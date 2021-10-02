@@ -16,6 +16,7 @@ pipenv shell
 cp .env.template .env
 vim .env
 createdb simpletodo
+./manage.py migrate
 ./manage.py seeddb
 ./manage.py runserver
 ```
