@@ -10,7 +10,7 @@ class UserFactory(django.DjangoModelFactory):
     is_superuser = False
     is_staff = False
 
-    @post_generation
+    @factory.post_generation
     def password(self, created, extracted, *args, **kwargs):
         """Set the password."""
         if not created:
