@@ -30,6 +30,13 @@ SECRET_KEY = 'django-insecure-5m#v_0a=77@6^%1=ky5gmj6oz%v6&3b_@4j*3y)wh$yqn2*(ci
 ALLOWED_HOSTS = []
 
 
+SESSION_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SECURE = True
+
+# Cors
+
+CORS_ALLOW_CREDENTIALS = True
+
 # Application definition
 
 INSTALLED_APPS_DJANGO = (
