@@ -10,6 +10,13 @@ class UserFactory(django.DjangoModelFactory):
     is_superuser = False
     is_staff = False
 
+    @post_generation
+    def password(self, created, extracted, *args, **kwargs):
+        """Set the password."""
+        if not created:
+            return
+        self.set_password(extracted or 'password')
+
     class Meta:
         """Meta."""
         model = 'user.User'
