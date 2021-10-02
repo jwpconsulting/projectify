@@ -4,6 +4,7 @@
 
 - Python > 3.8
 - pipenv
+- PostgreSQL
 
 ## Quickstart
 
