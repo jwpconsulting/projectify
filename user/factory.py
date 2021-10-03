@@ -6,7 +6,7 @@ import factory
 class UserFactory(django.DjangoModelFactory):
     """User Factory."""
 
-    email = factory.Faker('email')
+    email = factory.Faker("email")
     is_superuser = False
     is_staff = False
 
@@ -15,12 +15,13 @@ class UserFactory(django.DjangoModelFactory):
         """Set the password."""
         if not created:
             return
-        self.set_password(extracted or 'password')
+        self.set_password(extracted or "password")
 
     class Meta:
         """Meta."""
-        model = 'user.User'
-        django_get_or_create = 'email',
+
+        model = "user.User"
+        django_get_or_create = ("email",)
 
 
 class SuperUserFactory(UserFactory):

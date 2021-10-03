@@ -9,14 +9,18 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('todo', '0003_auto_20210923_1517'),
+        ("todo", "0003_auto_20210923_1517"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='todoitemfolder',
-            name='user',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='user.user'),
+            model_name="todoitemfolder",
+            name="user",
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="user.user",
+            ),
             preserve_default=False,
         ),
     ]

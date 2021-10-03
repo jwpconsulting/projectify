@@ -15,4 +15,3 @@ class TodoItemFolderAdmin(admin.ModelAdmin):
 @admin.register(TodoItem)
 class TodoItemAdmin(admin.ModelAdmin):
     """TodoItem Admin."""
-

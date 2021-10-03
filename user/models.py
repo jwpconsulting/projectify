@@ -42,7 +42,6 @@ class UserManager(BaseUserManager):
         )
 
 
-
 class User(AbstractBaseUser, PermissionsMixin):
     """User class."""
 
@@ -51,4 +50,4 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField()
     objects = UserManager()
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"

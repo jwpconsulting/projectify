@@ -10,7 +10,7 @@ from .models import TodoItemFolder, TodoItem
 class TodoItemFolderFactory(django.DjangoModelFactory):
     """TodoItemFolder Factory."""
 
-    name = factory.Faker('bs')
+    name = factory.Faker("bs")
     user = factory.SubFactory(UserFactory)
 
     class Meta:
@@ -19,11 +19,12 @@ class TodoItemFolderFactory(django.DjangoModelFactory):
 
 class TodoItemFactory(django.DjangoModelFactory):
     """TodoItem Factory."""
+
     user = factory.SubFactory(UserFactory)
     folder = factory.SubFactory(TodoItemFolderFactory)
-    name = factory.Faker('bs')
-    description = factory.Faker('text')
-    done = factory.Faker('boolean')
+    name = factory.Faker("bs")
+    description = factory.Faker("text")
+    done = factory.Faker("boolean")
 
     class Meta:
         model = TodoItem

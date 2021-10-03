@@ -4,6 +4,7 @@ from django.conf import settings
 
 class TodoItemFolder(models.Model):
     """Folders for todo items."""
+
     name = models.CharField(max_length=256)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -13,6 +14,7 @@ class TodoItemFolder(models.Model):
 
 class TodoItem(models.Model):
     """A todo item."""
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,

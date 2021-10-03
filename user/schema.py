@@ -18,6 +18,7 @@ class LoginMutation(graphene.Mutation):
 
     class Arguments:
         """Arguments required."""
+
         email = graphene.String(required=True)
         password = graphene.String(required=True)
 

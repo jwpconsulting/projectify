@@ -6,20 +6,20 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('todo', '0002_auto_20210923_0947'),
+        ("todo", "0002_auto_20210923_0947"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='todoitem',
-            name='description',
-            field=models.TextField(default=''),
+            model_name="todoitem",
+            name="description",
+            field=models.TextField(default=""),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='todoitem',
-            name='name',
-            field=models.CharField(default='', max_length=256),
+            model_name="todoitem",
+            name="name",
+            field=models.CharField(default="", max_length=256),
             preserve_default=False,
         ),
     ]

@@ -8,4 +8,3 @@ class TestUser:
     def test_factory(self, user):
         """Test user factory."""
         assert user.email
-

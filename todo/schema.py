@@ -46,8 +46,8 @@ class TodoItemPage(PageType):
 
 
 pagination_kwargs = {
-    'page': graphene.Int(required=True),
-    'size': graphene.Int(required=True),
+    "page": graphene.Int(required=True),
+    "size": graphene.Int(required=True),
 }
 
 
@@ -56,7 +56,7 @@ def paginate(queryset, page, size):
     return Paginator(queryset, size).page(page)
 
 
-class Query():
+class Query:
     """Query object."""
 
     todo_items = graphene.Field(TodoItemPage, **pagination_kwargs)

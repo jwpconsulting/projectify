@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('todo', '0004_todoitemfolder_user'),
+        ("todo", "0004_todoitemfolder_user"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='todoitem',
-            name='done',
+            model_name="todoitem",
+            name="done",
             field=models.BooleanField(default=False),
             preserve_default=False,
         ),
