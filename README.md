@@ -30,4 +30,4 @@ createdb simpletodo
 
 # License
 
-This project is licensed under GPL. See the LICENSE file in this repository.
+This project is licensed under AGPL. See the LICENSE file in this repository.
