@@ -27,3 +27,7 @@ createdb simpletodo
 - `DJANGO_SETTINGS_MODULE`
 - `DATABASE_URL`
 - `SECRET_KEY`
+
+# License
+
+This project is licensed under GPL. See the LICENSE file in this repository.
