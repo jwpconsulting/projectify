@@ -1,0 +1,38 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/projectify
+    docker:
+      - image: python:3.9.9
+        environment:
+          DJANGO_SETTINGS_MODULE: projectify.settings.test
+          DATABASE_URL: "postgres://projectify:projectify@localhost:5432/projectify"
+      - image: postgres:13.5
+        environment:
+          POSTGRES_DB: projectify
+          POSTGRES_USER: projectify
+          POSTGRES_PASSWORD: projectify
+    steps:
+      - checkout
+      - run:
+          name: Create junit folder
+          command: mkdir junit
+      - restore_cache:
+          keys:
+            - cache-{{ checksum "Pipfile.lock" }}
+      - run:
+          name: Install pipenv
+          command: pip3 install pipenv
+      - run:
+          name: Install pip packages
+          command: pipenv sync --dev
+      - save_cache:
+          key: cache-{{ checksum "Pipfile.lock" }}
+          paths:
+            - ~/.local
+            - ~/.cache
+      - run:
+          name: Run pytest
+          command: pipenv run pytest --junit-xml=junit/pytest.xml
+      - store_test_results:
+          path: junit/
