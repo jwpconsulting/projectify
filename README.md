@@ -1,4 +1,4 @@
-# Simple Todo backend
+# Projectify Backend
 
 # Requirements
 
@@ -9,14 +9,14 @@
 # Quickstart
 
 ```
-git clone git@github.com:justuswilhelm/simpletodo-backend.git
-cd simpletodo-backend
-pipenv install
+git clone git@github.com:jwp-consulting/projectify-backend.git
+cd projectify-backend
+pipenv install --dev
 pipenv shell
 cp .env.template .env
 vim .env
 # Edit DATABASE_URL
-createdb simpletodo
+createdb projectify
 ./manage.py migrate
 ./manage.py seeddb
 ./manage.py runserver
