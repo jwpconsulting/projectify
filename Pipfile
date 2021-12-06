@@ -4,19 +4,19 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+black = "*"
+tqdm = "*"
+factory-boy = "*"
+pytest-django = "*"
+python-dotenv = "*"
 
 [packages]
 django = "*"
 graphene-django = "*"
-factory-boy = "*"
-pytest-django = "*"
-python-dotenv = "*"
 dj-database-url = "*"
 psycopg2 = "*"
 django-extensions = "*"
-tqdm = "*"
 django-cors-headers = "*"
-black = "*"
 
 [requires]
 python_version = "3.9.9"
