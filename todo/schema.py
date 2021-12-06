@@ -21,6 +21,7 @@ class TodoItemFolder(DjangoObjectType):
     class Meta:
         """Meta."""
 
+        fields = 'name', 'user'
         model = models.TodoItemFolder
 
 
@@ -36,6 +37,7 @@ class TodoItem(DjangoObjectType):
     class Meta:
         """Meta."""
 
+        fields = 'user', 'folder', 'name', 'description', 'done'
         model = models.TodoItem
 
 
