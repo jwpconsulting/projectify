@@ -55,7 +55,7 @@ pagination_kwargs = {
 
 def paginate(queryset, page, size):
     """Paginate a queryset."""
-    return Paginator(queryset, size).page(page)
+    return Paginator(queryset.order_by('-id'), size).page(page)
 
 
 class Query:
