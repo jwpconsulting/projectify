@@ -19,7 +19,7 @@ django-cors-headers = "*"
 black = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.9.9"
 
 [pipenv]
 allow_prereleases = true
