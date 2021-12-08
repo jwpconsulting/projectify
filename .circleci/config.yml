@@ -26,6 +26,9 @@ jobs:
       - run:
           name: Install pip packages
           command: pipenv sync --dev
+      - run:
+          name: Pipenv check
+          command: pipenv check
       - save_cache:
           key: cache-{{ checksum "Pipfile.lock" }}
           paths:
