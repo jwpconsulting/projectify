@@ -21,7 +21,7 @@ class TodoItemFolder(DjangoObjectType):
     class Meta:
         """Meta."""
 
-        fields = 'name', 'user'
+        fields = "name", "user"
         model = models.TodoItemFolder
 
 
@@ -37,7 +37,7 @@ class TodoItem(DjangoObjectType):
     class Meta:
         """Meta."""
 
-        fields = 'user', 'folder', 'name', 'description', 'done'
+        fields = "user", "folder", "name", "description", "done"
         model = models.TodoItem
 
 
@@ -55,7 +55,7 @@ pagination_kwargs = {
 
 def paginate(queryset, page, size):
     """Paginate a queryset."""
-    return Paginator(queryset.order_by('-id'), size).page(page)
+    return Paginator(queryset.order_by("-id"), size).page(page)
 
 
 class Query:
