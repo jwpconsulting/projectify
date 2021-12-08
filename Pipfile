@@ -8,15 +8,15 @@ black = "*"
 tqdm = "*"
 factory-boy = "*"
 pytest-django = "*"
-python-dotenv = "*"
 
 [packages]
-django = "*"
-graphene-django = "*"
 dj-database-url = "*"
-psycopg2 = "*"
-django-extensions = "*"
+django = "*"
 django-cors-headers = "*"
+django-extensions = "*"
+graphene-django = "*"
+psycopg2 = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.9.9"
