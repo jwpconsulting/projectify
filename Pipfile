@@ -19,6 +19,7 @@ psycopg2 = "*"
 python-dotenv = "*"
 whitenoise = "*"
 gunicorn = "*"
+newrelic = "*"
 
 [requires]
 python_version = "3.9"
