@@ -17,6 +17,7 @@ django-extensions = "*"
 graphene-django = "*"
 psycopg2 = "*"
 python-dotenv = "*"
+whitenoise = "*"
 
 [requires]
 python_version = "3.9"
