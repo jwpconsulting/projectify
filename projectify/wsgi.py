@@ -16,4 +16,4 @@ from whitenoise import WhiteNoise
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "projectify.settings.production")
 
 application = get_wsgi_application()
-application = DjangoWhiteNoise(application)
+application = WhiteNoise(application)
