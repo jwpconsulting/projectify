@@ -6,14 +6,6 @@ from unittest.mock import (
 import pytest
 
 
-@pytest.fixture
-def info(user):
-    """Mock an info object."""
-    info = MagicMock()
-    info.context.user = user
-    return info
-
-
 @pytest.mark.django_db
 class TestQuery:
     """Test Query class."""

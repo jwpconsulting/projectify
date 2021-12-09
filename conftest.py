@@ -22,6 +22,27 @@ def user():
 
 
 @pytest.fixture
+def inactive_user():
+    """Return an inactive db user."""
+    return UserFactory.create(is_active=False)
+
+
+@pytest.fixture
+def graphql_query(client):
+    """Return a client query fn without logged in user."""
+
+    def func(*args, **kwargs):
+        return testing.graphql_query(
+            *args,
+            **kwargs,
+            client=client,
+            graphql_url=reverse("graphql"),
+        )
+
+    return func
+
+
+@pytest.fixture
 def graphql_query_user(client, user):
     """Return a client query fn."""
 
