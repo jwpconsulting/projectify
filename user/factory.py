@@ -9,6 +9,7 @@ class UserFactory(django.DjangoModelFactory):
     email = factory.Faker("email")
     is_superuser = False
     is_staff = False
+    is_active = True
 
     @factory.post_generation
     def password(self, created, extracted, *args, **kwargs):
