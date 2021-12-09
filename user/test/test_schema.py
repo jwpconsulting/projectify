@@ -1,5 +1,4 @@
 """User app schema tests."""
-
 import pytest
 
 
@@ -8,6 +7,7 @@ class TestSignupMutation:
     """Test Signup Mutation."""
 
     def test_user_is_created(self, graphql_query, json_loads):
+        """Assert that user is created."""
         query = """
 mutation {
     signup(email: "hello@example.com", password: "password") {

@@ -1,8 +1,4 @@
 """Test todo queries."""
-from unittest.mock import (
-    MagicMock,
-)
-
 import pytest
 
 

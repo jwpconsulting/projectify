@@ -73,7 +73,6 @@ class Query:
     def resolve_todo_item_folders(self, info, page, size):
         """Resolve a page of todo item folders."""
         qs = info.context.user.todoitemfolder_set.all()
-        print(qs)
         return paginate(qs, page, size)
 
     def resolve_todo_items(self, info, page, size):
