@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _
 from django.apps import apps
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import (
@@ -45,7 +46,10 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     """User class."""
 
-    email = models.EmailField(unique=True)
+    email = models.EmailField(
+        verbose_name=_("Email"),
+        unique=True,
+    )
     is_staff = models.BooleanField()
     is_superuser = models.BooleanField()
     objects = UserManager()
