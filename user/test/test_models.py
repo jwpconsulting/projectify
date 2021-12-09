@@ -1,3 +1,4 @@
+"""Test user models."""
 import pytest
 
 

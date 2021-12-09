@@ -1,10 +1,18 @@
+"""Top level conftest module."""
 import json
 
-import pytest
-from graphene_django.utils import testing
-from django.urls import reverse
+from django.urls import (
+    reverse,
+)
 
-from user.factory import UserFactory
+import pytest
+from graphene_django.utils import (
+    testing,
+)
+
+from user.factory import (
+    UserFactory,
+)
 
 
 @pytest.fixture

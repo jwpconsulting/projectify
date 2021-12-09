@@ -1,7 +1,9 @@
 """Production settings."""
 import os
 
+# flake8: noqa: F401, F403
 from .base import *
+
 
 SECRET_KEY = os.environ["SECRET_KEY"]
 

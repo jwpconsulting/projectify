@@ -1,10 +1,16 @@
 """Todo Schema."""
-from django.core.paginator import Paginator
+from django.core.paginator import (
+    Paginator,
+)
 
 import graphene
-from graphene_django import DjangoObjectType
+from graphene_django import (
+    DjangoObjectType,
+)
 
-from todo import models
+from todo import (
+    models,
+)
 
 
 class PageType(graphene.ObjectType):

@@ -1,8 +1,9 @@
 """Test todo queries."""
-import pytest
-from unittest.mock import MagicMock
+from unittest.mock import (
+    MagicMock,
+)
 
-from .. import schema
+import pytest
 
 
 @pytest.fixture
@@ -33,11 +34,15 @@ class TestQuery:
         result = json_loads(graphql_query_user(query).content)
         assert result == {
             "data": {
-                "todoItemFolders": {"objectList": [{"name": todo_item_folder.name}]}
+                "todoItemFolders": {
+                    "objectList": [{"name": todo_item_folder.name}]
+                }
             }
         }
 
-    def test_resolve_todo_items(self, graphql_query_user, json_loads, todo_item):
+    def test_resolve_todo_items(
+        self, graphql_query_user, json_loads, todo_item
+    ):
         """Test resolve_todo_items."""
         query = """
 {

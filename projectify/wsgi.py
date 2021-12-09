@@ -9,11 +9,18 @@ https://docs.djangoproject.com/en/3.2/howto/deployment/wsgi/
 
 import os
 
-from django.core.wsgi import get_wsgi_application
+from django.core.wsgi import (
+    get_wsgi_application,
+)
 
-from whitenoise import WhiteNoise
+from whitenoise import (
+    WhiteNoise,
+)
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "projectify.settings.production")
+
+os.environ.setdefault(
+    "DJANGO_SETTINGS_MODULE", "projectify.settings.production"
+)
 
 application = get_wsgi_application()
 application = WhiteNoise(application)

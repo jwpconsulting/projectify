@@ -1,5 +1,11 @@
-from django.contrib import admin
-from .models import User
+"""User app model admins."""
+from django.contrib import (
+    admin,
+)
+
+from .models import (
+    User,
+)
 
 
 @admin.register(User)

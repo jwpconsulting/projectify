@@ -1,10 +1,16 @@
 """Todo factories."""
 import factory
-from factory import django
+from factory import (
+    django,
+)
+from user.factory import (
+    UserFactory,
+)
 
-from user.factory import UserFactory
-
-from .models import TodoItemFolder, TodoItem
+from .models import (
+    TodoItem,
+    TodoItemFolder,
+)
 
 
 class TodoItemFolderFactory(django.DjangoModelFactory):
@@ -14,6 +20,8 @@ class TodoItemFolderFactory(django.DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
 
     class Meta:
+        """Meta."""
+
         model = TodoItemFolder
 
 
@@ -27,4 +35,6 @@ class TodoItemFactory(django.DjangoModelFactory):
     done = factory.Faker("boolean")
 
     class Meta:
+        """Meta."""
+
         model = TodoItem
