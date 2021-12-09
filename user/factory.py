@@ -36,3 +36,4 @@ class SuperUserFactory(UserFactory):
 
     is_superuser = True
     is_staff = True
+    is_active = True

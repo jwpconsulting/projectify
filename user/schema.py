@@ -2,6 +2,7 @@
 from django.contrib import (
     auth,
 )
+from django.contrib.auth.backends import ModelBackend
 
 import graphene
 import graphene_django
@@ -31,10 +32,18 @@ class LoginMutation(graphene.Mutation):
     @classmethod
     def mutate(cls, root, info, email, password):
         """Mutate."""
-        user = auth.get_user_model().objects.get_by_natural_key(email)
-        if not user.check_password(password):
+        user = ModelBackend().authenticate(
+            info.context,
+            username=email,
+            password=password,
+        )
+        if user is None:
             return
-        auth.login(info.context, user)
+        auth.login(
+            info.context,
+            user,
+            backend="django.contrib.auth.backends.ModelBackend",
+        )
         return cls(user=user)
 
 
