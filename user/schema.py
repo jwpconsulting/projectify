@@ -18,6 +18,26 @@ class User(graphene_django.DjangoObjectType):
         model = auth.get_user_model()
 
 
+class SignupMutation(graphene.Mutation):
+    """Signup mutation."""
+
+    class Arguments:
+        """Arguments required."""
+
+        email = graphene.String(required=True)
+        password = graphene.String(required=True)
+
+    user = graphene.Field(User)
+
+    @classmethod
+    def mutate(cls, root, info, email, password):
+        User = auth.get_user_model()
+        user = User.objects.create_user(email=email, password=password)
+        # todo send email
+        print(user)
+        return cls(user=user)
+
+
 class LoginMutation(graphene.Mutation):
     """Login mutation."""
 
@@ -72,11 +92,13 @@ class Query:
 
     def resolve_user(self, info):
         """Resolve user field."""
-        return info.context.user
+        user = info.context.user
+        return user
 
 
 class Mutation:
     """Mutation."""
 
+    signup = SignupMutation.Field()
     login = LoginMutation.Field()
     logout = LogoutMutation.Field()
