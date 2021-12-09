@@ -34,8 +34,8 @@ class TestLoginMutation:
     """Test LoginMutation."""
 
     query = """
-mutation ($email: String!) {
-  login(email: $email, password: "password") {
+mutation ($email: String!, $password: String!) {
+  login(email: $email, password: $password) {
     user {
       email
     }
@@ -46,7 +46,13 @@ mutation ($email: String!) {
     def test_login_active_user(self, graphql_query, user, json_loads):
         """Test logging in an active user."""
         result = json_loads(
-            graphql_query(self.query, variables={"email": user.email}).content
+            graphql_query(
+                self.query,
+                variables={
+                    "email": user.email,
+                    "password": "password",
+                },
+            ).content
         )
         assert result == {
             "data": {
@@ -64,7 +70,11 @@ mutation ($email: String!) {
         """Test logging in an inactive user."""
         result = json_loads(
             graphql_query(
-                self.query, variables={"email": inactive_user.email}
+                self.query,
+                variables={
+                    "email": inactive_user.email,
+                    "password": "password",
+                },
             ).content
         )
         assert result == {"data": {"login": None}}
