@@ -3,3 +3,5 @@ from .base import *
 
 
 SECRET_KEY = "test"
+
+STATIC_ROOT = None
