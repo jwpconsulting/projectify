@@ -2,7 +2,9 @@
 from django.contrib import (
     auth,
 )
-from django.contrib.auth.backends import ModelBackend
+from django.contrib.auth.backends import (
+    ModelBackend,
+)
 
 import graphene
 import graphene_django
@@ -31,10 +33,10 @@ class SignupMutation(graphene.Mutation):
 
     @classmethod
     def mutate(cls, root, info, email, password):
+        """Mutate."""
         User = auth.get_user_model()
         user = User.objects.create_user(email=email, password=password)
         # todo send email
-        print(user)
         return cls(user=user)
 
 
