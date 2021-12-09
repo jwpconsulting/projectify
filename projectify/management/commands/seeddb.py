@@ -1,11 +1,20 @@
 """Seeddb command."""
-import tqdm
-from django.core.management.base import BaseCommand
-from django.contrib.auth import get_user_model
-from django.db import transaction
+from django.core.management.base import (
+    BaseCommand,
+)
+from django.db import (
+    transaction,
+)
 
-from user.factory import SuperUserFactory, UserFactory
-from todo.factory import TodoItemFactory, TodoItemFolderFactory
+import tqdm
+from todo.factory import (
+    TodoItemFactory,
+    TodoItemFolderFactory,
+)
+from user.factory import (
+    SuperUserFactory,
+    UserFactory,
+)
 
 
 class Command(BaseCommand):

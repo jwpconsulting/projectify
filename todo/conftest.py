@@ -1,7 +1,10 @@
 """Todo conftest."""
 import pytest
 
-from .factory import TodoItemFolderFactory, TodoItemFactory
+from .factory import (
+    TodoItemFactory,
+    TodoItemFolderFactory,
+)
 
 
 @pytest.fixture

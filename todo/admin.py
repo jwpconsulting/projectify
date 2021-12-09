@@ -1,9 +1,11 @@
-from django.contrib import admin
-
+"""Todo admin."""
+from django.contrib import (
+    admin,
+)
 
 from .models import (
-    TodoItemFolder,
     TodoItem,
+    TodoItemFolder,
 )
 
 

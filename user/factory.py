@@ -1,6 +1,12 @@
-from django.contrib.auth import get_user_model
-from factory import django
+"""User app factories."""
+from django.contrib.auth import (
+    get_user_model,
+)
+
 import factory
+from factory import (
+    django,
+)
 
 
 class UserFactory(django.DjangoModelFactory):
@@ -21,7 +27,7 @@ class UserFactory(django.DjangoModelFactory):
     class Meta:
         """Meta."""
 
-        model = "user.User"
+        model = get_user_model()
         django_get_or_create = ("email",)
 
 

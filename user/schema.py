@@ -1,5 +1,8 @@
 """User schema."""
-from django.contrib import auth
+from django.contrib import (
+    auth,
+)
+
 import graphene
 import graphene_django
 

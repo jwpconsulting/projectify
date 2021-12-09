@@ -1,3 +1,4 @@
+"""Projectify project schema."""
 import graphene
 
 import todo.schema

@@ -9,10 +9,15 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-from pathlib import Path
-import dj_database_url
+from pathlib import (
+    Path,
+)
 
-from dotenv import load_dotenv
+import dj_database_url
+from dotenv import (
+    load_dotenv,
+)
+
 
 load_dotenv()
 
@@ -58,7 +63,9 @@ INSTALLED_APPS_FIRST_PARTY = (
 )
 
 INSTALLED_APPS = (
-    INSTALLED_APPS_DJANGO + INSTALLED_APPS_THIRD_PARTY + INSTALLED_APPS_FIRST_PARTY
+    INSTALLED_APPS_DJANGO
+    + INSTALLED_APPS_THIRD_PARTY
+    + INSTALLED_APPS_FIRST_PARTY
 )
 
 MIDDLEWARE = [
@@ -103,16 +110,20 @@ DATABASES = {"default": dj_database_url.config(conn_max_age=600)}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": "django.contrib.auth.password_validation."
+        "UserAttributeSimilarityValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "NAME": "django.contrib.auth.password_validation."
+        "MinimumLengthValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+        "NAME": "django.contrib.auth.password_validation."
+        "CommonPasswordValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+        "NAME": "django.contrib.auth.password_validation."
+        "NumericPasswordValidator",
     },
 ]
 
@@ -133,7 +144,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = "/static/"
-STATIC_ROOT = Path(BASE_DIR, 'staticfiles')
+STATIC_ROOT = Path(BASE_DIR, "staticfiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

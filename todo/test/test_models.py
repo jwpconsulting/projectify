@@ -1,3 +1,4 @@
+"""Todo app model tests."""
 import pytest
 
 

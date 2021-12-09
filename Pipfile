@@ -7,7 +7,12 @@ verify_ssl = true
 black = "*"
 tqdm = "*"
 factory-boy = "*"
+flake8 = "*"
 pytest-django = "*"
+flake8-black = "*"
+flake8-isort = "*"
+isort = "*"
+flake8-docstrings = "*"
 
 [packages]
 dj-database-url = "*"
