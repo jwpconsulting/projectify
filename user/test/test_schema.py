@@ -64,6 +64,19 @@ mutation ($email: String!, $password: String!) {
             }
         }
 
+    def test_login_wrong_password(self, graphql_query, user, json_loads):
+        """Test logging in with a wrong password."""
+        result = json_loads(
+            graphql_query(
+                self.query,
+                variables={
+                    "email": user.email,
+                    "password": "wrongpassword",
+                },
+            ).content
+        )
+        assert result == {"data": {"login": None}}
+
     def test_login_inactive_user(
         self, graphql_query, inactive_user, json_loads
     ):
