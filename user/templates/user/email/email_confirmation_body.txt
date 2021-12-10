@@ -1,0 +1,8 @@
+{% load i18n %}
+{% include "email/_salutation.txt" %}{% blocktranslate with email=object.email token=object.get_email_confirmation_token %}
+You have recently signed up for Projectify. Please confirm your email address by
+visiting the following URL:
+
+{{ FRONTEND_URL }}user/email-confirm/{{ email }}/{{ token }}
+{% endblocktranslate %}
+{% include "email/_greeting.txt" %}
