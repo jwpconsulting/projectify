@@ -30,6 +30,45 @@ mutation {
 
 
 @pytest.mark.django_db
+class TestEmailConfirmationMutation:
+    """Test Email Confirmation Mutation."""
+
+    query = """
+mutation($email: String!, $token: String!) {
+    emailConfirmation(email: $email, token: $token) {
+        user {
+            email
+        }
+    }
+}
+"""
+
+    def test_user_is_activated(self, graphql_query, inactive_user, json_loads):
+        """Assert that user is activated."""
+        assert inactive_user.is_active is False
+        result = json_loads(
+            graphql_query(
+                self.query,
+                variables={
+                    "email": inactive_user.email,
+                    "token": inactive_user.get_email_confirmation_token(),
+                },
+            ).content
+        )
+        assert result == {
+            "data": {
+                "emailConfirmation": {
+                    "user": {
+                        "email": inactive_user.email,
+                    },
+                }
+            }
+        }
+        inactive_user.refresh_from_db()
+        assert inactive_user.is_active is True
+
+
+@pytest.mark.django_db
 class TestLoginMutation:
     """Test LoginMutation."""
 
