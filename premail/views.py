@@ -3,6 +3,9 @@ from inspect import (
     getdoc,
 )
 
+from django.contrib.auth.mixins import (
+    UserPassesTestMixin,
+)
 from django.views.generic import (
     TemplateView,
 )
@@ -12,7 +15,15 @@ from .registry import (
 )
 
 
-class EmailList(TemplateView):
+class SuperUserTestMixin(UserPassesTestMixin):
+    """Permission mixin that tests for superuser status."""
+
+    def test_func(self):
+        """Assert that user is superuser."""
+        return self.request.user.is_superuser
+
+
+class EmailList(SuperUserTestMixin, TemplateView):
     """List all available emails."""
 
     template_name = "premail/email_list.html"
@@ -31,7 +42,7 @@ class EmailList(TemplateView):
         return context
 
 
-class EmailPreview(TemplateView):
+class EmailPreview(SuperUserTestMixin, TemplateView):
     """Preview an email."""
 
     template_name = "premail/email_detail.html"

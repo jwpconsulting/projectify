@@ -6,4 +6,4 @@ SECRET_KEY = "test"
 
 STATIC_ROOT = None
 
-FRONTEND_URL = 'https://example.com'
+FRONTEND_URL = "https://example.com"

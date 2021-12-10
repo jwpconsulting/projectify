@@ -1,0 +1,1 @@
+"""Premail tests."""
