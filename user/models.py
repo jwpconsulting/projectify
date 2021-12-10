@@ -50,7 +50,7 @@ class UserManager(BaseUserManager):
         )
 
 
-EMAIL_CONFIRMATION_TOKEN_SALT = 'email-confirmation-token-salt'
+EMAIL_CONFIRMATION_TOKEN_SALT = "email-confirmation-token-salt"
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -76,3 +76,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             key_salt=EMAIL_CONFIRMATION_TOKEN_SALT,
             value=self.email,
         ).hexdigest()
+
+    def check_email_confirmation_token(self, token):
+        """Compare a hexdigest to the actual email confirmation token."""
+        actual = self.get_email_confirmation_token()
+        return crypto.constant_time_compare(token, actual)
