@@ -11,3 +11,5 @@ ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split(",")
 
 # Want forever-cacheable files and compression support? Just add this to your settings.py:
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+FRONTEND_URL = os.environ["FRONTEND_URL"]

@@ -1,0 +1,27 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% block content %}
+  <table>
+    <thead>
+      <th>
+        {% trans "Link" %}
+      </th>
+      <th>
+        {% trans "Description" %}
+      </th>
+    </thead>
+    <tbody>
+      {% for email in object_list %}
+        <tr>
+          <td>
+            <a href="{% url 'email-preview' email.slug %}">
+              {{ email.slug }}
+            </a>
+          <td>
+            {{ email.doc }}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}

@@ -54,6 +54,7 @@ INSTALLED_APPS_DJANGO = (
 INSTALLED_APPS_THIRD_PARTY = (
     "django_extensions",
     "graphene_django",
+    "premail",
 )
 
 INSTALLED_APPS_FIRST_PARTY = (
@@ -154,3 +155,19 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 GRAPHENE = {"SCHEMA": "projectify.schema.schema"}
 
 AUTH_USER_MODEL = "user.User"
+
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": (
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "projectify.context_processors.frontend_url",
+            ),
+        },
+    }
+]

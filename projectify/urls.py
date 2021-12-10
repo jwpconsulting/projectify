@@ -18,6 +18,7 @@ from django.contrib import (
     admin,
 )
 from django.urls import (
+    include,
     path,
 )
 from django.views.decorators import (
@@ -35,5 +36,9 @@ urlpatterns = [
         "graphql",
         csrf.csrf_exempt(GraphQLView.as_view(graphiql=True)),
         name="graphql",
+    ),
+    path(
+        r"premail/",
+        include("premail.urls"),
     ),
 ]
