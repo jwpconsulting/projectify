@@ -40,6 +40,28 @@ class SignupMutation(graphene.Mutation):
         return cls(user=user)
 
 
+class EmailConfirmationMutation(graphene.Mutation):
+    """Mutation to confirm user email adresses for inactive users."""
+
+    class Arguments:
+        """Arguments required."""
+
+        email = graphene.String(required=True)
+        token = graphene.String(required=True)
+
+    user = graphene.Field(User)
+
+    @classmethod
+    def mutate(cls, root, info, email, token):
+        """Mutate."""
+        User = auth.get_user_model()
+        user = User.objects.get_by_natural_key(email)
+        if user.check_email_confirmation_token(token):
+            user.is_active = True
+            user.save()
+            return cls(user=user)
+
+
 class LoginMutation(graphene.Mutation):
     """Login mutation."""
 
@@ -102,5 +124,6 @@ class Mutation:
     """Mutation."""
 
     signup = SignupMutation.Field()
+    email_confirmation = EmailConfirmationMutation.Field()
     login = LoginMutation.Field()
     logout = LogoutMutation.Field()
