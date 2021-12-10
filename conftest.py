@@ -11,6 +11,7 @@ from graphene_django.utils import (
 )
 
 from user.factory import (
+    SuperUserFactory,
     UserFactory,
 )
 
@@ -19,6 +20,12 @@ from user.factory import (
 def user():
     """Return a db user."""
     return UserFactory.create()
+
+
+@pytest.fixture
+def superuser():
+    """Return a db super user."""
+    return SuperUserFactory.create()
 
 
 @pytest.fixture
@@ -62,3 +69,17 @@ def graphql_query_user(client, user):
 def json_loads():
     """Return json loads."""
     return json.loads
+
+
+@pytest.fixture
+def user_client(client, user):
+    """Return logged in client."""
+    client.force_login(user)
+    return client
+
+
+@pytest.fixture
+def superuser_client(client, superuser):
+    """Return logged in super user client."""
+    client.force_login(superuser)
+    return client

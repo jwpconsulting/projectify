@@ -9,6 +9,9 @@ from .views import (
 )
 
 
+app_name = "premail"
+
+
 urlpatterns = (
     path(r"email-preview/", EmailList.as_view(), name="email-list"),
     path(
