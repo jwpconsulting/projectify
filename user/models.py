@@ -10,6 +10,9 @@ from django.contrib.auth.models import (
 from django.db import (
     models,
 )
+from django.utils import (
+    crypto,
+)
 from django.utils.translation import gettext_lazy as _
 
 
@@ -47,6 +50,9 @@ class UserManager(BaseUserManager):
         )
 
 
+EMAIL_CONFIRMATION_TOKEN_SALT = 'email-confirmation-token-salt'
+
+
 class User(AbstractBaseUser, PermissionsMixin):
     """User class."""
 
@@ -63,3 +69,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
+
+    def get_email_confirmation_token(self):
+        """Return a secure email confirmation token."""
+        return crypto.salted_hmac(
+            key_salt=EMAIL_CONFIRMATION_TOKEN_SALT,
+            value=self.email,
+        ).hexdigest()
