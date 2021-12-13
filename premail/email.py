@@ -7,9 +7,17 @@ from projectify.context_processors import (
     frontend_url,
 )
 
+from .tasks import (
+    send_mail,
+)
+
 
 class TemplateEmail:
     """Email template."""
+
+    def __init__(self, obj):
+        """Designate receiver."""
+        self.obj = obj
 
     def get_subject_template_path(self):
         """Get path of subject template."""
@@ -45,3 +53,15 @@ class TemplateEmail:
             self.get_body_template_path(),
             self.get_context(),
         ).content.decode()
+
+    def get_to_email(self):
+        """Return recipient email. To override."""
+        return self.obj.email
+
+    def send(self):
+        """Send email to obj."""
+        return send_mail.delay(
+            self.render_subject(),
+            self.render_body(),
+            self.get_to_email(),
+        )

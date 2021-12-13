@@ -52,6 +52,7 @@ INSTALLED_APPS_DJANGO = (
 )
 
 INSTALLED_APPS_THIRD_PARTY = (
+    "django_celery_results",
     "django_extensions",
     "graphene_django",
     "premail",
@@ -162,12 +163,21 @@ TEMPLATES = [
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": (
+                "projectify.context_processors.frontend_url",
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "projectify.context_processors.frontend_url",
             ),
         },
     }
 ]
+
+# Celery
+CELERY_TIMEZONE = "Asia/Tokyo"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_RESULT_BACKEND = "django-db"
+
+# Email
+DEFAULT_FROM_EMAIL = "hello@projectifyapp.com"

@@ -13,6 +13,7 @@ flake8-black = "*"
 flake8-isort = "*"
 isort = "*"
 flake8-docstrings = "*"
+ipython = "*"
 
 [packages]
 dj-database-url = "*"
@@ -25,6 +26,9 @@ python-dotenv = "*"
 whitenoise = "*"
 gunicorn = "*"
 newrelic = "*"
+celery = {extras = ["redis"], version = "*"}
+django-celery-results = "*"
+pytest-celery = "*"
 
 [requires]
 python_version = "3.9"

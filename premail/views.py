@@ -51,7 +51,7 @@ class EmailPreview(SuperUserTestMixin, TemplateView):
         """Add email preview data to context."""
         context = super().get_context_data(**kwargs)
         Email = registry[self.kwargs["slug"]]
-        email = Email()
+        email = Email(obj=Email.model.objects.first())
         context["subject"] = email.render_subject()
         context["body"] = email.render_body()
         return context
