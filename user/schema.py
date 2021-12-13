@@ -9,6 +9,10 @@ from django.contrib.auth.backends import (
 import graphene
 import graphene_django
 
+from .emails import (
+    UserEmailConfirmationEmail,
+)
+
 
 class User(graphene_django.DjangoObjectType):
     """User."""
@@ -36,7 +40,8 @@ class SignupMutation(graphene.Mutation):
         """Mutate."""
         User = auth.get_user_model()
         user = User.objects.create_user(email=email, password=password)
-        # todo send email
+        mail = UserEmailConfirmationEmail(user)
+        mail.send()
         return cls(user=user)
 
 
