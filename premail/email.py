@@ -1,6 +1,10 @@
 """Premail email templates."""
-from django.template import (
-    loader,
+from django.shortcuts import (
+    render,
+)
+
+from projectify.context_processors import (
+    frontend_url,
 )
 
 
@@ -16,18 +20,28 @@ class TemplateEmail:
         return f"{self.template_prefix}_body.txt"
 
     def get_context(self):
-        """Get context."""
-        return {"object": self.model.objects.first()}
+        """Get context. To override."""
+        return {
+            **frontend_url(None),
+            "object": self.obj,
+        }
 
     def render_subject(self):
         """Render subject."""
-        template = loader.get_template(self.get_subject_template_path())
-        subject = template.render(self.get_context())
+        subject = render(
+            None,
+            self.get_subject_template_path(),
+            self.get_context(),
+        )
+        subject = subject.content.decode()
         subject = subject.replace("\n", "")
         subject = subject.strip()
         return subject
 
     def render_body(self):
         """Render body."""
-        template = loader.get_template(self.get_body_template_path())
-        return template.render(self.get_context())
+        return render(
+            None,
+            self.get_body_template_path(),
+            self.get_context(),
+        ).content.decode()
