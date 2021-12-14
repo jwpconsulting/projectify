@@ -29,6 +29,7 @@ createdb projectify
 - `SECRET_KEY`
 - `MAILGUN_API_KEY`
 - `MAILGUN_DOMAIN`
+- `FRONTEND_URL`
 
 # License
 
