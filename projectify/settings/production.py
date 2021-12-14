@@ -19,3 +19,6 @@ ANYMAIL = {
     "MAILGUN_SENDER_DOMAIN": os.environ["MAILGUN_DOMAIN"],
 }
 EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+
+# Celery
+CELERY_BROKER_URL = os.environ["REDIS_TLS_URL"]
