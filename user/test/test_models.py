@@ -1,6 +1,25 @@
 """Test user models."""
 import pytest
 
+from ..models import (
+    User,
+)
+
+
+@pytest.mark.django_db
+class TestUserManager:
+    """Test UserManager."""
+
+    def test_create_user(self):
+        """Test creating a normal user."""
+        u = User.objects.create_user("hello@example")
+        assert u.is_active is False
+
+    def test_create_superuser(self):
+        """Test creating a superuser. A superuser should be active."""
+        u = User.objects.create_superuser("hello@example")
+        assert u.is_active is True
+
 
 @pytest.mark.django_db
 class TestUser:

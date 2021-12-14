@@ -19,13 +19,14 @@ from django.utils.translation import gettext_lazy as _
 class UserManager(BaseUserManager):
     """Manager class for User."""
 
-    def _create_user(self, email, password, is_staff, is_superuser):
+    def _create_user(self, email, password, is_staff, is_superuser, is_active):
         """Create and save a user with the given email, and password."""
         email = self.normalize_email(email)
         user = self.model(
             email=email,
             is_staff=is_staff,
             is_superuser=is_superuser,
+            is_active=is_active,
         )
         user.password = make_password(password)
         user.save(using=self._db)
@@ -38,6 +39,7 @@ class UserManager(BaseUserManager):
             password,
             is_staff=False,
             is_superuser=False,
+            is_active=False,
         )
 
     def create_superuser(self, email, password=None):
@@ -47,6 +49,7 @@ class UserManager(BaseUserManager):
             password,
             is_staff=True,
             is_superuser=True,
+            is_active=True,
         )
 
 
