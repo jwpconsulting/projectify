@@ -13,3 +13,9 @@ ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split(",")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 FRONTEND_URL = os.environ["FRONTEND_URL"]
+
+ANYMAIL = {
+    "MAILGUN_API_KEY": os.environ["MAILGUN_API_KEY"],
+    "MAILGUN_SENDER_DOMAIN": os.environ["MAILGUN_DOMAIN"],
+}
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"

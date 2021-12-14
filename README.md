@@ -27,6 +27,8 @@ createdb projectify
 - `DJANGO_SETTINGS_MODULE`
 - `DATABASE_URL`
 - `SECRET_KEY`
+- `MAILGUN_API_KEY`
+- `MAILGUN_DOMAIN`
 
 # License
 

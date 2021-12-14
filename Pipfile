@@ -29,6 +29,7 @@ newrelic = "*"
 celery = {extras = ["redis"], version = "*"}
 django-celery-results = "*"
 pytest-celery = "*"
+django-anymail = {extras = ["mailgun"], version = "*"}
 
 [requires]
 python_version = "3.9"
