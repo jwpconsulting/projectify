@@ -10,7 +10,6 @@ CORS_ALLOWED_ORIGINS = ("http://localhost:3000",)
 
 FRONTEND_URL = "http://localhost:8000/"
 
-CELERY_BROKER_URL = "redis://localhost:6379/0"
 CELERY_TASK_ALWAYS_EAGER = True
 
 # Email
