@@ -3,9 +3,15 @@ import graphene
 
 import todo.schema
 import user.schema
+import workspace.schema
 
 
-class Query(todo.schema.Query, user.schema.Query, graphene.ObjectType):
+class Query(
+    workspace.schema.Query,
+    todo.schema.Query,
+    user.schema.Query,
+    graphene.ObjectType,
+):
     """Query object."""
 
 
