@@ -28,3 +28,12 @@ class WorkspaceUser(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
     )
+
+
+class WorkspaceBoard(models.Model):
+    """Workspace board."""
+
+    workspace = models.ForeignKey(
+        Workspace,
+        on_delete=models.PROTECT,
+    )
