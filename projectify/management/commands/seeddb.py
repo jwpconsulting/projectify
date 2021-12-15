@@ -17,6 +17,7 @@ from user.factory import (
     UserFactory,
 )
 from workspace.factory import (
+    WorkspaceBoardFactory,
     WorkspaceFactory,
 )
 from workspace.models import (
@@ -48,12 +49,17 @@ class Command(BaseCommand):
         return users
 
     N_WORKSPACES = 3
+    N_WORKSPACE_BOARDS = 3
 
     def create_workspaces(self, users):
         """Create workspaces."""
         n_workspaces = self.N_WORKSPACES - Workspace.objects.count()
         for _ in tqdm.trange(n_workspaces, desc="Workspaces"):
             WorkspaceFactory(add_users=random.sample(users, 3))
+        workspaces = Workspace.objects.all()
+        for workspace in tqdm.tqdm(workspaces, desc="Workspace boards"):
+            n = self.N_WORKSPACE_BOARDS - workspace.workspaceboard_set.count()
+            WorkspaceBoardFactory.create_batch(n, workspace=workspace)
 
     @transaction.atomic
     def handle(self, *args, **options):

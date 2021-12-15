@@ -8,10 +8,11 @@ from django.db import (
 
 from django_extensions.db.models import (
     TimeStampedModel,
+    TitleDescriptionModel,
 )
 
 
-class Workspace(TimeStampedModel, models.Model):
+class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
     """Workspace."""
 
     users = models.ManyToManyField(
@@ -34,7 +35,7 @@ class WorkspaceUser(TimeStampedModel, models.Model):
     )
 
 
-class WorkspaceBoard(TimeStampedModel, models.Model):
+class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
     """Workspace board."""
 
     workspace = models.ForeignKey(

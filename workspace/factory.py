@@ -17,6 +17,9 @@ from .models import (
 class WorkspaceFactory(django.DjangoModelFactory):
     """Workspace Factory."""
 
+    title = factory.Faker("word")
+    description = factory.Faker("paragraph")
+
     @factory.post_generation
     def add_users(self, created, extracted, *args, **kwargs):
         """Add users to workspace."""
@@ -48,6 +51,8 @@ class WorkspaceUserFactory(django.DjangoModelFactory):
 class WorkspaceBoardFactory(django.DjangoModelFactory):
     """WorkspaceBoard factory."""
 
+    title = factory.Faker("word")
+    description = factory.Faker("paragraph")
     workspace = factory.SubFactory(WorkspaceFactory)
 
     class Meta:
