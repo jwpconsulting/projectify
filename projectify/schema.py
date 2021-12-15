@@ -1,14 +1,12 @@
 """Projectify project schema."""
 import graphene
 
-import todo.schema
 import user.schema
 import workspace.schema
 
 
 class Query(
     workspace.schema.Query,
-    todo.schema.Query,
     user.schema.Query,
     graphene.ObjectType,
 ):

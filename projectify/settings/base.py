@@ -60,7 +60,6 @@ INSTALLED_APPS_THIRD_PARTY = (
 
 INSTALLED_APPS_FIRST_PARTY = (
     "projectify",
-    "todo",
     "user",
     "workspace",
 )
