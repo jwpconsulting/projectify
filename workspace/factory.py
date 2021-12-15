@@ -9,6 +9,7 @@ from user.factory import (
 
 from .models import (
     Workspace,
+    WorkspaceBoard,
     WorkspaceUser,
 )
 
@@ -20,6 +21,8 @@ class WorkspaceFactory(django.DjangoModelFactory):
     def add_users(self, created, extracted, *args, **kwargs):
         """Add users to workspace."""
         if not created:
+            return
+        if not extracted:
             return
         for user in extracted:
             WorkspaceUserFactory(workspace=self, user=user)
@@ -40,3 +43,14 @@ class WorkspaceUserFactory(django.DjangoModelFactory):
         """Meta."""
 
         model = WorkspaceUser
+
+
+class WorkspaceBoardFactory(django.DjangoModelFactory):
+    """WorkspaceBoard factory."""
+
+    workspace = factory.SubFactory(WorkspaceFactory)
+
+    class Meta:
+        """Meta."""
+
+        model = WorkspaceBoard
