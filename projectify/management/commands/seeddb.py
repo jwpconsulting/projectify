@@ -1,4 +1,9 @@
 """Seeddb command."""
+import random
+
+from django.contrib import (
+    auth,
+)
 from django.core.management.base import (
     BaseCommand,
 )
@@ -7,13 +12,15 @@ from django.db import (
 )
 
 import tqdm
-from todo.factory import (
-    TodoItemFactory,
-    TodoItemFolderFactory,
-)
 from user.factory import (
     SuperUserFactory,
     UserFactory,
+)
+from workspace.factory import (
+    WorkspaceFactory,
+)
+from workspace.models import (
+    Workspace,
 )
 
 
@@ -34,31 +41,22 @@ class Command(BaseCommand):
         )
 
         users = super_user, guest_user
+        n_users = self.USERS - auth.get_user_model().objects.count()
+        UserFactory.create_batch(n_users)
+        users = list(auth.get_user_model().objects.all())
 
         return users
 
-    FOLDERS = 5
-    TODOS_PER_FOLDER = 5
+    N_WORKSPACES = 3
 
-    def create_todos(self, users):
-        """Create todo item folders and todo items."""
-        for user in tqdm.tqdm(users, desc="Todo Item Folders"):
-            count = user.todoitemfolder_set.count()
-            TodoItemFolderFactory.create_batch(
-                self.FOLDERS - count,
-                user=user,
-            )
-            folders = user.todoitemfolder_set.all()
-            for folder in tqdm.tqdm(folders, desc="Todo Items"):
-                count = folder.todoitem_set.count()
-                TodoItemFactory.create_batch(
-                    self.TODOS_PER_FOLDER - count,
-                    user=user,
-                    folder=folder,
-                )
+    def create_workspaces(self, users):
+        """Create workspaces."""
+        n_workspaces = self.N_WORKSPACES - Workspace.objects.count()
+        for _ in tqdm.trange(n_workspaces, desc="Workspaces"):
+            WorkspaceFactory(add_users=random.sample(users, 3))
 
     @transaction.atomic
     def handle(self, *args, **options):
         """Handle."""
         users = self.create_users()
-        self.create_todos(users)
+        self.create_workspaces(users)
