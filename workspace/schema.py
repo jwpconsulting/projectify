@@ -11,13 +11,13 @@ class Workspace(graphene_django.DjangoObjectType):
     """Workspace."""
 
     users = graphene.List("user.schema.User")
-    workspace_boards = graphene.List("workspace.schema.WorkspaceBoard")
+    boards = graphene.List("workspace.schema.WorkspaceBoard")
 
     def resolve_users(self, info):
         """Resolve workspace users."""
         return self.users.all()
 
-    def resolve_workspace_boards(self, info):
+    def resolve_boards(self, info):
         """Resolve workspace boards."""
         return self.workspaceboard_set.all()
 
