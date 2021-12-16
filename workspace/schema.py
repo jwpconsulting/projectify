@@ -24,7 +24,7 @@ class Workspace(graphene_django.DjangoObjectType):
     class Meta:
         """Meta."""
 
-        fields = ("users", "created", "modified")
+        fields = ("users", "created", "modified", "title", "description")
         model = models.Workspace
 
 
@@ -34,7 +34,7 @@ class WorkspaceBoard(graphene_django.DjangoObjectType):
     class Meta:
         """Meta."""
 
-        fields = ("created", "modified")
+        fields = ("created", "modified", "title", "description")
         model = models.WorkspaceBoard
 
 
