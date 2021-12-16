@@ -55,6 +55,7 @@ INSTALLED_APPS_THIRD_PARTY = (
     "django_celery_results",
     "django_extensions",
     "graphene_django",
+    "ordered_model",
     "premail",
 )
 

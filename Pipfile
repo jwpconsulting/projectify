@@ -17,7 +17,7 @@ ipython = "*"
 
 [packages]
 dj-database-url = "*"
-django = "*"
+django = "==3.2.10"
 django-cors-headers = "*"
 django-extensions = "*"
 graphene-django = "*"
@@ -30,6 +30,7 @@ celery = {extras = ["redis"], version = "*"}
 django-celery-results = "*"
 pytest-celery = "*"
 django-anymail = {extras = ["mailgun"], version = "*"}
+django-ordered-model = "*"
 
 [requires]
 python_version = "3.9"
