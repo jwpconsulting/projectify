@@ -74,3 +74,23 @@ class WorkspaceBoardSection(
         """Meta."""
 
         ordering = ("workspace_board", "order")
+
+
+class Task(
+    OrderedModel,
+    TitleDescriptionModel,
+    TimeStampedModel,
+    models.Model,
+):
+    """Task, belongs to workspace board section."""
+
+    workspace_board_section = models.ForeignKey(
+        WorkspaceBoardSection,
+        on_delete=models.PROTECT,
+    )
+    order_with_respect_to = "workspace_board_section"
+
+    class Meta:
+        """Meta."""
+
+        ordering = ("workspace_board_section", "order")

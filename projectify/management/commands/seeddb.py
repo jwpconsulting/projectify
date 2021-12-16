@@ -17,6 +17,7 @@ from user.factory import (
     UserFactory,
 )
 from workspace.factory import (
+    TaskFactory,
     WorkspaceBoardFactory,
     WorkspaceBoardSectionFactory,
     WorkspaceFactory,
@@ -69,10 +70,12 @@ class Command(BaseCommand):
             self.SECTION_TITLES,
             desc="Workspace board sections",
         ):
-            WorkspaceBoardSectionFactory(
+            section = WorkspaceBoardSectionFactory(
                 workspace_board=board,
                 title=title,
             )
+            for _ in tqdm.trange(10, desc="Tasks"):
+                TaskFactory(workspace_board_section=section)
 
     def create_workspaces(self, users):
         """Create workspaces."""

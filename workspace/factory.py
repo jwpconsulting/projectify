@@ -8,6 +8,7 @@ from user.factory import (
 )
 
 from .models import (
+    Task,
     Workspace,
     WorkspaceBoard,
     WorkspaceBoardSection,
@@ -73,3 +74,16 @@ class WorkspaceBoardSectionFactory(django.DjangoModelFactory):
         """Meta."""
 
         model = WorkspaceBoardSection
+
+
+class TaskFactory(django.DjangoModelFactory):
+    """Task factory."""
+
+    title = factory.Faker("word")
+    description = factory.Faker("paragraph")
+    workspace_board_section = factory.SubFactory(WorkspaceBoardSectionFactory)
+
+    class Meta:
+        """Meta."""
+
+        model = Task

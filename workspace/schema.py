@@ -47,11 +47,27 @@ class WorkspaceBoard(graphene_django.DjangoObjectType):
 class WorkspaceBoardSection(graphene_django.DjangoObjectType):
     """WorkspaceBoardSection."""
 
+    tasks = graphene.List("workspace.schema.Task")
+
+    def resolve_tasks(self, info):
+        """Resolve tasks for this workspace board section."""
+        return self.task_set.all()
+
     class Meta:
         """Meta."""
 
         fields = ("created", "modified", "title", "description")
         model = models.WorkspaceBoardSection
+
+
+class Task(graphene_django.DjangoObjectType):
+    """Task."""
+
+    class Meta:
+        """Meta."""
+
+        fields = ("created", "modified", "title", "description")
+        model = models.Task
 
 
 class Query:
