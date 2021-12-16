@@ -1,6 +1,20 @@
 """Test workspace models."""
 import pytest
 
+from ..factory import WorkspaceFactory
+from ..models import Workspace
+
+
+@pytest.mark.django_db
+class TestWorkspaceManager:
+    """Test Workspace manager."""
+
+    def test_get_for_user(self, workspace_user, user, other_user):
+        """."""
+        workspace = workspace_user.workspace
+        WorkspaceFactory(add_users=[other_user])
+        assert list(Workspace.objects.get_for_user(user)) == [workspace]
+
 
 @pytest.mark.django_db
 class TestWorkspace:

@@ -29,6 +29,12 @@ def superuser():
 
 
 @pytest.fixture
+def other_user():
+    """Return another db user."""
+    return UserFactory.create()
+
+
+@pytest.fixture
 def inactive_user():
     """Return an inactive db user."""
     return UserFactory.create(is_active=False)
