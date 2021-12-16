@@ -10,6 +10,9 @@ from django_extensions.db.models import (
     TimeStampedModel,
     TitleDescriptionModel,
 )
+from ordered_model.models import (
+    OrderedModel,
+)
 
 
 class WorkspaceManager(models.Manager):
@@ -54,6 +57,7 @@ class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
 
 
 class WorkspaceBoardSection(
+    OrderedModel,
     TitleDescriptionModel,
     TimeStampedModel,
     models.Model,
@@ -64,3 +68,9 @@ class WorkspaceBoardSection(
         WorkspaceBoard,
         on_delete=models.PROTECT,
     )
+    order_with_respect_to = "workspace_board"
+
+    class Meta:
+        """Meta."""
+
+        ordering = ("workspace_board", "order")

@@ -4,6 +4,10 @@ from django.contrib import (
 )
 from django.utils.translation import gettext_lazy as _
 
+from ordered_model.admin import (
+    OrderedModelAdmin,
+)
+
 from .models import (
     Workspace,
     WorkspaceBoard,
@@ -84,11 +88,12 @@ class WorkspaceBoardAdmin(admin.ModelAdmin):
 
 
 @admin.register(WorkspaceBoardSection)
-class WorkspaceBoardSectionAdmin(admin.ModelAdmin):
+class WorkspaceBoardSectionAdmin(OrderedModelAdmin):
     """WorkspaceBoardSection Admin."""
 
     list_display = (
         "title",
+        "move_up_down_links",
         "workspace_board_title",
         "workspace_title",
         "created",
