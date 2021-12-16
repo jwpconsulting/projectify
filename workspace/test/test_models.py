@@ -1,8 +1,12 @@
 """Test workspace models."""
 import pytest
 
-from ..factory import WorkspaceFactory
-from ..models import Workspace
+from ..factory import (
+    WorkspaceFactory,
+)
+from ..models import (
+    Workspace,
+)
 
 
 @pytest.mark.django_db
@@ -41,3 +45,12 @@ class TestWorkspaceBoard:
     def test_factory(self, workspace, workspace_board):
         """Test workspace board creation works."""
         assert workspace_board.workspace == workspace
+
+
+@pytest.mark.django_db
+class TestWorkspaceBoardSection:
+    """Test WorkspaceBoardSection."""
+
+    def test_factory(self, workspace_board_section, workspace_board):
+        """Test workspace board section creation works."""
+        assert workspace_board_section.workspace_board == workspace_board

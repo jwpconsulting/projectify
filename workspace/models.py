@@ -51,3 +51,16 @@ class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
         Workspace,
         on_delete=models.PROTECT,
     )
+
+
+class WorkspaceBoardSection(
+    TitleDescriptionModel,
+    TimeStampedModel,
+    models.Model,
+):
+    """Section of a WorkspaceBoard."""
+
+    workspace_board = models.ForeignKey(
+        WorkspaceBoard,
+        on_delete=models.PROTECT,
+    )
