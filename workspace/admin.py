@@ -9,6 +9,7 @@ from ordered_model.admin import (
 )
 
 from .models import (
+    Task,
     Workspace,
     WorkspaceBoard,
     WorkspaceBoardSection,
@@ -110,3 +111,36 @@ class WorkspaceBoardSectionAdmin(OrderedModelAdmin):
     def workspace_title(self, instance):
         """Return the workspace's title."""
         return instance.workspace_board.workspace.title
+
+
+@admin.register(Task)
+class TaskAdmin(OrderedModelAdmin):
+    """Task Admin."""
+
+    list_display = (
+        "title",
+        "move_up_down_links",
+        "workspace_board_section_title",
+        "workspace_board_title",
+        "workspace_title",
+        "created",
+        "modified",
+    )
+    list_select_related = (
+        "workspace_board_section__workspace_board__workspace",
+    )
+
+    @admin.display(description=_("Workspace board section title"))
+    def workspace_board_section_title(self, instance):
+        """Return the workspace board's title."""
+        return instance.workspace_board_section.title
+
+    @admin.display(description=_("Workspace board title"))
+    def workspace_board_title(self, instance):
+        """Return the workspace board's title."""
+        return instance.workspace_board_section.workspace_board.title
+
+    @admin.display(description=_("Workspace title"))
+    def workspace_title(self, instance):
+        """Return the workspace's title."""
+        return instance.workspace_board_section.workspace_board.workspace.title
