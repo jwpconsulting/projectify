@@ -18,10 +18,12 @@ from user.factory import (
 )
 from workspace.factory import (
     WorkspaceBoardFactory,
+    WorkspaceBoardSectionFactory,
     WorkspaceFactory,
 )
 from workspace.models import (
     Workspace,
+    WorkspaceBoard,
 )
 
 
@@ -50,16 +52,42 @@ class Command(BaseCommand):
 
     N_WORKSPACES = 3
     N_WORKSPACE_BOARDS = 3
+    SECTION_TITLES = [
+        "Backlog",
+        "To Do",
+        "Ongoing",
+        "Review",
+        "Done",
+    ]
+
+    def populate_workspace_board(self, board):
+        """Populate a workspace board."""
+        if board.workspaceboardsection_set.count():
+            return
+        for title in tqdm.tqdm(
+            self.SECTION_TITLES,
+            desc="Workspace board sections",
+        ):
+            WorkspaceBoardSectionFactory(
+                workspace_board=board,
+                title=title,
+            )
 
     def create_workspaces(self, users):
         """Create workspaces."""
         n_workspaces = self.N_WORKSPACES - Workspace.objects.count()
-        for _ in tqdm.trange(n_workspaces, desc="Workspaces"):
+        for _ in tqdm.trange(n_workspaces, desc="Workspaces with users"):
             WorkspaceFactory(add_users=random.sample(users, 3))
         workspaces = Workspace.objects.all()
-        for workspace in tqdm.tqdm(workspaces, desc="Workspace boards"):
+        for workspace in tqdm.tqdm(workspaces, desc="Workspaces"):
             n = self.N_WORKSPACE_BOARDS - workspace.workspaceboard_set.count()
-            WorkspaceBoardFactory.create_batch(n, workspace=workspace)
+            WorkspaceBoardFactory.create_batch(
+                n,
+                workspace=workspace,
+            )
+            boards = WorkspaceBoard.objects.all()
+            for board in tqdm.tqdm(boards, desc="Workspace boards"):
+                self.populate_workspace_board(board)
 
     @transaction.atomic
     def handle(self, *args, **options):

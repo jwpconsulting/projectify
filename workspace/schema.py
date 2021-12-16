@@ -18,7 +18,7 @@ class Workspace(graphene_django.DjangoObjectType):
         return self.users.all()
 
     def resolve_workspace_boards(self, info):
-        """Resolve workspace baords."""
+        """Resolve workspace boards."""
         return self.workspaceboard_set.all()
 
     class Meta:
@@ -31,11 +31,27 @@ class Workspace(graphene_django.DjangoObjectType):
 class WorkspaceBoard(graphene_django.DjangoObjectType):
     """WorkspaceBoard."""
 
+    sections = graphene.List("workspace.schema.WorkspaceBoardSection")
+
+    def resolve_sections(self, info):
+        """Resolve workspace board sections."""
+        return self.workspaceboardsection_set.all()
+
     class Meta:
         """Meta."""
 
         fields = ("created", "modified", "title", "description")
         model = models.WorkspaceBoard
+
+
+class WorkspaceBoardSection(graphene_django.DjangoObjectType):
+    """WorkspaceBoardSection."""
+
+    class Meta:
+        """Meta."""
+
+        fields = ("created", "modified", "title", "description")
+        model = models.WorkspaceBoardSection
 
 
 class Query:
