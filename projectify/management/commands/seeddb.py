@@ -30,10 +30,12 @@ from workspace.models import (
 class Command(BaseCommand):
     """Command."""
 
-    USERS = 5
+    N_USERS = 5
 
     def create_users(self):
         """Create users."""
+        if auth.get_user_model().objects.count():
+            return
         super_user = SuperUserFactory(
             email="admin@localhost",
             password="password",
@@ -44,10 +46,9 @@ class Command(BaseCommand):
         )
 
         users = super_user, guest_user
-        n_users = self.USERS - auth.get_user_model().objects.count()
+        n_users = self.N_USERS - auth.get_user_model().objects.count()
         UserFactory.create_batch(n_users)
         users = list(auth.get_user_model().objects.all())
-
         return users
 
     N_WORKSPACES = 3
