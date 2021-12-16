@@ -45,6 +45,4 @@ class Query:
 
     def resolve_workspaces(self, info):
         """Resolve user's workspaces."""
-        user = info.context.user
-        workspaces = user.workspace_set.all()
-        return workspaces
+        return models.Workspace.objects.get_for_user(info.context.user)

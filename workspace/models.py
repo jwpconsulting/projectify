@@ -12,6 +12,14 @@ from django_extensions.db.models import (
 )
 
 
+class WorkspaceManager(models.Manager):
+    """Workspace Manager."""
+
+    def get_for_user(self, user):
+        """Return workspaces for a user."""
+        return user.workspace_set.all()
+
+
 class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
     """Workspace."""
 
@@ -20,6 +28,7 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         through="WorkspaceUser",
         through_fields=("workspace", "user"),
     )
+    objects = WorkspaceManager()
 
 
 class WorkspaceUser(TimeStampedModel, models.Model):
