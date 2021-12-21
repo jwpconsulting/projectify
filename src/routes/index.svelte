@@ -1,4 +1,6 @@
 <script context="module" lang="ts">
+    import { _ } from "svelte-i18n";
+
     export const prerender = true;
 </script>
 
@@ -7,7 +9,7 @@
 </script>
 
 <svelte:head>
-    <title>Home</title>
+    <title>{$_("home")}</title>
 </svelte:head>
 
 <section>
