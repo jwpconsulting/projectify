@@ -94,3 +94,23 @@ class Task(
         """Meta."""
 
         ordering = ("workspace_board_section", "order")
+
+
+class SubTask(
+    OrderedModel,
+    TitleDescriptionModel,
+    TimeStampedModel,
+    models.Model,
+):
+    """SubTask, belongs to Task."""
+
+    task = models.ForeignKey(
+        Task,
+        on_delete=models.PROTECT,
+    )
+    order_with_respect_to = "task"
+
+    class Meta:
+        """Meta."""
+
+        ordering = ("task", "order")

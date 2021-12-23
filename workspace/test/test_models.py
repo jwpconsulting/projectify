@@ -54,3 +54,21 @@ class TestWorkspaceBoardSection:
     def test_factory(self, workspace_board_section, workspace_board):
         """Test workspace board section creation works."""
         assert workspace_board_section.workspace_board == workspace_board
+
+
+@pytest.mark.django_db
+class TestTask:
+    """Test Task."""
+
+    def test_factory(self, workspace_board_section, task):
+        """Test that workspace_board_section is assigned correctly."""
+        assert task.workspace_board_section == workspace_board_section
+
+
+@pytest.mark.django_db
+class TestSubTask:
+    """Test SubTask."""
+
+    def test_factory(self, task, sub_task):
+        """Test that sub task correctly belongs to task."""
+        assert sub_task.task == task

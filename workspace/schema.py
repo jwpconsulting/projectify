@@ -63,11 +63,27 @@ class WorkspaceBoardSection(graphene_django.DjangoObjectType):
 class Task(graphene_django.DjangoObjectType):
     """Task."""
 
+    sub_tasks = graphene.List("workspace.schema.SubTask")
+
+    def resolve_sub_tasks(self, info):
+        """Resolve sub tasks for this task."""
+        return self.subtask_set.all()
+
     class Meta:
         """Meta."""
 
         fields = ("created", "modified", "title", "description")
         model = models.Task
+
+
+class SubTask(graphene_django.DjangoObjectType):
+    """SubTask."""
+
+    class Meta:
+        """Meta."""
+
+        fields = ("created", "modified", "title", "description")
+        model = models.SubTask
 
 
 class Query:

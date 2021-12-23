@@ -30,3 +30,19 @@ def workspace_board_section(workspace_board):
     return factory.WorkspaceBoardSectionFactory(
         workspace_board=workspace_board,
     )
+
+
+@pytest.fixture
+def task(workspace_board_section):
+    """Return task."""
+    return factory.TaskFactory(
+        workspace_board_section=workspace_board_section,
+    )
+
+
+@pytest.fixture
+def sub_task(task):
+    """Return subtask."""
+    return factory.SubTaskFactory(
+        task=task,
+    )

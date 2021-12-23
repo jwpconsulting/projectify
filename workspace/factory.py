@@ -7,12 +7,8 @@ from user.factory import (
     UserFactory,
 )
 
-from .models import (
-    Task,
-    Workspace,
-    WorkspaceBoard,
-    WorkspaceBoardSection,
-    WorkspaceUser,
+from . import (
+    models,
 )
 
 
@@ -35,7 +31,7 @@ class WorkspaceFactory(django.DjangoModelFactory):
     class Meta:
         """Meta."""
 
-        model = Workspace
+        model = models.Workspace
 
 
 class WorkspaceUserFactory(django.DjangoModelFactory):
@@ -47,7 +43,7 @@ class WorkspaceUserFactory(django.DjangoModelFactory):
     class Meta:
         """Meta."""
 
-        model = WorkspaceUser
+        model = models.WorkspaceUser
 
 
 class WorkspaceBoardFactory(django.DjangoModelFactory):
@@ -60,7 +56,7 @@ class WorkspaceBoardFactory(django.DjangoModelFactory):
     class Meta:
         """Meta."""
 
-        model = WorkspaceBoard
+        model = models.WorkspaceBoard
 
 
 class WorkspaceBoardSectionFactory(django.DjangoModelFactory):
@@ -73,7 +69,7 @@ class WorkspaceBoardSectionFactory(django.DjangoModelFactory):
     class Meta:
         """Meta."""
 
-        model = WorkspaceBoardSection
+        model = models.WorkspaceBoardSection
 
 
 class TaskFactory(django.DjangoModelFactory):
@@ -86,4 +82,17 @@ class TaskFactory(django.DjangoModelFactory):
     class Meta:
         """Meta."""
 
-        model = Task
+        model = models.Task
+
+
+class SubTaskFactory(django.DjangoModelFactory):
+    """SubTask Factory."""
+
+    title = factory.Faker("word")
+    description = factory.Faker("paragraph")
+    task = factory.SubFactory(TaskFactory)
+
+    class Meta:
+        """Meta."""
+
+        model = models.SubTask
