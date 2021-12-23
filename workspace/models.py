@@ -6,6 +6,7 @@ from django.conf import (
 )
 from django.db import (
     models,
+    transaction,
 )
 
 from django_extensions.db.models import (
@@ -96,6 +97,34 @@ class Task(
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     order_with_respect_to = "workspace_board_section"
+
+    def move_to(self, workspace_board_section, position):
+        """
+        Move to specified workspace board section and to position n.
+
+        No save required.
+        """
+        neighbor_tasks = (
+            self.workspace_board_section.task_set.select_for_update()
+        )
+        other_tasks = workspace_board_section.task_set.select_for_update()
+        with transaction.atomic():
+            # Force both querysets to be evaluated to lock them for the time of
+            # this transaction
+            list(neighbor_tasks)
+            list(other_tasks)
+            self.workspace_board_section = workspace_board_section
+            self.save()
+            # XXX hack
+            qs = self.get_ordering_queryset()
+            if len(qs) == 1:
+                # If there is nothing to order, move along
+                self.order = 0
+                self.save()
+                return
+            bottom_plus_one = qs.get_next_order()
+            self.to(bottom_plus_one)
+            self.to(position)
 
     class Meta:
         """Meta."""
