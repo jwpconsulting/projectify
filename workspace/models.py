@@ -1,4 +1,6 @@
 """Workspace models."""
+import uuid
+
 from django.conf import (
     settings,
 )
@@ -31,6 +33,7 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         through="WorkspaceUser",
         through_fields=("workspace", "user"),
     )
+    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     objects = WorkspaceManager()
 
 
@@ -45,6 +48,7 @@ class WorkspaceUser(TimeStampedModel, models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
     )
+    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 
 
 class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
@@ -54,6 +58,7 @@ class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
         Workspace,
         on_delete=models.PROTECT,
     )
+    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 
 
 class WorkspaceBoardSection(
@@ -68,6 +73,7 @@ class WorkspaceBoardSection(
         WorkspaceBoard,
         on_delete=models.PROTECT,
     )
+    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     order_with_respect_to = "workspace_board"
 
     class Meta:
@@ -88,6 +94,7 @@ class Task(
         WorkspaceBoardSection,
         on_delete=models.PROTECT,
     )
+    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     order_with_respect_to = "workspace_board_section"
 
     class Meta:
@@ -108,6 +115,7 @@ class SubTask(
         Task,
         on_delete=models.PROTECT,
     )
+    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     order_with_respect_to = "task"
 
     class Meta:

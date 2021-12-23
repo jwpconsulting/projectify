@@ -24,7 +24,14 @@ class Workspace(graphene_django.DjangoObjectType):
     class Meta:
         """Meta."""
 
-        fields = ("users", "created", "modified", "title", "description")
+        fields = (
+            "users",
+            "created",
+            "modified",
+            "title",
+            "description",
+            "uuid",
+        )
         model = models.Workspace
 
 
@@ -40,7 +47,7 @@ class WorkspaceBoard(graphene_django.DjangoObjectType):
     class Meta:
         """Meta."""
 
-        fields = ("created", "modified", "title", "description")
+        fields = ("created", "modified", "title", "description", "uuid")
         model = models.WorkspaceBoard
 
 
@@ -56,7 +63,7 @@ class WorkspaceBoardSection(graphene_django.DjangoObjectType):
     class Meta:
         """Meta."""
 
-        fields = ("created", "modified", "title", "description")
+        fields = ("created", "modified", "title", "description", "uuid")
         model = models.WorkspaceBoardSection
 
 
@@ -72,7 +79,7 @@ class Task(graphene_django.DjangoObjectType):
     class Meta:
         """Meta."""
 
-        fields = ("created", "modified", "title", "description")
+        fields = ("created", "modified", "title", "description", "uuid")
         model = models.Task
 
 
@@ -82,7 +89,7 @@ class SubTask(graphene_django.DjangoObjectType):
     class Meta:
         """Meta."""
 
-        fields = ("created", "modified", "title", "description")
+        fields = ("created", "modified", "title", "description", "uuid")
         model = models.SubTask
 
 
