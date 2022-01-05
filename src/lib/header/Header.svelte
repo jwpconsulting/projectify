@@ -6,7 +6,7 @@
     $: items = [
         { label: "Home", to: "/" },
         { label: "Signin", to: "/signin", authRequired: false },
-        { label: "Signout", action: logout, authRequired: true }
+        { label: "Signout", action: logout, authRequired: true },
     ].filter((it) => {
         if (!userData && it.authRequired === true) {
             return false;

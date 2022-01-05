@@ -7,7 +7,7 @@
 
     let errorAnimation = spring(0, {
         stiffness: 0.3,
-        damping: 0.2
+        damping: 0.2,
     });
 
     let usernameValue;

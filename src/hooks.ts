@@ -21,7 +21,7 @@ export const handle: Handle = async ({ request, resolve }) => {
             request.locals.userid,
             {
                 path: "/",
-                httpOnly: true
+                httpOnly: true,
             }
         );
     }

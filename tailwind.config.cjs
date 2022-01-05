@@ -15,13 +15,13 @@ module.exports = {
             "blue-2": "#67CDFA",
             "blue-3": "#F0F5FF",
             "dark-blue-1": "#006491",
-            "yellow-1": "#FFF56B"
+            "yellow-1": "#FFF56B",
         },
         extend: {
             boxShadow: {
-                card: "0px 0px 4px 0px #1E202940"
-            }
-        }
+                card: "0px 0px 4px 0px #1E202940",
+            },
+        },
     },
 
     plugins: [require("@tailwindcss/typography"), require("daisyui")],
@@ -62,9 +62,9 @@ module.exports = {
                     info: "#2094f3" /* Info */,
                     success: "#009485" /* Success */,
                     warning: "#ff9900" /* Warning */,
-                    error: "#ff5724" /* Error */
-                }
-            }
-        ]
-    }
+                    error: "#ff5724" /* Error */,
+                },
+            },
+        ],
+    },
 };
