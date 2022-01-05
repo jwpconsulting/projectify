@@ -22,6 +22,14 @@ body {
 }
 
 @layer components {
+    .link {
+        text-decoration: none;
+    }
+
+    .btn {
+        @apply rounded-full px-8;
+    }
+
     .page {
         @apply flex bg-blue-3 p-1 grow flex-col;
     }
@@ -30,15 +38,15 @@ body {
         @apply justify-center items-center;
     }
 
-    .panel {
-        @apply m-2 bg-wite-1 flex flex-col p-8 max-w-xs rounded-lg shadow-panel;
-
-        .field {
-            @apply p-4;
-        }
+    .card {
+        @apply bg-base-100 rounded-lg;
     }
 
-    .btn-primary {
-        @apply bg-blue-1 h-12 text-wite-1 px-8 text-base uppercase rounded-full whitespace-nowrap;
+    .card-title {
+        @apply text-4xl;
+    }
+
+    .form-control {
+        @apply py-1
     }
 }
