@@ -1,4 +1,4 @@
-import { GraphQLClient } from 'graphql-request'
-import vars from '$lib/env'
+import { GraphQLClient } from "graphql-request";
+import vars from "$lib/env";
 
-export const client = new GraphQLClient(vars.GRAPHQL_ENDPOINT)
+export const client = new GraphQLClient(vars.GRAPHQL_ENDPOINT);
