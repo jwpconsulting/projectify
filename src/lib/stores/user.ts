@@ -18,17 +18,21 @@ user.subscribe(u => {
 })
 
 export const logout = async () => {
-  const res = await client.request(
-    gql`
-        mutation {
-            logout {
-                user {
-                    email
-                }
-            }
-        }
-    `
-  );
+  try {
+    await client.request(
+      gql`
+          mutation {
+              logout {
+                  user {
+                      email
+                  }
+              }
+          }
+      `
+    );
+  } catch (error) {
+    console.error(error);
+  }
 
   user.set(null)
 }
