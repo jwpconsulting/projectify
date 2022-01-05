@@ -38,7 +38,6 @@
             errorAnimation.set(0);
         } else {
             user.set(res.login.user);
-            //TODO: redirect
         }
     }
 
