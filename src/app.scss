@@ -1,0 +1,44 @@
+@import "@fontsource/fira-mono";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#svelte {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.bg-debug {
+    background-color: rgba(#f00, 0.2);
+}
+
+@layer components {
+    .page {
+        @apply flex bg-blue-3 p-1 grow flex-col;
+    }
+
+    .page-center {
+        @apply justify-center items-center;
+    }
+
+    .panel {
+        @apply m-2 bg-wite-1 flex flex-col p-8 max-w-xs rounded-lg shadow-panel;
+
+        .field {
+            @apply p-4;
+        }
+    }
+
+    .btn-primary {
+        @apply bg-blue-1 h-12 text-wite-1 px-8 text-base uppercase rounded-full whitespace-nowrap;
+    }
+}

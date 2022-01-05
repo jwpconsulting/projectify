@@ -1,11 +1,12 @@
 <script lang="ts">
+    import "../app.scss";
     import Header from "$lib/header/Header.svelte";
-    import "../App.css";
     import "../i18n.js";
 </script>
 
-<Header />
-
-<main>
-    <slot />
-</main>
+<Header>
+    <main class="flex">
+        <slot />
+    </main>
+</Header>
+<slot />
