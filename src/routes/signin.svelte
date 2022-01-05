@@ -1,14 +1,57 @@
 <script lang="ts">
     import { client } from "$lib/graphql-client";
+    import { gql } from "graphql-request";
+    import { spring } from "svelte/motion";
+    import delay from "delay";
+    import { user } from "$lib/stores/user";
+
+    let errorAnimation = spring(0, {
+        stiffness: 0.3,
+        damping: 0.2
+    });
 
     let usernameValue;
     let passwordValue;
 
-    function submit() {}
+    let error = false;
+
+    async function submit() {
+        const res = await client.request(
+            gql`
+                mutation {
+                    login(
+                        email: "${usernameValue}"
+                        password: "${passwordValue}"
+                    ) {
+                        user {
+                            email
+                        }
+                    }
+                }
+            `
+        );
+
+        if (res.login == null) {
+            error = true;
+            errorAnimation.set(-50);
+            await delay(100);
+            errorAnimation.set(0);
+        } else {
+            user.set(res.login.user);
+            //TODO: redirect
+        }
+    }
+
+    function unsetError() {
+        error = false;
+    }
 </script>
 
 <main class="page page-center">
-    <div class="card text-center shadow-card">
+    <div
+        class="card text-center shadow-card transform-gpu"
+        style={`transform:translateX(${$errorAnimation}px);`}
+    >
         <div class="card-body items-center">
             <div class="py-2">
                 <h1 class="card-title">Sign in</h1>
@@ -28,6 +71,9 @@
                     type="text"
                     placeholder="username"
                     class="input input-bordered"
+                    class:input-error={error}
+                    bind:value={usernameValue}
+                    on:input={unsetError}
                 />
             </div>
 
@@ -39,12 +85,19 @@
                     type="password"
                     placeholder="password"
                     class="input input-bordered"
+                    class:input-error={error}
+                    bind:value={passwordValue}
+                    on:input={unsetError}
                 />
             </div>
-            <div class="p-2 text-error">Wrong username or password.</div>
+            <div class="p-2  hi form-pop-msg text-error" class:hidden={!error}>
+                Wrong username or password.
+            </div>
 
             <div class="pt-7">
-                <button class="btn btn-primary">Sign in</button>
+                <button class="btn btn-primary" on:click={submit}>
+                    Sign in
+                </button>
 
                 <div class="p-2">
                     Forget password? Password reset
