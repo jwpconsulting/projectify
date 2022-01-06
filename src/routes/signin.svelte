@@ -1,9 +1,7 @@
 <script lang="ts">
-    import { client } from "$lib/graphql-client";
-    import { gql } from "graphql-request";
     import { spring } from "svelte/motion";
     import delay from "delay";
-    import { user, login } from "$lib/stores/user";
+    import { login } from "$lib/stores/user";
 
     let errorAnimation = spring(0, {
         stiffness: 0.3,
@@ -16,21 +14,6 @@
     let error = false;
 
     async function submit() {
-        const res = await client.request(
-            gql`
-                mutation {
-                    login(
-                        email: "${usernameValue}"
-                        password: "${passwordValue}"
-                    ) {
-                        user {
-                            email
-                        }
-                    }
-                }
-            `
-        );
-
         const userData = await login(usernameValue, passwordValue);
 
         if (!userData) {
