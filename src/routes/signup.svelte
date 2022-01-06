@@ -110,7 +110,6 @@
     {:else}
         <div
             class="card text-center shadow-card w-full max-w-xl transform-gpu"
-            style={`transform:translateX(${$errorAnimation}px);`}
         >
             <div class="card-body items-center">
                 <div class="py-2">
