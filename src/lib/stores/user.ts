@@ -6,6 +6,35 @@ import { gql } from "graphql-request";
 export const user = writable(null);
 export const singinRedirect = { to: null };
 
+export const singUp = async (username, password) => {
+    try {
+        const res = await client.request(
+            gql`
+                mutation {
+                    signup(
+                        email: "${username}"
+                        password: "${password}"
+                    ) {
+                        user {
+                            email
+                        }
+                    }
+                }
+            `
+        );
+        console.log(res);
+
+        if (res.signup !== null) {
+            const userData = res.signup.user;
+            return userData;
+        }
+    } catch (error) {
+        console.error(error);
+    }
+
+    return null;
+};
+
 export const login = async (username, password) => {
     try {
         const res = await client.request(

@@ -49,4 +49,8 @@ body {
     .form-control {
         @apply py-1;
     }
+
+    .label-text {
+        @apply font-bold text-xs;
+    }
 }
