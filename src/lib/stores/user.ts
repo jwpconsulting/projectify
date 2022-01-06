@@ -22,10 +22,37 @@ export const singUp = async (username, password) => {
                 }
             `
         );
-        console.log(res);
 
         if (res.signup !== null) {
             const userData = res.signup.user;
+            return userData;
+        }
+    } catch (error) {
+        console.error(error);
+    }
+
+    return null;
+};
+
+export const emailConfirmation = async (email, token) => {
+    try {
+        const res = await client.request(
+            gql`
+                mutation {
+                    emailConfirmation(
+                        email: "${email}"
+                        token: "${token}"
+                    ) {
+                        user {
+                            email
+                        }
+                    }
+                }
+            `
+        );
+
+        if (res.emailConfirmation !== null) {
+            const userData = res.emailConfirmation.user;
             return userData;
         }
     } catch (error) {
