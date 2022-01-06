@@ -18,6 +18,9 @@ module.exports = {
             "yellow-1": "#FFF56B",
         },
         extend: {
+            fontFamily: {
+                Rampart: ["Roboto", "sans-serif"],
+            },
             boxShadow: {
                 card: "0px 0px 4px 0px #1E202940",
             },
@@ -31,6 +34,7 @@ module.exports = {
         themes: [
             {
                 "app-light": {
+                    fontFamily: "Roboto, sans-serif",
                     primary: "#00A0EB" /* Primary color */,
                     "primary-focus": "#67CDFA" /* Primary color - focused */,
                     "primary-content":
