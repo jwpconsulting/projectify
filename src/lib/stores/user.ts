@@ -6,17 +6,6 @@ import { gql } from "graphql-request";
 export const user = writable(null);
 export const singinRedirect = { to: null };
 
-user.subscribe((u) => {
-    if (u) {
-        if (singinRedirect.to == null) {
-            goto("/");
-        } else {
-            goto(singinRedirect.to);
-            singinRedirect.to = null;
-        }
-    }
-});
-
 export const login = async (username, password) => {
     try {
         const res = await client.request(
@@ -34,19 +23,24 @@ export const login = async (username, password) => {
             `
         );
 
-        let userData = null;
-
         if (res.login !== null) {
-            userData = res.login.user;
+            const userData = res.login.user;
+            user.set(userData);
+
+            if (singinRedirect.to == null) {
+                goto("/");
+            } else {
+                goto(singinRedirect.to);
+                singinRedirect.to = null;
+            }
+
+            return userData;
         }
-
-        user.set(userData);
-
-        return userData;
     } catch (error) {
         console.error(error);
-        return null;
     }
+
+    return null;
 };
 
 export const logout = async () => {
