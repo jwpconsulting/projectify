@@ -17,6 +17,38 @@ user.subscribe((u) => {
     }
 });
 
+export const login = async (username, password) => {
+    try {
+        const res = await client.request(
+            gql`
+                mutation {
+                    login(
+                        email: "${username}"
+                        password: "${password}"
+                    ) {
+                        user {
+                            email
+                        }
+                    }
+                }
+            `
+        );
+
+        let userData = null;
+
+        if (res.login !== null) {
+            userData = res.login.user;
+        }
+
+        user.set(userData);
+
+        return userData;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+};
+
 export const logout = async () => {
     try {
         await client.request(

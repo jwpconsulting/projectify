@@ -3,7 +3,7 @@
     import { gql } from "graphql-request";
     import { spring } from "svelte/motion";
     import delay from "delay";
-    import { user } from "$lib/stores/user";
+    import { user, login } from "$lib/stores/user";
 
     let errorAnimation = spring(0, {
         stiffness: 0.3,
@@ -31,13 +31,13 @@
             `
         );
 
-        if (res.login == null) {
+        const userData = await login(usernameValue, passwordValue);
+
+        if (!userData) {
             error = true;
             errorAnimation.set(-50);
             await delay(100);
             errorAnimation.set(0);
-        } else {
-            user.set(res.login.user);
         }
     }
 
