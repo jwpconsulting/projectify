@@ -31,7 +31,7 @@
 
 <main class="page page-center">
     <div
-        class="card text-center shadow-card transform-gpu"
+        class="card text-center shadow-card w-full max-w-xl transform-gpu"
         style={`transform:translateX(${$errorAnimation}px);`}
     >
         <div class="card-body items-center">
@@ -39,16 +39,14 @@
                 <h1 class="card-title">Sign in</h1>
                 <div>
                     Let’s set up your account, Don't have one yet?<wbr />
-                    <a class="link link-primary" href="/singup">
+                    <a class="link link-primary" href="/signup">
                         Sign up here.
                     </a>
                 </div>
             </div>
 
             <div class="form-control w-full">
-                <label class="label">
-                    <span class="label-text">Username</span>
-                </label>
+                <label class="label label-text"> Username </label>
                 <input
                     type="text"
                     placeholder="username"
@@ -60,9 +58,7 @@
             </div>
 
             <div class="form-control w-full">
-                <label class="label">
-                    <span class="label-text">Password</span>
-                </label>
+                <label class="label label-text"> Password </label>
                 <input
                     type="password"
                     placeholder="password"
