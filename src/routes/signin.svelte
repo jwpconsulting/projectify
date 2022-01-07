@@ -79,7 +79,7 @@
 
                 <div class="p-2">
                     Forget password? Password reset
-                    <a class="link link-primary" href="/reset">here.</a>
+                    <a class="link link-primary" href="/user/reset">here.</a>
                 </div>
             </div>
         </div>
