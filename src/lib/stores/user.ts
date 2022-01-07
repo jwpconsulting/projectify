@@ -74,6 +74,7 @@ export const logout = async () => {
         await client.mutate({
             mutation: Mutation_Logout,
         });
+        client.resetStore();
     } catch (error) {
         console.error(error);
     }
