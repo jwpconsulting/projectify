@@ -7,8 +7,9 @@
     let userData = null;
     let error;
 
-    let email = $page.url.searchParams.get("email");
-    let token = $page.url.searchParams.get("token");
+    let email = $page.params["email"];
+    let token = $page.params["token"];
+
     onMount(async () => {
         userData = await emailConfirmation(email, token);
 
@@ -23,6 +24,9 @@
 </script>
 
 <main class="page page-center">
+    <div>{email}</div>
+    <div>{token}</div>
+
     {#if !userData && !error}
         Loading
     {:else if error}
