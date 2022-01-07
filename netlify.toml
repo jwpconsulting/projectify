@@ -5,3 +5,4 @@ publish = "build"
 [[redirects]]
   from = "/*"
   to = "/:splat"
+  status = 200
