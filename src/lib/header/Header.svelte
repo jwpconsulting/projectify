@@ -22,7 +22,7 @@
     <nav>
         <ul class="flex">
             {#each items as it}
-                <li class:active={$page.path === it.to}>
+                <li class:active={$page.url.pathname === it.to}>
                     <a
                         on:click={it.action}
                         class="p-2"

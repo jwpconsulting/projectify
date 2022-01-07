@@ -7,8 +7,8 @@
     let userData = null;
     let error;
 
-    let email = $page.query.get("email");
-    let token = $page.query.get("token");
+    let email = $page.url.searchParams.get("email");
+    let token = $page.url.searchParams.get("token");
     onMount(async () => {
         userData = await emailConfirmation(email, token);
 
