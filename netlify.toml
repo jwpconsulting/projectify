@@ -4,5 +4,5 @@ publish = "build"
 
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/redirect.html"
   status = 200
