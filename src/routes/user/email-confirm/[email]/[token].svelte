@@ -24,9 +24,6 @@
 </script>
 
 <main class="page page-center">
-    <div>{email}</div>
-    <div>{token}</div>
-
     {#if !userData && !error}
         Loading
     {:else if error}
