@@ -55,9 +55,12 @@
                 </div>
 
                 <div class="form-control w-full">
-                    <label class="label label-text">Username</label>
+                    <label for="username" class="label label-text"
+                        >Username</label
+                    >
                     <input
                         type="text"
+                        name="username"
                         placeholder="username"
                         class="input input-bordered"
                         class:input-error={error}
@@ -67,9 +70,12 @@
                 </div>
 
                 <div class="form-control w-full">
-                    <label class="label label-text">Password</label>
+                    <label for="password" class="label label-text"
+                        >Password</label
+                    >
                     <input
                         type="password"
+                        name="password"
                         placeholder="password"
                         class="input input-bordered"
                         class:input-error={error}
@@ -86,15 +92,15 @@
                 <div class="flex  py-4">
                     <input
                         type="checkbox"
+                        name="privacy"
                         class="checkbox shrink-0"
                         bind:checked={privacyChecked}
                     />
-
-                    <div class="text-xs ml-2 text-left">
+                    <label for="privacy" class="text-xs ml-2 text-left">
                         I accept the Projectify Terms of Service. For more
                         information about Projectify's use and protection of
                         your data, please see our Privacy Policy.
-                    </div>
+                    </label>
                 </div>
                 <div class="pt-2">
                     <button

@@ -46,9 +46,10 @@
             </div>
 
             <div class="form-control w-full">
-                <label class="label label-text"> Username </label>
+                <label for="username" class="label label-text">Username</label>
                 <input
                     type="text"
+                    name="username"
                     placeholder="username"
                     class="input input-bordered"
                     class:input-error={error}
@@ -58,9 +59,10 @@
             </div>
 
             <div class="form-control w-full">
-                <label class="label label-text"> Password </label>
+                <label for="password" class="label label-text">Password</label>
                 <input
                     type="password"
+                    name="password"
                     placeholder="password"
                     class="input input-bordered"
                     class:input-error={error}
