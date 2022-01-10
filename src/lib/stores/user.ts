@@ -1,13 +1,13 @@
 import { writable } from "svelte/store";
 import { goto } from "$app/navigation";
-import { client } from "$lib/graphql-client";
+import { client } from "$lib/grapql/client";
 
 import {
     Mutation_Singup,
     Mutation_EmailConfirmation,
     Mutation_Login,
     Mutation_Logout,
-} from "$lib/grapql/mutations";
+} from "$lib/grapql/queries";
 
 export const user = writable(null);
 export const singinRedirect = { to: null };
