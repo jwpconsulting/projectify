@@ -1,5 +1,4 @@
 import { writable } from "svelte/store";
-import { goto } from "$app/navigation";
 import { client } from "$lib/grapql/client";
 
 import {
@@ -7,6 +6,7 @@ import {
     Mutation_EmailConfirmation,
     Mutation_Login,
     Mutation_Logout,
+    Query_User,
 } from "$lib/grapql/queries";
 
 export const user = writable(null);
@@ -55,12 +55,6 @@ export const login = async (email, password) => {
         if (res.data.login !== null) {
             const userData = res.data.login.user;
             user.set(userData);
-            if (singinRedirect.to == null) {
-                goto("/");
-            } else {
-                goto(singinRedirect.to);
-                singinRedirect.to = null;
-            }
             return userData;
         }
     } catch (error) {
@@ -79,4 +73,21 @@ export const logout = async () => {
         console.error(error);
     }
     user.set(null);
+};
+
+export const fetchUser = async () => {
+    try {
+        const res = await client.query({
+            query: Query_User,
+        });
+
+        if (res.data.user !== null) {
+            const userData = res.data.user;
+            user.set(userData);
+            return userData;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+    return null;
 };

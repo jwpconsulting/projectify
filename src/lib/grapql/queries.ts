@@ -47,3 +47,13 @@ export const Mutation_Logout = gql`
         }
     }
 `;
+
+export const Query_WorkspacesSideNav = gql`
+    query WorkspacesSideNav {
+        workspaces {
+            uuid
+            title
+            description
+        }
+    }
+`;
