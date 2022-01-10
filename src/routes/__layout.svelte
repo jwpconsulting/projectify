@@ -1,6 +1,6 @@
 <script lang="ts">
     import "../app.scss";
-    import Header from "$lib/header/Header.svelte";
+    import Header from "$lib/components/Header.svelte";
     import "../i18n.js";
 </script>
 
