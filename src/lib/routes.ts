@@ -15,4 +15,4 @@ export default [
         authRequired: true, // When is true user is fetched
         forceNavigation: true, // Force visibility in the nav bar even if auth is required
     },
-] as routeItem[];
+];
