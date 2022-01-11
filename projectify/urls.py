@@ -25,7 +25,8 @@ from django.views.decorators import (
     csrf,
 )
 
-from graphene_django.views import (
+from .views import (
+    GraphQLBatchView,
     GraphQLView,
 )
 
@@ -36,6 +37,11 @@ urlpatterns = [
         "graphql",
         csrf.csrf_exempt(GraphQLView.as_view(graphiql=True)),
         name="graphql",
+    ),
+    path(
+        "graphql-batch",
+        csrf.csrf_exempt(GraphQLBatchView.as_view(graphiql=True)),
+        name="graphql-batch",
     ),
     path(
         r"premail/",
