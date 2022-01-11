@@ -15,6 +15,7 @@ from django_extensions.db.models import (
 )
 from ordered_model.models import (
     OrderedModel,
+    OrderedModelManager,
 )
 
 
@@ -52,6 +53,14 @@ class WorkspaceUser(TimeStampedModel, models.Model):
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 
 
+class WorkspaceBoardManager(models.Manager):
+    """WorkspaceBoard Manager."""
+
+    def get_for_user_and_uuid(self, user, uuid):
+        """Get a workspace baord for user and uuid."""
+        return self.filter(workspace__users=user).get(uuid=uuid)
+
+
 class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
     """Workspace board."""
 
@@ -60,6 +69,18 @@ class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
         on_delete=models.PROTECT,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+
+    objects = WorkspaceBoardManager()
+
+
+class WorkspaceBoardSectionManager(OrderedModelManager):
+    """Manager for WorkspaceBoard."""
+
+    def get_for_user_and_uuid(self, user, uuid):
+        """Return a workspace for user and uuid."""
+        return self.filter(workspace_board__workspace__users=user,).get(
+            uuid=uuid,
+        )
 
 
 class WorkspaceBoardSection(
@@ -75,6 +96,7 @@ class WorkspaceBoardSection(
         on_delete=models.PROTECT,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+    objects = WorkspaceBoardSectionManager()
     order_with_respect_to = "workspace_board"
 
     class Meta:
