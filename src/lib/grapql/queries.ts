@@ -57,3 +57,29 @@ export const Query_WorkspacesSideNav = gql`
         }
     }
 `;
+
+export const Query_TaskPage = gql`
+    query TaskPage {
+        workspaces {
+            uuid
+            title
+            boards {
+                uuid
+                title
+                sections {
+                    uuid
+                    title
+                    tasks {
+                        uuid
+                        title
+                        description
+                        subTasks {
+                            title
+                            description
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
