@@ -37,12 +37,55 @@ class TestWorkspaceUser:
 
 
 @pytest.mark.django_db
+class TestWorkspaceBoardManager:
+    """Test WorkspaceBoard manager."""
+
+    def test_get_for_user_and_uuid(
+        self,
+        workspace,
+        workspace_board,
+        workspace_user,
+    ):
+        """Test that the workspace board is retrieved correctly."""
+        factory.WorkspaceUserFactory(
+            workspace=workspace,
+        )
+        assert workspace_board.workspace.users.count() == 2
+        actual = models.WorkspaceBoard.objects.get_for_user_and_uuid(
+            workspace_user.user,
+            workspace_board.uuid,
+        )
+        assert actual == workspace_board
+
+
+@pytest.mark.django_db
 class TestWorkspaceBoard:
     """Test WorkspaceBoard."""
 
     def test_factory(self, workspace, workspace_board):
         """Test workspace board creation works."""
         assert workspace_board.workspace == workspace
+
+
+@pytest.mark.django_db
+class TestWorkspaceBoardSectionManager:
+    """Test WorkspaceBoardSection manager."""
+
+    def test_get_for_user_and_uuid(
+        self,
+        workspace,
+        workspace_board_section,
+        workspace_user,
+    ):
+        """Test getting for user and uuid."""
+        factory.WorkspaceUserFactory(
+            workspace=workspace,
+        )
+        actual = models.WorkspaceBoardSection.objects.get_for_user_and_uuid(
+            workspace_user.user,
+            workspace_board_section.uuid,
+        )
+        assert actual == workspace_board_section
 
 
 @pytest.mark.django_db
