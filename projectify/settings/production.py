@@ -31,3 +31,6 @@ CORS_ALLOWED_ORIGINS = (
 CORS_ALLOWED_ORIGINS_REGEXES = (
     r"^https://deploy-preview-\d+--projectifyapp.netlify.app$",
 )
+
+# GraphQL
+GRAPHIQL_ENABLE = False
