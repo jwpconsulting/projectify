@@ -12,3 +12,6 @@ CELERY_TASK_ALWAYS_EAGER = True
 
 # Email
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# GraphQL
+GRAPHIQL_ENABLE = False
