@@ -1,6 +1,6 @@
 <script lang="ts">
-    import WorkspacesSideNav from "$lib/components/tasks/workspaces-side-nav.svelte";
-    import BoardsSideNav from "$lib/components/tasks/boards-side-nav.svelte";
+    import WorkspacesSideNav from "$lib/components/dashboard/workspaces-side-nav.svelte";
+    import BoardsSideNav from "$lib/components/dashboard/boards-side-nav.svelte";
 
     import { user } from "$lib/stores/user";
 

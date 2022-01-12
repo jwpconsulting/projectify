@@ -18,10 +18,8 @@
 </nav>
 
 <style lang="scss">
-    nav {
-        > * {
-            @apply m-2;
-        }
+    nav > * {
+        @apply m-2;
     }
     button {
         @apply w-12 h-12;
