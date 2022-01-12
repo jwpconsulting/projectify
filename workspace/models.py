@@ -26,6 +26,10 @@ class WorkspaceManager(models.Manager):
         """Return workspaces for a user."""
         return user.workspace_set.all()
 
+    def get_for_user_and_uuid(self, user, uuid):
+        """Return workspace for user and uuid."""
+        return user.workspace_set.get(uuid=uuid)
+
 
 class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
     """Workspace."""
@@ -105,6 +109,16 @@ class WorkspaceBoardSection(
         ordering = ("workspace_board", "order")
 
 
+class TaskManager(OrderedModelManager):
+    """Manager for Task."""
+
+    def get_for_user_and_uuid(self, user, uuid):
+        """Return task from user workspace corresponding to uuid."""
+        return self.filter(
+            workspace_board_section__workspace_board__workspace__users=user,
+        ).get(uuid=uuid)
+
+
 class Task(
     OrderedModel,
     TitleDescriptionModel,
@@ -118,6 +132,9 @@ class Task(
         on_delete=models.PROTECT,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+
+    objects = TaskManager()
+
     order_with_respect_to = "workspace_board_section"
 
     def move_to(self, workspace_board_section, position):
