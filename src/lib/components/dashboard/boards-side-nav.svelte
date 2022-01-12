@@ -2,13 +2,26 @@
     export let boards = [];
 </script>
 
-<main class="bg-wite-1 flex flex-col w-24 items-center p-2">
+<ul class="menu">
     {#if boards}
         {#each boards as board}
-            <button class="btn btn-primary btn-ghost">{board.title}</button>
+            <li class="p-0">
+                <a class="h-9 text-xs font-bold capitalize px-8" href="/"
+                    ># {board.title}</a
+                >
+            </li>
         {/each}
+        <li class="text-blue-1">
+            <a class="h-9 text-xs font-bold capitalize" href="/"
+                >+ New Workspace Board</a
+            >
+        </li>
     {/if}
-</main>
+</ul>
 
-<style lang="scss">
+<style>
+    .menu li > :where(a),
+    .menu li > :where(span) {
+        @apply px-4 py-0;
+    }
 </style>

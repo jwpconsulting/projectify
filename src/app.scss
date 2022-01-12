@@ -53,4 +53,10 @@ body {
     .label-text {
         @apply font-bold text-xs;
     }
+
+    .btn-xs {
+        > * {
+            @apply w-4 h-4;
+        }
+    }
 }
