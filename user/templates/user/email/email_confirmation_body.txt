@@ -3,5 +3,5 @@
 You have recently signed up for Projectify. Please confirm your email address by
 visiting the following URL:
 {% endblocktranslate %}
-{{ FRONTEND_URL }}user/email-confirm/{{ object.email }}/{{ object.get_email_confirmation_token }}
+{{ FRONTEND_URL }}user/email-confirm/{{ object.email|urlencode:"" }}/{{ object.get_email_confirmation_token|urlencode:"" }}
 {% include "email/_greeting.txt" %}
