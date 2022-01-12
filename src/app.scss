@@ -54,6 +54,17 @@ body {
         @apply font-bold text-xs;
     }
 
+    .btn {
+        > * {
+            @apply w-5 h-5 mx-2;
+            &:first-child {
+                margin-left: 0;
+            }
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
     .btn-xs {
         > * {
             @apply w-4 h-4;
