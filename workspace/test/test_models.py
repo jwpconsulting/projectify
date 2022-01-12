@@ -12,10 +12,20 @@ class TestWorkspaceManager:
     """Test Workspace manager."""
 
     def test_get_for_user(self, workspace_user, user, other_user):
-        """."""
+        """Test getting workspaces for user."""
         workspace = workspace_user.workspace
         factory.WorkspaceFactory(add_users=[other_user])
         assert list(models.Workspace.objects.get_for_user(user)) == [workspace]
+
+    def test_get_for_user_and_uuid(self, workspace_user, workspace, user):
+        """Test getting workspace for user and uuid."""
+        assert (
+            models.Workspace.objects.get_for_user_and_uuid(
+                user,
+                workspace.uuid,
+            )
+            == workspace
+        )
 
 
 @pytest.mark.django_db
@@ -95,6 +105,22 @@ class TestWorkspaceBoardSection:
     def test_factory(self, workspace_board_section, workspace_board):
         """Test workspace board section creation works."""
         assert workspace_board_section.workspace_board == workspace_board
+
+
+@pytest.mark.django_db
+class TestTaskManager:
+    """Test TaskManager."""
+
+    def test_get_for_user_and_uuid(self, workspace, task, workspace_user):
+        """Test get_for_user_and_uuid."""
+        factory.WorkspaceUserFactory(
+            workspace=workspace,
+        )
+        actual = models.Task.objects.get_for_user_and_uuid(
+            workspace_user.user,
+            task.uuid,
+        )
+        assert actual == task
 
 
 @pytest.mark.django_db
