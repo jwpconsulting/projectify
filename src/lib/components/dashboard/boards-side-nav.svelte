@@ -2,6 +2,10 @@
     export let boards = [];
 
     export let selectedBoardUUID;
+
+    function onAddNewBoard() {
+        console.log("Add new Workspace Board");
+    }
 </script>
 
 <ul class="menu">
@@ -23,7 +27,8 @@
             <a
                 class="h-9 text-xs font-bold capitalize"
                 href="/"
-                on:click|preventDefault={() => {}}>+ New Workspace Board</a
+                on:click|preventDefault={onAddNewBoard}
+                >+ New Workspace Board</a
             >
         </li>
     {/if}
