@@ -2,16 +2,57 @@
     import WorkspacesSideNav from "$lib/components/dashboard/workspaces-side-nav.svelte";
     import BoardsSideNav from "$lib/components/dashboard/boards-side-nav.svelte";
 
-    import { user } from "$lib/stores/user";
-
     import { query } from "svelte-apollo";
     import { Query_TaskPage } from "$lib/grapql/queries";
 
     import IconSettings from "../icons/icon-settings.svelte";
-
     import BoardSection from "./board-section.svelte";
 
     const res = query(Query_TaskPage);
+
+    let selectedWorkspaceUUID = null;
+    let selectedBoardUUID = null;
+
+    $: {
+        if ($res.data) {
+            if (selectedWorkspaceUUID === null) {
+                selectedWorkspaceUUID = $res.data["workspaces"][0]["uuid"];
+            }
+            if (selectedBoardUUID === null) {
+                selectedBoardUUID =
+                    $res.data["workspaces"][0]["boards"][0]["uuid"];
+            }
+        }
+    }
+
+    function getSelectedWorkspaceIndex() {
+        if (selectedWorkspaceUUID) {
+            const inx = $res.data["workspaces"].findIndex(
+                (it) => it.uuid == selectedWorkspaceUUID
+            );
+            if (inx >= 0) {
+                return inx;
+            }
+        }
+        return 0;
+    }
+
+    function getSelectedBoardIndex() {
+        if (selectedBoardUUID) {
+            const pInx = getSelectedWorkspaceIndex();
+            const inx = $res.data["workspaces"][pInx]["boards"].findIndex(
+                (it) => it.uuid == selectedBoardUUID
+            );
+            if (inx >= 0) {
+                return inx;
+            } else {
+                selectedBoardUUID =
+                    $res.data["workspaces"][pInx]["boards"][0]["uuid"];
+                return 0;
+            }
+        }
+        return 0;
+    }
 </script>
 
 {#if $res.loading}
@@ -21,7 +62,10 @@
 {:else}
     <main class="page p-0 flex-row divide-x divide-base-300 max-h-screen">
         <!-- First side bar -->
-        <WorkspacesSideNav workspaces={$res.data["workspaces"]} />
+        <WorkspacesSideNav
+            bind:selectedWorkspaceUUID
+            workspaces={$res.data["workspaces"]}
+        />
 
         <!-- Secon side bar -->
         <nav class="flex flex-col bg-base-100 w-60">
@@ -36,7 +80,12 @@
             <!-- Boards nav -->
             <div class="grow">
                 <h2 class="p-4 text-base font-bold">Workspace Boards</h2>
-                <BoardsSideNav boards={$res.data["workspaces"][0]["boards"]} />
+                <BoardsSideNav
+                    bind:selectedBoardUUID
+                    boards={$res.data["workspaces"][
+                        getSelectedWorkspaceIndex()
+                    ]["boards"]}
+                />
             </div>
 
             <!-- User infos -->
@@ -92,7 +141,7 @@
 
             <!-- Sections -->
             <div class="flex flex-col grow p-2">
-                {#each $res.data["workspaces"][0]["boards"][0]["sections"] as section, index}
+                {#each $res.data["workspaces"][getSelectedWorkspaceIndex()]["boards"][getSelectedBoardIndex()]["sections"] as section, index}
                     <BoardSection {section} {index} />
                 {/each}
             </div>
