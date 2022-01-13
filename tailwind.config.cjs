@@ -4,28 +4,7 @@ module.exports = {
     content: ["./src/**/*.{html,js,svelte,ts}"],
 
     theme: {
-        colors: {
-            "wite-1": "#FFFFFF",
-            "border-1": "#A6B2B7",
-            "black-1": "#002332",
-            "black-2": "#326478",
-            "black-3": "#78A0B0",
-            "black-4": "#BED2DC",
-            "blue-1": "#00A0EB",
-            "blue-2": "#B5D7FF",
-            "blue-3": "#EBF5FF",
-            "dark-blue-1": "#006491",
-            "yellow-1": "#FFF56B",
-            "rainbow-1": "hsl(0, 80%, 60%)",
-            "rainbow-2": "hsl(36, 80%, 60%)",
-            "rainbow-3": "hsl(72, 80%, 60%)",
-            "rainbow-4": "hsl(108, 80%, 60%)",
-            "rainbow-5": "hsl(140, 80%, 60%)",
-            "rainbow-6": "hsl(172, 80%, 60%)",
-            "rainbow-7": "hsl(208, 80%, 60%)",
-            "rainbow-8": "hsl(240, 80%, 60%)",
-            "rainbow-9": "hsl(272, 80%, 60%)",
-        },
+        colors: {},
         extend: {
             fontFamily: {
                 Rampart: ["Roboto", "sans-serif"],
@@ -74,12 +53,12 @@ module.exports = {
             {
                 "app-light": {
                     "fontFamily": "Roboto, sans-serif",
-                    "primary": "#00A0EB" /* Primary color */,
-                    "primary-focus": "#67CDFA" /* Primary color - focused */,
+                    "primary": "#76B4F9" /* Primary color */,
+                    "primary-focus": "#B5D7FF" /* Primary color - focused */,
                     "primary-content":
-                        "#ffffff" /* Foreground content color to use on primary color */,
+                        "#EBF5FF" /* Foreground content color to use on primary color */,
 
-                    "secondary": "#f6d860" /* Secondary color */,
+                    "secondary": "#BED2DC" /* Secondary color */,
                     "secondary-focus":
                         "#f3cc30" /* Secondary color - focused */,
                     "secondary-content":

@@ -6,7 +6,7 @@
     }
 </script>
 
-<nav class="bg-wite-1 flex flex-col w-24 items-center p-2">
+<nav class="bg-neutral-content flex flex-col w-24 items-center p-2">
     {#if workspaces}
         {#each workspaces as workspace}
             <button class="btn btn-primary btn-outline"

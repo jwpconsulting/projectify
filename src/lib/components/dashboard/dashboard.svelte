@@ -19,7 +19,7 @@
 {:else if $res.error}
     <main class="page page-center">Error: {$res.error["message"]}</main>
 {:else}
-    <main class="page p-0 flex-row divide-x divide-border-1 max-h-screen">
+    <main class="page p-0 flex-row divide-x divide-base-300 max-h-screen">
         <!-- First side bar -->
         <WorkspacesSideNav workspaces={$res.data["workspaces"]} />
 
@@ -72,7 +72,7 @@
             <div class="flex flex-row items-center px-4 py-4">
                 <h1 class="font-bold text-3xl grow">Project ver1</h1>
                 <div
-                    class="bg-blue-2 flex items-center p-1 px-3 rounded-lg text-wite-1"
+                    class="bg-primary flex items-center p-1 px-3 rounded-lg text-primary-content"
                 >
                     <span class="text-xs p-1">Deadline</span>
                     <span class="text-base p-1 ">2021.12.31</span>
@@ -83,7 +83,7 @@
             <div class="flex px-3 flex-wrap">
                 {#each ["All", "Manager", "Design", "Engineer", "Marketing", "Other", "My task"] as tag}
                     <div
-                        class="whitespace-nowrap font-bold text-xs bg-base-100 px-3 py-1 m-1 rounded-full border border-border-1"
+                        class="whitespace-nowrap font-bold text-xs bg-base-100 px-3 py-1 m-1 rounded-full border border-base-300"
                     >
                         {tag}
                     </div>

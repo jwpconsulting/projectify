@@ -31,7 +31,7 @@ body {
     }
 
     .page {
-        @apply flex bg-blue-3 p-1 grow flex-col;
+        @apply flex bg-primary-content p-1 grow flex-col;
     }
 
     .page-center {
@@ -61,7 +61,7 @@ body {
 
         > * {
             &:first-child {
-                @apply mr-2;
+                @apply mr-1;
             }
             &:last-child {
                 @apply m-0;
@@ -70,7 +70,7 @@ body {
     }
     .btn-xs {
         > svg {
-            @apply w-4 h-4;
+            @apply w-5 h-5;
         }
     }
 }

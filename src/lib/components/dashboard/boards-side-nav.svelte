@@ -11,7 +11,7 @@
                 >
             </li>
         {/each}
-        <li class="text-blue-1">
+        <li class="text-primary">
             <a class="h-9 text-xs font-bold capitalize" href="/"
                 >+ New Workspace Board</a
             >

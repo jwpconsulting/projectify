@@ -42,6 +42,7 @@
             </div>
             <div class="grow font-bold uppercase">
                 {section.title}
+                {#if !open} ({section.tasks.length + 1}) {/if}
             </div>
             {#each [{ label: "Edit", icon: IconEdit, onClick: onEdit }, { label: "Delete", icon: IconTrash, onClick: onDelete }] as it}
                 <button
@@ -60,10 +61,10 @@
             >
                 {#each section.tasks as task, inx}
                     <div
-                        class="h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-border-1 overflow-y-hidden"
+                        class="h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden"
                     >
                         <div
-                            class="m-2 mr-3 flex overflow-hidden w-11 h-11 rounded-full shrink-0 border-2 border-blue-1 "
+                            class="m-2 mr-3 flex overflow-hidden w-11 h-11 rounded-full shrink-0 border-2 border-primary "
                         >
                             <img
                                 width="100%"
@@ -77,7 +78,7 @@
                         >
                             <div class="flex items-center">
                                 <div
-                                    class="text-xs bg-blue-2 px-2 py-1 rounded mr-2"
+                                    class="text-xs bg-secondary px-2 py-1 rounded mr-2 font-bold"
                                 >
                                     Design
                                 </div>
