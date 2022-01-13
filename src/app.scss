@@ -55,18 +55,21 @@ body {
     }
 
     .btn {
+        > svg {
+            @apply w-5 h-5;
+        }
+
         > * {
-            @apply w-5 h-5 mx-2;
             &:first-child {
-                margin-left: 0;
+                @apply mr-2;
             }
             &:last-child {
-                margin-right: 0;
+                @apply m-0;
             }
         }
     }
     .btn-xs {
-        > * {
+        > svg {
             @apply w-4 h-4;
         }
     }

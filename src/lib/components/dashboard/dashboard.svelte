@@ -80,10 +80,10 @@
             </div>
 
             <!-- Tags -->
-            <div class="flex px-3">
+            <div class="flex px-3 flex-wrap">
                 {#each ["All", "Manager", "Design", "Engineer", "Marketing", "Other", "My task"] as tag}
                     <div
-                        class="font-bold text-xs bg-base-100 px-3 py-1 m-1 rounded-full border border-border-1"
+                        class="whitespace-nowrap font-bold text-xs bg-base-100 px-3 py-1 m-1 rounded-full border border-border-1"
                     >
                         {tag}
                     </div>

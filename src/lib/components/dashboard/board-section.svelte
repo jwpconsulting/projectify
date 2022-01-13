@@ -15,6 +15,13 @@
     let contentHeght = 0;
     $: openHeight = open ? contentHeght : 0;
     $: openArrowDeg = open ? 90 : 0;
+
+    function onEdit() {
+        console.log("edit");
+    }
+    function onDelete() {
+        console.log("delete");
+    }
 </script>
 
 <div class="flex m-2 bg-base-100">
@@ -36,14 +43,14 @@
             <div class="grow font-bold uppercase">
                 {section.title}
             </div>
-            {#each [{ label: "Edit", icon: IconEdit }, { label: "Delete", icon: IconTrash }] as it}
+            {#each [{ label: "Edit", icon: IconEdit, onClick: onEdit }, { label: "Delete", icon: IconTrash, onClick: onDelete }] as it}
                 <button
-                    class="btn btn-ghost h-10 btn-xs px-3 flex justify-center items-center"
+                    class="btn btn-ghost btn-xs h-10 px-3 flex justify-center items-center"
+                    on:click|stopPropagation={it.onClick}
                 >
                     <svelte:component this={it.icon} />
-
-                    {it.label}</button
-                >
+                    <span>{it.label}</span>
+                </button>
             {/each}
         </header>
         <main style="--open-height:{openHeight}px">
