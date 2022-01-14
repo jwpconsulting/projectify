@@ -42,6 +42,13 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     objects = WorkspaceManager()
 
+    def add_workspace_board(self, title, description):
+        """Add workspace board."""
+        return self.workspaceboard_set.create(
+            title=title,
+            description=description,
+        )
+
 
 class WorkspaceUser(TimeStampedModel, models.Model):
     """Workspace to user mapping."""

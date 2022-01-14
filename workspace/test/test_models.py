@@ -36,6 +36,18 @@ class TestWorkspace:
         """Assert that the creates."""
         assert workspace
 
+    def test_add_workspace_board(self, workspace):
+        """Test adding a workspace board."""
+        assert workspace.workspaceboard_set.count() == 0
+        board = workspace.add_workspace_board("foo", "bar")
+        assert workspace.workspaceboard_set.count() == 1
+        board2 = workspace.add_workspace_board("foo", "bar")
+        assert workspace.workspaceboard_set.count() == 2
+        assert list(workspace.workspaceboard_set.all()) == [
+            board,
+            board2,
+        ]
+
 
 @pytest.mark.django_db
 class TestWorkspaceUser:
