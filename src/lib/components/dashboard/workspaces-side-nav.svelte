@@ -1,11 +1,25 @@
 <script lang="ts">
-    export let workspaces;
+    import { query } from "svelte-apollo";
+    import { Query_DashboardWorkspacesSideNav } from "$lib/grapql/queries";
     import IconPlus from "../icons/icon-plus.svelte";
+
+    export let selectedWorkspaceUUID;
+
+    let res = query(Query_DashboardWorkspacesSideNav);
+    let workspaces = [];
+
+    $: {
+        if ($res.data) {
+            workspaces = $res.data["workspaces"];
+            if (!selectedWorkspaceUUID && workspaces.length) {
+                selectedWorkspaceUUID = workspaces[0]["uuid"];
+            }
+        }
+    }
+
     function workspaceIconFrom(title) {
         return title.substr(0, 2);
     }
-
-    export let selectedWorkspaceUUID;
 </script>
 
 <nav class="bg-neutral-content flex flex-col w-24 items-center p-2">

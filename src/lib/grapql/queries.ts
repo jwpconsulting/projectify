@@ -48,18 +48,8 @@ export const Mutation_Logout = gql`
     }
 `;
 
-export const Query_WorkspacesSideNav = gql`
-    query WorkspacesSideNav {
-        workspaces {
-            uuid
-            title
-            description
-        }
-    }
-`;
-
-export const Query_TaskPage = gql`
-    query TaskPage {
+export const Query_Dashboard = gql`
+    query Query_Dashboard {
         workspaces {
             uuid
             title
@@ -78,6 +68,48 @@ export const Query_TaskPage = gql`
                             description
                         }
                     }
+                }
+            }
+        }
+    }
+`;
+
+export const Query_DashboardWorkspacesSideNav = gql`
+    query DashboardWorkspacesSideNav {
+        workspaces {
+            uuid
+            title
+            description
+        }
+    }
+`;
+
+export const Query_DashboardBoardsSideNav = gql`
+    query DashboardBoardsSideNav($uuid: ID!) {
+        workspace(uuid: $uuid) {
+            uuid
+            boards {
+                uuid
+                title
+            }
+        }
+    }
+`;
+
+export const Query_DashboardBoard = gql`
+    query Query_DashboardBoard($uuid: ID!) {
+        workspaceBoard(uuid: $uuid) {
+            uuid
+            title
+            description
+            sections {
+                uuid
+                title
+                description
+                tasks {
+                    uuid
+                    title
+                    description
                 }
             }
         }
