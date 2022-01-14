@@ -12,6 +12,7 @@ const batchLinkEnabled = false;
 const httpCommonOpts = {
     uri: vars.GRAPHQL_ENDPOINT,
     credentials: "include",
+    crossOriginIsolated,
 };
 
 const httpLink = batchLinkEnabled

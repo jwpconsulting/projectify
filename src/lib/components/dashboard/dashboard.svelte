@@ -3,6 +3,8 @@
     import BoardsSideNav from "$lib/components/dashboard/boards-side-nav.svelte";
     import Board from "./board.svelte";
     import IconSettings from "../icons/icon-settings.svelte";
+    import DrawerModal from "../drawerModal.svelte";
+    import TaskDetails from "./task-details.svelte";
 
     let selectedWorkspaceUUID = null;
     let selectedBoardUUID = null;
@@ -56,4 +58,8 @@
     </nav>
 
     <Board bind:boardUUID={selectedBoardUUID} />
+
+    <DrawerModal>
+        <TaskDetails />
+    </DrawerModal>
 </main>
