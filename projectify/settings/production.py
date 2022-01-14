@@ -25,7 +25,7 @@ CELERY_BROKER_URL = os.environ["REDIS_TLS_URL"]
 
 CORS_ALLOWED_ORIGINS = ("https://www.projectifyapp.com",)
 
-CORS_ALLOWED_ORIGINS_REGEXES = (
+CORS_ALLOWED_ORIGIN_REGEXES = (
     r"^https://deploy-preview-\d+--projectifyapp.netlify.app$",
 )
 
