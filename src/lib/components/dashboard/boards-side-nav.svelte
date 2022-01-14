@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Query_DashboardBoardsSideNav } from "$lib/grapql/queries";
+    import { Query_DashboardBoardsSideNav } from "$lib/graphql/queries";
     import { query } from "svelte-apollo";
 
     export let selectedWorkspaceUUID;

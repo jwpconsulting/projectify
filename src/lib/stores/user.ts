@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { client } from "$lib/grapql/client";
+import { client } from "$lib/graphql/client";
 
 import {
     Mutation_Singup,
@@ -7,7 +7,7 @@ import {
     Mutation_Login,
     Mutation_Logout,
     Query_User,
-} from "$lib/grapql/queries";
+} from "$lib/graphql/queries";
 
 export const user = writable(null);
 export const singinRedirect = { to: null };

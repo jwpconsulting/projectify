@@ -1,6 +1,6 @@
 <script lang="ts">
     import { query } from "svelte-apollo";
-    import { Query_DashboardWorkspacesSideNav } from "$lib/grapql/queries";
+    import { Query_DashboardWorkspacesSideNav } from "$lib/graphql/queries";
     import IconPlus from "../icons/icon-plus.svelte";
 
     export let selectedWorkspaceUUID;
