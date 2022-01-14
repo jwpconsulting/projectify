@@ -138,6 +138,38 @@ class Query:
         )
 
 
+class AddWorkspaceBoardSectionInput(graphene.InputObjectType):
+    """Add workspace board section input."""
+
+    workspace_board_uuid = graphene.ID(required=True)
+    title = graphene.ID(required=True)
+    description = graphene.ID(required=True)
+
+
+class AddWorkspaceBoardSectionMutation(graphene.Mutation):
+    """Add workspace board section mutation."""
+
+    class Arguments:
+        """Arguments."""
+
+        input = AddWorkspaceBoardSectionInput(required=True)
+
+    workspace_board_section = graphene.Field(WorkspaceBoardSection)
+
+    @classmethod
+    def mutate(cls, root, info, input):
+        """Mutate."""
+        workspace_board = models.WorkspaceBoard.objects.get_for_user_and_uuid(
+            info.context.user,
+            input.workspace_board_uuid,
+        )
+        workspace_board_section = workspace_board.add_workspace_board_section(
+            title=input.title,
+            description=input.description,
+        )
+        return cls(workspace_board_section)
+
+
 class AddTaskMutationInput(graphene.InputObjectType):
     """Add task mutation input."""
 
@@ -175,4 +207,5 @@ class AddTaskMutation(graphene.Mutation):
 class Mutation:
     """Mutation."""
 
+    add_workspace_board_section = AddWorkspaceBoardSectionMutation.Field()
     add_task = AddTaskMutation.Field()
