@@ -10,6 +10,7 @@ import {
 } from "$lib/graphql/operations";
 
 export const user = writable(null);
+export const userIsLoading = writable(false);
 export const singinRedirect = { to: null };
 
 export const singUp = async (email, password) => {
@@ -77,9 +78,11 @@ export const logout = async () => {
 
 export const fetchUser = async () => {
     try {
+        userIsLoading.set(true);
         const res = await client.query({
             query: Query_User,
         });
+        userIsLoading.set(false);
 
         if (res.data.user !== null) {
             const userData = res.data.user;
