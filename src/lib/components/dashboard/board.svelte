@@ -1,6 +1,6 @@
 <script lang="ts">
     import BoardSection from "./board-section.svelte";
-    import { Query_DashboardBoard } from "$lib/graphql/queries";
+    import { Query_DashboardBoard } from "$lib/graphql/operations";
     import { query } from "svelte-apollo";
 
     export let boardUUID = null;

@@ -7,7 +7,7 @@ import {
     Mutation_Login,
     Mutation_Logout,
     Query_User,
-} from "$lib/graphql/queries";
+} from "$lib/graphql/operations";
 
 export const user = writable(null);
 export const singinRedirect = { to: null };
