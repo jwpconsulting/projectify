@@ -103,6 +103,10 @@ class WorkspaceBoardSection(
     objects = WorkspaceBoardSectionManager()
     order_with_respect_to = "workspace_board"
 
+    def add_task(self, title, description):
+        """Add a task to this section."""
+        return self.task_set.create(title=title, description=description)
+
     class Meta:
         """Meta."""
 

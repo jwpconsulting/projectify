@@ -106,6 +106,18 @@ class TestWorkspaceBoardSection:
         """Test workspace board section creation works."""
         assert workspace_board_section.workspace_board == workspace_board
 
+    def test_add_task(self, workspace_board_section):
+        """Test adding tasks to a workspace board."""
+        assert workspace_board_section.task_set.count() == 0
+        task = workspace_board_section.add_task(title="foo", description="bar")
+        assert workspace_board_section.task_set.count() == 1
+        task2 = workspace_board_section.add_task(
+            title="foo2",
+            description="bar2",
+        )
+        assert workspace_board_section.task_set.count() == 2
+        assert list(workspace_board_section.task_set.all()) == [task, task2]
+
 
 @pytest.mark.django_db
 class TestTaskManager:
