@@ -76,6 +76,13 @@ class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
 
     objects = WorkspaceBoardManager()
 
+    def add_workspace_board_section(self, title, description):
+        """Add workspace board section to this workspace board."""
+        return self.workspaceboardsection_set.create(
+            title=title,
+            description=description,
+        )
+
 
 class WorkspaceBoardSectionManager(OrderedModelManager):
     """Manager for WorkspaceBoard."""

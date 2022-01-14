@@ -76,6 +76,24 @@ class TestWorkspaceBoard:
         """Test workspace board creation works."""
         assert workspace_board.workspace == workspace
 
+    def test_add_workspace_board_section(self, workspace_board):
+        """Test workspace board section creation."""
+        assert workspace_board.workspaceboardsection_set.count() == 0
+        section = workspace_board.add_workspace_board_section(
+            "hello",
+            "world",
+        )
+        assert workspace_board.workspaceboardsection_set.count() == 1
+        section2 = workspace_board.add_workspace_board_section(
+            "hello",
+            "world",
+        )
+        assert workspace_board.workspaceboardsection_set.count() == 2
+        assert list(workspace_board.workspaceboardsection_set.all()) == [
+            section,
+            section2,
+        ]
+
 
 @pytest.mark.django_db
 class TestWorkspaceBoardSectionManager:
