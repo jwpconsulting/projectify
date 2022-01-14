@@ -136,3 +136,43 @@ class Query:
             info.context.user,
             uuid,
         )
+
+
+class AddTaskMutationInput(graphene.InputObjectType):
+    """Add task mutation input."""
+
+    workspace_board_section_uuid = graphene.ID(required=True)
+    title = graphene.String(required=True)
+    description = graphene.String(required=True)
+
+
+class AddTaskMutation(graphene.Mutation):
+    """Add task mutation."""
+
+    class Arguments:
+        """Arguments."""
+
+        input = AddTaskMutationInput(required=True)
+
+    task = graphene.Field(Task)
+
+    @classmethod
+    def mutate(cls, root, info, input):
+        """Mutate."""
+        workspace_board_section = (
+            models.WorkspaceBoardSection.objects.get_for_user_and_uuid(
+                info.context.user,
+                input.workspace_board_section_uuid,
+            )
+        )
+        task = workspace_board_section.add_task(
+            input.title,
+            input.description,
+        )
+        return cls(task)
+
+
+class Mutation:
+    """Mutation."""
+
+    add_task = AddTaskMutation.Field()

@@ -13,7 +13,11 @@ class Query(
     """Query object."""
 
 
-class Mutation(user.schema.Mutation, graphene.ObjectType):
+class Mutation(
+    workspace.schema.Mutation,
+    user.schema.Mutation,
+    graphene.ObjectType,
+):
     """Mutation object."""
 
 
