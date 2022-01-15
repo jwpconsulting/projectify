@@ -43,6 +43,7 @@ CORS_ALLOW_CREDENTIALS = True
 # Application definition
 
 INSTALLED_APPS_DJANGO = (
+    "channels",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -73,6 +74,7 @@ INSTALLED_APPS = (
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -102,7 +104,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "projectify.wsgi.application"
+ASGI_APPLICATION = "projectify.asgi.application"
 
+# Channels
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -154,7 +163,10 @@ STATIC_ROOT = Path(BASE_DIR, "staticfiles")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-GRAPHENE = {"SCHEMA": "projectify.schema.schema"}
+GRAPHENE = {
+    "SCHEMA": "projectify.schema.schema",
+    "SUBSCRIPTION_PATH": "/graphql-ws",
+}
 
 AUTH_USER_MODEL = "user.User"
 

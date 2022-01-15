@@ -31,3 +31,15 @@ CORS_ALLOWED_ORIGIN_REGEXES = (
 
 # GraphQL
 GRAPHIQL_ENABLE = False
+GRAPHQL_WS_SEQUENTIAL = False
+
+# Channels
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.environ["REDIS_TLS_URL"]],
+            "symmetric_encryption_keys": [SECRET_KEY],
+        },
+    },
+}

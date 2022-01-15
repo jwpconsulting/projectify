@@ -31,6 +31,10 @@ django-celery-results = "*"
 pytest-celery = "*"
 django-anymail = {extras = ["mailgun"], version = "*"}
 django-ordered-model = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+channels = "*"
+django-channels-graphql-ws = "*"
+channels-redis = {extras = ["cryptography"], version = "*"}
 
 [requires]
 python_version = "3.9"
