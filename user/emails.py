@@ -13,3 +13,10 @@ class UserEmailConfirmationEmail(TemplateEmail):
 
     model = auth.get_user_model()
     template_prefix = "user/email/email_confirmation"
+
+
+class UserPasswordResetEmail(TemplateEmail):
+    """Email that shows a password reset token to the user."""
+
+    model = auth.get_user_model()
+    template_prefix = "user/email/password_reset"
