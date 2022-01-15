@@ -54,6 +54,7 @@ class UserManager(BaseUserManager):
 
 
 EMAIL_CONFIRMATION_TOKEN_SALT = "email-confirmation-token-salt"
+PASSWORD_RESET_TOKEN_SALT = "password-reset-token-salt"
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -83,4 +84,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     def check_email_confirmation_token(self, token):
         """Compare a hexdigest to the actual email confirmation token."""
         actual = self.get_email_confirmation_token()
+        return crypto.constant_time_compare(token, actual)
+
+    def get_password_reset_token(self):
+        """Return a secure password reset token."""
+        return crypto.salted_hmac(
+            key_salt=PASSWORD_RESET_TOKEN_SALT,
+            value=self.password,
+        ).hexdigest()
+
+    def check_password_reset_token(self, token):
+        """Compare a hexdigest to the actual password reset token."""
+        actual = self.get_password_reset_token()
         return crypto.constant_time_compare(token, actual)

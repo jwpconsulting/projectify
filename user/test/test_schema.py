@@ -130,3 +130,83 @@ mutation ($email: String!, $password: String!) {
             ).content
         )
         assert result == {"data": {"login": None}}
+
+
+@pytest.mark.django_db
+class TestRequestPasswordResetMutation:
+    """Test RequestPasswordResetMutation."""
+
+    query = """
+mutation RequestPasswordReset($email: String!) {
+  requestPasswordReset(input: {email: $email}) {
+    email
+  }
+}
+"""
+
+    def test_mutation(self, graphql_query, user, mailoutbox):
+        """Test that an email is sent."""
+        graphql_query(
+            self.query,
+            variables={
+                "email": user.email,
+            },
+        )
+        assert len(mailoutbox) == 1
+
+
+@pytest.mark.django_db
+class TestConfirmPasswordResetMutation:
+    """Test ConfirmPasswordResetMutation."""
+
+    query = """
+mutation ConfirmPasswordReset($token: String!, $email: String!) {
+  confirmPasswordReset(input: {
+    email: $email, token: $token, newPassword: "password"
+  }) {
+    user {
+      email
+    }
+  }
+}
+"""
+
+    def test_valid_token(self, graphql_query, user, json_loads):
+        """Test with a valid token."""
+        result = json_loads(
+            graphql_query(
+                self.query,
+                variables={
+                    "token": user.get_password_reset_token(),
+                    "email": user.email,
+                },
+            ).content
+        )
+        assert result == {
+            "data": {
+                "confirmPasswordReset": {
+                    "user": {
+                        "email": user.email,
+                    }
+                }
+            }
+        }
+
+    def test_invalid_token(self, graphql_query, user, json_loads):
+        """Test with an invalid token."""
+        result = json_loads(
+            graphql_query(
+                self.query,
+                variables={
+                    "token": "beefcace",
+                    "email": user.email,
+                },
+            ).content
+        )
+        assert result == {
+            "data": {
+                "confirmPasswordReset": {
+                    "user": None,
+                }
+            }
+        }

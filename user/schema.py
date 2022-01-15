@@ -11,6 +11,7 @@ import graphene_django
 
 from .emails import (
     UserEmailConfirmationEmail,
+    UserPasswordResetEmail,
 )
 
 
@@ -114,6 +115,62 @@ class LogoutMutation(graphene.Mutation):
         return cls(user=user)
 
 
+class RequestPasswordResetInput(graphene.InputObjectType):
+    """RequestPasswordReset input."""
+
+    email = graphene.String(required=True)
+
+
+class RequestPasswordResetMutation(graphene.Mutation):
+    """Request password reset mutation."""
+
+    class Arguments:
+        """Arguments."""
+
+        input = RequestPasswordResetInput(required=True)
+
+    email = graphene.String()
+
+    @classmethod
+    def mutate(cls, root, info, input):
+        """Mutate."""
+        User = auth.get_user_model()
+        user = User.objects.get_by_natural_key(input.email)
+        password_reset_email = UserPasswordResetEmail(user)
+        password_reset_email.send()
+        return cls(input.email)
+
+
+class ConfirmPasswordResetInput(graphene.InputObjectType):
+    """ConfirmPasswordReset mutation input."""
+
+    email = graphene.String(required=True)
+    token = graphene.String(required=True)
+    new_password = graphene.String(required=True)
+
+
+class ConfirmPasswordResetMutation(graphene.Mutation):
+    """Confirm password reset."""
+
+    class Arguments:
+        """Arguments."""
+
+        input = ConfirmPasswordResetInput(required=True)
+
+    user = graphene.Field(User)
+
+    @classmethod
+    def mutate(cls, root, info, input):
+        """Mutate."""
+        User = auth.get_user_model()
+        user = User.objects.get_by_natural_key(input.email)
+        if user.check_password_reset_token(input.token):
+            user.set_password(input.new_password)
+            user.save()
+            return cls(user)
+        return cls(None)
+
+
 class Query:
     """Query."""
 
@@ -132,3 +189,5 @@ class Mutation:
     email_confirmation = EmailConfirmationMutation.Field()
     login = LoginMutation.Field()
     logout = LogoutMutation.Field()
+    request_password_reset = RequestPasswordResetMutation.Field()
+    confirm_password_reset = ConfirmPasswordResetMutation.Field()
