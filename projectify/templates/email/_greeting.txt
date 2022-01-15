@@ -1,3 +1,4 @@
-{% load i18n %}{% blocktranslate %}Kind regards,
+{% load i18n %}
+{% blocktranslate %}Kind regards,
 
 Projectify Support{% endblocktranslate %}
