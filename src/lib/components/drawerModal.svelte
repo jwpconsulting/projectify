@@ -8,7 +8,7 @@
 >
     <div
         on:click={() => (open = !open)}
-        class="d-modal-background fixed w-full h-full bg-neutral open:bg-opacity-80"
+        class="d-modal-background fixed w-full h-full bg-[#002332] open:bg-opacity-30"
     />
     <div class="d-modal-content bg-base-100 grow open:opacity-40">
         <slot />
@@ -27,7 +27,7 @@
         transition: all 300ms ease-in-out;
     }
     .d-modal.open > .d-modal-background {
-        @apply opacity-80;
+        @apply opacity-30;
     }
 
     .d-modal > .d-modal-content {
