@@ -5,12 +5,14 @@
     import IconSettings from "../icons/icon-settings.svelte";
     import DrawerModal from "../drawerModal.svelte";
     import TaskDetails from "./task-details.svelte";
-
+    import { drawerModalOpen } from "$lib/stores/dashboard";
     let selectedWorkspaceUUID = null;
     let selectedBoardUUID = null;
 </script>
 
-<main class="page p-0 flex-row divide-x divide-base-300 max-h-screen">
+<main
+    class="page p-0 flex-row divide-x divide-base-300 max-h-screen select-none"
+>
     <!-- First side bar -->
     <WorkspacesSideNav bind:selectedWorkspaceUUID />
 
@@ -59,7 +61,7 @@
 
     <Board bind:boardUUID={selectedBoardUUID} />
 
-    <DrawerModal>
+    <DrawerModal bind:open={$drawerModalOpen}>
         <TaskDetails />
     </DrawerModal>
 </main>

@@ -1,5 +1,5 @@
 <script lang="ts">
-    export let open = true;
+    export let open = false;
 </script>
 
 <div
@@ -16,10 +16,15 @@
 </div>
 
 <style lang="scss">
+    .d-modal {
+        @apply pointer-events-none;
+    }
+    .d-modal.open {
+        @apply pointer-events-auto;
+    }
     .d-modal > .d-modal-background {
         @apply opacity-0;
         transition: all 300ms ease-in-out;
-        backdrop-filter: blur(10px);
     }
     .d-modal.open > .d-modal-background {
         @apply opacity-80;
