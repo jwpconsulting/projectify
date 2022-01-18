@@ -97,7 +97,7 @@ export const Query_DashboardBoardsSideNav = gql`
 `;
 
 export const Query_DashboardBoard = gql`
-    query Query_DashboardBoard($uuid: ID!) {
+    query DashboardBoard($uuid: ID!) {
         workspaceBoard(uuid: $uuid) {
             uuid
             title
@@ -111,6 +111,21 @@ export const Query_DashboardBoard = gql`
                     title
                     description
                 }
+            }
+        }
+    }
+`;
+
+export const Query_DashboardTaskDetais = gql`
+    query DashboardTaskDetais($uuid: ID!) {
+        task(uuid: $uuid) {
+            uuid
+            title
+            description
+            subTasks {
+                uuid
+                title
+                description
             }
         }
     }
