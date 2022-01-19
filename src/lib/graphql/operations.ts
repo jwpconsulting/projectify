@@ -130,3 +130,13 @@ export const Query_DashboardTaskDetais = gql`
         }
     }
 `;
+
+export const Mutation_AddTask = gql`
+    mutation AddTask($input: AddTaskMutationInput!) {
+        addTask(input: $input) {
+            task {
+                created
+            }
+        }
+    }
+`;

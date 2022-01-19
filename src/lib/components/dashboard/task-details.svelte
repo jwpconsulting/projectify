@@ -1,10 +1,18 @@
 <script>
-    import { currenTaskDetailsUUID } from "$lib/stores/dashboard";
+    import {
+        currenTaskDetailsUUID,
+        newTaskSectionUUID,
+        closeTaskDetails,
+    } from "$lib/stores/dashboard";
     import IconPlus from "../icons/icon-plus.svelte";
 
-    import { Query_DashboardTaskDetais } from "$lib/graphql/operations";
+    import {
+        Query_DashboardTaskDetais,
+        Mutation_AddTask,
+    } from "$lib/graphql/operations";
     import { query } from "svelte-apollo";
     import IconTrash from "../icons/icon-trash.svelte";
+    import { client } from "$lib/graphql/client";
 
     let res = null;
     let task = null;
@@ -15,6 +23,16 @@
 
     let itsNew = $currenTaskDetailsUUID == null;
 
+    function reset() {
+        res = null;
+        task = {
+            title: "",
+            description: "",
+        };
+        percent = 0;
+        subTasks = [];
+    }
+
     $: {
         if ($currenTaskDetailsUUID) {
             res = query(Query_DashboardTaskDetais, {
@@ -22,13 +40,7 @@
             });
             firstLoad = true;
         } else {
-            res = null;
-            task = {
-                title: "",
-                description: "",
-            };
-            percent = 0;
-            subTasks = [];
+            reset();
         }
     }
 
@@ -74,9 +86,24 @@
         subTasks = subTasks;
     }
 
-    function save() {
-        console.log(task);
-        console.log({ itsNew });
+    async function save() {
+        if (itsNew) {
+            try {
+                let mRes = await client.mutate({
+                    mutation: Mutation_AddTask,
+                    variables: {
+                        input: {
+                            workspaceBoardSectionUuid: $newTaskSectionUUID,
+                            ...task,
+                        },
+                    },
+                });
+                reset();
+                closeTaskDetails();
+            } catch (error) {
+                console.error(error);
+            }
+        }
     }
 </script>
 

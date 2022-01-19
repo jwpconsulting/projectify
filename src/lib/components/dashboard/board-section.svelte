@@ -3,7 +3,7 @@
     import IconTrash from "../icons/icon-trash.svelte";
     import IconChevronRight from "../icons/icon-chevron-right.svelte";
     import IconPlus from "../icons/icon-plus.svelte";
-    import { createNewTask, viewTaskDetails } from "$lib/stores/dashboard";
+    import { openNewTask, openTaskDetails } from "$lib/stores/dashboard";
 
     export let section;
     export let index = 0;
@@ -64,7 +64,7 @@
                 {#each section.tasks as task, inx}
                     <div
                         class="h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer hover:ring"
-                        on:click={() => viewTaskDetails(task.uuid)}
+                        on:click={() => openTaskDetails(task.uuid)}
                     >
                         <div
                             class="m-2 mr-3 flex overflow-hidden w-11 h-11 rounded-full shrink-0 border-2 border-primary "
@@ -97,7 +97,7 @@
                 {/each}
                 <div
                     class="h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer hover:ring"
-                    on:click={() => createNewTask()}
+                    on:click={() => openNewTask(section.uuid)}
                 >
                     <div
                         class="m-2 mr-3 flex justify-center items-center overflow-hidden w-11 h-11 rounded-full shrink-0 border-2 border-primary text-primary border-dashed"
