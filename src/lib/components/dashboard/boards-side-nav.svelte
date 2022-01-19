@@ -1,6 +1,9 @@
 <script lang="ts">
     import { Query_DashboardBoardsSideNav } from "$lib/graphql/operations";
     import { query } from "svelte-apollo";
+    import AuthGuard from "../authGuard.svelte";
+
+    import { getModal } from "$lib/components/dialogModal.svelte";
 
     export let selectedWorkspaceUUID;
     export let selectedBoardUUID;
@@ -29,6 +32,7 @@
 
     function onAddNewBoard() {
         console.log("Add new Workspace Board");
+        getModal("newBoardModal").open();
     }
 </script>
 

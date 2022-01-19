@@ -6,8 +6,12 @@
     import DrawerModal from "../drawerModal.svelte";
     import TaskDetails from "./task-details.svelte";
     import { drawerModalOpen } from "$lib/stores/dashboard";
+    import DialogModal from "../dialogModal.svelte";
+    import NewBoardModal from "./newBoardModal.svelte";
     let selectedWorkspaceUUID = null;
     let selectedBoardUUID = null;
+
+    let modal;
 </script>
 
 <main
@@ -64,4 +68,8 @@
     <DrawerModal bind:open={$drawerModalOpen}>
         <TaskDetails />
     </DrawerModal>
+
+    <DialogModal id="newBoardModal">
+        <NewBoardModal />
+    </DialogModal>
 </main>
