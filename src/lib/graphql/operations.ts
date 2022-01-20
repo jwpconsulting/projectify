@@ -135,6 +135,7 @@ export const Mutation_AddTask = gql`
     mutation AddTask($input: AddTaskMutationInput!) {
         addTask(input: $input) {
             task {
+                uuid
                 created
             }
         }
@@ -145,6 +146,7 @@ export const Mutation_AddWorkspaceBoardSection = gql`
     mutation AddWorkspaceBoardSection($input: AddWorkspaceBoardSectionInput!) {
         addWorkspaceBoardSection(input: $input) {
             workspaceBoardSection {
+                uuid
                 created
             }
         }
@@ -155,6 +157,7 @@ export const Mutation_AddWorkspaceBoard = gql`
     mutation AddWorkspaceBoard($input: AddWorkspaceBoardInput!) {
         addWorkspaceBoard(input: $input) {
             workspaceBoard {
+                uuid
                 created
             }
         }

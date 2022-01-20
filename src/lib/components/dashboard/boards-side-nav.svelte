@@ -49,6 +49,8 @@
                     },
                 });
                 res.refetch({ uuid: selectedWorkspaceUUID });
+                selectedBoardUUID =
+                    mRes.data.addWorkspaceBoard.workspaceBoard.uuid;
             } catch (error) {
                 console.error(error);
             }
