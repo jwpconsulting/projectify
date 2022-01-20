@@ -5,7 +5,7 @@
 
 {#if $user}
     <slot />
-{:else if userIsLoading}
+{:else if $userIsLoading}
     <main class="page page-center">Loading...</main>
 {:else}
     <main class="page page-center">

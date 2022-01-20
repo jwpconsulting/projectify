@@ -77,12 +77,11 @@ export const logout = async () => {
 };
 
 export const fetchUser = async () => {
+    userIsLoading.set(true);
     try {
-        userIsLoading.set(true);
         const res = await client.query({
             query: Query_User,
         });
-        userIsLoading.set(false);
 
         if (res.data.user !== null) {
             const userData = res.data.user;
@@ -92,5 +91,6 @@ export const fetchUser = async () => {
     } catch (error) {
         console.log(error);
     }
+    userIsLoading.set(false);
     return null;
 };
