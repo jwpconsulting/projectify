@@ -10,18 +10,14 @@
     import NewBoardModal from "./newBoardModal.svelte";
     let selectedWorkspaceUUID = null;
     let selectedBoardUUID = null;
-
-    let modal;
 </script>
 
-<main
-    class="page p-0 flex-row divide-x divide-base-300 max-h-screen select-none"
->
+<main class="page p-0 flex-row divide-x divide-base-300 select-none">
     <!-- First side bar -->
     <WorkspacesSideNav bind:selectedWorkspaceUUID />
 
     <!-- Secon side bar -->
-    <nav class="flex flex-col bg-base-100 w-60">
+    <nav class="flex flex-col bg-base-100 w-60 h-screen sticky top-0">
         <!-- Tite and settings -->
         <div class="flex p-4">
             <h1 class="grow font-bold text-xl">Projectify</h1>
