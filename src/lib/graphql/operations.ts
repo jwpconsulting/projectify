@@ -140,3 +140,23 @@ export const Mutation_AddTask = gql`
         }
     }
 `;
+
+export const Mutation_AddWorkspaceBoardSection = gql`
+    mutation AddWorkspaceBoardSection($input: AddWorkspaceBoardSectionInput!) {
+        addWorkspaceBoardSection(input: $input) {
+            workspaceBoardSection {
+                created
+            }
+        }
+    }
+`;
+
+export const Mutation_AddWorkspaceBoard = gql`
+    mutation AddWorkspaceBoard($input: AddWorkspaceBoardInput!) {
+        addWorkspaceBoard(input: $input) {
+            workspaceBoard {
+                created
+            }
+        }
+    }
+`;
