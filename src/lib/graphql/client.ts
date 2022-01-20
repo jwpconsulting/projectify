@@ -10,17 +10,20 @@ import vars from "$lib/env";
 const batchLinkEnabled = true;
 
 const httpCommonOpts = {
-    uri: vars.GRAPHQL_ENDPOINT,
     credentials: "include",
 };
 
 const httpLink = batchLinkEnabled
     ? new BatchHttpLink({
           ...httpCommonOpts,
+          uri: vars.GRAPHQL_ENDPOINT_BATCH,
           batchMax: 10, // No more than 5 operations per batch
           batchInterval: 20, // Wait no more than 20ms after first batched operation
       })
-    : new HttpLink(httpCommonOpts);
+    : new HttpLink({
+          ...httpCommonOpts,
+          uri: vars.GRAPHQL_ENDPOINT,
+      });
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors)
