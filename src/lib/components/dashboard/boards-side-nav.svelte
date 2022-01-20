@@ -35,7 +35,6 @@
 
     async function onAddNewBoard() {
         let modalRes = await getModal("newBoardModal").open();
-        console.log(modalRes);
         if (modalRes) {
             try {
                 let mRes = await client.mutate({

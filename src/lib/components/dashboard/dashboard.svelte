@@ -8,6 +8,7 @@
     import { drawerModalOpen } from "$lib/stores/dashboard";
     import DialogModal from "../dialogModal.svelte";
     import NewBoardModal from "./newBoardModal.svelte";
+    import NewBoardSectionModal from "./newBoardSectionModal.svelte";
     let selectedWorkspaceUUID = null;
     let selectedBoardUUID = null;
 </script>
@@ -69,5 +70,9 @@
 
     <DialogModal id="newBoardModal">
         <NewBoardModal />
+    </DialogModal>
+
+    <DialogModal id="newBoardSectionModal">
+        <NewBoardSectionModal />
     </DialogModal>
 </main>

@@ -8,7 +8,7 @@
     export let section;
     export let index = 0;
 
-    let open = true;
+    let open = false;
 
     function toggleOpen() {
         open = !open;
@@ -44,7 +44,7 @@
             </div>
             <div class="grow font-bold uppercase">
                 {section.title}
-                {#if !open} ({section.tasks.length + 1}) {/if}
+                {#if !open} ({section.tasks.length}) {/if}
             </div>
             {#each [{ label: "Edit", icon: IconEdit, onClick: onEdit }, { label: "Delete", icon: IconTrash, onClick: onDelete }] as it}
                 <button

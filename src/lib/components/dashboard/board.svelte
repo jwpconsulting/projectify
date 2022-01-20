@@ -1,7 +1,13 @@
 <script lang="ts">
     import BoardSection from "./board-section.svelte";
-    import { Query_DashboardBoard } from "$lib/graphql/operations";
+    import {
+        Mutation_AddWorkspaceBoardSection,
+        Query_DashboardBoard,
+    } from "$lib/graphql/operations";
     import { query } from "svelte-apollo";
+    import IconPlus from "../icons/icon-plus.svelte";
+    import { getModal } from "../dialogModal.svelte";
+    import { client } from "$lib/graphql/client";
 
     export let boardUUID = null;
 
@@ -21,6 +27,27 @@
         if (res && $res.data) {
             board = $res.data["workspaceBoard"];
             sections = board["sections"];
+        }
+    }
+
+    async function onAddNewSection() {
+        let modalRes = await getModal("newBoardSectionModal").open();
+        if (modalRes) {
+            try {
+                let mRes = await client.mutate({
+                    mutation: Mutation_AddWorkspaceBoardSection,
+                    variables: {
+                        input: {
+                            workspaceBoardUuid: boardUUID,
+                            title: modalRes.title,
+                            description: "",
+                        },
+                    },
+                });
+                res.refetch({ uuid: boardUUID });
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
 </script>
@@ -54,6 +81,13 @@
             {#each sections as section, index}
                 <BoardSection {section} {index} />
             {/each}
+            <div
+                class="bg-base-100 text-primary m-2 p-5 flex space-x-4 font-bold children-first:bg-debug hover:ring hover:cursor-pointer"
+                on:click={() => onAddNewSection()}
+            >
+                <IconPlus />
+                <div>New Section</div>
+            </div>
         </div>
     </div>
 {/if}
