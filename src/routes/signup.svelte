@@ -39,80 +39,82 @@
 
 <main class="page page-center">
     {#if !userData}
-        <div
-            class="card text-center shadow-card w-full max-w-xl transform-gpu"
-            style={`transform:translateX(${$errorAnimation}px);`}
-        >
-            <div class="card-body items-center">
-                <div class="py-2">
-                    <h1 class="card-title">Sign up</h1>
-                    <div>
-                        Let’s set up your account, Already have one?<wbr />
-                        <a class="link link-primary" href="/signin">
-                            Sign in here.
-                        </a>
+        <form on:submit|preventDefault={() => submit()}>
+            <div
+                class="card text-center shadow-card w-full max-w-xl transform-gpu"
+                style={`transform:translateX(${$errorAnimation}px);`}
+            >
+                <div class="card-body items-center">
+                    <div class="py-2">
+                        <h1 class="card-title">Sign up</h1>
+                        <div>
+                            Let’s set up your account, Already have one?<wbr />
+                            <a class="link link-primary" href="/signin">
+                                Sign in here.
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="form-control w-full">
+                        <label for="username" class="label label-text"
+                            >Username</label
+                        >
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder="username"
+                            class="input input-bordered"
+                            class:input-error={error}
+                            bind:value={usernameValue}
+                            on:input={unsetError}
+                        />
+                    </div>
+
+                    <div class="form-control w-full">
+                        <label for="password" class="label label-text"
+                            >Password</label
+                        >
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="password"
+                            class="input input-bordered"
+                            class:input-error={error}
+                            bind:value={passwordValue}
+                            on:input={unsetError}
+                        />
+                    </div>
+                    <div
+                        class="p-2  hi form-pop-msg text-error"
+                        class:hidden={!error}
+                    >
+                        User already exist.
+                    </div>
+                    <div class="flex  py-4">
+                        <input
+                            type="checkbox"
+                            name="privacy"
+                            class="checkbox shrink-0"
+                            bind:checked={privacyChecked}
+                        />
+                        <label for="privacy" class="text-xs ml-2 text-left">
+                            I accept the Projectify Terms of Service. For more
+                            information about Projectify's use and protection
+                            of your data, please see our Privacy Policy.
+                        </label>
+                    </div>
+                    <div class="pt-2">
+                        <button
+                            class="btn btn-primary rounded-full"
+                            type="submit"
+                            disabled={!privacyChecked}
+                        >
+                            Sign up
+                        </button>
                     </div>
                 </div>
-
-                <div class="form-control w-full">
-                    <label for="username" class="label label-text"
-                        >Username</label
-                    >
-                    <input
-                        type="text"
-                        name="username"
-                        placeholder="username"
-                        class="input input-bordered"
-                        class:input-error={error}
-                        bind:value={usernameValue}
-                        on:input={unsetError}
-                    />
-                </div>
-
-                <div class="form-control w-full">
-                    <label for="password" class="label label-text"
-                        >Password</label
-                    >
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="password"
-                        class="input input-bordered"
-                        class:input-error={error}
-                        bind:value={passwordValue}
-                        on:input={unsetError}
-                    />
-                </div>
-                <div
-                    class="p-2  hi form-pop-msg text-error"
-                    class:hidden={!error}
-                >
-                    User already exist.
-                </div>
-                <div class="flex  py-4">
-                    <input
-                        type="checkbox"
-                        name="privacy"
-                        class="checkbox shrink-0"
-                        bind:checked={privacyChecked}
-                    />
-                    <label for="privacy" class="text-xs ml-2 text-left">
-                        I accept the Projectify Terms of Service. For more
-                        information about Projectify's use and protection of
-                        your data, please see our Privacy Policy.
-                    </label>
-                </div>
-                <div class="pt-2">
-                    <button
-                        class="btn btn-primary"
-                        on:click={submit}
-                        disabled={!privacyChecked}
-                    >
-                        Sign up
-                    </button>
-                </div>
             </div>
-        </div>
+        </form>
     {:else}
         <div
             class="card text-center shadow-card w-full max-w-xl transform-gpu"
