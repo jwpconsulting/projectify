@@ -29,7 +29,11 @@
         <ul class="flex">
             {#each items as it}
                 <li class:active={$page.url.pathname === it.to}>
-                    <a on:click={it.action} class="p-2" href={it.to}>
+                    <a
+                        on:click={it.action}
+                        class="p-2 cursor-pointer"
+                        href={it.to}
+                    >
                         {it.label}
                     </a>
                 </li>
