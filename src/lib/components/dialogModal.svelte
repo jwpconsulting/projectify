@@ -8,12 +8,11 @@
 </script>
 
 <script lang="ts">
-    import { onDestroy } from "svelte";
+    import { onDestroy, setContext } from "svelte";
 
     let topDiv;
     let visible = false;
     let prevOnTop;
-    let closeCallback;
 
     export let id = "";
 
@@ -21,29 +20,37 @@
         if (ev.key == "Escape" && onTop == topDiv) close();
     }
 
-    function open(callback) {
-        closeCallback = callback;
+    let resolveFn;
 
+    function open() {
         if (visible) return;
         visible = true;
 
         prevOnTop = onTop;
         onTop = topDiv;
         window.addEventListener("keydown", keyPress);
-
         document.body.style.overflow = "hidden";
+
+        return new Promise((res) => {
+            resolveFn = res;
+        });
     }
 
     function close(retVal?) {
         if (!visible) return;
         window.removeEventListener("keydown", keyPress);
         onTop = prevOnTop;
+
         if (onTop == null) document.body.style.overflow = "";
+
         visible = false;
-        if (closeCallback) closeCallback(retVal);
+        if (resolveFn) {
+            resolveFn(retVal);
+        }
     }
 
     modals[id] = { open, close };
+    setContext("modal", modals[id]);
 
     onDestroy(() => {
         delete modals[id];
@@ -60,8 +67,10 @@
         on:click={() => close(null)}
         class="d-modal-background fixed w-full h-full bg-[#002332] open:bg-opacity-30"
     />
-    <div class="d-modal-content bg-base-100 open:opacity-40">
-        <slot />
+    <div class="d-modal-content bg-base-100 open:opacity-40 card shadow-card">
+        {#if visible}
+            <slot />
+        {/if}
     </div>
 </div>
 
