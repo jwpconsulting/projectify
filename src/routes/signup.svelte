@@ -9,7 +9,7 @@
         damping: 0.2,
     });
 
-    let usernameValue;
+    let emailValue;
     let passwordValue;
 
     let privacyChecked = false;
@@ -18,7 +18,7 @@
     let userData = null;
 
     async function submit() {
-        userData = await singUp(usernameValue, passwordValue);
+        userData = await singUp(emailValue, passwordValue);
 
         if (!userData) {
             error = true;
@@ -56,16 +56,16 @@
                     </div>
 
                     <div class="form-control w-full">
-                        <label for="username" class="label label-text"
-                            >Username</label
+                        <label for="email" class="label label-text"
+                            >Email</label
                         >
                         <input
                             type="text"
-                            name="username"
-                            placeholder="username"
+                            name="email"
+                            placeholder="Please enter your email"
                             class="input input-bordered"
                             class:input-error={error}
-                            bind:value={usernameValue}
+                            bind:value={emailValue}
                             on:input={unsetError}
                         />
                     </div>
@@ -77,7 +77,7 @@
                         <input
                             type="password"
                             name="password"
-                            placeholder="password"
+                            placeholder="Please enter a password"
                             class="input input-bordered"
                             class:input-error={error}
                             bind:value={passwordValue}
