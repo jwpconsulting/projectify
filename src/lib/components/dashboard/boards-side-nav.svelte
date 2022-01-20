@@ -1,7 +1,10 @@
 <script lang="ts">
-    import { Query_DashboardBoardsSideNav } from "$lib/graphql/operations";
+    import {
+        Query_DashboardBoardsSideNav,
+        Mutation_AddWorkspaceBoard,
+    } from "$lib/graphql/operations";
     import { query } from "svelte-apollo";
-    import AuthGuard from "../authGuard.svelte";
+    import { client } from "$lib/graphql/client";
 
     import { getModal } from "$lib/components/dialogModal.svelte";
 
@@ -30,9 +33,26 @@
         }
     }
 
-    function onAddNewBoard() {
-        console.log("Add new Workspace Board");
-        getModal("newBoardModal").open();
+    async function onAddNewBoard() {
+        let modalRes = await getModal("newBoardModal").open();
+        console.log(modalRes);
+        if (modalRes) {
+            try {
+                let mRes = await client.mutate({
+                    mutation: Mutation_AddWorkspaceBoard,
+                    variables: {
+                        input: {
+                            workspaceUuid: selectedWorkspaceUUID,
+                            title: modalRes.boardName,
+                            description: "",
+                        },
+                    },
+                });
+                res.refetch({ uuid: selectedWorkspaceUUID });
+            } catch (error) {
+                console.error(error);
+            }
+        }
     }
 </script>
 
