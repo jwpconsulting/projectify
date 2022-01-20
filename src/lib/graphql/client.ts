@@ -7,7 +7,7 @@ import { onError } from "@apollo/client/link/error";
 
 import vars from "$lib/env";
 
-const batchLinkEnabled = false;
+const batchLinkEnabled = true;
 
 const httpCommonOpts = {
     uri: vars.GRAPHQL_ENDPOINT,
