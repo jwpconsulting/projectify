@@ -33,7 +33,11 @@
     class="card text-center shadow-card w-full max-w-xl transform-gpu"
     style={`transform:translateX(${$errorAnimation}px);`}
 >
-    <form on:submit|preventDefault={() => submit()}>
+    <form
+        action="/signin"
+        method="post"
+        on:submit|preventDefault={() => submit()}
+    >
         <div class="card-body items-center">
             <div class="py-2">
                 <h1 class="card-title">Sign in</h1>
@@ -48,8 +52,9 @@
             <div class="form-control w-full">
                 <label for="email" class="label label-text">Email</label>
                 <input
-                    type="text"
-                    name="email"
+                    type="email"
+                    id="email"
+                    autocomplete="email"
                     placeholder="Please enter your email"
                     class="input input-bordered"
                     class:input-error={error}
@@ -62,7 +67,8 @@
                 <label for="password" class="label label-text">Password</label>
                 <input
                     type="password"
-                    name="password"
+                    id="password"
+                    autocomplete="current-password"
                     placeholder="Please enter a password"
                     class="input input-bordered"
                     class:input-error={error}

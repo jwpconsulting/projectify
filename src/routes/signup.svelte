@@ -39,7 +39,11 @@
 
 <main class="page page-center">
     {#if !userData}
-        <form on:submit|preventDefault={() => submit()}>
+        <form
+            action="/signup"
+            method="post"
+            on:submit|preventDefault={() => submit()}
+        >
             <div
                 class="card text-center shadow-card w-full max-w-xl transform-gpu"
                 style={`transform:translateX(${$errorAnimation}px);`}
@@ -60,8 +64,9 @@
                             >Email</label
                         >
                         <input
-                            type="text"
-                            name="email"
+                            type="email"
+                            id="email"
+                            autocomplete="email"
                             placeholder="Please enter your email"
                             class="input input-bordered"
                             class:input-error={error}
@@ -76,7 +81,8 @@
                         >
                         <input
                             type="password"
-                            name="password"
+                            id="password"
+                            autocomplete="new-password"
                             placeholder="Please enter a password"
                             class="input input-bordered"
                             class:input-error={error}
