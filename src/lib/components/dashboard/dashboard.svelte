@@ -17,9 +17,11 @@
     <WorkspacesSideNav bind:selectedWorkspaceUUID />
 
     <!-- Secon side bar -->
-    <nav class="flex flex-col bg-base-100 w-60 h-screen sticky top-0">
+    <nav
+        class="flex flex-col bg-base-100 w-60 h-min min-h-screen sticky top-0"
+    >
         <!-- Tite and settings -->
-        <div class="flex p-4">
+        <div class="flex p-4 sticky top-0 bg-base-100">
             <h1 class="grow font-bold text-xl">Projectify</h1>
             <button class="btn btn-primary btn-outline btn-circle btn-xs">
                 <IconSettings />
@@ -33,7 +35,7 @@
         </div>
 
         <!-- User infos -->
-        <div class="flex p-3 sticky bottom-0">
+        <div class="flex p-3 sticky bottom-0 bg-base-100">
             <div
                 class="m-1 flex -space-x-1 overflow-hidden w-8 h-8 rounded-full shrink-0"
             >
