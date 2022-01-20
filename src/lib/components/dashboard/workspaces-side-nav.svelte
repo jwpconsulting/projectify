@@ -22,7 +22,9 @@
     }
 </script>
 
-<nav class="bg-neutral-content flex flex-col w-24 items-center p-2">
+<nav
+    class="bg-neutral-content flex flex-col w-24 items-center p-2 h-screen sticky top-0"
+>
     {#if workspaces}
         {#each workspaces as workspace (workspace.uuid)}
             <button

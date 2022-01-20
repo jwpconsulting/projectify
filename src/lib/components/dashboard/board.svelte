@@ -26,7 +26,7 @@
 </script>
 
 {#if board}
-    <div class="flex grow flex-col overflow-y-scroll">
+    <div class="flex grow flex-col">
         <!-- Tile -->
         <div class="flex flex-row items-center px-4 py-4">
             <h1 class="font-bold text-3xl grow">{board.title}</h1>
