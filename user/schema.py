@@ -2,9 +2,6 @@
 from django.contrib import (
     auth,
 )
-from django.contrib.auth.backends import (
-    ModelBackend,
-)
 
 import graphene
 import graphene_django
@@ -82,6 +79,10 @@ class LoginMutation(graphene.Mutation):
     @classmethod
     def mutate(cls, root, info, email, password):
         """Mutate."""
+        from django.contrib.auth.backends import (
+            ModelBackend,
+        )
+
         user = ModelBackend().authenticate(
             info.context,
             username=email,
