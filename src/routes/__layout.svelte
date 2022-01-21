@@ -6,7 +6,7 @@
     export async function load({ url }) {
         if (browser) {
             const route = routes.find((r) => r.to === url.pathname);
-            if (route && route.authRequired) {
+            if (route && (route.authRequired || route.fetchUser)) {
                 await fetchUser();
             }
         }

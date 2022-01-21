@@ -8,6 +8,7 @@ import {
     Mutation_Logout,
     Query_User,
 } from "$lib/graphql/operations";
+import { goto } from "$app/navigation";
 
 export const user = writable(null);
 export const userIsLoading = writable(false);
@@ -56,6 +57,17 @@ export const login = async (email, password) => {
         if (res.data.login !== null) {
             const userData = res.data.login.user;
             user.set(userData);
+
+            console.log("singinRedirect.to", singinRedirect.to);
+
+            if (singinRedirect.to) {
+                console.log("redirect to ", singinRedirect.to);
+
+                goto(singinRedirect.to);
+
+                singinRedirect.to = null;
+            }
+
             return userData;
         }
     } catch (error) {
@@ -74,6 +86,7 @@ export const logout = async () => {
         console.error(error);
     }
     user.set(null);
+    userIsLoading.set(false);
 };
 
 export const fetchUser = async () => {
