@@ -6,6 +6,8 @@ import {
     Mutation_EmailConfirmation,
     Mutation_Login,
     Mutation_Logout,
+    Mutation_RequesetPasswordReset,
+    Mutation_ConfirmPasswordReset,
     Query_User,
 } from "$lib/graphql/operations";
 import { goto } from "$app/navigation";
@@ -106,4 +108,33 @@ export const fetchUser = async () => {
     }
     userIsLoading.set(false);
     return null;
+};
+
+export const requestPasswordReset = async (email) => {
+    try {
+        const res = await client.mutate({
+            mutation: Mutation_RequesetPasswordReset,
+            variables: { input: { email } },
+        });
+
+        if (res.data.requestPasswordReset !== null) {
+            return res.data.requestPasswordReset.email;
+        }
+    } catch (error) {
+        return { error };
+    }
+};
+
+export const confirmPasswordReset = async (email, token, newPassword) => {
+    try {
+        const res = await client.mutate({
+            mutation: Mutation_ConfirmPasswordReset,
+            variables: { input: { email, token, newPassword } },
+        });
+        if (res.data.confirmPasswordReset !== null) {
+            return res.data.confirmPasswordReset.user;
+        }
+    } catch (error) {
+        return { error };
+    }
 };

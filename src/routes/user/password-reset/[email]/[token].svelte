@@ -1,16 +1,25 @@
 <script lang="ts">
+    import {
+        confirmPasswordReset,
+        emailConfirmation,
+        login,
+    } from "$lib/stores/user";
     import { goto } from "$app/navigation";
-    import { requestPasswordReset } from "$lib/stores/user";
+    import { page } from "$app/stores";
 
-    let emailValue;
-    let error = null;
     let requestSent = false;
+    let userData = null;
+    let error = null;
+    let passwordValue;
+
+    let email = $page.params["email"];
+    let token = $page.params["token"];
 
     async function submit() {
-        const res = await requestPasswordReset(emailValue);
+        userData = await confirmPasswordReset(email, token, passwordValue);
 
-        if (res.error) {
-            error = res.error.message;
+        if (userData && userData.error) {
+            error = userData.error.message;
         } else {
             requestSent = true;
         }
@@ -44,21 +53,25 @@
                             >Email</label
                         >
                         <input
-                            type="email"
-                            id="email"
-                            autocomplete="email"
-                            placeholder="Please enter your email"
+                            type="password"
+                            id="password"
+                            autocomplete="new-password"
+                            placeholder="Please enter a password"
                             class="input input-bordered"
                             class:input-error={error}
-                            bind:value={emailValue}
+                            bind:value={passwordValue}
                             on:input={() => (error = null)}
                         />
                     </div>
                     <div
                         class="p-2  hi form-pop-msg text-error"
-                        class:hidden={!error}
+                        class:hidden={error == null}
                     >
-                        User not found.
+                        {#if !passwordValue}
+                            Password can not be empty.
+                        {:else}
+                            Something went wrong.
+                        {/if}
                     </div>
 
                     <div class="pt-2">
@@ -76,12 +89,11 @@
         <div class="card text-center shadow-card w-full max-w-lg">
             <div class="card-body items-center">
                 <div class="py-2">
-                    <h1 class="card-title">Password reset email sent</h1>
+                    <h1 class="card-title">Password reset complete</h1>
                     <div class="text-left">
-                        I sent an email to <span class="link link-primary"
-                            >{emailValue}</span
-                        >. Please proceed from the url described in the
-                        message.
+                        Your password has been changed, and you have been
+                        logged into your account. Please continue to enjoy
+                        Projectify.
                     </div>
                 </div>
 

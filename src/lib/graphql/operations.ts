@@ -48,6 +48,24 @@ export const Mutation_Logout = gql`
     }
 `;
 
+export const Mutation_RequesetPasswordReset = gql`
+    mutation RequesetPasswordReset($input: RequestPasswordResetInput!) {
+        requestPasswordReset(input: $input) {
+            email
+        }
+    }
+`;
+
+export const Mutation_ConfirmPasswordReset = gql`
+    mutation ConfirmPasswordReset($input: ConfirmPasswordResetInput!) {
+        confirmPasswordReset(input: $input) {
+            user {
+                email
+            }
+        }
+    }
+`;
+
 export const Query_Dashboard = gql`
     query Query_Dashboard {
         workspaces {
