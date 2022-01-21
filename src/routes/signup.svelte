@@ -67,6 +67,7 @@
                         <input
                             type="email"
                             id="email"
+                            name="email"
                             autocomplete="email"
                             placeholder="Please enter your email"
                             class="input input-bordered"
@@ -83,6 +84,7 @@
                         <input
                             type="password"
                             id="password"
+                            name="password"
                             autocomplete="new-password"
                             placeholder="Please enter a password"
                             class="input input-bordered"
