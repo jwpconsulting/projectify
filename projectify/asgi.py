@@ -12,9 +12,6 @@ import os
 from django.core.asgi import (
     get_asgi_application,
 )
-from django.urls import (
-    path,
-)
 
 from channels.auth import (
     AuthMiddlewareStack,
@@ -24,24 +21,22 @@ from channels.routing import (
     URLRouter,
 )
 
-from .schema import (
-    GraphqlWsConsumer,
-)
-
 
 os.environ.setdefault(
     "DJANGO_SETTINGS_MODULE", "projectify.settings.production"
 )
+asgi_application = get_asgi_application()
+
+from .urls import (  # noqa: E402
+    websocket_urlpatterns,
+)
+
 
 application = ProtocolTypeRouter(
     {
-        "http": get_asgi_application(),
+        "http": asgi_application,
         "websocket": AuthMiddlewareStack(
-            URLRouter(
-                [
-                    path("graphql-ws", GraphqlWsConsumer.as_asgi()),
-                ],
-            ),
+            URLRouter(websocket_urlpatterns),
         ),
     }
 )

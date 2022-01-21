@@ -28,6 +28,9 @@ from django.views.decorators import (
     csrf,
 )
 
+from .graphql_ws_consumer import (
+    GraphqlWsConsumer,
+)
 from .views import (
     GraphQLBatchView,
     GraphQLView,
@@ -59,3 +62,5 @@ urlpatterns = [
         include("premail.urls"),
     ),
 ]
+
+websocket_urlpatterns = (path("graphql-ws", GraphqlWsConsumer.as_asgi()),)
