@@ -34,6 +34,7 @@
     style={`transform:translateX(${$errorAnimation}px);`}
 >
     <form
+        class="contents"
         action="/signin"
         method="post"
         on:submit|preventDefault={() => submit()}

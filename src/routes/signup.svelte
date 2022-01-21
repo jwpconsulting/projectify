@@ -40,6 +40,7 @@
 <main class="page page-center">
     {#if !userData}
         <form
+            class="contents"
             action="/signup"
             method="post"
             on:submit|preventDefault={() => submit()}
