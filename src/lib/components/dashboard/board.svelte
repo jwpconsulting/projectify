@@ -34,13 +34,27 @@
         let modalRes = await getModal("newBoardSectionModal").open();
         if (modalRes) {
             try {
+                const newSection = {
+                    title: modalRes.title,
+                    description: "",
+                };
                 let mRes = await client.mutate({
                     mutation: Mutation_AddWorkspaceBoardSection,
                     variables: {
                         input: {
                             workspaceBoardUuid: boardUUID,
-                            title: modalRes.title,
-                            description: "",
+                            ...newSection,
+                        },
+                    },
+                    optimisticResponse: {
+                        addWorkspaceBoardSection: {
+                            workspaceBoardSection: {
+                                uuid: "temp-id",
+                                __typename: "WorkspaceBoardSection",
+                                ...newSection,
+                                created: "",
+                                tasks: [],
+                            },
                         },
                     },
                     update(cache, { data }) {
