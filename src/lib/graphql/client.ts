@@ -39,5 +39,14 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 export const client = new ApolloClient({
     link: from([errorLink, httpLink]),
     uri: vars.GRAPHQL_ENDPOINT,
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+        dataIdFromObject(responseObject) {
+            switch (responseObject.__typename) {
+                case "User":
+                    return `${responseObject.__typename}:${responseObject.email}`;
+                default:
+                    return `${responseObject.__typename}:${responseObject.uuid}`;
+            }
+        },
+    }),
 });
