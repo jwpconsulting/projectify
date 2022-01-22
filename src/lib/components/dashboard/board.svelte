@@ -43,8 +43,21 @@
                             description: "",
                         },
                     },
+                    update(cache, { data }) {
+                        const resSection =
+                            data.addWorkspaceBoardSection
+                                .workspaceBoardSection;
+
+                        cache.modify({
+                            id: `WorkspaceBoard:${boardUUID}`,
+                            fields: {
+                                sections(currentSections = []) {
+                                    return [...currentSections, resSection];
+                                },
+                            },
+                        });
+                    },
                 });
-                res.refetch({ uuid: boardUUID });
             } catch (error) {
                 console.error(error);
             }

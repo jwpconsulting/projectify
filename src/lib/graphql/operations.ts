@@ -166,6 +166,13 @@ export const Mutation_AddWorkspaceBoardSection = gql`
             workspaceBoardSection {
                 uuid
                 created
+                title
+                description
+                tasks {
+                    uuid
+                    title
+                    description
+                }
             }
         }
     }
