@@ -133,6 +133,27 @@ export const Query_DashboardBoard = gql`
         }
     }
 `;
+export const Subscription_OnWorkspaceBoardChange = gql`
+    subscription OnWorkspaceBoardChange($uuid: ID!) {
+        onWorkspaceBoardChange(uuid: $uuid) {
+            workspaceBoard {
+                uuid
+                title
+                description
+                sections {
+                    uuid
+                    title
+                    description
+                    tasks {
+                        uuid
+                        title
+                        description
+                    }
+                }
+            }
+        }
+    }
+`;
 
 export const Query_DashboardTaskDetais = gql`
     query DashboardTaskDetais($uuid: ID!) {

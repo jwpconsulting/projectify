@@ -3,8 +3,9 @@
     import {
         Mutation_AddWorkspaceBoardSection,
         Query_DashboardBoard,
+        Subscription_OnWorkspaceBoardChange,
     } from "$lib/graphql/operations";
-    import { query } from "svelte-apollo";
+    import { query, subscribe } from "svelte-apollo";
     import IconPlus from "../icons/icon-plus.svelte";
     import { getModal } from "../dialogModal.svelte";
     import { client } from "$lib/graphql/client";
@@ -12,12 +13,16 @@
     export let boardUUID = null;
 
     let res = null;
+    let subRes = null;
     let board = null;
     let sections = [];
 
     $: {
         if (boardUUID) {
             res = query(Query_DashboardBoard, {
+                variables: { uuid: boardUUID },
+            });
+            subRes = subscribe(Subscription_OnWorkspaceBoardChange, {
                 variables: { uuid: boardUUID },
             });
         }
@@ -29,6 +34,8 @@
             sections = board["sections"];
         }
     }
+
+    let autoSubscribe = $subRes;
 
     async function onAddNewSection() {
         let modalRes = await getModal("newBoardSectionModal").open();
@@ -56,20 +63,6 @@
                                 tasks: [],
                             },
                         },
-                    },
-                    update(cache, { data }) {
-                        const resSection =
-                            data.addWorkspaceBoardSection
-                                .workspaceBoardSection;
-
-                        cache.modify({
-                            id: `WorkspaceBoard:${boardUUID}`,
-                            fields: {
-                                sections(currentSections = []) {
-                                    return [...currentSections, resSection];
-                                },
-                            },
-                        });
                     },
                 });
             } catch (error) {
