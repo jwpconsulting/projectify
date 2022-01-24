@@ -1,5 +1,6 @@
 """Production settings."""
 import os
+import ssl
 
 # flake8: noqa: F401, F403
 from .base import *
@@ -34,11 +35,19 @@ GRAPHIQL_ENABLE = False
 GRAPHQL_WS_SEQUENTIAL = False
 
 # Channels
+# https://github.com/django/channels_redis/issues/235#issuecomment-795520644
+ssl_context = ssl.SSLContext()
+ssl_context.check_hostname = False
+
+heroku_redis_ssl_host = {
+    "address": os.environ["REDIS_TLS_URL"],
+    "ssl": ssl_context,
+}
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [os.environ["REDIS_TLS_URL"]],
+            "hosts": (heroku_redis_ssl_host,),
             "symmetric_encryption_keys": [SECRET_KEY],
         },
     },
