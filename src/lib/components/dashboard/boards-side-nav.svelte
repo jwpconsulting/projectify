@@ -62,13 +62,12 @@
         {#each boards as board (board.uuid)}
             <li
                 class="p-0"
-                class:menu-item-active={selectedBoardUUID == board.uuid}
+                class:menu-item-active={board.uuid === selectedBoardUUID}
             >
                 <a
                     class="h-9 text-xs font-bold capitalize px-8"
-                    href="/"
-                    on:click|preventDefault={() =>
-                        (selectedBoardUUID = board.uuid)}># {board.title}</a
+                    href={`/dashboard/${selectedWorkspaceUUID}/${board.uuid}`}
+                    ># {board.title}</a
                 >
             </li>
         {/each}

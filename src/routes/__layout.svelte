@@ -5,7 +5,22 @@
 
     export async function load({ url }) {
         if (browser) {
-            const route = routes.find((r) => r.to === url.pathname);
+            const route = routes.find((r) => {
+                if (r.to === url.pathname) {
+                    return true;
+                }
+
+                if (url.pathname.indexOf(r.to + "/") == 0) {
+                    console.log(
+                        url.pathname,
+                        r.to,
+                        url.pathname.indexOf(r.to)
+                    );
+                    return true;
+                }
+
+                return false;
+            });
             if (route && (route.authRequired || route.fetchUser)) {
                 await fetchUser();
             }

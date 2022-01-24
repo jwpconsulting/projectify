@@ -27,11 +27,11 @@
 >
     {#if workspaces}
         {#each workspaces as workspace (workspace.uuid)}
-            <button
-                class="btn btn-primary btn-outline"
+            <a
+                class="btn btn-primary btn-outline btn-square"
                 class:btn-active={workspace.uuid == selectedWorkspaceUUID}
-                on:click={() => (selectedWorkspaceUUID = workspace.uuid)}
-                >{workspaceIconFrom(workspace.title)}</button
+                href={`/dashboard/${workspace.uuid}`}
+                >{workspaceIconFrom(workspace.title)}</a
             >
         {/each}
         <button class="plus btn btn-primary btn-outline text-primary"

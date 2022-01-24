@@ -9,8 +9,8 @@
     import DialogModal from "../dialogModal.svelte";
     import NewBoardModal from "./newBoardModal.svelte";
     import NewBoardSectionModal from "./newBoardSectionModal.svelte";
-    let selectedWorkspaceUUID = null;
-    let selectedBoardUUID = null;
+    export let selectedWorkspaceUUID = null;
+    export let selectedBoardUUID = null;
 </script>
 
 <main class="page p-0 flex-row divide-x divide-base-300 select-none">
