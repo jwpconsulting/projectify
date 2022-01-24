@@ -1,10 +1,13 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client/core";
+import { ApolloClient, InMemoryCache, ApolloLink } from "@apollo/client/core";
 
 import { from, split } from "@apollo/client/link/core";
 import { HttpLink } from "@apollo/client/link/http";
 import { BatchHttpLink } from "@apollo/client/link/batch-http";
 import { onError } from "@apollo/client/link/error";
+import { WebSocketLink } from "@apollo/client/link/ws";
+import { getMainDefinition } from "@apollo/client/utilities";
 
+import { browser } from "$app/env";
 import vars from "$lib/env";
 
 const batchLinkEnabled = true;
@@ -25,6 +28,28 @@ const httpLink = batchLinkEnabled
           uri: vars.GRAPHQL_ENDPOINT,
       });
 
+let splitLink: ApolloLink = httpLink;
+if (browser) {
+    const wsLink = new WebSocketLink({
+        uri: vars.GRAPHQL_ENDPOINT_SUBSCRIPTIONS,
+        options: {
+            reconnect: true,
+        },
+    });
+
+    splitLink = split(
+        ({ query }) => {
+            const definition = getMainDefinition(query);
+            return (
+                definition.kind === "OperationDefinition" &&
+                definition.operation === "subscription"
+            );
+        },
+        wsLink,
+        httpLink
+    );
+}
+
 const errorLink = onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors)
         graphQLErrors.forEach(({ message, locations, path }) =>
@@ -37,7 +62,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 export const client = new ApolloClient({
-    link: from([errorLink, httpLink]),
+    link: from([errorLink, splitLink]),
     uri: vars.GRAPHQL_ENDPOINT,
     cache: new InMemoryCache({
         dataIdFromObject(responseObject) {
