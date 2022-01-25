@@ -23,7 +23,6 @@ EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
 # Celery
 CELERY_BROKER_URL = os.environ["REDIS_TLS_URL"]
-CELERYD_CONCURRENCY = 1
 
 CORS_ALLOWED_ORIGINS = ("https://www.projectifyapp.com",)
 
