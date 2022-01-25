@@ -8,14 +8,16 @@ from django.dispatch import (
 
 from . import (
     models,
-    schema,
+)
+from .schema import (
+    subscription,
 )
 
 
 @receiver(post_save, sender=models.WorkspaceBoard)
 def workspace_board_saved(sender, instance, **kwargs):
     """Broadcast changes."""
-    schema.OnWorkspaceBoardChange.broadcast(
+    subscription.OnWorkspaceBoardChange.broadcast(
         group=str(instance.uuid),
         payload=instance,
     )
@@ -24,7 +26,7 @@ def workspace_board_saved(sender, instance, **kwargs):
 @receiver(post_save, sender=models.WorkspaceBoardSection)
 def workspace_board_section_saved(sender, instance, **kwargs):
     """Broadcast changes."""
-    schema.OnWorkspaceBoardChange.broadcast(
+    subscription.OnWorkspaceBoardChange.broadcast(
         group=str(instance.workspace_board.uuid),
         payload=instance.workspace_board,
     )
@@ -33,7 +35,7 @@ def workspace_board_section_saved(sender, instance, **kwargs):
 @receiver(post_save, sender=models.Task)
 def task_saved(sender, instance, **kwargs):
     """Broadcast changes."""
-    schema.OnWorkspaceBoardChange.broadcast(
+    subscription.OnWorkspaceBoardChange.broadcast(
         group=str(instance.workspace_board_section.workspace_board.uuid),
         payload=instance.workspace_board_section.workspace_board,
     )
@@ -42,7 +44,7 @@ def task_saved(sender, instance, **kwargs):
 @receiver(post_save, sender=models.SubTask)
 def sub_task_aveed(sender, instance, **kwargs):
     """Broadcast changes."""
-    schema.OnWorkspaceBoardChange.broadcast(
+    subscription.OnWorkspaceBoardChange.broadcast(
         group=str(instance.task.workspace_board_section.workspace_board.uuid),
         payload=instance.task.workspace_board_section.workspace_board,
     )
