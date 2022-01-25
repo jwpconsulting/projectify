@@ -74,6 +74,13 @@ class TestWorkspaceUser:
 class TestWorkspaceBoardManager:
     """Test WorkspaceBoard manager."""
 
+    def test_filter_by_workspace_pks(self, workspace, workspace_board):
+        """Test filter_by_workspace_pks."""
+        qs = models.WorkspaceBoard.objects.filter_by_workspace_pks(
+            [workspace.pk],
+        )
+        assert list(qs) == [workspace_board]
+
     def test_get_for_user_and_uuid(
         self,
         workspace,

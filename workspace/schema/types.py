@@ -22,7 +22,7 @@ class Workspace(graphene_django.DjangoObjectType):
 
     def resolve_boards(self, info):
         """Resolve workspace boards."""
-        return self.workspaceboard_set.all()
+        return loader.workspace_workspace_board_loader.load(self.pk)
 
     class Meta:
         """Meta."""
