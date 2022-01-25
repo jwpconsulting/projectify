@@ -236,6 +236,12 @@ class TestTask:
         task.refresh_from_db()
         assert task.order == 0
 
+    def test_add_sub_task(self, task):
+        """Test adding a sub task."""
+        assert task.subtask_set.count() == 0
+        task.add_sub_task("foo", "bar")
+        assert task.subtask_set.count() == 1
+
 
 @pytest.mark.django_db
 class TestSubTask:

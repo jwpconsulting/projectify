@@ -107,9 +107,42 @@ class AddTaskMutation(graphene.Mutation):
         return cls(task)
 
 
+class AddSubTaskInput(graphene.InputObjectType):
+    """Add sub task mutation input."""
+
+    task_uuid = graphene.ID(required=True)
+    title = graphene.String(required=True)
+    description = graphene.String(required=True)
+
+
+class AddSubTaskMutation(graphene.Mutation):
+    """Add subtask mutation."""
+
+    class Arguments:
+        """Arguments."""
+
+        input = AddSubTaskInput(required=True)
+
+    sub_task = graphene.Field(types.SubTask)
+
+    @classmethod
+    def mutate(cls, root, info, input):
+        """Mutate."""
+        task = models.Task.objects.get_for_user_and_uuid(
+            info.context.user,
+            input.task_uuid,
+        )
+        sub_task = task.add_task(
+            input.title,
+            input.description,
+        )
+        return cls(sub_task)
+
+
 class Mutation:
     """Mutation."""
 
     add_workspace_board = AddWorkspaceBoardMutation.Field()
     add_workspace_board_section = AddWorkspaceBoardSectionMutation.Field()
     add_task = AddTaskMutation.Field()
+    add_sub_task = AddSubTaskMutation.Field()
