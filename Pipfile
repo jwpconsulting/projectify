@@ -17,7 +17,7 @@ ipython = "*"
 
 [packages]
 dj-database-url = "*"
-django = "==3.2.10"
+django = "==3.2.11"
 django-cors-headers = "*"
 django-extensions = "*"
 graphene-django = "*"
