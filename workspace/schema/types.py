@@ -63,7 +63,7 @@ class WorkspaceBoardSection(graphene_django.DjangoObjectType):
 
     def resolve_tasks(self, info):
         """Resolve tasks for this workspace board section."""
-        return self.task_set.all()
+        return loader.workspace_board_section_task_loader.load(self.pk)
 
     class Meta:
         """Meta."""

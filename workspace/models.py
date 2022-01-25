@@ -148,6 +148,15 @@ class WorkspaceBoardSection(
 class TaskManager(OrderedModelManager):
     """Manager for Task."""
 
+    def filter_by_workspace_board_section_pks(
+        self,
+        workspace_board_section_pks,
+    ):
+        """Filter by workspace board section pks."""
+        return self.filter(
+            workspace_board_section__pk__in=workspace_board_section_pks,
+        )
+
     def get_for_user_and_uuid(self, user, uuid):
         """Return task from user workspace corresponding to uuid."""
         return self.filter(
