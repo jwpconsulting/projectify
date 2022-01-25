@@ -79,7 +79,7 @@ class Task(graphene_django.DjangoObjectType):
 
     def resolve_sub_tasks(self, info):
         """Resolve sub tasks for this task."""
-        return self.subtask_set.all()
+        return loader.task_sub_task_loader.load(self.pk)
 
     class Meta:
         """Meta."""

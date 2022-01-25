@@ -103,3 +103,20 @@ class WorkspaceBoardSectionTaskLoader(DataLoader):
 
 
 workspace_board_section_task_loader = WorkspaceBoardSectionTaskLoader()
+
+
+class TaskSubTaskLoader(DataLoader):
+    """SubTask loader for tasks."""
+
+    def batch_load_fn(self, keys):
+        """Load sub tasks for task keys."""
+        sub_tasks = defaultdict(list)
+        qs = models.SubTask.objects.filter_by_task_pks(keys).select_related(
+            "task",
+        )
+        for sub_task in qs.iterator():
+            sub_tasks[sub_task.task.pk].append(sub_task)
+        return Promise.resolve([sub_tasks.get(key, []) for key in keys])
+
+
+task_sub_task_loader = TaskSubTaskLoader()

@@ -220,6 +220,14 @@ class Task(
         ordering = ("workspace_board_section", "order")
 
 
+class SubTaskManager(OrderedModelManager):
+    """Sub task queryset."""
+
+    def filter_by_task_pks(self, task_pks):
+        """Filter by task pks."""
+        return self.filter(task__pk__in=task_pks)
+
+
 class SubTask(
     OrderedModel,
     TitleDescriptionModel,
@@ -234,6 +242,8 @@ class SubTask(
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     order_with_respect_to = "task"
+
+    objects = SubTaskManager()
 
     class Meta:
         """Meta."""
