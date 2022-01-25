@@ -45,7 +45,9 @@ class WorkspaceBoard(graphene_django.DjangoObjectType):
 
     def resolve_sections(self, info):
         """Resolve workspace board sections."""
-        return self.workspaceboardsection_set.all()
+        return loader.workspace_board_workspace_board_section_loader.load(
+            self.pk,
+        )
 
     class Meta:
         """Meta."""

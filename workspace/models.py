@@ -108,6 +108,10 @@ class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
 class WorkspaceBoardSectionManager(OrderedModelManager):
     """Manager for WorkspaceBoard."""
 
+    def filter_by_workspace_board_pks(self, keys):
+        """Filter by workspace boards."""
+        return self.filter(workspace_board__pk__in=keys)
+
     def get_for_user_and_uuid(self, user, uuid):
         """Return a workspace for user and uuid."""
         return self.filter(workspace_board__workspace__users=user,).get(
