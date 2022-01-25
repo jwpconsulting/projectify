@@ -9,8 +9,11 @@
     import DialogModal from "../dialogModal.svelte";
     import NewBoardModal from "./newBoardModal.svelte";
     import NewBoardSectionModal from "./newBoardSectionModal.svelte";
-    export let selectedWorkspaceUUID = null;
-    export let selectedBoardUUID = null;
+
+    import { page } from "$app/stores";
+
+    $: selectedWorkspaceUUID = $page.params["workspaceUUID"];
+    $: selectedBoardUUID = $page.params["boardUUID"] || null;
 </script>
 
 <main class="page p-0 flex-row divide-x divide-base-300 select-none">
@@ -31,8 +34,10 @@
 
         <!-- Boards nav -->
         <div class="grow">
-            <h2 class="p-4 text-base font-bold">Workspace Boards</h2>
-            <BoardsSideNav {selectedWorkspaceUUID} bind:selectedBoardUUID />
+            {#if selectedWorkspaceUUID}
+                <h2 class="p-4 text-base font-bold">Workspace Boards</h2>
+                <BoardsSideNav {selectedWorkspaceUUID} {selectedBoardUUID} />
+            {/if}
         </div>
 
         <!-- User infos -->

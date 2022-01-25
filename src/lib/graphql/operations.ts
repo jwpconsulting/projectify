@@ -123,11 +123,9 @@ export const Query_DashboardBoard = gql`
             sections {
                 uuid
                 title
-                description
                 tasks {
                     uuid
                     title
-                    description
                 }
             }
         }
@@ -143,11 +141,9 @@ export const Subscription_OnWorkspaceBoardChange = gql`
                 sections {
                     uuid
                     title
-                    description
                     tasks {
                         uuid
                         title
-                        description
                     }
                 }
             }

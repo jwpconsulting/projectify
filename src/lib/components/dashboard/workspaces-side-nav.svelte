@@ -2,6 +2,7 @@
     import { query } from "svelte-apollo";
     import { Query_DashboardWorkspacesSideNav } from "$lib/graphql/operations";
     import IconPlus from "../icons/icon-plus.svelte";
+    import { goto } from "$app/navigation";
 
     export let selectedWorkspaceUUID;
 
@@ -12,7 +13,7 @@
         if ($res.data) {
             workspaces = $res.data["workspaces"];
             if (!selectedWorkspaceUUID && workspaces.length) {
-                selectedWorkspaceUUID = workspaces[0]["uuid"];
+                goto(`/dashboard/${workspaces[0]["uuid"]}`);
             }
         }
     }

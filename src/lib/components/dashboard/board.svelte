@@ -72,7 +72,11 @@
     }
 </script>
 
-{#if board}
+{#if res && $res.loading}
+    <div class="flex grow flex-col items-center justify-center">
+        ...Loading
+    </div>
+{:else if board}
     <div class="flex grow flex-col">
         <!-- Tile -->
         <div class="flex flex-row items-center px-4 py-4">
@@ -98,7 +102,7 @@
 
         <!-- Sections -->
         <div class="flex flex-col grow p-2">
-            {#each sections as section, index}
+            {#each sections as section, index (section.uuid)}
                 <BoardSection {section} {index} />
             {/each}
             <div

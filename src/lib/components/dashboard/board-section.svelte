@@ -61,7 +61,7 @@
                 class="content p-2 flex flex-wrap"
                 bind:clientHeight={contentHeght}
             >
-                {#each section.tasks as task, inx}
+                {#each section.tasks as task, inx (task.uuid)}
                     <div
                         class="h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer hover:ring"
                         on:click={() => openTaskDetails(task.uuid)}

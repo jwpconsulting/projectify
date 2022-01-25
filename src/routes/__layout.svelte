@@ -11,11 +11,6 @@
                 }
 
                 if (url.pathname.indexOf(r.to + "/") == 0) {
-                    console.log(
-                        url.pathname,
-                        r.to,
-                        url.pathname.indexOf(r.to)
-                    );
                     return true;
                 }
 

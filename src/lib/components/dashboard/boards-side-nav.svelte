@@ -7,6 +7,7 @@
     import { client } from "$lib/graphql/client";
 
     import { getModal } from "$lib/components/dialogModal.svelte";
+    import { goto } from "$app/navigation";
 
     export let selectedWorkspaceUUID;
     export let selectedBoardUUID;
@@ -16,7 +17,6 @@
 
     $: {
         if (selectedWorkspaceUUID) {
-            selectedBoardUUID = null;
             res = query(Query_DashboardBoardsSideNav, {
                 variables: { uuid: selectedWorkspaceUUID },
             });
@@ -28,7 +28,9 @@
             boards = $res.data["workspace"]["boards"];
 
             if (!selectedBoardUUID && boards.length) {
-                selectedBoardUUID = boards[0]["uuid"];
+                goto(
+                    `/dashboard/${selectedWorkspaceUUID}/${boards[0]["uuid"]}`
+                );
             }
         }
     }
