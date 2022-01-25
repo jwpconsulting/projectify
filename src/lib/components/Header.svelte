@@ -2,11 +2,12 @@
     import { page } from "$app/stores";
     import { user, logout } from "$lib/stores/user";
     import routes from "$lib/routes";
+    import { _ } from "svelte-i18n";
 
     $: userData = $user;
     $: items = [
         ...routes,
-        { label: "Signout", action: logout, authRequired: true },
+        { label: "signout", action: logout, authRequired: true },
     ].filter((it) => {
         if (it.forceNavigation) {
             return true;
@@ -34,7 +35,7 @@
                         class="p-2 cursor-pointer"
                         href={it.to}
                     >
-                        {it.label}
+                        {$_(it.label)}
                     </a>
                 </li>
             {/each}

@@ -48,13 +48,13 @@
     button {
         @apply w-12 h-12 border-base-300 p-0 text-base-content;
     }
-    button.btn-active:hover {
-        @apply bg-primary-focus text-base-content;
-    }
     button.plus {
         @apply text-primary;
     }
-    button.btn-active {
-        @apply bg-neutral-content border-2 border-primary;
+    a.btn-active {
+        @apply bg-neutral-content ring border-primary;
+    }
+    a.btn-active:hover {
+        @apply bg-primary-focus text-base-content;
     }
 </style>

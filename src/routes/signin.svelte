@@ -8,8 +8,6 @@
     if ($user) {
         goto(rediretURL);
     } else {
-        console.log("aaa");
-
         singinRedirect.to = rediretURL;
     }
 </script>

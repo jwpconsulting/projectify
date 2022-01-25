@@ -2,6 +2,7 @@
     import { spring } from "svelte/motion";
     import delay from "delay";
     import { login } from "$lib/stores/user";
+    import { _ } from "svelte-i18n";
 
     let errorAnimation = spring(0, {
         stiffness: 0.3,
@@ -41,23 +42,25 @@
     >
         <div class="card-body items-center">
             <div class="py-2">
-                <h1 class="card-title">Sign in</h1>
+                <h1 class="card-title">{$_("sign-in")}</h1>
                 <div>
-                    Let’s set up your account, Don't have one yet?<wbr />
+                    {$_("lets-set-up-your-account-dont-have-one-yet")}<wbr />
                     <a class="link link-primary" href="/signup">
-                        Sign up here.
+                        {$_("sign-up-here")}
                     </a>
                 </div>
             </div>
 
             <div class="form-control w-full">
-                <label for="email" class="label label-text">Email</label>
+                <label for="email" class="label label-text"
+                    >{$_("email")}</label
+                >
                 <input
                     type="email"
                     id="email"
                     name="email"
                     autocomplete="email"
-                    placeholder="Please enter your email"
+                    placeholder={$_("please-enter-your-email")}
                     class="input input-bordered"
                     class:input-error={error}
                     bind:value={emailValue}
@@ -66,13 +69,15 @@
             </div>
 
             <div class="form-control w-full">
-                <label for="password" class="label label-text">Password</label>
+                <label for="password" class="label label-text"
+                    >{$_("password")}</label
+                >
                 <input
                     type="password"
                     id="password"
                     name="password"
                     autocomplete="current-password"
-                    placeholder="Please enter a password"
+                    placeholder={$_("please-enter-a-password")}
                     class="input input-bordered"
                     class:input-error={error}
                     bind:value={passwordValue}
@@ -80,16 +85,18 @@
                 />
             </div>
             <div class="p-2  hi form-pop-msg text-error" class:hidden={!error}>
-                Wrong email or password.
+                {$_("wrong-email-or-password")}
             </div>
 
             <div class="pt-7">
                 <button class="btn btn-primary rounded-full" type="submit">
-                    Sign in
+                    {$_("sign-in")}
                 </button>
                 <div class="p-2">
-                    Forget password? Password reset
-                    <a class="link link-primary" href="/user/reset">here.</a>
+                    {$_("forget-password-password-reset")}
+                    <a class="link link-primary" href="/user/reset"
+                        >{$_("here")}</a
+                    >
                 </div>
             </div>
         </div>

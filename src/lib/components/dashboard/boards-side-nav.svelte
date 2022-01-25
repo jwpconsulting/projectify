@@ -8,6 +8,7 @@
 
     import { getModal } from "$lib/components/dialogModal.svelte";
     import { goto } from "$app/navigation";
+    import { _ } from "svelte-i18n";
 
     export let selectedWorkspaceUUID;
     export let selectedBoardUUID;
@@ -78,7 +79,7 @@
                 class="h-9 text-xs font-bold capitalize"
                 href="/"
                 on:click|preventDefault={onAddNewBoard}
-                >+ New Workspace Board</a
+                >+ {$_("new-workspace-board")}</a
             >
         </li>
     {/if}

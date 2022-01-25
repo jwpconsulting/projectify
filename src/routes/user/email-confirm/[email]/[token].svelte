@@ -3,6 +3,7 @@
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";
     import { onMount } from "svelte";
+    import { _ } from "svelte-i18n";
 
     let userData = null;
     let error;
@@ -25,19 +26,19 @@
 
 <main class="page page-center">
     {#if !userData && !error}
-        Loading
+        {$_("loading")}
     {:else if error}
         <div
             class="card text-center shadow-card w-full max-w-xl transform-gpu"
         >
             <div class="card-body items-center">
                 <div class="py-2">
-                    <h1 class="card-title text-error">Error</h1>
-                    <div>Something went wrong.</div>
+                    <h1 class="card-title text-error">{$_("error")}</h1>
+                    <div>{$_("something-went-wrong")}</div>
                 </div>
                 <div class="pt-2">
                     <button class="btn btn-primary" on:click={gotoTopPage}>
-                        Top page
+                        {$_("top-page")}
                     </button>
                 </div>
             </div>
@@ -48,15 +49,14 @@
         >
             <div class="card-body items-center">
                 <div class="py-2">
-                    <h1 class="card-title">Sign up finished</h1>
+                    <h1 class="card-title">{$_("sign-up-finished")}</h1>
                     <div>
-                        Sign up is finishied. Enjoy the application from now
-                        on.
+                        {$_("sign-up-is-finishied-msg")}
                     </div>
                 </div>
                 <div class="pt-2">
                     <button class="btn btn-primary" on:click={gotoTopPage}>
-                        Top page
+                        {$_("top-page")}
                     </button>
                 </div>
             </div>

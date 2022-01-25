@@ -3,6 +3,7 @@
     import delay from "delay";
     import { singUp } from "$lib/stores/user";
     import { goto } from "$app/navigation";
+    import { _ } from "svelte-i18n";
 
     let errorAnimation = spring(0, {
         stiffness: 0.3,
@@ -51,25 +52,27 @@
             >
                 <div class="card-body items-center">
                     <div class="py-2">
-                        <h1 class="card-title">Sign up</h1>
+                        <h1 class="card-title">
+                            {$_("sign-up")}
+                        </h1>
                         <div>
-                            Let’s set up your account, Already have one?<wbr />
+                            {$_("page.signup.msg")}<wbr />
                             <a class="link link-primary" href="/signin">
-                                Sign in here.
+                                {$_("sing-in-here")}
                             </a>
                         </div>
                     </div>
 
                     <div class="form-control w-full">
                         <label for="email" class="label label-text"
-                            >Email</label
+                            >{$_("Email")}</label
                         >
                         <input
                             type="email"
                             id="email"
                             name="email"
                             autocomplete="email"
-                            placeholder="Please enter your email"
+                            placeholder={$_("please-enter-your-email")}
                             class="input input-bordered"
                             class:input-error={error}
                             bind:value={emailValue}
@@ -79,14 +82,14 @@
 
                     <div class="form-control w-full">
                         <label for="password" class="label label-text"
-                            >Password</label
+                            >{$_("password")}</label
                         >
                         <input
                             type="password"
                             id="password"
                             name="password"
                             autocomplete="new-password"
-                            placeholder="Please enter a password"
+                            placeholder={$_("please-enter-a-password")}
                             class="input input-bordered"
                             class:input-error={error}
                             bind:value={passwordValue}
@@ -97,7 +100,7 @@
                         class="p-2  hi form-pop-msg text-error"
                         class:hidden={!error}
                     >
-                        User already exist.
+                        {$_("user-already-exist")}
                     </div>
                     <div class="flex  py-4">
                         <input
@@ -107,9 +110,7 @@
                             bind:checked={privacyChecked}
                         />
                         <label for="privacy" class="text-xs ml-2 text-left">
-                            I accept the Projectify Terms of Service. For more
-                            information about Projectify's use and protection
-                            of your data, please see our Privacy Policy.
+                            {$_("signup-privacy")}
                         </label>
                     </div>
                     <div class="pt-2">
@@ -118,7 +119,7 @@
                             type="submit"
                             disabled={!privacyChecked}
                         >
-                            Sign up
+                            {$_("sign-up")}
                         </button>
                     </div>
                 </div>
@@ -130,17 +131,18 @@
         >
             <div class="card-body items-center">
                 <div class="py-2">
-                    <h1 class="card-title">Email sent</h1>
+                    <h1 class="card-title">{$_("email-sent")}</h1>
                     <div>
-                        I sent an email to <span class="link link-primary"
-                            >{userData.email}</span
-                        >. Please proceed from the url described in the
-                        message.<wbr />
+                        {$_("i-sent-an-email-to")}
+                        <span class="link link-primary">{userData.email}</span
+                        >. {$_(
+                            "please-proceed-from-the-url-described-in-the-message"
+                        )}<wbr />
                     </div>
                 </div>
                 <div class="pt-2">
                     <button class="btn btn-primary" on:click={gotoTopPage}>
-                        Top page
+                        {$_("top-page")}
                     </button>
                 </div>
             </div>

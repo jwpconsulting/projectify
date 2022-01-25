@@ -4,6 +4,7 @@
     import IconChevronRight from "../icons/icon-chevron-right.svelte";
     import IconPlus from "../icons/icon-plus.svelte";
     import { openNewTask, openTaskDetails } from "$lib/stores/dashboard";
+    import { _ } from "svelte-i18n";
 
     export let section;
     export let index = 0;
@@ -107,7 +108,7 @@
                     <div
                         class="flex flex-col overflow-y-hidden max-h-full mr-3 text-primary font-bold"
                     >
-                        New task
+                        {$_("new-task")}
                     </div>
                 </div>
             </div>

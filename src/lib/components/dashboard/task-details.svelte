@@ -13,6 +13,7 @@
     import { query } from "svelte-apollo";
     import IconTrash from "../icons/icon-trash.svelte";
     import { client } from "$lib/graphql/client";
+    import { _ } from "svelte-i18n";
 
     let res = null;
     let task = null;
@@ -109,7 +110,7 @@
 
 {#if res && $res.loading}
     <div class="flex flex-col p-0 w-[60vw] justify-center items-center h-full">
-        Loading...
+        $_('loading')
     </div>
 {:else}
     <div class="flex flex-col p-0 w-[60vw]">
@@ -121,34 +122,34 @@
             </div>
             <input
                 class="grow text-xl p-2 rounded-md"
-                placeholder="Task Name"
+                placeholder={$_("task-name")}
                 bind:value={task.title}
             />
 
             <button
                 class="btn btn-primary rounded-full"
-                on:click={() => save()}>Save</button
+                on:click={() => save()}>$_('save')</button
             >
         </header>
         <div class="tabs px-6">
-            <button class="tab tab-bordered tab-active">Task</button>
-            <button class="tab tab-bordered">Discussion</button>
+            <button class="tab tab-bordered tab-active">{$_("task")}</button>
+            <button class="tab tab-bordered">{$_("discussion")}</button>
             <div class="h-[2px] grow bg-base-300" />
         </div>
         <main class="flex flex-col overflow-y-auto">
             <div class="flex flex-col p-6 space-y-4">
-                <div class="text-xl uppercase font-bold">Overview</div>
+                <div class="text-xl uppercase font-bold">{$_("overview")}</div>
 
                 <textarea
                     rows="6"
                     class="textarea textarea-bordered resize-none leading-normal p-4"
-                    placeholder="Please enter an overview"
+                    placeholder={$_("please-enter-an-overview")}
                     bind:value={task.description}
                 />
             </div>
             <div class="flex flex-col p-6 space-y-4">
                 <div class="flex text-xl space-x-2">
-                    <span class="uppercase font-bold">Sub Task</span>
+                    <span class="uppercase font-bold">{$_("sub-task")}</span>
                     <span>{percent}%</span>
                 </div>
 
@@ -179,7 +180,7 @@
                 <div class="relative">
                     <input
                         type="text"
-                        placeholder="New sub task name"
+                        placeholder={$_("new-sub-task-name")}
                         class="w-full pr-16 input input-bordered"
                         bind:value={newSubTaskTitle}
                         on:keydown={(e) => e.key === "Enter" && addSubTask()}

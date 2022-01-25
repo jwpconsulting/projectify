@@ -1,5 +1,6 @@
 <script lang="ts">
     import { getContext } from "svelte";
+    import { _ } from "svelte-i18n";
 
     let boardName = "";
     const modal = getContext<any>("modal");
@@ -10,7 +11,9 @@
 
 <div class="card-body items-center">
     <div class="form-control w-full">
-        <label for="boardName" class="label label-text">BoardName</label>
+        <label for="boardName" class="label label-text"
+            >{$_("board-name")}</label
+        >
         <input
             type="text"
             name="boardName"
@@ -20,6 +23,8 @@
         />
     </div>
     <div class="pt-7">
-        <button class="btn btn-primary" on:click={submit}>Create</button>
+        <button class="btn btn-primary" on:click={submit}
+            >{$_("create")}</button
+        >
     </div>
 </div>

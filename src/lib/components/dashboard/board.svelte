@@ -9,6 +9,7 @@
     import IconPlus from "../icons/icon-plus.svelte";
     import { getModal } from "../dialogModal.svelte";
     import { client } from "$lib/graphql/client";
+    import { _ } from "svelte-i18n";
 
     export let boardUUID = null;
 
@@ -74,7 +75,7 @@
 
 {#if res && $res.loading}
     <div class="flex grow flex-col items-center justify-center">
-        ...Loading
+        {$_("loading")}
     </div>
 {:else if board}
     <div class="flex grow flex-col">
@@ -84,7 +85,7 @@
             <div
                 class="bg-primary flex items-center p-1 px-3 rounded-lg text-primary-content"
             >
-                <span class="text-xs p-1">Deadline</span>
+                <span class="text-xs p-1">{$_("deadline")}</span>
                 <span class="text-base p-1 ">2021.12.31</span>
             </div>
         </div>
@@ -110,7 +111,7 @@
                 on:click={() => onAddNewSection()}
             >
                 <IconPlus />
-                <div>New Section</div>
+                <div>{$_("new-section")}</div>
             </div>
         </div>
     </div>
