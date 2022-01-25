@@ -40,6 +40,9 @@ GRAPHQL_WS_SEQUENTIAL = False
 ssl_context = ssl.SSLContext()
 ssl_context.check_hostname = False
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+
 heroku_redis_ssl_host = {
     "address": os.environ["REDIS_TLS_URL"],
     "ssl": ssl_context,
