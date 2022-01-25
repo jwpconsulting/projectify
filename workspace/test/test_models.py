@@ -50,6 +50,18 @@ class TestWorkspace:
 
 
 @pytest.mark.django_db
+class TestWorkspaceUserManager:
+    """Test workspace user manager."""
+
+    def test_filter_by_workspace_pks(self, workspace_user, workspace):
+        """Test filter_by_workspace_pks."""
+        qs = models.WorkspaceUser.objects.filter_by_workspace_pks(
+            [workspace.pk],
+        )
+        assert list(qs) == [workspace_user]
+
+
+@pytest.mark.django_db
 class TestWorkspaceUser:
     """Test WorkspaceUser."""
 

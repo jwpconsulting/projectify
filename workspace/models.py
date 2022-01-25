@@ -50,6 +50,14 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         )
 
 
+class WorkspaceUserQuerySet(models.QuerySet):
+    """Workspace user queryset."""
+
+    def filter_by_workspace_pks(self, workspace_pks):
+        """Filter by workspace pks."""
+        return self.filter(workspace__pk__in=workspace_pks)
+
+
 class WorkspaceUser(TimeStampedModel, models.Model):
     """Workspace to user mapping."""
 
@@ -62,6 +70,8 @@ class WorkspaceUser(TimeStampedModel, models.Model):
         on_delete=models.PROTECT,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+
+    objects = WorkspaceUserQuerySet.as_manager()
 
 
 class WorkspaceBoardManager(models.Manager):
