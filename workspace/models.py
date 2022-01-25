@@ -183,6 +183,10 @@ class Task(
             self.to(bottom_plus_one)
             self.to(position)
 
+    def add_sub_task(self, title, description):
+        """Add a sub task."""
+        return self.subtask_set.create(title=title, description=description)
+
     class Meta:
         """Meta."""
 
