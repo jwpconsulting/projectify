@@ -130,6 +130,18 @@ class TestWorkspaceBoard:
 class TestWorkspaceBoardSectionManager:
     """Test WorkspaceBoardSection manager."""
 
+    def test_filter_by_workspace_board_pks(
+        self,
+        workspace_board,
+        workspace_board_section,
+    ):
+        """Test filter_by_workspace_board_pks."""
+        objects = models.WorkspaceBoardSection.objects
+        qs = objects.filter_by_workspace_board_pks(
+            [workspace_board.pk],
+        )
+        assert list(qs) == [workspace_board_section]
+
     def test_get_for_user_and_uuid(
         self,
         workspace,

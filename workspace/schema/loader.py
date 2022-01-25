@@ -58,3 +58,29 @@ class WorkspaceWorkspaceBoardLoader(DataLoader):
 
 
 workspace_workspace_board_loader = WorkspaceWorkspaceBoardLoader()
+
+
+class WorkspaceBoardWorkspaceBoardSectionLoader(DataLoader):
+    """Workspace board section loader for workspace boards."""
+
+    def batch_load_fn(self, keys):
+        """Load workspace board sections for workspace boards."""
+        workspace_board_sections = defaultdict(list)
+        objects = models.WorkspaceBoardSection.objects
+        qs = objects.filter_by_workspace_board_pks(keys).select_related(
+            "workspace_board",
+        )
+        for workspace_board_section in qs.iterator():
+            workspace_board_sections[
+                workspace_board_section.workspace_board.pk
+            ].append(
+                workspace_board_section,
+            )
+        return Promise.resolve(
+            [workspace_board_sections.get(key, []) for key in keys],
+        )
+
+
+workspace_board_workspace_board_section_loader = (
+    WorkspaceBoardWorkspaceBoardSectionLoader()
+)
