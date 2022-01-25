@@ -1,5 +1,8 @@
 """Projectify project schema."""
 import graphene
+from graphene_django.debug import (
+    DjangoDebug,
+)
 
 import user.schema
 import workspace.schema
@@ -11,6 +14,8 @@ class Query(
     graphene.ObjectType,
 ):
     """Query object."""
+
+    debug = graphene.Field(DjangoDebug, name="_debug")
 
 
 class Mutation(
