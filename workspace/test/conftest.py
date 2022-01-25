@@ -41,6 +41,14 @@ def task(workspace_board_section):
 
 
 @pytest.fixture
+def other_task(workspace_board_section):
+    """Return another task belonging to the same workspace board section."""
+    return factory.TaskFactory(
+        workspace_board_section=workspace_board_section,
+    )
+
+
+@pytest.fixture
 def sub_task(task):
     """Return subtask."""
     return factory.SubTaskFactory(
