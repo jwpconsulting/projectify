@@ -25,7 +25,7 @@ jobs:
           command: pip3 install pipenv
       - run:
           name: Install pip packages
-          command: pipenv install --deploy --dev
+          command: pipenv sync --dev
       - run:
           name: Pipenv check
           command: pipenv check
