@@ -77,6 +77,10 @@ class WorkspaceUser(TimeStampedModel, models.Model):
 class WorkspaceBoardManager(models.Manager):
     """WorkspaceBoard Manager."""
 
+    def filter_by_workspace_pks(self, workspace_pks):
+        """Filter by workspace pks."""
+        return self.filter(workspace__pk__in=workspace_pks)
+
     def get_for_user_and_uuid(self, user, uuid):
         """Get a workspace baord for user and uuid."""
         return self.filter(workspace__users=user).get(uuid=uuid)
