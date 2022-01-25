@@ -5,6 +5,9 @@ import graphene_django
 from .. import (
     models,
 )
+from . import (
+    loader,
+)
 
 
 class Workspace(graphene_django.DjangoObjectType):
@@ -15,7 +18,7 @@ class Workspace(graphene_django.DjangoObjectType):
 
     def resolve_users(self, info):
         """Resolve workspace users."""
-        return self.users.all()
+        return loader.workspace_user_loader.load(self.pk)
 
     def resolve_boards(self, info):
         """Resolve workspace boards."""
