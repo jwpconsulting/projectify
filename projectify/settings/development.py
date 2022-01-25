@@ -18,3 +18,7 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # GraphQL
 GRAPHIQL_ENABLE = True
 GRAPHQL_WS_SEQUENTIAL = True
+GRAPHENE["MIDDLEWARE"] = (
+    *GRAPHENE["MIDDLEWARE"],
+    "graphene_django.debug.DjangoDebugMiddleware",
+)
