@@ -284,6 +284,16 @@ class TestTask:
 
 
 @pytest.mark.django_db
+class TestSubTaskManager:
+    """Test SubTask manager."""
+
+    def test_filter_by_task_pks(self, task, sub_task):
+        """Test filter_by_task_pks."""
+        qs = models.SubTask.objects.filter_by_task_pks([task.pk])
+        assert list(qs) == [sub_task]
+
+
+@pytest.mark.django_db
 class TestSubTask:
     """Test SubTask."""
 
