@@ -184,6 +184,15 @@ class TestWorkspaceBoardSection:
 class TestTaskManager:
     """Test TaskManager."""
 
+    def test_filter_by_workspace_board_section_pks(
+        self, workspace_board_section, task
+    ):
+        """Test filter_by_workspace_board_section_pks."""
+        qs = models.Task.objects.filter_by_workspace_board_section_pks(
+            [workspace_board_section.pk],
+        )
+        assert list(qs) == [task]
+
     def test_get_for_user_and_uuid(self, workspace, task, workspace_user):
         """Test get_for_user_and_uuid."""
         factory.WorkspaceUserFactory(
