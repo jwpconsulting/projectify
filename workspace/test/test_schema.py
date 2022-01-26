@@ -41,6 +41,70 @@ class TestBigQuery:
 
 
 @pytest.mark.django_db
+class TestTopLevelResolvers:
+    """Test top level resolvers."""
+
+    query = """
+query All(
+  $workspaceUuid: ID!, $workspaceBoardUuid: ID!,
+  $workspaceBoardSectionUuid: ID!, $taskUuid: ID!, $subTaskUuid: ID!) {
+  workspace(uuid: $workspaceUuid) {
+    title
+  }
+  workspaceBoard(uuid: $workspaceBoardUuid) {
+    title
+  }
+  workspaceBoardSection(uuid: $workspaceBoardSectionUuid) {
+    title
+  }
+  task(uuid: $taskUuid) {
+    title
+  }
+}
+"""
+
+    def test_query(
+        self,
+        workspace,
+        workspace_board,
+        workspace_board_section,
+        task,
+        graphql_query_user,
+        workspace_user,
+        json_loads,
+    ):
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "workspaceUuid": str(workspace.uuid),
+                    "workspaceBoardUuid": str(workspace_board.uuid),
+                    "workspaceBoardSectionUuid": str(
+                        workspace_board_section.uuid,
+                    ),
+                    "taskUuid": str(task.uuid),
+                },
+            ).content,
+        )
+        assert result == {
+            "data": {
+                "workspace": {
+                    "title": workspace.title,
+                },
+                "workspaceBoard": {
+                    "title": workspace_board.title,
+                },
+                "workspaceBoardSection": {
+                    "title": workspace_board_section.title,
+                },
+                "task": {
+                    "title": task.title,
+                },
+            },
+        }
+
+
+@pytest.mark.django_db
 class TestMoveTaskMutation:
     """Test MoveTaskMutation."""
 
