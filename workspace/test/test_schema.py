@@ -77,6 +77,7 @@ query All(
         workspace_user,
         json_loads,
     ):
+        """Test query."""
         result = json_loads(
             graphql_query_user(
                 self.query,
