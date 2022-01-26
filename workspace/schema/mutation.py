@@ -178,6 +178,28 @@ class MoveTaskMutation(graphene.Mutation):
         return cls(task)
 
 
+# Delete Mutations
+class DeleteWorkspaceBoardMutation(graphene.Mutation):
+    """Delete workspace board mutation."""
+
+    class Arguments:
+        """Arguments."""
+
+        uuid = graphene.ID(required=True)
+
+    workspace_board = graphene.Field(types.WorkspaceBoard)
+
+    @classmethod
+    def mutate(cls, root, info, uuid):
+        """Delete workspace board."""
+        workspace_board = models.WorkspaceBoard.objects.get_for_user_and_uuid(
+            info.context.user,
+            uuid,
+        )
+        workspace_board.delete()
+        return cls(workspace_board)
+
+
 class Mutation:
     """Mutation."""
 
@@ -186,3 +208,4 @@ class Mutation:
     add_task = AddTaskMutation.Field()
     add_sub_task = AddSubTaskMutation.Field()
     move_task = MoveTaskMutation.Field()
+    delete_workspace_board = DeleteWorkspaceBoardMutation.Field()

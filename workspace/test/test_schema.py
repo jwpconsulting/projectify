@@ -1,6 +1,10 @@
 """Test workspace schema."""
 import pytest
 
+from .. import (
+    models,
+)
+
 
 @pytest.mark.django_db
 class TestBigQuery:
@@ -157,3 +161,77 @@ mutation MoveTask($taskUuid: ID!, $sectionUuid: ID!) {
                 }
             }
         }
+
+
+# Delete Mutations
+@pytest.mark.django_db
+class TestDeleteWorkspaceBoardMutation:
+    """Test DeleteWorkspaceBoardMutation."""
+
+    query = """
+mutation DeleteWorkspaceBoard($uuid: ID!) {
+  deleteWorkspaceBoard(uuid: $uuid) {
+    workspaceBoard {
+      uuid
+    }
+  }
+}
+"""
+
+    def test_query(
+        self,
+        graphql_query_user,
+        json_loads,
+        workspace_board,
+        workspace_user,
+    ):
+        """Test query."""
+        assert models.WorkspaceBoard.objects.count() == 1
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(workspace_board.uuid),
+                },
+            ).content,
+        )
+        assert result == {
+            "data": {
+                "deleteWorkspaceBoard": {
+                    "workspaceBoard": {
+                        "uuid": str(workspace_board.uuid),
+                    }
+                }
+            }
+        }
+        assert models.WorkspaceBoard.objects.count() == 0
+
+    def test_query_unauthorized(
+        self,
+        graphql_query_user,
+        json_loads,
+        workspace_board,
+    ):
+        """Test query."""
+        assert models.WorkspaceBoard.objects.count() == 1
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(workspace_board.uuid),
+                },
+            ).content,
+        )
+        assert result == {
+            "data": {
+                "deleteWorkspaceBoard": None,
+            },
+            "errors": [
+                {
+                    "locations": [{"column": 3, "line": 3}],
+                    "message": "WorkspaceBoard matching query does not exist.",
+                    "path": ["deleteWorkspaceBoard"],
+                },
+            ],
+        }
+        assert models.WorkspaceBoard.objects.count() == 1
