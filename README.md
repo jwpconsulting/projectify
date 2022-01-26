@@ -36,6 +36,7 @@ To run a celery worker:
 - `MAILGUN_API_KEY`
 - `MAILGUN_DOMAIN`
 - `FRONTEND_URL`
+- `REDIS_TLS_URL`
 
 # License
 
