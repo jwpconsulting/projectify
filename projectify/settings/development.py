@@ -1,4 +1,6 @@
 # flake8: noqa: F401, F403
+import os
+
 from .base import *
 
 
@@ -11,6 +13,7 @@ CORS_ALLOWED_ORIGINS = ("http://localhost:3000",)
 FRONTEND_URL = "http://localhost:3000/"
 
 CELERY_TASK_ALWAYS_EAGER = True
+CELERY_BROKER_URL = os.environ["REDIS_TLS_URL"]
 
 # Email
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

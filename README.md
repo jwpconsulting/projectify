@@ -5,6 +5,7 @@
 - Python >= 3.9.9
 - pipenv
 - PostgreSQL
+- Redis (for celery)
 
 # Quickstart
 
@@ -16,11 +17,16 @@ pipenv shell
 cp .env.template .env
 vim .env
 # Edit DATABASE_URL
+# Edit REDIS_TLS_URL
 createdb projectify
 ./manage.py migrate
 ./manage.py seeddb
 ./manage.py runserver
 ```
+
+To run a celery worker:
+
+`celery -A projectify worker -c 1`
 
 # Production Environment Variables
 
