@@ -20,6 +20,7 @@ class Query:
         uuid=graphene.ID(),
     )
     task = graphene.Field(types.Task, uuid=graphene.ID())
+    sub_task = graphene.Field(types.SubTask, uuid=graphene.ID())
 
     def resolve_workspaces(self, info):
         """Resolve user's workspaces."""
@@ -49,6 +50,13 @@ class Query:
     def resolve_task(self, info, uuid):
         """Resolve a task."""
         return models.Task.objects.get_for_user_and_uuid(
+            info.context.user,
+            uuid,
+        )
+
+    def resolve_sub_task(self, info, uuid):
+        """Resolve a sub task."""
+        return models.SubTask.objects.get_for_user_and_uuid(
             info.context.user,
             uuid,
         )

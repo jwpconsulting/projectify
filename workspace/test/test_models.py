@@ -292,6 +292,16 @@ class TestSubTaskManager:
         qs = models.SubTask.objects.filter_by_task_pks([task.pk])
         assert list(qs) == [sub_task]
 
+    def test_get_for_user_and_uuid(self, sub_task, workspace_user):
+        """Test get_for_user_and_uuid."""
+        assert (
+            models.SubTask.objects.get_for_user_and_uuid(
+                workspace_user.user,
+                sub_task.uuid,
+            )
+            == sub_task
+        )
+
 
 @pytest.mark.django_db
 class TestSubTask:

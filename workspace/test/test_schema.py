@@ -60,6 +60,9 @@ query All(
   task(uuid: $taskUuid) {
     title
   }
+  subTask(uuid: $subTaskUuid) {
+    title
+  }
 }
 """
 
@@ -69,6 +72,7 @@ query All(
         workspace_board,
         workspace_board_section,
         task,
+        sub_task,
         graphql_query_user,
         workspace_user,
         json_loads,
@@ -83,6 +87,7 @@ query All(
                         workspace_board_section.uuid,
                     ),
                     "taskUuid": str(task.uuid),
+                    "subTaskUuid": str(sub_task.uuid),
                 },
             ).content,
         )
@@ -99,6 +104,9 @@ query All(
                 },
                 "task": {
                     "title": task.title,
+                },
+                "subTask": {
+                    "title": sub_task.title,
                 },
             },
         }
