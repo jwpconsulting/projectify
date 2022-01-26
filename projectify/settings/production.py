@@ -42,6 +42,8 @@ ssl_context.check_hostname = False
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = True
 
+SECURE_HSTS_SECONDS = 3600
+
 heroku_redis_ssl_host = {
     "address": os.environ["REDIS_TLS_URL"],
     "ssl": ssl_context,
