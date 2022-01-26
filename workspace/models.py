@@ -229,9 +229,11 @@ class SubTaskManager(OrderedModelManager):
 
     def get_for_user_and_uuid(self, user, uuid):
         """Get sub task for a certain user and sub task uuid."""
-        return self.filter(
-            task__workspace_board_section__workspace_board__workspace__users=user,
-        ).get(uuid=uuid)
+        kwargs = {
+            "task__workspace_board_section__workspace_board__"
+            "workspace__users": user,
+        }
+        return self.filter(**kwargs).get(uuid=uuid)
 
 
 class SubTask(
