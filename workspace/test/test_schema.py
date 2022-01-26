@@ -163,6 +163,81 @@ mutation MoveTask($taskUuid: ID!, $sectionUuid: ID!) {
         }
 
 
+# Update Mutations
+@pytest.mark.django_db
+class TestUpdateWorkspaceMutation:
+    """Test UpdateWorkspaceMutation."""
+
+    query = """
+mutation UpdateWorkspace($uuid: ID!) {
+  updateWorkspace(input: {uuid: $uuid, title: "foo", description: "bar"}) {
+    workspace {
+      uuid
+      title
+      description
+    }
+  }
+}
+
+"""
+
+    def test_query(
+        self,
+        graphql_query_user,
+        json_loads,
+        workspace,
+        workspace_user,
+    ):
+        """Test query."""
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(workspace.uuid),
+                },
+            ).content,
+        )
+        assert result == {
+            "data": {
+                "updateWorkspace": {
+                    "workspace": {
+                        "uuid": str(workspace.uuid),
+                        "title": "foo",
+                        "description": "bar",
+                    },
+                },
+            },
+        }
+
+    def test_query_unauthorized(
+        self,
+        graphql_query_user,
+        json_loads,
+        workspace,
+    ):
+        """Test with unauthorized user."""
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(workspace.uuid),
+                },
+            ).content,
+        )
+        assert result == {
+            "data": {
+                "updateWorkspace": None,
+            },
+            "errors": [
+                {
+                    "locations": [{"column": 3, "line": 3}],
+                    "message": "Workspace matching query does not exist.",
+                    "path": ["updateWorkspace"],
+                },
+            ],
+        }
+
+
 # Delete Mutations
 @pytest.mark.django_db
 class TestDeleteWorkspaceBoardMutation:
