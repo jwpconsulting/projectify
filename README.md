@@ -5,7 +5,7 @@
 - Python >= 3.9.9
 - pipenv
 - PostgreSQL
-- Redis (for celery)
+- Redis (6 >= for production)
 
 # Quickstart
 
