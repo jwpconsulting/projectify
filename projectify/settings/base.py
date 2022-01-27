@@ -166,7 +166,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 GRAPHENE = {
     "SCHEMA": "projectify.schema.schema",
     "SUBSCRIPTION_PATH": "/graphql-ws",
-    "MIDDLEWARE": [],
+    "MIDDLEWARE": ["projectify.middleware.atomic_transaction_middleware"],
 }
 
 AUTH_USER_MODEL = "user.User"
