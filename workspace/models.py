@@ -139,6 +139,30 @@ class WorkspaceBoardSection(
         """Add a task to this section."""
         return self.task_set.create(title=title, description=description)
 
+    def move_to(self, position):
+        """
+        Move to specified position n within workspace board.
+
+        No save required.
+        """
+        neighbor_sections = (
+            self.workspace_board.workspaceboardsection_set.select_for_update()
+        )
+        with transaction.atomic():
+            # Force queryset to be evaluated to lock them for the time of
+            # this transaction
+            list(neighbor_sections)
+            # XXX hack
+            qs = self.get_ordering_queryset()
+            if len(qs) == 1:
+                # If there is nothing to order, move along
+                self.order = 0
+                self.save()
+                return
+            bottom_plus_one = qs.get_next_order()
+            self.to(bottom_plus_one)
+            self.to(position)
+
     class Meta:
         """Meta."""
 
