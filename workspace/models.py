@@ -234,6 +234,7 @@ class Task(
             bottom_plus_one = qs.get_next_order()
             self.to(bottom_plus_one)
             self.to(position)
+            self.save()
 
     def add_sub_task(self, title, description):
         """Add a sub task."""
