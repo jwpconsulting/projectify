@@ -74,6 +74,9 @@ query All(
   }
   task(uuid: $taskUuid) {
     title
+    workspaceBoardSection {
+      title
+    }
   }
   subTask(uuid: $subTaskUuid) {
     title
@@ -128,6 +131,9 @@ query All(
                 },
                 "task": {
                     "title": task.title,
+                    "workspaceBoardSection": {
+                        "title": workspace_board_section.title,
+                    },
                 },
                 "subTask": {
                     "title": sub_task.title,

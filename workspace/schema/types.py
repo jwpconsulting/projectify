@@ -84,6 +84,9 @@ class Task(graphene_django.DjangoObjectType):
 
     sub_tasks = graphene.List("workspace.schema.types.SubTask")
     chat_messages = graphene.List("workspace.schema.types.ChatMessage")
+    workspace_board_section = graphene.Field(
+        "workspace.schema.types.WorkspaceBoardSection",
+    )
 
     def resolve_sub_tasks(self, info):
         """Resolve sub tasks for this task."""
@@ -92,6 +95,12 @@ class Task(graphene_django.DjangoObjectType):
     def resolve_chat_messages(self, info):
         """Resolve chat messages for this task."""
         return loader.task_chat_message_loader.load(self.pk)
+
+    def resolve_workspace_board_section(self, info):
+        """Resolve workspace board section for this task."""
+        return loader.workspace_board_section_loader.load(
+            self.workspace_board_section.pk,
+        )
 
     class Meta:
         """Meta."""
