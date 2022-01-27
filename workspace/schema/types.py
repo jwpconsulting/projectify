@@ -42,12 +42,17 @@ class WorkspaceBoard(graphene_django.DjangoObjectType):
     """WorkspaceBoard."""
 
     sections = graphene.List("workspace.schema.types.WorkspaceBoardSection")
+    workspace = graphene.Field("workspace.schema.types.Workspace")
 
     def resolve_sections(self, info):
         """Resolve workspace board sections."""
         return loader.workspace_board_workspace_board_section_loader.load(
             self.pk,
         )
+
+    def resolve_workspace(self, info):
+        """Resolve workspace."""
+        return loader.workspace_loader.load(self.workspace.pk)
 
     class Meta:
         """Meta."""

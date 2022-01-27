@@ -160,6 +160,21 @@ class AuthorLoader(DataLoader):
 author_loader = AuthorLoader()
 
 
+class WorkspaceLoader(DataLoader):
+    """Workspace loader."""
+
+    def batch_load_fn(self, keys):
+        """Load work spaces by pk."""
+        workspaces = {}
+        qs = models.Workspace.objects.filter(pk__in=keys)
+        for workspace in qs.iterator():
+            workspaces[workspace.pk] = workspace
+        return Promise.resolve([workspaces.get(key) for key in keys])
+
+
+workspace_loader = WorkspaceLoader()
+
+
 class WorkspaceBoardLoader(DataLoader):
     """Workspace board loader."""
 
