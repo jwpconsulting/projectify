@@ -162,6 +162,7 @@ class WorkspaceBoardSection(
             bottom_plus_one = qs.get_next_order()
             self.to(bottom_plus_one)
             self.to(position)
+            self.save()
 
     class Meta:
         """Meta."""
