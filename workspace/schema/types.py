@@ -110,6 +110,10 @@ class Task(graphene_django.DjangoObjectType):
 class SubTask(graphene_django.DjangoObjectType):
     """SubTask."""
 
+    def resolve_task(self, info):
+        """Resolve task with data loader."""
+        return loader.task_loader.load(self.task.pk)
+
     class Meta:
         """Meta."""
 
@@ -120,6 +124,7 @@ class SubTask(graphene_django.DjangoObjectType):
             "description",
             "uuid",
             "order",
+            "task",
         )
         model = models.SubTask
 

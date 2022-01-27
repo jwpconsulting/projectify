@@ -158,3 +158,18 @@ class AuthorLoader(DataLoader):
 
 
 author_loader = AuthorLoader()
+
+
+class TaskLoader(DataLoader):
+    """Task loader."""
+
+    def batch_load_fn(self, keys):
+        """Load tasks by pk."""
+        tasks = {}
+        qs = models.Task.objects.filter(pk__in=keys)
+        for task in qs.iterator():
+            tasks[task.pk] = task
+        return Promise.resolve([tasks.get(key) for key in keys])
+
+
+task_loader = TaskLoader()
