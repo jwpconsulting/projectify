@@ -292,6 +292,61 @@ class DeleteWorkspaceBoardMutation(graphene.Mutation):
         workspace_board.delete()
         return cls(workspace_board)
 
+class DeleteWorkspaceBoardSectionMutation(graphene.Mutation):
+    """Delete workspace board section mutation."""
+
+    class Arguments:
+        uuid = graphene.ID(required=True)
+
+    workspace_board_section = graphene.Field(types.WorkspaceBoardSection)
+
+    @classmethod
+    def mutate(cls, root, info, uuid):
+        """Delete workspace section board."""
+        workspace_board_section = models.WorkspaceBoardSection.objects.get_for_user_and_uuid(
+            info.context.user,
+            uuid,
+        )
+        workspace_board_section.delete()
+        return cls(workspace_board_section)
+
+class DeleteTaskMutation(graphene.Mutation):
+    """Delete task."""
+
+    class Arguments:
+        uuid = graphene.ID(required=True)
+
+    task = graphene.Field(types.Task)
+
+    @classmethod
+    def mutate(cls, root, info, uuid):
+        """Delete task."""
+        task = models.Task.objects.get_for_user_and_uuid(
+            info.context.user,
+            uuid,
+        )
+        task.delete()
+        return cls(task)
+
+class DeleteSubTaskMutation(graphene.Mutation):
+    """Delete subtask."""
+
+    class Arguments:
+        uuid = graphene.ID(required=True)
+
+    task = graphene.Field(types.Task)
+
+    @classmethod
+    def mutate(cls, root, info, uuid):
+        """Delete task."""
+        sub_task = models.SubTask.objects.get_for_user_and_uuid(
+            info.context.user,
+            uuid,
+        )
+        sub_task.delete()
+        return cls(sub_task)
+
+
 
 class Mutation:
     """Mutation."""
@@ -305,3 +360,5 @@ class Mutation:
     move_task = MoveTaskMutation.Field()
     update_workspace = UpdateWorkspaceMutation.Field()
     delete_workspace_board = DeleteWorkspaceBoardMutation.Field()
+    delete_workspace_board_section = DeleteWorkspaceBoardSectionMutation.Field()
+    delete_task = DeleteTaskMutation.Field()
