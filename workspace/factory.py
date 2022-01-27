@@ -96,3 +96,28 @@ class SubTaskFactory(django.DjangoModelFactory):
         """Meta."""
 
         model = models.SubTask
+
+
+def extract_author(chat_message):
+    """Extract author from chat_message by walking through workspace."""
+    workspace_board = chat_message.task.workspace_board_section.workspace_board
+    workspace_user = workspace_board.workspace.workspaceuser_set.first()
+    if not workspace_user:
+        workspace_user = WorkspaceUserFactory(
+            workspace=workspace_board.workspace,
+        )
+    user = workspace_user.user
+    return user
+
+
+class ChatMessageFactory(django.DjangoModelFactory):
+    """ChatMessage Factory."""
+
+    task = factory.SubFactory(TaskFactory)
+    text = factory.Faker("paragraph")
+    author = factory.LazyAttribute(extract_author)
+
+    class Meta:
+        """Meta."""
+
+        model = models.ChatMessage

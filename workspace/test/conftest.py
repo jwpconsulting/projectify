@@ -54,3 +54,11 @@ def sub_task(task):
     return factory.SubTaskFactory(
         task=task,
     )
+
+
+@pytest.fixture
+def chat_message(task):
+    """Return ChatMessage instance."""
+    return factory.ChatMessageFactory(
+        task=task,
+    )
