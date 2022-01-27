@@ -230,6 +230,54 @@ mutation MoveTask($taskUuid: ID!, $sectionUuid: ID!) {
         }
 
 
+# Add Mutations
+@pytest.mark.django_db
+class TestAddChatMessageMutation:
+    """Test AddChatMessageMutation."""
+
+    query = """
+mutation AddChatMessage($uuid: ID!) {
+  addChatMessage(input:{taskUuid: $uuid, text:"Hello world"}) {
+    chatMessage {
+      text
+    }
+  }
+}
+"""
+
+    def test_query(self, graphql_query_user, json_loads, task, workspace_user):
+        """Test query."""
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(task.uuid),
+                },
+            ).content,
+        )
+        assert result == {
+            "data": {
+                "addChatMessage": {
+                    "chatMessage": {
+                        "text": "Hello world",
+                    },
+                },
+            },
+        }
+
+    def test_query_unauthorized(self, graphql_query_user, json_loads, task):
+        """Test query."""
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(task.uuid),
+                },
+            ).content,
+        )
+        assert "errors" in result
+
+
 # Update Mutations
 @pytest.mark.django_db
 class TestUpdateWorkspaceMutation:
