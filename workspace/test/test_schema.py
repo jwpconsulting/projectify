@@ -77,6 +77,9 @@ query All(
   }
   subTask(uuid: $subTaskUuid) {
     title
+    task {
+      title
+    }
   }
   chatMessage(uuid: $chatMessageUuid) {
     text
@@ -128,6 +131,9 @@ query All(
                 },
                 "subTask": {
                     "title": sub_task.title,
+                    "task": {
+                        "title": task.title,
+                    },
                 },
                 "chatMessage": {
                     "text": chat_message.text,
