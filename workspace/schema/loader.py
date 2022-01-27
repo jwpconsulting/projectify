@@ -3,6 +3,10 @@ from collections import (
     defaultdict,
 )
 
+from django.contrib.auth import (
+    get_user_model,
+)
+
 from promise import (
     Promise,
 )
@@ -120,3 +124,37 @@ class TaskSubTaskLoader(DataLoader):
 
 
 task_sub_task_loader = TaskSubTaskLoader()
+
+
+class TaskChatMessageLoader(DataLoader):
+    """ChatMessage loader for tasks."""
+
+    def batch_load_fn(self, keys):
+        """Load chat messages for task keys."""
+        chat_messages = defaultdict(list)
+        qs = models.ChatMessage.objects.filter_by_task_pks(
+            keys,
+        ).select_related(
+            "task",
+        )
+        for chat_message in qs.iterator():
+            chat_messages[chat_message.task.pk].append(chat_message)
+        return Promise.resolve([chat_messages.get(key, []) for key in keys])
+
+
+task_chat_message_loader = TaskChatMessageLoader()
+
+
+class AuthorLoader(DataLoader):
+    """Author loader."""
+
+    def batch_load_fn(self, keys):
+        """Load authors for author pks."""
+        authors = {}
+        qs = get_user_model().objects.filter(pk__in=keys)
+        for user in qs.iterator():
+            authors[user.pk] = user
+        return Promise.resolve([authors.get(key) for key in keys])
+
+
+author_loader = AuthorLoader()

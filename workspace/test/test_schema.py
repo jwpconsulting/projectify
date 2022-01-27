@@ -20,6 +20,9 @@ class TestBigQuery:
     boards {
       sections {
         tasks {
+          chatMessages {
+            text
+          }
           subTasks {
             title
           }
@@ -38,11 +41,16 @@ class TestBigQuery:
         user,
         json_loads,
         sub_task,
+        chat_message,
     ):
         """Assert that the big query works."""
         result = json_loads(graphql_query_user(self.query).content)
+        assert "errors" not in result, result
         sections = result["data"]["workspaces"][0]["boards"][0]["sections"][0]
-        assert sections["tasks"][0]["subTasks"][0]["title"] == sub_task.title
+        tasks = sections["tasks"]
+        sub_tasks = tasks[0]["subTasks"]
+        assert sub_tasks[0]["title"] == sub_task.title
+        assert tasks[0]["chatMessages"][0]["text"] == chat_message.text
 
 
 @pytest.mark.django_db
@@ -52,7 +60,9 @@ class TestTopLevelResolvers:
     query = """
 query All(
   $workspaceUuid: ID!, $workspaceBoardUuid: ID!,
-  $workspaceBoardSectionUuid: ID!, $taskUuid: ID!, $subTaskUuid: ID!) {
+  $workspaceBoardSectionUuid: ID!, $taskUuid: ID!, $subTaskUuid: ID!,
+  $chatMessageUuid: ID!
+) {
   workspace(uuid: $workspaceUuid) {
     title
   }
@@ -68,6 +78,9 @@ query All(
   subTask(uuid: $subTaskUuid) {
     title
   }
+  chatMessage(uuid: $chatMessageUuid) {
+    text
+  }
 }
 """
 
@@ -78,6 +91,7 @@ query All(
         workspace_board_section,
         task,
         sub_task,
+        chat_message,
         graphql_query_user,
         workspace_user,
         json_loads,
@@ -94,6 +108,7 @@ query All(
                     ),
                     "taskUuid": str(task.uuid),
                     "subTaskUuid": str(sub_task.uuid),
+                    "chatMessageUuid": str(chat_message.uuid),
                 },
             ).content,
         )
@@ -113,6 +128,9 @@ query All(
                 },
                 "subTask": {
                     "title": sub_task.title,
+                },
+                "chatMessage": {
+                    "text": chat_message.text,
                 },
             },
         }
