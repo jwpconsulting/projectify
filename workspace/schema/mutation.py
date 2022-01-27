@@ -139,6 +139,37 @@ class AddSubTaskMutation(graphene.Mutation):
         return cls(sub_task)
 
 
+class AddChatMessageInput(graphene.InputObjectType):
+    """AddChatMessageMutation input."""
+
+    task_uuid = graphene.ID(required=True)
+    text = graphene.String(required=True)
+
+
+class AddChatMessageMutation(graphene.Mutation):
+    """Add ChatMessage mutation."""
+
+    class Arguments:
+        """Arguments."""
+
+        input = AddChatMessageInput(required=True)
+
+    chat_message = graphene.Field(types.ChatMessage)
+
+    @classmethod
+    def mutate(cls, root, info, input):
+        """Mutate."""
+        task = models.Task.objects.get_for_user_and_uuid(
+            info.context.user,
+            input.task_uuid,
+        )
+        chat_message = task.add_chat_message(
+            text=input.text,
+            author=info.context.user,
+        )
+        return cls(chat_message)
+
+
 class MoveWorkspaceBoardSectionInput(graphene.InputObjectType):
     """MoveWorkspaceBoardSectionMutation input."""
 
@@ -269,6 +300,7 @@ class Mutation:
     add_workspace_board_section = AddWorkspaceBoardSectionMutation.Field()
     add_task = AddTaskMutation.Field()
     add_sub_task = AddSubTaskMutation.Field()
+    add_chat_message = AddChatMessageMutation.Field()
     move_workspace_board_section = MoveWorkspaceBoardSectionMutation.Field()
     move_task = MoveTaskMutation.Field()
     update_workspace = UpdateWorkspaceMutation.Field()
