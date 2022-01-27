@@ -139,6 +139,36 @@ class AddSubTaskMutation(graphene.Mutation):
         return cls(sub_task)
 
 
+class MoveWorkspaceBoardSectionInput(graphene.InputObjectType):
+    """MoveWorkspaceBoardSectionMutation input."""
+
+    workspace_board_section_uuid = graphene.ID(required=True)
+    position = graphene.Int(required=True)
+
+
+class MoveWorkspaceBoardSectionMutation(graphene.Mutation):
+    """Move workspace board section mutation."""
+
+    class Arguments:
+        """Arguments."""
+
+        input = MoveWorkspaceBoardSectionInput(required=True)
+
+    workspace_board_section = graphene.Field(types.WorkspaceBoardSection)
+
+    @classmethod
+    def mutate(cls, root, info, input):
+        """Mutate."""
+        workspace_board_section = (
+            models.WorkspaceBoardSection.objects.get_for_user_and_uuid(
+                info.context.user,
+                input.workspace_board_section_uuid,
+            )
+        )
+        workspace_board_section.move_to(input.position)
+        return cls(workspace_board_section)
+
+
 class MoveTaskInput(graphene.InputObjectType):
     """MoveTask mutation input."""
 
@@ -239,6 +269,7 @@ class Mutation:
     add_workspace_board_section = AddWorkspaceBoardSectionMutation.Field()
     add_task = AddTaskMutation.Field()
     add_sub_task = AddSubTaskMutation.Field()
+    move_workspace_board_section = MoveWorkspaceBoardSectionMutation.Field()
     move_task = MoveTaskMutation.Field()
     update_workspace = UpdateWorkspaceMutation.Field()
     delete_workspace_board = DeleteWorkspaceBoardMutation.Field()

@@ -2,6 +2,7 @@
 import pytest
 
 from .. import (
+    factory,
     models,
 )
 
@@ -112,6 +113,54 @@ query All(
                 },
                 "subTask": {
                     "title": sub_task.title,
+                },
+            },
+        }
+
+
+@pytest.mark.django_db
+class TestMoveWorkspaceBoardSectionMutation:
+    """Test MoveWorkspaceBoardSectionMutation."""
+
+    query = """
+mutation MoveWorkspaceBoardSection($uuid: ID!) {
+  moveWorkspaceBoardSection(
+    input:{workspaceBoardSectionUuid: $uuid, position: 1 }
+  ) {
+    workspaceBoardSection {
+      uuid
+      order
+    }
+  }
+}
+"""
+
+    def test_query(
+        self,
+        workspace_board_section,
+        graphql_query_user,
+        workspace_user,
+        json_loads,
+    ):
+        """Test the query."""
+        factory.WorkspaceBoardSectionFactory(
+            workspace_board=workspace_board_section.workspace_board,
+        )
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(workspace_board_section.uuid),
+                },
+            ).content,
+        )
+        assert result == {
+            "data": {
+                "moveWorkspaceBoardSection": {
+                    "workspaceBoardSection": {
+                        "uuid": str(workspace_board_section.uuid),
+                        "order": 1,
+                    },
                 },
             },
         }
