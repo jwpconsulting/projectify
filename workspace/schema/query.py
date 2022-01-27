@@ -21,6 +21,7 @@ class Query:
     )
     task = graphene.Field(types.Task, uuid=graphene.ID())
     sub_task = graphene.Field(types.SubTask, uuid=graphene.ID())
+    chat_message = graphene.Field(types.ChatMessage, uuid=graphene.ID())
 
     def resolve_workspaces(self, info):
         """Resolve user's workspaces."""
@@ -57,6 +58,13 @@ class Query:
     def resolve_sub_task(self, info, uuid):
         """Resolve a sub task."""
         return models.SubTask.objects.get_for_user_and_uuid(
+            info.context.user,
+            uuid,
+        )
+
+    def resolve_chat_message(self, info, uuid):
+        """Resolve a chat message."""
+        return models.ChatMessage.objects.get_for_user_and_uuid(
             info.context.user,
             uuid,
         )

@@ -83,10 +83,15 @@ class Task(graphene_django.DjangoObjectType):
     """Task."""
 
     sub_tasks = graphene.List("workspace.schema.types.SubTask")
+    chat_messages = graphene.List("workspace.schema.types.ChatMessage")
 
     def resolve_sub_tasks(self, info):
         """Resolve sub tasks for this task."""
         return loader.task_sub_task_loader.load(self.pk)
+
+    def resolve_chat_messages(self, info):
+        """Resolve chat messages for this task."""
+        return loader.task_chat_message_loader.load(self.pk)
 
     class Meta:
         """Meta."""
@@ -117,3 +122,23 @@ class SubTask(graphene_django.DjangoObjectType):
             "order",
         )
         model = models.SubTask
+
+
+class ChatMessage(graphene_django.DjangoObjectType):
+    """ChatMessage."""
+
+    def resolve_author(self, info):
+        """Resolve author."""
+        return loader.author_loader.load(self.author.pk)
+
+    class Meta:
+        """Meta."""
+
+        fields = (
+            "created",
+            "modified",
+            "uuid",
+            "text",
+            "author",
+        )
+        model = models.ChatMessage

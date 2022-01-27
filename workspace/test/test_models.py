@@ -360,6 +360,26 @@ class TestSubTask:
 
 
 @pytest.mark.django_db
+class TestChatMessageManager:
+    """Test ChatMessage Manager."""
+
+    def test_filter_by_task_pks(self, chat_message, task):
+        """Test filter_by_task_pks."""
+        qs = models.ChatMessage.objects.filter_by_task_pks([task.pk])
+        assert list(qs) == [chat_message]
+
+    def test_get_for_user_and_uuid(self, chat_message, workspace_user):
+        """Test get_for_user_and_uuid."""
+        assert (
+            models.ChatMessage.objects.get_for_user_and_uuid(
+                workspace_user.user,
+                chat_message.uuid,
+            )
+            == chat_message
+        )
+
+
+@pytest.mark.django_db
 class TestChatMessage:
     """Test ChatMessage."""
 

@@ -285,6 +285,22 @@ class SubTask(
         ordering = ("task", "order")
 
 
+class ChatMessageQuerySet(models.QuerySet):
+    """ChatMessage query set."""
+
+    def filter_by_task_pks(self, task_pks):
+        """Filter by task pks."""
+        return self.filter(task__pk__in=task_pks)
+
+    def get_for_user_and_uuid(self, user, uuid):
+        """Get for a specific workspace user and uuid."""
+        kwargs = {
+            "task__workspace_board_section__workspace_board__"
+            "workspace__users": user,
+        }
+        return self.filter(**kwargs).get(uuid=uuid)
+
+
 class ChatMessage(TimeStampedModel, models.Model):
     """ChatMessage, belongs to Task."""
 
@@ -298,6 +314,8 @@ class ChatMessage(TimeStampedModel, models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
     )
+
+    objects = ChatMessageQuerySet.as_manager()
 
     class Meta:
         """Meta."""
