@@ -240,6 +240,13 @@ class Task(
         """Add a sub task."""
         return self.subtask_set.create(title=title, description=description)
 
+    def add_chat_message(self, text, author):
+        """Add a chat message."""
+        return self.chatmessage_set.create(
+            text=text,
+            author=author,
+        )
+
     class Meta:
         """Meta."""
 

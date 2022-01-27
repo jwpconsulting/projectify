@@ -329,6 +329,12 @@ class TestTask:
         task.add_sub_task("foo", "bar")
         assert task.subtask_set.count() == 1
 
+    def test_add_chat_message(self, task, user, workspace_user):
+        """Test adding a chat message."""
+        assert task.chatmessage_set.count() == 0
+        task.add_chat_message("Hello", user)
+        assert task.chatmessage_set.count() == 1
+
 
 @pytest.mark.django_db
 class TestSubTaskManager:
