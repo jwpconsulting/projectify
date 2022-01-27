@@ -125,7 +125,7 @@ class TestMoveWorkspaceBoardSectionMutation:
     query = """
 mutation MoveWorkspaceBoardSection($uuid: ID!) {
   moveWorkspaceBoardSection(
-    input:{workspaceBoardSectionUuid: $uuid, position: 1 }
+    input:{workspaceBoardSectionUuid: $uuid, order: 1 }
   ) {
     workspaceBoardSection {
       uuid
@@ -173,7 +173,7 @@ class TestMoveTaskMutation:
     query = """
 mutation MoveTask($taskUuid: ID!, $sectionUuid: ID!) {
   moveTask(input: {taskUuid: $taskUuid,
-      workspaceBoardSectionUuid: $sectionUuid, position: 2}) {
+      workspaceBoardSectionUuid: $sectionUuid, order: 2}) {
     task {
       title
     }

@@ -139,9 +139,9 @@ class WorkspaceBoardSection(
         """Add a task to this section."""
         return self.task_set.create(title=title, description=description)
 
-    def move_to(self, position):
+    def move_to(self, order):
         """
-        Move to specified position n within workspace board.
+        Move to specified order n within workspace board.
 
         No save required.
         """
@@ -161,7 +161,7 @@ class WorkspaceBoardSection(
                 return
             bottom_plus_one = qs.get_next_order()
             self.to(bottom_plus_one)
-            self.to(position)
+            self.to(order)
             self.save()
 
     class Meta:
@@ -207,9 +207,9 @@ class Task(
 
     order_with_respect_to = "workspace_board_section"
 
-    def move_to(self, workspace_board_section, position):
+    def move_to(self, workspace_board_section, order):
         """
-        Move to specified workspace board section and to position n.
+        Move to specified workspace board section and to order n.
 
         No save required.
         """
@@ -233,7 +233,7 @@ class Task(
                 return
             bottom_plus_one = qs.get_next_order()
             self.to(bottom_plus_one)
-            self.to(position)
+            self.to(order)
             self.save()
 
     def add_sub_task(self, title, description):

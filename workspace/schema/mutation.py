@@ -143,7 +143,7 @@ class MoveWorkspaceBoardSectionInput(graphene.InputObjectType):
     """MoveWorkspaceBoardSectionMutation input."""
 
     workspace_board_section_uuid = graphene.ID(required=True)
-    position = graphene.Int(required=True)
+    order = graphene.Int(required=True)
 
 
 class MoveWorkspaceBoardSectionMutation(graphene.Mutation):
@@ -165,7 +165,7 @@ class MoveWorkspaceBoardSectionMutation(graphene.Mutation):
                 input.workspace_board_section_uuid,
             )
         )
-        workspace_board_section.move_to(input.position)
+        workspace_board_section.move_to(input.order)
         return cls(workspace_board_section)
 
 
@@ -174,7 +174,7 @@ class MoveTaskInput(graphene.InputObjectType):
 
     task_uuid = graphene.ID(required=True)
     workspace_board_section_uuid = graphene.ID(required=True)
-    position = graphene.Int(required=True)
+    order = graphene.Int(required=True)
 
 
 class MoveTaskMutation(graphene.Mutation):
@@ -202,8 +202,8 @@ class MoveTaskMutation(graphene.Mutation):
             info.context.user,
             input.task_uuid,
         )
-        # Reposition task
-        task.move_to(workspace_board_section, input.position)
+        # Reorder task
+        task.move_to(workspace_board_section, input.order)
         # Return task
         return cls(task)
 
