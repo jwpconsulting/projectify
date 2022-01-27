@@ -283,3 +283,23 @@ class SubTask(
         """Meta."""
 
         ordering = ("task", "order")
+
+
+class ChatMessage(TimeStampedModel, models.Model):
+    """ChatMessage, belongs to Task."""
+
+    task = models.ForeignKey(
+        Task,
+        on_delete=models.PROTECT,
+    )
+    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+    text = models.TextField()
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+    )
+
+    class Meta:
+        """Meta."""
+
+        ordering = ("created",)

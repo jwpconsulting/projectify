@@ -17,6 +17,7 @@ from user.factory import (
     UserFactory,
 )
 from workspace.factory import (
+    ChatMessageFactory,
     SubTaskFactory,
     TaskFactory,
     WorkspaceBoardFactory,
@@ -77,8 +78,9 @@ class Command(BaseCommand):
             )
             for _ in tqdm.trange(10, desc="Tasks"):
                 task = TaskFactory(workspace_board_section=section)
-                for _ in tqdm.trange(3, desc="Subtasks"):
+                for _ in tqdm.trange(3, desc="Subtasks & chat messages"):
                     SubTaskFactory(task=task)
+                    ChatMessageFactory(task=task)
 
     def create_workspaces(self, users):
         """Create workspaces."""

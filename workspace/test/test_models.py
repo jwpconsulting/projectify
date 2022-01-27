@@ -357,3 +357,12 @@ class TestSubTask:
     def test_factory(self, task, sub_task):
         """Test that sub task correctly belongs to task."""
         assert sub_task.task == task
+
+
+@pytest.mark.django_db
+class TestChatMessage:
+    """Test ChatMessage."""
+
+    def test_factory(self, workspace_user, chat_message):
+        """Test that chat message belongs to user."""
+        assert chat_message.author == workspace_user.user
