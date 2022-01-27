@@ -68,6 +68,9 @@ query All(
   }
   workspaceBoard(uuid: $workspaceBoardUuid) {
     title
+    workspace {
+      title
+    }
   }
   workspaceBoardSection(uuid: $workspaceBoardSectionUuid) {
     title
@@ -128,6 +131,9 @@ query All(
                 },
                 "workspaceBoard": {
                     "title": workspace_board.title,
+                    "workspace": {
+                        "title": workspace.title,
+                    },
                 },
                 "workspaceBoardSection": {
                     "title": workspace_board_section.title,
