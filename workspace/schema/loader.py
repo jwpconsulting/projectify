@@ -40,9 +40,6 @@ class WorkspaceUserLoader(DataLoader):
         return Promise.resolve([users.get(key, []) for key in keys])
 
 
-workspace_user_loader = WorkspaceUserLoader()
-
-
 class WorkspaceWorkspaceBoardLoader(DataLoader):
     """Workspace board loader for workspaces."""
 
