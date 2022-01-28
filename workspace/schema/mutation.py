@@ -297,6 +297,8 @@ class DeleteWorkspaceBoardSectionMutation(graphene.Mutation):
     """Delete workspace board section mutation."""
 
     class Arguments:
+        """Arguments."""
+
         uuid = graphene.ID(required=True)
 
     workspace_board_section = graphene.Field(types.WorkspaceBoardSection)
@@ -318,6 +320,8 @@ class DeleteTaskMutation(graphene.Mutation):
     """Delete task."""
 
     class Arguments:
+        """Arguments."""
+
         uuid = graphene.ID(required=True)
 
     task = graphene.Field(types.Task)
@@ -337,6 +341,8 @@ class DeleteSubTaskMutation(graphene.Mutation):
     """Delete subtask."""
 
     class Arguments:
+        """Arguments."""
+
         uuid = graphene.ID(required=True)
 
     task = graphene.Field(types.Task)
