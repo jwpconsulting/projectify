@@ -77,6 +77,56 @@ def delete_model_instance(model_instance):
 
 @pytest.mark.django_db
 @pytest.mark.asyncio
+class TestWorkspaceConsumer:
+    """Test WorkspaceConsumer."""
+
+    async def test_workspace_saved(self):
+        """Test signal firing on workspace change."""
+        user = await create_user()
+        workspace = await create_workspace()
+        workspace_user = await create_workspace_user(workspace, user)
+        resource = f"ws/workspace/{workspace.uuid}/"
+        communicator = WebsocketCommunicator(
+            websocket_application,
+            resource,
+        )
+        communicator.scope["user"] = user
+        connected, subprotocol = await communicator.connect()
+        assert connected
+        await save_model_instance(workspace)
+        message = await communicator.receive_json_from()
+        assert message == str(workspace.uuid)
+        await communicator.disconnect()
+        await delete_model_instance(workspace_user)
+        await delete_model_instance(user)
+        await delete_model_instance(workspace)
+
+    async def test_workspace_board_saved(self):
+        """Test signal firing on workspace board change."""
+        user = await create_user()
+        workspace = await create_workspace()
+        workspace_board = await create_workspace_board(workspace)
+        workspace_user = await create_workspace_user(workspace, user)
+        resource = f"ws/workspace/{workspace.uuid}/"
+        communicator = WebsocketCommunicator(
+            websocket_application,
+            resource,
+        )
+        communicator.scope["user"] = user
+        connected, subprotocol = await communicator.connect()
+        assert connected
+        await save_model_instance(workspace)
+        message = await communicator.receive_json_from()
+        assert message == str(workspace.uuid)
+        await communicator.disconnect()
+        await delete_model_instance(workspace_board)
+        await delete_model_instance(workspace_user)
+        await delete_model_instance(user)
+        await delete_model_instance(workspace)
+
+
+@pytest.mark.django_db
+@pytest.mark.asyncio
 class TestWorkspaceBoardConsumer:
     """Test WorkspaceBoardConsumer."""
 
