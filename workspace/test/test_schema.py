@@ -161,6 +161,48 @@ query All(
 
 
 @pytest.mark.django_db
+class TestChangeSubTaskDoneMutation:
+    """Test ChangeSubTaskDoneMutation."""
+
+    query = """
+mutation ChangeSubTaskDone($uuid: ID!) {
+  changeSubTaskDone(input: {subTaskUuid: $uuid, done: true}) {
+    subTask {
+      done
+    }
+  }
+}
+"""
+
+    def test_query(
+        self,
+        graphql_query_user,
+        json_loads,
+        workspace_user,
+        sub_task,
+    ):
+        """Test query."""
+        assert sub_task.done is False
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(sub_task.uuid),
+                },
+            ).content,
+        )
+        assert result == {
+            "data": {
+                "changeSubTaskDone": {
+                    "subTask": {
+                        "done": True,
+                    },
+                },
+            },
+        }
+
+
+@pytest.mark.django_db
 class TestMoveWorkspaceBoardSectionMutation:
     """Test MoveWorkspaceBoardSectionMutation."""
 

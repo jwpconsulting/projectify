@@ -144,6 +144,7 @@ class SubTask(graphene_django.DjangoObjectType):
             "uuid",
             "order",
             "task",
+            "done",
         )
         model = models.SubTask
 
