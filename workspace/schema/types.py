@@ -5,9 +5,6 @@ import graphene_django
 from .. import (
     models,
 )
-from . import (
-    loader,
-)
 
 
 class Workspace(graphene_django.DjangoObjectType):
@@ -18,11 +15,13 @@ class Workspace(graphene_django.DjangoObjectType):
 
     def resolve_users(self, info):
         """Resolve workspace users."""
-        return loader.workspace_user_loader.load(self.pk)
+        return info.context.loader.workspace_user_loader.load(self.pk)
 
     def resolve_boards(self, info):
         """Resolve workspace boards."""
-        return loader.workspace_workspace_board_loader.load(self.pk)
+        return info.context.loader.workspace_workspace_board_loader.load(
+            self.pk
+        )
 
     class Meta:
         """Meta."""
@@ -46,13 +45,14 @@ class WorkspaceBoard(graphene_django.DjangoObjectType):
 
     def resolve_sections(self, info):
         """Resolve workspace board sections."""
+        loader = info.context.loader
         return loader.workspace_board_workspace_board_section_loader.load(
             self.pk,
         )
 
     def resolve_workspace(self, info):
         """Resolve workspace."""
-        return loader.workspace_loader.load(self.workspace.pk)
+        return info.context.loader.workspace_loader.load(self.workspace.pk)
 
     class Meta:
         """Meta."""
@@ -69,11 +69,15 @@ class WorkspaceBoardSection(graphene_django.DjangoObjectType):
 
     def resolve_tasks(self, info):
         """Resolve tasks for this workspace board section."""
-        return loader.workspace_board_section_task_loader.load(self.pk)
+        return info.context.loader.workspace_board_section_task_loader.load(
+            self.pk
+        )
 
     def resolve_workspace_board(self, info):
         """Resolve workspace board."""
-        return loader.workspace_board_loader.load(self.workspace_board.pk)
+        return info.context.loader.workspace_board_loader.load(
+            self.workspace_board.pk
+        )
 
     class Meta:
         """Meta."""
@@ -100,15 +104,15 @@ class Task(graphene_django.DjangoObjectType):
 
     def resolve_sub_tasks(self, info):
         """Resolve sub tasks for this task."""
-        return loader.task_sub_task_loader.load(self.pk)
+        return info.context.loader.task_sub_task_loader.load(self.pk)
 
     def resolve_chat_messages(self, info):
         """Resolve chat messages for this task."""
-        return loader.task_chat_message_loader.load(self.pk)
+        return info.context.loader.task_chat_message_loader.load(self.pk)
 
     def resolve_workspace_board_section(self, info):
         """Resolve workspace board section for this task."""
-        return loader.workspace_board_section_loader.load(
+        return info.context.loader.workspace_board_section_loader.load(
             self.workspace_board_section.pk,
         )
 
@@ -131,7 +135,7 @@ class SubTask(graphene_django.DjangoObjectType):
 
     def resolve_task(self, info):
         """Resolve task with data loader."""
-        return loader.task_loader.load(self.task.pk)
+        return info.context.loader.task_loader.load(self.task.pk)
 
     class Meta:
         """Meta."""

@@ -61,9 +61,6 @@ class WorkspaceWorkspaceBoardLoader(DataLoader):
         return Promise.resolve([workspace_boards.get(key, []) for key in keys])
 
 
-workspace_workspace_board_loader = WorkspaceWorkspaceBoardLoader()
-
-
 class WorkspaceBoardWorkspaceBoardSectionLoader(DataLoader):
     """Workspace board section loader for workspace boards."""
 
@@ -85,11 +82,6 @@ class WorkspaceBoardWorkspaceBoardSectionLoader(DataLoader):
         )
 
 
-workspace_board_workspace_board_section_loader = (
-    WorkspaceBoardWorkspaceBoardSectionLoader()
-)
-
-
 class WorkspaceBoardSectionTaskLoader(DataLoader):
     """Task loader for workspace board sections."""
 
@@ -106,9 +98,6 @@ class WorkspaceBoardSectionTaskLoader(DataLoader):
         return Promise.resolve([tasks.get(key, []) for key in keys])
 
 
-workspace_board_section_task_loader = WorkspaceBoardSectionTaskLoader()
-
-
 class TaskSubTaskLoader(DataLoader):
     """SubTask loader for tasks."""
 
@@ -121,9 +110,6 @@ class TaskSubTaskLoader(DataLoader):
         for sub_task in qs.iterator():
             sub_tasks[sub_task.task.pk].append(sub_task)
         return Promise.resolve([sub_tasks.get(key, []) for key in keys])
-
-
-task_sub_task_loader = TaskSubTaskLoader()
 
 
 class TaskChatMessageLoader(DataLoader):
@@ -140,9 +126,6 @@ class TaskChatMessageLoader(DataLoader):
         for chat_message in qs.iterator():
             chat_messages[chat_message.task.pk].append(chat_message)
         return Promise.resolve([chat_messages.get(key, []) for key in keys])
-
-
-task_chat_message_loader = TaskChatMessageLoader()
 
 
 class AuthorLoader(DataLoader):
@@ -172,9 +155,6 @@ class WorkspaceLoader(DataLoader):
         return Promise.resolve([workspaces.get(key) for key in keys])
 
 
-workspace_loader = WorkspaceLoader()
-
-
 class WorkspaceBoardLoader(DataLoader):
     """Workspace board loader."""
 
@@ -185,9 +165,6 @@ class WorkspaceBoardLoader(DataLoader):
         for workspace_board in qs.iterator():
             workspace_boards[workspace_board.pk] = workspace_board
         return Promise.resolve([workspace_boards.get(key) for key in keys])
-
-
-workspace_board_loader = WorkspaceBoardLoader()
 
 
 class WorkspaceBoardSectionLoader(DataLoader):
@@ -206,9 +183,6 @@ class WorkspaceBoardSectionLoader(DataLoader):
         )
 
 
-workspace_board_section_loader = WorkspaceBoardSectionLoader()
-
-
 class TaskLoader(DataLoader):
     """Task loader."""
 
@@ -219,6 +193,3 @@ class TaskLoader(DataLoader):
         for task in qs.iterator():
             tasks[task.pk] = task
         return Promise.resolve([tasks.get(key) for key in keys])
-
-
-task_loader = TaskLoader()
