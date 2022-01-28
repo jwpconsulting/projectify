@@ -425,6 +425,67 @@ mutation UpdateWorkspace($uuid: ID!) {
         }
 
 
+@pytest.mark.django_db
+class TestUpdateWorkspaceBoardMutation:
+    """Test UpdateWorkspaceBoardMutation."""
+
+    query = """
+mutation UpdateWorkspaceBoard($uuid: ID!) {
+  updateWorkspaceBoard(input: {uuid: $uuid, title: "Foo", description: "Bar"})
+  {
+    workspaceBoard {
+      title
+      description
+    }
+  }
+}
+"""
+
+    def test_query(
+        self,
+        graphql_query_user,
+        workspace_board,
+        json_loads,
+        workspace_user,
+    ):
+        """Test query."""
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(workspace_board.uuid),
+                },
+            ).content
+        )
+        assert result == {
+            "data": {
+                "updateWorkspaceBoard": {
+                    "workspaceBoard": {
+                        "title": "Foo",
+                        "description": "Bar",
+                    },
+                },
+            },
+        }
+
+    def test_query_unauthorized(
+        self,
+        graphql_query_user,
+        workspace_board,
+        json_loads,
+    ):
+        """Test query when user not authorized."""
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(workspace_board.uuid),
+                },
+            ).content
+        )
+        assert "errors" in result
+
+
 # Delete Mutations
 @pytest.mark.django_db
 class TestDeleteWorkspaceBoardMutation:
