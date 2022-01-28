@@ -289,8 +289,39 @@ class UpdateWorkspaceMutation(graphene.Mutation):
 
     @classmethod
     def mutate(cls, root, info, input):
+        """Update workspace."""
+        workspace = models.Workspace.objects.get_for_user_and_uuid(
+            info.context.user,
+            input.uuid,
+        )
+        workspace.title = input.title
+        workspace.description = input.description
+        workspace.save()
+        return cls(workspace)
+
+
+class UpdateWorkspaceBoardInput(graphene.InputObjectType):
+    """Input for UpdateWorkspaceBoardMutation."""
+
+    uuid = graphene.ID(required=True)
+    title = graphene.String(required=True)
+    description = graphene.String(required=True)
+
+
+class UpdateWorkspaceBoardMutation(graphene.Mutation):
+    """Update workspace board."""
+
+    class Arguments:
+        """Arguments."""
+
+        input = UpdateWorkspaceBoardInput(required=True)
+
+    workspace_board = graphene.Field(types.WorkspaceBoard)
+
+    @classmethod
+    def mutate(cls, root, info, input):
         """Update workspace board."""
-        workspace_board = models.Workspace.objects.get_for_user_and_uuid(
+        workspace_board = models.WorkspaceBoard.objects.get_for_user_and_uuid(
             info.context.user,
             input.uuid,
         )
@@ -334,4 +365,5 @@ class Mutation:
     move_task = MoveTaskMutation.Field()
     change_sub_task_done = ChangeSubTaskDoneMutation.Field()
     update_workspace = UpdateWorkspaceMutation.Field()
+    update_workspace_board = UpdateWorkspaceBoardMutation.Field()
     delete_workspace_board = DeleteWorkspaceBoardMutation.Field()
