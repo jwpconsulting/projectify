@@ -158,7 +158,7 @@ class ChatMessage(graphene_django.DjangoObjectType):
 
     def resolve_author(self, info):
         """Resolve author."""
-        return loader.author_loader.load(self.author.pk)
+        return info.context.loader.user_loader.load(self.author.pk)
 
     class Meta:
         """Meta."""
