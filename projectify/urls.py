@@ -30,6 +30,7 @@ from django.views.decorators import (
 
 from workspace.consumers import (
     WorkspaceBoardConsumer,
+    WorkspaceConsumer,
 )
 
 from .graphql_ws_consumer import (
@@ -70,4 +71,5 @@ urlpatterns = [
 websocket_urlpatterns = (
     path("graphql-ws", GraphqlWsConsumer.as_asgi()),
     path("ws/workspace-board/<uuid:uuid>/", WorkspaceBoardConsumer.as_asgi()),
+    path("ws/workspace/<uuid:uuid>/", WorkspaceConsumer.as_asgi()),
 )

@@ -21,13 +21,36 @@ from .schema import (
 )
 
 
+@receiver(post_save, sender=models.Workspace)
+def workspace_saved(sender, instance, **kwargs):
+    """Broadcast changes."""
+    uuid = str(instance.uuid)
+    subscription.OnWorkspaceChange.broadcast(
+        group=uuid,
+        payload=instance,
+    )
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"workspace-{uuid}",
+        {
+            "type": "workspace.change",
+            "uuid": uuid,
+        },
+    )
+
+
 @receiver(post_save, sender=models.WorkspaceBoard)
 def workspace_board_saved(sender, instance, **kwargs):
     """Broadcast changes."""
     uuid = str(instance.uuid)
+    workspace_uuid = str(instance.workspace.uuid)
     subscription.OnWorkspaceBoardChange.broadcast(
         group=uuid,
         payload=instance,
+    )
+    subscription.OnWorkspaceChange.broadcast(
+        group=str(instance.workspace.uuid),
+        payload=instance.workspace,
     )
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
@@ -35,6 +58,13 @@ def workspace_board_saved(sender, instance, **kwargs):
         {
             "type": "workspace.board.change",
             "uuid": uuid,
+        },
+    )
+    async_to_sync(channel_layer.group_send)(
+        f"workspace-{uuid}",
+        {
+            "type": "workspace.change",
+            "uuid": workspace_uuid,
         },
     )
 
