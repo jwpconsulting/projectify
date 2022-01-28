@@ -128,19 +128,16 @@ class TaskChatMessageLoader(DataLoader):
         return Promise.resolve([chat_messages.get(key, []) for key in keys])
 
 
-class AuthorLoader(DataLoader):
+class UserLoader(DataLoader):
     """Author loader."""
 
     def batch_load_fn(self, keys):
         """Load authors for author pks."""
-        authors = {}
+        users = {}
         qs = get_user_model().objects.filter(pk__in=keys)
         for user in qs.iterator():
-            authors[user.pk] = user
-        return Promise.resolve([authors.get(key) for key in keys])
-
-
-author_loader = AuthorLoader()
+            users[user.pk] = user
+        return Promise.resolve([users.get(key) for key in keys])
 
 
 class WorkspaceLoader(DataLoader):

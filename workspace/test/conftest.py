@@ -57,8 +57,9 @@ def sub_task(task):
 
 
 @pytest.fixture
-def chat_message(task):
+def chat_message(task, workspace_user):
     """Return ChatMessage instance."""
     return factory.ChatMessageFactory(
         task=task,
+        author=workspace_user.user,
     )

@@ -92,6 +92,9 @@ query All(
   }
   chatMessage(uuid: $chatMessageUuid) {
     text
+    author {
+      email
+    }
   }
 }
 """
@@ -155,6 +158,9 @@ query All(
                 },
                 "chatMessage": {
                     "text": chat_message.text,
+                    "author": {
+                        "email": workspace_user.user.email,
+                    },
                 },
             },
         }
