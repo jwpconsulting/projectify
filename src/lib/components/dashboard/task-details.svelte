@@ -110,7 +110,7 @@
 
 {#if res && $res.loading}
     <div class="flex flex-col p-0 w-[60vw] justify-center items-center h-full">
-        $_('loading')
+        {$_("loading")}
     </div>
 {:else}
     <div class="flex flex-col p-0 w-[60vw]">
@@ -128,7 +128,7 @@
 
             <button
                 class="btn btn-primary rounded-full"
-                on:click={() => save()}>$_('save')</button
+                on:click={() => save()}>{$_("save")}</button
             >
         </header>
         <div class="tabs px-6">
