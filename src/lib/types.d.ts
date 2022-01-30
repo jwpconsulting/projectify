@@ -5,9 +5,3 @@
 export interface Locals {
     userid: string;
 }
-
-declare namespace svelte.JSX {
-    interface HTMLAttributes<T> {
-        ondragClick: () => void;
-    }
-}
