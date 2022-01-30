@@ -10,9 +10,11 @@
     export let index = 0;
 
     let open = false;
+    let firstOpen = true;
 
     function toggleOpen() {
         open = !open;
+        firstOpen = true;
     }
 
     let contentHeght = 0;
@@ -58,60 +60,62 @@
             {/each}
         </header>
         <main style="--open-height:{openHeight}px">
-            <div
-                class="content p-2 flex flex-wrap"
-                bind:clientHeight={contentHeght}
-            >
-                {#each section.tasks as task, inx (task.uuid)}
-                    <div
-                        class="h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer hover:ring"
-                        on:click={() => openTaskDetails(task.uuid)}
-                    >
+            {#if firstOpen}
+                <div
+                    class="content p-2 flex flex-wrap"
+                    bind:clientHeight={contentHeght}
+                >
+                    {#each section.tasks as task, inx (task.uuid)}
                         <div
-                            class="m-2 mr-3 flex overflow-hidden w-11 h-11 rounded-full shrink-0 border-2 border-primary "
+                            class="h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer hover:ring"
+                            on:click={() => openTaskDetails(task.uuid)}
                         >
-                            <img
-                                width="100%"
-                                height="100%"
-                                src="https://picsum.photos/seed/picsum/200?random={inx}"
-                                alt="user"
-                            />
-                        </div>
-                        <div
-                            class="flex flex-col overflow-y-hidden max-h-full mr-3"
-                        >
-                            <div class="flex items-center">
-                                <div
-                                    class="text-xs bg-secondary px-2 py-1 rounded mr-2 font-bold"
-                                >
-                                    Design
-                                </div>
-                                <div class="text-xs">Date 2022.01.01</div>
+                            <div
+                                class="m-2 mr-3 flex overflow-hidden w-11 h-11 rounded-full shrink-0 border-2 border-primary "
+                            >
+                                <img
+                                    width="100%"
+                                    height="100%"
+                                    src="https://picsum.photos/seed/picsum/200?random={inx}"
+                                    alt="user"
+                                />
                             </div>
                             <div
-                                class="flex flex-col px-1 max-w-xs overflow-y-hidden overflow-ellipsis font-bold"
+                                class="flex flex-col overflow-y-hidden max-h-full mr-3"
                             >
-                                {task.title}
+                                <div class="flex items-center">
+                                    <div
+                                        class="text-xs bg-secondary px-2 py-1 rounded mr-2 font-bold"
+                                    >
+                                        Design
+                                    </div>
+                                    <div class="text-xs">Date 2022.01.01</div>
+                                </div>
+                                <div
+                                    class="flex flex-col px-1 max-w-xs overflow-y-hidden overflow-ellipsis font-bold"
+                                >
+                                    {task.title}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                {/each}
-                <div
-                    class="h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer hover:ring"
-                    on:click={() => openNewTask(section.uuid)}
-                >
+                    {/each}
                     <div
-                        class="m-2 mr-3 flex justify-center items-center overflow-hidden w-11 h-11 rounded-full shrink-0 border-2 border-primary text-primary border-dashed"
+                        class="h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer hover:ring"
+                        on:click={() => openNewTask(section.uuid)}
                     >
-                        <IconPlus />
-                    </div>
-                    <div
-                        class="flex flex-col overflow-y-hidden max-h-full mr-3 text-primary font-bold"
-                    >
-                        {$_("new-task")}
+                        <div
+                            class="m-2 mr-3 flex justify-center items-center overflow-hidden w-11 h-11 rounded-full shrink-0 border-2 border-primary text-primary border-dashed"
+                        >
+                            <IconPlus />
+                        </div>
+                        <div
+                            class="flex flex-col overflow-y-hidden max-h-full mr-3 text-primary font-bold"
+                        >
+                            {$_("new-task")}
+                        </div>
                     </div>
                 </div>
-            </div>
+            {/if}
         </main>
     </div>
 </div>
