@@ -58,7 +58,7 @@
                         <div>
                             {$_("page.signup.msg")}<wbr />
                             <a class="link link-primary" href="/signin">
-                                {$_("sing-in-here")}
+                                {$_("sign-in-here")}
                             </a>
                         </div>
                     </div>

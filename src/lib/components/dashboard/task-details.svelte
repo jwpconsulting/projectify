@@ -138,12 +138,14 @@
         </div>
         <main class="flex flex-col overflow-y-auto">
             <div class="flex flex-col p-6 space-y-4">
-                <div class="text-xl uppercase font-bold">{$_("overview")}</div>
+                <div class="text-xl uppercase font-bold">
+                    {$_("description")}
+                </div>
 
                 <textarea
                     rows="6"
                     class="textarea textarea-bordered resize-none leading-normal p-4"
-                    placeholder={$_("please-enter-an-overview")}
+                    placeholder={$_("please-enter-a-description")}
                     bind:value={task.description}
                 />
             </div>

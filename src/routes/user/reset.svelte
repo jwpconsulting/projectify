@@ -35,7 +35,9 @@
                     <div class="py-2">
                         <h1 class="card-title">{$_("password-reset")}</h1>
                         <div>
-                            {$_("page-user-reset-msg")}
+                            {$_(
+                                "please-enter-your-email-to-request-a-password-reset"
+                            )}
                         </div>
                     </div>
 
