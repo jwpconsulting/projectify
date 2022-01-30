@@ -5,6 +5,7 @@
     import IconPlus from "../icons/icon-plus.svelte";
     import { openNewTask, openTaskDetails } from "$lib/stores/dashboard";
     import { _ } from "svelte-i18n";
+    import { draggable } from "$lib/actions/draggable";
 
     export let section;
     export let index = 0;
@@ -29,15 +30,18 @@
     }
 </script>
 
-<div class="flex m-2 bg-base-100">
+<div
+    class="flex m-2 bg-base-100"
+    use:draggable={{ handle: "header.drag-handle" }}
+>
     <div
         class="w-1 shrink-0"
         style={`background-color: hsl(${index * 36}, 80%, 60%);`}
     />
     <div class="flex grow flex-col">
         <header
-            class="select-none flex items-center h-16 p-2  children:m-1 cursor-pointer"
-            on:click={toggleOpen}
+            class="drag-handle select-none flex items-center h-16 p-2  children:m-1 cursor-pointer"
+            on:dragClick={toggleOpen}
         >
             <div
                 class="children:w-5 px-2 transition-transform"
@@ -68,7 +72,8 @@
                     {#each section.tasks as task, inx (task.uuid)}
                         <div
                             class="h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer hover:ring"
-                            on:click={() => openTaskDetails(task.uuid)}
+                            on:dragClick={() => openTaskDetails(task.uuid)}
+                            use:draggable
                         >
                             <div
                                 class="m-2 mr-3 flex overflow-hidden w-11 h-11 rounded-full shrink-0 border-2 border-primary "
