@@ -558,3 +558,184 @@ mutation DeleteWorkspaceBoard($uuid: ID!) {
             ],
         }
         assert models.WorkspaceBoard.objects.count() == 1
+
+
+@pytest.mark.django_db
+class TestDeleteWorkspaceBoardSectionMutation:
+    """Test DeleteWorkspaceBoardMutation."""
+
+    query = """
+mutation DeleteWorkspaceBoardSection($uuid: ID!) {
+  deleteWorkspaceBoardSection(uuid: $uuid) {
+    workspaceBoardSection {
+      uuid
+    }
+  }
+}
+"""
+
+    def test_query(
+        self,
+        graphql_query_user,
+        json_loads,
+        workspace_board_section,
+        workspace_user,
+    ):
+        """Test query."""
+        assert models.WorkspaceBoardSection.objects.count() == 1
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(workspace_board_section.uuid),
+                },
+            ).content,
+        )
+        assert result == {
+            "data": {
+                "deleteWorkspaceBoardSection": {
+                    "workspaceBoardSection": {
+                        "uuid": str(workspace_board_section.uuid),
+                    }
+                }
+            }
+        }
+        assert models.WorkspaceBoardSection.objects.count() == 0
+
+    def test_query_unauthorized(
+        self,
+        graphql_query_user,
+        json_loads,
+        workspace_board_section,
+    ):
+        """Test query."""
+        assert models.WorkspaceBoardSection.objects.count() == 1
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(workspace_board_section.uuid),
+                },
+            ).content,
+        )
+        assert "errors" in result
+
+
+@pytest.mark.django_db
+class TestDeleteTask:
+    """Test DeleteTask."""
+
+    query = """
+mutation DeleteTask($uuid: ID!) {
+  deleteTask(uuid: $uuid) {
+    task {
+      uuid
+    }
+  }
+}
+"""
+
+    def test_query(
+        self,
+        graphql_query_user,
+        json_loads,
+        task,
+        workspace_user,
+    ):
+        """Test query."""
+        assert models.Task.objects.count() == 1
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(task.uuid),
+                },
+            ).content,
+        )
+        assert result == {
+            "data": {
+                "deleteTask": {
+                    "task": {
+                        "uuid": str(task.uuid),
+                    }
+                }
+            }
+        }
+        assert models.Task.objects.count() == 0
+
+    def test_query_unauthorized(
+        self,
+        graphql_query_user,
+        json_loads,
+        task,
+    ):
+        """Test query."""
+        assert models.Task.objects.count() == 1
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(task.uuid),
+                },
+            ).content,
+        )
+        assert "errors" in result
+
+
+@pytest.mark.django_db
+class TestDeleteSubTask:
+    """Test DeleteSubTask."""
+
+    query = """
+mutation DeleteSubTask($uuid: ID!) {
+  deleteSubTask(uuid: $uuid) {
+    subTask {
+      uuid
+    }
+  }
+}
+"""
+
+    def test_query(
+        self,
+        graphql_query_user,
+        json_loads,
+        sub_task,
+        workspace_user,
+    ):
+        """Test query."""
+        assert models.SubTask.objects.count() == 1
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(sub_task.uuid),
+                },
+            ).content,
+        )
+
+        assert result == {
+            "data": {
+                "deleteSubTask": {
+                    "subTask": {
+                        "uuid": str(sub_task.uuid),
+                    }
+                }
+            }
+        }
+        assert models.SubTask.objects.count() == 0
+
+    def test_query_unauthorized(
+        self, graphql_query_user, json_loads, task, sub_task
+    ):
+        """Test query."""
+        assert models.SubTask.objects.count() == 1
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(sub_task.uuid),
+                },
+            ).content,
+        )
+        assert "errors" in result
