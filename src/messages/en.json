@@ -27,7 +27,7 @@
     "password-can-not-be-empty": "Password can not be empty.",
     "something-went-wrong": "Something went wrong.",
     "password-reset-complete": "Password reset complete",
-    "user-password-reset-completed-msg": "Your password has been changed, and you have been logged into your account. Please continue to enjoy Projectify.",
+    "user-password-reset-completed-msg": "Your password has been changed. Please log in to continue using Projectify.",
     "loading": "Loading...",
     "error": "Error",
     "sign-up-finished": "Sign up finished",
