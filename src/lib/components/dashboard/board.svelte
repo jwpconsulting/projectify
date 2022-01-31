@@ -17,6 +17,7 @@
     let subRes = null;
     let board = null;
     let sections = [];
+    let isDragging = false;
 
     $: {
         if (boardUUID) {
@@ -32,7 +33,9 @@
     $: {
         if (res && $res.data) {
             board = $res.data["workspaceBoard"];
-            sections = board["sections"];
+            if (board["sections"]) {
+                sections = board["sections"];
+            }
         }
     }
 
@@ -104,7 +107,7 @@
         <!-- Sections -->
         <div class="flex flex-col grow p-2">
             {#each sections as section, index (section.uuid)}
-                <BoardSection {section} {index} />
+                <BoardSection {section} {index} bind:isDragging />
             {/each}
             <div
                 class="bg-base-100 text-primary m-2 p-5 flex space-x-4 font-bold children-first:bg-debug hover:ring hover:cursor-pointer"

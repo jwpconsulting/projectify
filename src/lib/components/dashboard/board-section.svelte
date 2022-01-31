@@ -6,12 +6,19 @@
     import { openNewTask, openTaskDetails } from "$lib/stores/dashboard";
     import { _ } from "svelte-i18n";
     import { draggable } from "$lib/actions/draggable";
+    import { sortable } from "$lib/actions/sortable";
+    import delay from "delay";
+    import { scale } from "svelte/transition";
+    import { client } from "$lib/graphql/client";
+    import { Mutation_MoveTask } from "$lib/graphql/operations";
 
     export let section;
     export let index = 0;
 
+    export let isDragging = false;
+
     let open = false;
-    let firstOpen = true;
+    let firstOpen = open;
 
     function toggleOpen() {
         open = !open;
@@ -28,10 +35,51 @@
     function onDelete() {
         console.log("delete");
     }
+
+    function taskDragStart(e) {
+        isDragging = true;
+    }
+
+    async function taskDragEnd({ detail }) {
+        await delay(10);
+        isDragging = false;
+
+        let task = section.tasks[detail.oldIndex];
+        const fromSectionUUID = detail.from.getAttribute("data-uuid");
+        const toSectionUUID = detail.to.getAttribute("data-uuid");
+        const order = detail.newIndex;
+
+        if (
+            task &&
+            (fromSectionUUID != toSectionUUID ||
+                detail.newIndex != detail.oldIndex)
+        ) {
+            console.log({ task, toSectionUUID, order });
+            moveTask(task.uuid, toSectionUUID, order);
+        }
+    }
+
+    async function moveTask(taskUuid, workspaceBoardSectionUuid, order) {
+        try {
+            let mRes = await client.mutate({
+                mutation: Mutation_MoveTask,
+                variables: {
+                    input: {
+                        taskUuid,
+                        workspaceBoardSectionUuid,
+                        order,
+                    },
+                },
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
 </script>
 
 <div
     class="flex m-2 bg-base-100"
+    class:hover:ring={isDragging}
     use:draggable={{ handle: "header.drag-handle" }}
 >
     <div
@@ -68,12 +116,17 @@
                 <div
                     class="content p-2 flex flex-wrap"
                     bind:clientHeight={contentHeght}
+                    use:sortable={{ group: "Tasks" }}
+                    on:dragStart={taskDragStart}
+                    on:dragEnd={taskDragEnd}
+                    data-uuid={section.uuid}
                 >
                     {#each section.tasks as task, inx (task.uuid)}
                         <div
-                            class="h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer hover:ring"
-                            on:dragClick={() => openTaskDetails(task.uuid)}
-                            use:draggable
+                            class="item h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer"
+                            class:hover:ring={!isDragging}
+                            on:click={() =>
+                                !isDragging && openTaskDetails(task.uuid)}
                         >
                             <div
                                 class="m-2 mr-3 flex overflow-hidden w-11 h-11 rounded-full shrink-0 border-2 border-primary "
@@ -104,21 +157,24 @@
                             </div>
                         </div>
                     {/each}
-                    <div
-                        class="h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer hover:ring"
-                        on:click={() => openNewTask(section.uuid)}
-                    >
+                    {#if !isDragging}
                         <div
-                            class="m-2 mr-3 flex justify-center items-center overflow-hidden w-11 h-11 rounded-full shrink-0 border-2 border-primary text-primary border-dashed"
+                            transition:scale={{ start: 0.5 }}
+                            class="filtered h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer hover:ring"
+                            on:click={() => openNewTask(section.uuid)}
                         >
-                            <IconPlus />
+                            <div
+                                class="m-2 mr-3 flex justify-center items-center overflow-hidden w-11 h-11 rounded-full shrink-0 border-2 border-primary text-primary border-dashed"
+                            >
+                                <IconPlus />
+                            </div>
+                            <div
+                                class="flex flex-col overflow-y-hidden max-h-full mr-3 text-primary font-bold"
+                            >
+                                {$_("new-task")}
+                            </div>
                         </div>
-                        <div
-                            class="flex flex-col overflow-y-hidden max-h-full mr-3 text-primary font-bold"
-                        >
-                            {$_("new-task")}
-                        </div>
-                    </div>
+                    {/if}
                 </div>
             {/if}
         </main>
@@ -137,5 +193,9 @@
     main > .content {
         transition: transform 300ms ease-in-out;
         position: absolute;
+    }
+
+    :global(.sortable-ghost) {
+        opacity: 0;
     }
 </style>
