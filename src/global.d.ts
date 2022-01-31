@@ -2,5 +2,7 @@
 declare namespace svelte.JSX {
     interface HTMLAttributes<T> {
         ondragClick?: (event: any) => any;
+        ondragStart?: (event: any) => any;
+        ondragEnd?: (event: any) => any;
     }
 }
