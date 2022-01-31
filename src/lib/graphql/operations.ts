@@ -177,6 +177,16 @@ export const Mutation_AddTask = gql`
     }
 `;
 
+export const Mutation_MoveTask = gql`
+    mutation MoveTask($input: MoveTaskInput!) {
+        moveTask(input: $input) {
+            task {
+                uuid
+            }
+        }
+    }
+`;
+
 export const Mutation_AddWorkspaceBoardSection = gql`
     mutation AddWorkspaceBoardSection($input: AddWorkspaceBoardSectionInput!) {
         addWorkspaceBoardSection(input: $input) {
