@@ -1,9 +1,11 @@
 import { spring } from "svelte/motion";
 import delay from "delay";
+import { getRawBody } from "@sveltejs/kit/node";
 
 type DraggableParamenters = {
     direction?: string;
     handle?: string;
+    moveToBody?: boolean;
 };
 
 export function draggable(
@@ -40,8 +42,13 @@ export function draggable(
         directions.x = false;
     }
 
+    let draggingItem: HTMLElement = node;
+
     coordinates.subscribe(($coords) => {
-        node.style.transform = `translate3d(${$coords.x}px, ${$coords.y}px, 0)`;
+        if (!draggingItem) {
+            return;
+        }
+        draggingItem.style.transform = `translate3d(${$coords.x}px, ${$coords.y}px, 0)`;
     });
 
     handle.addEventListener("mousedown", handleMouseDown);
@@ -60,11 +67,28 @@ export function draggable(
         dragStarted = false;
 
         coordinates.stiffness = coordinates.damping = 1;
+
+        if (params.moveToBody) {
+            const bounds = node.getBoundingClientRect();
+
+            draggingItem = node.cloneNode(true);
+            draggingItem.style.position = "fixed";
+            draggingItem.style.left = `${bounds.x}px`;
+            draggingItem.style.top = `${bounds.y}px`;
+            draggingItem.style.zIndex = "10000";
+            draggingItem.style.opacity = "0.9";
+            // draggingItem.style.pointerEvents = "none";
+
+            node.style.visibility = "hidden";
+
+            document.body.appendChild(draggingItem);
+        }
     }
 
     function handleMouseMove(event) {
         if (!dragStarted) {
             dragStarted = true;
+            node.dispatchEvent(new CustomEvent("dragStart"));
         }
         // Delta X = difference of where we clicked vs where we are currently
         const dx = event.clientX - x;
@@ -85,7 +109,7 @@ export function draggable(
 
         // Fire up event
         node.dispatchEvent(
-            new CustomEvent("dragStop", {
+            new CustomEvent("dragEnd", {
                 detail: {
                     x,
                     y,
@@ -106,9 +130,18 @@ export function draggable(
         window.removeEventListener("mousemove", handleMouseMove);
         window.removeEventListener("mouseup", handleMouseUp);
 
+        const curNode = node;
+        const curDraggingItem = draggingItem;
+        draggingItem = node;
+
+        if (params.moveToBody && curDraggingItem) {
+            curDraggingItem.remove();
+        }
+
+        curNode.style.visibility = "visible";
         await delay(1000);
 
-        node.style.zIndex = zIndex;
+        curNode.style.zIndex = zIndex;
     }
 
     function handleClick(e) {
