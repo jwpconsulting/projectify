@@ -74,4 +74,11 @@ export const client = new ApolloClient({
             }
         },
     }),
+
+    defaultOptions: {
+        query: {
+            fetchPolicy: "network-only",
+            errorPolicy: "all",
+        },
+    },
 });
