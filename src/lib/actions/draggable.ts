@@ -1,4 +1,5 @@
 import { spring } from "svelte/motion";
+import delay from "delay";
 
 type DraggableParamenters = {
     direction?: string;
@@ -20,15 +21,12 @@ export function draggable(
         handle = node.querySelector(params.handle);
     }
 
-    // handle.draggable = true;
+    const springOpts = {
+        stiffness: 0.2,
+        damping: 0.4,
+    };
 
-    const coordinates = spring(
-        { x: 0, y: 0 },
-        {
-            stiffness: 0.2,
-            damping: 0.4,
-        }
-    );
+    const coordinates = spring({ x: 0, y: 0 }, springOpts);
 
     // Default Directions
     const directions = {
@@ -60,6 +58,8 @@ export function draggable(
         window.addEventListener("mousemove", handleMouseMove);
         window.addEventListener("mouseup", handleMouseUp);
         dragStarted = false;
+
+        coordinates.stiffness = coordinates.damping = 1;
     }
 
     function handleMouseMove(event) {
@@ -79,8 +79,9 @@ export function draggable(
         });
     }
 
-    function handleMouseUp(e) {
-        node.style.zIndex = zIndex;
+    async function handleMouseUp(e) {
+        coordinates.stiffness = springOpts.stiffness;
+        coordinates.damping = springOpts.damping;
 
         // Fire up event
         node.dispatchEvent(
@@ -104,6 +105,10 @@ export function draggable(
         // Remove event listers
         window.removeEventListener("mousemove", handleMouseMove);
         window.removeEventListener("mouseup", handleMouseUp);
+
+        await delay(1000);
+
+        node.style.zIndex = zIndex;
     }
 
     function handleClick(e) {
