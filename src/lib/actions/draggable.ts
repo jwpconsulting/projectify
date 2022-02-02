@@ -88,7 +88,6 @@ export function draggable(
         if (!dragStarted && dist > 10) {
             dragStarted = true;
             node.dispatchEvent(new CustomEvent("dragstart"));
-            console.log("Stard Dragging");
 
             zIndex = node.style.zIndex;
             node.style.zIndex = "10000";
@@ -158,8 +157,6 @@ export function draggable(
         }
 
         dragStarted = false;
-
-        console.log("<<<", node.getClientRects());
 
         node.dispatchEvent(
             new CustomEvent("dragend", {

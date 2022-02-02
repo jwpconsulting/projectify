@@ -5,8 +5,10 @@
     import { flip } from "svelte/animate";
     import { arrayMoveImmutable } from "array-move";
     import debounce from "lodash/debounce";
+    import { createEventDispatcher } from "svelte";
 
     export let list;
+    export let listUUID;
     export let key;
     export let isDragging = false;
     export let containerCSS = "";
@@ -16,6 +18,8 @@
     let startDragingIndex = -1;
     let dragoverItem = null;
     let dragoverIndex = -1;
+
+    const dispatch = createEventDispatcher();
 
     const [send, receive] = crossfade({
         fallback(node, params) {
@@ -48,13 +52,12 @@
     function onDragEnd(event, item, inx) {
         isDragging = false;
 
-        console.log(
-            "Drop move from",
-            startDragingIndex,
-            " to ",
-            dragoverIndex
-        );
         list = arrayMoveImmutable(startList, startDragingIndex, dragoverIndex);
+        dispatch("sorting", {
+            listUUID,
+            fromIndex: startDragingIndex,
+            toIndex: dragoverIndex,
+        });
 
         dragingItem = null;
         dragingIndex = -1;
