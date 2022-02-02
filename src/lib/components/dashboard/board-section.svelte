@@ -123,7 +123,7 @@
                 >
                     <SortableList
                         containerCSS="flex flex-wrap"
-                        bind:list={tasks}
+                        list={tasks}
                         key={"uuid"}
                         let:item
                         let:inx
@@ -159,7 +159,7 @@
                                 <div
                                     class="flex flex-col px-1 max-w-xs overflow-y-hidden overflow-ellipsis font-bold"
                                 >
-                                    {item.title}
+                                    {item["title"]}
                                 </div>
                             </div>
                         </div>

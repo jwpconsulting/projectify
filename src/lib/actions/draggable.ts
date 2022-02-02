@@ -1,6 +1,5 @@
 import { spring } from "svelte/motion";
 import delay from "delay";
-import { getRawBody } from "@sveltejs/kit/node";
 
 type DraggableParamenters = {
     direction?: string;
@@ -14,6 +13,7 @@ export function draggable(
 ): any {
     let x;
     let y;
+    let dragOverIt: HTMLElement = null;
 
     let dragStarted = false;
 
@@ -71,15 +71,14 @@ export function draggable(
         if (params.moveToBody) {
             const bounds = node.getBoundingClientRect();
 
-            draggingItem = node.cloneNode(true);
+            draggingItem = node.cloneNode(true) as HTMLElement;
             draggingItem.style.position = "fixed";
             draggingItem.style.left = `${bounds.x}px`;
             draggingItem.style.top = `${bounds.y}px`;
             draggingItem.style.zIndex = "10000";
             draggingItem.style.opacity = "0.9";
-            // draggingItem.style.pointerEvents = "none";
 
-            node.style.visibility = "hidden";
+            node.style.opacity = "0.0";
 
             document.body.appendChild(draggingItem);
         }
@@ -88,9 +87,8 @@ export function draggable(
     function handleMouseMove(event) {
         if (!dragStarted) {
             dragStarted = true;
-            node.dispatchEvent(new CustomEvent("dragStart"));
+            node.dispatchEvent(new CustomEvent("dragstart"));
         }
-        // Delta X = difference of where we clicked vs where we are currently
         const dx = event.clientX - x;
         const dy = event.clientY - y;
         x = event.clientX;
@@ -101,6 +99,29 @@ export function draggable(
                 y: directions.y ? $coords.y + dy : 0,
             };
         });
+
+        let els = document.elementsFromPoint(x, y);
+        els = els.filter((el) => {
+            if (!el.classList.contains("sortable-item")) {
+                return false;
+            }
+            return true;
+        });
+        if (els[1]) {
+            if (!dragOverIt || els[1] != dragOverIt) {
+                if (dragOverIt && els[1] != dragOverIt) {
+                    dragOverIt.dispatchEvent(new CustomEvent("dragout"));
+                }
+
+                dragOverIt = els[1] as HTMLElement;
+                dragOverIt.dispatchEvent(new CustomEvent("dragover"));
+            }
+        } else {
+            if (dragOverIt) {
+                dragOverIt.dispatchEvent(new CustomEvent("dragout"));
+                dragOverIt = null;
+            }
+        }
     }
 
     async function handleMouseUp(e) {
@@ -109,7 +130,7 @@ export function draggable(
 
         // Fire up event
         node.dispatchEvent(
-            new CustomEvent("dragEnd", {
+            new CustomEvent("dragend", {
                 detail: {
                     x,
                     y,
@@ -138,7 +159,13 @@ export function draggable(
             curDraggingItem.remove();
         }
 
-        curNode.style.visibility = "visible";
+        curNode.style.opacity = "1";
+
+        if (dragOverIt) {
+            dragOverIt.dispatchEvent(new CustomEvent("dragout"));
+            dragOverIt = null;
+        }
+
         await delay(1000);
 
         curNode.style.zIndex = zIndex;
