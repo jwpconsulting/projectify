@@ -43,20 +43,32 @@
     }
 
     async function taskDragEnd({ detail }) {
-        await delay(10);
+        // await delay(10);
         isDragging = false;
 
-        let task = section.tasks[detail.oldIndex];
-        const fromSectionUUID = detail.from.getAttribute("data-uuid");
-        const toSectionUUID = detail.to.getAttribute("data-uuid");
-        const order = detail.newIndex;
+        let task = section.tasks[detail.fromIndex];
+        const fromSectionUUID = detail.listUUID;
+        const toSectionUUID = detail.listUUID;
+        const order = detail.toIndex;
+
+        // console.log("taskDragEnd", {
+        //     task,
+        //     fromSectionUUID,
+        //     toSectionUUID,
+        //     order,
+        // });
 
         if (
             task &&
             (fromSectionUUID != toSectionUUID ||
-                detail.newIndex != detail.oldIndex)
+                detail.fromIndex != detail.toIndex)
         ) {
             moveTask(task.uuid, toSectionUUID, order);
+            console.log("modeTask", {
+                "task.uuid": task.uuid,
+                toSectionUUID,
+                order,
+            });
         }
     }
 
@@ -124,9 +136,11 @@
                     <SortableList
                         containerCSS="flex flex-wrap"
                         list={tasks}
+                        listUUID={section.uuid}
                         key={"uuid"}
                         let:item
                         let:inx
+                        on:sorting={taskDragEnd}
                     >
                         <!-- Task Item -->
                         <div
