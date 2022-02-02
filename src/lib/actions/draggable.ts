@@ -5,14 +5,22 @@ type DraggableParamenters = {
     direction?: string;
     handle?: string;
     moveToBody?: boolean;
+    dragOffset: number;
 };
 
 export function draggable(
     node: HTMLElement,
-    params: DraggableParamenters = {}
+    params: DraggableParamenters
 ): any {
+    params = {
+        moveToBody: false,
+        dragOffset: 10,
+        ...params,
+    };
+
     let x;
     let y;
+    let startX, startY;
     let dragOverIt: HTMLElement = null;
 
     let dragStarted = false;
@@ -58,47 +66,64 @@ export function draggable(
     let zIndex;
 
     function handleMouseDown(event) {
+        dragStarted = false;
         x = event.clientX;
         y = event.clientY;
-        zIndex = node.style.zIndex;
-        node.style.zIndex = "10000";
+        startX = x;
+        startY = y;
         window.addEventListener("mousemove", handleMouseMove);
         window.addEventListener("mouseup", handleMouseUp);
-        dragStarted = false;
-
-        coordinates.stiffness = coordinates.damping = 1;
-
-        if (params.moveToBody) {
-            const bounds = node.getBoundingClientRect();
-
-            draggingItem = node.cloneNode(true) as HTMLElement;
-            draggingItem.style.position = "fixed";
-            draggingItem.style.left = `${bounds.x}px`;
-            draggingItem.style.top = `${bounds.y}px`;
-            draggingItem.style.zIndex = "10000";
-            draggingItem.style.opacity = "0.9";
-
-            node.style.opacity = "0.0";
-
-            document.body.appendChild(draggingItem);
-        }
     }
 
+    let sDx, sDy;
+
     function handleMouseMove(event) {
-        if (!dragStarted) {
-            dragStarted = true;
-            node.dispatchEvent(new CustomEvent("dragstart"));
-        }
         const dx = event.clientX - x;
         const dy = event.clientY - y;
+
+        sDx = event.clientX - startX;
+        sDy = event.clientY - startY;
+        const dist = Math.sqrt(sDx * sDx + sDy * sDy);
+
+        if (!dragStarted && dist > 10) {
+            dragStarted = true;
+            node.dispatchEvent(new CustomEvent("dragstart"));
+            console.log("Stard Dragging");
+
+            zIndex = node.style.zIndex;
+            node.style.zIndex = "10000";
+
+            // coordinates.stiffness = coordinates.damping = 1;
+
+            if (params.moveToBody) {
+                const bounds = node.getBoundingClientRect();
+
+                draggingItem = node.cloneNode(true) as HTMLElement;
+                draggingItem.style.position = "fixed";
+                draggingItem.style.left = `${bounds.x}px`;
+                draggingItem.style.top = `${bounds.y}px`;
+                draggingItem.style.zIndex = "10000";
+                draggingItem.style.opacity = "0.9";
+                draggingItem.style.width = `${node.clientWidth}px`;
+                draggingItem.style.height = `${node.clientHeight}px`;
+
+                node.style.opacity = "0.0";
+
+                document.body.appendChild(draggingItem);
+            }
+        }
+
         x = event.clientX;
         y = event.clientY;
-        coordinates.update(($coords) => {
-            return {
-                x: directions.x ? $coords.x + dx : 0,
-                y: directions.y ? $coords.y + dy : 0,
-            };
-        });
+        coordinates.update(
+            ($coords) => {
+                return {
+                    x: directions.x ? $coords.x + dx : 0,
+                    y: directions.y ? $coords.y + dy : 0,
+                };
+            },
+            { hard: true }
+        );
 
         let els = document.elementsFromPoint(x, y);
         els = els.filter((el) => {
@@ -125,37 +150,57 @@ export function draggable(
     }
 
     async function handleMouseUp(e) {
-        coordinates.stiffness = springOpts.stiffness;
-        coordinates.damping = springOpts.damping;
+        window.removeEventListener("mousemove", handleMouseMove);
+        window.removeEventListener("mouseup", handleMouseUp);
 
-        // Fire up event
+        if (!dragStarted) {
+            return;
+        }
+
+        dragStarted = false;
+
+        console.log("<<<", node.getClientRects());
+
         node.dispatchEvent(
             new CustomEvent("dragend", {
                 detail: {
-                    x,
-                    y,
+                    x: sDx,
+                    y: sDy,
                 },
             })
         );
 
-        // Reset values
+        const nodeBounds = node.getBoundingClientRect();
+        const draggingItemBounds = draggingItem.getBoundingClientRect();
+
+        const dx = draggingItemBounds.x - nodeBounds.x;
+        const dy = draggingItemBounds.y - nodeBounds.y;
+
+        coordinates.update(
+            () => {
+                return {
+                    x: dx,
+                    y: dy,
+                };
+            },
+            { hard: true }
+        );
+
         x = 0;
         y = 0;
         coordinates.update(() => {
-            return {
-                x: 0,
-                y: 0,
-            };
+            return { x, y };
         });
-        // Remove event listers
-        window.removeEventListener("mousemove", handleMouseMove);
-        window.removeEventListener("mouseup", handleMouseUp);
 
         const curNode = node;
         const curDraggingItem = draggingItem;
         draggingItem = node;
 
-        if (params.moveToBody && curDraggingItem) {
+        if (
+            params.moveToBody &&
+            curDraggingItem &&
+            curDraggingItem != curNode
+        ) {
             curDraggingItem.remove();
         }
 

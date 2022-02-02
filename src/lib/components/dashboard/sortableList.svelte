@@ -72,7 +72,6 @@
         if (fromInx == toInx) {
             return;
         }
-        console.log("dragingIndex", dragingIndex, "dragoverIndex", inx);
 
         list = arrayMoveImmutable(list, fromInx, toInx);
         dragingIndex = inx;

@@ -81,7 +81,7 @@
 <div
     class="flex m-2 bg-base-100"
     class:hover:ring={isDragging}
-    use:draggable={{ handle: "header.drag-handle" }}
+    use:draggable={{ handle: "header.drag-handle", moveToBody: true }}
 >
     <div
         class="w-1 shrink-0"
@@ -132,8 +132,7 @@
                         <div
                             class="item h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer"
                             class:hover:ring={!isDragging}
-                            on:dragClick={() =>
-                                !isDragging && openTaskDetails(item["uuid"])}
+                            on:click={() => openTaskDetails(item["uuid"])}
                         >
                             <div
                                 class="m-2 mr-3 flex overflow-hidden w-11 h-11 rounded-full shrink-0 border-2 border-primary "
@@ -141,7 +140,7 @@
                                 <img
                                     width="100%"
                                     height="100%"
-                                    src="https://picsum.photos/seed/picsum/200?random={inx}"
+                                    src="https://picsum.photos/seed/picsum/200"
                                     alt="user"
                                 />
                             </div>
