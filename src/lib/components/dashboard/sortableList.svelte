@@ -4,6 +4,7 @@
     import { crossfade } from "svelte/transition";
     import { flip } from "svelte/animate";
     import { arrayMoveImmutable } from "array-move";
+    import debounce from "lodash/debounce";
 
     export let list;
     export let key;
@@ -94,7 +95,7 @@
             use:draggable={{ moveToBody: true }}
             on:dragstart={(e) => onDragStart(e, item, inx)}
             on:dragend={(e) => onDragEnd(e, item, inx)}
-            on:dragover={(e) => onDragOverItem(e, item, inx)}
+            on:dragover={debounce((e) => onDragOverItem(e, item, inx), 100)}
         >
             <slot {item} {inx} />
         </div>

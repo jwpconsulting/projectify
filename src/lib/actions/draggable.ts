@@ -5,7 +5,7 @@ type DraggableParamenters = {
     direction?: string;
     handle?: string;
     moveToBody?: boolean;
-    dragOffset: number;
+    dragOffset?: number;
 };
 
 export function draggable(
