@@ -14,6 +14,9 @@ flake8-isort = "*"
 isort = "*"
 flake8-docstrings = "*"
 ipython = "*"
+pytest-celery = "*"
+pytest-asyncio = "*"
+pytest = "*"
 
 [packages]
 dj-database-url = "*"
@@ -28,7 +31,6 @@ gunicorn = "*"
 newrelic = "*"
 celery = {extras = ["redis"], version = "*"}
 django-celery-results = "*"
-pytest-celery = "*"
 django-anymail = {extras = ["mailgun"], version = "*"}
 django-ordered-model = "*"
 uvicorn = {extras = ["standard"], version = "*"}

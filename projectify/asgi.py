@@ -32,11 +32,11 @@ from .urls import (  # noqa: E402
 )
 
 
+websocket_application = AuthMiddlewareStack(URLRouter(websocket_urlpatterns))
+
 application = ProtocolTypeRouter(
     {
         "http": asgi_application,
-        "websocket": AuthMiddlewareStack(
-            URLRouter(websocket_urlpatterns),
-        ),
+        "websocket": websocket_application,
     }
 )
