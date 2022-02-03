@@ -6,14 +6,13 @@
     import { openNewTask, openTaskDetails } from "$lib/stores/dashboard";
     import { _ } from "svelte-i18n";
     import { draggable } from "$lib/actions/draggable";
+    import { sortable } from "$lib/actions/sortable";
     import delay from "delay";
     import { scale } from "svelte/transition";
     import { client } from "$lib/graphql/client";
     import { Mutation_MoveTask } from "$lib/graphql/operations";
-    import SortableList from "./sortableList.svelte";
 
     export let section;
-
     export let index = 0;
 
     export let isDragging = false;
@@ -29,7 +28,6 @@
     let contentHeght = 0;
     $: openHeight = open ? contentHeght : 0;
     $: openArrowDeg = open ? 90 : 0;
-    $: tasks = section.tasks;
 
     function onEdit() {
         console.log("edit");
@@ -43,32 +41,21 @@
     }
 
     async function taskDragEnd({ detail }) {
-        // await delay(10);
+        await delay(10);
         isDragging = false;
 
-        let task = section.tasks[detail.fromIndex];
-        const fromSectionUUID = detail.listUUID;
-        const toSectionUUID = detail.listUUID;
-        const order = detail.toIndex;
-
-        // console.log("taskDragEnd", {
-        //     task,
-        //     fromSectionUUID,
-        //     toSectionUUID,
-        //     order,
-        // });
+        let task = section.tasks[detail.oldIndex];
+        const fromSectionUUID = detail.from.getAttribute("data-uuid");
+        const toSectionUUID = detail.to.getAttribute("data-uuid");
+        const order = detail.newIndex;
 
         if (
             task &&
             (fromSectionUUID != toSectionUUID ||
-                detail.fromIndex != detail.toIndex)
+                detail.newIndex != detail.oldIndex)
         ) {
+            // console.log({ task, toSectionUUID, order });
             moveTask(task.uuid, toSectionUUID, order);
-            console.log("modeTask", {
-                "task.uuid": task.uuid,
-                toSectionUUID,
-                order,
-            });
         }
     }
 
@@ -93,7 +80,7 @@
 <div
     class="flex m-2 bg-base-100"
     class:hover:ring={isDragging}
-    use:draggable={{ handle: "header.drag-handle", moveToBody: true }}
+    use:draggable={{ handle: "header.drag-handle" }}
 >
     <div
         class="w-1 shrink-0"
@@ -129,24 +116,17 @@
                 <div
                     class="content p-2 flex flex-wrap"
                     bind:clientHeight={contentHeght}
+                    use:sortable={{ group: "Tasks" }}
                     on:dragStart={taskDragStart}
                     on:dragEnd={taskDragEnd}
                     data-uuid={section.uuid}
                 >
-                    <SortableList
-                        containerCSS="flex flex-wrap"
-                        list={tasks}
-                        listUUID={section.uuid}
-                        key={"uuid"}
-                        let:item
-                        let:inx
-                        on:sorting={taskDragEnd}
-                    >
-                        <!-- Task Item -->
+                    {#each section.tasks as task, inx (task.uuid)}
                         <div
                             class="item h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer"
                             class:hover:ring={!isDragging}
-                            on:click={() => openTaskDetails(item["uuid"])}
+                            on:click={() =>
+                                !isDragging && openTaskDetails(task.uuid)}
                         >
                             <div
                                 class="m-2 mr-3 flex overflow-hidden w-11 h-11 rounded-full shrink-0 border-2 border-primary "
@@ -154,7 +134,7 @@
                                 <img
                                     width="100%"
                                     height="100%"
-                                    src="https://picsum.photos/seed/picsum/200"
+                                    src="https://picsum.photos/seed/picsum/200?random={inx}"
                                     alt="user"
                                 />
                             </div>
@@ -172,14 +152,13 @@
                                 <div
                                     class="flex flex-col px-1 max-w-xs overflow-y-hidden overflow-ellipsis font-bold"
                                 >
-                                    {item["title"]}
+                                    {task.title}
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Plus button -->
+                    {/each}
+                    {#if !isDragging}
                         <div
-                            slot="footer"
                             class="filtered h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer hover:ring"
                             on:click={() => openNewTask(section.uuid)}
                         >
@@ -194,7 +173,7 @@
                                 {$_("new-task")}
                             </div>
                         </div>
-                    </SortableList>
+                    {/if}
                 </div>
             {/if}
         </main>
