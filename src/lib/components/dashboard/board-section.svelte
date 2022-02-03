@@ -180,7 +180,6 @@
                         <!-- Plus button -->
                         <div
                             slot="footer"
-                            transition:scale={{ start: 0.5 }}
                             class="filtered h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer hover:ring"
                             on:click={() => openNewTask(section.uuid)}
                         >

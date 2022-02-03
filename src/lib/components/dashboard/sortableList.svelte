@@ -91,8 +91,6 @@
 <div class={containerCSS}>
     {#each list as item, inx (item[key])}
         <div
-            in:send={{ key: item[key] }}
-            out:send={{ key: item[key] }}
             animate:flip={flipOpts}
             class="sortable-item"
             use:draggable={{ moveToBody: true }}
