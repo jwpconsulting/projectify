@@ -15,6 +15,7 @@ export function sortable(
         pull: true,
         forceFallback: true,
         fallbackOnBody: true,
+        filter: ".ignore-elements",
         onStart(e) {
             node.dispatchEvent(new CustomEvent("dragStart"));
         },

@@ -5,10 +5,8 @@
     import IconPlus from "../icons/icon-plus.svelte";
     import { openNewTask, openTaskDetails } from "$lib/stores/dashboard";
     import { _ } from "svelte-i18n";
-    import { draggable } from "$lib/actions/draggable";
     import { sortable } from "$lib/actions/sortable";
     import delay from "delay";
-    import { scale } from "svelte/transition";
     import { client } from "$lib/graphql/client";
     import { Mutation_MoveTask } from "$lib/graphql/operations";
 
@@ -54,7 +52,6 @@
             (fromSectionUUID != toSectionUUID ||
                 detail.newIndex != detail.oldIndex)
         ) {
-            // console.log({ task, toSectionUUID, order });
             moveTask(task.uuid, toSectionUUID, order);
         }
     }
@@ -77,11 +74,7 @@
     }
 </script>
 
-<div
-    class="flex m-2 bg-base-100"
-    class:hover:ring={isDragging}
-    use:draggable={{ handle: "header.drag-handle" }}
->
+<div class="flex m-2 bg-base-100" class:hover:ring={isDragging}>
     <div
         class="w-1 shrink-0"
         style={`background-color: hsl(${index * 36}, 80%, 60%);`}
@@ -89,7 +82,7 @@
     <div class="flex grow flex-col">
         <header
             class="drag-handle select-none flex items-center h-16 p-2  children:m-1 cursor-pointer"
-            on:dragClick={toggleOpen}
+            on:click={toggleOpen}
         >
             <div
                 class="children:w-5 px-2 transition-transform"
@@ -159,7 +152,7 @@
                     {/each}
                     {#if !isDragging}
                         <div
-                            class="filtered h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer hover:ring"
+                            class="ignore-elements h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer hover:ring"
                             on:click={() => openNewTask(section.uuid)}
                         >
                             <div
