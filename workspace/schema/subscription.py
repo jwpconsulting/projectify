@@ -1,7 +1,6 @@
 """Workspace schema subscription."""
-import graphene
-
 import channels_graphql_ws
+import graphene
 
 from .. import (
     models,

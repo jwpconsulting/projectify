@@ -11,5 +11,12 @@ lines_after_imports = 2
 multi_line_output = 3
 sections = ["STDLIB", "DJANGO", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
 known_django = ["django"]
-known_third_party = ["graphene", "graphene_django", "pytest"]
+known_third_party = [
+    "asgiref",
+    "graphene",
+    "graphene_django",
+    "pytest",
+    "channels",
+    "channels_graphql_ws"
+]
 known_first_party = ["user"]
