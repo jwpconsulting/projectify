@@ -1,6 +1,6 @@
 import vars from "$lib/env";
 import type { ReadableQuery } from "svelte-apollo";
-import debounce from "lodash/debounce";
+import debounce from "lodash/debounce.js";
 
 let socket;
 
