@@ -19,6 +19,9 @@
     let firstOpen = open;
 
     function toggleOpen() {
+        if (isDragging) {
+            return;
+        }
         open = !open;
         firstOpen = true;
     }
@@ -116,7 +119,7 @@
                 >
                     {#each section.tasks as task, inx (task.uuid)}
                         <div
-                            class="item h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer"
+                            class="drag-handle item h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer"
                             class:hover:ring={!isDragging}
                             on:click={() =>
                                 !isDragging && openTaskDetails(task.uuid)}

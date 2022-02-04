@@ -16,6 +16,7 @@ export function sortable(
         forceFallback: true,
         fallbackOnBody: true,
         filter: ".ignore-elements",
+        handle: ".drag-handle",
         onStart(e) {
             node.dispatchEvent(new CustomEvent("dragStart"));
         },
@@ -34,7 +35,6 @@ export function sortable(
     });
     return {
         destroy() {
-            console.log("destro");
             sortable.destroy();
         },
     };

@@ -2,6 +2,7 @@
     import BoardSection from "./board-section.svelte";
     import {
         Mutation_AddWorkspaceBoardSection,
+        Mutation_MoveWorkspaceBoardSection,
         Query_DashboardBoard,
         Subscription_OnWorkspaceBoardChange,
     } from "$lib/graphql/operations";
@@ -10,6 +11,8 @@
     import { getModal } from "../dialogModal.svelte";
     import { client } from "$lib/graphql/client";
     import { _ } from "svelte-i18n";
+    import { sortable } from "$lib/actions/sortable";
+    import delay from "delay";
 
     export let boardUUID = null;
 
@@ -74,6 +77,43 @@
             }
         }
     }
+
+    async function sectionDragStart() {
+        isDragging = true;
+    }
+
+    async function sectionDragEnd({ detail }) {
+        await delay(10);
+        isDragging = false;
+
+        if (detail.oldIndex == detail.newIndex) {
+            return;
+        }
+
+        let section = sections[detail.oldIndex];
+        const order = detail.newIndex;
+
+        if (section) {
+            console.log("section id ", section.uuid, order);
+            moveSection(section.uuid, order);
+        }
+    }
+
+    async function moveSection(workspaceBoardSectionUuid, order) {
+        try {
+            let mRes = await client.mutate({
+                mutation: Mutation_MoveWorkspaceBoardSection,
+                variables: {
+                    input: {
+                        workspaceBoardSectionUuid,
+                        order,
+                    },
+                },
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
 </script>
 
 {#if res && $res.loading}
@@ -105,17 +145,24 @@
         </div>
 
         <!-- Sections -->
-        <div class="flex flex-col grow p-2">
+        <div
+            class="flex flex-col grow p-2"
+            use:sortable={{ group: "Sections" }}
+            on:dragStart={sectionDragStart}
+            on:dragEnd={sectionDragEnd}
+        >
             {#each sections as section, index (section.uuid)}
                 <BoardSection {section} {index} bind:isDragging />
             {/each}
-            <div
-                class="bg-base-100 text-primary m-2 p-5 flex space-x-4 font-bold children-first:bg-debug hover:ring hover:cursor-pointer"
-                on:click={() => onAddNewSection()}
-            >
-                <IconPlus />
-                <div>{$_("new-section")}</div>
-            </div>
+            {#if !isDragging}
+                <div
+                    class="ignore-elements bg-base-100 text-primary m-2 p-5 flex space-x-4 font-bold children-first:bg-debug hover:ring hover:cursor-pointer"
+                    on:click={() => onAddNewSection()}
+                >
+                    <IconPlus />
+                    <div>{$_("new-section")}</div>
+                </div>
+            {/if}
         </div>
     </div>
 {/if}
