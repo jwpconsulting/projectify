@@ -14,24 +14,28 @@ from . import (
 class WorkspaceBoardConsumer(JsonWebsocketConsumer):
     """Consumer for WorkspaceBoard ws."""
 
+    def get_group_name(self):
+        """Return group name."""
+        uuid = self.scope["url_route"]["kwargs"]["uuid"]
+        return f"workspace-board-{uuid}"
+
     def connect(self):
         """Handle connect."""
         user = self.scope["user"]
         if user.is_anonymous:
             return
         self.accept()
-        self.uuid = self.scope["url_route"]["kwargs"]["uuid"]
-        self.group_name = f"workspace-board-{self.uuid}"
-        models.WorkspaceBoard.objects.get_for_user_and_uuid(user, self.uuid)
+        uuid = self.scope["url_route"]["kwargs"]["uuid"]
+        models.WorkspaceBoard.objects.get_for_user_and_uuid(user, uuid)
         async_to_sync(self.channel_layer.group_add)(
-            self.group_name,
+            self.get_group_name(),
             self.channel_name,
         )
 
     def disconnect(self, close_code):
         """Handle disconnect."""
         async_to_sync(self.channel_layer.group_discard)(
-            self.group_name,
+            self.get_group_name(),
             self.channel_name,
         )
 
