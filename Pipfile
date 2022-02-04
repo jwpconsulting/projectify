@@ -33,7 +33,7 @@ celery = {extras = ["redis"], version = "*"}
 django-celery-results = "*"
 django-anymail = {extras = ["mailgun"], version = "*"}
 django-ordered-model = "*"
-uvicorn = {extras = ["standard"], version = "*"}
+uvicorn = "*"
 channels = "*"
 django-channels-graphql-ws = "*"
 channels-redis = {extras = ["cryptography"], version = "*"}
