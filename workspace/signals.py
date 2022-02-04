@@ -34,7 +34,7 @@ def workspace_board_saved(sender, instance, **kwargs):
         f"workspace-board-{uuid}",
         {
             "type": "workspace.board.change",
-            "instance": instance,
+            "uuid": uuid,
         },
     )
 
@@ -53,7 +53,7 @@ def workspace_board_section_saved(sender, instance, **kwargs):
         f"workspace-board-{uuid}",
         {
             "type": "workspace.board.change",
-            "instance": workspace_board,
+            "uuid": uuid,
         },
     )
 
@@ -72,7 +72,7 @@ def task_saved(sender, instance, **kwargs):
         f"workspace-board-{uuid}",
         {
             "type": "workspace.board.change",
-            "instance": workspace_board,
+            "uuid": uuid,
         },
     )
 
@@ -91,6 +91,6 @@ def sub_task_saved(sender, instance, **kwargs):
         f"workspace-board-{uuid}",
         {
             "type": "workspace.board.change",
-            "instance": workspace_board,
+            "uuid": uuid,
         },
     )
