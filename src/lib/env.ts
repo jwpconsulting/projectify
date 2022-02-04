@@ -6,4 +6,6 @@ export default {
     GRAPHQL_ENDPOINT_SUBSCRIPTIONS: import.meta.env[
         "VITE_GRAPHQL_ENDPOINT_SUBSCRIPTIONS"
     ] as string,
+
+    WS_ENDPOINT: import.meta.env["VITE_WS_ENDPOINT"] as string,
 };

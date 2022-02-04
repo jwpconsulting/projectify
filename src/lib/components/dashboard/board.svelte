@@ -13,11 +13,11 @@
     import { _ } from "svelte-i18n";
     import { sortable } from "$lib/actions/sortable";
     import delay from "delay";
+    import { subscribeToWorkspaceBoard } from "$lib/stores/dashboardSubscription";
 
     export let boardUUID = null;
 
     let res = null;
-    let subRes = null;
     let board = null;
     let sections = [];
     let isDragging = false;
@@ -27,9 +27,8 @@
             res = query(Query_DashboardBoard, {
                 variables: { uuid: boardUUID },
             });
-            subRes = subscribe(Subscription_OnWorkspaceBoardChange, {
-                variables: { uuid: boardUUID },
-            });
+
+            subscribeToWorkspaceBoard(boardUUID, res);
         }
     }
 
@@ -41,8 +40,6 @@
             }
         }
     }
-
-    let autoSubscribe = $subRes;
 
     async function onAddNewSection() {
         let modalRes = await getModal("newBoardSectionModal").open();

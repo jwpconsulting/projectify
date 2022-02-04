@@ -11,6 +11,7 @@ import { browser } from "$app/env";
 import vars from "$lib/env";
 
 const batchLinkEnabled = true;
+const enableWebsocket = false;
 
 const httpCommonOpts = {
     credentials: "include",
@@ -29,7 +30,7 @@ const httpLink = batchLinkEnabled
       });
 
 let splitLink: ApolloLink = httpLink;
-if (browser) {
+if (browser && enableWebsocket) {
     const wsLink = new WebSocketLink({
         uri: vars.GRAPHQL_ENDPOINT_SUBSCRIPTIONS,
         options: {
