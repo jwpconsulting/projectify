@@ -45,5 +45,5 @@ class WorkspaceBoardConsumer(JsonWebsocketConsumer):
 
     def workspace_board_change(self, event):
         """Respond to workspace board change event."""
-        event_uuid = event["instance"].uuid
+        event_uuid = event["uuid"]
         self.send_json(str(event_uuid))
