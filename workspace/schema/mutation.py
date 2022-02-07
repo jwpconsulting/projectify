@@ -132,7 +132,7 @@ class AddSubTaskMutation(graphene.Mutation):
             info.context.user,
             input.task_uuid,
         )
-        sub_task = task.add_task(
+        sub_task = task.add_sub_task(
             input.title,
             input.description,
         )
