@@ -8,7 +8,6 @@ export function openNewTask(sectionUUID: string): void {
     drawerModalOpen.set(true);
     newTaskSectionUUID.set(sectionUUID);
     currenTaskDetailsUUID.set(null);
-    console.log("createNewTask");
 }
 export function openTaskDetails(taskUUID: string): void {
     drawerModalOpen.set(true);

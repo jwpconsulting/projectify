@@ -9,6 +9,7 @@
     import {
         Query_DashboardTaskDetais,
         Mutation_AddTask,
+        Mutation_AddSubTask,
     } from "$lib/graphql/operations";
     import { query } from "svelte-apollo";
     import IconTrash from "../icons/icon-trash.svelte";
@@ -21,8 +22,6 @@
     let subTasks = [];
     let firstLoad = false;
     let newSubTaskTitle = null;
-
-    let itsNew = $currenTaskDetailsUUID == null;
 
     function reset() {
         res = null;
@@ -38,6 +37,7 @@
         if ($currenTaskDetailsUUID) {
             res = query(Query_DashboardTaskDetais, {
                 variables: { uuid: $currenTaskDetailsUUID },
+                fetchPolicy: "network-only",
             });
             firstLoad = true;
         } else {
@@ -68,7 +68,12 @@
         }
     }
 
-    function addSubTask() {
+    $: itsNew = $currenTaskDetailsUUID == null;
+
+    $: saveEnabled =
+        task && task.title.length > 0 && task.description.length > 0;
+
+    async function addSubTask() {
         if (!newSubTaskTitle || newSubTaskTitle.length < 1) {
             return;
         }
@@ -79,6 +84,22 @@
                 checked: false,
             },
         ];
+
+        try {
+            let mRes = await client.mutate({
+                mutation: Mutation_AddSubTask,
+                variables: {
+                    input: {
+                        taskUuid: task.uuid,
+                        title: newSubTaskTitle,
+                        description: "",
+                    },
+                },
+            });
+        } catch (error) {
+            console.error(error);
+        }
+
         newSubTaskTitle = "";
     }
 
@@ -99,11 +120,13 @@
                         },
                     },
                 });
-                reset();
-                closeTaskDetails();
+                currenTaskDetailsUUID.set(mRes.data.addTask.task.uuid);
             } catch (error) {
                 console.error(error);
             }
+        } else {
+            reset();
+            closeTaskDetails();
         }
     }
 </script>
@@ -127,6 +150,7 @@
             />
 
             <button
+                disabled={!saveEnabled}
                 class="btn btn-primary rounded-full"
                 on:click={() => save()}>{$_("save")}</button
             >
@@ -149,51 +173,57 @@
                     bind:value={task.description}
                 />
             </div>
-            <div class="flex flex-col p-6 space-y-4">
-                <div class="flex text-xl space-x-2">
-                    <span class="uppercase font-bold">{$_("sub-task")}</span>
-                    <span>{percent}%</span>
-                </div>
+            {#if !itsNew}
+                <div class="flex flex-col p-6 space-y-4">
+                    <div class="flex text-xl space-x-2">
+                        <span class="uppercase font-bold"
+                            >{$_("sub-task")}</span
+                        >
+                        <span>{percent}%</span>
+                    </div>
 
-                <progress
-                    class="progress progress-primary"
-                    value={percent}
-                    max="100"
-                />
-
-                <div>
-                    {#each subTasks as it, inx}
-                        <label class="cursor-pointer label space-x-2">
-                            <input
-                                type="checkbox"
-                                class="checkbox checkbox-primary"
-                                bind:checked={it.checked}
-                            />
-                            <div class="grow">{it.title}</div>
-                            <button
-                                on:click={() => removeSubTask(inx)}
-                                class="btn btn-xs btn-circle btn-ghost children:w-2"
-                                ><IconTrash /></button
-                            >
-                        </label>
-                    {/each}
-                </div>
-
-                <div class="relative">
-                    <input
-                        type="text"
-                        placeholder={$_("new-sub-task-name")}
-                        class="w-full pr-16 input input-bordered"
-                        bind:value={newSubTaskTitle}
-                        on:keydown={(e) => e.key === "Enter" && addSubTask()}
+                    <progress
+                        class="progress progress-primary"
+                        value={percent}
+                        max="100"
                     />
-                    <button
-                        on:click={() => addSubTask()}
-                        class="absolute top-0 right-0 rounded-l-none btn btn-primary btn-square"
-                        ><IconPlus /></button
-                    >
+
+                    <div>
+                        {#each subTasks as it, inx}
+                            <label class="cursor-pointer label space-x-2">
+                                <input
+                                    type="checkbox"
+                                    class="checkbox checkbox-primary"
+                                    bind:checked={it.done}
+                                    on:change={(e) => console.log(e, it, inx)}
+                                />
+                                <div class="grow">{it.title}</div>
+                                <button
+                                    on:click={() => removeSubTask(inx)}
+                                    class="btn btn-xs btn-circle btn-ghost children:w-2"
+                                    ><IconTrash /></button
+                                >
+                            </label>
+                        {/each}
+                    </div>
+
+                    <div class="relative">
+                        <input
+                            type="text"
+                            placeholder={$_("new-sub-task-name")}
+                            class="w-full pr-16 input input-bordered"
+                            bind:value={newSubTaskTitle}
+                            on:keydown={(e) =>
+                                e.key === "Enter" && addSubTask()}
+                        />
+                        <button
+                            on:click={() => addSubTask()}
+                            class="absolute top-0 right-0 rounded-l-none btn btn-primary btn-square"
+                            ><IconPlus /></button
+                        >
+                    </div>
                 </div>
-            </div>
+            {/if}
         </main>
     </div>
 {/if}

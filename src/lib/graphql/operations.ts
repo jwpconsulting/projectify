@@ -161,6 +161,7 @@ export const Query_DashboardTaskDetais = gql`
                 uuid
                 title
                 description
+                done
             }
         }
     }
@@ -182,6 +183,17 @@ export const Mutation_MoveTask = gql`
         moveTask(input: $input) {
             task {
                 uuid
+            }
+        }
+    }
+`;
+
+export const Mutation_AddSubTask = gql`
+    mutation AddSubTask($input: AddSubTaskInput!) {
+        addSubTask(input: $input) {
+            subTask {
+                uuid
+                created
             }
         }
     }
