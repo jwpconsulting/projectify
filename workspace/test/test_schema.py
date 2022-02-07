@@ -304,6 +304,54 @@ mutation MoveTask($taskUuid: ID!, $sectionUuid: ID!) {
 
 # Add Mutations
 @pytest.mark.django_db
+class TestAddSubTaskMutation:
+    """Test AddSubTaskMutation."""
+
+    query = """
+mutation AddSubTask($uuid: ID!) {
+  addSubTask(
+    input:{taskUuid: $uuid, title:"Hello world", description: "Foo bar"}) {
+    subTask {
+      title
+    }
+  }
+}
+"""
+
+    def test_query(self, graphql_query_user, json_loads, task, workspace_user):
+        """Test query."""
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(task.uuid),
+                },
+            ).content,
+        )
+        assert result == {
+            "data": {
+                "addSubTask": {
+                    "subTask": {
+                        "title": "Hello world",
+                    },
+                },
+            },
+        }
+
+    def test_query_unauthorized(self, graphql_query_user, json_loads, task):
+        """Test query."""
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(task.uuid),
+                },
+            ).content,
+        )
+        assert "errors" in result
+
+
+@pytest.mark.django_db
 class TestAddChatMessageMutation:
     """Test AddChatMessageMutation."""
 
