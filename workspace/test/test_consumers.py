@@ -130,9 +130,7 @@ class TestWorkspaceConsumer:
 class TestWorkspaceBoardConsumer:
     """Test WorkspaceBoardConsumer."""
 
-    async def test_workspace_board_saved(
-        self,
-    ):
+    async def test_workspace_board_saved(self):
         """Test signal firing on workspace board change."""
         user = await create_user()
         workspace = await create_workspace()
