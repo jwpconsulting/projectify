@@ -534,6 +534,190 @@ mutation UpdateWorkspaceBoard($uuid: ID!) {
         assert "errors" in result
 
 
+@pytest.mark.django_db
+class TestUpdateWorkspaceBoardSectionMutation:
+    """Test UpdateWorkspaceBoardSectionMutation."""
+
+    query = """
+mutation UpdateWorkspaceBoardSection($uuid: ID!) {
+  updateWorkspaceBoardSection(input: {uuid: $uuid,\
+       title: "Foo", description: "Bar"})
+  {
+    workspaceBoardSection {
+      title
+      description
+    }
+  }
+}
+"""
+
+    def test_query(
+        self,
+        graphql_query_user,
+        workspace_board_section,
+        json_loads,
+        workspace_user,
+    ):
+        """Test query."""
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(workspace_board_section.uuid),
+                },
+            ).content
+        )
+        assert result == {
+            "data": {
+                "updateWorkspaceBoardSection": {
+                    "workspaceBoardSection": {
+                        "title": "Foo",
+                        "description": "Bar",
+                    },
+                },
+            },
+        }
+
+    def test_query_unauthorized(
+        self,
+        graphql_query_user,
+        workspace_board_section,
+        json_loads,
+    ):
+        """Test query when user not authorized."""
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(workspace_board_section.uuid),
+                },
+            ).content
+        )
+        assert "errors" in result
+
+
+@pytest.mark.django_db
+class TestUpdateTaskMutation:
+    """Test TestUpdateTaskMutation."""
+
+    query = """
+mutation UpdateTaskMutation($uuid: ID!) {
+  updateTask(input: {uuid: $uuid, title: "Foo", description: "Bar"})
+  {
+    task {
+      title
+      description
+    }
+  }
+}
+"""
+
+    def test_query(
+        self,
+        graphql_query_user,
+        task,
+        json_loads,
+        workspace_user,
+    ):
+        """Test query."""
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(task.uuid),
+                },
+            ).content
+        )
+        assert result == {
+            "data": {
+                "updateTask": {
+                    "task": {
+                        "title": "Foo",
+                        "description": "Bar",
+                    },
+                },
+            },
+        }
+
+    def test_query_unauthorized(
+        self,
+        graphql_query_user,
+        task,
+        json_loads,
+    ):
+        """Test query when user not authorized."""
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(task.uuid),
+                },
+            ).content
+        )
+        assert "errors" in result
+
+
+@pytest.mark.django_db
+class TestUpdateSubTaskMutation:
+    """Test TestUpdateSubTaskMutation."""
+
+    query = """
+mutation UpdateSubTaskMutation($uuid: ID!) {
+  updateSubTask(input: {uuid: $uuid, title: "Foo", description: "Bar"})
+  {
+    subTask {
+      title
+      description
+    }
+  }
+}
+"""
+
+    def test_query(
+        self,
+        graphql_query_user,
+        sub_task,
+        json_loads,
+        workspace_user,
+    ):
+        """Test query."""
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(sub_task.uuid),
+                },
+            ).content
+        )
+        assert result == {
+            "data": {
+                "updateSubTask": {
+                    "subTask": {
+                        "title": "Foo",
+                        "description": "Bar",
+                    },
+                },
+            },
+        }
+
+    def test_query_unauthorized(
+        self,
+        graphql_query_user,
+        sub_task,
+        json_loads,
+    ):
+        """Test query when user not authorized."""
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(sub_task.uuid),
+                },
+            ).content
+        )
+        assert "errors" in result
+
+
 # Delete Mutations
 @pytest.mark.django_db
 class TestDeleteWorkspaceBoardMutation:

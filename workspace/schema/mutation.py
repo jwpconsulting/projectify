@@ -331,6 +331,101 @@ class UpdateWorkspaceBoardMutation(graphene.Mutation):
         return cls(workspace_board)
 
 
+class UpdateWorkspaceBoardSectionInput(graphene.InputObjectType):
+    """Input for UpdateWorkspaceSectionMutation."""
+
+    uuid = graphene.ID(required=True)
+    title = graphene.String(required=True)
+    description = graphene.String(required=True)
+
+
+class UpdateWorkspaceBoardSectionMutation(graphene.Mutation):
+    """Update workspace board section muatation."""
+
+    class Arguments:
+        """Arguments."""
+
+        input = UpdateWorkspaceBoardSectionInput(required=True)
+
+    workspace_board_section = graphene.Field(types.WorkspaceBoardSection)
+
+    @classmethod
+    def mutate(cls, root, info, input):
+        """Update workspace board."""
+        workspace_board_section = (
+            models.WorkspaceBoardSection.objects.get_for_user_and_uuid(
+                info.context.user,
+                input.uuid,
+            )
+        )
+        workspace_board_section.title = input.title
+        workspace_board_section.description = input.description
+        workspace_board_section.save()
+        return cls(workspace_board_section)
+
+
+class UpdateTaskMutationInput(graphene.InputObjectType):
+    """Input for UpdateTaskMutationInput."""
+
+    uuid = graphene.ID(required=True)
+    title = graphene.String(required=True)
+    description = graphene.String(required=True)
+
+
+class UpdateTaskMutation(graphene.Mutation):
+    """Update task mutation."""
+
+    class Arguments:
+        """Arguments."""
+
+        input = UpdateTaskMutationInput(required=True)
+
+    task = graphene.Field(types.Task)
+
+    @classmethod
+    def mutate(cls, root, info, input):
+        """Update workspace board."""
+        task = models.Task.objects.get_for_user_and_uuid(
+            info.context.user,
+            input.uuid,
+        )
+        task.title = input.title
+        task.description = input.description
+        task.save()
+        return cls(task)
+
+
+class UpdateSubTaskMutationInput(graphene.InputObjectType):
+    """Input for UpdateSubTaskMutationInput."""
+
+    uuid = graphene.ID(required=True)
+    title = graphene.String(required=True)
+    description = graphene.String(required=True)
+
+
+class UpdateSubTaskMutation(graphene.Mutation):
+    """Update subtask mutation."""
+
+    class Arguments:
+        """Arguments."""
+
+        input = UpdateSubTaskMutationInput(required=True)
+
+    sub_task = graphene.Field(types.SubTask)
+
+    @classmethod
+    def mutate(cls, root, info, input):
+        """Update workspace board."""
+        sub_task = models.SubTask.objects.get_for_user_and_uuid(
+            info.context.user,
+            input.uuid,
+        )
+        sub_task.title = input.title
+        sub_task.description = input.description
+        sub_task.save()
+        return cls(sub_task)
+
+
 # Delete Mutations
 class DeleteWorkspaceBoardMutation(graphene.Mutation):
     """Delete workspace board mutation."""
@@ -431,6 +526,11 @@ class Mutation:
     change_sub_task_done = ChangeSubTaskDoneMutation.Field()
     update_workspace = UpdateWorkspaceMutation.Field()
     update_workspace_board = UpdateWorkspaceBoardMutation.Field()
+    update_workspace_board_section = (
+        UpdateWorkspaceBoardSectionMutation.Field()
+    )
+    update_task = UpdateTaskMutation.Field()
+    update_sub_task = UpdateSubTaskMutation.Field()
     delete_workspace_board = DeleteWorkspaceBoardMutation.Field()
     delete_workspace_board_section = (
         DeleteWorkspaceBoardSectionMutation.Field()
