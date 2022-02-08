@@ -9,22 +9,16 @@
     import {
         Query_DashboardTaskDetails,
         Mutation_AddTask,
-        Mutation_AddSubTask,
-        Mutation_ChangeSubTaskDone,
-        Mutation_DeleteSubTaskMutation,
     } from "$lib/graphql/operations";
     import { query } from "svelte-apollo";
-    import IconTrash from "../icons/icon-trash.svelte";
     import { client } from "$lib/graphql/client";
     import { _ } from "svelte-i18n";
-    import { workspaceBoardSubscription } from "$lib/stores/dashboardSubscription";
+    import Subtasks from "./task-details-subtasks.svelte";
 
     let res = null;
     let task = null;
-    let percent = 0;
-    let subTasks = [];
     let firstLoad = false;
-    let newSubTaskTitle = null;
+    let subTasks = [];
 
     function reset() {
         res = null;
@@ -32,7 +26,6 @@
             title: "",
             description: "",
         };
-        percent = 0;
         subTasks = [];
     }
 
@@ -58,26 +51,6 @@
                     done: Boolean(t.done),
                 };
             });
-
-            console.log(subTasks);
-        }
-    }
-
-    // $: {
-    //     if (res && $workspaceBoardSubscription) {
-    //         firstLoad = true;
-    //         res.refetch();
-    //         console.log("refetch ", $currenTaskDetailsUUID);
-    //     }
-    // }
-
-    $: {
-        if (subTasks.length) {
-            let sum = 0;
-            subTasks.forEach((it) => {
-                sum += it.done;
-            });
-            percent = Math.round((sum / subTasks.length) * 100);
         }
     }
 
@@ -85,72 +58,6 @@
 
     $: saveEnabled =
         task && task.title.length > 0 && task.description.length > 0;
-
-    async function addSubTask() {
-        if (!newSubTaskTitle || newSubTaskTitle.length < 1) {
-            return;
-        }
-        subTasks = [
-            ...subTasks,
-            {
-                title: newSubTaskTitle,
-                done: false,
-            },
-        ];
-
-        try {
-            let mRes = await client.mutate({
-                mutation: Mutation_AddSubTask,
-                variables: {
-                    input: {
-                        taskUuid: task.uuid,
-                        title: newSubTaskTitle,
-                        description: "",
-                    },
-                },
-            });
-        } catch (error) {
-            console.error(error);
-        }
-
-        newSubTaskTitle = "";
-    }
-
-    async function changeSubTaskDone(subTask) {
-        try {
-            let mRes = await client.mutate({
-                mutation: Mutation_ChangeSubTaskDone,
-                variables: {
-                    input: {
-                        subTaskUuid: subTask.uuid,
-                        done: subTask.done,
-                    },
-                },
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async function deleteSubTask(subTask) {
-        const inx = subTasks.findIndex((it) => subTask.uuid == it.uuid);
-        if (inx == -1) {
-            return;
-        }
-        subTasks.splice(inx, 1);
-        subTasks = subTasks;
-
-        try {
-            let mRes = await client.mutate({
-                mutation: Mutation_DeleteSubTaskMutation,
-                variables: {
-                    uuid: subTask.uuid,
-                },
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     async function save() {
         if (itsNew) {
@@ -217,56 +124,8 @@
                     bind:value={task.description}
                 />
             </div>
-            {#if !itsNew}
-                <div class="flex flex-col p-6 space-y-4">
-                    <div class="flex text-xl space-x-2">
-                        <span class="uppercase font-bold"
-                            >{$_("sub-task")}</span
-                        >
-                        <span>{percent}%</span>
-                    </div>
-
-                    <progress
-                        class="progress progress-primary"
-                        value={percent}
-                        max="100"
-                    />
-
-                    <div>
-                        {#each subTasks as it, inx}
-                            <label class="cursor-pointer label space-x-2">
-                                <input
-                                    type="checkbox"
-                                    class="checkbox checkbox-primary"
-                                    bind:checked={it.done}
-                                    on:change={(e) => changeSubTaskDone(it)}
-                                />
-                                <div class="grow">{it.title}</div>
-                                <button
-                                    on:click={() => deleteSubTask(it)}
-                                    class="btn btn-xs btn-circle btn-ghost children:w-2"
-                                    ><IconTrash /></button
-                                >
-                            </label>
-                        {/each}
-                    </div>
-
-                    <div class="relative">
-                        <input
-                            type="text"
-                            placeholder={$_("new-sub-task-name")}
-                            class="w-full pr-16 input input-bordered"
-                            bind:value={newSubTaskTitle}
-                            on:keydown={(e) =>
-                                e.key === "Enter" && addSubTask()}
-                        />
-                        <button
-                            on:click={() => addSubTask()}
-                            class="absolute top-0 right-0 rounded-l-none btn btn-primary btn-square"
-                            ><IconPlus /></button
-                        >
-                    </div>
-                </div>
+            {#if $currenTaskDetailsUUID && subTasks}
+                <Subtasks taskUUID={$currenTaskDetailsUUID} {subTasks} />
             {/if}
         </main>
     </div>
@@ -275,9 +134,5 @@
 <style lang="scss">
     main {
         max-height: calc(100vh - 128px);
-    }
-
-    ::-webkit-progress-value {
-        transition: width 1s;
     }
 </style>
