@@ -6,7 +6,7 @@ import pytest
 class TestSignupMutation:
     """Test Signup Mutation."""
 
-    def test_user_is_created(self, graphql_query, json_loads):
+    def test_user_is_created(self, graphql_query):
         """Assert that user is created."""
         query = """
 mutation {
@@ -17,7 +17,7 @@ mutation {
     }
 }
 """
-        result = json_loads(graphql_query(query).content)
+        result = graphql_query(query)
         assert result == {
             "data": {
                 "signup": {
@@ -43,17 +43,15 @@ mutation($email: String!, $token: String!) {
 }
 """
 
-    def test_user_is_activated(self, graphql_query, inactive_user, json_loads):
+    def test_user_is_activated(self, graphql_query, inactive_user):
         """Assert that user is activated."""
         assert inactive_user.is_active is False
-        result = json_loads(
-            graphql_query(
-                self.query,
-                variables={
-                    "email": inactive_user.email,
-                    "token": inactive_user.get_email_confirmation_token(),
-                },
-            ).content
+        result = graphql_query(
+            self.query,
+            variables={
+                "email": inactive_user.email,
+                "token": inactive_user.get_email_confirmation_token(),
+            },
         )
         assert result == {
             "data": {
@@ -82,16 +80,14 @@ mutation ($email: String!, $password: String!) {
 }
 """
 
-    def test_login_active_user(self, graphql_query, user, json_loads):
+    def test_login_active_user(self, graphql_query, user):
         """Test logging in an active user."""
-        result = json_loads(
-            graphql_query(
-                self.query,
-                variables={
-                    "email": user.email,
-                    "password": "password",
-                },
-            ).content
+        result = graphql_query(
+            self.query,
+            variables={
+                "email": user.email,
+                "password": "password",
+            },
         )
         assert result == {
             "data": {
@@ -103,31 +99,25 @@ mutation ($email: String!, $password: String!) {
             }
         }
 
-    def test_login_wrong_password(self, graphql_query, user, json_loads):
+    def test_login_wrong_password(self, graphql_query, user):
         """Test logging in with a wrong password."""
-        result = json_loads(
-            graphql_query(
-                self.query,
-                variables={
-                    "email": user.email,
-                    "password": "wrongpassword",
-                },
-            ).content
+        result = graphql_query(
+            self.query,
+            variables={
+                "email": user.email,
+                "password": "wrongpassword",
+            },
         )
         assert result == {"data": {"login": None}}
 
-    def test_login_inactive_user(
-        self, graphql_query, inactive_user, json_loads
-    ):
+    def test_login_inactive_user(self, graphql_query, inactive_user):
         """Test logging in an inactive user."""
-        result = json_loads(
-            graphql_query(
-                self.query,
-                variables={
-                    "email": inactive_user.email,
-                    "password": "password",
-                },
-            ).content
+        result = graphql_query(
+            self.query,
+            variables={
+                "email": inactive_user.email,
+                "password": "password",
+            },
         )
         assert result == {"data": {"login": None}}
 
@@ -171,16 +161,14 @@ mutation ConfirmPasswordReset($token: String!, $email: String!) {
 }
 """
 
-    def test_valid_token(self, graphql_query, user, json_loads):
+    def test_valid_token(self, graphql_query, user):
         """Test with a valid token."""
-        result = json_loads(
-            graphql_query(
-                self.query,
-                variables={
-                    "token": user.get_password_reset_token(),
-                    "email": user.email,
-                },
-            ).content
+        result = graphql_query(
+            self.query,
+            variables={
+                "token": user.get_password_reset_token(),
+                "email": user.email,
+            },
         )
         assert result == {
             "data": {
@@ -192,16 +180,14 @@ mutation ConfirmPasswordReset($token: String!, $email: String!) {
             }
         }
 
-    def test_invalid_token(self, graphql_query, user, json_loads):
+    def test_invalid_token(self, graphql_query, user):
         """Test with an invalid token."""
-        result = json_loads(
-            graphql_query(
-                self.query,
-                variables={
-                    "token": "beefcace",
-                    "email": user.email,
-                },
-            ).content
+        result = graphql_query(
+            self.query,
+            variables={
+                "token": "beefcace",
+                "email": user.email,
+            },
         )
         assert result == {
             "data": {
