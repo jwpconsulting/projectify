@@ -310,6 +310,70 @@ mutation MoveTask($taskUuid: ID!, $sectionUuid: ID!) {
 
 
 @pytest.mark.django_db
+class TestAddUserToWorkspaceMutation:
+    """Test AddUserToWorkspaceMutation."""
+
+    query = """
+mutation AddUserToWorkspace($uuid: ID!, $email: String!) {
+  addUserToWorkspace(input: {uuid: $uuid, email: $email}) {
+    workspace {
+      uuid
+    }
+  }
+}
+"""
+
+    def test_query(
+        self,
+        task,
+        other_user,
+        json_loads,
+        graphql_query_user,
+        workspace,
+        workspace_user,
+    ):
+        """Test query."""
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(workspace.uuid),
+                    "email": other_user.email,
+                },
+            ).content,
+        )
+        assert result == {
+            "data": {
+                "addUserToWorkspace": {
+                    "workspace": {
+                        "uuid": str(workspace.uuid),
+                    },
+                },
+            },
+        }
+
+    def test_query_unauthorized(
+        self,
+        task,
+        other_user,
+        json_loads,
+        graphql_query_user,
+        workspace,
+    ):
+        """Test query."""
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(workspace.uuid),
+                    "email": other_user.email,
+                },
+            ).content,
+        )
+        assert "errors" in result
+
+
+@pytest.mark.django_db
 class TestAssignTaskMutation:
     """Test AssignTaskMutation."""
 
