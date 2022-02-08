@@ -151,8 +151,8 @@ export const Subscription_OnWorkspaceBoardChange = gql`
     }
 `;
 
-export const Query_DashboardTaskDetais = gql`
-    query DashboardTaskDetais($uuid: ID!) {
+export const Query_DashboardTaskDetails = gql`
+    query DashboardTaskDetails($uuid: ID!) {
         task(uuid: $uuid) {
             uuid
             title
@@ -191,6 +191,17 @@ export const Mutation_MoveTask = gql`
 export const Mutation_AddSubTask = gql`
     mutation AddSubTask($input: AddSubTaskInput!) {
         addSubTask(input: $input) {
+            subTask {
+                uuid
+                created
+            }
+        }
+    }
+`;
+
+export const Mutation_ChangeSubTaskDone = gql`
+    mutation ChangeSubTaskDone($input: ChangeSubTaskDoneInput!) {
+        changeSubTaskDone(input: $input) {
             subTask {
                 uuid
                 created

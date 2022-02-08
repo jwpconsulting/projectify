@@ -7,14 +7,16 @@
     import IconPlus from "../icons/icon-plus.svelte";
 
     import {
-        Query_DashboardTaskDetais,
+        Query_DashboardTaskDetails,
         Mutation_AddTask,
         Mutation_AddSubTask,
+        Mutation_ChangeSubTaskDone,
     } from "$lib/graphql/operations";
     import { query } from "svelte-apollo";
     import IconTrash from "../icons/icon-trash.svelte";
     import { client } from "$lib/graphql/client";
     import { _ } from "svelte-i18n";
+    import { workspaceBoardSubscription } from "$lib/stores/dashboardSubscription";
 
     let res = null;
     let task = null;
@@ -35,7 +37,7 @@
 
     $: {
         if ($currenTaskDetailsUUID) {
-            res = query(Query_DashboardTaskDetais, {
+            res = query(Query_DashboardTaskDetails, {
                 variables: { uuid: $currenTaskDetailsUUID },
                 fetchPolicy: "network-only",
             });
@@ -52,17 +54,27 @@
             subTasks = task.subTasks.map((t) => {
                 return {
                     ...t,
-                    checked: Boolean(t.checked),
+                    done: Boolean(t.done),
                 };
             });
+
+            console.log(subTasks);
         }
     }
+
+    // $: {
+    //     if (res && $workspaceBoardSubscription) {
+    //         firstLoad = true;
+    //         res.refetch();
+    //         console.log("refetch ", $currenTaskDetailsUUID);
+    //     }
+    // }
 
     $: {
         if (subTasks.length) {
             let sum = 0;
             subTasks.forEach((it) => {
-                sum += it.checked;
+                sum += it.done;
             });
             percent = Math.round((sum / subTasks.length) * 100);
         }
@@ -81,7 +93,7 @@
             ...subTasks,
             {
                 title: newSubTaskTitle,
-                checked: false,
+                done: false,
             },
         ];
 
@@ -101,6 +113,22 @@
         }
 
         newSubTaskTitle = "";
+    }
+
+    async function changeSubTaskDone(subTask) {
+        try {
+            let mRes = await client.mutate({
+                mutation: Mutation_ChangeSubTaskDone,
+                variables: {
+                    input: {
+                        subTaskUuid: subTask.uuid,
+                        done: subTask.done,
+                    },
+                },
+            });
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     function removeSubTask(inx) {
@@ -195,7 +223,7 @@
                                     type="checkbox"
                                     class="checkbox checkbox-primary"
                                     bind:checked={it.done}
-                                    on:change={(e) => console.log(e, it, inx)}
+                                    on:change={(e) => changeSubTaskDone(it)}
                                 />
                                 <div class="grow">{it.title}</div>
                                 <button
