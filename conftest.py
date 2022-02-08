@@ -45,11 +45,13 @@ def graphql_query(client):
     """Return a client query fn without logged in user."""
 
     def func(*args, **kwargs):
-        return testing.graphql_query(
-            *args,
-            **kwargs,
-            client=client,
-            graphql_url=reverse("graphql"),
+        return json.loads(
+            testing.graphql_query(
+                *args,
+                **kwargs,
+                client=client,
+                graphql_url=reverse("graphql"),
+            ).content
         )
 
     return func
@@ -60,21 +62,17 @@ def graphql_query_user(client, user):
     """Return a client query fn."""
 
     def func(*args, **kwargs):
-        return testing.graphql_query(
-            *args,
-            **kwargs,
-            client=client,
-            graphql_url=reverse("graphql"),
+        return json.loads(
+            testing.graphql_query(
+                *args,
+                **kwargs,
+                client=client,
+                graphql_url=reverse("graphql"),
+            ).content,
         )
 
     client.force_login(user)
     return func
-
-
-@pytest.fixture
-def json_loads():
-    """Return json loads."""
-    return json.loads
 
 
 @pytest.fixture

@@ -39,12 +39,11 @@ class TestBigQuery:
         graphql_query_user,
         workspace_user,
         user,
-        json_loads,
         sub_task,
         chat_message,
     ):
         """Assert that the big query works."""
-        result = json_loads(graphql_query_user(self.query).content)
+        result = graphql_query_user(self.query)
         assert "errors" not in result, result
         sections = result["data"]["workspaces"][0]["boards"][0]["sections"][0]
         tasks = sections["tasks"]
@@ -113,23 +112,20 @@ query All(
         sub_task,
         chat_message,
         graphql_query_user,
-        json_loads,
     ):
         """Test query."""
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "workspaceUuid": str(workspace.uuid),
-                    "workspaceBoardUuid": str(workspace_board.uuid),
-                    "workspaceBoardSectionUuid": str(
-                        workspace_board_section.uuid,
-                    ),
-                    "taskUuid": str(task.uuid),
-                    "subTaskUuid": str(sub_task.uuid),
-                    "chatMessageUuid": str(chat_message.uuid),
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "workspaceUuid": str(workspace.uuid),
+                "workspaceBoardUuid": str(workspace_board.uuid),
+                "workspaceBoardSectionUuid": str(
+                    workspace_board_section.uuid,
+                ),
+                "taskUuid": str(task.uuid),
+                "subTaskUuid": str(sub_task.uuid),
+                "chatMessageUuid": str(chat_message.uuid),
+            },
         )
         assert result == {
             "data": {
@@ -190,19 +186,16 @@ mutation ChangeSubTaskDone($uuid: ID!) {
     def test_query(
         self,
         graphql_query_user,
-        json_loads,
         workspace_user,
         sub_task,
     ):
         """Test query."""
         assert sub_task.done is False
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(sub_task.uuid),
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(sub_task.uuid),
+            },
         )
         assert result == {
             "data": {
@@ -237,19 +230,16 @@ mutation MoveWorkspaceBoardSection($uuid: ID!) {
         workspace_board_section,
         graphql_query_user,
         workspace_user,
-        json_loads,
     ):
         """Test the query."""
         factory.WorkspaceBoardSectionFactory(
             workspace_board=workspace_board_section.workspace_board,
         )
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(workspace_board_section.uuid),
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace_board_section.uuid),
+            },
         )
         assert result == {
             "data": {
@@ -286,17 +276,14 @@ mutation MoveTask($taskUuid: ID!, $sectionUuid: ID!) {
         workspace_board_section,
         graphql_query_user,
         workspace_user,
-        json_loads,
     ):
         """Test moving."""
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "taskUuid": str(task.uuid),
-                    "sectionUuid": str(workspace_board_section.uuid),
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "taskUuid": str(task.uuid),
+                "sectionUuid": str(workspace_board_section.uuid),
+            },
         )
         assert result == {
             "data": {
@@ -327,20 +314,17 @@ mutation AddUserToWorkspace($uuid: ID!, $email: String!) {
         self,
         task,
         other_user,
-        json_loads,
         graphql_query_user,
         workspace,
         workspace_user,
     ):
         """Test query."""
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(workspace.uuid),
-                    "email": other_user.email,
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace.uuid),
+                "email": other_user.email,
+            },
         )
         assert result == {
             "data": {
@@ -356,19 +340,16 @@ mutation AddUserToWorkspace($uuid: ID!, $email: String!) {
         self,
         task,
         other_user,
-        json_loads,
         graphql_query_user,
         workspace,
     ):
         """Test query."""
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(workspace.uuid),
-                    "email": other_user.email,
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace.uuid),
+                "email": other_user.email,
+            },
         )
         assert "errors" in result
 
@@ -394,19 +375,16 @@ mutation AssignTask($uuid: ID!, $email: String!) {
         task,
         other_user,
         other_workspace_user,
-        json_loads,
         graphql_query_user,
         workspace_user,
     ):
         """Test query."""
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(task.uuid),
-                    "email": other_user.email,
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(task.uuid),
+                "email": other_user.email,
+            },
         )
         assert result == {
             "data": {
@@ -437,15 +415,13 @@ mutation AddSubTask($uuid: ID!) {
 }
 """
 
-    def test_query(self, graphql_query_user, json_loads, task, workspace_user):
+    def test_query(self, graphql_query_user, task, workspace_user):
         """Test query."""
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(task.uuid),
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(task.uuid),
+            },
         )
         assert result == {
             "data": {
@@ -457,15 +433,13 @@ mutation AddSubTask($uuid: ID!) {
             },
         }
 
-    def test_query_unauthorized(self, graphql_query_user, json_loads, task):
+    def test_query_unauthorized(self, graphql_query_user, task):
         """Test query."""
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(task.uuid),
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(task.uuid),
+            },
         )
         assert "errors" in result
 
@@ -484,15 +458,13 @@ mutation AddChatMessage($uuid: ID!) {
 }
 """
 
-    def test_query(self, graphql_query_user, json_loads, task, workspace_user):
+    def test_query(self, graphql_query_user, task, workspace_user):
         """Test query."""
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(task.uuid),
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(task.uuid),
+            },
         )
         assert result == {
             "data": {
@@ -504,15 +476,13 @@ mutation AddChatMessage($uuid: ID!) {
             },
         }
 
-    def test_query_unauthorized(self, graphql_query_user, json_loads, task):
+    def test_query_unauthorized(self, graphql_query_user, task):
         """Test query."""
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(task.uuid),
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(task.uuid),
+            },
         )
         assert "errors" in result
 
@@ -538,18 +508,15 @@ mutation UpdateWorkspace($uuid: ID!) {
     def test_query(
         self,
         graphql_query_user,
-        json_loads,
         workspace,
         workspace_user,
     ):
         """Test query."""
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(workspace.uuid),
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace.uuid),
+            },
         )
         assert result == {
             "data": {
@@ -566,17 +533,14 @@ mutation UpdateWorkspace($uuid: ID!) {
     def test_query_unauthorized(
         self,
         graphql_query_user,
-        json_loads,
         workspace,
     ):
         """Test with unauthorized user."""
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(workspace.uuid),
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace.uuid),
+            },
         )
         assert result == {
             "data": {
@@ -608,21 +572,13 @@ mutation UpdateWorkspaceBoard($uuid: ID!) {
 }
 """
 
-    def test_query(
-        self,
-        graphql_query_user,
-        workspace_board,
-        json_loads,
-        workspace_user,
-    ):
+    def test_query(self, graphql_query_user, workspace_board, workspace_user):
         """Test query."""
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(workspace_board.uuid),
-                },
-            ).content
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace_board.uuid),
+            },
         )
         assert result == {
             "data": {
@@ -635,20 +591,13 @@ mutation UpdateWorkspaceBoard($uuid: ID!) {
             },
         }
 
-    def test_query_unauthorized(
-        self,
-        graphql_query_user,
-        workspace_board,
-        json_loads,
-    ):
+    def test_query_unauthorized(self, graphql_query_user, workspace_board):
         """Test query when user not authorized."""
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(workspace_board.uuid),
-                },
-            ).content
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace_board.uuid),
+            },
         )
         assert "errors" in result
 
@@ -674,17 +623,14 @@ mutation UpdateWorkspaceBoardSection($uuid: ID!) {
         self,
         graphql_query_user,
         workspace_board_section,
-        json_loads,
         workspace_user,
     ):
         """Test query."""
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(workspace_board_section.uuid),
-                },
-            ).content
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace_board_section.uuid),
+            },
         )
         assert result == {
             "data": {
@@ -701,16 +647,13 @@ mutation UpdateWorkspaceBoardSection($uuid: ID!) {
         self,
         graphql_query_user,
         workspace_board_section,
-        json_loads,
     ):
         """Test query when user not authorized."""
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(workspace_board_section.uuid),
-                },
-            ).content
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace_board_section.uuid),
+            },
         )
         assert "errors" in result
 
@@ -731,21 +674,13 @@ mutation UpdateTaskMutation($uuid: ID!) {
 }
 """
 
-    def test_query(
-        self,
-        graphql_query_user,
-        task,
-        json_loads,
-        workspace_user,
-    ):
+    def test_query(self, graphql_query_user, task, workspace_user):
         """Test query."""
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(task.uuid),
-                },
-            ).content
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(task.uuid),
+            },
         )
         assert result == {
             "data": {
@@ -758,20 +693,13 @@ mutation UpdateTaskMutation($uuid: ID!) {
             },
         }
 
-    def test_query_unauthorized(
-        self,
-        graphql_query_user,
-        task,
-        json_loads,
-    ):
+    def test_query_unauthorized(self, graphql_query_user, task):
         """Test query when user not authorized."""
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(task.uuid),
-                },
-            ).content
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(task.uuid),
+            },
         )
         assert "errors" in result
 
@@ -792,21 +720,13 @@ mutation UpdateSubTaskMutation($uuid: ID!) {
 }
 """
 
-    def test_query(
-        self,
-        graphql_query_user,
-        sub_task,
-        json_loads,
-        workspace_user,
-    ):
+    def test_query(self, graphql_query_user, sub_task, workspace_user):
         """Test query."""
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(sub_task.uuid),
-                },
-            ).content
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(sub_task.uuid),
+            },
         )
         assert result == {
             "data": {
@@ -819,20 +739,13 @@ mutation UpdateSubTaskMutation($uuid: ID!) {
             },
         }
 
-    def test_query_unauthorized(
-        self,
-        graphql_query_user,
-        sub_task,
-        json_loads,
-    ):
+    def test_query_unauthorized(self, graphql_query_user, sub_task):
         """Test query when user not authorized."""
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(sub_task.uuid),
-                },
-            ).content
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(sub_task.uuid),
+            },
         )
         assert "errors" in result
 
@@ -855,19 +768,16 @@ mutation DeleteWorkspaceBoard($uuid: ID!) {
     def test_query(
         self,
         graphql_query_user,
-        json_loads,
         workspace_board,
         workspace_user,
     ):
         """Test query."""
         assert models.WorkspaceBoard.objects.count() == 1
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(workspace_board.uuid),
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace_board.uuid),
+            },
         )
         assert result == {
             "data": {
@@ -880,21 +790,14 @@ mutation DeleteWorkspaceBoard($uuid: ID!) {
         }
         assert models.WorkspaceBoard.objects.count() == 0
 
-    def test_query_unauthorized(
-        self,
-        graphql_query_user,
-        json_loads,
-        workspace_board,
-    ):
+    def test_query_unauthorized(self, graphql_query_user, workspace_board):
         """Test query."""
         assert models.WorkspaceBoard.objects.count() == 1
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(workspace_board.uuid),
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace_board.uuid),
+            },
         )
         assert result == {
             "data": {
@@ -928,19 +831,16 @@ mutation DeleteWorkspaceBoardSection($uuid: ID!) {
     def test_query(
         self,
         graphql_query_user,
-        json_loads,
         workspace_board_section,
         workspace_user,
     ):
         """Test query."""
         assert models.WorkspaceBoardSection.objects.count() == 1
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(workspace_board_section.uuid),
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace_board_section.uuid),
+            },
         )
         assert result == {
             "data": {
@@ -956,18 +856,15 @@ mutation DeleteWorkspaceBoardSection($uuid: ID!) {
     def test_query_unauthorized(
         self,
         graphql_query_user,
-        json_loads,
         workspace_board_section,
     ):
         """Test query."""
         assert models.WorkspaceBoardSection.objects.count() == 1
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(workspace_board_section.uuid),
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace_board_section.uuid),
+            },
         )
         assert "errors" in result
 
@@ -986,22 +883,14 @@ mutation DeleteTask($uuid: ID!) {
 }
 """
 
-    def test_query(
-        self,
-        graphql_query_user,
-        json_loads,
-        task,
-        workspace_user,
-    ):
+    def test_query(self, graphql_query_user, task, workspace_user):
         """Test query."""
         assert models.Task.objects.count() == 1
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(task.uuid),
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(task.uuid),
+            },
         )
         assert result == {
             "data": {
@@ -1014,21 +903,14 @@ mutation DeleteTask($uuid: ID!) {
         }
         assert models.Task.objects.count() == 0
 
-    def test_query_unauthorized(
-        self,
-        graphql_query_user,
-        json_loads,
-        task,
-    ):
+    def test_query_unauthorized(self, graphql_query_user, task):
         """Test query."""
         assert models.Task.objects.count() == 1
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(task.uuid),
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(task.uuid),
+            },
         )
         assert "errors" in result
 
@@ -1047,22 +929,14 @@ mutation DeleteSubTask($uuid: ID!) {
 }
 """
 
-    def test_query(
-        self,
-        graphql_query_user,
-        json_loads,
-        sub_task,
-        workspace_user,
-    ):
+    def test_query(self, graphql_query_user, sub_task, workspace_user):
         """Test query."""
         assert models.SubTask.objects.count() == 1
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(sub_task.uuid),
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(sub_task.uuid),
+            },
         )
 
         assert result == {
@@ -1076,17 +950,13 @@ mutation DeleteSubTask($uuid: ID!) {
         }
         assert models.SubTask.objects.count() == 0
 
-    def test_query_unauthorized(
-        self, graphql_query_user, json_loads, task, sub_task
-    ):
+    def test_query_unauthorized(self, graphql_query_user, task, sub_task):
         """Test query."""
         assert models.SubTask.objects.count() == 1
-        result = json_loads(
-            graphql_query_user(
-                self.query,
-                variables={
-                    "uuid": str(sub_task.uuid),
-                },
-            ).content,
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(sub_task.uuid),
+            },
         )
         assert "errors" in result
