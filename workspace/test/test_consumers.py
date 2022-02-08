@@ -255,8 +255,8 @@ class TestWorkspaceBoardConsumer:
 class TestTaskConsumer:
     """Test TaskConsumer."""
 
-    async def test_task_saved(self):
-        """Assert event is fired when task is saved."""
+    async def test_task_saved_or_deleted(self):
+        """Assert event is fired when task is saved or deleted."""
         user = await create_user()
         workspace = await create_workspace()
         workspace_user = await create_workspace_user(workspace, user)
@@ -273,16 +273,18 @@ class TestTaskConsumer:
         await save_model_instance(task)
         message = await communicator.receive_json_from()
         assert message == str(task.uuid)
-        await communicator.disconnect()
         await delete_model_instance(task)
+        message = await communicator.receive_json_from()
+        assert message == str(task.uuid)
+        await communicator.disconnect()
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
         await delete_model_instance(user)
         await delete_model_instance(workspace)
 
-    async def test_sub_task_saved(self):
-        """Assert event is fired when sub task is saved."""
+    async def test_sub_task_saved_or_deleted(self):
+        """Assert event is fired when sub task is saved or deleted."""
         user = await create_user()
         workspace = await create_workspace()
         workspace_user = await create_workspace_user(workspace, user)
@@ -300,8 +302,10 @@ class TestTaskConsumer:
         await save_model_instance(sub_task)
         message = await communicator.receive_json_from()
         assert message == str(task.uuid)
-        await communicator.disconnect()
         await delete_model_instance(sub_task)
+        message = await communicator.receive_json_from()
+        assert message == str(task.uuid)
+        await communicator.disconnect()
         await delete_model_instance(task)
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
@@ -309,8 +313,8 @@ class TestTaskConsumer:
         await delete_model_instance(user)
         await delete_model_instance(workspace)
 
-    async def test_chat_message_saved(self):
-        """Assert event is fired when chat message is saved."""
+    async def test_chat_message_saved_or_deleted(self):
+        """Assert event is fired when chat message is saved or deleted."""
         user = await create_user()
         workspace = await create_workspace()
         workspace_user = await create_workspace_user(workspace, user)
@@ -328,8 +332,10 @@ class TestTaskConsumer:
         await save_model_instance(chat_message)
         message = await communicator.receive_json_from()
         assert message == str(task.uuid)
-        await communicator.disconnect()
         await delete_model_instance(chat_message)
+        message = await communicator.receive_json_from()
+        assert message == str(task.uuid)
+        await communicator.disconnect()
         await delete_model_instance(task)
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)

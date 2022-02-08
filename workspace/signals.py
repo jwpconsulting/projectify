@@ -1,5 +1,6 @@
 """Workspace signals."""
 from django.db.models.signals import (
+    post_delete,
     post_save,
 )
 from django.dispatch import (
@@ -115,6 +116,20 @@ def task_saved(sender, instance, **kwargs):
     )
 
 
+@receiver(post_delete, sender=models.Task)
+def task_deleted(sender, instance, **kwargs):
+    """Broadcast changes."""
+    task_uuid = str(instance.uuid)
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"task-{task_uuid}",
+        {
+            "type": "task.change",
+            "uuid": task_uuid,
+        },
+    )
+
+
 @receiver(post_save, sender=models.SubTask)
 def sub_task_saved(sender, instance, **kwargs):
     """Broadcast changes."""
@@ -142,8 +157,36 @@ def sub_task_saved(sender, instance, **kwargs):
     )
 
 
+@receiver(post_delete, sender=models.SubTask)
+def sub_task_deleted(sender, instance, **kwargs):
+    """Broadcast changes."""
+    task_uuid = str(instance.task.uuid)
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"task-{task_uuid}",
+        {
+            "type": "task.change",
+            "uuid": task_uuid,
+        },
+    )
+
+
 @receiver(post_save, sender=models.ChatMessage)
 def chat_message_saved(sender, instance, **kwargs):
+    """Broadcast changes."""
+    uuid = str(instance.task.uuid)
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"task-{uuid}",
+        {
+            "type": "task.change",
+            "uuid": uuid,
+        },
+    )
+
+
+@receiver(post_delete, sender=models.ChatMessage)
+def chat_message_deleted(sender, instance, **kwargs):
     """Broadcast changes."""
     uuid = str(instance.task.uuid)
     channel_layer = get_channel_layer()
