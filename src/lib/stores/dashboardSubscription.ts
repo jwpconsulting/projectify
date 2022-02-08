@@ -1,29 +1,13 @@
-import { writable } from "svelte/store";
 import vars from "$lib/env";
-import type { ReadableQuery } from "svelte-apollo";
-import debounce from "lodash/debounce.js";
+import {
+    getSubscriptionFor,
+    WSSubscriptionStore,
+} from "$lib/stores/wsSubscription";
 
-let socket;
-
-export const workspaceBoardSubscription = writable(null);
-
-export function subscribeToWorkspaceBoard(
-    uuid: string,
-    queryToRefetch: ReadableQuery<any>
-): void {
-    console.log("subscribeToWorkspaceBoard", uuid);
-
-    const wsURL = `${vars.WS_ENDPOINT}/workspace-board/${uuid}/`;
-
-    if (socket) {
-        socket.close();
-    }
-    socket = new WebSocket(wsURL);
-
-    const refetch = debounce(({ data }) => {
-        queryToRefetch.refetch();
-        workspaceBoardSubscription.set(data);
-    }, 100);
-
-    socket.addEventListener("message", refetch);
-}
+export const getSubscriptionForCollection = (
+    collection: "workspace-board" | "task",
+    uuid: string
+): WSSubscriptionStore => {
+    const wsURL = `${vars.WS_ENDPOINT}/${collection}/${uuid}/`;
+    return getSubscriptionFor(wsURL);
+};

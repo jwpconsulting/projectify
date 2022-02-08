@@ -4,16 +4,16 @@
         Mutation_AddWorkspaceBoardSection,
         Mutation_MoveWorkspaceBoardSection,
         Query_DashboardBoard,
-        Subscription_OnWorkspaceBoardChange,
     } from "$lib/graphql/operations";
-    import { query, subscribe } from "svelte-apollo";
+    import { query } from "svelte-apollo";
     import IconPlus from "../icons/icon-plus.svelte";
     import { getModal } from "../dialogModal.svelte";
     import { client } from "$lib/graphql/client";
     import { _ } from "svelte-i18n";
     import { sortable } from "$lib/actions/sortable";
     import delay from "delay";
-    import { subscribeToWorkspaceBoard } from "$lib/stores/dashboardSubscription";
+    import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
+    import debounce from "lodash/debounce.js";
 
     export let boardUUID = null;
 
@@ -22,13 +22,28 @@
     let sections = [];
     let isDragging = false;
 
+    let boardWSStore;
+
+    const refetch = debounce(() => {
+        res.refetch();
+    }, 100);
+
     $: {
         if (boardUUID) {
             res = query(Query_DashboardBoard, {
                 variables: { uuid: boardUUID },
             });
 
-            subscribeToWorkspaceBoard(boardUUID, res);
+            boardWSStore = getSubscriptionForCollection(
+                "workspace-board",
+                boardUUID
+            );
+        }
+    }
+
+    $: {
+        if ($boardWSStore) {
+            refetch();
         }
     }
 
@@ -91,7 +106,6 @@
         const order = detail.newIndex;
 
         if (section) {
-            console.log("section id ", section.uuid, order);
             moveSection(section.uuid, order);
         }
     }
