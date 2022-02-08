@@ -309,6 +309,54 @@ mutation MoveTask($taskUuid: ID!, $sectionUuid: ID!) {
         }
 
 
+@pytest.mark.django_db
+class TestAssignTaskMutation:
+    """Test AssignTaskMutation."""
+
+    query = """
+mutation AssignTask($uuid: ID!, $email: String!) {
+  assignTask(input: {uuid: $uuid, email: $email}) {
+    task {
+      assignee {
+        email
+      }
+    }
+  }
+}
+"""
+
+    def test_query(
+        self,
+        task,
+        other_user,
+        other_workspace_user,
+        json_loads,
+        graphql_query_user,
+        workspace_user,
+    ):
+        """Test query."""
+        result = json_loads(
+            graphql_query_user(
+                self.query,
+                variables={
+                    "uuid": str(task.uuid),
+                    "email": other_user.email,
+                },
+            ).content,
+        )
+        assert result == {
+            "data": {
+                "assignTask": {
+                    "task": {
+                        "assignee": {
+                            "email": other_user.email,
+                        },
+                    },
+                },
+            },
+        }
+
+
 # Add Mutations
 @pytest.mark.django_db
 class TestAddSubTaskMutation:

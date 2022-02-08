@@ -1,4 +1,8 @@
 """Test workspace models."""
+from django.contrib.auth import (
+    get_user_model,
+)
+
 import pytest
 
 from .. import (
@@ -341,6 +345,23 @@ class TestTask:
         assert task.chatmessage_set.count() == 0
         task.add_chat_message("Hello", user)
         assert task.chatmessage_set.count() == 1
+
+    def test_assign_to(
+        self,
+        workspace,
+        task,
+        other_user,
+        other_workspace_user,
+    ):
+        """Test assigning to a different workspace's user."""
+        task.assign_to(other_user)
+        assert task.assignee == other_user
+
+    def test_assign_outside_of_workspace(self, workspace, task, other_user):
+        """Test assigning to a different workspace's user."""
+        # This time do not create a workspace_user
+        with pytest.raises(get_user_model().DoesNotExist):
+            task.assign_to(other_user)
 
 
 @pytest.mark.django_db
