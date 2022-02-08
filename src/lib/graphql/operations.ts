@@ -210,6 +210,16 @@ export const Mutation_ChangeSubTaskDone = gql`
     }
 `;
 
+export const Mutation_DeleteSubTaskMutation = gql`
+    mutation DeleteSubTaskMutation($uuid: ID!) {
+        deleteSubTask(uuid: $uuid) {
+            subTask {
+                uuid
+            }
+        }
+    }
+`;
+
 export const Mutation_MoveWorkspaceBoardSection = gql`
     mutation MoveWorkspaceBoardSection(
         $input: MoveWorkspaceBoardSectionInput!

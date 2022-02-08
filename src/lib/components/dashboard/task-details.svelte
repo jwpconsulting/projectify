@@ -11,6 +11,7 @@
         Mutation_AddTask,
         Mutation_AddSubTask,
         Mutation_ChangeSubTaskDone,
+        Mutation_DeleteSubTaskMutation,
     } from "$lib/graphql/operations";
     import { query } from "svelte-apollo";
     import IconTrash from "../icons/icon-trash.svelte";
@@ -131,9 +132,24 @@
         }
     }
 
-    function removeSubTask(inx) {
+    async function deleteSubTask(subTask) {
+        const inx = subTasks.findIndex((it) => subTask.uuid == it.uuid);
+        if (inx == -1) {
+            return;
+        }
         subTasks.splice(inx, 1);
         subTasks = subTasks;
+
+        try {
+            let mRes = await client.mutate({
+                mutation: Mutation_DeleteSubTaskMutation,
+                variables: {
+                    uuid: subTask.uuid,
+                },
+            });
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     async function save() {
@@ -227,7 +243,7 @@
                                 />
                                 <div class="grow">{it.title}</div>
                                 <button
-                                    on:click={() => removeSubTask(inx)}
+                                    on:click={() => deleteSubTask(it)}
                                     class="btn btn-xs btn-circle btn-ghost children:w-2"
                                     ><IconTrash /></button
                                 >
