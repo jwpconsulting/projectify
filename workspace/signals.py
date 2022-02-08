@@ -93,6 +93,7 @@ def task_saved(sender, instance, **kwargs):
     """Broadcast changes."""
     workspace_board = instance.workspace_board_section.workspace_board
     uuid = str(workspace_board.uuid)
+    task_uuid = str(instance.uuid)
     subscription.OnWorkspaceBoardChange.broadcast(
         group=uuid,
         payload=workspace_board,
@@ -105,6 +106,13 @@ def task_saved(sender, instance, **kwargs):
             "uuid": uuid,
         },
     )
+    async_to_sync(channel_layer.group_send)(
+        f"task-{task_uuid}",
+        {
+            "type": "task.change",
+            "uuid": task_uuid,
+        },
+    )
 
 
 @receiver(post_save, sender=models.SubTask)
@@ -112,6 +120,7 @@ def sub_task_saved(sender, instance, **kwargs):
     """Broadcast changes."""
     workspace_board = instance.task.workspace_board_section.workspace_board
     uuid = str(workspace_board.uuid)
+    task_uuid = str(instance.task.uuid)
     subscription.OnWorkspaceBoardChange.broadcast(
         group=uuid,
         payload=workspace_board,
@@ -121,6 +130,27 @@ def sub_task_saved(sender, instance, **kwargs):
         f"workspace-board-{uuid}",
         {
             "type": "workspace.board.change",
+            "uuid": uuid,
+        },
+    )
+    async_to_sync(channel_layer.group_send)(
+        f"task-{task_uuid}",
+        {
+            "type": "task.change",
+            "uuid": task_uuid,
+        },
+    )
+
+
+@receiver(post_save, sender=models.ChatMessage)
+def chat_message_saved(sender, instance, **kwargs):
+    """Broadcast changes."""
+    uuid = str(instance.task.uuid)
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"task-{uuid}",
+        {
+            "type": "task.change",
             "uuid": uuid,
         },
     )
