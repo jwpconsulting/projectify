@@ -1,4 +1,7 @@
 """Test workspace models."""
+from django import (
+    db,
+)
 from django.contrib.auth import (
     get_user_model,
 )
@@ -51,6 +54,17 @@ class TestWorkspace:
             board,
             board2,
         ]
+
+    def test_add_user(self, workspace, user):
+        """Test adding a user."""
+        assert workspace.users.count() == 0
+        workspace.add_user(user)
+        assert workspace.users.count() == 1
+
+    def test_add_user_twice(self, workspace, workspace_user, user):
+        """Test that adding a user twice won't work."""
+        with pytest.raises(db.IntegrityError):
+            workspace.add_user(user)
 
 
 @pytest.mark.django_db

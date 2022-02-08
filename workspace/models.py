@@ -50,6 +50,15 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
             description=description,
         )
 
+    def add_user(self, user):
+        """
+        Add user to workspace.
+
+        Return user.
+        """
+        self.workspaceuser_set.create(user=user)
+        return user
+
 
 class WorkspaceUserQuerySet(models.QuerySet):
     """Workspace user queryset."""
@@ -73,6 +82,11 @@ class WorkspaceUser(TimeStampedModel, models.Model):
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 
     objects = WorkspaceUserQuerySet.as_manager()
+
+    class Meta:
+        """Meta."""
+
+        unique_together = ("workspace", "user")
 
 
 class WorkspaceBoardManager(models.Manager):
