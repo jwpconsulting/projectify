@@ -1,4 +1,8 @@
 """Workspace schema mutations."""
+from django.contrib.auth import (
+    get_user_model,
+)
+
 import graphene
 
 from .. import (
@@ -268,6 +272,36 @@ class MoveTaskMutation(graphene.Mutation):
         return cls(task)
 
 
+class AssignTaskInput(graphene.InputObjectType):
+    """Input for AssignTaskMutation."""
+
+    uuid = graphene.ID(required=True)
+    email = graphene.String(required=True)
+
+
+class AssignTaskMutation(graphene.Mutation):
+    """Mutation to assign tasks to users."""
+
+    class Arguments:
+        """Arguments."""
+
+        input = AssignTaskInput(required=True)
+
+    task = graphene.Field(types.Task)
+
+    @classmethod
+    def mutate(cls, root, info, input):
+        """Assign task to user."""
+        task = models.Task.objects.get_for_user_and_uuid(
+            info.context.user,
+            input.uuid,
+        )
+        User = get_user_model()
+        assignee = User.objects.get_by_natural_key(input.email)
+        task.assign_to(assignee)
+        return cls(task)
+
+
 # Update Mutations
 class UpdateWorkspaceInput(graphene.InputObjectType):
     """Input for UpdateWorkspaceMutation."""
@@ -523,6 +557,7 @@ class Mutation:
     add_chat_message = AddChatMessageMutation.Field()
     move_workspace_board_section = MoveWorkspaceBoardSectionMutation.Field()
     move_task = MoveTaskMutation.Field()
+    assign_task = AssignTaskMutation.Field()
     change_sub_task_done = ChangeSubTaskDoneMutation.Field()
     update_workspace = UpdateWorkspaceMutation.Field()
     update_workspace_board = UpdateWorkspaceBoardMutation.Field()

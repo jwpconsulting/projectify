@@ -19,6 +19,12 @@ def workspace_user(workspace, user):
 
 
 @pytest.fixture
+def other_workspace_user(workspace, other_user):
+    """Return workspace user for other_user."""
+    return factory.WorkspaceUserFactory(workspace=workspace, user=other_user)
+
+
+@pytest.fixture
 def workspace_board(workspace):
     """Return workspace board."""
     return factory.WorkspaceBoardFactory(workspace=workspace)
@@ -33,10 +39,11 @@ def workspace_board_section(workspace_board):
 
 
 @pytest.fixture
-def task(workspace_board_section):
+def task(workspace_board_section, user):
     """Return task."""
     return factory.TaskFactory(
         workspace_board_section=workspace_board_section,
+        assignee=user,
     )
 
 

@@ -255,6 +255,20 @@ class Task(
             author=author,
         )
 
+    def assign_to(self, assignee):
+        """
+        Assign task to user.
+
+        Saves after done.
+        """
+        # Check if assignee is part of the task's workspace
+        workspace = self.workspace_board_section.workspace_board.workspace
+        workspace.users.get(pk=assignee.pk)
+        # Change assignee
+        self.assignee = assignee
+        # Save
+        self.save()
+
     class Meta:
         """Meta."""
 
