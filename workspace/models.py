@@ -203,6 +203,13 @@ class Task(
         on_delete=models.PROTECT,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+    assignee = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        help_text=_("User this task is assigned to."),
+    )
 
     objects = TaskManager()
 

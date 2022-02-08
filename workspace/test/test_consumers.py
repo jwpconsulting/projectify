@@ -52,9 +52,12 @@ def create_workspace_board_section(workspace_board):
 
 
 @database_sync_to_async
-def create_task(workspace_board_section):
+def create_task(workspace_board_section, assignee):
     """Create task."""
-    return factory.TaskFactory(workspace_board_section=workspace_board_section)
+    return factory.TaskFactory(
+        workspace_board_section=workspace_board_section,
+        assignee=assignee,
+    )
 
 
 @database_sync_to_async
@@ -194,7 +197,7 @@ class TestWorkspaceBoardConsumer:
         workspace_board_section = await create_workspace_board_section(
             workspace_board,
         )
-        task = await create_task(workspace_board_section)
+        task = await create_task(workspace_board_section, user)
         workspace_user = await create_workspace_user(workspace, user)
         resource = f"ws/workspace-board/{workspace_board.uuid}/"
         communicator = WebsocketCommunicator(
@@ -223,7 +226,7 @@ class TestWorkspaceBoardConsumer:
         workspace_board_section = await create_workspace_board_section(
             workspace_board,
         )
-        task = await create_task(workspace_board_section)
+        task = await create_task(workspace_board_section, user)
         sub_task = await create_sub_task(task)
         workspace_user = await create_workspace_user(workspace, user)
         resource = f"ws/workspace-board/{workspace_board.uuid}/"
@@ -261,7 +264,7 @@ class TestTaskConsumer:
         workspace_board_section = await create_workspace_board_section(
             workspace_board,
         )
-        task = await create_task(workspace_board_section)
+        task = await create_task(workspace_board_section, user)
         resource = f"ws/task/{task.uuid}/"
         communicator = WebsocketCommunicator(websocket_application, resource)
         communicator.scope["user"] = user
@@ -287,7 +290,7 @@ class TestTaskConsumer:
         workspace_board_section = await create_workspace_board_section(
             workspace_board,
         )
-        task = await create_task(workspace_board_section)
+        task = await create_task(workspace_board_section, user)
         sub_task = await create_sub_task(task)
         resource = f"ws/task/{task.uuid}/"
         communicator = WebsocketCommunicator(websocket_application, resource)
@@ -315,7 +318,7 @@ class TestTaskConsumer:
         workspace_board_section = await create_workspace_board_section(
             workspace_board,
         )
-        task = await create_task(workspace_board_section)
+        task = await create_task(workspace_board_section, user)
         chat_message = await create_chat_message(task, user)
         resource = f"ws/task/{task.uuid}/"
         communicator = WebsocketCommunicator(websocket_application, resource)
