@@ -126,6 +126,7 @@ class Task(graphene_django.DjangoObjectType):
             "description",
             "uuid",
             "order",
+            "assignee",
         )
         model = models.Task
 

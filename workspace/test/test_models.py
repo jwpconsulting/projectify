@@ -256,9 +256,16 @@ class TestTaskManager:
 class TestTask:
     """Test Task."""
 
-    def test_factory(self, workspace_board_section, task):
+    def test_factory(
+        self,
+        workspace_board_section,
+        workspace_user,
+        task,
+        user,
+    ):
         """Test that workspace_board_section is assigned correctly."""
         assert task.workspace_board_section == workspace_board_section
+        assert task.assignee == user
 
     def test_moving_task_within_section(
         self,

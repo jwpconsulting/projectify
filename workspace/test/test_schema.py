@@ -83,6 +83,9 @@ query All(
     workspaceBoardSection {
       title
     }
+    assignee {
+      email
+    }
   }
   subTask(uuid: $subTaskUuid) {
     title
@@ -101,14 +104,15 @@ query All(
 
     def test_query(
         self,
+        user,
         workspace,
         workspace_board,
         workspace_board_section,
+        workspace_user,
         task,
         sub_task,
         chat_message,
         graphql_query_user,
-        workspace_user,
         json_loads,
     ):
         """Test query."""
@@ -148,6 +152,9 @@ query All(
                     "title": task.title,
                     "workspaceBoardSection": {
                         "title": workspace_board_section.title,
+                    },
+                    "assignee": {
+                        "email": user.email,
                     },
                 },
                 "subTask": {
