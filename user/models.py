@@ -70,6 +70,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name=_("Is active"),
         default=False,
     )
+    profile_picture = models.ImageField(
+        upload_to="profile_picture/",
+        blank=True,
+        null=True,
+    )
     objects = UserManager()
 
     USERNAME_FIELD = "email"
