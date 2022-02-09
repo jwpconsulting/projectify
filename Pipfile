@@ -38,6 +38,7 @@ channels = "*"
 django-channels-graphql-ws = "*"
 channels-redis = {extras = ["cryptography"], version = "*"}
 djangorestframework = "*"
+pillow = "*"
 
 [requires]
 python_version = "3.9"
