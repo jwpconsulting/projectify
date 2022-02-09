@@ -67,6 +67,10 @@ urlpatterns = [
         r"premail/",
         include("premail.urls"),
     ),
+    path(
+        r"user/",
+        include("user.urls"),
+    ),
 ]
 
 websocket_urlpatterns = (
