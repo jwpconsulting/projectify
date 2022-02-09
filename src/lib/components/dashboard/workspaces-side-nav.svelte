@@ -2,7 +2,7 @@
     import { query } from "svelte-apollo";
     import { Query_DashboardWorkspacesSideNav } from "$lib/graphql/operations";
     import IconPlus from "../icons/icon-plus.svelte";
-    import { goto } from "$app/navigation";
+    import { gotoDashboard, getDashboardURL } from "$lib/stores/dashboard";
 
     export let selectedWorkspaceUUID;
 
@@ -13,7 +13,7 @@
         if ($res.data) {
             workspaces = $res.data["workspaces"];
             if (!selectedWorkspaceUUID && workspaces.length) {
-                goto(`/dashboard/${workspaces[0]["uuid"]}`);
+                gotoDashboard(workspaces[0]["uuid"]);
             }
         }
     }
@@ -31,7 +31,7 @@
             <a
                 class="btn btn-primary btn-outline btn-square"
                 class:btn-active={workspace.uuid == selectedWorkspaceUUID}
-                href={`/dashboard/${workspace.uuid}`}
+                href={getDashboardURL(workspace.uuid)}
                 >{workspaceIconFrom(workspace.title)}</a
             >
         {/each}

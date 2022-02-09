@@ -11,9 +11,17 @@
     import NewBoardSectionModal from "./newBoardSectionModal.svelte";
 
     import { page } from "$app/stores";
+    import { decodeUUID, encodeUUID } from "$lib/utils/encoders";
 
-    $: selectedWorkspaceUUID = $page.params["workspaceUUID"];
-    $: selectedBoardUUID = $page.params["boardUUID"] || null;
+    $: selectedWorkspaceUUID = $page.params["workspaceUUID"]
+        ? decodeUUID($page.params["workspaceUUID"])
+        : null;
+    $: selectedBoardUUID = $page.params["boardUUID"]
+        ? decodeUUID($page.params["boardUUID"])
+        : null;
+    $: selectedTaskUUID = $page.params["taskUUID"]
+        ? decodeUUID($page.params["taskUUID"])
+        : null;
 </script>
 
 <main class="page p-0 flex-row divide-x divide-base-300 select-none">

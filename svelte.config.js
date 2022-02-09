@@ -32,6 +32,9 @@ const config = {
                     },
                 },
             },
+            build: {
+                target: ["es2020"],
+            },
         },
     },
 };

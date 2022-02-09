@@ -7,7 +7,7 @@
     import { client } from "$lib/graphql/client";
 
     import { getModal } from "$lib/components/dialogModal.svelte";
-    import { goto } from "$app/navigation";
+    import { gotoDashboard, getDashboardURL } from "$lib/stores/dashboard";
     import { _ } from "svelte-i18n";
 
     export let selectedWorkspaceUUID;
@@ -29,9 +29,7 @@
             boards = $res.data["workspace"]["boards"];
 
             if (!selectedBoardUUID && boards.length) {
-                goto(
-                    `/dashboard/${selectedWorkspaceUUID}/${boards[0]["uuid"]}`
-                );
+                gotoDashboard(selectedWorkspaceUUID, boards[0]["uuid"]);
             }
         }
     }
@@ -55,9 +53,7 @@
                 selectedBoardUUID =
                     mRes.data.addWorkspaceBoard.workspaceBoard.uuid;
 
-                goto(
-                    `/dashboard/${selectedWorkspaceUUID}/${selectedBoardUUID}`
-                );
+                gotoDashboard(selectedWorkspaceUUID, selectedBoardUUID);
             } catch (error) {
                 console.error(error);
             }
@@ -74,7 +70,7 @@
             >
                 <a
                     class="h-9 text-xs font-bold capitalize px-8"
-                    href={`/dashboard/${selectedWorkspaceUUID}/${board.uuid}`}
+                    href={getDashboardURL(selectedWorkspaceUUID, board.uuid)}
                     ># {board.title}</a
                 >
             </li>
