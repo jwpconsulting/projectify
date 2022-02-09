@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import {
         currenTaskDetailsUUID,
         newTaskSectionUUID,
@@ -14,11 +14,15 @@
     import { client } from "$lib/graphql/client";
     import { _ } from "svelte-i18n";
     import Subtasks from "./task-details-subtasks.svelte";
+    import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
+    import debounce from "lodash/debounce.js";
+    import type { ReadableQuery } from "svelte-apollo";
 
-    let res = null;
+    let res: ReadableQuery<any> = null;
     let task = null;
-    let firstLoad = false;
     let subTasks = [];
+
+    let taskWSStrore;
 
     function reset() {
         res = null;
@@ -29,21 +33,34 @@
         subTasks = [];
     }
 
+    const refetch = debounce(() => {
+        res.refetch();
+    }, 100);
+
     $: {
         if ($currenTaskDetailsUUID) {
             res = query(Query_DashboardTaskDetails, {
                 variables: { uuid: $currenTaskDetailsUUID },
                 fetchPolicy: "network-only",
             });
-            firstLoad = true;
+
+            taskWSStrore = getSubscriptionForCollection(
+                "task",
+                $currenTaskDetailsUUID
+            );
         } else {
             reset();
         }
     }
 
     $: {
-        if (res && $res.data && firstLoad) {
-            firstLoad = false;
+        if ($taskWSStrore) {
+            refetch();
+        }
+    }
+
+    $: {
+        if (res && $res.data) {
             task = $res.data.task;
             subTasks = task.subTasks.map((t) => {
                 return {

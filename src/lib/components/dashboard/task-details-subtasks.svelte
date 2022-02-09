@@ -10,8 +10,6 @@
     import IconPlus from "../icons/icon-plus.svelte";
     import { _ } from "svelte-i18n";
 
-    // import { workspaceBoardSubscription } from "$lib/stores/dashboardSubscription";
-
     export let taskUUID;
     export let subTasks;
     let percent = 0;
@@ -26,14 +24,6 @@
             percent = Math.round((sum / subTasks.length) * 100);
         }
     }
-
-    // $: {
-    //     if (res && $workspaceBoardSubscription) {
-    //         firstLoad = true;
-    //         res.refetch();
-    //         console.log("refetch ", $currenTaskDetailsUUID);
-    //     }
-    // }
 
     async function addSubTask() {
         if (!newSubTaskTitle || newSubTaskTitle.length < 1) {
@@ -66,6 +56,10 @@
     }
 
     async function changeSubTaskDone(subTask) {
+        if (!subTask || !subTask.uuid) {
+            return;
+        }
+
         try {
             let mRes = await client.mutate({
                 mutation: Mutation_ChangeSubTaskDone,
@@ -82,6 +76,10 @@
     }
 
     async function deleteSubTask(subTask) {
+        if (!subTask || !subTask.uuid) {
+            return;
+        }
+
         const inx = subTasks.findIndex((it) => subTask.uuid == it.uuid);
         if (inx == -1) {
             return;
@@ -112,7 +110,7 @@
 
     <div>
         {#each subTasks as it, inx}
-            <label class="cursor-pointer label space-x-2">
+            <label class="cursor-pointer label space-x-2 hover:bg-base-200">
                 <input
                     type="checkbox"
                     class="checkbox checkbox-primary"

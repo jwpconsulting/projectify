@@ -15,4 +15,5 @@ export function openTaskDetails(taskUUID: string): void {
 }
 export function closeTaskDetails(): void {
     drawerModalOpen.set(false);
+    currenTaskDetailsUUID.set(null);
 }
