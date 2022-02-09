@@ -58,6 +58,7 @@ INSTALLED_APPS_THIRD_PARTY = (
     "graphene_django",
     "ordered_model",
     "premail",
+    "rest_framework",
 )
 
 INSTALLED_APPS_FIRST_PARTY = (
@@ -198,3 +199,10 @@ CELERY_RESULT_BACKEND = "django-db"
 
 # Email
 DEFAULT_FROM_EMAIL = "hello@projectifyapp.com"
+
+# Rest framework
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+    ]
+}
