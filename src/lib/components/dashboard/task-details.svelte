@@ -35,7 +35,7 @@
 
     const refetch = debounce(() => {
         res.refetch();
-    }, 100);
+    }, 1000);
 
     $: {
         if ($currenTaskDetailsUUID) {
