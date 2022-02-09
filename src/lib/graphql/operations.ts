@@ -77,10 +77,12 @@ export const Query_Dashboard = gql`
                 sections {
                     uuid
                     title
+                    order
                     tasks {
                         uuid
                         title
                         description
+                        order
                         subTasks {
                             title
                             description
@@ -121,9 +123,11 @@ export const Query_DashboardBoard = gql`
             title
             description
             sections {
+                order
                 uuid
                 title
                 tasks {
+                    order
                     uuid
                     title
                 }
@@ -131,6 +135,7 @@ export const Query_DashboardBoard = gql`
         }
     }
 `;
+
 export const Subscription_OnWorkspaceBoardChange = gql`
     subscription OnWorkspaceBoardChange($uuid: ID!) {
         onWorkspaceBoardChange(uuid: $uuid) {

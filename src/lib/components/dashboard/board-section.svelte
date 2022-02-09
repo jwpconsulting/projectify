@@ -94,6 +94,7 @@
                 <IconChevronRight />
             </div>
             <div class="grow font-bold uppercase">
+                {section.order} -
                 {section.title}
                 {#if !open} ({section.tasks.length}) {/if}
             </div>
@@ -141,7 +142,7 @@
                                     <div
                                         class="text-xs bg-secondary px-2 py-1 rounded mr-2 font-bold"
                                     >
-                                        Design
+                                        Design {task.order}
                                     </div>
                                     <div class="text-xs">Date 2022.01.01</div>
                                 </div>
