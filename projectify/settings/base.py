@@ -215,3 +215,4 @@ REST_FRAMEWORK = {
 # Where to store media
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
+SERVE_MEDIA = False

@@ -15,6 +15,13 @@ from .emails import (
 class User(graphene_django.DjangoObjectType):
     """User."""
 
+    profile_picture = graphene.String()
+
+    def resolve_profile_picture(self, info):
+        """Resolve profile_picture."""
+        if self.profile_picture:
+            return self.profile_picture.url
+
     class Meta:
         """Meta."""
 
