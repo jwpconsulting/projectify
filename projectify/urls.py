@@ -17,6 +17,9 @@ Including another URLconf
 from django.conf import (
     settings,
 )
+from django.conf.urls.static import (
+    static,
+)
 from django.contrib import (
     admin,
 )
@@ -72,6 +75,12 @@ urlpatterns = [
         include("user.urls"),
     ),
 ]
+
+if settings.SERVE_MEDIA:
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT,
+    )
 
 websocket_urlpatterns = (
     path("graphql-ws", GraphqlWsConsumer.as_asgi()),

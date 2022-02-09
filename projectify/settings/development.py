@@ -25,3 +25,6 @@ GRAPHENE["MIDDLEWARE"] = (
     *GRAPHENE["MIDDLEWARE"],
     "graphene_django.debug.DjangoDebugMiddleware",
 )
+
+# Media
+SERVE_MEDIA = True
