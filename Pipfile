@@ -39,6 +39,7 @@ django-channels-graphql-ws = "*"
 channels-redis = {extras = ["cryptography"], version = "*"}
 djangorestframework = "*"
 pillow = "*"
+django-cloudinary-storage = "*"
 
 [requires]
 python_version = "3.9"

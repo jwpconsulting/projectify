@@ -57,3 +57,6 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+# Cloudinary
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"

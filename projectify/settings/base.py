@@ -53,6 +53,8 @@ INSTALLED_APPS_DJANGO = (
 )
 
 INSTALLED_APPS_THIRD_PARTY = (
+    "cloudinary",
+    "cloudinary_storage",
     "django_celery_results",
     "django_extensions",
     "graphene_django",
