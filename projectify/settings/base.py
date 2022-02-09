@@ -209,3 +209,7 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ),
 }
+
+# Where to store media
+MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "/media/"
