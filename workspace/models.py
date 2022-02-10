@@ -283,6 +283,11 @@ class Task(
         # Save
         self.save()
 
+    def get_next_section(self):
+        """Return instance of the next section."""
+        next_section = self.workspace_board_section.next()
+        return next_section
+
     class Meta:
         """Meta."""
 

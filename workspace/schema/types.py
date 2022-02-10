@@ -101,6 +101,9 @@ class Task(graphene_django.DjangoObjectType):
     workspace_board_section = graphene.Field(
         "workspace.schema.types.WorkspaceBoardSection",
     )
+    next_workspace_board_section = graphene.Field(
+        "workspace.schema.types.WorkspaceBoardSection",
+    )
 
     def resolve_sub_tasks(self, info):
         """Resolve sub tasks for this task."""
@@ -115,6 +118,14 @@ class Task(graphene_django.DjangoObjectType):
         return info.context.loader.workspace_board_section_loader.load(
             self.workspace_board_section.pk,
         )
+
+    def resolve_next_workspace_board_section(self, info):
+        """Resolve the next section."""
+        section = self.get_next_section()
+        if section:
+            return info.context.loader.workspace_board_section_loader.load(
+                section.pk,
+            )
 
     class Meta:
         """Meta."""

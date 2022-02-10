@@ -377,6 +377,17 @@ class TestTask:
         with pytest.raises(get_user_model().DoesNotExist):
             task.assign_to(other_user)
 
+    def test_get_next_section(self, workspace_board, task):
+        """Test getting the next section."""
+        section = factory.WorkspaceBoardSectionFactory(
+            workspace_board=workspace_board,
+        )
+        assert task.get_next_section() == section
+
+    def test_get_next_section_no_next_section(self, workspace_board, task):
+        """Test getting the next section when there is none."""
+        assert task.get_next_section() is None
+
 
 @pytest.mark.django_db
 class TestSubTaskManager:
