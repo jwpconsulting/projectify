@@ -1,0 +1,1 @@
+"""Workspace schema tests."""
