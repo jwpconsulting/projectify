@@ -187,7 +187,8 @@ class Query:
     def resolve_user(self, info):
         """Resolve user field."""
         user = info.context.user
-        return user
+        if user.is_authenticated:
+            return user
 
 
 class Mutation:
