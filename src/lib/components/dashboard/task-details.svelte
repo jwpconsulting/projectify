@@ -34,7 +34,7 @@
     }
 
     const refetch = debounce(() => {
-        res.refetch();
+        res?.refetch();
     }, 1000);
 
     $: {
