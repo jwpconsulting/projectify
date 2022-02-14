@@ -1,8 +1,10 @@
 import { goto } from "$app/navigation";
 import { encodeUUID } from "$lib/utils/encoders";
-import { writable } from "svelte/store";
+import { writable, get } from "svelte/store";
 
 export const drawerModalOpen = writable(false);
+export const currentWorkspaceUUID = writable<string | null>(null);
+export const currentBoardUUID = writable<string | null>(null);
 export const currenTaskDetailsUUID = writable<string | null>(null);
 export const newTaskSectionUUID = writable<string | null>(null);
 
@@ -14,10 +16,20 @@ export function openNewTask(sectionUUID: string): void {
 export function openTaskDetails(taskUUID: string): void {
     drawerModalOpen.set(true);
     currenTaskDetailsUUID.set(taskUUID);
+
+    const workspaceUUID = get(currentWorkspaceUUID);
+    const boardUUID = get(currentBoardUUID);
+
+    gotoDashboard(workspaceUUID, boardUUID, taskUUID);
 }
 export function closeTaskDetails(): void {
     drawerModalOpen.set(false);
     currenTaskDetailsUUID.set(null);
+
+    const workspaceUUID = get(currentWorkspaceUUID);
+    const boardUUID = get(currentBoardUUID);
+
+    gotoDashboard(workspaceUUID, boardUUID, null);
 }
 
 export function getDashboardURL(

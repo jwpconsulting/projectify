@@ -5,23 +5,50 @@
     import IconSettings from "../icons/icon-settings.svelte";
     import DrawerModal from "../drawerModal.svelte";
     import TaskDetails from "./task-details.svelte";
-    import { drawerModalOpen } from "$lib/stores/dashboard";
+    import {
+        currentWorkspaceUUID,
+        currentBoardUUID,
+        currenTaskDetailsUUID,
+        drawerModalOpen,
+        gotoDashboard,
+        closeTaskDetails,
+        openTaskDetails,
+    } from "$lib/stores/dashboard";
     import DialogModal from "../dialogModal.svelte";
     import NewBoardModal from "./newBoardModal.svelte";
     import NewBoardSectionModal from "./newBoardSectionModal.svelte";
 
     import { page } from "$app/stores";
-    import { decodeUUID, encodeUUID } from "$lib/utils/encoders";
+    import { decodeUUID } from "$lib/utils/encoders";
+    import { onMount } from "svelte";
 
-    $: selectedWorkspaceUUID = $page.params["workspaceUUID"]
-        ? decodeUUID($page.params["workspaceUUID"])
-        : null;
-    $: selectedBoardUUID = $page.params["boardUUID"]
-        ? decodeUUID($page.params["boardUUID"])
-        : null;
-    $: selectedTaskUUID = $page.params["taskUUID"]
-        ? decodeUUID($page.params["taskUUID"])
-        : null;
+    $: uuids = $page.params["uuids"].split("/");
+
+    $: selectedWorkspaceUUID = uuids[0] ? decodeUUID(uuids[0]) : null;
+    $: selectedBoardUUID = uuids[1] ? decodeUUID(uuids[1]) : null;
+    $: selectedTaskUUID = uuids[2] ? decodeUUID(uuids[2]) : null;
+
+    $: {
+        currentWorkspaceUUID.set(selectedWorkspaceUUID);
+        currentBoardUUID.set(selectedBoardUUID);
+    }
+
+    $: {
+        if (
+            !$drawerModalOpen &&
+            selectedWorkspaceUUID &&
+            selectedBoardUUID &&
+            selectedTaskUUID
+        ) {
+            closeTaskDetails();
+        }
+    }
+
+    onMount(() => {
+        if (selectedTaskUUID) {
+            openTaskDetails(selectedTaskUUID);
+        }
+    });
 </script>
 
 <main class="page p-0 flex-row divide-x divide-base-300 select-none">
