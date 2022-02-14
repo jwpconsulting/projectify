@@ -13,7 +13,7 @@ import {
 import { goto } from "$app/navigation";
 
 export const user = writable(null);
-export const userIsLoading = writable(false);
+export const userIsLoading = writable(true);
 export const singinRedirect = { to: null };
 
 export const singUp = async (email, password) => {
