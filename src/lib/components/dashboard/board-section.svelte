@@ -80,7 +80,7 @@
 <div class="flex m-2 bg-base-100" class:hover:ring={isDragging}>
     <div
         class="w-1 shrink-0"
-        style={`background-color: hsl(${index * 36}, 80%, 60%);`}
+        style={`background-color: hsl(${index * 45}, 80%, 75%);`}
     />
     <div class="flex grow flex-col">
         <header
