@@ -13,7 +13,7 @@
     export let taskUUID;
     export let subTasks;
     let percent = 0;
-    let newSubTaskTitle = null;
+    let newSubTaskTitle = "";
 
     $: {
         if (subTasks.length) {
@@ -136,6 +136,7 @@
             on:keydown={(e) => e.key === "Enter" && addSubTask()}
         />
         <button
+            disabled={newSubTaskTitle.length < 1}
             on:click={() => addSubTask()}
             class="absolute top-0 right-0 rounded-l-none btn btn-primary btn-square"
             ><IconPlus /></button
