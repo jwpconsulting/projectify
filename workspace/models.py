@@ -8,6 +8,9 @@ from django.db import (
     models,
     transaction,
 )
+from django.utils.timezone import (
+    now,
+)
 from django.utils.translation import gettext_lazy as _
 
 from django_extensions.db.models import (
@@ -89,7 +92,7 @@ class WorkspaceUser(TimeStampedModel, models.Model):
         unique_together = ("workspace", "user")
 
 
-class WorkspaceBoardManager(models.Manager):
+class WorkspaceBoardQuerySet(models.QuerySet):
     """WorkspaceBoard Manager."""
 
     def filter_by_workspace_pks(self, workspace_pks):
@@ -100,6 +103,10 @@ class WorkspaceBoardManager(models.Manager):
         """Get a workspace baord for user and uuid."""
         return self.filter(workspace__users=user).get(uuid=uuid)
 
+    def filter_by_archived(self, archived=True):
+        """Filter by archived boards."""
+        return self.filter(archived__isnull=not archived)
+
 
 class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
     """Workspace board."""
@@ -109,8 +116,13 @@ class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
         on_delete=models.PROTECT,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+    archived = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text=_("Archival timestamp of this workspace board."),
+    )
 
-    objects = WorkspaceBoardManager()
+    objects = WorkspaceBoardQuerySet.as_manager()
 
     def add_workspace_board_section(self, title, description):
         """Add workspace board section to this workspace board."""
@@ -118,6 +130,15 @@ class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
             title=title,
             description=description,
         )
+
+    def archive(self):
+        """
+        Mark this workspace board as archived.
+
+        Saves model instance.
+        """
+        self.archived = now()
+        self.save()
 
 
 class WorkspaceBoardSectionManager(OrderedModelManager):
