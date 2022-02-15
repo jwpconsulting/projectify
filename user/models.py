@@ -75,6 +75,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         blank=True,
         null=True,
     )
+    full_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
     objects = UserManager()
 
     USERNAME_FIELD = "email"
