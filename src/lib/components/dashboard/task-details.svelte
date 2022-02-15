@@ -18,13 +18,16 @@
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
     import debounce from "lodash/debounce.js";
     import type { ReadableQuery } from "svelte-apollo";
-    import { get } from "svelte/store";
+    import { onDestroy } from "svelte";
 
     let res: ReadableQuery<any> = null;
-    let savedTask = null;
     let task = null;
     let subTasks = [];
-    let dataFromApi = false;
+    let taskModified = false;
+
+    function fieldChanged() {
+        taskModified = true;
+    }
 
     let taskWSStrore;
 
@@ -37,25 +40,7 @@
         subTasks = [];
     }
 
-    function isTaskDifferent(a, b) {
-        if (a == null) {
-            return true;
-        }
-        if (b == null) {
-            return true;
-        }
-        if (a.title != b.title) {
-            return true;
-        }
-        if (a.description != b.description) {
-            return true;
-        }
-
-        return false;
-    }
-
     const refetch = debounce(() => {
-        dataFromApi = true;
         res?.refetch();
     }, 100);
 
@@ -70,24 +55,41 @@
                 "task",
                 $currenTaskDetailsUUID
             );
-
-            dataFromApi = true;
         } else {
             reset();
         }
     }
 
-    $: {
-        if ($taskWSStrore) {
-            refetch();
+    function setData(data) {
+        if (!taskModified) {
+            task = { ...data.task };
         }
     }
 
+    let unsubscriber = null;
     $: {
-        if (res && $res.data && dataFromApi) {
-            dataFromApi = false;
-            savedTask = { ...$res.data.task };
-            task = { ...$res.data.task };
+        if (res) {
+            if (unsubscriber) {
+                unsubscriber();
+            }
+            unsubscriber = res.subscribe(({ data }) => {
+                if (!data) {
+                    return;
+                }
+                setData(data);
+            });
+        }
+    }
+
+    onDestroy(() => {
+        if (unsubscriber) {
+            unsubscriber();
+        }
+    });
+
+    $: {
+        if ($taskWSStrore) {
+            refetch();
         }
     }
 
@@ -104,7 +106,7 @@
 
     $: itsNew = $currenTaskDetailsUUID == null;
 
-    $: saveEnabled = isTaskDifferent(task, savedTask);
+    $: saveEnabled = taskModified && task.title.length;
 
     async function save() {
         if (itsNew) {
@@ -122,6 +124,7 @@
                 let taskUUID = mRes.data.addTask.task.uuid;
                 currenTaskDetailsUUID.set(taskUUID);
                 pushTashUUIDtoPath(taskUUID);
+                taskModified = false;
             } catch (error) {
                 console.error(error);
             }
@@ -137,10 +140,7 @@
                         },
                     },
                 });
-
-                savedTask = {
-                    ...task,
-                };
+                taskModified = false;
             } catch (error) {
                 console.error(error);
             }
@@ -161,14 +161,15 @@
                 <IconPlus />
             </div>
             <input
-                class="grow text-xl p-2 rounded-md"
+                class="grow text-xl p-2 rounded-md overflow-hidden text-ellipsis"
                 placeholder={$_("task-name")}
+                on:input={() => fieldChanged()}
                 bind:value={task.title}
             />
 
             <button
                 disabled={!saveEnabled}
-                class="btn btn-primary rounded-full"
+                class="btn btn-primary rounded-full shrink-0"
                 on:click={() => save()}>{$_("save")}</button
             >
         </header>
@@ -187,6 +188,7 @@
                     rows="6"
                     class="textarea textarea-bordered resize-none leading-normal p-4"
                     placeholder={$_("please-enter-a-description")}
+                    on:input={() => fieldChanged()}
                     bind:value={task.description}
                 />
             </div>
