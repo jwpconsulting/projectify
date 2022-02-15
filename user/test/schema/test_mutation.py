@@ -196,3 +196,40 @@ mutation ConfirmPasswordReset($token: String!, $email: String!) {
                 }
             }
         }
+
+
+@pytest.mark.django_db
+class TestSetProfileMutation:
+    """Test SetProfileMutation."""
+
+    query = """
+mutation SetProfile {
+    setProfile(input: {fullName: "Foo Bar"}) {
+        user {
+            fullName
+        }
+    }
+}
+"""
+
+    def test_query(self, graphql_query_user):
+        """Test query."""
+        result = graphql_query_user(self.query)
+        assert result == {
+            "data": {
+                "setProfile": {
+                    "user": {
+                        "fullName": "Foo Bar",
+                    },
+                },
+            },
+        }
+
+    def test_query_unauthenticated(self, graphql_query):
+        """Test query when unauthenticated."""
+        result = graphql_query(self.query)
+        assert result == {
+            "data": {
+                "setProfile": None,
+            },
+        }
