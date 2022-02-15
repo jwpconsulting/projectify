@@ -20,5 +20,8 @@ class User(graphene_django.DjangoObjectType):
     class Meta:
         """Meta."""
 
-        fields = ("email",)
+        fields = (
+            "email",
+            "full_name",
+        )
         model = auth.get_user_model()

@@ -164,6 +164,33 @@ class ConfirmPasswordResetMutation(graphene.Mutation):
         return cls(None)
 
 
+class SetProfileInput(graphene.InputObjectType):
+    """SetProfileMutation input."""
+
+    full_name = graphene.String(required=True)
+
+
+class SetProfileMutation(graphene.Mutation):
+    """Set profile mutation."""
+
+    class Arguments:
+        """Arguments."""
+
+        input = SetProfileInput(required=True)
+
+    user = graphene.Field(types.User)
+
+    @classmethod
+    def mutate(cls, root, info, input):
+        """Mutate."""
+        user = info.context.user
+        if not user.is_authenticated:
+            return
+        user.full_name = input.full_name
+        user.save()
+        return cls(user)
+
+
 class Mutation:
     """Mutation."""
 
@@ -173,3 +200,4 @@ class Mutation:
     logout = LogoutMutation.Field()
     request_password_reset = RequestPasswordResetMutation.Field()
     confirm_password_reset = ConfirmPasswordResetMutation.Field()
+    set_profile = SetProfileMutation.Field()
