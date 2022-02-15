@@ -318,6 +318,7 @@ class TestTask:
         """Test that workspace_board_section is assigned correctly."""
         assert task.workspace_board_section == workspace_board_section
         assert task.assignee == user
+        assert task.deadline is not None
 
     def test_moving_task_within_section(
         self,
