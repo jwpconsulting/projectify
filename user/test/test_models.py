@@ -28,6 +28,7 @@ class TestUser:
     def test_factory(self, user):
         """Test user factory."""
         assert user.email
+        assert user.full_name is not None
 
     def test_get_email_confirmation_token(self, user):
         """Test retrieving the email confirmation token."""
