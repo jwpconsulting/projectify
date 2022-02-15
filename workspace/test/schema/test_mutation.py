@@ -325,6 +325,40 @@ mutation AddChatMessage($uuid: ID!) {
         assert "errors" in result
 
 
+@pytest.mark.django_db
+class TestDuplicateTaskMutation:
+    """Test DuplicateTaskMutation."""
+
+    query = """
+mutation DuplicateTask($uuid: ID!) {
+    duplicateTask(input: {uuid: $uuid}) {
+        task {
+            uuid
+        }
+    }
+}
+"""
+
+    def test_query(self, graphql_query_user, workspace_user, task):
+        """Test query."""
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(task.uuid),
+            },
+        )
+        new_task = models.Task.objects.last()
+        assert result == {
+            "data": {
+                "duplicateTask": {
+                    "task": {
+                        "uuid": str(new_task.uuid),
+                    }
+                },
+            },
+        }
+
+
 # Update Mutations
 @pytest.mark.django_db
 class TestUpdateWorkspaceMutation:
