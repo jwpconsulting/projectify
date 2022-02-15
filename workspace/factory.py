@@ -1,4 +1,8 @@
 """Workspace factories."""
+from datetime import (
+    timezone,
+)
+
 import factory
 from factory import (
     django,
@@ -91,6 +95,7 @@ class TaskFactory(django.DjangoModelFactory):
     description = factory.Faker("paragraph")
     workspace_board_section = factory.SubFactory(WorkspaceBoardSectionFactory)
     assignee = factory.LazyAttribute(extract_assignee)
+    deadline = factory.Faker("date_time", tzinfo=timezone.utc)
 
     class Meta:
         """Meta."""

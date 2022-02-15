@@ -263,6 +263,11 @@ class Task(
         on_delete=models.PROTECT,
         help_text=_("User this task is assigned to."),
     )
+    deadline = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text=_("Task's deadline"),
+    )
 
     objects = TaskManager()
 
