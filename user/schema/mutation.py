@@ -1,32 +1,17 @@
-"""User schema."""
+"""User schema mutations."""
 from django.contrib import (
     auth,
 )
 
 import graphene
-import graphene_django
 
-from .emails import (
+from ..emails import (
     UserEmailConfirmationEmail,
     UserPasswordResetEmail,
 )
-
-
-class User(graphene_django.DjangoObjectType):
-    """User."""
-
-    profile_picture = graphene.String()
-
-    def resolve_profile_picture(self, info):
-        """Resolve profile_picture."""
-        if self.profile_picture:
-            return self.profile_picture.url
-
-    class Meta:
-        """Meta."""
-
-        fields = ("email",)
-        model = auth.get_user_model()
+from . import (
+    types,
+)
 
 
 class SignupMutation(graphene.Mutation):
@@ -38,7 +23,7 @@ class SignupMutation(graphene.Mutation):
         email = graphene.String(required=True)
         password = graphene.String(required=True)
 
-    user = graphene.Field(User)
+    user = graphene.Field(types.User)
 
     @classmethod
     def mutate(cls, root, info, email, password):
@@ -59,7 +44,7 @@ class EmailConfirmationMutation(graphene.Mutation):
         email = graphene.String(required=True)
         token = graphene.String(required=True)
 
-    user = graphene.Field(User)
+    user = graphene.Field(types.User)
 
     @classmethod
     def mutate(cls, root, info, email, token):
@@ -81,7 +66,7 @@ class LoginMutation(graphene.Mutation):
         email = graphene.String(required=True)
         password = graphene.String(required=True)
 
-    user = graphene.Field(User)
+    user = graphene.Field(types.User)
 
     @classmethod
     def mutate(cls, root, info, email, password):
@@ -111,7 +96,7 @@ class LogoutMutation(graphene.Mutation):
     class Arguments:
         """No arguments required."""
 
-    user = graphene.Field(User)
+    user = graphene.Field(types.User)
 
     @classmethod
     def mutate(cls, root, info):
@@ -165,7 +150,7 @@ class ConfirmPasswordResetMutation(graphene.Mutation):
 
         input = ConfirmPasswordResetInput(required=True)
 
-    user = graphene.Field(User)
+    user = graphene.Field(types.User)
 
     @classmethod
     def mutate(cls, root, info, input):
@@ -177,18 +162,6 @@ class ConfirmPasswordResetMutation(graphene.Mutation):
             user.save()
             return cls(user)
         return cls(None)
-
-
-class Query:
-    """Query."""
-
-    user = graphene.Field(User)
-
-    def resolve_user(self, info):
-        """Resolve user field."""
-        user = info.context.user
-        if user.is_authenticated:
-            return user
 
 
 class Mutation:

@@ -10,7 +10,7 @@ from .. import (
 class Workspace(graphene_django.DjangoObjectType):
     """Workspace."""
 
-    users = graphene.List("user.schema.User")
+    users = graphene.List("user.schema.types.User")
     boards = graphene.List("workspace.schema.types.WorkspaceBoard")
     archived_boards = graphene.List("workspace.schema.types.WorkspaceBoard")
 
