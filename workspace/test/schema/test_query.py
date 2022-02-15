@@ -1,6 +1,10 @@
 """Test workspace queries."""
 import pytest
 
+from ... import (
+    factory,
+)
+
 
 @pytest.mark.django_db
 class TestBigQuery:
@@ -160,5 +164,83 @@ query All(
                         "email": workspace_user.user.email,
                     },
                 },
+            },
+        }
+
+
+@pytest.mark.django_db
+class TestWorkspaces:
+    """Test workspaces field."""
+
+    def test_boards(
+        self,
+        user,
+        workspace_board,
+        workspace_user,
+        graphql_query_user,
+    ):
+        """Test retrieving non-archived boards."""
+        query = """
+query {
+    workspaces {
+        boards {
+            uuid
+        }
+    }
+}
+"""
+        result = graphql_query_user(
+            query,
+        )
+        assert result == {
+            "data": {
+                "workspaces": [
+                    {
+                        "boards": [
+                            {
+                                "uuid": str(workspace_board.uuid),
+                            },
+                        ],
+                    },
+                ]
+            },
+        }
+
+    def test_archived_boards(
+        self,
+        user,
+        workspace,
+        workspace_board,
+        workspace_user,
+        graphql_query_user,
+    ):
+        """Test retrieving archived boards."""
+        query = """
+query {
+    workspaces {
+        archivedBoards {
+            uuid
+        }
+    }
+}
+"""
+        other_workspace_board = factory.WorkspaceBoardFactory(
+            workspace=workspace,
+        )
+        other_workspace_board.archive()
+        result = graphql_query_user(
+            query,
+        )
+        assert result == {
+            "data": {
+                "workspaces": [
+                    {
+                        "archivedBoards": [
+                            {
+                                "uuid": str(other_workspace_board.uuid),
+                            },
+                        ],
+                    },
+                ]
             },
         }

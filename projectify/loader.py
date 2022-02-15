@@ -11,6 +11,9 @@ class Loader:
         self.workspace_workspace_board_loader = (
             workspace_loader.WorkspaceWorkspaceBoardLoader()
         )
+        self.workspace_archived_workspace_board_loader = (
+            workspace_loader.WorkspaceArchivedWorkspaceBoardLoader()
+        )
         self.workspace_board_workspace_board_section_loader = (
             workspace_loader.WorkspaceBoardWorkspaceBoardSectionLoader()
         )

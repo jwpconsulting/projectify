@@ -46,10 +46,40 @@ class WorkspaceWorkspaceBoardLoader(DataLoader):
     def batch_load_fn(self, keys):
         """Load workspace boards for workspace."""
         workspace_boards = defaultdict(list)
-        qs = models.WorkspaceBoard.objects.filter_by_workspace_pks(
-            keys,
-        ).select_related(
-            "workspace",
+        qs = (
+            models.WorkspaceBoard.objects.filter_by_archived(
+                False,
+            )
+            .filter_by_workspace_pks(
+                keys,
+            )
+            .select_related(
+                "workspace",
+            )
+        )
+        for workspace_board in qs.iterator():
+            workspace_boards[workspace_board.workspace.pk].append(
+                workspace_board,
+            )
+        return Promise.resolve([workspace_boards.get(key, []) for key in keys])
+
+
+class WorkspaceArchivedWorkspaceBoardLoader(DataLoader):
+    """Workspace board loader for archived workspaces."""
+
+    def batch_load_fn(self, keys):
+        """Load workspace boards for workspace."""
+        workspace_boards = defaultdict(list)
+        qs = (
+            models.WorkspaceBoard.objects.filter_by_archived(
+                True,
+            )
+            .filter_by_workspace_pks(
+                keys,
+            )
+            .select_related(
+                "workspace",
+            )
         )
         for workspace_board in qs.iterator():
             workspace_boards[workspace_board.workspace.pk].append(

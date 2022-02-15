@@ -12,6 +12,7 @@ class Workspace(graphene_django.DjangoObjectType):
 
     users = graphene.List("user.schema.User")
     boards = graphene.List("workspace.schema.types.WorkspaceBoard")
+    archived_boards = graphene.List("workspace.schema.types.WorkspaceBoard")
 
     def resolve_users(self, info):
         """Resolve workspace users."""
@@ -22,6 +23,11 @@ class Workspace(graphene_django.DjangoObjectType):
         return info.context.loader.workspace_workspace_board_loader.load(
             self.pk
         )
+
+    def resolve_archived_boards(self, info):
+        """Resolve archived workspace boards."""
+        loader = info.context.loader.workspace_archived_workspace_board_loader
+        return loader.load(self.pk)
 
     class Meta:
         """Meta."""
