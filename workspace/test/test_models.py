@@ -116,6 +116,16 @@ class TestWorkspaceBoardManager:
         )
         assert actual == workspace_board
 
+    def test_filter_by_archived(self, workspace_board):
+        """Test filter_by_archived."""
+        qs_archived = models.WorkspaceBoard.objects.filter_by_archived(True)
+        qs_unarchived = models.WorkspaceBoard.objects.filter_by_archived(False)
+        assert qs_archived.count() == 0
+        assert qs_unarchived.count() == 1
+        workspace_board.archive()
+        assert qs_archived.count() == 1
+        assert qs_unarchived.count() == 0
+
 
 @pytest.mark.django_db
 class TestWorkspaceBoard:
@@ -142,6 +152,12 @@ class TestWorkspaceBoard:
             section,
             section2,
         ]
+
+    def test_archive(self, workspace_board):
+        """Test archive method."""
+        assert workspace_board.archived is None
+        workspace_board.archive()
+        assert workspace_board.archived is not None
 
 
 @pytest.mark.django_db
