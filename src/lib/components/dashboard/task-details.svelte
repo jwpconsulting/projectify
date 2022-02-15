@@ -2,13 +2,14 @@
     import {
         currenTaskDetailsUUID,
         newTaskSectionUUID,
-        closeTaskDetails,
+        pushTashUUIDtoPath,
     } from "$lib/stores/dashboard";
     import IconPlus from "../icons/icon-plus.svelte";
 
     import {
         Query_DashboardTaskDetails,
         Mutation_AddTask,
+        Mutation_UpdateTask,
     } from "$lib/graphql/operations";
     import { query } from "svelte-apollo";
     import { client } from "$lib/graphql/client";
@@ -17,10 +18,13 @@
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
     import debounce from "lodash/debounce.js";
     import type { ReadableQuery } from "svelte-apollo";
+    import { get } from "svelte/store";
 
     let res: ReadableQuery<any> = null;
+    let savedTask = null;
     let task = null;
     let subTasks = [];
+    let dataFromApi = false;
 
     let taskWSStrore;
 
@@ -33,9 +37,27 @@
         subTasks = [];
     }
 
+    function isTaskDifferent(a, b) {
+        if (a == null) {
+            return true;
+        }
+        if (b == null) {
+            return true;
+        }
+        if (a.title != b.title) {
+            return true;
+        }
+        if (a.description != b.description) {
+            return true;
+        }
+
+        return false;
+    }
+
     const refetch = debounce(() => {
+        dataFromApi = true;
         res?.refetch();
-    }, 1000);
+    }, 100);
 
     $: {
         if ($currenTaskDetailsUUID) {
@@ -48,6 +70,8 @@
                 "task",
                 $currenTaskDetailsUUID
             );
+
+            dataFromApi = true;
         } else {
             reset();
         }
@@ -60,9 +84,16 @@
     }
 
     $: {
+        if (res && $res.data && dataFromApi) {
+            dataFromApi = false;
+            savedTask = { ...$res.data.task };
+            task = { ...$res.data.task };
+        }
+    }
+
+    $: {
         if (res && $res.data) {
-            task = $res.data.task;
-            subTasks = task.subTasks.map((t) => {
+            subTasks = $res.data.task.subTasks.map((t) => {
                 return {
                     ...t,
                     done: Boolean(t.done),
@@ -73,8 +104,7 @@
 
     $: itsNew = $currenTaskDetailsUUID == null;
 
-    $: saveEnabled =
-        task && task.title.length > 0 && task.description.length > 0;
+    $: saveEnabled = isTaskDifferent(task, savedTask);
 
     async function save() {
         if (itsNew) {
@@ -88,13 +118,32 @@
                         },
                     },
                 });
-                currenTaskDetailsUUID.set(mRes.data.addTask.task.uuid);
+
+                let taskUUID = mRes.data.addTask.task.uuid;
+                currenTaskDetailsUUID.set(taskUUID);
+                pushTashUUIDtoPath(taskUUID);
             } catch (error) {
                 console.error(error);
             }
         } else {
-            reset();
-            closeTaskDetails();
+            try {
+                let mRes = await client.mutate({
+                    mutation: Mutation_UpdateTask,
+                    variables: {
+                        input: {
+                            uuid: $currenTaskDetailsUUID,
+                            title: task.title,
+                            description: task.description,
+                        },
+                    },
+                });
+
+                savedTask = {
+                    ...task,
+                };
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
 </script>

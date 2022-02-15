@@ -64,3 +64,11 @@ export function gotoDashboard(
     const url = getDashboardURL(workspaceUUID, boardUUID, taskUUID);
     goto(url);
 }
+
+export function pushTashUUIDtoPath(uuid: string): void {
+    const workspaceUUID = get(currentWorkspaceUUID);
+    const boardUUID = get(currentBoardUUID);
+    if (workspaceUUID && boardUUID) {
+        gotoDashboard(workspaceUUID, boardUUID, uuid);
+    }
+}

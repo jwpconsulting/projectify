@@ -183,6 +183,19 @@ export const Mutation_AddTask = gql`
     }
 `;
 
+export const Mutation_UpdateTask = gql`
+    mutation UpdateTask($input: UpdateTaskMutationInput!) {
+        updateTask(input: $input) {
+            task {
+                uuid
+                modified
+                title
+                description
+            }
+        }
+    }
+`;
+
 export const Mutation_MoveTask = gql`
     mutation MoveTask($input: MoveTaskInput!) {
         moveTask(input: $input) {
@@ -199,6 +212,9 @@ export const Mutation_AddSubTask = gql`
             subTask {
                 uuid
                 created
+                title
+                description
+                done
             }
         }
     }
@@ -209,7 +225,10 @@ export const Mutation_ChangeSubTaskDone = gql`
         changeSubTaskDone(input: $input) {
             subTask {
                 uuid
-                created
+                modified
+                title
+                description
+                done
             }
         }
     }
