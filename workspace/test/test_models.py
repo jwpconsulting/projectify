@@ -296,6 +296,13 @@ class TestTaskManager:
         )
         assert actual == task
 
+    def test_duplicate_task(self, task):
+        """Test task duplication."""
+        new_task = models.Task.objects.duplicate_task(task)
+        assert new_task.workspace_board_section == task.workspace_board_section
+        assert new_task.title == task.title
+        assert new_task.description == task.description
+
 
 @pytest.mark.django_db
 class TestTask:

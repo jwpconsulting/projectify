@@ -233,6 +233,15 @@ class TaskManager(OrderedModelManager):
             workspace_board_section__workspace_board__workspace__users=user,
         ).get(uuid=uuid)
 
+    def duplicate_task(self, task):
+        """Duplicate a task."""
+        new_task = self.create(
+            workspace_board_section=task.workspace_board_section,
+            title=task.title,
+            description=task.description,
+        )
+        return new_task
+
 
 class Task(
     OrderedModel,
