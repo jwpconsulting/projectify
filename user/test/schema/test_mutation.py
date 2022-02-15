@@ -1,4 +1,4 @@
-"""User app schema tests."""
+"""User app schema mutation tests."""
 import pytest
 
 
