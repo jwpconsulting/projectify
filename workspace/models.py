@@ -140,6 +140,15 @@ class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
         self.archived = now()
         self.save()
 
+    def unarchive(self):
+        """
+        Mark this workspace board as not archived.
+
+        Saves model instance.
+        """
+        self.archived = None
+        self.save()
+
 
 class WorkspaceBoardSectionManager(OrderedModelManager):
     """Manager for WorkspaceBoard."""

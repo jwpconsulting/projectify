@@ -125,6 +125,9 @@ class TestWorkspaceBoardManager:
         workspace_board.archive()
         assert qs_archived.count() == 1
         assert qs_unarchived.count() == 0
+        workspace_board.unarchive()
+        assert qs_archived.count() == 0
+        assert qs_unarchived.count() == 1
 
 
 @pytest.mark.django_db
@@ -158,6 +161,14 @@ class TestWorkspaceBoard:
         assert workspace_board.archived is None
         workspace_board.archive()
         assert workspace_board.archived is not None
+
+    def test_unarchive(self, workspace_board):
+        """Test unarchive method."""
+        assert workspace_board.archived is None
+        workspace_board.archive()
+        assert workspace_board.archived is not None
+        workspace_board.unarchive()
+        assert workspace_board.archived is None
 
 
 @pytest.mark.django_db
