@@ -1,4 +1,12 @@
 """Test workspace mutations."""
+from datetime import (
+    datetime,
+)
+
+from django.utils import (
+    timezone,
+)
+
 import pytest
 
 from ... import (
@@ -602,8 +610,12 @@ class TestUpdateTaskMutation:
     """Test TestUpdateTaskMutation."""
 
     query = """
-mutation UpdateTaskMutation($uuid: ID!) {
-  updateTask(input: {uuid: $uuid, title: "Foo", description: "Bar"})
+mutation UpdateTaskMutation($uuid: ID!, $deadline: DateTime) {
+  updateTask(
+      input: {
+        uuid: $uuid, title: "Foo", description: "Bar", deadline: $deadline
+      }
+  )
   {
     task {
       title
@@ -641,6 +653,42 @@ mutation UpdateTaskMutation($uuid: ID!) {
             },
         )
         assert "errors" in result
+
+    def test_assigning_deadline(
+        self,
+        graphql_query_user,
+        task,
+        workspace_user,
+    ):
+        """Test assigning a deadline."""
+        deadline = timezone.now()
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(task.uuid),
+                "deadline": deadline.isoformat(),
+            },
+        )
+        assert "errors" not in result, result
+        task.refresh_from_db()
+        assert task.deadline == deadline
+
+    def test_assigning_deadline_missing_tz(
+        self,
+        graphql_query_user,
+        task,
+        workspace_user,
+    ):
+        """Test assigning a deadline."""
+        deadline = datetime.now()
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(task.uuid),
+                "deadline": deadline.isoformat(),
+            },
+        )
+        assert "errors" in result, result
 
 
 @pytest.mark.django_db

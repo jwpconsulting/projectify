@@ -495,6 +495,7 @@ class UpdateTaskMutationInput(graphene.InputObjectType):
     uuid = graphene.ID(required=True)
     title = graphene.String(required=True)
     description = graphene.String(required=True)
+    deadline = graphene.DateTime(required=False)
 
 
 class UpdateTaskMutation(graphene.Mutation):
@@ -516,6 +517,9 @@ class UpdateTaskMutation(graphene.Mutation):
         )
         task.title = input.title
         task.description = input.description
+        if input.deadline:
+            task.deadline = input.deadline
+            assert task.deadline.tzinfo
         task.save()
         return cls(task)
 
