@@ -335,6 +335,33 @@ class AssignTaskMutation(graphene.Mutation):
         return cls(task)
 
 
+class DuplicateTaskInput(graphene.InputObjectType):
+    """DuplicateTaskMutation input."""
+
+    uuid = graphene.ID(required=True)
+
+
+class DuplicateTaskMutation(graphene.Mutation):
+    """Duplicate task mutation."""
+
+    class Arguments:
+        """Arguments."""
+
+        input = DuplicateTaskInput(required=True)
+
+    task = graphene.Field(types.Task)
+
+    @classmethod
+    def mutate(cls, root, info, input):
+        """Duplicate a task."""
+        task = models.Task.objects.get_for_user_and_uuid(
+            info.context.user,
+            input.uuid,
+        )
+        new_task = models.Task.objects.duplicate_task(task)
+        return cls(new_task)
+
+
 # Update Mutations
 class UpdateWorkspaceInput(graphene.InputObjectType):
     """Input for UpdateWorkspaceMutation."""
@@ -623,6 +650,7 @@ class Mutation:
     move_task = MoveTaskMutation.Field()
     add_user_to_workspace = AddUserToWorkspaceMutation.Field()
     assign_task = AssignTaskMutation.Field()
+    duplicate_task = DuplicateTaskMutation.Field()
     change_sub_task_done = ChangeSubTaskDoneMutation.Field()
     update_workspace = UpdateWorkspaceMutation.Field()
     archive_workspace_board = ArchiveWorkspaceBoardMutation.Field()
