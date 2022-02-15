@@ -24,6 +24,7 @@
     let task = null;
     let subTasks = [];
     let taskModified = false;
+    let isSaving = false;
 
     function fieldChanged() {
         taskModified = true;
@@ -106,9 +107,10 @@
 
     $: itsNew = $currenTaskDetailsUUID == null;
 
-    $: saveEnabled = taskModified && task.title.length;
+    $: saveEnabled = taskModified && task.title.length && !isSaving;
 
     async function save() {
+        isSaving = true;
         if (itsNew) {
             try {
                 let mRes = await client.mutate({
@@ -145,6 +147,8 @@
                 console.error(error);
             }
         }
+
+        isSaving = false;
     }
 </script>
 
