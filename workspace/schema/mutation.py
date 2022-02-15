@@ -367,6 +367,37 @@ class UpdateWorkspaceMutation(graphene.Mutation):
         return cls(workspace)
 
 
+class ArchiveWorkspaceBoardInput(graphene.InputObjectType):
+    """Input for ArchiveWorkspaceBoardMutation."""
+
+    uuid = graphene.ID(required=True)
+    archived = graphene.Boolean(required=True)
+
+
+class ArchiveWorkspaceBoardMutation(graphene.Mutation):
+    """Archive workspace board."""
+
+    class Arguments:
+        """Arguments."""
+
+        input = ArchiveWorkspaceBoardInput(required=True)
+
+    workspace_board = graphene.Field(types.WorkspaceBoard)
+
+    @classmethod
+    def mutate(cls, root, info, input):
+        """Mutate."""
+        workspace_board = models.WorkspaceBoard.objects.get_for_user_and_uuid(
+            info.context.user,
+            input.uuid,
+        )
+        if input.archived:
+            workspace_board.archive()
+        else:
+            workspace_board.unarchive()
+        return cls(workspace_board)
+
+
 class UpdateWorkspaceBoardInput(graphene.InputObjectType):
     """Input for UpdateWorkspaceBoardMutation."""
 
@@ -594,6 +625,7 @@ class Mutation:
     assign_task = AssignTaskMutation.Field()
     change_sub_task_done = ChangeSubTaskDoneMutation.Field()
     update_workspace = UpdateWorkspaceMutation.Field()
+    archive_workspace_board = ArchiveWorkspaceBoardMutation.Field()
     update_workspace_board = UpdateWorkspaceBoardMutation.Field()
     update_workspace_board_section = (
         UpdateWorkspaceBoardSectionMutation.Field()

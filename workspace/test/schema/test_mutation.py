@@ -395,6 +395,73 @@ mutation UpdateWorkspace($uuid: ID!) {
 
 
 @pytest.mark.django_db
+class TestArchiveWorkspaceBoardMutation:
+    """Test ArchiveWorkspaceBoardMutation."""
+
+    query = """
+mutation ArchiveWorkspaceBoard($uuid: ID!, $archived: Boolean!) {
+    archiveWorkspaceBoard(input: {uuid: $uuid, archived: $archived}) {
+        workspaceBoard {
+            uuid
+            archived
+        }
+    }
+}
+"""
+
+    def test_archive(
+        self,
+        graphql_query_user,
+        workspace_board,
+        workspace_user,
+    ):
+        """Test archiving."""
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace_board.uuid),
+                "archived": True,
+            },
+        )
+        workspace_board.refresh_from_db()
+        assert result == {
+            "data": {
+                "archiveWorkspaceBoard": {
+                    "workspaceBoard": {
+                        "uuid": str(workspace_board.uuid),
+                        "archived": workspace_board.archived.isoformat(),
+                    },
+                },
+            },
+        }
+
+    def test_unarchive(
+        self,
+        graphql_query_user,
+        workspace_board,
+        workspace_user,
+    ):
+        """Test unarchiving."""
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace_board.uuid),
+                "archived": False,
+            },
+        )
+        assert result == {
+            "data": {
+                "archiveWorkspaceBoard": {
+                    "workspaceBoard": {
+                        "uuid": str(workspace_board.uuid),
+                        "archived": None,
+                    },
+                },
+            },
+        }
+
+
+@pytest.mark.django_db
 class TestUpdateWorkspaceBoardMutation:
     """Test UpdateWorkspaceBoardMutation."""
 
