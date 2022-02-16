@@ -199,12 +199,12 @@ mutation ConfirmPasswordReset($token: String!, $email: String!) {
 
 
 @pytest.mark.django_db
-class TestSetProfileMutation:
-    """Test SetProfileMutation."""
+class TestUpdateProfileMutation:
+    """Test UpdateProfileMutation."""
 
     query = """
-mutation SetProfile {
-    setProfile(input: {fullName: "Foo Bar"}) {
+mutation UpdateProfile {
+    updateProfile(input: {fullName: "Foo Bar"}) {
         user {
             fullName
         }
@@ -217,7 +217,7 @@ mutation SetProfile {
         result = graphql_query_user(self.query)
         assert result == {
             "data": {
-                "setProfile": {
+                "updateProfile": {
                     "user": {
                         "fullName": "Foo Bar",
                     },
@@ -230,6 +230,6 @@ mutation SetProfile {
         result = graphql_query(self.query)
         assert result == {
             "data": {
-                "setProfile": None,
+                "updateProfile": None,
             },
         }
