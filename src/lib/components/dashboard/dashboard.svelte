@@ -8,9 +8,7 @@
     import {
         currentWorkspaceUUID,
         currentBoardUUID,
-        currenTaskDetailsUUID,
         drawerModalOpen,
-        gotoDashboard,
         closeTaskDetails,
         openTaskDetails,
     } from "$lib/stores/dashboard";
@@ -51,7 +49,9 @@
     });
 </script>
 
-<main class="page p-0 flex-row divide-x divide-base-300 select-none">
+<main
+    class="page p-0 flex-row divide-x divide-base-300 select-none overflow-x-hidden"
+>
     <!-- First side bar -->
     <WorkspacesSideNav bind:selectedWorkspaceUUID />
 
@@ -68,7 +68,7 @@
         </div>
 
         <!-- Boards nav -->
-        <div class="grow">
+        <div class="flex flex-col grow">
             {#if selectedWorkspaceUUID}
                 <h2 class="p-4 text-base font-bold">Workspace Boards</h2>
                 <BoardsSideNav {selectedWorkspaceUUID} {selectedBoardUUID} />

@@ -69,9 +69,9 @@
                 class:menu-item-active={board.uuid === selectedBoardUUID}
             >
                 <a
-                    class="h-9 text-xs font-bold capitalize px-8"
+                    class="h-9 text-xs font-bold capitalize px-8 inline"
                     href={getDashboardURL(selectedWorkspaceUUID, board.uuid)}
-                    ># {board.title}</a
+                    ><span class="nowrap-ellipsis"># {board.title}</span></a
                 >
             </li>
         {/each}

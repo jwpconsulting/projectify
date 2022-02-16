@@ -15,6 +15,7 @@ body {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    max-width: 100vw;
 }
 
 .bg-debug {
@@ -72,6 +73,10 @@ body {
         > svg {
             @apply w-5 h-5;
         }
+    }
+
+    .nowrap-ellipsis {
+        @apply overflow-hidden text-ellipsis whitespace-nowrap;
     }
 }
 

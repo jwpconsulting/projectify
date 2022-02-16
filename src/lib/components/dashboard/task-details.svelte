@@ -165,7 +165,7 @@
                 <IconPlus />
             </div>
             <input
-                class="grow text-xl p-2 rounded-md overflow-hidden text-ellipsis"
+                class="grow text-xl p-2 rounded-md nowrap-ellipsis"
                 placeholder={$_("task-name")}
                 on:input={() => fieldChanged()}
                 bind:value={task.title}

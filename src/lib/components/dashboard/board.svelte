@@ -14,6 +14,9 @@
     import delay from "delay";
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
     import debounce from "lodash/debounce.js";
+    import ToolBar from "./toolBar.svelte";
+    import IconEdit from "../icons/icon-edit.svelte";
+    import IconTrash from "../icons/icon-trash.svelte";
 
     export let boardUUID = null;
 
@@ -125,6 +128,13 @@
             console.error(error);
         }
     }
+
+    function onEdit() {
+        console.log("edit");
+    }
+    function onArchive() {
+        console.log("archive");
+    }
 </script>
 
 {#if res && $res.loading}
@@ -134,10 +144,22 @@
 {:else if board}
     <div class="flex grow flex-col">
         <!-- Tile -->
-        <div class="flex flex-row items-center px-4 py-4">
-            <h1 class="font-bold text-3xl grow">{board.title}</h1>
+        <div class="flex flex-row items-center px-4 py-4 gap-2">
+            <div class="grid font-bold text-3xl grow shrink basis-0">
+                <span class="nowrap-ellipsis">{board.title}</span>
+            </div>
+            <ToolBar
+                items={[
+                    { label: $_("Edit"), icon: IconEdit, onClick: onEdit },
+                    {
+                        label: $_("Archive"),
+                        icon: IconTrash,
+                        onClick: onArchive,
+                    },
+                ]}
+            />
             <div
-                class="bg-primary flex items-center p-1 px-3 rounded-lg text-primary-content"
+                class="bg-primary flex items-center p-1 px-3 rounded-lg text-primary-content shrink-0"
             >
                 <span class="text-xs p-1">{$_("deadline")}</span>
                 <span class="text-base p-1 ">2021.12.31</span>

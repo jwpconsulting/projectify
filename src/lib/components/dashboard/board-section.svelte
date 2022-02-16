@@ -9,6 +9,7 @@
     import delay from "delay";
     import { client } from "$lib/graphql/client";
     import { Mutation_MoveTask } from "$lib/graphql/operations";
+    import ToolBar from "./toolBar.svelte";
 
     export let section;
     export let index = 0;
@@ -93,20 +94,23 @@
             >
                 <IconChevronRight />
             </div>
-            <div class="grow font-bold uppercase">
-                {section.order} -
-                {section.title}
-                {#if !open} ({section.tasks.length}) {/if}
+            <div class="grow font-bold uppercase grid">
+                <span class="nowrap-ellipsis"
+                    >{section.order} -
+                    {section.title}
+                    {#if !open} ({section.tasks.length}) {/if}
+                </span>
             </div>
-            {#each [{ label: "Edit", icon: IconEdit, onClick: onEdit }, { label: "Delete", icon: IconTrash, onClick: onDelete }] as it}
-                <button
-                    class="btn btn-ghost btn-xs h-10 px-3 flex justify-center items-center"
-                    on:click|stopPropagation={it.onClick}
-                >
-                    <svelte:component this={it.icon} />
-                    <span>{it.label}</span>
-                </button>
-            {/each}
+            <ToolBar
+                items={[
+                    { label: $_("Edit"), icon: IconEdit, onClick: onEdit },
+                    {
+                        label: $_("Delete"),
+                        icon: IconTrash,
+                        onClick: onDelete,
+                    },
+                ]}
+            />
         </header>
         <main style="--open-height:{openHeight}px">
             {#if firstOpen}
@@ -146,10 +150,10 @@
                                     </div>
                                     <div class="text-xs">Date 2022.01.01</div>
                                 </div>
-                                <div
-                                    class="flex flex-col px-1 max-w-xs overflow-y-hidden overflow-ellipsis font-bold"
-                                >
-                                    {task.title}
+                                <div class="grid px-1 max-w-xs font-bold ">
+                                    <span class="nowrap-ellipsis"
+                                        >{task.title}</span
+                                    >
                                 </div>
                             </div>
                         </div>
