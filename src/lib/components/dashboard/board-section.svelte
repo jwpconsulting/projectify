@@ -10,6 +10,7 @@
     import { client } from "$lib/graphql/client";
     import { Mutation_MoveTask } from "$lib/graphql/operations";
     import ToolBar from "./toolBar.svelte";
+    import { getModal } from "../dialogModal.svelte";
 
     export let section;
     export let index = 0;
@@ -34,8 +35,12 @@
     function onEdit() {
         console.log("edit");
     }
-    function onDelete() {
+    async function onDelete() {
         console.log("delete");
+
+        let modalRes = await getModal("deleteBoardSectionConfirmModal").open();
+
+        console.log(modalRes);
     }
 
     function taskDragStart(e) {

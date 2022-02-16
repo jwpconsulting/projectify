@@ -19,6 +19,8 @@
     import { page } from "$app/stores";
     import { decodeUUID } from "$lib/utils/encoders";
     import { onMount } from "svelte";
+    import ConfirmModalContent from "../confirmModalContent.svelte";
+    import { _ } from "svelte-i18n";
 
     $: uuids = $page.params["uuids"].split("/");
 
@@ -49,7 +51,9 @@
     });
 </script>
 
-<main class="page p-0 flex-row divide-x divide-base-300 select-none">
+<main
+    class="page p-0 flex-row divide-x divide-base-300 select-none bg-base-200"
+>
     <!-- First side bar -->
     <WorkspacesSideNav bind:selectedWorkspaceUUID />
 
@@ -112,5 +116,16 @@
 
     <DialogModal id="newBoardSectionModal">
         <NewBoardSectionModal />
+    </DialogModal>
+
+    <DialogModal id="deleteBoardSectionConfirmModal">
+        <ConfirmModalContent
+            title={$_("delete-section")}
+            confirmLabel={$_("Delete")}
+        >
+            {$_(
+                "deleted-section-cannot-be-returned-would-you-like-to-delete-this-section"
+            )}
+        </ConfirmModalContent>
     </DialogModal>
 </main>

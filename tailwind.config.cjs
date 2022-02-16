@@ -53,19 +53,19 @@ module.exports = {
             {
                 "app-light": {
                     "fontFamily": "Roboto, sans-serif",
-                    "primary": "#76B4F9" /* Primary color */,
-                    "primary-focus": "#B5D7FF" /* Primary color - focused */,
+                    "primary": "#288CFF" /* Primary color */,
+                    "primary-focus": "#0077FF" /* Primary color - focused */,
                     "primary-content":
-                        "#EBF5FF" /* Foreground content color to use on primary color */,
+                        "#ffffff" /* Foreground content color to use on primary color */,
 
-                    "secondary": "#BED2DC" /* Secondary color */,
+                    "secondary": "#BEDCFF" /* Secondary color */,
                     "secondary-focus":
-                        "#f3cc30" /* Secondary color - focused */,
+                        "#76B4F9" /* Secondary color - focused */,
                     "secondary-content":
                         "#ffffff" /* Foreground content color to use on secondary color */,
 
-                    "accent": "#37cdbe" /* Accent color */,
-                    "accent-focus": "#2aa79b" /* Accent color - focused */,
+                    "accent": "#EF7D69" /* Accent color */,
+                    "accent-focus": "#F05F46" /* Accent color - focused */,
                     "accent-content":
                         "#ffffff" /* Foreground content color to use on accent color */,
 
@@ -76,7 +76,7 @@ module.exports = {
 
                     "base-100":
                         "#ffffff" /* Base color of page, used for blank backgrounds */,
-                    "base-200": "#f9fafb" /* Base color, a little darker */,
+                    "base-200": "#F2F8FF" /* Base color, a little darker */,
                     "base-300": "#d1d5db" /* Base color, even more darker */,
                     "base-content":
                         "#1f2937" /* Foreground content color to use on base color */,
