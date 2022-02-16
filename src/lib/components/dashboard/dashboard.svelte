@@ -49,9 +49,7 @@
     });
 </script>
 
-<main
-    class="page p-0 flex-row divide-x divide-base-300 select-none overflow-x-hidden"
->
+<main class="page p-0 flex-row divide-x divide-base-300 select-none">
     <!-- First side bar -->
     <WorkspacesSideNav bind:selectedWorkspaceUUID />
 
