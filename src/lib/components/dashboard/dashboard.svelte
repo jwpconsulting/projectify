@@ -103,10 +103,12 @@
         </div>
     </nav>
 
-    <Board
-        workspaceUUID={selectedWorkspaceUUID}
-        bind:boardUUID={selectedBoardUUID}
-    />
+    {#if selectedBoardUUID}
+        <Board
+            workspaceUUID={selectedWorkspaceUUID}
+            bind:boardUUID={selectedBoardUUID}
+        />
+    {/if}
 
     <DrawerModal bind:open={$drawerModalOpen}>
         <TaskDetails />
