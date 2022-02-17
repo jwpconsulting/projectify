@@ -3,6 +3,9 @@
         label: string;
         icon: any;
         onClick: (...any) => void;
+        disabled?: boolean;
+        hidden?: boolean;
+        tooltip?: string;
     };
 </script>
 
@@ -11,11 +14,15 @@
 </script>
 
 {#each items as it}
-    <button
-        class="btn btn-ghost btn-xs h-10 px-3 flex justify-center items-center shrink-0"
-        on:click|stopPropagation={it.onClick}
-    >
-        <svelte:component this={it.icon} />
-        <span>{it.label}</span>
-    </button>
+    {#if !it.hidden}
+        <button
+            title={it.tooltip}
+            disabled={it.disabled}
+            class="btn btn-ghost btn-xs h-10 px-3 flex justify-center items-center shrink-0"
+            on:click|stopPropagation={it.onClick}
+        >
+            <svelte:component this={it.icon} />
+            <span>{it.label}</span>
+        </button>
+    {/if}
 {/each}
