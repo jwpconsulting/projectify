@@ -199,8 +199,8 @@
                 <BoardSection
                     {section}
                     {index}
-                    bind:isDragging
                     boardUUID={board.uuid}
+                    bind:isDragging
                 />
             {/each}
             {#if !isDragging}
