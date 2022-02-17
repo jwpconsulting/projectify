@@ -186,7 +186,12 @@
             on:dragEnd={sectionDragEnd}
         >
             {#each sections as section, index (section.uuid)}
-                <BoardSection {section} {index} bind:isDragging />
+                <BoardSection
+                    {section}
+                    {index}
+                    bind:isDragging
+                    boardUUID={board.uuid}
+                />
             {/each}
             {#if !isDragging}
                 <div

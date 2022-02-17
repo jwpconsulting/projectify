@@ -8,10 +8,14 @@
     import { sortable } from "$lib/actions/sortable";
     import delay from "delay";
     import { client } from "$lib/graphql/client";
-    import { Mutation_MoveTask } from "$lib/graphql/operations";
+    import {
+        Mutation_DeleteWorkspaceBoardSection,
+        Mutation_MoveTask,
+    } from "$lib/graphql/operations";
     import ToolBar from "./toolBar.svelte";
     import { getModal } from "../dialogModal.svelte";
 
+    export let boardUUID;
     export let section;
     export let index = 0;
 
@@ -35,12 +39,38 @@
     function onEdit() {
         console.log("edit");
     }
-    async function onDelete() {
-        console.log("delete");
 
+    async function onDelete() {
         let modalRes = await getModal("deleteBoardSectionConfirmModal").open();
 
-        console.log(modalRes);
+        if (!modalRes) {
+            return;
+        }
+
+        try {
+            let mRes = await client.mutate({
+                mutation: Mutation_DeleteWorkspaceBoardSection,
+                variables: {
+                    input: {
+                        uuid: section.uuid,
+                    },
+                },
+                update(cache, { data }) {
+                    cache.modify({
+                        id: `WorkspaceBoard:${boardUUID}`,
+                        fields: {
+                            sections(currentSections = []) {
+                                return currentSections.filter(
+                                    (it) => it.uuid == section.uuid
+                                );
+                            },
+                        },
+                    });
+                },
+            });
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     function taskDragStart(e) {
@@ -113,6 +143,7 @@
                         label: $_("Delete"),
                         icon: IconTrash,
                         onClick: onDelete,
+                        disabled: section.tasks.length,
                     },
                 ]}
             />
