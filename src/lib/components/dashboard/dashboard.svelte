@@ -111,7 +111,11 @@
     </DrawerModal>
 
     <DialogModal id="newBoardModal">
-        <NewBoardModal />
+        <ConfirmModalContent
+            title={$_("new-workspace-board")}
+            confirmLabel={$_("Save")}
+            inputs={[{ name: "boardName", label: $_("workspace-board-name") }]}
+        />
     </DialogModal>
 
     <DialogModal id="newBoardSectionModal">
@@ -122,6 +126,7 @@
         <ConfirmModalContent
             title={$_("delete-section")}
             confirmLabel={$_("Delete")}
+            confirmColor="accent"
         >
             {$_(
                 "deleted-section-cannot-be-returned-would-you-like-to-delete-this-section"

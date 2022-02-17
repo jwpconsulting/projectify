@@ -36,14 +36,15 @@
 
     async function onAddNewBoard() {
         let modalRes = await getModal("newBoardModal").open();
-        if (modalRes) {
+
+        if (modalRes?.confirm) {
             try {
                 let mRes = await client.mutate({
                     mutation: Mutation_AddWorkspaceBoard,
                     variables: {
                         input: {
                             workspaceUuid: selectedWorkspaceUUID,
-                            title: modalRes.boardName,
+                            title: modalRes.outputs.boardName,
                             description: "",
                         },
                     },
