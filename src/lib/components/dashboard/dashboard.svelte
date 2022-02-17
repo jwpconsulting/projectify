@@ -13,7 +13,6 @@
         openTaskDetails,
     } from "$lib/stores/dashboard";
     import DialogModal from "../dialogModal.svelte";
-    import NewBoardModal from "./newBoardModal.svelte";
     import NewBoardSectionModal from "./newBoardSectionModal.svelte";
 
     import { page } from "$app/stores";
@@ -104,7 +103,10 @@
         </div>
     </nav>
 
-    <Board bind:boardUUID={selectedBoardUUID} />
+    <Board
+        workspaceUUID={selectedWorkspaceUUID}
+        bind:boardUUID={selectedBoardUUID}
+    />
 
     <DrawerModal bind:open={$drawerModalOpen}>
         <TaskDetails />
@@ -120,6 +122,26 @@
 
     <DialogModal id="newBoardSectionModal">
         <NewBoardSectionModal />
+    </DialogModal>
+
+    <DialogModal id="archiveBoardConfirmModal">
+        <ConfirmModalContent
+            title={$_("archive-board")}
+            confirmLabel={$_("Archive")}
+            confirmColor="accent"
+        >
+            {$_("archive-board-message")}
+        </ConfirmModalContent>
+    </DialogModal>
+
+    <DialogModal id="deleteBoardConfirmModal">
+        <ConfirmModalContent
+            title={$_("delete-board")}
+            confirmLabel={$_("Delete")}
+            confirmColor="accent"
+        />
+
+        {$_("delete-board-message")}
     </DialogModal>
 
     <DialogModal id="deleteBoardSectionConfirmModal">

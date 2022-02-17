@@ -2,6 +2,8 @@
     import BoardSection from "./board-section.svelte";
     import {
         Mutation_AddWorkspaceBoardSection,
+        Mutation_ArchiveWorkspaceBoard,
+        Mutation_DeleteWorkspaceBoard,
         Mutation_MoveWorkspaceBoardSection,
         Query_DashboardBoard,
     } from "$lib/graphql/operations";
@@ -17,7 +19,9 @@
     import ToolBar from "./toolBar.svelte";
     import IconEdit from "../icons/icon-edit.svelte";
     import IconTrash from "../icons/icon-trash.svelte";
+    import { gotoDashboard } from "$lib/stores/dashboard";
 
+    export let workspaceUUID;
     export let boardUUID = null;
 
     let res = null;
@@ -133,11 +137,78 @@
     function onEdit() {
         console.log("edit");
     }
-    function onArchive() {
-        console.log("archive");
+    async function onArchive() {
+        let modalRes = await getModal("archiveBoardConfirmModal").open();
+
+        if (!modalRes) {
+            return;
+        }
+
+        try {
+            let mRes = await client.mutate({
+                mutation: Mutation_ArchiveWorkspaceBoard,
+                variables: {
+                    input: {
+                        uuid: board.uuid,
+                        archived: true,
+                    },
+                },
+                update(cache, { data }) {
+                    cache.modify({
+                        id: `Workspace:${workspaceUUID}`,
+                        fields: {
+                            boards(list = []) {
+                                return list.filter(
+                                    (it) =>
+                                        it.__ref !=
+                                        `WorkspaceBoard:${board.uuid}`
+                                );
+                            },
+                        },
+                    });
+                },
+            });
+
+            gotoDashboard(workspaceUUID);
+        } catch (error) {
+            console.error(error);
+        }
     }
-    function onDelete() {
-        console.log("delete");
+    async function onDelete() {
+        let modalRes = await getModal("deleteBoardConfirmModal").open();
+
+        if (!modalRes) {
+            return;
+        }
+
+        try {
+            let mRes = await client.mutate({
+                mutation: Mutation_DeleteWorkspaceBoard,
+                variables: {
+                    input: {
+                        uuid: board.uuid,
+                    },
+                },
+                update(cache, { data }) {
+                    cache.modify({
+                        id: `Workspace:${workspaceUUID}`,
+                        fields: {
+                            boards(list = []) {
+                                return list.filter(
+                                    (it) =>
+                                        it.__ref !=
+                                        `WorkspaceBoard:${board.uuid}`
+                                );
+                            },
+                        },
+                    });
+                },
+            });
+
+            gotoDashboard(workspaceUUID);
+        } catch (error) {
+            console.error(error);
+        }
     }
 </script>
 

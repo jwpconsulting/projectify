@@ -63,5 +63,9 @@
   "delete-section": "Delete Section",
   "Save": "Save",
   "please-enter-a": "Please enter a",
-  "workspace-board-name": "workspace board name"
+  "workspace-board-name": "workspace board name",
+  "archive-board-message": "Would you like to archive this board? You can see archived boards in archives screen.",
+  "delete-board-message": "Would you like to delete this board?",
+  "archive-board": "Archive Board",
+  "delete-board": "Delete Board"
 }

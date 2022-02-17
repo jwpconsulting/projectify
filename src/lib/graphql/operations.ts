@@ -296,3 +296,23 @@ export const Mutation_AddWorkspaceBoard = gql`
         }
     }
 `;
+
+export const Mutation_DeleteWorkspaceBoard = gql`
+    mutation DeleteWorkspaceBoard($input: DeleteWorkspaceBoardInput!) {
+        deleteWorkspaceBoard(input: $input) {
+            workspaceBoard {
+                uuid
+            }
+        }
+    }
+`;
+
+export const Mutation_ArchiveWorkspaceBoard = gql`
+    mutation ArchiveWorkspaceBoard($input: ArchiveWorkspaceBoardInput!) {
+        archiveWorkspaceBoard(input: $input) {
+            workspaceBoard {
+                uuid
+            }
+        }
+    }
+`;
