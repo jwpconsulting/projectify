@@ -225,3 +225,59 @@ def chat_message_deleted(sender, instance, **kwargs):
             "uuid": uuid,
         },
     )
+
+
+@receiver(post_delete, sender=models.WorkspaceBoard)
+def workspace_board_deleted(sender, instance, **kwargs):
+    """Broadcast changes."""
+    uuid = str(instance.uuid)
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"workspace-board-{uuid}",
+        {
+            "type": "workspace.board.change",
+            "uuid": uuid,
+        },
+    )
+
+
+@receiver(post_delete, sender=models.WorkspaceBoardSection)
+def workspace_board_section_deleted(sender, instance, **kwargs):
+    """Broadcast changes."""
+    uuid = str(instance.workspace_board.uuid)
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"workspace-board-{uuid}",
+        {
+            "type": "workspace.board.change",
+            "uuid": uuid,
+        },
+    )
+
+
+@receiver(post_delete, sender=models.Task)
+def workspace_task_deleted(sender, instance, **kwargs):
+    """Broadcast changes."""
+    uuid = str(instance.workspace_board_section.workspace_board.uuid)
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"workspace-board-{uuid}",
+        {
+            "type": "workspace.board.change",
+            "uuid": uuid,
+        },
+    )
+
+
+@receiver(post_delete, sender=models.SubTask)
+def workspace_sub_task_deleted(sender, instance, **kwargs):
+    """Broadcast changes."""
+    uuid = str(instance.task.workspace_board_section.workspace_board.uuid)
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"workspace-board-{uuid}",
+        {
+            "type": "workspace.board.change",
+            "uuid": uuid,
+        },
+    )
