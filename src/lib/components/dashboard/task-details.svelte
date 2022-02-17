@@ -1,5 +1,6 @@
 <script lang="ts">
     import {
+        closeTaskDetails,
         currenTaskDetailsUUID,
         newTaskSectionUUID,
         pushTashUUIDtoPath,
@@ -10,6 +11,7 @@
         Query_DashboardTaskDetails,
         Mutation_AddTask,
         Mutation_UpdateTask,
+        Mutation_DeleteTask,
     } from "$lib/graphql/operations";
     import { query } from "svelte-apollo";
     import { client } from "$lib/graphql/client";
@@ -19,6 +21,9 @@
     import debounce from "lodash/debounce.js";
     import type { ReadableQuery } from "svelte-apollo";
     import { onDestroy } from "svelte";
+    import ToolBar from "./toolBar.svelte";
+    import IconTrash from "../icons/icon-trash.svelte";
+    import { getModal } from "../dialogModal.svelte";
 
     let res: ReadableQuery<any> = null;
     let task = null;
@@ -150,6 +155,44 @@
 
         isSaving = false;
     }
+
+    async function onDelete() {
+        let modalRes = await getModal("deleteTaskConfirmModal").open();
+
+        if (!modalRes) {
+            return;
+        }
+
+        try {
+            let mRes = await client.mutate({
+                mutation: Mutation_DeleteTask,
+                variables: {
+                    input: {
+                        uuid: task.uuid,
+                    },
+                },
+                update(cache, { data }) {
+                    const sectionUUID = task.workspaceBoardSection.uuid;
+                    const cacheId = `WorkspaceBoardSection:${sectionUUID}`;
+
+                    cache.modify({
+                        id: cacheId,
+                        fields: {
+                            tasks(list = []) {
+                                return list.filter(
+                                    (it) => it.__ref != `Task:${task.uuid}`
+                                );
+                            },
+                        },
+                    });
+                },
+            });
+
+            closeTaskDetails();
+        } catch (error) {
+            console.error(error);
+        }
+    }
 </script>
 
 {#if res && $res.loading}
@@ -169,6 +212,17 @@
                 placeholder={$_("task-name")}
                 on:input={() => fieldChanged()}
                 bind:value={task.title}
+            />
+
+            <ToolBar
+                items={[
+                    {
+                        label: $_("Delete"),
+                        icon: IconTrash,
+                        onClick: onDelete,
+                        hidden: itsNew,
+                    },
+                ]}
             />
 
             <button

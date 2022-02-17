@@ -168,6 +168,9 @@ export const Query_DashboardTaskDetails = gql`
                 description
                 done
             }
+            workspaceBoardSection {
+                uuid
+            }
         }
     }
 `;
@@ -178,6 +181,16 @@ export const Mutation_AddTask = gql`
             task {
                 uuid
                 created
+            }
+        }
+    }
+`;
+
+export const Mutation_DeleteTask = gql`
+    mutation DeleteTask($input: DeleteTaskInput!) {
+        deleteTask(input: $input) {
+            task {
+                uuid
             }
         }
     }

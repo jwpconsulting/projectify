@@ -68,5 +68,7 @@
     "delete-board-message": "Would you like to delete this board?",
     "archive-board": "Archive Board",
     "delete-board": "Delete Board",
-    "section-name": "section name"
+    "section-name": "section name",
+    "delete-task-modal-message": "Deleted task cannot be returned. Would you like to delete this task?",
+    "delete-task": "Delete Task"
 }

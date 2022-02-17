@@ -161,4 +161,14 @@
             )}
         </ConfirmModalContent>
     </DialogModal>
+
+    <DialogModal id="deleteTaskConfirmModal">
+        <ConfirmModalContent
+            title={$_("delete-task")}
+            confirmLabel={$_("Delete")}
+            confirmColor="accent"
+        >
+            {$_("delete-task-modal-message")}
+        </ConfirmModalContent>
+    </DialogModal>
 </main>
