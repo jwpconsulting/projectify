@@ -35,6 +35,7 @@
         if (boardUUID) {
             res = query(Query_DashboardBoard, {
                 variables: { uuid: boardUUID },
+                fetchPolicy: "network-only",
             });
 
             boardWSStore = getSubscriptionForCollection(
