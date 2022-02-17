@@ -136,6 +136,9 @@
     function onArchive() {
         console.log("archive");
     }
+    function onDelete() {
+        console.log("delete");
+    }
 </script>
 
 {#if res && $res.loading}
@@ -156,6 +159,13 @@
                         label: $_("Archive"),
                         icon: IconTrash,
                         onClick: onArchive,
+                        hidden: !board?.sections?.length,
+                    },
+                    {
+                        label: $_("Delete"),
+                        icon: IconTrash,
+                        onClick: onDelete,
+                        hidden: board?.sections?.length,
                     },
                 ]}
             />
