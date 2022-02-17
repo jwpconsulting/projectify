@@ -145,9 +145,9 @@
             title={$_("delete-board")}
             confirmLabel={$_("Delete")}
             confirmColor="accent"
-        />
-
-        {$_("delete-board-message")}
+        >
+            {$_("delete-board-message")}
+        </ConfirmModalContent>
     </DialogModal>
 
     <DialogModal id="deleteBoardSectionConfirmModal">
