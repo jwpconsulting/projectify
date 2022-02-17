@@ -24,11 +24,7 @@
 </script>
 
 <div class="card-body max-w-lg">
-    <div
-        class="flex flex-col {inputs.length
-            ? ''
-            : 'divide-y divide-base-300'}}"
-    >
+    <div class:divide-y={!inputs.length} class="flex flex-col divide-base-300">
         <h1 class="text-3xl font-bold text-center pb-4">{title}</h1>
         <div class="pt-4">
             <slot />
@@ -54,7 +50,9 @@
             on:click|preventDefault={cancel}>{cancelLabel}</button
         >
         <button
-            class="btn btn-{confirmColor} rounded-full grow"
+            class:btn-primary={confirmColor == "primary"}
+            class:btn-accent={confirmColor == "accent"}
+            class="btn rounded-full grow"
             on:click|preventDefault={confirm}>{confirmLabel}</button
         >
     </div>
