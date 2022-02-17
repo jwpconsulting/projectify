@@ -78,6 +78,14 @@ body {
     .nowrap-ellipsis {
         @apply overflow-hidden text-ellipsis whitespace-nowrap;
     }
+
+    .btn-ghost:hover {
+        @apply bg-secondary;
+    }
+
+    .btn-ghost[disabled] {
+        @apply bg-opacity-0 cursor-default pointer-events-auto;
+    }
 }
 
 ::-webkit-progress-value {
