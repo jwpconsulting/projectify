@@ -66,10 +66,10 @@
 
     async function onAddNewSection() {
         let modalRes = await getModal("newBoardSectionModal").open();
-        if (modalRes) {
+        if (modalRes?.confirm) {
             try {
                 const newSection = {
-                    title: modalRes.title,
+                    title: modalRes.outputs.title,
                     description: "",
                 };
                 let mRes = await client.mutate({

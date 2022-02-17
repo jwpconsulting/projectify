@@ -67,5 +67,6 @@
     "archive-board-message": "Would you like to archive this board? You can see archived boards in archives screen.",
     "delete-board-message": "Would you like to delete this board?",
     "archive-board": "Archive Board",
-    "delete-board": "Delete Board"
+    "delete-board": "Delete Board",
+    "section-name": "section name"
 }

@@ -23,7 +23,7 @@
     }
 </script>
 
-<div class="card-body max-w-lg">
+<div class="card-body w-screen max-w-lg">
     <div class:divide-y={!inputs.length} class="flex flex-col divide-base-300">
         <h1 class="text-3xl font-bold text-center pb-4">{title}</h1>
         <div class="pt-4">

@@ -123,7 +123,11 @@
     </DialogModal>
 
     <DialogModal id="newBoardSectionModal">
-        <NewBoardSectionModal />
+        <ConfirmModalContent
+            title={$_("new-section")}
+            confirmLabel={$_("Save")}
+            inputs={[{ name: "title", label: $_("section-name") }]}
+        />
     </DialogModal>
 
     <DialogModal id="archiveBoardConfirmModal">
