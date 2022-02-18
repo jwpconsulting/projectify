@@ -91,7 +91,9 @@
             let mRes = await client.mutate({
                 mutation: Mutation_DeleteSubTaskMutation,
                 variables: {
-                    uuid: subTask.uuid,
+                    input: {
+                        uuid: subTask.uuid,
+                    },
                 },
             });
         } catch (error) {

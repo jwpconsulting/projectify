@@ -248,8 +248,8 @@ export const Mutation_ChangeSubTaskDone = gql`
 `;
 
 export const Mutation_DeleteSubTaskMutation = gql`
-    mutation DeleteSubTaskMutation($uuid: ID!) {
-        deleteSubTask(uuid: $uuid) {
+    mutation DeleteSubTaskMutation($input: DeleteSubTaskInput!) {
+        deleteSubTask(input: $input) {
             subTask {
                 uuid
             }
