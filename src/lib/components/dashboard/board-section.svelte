@@ -144,6 +144,9 @@
                         icon: IconTrash,
                         onClick: onDelete,
                         disabled: section.tasks.length,
+                        tooltip: section.tasks.length
+                            ? $_("remove-section-tooltip-message")
+                            : "",
                     },
                 ]}
             />
