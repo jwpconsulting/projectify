@@ -24,9 +24,16 @@
 
     let resolveFn;
 
-    function open() {
+    let data = null;
+    function getData() {
+        return data;
+    }
+
+    function open(_data?: any) {
         if (visible) return;
         visible = true;
+
+        data = _data;
 
         prevOnTop = onTop;
         onTop = topDiv;
@@ -51,7 +58,7 @@
         }
     }
 
-    modals[id] = { open, close };
+    modals[id] = { open, close, getData };
     setContext("modal", modals[id]);
 
     onDestroy(() => {

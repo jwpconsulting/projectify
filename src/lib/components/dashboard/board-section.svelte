@@ -11,6 +11,7 @@
     import {
         Mutation_DeleteWorkspaceBoardSection,
         Mutation_MoveTask,
+        Mutation_UpdateWorkspaceBoardSection,
     } from "$lib/graphql/operations";
     import ToolBar from "./toolBar.svelte";
     import { getModal } from "../dialogModal.svelte";
@@ -36,8 +37,27 @@
     $: openHeight = open ? contentHeght : 0;
     $: openArrowDeg = open ? 90 : 0;
 
-    function onEdit() {
-        console.log("edit");
+    async function onEdit() {
+        let modalRes = await getModal("editBoardSectionModal").open(section);
+
+        if (!modalRes) {
+            return;
+        }
+
+        try {
+            let mRes = await client.mutate({
+                mutation: Mutation_UpdateWorkspaceBoardSection,
+                variables: {
+                    input: {
+                        uuid: section.uuid,
+                        title: modalRes.outputs.title,
+                        description: "",
+                    },
+                },
+            });
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     async function onDelete() {

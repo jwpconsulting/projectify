@@ -130,6 +130,14 @@
         />
     </DialogModal>
 
+    <DialogModal id="editBoardSectionModal">
+        <ConfirmModalContent
+            title={"Edit Section"}
+            confirmLabel={$_("Save")}
+            inputs={[{ name: "title", label: $_("section-name") }]}
+        />
+    </DialogModal>
+
     <DialogModal id="archiveBoardConfirmModal">
         <ConfirmModalContent
             title={$_("archive-board")}

@@ -287,6 +287,26 @@ export const Mutation_AddWorkspaceBoardSection = gql`
     }
 `;
 
+export const Mutation_UpdateWorkspaceBoardSection = gql`
+    mutation UpdateWorkspaceBoardSection(
+        $input: UpdateWorkspaceBoardSectionInput!
+    ) {
+        updateWorkspaceBoardSection(input: $input) {
+            workspaceBoardSection {
+                uuid
+                created
+                title
+                description
+                tasks {
+                    uuid
+                    title
+                    description
+                }
+            }
+        }
+    }
+`;
+
 export const Mutation_DeleteWorkspaceBoardSection = gql`
     mutation DeleteWorkspaceBoardSection(
         $input: DeleteWorkspaceBoardSectionInput!

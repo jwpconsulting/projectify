@@ -8,10 +8,22 @@
     export let confirmColor = "primary";
 
     export let inputs = [];
+    let isEditing = false;
 
     const modal = getContext<any>("modal");
+    $: data = modal.getData();
+
+    $: {
+        if (!isEditing) {
+            inputs.forEach((input) => {
+                input.value = data[input.name];
+            });
+        }
+    }
+
     function cancel() {
         modal.close();
+        isEditing = false;
     }
     function confirm() {
         const outputs = {};
@@ -20,6 +32,7 @@
         });
 
         modal.close({ confirm: true, outputs });
+        isEditing = false;
     }
 </script>
 
@@ -41,6 +54,7 @@
                 placeholder={`${$_("please-enter-a")} ${input.label}`}
                 class="input input-bordered"
                 bind:value={input.value}
+                on:input={() => (isEditing = true)}
             />
         </div>
     {/each}
