@@ -277,11 +277,6 @@ export const Mutation_AddWorkspaceBoardSection = gql`
                 created
                 title
                 description
-                tasks {
-                    uuid
-                    title
-                    description
-                }
             }
         }
     }
@@ -297,11 +292,6 @@ export const Mutation_UpdateWorkspaceBoardSection = gql`
                 created
                 title
                 description
-                tasks {
-                    uuid
-                    title
-                    description
-                }
             }
         }
     }
@@ -325,6 +315,19 @@ export const Mutation_AddWorkspaceBoard = gql`
             workspaceBoard {
                 uuid
                 created
+            }
+        }
+    }
+`;
+
+export const Mutation_UpdateWorkspaceBoard = gql`
+    mutation UpdateWorkspaceBoard($input: UpdateWorkspaceBoardInput!) {
+        updateWorkspaceBoard(input: $input) {
+            workspaceBoard {
+                uuid
+                modified
+                title
+                description
             }
         }
     }

@@ -14,7 +14,7 @@
     $: data = modal.getData();
 
     $: {
-        if (!isEditing) {
+        if (data && !isEditing) {
             inputs.forEach((input) => {
                 input.value = data[input.name];
             });
@@ -54,7 +54,7 @@
                 placeholder={`${$_("please-enter-a")} ${input.label}`}
                 class="input input-bordered"
                 bind:value={input.value}
-                on:input={() => (isEditing = true)}
+                on:focus={() => (isEditing = true)}
             />
         </div>
     {/each}

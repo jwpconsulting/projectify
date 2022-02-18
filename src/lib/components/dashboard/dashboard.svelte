@@ -118,7 +118,15 @@
         <ConfirmModalContent
             title={$_("new-workspace-board")}
             confirmLabel={$_("Save")}
-            inputs={[{ name: "boardName", label: $_("workspace-board-name") }]}
+            inputs={[{ name: "title", label: $_("workspace-board-name") }]}
+        />
+    </DialogModal>
+
+    <DialogModal id="editBoardModal">
+        <ConfirmModalContent
+            title={$_("edit-workspace-board")}
+            confirmLabel={$_("Save")}
+            inputs={[{ name: "title", label: $_("workspace-board-name") }]}
         />
     </DialogModal>
 
@@ -132,7 +140,7 @@
 
     <DialogModal id="editBoardSectionModal">
         <ConfirmModalContent
-            title={"Edit Section"}
+            title={$_("edit-section")}
             confirmLabel={$_("Save")}
             inputs={[{ name: "title", label: $_("section-name") }]}
         />

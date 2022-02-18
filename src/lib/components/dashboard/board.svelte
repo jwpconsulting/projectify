@@ -5,6 +5,7 @@
         Mutation_ArchiveWorkspaceBoard,
         Mutation_DeleteWorkspaceBoard,
         Mutation_MoveWorkspaceBoardSection,
+        Mutation_UpdateWorkspaceBoard,
         Query_DashboardBoard,
     } from "$lib/graphql/operations";
     import { query } from "svelte-apollo";
@@ -134,9 +135,29 @@
         }
     }
 
-    function onEdit() {
-        console.log("edit");
+    async function onEdit() {
+        let modalRes = await getModal("editBoardModal").open(board);
+
+        if (!modalRes) {
+            return;
+        }
+
+        try {
+            let mRes = await client.mutate({
+                mutation: Mutation_UpdateWorkspaceBoard,
+                variables: {
+                    input: {
+                        uuid: board.uuid,
+                        title: modalRes.outputs.title,
+                        description: "",
+                    },
+                },
+            });
+        } catch (error) {
+            console.error(error);
+        }
     }
+
     async function onArchive() {
         let modalRes = await getModal("archiveBoardConfirmModal").open();
 

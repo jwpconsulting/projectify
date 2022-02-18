@@ -44,7 +44,7 @@
                     variables: {
                         input: {
                             workspaceUuid: selectedWorkspaceUUID,
-                            title: modalRes.outputs.boardName,
+                            title: modalRes.outputs.title,
                             description: "",
                         },
                     },

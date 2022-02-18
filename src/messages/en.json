@@ -71,5 +71,7 @@
     "section-name": "section name",
     "delete-task-modal-message": "Deleted task cannot be returned. Would you like to delete this task?",
     "delete-task": "Delete Task",
-    "remove-section-tooltip-message": "You need to remove all tasks in order to delete this section"
+    "remove-section-tooltip-message": "You need to remove all tasks in order to delete this section",
+    "edit-section": "Edit Section",
+    "edit-workspace-board": "Edit Workspace Board"
 }
