@@ -61,7 +61,9 @@
                         fields: {
                             sections(currentSections = []) {
                                 return currentSections.filter(
-                                    (it) => it.uuid == section.uuid
+                                    (it) =>
+                                        it.__ref !=
+                                        `WorkspaceBoardSection:${section.uuid}`
                                 );
                             },
                         },
