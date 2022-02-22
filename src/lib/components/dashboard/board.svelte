@@ -297,7 +297,7 @@
             {/each}
             {#if !isDragging}
                 <div
-                    class="ignore-elements bg-base-100 text-primary m-2 p-5 flex space-x-4 font-bold children-first:bg-debug hover:ring hover:cursor-pointer"
+                    class="ignore-elements bg-base-100 text-primary m-2 p-5 flex space-x-4 font-bold hover:ring hover:cursor-pointer"
                     on:click={() => onAddNewSection()}
                 >
                     <IconPlus />

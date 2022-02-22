@@ -62,7 +62,7 @@
     }
 </script>
 
-<ul class="menu">
+<ul class="menu overflow-y-auto block">
     {#if boards}
         {#each boards as board (board.uuid)}
             <li
@@ -76,7 +76,7 @@
                 >
             </li>
         {/each}
-        <li class="text-primary">
+        <li class="text-primary sticky bottom-0 bg-base-100">
             <a
                 class="h-9 text-xs font-bold capitalize"
                 href="/"

@@ -24,7 +24,7 @@
 </script>
 
 <nav
-    class="bg-neutral-content flex flex-col items-center p-2 h-screen sticky top-0"
+    class="bg-neutral-content flex flex-col items-center p-2 h-full max-h-full sticky top-0 overflow-y-auto"
 >
     {#if workspaces}
         {#each workspaces as workspace (workspace.uuid)}
