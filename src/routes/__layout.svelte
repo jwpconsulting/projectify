@@ -26,12 +26,10 @@
 
 <script lang="ts">
     import "../app.scss";
-    import Header from "$lib/components/Header.svelte";
     import "../i18n.js";
     import { client } from "$lib/graphql/client";
     import { setClient } from "svelte-apollo";
     setClient(client);
 </script>
 
-<Header />
 <slot />
