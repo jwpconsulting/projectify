@@ -79,7 +79,7 @@
                             href: "/dashboard/archive",
                         },
                         {
-                            label: $_("Settings"),
+                            label: $_("settings"),
                             icon: IconSettings,
                             onClick: () => {
                                 // $dialogModalOpen.set(true);
