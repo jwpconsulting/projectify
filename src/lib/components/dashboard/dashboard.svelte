@@ -22,6 +22,9 @@
     import { onMount } from "svelte";
     import ConfirmModalContent from "../confirmModalContent.svelte";
     import { _ } from "svelte-i18n";
+    import IconMenu from "../icons/icon-menu.svelte";
+    import IconArchive from "../icons/icon-archive.svelte";
+    import DropDownMenu from "../dropDownMenu.svelte";
 
     $: uuids = $page.params["uuids"].split("/");
 
@@ -65,9 +68,30 @@
             <!-- Tite and settings -->
             <div class="flex p-4 sticky top-0 bg-base-100">
                 <h1 class="grow font-bold text-xl">Projectify</h1>
-                <button class="btn btn-primary btn-outline btn-circle btn-xs">
-                    <IconSettings />
-                </button>
+                <DropDownMenu
+                    items={[
+                        {
+                            label: $_("Archive"),
+                            icon: IconArchive,
+                            href: "/dashboard/archive",
+                        },
+                        {
+                            label: $_("Settings"),
+                            icon: IconSettings,
+                            onClick: () => {
+                                // $dialogModalOpen.set(true);
+                            },
+                        },
+                    ]}
+                >
+                    <!-- svelte-ignore a11y-label-has-associated-control -->
+                    <label
+                        tabindex="0"
+                        class="btn btn-primary btn-outline btn-circle btn-xs"
+                    >
+                        <IconMenu />
+                    </label>
+                </DropDownMenu>
             </div>
 
             <!-- Boards nav -->
