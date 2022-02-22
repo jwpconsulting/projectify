@@ -9,6 +9,8 @@
     let res = query(Query_DashboardWorkspacesSideNav);
     let workspaces = [];
 
+    export let selectedWorkspace;
+
     $: {
         if ($res.data) {
             workspaces = $res.data["workspaces"];
@@ -16,6 +18,12 @@
                 gotoDashboard(workspaces[0]["uuid"]);
             }
         }
+    }
+
+    $: {
+        selectedWorkspace = workspaces
+            ? workspaces.find((w) => w.uuid === selectedWorkspaceUUID)
+            : null;
     }
 
     function workspaceIconFrom(title) {

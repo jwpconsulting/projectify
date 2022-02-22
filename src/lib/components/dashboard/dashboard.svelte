@@ -15,7 +15,6 @@
         openTaskDetails,
     } from "$lib/stores/dashboard";
     import DialogModal from "../dialogModal.svelte";
-    import NewBoardSectionModal from "./newBoardSectionModal.svelte";
 
     import { page } from "$app/stores";
     import { decodeUUID } from "$lib/utils/encoders";
@@ -25,6 +24,8 @@
     import IconMenu from "../icons/icon-menu.svelte";
     import IconArchive from "../icons/icon-archive.svelte";
     import DropDownMenu from "../dropDownMenu.svelte";
+
+    export let selectedWorkspace;
 
     $: uuids = $page.params["uuids"].split("/");
 
@@ -61,13 +62,15 @@
     </div>
     <div class="flex flex-row divide-x divide-base-300 grow overflow-hidden">
         <!-- First side bar -->
-        <WorkspacesSideNav bind:selectedWorkspaceUUID />
+        <WorkspacesSideNav bind:selectedWorkspaceUUID bind:selectedWorkspace />
 
         <!-- Secon side bar -->
         <nav class="flex flex-col bg-base-100 w-60 min-h-full sticky top-0">
             <!-- Tite and settings -->
             <div class="flex p-4 sticky top-0 bg-base-100">
-                <h1 class="grow font-bold text-xl">Projectify</h1>
+                <h1 class="grow font-bold text-xl capitalize">
+                    {selectedWorkspace?.title}
+                </h1>
                 <DropDownMenu
                     items={[
                         {
