@@ -32,7 +32,7 @@ body {
     }
 
     .page {
-        @apply flex bg-primary-content p-1 grow flex-col;
+        @apply flex bg-base-200 p-1 grow flex-col;
     }
 
     .page-center {
