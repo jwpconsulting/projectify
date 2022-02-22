@@ -25,7 +25,7 @@
     import IconArchive from "../icons/icon-archive.svelte";
     import DropDownMenu from "../dropDownMenu.svelte";
 
-    export let selectedWorkspace;
+    export let selectedWorkspace = null;
 
     $: uuids = $page.params["uuids"].split("/");
 
