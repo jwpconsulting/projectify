@@ -69,7 +69,7 @@
             <!-- Tite and settings -->
             <div class="flex p-4 sticky top-0 bg-base-100">
                 <h1 class="grow font-bold text-xl capitalize">
-                    {selectedWorkspace?.title}
+                    {selectedWorkspace ? selectedWorkspace.title : ""}
                 </h1>
                 <DropDownMenu
                     items={[
