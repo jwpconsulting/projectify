@@ -7,10 +7,7 @@
     import HeaderUser from "./headerUser.svelte";
 
     $: userData = $user;
-    $: items = [
-        ...routes,
-        { label: "signout", action: logout, authRequired: true },
-    ].filter((it) => {
+    $: items = [...routes].filter((it) => {
         if (it.forceNavigation) {
             return true;
         }
