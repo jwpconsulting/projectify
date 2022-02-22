@@ -2,6 +2,7 @@
     import { user, userIsLoading } from "$lib/stores/user";
     import Signin from "$lib/components/signin.svelte";
     import { _ } from "svelte-i18n";
+    import PageLayout from "./layouts/pageLayout.svelte";
 </script>
 
 {#if $user}
@@ -9,7 +10,9 @@
 {:else if $userIsLoading}
     <main class="page page-center">{$_("loading")}</main>
 {:else}
-    <main class="page page-center">
-        <Signin />
-    </main>
+    <PageLayout>
+        <main class="page page-center bg-base-200">
+            <Signin />
+        </main>
+    </PageLayout>
 {/if}

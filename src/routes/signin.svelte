@@ -1,5 +1,6 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
+    import PageLayout from "$lib/components/layouts/pageLayout.svelte";
 
     import Signin from "$lib/components/signin.svelte";
     import { user, singinRedirect } from "$lib/stores/user";
@@ -12,8 +13,10 @@
     }
 </script>
 
-{#if !$user}
-    <main class="page page-center">
-        <Signin />
-    </main>
-{/if}
+<PageLayout>
+    {#if !$user}
+        <main class="page page-center bg-base-200">
+            <Signin />
+        </main>
+    {/if}
+</PageLayout>
