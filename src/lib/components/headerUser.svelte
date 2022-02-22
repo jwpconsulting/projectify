@@ -3,6 +3,7 @@
     import { _ } from "svelte-i18n";
     import DropDownMenu from "./dropDownMenu.svelte";
     import IconLogout from "./icons/icon-logout.svelte";
+    import IconMenu from "./icons/icon-menu.svelte";
 
     $: userData = $user;
 </script>
@@ -10,6 +11,11 @@
 {#if userData}
     <DropDownMenu
         items={[
+            {
+                label: $_("my-profile"),
+                icon: IconMenu,
+                href: "/user/profile",
+            },
             {
                 label: $_("logout"),
                 icon: IconLogout,
