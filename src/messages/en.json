@@ -73,5 +73,6 @@
     "delete-task": "Delete Task",
     "remove-section-tooltip-message": "You need to remove all tasks in order to delete this section",
     "edit-section": "Edit Section",
-    "edit-workspace-board": "Edit Workspace Board"
+    "edit-workspace-board": "Edit Workspace Board",
+    "logout": "Logout"
 }

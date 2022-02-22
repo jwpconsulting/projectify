@@ -11,6 +11,7 @@ module.exports = {
             },
             boxShadow: {
                 card: "0px 0px 4px 0px #1E202940",
+                xl: "0 4px 16px rgba(0, 0, 0, 0.15)",
             },
         },
     },

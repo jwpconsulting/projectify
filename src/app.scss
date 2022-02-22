@@ -86,6 +86,14 @@ body {
     .btn-ghost[disabled] {
         @apply bg-opacity-0 cursor-default pointer-events-auto;
     }
+
+    .dropdown > .dropdown-content {
+        @apply translate-y-2;
+    }
+
+    .menu li > :where(a:hover) {
+        @apply bg-secondary;
+    }
 }
 
 ::-webkit-progress-value {
