@@ -70,10 +70,10 @@ module.exports = {
                     "accent-content":
                         "#ffffff" /* Foreground content color to use on accent color */,
 
-                    "neutral": "#3d4451" /* Neutral color */,
-                    "neutral-focus": "#2a2e37" /* Neutral color - focused */,
+                    "neutral": "#ffffff" /* Neutral color */,
+                    "neutral-focus": "#eeeeee" /* Neutral color - focused */,
                     "neutral-content":
-                        "#ffffff" /* Foreground content color to use on neutral color */,
+                        "#333333" /* Foreground content color to use on neutral color */,
 
                     "base-100":
                         "#ffffff" /* Base color of page, used for blank backgrounds */,
