@@ -4,6 +4,8 @@ export const Query_User = gql`
     query User {
         user {
             email
+            fullName
+            profilePicture
         }
     }
 `;

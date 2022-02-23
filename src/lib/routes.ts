@@ -1,8 +1,8 @@
 type routeItem = {
     label: string;
     to?: string;
-    authRequired?: boolean;
-    forceNavigation?: boolean;
+    authRequired?: boolean; // When is true user is fetched
+    forceNavigation?: boolean; // Force visibility in the nav bar even if auth is required
     fetchUser?: boolean;
     action?: (any) => void;
 };
@@ -13,7 +13,13 @@ export default [
     {
         label: "dashboard",
         to: "/dashboard",
-        authRequired: true, // When is true user is fetched
-        forceNavigation: true, // Force visibility in the nav bar even if auth is required
+        authRequired: true,
+        forceNavigation: true,
+    },
+    {
+        label: "Profile",
+        to: "/user/profile",
+        authRequired: true,
+        forceNavigation: false,
     },
 ] as routeItem[];
