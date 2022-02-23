@@ -12,6 +12,10 @@
             return true;
         }
 
+        if (it.forceNavigation === false) {
+            return false;
+        }
+
         if (!userData && it.authRequired === true) {
             return false;
         }
