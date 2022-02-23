@@ -56,69 +56,61 @@
     });
 </script>
 
-<main class="flex flex-col select-none bg-base-200 h-screen overflow-hidden">
-    <div class="bg-base-100">
-        <Header />
-    </div>
-    <div class="flex flex-row divide-x divide-base-300 grow overflow-hidden">
-        <!-- First side bar -->
-        <WorkspacesSideNav bind:selectedWorkspaceUUID bind:selectedWorkspace />
+<div class="flex flex-row divide-x divide-base-300 grow overflow-hidden">
+    <!-- First side bar -->
+    <WorkspacesSideNav bind:selectedWorkspaceUUID bind:selectedWorkspace />
 
-        <!-- Secon side bar -->
-        <nav class="flex flex-col bg-base-100 w-60 min-h-full sticky top-0">
-            <!-- Tite and settings -->
-            <div class="flex p-4 sticky top-0 bg-base-100">
-                <h1 class="grow font-bold text-xl capitalize">
-                    {selectedWorkspace ? selectedWorkspace.title : ""}
-                </h1>
-                <DropDownMenu
-                    items={[
-                        {
-                            label: $_("Archive"),
-                            icon: IconArchive,
-                            href: "/dashboard/archive",
+    <!-- Secon side bar -->
+    <nav class="flex flex-col bg-base-100 w-60 min-h-full sticky top-0">
+        <!-- Tite and settings -->
+        <div class="flex p-4 sticky top-0 bg-base-100">
+            <h1 class="grow font-bold text-xl capitalize">
+                {selectedWorkspace ? selectedWorkspace.title : ""}
+            </h1>
+            <DropDownMenu
+                items={[
+                    {
+                        label: $_("Archive"),
+                        icon: IconArchive,
+                        href: "/dashboard/archive",
+                    },
+                    {
+                        label: $_("settings"),
+                        icon: IconSettings,
+                        onClick: () => {
+                            // $dialogModalOpen.set(true);
                         },
-                        {
-                            label: $_("settings"),
-                            icon: IconSettings,
-                            onClick: () => {
-                                // $dialogModalOpen.set(true);
-                            },
-                        },
-                    ]}
+                    },
+                ]}
+            >
+                <!-- svelte-ignore a11y-label-has-associated-control -->
+                <label
+                    tabindex="0"
+                    class="btn btn-primary btn-outline btn-circle btn-xs"
                 >
-                    <!-- svelte-ignore a11y-label-has-associated-control -->
-                    <label
-                        tabindex="0"
-                        class="btn btn-primary btn-outline btn-circle btn-xs"
-                    >
-                        <IconMenu />
-                    </label>
-                </DropDownMenu>
-            </div>
+                    <IconMenu />
+                </label>
+            </DropDownMenu>
+        </div>
 
-            <!-- Boards nav -->
-            <div class="flex flex-col grow overflow-hidden">
-                {#if selectedWorkspaceUUID}
-                    <h2 class="p-4 text-base font-bold">Workspace Boards</h2>
-                    <BoardsSideNav
-                        {selectedWorkspaceUUID}
-                        {selectedBoardUUID}
-                    />
-                {/if}
-            </div>
-        </nav>
+        <!-- Boards nav -->
+        <div class="flex flex-col grow overflow-hidden">
+            {#if selectedWorkspaceUUID}
+                <h2 class="p-4 text-base font-bold">Workspace Boards</h2>
+                <BoardsSideNav {selectedWorkspaceUUID} {selectedBoardUUID} />
+            {/if}
+        </div>
+    </nav>
 
-        {#if selectedBoardUUID}
-            <div class="flex grow h-full overflow-y-auto">
-                <Board
-                    workspaceUUID={selectedWorkspaceUUID}
-                    bind:boardUUID={selectedBoardUUID}
-                />
-            </div>
-        {/if}
-    </div>
-</main>
+    {#if selectedBoardUUID}
+        <div class="flex grow h-full overflow-y-auto">
+            <Board
+                workspaceUUID={selectedWorkspaceUUID}
+                bind:boardUUID={selectedBoardUUID}
+            />
+        </div>
+    {/if}
+</div>
 
 <DrawerModal bind:open={$drawerModalOpen}>
     <TaskDetails />
