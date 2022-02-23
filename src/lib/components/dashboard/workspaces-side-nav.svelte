@@ -32,7 +32,7 @@
 </script>
 
 <nav
-    class="bg-neutral-content flex flex-col items-center p-2 h-full max-h-full sticky top-0 overflow-y-auto"
+    class="bg-base-100 flex flex-col items-center p-2 h-full max-h-full sticky top-0 overflow-y-auto"
 >
     {#if workspaces}
         {#each workspaces as workspace (workspace.uuid)}
@@ -59,10 +59,14 @@
     button.plus {
         @apply text-primary;
     }
+    button.plus:hover {
+        @apply text-primary-content;
+    }
+
     a.btn-active {
-        @apply bg-neutral-content ring border-primary;
+        @apply bg-base-100 ring border-primary;
     }
     a.btn-active:hover {
-        @apply bg-primary-focus text-base-content;
+        @apply bg-primary-focus;
     }
 </style>
