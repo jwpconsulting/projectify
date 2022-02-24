@@ -10,6 +10,20 @@ export const Query_User = gql`
     }
 `;
 
+// updateProfile(input: UpdateProfileInput!): UpdateProfileMutation
+
+export const Mutation_UpdateProfile = gql`
+    mutation UpdateProfile($input: UpdateProfileInput!) {
+        updateProfile(input: $input) {
+            user {
+                email
+                fullName
+                profilePicture
+            }
+        }
+    }
+`;
+
 export const Mutation_Singup = gql`
     mutation Signup($email: String!, $password: String!) {
         signup(email: $email, password: $password) {

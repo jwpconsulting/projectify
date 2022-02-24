@@ -4,7 +4,8 @@
     import DropDownMenu from "./dropDownMenu.svelte";
     import IconLogout from "./icons/icon-logout.svelte";
     import IconUser from "./icons/icon-user.svelte";
-
+    import vars from "$lib/env";
+    import UserProfilePicture from "./userProfilePicture.svelte";
     $: userData = $user;
 </script>
 
@@ -30,20 +31,12 @@
             <div class="flex">
                 <span
                     class="text-base font-bold normal-case overflow-hidden whitespace-nowrap text-ellipsis"
-                    >{userData?.email}</span
+                    >{userData.fullName
+                        ? userData.fullName
+                        : userData.email}</span
                 >
             </div>
-            <div
-                class="m-1 flex -space-x-1 overflow-hidden w-8 h-8 rounded-full shrink-0 ring-2"
-            >
-                <img
-                    draggable="false"
-                    width="100%"
-                    height="100%"
-                    src="https://picsum.photos/200"
-                    alt="user"
-                />
-            </div>
+            <UserProfilePicture size={32} url={userData.profilePicture} />
         </label>
     </DropDownMenu>
 {/if}
