@@ -3,7 +3,7 @@
     import { _ } from "svelte-i18n";
     import DropDownMenu from "./dropDownMenu.svelte";
     import IconLogout from "./icons/icon-logout.svelte";
-    import IconMenu from "./icons/icon-menu.svelte";
+    import IconUser from "./icons/icon-user.svelte";
 
     $: userData = $user;
 </script>
@@ -13,7 +13,7 @@
         items={[
             {
                 label: $_("my-profile"),
-                icon: IconMenu,
+                icon: IconUser,
                 href: "/user/profile",
             },
             {
