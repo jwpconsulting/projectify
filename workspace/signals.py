@@ -17,19 +17,12 @@ from channels.layers import (
 from . import (
     models,
 )
-from .schema import (
-    subscription,
-)
 
 
 @receiver(post_save, sender=models.Workspace)
 def workspace_saved(sender, instance, **kwargs):
     """Broadcast changes."""
     uuid = str(instance.uuid)
-    subscription.OnWorkspaceChange.broadcast(
-        group=uuid,
-        payload=instance,
-    )
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
         f"workspace-{uuid}",
@@ -73,14 +66,6 @@ def workspace_board_saved(sender, instance, **kwargs):
     """Broadcast changes."""
     uuid = str(instance.uuid)
     workspace_uuid = str(instance.workspace.uuid)
-    subscription.OnWorkspaceBoardChange.broadcast(
-        group=uuid,
-        payload=instance,
-    )
-    subscription.OnWorkspaceChange.broadcast(
-        group=str(instance.workspace.uuid),
-        payload=instance.workspace,
-    )
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
         f"workspace-board-{uuid}",
@@ -125,10 +110,6 @@ def workspace_board_section_saved(sender, instance, **kwargs):
     """Broadcast changes."""
     workspace_board = instance.workspace_board
     uuid = str(workspace_board.uuid)
-    subscription.OnWorkspaceBoardChange.broadcast(
-        group=uuid,
-        payload=workspace_board,
-    )
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
         f"workspace-board-{uuid}",
@@ -159,10 +140,6 @@ def task_saved(sender, instance, **kwargs):
     workspace_board = instance.workspace_board_section.workspace_board
     uuid = str(workspace_board.uuid)
     task_uuid = str(instance.uuid)
-    subscription.OnWorkspaceBoardChange.broadcast(
-        group=uuid,
-        payload=workspace_board,
-    )
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
         f"workspace-board-{uuid}",
@@ -208,10 +185,6 @@ def sub_task_saved(sender, instance, **kwargs):
     workspace_board = instance.task.workspace_board_section.workspace_board
     uuid = str(workspace_board.uuid)
     task_uuid = str(instance.task.uuid)
-    subscription.OnWorkspaceBoardChange.broadcast(
-        group=uuid,
-        payload=workspace_board,
-    )
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
         f"workspace-board-{uuid}",
