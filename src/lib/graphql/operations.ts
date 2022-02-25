@@ -368,3 +368,16 @@ export const Mutation_ArchiveWorkspaceBoard = gql`
         }
     }
 `;
+
+export const Query_ArchivedWorkspaceBoards = gql`
+    query ArchivedWorkspaceBoards($uuid: ID!) {
+        workspace(uuid: $uuid) {
+            uuid
+            archivedBoards {
+                uuid
+                title
+                archived
+            }
+        }
+    }
+`;

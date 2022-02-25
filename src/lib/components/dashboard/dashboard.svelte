@@ -72,7 +72,7 @@
                     {
                         label: $_("Archive"),
                         icon: IconArchive,
-                        href: "/dashboard/archive",
+                        href: `/dashboard/archive/${selectedWorkspaceUUID}`,
                     },
                     {
                         label: $_("settings"),
@@ -151,7 +151,7 @@
 <DialogModal id="archiveBoardConfirmModal">
     <ConfirmModalContent
         title={$_("archive-board")}
-        confirmLabel={$_("Archive")}
+        confirmLabel={$_("Archives")}
         confirmColor="accent"
     >
         {$_("archive-board-message")}

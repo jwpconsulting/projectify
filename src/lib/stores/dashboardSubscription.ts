@@ -5,7 +5,7 @@ import {
 } from "$lib/stores/wsSubscription";
 
 export const getSubscriptionForCollection = (
-    collection: "workspace-board" | "task",
+    collection: "workspace" | "workspace-board" | "task",
     uuid: string
 ): WSSubscriptionStore => {
     const wsURL = `${vars.WS_ENDPOINT}/${collection}/${uuid}/`;
