@@ -234,11 +234,11 @@
 </script>
 
 {#if res && $res.loading}
-    <div class="flex grow flex-col items-center justify-center">
+    <div class="flex grow flex-col items-center justify-center bg-base-200">
         {$_("loading")}
     </div>
 {:else if board}
-    <div class="flex grow flex-col">
+    <div class="flex grow flex-col bg-base-200">
         <!-- Tile -->
         <div class="flex flex-row items-center px-4 py-4 gap-2">
             <div class="grid font-bold text-3xl grow shrink basis-0">
