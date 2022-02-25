@@ -35,7 +35,6 @@ django-anymail = {extras = ["mailgun"], version = "*"}
 django-ordered-model = "*"
 uvicorn = "*"
 channels = "*"
-django-channels-graphql-ws = "*"
 channels-redis = {extras = ["cryptography"], version = "*"}
 djangorestframework = "*"
 pillow = "*"

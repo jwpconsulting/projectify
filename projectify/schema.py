@@ -26,15 +26,7 @@ class Mutation(
     """Mutation object."""
 
 
-class Subscription(
-    workspace.schema.Subscription,
-    graphene.ObjectType,
-):
-    """Subscription object."""
-
-
 schema = graphene.Schema(
     query=Query,
     mutation=Mutation,
-    subscription=Subscription,
 )

@@ -37,9 +37,6 @@ from workspace.consumers import (
     WorkspaceConsumer,
 )
 
-from .graphql_ws_consumer import (
-    GraphqlWsConsumer,
-)
 from .views import (
     GraphQLBatchView,
     GraphQLView,
@@ -83,7 +80,6 @@ if settings.SERVE_MEDIA:
     )
 
 websocket_urlpatterns = (
-    path("graphql-ws", GraphqlWsConsumer.as_asgi()),
     path("ws/task/<uuid:uuid>/", TaskConsumer.as_asgi()),
     path("ws/workspace-board/<uuid:uuid>/", WorkspaceBoardConsumer.as_asgi()),
     path("ws/workspace/<uuid:uuid>/", WorkspaceConsumer.as_asgi()),
