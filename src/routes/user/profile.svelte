@@ -62,7 +62,6 @@
             uploadRequest.abort();
         }
 
-        const csrftoken = getCookie("csrftoken");
         const formData = new FormData();
         formData.append("file", imageFile);
         uploadRequest = new XMLHttpRequest();
@@ -71,7 +70,10 @@
             "POST",
             vars.API_ENDPOINT + "/user/profile-picture-upload"
         );
-        uploadRequest.setRequestHeader("X-CSRFToken", csrftoken);
+
+        // const csrftoken = getCookie("csrftoken");
+        // uploadRequest.setRequestHeader("X-CSRFToken", csrftoken);
+
         uploadRequest.send(formData);
 
         const promise = new Promise((resolve, reject) => {
