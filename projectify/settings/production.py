@@ -28,6 +28,7 @@ CELERY_BROKER_URL = os.environ["REDIS_TLS_URL"]
 CSRF_COOKIE_SAMESITE = 'None'
 CSRF_TRUSTED_ORIGINS = (
     "https://www.projectifyapp.com",
+    "https://*.netlify.app",
 )
 CSRF_COOKIE_SECURE = True
 
