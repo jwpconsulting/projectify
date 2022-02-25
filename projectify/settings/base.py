@@ -223,3 +223,10 @@ REST_FRAMEWORK = {
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
 SERVE_MEDIA = False
+
+# Graphene-django monkeypatch
+import django  # noqa: E402
+from django.utils.encoding import force_str  # noqa: E402
+
+
+django.utils.encoding.force_text = force_str
