@@ -151,7 +151,7 @@
 <DialogModal id="archiveBoardConfirmModal">
     <ConfirmModalContent
         title={$_("archive-board")}
-        confirmLabel={$_("Archives")}
+        confirmLabel={$_("Archive")}
         confirmColor="accent"
     >
         {$_("archive-board-message")}
