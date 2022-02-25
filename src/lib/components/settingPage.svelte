@@ -1,8 +1,10 @@
 <script>
     import { gotoDashboard } from "$lib/stores/dashboard";
+    import { _ } from "svelte-i18n";
 
     import IconArrowLeft from "./icons/icon-arrow-left.svelte";
     export let title;
+    export let loading = false;
     export let onBack = () => {
         gotoDashboard();
     };
@@ -21,8 +23,12 @@
             </button>
             <div class="font-bold text-2xl">{title}</div>
         </div>
-        <div class="card min-h-8 overflow-visible">
-            <slot />
-        </div>
+        {#if loading}
+            <div class="text-center">{$_("loading")}</div>
+        {:else}
+            <div class="card shadow-card min-h-8 overflow-visible">
+                <slot />
+            </div>
+        {/if}
     </div>
 </div>
