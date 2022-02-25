@@ -1,7 +1,7 @@
 <script lang="ts">
     import AuthGuard from "$lib/components/authGuard.svelte";
     import SettingFooterEditSaveButtons from "$lib/components/settingFooterEditSaveButtons.svelte";
-    import SettingPage from "$lib/components/SettingPage.svelte";
+    import SettingPage from "$lib/components/settingPage.svelte";
     import UserProfilePictureFileSelector from "$lib/components/userProfilePictureFileSelector.svelte";
     import { fetchUser, user } from "$lib/stores/user";
     import { _ } from "svelte-i18n";
