@@ -231,12 +231,20 @@ def chat_message_deleted(sender, instance, **kwargs):
 def workspace_board_deleted(sender, instance, **kwargs):
     """Broadcast changes."""
     uuid = str(instance.uuid)
+    workspace_uuid = str(instance.workspace.uuid)
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
         f"workspace-board-{uuid}",
         {
             "type": "workspace.board.change",
             "uuid": uuid,
+        },
+    )
+    async_to_sync(channel_layer.group_send)(
+        f"workspace-{uuid}",
+        {
+            "type": "workspace.change",
+            "uuid": workspace_uuid,
         },
     )
 
