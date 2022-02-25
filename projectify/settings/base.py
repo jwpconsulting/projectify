@@ -212,7 +212,7 @@ DEFAULT_FROM_EMAIL = "hello@projectifyapp.com"
 # Rest framework
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "projectify.authentication.CsrfExemptSessionAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
