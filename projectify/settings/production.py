@@ -29,6 +29,7 @@ CSRF_COOKIE_SAMESITE = 'None'
 CSRF_TRUSTED_ORIGINS = (
     "https://www.projectifyapp.com",
 )
+CSRF_COOKIE_SECURE = True
 
 CORS_ALLOWED_ORIGINS = ("https://www.projectifyapp.com",)
 
