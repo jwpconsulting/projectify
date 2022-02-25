@@ -25,7 +25,10 @@ EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 CELERY_BROKER_URL = os.environ["REDIS_TLS_URL"]
 
 # CSRF
-CSRF_COOKIE_DOMAIN = ".projectifyapp.com"
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_TRUSTED_ORIGINS = (
+    "https://www.projectifyapp.com",
+)
 
 CORS_ALLOWED_ORIGINS = ("https://www.projectifyapp.com",)
 
