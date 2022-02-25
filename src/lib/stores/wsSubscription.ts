@@ -1,3 +1,4 @@
+import { browser } from "$app/env";
 import delay from "delay";
 import type { Subscriber } from "svelte/store";
 
@@ -114,6 +115,9 @@ type WSSubscriptionStoreMap = {
 const stores: WSSubscriptionStoreMap = {};
 
 export function getSubscriptionFor(url: string): WSSubscriptionStore {
+    if (!browser) {
+        return null;
+    }
     if (!stores[url]) {
         stores[url] = new WSSubscriptionStore(url);
     }
