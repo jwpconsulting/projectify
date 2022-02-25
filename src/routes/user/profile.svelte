@@ -71,8 +71,8 @@
             vars.API_ENDPOINT + "/user/profile-picture-upload"
         );
 
-        // const csrftoken = getCookie("csrftoken");
-        // uploadRequest.setRequestHeader("X-CSRFToken", csrftoken);
+        const csrftoken = getCookie("csrftoken");
+        uploadRequest.setRequestHeader("X-CSRFToken", csrftoken);
 
         uploadRequest.send(formData);
 
