@@ -92,9 +92,6 @@
     }
 
     async function saveData() {
-        if (isSaving) {
-            return;
-        }
         try {
             await client.mutate({
                 mutation: Mutation_UpdateProfile,
