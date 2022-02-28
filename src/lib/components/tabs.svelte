@@ -4,8 +4,7 @@
     let contentHeght = 0;
     const handleClick = (tabId) => () => (activeTabId = tabId);
 
-    import { fly } from "svelte/transition";
-    import { quintOut } from "svelte/easing";
+    import { fade } from "svelte/transition";
 </script>
 
 <ul class="tabs">
@@ -26,7 +25,7 @@
             class="flex flex-col relative overflow-hidden transition-all ease-in-out duration-300"
         >
             <div bind:clientHeight={contentHeght} class="flex flex-col pt-4">
-                <svelte:component this={item.component} />
+                <svelte:component this={item.component} {...item.props} />
             </div>
         </main>
     {/if}
