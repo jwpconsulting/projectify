@@ -26,7 +26,7 @@
         {#if loading}
             <div class="text-center">{$_("loading")}</div>
         {:else}
-            <div class="card shadow-card min-h-8 overflow-visible">
+            <div class="card shadow-card min-h-8 overflow-visible p-4">
                 <slot />
             </div>
         {/if}

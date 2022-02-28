@@ -5,10 +5,23 @@
     import Tabs from "$lib/components/tabs.svelte";
     import SettingsGeneral from "$lib/components/dashboard/settings-general.svelte";
     import TeamMembers from "$lib/components/dashboard/team-members.svelte";
+    import { page } from "$app/stores";
 
-    const tabItems = [
-        { label: "General", id: 1, component: SettingsGeneral },
-        { label: "Team members", id: 2, component: TeamMembers },
+    $: workspaceUUID = $page.params["workspaceUUID"];
+
+    $: tabItems = [
+        {
+            label: "General",
+            id: 1,
+            component: SettingsGeneral,
+            props: { workspaceUUID },
+        },
+        {
+            label: "Team members",
+            id: 2,
+            component: TeamMembers,
+            props: { workspaceUUID },
+        },
     ];
 </script>
 

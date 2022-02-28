@@ -10,8 +10,6 @@ export const Query_User = gql`
     }
 `;
 
-// updateProfile(input: UpdateProfileInput!): UpdateProfileMutation
-
 export const Mutation_UpdateProfile = gql`
     mutation UpdateProfile($input: UpdateProfileInput!) {
         updateProfile(input: $input) {
@@ -127,6 +125,19 @@ export const Query_DashboardBoardsSideNav = gql`
             boards {
                 uuid
                 title
+            }
+        }
+    }
+`;
+
+export const Query_WorkspaceTeamMembers = gql`
+    query WorkspaceTeamMembers($uuid: ID!) {
+        workspace(uuid: $uuid) {
+            uuid
+            users {
+                email
+                fullName
+                profilePicture
             }
         }
     }

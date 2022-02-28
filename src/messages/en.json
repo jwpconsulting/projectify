@@ -76,5 +76,7 @@
     "edit-workspace-board": "Edit Workspace Board",
     "logout": "Logout",
     "settings": "Settings",
-    "my-profile": "My Profile"
+    "my-profile": "My Profile",
+    "remove": "Remove",
+    "new-member": "New member"
 }
