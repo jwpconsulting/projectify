@@ -28,3 +28,4 @@ GRAPHENE["MIDDLEWARE"] = (
 
 # Media
 SERVE_MEDIA = True
+MEDIA_URL = "http://localhost:8000/media/"
