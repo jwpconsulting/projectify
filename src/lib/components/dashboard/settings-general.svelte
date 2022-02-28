@@ -10,13 +10,16 @@
     async function onCancel() {
         console.log("cancel");
     }
+    async function onDelete() {
+        console.log("delete");
+    }
 </script>
 
 <div class="flex justify-start">
     <button
         class:loading={isSaving}
         class="btn btn-accent btn-ghost text-accent btn-sm rounded-full hover:bg-accent hover:text-accent-content"
-        on:click={() => {}}
+        on:click={onDelete}
     >
         {"Delete Workspace"}
     </button>
