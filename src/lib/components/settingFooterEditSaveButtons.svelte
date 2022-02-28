@@ -9,8 +9,9 @@
     const dispatch = createEventDispatcher();
 </script>
 
-<footer class="flex item-center justify-center space-x-2">
+<footer class="flex item-center justify-center space-x-2 py-4">
     {#if !isEditMode}
+        <slot />
         <button
             class="btn btn-primary btn-outline btn-wide rounded-full"
             on:click={() => (isEditMode = true)}
@@ -32,7 +33,7 @@
             class="btn btn-primary btn-wide rounded-full"
             on:click={() => dispatch("save")}
         >
-            Save
+            {$_("Save")}
         </button>
     {/if}
 </footer>

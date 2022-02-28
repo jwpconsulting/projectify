@@ -77,9 +77,7 @@
                     {
                         label: $_("settings"),
                         icon: IconSettings,
-                        onClick: () => {
-                            // $dialogModalOpen.set(true);
-                        },
+                        href: `/dashboard/settings/${selectedWorkspaceUUID}`,
                     },
                 ]}
             >
