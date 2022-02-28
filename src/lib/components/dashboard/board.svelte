@@ -238,7 +238,7 @@
         {$_("loading")}
     </div>
 {:else if board}
-    <div class="flex grow flex-col bg-base-200">
+    <div class="flex grow flex-col bg-base-200 h-fit min-h-full">
         <!-- Tile -->
         <div class="flex flex-row items-center px-4 py-4 gap-2">
             <div class="grid font-bold text-3xl grow shrink basis-0">

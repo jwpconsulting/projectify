@@ -4,7 +4,7 @@
     import PageLayout from "$lib/components/layouts/pageLayout.svelte";
 </script>
 
-<PageLayout footerVisible={false}>
+<PageLayout footerVisible={false} heightScreen={true}>
     <AuthGuard>
         <Dashboard />
     </AuthGuard>
