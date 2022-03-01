@@ -41,10 +41,6 @@ SESSION_COOKIE_SECURE = True
 CSRF_USE_SESSIONS = False
 CSRF_COOKIE_SAMESITE = "None"
 CSRF_COOKIE_SECURE = True
-CSRF_TRUSTED_ORIGINS = (
-    "https://*.netlify.app/",
-    "https://www.projectifyapp.com",
-)
 
 # Cors
 
