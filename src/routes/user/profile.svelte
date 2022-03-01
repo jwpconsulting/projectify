@@ -72,7 +72,9 @@
         );
 
         const csrftoken = getCookie("csrftoken");
-        uploadRequest.setRequestHeader("X-CSRFToken", csrftoken);
+        if (csrftoken) {
+            uploadRequest.setRequestHeader("X-CSRFToken", csrftoken);
+        }
 
         uploadRequest.send(formData);
 
