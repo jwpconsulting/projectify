@@ -36,7 +36,6 @@ CSRF_TRUSTED_ORIGINS = (
 
 # GraphQL
 GRAPHIQL_ENABLE = False
-GRAPHQL_WS_SEQUENTIAL = False
 
 # Channels
 # https://github.com/django/channels_redis/issues/235#issuecomment-795520644
