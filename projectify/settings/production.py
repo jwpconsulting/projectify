@@ -25,9 +25,13 @@ EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 CELERY_BROKER_URL = os.environ["REDIS_TLS_URL"]
 
 CORS_ALLOWED_ORIGINS = ("https://www.projectifyapp.com",)
-
 CORS_ALLOWED_ORIGIN_REGEXES = (
     r"^https://deploy-preview-\d+--projectifyapp.netlify.app$",
+)
+
+CSRF_TRUSTED_ORIGINS = (
+    "https://*.netlify.app/",
+    "https://www.projectifyapp.com",
 )
 
 # GraphQL
