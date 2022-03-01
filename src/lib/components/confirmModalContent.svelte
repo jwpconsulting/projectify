@@ -3,6 +3,7 @@
     import { _ } from "svelte-i18n";
 
     export let title;
+    export let subtitle = null;
     export let cancelLabel = $_("Cancel");
     export let confirmLabel = $_("Confirm");
     export let confirmColor = "primary";
@@ -34,11 +35,21 @@
         modal.close({ confirm: true, outputs });
         isEditing = false;
     }
+
+    function placeholderFor(input) {
+        if (input.placeholder) {
+            return input.placeholder;
+        }
+        return `${$_("please-enter-a")} ${input.label}`;
+    }
 </script>
 
 <div class="card-body w-screen max-w-lg">
     <div class:divide-y={!inputs.length} class="flex flex-col divide-base-300">
         <h1 class="text-3xl font-bold text-center pb-4">{title}</h1>
+        {#if subtitle}
+            <div class="text-center">{subtitle}</div>
+        {/if}
         <div class="pt-4">
             <slot />
         </div>
@@ -51,7 +62,7 @@
             <input
                 type="text"
                 name={input.name}
-                placeholder={`${$_("please-enter-a")} ${input.label}`}
+                placeholder={placeholderFor(input)}
                 class="input input-bordered"
                 bind:value={input.value}
                 on:focus={() => (isEditing = true)}
