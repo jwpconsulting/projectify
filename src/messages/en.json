@@ -78,5 +78,6 @@
     "settings": "Settings",
     "my-profile": "My Profile",
     "remove": "Remove",
-    "new-member": "New member"
+    "new-member": "New member",
+    "no-archived-boards-found": "No archived boards found."
 }
