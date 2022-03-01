@@ -15,4 +15,3 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # GraphQL
 GRAPHIQL_ENABLE = False
-GRAPHQL_WS_SEQUENTIAL = True
