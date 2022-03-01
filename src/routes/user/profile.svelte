@@ -100,7 +100,7 @@
                 mutation: Mutation_UpdateProfile,
                 variables: {
                     input: {
-                        fullName: currentUser.fullName,
+                        fullName: currentUser.fullName || "",
                     },
                 },
             });
