@@ -12,6 +12,7 @@
     import UserProfilePicture from "../userProfilePicture.svelte";
     import DialogModal, { getModal } from "$lib/components/dialogModal.svelte";
     import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
+    import { client } from "$lib/graphql/client";
     export let workspaceUUID = null;
 
     let res = null;
@@ -59,19 +60,19 @@
             return;
         }
 
-        // try {
-        //     await client.mutate({
-        //         mutation: Mutation_AddUserToWorkspace,
-        //         variables: {
-        //             input: {
-        //                 uuid: workspaceUUID,
-        //                 email: modalRes.outputs.email,
-        //             },
-        //         },
-        //     });
-        // } catch (error) {
-        //     console.error(error);
-        // }
+        try {
+            await client.mutate({
+                mutation: Mutation_AddUserToWorkspace,
+                variables: {
+                    input: {
+                        uuid: workspaceUUID,
+                        email: modalRes.outputs.email,
+                    },
+                },
+            });
+        } catch (error) {
+            console.error(error);
+        }
     }
     async function onRemoveUser(user) {
         let modalRes = await getModal("removeTeamMemberFromWorkspace").open();
