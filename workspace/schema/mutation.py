@@ -319,6 +319,38 @@ class AddUserToWorkspaceMutation(GetForUserAndUuidMixin, graphene.Mutation):
         return cls(workspace)
 
 
+class RemoveUserFromWorkspaceInput(graphene.InputObjectType):
+    """Input for RemoveUserFromWorkspaceMutation."""
+
+    uuid = graphene.ID(required=True)
+    email = graphene.String(required=True)
+
+
+class RemoveUserFromWorkspaceMutation(
+    GetForUserAndUuidMixin,
+    graphene.Mutation,
+):
+    """Mutation for removing users from workspaces."""
+
+    model = models.Workspace
+
+    class Arguments:
+        """Arguments."""
+
+        input = RemoveUserFromWorkspaceInput(required=True)
+
+    workspace = graphene.Field(types.Workspace)
+
+    @classmethod
+    def mutate(cls, root, info, input):
+        """utate."""
+        workspace = cls.get_object(cls, info, input)
+        User = get_user_model()
+        user = User.objects.get_by_natural_key(input.email)
+        workspace.remove_user(user)
+        return cls(workspace)
+
+
 class AssignTaskInput(graphene.InputObjectType):
     """Input for AssignTaskMutation."""
 
@@ -681,6 +713,7 @@ class Mutation:
     move_workspace_board_section = MoveWorkspaceBoardSectionMutation.Field()
     move_task = MoveTaskMutation.Field()
     add_user_to_workspace = AddUserToWorkspaceMutation.Field()
+    remove_user_from_workspace = RemoveUserFromWorkspaceMutation.Field()
     assign_task = AssignTaskMutation.Field()
     duplicate_task = DuplicateTaskMutation.Field()
     change_sub_task_done = ChangeSubTaskDoneMutation.Field()

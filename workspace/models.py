@@ -62,6 +62,16 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         self.workspaceuser_set.create(user=user)
         return user
 
+    def remove_user(self, user):
+        """
+        Remove user from workspace.
+
+        Return user.
+        """
+        workspace_user = self.workspaceuser_set.get(user=user)
+        workspace_user.delete()
+        return user
+
 
 class WorkspaceUserQuerySet(models.QuerySet):
     """Workspace user queryset."""

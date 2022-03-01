@@ -201,6 +201,70 @@ mutation AddUserToWorkspace($uuid: ID!, $email: String!) {
 
 
 @pytest.mark.django_db
+class TestRemoveUserFromWorkspaceMutation:
+    """Test RemoveUserFromWorkspaceMutation."""
+
+    query = """
+mutation RemoveUserFromWorkspace($uuid: ID!, $email: String!) {
+  removeUserFromWorkspace(input: {uuid: $uuid, email: $email}) {
+    workspace {
+      uuid
+    }
+  }
+}
+"""
+
+    def test_query(
+        self,
+        task,
+        other_user,
+        graphql_query_user,
+        workspace,
+        workspace_user,
+    ):
+        """Test query."""
+        workspace.add_user(other_user)
+        assert workspace.users.count() == 2
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace.uuid),
+                "email": other_user.email,
+            },
+        )
+        assert result == {
+            "data": {
+                "removeUserFromWorkspace": {
+                    "workspace": {
+                        "uuid": str(workspace.uuid),
+                    },
+                },
+            },
+        }
+        assert workspace.users.count() == 1
+
+    def test_query_unauthorized(
+        self,
+        task,
+        other_user,
+        graphql_query_user,
+        workspace,
+    ):
+        """Test query."""
+        workspace.add_user(other_user)
+        assert workspace.users.count() == 1
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace.uuid),
+                "email": other_user.email,
+            },
+        )
+        assert "errors" in result
+        assert workspace.users.count() == 1
+
+
+@pytest.mark.django_db
 class TestAssignTaskMutation:
     """Test AssignTaskMutation."""
 
