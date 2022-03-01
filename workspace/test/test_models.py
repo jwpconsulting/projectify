@@ -66,6 +66,12 @@ class TestWorkspace:
         with pytest.raises(db.IntegrityError):
             workspace.add_user(user)
 
+    def test_remove_user(self, workspace, workspace_user, user):
+        """Test remove_user."""
+        assert workspace.users.count() == 1
+        workspace.remove_user(user)
+        assert workspace.users.count() == 0
+
 
 @pytest.mark.django_db
 class TestWorkspaceUserManager:
