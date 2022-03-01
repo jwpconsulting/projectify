@@ -26,9 +26,10 @@
         }
     }
 
-    function onFileSelected({ detail: { file } }) {
+    function onFileSelected({ detail: { src, file } }) {
         imageFile = file;
         isEditMode = true;
+        currentUser.profilePicture = src;
     }
 
     function getCookie(name) {
