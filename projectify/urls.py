@@ -43,7 +43,7 @@ from .views import (
 )
 
 
-urlpatterns = [
+urlpatterns = (
     path("admin/", admin.site.urls),
     path(
         "graphql",
@@ -71,12 +71,15 @@ urlpatterns = [
         r"user/",
         include("user.urls"),
     ),
-]
+)
 
 if settings.SERVE_MEDIA:
-    urlpatterns += static(
-        settings.MEDIA_URL,
-        document_root=settings.MEDIA_ROOT,
+    urlpatterns = (
+        *urlpatterns,
+        *static(
+            settings.MEDIA_URL,
+            document_root=settings.MEDIA_ROOT,
+        ),
     )
 
 websocket_urlpatterns = (
