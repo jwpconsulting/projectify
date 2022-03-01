@@ -143,6 +143,16 @@ export const Query_WorkspaceTeamMembers = gql`
     }
 `;
 
+export const Mutation_AddUserToWorkspace = gql`
+    mutation AddUserToWorkspace($input: AddUserToWorkspaceInput!) {
+        addUserToWorkspace(input: $input) {
+            workspace {
+                uuid
+            }
+        }
+    }
+`;
+
 export const Query_DashboardBoard = gql`
     query DashboardBoard($uuid: ID!) {
         workspaceBoard(uuid: $uuid) {

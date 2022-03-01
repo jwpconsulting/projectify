@@ -1,5 +1,8 @@
 <script lang="ts">
-    import { Query_WorkspaceTeamMembers } from "$lib/graphql/operations";
+    import {
+        Mutation_AddUserToWorkspace,
+        Query_WorkspaceTeamMembers,
+    } from "$lib/graphql/operations";
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
 
     import debounce from "lodash/debounce.js";
@@ -7,6 +10,8 @@
     import { _ } from "svelte-i18n";
     import Loading from "../loading.svelte";
     import UserProfilePicture from "../userProfilePicture.svelte";
+    import DialogModal, { getModal } from "$lib/components/dialogModal.svelte";
+    import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
     export let workspaceUUID = null;
 
     let res = null;
@@ -47,8 +52,33 @@
         }
     }
 
-    function onNewMember() {
-        console.log("onNewMember");
+    async function onNewMember() {
+        let modalRes = await getModal("inviteTeamMemberToWorkspace").open();
+
+        if (!modalRes) {
+            return;
+        }
+
+        // try {
+        //     await client.mutate({
+        //         mutation: Mutation_AddUserToWorkspace,
+        //         variables: {
+        //             input: {
+        //                 uuid: workspaceUUID,
+        //                 email: modalRes.outputs.email,
+        //             },
+        //         },
+        //     });
+        // } catch (error) {
+        //     console.error(error);
+        // }
+    }
+    async function onRemoveUser(user) {
+        let modalRes = await getModal("removeTeamMemberFromWorkspace").open();
+
+        if (!modalRes) {
+            return;
+        }
     }
 </script>
 
@@ -69,6 +99,7 @@
                 </div>
                 <div class="flex items-center">
                     <button
+                        on:click={() => onRemoveUser(user)}
                         class="btn btn-accent btn-outline rounded-full btn-sm"
                     >
                         {$_("remove")}
@@ -92,3 +123,28 @@
         </div>
     </div>
 {/if}
+
+<DialogModal id="inviteTeamMemberToWorkspace">
+    <ConfirmModalContent
+        title={"Invite team member"}
+        subtitle={"Please enter a email of team member."}
+        confirmLabel={"Send"}
+        inputs={[
+            {
+                name: "email",
+                label: "Email",
+                placeholder: "Please enter a email of team member.",
+            },
+        ]}
+    />
+</DialogModal>
+
+<DialogModal id="removeTeamMemberFromWorkspace">
+    <ConfirmModalContent
+        title={"Remove team member"}
+        confirmLabel={"Remove"}
+        confirmColor="accent"
+    >
+        {"Are you sure you want to remove this team member?"}
+    </ConfirmModalContent>
+</DialogModal>
