@@ -13,6 +13,7 @@ class Workspace(graphene_django.DjangoObjectType):
     users = graphene.List("user.schema.types.User")
     boards = graphene.List("workspace.schema.types.WorkspaceBoard")
     archived_boards = graphene.List("workspace.schema.types.WorkspaceBoard")
+    picture = graphene.String()
 
     def resolve_users(self, info):
         """Resolve workspace users."""
@@ -28,6 +29,11 @@ class Workspace(graphene_django.DjangoObjectType):
         """Resolve archived workspace boards."""
         loader = info.context.loader.workspace_archived_workspace_board_loader
         return loader.load(self.pk)
+
+    def resolve_picture(self, info):
+        """Resolve picture."""
+        if self.picture:
+            return self.picture.url
 
     class Meta:
         """Meta."""
