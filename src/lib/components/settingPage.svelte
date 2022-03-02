@@ -10,7 +10,7 @@
     };
 </script>
 
-<div class="page page-center">
+<div class="page page-center p-8">
     <div class="w-full max-w-xl space-y-8">
         <div class="flex space-x-5 justify-start items-center">
             <button
