@@ -1,4 +1,4 @@
-"""Workspace url patterns."""
+"""User url patterns."""
 from django.urls import (
     path,
 )

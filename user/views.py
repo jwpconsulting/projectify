@@ -1,4 +1,4 @@
-"""Workspace views."""
+"""User views."""
 from rest_framework import (
     parsers,
     response,
