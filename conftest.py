@@ -1,6 +1,10 @@
 """Top level conftest module."""
+import base64
 import json
 
+from django.core.files.uploadedfile import (
+    SimpleUploadedFile,
+)
 from django.urls import (
     reverse,
 )
@@ -87,3 +91,19 @@ def superuser_client(client, superuser):
     """Return logged in super user client."""
     client.force_login(superuser)
     return client
+
+
+@pytest.fixture
+def png_image():
+    """Return a simple png file."""
+    return base64.b64decode(
+        "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAgAAAAAcoT2JAAAABGdBTUEAAYagMeiWX\
+        wAAAB9JREFUeJxjYAhd9R+M8TCIUMIAU4aPATMJH2OQuQcAvUl/gYsJiakAAAAASUVORK5\
+        CYII="
+    )
+
+
+@pytest.fixture
+def uploaded_file(png_image):
+    """Return an UploadFile instance of the above png file."""
+    return SimpleUploadedFile("test.png", png_image)

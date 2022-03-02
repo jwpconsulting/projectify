@@ -44,6 +44,11 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         through_fields=("workspace", "user"),
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+    picture = models.ImageField(
+        upload_to="workspace_picture/",
+        blank=True,
+        null=True,
+    )
     objects = WorkspaceManager()
 
     def add_workspace_board(self, title, description):

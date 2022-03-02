@@ -71,6 +71,10 @@ urlpatterns = (
         r"user/",
         include("user.urls"),
     ),
+    path(
+        "workspace/",
+        include("workspace.urls"),
+    ),
 )
 
 if settings.SERVE_MEDIA:

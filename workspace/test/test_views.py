@@ -1,4 +1,4 @@
-"""User view tests."""
+"""Test workspace views."""
 from django.urls import (
     reverse,
 )
@@ -7,13 +7,15 @@ import pytest
 
 
 @pytest.mark.django_db
-class TestProfilePictureUploadView:
-    """Test ProfilePictureUploadView."""
+class TestWorkspacePictureUploadView:
+    """Test WorkspacePictureUploadView."""
 
     @pytest.fixture
-    def resource_url(self):
+    def resource_url(self, workspace):
         """Return URL to this view."""
-        return reverse("user:profile-picture-upload")
+        return reverse(
+            "workspace:workspace-picture-upload", args=(workspace.uuid,)
+        )
 
     @pytest.fixture
     def headers(self, png_image):
@@ -35,6 +37,8 @@ class TestProfilePictureUploadView:
         headers,
         uploaded_file,
         user,
+        workspace,
+        workspace_user,
     ):
         """Assert we can post to this view this while being logged in."""
         response = user_client.post(
