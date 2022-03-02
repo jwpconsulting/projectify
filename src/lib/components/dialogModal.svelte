@@ -69,7 +69,7 @@
 
 {#if visible}
     <div
-        class="d-modal fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center p-0"
+        class="z-50 d-modal fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center p-0"
         bind:this={topDiv}
     >
         <div

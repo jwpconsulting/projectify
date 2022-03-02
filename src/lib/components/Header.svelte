@@ -29,7 +29,7 @@
 </script>
 
 <header
-    class="h-[80px] flex items-center p-4 border-b border-base-300 sticky top-0"
+    class="h-[80px] flex items-center p-4 border-b border-base-300 sticky top-0 bg-base-100 z-10"
 >
     <a href="/" class="flex mr-8">
         <HeaderLogo />
