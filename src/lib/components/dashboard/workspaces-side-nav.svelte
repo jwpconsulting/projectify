@@ -32,7 +32,7 @@
 </script>
 
 <nav
-    class="bg-base-100 flex flex-col items-center p-2 h-full max-h-full sticky top-0 overflow-y-auto"
+    class="bg-base-100 shrink-0 flex flex-col items-center p-2 h-full max-h-full sticky top-0 overflow-y-auto"
 >
     {#if workspaces}
         {#each workspaces as workspace (workspace.uuid)}
