@@ -4,8 +4,7 @@
     import DropDownMenu from "./dropDownMenu.svelte";
     import IconLogout from "./icons/icon-logout.svelte";
     import IconUser from "./icons/icon-user.svelte";
-    import vars from "$lib/env";
-    import UserProfilePicture from "./userProfilePicture.svelte";
+    import ProfilePicture from "./profilePicture.svelte";
     $: userData = $user;
 </script>
 
@@ -36,7 +35,7 @@
                         : userData.email}</span
                 >
             </div>
-            <UserProfilePicture size={32} url={userData.profilePicture} />
+            <ProfilePicture size={32} url={userData.profilePicture} />
         </label>
     </DropDownMenu>
 {/if}

@@ -9,7 +9,7 @@
     import { query } from "svelte-apollo";
     import { _ } from "svelte-i18n";
     import Loading from "../loading.svelte";
-    import UserProfilePicture from "../userProfilePicture.svelte";
+    import ProfilePicture from "../profilePicture.svelte";
     import DialogModal, { getModal } from "$lib/components/dialogModal.svelte";
     import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
     import { client } from "$lib/graphql/client";
@@ -91,7 +91,7 @@
     <div class=" divide-y divide-base-300">
         {#each users as user}
             <div class="flex px-4 py-4 space-x-4">
-                <UserProfilePicture url={user.profilePicture} size={42} />
+                <ProfilePicture url={user.profilePicture} size={42} />
                 <div class="grow flex flex-col  justify-center">
                     <div class="text-xs">Interface designer</div>
                     <div class="font-bold">
@@ -114,7 +114,7 @@
                 on:click|preventDefault={onNewMember}
                 class="flex p-2 space-x-4 ch"
             >
-                <UserProfilePicture showPlus={true} size={42} />
+                <ProfilePicture showPlus={true} size={42} />
                 <div
                     class="grow flex flex-col font-bold justify-center text-primary"
                 >

@@ -7,6 +7,7 @@
     export let url: string = null;
     export let prefix = vars.API_ENDPOINT;
     export let showPlus = false;
+    export let emptyIcon = IconUserProfile;
 
     let src: string = null;
 
@@ -54,7 +55,7 @@
                 />
             {/if}
         {:else}
-            <IconUserProfile />
+            <svelte:component this={emptyIcon} />
         {/if}
     </div>
 {/if}

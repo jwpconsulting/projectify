@@ -3,15 +3,15 @@
 
     import IconPhotocamera from "./icons/icon-photocamera.svelte";
 
-    import UserProfilePicture from "./userProfilePicture.svelte";
+    import ProfilePicture from "./profilePicture.svelte";
 
-    export let user = null;
+    export let url = null;
 
     let inputFileRef = null;
 
     const dispatch = createEventDispatcher();
 
-    $: src = user ? user.profilePicture : null;
+    $: src = url ? url : null;
 
     function onSelectFileClick() {
         inputFileRef.click();
@@ -32,7 +32,7 @@
 </script>
 
 <div class="relative">
-    <UserProfilePicture size={128} url={src} />
+    <ProfilePicture size={128} url={src} />
     <input
         bind:this={inputFileRef}
         type="file"

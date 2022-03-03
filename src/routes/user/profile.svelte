@@ -2,13 +2,14 @@
     import AuthGuard from "$lib/components/authGuard.svelte";
     import SettingFooterEditSaveButtons from "$lib/components/settingFooterEditSaveButtons.svelte";
     import SettingPage from "$lib/components/settingPage.svelte";
-    import UserProfilePictureFileSelector from "$lib/components/userProfilePictureFileSelector.svelte";
+    import ProfilePictureFileSelector from "$lib/components/profilePictureFileSelector.svelte";
     import { fetchUser, user } from "$lib/stores/user";
     import { _ } from "svelte-i18n";
 
     import vars from "$lib/env";
     import { client } from "$lib/graphql/client";
     import { Mutation_UpdateProfile } from "$lib/graphql/operations";
+    import ProfilePicture from "$lib/components/profilePicture.svelte";
 
     let isEditMode = false;
     let isSaving = false;
@@ -132,8 +133,8 @@
             <header
                 class="flex flex-col justify-center items-center space-y-2 mt-[-40px]"
             >
-                <UserProfilePictureFileSelector
-                    user={currentUser}
+                <ProfilePictureFileSelector
+                    url={currentUser ? currentUser.profilePicture : null}
                     on:fileSelected={onFileSelected}
                 />
 

@@ -1,7 +1,7 @@
 <script lang="ts">
     import SettingFooterEditSaveButtons from "$lib/components/settingFooterEditSaveButtons.svelte";
     import { _ } from "svelte-i18n";
-    import UserProfilePictureFileSelector from "../userProfilePictureFileSelector.svelte";
+    import ProfilePictureFileSelector from "../profilePictureFileSelector.svelte";
     import SettingsField from "./settings-field.svelte";
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
 
@@ -9,7 +9,7 @@
     import { query } from "svelte-apollo";
     import { _ } from "svelte-i18n";
     import Loading from "../loading.svelte";
-    import UserProfilePicture from "../userProfilePicture.svelte";
+    import ProfilePicture from "../profilePicture.svelte";
     import DialogModal, { getModal } from "$lib/components/dialogModal.svelte";
     import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
     import { client } from "$lib/graphql/client";
@@ -76,7 +76,7 @@
         class="flex flex-col space-y-4 divide-y divide-base-300"
     >
         <SettingsField label="Icon image" labelVAlign="start">
-            <UserProfilePictureFileSelector />
+            <ProfilePictureFileSelector />
         </SettingsField>
         <SettingsField label="Project Name">
             <input
