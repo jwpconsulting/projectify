@@ -3,51 +3,111 @@
     import { _ } from "svelte-i18n";
     import UserProfilePictureFileSelector from "../userProfilePictureFileSelector.svelte";
     import SettingsField from "./settings-field.svelte";
+    import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
+
+    import debounce from "lodash/debounce.js";
+    import { query } from "svelte-apollo";
+    import { _ } from "svelte-i18n";
+    import Loading from "../loading.svelte";
+    import UserProfilePicture from "../userProfilePicture.svelte";
+    import DialogModal, { getModal } from "$lib/components/dialogModal.svelte";
+    import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
+    import { client } from "$lib/graphql/client";
+    import { Query_WorkspacesSettingsGeneral } from "$lib/graphql/operations";
+
+    export let workspaceUUID = null;
+    let res = null;
+    let workspaceWSStore;
+    let workspace = null;
+
+    const refetch = debounce(() => {
+        res.refetch();
+    }, 100);
+
+    $: {
+        if (workspaceUUID) {
+            res = query(Query_WorkspacesSettingsGeneral, {
+                variables: { uuid: workspaceUUID },
+                fetchPolicy: "network-only",
+            });
+
+            workspaceWSStore = getSubscriptionForCollection(
+                "workspace",
+                workspaceUUID
+            );
+        }
+    }
+
+    $: {
+        if ($workspaceWSStore) {
+            refetch();
+        }
+    }
+
+    $: {
+        if (!isEditMode && res && $res.data) {
+            workspace = { ...$res.data["workspace"] };
+        }
+    }
+
     let isEditMode = false;
     let isSaving = false;
 
     async function onSave() {
+        isSaving = true;
         console.log("save");
     }
     async function onCancel() {
+        isSaving = false;
         console.log("cancel");
     }
     async function onDelete() {
         console.log("delete");
     }
 
-    let fileds = [];
+    function fieldChanged() {
+        isEditMode = true;
+    }
 </script>
 
-<div class="flex flex-col space-y-4 divide-y divide-base-300">
-    <SettingsField label="Icon image" labelVAlign="start">
-        <UserProfilePictureFileSelector />
-    </SettingsField>
-    <SettingsField label="Project Name">
-        <input
-            type="email"
-            id="email"
-            name="email"
-            autocomplete="email"
-            placeholder={"place g"}
-            class="input input-bordered w-full"
-        />
-    </SettingsField>
-    <SettingsField label="Description">
-        <textarea rows="5" class="textarea textarea-bordered w-full"
-            >{"text"}</textarea
-        >
-    </SettingsField>
-    <SettingsField label="Danger Zone">
-        <button
-            class:loading={isSaving}
-            class="btn btn-accent  w-full btn-outline btn-sm rounded-full hover:bg-accent hover:text-accent-content"
-            on:click={onDelete}
-        >
-            {"Delete Workspace"}
-        </button>
-    </SettingsField>
-</div>
+{#if workspace}
+    <div
+        class:pointer-events-none={isSaving}
+        class="flex flex-col space-y-4 divide-y divide-base-300"
+    >
+        <SettingsField label="Icon image" labelVAlign="start">
+            <UserProfilePictureFileSelector />
+        </SettingsField>
+        <SettingsField label="Project Name">
+            <input
+                type="text"
+                id="title"
+                name="title"
+                autocomplete="email"
+                placeholder={"Workspace title"}
+                class="input input-bordered w-full"
+                on:input={fieldChanged}
+                bind:value={workspace.title}
+            />
+        </SettingsField>
+        <SettingsField label="Description">
+            <textarea
+                rows="5"
+                class="textarea textarea-bordered w-full"
+                on:input={fieldChanged}>{workspace.description}</textarea
+            >
+        </SettingsField>
+        <SettingsField label="Danger Zone">
+            <button
+                disabled={isSaving}
+                class="btn btn-accent  w-full btn-outline btn-sm rounded-full hover:bg-accent hover:text-accent-content"
+                on:click={onDelete}
+            >
+                {"Delete Workspace"}
+            </button>
+        </SettingsField>
+    </div>
+{/if}
 
 <SettingFooterEditSaveButtons
     {isSaving}

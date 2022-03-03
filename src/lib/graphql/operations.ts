@@ -118,6 +118,16 @@ export const Query_DashboardWorkspacesSideNav = gql`
     }
 `;
 
+export const Query_WorkspacesSettingsGeneral = gql`
+    query WorkspacesSettingsGeneral($uuid: ID!) {
+        workspace(uuid: $uuid) {
+            uuid
+            title
+            description
+        }
+    }
+`;
+
 export const Query_DashboardBoardsSideNav = gql`
     query DashboardBoardsSideNav($uuid: ID!) {
         workspace(uuid: $uuid) {
