@@ -3,11 +3,13 @@
     import vars from "$lib/env";
     import IconPlus from "./icons/icon-plus.svelte";
     import IconClose from "./icons/icon-close.svelte";
+
     export let size = 32;
     export let url: string = null;
     export let prefix = vars.API_ENDPOINT;
     export let showPlus = false;
     export let emptyIcon = IconUserProfile;
+    export let typogram: string = null;
 
     let src: string = null;
 
@@ -29,16 +31,14 @@
 {#if !url && showPlus}
     <div
         style={`width: ${sizePx}; height: ${sizePx};`}
-        class="flex justify-center items-center overflow-hidden rounded-full shrink-0 border-2 border-primary text-primary border-dotted hover:ring"
+        class="flex justify-center items-center overflow-hidden rounded-3xl shrink-0 border-2 border-primary text-primary border-dotted hover:ring"
     >
         <IconPlus />
     </div>
 {:else}
     <div
-        class:ring-2={size <= 32}
-        class:ring-4={size > 32}
         style={`width: ${sizePx}; height: ${sizePx};`}
-        class="flex justify-center items-center overflow-hidden rounded-full shrink-0 bg-secondary text-base-100"
+        class="flex justify-center items-center overflow-hidden shrink-0"
     >
         {#if src}
             {#if loadingError}
@@ -54,8 +54,21 @@
                     on:error={() => (loadingError = true)}
                 />
             {/if}
-        {:else}
+        {:else if emptyIcon}
             <svelte:component this={emptyIcon} />
+        {:else if typogram}
+            <svg viewBox="-50 -50 100 100" preserveAspectRatio="xMidYMid meet">
+                <text
+                    x="0px"
+                    y="0px"
+                    font-size="30"
+                    dy=".35em"
+                    text-anchor="middle"
+                    class="uppercase font-bold"
+                    fill="currentColor"
+                    >{typogram.substr(0, 2)}
+                </text>
+            </svg>
         {/if}
     </div>
 {/if}
