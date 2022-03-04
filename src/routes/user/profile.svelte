@@ -9,7 +9,8 @@
     import vars from "$lib/env";
     import { client } from "$lib/graphql/client";
     import { Mutation_UpdateProfile } from "$lib/graphql/operations";
-    import ProfilePicture from "$lib/components/profilePicture.svelte";
+    import { uploadImage } from "$lib/utils/file";
+    import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
 
     let isEditMode = false;
     let isSaving = false;
@@ -33,67 +34,7 @@
         currentUser.profilePicture = src;
     }
 
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== "") {
-            const cookies = document.cookie.split(";");
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === name + "=") {
-                    cookieValue = decodeURIComponent(
-                        cookie.substring(name.length + 1)
-                    );
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
     let uploadRequest = null;
-
-    async function uploadImage() {
-        if (!imageFile) {
-            return new Promise((resolve) => {
-                resolve(null);
-            });
-        }
-
-        if (uploadRequest) {
-            uploadRequest.abort();
-        }
-
-        const formData = new FormData();
-        formData.append("file", imageFile);
-        uploadRequest = new XMLHttpRequest();
-        uploadRequest.withCredentials = true;
-        uploadRequest.open(
-            "POST",
-            vars.API_ENDPOINT + "/user/profile-picture-upload"
-        );
-
-        const csrftoken = getCookie("csrftoken");
-        if (csrftoken) {
-            uploadRequest.setRequestHeader("X-CSRFToken", csrftoken);
-        }
-
-        uploadRequest.send(formData);
-
-        const promise = new Promise((resolve, reject) => {
-            uploadRequest.onload = () => {
-                if (
-                    uploadRequest.status === 200 ||
-                    uploadRequest.status === 204
-                ) {
-                    resolve(uploadRequest.response);
-                } else {
-                    reject(Error(uploadRequest.statusText));
-                }
-            };
-        });
-        return promise;
-    }
 
     async function saveData() {
         try {
@@ -112,7 +53,10 @@
 
     async function onSave() {
         isSaving = true;
-        await uploadImage();
+        await uploadImage(
+            imageFile,
+            vars.API_ENDPOINT + "/user/profile-picture-upload"
+        );
         await saveData();
         await fetchUser();
         isSaving = false;
@@ -136,7 +80,15 @@
                 <ProfilePictureFileSelector
                     url={currentUser ? currentUser.profilePicture : null}
                     on:fileSelected={onFileSelected}
-                />
+                    let:src
+                >
+                    <UserProfilePicture
+                        pictureProps={{
+                            url: src,
+                            size: 128,
+                        }}
+                    />
+                </ProfilePictureFileSelector>
 
                 <div class="font-bold text-xl ">
                     <input
