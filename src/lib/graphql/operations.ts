@@ -124,6 +124,20 @@ export const Query_WorkspacesSettingsGeneral = gql`
             uuid
             title
             description
+            picture
+        }
+    }
+`;
+
+export const Mutation_UpdateWorkspace = gql`
+    mutation UpdateWorkspace($input: UpdateWorkspaceInput!) {
+        updateWorkspace(input: $input) {
+            workspace {
+                uuid
+                modified
+                title
+                description
+            }
         }
     }
 `;

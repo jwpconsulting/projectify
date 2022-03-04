@@ -9,11 +9,16 @@
     import { query } from "svelte-apollo";
     import { _ } from "svelte-i18n";
     import Loading from "../loading.svelte";
-    import ProfilePicture from "../profilePicture.svelte";
     import DialogModal, { getModal } from "$lib/components/dialogModal.svelte";
     import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
     import { client } from "$lib/graphql/client";
-    import { Query_WorkspacesSettingsGeneral } from "$lib/graphql/operations";
+    import vars from "$lib/env";
+    import {
+        Mutation_UpdateWorkspace,
+        Query_WorkspacesSettingsGeneral,
+    } from "$lib/graphql/operations";
+    import ProfilePicture from "../profilePicture.svelte";
+    import { uploadImage } from "$lib/utils/file";
 
     export let workspaceUUID = null;
     let res = null;
@@ -53,20 +58,53 @@
     let isEditMode = false;
     let isSaving = false;
 
+    async function saveData() {
+        try {
+            await client.mutate({
+                mutation: Mutation_UpdateWorkspace,
+                variables: {
+                    input: {
+                        uuid: workspaceUUID,
+                        title: workspace.title,
+                        description: workspace.description,
+                    },
+                },
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    function fieldChanged() {
+        isEditMode = true;
+    }
+
+    let imageFile = null;
+    function onFileSelected({ detail: { src, file } }) {
+        imageFile = file;
+        isEditMode = true;
+        workspace.picture = src;
+    }
+
     async function onSave() {
         isSaving = true;
-        console.log("save");
+        await uploadImage(
+            imageFile,
+            vars.API_ENDPOINT +
+                `/workspace/workspace/${workspaceUUID}/picture-upload`
+        );
+        await saveData();
+        await res.refetch();
+        isSaving = false;
+        isEditMode = false;
     }
+
     async function onCancel() {
         isSaving = false;
         console.log("cancel");
     }
     async function onDelete() {
         console.log("delete");
-    }
-
-    function fieldChanged() {
-        isEditMode = true;
     }
 </script>
 
@@ -76,7 +114,22 @@
         class="flex flex-col space-y-4 divide-y divide-base-300"
     >
         <SettingsField label="Icon image" labelVAlign="start">
-            <ProfilePictureFileSelector />
+            <ProfilePictureFileSelector
+                url={workspace.picture}
+                on:fileSelected={onFileSelected}
+                let:src
+            >
+                <div
+                    class="border border-base-300 rounded-md bg-primary-content text-primary overflow-hidden"
+                >
+                    <ProfilePicture
+                        typogram={workspace.title}
+                        emptyIcon={null}
+                        url={src}
+                        size={128}
+                    />
+                </div>
+            </ProfilePictureFileSelector>
         </SettingsField>
         <SettingsField label="Project Name">
             <input
