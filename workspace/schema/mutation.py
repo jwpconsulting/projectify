@@ -473,6 +473,7 @@ class UpdateWorkspaceBoardInput(graphene.InputObjectType):
     uuid = graphene.ID(required=True)
     title = graphene.String(required=True)
     description = graphene.String(required=True)
+    deadline = graphene.DateTime(required=False)
 
 
 class UpdateWorkspaceBoardMutation(GetForUserAndUuidMixin, graphene.Mutation):
@@ -493,6 +494,9 @@ class UpdateWorkspaceBoardMutation(GetForUserAndUuidMixin, graphene.Mutation):
         workspace_board = cls.get_object(cls, info, input)
         workspace_board.title = input.title
         workspace_board.description = input.description
+        if input.deadline:
+            assert input.deadline.tzinfo
+            workspace_board.deadline = input.deadline
         workspace_board.save()
         return cls(workspace_board)
 
@@ -531,7 +535,7 @@ class UpdateWorkspaceBoardSectionMutation(
 
 
 class UpdateTaskMutationInput(graphene.InputObjectType):
-    """Input for UpdateTaskMutationInput."""
+    """Input for UpdateTaskMutation."""
 
     uuid = graphene.ID(required=True)
     title = graphene.String(required=True)

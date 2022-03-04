@@ -136,6 +136,11 @@ class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
         blank=True,
         help_text=_("Archival timestamp of this workspace board."),
     )
+    deadline = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text=_("Workspace board's deadline"),
+    )
 
     objects = WorkspaceBoardQuerySet.as_manager()
 
