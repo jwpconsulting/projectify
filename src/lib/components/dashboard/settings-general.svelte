@@ -1,6 +1,5 @@
 <script lang="ts">
     import SettingFooterEditSaveButtons from "$lib/components/settingFooterEditSaveButtons.svelte";
-    import { _ } from "svelte-i18n";
     import ProfilePictureFileSelector from "../profilePictureFileSelector.svelte";
     import SettingsField from "./settings-field.svelte";
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
