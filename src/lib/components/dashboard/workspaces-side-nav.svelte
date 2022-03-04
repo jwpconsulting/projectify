@@ -45,7 +45,6 @@
                 <ProfilePicture
                     size={48}
                     url={workspace.picture}
-                    fullRound={false}
                     typogram={workspace.title}
                     emptyIcon={null}
                 />
