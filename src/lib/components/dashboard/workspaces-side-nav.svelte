@@ -3,6 +3,7 @@
     import { Query_DashboardWorkspacesSideNav } from "$lib/graphql/operations";
     import IconPlus from "../icons/icon-plus.svelte";
     import { gotoDashboard, getDashboardURL } from "$lib/stores/dashboard";
+    import ProfilePicture from "../profilePicture.svelte";
 
     export let selectedWorkspaceUUID;
 
@@ -37,11 +38,18 @@
     {#if workspaces}
         {#each workspaces as workspace (workspace.uuid)}
             <a
-                class="btn btn-primary btn-outline btn-square"
+                class="btn btn-primary btn-outline btn-square overflow-hidden"
                 class:btn-active={workspace.uuid == selectedWorkspaceUUID}
                 href={getDashboardURL(workspace.uuid)}
-                >{workspaceIconFrom(workspace.title)}</a
             >
+                <ProfilePicture
+                    size={48}
+                    url={workspace.picture}
+                    fullRound={false}
+                    typogram={workspace.title}
+                    emptyIcon={null}
+                />
+            </a>
         {/each}
         <button class="plus btn btn-primary btn-outline text-primary"
             ><IconPlus /></button

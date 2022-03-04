@@ -1,4 +1,5 @@
 <script lang="ts">
+    import IconUserProfile from "./icons/icon-user-profile.svelte";
     import { createEventDispatcher } from "svelte";
 
     import IconPhotocamera from "./icons/icon-photocamera.svelte";
@@ -6,7 +7,6 @@
     import ProfilePicture from "./profilePicture.svelte";
 
     export let url = null;
-
     let inputFileRef = null;
 
     const dispatch = createEventDispatcher();
@@ -32,7 +32,11 @@
 </script>
 
 <div class="relative">
-    <ProfilePicture size={128} url={src} />
+    {#if $$slots.default}
+        <slot {src} />
+    {:else}
+        <ProfilePicture size={128} url={src} />
+    {/if}
     <input
         bind:this={inputFileRef}
         type="file"
@@ -42,7 +46,7 @@
     />
     <button
         on:click={onSelectFileClick}
-        class="absolute bottom-0 right-0 btn shadow-lg btn-circle children-first:w-2 text-primary"
+        class="absolute bottom-[-8px] right-[-8px] btn shadow-lg btn-circle children-first:w-2 text-primary"
         ><IconPhotocamera /></button
     >
 </div>

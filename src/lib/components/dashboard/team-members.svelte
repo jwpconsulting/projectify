@@ -13,6 +13,7 @@
     import DialogModal, { getModal } from "$lib/components/dialogModal.svelte";
     import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
     import { client } from "$lib/graphql/client";
+    import UserProfilePicture from "../userProfilePicture.svelte";
     export let workspaceUUID = null;
 
     let res = null;
@@ -91,7 +92,13 @@
     <div class=" divide-y divide-base-300">
         {#each users as user}
             <div class="flex px-4 py-4 space-x-4">
-                <ProfilePicture url={user.profilePicture} size={42} />
+                <UserProfilePicture
+                    pictureProps={{
+                        url: user.profilePicture,
+                        size: 42,
+                    }}
+                />
+
                 <div class="grow flex flex-col  justify-center">
                     <div class="text-xs">Interface designer</div>
                     <div class="font-bold">
