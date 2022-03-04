@@ -273,7 +273,7 @@ class Task(
 
     workspace_board_section = models.ForeignKey(
         WorkspaceBoardSection,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     assignee = models.ForeignKey(

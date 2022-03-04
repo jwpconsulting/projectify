@@ -2,6 +2,10 @@
 from django.contrib.auth import (
     get_user_model,
 )
+from django.db import (
+    transaction,
+)
+from django.utils.translation import gettext_lazy as _
 
 import graphene
 
@@ -649,9 +653,15 @@ class DeleteWorkspaceBoardSectionMutation(
     @classmethod
     def mutate(cls, root, info, input):
         """Delete workspace section board."""
-        workspace_board_section = cls.get_object(cls, info, input)
-        workspace_board_section.delete()
-        return cls(workspace_board_section)
+        with transaction.atomic():
+            workspace_board_section = cls.get_object(cls, info, input)
+            task_len = workspace_board_section.task_set.count()
+            if task_len:
+                raise ValueError(
+                    _("This workspace board section still has tasks"),
+                )
+            workspace_board_section.delete()
+            return cls(workspace_board_section)
 
 
 class DeleteTaskInput(graphene.InputObjectType):

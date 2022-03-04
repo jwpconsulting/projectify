@@ -950,6 +950,24 @@ mutation DeleteWorkspaceBoardSection($uuid: ID!) {
         )
         assert "errors" in result
 
+    def test_still_has_tasks(
+        self,
+        graphql_query_user,
+        workspace_board_section,
+        workspace_user,
+        task,
+    ):
+        """Assert section is not deleted if tasks still exist."""
+        assert models.WorkspaceBoardSection.objects.count() == 1
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace_board_section.uuid),
+            },
+        )
+        assert "still has tasks" in str(result)
+        assert models.WorkspaceBoardSection.objects.count() == 1
+
 
 @pytest.mark.django_db
 class TestDeleteTask:
@@ -966,7 +984,12 @@ mutation DeleteTask($uuid: ID!) {
 """
 
     def test_query(
-        self, graphql_query_user, task, workspace_user, chat_message, sub_task,
+        self,
+        graphql_query_user,
+        task,
+        workspace_user,
+        chat_message,
+        sub_task,
     ):
         """Test query."""
         assert models.Task.objects.count() == 1
