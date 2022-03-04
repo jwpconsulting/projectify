@@ -572,12 +572,15 @@ class TestUpdateWorkspaceBoardMutation:
     """Test UpdateWorkspaceBoardMutation."""
 
     query = """
-mutation UpdateWorkspaceBoard($uuid: ID!) {
-  updateWorkspaceBoard(input: {uuid: $uuid, title: "Foo", description: "Bar"})
+mutation UpdateWorkspaceBoard($uuid: ID!, $deadline: DateTime) {
+  updateWorkspaceBoard(input: {
+    uuid: $uuid, title: "Foo", description: "Bar"
+    deadline: $deadline})
   {
     workspaceBoard {
       title
       description
+      deadline
     }
   }
 }
@@ -597,6 +600,34 @@ mutation UpdateWorkspaceBoard($uuid: ID!) {
                     "workspaceBoard": {
                         "title": "Foo",
                         "description": "Bar",
+                        "deadline": None,
+                    },
+                },
+            },
+        }
+
+    def test_set_deadline(
+        self,
+        graphql_query_user,
+        workspace_board,
+        workspace_user,
+    ):
+        """Test query."""
+        now = timezone.now().isoformat()
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "deadline": now,
+                "uuid": str(workspace_board.uuid),
+            },
+        )
+        assert result == {
+            "data": {
+                "updateWorkspaceBoard": {
+                    "workspaceBoard": {
+                        "title": "Foo",
+                        "description": "Bar",
+                        "deadline": now,
                     },
                 },
             },

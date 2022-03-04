@@ -76,6 +76,7 @@ class WorkspaceBoard(graphene_django.DjangoObjectType):
             "description",
             "uuid",
             "archived",
+            "deadline",
         )
         model = models.WorkspaceBoard
 
