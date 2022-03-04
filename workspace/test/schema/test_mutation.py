@@ -965,7 +965,9 @@ mutation DeleteTask($uuid: ID!) {
 }
 """
 
-    def test_query(self, graphql_query_user, task, workspace_user):
+    def test_query(
+        self, graphql_query_user, task, workspace_user, chat_message, sub_task,
+    ):
         """Test query."""
         assert models.Task.objects.count() == 1
         result = graphql_query_user(

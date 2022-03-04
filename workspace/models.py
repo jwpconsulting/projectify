@@ -384,7 +384,7 @@ class SubTask(
 
     task = models.ForeignKey(
         Task,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     done = models.BooleanField(
@@ -422,7 +422,7 @@ class ChatMessage(TimeStampedModel, models.Model):
 
     task = models.ForeignKey(
         Task,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     text = models.TextField()
