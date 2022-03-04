@@ -194,7 +194,7 @@ class WorkspaceBoardSection(
 
     workspace_board = models.ForeignKey(
         WorkspaceBoard,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     objects = WorkspaceBoardSectionManager()
