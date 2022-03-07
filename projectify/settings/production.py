@@ -70,6 +70,6 @@ DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 # Disable CSRF protection
 csrf_middleware = "django.middleware.csrf.CsrfViewMiddleware"
-if os.getenv("DISABLE_CSRF_PROTECTION"):
+if "DISABLE_CSRF_PROTECTION" in os.environ:
     csrf_middleware_index = MIDDLEWARE.index(csrf_middleware)
     MIDDLEWARE.pop(csrf_middleware_index)
