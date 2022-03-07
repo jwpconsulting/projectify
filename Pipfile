@@ -39,6 +39,7 @@ channels-redis = {extras = ["cryptography"], version = "*"}
 djangorestframework = "*"
 pillow = "*"
 django-cloudinary-storage = "*"
+websockets = "*"
 
 [requires]
 python_version = "3.9"
