@@ -63,7 +63,7 @@
     <!-- Secon side bar -->
     <nav class="flex flex-col bg-base-100 w-60 min-h-full sticky top-0">
         <!-- Tite and settings -->
-        <div class="flex p-4 sticky top-0 bg-base-100">
+        <div class="flex p-4 sticky top-0 bg-base-100 z-50">
             <h1 class="grow font-bold text-xl capitalize">
                 {selectedWorkspace ? selectedWorkspace.title : ""}
             </h1>
