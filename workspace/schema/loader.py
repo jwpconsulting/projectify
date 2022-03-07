@@ -88,6 +88,22 @@ class WorkspaceArchivedWorkspaceBoardLoader(DataLoader):
         return Promise.resolve([workspace_boards.get(key, []) for key in keys])
 
 
+class WorkspaceLabelLoader(DataLoader):
+    """Label loader for workspaces."""
+
+    def batch_load_fn(self, keys):
+        """Load labels for workspace."""
+        labels = defaultdict(list)
+        qs = models.Label.objects.filter_by_workspace_pks(
+            keys,
+        ).select_related(
+            "workspace",
+        )
+        for label in qs.iterator():
+            labels[label.workspace.pk].append(label)
+        return Promise.resolve([labels.get(key, []) for key in keys])
+
+
 class WorkspaceBoardWorkspaceBoardSectionLoader(DataLoader):
     """Workspace board section loader for workspace boards."""
 
@@ -153,6 +169,24 @@ class TaskChatMessageLoader(DataLoader):
         for chat_message in qs.iterator():
             chat_messages[chat_message.task.pk].append(chat_message)
         return Promise.resolve([chat_messages.get(key, []) for key in keys])
+
+
+class TaskTaskLabelLoader(DataLoader):
+    """Label loader for tasks."""
+
+    def batch_load_fn(self, keys):
+        """
+        Load labels for task keys.
+
+        Skip over m2m connection and return labels directly.
+        """
+        labels = defaultdict(list)
+        qs = models.TaskLabel.objects.filter_by_task_pks(
+            keys,
+        )
+        for task_label in qs.iterator():
+            labels[task_label.task.pk].append(task_label.label)
+        return Promise.resolve([labels.get(key, []) for key in keys])
 
 
 class UserLoader(DataLoader):

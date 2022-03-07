@@ -16,6 +16,9 @@ class TestBigQuery:
     email
   }
   workspaces {
+    labels {
+      uuid
+    }
     boards {
       sections {
         tasks {
@@ -39,12 +42,16 @@ class TestBigQuery:
         workspace_user,
         user,
         sub_task,
+        label,
         chat_message,
     ):
         """Assert that the big query works."""
         result = graphql_query_user(self.query)
         assert "errors" not in result, result
-        sections = result["data"]["workspaces"][0]["boards"][0]["sections"][0]
+        workspace = result["data"]["workspaces"][0]
+        labels = workspace["labels"]
+        assert labels[0]["uuid"] == str(label.uuid)
+        sections = workspace["boards"][0]["sections"][0]
         tasks = sections["tasks"]
         sub_tasks = tasks[0]["subTasks"]
         assert sub_tasks[0]["title"] == sub_task.title

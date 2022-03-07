@@ -13,6 +13,7 @@ class Workspace(graphene_django.DjangoObjectType):
     users = graphene.List("user.schema.types.User")
     boards = graphene.List("workspace.schema.types.WorkspaceBoard")
     archived_boards = graphene.List("workspace.schema.types.WorkspaceBoard")
+    labels = graphene.List("workspace.schema.types.Label")
     picture = graphene.String()
 
     def resolve_users(self, info):
@@ -28,6 +29,11 @@ class Workspace(graphene_django.DjangoObjectType):
     def resolve_archived_boards(self, info):
         """Resolve archived workspace boards."""
         loader = info.context.loader.workspace_archived_workspace_board_loader
+        return loader.load(self.pk)
+
+    def resolve_labels(self, info):
+        """Resolve labels."""
+        loader = info.context.loader.workspace_label_loader
         return loader.load(self.pk)
 
     def resolve_picture(self, info):
@@ -124,6 +130,7 @@ class Task(graphene_django.DjangoObjectType):
     next_workspace_board_section = graphene.Field(
         "workspace.schema.types.WorkspaceBoardSection",
     )
+    labels = graphene.List("workspace.schema.types.Label")
 
     def resolve_sub_tasks(self, info):
         """Resolve sub tasks for this task."""
@@ -147,6 +154,10 @@ class Task(graphene_django.DjangoObjectType):
                 section.pk,
             )
 
+    def resolve_labels(self, info):
+        """Resolve labels for this task."""
+        return info.context.loader.task_task_label_loader.load(self.pk)
+
     class Meta:
         """Meta."""
 
@@ -160,6 +171,25 @@ class Task(graphene_django.DjangoObjectType):
             "assignee",
         )
         model = models.Task
+
+
+class Label(graphene_django.DjangoObjectType):
+    """Label."""
+
+    def resolve_workspace(self, info):
+        """Resolve workspace."""
+        return info.context.loader.workspace_loader.load(self.workspace.pk)
+
+    class Meta:
+        """Meta."""
+
+        fields = (
+            "name",
+            "color",
+            "workspace",
+            "uuid",
+        )
+        model = models.Label
 
 
 class SubTask(graphene_django.DjangoObjectType):

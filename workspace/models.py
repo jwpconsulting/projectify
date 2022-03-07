@@ -387,6 +387,19 @@ class Task(
         ordering = ("workspace_board_section", "order")
 
 
+class LabelQuerySet(models.QuerySet):
+    """Label Queryset."""
+
+    def filter_by_workspace_pks(self, workspace_pks):
+        """Filter by workspace pks."""
+        return self.filter(workspace__pk__in=workspace_pks)
+
+    def get_for_user_and_uuid(self, user, uuid):
+        """Return for matching workspace user and uuid."""
+        qs = self.filter(workspace__users=user)
+        return qs.get(uuid=uuid)
+
+
 class Label(models.Model):
     """A label."""
 
@@ -398,10 +411,20 @@ class Label(models.Model):
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 
+    objects = LabelQuerySet.as_manager()
+
     class Meta:
         """Meta."""
 
         unique_together = ("workspace", "name")
+
+
+class TaskLabelQuerySet(models.QuerySet):
+    """QuerySet for TaskLabel."""
+
+    def filter_by_task_pks(self, pks):
+        """Filter by task pks."""
+        return self.filter(task__pk__in=pks)
 
 
 class TaskLabel(models.Model):
@@ -415,6 +438,8 @@ class TaskLabel(models.Model):
         Label,
         on_delete=models.CASCADE,
     )
+
+    objects = TaskLabelQuerySet.as_manager()
 
     class Meta:
         """Meta."""
