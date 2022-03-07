@@ -429,6 +429,22 @@ class TestTask:
         """Test getting the next section when there is none."""
         assert task.get_next_section() is None
 
+    def test_add_label(self, task, label):
+        """Test adding a label."""
+        assert task.tasklabel_set.count() == 0
+        task.add_label(label)
+        assert task.tasklabel_set.count() == 1
+
+    def test_remove_label(self, task, label):
+        """Test removing a label."""
+        task.add_label(label)
+        assert task.tasklabel_set.count() == 1
+        task.remove_label(label)
+        assert task.tasklabel_set.count() == 0
+        # This is idempotent
+        task.remove_label(label)
+        assert task.tasklabel_set.count() == 0
+
 
 @pytest.mark.django_db
 class TestSubTaskManager:

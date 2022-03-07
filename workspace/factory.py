@@ -103,6 +103,19 @@ class TaskFactory(django.DjangoModelFactory):
         model = models.Task
 
 
+class LabelFactory(django.DjangoModelFactory):
+    """Factory for Label."""
+
+    name = factory.Faker("catch_phrase")
+    color = factory.Faker("safe_color_name")
+    workspace = factory.SubFactory(WorkspaceFactory)
+
+    class Meta:
+        """Meta."""
+
+        model = models.Label
+
+
 class SubTaskFactory(django.DjangoModelFactory):
     """SubTask Factory."""
 

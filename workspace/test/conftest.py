@@ -56,6 +56,14 @@ def other_task(workspace_board_section):
 
 
 @pytest.fixture
+def label(workspace):
+    """Return a label."""
+    return factory.LabelFactory(
+        workspace=workspace,
+    )
+
+
+@pytest.fixture
 def sub_task(task):
     """Return subtask."""
     return factory.SubTaskFactory(
