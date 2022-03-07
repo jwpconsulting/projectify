@@ -311,6 +311,50 @@ mutation AssignTask($uuid: ID!, $email: String!) {
 
 # Add Mutations
 @pytest.mark.django_db
+class TestAddLabelMutation:
+    """Test AddLabelMutation."""
+
+    query = """
+mutation AddLabel($workspaceUuid: ID!) {
+    addLabel(input: {
+        workspaceUuid: $workspaceUuid,
+        color: "fuchsia", name: "important"
+    }) {
+        label {
+            name
+            color
+            workspace {
+                uuid
+            }
+        }
+    }
+}
+"""
+
+    def test_query(self, workspace, workspace_user, graphql_query_user):
+        """Test query."""
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "workspaceUuid": str(workspace.uuid),
+            },
+        )
+        assert result == {
+            "data": {
+                "addLabel": {
+                    "label": {
+                        "name": "important",
+                        "color": "fuchsia",
+                        "workspace": {
+                            "uuid": str(workspace.uuid),
+                        },
+                    },
+                },
+            }
+        }
+
+
+@pytest.mark.django_db
 class TestAddSubTaskMutation:
     """Test AddSubTaskMutation."""
 
@@ -428,6 +472,85 @@ mutation DuplicateTask($uuid: ID!) {
                     }
                 },
             },
+        }
+
+
+@pytest.mark.django_db
+class TestAssignLabelMutation:
+    """Test AssignLabelMutation."""
+
+    query = """
+mutation AssignLabel($taskUuid: ID!, $labelUuid: ID!, $assigned: Boolean!) {
+    assignLabel(input: {
+        taskUuid: $taskUuid, labelUuid: $labelUuid, assigned: $assigned
+    }) {
+        task {
+            uuid
+            labels {
+                uuid
+            }
+        }
+    }
+}
+"""
+
+    def test_query_assign(
+        self,
+        graphql_query_user,
+        task,
+        label,
+        workspace_user,
+    ):
+        """Test assigning."""
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "taskUuid": str(task.uuid),
+                "labelUuid": str(label.uuid),
+                "assigned": True,
+            },
+        )
+        assert result == {
+            "data": {
+                "assignLabel": {
+                    "task": {
+                        "uuid": str(task.uuid),
+                        "labels": [
+                            {
+                                "uuid": str(label.uuid),
+                            },
+                        ],
+                    }
+                }
+            }
+        }
+
+    def test_query_unassign(
+        self,
+        graphql_query_user,
+        task,
+        label,
+        workspace_user,
+    ):
+        """Test unassigning."""
+        task.add_label(label)
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "taskUuid": str(task.uuid),
+                "labelUuid": str(label.uuid),
+                "assigned": False,
+            },
+        )
+        assert result == {
+            "data": {
+                "assignLabel": {
+                    "task": {
+                        "uuid": str(task.uuid),
+                        "labels": [],
+                    }
+                }
+            }
         }
 
 
@@ -787,6 +910,41 @@ mutation UpdateTaskMutation($uuid: ID!, $deadline: DateTime) {
 
 
 @pytest.mark.django_db
+class TestUpdateLabelMutation:
+    """Test UpdateLabelMutation."""
+
+    query = """
+mutation UpdateLabel($uuid: ID!) {
+    updateLabel(input: {uuid: $uuid, name: "Friendship", color: "Rainbow"}) {
+        label {
+            name
+            color
+        }
+    }
+}
+"""
+
+    def test_query(self, graphql_query_user, label, workspace_user):
+        """Test query."""
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(label.uuid),
+            },
+        )
+        assert result == {
+            "data": {
+                "updateLabel": {
+                    "label": {
+                        "name": "Friendship",
+                        "color": "Rainbow",
+                    },
+                },
+            },
+        }
+
+
+@pytest.mark.django_db
 class TestUpdateSubTaskMutation:
     """Test TestUpdateSubTaskMutation."""
 
@@ -1020,6 +1178,41 @@ mutation DeleteTask($uuid: ID!) {
             },
         )
         assert "errors" in result
+
+
+@pytest.mark.django_db
+class TestDeleteLabel:
+    """Test DeleteLabelMutation."""
+
+    query = """
+mutation DeleteLabel($uuid: ID!) {
+    deleteLabel(input: {uuid: $uuid}) {
+        label {
+            uuid
+        }
+    }
+}
+"""
+
+    def test_query(self, graphql_query_user, label, workspace_user):
+        """Test query."""
+        assert models.Label.objects.count() == 1
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(label.uuid),
+            },
+        )
+        assert result == {
+            "data": {
+                "deleteLabel": {
+                    "label": {
+                        "uuid": str(label.uuid),
+                    },
+                },
+            },
+        }
+        assert models.Label.objects.count() == 0
 
 
 @pytest.mark.django_db

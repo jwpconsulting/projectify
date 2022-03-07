@@ -14,6 +14,7 @@ class Loader:
         self.workspace_archived_workspace_board_loader = (
             workspace_loader.WorkspaceArchivedWorkspaceBoardLoader()
         )
+        self.workspace_label_loader = workspace_loader.WorkspaceLabelLoader()
         self.workspace_board_workspace_board_section_loader = (
             workspace_loader.WorkspaceBoardWorkspaceBoardSectionLoader()
         )
@@ -24,6 +25,7 @@ class Loader:
         self.task_chat_message_loader = (
             workspace_loader.TaskChatMessageLoader()
         )
+        self.task_task_label_loader = workspace_loader.TaskTaskLabelLoader()
         self.user_loader = workspace_loader.UserLoader()
         self.workspace_loader = workspace_loader.WorkspaceLoader()
         self.workspace_board_loader = workspace_loader.WorkspaceBoardLoader()

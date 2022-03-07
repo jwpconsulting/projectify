@@ -131,6 +131,38 @@ class AddTaskMutation(GetForUserAndUuidMixin, graphene.Mutation):
         return cls(task)
 
 
+class AddLabelMutationInput(graphene.InputObjectType):
+    """AddLabelMutation input."""
+
+    workspace_uuid = graphene.ID(required=True)
+    name = graphene.String(required=True)
+    color = graphene.String(required=True)
+
+
+class AddLabelMutation(GetForUserAndUuidMixin, graphene.Mutation):
+    """Add label mutation."""
+
+    model = models.Workspace
+    UUID_FIELD = "workspace_uuid"
+
+    class Arguments:
+        """Arguments."""
+
+        input = AddLabelMutationInput(required=True)
+
+    label = graphene.Field(types.Label)
+
+    @classmethod
+    def mutate(cls, root, info, input):
+        """Mutate."""
+        workspace = cls.get_object(cls, info, input)
+        label = workspace.label_set.create(
+            name=input.name,
+            color=input.color,
+        )
+        return cls(label)
+
+
 class AddSubTaskInput(graphene.InputObjectType):
     """Add sub task mutation input."""
 
@@ -410,6 +442,42 @@ class DuplicateTaskMutation(GetForUserAndUuidMixin, graphene.Mutation):
         return cls(new_task)
 
 
+class AssignLabelInput(graphene.InputObjectType):
+    """Input for AssignLabelMutation."""
+
+    task_uuid = graphene.ID(required=True)
+    label_uuid = graphene.ID(required=True)
+    assigned = graphene.Boolean(required=True)
+
+
+class AssignLabelMutation(GetForUserAndUuidMixin, graphene.Mutation):
+    """Assign or unassign a label to a task mutation."""
+
+    model = models.Task
+    UUID_FIELD = "task_uuid"
+
+    class Arguments:
+        """Arguments."""
+
+        input = AssignLabelInput(required=True)
+
+    task = graphene.Field(types.Task)
+
+    @classmethod
+    def mutate(cls, root, info, input):
+        """Assign or unassign a label."""
+        task = cls.get_object(cls, info, input)
+        label = models.Label.objects.get_for_user_and_uuid(
+            info.context.user,
+            input.label_uuid,
+        )
+        if input.assigned:
+            task.add_label(label)
+        else:
+            task.remove_label(label)
+        return cls(task)
+
+
 # Update Mutations
 class UpdateWorkspaceInput(graphene.InputObjectType):
     """Input for UpdateWorkspaceMutation."""
@@ -572,6 +640,36 @@ class UpdateTaskMutation(GetForUserAndUuidMixin, graphene.Mutation):
         return cls(task)
 
 
+class UpdateLabelMutationInput(graphene.InputObjectType):
+    """Input for UpdateLabelMutation."""
+
+    uuid = graphene.ID(required=True)
+    color = graphene.String(required=True)
+    name = graphene.String(required=True)
+
+
+class UpdateLabelMutation(GetForUserAndUuidMixin, graphene.Mutation):
+    """Update label mutation."""
+
+    model = models.Label
+
+    class Arguments:
+        """Arguments."""
+
+        input = UpdateLabelMutationInput(required=True)
+
+    label = graphene.Field(types.Label)
+
+    @classmethod
+    def mutate(cls, root, info, input):
+        """Update label."""
+        label = cls.get_object(cls, info, input)
+        label.color = input.color
+        label.name = input.name
+        label.save()
+        return cls(label)
+
+
 class UpdateSubTaskMutationInput(graphene.InputObjectType):
     """Input for UpdateSubTaskMutationInput."""
 
@@ -690,6 +788,32 @@ class DeleteTaskMutation(GetForUserAndUuidMixin, graphene.Mutation):
         return cls(task)
 
 
+class DeleteLabelInput(graphene.InputObjectType):
+    """DeleteLabelMutation input."""
+
+    uuid = graphene.ID(required=True)
+
+
+class DeleteLabelMutation(GetForUserAndUuidMixin, graphene.Mutation):
+    """Delete label."""
+
+    model = models.Label
+
+    class Arguments:
+        """Arguments."""
+
+        input = DeleteLabelInput(required=True)
+
+    label = graphene.Field(types.Label)
+
+    @classmethod
+    def mutate(cls, root, info, input):
+        """Delete label."""
+        label = cls.get_object(cls, info, input)
+        label.delete()
+        return cls(label)
+
+
 class DeleteSubTaskInput(graphene.InputObjectType):
     """DeleteTaskMutation input."""
 
@@ -722,6 +846,7 @@ class Mutation:
     add_workspace_board = AddWorkspaceBoardMutation.Field()
     add_workspace_board_section = AddWorkspaceBoardSectionMutation.Field()
     add_task = AddTaskMutation.Field()
+    add_label = AddLabelMutation.Field()
     add_sub_task = AddSubTaskMutation.Field()
     add_chat_message = AddChatMessageMutation.Field()
     move_workspace_board_section = MoveWorkspaceBoardSectionMutation.Field()
@@ -730,6 +855,7 @@ class Mutation:
     remove_user_from_workspace = RemoveUserFromWorkspaceMutation.Field()
     assign_task = AssignTaskMutation.Field()
     duplicate_task = DuplicateTaskMutation.Field()
+    assign_label = AssignLabelMutation.Field()
     change_sub_task_done = ChangeSubTaskDoneMutation.Field()
     update_workspace = UpdateWorkspaceMutation.Field()
     archive_workspace_board = ArchiveWorkspaceBoardMutation.Field()
@@ -738,10 +864,12 @@ class Mutation:
         UpdateWorkspaceBoardSectionMutation.Field()
     )
     update_task = UpdateTaskMutation.Field()
+    update_label = UpdateLabelMutation.Field()
     update_sub_task = UpdateSubTaskMutation.Field()
     delete_workspace_board = DeleteWorkspaceBoardMutation.Field()
     delete_workspace_board_section = (
         DeleteWorkspaceBoardSectionMutation.Field()
     )
     delete_task = DeleteTaskMutation.Field()
+    delete_label = DeleteLabelMutation.Field()
     delete_sub_task = DeleteSubTaskMutation.Field()

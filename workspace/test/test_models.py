@@ -447,6 +447,48 @@ class TestTask:
 
 
 @pytest.mark.django_db
+class TestLabelManager:
+    """Test Label queryset/manager."""
+
+    def test_filter_by_workspace_pks(self, label, workspace):
+        """Test filter_by_workspace_pks."""
+        qs = models.Label.objects.filter_by_workspace_pks([workspace.pk])
+        labels = [label]
+        assert list(qs) == labels
+
+    def test_get_for_user_and_uuid(self, label, workspace_user):
+        """Test get_for_user_and_uuid."""
+        assert (
+            models.Label.objects.get_for_user_and_uuid(
+                workspace_user.user,
+                label.uuid,
+            )
+            == label
+        )
+
+
+@pytest.mark.django_db
+class TestLabel:
+    """Test Label model."""
+
+    def test_factory(self, label):
+        """Test factory."""
+        assert label.color
+
+
+@pytest.mark.django_db
+class TestLabelQuerySet:
+    """Test LabelQuerySet."""
+
+    def test_filter_by_task_pks(self, label, task):
+        """Test filter_by_task_pks."""
+        task_label = task.add_label(label)
+        qs = models.TaskLabel.objects.filter_by_task_pks([task.pk])
+        task_labels = [task_label]
+        assert list(qs) == task_labels
+
+
+@pytest.mark.django_db
 class TestSubTaskManager:
     """Test SubTask manager."""
 
