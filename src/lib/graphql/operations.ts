@@ -177,6 +177,16 @@ export const Mutation_AddUserToWorkspace = gql`
     }
 `;
 
+export const Mutation_RemoveUserFromWorkspace = gql`
+    mutation RemoveUserFromWorkspace($input: RemoveUserFromWorkspaceInput!) {
+        removeUserFromWorkspace(input: $input) {
+            workspace {
+                uuid
+            }
+        }
+    }
+`;
+
 export const Query_DashboardBoard = gql`
     query DashboardBoard($uuid: ID!) {
         workspaceBoard(uuid: $uuid) {

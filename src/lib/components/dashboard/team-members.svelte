@@ -1,6 +1,7 @@
 <script lang="ts">
     import {
         Mutation_AddUserToWorkspace,
+        Mutation_RemoveUserFromWorkspace,
         Query_WorkspaceTeamMembers,
     } from "$lib/graphql/operations";
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
@@ -80,6 +81,20 @@
 
         if (!modalRes) {
             return;
+        }
+
+        try {
+            await client.mutate({
+                mutation: Mutation_RemoveUserFromWorkspace,
+                variables: {
+                    input: {
+                        uuid: workspaceUUID,
+                        email: user.email,
+                    },
+                },
+            });
+        } catch (error) {
+            console.error(error);
         }
     }
 </script>
