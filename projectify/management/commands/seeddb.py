@@ -18,6 +18,7 @@ from user.factory import (
 )
 from workspace.factory import (
     ChatMessageFactory,
+    LabelFactory,
     SubTaskFactory,
     TaskFactory,
     WorkspaceBoardFactory,
@@ -82,6 +83,8 @@ class Command(BaseCommand):
                     SubTaskFactory(task=task)
                     ChatMessageFactory(task=task)
 
+    N_LABELS = 3
+
     def create_workspaces(self, users):
         """Create workspaces."""
         n_workspaces = self.N_WORKSPACES - Workspace.objects.count()
@@ -89,6 +92,11 @@ class Command(BaseCommand):
             WorkspaceFactory(add_users=random.sample(users, 3))
         workspaces = Workspace.objects.all()
         for workspace in tqdm.tqdm(workspaces, desc="Workspaces"):
+            n_labels = self.N_LABELS - workspace.label_set.count()
+            LabelFactory.create_batch(
+                n_labels,
+                workspace=workspace,
+            )
             n = self.N_WORKSPACE_BOARDS - workspace.workspaceboard_set.count()
             WorkspaceBoardFactory.create_batch(
                 n,
