@@ -89,7 +89,7 @@ def workspace_board_saved(sender, instance, **kwargs):
         },
     )
     async_to_sync(channel_layer.group_send)(
-        f"workspace-{uuid}",
+        f"workspace-{workspace_uuid}",
         {
             "type": "workspace.change",
             "uuid": workspace_uuid,
@@ -111,7 +111,7 @@ def workspace_board_deleted(sender, instance, **kwargs):
         },
     )
     async_to_sync(channel_layer.group_send)(
-        f"workspace-{uuid}",
+        f"workspace-{workspace_uuid}",
         {
             "type": "workspace.change",
             "uuid": workspace_uuid,
