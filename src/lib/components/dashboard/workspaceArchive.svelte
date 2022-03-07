@@ -2,6 +2,7 @@
     import { page } from "$app/stores";
     import {
         Mutation_ArchiveWorkspaceBoard,
+        Mutation_DeleteWorkspaceBoard,
         Query_ArchivedWorkspaceBoards,
     } from "$lib/graphql/operations";
     import { query } from "svelte-apollo";
@@ -93,6 +94,22 @@
 
         if (!modalRes) {
             return;
+        }
+
+        try {
+            await client.mutate({
+                mutation: Mutation_DeleteWorkspaceBoard,
+                variables: {
+                    input: {
+                        uuid: item.uuid,
+                    },
+                },
+            });
+
+            // TODO: don't refetch when server notification work on delete mutation
+            res.refetch();
+        } catch (error) {
+            console.error(error);
         }
     }
 </script>
