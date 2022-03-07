@@ -35,6 +35,7 @@ CORS_ALLOWED_ORIGIN_REGEXES = (
 CSRF_TRUSTED_ORIGINS = (
     "https://*.netlify.app",
     "https://www.projectifyapp.com",
+    "https://staging.projectifyapp.com",
 )
 
 # GraphQL
