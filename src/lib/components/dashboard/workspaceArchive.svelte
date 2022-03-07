@@ -13,6 +13,7 @@
     import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
     import { _ } from "svelte-i18n";
     import { client } from "$lib/graphql/client";
+    import Loading from "../loading.svelte";
 
     $: workspaceUUID = $page.params["workspaceUUID"];
 
@@ -114,47 +115,53 @@
     }
 </script>
 
-<div class="divide-y divide-base-300 p-4">
-    {#if archivedBoards.length > 0}
-        {#each archivedBoards as board}
-            <div class="flex py-4 space-x-2">
-                <div class="grid grow">
-                    <div class="overflow-hidden nowrap-ellipsis">
-                        <span class="font-bold nowrap-ellipsis"
-                            >{board.title}</span
+{#if $res.loading}
+    <div class="flex items-center justify-center min-h-[200px]">
+        <Loading />
+    </div>
+{:else}
+    <div class="divide-y divide-base-300 p-4">
+        {#if archivedBoards.length > 0}
+            {#each archivedBoards as board}
+                <div class="flex py-4 space-x-2">
+                    <div class="grid grow">
+                        <div class="overflow-hidden nowrap-ellipsis">
+                            <span class="font-bold nowrap-ellipsis"
+                                >{board.title}</span
+                            >
+                        </div>
+                        <div class="text-xs">
+                            {dateStringToLocal(board.archived)}
+                        </div>
+                    </div>
+                    <div
+                        class="flex space-x-2 justify-center items-center shrink-0"
+                    >
+                        <button
+                            class:loading={unarchivingItems[board.uuid]}
+                            on:click={() => {
+                                onUnarchiveItem(board);
+                            }}
+                            class="btn text-primary btn-sm btn-ghost btn-primary rounded-full"
+                            >Return</button
+                        >
+                        <button
+                            on:click={() => {
+                                onDeleteItem(board);
+                            }}
+                            class="btn btn-accent btn-sm btn-outline rounded-full"
+                            >Delete</button
                         >
                     </div>
-                    <div class="text-xs">
-                        {dateStringToLocal(board.archived)}
-                    </div>
                 </div>
-                <div
-                    class="flex space-x-2 justify-center items-center shrink-0"
-                >
-                    <button
-                        class:loading={unarchivingItems[board.uuid]}
-                        on:click={() => {
-                            onUnarchiveItem(board);
-                        }}
-                        class="btn text-primary btn-sm btn-ghost btn-primary rounded-full"
-                        >Return</button
-                    >
-                    <button
-                        on:click={() => {
-                            onDeleteItem(board);
-                        }}
-                        class="btn btn-accent btn-sm btn-outline rounded-full"
-                        >Delete</button
-                    >
-                </div>
+            {/each}
+        {:else}
+            <div class="text-center text-gray-600">
+                {$_("no-archived-boards-found")}
             </div>
-        {/each}
-    {:else}
-        <div class="text-center text-gray-600">
-            {$_("no-archived-boards-found")}
-        </div>
-    {/if}
-</div>
+        {/if}
+    </div>
+{/if}
 
 <DialogModal id="deleteArchivedBoard">
     <ConfirmModalContent
