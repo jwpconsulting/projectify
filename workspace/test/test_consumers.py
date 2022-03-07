@@ -96,7 +96,7 @@ def get_object_count(model):
 class TestWorkspaceConsumer:
     """Test WorkspaceConsumer."""
 
-    async def test_workspace_saved(self):
+    async def test_workspace_saved_or_deleted(self):
         """Test signal firing on workspace change."""
         user = await create_user()
         workspace = await create_workspace()
@@ -112,10 +112,12 @@ class TestWorkspaceConsumer:
         await save_model_instance(workspace)
         message = await communicator.receive_json_from()
         assert message == str(workspace.uuid)
-        await communicator.disconnect()
         await delete_model_instance(workspace_user)
         await delete_model_instance(user)
         await delete_model_instance(workspace)
+        message = await communicator.receive_json_from()
+        assert message == str(workspace.uuid)
+        await communicator.disconnect()
 
     async def test_workspace_user_saved_or_deleted(self):
         """Test signal firing on workspace user save or delete."""

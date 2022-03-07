@@ -33,6 +33,20 @@ def workspace_saved(sender, instance, **kwargs):
     )
 
 
+@receiver(post_delete, sender=models.Workspace)
+def workspace_deleted(sender, instance, **kwargs):
+    """Broadcast changes upon workspace delete."""
+    uuid = str(instance.uuid)
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"workspace-{uuid}",
+        {
+            "type": "workspace.change",
+            "uuid": uuid,
+        },
+    )
+
+
 @receiver(post_save, sender=models.WorkspaceUser)
 def workspace_user_saved(sender, instance, **kwargs):
     """Broadcast changes."""
