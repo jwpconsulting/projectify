@@ -16,7 +16,6 @@ from user.factory import (
 
 from .. import (
     factory,
-    models,
 )
 
 
@@ -85,12 +84,6 @@ def delete_model_instance(model_instance):
     model_instance.delete()
 
 
-@database_sync_to_async
-def get_object_count(model):
-    """Return number of objects in database."""
-    return model.objects.count()
-
-
 @pytest.mark.django_db
 @pytest.mark.asyncio
 class TestWorkspaceConsumer:
@@ -142,7 +135,7 @@ class TestWorkspaceConsumer:
         await delete_model_instance(user)
         await delete_model_instance(workspace)
 
-    async def test_workspace_board_saved(self):
+    async def test_workspace_board_saved_or_deleted(self):
         """Test signal firing on workspace board change."""
         user = await create_user()
         workspace = await create_workspace()
@@ -156,11 +149,13 @@ class TestWorkspaceConsumer:
         communicator.scope["user"] = user
         connected, subprotocol = await communicator.connect()
         assert connected
-        await save_model_instance(workspace)
+        await save_model_instance(workspace_board)
+        message = await communicator.receive_json_from()
+        assert message == str(workspace.uuid)
+        await delete_model_instance(workspace_board)
         message = await communicator.receive_json_from()
         assert message == str(workspace.uuid)
         await communicator.disconnect()
-        await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
         await delete_model_instance(user)
         await delete_model_instance(workspace)
@@ -192,8 +187,6 @@ class TestWorkspaceBoardConsumer:
         message = await communicator.receive_json_from()
         assert message == str(workspace_board.uuid)
         await communicator.disconnect()
-        count = await get_object_count(models.WorkspaceBoard)
-        assert count == 0
         await delete_model_instance(workspace_user)
         await delete_model_instance(user)
         await delete_model_instance(workspace)
@@ -222,8 +215,6 @@ class TestWorkspaceBoardConsumer:
         message = await communicator.receive_json_from()
         assert message == str(workspace_board.uuid)
         await communicator.disconnect()
-        count = await get_object_count(models.WorkspaceBoardSection)
-        assert count == 0
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
         await delete_model_instance(user)
@@ -254,8 +245,6 @@ class TestWorkspaceBoardConsumer:
         message = await communicator.receive_json_from()
         assert message == str(workspace_board.uuid)
         await communicator.disconnect()
-        count = await get_object_count(models.Task)
-        assert count == 0
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
@@ -288,8 +277,6 @@ class TestWorkspaceBoardConsumer:
         message = await communicator.receive_json_from()
         assert message == str(workspace_board.uuid)
         await communicator.disconnect()
-        count = await get_object_count(models.SubTask)
-        assert count == 0
         await delete_model_instance(task)
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
