@@ -434,6 +434,9 @@ class TestTask:
         assert task.tasklabel_set.count() == 0
         task.add_label(label)
         assert task.tasklabel_set.count() == 1
+        # This is idempotent
+        task.add_label(label)
+        assert task.tasklabel_set.count() == 1
 
     def test_remove_label(self, task, label):
         """Test removing a label."""

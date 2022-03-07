@@ -365,8 +365,11 @@ class Task(
         workspace = self.workspace_board_section.workspace_board.workspace
         # XXX can this be a db constraint?
         assert label.workspace == workspace
-        task_label = self.tasklabel_set.create(label=label)
-        return task_label
+        with transaction.atomic():
+            if self.tasklabel_set.filter(label=label).exists():
+                return self.tasklabel_set.get(label=label)
+            task_label = self.tasklabel_set.create(label=label)
+            return task_label
 
     def remove_label(self, label):
         """
