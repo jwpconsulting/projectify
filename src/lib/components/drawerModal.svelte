@@ -15,7 +15,7 @@
 
 <div
     class:open
-    class="d-modal fixed top-0 left-0 w-full h-full flex flex-col items-end justify-center p-0"
+    class="d-modal fixed top-0 left-0 w-full h-full flex flex-col items-end justify-center p-0 z-50"
 >
     <div
         on:click={() => (open = !open)}
