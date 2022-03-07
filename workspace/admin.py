@@ -166,6 +166,22 @@ class TaskAdmin(OrderedModelAdmin):
         return instance.workspace_board_section.workspace_board.workspace.title
 
 
+@admin.register(models.Label)
+class LabelAdmin(admin.ModelAdmin):
+    """Label admin."""
+
+    list_display = (
+        "name",
+        "color",
+        "workspace_title",
+    )
+
+    @admin.display(description=_("Workspace title"))
+    def workspace_title(self, instance):
+        """Return the workspace's title."""
+        return instance.workspace.title
+
+
 @admin.register(models.SubTask)
 class SubTaskAdmin(OrderedModelAdmin):
     """SubTask Admin."""
