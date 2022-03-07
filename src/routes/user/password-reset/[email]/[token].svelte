@@ -52,7 +52,7 @@
 
                     <div class="form-control w-full">
                         <label for="email" class="label label-text"
-                            >{$_("email")}</label
+                            >{$_("password")}</label
                         >
                         <input
                             type="password"
