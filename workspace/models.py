@@ -288,6 +288,10 @@ class Task(
         blank=True,
         help_text=_("Task's deadline"),
     )
+    labels = models.ManyToManyField(
+        "workspace.Label",
+        through="workspace.TaskLabel",
+    )
 
     objects = TaskManager()
 
@@ -352,10 +356,70 @@ class Task(
         next_section = self.workspace_board_section.next()
         return next_section
 
+    def add_label(self, label):
+        """
+        Add a label to this task.
+
+        Returns task label.
+        """
+        workspace = self.workspace_board_section.workspace_board.workspace
+        # XXX can this be a db constraint?
+        assert label.workspace == workspace
+        task_label = self.tasklabel_set.create(label=label)
+        return task_label
+
+    def remove_label(self, label):
+        """
+        Remove a label from this task. Is idempotent.
+
+        Returns label.
+        """
+        try:
+            task_label = self.tasklabel_set.get(label=label)
+            task_label.delete()
+        except TaskLabel.DoesNotExist:
+            pass
+        return label
+
     class Meta:
         """Meta."""
 
         ordering = ("workspace_board_section", "order")
+
+
+class Label(models.Model):
+    """A label."""
+
+    name = models.CharField(max_length=255)
+    color = models.CharField(max_length=64)
+    workspace = models.ForeignKey(
+        Workspace,
+        on_delete=models.CASCADE,
+    )
+    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+
+    class Meta:
+        """Meta."""
+
+        unique_together = ("workspace", "name")
+
+
+class TaskLabel(models.Model):
+    """A label to task assignment."""
+
+    task = models.ForeignKey(
+        Task,
+        on_delete=models.CASCADE,
+    )
+    label = models.ForeignKey(
+        Label,
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        """Meta."""
+
+        unique_together = ("task", "label")
 
 
 class SubTaskManager(OrderedModelManager):
