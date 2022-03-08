@@ -418,6 +418,13 @@ class TestTask:
         with pytest.raises(get_user_model().DoesNotExist):
             task.assign_to(other_user)
 
+    def test_assign_none(self, workspace, task, workspace_user, user):
+        """Test assigning to no user."""
+        task.assign_to(user)
+        task.assign_to(None)
+        task.refresh_from_db()
+        assert task.assignee is None
+
     def test_get_next_section(self, workspace_board, task):
         """Test getting the next section."""
         section = factory.WorkspaceBoardSectionFactory(
