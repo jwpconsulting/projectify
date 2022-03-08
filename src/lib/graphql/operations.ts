@@ -201,6 +201,11 @@ export const Query_DashboardBoard = gql`
                     order
                     uuid
                     title
+                    assignee {
+                        email
+                        fullName
+                        profilePicture
+                    }
                 }
             }
         }
@@ -233,6 +238,11 @@ export const Query_DashboardTaskDetails = gql`
             uuid
             title
             description
+            assignee {
+                email
+                fullName
+                profilePicture
+            }
             subTasks {
                 uuid
                 title
@@ -432,6 +442,16 @@ export const Query_ArchivedWorkspaceBoards = gql`
                 uuid
                 title
                 archived
+            }
+        }
+    }
+`;
+
+export const Mutation_AssignTask = gql`
+    mutation AssignTask($input: AssignTaskInput!) {
+        assignTask(input: $input) {
+            task {
+                uuid
             }
         }
     }
