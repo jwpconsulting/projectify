@@ -98,7 +98,7 @@ body {
     .menu li > :where(a:hover) {
         @apply bg-secondary;
     }
-    .menu li svg {
+    .menu li > * > svg {
         @apply w-4 h-4;
     }
 }
