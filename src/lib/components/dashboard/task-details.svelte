@@ -13,6 +13,7 @@
         Mutation_AddTask,
         Mutation_UpdateTask,
         Mutation_DeleteTask,
+        Mutation_AssignTask,
     } from "$lib/graphql/operations";
     import { query } from "svelte-apollo";
     import { client } from "$lib/graphql/client";
@@ -26,6 +27,8 @@
     import IconTrash from "../icons/icon-trash.svelte";
     import { getModal } from "../dialogModal.svelte";
     import UserPicker from "../userPicker.svelte";
+    import UserProfilePicture from "../userProfilePicture.svelte";
+    import ProfilePicture from "../profilePicture.svelte";
 
     let res: ReadableQuery<any> = null;
     let task = null;
@@ -118,6 +121,7 @@
 
     async function save() {
         isSaving = true;
+        await saveTaskAssignment();
         if (itsNew) {
             try {
                 let mRes = await client.mutate({
@@ -197,9 +201,38 @@
     }
 
     let userPickerOpen = false;
+    let userPicked = false;
     function onUserSelected({ detail: { user } }) {
-        console.log(user);
         userPickerOpen = false;
+        if (user == task.assignee) {
+            task.assignee = null;
+        } else {
+            task.assignee = user;
+        }
+
+        userPicked = true;
+
+        taskModified = true;
+    }
+
+    async function saveTaskAssignment() {
+        if (!userPicked) {
+            return;
+        }
+        try {
+            await client.mutate({
+                mutation: Mutation_AssignTask,
+                variables: {
+                    input: {
+                        uuid: $currenTaskDetailsUUID,
+                        email: task?.assignee.email,
+                    },
+                },
+            });
+        } catch (error) {
+            console.error(error);
+        }
+        userPicked = false;
     }
 </script>
 
@@ -210,12 +243,24 @@
 {:else}
     <div class="flex flex-col p-0 w-[60vw]">
         <header class="flex p-6 space-x-4 items-center bg-base-100 relative">
-            <div
-                class="flex justify-center items-center w-11 h-11 rounded-full shrink-0 border-2 border-primary text-primary border-dashed hover:ring"
-                on:click={() => (userPickerOpen = !userPickerOpen)}
+            <a
+                href="/"
+                class="flex justify-center items-center"
+                on:click|preventDefault={() =>
+                    (userPickerOpen = !userPickerOpen)}
             >
-                <IconPlus />
-            </div>
+                {#if task?.assignee}
+                    <UserProfilePicture
+                        pictureProps={{
+                            size: 42,
+                            url: task.assignee.profilePicture,
+                        }}
+                    />
+                {:else}
+                    <ProfilePicture showPlus={true} size={42} />
+                {/if}
+            </a>
+
             <input
                 class="grow text-xl p-2 rounded-md nowrap-ellipsis"
                 placeholder={$_("task-name")}
@@ -243,7 +288,7 @@
                 <div class="absolute top-20 left-2 right-20 max-w-md z-10">
                     <UserPicker
                         workspaceUUID={$currentWorkspaceUUID}
-                        selectedUser={task.user}
+                        selectedUser={task.assignee}
                         on:userSelected={onUserSelected}
                     />
                 </div>
