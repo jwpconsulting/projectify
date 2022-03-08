@@ -30,6 +30,7 @@ CORS_ALLOWED_ORIGINS = (
 )
 CORS_ALLOWED_ORIGIN_REGEXES = (
     r"^https://deploy-preview-\d+--projectifyapp.netlify.app$",
+    r"^https://deploy-preview-\d+--projectifyapp-staging.netlify.app$",
 )
 
 CSRF_TRUSTED_ORIGINS = (
