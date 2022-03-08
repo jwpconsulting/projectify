@@ -106,9 +106,6 @@
                     },
                 },
             });
-
-            // TODO: don't refetch when server notification work on delete mutation
-            res.refetch();
         } catch (error) {
             console.error(error);
         }
