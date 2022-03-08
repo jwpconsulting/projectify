@@ -2,6 +2,7 @@
     import {
         closeTaskDetails,
         currenTaskDetailsUUID,
+        currentWorkspaceUUID,
         newTaskSectionUUID,
         pushTashUUIDtoPath,
     } from "$lib/stores/dashboard";
@@ -24,6 +25,7 @@
     import ToolBar from "./toolBar.svelte";
     import IconTrash from "../icons/icon-trash.svelte";
     import { getModal } from "../dialogModal.svelte";
+    import UserPicker from "../userPicker.svelte";
 
     let res: ReadableQuery<any> = null;
     let task = null;
@@ -193,6 +195,12 @@
             console.error(error);
         }
     }
+
+    let userPickerOpen = false;
+    function onUserSelected({ detail: { user } }) {
+        console.log(user);
+        userPickerOpen = false;
+    }
 </script>
 
 {#if res && $res.loading}
@@ -201,9 +209,10 @@
     </div>
 {:else}
     <div class="flex flex-col p-0 w-[60vw]">
-        <header class="flex p-6 space-x-4 items-center bg-base-100">
+        <header class="flex p-6 space-x-4 items-center bg-base-100 relative">
             <div
-                class="flex justify-center items-center overflow-hidden w-11 h-11 rounded-full shrink-0 border-2 border-primary text-primary border-dashed hover:ring"
+                class="flex justify-center items-center w-11 h-11 rounded-full shrink-0 border-2 border-primary text-primary border-dashed hover:ring"
+                on:click={() => (userPickerOpen = !userPickerOpen)}
             >
                 <IconPlus />
             </div>
@@ -230,6 +239,15 @@
                 class="btn btn-primary rounded-full shrink-0"
                 on:click={() => save()}>{$_("save")}</button
             >
+            {#if userPickerOpen}
+                <div class="absolute top-20 left-2 right-20 max-w-md z-10">
+                    <UserPicker
+                        workspaceUUID={$currentWorkspaceUUID}
+                        selectedUser={task.user}
+                        on:userSelected={onUserSelected}
+                    />
+                </div>
+            {/if}
         </header>
         <div class="tabs px-6">
             <button class="tab tab-bordered tab-active">{$_("task")}</button>
