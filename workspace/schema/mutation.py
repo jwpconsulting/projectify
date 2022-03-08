@@ -391,7 +391,7 @@ class AssignTaskInput(graphene.InputObjectType):
     """Input for AssignTaskMutation."""
 
     uuid = graphene.ID(required=True)
-    email = graphene.String(required=True)
+    email = graphene.String()
 
 
 class AssignTaskMutation(GetForUserAndUuidMixin, graphene.Mutation):
@@ -410,9 +410,12 @@ class AssignTaskMutation(GetForUserAndUuidMixin, graphene.Mutation):
     def mutate(cls, root, info, input):
         """Assign task to user."""
         task = cls.get_object(cls, info, input)
-        User = get_user_model()
-        assignee = User.objects.get_by_natural_key(input.email)
-        task.assign_to(assignee)
+        if input.email is None:
+            task.assign_to(None)
+        else:
+            User = get_user_model()
+            assignee = User.objects.get_by_natural_key(input.email)
+            task.assign_to(assignee)
         return cls(task)
 
 

@@ -269,7 +269,7 @@ class TestAssignTaskMutation:
     """Test AssignTaskMutation."""
 
     query = """
-mutation AssignTask($uuid: ID!, $email: String!) {
+mutation AssignTask($uuid: ID!, $email: String) {
   assignTask(input: {uuid: $uuid, email: $email}) {
     task {
       assignee {
@@ -303,6 +303,33 @@ mutation AssignTask($uuid: ID!, $email: String!) {
                         "assignee": {
                             "email": other_user.email,
                         },
+                    },
+                },
+            },
+        }
+
+    def test_unassign(
+        self,
+        task,
+        other_user,
+        other_workspace_user,
+        graphql_query_user,
+        workspace_user,
+    ):
+        """Test query."""
+        task.assign_to(other_user)
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(task.uuid),
+                "email": None,
+            },
+        )
+        assert result == {
+            "data": {
+                "assignTask": {
+                    "task": {
+                        "assignee": None,
                     },
                 },
             },
