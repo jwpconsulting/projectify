@@ -15,6 +15,7 @@
     } from "$lib/graphql/operations";
     import ToolBar from "./toolBar.svelte";
     import { getModal } from "../dialogModal.svelte";
+    import UserProfilePicture from "../userProfilePicture.svelte";
 
     export let boardUUID;
     export let section;
@@ -185,33 +186,27 @@
                 >
                     {#each section.tasks as task, inx (task.uuid)}
                         <div
-                            class="drag-handle item h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer"
+                            class="drag-handle space-x-4 item h-24 bg-base-100 m-2 rounded-lg py-4 px-6 flex items-center border border-base-300 overflow-y-hidden cursor-pointer"
                             class:hover:ring={!isDragging}
                             on:click={() =>
                                 !isDragging && openTaskDetails(task.uuid)}
                         >
-                            <div
-                                class="m-2 mr-3 flex overflow-hidden w-11 h-11 rounded-full shrink-0 border-2 border-primary "
-                            >
-                                <img
-                                    width="100%"
-                                    height="100%"
-                                    src="https://picsum.photos/seed/picsum/200?random={inx}"
-                                    alt="user"
+                            {#if task.assignee}
+                                <UserProfilePicture
+                                    pictureProps={{
+                                        url: task.assignee.profilePicture,
+                                        size: 44,
+                                    }}
                                 />
-                            </div>
+                            {/if}
                             <div
                                 class="flex flex-col overflow-y-hidden max-h-full mr-3"
                             >
                                 <div class="flex items-center">
-                                    <div
-                                        class="text-xs bg-secondary px-2 py-1 rounded mr-2 font-bold"
+                                    <span class="text-xs">Date 2022.01.01</span
                                     >
-                                        Design {task.order}
-                                    </div>
-                                    <div class="text-xs">Date 2022.01.01</div>
                                 </div>
-                                <div class="grid px-1 max-w-xs font-bold ">
+                                <div class="grid max-w-xs font-bold">
                                     <span class="nowrap-ellipsis"
                                         >{task.title}</span
                                     >
