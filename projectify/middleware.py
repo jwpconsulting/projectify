@@ -28,3 +28,19 @@ def loader_middleware(next, root, info, *args, **kwargs):
     info.context.loader_middleware = True
     info.context.loader = Loader()
     return next(root, info, *args, **kwargs)
+
+
+# https://stackoverflow.com/a/47888695
+class DisableCSRFMiddleware:
+    """Dangerous CSRF disable middleware."""
+
+    def __init__(self, get_response):
+        """Init."""
+        self.get_response = get_response
+
+    def __call__(self, request):
+        """Call."""
+        # This is insane
+        setattr(request, "_dont_enforce_csrf_checks", True)
+        response = self.get_response(request)
+        return response

@@ -73,4 +73,6 @@ DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 csrf_middleware = "django.middleware.csrf.CsrfViewMiddleware"
 if "DISABLE_CSRF_PROTECTION" in os.environ:
     csrf_middleware_index = MIDDLEWARE.index(csrf_middleware)
-    MIDDLEWARE.pop(csrf_middleware_index)
+    MIDDLEWARE[
+        csrf_middleware_index
+    ] = "projectify.middleware.DisableCSRFMiddleware"
