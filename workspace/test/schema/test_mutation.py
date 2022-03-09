@@ -199,6 +199,34 @@ mutation AddUserToWorkspace($uuid: ID!, $email: String!) {
         )
         assert "errors" in result
 
+    def test_no_user(
+        self,
+        task,
+        graphql_query_user,
+        workspace,
+        workspace_user,
+    ):
+        """Test query."""
+        assert workspace.users.count() == 1
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace.uuid),
+                "email": "hello@example.com",
+            },
+        )
+        assert result == {
+            "data": {
+                "addUserToWorkspace": {
+                    "workspace": {
+                        "uuid": str(workspace.uuid),
+                    },
+                },
+            },
+        }
+        assert workspace.users.count() == 1
+        assert workspace.workspaceuserinvite_set.count() == 1
+
 
 @pytest.mark.django_db
 class TestRemoveUserFromWorkspaceMutation:
