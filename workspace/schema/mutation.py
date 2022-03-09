@@ -136,7 +136,7 @@ class AddLabelMutationInput(graphene.InputObjectType):
 
     workspace_uuid = graphene.ID(required=True)
     name = graphene.String(required=True)
-    color = graphene.String(required=True)
+    color = graphene.Int(required=True)
 
 
 class AddLabelMutation(GetForUserAndUuidMixin, graphene.Mutation):
@@ -647,7 +647,7 @@ class UpdateLabelMutationInput(graphene.InputObjectType):
     """Input for UpdateLabelMutation."""
 
     uuid = graphene.ID(required=True)
-    color = graphene.String(required=True)
+    color = graphene.Int(required=True)
     name = graphene.String(required=True)
 
 
