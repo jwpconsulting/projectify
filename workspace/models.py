@@ -99,6 +99,14 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         )
         return workspace_user_invite
 
+    @transaction.atomic
+    def uninvite_user(self, email):
+        """Remove a users invitation."""
+        workspace_user_invite = self.workspaceuserinvite_set.get(
+            user_invite__email=email,
+        )
+        workspace_user_invite.delete()
+
 
 class WorkspaceUserInvite(TimeStampedModel, models.Model):
     """UserInvites belonging to this workspace."""

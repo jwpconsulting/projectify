@@ -385,8 +385,11 @@ class RemoveUserFromWorkspaceMutation(
         """utate."""
         workspace = cls.get_object(cls, info, input)
         User = get_user_model()
-        user = User.objects.get_by_natural_key(input.email)
-        workspace.remove_user(user)
+        try:
+            user = User.objects.get_by_natural_key(input.email)
+            workspace.remove_user(user)
+        except User.DoesNotExist:
+            workspace.uninvite_user(input.email)
         return cls(workspace)
 
 
