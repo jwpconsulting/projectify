@@ -345,7 +345,7 @@ class TestAddLabelMutation:
 mutation AddLabel($workspaceUuid: ID!) {
     addLabel(input: {
         workspaceUuid: $workspaceUuid,
-        color: "fuchsia", name: "important"
+        color: 1, name: "important"
     }) {
         label {
             name
@@ -371,7 +371,7 @@ mutation AddLabel($workspaceUuid: ID!) {
                 "addLabel": {
                     "label": {
                         "name": "important",
-                        "color": "fuchsia",
+                        "color": 1,
                         "workspace": {
                             "uuid": str(workspace.uuid),
                         },
@@ -942,7 +942,7 @@ class TestUpdateLabelMutation:
 
     query = """
 mutation UpdateLabel($uuid: ID!) {
-    updateLabel(input: {uuid: $uuid, name: "Friendship", color: "Rainbow"}) {
+    updateLabel(input: {uuid: $uuid, name: "Friendship", color: 199}) {
         label {
             name
             color
@@ -964,7 +964,7 @@ mutation UpdateLabel($uuid: ID!) {
                 "updateLabel": {
                     "label": {
                         "name": "Friendship",
-                        "color": "Rainbow",
+                        "color": 199,
                     },
                 },
             },

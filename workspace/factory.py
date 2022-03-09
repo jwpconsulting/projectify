@@ -107,7 +107,7 @@ class LabelFactory(django.DjangoModelFactory):
     """Factory for Label."""
 
     name = factory.Faker("catch_phrase")
-    color = factory.Faker("safe_color_name")
+    color = factory.Faker("pyint")
     workspace = factory.SubFactory(WorkspaceFactory)
 
     class Meta:
