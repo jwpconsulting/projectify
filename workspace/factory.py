@@ -38,6 +38,18 @@ class WorkspaceFactory(django.DjangoModelFactory):
         model = models.Workspace
 
 
+class WorkspaceUserInviteFactory(django.DjangoModelFactory):
+    """WorkspaceUserInvite factory."""
+
+    workspace = factory.SubFactory(WorkspaceFactory)
+    user_invite = factory.SubFactory("user.factory.UserInviteFactory")
+
+    class Meta:
+        """Meta."""
+
+        model = models.WorkspaceUserInvite
+
+
 class WorkspaceUserFactory(django.DjangoModelFactory):
     """WorkspaceUser factory."""
 
