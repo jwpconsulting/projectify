@@ -10,6 +10,7 @@ from django.dispatch import (
 import pytest
 
 from .. import (
+    factory,
     models,
     signals,
 )
@@ -71,6 +72,12 @@ class TestUser:
         user.redeem_invites()
         user_invite.refresh_from_db()
         assert user_invite.redeemed
+
+    def test_redeem_multiple_invites(self, user):
+        """Test what happens if invites exist. Nothing should happen."""
+        factory.UserInviteFactory(email=user.email)
+        factory.UserInviteFactory(email=user.email)
+        user.redeem_invites()
 
 
 @pytest.mark.django_db
