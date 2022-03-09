@@ -204,7 +204,7 @@
     let userPicked = false;
     function onUserSelected({ detail: { user } }) {
         userPickerOpen = false;
-        if (user == task.assignee) {
+        if (user?.email == task?.assignee?.email) {
             task.assignee = null;
         } else {
             task.assignee = user;
@@ -225,7 +225,7 @@
                 variables: {
                     input: {
                         uuid: $currenTaskDetailsUUID,
-                        email: task?.assignee.email,
+                        email: task?.assignee?.email || null,
                     },
                 },
             });
