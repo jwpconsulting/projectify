@@ -97,6 +97,13 @@ class TestWorkspace:
         with pytest.raises(ValueError):
             workspace.invite_user(user.email)
 
+    def test_uninviting_user(self, workspace):
+        """Test uninviting a user."""
+        workspace.invite_user("hello@example.com")
+        assert workspace.workspaceuserinvite_set.count() == 1
+        workspace.uninvite_user("hello@example.com")
+        assert workspace.workspaceuserinvite_set.count() == 0
+
 
 @pytest.mark.django_db
 class TestWorkspaceUserInvite:

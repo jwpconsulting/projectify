@@ -291,6 +291,49 @@ mutation RemoveUserFromWorkspace($uuid: ID!, $email: String!) {
         assert "errors" in result
         assert workspace.users.count() == 1
 
+    def test_uninvite_on_invite(
+        self,
+        task,
+        graphql_query_user,
+        workspace,
+        workspace_user,
+    ):
+        """Test query."""
+        workspace.invite_user("hello@example.com")
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace.uuid),
+                "email": "hello@example.com",
+            },
+        )
+        assert result == {
+            "data": {
+                "removeUserFromWorkspace": {
+                    "workspace": {
+                        "uuid": str(workspace.uuid),
+                    },
+                },
+            },
+        }
+
+    def test_uninvite_on_no_invite(
+        self,
+        task,
+        graphql_query_user,
+        workspace,
+        workspace_user,
+    ):
+        """Test query."""
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(workspace.uuid),
+                "email": "hello@example.com",
+            },
+        )
+        assert "errors" in result
+
 
 @pytest.mark.django_db
 class TestAssignTaskMutation:

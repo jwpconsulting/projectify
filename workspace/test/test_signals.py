@@ -29,3 +29,12 @@ class TestRedeemWorkspaceInvitations:
         user = User.objects.create_user("hello@example.com")
         # The user is not automatically added
         assert workspace.users.count() == 0
+
+    def test_after_uninvite(self, workspace):
+        """Test what happens when a user is uninvited."""
+        User = auth.get_user_model()
+        workspace.invite_user("hello@example.com")
+        workspace.uninvite_user("hello@example.com")
+        User.objects.create_user("hello@example.com")
+        # The user is not added
+        assert workspace.users.count() == 0
