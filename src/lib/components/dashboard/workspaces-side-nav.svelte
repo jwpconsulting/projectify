@@ -26,10 +26,6 @@
             ? workspaces.find((w) => w.uuid === selectedWorkspaceUUID)
             : null;
     }
-
-    function workspaceIconFrom(title) {
-        return title.substr(0, 2);
-    }
 </script>
 
 <nav
