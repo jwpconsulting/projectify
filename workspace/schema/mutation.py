@@ -349,9 +349,12 @@ class AddUserToWorkspaceMutation(GetForUserAndUuidMixin, graphene.Mutation):
         workspace = cls.get_object(cls, info, input)
         # Find user
         User = get_user_model()
-        user = User.objects.get_by_natural_key(input.email)
-        # Assign user to workspace
-        workspace.add_user(user)
+        try:
+            user = User.objects.get_by_natural_key(input.email)
+            # Assign user to workspace
+            workspace.add_user(user)
+        except User.DoesNotExist:
+            workspace.invite_user(input.email)
         return cls(workspace)
 
 
