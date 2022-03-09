@@ -72,6 +72,51 @@ class TestWorkspace:
         workspace.remove_user(user)
         assert workspace.users.count() == 0
 
+    def test_invite_user(self, workspace):
+        """Test inviting a user."""
+        workspace_user_invite = workspace.invite_user("hello@example.com")
+        assert workspace_user_invite.workspace == workspace
+
+    def test_inviting_twice(self, workspace):
+        """Test that inviting twice won't work."""
+        workspace.invite_user("hello@example.com")
+        with pytest.raises(ValueError):
+            workspace.invite_user("hello@example.com")
+
+    def test_inviting_workspace_user(self, workspace, workspace_user):
+        """Test that inviting a pre-existing user won't work."""
+        with pytest.raises(ValueError):
+            workspace.invite_user(workspace_user.user.email)
+
+    def test_inviting_user(self, workspace, user):
+        """
+        Test that inviting a user won't work.
+
+        This is already tested in user/test/test_models.py
+        """
+        with pytest.raises(ValueError):
+            workspace.invite_user(user.email)
+
+
+@pytest.mark.django_db
+class TestWorkspaceUserInvite:
+    """Test workspace user invite."""
+
+    def test_factory(self, workspace_user_invite):
+        """Test factory."""
+        assert workspace_user_invite
+
+    def test_redeem(self, workspace_user_invite):
+        """Test redeeming."""
+        workspace_user_invite.redeem()
+        assert workspace_user_invite.redeem
+
+    def test_redeeming_twice(self, workspace_user_invite):
+        """Test redeeming twice."""
+        workspace_user_invite.redeem()
+        with pytest.raises(AssertionError):
+            workspace_user_invite.redeem()
+
 
 @pytest.mark.django_db
 class TestWorkspaceUserManager:

@@ -21,6 +21,7 @@ from ordered_model.models import (
     OrderedModel,
     OrderedModelManager,
 )
+from user import models as user_models
 
 
 class WorkspaceManager(models.Manager):
@@ -77,6 +78,59 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         workspace_user.delete()
         return user
 
+    @transaction.atomic
+    def invite_user(self, email):
+        """Invite a user to this workspace."""
+        invite_check_qs = WorkspaceUserInvite.objects.filter(
+            user_invite__email=email,
+            workspace=self,
+        )
+        if invite_check_qs.exists():
+            raise ValueError(_("Email is already invited"))
+        already_user_qs = self.users.filter(
+            email=email,
+        )
+        if already_user_qs.exists():
+            raise ValueError(_("Email is already workspace user"))
+        user_invite = user_models.UserInvite.objects.invite_user(email)
+        workspace_user_invite = self.workspaceuserinvite_set.create(
+            user_invite=user_invite,
+            workspace=self,
+        )
+        return workspace_user_invite
+
+
+class WorkspaceUserInvite(TimeStampedModel, models.Model):
+    """UserInvites belonging to this workspace."""
+
+    user_invite = models.ForeignKey(
+        "user.UserInvite",
+        on_delete=models.CASCADE,
+    )
+    workspace = models.ForeignKey(
+        Workspace,
+        on_delete=models.CASCADE,
+    )
+    redeemed = models.BooleanField(
+        default=False,
+        help_text=_("Has this invite been redeemed?"),
+    )
+
+    def redeem(self):
+        """
+        Redeem invite.
+
+        Save.
+        """
+        assert not self.redeemed
+        self.redeemed = True
+        self.save()
+
+    class Meta:
+        """Meta."""
+
+        unique_together = ("user_invite", "workspace")
+
 
 class WorkspaceUserQuerySet(models.QuerySet):
     """Workspace user queryset."""
@@ -95,7 +149,7 @@ class WorkspaceUser(TimeStampedModel, models.Model):
     )
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 

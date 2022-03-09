@@ -1,4 +1,7 @@
 """Workspace signals."""
+from django.db import (
+    transaction,
+)
 from django.db.models.signals import (
     post_delete,
     post_save,
@@ -12,6 +15,10 @@ from asgiref.sync import (
 )
 from channels.layers import (
     get_channel_layer,
+)
+
+from user.signals import (
+    user_invitation_redeemed,
 )
 
 from . import (
@@ -264,3 +271,15 @@ def chat_message_deleted(sender, instance, **kwargs):
             "uuid": uuid,
         },
     )
+
+
+@receiver(user_invitation_redeemed)
+@transaction.atomic
+def redeem_workspace_invitations(user, instance, **kwargs):
+    """Redeem workspace invitations."""
+    qs = models.WorkspaceUserInvite.objects.filter(
+        user_invite__user=user,
+    )
+    for invite in qs:
+        invite.workspace.add_user(user)
+        invite.redeem()
