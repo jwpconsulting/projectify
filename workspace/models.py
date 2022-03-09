@@ -108,6 +108,14 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         workspace_user_invite.delete()
 
 
+class WorkspaceUserInviteQuerySet(models.QuerySet):
+    """QuerySet for WorkspaceUserInvite."""
+
+    def filter_by_workspace_pks(self, workspace_pks):
+        """Filter by workspace pks."""
+        return self.filter(workspace__pk__in=workspace_pks)
+
+
 class WorkspaceUserInvite(TimeStampedModel, models.Model):
     """UserInvites belonging to this workspace."""
 
@@ -123,6 +131,8 @@ class WorkspaceUserInvite(TimeStampedModel, models.Model):
         default=False,
         help_text=_("Has this invite been redeemed?"),
     )
+
+    objects = WorkspaceUserInviteQuerySet.as_manager()
 
     def redeem(self):
         """

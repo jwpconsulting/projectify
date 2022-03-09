@@ -17,6 +17,9 @@ from promise.dataloader import (
 from .. import (
     models,
 )
+from . import (
+    types,
+)
 
 
 class WorkspaceUserLoader(DataLoader):
@@ -102,6 +105,24 @@ class WorkspaceLabelLoader(DataLoader):
         for label in qs.iterator():
             labels[label.workspace.pk].append(label)
         return Promise.resolve([labels.get(key, []) for key in keys])
+
+
+class WorkspaceUserInviteLoader(DataLoader):
+    """User invite loader for workspaces."""
+
+    def batch_load_fn(self, keys):
+        """Load user invite for workspace keys."""
+        user_invitations = defaultdict(list)
+        qs = models.WorkspaceUserInvite.objects.filter_by_workspace_pks(
+            keys,
+        ).select_related(
+            "workspace",
+            "user_invite",
+        )
+        for user_invite in qs.iterator():
+            obj = types.UserInvitation(email=user_invite.user_invite.email)
+            user_invitations[user_invite.workspace.pk].append(obj)
+        return Promise.resolve([user_invitations.get(key, []) for key in keys])
 
 
 class WorkspaceBoardWorkspaceBoardSectionLoader(DataLoader):

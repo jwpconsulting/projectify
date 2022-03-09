@@ -14,6 +14,7 @@ class Workspace(graphene_django.DjangoObjectType):
     boards = graphene.List("workspace.schema.types.WorkspaceBoard")
     archived_boards = graphene.List("workspace.schema.types.WorkspaceBoard")
     labels = graphene.List("workspace.schema.types.Label")
+    user_invitations = graphene.List("workspace.schema.types.UserInvitation")
     picture = graphene.String()
 
     def resolve_users(self, info):
@@ -36,6 +37,11 @@ class Workspace(graphene_django.DjangoObjectType):
         loader = info.context.loader.workspace_label_loader
         return loader.load(self.pk)
 
+    def resolve_user_invitations(self, info):
+        """Resolve user invitations."""
+        loader = info.context.loader.workspace_user_invite_loader
+        return loader.load(self.pk)
+
     def resolve_picture(self, info):
         """Resolve picture."""
         if self.picture:
@@ -53,6 +59,16 @@ class Workspace(graphene_django.DjangoObjectType):
             "uuid",
         )
         model = models.Workspace
+
+
+class UserInvitation(graphene.ObjectType):
+    """
+    UserInvitation.
+
+    A synthetic object not directly based on a Django model.
+    """
+
+    email = graphene.String(required=True)
 
 
 class WorkspaceBoard(graphene_django.DjangoObjectType):

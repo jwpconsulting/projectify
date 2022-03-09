@@ -106,6 +106,18 @@ class TestWorkspace:
 
 
 @pytest.mark.django_db
+class TestWorkspaceUserInviteQuerySet:
+    """Test WorkspaceUserInviteQuerySet."""
+
+    def test_filter_by_workspace_pks(self, workspace, workspace_user_invite):
+        """Test filter_by_workspace_pks."""
+        qs = models.WorkspaceUserInvite.objects.filter_by_workspace_pks(
+            [workspace.pk],
+        )
+        assert list(qs) == [workspace_user_invite]
+
+
+@pytest.mark.django_db
 class TestWorkspaceUserInvite:
     """Test workspace user invite."""
 
