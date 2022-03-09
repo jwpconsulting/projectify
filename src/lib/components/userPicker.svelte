@@ -9,6 +9,8 @@
     import UserProfilePicture from "./userProfilePicture.svelte";
     import { createEventDispatcher } from "svelte";
 
+    import Fuse from "fuse.js";
+
     export let workspaceUUID = null;
     export let selectedUser = null;
 
@@ -52,6 +54,25 @@
         }
     }
 
+    let searchText = "";
+    let searchEngine = null;
+    let filteredUsers = [];
+    $: {
+        searchEngine = new Fuse(users, {
+            keys: ["email", "fullName"],
+        });
+    }
+
+    $: {
+        if (searchText.length) {
+            filteredUsers = searchEngine
+                .search(searchText)
+                .map((res) => res.item);
+        } else {
+            filteredUsers = users;
+        }
+    }
+
     function selectUser(user) {
         selectedUser = user;
         dispatch("userSelected", { user });
@@ -69,13 +90,14 @@
                 type="text"
                 class="input w-full input-bordered"
                 placeholder="Search"
+                bind:value={searchText}
             />
         </div>
         <div class="px-4 font-bold">Team Members</div>
         <ul
             class="menu flex flex-col pb-4 pt-2 divide-y divide-base-300 overflow-y-auto max-h-full"
         >
-            {#each users as user}
+            {#each filteredUsers as user}
                 <li>
                     <a
                         class:active={selectedUser &&
