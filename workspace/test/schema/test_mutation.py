@@ -151,6 +151,9 @@ mutation AddUserToWorkspace($uuid: ID!, $email: String!) {
   addUserToWorkspace(input: {uuid: $uuid, email: $email}) {
     workspace {
       uuid
+      userInvitations {
+        email
+      }
     }
   }
 }
@@ -177,6 +180,7 @@ mutation AddUserToWorkspace($uuid: ID!, $email: String!) {
                 "addUserToWorkspace": {
                     "workspace": {
                         "uuid": str(workspace.uuid),
+                        "userInvitations": [],
                     },
                 },
             },
@@ -220,6 +224,11 @@ mutation AddUserToWorkspace($uuid: ID!, $email: String!) {
                 "addUserToWorkspace": {
                     "workspace": {
                         "uuid": str(workspace.uuid),
+                        "userInvitations": [
+                            {
+                                "email": "hello@example.com",
+                            },
+                        ],
                     },
                 },
             },
@@ -237,6 +246,9 @@ mutation RemoveUserFromWorkspace($uuid: ID!, $email: String!) {
   removeUserFromWorkspace(input: {uuid: $uuid, email: $email}) {
     workspace {
       uuid
+      userInvitations {
+        email
+      }
     }
   }
 }
@@ -265,6 +277,7 @@ mutation RemoveUserFromWorkspace($uuid: ID!, $email: String!) {
                 "removeUserFromWorkspace": {
                     "workspace": {
                         "uuid": str(workspace.uuid),
+                        "userInvitations": [],
                     },
                 },
             },
@@ -312,6 +325,7 @@ mutation RemoveUserFromWorkspace($uuid: ID!, $email: String!) {
                 "removeUserFromWorkspace": {
                     "workspace": {
                         "uuid": str(workspace.uuid),
+                        "userInvitations": [],
                     },
                 },
             },
