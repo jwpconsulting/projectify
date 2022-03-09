@@ -90,6 +90,12 @@ class TestUserInviteQuerySet:
         invite = models.UserInvite.objects.invite_user("hello@example.com")
         assert invite
 
+    def test_invite_twice(self):
+        """Test inviting twice."""
+        models.UserInvite.objects.invite_user("hello@example.com")
+        # Works
+        models.UserInvite.objects.invite_user("hello@example.com")
+
     def test_invite_existing_user(self, user):
         """Ensure that inviting an existing user is impossible."""
         with pytest.raises(ValueError):
