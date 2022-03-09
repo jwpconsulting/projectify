@@ -1,4 +1,7 @@
 """User models."""
+from django.conf import (
+    settings,
+)
 from django.contrib.auth.hashers import (
     make_password,
 )
@@ -9,11 +12,20 @@ from django.contrib.auth.models import (
 )
 from django.db import (
     models,
+    transaction,
 )
 from django.utils import (
     crypto,
 )
 from django.utils.translation import gettext_lazy as _
+
+from django_extensions.db.models import (
+    TimeStampedModel,
+)
+
+from . import (
+    signals,
+)
 
 
 class UserManager(BaseUserManager):
@@ -30,6 +42,7 @@ class UserManager(BaseUserManager):
         )
         user.password = make_password(password)
         user.save(using=self._db)
+        user.redeem_invites()
         return user
 
     def create_user(self, email, password=None):
@@ -107,3 +120,67 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Compare a hexdigest to the actual password reset token."""
         actual = self.get_password_reset_token()
         return crypto.constant_time_compare(token, actual)
+
+    @transaction.atomic
+    def redeem_invites(self):
+        """Redeem all invites."""
+        invites = UserInvite.objects.is_redeemed(False).by_email(self.email)
+        for invitation in invites.iterator():
+            invitation.redeem(self)
+
+
+class UserInviteQuerySet(models.QuerySet):
+    """User invite QuerySet."""
+
+    def is_redeemed(self, redeemed=True):
+        """Return not self redeemed invites."""
+        return self.filter(redeemed=redeemed)
+
+    def by_email(self, email):
+        """Filter by email."""
+        return self.filter(email=email)
+
+    def invite_user(self, email):
+        """Invite a user."""
+        user_qs = User.objects.filter(email=email)
+        if user_qs.exists():
+            raise ValueError(_("User already exists."))
+        invite = self.create(email=email)
+        return invite
+
+
+class UserInvite(TimeStampedModel, models.Model):
+    """User invite model."""
+
+    email = models.EmailField(
+        verbose_name=_("Email"),
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        help_text=_("Matched user"),
+    )
+    redeemed = models.BooleanField(
+        default=False,
+        help_text=_("Has this invite been redeemed?"),
+    )
+
+    def redeem(self, user):
+        """
+        Redeem this invite with a user.
+
+        Saves.
+        """
+        assert not self.redeemed
+        self.redeemed = True
+        self.user = user
+        self.save()
+        signals.user_invitation_redeemed.send(
+            sender=self.__class__,
+            user=user,
+            instance=self,
+        )
+
+    objects = UserInviteQuerySet.as_manager()

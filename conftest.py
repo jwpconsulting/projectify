@@ -17,6 +17,7 @@ from graphene_django.utils import (
 from user.factory import (
     SuperUserFactory,
     UserFactory,
+    UserInviteFactory,
 )
 
 
@@ -42,6 +43,18 @@ def other_user():
 def inactive_user():
     """Return an inactive db user."""
     return UserFactory.create(is_active=False)
+
+
+@pytest.fixture
+def user_invite():
+    """Return a user invite."""
+    return UserInviteFactory()
+
+
+@pytest.fixture
+def redeemed_user_invite(user):
+    """Return a redeemed user invite."""
+    return UserInviteFactory(redeemed=True, user=user, email=user.email)
 
 
 @pytest.fixture

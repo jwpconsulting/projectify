@@ -8,6 +8,10 @@ from factory import (
     django,
 )
 
+from . import (
+    models,
+)
+
 
 class UserFactory(django.DjangoModelFactory):
     """User Factory."""
@@ -38,3 +42,15 @@ class SuperUserFactory(UserFactory):
     is_superuser = True
     is_staff = True
     is_active = True
+
+
+class UserInviteFactory(django.DjangoModelFactory):
+    """UserInvite factory."""
+
+    email = factory.Faker("email")
+    user = None
+
+    class Meta:
+        """Meta."""
+
+        model = models.UserInvite
