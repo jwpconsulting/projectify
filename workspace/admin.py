@@ -40,6 +40,19 @@ class WorkspaceAdmin(admin.ModelAdmin):
     )
 
 
+@admin.register(models.WorkspaceUserInvite)
+class WorkspaceUserInviteAdmin(admin.ModelAdmin):
+    """Workspace user invite admin."""
+
+    list_display = ("workspace_title",)
+    list_select_related = ("workspace",)
+
+    @admin.display(description=_("Workspace title"))
+    def workspace_title(self, instance):
+        """Return the workspace's title."""
+        return instance.workspace.title
+
+
 @admin.register(models.WorkspaceUser)
 class WorkspaceUserAdmin(admin.ModelAdmin):
     """WorkspaceUser Admin."""
