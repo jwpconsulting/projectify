@@ -24,7 +24,7 @@ from django_extensions.db.models import (
 )
 
 from . import (
-    signals,
+    signal_defs,
 )
 
 
@@ -177,7 +177,7 @@ class UserInvite(TimeStampedModel, models.Model):
         self.redeemed = True
         self.user = user
         self.save()
-        signals.user_invitation_redeemed.send(
+        signal_defs.user_invitation_redeemed.send(
             sender=self.__class__,
             user=user,
             instance=self,
