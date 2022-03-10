@@ -102,6 +102,7 @@ class TestUserInviteQuerySet:
         models.UserInvite.objects.invite_user("hello@example.com")
         # Works
         models.UserInvite.objects.invite_user("hello@example.com")
+        assert models.UserInvite.objects.count() == 1
 
     def test_invite_existing_user(self, user):
         """Ensure that inviting an existing user is impossible."""
