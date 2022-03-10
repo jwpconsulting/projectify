@@ -72,10 +72,11 @@ class TestWorkspace:
         workspace.remove_user(user)
         assert workspace.users.count() == 0
 
-    def test_invite_user(self, workspace):
+    def test_invite_user(self, workspace, mailoutbox):
         """Test inviting a user."""
         workspace_user_invite = workspace.invite_user("hello@example.com")
         assert workspace_user_invite.workspace == workspace
+        assert len(mailoutbox) == 1
 
     def test_inviting_twice(self, workspace):
         """Test that inviting twice won't work."""

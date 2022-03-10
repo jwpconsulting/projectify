@@ -23,6 +23,10 @@ from ordered_model.models import (
 )
 from user import models as user_models
 
+from . import (
+    signal_defs,
+)
+
 
 class WorkspaceManager(models.Manager):
     """Workspace Manager."""
@@ -96,6 +100,10 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         workspace_user_invite = self.workspaceuserinvite_set.create(
             user_invite=user_invite,
             workspace=self,
+        )
+        signal_defs.workspace_user_invited.send(
+            sender=self.__class__,
+            instance=workspace_user_invite,
         )
         return workspace_user_invite
 
