@@ -1,4 +1,8 @@
 """Test workspace queries."""
+from django.contrib import (
+    auth,
+)
+
 import pytest
 
 from ... import (
@@ -170,6 +174,79 @@ query All(
                     "author": {
                         "email": workspace_user.user.email,
                     },
+                },
+            },
+        }
+
+
+@pytest.mark.django_db
+class TestWorkspace:
+    """Test workspace field."""
+
+    def test_redeemed_invite(
+        self,
+        user,
+        workspace,
+        workspace_user,
+        graphql_query_user,
+        workspace_user_invite,
+    ):
+        """Ensure that invites disappear once redeemed."""
+        query = """
+query Workspace($uuid: ID!) {
+    workspace(uuid: $uuid) {
+        users {
+            email
+        }
+        userInvitations {
+            email
+        }
+    }
+}
+"""
+        result = graphql_query_user(
+            query,
+            variables={
+                "uuid": str(workspace.uuid),
+            },
+        )
+        email = workspace_user_invite.user_invite.email
+        assert result == {
+            "data": {
+                "workspace": {
+                    "users": [
+                        {
+                            "email": user.email,
+                        },
+                    ],
+                    "userInvitations": [
+                        {
+                            "email": email,
+                        },
+                    ],
+                },
+            },
+        }
+        User = auth.get_user_model()
+        User.objects.create_user(email)
+        result = graphql_query_user(
+            query,
+            variables={
+                "uuid": str(workspace.uuid),
+            },
+        )
+        assert result == {
+            "data": {
+                "workspace": {
+                    "users": [
+                        {
+                            "email": user.email,
+                        },
+                        {
+                            "email": email,
+                        },
+                    ],
+                    "userInvitations": [],
                 },
             },
         }

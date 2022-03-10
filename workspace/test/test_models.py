@@ -116,6 +116,15 @@ class TestWorkspaceUserInviteQuerySet:
         )
         assert list(qs) == [workspace_user_invite]
 
+    def test_filter_by_redeemed(self, workspace, workspace_user_invite):
+        """Test filter_by_redeemed."""
+        qs = models.WorkspaceUserInvite.objects.filter_by_redeemed(False)
+        assert qs.count() == 1
+        workspace_user_invite.redeem()
+        assert qs.count() == 0
+        qs = models.WorkspaceUserInvite.objects.filter_by_redeemed(True)
+        assert qs.count() == 1
+
 
 @pytest.mark.django_db
 class TestWorkspaceUserInvite:
