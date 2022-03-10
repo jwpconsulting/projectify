@@ -113,11 +113,17 @@ class WorkspaceUserInviteLoader(DataLoader):
     def batch_load_fn(self, keys):
         """Load user invite for workspace keys."""
         user_invitations = defaultdict(list)
-        qs = models.WorkspaceUserInvite.objects.filter_by_workspace_pks(
-            keys,
-        ).select_related(
-            "workspace",
-            "user_invite",
+        qs = (
+            models.WorkspaceUserInvite.objects.filter_by_workspace_pks(
+                keys,
+            )
+            .filter_by_redeemed(
+                False,
+            )
+            .select_related(
+                "workspace",
+                "user_invite",
+            )
         )
         for user_invite in qs.iterator():
             obj = types.UserInvitation(email=user_invite.user_invite.email)

@@ -115,6 +115,10 @@ class WorkspaceUserInviteQuerySet(models.QuerySet):
         """Filter by workspace pks."""
         return self.filter(workspace__pk__in=workspace_pks)
 
+    def filter_by_redeemed(self, redeemed=True):
+        """Filter by redeemed workspace user invites."""
+        return self.filter(redeemed=redeemed)
+
 
 class WorkspaceUserInvite(TimeStampedModel, models.Model):
     """UserInvites belonging to this workspace."""
