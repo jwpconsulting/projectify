@@ -1,0 +1,8 @@
+{% load i18n %}
+{% include "email/_salutation.txt" %}{% blocktranslate with title=object.workspace.title %}
+You have been invited to join the workspace {{ title }} on
+Projectify. You can sign up by clicking the following link. You will be
+automatically added to the workspace upon following the sign up process.
+{% endblocktranslate %}
+{{ FRONTEND_URL }}signup/
+{% include "email/_greeting.txt" %}

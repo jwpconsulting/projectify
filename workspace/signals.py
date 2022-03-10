@@ -17,13 +17,26 @@ from channels.layers import (
     get_channel_layer,
 )
 
-from user.signals import (
+from user.signal_defs import (
     user_invitation_redeemed,
 )
 
 from . import (
     models,
+    signal_defs,
 )
+
+
+@receiver(signal_defs.workspace_user_invited)
+def send_invitation_email(instance, **kwargs):
+    """Send email when workspace user is invited."""
+    # Avoid circular import
+    from . import (
+        emails,
+    )
+
+    email = emails.WorkspaceUserInviteEmail(instance)
+    email.send()
 
 
 @receiver(post_save, sender=models.Workspace)
