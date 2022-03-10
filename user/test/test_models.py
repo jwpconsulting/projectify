@@ -12,7 +12,7 @@ import pytest
 from .. import (
     factory,
     models,
-    signals,
+    signal_defs,
 )
 
 
@@ -125,7 +125,7 @@ class TestUserInvite:
         """Test redeeming."""
         mock = MagicMock()
         receiver(
-            signals.user_invitation_redeemed,
+            signal_defs.user_invitation_redeemed,
             sender=models.UserInvite,
         )(mock)
         user_invite.redeem(user)
