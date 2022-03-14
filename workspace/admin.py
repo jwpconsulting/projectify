@@ -4,10 +4,6 @@ from django.contrib import (
 )
 from django.utils.translation import gettext_lazy as _
 
-from ordered_model.admin import (
-    OrderedModelAdmin,
-)
-
 from . import (
     models,
 )
@@ -113,13 +109,12 @@ class TaskInline(admin.TabularInline):
 
 
 @admin.register(models.WorkspaceBoardSection)
-class WorkspaceBoardSectionAdmin(OrderedModelAdmin):
+class WorkspaceBoardSectionAdmin(admin.ModelAdmin):
     """WorkspaceBoardSection Admin."""
 
     inlines = (TaskInline,)
     list_display = (
         "title",
-        "move_up_down_links",
         "workspace_board_title",
         "workspace_title",
         "created",
@@ -153,13 +148,12 @@ class TaskLabelInline(admin.TabularInline):
 
 
 @admin.register(models.Task)
-class TaskAdmin(OrderedModelAdmin):
+class TaskAdmin(admin.ModelAdmin):
     """Task Admin."""
 
     inlines = (SubTaskInline, TaskLabelInline)
     list_display = (
         "title",
-        "move_up_down_links",
         "number_labels",
         "workspace_board_section_title",
         "workspace_board_title",
@@ -209,12 +203,11 @@ class LabelAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.SubTask)
-class SubTaskAdmin(OrderedModelAdmin):
+class SubTaskAdmin(admin.ModelAdmin):
     """SubTask Admin."""
 
     list_display = (
         "title",
-        "move_up_down_links",
         "task_title",
         "workspace_board_section_title",
         "workspace_board_title",
