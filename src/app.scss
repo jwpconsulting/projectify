@@ -101,6 +101,18 @@ body {
     .menu li > * > svg {
         @apply w-4 h-4;
     }
+
+    .label {
+        --opacity: 1;
+        --bg-opacity: calc(var(--opacity) * 0.1);
+        color: rgba(var(--color) / var(--opacity));
+        background-color: rgba(var(--color) / var(--bg-opacity));
+    }
+    .label-dot {
+        --opacity: 1;
+        --color: 255 255 255;
+        background-color: rgba(var(--color) / var(--opacity));
+    }
 }
 
 ::-webkit-progress-value {

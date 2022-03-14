@@ -20,7 +20,10 @@
     import ToolBar from "./toolBar.svelte";
     import IconEdit from "../icons/icon-edit.svelte";
     import IconTrash from "../icons/icon-trash.svelte";
-    import { gotoDashboard } from "$lib/stores/dashboard";
+    import {
+        filterSectionsTaskWithLabels,
+        gotoDashboard,
+    } from "$lib/stores/dashboard";
     import LabelPillList from "./labelPillList.svelte";
 
     export let workspaceUUID;
@@ -32,6 +35,9 @@
     let isDragging = false;
 
     let boardWSStore;
+
+    let filteredSections = [];
+    let filterLabels = [];
 
     const refetch = debounce(() => {
         res.refetch();
@@ -63,6 +69,17 @@
             if (board["sections"]) {
                 sections = board["sections"];
             }
+        }
+    }
+
+    $: {
+        if (filterLabels.length) {
+            filteredSections = filterSectionsTaskWithLabels(
+                sections,
+                filterLabels
+            );
+        } else {
+            filteredSections = sections;
         }
     }
 
@@ -272,7 +289,7 @@
 
         <!-- Labels -->
         <div class="flex px-3 flex-wrap">
-            <LabelPillList />
+            <LabelPillList bind:selectedLabels={filterLabels} />
         </div>
 
         <!-- Sections -->
@@ -282,7 +299,7 @@
             on:dragStart={sectionDragStart}
             on:dragEnd={sectionDragEnd}
         >
-            {#each sections as section, index (section.uuid)}
+            {#each filteredSections as section, index (section.uuid)}
                 <BoardSection
                     {section}
                     {index}
