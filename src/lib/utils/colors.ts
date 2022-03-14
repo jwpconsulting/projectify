@@ -1,4 +1,4 @@
-const hueSteps = 20;
+const hueSteps = 24;
 
 export function interpolateCosine(
     [ar, ag, ab]: number[],
@@ -24,10 +24,10 @@ export const paletteA = interpolateCosine(
 );
 
 export const paletteB = interpolateCosine(
+    [0.6, 0.2, 0.6],
     [0.5, 0.5, 0.5],
-    [0.5, 0.5, 0.5],
-    [2.0, 1.0, 0.0],
-    [0.5, 0.2, 0.25]
+    [2.0, 1.2, 0.0],
+    [0.5, 0.23, 0.3]
 );
 export const paletteC = interpolateCosine(
     [0.5, 0.5, 0.5],
@@ -54,6 +54,6 @@ export function getColorFromInx(inx: number): {
         s,
         l,
         br,
-        style: paletteA(i),
+        style: paletteB(i),
     };
 }
