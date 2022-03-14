@@ -16,6 +16,7 @@
     import ToolBar from "./toolBar.svelte";
     import { getModal } from "../dialogModal.svelte";
     import UserProfilePicture from "../userProfilePicture.svelte";
+    import { getColorFromInx } from "$lib/utils/colors";
 
     export let boardUUID;
     export let section;
@@ -202,6 +203,17 @@
                             <div
                                 class="flex flex-col overflow-y-hidden max-h-full mr-3"
                             >
+                                <div class="flex mb-2 space-x-1">
+                                    {#each task.labels as label}
+                                        <div
+                                            style={`--color:${
+                                                getColorFromInx(label.color)
+                                                    .style
+                                            };`}
+                                            class="label-dot w-2 h-2 rounded-full"
+                                        />
+                                    {/each}
+                                </div>
                                 <div class="flex items-center">
                                     <span class="text-xs">Date 2022.01.01</span
                                     >
