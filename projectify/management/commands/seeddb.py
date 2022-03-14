@@ -65,8 +65,21 @@ class Command(BaseCommand):
         "Done",
     ]
 
+    def create_tasks(self, section, labels):
+        """Create tasks for a workspace board section."""
+        for _ in tqdm.trange(10, desc="Tasks"):
+            task = TaskFactory(workspace_board_section=section)
+            n_labels = random.randint(0, 3)
+            chosen_labels = random.choices(labels, k=n_labels)
+            for label in tqdm.tqdm(chosen_labels, desc="Labels"):
+                task.add_label(label)
+            for _ in tqdm.trange(3, desc="Subtasks & chat messages"):
+                SubTaskFactory(task=task)
+                ChatMessageFactory(task=task)
+
     def populate_workspace_board(self, board):
         """Populate a workspace board."""
+        labels = list(board.workspace.label_set.all())
         if board.workspaceboardsection_set.count():
             return
         for title in tqdm.tqdm(
@@ -77,11 +90,7 @@ class Command(BaseCommand):
                 workspace_board=board,
                 title=title,
             )
-            for _ in tqdm.trange(10, desc="Tasks"):
-                task = TaskFactory(workspace_board_section=section)
-                for _ in tqdm.trange(3, desc="Subtasks & chat messages"):
-                    SubTaskFactory(task=task)
-                    ChatMessageFactory(task=task)
+            self.create_tasks(section, labels)
 
     N_LABELS = 3
 
