@@ -74,3 +74,26 @@ export function pushTashUUIDtoPath(uuid: string): void {
 }
 
 export const currentWorkspaceLabels = writable([]);
+
+export function filterSectionsTaskWithLabels(
+    sections: any[],
+    labels: any[]
+): any[] {
+    const labelUUIDs = {};
+
+    labels.forEach((l) => {
+        labelUUIDs[l.uuid] = true;
+    });
+
+    sections = sections.map((section) => {
+        const tasks = section.tasks.filter((task) => {
+            return task.labels.findIndex((l) => labelUUIDs[l.uuid]) >= 0;
+        });
+
+        return {
+            ...section,
+            tasks,
+        };
+    });
+    return sections;
+}
