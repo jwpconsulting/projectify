@@ -21,6 +21,7 @@
     import IconEdit from "../icons/icon-edit.svelte";
     import IconTrash from "../icons/icon-trash.svelte";
     import { gotoDashboard } from "$lib/stores/dashboard";
+    import LabelPillList from "./labelPillList.svelte";
 
     export let workspaceUUID;
     export let boardUUID = null;
@@ -269,15 +270,9 @@
             </div>
         </div>
 
-        <!-- Tags -->
+        <!-- Labels -->
         <div class="flex px-3 flex-wrap">
-            {#each ["All", "Manager", "Design", "Engineer", "Marketing", "Other", "My task"] as tag}
-                <div
-                    class="whitespace-nowrap font-bold text-xs bg-base-100 px-3 py-1 m-1 rounded-full border border-base-300"
-                >
-                    {tag}
-                </div>
-            {/each}
+            <LabelPillList />
         </div>
 
         <!-- Sections -->

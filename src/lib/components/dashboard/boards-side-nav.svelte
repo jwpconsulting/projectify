@@ -7,7 +7,11 @@
     import { client } from "$lib/graphql/client";
 
     import { getModal } from "$lib/components/dialogModal.svelte";
-    import { gotoDashboard, getDashboardURL } from "$lib/stores/dashboard";
+    import {
+        gotoDashboard,
+        getDashboardURL,
+        currentWorkspaceLabels,
+    } from "$lib/stores/dashboard";
     import { _ } from "svelte-i18n";
 
     export let selectedWorkspaceUUID;
@@ -27,6 +31,7 @@
     $: {
         if (res && $res.data) {
             boards = $res.data["workspace"]["boards"];
+            currentWorkspaceLabels.set([...$res.data["workspace"]["labels"]]);
 
             if (!selectedBoardUUID && boards.length) {
                 gotoDashboard(selectedWorkspaceUUID, boards[0]["uuid"]);

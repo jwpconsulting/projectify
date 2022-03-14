@@ -146,6 +146,11 @@ export const Query_DashboardBoardsSideNav = gql`
     query DashboardBoardsSideNav($uuid: ID!) {
         workspace(uuid: $uuid) {
             uuid
+            labels {
+                uuid
+                name
+                color
+            }
             boards {
                 uuid
                 title
@@ -201,6 +206,11 @@ export const Query_DashboardBoard = gql`
                     order
                     uuid
                     title
+                    labels {
+                        uuid
+                        name
+                        color
+                    }
                     assignee {
                         email
                         fullName
@@ -251,6 +261,11 @@ export const Query_DashboardTaskDetails = gql`
             }
             workspaceBoardSection {
                 uuid
+            }
+            labels {
+                uuid
+                name
+                color
             }
         }
     }

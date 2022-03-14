@@ -72,3 +72,5 @@ export function pushTashUUIDtoPath(uuid: string): void {
         gotoDashboard(workspaceUUID, boardUUID, uuid);
     }
 }
+
+export const currentWorkspaceLabels = writable([]);
