@@ -145,14 +145,22 @@ class SubTaskInline(admin.TabularInline):
     extra = 0
 
 
+class TaskLabelInline(admin.TabularInline):
+    """TaskLabel inline admin."""
+
+    model = models.TaskLabel
+    extra = 0
+
+
 @admin.register(models.Task)
 class TaskAdmin(OrderedModelAdmin):
     """Task Admin."""
 
-    inlines = (SubTaskInline,)
+    inlines = (SubTaskInline, TaskLabelInline)
     list_display = (
         "title",
         "move_up_down_links",
+        "number_labels",
         "workspace_board_section_title",
         "workspace_board_title",
         "workspace_title",
@@ -162,6 +170,11 @@ class TaskAdmin(OrderedModelAdmin):
     list_select_related = (
         "workspace_board_section__workspace_board__workspace",
     )
+
+    @admin.display(description=_("Number of labels"))
+    def number_labels(self, instance):
+        """Return the workspace board's title."""
+        return instance.tasklabel_set.count()
 
     @admin.display(description=_("Workspace board section title"))
     def workspace_board_section_title(self, instance):
