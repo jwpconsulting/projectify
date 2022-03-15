@@ -114,6 +114,7 @@ export const Query_DashboardWorkspacesSideNav = gql`
             uuid
             title
             description
+            picture
         }
     }
 `;
