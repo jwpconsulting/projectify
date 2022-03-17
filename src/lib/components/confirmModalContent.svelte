@@ -27,11 +27,29 @@
         modal.close();
         isEditing = false;
     }
+
+    let valid = true;
+
     function confirm() {
         const outputs = {};
-        inputs.forEach((out) => {
-            outputs[out.name] = out.value;
+
+        inputs.forEach((field) => {
+            if (
+                field.validation?.required &&
+                (field.value === "" ||
+                    field.value === null ||
+                    field.value === undefined)
+            ) {
+                valid = false;
+                field.error = $_("this-field-is-required");
+            }
+
+            outputs[field.name] = field.value;
         });
+
+        if (!valid) {
+            return;
+        }
 
         modal.close({ confirm: true, outputs });
         isEditing = false;
@@ -70,10 +88,14 @@
                     type="text"
                     name={input.name}
                     placeholder={placeholderFor(input)}
+                    class:input-error={!valid && input.error}
                     class="input input-bordered"
                     bind:value={input.value}
                     on:focus={() => (isEditing = true)}
                 />
+            {/if}
+            {#if !valid && input.error}
+                <div class="px-1 py-2  text-error text-xs">{input.error}</div>
             {/if}
         </div>
     {/each}

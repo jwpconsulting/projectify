@@ -182,6 +182,9 @@
                 name: "name",
                 label: $_("name"),
                 placeholder: $_("please-enter-a-label-name"),
+                validation: {
+                    required: true,
+                },
             },
             {
                 type: "colorPicker",
@@ -203,6 +206,9 @@
                 name: "name",
                 label: $_("name"),
                 placeholder: $_("please-enter-a-label-name"),
+                validation: {
+                    required: true,
+                },
             },
             {
                 type: "colorPicker",

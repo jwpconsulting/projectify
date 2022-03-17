@@ -88,5 +88,6 @@
     "please-enter-a-label-name": "Please enter a label name.",
     "color": "Color",
     "please-enter-a-label-color": "Please enter a label color.",
-    "edit-label": "Edit label"
+    "edit-label": "Edit label",
+    "this-field-is-required": "This field is required"
 }
