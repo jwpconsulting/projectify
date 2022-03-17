@@ -6,6 +6,7 @@
     import SettingsGeneral from "$lib/components/dashboard/settings-general.svelte";
     import TeamMembers from "$lib/components/dashboard/team-members.svelte";
     import { page } from "$app/stores";
+    import SettingsLabels from "$lib/components/dashboard/settings-labels.svelte";
 
     $: workspaceUUID = $page.params["workspaceUUID"];
 
@@ -20,6 +21,12 @@
             label: "Team members",
             id: 2,
             component: TeamMembers,
+            props: { workspaceUUID },
+        },
+        {
+            label: "Labels",
+            id: 3,
+            component: SettingsLabels,
             props: { workspaceUUID },
         },
     ];

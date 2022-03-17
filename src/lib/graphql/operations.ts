@@ -160,6 +160,49 @@ export const Query_DashboardBoardsSideNav = gql`
     }
 `;
 
+export const Query_WorkspaceLabels = gql`
+    query WorkspaceLabels($uuid: ID!) {
+        workspace(uuid: $uuid) {
+            uuid
+            labels {
+                uuid
+                name
+                color
+            }
+        }
+    }
+`;
+
+export const Mutation_AddLabelMutation = gql`
+    mutation AddLabelMutation($input: AddLabelMutationInput!) {
+        addLabel(input: $input) {
+            label {
+                uuid
+            }
+        }
+    }
+`;
+
+export const Mutation_UpdateLabelMutation = gql`
+    mutation UpdateLabelMutation($input: UpdateLabelMutationInput!) {
+        updateLabel(input: $input) {
+            label {
+                uuid
+            }
+        }
+    }
+`;
+
+export const Mutation_DeleteLabelMutation = gql`
+    mutation DeleteLabelMutation($input: DeleteLabelInput!) {
+        deleteLabel(input: $input) {
+            label {
+                uuid
+            }
+        }
+    }
+`;
+
 export const Query_WorkspaceTeamMembers = gql`
     query WorkspaceTeamMembers($uuid: ID!) {
         workspace(uuid: $uuid) {

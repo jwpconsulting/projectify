@@ -79,5 +79,14 @@
     "my-profile": "My Profile",
     "remove": "Remove",
     "new-member": "New member",
-    "no-archived-boards-found": "No archived boards found."
+    "no-archived-boards-found": "No archived boards found.",
+    "new-label": "Create New Label",
+    "delete-label": "Delete label",
+    "are-you-sure-you-want-to-delete-this-label": "Are you sure you want to delete this label?",
+    "create-new-label": "Create new label",
+    "name": "Name",
+    "please-enter-a-label-name": "Please enter a label name.",
+    "color": "Color",
+    "please-enter-a-label-color": "Please enter a label color.",
+    "edit-label": "Edit label"
 }
