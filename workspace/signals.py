@@ -67,6 +67,34 @@ def workspace_deleted(sender, instance, **kwargs):
     )
 
 
+@receiver(post_save, sender=models.Label)
+def label_saved(sender, instance, **kwargs):
+    """Broadcast changes upon label save."""
+    workspace_uuid = str(instance.workspace.uuid)
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"workspace-{workspace_uuid}",
+        {
+            "type": "workspace.change",
+            "uuid": workspace_uuid,
+        },
+    )
+
+
+@receiver(post_delete, sender=models.Label)
+def label_deleted(sender, instance, **kwargs):
+    """Broadcast changes upon label delete."""
+    workspace_uuid = str(instance.workspace.uuid)
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"workspace-{workspace_uuid}",
+        {
+            "type": "workspace.change",
+            "uuid": workspace_uuid,
+        },
+    )
+
+
 @receiver(post_save, sender=models.WorkspaceUser)
 def workspace_user_saved(sender, instance, **kwargs):
     """Broadcast changes."""
@@ -209,6 +237,54 @@ def task_deleted(sender, instance, **kwargs):
         {
             "type": "workspace.board.change",
             "uuid": uuid,
+        },
+    )
+
+
+@receiver(post_save, sender=models.TaskLabel)
+def task_label_saved(sender, instance, **kwargs):
+    """Broadcast changes upon task label save."""
+    task_uuid = str(instance.task.uuid)
+    workspace_board_uuid = str(
+        instance.task.workspace_board_section.workspace_board.uuid,
+    )
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"task-{task_uuid}",
+        {
+            "type": "task.change",
+            "uuid": task_uuid,
+        },
+    )
+    async_to_sync(channel_layer.group_send)(
+        f"workspace-board-{workspace_board_uuid}",
+        {
+            "type": "workspace.board.change",
+            "uuid": workspace_board_uuid,
+        },
+    )
+
+
+@receiver(post_delete, sender=models.TaskLabel)
+def task_label_deleted(sender, instance, **kwargs):
+    """Broadcast changes upon task label delete."""
+    task_uuid = str(instance.task.uuid)
+    workspace_board_uuid = str(
+        instance.task.workspace_board_section.workspace_board.uuid,
+    )
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"task-{task_uuid}",
+        {
+            "type": "task.change",
+            "uuid": task_uuid,
+        },
+    )
+    async_to_sync(channel_layer.group_send)(
+        f"workspace-board-{workspace_board_uuid}",
+        {
+            "type": "workspace.board.change",
+            "uuid": workspace_board_uuid,
         },
     )
 
