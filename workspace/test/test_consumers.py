@@ -61,6 +61,24 @@ def create_task(workspace_board_section, assignee):
 
 
 @database_sync_to_async
+def create_label(workspace):
+    """Create a label."""
+    return factory.LabelFactory(workspace=workspace)
+
+
+@database_sync_to_async
+def add_label(label, task):
+    """Add a label to a task."""
+    task.add_label(label)
+
+
+@database_sync_to_async
+def remove_label(label, task):
+    """Remove a label from a task."""
+    task.remove_label(label)
+
+
+@database_sync_to_async
 def create_sub_task(task):
     """Create sub task."""
     return factory.SubTaskFactory(task=task)
@@ -110,6 +128,31 @@ class TestWorkspaceConsumer:
         await delete_model_instance(workspace)
         message = await communicator.receive_json_from()
         assert message == str(workspace.uuid)
+        await communicator.disconnect()
+
+    async def test_label_saved_or_deleted(self):
+        """Test signal firing on workspace change."""
+        user = await create_user()
+        workspace = await create_workspace()
+        workspace_user = await create_workspace_user(workspace, user)
+        label = await create_label(workspace)
+        resource = f"ws/workspace/{workspace.uuid}/"
+        communicator = WebsocketCommunicator(
+            websocket_application,
+            resource,
+        )
+        communicator.scope["user"] = user
+        connected, subprotocol = await communicator.connect()
+        assert connected
+        await save_model_instance(label)
+        message = await communicator.receive_json_from()
+        assert message == str(workspace.uuid)
+        await delete_model_instance(label)
+        message = await communicator.receive_json_from()
+        assert message == str(workspace.uuid)
+        await delete_model_instance(workspace_user)
+        await delete_model_instance(user)
+        await delete_model_instance(workspace)
         await communicator.disconnect()
 
     async def test_workspace_user_saved_or_deleted(self):
@@ -251,6 +294,39 @@ class TestWorkspaceBoardConsumer:
         await delete_model_instance(user)
         await delete_model_instance(workspace)
 
+    async def test_label_added_or_removed(self):
+        """Test workspace board update on task label add or remove."""
+        user = await create_user()
+        workspace = await create_workspace()
+        label = await create_label(workspace)
+        workspace_board = await create_workspace_board(workspace)
+        workspace_board_section = await create_workspace_board_section(
+            workspace_board,
+        )
+        task = await create_task(workspace_board_section, user)
+        workspace_user = await create_workspace_user(workspace, user)
+        resource = f"ws/workspace-board/{workspace_board.uuid}/"
+        communicator = WebsocketCommunicator(
+            websocket_application,
+            resource,
+        )
+        communicator.scope["user"] = user
+        connected, subprotocol = await communicator.connect()
+        assert connected
+        await add_label(label, task)
+        message = await communicator.receive_json_from()
+        assert message == str(workspace_board.uuid)
+        await remove_label(label, task)
+        message = await communicator.receive_json_from()
+        assert message == str(workspace_board.uuid)
+        await communicator.disconnect()
+        await delete_model_instance(workspace_board_section)
+        await delete_model_instance(workspace_board)
+        await delete_model_instance(workspace_user)
+        await delete_model_instance(user)
+        await delete_model_instance(label)
+        await delete_model_instance(workspace)
+
     async def test_sub_task_saved_or_deleted(self):
         """Test signal firing on sub task change."""
         user = await create_user()
@@ -315,6 +391,36 @@ class TestTaskConsumer:
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
+        await delete_model_instance(user)
+        await delete_model_instance(workspace)
+
+    async def test_label_added_or_removed(self):
+        """Test adding or removing a label."""
+        user = await create_user()
+        workspace = await create_workspace()
+        workspace_user = await create_workspace_user(workspace, user)
+        workspace_board = await create_workspace_board(workspace)
+        workspace_board_section = await create_workspace_board_section(
+            workspace_board,
+        )
+        task = await create_task(workspace_board_section, user)
+        label = await create_label(workspace)
+        resource = f"ws/task/{task.uuid}/"
+        communicator = WebsocketCommunicator(websocket_application, resource)
+        communicator.scope["user"] = user
+        connected, subprotocol = await communicator.connect()
+        assert connected
+        await add_label(label, task)
+        message = await communicator.receive_json_from()
+        assert message == str(task.uuid)
+        await remove_label(label, task)
+        message = await communicator.receive_json_from()
+        assert message == str(task.uuid)
+        await communicator.disconnect()
+        await delete_model_instance(workspace_board_section)
+        await delete_model_instance(workspace_board)
+        await delete_model_instance(workspace_user)
+        await delete_model_instance(label)
         await delete_model_instance(user)
         await delete_model_instance(workspace)
 
