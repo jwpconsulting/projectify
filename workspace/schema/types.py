@@ -108,6 +108,7 @@ class WorkspaceBoardSection(graphene_django.DjangoObjectType):
 
     tasks = graphene.List("workspace.schema.types.Task")
     workspace_board = graphene.Field("workspace.schema.types.WorkspaceBoard")
+    order = graphene.Field(graphene.Int)
 
     def resolve_tasks(self, info):
         """Resolve tasks for this workspace board section."""
@@ -121,6 +122,10 @@ class WorkspaceBoardSection(graphene_django.DjangoObjectType):
             self.workspace_board.pk
         )
 
+    def resolve_order(self, info):
+        """Resolve order field."""
+        return self._order
+
     class Meta:
         """Meta."""
 
@@ -130,7 +135,6 @@ class WorkspaceBoardSection(graphene_django.DjangoObjectType):
             "title",
             "description",
             "uuid",
-            "order",
         )
         model = models.WorkspaceBoardSection
 
@@ -147,6 +151,7 @@ class Task(graphene_django.DjangoObjectType):
         "workspace.schema.types.WorkspaceBoardSection",
     )
     labels = graphene.List("workspace.schema.types.Label")
+    order = graphene.Field(graphene.Int)
 
     def resolve_sub_tasks(self, info):
         """Resolve sub tasks for this task."""
@@ -174,6 +179,10 @@ class Task(graphene_django.DjangoObjectType):
         """Resolve labels for this task."""
         return info.context.loader.task_task_label_loader.load(self.pk)
 
+    def resolve_order(self, info):
+        """Resolve order field."""
+        return self._order
+
     class Meta:
         """Meta."""
 
@@ -183,7 +192,6 @@ class Task(graphene_django.DjangoObjectType):
             "title",
             "description",
             "uuid",
-            "order",
             "assignee",
         )
         model = models.Task
