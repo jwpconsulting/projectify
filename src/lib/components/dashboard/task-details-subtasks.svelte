@@ -108,7 +108,11 @@
         <span>{percent}%</span>
     </div>
 
-    <progress class="progress progress-primary" value={percent} max="100" />
+    <progress
+        class="progress progress-primary grow w-full bg-base-300"
+        value={percent}
+        max="100"
+    />
 
     <div>
         {#each subTasks as it, inx}
