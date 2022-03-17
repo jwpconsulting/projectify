@@ -1,6 +1,7 @@
 <script lang="ts">
     import { getContext } from "svelte";
     import { _ } from "svelte-i18n";
+    import ColorPicker from "./colorPicker.svelte";
 
     export let title;
     export let subtitle = null;
@@ -59,14 +60,21 @@
             <label for={input.name} class="label label-text uppercase"
                 >{input.label}</label
             >
-            <input
-                type="text"
-                name={input.name}
-                placeholder={placeholderFor(input)}
-                class="input input-bordered"
-                bind:value={input.value}
-                on:focus={() => (isEditing = true)}
-            />
+            {#if input.type == "colorPicker"}
+                <ColorPicker
+                    bind:selectedColorInx={input.value}
+                    on:change={() => (isEditing = true)}
+                />
+            {:else}
+                <input
+                    type="text"
+                    name={input.name}
+                    placeholder={placeholderFor(input)}
+                    class="input input-bordered"
+                    bind:value={input.value}
+                    on:focus={() => (isEditing = true)}
+                />
+            {/if}
         </div>
     {/each}
     <div class="flex pt-9 space-x-2 w-full">
