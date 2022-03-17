@@ -1,6 +1,7 @@
 <script lang="ts">
     import { currentWorkspaceLabels } from "$lib/stores/dashboard";
     import { getColorFromInx } from "$lib/utils/colors";
+    import LabelPill from "./labelPill.svelte";
 
     export let selectedLabels = [];
     let selectedLabelsInx = {};
@@ -23,16 +24,14 @@
 </script>
 
 {#each $currentWorkspaceLabels as label}
-    <a
-        style="{`--color:${getColorFromInx(label.color).style}; --opacity:${
-            selectedLabels.length == 0 || selectedLabelsInx[label.uuid]
-                ? '1.0'
-                : '0.2'
-        }`};"
-        href="/"
-        class="label whitespace-nowrap font-bold text-xs px-3 py-1 m-1 rounded-full border"
+    <div
         on:click|preventDefault={() => selectLabel(label)}
+        class="cursor-pointer"
     >
-        {label.name}
-    </a>
+        <LabelPill
+            {label}
+            active={selectedLabels.length == 0 ||
+                selectedLabelsInx[label.uuid]}
+        />
+    </div>
 {/each}
