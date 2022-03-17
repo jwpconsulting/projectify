@@ -1,4 +1,4 @@
-const hueSteps = 24;
+export const paletteSize = 24;
 
 export function interpolateCosine(
     [ar, ag, ab]: number[],
@@ -43,7 +43,7 @@ export function getColorFromInx(inx: number): {
     br: boolean;
     style: string;
 } {
-    const i = inx / hueSteps;
+    const i = inx / paletteSize;
     const h = Math.floor(i * 360) % 360;
     const s = 80;
     const l = 70;
