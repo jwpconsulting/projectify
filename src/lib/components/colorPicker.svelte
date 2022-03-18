@@ -2,7 +2,7 @@
     import { getColorFromInx, paletteSize } from "$lib/utils/colors";
     import { createEventDispatcher } from "svelte";
 
-    export let selectedColorInx: number = -1;
+    export let selectedColorInx = -1;
 
     const dispatch = createEventDispatcher();
 
