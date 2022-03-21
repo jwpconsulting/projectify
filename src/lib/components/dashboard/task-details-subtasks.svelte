@@ -102,7 +102,7 @@
     }
 </script>
 
-<div class="flex flex-col p-6 space-y-4">
+<div class="flex flex-col space-y-4">
     <div class="flex text-xl space-x-2">
         <span class="uppercase font-bold">{$_("sub-task")}</span>
         <span>{percent}%</span>

@@ -7,24 +7,25 @@
     import TeamMembers from "$lib/components/dashboard/team-members.svelte";
     import { page } from "$app/stores";
     import SettingsLabels from "$lib/components/dashboard/settings-labels.svelte";
+    import { _ } from "svelte-i18n";
 
     $: workspaceUUID = $page.params["workspaceUUID"];
 
     $: tabItems = [
         {
-            label: "General",
+            label: $_("general"),
             id: 1,
             component: SettingsGeneral,
             props: { workspaceUUID },
         },
         {
-            label: "Team members",
+            label: $_("team-members"),
             id: 2,
             component: TeamMembers,
             props: { workspaceUUID },
         },
         {
-            label: "Labels",
+            label: $_("labels"),
             id: 3,
             component: SettingsLabels,
             props: { workspaceUUID },

@@ -6,7 +6,6 @@
         newTaskSectionUUID,
         pushTashUUIDtoPath,
     } from "$lib/stores/dashboard";
-    import IconPlus from "../icons/icon-plus.svelte";
 
     import {
         Query_DashboardTaskDetails,
@@ -18,7 +17,7 @@
     import { query } from "svelte-apollo";
     import { client } from "$lib/graphql/client";
     import { _ } from "svelte-i18n";
-    import Subtasks from "./task-details-subtasks.svelte";
+
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
     import debounce from "lodash/debounce.js";
     import type { ReadableQuery } from "svelte-apollo";
@@ -29,16 +28,16 @@
     import UserPicker from "../userPicker.svelte";
     import UserProfilePicture from "../userProfilePicture.svelte";
     import ProfilePicture from "../profilePicture.svelte";
+    import TaskDetailsContent from "./task-details-content.svelte";
+    import Tabs from "../tabs.svelte";
+    import TaskDetailsDiscussion from "./task-details-discussion.svelte";
+    import Tab from "../tab.svelte";
 
     let res: ReadableQuery<any> = null;
     let task = null;
     let subTasks = [];
     let taskModified = false;
     let isSaving = false;
-
-    function fieldChanged() {
-        taskModified = true;
-    }
 
     let taskWSStrore;
 
@@ -234,6 +233,19 @@
         }
         userPicked = false;
     }
+
+    $: tabItems = [
+        {
+            label: "Task",
+            id: 1,
+        },
+        {
+            label: "Discussion",
+            id: 2,
+            component: TaskDetailsDiscussion,
+            props: {},
+        },
+    ];
 </script>
 
 {#if res && $res.loading}
@@ -241,7 +253,7 @@
         {$_("loading")}
     </div>
 {:else}
-    <div class="flex flex-col p-0 w-[60vw]">
+    <div class="flex flex-col p-0 w-[60vw] max-h-screen">
         <header class="flex p-6 space-x-4 items-center bg-base-100 relative">
             <a
                 href="/"
@@ -264,7 +276,7 @@
             <input
                 class="grow text-xl p-2 rounded-md nowrap-ellipsis"
                 placeholder={$_("task-name")}
-                on:input={() => fieldChanged()}
+                on:input={() => (taskModified = true)}
                 bind:value={task.title}
             />
 
@@ -294,29 +306,11 @@
                 </div>
             {/if}
         </header>
-        <div class="tabs px-6">
-            <button class="tab tab-bordered tab-active">{$_("task")}</button>
-            <button class="tab tab-bordered">{$_("discussion")}</button>
-            <div class="h-[2px] grow bg-base-300" />
-        </div>
-        <main class="flex flex-col overflow-y-auto">
-            <div class="flex flex-col p-6 space-y-4">
-                <div class="text-xl uppercase font-bold">
-                    {$_("description")}
-                </div>
-
-                <textarea
-                    rows="6"
-                    class="textarea textarea-bordered resize-none leading-normal p-4"
-                    placeholder={$_("please-enter-a-description")}
-                    on:input={() => fieldChanged()}
-                    bind:value={task.description}
-                />
-            </div>
-            {#if $currenTaskDetailsUUID && subTasks}
-                <Subtasks taskUUID={$currenTaskDetailsUUID} {subTasks} />
-            {/if}
-        </main>
+        <Tabs items={tabItems}>
+            <Tab id={1}>
+                <TaskDetailsContent {task} {subTasks} bind:taskModified />
+            </Tab>
+        </Tabs>
     </div>
 {/if}
 

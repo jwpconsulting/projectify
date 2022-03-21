@@ -10,7 +10,7 @@
     };
 </script>
 
-<div class="page page-center p-8">
+<div class="page justify-start items-center p-8">
     <div class="w-full max-w-xl space-y-8">
         <div class="flex space-x-5 justify-start items-center">
             <button
@@ -26,7 +26,7 @@
         {#if loading}
             <div class="text-center">{$_("loading")}</div>
         {:else}
-            <div class="card shadow-card min-h-8 overflow-visible p-4">
+            <div class="card shadow-card min-h-8 overflow-visible py-4">
                 <slot />
             </div>
         {/if}

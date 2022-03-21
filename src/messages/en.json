@@ -89,5 +89,8 @@
     "color": "Color",
     "please-enter-a-label-color": "Please enter a label color.",
     "edit-label": "Edit label",
-    "this-field-is-required": "This field is required"
+    "this-field-is-required": "This field is required",
+    "general": "General",
+    "team-members": "Team members",
+    "labels": "Labels"
 }
