@@ -7,7 +7,7 @@
     import { Query_WorkspaceTeamMembers } from "$lib/graphql/operations";
     import Loading from "./loading.svelte";
     import UserProfilePicture from "./userProfilePicture.svelte";
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
 
     import Fuse from "fuse.js";
 
@@ -77,6 +77,13 @@
         selectedUser = user;
         dispatch("userSelected", { user });
     }
+
+    let serachFieldEl;
+    $: {
+        if (serachFieldEl) {
+            serachFieldEl.focus();
+        }
+    }
 </script>
 
 <div class="w-full bg-base-100 shadow-lg rounded-xl">
@@ -91,6 +98,7 @@
                 class="input w-full input-bordered"
                 placeholder="Search"
                 bind:value={searchText}
+                bind:this={serachFieldEl}
             />
         </div>
         <div class="px-4 font-bold">Team Members</div>
