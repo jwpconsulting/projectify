@@ -1,6 +1,16 @@
 <script lang="ts">
-    export let color;
+    import { getColorFromInx } from "$lib/utils/colors";
+
+    export let color = null;
     export let active = false;
+
+    export let index = null;
+
+    $: {
+        if (color == null && index != null) {
+            color = getColorFromInx(index);
+        }
+    }
 </script>
 
 <div
@@ -29,9 +39,9 @@
         bottom: var(--margin);
         right: var(--margin);
         background-color: #fff;
-        opacity: 0.6;
+        opacity: 0.9;
         border-radius: 50%;
-        transition: all ease-out 300ms;
+        transition: all ease-out 100ms;
         transform: scale(0);
     }
 
