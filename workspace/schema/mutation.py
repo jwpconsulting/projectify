@@ -283,7 +283,6 @@ class MoveWorkspaceBoardSectionMutation(
         """Mutate."""
         workspace_board_section = cls.get_object(cls, info, input)
         workspace_board_section.move_to(input.order)
-        workspace_board_section.refresh_from_db()
         return cls(workspace_board_section)
 
 

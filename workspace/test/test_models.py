@@ -349,7 +349,7 @@ class TestWorkspaceBoardSection:
         assert list(workspace_board.workspaceboardsection_set.all()) == [
             workspace_board_section,
         ]
-        assert workspace_board_section._order == 0
+        assert workspace_board_section.order == 0
 
 
 @pytest.mark.django_db
@@ -461,7 +461,7 @@ class TestTask:
             task,
         ]
         task.refresh_from_db()
-        assert task._order == 0
+        assert task.order == 0
 
     def test_add_sub_task(self, task):
         """Test adding a sub task."""
@@ -508,8 +508,7 @@ class TestTask:
 
     def test_get_next_section_no_next_section(self, workspace_board, task):
         """Test getting the next section when there is none."""
-        with pytest.raises(models.WorkspaceBoardSection.DoesNotExist):
-            task.get_next_section()
+        assert task.get_next_section() is None
 
     def test_add_label(self, task, label):
         """Test adding a label."""
