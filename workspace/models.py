@@ -254,7 +254,7 @@ class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
         self.save()
 
 
-class WorkspaceBoardSectionManager(models.Manager):
+class WorkspaceBoardSectionManager(OrderedModelManager):
     """Manager for WorkspaceBoard."""
 
     def filter_by_workspace_board_pks(self, keys):
@@ -269,6 +269,7 @@ class WorkspaceBoardSectionManager(models.Manager):
 
 
 class WorkspaceBoardSection(
+    OrderedModel,
     TitleDescriptionModel,
     TimeStampedModel,
     models.Model,
@@ -281,6 +282,7 @@ class WorkspaceBoardSection(
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     objects = WorkspaceBoardSectionManager()
+    order_with_respect_to = "workspace_board"
 
     def add_task(self, title, description):
         """Add a task to this section."""
@@ -298,31 +300,23 @@ class WorkspaceBoardSection(
         with transaction.atomic():
             # Force queryset to be evaluated to lock them for the time of
             # this transaction
-            len(neighbor_sections)
-            current_workspace = self.workspace_board
-            # Django docs wrong, need to cast to list
-            order_list = list(
-                current_workspace.get_workspaceboardsection_order()
-            )
-            # The list is ordered by pk, which is not uuid for us
-            current_object_index = order_list.index(self.pk)
-            # Mutate to perform move operation
-            order_list.insert(order, order_list.pop(current_object_index))
-            # Set new order
-            current_workspace.set_workspaceboardsection_order(order_list)
-            current_workspace.save()
+            list(neighbor_sections)
+            # XXX hack
+            qs = self.get_ordering_queryset()
+            if len(qs) == 1:
+                # If there is nothing to order, move along
+                self.order = 0
+                self.save()
+                return
+            bottom_plus_one = qs.get_next_order()
+            self.to(bottom_plus_one)
+            self.to(order)
+            self.save()
 
     class Meta:
         """Meta."""
 
-        order_with_respect_to = "workspace_board"
-        constraints = [
-            models.UniqueConstraint(
-                fields=["workspace_board", "_order"],
-                name="unique_workspace_board_order",
-                deferrable=models.Deferrable.DEFERRED,
-            )
-        ]
+        ordering = ("workspace_board", "order")
 
 
 class TaskManager(OrderedModelManager):
@@ -354,6 +348,7 @@ class TaskManager(OrderedModelManager):
 
 
 class Task(
+    OrderedModel,
     TitleDescriptionModel,
     TimeStampedModel,
     models.Model,
@@ -384,6 +379,8 @@ class Task(
 
     objects = TaskManager()
 
+    order_with_respect_to = "workspace_board_section"
+
     def move_to(self, workspace_board_section, order):
         """
         Move to specified workspace board section and to order n.
@@ -397,21 +394,21 @@ class Task(
         with transaction.atomic():
             # Force both querysets to be evaluated to lock them for the time of
             # this transaction
-            len(neighbor_tasks)
-            len(other_tasks)
-            # Set new WorkspaceBoardSection
-            if self.workspace_board_section != workspace_board_section:
-                self.workspace_board_section = workspace_board_section
+            list(neighbor_tasks)
+            list(other_tasks)
+            self.workspace_board_section = workspace_board_section
+            self.save()
+            # XXX hack
+            qs = self.get_ordering_queryset()
+            if len(qs) == 1:
+                # If there is nothing to order, move along
+                self.order = 0
                 self.save()
-
-            # Change order
-            order_list = list(workspace_board_section.get_task_order())
-            current_object_index = order_list.index(self.pk)
-            order_list.insert(order, order_list.pop(current_object_index))
-
-            # Set the order
-            workspace_board_section.set_task_order(order_list)
-            workspace_board_section.save()
+                return
+            bottom_plus_one = qs.get_next_order()
+            self.to(bottom_plus_one)
+            self.to(order)
+            self.save()
 
     def add_sub_task(self, title, description):
         """Add a sub task."""
@@ -441,7 +438,7 @@ class Task(
 
     def get_next_section(self):
         """Return instance of the next section."""
-        next_section = self.workspace_board_section.get_next_in_order()
+        next_section = self.workspace_board_section.next()
         return next_section
 
     def add_label(self, label):
@@ -475,14 +472,7 @@ class Task(
     class Meta:
         """Meta."""
 
-        order_with_respect_to = "workspace_board_section"
-        constraints = [
-            models.UniqueConstraint(
-                fields=["workspace_board_section", "_order"],
-                name="unique_task_order",
-                deferrable=models.Deferrable.DEFERRED,
-            )
-        ]
+        ordering = ("workspace_board_section", "order")
 
 
 class LabelQuerySet(models.QuerySet):
