@@ -41,6 +41,13 @@
             console.error(error);
         }
     }
+
+    let serachFieldEl;
+    $: {
+        if (serachFieldEl) {
+            serachFieldEl.focus();
+        }
+    }
 </script>
 
 <div
@@ -56,6 +63,7 @@
             class="input w-full input-bordered"
             placeholder="Filter labels"
             bind:value={searchText}
+            bind:this={serachFieldEl}
             on:blur={() => rootEl.focus()}
         />
     </div>
