@@ -24,7 +24,7 @@
         filterSectionsTaskWithLabels,
         gotoDashboard,
     } from "$lib/stores/dashboard";
-    import LabelPillList from "./labelPillList.svelte";
+    import LabelPillList from "./labelList.svelte";
 
     export let workspaceUUID;
     export let boardUUID = null;
@@ -288,7 +288,7 @@
         </div>
 
         <!-- Labels -->
-        <div class="flex px-3 flex-wrap">
+        <div class="px-4 inline-flex gap-2 flex-wrap">
             <LabelPillList bind:selectedLabels={filterLabels} />
         </div>
 

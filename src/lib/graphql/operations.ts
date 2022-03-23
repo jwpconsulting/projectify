@@ -515,3 +515,13 @@ export const Mutation_AssignTask = gql`
         }
     }
 `;
+
+export const Mutation_AssignLabel = gql`
+    mutation AssignLabel($input: AssignLabelInput!) {
+        assignLabel(input: $input) {
+            task {
+                uuid
+            }
+        }
+    }
+`;

@@ -46,6 +46,7 @@
         task = {
             title: "",
             description: "",
+            labels: [],
         };
         subTasks = [];
     }
@@ -253,7 +254,7 @@
         {$_("loading")}
     </div>
 {:else}
-    <div class="flex flex-col p-0 w-[60vw] max-h-screen">
+    <div class="flex flex-col p-0 w-[60vw] h-screen">
         <header class="flex p-6 space-x-4 items-center bg-base-100 relative">
             <a
                 href="/"
