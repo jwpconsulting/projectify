@@ -2,10 +2,28 @@
     import { currentWorkspaceLabels } from "$lib/stores/dashboard";
     import { createEventDispatcher } from "svelte";
     import LabelPill from "./labelPill.svelte";
+    import Fuse from "fuse.js";
 
-    export let labels = null;
+    export let labels;
     export let editable = false;
     export let searchText = "";
+    let searchEngine = null;
+    let filteredLabels = [];
+    $: {
+        searchEngine = new Fuse(labels, {
+            keys: ["name"],
+        });
+    }
+
+    $: {
+        if (searchText.length) {
+            filteredLabels = searchEngine
+                .search(searchText)
+                .map((res) => res.item);
+        } else {
+            filteredLabels = labels;
+        }
+    }
 
     let dispatch = createEventDispatcher();
 
@@ -43,7 +61,7 @@
     }
 </script>
 
-{#each labels || $currentWorkspaceLabels as label}
+{#each filteredLabels as label}
     <div
         on:click|preventDefault={() => onLabelClick(label)}
         class:cursor-pointer={editable}

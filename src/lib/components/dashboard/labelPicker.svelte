@@ -1,12 +1,12 @@
 <script lang="ts">
     import { client } from "$lib/graphql/client";
     import { Mutation_AssignLabel } from "$lib/graphql/operations";
+    import { currentWorkspaceLabels } from "$lib/stores/dashboard";
 
     import { createEventDispatcher, onMount } from "svelte";
 
     import ColorDot from "../colorDot.svelte";
     import LabelList from "./labelList.svelte";
-    import TaskDetails from "./task-details.svelte";
 
     let searchText = "";
     export let task;
@@ -63,6 +63,7 @@
         class="flex flex-col divide-y divide-base-300 overflow-y-auto max-h-full"
     >
         <LabelList
+            labels={$currentWorkspaceLabels}
             bind:searchText
             bind:selectedLabels
             editable={true}

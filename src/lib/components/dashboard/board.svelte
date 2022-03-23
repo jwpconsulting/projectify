@@ -25,6 +25,7 @@
         gotoDashboard,
     } from "$lib/stores/dashboard";
     import LabelPillList from "./labelList.svelte";
+    import { currentWorkspaceLabels } from "$lib/stores/dashboard";
 
     export let workspaceUUID;
     export let boardUUID = null;
@@ -289,7 +290,11 @@
 
         <!-- Labels -->
         <div class="px-4 inline-flex gap-2 flex-wrap">
-            <LabelPillList bind:selectedLabels={filterLabels} />
+            <LabelPillList
+                editable={true}
+                labels={$currentWorkspaceLabels}
+                bind:selectedLabels={filterLabels}
+            />
         </div>
 
         <!-- Sections -->
