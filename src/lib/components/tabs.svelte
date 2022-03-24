@@ -15,6 +15,7 @@
     };
 
     export let forceHeight = false;
+    export let autoPadding = true;
 </script>
 
 <ul class="tabs px-6">
@@ -35,8 +36,9 @@
             class="grow flex flex-col relative overflow-y-auto transition-all ease-in-out duration-300"
         >
             <div
+                class:px-6={autoPadding}
                 bind:clientHeight={contentHeght}
-                class="flex flex-col px-6 py-4 "
+                class="flex flex-col py-4 grow"
             >
                 {#if item.component}
                     <svelte:component this={item.component} {...item.props} />
