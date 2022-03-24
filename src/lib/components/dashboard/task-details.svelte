@@ -243,8 +243,6 @@
         {
             label: "Discussion",
             id: 2,
-            component: TaskDetailsDiscussion,
-            props: {},
         },
     ];
 </script>
@@ -307,9 +305,12 @@
                 </div>
             {/if}
         </header>
-        <Tabs items={tabItems}>
+        <Tabs items={tabItems} autoPadding={false}>
             <Tab id={1}>
                 <TaskDetailsContent {task} {subTasks} bind:taskModified />
+            </Tab>
+            <Tab id={2}>
+                <TaskDetailsDiscussion {task} />
             </Tab>
         </Tabs>
     </div>

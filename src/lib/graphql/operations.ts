@@ -311,6 +311,17 @@ export const Query_DashboardTaskDetails = gql`
                 name
                 color
             }
+            chatMessages {
+                created
+                modified
+                uuid
+                text
+                author {
+                    email
+                    fullName
+                    profilePicture
+                }
+            }
         }
     }
 `;

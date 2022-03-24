@@ -1,8 +1,11 @@
-export function dateStringToLocal(dateStr: string): string {
+export function dateStringToLocal(dateStr: string, time = false): string {
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) {
         throw new Error(`Invalid date: ${dateStr}`);
     }
-
-    return date.toLocaleDateString();
+    if (time) {
+        return date.toLocaleDateString() + " " + date.toLocaleTimeString();
+    } else {
+        return date.toLocaleDateString();
+    }
 }
