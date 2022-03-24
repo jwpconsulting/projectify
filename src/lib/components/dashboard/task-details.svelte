@@ -314,9 +314,3 @@
         </Tabs>
     </div>
 {/if}
-
-<style lang="scss">
-    main {
-        max-height: calc(100vh - 128px);
-    }
-</style>
