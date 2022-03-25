@@ -36,6 +36,7 @@
     let res: ReadableQuery<any> = null;
     let task = null;
     let subTasks = [];
+    let labels = [];
     let taskModified = false;
     let isSaving = false;
 
@@ -46,7 +47,6 @@
         task = {
             title: "",
             description: "",
-            labels: [],
         };
         subTasks = [];
     }
@@ -112,6 +112,8 @@
                     done: Boolean(t.done),
                 };
             });
+
+            labels = $res.data.task.labels;
         }
     }
 
@@ -307,7 +309,12 @@
         </header>
         <Tabs items={tabItems} autoPadding={false}>
             <Tab id={1}>
-                <TaskDetailsContent {task} {subTasks} bind:taskModified />
+                <TaskDetailsContent
+                    {task}
+                    {subTasks}
+                    {labels}
+                    bind:taskModified
+                />
             </Tab>
             <Tab id={2}>
                 <TaskDetailsDiscussion {task} />

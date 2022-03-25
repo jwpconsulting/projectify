@@ -6,12 +6,12 @@
     import LabelList from "./labelList.svelte";
 
     import Subtasks from "./task-details-subtasks.svelte";
-    import IconPlus from "../icons/icon-plus.svelte";
     import ToolBar from "./toolBar.svelte";
     import IconEdit from "../icons/icon-edit.svelte";
 
     export let task;
     export let subTasks;
+    export let labels;
     export let taskModified = false;
 
     let labelPickerOpen = false;
@@ -56,7 +56,7 @@
                     >
                         <LabelPicker
                             {task}
-                            bind:selectedLabels={task.labels}
+                            bind:selectedLabels={labels}
                             on:blur={() => (labelPickerOpen = false)}
                         />
                     </div>
@@ -64,7 +64,7 @@
             </div>
             <div class="inline-flex gap-2 flex-wrap">
                 <LabelList
-                    labels={task.labels}
+                    {labels}
                     editable={false}
                     on:addLabelClick={() => (labelPickerOpen = true)}
                 />
