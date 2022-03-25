@@ -4,6 +4,7 @@
 
     import { dateStringToLocal } from "$lib/utils/date";
     import UserProfilePicture from "../userProfilePicture.svelte";
+    import { afterUpdate } from "svelte";
 
     export let task;
 
@@ -30,13 +31,12 @@
     }
 
     let messagesView: HTMLDivElement;
-    $: {
-        if (messagesView && task?.chatMessages?.length > 0) {
-            console.log("task chamge");
 
+    afterUpdate(() => {
+        if (messagesView && task?.chatMessages?.length > 0) {
             messagesView.scrollTo(0, messagesView.scrollHeight);
         }
-    }
+    });
 </script>
 
 <div class="flex flex-col h-full max-h-full overflow-hidden absolute ">
