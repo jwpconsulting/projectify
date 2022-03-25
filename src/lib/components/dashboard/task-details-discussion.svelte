@@ -39,7 +39,9 @@
     });
 </script>
 
-<div class="flex flex-col h-full max-h-full overflow-hidden absolute ">
+<div
+    class="flex flex-col h-full max-h-full overflow-hidden absolute w-full top-0 left-0"
+>
     <div
         bind:this={messagesView}
         class="flex flex-col divide-y divide-base-300 grow px-6 overflow-y-auto"
