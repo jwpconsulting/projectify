@@ -39,7 +39,7 @@
     }
 </script>
 
-<div class="flex flex-col max-h-full overflow-hidden">
+<div class="flex flex-col h-full max-h-full overflow-hidden absolute ">
     <div
         bind:this={messagesView}
         class="flex flex-col divide-y divide-base-300 grow px-6 overflow-y-auto"
@@ -69,7 +69,7 @@
             </div>
         {/each}
     </div>
-    <div class="px-6 border-t border-base-300 pt-6 space-y-2">
+    <div class="p-6 border-t border-base-300 space-y-2">
         <textarea
             rows="2"
             class="textarea textarea-bordered resize-none leading-normal p-4 w-full"
@@ -85,7 +85,8 @@
             <div class="grow" />
             <button
                 class="btn btn-primary rounded-full btn-sm"
-                disabled={chatMessageText.length === 0}>Send</button
+                disabled={chatMessageText.length === 0}
+                on:click={() => sendChatMessage()}>Send</button
             >
         </div>
     </div>

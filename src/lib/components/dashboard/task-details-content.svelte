@@ -18,7 +18,7 @@
 </script>
 
 {#if task}
-    <main class="flex flex-col space-y-6 pt-4 px-6">
+    <main class="flex flex-col space-y-6 py-4 px-6">
         <div class="flex flex-col space-y-4">
             <div class="text-xl uppercase font-bold">
                 {$_("description")}

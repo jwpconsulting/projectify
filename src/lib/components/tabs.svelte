@@ -37,8 +37,9 @@
         >
             <div
                 class:px-6={autoPadding}
+                class:py-4={autoPadding}
                 bind:clientHeight={contentHeght}
-                class="flex flex-col py-4 grow"
+                class="flex flex-col grow relative"
             >
                 {#if item.component}
                     <svelte:component this={item.component} {...item.props} />
