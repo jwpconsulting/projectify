@@ -536,3 +536,13 @@ export const Mutation_AssignLabel = gql`
         }
     }
 `;
+
+export const Mutation_AddChatMessage = gql`
+    mutation AddChatMessage($input: AddChatMessageInput!) {
+        addChatMessage(input: $input) {
+            chatMessage {
+                uuid
+            }
+        }
+    }
+`;

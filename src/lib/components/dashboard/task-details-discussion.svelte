@@ -1,15 +1,50 @@
 <script lang="ts">
+    import { client } from "$lib/graphql/client";
+    import { Mutation_AddChatMessage } from "$lib/graphql/operations";
+
     import { dateStringToLocal } from "$lib/utils/date";
     import UserProfilePicture from "../userProfilePicture.svelte";
 
     export let task;
+
+    let chatMessageText = "";
+
+    async function sendChatMessage() {
+        console.log(chatMessageText);
+
+        try {
+            await client.mutate({
+                mutation: Mutation_AddChatMessage,
+                variables: {
+                    input: {
+                        taskUuid: task.uuid,
+                        text: chatMessageText,
+                    },
+                },
+            });
+        } catch (error) {
+            console.error(error);
+        }
+
+        chatMessageText = "";
+    }
+
+    let messagesView: HTMLDivElement;
+    $: {
+        if (messagesView && task?.chatMessages?.length > 0) {
+            console.log("task chamge");
+
+            messagesView.scrollTo(0, messagesView.scrollHeight);
+        }
+    }
 </script>
 
-<div class="flex flex-col h-full">
+<div class="flex flex-col max-h-full overflow-hidden">
     <div
+        bind:this={messagesView}
         class="flex flex-col divide-y divide-base-300 grow px-6 overflow-y-auto"
     >
-        {#each task.chatMessages as message}
+        {#each task?.chatMessages || [] as message}
             <div class="flex space-x-4  py-6">
                 <div class="shrink-0">
                     <UserProfilePicture
@@ -39,10 +74,19 @@
             rows="2"
             class="textarea textarea-bordered resize-none leading-normal p-4 w-full"
             placeholder={"Please enter message"}
+            bind:value={chatMessageText}
+            on:keyup={(e) => {
+                if (!e.shiftKey && e.key === "Enter") {
+                    sendChatMessage();
+                }
+            }}
         />
         <div class="flex items-center space-x-2">
             <div class="grow" />
-            <button class="btn btn-primary rounded-full btn-sm">Send</button>
+            <button
+                class="btn btn-primary rounded-full btn-sm"
+                disabled={chatMessageText.length === 0}>Send</button
+            >
         </div>
     </div>
 </div>
