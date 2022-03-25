@@ -11,7 +11,10 @@
     let chatMessageText = "";
 
     async function sendChatMessage() {
-        console.log(chatMessageText);
+        if (chatMessageText.length <= 1) {
+            chatMessageText = "";
+            return;
+        }
 
         try {
             await client.mutate({
