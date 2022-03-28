@@ -11,8 +11,10 @@
     let chatMessageText = "";
 
     async function sendChatMessage() {
-        if (chatMessageText.length <= 1) {
-            chatMessageText = "";
+        let msg = chatMessageText.trim();
+        chatMessageText = "";
+
+        if (!msg) {
             return;
         }
 
@@ -22,15 +24,13 @@
                 variables: {
                     input: {
                         taskUuid: task.uuid,
-                        text: chatMessageText,
+                        text: msg,
                     },
                 },
             });
         } catch (error) {
             console.error(error);
         }
-
-        chatMessageText = "";
     }
 
     let messagesView: HTMLDivElement;
@@ -80,8 +80,9 @@
             class="textarea textarea-bordered resize-none leading-normal p-4 w-full"
             placeholder={"Please enter message"}
             bind:value={chatMessageText}
-            on:keyup={(e) => {
+            on:keypress={(e) => {
                 if (!e.shiftKey && e.key === "Enter") {
+                    e.preventDefault();
                     sendChatMessage();
                 }
             }}
