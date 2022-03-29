@@ -97,7 +97,7 @@
         }
     }
 
-    function taskDragStart(e) {
+    function taskDragStart() {
         isDragging = true;
     }
 
@@ -135,9 +135,16 @@
             console.error(error);
         }
     }
+
+    function onHandlerOver(e) {
+        if (isDragging) {
+            open = true;
+            firstOpen = true;
+        }
+    }
 </script>
 
-<div class="flex m-2 bg-base-100" class:hover:ring={isDragging}>
+<div class="section flex m-2 bg-base-100">
     <div
         class="w-1 shrink-0"
         style={`background-color: hsl(${index * 45}, 80%, 75%);`}
@@ -146,6 +153,8 @@
         <header
             class="drag-handle select-none flex items-center h-16 p-2  children:m-1 cursor-pointer"
             on:click={toggleOpen}
+            on:focus={onHandlerOver}
+            on:mouseover={onHandlerOver}
         >
             <div
                 class="children:w-5 px-2 transition-transform"
@@ -175,10 +184,13 @@
                 ]}
             />
         </header>
-        <main style="--open-height:{openHeight}px">
+        <main
+            style="--open-height:{openHeight}px"
+            class:hover:ring={isDragging}
+        >
             {#if firstOpen}
                 <div
-                    class="content p-2 flex flex-wrap"
+                    class="content p-2 flex flex-wrap grow w-full min-h-16 relative"
                     bind:clientHeight={contentHeght}
                     use:sortable={{ group: "Tasks" }}
                     on:dragStart={taskDragStart}

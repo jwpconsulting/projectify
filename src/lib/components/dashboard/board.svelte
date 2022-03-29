@@ -300,7 +300,7 @@
         <!-- Sections -->
         <div
             class="flex flex-col grow p-2"
-            use:sortable={{ group: "Sections" }}
+            use:sortable={{ group: "Sections", draggable: ".section" }}
             on:dragStart={sectionDragStart}
             on:dragEnd={sectionDragEnd}
         >
