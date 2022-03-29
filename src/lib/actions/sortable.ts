@@ -1,7 +1,9 @@
 import Sortable from "sortablejs";
 
 type SortableParamenters = {
-    group?: string;
+    group?: any;
+    filter?: string;
+    draggable?: string;
 };
 
 export function sortable(
@@ -11,14 +13,22 @@ export function sortable(
     const sortable = Sortable.create(node, {
         group: params.group,
         animation: 300,
-        put: true,
-        pull: true,
         forceFallback: true,
         fallbackOnBody: true,
         filter: ".ignore-elements",
         handle: ".drag-handle",
+        draggable: ".item",
         onStart(e) {
-            node.dispatchEvent(new CustomEvent("dragStart"));
+            node.dispatchEvent(
+                new CustomEvent("dragStart", {
+                    detail: {
+                        from: e.from,
+                        to: e.to,
+                        oldIndex: e.oldIndex,
+                        newIndex: e.newIndex,
+                    },
+                })
+            );
         },
         onEnd(e) {
             node.dispatchEvent(
@@ -32,6 +42,7 @@ export function sortable(
                 })
             );
         },
+        ...params,
     });
     return {
         destroy() {
