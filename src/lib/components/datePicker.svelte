@@ -15,13 +15,23 @@
     let today = new Date();
     today = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
+    let viewMode: "day" | "month" | "year" = "day";
+
     function selectDate(d) {
         date = d;
         dispatch("date-changed", { date });
+        console.log("dispatch date ", date);
     }
 
     function selectToday() {
         selectDate(today);
+    }
+
+    function selectMonth(m) {
+        viewMode = "day";
+        date.setMonth(m);
+        date.setFullYear(year);
+        selectDate(date);
     }
 
     function setNextMonth() {
@@ -41,35 +51,75 @@
         }
         calendar = getCalendar(year, month);
     }
+
+    function setNextYear() {
+        year++;
+        calendar = getCalendar(year, month);
+    }
+    function setPrevYear() {
+        year--;
+        calendar = getCalendar(year, month);
+    }
+
+    function onNext() {
+        if (viewMode === "day") {
+            setNextMonth();
+        } else if (viewMode === "month") {
+            setNextYear();
+        }
+    }
+
+    function onPrev() {
+        if (viewMode === "day") {
+            setPrevMonth();
+        } else if (viewMode === "month") {
+            setPrevYear();
+        }
+    }
+
+    function setViewMode(mode: "day" | "month" | "year") {
+        viewMode = mode;
+    }
+
+    function onHeaderClick() {
+        if (viewMode === "day") {
+            setViewMode("month");
+        } else {
+            setViewMode("day");
+        }
+    }
 </script>
 
 <div
-    class="flex select-none flex-col divide-y divide-base-300 overflow-hidden rounded-lg bg-base-100"
+    class="relative flex select-none flex-col divide-y divide-base-300 overflow-hidden rounded-lg bg-base-100"
 >
     <div class="flex items-center justify-center">
         <div
-            class="header-btn header-arrow header-arrow-prev"
-            on:click={() => setPrevMonth()}
+            class="cal-btn header-arrow header-arrow-prev"
+            on:click={() => onPrev()}
         >
             <div><IconArrowLeft /></div>
         </div>
         <div
-            class="header-btn flex h-12 grow items-center justify-center font-bold "
+            class="cal-btn flex h-12 grow items-center justify-center font-bold"
+            on:click={() => onHeaderClick()}
         >
             <div class="flex space-x-2">
                 <div>{year}</div>
-                <div>{months[month]}</div>
+                {#if viewMode !== "month"}
+                    <div>{months[month]}</div>
+                {/if}
             </div>
         </div>
         <div
-            class="header-btn header-arrow header-arrow-next"
-            on:click={() => setNextMonth()}
+            class="cal-btn header-arrow header-arrow-next"
+            on:click={() => onNext()}
         >
             <div><IconArrowRight /></div>
         </div>
     </div>
 
-    <div class="p-4">
+    <div class="relative p-4">
         <div class="grid grid-cols-7">
             {#each weekDays as day}
                 <div
@@ -92,9 +142,25 @@
                 </div>
             {/each}
         </div>
+
+        {#if viewMode === "month"}
+            <div
+                class="absolute top-0 left-0 grid h-full w-full grid-cols-3 grid-rows-4 bg-base-100"
+            >
+                {#each months as m, inx}
+                    <div
+                        class:active={months[month] === m}
+                        class="cal-btn active flex items-center justify-center capitalize"
+                        on:click={() => selectMonth(inx)}
+                    >
+                        <div>{m.substring(0, 3)}</div>
+                    </div>
+                {/each}
+            </div>
+        {/if}
     </div>
     <div
-        class="header-btn flex h-8 items-center justify-center"
+        class="cal-btn flex h-8 items-center justify-center"
         on:click={() => selectToday()}
     >
         <div class="link text-xs text-primary">Today</div>
@@ -102,7 +168,7 @@
 </div>
 
 <style lang="scss">
-    .header-btn {
+    .cal-btn {
         @apply cursor-pointer;
         > * {
             @apply transition-all;
@@ -112,6 +178,10 @@
             > * {
                 @apply scale-90;
             }
+        }
+
+        &.active {
+            @apply bg-primary text-primary-content;
         }
     }
     .header-arrow {
