@@ -171,10 +171,11 @@
         {/if}
     </div>
     <div
-        class="cal-btn flex h-8 items-center justify-center"
+        class:active={date.getTime() === today.getTime()}
+        class="cal-btn flex h-8 items-center justify-center text-primary"
         on:click={() => selectToday()}
     >
-        <div class="link text-xs text-primary">Today</div>
+        <div class="text-xs ">Today</div>
     </div>
 </div>
 
