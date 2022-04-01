@@ -3,6 +3,8 @@
     import { createEventDispatcher } from "svelte";
     import IconArrowLeft from "./icons/icon-arrow-left.svelte";
     import IconArrowRight from "./icons/icon-arrow-right.svelte";
+    import { scale } from "svelte/transition";
+    import { quintOut } from "svelte/easing";
 
     const dispatch = createEventDispatcher();
 
@@ -119,7 +121,7 @@
         </div>
     </div>
 
-    <div class="relative p-4">
+    <div class="relative overflow-hidden p-4">
         <div class="grid grid-cols-7">
             {#each weekDays as day}
                 <div
@@ -146,6 +148,13 @@
         {#if viewMode === "month"}
             <div
                 class="absolute top-0 left-0 grid h-full w-full grid-cols-3 grid-rows-4 bg-base-100"
+                transition:scale={{
+                    duration: 300,
+                    delay: 0,
+                    opacity: 0,
+                    start: 1.2,
+                    easing: quintOut,
+                }}
             >
                 {#each months as m, inx}
                     <div
@@ -181,7 +190,7 @@
         }
 
         &.active {
-            @apply bg-primary text-primary-content;
+            @apply bg-primary text-primary-content shadow-md;
         }
     }
     .header-arrow {
@@ -220,7 +229,7 @@
         }
         &.day-selected {
             > * {
-                @apply pointer-events-none bg-primary text-primary-content;
+                @apply pointer-events-none bg-primary text-primary-content shadow-md;
             }
             &:hover > * {
                 @apply cursor-default bg-primary text-primary-content;
