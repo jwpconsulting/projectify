@@ -18,8 +18,8 @@
     <slot />
     <ul
         tabindex="0"
-        class="menu dropdown-content bg-base-100 rounded-lg
-            min-w-[200px] shadow-xl py-2"
+        class="dropdown-content menu min-w-[200px] rounded-lg
+            bg-base-100 py-2 shadow-xl"
     >
         {#each items as it}
             {#if !it.hidden}
@@ -27,7 +27,7 @@
                     <a
                         title={it.tooltip}
                         disabled={it.disabled}
-                        class="space-x-2 nowrap-ellipsis text-xs font-bold h-9 px-0"
+                        class="nowrap-ellipsis h-9 space-x-2 px-0 text-xs font-bold"
                         href={it.href}
                         on:click={it.onClick}
                     >

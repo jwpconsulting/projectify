@@ -34,7 +34,7 @@
         "js-base64": "github:dankogai/js-base64",
         "lodash": "^4.17.21",
         "prettier": "^2.4.1",
-        "prettier-plugin-svelte": "^2.4.0",
+        "prettier-plugin-tailwindcss": "^0.1.8",
         "sass": "^1.45.1",
         "sortablejs": "^1.14.0",
         "subscriptions-transport-ws": "^0.11.0",

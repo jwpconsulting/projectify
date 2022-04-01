@@ -6,7 +6,7 @@
 <div
     class:ring-2={pictureProps.size <= 64}
     class:ring-4={pictureProps.size > 64}
-    class="rounded-full overflow-hidden bg-secondary text-secondary-content border-primary"
+    class="overflow-hidden rounded-full border-primary bg-secondary text-secondary-content"
 >
     <ProfilePicture {...pictureProps} />
 </div>

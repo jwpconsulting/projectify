@@ -65,7 +65,7 @@
 
 <div class="card-body w-screen max-w-lg">
     <div class:divide-y={!inputs.length} class="flex flex-col divide-base-300">
-        <h1 class="text-3xl font-bold text-center pb-4">{title}</h1>
+        <h1 class="pb-4 text-center text-3xl font-bold">{title}</h1>
         {#if subtitle}
             <div class="text-center">{subtitle}</div>
         {/if}
@@ -95,19 +95,19 @@
                 />
             {/if}
             {#if !valid && input.error}
-                <div class="px-1 py-2  text-error text-xs">{input.error}</div>
+                <div class="px-1 py-2  text-xs text-error">{input.error}</div>
             {/if}
         </div>
     {/each}
-    <div class="flex pt-9 space-x-2 w-full">
+    <div class="flex w-full space-x-2 pt-9">
         <button
-            class="btn btn-primary btn-outline rounded-full grow"
+            class="btn btn-outline btn-primary grow rounded-full"
             on:click|preventDefault={cancel}>{cancelLabel}</button
         >
         <button
             class:btn-primary={confirmColor == "primary"}
             class:btn-accent={confirmColor == "accent"}
-            class="btn rounded-full grow"
+            class="btn grow rounded-full"
             on:click|preventDefault={confirm}>{confirmLabel}</button
         >
     </div>

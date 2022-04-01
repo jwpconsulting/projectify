@@ -10,14 +10,14 @@
     style="{`--color:${getColorFromInx(label.color).style}; --opacity:${
         active ? '1.0' : '0.2'
     }`};"
-    class="label whitespace-nowrap font-bold text-xs px-3 py-1 rounded-full border max-w-xs"
+    class="label max-w-xs whitespace-nowrap rounded-full border px-3 py-1 text-xs font-bold"
 >
     <span class="nowrap-ellipsis">{label.name}</span>
     {#if deleteIcon}
         <div
-            class="relative flex justify-center items-center w-4 h-4 bg-current mr-[-8px] rounded-full ml-2"
+            class="relative mr-[-8px] ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-current"
         >
-            <div class="text-[#fff] w-3 h-3 absolute top-[-1px]">
+            <div class="absolute top-[-1px] h-3 w-3 text-[#fff]">
                 <IconClose />
             </div>
         </div>

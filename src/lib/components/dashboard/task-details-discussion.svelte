@@ -43,11 +43,11 @@
 </script>
 
 <div
-    class="flex flex-col h-full max-h-full overflow-hidden absolute w-full top-0 left-0"
+    class="absolute top-0 left-0 flex h-full max-h-full w-full flex-col overflow-hidden"
 >
     <div
         bind:this={messagesView}
-        class="flex flex-col divide-y divide-base-300 grow px-6 overflow-y-auto"
+        class="flex grow flex-col divide-y divide-base-300 overflow-y-auto px-6"
     >
         {#each task?.chatMessages || [] as message}
             <div class="flex space-x-4  py-6">
@@ -61,7 +61,7 @@
                 </div>
                 <div class="grow space-y-2">
                     <div class="flex items-center space-x-2 text-xs">
-                        <div class="font-bold grow">
+                        <div class="grow font-bold">
                             {message.author.fullName || message.author.email}
                         </div>
                         <div class="font-bold opacity-50">
@@ -74,10 +74,10 @@
             </div>
         {/each}
     </div>
-    <div class="p-6 border-t border-base-300 space-y-2">
+    <div class="space-y-2 border-t border-base-300 p-6">
         <textarea
             rows="2"
-            class="textarea textarea-bordered resize-none leading-normal p-4 w-full"
+            class="textarea textarea-bordered w-full resize-none p-4 leading-normal"
             placeholder={"Please enter message"}
             bind:value={chatMessageText}
             on:keypress={(e) => {
@@ -90,7 +90,7 @@
         <div class="flex items-center space-x-2">
             <div class="grow" />
             <button
-                class="btn btn-primary rounded-full btn-sm"
+                class="btn btn-primary btn-sm rounded-full"
                 disabled={chatMessageText.length === 0}
                 on:click={() => sendChatMessage()}>Send</button
             >

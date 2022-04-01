@@ -86,9 +86,9 @@
     }
 </script>
 
-<div class="w-full bg-base-100 shadow-lg rounded-xl">
+<div class="w-full rounded-xl bg-base-100 shadow-lg">
     {#if res && $res.loading}
-        <div class="w-full h-full flex justify-center items-center py-8">
+        <div class="flex h-full w-full items-center justify-center py-8">
             <Loading />
         </div>
     {:else}

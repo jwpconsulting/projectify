@@ -44,9 +44,9 @@
 </script>
 
 <div
-    class="flex flex-col select-none bg-base-100 rounded-lg overflow-hidden divide-y divide-base-300"
+    class="flex select-none flex-col divide-y divide-base-300 overflow-hidden rounded-lg bg-base-100"
 >
-    <div class="flex justify-center items-center">
+    <div class="flex items-center justify-center">
         <div
             class="header-btn header-arrow header-arrow-prev"
             on:click={() => setPrevMonth()}
@@ -54,7 +54,7 @@
             <div><IconArrowLeft /></div>
         </div>
         <div
-            class="header-btn grow h-12 font-bold flex justify-center items-center "
+            class="header-btn flex h-12 grow items-center justify-center font-bold "
         >
             <div class="flex space-x-2">
                 <div>{year}</div>
@@ -73,13 +73,13 @@
         <div class="grid grid-cols-7">
             {#each weekDays as day}
                 <div
-                    class="capitalize w-8 h-8 m-0 flex items-center justify-center"
+                    class="m-0 flex h-8 w-8 items-center justify-center capitalize"
                 >
                     {day.substring(0, 2)}
                 </div>
             {/each}
         </div>
-        <div class="grid grid-cols-7 justify-items-center items-center">
+        <div class="grid grid-cols-7 items-center justify-items-center">
             {#each calendar.days as day}
                 <div
                     class:day-today={day.date.getTime() === today.getTime()}
@@ -94,10 +94,10 @@
         </div>
     </div>
     <div
-        class="header-btn h-8 flex justify-center items-center"
+        class="header-btn flex h-8 items-center justify-center"
         on:click={() => selectToday()}
     >
-        <div class="text-xs text-primary link">Today</div>
+        <div class="link text-xs text-primary">Today</div>
     </div>
 </div>
 
@@ -115,11 +115,11 @@
         }
     }
     .header-arrow {
-        @apply flex items-center justify-center p-1 overflow-hidden w-12 h-12;
+        @apply flex h-12 w-12 items-center justify-center overflow-hidden p-1;
 
         // @apply bg-base-200;
         > * {
-            @apply flex items-center justify-center w-4 h-4;
+            @apply flex h-4 w-4 items-center justify-center;
         }
 
         &.header-arrow-prev {
@@ -132,28 +132,28 @@
     .day {
         > * {
             @apply text-sm capitalize;
-            @apply w-8 h-8 m-0 flex items-center justify-center rounded-full cursor-pointer;
+            @apply m-0 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full;
             @apply transition-all;
         }
 
         &.day-today > * {
-            @apply bg-primary-content text-primary border border-primary;
+            @apply border border-primary bg-primary-content text-primary;
         }
 
         &:hover > * {
             @apply bg-base-300 text-base-100;
             @apply scale-75;
-            @apply ring-0 border-0;
+            @apply border-0 ring-0;
         }
         &.day-disbled > * {
             @apply opacity-50;
         }
         &.day-selected {
             > * {
-                @apply bg-primary text-primary-content pointer-events-none;
+                @apply pointer-events-none bg-primary text-primary-content;
             }
             &:hover > * {
-                @apply bg-primary text-primary-content cursor-default;
+                @apply cursor-default bg-primary text-primary-content;
                 @apply scale-100;
             }
         }

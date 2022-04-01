@@ -2,7 +2,7 @@
     import { circIn } from "svelte/easing";
 </script>
 
-<div class="w-20 h-20 text-primary">
+<div class="h-20 w-20 text-primary">
     <svg viewBox="-50 -50 100 100" fill="none">
         <circle cx="0" cy="0" />
         <circle cx="0" cy="0" />

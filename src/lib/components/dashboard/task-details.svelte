@@ -250,7 +250,7 @@
 </script>
 
 {#if res && $res.loading}
-    <div class="flex flex-col p-0 w-[60vw] justify-center items-center h-full">
+    <div class="flex h-full w-[60vw] flex-col items-center justify-center p-0">
         {$_("loading")}
     </div>
 {:else}

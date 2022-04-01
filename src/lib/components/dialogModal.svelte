@@ -69,18 +69,18 @@
 
 {#if visible}
     <div
-        class="z-50 d-modal fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center p-0"
+        class="d-modal fixed top-0 left-0 z-50 flex h-full w-full flex-col items-center justify-center p-0"
         bind:this={topDiv}
     >
         <div
             transition:fly={{ duration: 500, opacity: 0 }}
             on:click={() => close(null)}
-            class="d-modal-background fixed w-full h-full bg-[#002332] bg-opacity-30"
+            class="d-modal-background fixed h-full w-full bg-[#002332] bg-opacity-30"
         />
         <div
             in:fly={{ duration: 300, y: -50, opacity: 0 }}
             out:fly={{ duration: 300, y: 50, opacity: 0 }}
-            class="d-modal-content bg-base-100 open:opacity-40 card shadow-card"
+            class="d-modal-content card bg-base-100 shadow-card open:opacity-40"
         >
             <slot />
         </div>

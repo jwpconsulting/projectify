@@ -29,9 +29,9 @@
 </script>
 
 <header
-    class="h-[80px] flex items-center p-4 border-b border-base-300 sticky top-0 bg-base-100 z-10"
+    class="sticky top-0 z-10 flex h-[80px] items-center border-b border-base-300 bg-base-100 p-4"
 >
-    <a href="/" class="flex mr-8">
+    <a href="/" class="mr-8 flex">
         <HeaderLogo />
     </a>
     <nav class="grow">
@@ -40,7 +40,7 @@
                 <li class:active={$page.url.pathname === it.to}>
                     <a
                         on:click={it.action}
-                        class="p-2 cursor-pointer font-bold"
+                        class="cursor-pointer p-2 font-bold"
                         href={it.to}
                     >
                         {$_(it.label)}

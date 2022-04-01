@@ -119,7 +119,7 @@
                 let:src
             >
                 <div
-                    class="border border-base-300 rounded-md bg-primary-content text-primary overflow-hidden"
+                    class="overflow-hidden rounded-md border border-base-300 bg-primary-content text-primary"
                 >
                     <ProfilePicture
                         typogram={workspace.title}
@@ -152,7 +152,7 @@
         <SettingsField label="Danger Zone">
             <button
                 disabled={isSaving}
-                class="btn btn-accent  w-full btn-outline btn-sm rounded-full hover:bg-accent hover:text-accent-content"
+                class="btn btn-outline  btn-accent btn-sm w-full rounded-full hover:bg-accent hover:text-accent-content"
                 on:click={onDelete}
             >
                 {"Delete Workspace"}

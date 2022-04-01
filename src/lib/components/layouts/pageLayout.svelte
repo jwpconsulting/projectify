@@ -9,14 +9,14 @@
 <div
     class:h-screen={heightScreen}
     class:overflow-hidden={heightScreen}
-    class="flex flex-col grow"
+    class="flex grow flex-col"
 >
     <Header />
     <slot />
     {#if footerVisible}
         <footer class="flex justify-center border-t border-base-300">
             <div
-                class="flex items-center justify-start w-full max-w-3xl py-8 px-4"
+                class="flex w-full max-w-3xl items-center justify-start py-8 px-4"
             >
                 <HeaderLogo />
             </div>

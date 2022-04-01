@@ -31,7 +31,7 @@
 {#if !url && showPlus}
     <div
         style={`width: ${sizePx}; height: ${sizePx};`}
-        class="flex justify-center items-center overflow-hidden rounded-3xl shrink-0 border-2 border-primary text-primary border-dotted hover:ring"
+        class="flex shrink-0 items-center justify-center overflow-hidden rounded-3xl border-2 border-dotted border-primary text-primary hover:ring"
     >
         <IconPlus />
     </div>

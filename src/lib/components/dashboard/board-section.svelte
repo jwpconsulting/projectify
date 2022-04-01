@@ -144,14 +144,14 @@
     }
 </script>
 
-<div class="section flex m-2 bg-base-100 select-none">
+<div class="section m-2 flex select-none bg-base-100">
     <div
         class="w-1 shrink-0"
         style={`background-color: hsl(${index * 45}, 80%, 75%);`}
     />
     <div class="flex grow flex-col">
         <header
-            class="drag-handle select-none flex items-center h-16 p-2  children:m-1 cursor-pointer"
+            class="drag-handle children:m-1 flex h-16 cursor-pointer select-none  items-center p-2"
             on:click={toggleOpen}
             on:focus={onHandlerOver}
             on:mouseover={onHandlerOver}
@@ -162,7 +162,7 @@
             >
                 <IconChevronRight />
             </div>
-            <div class="grow font-bold uppercase grid">
+            <div class="grid grow font-bold uppercase">
                 <span class="nowrap-ellipsis"
                     >{section.order} -
                     {section.title}
@@ -190,7 +190,7 @@
         >
             {#if firstOpen}
                 <div
-                    class="content p-2 flex flex-wrap grow w-full min-h-16 relative"
+                    class="content min-h-16 relative flex w-full grow flex-wrap p-2"
                     bind:clientHeight={contentHeght}
                     use:sortable={{ group: "Tasks" }}
                     on:dragStart={taskDragStart}
@@ -199,7 +199,7 @@
                 >
                     {#each section.tasks as task, inx (task.uuid)}
                         <div
-                            class="drag-handle space-x-4 item h-24 bg-base-100 m-2 rounded-lg py-4 px-6 flex items-center border border-base-300 overflow-y-hidden cursor-pointer"
+                            class="drag-handle item m-2 flex h-24 cursor-pointer items-center space-x-4 overflow-y-hidden rounded-lg border border-base-300 bg-base-100 py-4 px-6"
                             class:hover:ring={!isDragging}
                             on:click={() =>
                                 !isDragging && openTaskDetails(task.uuid)}
@@ -213,16 +213,16 @@
                                 />
                             {/if}
                             <div
-                                class="flex flex-col overflow-y-hidden max-h-full mr-3"
+                                class="mr-3 flex max-h-full flex-col overflow-y-hidden"
                             >
-                                <div class="flex mb-2 space-x-1">
+                                <div class="mb-2 flex space-x-1">
                                     {#each task.labels as label}
                                         <div
                                             style={`--color:${
                                                 getColorFromInx(label.color)
                                                     .style
                                             };`}
-                                            class="label-dot w-2 h-2 rounded-full"
+                                            class="label-dot h-2 w-2 rounded-full"
                                         />
                                     {/each}
                                 </div>
@@ -240,16 +240,16 @@
                     {/each}
                     {#if !isDragging}
                         <div
-                            class="ignore-elements h-24 bg-base-100 m-2 rounded-lg p-4 flex items-center border border-base-300 overflow-y-hidden cursor-pointer hover:ring"
+                            class="ignore-elements m-2 flex h-24 cursor-pointer items-center overflow-y-hidden rounded-lg border border-base-300 bg-base-100 p-4 hover:ring"
                             on:click={() => openNewTask(section.uuid)}
                         >
                             <div
-                                class="m-2 mr-3 flex justify-center items-center overflow-hidden w-11 h-11 rounded-full shrink-0 border-2 border-primary text-primary border-dashed"
+                                class="m-2 mr-3 flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-primary text-primary"
                             >
                                 <IconPlus />
                             </div>
                             <div
-                                class="flex flex-col overflow-y-hidden max-h-full mr-3 text-primary font-bold"
+                                class="mr-3 flex max-h-full flex-col overflow-y-hidden font-bold text-primary"
                             >
                                 {$_("new-task")}
                             </div>

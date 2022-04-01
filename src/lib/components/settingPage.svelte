@@ -10,9 +10,9 @@
     };
 </script>
 
-<div class="page justify-start items-center p-8">
+<div class="page items-center justify-start p-8">
     <div class="w-full max-w-xl space-y-8">
-        <div class="flex space-x-5 justify-start items-center">
+        <div class="flex items-center justify-start space-x-5">
             <button
                 class="btn btn-circle btn-primary shadow-md"
                 on:click={() => onBack()}
@@ -21,7 +21,7 @@
                     <IconArrowLeft />
                 </div>
             </button>
-            <div class="font-bold text-2xl">{title}</div>
+            <div class="text-2xl font-bold">{title}</div>
         </div>
         {#if loading}
             <div class="text-center">{$_("loading")}</div>

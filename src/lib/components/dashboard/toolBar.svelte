@@ -18,7 +18,7 @@
         <button
             title={it.tooltip}
             disabled={it.disabled}
-            class="btn btn-ghost btn-xs h-10 px-3 flex justify-center items-center shrink-0"
+            class="btn btn-ghost btn-xs flex h-10 shrink-0 items-center justify-center px-3"
             on:click|stopPropagation={it.onClick}
         >
             <svelte:component this={it.icon} />

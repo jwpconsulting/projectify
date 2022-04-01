@@ -56,17 +56,17 @@
     });
 </script>
 
-<div class="flex flex-row divide-x divide-base-300 grow overflow-hidden">
+<div class="flex grow flex-row divide-x divide-base-300 overflow-hidden">
     <!-- First side bar -->
     <WorkspacesSideNav bind:selectedWorkspaceUUID bind:selectedWorkspace />
 
     <!-- Secon side bar -->
     <nav
-        class="flex flex-col bg-base-100 w-60 min-h-full sticky top-0 shrink-0"
+        class="sticky top-0 flex min-h-full w-60 shrink-0 flex-col bg-base-100"
     >
         <!-- Tite and settings -->
-        <div class="flex p-4 sticky top-0 bg-base-100 z-50">
-            <h1 class="grow font-bold text-xl capitalize">
+        <div class="sticky top-0 z-50 flex bg-base-100 p-4">
+            <h1 class="grow text-xl font-bold capitalize">
                 {selectedWorkspace ? selectedWorkspace.title : ""}
             </h1>
             <DropDownMenu
@@ -86,7 +86,7 @@
                 <!-- svelte-ignore a11y-label-has-associated-control -->
                 <label
                     tabindex="0"
-                    class="btn btn-primary btn-outline btn-circle btn-xs"
+                    class="btn btn-outline btn-primary btn-circle btn-xs"
                 >
                     <IconMenu />
                 </label>
@@ -94,7 +94,7 @@
         </div>
 
         <!-- Boards nav -->
-        <div class="flex flex-col grow overflow-hidden">
+        <div class="flex grow flex-col overflow-hidden">
             {#if selectedWorkspaceUUID}
                 <h2 class="p-4 text-base font-bold">Workspace Boards</h2>
                 <BoardsSideNav {selectedWorkspaceUUID} {selectedBoardUUID} />
@@ -103,7 +103,7 @@
     </nav>
 
     {#if selectedBoardUUID}
-        <div class="flex grow h-full overflow-y-auto">
+        <div class="flex h-full grow overflow-y-auto">
             <Board
                 workspaceUUID={selectedWorkspaceUUID}
                 bind:boardUUID={selectedBoardUUID}

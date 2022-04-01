@@ -52,7 +52,7 @@
 
 <div
     tabindex="-1"
-    class="flex flex-col overflow-hidden w-full bg-base-100 shadow-lg rounded-xl divide-y divide-base-300 max-h-[400px]"
+    class="flex max-h-[400px] w-full flex-col divide-y divide-base-300 overflow-hidden rounded-xl bg-base-100 shadow-lg"
     bind:this={rootEl}
     on:blur={onBlur}
 >
@@ -60,7 +60,7 @@
     <div class="p-4">
         <input
             type="text"
-            class="input w-full input-bordered"
+            class="input input-bordered w-full"
             placeholder="Filter labels"
             bind:value={searchText}
             bind:this={serachFieldEl}
@@ -68,7 +68,7 @@
         />
     </div>
     <div
-        class="flex flex-col divide-y divide-base-300 overflow-y-auto max-h-full"
+        class="flex max-h-full flex-col divide-y divide-base-300 overflow-y-auto"
     >
         <LabelList
             labels={$currentWorkspaceLabels}
@@ -86,9 +86,9 @@
         >
             <div
                 slot="item"
-                class="px-4 flex items-center space-x-2 h-14  hover:bg-base-200 select-none"
+                class="flex h-14 select-none items-center space-x-2  px-4 hover:bg-base-200"
             >
-                <div class="w-6 h-6 bg-debug rounded-full shrink-0">
+                <div class="bg-debug h-6 w-6 shrink-0 rounded-full">
                     <ColorDot index={label.color} {active} />
                 </div>
                 <div class="grid">

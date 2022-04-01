@@ -32,15 +32,15 @@ body {
     }
 
     .page {
-        @apply flex bg-base-200 p-1 grow flex-col;
+        @apply flex grow flex-col bg-base-200 p-1;
     }
 
     .page-center {
-        @apply justify-center items-center;
+        @apply items-center justify-center;
     }
 
     .card {
-        @apply bg-base-100 rounded-lg;
+        @apply rounded-lg bg-base-100;
     }
 
     .card-title {
@@ -52,12 +52,12 @@ body {
     }
 
     .label-text {
-        @apply font-bold text-xs;
+        @apply text-xs font-bold;
     }
 
     .btn {
         > svg {
-            @apply w-6 h-6;
+            @apply h-6 w-6;
         }
 
         > * {
@@ -71,7 +71,7 @@ body {
     }
     .btn-xs {
         > svg {
-            @apply w-5 h-5;
+            @apply h-5 w-5;
         }
     }
 
@@ -84,7 +84,7 @@ body {
     }
 
     .btn-ghost[disabled] {
-        @apply bg-opacity-0 cursor-default pointer-events-auto;
+        @apply pointer-events-auto cursor-default bg-opacity-0;
     }
 
     .dropdown > .dropdown-content {
@@ -99,7 +99,7 @@ body {
         @apply bg-secondary;
     }
     .menu li > * > svg {
-        @apply w-4 h-4;
+        @apply h-4 w-4;
     }
 
     .label {

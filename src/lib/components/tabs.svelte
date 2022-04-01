@@ -33,13 +33,13 @@
     {#if $activeTabId == item.id}
         <main
             style={forceHeight && `height:${contentHeght}px`}
-            class="grow flex flex-col relative overflow-y-auto transition-all ease-in-out duration-300"
+            class="relative flex grow flex-col overflow-y-auto transition-all duration-300 ease-in-out"
         >
             <div
                 class:px-6={autoPadding}
                 class:py-4={autoPadding}
                 bind:clientHeight={contentHeght}
-                class="flex flex-col grow relative"
+                class="relative flex grow flex-col"
             >
                 {#if item.component}
                     <svelte:component this={item.component} {...item.props} />

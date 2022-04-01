@@ -15,11 +15,11 @@
 
 <div
     class:open
-    class="d-modal fixed top-0 left-0 w-full h-full flex flex-col items-end justify-center p-0 z-50"
+    class="d-modal fixed top-0 left-0 z-50 flex h-full w-full flex-col items-end justify-center p-0"
 >
     <div
         on:click={() => (open = !open)}
-        class="d-modal-background fixed w-full h-full bg-[#002332] open:bg-opacity-30"
+        class="d-modal-background fixed h-full w-full bg-[#002332] open:bg-opacity-30"
     />
     {#if open}
         <div
@@ -29,7 +29,7 @@
                 x: contentWidth,
                 opacity: 1,
             }}
-            class="d-modal-content bg-base-100 grow open:opacity-40"
+            class="d-modal-content grow bg-base-100 open:opacity-40"
         >
             <slot />
         </div>

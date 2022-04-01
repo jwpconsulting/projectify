@@ -29,12 +29,12 @@
 </script>
 
 <nav
-    class="bg-base-100 shrink-0 flex flex-col items-center p-2 h-full max-h-full sticky top-0 overflow-y-auto"
+    class="sticky top-0 flex h-full max-h-full shrink-0 flex-col items-center overflow-y-auto bg-base-100 p-2"
 >
     {#if workspaces}
         {#each workspaces as workspace (workspace.uuid)}
             <a
-                class="btn btn-primary btn-outline btn-square overflow-hidden"
+                class="btn btn-outline btn-primary btn-square overflow-hidden"
                 class:btn-active={workspace.uuid == selectedWorkspaceUUID}
                 href={getDashboardURL(workspace.uuid)}
             >
@@ -46,7 +46,7 @@
                 />
             </a>
         {/each}
-        <button class="plus btn btn-primary btn-outline text-primary"
+        <button class="plus btn btn-outline btn-primary text-primary"
             ><IconPlus /></button
         >
     {/if}
@@ -57,7 +57,7 @@
         @apply m-2;
     }
     button {
-        @apply w-12 h-12 border-base-300 p-0 text-base-content;
+        @apply h-12 w-12 border-base-300 p-0 text-base-content;
     }
     button.plus {
         @apply text-primary;
@@ -67,7 +67,7 @@
     }
 
     a.btn-active {
-        @apply bg-base-100 ring border-primary;
+        @apply border-primary bg-base-100 ring;
     }
     a.btn-active:hover {
         @apply bg-primary-focus;

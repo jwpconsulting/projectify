@@ -67,7 +67,7 @@
     }
 </script>
 
-<ul class="menu overflow-y-auto block">
+<ul class="menu block overflow-y-auto">
     {#if boards}
         {#each boards as board (board.uuid)}
             <li
@@ -75,13 +75,13 @@
                 class:menu-item-active={board.uuid === selectedBoardUUID}
             >
                 <a
-                    class="h-9 text-xs font-bold capitalize px-8 inline"
+                    class="inline h-9 px-8 text-xs font-bold capitalize"
                     href={getDashboardURL(selectedWorkspaceUUID, board.uuid)}
                     ><span class="nowrap-ellipsis"># {board.title}</span></a
                 >
             </li>
         {/each}
-        <li class="text-primary sticky bottom-0 bg-base-100">
+        <li class="sticky bottom-0 bg-base-100 text-primary">
             <a
                 class="h-9 text-xs font-bold capitalize"
                 href="/"

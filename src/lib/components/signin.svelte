@@ -31,7 +31,7 @@
 </script>
 
 <div
-    class="card text-center shadow-card w-full max-w-xl transform-gpu"
+    class="card w-full max-w-xl transform-gpu text-center shadow-card"
     style={`transform:translateX(${$errorAnimation}px);`}
 >
     <form
@@ -84,7 +84,7 @@
                     on:input={unsetError}
                 />
             </div>
-            <div class="p-2  hi form-pop-msg text-error" class:hidden={!error}>
+            <div class="hi  form-pop-msg p-2 text-error" class:hidden={!error}>
                 {$_("wrong-email-or-password")}
             </div>
 

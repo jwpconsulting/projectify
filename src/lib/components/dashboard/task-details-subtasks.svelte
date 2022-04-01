@@ -103,20 +103,20 @@
 </script>
 
 <div class="flex flex-col space-y-4">
-    <div class="flex text-xl space-x-2">
-        <span class="uppercase font-bold">{$_("sub-task")}</span>
+    <div class="flex space-x-2 text-xl">
+        <span class="font-bold uppercase">{$_("sub-task")}</span>
         <span>{percent}%</span>
     </div>
 
     <progress
-        class="progress progress-primary grow w-full bg-base-300"
+        class="progress progress-primary w-full grow bg-base-300"
         value={percent}
         max="100"
     />
 
     <div>
         {#each subTasks as it, inx}
-            <label class="cursor-pointer label space-x-2 hover:bg-base-200">
+            <label class="label cursor-pointer space-x-2 hover:bg-base-200">
                 <input
                     type="checkbox"
                     class="checkbox checkbox-primary"
@@ -126,7 +126,7 @@
                 <div class="grow">{it.title}</div>
                 <button
                     on:click={() => deleteSubTask(it)}
-                    class="btn btn-xs btn-circle btn-ghost children:w-2"
+                    class="children:w-2 btn btn-ghost btn-circle btn-xs"
                     ><IconTrash /></button
                 >
             </label>
@@ -137,14 +137,14 @@
         <input
             type="text"
             placeholder={$_("new-sub-task-name")}
-            class="w-full pr-16 input input-bordered"
+            class="input input-bordered w-full pr-16"
             bind:value={newSubTaskTitle}
             on:keydown={(e) => e.key === "Enter" && addSubTask()}
         />
         <button
             disabled={newSubTaskTitle.length < 1}
             on:click={() => addSubTask()}
-            class="absolute top-0 right-0 rounded-l-none btn btn-primary btn-square"
+            class="btn btn-primary btn-square absolute top-0 right-0 rounded-l-none"
             ><IconPlus /></button
         >
     </div>

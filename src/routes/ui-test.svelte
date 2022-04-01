@@ -12,7 +12,7 @@
 </script>
 
 <div
-    class="flex flex-wrap bg-secondary p-8 justify-center items-center min-h-full"
+    class="flex min-h-full flex-wrap items-center justify-center bg-secondary p-8"
 >
     {#each monthDates as date}
         <div class="m-1">

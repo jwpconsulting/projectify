@@ -17,7 +17,7 @@
              --color:${color.style};   
             `}
             class:text-base-100={color.br}
-            class="color flex justify-center items-center rounded-full p-2 m-2 bg-debug h-10 w-10"
+            class="color bg-debug m-2 flex h-10 w-10 items-center justify-center rounded-full p-2"
         >
             {inx}
         </div>

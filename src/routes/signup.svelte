@@ -49,7 +49,7 @@
                 on:submit|preventDefault={() => submit()}
             >
                 <div
-                    class="card text-center shadow-card w-full max-w-xl transform-gpu"
+                    class="card w-full max-w-xl transform-gpu text-center shadow-card"
                     style={`transform:translateX(${$errorAnimation}px);`}
                 >
                     <div class="card-body items-center">
@@ -99,7 +99,7 @@
                             />
                         </div>
                         <div
-                            class="p-2  hi form-pop-msg text-error"
+                            class="hi  form-pop-msg p-2 text-error"
                             class:hidden={!error}
                         >
                             {$_("user-already-exist")}
@@ -113,7 +113,7 @@
                             />
                             <label
                                 for="privacy"
-                                class="text-xs ml-2 text-left"
+                                class="ml-2 text-left text-xs"
                             >
                                 {$_("signup-privacy")}
                             </label>

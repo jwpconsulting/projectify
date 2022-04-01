@@ -30,7 +30,7 @@
             method="post"
             on:submit|preventDefault={() => submit()}
         >
-            <div class="card text-center shadow-card w-full max-w-xl">
+            <div class="card w-full max-w-xl text-center shadow-card">
                 <div class="card-body items-center">
                     <div class="py-2">
                         <h1 class="card-title">{$_("password-reset")}</h1>
@@ -57,7 +57,7 @@
                         />
                     </div>
                     <div
-                        class="p-2  hi form-pop-msg text-error"
+                        class="hi  form-pop-msg p-2 text-error"
                         class:hidden={!error}
                     >
                         {$_("user-not-found")}
@@ -65,7 +65,7 @@
 
                     <div class="pt-2">
                         <button
-                            class="btn btn-primary rounded-full w-28 mt-4"
+                            class="btn btn-primary mt-4 w-28 rounded-full"
                             type="submit"
                         >
                             {$_("send")}

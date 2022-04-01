@@ -46,7 +46,7 @@
     />
     <button
         on:click={onSelectFileClick}
-        class="absolute bottom-[-8px] right-[-8px] btn shadow-lg btn-circle children-first:w-2 text-primary"
+        class="children-first:w-2 btn btn-circle absolute bottom-[-8px] right-[-8px] text-primary shadow-lg"
         ><IconPhotocamera /></button
     >
 </div>

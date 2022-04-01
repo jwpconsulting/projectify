@@ -17,7 +17,7 @@
     style={`--color:${color.h} ${color.s}% ${color.l}%;--color:${color.style};`}
     class:text-base-100={color.br}
     class:active
-    class="color flex shrink-0 justify-center items-center rounded-full p-2 w-full h-full"
+    class="color flex h-full w-full shrink-0 items-center justify-center rounded-full p-2"
 />
 
 <style lang="scss">

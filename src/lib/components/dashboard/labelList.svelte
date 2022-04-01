@@ -66,7 +66,7 @@
         on:click|preventDefault={() => onLabelClick(label)}
         class:cursor-pointer={editable}
         class:hover:opacity-60={editable}
-        class="cursor-pointer transition-opacity ease-out duration-300"
+        class="cursor-pointer transition-opacity duration-300 ease-out"
     >
         {#if $$slots.item}
             <slot name="item" {label} active={selectedLabelsInx[label.uuid]} />

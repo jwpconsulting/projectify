@@ -75,7 +75,7 @@
     <SettingPage title="My Profile">
         <div class="space-y-8">
             <header
-                class="flex flex-col justify-center items-center space-y-2 mt-[-40px]"
+                class="mt-[-40px] flex flex-col items-center justify-center space-y-2"
             >
                 <ProfilePictureFileSelector
                     url={currentUser ? currentUser.profilePicture : null}
@@ -90,9 +90,9 @@
                     />
                 </ProfilePictureFileSelector>
 
-                <div class="font-bold text-xl ">
+                <div class="text-xl font-bold ">
                     <input
-                        class="grow text-xl text-center p-2 rounded-md nowrap-ellipsis font-bold"
+                        class="nowrap-ellipsis grow rounded-md p-2 text-center text-xl font-bold"
                         placeholder={"Full name"}
                         on:input={() => fieldChanged()}
                         bind:value={currentUser.fullName}

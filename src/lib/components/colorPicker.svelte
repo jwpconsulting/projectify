@@ -22,7 +22,7 @@
 <div class="flex flex-wrap">
     {#each colors as color, inx}
         <div
-            class="cursor-pointer m-2 h-10 w-10"
+            class="m-2 h-10 w-10 cursor-pointer"
             on:click={() => {
                 onColorClick(inx);
             }}
