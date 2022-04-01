@@ -93,7 +93,7 @@
 </script>
 
 <div
-    class="relative flex select-none flex-col divide-y divide-base-300 overflow-hidden rounded-lg bg-base-100"
+    class="relative flex select-none flex-col divide-y divide-base-300 overflow-hidden rounded-lg bg-base-100 shadow-md"
 >
     <div class="flex items-center justify-center">
         <div
@@ -126,7 +126,7 @@
             {#each weekDays as day, inx}
                 <div
                     class:weekend={inx >= 5}
-                    class="m-0 flex h-8 w-8 items-center justify-center capitalize"
+                    class="m-0 flex h-8 w-8 items-center justify-center font-medium capitalize"
                 >
                     {day.substring(0, 2)}
                 </div>
@@ -227,7 +227,7 @@
         }
 
         &:hover > * {
-            @apply bg-base-300 text-base-100;
+            @apply bg-primary-focus text-base-100;
             @apply scale-75;
             @apply border-0 ring-0;
         }
