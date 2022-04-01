@@ -87,14 +87,14 @@ export function getCalendar(year: number, month: number): Calendar {
         days: [],
     };
 
-    const firstDay = objDate.getDay();
+    const firstDay = (objDate.getDay() + 6) % 7;
     const lastDay = new Date(year, month + 1, 0).getDate();
     const lastMonth = month === 0 ? 11 : month - 1;
     const lastYear = month === 0 ? year - 1 : year;
     const lastMonthLastDay = new Date(lastYear, lastMonth + 1, 0).getDate();
 
     for (let i = 0; i < 42; i++) {
-        let day = i - firstDay + 2;
+        let day = i - firstDay + 1;
         let moff = 0;
         if (day <= 0) {
             moff = -1;
