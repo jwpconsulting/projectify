@@ -122,9 +122,10 @@
     </div>
 
     <div class="relative overflow-hidden p-4">
-        <div class="grid grid-cols-7">
-            {#each weekDays as day}
+        <div class="grid grid-cols-7 justify-items-center">
+            {#each weekDays as day, inx}
                 <div
+                    class:weekend={inx >= 5}
                     class="m-0 flex h-8 w-8 items-center justify-center capitalize"
                 >
                     {day.substring(0, 2)}
@@ -132,11 +133,12 @@
             {/each}
         </div>
         <div class="grid grid-cols-7 items-center justify-items-center">
-            {#each calendar.days as day}
+            {#each calendar.days as day, inx}
                 <div
                     class:day-today={day.date.getTime() === today.getTime()}
                     class:day-selected={day.date.getTime() === date.getTime()}
                     class:day-disbled={day.moff !== 0}
+                    class:weekend={inx % 7 >= 5}
                     class="day"
                     on:click={() => selectDate(day.date)}
                 >
@@ -208,6 +210,11 @@
             @apply pr-3;
         }
     }
+
+    .weekend {
+        @apply text-primary-focus;
+    }
+
     .day {
         > * {
             @apply text-sm capitalize;

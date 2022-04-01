@@ -9,8 +9,18 @@
         date.setDate(1);
         return date;
     });
+
+    let date = new Date();
 </script>
 
+<div class="flex flex-wrap items-center justify-center bg-secondary p-8">
+    <div class="m-2">
+        <DatePicker bind:date />
+    </div>
+    <div class="m-2">
+        <DatePicker bind:date />
+    </div>
+</div>
 <div
     class="flex min-h-full flex-wrap items-center justify-center bg-secondary p-8"
 >
