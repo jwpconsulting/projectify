@@ -242,6 +242,7 @@ export const Query_DashboardBoard = gql`
             uuid
             title
             description
+            deadline
             sections {
                 order
                 uuid
@@ -443,6 +444,7 @@ export const Mutation_UpdateWorkspaceBoardSection = gql`
                 created
                 title
                 description
+                deadline
             }
         }
     }
