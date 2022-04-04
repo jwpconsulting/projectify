@@ -2,6 +2,7 @@
     import { getContext } from "svelte";
     import { _ } from "svelte-i18n";
     import ColorPicker from "./colorPicker.svelte";
+    import InputDatePicker from "./inputDatePicker.svelte";
 
     export let title;
     export let subtitle = null;
@@ -82,6 +83,11 @@
                 <ColorPicker
                     bind:selectedColorInx={input.value}
                     on:change={() => (isEditing = true)}
+                />
+            {:else if input.type == "datePicker"}
+                <InputDatePicker bind:input bind:isEditing />
+                <div
+                    class="absolute w-[100px] h-[100px] bg-debug top-[0] left-0"
                 />
             {:else}
                 <input
