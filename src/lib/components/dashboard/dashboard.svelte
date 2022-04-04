@@ -128,7 +128,18 @@
     <ConfirmModalContent
         title={$_("edit-workspace-board")}
         confirmLabel={$_("Save")}
-        inputs={[{ name: "title", label: $_("workspace-board-name") }]}
+        inputs={[
+            {
+                name: "title",
+                label: $_("workspace-board-name"),
+                validation: { required: true },
+            },
+            {
+                deadline: "deadline",
+                label: $_("deadline"),
+                type: "datePicker",
+            },
+        ]}
     />
 </DialogModal>
 

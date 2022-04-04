@@ -86,9 +86,6 @@
                 />
             {:else if input.type == "datePicker"}
                 <InputDatePicker bind:input bind:isEditing />
-                <div
-                    class="absolute w-[100px] h-[100px] bg-debug top-[0] left-0"
-                />
             {:else}
                 <input
                     type="text"

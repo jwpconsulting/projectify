@@ -280,12 +280,14 @@
                     },
                 ]}
             />
-            <div
-                class="bg-primary flex items-center p-1 px-3 rounded-lg text-primary-content shrink-0"
-            >
-                <span class="text-xs p-1">{$_("deadline")}</span>
-                <span class="text-base p-1 ">2021.12.31</span>
-            </div>
+            {#if board.deadline}
+                <div
+                    class="bg-primary flex items-center p-1 px-3 rounded-lg text-primary-content shrink-0"
+                >
+                    <span class="text-xs p-1">{$_("deadline")}</span>
+                    <span class="text-base p-1 ">{board.deadline}</span>
+                </div>
+            {/if}
         </div>
 
         <!-- Labels -->
