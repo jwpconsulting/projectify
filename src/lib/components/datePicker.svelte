@@ -9,6 +9,11 @@
     const dispatch = createEventDispatcher();
 
     export let date = new Date();
+    $: {
+        if (!date) {
+            date = new Date();
+        }
+    }
 
     $: year = date.getFullYear();
     $: month = date.getMonth();
@@ -21,7 +26,7 @@
 
     function selectDate(d) {
         date = d;
-        dispatch("date-changed", { date });
+        dispatch("change", { date });
         console.log("dispatch date ", date);
     }
 
