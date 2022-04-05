@@ -93,5 +93,9 @@
     "general": "General",
     "team-members": "Team members",
     "labels": "Labels",
-    "select-date": "Select date"
+    "select-date": "Select date",
+    "invite-team-member": "Invite team member",
+    "please-enter-a-email-of-team-member": "Please enter a email of team member.",
+    "remove-team-member": "Remove team member",
+    "are-you-sure-you-want-to-remove-this-team-member": "Are you sure you want to remove this team member?"
 }

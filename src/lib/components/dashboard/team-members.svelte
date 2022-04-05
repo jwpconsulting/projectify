@@ -149,14 +149,14 @@
 
 <DialogModal id="inviteTeamMemberToWorkspace">
     <ConfirmModalContent
-        title={"Invite team member"}
-        subtitle={"Please enter a email of team member."}
-        confirmLabel={"Send"}
+        title={$_("invite-team-member")}
+        subtitle={$_("please-enter-a-email-of-team-member")}
+        confirmLabel={$_("send")}
         inputs={[
             {
                 name: "email",
-                label: "Email",
-                placeholder: "Please enter a email of team member.",
+                label: $_("email"),
+                placeholder: $_("please-enter-a-email-of-team-member"),
             },
         ]}
     />
@@ -164,10 +164,10 @@
 
 <DialogModal id="removeTeamMemberFromWorkspace">
     <ConfirmModalContent
-        title={"Remove team member"}
-        confirmLabel={"Remove"}
+        title={$_("remove-team-member")}
+        confirmLabel={$_("remove")}
         confirmColor="accent"
     >
-        {"Are you sure you want to remove this team member?"}
+        {$_("are-you-sure-you-want-to-remove-this-team-member")}
     </ConfirmModalContent>
 </DialogModal>
