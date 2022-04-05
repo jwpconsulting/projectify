@@ -26,6 +26,7 @@
     } from "$lib/stores/dashboard";
     import LabelPillList from "./labelList.svelte";
     import { currentWorkspaceLabels } from "$lib/stores/dashboard";
+    import { dateStringToLocal } from "$lib/utils/date";
 
     export let workspaceUUID;
     export let boardUUID = null;
@@ -168,6 +169,7 @@
                     input: {
                         uuid: board.uuid,
                         title: modalRes.outputs.title,
+                        deadline: modalRes.outputs.deadline,
                         description: "",
                     },
                 },
@@ -285,7 +287,9 @@
                     class="bg-primary flex items-center p-1 px-3 rounded-lg text-primary-content shrink-0"
                 >
                     <span class="text-xs p-1">{$_("deadline")}</span>
-                    <span class="text-base p-1 ">{board.deadline}</span>
+                    <span class="text-base p-1 "
+                        >{dateStringToLocal(board.deadline)}</span
+                    >
                 </div>
             {/if}
         </div>

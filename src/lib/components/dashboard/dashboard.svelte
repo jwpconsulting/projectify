@@ -135,7 +135,7 @@
                 validation: { required: true },
             },
             {
-                deadline: "deadline",
+                name: "deadline",
                 label: $_("deadline"),
                 type: "datePicker",
             },
