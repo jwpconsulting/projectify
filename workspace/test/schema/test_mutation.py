@@ -20,12 +20,10 @@ class TestChangeSubTaskDoneMutation:
     """Test ChangeSubTaskDoneMutation."""
 
     query = """
-mutation ChangeSubTaskDone($uuid: ID!) {
-  changeSubTaskDone(input: {subTaskUuid: $uuid, done: true}) {
-    subTask {
-      done
+mutation ChangeSubTaskDone($uuid: UUID!) {
+    changeSubTaskDone(input: {subTaskUuid: $uuid, done: true}) {
+        done
     }
-  }
 }
 """
 
@@ -46,9 +44,7 @@ mutation ChangeSubTaskDone($uuid: ID!) {
         assert result == {
             "data": {
                 "changeSubTaskDone": {
-                    "subTask": {
-                        "done": True,
-                    },
+                    "done": True,
                 },
             },
         }
@@ -59,15 +55,13 @@ class TestMoveWorkspaceBoardSectionMutation:
     """Test MoveWorkspaceBoardSectionMutation."""
 
     query = """
-mutation MoveWorkspaceBoardSection($uuid: ID!) {
-  moveWorkspaceBoardSection(
-    input:{workspaceBoardSectionUuid: $uuid, order: 1 }
-  ) {
-    workspaceBoardSection {
-      uuid
-      order
+mutation MoveWorkspaceBoardSection($uuid: UUID!) {
+    moveWorkspaceBoardSection(
+        input:{workspaceBoardSectionUuid: $uuid, order: 1 }
+    ) {
+        uuid
+        order
     }
-  }
 }
 """
 
@@ -90,10 +84,8 @@ mutation MoveWorkspaceBoardSection($uuid: ID!) {
         assert result == {
             "data": {
                 "moveWorkspaceBoardSection": {
-                    "workspaceBoardSection": {
-                        "uuid": str(workspace_board_section.uuid),
-                        "order": 1,
-                    },
+                    "uuid": str(workspace_board_section.uuid),
+                    "order": 1,
                 },
             },
         }
@@ -104,13 +96,12 @@ class TestMoveTaskMutation:
     """Test MoveTaskMutation."""
 
     query = """
-mutation MoveTask($taskUuid: ID!, $sectionUuid: ID!) {
-  moveTask(input: {taskUuid: $taskUuid,
-      workspaceBoardSectionUuid: $sectionUuid, order: 2}) {
-    task {
-      title
+mutation MoveTask($taskUuid: UUID!, $sectionUuid: UUID!) {
+    moveTask(input: {taskUuid: $taskUuid,
+        workspaceBoardSectionUuid: $sectionUuid, order: 2}
+    ) {
+        title
     }
-  }
 }
 
 """
@@ -134,9 +125,7 @@ mutation MoveTask($taskUuid: ID!, $sectionUuid: ID!) {
         assert result == {
             "data": {
                 "moveTask": {
-                    "task": {
-                        "title": task.title,
-                    }
+                    "title": task.title,
                 }
             }
         }
@@ -147,15 +136,13 @@ class TestAddUserToWorkspaceMutation:
     """Test AddUserToWorkspaceMutation."""
 
     query = """
-mutation AddUserToWorkspace($uuid: ID!, $email: String!) {
-  addUserToWorkspace(input: {uuid: $uuid, email: $email}) {
-    workspace {
-      uuid
-      userInvitations {
-        email
-      }
+mutation AddUserToWorkspace($uuid: UUID!, $email: String!) {
+    addUserToWorkspace(input: {uuid: $uuid, email: $email}) {
+        uuid
+        userInvitations {
+            email
+        }
     }
-  }
 }
 """
 
@@ -178,10 +165,8 @@ mutation AddUserToWorkspace($uuid: ID!, $email: String!) {
         assert result == {
             "data": {
                 "addUserToWorkspace": {
-                    "workspace": {
-                        "uuid": str(workspace.uuid),
-                        "userInvitations": [],
-                    },
+                    "uuid": str(workspace.uuid),
+                    "userInvitations": [],
                 },
             },
         }
@@ -222,14 +207,12 @@ mutation AddUserToWorkspace($uuid: ID!, $email: String!) {
         assert result == {
             "data": {
                 "addUserToWorkspace": {
-                    "workspace": {
-                        "uuid": str(workspace.uuid),
-                        "userInvitations": [
-                            {
-                                "email": "hello@example.com",
-                            },
-                        ],
-                    },
+                    "uuid": str(workspace.uuid),
+                    "userInvitations": [
+                        {
+                            "email": "hello@example.com",
+                        },
+                    ],
                 },
             },
         }
@@ -242,15 +225,13 @@ class TestRemoveUserFromWorkspaceMutation:
     """Test RemoveUserFromWorkspaceMutation."""
 
     query = """
-mutation RemoveUserFromWorkspace($uuid: ID!, $email: String!) {
-  removeUserFromWorkspace(input: {uuid: $uuid, email: $email}) {
-    workspace {
-      uuid
-      userInvitations {
-        email
-      }
+mutation RemoveUserFromWorkspace($uuid: UUID!, $email: String!) {
+    removeUserFromWorkspace(input: {uuid: $uuid, email: $email}) {
+        uuid
+        userInvitations {
+            email
+        }
     }
-  }
 }
 """
 
@@ -275,10 +256,8 @@ mutation RemoveUserFromWorkspace($uuid: ID!, $email: String!) {
         assert result == {
             "data": {
                 "removeUserFromWorkspace": {
-                    "workspace": {
-                        "uuid": str(workspace.uuid),
-                        "userInvitations": [],
-                    },
+                    "uuid": str(workspace.uuid),
+                    "userInvitations": [],
                 },
             },
         }
@@ -323,10 +302,8 @@ mutation RemoveUserFromWorkspace($uuid: ID!, $email: String!) {
         assert result == {
             "data": {
                 "removeUserFromWorkspace": {
-                    "workspace": {
-                        "uuid": str(workspace.uuid),
-                        "userInvitations": [],
-                    },
+                    "uuid": str(workspace.uuid),
+                    "userInvitations": [],
                 },
             },
         }
@@ -354,14 +331,12 @@ class TestAssignTaskMutation:
     """Test AssignTaskMutation."""
 
     query = """
-mutation AssignTask($uuid: ID!, $email: String) {
-  assignTask(input: {uuid: $uuid, email: $email}) {
-    task {
-      assignee {
-        email
-      }
+mutation AssignTask($uuid: UUID!, $email: String) {
+    assignTask(input: {uuid: $uuid, email: $email}) {
+        assignee {
+            email
+        }
     }
-  }
 }
 """
 
@@ -384,10 +359,8 @@ mutation AssignTask($uuid: ID!, $email: String) {
         assert result == {
             "data": {
                 "assignTask": {
-                    "task": {
-                        "assignee": {
-                            "email": other_user.email,
-                        },
+                    "assignee": {
+                        "email": other_user.email,
                     },
                 },
             },
@@ -413,9 +386,7 @@ mutation AssignTask($uuid: ID!, $email: String) {
         assert result == {
             "data": {
                 "assignTask": {
-                    "task": {
-                        "assignee": None,
-                    },
+                    "assignee": None,
                 },
             },
         }
@@ -427,17 +398,15 @@ class TestAddLabelMutation:
     """Test AddLabelMutation."""
 
     query = """
-mutation AddLabel($workspaceUuid: ID!) {
+mutation AddLabel($workspaceUuid: UUID!) {
     addLabel(input: {
         workspaceUuid: $workspaceUuid,
         color: 1, name: "important"
     }) {
-        label {
-            name
-            color
-            workspace {
-                uuid
-            }
+        name
+        color
+        workspace {
+            uuid
         }
     }
 }
@@ -454,12 +423,10 @@ mutation AddLabel($workspaceUuid: ID!) {
         assert result == {
             "data": {
                 "addLabel": {
-                    "label": {
-                        "name": "important",
-                        "color": 1,
-                        "workspace": {
-                            "uuid": str(workspace.uuid),
-                        },
+                    "name": "important",
+                    "color": 1,
+                    "workspace": {
+                        "uuid": str(workspace.uuid),
                     },
                 },
             }
@@ -471,13 +438,12 @@ class TestAddSubTaskMutation:
     """Test AddSubTaskMutation."""
 
     query = """
-mutation AddSubTask($uuid: ID!) {
-  addSubTask(
-    input:{taskUuid: $uuid, title:"Hello world", description: "Foo bar"}) {
-    subTask {
-      title
+mutation AddSubTask($uuid: UUID!) {
+    addSubTask(
+        input:{taskUuid: $uuid, title: "Hello world", description: "Foo bar"}
+    ) {
+        title
     }
-  }
 }
 """
 
@@ -492,9 +458,7 @@ mutation AddSubTask($uuid: ID!) {
         assert result == {
             "data": {
                 "addSubTask": {
-                    "subTask": {
-                        "title": "Hello world",
-                    },
+                    "title": "Hello world",
                 },
             },
         }
@@ -515,12 +479,10 @@ class TestAddChatMessageMutation:
     """Test AddChatMessageMutation."""
 
     query = """
-mutation AddChatMessage($uuid: ID!) {
-  addChatMessage(input:{taskUuid: $uuid, text:"Hello world"}) {
-    chatMessage {
-      text
+mutation AddChatMessage($uuid: UUID!) {
+    addChatMessage(input:{taskUuid: $uuid, text:"Hello world"}) {
+        text
     }
-  }
 }
 """
 
@@ -535,9 +497,7 @@ mutation AddChatMessage($uuid: ID!) {
         assert result == {
             "data": {
                 "addChatMessage": {
-                    "chatMessage": {
-                        "text": "Hello world",
-                    },
+                    "text": "Hello world",
                 },
             },
         }
@@ -558,11 +518,9 @@ class TestDuplicateTaskMutation:
     """Test DuplicateTaskMutation."""
 
     query = """
-mutation DuplicateTask($uuid: ID!) {
+mutation DuplicateTask($uuid: UUID!) {
     duplicateTask(input: {uuid: $uuid}) {
-        task {
-            uuid
-        }
+        uuid
     }
 }
 """
@@ -579,9 +537,7 @@ mutation DuplicateTask($uuid: ID!) {
         assert result == {
             "data": {
                 "duplicateTask": {
-                    "task": {
-                        "uuid": str(new_task.uuid),
-                    }
+                    "uuid": str(new_task.uuid),
                 },
             },
         }
@@ -592,15 +548,15 @@ class TestAssignLabelMutation:
     """Test AssignLabelMutation."""
 
     query = """
-mutation AssignLabel($taskUuid: ID!, $labelUuid: ID!, $assigned: Boolean!) {
+mutation AssignLabel(
+    $taskUuid: UUID!, $labelUuid: UUID!, $assigned: Boolean!
+) {
     assignLabel(input: {
         taskUuid: $taskUuid, labelUuid: $labelUuid, assigned: $assigned
     }) {
-        task {
+        uuid
+        labels {
             uuid
-            labels {
-                uuid
-            }
         }
     }
 }
@@ -625,14 +581,12 @@ mutation AssignLabel($taskUuid: ID!, $labelUuid: ID!, $assigned: Boolean!) {
         assert result == {
             "data": {
                 "assignLabel": {
-                    "task": {
-                        "uuid": str(task.uuid),
-                        "labels": [
-                            {
-                                "uuid": str(label.uuid),
-                            },
-                        ],
-                    }
+                    "uuid": str(task.uuid),
+                    "labels": [
+                        {
+                            "uuid": str(label.uuid),
+                        },
+                    ],
                 }
             }
         }
@@ -657,10 +611,8 @@ mutation AssignLabel($taskUuid: ID!, $labelUuid: ID!, $assigned: Boolean!) {
         assert result == {
             "data": {
                 "assignLabel": {
-                    "task": {
-                        "uuid": str(task.uuid),
-                        "labels": [],
-                    }
+                    "uuid": str(task.uuid),
+                    "labels": [],
                 }
             }
         }
@@ -672,14 +624,12 @@ class TestUpdateWorkspaceMutation:
     """Test UpdateWorkspaceMutation."""
 
     query = """
-mutation UpdateWorkspace($uuid: ID!) {
-  updateWorkspace(input: {uuid: $uuid, title: "foo", description: "bar"}) {
-    workspace {
-      uuid
-      title
-      description
+mutation UpdateWorkspace($uuid: UUID!) {
+    updateWorkspace(input: {uuid: $uuid, title: "foo", description: "bar"}) {
+        uuid
+        title
+        description
     }
-  }
 }
 
 """
@@ -700,11 +650,9 @@ mutation UpdateWorkspace($uuid: ID!) {
         assert result == {
             "data": {
                 "updateWorkspace": {
-                    "workspace": {
-                        "uuid": str(workspace.uuid),
-                        "title": "foo",
-                        "description": "bar",
-                    },
+                    "uuid": str(workspace.uuid),
+                    "title": "foo",
+                    "description": "bar",
                 },
             },
         }
@@ -721,18 +669,7 @@ mutation UpdateWorkspace($uuid: ID!) {
                 "uuid": str(workspace.uuid),
             },
         )
-        assert result == {
-            "data": {
-                "updateWorkspace": None,
-            },
-            "errors": [
-                {
-                    "locations": [{"column": 3, "line": 3}],
-                    "message": "Workspace matching query does not exist.",
-                    "path": ["updateWorkspace"],
-                },
-            ],
-        }
+        assert "errors" in result
 
 
 @pytest.mark.django_db
@@ -740,12 +677,10 @@ class TestArchiveWorkspaceBoardMutation:
     """Test ArchiveWorkspaceBoardMutation."""
 
     query = """
-mutation ArchiveWorkspaceBoard($uuid: ID!, $archived: Boolean!) {
+mutation ArchiveWorkspaceBoard($uuid: UUID!, $archived: Boolean!) {
     archiveWorkspaceBoard(input: {uuid: $uuid, archived: $archived}) {
-        workspaceBoard {
-            uuid
-            archived
-        }
+        uuid
+        archived
     }
 }
 """
@@ -768,10 +703,8 @@ mutation ArchiveWorkspaceBoard($uuid: ID!, $archived: Boolean!) {
         assert result == {
             "data": {
                 "archiveWorkspaceBoard": {
-                    "workspaceBoard": {
-                        "uuid": str(workspace_board.uuid),
-                        "archived": workspace_board.archived.isoformat(),
-                    },
+                    "uuid": str(workspace_board.uuid),
+                    "archived": workspace_board.archived.isoformat(),
                 },
             },
         }
@@ -793,10 +726,8 @@ mutation ArchiveWorkspaceBoard($uuid: ID!, $archived: Boolean!) {
         assert result == {
             "data": {
                 "archiveWorkspaceBoard": {
-                    "workspaceBoard": {
-                        "uuid": str(workspace_board.uuid),
-                        "archived": None,
-                    },
+                    "uuid": str(workspace_board.uuid),
+                    "archived": None,
                 },
             },
         }
@@ -807,17 +738,15 @@ class TestUpdateWorkspaceBoardMutation:
     """Test UpdateWorkspaceBoardMutation."""
 
     query = """
-mutation UpdateWorkspaceBoard($uuid: ID!, $deadline: DateTime) {
-  updateWorkspaceBoard(input: {
-    uuid: $uuid, title: "Foo", description: "Bar"
-    deadline: $deadline})
-  {
-    workspaceBoard {
-      title
-      description
-      deadline
+mutation UpdateWorkspaceBoard($uuid: UUID!, $deadline: DateTime) {
+    updateWorkspaceBoard(input: {
+        uuid: $uuid, title: "Foo", description: "Bar"
+        deadline: $deadline}
+    ) {
+        title
+        description
+        deadline
     }
-  }
 }
 """
 
@@ -827,16 +756,15 @@ mutation UpdateWorkspaceBoard($uuid: ID!, $deadline: DateTime) {
             self.query,
             variables={
                 "uuid": str(workspace_board.uuid),
+                "deadline": None,
             },
         )
         assert result == {
             "data": {
                 "updateWorkspaceBoard": {
-                    "workspaceBoard": {
-                        "title": "Foo",
-                        "description": "Bar",
-                        "deadline": None,
-                    },
+                    "title": "Foo",
+                    "description": "Bar",
+                    "deadline": None,
                 },
             },
         }
@@ -859,11 +787,9 @@ mutation UpdateWorkspaceBoard($uuid: ID!, $deadline: DateTime) {
         assert result == {
             "data": {
                 "updateWorkspaceBoard": {
-                    "workspaceBoard": {
-                        "title": "Foo",
-                        "description": "Bar",
-                        "deadline": now,
-                    },
+                    "title": "Foo",
+                    "description": "Bar",
+                    "deadline": now,
                 },
             },
         }
@@ -874,6 +800,7 @@ mutation UpdateWorkspaceBoard($uuid: ID!, $deadline: DateTime) {
             self.query,
             variables={
                 "uuid": str(workspace_board.uuid),
+                "deadline": None,
             },
         )
         assert "errors" in result
@@ -884,15 +811,13 @@ class TestUpdateWorkspaceBoardSectionMutation:
     """Test UpdateWorkspaceBoardSectionMutation."""
 
     query = """
-mutation UpdateWorkspaceBoardSection($uuid: ID!) {
-  updateWorkspaceBoardSection(input: {uuid: $uuid,\
-       title: "Foo", description: "Bar"})
-  {
-    workspaceBoardSection {
-      title
-      description
+mutation UpdateWorkspaceBoardSection($uuid: UUID!) {
+    updateWorkspaceBoardSection(input: {
+        uuid: $uuid, title: "Foo", description: "Bar"}
+    ) {
+        title
+        description
     }
-  }
 }
 """
 
@@ -912,10 +837,8 @@ mutation UpdateWorkspaceBoardSection($uuid: ID!) {
         assert result == {
             "data": {
                 "updateWorkspaceBoardSection": {
-                    "workspaceBoardSection": {
-                        "title": "Foo",
-                        "description": "Bar",
-                    },
+                    "title": "Foo",
+                    "description": "Bar",
                 },
             },
         }
@@ -940,18 +863,16 @@ class TestUpdateTaskMutation:
     """Test TestUpdateTaskMutation."""
 
     query = """
-mutation UpdateTaskMutation($uuid: ID!, $deadline: DateTime) {
-  updateTask(
-      input: {
-        uuid: $uuid, title: "Foo", description: "Bar", deadline: $deadline
-      }
-  )
-  {
-    task {
-      title
-      description
+mutation UpdateTaskMutation($uuid: UUID!, $deadline: DateTime) {
+    updateTask(
+        input: {
+            uuid: $uuid, title: "Foo", description: "Bar", deadline: $deadline
+        }
+    )
+    {
+        title
+        description
     }
-  }
 }
 """
 
@@ -961,15 +882,14 @@ mutation UpdateTaskMutation($uuid: ID!, $deadline: DateTime) {
             self.query,
             variables={
                 "uuid": str(task.uuid),
+                "deadline": None,
             },
         )
         assert result == {
             "data": {
                 "updateTask": {
-                    "task": {
-                        "title": "Foo",
-                        "description": "Bar",
-                    },
+                    "title": "Foo",
+                    "description": "Bar",
                 },
             },
         }
@@ -980,6 +900,7 @@ mutation UpdateTaskMutation($uuid: ID!, $deadline: DateTime) {
             self.query,
             variables={
                 "uuid": str(task.uuid),
+                "deadline": None,
             },
         )
         assert "errors" in result
@@ -1026,12 +947,10 @@ class TestUpdateLabelMutation:
     """Test UpdateLabelMutation."""
 
     query = """
-mutation UpdateLabel($uuid: ID!) {
+mutation UpdateLabel($uuid: UUID!) {
     updateLabel(input: {uuid: $uuid, name: "Friendship", color: 199}) {
-        label {
-            name
-            color
-        }
+        name
+        color
     }
 }
 """
@@ -1047,10 +966,8 @@ mutation UpdateLabel($uuid: ID!) {
         assert result == {
             "data": {
                 "updateLabel": {
-                    "label": {
-                        "name": "Friendship",
-                        "color": 199,
-                    },
+                    "name": "Friendship",
+                    "color": 199,
                 },
             },
         }
@@ -1061,14 +978,12 @@ class TestUpdateSubTaskMutation:
     """Test TestUpdateSubTaskMutation."""
 
     query = """
-mutation UpdateSubTaskMutation($uuid: ID!) {
-  updateSubTask(input: {uuid: $uuid, title: "Foo", description: "Bar"})
-  {
-    subTask {
-      title
-      description
+mutation UpdateSubTaskMutation($uuid: UUID!) {
+    updateSubTask(input: {uuid: $uuid, title: "Foo", description: "Bar"})
+    {
+        title
+        description
     }
-  }
 }
 """
 
@@ -1083,10 +998,8 @@ mutation UpdateSubTaskMutation($uuid: ID!) {
         assert result == {
             "data": {
                 "updateSubTask": {
-                    "subTask": {
-                        "title": "Foo",
-                        "description": "Bar",
-                    },
+                    "title": "Foo",
+                    "description": "Bar",
                 },
             },
         }
@@ -1108,12 +1021,10 @@ class TestDeleteWorkspaceBoardMutation:
     """Test DeleteWorkspaceBoardMutation."""
 
     query = """
-mutation DeleteWorkspaceBoard($uuid: ID!) {
-  deleteWorkspaceBoard(input: {uuid: $uuid}) {
-    workspaceBoard {
-      uuid
+mutation DeleteWorkspaceBoard($uuid: UUID!) {
+    deleteWorkspaceBoard(input: {uuid: $uuid}) {
+        uuid
     }
-  }
 }
 """
 
@@ -1134,9 +1045,7 @@ mutation DeleteWorkspaceBoard($uuid: ID!) {
         assert result == {
             "data": {
                 "deleteWorkspaceBoard": {
-                    "workspaceBoard": {
-                        "uuid": str(workspace_board.uuid),
-                    }
+                    "uuid": str(workspace_board.uuid),
                 }
             }
         }
@@ -1151,18 +1060,7 @@ mutation DeleteWorkspaceBoard($uuid: ID!) {
                 "uuid": str(workspace_board.uuid),
             },
         )
-        assert result == {
-            "data": {
-                "deleteWorkspaceBoard": None,
-            },
-            "errors": [
-                {
-                    "locations": [{"column": 3, "line": 3}],
-                    "message": "WorkspaceBoard matching query does not exist.",
-                    "path": ["deleteWorkspaceBoard"],
-                },
-            ],
-        }
+        assert "errors" in result
         assert models.WorkspaceBoard.objects.count() == 1
 
 
@@ -1171,12 +1069,10 @@ class TestDeleteWorkspaceBoardSectionMutation:
     """Test DeleteWorkspaceBoardMutation."""
 
     query = """
-mutation DeleteWorkspaceBoardSection($uuid: ID!) {
-  deleteWorkspaceBoardSection(input: {uuid: $uuid}) {
-    workspaceBoardSection {
-      uuid
+mutation DeleteWorkspaceBoardSection($uuid: UUID!) {
+    deleteWorkspaceBoardSection(input: {uuid: $uuid}) {
+        uuid
     }
-  }
 }
 """
 
@@ -1197,9 +1093,7 @@ mutation DeleteWorkspaceBoardSection($uuid: ID!) {
         assert result == {
             "data": {
                 "deleteWorkspaceBoardSection": {
-                    "workspaceBoardSection": {
-                        "uuid": str(workspace_board_section.uuid),
-                    }
+                    "uuid": str(workspace_board_section.uuid),
                 }
             }
         }
@@ -1244,12 +1138,10 @@ class TestDeleteTask:
     """Test DeleteTask."""
 
     query = """
-mutation DeleteTask($uuid: ID!) {
-  deleteTask(input: {uuid: $uuid}) {
-    task {
-      uuid
+mutation DeleteTask($uuid: UUID!) {
+    deleteTask(input: {uuid: $uuid}) {
+        uuid
     }
-  }
 }
 """
 
@@ -1272,9 +1164,7 @@ mutation DeleteTask($uuid: ID!) {
         assert result == {
             "data": {
                 "deleteTask": {
-                    "task": {
-                        "uuid": str(task.uuid),
-                    }
+                    "uuid": str(task.uuid),
                 }
             }
         }
@@ -1297,11 +1187,9 @@ class TestDeleteLabel:
     """Test DeleteLabelMutation."""
 
     query = """
-mutation DeleteLabel($uuid: ID!) {
+mutation DeleteLabel($uuid: UUID!) {
     deleteLabel(input: {uuid: $uuid}) {
-        label {
-            uuid
-        }
+        uuid
     }
 }
 """
@@ -1318,9 +1206,7 @@ mutation DeleteLabel($uuid: ID!) {
         assert result == {
             "data": {
                 "deleteLabel": {
-                    "label": {
-                        "uuid": str(label.uuid),
-                    },
+                    "uuid": str(label.uuid),
                 },
             },
         }
@@ -1332,12 +1218,10 @@ class TestDeleteSubTask:
     """Test DeleteSubTask."""
 
     query = """
-mutation DeleteSubTask($uuid: ID!) {
-  deleteSubTask(input: {uuid: $uuid}) {
-    subTask {
-      uuid
+mutation DeleteSubTask($uuid: UUID!) {
+    deleteSubTask(input: {uuid: $uuid}) {
+        uuid
     }
-  }
 }
 """
 
@@ -1354,9 +1238,7 @@ mutation DeleteSubTask($uuid: ID!) {
         assert result == {
             "data": {
                 "deleteSubTask": {
-                    "subTask": {
-                        "uuid": str(sub_task.uuid),
-                    }
+                    "uuid": str(sub_task.uuid),
                 }
             }
         }

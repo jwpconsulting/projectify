@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/projectify
     docker:
-      - image: python:3.9.9
+      - image: python:3.10.2
         environment:
           DJANGO_SETTINGS_MODULE: projectify.settings.test
           DATABASE_URL: "postgres://projectify:projectify@localhost:5432/projectify"

@@ -1,259 +1,219 @@
 """Workspace schema types."""
-import graphene
-import graphene_django
+import datetime
+import uuid
+
+import strawberry
+from user.schema import types as user_types
 
 from .. import (
     models,
 )
 
 
-class Workspace(graphene_django.DjangoObjectType):
+@strawberry.django.type(models.Workspace)
+class Workspace:
     """Workspace."""
 
-    users = graphene.List("user.schema.types.User")
-    boards = graphene.List("workspace.schema.types.WorkspaceBoard")
-    archived_boards = graphene.List("workspace.schema.types.WorkspaceBoard")
-    labels = graphene.List("workspace.schema.types.Label")
-    user_invitations = graphene.List("workspace.schema.types.UserInvitation")
-    picture = graphene.String()
-
-    def resolve_users(self, info):
+    @strawberry.field
+    def users(self, info) -> list[user_types.User]:
         """Resolve workspace users."""
-        return info.context.loader.workspace_user_loader.load(self.pk)
+        # TODO data loader
+        return self.users.all()
 
-    def resolve_boards(self, info):
+    @strawberry.field
+    def boards(self) -> list["WorkspaceBoard"]:
         """Resolve workspace boards."""
-        return info.context.loader.workspace_workspace_board_loader.load(
-            self.pk
-        )
+        # TODO data loader
+        return self.workspaceboard_set.filter_by_archived(False)
 
-    def resolve_archived_boards(self, info):
+    @strawberry.field
+    def archived_boards(self) -> list["WorkspaceBoard"]:
         """Resolve archived workspace boards."""
-        loader = info.context.loader.workspace_archived_workspace_board_loader
-        return loader.load(self.pk)
+        # TODO data loader
+        return self.workspaceboard_set.filter_by_archived()
 
-    def resolve_labels(self, info):
+    @strawberry.field
+    def labels(self) -> list["Label"]:
         """Resolve labels."""
-        loader = info.context.loader.workspace_label_loader
-        return loader.load(self.pk)
+        # TODO data loadder
+        return self.label_set.all()
 
-    def resolve_user_invitations(self, info):
+    @strawberry.field
+    def user_invitations(self) -> list["UserInvitation"]:
         """Resolve user invitations."""
-        loader = info.context.loader.workspace_user_invite_loader
-        return loader.load(self.pk)
+        # TODO data loader
+        invites = []
+        qs = self.workspaceuserinvite_set.filter_by_redeemed(False)
+        for invite in qs.iterator():
+            invites.append(UserInvitation(email=invite.user_invite.email))
+        return invites
 
-    def resolve_picture(self, info):
+    @strawberry.field
+    def picture(self) -> str | None:
         """Resolve picture."""
         if self.picture:
             return self.picture.url
 
-    class Meta:
-        """Meta."""
-
-        fields = (
-            "users",
-            "created",
-            "modified",
-            "title",
-            "description",
-            "uuid",
-        )
-        model = models.Workspace
+    created: datetime.datetime
+    modified: datetime.datetime
+    title: str
+    description: str
+    uuid: uuid.UUID
 
 
-class UserInvitation(graphene.ObjectType):
+@strawberry.type
+class UserInvitation:
     """
     UserInvitation.
 
     A synthetic object not directly based on a Django model.
     """
 
-    email = graphene.String(required=True)
+    email: str
 
 
-class WorkspaceBoard(graphene_django.DjangoObjectType):
+@strawberry.django.type(models.WorkspaceBoard)
+class WorkspaceBoard:
     """WorkspaceBoard."""
 
-    sections = graphene.List("workspace.schema.types.WorkspaceBoardSection")
-    workspace = graphene.Field("workspace.schema.types.Workspace")
-
-    def resolve_sections(self, info):
+    @strawberry.field
+    def sections(self, info) -> list["WorkspaceBoardSection"]:
         """Resolve workspace board sections."""
-        loader = info.context.loader
-        return loader.workspace_board_workspace_board_section_loader.load(
-            self.pk,
-        )
+        # TODO data loader
+        return self.workspaceboardsection_set.all()
 
-    def resolve_workspace(self, info):
+    @strawberry.field
+    def workspace(self, info) -> "Workspace":
         """Resolve workspace."""
-        return info.context.loader.workspace_loader.load(self.workspace.pk)
+        return self.workspace
 
-    class Meta:
-        """Meta."""
-
-        fields = (
-            "created",
-            "modified",
-            "title",
-            "description",
-            "uuid",
-            "archived",
-            "deadline",
-        )
-        model = models.WorkspaceBoard
+    created: datetime.datetime
+    modified: datetime.datetime
+    title: str
+    description: str
+    uuid: uuid.UUID
+    archived: datetime.datetime | None
+    deadline: datetime.datetime | None
 
 
-class WorkspaceBoardSection(graphene_django.DjangoObjectType):
+@strawberry.django.type(models.WorkspaceBoardSection)
+class WorkspaceBoardSection:
     """WorkspaceBoardSection."""
 
-    tasks = graphene.List("workspace.schema.types.Task")
-    workspace_board = graphene.Field("workspace.schema.types.WorkspaceBoard")
-    order = graphene.Field(graphene.Int)
-
-    def resolve_tasks(self, info):
+    @strawberry.field
+    def tasks(self) -> list["Task"]:
         """Resolve tasks for this workspace board section."""
-        return info.context.loader.workspace_board_section_task_loader.load(
-            self.pk
-        )
+        return self.task_set.all()
 
-    def resolve_workspace_board(self, info):
-        """Resolve workspace board."""
-        return info.context.loader.workspace_board_loader.load(
-            self.workspace_board.pk
-        )
-
-    def resolve_order(self, info):
+    @strawberry.field
+    def order(self) -> int:
         """Resolve order field."""
         return self._order
 
-    class Meta:
-        """Meta."""
+    @strawberry.field
+    def workspace_board(self) -> "WorkspaceBoard":
+        """Resolve workspace board."""
+        return self.workspace_board
 
-        fields = (
-            "created",
-            "modified",
-            "title",
-            "description",
-            "uuid",
-        )
-        model = models.WorkspaceBoardSection
+    created: datetime.datetime
+    modified: datetime.datetime
+    title: str
+    description: str
+    uuid: uuid.UUID
 
 
-class Task(graphene_django.DjangoObjectType):
+@strawberry.django.type(models.Task)
+class Task:
     """Task."""
 
-    sub_tasks = graphene.List("workspace.schema.types.SubTask")
-    chat_messages = graphene.List("workspace.schema.types.ChatMessage")
-    workspace_board_section = graphene.Field(
-        "workspace.schema.types.WorkspaceBoardSection",
-    )
-    next_workspace_board_section = graphene.Field(
-        "workspace.schema.types.WorkspaceBoardSection",
-    )
-    labels = graphene.List("workspace.schema.types.Label")
-    order = graphene.Field(graphene.Int)
-
-    def resolve_sub_tasks(self, info):
+    @strawberry.field
+    def sub_tasks(self) -> list["SubTask"]:
         """Resolve sub tasks for this task."""
-        return info.context.loader.task_sub_task_loader.load(self.pk)
+        # TODO data loader
+        return self.subtask_set.all()
 
-    def resolve_chat_messages(self, info):
+    @strawberry.field
+    def chat_messages(self) -> list["ChatMessage"]:
         """Resolve chat messages for this task."""
-        return info.context.loader.task_chat_message_loader.load(self.pk)
+        # TODO data loader
+        return self.chatmessage_set.all()
 
-    def resolve_workspace_board_section(self, info):
+    @strawberry.field
+    def workspace_board_section(self) -> "WorkspaceBoardSection":
         """Resolve workspace board section for this task."""
-        return info.context.loader.workspace_board_section_loader.load(
-            self.workspace_board_section.pk,
-        )
+        # TODO data loader
+        return self.workspace_board_section
 
-    def resolve_next_workspace_board_section(self, info):
+    @strawberry.field
+    def next_workspace_board_section(self) -> "WorkspaceBoardSection":
         """Resolve the next section."""
         section = self.get_next_section()
-        if section:
-            return info.context.loader.workspace_board_section_loader.load(
-                section.pk,
-            )
+        return section
 
-    def resolve_labels(self, info):
-        """Resolve labels for this task."""
-        return info.context.loader.task_task_label_loader.load(self.pk)
-
-    def resolve_order(self, info):
+    @strawberry.field
+    def order(self) -> int:
         """Resolve order field."""
         return self._order
 
-    class Meta:
-        """Meta."""
+    @strawberry.field
+    def labels(self) -> list["Label"]:
+        """Resolve labels for this task."""
+        return self.labels.all()
 
-        fields = (
-            "created",
-            "modified",
-            "title",
-            "description",
-            "uuid",
-            "assignee",
-        )
-        model = models.Task
+    @strawberry.field
+    def assignee(self) -> user_types.User | None:
+        """Resolve user."""
+        return self.assignee
+
+    created: datetime.datetime
+    modified: datetime.datetime
+    title: str
+    description: str
+    uuid: uuid.UUID
 
 
-class Label(graphene_django.DjangoObjectType):
+@strawberry.django.type(models.Label)
+class Label:
     """Label."""
 
-    def resolve_workspace(self, info):
+    @strawberry.field
+    def workspace(self) -> Workspace:
         """Resolve workspace."""
-        return info.context.loader.workspace_loader.load(self.workspace.pk)
+        return self.workspace
 
-    class Meta:
-        """Meta."""
-
-        fields = (
-            "name",
-            "color",
-            "workspace",
-            "uuid",
-        )
-        model = models.Label
+    name: str
+    color: int
+    uuid: uuid.UUID
 
 
-class SubTask(graphene_django.DjangoObjectType):
+@strawberry.django.type(models.SubTask)
+class SubTask:
     """SubTask."""
 
-    def resolve_task(self, info):
+    @strawberry.field
+    def task(self) -> Task:
         """Resolve task with data loader."""
-        return info.context.loader.task_loader.load(self.task.pk)
+        return self.task
 
-    class Meta:
-        """Meta."""
-
-        fields = (
-            "created",
-            "modified",
-            "title",
-            "description",
-            "uuid",
-            "order",
-            "task",
-            "done",
-        )
-        model = models.SubTask
+    created: datetime.datetime
+    modified: datetime.datetime
+    title: str
+    description: str
+    uuid: uuid.UUID
+    order: int
+    done: bool
 
 
-class ChatMessage(graphene_django.DjangoObjectType):
+@strawberry.django.type(models.ChatMessage)
+class ChatMessage:
     """ChatMessage."""
 
-    def resolve_author(self, info):
+    @strawberry.field
+    def author(self, info) -> user_types.User:
         """Resolve author."""
-        return info.context.loader.user_loader.load(self.author.pk)
+        return self.author
 
-    class Meta:
-        """Meta."""
-
-        fields = (
-            "created",
-            "modified",
-            "uuid",
-            "text",
-            "author",
-        )
-        model = models.ChatMessage
+    created: datetime.datetime
+    modified: datetime.datetime
+    uuid: uuid.UUID
+    text: str

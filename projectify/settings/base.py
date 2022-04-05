@@ -63,7 +63,7 @@ INSTALLED_APPS_THIRD_PARTY = (
     "cloudinary_storage",
     "django_celery_results",
     "django_extensions",
-    "graphene_django",
+    "strawberry.django",
     "ordered_model",
     "premail",
     "rest_framework",
@@ -207,6 +207,7 @@ CELERY_RESULT_BACKEND = "django-db"
 
 # Email
 DEFAULT_FROM_EMAIL = "hello@projectifyapp.com"
+EMAIL_EAGER = False
 
 # Rest framework
 REST_FRAMEWORK = {
@@ -222,10 +223,3 @@ REST_FRAMEWORK = {
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
 SERVE_MEDIA = False
-
-# Graphene-django monkeypatch
-import django  # noqa: E402
-from django.utils.encoding import force_str  # noqa: E402
-
-
-django.utils.encoding.force_text = force_str

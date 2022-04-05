@@ -16,26 +16,26 @@ class TestBigQuery:
 
     query = """
 {
-  user {
-    email
-  }
-  workspaces {
-    labels {
-      uuid
-    }
-    boards {
-      sections {
-        tasks {
-          chatMessages {
-            text
-          }
-          subTasks {
-            title
-          }
+    user {
+        email
         }
-      }
+        workspaces {
+        labels {
+            uuid
+        }
+        boards {
+            sections {
+                tasks {
+                    chatMessages {
+                        text
+                    }
+                    subTasks {
+                        title
+                    }
+                }
+            }
+        }
     }
-  }
 }
 
 """
@@ -68,46 +68,46 @@ class TestTopLevelResolvers:
 
     query = """
 query All(
-  $workspaceUuid: ID!, $workspaceBoardUuid: ID!,
-  $workspaceBoardSectionUuid: ID!, $taskUuid: ID!, $subTaskUuid: ID!,
-  $chatMessageUuid: ID!
+$workspaceUuid: UUID!, $workspaceBoardUuid: UUID!,
+$workspaceBoardSectionUuid: UUID!, $taskUuid: UUID!, $subTaskUuid: UUID!,
+$chatMessageUuid: UUID!
 ) {
-  workspace(uuid: $workspaceUuid) {
-    title
-  }
-  workspaceBoard(uuid: $workspaceBoardUuid) {
-    title
-    workspace {
-      title
+    workspace(uuid: $workspaceUuid) {
+        title
     }
-  }
-  workspaceBoardSection(uuid: $workspaceBoardSectionUuid) {
-    title
-    workspaceBoard {
-      title
+    workspaceBoard(uuid: $workspaceBoardUuid) {
+        title
+        workspace {
+            title
+        }
     }
-  }
-  task(uuid: $taskUuid) {
-    title
-    workspaceBoardSection {
-      title
+    workspaceBoardSection(uuid: $workspaceBoardSectionUuid) {
+        title
+        workspaceBoard {
+            title
+        }
     }
-    assignee {
-      email
+    task(uuid: $taskUuid) {
+        title
+        workspaceBoardSection {
+            title
+        }
+        assignee {
+            email
+        }
     }
-  }
-  subTask(uuid: $subTaskUuid) {
-    title
-    task {
-      title
+    subTask(uuid: $subTaskUuid) {
+        title
+        task {
+            title
+        }
     }
-  }
-  chatMessage(uuid: $chatMessageUuid) {
-    text
-    author {
-      email
+    chatMessage(uuid: $chatMessageUuid) {
+        text
+        author {
+            email
+        }
     }
-  }
 }
 """
 
@@ -193,7 +193,7 @@ class TestWorkspace:
     ):
         """Ensure that invites disappear once redeemed."""
         query = """
-query Workspace($uuid: ID!) {
+query Workspace($uuid: UUID!) {
     workspace(uuid: $uuid) {
         users {
             email

@@ -13,5 +13,5 @@ class TestSampleEmail:
     def test_send(self, user, mailoutbox):
         """Test send."""
         mail = SampleEmail(user)
-        mail.send().get()
+        mail.send()
         assert len(mailoutbox) == 1

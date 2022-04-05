@@ -1,19 +1,24 @@
 """Top level conftest module."""
 import base64
-import json
+from unittest import (
+    mock,
+)
 
+from django.contrib.auth.models import (
+    AnonymousUser,
+)
 from django.core.files.uploadedfile import (
     SimpleUploadedFile,
 )
-from django.urls import (
-    reverse,
-)
 
 import pytest
-from graphene_django.utils import (
-    testing,
-)
 
+from projectify.schema import (
+    schema,
+)
+from projectify.views import (
+    RequestContext,
+)
 from user.factory import (
     SuperUserFactory,
     UserFactory,
@@ -57,38 +62,53 @@ def redeemed_user_invite(user):
     return UserInviteFactory(redeemed=True, user=user, email=user.email)
 
 
+def dict_from_execution_result(result):
+    """Turn an execution result into a dict."""
+    if result.errors:
+        return {
+            "data": result.data,
+            "errors": result.errors,
+        }
+    return {
+        "data": result.data,
+    }
+
+
 @pytest.fixture
-def graphql_query(client):
+def graphql_query():
     """Return a client query fn without logged in user."""
 
-    def func(*args, **kwargs):
-        return json.loads(
-            testing.graphql_query(
-                *args,
-                **kwargs,
-                client=client,
-                graphql_url=reverse("graphql"),
-            ).content
+    def func(query, variables=None):
+        result = schema.execute_sync(
+            query,
+            variable_values=variables,
+            context_value=RequestContext(
+                user=AnonymousUser(),
+                session=mock.MagicMock(),
+                META={},
+            ),
         )
+        return dict_from_execution_result(result)
 
     return func
 
 
 @pytest.fixture
-def graphql_query_user(client, user):
+def graphql_query_user(user):
     """Return a client query fn."""
 
-    def func(*args, **kwargs):
-        return json.loads(
-            testing.graphql_query(
-                *args,
-                **kwargs,
-                client=client,
-                graphql_url=reverse("graphql"),
-            ).content,
+    def func(query, variables=None):
+        result = schema.execute_sync(
+            query,
+            variable_values=variables,
+            context_value=RequestContext(
+                user=user,
+                session=mock.MagicMock(),
+                META={},
+            ),
         )
+        return dict_from_execution_result(result)
 
-    client.force_login(user)
     return func
 
 

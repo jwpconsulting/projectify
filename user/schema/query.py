@@ -1,17 +1,17 @@
 """User schema queries."""
-import graphene
+import strawberry
 
 from . import (
     types,
 )
 
 
+@strawberry.type
 class Query:
     """Query."""
 
-    user = graphene.Field(types.User)
-
-    def resolve_user(self, info):
+    @strawberry.field(types.User)
+    def user(self, info) -> types.User | None:
         """Resolve user field."""
         user = info.context.user
         if user.is_authenticated:
