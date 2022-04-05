@@ -92,5 +92,6 @@
     "this-field-is-required": "This field is required",
     "general": "General",
     "team-members": "Team members",
-    "labels": "Labels"
+    "labels": "Labels",
+    "select-date": "Select date"
 }

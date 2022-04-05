@@ -1,12 +1,13 @@
 <script lang="ts">
     import { dateStringToLocal } from "$lib/utils/date";
+    import type { _ } from "svelte-i18n";
 
     import { getContainer } from "./componentContainer.svelte";
 
     import DatePicker from "./datePicker.svelte";
     import { getModal } from "./dialogModal.svelte";
 
-    export let placeholder = "Select date";
+    export let placeholder = $_("select-date");
     export let input;
     export let isEditing = false;
 
