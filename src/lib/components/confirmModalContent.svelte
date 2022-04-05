@@ -49,6 +49,7 @@
 
     function confirm() {
         const outputs = {};
+        valid = true;
 
         inputs.forEach((field) => {
             if (
