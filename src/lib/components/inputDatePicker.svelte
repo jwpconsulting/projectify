@@ -1,10 +1,6 @@
 <script lang="ts">
     import { dateStringToLocal } from "$lib/utils/date";
-    import type { _ } from "svelte-i18n";
-
-    import { getContainer } from "./componentContainer.svelte";
-
-    import DatePicker from "./datePicker.svelte";
+    import { _ } from "svelte-i18n";
     import { getModal } from "./dialogModal.svelte";
 
     export let placeholder = $_("select-date");
@@ -17,6 +13,7 @@
         let modalRes = await getModal("dataPicker").open(input.value);
         if (modalRes) {
             input.value = modalRes.date;
+            isEditing = true;
         }
     }
 </script>
@@ -32,7 +29,6 @@
         e.preventDefault();
     }}
     on:focus={() => {
-        isEditing = true;
         openDataPicker();
     }}
 />
