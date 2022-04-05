@@ -27,7 +27,6 @@
     function selectDate(d) {
         date = d;
         dispatch("change", { date });
-        console.log("dispatch date ", date);
     }
 
     function selectToday() {
