@@ -29,7 +29,15 @@
     import "../i18n.js";
     import { client } from "$lib/graphql/client";
     import { setClient } from "svelte-apollo";
+    import DialogModal from "$lib/components/dialogModal.svelte";
+    import DatePickerDropDown from "$lib/components/datePickerDropDown.svelte";
     setClient(client);
 </script>
 
 <slot />
+
+{#if browser}
+    <DialogModal id="dataPicker">
+        <DatePickerDropDown />
+    </DialogModal>
+{/if}
