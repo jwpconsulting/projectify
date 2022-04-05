@@ -13,6 +13,9 @@
         if (!date) {
             date = new Date();
         }
+        if (typeof date === "string") {
+            date = new Date(date);
+        }
     }
 
     $: year = date.getFullYear();
