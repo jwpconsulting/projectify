@@ -16,6 +16,7 @@
         type?: string;
         value?: any;
         error?: string;
+        placeholder?: string;
         validation?: {
             required?: boolean;
             // Todo:
