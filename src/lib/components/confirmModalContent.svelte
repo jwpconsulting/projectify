@@ -10,7 +10,22 @@
     export let confirmLabel = $_("Confirm");
     export let confirmColor = "primary";
 
-    export let inputs = [];
+    export let inputs: {
+        name?: string;
+        label?: string;
+        type?: string;
+        value?: any;
+        error?: string;
+        validation?: {
+            required?: boolean;
+            // Todo:
+            // min?: number;
+            // max?: number;
+            // minLength?: number;
+            // maxLength?: number;
+            // pattern?: string;
+        };
+    }[] = [];
     let isEditing = false;
 
     const modal = getContext<any>("modal");
