@@ -1,4 +1,7 @@
 """Premail email templates."""
+from django.conf import (
+    settings,
+)
 from django.shortcuts import (
     render,
 )
@@ -60,6 +63,12 @@ class TemplateEmail:
 
     def send(self):
         """Send email to obj."""
+        if settings.EMAIL_EAGER:
+            return send_mail(
+                self.render_subject(),
+                self.render_body(),
+                self.get_to_email(),
+            )
         return send_mail.delay(
             self.render_subject(),
             self.render_body(),

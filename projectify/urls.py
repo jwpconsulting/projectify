@@ -37,6 +37,9 @@ from workspace.consumers import (
     WorkspaceConsumer,
 )
 
+from . import (
+    schema,
+)
 from .views import (
     GraphQLBatchView,
     GraphQLView,
@@ -49,6 +52,7 @@ urlpatterns = (
         "graphql",
         csrf.csrf_exempt(
             GraphQLView.as_view(
+                schema=schema.schema,
                 graphiql=settings.GRAPHIQL_ENABLE,
             ),
         ),
@@ -58,6 +62,7 @@ urlpatterns = (
         "graphql-batch",
         csrf.csrf_exempt(
             GraphQLBatchView.as_view(
+                schema=schema.schema,
                 graphiql=settings.GRAPHIQL_ENABLE,
             ),
         ),

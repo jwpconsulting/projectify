@@ -1,32 +1,26 @@
 """Projectify project schema."""
-import graphene
-from graphene_django.debug import (
-    DjangoDebug,
-)
-
+import strawberry
 import user.schema
 import workspace.schema
 
 
+@strawberry.type
 class Query(
     workspace.schema.Query,
     user.schema.Query,
-    graphene.ObjectType,
 ):
     """Query object."""
 
-    debug = graphene.Field(DjangoDebug, name="_debug")
 
-
+@strawberry.type
 class Mutation(
     workspace.schema.Mutation,
     user.schema.Mutation,
-    graphene.ObjectType,
 ):
     """Mutation object."""
 
 
-schema = graphene.Schema(
+schema = strawberry.Schema(
     query=Query,
     mutation=Mutation,
 )

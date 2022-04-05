@@ -23,7 +23,6 @@ dj-database-url = "*"
 django = "==4.0.2"
 django-cors-headers = "*"
 django-extensions = "*"
-graphene-django = "<3.0.0"
 psycopg2 = "*"
 python-dotenv = "*"
 whitenoise = "*"
@@ -40,9 +39,11 @@ djangorestframework = "*"
 pillow = "*"
 django-cloudinary-storage = "*"
 websockets = "*"
+strawberry-graphql = "*"
+strawberry-graphql-django = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.10"
 
 [pipenv]
 allow_prereleases = true

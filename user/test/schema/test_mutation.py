@@ -10,10 +10,8 @@ class TestSignupMutation:
         """Assert that user is created."""
         query = """
 mutation {
-    signup(email: "hello@example.com", password: "password") {
-        user {
-            email
-        }
+    signup(input: {email: "hello@example.com", password: "password"}) {
+        email
     }
 }
 """
@@ -21,11 +19,9 @@ mutation {
         assert result == {
             "data": {
                 "signup": {
-                    "user": {
-                        "email": "hello@example.com",
-                    },
-                }
-            }
+                    "email": "hello@example.com",
+                },
+            },
         }
 
 
@@ -35,10 +31,8 @@ class TestEmailConfirmationMutation:
 
     query = """
 mutation($email: String!, $token: String!) {
-    emailConfirmation(email: $email, token: $token) {
-        user {
-            email
-        }
+    emailConfirmation(input: {email: $email, token: $token}) {
+        email
     }
 }
 """
@@ -56,9 +50,7 @@ mutation($email: String!, $token: String!) {
         assert result == {
             "data": {
                 "emailConfirmation": {
-                    "user": {
-                        "email": inactive_user.email,
-                    },
+                    "email": inactive_user.email,
                 }
             }
         }
@@ -72,11 +64,9 @@ class TestLoginMutation:
 
     query = """
 mutation ($email: String!, $password: String!) {
-  login(email: $email, password: $password) {
-    user {
-      email
+    login(input: {email: $email, password: $password}) {
+        email
     }
-  }
 }
 """
 
@@ -92,9 +82,7 @@ mutation ($email: String!, $password: String!) {
         assert result == {
             "data": {
                 "login": {
-                    "user": {
-                        "email": user.email,
-                    },
+                    "email": user.email,
                 }
             }
         }
@@ -128,9 +116,7 @@ class TestRequestPasswordResetMutation:
 
     query = """
 mutation RequestPasswordReset($email: String!) {
-  requestPasswordReset(input: {email: $email}) {
-    email
-  }
+    requestPasswordReset(input: {email: $email})
 }
 """
 
@@ -151,13 +137,12 @@ class TestConfirmPasswordResetMutation:
 
     query = """
 mutation ConfirmPasswordReset($token: String!, $email: String!) {
-  confirmPasswordReset(input: {
-    email: $email, token: $token, newPassword: "password"
-  }) {
-    user {
-      email
+    confirmPasswordReset(
+        input: {
+            email: $email, token: $token, newPassword: "password"
+    }) {
+        email
     }
-  }
 }
 """
 
@@ -173,9 +158,7 @@ mutation ConfirmPasswordReset($token: String!, $email: String!) {
         assert result == {
             "data": {
                 "confirmPasswordReset": {
-                    "user": {
-                        "email": user.email,
-                    }
+                    "email": user.email,
                 }
             }
         }
@@ -191,9 +174,7 @@ mutation ConfirmPasswordReset($token: String!, $email: String!) {
         )
         assert result == {
             "data": {
-                "confirmPasswordReset": {
-                    "user": None,
-                }
+                "confirmPasswordReset": None,
             }
         }
 
@@ -205,9 +186,7 @@ class TestUpdateProfileMutation:
     query = """
 mutation UpdateProfile {
     updateProfile(input: {fullName: "Foo Bar"}) {
-        user {
-            fullName
-        }
+        fullName
     }
 }
 """
@@ -218,9 +197,7 @@ mutation UpdateProfile {
         assert result == {
             "data": {
                 "updateProfile": {
-                    "user": {
-                        "fullName": "Foo Bar",
-                    },
+                    "fullName": "Foo Bar",
                 },
             },
         }

@@ -16,7 +16,7 @@ class TestUserEmailConfirmationEmail:
         user.email = "contains space@example.com"
         user.save()
         mail = UserEmailConfirmationEmail(user)
-        mail.send().get()
+        mail.send()
         assert len(mailoutbox) == 1
         m = mailoutbox[0]
         assert "contains%20space%40example.com" in m.body
@@ -30,7 +30,7 @@ class TestUserPasswordResetEmail:
     def test_send(self, user, mailoutbox):
         """Test send."""
         mail = UserPasswordResetEmail(user)
-        mail.send().get()
+        mail.send()
         assert len(mailoutbox) == 1
         m = mailoutbox[0]
         assert user.get_password_reset_token() in m.body

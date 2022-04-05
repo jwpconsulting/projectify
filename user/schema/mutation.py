@@ -3,7 +3,7 @@ from django.contrib import (
     auth,
 )
 
-import graphene
+import strawberry
 
 from ..emails import (
     UserEmailConfirmationEmail,
@@ -14,62 +14,84 @@ from . import (
 )
 
 
-class SignupMutation(graphene.Mutation):
-    """Signup mutation."""
+@strawberry.input
+class SignupInput:
+    """Signup input."""
 
-    class Arguments:
-        """Arguments required."""
+    email: str
+    password: str
 
-        email = graphene.String(required=True)
-        password = graphene.String(required=True)
 
-    user = graphene.Field(types.User)
+@strawberry.input
+class EmailConfirmationInput:
+    """EmailConfirmation input."""
 
-    @classmethod
-    def mutate(cls, root, info, email, password):
+    email: str
+    token: str
+
+
+@strawberry.input
+class LoginInput:
+    """Login input."""
+
+    email: str
+    password: str
+
+
+@strawberry.input
+class RequestPasswordResetInput:
+    """RequestPasswordReset input."""
+
+    email: str
+
+
+@strawberry.input
+class ConfirmPasswordResetInput:
+    """ConfirmPasswordReset input."""
+
+    email: str
+    token: str
+    new_password: str
+
+
+@strawberry.input
+class UpdateProfileInput:
+    """UpdateProfile input."""
+
+    full_name: str
+
+
+@strawberry.type
+class Mutation:
+    """."""
+
+    @strawberry.mutation
+    def signup(self, input: SignupInput) -> types.User:
         """Mutate."""
         User = auth.get_user_model()
-        user = User.objects.create_user(email=email, password=password)
+        user = User.objects.create_user(
+            email=input.email,
+            password=input.password,
+        )
         mail = UserEmailConfirmationEmail(user)
         mail.send()
-        return cls(user=user)
+        return user
 
-
-class EmailConfirmationMutation(graphene.Mutation):
-    """Mutation to confirm user email adresses for inactive users."""
-
-    class Arguments:
-        """Arguments required."""
-
-        email = graphene.String(required=True)
-        token = graphene.String(required=True)
-
-    user = graphene.Field(types.User)
-
-    @classmethod
-    def mutate(cls, root, info, email, token):
+    @strawberry.mutation
+    def email_confirmation(
+        self,
+        input: EmailConfirmationInput,
+    ) -> types.User | None:
         """Mutate."""
         User = auth.get_user_model()
-        user = User.objects.get_by_natural_key(email)
-        if user.check_email_confirmation_token(token):
+        user = User.objects.get_by_natural_key(input.email)
+        if user.check_email_confirmation_token(input.token):
             user.is_active = True
             user.save()
-            return cls(user=user)
+            return user
 
-
-class LoginMutation(graphene.Mutation):
-    """Login mutation."""
-
-    class Arguments:
-        """Arguments required."""
-
-        email = graphene.String(required=True)
-        password = graphene.String(required=True)
-
-    user = graphene.Field(types.User)
-
-    @classmethod
-    def mutate(cls, root, info, email, password):
+    @strawberry.mutation
+    def login(self, input: LoginInput, info) -> types.User | None:
         """Mutate."""
         from django.contrib.auth.backends import (
             ModelBackend,
@@ -77,8 +99,8 @@ class LoginMutation(graphene.Mutation):
 
         user = ModelBackend().authenticate(
             info.context,
-            username=email,
-            password=password,
+            username=input.email,
+            password=input.password,
         )
         if user is None:
             return
@@ -87,117 +109,50 @@ class LoginMutation(graphene.Mutation):
             user,
             backend="django.contrib.auth.backends.ModelBackend",
         )
-        return cls(user=user)
+        return user
 
-
-class LogoutMutation(graphene.Mutation):
-    """Logout mutation."""
-
-    class Arguments:
-        """No arguments required."""
-
-    user = graphene.Field(types.User)
-
-    @classmethod
-    def mutate(cls, root, info):
+    @strawberry.mutation
+    def logout(self, info) -> types.User | None:
         """Mutate."""
         user = info.context.user
         if user.is_anonymous:
-            raise ValueError("User not logged in")
+            return
         auth.logout(info.context)
-        return cls(user=user)
+        return user
 
-
-class RequestPasswordResetInput(graphene.InputObjectType):
-    """RequestPasswordReset input."""
-
-    email = graphene.String(required=True)
-
-
-class RequestPasswordResetMutation(graphene.Mutation):
-    """Request password reset mutation."""
-
-    class Arguments:
-        """Arguments."""
-
-        input = RequestPasswordResetInput(required=True)
-
-    email = graphene.String()
-
-    @classmethod
-    def mutate(cls, root, info, input):
+    @strawberry.mutation
+    def request_password_reset(self, input: RequestPasswordResetInput) -> str:
         """Mutate."""
         User = auth.get_user_model()
         user = User.objects.get_by_natural_key(input.email)
         password_reset_email = UserPasswordResetEmail(user)
         password_reset_email.send()
-        return cls(input.email)
+        return input.email
 
-
-class ConfirmPasswordResetInput(graphene.InputObjectType):
-    """ConfirmPasswordReset mutation input."""
-
-    email = graphene.String(required=True)
-    token = graphene.String(required=True)
-    new_password = graphene.String(required=True)
-
-
-class ConfirmPasswordResetMutation(graphene.Mutation):
-    """Confirm password reset."""
-
-    class Arguments:
-        """Arguments."""
-
-        input = ConfirmPasswordResetInput(required=True)
-
-    user = graphene.Field(types.User)
-
-    @classmethod
-    def mutate(cls, root, info, input):
+    @strawberry.mutation
+    def confirm_password_reset(
+        self,
+        input: ConfirmPasswordResetInput,
+    ) -> types.User | None:
         """Mutate."""
         User = auth.get_user_model()
         user = User.objects.get_by_natural_key(input.email)
         if user.check_password_reset_token(input.token):
             user.set_password(input.new_password)
             user.save()
-            return cls(user)
-        return cls(None)
+            return user
+        return
 
-
-class UpdateProfileInput(graphene.InputObjectType):
-    """UpdateProfileMutation input."""
-
-    full_name = graphene.String(required=True)
-
-
-class UpdateProfileMutation(graphene.Mutation):
-    """Set profile mutation."""
-
-    class Arguments:
-        """Arguments."""
-
-        input = UpdateProfileInput(required=True)
-
-    user = graphene.Field(types.User)
-
-    @classmethod
-    def mutate(cls, root, info, input):
+    @strawberry.mutation
+    def update_profile(
+        self,
+        input: UpdateProfileInput,
+        info,
+    ) -> types.User | None:
         """Mutate."""
         user = info.context.user
         if not user.is_authenticated:
             return
         user.full_name = input.full_name
         user.save()
-        return cls(user)
-
-
-class Mutation:
-    """Mutation."""
-
-    signup = SignupMutation.Field()
-    email_confirmation = EmailConfirmationMutation.Field()
-    login = LoginMutation.Field()
-    logout = LogoutMutation.Field()
-    request_password_reset = RequestPasswordResetMutation.Field()
-    confirm_password_reset = ConfirmPasswordResetMutation.Field()
-    update_profile = UpdateProfileMutation.Field()
+        return user

@@ -8,10 +8,9 @@ STATIC_ROOT = None
 
 FRONTEND_URL = "https://example.com"
 
-CELERY_TASK_ALWAYS_EAGER = True
-
 # Email
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_EAGER = True
 
 # GraphQL
 GRAPHIQL_ENABLE = False
