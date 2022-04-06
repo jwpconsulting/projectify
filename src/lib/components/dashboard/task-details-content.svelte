@@ -8,6 +8,7 @@
     import Subtasks from "./task-details-subtasks.svelte";
     import ToolBar from "./toolBar.svelte";
     import InputDatePicker from "../inputDatePicker.svelte";
+    import IconCheckCircle from "../icons/icon-check-circle.svelte";
 
     export let task;
     export let subTasks;
@@ -48,8 +49,8 @@
                         <ToolBar
                             items={[
                                 {
-                                    label: $_("Edit"),
-                                    icon: IconEdit,
+                                    label: $_("apply-labels"),
+                                    icon: IconCheckCircle,
                                     onClick: () => {
                                         labelPickerOpen = true;
                                     },
