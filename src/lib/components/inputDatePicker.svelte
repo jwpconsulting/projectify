@@ -2,6 +2,7 @@
     import { dateStringToLocal } from "$lib/utils/date";
     import { _ } from "svelte-i18n";
     import { getModal } from "./dialogModal.svelte";
+    import IconCalendar from "./icons/icon-calendar.svelte";
 
     export let placeholder = $_("select-date");
     export let input;
@@ -18,17 +19,25 @@
     }
 </script>
 
-<input
-    tabindex="0"
-    type="text"
-    name={input.name}
-    {placeholder}
-    class="input input-bordered w-full select-none caret-transparent"
-    value={dateStr}
-    on:keypress={(e) => {
-        e.preventDefault();
-    }}
-    on:focus={() => {
-        openDataPicker();
-    }}
-/>
+<div class="relative">
+    <input
+        tabindex="0"
+        type="text"
+        name={input.name}
+        {placeholder}
+        class="input input-bordered w-full select-none caret-transparent"
+        value={dateStr}
+        on:keypress={(e) => {
+            e.preventDefault();
+        }}
+        on:focus={() => {
+            openDataPicker();
+        }}
+    />
+
+    <button
+        on:click={() => openDataPicker()}
+        class="btn btn-ghost btn-square absolute top-0 right-0 rounded-l-none"
+        ><IconCalendar /></button
+    >
+</div>
