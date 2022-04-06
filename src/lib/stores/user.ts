@@ -24,7 +24,7 @@ export const singUp = async (email, password) => {
         });
 
         if (res.data.signup !== null) {
-            const userData = res.data.signup.user;
+            const userData = res.data.signup;
             return userData;
         }
     } catch (error) {

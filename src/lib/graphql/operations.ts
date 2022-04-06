@@ -21,8 +21,8 @@ export const Mutation_UpdateProfile = gql`
 `;
 
 export const Mutation_Singup = gql`
-    mutation Signup($email: String!, $password: String!) {
-        signup(email: $email, password: $password) {
+    mutation Signup($input: SignupInput!) {
+        signup(input: $input) {
             email
         }
     }
