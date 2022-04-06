@@ -158,7 +158,7 @@ export const Query_WorkspaceLabels = gql`
 `;
 
 export const Mutation_AddLabelMutation = gql`
-    mutation AddLabelMutation($input: AddLabelMutationInput!) {
+    mutation AddLabelMutation($input: AddLabelInput!) {
         addLabel(input: $input) {
             uuid
         }
@@ -166,7 +166,7 @@ export const Mutation_AddLabelMutation = gql`
 `;
 
 export const Mutation_UpdateLabelMutation = gql`
-    mutation UpdateLabelMutation($input: UpdateLabelMutationInput!) {
+    mutation UpdateLabelMutation($input: UpdateLabelInput!) {
         updateLabel(input: $input) {
             uuid
         }
@@ -319,7 +319,7 @@ export const Mutation_DeleteTask = gql`
 `;
 
 export const Mutation_UpdateTask = gql`
-    mutation UpdateTask($input: UpdateTaskMutationInput!) {
+    mutation UpdateTask($input: UpdateTaskInput!) {
         updateTask(input: $input) {
             uuid
             modified
