@@ -13,11 +13,9 @@ export const Query_User = gql`
 export const Mutation_UpdateProfile = gql`
     mutation UpdateProfile($input: UpdateProfileInput!) {
         updateProfile(input: $input) {
-            user {
-                email
-                fullName
-                profilePicture
-            }
+            email
+            fullName
+            profilePicture
         }
     }
 `;
@@ -25,9 +23,7 @@ export const Mutation_UpdateProfile = gql`
 export const Mutation_Singup = gql`
     mutation Signup($email: String!, $password: String!) {
         signup(email: $email, password: $password) {
-            user {
-                email
-            }
+            email
         }
     }
 `;
@@ -35,9 +31,7 @@ export const Mutation_Singup = gql`
 export const Mutation_EmailConfirmation = gql`
     mutation EmailConfirmation($email: String!, $token: String!) {
         emailConfirmation(email: $email, token: $token) {
-            user {
-                email
-            }
+            email
         }
     }
 `;
@@ -45,9 +39,7 @@ export const Mutation_EmailConfirmation = gql`
 export const Mutation_Login = gql`
     mutation Login($email: String!, $password: String!) {
         login(email: $email, password: $password) {
-            user {
-                email
-            }
+            email
         }
     }
 `;
@@ -55,27 +47,21 @@ export const Mutation_Login = gql`
 export const Mutation_Logout = gql`
     mutation Logout {
         logout {
-            user {
-                email
-            }
+            email
         }
     }
 `;
 
 export const Mutation_RequesetPasswordReset = gql`
     mutation RequesetPasswordReset($input: RequestPasswordResetInput!) {
-        requestPasswordReset(input: $input) {
-            email
-        }
+        requestPasswordReset(input: $input)
     }
 `;
 
 export const Mutation_ConfirmPasswordReset = gql`
     mutation ConfirmPasswordReset($input: ConfirmPasswordResetInput!) {
         confirmPasswordReset(input: $input) {
-            user {
-                email
-            }
+            email
         }
     }
 `;
@@ -120,7 +106,7 @@ export const Query_DashboardWorkspacesSideNav = gql`
 `;
 
 export const Query_WorkspacesSettingsGeneral = gql`
-    query WorkspacesSettingsGeneral($uuid: ID!) {
+    query WorkspacesSettingsGeneral($uuid: UUID!) {
         workspace(uuid: $uuid) {
             uuid
             title
@@ -133,18 +119,16 @@ export const Query_WorkspacesSettingsGeneral = gql`
 export const Mutation_UpdateWorkspace = gql`
     mutation UpdateWorkspace($input: UpdateWorkspaceInput!) {
         updateWorkspace(input: $input) {
-            workspace {
-                uuid
-                modified
-                title
-                description
-            }
+            uuid
+            modified
+            title
+            description
         }
     }
 `;
 
 export const Query_DashboardBoardsSideNav = gql`
-    query DashboardBoardsSideNav($uuid: ID!) {
+    query DashboardBoardsSideNav($uuid: UUID!) {
         workspace(uuid: $uuid) {
             uuid
             labels {
@@ -161,7 +145,7 @@ export const Query_DashboardBoardsSideNav = gql`
 `;
 
 export const Query_WorkspaceLabels = gql`
-    query WorkspaceLabels($uuid: ID!) {
+    query WorkspaceLabels($uuid: UUID!) {
         workspace(uuid: $uuid) {
             uuid
             labels {
@@ -176,9 +160,7 @@ export const Query_WorkspaceLabels = gql`
 export const Mutation_AddLabelMutation = gql`
     mutation AddLabelMutation($input: AddLabelMutationInput!) {
         addLabel(input: $input) {
-            label {
-                uuid
-            }
+            uuid
         }
     }
 `;
@@ -186,9 +168,7 @@ export const Mutation_AddLabelMutation = gql`
 export const Mutation_UpdateLabelMutation = gql`
     mutation UpdateLabelMutation($input: UpdateLabelMutationInput!) {
         updateLabel(input: $input) {
-            label {
-                uuid
-            }
+            uuid
         }
     }
 `;
@@ -196,15 +176,13 @@ export const Mutation_UpdateLabelMutation = gql`
 export const Mutation_DeleteLabelMutation = gql`
     mutation DeleteLabelMutation($input: DeleteLabelInput!) {
         deleteLabel(input: $input) {
-            label {
-                uuid
-            }
+            uuid
         }
     }
 `;
 
 export const Query_WorkspaceTeamMembers = gql`
-    query WorkspaceTeamMembers($uuid: ID!) {
+    query WorkspaceTeamMembers($uuid: UUID!) {
         workspace(uuid: $uuid) {
             uuid
             users {
@@ -219,9 +197,7 @@ export const Query_WorkspaceTeamMembers = gql`
 export const Mutation_AddUserToWorkspace = gql`
     mutation AddUserToWorkspace($input: AddUserToWorkspaceInput!) {
         addUserToWorkspace(input: $input) {
-            workspace {
-                uuid
-            }
+            uuid
         }
     }
 `;
@@ -229,15 +205,13 @@ export const Mutation_AddUserToWorkspace = gql`
 export const Mutation_RemoveUserFromWorkspace = gql`
     mutation RemoveUserFromWorkspace($input: RemoveUserFromWorkspaceInput!) {
         removeUserFromWorkspace(input: $input) {
-            workspace {
-                uuid
-            }
+            uuid
         }
     }
 `;
 
 export const Query_DashboardBoard = gql`
-    query DashboardBoard($uuid: ID!) {
+    query DashboardBoard($uuid: UUID!) {
         workspaceBoard(uuid: $uuid) {
             uuid
             title
@@ -268,7 +242,7 @@ export const Query_DashboardBoard = gql`
 `;
 
 export const Subscription_OnWorkspaceBoardChange = gql`
-    subscription OnWorkspaceBoardChange($uuid: ID!) {
+    subscription OnWorkspaceBoardChange($uuid: UUID!) {
         onWorkspaceBoardChange(uuid: $uuid) {
             workspaceBoard {
                 uuid
@@ -288,7 +262,7 @@ export const Subscription_OnWorkspaceBoardChange = gql`
 `;
 
 export const Query_DashboardTaskDetails = gql`
-    query DashboardTaskDetails($uuid: ID!) {
+    query DashboardTaskDetails($uuid: UUID!) {
         task(uuid: $uuid) {
             uuid
             title
@@ -330,10 +304,8 @@ export const Query_DashboardTaskDetails = gql`
 export const Mutation_AddTask = gql`
     mutation AddTask($input: AddTaskMutationInput!) {
         addTask(input: $input) {
-            task {
-                uuid
-                created
-            }
+            uuid
+            created
         }
     }
 `;
@@ -341,9 +313,7 @@ export const Mutation_AddTask = gql`
 export const Mutation_DeleteTask = gql`
     mutation DeleteTask($input: DeleteTaskInput!) {
         deleteTask(input: $input) {
-            task {
-                uuid
-            }
+            uuid
         }
     }
 `;
@@ -351,12 +321,10 @@ export const Mutation_DeleteTask = gql`
 export const Mutation_UpdateTask = gql`
     mutation UpdateTask($input: UpdateTaskMutationInput!) {
         updateTask(input: $input) {
-            task {
-                uuid
-                modified
-                title
-                description
-            }
+            uuid
+            modified
+            title
+            description
         }
     }
 `;
@@ -364,9 +332,7 @@ export const Mutation_UpdateTask = gql`
 export const Mutation_MoveTask = gql`
     mutation MoveTask($input: MoveTaskInput!) {
         moveTask(input: $input) {
-            task {
-                uuid
-            }
+            uuid
         }
     }
 `;
@@ -374,13 +340,11 @@ export const Mutation_MoveTask = gql`
 export const Mutation_AddSubTask = gql`
     mutation AddSubTask($input: AddSubTaskInput!) {
         addSubTask(input: $input) {
-            subTask {
-                uuid
-                created
-                title
-                description
-                done
-            }
+            uuid
+            created
+            title
+            description
+            done
         }
     }
 `;
@@ -388,13 +352,11 @@ export const Mutation_AddSubTask = gql`
 export const Mutation_ChangeSubTaskDone = gql`
     mutation ChangeSubTaskDone($input: ChangeSubTaskDoneInput!) {
         changeSubTaskDone(input: $input) {
-            subTask {
-                uuid
-                modified
-                title
-                description
-                done
-            }
+            uuid
+            modified
+            title
+            description
+            done
         }
     }
 `;
@@ -402,9 +364,7 @@ export const Mutation_ChangeSubTaskDone = gql`
 export const Mutation_DeleteSubTaskMutation = gql`
     mutation DeleteSubTaskMutation($input: DeleteSubTaskInput!) {
         deleteSubTask(input: $input) {
-            subTask {
-                uuid
-            }
+            uuid
         }
     }
 `;
@@ -414,9 +374,7 @@ export const Mutation_MoveWorkspaceBoardSection = gql`
         $input: MoveWorkspaceBoardSectionInput!
     ) {
         moveWorkspaceBoardSection(input: $input) {
-            workspaceBoardSection {
-                uuid
-            }
+            uuid
         }
     }
 `;
@@ -424,12 +382,10 @@ export const Mutation_MoveWorkspaceBoardSection = gql`
 export const Mutation_AddWorkspaceBoardSection = gql`
     mutation AddWorkspaceBoardSection($input: AddWorkspaceBoardSectionInput!) {
         addWorkspaceBoardSection(input: $input) {
-            workspaceBoardSection {
-                uuid
-                created
-                title
-                description
-            }
+            uuid
+            created
+            title
+            description
         }
     }
 `;
@@ -439,13 +395,10 @@ export const Mutation_UpdateWorkspaceBoardSection = gql`
         $input: UpdateWorkspaceBoardSectionInput!
     ) {
         updateWorkspaceBoardSection(input: $input) {
-            workspaceBoardSection {
-                uuid
-                created
-                title
-                description
-                deadline
-            }
+            uuid
+            created
+            title
+            description
         }
     }
 `;
@@ -455,9 +408,7 @@ export const Mutation_DeleteWorkspaceBoardSection = gql`
         $input: DeleteWorkspaceBoardSectionInput!
     ) {
         deleteWorkspaceBoardSection(input: $input) {
-            workspaceBoardSection {
-                uuid
-            }
+            uuid
         }
     }
 `;
@@ -465,10 +416,8 @@ export const Mutation_DeleteWorkspaceBoardSection = gql`
 export const Mutation_AddWorkspaceBoard = gql`
     mutation AddWorkspaceBoard($input: AddWorkspaceBoardInput!) {
         addWorkspaceBoard(input: $input) {
-            workspaceBoard {
-                uuid
-                created
-            }
+            uuid
+            created
         }
     }
 `;
@@ -476,12 +425,10 @@ export const Mutation_AddWorkspaceBoard = gql`
 export const Mutation_UpdateWorkspaceBoard = gql`
     mutation UpdateWorkspaceBoard($input: UpdateWorkspaceBoardInput!) {
         updateWorkspaceBoard(input: $input) {
-            workspaceBoard {
-                uuid
-                modified
-                title
-                description
-            }
+            uuid
+            modified
+            title
+            description
         }
     }
 `;
@@ -489,9 +436,7 @@ export const Mutation_UpdateWorkspaceBoard = gql`
 export const Mutation_DeleteWorkspaceBoard = gql`
     mutation DeleteWorkspaceBoard($input: DeleteWorkspaceBoardInput!) {
         deleteWorkspaceBoard(input: $input) {
-            workspaceBoard {
-                uuid
-            }
+            uuid
         }
     }
 `;
@@ -499,15 +444,13 @@ export const Mutation_DeleteWorkspaceBoard = gql`
 export const Mutation_ArchiveWorkspaceBoard = gql`
     mutation ArchiveWorkspaceBoard($input: ArchiveWorkspaceBoardInput!) {
         archiveWorkspaceBoard(input: $input) {
-            workspaceBoard {
-                uuid
-            }
+            uuid
         }
     }
 `;
 
 export const Query_ArchivedWorkspaceBoards = gql`
-    query ArchivedWorkspaceBoards($uuid: ID!) {
+    query ArchivedWorkspaceBoards($uuid: UUID!) {
         workspace(uuid: $uuid) {
             uuid
             archivedBoards {
@@ -522,9 +465,7 @@ export const Query_ArchivedWorkspaceBoards = gql`
 export const Mutation_AssignTask = gql`
     mutation AssignTask($input: AssignTaskInput!) {
         assignTask(input: $input) {
-            task {
-                uuid
-            }
+            uuid
         }
     }
 `;
@@ -532,9 +473,7 @@ export const Mutation_AssignTask = gql`
 export const Mutation_AssignLabel = gql`
     mutation AssignLabel($input: AssignLabelInput!) {
         assignLabel(input: $input) {
-            task {
-                uuid
-            }
+            uuid
         }
     }
 `;

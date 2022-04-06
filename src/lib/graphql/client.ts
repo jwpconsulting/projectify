@@ -10,7 +10,7 @@ import { getMainDefinition } from "@apollo/client/utilities";
 import { browser } from "$app/env";
 import vars from "$lib/env";
 
-const batchLinkEnabled = true;
+const batchLinkEnabled = false;
 const enableWebsocket = false;
 
 const httpCommonOpts = {
