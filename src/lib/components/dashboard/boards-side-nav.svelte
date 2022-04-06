@@ -56,8 +56,7 @@
                 });
                 res.refetch({ uuid: selectedWorkspaceUUID });
 
-                selectedBoardUUID =
-                    mRes.data.addWorkspaceBoard.workspaceBoard.uuid;
+                selectedBoardUUID = mRes.data.addWorkspaceBoard.uuid;
 
                 gotoDashboard(selectedWorkspaceUUID, selectedBoardUUID);
             } catch (error) {
