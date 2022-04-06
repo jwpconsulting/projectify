@@ -8,7 +8,7 @@
 
     const dispatch = createEventDispatcher();
 
-    export let date = new Date();
+    export let date = null;
     $: {
         if (!date) {
             date = new Date();
@@ -177,13 +177,21 @@
             </div>
         {/if}
     </div>
-    <div
-        class:active={date.getTime() === today.getTime()}
-        class="cal-btn flex h-8 items-center justify-center text-primary"
-        on:click={() => selectToday()}
-    >
-        <div class="text-xs ">Today</div>
-    </div>
+    <footer class="flex divide-x divide-base-300">
+        <div
+            class="cal-btn flex h-8 grow items-center justify-center text-primary"
+            on:click={() => selectDate(null)}
+        >
+            <div class="text-xs ">Clear</div>
+        </div>
+        <div
+            class:active={date.getTime() === today.getTime()}
+            class="cal-btn flex h-8 grow items-center justify-center text-primary"
+            on:click={() => selectToday()}
+        >
+            <div class="text-xs ">Today</div>
+        </div>
+    </footer>
 </div>
 
 <style lang="scss">
