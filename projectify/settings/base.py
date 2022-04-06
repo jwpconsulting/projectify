@@ -173,14 +173,6 @@ STATIC_ROOT = Path(BASE_DIR, "staticfiles")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-GRAPHENE = {
-    "SCHEMA": "projectify.schema.schema",
-    "MIDDLEWARE": (
-        "projectify.middleware.atomic_transaction_middleware",
-        "projectify.middleware.loader_middleware",
-    ),
-}
-
 AUTH_USER_MODEL = "user.User"
 
 TEMPLATES = [

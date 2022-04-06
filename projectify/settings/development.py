@@ -21,10 +21,6 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # GraphQL
 GRAPHIQL_ENABLE = True
-GRAPHENE["MIDDLEWARE"] = (
-    *GRAPHENE["MIDDLEWARE"],
-    "graphene_django.debug.DjangoDebugMiddleware",
-)
 
 # Media
 SERVE_MEDIA = True
