@@ -15,8 +15,7 @@ known_third_party = [
     "asgiref",
     "channels",
     "channels_graphql_ws",
-    "graphene",
-    "graphene_django",
+    "strawberry",
     "pytest",
     "rest_framework"
 ]
