@@ -31,12 +31,19 @@
                 on:input={() => (taskModified = true)}
                 bind:value={task.description}
             />
+            <div class="text-xl font-bold uppercase">
+                {$_("deadline")}
+            </div>
             <div>
                 <InputDatePicker
                     input={{
                         value: task.deadline,
                     }}
-                    placeholder={"Deadline"}
+                    placeholder={$_("deadline")}
+                    on:change={({ detail: { date } }) => {
+                        task.deadline = date;
+                        taskModified = true;
+                    }}
                 />
             </div>
             <div class="relative">

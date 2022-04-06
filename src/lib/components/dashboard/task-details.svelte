@@ -152,6 +152,7 @@
                             uuid: $currenTaskDetailsUUID,
                             title: task.title,
                             description: task.description,
+                            deadline: task.deadline,
                         },
                     },
                 });
