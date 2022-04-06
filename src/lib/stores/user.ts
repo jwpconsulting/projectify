@@ -37,10 +37,10 @@ export const emailConfirmation = async (email, token) => {
     try {
         const res = await client.mutate({
             mutation: Mutation_EmailConfirmation,
-            variables: { email, token },
+            variables: { input: { email, token } },
         });
         if (res.data.emailConfirmation !== null) {
-            const userData = res.data.emailConfirmation.user;
+            const userData = res.data.emailConfirmation;
             return userData;
         }
     } catch (error) {

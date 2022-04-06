@@ -29,8 +29,8 @@ export const Mutation_Singup = gql`
 `;
 
 export const Mutation_EmailConfirmation = gql`
-    mutation EmailConfirmation($email: String!, $token: String!) {
-        emailConfirmation(email: $email, token: $token) {
+    mutation EmailConfirmation($input: EmailConfirmationInput!) {
+        emailConfirmation(input: $input) {
             email
         }
     }
