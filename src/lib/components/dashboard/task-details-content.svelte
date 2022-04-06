@@ -7,7 +7,7 @@
 
     import Subtasks from "./task-details-subtasks.svelte";
     import ToolBar from "./toolBar.svelte";
-    import IconEdit from "../icons/icon-edit.svelte";
+    import InputDatePicker from "../inputDatePicker.svelte";
 
     export let task;
     export let subTasks;
@@ -30,6 +30,14 @@
                 on:input={() => (taskModified = true)}
                 bind:value={task.description}
             />
+            <div>
+                <InputDatePicker
+                    input={{
+                        value: task.deadline,
+                    }}
+                    placeholder={"Deadline"}
+                />
+            </div>
             <div class="relative">
                 <div class="flex items-center border-b border-base-300 py-2">
                     <div class="grow text-xl font-bold uppercase">
