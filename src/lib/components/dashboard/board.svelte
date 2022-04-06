@@ -103,13 +103,11 @@
                     },
                     optimisticResponse: {
                         addWorkspaceBoardSection: {
-                            workspaceBoardSection: {
-                                uuid: "temp-id",
-                                __typename: "WorkspaceBoardSection",
-                                ...newSection,
-                                created: "",
-                                tasks: [],
-                            },
+                            uuid: "temp-id",
+                            __typename: "WorkspaceBoardSection",
+                            ...newSection,
+                            created: "",
+                            tasks: [],
                         },
                     },
                 });
