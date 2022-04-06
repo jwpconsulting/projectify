@@ -1,5 +1,6 @@
 <script lang="ts">
     import { dateStringToLocal } from "$lib/utils/date";
+    import { createEventDispatcher } from "svelte";
     import { _ } from "svelte-i18n";
     import { getModal } from "./dialogModal.svelte";
     import IconCalendar from "./icons/icon-calendar.svelte";
@@ -8,6 +9,8 @@
     export let input;
     export let isEditing = false;
 
+    const dispatch = createEventDispatcher();
+
     $: dateStr = input?.value ? dateStringToLocal(input.value) : "";
 
     async function openDataPicker() {
@@ -15,6 +18,7 @@
         if (modalRes) {
             input.value = modalRes.date;
             isEditing = true;
+            dispatch("change", { date: input.value });
         }
     }
 </script>
