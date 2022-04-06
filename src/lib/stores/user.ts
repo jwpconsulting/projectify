@@ -20,7 +20,7 @@ export const singUp = async (email, password) => {
     try {
         const res = await client.mutate({
             mutation: Mutation_Singup,
-            variables: { email, password },
+            variables: { input: { email, password } },
         });
 
         if (res.data.signup !== null) {
@@ -53,19 +53,18 @@ export const login = async (email, password) => {
     try {
         const res = await client.mutate({
             mutation: Mutation_Login,
-            variables: { email, password },
+            variables: { input: { email, password } },
         });
 
+        console.log(res);
         if (res.data.login !== null) {
-            const userData = res.data.login.user;
+            const userData = res.data.login;
             user.set(userData);
 
-            console.log("singinRedirect.to", singinRedirect.to);
-
             if (singinRedirect.to) {
-                console.log("redirect to ", singinRedirect.to);
-
-                goto(singinRedirect.to);
+                if (singinRedirect.to) {
+                    goto(singinRedirect.to);
+                }
 
                 singinRedirect.to = null;
             }

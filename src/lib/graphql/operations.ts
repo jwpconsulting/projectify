@@ -37,8 +37,8 @@ export const Mutation_EmailConfirmation = gql`
 `;
 
 export const Mutation_Login = gql`
-    mutation Login($email: String!, $password: String!) {
-        login(email: $email, password: $password) {
+    mutation Login($input: LoginInput!) {
+        login(input: $input) {
             email
         }
     }
