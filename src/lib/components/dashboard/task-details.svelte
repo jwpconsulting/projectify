@@ -136,7 +136,7 @@
                     },
                 });
 
-                let taskUUID = mRes.data.addTask.task.uuid;
+                let taskUUID = mRes.data.addTask.uuid;
                 currenTaskDetailsUUID.set(taskUUID);
                 pushTashUUIDtoPath(taskUUID);
                 taskModified = false;

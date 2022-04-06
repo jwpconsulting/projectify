@@ -302,7 +302,7 @@ export const Query_DashboardTaskDetails = gql`
 `;
 
 export const Mutation_AddTask = gql`
-    mutation AddTask($input: AddTaskMutationInput!) {
+    mutation AddTask($input: AddTaskInput!) {
         addTask(input: $input) {
             uuid
             created
