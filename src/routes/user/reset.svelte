@@ -10,7 +10,7 @@
     async function submit() {
         const res = await requestPasswordReset(emailValue);
 
-        if (res.error) {
+        if (res?.error) {
             error = res.error.message;
         } else {
             requestSent = true;
