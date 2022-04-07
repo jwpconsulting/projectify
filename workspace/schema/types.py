@@ -3,6 +3,7 @@ import datetime
 import uuid
 
 import strawberry
+
 from user.schema import types as user_types
 
 from .. import (
