@@ -1,5 +1,6 @@
 """Projectify project schema."""
 import strawberry
+
 import user.schema
 import workspace.schema
 
