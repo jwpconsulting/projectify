@@ -42,7 +42,6 @@ export class WSSubscriptionStore {
         this.deleteConnection();
 
         this.socket = new WebSocket(this.url);
-        console.log("reconnecting", this.url);
 
         this.socket.onmessage = ({ data, timeStamp }) => {
             this.store = {
@@ -152,10 +151,7 @@ function startWatchDog(): void {
         const deltaTime = now - watchDogLastTime;
         watchDogLastTime = now;
 
-        console.log(deltaTime);
-
         if (deltaTime > watchDogInterval * 2) {
-            console.log("WS watchdog triggered");
             for (const url in stores) {
                 const wsss = stores[url];
                 if (wsss) {
