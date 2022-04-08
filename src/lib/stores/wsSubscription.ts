@@ -1,9 +1,13 @@
 import { browser } from "$app/env";
 import delay from "delay";
 import type { Subscriber } from "svelte/store";
+import { writable } from "svelte/store";
 
 type WSStore = { message: string; at: number };
 type WSSubscriber = Subscriber<WSStore>;
+
+export const activeWSSubscriptions = writable(0);
+export const activeWSConnections = writable(0);
 
 export class WSSubscriptionStore {
     public store: WSStore;
@@ -20,6 +24,7 @@ export class WSSubscriptionStore {
     constructor(public url: string) {
         this.retryTime = this.retryTimeStart;
         this.createNewConnection();
+        startWatchDog();
     }
 
     deleteConnection(): void {
@@ -37,6 +42,7 @@ export class WSSubscriptionStore {
         this.deleteConnection();
 
         this.socket = new WebSocket(this.url);
+        console.log("reconnecting", this.url);
 
         this.socket.onmessage = ({ data, timeStamp }) => {
             this.store = {
@@ -60,18 +66,23 @@ export class WSSubscriptionStore {
         };
     }
 
-    async retryConnection(): Promise<void> {
+    async retryConnection(now = false): Promise<void> {
         if (this.retryingConnection) {
             return;
         }
+
         this.retryingConnection = true;
 
         const delayTime =
             this.retryTime + Math.random() * this.retryTimeJitter;
 
-        await delay(delayTime);
-
         this.retryTime *= this.retryTimeMult;
+
+        if (now) {
+            this.retryTime = 0;
+        } else {
+            await delay(delayTime);
+        }
 
         if (
             this.retryingConnection &&
@@ -103,6 +114,7 @@ export class WSSubscriptionStore {
                 this.deleteConnection();
                 stores[this.url] = null;
                 delete stores[this.url];
+                stopWatchDog();
             }
         };
     }
@@ -122,4 +134,69 @@ export function getSubscriptionFor(url: string): WSSubscriptionStore {
         stores[url] = new WSSubscriptionStore(url);
     }
     return stores[url];
+}
+
+let watchDogTimer = null;
+let watchDogLastTime = 0;
+const watchDogInterval = 1000;
+function startWatchDog(): void {
+    if (!browser) {
+        return;
+    }
+    if (watchDogLastTime == 0) {
+        watchDogLastTime = Date.now();
+    }
+    clearInterval(watchDogTimer);
+    watchDogTimer = setInterval(() => {
+        const now = Date.now();
+        const deltaTime = now - watchDogLastTime;
+        watchDogLastTime = now;
+
+        console.log(deltaTime);
+
+        if (deltaTime > watchDogInterval * 2) {
+            console.log("WS watchdog triggered");
+            for (const url in stores) {
+                const wsss = stores[url];
+                if (wsss) {
+                    wsss.retryConnection(true);
+                }
+            }
+        }
+
+        checkAllConnectionStatus();
+    }, watchDogInterval);
+}
+function stopWatchDog(): void {
+    let connectionActive = false;
+    for (const url in stores) {
+        if (stores[url]) {
+            connectionActive = true;
+        }
+        break;
+    }
+    if (!connectionActive) {
+        clearInterval(watchDogTimer);
+    }
+    checkAllConnectionStatus();
+}
+
+function checkAllConnectionStatus() {
+    let activeWSS = 0;
+    let activeCon = 0;
+    for (const url in stores) {
+        const wsss = stores[url];
+
+        if (wsss) {
+            activeWSS++;
+            if (wsss.socket && wsss.socket.readyState == WebSocket.OPEN) {
+                {
+                    activeCon++;
+                }
+            }
+        }
+    }
+
+    activeWSSubscriptions.set(activeWSS);
+    activeWSConnections.set(activeCon);
 }
