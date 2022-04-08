@@ -31,10 +31,13 @@
     import { setClient } from "svelte-apollo";
     import DialogModal from "$lib/components/dialogModal.svelte";
     import DatePickerDropDown from "$lib/components/datePickerDropDown.svelte";
+    import ConnectionStatus from "$lib/components/connectionStatus.svelte";
     setClient(client);
 </script>
 
 <slot />
+
+<ConnectionStatus />
 
 {#if browser}
     <DialogModal id="dataPicker">
