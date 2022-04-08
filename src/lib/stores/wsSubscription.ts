@@ -186,7 +186,7 @@ function checkAllConnectionStatus() {
 
         if (wsss) {
             activeWSS++;
-            if (wsss.socket && wsss.socket.readyState == WebSocket.OPEN) {
+            if (wsss.socket && wsss.socket.readyState <= WebSocket.OPEN) {
                 {
                     activeCon++;
                 }
