@@ -151,7 +151,13 @@
     <ConfirmModalContent
         title={$_("new-section")}
         confirmLabel={$_("Save")}
-        inputs={[{ name: "title", label: $_("section-name") }]}
+        inputs={[
+            {
+                name: "title",
+                label: $_("section-name"),
+                validation: { required: true },
+            },
+        ]}
     />
 </DialogModal>
 
@@ -159,7 +165,13 @@
     <ConfirmModalContent
         title={$_("edit-section")}
         confirmLabel={$_("Save")}
-        inputs={[{ name: "title", label: $_("section-name") }]}
+        inputs={[
+            {
+                name: "title",
+                label: $_("section-name"),
+                validation: { required: true },
+            },
+        ]}
     />
 </DialogModal>
 
