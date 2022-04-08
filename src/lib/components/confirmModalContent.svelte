@@ -91,7 +91,7 @@
             <slot />
         </div>
     </div>
-    {#each inputs as input}
+    {#each inputs as input, inx}
         <div class="form-control w-full">
             <label for={input.name} class="label label-text uppercase"
                 >{input.label}</label
@@ -105,11 +105,17 @@
                 <InputDatePicker bind:input bind:isEditing />
             {:else}
                 <input
+                    autofocus={inx == 0}
                     type="text"
                     name={input.name}
                     placeholder={placeholderFor(input)}
                     class:input-error={!valid && input.error}
                     class="input input-bordered"
+                    on:keypress={(e) => {
+                        if (e.key == "Enter") {
+                            confirm();
+                        }
+                    }}
                     bind:value={input.value}
                     on:focus={() => (isEditing = true)}
                 />
