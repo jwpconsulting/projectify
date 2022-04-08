@@ -16,8 +16,9 @@ export class WSSubscriptionStore {
     retryingConnection = false;
 
     public retryTimeStart = 2000;
-    public retryTimeMult = 1.3;
+    public retryTimeMult = 1.1;
     public retryTimeJitter = 500;
+    public maxRetrieTime = 20000;
 
     retryTime: number;
 
@@ -76,7 +77,7 @@ export class WSSubscriptionStore {
             this.retryTime + Math.random() * this.retryTimeJitter;
 
         this.retryTime *= this.retryTimeMult;
-
+        this.retryTime = Math.min(this.retryTime, this.maxRetrieTime);
         if (now) {
             this.retryTime = 0;
         } else {
