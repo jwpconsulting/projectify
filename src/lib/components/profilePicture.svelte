@@ -45,7 +45,7 @@
                 <IconClose />
             {:else}
                 <img
-                    class="object-cover"
+                    class="object-cover pointer-events-none"
                     draggable="false"
                     width="100%"
                     height="100%"
