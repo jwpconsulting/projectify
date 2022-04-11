@@ -123,7 +123,12 @@
 
     async function save() {
         isSaving = true;
-        await saveTaskAssignment();
+
+        const commonTaskInputs = {
+            title: task.title,
+            description: task.description,
+        };
+
         if (itsNew) {
             try {
                 let mRes = await client.mutate({
@@ -131,7 +136,7 @@
                     variables: {
                         input: {
                             workspaceBoardSectionUuid: $newTaskSectionUUID,
-                            ...task,
+                            ...commonTaskInputs,
                         },
                     },
                 });
@@ -150,8 +155,7 @@
                     variables: {
                         input: {
                             uuid: $currenTaskDetailsUUID,
-                            title: task.title,
-                            description: task.description,
+                            ...commonTaskInputs,
                             deadline: task.deadline || null,
                         },
                     },
@@ -161,6 +165,8 @@
                 console.error(error);
             }
         }
+
+        await saveTaskAssignment();
 
         isSaving = false;
     }
@@ -215,11 +221,16 @@
 
         userPicked = true;
 
-        taskModified = true;
+        // taskModified = true;
+
+        saveTaskAssignment();
     }
 
     async function saveTaskAssignment() {
         if (!userPicked) {
+            return;
+        }
+        if (!$currenTaskDetailsUUID) {
             return;
         }
         try {
