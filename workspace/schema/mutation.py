@@ -20,6 +20,7 @@ from . import (
 )
 
 
+# Add inputs
 @strawberry.input
 class AddWorkspaceBoardInput:
     """Add workspace board input."""
@@ -45,6 +46,7 @@ class AddTaskInput:
     workspace_board_section_uuid: uuid.UUID
     title: str
     description: str
+    deadline: datetime.datetime | None
 
 
 @strawberry.input
@@ -284,6 +286,7 @@ class Mutation:
         task = workspace_board_section.add_task(
             input.title,
             input.description,
+            input.deadline,
         )
         return task
 

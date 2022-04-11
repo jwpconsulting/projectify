@@ -171,6 +171,7 @@ class Task:
     title: str
     description: str
     uuid: uuid.UUID
+    deadline: datetime.datetime | None
 
 
 @strawberry.django.type(models.Label)

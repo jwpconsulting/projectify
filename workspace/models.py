@@ -282,9 +282,13 @@ class WorkspaceBoardSection(
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     objects = WorkspaceBoardSectionManager()
 
-    def add_task(self, title, description):
+    def add_task(self, title, description, deadline=None):
         """Add a task to this section."""
-        return self.task_set.create(title=title, description=description)
+        return self.task_set.create(
+            title=title,
+            description=description,
+            deadline=deadline,
+        )
 
     def move_to(self, order):
         """
