@@ -289,6 +289,12 @@
             <input
                 class="grow text-xl p-2 rounded-md nowrap-ellipsis"
                 placeholder={$_("task-name")}
+                on:keydown={(e) => {
+                    if (e.key == "Enter") {
+                        e.preventDefault();
+                        save();
+                    }
+                }}
                 on:input={() => (taskModified = true)}
                 bind:value={task.title}
             />
