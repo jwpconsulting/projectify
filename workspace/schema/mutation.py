@@ -20,21 +20,6 @@ from . import (
 )
 
 
-class GetForUserAndUuidMixin:
-    """Helper mixin to make retrieving objects simpler."""
-
-    def get_object(self, info, input):
-        """Return object in question."""
-        if hasattr(self, "UUID_FIELD"):
-            uuid = getattr(input, self.UUID_FIELD)
-        else:
-            uuid = input.uuid
-        return self.model.objects.get_for_user_and_uuid(
-            info.context.user,
-            uuid,
-        )
-
-
 @strawberry.input
 class AddWorkspaceBoardInput:
     """Add workspace board input."""
