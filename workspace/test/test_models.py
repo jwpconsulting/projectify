@@ -5,6 +5,9 @@ from django import (
 from django.contrib.auth import (
     get_user_model,
 )
+from django.utils import (
+    timezone,
+)
 
 import pytest
 
@@ -303,6 +306,15 @@ class TestWorkspaceBoardSection:
         )
         assert workspace_board_section.task_set.count() == 2
         assert list(workspace_board_section.task_set.all()) == [task, task2]
+
+    def test_add_task_deadline(self, workspace_board_section):
+        """Test adding a task with a deadline."""
+        task = workspace_board_section.add_task(
+            title="foo",
+            description="bar",
+            deadline=timezone.now(),
+        )
+        assert task.deadline is not None
 
     def test_moving_section(self, workspace_board, workspace_board_section):
         """Test moving a section around."""

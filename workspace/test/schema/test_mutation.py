@@ -394,6 +394,75 @@ mutation AssignTask($uuid: UUID!, $email: String) {
 
 # Add Mutations
 @pytest.mark.django_db
+class TestAddTaskMutation:
+    """Test AddTask."""
+
+    query = """
+mutation AddTask($workspaceBoardSectionUuid: UUID!, $deadline: DateTime) {
+    addTask(input: {
+        workspaceBoardSectionUuid: $workspaceBoardSectionUuid,
+        title: "Hello",
+        description: "World",
+        deadline: $deadline
+    }) {
+        title
+        description
+        deadline
+    }
+}
+"""
+
+    def test_query(
+        self,
+        graphql_query_user,
+        workspace_board_section,
+        workspace_user,
+    ):
+        """Test query."""
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "workspaceBoardSectionUuid": str(workspace_board_section.uuid),
+                "deadline": None,
+            },
+        )
+        assert result == {
+            "data": {
+                "addTask": {
+                    "title": "Hello",
+                    "description": "World",
+                    "deadline": None,
+                },
+            },
+        }
+
+    def test_query_deadline(
+        self,
+        graphql_query_user,
+        workspace_board_section,
+        workspace_user,
+    ):
+        """Test query."""
+        now = timezone.now().isoformat()
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "workspaceBoardSectionUuid": str(workspace_board_section.uuid),
+                "deadline": now,
+            },
+        )
+        assert result == {
+            "data": {
+                "addTask": {
+                    "title": "Hello",
+                    "description": "World",
+                    "deadline": now,
+                },
+            },
+        }
+
+
+@pytest.mark.django_db
 class TestAddLabelMutation:
     """Test AddLabelMutation."""
 
