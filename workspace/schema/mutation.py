@@ -533,6 +533,8 @@ class Mutation:
         if input.deadline:
             task.deadline = input.deadline
             assert task.deadline.tzinfo
+        else:
+            task.deadline = None
         task.save()
         return task
 
