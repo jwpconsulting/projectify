@@ -127,6 +127,7 @@
         const commonTaskInputs = {
             title: task.title,
             description: task.description,
+            deadline: task.deadline || null,
         };
 
         if (itsNew) {
@@ -156,7 +157,6 @@
                         input: {
                             uuid: $currenTaskDetailsUUID,
                             ...commonTaskInputs,
-                            deadline: task.deadline || null,
                         },
                     },
                 });
