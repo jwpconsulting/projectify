@@ -267,6 +267,7 @@ export const Query_DashboardTaskDetails = gql`
             uuid
             title
             description
+            deadline
             assignee {
                 email
                 fullName
