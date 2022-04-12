@@ -46,45 +46,49 @@
                     }}
                 />
             </div>
-            <div class="relative">
-                <div class="flex items-center border-b border-base-300 py-2">
-                    <div class="grow text-xl font-bold uppercase">
-                        {"Labels"}
-                    </div>
-
-                    <div>
-                        <ToolBar
-                            items={[
-                                {
-                                    label: $_("apply-labels"),
-                                    icon: IconCheckCircle,
-                                    onClick: () => {
-                                        labelPickerOpen = true;
-                                    },
-                                },
-                            ]}
-                        />
-                    </div>
-                </div>
-                {#if labelPickerOpen}
+            {#if $currenTaskDetailsUUID}
+                <div class="relative">
                     <div
-                        class="absolute top-0 left-0 right-20 z-10 max-w-md pb-6"
+                        class="flex items-center border-b border-base-300 py-2"
                     >
-                        <LabelPicker
-                            {task}
-                            bind:selectedLabels={labels}
-                            on:blur={() => (labelPickerOpen = false)}
-                        />
+                        <div class="grow text-xl font-bold uppercase">
+                            {"Labels"}
+                        </div>
+
+                        <div>
+                            <ToolBar
+                                items={[
+                                    {
+                                        label: $_("apply-labels"),
+                                        icon: IconCheckCircle,
+                                        onClick: () => {
+                                            labelPickerOpen = true;
+                                        },
+                                    },
+                                ]}
+                            />
+                        </div>
                     </div>
-                {/if}
-            </div>
-            <div class="inline-flex flex-wrap gap-2">
-                <LabelList
-                    {labels}
-                    editable={false}
-                    on:addLabelClick={() => (labelPickerOpen = true)}
-                />
-            </div>
+                    {#if labelPickerOpen}
+                        <div
+                            class="absolute top-0 left-0 right-20 z-10 max-w-md pb-6"
+                        >
+                            <LabelPicker
+                                {task}
+                                bind:selectedLabels={labels}
+                                on:blur={() => (labelPickerOpen = false)}
+                            />
+                        </div>
+                    {/if}
+                </div>
+                <div class="inline-flex flex-wrap gap-2">
+                    <LabelList
+                        {labels}
+                        editable={false}
+                        on:addLabelClick={() => (labelPickerOpen = true)}
+                    />
+                </div>
+            {/if}
         </div>
         {#if $currenTaskDetailsUUID && subTasks}
             <Subtasks taskUUID={$currenTaskDetailsUUID} {subTasks} />
