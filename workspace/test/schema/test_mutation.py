@@ -1010,6 +1010,24 @@ mutation UpdateTaskMutation($uuid: UUID!, $deadline: DateTime) {
         )
         assert "errors" in result, result
 
+    def test_removing_deadline(
+        self,
+        graphql_query_user,
+        task,
+        workspace_user,
+    ):
+        """Test assigning a deadline."""
+        assert task.deadline
+        graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(task.uuid),
+                "deadline": None,
+            },
+        )
+        task.refresh_from_db()
+        assert task.deadline is None
+
 
 @pytest.mark.django_db
 class TestUpdateLabelMutation:
