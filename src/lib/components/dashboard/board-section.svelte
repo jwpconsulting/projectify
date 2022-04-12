@@ -17,6 +17,7 @@
     import { getModal } from "../dialogModal.svelte";
     import UserProfilePicture from "../userProfilePicture.svelte";
     import { getColorFromInx } from "$lib/utils/colors";
+    import { dateStringToLocal } from "$lib/utils/date";
 
     export let boardUUID;
     export let section;
@@ -226,10 +227,15 @@
                                         />
                                     {/each}
                                 </div>
-                                <div class="flex items-center">
-                                    <span class="text-xs">Date 2022.01.01</span
-                                    >
-                                </div>
+                                {#if task.deadline}
+                                    <div class="flex items-center">
+                                        <span class="text-xs"
+                                            >Date {dateStringToLocal(
+                                                task.deadline
+                                            )}</span
+                                        >
+                                    </div>
+                                {/if}
                                 <div class="grid max-w-xs font-bold">
                                     <span class="nowrap-ellipsis"
                                         >{task.title}</span

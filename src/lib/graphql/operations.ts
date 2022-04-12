@@ -225,6 +225,7 @@ export const Query_DashboardBoard = gql`
                     order
                     uuid
                     title
+                    deadline
                     labels {
                         uuid
                         name
@@ -326,6 +327,7 @@ export const Mutation_UpdateTask = gql`
             modified
             title
             description
+            deadline
         }
     }
 `;
