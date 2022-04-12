@@ -93,6 +93,7 @@ export function filterSectionsTaskWithLabels(
         return {
             ...section,
             tasks,
+            totalTasksCount: section.tasks.length,
         };
     });
     return sections;

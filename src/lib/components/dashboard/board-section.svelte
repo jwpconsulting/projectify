@@ -177,7 +177,8 @@
                         label: $_("Delete"),
                         icon: IconTrash,
                         onClick: onDelete,
-                        disabled: section.tasks.length,
+                        disabled:
+                            section.totalTasksCount || section.tasks.length,
                         tooltip: section.tasks.length
                             ? $_("remove-section-tooltip-message")
                             : "",
