@@ -11,6 +11,10 @@ from django.db import (
 from django.utils.translation import gettext_lazy as _
 
 import strawberry
+from strawberry.arguments import (
+    UNSET,
+    is_unset,
+)
 
 from .. import (
     models,
@@ -47,6 +51,7 @@ class AddTaskInput:
     title: str
     description: str
     deadline: datetime.datetime | None
+    assignee: str | None = UNSET
 
 
 @strawberry.input
@@ -288,6 +293,10 @@ class Mutation:
             input.description,
             input.deadline,
         )
+        if not is_unset(input.assignee):
+            User = get_user_model()
+            user = User.objects.get_by_natural_key(input.assignee)
+            task.assign_to(user)
         return task
 
     @strawberry.field
