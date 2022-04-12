@@ -176,7 +176,7 @@
 <DialogModal id="newLabel">
     <ConfirmModalContent
         title={$_("create-new-label")}
-        confirmLabel={$_("send")}
+        confirmLabel={$_("Save")}
         inputs={[
             {
                 name: "name",
@@ -200,7 +200,7 @@
 <DialogModal id="editLabel">
     <ConfirmModalContent
         title={$_("edit-label")}
-        confirmLabel={"Send"}
+        confirmLabel={$_("Save")}
         inputs={[
             {
                 name: "name",
