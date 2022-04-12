@@ -398,16 +398,24 @@ class TestAddTaskMutation:
     """Test AddTask."""
 
     query = """
-mutation AddTask($workspaceBoardSectionUuid: UUID!, $deadline: DateTime) {
+mutation AddTask(
+    $workspaceBoardSectionUuid: UUID!,
+    $deadline: DateTime,
+    $assignee: String
+    ) {
     addTask(input: {
         workspaceBoardSectionUuid: $workspaceBoardSectionUuid,
         title: "Hello",
         description: "World",
-        deadline: $deadline
+        deadline: $deadline,
+        assignee: $assignee
     }) {
         title
         description
         deadline
+        assignee {
+            email
+        }
     }
 }
 """
@@ -432,6 +440,7 @@ mutation AddTask($workspaceBoardSectionUuid: UUID!, $deadline: DateTime) {
                     "title": "Hello",
                     "description": "World",
                     "deadline": None,
+                    "assignee": None,
                 },
             },
         }
@@ -457,6 +466,36 @@ mutation AddTask($workspaceBoardSectionUuid: UUID!, $deadline: DateTime) {
                     "title": "Hello",
                     "description": "World",
                     "deadline": now,
+                    "assignee": None,
+                },
+            },
+        }
+
+    def test_query_assignee(
+        self,
+        graphql_query_user,
+        workspace_board_section,
+        workspace_user,
+        user,
+    ):
+        """Test query."""
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "workspaceBoardSectionUuid": str(workspace_board_section.uuid),
+                "deadline": None,
+                "assignee": user.email,
+            },
+        )
+        assert result == {
+            "data": {
+                "addTask": {
+                    "title": "Hello",
+                    "description": "World",
+                    "deadline": None,
+                    "assignee": {
+                        "email": user.email,
+                    },
                 },
             },
         }
