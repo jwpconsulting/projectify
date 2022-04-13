@@ -809,9 +809,11 @@ class TestUpdateWorkspaceBoardMutation:
     query = """
 mutation UpdateWorkspaceBoard($uuid: UUID!, $deadline: DateTime) {
     updateWorkspaceBoard(input: {
-        uuid: $uuid, title: "Foo", description: "Bar"
-        deadline: $deadline}
-    ) {
+        uuid: $uuid,
+        title: "Foo",
+        description: "Bar",
+        deadline: $deadline
+    }) {
         title
         description
         deadline
@@ -821,6 +823,7 @@ mutation UpdateWorkspaceBoard($uuid: UUID!, $deadline: DateTime) {
 
     def test_query(self, graphql_query_user, workspace_board, workspace_user):
         """Test query."""
+        assert workspace_board.deadline
         result = graphql_query_user(
             self.query,
             variables={
@@ -837,6 +840,8 @@ mutation UpdateWorkspaceBoard($uuid: UUID!, $deadline: DateTime) {
                 },
             },
         }
+        workspace_board.refresh_from_db()
+        assert workspace_board.deadline is None
 
     def test_set_deadline(
         self,

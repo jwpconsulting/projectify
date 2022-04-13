@@ -502,6 +502,8 @@ class Mutation:
         if input.deadline:
             assert input.deadline.tzinfo
             workspace_board.deadline = input.deadline
+        else:
+            workspace_board.deadline = None
         workspace_board.save()
         return workspace_board
 
