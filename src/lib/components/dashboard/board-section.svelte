@@ -202,9 +202,9 @@
                     on:dragEnd={taskDragEnd}
                     data-uuid={section.uuid}
                 >
-                    {#each section.tasks as task, inx (task.uuid)}
+                    {#each section.tasks as task (task.uuid)}
                         <div
-                            class="drag-handle item m-2 flex grow cursor-pointer items-center space-x-4 overflow-y-hidden rounded-lg border border-base-300 bg-base-100 py-4 px-6"
+                            class="drag-handle item"
                             class:hover:ring={!isDragging}
                             on:click={() =>
                                 !isDragging && openTaskDetails(task.uuid)}
@@ -248,16 +248,16 @@
                     {/each}
                     {#if !isDragging}
                         <div
-                            class="ignore-elements m-2 flex h-24 cursor-pointer items-center overflow-y-hidden rounded-lg border border-base-300 bg-base-100 p-4 hover:ring"
+                            class="add-item ignore-elements hover:ring"
                             on:click={() => openNewTask(section.uuid)}
                         >
                             <div
-                                class="m-2 mr-3 flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-primary text-primary"
+                                class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-primary text-primary"
                             >
                                 <IconPlus />
                             </div>
                             <div
-                                class="mr-3 flex max-h-full flex-col overflow-y-hidden font-bold text-primary"
+                                class="flex max-h-full flex-col overflow-y-hidden font-bold text-primary"
                             >
                                 {$_("new-task")}
                             </div>
@@ -286,13 +286,18 @@
     :global(.sortable-ghost) {
         opacity: 0;
     }
+    .item,
+    .add-item {
+        @apply m-2 flex cursor-pointer items-center space-x-4 overflow-y-hidden rounded-lg border border-base-300 bg-base-100 py-4 px-6;
+    }
 
     .content {
         &.layout-grid {
             @apply grid;
             grid-auto-flow: row dense;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            .item {
+            .item,
+            .add-item {
                 @apply h-24;
                 .title {
                     @apply grid;
