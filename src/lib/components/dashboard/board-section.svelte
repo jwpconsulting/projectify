@@ -204,6 +204,10 @@
                 >
                     {#each section.tasks as task (task.uuid)}
                         <div
+                            class:item-layout-grid={$dashboardSectionsLayout ==
+                                "grid"}
+                            class:item-layout-list={$dashboardSectionsLayout ==
+                                "list"}
                             class="drag-handle item"
                             class:hover:ring={!isDragging}
                             on:click={() =>
@@ -220,17 +224,20 @@
                             <div
                                 class="mr-3 flex max-h-full flex-col overflow-y-hidden"
                             >
-                                <div class="mb-2 flex space-x-1">
-                                    {#each task.labels as label}
-                                        <div
-                                            style={`--color:${
-                                                getColorFromInx(label.color)
-                                                    .style
-                                            };`}
-                                            class="label-dot h-2 w-2 rounded-full"
-                                        />
-                                    {/each}
-                                </div>
+                                {#if task.labels.length}
+                                    <div class="mb-2 flex space-x-1">
+                                        {#each task.labels as label}
+                                            <div
+                                                style={`--color:${
+                                                    getColorFromInx(
+                                                        label.color
+                                                    ).style
+                                                };`}
+                                                class="label-dot h-2 w-2 rounded-full"
+                                            />
+                                        {/each}
+                                    </div>
+                                {/if}
                                 {#if task.deadline}
                                     <div class="flex items-center">
                                         <span class="text-xs"
@@ -289,6 +296,18 @@
     .item,
     .add-item {
         @apply m-2 flex cursor-pointer items-center space-x-4 overflow-y-hidden rounded-lg border border-base-300 bg-base-100 py-4 px-6;
+        &.item-layout-grid {
+            @apply h-24;
+            .title {
+                background: rgba(#f00, 0.2);
+
+                @apply grid grow;
+
+                span {
+                    @apply overflow-hidden text-ellipsis whitespace-nowrap;
+                }
+            }
+        }
     }
 
     .content {
@@ -296,16 +315,6 @@
             @apply grid;
             grid-auto-flow: row dense;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            .item,
-            .add-item {
-                @apply h-24;
-                .title {
-                    @apply grid;
-                    span {
-                        @apply overflow-hidden text-ellipsis whitespace-nowrap;
-                    }
-                }
-            }
         }
         &.layout-list {
             @apply flex flex-col;
