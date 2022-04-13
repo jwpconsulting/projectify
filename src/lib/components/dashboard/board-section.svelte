@@ -230,7 +230,7 @@
                                     >
                                         {#if task.labels.length}
                                             <div
-                                                class="flex h-4 items-center space-x-1"
+                                                class="flex h-4 grow items-center space-x-1"
                                             >
                                                 {#each task.labels as label}
                                                     <div
@@ -244,7 +244,6 @@
                                                 {/each}
                                             </div>
                                         {/if}
-                                        <div class="grow" />
                                         {#if task.deadline}
                                             <div
                                                 class="grid h-4 items-center self-end"
