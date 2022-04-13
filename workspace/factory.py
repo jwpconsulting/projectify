@@ -68,6 +68,7 @@ class WorkspaceBoardFactory(django.DjangoModelFactory):
     title = factory.Faker("word")
     description = factory.Faker("paragraph")
     workspace = factory.SubFactory(WorkspaceFactory)
+    deadline = factory.Faker("date_time", tzinfo=timezone.utc)
 
     class Meta:
         """Meta."""
