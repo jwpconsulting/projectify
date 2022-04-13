@@ -27,6 +27,7 @@
     import LabelPillList from "./labelList.svelte";
     import { currentWorkspaceLabels } from "$lib/stores/dashboard";
     import { dateStringToLocal } from "$lib/utils/date";
+    import BoardSectionLayoutSelector from "./board-section-layout-selector.svelte";
 
     export let workspaceUUID;
     export let boardUUID = null;
@@ -263,6 +264,7 @@
             <div class="grid font-bold text-3xl grow shrink basis-0">
                 <span class="nowrap-ellipsis">{board.title}</span>
             </div>
+            <BoardSectionLayoutSelector />
             <ToolBar
                 items={[
                     { label: $_("Edit"), icon: IconEdit, onClick: onEdit },

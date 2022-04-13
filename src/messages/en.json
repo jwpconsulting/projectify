@@ -100,5 +100,6 @@
     "are-you-sure-you-want-to-remove-this-team-member": "Are you sure you want to remove this team member?",
     "apply-labels": "Apply labels",
     "disconnected-network": "Disconnected Network",
-    "back-to-landing-page": "back to landing page"
+    "back-to-landing-page": "back to landing page",
+    "layout": "Layout"
 }
