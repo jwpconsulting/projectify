@@ -18,6 +18,7 @@
     import UserProfilePicture from "../userProfilePicture.svelte";
     import { getColorFromInx } from "$lib/utils/colors";
     import { dateStringToLocal } from "$lib/utils/date";
+    import { dashboardSectionsLayout } from "$lib/stores/dashboard-ui";
 
     export let boardUUID;
     export let section;
@@ -25,7 +26,7 @@
 
     export let isDragging = false;
 
-    let open = false;
+    let open = true;
     let firstOpen = open;
 
     function toggleOpen() {
@@ -192,7 +193,9 @@
         >
             {#if firstOpen}
                 <div
-                    class="content min-h-16 relative flex w-full grow flex-wrap p-2"
+                    class:layout-grid={$dashboardSectionsLayout == "grid"}
+                    class:layout-list={$dashboardSectionsLayout == "list"}
+                    class="content min-h-16 relative w-full grow p-2"
                     bind:clientHeight={contentHeght}
                     use:sortable={{ group: "Tasks" }}
                     on:dragStart={taskDragStart}
@@ -201,7 +204,7 @@
                 >
                     {#each section.tasks as task, inx (task.uuid)}
                         <div
-                            class="drag-handle item m-2 flex h-24 cursor-pointer items-center space-x-4 overflow-y-hidden rounded-lg border border-base-300 bg-base-100 py-4 px-6"
+                            class="drag-handle item m-2 flex grow cursor-pointer items-center space-x-4 overflow-y-hidden rounded-lg border border-base-300 bg-base-100 py-4 px-6"
                             class:hover:ring={!isDragging}
                             on:click={() =>
                                 !isDragging && openTaskDetails(task.uuid)}
@@ -237,10 +240,8 @@
                                         >
                                     </div>
                                 {/if}
-                                <div class="grid max-w-xs font-bold">
-                                    <span class="nowrap-ellipsis"
-                                        >{task.title}</span
-                                    >
+                                <div class="title font-bold">
+                                    <span>{task.title}</span>
                                 </div>
                             </div>
                         </div>
@@ -284,5 +285,25 @@
 
     :global(.sortable-ghost) {
         opacity: 0;
+    }
+
+    .content {
+        &.layout-grid {
+            @apply grid;
+            grid-auto-flow: row dense;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            .item {
+                @apply h-24;
+                .title {
+                    @apply grid;
+                    span {
+                        @apply overflow-hidden text-ellipsis whitespace-nowrap;
+                    }
+                }
+            }
+        }
+        &.layout-list {
+            @apply flex flex-col;
+        }
     }
 </style>

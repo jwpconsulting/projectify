@@ -1,4 +1,2 @@
 import { writable } from "svelte/store";
-export const dashboardSectionsLayout = writable<"float" | "grid" | "list">(
-    "list"
-);
+export const dashboardSectionsLayout = writable<"grid" | "list">("list");
