@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
     export type DropDownMenuItem = {
+        id?: any;
         label: string;
         icon: any;
         onClick?: (...any) => void;
@@ -8,12 +9,12 @@
         hidden?: boolean;
         tooltip?: string;
     };
-
-    let focusEl;
 </script>
 
 <script lang="ts">
+    let focusEl;
     export let items: DropDownMenuItem[];
+    export let activeId: any = null;
 </script>
 
 <div class="dropdown-end dropdown select-none">
@@ -30,10 +31,14 @@
                     <a
                         title={it.tooltip}
                         disabled={it.disabled}
+                        class:active={activeId === it.id}
                         class="nowrap-ellipsis h-9 space-x-2 px-0 text-xs font-bold"
                         href={it.href}
                         on:click={() => {
-                            it.onClick();
+                            if (it.onClick) {
+                                it.onClick();
+                            }
+
                             focusEl.blur();
                         }}
                     >

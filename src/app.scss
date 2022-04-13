@@ -101,6 +101,9 @@ body {
     .menu li > * > svg {
         @apply h-4 w-4;
     }
+    .menu .menu-item-active {
+        @apply bg-primary text-base-content;
+    }
 
     .label {
         --opacity: 1;

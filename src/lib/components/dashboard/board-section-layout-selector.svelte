@@ -19,8 +19,10 @@
 </script>
 
 <DropDownMenu
+    activeId={$dashboardSectionsLayout}
     items={[
         {
+            id: "grid",
             label: "Grid",
             icon: IconViewGrid,
             onClick: () => {
@@ -28,6 +30,7 @@
             },
         },
         {
+            id: "list",
             label: "List",
             icon: IconViewList,
             onClick: () => {

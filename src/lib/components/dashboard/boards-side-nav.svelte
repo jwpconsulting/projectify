@@ -96,10 +96,6 @@
     .menu li > :where(span) {
         @apply px-4 py-0;
     }
-    .menu .menu-item-active {
-        @apply bg-primary text-base-content;
-    }
-
     .menu .menu-item-active > * {
         @apply text-primary-content;
     }
