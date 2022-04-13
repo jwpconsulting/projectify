@@ -222,31 +222,41 @@
                                 />
                             {/if}
                             <div
-                                class="mr-3 flex max-h-full flex-col overflow-y-hidden"
+                                class="mr-3 flex max-h-full grow flex-col overflow-y-hidden"
                             >
-                                {#if task.labels.length}
-                                    <div class="mb-2 flex space-x-1">
-                                        {#each task.labels as label}
+                                {#if task.labels.length || task.deadline}
+                                    <div
+                                        class="my-1 flex items-center space-x-2"
+                                    >
+                                        {#if task.labels.length}
+                                            <div class="flex space-x-1">
+                                                {#each task.labels as label}
+                                                    <div
+                                                        style={`--color:${
+                                                            getColorFromInx(
+                                                                label.color
+                                                            ).style
+                                                        };`}
+                                                        class="label-dot h-2 w-2 rounded-full"
+                                                    />
+                                                {/each}
+                                            </div>
+                                        {/if}
+                                        <div class="grow" />
+                                        {#if task.deadline}
                                             <div
-                                                style={`--color:${
-                                                    getColorFromInx(
-                                                        label.color
-                                                    ).style
-                                                };`}
-                                                class="label-dot h-2 w-2 rounded-full"
-                                            />
-                                        {/each}
+                                                class="flex items-center self-end"
+                                            >
+                                                <span class="text-xs"
+                                                    >Date {dateStringToLocal(
+                                                        task.deadline
+                                                    )}</span
+                                                >
+                                            </div>
+                                        {/if}
                                     </div>
                                 {/if}
-                                {#if task.deadline}
-                                    <div class="flex items-center">
-                                        <span class="text-xs"
-                                            >Date {dateStringToLocal(
-                                                task.deadline
-                                            )}</span
-                                        >
-                                    </div>
-                                {/if}
+
                                 <div class="title font-bold">
                                     <span>{task.title}</span>
                                 </div>
@@ -299,8 +309,6 @@
         &.item-layout-grid {
             @apply h-24;
             .title {
-                background: rgba(#f00, 0.2);
-
                 @apply grid grow;
 
                 span {
