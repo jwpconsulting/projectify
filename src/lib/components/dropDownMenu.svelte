@@ -8,15 +8,18 @@
         hidden?: boolean;
         tooltip?: string;
     };
+
+    let focusEl;
 </script>
 
 <script lang="ts">
     export let items: DropDownMenuItem[];
 </script>
 
-<div class="dropdown dropdown-end">
+<div class="dropdown-end dropdown select-none">
     <slot />
     <ul
+        bind:this={focusEl}
         tabindex="0"
         class="dropdown-content menu min-w-[200px] rounded-lg
             bg-base-100 py-2 shadow-xl"
@@ -29,7 +32,10 @@
                         disabled={it.disabled}
                         class="nowrap-ellipsis h-9 space-x-2 px-0 text-xs font-bold"
                         href={it.href}
-                        on:click={it.onClick}
+                        on:click={() => {
+                            it.onClick();
+                            focusEl.blur();
+                        }}
                     >
                         <svelte:component this={it.icon} />
                         <span>{it.label}</span>
