@@ -226,10 +226,12 @@
                             >
                                 {#if task.labels.length || task.deadline}
                                     <div
-                                        class="my-1 flex items-center space-x-2"
+                                        class="my-1 flex items-center space-x-2 border-b border-base-300 pb-2"
                                     >
                                         {#if task.labels.length}
-                                            <div class="flex space-x-1">
+                                            <div
+                                                class="flex h-4 items-center space-x-1"
+                                            >
                                                 {#each task.labels as label}
                                                     <div
                                                         style={`--color:${
@@ -245,9 +247,10 @@
                                         <div class="grow" />
                                         {#if task.deadline}
                                             <div
-                                                class="flex items-center self-end"
+                                                class="grid h-4 items-center self-end"
                                             >
-                                                <span class="text-xs"
+                                                <span
+                                                    class="nowrap-ellipsis text-xs"
                                                     >Date {dateStringToLocal(
                                                         task.deadline
                                                     )}</span
