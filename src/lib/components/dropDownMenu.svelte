@@ -17,7 +17,7 @@
     export let activeId: any = null;
 </script>
 
-<div class="dropdown-end dropdown select-none">
+<div class="dropdown dropdown-end select-none">
     <slot />
     <ul
         bind:this={focusEl}
