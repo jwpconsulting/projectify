@@ -226,7 +226,7 @@
                             >
                                 {#if task.labels.length || task.deadline}
                                     <div
-                                        class="my-1 flex items-center space-x-2 border-b border-base-300 pb-2"
+                                        class="my-1 mb-2 flex items-center space-x-2 border-b border-base-300 pb-3"
                                     >
                                         {#if task.labels.length}
                                             <div
