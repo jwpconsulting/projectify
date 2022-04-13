@@ -222,7 +222,7 @@
                                 />
                             {/if}
                             <div
-                                class="mr-3 flex max-h-full grow flex-col overflow-y-hidden"
+                                class="flex max-h-full grow flex-col overflow-y-hidden"
                             >
                                 {#if task.labels.length || task.deadline}
                                     <div
