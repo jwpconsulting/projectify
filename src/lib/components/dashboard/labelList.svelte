@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { currentWorkspaceLabels } from "$lib/stores/dashboard";
     import { createEventDispatcher } from "svelte";
     import LabelPill from "./labelPill.svelte";
     import Fuse from "fuse.js";
@@ -7,6 +6,8 @@
     export let labels;
     export let editable = false;
     export let searchText = "";
+    export let size: "sm" | "md" = "md";
+
     let searchEngine = null;
     let filteredLabels = [];
     $: {
@@ -72,6 +73,7 @@
             <slot name="item" {label} active={selectedLabelsInx[label.uuid]} />
         {:else}
             <LabelPill
+                {size}
                 {label}
                 active={selectedLabels.length == 0 ||
                     selectedLabelsInx[label.uuid]}

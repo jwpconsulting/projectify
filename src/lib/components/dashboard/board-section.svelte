@@ -19,6 +19,7 @@
     import { getColorFromInx } from "$lib/utils/colors";
     import { dateStringToLocal } from "$lib/utils/date";
     import { dashboardSectionsLayout } from "$lib/stores/dashboard-ui";
+    import LabelList from "./labelList.svelte";
 
     export let boardUUID;
     export let section;
@@ -230,23 +231,31 @@
                                     >
                                         {#if task.labels.length}
                                             <div
-                                                class="flex h-4 grow items-center space-x-1"
+                                                class="flex grow items-center space-x-1"
                                             >
-                                                {#each task.labels as label}
-                                                    <div
-                                                        style={`--color:${
-                                                            getColorFromInx(
-                                                                label.color
-                                                            ).style
-                                                        };`}
-                                                        class="label-dot h-2 w-2 rounded-full"
+                                                {#if $dashboardSectionsLayout == "list"}
+                                                    <LabelList
+                                                        size={"sm"}
+                                                        editable={false}
+                                                        labels={task.labels}
                                                     />
-                                                {/each}
+                                                {:else}
+                                                    {#each task.labels as label}
+                                                        <div
+                                                            style={`--color:${
+                                                                getColorFromInx(
+                                                                    label.color
+                                                                ).style
+                                                            };`}
+                                                            class="label-dot h-2 w-2 rounded-full"
+                                                        />
+                                                    {/each}
+                                                {/if}
                                             </div>
                                         {/if}
                                         {#if task.deadline}
                                             <div
-                                                class="grid h-4 items-center self-end"
+                                                class="item-date grid h-4 items-center"
                                             >
                                                 <span
                                                     class="nowrap-ellipsis text-xs"
@@ -308,6 +317,8 @@
     .item,
     .add-item {
         @apply m-2 flex cursor-pointer items-center space-x-4 overflow-y-hidden rounded-lg border border-base-300 bg-base-100 py-4 px-6;
+        @apply font-bold;
+
         &.item-layout-grid {
             @apply h-24;
             .title {
@@ -315,6 +326,14 @@
 
                 span {
                     @apply overflow-hidden text-ellipsis whitespace-nowrap;
+                }
+            }
+        }
+
+        &.item-layout-list {
+            .item-date {
+                span {
+                    @apply text-sm;
                 }
             }
         }
