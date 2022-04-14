@@ -258,54 +258,60 @@
         {$_("loading")}
     </div>
 {:else if board}
-    <div class="flex grow flex-col bg-base-200 h-fit min-h-full">
-        <!-- Tile -->
-        <div class="flex flex-row items-center px-4 py-4 gap-2">
-            <div class="grid font-bold text-3xl grow shrink basis-0">
-                <span class="nowrap-ellipsis">{board.title}</span>
-            </div>
-            <BoardSectionLayoutSelector />
-            <ToolBar
-                items={[
-                    { label: $_("Edit"), icon: IconEdit, onClick: onEdit },
-                    {
-                        label: $_("Archive"),
-                        icon: IconTrash,
-                        onClick: onArchive,
-                        hidden: !board?.sections?.length,
-                    },
-                    {
-                        label: $_("Delete"),
-                        icon: IconTrash,
-                        onClick: onDelete,
-                        hidden: board?.sections?.length,
-                    },
-                ]}
-            />
-            {#if board.deadline}
-                <div
-                    class="bg-primary flex items-center p-1 px-3 rounded-lg text-primary-content shrink-0"
-                >
-                    <span class="text-xs p-1">{$_("deadline")}</span>
-                    <span class="text-base p-1 "
-                        >{dateStringToLocal(board.deadline)}</span
-                    >
+    <div
+        class="flex grow flex-col bg-base-200 h-full min-h-full overflow-hidden"
+    >
+        <header
+            class="flex grow flex-col bg-base-100 pb-6 border-b border-base-300"
+        >
+            <!-- Tile -->
+            <div class="flex flex-row items-center px-4 py-4 gap-2">
+                <div class="grid font-bold text-3xl grow shrink basis-0">
+                    <span class="nowrap-ellipsis">{board.title}</span>
                 </div>
-            {/if}
-        </div>
+                <BoardSectionLayoutSelector />
+                <ToolBar
+                    items={[
+                        { label: $_("Edit"), icon: IconEdit, onClick: onEdit },
+                        {
+                            label: $_("Archive"),
+                            icon: IconTrash,
+                            onClick: onArchive,
+                            hidden: !board?.sections?.length,
+                        },
+                        {
+                            label: $_("Delete"),
+                            icon: IconTrash,
+                            onClick: onDelete,
+                            hidden: board?.sections?.length,
+                        },
+                    ]}
+                />
+                {#if board.deadline}
+                    <div
+                        class="bg-primary flex items-center p-1 px-3 rounded-lg text-primary-content shrink-0"
+                    >
+                        <span class="text-xs p-1">{$_("deadline")}</span>
+                        <span class="text-base p-1 "
+                            >{dateStringToLocal(board.deadline)}</span
+                        >
+                    </div>
+                {/if}
+            </div>
 
-        <!-- Labels -->
-        <div class="px-4 inline-flex gap-2 flex-wrap">
-            <LabelPillList
-                editable={true}
-                labels={$currentWorkspaceLabels}
-                bind:selectedLabels={filterLabels}
-            />
-        </div>
+            <!-- Labels -->
+            <div class="px-4 inline-flex gap-2 flex-wrap">
+                <LabelPillList
+                    editable={true}
+                    labels={$currentWorkspaceLabels}
+                    bind:selectedLabels={filterLabels}
+                />
+            </div>
+        </header>
 
         <!-- Sections -->
         <div
-            class="flex flex-col grow p-2"
+            class="flex flex-col grow p-2 overflow-y-auto"
             use:sortable={{ group: "Sections", draggable: ".section" }}
             on:dragStart={sectionDragStart}
             on:dragEnd={sectionDragEnd}
