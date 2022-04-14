@@ -154,6 +154,7 @@
     />
     <div class="flex grow flex-col">
         <header
+            class:open
             class="drag-handle children:m-1 relative flex h-16 cursor-pointer select-none  items-center p-2"
             on:click={toggleOpen}
             on:focus={onHandlerOver}
@@ -339,14 +340,24 @@
         }
     }
 
-    .content {
+    header {
         &::after {
             content: "";
             position: absolute;
 
             height: 1px;
-            @apply top-0 left-4 right-4 bg-base-300;
+            @apply bottom-0 left-3 right-3 bg-base-300;
+            transition: all 300ms ease-in-out;
+            opacity: 0;
         }
+
+        &.open {
+            &::after {
+                opacity: 1;
+            }
+        }
+    }
+    .content {
         &.layout-grid {
             @apply grid;
             grid-auto-flow: row dense;
