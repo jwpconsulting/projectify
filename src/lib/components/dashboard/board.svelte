@@ -262,7 +262,7 @@
         class="flex grow flex-col bg-base-200 h-full min-h-full overflow-hidden"
     >
         <header
-            class="flex grow flex-col bg-base-100 pb-6 border-b border-base-300"
+            class="flex flex-col bg-base-100 pb-6 border-b border-base-300"
         >
             <!-- Tile -->
             <div class="flex flex-row items-center px-4 py-4 gap-2">
