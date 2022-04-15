@@ -144,7 +144,7 @@
     }
 </script>
 
-<div class="section m-2 flex select-none bg-base-100">
+<div class="section m-2 flex select-none bg-base-100 shadow-sm">
     <div
         class="w-1 shrink-0"
         style={`background-color: hsl(${index * 45}, 80%, 75%);`}
