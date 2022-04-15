@@ -15,11 +15,8 @@
     } from "$lib/graphql/operations";
     import ToolBar from "./toolBar.svelte";
     import { getModal } from "../dialogModal.svelte";
-    import UserProfilePicture from "../userProfilePicture.svelte";
-    import { getColorFromInx } from "$lib/utils/colors";
-    import { dateStringToLocal } from "$lib/utils/date";
     import { dashboardSectionsLayout } from "$lib/stores/dashboard-ui";
-    import LabelList from "./labelList.svelte";
+    import BoardTaskItem from "./board-task-item.svelte";
 
     export let boardUUID;
     export let section;
@@ -205,92 +202,19 @@
                     data-uuid={section.uuid}
                 >
                     {#each section.tasks as task (task.uuid)}
-                        <div
-                            class:item-layout-grid={$dashboardSectionsLayout ==
-                                "grid"}
-                            class:item-layout-list={$dashboardSectionsLayout ==
-                                "list"}
-                            class="drag-handle item"
-                            class:hover:ring={!isDragging}
+                        <BoardTaskItem
+                            layout={$dashboardSectionsLayout}
+                            {task}
+                            showHoverRing={!isDragging}
                             on:click={() =>
                                 !isDragging && openTaskDetails(task.uuid)}
-                        >
-                            {#if task.assignee}
-                                <UserProfilePicture
-                                    pictureProps={{
-                                        url: task.assignee.profilePicture,
-                                        size: 44,
-                                    }}
-                                />
-                            {/if}
-                            <div
-                                class="flex max-h-full grow flex-col overflow-y-hidden"
-                            >
-                                {#if task.labels.length || task.deadline}
-                                    <div
-                                        class="my-1 mb-2 flex items-center space-x-2 border-b border-base-300 pb-3"
-                                    >
-                                        {#if task.labels.length}
-                                            <div
-                                                class="flex grow items-center space-x-1"
-                                            >
-                                                {#if $dashboardSectionsLayout == "list"}
-                                                    <LabelList
-                                                        size={"sm"}
-                                                        editable={false}
-                                                        labels={task.labels}
-                                                    />
-                                                {:else}
-                                                    {#each task.labels as label}
-                                                        <div
-                                                            style={`--color:${
-                                                                getColorFromInx(
-                                                                    label.color
-                                                                ).style
-                                                            };`}
-                                                            class="label-dot h-2 w-2 rounded-full"
-                                                        />
-                                                    {/each}
-                                                {/if}
-                                            </div>
-                                        {/if}
-                                        {#if task.deadline}
-                                            <div
-                                                class="item-date grid h-4 items-center"
-                                            >
-                                                <span
-                                                    class="nowrap-ellipsis text-xs"
-                                                    >Date {dateStringToLocal(
-                                                        task.deadline
-                                                    )}</span
-                                                >
-                                            </div>
-                                        {/if}
-                                    </div>
-                                {/if}
-
-                                <div class="title font-bold">
-                                    <span>{task.title}</span>
-                                </div>
-                            </div>
-                        </div>
+                        />
                     {/each}
                     {#if !isDragging}
-                        <div
-                            class="add-item ignore-elements hover:ring"
+                        <BoardTaskItem
+                            layout={$dashboardSectionsLayout}
                             on:click={() => openNewTask(section.uuid)}
-                        >
-                            <div
-                                class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-primary text-primary"
-                            >
-                                <IconPlus />
-                            </div>
-                            <div
-                                class="flex max-h-full flex-col overflow-y-hidden font-bold text-primary"
-                            >
-                                {$_("new-task")}
-                            </div>
-                        </div>
+                        />
                     {/if}
                 </div>
             {/if}
@@ -314,30 +238,6 @@
 
     :global(.sortable-ghost) {
         opacity: 0;
-    }
-    .item,
-    .add-item {
-        @apply m-2 flex cursor-pointer items-center space-x-4 overflow-y-hidden rounded-lg border border-base-300 bg-base-100 py-4 px-6;
-        @apply font-bold;
-
-        &.item-layout-grid {
-            @apply h-24;
-            .title {
-                @apply grid grow;
-
-                span {
-                    @apply overflow-hidden text-ellipsis whitespace-nowrap;
-                }
-            }
-        }
-
-        &.item-layout-list {
-            .item-date {
-                span {
-                    @apply text-sm;
-                }
-            }
-        }
     }
 
     header {

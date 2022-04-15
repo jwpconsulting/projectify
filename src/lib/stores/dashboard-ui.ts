@@ -1,7 +1,7 @@
 import { browser } from "$app/env";
 import { writable } from "svelte/store";
 
-type DashboardSectionsLayout = "grid" | "list";
+export type DashboardSectionsLayout = "grid" | "list";
 
 export const dashboardSectionsLayout =
     writable<DashboardSectionsLayout>("list");
