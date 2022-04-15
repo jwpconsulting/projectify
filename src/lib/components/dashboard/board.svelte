@@ -21,13 +21,17 @@
     import IconEdit from "../icons/icon-edit.svelte";
     import IconTrash from "../icons/icon-trash.svelte";
     import {
-        filterSectionsTaskWithLabels,
+        filterSectionsTasks,
         gotoDashboard,
+        openTaskDetails,
+        searchTasks,
     } from "$lib/stores/dashboard";
     import LabelPillList from "./labelList.svelte";
     import { currentWorkspaceLabels } from "$lib/stores/dashboard";
     import { dateStringToLocal } from "$lib/utils/date";
     import BoardSectionLayoutSelector from "./board-section-layout-selector.svelte";
+    import BoardSeachBar from "./board-seach-bar.svelte";
+    import BoardTaskItem from "./board-task-item.svelte";
 
     export let workspaceUUID;
     export let boardUUID = null;
@@ -41,6 +45,9 @@
 
     let filteredSections = [];
     let filterLabels = [];
+
+    let searchText = "";
+    let tasksSearchResults = [];
 
     const refetch = debounce(() => {
         res.refetch();
@@ -77,12 +84,13 @@
 
     $: {
         if (filterLabels.length) {
-            filteredSections = filterSectionsTaskWithLabels(
-                sections,
-                filterLabels
-            );
+            filteredSections = filterSectionsTasks(sections, filterLabels);
         } else {
             filteredSections = sections;
+        }
+
+        if (searchText) {
+            tasksSearchResults = searchTasks(filteredSections, searchText);
         }
     }
 
@@ -262,10 +270,10 @@
         class="flex grow flex-col bg-base-200 h-full min-h-full overflow-hidden"
     >
         <header
-            class="flex flex-col bg-base-100 pb-6 border-b border-base-300"
+            class="flex flex-col bg-base-100 pb-6 border-b border-base-300 space-y-4"
         >
             <!-- Tile -->
-            <div class="flex flex-row items-center px-4 py-4 gap-2">
+            <div class="flex flex-row items-center px-4 pt-4 space-x-2">
                 <div class="grid font-bold text-3xl grow shrink basis-0">
                     <span class="nowrap-ellipsis">{board.title}</span>
                 </div>
@@ -299,9 +307,14 @@
                 {/if}
             </div>
 
+            <div class="flex px-4 grow items-stretch">
+                <BoardSeachBar bind:searchText />
+            </div>
+
             <!-- Labels -->
             <div class="px-4 inline-flex gap-2 flex-wrap">
                 <LabelPillList
+                    size="sm"
                     editable={true}
                     labels={$currentWorkspaceLabels}
                     bind:selectedLabels={filterLabels}
@@ -309,30 +322,51 @@
             </div>
         </header>
 
-        <!-- Sections -->
-        <div
-            class="flex flex-col grow p-2 overflow-y-auto"
-            use:sortable={{ group: "Sections", draggable: ".section" }}
-            on:dragStart={sectionDragStart}
-            on:dragEnd={sectionDragEnd}
-        >
-            {#each filteredSections as section, index (section.uuid)}
-                <BoardSection
-                    {section}
-                    {index}
-                    boardUUID={board.uuid}
-                    bind:isDragging
-                />
-            {/each}
-            {#if !isDragging}
-                <div
-                    class="ignore-elements bg-base-100 text-primary m-2 p-5 flex space-x-4 font-bold hover:ring hover:cursor-pointer"
-                    on:click={() => onAddNewSection()}
-                >
-                    <IconPlus />
-                    <div>{$_("new-section")}</div>
+        {#if searchText}
+            <!-- Flat Tasks Results -->
+            {#if tasksSearchResults.length}
+                <div class="flex flex-col grow p-2 overflow-y-auto">
+                    {#each tasksSearchResults as task}
+                        <BoardTaskItem
+                            layout="list"
+                            {task}
+                            on:click={() => openTaskDetails(task.uuid)}
+                        />
+                    {/each}
+                </div>
+            {:else}
+                <div class="flex items-center justify-center grow">
+                    <div class="bg-base-100 p-6 rounded-md shadow-sm">
+                        {$_("tasks-not-found-for")} "{searchText}"
+                    </div>
                 </div>
             {/if}
-        </div>
+        {:else}
+            <!-- Sections -->
+            <div
+                class="flex flex-col grow p-2 overflow-y-auto"
+                use:sortable={{ group: "Sections", draggable: ".section" }}
+                on:dragStart={sectionDragStart}
+                on:dragEnd={sectionDragEnd}
+            >
+                {#each filteredSections as section, index (section.uuid)}
+                    <BoardSection
+                        {section}
+                        {index}
+                        boardUUID={board.uuid}
+                        bind:isDragging
+                    />
+                {/each}
+                {#if !isDragging}
+                    <div
+                        class="shadow-sm ignore-elements bg-base-100 text-primary m-2 p-5 flex space-x-4 font-bold hover:ring hover:cursor-pointer"
+                        on:click={() => onAddNewSection()}
+                    >
+                        <IconPlus />
+                        <div>{$_("new-section")}</div>
+                    </div>
+                {/if}
+            </div>
+        {/if}
     </div>
 {/if}

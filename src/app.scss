@@ -75,6 +75,18 @@ body {
         }
     }
 
+    .btn-sm {
+        > svg {
+            @apply h-4 w-4;
+        }
+    }
+
+    .icon-sm {
+        > svg {
+            @apply h-4 w-4;
+        }
+    }
+
     .nowrap-ellipsis {
         @apply overflow-hidden text-ellipsis whitespace-nowrap;
     }

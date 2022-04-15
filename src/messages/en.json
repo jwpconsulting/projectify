@@ -101,5 +101,7 @@
     "apply-labels": "Apply labels",
     "disconnected-network": "Disconnected Network",
     "back-to-landing-page": "back to landing page",
-    "layout": "Layout"
+    "layout": "Layout",
+    "filter-tasks": "Filter tasks",
+    "tasks-not-found-for": "Tasks not found for"
 }

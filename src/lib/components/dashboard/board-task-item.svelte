@@ -93,7 +93,7 @@
     .item,
     .add-item {
         @apply m-2 flex cursor-pointer items-center space-x-4 overflow-y-hidden rounded-lg border border-base-300 bg-base-100 py-4 px-6;
-        @apply font-bold;
+        @apply shrink-0 font-bold;
 
         &.item-layout-grid {
             @apply h-24;

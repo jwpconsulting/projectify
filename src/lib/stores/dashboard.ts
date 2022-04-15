@@ -1,5 +1,6 @@
 import { goto } from "$app/navigation";
 import { encodeUUID } from "$lib/utils/encoders";
+import Fuse from "fuse.js";
 import { writable, get } from "svelte/store";
 
 export const drawerModalOpen = writable(false);
@@ -75,26 +76,42 @@ export function pushTashUUIDtoPath(uuid: string): void {
 
 export const currentWorkspaceLabels = writable([]);
 
-export function filterSectionsTaskWithLabels(
-    sections: any[],
-    labels: any[]
-): any[] {
-    const labelUUIDs = {};
+export function filterSectionsTasks(sections: any[], labels: any[]): any[] {
+    if (labels.length) {
+        const labelUUIDs = {};
 
-    labels.forEach((l) => {
-        labelUUIDs[l.uuid] = true;
-    });
-
-    sections = sections.map((section) => {
-        const tasks = section.tasks.filter((task) => {
-            return task.labels.findIndex((l) => labelUUIDs[l.uuid]) >= 0;
+        labels.forEach((l) => {
+            labelUUIDs[l.uuid] = true;
         });
 
-        return {
-            ...section,
-            tasks,
-            totalTasksCount: section.tasks.length,
-        };
-    });
+        sections = sections.map((section) => {
+            const tasks = section.tasks.filter((task) => {
+                return task.labels.findIndex((l) => labelUUIDs[l.uuid]) >= 0;
+            });
+
+            return {
+                ...section,
+                tasks,
+                totalTasksCount: section.tasks.length,
+            };
+        });
+    }
+
     return sections;
+}
+
+export function searchTasks(sections: any[], searchText: string): any[] {
+    let tasks = [];
+
+    sections.forEach((section) => {
+        tasks = tasks.concat(section.tasks);
+    });
+
+    const searchEngine = new Fuse(tasks, {
+        keys: ["title"],
+    });
+
+    tasks = searchEngine.search(searchText).map((res) => res.item);
+
+    return tasks;
 }
