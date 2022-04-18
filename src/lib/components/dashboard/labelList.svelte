@@ -29,7 +29,8 @@
     let dispatch = createEventDispatcher();
 
     export let selectedLabels = [];
-    let selectedLabelsInx = {};
+    $: selectedLabelsInx = selectedLabels && {};
+
     function onLabelClick(label) {
         if (!editable) {
             return;
@@ -72,12 +73,7 @@
         {#if $$slots.item}
             <slot name="item" {label} active={selectedLabelsInx[label.uuid]} />
         {:else}
-            <LabelPill
-                {size}
-                {label}
-                active={selectedLabels.length == 0 ||
-                    selectedLabelsInx[label.uuid]}
-            />
+            <LabelPill {size} {label} active={selectedLabelsInx[label.uuid]} />
         {/if}
     </div>
 {/each}

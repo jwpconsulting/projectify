@@ -34,7 +34,7 @@
 </script>
 
 <div class="flex grow flex-col space-y-2">
-    <div class="flex grow items-center space-x-2 px-4">
+    <div class="flex grow flex-wrap items-center gap-2 px-4">
         <div class="relative flex grow">
             <input
                 type="text"
@@ -57,7 +57,6 @@
                 </button>
             {/if}
         </div>
-
         <button
             on:click={onLabelsFiltersDrawerBtnClick}
             class:text-primary={filterLabels.length}
@@ -80,10 +79,10 @@
             {/if}
         </button>
 
-        <!-- <button class="btn-filter btn btn-ghost">
+        <button class="btn-filter btn btn-ghost">
             <IconUserCirlce />
             <span>Filter by assignee</span>
-        </button> -->
+        </button>
     </div>
 
     <div
