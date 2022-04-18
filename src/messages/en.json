@@ -103,5 +103,8 @@
     "back-to-landing-page": "back to landing page",
     "layout": "Layout",
     "filter-tasks": "Filter tasks",
-    "tasks-not-found-for": "Tasks not found for"
+    "tasks-not-found-for": "Tasks not found for",
+    "search-task": "Search Task",
+    "clear-labels-filter": "Clear labels filter",
+    "filter-by-labels": "Filter by labels"
 }

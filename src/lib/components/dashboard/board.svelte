@@ -26,8 +26,7 @@
         openTaskDetails,
         searchTasks,
     } from "$lib/stores/dashboard";
-    import LabelPillList from "./labelList.svelte";
-    import { currentWorkspaceLabels } from "$lib/stores/dashboard";
+
     import { dateStringToLocal } from "$lib/utils/date";
     import BoardSectionLayoutSelector from "./board-section-layout-selector.svelte";
     import BoardSeachBar from "./board-seach-bar.svelte";
@@ -270,7 +269,7 @@
         class="flex grow flex-col bg-base-200 h-full min-h-full overflow-hidden"
     >
         <header
-            class="flex flex-col bg-base-100 pb-6 border-b border-base-300 space-y-4"
+            class="flex flex-col bg-base-100 border-b border-base-300 space-y-4"
         >
             <!-- Tile -->
             <div class="flex flex-row items-center px-4 pt-4 space-x-2">
@@ -307,18 +306,8 @@
                 {/if}
             </div>
 
-            <div class="flex px-4 grow items-stretch">
-                <BoardSeachBar bind:searchText />
-            </div>
-
-            <!-- Labels -->
-            <div class="px-4 inline-flex gap-2 flex-wrap">
-                <LabelPillList
-                    size="sm"
-                    editable={true}
-                    labels={$currentWorkspaceLabels}
-                    bind:selectedLabels={filterLabels}
-                />
+            <div class="flex grow items-stretch">
+                <BoardSeachBar bind:searchText bind:filterLabels />
             </div>
         </header>
 
