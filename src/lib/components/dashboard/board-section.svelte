@@ -158,7 +158,7 @@
             on:mouseover={onHandlerOver}
         >
             <div
-                class="children:w-5 px-2 transition-transform"
+                class="px-2 transition-transform"
                 style="transform: rotate({openArrowDeg}deg);"
             >
                 <IconChevronRight />
