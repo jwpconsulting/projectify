@@ -51,7 +51,7 @@
 </script>
 
 <div class="flex grow flex-col space-y-2">
-    <div class="flex grow flex-wrap items-center gap-2 px-4">
+    <div class="flex grow items-center gap-2 px-4">
         <SearchInput placeholder={$_("search-task")} bind:searchText />
         <button
             on:click={onLabelsFiltersDrawerBtnClick}
