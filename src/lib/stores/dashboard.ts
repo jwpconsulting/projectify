@@ -126,6 +126,7 @@ export function searchTasks(sections: any[], searchText: string): any[] {
 
     const searchEngine = new Fuse(tasks, {
         keys: ["title"],
+        threshold: 0.3,
     });
 
     tasks = searchEngine.search(searchText).map((res) => res.item);
