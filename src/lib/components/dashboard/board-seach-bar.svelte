@@ -3,14 +3,11 @@
         currentWorkspaceLabels,
         currentWorkspaceUUID,
     } from "$lib/stores/dashboard";
-    import { UniqueFieldDefinitionNamesRule } from "graphql";
 
     import { _ } from "svelte-i18n";
     import IconCheckCircle from "../icons/icon-check-circle.svelte";
     import IconChevronDown from "../icons/icon-chevron-down.svelte";
 
-    import IconClose from "../icons/icon-close.svelte";
-    import IconSearch from "../icons/icon-search.svelte";
     import IconUserCirlce from "../icons/icon-user-cirlce.svelte";
     import IconXCircle from "../icons/icon-x-circle.svelte";
     import SearchInput from "../search-input.svelte";
