@@ -92,6 +92,12 @@
                     <IconUserCirlce />
                     <span>Filter by assignee</span>
                 {/if}
+                <div
+                    class:rotate-180={userPickerOpen}
+                    class="icon-sm transition-all"
+                >
+                    <IconChevronDown />
+                </div>
             </button>
 
             {#if userPickerOpen}
