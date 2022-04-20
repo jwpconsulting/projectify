@@ -10,6 +10,7 @@
     import { createEventDispatcher, onMount } from "svelte";
 
     import Fuse from "fuse.js";
+    import SearchInput from "./search-input.svelte";
 
     export let workspaceUUID = null;
     export let selectedUser = null;
@@ -93,13 +94,10 @@
         </div>
     {:else}
         <div class="p-4">
-            <input
-                tabindex="0"
-                type="text"
-                class="input w-full input-bordered"
-                placeholder="Search"
-                bind:value={searchText}
-                bind:this={serachFieldEl}
+            <SearchInput
+                placeholder={$_("search-team-member")}
+                bind:inputElement={serachFieldEl}
+                bind:searchText
             />
         </div>
         <div class="px-4 font-bold">Team Members</div>

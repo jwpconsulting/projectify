@@ -4,10 +4,12 @@
     import IconSearch from "./icons/icon-search.svelte";
     export let placeholder = $_("search");
     export let searchText = "";
+    export let inputElement = null;
 </script>
 
 <div class="relative flex grow">
     <input
+        bind:this={inputElement}
         type="text"
         {placeholder}
         class="input input-bordered input-sm h-10 grow pl-9"

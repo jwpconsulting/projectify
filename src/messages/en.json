@@ -107,5 +107,6 @@
     "search-task": "Search Task",
     "clear-labels-filter": "Clear labels filter",
     "filter-by-labels": "Filter by labels",
-    "search": "Search"
+    "search": "Search",
+    "search-team-member": "Search team member"
 }
