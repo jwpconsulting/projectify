@@ -108,5 +108,7 @@
     "clear-labels-filter": "Clear labels filter",
     "filter-by-labels": "Filter by labels",
     "search": "Search",
-    "search-team-member": "Search team member"
+    "search-team-member": "Search team member",
+    "clear-selection": "Clear Selection",
+    "select-me": "Select Me"
 }

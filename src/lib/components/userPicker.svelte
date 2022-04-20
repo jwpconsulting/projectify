@@ -8,6 +8,7 @@
     import Loading from "./loading.svelte";
     import UserProfilePicture from "./userProfilePicture.svelte";
     import { createEventDispatcher, onMount } from "svelte";
+    import { user } from "$lib/stores/user";
 
     import Fuse from "fuse.js";
     import SearchInput from "./search-input.svelte";
@@ -85,9 +86,17 @@
             serachFieldEl.focus();
         }
     }
+
+    function selectMe() {
+        selectUser($user);
+    }
+
+    function clearSelection() {
+        selectUser(null);
+    }
 </script>
 
-<div class="w-full rounded-xl bg-base-100 shadow-lg">
+<div class="w-full overflow-hidden rounded-xl bg-base-100 shadow-lg">
     {#if res && $res.loading}
         <div class="flex h-full w-full items-center justify-center py-8">
             <Loading />
@@ -102,7 +111,7 @@
         </div>
         <div class="px-4 font-bold">Team Members</div>
         <ul
-            class="menu flex flex-col pb-4 pt-2 divide-y divide-base-300 overflow-y-auto max-h-full"
+            class="menu flex flex-col pt-2 divide-y divide-base-300 overflow-y-auto max-h-full"
         >
             {#each filteredUsers as user}
                 <li>
@@ -132,5 +141,44 @@
                 </li>
             {/each}
         </ul>
+        <footer
+            class="flex divide-x divide-base-300 border-t border-base-300 min-h-8"
+        >
+            {#if selectedUser}
+                <div
+                    class="footer-btn flex h-8 grow items-center justify-center text-primary"
+                    on:click={clearSelection}
+                >
+                    <div class="text-xs ">{$_("clear-selection")}</div>
+                </div>
+            {/if}
+            {#if selectedUser?.email !== $user.email}
+                <div
+                    class="footer-btn flex h-8 grow items-center justify-center text-primary"
+                    on:click={selectMe}
+                >
+                    <div class="text-xs ">{$_("select-me")}</div>
+                </div>
+            {/if}
+        </footer>
     {/if}
 </div>
+
+<style lang="scss">
+    .footer-btn {
+        @apply cursor-pointer;
+        > * {
+            @apply transition-all;
+        }
+        &:hover {
+            @apply bg-base-200;
+            > * {
+                @apply scale-90;
+            }
+        }
+
+        &.active {
+            @apply bg-primary text-primary-content shadow-md;
+        }
+    }
+</style>
