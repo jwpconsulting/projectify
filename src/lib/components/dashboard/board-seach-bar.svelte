@@ -13,6 +13,7 @@
     import IconSearch from "../icons/icon-search.svelte";
     import IconUserCirlce from "../icons/icon-user-cirlce.svelte";
     import IconXCircle from "../icons/icon-x-circle.svelte";
+    import SearchInput from "../search-input.svelte";
     import UserPicker from "../userPicker.svelte";
     import UserProfilePicture from "../userProfilePicture.svelte";
     import LabelList from "./labelList.svelte";
@@ -54,28 +55,7 @@
 
 <div class="flex grow flex-col space-y-2">
     <div class="flex grow flex-wrap items-center gap-2 px-4">
-        <div class="relative flex grow">
-            <input
-                type="text"
-                placeholder={$_("search-task")}
-                class="input input-bordered input-sm h-10 grow pl-9"
-                bind:value={searchText}
-            />
-            <div
-                class="icon-sm absolute top-0 left-0 flex h-full w-10 items-center justify-center rounded-l-none"
-            >
-                <IconSearch />
-            </div>
-
-            {#if searchText}
-                <button
-                    class="btn btn-ghost btn-square btn-sm absolute right-0 h-full w-10 rounded-l-none"
-                    on:click={() => (searchText = "")}
-                >
-                    <IconClose />
-                </button>
-            {/if}
-        </div>
+        <SearchInput placeholder={$_("search-task")} bind:searchText />
         <button
             on:click={onLabelsFiltersDrawerBtnClick}
             class:text-primary={filterLabels.length}

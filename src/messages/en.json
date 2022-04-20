@@ -106,5 +106,6 @@
     "tasks-not-found-for": "Tasks not found for",
     "search-task": "Search Task",
     "clear-labels-filter": "Clear labels filter",
-    "filter-by-labels": "Filter by labels"
+    "filter-by-labels": "Filter by labels",
+    "search": "Search"
 }
