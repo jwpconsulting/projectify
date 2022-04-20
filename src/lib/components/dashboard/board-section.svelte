@@ -261,7 +261,7 @@
         &.layout-grid {
             @apply grid;
             grid-auto-flow: row dense;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
         }
         &.layout-list {
             @apply flex flex-col;
