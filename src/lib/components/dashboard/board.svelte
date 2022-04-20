@@ -44,6 +44,7 @@
 
     let filteredSections = [];
     let filterLabels = [];
+    let filterUser = null;
 
     let searchText = "";
     let tasksSearchResults = [];
@@ -82,8 +83,12 @@
     }
 
     $: {
-        if (filterLabels.length) {
-            filteredSections = filterSectionsTasks(sections, filterLabels);
+        if (filterLabels.length || filterUser) {
+            filteredSections = filterSectionsTasks(
+                sections,
+                filterLabels,
+                filterUser
+            );
         } else {
             filteredSections = sections;
         }
@@ -307,7 +312,11 @@
             </div>
 
             <div class="flex grow items-stretch">
-                <BoardSeachBar bind:searchText bind:filterLabels />
+                <BoardSeachBar
+                    bind:searchText
+                    bind:filterLabels
+                    bind:filterUser
+                />
             </div>
         </header>
 

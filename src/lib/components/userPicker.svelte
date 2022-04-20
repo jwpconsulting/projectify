@@ -94,6 +94,7 @@
     {:else}
         <div class="p-4">
             <input
+                tabindex="0"
                 type="text"
                 class="input w-full input-bordered"
                 placeholder="Search"

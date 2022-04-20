@@ -76,7 +76,11 @@ export function pushTashUUIDtoPath(uuid: string): void {
 
 export const currentWorkspaceLabels = writable([]);
 
-export function filterSectionsTasks(sections: any[], labels: any[]): any[] {
+export function filterSectionsTasks(
+    sections: any[],
+    labels: any[],
+    assegnee: any
+): any[] {
     if (labels.length) {
         const labelUUIDs = {};
 
@@ -93,6 +97,19 @@ export function filterSectionsTasks(sections: any[], labels: any[]): any[] {
                 ...section,
                 tasks,
                 totalTasksCount: section.tasks.length,
+            };
+        });
+    }
+
+    if (assegnee) {
+        sections = sections.map((section) => {
+            const tasks = section.tasks.filter((task) => {
+                return task.assignee?.email === assegnee.email;
+            });
+
+            return {
+                ...section,
+                tasks,
             };
         });
     }

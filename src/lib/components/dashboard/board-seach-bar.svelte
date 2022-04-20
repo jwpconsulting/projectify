@@ -1,5 +1,8 @@
 <script lang="ts">
-    import { currentWorkspaceLabels } from "$lib/stores/dashboard";
+    import {
+        currentWorkspaceLabels,
+        currentWorkspaceUUID,
+    } from "$lib/stores/dashboard";
     import { UniqueFieldDefinitionNamesRule } from "graphql";
 
     import { _ } from "svelte-i18n";
@@ -10,6 +13,8 @@
     import IconSearch from "../icons/icon-search.svelte";
     import IconUserCirlce from "../icons/icon-user-cirlce.svelte";
     import IconXCircle from "../icons/icon-x-circle.svelte";
+    import UserPicker from "../userPicker.svelte";
+    import UserProfilePicture from "../userProfilePicture.svelte";
     import LabelList from "./labelList.svelte";
 
     export let searchText = "";
@@ -17,6 +22,8 @@
     export let filtersOpen = false;
 
     export let filterLabels = [];
+
+    export let filterUser = null;
 
     let fitersContentHeight = 0;
 
@@ -30,6 +37,18 @@
             return;
         }
         filtersOpen = !filtersOpen;
+    }
+
+    let userPickerOpen = true;
+
+    function onUserSelected({ detail: { user } }) {
+        userPickerOpen = false;
+
+        if (user?.email == filterUser?.email) {
+            filterUser = null;
+        } else {
+            filterUser = user;
+        }
     }
 </script>
 
@@ -78,11 +97,40 @@
                 </div>
             {/if}
         </button>
+        <div class="relative">
+            <button
+                tabindex="0"
+                class="btn-filter btn btn-ghost"
+                on:click={() => (userPickerOpen = !userPickerOpen)}
+            >
+                {#if filterUser}
+                    <UserProfilePicture
+                        pictureProps={{
+                            size: 16,
+                            url: filterUser.profilePicture,
+                        }}
+                    />
+                    <span>{filterUser.fullName || filterUser.email}</span>
+                {:else}
+                    <IconUserCirlce />
+                    <span>Filter by assignee</span>
+                {/if}
+            </button>
 
-        <button class="btn-filter btn btn-ghost">
-            <IconUserCirlce />
-            <span>Filter by assignee</span>
-        </button>
+            {#if userPickerOpen}
+                <div
+                    on:blur={() => (userPickerOpen = false)}
+                    tabindex="0"
+                    class="absolute top-11 right-0 z-10 w-64 max-w-md"
+                >
+                    <UserPicker
+                        workspaceUUID={$currentWorkspaceUUID}
+                        selectedUser={filterUser}
+                        on:userSelected={onUserSelected}
+                    />
+                </div>
+            {/if}
+        </div>
     </div>
 
     <div
