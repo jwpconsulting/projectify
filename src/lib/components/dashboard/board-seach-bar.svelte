@@ -37,7 +37,7 @@
         filtersOpen = !filtersOpen;
     }
 
-    let userPickerOpen = true;
+    let userPickerOpen = false;
 
     function onUserSelected({ detail: { user } }) {
         userPickerOpen = false;
