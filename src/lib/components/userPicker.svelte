@@ -152,7 +152,7 @@
                     <div class="text-xs ">{$_("clear-selection")}</div>
                 </div>
             {/if}
-            {#if selectedUser?.email !== $user.email}
+            {#if selectedUser?.email !== $user?.email}
                 <div
                     class="footer-btn flex h-8 grow items-center justify-center text-primary"
                     on:click={selectMe}
