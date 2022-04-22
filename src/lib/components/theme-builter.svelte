@@ -1,41 +1,9 @@
 <script lang="ts">
+    import { browser } from "$app/env";
+
     import colorStyleVars from "daisyui/colors/colorNames.js";
     import hex2hsl from "daisyui/colors/hex2hsl.js";
     import { onMount } from "svelte";
-
-    const light = {
-        "primary": "#288CFF" /* Primary color */,
-        "primary-focus": "#0077FF" /* Primary color - focused */,
-        "primary-content":
-            "#ffffff" /* Foreground content color to use on primary color */,
-
-        "secondary": "#BEDCFF" /* Secondary color */,
-        "secondary-focus": "#76B4F9" /* Secondary color - focused */,
-        "secondary-content":
-            "#ffffff" /* Foreground content color to use on secondary color */,
-
-        "accent": "#EF7D69" /* Accent color */,
-        "accent-focus": "#F05F46" /* Accent color - focused */,
-        "accent-content":
-            "#ffffff" /* Foreground content color to use on accent color */,
-
-        "neutral": "#ffffff" /* Neutral color */,
-        "neutral-focus": "#eeeeee" /* Neutral color - focused */,
-        "neutral-content":
-            "#333333" /* Foreground content color to use on neutral color */,
-
-        "base-100":
-            "#ffffff" /* Base color of page, used for blank backgrounds */,
-        "base-200": "#F2F8FF" /* Base color, a little darker */,
-        "base-300": "#d1d5db" /* Base color, even more darker */,
-        "base-content":
-            "#1f2937" /* Foreground content color to use on base color */,
-
-        "info": "#2094f3" /* Info */,
-        "success": "#009485" /* Success */,
-        "warning": "#ff9900" /* Warning */,
-        "error": "#ff5724" /* Error */,
-    };
 
     function getStyleFromDom() {
         const styles = getComputedStyle(document.documentElement);
@@ -44,9 +12,10 @@
         const node = document.createElement("div");
         Object.entries(colorStyleVars).forEach(([key, val]) => {
             let value = styles.getPropertyValue(val as string);
-            value = rgb2hex(value);
             node.style.setProperty("color", `hsla(${value})`);
-            theme[key] = node.style.getPropertyValue("color");
+            value = node.style.getPropertyValue("color");
+            value = rgb2hex(value);
+            theme[key] = value;
         });
 
         return theme;
@@ -57,6 +26,7 @@
         function hex(x) {
             return ("0" + parseInt(x).toString(16)).slice(-2);
         }
+
         return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
     }
 
@@ -76,17 +46,13 @@
         }, {});
     }
 
-    let lightArray = themeToArray(light);
-
-    console.log(colorStyleVars);
+    let lightArray = [];
 
     function dumpTheme(themeArray) {
         const th = arrayToTheme(themeArray);
         const thStr = JSON.stringify(th, null, 4);
         console.log(thStr);
         navigator.clipboard.writeText(thStr);
-
-        console.log(getStyleFor(themeArray));
     }
 
     function getStyleFor(themeArray) {
@@ -100,11 +66,13 @@
     }
 
     onMount(() => {
-        const theme = getStyleFromDom();
+        if (browser) {
+            const theme = getStyleFromDom();
 
-        lightArray = themeToArray(theme);
-        console.log(theme);
-        console.log(lightArray);
+            lightArray = themeToArray(theme);
+            console.log(theme);
+            console.log(lightArray);
+        }
     });
 </script>
 
