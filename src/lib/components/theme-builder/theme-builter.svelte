@@ -10,16 +10,10 @@
 </script>
 
 <div class="flex h-[100vh] w-full flex-col">
-    <header class="flex items-center justify-center bg-[#fff] p-2">
-        <button
-            class="btn btn-primary btn-sm"
-            on:click={() => dumpTheme(themeArray)}>Dump theme</button
-        >
-    </header>
     <div class="flex">
         <div
             class:order-2={swapLayout}
-            class="grid-layout h-fit shrink-0 gap-4 p-4"
+            class="flex h-fit shrink-0 flex-col gap-4 bg-[#f0f0f0] p-4"
         >
             {#each themeArray as color}
                 <div
@@ -30,9 +24,7 @@
                         type="color"
                         bind:value={color.value}
                     />
-                    <div
-                        class="flex grow flex-col gap-2 p-2 text-xs uppercase"
-                    >
+                    <div class="flex grow flex-col p-2 text-xs uppercase">
                         <div class=" font-bold ">{color.name}</div>
                         <div class="text-[#888]">{color.value}</div>
                     </div>
@@ -44,24 +36,43 @@
         <div
             style={getStyleFor(themeArray)}
             class:order-1={swapLayout}
-            class="items-top relative flex grow flex-wrap justify-center gap-4 bg-base-100"
+            class="items-top relative flex grow flex-wrap justify-center gap-4 bg-base-200"
         >
             <div
-                class="sticky top-0 flex h-fit flex-wrap items-center justify-start gap-4 p-4 "
+                class="sticky top-0 flex h-fit w-full flex-col flex-wrap items-center justify-start gap-4 p-4 "
             >
-                <button class="btn btn-sm">Button</button>
-                <button class="btn btn-primary btn-sm">Button</button>
-                <button class="btn btn-secondary btn-sm">Button</button>
-                <button class="btn btn-accent btn-sm">Button</button>
-                <button class="btn btn-ghost btn-sm">Button</button>
-                <button class="btn btn-link btn-sm">Button</button>
-                <button class="btn btn-info btn-sm">Info</button>
-                <button class="btn btn-success btn-sm">Success</button>
-                <button class="btn btn-warning btn-sm">Warning</button>
-                <button class="btn btn-error btn-sm">Error</button>
+                <div
+                    class="flex w-full flex-col gap-4 bg-base-100 p-8 shadow-sm"
+                >
+                    <button class="btn btn-primary btn-sm">Button</button>
+                    <button class="btn btn-secondary btn-sm">Button</button>
+                    <button class="btn btn-accent btn-sm">Button</button>
+
+                    <hr class="border-base-300" />
+
+                    <button class="btn btn-ghost btn-sm">Button</button>
+                    <hr class="border-base-300" />
+                    <button class="btn btn-link btn-sm">Button</button>
+
+                    <hr class="border-base-300" />
+
+                    <button class="btn btn-info btn-sm">Info</button>
+                    <button class="btn btn-success btn-sm">Success</button>
+                    <button class="btn btn-warning btn-sm">Warning</button>
+                    <button class="btn btn-error btn-sm">Error</button>
+                </div>
             </div>
         </div>
     </div>
+
+    <header
+        class="sticky bottom-0 flex items-center justify-center border-t border-base-300 bg-[#fff] p-2"
+    >
+        <button
+            class="btn btn-outline btn-primary btn-sm"
+            on:click={() => dumpTheme(themeArray)}>Dump theme</button
+        >
+    </header>
 </div>
 
 <style lang="scss">
