@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ThemeBuilter from "$lib/components/theme-builter.svelte";
+    import ThemeBuilderPage from "$lib/components/theme-builder/theme-builder-page.svelte";
 </script>
 
-<ThemeBuilter />
+<ThemeBuilderPage />
