@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { getColorFromInx } from "$lib/utils/colors";
+    import { getColorFromInx, paletteSize } from "$lib/utils/colors";
 
-    let colors = Array(100)
+    let colors = Array(paletteSize)
         .fill({})
         .map((it, i) => {
             return getColorFromInx(i);
