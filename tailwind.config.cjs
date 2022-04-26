@@ -56,38 +56,52 @@ module.exports = {
             {
                 "app-light": {
                     "fontFamily": "Roboto, sans-serif",
-                    "primary": "#288CFF" /* Primary color */,
-                    "primary-focus": "#0077FF" /* Primary color - focused */,
-                    "primary-content":
-                        "#ffffff" /* Foreground content color to use on primary color */,
 
-                    "secondary": "#BEDCFF" /* Secondary color */,
-                    "secondary-focus":
-                        "#76B4F9" /* Secondary color - focused */,
-                    "secondary-content":
-                        "#ffffff" /* Foreground content color to use on secondary color */,
+                    "primary": "#288CFF",
+                    "primary-focus": "#0077FF",
+                    "primary-content": "#ffffff",
+                    "secondary": "#BEDCFF",
+                    "secondary-focus": "#76B4F9",
+                    "secondary-content": "#ffffff",
+                    "accent": "#EF7D69",
+                    "accent-focus": "#F05F46",
+                    "accent-content": "#ffffff",
+                    "neutral": "#ffffff",
+                    "neutral-focus": "#eeeeee",
+                    "neutral-content": "#333333",
+                    "base-100": "#ffffff",
+                    "base-200": "#F2F8FF",
+                    "base-300": "#d1d5db",
+                    "base-content": "#1f2937",
+                    "info": "#2094f3",
+                    "success": "#009485",
+                    "warning": "#ff9900",
+                    "error": "#ff5724",
+                },
 
-                    "accent": "#EF7D69" /* Accent color */,
-                    "accent-focus": "#F05F46" /* Accent color - focused */,
-                    "accent-content":
-                        "#ffffff" /* Foreground content color to use on accent color */,
+                "app-dark": {
+                    "fontFamily": "Roboto, sans-serif",
 
-                    "neutral": "#ffffff" /* Neutral color */,
-                    "neutral-focus": "#eeeeee" /* Neutral color - focused */,
-                    "neutral-content":
-                        "#333333" /* Foreground content color to use on neutral color */,
-
-                    "base-100":
-                        "#ffffff" /* Base color of page, used for blank backgrounds */,
-                    "base-200": "#F2F8FF" /* Base color, a little darker */,
-                    "base-300": "#d1d5db" /* Base color, even more darker */,
-                    "base-content":
-                        "#1f2937" /* Foreground content color to use on base color */,
-
-                    "info": "#2094f3" /* Info */,
-                    "success": "#009485" /* Success */,
-                    "warning": "#ff9900" /* Warning */,
-                    "error": "#ff5724" /* Error */,
+                    "primary": "#288CFF",
+                    "primary-focus": "#0077FF",
+                    "primary-content": "#ffffff",
+                    "secondary": "#BEDCFF",
+                    "secondary-focus": "#76B4F9",
+                    "secondary-content": "#ffffff",
+                    "accent": "#EF7D69",
+                    "accent-focus": "#F05F46",
+                    "accent-content": "#ffffff",
+                    "neutral": "#ffffff",
+                    "neutral-focus": "#eeeeee",
+                    "neutral-content": "#333333",
+                    "base-100": "#34363a",
+                    "base-200": "#202123",
+                    "base-300": "#5c5c5c",
+                    "base-content": "#ffffff",
+                    "info": "#2094f3",
+                    "success": "#009485",
+                    "warning": "#ff9900",
+                    "error": "#ff5724",
                 },
             },
         ],

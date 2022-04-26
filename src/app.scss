@@ -9,6 +9,7 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
+    @apply bg-base-100 text-base-content;
 }
 
 #svelte {
@@ -16,7 +17,7 @@ body {
     flex-direction: column;
     flex-grow: 1;
     max-width: 100vw;
-    min-width: 1024px;
+    min-width: 720px;
 }
 
 .bg-debug {
