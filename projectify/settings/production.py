@@ -76,3 +76,5 @@ if "DISABLE_CSRF_PROTECTION" in os.environ:
     MIDDLEWARE[
         csrf_middleware_index
     ] = "projectify.middleware.DisableCSRFMiddleware"
+
+CSRF_COOKIE_DOMAIN = ".projectifyapp.com"
