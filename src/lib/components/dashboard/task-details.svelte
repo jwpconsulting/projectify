@@ -287,7 +287,7 @@
             </a>
 
             <input
-                class="grow text-xl p-2 rounded-md nowrap-ellipsis"
+                class="input grow text-xl p-2 rounded-md nowrap-ellipsis"
                 placeholder={$_("task-name")}
                 on:keydown={(e) => {
                     if (e.key == "Enter") {
@@ -312,7 +312,7 @@
 
             <button
                 disabled={!saveEnabled}
-                class="btn btn-primary rounded-full shrink-0"
+                class="btn btn-primary btn-sm rounded-full shrink-0"
                 on:click={() => save()}>{$_("save")}</button
             >
             {#if userPickerOpen}
