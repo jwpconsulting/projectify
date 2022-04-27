@@ -70,6 +70,11 @@ body {
                 @apply m-0;
             }
         }
+
+        &:active:hover {
+            transform: scale(1);
+            opacity: 0.5;
+        }
     }
     .btn-xs {
         > svg {
