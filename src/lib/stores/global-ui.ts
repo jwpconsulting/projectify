@@ -1,4 +1,10 @@
 import type { Theme } from "./../components/theme-builder/theme-utils";
+
+import {
+    getStyleFor,
+    themeToArray,
+} from "./../components/theme-builder/theme-utils";
+
 import { browser } from "$app/env";
 import { get, writable } from "svelte/store";
 
@@ -8,10 +14,12 @@ function setThemeToNode(node: HTMLElement, dark): void {
     node.setAttribute("data-theme", dark ? "app-dark" : "app-light");
 }
 
+const localsThemeKey = "theme";
+
 isDarkMode.subscribe((value) => {
     console.log(value);
     if (browser) {
-        localStorage.setItem("theme", value ? "dark" : "light");
+        localStorage.setItem(localsThemeKey, value ? "dark" : "light");
         setThemeToNode(document.body, value);
     }
 });
@@ -19,7 +27,13 @@ isDarkMode.subscribe((value) => {
 if (browser) {
     if (window.matchMedia) {
         const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
-        isDarkMode.set(matchMedia.matches);
+
+        const localThemeIsSet = localStorage.getItem(localsThemeKey) !== null;
+
+        if (!localThemeIsSet) {
+            isDarkMode.set(matchMedia.matches);
+        }
+
         matchMedia.addEventListener("change", (e) => {
             isDarkMode.set(e.matches);
         });
@@ -56,6 +70,26 @@ export function getUserThemeFor(isDarkMode: boolean): Theme {
 
 // const applyCustomThemeEnabled = true;
 
+export function applyStyleToBody(themes: UserTheme): void {
+    if (!browser) {
+        return;
+    }
+    const dm = get(isDarkMode);
+    if (!dm) {
+        return;
+    }
+    if (!themes) {
+        return;
+    }
+    const curTheme = themes[dm ? "dark" : "light"];
+    const themeArray = themeToArray(curTheme);
+    if (!themeArray) {
+        return;
+    }
+    const styles = getStyleFor(themeArray);
+    // document.body.setAttribute("style", styles);
+}
+
 if (browser) {
     const userThemeKey = "userTheme";
 
@@ -67,22 +101,15 @@ if (browser) {
 
     window.addEventListener("storage", (event) => {
         if (event.key === userThemeKey) {
-            const theme = JSON.parse(event.newValue as string) as UserTheme;
-            userTheme.set(theme);
+            const themes = JSON.parse(event.newValue as string) as UserTheme;
+            userTheme.set(themes);
+            applyStyleToBody(themes);
         }
     });
 
     userTheme.subscribe((themes) => {
         const themeStr = JSON.stringify(themes);
         localStorage.setItem(userThemeKey, themeStr);
-
-        // if (browser && applyCustomThemeEnabled) {
-        //     const dm = get(isDarkMode);
-        //     const curTheme = themes[isDarkMode ? "dark" : "light"];
-        //     if (curTheme) {
-        //         console.log("curTheme", curTheme);
-        //     }
-        //     // document.body.
-        // }
+        applyStyleToBody(themes);
     });
 }

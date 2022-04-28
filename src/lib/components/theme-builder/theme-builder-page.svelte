@@ -25,8 +25,10 @@
                 darkTheme = { ...$userTheme.dark };
             } else {
                 darkTheme = { ...factoryDarkThemeColors };
-                console.log("reset dark theme", darkTheme);
             }
+        } else {
+            lightTheme = { ...factoryLightThemeColors };
+            darkTheme = { ...factoryDarkThemeColors };
         }
     }
 </script>
