@@ -18,7 +18,7 @@
 
     export let isDark = false;
 
-    let themeArray = themeToArray(theme);
+    let themeArray = themeToArray(theme) || [];
 
     function save() {
         const thm = arrayToTheme(themeArray);
@@ -36,7 +36,9 @@
 
     function revertToSaved() {
         const theme = getUserThemeFor(isDark);
-        themeArray = themeToArray(theme);
+        if (theme) {
+            themeArray = themeToArray(theme);
+        }
     }
 </script>
 

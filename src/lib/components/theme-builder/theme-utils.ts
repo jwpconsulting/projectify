@@ -37,7 +37,7 @@ export function rgb2hex(rgb: string): string {
 
 export function themeToArray(theme: Theme): ThemeItem[] {
     if (!theme) {
-        return [];
+        return null;
     }
     return Object.entries(theme).map(([key, val]) => {
         return {
