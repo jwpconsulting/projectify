@@ -1,15 +1,44 @@
 <script lang="ts">
-    import { browser } from "$app/env";
+    import { getUserThemeFor, setUserThemeFor } from "$lib/stores/global-ui";
+    import {
+        factoryDarkThemeColors,
+        factoryLightThemeColors,
+    } from "$lib/themeColors";
+    import Palette from "./palette.svelte";
 
-    import { dumpTheme, getStyleFor, themeToArray } from "./theme-utils";
+    import {
+        arrayToTheme,
+        dumpTheme,
+        getStyleFor,
+        themeToArray,
+    } from "./theme-utils";
 
     export let theme = null;
     export let swapLayout = false;
 
+    export let isDark = false;
+
     let themeArray = theme ? themeToArray(theme) : [];
+
+    function save() {
+        const thm = arrayToTheme(themeArray);
+        setUserThemeFor(thm, isDark);
+    }
+
+    function resetToFactory() {
+        const theme = isDark
+            ? factoryDarkThemeColors
+            : factoryLightThemeColors;
+        themeArray = themeToArray(theme);
+    }
+
+    function revertToSaved() {
+        const theme = getUserThemeFor(isDark);
+        themeArray = themeToArray(theme);
+    }
 </script>
 
-<div class="flex h-[100vh] w-full flex-col">
+<div class="flex h-[100vh] w-full flex-col text-[#333]">
     <div class="flex">
         <div
             class:order-2={swapLayout}
@@ -61,16 +90,33 @@
                     <button class="btn btn-warning btn-sm">Warning</button>
                     <button class="btn btn-error btn-sm">Error</button>
                 </div>
+
+                <Palette />
             </div>
         </div>
     </div>
 
     <header
-        class="sticky bottom-0 flex items-center justify-center border-t border-base-300 bg-[#fff] p-2"
+        class="sticky bottom-0 flex items-center justify-center gap-2 border-t border-base-300 bg-[#fff] p-2"
     >
         <button
             class="btn btn-outline btn-primary btn-sm"
+            on:click={() => resetToFactory()}>Reset To factory</button
+        >
+
+        <button
+            class="btn btn-outline btn-primary btn-sm"
             on:click={() => dumpTheme(themeArray)}>Dump theme</button
+        >
+
+        <button
+            class="btn btn-outline btn-primary btn-sm"
+            on:click={() => save()}>Save</button
+        >
+
+        <button
+            class="btn btn-outline btn-primary btn-sm"
+            on:click={() => revertToSaved()}>Revert</button
         >
     </header>
 </div>

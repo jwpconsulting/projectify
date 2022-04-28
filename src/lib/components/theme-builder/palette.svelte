@@ -6,8 +6,6 @@
         .map((it, i) => {
             return getColorFromInx(i);
         });
-
-    console.log(colors);
 </script>
 
 <div class="flex flex-wrap p-8">
