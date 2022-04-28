@@ -18,7 +18,7 @@
 
     export let isDark = false;
 
-    let themeArray = theme ? themeToArray(theme) : [];
+    let themeArray = themeToArray(theme);
 
     function save() {
         const thm = arrayToTheme(themeArray);
@@ -30,6 +30,8 @@
             ? factoryDarkThemeColors
             : factoryLightThemeColors;
         themeArray = themeToArray(theme);
+
+        setUserThemeFor(null, isDark);
     }
 
     function revertToSaved() {
