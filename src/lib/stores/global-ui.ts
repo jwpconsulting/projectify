@@ -68,8 +68,6 @@ export function getUserThemeFor(isDarkMode: boolean): Theme {
     return themes && themes[isDarkMode ? "dark" : "light"];
 }
 
-// const applyCustomThemeEnabled = true;
-
 export function applyStyleToBody(themes: UserTheme): void {
     if (!browser) {
         return;
@@ -87,7 +85,7 @@ export function applyStyleToBody(themes: UserTheme): void {
         return;
     }
     const styles = getStyleFor(themeArray);
-    // document.body.setAttribute("style", styles);
+    document.body.setAttribute("style", styles);
 }
 
 if (browser) {
