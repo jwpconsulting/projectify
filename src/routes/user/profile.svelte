@@ -92,7 +92,7 @@
 
                 <div class="text-xl font-bold ">
                     <input
-                        class="nowrap-ellipsis grow rounded-md p-2 text-center text-xl font-bold"
+                        class="nowrap-ellipsis input input-bordered grow rounded-md p-2 text-center text-xl font-bold"
                         placeholder={"Full name"}
                         on:input={() => fieldChanged()}
                         bind:value={currentUser.fullName}
