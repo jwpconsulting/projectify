@@ -5,7 +5,6 @@
     import { _ } from "svelte-i18n";
     import HeaderLogo from "./assets/headerLogo.svelte";
     import HeaderUser from "./headerUser.svelte";
-    import ThemeSwitch from "./theme-builder/theme-switch.svelte";
 
     $: userData = $user;
     $: items = [...routes].filter((it) => {
@@ -51,6 +50,5 @@
         </ul>
     </nav>
 
-    <ThemeSwitch />
     <HeaderUser />
 </header>
