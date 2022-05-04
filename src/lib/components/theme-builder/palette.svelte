@@ -1,11 +1,29 @@
 <script lang="ts">
-    import { getColorFromInx, paletteSize } from "$lib/utils/colors";
+    import {
+        getColorFromInx,
+        getColorFromInxWithPalette,
+        paletteSize,
+        paletteVals,
+    } from "$lib/utils/colors";
 
-    let colors = Array(paletteSize)
-        .fill({})
-        .map((it, i) => {
-            return getColorFromInx(i);
-        });
+    let cosPalette = [...paletteVals];
+
+    let colors;
+    setColors();
+
+    function setColors() {
+        colors = Array(paletteSize)
+            .fill({})
+            .map((it, i) => {
+                return getColorFromInxWithPalette(i, cosPalette);
+            });
+    }
+    function copyPalette() {
+        const pStr = JSON.stringify(cosPalette, null, 4);
+        navigator.clipboard.writeText(pStr);
+        console.log(pStr);
+    }
+    const classRanges = [1, 1, 4, 4];
 </script>
 
 <div class="flex flex-wrap p-8">
@@ -20,6 +38,35 @@
             {inx}
         </div>
     {/each}
+
+    <div class="grid grid-cols-3 gap-4 p-4">
+        {#each cosPalette as cosClass, cInx}
+            {#each cosClass as cosVal, vInx}
+                <div>
+                    <input
+                        type="range"
+                        min={classRanges[cInx] * -100}
+                        max={classRanges[cInx] * 100}
+                        value={cosVal * 100}
+                        on:input={(e) => {
+                            cosClass[vInx] = e.target.value / 100.0;
+                            setColors();
+                        }}
+                        class="range"
+                    />
+                </div>
+            {/each}
+        {/each}
+    </div>
+
+    <div class="flex grow items-center justify-center p-4">
+        <button
+            class="btn btn-primary"
+            on:click={() => {
+                copyPalette();
+            }}>Copy</button
+        >
+    </div>
 </div>
 
 <style lang="scss">

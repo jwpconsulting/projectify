@@ -16,24 +16,18 @@ export function interpolateCosine(
             .join(" ");
 }
 
-export const paletteA = interpolateCosine(
-    [0.8, 0.5, 0.4],
-    [0.2, 0.4, 0.2],
-    [2.0, 1.0, 1.0],
-    [0.0, 0.25, 0.25]
-);
+export const paletteVals = [
+    [0.77, 0.63, 0.79],
+    [0.56, -0.12, 0.61],
+    [4, 2.44, 0.56],
+    [1.39, 3.59, -0.86],
+];
 
-export const paletteB = interpolateCosine(
-    [0.6, 0.2, 0.6],
-    [0.5, 0.5, 0.5],
-    [2.0, 1.2, 0.0],
-    [0.5, 0.23, 0.3]
-);
-export const paletteC = interpolateCosine(
-    [0.5, 0.5, 0.5],
-    [0.5, 0.5, 0.5],
-    [1.0, 1.0, 1.0],
-    [0.0, 0.33, 0.67]
+export const paletteA = interpolateCosine(
+    paletteVals[0],
+    paletteVals[1],
+    paletteVals[2],
+    paletteVals[3]
 );
 
 export function getColorFromInx(inx: number): {
@@ -43,7 +37,7 @@ export function getColorFromInx(inx: number): {
     br: boolean;
     style: string;
 } {
-    const i = inx / paletteSize;
+    const i = (inx % paletteSize) / paletteSize;
     const h = Math.floor(i * 360) % 360;
     const s = 80;
     const l = 70;
@@ -54,6 +48,38 @@ export function getColorFromInx(inx: number): {
         s,
         l,
         br,
-        style: paletteB(i),
+        style: paletteA(i),
+    };
+}
+
+export function getColorFromInxWithPalette(
+    inx: number,
+    palette: number[][]
+): {
+    h: number;
+    s: number;
+    l: number;
+    br: boolean;
+    style: string;
+} {
+    const i = (inx % paletteSize) / paletteSize;
+    const h = Math.floor(i * 360) % 360;
+    const s = 80;
+    const l = 70;
+    const br = true;
+
+    const intPal = interpolateCosine(
+        palette[0],
+        palette[1],
+        palette[2],
+        palette[3]
+    );
+
+    return {
+        h,
+        s,
+        l,
+        br,
+        style: intPal(i),
     };
 }
