@@ -31,13 +31,13 @@
                 }}
             />
         {/if}
-        <div class="flex max-h-full grow flex-col overflow-y-hidden">
+        <div class="flex max-h-full grow flex-col overflow-hidden">
             {#if task.labels.length || task.deadline}
                 <div
                     class="my-1 mb-2 flex items-center space-x-2 border-b border-base-300 pb-3"
                 >
                     {#if task.labels.length}
-                        <div class="flex grow items-center space-x-1">
+                        <div class="flex grow flex-wrap items-center gap-2">
                             {#if layout == "list"}
                                 <LabelList
                                     size={"sm"}
@@ -57,7 +57,7 @@
                         </div>
                     {/if}
                     {#if task.deadline}
-                        <div class="item-date grid h-4 items-center">
+                        <div class="item-date grid h-4 shrink-0 items-center">
                             <span class="nowrap-ellipsis text-xs"
                                 >Date {dateStringToLocal(task.deadline)}</span
                             >
