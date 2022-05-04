@@ -14,7 +14,9 @@
     <Header />
     <slot />
     {#if footerVisible}
-        <footer class="flex justify-center border-t border-base-300">
+        <footer
+            class="flex justify-center border-t border-base-300 bg-base-100"
+        >
             <div
                 class="flex w-full max-w-3xl items-center justify-start py-8 px-4"
             >
