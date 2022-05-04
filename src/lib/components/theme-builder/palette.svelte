@@ -49,7 +49,7 @@
                         max={classRanges[cInx] * 100}
                         value={cosVal * 100}
                         on:input={(e) => {
-                            cosClass[vInx] = e.target.value / 100.0;
+                            cosClass[vInx] = e.target["value"] / 100.0;
                             setColors();
                         }}
                         class="range"
