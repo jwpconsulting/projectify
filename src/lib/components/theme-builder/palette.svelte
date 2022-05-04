@@ -12,9 +12,9 @@
     {#each colors as color, inx}
         <div
             style={`--color:${color.h} ${color.s}% ${color.l}%; 
-             --color:${color.style};   
+             --color:${color.style};
+             --text-color: ${color.br ? "white" : "black"};}};   
             `}
-            class:text-base-100={color.br}
             class="color bg-debug m-2 flex h-10 w-10 items-center justify-center rounded-full p-2"
         >
             {inx}
@@ -25,6 +25,7 @@
 <style lang="scss">
     .color {
         --opacity: 1;
+        color: var(--text-color);
         background-color: hsla(var(--color) / var(--opacity));
         background-color: rgba(var(--color) / var(--opacity));
     }
