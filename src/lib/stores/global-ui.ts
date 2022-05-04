@@ -16,28 +16,32 @@ function setThemeToNode(node: HTMLElement, dark): void {
 
 const localsThemeKey = "theme";
 
-isDarkMode.subscribe((value) => {
-    console.log(value);
-    if (browser) {
-        localStorage.setItem(localsThemeKey, value ? "dark" : "light");
-        setThemeToNode(document.body, value);
-    }
-});
-
 if (browser) {
     if (window.matchMedia) {
         const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
 
-        const localThemeIsSet = localStorage.getItem(localsThemeKey) !== null;
+        const localTheme = localStorage.getItem(localsThemeKey);
+        console.log("localTheme", localTheme);
 
-        if (!localThemeIsSet) {
+        if (localTheme === null) {
             isDarkMode.set(matchMedia.matches);
+        } else {
+            isDarkMode.set(localTheme == "dark");
         }
 
         matchMedia.addEventListener("change", (e) => {
             isDarkMode.set(e.matches);
         });
     }
+
+    isDarkMode.subscribe((value) => {
+        setThemeToNode(document.body, value);
+    });
+}
+
+export function saveDarkMode(value: boolean): void {
+    localStorage.setItem(localsThemeKey, value ? "dark" : "light");
+    isDarkMode.set(value);
 }
 
 export type UserTheme = {
