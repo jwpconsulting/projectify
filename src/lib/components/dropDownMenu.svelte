@@ -17,13 +17,13 @@
     export let activeId: any = null;
 </script>
 
-<div class="dropdown dropdown-end select-none">
+<div class="dropdown-end dropdown select-none">
     <slot />
     <ul
         bind:this={focusEl}
         tabindex="0"
         class="dropdown-content menu min-w-[200px] rounded-lg
-            bg-base-100 py-2 shadow-xl"
+            border border-base-300 bg-base-100 py-2 shadow-xl"
     >
         {#each items as it}
             {#if !it.hidden}
