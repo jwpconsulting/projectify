@@ -3,6 +3,8 @@
     import { fetchUser } from "$lib/stores/user";
     import routes from "$lib/routes";
 
+    import "$lib/stores/global-ui";
+
     export async function load({ url }) {
         if (browser) {
             const route = routes.find((r) => {
