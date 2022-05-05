@@ -80,7 +80,9 @@
                 >
             </li>
         {/each}
-        <li class="sticky bottom-0 bg-base-100 text-primary">
+        <li
+            class="sticky bottom-0 bg-base-100 text-primary hover:text-secondary-content"
+        >
             <a
                 class="h-9 text-xs font-bold capitalize"
                 href="/"
