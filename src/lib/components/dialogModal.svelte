@@ -75,7 +75,7 @@
         <div
             transition:fly={{ duration: 500, opacity: 0 }}
             on:click={() => close(null)}
-            class="d-modal-background fixed h-full w-full bg-[#002332] bg-opacity-30"
+            class="d-modal-background fixed h-full w-full bg-[#000] bg-opacity-60"
         />
         <div
             in:fly={{ duration: 300, y: -50, opacity: 0 }}

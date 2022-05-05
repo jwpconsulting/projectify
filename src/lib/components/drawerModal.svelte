@@ -19,7 +19,7 @@
 >
     <div
         on:click={() => (open = !open)}
-        class="d-modal-background fixed h-full w-full bg-[#002332] open:bg-opacity-30"
+        class="d-modal-background fixed h-full w-full bg-[#000]"
     />
     {#if open}
         <div
@@ -48,7 +48,7 @@
         transition: all 300ms ease-in-out;
     }
     .d-modal.open > .d-modal-background {
-        @apply opacity-30;
+        @apply opacity-60 backdrop-blur-sm;
     }
 
     .d-modal > .d-modal-content {
