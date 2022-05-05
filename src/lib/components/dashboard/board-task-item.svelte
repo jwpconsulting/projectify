@@ -19,7 +19,7 @@
     <div
         class:item-layout-grid={layout == "grid"}
         class:item-layout-list={layout == "list"}
-        class="drag-handle item"
+        class="drag-handle item bg-base-100 dark:bg-base-300"
         class:hover:ring={showHoverRing}
         on:click={() => dispatch("click")}
     >
@@ -34,7 +34,7 @@
         <div class="flex max-h-full grow flex-col overflow-hidden">
             {#if task.labels.length || task.deadline}
                 <div
-                    class="my-1 mb-2 flex items-center space-x-2 border-b border-base-300 pb-3"
+                    class="my-1 mb-2 flex items-center space-x-2 border-b border-base-300 pb-3 dark:border-base-100"
                 >
                     {#if task.labels.length}
                         <div class="flex grow flex-wrap items-center gap-2">
@@ -73,7 +73,7 @@
     </div>
 {:else}
     <div
-        class="add-item ignore-elements hover:ring"
+        class="add-item ignore-elements hover:ring dark:bg-base-300"
         on:click={() => dispatch("click")}
     >
         <div
@@ -92,7 +92,7 @@
 <style lang="scss">
     .item,
     .add-item {
-        @apply m-2 flex cursor-pointer items-center space-x-4 overflow-y-hidden rounded-lg border border-base-300 bg-base-100 py-4 px-6;
+        @apply m-2 flex cursor-pointer items-center space-x-4 overflow-y-hidden rounded-lg border border-base-300 py-4 px-6;
         @apply shrink-0 font-bold;
 
         &.item-layout-grid {
