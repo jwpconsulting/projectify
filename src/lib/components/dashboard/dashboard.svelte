@@ -54,10 +54,6 @@
             openTaskDetails(selectedTaskUUID);
         }
     });
-
-    onMount(() => {
-        console.log("Dashboard mounted");
-    });
 </script>
 
 <div class="flex grow flex-row divide-x divide-base-300 overflow-hidden">
