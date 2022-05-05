@@ -22,10 +22,10 @@ const factoryLightThemeColors = {
 };
 
 const factoryDarkThemeColors = {
-    "primary": "#288CFF",
+    "primary": "#4db2fe",
     "primary-focus": "#0077FF",
     "primary-content": "#ffffff",
-    "secondary": "#BEDCFF",
+    "secondary": "#5ca3ff",
     "secondary-focus": "#76B4F9",
     "secondary-content": "#ffffff",
     "accent": "#EF7D69",
@@ -33,10 +33,10 @@ const factoryDarkThemeColors = {
     "accent-content": "#ffffff",
     "neutral": "#ffffff",
     "neutral-focus": "#eeeeee",
-    "neutral-content": "#333333",
-    "base-100": "#34363a",
-    "base-200": "#202123",
-    "base-300": "#5c5c5c",
+    "neutral-content": "#ffffff",
+    "base-100": "#282841",
+    "base-200": "#191e32",
+    "base-300": "#3c3c5a",
     "base-content": "#ffffff",
     "info": "#2094f3",
     "success": "#009485",
