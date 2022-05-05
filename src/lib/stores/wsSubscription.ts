@@ -84,11 +84,7 @@ export class WSSubscriptionStore {
             await delay(delayTime);
         }
 
-        if (
-            this.retryingConnection &&
-            this.socket &&
-            this.socket.readyState == WebSocket.CLOSED
-        ) {
+        if (this.socket && this.socket.readyState == WebSocket.CLOSED) {
             this.retryingConnection = false;
             this.createNewConnection();
         }
@@ -196,4 +192,17 @@ function checkAllConnectionStatus() {
 
     activeWSSubscriptions.set(activeWSS);
     activeWSConnections.set(activeCon);
+
+    if (activeWSS != activeCon) {
+        for (const url in stores) {
+            const wsss = stores[url];
+            if (wsss) {
+                wsss.retryConnection(true);
+            }
+        }
+    }
+}
+
+if (browser) {
+    window["checkAllConnectionStatus"] = checkAllConnectionStatus;
 }
