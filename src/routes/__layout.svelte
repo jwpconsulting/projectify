@@ -37,6 +37,11 @@
     setClient(client);
 </script>
 
+<svelte:head>
+    <title>Projectify</title>
+    <meta name="description" content="Projects menagemet app" />
+</svelte:head>
+
 <slot />
 
 <ConnectionStatus />
