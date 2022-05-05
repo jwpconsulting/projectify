@@ -12,6 +12,11 @@ export const isDarkMode = writable(false);
 
 function setThemeToNode(node: HTMLElement, dark): void {
     node.setAttribute("data-theme", dark ? "app-dark" : "app-light");
+    if (dark) {
+        node.classList.add("dark");
+    } else {
+        node.classList.remove("dark");
+    }
 }
 
 const localsThemeKey = "theme";
@@ -21,7 +26,6 @@ if (browser) {
         const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
 
         const localTheme = localStorage.getItem(localsThemeKey);
-        console.log("localTheme", localTheme);
 
         if (localTheme === null) {
             isDarkMode.set(matchMedia.matches);
@@ -33,6 +37,13 @@ if (browser) {
             isDarkMode.set(e.matches);
         });
     }
+
+    window.addEventListener("storage", (event) => {
+        if (event.key === localsThemeKey) {
+            const localTheme = event.newValue;
+            isDarkMode.set(localTheme == "dark");
+        }
+    });
 
     isDarkMode.subscribe((value) => {
         setThemeToNode(document.body, value);

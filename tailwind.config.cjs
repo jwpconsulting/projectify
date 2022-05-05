@@ -45,6 +45,7 @@ const factoryDarkThemeColors = {
 };
 
 module.exports = {
+    darkMode: "class",
     mode: "jit",
     purge: ["./src/**/*.svelte"],
     content: ["./src/**/*.{html,js,svelte,ts}"],
