@@ -113,5 +113,16 @@
     "select-me": "Select Me",
     "page-not-found": "Page not found",
     "the-page-you-are-looking-for-could-not-be-found": "the page you are looking for could not be found.",
-    "go-back": "Go Back"
+    "go-back": "Go Back",
+    "enable-smooth-project-management": "Enable smooth project management.",
+    "service": "Service",
+    "support": "Support",
+    "policy": "Policy",
+    "terms": "Terms",
+    "company": "Company",
+    "about": "About",
+    "blog": "Blog",
+    "contact": "Contact",
+    "legal": "Legal",
+    "social": "Social"
 }
