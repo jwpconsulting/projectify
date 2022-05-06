@@ -34,38 +34,38 @@
                     url: "/",
                 },
                 {
-                    name: $_('policy'),
+                    name: $_("policy"),
                     url: "/",
                 },
                 {
-                    name: $_('terms'),
+                    name: $_("terms"),
                     url: "/",
                 },
             ],
         },
         {
-            title: $_('company'),
+            title: $_("company"),
             links: [
                 {
-                    name: $_('about'),
+                    name: $_("about"),
                     url: "/",
                 },
                 {
-                    name: $_('blog'),
+                    name: $_("blog"),
                     url: "/",
                 },
                 {
-                    name: $_('contact'),
+                    name: $_("contact"),
                     url: "/",
                 },
                 {
-                    name: $_('legal'),
+                    name: $_("legal"),
                     url: "/",
                 },
             ],
         },
         {
-            title: $_('social'),
+            title: $_("social"),
             links: [
                 {
                     name: "Github",
