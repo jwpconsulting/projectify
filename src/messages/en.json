@@ -110,5 +110,8 @@
     "search": "Search",
     "search-team-member": "Search team member",
     "clear-selection": "Clear Selection",
-    "select-me": "Select Me"
+    "select-me": "Select Me",
+    "page-not-found": "Page not found",
+    "the-page-you-are-looking-for-could-not-be-found": "the page you are looking for could not be found.",
+    "go-back": "Go Back"
 }

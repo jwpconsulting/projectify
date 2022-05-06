@@ -135,6 +135,10 @@ body {
         --color: 255 255 255;
         background-color: rgba(var(--color) / var(--opacity));
     }
+    .btn-action {
+        @apply btn-primary;
+        @apply border-none bg-gradient-to-l from-accent to-primary-focus;
+    }
 }
 
 ::-webkit-progress-value {
