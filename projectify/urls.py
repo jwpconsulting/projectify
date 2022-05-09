@@ -80,6 +80,7 @@ urlpatterns = (
         "workspace/",
         include("workspace.urls"),
     ),
+    path("blog/api/v1/", include("blog.urls")),
 )
 
 if settings.SERVE_MEDIA:
