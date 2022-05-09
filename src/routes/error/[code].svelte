@@ -7,28 +7,28 @@
 
     const errors = {
         "something-wrong": {
-            message: "Something went wrong.",
-            backBtnLabel: "Go to homepage",
+            message: $_("something-went-wrong"),
+            backBtnLabel: $_("go-to-homepage"),
             backBtnUrl: "/",
         },
         "workspace-not-found": {
-            message: "Workspace not found",
-            backBtnLabel: "Retun to dashboard",
+            message: $_("workspace-not-found"),
+            backBtnLabel: $_("retun-to-dashboard"),
             backBtnUrl: "/dashboard",
         },
         "board-not-found": {
             message: "",
-            backBtnLabel: "Retun to dashboard",
+            backBtnLabel: $_("retun-to-dashboard"),
             backBtnUrl: "/dashboard",
         },
         "task-not-found": {
-            message: "Task not found",
-            backBtnLabel: "Retun to dashboard",
+            message: $_("task-not-found"),
+            backBtnLabel: $_("retun-to-dashboard"),
             backBtnUrl: "/dashboard",
         },
         "user-agent": {
-            message: "This application is best used on a PC",
-            backBtnLabel: "Go to homepage",
+            message: $_("this-application-is-best-used-on-a-pc"),
+            backBtnLabel: $_("go-to-homepage"),
             backBtnUrl: "/",
         },
     };

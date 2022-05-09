@@ -124,5 +124,10 @@
     "blog": "Blog",
     "contact": "Contact",
     "legal": "Legal",
-    "social": "Social"
+    "social": "Social",
+    "go-to-homepage": "Go to homepage",
+    "workspace-not-found": "Workspace not found",
+    "retun-to-dashboard": "Retun to dashboard",
+    "task-not-found": "Task not found",
+    "this-application-is-best-used-on-a-pc": "This application is best used on a PC"
 }
