@@ -17,7 +17,7 @@
             backBtnUrl: "/dashboard",
         },
         "board-not-found": {
-            message: "",
+            message: $_("board-not-found"),
             backBtnLabel: $_("retun-to-dashboard"),
             backBtnUrl: "/dashboard",
         },
