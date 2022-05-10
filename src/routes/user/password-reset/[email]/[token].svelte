@@ -7,6 +7,7 @@
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";
     import { _ } from "svelte-i18n";
+    import IllustrationPasswordResetComplete from "$lib/components/illustrations/illustration-password-reset-complete.svelte";
 
     let requestSent = false;
     let userData = null;
@@ -91,6 +92,9 @@
         <div class="card text-center shadow-card w-full max-w-lg">
             <div class="card-body items-center">
                 <div class="py-2">
+                    <div class="flex items-center justify-center pb-2">
+                        <IllustrationPasswordResetComplete />
+                    </div>
                     <h1 class="card-title">{$_("password-reset-complete")}</h1>
                     <div class="text-left">
                         {$_("user-password-reset-completed-msg")}
