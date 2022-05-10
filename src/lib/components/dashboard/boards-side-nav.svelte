@@ -13,6 +13,7 @@
         currentWorkspaceLabels,
     } from "$lib/stores/dashboard";
     import { _ } from "svelte-i18n";
+    import { goto } from "$app/navigation";
 
     export let selectedWorkspaceUUID;
     export let selectedBoardUUID;
@@ -35,6 +36,14 @@
 
             if (!selectedBoardUUID && boards.length) {
                 gotoDashboard(selectedWorkspaceUUID, boards[0]["uuid"]);
+            } else {
+                const selectedBoard = boards
+                    ? boards.find((b) => b.uuid === selectedBoardUUID)
+                    : null;
+
+                if (!selectedBoard) {
+                    goto("/error/board-not-found");
+                }
             }
         }
     }
