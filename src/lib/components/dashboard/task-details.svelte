@@ -32,6 +32,7 @@
     import Tabs from "../tabs.svelte";
     import TaskDetailsDiscussion from "./task-details-discussion.svelte";
     import Tab from "../tab.svelte";
+    import { goto } from "$app/navigation";
 
     let res: ReadableQuery<any> = null;
     let task = null;
@@ -52,7 +53,7 @@
     }
 
     const refetch = debounce(() => {
-        res?.refetch();
+        // res?.refetch();
     }, 100);
 
     $: {
@@ -61,13 +62,21 @@
                 variables: { uuid: $currenTaskDetailsUUID },
                 fetchPolicy: "network-only",
             });
-
-            taskWSStrore = getSubscriptionForCollection(
-                "task",
-                $currenTaskDetailsUUID
-            );
         } else {
             reset();
+        }
+    }
+
+    $: {
+        if (!$res.loading) {
+            if (!$res.error) {
+                taskWSStrore = getSubscriptionForCollection(
+                    "task",
+                    $currenTaskDetailsUUID
+                );
+            } else {
+                goto("/error/task-not-found");
+            }
         }
     }
 
@@ -79,7 +88,7 @@
 
     let unsubscriber = null;
     $: {
-        if (res) {
+        if (res && !$res.loading && !$res.error) {
             if (unsubscriber) {
                 unsubscriber();
             }
@@ -261,82 +270,88 @@
     ];
 </script>
 
-{#if res && $res.loading}
-    <div class="flex h-full w-[60vw] flex-col items-center justify-center p-0">
-        {$_("loading")}
-    </div>
-{:else}
-    <div class="flex flex-col p-0 w-[60vw] h-screen">
-        <header class="flex p-6 space-x-4 items-center bg-base-100 relative">
-            <a
-                href="/"
-                class="flex justify-center items-center"
-                on:click|preventDefault={() =>
-                    (userPickerOpen = !userPickerOpen)}
+{#if res}
+    {#if $res.loading}
+        <div
+            class="flex h-full w-[60vw] flex-col items-center justify-center p-0"
+        >
+            {$_("loading")}
+        </div>
+    {:else if !$res.error}
+        <div class="flex flex-col p-0 w-[60vw] h-screen">
+            <header
+                class="flex p-6 space-x-4 items-center bg-base-100 relative"
             >
-                {#if task?.assignee}
-                    <UserProfilePicture
-                        pictureProps={{
-                            size: 42,
-                            url: task.assignee.profilePicture,
-                        }}
-                    />
-                {:else}
-                    <ProfilePicture showPlus={true} size={42} />
-                {/if}
-            </a>
+                <a
+                    href="/"
+                    class="flex justify-center items-center"
+                    on:click|preventDefault={() =>
+                        (userPickerOpen = !userPickerOpen)}
+                >
+                    {#if task?.assignee}
+                        <UserProfilePicture
+                            pictureProps={{
+                                size: 42,
+                                url: task.assignee.profilePicture,
+                            }}
+                        />
+                    {:else}
+                        <ProfilePicture showPlus={true} size={42} />
+                    {/if}
+                </a>
 
-            <input
-                class="input grow text-xl p-2 rounded-md nowrap-ellipsis"
-                placeholder={$_("task-name")}
-                on:keydown={(e) => {
-                    if (e.key == "Enter") {
-                        e.preventDefault();
-                        save();
-                    }
-                }}
-                on:input={() => (taskModified = true)}
-                bind:value={task.title}
-            />
-
-            <ToolBar
-                items={[
-                    {
-                        label: $_("Delete"),
-                        icon: IconTrash,
-                        onClick: onDelete,
-                        hidden: itsNew,
-                    },
-                ]}
-            />
-
-            <button
-                disabled={!saveEnabled}
-                class="btn btn-primary btn-sm rounded-full shrink-0"
-                on:click={() => save()}>{$_("save")}</button
-            >
-            {#if userPickerOpen}
-                <div class="absolute top-20 left-2 right-20 max-w-md z-10">
-                    <UserPicker
-                        workspaceUUID={$currentWorkspaceUUID}
-                        selectedUser={task.assignee}
-                        on:userSelected={onUserSelected}
-                    />
-                </div>
-            {/if}
-        </header>
-        <Tabs items={tabItems} autoPadding={false}>
-            <Tab id={1}>
-                <TaskDetailsContent
-                    {task}
-                    {subTasks}
-                    {labels}
-                    bind:taskModified
+                <input
+                    class="input grow text-xl p-2 rounded-md nowrap-ellipsis"
+                    placeholder={$_("task-name")}
+                    on:keydown={(e) => {
+                        if (e.key == "Enter") {
+                            e.preventDefault();
+                            save();
+                        }
+                    }}
+                    on:input={() => (taskModified = true)}
+                    bind:value={task.title}
                 />
-            </Tab>
-            <Tab id={2}>
-                <TaskDetailsDiscussion {task} />
-            </Tab>
-        </Tabs>
-    </div>
+
+                <ToolBar
+                    items={[
+                        {
+                            label: $_("Delete"),
+                            icon: IconTrash,
+                            onClick: onDelete,
+                            hidden: itsNew,
+                        },
+                    ]}
+                />
+
+                <button
+                    disabled={!saveEnabled}
+                    class="btn btn-primary btn-sm rounded-full shrink-0"
+                    on:click={() => save()}>{$_("save")}</button
+                >
+                {#if userPickerOpen}
+                    <div class="absolute top-20 left-2 right-20 max-w-md z-10">
+                        <UserPicker
+                            workspaceUUID={$currentWorkspaceUUID}
+                            selectedUser={task.assignee}
+                            on:userSelected={onUserSelected}
+                        />
+                    </div>
+                {/if}
+            </header>
+            <Tabs items={tabItems} autoPadding={false}>
+                <Tab id={1}>
+                    <TaskDetailsContent
+                        {task}
+                        {subTasks}
+                        {labels}
+                        bind:taskModified
+                    />
+                </Tab>
+                <Tab id={2}>
+                    <TaskDetailsDiscussion {task} />
+                </Tab>
+            </Tabs>
+        </div>
+    {/if}
 {/if}
