@@ -33,6 +33,7 @@
     import TaskDetailsDiscussion from "./task-details-discussion.svelte";
     import Tab from "../tab.svelte";
     import { goto } from "$app/navigation";
+    import Loading from "../loading.svelte";
 
     let res: ReadableQuery<any> = null;
     let task = null;
@@ -275,7 +276,7 @@
         <div
             class="flex h-full w-[60vw] flex-col items-center justify-center p-0"
         >
-            {$_("loading")}
+            <Loading />
         </div>
     {:else if !$res.error}
         <div class="flex flex-col p-0 w-[60vw] h-screen">
