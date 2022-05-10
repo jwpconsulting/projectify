@@ -138,6 +138,7 @@ body {
     .btn-action {
         @apply btn-primary;
         @apply border-none bg-gradient-to-l from-accent to-primary-focus;
+        @apply rounded-full px-8;
     }
 }
 

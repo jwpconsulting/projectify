@@ -5,6 +5,7 @@
     import { goto } from "$app/navigation";
     import { _ } from "svelte-i18n";
     import PageLayout from "$lib/components/layouts/pageLayout.svelte";
+    import IllustrationEmailSent from "$lib/components/illustrations/illustration-email-sent.svelte";
 
     let errorAnimation = spring(0, {
         stiffness: 0.3,
@@ -136,10 +137,13 @@
             >
                 <div class="card-body items-center">
                     <div class="py-2">
+                        <div class="flex items-center justify-center pb-2">
+                            <IllustrationEmailSent />
+                        </div>
                         <h1 class="card-title">{$_("email-sent")}</h1>
                         <div>
                             {$_("i-sent-an-email-to")}
-                            <span class="link link-primary"
+                            <span class="link link-primary">
                                 >{userData.email}</span
                             >. {$_(
                                 "please-proceed-from-the-url-described-in-the-message"
@@ -147,7 +151,7 @@
                         </div>
                     </div>
                     <div class="pt-2">
-                        <button class="btn btn-primary" on:click={gotoTopPage}>
+                        <button class="btn btn-action" on:click={gotoTopPage}>
                             {$_("top-page")}
                         </button>
                     </div>
