@@ -4,6 +4,7 @@
     import IconPlus from "../icons/icon-plus.svelte";
     import { gotoDashboard, getDashboardURL } from "$lib/stores/dashboard";
     import ProfilePicture from "../profilePicture.svelte";
+    import { goto } from "$app/navigation";
 
     export let selectedWorkspaceUUID;
 
@@ -17,14 +18,16 @@
             workspaces = $res.data["workspaces"];
             if (!selectedWorkspaceUUID && workspaces.length) {
                 gotoDashboard(workspaces[0]["uuid"]);
+            } else {
+                selectedWorkspace = workspaces
+                    ? workspaces.find((w) => w.uuid === selectedWorkspaceUUID)
+                    : null;
+
+                if (!selectedWorkspace) {
+                    goto("/error/workspace-not-found");
+                }
             }
         }
-    }
-
-    $: {
-        selectedWorkspace = workspaces
-            ? workspaces.find((w) => w.uuid === selectedWorkspaceUUID)
-            : null;
     }
 </script>
 
