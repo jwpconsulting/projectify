@@ -15,7 +15,7 @@
     <div class="w-full max-w-xl space-y-8">
         <div class="flex items-center justify-start space-x-5">
             <button
-                class="btn btn-primary btn-circle shadow-md"
+                class="btn btn-circle btn-primary shadow-md"
                 on:click={() => onBack()}
             >
                 <div class="translate-x-1">
