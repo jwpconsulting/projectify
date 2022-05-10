@@ -143,7 +143,7 @@
                         <h1 class="card-title">{$_("email-sent")}</h1>
                         <div>
                             {$_("i-sent-an-email-to")}
-                            <span class="link link-primary">
+                            <span class="link link-primary"
                                 >{userData.email}</span
                             >. {$_(
                                 "please-proceed-from-the-url-described-in-the-message"
