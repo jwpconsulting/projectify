@@ -1,5 +1,6 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
+    import IllustrationEmailSent from "$lib/components/illustrations/illustration-email-sent.svelte";
     import { requestPasswordReset } from "$lib/stores/user";
     import { _ } from "svelte-i18n";
 
@@ -78,6 +79,9 @@
         <div class="card text-center shadow-card w-full max-w-lg">
             <div class="card-body items-center">
                 <div class="py-2">
+                    <div class="flex items-center justify-center pb-2">
+                        <IllustrationEmailSent />
+                    </div>
                     <h1 class="card-title">
                         {$_("password-reset-email-sent")}
                     </h1>
