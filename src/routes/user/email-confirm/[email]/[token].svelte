@@ -4,6 +4,7 @@
     import { page } from "$app/stores";
     import { onMount } from "svelte";
     import { _ } from "svelte-i18n";
+    import IllustrationSignupFinish from "$lib/components/illustrations/illustration-signup-finish.svelte";
 
     let userData = null;
     let error;
@@ -49,13 +50,16 @@
         >
             <div class="card-body items-center">
                 <div class="py-2">
+                    <div class="flex items-center justify-center pb-2">
+                        <IllustrationSignupFinish />
+                    </div>
                     <h1 class="card-title">{$_("sign-up-finished")}</h1>
                     <div>
                         {$_("sign-up-is-finishied-msg")}
                     </div>
                 </div>
                 <div class="pt-2">
-                    <button class="btn btn-primary" on:click={gotoTopPage}>
+                    <button class="btn btn-action" on:click={gotoTopPage}>
                         {$_("top-page")}
                     </button>
                 </div>
