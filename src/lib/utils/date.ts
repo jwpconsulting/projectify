@@ -1,3 +1,4 @@
+import { browser } from "$app/env";
 export const months = [
     "January",
     "February",
@@ -25,7 +26,11 @@ export const weekDays = [
 
 export function dateStringToLocal(dateStr: string, time = false): string {
     const date = new Date(dateStr);
-    const lang = navigator.language;
+    let lang;
+
+    if (browser) {
+        lang = navigator.language;
+    }
 
     if (isNaN(date.getTime())) {
         throw new Error(`Invalid date: ${dateStr}`);
