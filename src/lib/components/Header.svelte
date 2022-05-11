@@ -7,27 +7,46 @@
     import HeaderUser from "./headerUser.svelte";
 
     export let mode = "app";
-
+    let items;
     $: userData = $user;
-    $: items = [...routes].filter((it) => {
-        if (it.forceNavigation) {
-            return true;
-        }
+    $: {
+        if (mode == "landing") {
+            items = [
+                {
+                    label: "Problem",
+                    to: "#problem",
+                },
+                {
+                    label: "Solution",
+                    to: "#solution",
+                },
+                {
+                    label: "Github",
+                    to: "#github",
+                },
+            ];
+        } else {
+            items = [...routes].filter((it) => {
+                if (it.forceNavigation) {
+                    return true;
+                }
 
-        if (it.forceNavigation === false) {
-            return false;
-        }
+                if (it.forceNavigation === false) {
+                    return false;
+                }
 
-        if (!userData && it.authRequired === true) {
-            return false;
-        }
+                if (!userData && it.authRequired === true) {
+                    return false;
+                }
 
-        if (userData && it.authRequired === false) {
-            return false;
-        }
+                if (userData && it.authRequired === false) {
+                    return false;
+                }
 
-        return true;
-    });
+                return true;
+            });
+        }
+    }
 </script>
 
 {#if mode == "landing"}
@@ -49,6 +68,17 @@
                     </li>
                 {/each}
             </ul>
+        </nav>
+        <nav class="flex gap-2">
+            <a
+                href="/signin"
+                class="btn btn-outline btn-primary rounded-full bg-base-100 px-8 capitalize"
+                >Signin</a
+            >
+            <a
+                href="/signup"
+                class="btn btn-primary rounded-full px-8 capitalize">Signup</a
+            >
         </nav>
     </header>
 {:else}
