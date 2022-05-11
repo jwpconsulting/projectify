@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { _ } from "svelte-i18n";
 
     import HeaderLogo from "../assets/headerLogo.svelte";
@@ -9,6 +9,8 @@
 
     export let footerVisible = true;
     export let heightScreen = false;
+
+    export let headerMode: "app" | "landing" = "app";
 
     let socials = [
         {
@@ -89,14 +91,14 @@
     class:overflow-hidden={heightScreen}
     class="flex grow flex-col"
 >
-    <Header />
+    <Header bind:mode={headerMode} />
     <slot />
     {#if footerVisible}
         <footer
             class="flex min-h-[200px] justify-center border-t border-base-300 bg-base-100"
         >
             <div
-                class="flex w-full max-w-3xl items-center justify-between gap-16 py-8 px-4"
+                class="container flex w-full flex-wrap items-center justify-between gap-y-4 gap-x-16 py-8 px-4"
             >
                 <div class="flex flex-col gap-2">
                     <HeaderLogo />

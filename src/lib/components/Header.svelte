@@ -6,6 +6,8 @@
     import HeaderLogo from "./assets/headerLogo.svelte";
     import HeaderUser from "./headerUser.svelte";
 
+    export let mode = "app";
+
     $: userData = $user;
     $: items = [...routes].filter((it) => {
         if (it.forceNavigation) {
@@ -28,27 +30,50 @@
     });
 </script>
 
-<header
-    class="sticky top-0 z-10 flex h-[80px] items-center border-b border-base-300 bg-base-100 p-4"
->
-    <a href="/" class="mr-8 flex">
-        <HeaderLogo />
-    </a>
-    <nav class="grow">
-        <ul class="flex">
-            {#each items as it}
-                <li class:active={$page.url.pathname === it.to}>
-                    <a
-                        on:click={it.action}
-                        class="cursor-pointer p-2 font-bold"
-                        href={it.to}
-                    >
-                        {$_(it.label)}
-                    </a>
-                </li>
-            {/each}
-        </ul>
-    </nav>
+{#if mode == "landing"}
+    <header class="sticky top-0 z-10 flex h-[80px] items-center p-4">
+        <a href="/" class="mr-8 flex">
+            <HeaderLogo />
+        </a>
+        <nav class="grow">
+            <ul class="flex">
+                {#each items as it}
+                    <li class:active={$page.url.pathname === it.to}>
+                        <a
+                            on:click={it.action}
+                            class="cursor-pointer p-2 font-bold"
+                            href={it.to}
+                        >
+                            {$_(it.label)}
+                        </a>
+                    </li>
+                {/each}
+            </ul>
+        </nav>
+    </header>
+{:else}
+    <header
+        class="sticky top-0 z-10 flex h-[80px] items-center border-b border-base-300 bg-base-100 p-4"
+    >
+        <a href="/" class="mr-8 flex">
+            <HeaderLogo />
+        </a>
+        <nav class="grow">
+            <ul class="flex">
+                {#each items as it}
+                    <li class:active={$page.url.pathname === it.to}>
+                        <a
+                            on:click={it.action}
+                            class="cursor-pointer p-2 font-bold"
+                            href={it.to}
+                        >
+                            {$_(it.label)}
+                        </a>
+                    </li>
+                {/each}
+            </ul>
+        </nav>
 
-    <HeaderUser />
-</header>
+        <HeaderUser />
+    </header>
+{/if}

@@ -17,7 +17,6 @@ body {
     flex-direction: column;
     flex-grow: 1;
     max-width: 100vw;
-    min-width: 720px;
 }
 
 .bg-debug {
@@ -34,7 +33,7 @@ body {
     }
 
     .page {
-        @apply flex grow flex-col bg-base-200 p-1;
+        @apply flex grow flex-col bg-base-200;
     }
 
     .page-center {
