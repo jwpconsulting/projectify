@@ -1,10 +1,40 @@
 <script lang="ts">
+    import IconCheck from "$lib/components/assets/landing/icon-check.svelte";
+    import IllComA from "$lib/components/assets/landing/ill-com-A.svelte";
+    import IllComB from "$lib/components/assets/landing/ill-com-B.svelte";
+    import IllComC from "$lib/components/assets/landing/ill-com-C.svelte";
     import PageLayout from "$lib/components/layouts/pageLayout.svelte";
     import { _ } from "svelte-i18n";
+
+    const heroList = [
+        "Simple design that even beginners can use",
+        "Easy to organize tasks to do now",
+        "Easy to grasp the entire project at a glance",
+        "100% open source software",
+    ];
+
+    const commobProblems = [
+        {
+            illustration: IllComA,
+            title: "I can’t concentrate on important work.",
+            body: "My job begins with finding the information I need by email or chat. If I have many tasks, I may not know which one is the most important.",
+        },
+        {
+            illustration: IllComB,
+            title: "The tools I'm currently using are complicated and difficult to use.",
+            body: "I am not satisfied with the operability of the current tool. Task sharing is inefficient and difficult to manage.",
+        },
+        {
+            illustration: IllComC,
+            title: "I don't know if the team is moving towards the goal.",
+            body: "I don't even know if the project is going well because I don't know the whole situation.",
+        },
+    ];
 </script>
 
 <PageLayout headerMode={"landing"}>
     <main class="page bg-base-100">
+        <!-- Section: Hero -->
         <section class="relative">
             <div
                 class="bg-debug absolute top-[-80px] right-0 h-[500px] w-[55%] max-w-4xl overflow-hidden rounded-bl-3xl"
@@ -15,36 +45,16 @@
                     alt=""
                 />
             </div>
-            <div class="container relative grow">
+            <div class="container relative min-h-[440px]">
                 <div class="flex max-w-md flex-col gap-4 bg-base-100 p-6">
                     <h1 class="text-5xl">
                         Fast and easy-to-use project management tool
                     </h1>
                     <ul class="flex flex-col gap-2">
-                        {#each ["Simple design that even beginners can use", "Easy to organize tasks to do now", "Easy to grasp the entire project at a glance", "100% open source software"] as item}
+                        {#each heroList as item}
                             <div class="flex items-center gap-2">
                                 <div>
-                                    <svg
-                                        width="20"
-                                        height="20"
-                                        viewBox="0 0 20 20"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <rect
-                                            x="0.5"
-                                            y="0.5"
-                                            width="19"
-                                            height="19"
-                                            rx="5.5"
-                                            fill="#76B4F9"
-                                            stroke="#76B4F9"
-                                        />
-                                        <path
-                                            d="M5.78222 9.24833C5.39131 8.85819 4.75814 8.85881 4.368 9.24972C3.97786 9.64063 3.97849 10.2738 4.36939 10.6639L5.78222 9.24833ZM8.45964 13.3333L7.75323 14.0411L8.45504 14.7416L9.16141 14.0457L8.45964 13.3333ZM15.9291 7.37906C16.3225 6.99148 16.3273 6.35834 15.9397 5.96489C15.5521 5.57144 14.919 5.56668 14.5255 5.95425L15.9291 7.37906ZM4.36939 10.6639L7.75323 14.0411L9.16606 12.6255L5.78222 9.24833L4.36939 10.6639ZM9.16141 14.0457L15.9291 7.37906L14.5255 5.95425L7.75787 12.6209L9.16141 14.0457Z"
-                                            fill="white"
-                                        />
-                                    </svg>
+                                    <IconCheck />
                                 </div>
                                 {item}
                             </div>
@@ -57,6 +67,30 @@
                 </div>
             </div>
         </section>
+
+        <!-- Section: Common Problems -->
+
+        <section id="problem" class="py-20">
+            <div class="container flex-col items-center justify-center gap-4">
+                <h1 class="text-[3.2rem] font-bold">Common Problem</h1>
+                <h2 class="text-2xl">Various problems occur when working.</h2>
+                <div class="flex gap-6 px-6">
+                    {#each commobProblems as item}
+                        <div
+                            class="mt-28 flex max-w-[384px] flex-col gap-4 rounded-2xl bg-neutral p-8 text-neutral-content"
+                        >
+                            <div
+                                class="-mt-20 flex min-h-[180px] items-center justify-center"
+                            >
+                                <svelte:component this={item.illustration} />
+                            </div>
+                            <h1 class="text-2xl font-bold">{item.title}</h1>
+                            <div class="text-lg font-light">{item.body}</div>
+                        </div>
+                    {/each}
+                </div>
+            </div>
+        </section>
     </main>
 </PageLayout>
 
@@ -66,8 +100,6 @@
         @apply bg-base-100;
 
         > .container {
-            // @apply bg-primary;
-            // max-width: 1200px;
             @apply flex;
         }
     }

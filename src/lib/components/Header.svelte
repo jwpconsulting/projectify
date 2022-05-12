@@ -5,6 +5,7 @@
     import { _ } from "svelte-i18n";
     import HeaderLogo from "./assets/headerLogo.svelte";
     import HeaderUser from "./headerUser.svelte";
+    import { onMount } from "svelte";
 
     export let mode = "app";
     let items;
@@ -47,10 +48,21 @@
             });
         }
     }
+
+    let scrollToTop = true;
 </script>
 
 {#if mode == "landing"}
-    <header class="sticky top-0 z-10 flex h-[80px] items-center p-4">
+    <header
+        class="sticky top-0 z-10 flex h-[80px] items-center p-4"
+        on:scroll={(e) => {
+            if (e.target["scrollTop"] > 0) {
+                scrollToTop = false;
+            } else {
+                scrollToTop = true;
+            }
+        }}
+    >
         <a href="/" class="mr-8 flex">
             <HeaderLogo />
         </a>
