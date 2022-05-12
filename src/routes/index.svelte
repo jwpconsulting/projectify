@@ -1,8 +1,10 @@
 <script lang="ts">
+    import BgLogo from "$lib/components/assets/landing/bg-logo.svelte";
     import IconCheck from "$lib/components/assets/landing/icon-check.svelte";
     import IllComA from "$lib/components/assets/landing/ill-com-A.svelte";
     import IllComB from "$lib/components/assets/landing/ill-com-B.svelte";
     import IllComC from "$lib/components/assets/landing/ill-com-C.svelte";
+    import IllSolution from "$lib/components/assets/landing/ill-solution.svelte";
     import PageLayout from "$lib/components/layouts/pageLayout.svelte";
     import { _ } from "svelte-i18n";
 
@@ -69,12 +71,11 @@
         </section>
 
         <!-- Section: Common Problems -->
-
-        <section id="problem" class="py-20">
+        <section id="problem" class="py-20 px-6">
             <div class="container flex-col items-center justify-center gap-4">
                 <h1 class="text-[3.2rem] font-bold">Common Problem</h1>
                 <h2 class="text-2xl">Various problems occur when working.</h2>
-                <div class="flex gap-6 px-6">
+                <div class="grid grid-cols-1 gap-6 px-6 md:grid-cols-3">
                     {#each commobProblems as item}
                         <div
                             class="mt-28 flex max-w-[384px] flex-col gap-4 rounded-2xl bg-neutral p-8 text-neutral-content"
@@ -91,16 +92,45 @@
                 </div>
             </div>
         </section>
+
+        <!-- Section: Solution  -->
+        <section id="solution" class="relative py-20 px-6">
+            <div class="absolute left-8 top-0 h-full overflow-hidden">
+                <BgLogo />
+            </div>
+            <div class="absolute top-0 left-[50%] flex h-1 w-1 justify-center">
+                <div
+                    class="h-20 w-20 shrink-0 translate-y-[-50%] rotate-45 rounded-br-3xl bg-base-100"
+                />
+            </div>
+            <div
+                class="container z-[1] flex-col items-center justify-center gap-4 text-primary-content"
+            >
+                <h1 class="text-[3.2rem] font-bold">Solution by Projectify</h1>
+                <h2 class="text-2xl">
+                    A design that allows you to simply group tasks together and
+                    share them quickly.
+                </h2>
+                <IllSolution />
+            </div>
+        </section>
     </main>
 </PageLayout>
 
 <style lang="scss">
     section {
         @apply min-h-16 flex justify-center;
-        @apply bg-base-100;
 
         > .container {
             @apply flex;
+        }
+
+        &#solution {
+            background: linear-gradient(
+                -45deg,
+                hsla(var(--p) / 30%),
+                hsla(var(--p) / 60%)
+            );
         }
     }
 </style>
