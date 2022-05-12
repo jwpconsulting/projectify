@@ -10,6 +10,7 @@ body {
     display: flex;
     flex-direction: column;
     @apply bg-base-100 text-base-content;
+    scroll-behavior: smooth;
 }
 
 #svelte {
