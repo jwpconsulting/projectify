@@ -130,5 +130,8 @@
     "retun-to-dashboard": "Retun to dashboard",
     "board-not-found": "Board not found",
     "task-not-found": "Task not found",
-    "this-application-is-best-used-on-a-pc": "This application is best used on a PC"
+    "this-application-is-best-used-on-a-pc": "This application is best used on a PC",
+    "Problem": "Problem",
+    "Solution": "Solution",
+    "Github": "Github"
 }

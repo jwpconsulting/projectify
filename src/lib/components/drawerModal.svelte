@@ -1,14 +1,17 @@
 <script lang="ts">
+    import { browser } from "$app/env";
     import { fly } from "svelte/transition";
 
     export let open = false;
     let contentWidth;
 
     $: {
-        if (open) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "";
+        if (browser) {
+            if (open) {
+                document.body.style.overflow = "hidden";
+            } else {
+                document.body.style.overflow = "";
+            }
         }
     }
 </script>
