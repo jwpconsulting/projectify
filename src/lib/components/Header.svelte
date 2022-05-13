@@ -57,8 +57,8 @@
 
 {#if mode == "landing"}
     <header
-        class="sticky top-0 z-10 flex h-[80px] items-center justify-center px-6 transition-all duration-300 ease-in-out"
-        class:bg-base-100={!scrollToTop}
+        class="sticky top-0 z-10 flex h-[80px] items-center justify-center bg-base-100 px-6 transition-all duration-300 ease-in-out"
+        class:lg:bg-transparent={scrollToTop}
         class:shadow-lg={!scrollToTop}
     >
         <div class="container flex items-center">
