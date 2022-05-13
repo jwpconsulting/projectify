@@ -80,7 +80,9 @@
 
         <!-- Section: Common Problems -->
         <section id="problem" class="py-20 px-6">
-            <div class="container flex-col items-center justify-center gap-4">
+            <div
+                class="container flex flex-col items-center justify-center gap-4"
+            >
                 <h1 class="text-[3.2rem] font-bold">Common Problem</h1>
                 <h2 class="text-2xl">Various problems occur when working.</h2>
                 <div class="grid w-full grid-cols-1 gap-6 md:grid-cols-3">
@@ -112,10 +114,12 @@
                 />
             </div>
             <div
-                class="container z-[1] flex-col items-center justify-center gap-4 text-primary-content"
+                class="container z-[1] flex flex-col items-center justify-center gap-4 text-primary-content"
             >
-                <h1 class="text-[3.2rem] font-bold">Solution by Projectify</h1>
-                <h2 class="text-2xl">
+                <h1 class="text-[3.2rem] font-bold drop-shadow-sm">
+                    Solution by Projectify
+                </h1>
+                <h2 class="text-2xl drop-shadow-sm">
                     A design that allows you to simply group tasks together and
                     share them quickly.
                 </h2>
@@ -124,13 +128,14 @@
                 </div>
             </div>
         </section>
-
-        <section class="gel flex bg-base-200 px-6 py-20">
-            <div class="container">
-                <div class="grid grid-flow-col grid-cols-3 gap-6">
+        <section class="flex bg-base-200 px-6 py-20">
+            <div class="container flex">
+                <div
+                    class="flex w-full flex-col  items-stretch gap-6 md:grid md:grid-cols-3"
+                >
                     {#each solutions as text, inx}
                         <div
-                            class="flex items-start gap-4 rounded-2xl bg-base-100 p-4 text-2xl font-bold"
+                            class="flex w-full items-start gap-4 rounded-2xl bg-base-100 p-4 text-2xl font-bold"
                         >
                             <div
                                 class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-content"
@@ -147,25 +152,25 @@
         <!-- Section Github -->
         <section id="github" class="relative py-20 px-6">
             <div
-                class="container grid grid-cols-2 items-center justify-center gap-4 overflow-hidden rounded-3xl shadow-2xl"
+                class="container grid grid-cols-1 items-center justify-center gap-4 overflow-hidden rounded-3xl shadow-2xl md:grid-cols-2"
             >
+                <div
+                    class="flex h-full w-full items-center justify-center bg-[#000] p-8 md:order-last"
+                >
+                    <div class="max-w-[200px]">
+                        <IllGithub />
+                    </div>
+                </div>
                 <div class="flex w-full flex-col gap-4 p-10">
                     <h1 class="text-2xl font-bold">
                         Projectify is 100% open source software
                     </h1>
-                    <h2 class="text-md">
+                    <h2 class="text-md max-w-lg">
                         Currently 4 people are participating in the project.
                         Projectify has a more active development community.
                     </h2>
                     <a href="/" class="btn-action btn w-fit">Learn more</a>
                     <div>Currently 1,140 people are participating</div>
-                </div>
-                <div
-                    class="flex h-full w-full items-center justify-center bg-[#000] p-8"
-                >
-                    <div class="max-w-[200px]">
-                        <IllGithub />
-                    </div>
                 </div>
             </div>
         </section>
@@ -175,10 +180,6 @@
 <style lang="scss">
     section {
         @apply min-h-16 flex justify-center;
-
-        > .container {
-            @apply flex;
-        }
 
         &#solution {
             background: linear-gradient(

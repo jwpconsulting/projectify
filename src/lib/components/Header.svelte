@@ -57,7 +57,7 @@
 
 {#if mode == "landing"}
     <header
-        class="sticky top-0 z-10 flex h-[80px] items-center justify-center transition-all duration-300 ease-in-out"
+        class="sticky top-0 z-10 flex h-[80px] items-center justify-center px-6 transition-all duration-300 ease-in-out"
         class:bg-base-100={!scrollToTop}
         class:shadow-lg={!scrollToTop}
     >
@@ -65,7 +65,7 @@
             <a href="/" class="mr-8 flex">
                 <HeaderLogo />
             </a>
-            <nav class="grow">
+            <nav class="hidden grow md:flex">
                 <ul class="flex">
                     {#each items as it}
                         <li class:active={$page.url.pathname === it.to}>
@@ -80,7 +80,7 @@
                     {/each}
                 </ul>
             </nav>
-            <nav class="flex gap-2">
+            <nav class="hidden gap-2 md:flex">
                 <a
                     href="/signin"
                     class="btn btn-outline btn-primary rounded-full bg-base-100 px-8 capitalize"
