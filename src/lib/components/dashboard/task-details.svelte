@@ -69,7 +69,7 @@
     }
 
     $: {
-        if (!$res.loading) {
+        if (res && !$res.loading) {
             if (!$res.error) {
                 taskWSStrore = getSubscriptionForCollection(
                     "task",
@@ -271,88 +271,82 @@
     ];
 </script>
 
-{#if res}
-    {#if $res.loading}
-        <div
-            class="flex h-full w-[60vw] flex-col items-center justify-center p-0"
-        >
-            <Loading />
-        </div>
-    {:else if !$res.error}
-        <div class="flex flex-col p-0 w-[60vw] h-screen">
-            <header
-                class="flex p-6 space-x-4 items-center bg-base-100 relative"
+{#if res && $res.loading}
+    <div class="flex h-full w-[60vw] flex-col items-center justify-center p-0">
+        <Loading />
+    </div>
+{:else if (res && !$res.error) || task}
+    <div class="flex flex-col p-0 w-[60vw] h-screen">
+        <header class="flex p-6 space-x-4 items-center bg-base-100 relative">
+            <a
+                href="/"
+                class="flex justify-center items-center"
+                on:click|preventDefault={() =>
+                    (userPickerOpen = !userPickerOpen)}
             >
-                <a
-                    href="/"
-                    class="flex justify-center items-center"
-                    on:click|preventDefault={() =>
-                        (userPickerOpen = !userPickerOpen)}
-                >
-                    {#if task?.assignee}
-                        <UserProfilePicture
-                            pictureProps={{
-                                size: 42,
-                                url: task.assignee.profilePicture,
-                            }}
-                        />
-                    {:else}
-                        <ProfilePicture showPlus={true} size={42} />
-                    {/if}
-                </a>
-
-                <input
-                    class="input grow text-xl p-2 rounded-md nowrap-ellipsis"
-                    placeholder={$_("task-name")}
-                    on:keydown={(e) => {
-                        if (e.key == "Enter") {
-                            e.preventDefault();
-                            save();
-                        }
-                    }}
-                    on:input={() => (taskModified = true)}
-                    bind:value={task.title}
-                />
-
-                <ToolBar
-                    items={[
-                        {
-                            label: $_("Delete"),
-                            icon: IconTrash,
-                            onClick: onDelete,
-                            hidden: itsNew,
-                        },
-                    ]}
-                />
-
-                <button
-                    disabled={!saveEnabled}
-                    class="btn btn-primary btn-sm rounded-full shrink-0"
-                    on:click={() => save()}>{$_("save")}</button
-                >
-                {#if userPickerOpen}
-                    <div class="absolute top-20 left-2 right-20 max-w-md z-10">
-                        <UserPicker
-                            workspaceUUID={$currentWorkspaceUUID}
-                            selectedUser={task.assignee}
-                            on:userSelected={onUserSelected}
-                        />
-                    </div>
-                {/if}
-            </header>
-            <Tabs items={tabItems} autoPadding={false}>
-                <Tab id={1}>
-                    <TaskDetailsContent
-                        {task}
-                        {subTasks}
-                        {labels}
-                        bind:taskModified
+                {#if task?.assignee}
+                    <UserProfilePicture
+                        pictureProps={{
+                            size: 42,
+                            url: task.assignee.profilePicture,
+                        }}
                     />
-                </Tab>
-                <Tab id={2}>
-                    <TaskDetailsDiscussion {task} />
-                </Tab>
-            </Tabs>
-        </div>
-    {/if}
+                {:else}
+                    <ProfilePicture showPlus={true} size={42} />
+                {/if}
+            </a>
+
+            <input
+                class="input grow text-xl p-2 rounded-md nowrap-ellipsis"
+                placeholder={$_("task-name")}
+                on:keydown={(e) => {
+                    if (e.key == "Enter") {
+                        e.preventDefault();
+                        save();
+                    }
+                }}
+                on:input={() => (taskModified = true)}
+                bind:value={task.title}
+            />
+
+            <ToolBar
+                items={[
+                    {
+                        label: $_("Delete"),
+                        icon: IconTrash,
+                        onClick: onDelete,
+                        hidden: itsNew,
+                    },
+                ]}
+            />
+
+            <button
+                disabled={!saveEnabled}
+                class="btn btn-primary btn-sm rounded-full shrink-0"
+                on:click={() => save()}>{$_("save")}</button
+            >
+            {#if userPickerOpen}
+                <div class="absolute top-20 left-2 right-20 max-w-md z-10">
+                    <UserPicker
+                        workspaceUUID={$currentWorkspaceUUID}
+                        selectedUser={task.assignee}
+                        on:userSelected={onUserSelected}
+                    />
+                </div>
+            {/if}
+        </header>
+        <Tabs items={tabItems} autoPadding={false}>
+            <Tab id={1}>
+                <TaskDetailsContent
+                    {task}
+                    {subTasks}
+                    {labels}
+                    bind:taskModified
+                />
+            </Tab>
+            <Tab id={2}>
+                <TaskDetailsDiscussion {task} />
+            </Tab>
+        </Tabs>
+    </div>
 {/if}
