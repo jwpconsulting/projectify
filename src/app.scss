@@ -21,7 +21,7 @@ body {
 }
 
 .bg-debug {
-    background-color: rgba(#f00, 0.2);
+    background-color: rgba(#f00, 0.2) !important;
 }
 
 @layer components {

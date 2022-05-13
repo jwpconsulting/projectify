@@ -4,9 +4,11 @@
     import IllComA from "$lib/components/assets/landing/ill-com-A.svelte";
     import IllComB from "$lib/components/assets/landing/ill-com-B.svelte";
     import IllComC from "$lib/components/assets/landing/ill-com-C.svelte";
+    import IllGithub from "$lib/components/assets/landing/ill-github.svelte";
     import IllSolution from "$lib/components/assets/landing/ill-solution.svelte";
     import PageLayout from "$lib/components/layouts/pageLayout.svelte";
     import { _ } from "svelte-i18n";
+    import A from "./dashboard/[...uuids].svelte";
 
     const heroList = [
         "Simple design that even beginners can use",
@@ -31,6 +33,12 @@
             title: "I don't know if the team is moving towards the goal.",
             body: "I don't even know if the project is going well because I don't know the whole situation.",
         },
+    ];
+
+    const solutions = [
+        "UI that makes it easy to see the entire task",
+        "Easy to organize tasks to do now",
+        "Easily organize what you need to do in the future",
     ];
 </script>
 
@@ -75,10 +83,10 @@
             <div class="container flex-col items-center justify-center gap-4">
                 <h1 class="text-[3.2rem] font-bold">Common Problem</h1>
                 <h2 class="text-2xl">Various problems occur when working.</h2>
-                <div class="grid grid-cols-1 gap-6 px-6 md:grid-cols-3">
+                <div class="grid w-full grid-cols-1 gap-6 md:grid-cols-3">
                     {#each commobProblems as item}
                         <div
-                            class="mt-28 flex max-w-[384px] flex-col gap-4 rounded-2xl bg-neutral p-8 text-neutral-content"
+                            class="mt-28 flex flex-col gap-4 rounded-2xl bg-neutral p-8 text-neutral-content"
                         >
                             <div
                                 class="-mt-20 flex min-h-[180px] items-center justify-center"
@@ -94,7 +102,7 @@
         </section>
 
         <!-- Section: Solution  -->
-        <section id="solution" class="relative py-20 px-6">
+        <section id="solution" class="relative px-6 pt-20">
             <div class="absolute left-8 top-0 h-full overflow-hidden">
                 <BgLogo />
             </div>
@@ -111,7 +119,54 @@
                     A design that allows you to simply group tasks together and
                     share them quickly.
                 </h2>
-                <IllSolution />
+                <div class="-mb-8 w-full max-w-4xl">
+                    <IllSolution />
+                </div>
+            </div>
+        </section>
+
+        <section class="gel flex bg-base-200 px-6 py-20">
+            <div class="container">
+                <div class="grid grid-flow-col grid-cols-3 gap-6">
+                    {#each solutions as text, inx}
+                        <div
+                            class="flex items-start gap-4 rounded-2xl bg-base-100 p-4 text-2xl font-bold"
+                        >
+                            <div
+                                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-content"
+                            >
+                                {inx + 1}
+                            </div>
+                            <span class="">{text}</span>
+                        </div>
+                    {/each}
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Github -->
+        <section id="github" class="relative py-20 px-6">
+            <div
+                class="container grid grid-cols-2 items-center justify-center gap-4 overflow-hidden rounded-3xl shadow-2xl"
+            >
+                <div class="flex w-full flex-col gap-4 p-10">
+                    <h1 class="text-2xl font-bold">
+                        Projectify is 100% open source software
+                    </h1>
+                    <h2 class="text-md">
+                        Currently 4 people are participating in the project.
+                        Projectify has a more active development community.
+                    </h2>
+                    <a href="/" class="btn-action btn w-fit">Learn more</a>
+                    <div>Currently 1,140 people are participating</div>
+                </div>
+                <div
+                    class="flex h-full w-full items-center justify-center bg-[#000] p-8"
+                >
+                    <div class="max-w-[200px]">
+                        <IllGithub />
+                    </div>
+                </div>
             </div>
         </section>
     </main>
