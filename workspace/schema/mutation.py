@@ -52,6 +52,7 @@ class AddTaskInput:
     description: str
     deadline: datetime.datetime | None
     assignee: str | None = UNSET
+    sub_tasks: list[str] | None = UNSET
 
 
 @strawberry.input
@@ -297,6 +298,12 @@ class Mutation:
             User = get_user_model()
             user = User.objects.get_by_natural_key(input.assignee)
             task.assign_to(user)
+        if not is_unset(input.sub_tasks):
+            for title in input.sub_tasks:
+                task.add_sub_task(
+                    title,
+                    "",
+                )
         return task
 
     @strawberry.field
