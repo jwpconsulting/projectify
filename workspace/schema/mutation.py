@@ -53,6 +53,7 @@ class AddTaskInput:
     deadline: datetime.datetime | None
     assignee: str | None = UNSET
     sub_tasks: list[str] | None = UNSET
+    labels: list[uuid.UUID] | None = UNSET
 
 
 @strawberry.input
@@ -304,6 +305,13 @@ class Mutation:
                     title,
                     "",
                 )
+        if not is_unset(input.labels):
+            for label_uuid in input.labels:
+                label = models.Label.objects.get_for_user_and_uuid(
+                    info.context.user,
+                    label_uuid,
+                )
+                task.add_label(label)
         return task
 
     @strawberry.field

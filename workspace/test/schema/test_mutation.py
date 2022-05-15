@@ -403,6 +403,7 @@ mutation AddTask(
     $deadline: DateTime,
     $assignee: String,
     $subTasks: [String!],
+    $labels: [UUID!],
     ) {
     addTask(input: {
         workspaceBoardSectionUuid: $workspaceBoardSectionUuid,
@@ -410,7 +411,8 @@ mutation AddTask(
         description: "World",
         deadline: $deadline,
         assignee: $assignee,
-        subTasks: $subTasks
+        subTasks: $subTasks,
+        labels: $labels
     }) {
         title
         description
@@ -420,6 +422,9 @@ mutation AddTask(
         }
         subTasks {
             title
+        }
+        labels {
+            uuid
         }
     }
 }
@@ -447,6 +452,7 @@ mutation AddTask(
                     "deadline": None,
                     "assignee": None,
                     "subTasks": [],
+                    "labels": [],
                 },
             },
         }
@@ -474,6 +480,7 @@ mutation AddTask(
                     "deadline": now,
                     "assignee": None,
                     "subTasks": [],
+                    "labels": [],
                 },
             },
         }
@@ -504,6 +511,7 @@ mutation AddTask(
                         "email": user.email,
                     },
                     "subTasks": [],
+                    "labels": [],
                 },
             },
         }
@@ -537,6 +545,41 @@ mutation AddTask(
                         },
                         {
                             "title": "World",
+                        },
+                    ],
+                    "labels": [],
+                },
+            },
+        }
+
+    def test_assigning_label(
+        self,
+        graphql_query_user,
+        workspace_board_section,
+        workspace_user,
+        user,
+        label,
+    ):
+        """Test assigning a label."""
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "workspaceBoardSectionUuid": str(workspace_board_section.uuid),
+                "deadline": None,
+                "labels": [str(label.uuid)],
+            },
+        )
+        assert result == {
+            "data": {
+                "addTask": {
+                    "title": "Hello",
+                    "description": "World",
+                    "deadline": None,
+                    "assignee": None,
+                    "subTasks": [],
+                    "labels": [
+                        {
+                            "uuid": str(label.uuid),
                         },
                     ],
                 },
