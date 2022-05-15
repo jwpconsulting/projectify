@@ -69,7 +69,13 @@ INSTALLED_APPS_THIRD_PARTY = (
     "rest_framework",
 )
 
-INSTALLED_APPS_FIRST_PARTY = ("projectify", "user", "workspace", "blog")
+INSTALLED_APPS_FIRST_PARTY = (
+    "projectify",
+    "user",
+    "workspace",
+    "blog",
+    "corporate",
+)
 
 INSTALLED_APPS = (
     INSTALLED_APPS_DJANGO
