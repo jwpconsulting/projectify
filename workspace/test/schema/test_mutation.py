@@ -401,20 +401,25 @@ class TestAddTaskMutation:
 mutation AddTask(
     $workspaceBoardSectionUuid: UUID!,
     $deadline: DateTime,
-    $assignee: String
+    $assignee: String,
+    $subTasks: [String!],
     ) {
     addTask(input: {
         workspaceBoardSectionUuid: $workspaceBoardSectionUuid,
         title: "Hello",
         description: "World",
         deadline: $deadline,
-        assignee: $assignee
+        assignee: $assignee,
+        subTasks: $subTasks
     }) {
         title
         description
         deadline
         assignee {
             email
+        }
+        subTasks {
+            title
         }
     }
 }
@@ -441,6 +446,7 @@ mutation AddTask(
                     "description": "World",
                     "deadline": None,
                     "assignee": None,
+                    "subTasks": [],
                 },
             },
         }
@@ -467,6 +473,7 @@ mutation AddTask(
                     "description": "World",
                     "deadline": now,
                     "assignee": None,
+                    "subTasks": [],
                 },
             },
         }
@@ -496,6 +503,42 @@ mutation AddTask(
                     "assignee": {
                         "email": user.email,
                     },
+                    "subTasks": [],
+                },
+            },
+        }
+
+    def test_adding_subtasks(
+        self,
+        graphql_query_user,
+        workspace_board_section,
+        workspace_user,
+        user,
+    ):
+        """Add subtasks as well."""
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "workspaceBoardSectionUuid": str(workspace_board_section.uuid),
+                "deadline": None,
+                "subTasks": ["Hello", "World"],
+            },
+        )
+        assert result == {
+            "data": {
+                "addTask": {
+                    "title": "Hello",
+                    "description": "World",
+                    "deadline": None,
+                    "assignee": None,
+                    "subTasks": [
+                        {
+                            "title": "Hello",
+                        },
+                        {
+                            "title": "World",
+                        },
+                    ],
                 },
             },
         }
