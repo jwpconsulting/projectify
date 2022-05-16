@@ -47,17 +47,19 @@
         <!-- Section: Hero -->
         <section class="relative">
             <div
-                class="bg-debug absolute top-[-80px] right-0 h-[500px] w-[55%] max-w-4xl overflow-hidden rounded-bl-3xl"
+                class="bg-debug absolute right-0 w-full max-w-4xl overflow-hidden md:top-[-80px] md:h-[500px] md:w-[55%] md:rounded-bl-3xl"
             >
                 <img
-                    class="object-left-center h-full w-full object-cover"
+                    class="md:object-left-center h-full w-full object-cover object-bottom"
                     src="/assets/landing/hero.jpg"
                     alt=""
                 />
             </div>
-            <div class="container relative min-h-[440px]">
-                <div class="flex max-w-md flex-col gap-4 bg-base-100 p-6">
-                    <h1 class="text-5xl">
+            <div class="container relative min-h-[440px] pt-[70vw] md:pt-0">
+                <div
+                    class="m-6 flex flex-col gap-4 bg-base-100 p-6 md:m-0 md:max-w-md"
+                >
+                    <h1 class="text-4xl md:text-5xl">
                         Fast and easy-to-use project management tool
                     </h1>
                     <ul class="flex flex-col gap-2">
@@ -79,19 +81,27 @@
         </section>
 
         <!-- Section: Common Problems -->
-        <section id="problem" class="py-20 px-6">
+        <section id="problem" class="px-6 pb-20 md:py-20">
             <div
                 class="container flex flex-col items-center justify-center gap-4"
             >
-                <h1 class="text-[3.2rem] font-bold">Common Problem</h1>
-                <h2 class="text-2xl">Various problems occur when working.</h2>
+                <h1
+                    class="text-center text-[2rem] font-bold leading-[1.2em] sm:text-[3.2rem]"
+                >
+                    Common Problem
+                </h1>
+                <h2
+                    class="-mb-10 text-center text-[1rem] leading-[1.2em] sm:text-2xl"
+                >
+                    Various problems occur when working.
+                </h2>
                 <div class="grid w-full grid-cols-1 gap-6 md:grid-cols-3">
                     {#each commobProblems as item}
                         <div
                             class="mt-28 flex flex-col gap-4 rounded-2xl bg-neutral p-8 text-neutral-content"
                         >
                             <div
-                                class="-mt-20 flex min-h-[180px] items-center justify-center"
+                                class="-mt-20 flex items-center justify-center md:min-h-[180px]"
                             >
                                 <svelte:component this={item.illustration} />
                             </div>
@@ -116,10 +126,14 @@
             <div
                 class="container z-[1] flex flex-col items-center justify-center gap-4 text-primary-content"
             >
-                <h1 class="text-[3.2rem] font-bold drop-shadow-sm">
-                    Solution by Projectify
+                <h1
+                    class="text-center text-[2.0rem] font-bold leading-[1.2em] sm:text-[3.2rem]"
+                >
+                    Resolve By Projectify
                 </h1>
-                <h2 class="text-2xl drop-shadow-sm">
+                <h2
+                    class="text-center text-[1rem] leading-[1.2em] sm:text-2xl"
+                >
                     A design that allows you to simply group tasks together and
                     share them quickly.
                 </h2>
@@ -128,7 +142,7 @@
                 </div>
             </div>
         </section>
-        <section class="flex bg-base-200 px-6 py-20">
+        <section class="flex bg-base-200 px-6 py-10 pt-20">
             <div class="container flex">
                 <div
                     class="flex w-full flex-col  items-stretch gap-6 md:grid md:grid-cols-3"
@@ -150,7 +164,7 @@
         </section>
 
         <!-- Section Github -->
-        <section id="github" class="relative py-20 px-6">
+        <section id="github" class="relative py-10 px-6">
             <div
                 class="container grid grid-cols-1 items-center justify-center gap-4 overflow-hidden rounded-3xl shadow-2xl md:grid-cols-2"
             >
@@ -180,7 +194,6 @@
 <style lang="scss">
     section {
         @apply min-h-16 flex justify-center;
-
         &#solution {
             background: linear-gradient(
                 -45deg,
