@@ -98,9 +98,9 @@
             class="flex min-h-[200px] justify-center border-t border-base-300 bg-base-100 py-8 px-6"
         >
             <div
-                class="container flex w-full flex-wrap items-center justify-between gap-y-4 gap-x-16 "
+                class="container flex w-full flex-wrap items-start justify-between gap-y-4 gap-x-16 "
             >
-                <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-4">
                     <HeaderLogo />
                     <div class="text-sm">
                         {$_("enable-smooth-project-management")}
@@ -117,7 +117,7 @@
                         {/each}
                     </div>
                 </div>
-                <div class="flex gap-8">
+                <div class="flex grow justify-between gap-8 sm:justify-start">
                     {#each footerLinks as group}
                         <div class="flex flex-col">
                             <h1 class="font-bold">{group.title}</h1>
@@ -129,7 +129,6 @@
                         </div>
                     {/each}
                 </div>
-                <div class="grow" />
             </div>
         </footer>
     {/if}
