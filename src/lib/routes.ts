@@ -8,6 +8,13 @@ type routeItem = {
 };
 
 export default [
+    {
+        to: "/",
+        label: "Home",
+        authRequired: false,
+        forceNavigation: false,
+        fetchUser: true,
+    },
     { label: "signup", to: "/signup", authRequired: false },
     { label: "signin", to: "/signin", authRequired: false },
     {

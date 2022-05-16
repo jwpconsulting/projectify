@@ -1,11 +1,10 @@
 <script lang="ts">
     import { page } from "$app/stores";
-    import { user, logout } from "$lib/stores/user";
+    import { user } from "$lib/stores/user";
     import routes from "$lib/routes";
     import { _ } from "svelte-i18n";
     import HeaderLogo from "./assets/headerLogo.svelte";
     import HeaderUser from "./headerUser.svelte";
-    import { onMount } from "svelte";
     import IconHamburgerMenu from "./icons/icon-hamburger-menu.svelte";
     import DrawerModal from "./drawerModal.svelte";
     import IconClose from "./icons/icon-close.svelte";
@@ -87,16 +86,24 @@
             </nav>
             <div class="grow" />
             <nav class="hidden gap-2 md:flex">
-                <a
-                    href="/signin"
-                    class="btn btn-outline btn-primary rounded-full bg-base-100 px-8 capitalize"
-                    >Signin</a
-                >
-                <a
-                    href="/signup"
-                    class="btn btn-primary rounded-full px-8 capitalize"
-                    >Signup</a
-                >
+                {#if userData}
+                    <a
+                        href="/dashboard"
+                        class="btn btn-primary rounded-full px-8 capitalize"
+                        >Continue to Dashboard</a
+                    >
+                {:else}
+                    <a
+                        href="/signin"
+                        class="btn btn-outline btn-primary rounded-full bg-base-100 px-8 capitalize"
+                        >Signin</a
+                    >
+                    <a
+                        href="/signup"
+                        class="btn btn-primary rounded-full px-8 capitalize"
+                        >Signup</a
+                    >
+                {/if}
             </nav>
 
             <button
@@ -142,16 +149,24 @@
             </nav>
             <div class="grow" />
             <nav class="flex flex-col gap-2">
-                <a
-                    href="/signin"
-                    class="btn btn-outline btn-primary rounded-full bg-base-100 px-8 capitalize"
-                    >Signin</a
-                >
-                <a
-                    href="/signup"
-                    class="btn btn-primary rounded-full px-8 capitalize"
-                    >Signup</a
-                >
+                {#if userData}
+                    <a
+                        href="/dashboard"
+                        class="btn btn-primary rounded-full px-8 capitalize"
+                        >Continue to Dashboard</a
+                    >
+                {:else}
+                    <a
+                        href="/signin"
+                        class="btn btn-outline btn-primary rounded-full bg-base-100 px-8 capitalize"
+                        >Signin</a
+                    >
+                    <a
+                        href="/signup"
+                        class="btn btn-primary rounded-full px-8 capitalize"
+                        >Signup</a
+                    >
+                {/if}
             </nav>
         </div>
     </DrawerModal>
