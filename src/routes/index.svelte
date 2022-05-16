@@ -96,7 +96,9 @@
                 >
                     Various problems occur when working.
                 </h2>
-                <div class="grid w-full grid-cols-1 gap-6 md:grid-cols-3">
+                <div
+                    class="grid w-full grid-cols-1 gap-6 gap-y-0  md:grid-cols-3"
+                >
                     {#each commobProblems as item}
                         <div
                             class="mt-28 flex flex-col gap-4 rounded-2xl bg-neutral p-8 text-neutral-content"
