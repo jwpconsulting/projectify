@@ -81,7 +81,8 @@
         </section>
 
         <!-- Section: Common Problems -->
-        <section id="problem" class="px-6 pb-20 md:py-20">
+        <section class="px-6 pb-20 md:py-20">
+            <div class="section-anchor" id="problem" />
             <div
                 class="container flex flex-col items-center justify-center gap-4"
             >
@@ -114,7 +115,8 @@
         </section>
 
         <!-- Section: Solution  -->
-        <section id="solution" class="relative px-6 pt-20">
+        <section class="solution relative px-6 pt-20">
+            <div class="section-anchor" id="solution" />
             <div class="absolute left-8 top-0 h-full overflow-hidden">
                 <BgLogo />
             </div>
@@ -164,7 +166,8 @@
         </section>
 
         <!-- Section Github -->
-        <section id="github" class="relative py-10 px-6">
+        <section class="relative min-h-[100vw] py-10 px-6">
+            <div class="section-anchor" id="github" />
             <div
                 class="container grid grid-cols-1 items-center justify-center gap-4 overflow-hidden rounded-3xl shadow-2xl md:grid-cols-2"
             >
@@ -197,13 +200,25 @@
 
 <style lang="scss">
     section {
-        @apply min-h-16 flex justify-center;
-        &#solution {
+        @apply min-h-16 relative flex justify-center;
+        &.solution {
             background: linear-gradient(
                 -45deg,
                 hsla(var(--p) / 30%),
                 hsla(var(--p) / 60%)
             );
+        }
+
+        > .section-anchor {
+            z-index: 2000;
+            @apply absolute -top-20 left-0;
+
+            @media screen and (max-width: 425px) {
+                &#problem {
+                    opacity: 0.3;
+                    top: -128px !important;
+                }
+            }
         }
 
         .title-shadow {
