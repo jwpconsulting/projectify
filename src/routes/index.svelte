@@ -8,7 +8,6 @@
     import IllSolution from "$lib/components/assets/landing/ill-solution.svelte";
     import PageLayout from "$lib/components/layouts/pageLayout.svelte";
     import { _ } from "svelte-i18n";
-    import A from "./dashboard/[...uuids].svelte";
 
     const heroList = [
         "Simple design that even beginners can use",
@@ -47,7 +46,7 @@
         <!-- Section: Hero -->
         <section class="relative">
             <div
-                class="bg-debug absolute right-0 w-full max-w-4xl overflow-hidden md:top-[-80px] md:h-[500px] md:w-[55%] md:rounded-bl-3xl"
+                class="bg-debug absolute right-0 w-full max-w-4xl overflow-hidden md:top-[0px] md:h-[500px] md:w-[55%] md:rounded-bl-3xl"
             >
                 <img
                     class="md:object-left-center h-full w-full object-cover object-bottom"
