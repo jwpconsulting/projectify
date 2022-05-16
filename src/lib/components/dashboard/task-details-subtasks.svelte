@@ -116,17 +116,20 @@
 
     <div>
         {#each subTasks as it, inx}
-            <label class="label cursor-pointer space-x-2 hover:bg-base-200">
+            <label
+                class="label flex cursor-pointer items-center justify-start gap-4 p-2 hover:bg-base-200"
+            >
                 <input
                     type="checkbox"
-                    class="checkbox checkbox-primary"
+                    class="checkbox checkbox-primary shrink-0"
                     bind:checked={it.done}
                     on:change={(e) => changeSubTaskDone(it)}
                 />
                 <div class="grow">{it.title}</div>
                 <button
                     on:click={() => deleteSubTask(it)}
-                    class="children:w-2 btn btn-ghost btn-circle btn-xs"
+                    class:visible={it.uuid}
+                    class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
                     ><IconTrash /></button
                 >
             </label>
