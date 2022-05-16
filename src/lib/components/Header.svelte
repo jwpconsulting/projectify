@@ -18,15 +18,15 @@
             items = [
                 {
                     label: "Problem",
-                    to: "#problem",
+                    to: "/#problem",
                 },
                 {
                     label: "Solution",
-                    to: "#solution",
+                    to: "/#solution",
                 },
                 {
                     label: "Github",
-                    to: "#github",
+                    to: "/#github",
                 },
             ];
         } else {
