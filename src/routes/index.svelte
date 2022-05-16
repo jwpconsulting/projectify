@@ -184,7 +184,10 @@
                         Projectify has a more active development community.
                     </h2>
                     <a href="/" class="btn-action btn w-fit">Learn more</a>
-                    <div>Currently 1,140 people are participating</div>
+                    <div>
+                        Currently <span class="text-primary font-bold">1,140</span> people
+                        are participating
+                    </div>
                 </div>
             </div>
         </section>
