@@ -127,12 +127,12 @@
                 class="container z-[1] flex flex-col items-center justify-center gap-4 text-primary-content"
             >
                 <h1
-                    class="text-center text-[2.0rem] font-bold leading-[1.2em] sm:text-[3.2rem]"
+                    class="title-shadow text-center text-[2.0rem] font-bold leading-[1.2em] sm:text-[3.2rem]"
                 >
                     Resolve By Projectify
                 </h1>
                 <h2
-                    class="text-center text-[1rem] leading-[1.2em] sm:text-2xl"
+                    class="title-shadow text-center text-[1rem] leading-[1.2em] sm:text-2xl"
                 >
                     A design that allows you to simply group tasks together and
                     share them quickly.
@@ -200,6 +200,10 @@
                 hsla(var(--p) / 30%),
                 hsla(var(--p) / 60%)
             );
+        }
+
+        .title-shadow {
+            text-shadow: 0px 1px 2px rgba(#000, 0.3);
         }
     }
 </style>
