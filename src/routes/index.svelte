@@ -59,7 +59,7 @@
                 <div
                     class="m-6 flex flex-col gap-4 bg-base-100 p-6 md:m-0 md:max-w-md"
                 >
-                    <h1 class="text-4xl md:text-5xl">
+                    <h1 class="text-4xl font-bold md:text-5xl">
                         Fast and easy-to-use project management tool
                     </h1>
                     <ul class="flex flex-col gap-2">
@@ -185,8 +185,9 @@
                     </h2>
                     <a href="/" class="btn-action btn w-fit">Learn more</a>
                     <div>
-                        Currently <span class="text-primary font-bold">1,140</span> people
-                        are participating
+                        Currently <span class="font-bold text-primary"
+                            >1,140</span
+                        > people are participating
                     </div>
                 </div>
             </div>
