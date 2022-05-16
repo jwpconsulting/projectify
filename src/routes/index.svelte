@@ -144,7 +144,7 @@
                 </div>
             </div>
         </section>
-        <section class="flex bg-base-200 px-6 py-10 pt-20">
+        <section class="flex bg-base-200 px-6 py-10 pt-20 md:py-20">
             <div class="container flex">
                 <div
                     class="flex w-full flex-col  items-stretch gap-6 md:grid md:grid-cols-3"
@@ -166,10 +166,10 @@
         </section>
 
         <!-- Section Github -->
-        <section class="relative min-h-[100vw] py-10 px-6">
+        <section class="relative min-h-[100vw] py-10 px-6 md:py-20">
             <div class="section-anchor" id="github" />
             <div
-                class="container grid grid-cols-1 items-center justify-center gap-4 overflow-hidden rounded-3xl shadow-2xl md:grid-cols-2"
+                class="container grid grid-cols-1 items-center justify-center overflow-hidden rounded-3xl shadow-2xl md:grid-cols-2"
             >
                 <div
                     class="flex h-full w-full items-center justify-center bg-[#000] p-8 md:order-last"
@@ -178,7 +178,7 @@
                         <IllGithub />
                     </div>
                 </div>
-                <div class="flex w-full flex-col gap-4 p-10">
+                <div class="flex w-full flex-col gap-4 p-6 md:p-10">
                     <h1 class="text-2xl font-bold">
                         Projectify is 100% open source software
                     </h1>
