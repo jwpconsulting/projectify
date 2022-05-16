@@ -101,7 +101,7 @@
                 >
                     {#each commobProblems as item}
                         <div
-                            class="mt-28 flex flex-col gap-4 rounded-2xl bg-neutral p-8 text-neutral-content"
+                            class="mt-28 flex flex-col gap-4 rounded-2xl bg-neutral p-8 text-neutral-content dark:bg-base-300"
                         >
                             <div
                                 class="-mt-20 flex items-center justify-center md:min-h-[180px]"
@@ -153,7 +153,7 @@
                 >
                     {#each solutions as text, inx}
                         <div
-                            class="flex w-full items-start gap-4 rounded-2xl bg-base-100 p-4 text-2xl font-bold"
+                            class="flex w-full items-start gap-4 rounded-2xl bg-base-100 p-4 text-2xl font-bold dark:bg-base-300"
                         >
                             <div
                                 class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-content"
@@ -171,7 +171,7 @@
         <section class="relative min-h-[100vw] py-10 px-6 md:py-20">
             <div class="section-anchor" id="github" />
             <div
-                class="container grid grid-cols-1 items-center justify-center overflow-hidden rounded-3xl shadow-2xl md:grid-cols-2"
+                class="container grid grid-cols-1 items-center justify-center overflow-hidden rounded-3xl shadow-2xl dark:bg-base-300 md:grid-cols-2"
             >
                 <div
                     class="flex h-full w-full items-center justify-center bg-[#000] p-8 md:order-last"
