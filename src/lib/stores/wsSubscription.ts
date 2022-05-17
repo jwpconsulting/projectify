@@ -67,6 +67,8 @@ export class WSSubscriptionStore {
     }
 
     async retryConnection(now = false): Promise<void> {
+        console.log("retryConnection", this.retryingConnection, this.url);
+
         if (this.retryingConnection) {
             return;
         }
@@ -194,10 +196,13 @@ function checkAllConnectionStatus() {
     activeWSConnections.set(activeCon);
 
     if (activeWSS != activeCon) {
+        console.log("activeWSS", activeWSS, "activeCon", activeCon);
+
         for (const url in stores) {
             const wsss = stores[url];
             if (wsss) {
                 wsss.retryConnection(true);
+                console.log("wsss.url", wsss.url, url);
             }
         }
     }
