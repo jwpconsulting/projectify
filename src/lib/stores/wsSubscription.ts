@@ -80,6 +80,9 @@ export class WSSubscriptionStore {
 
         this.retryTime *= this.retryTimeMult;
         this.retryTime = Math.min(this.retryTime, this.maxRetrieTime);
+
+        console.log("now", now, "this.retryTime", this.retryTime);
+
         if (now) {
             this.retryTime = 0;
         } else {
@@ -148,17 +151,17 @@ function startWatchDog(): void {
     clearInterval(watchDogTimer);
     watchDogTimer = setInterval(() => {
         const now = Date.now();
-        const deltaTime = now - watchDogLastTime;
+        // const deltaTime = now - watchDogLastTime;
         watchDogLastTime = now;
 
-        if (deltaTime > watchDogInterval * 2) {
-            for (const url in stores) {
-                const wsss = stores[url];
-                if (wsss) {
-                    wsss.retryConnection(true);
-                }
-            }
-        }
+        // if (deltaTime > watchDogInterval * 2) {
+        //     for (const url in stores) {
+        //         const wsss = stores[url];
+        //         if (wsss) {
+        //             wsss.retryConnection(true);
+        //         }
+        //     }
+        // }
 
         checkAllConnectionStatus();
     }, watchDogInterval);
@@ -180,15 +183,14 @@ function stopWatchDog(): void {
 function checkAllConnectionStatus() {
     let activeWSS = 0;
     let activeCon = 0;
+
+    // const readyMsgs = ["Connecitng", "OPEN", "Closing", "Closed"];
     for (const url in stores) {
         const wsss = stores[url];
 
         if (wsss) {
             activeWSS++;
-            if (
-                wsss.socket &&
-                wsss.socket.readyState >= WebSocket.CONNECTING
-            ) {
+            if (wsss.socket && wsss.socket.readyState <= WebSocket.OPEN) {
                 activeCon++;
             }
         }
