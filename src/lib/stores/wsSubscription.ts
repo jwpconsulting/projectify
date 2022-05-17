@@ -201,8 +201,8 @@ function checkAllConnectionStatus() {
         for (const url in stores) {
             const wsss = stores[url];
             if (wsss) {
-                wsss.retryConnection(true);
                 console.log("wsss.url", wsss.url, url);
+                wsss.retryConnection(true);
             }
         }
     }
