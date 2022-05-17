@@ -8,7 +8,6 @@ type WSSubscriber = Subscriber<WSStore>;
 
 export const activeWSSubscriptions = writable(0);
 export const activeWSConnections = writable(0);
-
 export class WSSubscriptionStore {
     public store: WSStore;
     subscribers = [];
@@ -214,4 +213,22 @@ function checkAllConnectionStatus() {
 
 if (browser) {
     window["checkAllConnectionStatus"] = checkAllConnectionStatus;
+}
+
+// Online connection
+
+export const online = writable(true);
+
+if (browser) {
+    setTimeout(() => {
+        online.set(navigator.onLine);
+    }, 1000);
+
+    window.addEventListener("offline", () => {
+        online.set(false);
+    });
+
+    window.addEventListener("online", () => {
+        online.set(true);
+    });
 }
