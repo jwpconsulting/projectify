@@ -87,9 +87,10 @@ export class WSSubscriptionStore {
         }
 
         if (this.socket && this.socket.readyState == WebSocket.CLOSED) {
-            this.retryingConnection = false;
             this.createNewConnection();
         }
+
+        this.retryingConnection = false;
     }
 
     dispatch(): void {
@@ -184,10 +185,11 @@ function checkAllConnectionStatus() {
 
         if (wsss) {
             activeWSS++;
-            if (wsss.socket && wsss.socket.readyState <= WebSocket.OPEN) {
-                {
-                    activeCon++;
-                }
+            if (
+                wsss.socket &&
+                wsss.socket.readyState >= WebSocket.CONNECTING
+            ) {
+                activeCon++;
             }
         }
     }
