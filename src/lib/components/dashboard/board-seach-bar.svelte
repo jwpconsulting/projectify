@@ -37,6 +37,7 @@
         filtersOpen = !filtersOpen;
     }
 
+    let userPickerEl;
     let userPickerOpen = false;
 
     function onUserSelected({ detail: { user } }) {
@@ -102,7 +103,15 @@
 
             {#if userPickerOpen}
                 <div
-                    on:blur={() => (userPickerOpen = false)}
+                    bind:this={userPickerEl}
+                    on:blur|capture={(e) => {
+                        if (
+                            e.relatedTarget &&
+                            !userPickerEl.contains(e.relatedTarget)
+                        ) {
+                            userPickerOpen = false;
+                        }
+                    }}
                     tabindex="0"
                     class="absolute top-11 right-0 z-10 w-64 max-w-md"
                 >
