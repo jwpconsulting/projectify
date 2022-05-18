@@ -42,7 +42,7 @@
     let taskModified = false;
     let isSaving = false;
 
-    let taskWSStrore;
+    let taskWSStrore = null;
 
     function reset() {
         res = null;
@@ -69,15 +69,17 @@
     }
 
     $: {
-        if (res && !$res.loading) {
-            if (!$res.error) {
-                taskWSStrore = getSubscriptionForCollection(
-                    "task",
-                    $currenTaskDetailsUUID
-                );
-            } else {
-                goto("/error/task-not-found");
-            }
+        if (res && !$res.loading && $res.error) {
+            goto("/error/task-not-found");
+        }
+    }
+
+    $: {
+        if ($currenTaskDetailsUUID) {
+            taskWSStrore = getSubscriptionForCollection(
+                "task",
+                $currenTaskDetailsUUID
+            );
         }
     }
 
