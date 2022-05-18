@@ -209,6 +209,8 @@ function checkAllConnectionStatus() {
             }
         }
     }
+
+    return { activeWSS, activeCon, stores };
 }
 
 if (browser) {
