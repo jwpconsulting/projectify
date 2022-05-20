@@ -20,12 +20,14 @@
 
 <ul class="tabs px-6">
     {#each items as item}
-        <li
-            class:tab-active={$activeTabId === item.id}
-            class="tab tab-bordered font-bold uppercase"
-        >
-            <span on:click={() => selectTab(item.id)}>{item.label}</span>
-        </li>
+        {#if item.hidden !== true}
+            <li
+                class:tab-active={$activeTabId === item.id}
+                class="tab tab-bordered font-bold uppercase"
+            >
+                <span on:click={() => selectTab(item.id)}>{item.label}</span>
+            </li>
+        {/if}
     {/each}
     <div class="h-[2px] grow bg-base-300" />
 </ul>

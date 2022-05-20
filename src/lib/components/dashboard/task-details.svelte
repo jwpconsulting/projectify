@@ -283,7 +283,7 @@
         },
         {
             label: "Discussion",
-            hidde: true,
+            hidden: itsNew,
             id: 2,
         },
     ];
