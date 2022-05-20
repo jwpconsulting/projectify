@@ -75,6 +75,19 @@ class TestWorkspace:
         workspace.remove_user(user)
         assert workspace.users.count() == 0
 
+    def test_remove_user_when_assigned(
+        self,
+        workspace,
+        task,
+        workspace_user,
+        user,
+    ):
+        """Assert that the user is removed when removing the workspace user."""
+        task.assign_to(user)
+        workspace.remove_user(user)
+        task.refresh_from_db()
+        assert task.assignee is None
+
     def test_invite_user(self, workspace, mailoutbox):
         """Test inviting a user."""
         workspace_user_invite = workspace.invite_user("hello@example.com")
@@ -497,6 +510,13 @@ class TestTask:
         """Test assigning to a different workspace's user."""
         task.assign_to(other_user)
         assert task.assignee == other_user
+
+    def test_assign_then_delete_user(self, task, workspace_user):
+        """Assert that nothing happens to the task if the user is gone."""
+        task.assign_to(workspace_user.user)
+        workspace_user.user.delete()
+        task.refresh_from_db()
+        assert task.assignee is None
 
     def test_assign_outside_of_workspace(self, workspace, task, other_user):
         """Test assigning to a different workspace's user."""
