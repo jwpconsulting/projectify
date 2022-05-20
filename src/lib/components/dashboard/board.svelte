@@ -32,6 +32,7 @@
     import BoardSeachBar from "./board-seach-bar.svelte";
     import BoardTaskItem from "./board-task-item.svelte";
     import Loading from "../loading.svelte";
+    import { dashboardSectionsLayout } from "$lib/stores/dashboard-ui";
 
     export let workspaceUUID;
     export let boardUUID = null;
@@ -343,7 +344,10 @@
         {:else}
             <!-- Sections -->
             <div
-                class="flex flex-col grow p-2 overflow-y-auto"
+                class={"flex grow p-2 " +
+                    ($dashboardSectionsLayout == "columns"
+                        ? "section-layout-col"
+                        : "section-layout-row")}
                 use:sortable={{ group: "Sections", draggable: ".section" }}
                 on:dragStart={sectionDragStart}
                 on:dragEnd={sectionDragEnd}
@@ -369,3 +373,13 @@
         {/if}
     </div>
 {/if}
+
+<style lang="scss">
+    .section-layout-row {
+        @apply flex-col overflow-y-auto;
+    }
+
+    .section-layout-col {
+        @apply flex-row overflow-x-auto;
+    }
+</style>

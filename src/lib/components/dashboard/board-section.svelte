@@ -142,9 +142,13 @@
             firstOpen = true;
         }
     }
+
+    $: layoutClass = `layout-${$dashboardSectionsLayout}`;
 </script>
 
-<div class="section m-2 flex select-none bg-base-100 shadow-sm">
+<div
+    class={`${layoutClass} section m-2 flex select-none bg-base-100 shadow-sm`}
+>
     <div
         class="w-1 shrink-0"
         style={`background-color: hsl(${index * 45}, 80%, 75%);`}
@@ -192,9 +196,7 @@
         >
             {#if firstOpen}
                 <div
-                    class:layout-grid={$dashboardSectionsLayout == "grid"}
-                    class:layout-list={$dashboardSectionsLayout == "list"}
-                    class="content min-h-16 relative w-full grow p-2"
+                    class={`${layoutClass} content min-h-16 relative w-full grow p-2`}
                     bind:clientHeight={contentHeght}
                     use:sortable={{ group: "Tasks" }}
                     on:dragStart={taskDragStart}
@@ -257,6 +259,16 @@
             }
         }
     }
+
+    .section {
+        // &.layout-grid {
+        // }
+        // &.layout-list {
+        // }
+        &.layout-columns {
+            @apply w-[50%] shrink-0;
+        }
+    }
     .content {
         &.layout-grid {
             @apply grid;
@@ -265,6 +277,9 @@
         }
         &.layout-list {
             @apply flex flex-col;
+        }
+        &.layout-columns {
+            @apply flex flex-col overflow-y-auto;
         }
     }
 </style>

@@ -4,6 +4,7 @@
     import DropDownMenu from "../dropDownMenu.svelte";
     import IconViewGrid from "../icons/icon-view-grid.svelte";
     import IconViewList from "../icons/icon-view-list.svelte";
+    import IconViewBoards from "../icons/icon-view-boards.svelte";
     import { _ } from "svelte-i18n";
 
     function getLayoutIconFor(layout) {
@@ -12,6 +13,8 @@
                 return IconViewGrid;
             case "list":
                 return IconViewList;
+            case "columns":
+                return IconViewBoards;
         }
     }
 
@@ -21,6 +24,14 @@
 <DropDownMenu
     activeId={$dashboardSectionsLayout}
     items={[
+        {
+            id: "columns",
+            label: "Columns",
+            icon: IconViewBoards,
+            onClick: () => {
+                dashboardSectionsLayout.set("columns");
+            },
+        },
         {
             id: "grid",
             label: "Grid",
