@@ -143,6 +143,22 @@
         };
 
         if (itsNew) {
+            let otherData: any = {};
+            let assignee = task?.assignee?.email || null;
+
+            if (assignee) {
+                otherData.assignee = assignee;
+            }
+
+            if (labels) {
+                otherData.labels = labels.map((l) => l.uuid);
+            }
+
+            if (subTasks) {
+                otherData.subTasks = subTasks;
+                otherData.subTasks = subTasks.map((s) => s.title);
+            }
+
             try {
                 let mRes = await client.mutate({
                     mutation: Mutation_AddTask,
@@ -150,6 +166,7 @@
                         input: {
                             workspaceBoardSectionUuid: $newTaskSectionUUID,
                             ...commonTaskInputs,
+                            ...otherData,
                         },
                     },
                 });
@@ -232,8 +249,6 @@
         }
 
         userPicked = true;
-
-        // taskModified = true;
 
         saveTaskAssignment();
     }
@@ -337,12 +352,13 @@
                 </div>
             {/if}
         </header>
+
         <Tabs items={tabItems} autoPadding={false}>
             <Tab id={1}>
                 <TaskDetailsContent
                     {task}
-                    {subTasks}
-                    {labels}
+                    bind:subTasks
+                    bind:labels
                     bind:taskModified
                 />
             </Tab>

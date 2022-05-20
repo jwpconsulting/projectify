@@ -26,6 +26,10 @@
     }
 
     async function assignLabel(label, assigned) {
+        if (!task?.uuid) {
+            return;
+        }
+
         try {
             await client.mutate({
                 mutation: Mutation_AssignLabel,

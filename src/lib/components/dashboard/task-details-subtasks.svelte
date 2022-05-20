@@ -37,19 +37,21 @@
             },
         ];
 
-        try {
-            let mRes = await client.mutate({
-                mutation: Mutation_AddSubTask,
-                variables: {
-                    input: {
-                        taskUuid: taskUUID,
-                        title: newSubTaskTitle,
-                        description: "",
+        if (taskUUID) {
+            try {
+                let mRes = await client.mutate({
+                    mutation: Mutation_AddSubTask,
+                    variables: {
+                        input: {
+                            taskUuid: taskUUID,
+                            title: newSubTaskTitle,
+                            description: "",
+                        },
                     },
-                },
-            });
-        } catch (error) {
-            console.error(error);
+                });
+            } catch (error) {
+                console.error(error);
+            }
         }
 
         newSubTaskTitle = "";
