@@ -344,7 +344,7 @@
         {:else}
             <!-- Sections -->
             <div
-                class={"flex grow p-2 " +
+                class={"flex p-2 " +
                     ($dashboardSectionsLayout == "columns"
                         ? "section-layout-col"
                         : "section-layout-row")}
@@ -362,7 +362,7 @@
                 {/each}
                 {#if !isDragging}
                     <div
-                        class="shadow-sm ignore-elements bg-base-100 text-primary m-2 p-5 flex space-x-4 font-bold hover:ring hover:cursor-pointer"
+                        class="shrink-0 shadow-sm ignore-elements bg-base-100 text-primary m-2 p-5 flex space-x-4 font-bold hover:ring hover:cursor-pointer"
                         on:click={() => onAddNewSection()}
                     >
                         <IconPlus />
@@ -376,10 +376,10 @@
 
 <style lang="scss">
     .section-layout-row {
-        @apply flex-col overflow-y-auto;
+        @apply grow flex-col overflow-y-auto;
     }
 
     .section-layout-col {
-        @apply flex-row overflow-x-auto;
+        @apply grow flex-row items-start justify-start overflow-x-auto;
     }
 </style>

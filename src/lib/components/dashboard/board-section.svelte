@@ -196,7 +196,7 @@
         >
             {#if firstOpen}
                 <div
-                    class={`${layoutClass} content min-h-16 relative w-full grow p-2`}
+                    class="content min-h-16 relative w-full grow p-2"
                     bind:clientHeight={contentHeght}
                     use:sortable={{ group: "Tasks" }}
                     on:dragStart={taskDragStart}
@@ -261,25 +261,28 @@
     }
 
     .section {
-        // &.layout-grid {
-        // }
-        // &.layout-list {
-        // }
-        &.layout-columns {
-            @apply w-[50%] shrink-0;
-        }
-    }
-    .content {
         &.layout-grid {
-            @apply grid;
-            grid-auto-flow: row dense;
-            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+            .content {
+                @apply grid;
+                grid-auto-flow: row dense;
+                grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+            }
         }
         &.layout-list {
-            @apply flex flex-col;
+            .content {
+                @apply flex flex-col;
+            }
         }
         &.layout-columns {
-            @apply flex flex-col overflow-y-auto;
+            @apply w-[50%] min-w-[400px] shrink-0;
+
+            max-height: calc(100% - 16px);
+            main {
+                @apply overflow-y-auto;
+            }
+            .content {
+                @apply flex flex-col;
+            }
         }
     }
 </style>
