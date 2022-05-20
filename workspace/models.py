@@ -72,14 +72,21 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         self.workspaceuser_set.create(user=user)
         return user
 
+    @transaction.atomic
     def remove_user(self, user):
         """
         Remove user from workspace.
+
+        Removes the user from task assignments.
 
         Return user.
         """
         workspace_user = self.workspaceuser_set.get(user=user)
         workspace_user.delete()
+        tasks = Task.objects.filter_by_workspace(self).filter_by_assignee(
+            user,
+        )
+        tasks.unset_assignees()
         return user
 
     @transaction.atomic
@@ -329,8 +336,22 @@ class WorkspaceBoardSection(
         ]
 
 
-class TaskManager(OrderedModelManager):
+class TaskQuerySet(models.QuerySet):
     """Manager for Task."""
+
+    def filter_by_workspace(self, workspace):
+        """Filter by workspace."""
+        return self.filter(
+            workspace_board_section__workspace_board__workspace=workspace,
+        )
+
+    def filter_by_assignee(self, assignee):
+        """Filter by assignee user."""
+        return self.filter(assignee=assignee)
+
+    def unset_assignees(self):
+        """Unset assignees."""
+        return self.update(assignee=None)
 
     def filter_by_workspace_board_section_pks(
         self,
@@ -373,7 +394,7 @@ class Task(
         settings.AUTH_USER_MODEL,
         null=True,
         blank=True,
-        on_delete=models.PROTECT,
+        on_delete=models.SET_NULL,
         help_text=_("User this task is assigned to."),
     )
     deadline = models.DateTimeField(
@@ -386,7 +407,7 @@ class Task(
         through="workspace.TaskLabel",
     )
 
-    objects = TaskManager()
+    objects = TaskQuerySet.as_manager()
 
     def move_to(self, workspace_board_section, order):
         """
