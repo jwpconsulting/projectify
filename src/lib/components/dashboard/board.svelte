@@ -31,6 +31,7 @@
     import BoardSectionLayoutSelector from "./board-section-layout-selector.svelte";
     import BoardSeachBar from "./board-seach-bar.svelte";
     import BoardTaskItem from "./board-task-item.svelte";
+    import Loading from "../loading.svelte";
 
     export let workspaceUUID;
     export let boardUUID = null;
@@ -267,7 +268,7 @@
 
 {#if res && $res.loading}
     <div class="flex grow flex-col items-center justify-center bg-base-200">
-        {$_("loading")}
+        <Loading />
     </div>
 {:else if board}
     <div

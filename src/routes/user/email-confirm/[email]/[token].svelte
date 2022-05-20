@@ -5,6 +5,7 @@
     import { onMount } from "svelte";
     import { _ } from "svelte-i18n";
     import IllustrationSignupFinish from "$lib/components/illustrations/illustration-signup-finish.svelte";
+    import Loading from "$lib/components/loading.svelte";
 
     let userData = null;
     let error;
@@ -27,7 +28,7 @@
 
 <main class="page page-center">
     {#if !userData && !error}
-        {$_("loading")}
+        <Loading />
     {:else if error}
         <div
             class="card text-center shadow-card w-full max-w-xl transform-gpu"

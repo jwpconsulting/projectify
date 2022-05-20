@@ -283,6 +283,7 @@
         },
         {
             label: "Discussion",
+            hidde: true,
             id: 2,
         },
     ];
