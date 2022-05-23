@@ -140,6 +140,16 @@ body {
         @apply border-none bg-gradient-to-l from-accent to-primary-focus;
         @apply rounded-full px-8;
     }
+
+    .btn-float {
+        @apply border-primary border-opacity-30 bg-primary-content text-primary;
+
+        &:active,
+        &:focus,
+        &:hover {
+            @apply bg-primary bg-opacity-30;
+        }
+    }
 }
 
 ::-webkit-progress-value {

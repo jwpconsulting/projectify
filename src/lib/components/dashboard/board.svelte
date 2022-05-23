@@ -33,6 +33,8 @@
     import BoardTaskItem from "./board-task-item.svelte";
     import Loading from "../loading.svelte";
     import { dashboardSectionsLayout } from "$lib/stores/dashboard-ui";
+    import IconArrowLeft from "../icons/icon-arrow-left.svelte";
+    import IconArrowRight from "../icons/icon-arrow-right.svelte";
 
     export let workspaceUUID;
     export let boardUUID = null;
@@ -370,6 +372,39 @@
                     </div>
                 {/if}
             </div>
+            {#if $dashboardSectionsLayout == "columns"}
+                <!-- <div class="px-4 py-1 flex justify-center items-center gap-4">
+                    <button
+                        class="btn btn-sm btn-primary rounded-full btn-square shadow-sm"
+                    >
+                        <IconArrowLeft />
+                    </button>
+                    <div class="flex gap-2 w justify-center items-center grow">
+                        {#each filteredSections as section, index (section.uuid)}
+                            <div
+                                class="bg-base-100 p-1 w-6 h-6 flex justify-center items-center rounded-full text-sm shadow-sm select-none cursor-pointer hover:bg-primary hover:text-primary-content"
+                            >
+                                {index + 1}
+                            </div>
+                        {/each}
+                    </div>
+                    <button
+                        class="btn btn-sm btn-primary rounded-full btn-square shadow-sm"
+                    >
+                        <IconArrowRight />
+                    </button>
+                </div> -->
+
+                <div class="flex p-3 justify-center items-center ">
+                    <div class="btn-group drop-shadow-sm">
+                        {#each filteredSections as section, index (section.uuid)}
+                            <button class="btn btn-float btn-sm"
+                                >{index + 1}</button
+                            >
+                        {/each}
+                    </div>
+                </div>
+            {/if}
         {/if}
     </div>
 {/if}
@@ -381,5 +416,7 @@
 
     .section-layout-col {
         @apply grow flex-row items-start justify-start overflow-x-auto;
+
+        // padding-left: calc(50% - 100px);
     }
 </style>
