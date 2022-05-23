@@ -10,6 +10,23 @@ import { get, writable } from "svelte/store";
 
 export const isDarkMode = writable(false);
 
+// let _isDarkMode = null;
+// export const isDarkMode = {
+//     ...writable(_isDarkMode),
+//     set(val) {
+//         _isDarkMode = val;
+//     },
+//     get(){
+
+//         if(_isDarkMode !== null){
+//             return _isDarkMode;
+//         }
+
+//         }el
+//         return _isDarkMode;
+//     }
+// }
+
 function setThemeToNode(node: HTMLElement, dark): void {
     node.setAttribute("data-theme", dark ? "app-dark" : "app-light");
     if (dark) {
@@ -20,6 +37,11 @@ function setThemeToNode(node: HTMLElement, dark): void {
 }
 
 const localsThemeKey = "theme";
+
+function systemPreferenceIsDarkMode(): boolean {
+    const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
+    return matchMedia.matches;
+}
 
 if (browser) {
     if (window.matchMedia) {
@@ -46,19 +68,19 @@ if (browser) {
     });
 
     isDarkMode.subscribe((value) => {
+        console.log("isDarkMode", value);
+
+        if (value == null) {
+            value = systemPreferenceIsDarkMode();
+        }
+
         setThemeToNode(document.body, value);
     });
 }
 
 export function saveDarkMode(value: boolean): void {
     localStorage.setItem(localsThemeKey, value ? "dark" : "light");
-
-    if (value == null) {
-        const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
-        isDarkMode.set(matchMedia.matches);
-    } else {
-        isDarkMode.set(value);
-    }
+    isDarkMode.set(value);
 }
 
 export type UserTheme = {
