@@ -52,7 +52,13 @@ if (browser) {
 
 export function saveDarkMode(value: boolean): void {
     localStorage.setItem(localsThemeKey, value ? "dark" : "light");
-    isDarkMode.set(value);
+
+    if (value == null) {
+        const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
+        isDarkMode.set(matchMedia.matches);
+    } else {
+        isDarkMode.set(value);
+    }
 }
 
 export type UserTheme = {
