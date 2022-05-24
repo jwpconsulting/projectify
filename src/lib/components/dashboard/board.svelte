@@ -304,6 +304,19 @@
     function scrollPrev() {
         scrollStep(-1);
     }
+
+    function scrollToInx(inx) {
+        const w = sectionContainerEl.clientWidth;
+        const el: HTMLElement = sectionContainerEl.querySelector(
+            `:scope > div:nth-child(${inx + 1})`
+        );
+        if (el) {
+            sectionContainerEl.scrollTo({
+                left: el.offsetLeft - w / 2 + el.clientWidth / 2,
+                behavior: "smooth",
+            });
+        }
+    }
 </script>
 
 {#if res && $res.loading}
@@ -429,6 +442,7 @@
                     >
                         {#each filteredSections as section, index (section.uuid)}
                             <div
+                                on:click={() => scrollToInx(index)}
                                 class:active={scrollInx == index}
                                 class="relative bg-primary p-1 w-4 h-4 flex justify-center items-center rounded-full text-sm shadow-sm select-none cursor-pointer bg-opacity-30 hover:bg-opacity-50"
                             >
