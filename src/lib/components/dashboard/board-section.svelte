@@ -156,8 +156,10 @@
     <div class="flex grow flex-col">
         <header
             class:open
-            class="drag-handle children:m-1 relative flex h-16 cursor-pointer select-none  items-center p-2"
-            on:click={toggleOpen}
+            class="drag-handle relative flex h-16 cursor-pointer select-none  items-center p-2"
+            on:click={$dashboardSectionsLayout == "columns"
+                ? null
+                : toggleOpen}
             on:focus={onHandlerOver}
             on:mouseover={onHandlerOver}
         >
@@ -274,9 +276,6 @@
             }
         }
         &.layout-columns {
-            // @apply w-[50%] min-w-[400px] shrink-0;
-            @apply snap-center;
-
             max-height: calc(100% - 16px);
             main {
                 @apply overflow-y-auto;

@@ -422,15 +422,17 @@
 
         @apply pb-10;
         @apply snap-x snap-proximity;
-        // padding-left: calc(100% - 200px);
     }
     :global(.section-layout-col > *) {
+        --scroll-padding: 138px;
         flex-shrink: 0;
-        width: calc(70% - 138px);
+        width: calc(70% - var(--scroll-padding));
         min-width: 400px;
         max-width: 800px;
+
+        scroll-snap-align: center;
         &:first-child {
-            margin-left: calc(50% - 128px);
+            margin-left: calc(50% - var(--scroll-padding) * 2);
         }
     }
 
