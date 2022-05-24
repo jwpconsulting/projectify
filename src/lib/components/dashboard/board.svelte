@@ -268,8 +268,41 @@
         }
     }
 
+    let sectionContainerEl: HTMLElement = null;
+    let scrollInx = -1;
+
     function onSectionScroll(e) {
-        console.log(e);
+        const s = sectionContainerEl.scrollLeft;
+        const vw = sectionContainerEl.clientWidth;
+
+        let dist = Number.MAX_SAFE_INTEGER;
+        sectionContainerEl
+            .querySelectorAll(":scope > div")
+            .forEach((el: HTMLElement, inx) => {
+                let newDist = Math.abs(
+                    el.offsetLeft + el.clientWidth / 2 - (s + vw / 2)
+                );
+                if (newDist < dist) {
+                    dist = newDist;
+                    scrollInx = inx;
+                }
+            });
+    }
+    function scrollStep(step: number) {
+        const w = sectionContainerEl.clientWidth;
+        const s = sectionContainerEl.scrollLeft;
+        sectionContainerEl.scrollTo({
+            left: s + (w / 2) * step,
+            behavior: "smooth",
+        });
+    }
+
+    function scrollNext() {
+        scrollStep(1);
+    }
+
+    function scrollPrev() {
+        scrollStep(-1);
     }
 </script>
 
@@ -351,6 +384,7 @@
             <!-- Sections -->
             <div
                 on:scroll={onSectionScroll}
+                bind:this={sectionContainerEl}
                 class={"flex p-2 " +
                     ($dashboardSectionsLayout == "columns"
                         ? "section-layout-col"
@@ -382,25 +416,32 @@
                     class="pagination-controls px-4 pb-6 py-1 flex justify-center items-center gap-4 absolute inset-0"
                 >
                     <button
+                        on:click={scrollPrev}
                         class="btn btn-primary btn-circle shadow-sm diraction-btn"
+                        class:invisible={scrollInx <= 0}
                     >
                         <div class="translate-x-1">
                             <IconArrowLeft />
                         </div>
                     </button>
-                    <div class="flex gap-2 w justify-center self-end grow">
+                    <div
+                        class="pagination-dots flex gap-2 w justify-center self-end grow"
+                    >
                         {#each filteredSections as section, index (section.uuid)}
                             <div
-                                class="relative bg-primary-content p-1 w-4 h-4 flex justify-center items-center rounded-full text-sm shadow-sm select-none cursor-pointer bg-opacity-75 hover:bg-opacity-50"
+                                class:active={scrollInx == index}
+                                class="relative bg-primary p-1 w-4 h-4 flex justify-center items-center rounded-full text-sm shadow-sm select-none cursor-pointer bg-opacity-30 hover:bg-opacity-50"
                             >
                                 <div
-                                    class="bg-primary absolute inset-1 rounded-full"
+                                    class="bg-primary absolute inset-0 rounded-full"
                                 />
                             </div>
                         {/each}
                     </div>
                     <button
+                        on:click={scrollNext}
                         class="btn btn-primary rounded-full btn-square shadow-sm diraction-btn"
+                        class:invisible={scrollInx >= filteredSections.length}
                     >
                         <div class="-translate-x-1">
                             <IconArrowRight />
@@ -419,10 +460,10 @@
 
     :global(.section-layout-col) {
         @apply grow flex-row items-start justify-start overflow-x-auto;
-
         @apply pb-10;
         @apply snap-x snap-proximity;
     }
+
     :global(.section-layout-col > *) {
         --scroll-padding: 138px;
         flex-shrink: 0;
@@ -436,6 +477,20 @@
         }
     }
 
+    .pagination-dots {
+        > * {
+            transition: all ease-in-out 300ms;
+            > * {
+                transform: scale(0.5);
+                transition: all ease-in-out 300ms;
+            }
+            &.active {
+                > * {
+                    transform: scale(1);
+                }
+            }
+        }
+    }
     .pagination-controls {
         pointer-events: none;
         > * {
