@@ -429,7 +429,7 @@
             </div>
             {#if $dashboardSectionsLayout == "columns"}
                 <div
-                    class="pagination-controls px-4 pb-6 py-1 flex justify-center items-center gap-4 absolute inset-0"
+                    class="pagination-controls px-4 pb-6 py-1 flex justify-center items-center gap-4 absolute inset-0 top-[120px]"
                 >
                     <button
                         on:click={scrollPrev}
@@ -512,7 +512,7 @@
     }
 
     .pagination-dots {
-        @apply relative w-fit;
+        @apply relative select-none;
         > * {
             transition: all ease-in-out 300ms;
             > * {
