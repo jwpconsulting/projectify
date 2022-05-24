@@ -159,15 +159,16 @@
             on:focus={onHandlerOver}
             on:mouseover={onHandlerOver}
         >
-            <div
-                class="px-2 transition-transform"
-                style="transform: rotate({openArrowDeg}deg);"
-            >
-                <IconChevronRight />
-            </div>
-            <div class="grid grow font-bold uppercase">
-                <span class="nowrap-ellipsis"
-                    >{section.order} -
+            {#if $dashboardSectionsLayout != "columns"}
+                <div
+                    class="px-2 transition-transform"
+                    style="transform: rotate({openArrowDeg}deg);"
+                >
+                    <IconChevronRight />
+                </div>
+            {/if}
+            <div class="ml-2 grid grow font-bold uppercase">
+                <span class="nowrap-ellipsis">
                     {section.title}
                     {#if !open} ({section.tasks.length}) {/if}
                 </span>
