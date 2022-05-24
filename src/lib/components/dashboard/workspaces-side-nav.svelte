@@ -23,7 +23,7 @@
                     ? workspaces.find((w) => w.uuid === selectedWorkspaceUUID)
                     : null;
 
-                if (!selectedWorkspace) {
+                if (!selectedWorkspace && workspaces.length) {
                     goto("/error/workspace-not-found");
                 }
             }

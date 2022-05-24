@@ -274,7 +274,8 @@
             }
         }
         &.layout-columns {
-            @apply w-[50%] min-w-[400px] shrink-0;
+            // @apply w-[50%] min-w-[400px] shrink-0;
+            @apply snap-center;
 
             max-height: calc(100% - 16px);
             main {

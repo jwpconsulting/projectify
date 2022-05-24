@@ -267,6 +267,10 @@
             console.error(error);
         }
     }
+
+    function onSectionScroll(e) {
+        console.log(e);
+    }
 </script>
 
 {#if res && $res.loading}
@@ -275,7 +279,7 @@
     </div>
 {:else if board}
     <div
-        class="flex grow flex-col bg-base-200 h-full min-h-full overflow-hidden"
+        class="flex grow flex-col bg-base-200 h-full min-h-full overflow-hidden relative"
     >
         <header
             class="flex flex-col bg-base-100 border-b border-base-300 space-y-4"
@@ -346,6 +350,7 @@
         {:else}
             <!-- Sections -->
             <div
+                on:scroll={onSectionScroll}
                 class={"flex p-2 " +
                     ($dashboardSectionsLayout == "columns"
                         ? "section-layout-col"
@@ -373,36 +378,34 @@
                 {/if}
             </div>
             {#if $dashboardSectionsLayout == "columns"}
-                <!-- <div class="px-4 py-1 flex justify-center items-center gap-4">
+                <div
+                    class="pagination-controls px-4 pb-6 py-1 flex justify-center items-center gap-4 absolute inset-0"
+                >
                     <button
-                        class="btn btn-sm btn-primary rounded-full btn-square shadow-sm"
+                        class="btn btn-primary btn-circle shadow-sm diraction-btn"
                     >
-                        <IconArrowLeft />
+                        <div class="translate-x-1">
+                            <IconArrowLeft />
+                        </div>
                     </button>
-                    <div class="flex gap-2 w justify-center items-center grow">
+                    <div class="flex gap-2 w justify-center self-end grow">
                         {#each filteredSections as section, index (section.uuid)}
                             <div
-                                class="bg-base-100 p-1 w-6 h-6 flex justify-center items-center rounded-full text-sm shadow-sm select-none cursor-pointer hover:bg-primary hover:text-primary-content"
+                                class="relative bg-primary-content p-1 w-4 h-4 flex justify-center items-center rounded-full text-sm shadow-sm select-none cursor-pointer bg-opacity-75 hover:bg-opacity-50"
                             >
-                                {index + 1}
+                                <div
+                                    class="bg-primary absolute inset-1 rounded-full"
+                                />
                             </div>
                         {/each}
                     </div>
                     <button
-                        class="btn btn-sm btn-primary rounded-full btn-square shadow-sm"
+                        class="btn btn-primary rounded-full btn-square shadow-sm diraction-btn"
                     >
-                        <IconArrowRight />
+                        <div class="-translate-x-1">
+                            <IconArrowRight />
+                        </div>
                     </button>
-                </div> -->
-
-                <div class="flex p-3 justify-center items-center ">
-                    <div class="btn-group drop-shadow-sm">
-                        {#each filteredSections as section, index (section.uuid)}
-                            <button class="btn btn-float btn-sm"
-                                >{index + 1}</button
-                            >
-                        {/each}
-                    </div>
                 </div>
             {/if}
         {/if}
@@ -414,9 +417,32 @@
         @apply grow flex-col overflow-y-auto;
     }
 
-    .section-layout-col {
+    :global(.section-layout-col) {
         @apply grow flex-row items-start justify-start overflow-x-auto;
 
-        // padding-left: calc(50% - 100px);
+        @apply pb-10;
+        @apply snap-x snap-proximity;
+        // padding-left: calc(100% - 200px);
+    }
+    :global(.section-layout-col > *) {
+        flex-shrink: 0;
+        width: calc(70% - 138px);
+        min-width: 400px;
+        max-width: 800px;
+        &:first-child {
+            margin-left: calc(50% - 128px);
+        }
+    }
+
+    .pagination-controls {
+        pointer-events: none;
+        > * {
+            pointer-events: all;
+        }
+
+        > .diraction-btn {
+            box-shadow: 0 0 0 8px hsla(var(--p) / 0.1),
+                0 3px 8px 0 hsla(var(--p) / 0.3);
+        }
     }
 </style>
