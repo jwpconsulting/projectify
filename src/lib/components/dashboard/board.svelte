@@ -317,6 +317,9 @@
             });
         }
     }
+
+    let sectionToolTipHoverInx = 0;
+    $: sectionTollTipLabel = filteredSections[sectionToolTipHoverInx]?.title;
 </script>
 
 {#if res && $res.loading}
@@ -438,19 +441,36 @@
                         </div>
                     </button>
                     <div
-                        class="pagination-dots flex gap-2 w justify-center self-end grow"
+                        class="flex grow items-center justify-center self-end"
                     >
-                        {#each filteredSections as section, index (section.uuid)}
+                        <div
+                            class="relative pagination-dots flex gap-2 w justify-center "
+                        >
                             <div
-                                on:click={() => scrollToInx(index)}
-                                class:active={scrollInx == index}
-                                class="relative bg-primary p-1 w-4 h-4 flex justify-center items-center rounded-full text-sm shadow-sm select-none cursor-pointer bg-opacity-30 hover:bg-opacity-50"
+                                class="section-tooltip"
+                                style={`--pos-factor: ${
+                                    sectionToolTipHoverInx /
+                                    (filteredSections.length - 1)
+                                }`}
                             >
-                                <div
-                                    class="bg-primary absolute inset-0 rounded-full"
-                                />
+                                {sectionTollTipLabel}
                             </div>
-                        {/each}
+                            {#each filteredSections as section, index (section.uuid)}
+                                <div
+                                    on:click={() => scrollToInx(index)}
+                                    on:mouseover={() =>
+                                        (sectionToolTipHoverInx = index)}
+                                    on:focus={() =>
+                                        (sectionToolTipHoverInx = index)}
+                                    class:active={scrollInx == index}
+                                    class="relative bg-primary p-1 w-4 h-4 flex justify-center items-center rounded-full text-sm shadow-sm select-none cursor-pointer bg-opacity-30 hover:bg-opacity-50"
+                                >
+                                    <div
+                                        class="bg-primary absolute inset-0 rounded-full"
+                                    />
+                                </div>
+                            {/each}
+                        </div>
                     </div>
                     <button
                         on:click={scrollNext}
@@ -492,6 +512,7 @@
     }
 
     .pagination-dots {
+        @apply relative w-fit;
         > * {
             transition: all ease-in-out 300ms;
             > * {
@@ -502,6 +523,40 @@
                 > * {
                     transform: scale(1);
                 }
+            }
+        }
+
+        > .section-tooltip {
+            @apply absolute whitespace-nowrap rounded-full bg-primary-content px-3 py-1 text-xs uppercase text-primary;
+            @apply top-[-32px];
+
+            @apply flex items-center justify-center;
+            opacity: 0;
+            flex-shrink: 0;
+
+            transform: translateX(calc(-50%));
+            left: calc(var(--pos-factor) * (100% - 16px) + 8px);
+
+            transition: all ease-out 200ms;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+
+            &::before {
+                content: "";
+                position: absolute;
+                bottom: -4px;
+
+                width: 0;
+                height: 0;
+                border-style: solid;
+                border-width: 4px 4px 0 4px;
+                border-color: hsla(var(--pc) / 1) transparent transparent
+                    transparent;
+            }
+        }
+
+        &:hover {
+            > .section-tooltip {
+                opacity: 1;
             }
         }
     }
