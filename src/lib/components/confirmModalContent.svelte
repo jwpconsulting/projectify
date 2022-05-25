@@ -112,6 +112,7 @@
                     class:input-error={!valid && input.error}
                     class="input input-bordered"
                     on:keypress={(e) => {
+                        isEditing = true;
                         if (e.key == "Enter") {
                             confirm();
                         }
