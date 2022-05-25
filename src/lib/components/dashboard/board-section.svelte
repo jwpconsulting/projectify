@@ -153,7 +153,7 @@
     <div class="flex grow flex-col">
         <header
             class:open={open || $dashboardSectionsLayout == "columns"}
-            class="drag-handle sticky -top-4 z-[2] flex h-16 cursor-pointer  select-none items-center bg-base-100 p-2"
+            class="drag-handle sticky -top-2 z-[2] flex h-16 cursor-pointer  select-none items-center bg-base-100 p-2"
             on:click={$dashboardSectionsLayout == "columns"
                 ? null
                 : toggleOpen}
