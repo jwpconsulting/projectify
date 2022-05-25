@@ -39,7 +39,7 @@ if (browser) {
         }
 
         matchMedia.addEventListener("change", (e) => {
-            const dark = get(isDarkMode)
+            const dark = get(isDarkMode);
             if (dark == null) {
                 setThemeToNode(document.body, e.matches);
             }
