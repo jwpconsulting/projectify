@@ -288,21 +288,13 @@
                 }
             });
     }
-    function scrollStep(step: number) {
-        const w = sectionContainerEl.clientWidth;
-        const s = sectionContainerEl.scrollLeft;
-        sectionContainerEl.scrollTo({
-            left: s + (w / 2) * step,
-            behavior: "smooth",
-        });
-    }
 
     function scrollNext() {
-        scrollStep(1);
+        scrollToInx(scrollInx + 1);
     }
 
     function scrollPrev() {
-        scrollStep(-1);
+        scrollToInx(scrollInx - 1);
     }
 
     function scrollToInx(inx) {
