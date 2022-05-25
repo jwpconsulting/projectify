@@ -205,7 +205,6 @@
                 >
                     {#each section.tasks as task (task.uuid)}
                         <BoardTaskItem
-                            layout={$dashboardSectionsLayout}
                             {task}
                             showHoverRing={!isDragging}
                             on:click={() =>
@@ -214,7 +213,6 @@
                     {/each}
                     {#if !isDragging}
                         <BoardTaskItem
-                            layout={$dashboardSectionsLayout}
                             on:click={() => openNewTask(section.uuid)}
                         />
                     {/if}

@@ -383,7 +383,6 @@
                 <div class="flex flex-col grow p-2 overflow-y-auto">
                     {#each tasksSearchResults as task}
                         <BoardTaskItem
-                            layout="list"
                             {task}
                             on:click={() => openTaskDetails(task.uuid)}
                         />

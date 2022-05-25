@@ -8,7 +8,7 @@
     import UserProfilePicture from "../userProfilePicture.svelte";
     import LabelList from "./labelList.svelte";
 
-    export let layout: DashboardSectionsLayout;
+    export let layout: "default" | "compact" = "default";
     export let task = null;
     export let showHoverRing = true;
 
@@ -17,8 +17,8 @@
 
 {#if task}
     <div
-        class:item-layout-grid={layout == "grid"}
-        class:item-layout-list={layout == "list"}
+        class:item-layout-compact={layout == "compact"}
+        class:item-layout-default={layout == "default"}
         class="drag-handle item bg-base-100 dark:bg-base-300"
         class:hover:ring={showHoverRing}
         on:click={() => dispatch("click")}
@@ -38,13 +38,7 @@
                 >
                     {#if task.labels.length}
                         <div class="flex grow flex-wrap items-center gap-2">
-                            {#if layout == "list"}
-                                <LabelList
-                                    size={"sm"}
-                                    editable={false}
-                                    labels={task.labels}
-                                />
-                            {:else}
+                            {#if layout == "compact"}
                                 {#each task.labels as label}
                                     <div
                                         style={`--color:${
@@ -53,6 +47,12 @@
                                         class="label-dot h-2 w-2 rounded-full"
                                     />
                                 {/each}
+                            {:else}
+                                <LabelList
+                                    size={"sm"}
+                                    editable={false}
+                                    labels={task.labels}
+                                />
                             {/if}
                         </div>
                     {/if}
@@ -95,7 +95,7 @@
         @apply m-2 flex cursor-pointer items-center space-x-4 overflow-y-hidden rounded-lg border border-base-300 py-4 px-6;
         @apply shrink-0 font-bold;
 
-        &.item-layout-grid {
+        &.item-layout-compact {
             @apply h-24;
             .title {
                 @apply grid grow;
@@ -106,7 +106,7 @@
             }
         }
 
-        &.item-layout-list {
+        &.item-layout-default {
             .item-date {
                 span {
                     @apply text-sm;
