@@ -10,23 +10,6 @@ import { get, writable } from "svelte/store";
 
 export const isDarkMode = writable(false);
 
-// let _isDarkMode = null;
-// export const isDarkMode = {
-//     ...writable(_isDarkMode),
-//     set(val) {
-//         _isDarkMode = val;
-//     },
-//     get(){
-
-//         if(_isDarkMode !== null){
-//             return _isDarkMode;
-//         }
-
-//         }el
-//         return _isDarkMode;
-//     }
-// }
-
 function setThemeToNode(node: HTMLElement, dark): void {
     node.setAttribute("data-theme", dark ? "app-dark" : "app-light");
     if (dark) {
