@@ -39,7 +39,10 @@ if (browser) {
         }
 
         matchMedia.addEventListener("change", (e) => {
-            isDarkMode.set(e.matches);
+            const dark = get(isDarkMode)
+            if (dark == null) {
+                setThemeToNode(document.body, e.matches);
+            }
         });
     }
 
