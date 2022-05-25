@@ -560,6 +560,14 @@
         > .diraction-btn {
             box-shadow: 0 0 0 8px hsla(var(--p) / 0.1),
                 0 3px 8px 0 hsla(var(--p) / 0.3);
+
+            transition: all ease-in-out 100ms;
+            &.invisible {
+                visibility: visible;
+                opacity: 0;
+                transform: scale(0.7);
+                pointer-events: none;
+            }
         }
     }
 </style>
