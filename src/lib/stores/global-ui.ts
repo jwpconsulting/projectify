@@ -8,7 +8,7 @@ import {
 import { browser } from "$app/env";
 import { get, writable } from "svelte/store";
 
-export const isDarkMode = writable(false);
+export const isDarkMode = writable(null);
 
 function setThemeToNode(node: HTMLElement, dark): void {
     node.setAttribute("data-theme", dark ? "app-dark" : "app-light");
