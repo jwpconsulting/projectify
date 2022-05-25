@@ -1,24 +1,25 @@
 <script lang="ts">
     import { isDarkMode, saveDarkMode } from "$lib/stores/global-ui";
+    import { _ } from "svelte-i18n";
     import SettingsField from "../dashboard/settings-field.svelte";
 
     const appearanceItems = [
         {
-            label: "Auto (System preference)",
+            label: $_("auto-system-preference"),
             isDarkMode: null,
         },
         {
-            label: "Light",
+            label: $_("light"),
             isDarkMode: false,
         },
         {
-            label: "Dark",
+            label: $_("dark"),
             isDarkMode: true,
         },
     ];
 </script>
 
-<SettingsField label="Appearance">
+<SettingsField label={$_("appearance")}>
     <div class="flex w-full flex-col">
         {#each appearanceItems as it, inx}
             <div class="form-control flex w-full">
