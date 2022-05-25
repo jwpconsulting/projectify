@@ -33,14 +33,6 @@
             },
         },
         {
-            id: "grid",
-            label: "Grid",
-            icon: IconViewGrid,
-            onClick: () => {
-                dashboardSectionsLayout.set("grid");
-            },
-        },
-        {
             id: "list",
             label: "List",
             icon: IconViewList,
