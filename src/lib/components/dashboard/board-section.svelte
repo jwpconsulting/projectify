@@ -36,7 +36,8 @@
     }
 
     let contentHeght = 0;
-    $: openHeight = open ? contentHeght : 0;
+    $: openHeight =
+        open || $dashboardSectionsLayout == "columns" ? contentHeght : 0;
     $: openArrowDeg = open ? 90 : 0;
 
     async function onEdit() {
@@ -151,7 +152,7 @@
 >
     <div class="flex grow flex-col">
         <header
-            class:open
+            class:open={open || $dashboardSectionsLayout == "columns"}
             class="drag-handle sticky -top-4 z-[2] flex h-16 cursor-pointer  select-none items-center bg-base-100 p-2"
             on:click={$dashboardSectionsLayout == "columns"
                 ? null
@@ -193,7 +194,7 @@
             style="--open-height:{openHeight}px"
             class:hover:ring={isDragging}
         >
-            {#if firstOpen}
+            {#if firstOpen || $dashboardSectionsLayout == "columns"}
                 <div
                     class="content min-h-16 relative w-full grow p-2"
                     bind:clientHeight={contentHeght}
