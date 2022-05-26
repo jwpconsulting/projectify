@@ -43,7 +43,7 @@
     function onUserSelected({ detail: { user } }) {
         userPickerOpen = false;
 
-        if (user?.email == filterUser?.email) {
+        if (user === null) {
             filterUser = null;
         } else {
             filterUser = user;
@@ -81,7 +81,7 @@
                 class="btn-filter btn btn-ghost"
                 on:click={() => (userPickerOpen = !userPickerOpen)}
             >
-                {#if filterUser}
+                {#if filterUser?.email}
                     <UserProfilePicture
                         pictureProps={{
                             size: 16,
@@ -89,6 +89,8 @@
                         }}
                     />
                     <span>{filterUser.fullName || filterUser.email}</span>
+                {:else if filterUser === "unassigned"}
+                    <span>Unassigned</span>
                 {:else}
                     <IconUserCirlce />
                     <span>Filter by assignee</span>
@@ -118,6 +120,7 @@
                     <UserPicker
                         workspaceUUID={$currentWorkspaceUUID}
                         selectedUser={filterUser}
+                        enableUnassignedSelection={true}
                         on:userSelected={onUserSelected}
                     />
                 </div>

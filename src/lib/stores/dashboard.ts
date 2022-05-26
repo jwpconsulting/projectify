@@ -104,7 +104,11 @@ export function filterSectionsTasks(
     if (assegnee) {
         sections = sections.map((section) => {
             const tasks = section.tasks.filter((task) => {
-                return task.assignee?.email === assegnee.email;
+                if (assegnee === "unassigned") {
+                    return !task.assignee;
+                } else {
+                    return task.assignee?.email === assegnee.email;
+                }
             });
 
             return {

@@ -15,6 +15,7 @@
 
     export let workspaceUUID = null;
     export let selectedUser = null;
+    export let enableUnassignedSelection = false;
 
     let dispatch = createEventDispatcher();
 
@@ -140,6 +141,25 @@
                     </a>
                 </li>
             {/each}
+
+            {#if enableUnassignedSelection}
+                <li>
+                    <a
+                        class:active={selectedUser == "unassigned"}
+                        class="flex flex-row space-x-4"
+                        href="/"
+                        on:click|preventDefault={(e) => {
+                            selectUser("unassigned");
+                        }}
+                    >
+                        <div
+                            class="grow flex flex-col justify-center items-center"
+                        >
+                            <div class="font-bold">Unassigned</div>
+                        </div>
+                    </a>
+                </li>
+            {/if}
         </ul>
         <footer
             class="flex divide-x divide-base-300 border-t border-base-300 min-h-8"
