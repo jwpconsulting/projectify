@@ -118,6 +118,14 @@ class MoveTaskAfterInput:
 
 
 @strawberry.input
+class MoveSubTaskInput:
+    """MoveSubTask mutation input."""
+
+    sub_task_uuid: uuid.UUID
+    order: int
+
+
+@strawberry.input
 class AddUserToWorkspaceInput:
     """Input for AddUserToWorkspaceMutation."""
 
@@ -441,6 +449,20 @@ class Mutation:
         task.move_to(workspace_board_section, new_order)
         # Return task
         return task
+
+    @strawberry.field
+    def move_sub_task(self, info, input: MoveSubTaskInput) -> types.SubTask:
+        """Move sub task to a specified position."""
+        # Find sub task
+        sub_task = models.SubTask.objects.get_for_user_and_uuid(
+            info.context.user,
+            input.sub_task_uuid,
+        )
+        # Reorder sub task
+        sub_task.move_to(input.order)
+        # This is necessary to refresh the _order field
+        sub_task.refresh_from_db()
+        return sub_task
 
     @strawberry.field
     def add_user_to_workspace(

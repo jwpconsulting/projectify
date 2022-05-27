@@ -191,6 +191,59 @@ mutation MoveTaskAfter(
 
 
 @pytest.mark.django_db
+class TestMoveSubTaskMutation:
+    """Test MoveSubTaskMutation."""
+
+    query = """
+mutation MoveSubTaskMutation($uuid: UUID!) {
+    moveSubTask(
+        input: {
+            subTaskUuid: $uuid,
+            order: 1
+        }
+    ) {
+        uuid
+        order
+    }
+}
+"""
+
+    def test_query(
+        self,
+        task,
+        sub_task,
+        graphql_query_user,
+        workspace_user,
+    ):
+        """Test the query."""
+        other_sub_task = factory.SubTaskFactory(
+            task=sub_task.task,
+        )
+        assert list(task.subtask_set.all().values("uuid", "_order")) == [
+            {"uuid": sub_task.uuid, "_order": 0},
+            {"uuid": other_sub_task.uuid, "_order": 1},
+        ]
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(sub_task.uuid),
+            },
+        )
+        assert list(task.subtask_set.all().values("uuid", "_order")) == [
+            {"uuid": other_sub_task.uuid, "_order": 0},
+            {"uuid": sub_task.uuid, "_order": 1},
+        ]
+        assert result == {
+            "data": {
+                "moveSubTask": {
+                    "uuid": str(sub_task.uuid),
+                    "order": 1,
+                },
+            },
+        }
+
+
+@pytest.mark.django_db
 class TestAddUserToWorkspaceMutation:
     """Test AddUserToWorkspaceMutation."""
 

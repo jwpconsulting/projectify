@@ -197,12 +197,16 @@ class SubTask:
         """Resolve task with data loader."""
         return self.task
 
+    @strawberry.field
+    def order(self) -> int:
+        """Resolve order field."""
+        return self._order
+
     created: datetime.datetime
     modified: datetime.datetime
     title: str
     description: str
     uuid: uuid.UUID
-    order: int
     done: bool
 
 
