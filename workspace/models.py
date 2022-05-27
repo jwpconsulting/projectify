@@ -17,10 +17,6 @@ from django_extensions.db.models import (
     TimeStampedModel,
     TitleDescriptionModel,
 )
-from ordered_model.models import (
-    OrderedModel,
-    OrderedModelManager,
-)
 from user import models as user_models
 
 from . import (
@@ -573,7 +569,7 @@ class TaskLabel(models.Model):
         unique_together = ("task", "label")
 
 
-class SubTaskManager(OrderedModelManager):
+class SubTaskQuerySet(models.QuerySet):
     """Sub task queryset."""
 
     def filter_by_task_pks(self, task_pks):
@@ -590,7 +586,6 @@ class SubTaskManager(OrderedModelManager):
 
 
 class SubTask(
-    OrderedModel,
     TitleDescriptionModel,
     TimeStampedModel,
     models.Model,
@@ -606,14 +601,20 @@ class SubTask(
         default=False,
         help_text=_("Designate whether this sub task is done"),
     )
-    order_with_respect_to = "task"
 
-    objects = SubTaskManager()
+    objects = SubTaskQuerySet.as_manager()
 
     class Meta:
         """Meta."""
 
-        ordering = ("task", "order")
+        order_with_respect_to = "task"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["task", "_order"],
+                name="unique_sub_task_order",
+                deferrable=models.Deferrable.DEFERRED,
+            )
+        ]
 
 
 class ChatMessageQuerySet(models.QuerySet):
