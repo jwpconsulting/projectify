@@ -633,6 +633,53 @@ class TestSubTask:
         """Test that sub task correctly belongs to task."""
         assert sub_task.task == task
 
+    def test_moving_sub_task(self, task, sub_task):
+        """Test moving a sub task around."""
+        other_sub_task = factory.SubTaskFactory(
+            task=task,
+        )
+        other_other_sub_task = factory.SubTaskFactory(
+            task=task,
+        )
+        assert list(task.subtask_set.all()) == [
+            sub_task,
+            other_sub_task,
+            other_other_sub_task,
+        ]
+        sub_task.move_to(0)
+        assert list(task.subtask_set.all()) == [
+            sub_task,
+            other_sub_task,
+            other_other_sub_task,
+        ]
+        sub_task.move_to(2)
+        assert list(task.subtask_set.all()) == [
+            other_sub_task,
+            other_other_sub_task,
+            sub_task,
+        ]
+        sub_task.move_to(1)
+        assert list(task.subtask_set.all()) == [
+            other_sub_task,
+            sub_task,
+            other_other_sub_task,
+        ]
+
+    def test_moving_within_empty_task(
+        self,
+        task,
+        sub_task,
+    ):
+        """Test moving when there are no other sub tasks."""
+        assert list(task.subtask_set.all()) == [
+            sub_task,
+        ]
+        sub_task.move_to(1)
+        assert list(task.subtask_set.all()) == [
+            sub_task,
+        ]
+        assert sub_task._order == 0
+
 
 @pytest.mark.django_db
 class TestChatMessageManager:
