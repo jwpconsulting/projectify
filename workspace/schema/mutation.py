@@ -113,8 +113,8 @@ class MoveTaskAfterInput:
     """MoveTaskAfter mutation input."""
 
     task_uuid: uuid.UUID
-    after_task_uuid: uuid.UUID
     workspace_board_section_uuid: uuid.UUID
+    after_task_uuid: uuid.UUID | None = UNSET
 
 
 @strawberry.input
@@ -441,12 +441,15 @@ class Mutation:
             input.task_uuid,
         )
         # Find after task
-        after_task = models.Task.objects.get_for_user_and_uuid(
-            info.context.user,
-            input.after_task_uuid,
-        )
+        if not is_unset(input.after_task_uuid) and input.after_task_uuid:
+            after_task = models.Task.objects.get_for_user_and_uuid(
+                info.context.user,
+                input.after_task_uuid,
+            )
+            new_order = after_task._order + 1
+        else:
+            new_order = 0
         # Reorder task
-        new_order = after_task._order + 1
         task.move_to(workspace_board_section, new_order)
         # Return task
         task.refresh_from_db()

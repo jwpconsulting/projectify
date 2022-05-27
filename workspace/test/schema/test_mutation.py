@@ -140,7 +140,7 @@ class TestMoveTaskAfterMutation:
     query = """
 mutation MoveTaskAfter(
     $taskUuid: UUID!,
-    $afterTaskUuid: UUID!,
+    $afterTaskUuid: UUID,
     $sectionUuid: UUID!
 ) {
     moveTaskAfter(
@@ -191,6 +191,42 @@ mutation MoveTaskAfter(
         assert tasks == [
             {"uuid": other_task.uuid},
             {"uuid": task.uuid},
+        ]
+
+    def test_move_no_after_task(
+        self,
+        task,
+        other_task,
+        workspace_board_section,
+        graphql_query_user,
+        workspace_user,
+    ):
+        """Test moving after nothing."""
+        tasks = list(models.Task.objects.all().values("uuid"))
+        assert tasks == [
+            {"uuid": task.uuid},
+            {"uuid": other_task.uuid},
+        ]
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "taskUuid": str(task.uuid),
+                "afterTaskUuid": None,
+                "sectionUuid": str(workspace_board_section.uuid),
+            },
+        )
+        assert result == {
+            "data": {
+                "moveTaskAfter": {
+                    "title": task.title,
+                    "order": 0,
+                }
+            }
+        }
+        tasks = list(models.Task.objects.all().values("uuid"))
+        assert tasks == [
+            {"uuid": task.uuid},
+            {"uuid": other_task.uuid},
         ]
 
 
