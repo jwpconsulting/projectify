@@ -604,6 +604,28 @@ class SubTask(
 
     objects = SubTaskQuerySet.as_manager()
 
+    def move_to(self, order):
+        """
+        Move to specified order n within task.
+
+        No save required.
+        """
+        neighbor_subtasks = self.task.subtask_set.select_for_update()
+        with transaction.atomic():
+            # Force queryset to be evaluated to lock them for the time of
+            # this transaction
+            len(neighbor_subtasks)
+            current_task = self.task
+            # Django docs wrong, need to cast to list
+            order_list = list(current_task.get_subtask_order())
+            # The list is ordered by pk, which is not uuid for us
+            current_object_index = order_list.index(self.pk)
+            # Mutate to perform move operation
+            order_list.insert(order, order_list.pop(current_object_index))
+            # Set new order
+            current_task.set_subtask_order(order_list)
+            current_task.save()
+
     class Meta:
         """Meta."""
 
