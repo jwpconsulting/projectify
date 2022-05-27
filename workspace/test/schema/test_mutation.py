@@ -132,6 +132,65 @@ mutation MoveTask($taskUuid: UUID!, $sectionUuid: UUID!) {
 
 
 @pytest.mark.django_db
+class TestMoveTaskAfterMutation:
+    """Test MoveTaskAfterMutation."""
+
+    query = """
+mutation MoveTaskAfter(
+    $taskUuid: UUID!,
+    $afterTaskUuid: UUID!,
+    $sectionUuid: UUID!
+) {
+    moveTaskAfter(
+        input: {
+            taskUuid: $taskUuid,
+            afterTaskUuid: $afterTaskUuid,
+            workspaceBoardSectionUuid: $sectionUuid
+        }
+    ) {
+        title
+    }
+}
+
+"""
+
+    def test_move(
+        self,
+        task,
+        other_task,
+        workspace_board_section,
+        graphql_query_user,
+        workspace_user,
+    ):
+        """Test moving."""
+        tasks = list(models.Task.objects.all().values("uuid"))
+        assert tasks == [
+            {"uuid": task.uuid},
+            {"uuid": other_task.uuid},
+        ]
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "taskUuid": str(task.uuid),
+                "afterTaskUuid": str(other_task.uuid),
+                "sectionUuid": str(workspace_board_section.uuid),
+            },
+        )
+        assert result == {
+            "data": {
+                "moveTaskAfter": {
+                    "title": task.title,
+                }
+            }
+        }
+        tasks = list(models.Task.objects.all().values("uuid"))
+        assert tasks == [
+            {"uuid": other_task.uuid},
+            {"uuid": task.uuid},
+        ]
+
+
+@pytest.mark.django_db
 class TestAddUserToWorkspaceMutation:
     """Test AddUserToWorkspaceMutation."""
 

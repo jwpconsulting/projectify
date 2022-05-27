@@ -109,6 +109,15 @@ class MoveTaskInput:
 
 
 @strawberry.input
+class MoveTaskAfterInput:
+    """MoveTaskAfter mutation input."""
+
+    task_uuid: uuid.UUID
+    after_task_uuid: uuid.UUID
+    workspace_board_section_uuid: uuid.UUID
+
+
+@strawberry.input
 class AddUserToWorkspaceInput:
     """Input for AddUserToWorkspaceMutation."""
 
@@ -404,6 +413,32 @@ class Mutation:
         )
         # Reorder task
         task.move_to(workspace_board_section, input.order)
+        # Return task
+        return task
+
+    @strawberry.field
+    def move_task_after(self, info, input: MoveTaskAfterInput) -> types.Task:
+        """Move task after another task."""
+        # Find workspace board section
+        workspace_board_section = (
+            models.WorkspaceBoardSection.objects.get_for_user_and_uuid(
+                info.context.user,
+                input.workspace_board_section_uuid,
+            )
+        )
+        # Find task
+        task = models.Task.objects.get_for_user_and_uuid(
+            info.context.user,
+            input.task_uuid,
+        )
+        # Find after task
+        after_task = models.Task.objects.get_for_user_and_uuid(
+            info.context.user,
+            input.after_task_uuid,
+        )
+        # Reorder task
+        new_order = after_task._order + 1
+        task.move_to(workspace_board_section, new_order)
         # Return task
         return task
 
