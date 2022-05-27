@@ -306,18 +306,18 @@ class WorkspaceBoardSection(
             # Force queryset to be evaluated to lock them for the time of
             # this transaction
             len(neighbor_sections)
-            current_workspace = self.workspace_board
+            current_workspace_board = self.workspace_board
             # Django docs wrong, need to cast to list
             order_list = list(
-                current_workspace.get_workspaceboardsection_order()
+                current_workspace_board.get_workspaceboardsection_order()
             )
             # The list is ordered by pk, which is not uuid for us
             current_object_index = order_list.index(self.pk)
             # Mutate to perform move operation
             order_list.insert(order, order_list.pop(current_object_index))
             # Set new order
-            current_workspace.set_workspaceboardsection_order(order_list)
-            current_workspace.save()
+            current_workspace_board.set_workspaceboardsection_order(order_list)
+            current_workspace_board.save()
 
     class Meta:
         """Meta."""
