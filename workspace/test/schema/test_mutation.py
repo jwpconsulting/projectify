@@ -98,9 +98,10 @@ class TestMoveTaskMutation:
     query = """
 mutation MoveTask($taskUuid: UUID!, $sectionUuid: UUID!) {
     moveTask(input: {taskUuid: $taskUuid,
-        workspaceBoardSectionUuid: $sectionUuid, order: 2}
+        workspaceBoardSectionUuid: $sectionUuid, order: 1}
     ) {
         title
+        order
     }
 }
 
@@ -126,6 +127,7 @@ mutation MoveTask($taskUuid: UUID!, $sectionUuid: UUID!) {
             "data": {
                 "moveTask": {
                     "title": task.title,
+                    "order": 1,
                 }
             }
         }
@@ -149,6 +151,7 @@ mutation MoveTaskAfter(
         }
     ) {
         title
+        order
     }
 }
 
@@ -180,6 +183,7 @@ mutation MoveTaskAfter(
             "data": {
                 "moveTaskAfter": {
                     "title": task.title,
+                    "order": 1,
                 }
             }
         }

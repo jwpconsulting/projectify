@@ -422,6 +422,7 @@ class Mutation:
         # Reorder task
         task.move_to(workspace_board_section, input.order)
         # Return task
+        task.refresh_from_db()
         return task
 
     @strawberry.field
@@ -448,6 +449,7 @@ class Mutation:
         new_order = after_task._order + 1
         task.move_to(workspace_board_section, new_order)
         # Return task
+        task.refresh_from_db()
         return task
 
     @strawberry.field
