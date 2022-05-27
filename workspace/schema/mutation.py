@@ -32,6 +32,7 @@ class AddWorkspaceBoardInput:
     workspace_uuid: uuid.UUID
     title: str
     description: str
+    deadline: datetime.datetime | None
 
 
 @strawberry.input
@@ -264,6 +265,9 @@ class Mutation:
             title=input.title,
             description=input.description,
         )
+        if not is_unset(input.deadline) and input.deadline:
+            assert input.deadline.tzinfo
+            workspace_board.deadline = input.deadline
         return workspace_board
 
     @strawberry.field
