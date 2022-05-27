@@ -394,6 +394,84 @@ mutation AssignTask($uuid: UUID!, $email: String) {
 
 # Add Mutations
 @pytest.mark.django_db
+class TestAddWorkspaceBoardMutation:
+    """Test AddWorkspaceBoard."""
+
+    query = """
+mutation AddWorkspaceBoard(
+    $workspaceUuid: UUID!,
+    $title: String!,
+    $description: String!,
+    $deadline: DateTime
+) {
+    addWorkspaceBoard(input: {
+        workspaceUuid: $workspaceUuid,
+        title: $title,
+        description: $description,
+        deadline: $deadline
+    }) {
+        title
+        description
+        deadline
+    }
+}
+"""
+
+    def test_query(
+        self,
+        graphql_query_user,
+        workspace,
+        workspace_user,
+    ):
+        """Test query."""
+        now = timezone.now().isoformat()
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "workspaceUuid": str(workspace.uuid),
+                "title": "Hello",
+                "description": "World",
+                "deadline": now,
+            },
+        )
+        assert result == {
+            "data": {
+                "addWorkspaceBoard": {
+                    "title": "Hello",
+                    "description": "World",
+                    "deadline": now,
+                }
+            }
+        }
+
+    def test_query_no_deadline(
+        self,
+        graphql_query_user,
+        workspace,
+        workspace_user,
+    ):
+        """Test query with no deadline specified."""
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "workspaceUuid": str(workspace.uuid),
+                "title": "Hello",
+                "description": "World",
+                "deadline": None,
+            },
+        )
+        assert result == {
+            "data": {
+                "addWorkspaceBoard": {
+                    "title": "Hello",
+                    "description": "World",
+                    "deadline": None,
+                }
+            }
+        }
+
+
+@pytest.mark.django_db
 class TestAddTaskMutation:
     """Test AddTask."""
 
