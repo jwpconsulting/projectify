@@ -78,3 +78,10 @@ if "DISABLE_CSRF_PROTECTION" in os.environ:
     ] = "projectify.middleware.DisableCSRFMiddleware"
 
 CSRF_COOKIE_DOMAIN = ".projectifyapp.com"
+
+
+# Stripe
+STRIPE_PUBLISHABLE_KEY = os.environ["STRIPE_PUBLISHABLE_KEY"]
+STRIPE_SECRET_KEY = os.environ["STRIPE_SECRET_KEY"]
+STRIPE_PRICE_OBJECT = os.environ["STRIPE_PRICE_OBJECT"]
+STRIPE_ENDPOINT_SECRET = os.environ["STRIPE_ENDPOINT_SECRET"]
