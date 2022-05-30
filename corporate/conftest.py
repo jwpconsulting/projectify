@@ -10,3 +10,14 @@ from . import (
 def customer():
     """Create customer."""
     return factory.CustomerFactory()
+
+
+class MockStripeSessionResponse:
+    """Mock StripeSessionResponse."""
+
+    id = "cs_asdjkj123hj4h"
+
+
+def mock_session(*args, **kwargs):
+    """Fixture of MockStripeSessionResponse."""
+    return MockStripeSessionResponse()

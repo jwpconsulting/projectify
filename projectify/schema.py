@@ -1,6 +1,7 @@
 """Projectify project schema."""
 import strawberry
 
+import corporate.schema
 import user.schema
 import workspace.schema
 
@@ -9,6 +10,7 @@ import workspace.schema
 class Query(
     workspace.schema.Query,
     user.schema.Query,
+    corporate.schema.Query,
 ):
     """Query object."""
 
@@ -17,6 +19,7 @@ class Query(
 class Mutation(
     workspace.schema.Mutation,
     user.schema.Mutation,
+    corporate.schema.Mutation,
 ):
     """Mutation object."""
 

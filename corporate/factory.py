@@ -13,6 +13,8 @@ class CustomerFactory(django.DjangoModelFactory):
     """Customer factory."""
 
     workspace = factory.SubFactory("workspace.factory.WorkspaceFactory")
+    seats = factory.Faker("pyint", min_value=1, max_value=98)
+    subscription_status = factory.Iterator(models.Customer.SubscriptionStatus)
 
     class Meta:
         """Meta."""

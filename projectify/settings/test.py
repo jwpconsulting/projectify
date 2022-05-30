@@ -13,4 +13,8 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 EMAIL_EAGER = True
 
 # GraphQL
-GRAPHIQL_ENABLE = False
+GRAPHIQL_ENABLE = False  #
+
+# Stripe
+STRIPE_SECRET_KEY = "undefined"
+STRIPE_ENDPOINT_SECRET = "ajksdhu32"

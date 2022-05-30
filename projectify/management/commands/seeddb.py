@@ -12,6 +12,12 @@ from django.db import (
 )
 
 import tqdm
+from corporate.factory import (
+    CustomerFactory,
+)
+from corporate.models import (
+    Customer,
+)
 from user.factory import (
     SuperUserFactory,
     UserFactory,
@@ -114,9 +120,20 @@ class Command(BaseCommand):
             boards = WorkspaceBoard.objects.all()
             for board in tqdm.tqdm(boards, desc="Workspace boards"):
                 self.populate_workspace_board(board)
+        return list(Workspace.objects.all())
+
+    def create_corporate_accounts(self, workspaces):
+        """Create corporate accounts."""
+        for workspace in tqdm.tqdm(workspaces, desc="Corporate accounts"):
+            if not hasattr(workspace, "customer"):
+                CustomerFactory(
+                    workspace=workspace,
+                    subscription_status=Customer.SubscriptionStatus.ACTIVE,
+                )
 
     @transaction.atomic
     def handle(self, *args, **options):
         """Handle."""
         users = self.create_users()
-        self.create_workspaces(users)
+        workspaces = self.create_workspaces(users)
+        self.create_corporate_accounts(workspaces)

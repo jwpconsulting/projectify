@@ -2,6 +2,11 @@
 from django.apps import (
     AppConfig,
 )
+from django.conf import (
+    settings,
+)
+
+import stripe
 
 
 class CorporateConfig(AppConfig):
@@ -9,3 +14,7 @@ class CorporateConfig(AppConfig):
 
     default_auto_field = "django.db.models.BigAutoField"
     name = "corporate"
+
+    def ready(self):
+        """Execute on loading the app."""
+        stripe.api_key = settings.STRIPE_SECRET_KEY
