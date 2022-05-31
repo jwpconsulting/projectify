@@ -26,6 +26,7 @@ export function sortable(
                         to: e.to,
                         oldIndex: e.oldIndex,
                         newIndex: e.newIndex,
+                        item: e.item,
                     },
                 })
             );
@@ -38,6 +39,7 @@ export function sortable(
                         to: e.to,
                         oldIndex: e.oldIndex,
                         newIndex: e.newIndex,
+                        item: e.item,
                     },
                 })
             );

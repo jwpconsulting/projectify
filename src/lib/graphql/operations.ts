@@ -340,6 +340,14 @@ export const Mutation_MoveTask = gql`
     }
 `;
 
+export const Mutation_MoveTaskAfter = gql`
+    mutation MoveTaskAfter($input: MoveTaskAfterInput!) {
+        moveTaskAfter(input: $input) {
+            uuid
+        }
+    }
+`;
+
 export const Mutation_AddSubTask = gql`
     mutation AddSubTask($input: AddSubTaskInput!) {
         addSubTask(input: $input) {

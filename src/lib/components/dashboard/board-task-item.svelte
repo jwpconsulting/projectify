@@ -22,6 +22,7 @@
         class="drag-handle item bg-base-100 text-left dark:bg-base-300"
         class:hover:ring={showHoverRing}
         on:click={() => dispatch("click")}
+        data-uuid={task.uuid}
     >
         {#if task.assignee}
             <UserProfilePicture

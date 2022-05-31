@@ -11,6 +11,7 @@
     import {
         Mutation_DeleteWorkspaceBoardSection,
         Mutation_MoveTask,
+        Mutation_MoveTaskAfter,
         Mutation_UpdateWorkspaceBoardSection,
     } from "$lib/graphql/operations";
     import ToolBar from "./toolBar.svelte";
@@ -106,6 +107,11 @@
         await delay(10);
         isDragging = false;
 
+        // console.log(detail);
+        const prevUUID =
+            detail.item.previousElementSibling?.getAttribute("data-uuid") ||
+            null;
+
         let task = section.tasks[detail.oldIndex];
         const fromSectionUUID = detail.from.getAttribute("data-uuid");
         const toSectionUUID = detail.to.getAttribute("data-uuid");
@@ -116,7 +122,7 @@
             (fromSectionUUID != toSectionUUID ||
                 detail.newIndex != detail.oldIndex)
         ) {
-            moveTask(task.uuid, toSectionUUID, order);
+            moveTaskAfter(task.uuid, toSectionUUID, prevUUID);
         }
     }
 
@@ -131,6 +137,34 @@
                         order,
                     },
                 },
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function moveTaskAfter(
+        taskUuid,
+        workspaceBoardSectionUuid,
+        afterTaskUuid
+    ) {
+        try {
+            const input: {
+                taskUuid: string;
+                workspaceBoardSectionUuid: string;
+                afterTaskUuid?: string;
+            } = {
+                taskUuid,
+                workspaceBoardSectionUuid,
+            };
+
+            if (afterTaskUuid) {
+                input.afterTaskUuid = afterTaskUuid;
+            }
+
+            let mRes = await client.mutate({
+                mutation: Mutation_MoveTaskAfter,
+                variables: { input },
             });
         } catch (error) {
             console.error(error);
