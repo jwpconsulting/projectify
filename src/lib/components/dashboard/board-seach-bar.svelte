@@ -90,7 +90,7 @@
                     />
                     <span>{filterUser.fullName || filterUser.email}</span>
                 {:else if filterUser === "unassigned"}
-                    <span>Unassigned</span>
+                    <span>{$_("assigned-to-nobody")}</span>
                 {:else}
                     <IconUserCirlce />
                     <span>Filter by assignee</span>

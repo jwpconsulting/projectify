@@ -155,7 +155,9 @@
                         <div
                             class="grow flex flex-col justify-center items-center"
                         >
-                            <div class="font-bold">Unassigned</div>
+                            <div class="font-bold">
+                                {$_("assigned-to-nobody")}
+                            </div>
                         </div>
                     </a>
                 </li>

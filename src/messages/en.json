@@ -137,5 +137,6 @@
     "auto-system-preference": "Auto (System preference)",
     "light": "Light",
     "dark": "Dark",
-    "appearance": "Appearance"
+    "appearance": "Appearance",
+    "assigned-to-nobody": "Assigned to nobody"
 }
