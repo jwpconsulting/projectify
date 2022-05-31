@@ -16,10 +16,10 @@
 </script>
 
 {#if task}
-    <div
+    <button
         class:item-layout-compact={layout == "compact"}
         class:item-layout-default={layout == "default"}
-        class="drag-handle item bg-base-100 dark:bg-base-300"
+        class="drag-handle item bg-base-100 text-left dark:bg-base-300"
         class:hover:ring={showHoverRing}
         on:click={() => dispatch("click")}
     >
@@ -70,9 +70,9 @@
                 <span>{task.title}</span>
             </div>
         </div>
-    </div>
+    </button>
 {:else}
-    <div
+    <button
         class="add-item ignore-elements hover:ring dark:bg-base-300"
         on:click={() => dispatch("click")}
     >
@@ -86,7 +86,7 @@
         >
             {$_("new-task")}
         </div>
-    </div>
+    </button>
 {/if}
 
 <style lang="scss">
