@@ -192,9 +192,6 @@
         }
         &:hover {
             @apply bg-base-200;
-            > * {
-                @apply scale-90;
-            }
         }
 
         &.active {
