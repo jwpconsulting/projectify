@@ -241,7 +241,6 @@
 
         &:hover > * {
             @apply bg-primary-focus text-base-100;
-            @apply scale-75;
             @apply border-0 ring-0;
         }
         &.day-disbled > * {
