@@ -59,6 +59,7 @@
                         input: {
                             workspaceUuid: selectedWorkspaceUUID,
                             title: modalRes.outputs.title,
+                            deadline: modalRes.outputs.deadline,
                             description: "",
                         },
                     },
