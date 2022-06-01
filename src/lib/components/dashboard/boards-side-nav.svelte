@@ -64,10 +64,8 @@
                         },
                     },
                 });
-                res.refetch({ uuid: selectedWorkspaceUUID });
-
+                await res.refetch({ uuid: selectedWorkspaceUUID });
                 selectedBoardUUID = mRes.data.addWorkspaceBoard.uuid;
-
                 gotoDashboard(selectedWorkspaceUUID, selectedBoardUUID);
             } catch (error) {
                 console.error(error);
