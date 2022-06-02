@@ -7,6 +7,7 @@
     import { createEventDispatcher } from "svelte";
     import { _ } from "svelte-i18n";
     import { getDropDown } from "../globalDropDown.svelte";
+    import IconArrowSRight from "../icons/icon-arrow-s-right.svelte";
     import IconEdit from "../icons/icon-edit.svelte";
     import IconMenu from "../icons/icon-menu.svelte";
     import IconPlus from "../icons/icon-plus.svelte";
@@ -25,7 +26,7 @@
     let menuSectionsItems = $currentBoardSections.map((it) => {
         return {
             label: it.title,
-            icon: IconEdit,
+            icon: IconArrowSRight,
             onClick: () => {
                 dispatch("moveTask", {
                     taskUUID: task.uuid,

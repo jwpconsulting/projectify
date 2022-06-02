@@ -7,9 +7,8 @@
 </script>
 
 <script lang="ts">
-    import { offsetLimitPagination } from "@apollo/client/utilities";
-
     import { tick } from "svelte";
+    import IconChevronDown from "./icons/icon-chevron-down.svelte";
 
     let items = null;
     let target: HTMLElement = null;
@@ -105,11 +104,23 @@
                             }}
                         >
                             <svelte:component this={it.icon} />
-                            <span>{it.label}</span>
+                            <span class="grow">{it.label}</span>
+
+                            {#if it.items}
+                                <div
+                                    class:rotate-180={it.open}
+                                    class="icon-sm transition-all"
+                                >
+                                    <IconChevronDown />
+                                </div>
+                            {/if}
                         </a>
 
                         {#if it.items}
-                            <ul class:h-0={!it.open} class="overflow-hidden">
+                            <ul
+                                class:h-0={!it.open}
+                                class="menu overflow-hidden pl-0"
+                            >
                                 {#each it.items as it}
                                     <li>
                                         <a

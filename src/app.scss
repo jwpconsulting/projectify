@@ -116,12 +116,25 @@ body {
 
     .menu li > :where(a:hover) {
         @apply bg-secondary;
+        @apply text-secondary-content;
     }
     .menu li > * > svg {
         @apply h-4 w-4;
     }
     .menu .menu-item-active {
         @apply bg-primary text-base-content;
+    }
+
+    .menu ul {
+        @apply pl-0;
+        li > a{
+            @apply pl-6;
+            @apply bg-secondary-focus;
+            @apply bg-opacity-10;
+            &:hover{
+                @apply bg-opacity-75;
+            }
+        }
     }
 
     .label {
@@ -148,6 +161,13 @@ body {
         &:focus,
         &:hover {
             @apply bg-primary bg-opacity-30;
+        }
+    }
+
+    .icon-sm{
+        > svg {
+            @apply h-4 w-4;
+            stroke-width: 1px;
         }
     }
 }

@@ -27,7 +27,7 @@ const factoryDarkThemeColors = {
     "primary-content": "#ffffff",
     "secondary": "#BEDCFF",
     "secondary-focus": "#76B4F9",
-    "secondary-content": "#ffffff",
+    "secondary-content": "#333333",
     "accent": "#EF7D69",
     "accent-focus": "#F05F46",
     "accent-content": "#ffffff",
@@ -100,8 +100,7 @@ module.exports = {
     daisyui: {
         styled: true,
         darkTheme: "app-dark",
-        themes: [
-            {
+        themes: [{
                 "app-light": {
                     fontFamily: "Roboto, sans-serif",
                     ...factoryLightThemeColors,
