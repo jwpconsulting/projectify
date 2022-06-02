@@ -7,10 +7,19 @@
     import { createEventDispatcher } from "svelte";
     import { _ } from "svelte-i18n";
     import { getDropDown } from "../globalDropDown.svelte";
+    import IconArrowExpand from "../icons/icon-arrow-expand.svelte";
+    import IconArrowSDown from "../icons/icon-arrow-s-down.svelte";
     import IconArrowSRight from "../icons/icon-arrow-s-right.svelte";
+    import IconArrowSUp from "../icons/icon-arrow-s-up.svelte";
+    import IconChatAlt from "../icons/icon-chat-alt.svelte";
+    import IconCopyLink from "../icons/icon-copy-link.svelte";
     import IconEdit from "../icons/icon-edit.svelte";
     import IconMenu from "../icons/icon-menu.svelte";
     import IconPlus from "../icons/icon-plus.svelte";
+    import IconSortAscending from "../icons/icon-sort-ascending.svelte";
+    import IconSortDescending from "../icons/icon-sort-descending.svelte";
+    import IconSwitchVertical from "../icons/icon-switch-vertical.svelte";
+    import IconTrash from "../icons/icon-trash.svelte";
     import UserProfilePicture from "../userProfilePicture.svelte";
     import LabelList from "./labelList.svelte";
 
@@ -39,40 +48,40 @@
     let dropDownItems = [
         {
             label: "Open",
-            icon: IconEdit,
+            icon: IconArrowExpand,
         },
         {
             label: "Move to section",
-            icon: IconEdit,
+            icon: IconSwitchVertical,
             items: menuSectionsItems,
         },
         {
             label: "Move to top",
-            icon: IconEdit,
+            icon: IconSortAscending,
         },
         {
             label: "Move to bottom",
-            icon: IconEdit,
+            icon: IconSortDescending,
         },
         {
             label: "Move to previews position",
-            icon: IconEdit,
+            icon: IconArrowSUp,
         },
         {
             label: "Move to next position",
-            icon: IconEdit,
+            icon: IconArrowSDown,
         },
         {
             label: "Copy link",
-            icon: IconEdit,
+            icon: IconCopyLink,
         },
         {
             label: "Goto updates",
-            icon: IconEdit,
+            icon: IconChatAlt,
         },
         {
             label: "Delete task",
-            icon: IconEdit,
+            icon: IconTrash,
         },
     ];
 
