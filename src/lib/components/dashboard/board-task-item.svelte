@@ -49,6 +49,9 @@
         {
             label: "Open",
             icon: IconArrowExpand,
+            onClick: () => {
+                dispatch("click");
+            },
         },
         {
             label: "Move to section",
