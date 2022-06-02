@@ -4,6 +4,7 @@
     import { dateStringToLocal } from "$lib/utils/date";
     import { createEventDispatcher } from "svelte";
     import { _ } from "svelte-i18n";
+    import IconMenu from "../icons/icon-menu.svelte";
     import IconPlus from "../icons/icon-plus.svelte";
     import UserProfilePicture from "../userProfilePicture.svelte";
     import LabelList from "./labelList.svelte";
@@ -34,8 +35,20 @@
         {/if}
         <div class="flex max-h-full grow flex-col overflow-hidden">
             {#if task.labels.length || task.deadline}
+                <div class="title flex flex-row font-bold">
+                    <div class="grow">
+                        <span>{task.title}</span>
+                    </div>
+                    <button
+                        on:click|stopPropagation={() => {
+                            console.log("click");
+                        }}
+                        class="btn btn-outline btn-primary btn-circle btn-xs shrink-0"
+                        ><IconMenu /></button
+                    >
+                </div>
                 <div
-                    class="my-1 mb-2 flex items-center space-x-2 border-b border-base-300 pb-3 dark:border-base-100"
+                    class="my-1 mt-2 flex items-start space-x-2 border-t border-base-300 pt-3 dark:border-base-100"
                 >
                     {#if task.labels.length}
                         <div class="flex grow flex-wrap items-center gap-2">
@@ -57,19 +70,15 @@
                             {/if}
                         </div>
                     {/if}
-                    {#if task.deadline}
+                    <!-- {#if task.deadline}
                         <div class="item-date grid h-4 shrink-0 items-center">
                             <span class="nowrap-ellipsis text-xs"
                                 >Date {dateStringToLocal(task.deadline)}</span
                             >
                         </div>
-                    {/if}
+                    {/if} -->
                 </div>
             {/if}
-
-            <div class="title font-bold">
-                <span>{task.title}</span>
-            </div>
         </div>
     </button>
 {:else}
@@ -93,7 +102,7 @@
 <style lang="scss">
     .item,
     .add-item {
-        @apply m-2 flex cursor-pointer items-center space-x-4 overflow-y-hidden rounded-lg border border-base-300 py-4 px-6;
+        @apply m-2 flex cursor-pointer items-start space-x-4 overflow-y-hidden rounded-lg border border-base-300 py-4 px-4;
         @apply shrink-0 font-bold;
 
         &.item-layout-compact {
@@ -114,5 +123,9 @@
                 }
             }
         }
+    }
+
+    .add-item {
+        @apply items-center;
     }
 </style>
