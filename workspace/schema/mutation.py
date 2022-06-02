@@ -31,7 +31,7 @@ class AddWorkspaceBoardInput:
     workspace_uuid: uuid.UUID
     title: str
     description: str
-    deadline: datetime.datetime | None
+    deadline: datetime.datetime | None = UNSET
 
 
 @strawberry.input

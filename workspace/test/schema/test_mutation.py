@@ -569,6 +569,20 @@ mutation AddWorkspaceBoard(
 }
 """
 
+    query_no_deadline = """
+mutation AddWorkspaceBoard($workspaceUuid: UUID!) {
+    addWorkspaceBoard(input: {
+        workspaceUuid: $workspaceUuid,
+        title: "Hello",
+        description: "World"
+    }) {
+        title
+        description
+        deadline
+    }
+}
+"""
+
     def test_query(
         self,
         graphql_query_user,
@@ -610,6 +624,29 @@ mutation AddWorkspaceBoard(
                 "title": "Hello",
                 "description": "World",
                 "deadline": None,
+            },
+        )
+        assert result == {
+            "data": {
+                "addWorkspaceBoard": {
+                    "title": "Hello",
+                    "description": "World",
+                    "deadline": None,
+                }
+            }
+        }
+
+    def test_query_no_deadline_unset(
+        self,
+        graphql_query_user,
+        workspace,
+        workspace_user,
+    ):
+        """Test query with no deadline specified."""
+        result = graphql_query_user(
+            self.query_no_deadline,
+            variables={
+                "workspaceUuid": str(workspace.uuid),
             },
         )
         assert result == {
