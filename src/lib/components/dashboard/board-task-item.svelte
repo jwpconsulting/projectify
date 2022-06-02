@@ -12,6 +12,7 @@
     export let layout: "default" | "compact" = "default";
     export let task = null;
     export let showHoverRing = true;
+    export let deadLineVisible = false;
 
     const dispatch = createEventDispatcher();
 </script>
@@ -70,13 +71,13 @@
                             {/if}
                         </div>
                     {/if}
-                    <!-- {#if task.deadline}
+                    {#if task.deadline && deadLineVisible}
                         <div class="item-date grid h-4 shrink-0 items-center">
                             <span class="nowrap-ellipsis text-xs"
                                 >Date {dateStringToLocal(task.deadline)}</span
                             >
                         </div>
-                    {/if} -->
+                    {/if}
                 </div>
             {/if}
         </div>
