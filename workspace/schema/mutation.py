@@ -11,9 +11,8 @@ from django.db import (
 from django.utils.translation import gettext_lazy as _
 
 import strawberry
-from strawberry.arguments import (
+from strawberry.unset import (
     UNSET,
-    is_unset,
 )
 
 from .. import (
@@ -282,7 +281,7 @@ class Mutation:
             title=input.title,
             description=input.description,
         )
-        if not is_unset(input.deadline) and input.deadline:
+        if input.deadline is not UNSET and input.deadline:
             assert input.deadline.tzinfo
             workspace_board.deadline = input.deadline
         return workspace_board
@@ -316,17 +315,17 @@ class Mutation:
             input.description,
             input.deadline,
         )
-        if not is_unset(input.assignee):
+        if input.assignee is not UNSET:
             User = get_user_model()
             user = User.objects.get_by_natural_key(input.assignee)
             task.assign_to(user)
-        if not is_unset(input.sub_tasks):
+        if input.sub_tasks is not UNSET:
             for title in input.sub_tasks:
                 task.add_sub_task(
                     title,
                     "",
                 )
-        if not is_unset(input.labels):
+        if input.labels is not UNSET:
             for label_uuid in input.labels:
                 label = models.Label.objects.get_for_user_and_uuid(
                     info.context.user,
@@ -441,7 +440,7 @@ class Mutation:
             input.task_uuid,
         )
         # Find after task
-        if not is_unset(input.after_task_uuid) and input.after_task_uuid:
+        if input.after_task_uuid is not UNSET and input.after_task_uuid:
             after_task = models.Task.objects.get_for_user_and_uuid(
                 info.context.user,
                 input.after_task_uuid,
