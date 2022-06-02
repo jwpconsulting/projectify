@@ -24,6 +24,7 @@
     import IconMenu from "../icons/icon-menu.svelte";
     import IconArchive from "../icons/icon-archive.svelte";
     import DropDownMenu from "../dropDownMenu.svelte";
+    import GlobalDropDown from "../globalDropDown.svelte";
 
     export let selectedWorkspace = null;
 
@@ -223,3 +224,5 @@
         {$_("delete-task-modal-message")}
     </ConfirmModalContent>
 </DialogModal>
+
+<GlobalDropDown />

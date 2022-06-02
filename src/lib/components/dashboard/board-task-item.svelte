@@ -1,9 +1,13 @@
 <script lang="ts">
+    import { currentBoardSections } from "$lib/stores/dashboard";
+
     import type { DashboardSectionsLayout } from "$lib/stores/dashboard-ui";
     import { getColorFromInx } from "$lib/utils/colors";
     import { dateStringToLocal } from "$lib/utils/date";
     import { createEventDispatcher } from "svelte";
     import { _ } from "svelte-i18n";
+    import { getDropDown } from "../globalDropDown.svelte";
+    import IconEdit from "../icons/icon-edit.svelte";
     import IconMenu from "../icons/icon-menu.svelte";
     import IconPlus from "../icons/icon-plus.svelte";
     import UserProfilePicture from "../userProfilePicture.svelte";
@@ -15,6 +19,65 @@
     export let deadLineVisible = false;
 
     const dispatch = createEventDispatcher();
+
+    let dropDownMenuBtnRef;
+
+    let menuSectionsItems = $currentBoardSections.map((it) => {
+        return {
+            label: it.title,
+            icon: IconEdit,
+            onClick: () => {
+                dispatch("moveTask", {
+                    taskUUID: task.uuid,
+                    sectionUUID: it.uuid,
+                });
+            },
+        };
+    });
+
+    let dropDownItems = [
+        {
+            label: "Open",
+            icon: IconEdit,
+        },
+        {
+            label: "Move to section",
+            icon: IconEdit,
+            items: menuSectionsItems,
+        },
+        {
+            label: "Move to top",
+            icon: IconEdit,
+        },
+        {
+            label: "Move to bottom",
+            icon: IconEdit,
+        },
+        {
+            label: "Move to previews position",
+            icon: IconEdit,
+        },
+        {
+            label: "Move to next position",
+            icon: IconEdit,
+        },
+        {
+            label: "Copy link",
+            icon: IconEdit,
+        },
+        {
+            label: "Goto updates",
+            icon: IconEdit,
+        },
+        {
+            label: "Delete task",
+            icon: IconEdit,
+        },
+    ];
+
+    function openDropDownMenu() {
+        getDropDown().open(dropDownItems, dropDownMenuBtnRef);
+    }
 </script>
 
 {#if task}
@@ -41,8 +104,9 @@
                         <span>{task.title}</span>
                     </div>
                     <button
+                        bind:this={dropDownMenuBtnRef}
                         on:click|stopPropagation={() => {
-                            console.log("click");
+                            openDropDownMenu();
                         }}
                         class="btn btn-outline btn-primary btn-circle btn-xs shrink-0"
                         ><IconMenu /></button

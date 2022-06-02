@@ -21,6 +21,7 @@
     import IconEdit from "../icons/icon-edit.svelte";
     import IconTrash from "../icons/icon-trash.svelte";
     import {
+        currentBoardSections,
         filterSectionsTasks,
         gotoDashboard,
         openTaskDetails,
@@ -52,6 +53,10 @@
 
     let searchText = "";
     let tasksSearchResults = [];
+
+    $: {
+        currentBoardSections.set(sections);
+    }
 
     const refetch = debounce(() => {
         res.refetch();

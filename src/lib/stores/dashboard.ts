@@ -8,6 +8,7 @@ export const currentWorkspaceUUID = writable<string | null>(null);
 export const currentBoardUUID = writable<string | null>(null);
 export const currenTaskDetailsUUID = writable<string | null>(null);
 export const newTaskSectionUUID = writable<string | null>(null);
+export const currentBoardSections = writable([]);
 
 export function openNewTask(sectionUUID: string): void {
     drawerModalOpen.set(true);
