@@ -1,9 +1,12 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
+
     import {
         copyDashboardURL,
         currentBoardSections,
         currentBoardUUID,
         currentWorkspaceUUID,
+        getDashboardURL,
     } from "$lib/stores/dashboard";
 
     import type { DashboardSectionsLayout } from "$lib/stores/dashboard-ui";
@@ -36,6 +39,10 @@
 
     let dropDownMenuBtnRef;
 
+    $: url =
+        task &&
+        getDashboardURL($currentWorkspaceUUID, $currentBoardUUID, task.uuid);
+
     let menuSectionsItems = $currentBoardSections.map((it) => {
         return {
             label: it.title,
@@ -54,7 +61,7 @@
             label: "Open",
             icon: IconArrowExpand,
             onClick: () => {
-                dispatch("click");
+                goto(url);
             },
         },
         {
