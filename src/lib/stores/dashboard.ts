@@ -67,6 +67,15 @@ export function gotoDashboard(
     goto(url);
 }
 
+export function copyDashboardURL(
+    workspaceUUID: string = null,
+    boardUUID: string = null,
+    taskUUID: string = null
+): void {
+    const url = getDashboardURL(workspaceUUID, boardUUID, taskUUID);
+    navigator.clipboard.writeText(url);
+}
+
 export function pushTashUUIDtoPath(uuid: string): void {
     const workspaceUUID = get(currentWorkspaceUUID);
     const boardUUID = get(currentBoardUUID);

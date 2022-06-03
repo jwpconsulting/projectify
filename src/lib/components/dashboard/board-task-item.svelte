@@ -1,5 +1,10 @@
 <script lang="ts">
-    import { currentBoardSections } from "$lib/stores/dashboard";
+    import {
+        copyDashboardURL,
+        currentBoardSections,
+        currentBoardUUID,
+        currentWorkspaceUUID,
+    } from "$lib/stores/dashboard";
 
     import type { DashboardSectionsLayout } from "$lib/stores/dashboard-ui";
     import { getColorFromInx } from "$lib/utils/colors";
@@ -13,7 +18,6 @@
     import IconArrowSUp from "../icons/icon-arrow-s-up.svelte";
     import IconChatAlt from "../icons/icon-chat-alt.svelte";
     import IconCopyLink from "../icons/icon-copy-link.svelte";
-    import IconEdit from "../icons/icon-edit.svelte";
     import IconMenu from "../icons/icon-menu.svelte";
     import IconPlus from "../icons/icon-plus.svelte";
     import IconSortAscending from "../icons/icon-sort-ascending.svelte";
@@ -77,6 +81,13 @@
         {
             label: "Copy link",
             icon: IconCopyLink,
+            onClick: () => {
+                copyDashboardURL(
+                    $currentWorkspaceUUID,
+                    $currentBoardUUID,
+                    task.uuid
+                );
+            },
         },
         {
             label: "Goto updates",
