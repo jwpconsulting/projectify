@@ -277,13 +277,16 @@ class Mutation:
             info.context.user,
             input.workspace_uuid,
         )
+        if input.deadline is not UNSET and input.deadline:
+            assert input.deadline.tzinfo
+            deadline = input.deadline
+        else:
+            deadline = None
         workspace_board = workspace.add_workspace_board(
             title=input.title,
             description=input.description,
+            deadline=deadline,
         )
-        if input.deadline is not UNSET and input.deadline:
-            assert input.deadline.tzinfo
-            workspace_board.deadline = input.deadline
         return workspace_board
 
     @strawberry.field
