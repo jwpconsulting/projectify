@@ -52,11 +52,12 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
     )
     objects = WorkspaceManager()
 
-    def add_workspace_board(self, title, description):
+    def add_workspace_board(self, title, description, deadline=None):
         """Add workspace board."""
         return self.workspaceboard_set.create(
             title=title,
             description=description,
+            deadline=deadline,
         )
 
     def add_user(self, user):
