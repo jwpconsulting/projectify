@@ -127,11 +127,11 @@ body {
 
     .menu ul {
         @apply pl-0;
-        li > a{
+        li > a {
             @apply pl-6;
             @apply bg-secondary-focus;
             @apply bg-opacity-10;
-            &:hover{
+            &:hover {
                 @apply bg-opacity-75;
             }
         }
@@ -164,7 +164,7 @@ body {
         }
     }
 
-    .icon-sm{
+    .icon-sm {
         > svg {
             @apply h-4 w-4;
             stroke-width: 1px;

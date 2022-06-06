@@ -100,7 +100,8 @@ module.exports = {
     daisyui: {
         styled: true,
         darkTheme: "app-dark",
-        themes: [{
+        themes: [
+            {
                 "app-light": {
                     fontFamily: "Roboto, sans-serif",
                     ...factoryLightThemeColors,
