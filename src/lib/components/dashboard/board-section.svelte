@@ -18,6 +18,7 @@
     import { getModal } from "../dialogModal.svelte";
     import { dashboardSectionsLayout } from "$lib/stores/dashboard-ui";
     import BoardTaskItem from "./board-task-item.svelte";
+    import { moveTaskAfter } from "$lib/graphql/api";
 
     export let boardUUID;
     export let section;
@@ -107,7 +108,6 @@
         await delay(10);
         isDragging = false;
 
-        // console.log(detail);
         const prevUUID =
             detail.item.previousElementSibling?.getAttribute("data-uuid") ||
             null;
@@ -122,7 +122,7 @@
             (fromSectionUUID != toSectionUUID ||
                 detail.newIndex != detail.oldIndex)
         ) {
-            moveTaskAfter(task.uuid, toSectionUUID, prevUUID);
+            await moveTaskAfter(task.uuid, toSectionUUID, prevUUID);
         }
     }
 
@@ -137,34 +137,6 @@
                         order,
                     },
                 },
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async function moveTaskAfter(
-        taskUuid,
-        workspaceBoardSectionUuid,
-        afterTaskUuid
-    ) {
-        try {
-            const input: {
-                taskUuid: string;
-                workspaceBoardSectionUuid: string;
-                afterTaskUuid?: string;
-            } = {
-                taskUuid,
-                workspaceBoardSectionUuid,
-            };
-
-            if (afterTaskUuid) {
-                input.afterTaskUuid = afterTaskUuid;
-            }
-
-            let mRes = await client.mutate({
-                mutation: Mutation_MoveTaskAfter,
-                variables: { input },
             });
         } catch (error) {
             console.error(error);
@@ -240,6 +212,7 @@
                     {#each section.tasks as task (task.uuid)}
                         <BoardTaskItem
                             {task}
+                            sectionUUID={section.uuid}
                             showHoverRing={!isDragging}
                             on:click={() =>
                                 !isDragging && openTaskDetails(task.uuid)}
@@ -247,6 +220,7 @@
                     {/each}
                     {#if !isDragging}
                         <BoardTaskItem
+                            sectionUUID={section.uuid}
                             on:click={() => openNewTask(section.uuid)}
                         />
                     {/if}

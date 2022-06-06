@@ -1,5 +1,6 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
+    import { moveTaskAfter } from "$lib/graphql/api";
 
     import {
         copyDashboardURL,
@@ -9,7 +10,6 @@
         getDashboardURL,
     } from "$lib/stores/dashboard";
 
-    import type { DashboardSectionsLayout } from "$lib/stores/dashboard-ui";
     import { getColorFromInx } from "$lib/utils/colors";
     import { dateStringToLocal } from "$lib/utils/date";
     import { createEventDispatcher } from "svelte";
@@ -35,6 +35,8 @@
     export let showHoverRing = true;
     export let deadLineVisible = false;
 
+    export let sectionUUID;
+
     const dispatch = createEventDispatcher();
 
     let dropDownMenuBtnRef;
@@ -43,23 +45,23 @@
         task &&
         getDashboardURL($currentWorkspaceUUID, $currentBoardUUID, task.uuid);
 
-    let menuSectionsItems = $currentBoardSections.map((it) => {
-        return {
-            label: it.title,
-            icon: IconArrowSRight,
-            onClick: () => {
-                dispatch("moveTask", {
-                    taskUUID: task.uuid,
-                    sectionUUID: it.uuid,
-                });
-            },
-        };
-    });
+    let menuSectionsItems = $currentBoardSections
+        .filter((section) => section.uuid != sectionUUID)
+        .map((it) => {
+            return {
+                label: it.title,
+                icon: IconArrowSRight,
+                onClick: () => {
+                    moveTaskAfter(task.uuid, it.uuid);
+                },
+            };
+        });
 
     let dropDownItems = [
         {
             label: "Open",
             icon: IconArrowExpand,
+
             onClick: () => {
                 goto(url);
             },
