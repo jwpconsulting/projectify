@@ -448,7 +448,7 @@ class Mutation:
                 info.context.user,
                 input.after_task_uuid,
             )
-            new_order = after_task._order + 1
+            new_order = after_task._order
         else:
             new_order = 0
         # Reorder task
