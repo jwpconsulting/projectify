@@ -166,10 +166,14 @@ mutation MoveTaskAfter(
         workspace_user,
     ):
         """Test moving."""
+        other_other_task = factory.TaskFactory(
+            workspace_board_section=task.workspace_board_section,
+        )
         tasks = list(models.Task.objects.all().values("uuid"))
         assert tasks == [
             {"uuid": task.uuid},
             {"uuid": other_task.uuid},
+            {"uuid": other_other_task.uuid},
         ]
         result = graphql_query_user(
             self.query,
@@ -191,6 +195,7 @@ mutation MoveTaskAfter(
         assert tasks == [
             {"uuid": other_task.uuid},
             {"uuid": task.uuid},
+            {"uuid": other_other_task.uuid},
         ]
 
     def test_move_no_after_task(
