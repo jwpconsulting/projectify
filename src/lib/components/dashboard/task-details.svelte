@@ -32,6 +32,8 @@
     import Tab from "../tab.svelte";
     import { goto } from "$app/navigation";
     import Loading from "../loading.svelte";
+    import { page } from "$app/stores";
+    import { writable } from "svelte/store";
 
     let res: ReadableQuery<any> = null;
     let task = null;
@@ -41,6 +43,9 @@
     let isSaving = false;
 
     let taskWSStrore = null;
+
+    $: uuids = $page.params["uuids"].split("/");
+    $: activeTabId = writable(uuids[3] || "details");
 
     function reset() {
         res = null;
@@ -242,13 +247,13 @@
 
     $: tabItems = [
         {
-            label: "Task",
-            id: 1,
+            label: $_("task"),
+            id: "details",
         },
         {
-            label: "Discussion",
+            label: $_("updates"),
             hidden: itsNew,
-            id: 2,
+            id: "updates",
         },
     ];
 </script>
@@ -318,8 +323,8 @@
             {/if}
         </header>
 
-        <Tabs items={tabItems} autoPadding={false}>
-            <Tab id={1}>
+        <Tabs bind:activeTabId items={tabItems} autoPadding={false}>
+            <Tab id={"details"}>
                 <TaskDetailsContent
                     {task}
                     bind:subTasks
@@ -327,7 +332,7 @@
                     bind:taskModified
                 />
             </Tab>
-            <Tab id={2}>
+            <Tab id={"updates"}>
                 <TaskDetailsDiscussion {task} />
             </Tab>
         </Tabs>

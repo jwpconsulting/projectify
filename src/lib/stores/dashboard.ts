@@ -1,10 +1,13 @@
-import { Mutation_MoveTaskAfter, Mutation_DeleteTask } from './../graphql/operations';
+import {
+    Mutation_MoveTaskAfter,
+    Mutation_DeleteTask,
+} from "./../graphql/operations";
 import { goto } from "$app/navigation";
 import { encodeUUID } from "$lib/utils/encoders";
 import Fuse from "fuse.js";
 import { writable, get } from "svelte/store";
-import { client } from '$lib/graphql/client';
-import { getModal } from '$lib/components/dialogModal.svelte';
+import { client } from "$lib/graphql/client";
+import { getModal } from "$lib/components/dialogModal.svelte";
 
 export const drawerModalOpen = writable(false);
 export const currentWorkspaceUUID = writable<string | null>(null);
@@ -18,14 +21,17 @@ export function openNewTask(sectionUUID: string): void {
     newTaskSectionUUID.set(sectionUUID);
     currenTaskDetailsUUID.set(null);
 }
-export function openTaskDetails(taskUUID: string): void {
+export function openTaskDetails(
+    taskUUID: string,
+    subView: string = null
+): void {
     drawerModalOpen.set(true);
     currenTaskDetailsUUID.set(taskUUID);
 
     const workspaceUUID = get(currentWorkspaceUUID);
     const boardUUID = get(currentBoardUUID);
 
-    gotoDashboard(workspaceUUID, boardUUID, taskUUID);
+    gotoDashboard(workspaceUUID, boardUUID, taskUUID, subView);
 }
 export function closeTaskDetails(): void {
     drawerModalOpen.set(false);
@@ -40,7 +46,8 @@ export function closeTaskDetails(): void {
 export function getDashboardURL(
     workspaceUUID: string = null,
     boardUUID: string = null,
-    taskUUID: string = null
+    taskUUID: string = null,
+    subView: string = null
 ): string {
     workspaceUUID = workspaceUUID ? encodeUUID(workspaceUUID) : null;
     boardUUID = boardUUID ? encodeUUID(boardUUID) : null;
@@ -54,6 +61,9 @@ export function getDashboardURL(
             url += "/" + boardUUID;
             if (taskUUID) {
                 url += "/" + taskUUID;
+                if (subView) {
+                    url += "/" + subView;
+                }
             }
         }
     }
@@ -64,9 +74,24 @@ export function getDashboardURL(
 export function gotoDashboard(
     workspaceUUID: string = null,
     boardUUID: string = null,
-    taskUUID: string = null
+    taskUUID: string = null,
+    subView: string = null
 ): void {
-    const url = getDashboardURL(workspaceUUID, boardUUID, taskUUID);
+    const url = getDashboardURL(workspaceUUID, boardUUID, taskUUID, subView);
+    const curURL = getDashboardURL(
+        get(currentWorkspaceUUID),
+        get(currentBoardUUID),
+        get(currenTaskDetailsUUID),
+        subView
+    );
+
+    console.log(url);
+    console.log(curURL);
+    // if (url == curURL) {
+    //     return;
+    // }
+    console.log("goto utr");
+
     goto(url);
 }
 
@@ -155,7 +180,7 @@ export function searchTasks(sections: any[], searchText: string): any[] {
 export async function moveTaskAfter(
     taskUuid: string,
     workspaceBoardSectionUuid: string,
-    afterTaskUuid: string | null = null,
+    afterTaskUuid: string | null = null
 ): Promise<void> {
     try {
         const input: {

@@ -2,14 +2,12 @@
     import IconEdit from "../icons/icon-edit.svelte";
     import IconTrash from "../icons/icon-trash.svelte";
     import IconChevronRight from "../icons/icon-chevron-right.svelte";
-    import IconPlus from "../icons/icon-plus.svelte";
     import {
         copyDashboardURL,
         currentBoardSections,
         currentBoardUUID,
         currentWorkspaceUUID,
         deleteTask,
-        getDashboardURL,
         moveTaskAfter,
         openNewTask,
         openTaskDetails,
@@ -31,7 +29,6 @@
     import IconArrowSRight from "../icons/icon-arrow-s-right.svelte";
     import type { DropDownMenuItem } from "../globalDropDown.svelte";
     import IconArrowExpand from "../icons/icon-arrow-expand.svelte";
-    import { goto } from "$app/navigation";
     import IconSwitchVertical from "../icons/icon-switch-vertical.svelte";
     import IconSortAscending from "../icons/icon-sort-ascending.svelte";
     import IconSortDescending from "../icons/icon-sort-descending.svelte";
@@ -173,14 +170,6 @@
     $: layoutClass = `layout-${$dashboardSectionsLayout}`;
 
     function openItemDropDownMenu({ detail: { task, target } }) {
-        const url =
-            task &&
-            getDashboardURL(
-                $currentWorkspaceUUID,
-                $currentBoardUUID,
-                task.uuid
-            );
-
         let lastTask = section.tasks[section.tasks.length - 1];
         let prevTask = section.tasks[section.tasks.indexOf(task) - 1];
         let nextTask = section.tasks[section.tasks.indexOf(task) + 1];
@@ -205,7 +194,7 @@
                 icon: IconArrowExpand,
 
                 onClick: () => {
-                    goto(url);
+                    openTaskDetails(task.uuid);
                 },
             },
             {
@@ -259,6 +248,9 @@
             {
                 label: "Goto updates",
                 icon: IconChatAlt,
+                onClick: () => {
+                    openTaskDetails(task.uuid, "updates");
+                },
             },
             {
                 label: "Delete task",

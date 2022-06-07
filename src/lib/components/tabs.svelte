@@ -3,11 +3,13 @@
     import { writable } from "svelte/store";
 
     export let items = [];
-    export let activeTabId = writable(1);
+    export let activeTabId = writable(items[0]?.id);
 
-    setContext("tabs", {
-        activeTabId,
-    });
+    $: {
+        setContext("tabs", {
+            activeTabId,
+        });
+    }
 
     let contentHeght = 0;
     const selectTab = (tabId) => {

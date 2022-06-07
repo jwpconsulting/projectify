@@ -138,5 +138,6 @@
     "light": "Light",
     "dark": "Dark",
     "appearance": "Appearance",
-    "assigned-to-nobody": "Assigned to nobody"
+    "assigned-to-nobody": "Assigned to nobody",
+    "updates": "Updates"
 }
