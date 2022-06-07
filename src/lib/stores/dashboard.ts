@@ -72,7 +72,8 @@ export function copyDashboardURL(
     boardUUID: string = null,
     taskUUID: string = null
 ): void {
-    const url = getDashboardURL(workspaceUUID, boardUUID, taskUUID);
+    let url = getDashboardURL(workspaceUUID, boardUUID, taskUUID);
+    url = `${location.protocol}//${location.host}${url}`;
     navigator.clipboard.writeText(url);
 }
 
