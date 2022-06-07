@@ -180,8 +180,9 @@
                 task.uuid
             );
 
+        let lastTask = section.tasks[section.tasks.length - 1];
         let isFirst = task.uuid == section.tasks[0].uuid;
-        let isLast = task.uuid == section.tasks[section.tasks.length - 1].uuid;
+        let isLast = task.uuid == lastTask.uuid;
 
         let menuSectionsItems = $currentBoardSections
             .filter((itSec) => itSec.uuid != section.uuid)
@@ -213,11 +214,17 @@
                 label: "Move to top",
                 icon: IconSortAscending,
                 hidden: isFirst === true,
+                onClick: () => {
+                    moveTaskAfter(task.uuid, section.uuid, null);
+                },
             },
             {
                 label: "Move to bottom",
                 icon: IconSortDescending,
                 hidden: isLast === true,
+                onClick: () => {
+                    moveTaskAfter(task.uuid, section.uuid, lastTask.uuid);
+                },
             },
             {
                 label: "Move to previews position",
