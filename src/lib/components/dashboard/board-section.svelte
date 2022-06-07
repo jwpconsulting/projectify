@@ -36,12 +36,22 @@
     import IconArrowSDown from "../icons/icon-arrow-s-down.svelte";
     import IconCopyLink from "../icons/icon-copy-link.svelte";
     import IconChatAlt from "../icons/icon-chat-alt.svelte";
+    import IconMenu from "../icons/icon-menu.svelte";
+    import IconSelector from "../icons/icon-selector.svelte";
+    import IconClose from "../icons/icon-close.svelte";
+    import IconPlus from "../icons/icon-plus.svelte";
+    import { createEventDispatcher } from "svelte";
 
     export let boardUUID;
     export let section;
     export let index = 0;
 
+    export let isFirst = null;
+    export let isLast = null;
+
     export let isDragging = false;
+
+    const dispatch = createEventDispatcher();
 
     let open = true;
     let firstOpen = open;
@@ -168,6 +178,7 @@
     }
 
     $: layoutClass = `layout-${$dashboardSectionsLayout}`;
+    $: collapsable = $dashboardSectionsLayout != "columns";
 
     function openItemDropDownMenu({ detail: { task, target } }) {
         let lastTask = section.tasks[section.tasks.length - 1];
@@ -262,6 +273,53 @@
         ];
         getDropDown().open(dropDownItems, target);
     }
+
+    let dropDownMenuBtnRef;
+
+    function openDropDownMenu() {
+        let dropDownItems: DropDownMenuItem[] = [
+            {
+                label: "Expand section",
+                icon: IconSelector,
+                hidden: !collapsable || open,
+                onClick: () => {
+                    open = true;
+                },
+            },
+            {
+                label: "Collapse section",
+                icon: IconClose,
+                hidden: !collapsable || !open,
+                onClick: () => {
+                    open = false;
+                },
+            },
+            {
+                label: "Switch with previous section",
+                icon: IconArrowSUp,
+                hidden: isFirst === true,
+                onClick: () => {
+                    dispatch("switchWithPrevSection", { section });
+                },
+            },
+            {
+                label: "Switch with next section",
+                icon: IconArrowSDown,
+                hidden: isLast === true,
+                onClick: () => {
+                    dispatch("switchWithNextSection", { section });
+                },
+            },
+            {
+                label: "Add task",
+                icon: IconPlus,
+                onClick: () => {
+                    openNewTask(section.uuid);
+                },
+            },
+        ];
+        getDropDown().open(dropDownItems, dropDownMenuBtnRef);
+    }
 </script>
 
 <div
@@ -306,6 +364,12 @@
                     },
                 ]}
             />
+            <button
+                bind:this={dropDownMenuBtnRef}
+                on:click|stopPropagation={openDropDownMenu}
+                class="btn btn-circle btn-outline btn-primary btn-xs mx-2 shrink-0"
+                ><IconMenu /></button
+            >
         </header>
         <main
             style="--open-height:{openHeight}px"

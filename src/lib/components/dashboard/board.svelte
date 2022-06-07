@@ -317,6 +317,23 @@
 
     let sectionToolTipHoverInx = 0;
     $: sectionTollTipLabel = filteredSections[sectionToolTipHoverInx]?.title;
+
+    function onSwitchWithPrevSection({ detail: { section } }) {
+        const sectionIndex = sections.findIndex((s) => s.uuid == section.uuid);
+        const prevSection = sections[sectionIndex - 1];
+
+        if (prevSection) {
+            moveSection(section.uuid, prevSection.order);
+        }
+    }
+    function onSwitchWithNextSection({ detail: { section } }) {
+        const sectionIndex = sections.findIndex((s) => s.uuid == section.uuid);
+        const nextSection = sections[sectionIndex + 1];
+
+        if (nextSection) {
+            moveSection(section.uuid, nextSection.order);
+        }
+    }
 </script>
 
 {#if res && $res.loading}
@@ -325,14 +342,14 @@
     </div>
 {:else if board}
     <div
-        class="flex grow flex-col bg-base-200 h-full min-h-full overflow-hidden relative"
+        class="relative flex h-full min-h-full grow flex-col overflow-hidden bg-base-200"
     >
         <header
-            class="flex flex-col bg-base-100 border-b border-base-300 space-y-4"
+            class="flex flex-col space-y-4 border-b border-base-300 bg-base-100"
         >
             <!-- Tile -->
-            <div class="flex flex-row items-center px-4 pt-4 space-x-2">
-                <div class="grid font-bold text-3xl grow shrink basis-0">
+            <div class="flex flex-row items-center space-x-2 px-4 pt-4">
+                <div class="grid shrink grow basis-0 text-3xl font-bold">
                     <span class="nowrap-ellipsis">{board.title}</span>
                 </div>
                 <BoardSectionLayoutSelector />
@@ -355,10 +372,10 @@
                 />
                 {#if board.deadline}
                     <div
-                        class="bg-primary flex items-center p-1 px-3 rounded-lg text-primary-content shrink-0"
+                        class="flex shrink-0 items-center rounded-lg bg-primary p-1 px-3 text-primary-content"
                     >
-                        <span class="text-xs p-1">{$_("deadline")}</span>
-                        <span class="text-base p-1 "
+                        <span class="p-1 text-xs">{$_("deadline")}</span>
+                        <span class="p-1 text-base "
                             >{dateStringToLocal(board.deadline)}</span
                         >
                     </div>
@@ -377,7 +394,7 @@
         {#if searchText}
             <!-- Flat Tasks Results -->
             {#if tasksSearchResults.length}
-                <div class="flex flex-col grow p-2 overflow-y-auto">
+                <div class="flex grow flex-col overflow-y-auto p-2">
                     {#each tasksSearchResults as task}
                         <BoardTaskItem
                             {task}
@@ -386,8 +403,8 @@
                     {/each}
                 </div>
             {:else}
-                <div class="flex items-center justify-center grow">
-                    <div class="bg-base-100 p-6 rounded-md shadow-sm">
+                <div class="flex grow items-center justify-center">
+                    <div class="rounded-md bg-base-100 p-6 shadow-sm">
                         {$_("tasks-not-found-for")} "{searchText}"
                     </div>
                 </div>
@@ -409,13 +426,17 @@
                     <BoardSection
                         {section}
                         {index}
+                        isFirst={index == 0}
+                        isLast={index == filteredSections.length - 1}
                         boardUUID={board.uuid}
                         bind:isDragging
+                        on:switchWithPrevSection={onSwitchWithPrevSection}
+                        on:switchWithNextSection={onSwitchWithNextSection}
                     />
                 {/each}
                 {#if !isDragging}
                     <div
-                        class="shrink-0 shadow-sm ignore-elements bg-base-100 text-primary m-2 p-5 flex space-x-4 font-bold hover:ring hover:cursor-pointer"
+                        class="ignore-elements m-2 flex shrink-0 space-x-4 bg-base-100 p-5 font-bold text-primary shadow-sm hover:cursor-pointer hover:ring"
                         on:click={() => onAddNewSection()}
                     >
                         <IconPlus />
@@ -425,11 +446,11 @@
             </div>
             {#if $dashboardSectionsLayout == "columns"}
                 <div
-                    class="pagination-controls px-4 pb-6 py-1 flex justify-center items-center gap-4 absolute inset-0 top-[120px]"
+                    class="pagination-controls absolute inset-0 top-[120px] flex items-center justify-center gap-4 px-4 py-1 pb-6"
                 >
                     <button
                         on:click={scrollPrev}
-                        class="btn btn-primary btn-circle shadow-sm diraction-btn"
+                        class="diraction-btn btn btn-circle btn-primary shadow-sm"
                         class:invisible={scrollInx <= 0}
                     >
                         <div class="translate-x-1">
@@ -440,7 +461,7 @@
                         class="flex grow items-center justify-center self-end"
                     >
                         <div
-                            class="relative pagination-dots flex gap-2 w justify-center "
+                            class="pagination-dots w relative flex justify-center gap-2 "
                         >
                             <div
                                 class="section-tooltip"
@@ -459,10 +480,10 @@
                                     on:focus={() =>
                                         (sectionToolTipHoverInx = index)}
                                     class:active={scrollInx == index}
-                                    class="relative bg-primary p-1 w-4 h-4 flex justify-center items-center rounded-full text-sm shadow-sm select-none cursor-pointer bg-opacity-30 hover:bg-opacity-50"
+                                    class="relative flex h-4 w-4 cursor-pointer select-none items-center justify-center rounded-full bg-primary bg-opacity-30 p-1 text-sm shadow-sm hover:bg-opacity-50"
                                 >
                                     <div
-                                        class="bg-primary absolute inset-0 rounded-full"
+                                        class="absolute inset-0 rounded-full bg-primary"
                                     />
                                 </div>
                             {/each}
@@ -470,7 +491,7 @@
                     </div>
                     <button
                         on:click={scrollNext}
-                        class="btn btn-primary rounded-full btn-square shadow-sm diraction-btn"
+                        class="diraction-btn btn btn-primary btn-square rounded-full shadow-sm"
                         class:invisible={scrollInx >= filteredSections.length}
                     >
                         <div class="-translate-x-1">

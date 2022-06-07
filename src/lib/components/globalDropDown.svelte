@@ -97,12 +97,11 @@
     <div
         style={`top:${y}px; left:${x}px;`}
         bind:this={rootEl}
-        class="absolute select-none"
+        class="absolute z-50 select-none"
     >
         <ul
             bind:this={focusEl}
             on:blur={() => {
-                console.log("blur");
                 close();
             }}
             tabindex="0"
