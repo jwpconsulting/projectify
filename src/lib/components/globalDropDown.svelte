@@ -1,4 +1,17 @@
 <script context="module" lang="ts">
+    export type DropDownMenuItem = {
+        id?: any;
+        label: string;
+        icon: any;
+        onClick?: (...any) => void;
+        href?: string;
+        disabled?: boolean;
+        hidden?: boolean;
+        tooltip?: string;
+        items?: DropDownMenuItem[];
+        open?: boolean;
+    };
+
     let dropDown = null;
 
     export function getDropDown() {
@@ -10,11 +23,12 @@
     import { tick } from "svelte";
     import IconChevronDown from "./icons/icon-chevron-down.svelte";
 
-    let items = null;
+    let items: DropDownMenuItem[] = null;
     let target: HTMLElement = null;
     let focusEl;
     let activeId: any = null;
     let rootEl;
+    let startX, startY;
     let x, y;
 
     let ofX = 0;
@@ -31,19 +45,31 @@
         const newX = Math.round(rect.left);
         const newY = Math.round(rect.top);
 
-        if (Math.abs(x - newX) > 10 || Math.abs(y - newY) > 10) {
+        if (Math.abs(startX - newX) > 10 || Math.abs(startY - newY) > 10) {
             close();
             return;
         }
 
+        const viewPortRect = rootEl.parentElement.getBoundingClientRect();
         const menuRect = rootEl.getBoundingClientRect();
+
         ofY = rect.height + posMargin;
         ofX = rect.width - menuRect.width;
+
+        x = newX + ofX;
+        y = newY + ofY;
+
+        let deltaBottom =
+            y + menuRect.height - viewPortRect.bottom + posMargin;
+
+        if (deltaBottom > 0) {
+            y -= deltaBottom;
+        }
 
         window.requestAnimationFrame(checkTargetPosition);
     }
 
-    async function open(its, trg) {
+    async function open(its: DropDownMenuItem[], trg: HTMLElement) {
         items = its;
         target = trg;
 
@@ -51,8 +77,8 @@
 
         focusEl.focus();
         const rect = target.getBoundingClientRect();
-        x = Math.round(rect.left);
-        y = Math.round(rect.top);
+        startX = Math.round(rect.left);
+        startY = Math.round(rect.top);
 
         checkTargetPosition();
 
@@ -69,7 +95,7 @@
 
 {#if items}
     <div
-        style={`top:${y + ofY}px; left:${x + ofX}px;`}
+        style={`top:${y}px; left:${x}px;`}
         bind:this={rootEl}
         class="absolute select-none"
     >
