@@ -1,7 +1,9 @@
+import { Mutation_MoveTaskAfter } from './../graphql/operations';
 import { goto } from "$app/navigation";
 import { encodeUUID } from "$lib/utils/encoders";
 import Fuse from "fuse.js";
 import { writable, get } from "svelte/store";
+import { client } from '$lib/graphql/client';
 
 export const drawerModalOpen = writable(false);
 export const currentWorkspaceUUID = writable<string | null>(null);
@@ -147,4 +149,32 @@ export function searchTasks(sections: any[], searchText: string): any[] {
     tasks = searchEngine.search(searchText).map((res) => res.item);
 
     return tasks;
+}
+
+export async function moveTaskAfter(
+    taskUuid: string,
+    workspaceBoardSectionUuid: string,
+    afterTaskUuid: string | null = null,
+): Promise<void> {
+    try {
+        const input: {
+            taskUuid: string;
+            workspaceBoardSectionUuid: string;
+            afterTaskUuid?: string;
+        } = {
+            taskUuid,
+            workspaceBoardSectionUuid,
+        };
+
+        if (afterTaskUuid) {
+            input.afterTaskUuid = afterTaskUuid;
+        }
+
+        await client.mutate({
+            mutation: Mutation_MoveTaskAfter,
+            variables: { input },
+        });
+    } catch (error) {
+        console.error(error);
+    }
 }

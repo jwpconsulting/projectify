@@ -9,6 +9,7 @@
         currentBoardUUID,
         currentWorkspaceUUID,
         getDashboardURL,
+        moveTaskAfter,
         openNewTask,
         openTaskDetails,
     } from "$lib/stores/dashboard";
@@ -25,7 +26,6 @@
     import { getModal } from "../dialogModal.svelte";
     import { dashboardSectionsLayout } from "$lib/stores/dashboard-ui";
     import BoardTaskItem from "./board-task-item.svelte";
-    import { moveTaskAfter } from "$lib/graphql/api";
     import { getDropDown } from "../globalDropDown.svelte";
     import IconArrowSRight from "../icons/icon-arrow-s-right.svelte";
     import type { DropDownMenuItem } from "../globalDropDown.svelte";
