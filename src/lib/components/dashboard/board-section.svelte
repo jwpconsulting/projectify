@@ -3,7 +3,15 @@
     import IconTrash from "../icons/icon-trash.svelte";
     import IconChevronRight from "../icons/icon-chevron-right.svelte";
     import IconPlus from "../icons/icon-plus.svelte";
-    import { openNewTask, openTaskDetails } from "$lib/stores/dashboard";
+    import {
+        copyDashboardURL,
+        currentBoardSections,
+        currentBoardUUID,
+        currentWorkspaceUUID,
+        getDashboardURL,
+        openNewTask,
+        openTaskDetails,
+    } from "$lib/stores/dashboard";
     import { _ } from "svelte-i18n";
     import { sortable } from "$lib/actions/sortable";
     import delay from "delay";
@@ -11,7 +19,6 @@
     import {
         Mutation_DeleteWorkspaceBoardSection,
         Mutation_MoveTask,
-        Mutation_MoveTaskAfter,
         Mutation_UpdateWorkspaceBoardSection,
     } from "$lib/graphql/operations";
     import ToolBar from "./toolBar.svelte";
@@ -19,6 +26,18 @@
     import { dashboardSectionsLayout } from "$lib/stores/dashboard-ui";
     import BoardTaskItem from "./board-task-item.svelte";
     import { moveTaskAfter } from "$lib/graphql/api";
+    import { getDropDown } from "../globalDropDown.svelte";
+    import IconArrowSRight from "../icons/icon-arrow-s-right.svelte";
+    import type { DropDownMenuItem } from "../globalDropDown.svelte";
+    import IconArrowExpand from "../icons/icon-arrow-expand.svelte";
+    import { goto } from "$app/navigation";
+    import IconSwitchVertical from "../icons/icon-switch-vertical.svelte";
+    import IconSortAscending from "../icons/icon-sort-ascending.svelte";
+    import IconSortDescending from "../icons/icon-sort-descending.svelte";
+    import IconArrowSUp from "../icons/icon-arrow-s-up.svelte";
+    import IconArrowSDown from "../icons/icon-arrow-s-down.svelte";
+    import IconCopyLink from "../icons/icon-copy-link.svelte";
+    import IconChatAlt from "../icons/icon-chat-alt.svelte";
 
     export let boardUUID;
     export let section;
@@ -151,6 +170,87 @@
     }
 
     $: layoutClass = `layout-${$dashboardSectionsLayout}`;
+
+    function openItemDropDownMenu({ detail: { task, target } }) {
+        const url =
+            task &&
+            getDashboardURL(
+                $currentWorkspaceUUID,
+                $currentBoardUUID,
+                task.uuid
+            );
+
+        let isFirst = task.uuid == section.tasks[0].uuid;
+        let isLast = task.uuid == section.tasks[section.tasks.length - 1].uuid;
+
+        let menuSectionsItems = $currentBoardSections
+            .filter((itSec) => itSec.uuid != section.uuid)
+            .map((it) => {
+                return {
+                    label: it.title,
+                    icon: IconArrowSRight,
+                    onClick: () => {
+                        moveTaskAfter(task.uuid, it.uuid);
+                    },
+                };
+            });
+
+        let dropDownItems: DropDownMenuItem[] = [
+            {
+                label: "Open",
+                icon: IconArrowExpand,
+
+                onClick: () => {
+                    goto(url);
+                },
+            },
+            {
+                label: "Move to section",
+                icon: IconSwitchVertical,
+                items: menuSectionsItems,
+            },
+            {
+                label: "Move to top",
+                icon: IconSortAscending,
+                hidden: isFirst === true,
+            },
+            {
+                label: "Move to bottom",
+                icon: IconSortDescending,
+                hidden: isLast === true,
+            },
+            {
+                label: "Move to previews position",
+                icon: IconArrowSUp,
+                hidden: isFirst === true,
+            },
+            {
+                label: "Move to next position",
+                icon: IconArrowSDown,
+                hidden: isLast === true,
+            },
+            {
+                label: "Copy link",
+                icon: IconCopyLink,
+                onClick: () => {
+                    copyDashboardURL(
+                        $currentWorkspaceUUID,
+                        $currentBoardUUID,
+                        task.uuid
+                    );
+                },
+            },
+            {
+                label: "Goto updates",
+                icon: IconChatAlt,
+            },
+            {
+                label: "Delete task",
+                icon: IconTrash,
+            },
+        ];
+        getDropDown().open(dropDownItems, target);
+    }
 </script>
 
 <div
@@ -212,15 +312,14 @@
                     {#each section.tasks as task (task.uuid)}
                         <BoardTaskItem
                             {task}
-                            sectionUUID={section.uuid}
                             showHoverRing={!isDragging}
+                            on:openDropDownMenu={openItemDropDownMenu}
                             on:click={() =>
                                 !isDragging && openTaskDetails(task.uuid)}
                         />
                     {/each}
                     {#if !isDragging}
                         <BoardTaskItem
-                            sectionUUID={section.uuid}
                             on:click={() => openNewTask(section.uuid)}
                         />
                     {/if}

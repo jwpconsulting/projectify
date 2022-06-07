@@ -1,32 +1,10 @@
 <script lang="ts">
-    import { goto } from "$app/navigation";
-    import { moveTaskAfter } from "$lib/graphql/api";
-
-    import {
-        copyDashboardURL,
-        currentBoardSections,
-        currentBoardUUID,
-        currentWorkspaceUUID,
-        getDashboardURL,
-    } from "$lib/stores/dashboard";
-
     import { getColorFromInx } from "$lib/utils/colors";
     import { dateStringToLocal } from "$lib/utils/date";
     import { createEventDispatcher } from "svelte";
     import { _ } from "svelte-i18n";
-    import { getDropDown } from "../globalDropDown.svelte";
-    import IconArrowExpand from "../icons/icon-arrow-expand.svelte";
-    import IconArrowSDown from "../icons/icon-arrow-s-down.svelte";
-    import IconArrowSRight from "../icons/icon-arrow-s-right.svelte";
-    import IconArrowSUp from "../icons/icon-arrow-s-up.svelte";
-    import IconChatAlt from "../icons/icon-chat-alt.svelte";
-    import IconCopyLink from "../icons/icon-copy-link.svelte";
     import IconMenu from "../icons/icon-menu.svelte";
     import IconPlus from "../icons/icon-plus.svelte";
-    import IconSortAscending from "../icons/icon-sort-ascending.svelte";
-    import IconSortDescending from "../icons/icon-sort-descending.svelte";
-    import IconSwitchVertical from "../icons/icon-switch-vertical.svelte";
-    import IconTrash from "../icons/icon-trash.svelte";
     import UserProfilePicture from "../userProfilePicture.svelte";
     import LabelList from "./labelList.svelte";
 
@@ -34,83 +12,8 @@
     export let task = null;
     export let showHoverRing = true;
     export let deadLineVisible = false;
-
-    export let sectionUUID;
-
     const dispatch = createEventDispatcher();
-
     let dropDownMenuBtnRef;
-
-    $: url =
-        task &&
-        getDashboardURL($currentWorkspaceUUID, $currentBoardUUID, task.uuid);
-
-    let menuSectionsItems = $currentBoardSections
-        .filter((section) => section.uuid != sectionUUID)
-        .map((it) => {
-            return {
-                label: it.title,
-                icon: IconArrowSRight,
-                onClick: () => {
-                    moveTaskAfter(task.uuid, it.uuid);
-                },
-            };
-        });
-
-    let dropDownItems = [
-        {
-            label: "Open",
-            icon: IconArrowExpand,
-
-            onClick: () => {
-                goto(url);
-            },
-        },
-        {
-            label: "Move to section",
-            icon: IconSwitchVertical,
-            items: menuSectionsItems,
-        },
-        {
-            label: "Move to top",
-            icon: IconSortAscending,
-        },
-        {
-            label: "Move to bottom",
-            icon: IconSortDescending,
-        },
-        {
-            label: "Move to previews position",
-            icon: IconArrowSUp,
-        },
-        {
-            label: "Move to next position",
-            icon: IconArrowSDown,
-        },
-        {
-            label: "Copy link",
-            icon: IconCopyLink,
-            onClick: () => {
-                copyDashboardURL(
-                    $currentWorkspaceUUID,
-                    $currentBoardUUID,
-                    task.uuid
-                );
-            },
-        },
-        {
-            label: "Goto updates",
-            icon: IconChatAlt,
-        },
-        {
-            label: "Delete task",
-            icon: IconTrash,
-        },
-    ];
-
-    function openDropDownMenu() {
-        getDropDown().open(dropDownItems, dropDownMenuBtnRef);
-    }
 </script>
 
 {#if task}
@@ -139,7 +42,10 @@
                     <button
                         bind:this={dropDownMenuBtnRef}
                         on:click|stopPropagation={() => {
-                            openDropDownMenu();
+                            dispatch("openDropDownMenu", {
+                                task,
+                                target: dropDownMenuBtnRef,
+                            });
                         }}
                         class="btn btn-outline btn-primary btn-circle btn-xs shrink-0"
                         ><IconMenu /></button
