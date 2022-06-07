@@ -8,6 +8,7 @@
         currentBoardSections,
         currentBoardUUID,
         currentWorkspaceUUID,
+        deleteTask,
         getDashboardURL,
         moveTaskAfter,
         openNewTask,
@@ -262,6 +263,9 @@
             {
                 label: "Delete task",
                 icon: IconTrash,
+                onClick: () => {
+                    deleteTask(task, section);
+                },
             },
         ];
         getDropDown().open(dropDownItems, target);

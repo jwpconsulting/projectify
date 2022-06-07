@@ -1,8 +1,8 @@
 <script lang="ts">
     import {
-        closeTaskDetails,
         currenTaskDetailsUUID,
         currentWorkspaceUUID,
+        deleteTask,
         newTaskSectionUUID,
         pushTashUUIDtoPath,
     } from "$lib/stores/dashboard";
@@ -11,7 +11,6 @@
         Query_DashboardTaskDetails,
         Mutation_AddTask,
         Mutation_UpdateTask,
-        Mutation_DeleteTask,
         Mutation_AssignTask,
     } from "$lib/graphql/operations";
     import { query } from "svelte-apollo";
@@ -24,7 +23,6 @@
     import { onDestroy } from "svelte";
     import ToolBar from "./toolBar.svelte";
     import IconTrash from "../icons/icon-trash.svelte";
-    import { getModal } from "../dialogModal.svelte";
     import UserPicker from "../userPicker.svelte";
     import UserProfilePicture from "../userProfilePicture.svelte";
     import ProfilePicture from "../profilePicture.svelte";
@@ -201,41 +199,7 @@
     }
 
     async function onDelete() {
-        let modalRes = await getModal("deleteTaskConfirmModal").open();
-
-        if (!modalRes) {
-            return;
-        }
-
-        try {
-            let mRes = await client.mutate({
-                mutation: Mutation_DeleteTask,
-                variables: {
-                    input: {
-                        uuid: task.uuid,
-                    },
-                },
-                update(cache, { data }) {
-                    const sectionUUID = task.workspaceBoardSection.uuid;
-                    const cacheId = `WorkspaceBoardSection:${sectionUUID}`;
-
-                    cache.modify({
-                        id: cacheId,
-                        fields: {
-                            tasks(list = []) {
-                                return list.filter(
-                                    (it) => it.__ref != `Task:${task.uuid}`
-                                );
-                            },
-                        },
-                    });
-                },
-            });
-
-            closeTaskDetails();
-        } catch (error) {
-            console.error(error);
-        }
+        deleteTask(task, task.workspaceBoardSection.uuid);
     }
 
     let userPickerOpen = false;
@@ -294,11 +258,11 @@
         <Loading />
     </div>
 {:else if (res && !$res.error) || task}
-    <div class="flex flex-col p-0 w-[60vw] h-screen">
-        <header class="flex p-6 space-x-4 items-center bg-base-100 relative">
+    <div class="flex h-screen w-[60vw] flex-col p-0">
+        <header class="relative flex items-center space-x-4 bg-base-100 p-6">
             <a
                 href="/"
-                class="flex justify-center items-center"
+                class="flex items-center justify-center"
                 on:click|preventDefault={() =>
                     (userPickerOpen = !userPickerOpen)}
             >
@@ -315,7 +279,7 @@
             </a>
 
             <input
-                class="input grow text-xl p-2 rounded-md nowrap-ellipsis"
+                class="nowrap-ellipsis input grow rounded-md p-2 text-xl"
                 placeholder={$_("task-name")}
                 on:keydown={(e) => {
                     if (e.key == "Enter") {
@@ -340,11 +304,11 @@
 
             <button
                 disabled={!saveEnabled}
-                class="btn btn-primary btn-sm rounded-full shrink-0"
+                class="btn btn-primary btn-sm shrink-0 rounded-full"
                 on:click={() => save()}>{$_("save")}</button
             >
             {#if userPickerOpen}
-                <div class="absolute top-20 left-2 right-20 max-w-md z-10">
+                <div class="absolute top-20 left-2 right-20 z-10 max-w-md">
                     <UserPicker
                         workspaceUUID={$currentWorkspaceUUID}
                         selectedUser={task.assignee}

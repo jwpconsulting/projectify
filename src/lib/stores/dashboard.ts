@@ -1,9 +1,10 @@
-import { Mutation_MoveTaskAfter } from './../graphql/operations';
+import { Mutation_MoveTaskAfter, Mutation_DeleteTask } from './../graphql/operations';
 import { goto } from "$app/navigation";
 import { encodeUUID } from "$lib/utils/encoders";
 import Fuse from "fuse.js";
 import { writable, get } from "svelte/store";
 import { client } from '$lib/graphql/client';
+import { getModal } from '$lib/components/dialogModal.svelte';
 
 export const drawerModalOpen = writable(false);
 export const currentWorkspaceUUID = writable<string | null>(null);
@@ -174,6 +175,44 @@ export async function moveTaskAfter(
             mutation: Mutation_MoveTaskAfter,
             variables: { input },
         });
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export async function deleteTask(task, section): Promise<void> {
+    const modalRes = await getModal("deleteTaskConfirmModal").open();
+
+    if (!modalRes) {
+        return;
+    }
+
+    try {
+        await client.mutate({
+            mutation: Mutation_DeleteTask,
+            variables: {
+                input: {
+                    uuid: task.uuid,
+                },
+            },
+            update(cache, { data }) {
+                const sectionUUID = section.uuid;
+                const cacheId = `WorkspaceBoardSection:${sectionUUID}`;
+
+                cache.modify({
+                    id: cacheId,
+                    fields: {
+                        tasks(list = []) {
+                            return list.filter(
+                                (it) => it.__ref != `Task:${task.uuid}`
+                            );
+                        },
+                    },
+                });
+            },
+        });
+
+        closeTaskDetails();
     } catch (error) {
         console.error(error);
     }
