@@ -328,7 +328,7 @@
     <div class="flex grow flex-col">
         <header
             class:open={open || $dashboardSectionsLayout == "columns"}
-            class="drag-handle sticky -top-2 z-[2] flex h-16 cursor-pointer  select-none items-center bg-base-100 p-2"
+            class="sticky -top-2 z-[2] flex h-16 cursor-pointer  select-none items-center bg-base-100 p-2"
             on:click={$dashboardSectionsLayout == "columns"
                 ? null
                 : toggleOpen}
@@ -343,7 +343,9 @@
                     <IconChevronRight />
                 </div>
             {/if}
-            <div class="ml-2 grid grow font-bold uppercase">
+            <div
+                class="drag-handle ml-2 grid grow cursor-move font-bold uppercase"
+            >
                 <span class="nowrap-ellipsis">
                     {section.title}
                     {#if !open} ({section.tasks.length}) {/if}
