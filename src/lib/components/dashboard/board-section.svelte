@@ -181,6 +181,8 @@
             );
 
         let lastTask = section.tasks[section.tasks.length - 1];
+        let prevTask = section.tasks[section.tasks.indexOf(task) - 1];
+        let nextTask = section.tasks[section.tasks.indexOf(task) + 1];
         let isFirst = task.uuid == section.tasks[0].uuid;
         let isLast = task.uuid == lastTask.uuid;
 
@@ -230,11 +232,17 @@
                 label: "Move to previews position",
                 icon: IconArrowSUp,
                 hidden: isFirst === true,
+                onClick: () => {
+                    moveTaskAfter(task.uuid, section.uuid, prevTask?.uuid);
+                },
             },
             {
                 label: "Move to next position",
                 icon: IconArrowSDown,
                 hidden: isLast === true,
+                onClick: () => {
+                    moveTaskAfter(task.uuid, section.uuid, nextTask?.uuid);
+                },
             },
             {
                 label: "Copy link",
