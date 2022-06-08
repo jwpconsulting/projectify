@@ -6,47 +6,50 @@
     import IconViewList from "../icons/icon-view-list.svelte";
     import IconViewBoards from "../icons/icon-view-boards.svelte";
     import { _ } from "svelte-i18n";
+    import { DropDownMenuItem, getDropDown } from "../globalDropDown.svelte";
 
     function getLayoutIconFor(layout) {
         switch (layout) {
-            case "grid":
-                return IconViewGrid;
-            case "list":
-                return IconViewList;
             case "columns":
                 return IconViewBoards;
+            case "list":
+                return IconViewList;
         }
     }
 
     $: currentIcon = getLayoutIconFor($dashboardSectionsLayout);
+
+    let targetBtn = null;
+
+    function openDropDownMenu() {
+        let dropDownItems: DropDownMenuItem[] = [
+            {
+                id: "columns",
+                label: "Columns",
+                icon: IconViewBoards,
+                onClick: () => {
+                    dashboardSectionsLayout.set("columns");
+                },
+            },
+            {
+                id: "list",
+                label: "List",
+                icon: IconViewList,
+                onClick: () => {
+                    dashboardSectionsLayout.set("list");
+                },
+            },
+        ];
+
+        getDropDown().open(dropDownItems, targetBtn, $dashboardSectionsLayout);
+    }
 </script>
 
-<DropDownMenu
-    activeId={$dashboardSectionsLayout}
-    items={[
-        {
-            id: "columns",
-            label: "Columns",
-            icon: IconViewBoards,
-            onClick: () => {
-                dashboardSectionsLayout.set("columns");
-            },
-        },
-        {
-            id: "list",
-            label: "List",
-            icon: IconViewList,
-            onClick: () => {
-                dashboardSectionsLayout.set("list");
-            },
-        },
-    ]}
+<button
+    bind:this={targetBtn}
+    class="btn btn-ghost btn-xs flex h-10 shrink-0 items-center px-3"
+    on:click={openDropDownMenu}
 >
-    <button
-        tabindex="0"
-        class="btn btn-ghost btn-xs flex h-10 shrink-0 items-center px-3"
-    >
-        <svelte:component this={currentIcon} />
-        <span>{$_("layout")}</span>
-    </button>
-</DropDownMenu>
+    <svelte:component this={currentIcon} />
+    <span>{$_("layout")}</span>
+</button>
