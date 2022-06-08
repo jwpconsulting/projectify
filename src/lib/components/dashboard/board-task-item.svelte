@@ -34,28 +34,28 @@
             />
         {/if}
         <div class="flex max-h-full grow flex-col overflow-hidden">
-            {#if task.labels.length || task.deadline}
-                <div class="title flex flex-row font-bold">
-                    <div class="grow">
-                        <span>{task.title}</span>
-                    </div>
-                    <button
-                        bind:this={dropDownMenuBtnRef}
-                        on:click|stopPropagation={() => {
-                            dispatch("openDropDownMenu", {
-                                task,
-                                target: dropDownMenuBtnRef,
-                            });
-                        }}
-                        class="btn btn-outline btn-primary btn-circle btn-xs shrink-0"
-                        ><IconMenu /></button
-                    >
+            <div class="title flex flex-row gap-2 font-bold">
+                <div class="grow">
+                    <span>{task.title}</span>
                 </div>
+                <button
+                    bind:this={dropDownMenuBtnRef}
+                    on:click|stopPropagation={() => {
+                        dispatch("openDropDownMenu", {
+                            task,
+                            target: dropDownMenuBtnRef,
+                        });
+                    }}
+                    class="btn btn-outline btn-primary btn-circle btn-xs shrink-0"
+                    ><IconMenu /></button
+                >
+            </div>
+            {#if task.labels.length || (deadLineVisible && task.deadline)}
                 <div
                     class="my-1 mt-2 flex items-start space-x-2 border-t border-base-300 pt-3 dark:border-base-100"
                 >
-                    {#if task.labels.length}
-                        <div class="flex grow flex-wrap items-center gap-2">
+                    <div class="flex grow flex-wrap items-center gap-2">
+                        {#if task.labels.length}
                             {#if layout == "compact"}
                                 {#each task.labels as label}
                                     <div
@@ -72,12 +72,13 @@
                                     labels={task.labels}
                                 />
                             {/if}
-                        </div>
-                    {/if}
+                        {/if}
+                    </div>
                     {#if task.deadline && deadLineVisible}
                         <div class="item-date grid h-4 shrink-0 items-center">
                             <span class="nowrap-ellipsis text-xs"
-                                >Date {dateStringToLocal(task.deadline)}</span
+                                >{$_("deadline")}
+                                {dateStringToLocal(task.deadline)}</span
                             >
                         </div>
                     {/if}
