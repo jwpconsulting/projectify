@@ -201,7 +201,7 @@
 
         let dropDownItems: DropDownMenuItem[] = [
             {
-                label: "Open",
+                label: "Open task",
                 icon: IconArrowExpand,
 
                 onClick: () => {
@@ -230,7 +230,7 @@
                 },
             },
             {
-                label: "Move to previews position",
+                label: "Move to previous position",
                 icon: IconArrowSUp,
                 hidden: isFirst === true,
                 onClick: () => {
@@ -257,7 +257,7 @@
                 },
             },
             {
-                label: "Goto updates",
+                label: "Goto to updates",
                 icon: IconChatAlt,
                 onClick: () => {
                     openTaskDetails(task.uuid, "updates");
