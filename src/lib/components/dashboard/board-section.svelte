@@ -323,7 +323,7 @@
 </script>
 
 <div
-    class={`${layoutClass} section m-2 flex select-none bg-base-100 shadow-sm`}
+    class={`${layoutClass} section m-2 flex select-none rounded-b-2xl bg-base-100 shadow-sm`}
 >
     <div class="flex grow flex-col">
         <header
