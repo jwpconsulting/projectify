@@ -369,7 +369,7 @@
             <button
                 bind:this={dropDownMenuBtnRef}
                 on:click|stopPropagation={openDropDownMenu}
-                class="btn btn-circle btn-outline btn-primary btn-xs mx-2 shrink-0"
+                class="btn btn-outline btn-primary btn-circle btn-xs mx-2 shrink-0"
                 ><IconMenu /></button
             >
         </header>
