@@ -66,6 +66,10 @@
             y -= deltaBottom;
         }
 
+        if (x - posMargin < 0) {
+            x = posMargin;
+        }
+
         window.requestAnimationFrame(checkTargetPosition);
     }
 
