@@ -3,7 +3,7 @@ jobs:
     build:
         working_directory: ~/projectify-frontend
         docker:
-            - image: node:17
+            - image: cimg/node:14.19.3
         steps:
             - checkout
             - restore_cache:
