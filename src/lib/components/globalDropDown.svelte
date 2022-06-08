@@ -69,9 +69,14 @@
         window.requestAnimationFrame(checkTargetPosition);
     }
 
-    async function open(its: DropDownMenuItem[], trg: HTMLElement) {
+    async function open(
+        its: DropDownMenuItem[],
+        trg: HTMLElement,
+        aId: any = null
+    ) {
         items = its;
         target = trg;
+        activeId = aId;
 
         await tick();
 
