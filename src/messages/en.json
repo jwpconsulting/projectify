@@ -139,5 +139,18 @@
     "dark": "Dark",
     "appearance": "Appearance",
     "assigned-to-nobody": "Assigned to nobody",
-    "updates": "Updates"
+    "updates": "Updates",
+    "open-task": "Open task",
+    "move-to-section": "Move to section",
+    "move-to-top": "Move to top",
+    "move-to-bottom": "Move to bottom",
+    "move-to-previous-position": "Move to previous position",
+    "move-to-next-position": "Move to next position",
+    "copy-link": "Copy link",
+    "goto-to-updates": "Goto to updates",
+    "expand-section": "Expand section",
+    "collapse-section": "Collapse section",
+    "switch-with-previous-section": "Switch with previous section",
+    "switch-with-next-section": "Switch with next section",
+    "add-task": "Add Task"
 }

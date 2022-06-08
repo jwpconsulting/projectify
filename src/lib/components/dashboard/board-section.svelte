@@ -201,7 +201,7 @@
 
         let dropDownItems: DropDownMenuItem[] = [
             {
-                label: "Open task",
+                label: $_("open-task"),
                 icon: IconArrowExpand,
 
                 onClick: () => {
@@ -209,12 +209,12 @@
                 },
             },
             {
-                label: "Move to section",
+                label: $_("move-to-section"),
                 icon: IconSwitchVertical,
                 items: menuSectionsItems,
             },
             {
-                label: "Move to top",
+                label: $_("move-to-top"),
                 icon: IconSortAscending,
                 hidden: isFirst === true,
                 onClick: () => {
@@ -222,7 +222,7 @@
                 },
             },
             {
-                label: "Move to bottom",
+                label: $_("move-to-bottom"),
                 icon: IconSortDescending,
                 hidden: isLast === true,
                 onClick: () => {
@@ -230,7 +230,7 @@
                 },
             },
             {
-                label: "Move to previous position",
+                label: $_("move-to-previous-position"),
                 icon: IconArrowSUp,
                 hidden: isFirst === true,
                 onClick: () => {
@@ -238,7 +238,7 @@
                 },
             },
             {
-                label: "Move to next position",
+                label: $_("move-to-next-position"),
                 icon: IconArrowSDown,
                 hidden: isLast === true,
                 onClick: () => {
@@ -246,7 +246,7 @@
                 },
             },
             {
-                label: "Copy link",
+                label: $_("copy-link"),
                 icon: IconCopyLink,
                 onClick: () => {
                     copyDashboardURL(
@@ -257,14 +257,14 @@
                 },
             },
             {
-                label: "Goto to updates",
+                label: $_("goto-to-updates"),
                 icon: IconChatAlt,
                 onClick: () => {
                     openTaskDetails(task.uuid, "updates");
                 },
             },
             {
-                label: "Delete task",
+                label: $_("delete-task"),
                 icon: IconTrash,
                 onClick: () => {
                     deleteTask(task, section);
@@ -279,7 +279,7 @@
     function openDropDownMenu() {
         let dropDownItems: DropDownMenuItem[] = [
             {
-                label: "Expand section",
+                label: $_("expand-section"),
                 icon: IconSelector,
                 hidden: !collapsable || open,
                 onClick: () => {
@@ -287,7 +287,7 @@
                 },
             },
             {
-                label: "Collapse section",
+                label: $_("collapse-section"),
                 icon: IconClose,
                 hidden: !collapsable || !open,
                 onClick: () => {
@@ -295,7 +295,7 @@
                 },
             },
             {
-                label: "Switch with previous section",
+                label: $_("switch-with-previous-section"),
                 icon: IconArrowSUp,
                 hidden: isFirst === true,
                 onClick: () => {
@@ -303,7 +303,7 @@
                 },
             },
             {
-                label: "Switch with next section",
+                label: $_("switch-with-next-section"),
                 icon: IconArrowSDown,
                 hidden: isLast === true,
                 onClick: () => {
@@ -311,7 +311,7 @@
                 },
             },
             {
-                label: "Add task",
+                label: $_("add-task"),
                 icon: IconPlus,
                 onClick: () => {
                     openNewTask(section.uuid);
