@@ -13,6 +13,10 @@ from django.views.decorators.csrf import (
 
 import stripe
 
+from .models import (
+    Customer,
+)
+
 
 endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
 
@@ -39,11 +43,14 @@ def stripe_webhook(request):
         logger.exception("Invalid signature")
         return HttpResponse(status=400)
 
-    # Handle the event
+    # Handle events
     if event.type == "checkout.session.completed":
-        pass
+        session = event["data"]["object"]
+        customer_uuid = session.metadata.customer_uuid
+        customer = Customer.objects.get_by_uuid(customer_uuid)
+        customer.stripe_customer_id = session.customer
+        customer.activate_subscription()
     else:
         logger.warning("Unhandled event type %s", event.type)
-        print("Unhandled event type {}".format(event.type))
 
     return HttpResponse(status=200)

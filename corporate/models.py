@@ -7,6 +7,14 @@ from django.db import (
 from django.utils.translation import gettext_lazy as _
 
 
+class CustomerManager(models.Manager):
+    """Custom Manager for Customer model."""
+
+    def get_by_uuid(self, uuid):
+        """Get Customer by UUID."""
+        return self.get(uuid=uuid)
+
+
 class Customer(models.Model):
     """Customer model. One to one linked to workspace."""
 
@@ -17,6 +25,8 @@ class Customer(models.Model):
         on_delete=models.CASCADE,
     )
     seats = models.PositiveIntegerField(default=1)
+
+    objects = CustomerManager()
 
     class SubscriptionStatus(models.TextChoices):
         """Subscription Choices."""
@@ -33,3 +43,8 @@ class Customer(models.Model):
     stripe_customer_id = models.CharField(
         max_length=150, null=True, blank=True
     )
+
+    def activate_subscription(self):
+        """Activate customter Subscription."""
+        self.subscription_status = Customer.SubscriptionStatus.ACTIVE
+        self.save()
