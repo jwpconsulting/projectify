@@ -35,6 +35,23 @@ const config = {
             build: {
                 target: ["es2020"],
             },
+            server: {
+                proxy: {
+                    "/api": {
+                        target: "http://localhost:8000",
+                        changeOrigin: true,
+                        rewrite: (path) => path.replace(/^\/api/, ""),
+                    },
+                    "/graphql": {
+                        target: "http://localhost:8000",
+                        changeOrigin: true,
+                    },
+                    "/ws": {
+                        target: "ws://localhost:8000",
+                        ws: true,
+                    },
+                },
+            },
         },
     },
 };
