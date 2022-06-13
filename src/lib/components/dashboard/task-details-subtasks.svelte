@@ -4,6 +4,7 @@
         Mutation_ChangeSubTaskDone,
         Mutation_DeleteSubTaskMutation,
         Mutation_MoveSubTaskMutation,
+        Mutation_UpdateSubTask,
     } from "$lib/graphql/operations";
 
     import { client } from "$lib/graphql/client";
@@ -13,6 +14,9 @@
     import IconChevronDown from "../icons/icon-chevron-down.svelte";
     import IconChevronUp from "../icons/icon-chevron-up.svelte";
     import IconEdit from "../icons/icon-edit.svelte";
+    import { tick } from "svelte";
+    import IconClose from "../icons/icon-close.svelte";
+    import IconUpload from "../icons/icon-upload.svelte";
 
     export let taskUUID;
     export let subTasks;
@@ -130,7 +134,46 @@
         await moveSubTask(subTask, subTask.order + 1);
     }
 
-    async function edit(subTask) {}
+    let subtaskEditTitle = null;
+    let editSubtaskUUID = null;
+    let editSubtaskInput = null;
+
+    async function editSubtask(subTask) {
+        editSubtaskUUID = subTask.uuid;
+        subtaskEditTitle = subTask.title;
+
+        await tick();
+
+        editSubtaskInput.focus();
+    }
+    function stopEditSubtask() {
+        editSubtaskUUID = null;
+        subtaskEditTitle = null;
+    }
+
+    async function saveSubTask(subTask) {
+        if (!subtaskEditTitle) {
+            return;
+        }
+
+        try {
+            await client.mutate({
+                mutation: Mutation_UpdateSubTask,
+                variables: {
+                    input: {
+                        uuid: subTask.uuid,
+                        title: subtaskEditTitle,
+                        description: "",
+                    },
+                },
+            });
+        } catch (error) {
+            console.error(error);
+        }
+
+        subTask.title = subtaskEditTitle;
+        editSubtaskUUID = null;
+    }
 </script>
 
 <div class="flex flex-col space-y-4">
@@ -156,32 +199,63 @@
                     bind:checked={it.done}
                     on:change={(e) => changeSubTaskDone(it)}
                 />
-                <div class="grow">{it.title}</div>
+
+                {#if editSubtaskUUID == it.uuid}
+                    <div class="relative flex w-full grow">
+                        <input
+                            bind:this={editSubtaskInput}
+                            class="nowrap-ellipsis input input-sm grow rounded-md p-2 text-base"
+                            on:keydown={(e) => {
+                                if (e.key === "Enter") {
+                                    saveSubTask(it);
+                                } else if (e.key == "Escape") {
+                                    stopEditSubtask();
+                                }
+                            }}
+                            bind:value={subtaskEditTitle}
+                        />
+                        <button
+                            class="btn btn-ghost btn-square btn-sm absolute right-0 h-full w-8 rounded-l-none"
+                            on:click={() => stopEditSubtask()}
+                        >
+                            <IconClose />
+                        </button>
+                    </div>
+                {:else}
+                    <div class="grow">{it.title}</div>
+                {/if}
+
                 {#if it.uuid}
                     <div class="flex gap-2">
                         <button
                             disabled={inx == 0}
                             on:click={() => moveUp(it)}
-                            class:visible={it.uuid}
                             class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
                             ><IconChevronUp /></button
                         >
                         <button
                             disabled={subTasks.length == inx + 1}
                             on:click={() => moveDown(it)}
-                            class:visible={it.uuid}
                             class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
                             ><IconChevronDown /></button
                         >
-                        <button
-                            on:click={() => edit(it)}
-                            class:visible={it.uuid}
-                            class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
-                            ><IconEdit /></button
-                        >
+
+                        {#if editSubtaskUUID == it.uuid}
+                            <button
+                                on:click={() => saveSubTask(it)}
+                                class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
+                                ><IconUpload /></button
+                            >
+                        {:else}
+                            <button
+                                on:click={() => editSubtask(it)}
+                                class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
+                                ><IconEdit /></button
+                            >
+                        {/if}
+
                         <button
                             on:click={() => deleteSubTask(it)}
-                            class:visible={it.uuid}
                             class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
                             ><IconTrash /></button
                         >

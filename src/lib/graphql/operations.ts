@@ -313,6 +313,14 @@ export const Mutation_AddTask = gql`
     }
 `;
 
+export const Mutation_UpdateSubTask = gql`
+    mutation UpdateSubTask($input: UpdateSubTaskInput!) {
+        updateSubTask(input: $input) {
+            uuid
+        }
+    }
+`;
+
 export const Mutation_DeleteTask = gql`
     mutation DeleteTask($input: DeleteTaskInput!) {
         deleteTask(input: $input) {
