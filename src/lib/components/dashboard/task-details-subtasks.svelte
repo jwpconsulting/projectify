@@ -3,12 +3,16 @@
         Mutation_AddSubTask,
         Mutation_ChangeSubTaskDone,
         Mutation_DeleteSubTaskMutation,
+        Mutation_MoveSubTaskMutation,
     } from "$lib/graphql/operations";
 
     import { client } from "$lib/graphql/client";
     import IconTrash from "../icons/icon-trash.svelte";
     import IconPlus from "../icons/icon-plus.svelte";
     import { _ } from "svelte-i18n";
+    import IconChevronDown from "../icons/icon-chevron-down.svelte";
+    import IconChevronUp from "../icons/icon-chevron-up.svelte";
+    import IconEdit from "../icons/icon-edit.svelte";
 
     export let taskUUID;
     export let subTasks;
@@ -102,6 +106,31 @@
             console.error(error);
         }
     }
+
+    async function moveSubTask(subTask, order) {
+        try {
+            await client.mutate({
+                mutation: Mutation_MoveSubTaskMutation,
+                variables: {
+                    input: {
+                        subTaskUuid: subTask.uuid,
+                        order,
+                    },
+                },
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function moveUp(subTask) {
+        await moveSubTask(subTask, subTask.order - 1);
+    }
+    async function moveDown(subTask) {
+        await moveSubTask(subTask, subTask.order + 1);
+    }
+
+    async function edit(subTask) {}
 </script>
 
 <div class="flex flex-col space-y-4">
@@ -119,7 +148,7 @@
     <div>
         {#each subTasks as it, inx}
             <label
-                class="label flex cursor-pointer items-center justify-start gap-4 p-2 hover:bg-base-200"
+                class="label flex cursor-pointer items-center justify-start gap-4 rounded-lg p-2 hover:bg-base-200"
             >
                 <input
                     type="checkbox"
@@ -128,12 +157,36 @@
                     on:change={(e) => changeSubTaskDone(it)}
                 />
                 <div class="grow">{it.title}</div>
-                <button
-                    on:click={() => deleteSubTask(it)}
-                    class:visible={it.uuid}
-                    class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
-                    ><IconTrash /></button
-                >
+                {#if it.uuid}
+                    <div class="flex gap-2">
+                        <button
+                            disabled={inx == 0}
+                            on:click={() => moveUp(it)}
+                            class:visible={it.uuid}
+                            class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
+                            ><IconChevronUp /></button
+                        >
+                        <button
+                            disabled={subTasks.length == inx + 1}
+                            on:click={() => moveDown(it)}
+                            class:visible={it.uuid}
+                            class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
+                            ><IconChevronDown /></button
+                        >
+                        <button
+                            on:click={() => edit(it)}
+                            class:visible={it.uuid}
+                            class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
+                            ><IconEdit /></button
+                        >
+                        <button
+                            on:click={() => deleteSubTask(it)}
+                            class:visible={it.uuid}
+                            class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
+                            ><IconTrash /></button
+                        >
+                    </div>
+                {/if}
             </label>
         {/each}
     </div>

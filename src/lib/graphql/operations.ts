@@ -279,6 +279,7 @@ export const Query_DashboardTaskDetails = gql`
                 title
                 description
                 done
+                order
             }
             workspaceBoardSection {
                 uuid
@@ -375,6 +376,14 @@ export const Mutation_ChangeSubTaskDone = gql`
 export const Mutation_DeleteSubTaskMutation = gql`
     mutation DeleteSubTaskMutation($input: DeleteSubTaskInput!) {
         deleteSubTask(input: $input) {
+            uuid
+        }
+    }
+`;
+
+export const Mutation_MoveSubTaskMutation = gql`
+    mutation MoveSubTaskMutation($input: MoveSubTaskInput!) {
+        moveSubTask(input: $input) {
             uuid
         }
     }
