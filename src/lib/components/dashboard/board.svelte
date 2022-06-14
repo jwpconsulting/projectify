@@ -276,7 +276,7 @@
     }
 
     let sectionContainerEl: HTMLElement = null;
-    let scrollInx = -1;
+    let scrollInx = 0;
 
     function onSectionScroll(e) {
         const s = sectionContainerEl.scrollLeft;
@@ -315,6 +315,7 @@
                 behavior: "smooth",
             });
         }
+        console.log("scroll to inx", scrollInx, inx);
     }
 
     let sectionToolTipHoverInx = 0;
