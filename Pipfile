@@ -42,6 +42,7 @@ websockets = "*"
 strawberry-graphql = "*"
 strawberry-graphql-django = "*"
 stripe = "*"
+rules = "*"
 
 [requires]
 python_version = "3.10"

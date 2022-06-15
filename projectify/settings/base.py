@@ -67,6 +67,7 @@ INSTALLED_APPS_THIRD_PARTY = (
     "ordered_model",
     "premail",
     "rest_framework",
+    "rules",
 )
 
 INSTALLED_APPS_FIRST_PARTY = (
@@ -151,6 +152,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Authentication
+AUTHENTICATION_BACKENDS = (
+    "rules.permissions.ObjectPermissionBackend",
+    "django.contrib.auth.backends.ModelBackend",
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
