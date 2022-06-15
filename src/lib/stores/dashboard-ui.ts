@@ -3,8 +3,6 @@ import { writable } from "svelte/store";
 
 export type DashboardSectionsLayout = "grid" | "list" | "columns";
 
-export const filterUser = writable(null);
-
 export const dashboardSectionsLayout =
     writable<DashboardSectionsLayout>("list");
 

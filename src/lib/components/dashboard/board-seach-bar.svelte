@@ -5,7 +5,6 @@
     } from "$lib/stores/dashboard";
 
     import { _ } from "svelte-i18n";
-    import { writable } from "svelte/store";
     import IconCheckCircle from "../icons/icon-check-circle.svelte";
     import IconChevronDown from "../icons/icon-chevron-down.svelte";
 

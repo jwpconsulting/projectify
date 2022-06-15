@@ -33,10 +33,7 @@
     import BoardSeachBar from "./board-seach-bar.svelte";
     import BoardTaskItem from "./board-task-item.svelte";
     import Loading from "../loading.svelte";
-    import {
-        dashboardSectionsLayout,
-        filterUser,
-    } from "$lib/stores/dashboard-ui";
+    import { dashboardSectionsLayout } from "$lib/stores/dashboard-ui";
     import IconArrowLeft from "../icons/icon-arrow-left.svelte";
     import IconArrowRight from "../icons/icon-arrow-right.svelte";
 
@@ -52,6 +49,7 @@
 
     let filteredSections = [];
     let filterLabels = [];
+    let filterUser = null;
 
     let searchText = "";
     let tasksSearchResults = [];
@@ -388,7 +386,7 @@
                 <BoardSeachBar
                     bind:searchText
                     bind:filterLabels
-                    bind:filterUser={$filterUser}
+                    bind:filterUser
                 />
             </div>
         </header>
