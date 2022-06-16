@@ -44,6 +44,11 @@ const factoryDarkThemeColors = {
     "error": "#ff5724",
 };
 
+const commonTheme = {
+    "fontFamily": "Roboto, sans-serif",
+    "--btn-text-case": "none",
+};
+
 module.exports = {
     darkMode: "class",
     mode: "jit",
@@ -103,13 +108,13 @@ module.exports = {
         themes: [
             {
                 "app-light": {
-                    fontFamily: "Roboto, sans-serif",
+                    ...commonTheme,
                     ...factoryLightThemeColors,
                 },
             },
             {
                 "app-dark": {
-                    fontFamily: "Roboto, sans-serif",
+                    ...commonTheme,
                     ...factoryDarkThemeColors,
                 },
             },

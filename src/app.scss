@@ -76,6 +76,7 @@ body {
             opacity: 0.5;
         }
     }
+
     .btn-xs {
         > svg {
             @apply h-5 w-5;
@@ -86,6 +87,10 @@ body {
         > svg {
             @apply h-4 w-4;
         }
+    }
+
+    .btn-md {
+        @apply h-10 min-h-[2.5rem];
     }
 
     .icon-sm {

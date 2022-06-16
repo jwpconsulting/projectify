@@ -29,18 +29,27 @@
 
     let footerLinks = [
         {
-            title: $_("service"),
+            title: "Product",
             links: [
                 {
-                    name: $_("support"),
+                    name: "Features",
                     url: "/",
                 },
                 {
-                    name: $_("policy"),
+                    name: "Solutions",
                     url: "/",
                 },
                 {
-                    name: $_("terms"),
+                    name: "Pricing",
+                    url: "/",
+                },
+            ],
+        },
+        {
+            title: "Resources",
+            links: [
+                {
+                    name: "Help and tips",
                     url: "/",
                 },
             ],
@@ -49,39 +58,33 @@
             title: $_("company"),
             links: [
                 {
-                    name: $_("about"),
+                    name: "About us",
                     url: "/",
                 },
                 {
-                    name: $_("blog"),
+                    name: "Careers",
                     url: "/",
                 },
                 {
-                    name: $_("contact"),
+                    name: "Accessibility statement",
                     url: "/",
                 },
                 {
-                    name: $_("legal"),
+                    name: "Contact us",
                     url: "/",
                 },
             ],
         },
+    ];
+
+    const footerBottomLinks = [
         {
-            title: $_("social"),
-            links: [
-                {
-                    name: "Github",
-                    url: "/",
-                },
-                {
-                    name: "Twitter",
-                    url: "/",
-                },
-                {
-                    name: "Instagram",
-                    url: "/",
-                },
-            ],
+            name: "Privacy",
+            url: "/",
+        },
+        {
+            name: $_("terms"),
+            url: "/",
         },
     ];
 </script>
@@ -95,39 +98,68 @@
     <slot />
     {#if footerVisible}
         <footer
-            class="flex min-h-[200px] justify-center border-t border-base-300 bg-base-100 py-8 px-6"
+            class="flex min-h-[200px] justify-center border-t border-base-300 bg-base-100 px-6"
         >
             <div
-                class="container flex w-full flex-wrap items-start justify-between gap-y-4 gap-x-16 "
+                class="container flex w-full flex-wrap items-start justify-between"
             >
-                <div class="flex flex-col gap-4">
-                    <HeaderLogo />
-                    <div class="text-sm">
-                        {$_("enable-smooth-project-management")}
+                <!-- Top row -->
+                <div
+                    class="flex w-full flex-wrap items-start justify-between gap-y-4 gap-x-16 py-8"
+                >
+                    <div class="flex flex-col gap-4">
+                        <HeaderLogo />
+                        <div class="text-sm">
+                            {"Project management at pace."}
+                        </div>
+                        <div class="grow" />
+                        <a
+                            href={"/"}
+                            class="btn btn-primary btn-md max-w-fit rounded-full"
+                            >{"Start a free trial"}</a
+                        >
                     </div>
-                    <div class="flex gap-4">
-                        {#each socials as social}
-                            <a
-                                href={social.url}
-                                target="_blank"
-                                class="btn btn-square border border-base-300 bg-[#fff]"
-                            >
-                                <svelte:component this={social.icon} />
-                            </a>
+
+                    <div
+                        class="flex grow justify-between gap-8 sm:justify-start"
+                    >
+                        {#each footerLinks as group}
+                            <div class="flex flex-col gap-2">
+                                <h1 class="font-bold">{group.title}</h1>
+                                {#each group.links as link}
+                                    <a class="link text-sm" href={link.url}
+                                        >{link.name}</a
+                                    >
+                                {/each}
+                            </div>
                         {/each}
                     </div>
                 </div>
-                <div class="flex grow justify-between gap-8 sm:justify-start">
-                    {#each footerLinks as group}
-                        <div class="flex flex-col">
-                            <h1 class="font-bold">{group.title}</h1>
-                            {#each group.links as link}
-                                <a class="link text-sm" href={link.url}
-                                    >{link.name}</a
+
+                <!-- Bottom row -->
+                <div class="flex grow items-center border-t py-3">
+                    <!-- Left -->
+                    <div class="flex grow gap-4">
+                        {#each footerBottomLinks as link}
+                            <a class="link text-sm" href={link.url}
+                                >{link.name}</a
+                            >
+                        {/each}
+                    </div>
+                    <!-- Right -->
+                    <div>
+                        <div class="flex gap-4">
+                            {#each socials as social}
+                                <a
+                                    href={social.url}
+                                    target="_blank"
+                                    class="btn btn-circle btn-ghost shrink-0"
                                 >
+                                    <svelte:component this={social.icon} />
+                                </a>
                             {/each}
                         </div>
-                    {/each}
+                    </div>
                 </div>
             </div>
         </footer>
