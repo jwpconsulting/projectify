@@ -562,6 +562,12 @@ class TestTask:
         task.remove_label(label)
         assert task.tasklabel_set.count() == 0
 
+    def test_task_number(self, task, other_task):
+        """Test unique task number."""
+        assert task.number == 1
+        assert other_task.number == 2
+        assert task.workspace.highest_task_number == 2
+
 
 @pytest.mark.django_db
 class TestLabelManager:

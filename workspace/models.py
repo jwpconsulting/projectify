@@ -50,6 +50,9 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         blank=True,
         null=True,
     )
+
+    highest_task_number = models.IntegerField(default=0)
+
     objects = WorkspaceManager()
 
     def add_workspace_board(self, title, description, deadline=None):
@@ -382,6 +385,10 @@ class Task(
 ):
     """Task, belongs to workspace board section."""
 
+    workspace = models.ForeignKey(
+        Workspace, on_delete=models.CASCADE, null=True
+    )
+
     workspace_board_section = models.ForeignKey(
         WorkspaceBoardSection,
         on_delete=models.CASCADE,
@@ -403,6 +410,8 @@ class Task(
         "workspace.Label",
         through="workspace.TaskLabel",
     )
+
+    number = models.PositiveIntegerField(null=True)
 
     objects = TaskQuerySet.as_manager()
 
@@ -494,6 +503,19 @@ class Task(
             pass
         return label
 
+    def save(self, *args, **kwargs):
+        """Override save to add task number."""
+        if self.workspace is None:
+            self.workspace = (
+                self.workspace_board_section.workspace_board.workspace
+            )
+        if self.number is None:
+            new_number = self.workspace.highest_task_number + 1
+            self.number = new_number
+            self.workspace.highest_task_number = new_number
+            self.workspace.save()
+        super().save(*args, **kwargs)
+
     class Meta:
         """Meta."""
 
@@ -503,7 +525,12 @@ class Task(
                 fields=["workspace_board_section", "_order"],
                 name="unique_task_order",
                 deferrable=models.Deferrable.DEFERRED,
-            )
+            ),
+            models.UniqueConstraint(
+                fields=["workspace", "number"],
+                name="unique_task_number",
+                deferrable=models.Deferrable.DEFERRED,
+            ),
         ]
 
 
