@@ -29,27 +29,27 @@
 
     let footerLinks = [
         {
-            title: "Product",
+            title: $_("product"),
             links: [
                 {
-                    name: "Features",
+                    name: $_("features"),
                     url: "/",
                 },
                 {
-                    name: "Solutions",
+                    name: $_("solutions"),
                     url: "/",
                 },
                 {
-                    name: "Pricing",
+                    name: $_("pricing"),
                     url: "/",
                 },
             ],
         },
         {
-            title: "Resources",
+            title: $_("resources"),
             links: [
                 {
-                    name: "Help and tips",
+                    name: $_("help-and-tips"),
                     url: "/",
                 },
             ],
@@ -58,19 +58,19 @@
             title: $_("company"),
             links: [
                 {
-                    name: "About us",
+                    name: $_("about-us"),
                     url: "/",
                 },
                 {
-                    name: "Careers",
+                    name: $_("careers"),
                     url: "/",
                 },
                 {
-                    name: "Accessibility statement",
+                    name: $_("accessibility-statement"),
                     url: "/",
                 },
                 {
-                    name: "Contact us",
+                    name: $_("contact-us"),
                     url: "/",
                 },
             ],
@@ -79,7 +79,7 @@
 
     const footerBottomLinks = [
         {
-            name: "Privacy",
+            name: $_("privacy"),
             url: "/",
         },
         {
@@ -111,13 +111,13 @@
                     <div class="flex flex-col gap-4">
                         <HeaderLogo />
                         <div class="text-sm">
-                            {"Project management at pace."}
+                            {$_("project-management-at-pace")}
                         </div>
                         <div class="grow" />
                         <a
                             href={"/"}
                             class="btn btn-primary btn-md max-w-fit rounded-full"
-                            >{"Start a free trial"}</a
+                            >{$_("start-a-free-trial")}</a
                         >
                     </div>
 

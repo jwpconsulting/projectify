@@ -152,5 +152,18 @@
     "collapse-section": "Collapse section",
     "switch-with-previous-section": "Switch with previous section",
     "switch-with-next-section": "Switch with next section",
-    "add-task": "Add Task"
+    "add-task": "Add Task",
+    "product": "Product",
+    "features": "Features",
+    "solutions": "Solutions",
+    "pricing": "Pricing",
+    "help-and-tips": "Help and tips",
+    "resources": "Resources",
+    "about-us": "About us",
+    "careers": "Careers",
+    "accessibility-statement": "Accessibility statement",
+    "contact-us": "Contact us",
+    "privacy": "Privacy",
+    "project-management-at-pace": "Project management at pace.",
+    "start-a-free-trial": "Start a free trial"
 }
