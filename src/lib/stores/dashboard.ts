@@ -85,13 +85,6 @@ export function gotoDashboard(
         subView
     );
 
-    console.log(url);
-    console.log(curURL);
-    // if (url == curURL) {
-    //     return;
-    // }
-    console.log("goto utr");
-
     goto(url);
 }
 
