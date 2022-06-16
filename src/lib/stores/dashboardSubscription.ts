@@ -8,6 +8,11 @@ export const getSubscriptionForCollection = (
     collection: "workspace" | "workspace-board" | "task",
     uuid: string
 ): WSSubscriptionStore => {
-    const wsURL = `${vars.WS_ENDPOINT}/${collection}/${uuid}/`;
+    let wsEndPoint = vars.WS_ENDPOINT;
+    if (wsEndPoint.indexOf("/ws") == 0) {
+        wsEndPoint = `ws://${location.host}${wsEndPoint}`;
+    }
+    const wsURL = `${wsEndPoint}/${collection}/${uuid}/`;
+
     return getSubscriptionFor(wsURL);
 };
