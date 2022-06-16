@@ -94,11 +94,11 @@
     }
 
     $: {
-        if (filterLabels.length || filterUser) {
+        if (filterLabels.length || $filterUser) {
             filteredSections = filterSectionsTasks(
                 sections,
                 filterLabels,
-                filterUser
+                $filterUser
             );
         } else {
             filteredSections = sections;
