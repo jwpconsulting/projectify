@@ -12,6 +12,6 @@ export const getSubscriptionForCollection = (
     if (wsEndPoint.indexOf("ws://") == -1) {
         wsEndPoint = `ws://${location.host}${wsEndPoint}`;
     }
-    const wsURL = `${vars.WS_ENDPOINT}/${collection}/${uuid}/`;
+    const wsURL = `${wsEndPoint}/${collection}/${uuid}/`;
     return getSubscriptionFor(wsURL);
 };
