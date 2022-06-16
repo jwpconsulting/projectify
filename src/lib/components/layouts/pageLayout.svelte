@@ -98,7 +98,8 @@
     <slot />
     {#if footerVisible}
         <footer
-            class="flex min-h-[200px] justify-center border-t border-base-300 bg-base-100 px-6"
+            data-theme="app-dark"
+            class="flex min-h-[200px] justify-center border-t border-base-300  bg-[#002332] px-6 text-base-content"
         >
             <div
                 class="container flex w-full flex-wrap items-start justify-between"
@@ -137,7 +138,7 @@
                 </div>
 
                 <!-- Bottom row -->
-                <div class="flex grow items-center border-t py-3">
+                <div class="flex grow items-center border-t py-6">
                     <!-- Left -->
                     <div class="flex grow gap-4">
                         {#each footerBottomLinks as link}
@@ -148,12 +149,12 @@
                     </div>
                     <!-- Right -->
                     <div>
-                        <div class="flex gap-4">
+                        <div class="flex gap-8">
                             {#each socials as social}
                                 <a
                                     href={social.url}
                                     target="_blank"
-                                    class="btn btn-circle btn-ghost shrink-0"
+                                    class="shrink-0 text-base-content"
                                 >
                                     <svelte:component this={social.icon} />
                                 </a>
