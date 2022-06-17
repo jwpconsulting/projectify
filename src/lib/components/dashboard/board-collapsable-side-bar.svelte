@@ -10,6 +10,7 @@
     import IconArrowCircleRight from "../icons/icon-arrow-circle-right.svelte";
     import IconMenu from "../icons/icon-menu.svelte";
     import IconSettings from "../icons/icon-settings.svelte";
+    import IconTag from "../icons/icon-tag.svelte";
     import BoardsSideNav from "./boards-side-nav.svelte";
 
     export let selectedWorkspace;
@@ -22,7 +23,7 @@
     function openDropDownMenu() {
         let dropDownItems: DropDownMenuItem[] = [
             {
-                label: "Minimise sidebar",
+                label: $_("minimise-sidebar"),
                 icon: IconArrowCircleLeft,
                 onClick: () => {
                     boardSideBarOpen.set(false);
@@ -30,12 +31,18 @@
                 hidden: open == false,
             },
             {
-                label: "Expand sidebar",
+                label: $_("expand-sidebar"),
                 icon: IconArrowCircleRight,
                 onClick: () => {
                     boardSideBarOpen.set(true);
                 },
                 hidden: open == true,
+            },
+
+            {
+                label: $_("edit-labels"),
+                icon: IconTag,
+                href: `/dashboard/settings/${selectedWorkspaceUUID}/labels`,
             },
             {
                 label: $_("Archive"),
