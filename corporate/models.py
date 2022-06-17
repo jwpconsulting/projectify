@@ -33,7 +33,7 @@ class Customer(models.Model):
 
         ACTIVE = "ACT", _("Active")
         UNPAID = "UNP", _("Unpaid")
-        CANCELED = "CAN", _("Canceled")
+        CANCELLED = "CAN", _("Cancelled")
 
     subscription_status = models.CharField(
         max_length=3,
