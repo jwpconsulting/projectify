@@ -8,25 +8,28 @@
     import { page } from "$app/stores";
     import SettingsLabels from "$lib/components/dashboard/settings-labels.svelte";
     import { _ } from "svelte-i18n";
+    import { writable } from "svelte/store";
 
     $: workspaceUUID = $page.params["workspaceUUID"];
 
+    $: tab = $page.url.searchParams.get("tab");
+    $: activeTabId = writable(tab || "general");
     $: tabItems = [
         {
             label: $_("general"),
-            id: 1,
+            id: "general",
             component: SettingsGeneral,
             props: { workspaceUUID },
         },
         {
             label: $_("team-members"),
-            id: 2,
+            id: "members",
             component: TeamMembers,
             props: { workspaceUUID },
         },
         {
             label: $_("labels"),
-            id: 3,
+            id: "labels",
             component: SettingsLabels,
             props: { workspaceUUID },
         },
@@ -36,7 +39,7 @@
 <PageLayout>
     <AuthGuard>
         <SettingPage title="Workspace Settings">
-            <Tabs items={tabItems} />
+            <Tabs items={tabItems} bind:activeTabId />
         </SettingPage>
     </AuthGuard>
 </PageLayout>
