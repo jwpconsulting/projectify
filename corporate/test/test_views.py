@@ -15,15 +15,8 @@ class DottableDict(dict):
 
     def __init__(self, *args, **kwargs):
         """Initialize the dict."""
-        dict.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.__dict__ = self
-
-    def allowDotting(self, state=True):
-        """Allow dot access."""
-        if state:
-            self.__dict__ = self
-        else:
-            self.__dict__ = dict()
 
 
 class MockStripeCheckoutSession:
@@ -42,7 +35,6 @@ def stripe_checkout_session_event_mock():
     """Mock the event sent by stripe."""
     mock_stripe_webhook_session = MockStripeCheckoutSession()
     event = DottableDict()
-    event.allowDotting()
     event.type = "checkout.session.completed"
     event.data = {"object": mock_stripe_webhook_session}
     return event
