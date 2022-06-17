@@ -16,12 +16,18 @@ class TestCustomer:
 
     def test_subscription_activation(self, unpaid_customer):
         """Test activating subscription."""
-        customer = unpaid_customer
-        customer.activate_subscription()
-        customer.refresh_from_db()
+        unpaid_customer.activate_subscription()
+        unpaid_customer.refresh_from_db()
         assert (
-            customer.subscription_status == Customer.SubscriptionStatus.ACTIVE
+            unpaid_customer.subscription_status
+            == Customer.SubscriptionStatus.ACTIVE
         )
+
+    def test_assign_stripe_customer_id(self, customer):
+        """Test assign_stripe_customer_id."""
+        customer.assign_stripe_customer_id("Hello world")
+        customer.refresh_from_db()
+        assert customer.stripe_customer_id == "Hello world"
 
 
 @pytest.mark.django_db
