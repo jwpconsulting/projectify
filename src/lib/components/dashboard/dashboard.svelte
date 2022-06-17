@@ -2,9 +2,7 @@
     import Header from "$lib/components/Header.svelte";
 
     import WorkspacesSideNav from "$lib/components/dashboard/workspaces-side-nav.svelte";
-    import BoardsSideNav from "$lib/components/dashboard/boards-side-nav.svelte";
     import Board from "./board.svelte";
-    import IconSettings from "../icons/icon-settings.svelte";
     import DrawerModal from "../drawerModal.svelte";
     import TaskDetails from "./task-details.svelte";
     import {
@@ -21,10 +19,8 @@
     import { onMount } from "svelte";
     import ConfirmModalContent from "../confirmModalContent.svelte";
     import { _ } from "svelte-i18n";
-    import IconMenu from "../icons/icon-menu.svelte";
-    import IconArchive from "../icons/icon-archive.svelte";
-    import DropDownMenu from "../dropDownMenu.svelte";
     import GlobalDropDown from "../globalDropDown.svelte";
+    import BoardCollapsableSideBar from "./board-collapsable-side-bar.svelte";
 
     export let selectedWorkspace = null;
 
@@ -61,47 +57,12 @@
     <!-- First side bar -->
     <WorkspacesSideNav bind:selectedWorkspaceUUID bind:selectedWorkspace />
 
-    <!-- Secon side bar -->
-    <nav
-        class="sticky top-0 flex min-h-full w-60 shrink-0 flex-col bg-base-100"
-    >
-        <!-- Tite and settings -->
-        <div class="sticky top-0 z-50 flex bg-base-100 p-4">
-            <h1 class="grow text-xl font-bold capitalize">
-                {selectedWorkspace ? selectedWorkspace.title : ""}
-            </h1>
-            <DropDownMenu
-                items={[
-                    {
-                        label: $_("Archive"),
-                        icon: IconArchive,
-                        href: `/dashboard/archive/${selectedWorkspaceUUID}`,
-                    },
-                    {
-                        label: $_("settings"),
-                        icon: IconSettings,
-                        href: `/dashboard/settings/${selectedWorkspaceUUID}`,
-                    },
-                ]}
-            >
-                <!-- svelte-ignore a11y-label-has-associated-control -->
-                <label
-                    tabindex="0"
-                    class="btn btn-outline btn-primary btn-circle btn-xs"
-                >
-                    <IconMenu />
-                </label>
-            </DropDownMenu>
-        </div>
-
-        <!-- Boards nav -->
-        <div class="flex grow flex-col overflow-hidden">
-            {#if selectedWorkspaceUUID}
-                <h2 class="p-4 text-base font-bold">Workspace Boards</h2>
-                <BoardsSideNav {selectedWorkspaceUUID} {selectedBoardUUID} />
-            {/if}
-        </div>
-    </nav>
+    <!-- Second side bar -->
+    <BoardCollapsableSideBar
+        {selectedWorkspace}
+        {selectedWorkspaceUUID}
+        {selectedBoardUUID}
+    />
 
     {#if selectedBoardUUID}
         <div class="flex h-full grow overflow-y-auto">
