@@ -1,9 +1,16 @@
 """Test Corporate mutations."""
 import pytest
 
-from ..conftest import (
-    mock_session,
-)
+
+class MockStripeSessionResponse:
+    """Mock StripeSessionResponse."""
+
+    id = "hello_world"
+
+
+def mock_session(*args, **kwargs):
+    """Fixture of MockStripeSessionResponse."""
+    return MockStripeSessionResponse()
 
 
 @pytest.mark.django_db
@@ -22,12 +29,10 @@ mutation createCheckoutSession ($workspaceUuid: UUID!, $seats: Int!) {
         customer,
         settings,
         monkeypatch,
-        mock_session=mock_session,
     ):
         """Test query."""
         monkeypatch.setattr("stripe.checkout.Session.create", mock_session)
         settings.STRIPE_PRICE_OBJECT = "price_aklsdjw5er"
-        """Test query."""
         result = graphql_query_user(
             self.query,
             variables={
@@ -36,6 +41,4 @@ mutation createCheckoutSession ($workspaceUuid: UUID!, $seats: Int!) {
             },
         )
 
-        assert result == {
-            "data": {"createCheckoutSession": "cs_asdjkj123hj4h"}
-        }
+        assert result == {"data": {"createCheckoutSession": "hello_world"}}
