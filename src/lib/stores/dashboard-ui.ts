@@ -5,6 +5,8 @@ export type DashboardSectionsLayout = "grid" | "list" | "columns";
 
 export const filterUser = writable(null);
 
+export const boardSideBarOpen = writable(true);
+
 export const dashboardSectionsLayout =
     writable<DashboardSectionsLayout>("list");
 
