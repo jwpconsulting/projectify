@@ -42,7 +42,7 @@
             {
                 label: $_("edit-labels"),
                 icon: IconTag,
-                href: `/dashboard/settings/${selectedWorkspaceUUID}/labels`,
+                href: `/dashboard/settings/${selectedWorkspaceUUID}?tab=labels`,
             },
             {
                 label: $_("Archive"),
