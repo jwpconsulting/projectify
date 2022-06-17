@@ -45,6 +45,19 @@ class Customer(models.Model):
     )
 
     def activate_subscription(self):
-        """Activate customter Subscription."""
+        """
+        Activate customer subscription.
+
+        Saves model instance.
+        """
         self.subscription_status = Customer.SubscriptionStatus.ACTIVE
+        self.save()
+
+    def assign_stripe_customer_id(self, stripe_customer_id):
+        """
+        Assign stripe customer id.
+
+        Saves model instance.
+        """
+        self.stripe_customer_id = stripe_customer_id
         self.save()

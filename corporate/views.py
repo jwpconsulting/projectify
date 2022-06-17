@@ -48,7 +48,7 @@ def stripe_webhook(request):
         session = event["data"]["object"]
         customer_uuid = session.metadata.customer_uuid
         customer = Customer.objects.get_by_uuid(customer_uuid)
-        customer.stripe_customer_id = session.customer
+        customer.assign_stripe_customer_id(session.customer)
         customer.activate_subscription()
     else:
         logger.warning("Unhandled event type %s", event.type)
