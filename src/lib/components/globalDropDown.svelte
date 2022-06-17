@@ -110,8 +110,10 @@
     >
         <ul
             bind:this={focusEl}
-            on:blur={() => {
-                close();
+            on:blur={(e) => {
+                if (e.relatedTarget && !focusEl.contains(e.relatedTarget)) {
+                    close();
+                }
             }}
             tabindex="0"
             class="dropdown-content menu min-w-[200px] rounded-lg
@@ -124,7 +126,7 @@
                             title={it.tooltip}
                             disabled={it.disabled}
                             class:active={activeId === it.id}
-                            class="nowrap-ellipsis h-9 space-x-2 px-0 text-xs font-bold"
+                            class="h-9 space-x-2 truncate px-0 text-xs font-bold"
                             href={it.href}
                             on:click={() => {
                                 if (!it.items) {
