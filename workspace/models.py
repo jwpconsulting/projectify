@@ -386,7 +386,8 @@ class Task(
     """Task, belongs to workspace board section."""
 
     workspace = models.ForeignKey(
-        Workspace, on_delete=models.CASCADE, null=True
+        Workspace,
+        on_delete=models.CASCADE,
     )
 
     workspace_board_section = models.ForeignKey(
@@ -411,7 +412,7 @@ class Task(
         through="workspace.TaskLabel",
     )
 
-    number = models.PositiveIntegerField(null=True)
+    number = models.PositiveIntegerField()
 
     objects = TaskQuerySet.as_manager()
 
