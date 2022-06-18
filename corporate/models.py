@@ -53,6 +53,15 @@ class Customer(models.Model):
         self.subscription_status = Customer.SubscriptionStatus.ACTIVE
         self.save()
 
+    def cancel_subscription(self):
+        """
+        Cancel customer subscription.
+
+        Saves model instance.
+        """
+        self.subscription_status = Customer.SubscriptionStatus.CANCELLED
+        self.save()
+
     def assign_stripe_customer_id(self, stripe_customer_id):
         """
         Assign stripe customer id.

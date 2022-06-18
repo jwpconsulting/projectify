@@ -14,7 +14,7 @@ class CustomerFactory(django.DjangoModelFactory):
 
     workspace = factory.SubFactory("workspace.factory.WorkspaceFactory")
     seats = factory.Faker("pyint", min_value=1, max_value=98)
-    subscription_status = factory.Iterator(models.Customer.SubscriptionStatus)
+    subscription_status = models.Customer.SubscriptionStatus.ACTIVE
 
     class Meta:
         """Meta."""
