@@ -67,7 +67,7 @@ INSTALLED_APPS_THIRD_PARTY = (
     "ordered_model",
     "premail",
     "rest_framework",
-    "rules",
+    "rules.apps.AutodiscoverRulesConfig",
 )
 
 INSTALLED_APPS_FIRST_PARTY = (
