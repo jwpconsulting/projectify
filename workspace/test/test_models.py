@@ -129,6 +129,31 @@ class TestWorkspace:
         workspace.refresh_from_db()
         assert workspace.highest_task_number == new
 
+    def test_has_at_least_role(self, workspace, workspace_user):
+        """Test has_at_least_role."""
+        assert workspace.has_at_least_role(
+            workspace_user,
+            models.WorkspaceUserRoles.OBSERVER,
+        )
+        assert not workspace.has_at_least_role(
+            workspace_user,
+            models.WorkspaceUserRoles.OWNER,
+        )
+        workspace_user.assign_role(models.WorkspaceUserRoles.OWNER)
+        assert workspace.has_at_least_role(
+            workspace_user,
+            models.WorkspaceUserRoles.OWNER,
+        )
+
+    def test_has_at_least_role_other_workspace(
+        self, other_workspace, workspace_user
+    ):
+        """Test has_at_least_role with a different workspace."""
+        assert not other_workspace.has_at_least_role(
+            workspace_user,
+            models.WorkspaceUserRoles.OBSERVER,
+        )
+
     def test_workspace(self, workspace):
         """Test workspace property."""
         assert workspace.workspace == workspace
