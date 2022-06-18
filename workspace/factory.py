@@ -101,6 +101,11 @@ def extract_assignee(task):
     return user
 
 
+def extract_workspace(task):
+    """Extract author from chat_message by walking through workspace."""
+    return task.workspace_board_section.workspace_board.workspace
+
+
 class TaskFactory(django.DjangoModelFactory):
     """Task factory."""
 
@@ -109,6 +114,7 @@ class TaskFactory(django.DjangoModelFactory):
     workspace_board_section = factory.SubFactory(WorkspaceBoardSectionFactory)
     assignee = factory.LazyAttribute(extract_assignee)
     deadline = factory.Faker("date_time", tzinfo=timezone.utc)
+    workspace = factory.LazyAttribute(extract_workspace)
 
     class Meta:
         """Meta."""

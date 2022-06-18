@@ -121,6 +121,12 @@ class TestWorkspace:
         workspace.uninvite_user("hello@example.com")
         assert workspace.workspaceuserinvite_set.count() == 0
 
+    def test_set_highest_task_number(self, workspace):
+        """Test set_highest_task_number."""
+        workspace.set_highest_task_number(1337)
+        workspace.refresh_from_db()
+        assert workspace.highest_task_number == 1337
+
 
 @pytest.mark.django_db
 class TestWorkspaceUserInviteQuerySet:
@@ -564,9 +570,8 @@ class TestTask:
 
     def test_task_number(self, task, other_task):
         """Test unique task number."""
-        assert task.number == 1
-        assert other_task.number == 2
-        assert task.workspace.highest_task_number == 2
+        assert other_task.number == task.number + 1
+        assert task.workspace.highest_task_number == other_task.number
 
 
 @pytest.mark.django_db
