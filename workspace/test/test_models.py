@@ -121,11 +121,13 @@ class TestWorkspace:
         workspace.uninvite_user("hello@example.com")
         assert workspace.workspaceuserinvite_set.count() == 0
 
-    def test_set_highest_task_number(self, workspace):
+    def test_increment_highest_task_number(self, workspace):
         """Test set_highest_task_number."""
-        workspace.set_highest_task_number(1337)
+        num = workspace.highest_task_number
+        new = workspace.increment_highest_task_number()
+        assert new == num + 1
         workspace.refresh_from_db()
-        assert workspace.highest_task_number == 1337
+        assert workspace.highest_task_number == new
 
 
 @pytest.mark.django_db
@@ -571,7 +573,21 @@ class TestTask:
     def test_task_number(self, task, other_task):
         """Test unique task number."""
         assert other_task.number == task.number + 1
+        task.workspace.refresh_from_db()
         assert task.workspace.highest_task_number == other_task.number
+
+    def test_save(self, task):
+        """Test saving and assert number does not change."""
+        num = task.number
+        task.save()
+        assert task.number == num
+
+    def test_save_no_number(self, task, workspace):
+        """Test saving with no number."""
+        task.number = None
+        task.save()
+        workspace.refresh_from_db()
+        assert task.number == workspace.highest_task_number
 
 
 @pytest.mark.django_db
