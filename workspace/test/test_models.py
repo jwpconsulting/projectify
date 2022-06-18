@@ -129,6 +129,10 @@ class TestWorkspace:
         workspace.refresh_from_db()
         assert workspace.highest_task_number == new
 
+    def test_workspace(self, workspace):
+        """Test workspace property."""
+        assert workspace.workspace == workspace
+
 
 @pytest.mark.django_db
 class TestWorkspaceUserInviteQuerySet:
@@ -170,6 +174,10 @@ class TestWorkspaceUserInvite:
         with pytest.raises(AssertionError):
             workspace_user_invite.redeem()
 
+    def test_workspace(self, workspace_user_invite, workspace):
+        """Test workspace property."""
+        assert workspace_user_invite.workspace == workspace
+
 
 @pytest.mark.django_db
 class TestWorkspaceUserManager:
@@ -187,8 +195,8 @@ class TestWorkspaceUserManager:
 class TestWorkspaceUser:
     """Test WorkspaceUser."""
 
-    def test_factory(self, workspace, workspace_user):
-        """Test workspace user creation."""
+    def test_workspace(self, workspace, workspace_user):
+        """Test workspace property."""
         assert workspace_user.workspace == workspace
 
 
@@ -273,6 +281,10 @@ class TestWorkspaceBoard:
         assert workspace_board.archived is not None
         workspace_board.unarchive()
         assert workspace_board.archived is None
+
+    def test_workspace(self, workspace, workspace_board):
+        """Test workspace property."""
+        assert workspace_board.workspace == workspace
 
 
 @pytest.mark.django_db
@@ -383,6 +395,10 @@ class TestWorkspaceBoardSection:
             workspace_board_section,
         ]
         assert workspace_board_section._order == 0
+
+    def test_workspace(self, workspace, workspace_board_section):
+        """Test workspace property."""
+        assert workspace_board_section.workspace == workspace
 
 
 @pytest.mark.django_db
@@ -619,6 +635,10 @@ class TestLabel:
         """Test factory."""
         assert label.color
 
+    def test_workspace(self, workspace, label):
+        """Test workspace property."""
+        assert label.workspace == workspace
+
 
 @pytest.mark.django_db
 class TestLabelQuerySet:
@@ -640,6 +660,10 @@ class TestTaskLabel:
         """Test factory."""
         assert task_label.task == task
         assert task_label.label == label
+
+    def test_workspace(self, workspace, task_label):
+        """Test workspace property."""
+        assert task_label.workspace == workspace
 
 
 @pytest.mark.django_db
@@ -717,6 +741,10 @@ class TestSubTask:
         ]
         assert sub_task._order == 0
 
+    def test_workspace(self, workspace, sub_task):
+        """Test workspace property."""
+        assert sub_task.workspace == workspace
+
 
 @pytest.mark.django_db
 class TestChatMessageManager:
@@ -745,3 +773,7 @@ class TestChatMessage:
     def test_factory(self, workspace_user, chat_message):
         """Test that chat message belongs to user."""
         assert chat_message.author == workspace_user.user
+
+    def test_workspace(self, workspace, chat_message):
+        """Test workspace property."""
+        assert chat_message.workspace == workspace
