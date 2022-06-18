@@ -193,6 +193,15 @@ class WorkspaceUserQuerySet(models.QuerySet):
         return self.filter(workspace__pk__in=workspace_pks)
 
 
+class WorkspaceUserRoles(models.TextChoices):
+    """Roles available."""
+
+    OBSERVER = "OBSE", _("Observer")
+    MEMBER = "MEMB", _("Member")
+    MAINTAINER = "MAIN", _("Maintainer")
+    OWNER = "OWNE", _("Owner")
+
+
 class WorkspaceUser(TimeStampedModel, models.Model):
     """Workspace to user mapping."""
 
@@ -204,9 +213,23 @@ class WorkspaceUser(TimeStampedModel, models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
+    role = models.CharField(
+        max_length=4,
+        choices=WorkspaceUserRoles.choices,
+        default=WorkspaceUserRoles.OBSERVER,
+    )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 
     objects = WorkspaceUserQuerySet.as_manager()
+
+    def assign_role(self, role):
+        """
+        Assign a new role.
+
+        Saves.
+        """
+        self.role = role
+        self.save()
 
     class Meta:
         """Meta."""
