@@ -133,6 +133,23 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         qs.update(highest_task_number=models.F("highest_task_number") + 1)
         return qs.get().highest_task_number
 
+    def has_at_least_role(self, workspace_user, role):
+        """Check if a workspace user has at least a given role."""
+        if not workspace_user.workspace == self:
+            return False
+        if role == WorkspaceUserRoles.OBSERVER:
+            return workspace_user.role in OBSERVER_EQUIVALENT
+        elif role == WorkspaceUserRoles.MEMBER:
+            return workspace_user.role in MEMBER_EQUIVALENT
+        elif role == WorkspaceUserRoles.MAINTAINER:
+            return workspace_user.role in MAINTAINER_EQUIVALENT
+        elif role == WorkspaceUserRoles.OWNER:
+            return workspace_user.role in OWNER_EQUIVALENT
+        else:
+            raise ValueError(
+                f"This just happened: {workspace_user} {role} {self}"
+            )
+
     @property
     def workspace(self):
         """Get workspace instance."""
@@ -200,6 +217,26 @@ class WorkspaceUserRoles(models.TextChoices):
     MEMBER = "MEMB", _("Member")
     MAINTAINER = "MAIN", _("Maintainer")
     OWNER = "OWNE", _("Owner")
+
+
+OBSERVER_EQUIVALENT = [
+    WorkspaceUserRoles.OBSERVER,
+    WorkspaceUserRoles.MEMBER,
+    WorkspaceUserRoles.MAINTAINER,
+    WorkspaceUserRoles.OWNER,
+]
+MEMBER_EQUIVALENT = [
+    WorkspaceUserRoles.MEMBER,
+    WorkspaceUserRoles.MAINTAINER,
+    WorkspaceUserRoles.OWNER,
+]
+MAINTAINER_EQUIVALENT = [
+    WorkspaceUserRoles.MAINTAINER,
+    WorkspaceUserRoles.OWNER,
+]
+OWNER_EQUIVALENT = [
+    WorkspaceUserRoles.OWNER,
+]
 
 
 class WorkspaceUser(TimeStampedModel, models.Model):

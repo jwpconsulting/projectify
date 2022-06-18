@@ -13,6 +13,12 @@ def workspace():
 
 
 @pytest.fixture
+def other_workspace():
+    """Return workspace."""
+    return factory.WorkspaceFactory()
+
+
+@pytest.fixture
 def workspace_user_invite(workspace, user_invite):
     """Return workspace user invite."""
     return factory.WorkspaceUserInviteFactory(
