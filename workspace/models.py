@@ -209,6 +209,10 @@ class WorkspaceUserQuerySet(models.QuerySet):
         """Filter by workspace pks."""
         return self.filter(workspace__pk__in=workspace_pks)
 
+    def get_by_workspace_and_user(self, workspace, user):
+        """Get by workspace and user."""
+        return self.get(workspace=workspace, user=user)
+
 
 class WorkspaceUserRoles(models.TextChoices):
     """Roles available."""

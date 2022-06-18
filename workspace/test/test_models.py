@@ -215,6 +215,16 @@ class TestWorkspaceUserManager:
         )
         assert list(qs) == [workspace_user]
 
+    def test_get_by_workspace_and_user(self, workspace, user, workspace_user):
+        """Test get_by_workspace_and_user."""
+        assert (
+            models.WorkspaceUser.objects.get_by_workspace_and_user(
+                workspace,
+                user,
+            )
+            == workspace_user
+        )
+
 
 @pytest.mark.django_db
 class TestWorkspaceUser:
