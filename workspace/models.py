@@ -122,14 +122,16 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         )
         workspace_user_invite.delete()
 
-    def set_highest_task_number(self, number):
+    @transaction.atomic
+    def increment_highest_task_number(self):
         """
-        Set highest task number.
+        Increment and return highest task number.
 
-        Saves.
+        Atomic.
         """
-        self.highest_task_number = number
-        self.save()
+        qs = Workspace.objects.filter(pk=self.pk).select_for_update()
+        qs.update(highest_task_number=models.F("highest_task_number") + 1)
+        return qs.get().highest_task_number
 
 
 class WorkspaceUserInviteQuerySet(models.QuerySet):
@@ -517,16 +519,8 @@ class Task(
 
     def save(self, *args, **kwargs):
         """Override save to add task number."""
-        # XXX this might need select for update
-        # otherwise there could be a race condition
-        if self.workspace is None:
-            self.workspace = (
-                self.workspace_board_section.workspace_board.workspace
-            )
         if self.number is None:
-            new_number = self.workspace.highest_task_number + 1
-            self.number = new_number
-            self.workspace.set_highest_task_number(new_number)
+            self.number = self.workspace.increment_highest_task_number()
         super().save(*args, **kwargs)
 
     class Meta:
