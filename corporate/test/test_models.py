@@ -7,6 +7,16 @@ from ..models import (
 
 
 @pytest.mark.django_db
+class TestCustomerManager:
+    """Test Customer Manager."""
+
+    def test_get_by_uuid(self, customer):
+        """Test get Customer by UUID."""
+        customer_by_manager = Customer.objects.get_by_uuid(customer.uuid)
+        assert customer == customer_by_manager
+
+
+@pytest.mark.django_db
 class TestCustomer:
     """Test customer model."""
 
@@ -29,12 +39,8 @@ class TestCustomer:
         customer.refresh_from_db()
         assert customer.stripe_customer_id == "Hello world"
 
-
-@pytest.mark.django_db
-class TestCustomerManager:
-    """Test Customer Manager."""
-
-    def test_get_by_uuid(self, customer):
-        """Test get Customer by UUID."""
-        customer_by_manager = Customer.objects.get_by_uuid(customer.uuid)
-        assert customer == customer_by_manager
+    def test_active(self, unpaid_customer):
+        """Test active property."""
+        assert not unpaid_customer.active
+        unpaid_customer.activate_subscription()
+        assert unpaid_customer.active

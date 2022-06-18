@@ -61,3 +61,8 @@ class Customer(models.Model):
         """
         self.stripe_customer_id = stripe_customer_id
         self.save()
+
+    @property
+    def active(self):
+        """Return if active customer."""
+        return self.subscription_status == Customer.SubscriptionStatus.ACTIVE
