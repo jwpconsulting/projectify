@@ -277,6 +277,9 @@ class Mutation:
             info.context.user,
             input.workspace_uuid,
         )
+        assert info.context.user.has_perm(
+            "workspace.can_create_workspace_board", workspace
+        )
         if input.deadline is not UNSET and input.deadline:
             assert input.deadline.tzinfo
             deadline = input.deadline
@@ -298,6 +301,9 @@ class Mutation:
             info.context.user,
             input.workspace_board_uuid,
         )
+        assert info.context.user.has_perm(
+            "workspace.can_create_workspace_board_section", workspace_board
+        )
         workspace_board_section = workspace_board.add_workspace_board_section(
             title=input.title,
             description=input.description,
@@ -312,6 +318,9 @@ class Mutation:
                 info.context.user,
                 input.workspace_board_section_uuid,
             )
+        )
+        assert info.context.user.has_perm(
+            "workspace.can_create_task", workspace_board_section
         )
         task = workspace_board_section.add_task(
             input.title,
@@ -344,6 +353,9 @@ class Mutation:
             info.context.user,
             input.workspace_uuid,
         )
+        assert info.context.user.has_perm(
+            "workspace.can_create_label", workspace
+        )
         label = workspace.label_set.create(
             name=input.name,
             color=input.color,
@@ -356,6 +368,9 @@ class Mutation:
         task = models.Task.objects.get_for_user_and_uuid(
             info.context.user,
             input.task_uuid,
+        )
+        assert info.context.user.has_perm(
+            "workspace.can_create_sub_task", task
         )
         sub_task = task.add_sub_task(
             input.title,
@@ -372,6 +387,9 @@ class Mutation:
             info.context.user,
             input.task_uuid,
         )
+        assert info.context.user.has_perm(
+            "workspace.can_create_chat_message", task
+        )
         chat_message = task.add_chat_message(
             text=input.text,
             author=info.context.user,
@@ -387,6 +405,9 @@ class Mutation:
             info.context.user,
             input.sub_task_uuid,
         )
+        assert info.context.user.has_perm(
+            "workspace.can_update_sub_task", sub_task
+        )
         sub_task.done = input.done
         sub_task.save()
         return sub_task
@@ -401,6 +422,10 @@ class Mutation:
                 info.context.user,
                 input.workspace_board_section_uuid,
             )
+        )
+        assert info.context.user.has_perm(
+            "workspace.can_update_workspace_board_section",
+            workspace_board_section,
         )
         workspace_board_section.move_to(input.order)
         workspace_board_section.refresh_from_db()
@@ -421,6 +446,7 @@ class Mutation:
             info.context.user,
             input.task_uuid,
         )
+        assert info.context.user.has_perm("workspace.can_update_task", task)
         # Reorder task
         task.move_to(workspace_board_section, input.order)
         # Return task
@@ -442,6 +468,7 @@ class Mutation:
             info.context.user,
             input.task_uuid,
         )
+        assert info.context.user.has_perm("workspace.can_update_task", task)
         # Find after task
         if input.after_task_uuid is not UNSET and input.after_task_uuid:
             after_task = models.Task.objects.get_for_user_and_uuid(
@@ -465,6 +492,9 @@ class Mutation:
             info.context.user,
             input.sub_task_uuid,
         )
+        assert info.context.user.has_perm(
+            "workspace.can_update_sub_task", sub_task
+        )
         # Reorder sub task
         sub_task.move_to(input.order)
         # This is necessary to refresh the _order field
@@ -480,6 +510,9 @@ class Mutation:
         workspace = models.Workspace.objects.get_for_user_and_uuid(
             info.context.user,
             input.uuid,
+        )
+        assert info.context.user.has_perm(
+            "workspace.can_create_workspace_user", workspace
         )
         # Find user
         User = get_user_model()
@@ -500,6 +533,9 @@ class Mutation:
             info.context.user,
             input.uuid,
         )
+        assert info.context.user.has_perm(
+            "workspace.can_delete_workspace_user", workspace
+        )
         User = get_user_model()
         try:
             user = User.objects.get_by_natural_key(input.email)
@@ -515,6 +551,7 @@ class Mutation:
             info.context.user,
             input.uuid,
         )
+        assert info.context.user.has_perm("workspace.can_update_task", task)
         if input.email is None:
             task.assign_to(None)
         else:
@@ -529,6 +566,10 @@ class Mutation:
         task = models.Task.objects.get_for_user_and_uuid(
             info.context.user,
             input.uuid,
+        )
+        assert info.context.user.has_perm(
+            "workspace.can_create_task",
+            task.workspace,
         )
         new_task = models.Task.objects.duplicate_task(task)
         return new_task
@@ -545,8 +586,16 @@ class Mutation:
             input.label_uuid,
         )
         if input.assigned:
+            assert info.context.user.has_perm(
+                "workspace.can_create_task_label",
+                task,
+            )
             task.add_label(label)
         else:
+            assert info.context.user.has_perm(
+                "workspace.can_delete_task_label",
+                task,
+            )
             task.remove_label(label)
         return task
 
@@ -559,6 +608,10 @@ class Mutation:
         workspace = models.Workspace.objects.get_for_user_and_uuid(
             info.context.user,
             input.uuid,
+        )
+        assert info.context.user.has_perm(
+            "workspace.can_update_workspace",
+            workspace,
         )
         workspace.title = input.title
         workspace.description = input.description
@@ -574,6 +627,10 @@ class Mutation:
             info.context.user,
             input.uuid,
         )
+        assert info.context.user.has_perm(
+            "workspace.can_update_workspace_board",
+            workspace_board,
+        )
         if input.archived:
             workspace_board.archive()
         else:
@@ -588,6 +645,10 @@ class Mutation:
         workspace_board = models.WorkspaceBoard.objects.get_for_user_and_uuid(
             info.context.user,
             input.uuid,
+        )
+        assert info.context.user.has_perm(
+            "workspace.can_update_workspace_board",
+            workspace_board,
         )
         workspace_board.title = input.title
         workspace_board.description = input.description
@@ -610,6 +671,10 @@ class Mutation:
                 input.uuid,
             )
         )
+        assert info.context.user.has_perm(
+            "workspace.can_update_workspace_board_section",
+            workspace_board_section,
+        )
         workspace_board_section.title = input.title
         workspace_board_section.description = input.description
         workspace_board_section.save()
@@ -621,6 +686,10 @@ class Mutation:
         task = models.Task.objects.get_for_user_and_uuid(
             info.context.user,
             input.uuid,
+        )
+        assert info.context.user.has_perm(
+            "workspace.can_update_task",
+            task,
         )
         task.title = input.title
         task.description = input.description
@@ -639,6 +708,10 @@ class Mutation:
             info.context.user,
             input.uuid,
         )
+        assert info.context.user.has_perm(
+            "workspace.can_update_label",
+            label,
+        )
         label.color = input.color
         label.name = input.name
         label.save()
@@ -652,6 +725,10 @@ class Mutation:
         sub_task = models.SubTask.objects.get_for_user_and_uuid(
             info.context.user,
             input.uuid,
+        )
+        assert info.context.user.has_perm(
+            "workspace.can_update_sub_task",
+            sub_task,
         )
         sub_task.title = input.title
         sub_task.description = input.description
@@ -668,6 +745,10 @@ class Mutation:
             info.context.user,
             input.uuid,
         )
+        assert info.context.user.has_perm(
+            "workspace.can_delete_workspace_board",
+            workspace_board,
+        )
         workspace_board.delete()
         return workspace_board
 
@@ -682,6 +763,10 @@ class Mutation:
                     info.context.user,
                     input.uuid,
                 )
+            )
+            assert info.context.user.has_perm(
+                "workspace.can_delete_workspace_board_section",
+                workspace_board_section,
             )
             task_len = workspace_board_section.task_set.count()
             if task_len:
@@ -698,6 +783,10 @@ class Mutation:
             info.context.user,
             input.uuid,
         )
+        assert info.context.user.has_perm(
+            "workspace.can_delete_task",
+            task,
+        )
         task.delete()
         return task
 
@@ -707,6 +796,10 @@ class Mutation:
         label = models.Label.objects.get_for_user_and_uuid(
             info.context.user,
             input.uuid,
+        )
+        assert info.context.user.has_perm(
+            "workspace.can_delete_label",
+            label,
         )
         label.delete()
         return label
@@ -719,6 +812,10 @@ class Mutation:
         sub_task = models.SubTask.objects.get_for_user_and_uuid(
             info.context.user,
             input.uuid,
+        )
+        assert info.context.user.has_perm(
+            "workspace.can_delete_sub_task",
+            sub_task,
         )
         sub_task.delete()
         return sub_task

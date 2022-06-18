@@ -1,15 +1,22 @@
 """Workspace test fixtures."""
 import pytest
 
+from corporate.factory import (
+    CustomerFactory,
+)
+
 from .. import (
     factory,
+    models,
 )
 
 
 @pytest.fixture
 def workspace():
     """Return workspace."""
-    return factory.WorkspaceFactory()
+    workspace = factory.WorkspaceFactory()
+    CustomerFactory(workspace=workspace)
+    return workspace
 
 
 @pytest.fixture
@@ -29,8 +36,12 @@ def workspace_user_invite(workspace, user_invite):
 
 @pytest.fixture
 def workspace_user(workspace, user):
-    """Return workspace user."""
-    return factory.WorkspaceUserFactory(workspace=workspace, user=user)
+    """Return workspace user with owner status."""
+    return factory.WorkspaceUserFactory(
+        workspace=workspace,
+        user=user,
+        role=models.WorkspaceUserRoles.OWNER,
+    )
 
 
 @pytest.fixture

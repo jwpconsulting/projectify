@@ -133,14 +133,14 @@ class TestWorkspace:
         """Test has_at_least_role."""
         assert workspace.has_at_least_role(
             workspace_user,
+            models.WorkspaceUserRoles.OWNER,
+        )
+        workspace_user.assign_role(models.WorkspaceUserRoles.OBSERVER)
+        assert workspace.has_at_least_role(
+            workspace_user,
             models.WorkspaceUserRoles.OBSERVER,
         )
         assert not workspace.has_at_least_role(
-            workspace_user,
-            models.WorkspaceUserRoles.OWNER,
-        )
-        workspace_user.assign_role(models.WorkspaceUserRoles.OWNER)
-        assert workspace.has_at_least_role(
             workspace_user,
             models.WorkspaceUserRoles.OWNER,
         )
@@ -232,7 +232,7 @@ class TestWorkspaceUser:
 
     def test_factory(self, workspace_user):
         """Test that the default rule is observer."""
-        assert workspace_user.role == models.WorkspaceUserRoles.OBSERVER
+        assert workspace_user.role == models.WorkspaceUserRoles.OWNER
 
     def test_workspace(self, workspace, workspace_user):
         """Test workspace property."""

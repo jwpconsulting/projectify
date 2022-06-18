@@ -34,13 +34,25 @@ class Mutation:
         self, info, input: CreateCheckoutSessionInput
     ) -> str:
         """Test creating a Stripe Checkout Session."""
-        workspace = Workspace.objects.get(uuid=input.workspace_uuid)
+        workspace = Workspace.objects.get_for_user_and_uuid(
+            info.context.user,
+            input.workspace_uuid,
+        )
         try:
             customer = workspace.customer
+            assert info.context.user.has_perm(
+                "corporate.can_update_customer",
+                customer,
+            )
         except Customer.DoesNotExist:
+            assert info.context.user.has_perm(
+                "corporate.can_create_customer",
+                workspace,
+            )
             customer = Customer.objects.create(
                 workspace=workspace, seats=input.seats
             )
+        assert not customer.active
         session = stripe.checkout.Session.create(
             success_url=settings.FRONTEND_URL,
             cancel_url=settings.FRONTEND_URL,
