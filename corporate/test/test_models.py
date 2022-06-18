@@ -26,12 +26,17 @@ class TestCustomer:
 
     def test_subscription_activation(self, unpaid_customer):
         """Test activating subscription."""
+        assert not unpaid_customer.active
         unpaid_customer.activate_subscription()
         unpaid_customer.refresh_from_db()
-        assert (
-            unpaid_customer.subscription_status
-            == Customer.SubscriptionStatus.ACTIVE
-        )
+        assert unpaid_customer.active
+
+    def test_cancel_subscription(self, customer):
+        """Test cancel_subscription."""
+        assert customer.active
+        customer.cancel_subscription()
+        customer.refresh_from_db()
+        assert not customer.active
 
     def test_assign_stripe_customer_id(self, customer):
         """Test assign_stripe_customer_id."""
