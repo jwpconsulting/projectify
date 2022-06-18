@@ -195,9 +195,19 @@ class TestWorkspaceUserManager:
 class TestWorkspaceUser:
     """Test WorkspaceUser."""
 
+    def test_factory(self, workspace_user):
+        """Test that the default rule is observer."""
+        assert workspace_user.role == models.WorkspaceUserRoles.OBSERVER
+
     def test_workspace(self, workspace, workspace_user):
         """Test workspace property."""
         assert workspace_user.workspace == workspace
+
+    def test_assign_role(self, workspace_user):
+        """Test assign_role."""
+        workspace_user.assign_role(models.WorkspaceUserRoles.OWNER)
+        workspace_user.refresh_from_db()
+        assert workspace_user.role == models.WorkspaceUserRoles.OWNER
 
 
 @pytest.mark.django_db
