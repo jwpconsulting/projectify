@@ -133,6 +133,11 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         qs.update(highest_task_number=models.F("highest_task_number") + 1)
         return qs.get().highest_task_number
 
+    @property
+    def workspace(self):
+        """Get workspace instance."""
+        return self
+
 
 class WorkspaceUserInviteQuerySet(models.QuerySet):
     """QuerySet for WorkspaceUserInvite."""
@@ -334,6 +339,11 @@ class WorkspaceBoardSection(
             # Set new order
             current_workspace_board.set_workspaceboardsection_order(order_list)
             current_workspace_board.save()
+
+    @property
+    def workspace(self):
+        """Get workspace instance."""
+        return self.workspace_board.workspace
 
     class Meta:
         """Meta."""
@@ -598,6 +608,11 @@ class TaskLabel(models.Model):
 
     objects = TaskLabelQuerySet.as_manager()
 
+    @property
+    def workspace(self):
+        """Get workspace instance."""
+        return self.label.workspace
+
     class Meta:
         """Meta."""
 
@@ -661,6 +676,11 @@ class SubTask(
             current_task.set_subtask_order(order_list)
             current_task.save()
 
+    @property
+    def workspace(self):
+        """Get workspace instance."""
+        return self.task.workspace_board_section.workspace_board.workspace
+
     class Meta:
         """Meta."""
 
@@ -705,6 +725,11 @@ class ChatMessage(TimeStampedModel, models.Model):
     )
 
     objects = ChatMessageQuerySet.as_manager()
+
+    @property
+    def workspace(self):
+        """Get workspace instance."""
+        return self.task.workspace_board_section.workspace_board.workspace
 
     class Meta:
         """Meta."""
