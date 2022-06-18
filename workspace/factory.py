@@ -135,6 +135,18 @@ class LabelFactory(django.DjangoModelFactory):
         model = models.Label
 
 
+class TaskLabelFactory(django.DjangoModelFactory):
+    """Factory for Label."""
+
+    task = factory.SubFactory(TaskFactory)
+    label = factory.SubFactory(LabelFactory)
+
+    class Meta:
+        """Meta."""
+
+        model = models.TaskLabel
+
+
 class SubTaskFactory(django.DjangoModelFactory):
     """SubTask Factory."""
 

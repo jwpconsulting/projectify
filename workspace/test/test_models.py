@@ -633,6 +633,16 @@ class TestLabelQuerySet:
 
 
 @pytest.mark.django_db
+class TestTaskLabel:
+    """Test TaskLabel model."""
+
+    def test_factory(self, task_label, task, label):
+        """Test factory."""
+        assert task_label.task == task
+        assert task_label.label == label
+
+
+@pytest.mark.django_db
 class TestSubTaskManager:
     """Test SubTask manager."""
 
