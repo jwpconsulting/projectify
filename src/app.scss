@@ -175,6 +175,10 @@ body {
             stroke-width: 1px;
         }
     }
+
+    .rich-textarea a {
+        @apply text-primary;
+    }
 }
 
 ::-webkit-progress-value {
