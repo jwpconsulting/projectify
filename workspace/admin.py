@@ -239,3 +239,41 @@ class SubTaskAdmin(admin.ModelAdmin):
         """Return the workspace's title."""
         workspace_board = instance.task.workspace_board_section.workspace_board
         return workspace_board.workspace.title
+
+
+@admin.register(models.ChatMessage)
+class ChatMessageAdmin(admin.ModelAdmin):
+    """ChatMessage admin."""
+
+    list_display = (
+        "task_title",
+        "workspace_board_section_title",
+        "workspace_board_title",
+        "workspace_title",
+        "created",
+        "modified",
+    )
+    list_select_related = (
+        "task__workspace_board_section__workspace_board__workspace",
+    )
+
+    @admin.display(description=_("Task title"))
+    def task_title(self, instance):
+        """Return the task's title."""
+        return instance.task.title
+
+    @admin.display(description=_("Workspace board section title"))
+    def workspace_board_section_title(self, instance):
+        """Return the workspace board's title."""
+        return instance.task.workspace_board_section.title
+
+    @admin.display(description=_("Workspace board title"))
+    def workspace_board_title(self, instance):
+        """Return the workspace board's title."""
+        return instance.task.workspace_board_section.workspace_board.title
+
+    @admin.display(description=_("Workspace title"))
+    def workspace_title(self, instance):
+        """Return the workspace's title."""
+        workspace_board = instance.task.workspace_board_section.workspace_board
+        return workspace_board.workspace.title
