@@ -55,6 +55,7 @@ class WorkspaceUserFactory(django.DjangoModelFactory):
 
     user = factory.SubFactory(UserFactory)
     workspace = factory.SubFactory(WorkspaceFactory)
+    job_title = factory.Faker("job")
 
     class Meta:
         """Meta."""

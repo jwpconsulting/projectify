@@ -259,6 +259,11 @@ class WorkspaceUser(TimeStampedModel, models.Model):
         choices=WorkspaceUserRoles.choices,
         default=WorkspaceUserRoles.OBSERVER,
     )
+    job_title = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+    )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 
     objects = WorkspaceUserQuerySet.as_manager()
