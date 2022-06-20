@@ -328,3 +328,34 @@ query {
                 ]
             },
         }
+
+
+@pytest.mark.django_db
+class TestTask:
+    """Test task field."""
+
+    query = """
+query Task($uuid: UUID!) {
+    task(uuid: $uuid) {
+        title
+        number
+    }
+}
+"""
+
+    def test_query(self, graphql_query_user, task, workspace_user):
+        """Test query."""
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "uuid": str(task.uuid),
+            },
+        )
+        assert result == {
+            "data": {
+                "task": {
+                    "title": task.title,
+                    "number": task.number,
+                }
+            }
+        }
