@@ -9,6 +9,7 @@
     import ToolBar from "./toolBar.svelte";
     import InputDatePicker from "../inputDatePicker.svelte";
     import IconCheckCircle from "../icons/icon-check-circle.svelte";
+    import RichTextarea from "../rich-textarea.svelte";
 
     export let task;
     export let subTasks;
@@ -24,13 +25,13 @@
             <div class="text-xl font-bold uppercase">
                 {$_("description")}
             </div>
-            <textarea
-                rows="6"
-                class="textarea textarea-bordered resize-none p-4 leading-normal"
+
+            <RichTextarea
+                bind:content={task.description}
                 placeholder={$_("please-enter-a-description")}
-                on:input={() => (taskModified = true)}
-                bind:value={task.description}
+                bind:modified={taskModified}
             />
+
             <div class="text-xl font-bold uppercase">
                 {$_("deadline")}
             </div>
