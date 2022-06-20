@@ -790,7 +790,9 @@ class ChatMessage(TimeStampedModel, models.Model):
     text = models.TextField()
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.PROTECT,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
     )
 
     objects = ChatMessageQuerySet.as_manager()
