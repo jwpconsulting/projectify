@@ -183,6 +183,37 @@ $chatMessageUuid: UUID!
 class TestWorkspace:
     """Test workspace field."""
 
+    def test_users(self, user, workspace_user, workspace, graphql_query_user):
+        """Test users field."""
+        query = """
+query Workspace($uuid: UUID!) {
+    workspace(uuid: $uuid) {
+        users {
+            email
+            jobTitle
+        }
+    }
+}
+"""
+        result = graphql_query_user(
+            query,
+            variables={
+                "uuid": str(workspace.uuid),
+            },
+        )
+        assert result == {
+            "data": {
+                "workspace": {
+                    "users": [
+                        {
+                            "email": user.email,
+                            "jobTitle": workspace_user.job_title,
+                        }
+                    ]
+                }
+            }
+        }
+
     def test_redeemed_invite(
         self,
         user,

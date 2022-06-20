@@ -4,8 +4,6 @@ import uuid
 
 import strawberry
 
-from user.schema import types as user_types
-
 from .. import (
     models,
 )
@@ -16,10 +14,10 @@ class Workspace:
     """Workspace."""
 
     @strawberry.field
-    def users(self, info) -> list[user_types.User]:
+    def users(self, info) -> list["WorkspaceUser"]:
         """Resolve workspace users."""
         # TODO data loader
-        return self.users.all()
+        return self.workspaceuser_set.all()
 
     @strawberry.field
     def boards(self) -> list["WorkspaceBoard"]:
@@ -60,6 +58,31 @@ class Workspace:
     title: str
     description: str
     uuid: uuid.UUID
+
+
+@strawberry.django.type(models.WorkspaceUser)
+class WorkspaceUser:
+    """WorkspaceUser."""
+
+    @strawberry.field
+    def email(self) -> str:
+        """Resolve email."""
+        return self.user.email
+
+    @strawberry.field
+    def full_name(self) -> str:
+        """Resolve full name."""
+        return self.user.full_name
+
+    @strawberry.field
+    def profile_picture(self) -> str | None:
+        """Resolve profile picture."""
+        profile_picture = self.user.profile_picture
+        if profile_picture:
+            return profile_picture
+
+    role: str
+    job_title: str
 
 
 @strawberry.type
@@ -162,9 +185,18 @@ class Task:
         return self.labels.all()
 
     @strawberry.field
-    def assignee(self) -> user_types.User | None:
+    def assignee(self) -> WorkspaceUser | None:
         """Resolve user."""
-        return self.assignee
+        user = self.assignee
+        if not self.assignee:
+            return
+        workspace_user = (
+            models.WorkspaceUser.objects.get_by_workspace_and_user(
+                self.workspace,
+                user,
+            )
+        )
+        return workspace_user
 
     created: datetime.datetime
     modified: datetime.datetime
@@ -216,9 +248,17 @@ class ChatMessage:
     """ChatMessage."""
 
     @strawberry.field
-    def author(self, info) -> user_types.User:
+    def author(self, info) -> WorkspaceUser | None:
         """Resolve author."""
-        return self.author
+        if not self.author:
+            return
+        workspace_user = (
+            models.WorkspaceUser.objects.get_by_workspace_and_user(
+                self.workspace,
+                self.author,
+            )
+        )
+        return workspace_user
 
     created: datetime.datetime
     modified: datetime.datetime
