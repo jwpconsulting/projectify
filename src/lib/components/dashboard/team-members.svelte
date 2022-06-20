@@ -15,6 +15,8 @@
     import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
     import { client } from "$lib/graphql/client";
     import UserProfilePicture from "../userProfilePicture.svelte";
+    import SearchInput from "../search-input.svelte";
+    import Fuse from "fuse.js";
     export let workspaceUUID = null;
 
     let res = null;
@@ -97,6 +99,26 @@
             console.error(error);
         }
     }
+
+    let serachFieldEl;
+    let searchText = "";
+    let searchEngine = null;
+    let filteredUsers = [];
+    $: {
+        searchEngine = new Fuse(users, {
+            keys: ["email", "fullName"],
+        });
+    }
+
+    $: {
+        if (searchText.length) {
+            filteredUsers = searchEngine
+                .search(searchText)
+                .map((res) => res.item);
+        } else {
+            filteredUsers = users;
+        }
+    }
 </script>
 
 {#if $res.loading}
@@ -104,8 +126,15 @@
         <Loading />
     </div>
 {:else}
+    <div class="py-4">
+        <SearchInput
+            placeholder={"Search for a team member"}
+            bind:inputElement={serachFieldEl}
+            bind:searchText
+        />
+    </div>
     <div class=" divide-y divide-base-300">
-        {#each users as user}
+        {#each filteredUsers as user}
             <div class="flex px-4 py-4 space-x-4">
                 <UserProfilePicture
                     pictureProps={{
