@@ -39,5 +39,9 @@
         textAreaEl.focus();
     }}
 >
-    {@html transform(content)}
+    {#if content}
+        {@html transform(content)}
+    {:else}
+        <div class="placeholder">{placeholder}</div>
+    {/if}
 </div>

@@ -176,8 +176,14 @@ body {
         }
     }
 
-    .rich-textarea a {
-        @apply text-primary;
+    .rich-textarea {
+        a {
+            @apply text-primary;
+        }
+
+        .placeholder {
+            @apply select-none text-[#9ca3af];
+        }
     }
 }
 
