@@ -17,6 +17,7 @@
     import UserProfilePicture from "../userProfilePicture.svelte";
     import SearchInput from "../search-input.svelte";
     import Fuse from "fuse.js";
+    import { fuseSearchThreshold } from "$lib/stores/dashboard";
     export let workspaceUUID = null;
 
     let res = null;
@@ -107,6 +108,7 @@
     $: {
         searchEngine = new Fuse(users, {
             keys: ["email", "fullName"],
+            threshold: fuseSearchThreshold,
         });
     }
 

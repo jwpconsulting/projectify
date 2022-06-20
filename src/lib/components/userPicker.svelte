@@ -12,6 +12,7 @@
 
     import Fuse from "fuse.js";
     import SearchInput from "./search-input.svelte";
+    import { fuseSearchThreshold } from "$lib/stores/dashboard";
 
     export let workspaceUUID = null;
     export let selectedUser = null;
@@ -63,6 +64,7 @@
     $: {
         searchEngine = new Fuse(users, {
             keys: ["email", "fullName"],
+            threshold: fuseSearchThreshold,
         });
     }
 

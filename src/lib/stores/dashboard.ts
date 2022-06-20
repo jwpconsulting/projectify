@@ -16,6 +16,8 @@ export const currenTaskDetailsUUID = writable<string | null>(null);
 export const newTaskSectionUUID = writable<string | null>(null);
 export const currentBoardSections = writable([]);
 
+export const fuseSearchThreshold = 0.3;
+
 export function openNewTask(sectionUUID: string): void {
     drawerModalOpen.set(true);
     newTaskSectionUUID.set(sectionUUID);
@@ -162,7 +164,7 @@ export function searchTasks(sections: any[], searchText: string): any[] {
 
     const searchEngine = new Fuse(tasks, {
         keys: ["title"],
-        threshold: 0.3,
+        threshold: fuseSearchThreshold,
     });
 
     tasks = searchEngine.search(searchText).map((res) => res.item);
