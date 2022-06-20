@@ -70,6 +70,8 @@ export const client = new ApolloClient({
             switch (responseObject.__typename) {
                 case "User":
                     return `${responseObject.__typename}:${responseObject.email}`;
+                case "WorkspaceUser":
+                    return `${responseObject.__typename}:${responseObject.email}`;
                 default:
                     return `${responseObject.__typename}:${responseObject.uuid}`;
             }
