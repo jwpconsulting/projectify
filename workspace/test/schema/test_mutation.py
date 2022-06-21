@@ -1139,6 +1139,56 @@ mutation UpdateWorkspace($uuid: UUID!) {
 
 
 @pytest.mark.django_db
+class TestUpdateWorkspaceUserMutation:
+    """Test UpdateWorkspaceUserMutation."""
+
+    query = """
+mutation UpdateWorkspaceUser(
+    $workspaceUuid: UUID!,
+    $email: String!
+) {
+    updateWorkspaceUser(
+        input: {
+            workspaceUuid: $workspaceUuid,
+            email: $email,
+            jobTitle: "Expert Knob Twiddler",
+            role: "OBSE",
+        }
+    ) {
+        email
+        role
+        jobTitle
+    }
+}
+
+"""
+
+    def test_query(
+        self,
+        graphql_query_user,
+        workspace,
+        workspace_user,
+    ):
+        """Test query."""
+        result = graphql_query_user(
+            self.query,
+            variables={
+                "workspaceUuid": str(workspace.uuid),
+                "email": workspace_user.user.email,
+            },
+        )
+        assert result == {
+            "data": {
+                "updateWorkspaceUser": {
+                    "email": workspace_user.user.email,
+                    "jobTitle": "Expert Knob Twiddler",
+                    "role": "OBSE",
+                },
+            },
+        }
+
+
+@pytest.mark.django_db
 class TestArchiveWorkspaceBoardMutation:
     """Test ArchiveWorkspaceBoardMutation."""
 

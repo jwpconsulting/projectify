@@ -82,6 +82,7 @@ class AddChatMessageInput:
     text: str
 
 
+# Update inputs
 @strawberry.input
 class ChangeSubTaskDoneInput:
     """ChangeSubTaskDoneMutation input."""
@@ -174,6 +175,16 @@ class UpdateWorkspaceInput:
 
 
 @strawberry.input
+class UpdateWorkspaceUserInput:
+    """Input for UpdateWorkspaceUserMutation."""
+
+    email: str
+    workspace_uuid: uuid.UUID
+    role: str
+    job_title: str
+
+
+@strawberry.input
 class ArchiveWorkspaceBoardInput:
     """Input for ArchiveWorkspaceBoardMutation."""
 
@@ -228,6 +239,7 @@ class UpdateSubTaskInput:
     description: str
 
 
+# Delete inputs
 @strawberry.input
 class DeleteWorkspaceBoardInput:
     """DeleteWorkspaceBoardMutation input."""
@@ -617,6 +629,31 @@ class Mutation:
         workspace.description = input.description
         workspace.save()
         return workspace
+
+    @strawberry.field
+    def update_workspace_user(
+        self, info, input: UpdateWorkspaceUserInput
+    ) -> types.WorkspaceUser:
+        """Update workspace user."""
+        workspace = models.Workspace.objects.get_for_user_and_uuid(
+            info.context.user,
+            input.workspace_uuid,
+        )
+        User = get_user_model()
+        user = User.objects.get_by_natural_key(input.email)
+        workspace_user = (
+            models.WorkspaceUser.objects.get_by_workspace_and_user(
+                workspace,
+                user,
+            )
+        )
+        assert info.context.user.has_perm(
+            "workspace.can_update_workspace_user", workspace_user
+        )
+        workspace_user.role = input.role
+        workspace_user.job_title = input.job_title
+        workspace_user.save()
+        return workspace_user
 
     @strawberry.field
     def archive_workspace_board(
