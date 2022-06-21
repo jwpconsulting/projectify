@@ -79,7 +79,7 @@ class WorkspaceUser:
         """Resolve profile picture."""
         profile_picture = self.user.profile_picture
         if profile_picture:
-            return profile_picture
+            return profile_picture.url
 
     role: str
     job_title: str
