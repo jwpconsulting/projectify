@@ -3,6 +3,7 @@
     import vars from "$lib/env";
     import IconPlus from "./icons/icon-plus.svelte";
     import IconClose from "./icons/icon-close.svelte";
+    import IconUserPlusFill from "./icons/icon-user-plus-fill.svelte";
 
     export let size = 32;
     export let url: string = null;
@@ -31,14 +32,14 @@
 {#if !url && showPlus}
     <div
         style={`width: ${sizePx}; height: ${sizePx};`}
-        class="flex shrink-0 items-center justify-center overflow-hidden rounded-3xl border-2 border-dotted border-primary text-primary hover:ring"
+        class="flex shrink-0 items-center justify-center rounded-3xl border border-dashed border-primary text-primary hover:ring"
     >
-        <IconPlus />
+        <IconUserPlusFill />
     </div>
 {:else}
     <div
         style={`width: ${sizePx}; height: ${sizePx};`}
-        class="flex justify-center items-center overflow-hidden shrink-0"
+        class="flex justify-center items-center shrink-0"
     >
         {#if src}
             {#if loadingError}
@@ -66,7 +67,7 @@
                     text-anchor="middle"
                     class="uppercase font-bold"
                     fill="currentColor"
-                    >{typogram.substr(0, 2)}
+                    >{typogram.substring(0, 2)}
                 </text>
             </svg>
         {/if}

@@ -3,17 +3,25 @@
     import { dateStringToLocal } from "$lib/utils/date";
     import { createEventDispatcher } from "svelte";
     import { _ } from "svelte-i18n";
+    import IconChevronDown from "../icons/icon-chevron-down.svelte";
+    import IconChevronUp from "../icons/icon-chevron-up.svelte";
     import IconMenu from "../icons/icon-menu.svelte";
     import IconPlus from "../icons/icon-plus.svelte";
+    import ProfilePicture from "../profilePicture.svelte";
     import UserProfilePicture from "../userProfilePicture.svelte";
     import LabelList from "./labelList.svelte";
 
     export let layout: "default" | "compact" = "default";
     export let task = null;
     export let showHoverRing = true;
-    export let deadLineVisible = false;
     const dispatch = createEventDispatcher();
     let dropDownMenuBtnRef;
+
+    export let isFirst = false;
+    export let isLast = false;
+
+    function moveUp() {}
+    function moveDown() {}
 </script>
 
 {#if task}
@@ -25,65 +33,69 @@
         on:click={() => dispatch("click")}
         data-uuid={task.uuid}
     >
-        {#if task.assignee}
-            <UserProfilePicture
-                pictureProps={{
-                    url: task.assignee.profilePicture,
-                    size: 44,
-                }}
-            />
-        {/if}
-        <div class="flex max-h-full grow flex-col overflow-hidden">
+        <div class="flex max-h-full grow flex-col">
             <div class="title flex flex-row gap-2 font-bold">
-                <div class="grow">
+                <div class="w-12 shrink-0 truncate text-sm opacity-50">
+                    #{task.number}
+                </div>
+                <div class="grow text-sm">
                     <span>{task.title}</span>
                 </div>
-                <button
-                    bind:this={dropDownMenuBtnRef}
-                    on:click|stopPropagation={() => {
-                        dispatch("openDropDownMenu", {
-                            task,
-                            target: dropDownMenuBtnRef,
-                        });
-                    }}
-                    class="btn btn-outline btn-primary btn-circle btn-xs shrink-0"
-                    ><IconMenu /></button
-                >
+                <div class="flex gap-2">
+                    <button
+                        disabled={isFirst}
+                        on:click={() => moveUp()}
+                        class="btn btn-primary btn-ghost btn-circle btn-xs shrink-0"
+                        ><IconChevronUp /></button
+                    >
+                    <button
+                        disabled={isLast}
+                        on:click={() => moveDown()}
+                        class="btn btn-primary btn-ghost btn-circle btn-xs shrink-0"
+                        ><IconChevronDown /></button
+                    >
+                    <button
+                        bind:this={dropDownMenuBtnRef}
+                        on:click|stopPropagation={() => {
+                            dispatch("openDropDownMenu", {
+                                task,
+                                target: dropDownMenuBtnRef,
+                            });
+                        }}
+                        class="btn btn-primary btn-ghost btn-circle btn-xs shrink-0"
+                        ><IconMenu /></button
+                    >
+                </div>
             </div>
-            {#if task.labels.length || (deadLineVisible && task.deadline)}
+
+            <div
+                class="mt-3 flex items-center space-x-2 border-t border-base-300 pt-4 dark:border-base-100"
+            >
+                {#if task.assignee}
+                    <UserProfilePicture
+                        pictureProps={{
+                            url: task.assignee.profilePicture,
+                            size: 36,
+                        }}
+                    />
+                {:else}
+                    <ProfilePicture showPlus={true} size={36} />
+                {/if}
+
                 <div
-                    class="my-1 mt-2 flex items-start space-x-2 border-t border-base-300 pt-3 dark:border-base-100"
+                    class="flex grow flex-wrap items-center justify-end gap-2"
                 >
-                    <div class="flex grow flex-wrap items-center gap-2">
-                        {#if task.labels.length}
-                            {#if layout == "compact"}
-                                {#each task.labels as label}
-                                    <div
-                                        style={`--color:${
-                                            getColorFromInx(label.color).style
-                                        };`}
-                                        class="label-dot h-2 w-2 rounded-full"
-                                    />
-                                {/each}
-                            {:else}
-                                <LabelList
-                                    size={"sm"}
-                                    editable={false}
-                                    labels={task.labels}
-                                />
-                            {/if}
-                        {/if}
-                    </div>
-                    {#if task.deadline && deadLineVisible}
-                        <div class="item-date grid h-4 shrink-0 items-center">
-                            <span class="nowrap-ellipsis text-xs"
-                                >{$_("deadline")}
-                                {dateStringToLocal(task.deadline)}</span
-                            >
-                        </div>
+                    {#if task.labels.length}
+                        <LabelList
+                            size={"sm"}
+                            editable={false}
+                            labels={task.labels}
+                        />
+                    {:else}
+                        <button class="btn-dashed">{$_("add-label")}</button>
                     {/if}
                 </div>
-            {/if}
+            </div>
         </div>
     </button>
 {:else}

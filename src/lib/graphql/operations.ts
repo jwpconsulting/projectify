@@ -226,6 +226,7 @@ export const Query_DashboardBoard = gql`
                     uuid
                     title
                     deadline
+                    number
                     labels {
                         uuid
                         name

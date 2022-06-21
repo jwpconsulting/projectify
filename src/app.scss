@@ -169,6 +169,10 @@ body {
         }
     }
 
+    .btn-dashed {
+        @apply rounded-full border border-dashed border-primary py-1 px-3 text-xs text-primary hover:ring;
+    }
+
     .icon-sm {
         > svg {
             @apply h-4 w-4;
