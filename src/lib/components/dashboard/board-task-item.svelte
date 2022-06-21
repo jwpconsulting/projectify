@@ -3,6 +3,7 @@
     import { dateStringToLocal } from "$lib/utils/date";
     import { createEventDispatcher } from "svelte";
     import { _ } from "svelte-i18n";
+    import { assign } from "svelte/internal";
     import IconChevronDown from "../icons/icon-chevron-down.svelte";
     import IconChevronUp from "../icons/icon-chevron-up.svelte";
     import IconMenu from "../icons/icon-menu.svelte";
@@ -20,8 +21,21 @@
     export let isFirst = false;
     export let isLast = false;
 
-    function moveUp() {}
-    function moveDown() {}
+    let userPickerBtnRef;
+    let labelPickerBtnRef;
+
+    function moveUp() {
+        dispatch("moveUp", { task });
+    }
+    function moveDown() {
+        dispatch("moveDown", { task });
+    }
+    function openUserPicker() {
+        dispatch("openUserPicker", { task, target: userPickerBtnRef });
+    }
+    function openLabelPicker() {
+        dispatch("openLabelPicker", { task, target: labelPickerBtnRef });
+    }
 </script>
 
 {#if task}
@@ -44,13 +58,13 @@
                 <div class="flex gap-2">
                     <button
                         disabled={isFirst}
-                        on:click={() => moveUp()}
+                        on:click|stopPropagation={() => moveUp()}
                         class="btn btn-primary btn-ghost btn-circle btn-xs shrink-0"
                         ><IconChevronUp /></button
                     >
                     <button
                         disabled={isLast}
-                        on:click={() => moveDown()}
+                        on:click|stopPropagation={() => moveDown()}
                         class="btn btn-primary btn-ghost btn-circle btn-xs shrink-0"
                         ><IconChevronDown /></button
                     >
@@ -79,7 +93,13 @@
                         }}
                     />
                 {:else}
-                    <ProfilePicture showPlus={true} size={36} />
+                    <div bind:this={userPickerBtnRef}>
+                        <ProfilePicture
+                            on:click={() => openUserPicker()}
+                            showPlus={true}
+                            size={36}
+                        />
+                    </div>
                 {/if}
 
                 <div
@@ -92,7 +112,11 @@
                             labels={task.labels}
                         />
                     {:else}
-                        <button class="btn-dashed">{$_("add-label")}</button>
+                        <button
+                            bind:this={labelPickerBtnRef}
+                            on:click|stopPropagation={() => openLabelPicker()}
+                            class="btn-dashed">{$_("add-label")}</button
+                        >
                     {/if}
                 </div>
             </div>

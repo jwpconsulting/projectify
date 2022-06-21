@@ -320,6 +320,17 @@
         ];
         getDropDown().open(dropDownItems, dropDownMenuBtnRef);
     }
+
+    function moveUpItem({ detail: { task } }) {
+        let prevTask = section.tasks[section.tasks.indexOf(task) - 1];
+        moveTaskAfter(task.uuid, section.uuid, prevTask?.uuid);
+    }
+    function moveDownItem({ detail: { task } }) {
+        let nextTask = section.tasks[section.tasks.indexOf(task) + 1];
+        moveTaskAfter(task.uuid, section.uuid, nextTask?.uuid);
+    }
+    function openUserPicker({ detail: { task, target } }) {}
+    function openLabelPicker({ detail: { task, target } }) {}
 </script>
 
 <div
@@ -386,11 +397,17 @@
                     on:dragEnd={taskDragEnd}
                     data-uuid={section.uuid}
                 >
-                    {#each section.tasks as task (task.uuid)}
+                    {#each section.tasks as task, inx (task.uuid)}
                         <BoardTaskItem
                             {task}
+                            isFirst={inx === 0}
+                            isLast={inx === section.tasks.length - 1}
                             showHoverRing={!isDragging}
                             on:openDropDownMenu={openItemDropDownMenu}
+                            on:moveDown={moveDownItem}
+                            on:moveUp={moveUpItem}
+                            on:openUserPicker={openUserPicker}
+                            on:openLabelPicker={openLabelPicker}
                             on:click={() =>
                                 !isDragging && openTaskDetails(task.uuid)}
                         />

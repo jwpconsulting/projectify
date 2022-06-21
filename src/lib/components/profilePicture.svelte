@@ -1,7 +1,6 @@
 <script lang="ts">
     import IconUserProfile from "./icons/icon-user-profile.svelte";
     import vars from "$lib/env";
-    import IconPlus from "./icons/icon-plus.svelte";
     import IconClose from "./icons/icon-close.svelte";
     import IconUserPlusFill from "./icons/icon-user-plus-fill.svelte";
 
@@ -31,6 +30,7 @@
 
 {#if !url && showPlus}
     <div
+        on:click|stopPropagation={() => {}}
         style={`width: ${sizePx}; height: ${sizePx};`}
         class="flex shrink-0 items-center justify-center rounded-3xl border border-dashed border-primary text-primary hover:ring"
     >
