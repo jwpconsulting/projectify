@@ -18,16 +18,6 @@ class CustomerManager(models.Manager):
 class Customer(models.Model):
     """Customer model. One to one linked to workspace."""
 
-    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
-
-    workspace = models.OneToOneField(
-        "workspace.Workspace",
-        on_delete=models.CASCADE,
-    )
-    seats = models.PositiveIntegerField(default=1)
-
-    objects = CustomerManager()
-
     class SubscriptionStatus(models.TextChoices):
         """Subscription Choices."""
 
@@ -35,6 +25,12 @@ class Customer(models.Model):
         UNPAID = "UNP", _("Unpaid")
         CANCELLED = "CAN", _("Cancelled")
 
+    workspace = models.OneToOneField(
+        "workspace.Workspace",
+        on_delete=models.CASCADE,
+    )
+    seats = models.PositiveIntegerField(default=1)
+    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     subscription_status = models.CharField(
         max_length=3,
         choices=SubscriptionStatus.choices,
@@ -43,6 +39,8 @@ class Customer(models.Model):
     stripe_customer_id = models.CharField(
         max_length=150, null=True, blank=True
     )
+
+    objects = CustomerManager()
 
     def activate_subscription(self):
         """
