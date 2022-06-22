@@ -30,7 +30,6 @@
 
 {#if !url && showPlus}
     <div
-        on:click|stopPropagation={() => {}}
         style={`width: ${sizePx}; height: ${sizePx};`}
         class="flex shrink-0 items-center justify-center rounded-3xl border border-dashed border-primary text-primary hover:ring"
     >
