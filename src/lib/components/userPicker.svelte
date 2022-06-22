@@ -18,7 +18,7 @@
     export let selectedUser = null;
     export let enableUnassignedSelection = false;
 
-    let dispatch = createEventDispatcher();
+    export let dispatch = createEventDispatcher();
 
     let res = null;
     let workspaceWSStore;
