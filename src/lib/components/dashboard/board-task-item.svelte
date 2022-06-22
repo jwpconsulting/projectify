@@ -93,12 +93,11 @@
                         }}
                     />
                 {:else}
-                    <div bind:this={userPickerBtnRef}>
-                        <ProfilePicture
-                            on:click={() => openUserPicker()}
-                            showPlus={true}
-                            size={36}
-                        />
+                    <div
+                        bind:this={userPickerBtnRef}
+                        on:click|stopPropagation={() => openUserPicker()}
+                    >
+                        <ProfilePicture showPlus={true} size={36} />
                     </div>
                 {/if}
 

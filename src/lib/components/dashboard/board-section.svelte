@@ -3,6 +3,7 @@
     import IconTrash from "../icons/icon-trash.svelte";
     import IconChevronRight from "../icons/icon-chevron-right.svelte";
     import {
+        assingUserToTask,
         copyDashboardURL,
         currentBoardSections,
         currentBoardUUID,
@@ -41,6 +42,8 @@
     import IconClose from "../icons/icon-close.svelte";
     import IconPlus from "../icons/icon-plus.svelte";
     import { createEventDispatcher } from "svelte";
+    import UserPicker from "../userPicker.svelte";
+    import LabelPicker from "./labelPicker.svelte";
 
     export let boardUUID;
     export let section;
@@ -325,11 +328,26 @@
         let prevTask = section.tasks[section.tasks.indexOf(task) - 1];
         moveTaskAfter(task.uuid, section.uuid, prevTask?.uuid);
     }
+
     function moveDownItem({ detail: { task } }) {
         let nextTask = section.tasks[section.tasks.indexOf(task) + 1];
         moveTaskAfter(task.uuid, section.uuid, nextTask?.uuid);
     }
-    function openUserPicker({ detail: { task, target } }) {}
+
+    function openUserPicker({ detail: { task, target } }) {
+        let dropDown = getDropDown();
+        dropDown.openComponent(UserPicker, target, {
+            workspaceUUID: $currentWorkspaceUUID,
+            selectedUser: task.assignee,
+            dispatch: async (name, data) => {
+                if (name == "userSelected") {
+                    await assingUserToTask(data.user.email, task.uuid);
+                }
+                dropDown.close();
+            },
+        });
+    }
+
     function openLabelPicker({ detail: { task, target } }) {}
 </script>
 
