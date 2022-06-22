@@ -352,6 +352,9 @@
         let dropDown = getDropDown();
         dropDown.openComponent(LabelPicker, target, {
             task,
+            dispatch: async (name, data) => {
+                dropDown.close();
+            },
         });
     }
 </script>

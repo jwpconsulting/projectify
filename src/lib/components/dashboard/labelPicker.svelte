@@ -13,7 +13,7 @@
     export let selectedLabels = [];
     let rootEl;
 
-    let dispatch = createEventDispatcher();
+    export let dispatch = createEventDispatcher();
 
     onMount(() => {
         rootEl.focus();

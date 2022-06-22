@@ -97,9 +97,22 @@
     function clearSelection() {
         selectUser(null);
     }
+
+    function onBlur(event) {
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+            dispatch("blur");
+        }
+    }
+
+    let rootEl;
 </script>
 
-<div class="w-full overflow-hidden rounded-xl bg-base-100 shadow-lg">
+<div
+    class="w-full overflow-hidden rounded-xl bg-base-100 shadow-lg"
+    tabindex="-1"
+    bind:this={rootEl}
+    on:blur={onBlur}
+>
     {#if res && $res.loading}
         <div class="flex h-full w-full items-center justify-center py-8">
             <Loading />
@@ -110,6 +123,7 @@
                 placeholder={$_("search-team-member")}
                 bind:inputElement={serachFieldEl}
                 bind:searchText
+                on:blur={() => rootEl.focus()}
             />
         </div>
         <div class="px-4 font-bold">Team Members</div>
