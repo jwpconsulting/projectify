@@ -1,8 +1,8 @@
 """Test corporate models."""
 import pytest
 
-from ..models import (
-    Customer,
+from .. import (
+    models,
 )
 
 
@@ -12,8 +12,19 @@ class TestCustomerManager:
 
     def test_get_by_uuid(self, customer):
         """Test get Customer by UUID."""
-        customer_by_manager = Customer.objects.get_by_uuid(customer.uuid)
+        customer_by_manager = models.Customer.objects.get_by_uuid(
+            customer.uuid
+        )
         assert customer == customer_by_manager
+
+    def test_get_by_workspace_uuid(self, customer):
+        """Test get_by_workspace_uuid."""
+        assert (
+            models.Customer.objects.get_by_workspace_uuid(
+                customer.workspace.uuid
+            )
+            == customer
+        )
 
 
 @pytest.mark.django_db
