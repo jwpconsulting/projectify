@@ -70,7 +70,7 @@ class WorkspaceUser:
         return self.user.email
 
     @strawberry.field
-    def full_name(self) -> str:
+    def full_name(self) -> str | None:
         """Resolve full name."""
         return self.user.full_name
 
