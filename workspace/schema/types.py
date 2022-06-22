@@ -82,7 +82,7 @@ class WorkspaceUser:
             return profile_picture.url
 
     role: str
-    job_title: str
+    job_title: str | None
 
 
 @strawberry.type
