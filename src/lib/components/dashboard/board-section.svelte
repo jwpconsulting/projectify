@@ -348,7 +348,12 @@
         });
     }
 
-    function openLabelPicker({ detail: { task, target } }) {}
+    function openLabelPicker({ detail: { task, target } }) {
+        let dropDown = getDropDown();
+        dropDown.openComponent(LabelPicker, target, {
+            task,
+        });
+    }
 </script>
 
 <div
