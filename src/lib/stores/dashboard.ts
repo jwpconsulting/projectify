@@ -1,6 +1,7 @@
 import {
     Mutation_MoveTaskAfter,
     Mutation_DeleteTask,
+    Mutation_AssignTask,
 } from "./../graphql/operations";
 import { goto } from "$app/navigation";
 import { encodeUUID } from "$lib/utils/encoders";
@@ -233,6 +234,25 @@ export async function deleteTask(task, section): Promise<void> {
         });
 
         closeTaskDetails();
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export async function assingUserToTask(
+    userEmail: string,
+    taskUUID: string
+): Promise<void> {
+    try {
+        await client.mutate({
+            mutation: Mutation_AssignTask,
+            variables: {
+                input: {
+                    uuid: taskUUID,
+                    email: userEmail,
+                },
+            },
+        });
     } catch (error) {
         console.error(error);
     }

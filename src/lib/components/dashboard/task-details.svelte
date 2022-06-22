@@ -1,5 +1,6 @@
 <script lang="ts">
     import {
+        assingUserToTask,
         currenTaskDetailsUUID,
         currentWorkspaceUUID,
         deleteTask,
@@ -229,19 +230,12 @@
         if (!$currenTaskDetailsUUID) {
             return;
         }
-        try {
-            await client.mutate({
-                mutation: Mutation_AssignTask,
-                variables: {
-                    input: {
-                        uuid: $currenTaskDetailsUUID,
-                        email: task?.assignee?.email || null,
-                    },
-                },
-            });
-        } catch (error) {
-            console.error(error);
-        }
+
+        await assingUserToTask(
+            task?.assignee?.email || null,
+            $currenTaskDetailsUUID
+        );
+
         userPicked = false;
     }
 
