@@ -650,6 +650,12 @@ class TestTask:
         workspace.refresh_from_db()
         assert task.number == workspace.highest_task_number
 
+    def test_task_workspace_pgtrigger(self, task, other_workspace):
+        """Test database trigger for wrong workspace assignment."""
+        with pytest.raises(db.InternalError):
+            task.workspace = other_workspace
+            task.save()
+
 
 @pytest.mark.django_db
 class TestLabelManager:

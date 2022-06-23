@@ -13,6 +13,7 @@ from django.utils.timezone import (
 )
 from django.utils.translation import gettext_lazy as _
 
+import pgtrigger
 from django_extensions.db.models import (
     TimeStampedModel,
     TitleDescriptionModel,
@@ -470,6 +471,36 @@ class TaskQuerySet(models.QuerySet):
         return new_task
 
 
+@pgtrigger.register(
+    pgtrigger.Trigger(
+        name="ensure_correct_workspace",
+        when=pgtrigger.Before,
+        operation=pgtrigger.Insert | pgtrigger.Update,
+        func="""
+              DECLARE
+                correct_workspace_id   INTEGER;
+              BEGIN
+                SELECT "workspace_workspace"."id" INTO correct_workspace_id
+                FROM "workspace_workspace"
+                INNER JOIN "workspace_workspaceboard"
+                    ON ("workspace_workspace"."id" = \
+                    "workspace_workspaceboard"."workspace_id")
+                INNER JOIN "workspace_workspaceboardsection"
+                    ON ("workspace_workspaceboard"."id" = \
+                         "workspace_workspaceboardsection"."workspace_board_id")
+                INNER JOIN "workspace_task"
+                    ON ("workspace_workspaceboardsection"."id" = \
+                        "workspace_task"."workspace_board_section_id")
+                WHERE "workspace_task"."id" = NEW.id
+                LIMIT 1;
+                IF correct_workspace_id != NEW.workspace_id THEN
+                    RAISE EXCEPTION 'invalid workspace_id: workspace being \
+                        inserted does not match correct derived workspace.';
+                END IF;
+                RETURN NEW;
+              END;""",
+    )
+)
 class Task(
     TitleDescriptionModel,
     TimeStampedModel,
