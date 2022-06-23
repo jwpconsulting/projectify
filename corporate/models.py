@@ -22,6 +22,10 @@ class CustomerManager(models.Manager):
         """Get customer by user and uuid."""
         return self.filter(workspace__users=user).get(uuid=uuid)
 
+    def get_by_stripe_customer_id(self, stripe_customer_id):
+        """Get customer by stripe customer id."""
+        return self.get(stripe_customer_id=stripe_customer_id)
+
 
 class Customer(models.Model):
     """Customer model. One to one linked to workspace."""

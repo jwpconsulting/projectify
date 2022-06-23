@@ -35,6 +35,17 @@ class TestCustomerManager:
             == customer
         )
 
+    def test_get_by_stripe_customer_id(self, customer):
+        """Test get_by_stripe_customer_id."""
+        customer.stripe_customer_id = "hello_world"
+        customer.save()
+        assert (
+            models.Customer.objects.get_by_stripe_customer_id(
+                "hello_world",
+            )
+            == customer
+        )
+
 
 @pytest.mark.django_db
 class TestCustomer:
