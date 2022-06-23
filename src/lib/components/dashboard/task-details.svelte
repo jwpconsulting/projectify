@@ -35,6 +35,8 @@
     import Loading from "../loading.svelte";
     import { page } from "$app/stores";
     import { writable } from "svelte/store";
+    import IconClose from "../icons/icon-close.svelte";
+    import TaskDetailsBreadcrumbs from "./task-details-breadcrumbs.svelte";
 
     let res: ReadableQuery<any> = null;
     let task = null;
@@ -250,6 +252,12 @@
             id: "updates",
         },
     ];
+
+    import { getContext } from "svelte";
+    const modal = getContext<any>("modal");
+    function close() {
+        modal.close();
+    }
 </script>
 
 {#if res && $res.loading}
@@ -258,7 +266,15 @@
     </div>
 {:else if (res && !$res.error) || task}
     <div class="flex h-screen w-[60vw] flex-col p-0">
-        <header class="relative flex items-center space-x-4 bg-base-100 p-6">
+        <div class="flex px-4 py-4 items-center gap-4 pb-2">
+            <button
+                on:click={() => close()}
+                class="btn btn-ghost btn-circle shrink-0 w-[42px] h-[42px] min-h-[42px] min-w-[42px]"
+                ><IconClose /></button
+            >
+            <TaskDetailsBreadcrumbs {task} />
+        </div>
+        <header class="relative flex items-center gap-4 bg-base-100 p-4 mb-2">
             <a
                 href="/"
                 class="flex items-center justify-center"
@@ -303,7 +319,7 @@
 
             <button
                 disabled={!saveEnabled}
-                class="btn btn-primary btn-sm shrink-0 rounded-full"
+                class="btn btn-primary btn-md shrink-0"
                 on:click={() => save()}>{$_("save")}</button
             >
             {#if userPickerOpen}

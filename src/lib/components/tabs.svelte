@@ -20,7 +20,7 @@
     export let autoPadding = true;
 </script>
 
-<ul class="tabs px-6">
+<ul class="tabs px-4">
     {#each items as item}
         {#if item.hidden !== true}
             <li
