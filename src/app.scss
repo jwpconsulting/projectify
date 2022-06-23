@@ -189,6 +189,26 @@ body {
             @apply select-none text-[#9ca3af];
         }
     }
+
+    .breadcrumbs {
+        @apply max-w-full;
+        > ul {
+            @apply flex max-w-full flex-nowrap content-evenly items-stretch;
+
+            li {
+                @apply flex shrink basis-auto overflow-hidden;
+                & + :before {
+                    @apply shrink-0;
+                }
+                > * {
+                    @apply truncate;
+                }
+                &:last-child {
+                    @apply shrink-0;
+                }
+            }
+        }
+    }
 }
 
 ::-webkit-progress-value {
