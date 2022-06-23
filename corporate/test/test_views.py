@@ -1,4 +1,8 @@
 """Test corporate app views."""
+from unittest import (
+    mock,
+)
+
 from django.urls import (
     reverse_lazy,
 )
@@ -48,7 +52,6 @@ class TestStripeWebhook:
         self,
         unpaid_customer,
         stripe_checkout_session_event_mock,
-        monkeypatch,
         client,
     ):
         """Test the handling of a checkout session."""
@@ -56,13 +59,11 @@ class TestStripeWebhook:
         session = stripe_checkout_session_event_mock["data"]["object"]
         session.metadata.customer_uuid = customer.uuid
 
-        def mock_event(*args, **kwargs):
-            """Mock function."""
-            return stripe_checkout_session_event_mock
-
-        monkeypatch.setattr("stripe.Webhook.construct_event", mock_event)
         header = {"HTTP_STRIPE_SIGNATURE": "dummy_sig"}
-        response = client.post(reverse_lazy("stripe-webhook"), **header)
+
+        with mock.patch("stripe.Webhook.construct_event") as construct_event:
+            construct_event.return_value = stripe_checkout_session_event_mock
+            response = client.post(reverse_lazy("stripe-webhook"), **header)
         assert response.status_code == 200
         customer.refresh_from_db()
         assert (
