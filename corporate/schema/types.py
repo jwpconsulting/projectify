@@ -39,3 +39,15 @@ class Customer:
     workspace: workspace_types.Workspace
     seats: int
     uuid: uuid.UUID
+
+
+@strawberry.type
+class CheckoutSession:
+    """Checkout session."""
+
+    @strawberry.field
+    def stripe_id(self) -> str:
+        """Return stripe id."""
+        return self.id
+
+    url: str

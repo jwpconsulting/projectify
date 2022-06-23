@@ -19,7 +19,11 @@ class TestCreateCheckoutSession:
 
     query = """
 mutation createCheckoutSession ($workspaceUuid: UUID!, $seats: Int!) {
-    createCheckoutSession(input: {workspaceUuid: $workspaceUuid, seats:$seats})
+    createCheckoutSession(
+        input: {workspaceUuid: $workspaceUuid, seats: $seats}
+    ) {
+        stripeId
+    }
 }
 """
 
@@ -41,7 +45,13 @@ mutation createCheckoutSession ($workspaceUuid: UUID!, $seats: Int!) {
                 "seats": unpaid_customer.seats,
             },
         )
-        assert result == {"data": {"createCheckoutSession": "hello_world"}}
+        assert result == {
+            "data": {
+                "createCheckoutSession": {
+                    "stripeId": "hello_world",
+                },
+            },
+        }
 
     def test_query_no_customer(
         self,
@@ -63,7 +73,13 @@ mutation createCheckoutSession ($workspaceUuid: UUID!, $seats: Int!) {
                 "seats": 1,
             },
         )
-        assert result == {"data": {"createCheckoutSession": "hello_world"}}
+        assert result == {
+            "data": {
+                "createCheckoutSession": {
+                    "stripeId": "hello_world",
+                },
+            },
+        }
 
     def test_query_paid_customer(
         self,
