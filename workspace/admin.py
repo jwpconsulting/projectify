@@ -34,6 +34,7 @@ class WorkspaceAdmin(admin.ModelAdmin):
         "created",
         "modified",
     )
+    readonly_fields = ("uuid",)
 
 
 @admin.register(models.WorkspaceUserInvite)
@@ -94,6 +95,7 @@ class WorkspaceBoardAdmin(admin.ModelAdmin):
         "modified",
     )
     list_select_related = ("workspace",)
+    readonly_fields = ("uuid",)
 
     @admin.display(description=_("Workspace title"))
     def workspace_title(self, instance):
@@ -121,6 +123,7 @@ class WorkspaceBoardSectionAdmin(admin.ModelAdmin):
         "modified",
     )
     list_select_related = ("workspace_board__workspace",)
+    readonly_fields = ("uuid",)
 
     @admin.display(description=_("Workspace board title"))
     def workspace_board_title(self, instance):
@@ -164,6 +167,7 @@ class TaskAdmin(admin.ModelAdmin):
     list_select_related = (
         "workspace_board_section__workspace_board__workspace",
     )
+    readonly_fields = ("uuid",)
 
     @admin.display(description=_("Number of labels"))
     def number_labels(self, instance):
@@ -195,6 +199,7 @@ class LabelAdmin(admin.ModelAdmin):
         "color",
         "workspace_title",
     )
+    readonly_fields = ("uuid",)
 
     @admin.display(description=_("Workspace title"))
     def workspace_title(self, instance):
@@ -218,6 +223,7 @@ class SubTaskAdmin(admin.ModelAdmin):
     list_select_related = (
         "task__workspace_board_section__workspace_board__workspace",
     )
+    readonly_fields = ("uuid",)
 
     @admin.display(description=_("Task title"))
     def task_title(self, instance):
@@ -256,6 +262,7 @@ class ChatMessageAdmin(admin.ModelAdmin):
     list_select_related = (
         "task__workspace_board_section__workspace_board__workspace",
     )
+    readonly_fields = ("uuid",)
 
     @admin.display(description=_("Task title"))
     def task_title(self, instance):
