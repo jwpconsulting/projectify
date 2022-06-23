@@ -8,12 +8,13 @@ from django.conf import (
 import strawberry
 
 import stripe
-from workspace.models import (
-    Workspace,
-)
+from workspace import models as workspace_models
 
-from ..models import (
-    Customer,
+from .. import (
+    models,
+)
+from . import (
+    types,
 )
 
 
@@ -32,9 +33,9 @@ class Mutation:
     @strawberry.field
     def create_checkout_session(
         self, info, input: CreateCheckoutSessionInput
-    ) -> str:
-        """Test creating a Stripe Checkout Session."""
-        workspace = Workspace.objects.get_for_user_and_uuid(
+    ) -> types.CheckoutSession:
+        """Create a Stripe checkout session."""
+        workspace = workspace_models.Workspace.objects.get_for_user_and_uuid(
             info.context.user,
             input.workspace_uuid,
         )
@@ -44,12 +45,12 @@ class Mutation:
                 "corporate.can_update_customer",
                 customer,
             )
-        except Customer.DoesNotExist:
+        except models.Customer.DoesNotExist:
             assert info.context.user.has_perm(
                 "corporate.can_create_customer",
                 workspace,
             )
-            customer = Customer.objects.create(
+            customer = models.Customer.objects.create(
                 workspace=workspace, seats=input.seats
             )
         assert not customer.active
@@ -66,4 +67,4 @@ class Mutation:
             subscription_data={"trial_period_days": 31},
             metadata={"customer_uuid": customer.uuid},
         )
-        return session.id
+        return session
