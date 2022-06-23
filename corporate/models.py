@@ -81,6 +81,17 @@ class Customer(models.Model):
         self.stripe_customer_id = stripe_customer_id
         self.save()
 
+    def set_number_of_seats(self, seats):
+        """
+        Set the number of seats.
+
+        Saves model instance.
+        """
+        if self.seats == seats:
+            return
+        self.seats = seats
+        self.save()
+
     @property
     def active(self):
         """Return if active customer."""
