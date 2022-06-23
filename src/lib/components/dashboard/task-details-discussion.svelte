@@ -47,7 +47,7 @@
 >
     <div
         bind:this={messagesView}
-        class="flex grow flex-col divide-y divide-base-300 overflow-y-auto px-6"
+        class="flex grow flex-col divide-y divide-base-300 overflow-y-auto px-4"
     >
         {#each task?.chatMessages || [] as message}
             <div class="flex space-x-4  py-6">
@@ -74,7 +74,7 @@
             </div>
         {/each}
     </div>
-    <div class="space-y-2 border-t border-base-300 p-6">
+    <div class="space-y-2 border-t border-base-300 p-4">
         <textarea
             rows="2"
             class="textarea textarea-bordered w-full resize-none p-4 leading-normal"
@@ -87,10 +87,10 @@
                 }
             }}
         />
-        <div class="flex items-center space-x-2">
+        <div class="flex items-center gap-2">
             <div class="grow" />
             <button
-                class="btn btn-primary btn-sm rounded-full"
+                class="btn btn-primary btn-md"
                 disabled={chatMessageText.length === 0}
                 on:click={() => sendChatMessage()}>Send</button
             >
