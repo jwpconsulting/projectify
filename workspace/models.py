@@ -17,6 +17,9 @@ from django_extensions.db.models import (
     TimeStampedModel,
     TitleDescriptionModel,
 )
+from notifications.signals import (
+    notify,
+)
 from user import models as user_models
 
 from . import (
@@ -508,6 +511,15 @@ class Task(
 
     objects = TaskQuerySet.as_manager()
 
+    def notify(self, verb):
+        """Notify assignee of change."""
+        if self.assignee:
+            notify.send(
+                sender=self.workspace,
+                recipient=self.assignee,
+                verb=verb,
+            )
+
     def move_to(self, workspace_board_section, order):
         """
         Move to specified workspace board section and to order n.
@@ -536,6 +548,10 @@ class Task(
             # Set the order
             workspace_board_section.set_task_order(order_list)
             workspace_board_section.save()
+        self.notify(
+            verb=f"Task number {self.number} has been moved to order \
+                 {order} in section {workspace_board_section.title}."
+        )
 
     def add_sub_task(self, title, description):
         """Add a sub task."""
@@ -561,7 +577,7 @@ class Task(
         # Change assignee
         self.assignee = assignee
         # Save
-        self.save()
+        self.save(assigned=True)
 
     def get_next_section(self):
         """Return instance of the next section."""
@@ -596,11 +612,22 @@ class Task(
             pass
         return label
 
-    def save(self, *args, **kwargs):
-        """Override save to add task number."""
+    def save(self, assigned=False, *args, **kwargs):
+        """Override save to add business logic."""
         if self.number is None:
             self.number = self.workspace.increment_highest_task_number()
+        if assigned and self.assignee is not None:
+            notify.send(
+                sender=self.workspace,
+                recipient=self.assignee,
+                verb=f"Task number {self.number} has been assigned to you.",
+            )
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        """Override delete to notify assignee."""
+        self.notify(verb=f"Task number {self.number} has been deleted.")
+        super().delete(*args, **kwargs)
 
     class Meta:
         """Meta."""
