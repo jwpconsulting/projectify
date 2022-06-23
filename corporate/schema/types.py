@@ -51,3 +51,10 @@ class CheckoutSession:
         return self.id
 
     url: str
+
+
+@strawberry.type
+class BillingPortalSession:
+    """Billing portal session."""
+
+    url: str

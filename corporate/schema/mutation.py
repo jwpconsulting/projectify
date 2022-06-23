@@ -26,6 +26,13 @@ class CreateCheckoutSessionInput:
     seats: int
 
 
+@strawberry.input
+class CreateBillingPortalSessionInput:
+    """CreateBillingPortalSession mutation input."""
+
+    uuid: uuid.UUID
+
+
 @strawberry.type
 class Mutation:
     """Mutation."""
@@ -66,5 +73,24 @@ class Mutation:
             mode="subscription",
             subscription_data={"trial_period_days": 31},
             metadata={"customer_uuid": customer.uuid},
+        )
+        return session
+
+    @strawberry.field
+    def create_billing_portal_session(
+        self, info, input: CreateBillingPortalSessionInput
+    ) -> types.BillingPortalSession:
+        """Allow accessing the billing portal."""
+        customer = models.Customer.objects.get_for_user_and_uuid(
+            info.context.user,
+            input.uuid,
+        )
+        assert info.context.user.has_perm(
+            "corporate.can_update_customer",
+            customer,
+        )
+        session = stripe.billing_portal.Session.create(
+            customer=customer.stripe_customer_id,
+            return_url=settings.FRONTEND_URL,
         )
         return session
