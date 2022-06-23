@@ -270,6 +270,7 @@ export const Query_DashboardTaskDetails = gql`
             title
             description
             deadline
+            number
             assignee {
                 email
                 fullName
@@ -284,6 +285,15 @@ export const Query_DashboardTaskDetails = gql`
             }
             workspaceBoardSection {
                 uuid
+                title
+                workspaceBoard {
+                    uuid
+                    title
+                    workspace {
+                        uuid
+                        title
+                    }
+                }
             }
             labels {
                 uuid
