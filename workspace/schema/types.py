@@ -190,12 +190,15 @@ class Task:
         user = self.assignee
         if not self.assignee:
             return
-        workspace_user = (
-            models.WorkspaceUser.objects.get_by_workspace_and_user(
-                self.workspace,
-                user,
+        try:
+            workspace_user = (
+                models.WorkspaceUser.objects.get_by_workspace_and_user(
+                    self.workspace,
+                    user,
+                )
             )
-        )
+        except models.WorkspaceUser.DoesNotExist:
+            return
         return workspace_user
 
     created: datetime.datetime
@@ -252,12 +255,15 @@ class ChatMessage:
         """Resolve author."""
         if not self.author:
             return
-        workspace_user = (
-            models.WorkspaceUser.objects.get_by_workspace_and_user(
-                self.workspace,
-                self.author,
+        try:
+            workspace_user = (
+                models.WorkspaceUser.objects.get_by_workspace_and_user(
+                    self.workspace,
+                    self.author,
+                )
             )
-        )
+        except models.WorkspaceUser.DoesNotExist:
+            return
         return workspace_user
 
     created: datetime.datetime
