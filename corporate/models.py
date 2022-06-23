@@ -18,6 +18,10 @@ class CustomerManager(models.Manager):
         """Get workpsace by UUID."""
         return self.get(workspace__uuid=workspace_uuid)
 
+    def get_for_user_and_uuid(self, user, uuid):
+        """Get customer by user and uuid."""
+        return self.filter(workspace__users=user).get(uuid=uuid)
+
 
 class Customer(models.Model):
     """Customer model. One to one linked to workspace."""

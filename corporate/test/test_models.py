@@ -26,6 +26,15 @@ class TestCustomerManager:
             == customer
         )
 
+    def test_get_for_user_and_uuid(self, customer, workspace_user_customer):
+        """Test get_for_user_and_uuid."""
+        assert (
+            models.Customer.objects.get_for_user_and_uuid(
+                workspace_user_customer.user, customer.uuid
+            )
+            == customer
+        )
+
 
 @pytest.mark.django_db
 class TestCustomer:
