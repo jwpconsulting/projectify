@@ -1,4 +1,8 @@
 """Test corporate models."""
+from unittest import (
+    mock,
+)
+
 import pytest
 
 from .. import (
@@ -74,6 +78,17 @@ class TestCustomer:
         customer.assign_stripe_customer_id("Hello world")
         customer.refresh_from_db()
         assert customer.stripe_customer_id == "Hello world"
+
+    def test_set_number_of_seats(self, customer):
+        """Test set_number_of_seats."""
+        original_seats = customer.seats
+        customer.set_number_of_seats(original_seats + 1)
+        customer.refresh_from_db()
+        assert customer.seats == original_seats + 1
+
+        customer.save = mock.MagicMock()
+        customer.set_number_of_seats(customer.seats)
+        assert not customer.save.called
 
     def test_active(self, unpaid_customer):
         """Test active property."""
