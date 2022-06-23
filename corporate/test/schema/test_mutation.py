@@ -1,4 +1,8 @@
 """Test Corporate mutations."""
+from unittest import (
+    mock,
+)
+
 import pytest
 
 
@@ -101,3 +105,47 @@ mutation createCheckoutSession ($workspaceUuid: UUID!, $seats: Int!) {
             },
         )
         assert "errors" in result
+
+
+@pytest.mark.django_db
+class TestCreateBillingPortalSession:
+    """Test createBillingPortalSession mutation."""
+
+    query = """
+mutation CreateBillingPortalSession($customerUuid: UUID!) {
+    createBillingPortalSession(input: {uuid: $customerUuid}) {
+        url
+    }
+}
+"""
+
+    def test_query_paid_customer(
+        self,
+        graphql_query_user,
+        customer,
+        settings,
+        monkeypatch,
+        workspace_user_customer,
+    ):
+        """Test query with paid customer."""
+
+        class Session:
+            """Billing portal mock session."""
+
+            url = "https://www.example.com/"
+
+        with mock.patch("stripe.billing_portal.Session.create") as create:
+            create.return_value = Session()
+            result = graphql_query_user(
+                self.query,
+                variables={
+                    "customerUuid": str(customer.uuid),
+                },
+            )
+        assert result == {
+            "data": {
+                "createBillingPortalSession": {
+                    "url": "https://www.example.com/",
+                },
+            },
+        }
