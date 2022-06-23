@@ -1,9 +1,16 @@
 <script lang="ts">
     import { browser } from "$app/env";
     import { fly } from "svelte/transition";
+    import { setContext } from "svelte";
 
     export let open = false;
     let contentWidth;
+
+    setContext("modal", {
+        close: () => {
+            open = false;
+        },
+    });
 
     $: {
         if (browser) {
