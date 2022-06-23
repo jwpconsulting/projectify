@@ -49,7 +49,12 @@ class Customer(models.Model):
         default=SubscriptionStatus.UNPAID,
     )
     stripe_customer_id = models.CharField(
-        max_length=150, null=True, blank=True
+        max_length=150,
+        null=True,
+        blank=True,
+        # XXX
+        # unique=True,
+        # db_index=True,
     )
 
     objects = CustomerManager()
