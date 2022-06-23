@@ -1,6 +1,4 @@
 <script lang="ts">
-    import Header from "$lib/components/Header.svelte";
-
     import WorkspacesSideNav from "$lib/components/dashboard/workspaces-side-nav.svelte";
     import Board from "./board.svelte";
     import DrawerModal from "../drawerModal.svelte";
