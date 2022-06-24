@@ -3,6 +3,7 @@ import uuid
 
 from django.db import (
     models,
+    transaction,
 )
 from django.utils.translation import gettext_lazy as _
 
@@ -101,3 +102,12 @@ class Customer(models.Model):
     def active(self):
         """Return if active customer."""
         return self.subscription_status == Customer.SubscriptionStatus.ACTIVE
+
+    @property
+    @transaction.atomic
+    def seats_remaining(self):
+        """Return the number of seats remaining."""
+        num_users = len(self.workspace.users.all())
+        invites_qs = self.workspace.workspaceuserinvite_set.all()
+        num_invites = len(invites_qs)
+        return self.seats - num_users - num_invites
