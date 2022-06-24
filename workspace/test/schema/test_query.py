@@ -191,6 +191,7 @@ query Workspace($uuid: UUID!) {
         users {
             email
             jobTitle
+            uuid
         }
     }
 }
@@ -208,6 +209,7 @@ query Workspace($uuid: UUID!) {
                         {
                             "email": user.email,
                             "jobTitle": workspace_user.job_title,
+                            "uuid": str(workspace_user.uuid),
                         }
                     ]
                 }

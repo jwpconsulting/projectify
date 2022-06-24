@@ -107,6 +107,7 @@ class WorkspaceUser:
             raise ValueError()
 
     job_title: str | None
+    uuid: uuid.UUID
 
 
 @strawberry.type
