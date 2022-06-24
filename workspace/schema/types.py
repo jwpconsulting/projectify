@@ -1,5 +1,6 @@
 """Workspace schema types."""
 import datetime
+import enum
 import uuid
 
 import strawberry
@@ -60,6 +61,16 @@ class Workspace:
     uuid: uuid.UUID
 
 
+@strawberry.enum
+class WorkspaceUserRole(enum.Enum):
+    """Workspace user role enum."""
+
+    OBSERVER = "observer"
+    MEMBER = "member"
+    MAINTAINER = "maintainer"
+    OWNER = "owner"
+
+
 @strawberry.django.type(models.WorkspaceUser)
 class WorkspaceUser:
     """WorkspaceUser."""
@@ -81,7 +92,20 @@ class WorkspaceUser:
         if profile_picture:
             return profile_picture.url
 
-    role: str
+    @strawberry.field
+    def role(self) -> WorkspaceUserRole:
+        """Resolve user role."""
+        if self.role == "OBSE":
+            return WorkspaceUserRole.OBSERVER
+        elif self.role == "MEMB":
+            return WorkspaceUserRole.MEMBER
+        elif self.role == "MAIN":
+            return WorkspaceUserRole.MAINTAINER
+        elif self.role == "OWNE":
+            return WorkspaceUserRole.OWNER
+        else:
+            raise ValueError()
+
     job_title: str | None
 
 
