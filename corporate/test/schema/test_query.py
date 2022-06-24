@@ -11,6 +11,7 @@ query CustomerByWorkspace($workspaceUuid: UUID!) {
     customerByWorkspace(workspaceUuid: $workspaceUuid) {
         subscriptionStatus
         seats
+        seatsRemaining
         uuid
         workspace {
             uuid
@@ -34,6 +35,7 @@ query CustomerByWorkspace($workspaceUuid: UUID!) {
                 "customerByWorkspace": {
                     "subscriptionStatus": "ACTIVE",
                     "seats": customer.seats,
+                    "seatsRemaining": customer.seats_remaining,
                     "uuid": str(customer.uuid),
                     "workspace": {
                         "uuid": str(customer.workspace.uuid),

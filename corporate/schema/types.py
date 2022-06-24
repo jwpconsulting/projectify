@@ -38,6 +38,7 @@ class Customer:
 
     workspace: workspace_types.Workspace
     seats: int
+    seats_remaining: int
     uuid: uuid.UUID
 
 
