@@ -194,6 +194,10 @@ body {
         @apply mb-4;
     }
 
+    .btn-primary.btn-active {
+        @apply text-primary-content;
+    }
+
     .breadcrumbs {
         @apply max-w-full;
         > ul {

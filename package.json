@@ -14,8 +14,7 @@
     "devDependencies": {
         "@apollo/client": "^3.5.6",
         "@sveltejs/adapter-auto": "next",
-        "@sveltejs/adapter-netlify": "^1.0.0-next.36",
-        "@sveltejs/adapter-static": "^1.0.0-next.24",
+        "@sveltejs/adapter-static": "1.0.0-next.24",
         "@sveltejs/kit": "1.0.0-next.216",
         "@tailwindcss/typography": "^0.5.0",
         "@types/cookie": "^0.4.1",
