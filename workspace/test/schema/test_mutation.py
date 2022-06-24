@@ -1145,14 +1145,15 @@ class TestUpdateWorkspaceUserMutation:
     query = """
 mutation UpdateWorkspaceUser(
     $workspaceUuid: UUID!,
-    $email: String!
+    $email: String!,
+    $role: WorkspaceUserRole!
 ) {
     updateWorkspaceUser(
         input: {
             workspaceUuid: $workspaceUuid,
             email: $email,
             jobTitle: "Expert Knob Twiddler",
-            role: "OBSE",
+            role: $role,
         }
     ) {
         email
@@ -1175,6 +1176,7 @@ mutation UpdateWorkspaceUser(
             variables={
                 "workspaceUuid": str(workspace.uuid),
                 "email": workspace_user.user.email,
+                "role": "OBSERVER",
             },
         )
         assert result == {
