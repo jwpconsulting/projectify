@@ -1182,7 +1182,7 @@ mutation UpdateWorkspaceUser(
                 "updateWorkspaceUser": {
                     "email": workspace_user.user.email,
                     "jobTitle": "Expert Knob Twiddler",
-                    "role": "OBSE",
+                    "role": "OBSERVER",
                 },
             },
         }
