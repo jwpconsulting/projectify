@@ -180,7 +180,7 @@ class UpdateWorkspaceUserInput:
 
     email: str
     workspace_uuid: uuid.UUID
-    role: str
+    role: types.WorkspaceUserRole
     job_title: str
 
 
@@ -650,7 +650,13 @@ class Mutation:
         assert info.context.user.has_perm(
             "workspace.can_update_workspace_user", workspace_user
         )
-        workspace_user.role = input.role
+        t = types.WorkspaceUserRole
+        workspace_user.role = {
+            t.OBSERVER: models.WorkspaceUserRoles.OBSERVER,
+            t.MEMBER: models.WorkspaceUserRoles.MEMBER,
+            t.MAINTAINER: models.WorkspaceUserRoles.MAINTAINER,
+            t.OWNER: models.WorkspaceUserRoles.OWNER,
+        }[input.role]
         workspace_user.job_title = input.job_title
         workspace_user.save()
         return workspace_user
