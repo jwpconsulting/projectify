@@ -186,9 +186,11 @@ export const Query_WorkspaceTeamMembers = gql`
         workspace(uuid: $uuid) {
             uuid
             users {
+                jobTitle
                 email
                 fullName
                 profilePicture
+                role
             }
         }
     }
