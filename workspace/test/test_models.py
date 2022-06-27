@@ -828,23 +828,33 @@ class TestChatMessage:
 class TestNotifications:
     """Test notifications."""
 
-    def test_task_assigned_notification(self, task, workspace_user):
+    def test_task_assigned_notification(
+        self, task, workspace_user, other_workspace_user
+    ):
         """Test sending assignment notification."""
         # Use setter method to trigger notification
-        task.assign_to(workspace_user.user)
-        assert "assigned" in workspace_user.user.notifications.last().verb
+        task.assign_to(workspace_user.user, actor=other_workspace_user.user)
+        notification = workspace_user.user.notifications.last().verb
+        assert "assigned" in notification
+        assert other_workspace_user.user.full_name in notification
 
     def test_task_moved_to_notification(
-        self, workspace_board, task, workspace_user
+        self, workspace_board, task, workspace_user, other_workspace_user
     ):
         """Test notification for moving a task to another section."""
         other_section = factory.WorkspaceBoardSectionFactory(
             workspace_board=workspace_board
         )
-        task.move_to(other_section, 0)
-        assert "moved" in workspace_user.user.notifications.last().verb
+        task.move_to(other_section, 0, actor=other_workspace_user.user)
+        notification = workspace_user.user.notifications.last().verb
+        assert "moved" in notification
+        assert other_workspace_user.user.full_name in notification
 
-    def test_deleted_task_notification(self, task, workspace_user):
+    def test_deleted_task_notification(
+        self, task, workspace_user, other_workspace_user
+    ):
         """Test deleted task notification."""
-        task.delete()
-        assert "deleted" in workspace_user.user.notifications.last().verb
+        task.delete(actor=other_workspace_user.user)
+        notification = workspace_user.user.notifications.last().verb
+        assert "deleted" in notification
+        assert other_workspace_user.user.full_name in notification
