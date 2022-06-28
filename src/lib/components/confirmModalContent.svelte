@@ -40,7 +40,7 @@
     let isEditing = false;
 
     const modal = getContext<any>("modal");
-    $: data = modal.getData();
+    let data = modal.getData();
 
     $: {
         if (data && !isEditing) {
