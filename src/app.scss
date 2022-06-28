@@ -190,6 +190,10 @@ body {
         }
     }
 
+    .text-block > p {
+        @apply mb-4;
+    }
+
     .breadcrumbs {
         @apply max-w-full;
         > ul {
