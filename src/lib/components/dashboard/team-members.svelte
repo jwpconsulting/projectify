@@ -23,6 +23,8 @@
     import { DropDownMenuItem, getDropDown } from "../globalDropDown.svelte";
     import RolesPickerList from "./rolesPickerList.svelte";
     import { workspaceUserRoles } from "$lib/types/workspaceUserRole";
+    import IconEdit from "../icons/icon-edit.svelte";
+    import IconTrash from "../icons/icon-trash.svelte";
     export let workspaceUUID = null;
 
     let res = null;
@@ -140,7 +142,7 @@
 
         let dropDownItems: DropDownMenuItem[] = workspaceUserRoles.map(
             (role) => ({
-                label: role,
+                label: $_(role),
                 icon: null,
                 onClick: () => {
                     roleFilter = role;
@@ -150,6 +152,9 @@
 
         dropDown.open(dropDownItems, filterRoleButton);
     }
+
+    function openEditModalFor(user) {}
+    function openDeleteModalFor(user) {}
 </script>
 
 {#if $res.loading}
@@ -164,38 +169,63 @@
             bind:searchText
         />
         <DropdownButton
-            label={roleFilter || "Filter by role"}
+            label={roleFilter ? $_(roleFilter) : "Filter by role"}
             icon={IconLockClosed}
             bind:target={filterRoleButton}
             on:click={openRolePicker}
         />
     </div>
     <div class="divide-y divide-base-300">
-        {#each filteredUsers as user}
-            <div class="flex px-4 py-4 space-x-4">
-                <UserProfilePicture
-                    pictureProps={{
-                        url: user.profilePicture,
-                        size: 42,
-                    }}
-                />
-
-                <div class="grow flex flex-col  justify-center">
-                    <div class="text-xs">Interface designer</div>
-                    <div class="font-bold">
-                        {user.fullName ? user.fullName : user.email}
-                    </div>
-                </div>
-                <div class="flex items-center">
-                    <button
-                        on:click={() => onRemoveUser(user)}
-                        class="btn btn-accent btn-outline rounded-full btn-sm"
-                    >
-                        {$_("remove")}
-                    </button>
-                </div>
-            </div>
-        {/each}
+        <table class="table-auto w-full">
+            <thead>
+                <tr class="text-left text-sm opacity-50">
+                    <th class="px-2 py-4">{$_("member-details")}</th>
+                    <th class="px-2 py-4">{$_("role")}</th>
+                    <th class="px-2 py-4 text-right">{$_("edit-remove")}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {#each filteredUsers as user}
+                    <tr class="border-t border-base-300">
+                        <td class="flex gap-4 p-2">
+                            <div class="flex p-2">
+                                <UserProfilePicture
+                                    pictureProps={{
+                                        url: user.profilePicture,
+                                        size: 42,
+                                    }}
+                                />
+                            </div>
+                            <div
+                                class="grow flex flex-col gap-2 justify-center"
+                            >
+                                <div class="font-bold">
+                                    {user.fullName
+                                        ? user.fullName
+                                        : user.email}
+                                </div>
+                                <div class="text-xs">Interface designer</div>
+                            </div>
+                        </td>
+                        <td class="p-2">{$_(user.role)}</td>
+                        <td class="">
+                            <div class="flex gap-2 items-end justify-end">
+                                <button
+                                    on:click={() => openEditModalFor}
+                                    class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
+                                    ><IconEdit /></button
+                                >
+                                <button
+                                    on:click={() => openDeleteModalFor}
+                                    class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
+                                    ><IconTrash /></button
+                                >
+                            </div></td
+                        >
+                    </tr>
+                {/each}
+            </tbody>
+        </table>
         <div class="p-2">
             <a
                 href="/"

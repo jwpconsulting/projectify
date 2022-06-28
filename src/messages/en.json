@@ -173,5 +173,12 @@
     "log-in": "Log in",
     "add-label": "Add label",
     "location": "Location",
-    "members": "Members"
+    "members": "Members",
+    "OBSERVER": "Observer",
+    "MEMBER": "Member",
+    "MAINTAINER": "Maintainer",
+    "OWNER": "Owner",
+    "member-details": "Member details",
+    "role": "Role",
+    "edit-remove": "Edit/remove"
 }
