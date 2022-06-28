@@ -188,5 +188,6 @@
     "email-0": "email",
     "job-title": "job title",
     "permissions": "permissions",
-    "selecat-a-permission": "selecat a permission"
+    "selecat-a-permission": "selecat a permission",
+    "all-roles": "All roles"
 }

@@ -167,15 +167,22 @@
     function openRolePicker() {
         let dropDown = getDropDown();
 
-        let dropDownItems: DropDownMenuItem[] = workspaceUserRoles.map(
-            (role) => ({
+        let dropDownItems: DropDownMenuItem[] = [
+            {
+                label: $_("all-roles"),
+                icon: null,
+                onClick: () => {
+                    roleFilter = null;
+                },
+            },
+            ...workspaceUserRoles.map((role) => ({
                 label: $_(role),
                 icon: null,
                 onClick: () => {
                     roleFilter = role;
                 },
-            })
-        );
+            })),
+        ];
 
         dropDown.open(dropDownItems, filterRoleButton);
     }
