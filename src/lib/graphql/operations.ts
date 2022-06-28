@@ -201,6 +201,12 @@ export const Query_WorkspaceTeamMembers = gql`
                 role
             }
         }
+        customerByWorkspace(workspaceUuid: $uuid) {
+            uuid
+            seats
+            seatsRemaining
+            subscriptionStatus
+        }
     }
 `;
 

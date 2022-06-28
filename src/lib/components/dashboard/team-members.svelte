@@ -25,12 +25,15 @@
     import { workspaceUserRoles } from "$lib/types/workspaceUserRole";
     import IconEdit from "../icons/icon-edit.svelte";
     import IconTrash from "../icons/icon-trash.svelte";
+    import { validate } from "graphql";
+    import { goto } from "$app/navigation";
 
     export let workspaceUUID = null;
 
     let res = null;
     let workspaceWSStore;
     let workspace = null;
+    let customerByWorkspace = null;
     let users = [];
 
     const refetch = debounce(() => {
@@ -63,6 +66,8 @@
             if (workspace["users"]) {
                 users = workspace["users"];
             }
+
+            customerByWorkspace = $res.data["customerByWorkspace"];
         }
     }
 
@@ -70,6 +75,11 @@
         let modalRes = await getModal("inviteTeamMemberToWorkspace").open();
 
         if (!modalRes) {
+            return;
+        }
+
+        if (!modalRes.outputs?.email) {
+            goto("/billing");
             return;
         }
 
@@ -278,18 +288,37 @@
 {/if}
 
 <DialogModal id="inviteTeamMemberToWorkspace">
-    <ConfirmModalContent
-        title={$_("invite-team-member")}
-        subtitle={$_("please-enter-a-email-of-team-member")}
-        confirmLabel={$_("send")}
-        inputs={[
-            {
-                name: "email",
-                label: $_("email"),
-                placeholder: $_("please-enter-a-email-of-team-member"),
-            },
-        ]}
-    />
+    {#if customerByWorkspace?.seatsRemaining}
+        <ConfirmModalContent
+            title={$_("invite-team-member")}
+            confirmLabel={$_("send")}
+            inputs={[
+                {
+                    name: "email",
+                    label: $_("email"),
+                    validation: {
+                        required: true,
+                    },
+                    placeholder: $_("please-enter-a-email-of-team-member"),
+                },
+            ]}
+        >
+            <div class="text-center text-xs">
+                {$_("you-have-seats-seats-left-in-your-plan", {
+                    values: { seats: customerByWorkspace?.seatsRemaining },
+                })}
+            </div>
+        </ConfirmModalContent>
+    {:else}
+        <ConfirmModalContent
+            title={$_("invite-team-member")}
+            confirmLabel={"Go to Billing"}
+        >
+            <div class="text-center text-xs text-error">
+                {$_("you-have-0-seats-left-in-your-plan")}
+            </div>
+        </ConfirmModalContent>
+    {/if}
 </DialogModal>
 
 <DialogModal id="removeTeamMemberFromWorkspace">

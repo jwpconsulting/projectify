@@ -189,5 +189,7 @@
     "job-title": "job title",
     "permissions": "permissions",
     "selecat-a-permission": "selecat a permission",
-    "all-roles": "All roles"
+    "all-roles": "All roles",
+    "you-have-seats-seats-left-in-your-plan": "You have {seats} seats left in your plan",
+    "you-have-0-seats-left-in-your-plan": "You have 0 seats left in your plan"
 }
