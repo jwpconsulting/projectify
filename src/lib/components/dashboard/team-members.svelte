@@ -2,6 +2,7 @@
     import {
         Mutation_AddUserToWorkspace,
         Mutation_RemoveUserFromWorkspace,
+        Mutation_UpdateWorkspaceUser,
         Query_WorkspaceTeamMembers,
     } from "$lib/graphql/operations";
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
@@ -21,10 +22,11 @@
     import DropdownButton from "../dropdown-button.svelte";
     import IconLockClosed from "../icons/icon-lock-closed.svelte";
     import { DropDownMenuItem, getDropDown } from "../globalDropDown.svelte";
-    import RolesPickerList from "./rolesPickerList.svelte";
     import { workspaceUserRoles } from "$lib/types/workspaceUserRole";
     import IconEdit from "../icons/icon-edit.svelte";
     import IconTrash from "../icons/icon-trash.svelte";
+    import { userTheme } from "$lib/stores/global-ui";
+
     export let workspaceUUID = null;
 
     let res = null;
@@ -107,6 +109,31 @@
             console.error(error);
         }
     }
+
+    async function onEditUser(user) {
+        let modalRes = await getModal("editTeamMember").open(user);
+
+        if (!modalRes) {
+            return;
+        }
+
+        try {
+            await client.mutate({
+                mutation: Mutation_UpdateWorkspaceUser,
+                variables: {
+                    input: {
+                        workspaceUuid: workspaceUUID,
+                        email: modalRes.outputs.email,
+                        role: modalRes.outputs.role,
+                        jobTitle: modalRes.outputs.jobTitle || "",
+                    },
+                },
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     let roleFilter = null;
     let serachFieldEl;
     let searchText = "";
@@ -153,8 +180,7 @@
         dropDown.open(dropDownItems, filterRoleButton);
     }
 
-    function openEditModalFor(user) {}
-    function openDeleteModalFor(user) {}
+    $: ownerRoleEmail = users?.find((it) => it.role == "OWNER")?.email || null;
 </script>
 
 {#if $res.loading}
@@ -204,19 +230,21 @@
                                         ? user.fullName
                                         : user.email}
                                 </div>
-                                <div class="text-xs">Interface designer</div>
+                                {#if user.jobTitle}
+                                    <div class="text-xs">{user.jobTitle}</div>
+                                {/if}
                             </div>
                         </td>
                         <td class="p-2">{$_(user.role)}</td>
                         <td class="">
                             <div class="flex gap-2 items-end justify-end">
                                 <button
-                                    on:click={() => openEditModalFor}
+                                    on:click={() => onEditUser(user)}
                                     class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
                                     ><IconEdit /></button
                                 >
                                 <button
-                                    on:click={() => openDeleteModalFor}
+                                    on:click={() => onRemoveUser(user)}
                                     class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
                                     ><IconTrash /></button
                                 >
@@ -264,6 +292,71 @@
         confirmLabel={$_("remove")}
         confirmColor="accent"
     >
-        {$_("are-you-sure-you-want-to-remove-this-team-member")}
+        <div class="text-center text-xs">
+            {$_("are-you-sure-you-want-to-remove-this-team-member")}
+        </div>
     </ConfirmModalContent>
+</DialogModal>
+
+<DialogModal id="editTeamMember">
+    <ConfirmModalContent
+        title={$_("remove-team-member")}
+        confirmLabel={$_("remove")}
+        confirmColor="accent"
+    >
+        {"Ed"}
+    </ConfirmModalContent>
+</DialogModal>
+
+<DialogModal id="editTeamMember">
+    <ConfirmModalContent
+        title={$_("edit-team-member")}
+        confirmLabel={$_("Save")}
+        inputs={[
+            {
+                name: "fullName",
+                label: $_("name-0"),
+                validation: { required: false },
+            },
+            {
+                name: "email",
+                label: $_("email-0"),
+                validation: { required: true },
+            },
+            {
+                name: "jobTitle",
+                label: $_("job-title"),
+                validation: { required: false },
+            },
+            {
+                name: "role",
+                label: $_("permissions"),
+                type: "select",
+                placeholder: $_("selecat-a-permission"),
+                selectOptions: workspaceUserRoles.map((role) => ({
+                    label: $_(role),
+                    value: role,
+                })),
+                validation: {
+                    required: true,
+                    validator: (value, data) => {
+                        console.log(value, ownerRoleEmail, data.email);
+
+                        if (
+                            value == "OWNER" &&
+                            ownerRoleEmail &&
+                            ownerRoleEmail != data.email
+                        ) {
+                            return {
+                                error: true,
+                                message: $_(
+                                    "you-can-only-assign-one-owner-per-workspace-please-choose-another-role"
+                                ),
+                            };
+                        }
+                    },
+                },
+            },
+        ]}
+    />
 </DialogModal>

@@ -181,5 +181,12 @@
     "member-details": "Member details",
     "role": "Role",
     "edit-remove": "Edit/remove",
-    "workspace-settings": "Workspace Settings"
+    "workspace-settings": "Workspace Settings",
+    "edit-team-member": "Edit team member",
+    "you-can-only-assign-one-owner-per-workspace-please-choose-another-role": "You can only assign one owner per workspace. Please choose another role.",
+    "name-0": "name",
+    "email-0": "email",
+    "job-title": "job title",
+    "permissions": "permissions",
+    "selecat-a-permission": "selecat a permission"
 }

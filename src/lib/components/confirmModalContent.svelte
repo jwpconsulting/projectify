@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { offsetLimitPagination } from "@apollo/client/utilities";
+
     import { getContext } from "svelte";
     import { _ } from "svelte-i18n";
     import ColorPicker from "./colorPicker.svelte";
@@ -17,8 +19,16 @@
         value?: any;
         error?: string;
         placeholder?: string;
+        selectOptions?: { label: string; value: any }[];
         validation?: {
             required?: boolean;
+            validator?: (
+                value: any,
+                data: any
+            ) => {
+                error?: boolean;
+                message?: string;
+            };
             // Todo:
             // min?: number;
             // max?: number;
@@ -62,6 +72,14 @@
                 field.error = $_("this-field-is-required");
             }
 
+            if (field.validation?.validator) {
+                const res = field.validation?.validator(field.value, data);
+
+                if (res?.error) {
+                    valid = false;
+                    field.error = res.message;
+                }
+            }
             outputs[field.name] = field.value;
         });
 
@@ -103,6 +121,27 @@
                 />
             {:else if input.type == "datePicker"}
                 <InputDatePicker bind:input bind:isEditing />
+            {:else if input.type == "select"}
+                <select
+                    class:select-error={!valid && input.error}
+                    class="select select-bordered w-full"
+                    on:change={(e) => {
+                        isEditing = true;
+                        input.value = e.target["value"];
+                    }}
+                >
+                    <option disabled selected={!input.value}
+                        >{input.placeholder}</option
+                    >
+                    {#each input.selectOptions as option}
+                        <option
+                            selected={input.value == option.value}
+                            value={option.value}>{option.label}</option
+                        >
+                    {/each}
+
+                    {input.value}
+                </select>
             {:else}
                 <input
                     autofocus={inx == 0}
@@ -128,13 +167,13 @@
     {/each}
     <div class="flex w-full space-x-2 pt-9">
         <button
-            class="btn btn-outline btn-primary grow rounded-full"
+            class="btn btn-outline btn-primary grow"
             on:click|preventDefault={cancel}>{cancelLabel}</button
         >
         <button
             class:btn-primary={confirmColor == "primary"}
             class:btn-accent={confirmColor == "accent"}
-            class="btn grow rounded-full"
+            class="btn grow"
             on:click|preventDefault={confirm}>{confirmLabel}</button
         >
     </div>

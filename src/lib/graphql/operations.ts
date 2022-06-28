@@ -10,6 +10,14 @@ export const Query_User = gql`
     }
 `;
 
+export const Mutation_UpdateWorkspaceUser = gql`
+    mutation UpdateWorkspaceUser($input: UpdateWorkspaceUserInput!) {
+        updateWorkspaceUser(input: $input) {
+            email
+        }
+    }
+`;
+
 export const Mutation_UpdateProfile = gql`
     mutation UpdateProfile($input: UpdateProfileInput!) {
         updateProfile(input: $input) {
