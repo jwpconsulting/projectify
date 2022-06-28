@@ -15,7 +15,7 @@
     <div class="w-full max-w-xl space-y-8">
         <div class="flex items-center justify-start space-x-5">
             <button
-                class="btn btn-circle btn-primary shadow-md"
+                class="btn btn-primary btn-circle shadow-md"
                 on:click={() => onBack()}
             >
                 <div class="translate-x-1">
@@ -31,7 +31,7 @@
                 <Loading />
             </div>
         {:else}
-            <div class="card shadow-card min-h-8 overflow-visible py-4">
+            <div class="card shadow-card min-h-8 overflow-visible pt-6">
                 <slot />
             </div>
         {/if}

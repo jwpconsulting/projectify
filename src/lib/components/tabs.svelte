@@ -42,7 +42,7 @@
             class="relative flex grow flex-col overflow-y-auto transition-all duration-300 ease-in-out"
         >
             <div
-                class:px-6={autoPadding}
+                class:px-4={autoPadding}
                 class:py-4={autoPadding}
                 bind:clientHeight={contentHeght}
                 class="relative flex grow flex-col"
