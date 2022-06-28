@@ -3,17 +3,22 @@
 
     export let task;
 
-    let pathLinks = [
-        {
-            label: task.workspaceBoardSection.workspaceBoard.title,
-        },
-        {
-            label: task.workspaceBoardSection.title,
-        },
-        {
-            label: `#${task.number}`,
-        },
-    ];
+    let pathLinks;
+    if (task.workspaceBoardSection) {
+        pathLinks = [
+            {
+                label: task.workspaceBoardSection.workspaceBoard.title,
+            },
+            {
+                label: task.workspaceBoardSection.title,
+            },
+            {
+                label: `#${task.number}`,
+            },
+        ];
+    } else {
+        pathLinks = [];
+    }
 </script>
 
 <div class="flex max-w-full items-center gap-2 overflow-hidden">
