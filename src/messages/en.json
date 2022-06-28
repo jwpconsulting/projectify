@@ -172,8 +172,6 @@
     "continue-to-dashboard": "Continue to dashboard",
     "log-in": "Log in",
     "add-label": "Add label",
-    "location": "Location",
-    "members": "Members",
     "OBSERVER": "Observer",
     "MEMBER": "Member",
     "MAINTAINER": "Maintainer",
@@ -192,5 +190,6 @@
     "all-roles": "All roles",
     "you-have-seats-seats-left-in-your-plan": "You have {seats} seats left in your plan",
     "you-have-0-seats-left-in-your-plan": "You have 0 seats left in your plan",
-    "location": "Location"
+    "location": "Location",
+    "members": "Members"
 }
