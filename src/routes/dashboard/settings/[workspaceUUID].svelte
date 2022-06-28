@@ -43,7 +43,7 @@
 
 <PageLayout>
     <AuthGuard>
-        <SettingPage title="Workspace Settings">
+        <SettingPage title={$_("workspace-settings")}>
             <Tabs
                 items={tabItems}
                 bind:activeTabId

@@ -180,5 +180,6 @@
     "OWNER": "Owner",
     "member-details": "Member details",
     "role": "Role",
-    "edit-remove": "Edit/remove"
+    "edit-remove": "Edit/remove",
+    "workspace-settings": "Workspace Settings"
 }
