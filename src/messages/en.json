@@ -191,5 +191,12 @@
     "you-have-seats-seats-left-in-your-plan": "You have {seats} seats left in your plan",
     "you-have-0-seats-left-in-your-plan": "You have 0 seats left in your plan",
     "location": "Location",
-    "members": "Members"
+    "members": "Members",
+    "OBSERVER": "Observer",
+    "MEMBER": "Member",
+    "MAINTAINER": "Maintainer",
+    "OWNER": "Owner",
+    "member-details": "Member details",
+    "role": "Role",
+    "edit-remove": "Edit/remove"
 }
