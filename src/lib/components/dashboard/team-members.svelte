@@ -25,7 +25,6 @@
     import { workspaceUserRoles } from "$lib/types/workspaceUserRole";
     import IconEdit from "../icons/icon-edit.svelte";
     import IconTrash from "../icons/icon-trash.svelte";
-    import { userTheme } from "$lib/stores/global-ui";
 
     export let workspaceUUID = null;
 
