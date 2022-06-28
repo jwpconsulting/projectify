@@ -151,10 +151,6 @@
 </div>
 
 <style lang="scss">
-    .btn-filter {
-        @apply btn-xs flex h-10 shrink-0 items-center justify-center space-x-1 border-base-300 px-3;
-    }
-
     .filters-drawer {
         --open-height: 0;
         overflow: hidden;

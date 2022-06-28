@@ -183,5 +183,3 @@
         {$_("delete-task-modal-message")}
     </ConfirmModalContent>
 </DialogModal>
-
-<GlobalDropDown />

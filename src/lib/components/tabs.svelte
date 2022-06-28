@@ -1,9 +1,10 @@
 <script lang="ts">
-    import { setContext } from "svelte";
+    import { createEventDispatcher, setContext } from "svelte";
     import { writable } from "svelte/store";
 
     export let items = [];
     export let activeTabId = writable(items[0]?.id);
+    export let dispatcher = createEventDispatcher();
 
     $: {
         setContext("tabs", {
@@ -14,6 +15,7 @@
     let contentHeght = 0;
     const selectTab = (tabId) => {
         activeTabId.set(tabId);
+        dispatcher("tabChanged", { tabId });
     };
 
     export let forceHeight = false;

@@ -34,6 +34,7 @@
     import DialogModal from "$lib/components/dialogModal.svelte";
     import DatePickerDropDown from "$lib/components/datePickerDropDown.svelte";
     import ConnectionStatus from "$lib/components/connectionStatus.svelte";
+    import GlobalDropDown from "$lib/components/globalDropDown.svelte";
     setClient(client);
 </script>
 
@@ -51,3 +52,5 @@
         <DatePickerDropDown />
     </DialogModal>
 {/if}
+
+<GlobalDropDown />

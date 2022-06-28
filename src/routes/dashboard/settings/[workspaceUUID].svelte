@@ -9,6 +9,7 @@
     import SettingsLabels from "$lib/components/dashboard/settings-labels.svelte";
     import { _ } from "svelte-i18n";
     import { writable } from "svelte/store";
+    import { goto } from "$app/navigation";
 
     $: workspaceUUID = $page.params["workspaceUUID"];
 
@@ -22,7 +23,7 @@
             props: { workspaceUUID },
         },
         {
-            label: $_("team-members"),
+            label: $_("members"),
             id: "members",
             component: TeamMembers,
             props: { workspaceUUID },
@@ -34,12 +35,20 @@
             props: { workspaceUUID },
         },
     ];
+
+    function onTabChanged({ detail: { tabId } }) {
+        goto(`?tab=${tabId}`);
+    }
 </script>
 
 <PageLayout>
     <AuthGuard>
         <SettingPage title="Workspace Settings">
-            <Tabs items={tabItems} bind:activeTabId />
+            <Tabs
+                items={tabItems}
+                bind:activeTabId
+                on:tabChanged={onTabChanged}
+            />
         </SettingPage>
     </AuthGuard>
 </PageLayout>

@@ -18,6 +18,11 @@
     import SearchInput from "../search-input.svelte";
     import Fuse from "fuse.js";
     import { fuseSearchThreshold } from "$lib/stores/dashboard";
+    import DropdownButton from "../dropdown-button.svelte";
+    import IconLockClosed from "../icons/icon-lock-closed.svelte";
+    import { DropDownMenuItem, getDropDown } from "../globalDropDown.svelte";
+    import RolesPickerList from "./rolesPickerList.svelte";
+    import { workspaceUserRoles } from "$lib/types/workspaceUserRole";
     export let workspaceUUID = null;
 
     let res = null;
@@ -100,26 +105,50 @@
             console.error(error);
         }
     }
-
+    let roleFilter = null;
     let serachFieldEl;
     let searchText = "";
     let searchEngine = null;
-    let filteredUsers = [];
+    let filteredUsers;
+
     $: {
-        searchEngine = new Fuse(users, {
+        filteredUsers = users || [];
+
+        if (roleFilter) {
+            console.log(filteredUsers);
+
+            filteredUsers = filteredUsers.filter(
+                (it) => it.role == roleFilter
+            );
+        }
+
+        searchEngine = new Fuse(filteredUsers, {
             keys: ["email", "fullName"],
             threshold: fuseSearchThreshold,
         });
-    }
 
-    $: {
         if (searchText.length) {
             filteredUsers = searchEngine
                 .search(searchText)
                 .map((res) => res.item);
-        } else {
-            filteredUsers = users;
         }
+    }
+
+    let filterRoleButton;
+    function openRolePicker() {
+        let dropDown = getDropDown();
+
+        let dropDownItems: DropDownMenuItem[] = workspaceUserRoles.map(
+            (role) => ({
+                label: role,
+                icon: null,
+                onClick: () => {
+                    roleFilter = role;
+                },
+            })
+        );
+
+        dropDown.open(dropDownItems, filterRoleButton);
     }
 </script>
 
@@ -128,14 +157,20 @@
         <Loading />
     </div>
 {:else}
-    <div class="py-4">
+    <div class="flex gap-3 justify-center items-center py-4">
         <SearchInput
             placeholder={"Search for a team member"}
             bind:inputElement={serachFieldEl}
             bind:searchText
         />
+        <DropdownButton
+            label={roleFilter || "Filter by role"}
+            icon={IconLockClosed}
+            bind:target={filterRoleButton}
+            on:click={openRolePicker}
+        />
     </div>
-    <div class=" divide-y divide-base-300">
+    <div class="divide-y divide-base-300">
         {#each filteredUsers as user}
             <div class="flex px-4 py-4 space-x-4">
                 <UserProfilePicture
