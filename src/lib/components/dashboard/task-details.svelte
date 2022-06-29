@@ -266,15 +266,15 @@
     </div>
 {:else if (res && !$res.error) || task}
     <div class="flex h-screen w-[60vw] flex-col p-0">
-        <div class="flex px-4 py-4 items-center gap-4 pb-2">
+        <div class="flex items-center gap-4 px-4 py-4 pb-2">
             <button
                 on:click={() => close()}
-                class="btn btn-ghost btn-circle shrink-0 w-[42px] h-[42px] min-h-[42px] min-w-[42px]"
+                class="btn btn-circle btn-ghost h-[42px] min-h-[42px] w-[42px] min-w-[42px] shrink-0"
                 ><IconClose /></button
             >
             <TaskDetailsBreadcrumbs {task} />
         </div>
-        <header class="relative flex items-center gap-4 bg-base-100 p-4 mb-2">
+        <header class="relative mb-2 flex items-center gap-4 bg-base-100 p-4">
             <a
                 href="/"
                 class="flex items-center justify-center"

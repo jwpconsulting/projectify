@@ -128,7 +128,7 @@
         </div>
         <div class="px-4 font-bold">Team Members</div>
         <ul
-            class="menu flex flex-col pt-2 divide-y divide-base-300 overflow-y-auto max-h-full"
+            class="menu flex max-h-full flex-col divide-y divide-base-300 overflow-y-auto pt-2"
         >
             {#each filteredUsers as user}
                 <li>
@@ -148,7 +148,7 @@
                             }}
                         />
 
-                        <div class="grow flex flex-col justify-start">
+                        <div class="flex grow flex-col justify-start">
                             <div class="text-xs">Interface designer</div>
                             <div class="font-bold">
                                 {user.fullName ? user.fullName : user.email}
@@ -169,7 +169,7 @@
                         }}
                     >
                         <div
-                            class="grow flex flex-col justify-center items-center"
+                            class="flex grow flex-col items-center justify-center"
                         >
                             <div class="font-bold">
                                 {$_("assigned-to-nobody")}
@@ -180,7 +180,7 @@
             {/if}
         </ul>
         <footer
-            class="flex divide-x divide-base-300 border-t border-base-300 min-h-8"
+            class="min-h-8 flex divide-x divide-base-300 border-t border-base-300"
         >
             {#if selectedUser}
                 <div

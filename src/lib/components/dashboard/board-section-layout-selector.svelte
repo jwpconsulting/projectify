@@ -6,7 +6,8 @@
     import IconViewList from "../icons/icon-view-list.svelte";
     import IconViewBoards from "../icons/icon-view-boards.svelte";
     import { _ } from "svelte-i18n";
-    import { DropDownMenuItem, getDropDown } from "../globalDropDown.svelte";
+    import { getDropDown } from "../globalDropDown.svelte";
+    import type { DropDownMenuItem } from "../globalDropDown.svelte";
 
     function getLayoutIconFor(layout) {
         switch (layout) {

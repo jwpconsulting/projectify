@@ -120,10 +120,10 @@
     <div class="divide-y divide-base-300 p-4">
         {#if archivedBoards.length > 0}
             {#each archivedBoards as board}
-                <div class="flex py-4 space-x-2">
+                <div class="flex space-x-2 py-4">
                     <div class="grid grow">
-                        <div class="overflow-hidden nowrap-ellipsis">
-                            <span class="font-bold nowrap-ellipsis"
+                        <div class="nowrap-ellipsis overflow-hidden">
+                            <span class="nowrap-ellipsis font-bold"
                                 >{board.title}</span
                             >
                         </div>
@@ -132,28 +132,28 @@
                         </div>
                     </div>
                     <div
-                        class="flex space-x-2 justify-center items-center shrink-0"
+                        class="flex shrink-0 items-center justify-center space-x-2"
                     >
                         <button
                             class:loading={unarchivingItems[board.uuid]}
                             on:click={() => {
                                 onUnarchiveItem(board);
                             }}
-                            class="btn text-primary btn-sm btn-ghost btn-primary rounded-full"
+                            class="btn btn-primary btn-ghost btn-sm rounded-full text-primary"
                             >Return</button
                         >
                         <button
                             on:click={() => {
                                 onDeleteItem(board);
                             }}
-                            class="btn btn-accent btn-sm btn-outline rounded-full"
+                            class="btn btn-outline btn-accent btn-sm rounded-full"
                             >Delete</button
                         >
                     </div>
                 </div>
             {/each}
         {:else}
-            <div class="text-center text-gray-600">
+            <div class="text-gray-600 text-center">
                 {$_("no-archived-boards-found")}
             </div>
         {/if}

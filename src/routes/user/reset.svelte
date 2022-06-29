@@ -76,7 +76,7 @@
             </div>
         </form>
     {:else}
-        <div class="card text-center shadow-card w-full max-w-lg">
+        <div class="card w-full max-w-lg text-center shadow-card">
             <div class="card-body items-center">
                 <div class="py-2">
                     <div class="flex items-center justify-center pb-2">
@@ -97,7 +97,7 @@
                 <div class="pt-2">
                     <button
                         on:click={() => gotoTopPage()}
-                        class="btn btn-primary rounded-full w-28 mt-4"
+                        class="btn btn-primary mt-4 w-28 rounded-full"
                     >
                         {$_("top-page")}
                     </button>

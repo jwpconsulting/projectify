@@ -15,6 +15,7 @@ module.exports = {
     parserOptions: {
         sourceType: "module",
         ecmaVersion: 2020,
+        tsconfigRootDir: __dirname,
     },
     env: {
         browser: true,

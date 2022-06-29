@@ -4,7 +4,6 @@ import { from, split } from "@apollo/client/link/core";
 import { HttpLink } from "@apollo/client/link/http";
 import { BatchHttpLink } from "@apollo/client/link/batch-http";
 import { onError } from "@apollo/client/link/error";
-import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 
 import { browser } from "$app/env";
@@ -29,27 +28,7 @@ const httpLink = batchLinkEnabled
           uri: vars.GRAPHQL_ENDPOINT,
       });
 
-let splitLink: ApolloLink = httpLink;
-if (browser && enableWebsocket) {
-    const wsLink = new WebSocketLink({
-        uri: vars.GRAPHQL_ENDPOINT_SUBSCRIPTIONS,
-        options: {
-            reconnect: true,
-        },
-    });
-
-    splitLink = split(
-        ({ query }) => {
-            const definition = getMainDefinition(query);
-            return (
-                definition.kind === "OperationDefinition" &&
-                definition.operation === "subscription"
-            );
-        },
-        wsLink,
-        httpLink
-    );
-}
+const splitLink: ApolloLink = httpLink;
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors)

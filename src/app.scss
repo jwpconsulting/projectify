@@ -213,30 +213,6 @@ body {
     .btn-filter {
         @apply btn-xs flex h-10 shrink-0 items-center justify-center space-x-1 border-base-content border-opacity-20 px-3;
     }
-
-    .breadcrumbs {
-        @apply max-w-full;
-        > ul {
-            @apply flex max-w-full flex-nowrap content-evenly items-stretch;
-
-            li {
-                @apply flex shrink basis-auto overflow-hidden;
-                & + :before {
-                    @apply shrink-0;
-                }
-                > * {
-                    @apply truncate;
-                }
-                &:last-child {
-                    @apply shrink-0;
-                }
-            }
-        }
-    }
-
-    .btn-filter {
-        @apply btn-xs flex h-10 shrink-0 items-center justify-center space-x-1 border-base-content border-opacity-20 px-3;
-    }
 }
 
 ::-webkit-progress-value {

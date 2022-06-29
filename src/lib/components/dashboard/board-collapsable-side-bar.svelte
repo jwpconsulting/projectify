@@ -4,7 +4,8 @@
     import { _ } from "svelte-i18n";
 
     import DropDownMenu from "../dropDownMenu.svelte";
-    import { DropDownMenuItem, getDropDown } from "../globalDropDown.svelte";
+    import { getDropDown } from "../globalDropDown.svelte";
+    import type { DropDownMenuItem } from "../globalDropDown.svelte";
     import IconArchive from "../icons/icon-archive.svelte";
     import IconArrowCircleLeft from "../icons/icon-arrow-circle-left.svelte";
     import IconArrowCircleRight from "../icons/icon-arrow-circle-right.svelte";

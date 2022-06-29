@@ -137,20 +137,20 @@
 {:else}
     <div class=" divide-y divide-base-300">
         {#each labels as label}
-            <div class="flex py-4 space-x-4">
-                <div class="grow flex">
+            <div class="flex space-x-4 py-4">
+                <div class="flex grow">
                     <LabelPill {label} />
                 </div>
                 <div class="flex items-center space-x-2">
                     <button
                         on:click={() => onEditLabel(label)}
-                        class="btn text-primary btn-sm btn-ghost btn-primary rounded-full btn-sm"
+                        class="btn btn-primary btn-ghost btn-sm btn-sm rounded-full text-primary"
                     >
                         {$_("Edit")}
                     </button>
                     <button
                         on:click={() => onDeleteLabel(label)}
-                        class="btn btn-accent btn-outline rounded-full btn-sm"
+                        class="btn btn-outline btn-accent btn-sm rounded-full"
                     >
                         {$_("Delete")}
                     </button>
@@ -161,10 +161,10 @@
             <a
                 href="/"
                 on:click|preventDefault={onNewLabel}
-                class="flex p-2 space-x-4 ch"
+                class="ch flex space-x-4 p-2"
             >
                 <div
-                    class="grow flex flex-col font-bold justify-center text-primary"
+                    class="flex grow flex-col justify-center font-bold text-primary"
                 >
                     + {$_("new-label")}
                 </div>

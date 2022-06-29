@@ -21,7 +21,8 @@
     import { fuseSearchThreshold } from "$lib/stores/dashboard";
     import DropdownButton from "../dropdown-button.svelte";
     import IconLockClosed from "../icons/icon-lock-closed.svelte";
-    import { DropDownMenuItem, getDropDown } from "../globalDropDown.svelte";
+    import { getDropDown } from "../globalDropDown.svelte";
+    import type { DropDownMenuItem } from "../globalDropDown.svelte";
     import { workspaceUserRoles } from "$lib/types/workspaceUserRole";
     import IconEdit from "../icons/icon-edit.svelte";
     import IconTrash from "../icons/icon-trash.svelte";
@@ -204,7 +205,7 @@
         <Loading />
     </div>
 {:else}
-    <div class="flex gap-3 justify-center items-center py-4">
+    <div class="flex items-center justify-center gap-3 py-4">
         <SearchInput
             placeholder={"Search for a team member"}
             bind:inputElement={serachFieldEl}
@@ -218,7 +219,7 @@
         />
     </div>
     <div class="divide-y divide-base-300">
-        <table class="table-auto w-full">
+        <table class="w-full table-auto">
             <thead>
                 <tr class="text-left text-sm opacity-50">
                     <th class="px-2 py-4">{$_("member-details")}</th>
@@ -239,7 +240,7 @@
                                 />
                             </div>
                             <div
-                                class="grow flex flex-col gap-2 justify-center"
+                                class="flex grow flex-col justify-center gap-2"
                             >
                                 <div class="font-bold">
                                     {user.fullName
@@ -253,7 +254,7 @@
                         </td>
                         <td class="p-2">{$_(user.role)}</td>
                         <td class="">
-                            <div class="flex gap-2 items-end justify-end">
+                            <div class="flex items-end justify-end gap-2">
                                 <button
                                     on:click={() => onEditUser(user)}
                                     class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
@@ -274,11 +275,11 @@
             <a
                 href="/"
                 on:click|preventDefault={onNewMember}
-                class="flex p-2 space-x-4 ch"
+                class="ch flex space-x-4 p-2"
             >
                 <ProfilePicture showPlus={true} size={42} />
                 <div
-                    class="grow flex flex-col font-bold justify-center text-primary"
+                    class="flex grow flex-col justify-center font-bold text-primary"
                 >
                     {$_("new-member")}
                 </div>

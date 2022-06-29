@@ -31,7 +31,7 @@
         <Loading />
     {:else if error}
         <div
-            class="card text-center shadow-card w-full max-w-xl transform-gpu"
+            class="card w-full max-w-xl transform-gpu text-center shadow-card"
         >
             <div class="card-body items-center">
                 <div class="py-2">
@@ -47,7 +47,7 @@
         </div>
     {:else}
         <div
-            class="card text-center shadow-card w-full max-w-xl transform-gpu"
+            class="card w-full max-w-xl transform-gpu text-center shadow-card"
         >
             <div class="card-body items-center">
                 <div class="py-2">
@@ -60,7 +60,7 @@
                     </div>
                 </div>
                 <div class="pt-2">
-                    <button class="btn btn-action" on:click={gotoTopPage}>
+                    <button class="btn-action btn" on:click={gotoTopPage}>
                         {$_("top-page")}
                     </button>
                 </div>

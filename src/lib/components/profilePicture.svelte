@@ -38,14 +38,14 @@
 {:else}
     <div
         style={`width: ${sizePx}; height: ${sizePx};`}
-        class="flex justify-center items-center shrink-0"
+        class="flex shrink-0 items-center justify-center"
     >
         {#if src}
             {#if loadingError}
                 <IconClose />
             {:else}
                 <img
-                    class="object-cover pointer-events-none"
+                    class="pointer-events-none object-cover"
                     draggable="false"
                     width="100%"
                     height="100%"
@@ -64,7 +64,7 @@
                     font-size="30"
                     dy=".35em"
                     text-anchor="middle"
-                    class="uppercase font-bold"
+                    class="font-bold uppercase"
                     fill="currentColor"
                     >{typogram.substring(0, 2)}
                 </text>

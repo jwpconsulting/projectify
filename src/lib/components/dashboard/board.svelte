@@ -455,7 +455,7 @@
                 >
                     <button
                         on:click={scrollPrev}
-                        class="diraction-btn btn btn-circle btn-primary shadow-sm"
+                        class="diraction-btn btn btn-primary btn-circle shadow-sm"
                         class:invisible={scrollInx <= 0}
                     >
                         <div class="translate-x-1">

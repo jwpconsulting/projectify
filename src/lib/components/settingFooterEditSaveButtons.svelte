@@ -22,7 +22,7 @@
         </button>
     {:else}
         <button
-            class="btn btn-primary btn-outline grow max-w-[200px] rounded-full"
+            class="btn btn-outline btn-primary max-w-[200px] grow rounded-full"
             on:click={() => {
                 isEditMode = false;
                 dispatch("cancel");
@@ -32,7 +32,7 @@
         </button>
         <button
             class:loading={isSaving}
-            class="btn btn-primary grow max-w-[200px] rounded-full"
+            class="btn btn-primary max-w-[200px] grow rounded-full"
             on:click={() => dispatch("save")}
         >
             {$_("Save")}
