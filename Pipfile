@@ -17,6 +17,7 @@ ipython = "*"
 pytest-celery = "*"
 pytest-asyncio = "*"
 pytest = "*"
+django-test-migrations = "*"
 
 [packages]
 dj-database-url = "*"
