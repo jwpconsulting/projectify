@@ -19,6 +19,7 @@
         value?: any;
         error?: string;
         placeholder?: string;
+        readonly?: boolean;
         selectOptions?: { label: string; value: any }[];
         validation?: {
             required?: boolean;
@@ -144,6 +145,7 @@
                 </select>
             {:else}
                 <input
+                    disabled={input.readonly === true}
                     autofocus={inx == 0}
                     type="text"
                     name={input.name}

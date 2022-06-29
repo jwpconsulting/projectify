@@ -351,11 +351,13 @@
             {
                 name: "fullName",
                 label: $_("name-0"),
+                readonly: true,
                 validation: { required: false },
             },
             {
                 name: "email",
                 label: $_("email-0"),
+                readonly: true,
                 validation: { required: true },
             },
             {
