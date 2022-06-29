@@ -525,6 +525,13 @@ class Task(
         on_delete=models.SET_NULL,
         help_text=_("User this task is assigned to."),
     )
+    assignee_workspace_user = models.ForeignKey(
+        WorkspaceUser,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        help_text=_("Workspace user this task is assigned to."),
+    )
     deadline = models.DateTimeField(
         null=True,
         blank=True,
@@ -589,8 +596,15 @@ class Task(
             # Check if assignee is part of the task's workspace
             workspace = self.workspace_board_section.workspace_board.workspace
             workspace.users.get(pk=assignee.pk)
+            workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(
+                workspace,
+                assignee,
+            )
+        else:
+            workspace_user = None
         # Change assignee
         self.assignee = assignee
+        self.assignee_workspace_user = workspace_user
         # Save
         self.save()
 

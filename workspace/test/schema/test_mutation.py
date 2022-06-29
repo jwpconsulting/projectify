@@ -305,7 +305,6 @@ mutation AddUserToWorkspace($uuid: UUID!, $email: String!) {
 
     def test_query(
         self,
-        task,
         other_user,
         graphql_query_user,
         workspace,
@@ -330,7 +329,6 @@ mutation AddUserToWorkspace($uuid: UUID!, $email: String!) {
 
     def test_query_unauthorized(
         self,
-        task,
         other_user,
         graphql_query_user,
         workspace,
@@ -347,7 +345,6 @@ mutation AddUserToWorkspace($uuid: UUID!, $email: String!) {
 
     def test_no_user(
         self,
-        task,
         graphql_query_user,
         workspace,
         workspace_user,
@@ -394,7 +391,6 @@ mutation RemoveUserFromWorkspace($uuid: UUID!, $email: String!) {
 
     def test_query(
         self,
-        task,
         other_user,
         graphql_query_user,
         workspace,
@@ -422,7 +418,6 @@ mutation RemoveUserFromWorkspace($uuid: UUID!, $email: String!) {
 
     def test_query_unauthorized(
         self,
-        task,
         other_user,
         graphql_query_user,
         workspace,
@@ -442,7 +437,6 @@ mutation RemoveUserFromWorkspace($uuid: UUID!, $email: String!) {
 
     def test_uninvite_on_invite(
         self,
-        task,
         graphql_query_user,
         workspace,
         workspace_user,
@@ -467,7 +461,6 @@ mutation RemoveUserFromWorkspace($uuid: UUID!, $email: String!) {
 
     def test_uninvite_on_no_invite(
         self,
-        task,
         graphql_query_user,
         workspace,
         workspace_user,
