@@ -69,7 +69,7 @@ def task(workspace_board_section, workspace_user):
     """Return task."""
     return factory.TaskFactory(
         workspace_board_section=workspace_board_section,
-        assignee_workspace_user=workspace_user,
+        assignee=workspace_user,
     )
 
 

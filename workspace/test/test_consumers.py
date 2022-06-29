@@ -52,11 +52,11 @@ def create_workspace_board_section(workspace_board):
 
 
 @database_sync_to_async
-def create_task(workspace_board_section, assignee_workspace_user):
+def create_task(workspace_board_section, assignee):
     """Create task."""
     return factory.TaskFactory(
         workspace_board_section=workspace_board_section,
-        assignee_workspace_user=assignee_workspace_user,
+        assignee=assignee,
     )
 
 

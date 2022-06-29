@@ -212,7 +212,7 @@ class Task:
     @strawberry.field
     def assignee(self) -> WorkspaceUser | None:
         """Resolve user."""
-        return self.assignee_workspace_user
+        return self.assignee
 
     created: datetime.datetime
     modified: datetime.datetime

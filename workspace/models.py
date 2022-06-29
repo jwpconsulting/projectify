@@ -510,7 +510,7 @@ class Task(
         on_delete=models.CASCADE,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
-    assignee_workspace_user = models.ForeignKey(
+    assignee = models.ForeignKey(
         WorkspaceUser,
         null=True,
         blank=True,
@@ -587,7 +587,7 @@ class Task(
         else:
             workspace_user = None
         # Change assignee
-        self.assignee_workspace_user = workspace_user
+        self.assignee = workspace_user
         # Save
         self.save()
 

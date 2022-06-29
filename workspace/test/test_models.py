@@ -82,10 +82,10 @@ class TestWorkspace:
         """Assert that the user is removed when removing the workspace user."""
         task.assign_to(user)
         task.refresh_from_db()
-        assert task.assignee_workspace_user == workspace_user
+        assert task.assignee == workspace_user
         workspace.remove_user(user)
         task.refresh_from_db()
-        assert task.assignee_workspace_user is None
+        assert task.assignee is None
 
     def test_invite_user(self, workspace, mailoutbox):
         """Test inviting a user."""
@@ -576,14 +576,14 @@ class TestTask:
     ):
         """Test assigning to a different workspace's user."""
         task.assign_to(other_user)
-        assert task.assignee_workspace_user == other_workspace_user
+        assert task.assignee == other_workspace_user
 
     def test_assign_then_delete_user(self, task, workspace_user):
         """Assert that nothing happens to the task if the user is gone."""
         task.assign_to(workspace_user.user)
         workspace_user.user.delete()
         task.refresh_from_db()
-        assert task.assignee_workspace_user is None
+        assert task.assignee is None
 
     def test_assign_outside_of_workspace(self, workspace, task, other_user):
         """Test assigning to a different workspace's user."""
@@ -596,16 +596,16 @@ class TestTask:
         task.assign_to(user)
         task.assign_to(None)
         task.refresh_from_db()
-        assert task.assignee_workspace_user is None
+        assert task.assignee is None
 
     def test_assign_remove_workspace_user(
         self, user, workspace, workspace_user, task
     ):
         """Test what happens if a workspace user is removed."""
-        assert task.assignee_workspace_user == workspace_user
+        assert task.assignee == workspace_user
         workspace.remove_user(user)
         task.refresh_from_db()
-        assert task.assignee_workspace_user is None
+        assert task.assignee is None
 
     def test_get_next_section(self, workspace_board, task):
         """Test getting the next section."""

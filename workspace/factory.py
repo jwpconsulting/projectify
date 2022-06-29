@@ -112,9 +112,7 @@ class TaskFactory(django.DjangoModelFactory):
     title = factory.Faker("word")
     description = factory.Faker("paragraph")
     workspace_board_section = factory.SubFactory(WorkspaceBoardSectionFactory)
-    assignee_workspace_user = factory.LazyAttribute(
-        extract_assignee_workspace_user
-    )
+    assignee = factory.LazyAttribute(extract_assignee_workspace_user)
     deadline = factory.Faker("date_time", tzinfo=timezone.utc)
     workspace = factory.LazyAttribute(extract_workspace)
 
