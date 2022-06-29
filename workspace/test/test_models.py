@@ -2,9 +2,6 @@
 from django import (
     db,
 )
-from django.contrib.auth import (
-    get_user_model,
-)
 from django.utils import (
     timezone,
 )
@@ -84,9 +81,11 @@ class TestWorkspace:
     ):
         """Assert that the user is removed when removing the workspace user."""
         task.assign_to(user)
+        task.refresh_from_db()
+        assert task.assignee_workspace_user == workspace_user
         workspace.remove_user(user)
         task.refresh_from_db()
-        assert task.assignee is None
+        assert task.assignee_workspace_user is None
 
     def test_invite_user(self, workspace, mailoutbox):
         """Test inviting a user."""
@@ -491,7 +490,6 @@ class TestTask:
     ):
         """Test that workspace_board_section is assigned correctly."""
         assert task.workspace_board_section == workspace_board_section
-        assert task.assignee == user
         assert task.deadline is not None
 
     def test_moving_task_within_section(
@@ -578,7 +576,6 @@ class TestTask:
     ):
         """Test assigning to a different workspace's user."""
         task.assign_to(other_user)
-        assert task.assignee == other_user
         assert task.assignee_workspace_user == other_workspace_user
 
     def test_assign_then_delete_user(self, task, workspace_user):
@@ -586,13 +583,12 @@ class TestTask:
         task.assign_to(workspace_user.user)
         workspace_user.user.delete()
         task.refresh_from_db()
-        assert task.assignee is None
         assert task.assignee_workspace_user is None
 
     def test_assign_outside_of_workspace(self, workspace, task, other_user):
         """Test assigning to a different workspace's user."""
         # This time do not create a workspace_user
-        with pytest.raises(get_user_model().DoesNotExist):
+        with pytest.raises(models.WorkspaceUser.DoesNotExist):
             task.assign_to(other_user)
 
     def test_assign_none(self, workspace, task, workspace_user, user):
@@ -600,18 +596,15 @@ class TestTask:
         task.assign_to(user)
         task.assign_to(None)
         task.refresh_from_db()
-        assert task.assignee is None
         assert task.assignee_workspace_user is None
 
     def test_assign_remove_workspace_user(
         self, user, workspace, workspace_user, task
     ):
         """Test what happens if a workspace user is removed."""
-        assert task.assignee == user
         assert task.assignee_workspace_user == workspace_user
         workspace.remove_user(user)
         task.refresh_from_db()
-        assert task.assignee is None
         assert task.assignee_workspace_user is None
 
     def test_get_next_section(self, workspace_board, task):

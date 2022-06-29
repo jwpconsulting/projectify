@@ -922,8 +922,11 @@ mutation AddSubTask($uuid: UUID!) {
             },
         }
 
-    def test_query_unauthorized(self, graphql_query_user, task):
+    def test_query_unauthorized(
+        self, workspace_user, graphql_query_user, task
+    ):
         """Test query."""
+        workspace_user.delete()
         result = graphql_query_user(
             self.query,
             variables={
@@ -961,8 +964,11 @@ mutation AddChatMessage($uuid: UUID!) {
             },
         }
 
-    def test_query_unauthorized(self, graphql_query_user, task):
+    def test_query_unauthorized(
+        self, graphql_query_user, task, workspace_user
+    ):
         """Test query."""
+        workspace_user.delete()
         result = graphql_query_user(
             self.query,
             variables={
@@ -1410,8 +1416,11 @@ mutation UpdateTaskMutation($uuid: UUID!, $deadline: DateTime) {
             },
         }
 
-    def test_query_unauthorized(self, graphql_query_user, task):
+    def test_query_unauthorized(
+        self, graphql_query_user, task, workspace_user
+    ):
         """Test query when user not authorized."""
+        workspace_user.delete()
         result = graphql_query_user(
             self.query,
             variables={
@@ -1538,8 +1547,11 @@ mutation UpdateSubTaskMutation($uuid: UUID!) {
             },
         }
 
-    def test_query_unauthorized(self, graphql_query_user, sub_task):
+    def test_query_unauthorized(
+        self, graphql_query_user, sub_task, workspace_user
+    ):
         """Test query when user not authorized."""
+        workspace_user.delete()
         result = graphql_query_user(
             self.query,
             variables={
@@ -1704,8 +1716,11 @@ mutation DeleteTask($uuid: UUID!) {
         }
         assert models.Task.objects.count() == 0
 
-    def test_query_unauthorized(self, graphql_query_user, task):
+    def test_query_unauthorized(
+        self, graphql_query_user, task, workspace_user
+    ):
         """Test query."""
+        workspace_user.delete()
         assert models.Task.objects.count() == 1
         result = graphql_query_user(
             self.query,
@@ -1778,8 +1793,11 @@ mutation DeleteSubTask($uuid: UUID!) {
         }
         assert models.SubTask.objects.count() == 0
 
-    def test_query_unauthorized(self, graphql_query_user, task, sub_task):
+    def test_query_unauthorized(
+        self, graphql_query_user, sub_task, workspace_user
+    ):
         """Test query."""
+        workspace_user.delete()
         assert models.SubTask.objects.count() == 1
         result = graphql_query_user(
             self.query,

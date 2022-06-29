@@ -65,11 +65,11 @@ def workspace_board_section(workspace_board):
 
 
 @pytest.fixture
-def task(workspace_board_section, user):
+def task(workspace_board_section, workspace_user):
     """Return task."""
     return factory.TaskFactory(
         workspace_board_section=workspace_board_section,
-        assignee=user,
+        assignee_workspace_user=workspace_user,
     )
 
 
