@@ -1,7 +1,14 @@
-version: 2
-jobs:
-  build:
-    working_directory: ~/projectify
+version: 2.1
+orbs:
+  cli: circleci/circleci-cli@0.1.9
+executors:
+  python:
+    docker:
+      - image: python:3.10.5
+        environment:
+          DJANGO_SETTINGS_MODULE: projectify.settings.test
+          DATABASE_URL: "postgres://projectify:projectify@localhost:5432/projectify"
+  python_and_postgres:
     docker:
       - image: python:3.10.5
         environment:
@@ -12,6 +19,48 @@ jobs:
           POSTGRES_DB: projectify
           POSTGRES_USER: projectify
           POSTGRES_PASSWORD: projectify
+
+commands:
+  install_dependencies:
+    description: Install pipenv
+    steps:
+      - run:
+          name: Install pipenv
+          command: pip3 install pipenv
+      - run:
+          name: Install pip packages
+          command: pipenv sync --dev
+jobs:
+  pipenv_check:
+    executor: python
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - cache-{{ checksum "Pipfile.lock" }}
+      - install_dependencies
+      - run:
+          name: Pipenv check
+          command: pipenv check
+      - save_cache:
+          key: cache-{{ checksum "Pipfile.lock" }}
+          paths:
+            - ~/.local
+            - ~/.cache
+  lint:
+    executor: python
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - cache-{{ checksum "Pipfile.lock" }}
+      - install_dependencies
+      - run:
+          name: Run flake8
+          command: pipenv run flake8
+  tests:
+    executor: python_and_postgres
+    parallelism: 8
     steps:
       - checkout
       - run:
@@ -20,25 +69,22 @@ jobs:
       - restore_cache:
           keys:
             - cache-{{ checksum "Pipfile.lock" }}
+      - install_dependencies
+      - cli/install
       - run:
-          name: Install pipenv
-          command: pip3 install pipenv
-      - run:
-          name: Install pip packages
-          command: pipenv sync --dev
-      - run:
-          name: Pipenv check
-          command: pipenv check
-      - run:
-          name: Run flake8
-          command: pipenv run flake8
-      - save_cache:
-          key: cache-{{ checksum "Pipfile.lock" }}
-          paths:
-            - ~/.local
-            - ~/.cache
+          name: Collect tests
+          command: |
+            circleci tests glob "*/test/test_*.py" "*/test/*/test_*.py" | circleci tests split --split-by=timings > /tmp/tests-to-run
       - run:
           name: Run pytest
-          command: pipenv run pytest --junit-xml=junit/pytest.xml
+          command: pipenv run pytest --junitxml=junit/pytest.xml $(cat /tmp/tests-to-run)
       - store_test_results:
           path: junit/
+      - store_artifacts:
+          path: junit/
+workflows:
+  test_all:
+    jobs:
+      - pipenv_check
+      - lint
+      - tests
