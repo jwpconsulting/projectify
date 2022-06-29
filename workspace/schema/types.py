@@ -212,19 +212,7 @@ class Task:
     @strawberry.field
     def assignee(self) -> WorkspaceUser | None:
         """Resolve user."""
-        user = self.assignee
-        if not self.assignee:
-            return
-        try:
-            workspace_user = (
-                models.WorkspaceUser.objects.get_by_workspace_and_user(
-                    self.workspace,
-                    user,
-                )
-            )
-        except models.WorkspaceUser.DoesNotExist:
-            return
-        return workspace_user
+        return self.assignee_workspace_user
 
     created: datetime.datetime
     modified: datetime.datetime

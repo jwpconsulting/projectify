@@ -84,10 +84,6 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         """
         workspace_user = self.workspaceuser_set.get(user=user)
         workspace_user.delete()
-        tasks = Task.objects.filter_by_workspace(self).filter_by_assignee(
-            user,
-        )
-        tasks.unset_assignees()
         return user
 
     @transaction.atomic
@@ -441,10 +437,6 @@ class TaskQuerySet(models.QuerySet):
         """Filter by assignee user."""
         return self.filter(assignee=assignee)
 
-    def unset_assignees(self):
-        """Unset assignees."""
-        return self.update(assignee=None)
-
     def filter_by_workspace_board_section_pks(
         self,
         workspace_board_section_pks,
@@ -518,13 +510,6 @@ class Task(
         on_delete=models.CASCADE,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
-    assignee = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        help_text=_("User this task is assigned to."),
-    )
     assignee_workspace_user = models.ForeignKey(
         WorkspaceUser,
         null=True,
@@ -595,7 +580,6 @@ class Task(
         if assignee is not None:
             # Check if assignee is part of the task's workspace
             workspace = self.workspace_board_section.workspace_board.workspace
-            workspace.users.get(pk=assignee.pk)
             workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(
                 workspace,
                 assignee,
@@ -603,7 +587,6 @@ class Task(
         else:
             workspace_user = None
         # Change assignee
-        self.assignee = assignee
         self.assignee_workspace_user = workspace_user
         # Save
         self.save()
