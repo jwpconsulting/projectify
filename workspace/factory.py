@@ -90,7 +90,7 @@ class WorkspaceBoardSectionFactory(django.DjangoModelFactory):
         model = models.WorkspaceBoardSection
 
 
-def extract_assignee(task):
+def extract_assignee_workspace_user(task):
     """Extract author from chat_message by walking through workspace."""
     workspace_board = task.workspace_board_section.workspace_board
     workspace_user = workspace_board.workspace.workspaceuser_set.first()
@@ -98,8 +98,7 @@ def extract_assignee(task):
         workspace_user = WorkspaceUserFactory(
             workspace=workspace_board.workspace,
         )
-    user = workspace_user.user
-    return user
+    return workspace_user
 
 
 def extract_workspace(task):
@@ -113,7 +112,9 @@ class TaskFactory(django.DjangoModelFactory):
     title = factory.Faker("word")
     description = factory.Faker("paragraph")
     workspace_board_section = factory.SubFactory(WorkspaceBoardSectionFactory)
-    assignee = factory.LazyAttribute(extract_assignee)
+    assignee_workspace_user = factory.LazyAttribute(
+        extract_assignee_workspace_user
+    )
     deadline = factory.Faker("date_time", tzinfo=timezone.utc)
     workspace = factory.LazyAttribute(extract_workspace)
 
