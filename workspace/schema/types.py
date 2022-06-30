@@ -266,18 +266,7 @@ class ChatMessage:
     @strawberry.field
     def author(self, info) -> WorkspaceUser | None:
         """Resolve author."""
-        if not self.author:
-            return
-        try:
-            workspace_user = (
-                models.WorkspaceUser.objects.get_by_workspace_and_user(
-                    self.workspace,
-                    self.author,
-                )
-            )
-        except models.WorkspaceUser.DoesNotExist:
-            return
-        return workspace_user
+        return self.author_workspace_user
 
     created: datetime.datetime
     modified: datetime.datetime

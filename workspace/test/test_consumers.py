@@ -85,9 +85,11 @@ def create_sub_task(task):
 
 
 @database_sync_to_async
-def create_chat_message(task, user):
+def create_chat_message(task, workspace_user):
     """Create chat message."""
-    return factory.ChatMessageFactory(task=task, author=user)
+    return factory.ChatMessageFactory(
+        task=task, author_workspace_user=workspace_user
+    )
 
 
 @database_sync_to_async
@@ -464,7 +466,7 @@ class TestTaskConsumer:
             workspace_board,
         )
         task = await create_task(workspace_board_section, workspace_user)
-        chat_message = await create_chat_message(task, user)
+        chat_message = await create_chat_message(task, workspace_user)
         resource = f"ws/task/{task.uuid}/"
         communicator = WebsocketCommunicator(websocket_application, resource)
         communicator.scope["user"] = user
