@@ -263,12 +263,8 @@ class SubTask:
 class ChatMessage:
     """ChatMessage."""
 
-    @strawberry.field
-    def author(self, info) -> WorkspaceUser | None:
-        """Resolve author."""
-        return self.author_workspace_user
-
     created: datetime.datetime
     modified: datetime.datetime
     uuid: uuid.UUID
     text: str
+    author: WorkspaceUser | None
