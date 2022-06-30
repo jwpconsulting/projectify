@@ -52,18 +52,23 @@
         {#each task?.chatMessages || [] as message}
             <div class="flex space-x-4  py-6">
                 <div class="shrink-0">
-                    <UserProfilePicture
-                        pictureProps={{
-                            url: message.author.profilePicture,
-                            size: 32,
-                        }}
-                    />
+                    {#if message.author}
+                        <UserProfilePicture
+                            pictureProps={{
+                                url: message.author.profilePicture,
+                                size: 32,
+                            }}
+                        />
+                    {/if}
                 </div>
                 <div class="grow space-y-2">
                     <div class="flex items-center space-x-2 text-xs">
-                        <div class="grow font-bold">
-                            {message.author.fullName || message.author.email}
-                        </div>
+                        {#if message.author}
+                            <div class="grow font-bold">
+                                {message.author.fullName ||
+                                    message.author.email}
+                            </div>
+                        {/if}
                         <div class="font-bold opacity-50">
                             {dateStringToLocal(message.created, true)}
                         </div>
