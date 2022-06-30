@@ -3,11 +3,34 @@ import datetime
 import enum
 import uuid
 
+from django.conf import (
+    settings,
+)
+
 import strawberry
+
+from cloudinary import (
+    CloudinaryImage,
+)
 
 from .. import (
     models,
 )
+
+
+def crop_image(image, width, height, **kwargs):
+    """Crop an image using cloudinary's API, if available."""
+    if settings.DEFAULT_FILE_STORAGE != settings.MEDIA_CLOUDINARY_STORAGE:
+        return image.url
+    cloudinary_image = CloudinaryImage(image.name)
+    url = cloudinary_image.build_url(
+        width=width,
+        height=height,
+        crop="crop",
+        gravity="face",
+        **kwargs,
+    )
+    return url
 
 
 @strawberry.django.type(models.Workspace)
@@ -52,7 +75,7 @@ class Workspace:
     def picture(self) -> str | None:
         """Resolve picture."""
         if self.picture:
-            return self.picture.url
+            return crop_image(self.picture.url, 100, 100)
 
     created: datetime.datetime
     modified: datetime.datetime
@@ -90,7 +113,7 @@ class WorkspaceUser:
         """Resolve profile picture."""
         profile_picture = self.user.profile_picture
         if profile_picture:
-            return profile_picture.url
+            return crop_image(profile_picture.url, 100, 100)
 
     @strawberry.field
     def role(self) -> WorkspaceUserRole:

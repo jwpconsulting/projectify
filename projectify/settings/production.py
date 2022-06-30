@@ -58,7 +58,7 @@ CHANNEL_LAYERS = {
 }
 
 # Cloudinary
-DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+DEFAULT_FILE_STORAGE = MEDIA_CLOUDINARY_STORAGE
 
 # Disable CSRF protection
 csrf_middleware = "django.middleware.csrf.CsrfViewMiddleware"
