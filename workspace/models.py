@@ -822,6 +822,12 @@ class ChatMessage(TimeStampedModel, models.Model):
         blank=True,
         null=True,
     )
+    author_workspace_user = models.ForeignKey(
+        WorkspaceUser,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
 
     objects = ChatMessageQuerySet.as_manager()
 
