@@ -18,6 +18,7 @@ pytest-celery = "*"
 pytest-asyncio = "*"
 pytest = "*"
 django-test-migrations = "*"
+pytest-xdist = "*"
 
 [packages]
 dj-database-url = "*"
