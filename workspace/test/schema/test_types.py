@@ -27,7 +27,7 @@ class TestCropImage:
         url = types.crop_image(image, 100, 100, cloud_name="bbbbbbbbb")
         assert url == (
             "https://res.cloudinary.com/bbbbbbbbb"
-            "/image/upload/c_crop,g_face,h_100,w_100/hello_world"
+            "/image/upload/c_thumb,g_face,h_100,w_100/hello_world"
         )
 
     def test_with_local(self, image):

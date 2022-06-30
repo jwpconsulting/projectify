@@ -26,7 +26,7 @@ def crop_image(image, width, height, **kwargs):
     url = cloudinary_image.build_url(
         width=width,
         height=height,
-        crop="crop",
+        crop="thumb",
         gravity="face",
         secure=True,
         **kwargs,
