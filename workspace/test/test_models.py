@@ -564,8 +564,9 @@ class TestTask:
     def test_add_chat_message(self, task, user, workspace_user):
         """Test adding a chat message."""
         assert task.chatmessage_set.count() == 0
-        task.add_chat_message("Hello", user)
+        chat_message = task.add_chat_message("Hello", user)
         assert task.chatmessage_set.count() == 1
+        assert chat_message.author_workspace_user == workspace_user
 
     def test_assign_to(
         self,
@@ -830,7 +831,7 @@ class TestChatMessage:
 
     def test_factory(self, workspace_user, chat_message):
         """Test that chat message belongs to user."""
-        assert chat_message.author == workspace_user.user
+        assert chat_message.author_workspace_user == workspace_user
 
     def test_workspace(self, workspace, chat_message):
         """Test workspace property."""
