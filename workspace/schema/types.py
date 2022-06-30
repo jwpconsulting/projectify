@@ -75,7 +75,7 @@ class Workspace:
     def picture(self) -> str | None:
         """Resolve picture."""
         if self.picture:
-            return crop_image(self.picture.url, 100, 100)
+            return crop_image(self.picture, 100, 100)
 
     created: datetime.datetime
     modified: datetime.datetime
@@ -113,7 +113,7 @@ class WorkspaceUser:
         """Resolve profile picture."""
         profile_picture = self.user.profile_picture
         if profile_picture:
-            return crop_image(profile_picture.url, 100, 100)
+            return crop_image(profile_picture, 100, 100)
 
     @strawberry.field
     def role(self) -> WorkspaceUserRole:
