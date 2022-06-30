@@ -26,7 +26,7 @@ class TestCropImage:
         settings.DEFAULT_FILE_STORAGE = settings.MEDIA_CLOUDINARY_STORAGE
         url = types.crop_image(image, 100, 100, cloud_name="bbbbbbbbb")
         assert url == (
-            "http://res.cloudinary.com/bbbbbbbbb"
+            "https://res.cloudinary.com/bbbbbbbbb"
             "/image/upload/c_crop,g_face,h_100,w_100/hello_world"
         )
 

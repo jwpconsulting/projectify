@@ -28,6 +28,7 @@ def crop_image(image, width, height, **kwargs):
         height=height,
         crop="crop",
         gravity="face",
+        secure=True,
         **kwargs,
     )
     return url
