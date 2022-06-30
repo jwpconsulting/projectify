@@ -111,5 +111,5 @@ def chat_message(task, workspace_user):
     """Return ChatMessage instance."""
     return factory.ChatMessageFactory(
         task=task,
-        author_workspace_user=workspace_user,
+        author=workspace_user,
     )

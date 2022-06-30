@@ -570,10 +570,7 @@ class Task(
             self.workspace,
             author,
         )
-        return self.chatmessage_set.create(
-            text=text,
-            author_workspace_user=workspace_user,
-        )
+        return self.chatmessage_set.create(text=text, author=workspace_user)
 
     def assign_to(self, assignee):
         """
@@ -820,7 +817,7 @@ class ChatMessage(TimeStampedModel, models.Model):
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     text = models.TextField()
-    author_workspace_user = models.ForeignKey(
+    author = models.ForeignKey(
         WorkspaceUser,
         on_delete=models.SET_NULL,
         blank=True,

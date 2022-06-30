@@ -161,7 +161,7 @@ class SubTaskFactory(django.DjangoModelFactory):
         model = models.SubTask
 
 
-def extract_author_workspace_user(chat_message):
+def extract_author(chat_message):
     """Extract author from chat_message by walking through workspace."""
     workspace_board = chat_message.task.workspace_board_section.workspace_board
     workspace_user = workspace_board.workspace.workspaceuser_set.first()
@@ -177,9 +177,7 @@ class ChatMessageFactory(django.DjangoModelFactory):
 
     task = factory.SubFactory(TaskFactory)
     text = factory.Faker("paragraph")
-    author_workspace_user = factory.LazyAttribute(
-        extract_author_workspace_user
-    )
+    author = factory.LazyAttribute(extract_author)
 
     class Meta:
         """Meta."""

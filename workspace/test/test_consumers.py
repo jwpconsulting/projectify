@@ -87,9 +87,7 @@ def create_sub_task(task):
 @database_sync_to_async
 def create_chat_message(task, workspace_user):
     """Create chat message."""
-    return factory.ChatMessageFactory(
-        task=task, author_workspace_user=workspace_user
-    )
+    return factory.ChatMessageFactory(task=task, author=workspace_user)
 
 
 @database_sync_to_async
