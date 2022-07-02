@@ -1,8 +1,13 @@
 """User views."""
 from rest_framework import (
+    generics,
     parsers,
     response,
     views,
+)
+
+from . import (
+    serializers,
 )
 
 
@@ -17,3 +22,13 @@ class ProfilePictureUploadView(views.APIView):
         request.user.profile_picture = file_obj
         request.user.save()
         return response.Response(status=204)
+
+
+class UserRetrieve(generics.RetrieveAPIView):
+    """Retrieve user."""
+
+    serializer_class = serializers.UserSerializer
+
+    def get_object(self):
+        """Return current user."""
+        return self.request.user

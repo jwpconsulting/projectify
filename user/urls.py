@@ -16,4 +16,9 @@ urlpatterns = (
         views.ProfilePictureUploadView.as_view(),
         name="profile-picture-upload",
     ),
+    path(
+        "user",
+        views.UserRetrieve.as_view(),
+        name="user",
+    ),
 )

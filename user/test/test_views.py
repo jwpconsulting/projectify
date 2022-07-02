@@ -46,3 +46,18 @@ class TestProfilePictureUploadView:
         assert response.status_code == 204, response.content
         user.refresh_from_db()
         assert user.profile_picture is not None
+
+
+@pytest.mark.django_db
+class TestUserRetrieve:
+    """Test UserRetrieve view."""
+
+    @pytest.fixture
+    def resource_url(self):
+        """Return URL to this view."""
+        return reverse("user:user")
+
+    def test_authenticated(self, user_client, resource_url, user):
+        """Assert we can post to this view this while being logged in."""
+        response = user_client.get(resource_url)
+        assert response.status_code == 200, response.content
