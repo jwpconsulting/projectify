@@ -114,7 +114,7 @@ export const currentWorkspaceLabels = writable([]);
 export function filterSectionsTasks(
     sections: any[],
     labels: any[],
-    assegnee: any
+    assignee: any
 ): any[] {
     if (labels.length) {
         const labelUUIDs = {};
@@ -136,13 +136,13 @@ export function filterSectionsTasks(
         });
     }
 
-    if (assegnee) {
+    if (assignee) {
         sections = sections.map((section) => {
             const tasks = section.tasks.filter((task) => {
-                if (assegnee === "unassigned") {
+                if (assignee === "unassigned") {
                     return !task.assignee;
                 } else {
-                    return task.assignee?.user.email === assegnee.email;
+                    return task.assignee?.user.email === assignee.email;
                 }
             });
 
