@@ -16,4 +16,9 @@ urlpatterns = (
         views.WorkspacePictureUploadView.as_view(),
         name="workspace-picture-upload",
     ),
+    path(
+        "workspace-board/<uuid:workspace_board_uuid>",
+        views.WorkspaceBoardRetrieve.as_view(),
+        name="workspace-board",
+    ),
 )

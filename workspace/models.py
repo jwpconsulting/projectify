@@ -446,6 +446,12 @@ class TaskQuerySet(models.QuerySet):
             workspace_board_section__pk__in=workspace_board_section_pks,
         )
 
+    def filter_by_workspace_board(self, workspace_board):
+        """Filter by tasks contained in workspace board."""
+        return self.filter(
+            workspace_board_section__workspace_board=workspace_board,
+        )
+
     def get_for_user_and_uuid(self, user, uuid):
         """Return task from user workspace corresponding to uuid."""
         return self.filter(

@@ -93,6 +93,12 @@ if settings.SERVE_MEDIA:
         ),
     )
 
+if settings.DEBUG_TOOLBAR:
+    urlpatterns = (
+        *urlpatterns,
+        path("__debug__/", include("debug_toolbar.urls")),
+    )
+
 websocket_urlpatterns = (
     path("ws/task/<uuid:uuid>/", TaskConsumer.as_asgi()),
     path("ws/workspace-board/<uuid:uuid>/", WorkspaceBoardConsumer.as_asgi()),

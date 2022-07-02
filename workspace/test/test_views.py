@@ -50,3 +50,32 @@ class TestWorkspacePictureUploadView:
         assert response.status_code == 204, response.content
         user.refresh_from_db()
         assert user.profile_picture is not None
+
+
+@pytest.mark.django_db
+class TestWorkspaceBoardRetrieve:
+    """Test WorkspaceBoardRetrieve view."""
+
+    @pytest.fixture
+    def resource_url(self, workspace_board):
+        """Return URL to this view."""
+        return reverse(
+            "workspace:workspace-board", args=(workspace_board.uuid,)
+        )
+
+    def test_authenticated(
+        self,
+        user_client,
+        resource_url,
+        user,
+        workspace,
+        workspace_user,
+        task,
+        other_task,
+        task_label,
+        django_assert_num_queries,
+    ):
+        """Assert we can post to this view this while being logged in."""
+        with django_assert_num_queries(8):
+            response = user_client.get(resource_url)
+        assert response.status_code == 200, response.content
