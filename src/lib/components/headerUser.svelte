@@ -38,7 +38,7 @@
 
             <UserProfilePicture
                 pictureProps={{
-                    url: userData.profilePicture,
+                    url: userData.profile_picture,
                     size: 32,
                 }}
             />

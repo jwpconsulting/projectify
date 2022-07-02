@@ -8,8 +8,8 @@ import {
     Mutation_Logout,
     Mutation_RequesetPasswordReset,
     Mutation_ConfirmPasswordReset,
-    Query_User,
 } from "$lib/graphql/operations";
+import { getUser } from "$lib/repository";
 import { goto } from "$app/navigation";
 
 export const user = writable(null);
@@ -93,15 +93,11 @@ export const logout = async () => {
 export const fetchUser = async () => {
     userIsLoading.set(true);
     try {
-        const res = await client.query({
-            query: Query_User,
-        });
+        const res = await getUser();
 
-        if (res.data.user !== null) {
-            const userData = res.data.user;
-            user.set(userData);
-            return userData;
-        }
+        const userData = res;
+        user.set(userData);
+        return userData;
     } catch (error) {
         console.log(error);
     }
