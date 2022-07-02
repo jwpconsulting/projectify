@@ -28,12 +28,13 @@ psycopg2 = "*"
 python-dotenv = "*"
 whitenoise = "*"
 newrelic = "*"
+redis = "==4.3.3"
 celery = {extras = ["redis"], version = "*"}
 django-celery-results = "*"
 django-anymail = {extras = ["mailgun"], version = "*"}
 django-ordered-model = "*"
-channels = "*"
-channels-redis = {extras = ["cryptography"], version = "*"}
+channels = "==3.0.4"
+channels-redis = {extras = ["cryptography"], version = "==3.4.0"}
 djangorestframework = "*"
 pillow = "*"
 django-cloudinary-storage = "*"
