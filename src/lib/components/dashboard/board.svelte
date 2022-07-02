@@ -44,6 +44,7 @@
     export let boardUUID = null;
 
     let res = null;
+    let loading = true;
     let board = null;
     let sections = [];
     let isDragging = false;
@@ -60,17 +61,23 @@
         currentBoardSections.set(sections);
     }
 
+    async function fetchBoard() {
+        loading = true;
+        const response = await fetch(
+            `http://localhost:8000/workspace/workspace-board/${boardUUID}`,
+            { credentials: "include" }
+        );
+        res = await response.json();
+        loading = false;
+    }
+
     const refetch = debounce(() => {
-        res.refetch();
+        fetchBoard();
     }, 100);
 
     $: {
         if (boardUUID) {
-            res = query(Query_DashboardBoard, {
-                variables: { uuid: boardUUID },
-                fetchPolicy: "network-only",
-            });
-
+            fetchBoard();
             boardWSStore = getSubscriptionForCollection(
                 "workspace-board",
                 boardUUID
@@ -85,10 +92,10 @@
     }
 
     $: {
-        if (res && $res.data) {
-            board = $res.data["workspaceBoard"];
-            if (board["sections"]) {
-                sections = board["sections"];
+        if (res) {
+            board = res;
+            if (board["workspace_board_sections"]) {
+                sections = board["workspace_board_sections"];
             }
         }
     }
@@ -339,7 +346,7 @@
     }
 </script>
 
-{#if res && $res.loading}
+{#if loading}
     <div class="flex grow flex-col items-center justify-center bg-base-200">
         <Loading />
     </div>
