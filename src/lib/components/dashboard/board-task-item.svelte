@@ -88,7 +88,7 @@
                 {#if task.assignee}
                     <UserProfilePicture
                         pictureProps={{
-                            url: task.assignee.profilePicture,
+                            url: task.assignee.user.profile_picture,
                             size: 36,
                         }}
                     />
