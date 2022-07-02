@@ -1,3 +1,3 @@
 release: ./manage.py migrate --noinput
-web: newrelic-admin run-program gunicorn projectify.asgi -w 3 -b "0.0.0.0:$PORT" -k uvicorn.workers.UvicornWorker --log-config gunicorn-error.log
+web: newrelic-admin run-program daphne projectify.asgi:application -b 0.0.0.0 -p $PORT
 worker: newrelic-admin run-program celery -A projectify worker -c 1
