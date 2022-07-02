@@ -226,39 +226,6 @@ export const Mutation_RemoveUserFromWorkspace = gql`
     }
 `;
 
-export const Query_DashboardBoard = gql`
-    query DashboardBoard($uuid: UUID!) {
-        workspaceBoard(uuid: $uuid) {
-            uuid
-            title
-            description
-            deadline
-            sections {
-                order
-                uuid
-                title
-                tasks {
-                    order
-                    uuid
-                    title
-                    deadline
-                    number
-                    labels {
-                        uuid
-                        name
-                        color
-                    }
-                    assignee {
-                        email
-                        fullName
-                        profilePicture
-                    }
-                }
-            }
-        }
-    }
-`;
-
 export const Subscription_OnWorkspaceBoardChange = gql`
     subscription OnWorkspaceBoardChange($uuid: UUID!) {
         onWorkspaceBoardChange(uuid: $uuid) {

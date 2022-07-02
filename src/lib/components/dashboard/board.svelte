@@ -6,13 +6,12 @@
         Mutation_DeleteWorkspaceBoard,
         Mutation_MoveWorkspaceBoardSection,
         Mutation_UpdateWorkspaceBoard,
-        Query_DashboardBoard,
     } from "$lib/graphql/operations";
     import { query } from "svelte-apollo";
     import IconPlus from "../icons/icon-plus.svelte";
     import { getModal } from "../dialogModal.svelte";
     import { client } from "$lib/graphql/client";
-    import vars from "$lib/env";
+    import { getWorkspaceBoard } from "$lib/repository";
     import { _ } from "svelte-i18n";
     import { sortable } from "$lib/actions/sortable";
     import delay from "delay";
@@ -64,11 +63,7 @@
 
     async function fetchBoard() {
         loading = true;
-        const response = await fetch(
-            `${vars.API_ENDPOINT}/workspace/workspace-board/${boardUUID}`,
-            { credentials: "include" }
-        );
-        res = await response.json();
+        res = await getWorkspaceBoard(boardUUID);
         loading = false;
     }
 
