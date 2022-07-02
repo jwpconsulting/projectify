@@ -62,7 +62,6 @@
     }
 
     async function fetchBoard() {
-        loading = true;
         res = await getWorkspaceBoard(boardUUID);
         loading = false;
     }
