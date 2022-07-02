@@ -142,7 +142,7 @@ export function filterSectionsTasks(
                 if (assegnee === "unassigned") {
                     return !task.assignee;
                 } else {
-                    return task.assignee?.email === assegnee.email;
+                    return task.assignee?.user.email === assegnee.email;
                 }
             });
 
