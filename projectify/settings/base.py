@@ -62,6 +62,7 @@ INSTALLED_APPS_DJANGO = (
 INSTALLED_APPS_THIRD_PARTY = (
     "cloudinary",
     "cloudinary_storage",
+    "debug_toolbar",
     "django_celery_results",
     "django_extensions",
     "strawberry.django",
@@ -89,6 +90,7 @@ INSTALLED_APPS = (
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.middleware.gzip.GZipMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -243,3 +245,7 @@ LOGGING = {
 
 # Cloudinary
 MEDIA_CLOUDINARY_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+# Debug
+DEBUG_TOOLBAR = False
+DEBUG = False

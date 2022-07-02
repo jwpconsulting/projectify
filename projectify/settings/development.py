@@ -6,7 +6,10 @@ from .base import *
 
 SECRET_KEY = "development"
 
+# Debug
 DEBUG = True
+DEBUG_TOOLBAR = True
+INTERNAL_IPS = ("127.0.0.1",)
 
 CORS_ALLOWED_ORIGINS = ("http://localhost:3000",)
 CSRF_TRUSTED_ORIGINS = ("http://localhost:3000",)
