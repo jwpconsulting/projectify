@@ -12,6 +12,7 @@
     import IconPlus from "../icons/icon-plus.svelte";
     import { getModal } from "../dialogModal.svelte";
     import { client } from "$lib/graphql/client";
+    import vars from "$lib/env";
     import { _ } from "svelte-i18n";
     import { sortable } from "$lib/actions/sortable";
     import delay from "delay";
@@ -64,7 +65,7 @@
     async function fetchBoard() {
         loading = true;
         const response = await fetch(
-            `http://localhost:8000/workspace/workspace-board/${boardUUID}`,
+            `${vars.API_ENDPOINT}/workspace/workspace-board/${boardUUID}`,
             { credentials: "include" }
         );
         res = await response.json();
