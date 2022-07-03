@@ -1,4 +1,6 @@
 """Workspace signals."""
+import logging
+
 from django.db import (
     transaction,
 )
@@ -25,6 +27,9 @@ from . import (
     models,
     signal_defs,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 @receiver(signal_defs.workspace_user_invited)
@@ -296,6 +301,7 @@ def sub_task_saved(sender, instance, **kwargs):
     uuid = str(workspace_board.uuid)
     task_uuid = str(instance.task.uuid)
     channel_layer = get_channel_layer()
+    logger.info("About to group_send workspace.board.change")
     async_to_sync(channel_layer.group_send)(
         f"workspace-board-{uuid}",
         {
@@ -303,6 +309,7 @@ def sub_task_saved(sender, instance, **kwargs):
             "uuid": uuid,
         },
     )
+    logger.info("About to group_send task.change")
     async_to_sync(channel_layer.group_send)(
         f"task-{task_uuid}",
         {
