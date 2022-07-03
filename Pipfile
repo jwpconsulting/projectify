@@ -27,6 +27,7 @@ django-extensions = "*"
 psycopg2 = "*"
 python-dotenv = "*"
 whitenoise = "*"
+gunicorn = "*"
 newrelic = "*"
 redis = "==4.3.3"
 celery = {extras = ["redis"], version = "*"}
@@ -35,6 +36,7 @@ django-anymail = {extras = ["mailgun"], version = "*"}
 django-ordered-model = "*"
 channels = "==3.0.4"
 channels-redis = {extras = ["cryptography"], version = "==3.4.0"}
+uvicorn = "*"
 djangorestframework = "*"
 pillow = "*"
 django-cloudinary-storage = "*"
@@ -45,7 +47,6 @@ stripe = "*"
 rules = "*"
 django-pgtrigger = "*"
 django-debug-toolbar = "*"
-daphne = "*"
 
 [requires]
 python_version = "3.10"
