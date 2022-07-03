@@ -328,7 +328,7 @@
         const prevSection = sections[sectionIndex - 1];
 
         if (prevSection) {
-            moveSection(section.uuid, prevSection.order);
+            moveSection(section.uuid, prevSection._order);
         }
     }
     function onSwitchWithNextSection({ detail: { section } }) {
@@ -336,7 +336,7 @@
         const nextSection = sections[sectionIndex + 1];
 
         if (nextSection) {
-            moveSection(section.uuid, nextSection.order);
+            moveSection(section.uuid, nextSection._order);
         }
     }
 </script>
