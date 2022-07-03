@@ -133,6 +133,7 @@ CHANNEL_LAYERS = {
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 CONN_MAX_AGE = 0
 DATABASES = {"default": dj_database_url.config(conn_max_age=CONN_MAX_AGE)}
+DATABASES["default"]["OPTIONS"] = {"options": "-c statement_timeout=5000"}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
