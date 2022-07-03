@@ -301,8 +301,10 @@ def sub_task_saved(sender, instance, **kwargs):
     uuid = str(workspace_board.uuid)
     task_uuid = str(instance.task.uuid)
     channel_layer = get_channel_layer()
+    logger.info("async_to_sync")
+    fn = async_to_sync(channel_layer.group_send)
     logger.info("About to group_send workspace.board.change")
-    async_to_sync(channel_layer.group_send)(
+    fn(
         f"workspace-board-{uuid}",
         {
             "type": "workspace.board.change",
