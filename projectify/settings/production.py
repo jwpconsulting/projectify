@@ -49,31 +49,6 @@ CSRF_TRUSTED_ORIGINS = (
 # GraphQL
 GRAPHIQL_ENABLE = False
 
-# Channels
-# https://github.com/django/channels_redis/issues/235#issuecomment-795520644
-ssl_context = ssl.SSLContext()
-ssl_context.check_hostname = False
-
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-SECURE_SSL_REDIRECT = True
-
-SECURE_HSTS_SECONDS = 3600
-
-heroku_redis_ssl_host = {
-    "address": os.environ["REDISCLOUD_URL"],
-    # "ssl": ssl_context,
-    "timeout": 1,
-}
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": (heroku_redis_ssl_host,),
-            "symmetric_encryption_keys": [SECRET_KEY],
-        },
-    },
-}
-
 # Cloudinary
 DEFAULT_FILE_STORAGE = MEDIA_CLOUDINARY_STORAGE
 
