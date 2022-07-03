@@ -37,7 +37,7 @@ django-anymail = {extras = ["mailgun"], version = "*"}
 django-ordered-model = "*"
 channels = "==3.0.4"
 channels-redis = {extras = ["cryptography"], version = "==3.4.0"}
-uvicorn = "*"
+uvicorn = "==0.17.6"
 djangorestframework = "*"
 pillow = "*"
 django-cloudinary-storage = "*"
