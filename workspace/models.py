@@ -546,7 +546,10 @@ class Task(
         neighbor_tasks = (
             self.workspace_board_section.task_set.select_for_update()
         )
-        other_tasks = workspace_board_section.task_set.select_for_update()
+        if self.workspace_board_section != workspace_board_section:
+            other_tasks = workspace_board_section.task_set.select_for_update()
+        else:
+            other_tasks = []
         with transaction.atomic():
             # Force both querysets to be evaluated to lock them for the time of
             # this transaction
