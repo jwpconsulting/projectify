@@ -5,6 +5,7 @@ import ssl
 # flake8: noqa: F401, F403
 from .base import *
 
+
 # Redis URL
 # Heroku unsets REDIS_TLS_URL when migrating to premium redis
 if "REDIS_TLS_URL" not in os.environ:
@@ -59,8 +60,9 @@ SECURE_SSL_REDIRECT = True
 SECURE_HSTS_SECONDS = 3600
 
 heroku_redis_ssl_host = {
-    "address": REDIS_TLS_URL,
-    "ssl": ssl_context,
+    "address": os.environ["REDISCLOUD_URL"],
+    # "ssl": ssl_context,
+    "timeout": 1,
 }
 CHANNEL_LAYERS = {
     "default": {
