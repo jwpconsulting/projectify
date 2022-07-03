@@ -30,8 +30,9 @@ whitenoise = "*"
 gunicorn = "*"
 newrelic = "*"
 redis = "==4.3.1"
-celery = {extras = ["redis"], version = "*"}
-django-celery-results = "*"
+celery = {extras = ["redis"], version = "==5.2.7"}
+django-celery-results = "==2.3.1"
+kombu = "==5.2.4"
 django-anymail = {extras = ["mailgun"], version = "*"}
 django-ordered-model = "*"
 channels = "==3.0.4"
