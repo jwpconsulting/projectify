@@ -49,11 +49,7 @@ SECURE_HSTS_SECONDS = 3600
 # Channels
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": (os.environ["REDIS_URL"],),
-            "symmetric_encryption_keys": [SECRET_KEY],
-        },
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
     },
 }
 
