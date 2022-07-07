@@ -37,6 +37,26 @@ class WorkspaceManager(models.Manager):
         return user.workspace_set.get(uuid=uuid)
 
 
+@pgtrigger.register(
+    pgtrigger.Trigger(
+        name="ensure_correct_highest_task_number",
+        when=pgtrigger.Before,
+        operation=pgtrigger.Update,
+        func="""
+              DECLARE
+                max_task_number   INTEGER;
+              BEGIN
+                SELECT MAX(workspace_task.number) INTO max_task_number
+                FROM workspace_task
+                WHERE workspace_task.workspace_id = NEW.id;
+                IF NEW.highest_task_number < max_task_number THEN
+                    RAISE EXCEPTION 'invalid highest_task_number:  \
+                    highest_task_number cannot be lower than a task number.';
+                END IF;
+                RETURN NEW;
+              END;""",
+    )
+)
 class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
     """Workspace."""
 
@@ -494,6 +514,21 @@ class TaskQuerySet(models.QuerySet):
                 IF correct_workspace_id != NEW.workspace_id THEN
                     RAISE EXCEPTION 'invalid workspace_id: workspace being \
                         inserted does not match correct derived workspace.';
+                END IF;
+                RETURN NEW;
+              END;""",
+    )
+)
+@pgtrigger.register(
+    pgtrigger.Trigger(
+        name="read_only_task_number",
+        when=pgtrigger.Before,
+        operation=pgtrigger.Update,
+        func="""
+              BEGIN
+                IF NEW.number != OLD.number THEN
+                    RAISE EXCEPTION 'invalid number: Task number \
+                        cannot be modified after inserting Task.';
                 END IF;
                 RETURN NEW;
               END;""",
