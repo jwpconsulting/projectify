@@ -128,6 +128,13 @@ class TestWorkspace:
         workspace.refresh_from_db()
         assert workspace.highest_task_number == new
 
+    def test_wrong_highest_task_number(self, workspace, task):
+        """Test db trigger when highest_task_number < highest child task."""
+        with pytest.raises(db.InternalError):
+            task.save()
+            workspace.highest_task_number = 0
+            workspace.save()
+
     def test_has_at_least_role(self, workspace, workspace_user):
         """Test has_at_least_role."""
         assert workspace.has_at_least_role(
@@ -651,6 +658,8 @@ class TestTask:
 
     def test_task_number(self, task, other_task):
         """Test unique task number."""
+        other_task.refresh_from_db()
+        task.refresh_from_db()
         assert other_task.number == task.number + 1
         task.workspace.refresh_from_db()
         assert task.workspace.highest_task_number == other_task.number
@@ -663,10 +672,16 @@ class TestTask:
 
     def test_save_no_number(self, task, workspace):
         """Test saving with no number."""
-        task.number = None
-        task.save()
-        workspace.refresh_from_db()
-        assert task.number == workspace.highest_task_number
+        with pytest.raises(db.InternalError):
+            task.number = None
+            task.save()
+            workspace.refresh_from_db()
+
+    def test_save_different_number(self, task):
+        """Test saving with different number."""
+        with pytest.raises(db.InternalError):
+            task.number = 154785787
+            task.save()
 
     def test_task_workspace_pgtrigger(self, task, other_workspace):
         """Test database trigger for wrong workspace assignment."""
