@@ -174,6 +174,16 @@ export const Query_Customer = gql`
             seatsRemaining
             subscriptionStatus
         }
+        workspace(uuid: $uuid) {
+            uuid
+            users {
+                jobTitle
+                email
+                fullName
+                profilePicture
+                role
+            }
+        }
     }
 `;
 
