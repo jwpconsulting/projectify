@@ -64,34 +64,6 @@ export const Mutation_ConfirmPasswordReset = gql`
     }
 `;
 
-export const Query_Dashboard = gql`
-    query Query_Dashboard {
-        workspaces {
-            uuid
-            title
-            boards {
-                uuid
-                title
-                sections {
-                    uuid
-                    title
-                    order
-                    tasks {
-                        uuid
-                        title
-                        description
-                        order
-                        subTasks {
-                            title
-                            description
-                        }
-                    }
-                }
-            }
-        }
-    }
-`;
-
 export const Query_DashboardWorkspacesSideNav = gql`
     query DashboardWorkspacesSideNav {
         workspaces {
