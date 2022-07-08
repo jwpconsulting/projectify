@@ -191,6 +191,11 @@ export const Query_WorkspaceTeamMembers = gql`
                 role
             }
         }
+    }
+`;
+
+export const Query_Customer = gql`
+    query Customer($uuid: UUID!) {
         customerByWorkspace(workspaceUuid: $uuid) {
             uuid
             seats

@@ -3,7 +3,7 @@
         Mutation_AddUserToWorkspace,
         Mutation_RemoveUserFromWorkspace,
         Mutation_UpdateWorkspaceUser,
-        Query_WorkspaceTeamMembers,
+        Query_Customer,
     } from "$lib/graphql/operations";
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
 
@@ -43,7 +43,7 @@
 
     $: {
         if (workspaceUUID) {
-            res = query(Query_WorkspaceTeamMembers, {
+            res = query(Query_Customer, {
                 variables: { uuid: workspaceUUID },
                 fetchPolicy: "network-only",
             });
