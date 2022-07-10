@@ -30,8 +30,8 @@
             <div class="flex">
                 <span
                     class="overflow-hidden text-ellipsis whitespace-nowrap text-base font-bold normal-case"
-                    >{userData.fullName
-                        ? userData.fullName
+                    >{userData.full_name
+                        ? userData.full_name
                         : userData.email}</span
                 >
             </div>

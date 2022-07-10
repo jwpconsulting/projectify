@@ -43,7 +43,7 @@
                 mutation: Mutation_UpdateProfile,
                 variables: {
                     input: {
-                        fullName: currentUser.fullName || "",
+                        fullName: currentUser.full_name || "",
                     },
                 },
             });
@@ -79,7 +79,7 @@
                 class="mt-[-40px] flex flex-col items-center justify-center space-y-2"
             >
                 <ProfilePictureFileSelector
-                    url={currentUser ? currentUser.profilePicture : null}
+                    url={currentUser ? currentUser.profile_picture : null}
                     on:fileSelected={onFileSelected}
                     let:src
                 >
@@ -96,7 +96,7 @@
                         class="nowrap-ellipsis input input-bordered grow rounded-md p-2 text-center text-xl font-bold"
                         placeholder={"Full name"}
                         on:input={() => fieldChanged()}
-                        bind:value={currentUser.fullName}
+                        bind:value={currentUser.full_name}
                     />
                 </div>
             </header>
