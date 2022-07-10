@@ -13,45 +13,6 @@ from . import (
 )
 
 
-"""
-query DashboardBoard($uuid: UUID!) {
-  workspaceBoard(uuid: $uuid) {
-    uuid
-    title
-    description
-    deadline
-    sections {
-      order
-      uuid
-      title
-      tasks {
-        order
-        uuid
-        title
-        deadline
-        number
-        labels {
-          uuid
-          name
-          color
-          __typename
-        }
-        assignee {
-          email
-          fullName
-          profilePicture
-          __typename
-        }
-        __typename
-      }
-      __typename
-    }
-    __typename
-  }
-}
-"""
-
-
 class WorkspaceUserSerializer(serializers.ModelSerializer):
     """Workspace user serializer."""
 
