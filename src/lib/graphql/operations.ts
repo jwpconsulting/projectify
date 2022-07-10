@@ -23,21 +23,6 @@ export const Query_WorkspacesSettingsGeneral = gql`
     }
 `;
 
-export const Query_WorkspaceTeamMembers = gql`
-    query WorkspaceTeamMembers($uuid: UUID!) {
-        workspace(uuid: $uuid) {
-            uuid
-            users {
-                jobTitle
-                email
-                fullName
-                profilePicture
-                role
-            }
-        }
-    }
-`;
-
 export const Query_Customer = gql`
     query Customer($uuid: UUID!) {
         customerByWorkspace(workspaceUuid: $uuid) {

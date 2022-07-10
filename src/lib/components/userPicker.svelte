@@ -4,7 +4,7 @@
     import debounce from "lodash/debounce.js";
     import { query } from "svelte-apollo";
     import { _ } from "svelte-i18n";
-    import { Query_WorkspaceTeamMembers } from "$lib/graphql/operations";
+    import { getWorkspace } from "$lib/repository";
     import Loading from "./loading.svelte";
     import UserProfilePicture from "./userProfilePicture.svelte";
     import { createEventDispatcher, onMount } from "svelte";
@@ -21,20 +21,23 @@
     export let dispatch = createEventDispatcher();
 
     let res = null;
+    let loading = true;
     let workspaceWSStore;
     let workspace = null;
     let users = [];
 
+    async function fetch() {
+        res = await getWorkspace(workspaceUUID);
+        loading = false;
+    }
+
     const refetch = debounce(() => {
-        res.refetch();
+        fetch();
     }, 100);
 
     $: {
         if (workspaceUUID) {
-            res = query(Query_WorkspaceTeamMembers, {
-                variables: { uuid: workspaceUUID },
-                fetchPolicy: "network-only",
-            });
+            fetch();
 
             workspaceWSStore = getSubscriptionForCollection(
                 "workspace",
@@ -50,10 +53,10 @@
     }
 
     $: {
-        if (res && $res.data) {
-            workspace = $res.data["workspace"];
-            if (workspace["users"]) {
-                users = workspace["users"];
+        if (res) {
+            workspace = res;
+            if (workspace["workspace_users"]) {
+                users = workspace["workspace_users"];
             }
         }
     }
@@ -63,7 +66,7 @@
     let filteredUsers = [];
     $: {
         searchEngine = new Fuse(users, {
-            keys: ["email", "fullName"],
+            keys: ["user.email", "user.full_name"],
             threshold: fuseSearchThreshold,
         });
     }
@@ -83,15 +86,17 @@
         dispatch("userSelected", { user });
     }
 
-    let serachFieldEl;
+    let searchFieldEl;
     $: {
-        if (serachFieldEl) {
-            serachFieldEl.focus();
+        if (searchFieldEl) {
+            searchFieldEl.focus();
         }
     }
 
     function selectMe() {
-        selectUser($user);
+        // find self in users
+        const self = users.find((el) => el.user.email == $user.email);
+        selectUser(self);
     }
 
     function clearSelection() {
@@ -113,7 +118,7 @@
     bind:this={rootEl}
     on:blur={onBlur}
 >
-    {#if res && $res.loading}
+    {#if loading}
         <div class="flex h-full w-full items-center justify-center py-8">
             <Loading />
         </div>
@@ -121,7 +126,7 @@
         <div class="p-4">
             <SearchInput
                 placeholder={$_("search-team-member")}
-                bind:inputElement={serachFieldEl}
+                bind:inputElement={searchFieldEl}
                 bind:searchText
                 on:blur={() => rootEl.focus()}
             />
@@ -134,7 +139,7 @@
                 <li>
                     <a
                         class:active={selectedUser &&
-                            selectedUser.email == user.email}
+                            selectedUser.email == user.user.email}
                         class="flex flex-row space-x-4"
                         href="/"
                         on:click|preventDefault={(e) => {
@@ -143,7 +148,7 @@
                     >
                         <UserProfilePicture
                             pictureProps={{
-                                url: user.profilePicture,
+                                url: user.user.profile_picture,
                                 size: 42,
                             }}
                         />
@@ -151,7 +156,9 @@
                         <div class="flex grow flex-col justify-start">
                             <div class="text-xs">Interface designer</div>
                             <div class="font-bold">
-                                {user.fullName ? user.fullName : user.email}
+                                {user.user.full_name
+                                    ? user.user.full_name
+                                    : user.user.email}
                             </div>
                         </div>
                     </a>
