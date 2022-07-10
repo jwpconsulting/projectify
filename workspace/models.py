@@ -25,7 +25,7 @@ from . import (
 )
 
 
-class WorkspaceManager(models.Manager):
+class WorkspaceQuerySet(models.QuerySet):
     """Workspace Manager."""
 
     def get_for_user(self, user):
@@ -34,7 +34,7 @@ class WorkspaceManager(models.Manager):
 
     def get_for_user_and_uuid(self, user, uuid):
         """Return workspace for user and uuid."""
-        return user.workspace_set.get(uuid=uuid)
+        return self.filter(users=user).get(uuid=uuid)
 
 
 class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
@@ -54,7 +54,7 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
 
     highest_task_number = models.IntegerField(default=0)
 
-    objects = WorkspaceManager()
+    objects = WorkspaceQuerySet.as_manager()
 
     def add_workspace_board(self, title, description, deadline=None):
         """Add workspace board."""
