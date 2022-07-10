@@ -21,4 +21,9 @@ urlpatterns = (
         views.WorkspaceBoardRetrieve.as_view(),
         name="workspace-board",
     ),
+    path(
+        "workspace/<uuid:workspace_uuid>",
+        views.WorkspaceRetrieve.as_view(),
+        name="workspace",
+    ),
 )

@@ -1,4 +1,8 @@
 """Workspace views."""
+from django.db.models import (
+    Prefetch,
+)
+
 from rest_framework import (
     generics,
     parsers,
@@ -49,3 +53,29 @@ class WorkspaceBoardRetrieve(generics.RetrieveAPIView):
             self.kwargs["workspace_board_uuid"],
         )
         return workspace_board
+
+
+class WorkspaceRetrieve(generics.RetrieveAPIView):
+    """Workspace retrieve view."""
+
+    queryset = models.Workspace.objects.prefetch_related(
+        "workspaceboard_set",
+        "label_set",
+    ).prefetch_related(
+        Prefetch(
+            "workspaceuser_set",
+            queryset=models.WorkspaceUser.objects.select_related(
+                "user",
+            ),
+        )
+    )
+    serializer_class = serializers.WorkspaceSerializer
+
+    def get_object(self):
+        """Return queryset with authenticated user in mind."""
+        user = self.request.user
+        workspace = self.get_queryset().get_for_user_and_uuid(
+            user,
+            self.kwargs["workspace_uuid"],
+        )
+        return workspace
