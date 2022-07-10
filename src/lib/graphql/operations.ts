@@ -1,5 +1,141 @@
 import { gql } from "@apollo/client/core";
 
+// Query
+export const Query_DashboardWorkspacesSideNav = gql`
+    query DashboardWorkspacesSideNav {
+        workspaces {
+            uuid
+            title
+            description
+            picture
+        }
+    }
+`;
+
+export const Query_WorkspacesSettingsGeneral = gql`
+    query WorkspacesSettingsGeneral($uuid: UUID!) {
+        workspace(uuid: $uuid) {
+            uuid
+            title
+            description
+            picture
+        }
+    }
+`;
+
+export const Query_WorkspaceTeamMembers = gql`
+    query WorkspaceTeamMembers($uuid: UUID!) {
+        workspace(uuid: $uuid) {
+            uuid
+            users {
+                jobTitle
+                email
+                fullName
+                profilePicture
+                role
+            }
+        }
+    }
+`;
+
+export const Query_Customer = gql`
+    query Customer($uuid: UUID!) {
+        customerByWorkspace(workspaceUuid: $uuid) {
+            uuid
+            seats
+            seatsRemaining
+            subscriptionStatus
+        }
+        workspace(uuid: $uuid) {
+            uuid
+            users {
+                jobTitle
+                email
+                fullName
+                profilePicture
+                role
+            }
+        }
+    }
+`;
+
+export const Query_DashboardTaskDetails = gql`
+    query DashboardTaskDetails($uuid: UUID!) {
+        task(uuid: $uuid) {
+            uuid
+            title
+            description
+            deadline
+            number
+            assignee {
+                email
+                fullName
+                profilePicture
+            }
+            subTasks {
+                uuid
+                title
+                description
+                done
+                order
+            }
+            workspaceBoardSection {
+                uuid
+                title
+                workspaceBoard {
+                    uuid
+                    title
+                    workspace {
+                        uuid
+                        title
+                    }
+                }
+            }
+            labels {
+                uuid
+                name
+                color
+            }
+            chatMessages {
+                created
+                modified
+                uuid
+                text
+                author {
+                    email
+                    fullName
+                    profilePicture
+                }
+            }
+        }
+    }
+`;
+
+export const Query_ArchivedWorkspaceBoards = gql`
+    query ArchivedWorkspaceBoards($uuid: UUID!) {
+        workspace(uuid: $uuid) {
+            uuid
+            archivedBoards {
+                uuid
+                title
+                archived
+            }
+        }
+    }
+`;
+
+// Mutation
+export const Mutation_UpdateWorkspace = gql`
+    mutation UpdateWorkspace($input: UpdateWorkspaceInput!) {
+        updateWorkspace(input: $input) {
+            uuid
+            modified
+            title
+            description
+        }
+    }
+`;
+
 export const Mutation_UpdateWorkspaceUser = gql`
     mutation UpdateWorkspaceUser($input: UpdateWorkspaceUserInput!) {
         updateWorkspaceUser(input: $input) {
@@ -64,39 +200,6 @@ export const Mutation_ConfirmPasswordReset = gql`
     }
 `;
 
-export const Query_DashboardWorkspacesSideNav = gql`
-    query DashboardWorkspacesSideNav {
-        workspaces {
-            uuid
-            title
-            description
-            picture
-        }
-    }
-`;
-
-export const Query_WorkspacesSettingsGeneral = gql`
-    query WorkspacesSettingsGeneral($uuid: UUID!) {
-        workspace(uuid: $uuid) {
-            uuid
-            title
-            description
-            picture
-        }
-    }
-`;
-
-export const Mutation_UpdateWorkspace = gql`
-    mutation UpdateWorkspace($input: UpdateWorkspaceInput!) {
-        updateWorkspace(input: $input) {
-            uuid
-            modified
-            title
-            description
-        }
-    }
-`;
-
 export const Mutation_AddLabelMutation = gql`
     mutation AddLabelMutation($input: AddLabelInput!) {
         addLabel(input: $input) {
@@ -121,42 +224,6 @@ export const Mutation_DeleteLabelMutation = gql`
     }
 `;
 
-export const Query_WorkspaceTeamMembers = gql`
-    query WorkspaceTeamMembers($uuid: UUID!) {
-        workspace(uuid: $uuid) {
-            uuid
-            users {
-                jobTitle
-                email
-                fullName
-                profilePicture
-                role
-            }
-        }
-    }
-`;
-
-export const Query_Customer = gql`
-    query Customer($uuid: UUID!) {
-        customerByWorkspace(workspaceUuid: $uuid) {
-            uuid
-            seats
-            seatsRemaining
-            subscriptionStatus
-        }
-        workspace(uuid: $uuid) {
-            uuid
-            users {
-                jobTitle
-                email
-                fullName
-                profilePicture
-                role
-            }
-        }
-    }
-`;
-
 export const Mutation_AddUserToWorkspace = gql`
     mutation AddUserToWorkspace($input: AddUserToWorkspaceInput!) {
         addUserToWorkspace(input: $input) {
@@ -169,78 +236,6 @@ export const Mutation_RemoveUserFromWorkspace = gql`
     mutation RemoveUserFromWorkspace($input: RemoveUserFromWorkspaceInput!) {
         removeUserFromWorkspace(input: $input) {
             uuid
-        }
-    }
-`;
-
-export const Subscription_OnWorkspaceBoardChange = gql`
-    subscription OnWorkspaceBoardChange($uuid: UUID!) {
-        onWorkspaceBoardChange(uuid: $uuid) {
-            workspaceBoard {
-                uuid
-                title
-                description
-                sections {
-                    uuid
-                    title
-                    tasks {
-                        uuid
-                        title
-                    }
-                }
-            }
-        }
-    }
-`;
-
-export const Query_DashboardTaskDetails = gql`
-    query DashboardTaskDetails($uuid: UUID!) {
-        task(uuid: $uuid) {
-            uuid
-            title
-            description
-            deadline
-            number
-            assignee {
-                email
-                fullName
-                profilePicture
-            }
-            subTasks {
-                uuid
-                title
-                description
-                done
-                order
-            }
-            workspaceBoardSection {
-                uuid
-                title
-                workspaceBoard {
-                    uuid
-                    title
-                    workspace {
-                        uuid
-                        title
-                    }
-                }
-            }
-            labels {
-                uuid
-                name
-                color
-            }
-            chatMessages {
-                created
-                modified
-                uuid
-                text
-                author {
-                    email
-                    fullName
-                    profilePicture
-                }
-            }
         }
     }
 `;
@@ -414,19 +409,6 @@ export const Mutation_ArchiveWorkspaceBoard = gql`
     mutation ArchiveWorkspaceBoard($input: ArchiveWorkspaceBoardInput!) {
         archiveWorkspaceBoard(input: $input) {
             uuid
-        }
-    }
-`;
-
-export const Query_ArchivedWorkspaceBoards = gql`
-    query ArchivedWorkspaceBoards($uuid: UUID!) {
-        workspace(uuid: $uuid) {
-            uuid
-            archivedBoards {
-                uuid
-                title
-                archived
-            }
         }
     }
 `;
