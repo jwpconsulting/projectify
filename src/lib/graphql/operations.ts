@@ -97,36 +97,6 @@ export const Mutation_UpdateWorkspace = gql`
     }
 `;
 
-export const Query_DashboardBoardsSideNav = gql`
-    query DashboardBoardsSideNav($uuid: UUID!) {
-        workspace(uuid: $uuid) {
-            uuid
-            labels {
-                uuid
-                name
-                color
-            }
-            boards {
-                uuid
-                title
-            }
-        }
-    }
-`;
-
-export const Query_WorkspaceLabels = gql`
-    query WorkspaceLabels($uuid: UUID!) {
-        workspace(uuid: $uuid) {
-            uuid
-            labels {
-                uuid
-                name
-                color
-            }
-        }
-    }
-`;
-
 export const Mutation_AddLabelMutation = gql`
     mutation AddLabelMutation($input: AddLabelInput!) {
         addLabel(input: $input) {

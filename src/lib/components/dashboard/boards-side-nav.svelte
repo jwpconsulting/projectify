@@ -1,10 +1,8 @@
 <script lang="ts">
-    import {
-        Query_DashboardBoardsSideNav,
-        Mutation_AddWorkspaceBoard,
-    } from "$lib/graphql/operations";
+    import { Mutation_AddWorkspaceBoard } from "$lib/graphql/operations";
     import { query } from "svelte-apollo";
     import { client } from "$lib/graphql/client";
+    import { getWorkspace } from "$lib/repository";
 
     import { getModal } from "$lib/components/dialogModal.svelte";
     import {
@@ -19,20 +17,23 @@
     export let selectedBoardUUID;
 
     let res = null;
+    let loading = true;
     let boards = [];
+
+    async function fetchWorkspace() {
+        res = await getWorkspace(selectedWorkspaceUUID);
+    }
 
     $: {
         if (selectedWorkspaceUUID) {
-            res = query(Query_DashboardBoardsSideNav, {
-                variables: { uuid: selectedWorkspaceUUID },
-            });
+            fetchWorkspace();
         }
     }
 
     $: {
-        if (res && $res.data) {
-            boards = $res.data["workspace"]["boards"];
-            currentWorkspaceLabels.set([...$res.data["workspace"]["labels"]]);
+        if (res) {
+            boards = res["workspace_boards"];
+            currentWorkspaceLabels.set([...res["labels"]]);
 
             if (!selectedBoardUUID && boards.length) {
                 gotoDashboard(selectedWorkspaceUUID, boards[0]["uuid"]);

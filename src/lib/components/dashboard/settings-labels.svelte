@@ -5,8 +5,8 @@
         Mutation_AddLabelMutation,
         Mutation_DeleteLabelMutation,
         Mutation_UpdateLabelMutation,
-        Query_WorkspaceLabels,
     } from "$lib/graphql/operations";
+    import { getWorkspace } from "$lib/repository";
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
     import debounce from "lodash/debounce.js";
     import { query } from "svelte-apollo";
@@ -22,18 +22,20 @@
     let workspaceWSStore;
     let workspace = null;
     let labels = [];
+    let loading = true;
+
+    async function fetch() {
+        res = await getWorkspace(workspaceUUID);
+        loading = false;
+    }
 
     const refetch = debounce(() => {
-        res.refetch();
+        fetch();
     }, 100);
 
     $: {
         if (workspaceUUID) {
-            res = query(Query_WorkspaceLabels, {
-                variables: { uuid: workspaceUUID },
-                fetchPolicy: "network-only",
-            });
-
+            fetch();
             workspaceWSStore = getSubscriptionForCollection(
                 "workspace",
                 workspaceUUID
@@ -48,10 +50,9 @@
     }
 
     $: {
-        if (res && $res.data) {
-            workspace = $res.data["workspace"];
-            if (workspace["labels"]) {
-                labels = workspace["labels"];
+        if (res) {
+            if (res["labels"]) {
+                labels = res["labels"];
             }
         }
     }
@@ -130,7 +131,7 @@
     }
 </script>
 
-{#if $res.loading}
+{#if loading}
     <div class="flex min-h-[200px] items-center justify-center">
         <Loading />
     </div>

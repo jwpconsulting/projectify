@@ -14,3 +14,11 @@ export async function getWorkspaceBoard(uuid: string) {
     );
     return await response.json();
 }
+
+export async function getWorkspace(uuid: string) {
+    const response = await fetch(
+        `${vars.API_ENDPOINT}/workspace/workspace/${uuid}`,
+        { credentials: "include" }
+    );
+    return await response.json();
+}

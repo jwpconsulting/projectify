@@ -16,24 +16,28 @@
         Mutation_UpdateWorkspace,
         Query_WorkspacesSettingsGeneral,
     } from "$lib/graphql/operations";
+    import { getWorkspace } from "$lib/repository";
     import ProfilePicture from "../profilePicture.svelte";
     import { uploadImage } from "$lib/utils/file";
 
     export let workspaceUUID = null;
     let res = null;
+    let loading = true;
     let workspaceWSStore;
     let workspace = null;
 
+    async function fetch() {
+        res = await getWorkspace(workspaceUUID);
+        loading = false;
+    }
+
     const refetch = debounce(() => {
-        res.refetch();
+        fetch();
     }, 100);
 
     $: {
         if (workspaceUUID) {
-            res = query(Query_WorkspacesSettingsGeneral, {
-                variables: { uuid: workspaceUUID },
-                fetchPolicy: "network-only",
-            });
+            fetch();
 
             workspaceWSStore = getSubscriptionForCollection(
                 "workspace",
@@ -49,8 +53,8 @@
     }
 
     $: {
-        if (!isEditMode && res && $res.data) {
-            workspace = { ...$res.data["workspace"] };
+        if (!isEditMode && res) {
+            workspace = { ...res };
         }
     }
 
@@ -107,7 +111,11 @@
     }
 </script>
 
-{#if workspace}
+{#if loading}
+    <div class="flex min-h-[200px] items-center justify-center">
+        <Loading />
+    </div>
+{:else}
     <div
         class:pointer-events-none={isSaving}
         class="flex flex-col space-y-4 divide-y divide-base-300"
