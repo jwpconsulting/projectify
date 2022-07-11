@@ -218,9 +218,5 @@
         &:hover {
             @apply bg-base-200;
         }
-
-        &.active {
-            @apply bg-primary text-primary-content shadow-md;
-        }
     }
 </style>

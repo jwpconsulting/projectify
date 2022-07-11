@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { emailConfirmation, login } from "$lib/stores/user";
+    import { emailConfirmation } from "$lib/stores/user";
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";
     import { onMount } from "svelte";
@@ -8,7 +8,7 @@
     import Loading from "$lib/components/loading.svelte";
 
     let userData = null;
-    let error;
+    let error: boolean;
 
     let email = $page.params["email"];
     let token = $page.params["token"];

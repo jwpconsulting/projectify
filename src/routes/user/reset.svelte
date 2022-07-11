@@ -4,7 +4,7 @@
     import { requestPasswordReset } from "$lib/stores/user";
     import { _ } from "svelte-i18n";
 
-    let emailValue;
+    let emailValue: string;
     let error = null;
     let requestSent = false;
 

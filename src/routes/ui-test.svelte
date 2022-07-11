@@ -3,7 +3,7 @@
     import DatePicker from "$lib/components/datePicker.svelte";
     import InputDatePicker from "$lib/components/inputDatePicker.svelte";
 
-    const monthDates = new Array(32).fill({}).map((it, inx) => {
+    const monthDates = new Array(32).fill({}).map((_, inx) => {
         const date = new Date(1);
         date.setFullYear(2022);
         date.setMonth(inx);

@@ -146,7 +146,6 @@
             {:else}
                 <input
                     disabled={input.readonly === true}
-                    autofocus={inx == 0}
                     type="text"
                     name={input.name}
                     placeholder={placeholderFor(input)}

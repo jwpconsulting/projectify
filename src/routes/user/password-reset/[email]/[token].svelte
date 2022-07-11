@@ -1,9 +1,5 @@
 <script lang="ts">
-    import {
-        confirmPasswordReset,
-        emailConfirmation,
-        login,
-    } from "$lib/stores/user";
+    import { confirmPasswordReset } from "$lib/stores/user";
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";
     import { _ } from "svelte-i18n";
@@ -12,7 +8,7 @@
     let requestSent = false;
     let userData = null;
     let error = null;
-    let passwordValue;
+    let passwordValue: string;
 
     let email = $page.params["email"];
     let token = $page.params["token"];

@@ -140,8 +140,7 @@
 {/if}
 
 <style lang="scss">
-    .item,
-    .add-item {
+    .item {
         @apply m-2 flex cursor-pointer items-start space-x-4 overflow-y-hidden rounded-lg border border-base-300 py-4 px-4;
         @apply shrink-0 font-bold;
 

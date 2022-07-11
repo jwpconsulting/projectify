@@ -39,9 +39,3 @@
         {/each}
     </div>
 </SettingsField>
-
-<style lang="scss">
-    .appearance-item {
-        @apply flex;
-    }
-</style>

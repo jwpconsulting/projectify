@@ -430,7 +430,6 @@
                 {#each filteredSections as section, index (section.uuid)}
                     <BoardSection
                         {section}
-                        {index}
                         isFirst={index == 0}
                         isLast={index == filteredSections.length - 1}
                         boardUUID={board.uuid}

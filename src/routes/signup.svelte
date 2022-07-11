@@ -12,8 +12,8 @@
         damping: 0.2,
     });
 
-    let emailValue;
-    let passwordValue;
+    let emailValue: string;
+    let passwordValue: string;
 
     let privacyChecked = false;
 

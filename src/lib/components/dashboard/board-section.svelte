@@ -47,7 +47,6 @@
 
     export let boardUUID;
     export let section;
-    export let index = 0;
 
     export let isFirst = null;
     export let isLast = null;

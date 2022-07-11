@@ -2,7 +2,6 @@
     import { page } from "$app/stores";
     import type { OnboardingState } from "../../lib/types/onboarding";
     import { onboardingStates } from "../../lib/types/onboarding";
-    import PageLayout from "$lib/components/layouts/pageLayout.svelte";
     import Onboarding from "$lib/components/onboarding.svelte";
     import AppIllustration from "$lib/components/onboarding/app-illustration.svelte";
     import { goto } from "$app/navigation";
@@ -60,7 +59,7 @@
 
         numberOfSears = Math.max(1, numberOfSears);
     }
-    function selectSeatInx(inx) {
+    function selectSeatInx(inx: number) {
         numberOfSears = billingSeats[inx];
     }
 </script>

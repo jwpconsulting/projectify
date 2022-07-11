@@ -126,11 +126,6 @@
 </div>
 
 <style lang="scss">
-    .grid-layout {
-        @apply grid grid-flow-row-dense;
-        // grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-
     input[type="color"] {
         -webkit-appearance: none;
         border: none;
