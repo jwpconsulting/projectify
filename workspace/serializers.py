@@ -116,17 +116,10 @@ class WorkspaceBoardSerializer(WorkspaceBoardNestedSerializer):
         )
 
 
-class WorkspaceSerializer(serializers.ModelSerializer):
-    """Workspace serializer."""
+class WorkspaceNestedSerializer(serializers.ModelSerializer):
+    """Workspace nested serializer."""
 
     picture = serializers.SerializerMethodField()
-    workspace_users = WorkspaceUserSerializer(
-        read_only=True, many=True, source="workspaceuser_set"
-    )
-    workspace_boards = WorkspaceBoardNestedSerializer(
-        read_only=True, many=True, source="workspaceboard_set"
-    )
-    labels = LabelSerializer(read_only=True, many=True, source="label_set")
 
     def get_picture(self, obj):
         """Return profile picture."""
@@ -139,9 +132,28 @@ class WorkspaceSerializer(serializers.ModelSerializer):
         fields = (
             "uuid",
             "picture",
+            "title",
+            "description",
+        )
+
+
+class WorkspaceSerializer(WorkspaceNestedSerializer):
+    """Workspace serializer."""
+
+    workspace_users = WorkspaceUserSerializer(
+        read_only=True, many=True, source="workspaceuser_set"
+    )
+    workspace_boards = WorkspaceBoardNestedSerializer(
+        read_only=True, many=True, source="workspaceboard_set"
+    )
+    labels = LabelSerializer(read_only=True, many=True, source="label_set")
+
+    class Meta(WorkspaceNestedSerializer.Meta):
+        """Meta."""
+
+        fields = (
+            *WorkspaceNestedSerializer.Meta.fields,
             "workspace_users",
             "workspace_boards",
             "labels",
-            "title",
-            "description",
         )
