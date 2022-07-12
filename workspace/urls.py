@@ -32,6 +32,11 @@ urlpatterns = (
         name="workspace",
     ),
     path(
+        "task/<uuid:task_uuid>",
+        views.TaskRetrieve.as_view(),
+        name="task",
+    ),
+    path(
         "workspace/<uuid:workspace_uuid>/workspace-boards-archived/",
         views.WorkspaceBoardArchivedList.as_view(),
         name="workspace-boards-archived",
