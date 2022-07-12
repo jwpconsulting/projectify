@@ -96,6 +96,7 @@ class WorkspaceBoardNestedSerializer(serializers.ModelSerializer):
             "description",
             "deadline",
             "uuid",
+            "archived",
         )
 
 

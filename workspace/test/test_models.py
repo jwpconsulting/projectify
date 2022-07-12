@@ -248,6 +248,16 @@ class TestWorkspaceUser:
 class TestWorkspaceBoardManager:
     """Test WorkspaceBoard manager."""
 
+    def test_filter_by_workspace(self, workspace, workspace_board):
+        """Test filter_by_workspace_uuid."""
+        qs = models.WorkspaceBoard.objects.filter_by_workspace(workspace)
+        assert list(qs) == [workspace_board]
+
+    def test_filter_by_user(self, workspace_board, workspace_user):
+        """Test filter_by_user."""
+        qs = models.WorkspaceBoard.objects.filter_by_user(workspace_user.user)
+        assert list(qs) == [workspace_board]
+
     def test_filter_by_workspace_pks(self, workspace, workspace_board):
         """Test filter_by_workspace_pks."""
         qs = models.WorkspaceBoard.objects.filter_by_workspace_pks(

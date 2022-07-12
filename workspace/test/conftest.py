@@ -1,4 +1,8 @@
 """Workspace test fixtures."""
+from django.utils import (
+    timezone,
+)
+
 import pytest
 
 from corporate.factory import (
@@ -9,6 +13,12 @@ from .. import (
     factory,
     models,
 )
+
+
+@pytest.fixture
+def now():
+    """Return now."""
+    return timezone.now()
 
 
 @pytest.fixture
@@ -54,6 +64,12 @@ def other_workspace_user(workspace, other_user):
 def workspace_board(workspace):
     """Return workspace board."""
     return factory.WorkspaceBoardFactory(workspace=workspace)
+
+
+@pytest.fixture
+def archived_workspace_board(workspace, now):
+    """Return archived workspace board."""
+    return factory.WorkspaceBoardFactory(workspace=workspace, archived=now)
 
 
 @pytest.fixture
