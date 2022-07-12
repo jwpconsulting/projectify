@@ -97,9 +97,40 @@ class TestWorkspaceRetrieveView:
         user,
         workspace,
         workspace_user,
+        workspace_board,
         django_assert_num_queries,
     ):
         """Assert we can GET this view this while being logged in."""
         with django_assert_num_queries(6):
             response = user_client.get(resource_url)
         assert response.status_code == 200, response.content
+        assert len(response.json()["workspace_boards"]) == 1
+
+
+@pytest.mark.django_db
+class TestWorkspaceBoardsArchivedList:
+    """Test WorkspaceBoardsArchived list."""
+
+    @pytest.fixture
+    def resource_url(self, workspace):
+        """Return URL to this view."""
+        return reverse(
+            "workspace:workspace-boards-archived", args=(workspace.uuid,)
+        )
+
+    def test_authenticated(
+        self,
+        user_client,
+        resource_url,
+        user,
+        workspace,
+        workspace_user,
+        workspace_board,
+        archived_workspace_board,
+        django_assert_num_queries,
+    ):
+        """Assert we can GET this view this while being logged in."""
+        with django_assert_num_queries(4):
+            response = user_client.get(resource_url)
+        assert response.status_code == 200, response.content
+        assert len(response.json()) == 1
