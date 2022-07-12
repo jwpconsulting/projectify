@@ -16,7 +16,7 @@ from corporate.factory import (
     CustomerFactory,
 )
 from corporate.models import (
-    Customer,
+    CustomerSubscriptionStatus,
 )
 from user.factory import (
     SuperUserFactory,
@@ -128,7 +128,7 @@ class Command(BaseCommand):
             if not hasattr(workspace, "customer"):
                 CustomerFactory(
                     workspace=workspace,
-                    subscription_status=Customer.SubscriptionStatus.ACTIVE,
+                    subscription_status=CustomerSubscriptionStatus.ACTIVE,
                 )
 
     @transaction.atomic

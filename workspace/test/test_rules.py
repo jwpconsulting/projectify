@@ -81,7 +81,7 @@ class TestPredicates:
         )
         # Inactive
         workspace.customer.subscription_status = (
-            corporate_models.Customer.SubscriptionStatus.CANCELLED
+            corporate_models.CustomerSubscriptionStatus.CANCELLED
         )
         assert not rules.belongs_to_active_workspace(
             user,

@@ -214,10 +214,10 @@ class WorkspaceUserQuerySet(models.QuerySet):
 class WorkspaceUserRoles(models.TextChoices):
     """Roles available."""
 
-    OBSERVER = "OBSE", _("Observer")
-    MEMBER = "MEMB", _("Member")
-    MAINTAINER = "MAIN", _("Maintainer")
-    OWNER = "OWNE", _("Owner")
+    OBSERVER = "OBSERVER", _("Observer")
+    MEMBER = "MEMBER", _("Member")
+    MAINTAINER = "MAINTAINER", _("Maintainer")
+    OWNER = "OWNER", _("Owner")
 
 
 OBSERVER_EQUIVALENT = [
@@ -252,7 +252,7 @@ class WorkspaceUser(TimeStampedModel, models.Model):
         on_delete=models.CASCADE,
     )
     role = models.CharField(
-        max_length=4,
+        max_length=10,
         choices=WorkspaceUserRoles.choices,
         default=WorkspaceUserRoles.OBSERVER,
     )

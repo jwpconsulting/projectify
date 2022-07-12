@@ -69,7 +69,7 @@ class TestStripeWebhook:
         unpaid_customer.refresh_from_db()
         assert (
             unpaid_customer.subscription_status
-            == models.Customer.SubscriptionStatus.ACTIVE
+            == models.CustomerSubscriptionStatus.ACTIVE
         )
         assert unpaid_customer.stripe_customer_id == "unique_stripe_id"
 

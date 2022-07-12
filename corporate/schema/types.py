@@ -15,9 +15,9 @@ from .. import (
 class SubscriptionStatus(enum.Enum):
     """Subscription status enum."""
 
-    ACTIVE = "active"
-    UNPAID = "unpaid"
-    CANCELLED = "cancelled"
+    ACTIVE = "ACTIVE"
+    UNPAID = "UNPAID"
+    CANCELLED = "CANCELLED"
 
 
 @strawberry.django.type(models.Customer)
@@ -27,11 +27,11 @@ class Customer:
     @strawberry.field
     def subscription_status(self) -> SubscriptionStatus:
         """Map subscription status."""
-        if self.subscription_status == "ACT":
+        if self.subscription_status == "ACTIVE":
             return SubscriptionStatus.ACTIVE
-        elif self.subscription_status == "UNP":
+        elif self.subscription_status == "UNPAID":
             return SubscriptionStatus.UNPAID
-        elif self.subscription_status == "CAN":
+        elif self.subscription_status == "CANCELLED":
             return SubscriptionStatus.CANCELLED
         else:
             raise ValueError(self.subscription_status)
