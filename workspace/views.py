@@ -59,15 +59,18 @@ class WorkspaceRetrieve(generics.RetrieveAPIView):
     """Workspace retrieve view."""
 
     queryset = models.Workspace.objects.prefetch_related(
-        "workspaceboard_set",
         "label_set",
     ).prefetch_related(
+        Prefetch(
+            "workspaceboard_set",
+            queryset=models.WorkspaceBoard.objects.filter_by_archived(False),
+        ),
         Prefetch(
             "workspaceuser_set",
             queryset=models.WorkspaceUser.objects.select_related(
                 "user",
             ),
-        )
+        ),
     )
     serializer_class = serializers.WorkspaceSerializer
 

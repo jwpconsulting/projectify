@@ -98,6 +98,7 @@ class TestWorkspaceRetrieveView:
         workspace,
         workspace_user,
         workspace_board,
+        archived_workspace_board,
         django_assert_num_queries,
     ):
         """Assert we can GET this view this while being logged in."""
