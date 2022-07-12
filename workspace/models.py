@@ -283,13 +283,21 @@ class WorkspaceUser(TimeStampedModel, models.Model):
 class WorkspaceBoardQuerySet(models.QuerySet):
     """WorkspaceBoard Manager."""
 
+    def filter_by_workspace(self, workspace):
+        """Filter by workspace."""
+        return self.filter(workspace=workspace)
+
+    def filter_by_user(self, user):
+        """Filter by user."""
+        return self.filter(workspace__users=user)
+
     def filter_by_workspace_pks(self, workspace_pks):
         """Filter by workspace pks."""
         return self.filter(workspace__pk__in=workspace_pks)
 
     def get_for_user_and_uuid(self, user, uuid):
         """Get a workspace baord for user and uuid."""
-        return self.filter(workspace__users=user).get(uuid=uuid)
+        return self.filter_by_user(user).get(uuid=uuid)
 
     def filter_by_archived(self, archived=True):
         """Filter by archived boards."""

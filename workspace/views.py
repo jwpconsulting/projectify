@@ -79,3 +79,19 @@ class WorkspaceRetrieve(generics.RetrieveAPIView):
             self.kwargs["workspace_uuid"],
         )
         return workspace
+
+
+class WorkspaceBoardArchivedList(generics.ListAPIView):
+    """List archived workspace boards inside a workspace."""
+
+    queryset = models.WorkspaceBoard.objects.filter_by_archived()
+    serializer_class = serializers.WorkspaceBoardNestedSerializer
+
+    def get_queryset(self):
+        """Get queryset."""
+        user = self.request.user
+        workspace = models.Workspace.objects.get_for_user_and_uuid(
+            user,
+            self.kwargs["workspace_uuid"],
+        )
+        return self.queryset.filter_by_workspace(workspace)

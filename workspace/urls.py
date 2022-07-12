@@ -26,4 +26,9 @@ urlpatterns = (
         views.WorkspaceRetrieve.as_view(),
         name="workspace",
     ),
+    path(
+        "workspace/<uuid:workspace_uuid>/workspace-boards-archived/",
+        views.WorkspaceBoardArchivedList.as_view(),
+        name="workspace-boards-archived",
+    ),
 )
