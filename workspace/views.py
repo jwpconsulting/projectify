@@ -55,6 +55,17 @@ class WorkspaceBoardRetrieve(generics.RetrieveAPIView):
         return workspace_board
 
 
+class WorkspaceList(generics.ListAPIView):
+    """List all workspaces for a user."""
+
+    queryset = models.Workspace.objects.all()
+    serializer_class = serializers.WorkspaceNestedSerializer
+
+    def get_queryset(self):
+        """Filter by user."""
+        return self.queryset.get_for_user(self.request.user)
+
+
 class WorkspaceRetrieve(generics.RetrieveAPIView):
     """Workspace retrieve view."""
 

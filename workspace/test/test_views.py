@@ -82,6 +82,31 @@ class TestWorkspaceBoardRetrieve:
 
 
 @pytest.mark.django_db
+class TestWorkspaceList:
+    """Test Workspace list."""
+
+    @pytest.fixture
+    def resource_url(self):
+        """Return URL to this view."""
+        return reverse("workspace:workspace-list")
+
+    def test_authenticated(
+        self,
+        user_client,
+        resource_url,
+        user,
+        workspace,
+        workspace_user,
+        django_assert_num_queries,
+    ):
+        """Assert we can GET this view this while being logged in."""
+        with django_assert_num_queries(3):
+            response = user_client.get(resource_url)
+        assert response.status_code == 200, response.content
+        assert len(response.json()) == 1
+
+
+@pytest.mark.django_db
 class TestWorkspaceRetrieveView:
     """Test WorkspaceRetrieve view."""
 

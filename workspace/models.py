@@ -30,11 +30,11 @@ class WorkspaceQuerySet(models.QuerySet):
 
     def get_for_user(self, user):
         """Return workspaces for a user."""
-        return user.workspace_set.all()
+        return self.filter(users=user)
 
     def get_for_user_and_uuid(self, user, uuid):
         """Return workspace for user and uuid."""
-        return self.filter(users=user).get(uuid=uuid)
+        return self.get_for_user(user).get(uuid=uuid)
 
 
 class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
