@@ -34,7 +34,7 @@ class TestWorkspaceCustomerRetrieve:
         django_assert_num_queries,
     ):
         """Test as authenticated user."""
-        with django_assert_num_queries(3):
+        with django_assert_num_queries(8):
             response = user_client.get(resource_url)
         assert response.status_code == 200, response.content
 
