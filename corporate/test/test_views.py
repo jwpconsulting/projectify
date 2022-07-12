@@ -15,13 +15,38 @@ from .. import (
 
 
 @pytest.mark.django_db
+class TestWorkspaceCustomerRetrieve:
+    """Test WorkspaceCustomerRetrieve."""
+
+    @pytest.fixture
+    def resource_url(self, workspace):
+        """Return URL to resource."""
+        return reverse_lazy(
+            "corporate:workspace-customer", args=(workspace.uuid,)
+        )
+
+    def test_authenticated(
+        self,
+        user_client,
+        resource_url,
+        customer,
+        workspace_user_customer,
+        django_assert_num_queries,
+    ):
+        """Test as authenticated user."""
+        with django_assert_num_queries(3):
+            response = user_client.get(resource_url)
+        assert response.status_code == 200, response.content
+
+
+@pytest.mark.django_db
 class TestStripeWebhook:
     """Test incoming webhooks from Stripe."""
 
     @pytest.fixture
     def resource_url(self):
         """Return URL to resource."""
-        return reverse_lazy("stripe-webhook")
+        return reverse_lazy("corporate:stripe-webhook")
 
     def test_checkout_session_completed(
         self,

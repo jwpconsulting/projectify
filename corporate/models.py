@@ -8,8 +8,8 @@ from django.db import (
 from django.utils.translation import gettext_lazy as _
 
 
-class CustomerManager(models.Manager):
-    """Custom Manager for Customer model."""
+class CustomerQuerySet(models.QuerySet):
+    """Customer QuerySet."""
 
     def get_by_uuid(self, uuid):
         """Get Customer by UUID."""
@@ -19,9 +19,13 @@ class CustomerManager(models.Manager):
         """Get workpsace by UUID."""
         return self.get(workspace__uuid=workspace_uuid)
 
+    def filter_by_user(self, user):
+        """Filter by user."""
+        return self.filter(workspace__users=user)
+
     def get_for_user_and_uuid(self, user, uuid):
         """Get customer by user and uuid."""
-        return self.filter(workspace__users=user).get(uuid=uuid)
+        return self.filter_by_user(user).get(uuid=uuid)
 
     def get_by_stripe_customer_id(self, stripe_customer_id):
         """Get customer by stripe customer id."""
@@ -58,7 +62,7 @@ class Customer(models.Model):
         # db_index=True,
     )
 
-    objects = CustomerManager()
+    objects = CustomerQuerySet.as_manager()
 
     def activate_subscription(self):
         """
