@@ -11,6 +11,8 @@ from . import (
 class CustomerSerializer(serializers.ModelSerializer):
     """Serializer for customer."""
 
+    seats_remaining = serializers.IntegerField(read_only=True)
+
     class Meta:
         """Meta."""
 
@@ -19,4 +21,5 @@ class CustomerSerializer(serializers.ModelSerializer):
             "seats",
             "uuid",
             "subscription_status",
+            "seats_remaining",
         )
