@@ -27,7 +27,7 @@ def unpaid_customer(workspace):
     """Create unpaid customer."""
     return factory.CustomerFactory(
         workspace=workspace,
-        subscription_status=models.Customer.SubscriptionStatus.UNPAID,
+        subscription_status=models.CustomerSubscriptionStatus.UNPAID,
     )
 
 

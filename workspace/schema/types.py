@@ -68,10 +68,10 @@ class Workspace:
 class WorkspaceUserRole(enum.Enum):
     """Workspace user role enum."""
 
-    OBSERVER = "observer"
-    MEMBER = "member"
-    MAINTAINER = "maintainer"
-    OWNER = "owner"
+    OBSERVER = "OBSERVER"
+    MEMBER = "MEMBER"
+    MAINTAINER = "MAINTAINER"
+    OWNER = "OWNER"
 
 
 @strawberry.django.type(models.WorkspaceUser)
@@ -97,13 +97,13 @@ class WorkspaceUser:
     @strawberry.field
     def role(self) -> WorkspaceUserRole:
         """Resolve user role."""
-        if self.role == "OBSE":
+        if self.role == "OBSERVER":
             return WorkspaceUserRole.OBSERVER
-        elif self.role == "MEMB":
+        elif self.role == "MEMBER":
             return WorkspaceUserRole.MEMBER
-        elif self.role == "MAIN":
+        elif self.role == "MAINTAINER":
             return WorkspaceUserRole.MAINTAINER
-        elif self.role == "OWNE":
+        elif self.role == "OWNER":
             return WorkspaceUserRole.OWNER
         else:
             raise ValueError()
