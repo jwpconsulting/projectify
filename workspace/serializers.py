@@ -13,6 +13,17 @@ from . import (
 )
 
 
+timestamps = (
+    "created",
+    "modified",
+)
+
+title_description = (
+    "title",
+    "description",
+)
+
+
 class WorkspaceUserSerializer(serializers.ModelSerializer):
     """Workspace user serializer."""
 
@@ -23,6 +34,7 @@ class WorkspaceUserSerializer(serializers.ModelSerializer):
 
         model = models.WorkspaceUser
         fields = (
+            *timestamps,
             "user",
             "uuid",
             "role",
@@ -58,10 +70,10 @@ class WorkspaceBaseSerializer(serializers.ModelSerializer):
 
         model = models.Workspace
         fields = (
+            *timestamps,
+            *title_description,
             "uuid",
             "picture",
-            "title",
-            "description",
         )
 
 
@@ -73,8 +85,8 @@ class WorkspaceBoardBaseSerializer(serializers.ModelSerializer):
 
         model = models.WorkspaceBoard
         fields = (
-            "title",
-            "description",
+            *timestamps,
+            *title_description,
             "deadline",
             "uuid",
             "archived",
@@ -103,8 +115,8 @@ class WorkspaceBoardSectionBaseSerializer(serializers.ModelSerializer):
 
         model = models.WorkspaceBoardSection
         fields = (
-            "title",
-            "description",
+            *timestamps,
+            *title_description,
             "_order",
             "uuid",
         )
@@ -132,10 +144,11 @@ class SubTaskSerializer(serializers.ModelSerializer):
 
         model = models.SubTask
         fields = (
-            "title",
-            "description",
+            *timestamps,
+            *title_description,
             "uuid",
             "done",
+            "_order",
         )
 
 
@@ -149,6 +162,7 @@ class ChatMessageSerializer(serializers.ModelSerializer):
 
         model = models.ChatMessage
         fields = (
+            *timestamps,
             "uuid",
             "text",
             "author",
@@ -166,10 +180,10 @@ class TaskSerializer(serializers.ModelSerializer):
 
         model = models.Task
         fields = (
+            *timestamps,
+            *title_description,
             "_order",
             "uuid",
-            "title",
-            "description",
             "deadline",
             "number",
             "labels",
