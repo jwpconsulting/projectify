@@ -11,16 +11,38 @@ from django.views.decorators.csrf import (
     csrf_exempt,
 )
 
+from rest_framework import (
+    generics,
+)
+
 import stripe
 
-from .models import (
-    Customer,
+from . import (
+    models,
+    serializers,
 )
 
 
 endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
 
 logger = logging.getLogger(__name__)
+
+
+class WorkspaceCustomerRetrieve(generics.RetrieveAPIView):
+    """Retrieve customer for a workspace."""
+
+    queryset = models.Customer.objects.all()
+    serializer_class = serializers.CustomerSerializer
+
+    def get_queryset(self):
+        """Filter by request user."""
+        return self.queryset.filter_by_user(self.request.user)
+
+    def get_object(self):
+        """Get customer."""
+        return self.get_queryset().get_by_workspace_uuid(
+            self.kwargs["workspace_uuid"]
+        )
 
 
 def update_subscription(customer, subscription):
@@ -53,13 +75,15 @@ def stripe_webhook(request):
     if event.type == "checkout.session.completed":
         session = event["data"]["object"]
         customer_uuid = session.metadata.customer_uuid
-        customer = Customer.objects.get_by_uuid(customer_uuid)
+        customer = models.Customer.objects.get_by_uuid(customer_uuid)
         customer.assign_stripe_customer_id(session.customer)
         customer.activate_subscription()
     elif event.type == "customer.subscription.updated":
         subscription = event["data"]["object"]
         customer_id = subscription.customer
-        customer = Customer.objects.get_by_stripe_customer_id(customer_id)
+        customer = models.Customer.objects.get_by_stripe_customer_id(
+            customer_id
+        )
         update_subscription(customer, subscription)
     else:
         logger.warning("Unhandled event type %s", event.type)

@@ -30,6 +30,13 @@ class TestCustomerManager:
             == customer
         )
 
+    def test_filter_by_user(self, customer, workspace_user_customer):
+        """Test filter_by_user."""
+        qs = models.Customer.objects.filter_by_user(
+            workspace_user_customer.user
+        )
+        assert list(qs) == [customer]
+
     def test_get_for_user_and_uuid(self, customer, workspace_user_customer):
         """Test get_for_user_and_uuid."""
         assert (

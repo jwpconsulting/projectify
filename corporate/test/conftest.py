@@ -11,24 +11,29 @@ from .. import (
 
 
 @pytest.fixture
-def customer():
+def workspace():
+    """Create workspace."""
+    return workspace_factory.WorkspaceFactory()
+
+
+@pytest.fixture
+def customer(workspace):
     """Create customer."""
-    return factory.CustomerFactory()
+    return factory.CustomerFactory(workspace=workspace)
 
 
 @pytest.fixture
-def unpaid_customer():
+def unpaid_customer(workspace):
     """Create unpaid customer."""
-    customer = factory.CustomerFactory(
-        subscription_status=models.Customer.SubscriptionStatus.UNPAID
+    return factory.CustomerFactory(
+        workspace=workspace,
+        subscription_status=models.Customer.SubscriptionStatus.UNPAID,
     )
-    return customer
 
 
 @pytest.fixture
-def workspace_user_unpaid_customer(user, unpaid_customer):
+def workspace_user_unpaid_customer(user, unpaid_customer, workspace):
     """Create workspace user for unpaid customer workspace."""
-    workspace = unpaid_customer.workspace
     return workspace_factory.WorkspaceUserFactory(
         user=user,
         workspace=workspace,
@@ -37,9 +42,8 @@ def workspace_user_unpaid_customer(user, unpaid_customer):
 
 
 @pytest.fixture
-def workspace_user_customer(user, customer):
+def workspace_user_customer(user, customer, workspace):
     """Create workspace user for paid customer workspace."""
-    workspace = customer.workspace
     return workspace_factory.WorkspaceUserFactory(
         user=user,
         workspace=workspace,
