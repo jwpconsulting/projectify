@@ -3,11 +3,18 @@ from django.urls import (
     path,
 )
 
-from .views import (
-    stripe_webhook,
+from . import (
+    views,
 )
 
 
+app_name = "corporate"
+
 urlpatterns = [
-    path("stripe-webhook/", stripe_webhook, name="stripe-webhook"),
+    path(
+        "workspace/<uuid:workspace_uuid>/customer",
+        views.WorkspaceCustomerRetrieve.as_view(),
+        name="workspace-customer",
+    ),
+    path("stripe-webhook/", views.stripe_webhook, name="stripe-webhook"),
 ]
