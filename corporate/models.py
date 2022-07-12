@@ -32,15 +32,16 @@ class CustomerQuerySet(models.QuerySet):
         return self.get(stripe_customer_id=stripe_customer_id)
 
 
+class CustomerSubscriptionStatus(models.TextChoices):
+    """Customer subscription status choices."""
+
+    ACTIVE = "ACTIVE", _("Active")
+    UNPAID = "UNPAID", _("Unpaid")
+    CANCELLED = "CANCELLED", _("Cancelled")
+
+
 class Customer(models.Model):
     """Customer model. One to one linked to workspace."""
-
-    class SubscriptionStatus(models.TextChoices):
-        """Subscription Choices."""
-
-        ACTIVE = "ACT", _("Active")
-        UNPAID = "UNP", _("Unpaid")
-        CANCELLED = "CAN", _("Cancelled")
 
     workspace = models.OneToOneField(
         "workspace.Workspace",
@@ -49,9 +50,9 @@ class Customer(models.Model):
     seats = models.PositiveIntegerField(default=1)
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     subscription_status = models.CharField(
-        max_length=3,
-        choices=SubscriptionStatus.choices,
-        default=SubscriptionStatus.UNPAID,
+        max_length=9,
+        choices=CustomerSubscriptionStatus.choices,
+        default=CustomerSubscriptionStatus.UNPAID,
     )
     stripe_customer_id = models.CharField(
         max_length=150,
@@ -70,7 +71,7 @@ class Customer(models.Model):
 
         Saves model instance.
         """
-        self.subscription_status = Customer.SubscriptionStatus.ACTIVE
+        self.subscription_status = CustomerSubscriptionStatus.ACTIVE
         self.save()
 
     def cancel_subscription(self):
@@ -79,7 +80,7 @@ class Customer(models.Model):
 
         Saves model instance.
         """
-        self.subscription_status = Customer.SubscriptionStatus.CANCELLED
+        self.subscription_status = CustomerSubscriptionStatus.CANCELLED
         self.save()
 
     def assign_stripe_customer_id(self, stripe_customer_id):
@@ -105,7 +106,7 @@ class Customer(models.Model):
     @property
     def active(self):
         """Return if active customer."""
-        return self.subscription_status == Customer.SubscriptionStatus.ACTIVE
+        return self.subscription_status == CustomerSubscriptionStatus.ACTIVE
 
     @property
     @transaction.atomic
