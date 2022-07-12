@@ -28,7 +28,7 @@ export function getThemeFromDom(): Theme {
 
 export function rgb2hex(rgb: string): string {
     const rgbRex = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-    function hex(x) {
+    function hex(x: string) {
         return ("0" + parseInt(x).toString(16)).slice(-2);
     }
 

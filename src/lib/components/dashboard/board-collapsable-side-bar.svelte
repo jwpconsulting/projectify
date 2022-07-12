@@ -3,7 +3,6 @@
 
     import { _ } from "svelte-i18n";
 
-    import DropDownMenu from "../dropDownMenu.svelte";
     import { getDropDown } from "../globalDropDown.svelte";
     import type { DropDownMenuItem } from "../globalDropDown.svelte";
     import IconArchive from "../icons/icon-archive.svelte";
@@ -13,14 +12,15 @@
     import IconSettings from "../icons/icon-settings.svelte";
     import IconTag from "../icons/icon-tag.svelte";
     import BoardsSideNav from "./boards-side-nav.svelte";
+    import type { Workspace } from "$lib/types";
 
-    export let selectedWorkspace;
-    export let selectedWorkspaceUUID;
-    export let selectedBoardUUID;
+    export let selectedWorkspace: Workspace;
+    export let selectedWorkspaceUUID: string;
+    export let selectedBoardUUID: string;
 
     $: open = $boardSideBarOpen;
 
-    let dropDownMenuBtnRef;
+    let dropDownMenuBtnRef: HTMLElement;
     function openDropDownMenu() {
         let dropDownItems: DropDownMenuItem[] = [
             {

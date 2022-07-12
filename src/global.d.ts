@@ -6,3 +6,6 @@ declare namespace svelte.JSX {
         ondragEnd?: (event: any) => any;
     }
 }
+
+declare module "daisyui/colors/colorNames.js";
+declare module "daisyui/colors/hex2hsl.js";

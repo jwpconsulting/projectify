@@ -3,7 +3,7 @@
         id?: any;
         label: string;
         icon: any;
-        onClick?: (...any) => void;
+        onClick?: (...arg0: any) => void;
         href?: string;
         disabled?: boolean;
         hidden?: boolean;
@@ -27,11 +27,13 @@
     let componentProps: any = null;
     let items: DropDownMenuItem[] = null;
     let target: HTMLElement = null;
-    let focusEl;
+    let focusEl: any;
     let activeId: any = null;
-    let rootEl;
-    let startX, startY;
-    let x, y;
+    let rootEl: any;
+    let startX: number;
+    let startY: number;
+    let x: number;
+    let y: number;
 
     let ofX = 0;
     let ofY = 0;

@@ -9,23 +9,23 @@
     import { getWorkspace } from "$lib/repository";
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
     import debounce from "lodash/debounce.js";
-    import { query } from "svelte-apollo";
     import { _ } from "svelte-i18n";
     import ConfirmModalContent from "../confirmModalContent.svelte";
     import DialogModal, { getModal } from "../dialogModal.svelte";
     import Loading from "../loading.svelte";
     import LabelPill from "./labelPill.svelte";
+    import type { Label, Workspace } from "$lib/types";
+    import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
 
     export let workspaceUUID = null;
 
-    let res = null;
-    let workspaceWSStore;
-    let workspace = null;
-    let labels = [];
+    let workspace: Workspace | null = null;
+    let workspaceWSStore: WSSubscriptionStore;
+    let labels: Label[] = [];
     let loading = true;
 
     async function fetch() {
-        res = await getWorkspace(workspaceUUID);
+        workspace = await getWorkspace(workspaceUUID);
         loading = false;
     }
 
@@ -50,14 +50,14 @@
     }
 
     $: {
-        if (res) {
-            if (res["labels"]) {
-                labels = res["labels"];
+        if (workspace) {
+            if (workspace.labels) {
+                labels = workspace.labels;
             }
         }
     }
 
-    async function onDeleteLabel(label) {
+    async function onDeleteLabel(label: Label) {
         let modalRes = await getModal("deleteLabel").open();
 
         if (!modalRes) {
@@ -80,7 +80,7 @@
         }
     }
 
-    async function onEditLabel(label) {
+    async function onEditLabel(label: Label) {
         let modalRes = await getModal("editLabel").open({ ...label });
 
         if (!modalRes) {

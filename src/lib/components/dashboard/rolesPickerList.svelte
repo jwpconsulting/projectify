@@ -1,12 +1,11 @@
 <script lang="ts">
-    import type { WorkspaceUserRole } from "$lib/types/workspaceUserRole";
     import { workspaceUserRoles } from "$lib/types/workspaceUserRole";
     import { createEventDispatcher } from "svelte";
 
-    export let role: WorkspaceUserRole = null;
+    export let role: string = null;
     export let dispatch = createEventDispatcher();
 
-    function selectRole(value) {
+    function selectRole(value: string) {
         role = value;
         dispatch("roleChanged", { role });
     }
@@ -20,7 +19,7 @@
             <li>
                 <a
                     href="/"
-                    on:click|preventDefault={(e) => {
+                    on:click|preventDefault={(_e) => {
                         selectRole(itRole);
                     }}>{itRole}</a
                 >

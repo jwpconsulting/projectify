@@ -7,22 +7,20 @@
     import debounce from "lodash/debounce";
     import { createEventDispatcher } from "svelte";
 
-    export let list;
-    export let listUUID;
-    export let key;
+    export let list: any[];
+    export let listUUID: string;
+    export let key: any;
     export let isDragging = false;
     export let containerCSS = "";
 
-    let dragingItem = null;
-    let dragingIndex = -1;
-    let startDragingIndex = -1;
-    let dragoverItem = null;
-    let dragoverIndex = -1;
+    let dragingIndex: number = -1;
+    let startDragingIndex: number = -1;
+    let dragoverIndex: number = -1;
 
     const dispatch = createEventDispatcher();
 
-    const [send, receive] = crossfade({
-        fallback(node, params) {
+    crossfade({
+        fallback(node: HTMLElement, _params: any) {
             const style = getComputedStyle(node);
             const transform =
                 style.transform === "none" ? "" : style.transform;
@@ -38,18 +36,17 @@
         },
     });
 
-    let startList;
+    let startList: any[];
 
-    function onDragStart(event, item, inx) {
+    function onDragStart(_event: DragEvent, _item: any, inx: number) {
         isDragging = true;
 
-        dragingItem = item;
         dragingIndex = inx;
         startDragingIndex = inx;
 
         startList = [...list];
     }
-    function onDragEnd(event, item, inx) {
+    function onDragEnd(_event: DragEvent, _item: any, _inx: number) {
         isDragging = false;
 
         list = arrayMoveImmutable(startList, startDragingIndex, dragoverIndex);
@@ -59,15 +56,12 @@
             toIndex: dragoverIndex,
         });
 
-        dragingItem = null;
         dragingIndex = -1;
 
-        dragoverItem = null;
         dragoverIndex = -1;
     }
 
-    function onDragOverItem(event, item, inx) {
-        dragoverItem = item;
+    function onDragOverItem(_event: DragEvent, _item: any, inx: number) {
         dragoverIndex = inx;
 
         const fromInx = dragingIndex;
@@ -82,7 +76,7 @@
     }
 
     const flipOpts = {
-        duration(d) {
+        duration(d: number) {
             return d;
         },
     };

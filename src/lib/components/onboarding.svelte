@@ -15,7 +15,7 @@
 
     $: steps = Array(stepCount)
         .fill({})
-        .map((it, inx) => inx + 1);
+        .map((_, inx) => inx + 1);
 
     const dispatch = createEventDispatcher();
 </script>
@@ -71,7 +71,7 @@
     {#if step && stepCount}
         <div class="flex justify-center">
             <ul class="steps steps-horizontal">
-                {#each steps as s, inx}
+                {#each steps as _, inx}
                     <li class:step-primary={inx < step} class="step" />
                 {/each}
             </ul>

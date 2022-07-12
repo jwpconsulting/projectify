@@ -17,10 +17,10 @@
     import { onMount } from "svelte";
     import ConfirmModalContent from "../confirmModalContent.svelte";
     import { _ } from "svelte-i18n";
-    import GlobalDropDown from "../globalDropDown.svelte";
     import BoardCollapsableSideBar from "./board-collapsable-side-bar.svelte";
+    import type { Workspace } from "$lib/types";
 
-    export let selectedWorkspace = null;
+    export let selectedWorkspace: Workspace | null = null;
 
     $: uuids = $page.params["uuids"].split("/");
 

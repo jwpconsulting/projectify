@@ -11,7 +11,18 @@
     import HeaderButtons from "./header-buttons.svelte";
 
     export let mode = "app";
-    let items;
+
+    type HeaderItem = {
+        label: string;
+        to?: string;
+        authRequired?: boolean;
+        forceNaviagiation?: boolean;
+        fetchUser?: boolean;
+        action?: (arg0: any) => void;
+    };
+
+    let items: HeaderItem[] = [];
+
     $: userData = $user;
     $: {
         if (mode == "landing") {

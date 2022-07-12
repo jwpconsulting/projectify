@@ -1,16 +1,21 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+    import type { Task } from "$lib/types";
 
-    export let task;
+    export let task: Task;
 
-    let pathLinks;
-    if (task.workspaceBoardSection) {
+    type PathLink = {
+        label: string;
+    };
+
+    let pathLinks: PathLink[];
+    if (task.workspace_board_section) {
         pathLinks = [
             {
-                label: task.workspaceBoardSection.workspaceBoard.title,
+                label: task.workspace_board_section.workspace_board.title,
             },
             {
-                label: task.workspaceBoardSection.title,
+                label: task.workspace_board_section.title,
             },
             {
                 label: `#${task.number}`,

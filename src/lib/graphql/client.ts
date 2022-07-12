@@ -1,16 +1,13 @@
 import { ApolloClient, InMemoryCache, ApolloLink } from "@apollo/client/core";
 
-import { from, split } from "@apollo/client/link/core";
+import { from } from "@apollo/client/link/core";
 import { HttpLink } from "@apollo/client/link/http";
 import { BatchHttpLink } from "@apollo/client/link/batch-http";
 import { onError } from "@apollo/client/link/error";
-import { getMainDefinition } from "@apollo/client/utilities";
 
-import { browser } from "$app/env";
 import vars from "$lib/env";
 
 const batchLinkEnabled = false;
-const enableWebsocket = false;
 
 const httpCommonOpts = {
     credentials: "include",
@@ -44,19 +41,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 export const client = new ApolloClient({
     link: from([errorLink, splitLink]),
     uri: vars.GRAPHQL_ENDPOINT,
-    cache: new InMemoryCache({
-        dataIdFromObject(responseObject) {
-            switch (responseObject.__typename) {
-                case "User":
-                    return `${responseObject.__typename}:${responseObject.email}`;
-                case "WorkspaceUser":
-                    return `${responseObject.__typename}:${responseObject.email}`;
-                default:
-                    return `${responseObject.__typename}:${responseObject.uuid}`;
-            }
-        },
-    }),
-
+    cache: new InMemoryCache(),
     defaultOptions: {
         query: {
             fetchPolicy: "network-only",

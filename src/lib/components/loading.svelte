@@ -1,5 +1,4 @@
 <script>
-    import { circIn } from "svelte/easing";
 </script>
 
 <div class="h-20 w-20 text-primary">

@@ -7,7 +7,6 @@
         Mutation_MoveWorkspaceBoardSection,
         Mutation_UpdateWorkspaceBoard,
     } from "$lib/graphql/operations";
-    import { query } from "svelte-apollo";
     import IconPlus from "../icons/icon-plus.svelte";
     import { getModal } from "../dialogModal.svelte";
     import { client } from "$lib/graphql/client";
@@ -39,8 +38,9 @@
     } from "$lib/stores/dashboard-ui";
     import IconArrowLeft from "../icons/icon-arrow-left.svelte";
     import IconArrowRight from "../icons/icon-arrow-right.svelte";
+    import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
 
-    export let workspaceUUID;
+    export let workspaceUUID: string;
     export let boardUUID = null;
 
     let res = null;
@@ -49,7 +49,7 @@
     let sections = [];
     let isDragging = false;
 
-    let boardWSStore;
+    let boardWSStore: WSSubscriptionStore;
 
     let filteredSections = [];
     let filterLabels = [];
@@ -119,7 +119,7 @@
                     title: modalRes.outputs.title,
                     description: "",
                 };
-                let mRes = await client.mutate({
+                await client.mutate({
                     mutation: Mutation_AddWorkspaceBoardSection,
                     variables: {
                         input: {
@@ -163,9 +163,12 @@
         }
     }
 
-    async function moveSection(workspaceBoardSectionUuid, order) {
+    async function moveSection(
+        workspaceBoardSectionUuid: string,
+        order: number
+    ) {
         try {
-            let mRes = await client.mutate({
+            await client.mutate({
                 mutation: Mutation_MoveWorkspaceBoardSection,
                 variables: {
                     input: {
@@ -187,7 +190,7 @@
         }
 
         try {
-            let mRes = await client.mutate({
+            await client.mutate({
                 mutation: Mutation_UpdateWorkspaceBoard,
                 variables: {
                     input: {
@@ -211,27 +214,13 @@
         }
 
         try {
-            let mRes = await client.mutate({
+            await client.mutate({
                 mutation: Mutation_ArchiveWorkspaceBoard,
                 variables: {
                     input: {
                         uuid: board.uuid,
                         archived: true,
                     },
-                },
-                update(cache, { data }) {
-                    cache.modify({
-                        id: `Workspace:${workspaceUUID}`,
-                        fields: {
-                            boards(list = []) {
-                                return list.filter(
-                                    (it) =>
-                                        it.__ref !=
-                                        `WorkspaceBoard:${board.uuid}`
-                                );
-                            },
-                        },
-                    });
                 },
             });
 
@@ -248,26 +237,12 @@
         }
 
         try {
-            let mRes = await client.mutate({
+            await client.mutate({
                 mutation: Mutation_DeleteWorkspaceBoard,
                 variables: {
                     input: {
                         uuid: board.uuid,
                     },
-                },
-                update(cache, { data }) {
-                    cache.modify({
-                        id: `Workspace:${workspaceUUID}`,
-                        fields: {
-                            boards(list = []) {
-                                return list.filter(
-                                    (it) =>
-                                        it.__ref !=
-                                        `WorkspaceBoard:${board.uuid}`
-                                );
-                            },
-                        },
-                    });
                 },
             });
 
@@ -280,7 +255,7 @@
     let sectionContainerEl: HTMLElement = null;
     let scrollInx = 0;
 
-    function onSectionScroll(e) {
+    function onSectionScroll(_e: Event) {
         const s = sectionContainerEl.scrollLeft;
         const vw = sectionContainerEl.clientWidth;
 
@@ -306,7 +281,7 @@
         scrollToInx(scrollInx - 1);
     }
 
-    function scrollToInx(inx) {
+    function scrollToInx(inx: number) {
         const w = sectionContainerEl.clientWidth;
         const el: HTMLElement = sectionContainerEl.querySelector(
             `:scope > div:nth-child(${inx + 1})`
@@ -365,13 +340,13 @@
                             label: $_("Archive"),
                             icon: IconTrash,
                             onClick: onArchive,
-                            hidden: !board?.sections?.length,
+                            hidden: !board?.workspace_board_sections?.length,
                         },
                         {
                             label: $_("Delete"),
                             icon: IconTrash,
                             onClick: onDelete,
-                            hidden: board?.sections?.length,
+                            hidden: board?.workspace_board_sections?.length,
                         },
                     ]}
                 />
@@ -432,7 +407,6 @@
                         {section}
                         isFirst={index == 0}
                         isLast={index == filteredSections.length - 1}
-                        boardUUID={board.uuid}
                         bind:isDragging
                         on:switchWithPrevSection={onSwitchWithPrevSection}
                         on:switchWithNextSection={onSwitchWithNextSection}

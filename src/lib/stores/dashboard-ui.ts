@@ -1,7 +1,6 @@
 import { browser } from "$app/env";
 import { writable } from "svelte/store";
-
-export type DashboardSectionsLayout = "grid" | "list" | "columns";
+import type { DashboardSectionsLayout } from "$lib/types";
 
 export const filterUser = writable(null);
 

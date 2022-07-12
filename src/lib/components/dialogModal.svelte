@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-    let onTop;
+    let onTop: HTMLElement;
     const modals = {};
 
     export function getModal(id = "") {
@@ -12,17 +12,17 @@
 
     import { fly } from "svelte/transition";
 
-    let topDiv;
+    let topDiv: HTMLElement;
     let visible = false;
-    let prevOnTop;
+    let prevOnTop: HTMLElement;
 
     export let id = "";
 
-    function keyPress(ev) {
+    function keyPress(ev: KeyboardEvent) {
         if (ev.key == "Escape" && onTop == topDiv) close();
     }
 
-    let resolveFn;
+    let resolveFn: (_: any) => void;
 
     let data = null;
     function getData() {
@@ -45,7 +45,7 @@
         });
     }
 
-    function close(retVal?) {
+    function close(retVal?: any) {
         if (!visible) return;
         window.removeEventListener("keydown", keyPress);
         onTop = prevOnTop;

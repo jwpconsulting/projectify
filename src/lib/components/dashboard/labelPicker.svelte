@@ -2,6 +2,7 @@
     import { client } from "$lib/graphql/client";
     import { Mutation_AssignLabel } from "$lib/graphql/operations";
     import { currentWorkspaceLabels } from "$lib/stores/dashboard";
+    import type { Task, Label } from "$lib/types";
 
     import { createEventDispatcher, onMount } from "svelte";
 
@@ -9,9 +10,9 @@
     import LabelList from "./labelList.svelte";
 
     let searchText = "";
-    export let task;
+    export let task: Task;
     export let selectedLabels = [];
-    let rootEl;
+    let rootEl: HTMLElement;
 
     export let dispatch = createEventDispatcher();
 
@@ -19,13 +20,22 @@
         rootEl.focus();
     });
 
-    function onBlur(event) {
-        if (!event.currentTarget.contains(event.relatedTarget)) {
-            dispatch("blur");
+    function onBlur(event: FocusEvent) {
+        const currentTarget = event.currentTarget;
+        const relatedTarget = event.relatedTarget;
+        if (
+            currentTarget instanceof HTMLElement &&
+            relatedTarget instanceof HTMLElement
+        ) {
+            if (!currentTarget.contains(relatedTarget)) {
+                dispatch("blur");
+            }
+        } else {
+            throw new Error("Invalid currentTarget");
         }
     }
 
-    async function assignLabel(label, assigned) {
+    async function assignLabel(label: Label, assigned: boolean) {
         if (!task?.uuid) {
             return;
         }
@@ -46,10 +56,10 @@
         }
     }
 
-    let serachFieldEl;
+    let searchFieldEl: HTMLElement;
     $: {
-        if (serachFieldEl) {
-            serachFieldEl.focus();
+        if (searchFieldEl) {
+            searchFieldEl.focus();
         }
     }
 </script>
@@ -67,7 +77,7 @@
             class="input input-bordered w-full"
             placeholder="Filter labels"
             bind:value={searchText}
-            bind:this={serachFieldEl}
+            bind:this={searchFieldEl}
             on:blur={() => rootEl.focus()}
         />
     </div>

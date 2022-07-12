@@ -21,7 +21,7 @@
 
 <SettingsField label={$_("appearance")}>
     <div class="flex w-full flex-col">
-        {#each appearanceItems as it, inx}
+        {#each appearanceItems as it, _}
             <div class="form-control flex w-full">
                 <label class="label flex w-full cursor-pointer gap-2">
                     <span class="label-text">{it.label}</span>
@@ -30,7 +30,7 @@
                         name="app"
                         class="checked:bg-blue-500 radio radio-primary shrink-0"
                         checked={it.isDarkMode == $isDarkMode}
-                        on:change={(e) => {
+                        on:change={(_) => {
                             saveDarkMode(it.isDarkMode);
                         }}
                     />

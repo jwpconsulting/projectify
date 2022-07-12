@@ -13,7 +13,7 @@
     }
 
     let contentHeght = 0;
-    const selectTab = (tabId) => {
+    const selectTab = (tabId: string) => {
         activeTabId.set(tabId);
         dispatcher("tabChanged", { tabId });
     };

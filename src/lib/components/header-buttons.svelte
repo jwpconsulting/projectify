@@ -1,7 +1,8 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+    import type { User } from "$lib/types";
 
-    export let userData;
+    export let userData: User;
 </script>
 
 {#if userData}

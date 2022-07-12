@@ -17,18 +17,17 @@
     import { tick } from "svelte";
     import IconClose from "../icons/icon-close.svelte";
     import IconUpload from "../icons/icon-upload.svelte";
+    import type { SubTask } from "$lib/types";
+    import lodash from "lodash";
 
-    export let taskUUID;
-    export let subTasks;
+    export let taskUUID: string;
+    export let subTasks: SubTask[];
     let percent = 0;
     let newSubTaskTitle = "";
 
     $: {
         if (subTasks.length) {
-            let sum = 0;
-            subTasks.forEach((it) => {
-                sum += it.done;
-            });
+            const sum = lodash.sumBy(subTasks, (it) => (it.done ? 1 : 0));
             percent = Math.round((sum / subTasks.length) * 100);
         }
     }
@@ -41,13 +40,17 @@
             ...subTasks,
             {
                 title: newSubTaskTitle,
+                uuid: "",
                 done: false,
+                created: "",
+                modified: "",
+                order: 0,
             },
         ];
 
         if (taskUUID) {
             try {
-                let mRes = await client.mutate({
+                await client.mutate({
                     mutation: Mutation_AddSubTask,
                     variables: {
                         input: {
@@ -65,13 +68,13 @@
         newSubTaskTitle = "";
     }
 
-    async function changeSubTaskDone(subTask) {
+    async function changeSubTaskDone(subTask: SubTask) {
         if (!subTask || !subTask.uuid) {
             return;
         }
 
         try {
-            let mRes = await client.mutate({
+            await client.mutate({
                 mutation: Mutation_ChangeSubTaskDone,
                 variables: {
                     input: {
@@ -85,7 +88,7 @@
         }
     }
 
-    async function deleteSubTask(subTask) {
+    async function deleteSubTask(subTask: SubTask) {
         if (!subTask || !subTask.uuid) {
             return;
         }
@@ -98,7 +101,7 @@
         subTasks = subTasks;
 
         try {
-            let mRes = await client.mutate({
+            await client.mutate({
                 mutation: Mutation_DeleteSubTaskMutation,
                 variables: {
                     input: {
@@ -111,7 +114,7 @@
         }
     }
 
-    async function moveSubTask(subTask, order) {
+    async function moveSubTask(subTask: SubTask, order: number) {
         try {
             await client.mutate({
                 mutation: Mutation_MoveSubTaskMutation,
@@ -127,10 +130,10 @@
         }
     }
 
-    async function moveUp(subTask) {
+    async function moveUp(subTask: SubTask) {
         await moveSubTask(subTask, subTask.order - 1);
     }
-    async function moveDown(subTask) {
+    async function moveDown(subTask: SubTask) {
         await moveSubTask(subTask, subTask.order + 1);
     }
 
@@ -138,7 +141,7 @@
     let editSubtaskUUID = null;
     let editSubtaskInput = null;
 
-    async function editSubtask(subTask) {
+    async function editSubtask(subTask: SubTask) {
         editSubtaskUUID = subTask.uuid;
         subtaskEditTitle = subTask.title;
 
@@ -151,7 +154,7 @@
         subtaskEditTitle = null;
     }
 
-    async function saveSubTask(subTask) {
+    async function saveSubTask(subTask: SubTask) {
         if (!subtaskEditTitle) {
             return;
         }
@@ -197,7 +200,7 @@
                     type="checkbox"
                     class="checkbox checkbox-primary shrink-0"
                     bind:checked={it.done}
-                    on:change={(e) => changeSubTaskDone(it)}
+                    on:change={(_e) => changeSubTaskDone(it)}
                 />
 
                 {#if editSubtaskUUID == it.uuid}

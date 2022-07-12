@@ -9,6 +9,12 @@ import Fuse from "fuse.js";
 import { writable, get } from "svelte/store";
 import { client } from "$lib/graphql/client";
 import { getModal } from "$lib/components/dialogModal.svelte";
+import type {
+    Label,
+    Task,
+    WorkspaceBoardSection,
+    WorkspaceUser,
+} from "$lib/types";
 
 export const drawerModalOpen = writable(false);
 export const currentWorkspaceUUID = writable<string | null>(null);
@@ -81,13 +87,6 @@ export function gotoDashboard(
     subView: string = null
 ): void {
     const url = getDashboardURL(workspaceUUID, boardUUID, taskUUID, subView);
-    const curURL = getDashboardURL(
-        get(currentWorkspaceUUID),
-        get(currentBoardUUID),
-        get(currenTaskDetailsUUID),
-        subView
-    );
-
     goto(url);
 }
 
@@ -112,10 +111,10 @@ export function pushTashUUIDtoPath(uuid: string): void {
 export const currentWorkspaceLabels = writable([]);
 
 export function filterSectionsTasks(
-    sections: any[],
-    labels: any[],
-    assignee: any
-): any[] {
+    sections: WorkspaceBoardSection[],
+    labels: Label[],
+    assignee: WorkspaceUser | "unassigned"
+): WorkspaceBoardSection[] {
     if (labels.length) {
         const labelUUIDs = {};
 
@@ -131,7 +130,6 @@ export function filterSectionsTasks(
             return {
                 ...section,
                 tasks,
-                totalTasksCount: section.tasks.length,
             };
         });
     }
@@ -142,7 +140,7 @@ export function filterSectionsTasks(
                 if (assignee === "unassigned") {
                     return !task.assignee;
                 } else {
-                    return task.assignee?.user.email === assignee.email;
+                    return task.assignee?.user.email === assignee.user.email;
                 }
             });
 
@@ -156,19 +154,24 @@ export function filterSectionsTasks(
     return sections;
 }
 
-export function searchTasks(sections: any[], searchText: string): any[] {
+export function searchTasks(
+    sections: WorkspaceBoardSection[],
+    searchText: string
+): Task[] {
     let tasks = [];
 
     sections.forEach((section) => {
         tasks = tasks.concat(section.tasks);
     });
 
-    const searchEngine = new Fuse(tasks, {
+    const searchEngine: Fuse<Task> = new Fuse(tasks, {
         keys: ["title"],
         threshold: fuseSearchThreshold,
     });
 
-    tasks = searchEngine.search(searchText).map((res) => res.item);
+    tasks = searchEngine
+        .search(searchText)
+        .map((res: Fuse.FuseResult<Task>) => res.item);
 
     return tasks;
 }
@@ -201,7 +204,7 @@ export async function moveTaskAfter(
     }
 }
 
-export async function deleteTask(task, section): Promise<void> {
+export async function deleteTask(task: Task): Promise<void> {
     const modalRes = await getModal("deleteTaskConfirmModal").open();
 
     if (!modalRes) {
@@ -215,21 +218,6 @@ export async function deleteTask(task, section): Promise<void> {
                 input: {
                     uuid: task.uuid,
                 },
-            },
-            update(cache, { data }) {
-                const sectionUUID = section.uuid;
-                const cacheId = `WorkspaceBoardSection:${sectionUUID}`;
-
-                cache.modify({
-                    id: cacheId,
-                    fields: {
-                        tasks(list = []) {
-                            return list.filter(
-                                (it) => it.__ref != `Task:${task.uuid}`
-                            );
-                        },
-                    },
-                });
             },
         });
 

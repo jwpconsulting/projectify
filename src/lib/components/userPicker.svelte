@@ -2,13 +2,14 @@
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
 
     import debounce from "lodash/debounce.js";
-    import { query } from "svelte-apollo";
     import { _ } from "svelte-i18n";
     import { getWorkspace } from "$lib/repository";
     import Loading from "./loading.svelte";
     import UserProfilePicture from "./userProfilePicture.svelte";
-    import { createEventDispatcher, onMount } from "svelte";
+    import { createEventDispatcher } from "svelte";
     import { user } from "$lib/stores/user";
+    import type { Workspace, WorkspaceUser } from "$lib/types";
+    import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
 
     import Fuse from "fuse.js";
     import SearchInput from "./search-input.svelte";
@@ -20,14 +21,13 @@
 
     export let dispatch = createEventDispatcher();
 
-    let res = null;
+    let workspace: Workspace | null = null;
     let loading = true;
-    let workspaceWSStore;
-    let workspace = null;
-    let users = [];
+    let workspaceWSStore: WSSubscriptionStore;
+    let workspace_users: WorkspaceUser[] = [];
 
     async function fetch() {
-        res = await getWorkspace(workspaceUUID);
+        workspace = await getWorkspace(workspaceUUID);
         loading = false;
     }
 
@@ -53,19 +53,18 @@
     }
 
     $: {
-        if (res) {
-            workspace = res;
-            if (workspace["workspace_users"]) {
-                users = workspace["workspace_users"];
+        if (workspace) {
+            if (workspace.workspace_users) {
+                workspace_users = workspace.workspace_users;
             }
         }
     }
 
     let searchText = "";
-    let searchEngine = null;
-    let filteredUsers = [];
+    let searchEngine: Fuse<WorkspaceUser> = null;
+    let filteredWorkspaceUsers: WorkspaceUser[] = [];
     $: {
-        searchEngine = new Fuse(users, {
+        searchEngine = new Fuse(workspace_users, {
             keys: ["user.email", "user.full_name"],
             threshold: fuseSearchThreshold,
         });
@@ -73,20 +72,21 @@
 
     $: {
         if (searchText.length) {
-            filteredUsers = searchEngine
+            filteredWorkspaceUsers = searchEngine
                 .search(searchText)
-                .map((res) => res.item);
+                .map((res: Fuse.FuseResult<WorkspaceUser>) => res.item);
         } else {
-            filteredUsers = users;
+            filteredWorkspaceUsers = workspace_users;
         }
     }
 
-    function selectUser(user) {
+    function selectUser(user: WorkspaceUser | "unassigned") {
         selectedUser = user;
         dispatch("userSelected", { user });
     }
 
-    let searchFieldEl;
+    let searchFieldEl: HTMLElement;
+
     $: {
         if (searchFieldEl) {
             searchFieldEl.focus();
@@ -94,8 +94,10 @@
     }
 
     function selectMe() {
-        // find self in users
-        const self = users.find((el) => el.user.email == $user.email);
+        // find self in workspace_users
+        const self = workspace_users.find(
+            (el) => el.user.email == $user.email
+        );
         selectUser(self);
     }
 
@@ -103,13 +105,22 @@
         selectUser(null);
     }
 
-    function onBlur(event) {
-        if (!event.currentTarget.contains(event.relatedTarget)) {
-            dispatch("blur");
+    function onBlur(event: FocusEvent) {
+        const currentTarget = event.currentTarget;
+        const relatedTarget = event.relatedTarget;
+        if (
+            currentTarget instanceof HTMLElement &&
+            relatedTarget instanceof HTMLElement
+        ) {
+            if (!currentTarget.contains(relatedTarget)) {
+                dispatch("blur");
+            }
+        } else {
+            throw new Error("Expected HTMLElement");
         }
     }
 
-    let rootEl;
+    let rootEl: HTMLElement;
 </script>
 
 <div
@@ -135,20 +146,20 @@
         <ul
             class="menu flex max-h-full flex-col divide-y divide-base-300 overflow-y-auto pt-2"
         >
-            {#each filteredUsers as user}
+            {#each filteredWorkspaceUsers as workspaceUser}
                 <li>
                     <a
                         class:active={selectedUser &&
-                            selectedUser.email == user.user.email}
+                            selectedUser.email == workspaceUser.user.email}
                         class="flex flex-row space-x-4"
                         href="/"
-                        on:click|preventDefault={(e) => {
-                            selectUser(user);
+                        on:click|preventDefault={(_) => {
+                            selectUser(workspaceUser);
                         }}
                     >
                         <UserProfilePicture
                             pictureProps={{
-                                url: user.user.profile_picture,
+                                url: workspaceUser.user.profile_picture,
                                 size: 42,
                             }}
                         />
@@ -156,9 +167,9 @@
                         <div class="flex grow flex-col justify-start">
                             <div class="text-xs">Interface designer</div>
                             <div class="font-bold">
-                                {user.user.full_name
-                                    ? user.user.full_name
-                                    : user.user.email}
+                                {workspaceUser.user.full_name
+                                    ? workspaceUser.user.full_name
+                                    : workspaceUser.user.email}
                             </div>
                         </div>
                     </a>
@@ -171,7 +182,7 @@
                         class:active={selectedUser == "unassigned"}
                         class="flex flex-row space-x-4"
                         href="/"
-                        on:click|preventDefault={(e) => {
+                        on:click|preventDefault={(_) => {
                             selectUser("unassigned");
                         }}
                     >

@@ -4,9 +4,10 @@
     import { _ } from "svelte-i18n";
     import { getModal } from "./dialogModal.svelte";
     import IconCalendar from "./icons/icon-calendar.svelte";
+    import type { Input } from "$lib/types";
 
     export let placeholder = $_("select-date");
-    export let input;
+    export let input: Input;
     export let isEditing = false;
 
     const dispatch = createEventDispatcher();

@@ -1,7 +1,8 @@
 <script lang="ts">
     import { getColorFromInx } from "$lib/utils/colors";
     import IconClose from "../icons/icon-close.svelte";
-    export let label;
+    import type { Label } from "$lib/types";
+    export let label: Label;
     export let active = false;
     export let deleteIcon = false;
     export let size: "sm" | "md" = "md";

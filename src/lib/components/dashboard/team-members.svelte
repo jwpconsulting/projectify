@@ -3,12 +3,12 @@
         Mutation_AddUserToWorkspace,
         Mutation_RemoveUserFromWorkspace,
         Mutation_UpdateWorkspaceUser,
-        Query_Customer,
     } from "$lib/graphql/operations";
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
+    import { getWorkspaceCustomer, getWorkspace } from "$lib/repository";
+    import type { Customer, Workspace, WorkspaceUser } from "$lib/types";
 
     import debounce from "lodash/debounce.js";
-    import { query } from "svelte-apollo";
     import { _ } from "svelte-i18n";
     import Loading from "../loading.svelte";
     import ProfilePicture from "../profilePicture.svelte";
@@ -26,27 +26,32 @@
     import { workspaceUserRoles } from "$lib/types/workspaceUserRole";
     import IconEdit from "../icons/icon-edit.svelte";
     import IconTrash from "../icons/icon-trash.svelte";
-    import { validate } from "graphql";
     import { goto } from "$app/navigation";
+    import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
 
     export let workspaceUUID = null;
 
-    let res = null;
-    let workspaceWSStore;
-    let workspace = null;
-    let customerByWorkspace = null;
-    let users = [];
+    let loading = true;
+    let customer: Customer | null = null;
+    let workspaceWSStore: WSSubscriptionStore;
+    let workspace: Workspace | null = null;
+    let workspaceUsers: WorkspaceUser[] | null = null;
+
+    async function fetch() {
+        [customer, workspace] = await Promise.all([
+            getWorkspaceCustomer(workspaceUUID),
+            getWorkspace(workspaceUUID),
+        ]);
+        loading = false;
+    }
 
     const refetch = debounce(() => {
-        res.refetch();
+        fetch();
     }, 100);
 
     $: {
         if (workspaceUUID) {
-            res = query(Query_Customer, {
-                variables: { uuid: workspaceUUID },
-                fetchPolicy: "network-only",
-            });
+            fetch();
 
             workspaceWSStore = getSubscriptionForCollection(
                 "workspace",
@@ -62,13 +67,8 @@
     }
 
     $: {
-        if (res && $res.data) {
-            workspace = $res.data["workspace"];
-            if (workspace["users"]) {
-                users = workspace["users"];
-            }
-
-            customerByWorkspace = $res.data["customerByWorkspace"];
+        if (!loading) {
+            workspaceUsers = workspace.workspace_users;
         }
     }
 
@@ -98,7 +98,7 @@
             console.error(error);
         }
     }
-    async function onRemoveUser(user) {
+    async function onRemoveUser(workspaceUser: WorkspaceUser) {
         let modalRes = await getModal("removeTeamMemberFromWorkspace").open();
 
         if (!modalRes) {
@@ -111,7 +111,7 @@
                 variables: {
                     input: {
                         uuid: workspaceUUID,
-                        email: user.email,
+                        email: workspaceUser.user.email,
                     },
                 },
             });
@@ -120,8 +120,8 @@
         }
     }
 
-    async function onEditUser(user) {
-        let modalRes = await getModal("editTeamMember").open(user);
+    async function onEditUser(workspaceUser: WorkspaceUser) {
+        let modalRes = await getModal("editTeamMember").open(workspaceUser);
 
         if (!modalRes) {
             return;
@@ -135,7 +135,7 @@
                         workspaceUuid: workspaceUUID,
                         email: modalRes.outputs.email,
                         role: modalRes.outputs.role,
-                        jobTitle: modalRes.outputs.jobTitle || "",
+                        jobTitle: modalRes.outputs.job_title || "",
                     },
                 },
             });
@@ -145,35 +145,36 @@
     }
 
     let roleFilter = null;
-    let serachFieldEl;
+    let searchFieldEl: HTMLElement;
     let searchText = "";
-    let searchEngine = null;
-    let filteredUsers;
+    let searchEngine: Fuse<WorkspaceUser> = null;
+    let filteredWorkspaceUsers: WorkspaceUser[] | null;
 
     $: {
-        filteredUsers = users || [];
+        filteredWorkspaceUsers = workspaceUsers || [];
 
         if (roleFilter) {
-            console.log(filteredUsers);
+            console.log(filteredWorkspaceUsers);
 
-            filteredUsers = filteredUsers.filter(
+            filteredWorkspaceUsers = filteredWorkspaceUsers.filter(
                 (it) => it.role == roleFilter
             );
         }
 
-        searchEngine = new Fuse(filteredUsers, {
-            keys: ["email", "fullName"],
+        searchEngine = new Fuse(filteredWorkspaceUsers, {
+            keys: ["user.email", "user.full_name"],
             threshold: fuseSearchThreshold,
         });
 
         if (searchText.length) {
-            filteredUsers = searchEngine
-                .search(searchText)
-                .map((res) => res.item);
+            const result = searchEngine.search(searchText);
+            filteredWorkspaceUsers = result.map(
+                (res: Fuse.FuseResult<WorkspaceUser>) => res.item
+            );
         }
     }
 
-    let filterRoleButton;
+    let filterRoleButton: HTMLElement;
     function openRolePicker() {
         let dropDown = getDropDown();
 
@@ -196,11 +197,9 @@
 
         dropDown.open(dropDownItems, filterRoleButton);
     }
-
-    $: ownerRoleEmail = users?.find((it) => it.role == "OWNER")?.email || null;
 </script>
 
-{#if $res.loading}
+{#if loading}
     <div class="flex min-h-[200px] items-center justify-center">
         <Loading />
     </div>
@@ -208,7 +207,7 @@
     <div class="flex items-center justify-center gap-3 py-4">
         <SearchInput
             placeholder={"Search for a team member"}
-            bind:inputElement={serachFieldEl}
+            bind:inputElement={searchFieldEl}
             bind:searchText
         />
         <DropdownButton
@@ -228,13 +227,14 @@
                 </tr>
             </thead>
             <tbody>
-                {#each filteredUsers as user}
+                {#each filteredWorkspaceUsers as workspaceUser}
                     <tr class="border-t border-base-300">
                         <td class="flex gap-4 p-2">
                             <div class="flex p-2">
                                 <UserProfilePicture
                                     pictureProps={{
-                                        url: user.profilePicture,
+                                        url: workspaceUser.user
+                                            .profile_picture,
                                         size: 42,
                                     }}
                                 />
@@ -243,25 +243,28 @@
                                 class="flex grow flex-col justify-center gap-2"
                             >
                                 <div class="font-bold">
-                                    {user.fullName
-                                        ? user.fullName
-                                        : user.email}
+                                    {workspaceUser.user.full_name
+                                        ? workspaceUser.user.full_name
+                                        : workspaceUser.user.email}
                                 </div>
-                                {#if user.jobTitle}
-                                    <div class="text-xs">{user.jobTitle}</div>
+                                {#if workspaceUser.job_title}
+                                    <div class="text-xs">
+                                        {workspaceUser.job_title}
+                                    </div>
                                 {/if}
                             </div>
                         </td>
-                        <td class="p-2">{$_(user.role)}</td>
+                        <td class="p-2">{$_(workspaceUser.role)}</td>
                         <td class="">
                             <div class="flex items-end justify-end gap-2">
                                 <button
-                                    on:click={() => onEditUser(user)}
+                                    on:click={() => onEditUser(workspaceUser)}
                                     class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
                                     ><IconEdit /></button
                                 >
                                 <button
-                                    on:click={() => onRemoveUser(user)}
+                                    on:click={() =>
+                                        onRemoveUser(workspaceUser)}
                                     class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
                                     ><IconTrash /></button
                                 >
@@ -289,7 +292,7 @@
 {/if}
 
 <DialogModal id="inviteTeamMemberToWorkspace">
-    {#if customerByWorkspace?.seatsRemaining}
+    {#if customer?.seats_remaining}
         <ConfirmModalContent
             title={$_("invite-team-member")}
             confirmLabel={$_("send")}
@@ -306,7 +309,7 @@
         >
             <div class="text-center text-xs">
                 {$_("you-have-seats-seats-left-in-your-plan", {
-                    values: { seats: customerByWorkspace?.seatsRemaining },
+                    values: { seats: customer.seats_remaining },
                 })}
             </div>
         </ConfirmModalContent>
@@ -350,19 +353,19 @@
         confirmLabel={$_("Save")}
         inputs={[
             {
-                name: "fullName",
+                name: "user.full_name",
                 label: $_("name-0"),
                 readonly: true,
                 validation: { required: false },
             },
             {
-                name: "email",
+                name: "user.email",
                 label: $_("email-0"),
                 readonly: true,
                 validation: { required: true },
             },
             {
-                name: "jobTitle",
+                name: "job_title",
                 label: $_("job-title"),
                 validation: { required: false },
             },
@@ -377,22 +380,6 @@
                 })),
                 validation: {
                     required: true,
-                    validator: (value, data) => {
-                        console.log(value, ownerRoleEmail, data.email);
-
-                        if (
-                            value == "OWNER" &&
-                            ownerRoleEmail &&
-                            ownerRoleEmail != data.email
-                        ) {
-                            return {
-                                error: true,
-                                message: $_(
-                                    "you-can-only-assign-one-owner-per-workspace-please-choose-another-role"
-                                ),
-                            };
-                        }
-                    },
                 },
             },
         ]}

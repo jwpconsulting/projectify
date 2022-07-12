@@ -5,8 +5,9 @@
     import { dateStringToLocal } from "$lib/utils/date";
     import UserProfilePicture from "../userProfilePicture.svelte";
     import { afterUpdate } from "svelte";
+    import type { Task } from "$lib/types";
 
-    export let task;
+    export let task: Task;
 
     let chatMessageText = "";
 
@@ -36,7 +37,7 @@
     let messagesView: HTMLDivElement;
 
     afterUpdate(() => {
-        if (messagesView && task?.chatMessages?.length > 0) {
+        if (messagesView && task?.chat_messages?.length > 0) {
             messagesView.scrollTo(0, messagesView.scrollHeight);
         }
     });
@@ -49,13 +50,13 @@
         bind:this={messagesView}
         class="flex grow flex-col divide-y divide-base-300 overflow-y-auto px-4"
     >
-        {#each task?.chatMessages || [] as message}
+        {#each task?.chat_messages || [] as message}
             <div class="flex space-x-4  py-6">
                 <div class="shrink-0">
                     {#if message.author}
                         <UserProfilePicture
                             pictureProps={{
-                                url: message.author.profilePicture,
+                                url: message.author.user.profile_picture,
                                 size: 32,
                             }}
                         />
@@ -65,8 +66,8 @@
                     <div class="flex items-center space-x-2 text-xs">
                         {#if message.author}
                             <div class="grow font-bold">
-                                {message.author.fullName ||
-                                    message.author.email}
+                                {message.author.user.full_name ||
+                                    message.author.user.email}
                             </div>
                         {/if}
                         <div class="font-bold opacity-50">

@@ -5,7 +5,6 @@
     } from "$lib/stores/dashboard";
 
     import { _ } from "svelte-i18n";
-    import { writable } from "svelte/store";
     import IconCheckCircle from "../icons/icon-check-circle.svelte";
     import IconChevronDown from "../icons/icon-chevron-down.svelte";
 
@@ -15,14 +14,15 @@
     import UserPicker from "../userPicker.svelte";
     import UserProfilePicture from "../userProfilePicture.svelte";
     import LabelList from "./labelList.svelte";
+    import type { WorkspaceUser, Label } from "$lib/types";
 
     export let searchText = "";
 
     export let filtersOpen = false;
 
-    export let filterLabels = [];
+    export let filterLabels: Label[] = [];
 
-    export let filterUser = null;
+    export let filterUser: WorkspaceUser | "unassigned" = null;
 
     let fitersContentHeight = 0;
 
@@ -38,7 +38,7 @@
         filtersOpen = !filtersOpen;
     }
 
-    let userPickerEl;
+    let userPickerEl: HTMLElement;
     let userPickerOpen = false;
 
     function onUserSelected({ detail: { user } }) {
@@ -48,6 +48,17 @@
             filterUser = null;
         } else {
             filterUser = user;
+        }
+    }
+
+    function onBlur(event: FocusEvent) {
+        const relatedTarget = event.relatedTarget;
+        if (relatedTarget instanceof HTMLElement) {
+            if (relatedTarget && !userPickerEl.contains(relatedTarget)) {
+                userPickerOpen = false;
+            }
+        } else {
+            throw new Error("Expected HTMLElement");
         }
     }
 </script>
@@ -82,14 +93,17 @@
                 class="btn-filter btn btn-ghost"
                 on:click={() => (userPickerOpen = !userPickerOpen)}
             >
-                {#if filterUser?.email}
+                {#if filterUser !== "unassigned" && filterUser !== null}
                     <UserProfilePicture
                         pictureProps={{
                             size: 16,
-                            url: filterUser.profilePicture,
+                            url: filterUser.user.profile_picture,
                         }}
                     />
-                    <span>{filterUser.fullName || filterUser.email}</span>
+                    <span
+                        >{filterUser.user?.full_name ||
+                            filterUser.user?.email}</span
+                    >
                 {:else if filterUser === "unassigned"}
                     <span>{$_("assigned-to-nobody")}</span>
                 {:else}
@@ -107,14 +121,7 @@
             {#if userPickerOpen}
                 <div
                     bind:this={userPickerEl}
-                    on:blur|capture={(e) => {
-                        if (
-                            e.relatedTarget &&
-                            !userPickerEl.contains(e.relatedTarget)
-                        ) {
-                            userPickerOpen = false;
-                        }
-                    }}
+                    on:blur|capture={onBlur}
                     tabindex="0"
                     class="absolute top-11 right-0 z-10 w-64 max-w-md"
                 >

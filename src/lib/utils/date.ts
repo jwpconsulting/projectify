@@ -26,7 +26,7 @@ export const weekDays = [
 
 export function dateStringToLocal(dateStr: string, time = false): string {
     const date = new Date(dateStr);
-    let lang;
+    let lang: string;
 
     if (browser) {
         lang = navigator.language;

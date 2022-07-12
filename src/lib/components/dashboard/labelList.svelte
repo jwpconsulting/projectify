@@ -2,13 +2,14 @@
     import { createEventDispatcher } from "svelte";
     import LabelPill from "./labelPill.svelte";
     import Fuse from "fuse.js";
+    import type { Label } from "$lib/types";
 
-    export let labels;
+    export let labels: Label[];
     export let editable = false;
     export let searchText = "";
     export let size: "sm" | "md" = "md";
 
-    let searchEngine = null;
+    let searchEngine: Fuse<Label> = null;
     let filteredLabels = [];
     $: {
         searchEngine = new Fuse(labels, {
@@ -20,7 +21,7 @@
         if (searchText.length) {
             filteredLabels = searchEngine
                 .search(searchText)
-                .map((res) => res.item);
+                .map((res: Fuse.FuseResult<Label>) => res.item);
         } else {
             filteredLabels = labels;
         }
@@ -31,7 +32,7 @@
     export let selectedLabels = [];
     $: selectedLabelsInx = selectedLabels && {};
 
-    function onLabelClick(label) {
+    function onLabelClick(label: Label) {
         if (!editable) {
             return;
         }

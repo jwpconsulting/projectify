@@ -19,7 +19,6 @@
     import { client } from "$lib/graphql/client";
     import {
         Mutation_DeleteWorkspaceBoardSection,
-        Mutation_MoveTask,
         Mutation_UpdateWorkspaceBoardSection,
     } from "$lib/graphql/operations";
     import ToolBar from "./toolBar.svelte";
@@ -44,9 +43,9 @@
     import { createEventDispatcher } from "svelte";
     import UserPicker from "../userPicker.svelte";
     import LabelPicker from "./labelPicker.svelte";
+    import type { WorkspaceBoardSection, WorkspaceUser } from "$lib/types";
 
-    export let boardUUID;
-    export let section;
+    export let section: WorkspaceBoardSection;
 
     export let isFirst = null;
     export let isLast = null;
@@ -79,7 +78,7 @@
         }
 
         try {
-            let mRes = await client.mutate({
+            await client.mutate({
                 mutation: Mutation_UpdateWorkspaceBoardSection,
                 variables: {
                     input: {
@@ -102,26 +101,12 @@
         }
 
         try {
-            let mRes = await client.mutate({
+            await client.mutate({
                 mutation: Mutation_DeleteWorkspaceBoardSection,
                 variables: {
                     input: {
                         uuid: section.uuid,
                     },
-                },
-                update(cache, { data }) {
-                    cache.modify({
-                        id: `WorkspaceBoard:${boardUUID}`,
-                        fields: {
-                            sections(currentSections = []) {
-                                return currentSections.filter(
-                                    (it) =>
-                                        it.__ref !=
-                                        `WorkspaceBoardSection:${section.uuid}`
-                                );
-                            },
-                        },
-                    });
                 },
             });
         } catch (error) {
@@ -144,7 +129,6 @@
         let task = section.tasks[detail.oldIndex];
         const fromSectionUUID = detail.from.getAttribute("data-uuid");
         const toSectionUUID = detail.to.getAttribute("data-uuid");
-        const order = detail.newIndex;
 
         if (
             task &&
@@ -155,24 +139,7 @@
         }
     }
 
-    async function moveTask(taskUuid, workspaceBoardSectionUuid, order) {
-        try {
-            let mRes = await client.mutate({
-                mutation: Mutation_MoveTask,
-                variables: {
-                    input: {
-                        taskUuid,
-                        workspaceBoardSectionUuid,
-                        order,
-                    },
-                },
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    function onHandlerOver(e) {
+    function onHandlerOver(_e: Event) {
         if (isDragging) {
             open = true;
             firstOpen = true;
@@ -269,14 +236,14 @@
                 label: $_("delete-task"),
                 icon: IconTrash,
                 onClick: () => {
-                    deleteTask(task, section);
+                    deleteTask(task);
                 },
             },
         ];
         getDropDown().open(dropDownItems, target);
     }
 
-    let dropDownMenuBtnRef;
+    let dropDownMenuBtnRef: HTMLElement;
 
     function openDropDownMenu() {
         let dropDownItems: DropDownMenuItem[] = [
@@ -338,7 +305,7 @@
         dropDown.openComponent(UserPicker, target, {
             workspaceUUID: $currentWorkspaceUUID,
             selectedUser: task.assignee,
-            dispatch: async (name, data) => {
+            dispatch: async (name: string, data: WorkspaceUser) => {
                 if (name == "userSelected") {
                     await assingUserToTask(data.user.email, task.uuid);
                 }
@@ -351,7 +318,7 @@
         let dropDown = getDropDown();
         dropDown.openComponent(LabelPicker, target, {
             task,
-            dispatch: async (name, data) => {
+            dispatch: async (_name: string, _data: any) => {
                 dropDown.close();
             },
         });
@@ -394,8 +361,7 @@
                         label: $_("Delete"),
                         icon: IconTrash,
                         onClick: onDelete,
-                        disabled:
-                            section.totalTasksCount || section.tasks.length,
+                        disabled: section.tasks.length > 0,
                         tooltip: section.tasks.length
                             ? $_("remove-section-tooltip-message")
                             : "",

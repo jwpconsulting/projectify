@@ -1,5 +1,4 @@
 <script lang="ts">
-    import IconUserProfile from "./icons/icon-user-profile.svelte";
     import { createEventDispatcher } from "svelte";
 
     import IconPhotocamera from "./icons/icon-photocamera.svelte";
@@ -16,18 +15,28 @@
     function onSelectFileClick() {
         inputFileRef.click();
     }
-    function onFileSelected(event) {
-        const file = event.target.files[0];
-        if (!file) {
-            return;
-        }
+    function onFileSelected(event: Event) {
+        const eventTarget = event.target;
+        if (eventTarget instanceof HTMLInputElement) {
+            const file = eventTarget.files[0];
+            if (!file) {
+                return;
+            }
 
-        const reader = new FileReader();
-        reader.addEventListener("load", (event) => {
-            src = event.target.result as string;
-            dispatch("fileSelected", { src, file });
-        });
-        reader.readAsDataURL(file);
+            const reader = new FileReader();
+            reader.addEventListener("load", (event: ProgressEvent) => {
+                const eventTarget = event.target;
+                if (eventTarget instanceof FileReader) {
+                    src = eventTarget.result as string;
+                    dispatch("fileSelected", { src, file });
+                } else {
+                    throw new Error("Expected FileReader");
+                }
+            });
+            reader.readAsDataURL(file);
+        } else {
+            throw new Error("Expected HTMLInputElement");
+        }
     }
 </script>
 

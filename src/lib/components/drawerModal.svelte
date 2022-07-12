@@ -4,7 +4,7 @@
     import { setContext } from "svelte";
 
     export let open = false;
-    let contentWidth;
+    let contentWidth: number;
 
     setContext("modal", {
         close: () => {

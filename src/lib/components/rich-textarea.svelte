@@ -4,16 +4,16 @@
     export let modified = false;
     let editMode = false;
     import { tick } from "svelte";
-    let textAreaEl;
+    let textAreaEl: HTMLElement;
 
-    function urlify(text) {
+    function urlify(text: string) {
         var urlRegex = /(https?:\/\/[^\s]+)/g;
         return text.replace(urlRegex, function (url) {
             return '<a href="' + url + '" target="_blank">' + url + "</a>";
         });
     }
 
-    function transform(text) {
+    function transform(text: string) {
         text = urlify(text);
         text = text.replace(/\n/g, "<br>");
         return text;

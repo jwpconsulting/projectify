@@ -1,15 +1,13 @@
 <script lang="ts">
     import { dashboardSectionsLayout } from "$lib/stores/dashboard-ui";
 
-    import DropDownMenu from "../dropDownMenu.svelte";
-    import IconViewGrid from "../icons/icon-view-grid.svelte";
     import IconViewList from "../icons/icon-view-list.svelte";
     import IconViewBoards from "../icons/icon-view-boards.svelte";
     import { _ } from "svelte-i18n";
     import { getDropDown } from "../globalDropDown.svelte";
     import type { DropDownMenuItem } from "../globalDropDown.svelte";
 
-    function getLayoutIconFor(layout) {
+    function getLayoutIconFor(layout: string) {
         switch (layout) {
             case "columns":
                 return IconViewBoards;

@@ -1,6 +1,5 @@
 <script lang="ts">
     import { Mutation_AddWorkspaceBoard } from "$lib/graphql/operations";
-    import { query } from "svelte-apollo";
     import { client } from "$lib/graphql/client";
     import { getWorkspace } from "$lib/repository";
 
@@ -13,11 +12,10 @@
     import { _ } from "svelte-i18n";
     import { goto } from "$app/navigation";
 
-    export let selectedWorkspaceUUID;
-    export let selectedBoardUUID;
+    export let selectedWorkspaceUUID: string;
+    export let selectedBoardUUID: string;
 
     let res = null;
-    let loading = true;
     let boards = [];
 
     async function fetchWorkspace() {

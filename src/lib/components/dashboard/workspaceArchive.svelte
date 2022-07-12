@@ -1,11 +1,10 @@
 <script lang="ts">
     import { page } from "$app/stores";
+    import { getArchivedWorkspaceBoards } from "$lib/repository";
     import {
         Mutation_ArchiveWorkspaceBoard,
         Mutation_DeleteWorkspaceBoard,
-        Query_ArchivedWorkspaceBoards,
     } from "$lib/graphql/operations";
-    import { query } from "svelte-apollo";
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
     import debounce from "lodash/debounce.js";
     import { dateStringToLocal } from "$lib/utils/date";
@@ -14,23 +13,28 @@
     import { _ } from "svelte-i18n";
     import { client } from "$lib/graphql/client";
     import Loading from "../loading.svelte";
+    import type { WorkspaceBoard } from "$lib/types";
+    import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
 
     $: workspaceUUID = $page.params["workspaceUUID"];
 
     let res = null;
-    let workspaceWSStore;
-    let workspace = null;
+    let loading = true;
+    let workspaceWSStore: WSSubscriptionStore;
     let archivedBoards = [];
 
+    async function fetch() {
+        res = await getArchivedWorkspaceBoards(workspaceUUID);
+        loading = false;
+    }
+
     const refetch = debounce(() => {
-        res.refetch();
+        fetch();
     }, 100);
+
     $: {
         if (workspaceUUID) {
-            res = query(Query_ArchivedWorkspaceBoards, {
-                variables: { uuid: workspaceUUID },
-                fetchPolicy: "network-only",
-            });
+            fetch();
 
             workspaceWSStore = getSubscriptionForCollection(
                 "workspace",
@@ -46,17 +50,14 @@
     }
 
     $: {
-        if (res && $res.data) {
-            workspace = $res.data["workspace"];
-            if (workspace["archivedBoards"]) {
-                archivedBoards = workspace["archivedBoards"];
-            }
+        if (res) {
+            archivedBoards = res;
         }
     }
 
     let unarchivingItems = {};
 
-    async function onUnarchiveItem(item) {
+    async function onUnarchiveItem(item: WorkspaceBoard) {
         let uuid = item.uuid;
 
         unarchivingItems[uuid] = true;
@@ -69,19 +70,6 @@
                         archived: false,
                     },
                 },
-                update(cache, { data }) {
-                    cache.modify({
-                        id: `Workspace:${workspaceUUID}`,
-                        fields: {
-                            archivedBoards(list = []) {
-                                return list.filter(
-                                    (it) =>
-                                        it.__ref != `WorkspaceBoard:${uuid}`
-                                );
-                            },
-                        },
-                    });
-                },
             });
         } catch (error) {
             console.error(error);
@@ -89,8 +77,7 @@
         unarchivingItems[uuid] = false;
     }
 
-    async function onDeleteItem(item) {
-        let uuid = item.uuid;
+    async function onDeleteItem(item: WorkspaceBoard) {
         let modalRes = await getModal("deleteArchivedBoard").open();
 
         if (!modalRes) {
@@ -112,7 +99,7 @@
     }
 </script>
 
-{#if $res.loading}
+{#if loading}
     <div class="flex min-h-[200px] items-center justify-center">
         <Loading />
     </div>

@@ -9,7 +9,7 @@
 
     let colors = Array(paletteSize)
         .fill({})
-        .map((it, i) => {
+        .map((_, i) => {
             return getColorFromInx(i);
         });
 

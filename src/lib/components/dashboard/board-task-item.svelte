@@ -1,9 +1,6 @@
 <script lang="ts">
-    import { getColorFromInx } from "$lib/utils/colors";
-    import { dateStringToLocal } from "$lib/utils/date";
     import { createEventDispatcher } from "svelte";
     import { _ } from "svelte-i18n";
-    import { assign } from "svelte/internal";
     import IconChevronDown from "../icons/icon-chevron-down.svelte";
     import IconChevronUp from "../icons/icon-chevron-up.svelte";
     import IconMenu from "../icons/icon-menu.svelte";
@@ -16,13 +13,13 @@
     export let task = null;
     export let showHoverRing = true;
     const dispatch = createEventDispatcher();
-    let dropDownMenuBtnRef;
+    let dropDownMenuBtnRef: HTMLElement;
 
     export let isFirst = false;
     export let isLast = false;
 
-    let userPickerBtnRef;
-    let labelPickerBtnRef;
+    let userPickerBtnRef: HTMLElement;
+    let labelPickerBtnRef: HTMLElement;
 
     function moveUp() {
         dispatch("moveUp", { task });

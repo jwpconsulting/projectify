@@ -1,21 +1,28 @@
 <script lang="ts">
-    import { query } from "svelte-apollo";
-    import { Query_DashboardWorkspacesSideNav } from "$lib/graphql/operations";
+    import { getWorkspaces } from "$lib/repository";
     import IconPlus from "../icons/icon-plus.svelte";
     import { gotoDashboard, getDashboardURL } from "$lib/stores/dashboard";
     import ProfilePicture from "../profilePicture.svelte";
     import { goto } from "$app/navigation";
+    import type { Workspace } from "$lib/types";
+    import Loading from "$lib/components/loading.svelte";
 
-    export let selectedWorkspaceUUID;
+    export let selectedWorkspaceUUID: string;
 
-    let res = query(Query_DashboardWorkspacesSideNav);
-    let workspaces = [];
+    let workspaces: Workspace[] | null;
+    let loading = true;
 
-    export let selectedWorkspace;
+    export let selectedWorkspace: Workspace | null;
+
+    async function fetch() {
+        workspaces = await getWorkspaces();
+        loading = false;
+    }
+
+    fetch();
 
     $: {
-        if ($res.data) {
-            workspaces = $res.data["workspaces"];
+        if (workspaces) {
             if (!selectedWorkspaceUUID && workspaces.length) {
                 gotoDashboard(workspaces[0]["uuid"]);
             } else {
@@ -34,7 +41,9 @@
 <nav
     class="sticky top-0 flex h-full max-h-full shrink-0 flex-col items-center overflow-y-auto bg-base-100 p-2"
 >
-    {#if workspaces}
+    {#if loading}
+        <Loading />
+    {:else}
         {#each workspaces as workspace (workspace.uuid)}
             <a
                 class="btn btn-outline btn-primary btn-square overflow-hidden"

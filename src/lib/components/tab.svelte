@@ -1,7 +1,7 @@
 <script lang="ts">
     import { getContext } from "svelte";
 
-    export let id;
+    export let id: string;
     let { activeTabId } = getContext("tabs");
 </script>
 

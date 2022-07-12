@@ -1,43 +1,18 @@
 <script lang="ts">
-    import { offsetLimitPagination } from "@apollo/client/utilities";
-
+    import type { Input } from "$lib/types";
     import { getContext } from "svelte";
     import { _ } from "svelte-i18n";
     import ColorPicker from "./colorPicker.svelte";
     import InputDatePicker from "./inputDatePicker.svelte";
+    import lodash from "lodash";
 
-    export let title;
+    export let title: string;
     export let subtitle = null;
     export let cancelLabel = $_("Cancel");
     export let confirmLabel = $_("Confirm");
     export let confirmColor = "primary";
 
-    export let inputs: {
-        name?: string;
-        label?: string;
-        type?: string;
-        value?: any;
-        error?: string;
-        placeholder?: string;
-        readonly?: boolean;
-        selectOptions?: { label: string; value: any }[];
-        validation?: {
-            required?: boolean;
-            validator?: (
-                value: any,
-                data: any
-            ) => {
-                error?: boolean;
-                message?: string;
-            };
-            // Todo:
-            // min?: number;
-            // max?: number;
-            // minLength?: number;
-            // maxLength?: number;
-            // pattern?: string;
-        };
-    }[] = [];
+    export let inputs: Input[] = [];
     let isEditing = false;
 
     const modal = getContext<any>("modal");
@@ -46,7 +21,7 @@
     $: {
         if (data && !isEditing) {
             inputs.forEach((input) => {
-                input.value = data[input.name];
+                input.value = lodash.get(data, input.name);
             });
         }
     }
@@ -92,7 +67,7 @@
         isEditing = false;
     }
 
-    function placeholderFor(input) {
+    function placeholderFor(input: Input) {
         if (input.placeholder) {
             return input.placeholder;
         }
@@ -110,7 +85,7 @@
             <slot />
         </div>
     </div>
-    {#each inputs as input, inx}
+    {#each inputs as input}
         <div class="form-control w-full">
             <label for={input.name} class="label label-text uppercase"
                 >{input.label}</label

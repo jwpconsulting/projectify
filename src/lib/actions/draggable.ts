@@ -18,9 +18,10 @@ export function draggable(
         ...params,
     };
 
-    let x;
-    let y;
-    let startX, startY;
+    let x: number;
+    let y: number;
+    let startX: number;
+    let startY: number;
     let dragOverIt: HTMLElement = null;
 
     let dragStarted = false;
@@ -63,9 +64,9 @@ export function draggable(
 
     handle.addEventListener("click", handleClick);
 
-    let zIndex;
+    let zIndex: string;
 
-    function handleMouseDown(event) {
+    function handleMouseDown(event: MouseEvent) {
         dragStarted = false;
         x = event.clientX;
         y = event.clientY;
@@ -75,9 +76,10 @@ export function draggable(
         window.addEventListener("mouseup", handleMouseUp);
     }
 
-    let sDx, sDy;
+    let sDx: number;
+    let sDy: number;
 
-    function handleMouseMove(event) {
+    function handleMouseMove(event: MouseEvent) {
         const dx = event.clientX - x;
         const dy = event.clientY - y;
 
@@ -148,7 +150,7 @@ export function draggable(
         }
     }
 
-    async function handleMouseUp(e) {
+    async function handleMouseUp(_: MouseEvent) {
         window.removeEventListener("mousemove", handleMouseMove);
         window.removeEventListener("mouseup", handleMouseUp);
 
@@ -213,7 +215,7 @@ export function draggable(
         curNode.style.zIndex = zIndex;
     }
 
-    function handleClick(e) {
+    function handleClick(_: MouseEvent) {
         if (!dragStarted) {
             handle.dispatchEvent(new CustomEvent("dragClick"));
         }

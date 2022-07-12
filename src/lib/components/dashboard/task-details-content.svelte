@@ -10,10 +10,11 @@
     import InputDatePicker from "../inputDatePicker.svelte";
     import IconCheckCircle from "../icons/icon-check-circle.svelte";
     import RichTextarea from "../rich-textarea.svelte";
+    import type { Task, SubTask, Label } from "$lib/types";
 
-    export let task;
-    export let subTasks;
-    export let labels;
+    export let task: Task;
+    export let subTasks: SubTask[];
+    export let labels: Label[];
     export let taskModified = false;
 
     let labelPickerOpen = false;

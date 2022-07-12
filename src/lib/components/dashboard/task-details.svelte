@@ -9,19 +9,15 @@
     } from "$lib/stores/dashboard";
 
     import {
-        Query_DashboardTaskDetails,
         Mutation_AddTask,
         Mutation_UpdateTask,
-        Mutation_AssignTask,
     } from "$lib/graphql/operations";
-    import { query } from "svelte-apollo";
     import { client } from "$lib/graphql/client";
     import { _ } from "svelte-i18n";
+    import { getTask } from "$lib/repository";
 
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
     import debounce from "lodash/debounce.js";
-    import type { ReadableQuery } from "svelte-apollo";
-    import { onDestroy } from "svelte";
     import ToolBar from "./toolBar.svelte";
     import IconTrash from "../icons/icon-trash.svelte";
     import UserPicker from "../userPicker.svelte";
@@ -37,11 +33,13 @@
     import { writable } from "svelte/store";
     import IconClose from "../icons/icon-close.svelte";
     import TaskDetailsBreadcrumbs from "./task-details-breadcrumbs.svelte";
+    import type { Task, SubTask, Label } from "$lib/types";
 
-    let res: ReadableQuery<any> = null;
-    let task = null;
-    let subTasks = [];
-    let labels = [];
+    let task: Task = null;
+    let loading = true;
+    let failed = false;
+    let subTasks: SubTask[] = [];
+    let labels: Label[] = [];
     let taskModified = false;
     let isSaving = false;
 
@@ -50,32 +48,45 @@
     $: uuids = $page.params["uuids"].split("/");
     $: activeTabId = writable(uuids[3] || "details");
 
+    async function fetch() {
+        try {
+            task = await getTask($currenTaskDetailsUUID);
+        } catch {
+            failed = true;
+        } finally {
+            loading = false;
+        }
+    }
+
     function reset() {
-        res = null;
         task = {
             title: "",
             description: "",
+            _order: 0,
+            uuid: "",
+            number: 0,
+            labels: [],
+            created: "",
+            modified: "",
         };
         subTasks = [];
     }
 
     const refetch = debounce(() => {
-        res?.refetch();
+        fetch();
     }, 100);
 
     $: {
         if ($currenTaskDetailsUUID) {
-            res = query(Query_DashboardTaskDetails, {
-                variables: { uuid: $currenTaskDetailsUUID },
-                fetchPolicy: "network-only",
-            });
+            fetch();
         } else {
             reset();
         }
     }
 
     $: {
-        if (res && !$res.loading && $res.error) {
+        if (failed) {
+            // TODO
             goto("/error/task-not-found");
         }
     }
@@ -89,33 +100,6 @@
         }
     }
 
-    function setData(data) {
-        if (!taskModified) {
-            task = { ...data.task };
-        }
-    }
-
-    let unsubscriber = null;
-    $: {
-        if (res && !$res.loading && !$res.error) {
-            if (unsubscriber) {
-                unsubscriber();
-            }
-            unsubscriber = res.subscribe(({ data }) => {
-                if (!data) {
-                    return;
-                }
-                setData(data);
-            });
-        }
-    }
-
-    onDestroy(() => {
-        if (unsubscriber) {
-            unsubscriber();
-        }
-    });
-
     $: {
         if ($taskWSStrore) {
             refetch();
@@ -123,15 +107,9 @@
     }
 
     $: {
-        if (res && $res.data) {
-            subTasks = $res.data.task.subTasks.map((t) => {
-                return {
-                    ...t,
-                    done: Boolean(t.done),
-                };
-            });
-
-            labels = $res.data.task.labels;
+        if (task) {
+            subTasks = task.sub_tasks;
+            labels = task.labels;
         }
     }
 
@@ -150,7 +128,7 @@
 
         if (itsNew) {
             let otherData: any = {};
-            let assignee = task?.assignee?.email || null;
+            let assignee = task?.assignee?.user.email || null;
 
             if (assignee) {
                 otherData.assignee = assignee;
@@ -186,7 +164,7 @@
             }
         } else {
             try {
-                let mRes = await client.mutate({
+                await client.mutate({
                     mutation: Mutation_UpdateTask,
                     variables: {
                         input: {
@@ -207,14 +185,14 @@
     }
 
     async function onDelete() {
-        deleteTask(task, task.workspaceBoardSection.uuid);
+        deleteTask(task);
     }
 
     let userPickerOpen = false;
     let userPicked = false;
     function onUserSelected({ detail: { user } }) {
         userPickerOpen = false;
-        if (user?.email == task?.assignee?.email) {
+        if (user?.email == task?.assignee?.user.email) {
             task.assignee = null;
         } else {
             task.assignee = user;
@@ -234,7 +212,7 @@
         }
 
         await assingUserToTask(
-            task?.assignee?.email || null,
+            task?.assignee?.user.email || null,
             $currenTaskDetailsUUID
         );
 
@@ -260,11 +238,11 @@
     }
 </script>
 
-{#if res && $res.loading}
+{#if loading}
     <div class="flex h-full w-[60vw] flex-col items-center justify-center p-0">
         <Loading />
     </div>
-{:else if (res && !$res.error) || task}
+{:else if task}
     <div class="flex h-screen w-[60vw] flex-col p-0">
         <div class="flex items-center gap-4 px-4 py-4 pb-2">
             <button
@@ -285,7 +263,7 @@
                     <UserProfilePicture
                         pictureProps={{
                             size: 42,
-                            url: task.assignee.profilePicture,
+                            url: task.assignee.user.profile_picture,
                         }}
                     />
                 {:else}

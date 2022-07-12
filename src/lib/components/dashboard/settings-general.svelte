@@ -5,25 +5,20 @@
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
 
     import debounce from "lodash/debounce.js";
-    import { query } from "svelte-apollo";
     import { _ } from "svelte-i18n";
     import Loading from "../loading.svelte";
-    import DialogModal, { getModal } from "$lib/components/dialogModal.svelte";
-    import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
     import { client } from "$lib/graphql/client";
     import vars from "$lib/env";
-    import {
-        Mutation_UpdateWorkspace,
-        Query_WorkspacesSettingsGeneral,
-    } from "$lib/graphql/operations";
+    import { Mutation_UpdateWorkspace } from "$lib/graphql/operations";
     import { getWorkspace } from "$lib/repository";
     import ProfilePicture from "../profilePicture.svelte";
     import { uploadImage } from "$lib/utils/file";
+    import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
 
     export let workspaceUUID = null;
     let res = null;
     let loading = true;
-    let workspaceWSStore;
+    let workspaceWSStore: WSSubscriptionStore;
     let workspace = null;
 
     async function fetch() {

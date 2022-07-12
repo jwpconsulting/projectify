@@ -11,12 +11,13 @@ import {
 } from "$lib/graphql/operations";
 import { getUser } from "$lib/repository";
 import { goto } from "$app/navigation";
+import type { User } from "$lib/types";
 
-export const user = writable(null);
+export const user = writable<User>(null);
 export const userIsLoading = writable(true);
 export const singinRedirect = { to: null };
 
-export const singUp = async (email, password) => {
+export const singUp = async (email: string, password: string) => {
     try {
         const res = await client.mutate({
             mutation: Mutation_Singup,
@@ -33,7 +34,7 @@ export const singUp = async (email, password) => {
     return null;
 };
 
-export const emailConfirmation = async (email, token) => {
+export const emailConfirmation = async (email: string, token: string) => {
     try {
         const res = await client.mutate({
             mutation: Mutation_EmailConfirmation,
@@ -49,7 +50,7 @@ export const emailConfirmation = async (email, token) => {
     return null;
 };
 
-export const login = async (email, password) => {
+export const login = async (email: string, password: string) => {
     try {
         const res = await client.mutate({
             mutation: Mutation_Login,
@@ -105,7 +106,7 @@ export const fetchUser = async () => {
     return null;
 };
 
-export const requestPasswordReset = async (email) => {
+export const requestPasswordReset = async (email: string) => {
     try {
         const res = await client.mutate({
             mutation: Mutation_RequesetPasswordReset,
@@ -120,7 +121,11 @@ export const requestPasswordReset = async (email) => {
     }
 };
 
-export const confirmPasswordReset = async (email, token, newPassword) => {
+export const confirmPasswordReset = async (
+    email: string,
+    token: string,
+    newPassword: string
+) => {
     try {
         const res = await client.mutate({
             mutation: Mutation_ConfirmPasswordReset,

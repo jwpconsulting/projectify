@@ -3,7 +3,7 @@
         id?: any;
         label: string;
         icon: any;
-        onClick?: (...any) => void;
+        onClick?: (...arg0: any) => void;
         href?: string;
         disabled?: boolean;
         hidden?: boolean;
@@ -12,7 +12,7 @@
 </script>
 
 <script lang="ts">
-    let focusEl;
+    let focusEl: HTMLElement;
     export let items: DropDownMenuItem[];
     export let activeId: any = null;
 </script>

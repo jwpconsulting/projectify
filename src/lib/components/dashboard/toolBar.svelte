@@ -2,7 +2,7 @@
     export type ToolBarItem = {
         label: string;
         icon: any;
-        onClick: (...any) => void;
+        onClick: (...arg0: any[]) => void;
         disabled?: boolean;
         hidden?: boolean;
         tooltip?: string;

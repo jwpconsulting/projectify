@@ -1,6 +1,5 @@
 <script lang="ts">
     import {
-        getColorFromInx,
         getColorFromInxWithPalette,
         paletteSize,
         paletteVals,
@@ -8,13 +7,13 @@
 
     let cosPalette = [...paletteVals];
 
-    let colors;
+    let colors: Array<any>;
     setColors();
 
     function setColors() {
         colors = Array(paletteSize)
             .fill({})
-            .map((it, i) => {
+            .map((_, i) => {
                 return getColorFromInxWithPalette(i, cosPalette);
             });
     }

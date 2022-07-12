@@ -27,7 +27,7 @@
 
     let viewMode: "day" | "month" | "year" = "day";
 
-    function selectDate(d) {
+    function selectDate(d: Date) {
         date = d;
         dispatch("change", { date });
     }
@@ -36,7 +36,7 @@
         selectDate(today);
     }
 
-    function selectMonth(m) {
+    function selectMonth(m: number) {
         viewMode = "day";
         date.setMonth(m);
         date.setFullYear(year);
