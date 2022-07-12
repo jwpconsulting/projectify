@@ -59,7 +59,7 @@ class WorkspaceList(generics.ListAPIView):
     """List all workspaces for a user."""
 
     queryset = models.Workspace.objects.all()
-    serializer_class = serializers.WorkspaceNestedSerializer
+    serializer_class = serializers.WorkspaceBaseSerializer
 
     def get_queryset(self):
         """Filter by user."""
@@ -95,11 +95,44 @@ class WorkspaceRetrieve(generics.RetrieveAPIView):
         return workspace
 
 
+class TaskRetrieve(generics.RetrieveAPIView):
+    """Retrieve a task."""
+
+    queryset = (
+        models.Task.objects.select_related(
+            "workspace_board_section__workspace_board__workspace",
+            "assignee",
+            "assignee__user",
+        )
+        .prefetch_related(
+            "labels",
+            "subtask_set",
+        )
+        .prefetch_related(
+            Prefetch(
+                "chatmessage_set",
+                queryset=models.ChatMessage.objects.select_related(
+                    "author",
+                    "author__user",
+                ),
+            ),
+        )
+    )
+    serializer_class = serializers.TaskDetailSerializer
+
+    def get_object(self):
+        """Get object for user and uuid."""
+        return self.get_queryset().get_for_user_and_uuid(
+            self.request.user,
+            self.kwargs["task_uuid"],
+        )
+
+
 class WorkspaceBoardArchivedList(generics.ListAPIView):
     """List archived workspace boards inside a workspace."""
 
     queryset = models.WorkspaceBoard.objects.filter_by_archived()
-    serializer_class = serializers.WorkspaceBoardNestedSerializer
+    serializer_class = serializers.WorkspaceBoardBaseSerializer
 
     def get_queryset(self):
         """Get queryset."""
