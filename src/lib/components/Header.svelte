@@ -103,7 +103,9 @@
             </nav>
             <div class="grow" />
             <nav class="hidden gap-2 md:flex">
-                <HeaderButtons {userData} />
+                {#if userData}
+                    <HeaderButtons {userData} />
+                {/if}
             </nav>
 
             <button
@@ -149,7 +151,9 @@
             </nav>
             <div class="grow" />
             <nav class="flex flex-col gap-2">
-                <HeaderButtons {userData} />
+                {#if userData}
+                    <HeaderButtons {userData} />
+                {/if}
             </nav>
         </div>
     </DrawerModal>

@@ -3,13 +3,13 @@
     import PageLayout from "$lib/components/layouts/pageLayout.svelte";
 
     import Signin from "$lib/components/signin.svelte";
-    import { user, singinRedirect } from "$lib/stores/user";
+    import { user, signinRedirect } from "$lib/stores/user";
 
-    const rediretURL = "/dashboard";
+    const redirectUrl = "/dashboard";
     if ($user) {
-        goto(rediretURL);
+        goto(redirectUrl);
     } else {
-        singinRedirect.to = rediretURL;
+        signinRedirect.to = redirectUrl;
     }
 </script>
 

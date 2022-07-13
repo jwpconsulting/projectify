@@ -6,6 +6,7 @@ import {
 import { goto } from "$app/navigation";
 import { encodeUUID } from "$lib/utils/encoders";
 import Fuse from "fuse.js";
+import lodash from "lodash";
 import { writable, get } from "svelte/store";
 import { client } from "$lib/graphql/client";
 import { getModal } from "$lib/components/dialogModal.svelte";
@@ -19,23 +20,23 @@ import type {
 export const drawerModalOpen = writable(false);
 export const currentWorkspaceUUID = writable<string | null>(null);
 export const currentBoardUUID = writable<string | null>(null);
-export const currenTaskDetailsUUID = writable<string | null>(null);
+export const currentTaskDetailsUUID = writable<string | null>(null);
 export const newTaskSectionUUID = writable<string | null>(null);
-export const currentBoardSections = writable([]);
+export const currentBoardSections = writable<WorkspaceBoardSection[]>([]);
 
 export const fuseSearchThreshold = 0.3;
 
 export function openNewTask(sectionUUID: string): void {
     drawerModalOpen.set(true);
     newTaskSectionUUID.set(sectionUUID);
-    currenTaskDetailsUUID.set(null);
+    currentTaskDetailsUUID.set(null);
 }
 export function openTaskDetails(
     taskUUID: string,
-    subView: string = null
+    subView: string | null = null
 ): void {
     drawerModalOpen.set(true);
-    currenTaskDetailsUUID.set(taskUUID);
+    currentTaskDetailsUUID.set(taskUUID);
 
     const workspaceUUID = get(currentWorkspaceUUID);
     const boardUUID = get(currentBoardUUID);
@@ -44,7 +45,7 @@ export function openTaskDetails(
 }
 export function closeTaskDetails(): void {
     drawerModalOpen.set(false);
-    currenTaskDetailsUUID.set(null);
+    currentTaskDetailsUUID.set(null);
 
     const workspaceUUID = get(currentWorkspaceUUID);
     const boardUUID = get(currentBoardUUID);
@@ -53,10 +54,10 @@ export function closeTaskDetails(): void {
 }
 
 export function getDashboardURL(
-    workspaceUUID: string = null,
-    boardUUID: string = null,
-    taskUUID: string = null,
-    subView: string = null
+    workspaceUUID: string | null = null,
+    boardUUID: string | null = null,
+    taskUUID: string | null = null,
+    subView: string | null = null
 ): string {
     workspaceUUID = workspaceUUID ? encodeUUID(workspaceUUID) : null;
     boardUUID = boardUUID ? encodeUUID(boardUUID) : null;
@@ -81,19 +82,19 @@ export function getDashboardURL(
 }
 
 export function gotoDashboard(
-    workspaceUUID: string = null,
-    boardUUID: string = null,
-    taskUUID: string = null,
-    subView: string = null
+    workspaceUUID: string | null = null,
+    boardUUID: string | null = null,
+    taskUUID: string | null = null,
+    subView: string | null = null
 ): void {
     const url = getDashboardURL(workspaceUUID, boardUUID, taskUUID, subView);
     goto(url);
 }
 
 export function copyDashboardURL(
-    workspaceUUID: string = null,
-    boardUUID: string = null,
-    taskUUID: string = null
+    workspaceUUID: string | null = null,
+    boardUUID: string | null = null,
+    taskUUID: string | null = null
 ): void {
     let url = getDashboardURL(workspaceUUID, boardUUID, taskUUID);
     url = `${location.protocol}//${location.host}${url}`;
@@ -108,12 +109,12 @@ export function pushTashUUIDtoPath(uuid: string): void {
     }
 }
 
-export const currentWorkspaceLabels = writable([]);
+export const currentWorkspaceLabels = writable<Label[]>([]);
 
 export function filterSectionsTasks(
     sections: WorkspaceBoardSection[],
     labels: Label[],
-    assignee: WorkspaceUser | "unassigned"
+    assignee: WorkspaceUser | "unassigned" | null
 ): WorkspaceBoardSection[] {
     if (labels.length) {
         const labelUUIDs = {};
@@ -123,8 +124,12 @@ export function filterSectionsTasks(
         });
 
         sections = sections.map((section) => {
-            const tasks = section.tasks.filter((task) => {
-                return task.labels.findIndex((l) => labelUUIDs[l.uuid]) >= 0;
+            const sectionTasks = section.tasks ? section.tasks : [];
+            const tasks = sectionTasks.filter((task: Task) => {
+                return (
+                    task.labels.findIndex((l: Label) => labelUUIDs[l.uuid]) >=
+                    0
+                );
             });
 
             return {
@@ -136,7 +141,8 @@ export function filterSectionsTasks(
 
     if (assignee) {
         sections = sections.map((section) => {
-            const tasks = section.tasks.filter((task) => {
+            const sectionTasks = section.tasks ? section.tasks : [];
+            const tasks = sectionTasks.filter((task: Task) => {
                 if (assignee === "unassigned") {
                     return !task.assignee;
                 } else {
@@ -158,22 +164,18 @@ export function searchTasks(
     sections: WorkspaceBoardSection[],
     searchText: string
 ): Task[] {
-    let tasks = [];
-
-    sections.forEach((section) => {
-        tasks = tasks.concat(section.tasks);
-    });
+    const tasks: Task[] = lodash.flatten(
+        sections.map((section) => (section.tasks ? section.tasks : []))
+    );
 
     const searchEngine: Fuse<Task> = new Fuse(tasks, {
         keys: ["title"],
         threshold: fuseSearchThreshold,
     });
 
-    tasks = searchEngine
+    return searchEngine
         .search(searchText)
         .map((res: Fuse.FuseResult<Task>) => res.item);
-
-    return tasks;
 }
 
 export async function moveTaskAfter(
@@ -227,7 +229,7 @@ export async function deleteTask(task: Task): Promise<void> {
     }
 }
 
-export async function assingUserToTask(
+export async function assignUserToTask(
     userEmail: string,
     taskUUID: string
 ): Promise<void> {

@@ -13,29 +13,39 @@
     import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
     import ThemeSwitch from "$lib/components/theme-builder/theme-switch.svelte";
 
+    import type { User } from "$lib/types";
+
     let isEditMode = false;
     let isSaving = false;
 
-    let imageFile = null;
+    let imageFile: File | null = null;
 
     function fieldChanged() {
         isEditMode = true;
     }
 
-    let currentUser = null;
+    let currentUser: User | null = null;
+    let fullName: string | null;
     $: {
         if (!isEditMode) {
-            currentUser = { ...$user };
+            if ($user) {
+                currentUser = { ...$user };
+                fullName = currentUser
+                    ? currentUser.full_name
+                        ? currentUser.full_name
+                        : null
+                    : null;
+            }
         }
     }
 
     function onFileSelected({ detail: { src, file } }) {
         imageFile = file;
         isEditMode = true;
-        currentUser.profilePicture = src;
+        if (currentUser) {
+            currentUser.profile_picture = src;
+        }
     }
-
-    let uploadRequest = null;
 
     async function saveData() {
         try {
@@ -43,7 +53,7 @@
                 mutation: Mutation_UpdateProfile,
                 variables: {
                     input: {
-                        fullName: currentUser.full_name || "",
+                        fullName: fullName || "",
                     },
                 },
             });
@@ -54,21 +64,25 @@
 
     async function onSave() {
         isSaving = true;
-        await uploadImage(
-            imageFile,
-            vars.API_ENDPOINT + "/user/profile-picture-upload"
-        );
-        await saveData();
-        await fetchUser();
-        isSaving = false;
-        isEditMode = false;
+        let fileUpload: Promise<null> | null = null;
+        if (imageFile) {
+            fileUpload = uploadImage(
+                imageFile,
+                vars.API_ENDPOINT + "/user/profile-picture-upload"
+            );
+        }
+        try {
+            await Promise.all([saveData(), fileUpload]);
+        } finally {
+            await fetchUser();
+            isSaving = false;
+            isEditMode = false;
+        }
     }
 
-    async function onCancel() {
-        if (uploadRequest) {
-            isSaving = false;
-            uploadRequest.abort();
-        }
+    function onCancel() {
+        isSaving = false;
+        isEditMode = false;
     }
 </script>
 
@@ -79,7 +93,7 @@
                 class="mt-[-40px] flex flex-col items-center justify-center space-y-2"
             >
                 <ProfilePictureFileSelector
-                    url={currentUser ? currentUser.profile_picture : null}
+                    url={currentUser?.profile_picture}
                     on:fileSelected={onFileSelected}
                     let:src
                 >
@@ -96,7 +110,7 @@
                         class="nowrap-ellipsis input input-bordered grow rounded-md p-2 text-center text-xl font-bold"
                         placeholder={"Full name"}
                         on:input={() => fieldChanged()}
-                        bind:value={currentUser.full_name}
+                        bind:value={fullName}
                     />
                 </div>
             </header>

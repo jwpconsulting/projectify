@@ -14,9 +14,9 @@
     import BoardsSideNav from "./boards-side-nav.svelte";
     import type { Workspace } from "$lib/types";
 
-    export let selectedWorkspace: Workspace;
-    export let selectedWorkspaceUUID: string;
-    export let selectedBoardUUID: string;
+    export let selectedWorkspace: Workspace | null;
+    export let selectedWorkspaceUUID: string | null;
+    export let selectedBoardUUID: string | null;
 
     $: open = $boardSideBarOpen;
 
@@ -56,7 +56,11 @@
                 href: `/dashboard/settings/${selectedWorkspaceUUID}`,
             },
         ];
-        getDropDown().open(dropDownItems, dropDownMenuBtnRef);
+        const dropDown = getDropDown();
+        if (!dropDown) {
+            throw new Error("Expected dropDown");
+        }
+        dropDown.open(dropDownItems, dropDownMenuBtnRef);
     }
 </script>
 
@@ -82,7 +86,7 @@
 
     <!-- Boards nav -->
     <div class:hidden={!open} class="flex grow flex-col overflow-hidden">
-        {#if selectedWorkspaceUUID}
+        {#if selectedWorkspaceUUID && selectedBoardUUID}
             <h2 class="p-4 text-base font-bold">Workspace Boards</h2>
             <BoardsSideNav {selectedWorkspaceUUID} {selectedBoardUUID} />
         {/if}

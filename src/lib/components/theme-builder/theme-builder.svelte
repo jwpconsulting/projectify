@@ -12,16 +12,18 @@
         getStyleFor,
         themeToArray,
     } from "./theme-utils";
+    import type { ThemeColors } from "$lib/types";
 
-    export let theme = null;
+    export let theme: ThemeColors | null = null;
     export let swapLayout = false;
 
     export let isDark = false;
 
-    let themeArray = themeToArray(theme) || [];
+    let themeArray = theme ? themeToArray(theme) : [];
 
     function save() {
-        const thm = arrayToTheme(themeArray);
+        // This will not work XXX
+        const thm: ThemeColors = arrayToTheme(themeArray) as ThemeColors;
         setUserThemeFor(thm, isDark);
     }
 

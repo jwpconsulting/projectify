@@ -29,15 +29,18 @@
     import { goto } from "$app/navigation";
     import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
 
-    export let workspaceUUID = null;
+    export let workspaceUUID: string | null = null;
 
     let loading = true;
     let customer: Customer | null = null;
-    let workspaceWSStore: WSSubscriptionStore;
+    let workspaceWSStore: WSSubscriptionStore | null;
     let workspace: Workspace | null = null;
     let workspaceUsers: WorkspaceUser[] | null = null;
 
     async function fetch() {
+        if (!workspaceUUID) {
+            throw new Error("Expected workspaceUUID");
+        }
         [customer, workspace] = await Promise.all([
             getWorkspaceCustomer(workspaceUUID),
             getWorkspace(workspaceUUID),
@@ -67,8 +70,8 @@
     }
 
     $: {
-        if (!loading) {
-            workspaceUsers = workspace.workspace_users;
+        if (!loading && workspace) {
+            workspaceUsers = workspace.workspace_users || [];
         }
     }
 
@@ -144,11 +147,10 @@
         }
     }
 
-    let roleFilter = null;
+    let roleFilter: string | null = null;
     let searchFieldEl: HTMLElement;
     let searchText = "";
-    let searchEngine: Fuse<WorkspaceUser> = null;
-    let filteredWorkspaceUsers: WorkspaceUser[] | null;
+    let filteredWorkspaceUsers: WorkspaceUser[];
 
     $: {
         filteredWorkspaceUsers = workspaceUsers || [];
@@ -161,7 +163,7 @@
             );
         }
 
-        searchEngine = new Fuse(filteredWorkspaceUsers, {
+        const searchEngine = new Fuse(filteredWorkspaceUsers, {
             keys: ["user.email", "user.full_name"],
             threshold: fuseSearchThreshold,
         });
@@ -174,7 +176,7 @@
         }
     }
 
-    let filterRoleButton: HTMLElement;
+    let filterRoleButton: HTMLElement | null;
     function openRolePicker() {
         let dropDown = getDropDown();
 
@@ -195,7 +197,11 @@
             })),
         ];
 
-        dropDown.open(dropDownItems, filterRoleButton);
+        if (dropDown && filterRoleButton) {
+            dropDown.open(dropDownItems, filterRoleButton);
+        } else {
+            throw new Error("Expected dropDown && filterRoleButton");
+        }
     }
 </script>
 

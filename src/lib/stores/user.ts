@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 import { client } from "$lib/graphql/client";
 
 import {
-    Mutation_Singup,
+    Mutation_Signup,
     Mutation_EmailConfirmation,
     Mutation_Login,
     Mutation_Logout,
@@ -13,23 +13,22 @@ import { getUser } from "$lib/repository";
 import { goto } from "$app/navigation";
 import type { User } from "$lib/types";
 
-export const user = writable<User>(null);
+export const user = writable<User | null>(null);
 export const userIsLoading = writable(true);
-export const singinRedirect = { to: null };
+export const signinRedirect: { to: null | string } = { to: null };
 
-export const singUp = async (email: string, password: string) => {
-    try {
-        const res = await client.mutate({
-            mutation: Mutation_Singup,
-            variables: { input: { email, password } },
-        });
+export const signUp = async (
+    email: string,
+    password: string
+): Promise<string | null> => {
+    const res = await client.mutate({
+        mutation: Mutation_Signup,
+        variables: { input: { email, password } },
+    });
 
-        if (res.data.signup !== null) {
-            const userData = res.data.signup;
-            return userData;
-        }
-    } catch (error) {
-        console.error(error);
+    if (res.data.signup !== null) {
+        const userData = res.data.signup;
+        return userData.email;
     }
     return null;
 };
@@ -62,12 +61,9 @@ export const login = async (email: string, password: string) => {
             const userData = res.data.login;
             user.set(userData);
 
-            if (singinRedirect.to) {
-                if (singinRedirect.to) {
-                    goto(singinRedirect.to);
-                }
-
-                singinRedirect.to = null;
+            if (signinRedirect.to) {
+                goto(signinRedirect.to);
+                signinRedirect.to = null;
             }
 
             return userData;
@@ -125,15 +121,13 @@ export const confirmPasswordReset = async (
     email: string,
     token: string,
     newPassword: string
-) => {
+): Promise<{ error: { message: string } } | null> => {
     try {
-        const res = await client.mutate({
+        await client.mutate({
             mutation: Mutation_ConfirmPasswordReset,
             variables: { input: { email, token, newPassword } },
         });
-        if (res.data.confirmPasswordReset !== null) {
-            return res.data.confirmPasswordReset.user;
-        }
+        return null;
     } catch (error) {
         return { error };
     }

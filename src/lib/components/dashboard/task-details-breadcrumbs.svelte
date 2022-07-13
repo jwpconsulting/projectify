@@ -9,7 +9,10 @@
     };
 
     let pathLinks: PathLink[];
-    if (task.workspace_board_section) {
+    if (
+        task.workspace_board_section &&
+        task.workspace_board_section.workspace_board
+    ) {
         pathLinks = [
             {
                 label: task.workspace_board_section.workspace_board.title,

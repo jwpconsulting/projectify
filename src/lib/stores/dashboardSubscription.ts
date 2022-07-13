@@ -7,7 +7,7 @@ import {
 export const getSubscriptionForCollection = (
     collection: "workspace" | "workspace-board" | "task",
     uuid: string
-): WSSubscriptionStore => {
+): WSSubscriptionStore | null => {
     let wsEndPoint = vars.WS_ENDPOINT;
     if (wsEndPoint.indexOf("/ws") == 0) {
         wsEndPoint = `ws://${location.host}${wsEndPoint}`;

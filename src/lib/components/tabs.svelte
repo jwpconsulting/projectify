@@ -1,8 +1,9 @@
 <script lang="ts">
     import { createEventDispatcher, setContext } from "svelte";
     import { writable } from "svelte/store";
+    import type { TabItem } from "$lib/components/types";
 
-    export let items = [];
+    export let items: TabItem[] = [];
     export let activeTabId = writable(items[0]?.id);
     export let dispatcher = createEventDispatcher();
 
@@ -12,7 +13,7 @@
         });
     }
 
-    let contentHeght = 0;
+    let contentHeight = 0;
     const selectTab = (tabId: string) => {
         activeTabId.set(tabId);
         dispatcher("tabChanged", { tabId });
@@ -38,13 +39,13 @@
 {#each items as item}
     {#if $activeTabId == item.id}
         <main
-            style={forceHeight && `height:${contentHeght}px`}
+            style={forceHeight ? `height:${contentHeight}px` : null}
             class="relative flex grow flex-col overflow-y-auto transition-all duration-300 ease-in-out"
         >
             <div
                 class:px-4={autoPadding}
                 class:py-4={autoPadding}
-                bind:clientHeight={contentHeght}
+                bind:clientHeight={contentHeight}
                 class="relative flex grow flex-col"
             >
                 {#if item.component}

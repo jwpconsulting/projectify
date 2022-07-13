@@ -1,4 +1,6 @@
-export const factoryLightThemeColors = {
+import type { ThemeColors } from "$lib/types";
+
+export const factoryLightThemeColors: ThemeColors = {
     "primary": "#288CFF",
     "primary-focus": "#0077FF",
     "primary-content": "#ffffff",
@@ -21,7 +23,7 @@ export const factoryLightThemeColors = {
     "error": "#ff5724",
 };
 
-export const factoryDarkThemeColors = {
+export const factoryDarkThemeColors: ThemeColors = {
     "primary": "#4db2fe",
     "primary-focus": "#0077FF",
     "primary-content": "#ffffff",

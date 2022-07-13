@@ -1,7 +1,8 @@
 <script lang="ts">
     import { getColorFromInx } from "$lib/utils/colors";
+    import type { Color } from "$lib/types";
 
-    export let color = null;
+    export let color: Color | null = null;
     export let active = false;
 
     export let index = null;
@@ -13,12 +14,14 @@
     }
 </script>
 
-<div
-    style={`--color:${color.h} ${color.s}% ${color.l}%;--color:${color.style};`}
-    class:text-base-100={color.br}
-    class:active
-    class="color flex h-full w-full shrink-0 items-center justify-center rounded-full p-2"
-/>
+{#if color}
+    <div
+        style={`--color:${color.h} ${color.s}% ${color.l}%;--color:${color.style};`}
+        class:text-base-100={color.br}
+        class:active
+        class="color flex h-full w-full shrink-0 items-center justify-center rounded-full p-2"
+    />
+{/if}
 
 <style lang="scss">
     .color {

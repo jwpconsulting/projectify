@@ -5,20 +5,26 @@
 
     import ProfilePicture from "./profilePicture.svelte";
 
-    export let url = null;
-    let inputFileRef = null;
+    export let url: string | null = null;
+    let inputFileRef: HTMLElement | null = null;
 
     const dispatch = createEventDispatcher();
 
     $: src = url ? url : null;
 
     function onSelectFileClick() {
+        if (!inputFileRef) {
+            throw new Error("Expected inputFileRef");
+        }
         inputFileRef.click();
     }
     function onFileSelected(event: Event) {
         const eventTarget = event.target;
         if (eventTarget instanceof HTMLInputElement) {
-            const file = eventTarget.files[0];
+            if (!eventTarget.files) {
+                throw new Error("Expected eventTarget.files");
+            }
+            const file: File | null = eventTarget.files[0];
             if (!file) {
                 return;
             }

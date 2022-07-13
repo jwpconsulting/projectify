@@ -11,7 +11,7 @@
 
     let searchText = "";
     export let task: Task;
-    export let selectedLabels = [];
+    export let selectedLabels: Label[] = [];
     let rootEl: HTMLElement;
 
     export let dispatch = createEventDispatcher();

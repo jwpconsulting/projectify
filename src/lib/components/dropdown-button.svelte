@@ -5,8 +5,8 @@
 
     export let label = "";
     export let open = false;
-    export let icon = null;
-    export let target = null;
+    export let icon: any | null = null;
+    export let target: HTMLElement | null = null;
     export let dispatch = createEventDispatcher();
 </script>
 

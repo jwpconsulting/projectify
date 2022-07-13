@@ -7,9 +7,9 @@
     import type { Workspace } from "$lib/types";
     import Loading from "$lib/components/loading.svelte";
 
-    export let selectedWorkspaceUUID: string;
+    export let selectedWorkspaceUUID: string | null;
 
-    let workspaces: Workspace[] | null;
+    let workspaces: Workspace[] = [];
     let loading = true;
 
     export let selectedWorkspace: Workspace | null;
@@ -26,8 +26,13 @@
             if (!selectedWorkspaceUUID && workspaces.length) {
                 gotoDashboard(workspaces[0]["uuid"]);
             } else {
+                const findResult = workspaces.find(
+                    (w) => w.uuid === selectedWorkspaceUUID
+                );
                 selectedWorkspace = workspaces
-                    ? workspaces.find((w) => w.uuid === selectedWorkspaceUUID)
+                    ? findResult
+                        ? findResult
+                        : null
                     : null;
 
                 if (!selectedWorkspace && workspaces.length) {

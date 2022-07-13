@@ -8,7 +8,7 @@
 
     const dispatch = createEventDispatcher();
 
-    export let date = null;
+    export let date: Date | null = null;
     $: {
         if (!date) {
             date = new Date();
@@ -18,8 +18,15 @@
         }
     }
 
-    $: year = date.getFullYear();
-    $: month = date.getMonth();
+    let year: number;
+    let month: number;
+
+    $: {
+        if (date) {
+            year = date.getFullYear();
+            month = date.getMonth();
+        }
+    }
     $: calendar = getCalendar(year, month);
 
     let today = new Date();
@@ -27,7 +34,7 @@
 
     let viewMode: "day" | "month" | "year" = "day";
 
-    function selectDate(d: Date) {
+    function selectDate(d: Date | null) {
         date = d;
         dispatch("change", { date });
     }
@@ -37,6 +44,9 @@
     }
 
     function selectMonth(m: number) {
+        if (!date) {
+            throw new Error("Expected date");
+        }
         viewMode = "day";
         date.setMonth(m);
         date.setFullYear(year);
@@ -141,16 +151,20 @@
         </div>
         <div class="grid grid-cols-7 items-center justify-items-center">
             {#each calendar.days as day, inx}
-                <div
-                    class:day-today={day.date.getTime() === today.getTime()}
-                    class:day-selected={day.date.getTime() === date.getTime()}
-                    class:day-disbled={day.moff !== 0}
-                    class:weekend={inx % 7 >= 5}
-                    class="day"
-                    on:click={() => selectDate(day.date)}
-                >
-                    <div>{day.inx}</div>
-                </div>
+                {#if date}
+                    <div
+                        class:day-today={day.date.getTime() ===
+                            today.getTime()}
+                        class:day-selected={day.date.getTime() ===
+                            date.getTime()}
+                        class:day-disbled={day.moff !== 0}
+                        class:weekend={inx % 7 >= 5}
+                        class="day"
+                        on:click={() => selectDate(day.date)}
+                    >
+                        <div>{day.inx}</div>
+                    </div>
+                {/if}
             {/each}
         </div>
 
@@ -184,13 +198,15 @@
         >
             <div class="text-xs ">Clear</div>
         </div>
-        <div
-            class:active={date.getTime() === today.getTime()}
-            class="cal-btn flex h-8 grow items-center justify-center text-primary"
-            on:click={() => selectToday()}
-        >
-            <div class="text-xs ">Today</div>
-        </div>
+        {#if date}
+            <div
+                class:active={date.getTime() === today.getTime()}
+                class="cal-btn flex h-8 grow items-center justify-center text-primary"
+                on:click={() => selectToday()}
+            >
+                <div class="text-xs ">Today</div>
+            </div>
+        {/if}
     </footer>
 </div>
 

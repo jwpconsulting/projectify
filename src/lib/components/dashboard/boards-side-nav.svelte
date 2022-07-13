@@ -11,12 +11,13 @@
     } from "$lib/stores/dashboard";
     import { _ } from "svelte-i18n";
     import { goto } from "$app/navigation";
+    import type { WorkspaceBoard, Workspace } from "$lib/types";
 
     export let selectedWorkspaceUUID: string;
     export let selectedBoardUUID: string;
 
-    let res = null;
-    let boards = [];
+    let res: Workspace | null = null;
+    let boards: WorkspaceBoard[] = [];
 
     async function fetchWorkspace() {
         res = await getWorkspace(selectedWorkspaceUUID);
@@ -30,8 +31,16 @@
 
     $: {
         if (res) {
-            boards = res["workspace_boards"];
-            currentWorkspaceLabels.set([...res["labels"]]);
+            if (res.workspace_boards) {
+                boards = res.workspace_boards;
+            } else {
+                throw new Error("Expected res.workspace_boards");
+            }
+            if (res.labels) {
+                currentWorkspaceLabels.set([...res.labels]);
+            } else {
+                throw new Error("Expected res.labels");
+            }
 
             if (!selectedBoardUUID && boards.length) {
                 gotoDashboard(selectedWorkspaceUUID, boards[0]["uuid"]);
@@ -63,7 +72,6 @@
                         },
                     },
                 });
-                await res.refetch({ uuid: selectedWorkspaceUUID });
                 selectedBoardUUID = mRes.data.addWorkspaceBoard.uuid;
                 gotoDashboard(selectedWorkspaceUUID, selectedBoardUUID);
             } catch (error) {

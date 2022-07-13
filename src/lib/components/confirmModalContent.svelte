@@ -21,6 +21,9 @@
     $: {
         if (data && !isEditing) {
             inputs.forEach((input) => {
+                if (!input.name) {
+                    throw new Error("Expected input.name");
+                }
                 input.value = lodash.get(data, input.name);
             });
         }
@@ -38,6 +41,9 @@
         valid = true;
 
         inputs.forEach((field) => {
+            if (!field.name) {
+                throw new Error("Expected field.name");
+            }
             if (
                 field.validation?.required &&
                 (field.value === "" ||
@@ -102,6 +108,9 @@
                     class:select-error={!valid && input.error}
                     class="select select-bordered w-full"
                     on:change={(e) => {
+                        if (!e.target) {
+                            throw new Error("Expected e.target");
+                        }
                         isEditing = true;
                         input.value = e.target["value"];
                     }}
@@ -109,12 +118,14 @@
                     <option disabled selected={!input.value}
                         >{input.placeholder}</option
                     >
-                    {#each input.selectOptions as option}
-                        <option
-                            selected={input.value == option.value}
-                            value={option.value}>{option.label}</option
-                        >
-                    {/each}
+                    {#if input.selectOptions}
+                        {#each input.selectOptions as option}
+                            <option
+                                selected={input.value == option.value}
+                                value={option.value}>{option.label}</option
+                            >
+                        {/each}
+                    {/if}
 
                     {input.value}
                 </select>

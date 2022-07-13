@@ -10,12 +10,14 @@
     import { _ } from "svelte-i18n";
     import { writable } from "svelte/store";
     import { goto } from "$app/navigation";
+    import type { TabItem } from "$lib/components/types";
 
     $: workspaceUUID = $page.params["workspaceUUID"];
 
     $: tab = $page.url.searchParams.get("tab");
     $: activeTabId = writable(tab || "general");
-    $: tabItems = [
+    let items: TabItem[];
+    $: items = [
         {
             label: $_("general"),
             id: "general",
@@ -44,11 +46,7 @@
 <PageLayout>
     <AuthGuard>
         <SettingPage title={$_("workspace-settings")}>
-            <Tabs
-                items={tabItems}
-                bind:activeTabId
-                on:tabChanged={onTabChanged}
-            />
+            <Tabs {items} bind:activeTabId on:tabChanged={onTabChanged} />
         </SettingPage>
     </AuthGuard>
 </PageLayout>

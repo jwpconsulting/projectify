@@ -3,15 +3,15 @@
 
     export let hasContentPadding = false;
 
-    export let title = null;
-    export let prompt = null;
-    export let nextBtnLabel = null;
+    export let title: string | null = null;
+    export let prompt: string | null = null;
+    export let nextBtnLabel: string | null = null;
     export let nextBtnDisabled = false;
     export let viewBackButton = false;
-    export let nextMessage = null;
+    export let nextMessage: string | null = null;
 
-    export let stepCount = 0;
-    export let step = null;
+    export let stepCount: number = 0;
+    export let step: number | null = null;
 
     $: steps = Array(stepCount)
         .fill({})

@@ -14,14 +14,18 @@
     import ProfilePicture from "../profilePicture.svelte";
     import { uploadImage } from "$lib/utils/file";
     import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
+    import type { Workspace } from "$lib/types";
 
-    export let workspaceUUID = null;
-    let res = null;
+    export let workspaceUUID: string | null = null;
+    let res: Workspace | null = null;
     let loading = true;
-    let workspaceWSStore: WSSubscriptionStore;
-    let workspace = null;
+    let workspaceWSStore: WSSubscriptionStore | null;
+    let workspace: Workspace | null = null;
 
     async function fetch() {
+        if (!workspaceUUID) {
+            throw new Error("Expected workspaceUUID");
+        }
         res = await getWorkspace(workspaceUUID);
         loading = false;
     }
@@ -57,6 +61,9 @@
     let isSaving = false;
 
     async function saveData() {
+        if (!workspace) {
+            throw new Error("Expected workspace");
+        }
         try {
             await client.mutate({
                 mutation: Mutation_UpdateWorkspace,
@@ -77,22 +84,26 @@
         isEditMode = true;
     }
 
-    let imageFile = null;
+    let imageFile: File | null = null;
     function onFileSelected({ detail: { src, file } }) {
         imageFile = file;
         isEditMode = true;
+        if (!workspace) {
+            throw new Error("Expected workspace");
+        }
         workspace.picture = src;
     }
 
     async function onSave() {
         isSaving = true;
-        await uploadImage(
-            imageFile,
-            vars.API_ENDPOINT +
-                `/workspace/workspace/${workspaceUUID}/picture-upload`
-        );
+        if (imageFile) {
+            await uploadImage(
+                imageFile,
+                vars.API_ENDPOINT +
+                    `/workspace/workspace/${workspaceUUID}/picture-upload`
+            );
+        }
         await saveData();
-        await res.refetch();
         isSaving = false;
         isEditMode = false;
     }
@@ -110,7 +121,7 @@
     <div class="flex min-h-[200px] items-center justify-center">
         <Loading />
     </div>
-{:else}
+{:else if workspace}
     <div
         class:pointer-events-none={isSaving}
         class="flex flex-col space-y-4 divide-y divide-base-300"
@@ -127,7 +138,7 @@
                     <ProfilePicture
                         typogram={workspace.title}
                         emptyIcon={null}
-                        url={src}
+                        url={src ? src : null}
                         size={128}
                     />
                 </div>

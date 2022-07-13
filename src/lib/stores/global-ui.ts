@@ -1,4 +1,4 @@
-import type { Theme } from "./../components/theme-builder/theme-utils";
+import type { ThemeColors } from "$lib/types";
 
 import {
     getStyleFor,
@@ -8,7 +8,7 @@ import {
 import { browser } from "$app/env";
 import { get, writable } from "svelte/store";
 
-export const isDarkMode = writable(null);
+export const isDarkMode = writable<boolean | null>(null);
 
 function setThemeToNode(node: HTMLElement, dark: boolean): void {
     node.setAttribute("data-theme", dark ? "app-dark" : "app-light");
@@ -64,19 +64,30 @@ if (browser) {
     });
 }
 
-export function saveDarkMode(value: boolean): void {
-    localStorage.setItem(localsThemeKey, value ? "dark" : "light");
+export function saveDarkMode(value: boolean | null): void {
+    if (value === null) {
+        localStorage.removeItem(localsThemeKey);
+    } else {
+        localStorage.setItem(localsThemeKey, value ? "dark" : "light");
+    }
     isDarkMode.set(value);
 }
 
 export type UserTheme = {
-    light?: Theme;
-    dark?: Theme;
+    light?: ThemeColors;
+    dark?: ThemeColors;
 };
 
-export const userTheme = writable<UserTheme>(null);
+export const userTheme = writable<UserTheme | null>(null);
 
-export function setUserThemeFor(theme: Theme, isDarkMode: boolean): void {
+export function setUserThemeFor(
+    theme: ThemeColors | null,
+    isDarkMode: boolean
+): void {
+    // XXX
+    if (!theme) {
+        throw new Error("Expected theme");
+    }
     let ut = get(userTheme);
 
     if (!ut) {
@@ -92,9 +103,13 @@ export function setUserThemeFor(theme: Theme, isDarkMode: boolean): void {
     userTheme.set(ut);
 }
 
-export function getUserThemeFor(isDarkMode: boolean): Theme {
+export function getUserThemeFor(isDarkMode: boolean): ThemeColors {
     const themes = get(userTheme);
-    return themes && themes[isDarkMode ? "dark" : "light"];
+    const theme = themes && themes[isDarkMode ? "dark" : "light"];
+    if (!theme) {
+        throw new Error("Expected theme");
+    }
+    return theme;
 }
 
 export function applyStyleToBody(themes: UserTheme): void {
@@ -109,6 +124,9 @@ export function applyStyleToBody(themes: UserTheme): void {
         return;
     }
     const curTheme = themes[dm ? "dark" : "light"];
+    if (!curTheme) {
+        throw new Error("Expected curTheme");
+    }
     const themeArray = themeToArray(curTheme);
     if (!themeArray) {
         return;
@@ -134,7 +152,7 @@ if (browser) {
         }
     });
 
-    userTheme.subscribe((themes) => {
+    userTheme.subscribe((themes: UserTheme) => {
         const themeStr = JSON.stringify(themes);
         localStorage.setItem(userThemeKey, themeStr);
         applyStyleToBody(themes);

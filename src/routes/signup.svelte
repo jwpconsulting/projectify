@@ -1,7 +1,7 @@
 <script lang="ts">
     import { spring } from "svelte/motion";
     import delay from "delay";
-    import { singUp } from "$lib/stores/user";
+    import { signUp } from "$lib/stores/user";
     import { goto } from "$app/navigation";
     import { _ } from "svelte-i18n";
     import PageLayout from "$lib/components/layouts/pageLayout.svelte";
@@ -18,12 +18,12 @@
     let privacyChecked = false;
 
     let error = false;
-    let userData = null;
+    let submittedEmail: string | null = null;
 
     async function submit() {
-        userData = await singUp(emailValue, passwordValue);
+        submittedEmail = await signUp(emailValue, passwordValue);
 
-        if (!userData) {
+        if (!submittedEmail) {
             error = true;
             errorAnimation.set(-50);
             await delay(100);
@@ -42,7 +42,7 @@
 
 <PageLayout>
     <main class="page page-center bg-base-200">
-        {#if !userData}
+        {#if !submittedEmail}
             <form
                 class="contents"
                 action="/signup"
@@ -144,7 +144,7 @@
                         <div>
                             {$_("i-sent-an-email-to")}
                             <span class="link link-primary"
-                                >{userData.email}</span
+                                >{submittedEmail}</span
                             >. {$_(
                                 "please-proceed-from-the-url-described-in-the-message"
                             )}<wbr />

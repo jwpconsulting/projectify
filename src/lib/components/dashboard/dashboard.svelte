@@ -17,13 +17,16 @@
     import { onMount } from "svelte";
     import ConfirmModalContent from "../confirmModalContent.svelte";
     import { _ } from "svelte-i18n";
-    import BoardCollapsableSideBar from "./board-collapsable-side-bar.svelte";
+    import BoardCollapsibleSideBar from "./board-collapsible-side-bar.svelte";
     import type { Workspace } from "$lib/types";
 
     export let selectedWorkspace: Workspace | null = null;
 
     $: uuids = $page.params["uuids"].split("/");
 
+    let selectedWorkspaceUUID: string | null;
+    let selectedBoardUUID: string | null;
+    let selectedTaskUUID: string | null;
     $: selectedWorkspaceUUID = uuids[0] ? decodeUUID(uuids[0]) : null;
     $: selectedBoardUUID = uuids[1] ? decodeUUID(uuids[1]) : null;
     $: selectedTaskUUID = uuids[2] ? decodeUUID(uuids[2]) : null;
@@ -56,7 +59,7 @@
     <WorkspacesSideNav bind:selectedWorkspaceUUID bind:selectedWorkspace />
 
     <!-- Second side bar -->
-    <BoardCollapsableSideBar
+    <BoardCollapsibleSideBar
         {selectedWorkspace}
         {selectedWorkspaceUUID}
         {selectedBoardUUID}

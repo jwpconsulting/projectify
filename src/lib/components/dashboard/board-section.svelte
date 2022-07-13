@@ -3,7 +3,7 @@
     import IconTrash from "../icons/icon-trash.svelte";
     import IconChevronRight from "../icons/icon-chevron-right.svelte";
     import {
-        assingUserToTask,
+        assignUserToTask,
         copyDashboardURL,
         currentBoardSections,
         currentBoardUUID,
@@ -47,8 +47,8 @@
 
     export let section: WorkspaceBoardSection;
 
-    export let isFirst = null;
-    export let isLast = null;
+    export let isFirst: boolean | null = null;
+    export let isLast: boolean | null = null;
 
     export let isDragging = false;
 
@@ -119,6 +119,9 @@
     }
 
     async function taskDragEnd({ detail }) {
+        if (!section.tasks) {
+            throw new Error("Expected section.tasks");
+        }
         await delay(10);
         isDragging = false;
 
@@ -150,6 +153,9 @@
     $: collapsable = $dashboardSectionsLayout != "columns";
 
     function openItemDropDownMenu({ detail: { task, target } }) {
+        if (!section.tasks) {
+            throw new Error("Expected section.tasks");
+        }
         let lastTask = section.tasks[section.tasks.length - 1];
         let prevTask = section.tasks[section.tasks.indexOf(task) - 1];
         let nextTask = section.tasks[section.tasks.indexOf(task) + 1];
@@ -157,8 +163,10 @@
         let isLast = task.uuid == lastTask.uuid;
 
         let menuSectionsItems = $currentBoardSections
-            .filter((itSec) => itSec.uuid != section.uuid)
-            .map((it) => {
+            .filter(
+                (itSec: WorkspaceBoardSection) => itSec.uuid != section.uuid
+            )
+            .map((it: WorkspaceBoardSection) => {
                 return {
                     label: it.title,
                     icon: IconArrowSRight,
@@ -240,7 +248,11 @@
                 },
             },
         ];
-        getDropDown().open(dropDownItems, target);
+        const dropDown = getDropDown();
+        if (!dropDown) {
+            throw new Error("Expected dropDown");
+        }
+        dropDown.open(dropDownItems, target);
     }
 
     let dropDownMenuBtnRef: HTMLElement;
@@ -287,27 +299,43 @@
                 },
             },
         ];
-        getDropDown().open(dropDownItems, dropDownMenuBtnRef);
+        const dropDown = getDropDown();
+        if (!dropDown) {
+            throw new Error("Expected dropDown");
+        }
+        dropDown.open(dropDownItems, dropDownMenuBtnRef);
     }
 
     function moveUpItem({ detail: { task } }) {
+        if (!section.tasks) {
+            throw new Error("Expected section.tasks");
+        }
         let prevTask = section.tasks[section.tasks.indexOf(task) - 1];
         moveTaskAfter(task.uuid, section.uuid, prevTask?.uuid);
     }
 
     function moveDownItem({ detail: { task } }) {
+        if (!section.tasks) {
+            throw new Error("Expected section.tasks");
+        }
         let nextTask = section.tasks[section.tasks.indexOf(task) + 1];
         moveTaskAfter(task.uuid, section.uuid, nextTask?.uuid);
     }
 
     function openUserPicker({ detail: { task, target } }) {
         let dropDown = getDropDown();
+        if (!dropDown) {
+            throw new Error("Expected dropDown");
+        }
         dropDown.openComponent(UserPicker, target, {
             workspaceUUID: $currentWorkspaceUUID,
             selectedUser: task.assignee,
             dispatch: async (name: string, data: WorkspaceUser) => {
+                if (!dropDown) {
+                    throw new Error("Expected dropDown");
+                }
                 if (name == "userSelected") {
-                    await assingUserToTask(data.user.email, task.uuid);
+                    await assignUserToTask(data.user.email, task.uuid);
                 }
                 dropDown.close();
             },
@@ -316,9 +344,15 @@
 
     function openLabelPicker({ detail: { task, target } }) {
         let dropDown = getDropDown();
+        if (!dropDown) {
+            throw new Error("Expected dropDown");
+        }
         dropDown.openComponent(LabelPicker, target, {
             task,
             dispatch: async (_name: string, _data: any) => {
+                if (!dropDown) {
+                    throw new Error("Expected dropDown");
+                }
                 dropDown.close();
             },
         });
@@ -351,23 +385,25 @@
             >
                 <span class="nowrap-ellipsis">
                     {section.title}
-                    {#if !open} ({section.tasks.length}) {/if}
+                    {#if !open && section.tasks} ({section.tasks.length}) {/if}
                 </span>
             </div>
-            <ToolBar
-                items={[
-                    { label: $_("Edit"), icon: IconEdit, onClick: onEdit },
-                    {
-                        label: $_("Delete"),
-                        icon: IconTrash,
-                        onClick: onDelete,
-                        disabled: section.tasks.length > 0,
-                        tooltip: section.tasks.length
-                            ? $_("remove-section-tooltip-message")
-                            : "",
-                    },
-                ]}
-            />
+            {#if section.tasks}
+                <ToolBar
+                    items={[
+                        { label: $_("Edit"), icon: IconEdit, onClick: onEdit },
+                        {
+                            label: $_("Delete"),
+                            icon: IconTrash,
+                            onClick: onDelete,
+                            disabled: section.tasks.length > 0,
+                            tooltip: section.tasks.length
+                                ? $_("remove-section-tooltip-message")
+                                : "",
+                        },
+                    ]}
+                />
+            {/if}
             <button
                 bind:this={dropDownMenuBtnRef}
                 on:click|stopPropagation={openDropDownMenu}
@@ -388,21 +424,23 @@
                     on:dragEnd={taskDragEnd}
                     data-uuid={section.uuid}
                 >
-                    {#each section.tasks as task, inx (task.uuid)}
-                        <BoardTaskItem
-                            {task}
-                            isFirst={inx === 0}
-                            isLast={inx === section.tasks.length - 1}
-                            showHoverRing={!isDragging}
-                            on:openDropDownMenu={openItemDropDownMenu}
-                            on:moveDown={moveDownItem}
-                            on:moveUp={moveUpItem}
-                            on:openUserPicker={openUserPicker}
-                            on:openLabelPicker={openLabelPicker}
-                            on:click={() =>
-                                !isDragging && openTaskDetails(task.uuid)}
-                        />
-                    {/each}
+                    {#if section.tasks}
+                        {#each section.tasks as task, inx (task.uuid)}
+                            <BoardTaskItem
+                                {task}
+                                isFirst={inx === 0}
+                                isLast={inx === section.tasks.length - 1}
+                                showHoverRing={!isDragging}
+                                on:openDropDownMenu={openItemDropDownMenu}
+                                on:moveDown={moveDownItem}
+                                on:moveUp={moveUpItem}
+                                on:openUserPicker={openUserPicker}
+                                on:openLabelPicker={openLabelPicker}
+                                on:click={() =>
+                                    !isDragging && openTaskDetails(task.uuid)}
+                            />
+                        {/each}
+                    {/if}
                     {#if !isDragging}
                         <BoardTaskItem
                             on:click={() => openNewTask(section.uuid)}

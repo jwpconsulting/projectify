@@ -22,14 +22,21 @@ export function draggable(
     let y: number;
     let startX: number;
     let startY: number;
-    let dragOverIt: HTMLElement = null;
+    let dragOverIt: HTMLElement | null = null;
 
     let dragStarted = false;
 
     let handle = node;
 
     if (params.handle) {
-        handle = node.querySelector(params.handle);
+        const newHandle = node.querySelector(params.handle);
+        if (!newHandle) {
+            throw new Error("Expected newHandle");
+        }
+        if (!(newHandle instanceof HTMLElement)) {
+            throw new Error("Expected HTMLElement");
+        }
+        node = newHandle;
     }
 
     const springOpts = {

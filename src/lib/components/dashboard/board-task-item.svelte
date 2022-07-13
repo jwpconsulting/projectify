@@ -8,9 +8,10 @@
     import ProfilePicture from "../profilePicture.svelte";
     import UserProfilePicture from "../userProfilePicture.svelte";
     import LabelList from "./labelList.svelte";
+    import type { Task } from "$lib/types";
 
     export let layout: "default" | "compact" = "default";
-    export let task = null;
+    export let task: Task | null = null;
     export let showHoverRing = true;
     const dispatch = createEventDispatcher();
     let dropDownMenuBtnRef: HTMLElement;

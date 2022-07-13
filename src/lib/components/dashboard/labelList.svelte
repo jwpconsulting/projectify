@@ -9,8 +9,8 @@
     export let searchText = "";
     export let size: "sm" | "md" = "md";
 
-    let searchEngine: Fuse<Label> = null;
-    let filteredLabels = [];
+    let searchEngine: Fuse<Label> | null = null;
+    let filteredLabels: Label[] = [];
     $: {
         searchEngine = new Fuse(labels, {
             keys: ["name"],
@@ -18,6 +18,9 @@
     }
 
     $: {
+        if (!searchEngine) {
+            throw new Error("Expected searchEngine");
+        }
         if (searchText.length) {
             filteredLabels = searchEngine
                 .search(searchText)
@@ -29,7 +32,7 @@
 
     let dispatch = createEventDispatcher();
 
-    export let selectedLabels = [];
+    export let selectedLabels: Label[] = [];
     $: selectedLabelsInx = selectedLabels && {};
 
     function onLabelClick(label: Label) {

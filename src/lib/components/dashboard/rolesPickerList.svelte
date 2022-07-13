@@ -2,7 +2,7 @@
     import { workspaceUserRoles } from "$lib/types/workspaceUserRole";
     import { createEventDispatcher } from "svelte";
 
-    export let role: string = null;
+    export let role: string | null = null;
     export let dispatch = createEventDispatcher();
 
     function selectRole(value: string) {

@@ -17,14 +17,17 @@
     import type { Label, Workspace } from "$lib/types";
     import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
 
-    export let workspaceUUID = null;
+    export let workspaceUUID: string | null = null;
 
     let workspace: Workspace | null = null;
-    let workspaceWSStore: WSSubscriptionStore;
+    let workspaceWSStore: WSSubscriptionStore | null;
     let labels: Label[] = [];
     let loading = true;
 
     async function fetch() {
+        if (!workspaceUUID) {
+            throw new Error("Expected workspaceUUID");
+        }
         workspace = await getWorkspace(workspaceUUID);
         loading = false;
     }

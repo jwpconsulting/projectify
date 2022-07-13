@@ -17,12 +17,19 @@
                 return getColorFromInxWithPalette(i, cosPalette);
             });
     }
-    function copyPalette() {
+    function copyPalette(_event: Event) {
         const pStr = JSON.stringify(cosPalette, null, 4);
         navigator.clipboard.writeText(pStr);
         console.log(pStr);
     }
     const classRanges = [1, 1, 4, 4];
+    function onInput(cosClass: number[], vInx: number, event: Event) {
+        if (!event.target) {
+            throw new Error("Expected event.target");
+        }
+        cosClass[vInx] = event.target["value"] / 100.0;
+        setColors();
+    }
 </script>
 
 <div class="flex flex-wrap p-8">
@@ -47,10 +54,7 @@
                         min={classRanges[cInx] * -100}
                         max={classRanges[cInx] * 100}
                         value={cosVal * 100}
-                        on:input={(e) => {
-                            cosClass[vInx] = e.target["value"] / 100.0;
-                            setColors();
-                        }}
+                        on:input={(e) => onInput(cosClass, vInx, e)}
                         class="range"
                     />
                 </div>
@@ -59,12 +63,7 @@
     </div>
 
     <div class="flex grow items-center justify-center p-4">
-        <button
-            class="btn btn-primary"
-            on:click={() => {
-                copyPalette();
-            }}>Copy</button
-        >
+        <button class="btn btn-primary" on:click={copyPalette}>Copy</button>
     </div>
 </div>
 

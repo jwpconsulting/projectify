@@ -1,8 +1,8 @@
 import { browser } from "$app/env";
 import { writable } from "svelte/store";
-import type { DashboardSectionsLayout } from "$lib/types";
+import type { DashboardSectionsLayout, WorkspaceUser } from "$lib/types";
 
-export const filterUser = writable(null);
+export const filterUser = writable<WorkspaceUser | null | "unassigned">(null);
 
 export const boardSideBarOpen = writable(true);
 

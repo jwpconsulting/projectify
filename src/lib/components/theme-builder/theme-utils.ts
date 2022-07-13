@@ -27,17 +27,21 @@ export function getThemeFromDom(): Theme {
 }
 
 export function rgb2hex(rgb: string): string {
-    const rgbRex = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
     function hex(x: string) {
         return ("0" + parseInt(x).toString(16)).slice(-2);
     }
+    const rgbRex = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+    if (!rgbRex) {
+        throw new Error("Expected rgbRex");
+    }
+    const [_a, r, g, b] = rgbRex;
 
-    return "#" + hex(rgbRex[1]) + hex(rgbRex[2]) + hex(rgbRex[3]);
+    return "#" + hex(r) + hex(g) + hex(b);
 }
 
 export function themeToArray(theme: Theme): ThemeItem[] {
     if (!theme) {
-        return null;
+        return [];
     }
     return Object.entries(theme).map(([key, val]) => {
         return {

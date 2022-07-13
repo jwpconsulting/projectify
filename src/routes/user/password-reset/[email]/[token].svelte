@@ -6,18 +6,17 @@
     import IllustrationPasswordResetComplete from "$lib/components/illustrations/illustration-password-reset-complete.svelte";
 
     let requestSent = false;
-    let userData = null;
-    let error = null;
+    let error: string | null = null;
     let passwordValue: string;
 
     let email = $page.params["email"];
     let token = $page.params["token"];
 
     async function submit() {
-        userData = await confirmPasswordReset(email, token, passwordValue);
+        const result = await confirmPasswordReset(email, token, passwordValue);
 
-        if (userData && userData.error) {
-            error = userData.error.message;
+        if (result) {
+            error = result.error.message;
         } else {
             requestSent = true;
         }

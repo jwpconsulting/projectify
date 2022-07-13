@@ -18,9 +18,12 @@
 
     $: currentIcon = getLayoutIconFor($dashboardSectionsLayout);
 
-    let targetBtn = null;
+    let targetBtn: HTMLElement | null = null;
 
     function openDropDownMenu() {
+        if (!targetBtn) {
+            throw new Error("Expected targetBtn");
+        }
         let dropDownItems: DropDownMenuItem[] = [
             {
                 id: "columns",
@@ -40,7 +43,11 @@
             },
         ];
 
-        getDropDown().open(dropDownItems, targetBtn, $dashboardSectionsLayout);
+        const dropDown = getDropDown();
+        if (!dropDown) {
+            throw new Error("Expected dropDown");
+        }
+        dropDown.open(dropDownItems, targetBtn, $dashboardSectionsLayout);
     }
 </script>
 

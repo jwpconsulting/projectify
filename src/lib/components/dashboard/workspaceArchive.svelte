@@ -18,10 +18,10 @@
 
     $: workspaceUUID = $page.params["workspaceUUID"];
 
-    let res = null;
+    let res: WorkspaceBoard[] | null = null;
     let loading = true;
-    let workspaceWSStore: WSSubscriptionStore;
-    let archivedBoards = [];
+    let workspaceWSStore: WSSubscriptionStore | null;
+    let archivedBoards: WorkspaceBoard[] = [];
 
     async function fetch() {
         res = await getArchivedWorkspaceBoards(workspaceUUID);
@@ -55,12 +55,12 @@
         }
     }
 
-    let unarchivingItems = {};
+    const unarchivingItems = new Map<string, boolean>();
 
     async function onUnarchiveItem(item: WorkspaceBoard) {
         let uuid = item.uuid;
 
-        unarchivingItems[uuid] = true;
+        unarchivingItems.set(uuid, true);
         try {
             await client.mutate({
                 mutation: Mutation_ArchiveWorkspaceBoard,
@@ -74,7 +74,7 @@
         } catch (error) {
             console.error(error);
         }
-        unarchivingItems[uuid] = false;
+        unarchivingItems.set(uuid, false);
     }
 
     async function onDeleteItem(item: WorkspaceBoard) {
@@ -115,14 +115,16 @@
                             >
                         </div>
                         <div class="text-xs">
-                            {dateStringToLocal(board.archived)}
+                            {board.archived
+                                ? dateStringToLocal(board.archived)
+                                : null}
                         </div>
                     </div>
                     <div
                         class="flex shrink-0 items-center justify-center space-x-2"
                     >
                         <button
-                            class:loading={unarchivingItems[board.uuid]}
+                            class:loading={unarchivingItems.get(board.uuid)}
                             on:click={() => {
                                 onUnarchiveItem(board);
                             }}

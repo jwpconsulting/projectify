@@ -30,6 +30,8 @@ export function dateStringToLocal(dateStr: string, time = false): string {
 
     if (browser) {
         lang = navigator.language;
+    } else {
+        lang = "en";
     }
 
     if (isNaN(date.getTime())) {
@@ -48,11 +50,11 @@ export function dateStringToLocal(dateStr: string, time = false): string {
     }
 }
 
-export function getMonths(lang: string = undefined): string[] {
+export function getMonths(lang: string | undefined = undefined): string[] {
     const objDate = new Date();
     objDate.setDate(1);
 
-    const months = [];
+    const months: string[] = [];
     for (let i = 0; i < 12; i++) {
         objDate.setMonth(i);
         const locale = lang;
@@ -63,11 +65,11 @@ export function getMonths(lang: string = undefined): string[] {
     return months;
 }
 
-export function getWeekDays(lang: string = undefined): string[] {
+export function getWeekDays(lang: string | undefined = undefined): string[] {
     const objDate = new Date();
     objDate.setDate(1);
 
-    const weekDays = [];
+    const weekDays: string[] = [];
     for (let i = 0; i < 7; i++) {
         objDate.setDate(i);
         const locale = lang;

@@ -1,3 +1,4 @@
+import type { Color } from "$lib/types";
 export const paletteSize = 24;
 
 export function interpolateCosine(
@@ -30,13 +31,7 @@ export const paletteA = interpolateCosine(
     paletteVals[3]
 );
 
-export function getColorFromInx(inx: number): {
-    h: number;
-    s: number;
-    l: number;
-    br: boolean;
-    style: string;
-} {
+export function getColorFromInx(inx: number): Color {
     const i = (inx % paletteSize) / paletteSize;
     const h = Math.floor(i * 360) % 360;
     const s = 80;

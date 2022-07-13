@@ -5,13 +5,13 @@
     import IconUserPlusFill from "./icons/icon-user-plus-fill.svelte";
 
     export let size = 32;
-    export let url: string = null;
+    export let url: string | null = null;
     export let prefix = vars.API_ENDPOINT;
     export let showPlus = false;
-    export let emptyIcon = IconUserProfile;
-    export let typogram: string = null;
+    export let emptyIcon: any | null = IconUserProfile;
+    export let typogram: string | null = null;
 
-    let src: string = null;
+    let src: string | null = null;
 
     let loadingError = false;
 

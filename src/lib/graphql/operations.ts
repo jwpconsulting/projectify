@@ -30,7 +30,7 @@ export const Mutation_UpdateProfile = gql`
     }
 `;
 
-export const Mutation_Singup = gql`
+export const Mutation_Signup = gql`
     mutation Signup($input: SignupInput!) {
         signup(input: $input) {
             email

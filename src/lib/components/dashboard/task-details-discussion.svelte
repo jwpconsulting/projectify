@@ -37,7 +37,10 @@
     let messagesView: HTMLDivElement;
 
     afterUpdate(() => {
-        if (messagesView && task?.chat_messages?.length > 0) {
+        if (!task.chat_messages) {
+            throw new Error("Expected task.chat_messages");
+        }
+        if (messagesView && task.chat_messages.length > 0) {
             messagesView.scrollTo(0, messagesView.scrollHeight);
         }
     });

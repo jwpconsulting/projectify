@@ -6,7 +6,7 @@
     import IconSearch from "./icons/icon-search.svelte";
     export let placeholder = $_("search");
     export let searchText = "";
-    export let inputElement = null;
+    export let inputElement: HTMLElement | null = null;
 
     export let dispatch = createEventDispatcher();
 </script>

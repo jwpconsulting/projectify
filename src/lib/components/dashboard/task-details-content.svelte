@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { currenTaskDetailsUUID } from "$lib/stores/dashboard";
+    import { currentTaskDetailsUUID } from "$lib/stores/dashboard";
 
     import { _ } from "svelte-i18n";
     import LabelPicker from "./labelPicker.svelte";
@@ -96,8 +96,8 @@
                 </div>
             </div>
         </div>
-        {#if subTasks}
-            <Subtasks taskUUID={$currenTaskDetailsUUID} bind:subTasks />
+        {#if subTasks && $currentTaskDetailsUUID}
+            <Subtasks taskUUID={$currentTaskDetailsUUID} bind:subTasks />
         {/if}
     </main>
 {/if}

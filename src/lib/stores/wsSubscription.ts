@@ -10,8 +10,8 @@ export const activeWSSubscriptions = writable(0);
 export const activeWSConnections = writable(0);
 export class WSSubscriptionStore {
     public store: WSStore;
-    subscribers = [];
-    socket: WebSocket = null;
+    subscribers: WSSubscriber[] = [];
+    socket: WebSocket | null = null;
     retryingConnection = false;
 
     public retryTimeStart = 2000;
@@ -33,7 +33,6 @@ export class WSSubscriptionStore {
             this.socket.onclose = null;
             this.socket.onerror = null;
             this.socket.close();
-            delete this.socket;
             this.socket = null;
         }
     }
@@ -113,31 +112,29 @@ export class WSSubscriptionStore {
             }
             if (!this.subscribers.length) {
                 this.deleteConnection();
-                stores[this.url] = null;
-                delete stores[this.url];
+                stores.delete(this.url);
                 stopWatchDog();
             }
         };
     }
 }
 
-type WSSubscriptionStoreMap = {
-    [key: string]: WSSubscriptionStore;
-};
+const stores = new Map<string, WSSubscriptionStore | null>();
 
-const stores: WSSubscriptionStoreMap = {};
-
-export function getSubscriptionFor(url: string): WSSubscriptionStore {
+export function getSubscriptionFor(url: string): WSSubscriptionStore | null {
     if (!browser) {
         return null;
     }
-    if (!stores[url]) {
-        stores[url] = new WSSubscriptionStore(url);
+    if (!stores.has(url)) {
+        const store = new WSSubscriptionStore(url);
+        stores.set(url, store);
+        return store;
     }
-    return stores[url];
+    const store = stores.get(url);
+    return store ? store : null;
 }
 
-let watchDogTimer = null;
+let watchDogTimer: number | null = null;
 let watchDogLastTime = 0;
 const watchDogInterval = 1000;
 function startWatchDog(): void {
@@ -147,8 +144,10 @@ function startWatchDog(): void {
     if (watchDogLastTime == 0) {
         watchDogLastTime = Date.now();
     }
-    clearInterval(watchDogTimer);
-    watchDogTimer = setInterval(() => {
+    if (watchDogTimer) {
+        window.clearInterval(watchDogTimer);
+    }
+    watchDogTimer = window.setInterval(() => {
         const now = Date.now();
         // const deltaTime = now - watchDogLastTime;
         watchDogLastTime = now;
@@ -166,15 +165,12 @@ function startWatchDog(): void {
     }, watchDogInterval);
 }
 function stopWatchDog(): void {
-    let connectionActive = false;
-    for (const url in stores) {
-        if (stores[url]) {
-            connectionActive = true;
-        }
-        break;
+    if (!watchDogTimer) {
+        throw new Error("Expected watchDogTimer");
     }
+    let connectionActive = stores.size > 0;
     if (!connectionActive) {
-        clearInterval(watchDogTimer);
+        window.clearInterval(watchDogTimer);
     }
     checkAllConnectionStatus();
 }
@@ -185,7 +181,7 @@ function checkAllConnectionStatus() {
 
     // const readyMsgs = ["Connecitng", "OPEN", "Closing", "Closed"];
     for (const url in stores) {
-        const wsss = stores[url];
+        const wsss = stores.get(url);
 
         if (wsss) {
             activeWSS++;
@@ -202,7 +198,7 @@ function checkAllConnectionStatus() {
         console.log("activeWSS", activeWSS, "activeCon", activeCon);
 
         for (const url in stores) {
-            const wsss = stores[url];
+            const wsss = stores.get(url);
             if (wsss) {
                 console.log("wsss.url", wsss.url, url);
                 wsss.retryConnection(true);

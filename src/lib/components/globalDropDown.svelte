@@ -12,9 +12,15 @@
         open?: boolean;
     };
 
-    let dropDown = null;
+    type DropDown = {
+        open: (...arg0: any[]) => void;
+        openComponent: (...arg0: any[]) => void;
+        close: (...arg0: any[]) => void;
+    };
 
-    export function getDropDown() {
+    let dropDown: DropDown | null = null;
+
+    export function getDropDown(): DropDown | null {
         return dropDown;
     }
 </script>
@@ -23,13 +29,13 @@
     import { SvelteComponent, tick } from "svelte";
     import IconChevronDown from "./icons/icon-chevron-down.svelte";
 
-    let component: SvelteComponent = null;
-    let componentProps: any = null;
-    let items: DropDownMenuItem[] = null;
-    let target: HTMLElement = null;
-    let focusEl: any;
-    let activeId: any = null;
-    let rootEl: any;
+    let component: SvelteComponent | null = null;
+    let componentProps: any | null = null;
+    let items: DropDownMenuItem[] | null = null;
+    let target: HTMLElement | null = null;
+    let focusEl: HTMLElement | null = null;
+    let activeId: any | null = null;
+    let rootEl: HTMLElement | null;
     let startX: number;
     let startY: number;
     let x: number;
@@ -43,6 +49,12 @@
     function checkTargetPosition() {
         if (!target) {
             return;
+        }
+        if (!rootEl) {
+            throw new Error("Expected rootEl");
+        }
+        if (!rootEl.parentElement) {
+            throw new Error("Expected rootEl.parentElement");
         }
 
         const rect = target.getBoundingClientRect();
@@ -80,6 +92,12 @@
     async function placeDialog() {
         await tick();
 
+        if (!focusEl) {
+            throw new Error("Expected focusEl");
+        }
+        if (!target) {
+            throw new Error("Expected target");
+        }
         focusEl.focus();
         const rect = target.getBoundingClientRect();
         startX = Math.round(rect.left);
@@ -134,10 +152,16 @@
                 bind:this={focusEl}
                 tabindex="0"
                 on:blur={(e) => {
-                    if (
-                        e.relatedTarget &&
-                        !focusEl.contains(e.relatedTarget)
-                    ) {
+                    if (!e.relatedTarget) {
+                        throw new Error("Expected e.relatedTarget");
+                    }
+                    if (!focusEl) {
+                        throw new Error("Expected focusEl");
+                    }
+                    if (!(e.relatedTarget instanceof HTMLElement)) {
+                        throw new Error("e.relatedTarget not HTMLElement");
+                    }
+                    if (!focusEl.contains(e.relatedTarget)) {
                         close();
                     }
                 }}
@@ -152,10 +176,16 @@
             <ul
                 bind:this={focusEl}
                 on:blur={(e) => {
-                    if (
-                        e.relatedTarget &&
-                        !focusEl.contains(e.relatedTarget)
-                    ) {
+                    if (!e.relatedTarget) {
+                        throw new Error("Expected e.relatedTarget");
+                    }
+                    if (!focusEl) {
+                        throw new Error("Expected focusEl");
+                    }
+                    if (!(e.relatedTarget instanceof HTMLElement)) {
+                        throw new Error("e.relatedTarget not HTMLElement");
+                    }
+                    if (!focusEl.contains(e.relatedTarget)) {
                         close();
                     }
                 }}
@@ -176,6 +206,11 @@
                                     if (!it.items) {
                                         if (it.onClick) {
                                             it.onClick();
+                                        }
+                                        if (!focusEl) {
+                                            throw new Error(
+                                                "Expected focusEl"
+                                            );
                                         }
                                         focusEl.blur();
                                         close();
@@ -202,7 +237,7 @@
                                     class:h-0={!it.open}
                                     class="menu overflow-hidden pl-0"
                                 >
-                                    {#each it.items as it}
+                                    {#each it.items || [] as it}
                                         <li>
                                             <a
                                                 title={it.tooltip}
@@ -212,6 +247,11 @@
                                                 class="nowrap-ellipsis h-9 space-x-2 px-0 text-xs font-bold"
                                                 href={it.href}
                                                 on:click={() => {
+                                                    if (!focusEl) {
+                                                        throw new Error(
+                                                            "Expected focusEl"
+                                                        );
+                                                    }
                                                     if (it.onClick) {
                                                         it.onClick();
                                                     }

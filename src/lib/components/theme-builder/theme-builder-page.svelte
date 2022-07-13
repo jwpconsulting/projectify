@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ThemeBuilter from "./theme-builter.svelte";
+    import ThemeBuilder from "./theme-builder.svelte";
 
     import { userTheme } from "$lib/stores/global-ui";
 
@@ -7,9 +7,10 @@
         factoryLightThemeColors,
         factoryDarkThemeColors,
     } from "$lib/themeColors";
+    import type { ThemeColors } from "$lib/types";
 
-    let lightTheme = null;
-    let darkTheme = null;
+    let lightTheme: ThemeColors | null = null;
+    let darkTheme: ThemeColors | null = null;
 
     $: {
         if ($userTheme) {
@@ -34,6 +35,6 @@
 </script>
 
 <div class="grid min-h-full grid-cols-2 justify-items-center bg-[#f0f0f0]">
-    <ThemeBuilter theme={lightTheme} />
-    <ThemeBuilter theme={darkTheme} swapLayout={true} isDark={true} />
+    <ThemeBuilder theme={lightTheme} />
+    <ThemeBuilder theme={darkTheme} swapLayout={true} isDark={true} />
 </div>

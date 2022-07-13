@@ -1,7 +1,7 @@
 <script lang="ts">
     import {
-        assingUserToTask,
-        currenTaskDetailsUUID,
+        assignUserToTask,
+        currentTaskDetailsUUID,
         currentWorkspaceUUID,
         deleteTask,
         newTaskSectionUUID,
@@ -34,8 +34,9 @@
     import IconClose from "../icons/icon-close.svelte";
     import TaskDetailsBreadcrumbs from "./task-details-breadcrumbs.svelte";
     import type { Task, SubTask, Label } from "$lib/types";
+    import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
 
-    let task: Task = null;
+    let task: Task | null = null;
     let loading = true;
     let failed = false;
     let subTasks: SubTask[] = [];
@@ -43,14 +44,17 @@
     let taskModified = false;
     let isSaving = false;
 
-    let taskWSStrore = null;
+    let taskWSStore: WSSubscriptionStore | null = null;
 
     $: uuids = $page.params["uuids"].split("/");
     $: activeTabId = writable(uuids[3] || "details");
 
     async function fetch() {
+        if (!$currentTaskDetailsUUID) {
+            throw new Error("Expected $currentTaskDetailsUUID");
+        }
         try {
-            task = await getTask($currenTaskDetailsUUID);
+            task = await getTask($currentTaskDetailsUUID);
         } catch {
             failed = true;
         } finally {
@@ -77,7 +81,7 @@
     }, 100);
 
     $: {
-        if ($currenTaskDetailsUUID) {
+        if ($currentTaskDetailsUUID) {
             fetch();
         } else {
             reset();
@@ -92,32 +96,36 @@
     }
 
     $: {
-        if ($currenTaskDetailsUUID) {
-            taskWSStrore = getSubscriptionForCollection(
+        if ($currentTaskDetailsUUID) {
+            taskWSStore = getSubscriptionForCollection(
                 "task",
-                $currenTaskDetailsUUID
+                $currentTaskDetailsUUID
             );
         }
     }
 
     $: {
-        if ($taskWSStrore) {
+        if (taskWSStore) {
             refetch();
         }
     }
 
     $: {
         if (task) {
-            subTasks = task.sub_tasks;
-            labels = task.labels;
+            subTasks = task.sub_tasks || [];
+            labels = task.labels || [];
         }
     }
 
-    $: itsNew = $currenTaskDetailsUUID == null;
+    let itsNew: boolean = false;
+    $: itsNew = $currentTaskDetailsUUID == null;
 
-    $: saveEnabled = taskModified && task.title.length && !isSaving;
+    $: saveEnabled = taskModified && task && task.title.length && !isSaving;
 
     async function save() {
+        if (!task) {
+            throw new Error("Expected task");
+        }
         isSaving = true;
 
         const commonTaskInputs = {
@@ -156,7 +164,7 @@
                 });
 
                 let taskUUID = mRes.data.addTask.uuid;
-                currenTaskDetailsUUID.set(taskUUID);
+                currentTaskDetailsUUID.set(taskUUID);
                 pushTashUUIDtoPath(taskUUID);
                 taskModified = false;
             } catch (error) {
@@ -168,7 +176,7 @@
                     mutation: Mutation_UpdateTask,
                     variables: {
                         input: {
-                            uuid: $currenTaskDetailsUUID,
+                            uuid: $currentTaskDetailsUUID,
                             ...commonTaskInputs,
                         },
                     },
@@ -185,15 +193,21 @@
     }
 
     async function onDelete() {
+        if (!task) {
+            throw new Error("Expected task");
+        }
         deleteTask(task);
     }
 
     let userPickerOpen = false;
     let userPicked = false;
     function onUserSelected({ detail: { user } }) {
+        if (!task) {
+            throw new Error("Expected task");
+        }
         userPickerOpen = false;
         if (user?.email == task?.assignee?.user.email) {
-            task.assignee = null;
+            task.assignee = undefined;
         } else {
             task.assignee = user;
         }
@@ -207,14 +221,15 @@
         if (!userPicked) {
             return;
         }
-        if (!$currenTaskDetailsUUID) {
+        if (!$currentTaskDetailsUUID) {
             return;
         }
 
-        await assingUserToTask(
-            task?.assignee?.user.email || null,
-            $currenTaskDetailsUUID
-        );
+        const userEmail = task?.assignee?.user.email;
+        if (!userEmail) {
+            throw new Error("Expected userEmail");
+        }
+        await assignUserToTask(userEmail, $currentTaskDetailsUUID);
 
         userPicked = false;
     }

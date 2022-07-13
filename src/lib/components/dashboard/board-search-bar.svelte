@@ -22,7 +22,7 @@
 
     export let filterLabels: Label[] = [];
 
-    export let filterUser: WorkspaceUser | "unassigned" = null;
+    export let filterUser: WorkspaceUser | "unassigned" | null = null;
 
     let fitersContentHeight = 0;
 

@@ -1,5 +1,5 @@
 function getCookie(name: string) {
-    let cookieValue = null;
+    let cookieValue: string | null = null;
     if (document.cookie && document.cookie !== "") {
         const cookies = document.cookie.split(";");
         for (let i = 0; i < cookies.length; i++) {
@@ -19,39 +19,22 @@ function getCookie(name: string) {
 export async function uploadImage(
     imageFile: File,
     url: string
-): Promise<unknown> {
-    let uploadRequest = null;
+): Promise<null> {
     if (!imageFile) {
         return new Promise((resolve) => {
             resolve(null);
         });
     }
 
-    if (uploadRequest) {
-        uploadRequest.abort();
-    }
-
     const formData = new FormData();
     formData.append("file", imageFile);
-    uploadRequest = new XMLHttpRequest();
-    uploadRequest.withCredentials = true;
-    uploadRequest.open("POST", url);
-
     const csrftoken = getCookie("csrftoken");
-    if (csrftoken) {
-        uploadRequest.setRequestHeader("X-CSRFToken", csrftoken);
-    }
-
-    uploadRequest.send(formData);
-
-    const promise = new Promise((resolve, reject) => {
-        uploadRequest.onload = () => {
-            if (uploadRequest.status === 200 || uploadRequest.status === 204) {
-                resolve(uploadRequest.response);
-            } else {
-                reject(Error(uploadRequest.statusText));
-            }
-        };
+    const response = await fetch(url, {
+        method: "POST",
+        credentials: "include",
+        headers: csrftoken ? { "X-CSRFToken": csrftoken } : {},
+        body: formData,
     });
-    return promise;
+    await response.text();
+    return null;
 }

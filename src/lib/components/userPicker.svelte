@@ -15,18 +15,21 @@
     import SearchInput from "./search-input.svelte";
     import { fuseSearchThreshold } from "$lib/stores/dashboard";
 
-    export let workspaceUUID = null;
-    export let selectedUser = null;
+    export let workspaceUUID: string | null = null;
+    export let selectedUser: WorkspaceUser | null | "unassigned" = null;
     export let enableUnassignedSelection = false;
 
     export let dispatch = createEventDispatcher();
 
     let workspace: Workspace | null = null;
     let loading = true;
-    let workspaceWSStore: WSSubscriptionStore;
+    let workspaceWSStore: WSSubscriptionStore | null;
     let workspace_users: WorkspaceUser[] = [];
 
     async function fetch() {
+        if (!workspaceUUID) {
+            throw new Error("Expected workspaceUUID");
+        }
         workspace = await getWorkspace(workspaceUUID);
         loading = false;
     }
@@ -61,7 +64,7 @@
     }
 
     let searchText = "";
-    let searchEngine: Fuse<WorkspaceUser> = null;
+    let searchEngine: Fuse<WorkspaceUser> | null = null;
     let filteredWorkspaceUsers: WorkspaceUser[] = [];
     $: {
         searchEngine = new Fuse(workspace_users, {
@@ -72,6 +75,9 @@
 
     $: {
         if (searchText.length) {
+            if (!searchEngine) {
+                throw new Error("Expected searchEngine");
+            }
             filteredWorkspaceUsers = searchEngine
                 .search(searchText)
                 .map((res: Fuse.FuseResult<WorkspaceUser>) => res.item);
@@ -80,7 +86,7 @@
         }
     }
 
-    function selectUser(user: WorkspaceUser | "unassigned") {
+    function selectUser(user: WorkspaceUser | "unassigned" | null) {
         selectedUser = user;
         dispatch("userSelected", { user });
     }
@@ -95,9 +101,12 @@
 
     function selectMe() {
         // find self in workspace_users
-        const self = workspace_users.find(
-            (el) => el.user.email == $user.email
+        const self = workspace_users.find((el) =>
+            $user ? el.user.email == $user.email : false
         );
+        if (!self) {
+            throw new Error("Expected self");
+        }
         selectUser(self);
     }
 
@@ -150,7 +159,9 @@
                 <li>
                     <a
                         class:active={selectedUser &&
-                            selectedUser.email == workspaceUser.user.email}
+                            selectedUser !== "unassigned" &&
+                            selectedUser.user.email ==
+                                workspaceUser.user.email}
                         class="flex flex-row space-x-4"
                         href="/"
                         on:click|preventDefault={(_) => {
@@ -207,14 +218,14 @@
                 >
                     <div class="text-xs ">{$_("clear-selection")}</div>
                 </div>
-            {/if}
-            {#if selectedUser?.email !== $user?.email}
-                <div
-                    class="footer-btn flex h-8 grow items-center justify-center text-primary"
-                    on:click={selectMe}
-                >
-                    <div class="text-xs ">{$_("select-me")}</div>
-                </div>
+                {#if selectedUser !== "unassigned"}
+                    <div
+                        class="footer-btn flex h-8 grow items-center justify-center text-primary"
+                        on:click={selectMe}
+                    >
+                        <div class="text-xs ">{$_("select-me")}</div>
+                    </div>
+                {/if}
             {/if}
         </footer>
     {/if}

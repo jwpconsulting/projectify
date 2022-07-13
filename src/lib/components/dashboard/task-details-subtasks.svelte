@@ -137,9 +137,9 @@
         await moveSubTask(subTask, subTask.order + 1);
     }
 
-    let subtaskEditTitle = null;
-    let editSubtaskUUID = null;
-    let editSubtaskInput = null;
+    let subtaskEditTitle: string | null = null;
+    let editSubtaskUUID: string | null = null;
+    let editSubtaskInput: HTMLElement | null = null;
 
     async function editSubtask(subTask: SubTask) {
         editSubtaskUUID = subTask.uuid;
@@ -147,6 +147,9 @@
 
         await tick();
 
+        if (!editSubtaskInput) {
+            throw new Error("Expected editSubtaskInput");
+        }
         editSubtaskInput.focus();
     }
     function stopEditSubtask() {

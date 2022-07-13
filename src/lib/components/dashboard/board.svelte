@@ -29,7 +29,7 @@
 
     import { dateStringToLocal } from "$lib/utils/date";
     import BoardSectionLayoutSelector from "./board-section-layout-selector.svelte";
-    import BoardSeachBar from "./board-seach-bar.svelte";
+    import BoardSearchBar from "./board-search-bar.svelte";
     import BoardTaskItem from "./board-task-item.svelte";
     import Loading from "../loading.svelte";
     import {
@@ -39,29 +39,37 @@
     import IconArrowLeft from "../icons/icon-arrow-left.svelte";
     import IconArrowRight from "../icons/icon-arrow-right.svelte";
     import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
+    import type {
+        Task,
+        WorkspaceBoard,
+        WorkspaceBoardSection,
+    } from "$lib/types";
 
-    export let workspaceUUID: string;
-    export let boardUUID = null;
+    export let workspaceUUID: string | null;
+    export let boardUUID: string | null = null;
 
-    let res = null;
+    let res: WorkspaceBoard | null = null;
     let loading = true;
-    let board = null;
-    let sections = [];
+    let board: WorkspaceBoard | null = null;
+    let sections: WorkspaceBoardSection[] = [];
     let isDragging = false;
 
-    let boardWSStore: WSSubscriptionStore;
+    let boardWSStore: WSSubscriptionStore | null;
 
-    let filteredSections = [];
+    let filteredSections: WorkspaceBoardSection[] = [];
     let filterLabels = [];
 
     let searchText = "";
-    let tasksSearchResults = [];
+    let tasksSearchResults: Task[] = [];
 
     $: {
         currentBoardSections.set(sections);
     }
 
     async function fetchBoard() {
+        if (!boardUUID) {
+            throw new Error("Expected boardUUID");
+        }
         res = await getWorkspaceBoard(boardUUID);
         loading = false;
     }
@@ -183,6 +191,9 @@
     }
 
     async function onEdit() {
+        if (!board) {
+            throw new Error("Expected board");
+        }
         let modalRes = await getModal("editBoardModal").open(board);
 
         if (!modalRes) {
@@ -213,6 +224,10 @@
             return;
         }
 
+        if (!board) {
+            throw new Error("Expected board");
+        }
+
         try {
             await client.mutate({
                 mutation: Mutation_ArchiveWorkspaceBoard,
@@ -223,17 +238,23 @@
                     },
                 },
             });
-
-            gotoDashboard(workspaceUUID);
         } catch (error) {
             console.error(error);
         }
+        if (!workspaceUUID) {
+            throw new Error("Expected workspaceUUID");
+        }
+        gotoDashboard(workspaceUUID);
     }
     async function onDelete() {
         let modalRes = await getModal("deleteBoardConfirmModal").open();
 
         if (!modalRes) {
             return;
+        }
+
+        if (!board) {
+            throw new Error("Expected board");
         }
 
         try {
@@ -245,17 +266,22 @@
                     },
                 },
             });
-
-            gotoDashboard(workspaceUUID);
         } catch (error) {
             console.error(error);
         }
+        if (!workspaceUUID) {
+            throw new Error("Expected workspaceUUID");
+        }
+        gotoDashboard(workspaceUUID);
     }
 
-    let sectionContainerEl: HTMLElement = null;
+    let sectionContainerEl: HTMLElement | null = null;
     let scrollInx = 0;
 
     function onSectionScroll(_e: Event) {
+        if (!sectionContainerEl) {
+            throw new Error("Expected sectionContainerEl");
+        }
         const s = sectionContainerEl.scrollLeft;
         const vw = sectionContainerEl.clientWidth;
 
@@ -282,8 +308,11 @@
     }
 
     function scrollToInx(inx: number) {
+        if (!sectionContainerEl) {
+            throw new Error("Expected sectionContainerEl");
+        }
         const w = sectionContainerEl.clientWidth;
-        const el: HTMLElement = sectionContainerEl.querySelector(
+        const el: HTMLElement | null = sectionContainerEl.querySelector(
             `:scope > div:nth-child(${inx + 1})`
         );
         if (el) {
@@ -291,6 +320,8 @@
                 left: el.offsetLeft - w / 2 + el.clientWidth / 2,
                 behavior: "smooth",
             });
+        } else {
+            throw new Error("Could not find el");
         }
         console.log("scroll to inx", scrollInx, inx);
     }
@@ -307,8 +338,11 @@
         }
     }
     function onSwitchWithNextSection({ detail: { section } }) {
-        const sectionIndex = sections.findIndex((s) => s.uuid == section.uuid);
-        const nextSection = sections[sectionIndex + 1];
+        const sectionIndex: number = sections.findIndex(
+            (s: WorkspaceBoardSection) => s.uuid == section.uuid
+        );
+        const nextSection: WorkspaceBoardSection | null =
+            sections[sectionIndex + 1] || null;
 
         if (nextSection) {
             moveSection(section.uuid, nextSection._order);
@@ -333,23 +367,31 @@
                     <span class="nowrap-ellipsis">{board.title}</span>
                 </div>
                 <BoardSectionLayoutSelector />
-                <ToolBar
-                    items={[
-                        { label: $_("Edit"), icon: IconEdit, onClick: onEdit },
-                        {
-                            label: $_("Archive"),
-                            icon: IconTrash,
-                            onClick: onArchive,
-                            hidden: !board?.workspace_board_sections?.length,
-                        },
-                        {
-                            label: $_("Delete"),
-                            icon: IconTrash,
-                            onClick: onDelete,
-                            hidden: board?.workspace_board_sections?.length,
-                        },
-                    ]}
-                />
+                {#if board.workspace_board_sections}
+                    <ToolBar
+                        items={[
+                            {
+                                label: $_("Edit"),
+                                icon: IconEdit,
+                                onClick: onEdit,
+                            },
+                            {
+                                label: $_("Archive"),
+                                icon: IconTrash,
+                                onClick: onArchive,
+                                hidden:
+                                    board.workspace_board_sections.length == 0,
+                            },
+                            {
+                                label: $_("Delete"),
+                                icon: IconTrash,
+                                onClick: onDelete,
+                                hidden:
+                                    board.workspace_board_sections.length > 0,
+                            },
+                        ]}
+                    />
+                {/if}
                 {#if board.deadline}
                     <div
                         class="flex shrink-0 items-center rounded-lg bg-primary p-1 px-3 text-primary-content"
@@ -363,7 +405,7 @@
             </div>
 
             <div class="flex grow items-stretch">
-                <BoardSeachBar
+                <BoardSearchBar
                     bind:searchText
                     bind:filterLabels
                     bind:filterUser={$filterUser}
