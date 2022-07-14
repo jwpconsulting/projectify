@@ -226,11 +226,10 @@
         }
 
         const userEmail = task?.assignee?.user.email;
-        if (!userEmail) {
-            throw new Error("Expected userEmail");
-        }
-        await assignUserToTask(userEmail, $currentTaskDetailsUUID);
-
+        await assignUserToTask(
+            userEmail ? userEmail : null,
+            $currentTaskDetailsUUID
+        );
         userPicked = false;
     }
 

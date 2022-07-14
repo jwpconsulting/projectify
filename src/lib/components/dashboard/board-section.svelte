@@ -330,12 +330,15 @@
         dropDown.openComponent(UserPicker, target, {
             workspaceUUID: $currentWorkspaceUUID,
             selectedUser: task.assignee,
-            dispatch: async (name: string, data: WorkspaceUser) => {
+            dispatch: async (name: string, data: { user: WorkspaceUser }) => {
                 if (!dropDown) {
                     throw new Error("Expected dropDown");
                 }
                 if (name == "userSelected") {
-                    await assignUserToTask(data.user.email, task.uuid);
+                    const userEmail = data.user.user
+                        ? data.user.user.email
+                        : null;
+                    await assignUserToTask(userEmail, task.uuid);
                 }
                 dropDown.close();
             },

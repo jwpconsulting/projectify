@@ -230,7 +230,7 @@ export async function deleteTask(task: Task): Promise<void> {
 }
 
 export async function assignUserToTask(
-    userEmail: string,
+    userEmail: string | null,
     taskUUID: string
 ): Promise<void> {
     try {
