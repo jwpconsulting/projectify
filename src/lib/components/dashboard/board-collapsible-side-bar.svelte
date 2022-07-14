@@ -86,7 +86,7 @@
 
     <!-- Boards nav -->
     <div class:hidden={!open} class="flex grow flex-col overflow-hidden">
-        {#if selectedWorkspaceUUID && selectedBoardUUID}
+        {#if selectedWorkspaceUUID}
             <h2 class="p-4 text-base font-bold">Workspace Boards</h2>
             <BoardsSideNav {selectedWorkspaceUUID} {selectedBoardUUID} />
         {/if}

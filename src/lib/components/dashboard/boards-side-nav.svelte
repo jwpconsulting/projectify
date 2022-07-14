@@ -14,7 +14,7 @@
     import type { WorkspaceBoard, Workspace } from "$lib/types";
 
     export let selectedWorkspaceUUID: string;
-    export let selectedBoardUUID: string;
+    export let selectedBoardUUID: string | null = null;
 
     let res: Workspace | null = null;
     let boards: WorkspaceBoard[] = [];
