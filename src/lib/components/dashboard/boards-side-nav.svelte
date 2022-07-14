@@ -16,11 +16,11 @@
     export let selectedWorkspaceUUID: string;
     export let selectedBoardUUID: string | null = null;
 
-    let res: Workspace | null = null;
+    let workspace: Workspace | null = null;
     let boards: WorkspaceBoard[] = [];
 
     async function fetchWorkspace() {
-        res = await getWorkspace(selectedWorkspaceUUID);
+        workspace = await getWorkspace(selectedWorkspaceUUID);
     }
 
     $: {
@@ -30,16 +30,16 @@
     }
 
     $: {
-        if (res) {
-            if (res.workspace_boards) {
-                boards = res.workspace_boards;
+        if (workspace) {
+            if (workspace.workspace_boards) {
+                boards = workspace.workspace_boards;
             } else {
-                throw new Error("Expected res.workspace_boards");
+                throw new Error("Expected workspace.workspace_boards");
             }
-            if (res.labels) {
-                currentWorkspaceLabels.set([...res.labels]);
+            if (workspace.labels) {
+                currentWorkspaceLabels.set([...workspace.labels]);
             } else {
-                throw new Error("Expected res.labels");
+                throw new Error("Expected workspace.labels");
             }
 
             if (!selectedBoardUUID && boards.length) {

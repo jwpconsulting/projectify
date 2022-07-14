@@ -53,6 +53,9 @@
 
     function onBlur(event: FocusEvent) {
         const relatedTarget = event.relatedTarget;
+        if (!relatedTarget) {
+            throw new Error("Expected relatedTarget");
+        }
         if (relatedTarget instanceof HTMLElement) {
             if (relatedTarget && !userPickerEl.contains(relatedTarget)) {
                 userPickerOpen = false;

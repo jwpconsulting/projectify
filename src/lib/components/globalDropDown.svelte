@@ -92,13 +92,14 @@
     async function placeDialog() {
         await tick();
 
-        if (!focusEl) {
+        if (focusEl) {
+            focusEl.focus();
+        } else {
             throw new Error("Expected focusEl");
         }
         if (!target) {
             throw new Error("Expected target");
         }
-        focusEl.focus();
         const rect = target.getBoundingClientRect();
         startX = Math.round(rect.left);
         startY = Math.round(rect.top);
@@ -153,13 +154,16 @@
                 tabindex="0"
                 on:blur={(e) => {
                     if (!e.relatedTarget) {
-                        throw new Error("Expected e.relatedTarget");
+                        console.log("Expected e.relatedTarget");
+                        return;
                     }
                     if (!focusEl) {
-                        throw new Error("Expected focusEl");
+                        console.log("Expected focusEl");
+                        return;
                     }
                     if (!(e.relatedTarget instanceof HTMLElement)) {
-                        throw new Error("e.relatedTarget not HTMLElement");
+                        console.log("e.relatedTarget not HTMLElement");
+                        return;
                     }
                     if (!focusEl.contains(e.relatedTarget)) {
                         close();
@@ -177,13 +181,16 @@
                 bind:this={focusEl}
                 on:blur={(e) => {
                     if (!e.relatedTarget) {
-                        throw new Error("Expected e.relatedTarget");
+                        console.log("Expected e.relatedTarget");
+                        return;
                     }
                     if (!focusEl) {
-                        throw new Error("Expected focusEl");
+                        console.log("Expected focusEl");
+                        return;
                     }
                     if (!(e.relatedTarget instanceof HTMLElement)) {
-                        throw new Error("e.relatedTarget not HTMLElement");
+                        console.log("e.relatedTarget not HTMLElement");
+                        return;
                     }
                     if (!focusEl.contains(e.relatedTarget)) {
                         close();

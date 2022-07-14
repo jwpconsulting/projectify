@@ -22,7 +22,10 @@
 
     export let selectedWorkspace: Workspace | null = null;
 
-    $: uuids = $page.params["uuids"].split("/");
+    let uuids: string[];
+    $: {
+        uuids = $page.params["uuids"].split("/");
+    }
 
     let selectedWorkspaceUUID: string | null;
     let selectedBoardUUID: string | null;
