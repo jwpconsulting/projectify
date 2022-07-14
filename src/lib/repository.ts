@@ -7,63 +7,61 @@ import type {
     Task,
 } from "$lib/types";
 
-export async function getUser(): Promise<User> {
-    const response = await fetch(`${vars.API_ENDPOINT}/user/user`, {
+async function getWithCredentialsJson<T>(url: string): Promise<T> {
+    const response = await fetch(`${vars.API_ENDPOINT}${url}`, {
         credentials: "include",
     });
-    return await response.json();
+    const body = await response.json();
+    if (!response.ok) {
+        throw new Error(`${response.statusText}: ${JSON.stringify(body)}`);
+    }
+    return body;
+}
+
+export async function getUser(): Promise<User | null> {
+    try {
+        return await getWithCredentialsJson<User>(`/user/user`);
+    } catch {
+        return null;
+    }
 }
 
 export async function getWorkspaceBoard(
     uuid: string
 ): Promise<WorkspaceBoard> {
-    const response = await fetch(
-        `${vars.API_ENDPOINT}/workspace/workspace-board/${uuid}`,
-        { credentials: "include" }
+    return await getWithCredentialsJson<WorkspaceBoard>(
+        `/workspace/workspace-board/${uuid}`
     );
-    return await response.json();
 }
 
 export async function getWorkspaces(): Promise<Workspace[]> {
-    const response = await fetch(
-        `${vars.API_ENDPOINT}/workspace/user/workspaces/`,
-        { credentials: "include" }
+    return await getWithCredentialsJson<Workspace[]>(
+        `/workspace/user/workspaces/`
     );
-    return await response.json();
 }
 
 export async function getWorkspace(uuid: string): Promise<Workspace> {
-    const response = await fetch(
-        `${vars.API_ENDPOINT}/workspace/workspace/${uuid}`,
-        { credentials: "include" }
+    return await getWithCredentialsJson<Workspace>(
+        `/workspace/workspace/${uuid}`
     );
-    return await response.json();
 }
 
 export async function getTask(uuid: string): Promise<Task> {
-    const response = await fetch(
-        `${vars.API_ENDPOINT}/workspace/task/${uuid}`,
-        { credentials: "include" }
-    );
-    return await response.json();
+    return await getWithCredentialsJson<Task>(`/workspace/task/${uuid}`);
 }
 
 export async function getArchivedWorkspaceBoards(
     workspace_uuid: string
 ): Promise<WorkspaceBoard[]> {
-    const response = await fetch(
-        `${vars.API_ENDPOINT}/workspace/workspace/${workspace_uuid}/workspace-boards-archived/`,
-        { credentials: "include" }
+    return await getWithCredentialsJson<WorkspaceBoard[]>(
+        `/workspace/workspace/${workspace_uuid}/workspace-boards-archived/`
     );
-    return await response.json();
 }
 
 export async function getWorkspaceCustomer(
     workspace_uuid: string
 ): Promise<Customer> {
-    const response = await fetch(
-        `${vars.API_ENDPOINT}/corporate/workspace/${workspace_uuid}/customer`,
-        { credentials: "include" }
+    return await getWithCredentialsJson<Customer>(
+        `/corporate/workspace/${workspace_uuid}/customer`
     );
-    return await response.json();
 }

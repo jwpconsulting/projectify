@@ -89,17 +89,13 @@ export const logout = async () => {
 
 export const fetchUser = async () => {
     userIsLoading.set(true);
-    try {
-        const res = await getUser();
-
-        const userData = res;
-        user.set(userData);
-        return userData;
-    } catch (error) {
-        console.log(error);
+    const userData = await getUser();
+    if (!userData) {
+        userIsLoading.set(false);
+        return null;
     }
-    userIsLoading.set(false);
-    return null;
+    user.set(userData);
+    return userData;
 };
 
 export const requestPasswordReset = async (email: string) => {
