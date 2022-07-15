@@ -114,9 +114,7 @@
                             {$_("project-management-at-pace")}
                         </div>
                         <div class="grow" />
-                        <a
-                            href={"/"}
-                            class="btn btn-primary btn-md max-w-fit rounded-full"
+                        <a href={"/"} class="btn btn-primary btn-md max-w-fit"
                             >{$_("start-a-free-trial")}</a
                         >
                     </div>
