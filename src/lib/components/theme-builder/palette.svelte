@@ -27,7 +27,10 @@
         if (!event.target) {
             throw new Error("Expected event.target");
         }
-        cosClass[vInx] = event.target["value"] / 100.0;
+        if (!(event.target instanceof HTMLInputElement)) {
+            throw new Error("Expected HTMLInputElement");
+        }
+        cosClass[vInx] = parseFloat(event.target.value) / 100.0;
         setColors();
     }
 </script>

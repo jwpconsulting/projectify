@@ -7,7 +7,7 @@
     import lodash from "lodash";
 
     export let title: string;
-    export let subtitle = null;
+    export let subtitle: string | null = null;
     export let cancelLabel = $_("Cancel");
     export let confirmLabel = $_("Confirm");
     export let confirmColor = "primary";
@@ -37,7 +37,7 @@
     let valid = true;
 
     function confirm() {
-        const outputs = {};
+        const outputs = new Map<string, string>();
         valid = true;
 
         inputs.forEach((field) => {
@@ -62,7 +62,7 @@
                     field.error = res.message;
                 }
             }
-            outputs[field.name] = field.value;
+            outputs.set(field.name, field.value);
         });
 
         if (!valid) {
@@ -78,6 +78,17 @@
             return input.placeholder;
         }
         return `${$_("please-enter-a")} ${input.label}`;
+    }
+
+    function onChange(input: Input, event: Event) {
+        if (!event.target) {
+            throw new Error("Expected e.target");
+        }
+        if (!(event.target instanceof HTMLInputElement)) {
+            throw new Error("Expected HTMLInputElement");
+        }
+        isEditing = true;
+        input.value = event.target.value;
     }
 </script>
 
@@ -107,13 +118,7 @@
                 <select
                     class:select-error={!valid && input.error}
                     class="select select-bordered w-full"
-                    on:change={(e) => {
-                        if (!e.target) {
-                            throw new Error("Expected e.target");
-                        }
-                        isEditing = true;
-                        input.value = e.target["value"];
-                    }}
+                    on:change={(event) => onChange(input, event)}
                 >
                     <option disabled selected={!input.value}
                         >{input.placeholder}</option

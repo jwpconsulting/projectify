@@ -33,7 +33,7 @@
     let dispatch = createEventDispatcher();
 
     export let selectedLabels: Label[] = [];
-    $: selectedLabelsInx = selectedLabels && {};
+    let selectedLabelsInx = new Map<string, boolean>();
 
     function onLabelClick(label: Label) {
         if (!editable) {
@@ -49,11 +49,11 @@
             return true;
         });
         if (addLabel) {
-            selectedLabelsInx[label.uuid] = true;
+            selectedLabelsInx.set(label.uuid, true);
             selectedLabels.push(label);
             dispatch("addLabel", label);
         } else {
-            selectedLabelsInx[label.uuid] = false;
+            selectedLabelsInx.set(label.uuid, false);
             dispatch("removeLabel", label);
         }
 
@@ -62,7 +62,7 @@
 
     $: {
         selectedLabels.forEach((label) => {
-            selectedLabelsInx[label.uuid] = true;
+            selectedLabelsInx.set(label.uuid, true);
         });
     }
 </script>
@@ -74,10 +74,20 @@
         class:hover:opacity-60={editable}
         class="cursor-pointer transition-opacity duration-300 ease-out"
     >
-        {#if $$slots.item}
-            <slot name="item" {label} active={selectedLabelsInx[label.uuid]} />
-        {:else}
-            <LabelPill {size} {label} active={selectedLabelsInx[label.uuid]} />
+        {#if selectedLabelsInx.has(label.uuid)}
+            {#if $$slots.item}
+                <slot
+                    name="item"
+                    {label}
+                    active={selectedLabelsInx.get(label.uuid)}
+                />
+            {:else}
+                <LabelPill
+                    {size}
+                    {label}
+                    active={selectedLabelsInx.get(label.uuid)}
+                />
+            {/if}
         {/if}
     </div>
 {/each}

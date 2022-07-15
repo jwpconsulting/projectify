@@ -9,7 +9,7 @@ type WSSubscriber = Subscriber<WSStore>;
 export const activeWSSubscriptions = writable(0);
 export const activeWSConnections = writable(0);
 export class WSSubscriptionStore {
-    public store: WSStore;
+    public store: WSStore | null = null;
     subscribers: WSSubscriber[] = [];
     socket: WebSocket | null = null;
     retryingConnection = false;
@@ -95,12 +95,18 @@ export class WSSubscriptionStore {
     }
 
     dispatch(): void {
+        if (!this.store) {
+            throw new Error("Expected this.store");
+        }
         for (let i = 0; i < this.subscribers.length; i += 1) {
             this.subscribers[i](this.store);
         }
     }
 
     public subscribe(subscriber: WSSubscriber): () => void {
+        if (!this.store) {
+            throw new Error("Expected this.store");
+        }
         this.subscribers.push(subscriber);
 
         subscriber(this.store);
@@ -207,10 +213,6 @@ function checkAllConnectionStatus() {
     }
 
     return { activeWSS, activeCon, stores };
-}
-
-if (browser) {
-    window["checkAllConnectionStatus"] = checkAllConnectionStatus;
 }
 
 // Online connection

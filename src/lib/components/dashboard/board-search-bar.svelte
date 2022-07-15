@@ -41,7 +41,11 @@
     let userPickerEl: HTMLElement;
     let userPickerOpen = false;
 
-    function onUserSelected({ detail: { user } }) {
+    function onUserSelected({
+        detail: { user },
+    }: {
+        detail: { user: WorkspaceUser };
+    }) {
         userPickerOpen = false;
 
         if (user === null) {

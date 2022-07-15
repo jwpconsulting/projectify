@@ -117,7 +117,7 @@ export const confirmPasswordReset = async (
     email: string,
     token: string,
     newPassword: string
-): Promise<{ error: { message: string } } | null> => {
+): Promise<Error | null> => {
     try {
         await client.mutate({
             mutation: Mutation_ConfirmPasswordReset,
@@ -125,6 +125,9 @@ export const confirmPasswordReset = async (
         });
         return null;
     } catch (error) {
-        return { error };
+        if (!(error instanceof Error)) {
+            throw new Error("Expected Error");
+        }
+        return error;
     }
 };

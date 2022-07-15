@@ -1,10 +1,10 @@
-<script>
+<script lang="ts">
     import { gotoDashboard } from "$lib/stores/dashboard";
     import { _ } from "svelte-i18n";
 
     import IconArrowLeft from "./icons/icon-arrow-left.svelte";
     import Loading from "./loading.svelte";
-    export let title;
+    export let title: string | null = null;
     export let loading = false;
     export let onBack = () => {
         gotoDashboard();
@@ -22,7 +22,7 @@
                     <IconArrowLeft />
                 </div>
             </button>
-            <div class="text-2xl font-bold">{title}</div>
+            <div class="text-2xl font-bold">{title ? title : "Woops"}</div>
         </div>
         {#if loading}
             <div

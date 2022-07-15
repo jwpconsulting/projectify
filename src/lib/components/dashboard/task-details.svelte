@@ -33,7 +33,7 @@
     import { writable } from "svelte/store";
     import IconClose from "../icons/icon-close.svelte";
     import TaskDetailsBreadcrumbs from "./task-details-breadcrumbs.svelte";
-    import type { Task, SubTask, Label } from "$lib/types";
+    import type { Task, SubTask, Label, WorkspaceUser } from "$lib/types";
     import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
 
     let task: Task | null = null;
@@ -201,15 +201,21 @@
 
     let userPickerOpen = false;
     let userPicked = false;
-    function onUserSelected({ detail: { user } }) {
+    function onUserSelected({
+        detail: { user },
+    }: {
+        detail: { user: WorkspaceUser | null };
+    }) {
         if (!task) {
             throw new Error("Expected task");
         }
         userPickerOpen = false;
-        if (user?.email == task?.assignee?.user.email) {
+        if (user?.user.email == task?.assignee?.user.email) {
             task.assignee = undefined;
-        } else {
+        } else if (user) {
             task.assignee = user;
+        } else {
+            throw new Error("Expected user");
         }
 
         userPicked = true;

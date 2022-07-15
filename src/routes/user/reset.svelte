@@ -5,7 +5,7 @@
     import { _ } from "svelte-i18n";
 
     let emailValue: string;
-    let error = null;
+    let error: string | null = null;
     let requestSent = false;
 
     async function submit() {

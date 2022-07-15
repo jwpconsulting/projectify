@@ -13,17 +13,17 @@ export type ThemeItem = {
 export function getThemeFromDom(): Theme {
     const styles = getComputedStyle(document.documentElement);
 
-    const theme = {};
+    const theme = new Map<string, string>();
     const node = document.createElement("div");
     Object.entries(colorStyleVars).forEach(([key, val]) => {
         let value = styles.getPropertyValue(val as string);
         node.style.setProperty("color", `hsla(${value})`);
         value = node.style.getPropertyValue("color");
         value = rgb2hex(value);
-        theme[key] = value;
+        theme.set(key, value);
     });
 
-    return theme;
+    return Object.fromEntries(theme);
 }
 
 export function rgb2hex(rgb: string): string {
@@ -52,10 +52,9 @@ export function themeToArray(theme: Theme): ThemeItem[] {
 }
 
 export function arrayToTheme(arr: ThemeItem[]): Theme {
-    return arr.reduce((acc, cur) => {
-        acc[cur.name] = cur.value;
-        return acc;
-    }, {});
+    const themeMap = new Map<string, string>();
+    arr.forEach((v) => themeMap.set(v.name, v.value));
+    return Object.fromEntries(themeMap);
 }
 
 export function dumpTheme(themeArray: ThemeItem[]): void {

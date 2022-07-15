@@ -20,29 +20,28 @@
     }
     function onFileSelected(event: Event) {
         const eventTarget = event.target;
-        if (eventTarget instanceof HTMLInputElement) {
-            if (!eventTarget.files) {
-                throw new Error("Expected eventTarget.files");
-            }
-            const file: File | null = eventTarget.files[0];
-            if (!file) {
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.addEventListener("load", (event: ProgressEvent) => {
-                const eventTarget = event.target;
-                if (eventTarget instanceof FileReader) {
-                    src = eventTarget.result as string;
-                    dispatch("fileSelected", { src, file });
-                } else {
-                    throw new Error("Expected FileReader");
-                }
-            });
-            reader.readAsDataURL(file);
-        } else {
+        if (!(eventTarget instanceof HTMLInputElement)) {
             throw new Error("Expected HTMLInputElement");
         }
+        if (!eventTarget.files) {
+            throw new Error("Expected eventTarget.files");
+        }
+        const file: File | null = eventTarget.files[0];
+        if (!file) {
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.addEventListener("load", (event: ProgressEvent) => {
+            const eventTarget = event.target;
+            if (eventTarget instanceof FileReader) {
+                src = eventTarget.result as string;
+                dispatch("fileSelected", { src, file });
+            } else {
+                throw new Error("Expected FileReader");
+            }
+        });
+        reader.readAsDataURL(file);
     }
 </script>
 

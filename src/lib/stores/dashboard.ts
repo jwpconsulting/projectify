@@ -117,18 +117,19 @@ export function filterSectionsTasks(
     assignee: WorkspaceUser | "unassigned" | null
 ): WorkspaceBoardSection[] {
     if (labels.length) {
-        const labelUUIDs = {};
+        const labelUuids = new Map<string, boolean>();
 
         labels.forEach((l) => {
-            labelUUIDs[l.uuid] = true;
+            labelUuids.set(l.uuid, true);
         });
 
         sections = sections.map((section) => {
             const sectionTasks = section.tasks ? section.tasks : [];
             const tasks = sectionTasks.filter((task: Task) => {
                 return (
-                    task.labels.findIndex((l: Label) => labelUUIDs[l.uuid]) >=
-                    0
+                    task.labels.findIndex((l: Label) =>
+                        labelUuids.get(l.uuid) ? true : false
+                    ) >= 0
                 );
             });
 

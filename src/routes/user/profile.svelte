@@ -39,7 +39,11 @@
         }
     }
 
-    function onFileSelected({ detail: { src, file } }) {
+    function onFileSelected({
+        detail: { src, file },
+    }: {
+        detail: { src: string; file: File };
+    }) {
         imageFile = file;
         isEditMode = true;
         if (currentUser) {

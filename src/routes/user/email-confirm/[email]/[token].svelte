@@ -6,8 +6,9 @@
     import { _ } from "svelte-i18n";
     import IllustrationSignupFinish from "$lib/components/illustrations/illustration-signup-finish.svelte";
     import Loading from "$lib/components/loading.svelte";
+    import type { User } from "$lib/types";
 
-    let userData = null;
+    let userData: User | null = null;
     let error: boolean;
 
     let email = $page.params["email"];

@@ -16,7 +16,7 @@
         const result = await confirmPasswordReset(email, token, passwordValue);
 
         if (result) {
-            error = result.error.message;
+            error = result.message;
         } else {
             requestSent = true;
         }

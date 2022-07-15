@@ -43,7 +43,11 @@
     import { createEventDispatcher } from "svelte";
     import UserPicker from "../userPicker.svelte";
     import LabelPicker from "./labelPicker.svelte";
-    import type { WorkspaceBoardSection, WorkspaceUser } from "$lib/types";
+    import type {
+        Task,
+        WorkspaceBoardSection,
+        WorkspaceUser,
+    } from "$lib/types";
 
     export let section: WorkspaceBoardSection;
 
@@ -118,7 +122,8 @@
         isDragging = true;
     }
 
-    async function taskDragEnd({ detail }) {
+    // XXX any
+    async function taskDragEnd({ detail }: any) {
         if (!section.tasks) {
             throw new Error("Expected section.tasks");
         }
@@ -152,7 +157,11 @@
     $: layoutClass = `layout-${$dashboardSectionsLayout}`;
     $: collapsable = $dashboardSectionsLayout != "columns";
 
-    function openItemDropDownMenu({ detail: { task, target } }) {
+    function openItemDropDownMenu({
+        detail: { task, target },
+    }: {
+        detail: { task: Task; target: HTMLElement };
+    }) {
         if (!section.tasks) {
             throw new Error("Expected section.tasks");
         }
@@ -306,7 +315,7 @@
         dropDown.open(dropDownItems, dropDownMenuBtnRef);
     }
 
-    function moveUpItem({ detail: { task } }) {
+    function moveUpItem({ detail: { task } }: { detail: { task: Task } }) {
         if (!section.tasks) {
             throw new Error("Expected section.tasks");
         }
@@ -314,7 +323,7 @@
         moveTaskAfter(task.uuid, section.uuid, prevTask?.uuid);
     }
 
-    function moveDownItem({ detail: { task } }) {
+    function moveDownItem({ detail: { task } }: { detail: { task: Task } }) {
         if (!section.tasks) {
             throw new Error("Expected section.tasks");
         }
@@ -322,7 +331,11 @@
         moveTaskAfter(task.uuid, section.uuid, nextTask?.uuid);
     }
 
-    function openUserPicker({ detail: { task, target } }) {
+    function openUserPicker({
+        detail: { task, target },
+    }: {
+        detail: { task: Task; target: HTMLElement };
+    }) {
         let dropDown = getDropDown();
         if (!dropDown) {
             throw new Error("Expected dropDown");
@@ -345,7 +358,11 @@
         });
     }
 
-    function openLabelPicker({ detail: { task, target } }) {
+    function openLabelPicker({
+        detail: { task, target },
+    }: {
+        detail: { task: Task; target: HTMLElement };
+    }) {
         let dropDown = getDropDown();
         if (!dropDown) {
             throw new Error("Expected dropDown");

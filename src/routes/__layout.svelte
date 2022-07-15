@@ -5,7 +5,7 @@
 
     import "$lib/stores/global-ui";
 
-    export async function load({ url }) {
+    export async function load({ url }: { url: URL }) {
         if (browser) {
             const route = routes.find((r) => {
                 if (r.to === url.pathname) {

@@ -20,7 +20,7 @@
     const dispatch = createEventDispatcher();
 
     crossfade({
-        fallback(node: HTMLElement, _params: any) {
+        fallback(node: Element, _params: any) {
             const style = getComputedStyle(node);
             const transform =
                 style.transform === "none" ? "" : style.transform;

@@ -152,7 +152,10 @@ if (browser) {
         }
     });
 
-    userTheme.subscribe((themes: UserTheme) => {
+    userTheme.subscribe((themes: UserTheme | null) => {
+        if (!themes) {
+            return;
+        }
         const themeStr = JSON.stringify(themes);
         localStorage.setItem(userThemeKey, themeStr);
         applyStyleToBody(themes);

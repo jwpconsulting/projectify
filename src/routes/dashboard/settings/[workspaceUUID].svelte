@@ -38,7 +38,11 @@
         },
     ];
 
-    function onTabChanged({ detail: { tabId } }) {
+    function onTabChanged({
+        detail: { tabId },
+    }: {
+        detail: { tabId: string };
+    }) {
         goto(`?tab=${tabId}`);
     }
 </script>

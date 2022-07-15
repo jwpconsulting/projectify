@@ -1,9 +1,18 @@
 <script context="module" lang="ts">
     let onTop: HTMLElement;
-    const modals = {};
+    type Modal = {
+        open: (_data?: any) => Promise<any> | null;
+        close: (retVal?: any) => any;
+        getData: () => any;
+    };
+    const modals = new Map<string, Modal>();
 
-    export function getModal(id = "") {
-        return modals[id];
+    export function getModal(id = ""): Modal {
+        const modal = modals.get(id);
+        if (!modal) {
+            throw new Error("Expected modal");
+        }
+        return modal;
     }
 </script>
 
@@ -24,13 +33,15 @@
 
     let resolveFn: (_: any) => void;
 
-    let data = null;
-    function getData() {
+    let data: any | null = null;
+    function getData(): any | null {
         return data;
     }
 
     function open(_data?: any) {
-        if (visible) return;
+        if (visible) {
+            return null;
+        }
         visible = true;
 
         data = _data;
@@ -58,11 +69,12 @@
         }
     }
 
-    modals[id] = { open, close, getData };
-    setContext("modal", modals[id]);
+    const modal = { open, close, getData };
+    modals.set(id, modal);
+    setContext("modal", modal);
 
     onDestroy(() => {
-        delete modals[id];
+        modals.delete(id);
         window.removeEventListener("keydown", keyPress);
     });
 </script>

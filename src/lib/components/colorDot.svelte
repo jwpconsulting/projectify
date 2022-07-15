@@ -5,7 +5,7 @@
     export let color: Color | null = null;
     export let active = false;
 
-    export let index = null;
+    export let index: number | null = null;
 
     $: {
         if (color == null && index != null) {

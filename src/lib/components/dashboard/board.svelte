@@ -40,6 +40,7 @@
     import IconArrowRight from "../icons/icon-arrow-right.svelte";
     import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
     import type {
+        Label,
         Task,
         WorkspaceBoard,
         WorkspaceBoardSection,
@@ -57,7 +58,7 @@
     let boardWSStore: WSSubscriptionStore | null;
 
     let filteredSections: WorkspaceBoardSection[] = [];
-    let filterLabels = [];
+    let filterLabels: Label[] = [];
 
     let searchText = "";
     let tasksSearchResults: Task[] = [];
@@ -155,7 +156,11 @@
         isDragging = true;
     }
 
-    async function sectionDragEnd({ detail }) {
+    async function sectionDragEnd({
+        detail,
+    }: {
+        detail: { oldIndex: number; newIndex: number };
+    }) {
         await delay(10);
         isDragging = false;
 
@@ -288,7 +293,10 @@
         let dist = Number.MAX_SAFE_INTEGER;
         sectionContainerEl
             .querySelectorAll(":scope > div")
-            .forEach((el: HTMLElement, inx) => {
+            .forEach((el: Element, inx: number) => {
+                if (!(el instanceof HTMLElement)) {
+                    throw new Error("Expected HTMLElement");
+                }
                 let newDist = Math.abs(
                     el.offsetLeft + el.clientWidth / 2 - (s + vw / 2)
                 );
@@ -329,7 +337,11 @@
     let sectionToolTipHoverInx = 0;
     $: sectionTollTipLabel = filteredSections[sectionToolTipHoverInx]?.title;
 
-    function onSwitchWithPrevSection({ detail: { section } }) {
+    function onSwitchWithPrevSection({
+        detail: { section },
+    }: {
+        detail: { section: WorkspaceBoardSection };
+    }) {
         const sectionIndex = sections.findIndex((s) => s.uuid == section.uuid);
         const prevSection = sections[sectionIndex - 1];
 
@@ -337,7 +349,11 @@
             moveSection(section.uuid, prevSection._order);
         }
     }
-    function onSwitchWithNextSection({ detail: { section } }) {
+    function onSwitchWithNextSection({
+        detail: { section },
+    }: {
+        detail: { section: WorkspaceBoardSection };
+    }) {
         const sectionIndex: number = sections.findIndex(
             (s: WorkspaceBoardSection) => s.uuid == section.uuid
         );
