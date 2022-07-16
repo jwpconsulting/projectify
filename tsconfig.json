@@ -26,7 +26,8 @@
             "$lib": ["src/lib"],
             "$lib/*": ["src/lib/*"]
         },
-        "strict": true
+        "strict": true,
+        "noImplicitReturns": true
     },
     "include": [
         "src/**/*.d.ts",

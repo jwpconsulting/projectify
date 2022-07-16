@@ -6,8 +6,9 @@
     import { _ } from "svelte-i18n";
     import { getDropDown } from "../globalDropDown.svelte";
     import type { DropDownMenuItem } from "../globalDropDown.svelte";
+    import type { DashboardSectionsLayout } from "src/lib/types";
 
-    function getLayoutIconFor(layout: string) {
+    function getLayoutIconFor(layout: DashboardSectionsLayout) {
         switch (layout) {
             case "columns":
                 return IconViewBoards;
