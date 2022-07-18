@@ -2,7 +2,7 @@
     import { _ } from "svelte-i18n";
     import type { User } from "$lib/types";
 
-    export let userData: User;
+    export let userData: User | null = null;
 </script>
 
 {#if userData}
