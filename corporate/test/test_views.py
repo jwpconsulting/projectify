@@ -91,3 +91,22 @@ class TestStripeWebhook:
         assert response.status_code == 200
         customer.refresh_from_db()
         assert customer.seats == new_seats
+
+    def test_customer_subscription_cancelled(
+        self, customer, client, resource_url
+    ):
+        """Test cancelling Subscription when payment fails."""
+        header = {"HTTP_STRIPE_SIGNATURE": "dummy_sig"}
+        event = mock.MagicMock()
+        event.type = "invoice.payment_failed"
+        event["data"]["object"].customer = customer.stripe_customer_id
+        event["data"]["object"].next_payment_attempt = None
+        with mock.patch("stripe.Webhook.construct_event") as construct_event:
+            construct_event.return_value = event
+            response = client.post(resource_url, **header)
+        assert response.status_code == 200
+        customer.refresh_from_db()
+        assert (
+            customer.subscription_status
+            == models.CustomerSubscriptionStatus.CANCELLED
+        )
