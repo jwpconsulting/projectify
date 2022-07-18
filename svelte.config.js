@@ -22,6 +22,9 @@ const config = {
         }),
 
         vite: {
+            esbuild: {
+                drop: ["console", "debugger"],
+            },
             css: {
                 preprocessorOptions: {
                     scss: {

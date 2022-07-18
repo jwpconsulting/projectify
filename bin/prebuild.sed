@@ -8,5 +8,5 @@ s/"dependencies":/"exports":{\
     ".\/utilities":{"node":".\/utilities\/utilities.cjs","default":".\/utilities\/index.js"},\
     ".\/link\/http":{"node":".\/link\/http\/http.cjs","default":".\/link\/http\/index.js"},\
     ".\/package.json": ".\/package.json"\
-    },\
+  },\
   "dependencies":/
