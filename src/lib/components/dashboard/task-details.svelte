@@ -105,7 +105,7 @@
     }
 
     $: {
-        if (taskWSStore) {
+        if ($taskWSStore) {
             refetch();
         }
     }

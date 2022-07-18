@@ -2,71 +2,79 @@ import { browser } from "$app/env";
 import delay from "delay";
 import type { Subscriber } from "svelte/store";
 import { writable } from "svelte/store";
+import { v4 as uuidv4 } from "uuid";
 
-type WSStore = { message: string; at: number };
-type WSSubscriber = Subscriber<WSStore | null>;
+type WSMessage = { message: string; at: number };
+type WSSubscriber = Subscriber<WSMessage | null>;
+
+const wsSubscriptionStores = new Map<string, WSSubscriptionStore>();
 
 export const activeWSSubscriptions = writable(0);
 export const activeWSConnections = writable(0);
-export class WSSubscriptionStore {
-    public store: WSStore | null = null;
-    subscribers: WSSubscriber[] = [];
-    socket: WebSocket | null = null;
-    retryingConnection = false;
 
+export class WSSubscriptionStore {
+    public wsMessage: WSMessage | null = null;
+    subscribers: WSSubscriber[] = [];
+    socket: WebSocket;
+    socketActive = true;
+    url: string;
+    uuid: string;
+
+    retryingConnection = false;
     public retryTimeStart = 2000;
     public retryTimeMult = 1.1;
     public retryTimeJitter = 500;
-    public maxRetrieTime = 20000;
+    public maxRetryTime = 20000;
 
     retryTime: number;
 
-    constructor(public url: string) {
+    constructor(url: string) {
+        this.url = url;
         this.retryTime = this.retryTimeStart;
-        this.createNewConnection();
+        this.socket = this.createNewConnection();
+        this.uuid = uuidv4();
         startWatchDog();
+        this.debug("constructor");
     }
 
     deleteConnection(): void {
-        if (this.socket !== null) {
-            this.socket.onmessage = null;
-            this.socket.onclose = null;
-            this.socket.onerror = null;
-            this.socket.close();
-            this.socket = null;
-        }
+        this.socket.onmessage = null;
+        this.socket.onclose = null;
+        this.socket.onerror = null;
+        this.socket.close();
+        this.socketActive = false;
     }
 
-    async createNewConnection(): Promise<void> {
-        this.deleteConnection();
-
-        this.socket = new WebSocket(this.url);
-
-        this.socket.onmessage = ({ data, timeStamp }) => {
-            this.store = {
+    createNewConnection(): WebSocket {
+        const socket = new WebSocket(this.url);
+        socket.onmessage = ({ data, timeStamp }) => {
+            this.wsMessage = {
                 message: data,
                 at: timeStamp,
             };
             this.dispatch();
         };
-
-        this.socket.onopen = () => {
+        socket.onopen = () => {
             this.retryTime = this.retryTimeStart;
             this.dispatch();
         };
-
-        this.socket.onclose = async () => {
+        socket.onclose = () => {
+            this.debug("socket.onclose");
             this.retryConnection();
         };
-
-        this.socket.onerror = async () => {
+        socket.onerror = () => {
+            this.debug("socket.onerror");
             this.retryConnection();
         };
+        return socket;
     }
 
-    async retryConnection(now = false): Promise<void> {
-        console.log("retryConnection", this.retryingConnection, this.url);
+    recreateConnection() {
+        this.deleteConnection();
+        this.createNewConnection();
+    }
 
+    async retryConnection(now = false) {
         if (this.retryingConnection) {
             return;
         }
@@ -77,9 +85,7 @@ export class WSSubscriptionStore {
             this.retryTime + Math.random() * this.retryTimeJitter;
 
         this.retryTime *= this.retryTimeMult;
-        this.retryTime = Math.min(this.retryTime, this.maxRetrieTime);
-
-        console.log("now", now, "this.retryTime", this.retryTime);
+        this.retryTime = Math.min(this.retryTime, this.maxRetryTime);
 
         if (now) {
             this.retryTime = 0;
@@ -88,22 +94,24 @@ export class WSSubscriptionStore {
         }
 
         if (this.socket && this.socket.readyState == WebSocket.CLOSED) {
-            this.createNewConnection();
+            this.recreateConnection();
         }
 
         this.retryingConnection = false;
     }
 
-    dispatch(): void {
-        for (let i = 0; i < this.subscribers.length; i += 1) {
-            this.subscribers[i](this.store);
-        }
+    dispatch() {
+        this.debug(this.wsMessage, this.subscribers);
+        this.subscribers.forEach((subscriber) => {
+            subscriber(this.wsMessage);
+        });
     }
 
     public subscribe(subscriber: WSSubscriber): () => void {
         this.subscribers.push(subscriber);
+        this.debug("Pushing", subscriber);
 
-        subscriber(this.store);
+        subscriber(this.wsMessage);
 
         return () => {
             const index = this.subscribers.indexOf(subscriber);
@@ -112,31 +120,34 @@ export class WSSubscriptionStore {
             }
             if (!this.subscribers.length) {
                 this.deleteConnection();
-                stores.delete(this.url);
+                wsSubscriptionStores.delete(this.url);
                 stopWatchDog();
             }
         };
     }
+
+    debug(...arg0: any) {
+        console.debug(this.uuid, this.url, ...arg0);
+    }
 }
 
-const stores = new Map<string, WSSubscriptionStore | null>();
-
-export function getSubscriptionFor(url: string): WSSubscriptionStore | null {
+export function getSubscriptionFor(url: string): WSSubscriptionStore {
     if (!browser) {
-        return null;
+        throw new Error("Expected browser");
     }
-    if (!stores.has(url)) {
-        const store = new WSSubscriptionStore(url);
-        stores.set(url, store);
+    const store = wsSubscriptionStores.get(url);
+    if (store) {
         return store;
     }
-    const store = stores.get(url);
-    return store ? store : null;
+    const newStore = new WSSubscriptionStore(url);
+    wsSubscriptionStores.set(url, newStore);
+    return newStore;
 }
 
 let watchDogTimer: number | null = null;
 let watchDogLastTime = 0;
 const watchDogInterval = 1000;
+
 function startWatchDog(): void {
     if (!browser) {
         return;
@@ -149,26 +160,17 @@ function startWatchDog(): void {
     }
     watchDogTimer = window.setInterval(() => {
         const now = Date.now();
-        // const deltaTime = now - watchDogLastTime;
         watchDogLastTime = now;
-
-        // if (deltaTime > watchDogInterval * 2) {
-        //     for (const url in stores) {
-        //         const wsss = stores[url];
-        //         if (wsss) {
-        //             wsss.retryConnection(true);
-        //         }
-        //     }
-        // }
 
         checkAllConnectionStatus();
     }, watchDogInterval);
 }
+
 function stopWatchDog(): void {
     if (!watchDogTimer) {
         throw new Error("Expected watchDogTimer");
     }
-    let connectionActive = stores.size > 0;
+    let connectionActive = wsSubscriptionStores.size > 0;
     if (!connectionActive) {
         window.clearInterval(watchDogTimer);
     }
@@ -179,34 +181,25 @@ function checkAllConnectionStatus() {
     let activeWSS = 0;
     let activeCon = 0;
 
-    // const readyMsgs = ["Connecitng", "OPEN", "Closing", "Closed"];
-    for (const url in stores) {
-        const wsss = stores.get(url);
-
-        if (wsss) {
-            activeWSS++;
-            if (wsss.socket && wsss.socket.readyState <= WebSocket.OPEN) {
-                activeCon++;
-            }
+    wsSubscriptionStores.forEach((wsSubscriptionStore) => {
+        activeWSS++;
+        if (
+            wsSubscriptionStore.socketActive &&
+            wsSubscriptionStore.socket.readyState <= WebSocket.OPEN
+        ) {
+            activeCon++;
         }
-    }
+    });
 
     activeWSSubscriptions.set(activeWSS);
     activeWSConnections.set(activeCon);
 
-    if (activeWSS != activeCon) {
-        console.log("activeWSS", activeWSS, "activeCon", activeCon);
-
-        for (const url in stores) {
-            const wsss = stores.get(url);
-            if (wsss) {
-                console.log("wsss.url", wsss.url, url);
-                wsss.retryConnection(true);
-            }
-        }
+    if (activeWSS === activeCon) {
+        return;
     }
-
-    return { activeWSS, activeCon, stores };
+    wsSubscriptionStores.forEach((wsSubscriptionStore) => {
+        wsSubscriptionStore.retryConnection(true);
+    });
 }
 
 // Online connection
