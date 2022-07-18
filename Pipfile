@@ -21,7 +21,7 @@ django-test-migrations = "*"
 
 [packages]
 dj-database-url = "*"
-django = "==4.0.4"
+django = "==4.0.6"
 django-cors-headers = "*"
 django-extensions = "*"
 psycopg2 = "*"
@@ -31,7 +31,7 @@ gunicorn = "*"
 newrelic = "*"
 redis = "==4.3.1"
 celery = {extras = ["redis"], version = "==5.2.7"}
-django-celery-results = "==2.3.1"
+django-celery-results = "==2.4.0"
 kombu = "==5.2.4"
 django-anymail = {extras = ["mailgun"], version = "*"}
 django-ordered-model = "*"
