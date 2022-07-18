@@ -72,6 +72,7 @@ class Mutation:
             ],
             mode="subscription",
             subscription_data={"trial_period_days": 31},
+            customer_email=info.context.user.email,
             metadata={"customer_uuid": customer.uuid},
         )
         return session
