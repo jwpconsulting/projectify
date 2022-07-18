@@ -52,7 +52,7 @@ def update_subscription(customer, subscription):
 
 
 @csrf_exempt
-def stripe_webhook(request):
+def stripe_webhook(request):  # noqa: C901
     """Handle Stripe Webhooks."""
     payload = request.body
     sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
@@ -78,6 +78,7 @@ def stripe_webhook(request):
         customer = models.Customer.objects.get_by_uuid(customer_uuid)
         customer.assign_stripe_customer_id(session.customer)
         customer.activate_subscription()
+        return HttpResponse(status=200)
     elif event.type == "customer.subscription.updated":
         subscription = event["data"]["object"]
         customer_id = subscription.customer
@@ -85,7 +86,16 @@ def stripe_webhook(request):
             customer_id
         )
         update_subscription(customer, subscription)
+        return HttpResponse(status=200)
+    elif event.type == "invoice.payment_failed":
+        invoice = event["data"]["object"]
+        if invoice.next_payment_attempt is None:
+            stripe_customer_id = invoice.customer
+            customer = models.Customer.objects.get_by_stripe_customer_id(
+                stripe_customer_id
+            )
+            customer.cancel_subscription()
+        return HttpResponse(status=200)
     else:
         logger.warning("Unhandled event type %s", event.type)
-
-    return HttpResponse(status=200)
+    return HttpResponse(status=400)
