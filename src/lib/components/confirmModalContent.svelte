@@ -84,10 +84,10 @@
         if (!event.target) {
             throw new Error("Expected e.target");
         }
-        if (!(event.target instanceof HTMLInputElement)) {
-            throw new Error("Expected HTMLInputElement");
-        }
         isEditing = true;
+        if (!(event.target instanceof HTMLInputElement)) {
+            return;
+        }
         input.value = event.target.value;
     }
 </script>

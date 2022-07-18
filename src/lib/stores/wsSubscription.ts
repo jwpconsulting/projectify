@@ -4,7 +4,7 @@ import type { Subscriber } from "svelte/store";
 import { writable } from "svelte/store";
 
 type WSStore = { message: string; at: number };
-type WSSubscriber = Subscriber<WSStore>;
+type WSSubscriber = Subscriber<WSStore | null>;
 
 export const activeWSSubscriptions = writable(0);
 export const activeWSConnections = writable(0);
@@ -95,18 +95,12 @@ export class WSSubscriptionStore {
     }
 
     dispatch(): void {
-        if (!this.store) {
-            throw new Error("Expected this.store");
-        }
         for (let i = 0; i < this.subscribers.length; i += 1) {
             this.subscribers[i](this.store);
         }
     }
 
     public subscribe(subscriber: WSSubscriber): () => void {
-        if (!this.store) {
-            throw new Error("Expected this.store");
-        }
         this.subscribers.push(subscriber);
 
         subscriber(this.store);
