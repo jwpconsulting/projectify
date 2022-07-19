@@ -42,8 +42,10 @@ class WorkspaceBoardRetrieve(generics.RetrieveAPIView):
         "workspaceboardsection_set__task_set__assignee",
         "workspaceboardsection_set__task_set__assignee__user",
         "workspaceboardsection_set__task_set__labels",
+    ).select_related(
+        "workspace",
     )
-    serializer_class = serializers.WorkspaceBoardSerializer
+    serializer_class = serializers.WorkspaceBoardDetailSerializer
 
     def get_object(self):
         """Return queryset with authenticated user in mind."""
