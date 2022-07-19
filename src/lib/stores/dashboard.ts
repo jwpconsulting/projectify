@@ -37,17 +37,11 @@ export function openNewTask(sectionUuid: string): void {
 export function openTaskDetails(
     workspaceBoardUuid: string,
     taskUuid: string,
-    _subView: string | null = null
-): void {
+    subView: string = "details"
+) {
     drawerModalOpen.set(true);
     currentTaskDetailsUuid.set(taskUuid);
-    goto(
-        getDashboardTaskUrl(
-            workspaceBoardUuid,
-            taskUuid,
-            _subView || "details"
-        )
-    );
+    goto(getDashboardTaskUrl(workspaceBoardUuid, taskUuid, subView));
 }
 export function closeTaskDetails(): void {
     drawerModalOpen.set(false);
