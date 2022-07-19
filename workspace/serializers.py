@@ -56,6 +56,61 @@ class LabelSerializer(serializers.ModelSerializer):
         )
 
 
+class SubTaskBaseSerializer(serializers.ModelSerializer):
+    """SubTask model serializer."""
+
+    class Meta:
+        """Meta."""
+
+        model = models.SubTask
+        fields = (
+            *timestamps,
+            *title_description,
+            "uuid",
+            "done",
+            "_order",
+        )
+
+
+class ChatMessageBaseSerializer(serializers.ModelSerializer):
+    """ChatMessage model serializer."""
+
+    author = WorkspaceUserSerializer(read_only=True)
+
+    class Meta:
+        """Meta."""
+
+        model = models.ChatMessage
+        fields = (
+            *timestamps,
+            "uuid",
+            "text",
+            "author",
+        )
+
+
+class TaskBaseSerializer(serializers.ModelSerializer):
+    """Task model serializer."""
+
+    labels = LabelSerializer(many=True, read_only=True)
+    assignee = WorkspaceUserSerializer(read_only=True)
+
+    class Meta:
+        """Meta."""
+
+        model = models.Task
+        fields = (
+            *timestamps,
+            *title_description,
+            "_order",
+            "uuid",
+            "deadline",
+            "number",
+            "labels",
+            "assignee",
+        )
+
+
 class WorkspaceBaseSerializer(serializers.ModelSerializer):
     """Workspace base serializer."""
 
@@ -136,77 +191,22 @@ class WorkspaceBoardSectionUpSerializer(WorkspaceBoardSectionBaseSerializer):
         )
 
 
-class SubTaskSerializer(serializers.ModelSerializer):
-    """SubTask model serializer."""
-
-    class Meta:
-        """Meta."""
-
-        model = models.SubTask
-        fields = (
-            *timestamps,
-            *title_description,
-            "uuid",
-            "done",
-            "_order",
-        )
-
-
-class ChatMessageSerializer(serializers.ModelSerializer):
-    """ChatMessage model serializer."""
-
-    author = WorkspaceUserSerializer(read_only=True)
-
-    class Meta:
-        """Meta."""
-
-        model = models.ChatMessage
-        fields = (
-            *timestamps,
-            "uuid",
-            "text",
-            "author",
-        )
-
-
-class TaskSerializer(serializers.ModelSerializer):
-    """Task model serializer."""
-
-    labels = LabelSerializer(many=True, read_only=True)
-    assignee = WorkspaceUserSerializer(read_only=True)
-
-    class Meta:
-        """Meta."""
-
-        model = models.Task
-        fields = (
-            *timestamps,
-            *title_description,
-            "_order",
-            "uuid",
-            "deadline",
-            "number",
-            "labels",
-            "assignee",
-        )
-
-
-class TaskDetailSerializer(TaskSerializer):
+class TaskDetailSerializer(TaskBaseSerializer):
     """Serialize all task details."""
 
-    sub_tasks = SubTaskSerializer(
+    sub_tasks = SubTaskBaseSerializer(
         many=True, read_only=True, source="subtask_set"
     )
-    chat_messages = ChatMessageSerializer(
+    chat_messages = ChatMessageBaseSerializer(
         many=True, read_only=True, source="chatmessage_set"
     )
     workspace_board_section = WorkspaceBoardSectionUpSerializer(read_only=True)
 
-    class Meta(TaskSerializer.Meta):
+    class Meta(TaskBaseSerializer.Meta):
         """Meta."""
 
         fields = (
-            *TaskSerializer.Meta.fields,
+            *TaskBaseSerializer.Meta.fields,
             "sub_tasks",
             "chat_messages",
             "workspace_board_section",
@@ -216,7 +216,7 @@ class TaskDetailSerializer(TaskSerializer):
 class WorkspaceBoardSectionSerializer(WorkspaceBoardSectionBaseSerializer):
     """Workspace board section serializer."""
 
-    tasks = TaskSerializer(many=True, read_only=True, source="task_set")
+    tasks = TaskBaseSerializer(many=True, read_only=True, source="task_set")
 
     class Meta(WorkspaceBoardSectionBaseSerializer.Meta):
         """Meta."""
@@ -240,6 +240,20 @@ class WorkspaceBoardSerializer(WorkspaceBoardBaseSerializer):
         fields = (
             *WorkspaceBoardBaseSerializer.Meta.fields,
             "workspace_board_sections",
+        )
+
+
+class WorkspaceBoardDetailSerializer(WorkspaceBoardSerializer):
+    """Workspace board serializer."""
+
+    workspace = WorkspaceBaseSerializer(read_only=True)
+
+    class Meta(WorkspaceBoardSerializer.Meta):
+        """Meta."""
+
+        fields = (
+            *WorkspaceBoardSerializer.Meta.fields,
+            "workspace",
         )
 
 
