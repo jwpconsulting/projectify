@@ -1,11 +1,11 @@
 <script lang="ts">
     import {
         assignUserToTask,
-        currentTaskDetailsUUID,
-        currentWorkspaceUUID,
+        currentTaskDetailsUuid,
+        currentWorkspace,
         deleteTask,
-        newTaskSectionUUID,
-        pushTashUUIDtoPath,
+        newTaskSectionUuid,
+        pushTashUuidtoPath,
     } from "$lib/stores/dashboard";
 
     import {
@@ -46,15 +46,18 @@
 
     let taskWSStore: WSSubscriptionStore | null = null;
 
-    $: uuids = $page.params["uuids"].split("/");
-    $: activeTabId = writable(uuids[3] || "details");
+    let activeTabId = writable<string>("details");
+    $: {
+        const tab = $page.url.searchParams.get("tab");
+        $activeTabId = tab ? tab : "details";
+    }
 
     async function fetch() {
-        if (!$currentTaskDetailsUUID) {
-            throw new Error("Expected $currentTaskDetailsUUID");
+        if (!$currentTaskDetailsUuid) {
+            throw new Error("Expected $currentTaskDetailsUuid");
         }
         try {
-            task = await getTask($currentTaskDetailsUUID);
+            task = await getTask($currentTaskDetailsUuid);
         } catch {
             failed = true;
         } finally {
@@ -81,7 +84,7 @@
     }, 100);
 
     $: {
-        if ($currentTaskDetailsUUID) {
+        if ($currentTaskDetailsUuid) {
             fetch();
         } else {
             reset();
@@ -96,10 +99,10 @@
     }
 
     $: {
-        if ($currentTaskDetailsUUID) {
+        if ($currentTaskDetailsUuid) {
             taskWSStore = getSubscriptionForCollection(
                 "task",
-                $currentTaskDetailsUUID
+                $currentTaskDetailsUuid
             );
         }
     }
@@ -118,7 +121,7 @@
     }
 
     let itsNew: boolean = false;
-    $: itsNew = $currentTaskDetailsUUID == null;
+    $: itsNew = $currentTaskDetailsUuid == null;
 
     $: saveEnabled = taskModified && task && task.title.length && !isSaving;
 
@@ -156,16 +159,16 @@
                     mutation: Mutation_AddTask,
                     variables: {
                         input: {
-                            workspaceBoardSectionUuid: $newTaskSectionUUID,
+                            workspaceBoardSectionUuid: $newTaskSectionUuid,
                             ...commonTaskInputs,
                             ...otherData,
                         },
                     },
                 });
 
-                let taskUUID = mRes.data.addTask.uuid;
-                currentTaskDetailsUUID.set(taskUUID);
-                pushTashUUIDtoPath(taskUUID);
+                let taskUuid = mRes.data.addTask.uuid;
+                currentTaskDetailsUuid.set(taskUuid);
+                pushTashUuidtoPath(taskUuid);
                 taskModified = false;
             } catch (error) {
                 console.error(error);
@@ -176,7 +179,7 @@
                     mutation: Mutation_UpdateTask,
                     variables: {
                         input: {
-                            uuid: $currentTaskDetailsUUID,
+                            uuid: $currentTaskDetailsUuid,
                             ...commonTaskInputs,
                         },
                     },
@@ -227,14 +230,14 @@
         if (!userPicked) {
             return;
         }
-        if (!$currentTaskDetailsUUID) {
+        if (!$currentTaskDetailsUuid) {
             return;
         }
 
         const userEmail = task?.assignee?.user.email;
         await assignUserToTask(
             userEmail ? userEmail : null,
-            $currentTaskDetailsUUID
+            $currentTaskDetailsUuid
         );
         userPicked = false;
     }
@@ -323,7 +326,9 @@
             {#if userPickerOpen}
                 <div class="absolute top-20 left-2 right-20 z-10 max-w-md">
                     <UserPicker
-                        workspaceUUID={$currentWorkspaceUUID}
+                        workspaceUuid={$currentWorkspace
+                            ? $currentWorkspace.uuid
+                            : null}
                         selectedUser={task.assignee}
                         on:userSelected={onUserSelected}
                     />

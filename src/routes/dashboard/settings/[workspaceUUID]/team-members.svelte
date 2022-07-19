@@ -30,7 +30,7 @@
     import { getContext } from "svelte";
     import { loading } from "$lib/stores/dashboard";
 
-    let workspaceUUID: string = getContext("workspaceUUID");
+    let workspaceUuid: string = getContext("workspaceUuid");
 
     let customer: Customer | null = null;
     let workspaceWSStore: WSSubscriptionStore | null;
@@ -38,12 +38,12 @@
     let workspaceUsers: WorkspaceUser[] = [];
 
     async function fetch() {
-        if (!workspaceUUID) {
-            throw new Error("Expected workspaceUUID");
+        if (!workspaceUuid) {
+            throw new Error("Expected workspaceUuid");
         }
         [customer, workspace] = await Promise.all([
-            getWorkspaceCustomer(workspaceUUID),
-            getWorkspace(workspaceUUID),
+            getWorkspaceCustomer(workspaceUuid),
+            getWorkspace(workspaceUuid),
         ]);
         workspaceUsers = workspace.workspace_users || [];
         $loading = false;
@@ -54,13 +54,13 @@
     }, 100);
 
     $: {
-        if (workspaceUUID) {
+        if (workspaceUuid) {
             $loading = true;
             fetch();
 
             workspaceWSStore = getSubscriptionForCollection(
                 "workspace",
-                workspaceUUID
+                workspaceUuid
             );
         }
     }
@@ -88,7 +88,7 @@
                 mutation: Mutation_AddUserToWorkspace,
                 variables: {
                     input: {
-                        uuid: workspaceUUID,
+                        uuid: workspaceUuid,
                         email: modalRes.outputs.email,
                     },
                 },
@@ -109,7 +109,7 @@
                 mutation: Mutation_RemoveUserFromWorkspace,
                 variables: {
                     input: {
-                        uuid: workspaceUUID,
+                        uuid: workspaceUuid,
                         email: workspaceUser.user.email,
                     },
                 },
@@ -131,7 +131,7 @@
                 mutation: Mutation_UpdateWorkspaceUser,
                 variables: {
                     input: {
-                        workspaceUuid: workspaceUUID,
+                        workspaceUuid: workspaceUuid,
                         email: modalRes.outputs.email,
                         role: modalRes.outputs.role,
                         jobTitle: modalRes.outputs.job_title || "",

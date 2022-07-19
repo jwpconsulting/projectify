@@ -16,7 +16,7 @@
     import type { WorkspaceBoard } from "$lib/types";
     import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
 
-    $: workspaceUUID = $page.params["workspaceUUID"];
+    $: workspaceUuid = $page.params["workspaceUuid"];
 
     let res: WorkspaceBoard[] | null = null;
     let loading = true;
@@ -24,7 +24,7 @@
     let archivedBoards: WorkspaceBoard[] = [];
 
     async function fetch() {
-        res = await getArchivedWorkspaceBoards(workspaceUUID);
+        res = await getArchivedWorkspaceBoards(workspaceUuid);
         loading = false;
     }
 
@@ -33,12 +33,12 @@
     }, 100);
 
     $: {
-        if (workspaceUUID) {
+        if (workspaceUuid) {
             fetch();
 
             workspaceWSStore = getSubscriptionForCollection(
                 "workspace",
-                workspaceUUID
+                workspaceUuid
             );
         }
     }

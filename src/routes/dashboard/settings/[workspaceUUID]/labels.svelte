@@ -18,17 +18,17 @@
     import { getContext } from "svelte";
     import { loading } from "$lib/stores/dashboard";
 
-    let workspaceUUID: string = getContext("workspaceUUID");
+    let workspaceUuid: string = getContext("workspaceUuid");
 
     let workspace: Workspace | null = null;
     let workspaceWSStore: WSSubscriptionStore | null;
     let labels: Label[] = [];
 
     async function fetch() {
-        if (!workspaceUUID) {
-            throw new Error("Expected workspaceUUID");
+        if (!workspaceUuid) {
+            throw new Error("Expected workspaceUuid");
         }
-        workspace = await getWorkspace(workspaceUUID);
+        workspace = await getWorkspace(workspaceUuid);
         $loading = false;
         labels = workspace.labels || [];
     }
@@ -38,12 +38,12 @@
     }, 100);
 
     $: {
-        if (workspaceUUID) {
+        if (workspaceUuid) {
             $loading = true;
             fetch();
             workspaceWSStore = getSubscriptionForCollection(
                 "workspace",
-                workspaceUUID
+                workspaceUuid
             );
         }
     }
@@ -114,7 +114,7 @@
                 mutation: Mutation_AddLabelMutation,
                 variables: {
                     input: {
-                        workspaceUuid: workspaceUUID,
+                        workspaceUuid: workspaceUuid,
                         name: modalRes.outputs.name,
                         color: modalRes.outputs.color,
                     },

@@ -6,8 +6,8 @@
         assignUserToTask,
         copyDashboardURL,
         currentBoardSections,
-        currentBoardUUID,
-        currentWorkspaceUUID,
+        currentBoardUuid,
+        currentWorkspace,
         deleteTask,
         moveTaskAfter,
         openNewTask,
@@ -130,20 +130,20 @@
         await delay(10);
         isDragging = false;
 
-        const prevUUID =
+        const prevUuid =
             detail.item.previousElementSibling?.getAttribute("data-uuid") ||
             null;
 
         let task = section.tasks[detail.oldIndex];
-        const fromSectionUUID = detail.from.getAttribute("data-uuid");
-        const toSectionUUID = detail.to.getAttribute("data-uuid");
+        const fromSectionUuid = detail.from.getAttribute("data-uuid");
+        const toSectionUuid = detail.to.getAttribute("data-uuid");
 
         if (
             task &&
-            (fromSectionUUID != toSectionUUID ||
+            (fromSectionUuid != toSectionUuid ||
                 detail.newIndex != detail.oldIndex)
         ) {
-            await moveTaskAfter(task.uuid, toSectionUUID, prevUUID);
+            await moveTaskAfter(task.uuid, toSectionUuid, prevUuid);
         }
     }
 
@@ -191,7 +191,10 @@
                 icon: IconArrowExpand,
 
                 onClick: () => {
-                    openTaskDetails(task.uuid);
+                    openTaskDetails(
+                        $currentBoardUuid ? $currentBoardUuid : "",
+                        task.uuid
+                    );
                 },
             },
             {
@@ -235,11 +238,7 @@
                 label: $_("copy-link"),
                 icon: IconCopyLink,
                 onClick: () => {
-                    copyDashboardURL(
-                        $currentWorkspaceUUID,
-                        $currentBoardUUID,
-                        task.uuid
-                    );
+                    copyDashboardURL("", $currentBoardUuid, task.uuid);
                 },
             },
             {
@@ -341,7 +340,7 @@
             throw new Error("Expected dropDown");
         }
         dropDown.openComponent(UserPicker, target, {
-            workspaceUUID: $currentWorkspaceUUID,
+            workspaceUuid: $currentWorkspace ? $currentWorkspace.uuid : "",
             selectedUser: task.assignee,
             dispatch: async (name: string, data: { user: WorkspaceUser }) => {
                 if (!dropDown) {
@@ -457,7 +456,13 @@
                                 on:openUserPicker={openUserPicker}
                                 on:openLabelPicker={openLabelPicker}
                                 on:click={() =>
-                                    !isDragging && openTaskDetails(task.uuid)}
+                                    !isDragging &&
+                                    openTaskDetails(
+                                        $currentBoardUuid
+                                            ? $currentBoardUuid
+                                            : "",
+                                        task.uuid
+                                    )}
                             />
                         {/each}
                     {/if}

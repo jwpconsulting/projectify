@@ -11,11 +11,11 @@
     import Loading from "$lib/components/loading.svelte";
     import { loading } from "$lib/stores/dashboard";
 
-    let workspaceUUID: string;
+    let workspaceUuid: string;
     let activeTabId: string;
     $: {
-        workspaceUUID = $page.params["workspaceUUID"];
-        setContext("workspaceUUID", workspaceUUID);
+        workspaceUuid = $page.params["workspaceUuid"];
+        setContext("workspaceUuid", workspaceUuid);
     }
     let items: TabItem[] = [];
     $: {
@@ -23,17 +23,17 @@
             {
                 label: $_("settings.general"),
                 id: "general",
-                url: `/dashboard/settings/${workspaceUUID}`,
+                url: `/dashboard/settings/${workspaceUuid}`,
             },
             {
                 label: $_("settings.labels"),
                 id: "labels",
-                url: `/dashboard/settings/${workspaceUUID}/labels`,
+                url: `/dashboard/settings/${workspaceUuid}/labels`,
             },
             {
                 label: $_("settings.team-members"),
                 id: "team-members",
-                url: `/dashboard/settings/${workspaceUUID}/team-members`,
+                url: `/dashboard/settings/${workspaceUuid}/team-members`,
             },
         ];
         const activeTab = items.find((item) => item.url == $page.url.pathname);

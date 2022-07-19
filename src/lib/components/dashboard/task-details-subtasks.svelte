@@ -20,7 +20,7 @@
     import type { SubTask } from "$lib/types";
     import lodash from "lodash";
 
-    export let taskUUID: string;
+    export let taskUuid: string;
     export let subTasks: SubTask[];
     let percent = 0;
     let newSubTaskTitle = "";
@@ -48,13 +48,13 @@
             },
         ];
 
-        if (taskUUID) {
+        if (taskUuid) {
             try {
                 await client.mutate({
                     mutation: Mutation_AddSubTask,
                     variables: {
                         input: {
-                            taskUuid: taskUUID,
+                            taskUuid: taskUuid,
                             title: newSubTaskTitle,
                             description: "",
                         },
@@ -138,11 +138,11 @@
     }
 
     let subtaskEditTitle: string | null = null;
-    let editSubtaskUUID: string | null = null;
+    let editSubtaskUuid: string | null = null;
     let editSubtaskInput: HTMLElement | null = null;
 
     async function editSubtask(subTask: SubTask) {
-        editSubtaskUUID = subTask.uuid;
+        editSubtaskUuid = subTask.uuid;
         subtaskEditTitle = subTask.title;
 
         await tick();
@@ -153,7 +153,7 @@
         editSubtaskInput.focus();
     }
     function stopEditSubtask() {
-        editSubtaskUUID = null;
+        editSubtaskUuid = null;
         subtaskEditTitle = null;
     }
 
@@ -178,7 +178,7 @@
         }
 
         subTask.title = subtaskEditTitle;
-        editSubtaskUUID = null;
+        editSubtaskUuid = null;
     }
 </script>
 
@@ -206,7 +206,7 @@
                     on:change={(_e) => changeSubTaskDone(it)}
                 />
 
-                {#if editSubtaskUUID == it.uuid}
+                {#if editSubtaskUuid == it.uuid}
                     <div class="relative flex w-full grow">
                         <input
                             bind:this={editSubtaskInput}
@@ -246,7 +246,7 @@
                             ><IconChevronDown /></button
                         >
 
-                        {#if editSubtaskUUID == it.uuid}
+                        {#if editSubtaskUuid == it.uuid}
                             <button
                                 on:click={() => saveSubTask(it)}
                                 class="btn btn-ghost btn-xs h-9 w-9 rounded-full"

@@ -20,9 +20,10 @@
     import IconEdit from "../icons/icon-edit.svelte";
     import IconTrash from "../icons/icon-trash.svelte";
     import {
+        currentWorkspace,
+        currentBoardUuid,
         currentBoardSections,
         filterSectionsTasks,
-        gotoDashboard,
         openTaskDetails,
         searchTasks,
     } from "$lib/stores/dashboard";
@@ -46,11 +47,6 @@
         WorkspaceBoardSection,
     } from "$lib/types";
 
-    export let workspaceUUID: string | null;
-    export let boardUUID: string | null = null;
-
-    let res: WorkspaceBoard | null = null;
-    let loading = true;
     let board: WorkspaceBoard | null = null;
     let sections: WorkspaceBoardSection[] = [];
     let isDragging = false;
@@ -68,11 +64,13 @@
     }
 
     async function fetchBoard() {
-        if (!boardUUID) {
-            throw new Error("Expected boardUUID");
+        if (!$currentBoardUuid) {
+            throw new Error("Expected boardUuid");
         }
-        res = await getWorkspaceBoard(boardUUID);
-        loading = false;
+        board = await getWorkspaceBoard($currentBoardUuid);
+        if (board.workspace && !$currentWorkspace) {
+            $currentWorkspace = board.workspace;
+        }
     }
 
     const refetch = debounce(() => {
@@ -80,11 +78,12 @@
     }, 100);
 
     $: {
-        if (boardUUID) {
+        if ($currentBoardUuid) {
+            board = null;
             fetchBoard();
             boardWSStore = getSubscriptionForCollection(
                 "workspace-board",
-                boardUUID
+                $currentBoardUuid
             );
         }
     }
@@ -96,10 +95,9 @@
     }
 
     $: {
-        if (res) {
-            board = res;
-            if (board["workspace_board_sections"]) {
-                sections = board["workspace_board_sections"];
+        if (board) {
+            if (board.workspace_board_sections) {
+                sections = board.workspace_board_sections;
             }
         }
     }
@@ -132,7 +130,7 @@
                     mutation: Mutation_AddWorkspaceBoardSection,
                     variables: {
                         input: {
-                            workspaceBoardUuid: boardUUID,
+                            workspaceBoardUuid: $currentBoardUuid,
                             ...newSection,
                         },
                     },
@@ -246,10 +244,10 @@
         } catch (error) {
             console.error(error);
         }
-        if (!workspaceUUID) {
-            throw new Error("Expected workspaceUUID");
+        if (!$currentWorkspace) {
+            throw new Error("Expected $currentWorkspace");
         }
-        gotoDashboard(workspaceUUID);
+        // XXX gotoDashboard($currentWorkspace);
     }
     async function onDelete() {
         let modalRes = await getModal("deleteBoardConfirmModal").open();
@@ -274,10 +272,10 @@
         } catch (error) {
             console.error(error);
         }
-        if (!workspaceUUID) {
-            throw new Error("Expected workspaceUUID");
+        if (!$currentWorkspace) {
+            throw new Error("Expected $currentWorkspace");
         }
-        gotoDashboard(workspaceUUID);
+        // XXX gotoDashboard($currentWorkspace);
     }
 
     let sectionContainerEl: HTMLElement | null = null;
@@ -366,7 +364,7 @@
     }
 </script>
 
-{#if loading}
+{#if !board}
     <div class="flex grow flex-col items-center justify-center bg-base-200">
         <Loading />
     </div>
@@ -436,7 +434,11 @@
                     {#each tasksSearchResults as task}
                         <BoardTaskItem
                             {task}
-                            on:click={() => openTaskDetails(task.uuid)}
+                            on:click={() =>
+                                openTaskDetails(
+                                    $currentBoardUuid ? $currentBoardUuid : "",
+                                    task.uuid
+                                )}
                         />
                     {/each}
                 </div>

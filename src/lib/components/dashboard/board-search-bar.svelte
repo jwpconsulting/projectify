@@ -1,7 +1,7 @@
 <script lang="ts">
     import {
         currentWorkspaceLabels,
-        currentWorkspaceUUID,
+        currentWorkspace,
     } from "$lib/stores/dashboard";
 
     import { _ } from "svelte-i18n";
@@ -133,7 +133,9 @@
                     class="absolute top-11 right-0 z-10 w-64 max-w-md"
                 >
                     <UserPicker
-                        workspaceUUID={$currentWorkspaceUUID}
+                        workspaceUuid={$currentWorkspace
+                            ? $currentWorkspace.uuid
+                            : null}
                         selectedUser={filterUser}
                         enableUnassignedSelection={true}
                         on:userSelected={onUserSelected}

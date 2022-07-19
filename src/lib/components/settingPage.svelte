@@ -1,13 +1,17 @@
 <script lang="ts">
-    import { gotoDashboard } from "$lib/stores/dashboard";
+    import { goto } from "$app/navigation";
+    import { getDashboardWorkspaceUrl } from "$lib/urls";
     import { _ } from "svelte-i18n";
 
     import IconArrowLeft from "./icons/icon-arrow-left.svelte";
     import Loading from "./loading.svelte";
     export let title: string | null = null;
     export let loading = false;
+    export let workspaceUuid: string | null = null;
     export let onBack = () => {
-        gotoDashboard();
+        if (workspaceUuid) {
+            goto(getDashboardWorkspaceUrl(workspaceUuid));
+        }
     };
 </script>
 

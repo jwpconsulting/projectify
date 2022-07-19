@@ -8,7 +8,7 @@
     import { createEventDispatcher } from "svelte";
 
     export let list: any[];
-    export let listUUID: string;
+    export let listUuid: string;
     export let key: any;
     export let isDragging = false;
     export let containerCSS = "";
@@ -51,7 +51,7 @@
 
         list = arrayMoveImmutable(startList, startDragingIndex, dragoverIndex);
         dispatch("sorting", {
-            listUUID,
+            listUuid,
             fromIndex: startDragingIndex,
             toIndex: dragoverIndex,
         });

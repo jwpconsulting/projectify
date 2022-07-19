@@ -1,18 +1,14 @@
 <script lang="ts">
     import { getWorkspaces } from "$lib/repository";
     import IconPlus from "../icons/icon-plus.svelte";
-    import { gotoDashboard, getDashboardURL } from "$lib/stores/dashboard";
+    import { getDashboardWorkspaceUrl } from "$lib/urls";
+    import { currentWorkspace } from "$lib/stores/dashboard";
     import ProfilePicture from "../profilePicture.svelte";
-    import { goto } from "$app/navigation";
     import type { Workspace } from "$lib/types";
     import Loading from "$lib/components/loading.svelte";
 
-    export let selectedWorkspaceUUID: string | null;
-
     let workspaces: Workspace[] = [];
     let loading = true;
-
-    export let selectedWorkspace: Workspace | null;
 
     async function fetch() {
         workspaces = await getWorkspaces();
@@ -23,22 +19,6 @@
 
     $: {
         if (workspaces) {
-            if (!selectedWorkspaceUUID && workspaces.length) {
-                gotoDashboard(workspaces[0]["uuid"]);
-            } else {
-                const findResult = workspaces.find(
-                    (w) => w.uuid === selectedWorkspaceUUID
-                );
-                selectedWorkspace = workspaces
-                    ? findResult
-                        ? findResult
-                        : null
-                    : null;
-
-                if (!selectedWorkspace && workspaces.length) {
-                    goto("/error/workspace-not-found");
-                }
-            }
         }
     }
 </script>
@@ -52,8 +32,9 @@
         {#each workspaces as workspace (workspace.uuid)}
             <a
                 class="btn btn-outline btn-primary btn-square overflow-hidden"
-                class:btn-active={workspace.uuid == selectedWorkspaceUUID}
-                href={getDashboardURL(workspace.uuid)}
+                href={getDashboardWorkspaceUrl(workspace.uuid)}
+                class:btn-active={workspace.uuid ==
+                    ($currentWorkspace ? $currentWorkspace.uuid : null)}
             >
                 <ProfilePicture
                     size={48}

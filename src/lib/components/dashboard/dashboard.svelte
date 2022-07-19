@@ -4,76 +4,53 @@
     import DrawerModal from "../drawerModal.svelte";
     import TaskDetails from "./task-details.svelte";
     import {
-        currentWorkspaceUUID,
-        currentBoardUUID,
+        currentBoardUuid,
         drawerModalOpen,
         closeTaskDetails,
-        openTaskDetails,
     } from "$lib/stores/dashboard";
     import DialogModal from "../dialogModal.svelte";
 
     import { page } from "$app/stores";
-    import { decodeUUID } from "$lib/utils/encoders";
     import { onMount } from "svelte";
     import ConfirmModalContent from "../confirmModalContent.svelte";
     import { _ } from "svelte-i18n";
     import BoardCollapsibleSideBar from "./board-collapsible-side-bar.svelte";
-    import type { Workspace } from "$lib/types";
 
-    export let selectedWorkspace: Workspace | null = null;
-
-    let uuids: string[];
+    let selectedWorkspaceUuid: string | null;
+    let selectedTaskUuid: string | null;
+    let workspaceBoardUuid: string | null = null;
     $: {
-        uuids = $page.params["uuids"].split("/");
+        workspaceBoardUuid = $page.params["workspaceBoardUuid"];
     }
 
-    let selectedWorkspaceUUID: string | null;
-    let selectedBoardUUID: string | null;
-    let selectedTaskUUID: string | null;
-    $: selectedWorkspaceUUID = uuids[0] ? decodeUUID(uuids[0]) : null;
-    $: selectedBoardUUID = uuids[1] ? decodeUUID(uuids[1]) : null;
-    $: selectedTaskUUID = uuids[2] ? decodeUUID(uuids[2]) : null;
-
     $: {
-        currentWorkspaceUUID.set(selectedWorkspaceUUID);
-        currentBoardUUID.set(selectedBoardUUID);
+        currentBoardUuid.set(workspaceBoardUuid);
     }
 
     $: {
         if (
             !$drawerModalOpen &&
-            selectedWorkspaceUUID &&
-            selectedBoardUUID &&
-            selectedTaskUUID
+            selectedWorkspaceUuid &&
+            workspaceBoardUuid &&
+            selectedTaskUuid
         ) {
             closeTaskDetails();
         }
     }
 
-    onMount(() => {
-        if (selectedTaskUUID) {
-            openTaskDetails(selectedTaskUUID);
-        }
-    });
+    onMount(() => {});
 </script>
 
 <div class="flex grow flex-row divide-x divide-base-300 overflow-hidden">
     <!-- First side bar -->
-    <WorkspacesSideNav bind:selectedWorkspaceUUID bind:selectedWorkspace />
+    <WorkspacesSideNav />
 
     <!-- Second side bar -->
-    <BoardCollapsibleSideBar
-        {selectedWorkspace}
-        {selectedWorkspaceUUID}
-        {selectedBoardUUID}
-    />
+    <BoardCollapsibleSideBar />
 
-    {#if selectedBoardUUID}
+    {#if workspaceBoardUuid}
         <div class="flex h-full grow overflow-y-auto">
-            <Board
-                workspaceUUID={selectedWorkspaceUUID}
-                bind:boardUUID={selectedBoardUUID}
-            />
+            <Board />
         </div>
     {/if}
 </div>

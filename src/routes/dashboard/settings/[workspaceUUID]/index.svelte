@@ -17,17 +17,17 @@
     import { getContext } from "svelte";
     import { loading } from "$lib/stores/dashboard";
 
-    let workspaceUUID: string = getContext("workspaceUUID");
+    let workspaceUuid: string = getContext("workspaceUuid");
 
     let res: Workspace | null = null;
     let workspaceWSStore: WSSubscriptionStore | null;
     let workspace: Workspace | null = null;
 
     async function fetch() {
-        if (!workspaceUUID) {
-            throw new Error("Expected workspaceUUID");
+        if (!workspaceUuid) {
+            throw new Error("Expected workspaceUuid");
         }
-        res = await getWorkspace(workspaceUUID);
+        res = await getWorkspace(workspaceUuid);
         $loading = false;
     }
 
@@ -36,13 +36,13 @@
     }, 100);
 
     $: {
-        if (workspaceUUID) {
+        if (workspaceUuid) {
             $loading = true;
             fetch();
 
             workspaceWSStore = getSubscriptionForCollection(
                 "workspace",
-                workspaceUUID
+                workspaceUuid
             );
         }
     }
@@ -71,7 +71,7 @@
                 mutation: Mutation_UpdateWorkspace,
                 variables: {
                     input: {
-                        uuid: workspaceUUID,
+                        uuid: workspaceUuid,
                         title: workspace.title,
                         description: workspace.description,
                     },
@@ -106,7 +106,7 @@
             await uploadImage(
                 imageFile,
                 vars.API_ENDPOINT +
-                    `/workspace/workspace/${workspaceUUID}/picture-upload`
+                    `/workspace/workspace/${workspaceUuid}/picture-upload`
             );
         }
         await saveData();

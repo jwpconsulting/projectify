@@ -12,11 +12,7 @@
     import IconSettings from "../icons/icon-settings.svelte";
     import IconTag from "../icons/icon-tag.svelte";
     import BoardsSideNav from "./boards-side-nav.svelte";
-    import type { Workspace } from "$lib/types";
-
-    export let selectedWorkspace: Workspace | null;
-    export let selectedWorkspaceUUID: string | null;
-    export let selectedBoardUUID: string | null;
+    import { currentWorkspace } from "$lib/stores/dashboard";
 
     $: open = $boardSideBarOpen;
 
@@ -43,17 +39,23 @@
             {
                 label: $_("edit-labels"),
                 icon: IconTag,
-                href: `/dashboard/settings/${selectedWorkspaceUUID}?tab=labels`,
+                href: `/dashboard/settings/${
+                    $currentWorkspace ? $currentWorkspace.uuid : ""
+                }?tab=labels`,
             },
             {
                 label: $_("Archive"),
                 icon: IconArchive,
-                href: `/dashboard/archive/${selectedWorkspaceUUID}`,
+                href: `/dashboard/archive/${
+                    $currentWorkspace ? $currentWorkspace.uuid : ""
+                }`,
             },
             {
                 label: $_("settings"),
                 icon: IconSettings,
-                href: `/dashboard/settings/${selectedWorkspaceUUID}`,
+                href: `/dashboard/settings/${
+                    $currentWorkspace ? $currentWorkspace.uuid : ""
+                }`,
             },
         ];
         const dropDown = getDropDown();
@@ -73,7 +75,7 @@
     <div class="sticky top-0 z-50 flex bg-base-100 p-4">
         {#if open}
             <h1 class="grow text-xl font-bold capitalize">
-                {selectedWorkspace ? selectedWorkspace.title : ""}
+                {$currentWorkspace ? $currentWorkspace.title : ""}
             </h1>
         {/if}
         <button
@@ -86,9 +88,9 @@
 
     <!-- Boards nav -->
     <div class:hidden={!open} class="flex grow flex-col overflow-hidden">
-        {#if selectedWorkspaceUUID}
+        {#if $currentWorkspace}
             <h2 class="p-4 text-base font-bold">Workspace Boards</h2>
-            <BoardsSideNav {selectedWorkspaceUUID} {selectedBoardUUID} />
+            <BoardsSideNav />
         {/if}
     </div>
 </nav>

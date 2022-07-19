@@ -15,7 +15,7 @@
     import SearchInput from "./search-input.svelte";
     import { fuseSearchThreshold } from "$lib/stores/dashboard";
 
-    export let workspaceUUID: string | null = null;
+    export let workspaceUuid: string | null = null;
     export let selectedUser: WorkspaceUser | null | "unassigned" = null;
     export let enableUnassignedSelection = false;
 
@@ -27,10 +27,10 @@
     let workspace_users: WorkspaceUser[] = [];
 
     async function fetch() {
-        if (!workspaceUUID) {
-            throw new Error("Expected workspaceUUID");
+        if (!workspaceUuid) {
+            throw new Error("Expected workspaceUuid");
         }
-        workspace = await getWorkspace(workspaceUUID);
+        workspace = await getWorkspace(workspaceUuid);
         loading = false;
     }
 
@@ -39,12 +39,12 @@
     }, 100);
 
     $: {
-        if (workspaceUUID) {
+        if (workspaceUuid) {
             fetch();
 
             workspaceWSStore = getSubscriptionForCollection(
                 "workspace",
-                workspaceUUID
+                workspaceUuid
             );
         }
     }

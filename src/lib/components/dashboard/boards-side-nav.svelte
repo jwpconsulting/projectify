@@ -4,54 +4,31 @@
     import { getWorkspace } from "$lib/repository";
 
     import { getModal } from "$lib/components/dialogModal.svelte";
-    import {
-        gotoDashboard,
-        getDashboardURL,
-        currentWorkspaceLabels,
-    } from "$lib/stores/dashboard";
+    import { currentWorkspaceLabels } from "$lib/stores/dashboard";
+    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
     import { _ } from "svelte-i18n";
-    import { goto } from "$app/navigation";
-    import type { WorkspaceBoard, Workspace } from "$lib/types";
+    import type { WorkspaceBoard } from "$lib/types";
+    import { currentWorkspace, currentBoardUuid } from "$lib/stores/dashboard";
 
-    export let selectedWorkspaceUUID: string;
-    export let selectedBoardUUID: string | null = null;
-
-    let workspace: Workspace | null = null;
     let boards: WorkspaceBoard[] = [];
 
     async function fetchWorkspace() {
-        workspace = await getWorkspace(selectedWorkspaceUUID);
-    }
-
-    $: {
-        if (selectedWorkspaceUUID) {
-            fetchWorkspace();
+        if ($currentWorkspace) {
+            $currentWorkspace = await getWorkspace($currentWorkspace.uuid);
         }
     }
 
     $: {
-        if (workspace) {
-            if (workspace.workspace_boards) {
-                boards = workspace.workspace_boards;
+        if ($currentWorkspace) {
+            if ($currentWorkspace.workspace_boards) {
+                boards = $currentWorkspace.workspace_boards;
             } else {
-                throw new Error("Expected workspace.workspace_boards");
+                fetchWorkspace();
             }
-            if (workspace.labels) {
-                currentWorkspaceLabels.set([...workspace.labels]);
+            if ($currentWorkspace.labels) {
+                currentWorkspaceLabels.set([...$currentWorkspace.labels]);
             } else {
-                throw new Error("Expected workspace.labels");
-            }
-
-            if (!selectedBoardUUID && boards.length) {
-                gotoDashboard(selectedWorkspaceUUID, boards[0]["uuid"]);
-            } else {
-                const selectedBoard = boards
-                    ? boards.find((b) => b.uuid === selectedBoardUUID)
-                    : null;
-
-                if (!selectedBoard) {
-                    goto("/error/board-not-found");
-                }
+                console.debug("Expected workspace.labels");
             }
         }
     }
@@ -65,15 +42,17 @@
                     mutation: Mutation_AddWorkspaceBoard,
                     variables: {
                         input: {
-                            workspaceUuid: selectedWorkspaceUUID,
+                            workspaceUuid: $currentWorkspace
+                                ? $currentWorkspace.uuid
+                                : "",
                             title: modalRes.outputs.title,
                             deadline: modalRes.outputs.deadline,
                             description: "",
                         },
                     },
                 });
-                selectedBoardUUID = mRes.data.addWorkspaceBoard.uuid;
-                gotoDashboard(selectedWorkspaceUUID, selectedBoardUUID);
+                $currentBoardUuid = mRes.data.addWorkspaceBoard.uuid;
+                // XXX gotoDashboard($currentWorkspaceUuid, $currentBoardUuid);
             } catch (error) {
                 console.error(error);
             }
@@ -86,11 +65,11 @@
         {#each boards as board (board.uuid)}
             <li
                 class="p-0"
-                class:menu-item-active={board.uuid === selectedBoardUUID}
+                class:menu-item-active={board.uuid === $currentBoardUuid}
             >
                 <a
                     class="inline h-9 px-8 text-xs font-bold capitalize"
-                    href={getDashboardURL(selectedWorkspaceUUID, board.uuid)}
+                    href={getDashboardWorkspaceBoardUrl(board.uuid)}
                     ><span class="nowrap-ellipsis"># {board.title}</span></a
                 >
             </li>

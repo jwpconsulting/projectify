@@ -4,110 +4,80 @@ import {
     Mutation_AssignTask,
 } from "./../graphql/operations";
 import { goto } from "$app/navigation";
-import { encodeUUID } from "$lib/utils/encoders";
 import Fuse from "fuse.js";
 import lodash from "lodash";
-import { writable, get } from "svelte/store";
+import { writable } from "svelte/store";
 import { client } from "$lib/graphql/client";
 import { getModal } from "$lib/components/dialogModal.svelte";
 import type {
     Label,
     Task,
     WorkspaceBoardSection,
+    Workspace,
     WorkspaceUser,
 } from "$lib/types";
+import { getDashboardWorkspaceBoardUrl, getDashboardTaskUrl } from "$lib/urls";
 
 export const drawerModalOpen = writable(false);
-export const currentWorkspaceUUID = writable<string | null>(null);
-export const currentBoardUUID = writable<string | null>(null);
-export const currentTaskDetailsUUID = writable<string | null>(null);
-export const newTaskSectionUUID = writable<string | null>(null);
+export const currentWorkspace = writable<Workspace | null>(null);
+export const currentBoardUuid = writable<string | null>(null);
+export const currentTaskDetailsUuid = writable<string | null>(null);
+export const newTaskSectionUuid = writable<string | null>(null);
 export const currentBoardSections = writable<WorkspaceBoardSection[]>([]);
 export const loading = writable<boolean>(false);
 
 export const fuseSearchThreshold = 0.3;
 
-export function openNewTask(sectionUUID: string): void {
+export function openNewTask(sectionUuid: string): void {
     drawerModalOpen.set(true);
-    newTaskSectionUUID.set(sectionUUID);
-    currentTaskDetailsUUID.set(null);
+    newTaskSectionUuid.set(sectionUuid);
+    currentTaskDetailsUuid.set(null);
 }
 export function openTaskDetails(
-    taskUUID: string,
-    subView: string | null = null
+    workspaceBoardUuid: string,
+    taskUuid: string,
+    _subView: string | null = null
 ): void {
     drawerModalOpen.set(true);
-    currentTaskDetailsUUID.set(taskUUID);
-
-    const workspaceUUID = get(currentWorkspaceUUID);
-    const boardUUID = get(currentBoardUUID);
-
-    gotoDashboard(workspaceUUID, boardUUID, taskUUID, subView);
+    currentTaskDetailsUuid.set(taskUuid);
+    goto(
+        getDashboardTaskUrl(
+            workspaceBoardUuid,
+            taskUuid,
+            _subView || "details"
+        )
+    );
 }
 export function closeTaskDetails(): void {
     drawerModalOpen.set(false);
-    currentTaskDetailsUUID.set(null);
+    currentTaskDetailsUuid.set(null);
 
-    const workspaceUUID = get(currentWorkspaceUUID);
-    const boardUUID = get(currentBoardUUID);
+    // const workspaceUuid = get(currentWorkspace);
+    // const boardUuid = get(currentBoardUuid);
 
-    gotoDashboard(workspaceUUID, boardUUID, null);
+    // XXX gotoDashboard(workspaceUuid, boardUuid, null);
 }
 
-export function getDashboardURL(
-    workspaceUUID: string | null = null,
-    boardUUID: string | null = null,
-    taskUUID: string | null = null,
-    subView: string | null = null
-): string {
-    workspaceUUID = workspaceUUID ? encodeUUID(workspaceUUID) : null;
-    boardUUID = boardUUID ? encodeUUID(boardUUID) : null;
-    taskUUID = taskUUID ? encodeUUID(taskUUID) : null;
-
-    let url = "/dashboard/";
-
-    if (workspaceUUID) {
-        url += workspaceUUID;
-        if (boardUUID) {
-            url += "/" + boardUUID;
-            if (taskUUID) {
-                url += "/" + taskUUID;
-                if (subView) {
-                    url += "/" + subView;
-                }
-            }
-        }
-    }
-
-    return url;
-}
-
-export function gotoDashboard(
-    workspaceUUID: string | null = null,
-    boardUUID: string | null = null,
-    taskUUID: string | null = null,
-    subView: string | null = null
-): void {
-    const url = getDashboardURL(workspaceUUID, boardUUID, taskUUID, subView);
-    goto(url);
+export function gotoWorkspaceBoard(workspaceBoardUuid: string) {
+    goto(getDashboardWorkspaceBoardUrl(workspaceBoardUuid));
 }
 
 export function copyDashboardURL(
-    workspaceUUID: string | null = null,
-    boardUUID: string | null = null,
-    taskUUID: string | null = null
+    _workspaceUuid: string | null = null,
+    _boardUuid: string | null = null,
+    _taskUuid: string | null = null
 ): void {
-    let url = getDashboardURL(workspaceUUID, boardUUID, taskUUID);
-    url = `${location.protocol}//${location.host}${url}`;
+    const path = "";
+    const url = `${location.protocol}//${location.host}${path}`;
     navigator.clipboard.writeText(url);
 }
 
-export function pushTashUUIDtoPath(uuid: string): void {
-    const workspaceUUID = get(currentWorkspaceUUID);
-    const boardUUID = get(currentBoardUUID);
-    if (workspaceUUID && boardUUID) {
-        gotoDashboard(workspaceUUID, boardUUID, uuid);
-    }
+export function pushTashUuidtoPath(_uuid: string): void {
+    // const workspaceUuid = get(currentWorkspace).uuid;
+    // const boardUuid = get(currentBoardUuid);
+    // if (workspaceUuid && boardUuid) {
+    // XXX gotoDashboard(workspaceUuid, boardUuid, uuid);
+    // }
 }
 
 export const currentWorkspaceLabels = writable<Label[]>([]);
@@ -233,14 +203,14 @@ export async function deleteTask(task: Task): Promise<void> {
 
 export async function assignUserToTask(
     userEmail: string | null,
-    taskUUID: string
+    taskUuid: string
 ): Promise<void> {
     try {
         await client.mutate({
             mutation: Mutation_AssignTask,
             variables: {
                 input: {
-                    uuid: taskUUID,
+                    uuid: taskUuid,
                     email: userEmail,
                 },
             },
