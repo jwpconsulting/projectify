@@ -5,7 +5,6 @@
         currentWorkspace,
         deleteTask,
         newTaskSectionUuid,
-        pushTashUuidtoPath,
     } from "$lib/stores/dashboard";
 
     import {
@@ -16,6 +15,7 @@
     import { _ } from "svelte-i18n";
     import { getTask } from "$lib/repository";
 
+    import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard";
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
     import debounce from "lodash/debounce.js";
     import ToolBar from "./toolBar.svelte";
@@ -35,6 +35,7 @@
     import TaskDetailsBreadcrumbs from "./task-details-breadcrumbs.svelte";
     import type { Task, SubTask, Label, WorkspaceUser } from "$lib/types";
     import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
+    import { getDashboardTaskUrl } from "$lib/urls";
 
     let task: Task | null = null;
     let loading = true;
@@ -168,7 +169,16 @@
 
                 let taskUuid = mRes.data.addTask.uuid;
                 currentTaskDetailsUuid.set(taskUuid);
-                pushTashUuidtoPath(taskUuid);
+                if (!$currentWorkspaceBoardUuid) {
+                    throw new Error("Expected $currentWorkspaceBoardUuid");
+                }
+                goto(
+                    getDashboardTaskUrl(
+                        $currentWorkspaceBoardUuid,
+                        taskUuid,
+                        "details"
+                    )
+                );
                 taskModified = false;
             } catch (error) {
                 console.error(error);

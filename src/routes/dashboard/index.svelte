@@ -2,7 +2,10 @@
     import { getWorkspaces, getWorkspace } from "$lib/repository";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
     import { browser } from "$app/env";
-    import { currentWorkspace, currentBoardUuid } from "$lib/stores/dashboard";
+    import {
+        currentWorkspace,
+        currentWorkspaceBoardUuid,
+    } from "$lib/stores/dashboard";
     import { goto } from "$app/navigation";
 
     async function fetch() {
@@ -21,7 +24,7 @@
             throw new Error("No workspace board");
         }
         currentWorkspace.set(workspace);
-        currentBoardUuid.set(workspaceBoardUuid);
+        currentWorkspaceBoardUuid.set(workspaceBoardUuid);
         goto(getDashboardWorkspaceBoardUrl(workspaceBoardUuid));
     }
     if (browser) {

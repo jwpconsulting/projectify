@@ -14,6 +14,8 @@
     import { _ } from "svelte-i18n";
     import { sortable } from "$lib/actions/sortable";
     import delay from "delay";
+    import { goto } from "$app/navigation";
+    import { getDashboardWorkspaceUrl } from "$lib/urls";
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
     import debounce from "lodash/debounce.js";
     import ToolBar from "./toolBar.svelte";
@@ -21,7 +23,7 @@
     import IconTrash from "../icons/icon-trash.svelte";
     import {
         currentWorkspace,
-        currentBoardUuid,
+        currentWorkspaceBoardUuid,
         currentBoardSections,
         filterSectionsTasks,
         openTaskDetails,
@@ -64,10 +66,10 @@
     }
 
     async function fetchBoard() {
-        if (!$currentBoardUuid) {
+        if (!$currentWorkspaceBoardUuid) {
             throw new Error("Expected boardUuid");
         }
-        board = await getWorkspaceBoard($currentBoardUuid);
+        board = await getWorkspaceBoard($currentWorkspaceBoardUuid);
         if (board.workspace && !$currentWorkspace) {
             $currentWorkspace = board.workspace;
         }
@@ -78,12 +80,12 @@
     }, 100);
 
     $: {
-        if ($currentBoardUuid) {
+        if ($currentWorkspaceBoardUuid) {
             board = null;
             fetchBoard();
             boardWSStore = getSubscriptionForCollection(
                 "workspace-board",
-                $currentBoardUuid
+                $currentWorkspaceBoardUuid
             );
         }
     }
@@ -130,7 +132,7 @@
                     mutation: Mutation_AddWorkspaceBoardSection,
                     variables: {
                         input: {
-                            workspaceBoardUuid: $currentBoardUuid,
+                            workspaceBoardUuid: $currentWorkspaceBoardUuid,
                             ...newSection,
                         },
                     },
@@ -247,7 +249,7 @@
         if (!$currentWorkspace) {
             throw new Error("Expected $currentWorkspace");
         }
-        // XXX gotoDashboard($currentWorkspace);
+        goto(getDashboardWorkspaceUrl($currentWorkspace.uuid));
     }
     async function onDelete() {
         let modalRes = await getModal("deleteBoardConfirmModal").open();
@@ -275,7 +277,7 @@
         if (!$currentWorkspace) {
             throw new Error("Expected $currentWorkspace");
         }
-        // XXX gotoDashboard($currentWorkspace);
+        goto(getDashboardWorkspaceUrl($currentWorkspace.uuid));
     }
 
     let sectionContainerEl: HTMLElement | null = null;
@@ -434,11 +436,17 @@
                     {#each tasksSearchResults as task}
                         <BoardTaskItem
                             {task}
-                            on:click={() =>
+                            on:click={() => {
+                                if (!$currentWorkspaceBoardUuid) {
+                                    throw new Error(
+                                        "Expected $currentWorkspaceBoardUuid"
+                                    );
+                                }
                                 openTaskDetails(
-                                    $currentBoardUuid ? $currentBoardUuid : "",
+                                    $currentWorkspaceBoardUuid,
                                     task.uuid
-                                )}
+                                );
+                            }}
                         />
                     {/each}
                 </div>

@@ -17,10 +17,11 @@ import type {
     WorkspaceUser,
 } from "$lib/types";
 import { getDashboardWorkspaceBoardUrl, getDashboardTaskUrl } from "$lib/urls";
+import { get } from "svelte/store";
 
 export const drawerModalOpen = writable(false);
 export const currentWorkspace = writable<Workspace | null>(null);
-export const currentBoardUuid = writable<string | null>(null);
+export const currentWorkspaceBoardUuid = writable<string | null>(null);
 export const currentTaskDetailsUuid = writable<string | null>(null);
 export const newTaskSectionUuid = writable<string | null>(null);
 export const currentBoardSections = writable<WorkspaceBoardSection[]>([]);
@@ -51,33 +52,30 @@ export function openTaskDetails(
 export function closeTaskDetails(): void {
     drawerModalOpen.set(false);
     currentTaskDetailsUuid.set(null);
-
-    // const workspaceUuid = get(currentWorkspace);
-    // const boardUuid = get(currentBoardUuid);
-
-    // XXX gotoDashboard(workspaceUuid, boardUuid, null);
-}
-
-export function gotoWorkspaceBoard(workspaceBoardUuid: string) {
-    goto(getDashboardWorkspaceBoardUrl(workspaceBoardUuid));
+    const boardUuid = get(currentWorkspaceBoardUuid);
+    if (!boardUuid) {
+        throw new Error("Expected boardUuid");
+    }
+    goto(getDashboardWorkspaceBoardUrl(boardUuid));
 }
 
 export function copyDashboardURL(
-    _workspaceUuid: string | null = null,
-    _boardUuid: string | null = null,
-    _taskUuid: string | null = null
+    workspaceBoardUuid: string,
+    taskUuid: string | null = null
 ): void {
-    const path = "";
+    const path = taskUuid
+        ? getDashboardTaskUrl(workspaceBoardUuid, taskUuid, "details")
+        : getDashboardWorkspaceBoardUrl(workspaceBoardUuid);
     const url = `${location.protocol}//${location.host}${path}`;
     navigator.clipboard.writeText(url);
 }
 
-export function pushTashUuidtoPath(_uuid: string): void {
-    // const workspaceUuid = get(currentWorkspace).uuid;
-    // const boardUuid = get(currentBoardUuid);
-    // if (workspaceUuid && boardUuid) {
-    // XXX gotoDashboard(workspaceUuid, boardUuid, uuid);
-    // }
+export function pushTashUuidtoPath() {
+    const boardUuid = get(currentWorkspaceBoardUuid);
+    if (!boardUuid) {
+        throw new Error("Expected boardUuid");
+    }
+    goto(getDashboardWorkspaceBoardUrl(boardUuid));
 }
 
 export const currentWorkspaceLabels = writable<Label[]>([]);

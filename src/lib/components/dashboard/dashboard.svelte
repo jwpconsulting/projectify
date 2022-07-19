@@ -4,7 +4,7 @@
     import DrawerModal from "../drawerModal.svelte";
     import TaskDetails from "./task-details.svelte";
     import {
-        currentBoardUuid,
+        currentWorkspaceBoardUuid,
         drawerModalOpen,
         closeTaskDetails,
     } from "$lib/stores/dashboard";
@@ -24,7 +24,7 @@
     }
 
     $: {
-        currentBoardUuid.set(workspaceBoardUuid);
+        currentWorkspaceBoardUuid.set(workspaceBoardUuid);
     }
 
     $: {

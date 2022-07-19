@@ -6,9 +6,13 @@
     import { getModal } from "$lib/components/dialogModal.svelte";
     import { currentWorkspaceLabels } from "$lib/stores/dashboard";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
+    import { goto } from "$app/navigation";
     import { _ } from "svelte-i18n";
     import type { WorkspaceBoard } from "$lib/types";
-    import { currentWorkspace, currentBoardUuid } from "$lib/stores/dashboard";
+    import {
+        currentWorkspace,
+        currentWorkspaceBoardUuid,
+    } from "$lib/stores/dashboard";
 
     let boards: WorkspaceBoard[] = [];
 
@@ -51,8 +55,13 @@
                         },
                     },
                 });
-                $currentBoardUuid = mRes.data.addWorkspaceBoard.uuid;
-                // XXX gotoDashboard($currentWorkspaceUuid, $currentBoardUuid);
+                $currentWorkspaceBoardUuid = mRes.data.addWorkspaceBoard.uuid;
+                if (!$currentWorkspaceBoardUuid) {
+                    throw new Error("Expected $currentWorkspaceBoardUuid");
+                }
+                goto(
+                    getDashboardWorkspaceBoardUrl($currentWorkspaceBoardUuid)
+                );
             } catch (error) {
                 console.error(error);
             }
@@ -65,7 +74,8 @@
         {#each boards as board (board.uuid)}
             <li
                 class="p-0"
-                class:menu-item-active={board.uuid === $currentBoardUuid}
+                class:menu-item-active={board.uuid ===
+                    $currentWorkspaceBoardUuid}
             >
                 <a
                     class="inline h-9 px-8 text-xs font-bold capitalize"

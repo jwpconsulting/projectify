@@ -4,7 +4,10 @@
     import { browser } from "$app/env";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
     import { goto } from "$app/navigation";
-    import { currentWorkspace, currentBoardUuid } from "$lib/stores/dashboard";
+    import {
+        currentWorkspace,
+        currentWorkspaceBoardUuid,
+    } from "$lib/stores/dashboard";
 
     async function fetch() {
         const workspaceUuid = $page.params["workspaceUuid"];
@@ -19,7 +22,7 @@
             throw new Error("No workspace board");
         }
         currentWorkspace.set(workspace);
-        currentBoardUuid.set(workspaceBoardUuid);
+        currentWorkspaceBoardUuid.set(workspaceBoardUuid);
         goto(getDashboardWorkspaceBoardUrl(workspaceBoardUuid));
     }
     if (browser) {

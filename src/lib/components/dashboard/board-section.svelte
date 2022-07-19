@@ -6,7 +6,7 @@
         assignUserToTask,
         copyDashboardURL,
         currentBoardSections,
-        currentBoardUuid,
+        currentWorkspaceBoardUuid,
         currentWorkspace,
         deleteTask,
         moveTaskAfter,
@@ -191,10 +191,10 @@
                 icon: IconArrowExpand,
 
                 onClick: () => {
-                    openTaskDetails(
-                        $currentBoardUuid ? $currentBoardUuid : "",
-                        task.uuid
-                    );
+                    if (!$currentWorkspaceBoardUuid) {
+                        throw new Error("Expected $currentWorkspaceBoardUuid");
+                    }
+                    openTaskDetails($currentWorkspaceBoardUuid, task.uuid);
                 },
             },
             {
@@ -238,7 +238,10 @@
                 label: $_("copy-link"),
                 icon: IconCopyLink,
                 onClick: () => {
-                    copyDashboardURL("", $currentBoardUuid, task.uuid);
+                    if (!$currentWorkspaceBoardUuid) {
+                        throw new Error("Expected $currentWorkspaceBoardUuid");
+                    }
+                    copyDashboardURL($currentWorkspaceBoardUuid, task.uuid);
                 },
             },
             {
@@ -455,14 +458,20 @@
                                 on:moveUp={moveUpItem}
                                 on:openUserPicker={openUserPicker}
                                 on:openLabelPicker={openLabelPicker}
-                                on:click={() =>
-                                    !isDragging &&
+                                on:click={() => {
+                                    if (!$currentWorkspaceBoardUuid) {
+                                        throw new Error(
+                                            "Expected $currentWorkspaceBoardUuid"
+                                        );
+                                    }
+                                    if (isDragging) {
+                                        return;
+                                    }
                                     openTaskDetails(
-                                        $currentBoardUuid
-                                            ? $currentBoardUuid
-                                            : "",
+                                        $currentWorkspaceBoardUuid,
                                         task.uuid
-                                    )}
+                                    );
+                                }}
                             />
                         {/each}
                     {/if}
