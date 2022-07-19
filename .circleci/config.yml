@@ -82,9 +82,24 @@ jobs:
           path: junit/
       - store_artifacts:
           path: junit/
+  seeddb:
+    executor: python_and_postgres
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - cache-{{ checksum "Pipfile.lock" }}
+      - install_dependencies
+      - run:
+          name: Migrate
+          command: pipenv run ./manage.py migrate
+      - run:
+          name: Seed DB
+          command: pipenv run ./manage.py seeddb
 workflows:
   test_all:
     jobs:
       - pipenv_check
       - lint
       - tests
+      - seeddb
