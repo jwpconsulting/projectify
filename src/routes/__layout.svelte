@@ -1,7 +1,8 @@
 <script lang="ts" context="module">
     import { browser } from "$app/env";
-    import { fetchUser } from "$lib/stores/user";
+    import { fetchUser, user } from "$lib/stores/user";
     import routes from "$lib/routes";
+    import { get } from "svelte/store";
 
     import "$lib/stores/global-ui";
 
@@ -18,7 +19,11 @@
 
                 return false;
             });
-            if (route && (route.authRequired || route.fetchUser)) {
+            if (
+                !get(user) &&
+                route &&
+                (route.authRequired || route.fetchUser)
+            ) {
                 await fetchUser();
             }
         }
