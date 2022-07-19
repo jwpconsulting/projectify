@@ -4,4 +4,5 @@ export type TabItem = {
     component?: any;
     props?: any;
     hidden?: boolean;
+    url?: string;
 };

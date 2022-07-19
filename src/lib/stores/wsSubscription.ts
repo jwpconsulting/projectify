@@ -131,9 +131,10 @@ export class WSSubscriptionStore {
     }
 }
 
-export function getSubscriptionFor(url: string): WSSubscriptionStore {
+export function getSubscriptionFor(url: string): WSSubscriptionStore | null {
     if (!browser) {
-        throw new Error("Expected browser");
+        console.debug("Expected browser");
+        return null;
     }
     const store = wsSubscriptionStores.get(url);
     if (store) {

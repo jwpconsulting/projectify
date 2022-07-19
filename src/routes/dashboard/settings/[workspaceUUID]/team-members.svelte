@@ -10,32 +10,32 @@
 
     import debounce from "lodash/debounce.js";
     import { _ } from "svelte-i18n";
-    import Loading from "../loading.svelte";
-    import ProfilePicture from "../profilePicture.svelte";
+    import ProfilePicture from "$lib/components/profilePicture.svelte";
     import DialogModal, { getModal } from "$lib/components/dialogModal.svelte";
     import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
     import { client } from "$lib/graphql/client";
-    import UserProfilePicture from "../userProfilePicture.svelte";
-    import SearchInput from "../search-input.svelte";
+    import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
+    import SearchInput from "$lib/components/search-input.svelte";
     import Fuse from "fuse.js";
     import { fuseSearchThreshold } from "$lib/stores/dashboard";
-    import DropdownButton from "../dropdown-button.svelte";
-    import IconLockClosed from "../icons/icon-lock-closed.svelte";
-    import { getDropDown } from "../globalDropDown.svelte";
-    import type { DropDownMenuItem } from "../globalDropDown.svelte";
+    import DropdownButton from "$lib/components/dropdown-button.svelte";
+    import IconLockClosed from "$lib/components/icons/icon-lock-closed.svelte";
+    import { getDropDown } from "$lib/components/globalDropDown.svelte";
+    import type { DropDownMenuItem } from "$lib/components/globalDropDown.svelte";
     import { workspaceUserRoles } from "$lib/types/workspaceUserRole";
-    import IconEdit from "../icons/icon-edit.svelte";
-    import IconTrash from "../icons/icon-trash.svelte";
+    import IconEdit from "$lib/components/icons/icon-edit.svelte";
+    import IconTrash from "$lib/components/icons/icon-trash.svelte";
     import { goto } from "$app/navigation";
     import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
+    import { getContext } from "svelte";
+    import { loading } from "$lib/stores/dashboard";
 
-    export let workspaceUUID: string | null = null;
+    let workspaceUUID: string = getContext("workspaceUUID");
 
-    let loading = true;
     let customer: Customer | null = null;
     let workspaceWSStore: WSSubscriptionStore | null;
     let workspace: Workspace | null = null;
-    let workspaceUsers: WorkspaceUser[] | null = null;
+    let workspaceUsers: WorkspaceUser[] = [];
 
     async function fetch() {
         if (!workspaceUUID) {
@@ -45,7 +45,8 @@
             getWorkspaceCustomer(workspaceUUID),
             getWorkspace(workspaceUUID),
         ]);
-        loading = false;
+        workspaceUsers = workspace.workspace_users || [];
+        $loading = false;
     }
 
     const refetch = debounce(() => {
@@ -54,6 +55,7 @@
 
     $: {
         if (workspaceUUID) {
+            $loading = true;
             fetch();
 
             workspaceWSStore = getSubscriptionForCollection(
@@ -66,12 +68,6 @@
     $: {
         if ($workspaceWSStore) {
             refetch();
-        }
-    }
-
-    $: {
-        if (!loading && workspace) {
-            workspaceUsers = workspace.workspace_users || [];
         }
     }
 
@@ -205,97 +201,87 @@
     }
 </script>
 
-{#if loading}
-    <div class="flex min-h-[200px] items-center justify-center">
-        <Loading />
-    </div>
-{:else}
-    <div class="flex items-center justify-center gap-3 py-4">
-        <SearchInput
-            placeholder={"Search for a team member"}
-            bind:inputElement={searchFieldEl}
-            bind:searchText
-        />
-        <DropdownButton
-            label={roleFilter ? $_(roleFilter) : "Filter by role"}
-            icon={IconLockClosed}
-            bind:target={filterRoleButton}
-            on:click={openRolePicker}
-        />
-    </div>
-    <div class="divide-y divide-base-300">
-        <table class="w-full table-auto">
-            <thead>
-                <tr class="text-left text-sm opacity-50">
-                    <th class="px-2 py-4">{$_("member-details")}</th>
-                    <th class="px-2 py-4">{$_("role")}</th>
-                    <th class="px-2 py-4 text-right">{$_("edit-remove")}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {#each filteredWorkspaceUsers as workspaceUser}
-                    <tr class="border-t border-base-300">
-                        <td class="flex gap-4 p-2">
-                            <div class="flex p-2">
-                                <UserProfilePicture
-                                    pictureProps={{
-                                        url: workspaceUser.user
-                                            .profile_picture,
-                                        size: 42,
-                                    }}
-                                />
+<div class="flex items-center justify-center gap-3 py-4">
+    <SearchInput
+        placeholder={"Search for a team member"}
+        bind:inputElement={searchFieldEl}
+        bind:searchText
+    />
+    <DropdownButton
+        label={roleFilter ? $_(roleFilter) : "Filter by role"}
+        icon={IconLockClosed}
+        bind:target={filterRoleButton}
+        on:click={openRolePicker}
+    />
+</div>
+<div class="divide-y divide-base-300">
+    <table class="w-full table-auto">
+        <thead>
+            <tr class="text-left text-sm opacity-50">
+                <th class="px-2 py-4">{$_("member-details")}</th>
+                <th class="px-2 py-4">{$_("role")}</th>
+                <th class="px-2 py-4 text-right">{$_("edit-remove")}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {#each filteredWorkspaceUsers as workspaceUser}
+                <tr class="border-t border-base-300">
+                    <td class="flex gap-4 p-2">
+                        <div class="flex p-2">
+                            <UserProfilePicture
+                                pictureProps={{
+                                    url: workspaceUser.user.profile_picture,
+                                    size: 42,
+                                }}
+                            />
+                        </div>
+                        <div class="flex grow flex-col justify-center gap-2">
+                            <div class="font-bold">
+                                {workspaceUser.user.full_name
+                                    ? workspaceUser.user.full_name
+                                    : workspaceUser.user.email}
                             </div>
-                            <div
-                                class="flex grow flex-col justify-center gap-2"
-                            >
-                                <div class="font-bold">
-                                    {workspaceUser.user.full_name
-                                        ? workspaceUser.user.full_name
-                                        : workspaceUser.user.email}
+                            {#if workspaceUser.job_title}
+                                <div class="text-xs">
+                                    {workspaceUser.job_title}
                                 </div>
-                                {#if workspaceUser.job_title}
-                                    <div class="text-xs">
-                                        {workspaceUser.job_title}
-                                    </div>
-                                {/if}
-                            </div>
-                        </td>
-                        <td class="p-2">{$_(workspaceUser.role)}</td>
-                        <td class="">
-                            <div class="flex items-end justify-end gap-2">
-                                <button
-                                    on:click={() => onEditUser(workspaceUser)}
-                                    class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
-                                    ><IconEdit /></button
-                                >
-                                <button
-                                    on:click={() =>
-                                        onRemoveUser(workspaceUser)}
-                                    class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
-                                    ><IconTrash /></button
-                                >
-                            </div></td
-                        >
-                    </tr>
-                {/each}
-            </tbody>
-        </table>
-        <div class="p-2">
-            <a
-                href="/"
-                on:click|preventDefault={onNewMember}
-                class="ch flex space-x-4 p-2"
+                            {/if}
+                        </div>
+                    </td>
+                    <td class="p-2">{$_(workspaceUser.role)}</td>
+                    <td class="">
+                        <div class="flex items-end justify-end gap-2">
+                            <button
+                                on:click={() => onEditUser(workspaceUser)}
+                                class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
+                                ><IconEdit /></button
+                            >
+                            <button
+                                on:click={() => onRemoveUser(workspaceUser)}
+                                class="btn btn-ghost btn-xs h-9 w-9 rounded-full"
+                                ><IconTrash /></button
+                            >
+                        </div></td
+                    >
+                </tr>
+            {/each}
+        </tbody>
+    </table>
+    <div class="p-2">
+        <a
+            href="/"
+            on:click|preventDefault={onNewMember}
+            class="ch flex space-x-4 p-2"
+        >
+            <ProfilePicture showPlus={true} size={42} />
+            <div
+                class="flex grow flex-col justify-center font-bold text-primary"
             >
-                <ProfilePicture showPlus={true} size={42} />
-                <div
-                    class="flex grow flex-col justify-center font-bold text-primary"
-                >
-                    {$_("new-member")}
-                </div>
-            </a>
-        </div>
+                {$_("new-member")}
+            </div>
+        </a>
     </div>
-{/if}
+</div>
 
 <DialogModal id="inviteTeamMemberToWorkspace">
     {#if customer?.seats_remaining}

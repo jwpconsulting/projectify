@@ -23,6 +23,7 @@ export const currentBoardUUID = writable<string | null>(null);
 export const currentTaskDetailsUUID = writable<string | null>(null);
 export const newTaskSectionUUID = writable<string | null>(null);
 export const currentBoardSections = writable<WorkspaceBoardSection[]>([]);
+export const loading = writable<boolean>(false);
 
 export const fuseSearchThreshold = 0.3;
 

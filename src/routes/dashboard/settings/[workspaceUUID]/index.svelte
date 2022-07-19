@@ -1,24 +1,25 @@
 <script lang="ts">
     import SettingFooterEditSaveButtons from "$lib/components/settingFooterEditSaveButtons.svelte";
-    import ProfilePictureFileSelector from "../profilePictureFileSelector.svelte";
-    import SettingsField from "./settings-field.svelte";
+    import ProfilePictureFileSelector from "$lib/components/profilePictureFileSelector.svelte";
+    import SettingsField from "$lib/components/dashboard/settings-field.svelte";
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
 
     import debounce from "lodash/debounce.js";
     import { _ } from "svelte-i18n";
-    import Loading from "../loading.svelte";
     import { client } from "$lib/graphql/client";
     import vars from "$lib/env";
     import { Mutation_UpdateWorkspace } from "$lib/graphql/operations";
     import { getWorkspace } from "$lib/repository";
-    import ProfilePicture from "../profilePicture.svelte";
+    import ProfilePicture from "$lib/components/profilePicture.svelte";
     import { uploadImage } from "$lib/utils/file";
     import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
     import type { Workspace } from "$lib/types";
+    import { getContext } from "svelte";
+    import { loading } from "$lib/stores/dashboard";
 
-    export let workspaceUUID: string | null = null;
+    let workspaceUUID: string = getContext("workspaceUUID");
+
     let res: Workspace | null = null;
-    let loading = true;
     let workspaceWSStore: WSSubscriptionStore | null;
     let workspace: Workspace | null = null;
 
@@ -27,7 +28,7 @@
             throw new Error("Expected workspaceUUID");
         }
         res = await getWorkspace(workspaceUUID);
-        loading = false;
+        $loading = false;
     }
 
     const refetch = debounce(() => {
@@ -36,6 +37,7 @@
 
     $: {
         if (workspaceUUID) {
+            $loading = true;
             fetch();
 
             workspaceWSStore = getSubscriptionForCollection(
@@ -121,11 +123,7 @@
     }
 </script>
 
-{#if loading}
-    <div class="flex min-h-[200px] items-center justify-center">
-        <Loading />
-    </div>
-{:else if workspace}
+{#if workspace}
     <div
         class:pointer-events-none={isSaving}
         class="flex flex-col space-y-4 divide-y divide-base-300"

@@ -10,26 +10,27 @@
     import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
     import debounce from "lodash/debounce.js";
     import { _ } from "svelte-i18n";
-    import ConfirmModalContent from "../confirmModalContent.svelte";
-    import DialogModal, { getModal } from "../dialogModal.svelte";
-    import Loading from "../loading.svelte";
-    import LabelPill from "./labelPill.svelte";
+    import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
+    import DialogModal, { getModal } from "$lib/components/dialogModal.svelte";
+    import LabelPill from "$lib/components/dashboard/labelPill.svelte";
     import type { Label, Workspace } from "$lib/types";
     import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
+    import { getContext } from "svelte";
+    import { loading } from "$lib/stores/dashboard";
 
-    export let workspaceUUID: string | null = null;
+    let workspaceUUID: string = getContext("workspaceUUID");
 
     let workspace: Workspace | null = null;
     let workspaceWSStore: WSSubscriptionStore | null;
     let labels: Label[] = [];
-    let loading = true;
 
     async function fetch() {
         if (!workspaceUUID) {
             throw new Error("Expected workspaceUUID");
         }
         workspace = await getWorkspace(workspaceUUID);
-        loading = false;
+        $loading = false;
+        labels = workspace.labels || [];
     }
 
     const refetch = debounce(() => {
@@ -38,6 +39,7 @@
 
     $: {
         if (workspaceUUID) {
+            $loading = true;
             fetch();
             workspaceWSStore = getSubscriptionForCollection(
                 "workspace",
@@ -49,14 +51,6 @@
     $: {
         if ($workspaceWSStore) {
             refetch();
-        }
-    }
-
-    $: {
-        if (workspace) {
-            if (workspace.labels) {
-                labels = workspace.labels;
-            }
         }
     }
 
@@ -134,48 +128,42 @@
     }
 </script>
 
-{#if loading}
-    <div class="flex min-h-[200px] items-center justify-center">
-        <Loading />
-    </div>
-{:else}
-    <div class=" divide-y divide-base-300">
-        {#each labels as label}
-            <div class="flex space-x-4 py-4">
-                <div class="flex grow">
-                    <LabelPill {label} />
-                </div>
-                <div class="flex items-center space-x-2">
-                    <button
-                        on:click={() => onEditLabel(label)}
-                        class="btn btn-primary btn-ghost btn-sm btn-sm rounded-full text-primary"
-                    >
-                        {$_("Edit")}
-                    </button>
-                    <button
-                        on:click={() => onDeleteLabel(label)}
-                        class="btn btn-outline btn-accent btn-sm rounded-full"
-                    >
-                        {$_("Delete")}
-                    </button>
-                </div>
+<div class=" divide-y divide-base-300">
+    {#each labels as label}
+        <div class="flex space-x-4 py-4">
+            <div class="flex grow">
+                <LabelPill {label} />
             </div>
-        {/each}
-        <div class="py-2">
-            <a
-                href="/"
-                on:click|preventDefault={onNewLabel}
-                class="ch flex space-x-4 p-2"
-            >
-                <div
-                    class="flex grow flex-col justify-center font-bold text-primary"
+            <div class="flex items-center space-x-2">
+                <button
+                    on:click={() => onEditLabel(label)}
+                    class="btn btn-primary btn-ghost btn-sm btn-sm rounded-full text-primary"
                 >
-                    + {$_("new-label")}
-                </div>
-            </a>
+                    {$_("Edit")}
+                </button>
+                <button
+                    on:click={() => onDeleteLabel(label)}
+                    class="btn btn-outline btn-accent btn-sm rounded-full"
+                >
+                    {$_("Delete")}
+                </button>
+            </div>
         </div>
+    {/each}
+    <div class="py-2">
+        <a
+            href="/"
+            on:click|preventDefault={onNewLabel}
+            class="ch flex space-x-4 p-2"
+        >
+            <div
+                class="flex grow flex-col justify-center font-bold text-primary"
+            >
+                + {$_("new-label")}
+            </div>
+        </a>
     </div>
-{/if}
+</div>
 
 <DialogModal id="newLabel">
     <ConfirmModalContent
