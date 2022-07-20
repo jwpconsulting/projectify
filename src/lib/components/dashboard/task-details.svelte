@@ -1,8 +1,8 @@
 <script lang="ts">
     import {
         assignUserToTask,
-        currentTaskDetailsUuid,
-        currentWorkspace,
+        currentTask,
+        currentTaskUuid,
         deleteTask,
         newTaskSectionUuid,
     } from "$lib/stores/dashboard";
@@ -13,11 +13,7 @@
     } from "$lib/graphql/operations";
     import { client } from "$lib/graphql/client";
     import { _ } from "svelte-i18n";
-    import { getTask } from "$lib/repository";
-
     import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard";
-    import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
-    import debounce from "lodash/debounce.js";
     import ToolBar from "./toolBar.svelte";
     import IconTrash from "../icons/icon-trash.svelte";
     import UserPicker from "../userPicker.svelte";
@@ -34,7 +30,6 @@
     import IconClose from "../icons/icon-close.svelte";
     import TaskDetailsBreadcrumbs from "./task-details-breadcrumbs.svelte";
     import type { Task, SubTask, Label, WorkspaceUser } from "$lib/types";
-    import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
     import { getDashboardTaskUrl } from "$lib/urls";
 
     let task: Task | null = null;
@@ -45,25 +40,10 @@
     let taskModified = false;
     let isSaving = false;
 
-    let taskWSStore: WSSubscriptionStore | null = null;
-
     let activeTabId = writable<string>("details");
     $: {
         const tab = $page.url.searchParams.get("tab");
         $activeTabId = tab ? tab : "details";
-    }
-
-    async function fetch() {
-        if (!$currentTaskDetailsUuid) {
-            throw new Error("Expected $currentTaskDetailsUuid");
-        }
-        try {
-            task = await getTask($currentTaskDetailsUuid);
-        } catch {
-            failed = true;
-        } finally {
-            loading = false;
-        }
     }
 
     function reset() {
@@ -80,18 +60,6 @@
         subTasks = [];
     }
 
-    const refetch = debounce(() => {
-        fetch();
-    }, 100);
-
-    $: {
-        if ($currentTaskDetailsUuid) {
-            fetch();
-        } else {
-            reset();
-        }
-    }
-
     $: {
         if (failed) {
             // TODO
@@ -100,29 +68,23 @@
     }
 
     $: {
-        if ($currentTaskDetailsUuid) {
-            taskWSStore = getSubscriptionForCollection(
-                "task",
-                $currentTaskDetailsUuid
-            );
+        if (!$currentTaskUuid) {
+            reset();
+            loading = false;
         }
     }
 
     $: {
-        if ($taskWSStore) {
-            refetch();
-        }
-    }
-
-    $: {
-        if (task) {
-            subTasks = task.sub_tasks || [];
-            labels = task.labels || [];
+        if ($currentTask) {
+            task = $currentTask;
+            subTasks = $currentTask.sub_tasks || [];
+            labels = $currentTask.labels || [];
+            loading = false;
         }
     }
 
     let itsNew: boolean = false;
-    $: itsNew = $currentTaskDetailsUuid == null;
+    $: itsNew = $currentTaskUuid == null;
 
     $: saveEnabled = taskModified && task && task.title.length && !isSaving;
 
@@ -168,7 +130,7 @@
                 });
 
                 let taskUuid = mRes.data.addTask.uuid;
-                currentTaskDetailsUuid.set(taskUuid);
+                currentTaskUuid.set(taskUuid);
                 if (!$currentWorkspaceBoardUuid) {
                     throw new Error("Expected $currentWorkspaceBoardUuid");
                 }
@@ -189,7 +151,7 @@
                     mutation: Mutation_UpdateTask,
                     variables: {
                         input: {
-                            uuid: $currentTaskDetailsUuid,
+                            uuid: $currentTaskUuid,
                             ...commonTaskInputs,
                         },
                     },
@@ -240,15 +202,12 @@
         if (!userPicked) {
             return;
         }
-        if (!$currentTaskDetailsUuid) {
+        if (!$currentTaskUuid) {
             return;
         }
 
         const userEmail = task?.assignee?.user.email;
-        await assignUserToTask(
-            userEmail ? userEmail : null,
-            $currentTaskDetailsUuid
-        );
+        await assignUserToTask(userEmail ? userEmail : null, $currentTaskUuid);
         userPicked = false;
     }
 
@@ -280,7 +239,7 @@
         <div class="flex items-center gap-4 px-4 py-4 pb-2">
             <button
                 on:click={() => close()}
-                class="btn btn-circle btn-ghost h-[42px] min-h-[42px] w-[42px] min-w-[42px] shrink-0"
+                class="btn btn-ghost btn-circle h-[42px] min-h-[42px] w-[42px] min-w-[42px] shrink-0"
                 ><IconClose /></button
             >
             <TaskDetailsBreadcrumbs {task} />
@@ -336,9 +295,6 @@
             {#if userPickerOpen}
                 <div class="absolute top-20 left-2 right-20 z-10 max-w-md">
                     <UserPicker
-                        workspaceUuid={$currentWorkspace
-                            ? $currentWorkspace.uuid
-                            : null}
                         selectedUser={task.assignee}
                         on:userSelected={onUserSelected}
                     />
@@ -348,12 +304,7 @@
 
         <Tabs bind:activeTabId items={tabItems} autoPadding={false}>
             <Tab id={"details"}>
-                <TaskDetailsContent
-                    {task}
-                    bind:subTasks
-                    bind:labels
-                    bind:taskModified
-                />
+                <TaskDetailsContent bind:taskModified {task} />
             </Tab>
             <Tab id={"updates"}>
                 <TaskDetailsDiscussion {task} />

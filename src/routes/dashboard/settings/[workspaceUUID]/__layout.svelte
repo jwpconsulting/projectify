@@ -4,18 +4,21 @@
     import SettingPage from "$lib/components/settingPage.svelte";
     import { browser } from "$app/env";
     import { page } from "$app/stores";
-    import { setContext } from "svelte";
     import TabsSimple from "$lib/components/tabs-simple.svelte";
     import type { TabItem } from "$lib/components/types";
     import { _ } from "svelte-i18n";
     import Loading from "$lib/components/loading.svelte";
-    import { loading } from "$lib/stores/dashboard";
+    import { currentWorkspaceUuid, loading } from "$lib/stores/dashboard";
 
-    let workspaceUuid: string;
     let activeTabId: string;
     $: {
-        workspaceUuid = $page.params["workspaceUuid"];
-        setContext("workspaceUuid", workspaceUuid);
+        const workspaceUuid = $page.params["workspaceUuid"];
+        if (!workspaceUuid) {
+            throw new Error("Expected workspaceUuid");
+        }
+        if (workspaceUuid != $currentWorkspaceUuid) {
+            $currentWorkspaceUuid = workspaceUuid;
+        }
     }
     let items: TabItem[] = [];
     $: {
@@ -23,17 +26,17 @@
             {
                 label: $_("settings.general"),
                 id: "general",
-                url: `/dashboard/settings/${workspaceUuid}`,
+                url: `/dashboard/settings/${$currentWorkspaceUuid}`,
             },
             {
                 label: $_("settings.labels"),
                 id: "labels",
-                url: `/dashboard/settings/${workspaceUuid}/labels`,
+                url: `/dashboard/settings/${$currentWorkspaceUuid}/labels`,
             },
             {
                 label: $_("settings.team-members"),
                 id: "team-members",
-                url: `/dashboard/settings/${workspaceUuid}/team-members`,
+                url: `/dashboard/settings/${$currentWorkspaceUuid}/team-members`,
             },
         ];
         const activeTab = items.find((item) => item.url == $page.url.pathname);

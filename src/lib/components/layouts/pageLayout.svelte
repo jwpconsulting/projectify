@@ -89,11 +89,7 @@
     ];
 </script>
 
-<div
-    class:h-screen={heightScreen}
-    class:overflow-hidden={heightScreen}
-    class="flex grow flex-col"
->
+<div class:h-screen={heightScreen} class="flex grow flex-col">
     <Header bind:mode={headerMode} />
     <slot />
     {#if footerVisible}

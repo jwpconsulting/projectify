@@ -1,9 +1,7 @@
 <script lang="ts">
-    import { currentTaskDetailsUuid } from "$lib/stores/dashboard";
-
     import { _ } from "svelte-i18n";
-    import LabelPicker from "./labelPicker.svelte";
-    import LabelList from "./labelList.svelte";
+    import LabelPicker from "./LabelPicker.svelte";
+    import LabelList from "./LabelList.svelte";
 
     import Subtasks from "./task-details-subtasks.svelte";
     import ToolBar from "./toolBar.svelte";
@@ -12,10 +10,23 @@
     import RichTextarea from "../rich-textarea.svelte";
     import type { Task, SubTask, Label } from "$lib/types";
 
-    export let task: Task;
-    export let subTasks: SubTask[];
-    export let labels: Label[];
     export let taskModified = false;
+    export let task: Task;
+    let subTasks: SubTask[];
+    let labels: Label[];
+
+    $: {
+        if (task && task.sub_tasks) {
+            subTasks = task.sub_tasks;
+        } else {
+            subTasks = [];
+        }
+        if (task && task.labels) {
+            labels = task.labels;
+        } else {
+            labels = [];
+        }
+    }
 
     let labelPickerOpen = false;
 </script>
@@ -45,6 +56,9 @@
                         }}
                         placeholder={$_("deadline")}
                         on:change={({ detail: { date } }) => {
+                            if (!task) {
+                                throw new Error("Expected task");
+                            }
                             task.deadline = date;
                             taskModified = true;
                         }}
@@ -96,8 +110,8 @@
                 </div>
             </div>
         </div>
-        {#if subTasks && $currentTaskDetailsUuid}
-            <Subtasks taskUuid={$currentTaskDetailsUuid} bind:subTasks />
+        {#if subTasks && task}
+            <Subtasks taskUuid={task.uuid} bind:subTasks />
         {/if}
     </main>
 {/if}

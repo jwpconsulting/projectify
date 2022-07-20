@@ -1,10 +1,32 @@
 {
+    "dashboard": {
+        "dashboard": "dashboard",
+        "create-board": "create new board",
+        "boards": "boards",
+        "members": "members",
+        "labels": "labels",
+        "member-name": "member name",
+        "filter-members": "filter members",
+        "filter-labels": "filter labels",
+        "label-name": "label name",
+        "search-task": "Search Task"
+    },
+    "filter-label": {
+        "all": "all",
+        "none": "none"
+    },
+    "filter-workspace-user": {
+        "assigned-nobody": "assigned to nobody"
+    },
+    "select-board": {
+        "edit-board": "edit board",
+        "archive-board": "archive board"
+    },
     "404": "404",
     "home": "Home",
     "signout": "Signout",
     "signup": "Signup",
     "signin": "Signin",
-    "dashboard": "Dashboard",
     "welcome-home": "Welcome Home",
     "sign-up": "Sign up",
     "page.signup.msg": "Let's set up your account, Already have one?",
@@ -104,7 +126,6 @@
     "layout": "Layout",
     "filter-tasks": "Filter tasks",
     "tasks-not-found-for": "Tasks not found for",
-    "search-task": "Search Task",
     "clear-labels-filter": "Clear labels filter",
     "filter-by-labels": "Filter by labels",
     "search": "Search",

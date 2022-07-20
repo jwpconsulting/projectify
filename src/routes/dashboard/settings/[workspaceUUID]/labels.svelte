@@ -6,51 +6,21 @@
         Mutation_DeleteLabelMutation,
         Mutation_UpdateLabelMutation,
     } from "$lib/graphql/operations";
-    import { getWorkspace } from "$lib/repository";
-    import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
-    import debounce from "lodash/debounce.js";
     import { _ } from "svelte-i18n";
     import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
     import DialogModal, { getModal } from "$lib/components/dialogModal.svelte";
-    import LabelPill from "$lib/components/dashboard/labelPill.svelte";
-    import type { Label, Workspace } from "$lib/types";
-    import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
-    import { getContext } from "svelte";
-    import { loading } from "$lib/stores/dashboard";
+    import LabelPill from "$lib/components/dashboard/LabelPill.svelte";
+    import type { Label } from "$lib/types";
+    import { currentWorkspace, loading } from "$lib/stores/dashboard";
 
-    let workspaceUuid: string = getContext("workspaceUuid");
-
-    let workspace: Workspace | null = null;
-    let workspaceWSStore: WSSubscriptionStore | null;
     let labels: Label[] = [];
 
-    async function fetch() {
-        if (!workspaceUuid) {
-            throw new Error("Expected workspaceUuid");
-        }
-        workspace = await getWorkspace(workspaceUuid);
-        $loading = false;
-        labels = workspace.labels || [];
-    }
-
-    const refetch = debounce(() => {
-        fetch();
-    }, 100);
-
     $: {
-        if (workspaceUuid) {
+        if ($currentWorkspace && $currentWorkspace.labels) {
+            labels = $currentWorkspace.labels;
+            $loading = false;
+        } else {
             $loading = true;
-            fetch();
-            workspaceWSStore = getSubscriptionForCollection(
-                "workspace",
-                workspaceUuid
-            );
-        }
-    }
-
-    $: {
-        if ($workspaceWSStore) {
-            refetch();
         }
     }
 
@@ -70,8 +40,6 @@
                     },
                 },
             });
-
-            refetch();
         } catch (error) {
             console.error(error);
         }
@@ -95,8 +63,6 @@
                     },
                 },
             });
-
-            refetch();
         } catch (error) {
             console.error(error);
         }
@@ -109,19 +75,21 @@
             return;
         }
 
+        if (!$currentWorkspace) {
+            return;
+        }
+
         try {
             await client.mutate({
                 mutation: Mutation_AddLabelMutation,
                 variables: {
                     input: {
-                        workspaceUuid: workspaceUuid,
+                        workspaceUuid: $currentWorkspace.uuid,
                         name: modalRes.outputs.name,
                         color: modalRes.outputs.color,
                     },
                 },
             });
-
-            refetch();
         } catch (error) {
             console.error(error);
         }

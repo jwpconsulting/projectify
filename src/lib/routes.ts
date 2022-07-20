@@ -18,7 +18,7 @@ export default [
     { label: "signup", to: "/signup", authRequired: false },
     { label: "signin", to: "/signin", authRequired: false },
     {
-        label: "dashboard",
+        label: "dashboard.dashboard",
         to: "/dashboard",
         authRequired: true,
         forceNavigation: true,

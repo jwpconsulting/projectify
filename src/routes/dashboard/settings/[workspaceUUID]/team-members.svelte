@@ -4,11 +4,8 @@
         Mutation_RemoveUserFromWorkspace,
         Mutation_UpdateWorkspaceUser,
     } from "$lib/graphql/operations";
-    import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
-    import { getWorkspaceCustomer, getWorkspace } from "$lib/repository";
-    import type { Customer, Workspace, WorkspaceUser } from "$lib/types";
+    import type { WorkspaceUser } from "$lib/types";
 
-    import debounce from "lodash/debounce.js";
     import { _ } from "svelte-i18n";
     import ProfilePicture from "$lib/components/profilePicture.svelte";
     import DialogModal, { getModal } from "$lib/components/dialogModal.svelte";
@@ -26,48 +23,20 @@
     import IconEdit from "$lib/components/icons/icon-edit.svelte";
     import IconTrash from "$lib/components/icons/icon-trash.svelte";
     import { goto } from "$app/navigation";
-    import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
-    import { getContext } from "svelte";
-    import { loading } from "$lib/stores/dashboard";
+    import {
+        loading,
+        currentWorkspace,
+        currentCustomer,
+    } from "$lib/stores/dashboard";
 
-    let workspaceUuid: string = getContext("workspaceUuid");
-
-    let customer: Customer | null = null;
-    let workspaceWSStore: WSSubscriptionStore | null;
-    let workspace: Workspace | null = null;
     let workspaceUsers: WorkspaceUser[] = [];
 
-    async function fetch() {
-        if (!workspaceUuid) {
-            throw new Error("Expected workspaceUuid");
-        }
-        [customer, workspace] = await Promise.all([
-            getWorkspaceCustomer(workspaceUuid),
-            getWorkspace(workspaceUuid),
-        ]);
-        workspaceUsers = workspace.workspace_users || [];
-        $loading = false;
-    }
-
-    const refetch = debounce(() => {
-        fetch();
-    }, 100);
-
     $: {
-        if (workspaceUuid) {
-            $loading = true;
-            fetch();
-
-            workspaceWSStore = getSubscriptionForCollection(
-                "workspace",
-                workspaceUuid
-            );
-        }
+        $loading = !($currentWorkspace && $currentCustomer);
     }
-
     $: {
-        if ($workspaceWSStore) {
-            refetch();
+        if ($currentWorkspace && $currentWorkspace.workspace_users) {
+            workspaceUsers = $currentWorkspace.workspace_users;
         }
     }
 
@@ -83,12 +52,16 @@
             return;
         }
 
+        if (!$currentWorkspace) {
+            return;
+        }
+
         try {
             await client.mutate({
                 mutation: Mutation_AddUserToWorkspace,
                 variables: {
                     input: {
-                        uuid: workspaceUuid,
+                        uuid: $currentWorkspace.uuid,
                         email: modalRes.outputs.email,
                     },
                 },
@@ -104,12 +77,16 @@
             return;
         }
 
+        if (!$currentWorkspace) {
+            return;
+        }
+
         try {
             await client.mutate({
                 mutation: Mutation_RemoveUserFromWorkspace,
                 variables: {
                     input: {
-                        uuid: workspaceUuid,
+                        uuid: $currentWorkspace.uuid,
                         email: workspaceUser.user.email,
                     },
                 },
@@ -126,12 +103,16 @@
             return;
         }
 
+        if (!$currentWorkspace) {
+            return;
+        }
+
         try {
             await client.mutate({
                 mutation: Mutation_UpdateWorkspaceUser,
                 variables: {
                     input: {
-                        workspaceUuid: workspaceUuid,
+                        workspaceUuid: $currentWorkspace.uuid,
                         email: modalRes.outputs.email,
                         role: modalRes.outputs.role,
                         jobTitle: modalRes.outputs.job_title || "",
@@ -284,7 +265,7 @@
 </div>
 
 <DialogModal id="inviteTeamMemberToWorkspace">
-    {#if customer?.seats_remaining}
+    {#if $currentCustomer?.seats_remaining}
         <ConfirmModalContent
             title={$_("invite-team-member")}
             confirmLabel={$_("send")}
@@ -301,7 +282,7 @@
         >
             <div class="text-center text-xs">
                 {$_("you-have-seats-seats-left-in-your-plan", {
-                    values: { seats: customer.seats_remaining },
+                    values: { seats: $currentCustomer.seats_remaining },
                 })}
             </div>
         </ConfirmModalContent>

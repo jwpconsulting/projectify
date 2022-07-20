@@ -33,8 +33,6 @@ export type Input = {
     };
 };
 
-export type DashboardSectionsLayout = "list" | "columns";
-
 export type TimestampedType = {
     created: string;
     modified: string;

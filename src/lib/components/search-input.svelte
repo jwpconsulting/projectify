@@ -28,7 +28,7 @@
 
     {#if searchText}
         <button
-            class="btn btn-ghost btn-square btn-sm absolute right-0 h-full w-10 rounded-l-none"
+            class="btn btn-square btn-ghost btn-sm absolute right-0 h-full w-10 rounded-l-none"
             on:click={() => (searchText = "")}
         >
             <IconClose />

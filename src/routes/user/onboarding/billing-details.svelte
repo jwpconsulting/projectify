@@ -50,7 +50,7 @@
                 {#each billingSeats as seat, inx}
                     <button
                         class:btn-active={selectedBillingSeatInx == inx}
-                        class="btn btn-outline btn-primary btn-square"
+                        class="btn btn-square btn-outline btn-primary"
                         on:click={() => selectSeatInx(inx)}
                     >
                         {seat}
@@ -59,7 +59,7 @@
             </div>
             <div class="flex items-center gap-2">
                 <button
-                    class="btn btn-circle btn-outline btn-primary btn-sm"
+                    class="btn btn-outline btn-primary btn-circle btn-sm"
                     on:click={() => increaseSeats(false)}
                 >
                     <IconMinus />
@@ -72,7 +72,7 @@
                     />
                 </div>
                 <button
-                    class="btn btn-circle btn-outline btn-primary btn-sm"
+                    class="btn btn-outline btn-primary btn-circle btn-sm"
                     on:click={() => increaseSeats(true)}
                 >
                     <IconPlus />

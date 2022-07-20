@@ -23,7 +23,7 @@ const config = {
 
         vite: {
             esbuild: {
-                drop: ["console", "debugger"],
+                // drop: ["console", "debugger"],
             },
             css: {
                 preprocessorOptions: {

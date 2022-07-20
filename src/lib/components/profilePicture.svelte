@@ -46,7 +46,6 @@
             {:else}
                 <img
                     class="pointer-events-none object-cover"
-                    draggable="false"
                     width="100%"
                     height="100%"
                     {src}

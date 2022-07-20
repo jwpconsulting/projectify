@@ -1,13 +1,12 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
-    import LabelPill from "./labelPill.svelte";
+    import LabelPill from "$lib/components/dashboard/LabelPill.svelte";
     import Fuse from "fuse.js";
     import type { Label } from "$lib/types";
 
     export let labels: Label[];
     export let editable = false;
     export let searchText = "";
-    export let size: "sm" | "md" = "md";
 
     let searchEngine: Fuse<Label> | null = null;
     let filteredLabels: Label[] = [];
@@ -15,12 +14,6 @@
         searchEngine = new Fuse(labels, {
             keys: ["name"],
         });
-    }
-
-    $: {
-        if (!searchEngine) {
-            throw new Error("Expected searchEngine");
-        }
         if (searchText.length) {
             filteredLabels = searchEngine
                 .search(searchText)
@@ -53,7 +46,7 @@
             selectedLabels.push(label);
             dispatch("addLabel", label);
         } else {
-            selectedLabelsInx.set(label.uuid, false);
+            selectedLabelsInx.delete(label.uuid);
             dispatch("removeLabel", label);
         }
 
@@ -74,20 +67,14 @@
         class:hover:opacity-60={editable}
         class="cursor-pointer transition-opacity duration-300 ease-out"
     >
-        {#if selectedLabelsInx.has(label.uuid)}
-            {#if $$slots.item}
-                <slot
-                    name="item"
-                    {label}
-                    active={selectedLabelsInx.get(label.uuid)}
-                />
-            {:else}
-                <LabelPill
-                    {size}
-                    {label}
-                    active={selectedLabelsInx.get(label.uuid)}
-                />
-            {/if}
+        {#if $$slots.item}
+            <slot
+                name="item"
+                {label}
+                active={selectedLabelsInx.get(label.uuid)}
+            />
+        {:else}
+            <LabelPill {label} />
         {/if}
     </div>
 {/each}

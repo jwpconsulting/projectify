@@ -2,60 +2,23 @@
     import SettingFooterEditSaveButtons from "$lib/components/settingFooterEditSaveButtons.svelte";
     import ProfilePictureFileSelector from "$lib/components/profilePictureFileSelector.svelte";
     import SettingsField from "$lib/components/dashboard/settings-field.svelte";
-    import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
-
-    import debounce from "lodash/debounce.js";
     import { _ } from "svelte-i18n";
     import { client } from "$lib/graphql/client";
     import vars from "$lib/env";
     import { Mutation_UpdateWorkspace } from "$lib/graphql/operations";
-    import { getWorkspace } from "$lib/repository";
     import ProfilePicture from "$lib/components/profilePicture.svelte";
     import { uploadImage } from "$lib/utils/file";
-    import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
     import type { Workspace } from "$lib/types";
-    import { getContext } from "svelte";
-    import { loading } from "$lib/stores/dashboard";
+    import { loading, currentWorkspace } from "$lib/stores/dashboard";
 
-    let workspaceUuid: string = getContext("workspaceUuid");
-
-    let res: Workspace | null = null;
-    let workspaceWSStore: WSSubscriptionStore | null;
     let workspace: Workspace | null = null;
-
-    async function fetch() {
-        if (!workspaceUuid) {
-            throw new Error("Expected workspaceUuid");
-        }
-        res = await getWorkspace(workspaceUuid);
-        $loading = false;
-    }
-
-    const refetch = debounce(() => {
-        fetch();
-    }, 100);
-
     $: {
-        if (workspaceUuid) {
-            $loading = true;
-            fetch();
-
-            workspaceWSStore = getSubscriptionForCollection(
-                "workspace",
-                workspaceUuid
-            );
-        }
+        $loading = !$currentWorkspace;
     }
 
     $: {
-        if ($workspaceWSStore) {
-            refetch();
-        }
-    }
-
-    $: {
-        if (!isEditMode && res) {
-            workspace = { ...res };
+        if (!isEditMode && $currentWorkspace) {
+            workspace = { ...$currentWorkspace };
         }
     }
 
@@ -66,12 +29,17 @@
         if (!workspace) {
             throw new Error("Expected workspace");
         }
+
+        if (!$currentWorkspace) {
+            return;
+        }
+
         try {
             await client.mutate({
                 mutation: Mutation_UpdateWorkspace,
                 variables: {
                     input: {
-                        uuid: workspaceUuid,
+                        uuid: $currentWorkspace.uuid,
                         title: workspace.title,
                         description: workspace.description,
                     },
@@ -101,12 +69,15 @@
     }
 
     async function onSave() {
+        if (!$currentWorkspace) {
+            throw new Error("Expected $currentWorkspace");
+        }
         isSaving = true;
         if (imageFile) {
             await uploadImage(
                 imageFile,
                 vars.API_ENDPOINT +
-                    `/workspace/workspace/${workspaceUuid}/picture-upload`
+                    `/workspace/workspace/${$currentWorkspace.uuid}/picture-upload`
             );
         }
         await saveData();

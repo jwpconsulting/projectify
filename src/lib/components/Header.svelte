@@ -9,6 +9,7 @@
     import DrawerModal from "./drawerModal.svelte";
     import IconClose from "./icons/icon-close.svelte";
     import HeaderButtons from "./header-buttons.svelte";
+    import BoardSearchBar from "$lib/components/BoardSearchBar.svelte";
 
     export let mode = "app";
 
@@ -92,7 +93,7 @@
                         <li class:active={$page.url.pathname === it.to}>
                             <a
                                 on:click={it.action}
-                                class="cursor-pointer p-2 font-bold"
+                                class="cursor-pointer p-2 font-bold capitalize"
                                 href={it.to}
                             >
                                 {it.label}
@@ -138,7 +139,7 @@
                                 on:click={() => {
                                     drawerMenuOpen = false;
                                 }}
-                                class="cursor-pointer p-2 font-bold"
+                                class="cursor-pointer p-2 font-bold capitalize"
                                 href={it.to}
                             >
                                 {it.label}
@@ -166,7 +167,7 @@
                     <li class:active={$page.url.pathname === it.to}>
                         <a
                             on:click={it.action}
-                            class="cursor-pointer p-2 font-bold"
+                            class="cursor-pointer p-2 font-bold capitalize"
                             href={it.to}
                         >
                             {it.label}
@@ -176,6 +177,9 @@
             </ul>
         </nav>
 
-        <HeaderUser />
+        <div class="flex flex-row items-center gap-7">
+            <BoardSearchBar />
+            <HeaderUser />
+        </div>
     </header>
 {/if}

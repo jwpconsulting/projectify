@@ -3,7 +3,7 @@
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
     import { browser } from "$app/env";
     import {
-        currentWorkspace,
+        currentWorkspaceUuid,
         currentWorkspaceBoardUuid,
     } from "$lib/stores/dashboard";
     import { goto } from "$app/navigation";
@@ -23,7 +23,7 @@
         } else {
             throw new Error("No workspace board");
         }
-        currentWorkspace.set(workspace);
+        currentWorkspaceUuid.set(workspace.uuid);
         currentWorkspaceBoardUuid.set(workspaceBoardUuid);
         goto(getDashboardWorkspaceBoardUrl(workspaceBoardUuid));
     }

@@ -1,5 +1,4 @@
 <script lang="ts">
-    import WorkspacesSideNav from "$lib/components/dashboard/workspaces-side-nav.svelte";
     import Board from "./board.svelte";
     import DrawerModal from "../drawerModal.svelte";
     import TaskDetails from "./task-details.svelte";
@@ -14,24 +13,19 @@
     import { onMount } from "svelte";
     import ConfirmModalContent from "../confirmModalContent.svelte";
     import { _ } from "svelte-i18n";
-    import BoardCollapsibleSideBar from "./board-collapsible-side-bar.svelte";
+    import SideNav from "./SideNav.svelte";
 
     let selectedWorkspaceUuid: string | null;
     let selectedTaskUuid: string | null;
-    let workspaceBoardUuid: string | null = null;
     $: {
-        workspaceBoardUuid = $page.params["workspaceBoardUuid"];
-    }
-
-    $: {
-        currentWorkspaceBoardUuid.set(workspaceBoardUuid);
+        $currentWorkspaceBoardUuid = $page.params["workspaceBoardUuid"];
     }
 
     $: {
         if (
             !$drawerModalOpen &&
             selectedWorkspaceUuid &&
-            workspaceBoardUuid &&
+            $currentWorkspaceBoardUuid &&
             selectedTaskUuid
         ) {
             closeTaskDetails();
@@ -42,17 +36,10 @@
 </script>
 
 <div class="flex grow flex-row divide-x divide-base-300 overflow-hidden">
-    <!-- First side bar -->
-    <WorkspacesSideNav />
-
-    <!-- Second side bar -->
-    <BoardCollapsibleSideBar />
-
-    {#if workspaceBoardUuid}
-        <div class="flex h-full grow overflow-y-auto">
-            <Board />
-        </div>
-    {/if}
+    <SideNav />
+    <div class="flex h-full grow overflow-y-auto">
+        <Board />
+    </div>
 </div>
 
 <DrawerModal bind:open={$drawerModalOpen}>

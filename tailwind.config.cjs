@@ -52,14 +52,41 @@ const commonTheme = {
 module.exports = {
     darkMode: "class",
     mode: "jit",
-    purge: ["./src/**/*.svelte"],
     content: ["./src/**/*.{html,js,svelte,ts}"],
-
     theme: {
-        colors: {},
+        colors: {
+            "disabled-text": "#64748B",
+            "disabled-background": "#E2E8F0",
+            "secondary-text": "#8390A2",
+            "secondary-text-hover": "#64748B",
+            "label-orange": "#FFEBDA",
+            "label-pink": "#FEDBF0",
+            "label-blue": "#C8E1FF",
+            "label-purple": "#DDD6FE",
+            "label-yellow": "#FFF5B1",
+            "label-red": "#FFDCE0",
+            "label-green": "#CFF0D7",
+            "label-hover-orange": "#FED7AA",
+            "label-hover-pink": "#EEB0D5",
+            "label-hover-blue": "#A0C2EC",
+            "label-hover-purple": "#C3B2EC",
+            "label-hover-yellow": "#E7DC8E",
+            "label-hover-red": "#F0B0B7",
+            "label-hover-green": "#ADD7B7",
+            "label-text-orange": "#9A3412",
+            "label-text-pink": "#9D174D",
+            "label-text-blue": "#1E40AF",
+            "label-text-purple": "#5B21B6",
+            "label-text-yellow": "#854D0E",
+            "label-text-red": "#991B1B",
+            "label-text-green": "#166534",
+        },
         extend: {
             fontFamily: {
                 Rampart: ["Roboto", "sans-serif"],
+            },
+            fontSize: {
+                xxs: "0.625rem",
             },
             boxShadow: {
                 card: "0px 0px 4px 0px #1E202940",
@@ -69,7 +96,6 @@ module.exports = {
             },
         },
     },
-
     variants: {
         display: [
             "children",
@@ -99,6 +125,7 @@ module.exports = {
     plugins: [
         // require("tailwind-children"),
         require("@tailwindcss/typography"),
+        require("@tailwindcss/line-clamp"),
         require("daisyui"),
     ],
 

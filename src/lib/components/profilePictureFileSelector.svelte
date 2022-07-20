@@ -60,7 +60,7 @@
     />
     <button
         on:click={onSelectFileClick}
-        class="children-first:w-2 btn btn-circle btn-primary absolute bottom-[-8px] right-[-8px] bg-primary-content text-primary shadow-lg hover:bg-secondary"
+        class="children-first:w-2 btn btn-primary btn-circle absolute bottom-[-8px] right-[-8px] bg-primary-content text-primary shadow-lg hover:bg-secondary"
         ><IconPhotocamera /></button
     >
 </div>

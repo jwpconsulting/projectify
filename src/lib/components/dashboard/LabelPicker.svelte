@@ -3,11 +3,11 @@
     import { Mutation_AssignLabel } from "$lib/graphql/operations";
     import { currentWorkspaceLabels } from "$lib/stores/dashboard";
     import type { Task, Label } from "$lib/types";
+    import LabelPill from "$lib/components/dashboard/LabelPill.svelte";
 
     import { createEventDispatcher, onMount } from "svelte";
 
-    import ColorDot from "../colorDot.svelte";
-    import LabelList from "./labelList.svelte";
+    import LabelList from "./LabelList.svelte";
 
     let searchText = "";
     export let task: Task;
@@ -90,7 +90,6 @@
             bind:selectedLabels
             editable={true}
             let:label
-            let:active
             on:addLabel={({ detail }) => {
                 assignLabel(detail, true);
             }}
@@ -102,12 +101,7 @@
                 slot="item"
                 class="flex h-14 select-none items-center space-x-2  px-4 hover:bg-base-200"
             >
-                <div class="bg-debug h-6 w-6 shrink-0 rounded-full">
-                    <ColorDot index={label.color} {active} />
-                </div>
-                <div class="grid">
-                    <span class="nowrap-ellipsis">{label.name}</span>
-                </div>
+                <LabelPill {label} />
             </div>
         </LabelList>
     </div>

@@ -48,6 +48,7 @@ export class WSSubscriptionStore {
     createNewConnection(): WebSocket {
         const socket = new WebSocket(this.url);
         socket.onmessage = ({ data, timeStamp }) => {
+            this.debug("socket.onmessage", data, timeStamp);
             this.wsMessage = {
                 message: data,
                 at: timeStamp,
@@ -56,7 +57,7 @@ export class WSSubscriptionStore {
         };
         socket.onopen = () => {
             this.retryTime = this.retryTimeStart;
-            this.dispatch();
+            // this.dispatch();
         };
         socket.onclose = () => {
             this.debug("socket.onclose");
@@ -110,8 +111,6 @@ export class WSSubscriptionStore {
     public subscribe(subscriber: WSSubscriber): () => void {
         this.subscribers.push(subscriber);
         this.debug("Pushing", subscriber);
-
-        subscriber(this.wsMessage);
 
         return () => {
             const index = this.subscribers.indexOf(subscriber);

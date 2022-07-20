@@ -1,80 +1,43 @@
 <script lang="ts">
-    import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
-
-    import debounce from "lodash/debounce.js";
     import { _ } from "svelte-i18n";
-    import { getWorkspace } from "$lib/repository";
     import Loading from "./loading.svelte";
     import UserProfilePicture from "./userProfilePicture.svelte";
     import { createEventDispatcher } from "svelte";
     import { user } from "$lib/stores/user";
-    import type { Workspace, WorkspaceUser } from "$lib/types";
-    import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
+    import type { WorkspaceUser } from "$lib/types";
 
     import Fuse from "fuse.js";
     import SearchInput from "./search-input.svelte";
-    import { fuseSearchThreshold } from "$lib/stores/dashboard";
+    import {
+        currentWorkspace,
+        fuseSearchThreshold,
+    } from "$lib/stores/dashboard";
 
-    export let workspaceUuid: string | null = null;
     export let selectedUser: WorkspaceUser | null | "unassigned" = null;
     export let enableUnassignedSelection = false;
 
     export let dispatch = createEventDispatcher();
 
-    let workspace: Workspace | null = null;
-    let loading = true;
-    let workspaceWSStore: WSSubscriptionStore | null;
-    let workspace_users: WorkspaceUser[] = [];
-
-    async function fetch() {
-        if (!workspaceUuid) {
-            throw new Error("Expected workspaceUuid");
-        }
-        workspace = await getWorkspace(workspaceUuid);
-        loading = false;
-    }
-
-    const refetch = debounce(() => {
-        fetch();
-    }, 100);
-
-    $: {
-        if (workspaceUuid) {
-            fetch();
-
-            workspaceWSStore = getSubscriptionForCollection(
-                "workspace",
-                workspaceUuid
-            );
-        }
-    }
-
-    $: {
-        if ($workspaceWSStore) {
-            refetch();
-        }
-    }
-
-    $: {
-        if (workspace) {
-            if (workspace.workspace_users) {
-                workspace_users = workspace.workspace_users;
-            }
-        }
-    }
-
+    let loading: boolean;
+    let workspaceUsers: WorkspaceUser[] = [];
     let searchText = "";
     let searchEngine: Fuse<WorkspaceUser> | null = null;
     let filteredWorkspaceUsers: WorkspaceUser[] = [];
     $: {
-        searchEngine = new Fuse(workspace_users, {
+        loading = !$currentWorkspace;
+    }
+    $: {
+        if ($currentWorkspace && $currentWorkspace.workspace_users) {
+            workspaceUsers = $currentWorkspace.workspace_users;
+        }
+        searchEngine = new Fuse(workspaceUsers, {
             keys: ["user.email", "user.full_name"],
             threshold: fuseSearchThreshold,
         });
     }
 
     $: {
-        if (searchText.length) {
+        if (searchText.length > 0) {
             if (!searchEngine) {
                 throw new Error("Expected searchEngine");
             }
@@ -82,7 +45,7 @@
                 .search(searchText)
                 .map((res: Fuse.FuseResult<WorkspaceUser>) => res.item);
         } else {
-            filteredWorkspaceUsers = workspace_users;
+            filteredWorkspaceUsers = workspaceUsers;
         }
     }
 
@@ -101,7 +64,7 @@
 
     function selectMe() {
         // find self in workspace_users
-        const self = workspace_users.find((el) =>
+        const self = workspaceUsers.find((el) =>
             $user ? el.user.email == $user.email : false
         );
         if (!self) {

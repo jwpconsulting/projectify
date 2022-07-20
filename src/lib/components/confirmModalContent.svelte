@@ -69,7 +69,7 @@
             return;
         }
 
-        modal.close({ confirm: true, outputs });
+        modal.close({ confirm: true, outputs: Object.fromEntries(outputs) });
         isEditing = false;
     }
 

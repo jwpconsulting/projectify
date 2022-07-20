@@ -1,12 +1,8 @@
 <script lang="ts">
-    import { page } from "$app/stores";
-    import { getArchivedWorkspaceBoards } from "$lib/repository";
     import {
         Mutation_ArchiveWorkspaceBoard,
         Mutation_DeleteWorkspaceBoard,
     } from "$lib/graphql/operations";
-    import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
-    import debounce from "lodash/debounce.js";
     import { dateStringToLocal } from "$lib/utils/date";
     import DialogModal, { getModal } from "$lib/components/dialogModal.svelte";
     import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
@@ -14,48 +10,15 @@
     import { client } from "$lib/graphql/client";
     import Loading from "../loading.svelte";
     import type { WorkspaceBoard } from "$lib/types";
-    import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
-
-    $: workspaceUuid = $page.params["workspaceUuid"];
-
-    let res: WorkspaceBoard[] | null = null;
-    let loading = true;
-    let workspaceWSStore: WSSubscriptionStore | null;
-    let archivedBoards: WorkspaceBoard[] = [];
-
-    async function fetch() {
-        res = await getArchivedWorkspaceBoards(workspaceUuid);
-        loading = false;
-    }
-
-    const refetch = debounce(() => {
-        fetch();
-    }, 100);
-
-    $: {
-        if (workspaceUuid) {
-            fetch();
-
-            workspaceWSStore = getSubscriptionForCollection(
-                "workspace",
-                workspaceUuid
-            );
-        }
-    }
-
-    $: {
-        if ($workspaceWSStore) {
-            refetch();
-        }
-    }
-
-    $: {
-        if (res) {
-            archivedBoards = res;
-        }
-    }
+    import { currentArchivedWorkspaceBoards } from "$lib/stores/dashboard";
 
     const unarchivingItems = new Map<string, boolean>();
+    let loading: boolean;
+
+    $: {
+        console.log($currentArchivedWorkspaceBoards);
+        loading = !$currentArchivedWorkspaceBoards;
+    }
 
     async function onUnarchiveItem(item: WorkspaceBoard) {
         let uuid = item.uuid;
@@ -105,18 +68,18 @@
     </div>
 {:else}
     <div class="divide-y divide-base-300 p-4">
-        {#if archivedBoards.length > 0}
-            {#each archivedBoards as board}
+        {#if $currentArchivedWorkspaceBoards.length > 0}
+            {#each $currentArchivedWorkspaceBoards as workspaceBoard}
                 <div class="flex space-x-2 py-4">
                     <div class="grid grow">
                         <div class="nowrap-ellipsis overflow-hidden">
                             <span class="nowrap-ellipsis font-bold"
-                                >{board.title}</span
+                                >{workspaceBoard.title}</span
                             >
                         </div>
                         <div class="text-xs">
-                            {board.archived
-                                ? dateStringToLocal(board.archived)
+                            {workspaceBoard.archived
+                                ? dateStringToLocal(workspaceBoard.archived)
                                 : null}
                         </div>
                     </div>
@@ -124,16 +87,18 @@
                         class="flex shrink-0 items-center justify-center space-x-2"
                     >
                         <button
-                            class:loading={unarchivingItems.get(board.uuid)}
+                            class:loading={unarchivingItems.get(
+                                workspaceBoard.uuid
+                            )}
                             on:click={() => {
-                                onUnarchiveItem(board);
+                                onUnarchiveItem(workspaceBoard);
                             }}
                             class="btn btn-primary btn-ghost btn-sm rounded-full text-primary"
                             >Return</button
                         >
                         <button
                             on:click={() => {
-                                onDeleteItem(board);
+                                onDeleteItem(workspaceBoard);
                             }}
                             class="btn btn-outline btn-accent btn-sm rounded-full"
                             >Delete</button

@@ -58,10 +58,6 @@ body {
     }
 
     .btn {
-        > svg {
-            @apply h-6 w-6;
-        }
-
         > * {
             &:first-child {
                 @apply mr-1;
