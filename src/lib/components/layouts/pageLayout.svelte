@@ -37,11 +37,11 @@
                 },
                 {
                     name: $_("solutions"),
-                    url: "/",
+                    url: "/solutions",
                 },
                 {
                     name: $_("pricing"),
-                    url: "/",
+                    url: "/pricing",
                 },
             ],
         },
@@ -50,7 +50,7 @@
             links: [
                 {
                     name: $_("help-and-tips"),
-                    url: "/",
+                    url: "/help/basics",
                 },
             ],
         },
@@ -67,7 +67,7 @@
                 },
                 {
                     name: $_("accessibility-statement"),
-                    url: "/",
+                    url: "/accessibility",
                 },
                 {
                     name: $_("contact-us"),

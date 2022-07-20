@@ -50,9 +50,9 @@ const commonTheme = {
 };
 
 module.exports = {
-    darkMode: "class",
+    darkmode: "class",
     mode: "jit",
-    content: ["./src/**/*.{html,js,svelte,ts}"],
+    content: ["./src/**/*.{json,html,js,svelte,ts}"],
     theme: {
         colors: {
             "disabled-text": "#64748B",
