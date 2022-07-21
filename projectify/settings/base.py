@@ -31,7 +31,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = ["3fc4-198-54-132-149.ngrok.io", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = []
 
 
 SESSION_COOKIE_SAMESITE = "None"
