@@ -717,7 +717,7 @@ class TestLabel:
 
     def test_factory(self, label):
         """Test factory."""
-        assert label.color
+        assert label.color is not None
 
     def test_workspace(self, workspace, label):
         """Test workspace property."""
