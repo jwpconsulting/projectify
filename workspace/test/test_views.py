@@ -76,7 +76,7 @@ class TestWorkspaceBoardRetrieve:
         django_assert_num_queries,
     ):
         """Assert we can post to this view this while being logged in."""
-        with django_assert_num_queries(8):
+        with django_assert_num_queries(9):
             response = user_client.get(resource_url)
         assert response.status_code == 200, response.content
 

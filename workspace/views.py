@@ -42,6 +42,7 @@ class WorkspaceBoardRetrieve(generics.RetrieveAPIView):
         "workspaceboardsection_set__task_set__assignee",
         "workspaceboardsection_set__task_set__assignee__user",
         "workspaceboardsection_set__task_set__labels",
+        "workspaceboardsection_set__task_set__subtask_set",
     ).select_related(
         "workspace",
     )

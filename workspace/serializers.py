@@ -191,16 +191,12 @@ class WorkspaceBoardSectionUpSerializer(WorkspaceBoardSectionBaseSerializer):
         )
 
 
-class TaskDetailSerializer(TaskBaseSerializer):
+class TaskWithSubTaskSerializer(TaskBaseSerializer):
     """Serialize all task details."""
 
     sub_tasks = SubTaskBaseSerializer(
         many=True, read_only=True, source="subtask_set"
     )
-    chat_messages = ChatMessageBaseSerializer(
-        many=True, read_only=True, source="chatmessage_set"
-    )
-    workspace_board_section = WorkspaceBoardSectionUpSerializer(read_only=True)
 
     class Meta(TaskBaseSerializer.Meta):
         """Meta."""
@@ -208,6 +204,22 @@ class TaskDetailSerializer(TaskBaseSerializer):
         fields = (
             *TaskBaseSerializer.Meta.fields,
             "sub_tasks",
+        )
+
+
+class TaskDetailSerializer(TaskWithSubTaskSerializer):
+    """Serialize all task details."""
+
+    chat_messages = ChatMessageBaseSerializer(
+        many=True, read_only=True, source="chatmessage_set"
+    )
+    workspace_board_section = WorkspaceBoardSectionUpSerializer(read_only=True)
+
+    class Meta(TaskWithSubTaskSerializer.Meta):
+        """Meta."""
+
+        fields = (
+            *TaskWithSubTaskSerializer.Meta.fields,
             "chat_messages",
             "workspace_board_section",
         )
@@ -216,7 +228,9 @@ class TaskDetailSerializer(TaskBaseSerializer):
 class WorkspaceBoardSectionSerializer(WorkspaceBoardSectionBaseSerializer):
     """Workspace board section serializer."""
 
-    tasks = TaskBaseSerializer(many=True, read_only=True, source="task_set")
+    tasks = TaskWithSubTaskSerializer(
+        many=True, read_only=True, source="task_set"
+    )
 
     class Meta(WorkspaceBoardSectionBaseSerializer.Meta):
         """Meta."""
