@@ -14,6 +14,7 @@
     import OnboardingSeats from "$lib/figma/OnboardingSeats.svelte";
     import MinusSeats from "$lib/figma/MinusSeats.svelte";
     import AddSeats from "$lib/figma/AddSeats.svelte";
+    import SeatInput from "$lib/figma/SeatInput.svelte";
     import { Plus } from "@steeze-ui/heroicons";
     import {
         buttonStyles,
@@ -171,4 +172,6 @@
     </div>
     Add seats
     <AddSeats on:click={console.log} />
+    Seat input
+    <SeatInput />
 </div>
