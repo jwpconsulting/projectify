@@ -12,6 +12,7 @@
     import MenuButton from "$lib/figma/MenuButton.svelte";
     import SubMenuDropdown from "$lib/figma/SubMenuDropdown.svelte";
     import OnboardingSeats from "$lib/figma/OnboardingSeats.svelte";
+    import MinusSeats from "$lib/figma/MinusSeats.svelte";
     import { Plus } from "@steeze-ui/heroicons";
     import {
         buttonStyles,
@@ -159,6 +160,12 @@
     <div class="flex flex-row flex-wrap gap-5">
         {#each onboardingSeats as seats}
             <OnboardingSeats on:click={console.log} {seats} />
+        {/each}
+    </div>
+    Minus seats
+    <div class="flex flex-row flex-wrap gap-5">
+        {#each disabledStates as disabled}
+            <MinusSeats on:click={console.log} {disabled} />
         {/each}
     </div>
 </div>
