@@ -10,6 +10,7 @@
     import NotificationRead from "$lib/figma/NotificationRead.svelte";
     import WorkspaceMenuBar from "$lib/figma/WorkspaceMenuBar.svelte";
     import MenuButton from "$lib/figma/MenuButton.svelte";
+    import SubMenuDropdown from "$lib/figma/SubMenuDropdown.svelte";
     import { Plus } from "@steeze-ui/heroicons";
     import {
         buttonStyles,
@@ -147,5 +148,9 @@
                 label={state}
             />
         {/each}
+    </div>
+    Submenu dropdown
+    <div class="flex w-40 flex-col">
+        <SubMenuDropdown on:click={console.log} label="Button" icon={Plus} />
     </div>
 </div>
