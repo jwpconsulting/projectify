@@ -17,6 +17,7 @@
     import SeatInput from "$lib/figma/SeatInput.svelte";
     import StepperComponent from "$lib/figma/StepperComponent.svelte";
     import Stepper from "$lib/figma/Stepper.svelte";
+    import MobileMenu from "$lib/figma/MobileMenu.svelte";
     import { currentStep } from "$lib/stores/onboarding";
     import { Plus } from "@steeze-ui/heroicons";
     import {
@@ -186,4 +187,10 @@
     </div>
     Stepper ({$currentStep})
     <Stepper />
+    Mobile Menu
+    <div class="flex flex-row flex-wrap gap-2">
+        {#each disabledStates as isActive}
+            <MobileMenu isActive={!isActive} on:click={console.log} />
+        {/each}
+    </div>
 </div>
