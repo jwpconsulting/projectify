@@ -30,6 +30,7 @@ module.exports = {
     content: ["./src/**/*.{json,html,js,svelte,ts}"],
     theme: {
         colors: {
+            "primary-hover": "#1E40AF",
             "primary-content-hover": "#2563EB",
             "secondary-content-hover": "#93C5FD",
             "accent-content-hover": "#FFFFFF",

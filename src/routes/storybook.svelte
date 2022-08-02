@@ -2,6 +2,7 @@
     import Button from "$lib/figma/Button.svelte";
     import EllipsisSideNav from "$lib/figma/EllipsisSideNav.svelte";
     import CircleIcon from "$lib/figma/CircleIcon.svelte";
+    import UploadAvatar from "$lib/figma/UploadAvatar.svelte";
     import { Plus } from "@steeze-ui/heroicons";
     import {
         buttonStyles,
@@ -98,4 +99,6 @@
             </div>
         {/each}
     </div>
+    Upload avatar
+    <UploadAvatar on:click={console.log} />
 </div>
