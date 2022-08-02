@@ -1,5 +1,6 @@
 <script lang="ts">
     import Button from "$lib/figma/Button.svelte";
+    import EllipsisSideNav from "$lib/figma/EllipsisSideNav.svelte";
     import { Plus } from "@steeze-ui/heroicons";
     import { buttonStyles, buttonSizes, buttonColors } from "$lib/figma/types";
     import type { ButtonIcon } from "$lib/figma/types";
@@ -63,5 +64,9 @@
                 {/each}
             </div>
         {/each}
+    </div>
+    <div>
+        Ellipsis side nav
+        <EllipsisSideNav on:click={console.log} />
     </div>
 </div>
