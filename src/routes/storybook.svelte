@@ -20,6 +20,7 @@
     import MobileMenu from "$lib/figma/MobileMenu.svelte";
     import MobileSearchMenu from "$lib/figma/MobileSearchMenu.svelte";
     import SideNavMain from "$lib/figma/SideNavMain.svelte";
+    import BoardButton from "$lib/figma/BoardButton.svelte";
     import { currentStep } from "$lib/stores/onboarding";
     import { Plus } from "@steeze-ui/heroicons";
     import {
@@ -31,6 +32,7 @@
         menuButtonStates,
         stepperPositions,
         sideNavMainTypes,
+        boardButtonStates,
     } from "$lib/figma/types";
     import type { ButtonIcon } from "$lib/figma/types";
 
@@ -203,6 +205,12 @@
     <div class="flex flex-row flex-wrap gap-2">
         {#each sideNavMainTypes as type}
             <SideNavMain {type} on:click={console.log} />
+        {/each}
+    </div>
+    Board button
+    <div class="flex flex-row flex-wrap gap-2">
+        {#each boardButtonStates as state}
+            <BoardButton {state} />
         {/each}
     </div>
 </div>

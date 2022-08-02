@@ -31,3 +31,6 @@ export type StepperPosition = typeof stepperPositions[number];
 
 export const sideNavMainTypes = ["workspace", "filter"] as const;
 export type SideNavMainType = typeof sideNavMainTypes[number];
+
+export const boardButtonStates = ["inactive", "disabled", "active"] as const;
+export type BoardButtonState = typeof boardButtonStates[number];
