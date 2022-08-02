@@ -6,6 +6,7 @@
     import NotificationButton from "$lib/figma/NotificationButton.svelte";
     import CancelSearch from "$lib/figma/CancelSearch.svelte";
     import WatcherButton from "$lib/figma/WatcherButton.svelte";
+    import NotificationRead from "$lib/figma/NotificationRead.svelte";
     import { Plus } from "@steeze-ui/heroicons";
     import {
         buttonStyles,
@@ -120,6 +121,12 @@
     <div class="flex flex-row">
         {#each disabledStates as isActive}
             <WatcherButton on:click={console.log} isActive={!isActive} />
+        {/each}
+    </div>
+    Notification read
+    <div class="flex flex-row">
+        {#each disabledStates as isRead}
+            <NotificationRead on:click={console.log} isRead={!isRead} />
         {/each}
     </div>
 </div>
