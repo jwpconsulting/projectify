@@ -28,3 +28,6 @@ export type MenuButtonState = typeof menuButtonStates[number];
 
 export const stepperPositions = ["first", "mid", "last"] as const;
 export type StepperPosition = typeof stepperPositions[number];
+
+export const sideNavMainTypes = ["workspace", "filter"] as const;
+export type SideNavMainType = typeof sideNavMainTypes[number];

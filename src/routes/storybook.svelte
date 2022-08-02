@@ -19,6 +19,7 @@
     import Stepper from "$lib/figma/Stepper.svelte";
     import MobileMenu from "$lib/figma/MobileMenu.svelte";
     import MobileSearchMenu from "$lib/figma/MobileSearchMenu.svelte";
+    import SideNavMain from "$lib/figma/SideNavMain.svelte";
     import { currentStep } from "$lib/stores/onboarding";
     import { Plus } from "@steeze-ui/heroicons";
     import {
@@ -29,6 +30,7 @@
         circleIconIcons,
         menuButtonStates,
         stepperPositions,
+        sideNavMainTypes,
     } from "$lib/figma/types";
     import type { ButtonIcon } from "$lib/figma/types";
 
@@ -197,4 +199,10 @@
     </div>
     Mobile search menu
     <MobileSearchMenu on:click={console.log} />
+    Side nav main
+    <div class="flex flex-row flex-wrap gap-2">
+        {#each sideNavMainTypes as type}
+            <SideNavMain {type} on:click={console.log} />
+        {/each}
+    </div>
 </div>
