@@ -15,6 +15,7 @@
     import MinusSeats from "$lib/figma/MinusSeats.svelte";
     import AddSeats from "$lib/figma/AddSeats.svelte";
     import SeatInput from "$lib/figma/SeatInput.svelte";
+    import StepperComponent from "$lib/figma/StepperComponent.svelte";
     import { Plus } from "@steeze-ui/heroicons";
     import {
         buttonStyles,
@@ -23,6 +24,7 @@
         circleIconSizes,
         circleIconIcons,
         menuButtonStates,
+        stepperPositions,
     } from "$lib/figma/types";
     import type { ButtonIcon } from "$lib/figma/types";
 
@@ -174,4 +176,10 @@
     <AddSeats on:click={console.log} />
     Seat input
     <SeatInput />
+    Stepper components
+    <div class="flex flex-row flex-wrap gap-2">
+        {#each stepperPositions as position}
+            <StepperComponent {position} on:click={console.log} />
+        {/each}
+    </div>
 </div>

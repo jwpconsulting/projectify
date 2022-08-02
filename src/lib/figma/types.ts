@@ -25,3 +25,6 @@ export type CircleIconIcon = typeof circleIconIcons[number];
 
 export const menuButtonStates = ["normal", "selected", "accordion"] as const;
 export type MenuButtonState = typeof menuButtonStates[number];
+
+export const stepperPositions = ["first", "mid", "last"] as const;
+export type StepperPosition = typeof stepperPositions[number];
