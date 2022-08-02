@@ -18,6 +18,7 @@
     import StepperComponent from "$lib/figma/StepperComponent.svelte";
     import Stepper from "$lib/figma/Stepper.svelte";
     import MobileMenu from "$lib/figma/MobileMenu.svelte";
+    import MobileSearchMenu from "$lib/figma/MobileSearchMenu.svelte";
     import { currentStep } from "$lib/stores/onboarding";
     import { Plus } from "@steeze-ui/heroicons";
     import {
@@ -194,4 +195,6 @@
             <MobileMenu {isActive} on:click={console.log} />
         {/each}
     </div>
+    Mobile search menu
+    <MobileSearchMenu on:click={console.log} />
 </div>
