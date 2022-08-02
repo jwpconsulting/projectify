@@ -20,9 +20,9 @@
     const disabledStates = [true, false];
 </script>
 
-<div class="flex flex-col flex-wrap gap-2">
+<div class="flex flex-col">
+    Buttons
     <div class="flex flex-row flex-wrap">
-        Buttons
         {#each buttonStyles as style}
             <div class="flex flex-col flex-wrap">
                 <div class="capitalize">
@@ -72,34 +72,30 @@
             </div>
         {/each}
     </div>
-    <div>
-        Ellipsis side nav
-        <EllipsisSideNav on:click={console.log} />
-    </div>
-    <div>
-        Circle icons
-        <div class="flex flex-row flex-wrap">
-            {#each circleIconSizes as size}
-                <div>
-                    <div class="capitalize">
-                        {size}
-                    </div>
-                    <div class="flex flex-col flex-wrap">
-                        {#each circleIconIcons as icon}
-                            <div class="flex flex-row flex-wrap">
-                                {#each disabledStates as disabled}
-                                    <CircleIcon
-                                        on:click={console.log}
-                                        {icon}
-                                        {disabled}
-                                        {size}
-                                    />
-                                {/each}
-                            </div>
-                        {/each}
-                    </div>
+    Ellipsis side nav
+    <EllipsisSideNav on:click={console.log} />
+    Circle icons
+    <div class="flex flex-row flex-wrap">
+        {#each circleIconSizes as size}
+            <div>
+                <div class="capitalize">
+                    {size}
                 </div>
-            {/each}
-        </div>
+                <div class="flex flex-col flex-wrap">
+                    {#each circleIconIcons as icon}
+                        <div class="flex flex-row flex-wrap">
+                            {#each disabledStates as disabled}
+                                <CircleIcon
+                                    on:click={console.log}
+                                    {icon}
+                                    {disabled}
+                                    {size}
+                                />
+                            {/each}
+                        </div>
+                    {/each}
+                </div>
+            </div>
+        {/each}
     </div>
 </div>
