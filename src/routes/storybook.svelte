@@ -3,6 +3,7 @@
     import EllipsisSideNav from "$lib/figma/EllipsisSideNav.svelte";
     import CircleIcon from "$lib/figma/CircleIcon.svelte";
     import UploadAvatar from "$lib/figma/UploadAvatar.svelte";
+    import NotificationButton from "$lib/figma/NotificationButton.svelte";
     import { Plus } from "@steeze-ui/heroicons";
     import {
         buttonStyles,
@@ -101,4 +102,10 @@
     </div>
     Upload avatar
     <UploadAvatar on:click={console.log} />
+    Notifications
+    <div class="flex flex-row">
+        {#each disabledStates as isActive}
+            <NotificationButton on:click={console.log} isActive={!isActive} />
+        {/each}
+    </div>
 </div>
