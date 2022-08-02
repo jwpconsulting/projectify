@@ -16,6 +16,8 @@
     import AddSeats from "$lib/figma/AddSeats.svelte";
     import SeatInput from "$lib/figma/SeatInput.svelte";
     import StepperComponent from "$lib/figma/StepperComponent.svelte";
+    import Stepper from "$lib/figma/Stepper.svelte";
+    import { currentStep } from "$lib/stores/onboarding";
     import { Plus } from "@steeze-ui/heroicons";
     import {
         buttonStyles,
@@ -182,4 +184,6 @@
             <StepperComponent {position} on:click={console.log} />
         {/each}
     </div>
+    Stepper ({$currentStep})
+    <Stepper />
 </div>

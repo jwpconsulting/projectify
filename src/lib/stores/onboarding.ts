@@ -15,3 +15,10 @@ seats.subscribe((n) => {
         seats.set(seatMax);
     }
 });
+
+export const numSteps = 5;
+export const firstStep = 0;
+export let currentStep = writable<number>(firstStep);
+export function gotoStep(step: number) {
+    currentStep.set(step);
+}
