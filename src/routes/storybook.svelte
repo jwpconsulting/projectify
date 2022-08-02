@@ -1,8 +1,15 @@
 <script lang="ts">
     import Button from "$lib/figma/Button.svelte";
     import EllipsisSideNav from "$lib/figma/EllipsisSideNav.svelte";
+    import CircleIcon from "$lib/figma/CircleIcon.svelte";
     import { Plus } from "@steeze-ui/heroicons";
-    import { buttonStyles, buttonSizes, buttonColors } from "$lib/figma/types";
+    import {
+        buttonStyles,
+        buttonSizes,
+        buttonColors,
+        circleIconSizes,
+        circleIconIcons,
+    } from "$lib/figma/types";
     import type { ButtonIcon } from "$lib/figma/types";
 
     const buttonTertiares: ButtonIcon[] = [
@@ -68,5 +75,31 @@
     <div>
         Ellipsis side nav
         <EllipsisSideNav on:click={console.log} />
+    </div>
+    <div>
+        Circle icons
+        <div class="flex flex-row flex-wrap">
+            {#each circleIconSizes as size}
+                <div>
+                    <div class="capitalize">
+                        {size}
+                    </div>
+                    <div class="flex flex-col flex-wrap">
+                        {#each circleIconIcons as icon}
+                            <div class="flex flex-row flex-wrap">
+                                {#each disabledStates as disabled}
+                                    <CircleIcon
+                                        on:click={console.log}
+                                        {icon}
+                                        {disabled}
+                                        {size}
+                                    />
+                                {/each}
+                            </div>
+                        {/each}
+                    </div>
+                </div>
+            {/each}
+        </div>
     </div>
 </div>

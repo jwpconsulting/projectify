@@ -10,3 +10,15 @@ export type ButtonIcon =
     | { position: "left"; icon: IconSource }
     | { position: "right"; icon: IconSource }
     | null;
+
+export const circleIconSizes = ["small", "medium"] as const;
+export type CircleIconSize = typeof circleIconSizes[number];
+export const circleIconIcons = [
+    "ellipsis",
+    "edit",
+    "delete",
+    "up",
+    "down",
+    "close",
+] as const;
+export type CircleIconIcon = typeof circleIconIcons[number];
