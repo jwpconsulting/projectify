@@ -1,52 +1,27 @@
-const factoryLightThemeColors = {
-    "primary": "#288CFF",
-    "primary-focus": "#0077FF",
-    "primary-content": "#ffffff",
-    "secondary": "#BEDCFF",
-    "secondary-focus": "#76B4F9",
-    "secondary-content": "#ffffff",
-    "accent": "#EF7D69",
-    "accent-focus": "#F05F46",
-    "accent-content": "#ffffff",
-    "neutral": "#3578C0",
-    "neutral-focus": "#5399E4",
-    "neutral-content": "#ffffff",
-    "base-100": "#ffffff",
-    "base-200": "#F2F8FF",
-    "base-300": "#d1d5db",
-    "base-content": "#1f2937",
-    "info": "#2094f3",
-    "success": "#009485",
-    "warning": "#ff9900",
-    "error": "#ff5724",
-};
+const factoryLightThemeColors = {};
 
-const factoryDarkThemeColors = {
-    "primary": "#288CFF",
-    "primary-focus": "#0077FF",
-    "primary-content": "#ffffff",
-    "secondary": "#BEDCFF",
-    "secondary-focus": "#76B4F9",
-    "secondary-content": "#333333",
-    "accent": "#EF7D69",
-    "accent-focus": "#F05F46",
-    "accent-content": "#ffffff",
-    "neutral": "#5B5AA0",
-    "neutral-focus": "#7F7ED3",
-    "neutral-content": "#ffffff",
-    "base-100": "#282841",
-    "base-200": "#191e32",
-    "base-300": "#3c3c5a",
-    "base-content": "#ffffff",
-    "info": "#2094f3",
-    "success": "#009485",
-    "warning": "#ff9900",
-    "error": "#ff5724",
-};
+const factoryDarkThemeColors = {};
 
 const commonTheme = {
     "fontFamily": "Roboto, sans-serif",
     "--btn-text-case": "none",
+    "primary": "#3B82F6",
+    "primary-focus": "#0077FF",
+    "primary-content": "#ffffff",
+    "secondary": "#DBEAFE",
+    "secondary-focus": "#93C5FD",
+    "secondary-content": "#FFFFFF",
+    "accent": "#FEE2E2",
+    "accent-focus": "#FECACA",
+    "accent-content": "#B91C1C",
+    "base-100": "#FFFFFF",
+    "base-200": "#EFF6FF",
+    "base-300": "#CBD5E1",
+    "base-content": "#1E293B",
+    "info": "#0EA5E9",
+    "success": "#0D9488",
+    "warning": "#F59E0B",
+    "error": "#EF4444",
 };
 
 module.exports = {
@@ -55,6 +30,9 @@ module.exports = {
     content: ["./src/**/*.{json,html,js,svelte,ts}"],
     theme: {
         colors: {
+            "primary-content-hover": "#2563EB",
+            "secondary-content-hover": "#93C5FD",
+            "accent-content-hover": "#FFFFFF",
             "disabled-text": "#64748B",
             "disabled-background": "#E2E8F0",
             "secondary-text": "#8390A2",
@@ -87,6 +65,9 @@ module.exports = {
             },
             fontSize: {
                 xxs: "0.625rem",
+            },
+            borderRadius: {
+                llg: "10px",
             },
             boxShadow: {
                 card: "0px 0px 4px 0px #1E202940",
