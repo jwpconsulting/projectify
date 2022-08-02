@@ -36,7 +36,8 @@
         { position: "right", icon: Plus },
         null,
     ];
-    const disabledStates = [true, false];
+    const trueFalse = [true, false];
+    const falseTrue = [false, true];
     const onboardingSeats = [5, 10, 15, 20, 25];
 </script>
 
@@ -72,7 +73,7 @@
                                         </Button>
                                     {/each}
                                 {:else}
-                                    {#each disabledStates as disabled}
+                                    {#each trueFalse as disabled}
                                         <Button
                                             on:click={console.log}
                                             {style}
@@ -104,7 +105,7 @@
                 <div class="flex flex-col flex-wrap">
                     {#each circleIconIcons as icon}
                         <div class="flex flex-row flex-wrap">
-                            {#each disabledStates as disabled}
+                            {#each trueFalse as disabled}
                                 <CircleIcon
                                     on:click={console.log}
                                     {icon}
@@ -124,26 +125,26 @@
     <AddUserButton on:click={console.log} />
     Notifications
     <div class="flex flex-row">
-        {#each disabledStates as isActive}
-            <NotificationButton on:click={console.log} isActive={!isActive} />
+        {#each falseTrue as isActive}
+            <NotificationButton on:click={console.log} {isActive} />
         {/each}
     </div>
     Cancel search
     <div class="flex flex-row">
-        {#each disabledStates as isActive}
-            <CancelSearch on:click={console.log} isActive={!isActive} />
+        {#each falseTrue as isActive}
+            <CancelSearch on:click={console.log} {isActive} />
         {/each}
     </div>
     Watcher
     <div class="flex flex-row">
-        {#each disabledStates as isActive}
-            <WatcherButton on:click={console.log} isActive={!isActive} />
+        {#each falseTrue as isActive}
+            <WatcherButton on:click={console.log} {isActive} />
         {/each}
     </div>
     Notification read
     <div class="flex flex-row">
-        {#each disabledStates as isRead}
-            <NotificationRead on:click={console.log} isRead={!isRead} />
+        {#each falseTrue as isRead}
+            <NotificationRead on:click={console.log} {isRead} />
         {/each}
     </div>
     Workspace menu bar
@@ -171,7 +172,7 @@
     </div>
     Minus seats
     <div class="flex flex-row flex-wrap gap-5">
-        {#each disabledStates as disabled}
+        {#each trueFalse as disabled}
             <MinusSeats on:click={console.log} {disabled} />
         {/each}
     </div>
@@ -189,8 +190,8 @@
     <Stepper />
     Mobile Menu
     <div class="flex flex-row flex-wrap gap-2">
-        {#each disabledStates as isActive}
-            <MobileMenu isActive={!isActive} on:click={console.log} />
+        {#each falseTrue as isActive}
+            <MobileMenu {isActive} on:click={console.log} />
         {/each}
     </div>
 </div>
