@@ -9,6 +9,7 @@
     import WatcherButton from "$lib/figma/WatcherButton.svelte";
     import NotificationRead from "$lib/figma/NotificationRead.svelte";
     import WorkspaceMenuBar from "$lib/figma/WorkspaceMenuBar.svelte";
+    import MenuButton from "$lib/figma/MenuButton.svelte";
     import { Plus } from "@steeze-ui/heroicons";
     import {
         buttonStyles,
@@ -16,6 +17,7 @@
         buttonColors,
         circleIconSizes,
         circleIconIcons,
+        menuButtonStates,
     } from "$lib/figma/types";
     import type { ButtonIcon } from "$lib/figma/types";
 
@@ -135,4 +137,15 @@
     </div>
     Workspace menu bar
     <WorkspaceMenuBar on:click={console.log}>members</WorkspaceMenuBar>
+    Menu button
+    <div class="flex w-40 flex-col">
+        {#each menuButtonStates as state}
+            <MenuButton
+                on:click={console.log}
+                {state}
+                icon={Plus}
+                label={state}
+            />
+        {/each}
+    </div>
 </div>

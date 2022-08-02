@@ -22,3 +22,6 @@ export const circleIconIcons = [
     "close",
 ] as const;
 export type CircleIconIcon = typeof circleIconIcons[number];
+
+export const menuButtonStates = ["normal", "selected", "accordion"] as const;
+export type MenuButtonState = typeof menuButtonStates[number];
