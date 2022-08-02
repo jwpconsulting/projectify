@@ -8,7 +8,7 @@
 
 <button
     on:click={click}
-    class="flex-start flex max-w-fit flex-row p-2.5 text-sm uppercase text-secondary-text hover:text-base-content active:text-base-content"
+    class="flex-start flex max-w-fit flex-row p-2.5 text-sm font-bold uppercase text-secondary-text hover:text-base-content active:text-base-content"
 >
     <slot />
 </button>
