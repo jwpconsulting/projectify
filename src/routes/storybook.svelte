@@ -13,6 +13,7 @@
     import SubMenuDropdown from "$lib/figma/SubMenuDropdown.svelte";
     import OnboardingSeats from "$lib/figma/OnboardingSeats.svelte";
     import MinusSeats from "$lib/figma/MinusSeats.svelte";
+    import AddSeats from "$lib/figma/AddSeats.svelte";
     import { Plus } from "@steeze-ui/heroicons";
     import {
         buttonStyles,
@@ -168,4 +169,6 @@
             <MinusSeats on:click={console.log} {disabled} />
         {/each}
     </div>
+    Add seats
+    <AddSeats on:click={console.log} />
 </div>
