@@ -7,6 +7,7 @@
     import CancelSearch from "$lib/figma/CancelSearch.svelte";
     import WatcherButton from "$lib/figma/WatcherButton.svelte";
     import NotificationRead from "$lib/figma/NotificationRead.svelte";
+    import WorkspaceMenuBar from "$lib/figma/WorkspaceMenuBar.svelte";
     import { Plus } from "@steeze-ui/heroicons";
     import {
         buttonStyles,
@@ -129,4 +130,6 @@
             <NotificationRead on:click={console.log} isRead={!isRead} />
         {/each}
     </div>
+    Workspace menu bar
+    <WorkspaceMenuBar on:click={console.log}>members</WorkspaceMenuBar>
 </div>
