@@ -4,6 +4,7 @@
     import CircleIcon from "$lib/figma/CircleIcon.svelte";
     import UploadAvatar from "$lib/figma/UploadAvatar.svelte";
     import NotificationButton from "$lib/figma/NotificationButton.svelte";
+    import CancelSearch from "$lib/figma/CancelSearch.svelte";
     import { Plus } from "@steeze-ui/heroicons";
     import {
         buttonStyles,
@@ -106,6 +107,12 @@
     <div class="flex flex-row">
         {#each disabledStates as isActive}
             <NotificationButton on:click={console.log} isActive={!isActive} />
+        {/each}
+    </div>
+    Cancel search
+    <div class="flex flex-row">
+        {#each disabledStates as isActive}
+            <CancelSearch on:click={console.log} isActive={!isActive} />
         {/each}
     </div>
 </div>
