@@ -11,6 +11,7 @@
     import WorkspaceMenuBar from "$lib/figma/WorkspaceMenuBar.svelte";
     import MenuButton from "$lib/figma/MenuButton.svelte";
     import SubMenuDropdown from "$lib/figma/SubMenuDropdown.svelte";
+    import OnboardingSeats from "$lib/figma/OnboardingSeats.svelte";
     import { Plus } from "@steeze-ui/heroicons";
     import {
         buttonStyles,
@@ -28,6 +29,7 @@
         null,
     ];
     const disabledStates = [true, false];
+    const onboardingSeats = [5, 10, 15, 20, 25];
 </script>
 
 <div class="flex flex-col">
@@ -152,5 +154,11 @@
     Submenu dropdown
     <div class="flex w-40 flex-col">
         <SubMenuDropdown on:click={console.log} label="Button" icon={Plus} />
+    </div>
+    Onboarding seats
+    <div class="flex flex-row flex-wrap gap-5">
+        {#each onboardingSeats as seats}
+            <OnboardingSeats on:click={console.log} {seats} />
+        {/each}
     </div>
 </div>
