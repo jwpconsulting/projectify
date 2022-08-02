@@ -14,7 +14,7 @@
     export let icon: CircleIconIcon;
     export let disabled: boolean;
 
-    const iconMapped = {
+    $: iconMapped = {
         ellipsis: DotsHorizontal,
         edit: Pencil,
         delete: Trash,
@@ -22,7 +22,7 @@
         down: ChevronDown,
         close: X,
     }[icon];
-    const sizeMapped = {
+    $: sizeMapped = {
         small: "w-6 h-6 p-1",
         medium: "w-8 h-8 p-1.5",
     }[size];

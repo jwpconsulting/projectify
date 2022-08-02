@@ -7,7 +7,7 @@
     export let icon: IconSource;
     export let state: MenuButtonState;
 
-    const style = {
+    $: style = {
         normal: "hover:bg-secondary active:bg-secondary active:text-base-100",
         selected: "bg-primary-hover text-base-100",
         accordion: "bg-base-200 text-base-content",

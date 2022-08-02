@@ -14,7 +14,7 @@
     export let icon: ButtonIcon;
     export let disabled: boolean;
 
-    const outerColorStyle = {
+    $: outerColorStyle = {
         primary: {
             blue: "border-transparent focus:border-base-content",
             red: "border-transparent focus:border-base-content",
@@ -31,7 +31,7 @@
             black: "border-transparent focus:border-base-content",
         },
     }[style][color];
-    const innerColorStyle = {
+    $: innerColorStyle = {
         primary: {
             blue: "group-disabled:bg-disabled-background group-disabled:text-disabled-text border-transparent bg-primary text-base-100 group-hover:bg-primary-focus group-active:bg-secondary",
             red: "group-disabled:bg-accent bg-accent border-transparent text-accent-content group-hover:bg-accent-focus group-active:bg-accent",
@@ -48,17 +48,17 @@
             black: "disabled:text-base-content border-transparent text-base-content focus:border-base-content",
         },
     }[style][color];
-    const tertiaryStyle = {
+    $: tertiaryStyle = {
         blue: "hover:bg-secondary",
         red: "",
         black: "hover:bg-base-300",
     }[color];
-    const outerSizeStyle = {
+    $: outerSizeStyle = {
         "medium": "",
         "small": "",
         "extra-small": "",
     }[size];
-    const innerSizeStyle = {
+    $: innerSizeStyle = {
         "medium": "text-base",
         "small": "text-sm",
         "extra-small": "text-xs",

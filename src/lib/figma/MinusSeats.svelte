@@ -5,8 +5,8 @@
 
     export let disabled: boolean;
 
-    const outerStyle = disabled ? "text-base-300" : "text-secondary-text";
-    const innerStyle = disabled
+    $: outerStyle = disabled ? "text-base-300" : "text-secondary-text";
+    $: innerStyle = disabled
         ? ""
         : "group-hover:text-base-content group-hover:bg-secondary group-focus:border-secondary-text";
 
