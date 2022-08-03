@@ -5,10 +5,12 @@
 
     export let disabled: boolean;
 
-    $: outerStyle = disabled ? "text-base-300" : "text-secondary-text";
+    $: outerStyle = disabled
+        ? "text-disabled-background"
+        : "text-secondary-text";
     $: innerStyle = disabled
-        ? ""
-        : "group-hover:text-base-content group-hover:bg-secondary group-focus:border-secondary-text";
+        ? "border-disabled-background"
+        : "border-secondary-text group-hover:text-base-content group-hover:border-base-content group-hover:bg-secondary-hover group-active:bg-primary group-active:text-display group-active:border-display group-focus:border-secondary-text";
 
     const dispatch = createEventDispatcher();
     function click() {
