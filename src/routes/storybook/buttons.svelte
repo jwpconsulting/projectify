@@ -23,6 +23,7 @@
     import BoardButton from "$lib/figma/BoardButton.svelte";
     import Squoval from "$lib/figma/Squoval.svelte";
     import AvatarWithHover from "$lib/figma/AvatarWithHover.svelte";
+    import SelectLabelColor from "$lib/figma/SelectLabelColor.svelte";
     import { currentStep } from "$lib/stores/onboarding";
     import { Plus } from "@steeze-ui/heroicons";
     import {
@@ -39,6 +40,7 @@
         squovalIcons,
         squovalStates,
     } from "$lib/figma/types";
+    import { labelColors } from "$lib/utils/colors";
     import type { ButtonIcon } from "$lib/figma/types";
     import { fr, fc, trueFalse, falseTrue, users } from "$lib/storybook";
 
@@ -234,6 +236,19 @@ Avatar with hover
                 {user}
                 on:click={() => console.log("AvatarWithHover", user)}
             />
+        </div>
+    {/each}
+</div>
+Select label color
+<div class={fr}>
+    {#each labelColors as color}
+        <div class={`${fc} items-center`}>
+            <div class="capitalize">
+                {color}
+            </div>
+            {#each falseTrue as active}
+                <SelectLabelColor {color} {active} />
+            {/each}
         </div>
     {/each}
 </div>

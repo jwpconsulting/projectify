@@ -83,7 +83,8 @@ module.exports = {
                 xxs: "0.625rem",
             },
             borderRadius: {
-                llg: "10px",
+                "llg": "10px",
+                "2.5xl": "20px",
             },
             boxShadow: {
                 card: "0px 0px 4px 0px #1E202940",

@@ -1,10 +1,12 @@
-export type LabelColorType =
-    | "bg"
-    | "bgHover"
-    | "border"
-    | "text"
-    | "textBg"
-    | "textHoverBg";
+export const labelColorTypes = [
+    "bg",
+    "bgHover",
+    "border",
+    "text",
+    "textBg",
+    "textHoverBg",
+] as const;
+export type LabelColorType = typeof labelColorTypes[number];
 export const labelColors = [
     "orange",
     "pink",
