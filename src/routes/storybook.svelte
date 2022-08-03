@@ -31,6 +31,7 @@
         circleIconIcons,
         menuButtonStates,
         stepperPositions,
+        stepperActiveStates,
         sideNavMainTypes,
         boardButtonStates,
     } from "$lib/figma/types";
@@ -188,7 +189,15 @@
     Stepper components
     <div class="flex flex-row flex-wrap gap-2">
         {#each stepperPositions as position}
-            <StepperComponent {position} on:click={console.log} />
+            <div class="flex flex-col gap-2">
+                {#each stepperActiveStates as state}
+                    <StepperComponent
+                        {position}
+                        {state}
+                        on:click={console.log}
+                    />
+                {/each}
+            </div>
         {/each}
     </div>
     Stepper ({$currentStep})
