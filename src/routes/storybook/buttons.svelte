@@ -50,19 +50,19 @@
 </script>
 
 Buttons
-<div class="flex flex-row flex-wrap">
+<div class={fr}>
     {#each buttonStyles as style}
-        <div class="flex flex-col flex-wrap">
+        <div class={fc}>
             <div class="capitalize">
                 {style}
             </div>
             {#each buttonColors as color}
-                <div class="flex flex-col flex-wrap">
+                <div class={fc}>
                     <div class="capitalize">
                         {color}
                     </div>
                     {#each buttonSizes as size}
-                        <div class="flex flex-row flex-wrap items-center">
+                        <div class={fr}>
                             {#if style == "tertiary"}
                                 {#each buttonTertiares as icon}
                                     <div class="capitalize">
@@ -103,15 +103,15 @@ Buttons
 Ellipsis side nav
 <EllipsisSideNav on:click={console.log} />
 Circle icons
-<div class="flex flex-row flex-wrap">
+<div class={fr}>
     {#each circleIconSizes as size}
         <div>
             <div class="capitalize">
                 {size}
             </div>
-            <div class="flex flex-col flex-wrap">
+            <div class={fc}>
                 {#each circleIconIcons as icon}
-                    <div class="flex flex-row flex-wrap">
+                    <div class={fr}>
                         {#each trueFalse as disabled}
                             <CircleIcon
                                 on:click={console.log}
@@ -131,25 +131,25 @@ Upload avatar
 Add user
 <AddUserButton on:click={console.log} />
 Notifications
-<div class="flex flex-row">
+<div class={fr}>
     {#each falseTrue as isActive}
         <NotificationButton on:click={console.log} {isActive} />
     {/each}
 </div>
 Cancel search
-<div class="flex flex-row">
+<div class={fr}>
     {#each falseTrue as isActive}
         <CancelSearch on:click={console.log} {isActive} />
     {/each}
 </div>
 Watcher
-<div class="flex flex-row">
+<div class={fr}>
     {#each falseTrue as isActive}
         <WatcherButton on:click={console.log} {isActive} />
     {/each}
 </div>
 Notification read
-<div class="flex flex-row">
+<div class={fr}>
     {#each falseTrue as isRead}
         <NotificationRead on:click={console.log} {isRead} />
     {/each}
@@ -157,23 +157,23 @@ Notification read
 Workspace menu bar
 <WorkspaceMenuBar on:click={console.log}>members</WorkspaceMenuBar>
 Menu button
-<div class="flex w-40 flex-col">
+<div class={`${fc} w-40`}>
     {#each menuButtonStates as state}
         <MenuButton on:click={console.log} {state} icon={Plus} label={state} />
     {/each}
 </div>
 Submenu dropdown
-<div class="flex w-40 flex-col">
+<div class={`${fc} w-40`}>
     <SubMenuDropdown on:click={console.log} label="Button" icon={Plus} />
 </div>
 Onboarding seats
-<div class="flex flex-row flex-wrap gap-5">
+<div class={fr}>
     {#each onboardingSeats as seats}
         <OnboardingSeats on:click={console.log} {seats} />
     {/each}
 </div>
 Minus seats
-<div class="flex flex-row flex-wrap gap-5">
+<div class={fr}>
     {#each trueFalse as disabled}
         <MinusSeats on:click={console.log} {disabled} />
     {/each}
@@ -183,9 +183,9 @@ Add seats
 Seat input
 <SeatInput />
 Stepper components
-<div class="flex flex-row flex-wrap gap-2">
+<div class={fr}>
     {#each stepperPositions as position}
-        <div class="flex flex-col gap-2">
+        <div class={fc}>
             {#each stepperActiveStates as state}
                 <StepperComponent {position} {state} on:click={console.log} />
             {/each}
@@ -195,7 +195,7 @@ Stepper components
 Stepper ({$currentStep})
 <Stepper />
 Mobile Menu
-<div class="flex flex-row flex-wrap gap-2">
+<div class={fr}>
     {#each falseTrue as isActive}
         <MobileMenu {isActive} on:click={console.log} />
     {/each}
@@ -203,13 +203,13 @@ Mobile Menu
 Mobile search menu
 <MobileSearchMenu on:click={console.log} />
 Side nav main
-<div class="flex flex-row flex-wrap gap-2">
+<div class={fr}>
     {#each sideNavMainTypes as type}
         <SideNavMain {type} on:click={console.log} />
     {/each}
 </div>
 Board button
-<div class="flex flex-row flex-wrap gap-2">
+<div class={fr}>
     {#each boardButtonStates as state}
         <BoardButton {state} on:click={console.log} />
     {/each}
