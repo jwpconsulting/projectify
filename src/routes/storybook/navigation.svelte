@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Avatar from "$lib/figma/Avatar.svelte";
+    import AvatarV3 from "$lib/figma/AvatarV3.svelte";
     import AvatarWithHover from "$lib/figma/AvatarWithHover.svelte";
     import { fr } from "$lib/storybook";
 
@@ -12,10 +12,10 @@
     ];
 </script>
 
-Avatar
+Avatar V3
 <div class={fr}>
     {#each users as user}
-        <Avatar {user} />
+        <AvatarV3 {user} />
     {/each}
 </div>
 Avatar with hover

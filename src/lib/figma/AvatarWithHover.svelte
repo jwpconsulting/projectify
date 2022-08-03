@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Avatar from "$lib/figma/Avatar.svelte";
+    import AvatarV3 from "$lib/figma/AvatarV3.svelte";
     import { createEventDispatcher } from "svelte";
     import type { User } from "$lib/types";
 
@@ -15,5 +15,5 @@
     on:click={click}
     class="rounded-lg border border-transparent p-1.5 hover:bg-secondary-hover focus:border-base-content focus:outline-none"
 >
-    <Avatar {user} />
+    <AvatarV3 {user} />
 </button>
