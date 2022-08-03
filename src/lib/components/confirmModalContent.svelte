@@ -2,7 +2,6 @@
     import type { Input } from "$lib/types";
     import { getContext } from "svelte";
     import { _ } from "svelte-i18n";
-    import ColorPicker from "./colorPicker.svelte";
     import InputDatePicker from "./inputDatePicker.svelte";
     import lodash from "lodash";
 
@@ -108,10 +107,7 @@
                 >{input.label}</label
             >
             {#if input.type == "colorPicker"}
-                <ColorPicker
-                    bind:selectedColorInx={input.value}
-                    on:change={() => (isEditing = true)}
-                />
+                To be implemented
             {:else if input.type == "datePicker"}
                 <InputDatePicker bind:input bind:isEditing />
             {:else if input.type == "select"}
