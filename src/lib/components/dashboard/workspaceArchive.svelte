@@ -107,7 +107,7 @@
                 </div>
             {/each}
         {:else}
-            <div class="text-gray-600 text-center">
+            <div class="text-center text-gray-600">
                 {$_("no-archived-boards-found")}
             </div>
         {/if}

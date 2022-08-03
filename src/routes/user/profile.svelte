@@ -11,7 +11,6 @@
     import { Mutation_UpdateProfile } from "$lib/graphql/operations";
     import { uploadImage } from "$lib/utils/file";
     import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
-    import ThemeSwitch from "$lib/components/theme-builder/theme-switch.svelte";
 
     import type { User } from "$lib/types";
 
@@ -118,10 +117,6 @@
                     />
                 </div>
             </header>
-
-            <div class="flex flex-col items-center justify-center px-8">
-                <ThemeSwitch />
-            </div>
 
             <SettingFooterEditSaveButtons
                 {isSaving}
