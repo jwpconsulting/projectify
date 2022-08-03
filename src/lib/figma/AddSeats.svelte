@@ -16,6 +16,6 @@
     <Icon
         src={Plus}
         theme="outline"
-        class="rounded-full border-2 group-hover:bg-secondary group-hover:text-base-content group-focus:border-secondary-text"
+        class="rounded-full border-2 border-secondary-text group-hover:border-base-content group-hover:bg-secondary-hover group-hover:text-base-content group-focus:border-secondary-text group-active:border-transparent group-active:bg-primary group-active:text-display"
     />
 </button>
