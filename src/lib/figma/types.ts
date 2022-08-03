@@ -36,3 +36,17 @@ export type SideNavMainType = typeof sideNavMainTypes[number];
 
 export const boardButtonStates = ["inactive", "disabled", "active"] as const;
 export type BoardButtonState = typeof boardButtonStates[number];
+
+export const squovalIcons = [
+    "board",
+    "member",
+    "label",
+    "bulk",
+    "move",
+    "filter-member",
+    "delete",
+    "ellipsis",
+] as const;
+export type SquovalIcon = typeof squovalIcons[number];
+export const squovalStates = ["inactive", "disabled", "active"] as const;
+export type SquovalState = typeof squovalStates[number];

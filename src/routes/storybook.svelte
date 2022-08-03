@@ -21,6 +21,7 @@
     import MobileSearchMenu from "$lib/figma/MobileSearchMenu.svelte";
     import SideNavMain from "$lib/figma/SideNavMain.svelte";
     import BoardButton from "$lib/figma/BoardButton.svelte";
+    import Squoval from "$lib/figma/Squoval.svelte";
     import { currentStep } from "$lib/stores/onboarding";
     import { Plus } from "@steeze-ui/heroicons";
     import {
@@ -34,6 +35,8 @@
         stepperActiveStates,
         sideNavMainTypes,
         boardButtonStates,
+        squovalIcons,
+        squovalStates,
     } from "$lib/figma/types";
     import type { ButtonIcon } from "$lib/figma/types";
 
@@ -45,6 +48,9 @@
     const trueFalse = [true, false];
     const falseTrue = [false, true];
     const onboardingSeats = [5, 10, 15, 20, 25];
+
+    const fr = "flex flex-row flex-wrap gap-2";
+    const fc = "flex flex-col flex-wrap gap-2";
 </script>
 
 <div class="flex flex-col">
@@ -219,7 +225,17 @@
     Board button
     <div class="flex flex-row flex-wrap gap-2">
         {#each boardButtonStates as state}
-            <BoardButton {state} />
+            <BoardButton {state} on:click={console.log} />
+        {/each}
+    </div>
+    Squoval
+    <div class={fc}>
+        {#each squovalIcons as icon}
+            <div class={fr}>
+                {#each squovalStates as state}
+                    <Squoval {icon} {state} on:click={console.log} />
+                {/each}
+            </div>
         {/each}
     </div>
 </div>
