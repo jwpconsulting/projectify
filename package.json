@@ -35,7 +35,6 @@
         "delay": "^5.0.0",
         "fuse.js": "^6.5.3",
         "lodash": "^4.17.21",
-        "svelte": "^3.48.0",
         "svelte-boring-avatars": "^1.2.2",
         "svelte-check": "^2.2.6",
         "svelte-i18n": "^3.3.13",
