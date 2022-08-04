@@ -148,7 +148,6 @@ module.exports = {
     },
 
     plugins: [
-        // require("tailwind-children"),
         require("@tailwindcss/typography"),
         require("@tailwindcss/line-clamp"),
     ],
