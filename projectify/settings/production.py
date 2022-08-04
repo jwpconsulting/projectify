@@ -70,3 +70,24 @@ STRIPE_PUBLISHABLE_KEY = os.environ["STRIPE_PUBLISHABLE_KEY"]
 STRIPE_SECRET_KEY = os.environ["STRIPE_SECRET_KEY"]
 STRIPE_PRICE_OBJECT = os.environ["STRIPE_PRICE_OBJECT"]
 STRIPE_ENDPOINT_SECRET = os.environ["STRIPE_ENDPOINT_SECRET"]
+
+# REDIS
+ssl_context = ssl.SSLContext()
+ssl_context.check_hostname = False
+
+heroku_redis_ssl_host = {
+    "address": os.environ["REDIS_TLS_URL"],
+    "ssl": ssl_context,
+}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.pubsub.RedisPubSubChannelLayer",
+        "CONFIG": {
+            "hosts": [
+                heroku_redis_ssl_host,
+            ],
+            "symmetric_encryption_keys": [SECRET_KEY],
+        },
+    },
+}
