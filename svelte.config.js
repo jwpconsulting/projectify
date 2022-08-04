@@ -20,7 +20,9 @@ const config = {
             fallback: null,
             precompress: false,
         }),
-
+        prerender: {
+            default: true,
+        },
         vite: {
             esbuild: {
                 // drop: ["console", "debugger"],
