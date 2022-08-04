@@ -54,3 +54,9 @@ export type SquovalState = typeof squovalStates[number];
 
 export const avatarV3Sizes = ["small", "medium"] as const;
 export type AvatarV3Size = typeof avatarV3Sizes[number];
+
+export const avatarV5Sizes = ["small", "medium"] as const;
+export type AvatarV5Size = typeof avatarV5Sizes[number];
+export type AvatarV5Content =
+    | { kind: "assign"; users: [User | null, User | null] }
+    | { kind: "multiple"; users: (User | null)[] };
