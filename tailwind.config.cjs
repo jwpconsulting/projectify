@@ -80,7 +80,7 @@ module.exports = {
                 Rampart: ["Roboto", "sans-serif"],
             },
             fontSize: {
-                xxs: "0.625rem",
+                xxs: "10px",
             },
             borderRadius: {
                 "llg": "10px",

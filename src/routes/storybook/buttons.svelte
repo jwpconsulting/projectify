@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { _ } from "svelte-i18n";
     import Button from "$lib/figma/Button.svelte";
     import EllipsisSideNav from "$lib/figma/EllipsisSideNav.svelte";
     import CircleIcon from "$lib/figma/CircleIcon.svelte";
@@ -24,6 +25,7 @@
     import Squoval from "$lib/figma/Squoval.svelte";
     import AvatarWithHover from "$lib/figma/AvatarWithHover.svelte";
     import SelectLabelColor from "$lib/figma/SelectLabelColor.svelte";
+    import Label from "$lib/figma/Label.svelte";
     import { currentStep } from "$lib/stores/onboarding";
     import { Plus } from "@steeze-ui/heroicons";
     import {
@@ -40,9 +42,16 @@
         squovalIcons,
         squovalStates,
     } from "$lib/figma/types";
-    import { labelColors } from "$lib/utils/colors";
     import type { ButtonIcon } from "$lib/figma/types";
-    import { fr, fc, trueFalse, falseTrue, users } from "$lib/storybook";
+    import {
+        fr,
+        fc,
+        trueFalse,
+        falseTrue,
+        users,
+        selectLabels,
+        labels,
+    } from "$lib/storybook";
 
     const buttonTertiares: ButtonIcon[] = [
         { position: "left", icon: Plus },
@@ -241,7 +250,7 @@ Avatar with hover
 </div>
 Select label color
 <div class={fr}>
-    {#each labelColors as color}
+    {#each selectLabels as color}
         <div class={`${fc} items-center`}>
             <div class="capitalize">
                 {color}
@@ -249,6 +258,19 @@ Select label color
             {#each falseTrue as active}
                 <SelectLabelColor {color} {active} />
             {/each}
+        </div>
+    {/each}
+</div>
+Label v2
+<div class={fr}>
+    {#each labels as label}
+        <div class={`${fc} items-center`}>
+            <div class="capitalize">
+                {label.kind === "applyLabel"
+                    ? $_("label.apply-label")
+                    : label.kind}
+            </div>
+            <Label label={label.label} />
         </div>
     {/each}
 </div>

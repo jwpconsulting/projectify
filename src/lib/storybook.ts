@@ -1,4 +1,6 @@
-import type { User } from "$lib/types";
+import type { User, Label } from "$lib/types";
+import { labelColors, getIndexFromLabelColor } from "$lib/utils/colors";
+import type { LabelColor } from "$lib/utils/colors";
 
 export const fr = "flex flex-row flex-wrap gap-2";
 export const fc = "flex flex-col flex-wrap gap-2";
@@ -16,3 +18,21 @@ export const user2: User = {
     profile_picture: undefined,
 };
 export const users = [user1, user2, null];
+
+export const selectLabels = [...labelColors];
+export const labels: (
+    | { kind: "applyLabel"; label: "applyLabel" }
+    | { kind: LabelColor; label: Label }
+)[] = [
+    ...labelColors.map((labelColor: LabelColor) => {
+        return {
+            kind: labelColor,
+            label: {
+                name: "label",
+                color: getIndexFromLabelColor(labelColor),
+                uuid: "",
+            },
+        };
+    }),
+    { kind: "applyLabel", label: "applyLabel" },
+];

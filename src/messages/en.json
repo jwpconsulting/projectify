@@ -1,4 +1,7 @@
 {
+    "label": {
+        "apply-label": "apply label"
+    },
     "dashboard": {
         "dashboard": "dashboard",
         "create-board": "create new board",

@@ -2,6 +2,7 @@ export const labelColorTypes = [
     "bg",
     "bgHover",
     "border",
+    "focusBorder",
     "text",
     "textBg",
     "textHoverBg",
@@ -25,6 +26,14 @@ export function getLabelColorFromIndex(index: number): LabelColor | null {
     }
     return color;
 }
+export function getIndexFromLabelColor(color: LabelColor): number {
+    const index = labelColors.indexOf(color);
+    if (index == -1) {
+        throw new Error("Expected index");
+    }
+    return index;
+}
+
 const colors = {
     bg: {
         orange: "bg-label-orange",
@@ -79,6 +88,15 @@ const colors = {
         yellow: "group-hover:text-label-hover-yellow",
         red: "group-hover:text-label-hover-red",
         green: "group-hover:text-label-hover-green",
+    },
+    focusBorder: {
+        orange: "focus:border-label-text-orange",
+        pink: "focus:border-label-text-pink",
+        blue: "focus:border-label-text-blue",
+        purple: "focus:border-label-text-purple",
+        yellow: "focus:border-label-text-yellow",
+        red: "focus:border-label-text-red",
+        green: "focus:border-label-text-green",
     },
 };
 export function getLabelColorClass(
