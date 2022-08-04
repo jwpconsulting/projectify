@@ -2,7 +2,6 @@ import { browser } from "$app/env";
 import delay from "delay";
 import type { Subscriber } from "svelte/store";
 import { writable } from "svelte/store";
-import { v4 as uuidv4 } from "uuid";
 
 type WSMessage = { message: string; at: number };
 type WSSubscriber = Subscriber<WSMessage | null>;
@@ -18,7 +17,6 @@ export class WSSubscriptionStore {
     socket: WebSocket;
     socketActive = true;
     url: string;
-    uuid: string;
 
     retryingConnection = false;
     public retryTimeStart = 2000;
@@ -32,7 +30,6 @@ export class WSSubscriptionStore {
         this.url = url;
         this.retryTime = this.retryTimeStart;
         this.socket = this.createNewConnection();
-        this.uuid = uuidv4();
         startWatchDog();
         this.debug("constructor");
     }
@@ -126,7 +123,7 @@ export class WSSubscriptionStore {
     }
 
     debug(...arg0: any) {
-        console.debug(this.uuid, this.url, ...arg0);
+        console.debug(this.url, ...arg0);
     }
 }
 
