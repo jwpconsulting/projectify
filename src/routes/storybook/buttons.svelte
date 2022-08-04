@@ -22,6 +22,7 @@
     import SideNavMain from "$lib/figma/SideNavMain.svelte";
     import BoardButton from "$lib/figma/BoardButton.svelte";
     import Squoval from "$lib/figma/Squoval.svelte";
+    import AvatarWithHover from "$lib/figma/AvatarWithHover.svelte";
     import { currentStep } from "$lib/stores/onboarding";
     import { Plus } from "@steeze-ui/heroicons";
     import {
@@ -39,7 +40,7 @@
         squovalStates,
     } from "$lib/figma/types";
     import type { ButtonIcon } from "$lib/figma/types";
-    import { fr, fc, trueFalse, falseTrue } from "$lib/storybook";
+    import { fr, fc, trueFalse, falseTrue, users } from "$lib/storybook";
 
     const buttonTertiares: ButtonIcon[] = [
         { position: "left", icon: Plus },
@@ -221,6 +222,18 @@ Squoval
             {#each squovalStates as state}
                 <Squoval {icon} {state} on:click={console.log} />
             {/each}
+        </div>
+    {/each}
+</div>
+Avatar with hover
+<div class={fr}>
+    {#each users as user}
+        <div class={fc}>
+            {user ? user.email : "No user"}
+            <AvatarWithHover
+                {user}
+                on:click={() => console.log("AvatarWithHover", user)}
+            />
         </div>
     {/each}
 </div>

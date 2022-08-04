@@ -1,4 +1,5 @@
 import type { IconSource } from "@steeze-ui/svelte-icon/types";
+import type { User } from "$lib/types";
 
 export const buttonStyles = ["primary", "secondary", "tertiary"] as const;
 export type ButtonStyle = typeof buttonStyles[number];
@@ -50,3 +51,6 @@ export const squovalIcons = [
 export type SquovalIcon = typeof squovalIcons[number];
 export const squovalStates = ["inactive", "disabled", "active"] as const;
 export type SquovalState = typeof squovalStates[number];
+
+export const avatarV3Sizes = ["small", "medium"] as const;
+export type AvatarV3Size = typeof avatarV3Sizes[number];

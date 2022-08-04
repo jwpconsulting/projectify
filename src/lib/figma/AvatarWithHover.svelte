@@ -13,7 +13,7 @@
 
 <button
     on:click={click}
-    class="rounded-lg border border-transparent p-1.5 hover:bg-secondary-hover focus:border-base-content focus:outline-none"
+    class="flex h-11 w-11 flex-row items-center justify-center rounded-lg border border-transparent hover:bg-secondary-hover focus:border-base-content focus:outline-none"
 >
-    <AvatarV3 {user} />
+    <AvatarV3 {user} size="medium" />
 </button>
