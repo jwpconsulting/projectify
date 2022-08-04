@@ -34,13 +34,10 @@
 <script lang="ts">
     import "../app.scss";
     import "../i18n.js";
-    import { client } from "$lib/graphql/client";
-    import { setClient } from "svelte-apollo";
     import DialogModal from "$lib/components/dialogModal.svelte";
     import DatePickerDropDown from "$lib/components/datePickerDropDown.svelte";
     import ConnectionStatus from "$lib/components/connectionStatus.svelte";
     import GlobalDropDown from "$lib/components/globalDropDown.svelte";
-    setClient(client);
 </script>
 
 <svelte:head>
