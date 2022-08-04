@@ -19,7 +19,11 @@ export const user2: User = {
 };
 export const users = [user1, user2, null];
 
-export const selectLabels = [...labelColors];
+export const selectLabels: ("allLabels" | "noLabel" | LabelColor)[] = [
+    ...labelColors,
+    "allLabels",
+    "noLabel",
+];
 export const labels: (
     | { kind: "applyLabel"; label: "applyLabel" }
     | { kind: LabelColor; label: Label }
