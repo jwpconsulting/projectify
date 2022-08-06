@@ -6,10 +6,14 @@ const commonTheme = {
     "fontFamily": "Roboto, sans-serif",
     "--btn-text-case": "none",
 };
+// Conflicting color name resolutions
+const conflictColors = {
+    "base-TODO": "#FFFFFF",
+};
 // These are the new colors added 2022-08-04
 // Some of them I have marked them as "renamed" in the colors object
 const missingColors = {
-    "base": "#FFFFFF",
+    // "base": "#FFFFFF", // This conflicts with the font size declaration text-base
     "utility": "#64748B",
     "task-default": "#FFFFFF",
     "task-hover": "#F8FAFC",
@@ -94,6 +98,7 @@ const colors = {
     "task-bg-pressed": "#F1F5F9", // unused, but not found in Colors spreadsheet
     "warning": "#F59E0B", // keep
     ...missingColors,
+    ...conflictColors,
 };
 
 module.exports = {

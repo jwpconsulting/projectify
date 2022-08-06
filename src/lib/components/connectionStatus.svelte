@@ -11,7 +11,7 @@
 
 {#if $activeWSSubscriptions != $activeWSConnections || ($online == false && $activeWSSubscriptions > 0)}
     <div
-        class="fixed top-0 left-0 z-50 flex h-full w-full items-center justify-center bg-base bg-opacity-50 p-2 backdrop-blur-sm"
+        class="bg-base fixed top-0 left-0 z-50 flex h-full w-full items-center justify-center bg-opacity-50 p-2 backdrop-blur-sm"
         transition:fade={{ duration: 100 }}
     >
         <div
