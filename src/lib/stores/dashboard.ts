@@ -304,6 +304,20 @@ export const selectedLabels = createMapStore<string, boolean>();
 type WorkspaceUserSelection = WorkspaceUser | null | "unassigned";
 export const selectedWorkspaceUser = writable<WorkspaceUserSelection>(null);
 
+export function selectWorkspaceUser(selection: WorkspaceUserSelection) {
+    selectedWorkspaceUser.update(
+        (currentSelection: WorkspaceUserSelection) => {
+            if (selection === null) {
+                return null;
+            }
+            if (currentSelection === selection) {
+                return null;
+            }
+            return selection;
+        }
+    );
+}
+
 type CurrentFilter = {
     labels: string[];
     workspaceUser: WorkspaceUserSelection;

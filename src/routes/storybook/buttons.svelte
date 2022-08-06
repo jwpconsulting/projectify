@@ -27,6 +27,7 @@
     import SelectLabelColor from "$lib/figma/SelectLabelColor.svelte";
     import Label from "$lib/figma/Label.svelte";
     import FilterUserAvatar from "$lib/figma/FilterUserAvatar.svelte";
+    import UserExpand from "$lib/figma/UserExpand.svelte";
     import { currentStep } from "$lib/stores/onboarding";
     import { Plus } from "@steeze-ui/heroicons";
     import {
@@ -52,8 +53,13 @@
         selectLabels,
         labels,
     } from "$lib/storybook";
+    import { browser } from "$app/env";
+    import { setFirstWorkspace } from "$lib/stores/dashboard";
 
     const onboardingSeats = [5, 10, 15, 20, 25];
+    if (browser) {
+        setFirstWorkspace();
+    }
 </script>
 
 Buttons
@@ -268,3 +274,6 @@ Filter user avatar
         </div>
     {/each}
 </div>
+
+User expand
+<UserExpand />
