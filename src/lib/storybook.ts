@@ -1,11 +1,21 @@
+import { Plus } from "@steeze-ui/heroicons";
 import type { User, Label } from "$lib/types";
 import { labelColors, getIndexFromLabelColor } from "$lib/utils/colors";
 import type { LabelColor } from "$lib/utils/colors";
+import type { ButtonStyle } from "$lib/figma/types";
 
 export const fr = "flex flex-row flex-wrap gap-2";
 export const fc = "flex flex-col flex-wrap gap-2";
 export const trueFalse = [true, false];
 export const falseTrue = [false, true];
+
+export const buttonStyles: ButtonStyle[] = [
+    { kind: "primary" },
+    { kind: "secondary" },
+    { kind: "tertiary", icon: { position: "left", icon: Plus } },
+    { kind: "tertiary", icon: { position: "right", icon: Plus } },
+    { kind: "tertiary", icon: null },
+];
 
 export const user1: User = {
     email: "hello@example.com",

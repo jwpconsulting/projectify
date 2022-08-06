@@ -5,52 +5,27 @@
         ButtonStyle,
         ButtonColor,
         ButtonSize,
-        ButtonIcon,
     } from "$lib/figma/types";
 
     export let style: ButtonStyle;
     export let color: ButtonColor;
     export let size: ButtonSize;
-    export let icon: ButtonIcon;
     export let disabled: boolean;
 
-    $: outerColorStyle = {
-        primary: {
-            blue: "border-transparent focus:border-base-content",
-            red: "border-transparent focus:border-base-content",
-        },
-        secondary: {
-            blue: "border-transparent focus:border-base-content",
-            red: "border-transparent focus:border-base-content",
-        },
-        tertiary: {
-            blue: "border-transparent focus:border-base-content",
-            red: "border-transparent focus:border-base-content",
-        },
-    }[style][color];
     $: innerColorStyle = {
         primary: {
-            blue: "group-disabled:bg-disabled-background group-disabled:text-disabled-text border-transparent bg-primary text-base-100 group-hover:bg-primary-focus group-active:bg-secondary",
-            red: "group-disabled:bg-accent bg-accent border-transparent text-accent-content group-hover:bg-accent-focus group-active:bg-accent",
+            blue: "border-transparent bg-primary text-primary-content group-hover:bg-primary-hover group-active:bg-primary-pressed",
+            red: "bg-destructive border-transparent text-destructive-content group-hover:bg-destructive-hover group-active:bg-destructive-pressed",
         },
         secondary: {
-            blue: "group-disabled:bg-base-100 group-disabled:text-disabled-text group-disabled:border-disabled-text border-primary text-primary group-hover:bg-secondary group-active:bg-secondary-focus group-active:text-primary-content group-focus:bg-primary group-focus:text-primary-content",
-            red: "group-disabled:text-accent-content group-disabled:bg-base-100 group-disabled:border-accent-content text-accent-content border-accent-content group-hover:bg-accent group-active:bg-accent-content group-active:text-secondary-content group-active:border-accent group-focus:border-transparent",
+            blue: "text-secondary-content border-secondary group-hover:bg-secondary-hover group-hover:text-secondary-content-hover group-hover:border-secondary-content-hover group-active:bg-secondary-pressed group-active:border-border-secondary group-active:text-secondary-content-hover group-focus:bg-transparent group-focus:text-secondary-content",
+            red: "text-destructive border-destructive group-hover:bg-destructive-secondary-hover group-hover:text-destructive-hover group-active:bg-destructive-secondary-pressed group-active:text-destructive-pressed group-active:border-destructive",
         },
         tertiary: {
-            blue: "disabled:text-primary border-transparent text-primary hover:text-primary-focus focus:border-base-content",
-            red: "disabled:text-accent-content border-transparent text-accent-content hover:text-accent-content-hover focus:border-base-content",
+            blue: "text-tertiary-content hover:text-tertiary-content-hover active:text-tertiary-content-hover active:bg-tertiary-pressed focus:text-tertiary-content-hover",
+            red: "text-destructive hover:text-destructive-hover active:bg-destructive-secondary-presed active:text-destructive-hover focus:text-destructive-hover",
         },
-    }[style][color];
-    $: tertiaryStyle = {
-        blue: "hover:bg-secondary",
-        red: "",
-    }[color];
-    $: outerSizeStyle = {
-        "medium": "",
-        "small": "",
-        "extra-small": "",
-    }[size];
+    }[style.kind][color];
     $: innerSizeStyle = {
         "medium": "text-base",
         "small": "text-sm",
@@ -63,40 +38,38 @@
     }
 </script>
 
-{#if style === "tertiary"}
-    {#if icon}
-        <button
-            on:click={click}
-            class={`flex flex-row items-center justify-center gap-2 rounded-lg border px-4 py-2 font-bold focus:outline-none ${innerColorStyle} ${innerSizeStyle}`}
-            {disabled}
-        >
-            {#if icon.position === "left"}
-                <Icon src={icon.icon} theme="outline" class="h-5 w-5" />
-            {/if}
-            <slot />
-            {#if icon.position === "right"}
-                <Icon src={icon.icon} theme="outline" class="h-5 w-5" />
-            {/if}
-        </button>
-    {:else}
-        <button
-            on:click={click}
-            class={`flex flex-row items-center justify-center gap-2 rounded-lg border px-4 py-2 font-bold focus:outline-none ${innerColorStyle} ${innerSizeStyle} ${tertiaryStyle}`}
-            {disabled}
-        >
-            <slot />
-        </button>
-    {/if}
+{#if style.kind === "tertiary"}
+    <button
+        on:click={click}
+        class={`flex flex-row items-center justify-center gap-2 rounded-lg border border-transparent border-transparent px-4 py-2 font-bold focus:outline-none disabled:text-disabled-content ${innerColorStyle} focus:border-border-focus ${innerSizeStyle}`}
+        {disabled}
+    >
+        {#if style.icon && style.icon.position === "left"}
+            <Icon src={style.icon.icon} theme="outline" class="h-6 w-6" />
+        {/if}
+        <slot />
+        {#if style.icon && style.icon.position === "right"}
+            <Icon src={style.icon.icon} theme="outline" class="h-6 w-6" />
+        {/if}
+    </button>
 {:else}
     <button
         on:click={click}
-        class={`group flex flex-col items-start gap-2 rounded-llg border p-0.5 focus:outline-none ${outerColorStyle} ${outerSizeStyle}`}
+        class={`group flex flex-col items-start gap-2 rounded-llg border border-transparent p-0.5 focus:border-border-focus focus:outline-none`}
         {disabled}
     >
-        <div
-            class={`flex flex-row items-center justify-center gap-2.5 rounded-lg border px-4  py-2 font-bold ${innerColorStyle} ${innerSizeStyle}`}
-        >
-            <slot />
-        </div>
+        {#if style.kind === "primary"}
+            <div
+                class={`flex flex-row items-center justify-center gap-2.5 rounded-lg border px-4  py-2 font-bold group-disabled:bg-disabled group-disabled:text-disabled-primary-content ${innerColorStyle} ${innerSizeStyle}`}
+            >
+                <slot />
+            </div>
+        {:else}
+            <div
+                class={`flex flex-row items-center justify-center gap-2.5 rounded-lg border px-4  py-2 font-bold group-disabled:border-disabled-content group-disabled:bg-transparent group-disabled:text-disabled-content ${innerColorStyle} ${innerSizeStyle}`}
+            >
+                <slot />
+            </div>
+        {/if}
     </button>
 {/if}

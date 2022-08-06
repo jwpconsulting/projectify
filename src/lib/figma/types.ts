@@ -1,16 +1,16 @@
 import type { IconSource } from "@steeze-ui/svelte-icon/types";
 import type { User } from "$lib/types";
 
-export const buttonStyles = ["primary", "secondary", "tertiary"] as const;
-export type ButtonStyle = typeof buttonStyles[number];
+export type ButtonStyle =
+    | { kind: "primary" }
+    | { kind: "secondary" }
+    | { kind: "tertiary"; icon: { position: "left"; icon: IconSource } }
+    | { kind: "tertiary"; icon: { position: "right"; icon: IconSource } }
+    | { kind: "tertiary"; icon: null };
 export const buttonColors = ["blue", "red"] as const;
 export type ButtonColor = typeof buttonColors[number];
 export const buttonSizes = ["medium", "small", "extra-small"] as const;
 export type ButtonSize = typeof buttonSizes[number];
-export type ButtonIcon =
-    | { position: "left"; icon: IconSource }
-    | { position: "right"; icon: IconSource }
-    | null;
 
 export const circleIconSizes = ["small", "medium"] as const;
 export type CircleIconSize = typeof circleIconSizes[number];

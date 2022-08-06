@@ -29,7 +29,6 @@
     import { currentStep } from "$lib/stores/onboarding";
     import { Plus } from "@steeze-ui/heroicons";
     import {
-        buttonStyles,
         buttonSizes,
         buttonColors,
         circleIconSizes,
@@ -42,22 +41,17 @@
         squovalIcons,
         squovalStates,
     } from "$lib/figma/types";
-    import type { ButtonIcon } from "$lib/figma/types";
     import {
         fr,
         fc,
         trueFalse,
         falseTrue,
+        buttonStyles,
         users,
         selectLabels,
         labels,
     } from "$lib/storybook";
 
-    const buttonTertiares: ButtonIcon[] = [
-        { position: "left", icon: Plus },
-        { position: "right", icon: Plus },
-        null,
-    ];
     const onboardingSeats = [5, 10, 15, 20, 25];
 </script>
 
@@ -66,7 +60,14 @@ Buttons
     {#each buttonStyles as style}
         <div class={fc}>
             <div class="capitalize">
-                {style}
+                {style.kind}
+                {#if style.kind === "tertiary"}
+                    {#if style.icon === null}
+                        no icon
+                    {:else}
+                        icon {style.icon.position}
+                    {/if}
+                {/if}
             </div>
             {#each buttonColors as color}
                 <div class={fc}>
@@ -75,36 +76,17 @@ Buttons
                     </div>
                     {#each buttonSizes as size}
                         <div class={fr}>
-                            {#if style == "tertiary"}
-                                {#each buttonTertiares as icon}
-                                    <div class="capitalize">
-                                        {icon ? icon.position : "no"}
-                                    </div>
-                                    <Button
-                                        on:click={console.log}
-                                        {style}
-                                        {size}
-                                        {color}
-                                        disabled={false}
-                                        {icon}
-                                    >
-                                        Button
-                                    </Button>
-                                {/each}
-                            {:else}
-                                {#each trueFalse as disabled}
-                                    <Button
-                                        on:click={console.log}
-                                        {style}
-                                        {size}
-                                        {color}
-                                        {disabled}
-                                        icon={null}
-                                    >
-                                        {disabled ? "Disabled" : "Button"}
-                                    </Button>
-                                {/each}
-                            {/if}
+                            {#each trueFalse as disabled}
+                                <Button
+                                    on:click={console.log}
+                                    {style}
+                                    {size}
+                                    {color}
+                                    {disabled}
+                                >
+                                    {disabled ? "Disabled" : "Button"}
+                                </Button>
+                            {/each}
                         </div>
                     {/each}
                 </div>
