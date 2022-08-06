@@ -546,3 +546,7 @@ export const userExpandOpen = writable<boolean>(false);
 export function toggleUserExpandOpen() {
     userExpandOpen.update((state) => !state);
 }
+export const labelExpandOpen = writable<boolean>(false);
+export function toggleLabelExpandOpen() {
+    labelExpandOpen.update((state) => !state);
+}

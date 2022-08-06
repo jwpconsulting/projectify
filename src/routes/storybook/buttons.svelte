@@ -29,6 +29,7 @@
     import Label from "$lib/figma/Label.svelte";
     import FilterUserAvatar from "$lib/figma/FilterUserAvatar.svelte";
     import UserExpand from "$lib/figma/UserExpand.svelte";
+    import LabelExpand from "$lib/figma/LabelExpand.svelte";
     import { currentStep } from "$lib/stores/onboarding";
     import { Plus } from "@steeze-ui/heroicons";
     import {
@@ -305,3 +306,6 @@ Filter user avatar
 
 User expand
 <UserExpand />
+
+Label expand
+<LabelExpand />
