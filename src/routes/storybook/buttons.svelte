@@ -26,6 +26,7 @@
     import AvatarWithHover from "$lib/figma/AvatarWithHover.svelte";
     import SelectLabelColor from "$lib/figma/SelectLabelColor.svelte";
     import Label from "$lib/figma/Label.svelte";
+    import FilterUserAvatar from "$lib/figma/FilterUserAvatar.svelte";
     import { currentStep } from "$lib/stores/onboarding";
     import { Plus } from "@steeze-ui/heroicons";
     import {
@@ -253,6 +254,17 @@ Label v2
                     : label.kind}
             </div>
             <Label label={label.label} />
+        </div>
+    {/each}
+</div>
+
+Filter user avatar
+<div class={fc}>
+    {#each users as user}
+        <div class={fr}>
+            {#each falseTrue as active}
+                <FilterUserAvatar {active} {user} />
+            {/each}
         </div>
     {/each}
 </div>
