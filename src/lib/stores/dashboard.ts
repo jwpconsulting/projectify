@@ -23,6 +23,7 @@ import { get } from "svelte/store";
 import {
     getTask,
     getWorkspace,
+    getWorkspaces,
     getWorkspaceBoard,
     getWorkspaceCustomer,
     getArchivedWorkspaceBoards,
@@ -500,4 +501,25 @@ export async function assignUserToTask(
     } catch (error) {
         console.error(error);
     }
+}
+
+export async function setFirstWorkspace() {
+    const workspaces = await getWorkspaces();
+    let workspaceUuid;
+    if (workspaces.length) {
+        workspaceUuid = workspaces[0].uuid;
+        currentWorkspaceUuid.set(workspaceUuid);
+    } else {
+        throw new Error("No workspaces");
+    }
+}
+
+export async function setAndNavigateWorkspaceBoard(uuid: string) {
+    currentWorkspaceBoardUuid.set(uuid);
+    goto(getDashboardWorkspaceBoardUrl(uuid));
+}
+
+export const userExpandOpen = writable<boolean>(false);
+export function toggleUserExpandOpen() {
+    userExpandOpen.update((state) => !state);
 }
