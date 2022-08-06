@@ -84,8 +84,8 @@ const colors = {
     "primary-focus": "#0077FF", // unused, renamed to primary-hover (already in colors)
     "primary-hover": "#1E40AF", // new
     "primary-pressed": "#1E3A8A", // new
-    "secondary": "#DBEAFE", // unused, renamed to secondary-hover (already in colors)
-    "secondary-content": "#FFFFFF", // keep
+    "secondary": "#2563EB", // unused, renamed to secondary-hover (already in colors)
+    "secondary-content": "#2563EB", // keep
     "secondary-content-hover": "#1E40AF", // new
     "secondary-focus": "#93C5FD", // unused, rename to secondary-pressed (already in colors)
     "secondary-hover": "#DBEAFE", // new
