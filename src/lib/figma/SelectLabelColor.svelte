@@ -2,22 +2,29 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Check } from "@steeze-ui/heroicons";
     import { createEventDispatcher } from "svelte";
-    import { getLabelColorClass } from "$lib/utils/colors";
-    import type { LabelColor } from "$lib/utils/colors";
+    import {
+        getLabelColorFromIndex,
+        getLabelColorClass,
+    } from "$lib/utils/colors";
+    import type { SelectLabel } from "$lib/figma/types";
 
-    export let color: LabelColor | "allLabels" | "noLabel";
+    export let label: SelectLabel;
     export let active: boolean;
 
     let outerStyle: string;
     let innerStyle: string;
     $: {
-        if (color == "allLabels") {
+        if (label.kind == "allLabels") {
             outerStyle =
                 "bg-background border-primary hover:bg-secondary-hover text-primary";
-        } else if (color == "noLabel") {
+        } else if (label.kind == "noLabel") {
             outerStyle =
                 "bg-background border-utility hover:bg-border text-utility";
         } else {
+            let color = getLabelColorFromIndex(label.label.color);
+            if (!color) {
+                throw new Error("Expected color");
+            }
             outerStyle = `${getLabelColorClass(
                 "bg",
                 color

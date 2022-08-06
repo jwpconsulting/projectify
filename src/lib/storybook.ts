@@ -2,7 +2,7 @@ import { Plus } from "@steeze-ui/heroicons";
 import type { User, Label } from "$lib/types";
 import { labelColors, getIndexFromLabelColor } from "$lib/utils/colors";
 import type { LabelColor } from "$lib/utils/colors";
-import type { ButtonStyle } from "$lib/figma/types";
+import type { ButtonStyle, LabelLabel, SelectLabel } from "$lib/figma/types";
 
 export const fr = "flex flex-row flex-wrap gap-2";
 export const fc = "flex flex-col flex-wrap gap-2";
@@ -29,24 +29,30 @@ export const user2: User = {
 };
 export const users = [user1, user2, null];
 
-export const selectLabels: ("allLabels" | "noLabel" | LabelColor)[] = [
-    ...labelColors,
-    "allLabels",
-    "noLabel",
-];
-export const labels: (
-    | { kind: "applyLabel"; label: "applyLabel" }
-    | { kind: LabelColor; label: Label }
-)[] = [
-    ...labelColors.map((labelColor: LabelColor) => {
+const mappedLabels: Label[] = labelColors.map((labelColor: LabelColor) => {
+    return {
+        name: labelColor,
+        color: getIndexFromLabelColor(labelColor),
+        uuid: "",
+    };
+});
+
+export const labels: LabelLabel[] = [
+    ...mappedLabels.map((label: Label) => {
         return {
-            kind: labelColor,
-            label: {
-                name: "label",
-                color: getIndexFromLabelColor(labelColor),
-                uuid: "",
-            },
+            kind: "label" as const,
+            label,
         };
     }),
-    { kind: "applyLabel", label: "applyLabel" },
+    { kind: "applyLabel" },
+];
+export const selectLabels: SelectLabel[] = [
+    ...mappedLabels.map((label: Label) => {
+        return {
+            kind: "label" as const,
+            label,
+        };
+    }),
+    { kind: "allLabels" },
+    { kind: "noLabel" },
 ];

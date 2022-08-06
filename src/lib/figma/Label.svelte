@@ -1,18 +1,20 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import { createEventDispatcher } from "svelte";
-    import type { Label } from "$lib/types";
     import type { LabelColor } from "$lib/utils/colors";
     import {
         getLabelColorFromIndex,
         getLabelColorClass,
     } from "$lib/utils/colors";
+    import type { LabelLabel } from "$lib/figma/types";
 
-    export let label: "applyLabel" | Label;
+    export let label: LabelLabel;
 
     let labelColor: LabelColor | null;
     $: labelColor =
-        label === "applyLabel" ? null : getLabelColorFromIndex(label.color);
+        label.kind === "applyLabel"
+            ? null
+            : getLabelColorFromIndex(label.label.color);
 
     let outerBorderStyle: string;
     let innerBorderStyle: string;
@@ -50,6 +52,8 @@
 
 <button class={outerStyle} on:click={click}>
     <div class={innerStyle}>
-        {label === "applyLabel" ? $_("label.apply-label") : label.name}
+        {label.kind === "applyLabel"
+            ? $_("label.apply-label")
+            : label.label.name}
     </div>
 </button>

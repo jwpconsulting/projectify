@@ -239,13 +239,19 @@ Avatar with hover
 </div>
 Select label color
 <div class={fr}>
-    {#each selectLabels as color}
+    {#each selectLabels as label}
         <div class={`${fc} items-center`}>
             <div class="capitalize">
-                {color}
+                {#if label.kind === "allLabels"}
+                    all labels
+                {:else if label.kind === "noLabel"}
+                    no label
+                {:else}
+                    {label.label.name}
+                {/if}
             </div>
             {#each falseTrue as active}
-                <SelectLabelColor {color} {active} />
+                <SelectLabelColor {label} {active} />
             {/each}
         </div>
     {/each}
@@ -259,7 +265,7 @@ Label v2
                     ? $_("label.apply-label")
                     : label.kind}
             </div>
-            <Label label={label.label} />
+            <Label {label} />
         </div>
     {/each}
 </div>

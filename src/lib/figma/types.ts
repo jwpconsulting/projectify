@@ -1,5 +1,5 @@
 import type { IconSource } from "@steeze-ui/svelte-icon/types";
-import type { User } from "$lib/types";
+import type { User, Label } from "$lib/types";
 
 export type ButtonStyle =
     | { kind: "primary" }
@@ -60,3 +60,11 @@ export type AvatarV5Size = typeof avatarV5Sizes[number];
 export type AvatarV5Content =
     | { kind: "assign"; users: [User | null, User | null] }
     | { kind: "multiple"; users: (User | null)[] };
+
+export type LabelLabel =
+    | { kind: "applyLabel" }
+    | { kind: "label"; label: Label };
+export type SelectLabel =
+    | { kind: "allLabels" }
+    | { kind: "noLabel" }
+    | { kind: "label"; label: Label };
