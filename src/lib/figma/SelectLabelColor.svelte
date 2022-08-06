@@ -10,8 +10,10 @@
 
     export let label: SelectLabel;
     export let active: boolean;
+    export let contained: boolean = false;
 
     let outerStyle: string;
+    let outerStyleComputed: string;
     let innerStyle: string;
     $: {
         if (label.kind == "allLabels") {
@@ -33,6 +35,7 @@
                 color
             )} ${getLabelColorClass("text", color)}`;
         }
+        outerStyleComputed = `flex h-6 w-10 flex-row items-center justify-center rounded-2.5xl border border-2 px-2.5 py-0.5 ${outerStyle}`;
     }
 
     const dispatch = createEventDispatcher();
@@ -41,13 +44,20 @@
     }
 </script>
 
-<button
-    on:click={click}
-    class={`flex h-6 w-10 flex-row items-center justify-center rounded-2.5xl border border-2 px-2.5 py-0.5 ${outerStyle}`}
->
-    <Icon
-        src={Check}
-        theme="outline"
-        class={`${active ? "visible" : "invisible"} ${innerStyle}`}
-    />
-</button>
+{#if contained}
+    <div class={outerStyleComputed}>
+        <Icon
+            src={Check}
+            theme="outline"
+            class={`${active ? "visible" : "invisible"} ${innerStyle}`}
+        />
+    </div>
+{:else}
+    <button on:click={click} class={outerStyleComputed}>
+        <Icon
+            src={Check}
+            theme="outline"
+            class={`${active ? "visible" : "invisible"} ${innerStyle}`}
+        />
+    </button>
+{/if}

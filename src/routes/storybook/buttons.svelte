@@ -25,6 +25,7 @@
     import Squoval from "$lib/figma/Squoval.svelte";
     import AvatarWithHover from "$lib/figma/AvatarWithHover.svelte";
     import SelectLabelColor from "$lib/figma/SelectLabelColor.svelte";
+    import SelectLabelFocus from "$lib/figma/SelectLabelFocus.svelte";
     import Label from "$lib/figma/Label.svelte";
     import FilterUserAvatar from "$lib/figma/FilterUserAvatar.svelte";
     import UserExpand from "$lib/figma/UserExpand.svelte";
@@ -256,6 +257,27 @@ Select label color
         </div>
     {/each}
 </div>
+
+Select label focus
+<div class={fr}>
+    {#each selectLabels as label}
+        <div class={`${fc} items-center`}>
+            <div class="capitalize">
+                {#if label.kind === "allLabels"}
+                    all labels
+                {:else if label.kind === "noLabel"}
+                    no label
+                {:else}
+                    {label.label.name}
+                {/if}
+            </div>
+            {#each falseTrue as active}
+                <SelectLabelFocus {label} {active} />
+            {/each}
+        </div>
+    {/each}
+</div>
+
 Label v2
 <div class={fr}>
     {#each labels as label}
