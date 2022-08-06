@@ -8,7 +8,7 @@
     import FilterLabel from "$lib/components/FilterLabel.svelte";
     import Fuse from "fuse.js";
     import { fuseSearchThreshold } from "$lib/stores/dashboard";
-    import { selectedLabels } from "$lib/stores/dashboard";
+    import { selectedLabels, selectLabel } from "$lib/stores/dashboard";
 
     let open = true;
 
@@ -24,14 +24,6 @@
                 ? defaultLabels
                 : search(defaultLabels, searchInput);
     }
-    let allSelected: boolean;
-    let noneSelected: boolean;
-    $: {
-        if (defaultLabels.length > 0) {
-            allSelected = $selectedLabels.size === defaultLabels.length;
-            noneSelected = $selectedLabels.size === 0;
-        }
-    }
 
     function search(labels: Label[], searchInput: string) {
         const searchEngine = new Fuse(labels, {
@@ -41,28 +33,6 @@
         });
         const result = searchEngine.search(searchInput);
         return result.map((res: Fuse.FuseResult<Label>) => res.item);
-    }
-
-    function selectLabel(label: Label | "all" | "none") {
-        console.log(label);
-        if (label === "all") {
-            if (allSelected) {
-                selectedLabels.clear();
-            } else {
-                labels.forEach((label) => {
-                    selectedLabels.set(label.uuid, true);
-                });
-            }
-        } else if (label === "none") {
-            selectedLabels.clear();
-        } else {
-            const isSelected = $selectedLabels.get(label.uuid) === true;
-            if (isSelected) {
-                selectedLabels.del(label.uuid);
-            } else {
-                selectedLabels.set(label.uuid, true);
-            }
-        }
     }
 </script>
 
@@ -81,21 +51,24 @@
         {#if searchInput === ""}
             <FilterLabel
                 label={"all"}
-                selected={allSelected}
-                onSelect={() => selectLabel("all")}
+                selected={$selectedLabels.kind === "allLabels"}
+                onSelect={() => selectLabel({ kind: "allLabels" })}
                 editable={false}
             />
             <FilterLabel
                 label={"none"}
-                selected={noneSelected}
-                onSelect={() => selectLabel("none")}
+                selected={$selectedLabels.kind === "noLabel"}
+                onSelect={() => selectLabel({ kind: "noLabel" })}
             />
         {/if}
         {#each labels as label (label.uuid)}
             <FilterLabel
                 {label}
-                selected={$selectedLabels.get(label.uuid) === true}
-                onSelect={() => selectLabel(label)}
+                selected={$selectedLabels.kind === "labels"
+                    ? $selectedLabels.labelUuids.has(label.uuid)
+                    : false}
+                onSelect={() =>
+                    selectLabel({ kind: "label", labelUuid: label.uuid })}
                 editable={true}
             />
         {/each}

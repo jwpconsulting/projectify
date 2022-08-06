@@ -17,6 +17,8 @@ import type {
     Workspace,
     WorkspaceBoard,
     WorkspaceUser,
+    LabelSelection,
+    LabelSelectionInput,
 } from "$lib/types";
 import { getDashboardWorkspaceBoardUrl, getDashboardTaskUrl } from "$lib/urls";
 import { get } from "svelte/store";
@@ -276,31 +278,7 @@ export const currentWorkspaceLabels = derived<
     []
 );
 
-function createMapStore<K, V>() {
-    const store = writable(new Map<K, V>());
-    const set = (k: K, v: V) => {
-        store.update((map) => {
-            map.set(k, v);
-            return map;
-        });
-    };
-    const clear = () => {
-        store.update((map) => {
-            map.clear();
-            return map;
-        });
-    };
-    const del = (k: K) => {
-        store.update((map) => {
-            map.delete(k);
-            return map;
-        });
-    };
-    const subscribe = store.subscribe;
-    return { subscribe, set, clear, del };
-}
-
-export const selectedLabels = createMapStore<string, boolean>();
+export const selectedLabels = writable<LabelSelection>({ kind: "allLabels" });
 type WorkspaceUserSelection = WorkspaceUser | null | "unassigned";
 export const selectedWorkspaceUser = writable<WorkspaceUserSelection>(null);
 
@@ -317,9 +295,39 @@ export function selectWorkspaceUser(selection: WorkspaceUserSelection) {
         }
     );
 }
+export function selectLabel(selection: LabelSelectionInput) {
+    selectedLabels.update((selectedLabels) => {
+        if (selection.kind == "label") {
+            if (selectedLabels.kind === "labels") {
+                if (selectedLabels.labelUuids.has(selection.labelUuid)) {
+                    selectedLabels.labelUuids.delete(selection.labelUuid);
+                    if (selectedLabels.labelUuids.size === 0) {
+                        return { kind: "allLabels" };
+                    }
+                } else {
+                    selectedLabels.labelUuids.add(selection.labelUuid);
+                }
+                return selectedLabels;
+            } else {
+                return {
+                    kind: "labels",
+                    labelUuids: new Set([selection.labelUuid]),
+                };
+            }
+        } else if (selection.kind == "noLabel") {
+            if (selectedLabels.kind === "noLabel") {
+                return { kind: "allLabels" };
+            } else {
+                return { kind: "noLabel" };
+            }
+        } else {
+            return { kind: "allLabels" };
+        }
+    });
+}
 
 type CurrentFilter = {
-    labels: string[];
+    labels: LabelSelection;
     workspaceUser: WorkspaceUserSelection;
     workspaceBoardSections: WorkspaceBoardSection[];
 };
@@ -344,10 +352,9 @@ export const currentWorkspaceBoardSections = derived<
         if (!workspaceBoardSections) {
             return;
         }
-        const labels = [...$selectedLabels.keys()];
         set(
             filterSectionsTasks({
-                labels,
+                labels: $selectedLabels,
                 workspaceUser: $selectedWorkspaceUser,
                 workspaceBoardSections,
             })
@@ -361,15 +368,17 @@ export function filterSectionsTasks(
 ): WorkspaceBoardSection[] {
     let sections: WorkspaceBoardSection[] =
         currentFilter.workspaceBoardSections;
-    if (currentFilter.labels.length) {
-        const labels = currentFilter.labels;
+    if (currentFilter.labels.kind === "noLabel") {
+    } else if (currentFilter.labels.kind === "allLabels") {
+    } else {
+        const labelUuids = [...currentFilter.labels.labelUuids.keys()];
 
         sections = sections.map((section) => {
             const sectionTasks = section.tasks ? section.tasks : [];
             const tasks = sectionTasks.filter((task: Task) => {
                 return (
                     task.labels.findIndex((l: Label) =>
-                        labels.find((labelUuid) => l.uuid === labelUuid)
+                        labelUuids.find((labelUuid) => l.uuid === labelUuid)
                             ? true
                             : false
                     ) >= 0
@@ -410,7 +419,7 @@ export function filterSectionsTasks(
 export const taskSearchInput = writable<string>("");
 // Clear on workspace board change
 currentWorkspaceBoardUuid.subscribe((_uuid) => {
-    selectedLabels.clear();
+    selectedLabels.set({ kind: "allLabels" });
     selectedWorkspaceUser.set(null);
     taskSearchInput.set("");
 });

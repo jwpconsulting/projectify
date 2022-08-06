@@ -151,3 +151,13 @@ export type Color = {
     br: boolean;
     style: string;
 };
+
+export type LabelSelectionInput =
+    | { kind: "noLabel" }
+    | { kind: "allLabels" }
+    | { kind: "label"; labelUuid: string };
+
+export type LabelSelection =
+    | { kind: "noLabel" }
+    | { kind: "allLabels" }
+    | { kind: "labels"; labelUuids: Set<string> };
