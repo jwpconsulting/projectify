@@ -26,6 +26,7 @@
         "ellipsis": DotsHorizontal,
     }[icon];
     export let state: SquovalState;
+    export let active: boolean = false;
 
     const dispatch = createEventDispatcher();
     function click() {
@@ -35,11 +36,16 @@
 
 <button
     on:click={click}
-    class="focus:base-content h-8 w-8 rounded-lg border border-transparent p-1 focus:border-base-content focus:outline-none active:text-display enabled:hover:bg-secondary-hover enabled:active:bg-primary"
+    class="focus:base-content relative h-8 w-8 rounded-lg border border-transparent p-1 focus:border-base-content focus:outline-none active:text-display enabled:hover:bg-secondary-hover enabled:active:bg-primary"
     class:text-base-content={state === "active"}
     class:invisible={state === "inactive"}
     class:text-secondary-text={state === "disabled"}
     disabled={state !== "active"}
 >
+    {#if active}
+        <div
+            class="-2 border-base absolute top-1 left-5 h-2 w-2 rounded-full border bg-primary"
+        />
+    {/if}
     <Icon {src} theme="outline" />
 </button>
