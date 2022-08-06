@@ -115,6 +115,7 @@ module.exports = {
             },
             borderRadius: {
                 "llg": "10px",
+                "1.5xl": "14px",
                 "2.5xl": "20px",
             },
             boxShadow: {
