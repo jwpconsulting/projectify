@@ -23,7 +23,9 @@ Avatar V3
         </div>
         <div class={fr}>
             {#each users as user}
-                <AvatarV3 {user} {size} />
+                <div class="group">
+                    <AvatarV3 {user} {size} />
+                </div>
             {/each}
         </div>
     {/each}

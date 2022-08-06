@@ -4,6 +4,7 @@
 
     export let content: AvatarV5Content;
     export let size: AvatarV5Size;
+    export let hoverableParent: boolean = false;
 
     const zIndices = new Map<number, string>([
         [0, "z-[110]"],
@@ -19,11 +20,15 @@
         [10, "z-10"],
         [11, "z-0"],
     ]);
-    $: assignStyle = size === "small" ? "w-9 h-9" : "w-12 h-12";
+    $: assignStyle = {
+        small: "w-9 h-9",
+        medium: "w-12 h-12",
+        hoverable: "w-12 h-12 group-hover:w-12 h-12",
+    }[size];
 </script>
 
 {#if content.kind === "assign"}
-    <div class={`relative ${assignStyle}`}>
+    <div class={`relative ${assignStyle}`} class:group={!hoverableParent}>
         <div class="absolute left-1/3 bottom-1/3">
             <AvatarV3 user={content.users[1]} {size} />
         </div>
@@ -32,12 +37,26 @@
         </div>
     </div>
 {:else}
-    <div class="flex flex-row" class:p-0.5={size === "medium"}>
+    <div
+        class="flex flex-row"
+        class:p-0.5={size === "medium"}
+        class:group={!hoverableParent}
+    >
         {#each content.users as user, inx}
             <div
-                class:w-3={size === "small" && inx < content.users.length - 1}
-                class:w-4={size === "medium" && inx < content.users.length - 1}
-                class={`${zIndices.get(inx)}`}
+                class={`${zIndices.get(inx)} ${
+                    size === "small" && inx < content.users.length - 1
+                        ? "w-3"
+                        : ""
+                } ${
+                    size === "medium" && inx < content.users.length - 1
+                        ? "w-4"
+                        : ""
+                } ${
+                    size === "hoverable" && inx < content.users.length - 1
+                        ? "w-3 group-hover:w-4"
+                        : ""
+                }`}
             >
                 <AvatarV3 {user} {size} />
             </div>
