@@ -161,3 +161,12 @@ export type LabelSelection =
     | { kind: "noLabel" }
     | { kind: "allLabels" }
     | { kind: "labels"; labelUuids: Set<string> };
+
+export type WorkspaceUserSelectionInput =
+    | { kind: "workspaceUser"; workspaceUser: WorkspaceUser }
+    | { kind: "allWorkspaceUsers" }
+    | { kind: "unassigned" };
+export type WorkspaceUserSelection =
+    | { kind: "workspaceUser"; workspaceUserUuid: string }
+    | { kind: "allWorkspaceUsers" }
+    | { kind: "unassigned" };

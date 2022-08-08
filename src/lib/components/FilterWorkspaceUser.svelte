@@ -1,59 +1,52 @@
 <script lang="ts">
-    import type { WorkspaceUser } from "$lib/types";
-    import { selectedWorkspaceUser } from "$lib/stores/dashboard";
+    import type {
+        WorkspaceUser,
+        WorkspaceUserSelectionInput,
+    } from "$lib/types";
+    import {
+        selectedWorkspaceUser,
+        selectWorkspaceUser,
+    } from "$lib/stores/dashboard";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Check } from "@steeze-ui/heroicons";
     import WorkspaceUserAvatar from "$lib/components/WorkspaceUserAvatar.svelte";
     import { _ } from "svelte-i18n";
 
-    export let workspaceUser: WorkspaceUser | "unassigned";
+    export let workspaceUser: WorkspaceUserSelectionInput;
     let isSelected: boolean;
 
     $: {
-        if (!$selectedWorkspaceUser) {
-            isSelected = false;
-        } else if ($selectedWorkspaceUser === "unassigned") {
-            if (workspaceUser === "unassigned") {
-                isSelected = true;
+        if ($selectedWorkspaceUser.kind === workspaceUser.kind) {
+            if (
+                $selectedWorkspaceUser.kind === "workspaceUser" &&
+                workspaceUser.kind === "workspaceUser"
+            ) {
+                isSelected =
+                    $selectedWorkspaceUser.workspaceUserUuid ===
+                    workspaceUser.workspaceUser.uuid;
             } else {
-                isSelected = false;
+                isSelected = true;
             }
         } else {
-            if (workspaceUser === "unassigned") {
-                isSelected = false;
-            } else if ($selectedWorkspaceUser.uuid === workspaceUser.uuid) {
-                isSelected = true;
-            } else {
-                isSelected = false;
-            }
+            isSelected = false;
         }
     }
 
-    function selectWorkspaceUser() {
-        if (workspaceUser === "unassigned") {
-            if ($selectedWorkspaceUser === "unassigned") {
-                $selectedWorkspaceUser = null;
-            } else {
-                $selectedWorkspaceUser = "unassigned";
-            }
+    let selection: WorkspaceUser | "unassigned" | "assign";
+    $: {
+        if (workspaceUser.kind === "unassigned") {
+            selection = "unassigned";
+        } else if (workspaceUser.kind === "allWorkspaceUsers") {
+            selection = "assign";
         } else {
-            if (
-                $selectedWorkspaceUser === null ||
-                $selectedWorkspaceUser === "unassigned"
-            ) {
-                $selectedWorkspaceUser = workspaceUser;
-            } else if ($selectedWorkspaceUser.uuid === workspaceUser.uuid) {
-                $selectedWorkspaceUser = null;
-            } else {
-                $selectedWorkspaceUser = workspaceUser;
-            }
+            selection = workspaceUser.workspaceUser;
         }
     }
 </script>
 
 <button
     class="group flex flex-row justify-between px-5 py-2 hover:bg-base-200"
-    on:click={selectWorkspaceUser}
+    on:click={() => selectWorkspaceUser(workspaceUser)}
 >
     <div class="flex flex-row items-center gap-2">
         <div class="flex flex-row p-0.5">
@@ -77,13 +70,15 @@
             <div
                 class="flex flex h-6 w-6 flex-row items-center justify-center"
             >
-                <WorkspaceUserAvatar {workspaceUser} size={20} />
+                <WorkspaceUserAvatar workspaceUser={selection} size={20} />
             </div>
             <div class="text-regular text-xs capitalize">
-                {#if workspaceUser === "unassigned"}
+                {#if selection === "unassigned"}
                     {$_("filter-workspace-user.assigned-nobody")}
+                {:else if selection === "assign"}
+                    {$_("filter-workspace-user.assign")}
                 {:else}
-                    {workspaceUser.user.full_name || workspaceUser.user.email}
+                    {selection.user.full_name || selection.user.email}
                 {/if}
             </div>
         </div>

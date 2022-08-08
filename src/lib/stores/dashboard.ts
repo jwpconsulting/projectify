@@ -16,9 +16,10 @@ import type {
     WorkspaceBoardSection,
     Workspace,
     WorkspaceBoard,
-    WorkspaceUser,
     LabelSelection,
     LabelSelectionInput,
+    WorkspaceUserSelectionInput,
+    WorkspaceUserSelection,
 } from "$lib/types";
 import { getDashboardWorkspaceBoardUrl, getDashboardTaskUrl } from "$lib/urls";
 import { get } from "svelte/store";
@@ -279,19 +280,35 @@ export const currentWorkspaceLabels = derived<
 );
 
 export const selectedLabels = writable<LabelSelection>({ kind: "allLabels" });
-type WorkspaceUserSelection = WorkspaceUser | null | "unassigned";
-export const selectedWorkspaceUser = writable<WorkspaceUserSelection>(null);
+export const selectedWorkspaceUser = writable<WorkspaceUserSelection>({
+    kind: "allWorkspaceUsers",
+});
 
-export function selectWorkspaceUser(selection: WorkspaceUserSelection) {
+export function selectWorkspaceUser(selection: WorkspaceUserSelectionInput) {
     selectedWorkspaceUser.update(
         (currentSelection: WorkspaceUserSelection) => {
-            if (selection === null) {
-                return null;
+            if (selection.kind === "allWorkspaceUsers") {
+                return { kind: "allWorkspaceUsers" };
+            } else if (selection.kind === "unassigned") {
+                if (currentSelection.kind === "unassigned") {
+                    return { kind: "allWorkspaceUsers" };
+                } else {
+                    return { kind: "unassigned" };
+                }
+            } else {
+                if (
+                    currentSelection.kind === "workspaceUser" &&
+                    currentSelection.workspaceUserUuid ===
+                        selection.workspaceUser.uuid
+                ) {
+                    return { kind: "allWorkspaceUsers" };
+                } else {
+                    return {
+                        kind: "workspaceUser",
+                        workspaceUserUuid: selection.workspaceUser.uuid,
+                    };
+                }
             }
-            if (currentSelection === selection) {
-                return null;
-            }
-            return selection;
         }
     );
 }
@@ -392,16 +409,17 @@ export function filterSectionsTasks(
         });
     }
 
-    const workspaceUser = currentFilter.workspaceUser;
-    if (workspaceUser) {
+    const workspaceUserSelection = currentFilter.workspaceUser;
+    if (workspaceUserSelection.kind !== "allWorkspaceUsers") {
         sections = sections.map((section) => {
             const sectionTasks = section.tasks ? section.tasks : [];
             const tasks = sectionTasks.filter((task: Task) => {
-                if (workspaceUser === "unassigned") {
+                if (workspaceUserSelection.kind === "unassigned") {
                     return !task.assignee;
                 } else {
                     return (
-                        task.assignee?.user.email === workspaceUser.user.email
+                        task.assignee?.uuid ===
+                        workspaceUserSelection.workspaceUserUuid
                     );
                 }
             });
@@ -420,7 +438,7 @@ export const taskSearchInput = writable<string>("");
 // Clear on workspace board change
 currentWorkspaceBoardUuid.subscribe((_uuid) => {
     selectedLabels.set({ kind: "allLabels" });
-    selectedWorkspaceUser.set(null);
+    selectedWorkspaceUser.set({ kind: "allWorkspaceUsers" });
     taskSearchInput.set("");
 });
 export const currentSearchedTasks = derived<

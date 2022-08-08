@@ -46,9 +46,14 @@
         />
     </div>
     <div class="flex flex-col">
-        <FilterWorkspaceUser workspaceUser={"unassigned"} />
+        <FilterWorkspaceUser workspaceUser={{ kind: "unassigned" }} />
         {#each workspaceUsers as workspaceUser (workspaceUser.uuid)}
-            <FilterWorkspaceUser {workspaceUser} />
+            <FilterWorkspaceUser
+                workspaceUser={{
+                    kind: "workspaceUser",
+                    workspaceUser: workspaceUser,
+                }}
+            />
         {/each}
     </div>
 {/if}

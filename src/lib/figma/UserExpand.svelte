@@ -8,11 +8,6 @@
         userExpandOpen,
         toggleUserExpandOpen,
     } from "$lib/stores/dashboard";
-
-    let active: boolean;
-    $: {
-        active = $selectedWorkspaceUser !== null;
-    }
 </script>
 
 <div class="flex flex-col items-center gap-6">
@@ -20,25 +15,28 @@
         state="active"
         icon="member"
         on:click={toggleUserExpandOpen}
-        {active}
+        active={$selectedWorkspaceUser.kind === "workspaceUser"}
     />
     {#if $userExpandOpen}
         <div class="flex flex-col items-center gap-2">
             <FilterUserAvatar
                 user={null}
-                active={$selectedWorkspaceUser === "unassigned"}
-                on:click={() => selectWorkspaceUser("unassigned")}
+                active={$selectedWorkspaceUser.kind === "unassigned"}
+                on:click={() => selectWorkspaceUser({ kind: "unassigned" })}
             />
             {#if $currentWorkspace && $currentWorkspace.workspace_users}
                 {#each $currentWorkspace.workspace_users as workspaceUser}
                     <FilterUserAvatar
                         user={workspaceUser.user}
-                        active={$selectedWorkspaceUser !== "unassigned" &&
-                        $selectedWorkspaceUser !== null
-                            ? $selectedWorkspaceUser.uuid ===
-                              workspaceUser.uuid
-                            : false}
-                        on:click={() => selectWorkspaceUser(workspaceUser)}
+                        active={$selectedWorkspaceUser.kind ===
+                            "workspaceUser" &&
+                            $selectedWorkspaceUser.workspaceUserUuid ===
+                                workspaceUser.uuid}
+                        on:click={() =>
+                            selectWorkspaceUser({
+                                kind: "workspaceUser",
+                                workspaceUser,
+                            })}
                     />
                 {/each}
             {/if}
