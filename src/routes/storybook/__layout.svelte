@@ -8,6 +8,10 @@
             title: "Buttons",
             href: "/storybook/buttons",
         },
+        {
+            title: "Dropdown",
+            href: "/storybook/dropdown",
+        },
     ];
 </script>
 
