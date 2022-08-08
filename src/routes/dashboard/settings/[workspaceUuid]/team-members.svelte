@@ -28,6 +28,7 @@
         currentWorkspace,
         currentCustomer,
     } from "$lib/stores/dashboard";
+    import type { Input } from "$lib/types";
 
     let workspaceUsers: WorkspaceUser[] = [];
 
@@ -56,19 +57,15 @@
             return;
         }
 
-        try {
-            await client.mutate({
-                mutation: Mutation_AddUserToWorkspace,
-                variables: {
-                    input: {
-                        uuid: $currentWorkspace.uuid,
-                        email: modalRes.outputs.email,
-                    },
+        await client.mutate({
+            mutation: Mutation_AddUserToWorkspace,
+            variables: {
+                input: {
+                    uuid: $currentWorkspace.uuid,
+                    email: modalRes.outputs.email,
                 },
-            });
-        } catch (error) {
-            console.error(error);
-        }
+            },
+        });
     }
     async function onRemoveUser(workspaceUser: WorkspaceUser) {
         let modalRes = await getModal("removeTeamMemberFromWorkspace").open();
@@ -81,19 +78,15 @@
             return;
         }
 
-        try {
-            await client.mutate({
-                mutation: Mutation_RemoveUserFromWorkspace,
-                variables: {
-                    input: {
-                        uuid: $currentWorkspace.uuid,
-                        email: workspaceUser.user.email,
-                    },
+        await client.mutate({
+            mutation: Mutation_RemoveUserFromWorkspace,
+            variables: {
+                input: {
+                    uuid: $currentWorkspace.uuid,
+                    email: workspaceUser.user.email,
                 },
-            });
-        } catch (error) {
-            console.error(error);
-        }
+            },
+        });
     }
 
     async function onEditUser(workspaceUser: WorkspaceUser) {
@@ -107,21 +100,17 @@
             return;
         }
 
-        try {
-            await client.mutate({
-                mutation: Mutation_UpdateWorkspaceUser,
-                variables: {
-                    input: {
-                        workspaceUuid: $currentWorkspace.uuid,
-                        email: modalRes.outputs.email,
-                        role: modalRes.outputs.role,
-                        jobTitle: modalRes.outputs.job_title || "",
-                    },
+        await client.mutate({
+            mutation: Mutation_UpdateWorkspaceUser,
+            variables: {
+                input: {
+                    workspaceUuid: $currentWorkspace.uuid,
+                    email: modalRes.outputs.email,
+                    role: modalRes.outputs.role,
+                    jobTitle: modalRes.outputs.job_title || "",
                 },
-            });
-        } catch (error) {
-            console.error(error);
-        }
+            },
+        });
     }
 
     let roleFilter: string | null = null;
@@ -179,6 +168,55 @@
         } else {
             throw new Error("Expected dropDown && filterRoleButton");
         }
+    }
+
+    let editTeamMemberInputs: Input[];
+    $: {
+        editTeamMemberInputs = [
+            {
+                name: "user.full_name",
+                label: $_("name-0"),
+                readonly: true,
+                validation: { required: false },
+            },
+            {
+                name: "user.email",
+                label: $_("email-0"),
+                readonly: true,
+                validation: { required: true },
+            },
+            {
+                name: "job_title",
+                label: $_("job-title"),
+                validation: { required: false },
+            },
+            {
+                name: "role",
+                label: $_("permissions"),
+                type: "select",
+                placeholder: $_("selecat-a-permission"),
+                selectOptions: workspaceUserRoles.map((role) => ({
+                    label: $_(role),
+                    value: role,
+                })),
+                validation: {
+                    required: true,
+                },
+            },
+        ];
+    }
+    let inviteTeamMemberInputs: Input[];
+    $: {
+        inviteTeamMemberInputs = [
+            {
+                name: "email",
+                label: $_("email"),
+                validation: {
+                    required: true,
+                },
+                placeholder: $_("please-enter-a-email-of-team-member"),
+            },
+        ];
     }
 </script>
 
@@ -263,22 +301,12 @@
         </a>
     </div>
 </div>
-
 <DialogModal id="inviteTeamMemberToWorkspace">
     {#if $currentCustomer?.seats_remaining}
         <ConfirmModalContent
             title={$_("invite-team-member")}
             confirmLabel={$_("send")}
-            inputs={[
-                {
-                    name: "email",
-                    label: $_("email"),
-                    validation: {
-                        required: true,
-                    },
-                    placeholder: $_("please-enter-a-email-of-team-member"),
-                },
-            ]}
+            inputs={inviteTeamMemberInputs}
         >
             <div class="text-center text-xs">
                 {$_("you-have-seats-seats-left-in-your-plan", {
@@ -319,42 +347,10 @@
         {"Ed"}
     </ConfirmModalContent>
 </DialogModal>
-
 <DialogModal id="editTeamMember">
     <ConfirmModalContent
         title={$_("edit-team-member")}
         confirmLabel={$_("Save")}
-        inputs={[
-            {
-                name: "user.full_name",
-                label: $_("name-0"),
-                readonly: true,
-                validation: { required: false },
-            },
-            {
-                name: "user.email",
-                label: $_("email-0"),
-                readonly: true,
-                validation: { required: true },
-            },
-            {
-                name: "job_title",
-                label: $_("job-title"),
-                validation: { required: false },
-            },
-            {
-                name: "role",
-                label: $_("permissions"),
-                type: "select",
-                placeholder: $_("selecat-a-permission"),
-                selectOptions: workspaceUserRoles.map((role) => ({
-                    label: $_(role),
-                    value: role,
-                })),
-                validation: {
-                    required: true,
-                },
-            },
-        ]}
+        inputs={editTeamMemberInputs}
     />
 </DialogModal>
