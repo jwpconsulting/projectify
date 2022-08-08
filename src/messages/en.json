@@ -25,6 +25,9 @@
         "edit-board": "edit board",
         "archive-board": "archive board"
     },
+    "workspace-menu": {
+        "workspace": "workspace"
+    },
     "404": "404",
     "home": "Home",
     "signout": "Signout",
