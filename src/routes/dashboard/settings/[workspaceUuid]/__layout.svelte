@@ -8,7 +8,12 @@
     import type { TabItem } from "$lib/components/types";
     import { _ } from "svelte-i18n";
     import Loading from "$lib/components/loading.svelte";
-    import { currentWorkspaceUuid, loading } from "$lib/stores/dashboard";
+    import {
+        currentWorkspace,
+        currentWorkspaceUuid,
+        loading,
+    } from "$lib/stores/dashboard";
+    import { getSettingsUrl } from "$lib/urls";
 
     let activeTabId: string;
     $: {
@@ -22,23 +27,28 @@
     }
     let items: TabItem[] = [];
     $: {
-        items = [
-            {
-                label: $_("settings.general"),
-                id: "general",
-                url: `/dashboard/settings/${$currentWorkspaceUuid}`,
-            },
-            {
-                label: $_("settings.labels"),
-                id: "labels",
-                url: `/dashboard/settings/${$currentWorkspaceUuid}/labels`,
-            },
-            {
-                label: $_("settings.team-members"),
-                id: "team-members",
-                url: `/dashboard/settings/${$currentWorkspaceUuid}/team-members`,
-            },
-        ];
+        if ($currentWorkspace) {
+            items = [
+                {
+                    label: $_("settings.general"),
+                    id: "general",
+                    url: getSettingsUrl($currentWorkspace.uuid, "index"),
+                },
+                {
+                    label: $_("settings.labels"),
+                    id: "labels",
+                    url: getSettingsUrl($currentWorkspace.uuid, "labels"),
+                },
+                {
+                    label: $_("settings.team-members"),
+                    id: "team-members",
+                    url: getSettingsUrl(
+                        $currentWorkspace.uuid,
+                        "team-members"
+                    ),
+                },
+            ];
+        }
         const activeTab = items.find((item) => item.url == $page.url.pathname);
         if (activeTab) {
             activeTabId = activeTab.id;

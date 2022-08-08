@@ -13,3 +13,18 @@ export function getDashboardTaskUrl(
 ) {
     return `/dashboard/workspace-board/${workspaceBoardUuid}?task=${taskUuid}&view=${view}`;
 }
+
+export function getSettingsUrl(
+    workspaceUuid: string,
+    kind: "index" | "labels" | "team-members"
+) {
+    const root = `/dashboard/settings/${workspaceUuid}`;
+    if (kind === "index") {
+        return root;
+    }
+    return `${root}/${kind}`;
+}
+
+export function getArchiveUrl(workspaceUuid: string) {
+    return `/dashboard/archive/${workspaceUuid}`;
+}
