@@ -31,6 +31,11 @@
         "small": "text-sm",
         "extra-small": "text-xs",
     }[size];
+    $: iconSizeStyle = {
+        "medium": "h-6 w-6",
+        "small": "h-5 w-5",
+        "extra-small": "h-4 w-4",
+    }[size];
 
     const dispatch = createEventDispatcher();
     function click() {
@@ -45,11 +50,19 @@
         {disabled}
     >
         {#if style.icon && style.icon.position === "left"}
-            <Icon src={style.icon.icon} theme="outline" class="h-6 w-6" />
+            <Icon
+                src={style.icon.icon}
+                theme="outline"
+                class={iconSizeStyle}
+            />
         {/if}
         <slot />
         {#if style.icon && style.icon.position === "right"}
-            <Icon src={style.icon.icon} theme="outline" class="h-6 w-6" />
+            <Icon
+                src={style.icon.icon}
+                theme="outline"
+                class={iconSizeStyle}
+            />
         {/if}
     </button>
 {:else}
