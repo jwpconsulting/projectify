@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import SideNavMenuCategory from "./SideNavMenuCategory.svelte";
+    import SideNavMenuCategoryFocus from "$lib/figma/SideNavMenuCategoryFocus.svelte";
     import { Tag } from "@steeze-ui/heroicons";
     import type { Label } from "$lib/types";
     import { currentWorkspace } from "$lib/stores/dashboard";
@@ -34,9 +34,19 @@
         const result = searchEngine.search(searchInput);
         return result.map((res: Fuse.FuseResult<Label>) => res.item);
     }
+
+    function toggleOpen() {
+        open = !open;
+    }
 </script>
 
-<SideNavMenuCategory label={$_("dashboard.labels")} icon={Tag} bind:open />
+<SideNavMenuCategoryFocus
+    label={$_("dashboard.labels")}
+    icon={Tag}
+    on:click={toggleOpen}
+    {open}
+    filtered={$selectedLabels.kind !== "allLabels"}
+/>
 {#if open}
     <div class="flex flex-col px-4 pt-2 pb-4">
         <div class="p-2 text-xs font-bold capitalize">

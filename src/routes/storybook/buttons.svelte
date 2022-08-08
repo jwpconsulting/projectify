@@ -30,8 +30,10 @@
     import FilterUserAvatar from "$lib/figma/FilterUserAvatar.svelte";
     import UserExpand from "$lib/figma/UserExpand.svelte";
     import LabelExpand from "$lib/figma/LabelExpand.svelte";
+    import SideNavMenuCategory from "$lib/figma/SideNavMenuCategory.svelte";
+    import SideNavMenuCategoryFocus from "$lib/figma/SideNavMenuCategoryFocus.svelte";
     import { currentStep } from "$lib/stores/onboarding";
-    import { Plus } from "@steeze-ui/heroicons";
+    import { Plus, Folder } from "@steeze-ui/heroicons";
     import {
         buttonSizes,
         buttonColors,
@@ -309,3 +311,40 @@ User expand
 
 Label expand
 <LabelExpand />
+
+Side nav menu category
+<div class={fc}>
+    {#each falseTrue as open}
+        <div class={fr}>
+            {#each falseTrue as filtered}
+                <div class="w-56">
+                    <SideNavMenuCategory
+                        label="boards"
+                        {open}
+                        {filtered}
+                        icon={Folder}
+                        contained={false}
+                    />
+                </div>
+            {/each}
+        </div>
+    {/each}
+</div>
+
+Side nav menu category focus
+<div class={fc}>
+    {#each falseTrue as open}
+        <div class={fr}>
+            {#each falseTrue as filtered}
+                <div class="w-56">
+                    <SideNavMenuCategoryFocus
+                        label="boards"
+                        {open}
+                        {filtered}
+                        icon={Folder}
+                    />
+                </div>
+            {/each}
+        </div>
+    {/each}
+</div>

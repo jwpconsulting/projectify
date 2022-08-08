@@ -1,12 +1,15 @@
 <script lang="ts">
     import { User } from "@steeze-ui/heroicons";
     import { _ } from "svelte-i18n";
-    import SideNavMenuCategory from "./SideNavMenuCategory.svelte";
+    import SideNavMenuCategoryFocus from "$lib/figma/SideNavMenuCategoryFocus.svelte";
     import { currentWorkspace } from "$lib/stores/dashboard";
     import SearchField from "$lib/components/SearchField.svelte";
     import type { WorkspaceUser } from "$lib/types";
     import Fuse from "fuse.js";
-    import { fuseSearchThreshold } from "$lib/stores/dashboard";
+    import {
+        selectedWorkspaceUser,
+        fuseSearchThreshold,
+    } from "$lib/stores/dashboard";
     import FilterWorkspaceUser from "$lib/components/FilterWorkspaceUser.svelte";
 
     let open = true;
@@ -32,9 +35,19 @@
         const result = searchEngine.search(searchInput);
         return result.map((res: Fuse.FuseResult<WorkspaceUser>) => res.item);
     }
+
+    function toggleOpen() {
+        open = !open;
+    }
 </script>
 
-<SideNavMenuCategory label={$_("dashboard.members")} icon={User} bind:open />
+<SideNavMenuCategoryFocus
+    label={$_("dashboard.members")}
+    icon={User}
+    {open}
+    on:click={toggleOpen}
+    filtered={$selectedWorkspaceUser.kind !== "allWorkspaceUsers"}
+/>
 {#if open}
     <div class="flex flex-col px-4 pt-2 pb-4">
         <div class="color-base-content p-2 text-xs font-bold capitalize">

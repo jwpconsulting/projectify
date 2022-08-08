@@ -11,7 +11,7 @@
     import Loading from "$lib/components/loading.svelte";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Plus, Folder } from "@steeze-ui/heroicons";
-    import SideNavMenuCategory from "./SideNavMenuCategory.svelte";
+    import SideNavMenuCategoryFocus from "$lib/figma/SideNavMenuCategoryFocus.svelte";
     import SelectBoard from "$lib/components/SelectBoard.svelte";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
@@ -43,9 +43,19 @@
         }
         goto(getDashboardWorkspaceBoardUrl($currentWorkspaceBoardUuid));
     }
+
+    function toggleOpen() {
+        open = !open;
+    }
 </script>
 
-<SideNavMenuCategory label={$_("dashboard.boards")} icon={Folder} bind:open />
+<SideNavMenuCategoryFocus
+    label={$_("dashboard.boards")}
+    icon={Folder}
+    {open}
+    on:click={toggleOpen}
+    filtered={false}
+/>
 {#if open}
     <div class="flex flex-col">
         {#if $currentWorkspace && $currentWorkspace.workspace_boards}
