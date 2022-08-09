@@ -279,6 +279,33 @@ export const currentWorkspaceLabels = derived<
     []
 );
 
+export const labelSearch = writable<string>("");
+export const workspaceUserSearch = writable<string>("");
+
+function searchLabels(labels: Label[], searchInput: string): Label[] {
+    if (searchInput === "") {
+        return labels;
+    }
+    const searchEngine = new Fuse(labels, {
+        keys: ["name"],
+        threshold: fuseSearchThreshold,
+        shouldSort: false,
+    });
+    const result = searchEngine.search(searchInput);
+    return result.map((res: Fuse.FuseResult<Label>) => res.item);
+}
+
+export const labelSearchResults = derived<
+    [typeof currentWorkspaceLabels, typeof labelSearch],
+    Label[]
+>(
+    [currentWorkspaceLabels, labelSearch],
+    ([$currentWorkspaceLabels, $labelSearch], set) => {
+        set(searchLabels($currentWorkspaceLabels, $labelSearch));
+    },
+    []
+);
+
 export const selectedLabels = writable<LabelSelection>({ kind: "allLabels" });
 export const selectedWorkspaceUser = writable<WorkspaceUserSelection>({
     kind: "allWorkspaceUsers",
