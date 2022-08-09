@@ -34,6 +34,7 @@
     import SideNavMenuCategoryFocus from "$lib/figma/SideNavMenuCategoryFocus.svelte";
     import FilterUser from "$lib/figma/FilterUser.svelte";
     import SelectBoard from "$lib/figma/SelectBoard.svelte";
+    import FilterLabel from "$lib/figma/FilterLabel.svelte";
     import { currentStep } from "$lib/stores/onboarding";
     import { Plus, Folder } from "@steeze-ui/heroicons";
     import {
@@ -279,7 +280,7 @@ Select label focus
                 {/if}
             </div>
             {#each falseTrue as active}
-                <SelectLabelFocus {label} {active} />
+                <SelectLabelFocus {label} {active} contained={false} />
             {/each}
         </div>
     {/each}
@@ -373,4 +374,17 @@ Filter user
 Select board
 <div class="w-96">
     <SelectBoard {workspaceBoard} />
+</div>
+
+Filter label
+<div class={fc}>
+    {#each selectLabels as label}
+        <div class={fr}>
+            {#each falseTrue as selected}
+                <div class="w-48">
+                    <FilterLabel {label} {selected} />
+                </div>
+            {/each}
+        </div>
+    {/each}
 </div>

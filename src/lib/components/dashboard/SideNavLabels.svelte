@@ -5,7 +5,7 @@
     import type { Label } from "$lib/types";
     import { currentWorkspace } from "$lib/stores/dashboard";
     import SearchField from "$lib/components/SearchField.svelte";
-    import FilterLabel from "$lib/components/FilterLabel.svelte";
+    import FilterLabel from "$lib/figma/FilterLabel.svelte";
     import Fuse from "fuse.js";
     import { fuseSearchThreshold } from "$lib/stores/dashboard";
     import { selectedLabels, selectLabel } from "$lib/stores/dashboard";
@@ -60,26 +60,24 @@
     <div class="flex flex-col">
         {#if searchInput === ""}
             <FilterLabel
-                label={"all"}
+                label={{ kind: "allLabels" }}
                 selected={$selectedLabels.kind === "allLabels"}
-                onSelect={() => selectLabel({ kind: "allLabels" })}
-                editable={false}
+                on:click={() => selectLabel({ kind: "allLabels" })}
             />
             <FilterLabel
-                label={"none"}
+                label={{ kind: "noLabel" }}
                 selected={$selectedLabels.kind === "noLabel"}
-                onSelect={() => selectLabel({ kind: "noLabel" })}
+                on:click={() => selectLabel({ kind: "noLabel" })}
             />
         {/if}
         {#each labels as label (label.uuid)}
             <FilterLabel
-                {label}
+                label={{ kind: "label", label }}
                 selected={$selectedLabels.kind === "labels"
                     ? $selectedLabels.labelUuids.has(label.uuid)
                     : false}
-                onSelect={() =>
+                on:click={() =>
                     selectLabel({ kind: "label", labelUuid: label.uuid })}
-                editable={true}
             />
         {/each}
     </div>

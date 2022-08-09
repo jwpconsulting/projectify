@@ -5,6 +5,11 @@
 
     export let label: SelectLabel;
     export let active: boolean;
+    export let contained: boolean;
+
+    $: containedStyle = contained
+        ? ""
+        : "focus:border-base-content focus:outline-none";
 
     const dispatch = createEventDispatcher();
     function click() {
@@ -12,9 +17,11 @@
     }
 </script>
 
-<button
-    on:click={click}
-    class="rounded-1.5xl border border-transparent focus:border-base-content focus:outline-none"
+<svelte:element
+    this={contained ? "div" : "button"}
+    on:click={contained ? undefined : click}
+    class={`rounded-1.5xl border border-transparent ${containedStyle}`}
+    class:group={!contained}
 >
     <SelectLabelColor {label} {active} contained={true} />
-</button>
+</svelte:element>

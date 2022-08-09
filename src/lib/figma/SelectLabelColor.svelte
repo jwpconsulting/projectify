@@ -18,10 +18,10 @@
     $: {
         if (label.kind == "allLabels") {
             outerStyle =
-                "bg-background border-primary hover:bg-secondary-hover text-primary";
+                "bg-background border-primary group-hover:bg-secondary-hover hover:bg-secondary-hover text-primary";
         } else if (label.kind == "noLabel") {
             outerStyle =
-                "bg-background border-utility hover:bg-border text-utility";
+                "bg-background border-utility group-hover:bg-border hover:bg-border text-utility";
         } else {
             let color = getLabelColorFromIndex(label.label.color);
             if (!color) {
@@ -44,20 +44,14 @@
     }
 </script>
 
-{#if contained}
-    <div class={outerStyleComputed}>
-        <Icon
-            src={Check}
-            theme="outline"
-            class={`${active ? "visible" : "invisible"} ${innerStyle}`}
-        />
-    </div>
-{:else}
-    <button on:click={click} class={outerStyleComputed}>
-        <Icon
-            src={Check}
-            theme="outline"
-            class={`${active ? "visible" : "invisible"} ${innerStyle}`}
-        />
-    </button>
-{/if}
+<svelte:element
+    this={contained ? "div" : "button"}
+    on:click={contained ? undefined : click}
+    class={outerStyleComputed}
+>
+    <Icon
+        src={Check}
+        theme="outline"
+        class={`${active ? "visible" : "invisible"} ${innerStyle}`}
+    />
+</svelte:element>
