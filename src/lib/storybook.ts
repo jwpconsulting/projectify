@@ -4,6 +4,7 @@ import type {
     Label,
     WorkspaceUser,
     WorkspaceUserSelectionInput,
+    WorkspaceBoard,
 } from "$lib/types";
 import { labelColors, getIndexFromLabelColor } from "$lib/utils/colors";
 import type { LabelColor } from "$lib/utils/colors";
@@ -74,3 +75,10 @@ export const workspaceUserSelectionInputs: WorkspaceUserSelectionInput[] = [
     { kind: "allWorkspaceUsers" },
     { kind: "workspaceUser", workspaceUser },
 ];
+
+export const workspaceBoard: WorkspaceBoard = {
+    uuid: "does-not-exist",
+    title: "Project board",
+    created: "",
+    modified: "",
+};

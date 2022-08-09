@@ -9,10 +9,16 @@
         ChevronDown,
         X,
     } from "@steeze-ui/heroicons";
+    import { createEventDispatcher } from "svelte";
 
     export let size: CircleIconSize;
     export let icon: CircleIconIcon;
     export let disabled: boolean;
+
+    const dispatch = createEventDispatcher();
+    function click() {
+        dispatch("click");
+    }
 
     $: iconMapped = {
         ellipsis: DotsHorizontal,
@@ -29,6 +35,7 @@
 </script>
 
 <button
+    on:click|stopPropagation={click}
     class={`${sizeMapped} rounded-full border border-transparent text-base-content hover:bg-secondary focus:border-base-content focus:bg-base-100 focus:outline-none active:bg-disabled-background disabled:bg-transparent disabled:text-transparent`}
     {disabled}
 >

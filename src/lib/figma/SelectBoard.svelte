@@ -2,8 +2,9 @@
     import { _ } from "svelte-i18n";
     import type { WorkspaceBoard } from "$lib/types";
     import { Icon } from "@steeze-ui/svelte-icon";
-    import { Folder, DotsHorizontal } from "@steeze-ui/heroicons";
+    import { Folder } from "@steeze-ui/heroicons";
     import { getModal } from "$lib/components/dialogModal.svelte";
+    import CircleIcon from "$lib/figma/CircleIcon.svelte";
     import {
         Mutation_UpdateWorkspaceBoard,
         Mutation_ArchiveWorkspaceBoard,
@@ -30,8 +31,6 @@
         if (!modalRes) {
             return;
         }
-        console.log(modalRes);
-        console.log(modalRes.outputs.title);
 
         await client.mutate({
             mutation: Mutation_UpdateWorkspaceBoard,
@@ -104,13 +103,21 @@
             },
         });
     }
+
+    function selectBoard() {
+        if (workspaceBoard.uuid === $currentWorkspaceBoardUuid) {
+            console.log("Already here");
+        } else {
+            goto(getDashboardWorkspaceBoardUrl(workspaceBoard.uuid));
+        }
+    }
 </script>
 
-<div class="group flex flex-row justify-between py-2 px-4 hover:bg-base-200">
-    <a
-        class="flex flex-row items-center gap-2"
-        href={getDashboardWorkspaceBoardUrl(workspaceBoard.uuid)}
-    >
+<button
+    class="group flex w-full flex-row justify-between py-2 px-4 hover:bg-base-200"
+    on:click={selectBoard}
+>
+    <div class="flex flex-row items-center gap-2">
         <div
             class={`rounded-md p-1 ${
                 workspaceBoard.uuid === $currentWorkspaceBoardUuid
@@ -130,17 +137,14 @@
         </div>
         <span class="nowrap-ellipsis text-xs font-bold capitalize"
             >{workspaceBoard.title}</span
-        ></a
-    >
-    <button
-        class="flex h-6 w-6 flex-row p-1"
-        on:click={toggleMenu}
-        bind:this={buttonRef}
-    >
-        <Icon
-            src={DotsHorizontal}
-            theme="outline"
-            class="h-4 w-4 text-base-100 group-hover:text-base-content"
+        >
+    </div>
+    <div class="invisible group-hover:visible" bind:this={buttonRef}>
+        <CircleIcon
+            size="small"
+            icon="ellipsis"
+            disabled={false}
+            on:click={toggleMenu}
         />
-    </button>
-</div>
+    </div>
+</button>

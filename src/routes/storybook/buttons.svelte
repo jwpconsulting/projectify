@@ -33,6 +33,7 @@
     import SideNavMenuCategory from "$lib/figma/SideNavMenuCategory.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/SideNavMenuCategoryFocus.svelte";
     import FilterUser from "$lib/figma/FilterUser.svelte";
+    import SelectBoard from "$lib/figma/SelectBoard.svelte";
     import { currentStep } from "$lib/stores/onboarding";
     import { Plus, Folder } from "@steeze-ui/heroicons";
     import {
@@ -58,6 +59,7 @@
         selectLabels,
         labels,
         workspaceUserSelectionInputs,
+        workspaceBoard,
     } from "$lib/storybook";
     import { browser } from "$app/env";
     import { setFirstWorkspace } from "$lib/stores/dashboard";
@@ -366,4 +368,9 @@ Filter user
             {/each}
         </div>
     {/each}
+</div>
+
+Select board
+<div class="w-96">
+    <SelectBoard {workspaceBoard} />
 </div>
