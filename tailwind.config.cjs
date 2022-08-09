@@ -8,6 +8,7 @@ const commonTheme = {
 };
 // Conflicting color name resolutions
 const conflictColors = {
+    "foreground": "#FFFFFF",
     "base-TODO": "#FFFFFF",
 };
 // These are the new colors added 2022-08-04
