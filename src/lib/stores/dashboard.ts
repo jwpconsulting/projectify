@@ -15,6 +15,7 @@ import type {
     Task,
     WorkspaceBoardSection,
     Workspace,
+    WorkspaceUser,
     WorkspaceBoard,
     LabelSelection,
     LabelSelectionInput,
@@ -279,6 +280,24 @@ export const currentWorkspaceLabels = derived<
     []
 );
 
+export const currentWorkspaceUsers = derived<
+    [typeof currentWorkspace],
+    WorkspaceUser[]
+>(
+    [currentWorkspace],
+    ([$currentWorkspace], set) => {
+        if (!$currentWorkspace) {
+            set([]);
+            return;
+        }
+        if (!$currentWorkspace.workspace_users) {
+            throw new Error("Expected $currentWorkspace.workspace_users");
+        }
+        set($currentWorkspace.workspace_users);
+    },
+    []
+);
+
 export const labelSearch = writable<string>("");
 export const workspaceUserSearch = writable<string>("");
 
@@ -302,6 +321,35 @@ export const labelSearchResults = derived<
     [currentWorkspaceLabels, labelSearch],
     ([$currentWorkspaceLabels, $labelSearch], set) => {
         set(searchLabels($currentWorkspaceLabels, $labelSearch));
+    },
+    []
+);
+
+function searchWorkspaceUsers(
+    workspaceUsers: WorkspaceUser[],
+    searchInput: string
+) {
+    if (searchInput === "") {
+        return workspaceUsers;
+    }
+    const searchEngine = new Fuse(workspaceUsers, {
+        keys: ["user.email", "user.full_name"],
+        threshold: fuseSearchThreshold,
+        shouldSort: false,
+    });
+    const result = searchEngine.search(searchInput);
+    return result.map((res: Fuse.FuseResult<WorkspaceUser>) => res.item);
+}
+
+export const workspaceUserSearchResults = derived<
+    [typeof currentWorkspaceUsers, typeof workspaceUserSearch],
+    WorkspaceUser[]
+>(
+    [currentWorkspaceUsers, workspaceUserSearch],
+    ([$currentWorkspaceUsers, $workspaceUserSearch], set) => {
+        set(
+            searchWorkspaceUsers($currentWorkspaceUsers, $workspaceUserSearch)
+        );
     },
     []
 );

@@ -3,43 +3,19 @@
     import { _ } from "svelte-i18n";
     import SideNavMenuCategoryFocus from "$lib/figma/SideNavMenuCategoryFocus.svelte";
     import {
-        currentWorkspace,
         selectWorkspaceUser,
         deselectWorkspaceUser,
     } from "$lib/stores/dashboard";
     import SearchField from "$lib/components/SearchField.svelte";
-    import type { WorkspaceUser } from "$lib/types";
-    import Fuse from "fuse.js";
     import {
         selectedWorkspaceUser,
-        fuseSearchThreshold,
         tasksPerUser,
+        workspaceUserSearch,
+        workspaceUserSearchResults,
     } from "$lib/stores/dashboard";
     import FilterUser from "$lib/figma/FilterUser.svelte";
 
     let open = true;
-    let searchInput = "";
-
-    let workspaceUsers: WorkspaceUser[] = [];
-    $: {
-        const defaultWorkspaceUsers = $currentWorkspace
-            ? $currentWorkspace.workspace_users || []
-            : [];
-        workspaceUsers =
-            searchInput === ""
-                ? defaultWorkspaceUsers
-                : search(defaultWorkspaceUsers, searchInput);
-    }
-
-    function search(workspaceUsers: WorkspaceUser[], searchInput: string) {
-        const searchEngine = new Fuse(workspaceUsers, {
-            keys: ["user.email", "user.full_name"],
-            threshold: fuseSearchThreshold,
-            shouldSort: false,
-        });
-        const result = searchEngine.search(searchInput);
-        return result.map((res: Fuse.FuseResult<WorkspaceUser>) => res.item);
-    }
 
     function toggleOpen() {
         open = !open;
@@ -59,7 +35,7 @@
             {$_("dashboard.filter-members")}
         </div>
         <SearchField
-            bind:searchInput
+            bind:searchInput={$workspaceUserSearch}
             placeholder={$_("dashboard.member-name")}
         />
     </div>
@@ -71,7 +47,7 @@
             on:select={() => selectWorkspaceUser({ kind: "unassigned" })}
             on:deselect={() => deselectWorkspaceUser({ kind: "unassigned" })}
         />
-        {#each workspaceUsers as workspaceUser (workspaceUser.uuid)}
+        {#each $workspaceUserSearchResults as workspaceUser (workspaceUser.uuid)}
             <FilterUser
                 workspaceUserSelectionInput={{
                     kind: "workspaceUser",
