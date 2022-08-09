@@ -17,7 +17,12 @@
 
     const dispatch = createEventDispatcher();
     function click() {
-        dispatch("click");
+        active = !active;
+        if (active) {
+            dispatch("select");
+        } else {
+            dispatch("deselect");
+        }
     }
 </script>
 

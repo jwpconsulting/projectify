@@ -296,17 +296,42 @@ export function selectWorkspaceUser(selection: WorkspaceUserSelectionInput) {
                     return { kind: "unassigned" };
                 }
             } else {
-                if (
-                    currentSelection.kind === "workspaceUser" &&
-                    currentSelection.workspaceUserUuid ===
-                        selection.workspaceUser.uuid
-                ) {
+                const selectionUuid = selection.workspaceUser.uuid;
+                if (currentSelection.kind === "workspaceUsers") {
+                    currentSelection.workspaceUserUuids.add(selectionUuid);
+                    return currentSelection;
+                } else {
+                    const workspaceUserUuids = new Set<string>();
+                    workspaceUserUuids.add(selectionUuid);
+                    return { kind: "workspaceUsers", workspaceUserUuids };
+                }
+            }
+        }
+    );
+}
+
+export function deselectWorkspaceUser(selection: WorkspaceUserSelectionInput) {
+    selectedWorkspaceUser.update(
+        (currentSelection: WorkspaceUserSelection) => {
+            if (selection.kind === "allWorkspaceUsers") {
+                return { kind: "allWorkspaceUsers" };
+            } else if (selection.kind === "unassigned") {
+                if (currentSelection.kind === "unassigned") {
                     return { kind: "allWorkspaceUsers" };
                 } else {
-                    return {
-                        kind: "workspaceUser",
-                        workspaceUserUuid: selection.workspaceUser.uuid,
-                    };
+                    return { kind: "unassigned" };
+                }
+            } else {
+                const selectionUuid = selection.workspaceUser.uuid;
+                if (currentSelection.kind === "workspaceUsers") {
+                    currentSelection.workspaceUserUuids.delete(selectionUuid);
+                    if (currentSelection.workspaceUserUuids.size === 0) {
+                        return { kind: "allWorkspaceUsers" };
+                    } else {
+                        return currentSelection;
+                    }
+                } else {
+                    return { kind: "allWorkspaceUsers" };
                 }
             }
         }
@@ -454,10 +479,11 @@ export function filterSectionsTasks(
                 if (workspaceUserSelection.kind === "unassigned") {
                     return !task.assignee;
                 } else {
-                    return (
-                        task.assignee?.uuid ===
-                        workspaceUserSelection.workspaceUserUuid
-                    );
+                    return task.assignee
+                        ? workspaceUserSelection.workspaceUserUuids.has(
+                              task.assignee.uuid
+                          )
+                        : false;
                 }
             });
 

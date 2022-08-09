@@ -2,15 +2,20 @@
     import { User } from "@steeze-ui/heroicons";
     import { _ } from "svelte-i18n";
     import SideNavMenuCategoryFocus from "$lib/figma/SideNavMenuCategoryFocus.svelte";
-    import { currentWorkspace } from "$lib/stores/dashboard";
+    import {
+        currentWorkspace,
+        selectWorkspaceUser,
+        deselectWorkspaceUser,
+    } from "$lib/stores/dashboard";
     import SearchField from "$lib/components/SearchField.svelte";
     import type { WorkspaceUser } from "$lib/types";
     import Fuse from "fuse.js";
     import {
         selectedWorkspaceUser,
         fuseSearchThreshold,
+        tasksPerUser,
     } from "$lib/stores/dashboard";
-    import FilterWorkspaceUser from "$lib/components/FilterWorkspaceUser.svelte";
+    import FilterUser from "$lib/figma/FilterUser.svelte";
 
     let open = true;
     let searchInput = "";
@@ -59,13 +64,35 @@
         />
     </div>
     <div class="flex flex-col">
-        <FilterWorkspaceUser workspaceUser={{ kind: "unassigned" }} />
+        <FilterUser
+            workspaceUserSelectionInput={{ kind: "unassigned" }}
+            active={$selectedWorkspaceUser.kind === "unassigned"}
+            count={$tasksPerUser.unassigned}
+            on:select={() => selectWorkspaceUser({ kind: "unassigned" })}
+            on:deselect={() => deselectWorkspaceUser({ kind: "unassigned" })}
+        />
         {#each workspaceUsers as workspaceUser (workspaceUser.uuid)}
-            <FilterWorkspaceUser
-                workspaceUser={{
+            <FilterUser
+                workspaceUserSelectionInput={{
                     kind: "workspaceUser",
                     workspaceUser: workspaceUser,
                 }}
+                active={$selectedWorkspaceUser.kind === "workspaceUsers"
+                    ? $selectedWorkspaceUser.workspaceUserUuids.has(
+                          workspaceUser.uuid
+                      )
+                    : false}
+                count={$tasksPerUser.assigned.get(workspaceUser.uuid) || null}
+                on:select={() =>
+                    selectWorkspaceUser({
+                        kind: "workspaceUser",
+                        workspaceUser,
+                    })}
+                on:deselect={() =>
+                    deselectWorkspaceUser({
+                        kind: "workspaceUser",
+                        workspaceUser,
+                    })}
             />
         {/each}
     </div>

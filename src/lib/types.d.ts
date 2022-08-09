@@ -167,6 +167,6 @@ export type WorkspaceUserSelectionInput =
     | { kind: "allWorkspaceUsers" }
     | { kind: "unassigned" };
 export type WorkspaceUserSelection =
-    | { kind: "workspaceUser"; workspaceUserUuid: string }
+    | { kind: "workspaceUsers"; workspaceUserUuids: Set<string> }
     | { kind: "allWorkspaceUsers" }
     | { kind: "unassigned" };

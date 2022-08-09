@@ -1,5 +1,10 @@
 import { Plus } from "@steeze-ui/heroicons";
-import type { User, Label } from "$lib/types";
+import type {
+    User,
+    Label,
+    WorkspaceUser,
+    WorkspaceUserSelectionInput,
+} from "$lib/types";
 import { labelColors, getIndexFromLabelColor } from "$lib/utils/colors";
 import type { LabelColor } from "$lib/utils/colors";
 import type { ButtonStyle, LabelLabel, SelectLabel } from "$lib/figma/types";
@@ -55,4 +60,17 @@ export const selectLabels: SelectLabel[] = [
     }),
     { kind: "allLabels" },
     { kind: "noLabel" },
+];
+
+const workspaceUser: WorkspaceUser = {
+    user: user1,
+    uuid: "helloWorld",
+    role: "OWNER",
+    created: "",
+    modified: "",
+};
+export const workspaceUserSelectionInputs: WorkspaceUserSelectionInput[] = [
+    { kind: "unassigned" },
+    { kind: "allWorkspaceUsers" },
+    { kind: "workspaceUser", workspaceUser },
 ];

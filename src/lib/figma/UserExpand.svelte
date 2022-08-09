@@ -5,6 +5,7 @@
         currentWorkspace,
         selectedWorkspaceUser,
         selectWorkspaceUser,
+        deselectWorkspaceUser,
         userExpandOpen,
         toggleUserExpandOpen,
     } from "$lib/stores/dashboard";
@@ -15,25 +16,33 @@
         state="active"
         icon="member"
         on:click={toggleUserExpandOpen}
-        active={$selectedWorkspaceUser.kind === "workspaceUser"}
+        active={$selectedWorkspaceUser.kind === "workspaceUsers"}
     />
     {#if $userExpandOpen}
         <div class="flex flex-col items-center gap-2">
             <FilterUserAvatar
                 user={null}
                 active={$selectedWorkspaceUser.kind === "unassigned"}
-                on:click={() => selectWorkspaceUser({ kind: "unassigned" })}
+                on:select={() => selectWorkspaceUser({ kind: "unassigned" })}
+                on:deselect={() =>
+                    deselectWorkspaceUser({ kind: "unassigned" })}
             />
             {#if $currentWorkspace && $currentWorkspace.workspace_users}
                 {#each $currentWorkspace.workspace_users as workspaceUser}
                     <FilterUserAvatar
                         user={workspaceUser.user}
                         active={$selectedWorkspaceUser.kind ===
-                            "workspaceUser" &&
-                            $selectedWorkspaceUser.workspaceUserUuid ===
-                                workspaceUser.uuid}
-                        on:click={() =>
+                            "workspaceUsers" &&
+                            $selectedWorkspaceUser.workspaceUserUuids.has(
+                                workspaceUser.uuid
+                            )}
+                        on:select={() =>
                             selectWorkspaceUser({
+                                kind: "workspaceUser",
+                                workspaceUser,
+                            })}
+                        on:deselect={() =>
+                            deselectWorkspaceUser({
                                 kind: "workspaceUser",
                                 workspaceUser,
                             })}

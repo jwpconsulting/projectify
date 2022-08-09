@@ -32,6 +32,7 @@
     import LabelExpand from "$lib/figma/LabelExpand.svelte";
     import SideNavMenuCategory from "$lib/figma/SideNavMenuCategory.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/SideNavMenuCategoryFocus.svelte";
+    import FilterUser from "$lib/figma/FilterUser.svelte";
     import { currentStep } from "$lib/stores/onboarding";
     import { Plus, Folder } from "@steeze-ui/heroicons";
     import {
@@ -56,6 +57,7 @@
         users,
         selectLabels,
         labels,
+        workspaceUserSelectionInputs,
     } from "$lib/storybook";
     import { browser } from "$app/env";
     import { setFirstWorkspace } from "$lib/stores/dashboard";
@@ -342,6 +344,23 @@ Side nav menu category focus
                         {open}
                         {filtered}
                         icon={Folder}
+                    />
+                </div>
+            {/each}
+        </div>
+    {/each}
+</div>
+
+Filter user
+<div class={fc}>
+    {#each workspaceUserSelectionInputs as workspaceUserSelectionInput}
+        <div class={fr}>
+            {#each falseTrue as active}
+                <div class="w-96">
+                    <FilterUser
+                        {workspaceUserSelectionInput}
+                        {active}
+                        count={125}
                     />
                 </div>
             {/each}

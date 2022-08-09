@@ -19,6 +19,7 @@
         "none": "none"
     },
     "filter-workspace-user": {
+        "all-users": "all users",
         "assigned-nobody": "assigned to nobody"
     },
     "select-board": {
