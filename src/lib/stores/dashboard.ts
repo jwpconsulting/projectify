@@ -380,6 +380,43 @@ export const currentWorkspaceBoardSections = derived<
     []
 );
 
+type TasksPerUser = { unassigned: number; assigned: Map<string, number> };
+export const tasksPerUser = derived<
+    [typeof currentWorkspaceBoardSections],
+    TasksPerUser
+>(
+    [currentWorkspaceBoardSections],
+    ([$currentWorkspaceBoardSections], set) => {
+        const userCounts = new Map<string, number>();
+        let unassignedCounts = 0;
+        $currentWorkspaceBoardSections.forEach((section) => {
+            if (!section.tasks) {
+                return;
+            }
+            section.tasks.forEach((task) => {
+                if (task.assignee) {
+                    const uuid = task.assignee.uuid;
+                    const count = userCounts.get(uuid);
+                    if (count) {
+                        userCounts.set(uuid, count + 1);
+                    } else {
+                        userCounts.set(uuid, 1);
+                    }
+                } else {
+                    unassignedCounts = unassignedCounts + 1;
+                }
+            });
+        });
+        const counts: TasksPerUser = {
+            unassigned: unassignedCounts,
+            assigned: userCounts,
+        };
+        console.log(counts);
+        set(counts);
+    },
+    { unassigned: 0, assigned: new Map<string, number>() }
+);
+
 export function filterSectionsTasks(
     currentFilter: CurrentFilter
 ): WorkspaceBoardSection[] {
