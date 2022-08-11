@@ -24,13 +24,13 @@ class TestWorkspaceManager:
         factory.WorkspaceFactory(add_users=[other_user])
         assert list(models.Workspace.objects.get_for_user(user)) == [workspace]
 
-    def test_get_for_user_and_uuid(self, workspace_user, workspace, user):
+    def test_filter_for_user_and_uuid(self, workspace_user, workspace, user):
         """Test getting workspace for user and uuid."""
         assert (
-            models.Workspace.objects.get_for_user_and_uuid(
+            models.Workspace.objects.filter_for_user_and_uuid(
                 user,
                 workspace.uuid,
-            )
+            ).first()
             == workspace
         )
 
@@ -272,7 +272,7 @@ class TestWorkspaceBoardManager:
         )
         assert list(qs) == [workspace_board]
 
-    def test_get_for_user_and_uuid(
+    def test_filter_for_user_and_uuid(
         self,
         workspace,
         workspace_board,
@@ -283,11 +283,11 @@ class TestWorkspaceBoardManager:
             workspace=workspace,
         )
         assert workspace_board.workspace.users.count() == 2
-        actual = models.WorkspaceBoard.objects.get_for_user_and_uuid(
+        actual = models.WorkspaceBoard.objects.filter_for_user_and_uuid(
             workspace_user.user,
             workspace_board.uuid,
         )
-        assert actual == workspace_board
+        assert actual.first() == workspace_board
 
     def test_filter_by_archived(self, workspace_board):
         """Test filter_by_archived."""
@@ -364,7 +364,7 @@ class TestWorkspaceBoardSectionManager:
         )
         assert list(qs) == [workspace_board_section]
 
-    def test_get_for_user_and_uuid(
+    def test_filter_for_user_and_uuid(
         self,
         workspace,
         workspace_board_section,
@@ -374,10 +374,10 @@ class TestWorkspaceBoardSectionManager:
         factory.WorkspaceUserFactory(
             workspace=workspace,
         )
-        actual = models.WorkspaceBoardSection.objects.get_for_user_and_uuid(
+        actual = models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
             workspace_user.user,
             workspace_board_section.uuid,
-        )
+        ).first()
         assert actual == workspace_board_section
 
 
@@ -475,15 +475,15 @@ class TestTaskManager:
         )
         assert list(qs) == [task]
 
-    def test_get_for_user_and_uuid(self, workspace, task, workspace_user):
-        """Test get_for_user_and_uuid."""
+    def test_filter_for_user_and_uuid(self, workspace, task, workspace_user):
+        """Test filter_for_user_and_uuid."""
         factory.WorkspaceUserFactory(
             workspace=workspace,
         )
-        actual = models.Task.objects.get_for_user_and_uuid(
+        actual = models.Task.objects.filter_for_user_and_uuid(
             workspace_user.user,
             task.uuid,
-        )
+        ).first()
         assert actual == task
 
     def test_duplicate_task(self, task):
@@ -700,13 +700,13 @@ class TestLabelManager:
         labels = [label]
         assert list(qs) == labels
 
-    def test_get_for_user_and_uuid(self, label, workspace_user):
-        """Test get_for_user_and_uuid."""
+    def test_filter_for_user_and_uuid(self, label, workspace_user):
+        """Test filter_for_user_and_uuid."""
         assert (
-            models.Label.objects.get_for_user_and_uuid(
+            models.Label.objects.filter_for_user_and_uuid(
                 workspace_user.user,
                 label.uuid,
-            )
+            ).first()
             == label
         )
 
@@ -759,13 +759,13 @@ class TestSubTaskManager:
         qs = models.SubTask.objects.filter_by_task_pks([task.pk])
         assert list(qs) == [sub_task]
 
-    def test_get_for_user_and_uuid(self, sub_task, workspace_user):
-        """Test get_for_user_and_uuid."""
+    def test_filter_for_user_and_uuid(self, sub_task, workspace_user):
+        """Test filter_for_user_and_uuid."""
         assert (
-            models.SubTask.objects.get_for_user_and_uuid(
+            models.SubTask.objects.filter_for_user_and_uuid(
                 workspace_user.user,
                 sub_task.uuid,
-            )
+            ).first()
             == sub_task
         )
 
@@ -839,13 +839,13 @@ class TestChatMessageManager:
         qs = models.ChatMessage.objects.filter_by_task_pks([task.pk])
         assert list(qs) == [chat_message]
 
-    def test_get_for_user_and_uuid(self, chat_message, workspace_user):
-        """Test get_for_user_and_uuid."""
+    def test_filter_for_user_and_uuid(self, chat_message, workspace_user):
+        """Test filter_for_user_and_uuid."""
         assert (
-            models.ChatMessage.objects.get_for_user_and_uuid(
+            models.ChatMessage.objects.filter_for_user_and_uuid(
                 workspace_user.user,
                 chat_message.uuid,
-            )
+            ).first()
             == chat_message
         )
 

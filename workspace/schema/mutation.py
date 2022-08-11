@@ -8,6 +8,9 @@ from django.contrib.auth import (
 from django.db import (
     transaction,
 )
+from django.shortcuts import (
+    get_object_or_404,
+)
 from django.utils.translation import gettext_lazy as _
 
 import strawberry
@@ -285,10 +288,11 @@ class Mutation:
         self, info, input: AddWorkspaceBoardInput
     ) -> types.WorkspaceBoard:
         """Add workspace board."""
-        workspace = models.Workspace.objects.get_for_user_and_uuid(
+        qs = models.Workspace.objects.filter_for_user_and_uuid(
             info.context.user,
             input.workspace_uuid,
         )
+        workspace = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_create_workspace_board", workspace
         )
@@ -309,10 +313,11 @@ class Mutation:
         self, info, input: AddWorkspaceBoardSectionInput
     ) -> types.WorkspaceBoardSection:
         """Add workspace board section."""
-        workspace_board = models.WorkspaceBoard.objects.get_for_user_and_uuid(
+        qs = models.WorkspaceBoard.objects.filter_for_user_and_uuid(
             info.context.user,
             input.workspace_board_uuid,
         )
+        workspace_board = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_create_workspace_board_section", workspace_board
         )
@@ -325,12 +330,11 @@ class Mutation:
     @strawberry.field
     def add_task(self, info, input: AddTaskInput) -> types.Task:
         """Add task."""
-        workspace_board_section = (
-            models.WorkspaceBoardSection.objects.get_for_user_and_uuid(
-                info.context.user,
-                input.workspace_board_section_uuid,
-            )
+        qs = models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
+            info.context.user,
+            input.workspace_board_section_uuid,
         )
+        workspace_board_section = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_create_task", workspace_board_section
         )
@@ -351,20 +355,22 @@ class Mutation:
                 )
         if input.labels is not UNSET:
             for label_uuid in input.labels:
-                label = models.Label.objects.get_for_user_and_uuid(
+                qs = models.Label.objects.filter_for_user_and_uuid(
                     info.context.user,
                     label_uuid,
                 )
+                label = get_object_or_404(qs)
                 task.add_label(label)
         return task
 
     @strawberry.field
     def add_label(self, info, input: AddLabelInput) -> types.Label:
         """Add label."""
-        workspace = models.Workspace.objects.get_for_user_and_uuid(
+        qs = models.Workspace.objects.filter_for_user_and_uuid(
             info.context.user,
             input.workspace_uuid,
         )
+        workspace = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_create_label", workspace
         )
@@ -377,10 +383,11 @@ class Mutation:
     @strawberry.field
     def add_sub_task(self, info, input: AddSubTaskInput) -> types.SubTask:
         """Add sub task."""
-        task = models.Task.objects.get_for_user_and_uuid(
+        qs = models.Task.objects.filter_for_user_and_uuid(
             info.context.user,
             input.task_uuid,
         )
+        task = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_create_sub_task", task
         )
@@ -395,10 +402,11 @@ class Mutation:
         self, info, input: AddChatMessageInput
     ) -> types.ChatMessage:
         """Add chat message."""
-        task = models.Task.objects.get_for_user_and_uuid(
+        qs = models.Task.objects.filter_for_user_and_uuid(
             info.context.user,
             input.task_uuid,
         )
+        task = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_create_chat_message", task
         )
@@ -413,10 +421,11 @@ class Mutation:
         self, info, input: ChangeSubTaskDoneInput
     ) -> types.SubTask:
         """Change sub task done status."""
-        sub_task = models.SubTask.objects.get_for_user_and_uuid(
+        qs = models.SubTask.objects.filter_for_user_and_uuid(
             info.context.user,
             input.sub_task_uuid,
         )
+        sub_task = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_update_sub_task", sub_task
         )
@@ -429,12 +438,11 @@ class Mutation:
         self, info, input: MoveWorkspaceBoardSectionInput
     ) -> types.WorkspaceBoardSection:
         """Move workspace board section."""
-        workspace_board_section = (
-            models.WorkspaceBoardSection.objects.get_for_user_and_uuid(
-                info.context.user,
-                input.workspace_board_section_uuid,
-            )
+        qs = models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
+            info.context.user,
+            input.workspace_board_section_uuid,
         )
+        workspace_board_section = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_update_workspace_board_section",
             workspace_board_section,
@@ -447,17 +455,17 @@ class Mutation:
     def move_task(self, info, input: MoveTaskInput) -> types.Task:
         """Move task."""
         # Find workspace board section
-        workspace_board_section = (
-            models.WorkspaceBoardSection.objects.get_for_user_and_uuid(
-                info.context.user,
-                input.workspace_board_section_uuid,
-            )
+        qs = models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
+            info.context.user,
+            input.workspace_board_section_uuid,
         )
+        workspace_board_section = get_object_or_404(qs)
         # Find task
-        task = models.Task.objects.get_for_user_and_uuid(
+        qs = models.Task.objects.filter_for_user_and_uuid(
             info.context.user,
             input.task_uuid,
         )
+        task = get_object_or_404(qs)
         assert info.context.user.has_perm("workspace.can_update_task", task)
         # Reorder task
         task.move_to(workspace_board_section, input.order)
@@ -469,24 +477,26 @@ class Mutation:
     def move_task_after(self, info, input: MoveTaskAfterInput) -> types.Task:
         """Move task after another task."""
         # Find workspace board section
-        workspace_board_section = (
-            models.WorkspaceBoardSection.objects.get_for_user_and_uuid(
+        workspace_board_section_qs = (
+            models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
                 info.context.user,
                 input.workspace_board_section_uuid,
             )
         )
+        workspace_board_section = get_object_or_404(workspace_board_section_qs)
         # Find task
-        task = models.Task.objects.get_for_user_and_uuid(
+        task_qs = models.Task.objects.filter_for_user_and_uuid(
             info.context.user,
             input.task_uuid,
         )
+        task = get_object_or_404(task_qs)
         assert info.context.user.has_perm("workspace.can_update_task", task)
         # Find after task
         if input.after_task_uuid is not UNSET and input.after_task_uuid:
-            after_task = models.Task.objects.get_for_user_and_uuid(
+            after_task = models.Task.objects.filter_for_user_and_uuid(
                 info.context.user,
                 input.after_task_uuid,
-            )
+            ).first()
             new_order = after_task._order
         else:
             new_order = 0
@@ -500,10 +510,11 @@ class Mutation:
     def move_sub_task(self, info, input: MoveSubTaskInput) -> types.SubTask:
         """Move sub task to a specified position."""
         # Find sub task
-        sub_task = models.SubTask.objects.get_for_user_and_uuid(
+        qs = models.SubTask.objects.filter_for_user_and_uuid(
             info.context.user,
             input.sub_task_uuid,
         )
+        sub_task = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_update_sub_task", sub_task
         )
@@ -519,10 +530,11 @@ class Mutation:
     ) -> types.Workspace:
         """Add user to workspace."""
         # Find workspace
-        workspace = models.Workspace.objects.get_for_user_and_uuid(
+        qs = models.Workspace.objects.filter_for_user_and_uuid(
             info.context.user,
             input.uuid,
         )
+        workspace = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_create_workspace_user", workspace
         )
@@ -541,10 +553,11 @@ class Mutation:
         self, info, input: RemoveUserFromWorkspaceInput
     ) -> types.Workspace:
         """Remove user from workspace."""
-        workspace = models.Workspace.objects.get_for_user_and_uuid(
+        qs = models.Workspace.objects.filter_for_user_and_uuid(
             info.context.user,
             input.uuid,
         )
+        workspace = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_delete_workspace_user", workspace
         )
@@ -559,10 +572,11 @@ class Mutation:
     @strawberry.field
     def assign_task(self, info, input: AssignTaskInput) -> types.Task:
         """Assign task to user."""
-        task = models.Task.objects.get_for_user_and_uuid(
+        qs = models.Task.objects.filter_for_user_and_uuid(
             info.context.user,
             input.uuid,
         )
+        task = get_object_or_404(qs)
         assert info.context.user.has_perm("workspace.can_update_task", task)
         if input.email is None:
             task.assign_to(None)
@@ -575,10 +589,11 @@ class Mutation:
     @strawberry.field
     def duplicate_task(self, info, input: DuplicateTaskInput) -> types.Task:
         """Duplicate a task."""
-        task = models.Task.objects.get_for_user_and_uuid(
+        qs = models.Task.objects.filter_for_user_and_uuid(
             info.context.user,
             input.uuid,
         )
+        task = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_create_task",
             task.workspace,
@@ -589,14 +604,16 @@ class Mutation:
     @strawberry.field
     def assign_label(self, info, input: AssignLabelInput) -> types.Task:
         """Assign or unassign a label."""
-        task = models.Task.objects.get_for_user_and_uuid(
+        task_qs = models.Task.objects.filter_for_user_and_uuid(
             info.context.user,
             input.task_uuid,
         )
-        label = models.Label.objects.get_for_user_and_uuid(
+        task = get_object_or_404(task_qs)
+        label_qs = models.Label.objects.filter_for_user_and_uuid(
             info.context.user,
             input.label_uuid,
         )
+        label = get_object_or_404(label_qs)
         if input.assigned:
             assert info.context.user.has_perm(
                 "workspace.can_create_task_label",
@@ -617,10 +634,11 @@ class Mutation:
         self, info, input: UpdateWorkspaceInput
     ) -> types.Workspace:
         """Update workspace."""
-        workspace = models.Workspace.objects.get_for_user_and_uuid(
+        qs = models.Workspace.objects.filter_for_user_and_uuid(
             info.context.user,
             input.uuid,
         )
+        workspace = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_update_workspace",
             workspace,
@@ -635,10 +653,11 @@ class Mutation:
         self, info, input: UpdateWorkspaceUserInput
     ) -> types.WorkspaceUser:
         """Update workspace user."""
-        workspace = models.Workspace.objects.get_for_user_and_uuid(
+        qs = models.Workspace.objects.filter_for_user_and_uuid(
             info.context.user,
             input.workspace_uuid,
         )
+        workspace = get_object_or_404(qs)
         User = get_user_model()
         user = User.objects.get_by_natural_key(input.email)
         workspace_user = (
@@ -666,10 +685,11 @@ class Mutation:
         self, info, input: ArchiveWorkspaceBoardInput
     ) -> types.WorkspaceBoard:
         """Archive workspace board."""
-        workspace_board = models.WorkspaceBoard.objects.get_for_user_and_uuid(
+        qs = models.WorkspaceBoard.objects.filter_for_user_and_uuid(
             info.context.user,
             input.uuid,
         )
+        workspace_board = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_update_workspace_board",
             workspace_board,
@@ -685,10 +705,11 @@ class Mutation:
         self, info, input: UpdateWorkspaceBoardInput
     ) -> types.WorkspaceBoard:
         """Update workspace board."""
-        workspace_board = models.WorkspaceBoard.objects.get_for_user_and_uuid(
+        qs = models.WorkspaceBoard.objects.filter_for_user_and_uuid(
             info.context.user,
             input.uuid,
         )
+        workspace_board = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_update_workspace_board",
             workspace_board,
@@ -708,12 +729,11 @@ class Mutation:
         self, info, input: UpdateWorkspaceBoardSectionInput
     ) -> types.WorkspaceBoardSection:
         """Update workspace board."""
-        workspace_board_section = (
-            models.WorkspaceBoardSection.objects.get_for_user_and_uuid(
-                info.context.user,
-                input.uuid,
-            )
+        qs = models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
+            info.context.user,
+            input.uuid,
         )
+        workspace_board_section = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_update_workspace_board_section",
             workspace_board_section,
@@ -726,10 +746,11 @@ class Mutation:
     @strawberry.field
     def update_task(self, info, input: UpdateTaskInput) -> types.Task:
         """Update workspace board."""
-        task = models.Task.objects.get_for_user_and_uuid(
+        qs = models.Task.objects.filter_for_user_and_uuid(
             info.context.user,
             input.uuid,
         )
+        task = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_update_task",
             task,
@@ -747,10 +768,11 @@ class Mutation:
     @strawberry.field
     def update_label(self, info, input: UpdateLabelInput) -> types.Label:
         """Update label."""
-        label = models.Label.objects.get_for_user_and_uuid(
+        qs = models.Label.objects.filter_for_user_and_uuid(
             info.context.user,
             input.uuid,
         )
+        label = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_update_label",
             label,
@@ -765,10 +787,11 @@ class Mutation:
         self, info, input: UpdateSubTaskInput
     ) -> types.SubTask:
         """Update workspace board."""
-        sub_task = models.SubTask.objects.get_for_user_and_uuid(
+        qs = models.SubTask.objects.filter_for_user_and_uuid(
             info.context.user,
             input.uuid,
         )
+        sub_task = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_update_sub_task",
             sub_task,
@@ -784,10 +807,11 @@ class Mutation:
         self, info, input: DeleteWorkspaceBoardInput
     ) -> types.WorkspaceBoard:
         """Delete workspace board."""
-        workspace_board = models.WorkspaceBoard.objects.get_for_user_and_uuid(
+        qs = models.WorkspaceBoard.objects.filter_for_user_and_uuid(
             info.context.user,
             input.uuid,
         )
+        workspace_board = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_delete_workspace_board",
             workspace_board,
@@ -801,12 +825,11 @@ class Mutation:
     ) -> types.WorkspaceBoardSection:
         """Delete workspace section board."""
         with transaction.atomic():
-            workspace_board_section = (
-                models.WorkspaceBoardSection.objects.get_for_user_and_uuid(
-                    info.context.user,
-                    input.uuid,
-                )
+            qs = models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
+                info.context.user,
+                input.uuid,
             )
+            workspace_board_section = get_object_or_404(qs)
             assert info.context.user.has_perm(
                 "workspace.can_delete_workspace_board_section",
                 workspace_board_section,
@@ -822,10 +845,11 @@ class Mutation:
     @strawberry.field
     def delete_task(self, info, input: DeleteTaskInput) -> types.Task:
         """Delete task."""
-        task = models.Task.objects.get_for_user_and_uuid(
+        qs = models.Task.objects.filter_for_user_and_uuid(
             info.context.user,
             input.uuid,
         )
+        task = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_delete_task",
             task,
@@ -836,10 +860,11 @@ class Mutation:
     @strawberry.field
     def delete_label(self, info, input: DeleteLabelInput) -> types.Label:
         """Delete label."""
-        label = models.Label.objects.get_for_user_and_uuid(
+        qs = models.Label.objects.filter_for_user_and_uuid(
             info.context.user,
             input.uuid,
         )
+        label = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_delete_label",
             label,
@@ -852,10 +877,11 @@ class Mutation:
         self, info, input: DeleteSubTaskInput
     ) -> types.SubTask:
         """Delete task."""
-        sub_task = models.SubTask.objects.get_for_user_and_uuid(
+        qs = models.SubTask.objects.filter_for_user_and_uuid(
             info.context.user,
             input.uuid,
         )
+        sub_task = get_object_or_404(qs)
         assert info.context.user.has_perm(
             "workspace.can_delete_sub_task",
             sub_task,
