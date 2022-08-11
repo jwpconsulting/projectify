@@ -26,7 +26,7 @@ class WorkspaceConsumer(JsonWebsocketConsumer):
             return
         self.accept()
         uuid = self.scope["url_route"]["kwargs"]["uuid"]
-        models.Workspace.objects.get_for_user_and_uuid(user, uuid)
+        models.Workspace.objects.filter_for_user_and_uuid(user, uuid).first()
         async_to_sync(self.channel_layer.group_add)(
             self.get_group_name(),
             self.channel_name,
@@ -64,7 +64,9 @@ class WorkspaceBoardConsumer(JsonWebsocketConsumer):
             return
         self.accept()
         uuid = self.scope["url_route"]["kwargs"]["uuid"]
-        models.WorkspaceBoard.objects.get_for_user_and_uuid(user, uuid)
+        models.WorkspaceBoard.objects.filter_for_user_and_uuid(
+            user, uuid
+        ).first()
         async_to_sync(self.channel_layer.group_add)(
             self.get_group_name(),
             self.channel_name,
@@ -102,7 +104,7 @@ class TaskConsumer(JsonWebsocketConsumer):
             return
         self.accept()
         uuid = self.scope["url_route"]["kwargs"]["uuid"]
-        models.Task.objects.get_for_user_and_uuid(user, uuid)
+        models.Task.objects.filter_for_user_and_uuid(user, uuid).first()
         async_to_sync(self.channel_layer.group_add)(
             self.get_group_name(),
             self.channel_name,

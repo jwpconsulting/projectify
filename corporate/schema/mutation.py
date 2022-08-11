@@ -4,6 +4,9 @@ import uuid
 from django.conf import (
     settings,
 )
+from django.shortcuts import (
+    get_object_or_404,
+)
 
 import strawberry
 
@@ -42,10 +45,11 @@ class Mutation:
         self, info, input: CreateCheckoutSessionInput
     ) -> types.CheckoutSession:
         """Create a Stripe checkout session."""
-        workspace = workspace_models.Workspace.objects.get_for_user_and_uuid(
+        qs = workspace_models.Workspace.objects.filter_for_user_and_uuid(
             info.context.user,
             input.workspace_uuid,
         )
+        workspace = get_object_or_404(qs)
         try:
             customer = workspace.customer
             assert info.context.user.has_perm(

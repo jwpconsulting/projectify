@@ -2,6 +2,9 @@
 from django.db.models import (
     Prefetch,
 )
+from django.shortcuts import (
+    get_object_or_404,
+)
 
 from rest_framework import (
     generics,
@@ -24,10 +27,11 @@ class WorkspacePictureUploadView(views.APIView):
     def post(self, request, uuid, format=None):
         """Handle POST."""
         file_obj = request.data["file"]
-        workspace = models.Workspace.objects.get_for_user_and_uuid(
+        qs = models.Workspace.objects.filter_for_user_and_uuid(
             request.user,
             uuid,
         )
+        workspace = get_object_or_404(qs)
         workspace.picture = file_obj
         workspace.save()
         return response.Response(status=204)
@@ -51,10 +55,11 @@ class WorkspaceBoardRetrieve(generics.RetrieveAPIView):
     def get_object(self):
         """Return queryset with authenticated user in mind."""
         user = self.request.user
-        workspace_board = self.get_queryset().get_for_user_and_uuid(
+        qs = self.get_queryset().filter_for_user_and_uuid(
             user,
             self.kwargs["workspace_board_uuid"],
         )
+        workspace_board = get_object_or_404(qs)
         return workspace_board
 
 
@@ -91,10 +96,11 @@ class WorkspaceRetrieve(generics.RetrieveAPIView):
     def get_object(self):
         """Return queryset with authenticated user in mind."""
         user = self.request.user
-        workspace = self.get_queryset().get_for_user_and_uuid(
+        qs = self.get_queryset().filter_for_user_and_uuid(
             user,
             self.kwargs["workspace_uuid"],
         )
+        workspace = get_object_or_404(qs)
         return workspace
 
 
@@ -125,9 +131,13 @@ class TaskRetrieve(generics.RetrieveAPIView):
 
     def get_object(self):
         """Get object for user and uuid."""
-        return self.get_queryset().get_for_user_and_uuid(
-            self.request.user,
-            self.kwargs["task_uuid"],
+        return (
+            self.get_queryset()
+            .filter_for_user_and_uuid(
+                self.request.user,
+                self.kwargs["task_uuid"],
+            )
+            .first()
         )
 
 
@@ -140,8 +150,9 @@ class WorkspaceBoardArchivedList(generics.ListAPIView):
     def get_queryset(self):
         """Get queryset."""
         user = self.request.user
-        workspace = models.Workspace.objects.get_for_user_and_uuid(
+        qs = models.Workspace.objects.filter_for_user_and_uuid(
             user,
             self.kwargs["workspace_uuid"],
         )
+        workspace = get_object_or_404(qs)
         return self.queryset.filter_by_workspace(workspace)
