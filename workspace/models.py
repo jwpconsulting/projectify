@@ -32,9 +32,9 @@ class WorkspaceQuerySet(models.QuerySet):
         """Return workspaces for a user."""
         return self.filter(users=user)
 
-    def get_for_user_and_uuid(self, user, uuid):
+    def filter_for_user_and_uuid(self, user, uuid):
         """Return workspace for user and uuid."""
-        return self.get_for_user(user).get(uuid=uuid)
+        return self.get_for_user(user).filter(uuid=uuid)
 
 
 @pgtrigger.register(
@@ -315,9 +315,9 @@ class WorkspaceBoardQuerySet(models.QuerySet):
         """Filter by workspace pks."""
         return self.filter(workspace__pk__in=workspace_pks)
 
-    def get_for_user_and_uuid(self, user, uuid):
+    def filter_for_user_and_uuid(self, user, uuid):
         """Get a workspace baord for user and uuid."""
-        return self.filter_by_user(user).get(uuid=uuid)
+        return self.filter_by_user(user).filter(uuid=uuid)
 
     def filter_by_archived(self, archived=True):
         """Filter by archived boards."""
@@ -378,11 +378,9 @@ class WorkspaceBoardSectionManager(models.Manager):
         """Filter by workspace boards."""
         return self.filter(workspace_board__pk__in=keys)
 
-    def get_for_user_and_uuid(self, user, uuid):
+    def filter_for_user_and_uuid(self, user, uuid):
         """Return a workspace for user and uuid."""
-        return self.filter(workspace_board__workspace__users=user,).get(
-            uuid=uuid,
-        )
+        return self.filter(workspace_board__workspace__users=user, uuid=uuid)
 
 
 class WorkspaceBoardSection(
@@ -480,11 +478,12 @@ class TaskQuerySet(models.QuerySet):
             workspace_board_section__workspace_board=workspace_board,
         )
 
-    def get_for_user_and_uuid(self, user, uuid):
+    def filter_for_user_and_uuid(self, user, uuid):
         """Return task from user workspace corresponding to uuid."""
         return self.filter(
             workspace_board_section__workspace_board__workspace__users=user,
-        ).get(uuid=uuid)
+            uuid=uuid,
+        )
 
     def duplicate_task(self, task):
         """Duplicate a task."""
@@ -708,10 +707,9 @@ class LabelQuerySet(models.QuerySet):
         """Filter by workspace pks."""
         return self.filter(workspace__pk__in=workspace_pks)
 
-    def get_for_user_and_uuid(self, user, uuid):
+    def filter_for_user_and_uuid(self, user, uuid):
         """Return for matching workspace user and uuid."""
-        qs = self.filter(workspace__users=user)
-        return qs.get(uuid=uuid)
+        return self.filter(workspace__users=user, uuid=uuid)
 
 
 class Label(models.Model):
@@ -776,13 +774,14 @@ class SubTaskQuerySet(models.QuerySet):
         """Filter by task pks."""
         return self.filter(task__pk__in=task_pks)
 
-    def get_for_user_and_uuid(self, user, uuid):
+    def filter_for_user_and_uuid(self, user, uuid):
         """Get sub task for a certain user and sub task uuid."""
         kwargs = {
             "task__workspace_board_section__workspace_board__"
             "workspace__users": user,
+            "uuid": uuid,
         }
-        return self.filter(**kwargs).get(uuid=uuid)
+        return self.filter(**kwargs)
 
 
 class SubTask(
@@ -851,13 +850,14 @@ class ChatMessageQuerySet(models.QuerySet):
         """Filter by task pks."""
         return self.filter(task__pk__in=task_pks)
 
-    def get_for_user_and_uuid(self, user, uuid):
+    def filter_for_user_and_uuid(self, user, uuid):
         """Get for a specific workspace user and uuid."""
         kwargs = {
             "task__workspace_board_section__workspace_board__"
             "workspace__users": user,
+            "uuid": uuid,
         }
-        return self.filter(**kwargs).get(uuid=uuid)
+        return self.filter(**kwargs)
 
 
 class ChatMessage(TimeStampedModel, models.Model):
