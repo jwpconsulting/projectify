@@ -94,9 +94,11 @@
     <slot />
     {#if footerVisible}
         <footer
-            data-theme="app-dark"
-            class="flex min-h-[200px] justify-center border-t border-base-300  bg-[#002332] px-6 text-base-content"
+            class="flex min-h-[200px] justify-center border-t border-base-300"
         >
+            {#if import.meta.env.DEV}
+                <a href="/storybook/">Storybook</a>
+            {/if}
             <div
                 class="container flex w-full flex-wrap items-start justify-between"
             >
