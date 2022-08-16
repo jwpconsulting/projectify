@@ -1,6 +1,5 @@
 <script lang="ts">
     import CheckBox from "$lib/figma/CheckBox.svelte";
-    import SelectLabelColor from "$lib/figma/SelectLabelColor.svelte";
     import SelectLabelFocus from "$lib/figma/SelectLabelFocus.svelte";
     import FilterUser from "$lib/figma/FilterUser.svelte";
     import FilterLabel from "$lib/figma/FilterLabel.svelte";
@@ -28,26 +27,6 @@ Checkbox
     {/each}
 </div>
 
-Select label color
-<div class={fr}>
-    {#each selectLabels as label}
-        <div class={`${fc} items-center`}>
-            <div class="capitalize">
-                {#if label.kind === "allLabels"}
-                    all labels
-                {:else if label.kind === "noLabel"}
-                    no label
-                {:else}
-                    {label.label.name}
-                {/if}
-            </div>
-            {#each falseTrue as active}
-                <SelectLabelColor {label} {active} />
-            {/each}
-        </div>
-    {/each}
-</div>
-
 Select label focus
 <div class={fr}>
     {#each selectLabels as label}
@@ -61,8 +40,8 @@ Select label focus
                     {label.label.name}
                 {/if}
             </div>
-            {#each falseTrue as active}
-                <SelectLabelFocus {label} {active} contained={false} />
+            {#each falseTrue as checked}
+                <SelectLabelFocus {label} {checked} contained={false} />
             {/each}
         </div>
     {/each}

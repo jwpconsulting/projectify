@@ -22,7 +22,7 @@
     on:click={click}
 >
     <div class="flex flex-row items-center gap-2">
-        <SelectLabelFocus {label} active={selected} contained={true} />
+        <SelectLabelFocus {label} checked={selected} contained={true} />
         <div class="text-regular text-xs capitalize">
             {#if label.kind === "allLabels"}
                 {$_("filter-label.all")}

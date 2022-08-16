@@ -22,20 +22,20 @@
             {#if $currentWorkspace && $currentWorkspace.labels}
                 <SelectLabelFocus
                     label={{ kind: "allLabels" }}
-                    active={$selectedLabels.kind === "allLabels"}
+                    checked={$selectedLabels.kind === "allLabels"}
                     on:click={() => selectLabel({ kind: "allLabels" })}
                     contained={false}
                 />
                 <SelectLabelFocus
                     label={{ kind: "noLabel" }}
-                    active={$selectedLabels.kind === "noLabel"}
+                    checked={$selectedLabels.kind === "noLabel"}
                     on:click={() => selectLabel({ kind: "noLabel" })}
                     contained={false}
                 />
                 {#each $currentWorkspace.labels as label}
                     <SelectLabelFocus
                         label={{ kind: "label", label: label }}
-                        active={$selectedLabels.kind === "labels"
+                        checked={$selectedLabels.kind === "labels"
                             ? $selectedLabels.labelUuids.has(label.uuid)
                             : false}
                         on:click={() =>
