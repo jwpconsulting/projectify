@@ -1,7 +1,18 @@
 <script lang="ts">
     import CheckBox from "$lib/figma/CheckBox.svelte";
+    import SelectLabelColor from "$lib/figma/SelectLabelColor.svelte";
+    import SelectLabelFocus from "$lib/figma/SelectLabelFocus.svelte";
+    import FilterUser from "$lib/figma/FilterUser.svelte";
+    import FilterLabel from "$lib/figma/FilterLabel.svelte";
 
-    import { falseTrue, trueFalse, fr, fc } from "$lib/storybook";
+    import {
+        fr,
+        fc,
+        trueFalse,
+        falseTrue,
+        selectLabels,
+        workspaceUserSelectionInputs,
+    } from "$lib/storybook";
 </script>
 
 Checkbox
@@ -12,6 +23,76 @@ Checkbox
             {#each falseTrue as checked}
                 Checked: {checked}
                 <CheckBox {checked} {disabled} contained={false} />
+            {/each}
+        </div>
+    {/each}
+</div>
+
+Select label color
+<div class={fr}>
+    {#each selectLabels as label}
+        <div class={`${fc} items-center`}>
+            <div class="capitalize">
+                {#if label.kind === "allLabels"}
+                    all labels
+                {:else if label.kind === "noLabel"}
+                    no label
+                {:else}
+                    {label.label.name}
+                {/if}
+            </div>
+            {#each falseTrue as active}
+                <SelectLabelColor {label} {active} />
+            {/each}
+        </div>
+    {/each}
+</div>
+
+Select label focus
+<div class={fr}>
+    {#each selectLabels as label}
+        <div class={`${fc} items-center`}>
+            <div class="capitalize">
+                {#if label.kind === "allLabels"}
+                    all labels
+                {:else if label.kind === "noLabel"}
+                    no label
+                {:else}
+                    {label.label.name}
+                {/if}
+            </div>
+            {#each falseTrue as active}
+                <SelectLabelFocus {label} {active} contained={false} />
+            {/each}
+        </div>
+    {/each}
+</div>
+
+Filter user
+<div class={fc}>
+    {#each workspaceUserSelectionInputs as workspaceUserSelectionInput}
+        <div class={fr}>
+            {#each falseTrue as active}
+                <div class="w-96">
+                    <FilterUser
+                        {workspaceUserSelectionInput}
+                        {active}
+                        count={125}
+                    />
+                </div>
+            {/each}
+        </div>
+    {/each}
+</div>
+
+Filter label
+<div class={fc}>
+    {#each selectLabels as label}
+        <div class={fr}>
+            {#each falseTrue as selected}
+                <div class="w-48">
+                    <FilterLabel {label} {selected} />
+                </div>
             {/each}
         </div>
     {/each}

@@ -24,17 +24,13 @@
     import BoardButton from "$lib/figma/BoardButton.svelte";
     import Squoval from "$lib/figma/Squoval.svelte";
     import AvatarWithHover from "$lib/figma/AvatarWithHover.svelte";
-    import SelectLabelColor from "$lib/figma/SelectLabelColor.svelte";
-    import SelectLabelFocus from "$lib/figma/SelectLabelFocus.svelte";
     import Label from "$lib/figma/Label.svelte";
     import FilterUserAvatar from "$lib/figma/FilterUserAvatar.svelte";
     import UserExpand from "$lib/figma/UserExpand.svelte";
     import LabelExpand from "$lib/figma/LabelExpand.svelte";
     import SideNavMenuCategory from "$lib/figma/SideNavMenuCategory.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/SideNavMenuCategoryFocus.svelte";
-    import FilterUser from "$lib/figma/FilterUser.svelte";
     import SelectBoard from "$lib/figma/SelectBoard.svelte";
-    import FilterLabel from "$lib/figma/FilterLabel.svelte";
     import { currentStep } from "$lib/stores/onboarding";
     import { Plus, Folder } from "@steeze-ui/heroicons";
     import {
@@ -57,9 +53,7 @@
         falseTrue,
         buttonStyles,
         users,
-        selectLabels,
         labels,
-        workspaceUserSelectionInputs,
         workspaceBoard,
     } from "$lib/storybook";
     import { browser } from "$app/env";
@@ -246,45 +240,6 @@ Avatar with hover
         </div>
     {/each}
 </div>
-Select label color
-<div class={fr}>
-    {#each selectLabels as label}
-        <div class={`${fc} items-center`}>
-            <div class="capitalize">
-                {#if label.kind === "allLabels"}
-                    all labels
-                {:else if label.kind === "noLabel"}
-                    no label
-                {:else}
-                    {label.label.name}
-                {/if}
-            </div>
-            {#each falseTrue as active}
-                <SelectLabelColor {label} {active} />
-            {/each}
-        </div>
-    {/each}
-</div>
-
-Select label focus
-<div class={fr}>
-    {#each selectLabels as label}
-        <div class={`${fc} items-center`}>
-            <div class="capitalize">
-                {#if label.kind === "allLabels"}
-                    all labels
-                {:else if label.kind === "noLabel"}
-                    no label
-                {:else}
-                    {label.label.name}
-                {/if}
-            </div>
-            {#each falseTrue as active}
-                <SelectLabelFocus {label} {active} contained={false} />
-            {/each}
-        </div>
-    {/each}
-</div>
 
 Label v2
 <div class={fr}>
@@ -354,37 +309,7 @@ Side nav menu category focus
     {/each}
 </div>
 
-Filter user
-<div class={fc}>
-    {#each workspaceUserSelectionInputs as workspaceUserSelectionInput}
-        <div class={fr}>
-            {#each falseTrue as active}
-                <div class="w-96">
-                    <FilterUser
-                        {workspaceUserSelectionInput}
-                        {active}
-                        count={125}
-                    />
-                </div>
-            {/each}
-        </div>
-    {/each}
-</div>
-
 Select board
 <div class="w-96">
     <SelectBoard {workspaceBoard} />
-</div>
-
-Filter label
-<div class={fc}>
-    {#each selectLabels as label}
-        <div class={fr}>
-            {#each falseTrue as selected}
-                <div class="w-48">
-                    <FilterLabel {label} {selected} />
-                </div>
-            {/each}
-        </div>
-    {/each}
 </div>
