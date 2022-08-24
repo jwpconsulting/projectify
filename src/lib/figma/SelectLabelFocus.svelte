@@ -1,20 +1,18 @@
 <script lang="ts">
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Check } from "@steeze-ui/heroicons";
-    import { createEventDispatcher } from "svelte";
     import {
         getLabelColorFromIndex,
         getLabelColorClass,
     } from "$lib/utils/colors";
     import type { SelectLabel } from "$lib/figma/types";
+    import { createEventDispatcher } from "svelte";
 
     export let label: SelectLabel;
     export let checked: boolean;
-    export let contained: boolean = false;
 
     let outerStyle: string;
     let outerStyleComputed: string;
-    let innerStyle: string;
     $: {
         if (label.kind == "allLabels") {
             outerStyle =
@@ -39,21 +37,21 @@
     }
 
     const dispatch = createEventDispatcher();
-    function click() {
-        dispatch("click");
+
+    $: {
+        if (checked) {
+            dispatch("checked");
+        } else {
+            dispatch("unchecked");
+        }
     }
 </script>
 
-<div
-    on:click={contained ? undefined : click}
-    class="group relative h-7 w-11 p-0.5"
->
+<div class="group relative h-7 w-11 p-0.5">
     <div class={outerStyleComputed}>
-        <Icon
-            src={Check}
-            theme="outline"
-            class={`${checked ? "visible" : "invisible"} ${innerStyle}`}
-        />
+        <div class:visible={checked} class:invisible={!checked}>
+            <Icon src={Check} theme="outline" />
+        </div>
     </div>
     <input
         type="checkbox"

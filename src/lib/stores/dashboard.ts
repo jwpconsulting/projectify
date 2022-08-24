@@ -416,14 +416,7 @@ export function selectLabel(selection: LabelSelectionInput) {
     selectedLabels.update((selectedLabels) => {
         if (selection.kind == "label") {
             if (selectedLabels.kind === "labels") {
-                if (selectedLabels.labelUuids.has(selection.labelUuid)) {
-                    selectedLabels.labelUuids.delete(selection.labelUuid);
-                    if (selectedLabels.labelUuids.size === 0) {
-                        return { kind: "allLabels" };
-                    }
-                } else {
-                    selectedLabels.labelUuids.add(selection.labelUuid);
-                }
+                selectedLabels.labelUuids.add(selection.labelUuid);
                 return selectedLabels;
             } else {
                 return {
@@ -432,13 +425,28 @@ export function selectLabel(selection: LabelSelectionInput) {
                 };
             }
         } else if (selection.kind == "noLabel") {
-            if (selectedLabels.kind === "noLabel") {
-                return { kind: "allLabels" };
-            } else {
-                return { kind: "noLabel" };
-            }
+            return { kind: "noLabel" };
         } else {
             return { kind: "allLabels" };
+        }
+    });
+}
+export function deselectLabel(selection: LabelSelectionInput) {
+    selectedLabels.update((selectedLabels) => {
+        if (selection.kind == "label") {
+            if (selectedLabels.kind === "labels") {
+                selectedLabels.labelUuids.delete(selection.labelUuid);
+                if (selectedLabels.labelUuids.size === 0) {
+                    return { kind: "allLabels" };
+                }
+                return selectedLabels;
+            } else {
+                return selectedLabels;
+            }
+        } else if (selection.kind == "noLabel") {
+            return { kind: "allLabels" };
+        } else {
+            return { kind: "noLabel" };
         }
     });
 }
@@ -511,7 +519,6 @@ export const tasksPerUser = derived<
             unassigned: unassignedCounts,
             assigned: userCounts,
         };
-        console.log(counts);
         set(counts);
     },
     { unassigned: 0, assigned: new Map<string, number>() }

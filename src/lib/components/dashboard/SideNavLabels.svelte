@@ -6,6 +6,7 @@
     import FilterLabel from "$lib/figma/FilterLabel.svelte";
     import {
         selectedLabels,
+        deselectLabel,
         selectLabel,
         labelSearch,
         labelSearchResults,
@@ -39,23 +40,27 @@
         {#if $labelSearch === ""}
             <FilterLabel
                 label={{ kind: "allLabels" }}
-                selected={$selectedLabels.kind === "allLabels"}
-                on:click={() => selectLabel({ kind: "allLabels" })}
+                checked={$selectedLabels.kind === "allLabels"}
+                on:checked={() => selectLabel({ kind: "allLabels" })}
+                on:unchecked={() => deselectLabel({ kind: "allLabels" })}
             />
             <FilterLabel
                 label={{ kind: "noLabel" }}
-                selected={$selectedLabels.kind === "noLabel"}
-                on:click={() => selectLabel({ kind: "noLabel" })}
+                checked={$selectedLabels.kind === "noLabel"}
+                on:checked={() => selectLabel({ kind: "noLabel" })}
+                on:unchecked={() => deselectLabel({ kind: "noLabel" })}
             />
         {/if}
         {#each $labelSearchResults as label (label.uuid)}
             <FilterLabel
                 label={{ kind: "label", label }}
-                selected={$selectedLabels.kind === "labels"
+                checked={$selectedLabels.kind === "labels"
                     ? $selectedLabels.labelUuids.has(label.uuid)
                     : false}
-                on:click={() =>
+                on:checked={() =>
                     selectLabel({ kind: "label", labelUuid: label.uuid })}
+                on:unchecked={() =>
+                    deselectLabel({ kind: "label", labelUuid: label.uuid })}
             />
         {/each}
     </div>

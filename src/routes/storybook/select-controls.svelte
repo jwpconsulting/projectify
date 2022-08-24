@@ -41,7 +41,7 @@ Select label focus
                 {/if}
             </div>
             {#each falseTrue as checked}
-                <SelectLabelFocus {label} {checked} contained={false} />
+                <SelectLabelFocus {label} {checked} />
             {/each}
         </div>
     {/each}
@@ -68,9 +68,9 @@ Filter label
 <div class={fc}>
     {#each selectLabels as label}
         <div class={fr}>
-            {#each falseTrue as selected}
+            {#each falseTrue as checked}
                 <div class="w-48">
-                    <FilterLabel {label} {selected} />
+                    <FilterLabel {label} {checked} />
                 </div>
             {/each}
         </div>

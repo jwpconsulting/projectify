@@ -7,13 +7,28 @@
     import SelectLabelFocus from "$lib/figma/SelectLabelFocus.svelte";
 
     export let label: SelectLabel;
-    export let selected: boolean;
+    export let checked: boolean;
 
     $: editable = label.kind === "label";
 
     const dispatch = createEventDispatcher();
+
+    function onChecked() {
+        checked = true;
+    }
+
+    function onUnchecked() {
+        checked = false;
+    }
+
     function click() {
-        dispatch("click");
+        if (checked) {
+            dispatch("unchecked");
+            checked = false;
+        } else {
+            dispatch("checked");
+            checked = true;
+        }
     }
 </script>
 
@@ -22,7 +37,12 @@
     on:click={click}
 >
     <div class="flex flex-row items-center gap-2">
-        <SelectLabelFocus {label} checked={selected} contained={true} />
+        <SelectLabelFocus
+            {label}
+            {checked}
+            on:checked={onChecked}
+            on:unchecked={onUnchecked}
+        />
         <div class="text-regular text-xs capitalize">
             {#if label.kind === "allLabels"}
                 {$_("filter-label.all")}
