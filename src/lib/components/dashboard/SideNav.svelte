@@ -2,7 +2,7 @@
     import WorkspaceMenu from "$lib/figma/WorkspaceMenu.svelte";
     import SideNavBoards from "./SideNavBoards.svelte";
     import SideNavMembers from "./SideNavMembers.svelte";
-    import SideNavLabels from "./SideNavLabels.svelte";
+    import FilterLabelCollapsible from "$lib/figma/FilterLabelCollapsible.svelte";
     import SideNavBulkSelect from "./SideNavBulkSelect.svelte";
 </script>
 
@@ -11,7 +11,7 @@
     <div class="flex flex-col overflow-x-auto overflow-y-scroll">
         <SideNavBoards />
         <SideNavMembers />
-        <SideNavLabels />
+        <FilterLabelCollapsible />
         <SideNavBulkSelect />
     </div>
 </nav>
