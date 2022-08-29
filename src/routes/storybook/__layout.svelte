@@ -17,6 +17,10 @@
             href: "/storybook/dropdown",
         },
         {
+            title: "Overlays",
+            href: "/storybook/overlays",
+        },
+        {
             title: "Composites",
             href: "/storybook/composites",
         },
