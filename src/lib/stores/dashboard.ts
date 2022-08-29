@@ -2,6 +2,9 @@ import {
     Mutation_MoveTaskAfter,
     Mutation_DeleteTask,
     Mutation_AssignTask,
+    Mutation_AddLabelMutation,
+    Mutation_UpdateLabelMutation,
+    Mutation_DeleteLabelMutation,
 } from "./../graphql/operations";
 import { goto } from "$app/navigation";
 import Fuse from "fuse.js";
@@ -712,4 +715,44 @@ export function toggleUserExpandOpen() {
 export const labelExpandOpen = writable<boolean>(false);
 export function toggleLabelExpandOpen() {
     labelExpandOpen.update((state) => !state);
+}
+
+// Label CRUD
+export async function createLabel(
+    workspace: Workspace,
+    name: string,
+    color: number
+) {
+    await client.mutate({
+        mutation: Mutation_AddLabelMutation,
+        variables: {
+            input: {
+                workspaceUuid: workspace.uuid,
+                name,
+                color,
+            },
+        },
+    });
+}
+export async function updateLabel(label: Label, name: string, color: number) {
+    await client.mutate({
+        mutation: Mutation_UpdateLabelMutation,
+        variables: {
+            input: {
+                uuid: label.uuid,
+                name,
+                color,
+            },
+        },
+    });
+}
+export async function deleteLabel(label: Label) {
+    await client.mutate({
+        mutation: Mutation_DeleteLabelMutation,
+        variables: {
+            input: {
+                uuid: label.uuid,
+            },
+        },
+    });
 }

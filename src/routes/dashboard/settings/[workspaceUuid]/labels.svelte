@@ -1,17 +1,16 @@
 <script lang="ts">
-    import { client } from "$lib/graphql/client";
-
-    import {
-        Mutation_AddLabelMutation,
-        Mutation_DeleteLabelMutation,
-        Mutation_UpdateLabelMutation,
-    } from "$lib/graphql/operations";
     import { _ } from "svelte-i18n";
     import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
     import DialogModal, { getModal } from "$lib/components/dialogModal.svelte";
     import LabelPill from "$lib/components/dashboard/LabelPill.svelte";
     import type { Label } from "$lib/types";
-    import { currentWorkspace, loading } from "$lib/stores/dashboard";
+    import {
+        currentWorkspace,
+        loading,
+        createLabel,
+        deleteLabel,
+        updateLabel,
+    } from "$lib/stores/dashboard";
 
     let labels: Label[] = [];
 
@@ -31,18 +30,7 @@
             return;
         }
 
-        try {
-            await client.mutate({
-                mutation: Mutation_DeleteLabelMutation,
-                variables: {
-                    input: {
-                        uuid: label.uuid,
-                    },
-                },
-            });
-        } catch (error) {
-            console.error(error);
-        }
+        await deleteLabel(label);
     }
 
     async function onEditLabel(label: Label) {
@@ -52,20 +40,11 @@
             return;
         }
 
-        try {
-            await client.mutate({
-                mutation: Mutation_UpdateLabelMutation,
-                variables: {
-                    input: {
-                        uuid: label.uuid,
-                        name: modalRes.outputs.name,
-                        color: modalRes.outputs.color,
-                    },
-                },
-            });
-        } catch (error) {
-            console.error(error);
-        }
+        await updateLabel(
+            label,
+            modalRes.outputs.name,
+            modalRes.outputs.color
+        );
     }
 
     async function onNewLabel() {
@@ -79,20 +58,11 @@
             return;
         }
 
-        try {
-            await client.mutate({
-                mutation: Mutation_AddLabelMutation,
-                variables: {
-                    input: {
-                        workspaceUuid: $currentWorkspace.uuid,
-                        name: modalRes.outputs.name,
-                        color: modalRes.outputs.color,
-                    },
-                },
-            });
-        } catch (error) {
-            console.error(error);
-        }
+        await createLabel(
+            $currentWorkspace,
+            modalRes.outputs.name,
+            modalRes.outputs.color
+        );
     }
 </script>
 
