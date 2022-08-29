@@ -16,6 +16,10 @@
             title: "Dropdown",
             href: "/storybook/dropdown",
         },
+        {
+            title: "Composites",
+            href: "/storybook/composites",
+        },
     ];
 </script>
 
