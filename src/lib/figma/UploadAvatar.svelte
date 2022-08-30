@@ -9,11 +9,11 @@
 </script>
 
 <button
-    class="group h-14 w-14 rounded-full border border-transparent p-0.5 focus:border-primary-hover"
+    class="focus:border-focus group h-14 w-14 rounded-full border border-transparent p-0.5"
     on:click={click}
 >
     <div
-        class="rounded-full border border-primary p-3 text-primary group-hover:bg-secondary"
+        class="rounded-full border border-primary p-3 text-primary group-hover:bg-secondary-hover group-active:bg-disabled"
     >
         <Icon src={Camera} theme="outline" />
     </div>
