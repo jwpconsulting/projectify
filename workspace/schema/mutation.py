@@ -496,7 +496,7 @@ class Mutation:
             after_task = models.Task.objects.filter_for_user_and_uuid(
                 info.context.user,
                 input.after_task_uuid,
-            ).first()
+            ).get()
             new_order = after_task._order
         else:
             new_order = 0

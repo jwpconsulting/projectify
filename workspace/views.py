@@ -137,7 +137,7 @@ class TaskRetrieve(generics.RetrieveAPIView):
                 self.request.user,
                 self.kwargs["task_uuid"],
             )
-            .first()
+            .get()
         )
 
 
