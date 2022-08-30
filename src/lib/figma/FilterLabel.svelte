@@ -1,10 +1,11 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import { Icon } from "@steeze-ui/svelte-icon";
-    import { Pencil, Trash } from "@steeze-ui/heroicons";
     import type { SelectLabel } from "$lib/figma/types";
     import { createEventDispatcher } from "svelte";
     import SelectLabelFocus from "$lib/figma/SelectLabelFocus.svelte";
+    import CircleIcon from "$lib/figma/CircleIcon.svelte";
+    import { openDestructiveOverlay } from "$lib/stores/global-ui";
+    import { deleteLabel } from "$lib/stores/dashboard";
 
     export let label: SelectLabel;
     export let checked: boolean;
@@ -29,6 +30,26 @@
             dispatch("checked");
             checked = true;
         }
+    }
+
+    function onEdit() {
+        // TODO
+    }
+
+    function onDelete() {
+        if (label.kind !== "label") {
+            throw new Error("Expected label");
+        }
+        const l = label.label;
+        openDestructiveOverlay(
+            { kind: "deleteLabel", label: l },
+            {
+                kind: "async",
+                action: async () => {
+                    await deleteLabel(l);
+                },
+            }
+        );
     }
 </script>
 
@@ -55,12 +76,18 @@
     </div>
     <div class="flex flex-row items-center gap-2">
         {#if editable}
-            <button class="p-1">
-                <Icon src={Pencil} theme="outline" class="h-4 w-4" />
-            </button>
-            <button class="p-1">
-                <Icon src={Trash} theme="outline" class="h-4 w-4" />
-            </button>
+            <CircleIcon
+                size="small"
+                disabled={false}
+                icon="edit"
+                on:click={onEdit}
+            />
+            <CircleIcon
+                size="small"
+                disabled={false}
+                icon="delete"
+                on:click={onDelete}
+            />
         {/if}
     </div>
 </button>
