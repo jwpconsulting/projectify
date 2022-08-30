@@ -30,7 +30,7 @@ class TestWorkspaceManager:
             models.Workspace.objects.filter_for_user_and_uuid(
                 user,
                 workspace.uuid,
-            ).first()
+            ).get()
             == workspace
         )
 
@@ -287,7 +287,7 @@ class TestWorkspaceBoardManager:
             workspace_user.user,
             workspace_board.uuid,
         )
-        assert actual.first() == workspace_board
+        assert actual.get() == workspace_board
 
     def test_filter_by_archived(self, workspace_board):
         """Test filter_by_archived."""
@@ -377,7 +377,7 @@ class TestWorkspaceBoardSectionManager:
         actual = models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
             workspace_user.user,
             workspace_board_section.uuid,
-        ).first()
+        ).get()
         assert actual == workspace_board_section
 
 
@@ -483,7 +483,7 @@ class TestTaskManager:
         actual = models.Task.objects.filter_for_user_and_uuid(
             workspace_user.user,
             task.uuid,
-        ).first()
+        ).get()
         assert actual == task
 
     def test_duplicate_task(self, task):
@@ -706,7 +706,7 @@ class TestLabelManager:
             models.Label.objects.filter_for_user_and_uuid(
                 workspace_user.user,
                 label.uuid,
-            ).first()
+            ).get()
             == label
         )
 
@@ -765,7 +765,7 @@ class TestSubTaskManager:
             models.SubTask.objects.filter_for_user_and_uuid(
                 workspace_user.user,
                 sub_task.uuid,
-            ).first()
+            ).get()
             == sub_task
         )
 
@@ -845,7 +845,7 @@ class TestChatMessageManager:
             models.ChatMessage.objects.filter_for_user_and_uuid(
                 workspace_user.user,
                 chat_message.uuid,
-            ).first()
+            ).get()
             == chat_message
         )
 
