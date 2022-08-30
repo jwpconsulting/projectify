@@ -179,6 +179,13 @@ export type DestructiveOverlayType =
     | { kind: "deleteSelectedTasks"; tasks: Task[] }
     | { kind: "archiveBoard"; workspaceBoard: WorkspaceBoard };
 
+export type DestructiveOverlayAction =
+    | { kind: "async"; action: () => Promise<void> }
+    | { kind: "sync"; action: () => void };
 export type DestructiveOverlayState =
     | { kind: "hidden" }
-    | { kind: "visible"; target: DestructiveOverlayType };
+    | {
+          kind: "visible";
+          target: DestructiveOverlayType;
+          action: DestructiveOverlayAction;
+      };

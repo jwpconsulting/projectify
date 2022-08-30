@@ -1,13 +1,19 @@
 <script lang="ts">
     import DestructiveOverlay from "$lib/figma/DestructiveOverlay.svelte";
-    import { destructiveOverlayState } from "$lib/stores/global-ui";
+    import {
+        destructiveOverlayState,
+        closeDestructiveOverlay,
+        performDestructiveOverlay,
+    } from "$lib/stores/global-ui";
 
     export let fixed: boolean = true;
 
     function close() {
-        $destructiveOverlayState = {
-            kind: "hidden",
-        };
+        closeDestructiveOverlay();
+    }
+
+    function perform() {
+        performDestructiveOverlay();
     }
 </script>
 
@@ -19,6 +25,7 @@
         <DestructiveOverlay
             target={$destructiveOverlayState.target}
             on:cancel={close}
+            on:destroy={perform}
         />
     </div>
 {/if}
