@@ -36,7 +36,7 @@
 
 <button
     on:click|stopPropagation={click}
-    class={`${sizeMapped} rounded-full border border-transparent text-base-content hover:bg-secondary focus:border-base-content focus:bg-base-100 focus:outline-none active:bg-disabled-background disabled:bg-transparent disabled:text-transparent`}
+    class={`${sizeMapped} rounded-full border border-transparent text-base-content hover:bg-secondary-hover focus:border-base-content focus:bg-base-100 focus:outline-none active:bg-disabled-background disabled:bg-transparent disabled:text-transparent`}
     {disabled}
 >
     <Icon src={iconMapped} style="outline" />
