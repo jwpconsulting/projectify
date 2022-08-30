@@ -37,7 +37,7 @@
 </script>
 
 <div
-    class="layout-list section m-2 flex select-none rounded-b-2xl bg-base-100 shadow-sm"
+    class="layout-list section isolate m-2 flex select-none rounded-b-2xl bg-base-100 shadow-sm"
 >
     <div class="flex grow flex-col">
         <SectionHeader

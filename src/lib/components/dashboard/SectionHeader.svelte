@@ -77,7 +77,7 @@
 
 <header
     class:open
-    class="sticky -top-2 z-[2] flex flex-row items-center justify-between bg-base-100 px-4 py-2"
+    class="sticky -top-2 z-10 flex flex-row items-center justify-between bg-base-100 px-4 py-2"
 >
     <button class="flex flex-row gap-4" on:click={toggleOpen}>
         <div

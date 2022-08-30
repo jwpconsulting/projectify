@@ -38,7 +38,7 @@
     </div>
 {:else}
     <div
-        class="flex flex-row"
+        class="isolate flex flex-row"
         class:p-0.5={size === "medium"}
         class:group={!hoverableParent}
     >
