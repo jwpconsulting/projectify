@@ -1,0 +1,24 @@
+<script lang="ts">
+    import DestructiveOverlay from "$lib/figma/DestructiveOverlay.svelte";
+    import { destructiveOverlayState } from "$lib/stores/global-ui";
+
+    export let fixed: boolean = true;
+
+    function close() {
+        $destructiveOverlayState = {
+            kind: "hidden",
+        };
+    }
+</script>
+
+{#if $destructiveOverlayState.kind === "visible"}
+    <div
+        class:fixed
+        class="top-0 left-0 flex h-screen w-screen items-center justify-center bg-black/50"
+    >
+        <DestructiveOverlay
+            target={$destructiveOverlayState.target}
+            on:cancel={close}
+        />
+    </div>
+{/if}

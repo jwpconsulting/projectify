@@ -21,6 +21,10 @@
             href: "/storybook/overlays",
         },
         {
+            title: "Overlay test",
+            href: "/storybook/overlay-test",
+        },
+        {
             title: "Composites",
             href: "/storybook/composites",
         },

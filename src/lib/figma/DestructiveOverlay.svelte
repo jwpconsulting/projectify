@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { DestructiveOverlayType } from "$lib/figma/types";
+    import type { DestructiveOverlayType } from "$lib/types";
     import { _ } from "svelte-i18n";
     import Button from "$lib/figma/Button.svelte";
     import { createEventDispatcher } from "svelte";
@@ -82,7 +82,9 @@
     }
 </script>
 
-<div class="flex w-[500px] flex-col items-center gap-4 p-8">
+<div
+    class="flex w-[500px] flex-col items-center gap-4 rounded-lg bg-foreground p-8"
+>
     <div class="text-3xl font-bold text-base-content">
         {title}
     </div>

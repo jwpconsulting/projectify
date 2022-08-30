@@ -170,3 +170,15 @@ export type WorkspaceUserSelection =
     | { kind: "workspaceUsers"; workspaceUserUuids: Set<string> }
     | { kind: "allWorkspaceUsers" }
     | { kind: "unassigned" };
+
+export type DestructiveOverlayType =
+    | { kind: "deleteLabel"; label: Label }
+    | { kind: "deleteMember"; workspaceUser: WorkspaceUser }
+    | { kind: "deleteSection"; workspaceBoardSection: WorkspaceBoardSection }
+    | { kind: "deleteTask"; task: Task }
+    | { kind: "deleteSelectedTasks"; tasks: Task[] }
+    | { kind: "archiveBoard"; workspaceBoard: WorkspaceBoard };
+
+export type DestructiveOverlayState =
+    | { kind: "hidden" }
+    | { kind: "visible"; target: DestructiveOverlayType };

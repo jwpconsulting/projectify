@@ -1,5 +1,6 @@
 import { browser } from "$app/env";
 import { get, writable } from "svelte/store";
+import type { DestructiveOverlayState } from "$lib/types";
 
 export const isDarkMode = writable<boolean | null>(null);
 
@@ -65,3 +66,7 @@ export function saveDarkMode(value: boolean | null): void {
     }
     isDarkMode.set(value);
 }
+
+export const destructiveOverlayState = writable<DestructiveOverlayState>({
+    kind: "hidden",
+});

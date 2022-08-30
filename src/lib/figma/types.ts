@@ -1,12 +1,5 @@
 import type { IconSource } from "@steeze-ui/svelte-icon/types";
-import type {
-    User,
-    Label,
-    WorkspaceUser,
-    WorkspaceBoardSection,
-    WorkspaceBoard,
-    Task,
-} from "$lib/types";
+import type { User, Label } from "$lib/types";
 
 export type ButtonStyle =
     | { kind: "primary" }
@@ -75,11 +68,3 @@ export type SelectLabel =
     | { kind: "allLabels" }
     | { kind: "noLabel" }
     | { kind: "label"; label: Label };
-
-export type DestructiveOverlayType =
-    | { kind: "deleteLabel"; label: Label }
-    | { kind: "deleteMember"; workspaceUser: WorkspaceUser }
-    | { kind: "deleteSection"; workspaceBoardSection: WorkspaceBoardSection }
-    | { kind: "deleteTask"; task: Task }
-    | { kind: "deleteSelectedTasks"; tasks: Task[] }
-    | { kind: "archiveBoard"; workspaceBoard: WorkspaceBoard };
