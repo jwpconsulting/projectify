@@ -6,8 +6,6 @@
         performDestructiveOverlay,
     } from "$lib/stores/global-ui";
 
-    export let fixed: boolean = true;
-
     function close() {
         closeDestructiveOverlay();
     }
@@ -19,8 +17,7 @@
 
 {#if $destructiveOverlayState.kind === "visible"}
     <div
-        class:fixed
-        class="top-0 left-0 flex h-screen w-screen items-center justify-center bg-black/50"
+        class="fixed top-0 left-0 flex h-screen w-screen items-center justify-center bg-black/50"
     >
         <DestructiveOverlay
             target={$destructiveOverlayState.target}

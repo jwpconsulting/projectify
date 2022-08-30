@@ -38,6 +38,7 @@
     import DatePickerDropDown from "$lib/components/datePickerDropDown.svelte";
     import ConnectionStatus from "$lib/components/connectionStatus.svelte";
     import GlobalDropDown from "$lib/components/globalDropDown.svelte";
+    import DestructiveOverlayContainer from "$lib/components/DestructiveOverlayContainer.svelte";
 </script>
 
 <svelte:head>
@@ -56,3 +57,5 @@
 {/if}
 
 <GlobalDropDown />
+
+<DestructiveOverlayContainer />

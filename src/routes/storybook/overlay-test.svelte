@@ -1,5 +1,4 @@
 <script lang="ts">
-    import DestructiveOverlayContainer from "$lib/components/DestructiveOverlayContainer.svelte";
     import { openDestructiveOverlay } from "$lib/stores/global-ui";
     import Button from "$lib/figma/Button.svelte";
     const target = {
@@ -44,4 +43,3 @@
 >
     Open async overlay
 </Button>
-<DestructiveOverlayContainer fixed={false} />
