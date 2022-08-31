@@ -8,9 +8,9 @@
     export let state: MenuButtonState;
 
     $: style = {
-        normal: "hover:bg-secondary active:bg-secondary active:text-base-100",
-        selected: "bg-primary-hover text-base-100",
-        accordion: "bg-base-200 text-base-content",
+        normal: "hover:bg-secondary-hover active:bg-disabled",
+        selected: "bg-primary text-primary-content",
+        accordion: "bg-background text-base-content",
     }[state];
 
     const dispatch = createEventDispatcher();
@@ -21,7 +21,7 @@
 
 <button
     on:click={click}
-    class={`flex-start flex flex-row items-center gap-2 px-4 py-3 text-xs font-bold focus:bg-base-300 focus:text-base-content focus:outline-none ${style}`}
+    class={`flex-start flex flex-row items-center gap-2 px-4 py-3 text-xs font-bold focus:bg-border-focus focus:text-base-content focus:outline-none ${style}`}
 >
     <Icon src={icon} theme="outline" class="h-4 w-4" />
     <div class="first-letter:uppercase">
