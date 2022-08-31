@@ -10,7 +10,7 @@
 
 <button
     on:click={click}
-    class="h-11 w-11 rounded-lg border border-transparent p-2.5 hover:bg-secondary focus:border-base-content focus:outline-none"
+    class="h-11 w-11 rounded-lg border border-transparent p-2.5 hover:bg-secondary-hover focus:border-base-content focus:outline-none active:bg-secondary-pressed"
 >
     <Icon src={Search} theme="outline" />
 </button>
