@@ -22,7 +22,7 @@
     class="group h-9 w-9 rounded-llg border border-transparent p-0.5 focus:border-base-content focus:outline-none"
 >
     <div
-        class="rounded-lg border border-secondary p-1 group-hover:bg-secondary group-active:bg-primary group-active:text-base-100"
+        class="rounded-lg border border-border p-1 group-hover:bg-secondary-hover group-active:bg-primary group-active:text-base-100"
     >
         <Icon {src} theme="outline" />
     </div>
