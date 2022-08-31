@@ -14,7 +14,7 @@
 
 <button
     on:click={click}
-    class="flex flex-row items-center justify-between px-4 py-3 text-xs font-bold text-base-content hover:bg-secondary focus:bg-base-300 focus:outline-none active:bg-secondary active:text-base-100"
+    class="flex flex-row items-center justify-between px-4 py-3 text-xs font-bold text-base-content hover:bg-secondary-hover focus:bg-base-300 focus:outline-none active:bg-disabled"
 >
     <div class="flex flex-row gap-2">
         <Icon src={icon} theme="outline" class="h-4 w-4" />
