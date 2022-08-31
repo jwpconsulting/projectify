@@ -10,7 +10,7 @@
 </script>
 
 <button
-    class="relative h-11 w-11 rounded-lg border border-transparent p-2.5 text-base-content hover:bg-secondary focus:border-base-content focus:outline-none active:bg-secondary active:text-disabled-text"
+    class="relative h-11 w-11 rounded-lg border border-transparent p-2.5 text-base-content hover:bg-secondary-hover focus:border-base-content focus:outline-none active:bg-secondary-pressed"
     on:click={click}
 >
     {#if isActive}
