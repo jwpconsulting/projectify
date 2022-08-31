@@ -9,7 +9,7 @@
     $: style = {
         inactive: "invisible",
         disabled: "text-secondary-text",
-        active: "text-base-content hover:bg-secondary hover:text-base-100 active:bg-primary active:text-base-100 focus:outline-none focus:border-base-content",
+        active: "text-base-content hover:bg-secondary-hover active:bg-primary active:text-base-100 focus:outline-none focus:border-base-content",
     }[state];
     const dispatch = createEventDispatcher();
     function click() {
