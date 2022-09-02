@@ -1,6 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import Button from "$lib/figma/Button.svelte";
+    import SideMenuCreate from "$lib/figma/SideMenuCreate.svelte";
     import EllipsisSideNav from "$lib/figma/EllipsisSideNav.svelte";
     import CircleIcon from "$lib/figma/CircleIcon.svelte";
     import UploadAvatar from "$lib/figma/UploadAvatar.svelte";
@@ -36,6 +37,7 @@
     import {
         buttonSizes,
         buttonColors,
+        sideMenuCreateSizes,
         circleIconSizes,
         circleIconIcons,
         menuButtonStates,
@@ -104,6 +106,19 @@ Buttons
         </div>
     {/each}
 </div>
+
+Side menu create
+<div class={fc}>
+    {#each sideMenuCreateSizes as size}
+        <SideMenuCreate
+            on:click={console.log}
+            {size}
+            icon={Plus}
+            label="Create New Label"
+        />
+    {/each}
+</div>
+
 Ellipsis side nav
 <EllipsisSideNav on:click={console.log} />
 Circle icons

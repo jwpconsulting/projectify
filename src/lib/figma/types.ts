@@ -12,6 +12,9 @@ export type ButtonColor = typeof buttonColors[number];
 export const buttonSizes = ["medium", "small", "extra-small"] as const;
 export type ButtonSize = typeof buttonSizes[number];
 
+export const sideMenuCreateSizes = ["extraSmall", "small"] as const;
+export type SideMenuCreateSize = typeof sideMenuCreateSizes[number];
+
 export const circleIconSizes = ["small", "medium"] as const;
 export type CircleIconSize = typeof circleIconSizes[number];
 export const circleIconIcons = [
