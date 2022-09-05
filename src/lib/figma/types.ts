@@ -71,3 +71,6 @@ export type SelectLabel =
     | { kind: "allLabels" }
     | { kind: "noLabel" }
     | { kind: "label"; label: Label };
+
+export const filterLabelMenuStates = ["list", "create"] as const;
+export type FilterLabelMenuState = typeof filterLabelMenuStates[number];

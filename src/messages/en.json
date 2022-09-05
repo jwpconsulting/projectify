@@ -10,9 +10,11 @@
         "labels": "labels",
         "member-name": "member name",
         "filter-members": "filter members",
-        "filter-labels": "filter labels",
-        "label-name": "label name",
         "search-task": "Search Task"
+    },
+    "filter-label-menu": {
+        "filter-labels": "filter labels",
+        "label-name": "label name"
     },
     "filter-label": {
         "all": "all",
