@@ -6,7 +6,7 @@
         selectWorkspaceUser,
         deselectWorkspaceUser,
     } from "$lib/stores/dashboard";
-    import SearchField from "$lib/components/SearchField.svelte";
+    import InputField from "$lib/figma/InputField.svelte";
     import {
         selectedWorkspaceUser,
         tasksPerUser,
@@ -34,8 +34,8 @@
         <div class="color-base-content p-2 text-xs font-bold capitalize">
             {$_("dashboard.filter-members")}
         </div>
-        <SearchField
-            bind:searchInput={$workspaceUserSearch}
+        <InputField
+            bind:value={$workspaceUserSearch}
             placeholder={$_("dashboard.member-name")}
         />
     </div>

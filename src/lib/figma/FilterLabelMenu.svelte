@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import SearchField from "$lib/components/SearchField.svelte";
+    import InputField from "$lib/figma/InputField.svelte";
     import FilterLabel from "$lib/figma/FilterLabel.svelte";
     import {
         selectedLabels,
@@ -19,8 +19,8 @@
         <div class="p-2 text-xs font-bold first-letter:capitalize">
             {$_("dashboard.filter-labels")}
         </div>
-        <SearchField
-            bind:searchInput={$labelSearch}
+        <InputField
+            bind:value={$labelSearch}
             placeholder={$_("dashboard.label-name")}
         />
     </div>

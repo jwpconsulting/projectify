@@ -3,10 +3,10 @@
     import { Search, X } from "@steeze-ui/heroicons";
     import { _ } from "svelte-i18n";
 
-    export let searchInput = "";
+    export let value = "";
     export let placeholder: string;
     function clear() {
-        searchInput = "";
+        value = "";
     }
 </script>
 
@@ -14,7 +14,7 @@
     <input
         type="text"
         class="text-regular placeholder:text-task-update-text h-10 w-full rounded-lg border border-base-300 pl-10 pr-10 text-xs placeholder:capitalize"
-        bind:value={searchInput}
+        bind:value
         {placeholder}
     />
     <div
@@ -28,7 +28,7 @@
             />
         </div>
     </div>
-    {#if searchInput}
+    {#if value}
         <button
             class="absolute right-0.5 top-0.5 flex flex-row gap-2.5 p-3"
             on:click={clear}
