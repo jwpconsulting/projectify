@@ -74,3 +74,8 @@ export type SelectLabel =
 
 export const filterLabelMenuStates = ["list", "create"] as const;
 export type FilterLabelMenuState = typeof filterLabelMenuStates[number];
+
+export const inputFieldStyles = ["search", "subTask", "field"] as const;
+export type InputFieldStyle = typeof inputFieldStyles[number];
+export const inputFieldSizes = ["extraSmall", "small", "normal"] as const;
+export type InputFieldSize = typeof inputFieldSizes[number];

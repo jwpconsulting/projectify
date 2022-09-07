@@ -21,6 +21,7 @@
         </div>
         <InputField
             bind:value={$labelSearch}
+            style="search"
             placeholder={$_("dashboard.label-name")}
         />
     </div>
@@ -53,5 +54,9 @@
         {/each}
     </div>
 {:else}
-    <div class="px-4 pt-2 pb-4" />
+    <div class="px-4 pt-2 pb-4">
+        <div class="p-2 text-xs font-bold first-letter:capitalize">
+            {$_("filter-label-menu.label-name")}
+        </div>
+    </div>
 {/if}
