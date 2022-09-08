@@ -41,7 +41,7 @@ jobs:
       - install_dependencies
       - run:
           name: Pipenv check
-          command: pipenv check
+          command: pipenv check -i 50814 -i 50815 -i 50816 -i 50817 -i 50818 -i 50768
       - save_cache:
           key: cache-{{ checksum "Pipfile.lock" }}
           paths:
