@@ -6,7 +6,6 @@
     let subTaskCompletionPercentage: number | null = null;
 
     if (task.sub_tasks) {
-        console.log(task.sub_tasks);
         const completed = task.sub_tasks.filter(
             (subTask) => subTask.done === true
         ).length;
