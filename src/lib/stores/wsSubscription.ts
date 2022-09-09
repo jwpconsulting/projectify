@@ -52,16 +52,17 @@ export class WSSubscriptionStore {
             };
             this.dispatch();
         };
-        socket.onopen = () => {
+        socket.onopen = (event) => {
+            this.debug("socket.onopen", event);
             this.retryTime = this.retryTimeStart;
             // this.dispatch();
         };
-        socket.onclose = () => {
-            this.debug("socket.onclose");
+        socket.onclose = (event) => {
+            this.debug("socket.onclose", event);
             this.retryConnection();
         };
-        socket.onerror = () => {
-            this.debug("socket.onerror");
+        socket.onerror = (event) => {
+            this.debug("socket.onerror", event);
             this.retryConnection();
         };
         return socket;
