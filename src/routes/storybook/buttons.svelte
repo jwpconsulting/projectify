@@ -41,6 +41,7 @@
         circleIconSizes,
         circleIconIcons,
         menuButtonStates,
+        menuButtonColors,
         stepperPositions,
         stepperActiveStates,
         sideNavMainTypes,
@@ -178,7 +179,16 @@ Workspace menu bar
 Menu button
 <div class={`${fc} w-40`}>
     {#each menuButtonStates as state}
-        <MenuButton on:click={console.log} {state} icon={Plus} label={state} />
+        {#each menuButtonColors as color}
+            <MenuButton
+                on:click={console.log}
+                {state}
+                {color}
+                kind={{ kind: "button" }}
+                icon={Plus}
+                label={state}
+            />
+        {/each}
     {/each}
 </div>
 Submenu dropdown

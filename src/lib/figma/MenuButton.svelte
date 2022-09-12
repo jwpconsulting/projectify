@@ -2,14 +2,24 @@
     import { createEventDispatcher } from "svelte";
     import { Icon } from "@steeze-ui/svelte-icon";
     import type { IconSource } from "@steeze-ui/svelte-icon/types";
-    import type { MenuButtonState } from "$lib/figma/types";
+    import type {
+        MenuButtonState,
+        MenuButtonColor,
+        MenuButtonKind,
+    } from "$lib/figma/types";
     export let label: string;
     export let icon: IconSource;
     export let state: MenuButtonState;
+    export let color: MenuButtonColor = "base";
+    export let kind: MenuButtonKind;
 
+    $: colorStyle = {
+        base: "text-base-content",
+        primary: "text-primary",
+        destructive: "text-destructive",
+    }[color];
     $: style = {
         normal: "hover:bg-secondary-hover active:bg-disabled",
-        selected: "bg-primary text-primary-content",
         accordion: "bg-background text-base-content",
     }[state];
 
@@ -19,12 +29,14 @@
     }
 </script>
 
-<button
+<svelte:element
+    this={kind.kind}
+    href={kind.kind === "a" ? kind.href : undefined}
     on:click={click}
-    class={`flex-start flex flex-row items-center gap-2 px-4 py-3 text-xs font-bold focus:bg-border-focus focus:text-base-content focus:outline-none ${style}`}
+    class={`flex-start flex flex-row items-center gap-2 px-4 py-3 text-left text-xs font-bold focus:bg-border-focus focus:text-base-content focus:outline-none ${colorStyle} ${style}`}
 >
     <Icon src={icon} theme="outline" class="h-4 w-4" />
     <div class="first-letter:uppercase">
         {label}
     </div>
-</button>
+</svelte:element>
