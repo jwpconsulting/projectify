@@ -31,7 +31,7 @@
             method="post"
             on:submit|preventDefault={() => submit()}
         >
-            <div class="card w-full max-w-xl text-center shadow-card">
+            <div class="card shadow-card w-full max-w-xl text-center">
                 <div class="card-body items-center">
                     <div class="py-2">
                         <h1 class="card-title">{$_("password-reset")}</h1>
@@ -76,7 +76,7 @@
             </div>
         </form>
     {:else}
-        <div class="card w-full max-w-lg text-center shadow-card">
+        <div class="card shadow-card w-full max-w-lg text-center">
             <div class="card-body items-center">
                 <div class="py-2">
                     <div class="flex items-center justify-center pb-2">

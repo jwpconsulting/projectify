@@ -31,7 +31,7 @@
 </script>
 
 <div
-    class="card w-full max-w-xl transform-gpu text-center shadow-card"
+    class="card shadow-card w-full max-w-xl transform-gpu text-center"
     style={`transform:translateX(${$errorAnimation}px);`}
 >
     <form
