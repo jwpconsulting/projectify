@@ -28,3 +28,7 @@ export function getSettingsUrl(
 export function getArchiveUrl(workspaceUuid: string) {
     return `/dashboard/archive/${workspaceUuid}`;
 }
+
+export function getProfileUrl() {
+    return "/user/profile";
+}
