@@ -3,6 +3,8 @@ import type {
     DestructiveOverlayState,
     DestructiveOverlayType,
     DestructiveOverlayAction,
+    ContextMenuType,
+    ContextMenuState,
 } from "$lib/types";
 
 export const destructiveOverlayState = writable<DestructiveOverlayState>({
@@ -59,5 +61,31 @@ export function performDestructiveOverlay() {
             })();
             return $destructiveOverlayState;
         }
+    });
+}
+
+export const contextMenuState = writable<ContextMenuState>({
+    kind: "hidden",
+});
+export function openContextMenu(target: ContextMenuType, anchor: HTMLElement) {
+    contextMenuState.update(($contextMenuState) => {
+        if ($contextMenuState.kind !== "hidden") {
+            throw new Error("Expected $contextMenuState.kind to be hidden");
+        }
+        return {
+            kind: "visible",
+            target,
+            anchor,
+        };
+    });
+}
+export function closeContextMenu() {
+    contextMenuState.update(($contextMenuState) => {
+        if ($contextMenuState.kind === "hidden") {
+            throw new Error("Expected $contextMenuState.kind to be visible");
+        }
+        return {
+            kind: "hidden",
+        };
     });
 }

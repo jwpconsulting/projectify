@@ -64,6 +64,52 @@
         "archive-board-button": "archive",
         "cancel": "Cancel"
     },
+    "profile-overlay": {
+        "my-profile": "my profile",
+        "log-out": "log out"
+    },
+    "workspace-overlay": {
+        "add-new-workspace": "add new workspace"
+    },
+    "side-nav-overlay": {
+        "minimise-sidebar": "minimise sidebar",
+        "expand-sidebar": "expand sidebar",
+        "go-to-archive": "go to archive",
+        "workspace-settings": "workspace settings"
+    },
+    "workspace-board-overlay": {
+        "edit-board": "edit board",
+        "archive-board": "archive board"
+    },
+    "workspace-board-section-overlay": {
+        "expand-section": "expand section",
+        "collapse-section": "collapse section",
+        "switch-previous": "switch with previous section",
+        "switch-next": "switch with next section",
+        "edit-title": "edit section title",
+        "add-task": "add task",
+        "delete-section": "delete section"
+    },
+    "task-overlay": {
+        "open-task": "open task",
+        "move-to-section": "move to section",
+        "move-to-top": "move to top",
+        "move-to-bottom": "move to bottom",
+        "copy-link": "copy link",
+        "go-to-updates": "go to updates",
+        "delete-task": "delete task"
+    },
+    "help-overlay": {
+        "help-and-tips": "help and tips",
+        "blog": "blog"
+    },
+    "permissions-overlay": {
+        "all-roles": "all roles",
+        "owner": "owner",
+        "maintainer": "maintainer",
+        "member": "member",
+        "observer": "observer"
+    },
     "404": "404",
     "home": "Home",
     "signout": "Signout",

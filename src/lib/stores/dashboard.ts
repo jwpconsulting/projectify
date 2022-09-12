@@ -728,6 +728,25 @@ export function toggleLabelExpandOpen() {
     labelExpandOpen.update((state) => !state);
 }
 
+export const sideNavOpen = writable<boolean>(false);
+export function toggleSideNavOpen() {
+    sideNavOpen.update(($sideNavOpen) => !$sideNavOpen);
+}
+
+export const workspaceBoardSectionClosed = writable<Set<string>>(new Set());
+export function toggleWorkspaceBoardSectionOpen(
+    workspaceBoardSectionUuid: string
+) {
+    workspaceBoardSectionClosed.update(($workspaceBoardSectionClosed) => {
+        if ($workspaceBoardSectionClosed.has(workspaceBoardSectionUuid)) {
+            $workspaceBoardSectionClosed.delete(workspaceBoardSectionUuid);
+        } else {
+            $workspaceBoardSectionClosed.add(workspaceBoardSectionUuid);
+        }
+        return $workspaceBoardSectionClosed;
+    });
+}
+
 // Label CRUD
 export async function createLabel(
     workspace: Workspace,

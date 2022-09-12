@@ -189,3 +189,20 @@ export type DestructiveOverlayState =
           target: DestructiveOverlayType;
           action: DestructiveOverlayAction;
       };
+
+export type ContextMenuType =
+    | { kind: "profile" }
+    | { kind: "workspace" }
+    | { kind: "sideNav"; workspace: Workspace }
+    | { kind: "workspaceBoard"; workspaceBoard: WorkspaceBoard }
+    | {
+          kind: "workspaceBoardSection";
+          workspaceBoardSection: WorkspaceBoardSection;
+      }
+    | { kind: "task"; task: Task; location: "dashboard" }
+    | { kind: "task"; task: Task; location: "task" }
+    | { kind: "help" }
+    | { kind: "permissions" };
+export type ContextMenuState =
+    | { kind: "hidden" }
+    | { kind: "visible"; target: ContextMenuType; anchor: HTMLElement };

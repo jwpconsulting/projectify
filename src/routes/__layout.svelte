@@ -39,6 +39,7 @@
     import ConnectionStatus from "$lib/components/connectionStatus.svelte";
     import GlobalDropDown from "$lib/components/globalDropDown.svelte";
     import DestructiveOverlayContainer from "$lib/components/DestructiveOverlayContainer.svelte";
+    import ContextMenuContainer from "$lib/components/ContextMenuContainer.svelte";
 </script>
 
 <svelte:head>
@@ -59,3 +60,4 @@
 <GlobalDropDown />
 
 <DestructiveOverlayContainer />
+<ContextMenuContainer />
