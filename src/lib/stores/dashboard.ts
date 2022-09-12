@@ -40,6 +40,7 @@ import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
 import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
 
 export const drawerModalOpen = writable(false);
+export const workspaces = writable<Workspace[] | null>(null);
 export const currentWorkspaceUuid = writable<string | null>(null);
 export const currentWorkspaceBoardUuid = writable<string | null>(null);
 export const currentTaskUuid = writable<string | null>(null);
@@ -692,15 +693,25 @@ export async function assignUserToTask(
     }
 }
 
-export async function setFirstWorkspace() {
-    const workspaces = await getWorkspaces();
+export async function setWorkspaces() {
+    workspaces.set(await getWorkspaces());
+}
+
+workspaces.subscribe(($workspaces: Workspace[] | null) => {
+    if ($workspaces === null) {
+        return;
+    }
     let workspaceUuid;
-    if (workspaces.length) {
-        workspaceUuid = workspaces[0].uuid;
+    if ($workspaces.length) {
+        workspaceUuid = $workspaces[0].uuid;
         currentWorkspaceUuid.set(workspaceUuid);
     } else {
         throw new Error("No workspaces");
     }
+});
+
+export async function setFirstWorkspace() {
+    await setWorkspaces();
 }
 
 export async function setAndNavigateWorkspaceBoard(uuid: string) {
