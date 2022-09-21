@@ -1,7 +1,7 @@
 <script lang="ts">
     import DestructiveOverlay from "$lib/figma/DestructiveOverlay.svelte";
     import ContextMenu from "$lib/figma/ContextMenu.svelte";
-    import { workspaces, setFirstWorkspace } from "$lib/stores/dashboard";
+    import { setFirstWorkspace } from "$lib/stores/dashboard";
     import type { ContextMenuType, DestructiveOverlayType } from "$lib/types";
     import { browser } from "$app/env";
     import { fc } from "$lib/storybook";
@@ -71,74 +71,72 @@
         },
     ];
 
-    let contextMenus: ContextMenuType[] = [];
-    $: {
-        if ($workspaces) {
-            contextMenus = [
-                {
-                    kind: "profile" as const,
-                },
-                {
-                    kind: "workspace" as const,
-                },
-                {
-                    kind: "sideNav" as const,
-                    workspace: $workspaces[0],
-                },
-                {
-                    kind: "workspaceBoard" as const,
-                    workspaceBoard: {
-                        title: "board name",
-                        created: "",
-                        modified: "",
-                        uuid: "",
-                    },
-                },
-                {
-                    kind: "workspaceBoardSection" as const,
-                    workspaceBoardSection: {
-                        title: "workspace board section",
-                        created: "",
-                        modified: "",
-                        uuid: "",
-                        _order: 0,
-                    },
-                },
-                {
-                    kind: "task" as const,
-                    task: {
-                        title: "this is a task",
-                        created: "",
-                        modified: "",
-                        uuid: "",
-                        _order: 0,
-                        labels: [],
-                        number: 1,
-                    },
-                    location: "dashboard",
-                },
-                {
-                    kind: "task" as const,
-                    task: {
-                        title: "this is a task",
-                        created: "",
-                        modified: "",
-                        uuid: "",
-                        _order: 0,
-                        labels: [],
-                        number: 1,
-                    },
-                    location: "task",
-                },
-                {
-                    kind: "help",
-                },
-                {
-                    kind: "permissions",
-                },
-            ];
-        }
-    }
+    const workspace = {
+        uuid: "",
+        title: "This is a workspace",
+        created: "",
+        modified: "",
+    };
+    const workspaceBoard = {
+        title: "board name",
+        created: "",
+        modified: "",
+        uuid: "",
+    };
+    const workspaceBoardSection = {
+        title: "workspace board section",
+        created: "",
+        modified: "",
+        uuid: "",
+        _order: 0,
+    };
+    const task = {
+        title: "this is a task",
+        created: "",
+        modified: "",
+        uuid: "",
+        _order: 0,
+        labels: [],
+        number: 1,
+    };
+
+    let contextMenus: ContextMenuType[] = [
+        {
+            kind: "profile" as const,
+        },
+        {
+            kind: "workspace" as const,
+        },
+        {
+            kind: "sideNav" as const,
+            workspace,
+        },
+        {
+            kind: "workspaceBoard" as const,
+            workspaceBoard,
+        },
+        {
+            kind: "workspaceBoardSection" as const,
+            workspaceBoardSection,
+        },
+        {
+            kind: "task" as const,
+            task,
+            location: "dashboard",
+        },
+        {
+            kind: "task" as const,
+            task,
+            location: "task",
+        },
+        {
+            kind: "help",
+        },
+        {
+            kind: "permissions",
+        },
+    ];
+
     if (browser) {
         setFirstWorkspace();
     }
@@ -148,8 +146,10 @@
     <DestructiveOverlay {target} />
 {/each}
 
-<div class={fc}>
-    {#each contextMenus as target}
-        <ContextMenu {target} />
-    {/each}
-</div>
+{#if browser}
+    <div class={fc}>
+        {#each contextMenus as target}
+            <ContextMenu {target} />
+        {/each}
+    </div>
+{/if}
