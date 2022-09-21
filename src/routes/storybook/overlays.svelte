@@ -2,11 +2,11 @@
     import DestructiveOverlay from "$lib/figma/DestructiveOverlay.svelte";
     import ContextMenu from "$lib/figma/ContextMenu.svelte";
     import { workspaces, setFirstWorkspace } from "$lib/stores/dashboard";
-    import type { ContextMenuType } from "$lib/types";
+    import type { ContextMenuType, DestructiveOverlayType } from "$lib/types";
     import { browser } from "$app/env";
     import { fc } from "$lib/storybook";
 
-    const destructiveOverlays = [
+    const destructiveOverlays: DestructiveOverlayType[] = [
         {
             kind: "deleteLabel" as const,
             label: { name: "This is a label", color: 0, uuid: "" },
