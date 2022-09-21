@@ -7,6 +7,7 @@
     export let value = "";
     export let placeholder: string;
     export let style: InputFieldStyle;
+    export let name: string;
     function clear() {
         value = "";
     }
@@ -18,6 +19,7 @@
         class="text-regular placeholder:text-task-update-text peer relative top-0 left-0 z-10 h-full w-full rounded-lg border border-border pr-8 text-xs placeholder:capitalize focus:outline-none"
         class:pl-2={style !== "search"}
         class:pl-8={style === "search"}
+        {name}
         bind:value
         {placeholder}
     />

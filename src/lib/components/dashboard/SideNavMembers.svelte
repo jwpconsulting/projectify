@@ -37,6 +37,7 @@
         <InputField
             bind:value={$workspaceUserSearch}
             style="search"
+            name="member-name"
             placeholder={$_("dashboard.member-name")}
         />
     </div>

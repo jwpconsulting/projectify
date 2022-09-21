@@ -17,7 +17,11 @@
                             {style}
                         </div>
                         <div class="w-96">
-                            <InputField {style} placeholder="Enter input" />
+                            <InputField
+                                {style}
+                                name={`${size} ${style}`}
+                                placeholder="Enter input"
+                            />
                         </div>
                     </div>
                 {/each}

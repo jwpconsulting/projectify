@@ -22,6 +22,7 @@
         <InputField
             bind:value={$labelSearch}
             style="search"
+            name="label-name"
             placeholder={$_("dashboard.label-name")}
         />
     </div>
