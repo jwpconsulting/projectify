@@ -206,3 +206,16 @@ export type ContextMenuType =
 export type ContextMenuState =
     | { kind: "hidden" }
     | { kind: "visible"; target: ContextMenuType; anchor: HTMLElement };
+
+export type ConstructiveOverlayType =
+    | { kind: "updateWorkspaceBoard"; workspaceBoard: WorkspaceBoard }
+    | { kind: "createWorkspaceBoard"; workspace: Workspace }
+    | { kind: "inviteTeamMembers"; workspace: Workspace }
+    | { kind: "inviteTeamMembersNoSeatsLeft"; workspace: Workspace }
+    | { kind: "createWorkspaceBoardSection"; workspaceBoard: WorkspaceBoard }
+    | { kind: "createWorkspace" }
+    | { kind: "skipOnboarding" }
+    | { kind: "recoverWorkspaceBoard"; workspaceBoard: WorkspaceBoard };
+export type ConstructiveOverlayState =
+    | { kind: "hidden" }
+    | { kind: "visible"; target: ConstructiveOverlayType };

@@ -2,7 +2,12 @@
     import DestructiveOverlay from "$lib/figma/DestructiveOverlay.svelte";
     import ContextMenu from "$lib/figma/ContextMenu.svelte";
     import { setFirstWorkspace } from "$lib/stores/dashboard";
-    import type { ContextMenuType, DestructiveOverlayType } from "$lib/types";
+    import ConstructiveOverlay from "$lib/figma/ConstructiveOverlay.svelte";
+    import type {
+        ContextMenuType,
+        ConstructiveOverlayType,
+        DestructiveOverlayType,
+    } from "$lib/types";
     import { browser } from "$app/env";
     import { fc } from "$lib/storybook";
 
@@ -137,6 +142,19 @@
         },
     ];
 
+    let constructiveOverlays: ConstructiveOverlayType[] = [
+        { kind: "updateWorkspaceBoard", workspaceBoard },
+        { kind: "createWorkspaceBoard", workspace },
+        { kind: "inviteTeamMembers", workspace },
+        { kind: "inviteTeamMembersNoSeatsLeft", workspace },
+        {
+            kind: "createWorkspaceBoardSection",
+            workspaceBoard,
+        },
+        { kind: "createWorkspace" },
+        { kind: "skipOnboarding" },
+        { kind: "recoverWorkspaceBoard", workspaceBoard },
+    ];
     if (browser) {
         setFirstWorkspace();
     }
@@ -153,3 +171,11 @@
         {/each}
     </div>
 {/if}
+
+<div class={fc}>
+    {#each constructiveOverlays as target}
+        <div class="w-[500px]">
+            <ConstructiveOverlay {target} />
+        </div>
+    {/each}
+</div>
