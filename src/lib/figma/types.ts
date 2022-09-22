@@ -78,10 +78,14 @@ export type SelectLabel =
 export const filterLabelMenuStates = ["list", "create"] as const;
 export type FilterLabelMenuState = typeof filterLabelMenuStates[number];
 
-export const inputFieldStyles = ["search", "subTask", "field"] as const;
-export type InputFieldStyle = typeof inputFieldStyles[number];
+// TODO rename to InputFieldKind Justus 2022-09-22
+export type InputFieldStyle =
+    | { kind: "search" }
+    | { kind: "subTask" }
+    | { kind: "field"; inputType: "text" | "password" };
 export const inputFieldSizes = ["extraSmall", "small", "normal"] as const;
 export type InputFieldSize = typeof inputFieldSizes[number];
+export type InputFieldAnchor = { href: string; label: string };
 
 export const anchorSizes = ["extraSmall", "normal"] as const;
 export type AnchorSize = typeof anchorSizes[number];

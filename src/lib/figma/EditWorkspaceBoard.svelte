@@ -17,7 +17,7 @@
         <InputField
             name="workspace-board-name"
             placeholder={$_("edit-workspace-board.please-edit-me")}
-            style="field"
+            style={{ kind: "field", inputType: "text" }}
         />
     </div>
     <div class="">
@@ -27,7 +27,7 @@
         <InputField
             name="deadline"
             placeholder={$_("edit-workspace-board.please-edit-me")}
-            style="field"
+            style={{ kind: "field", inputType: "text" }}
         />
     </div>
 </div>

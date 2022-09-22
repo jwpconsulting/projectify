@@ -21,7 +21,7 @@
         </div>
         <InputField
             bind:value={$labelSearch}
-            style="search"
+            style={{ kind: "search" }}
             name="label-name"
             placeholder={$_("dashboard.label-name")}
         />

@@ -1,7 +1,15 @@
 <script lang="ts">
     import InputField from "$lib/figma/InputField.svelte";
-    import { inputFieldStyles, inputFieldSizes } from "$lib/figma/types";
+    import { inputFieldSizes } from "$lib/figma/types";
+    import type { InputFieldStyle } from "$lib/figma/types";
     import { fc, fr } from "$lib/storybook";
+
+    const inputFieldStyles: InputFieldStyle[] = [
+        { kind: "search" },
+        { kind: "subTask" },
+        { kind: "field", inputType: "text" },
+        { kind: "field", inputType: "password" },
+    ];
 </script>
 
 <div class={fc}>
@@ -12,14 +20,26 @@
             </div>
             <div class={fc}>
                 {#each inputFieldStyles as style}
-                    <div class={fr}>
+                    <div class={`${fr} items-center`}>
                         <div class="capitalize">
-                            {style}
+                            {style.kind}
+                            {style.kind === "field"
+                                ? `(${style.inputType})`
+                                : ""}
                         </div>
                         <div class="w-96">
                             <InputField
                                 {style}
-                                name={`${size} ${style}`}
+                                label="email"
+                                anchorTop={{
+                                    href: "/",
+                                    label: "Change email",
+                                }}
+                                anchorBottom={{
+                                    href: "/",
+                                    label: "Forgot password?",
+                                }}
+                                name={`email ${size} ${JSON.stringify(style)}`}
                                 placeholder="Enter input"
                             />
                         </div>
