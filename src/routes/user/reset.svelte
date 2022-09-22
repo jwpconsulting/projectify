@@ -9,13 +9,8 @@
     let requestSent = false;
 
     async function submit() {
-        const res = await requestPasswordReset(emailValue);
-
-        if (res?.error) {
-            error = res.error.message;
-        } else {
-            requestSent = true;
-        }
+        await requestPasswordReset(emailValue);
+        requestSent = true;
     }
 
     function gotoTopPage() {

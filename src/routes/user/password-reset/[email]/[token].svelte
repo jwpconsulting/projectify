@@ -13,13 +13,8 @@
     let token = $page.params["token"];
 
     async function submit() {
-        const result = await confirmPasswordReset(email, token, passwordValue);
-
-        if (result) {
-            error = result.message;
-        } else {
-            requestSent = true;
-        }
+        await confirmPasswordReset(email, token, passwordValue);
+        requestSent = true;
     }
 
     function gotoTopPage() {

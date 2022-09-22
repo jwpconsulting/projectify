@@ -50,28 +50,22 @@ export const emailConfirmation = async (email: string, token: string) => {
 };
 
 export const login = async (email: string, password: string) => {
-    try {
-        const res = await client.mutate({
-            mutation: Mutation_Login,
-            variables: { input: { email, password } },
-        });
+    const res = await client.mutate({
+        mutation: Mutation_Login,
+        variables: { input: { email, password } },
+    });
 
-        console.log(res);
-        if (res.data.login !== null) {
-            const userData = res.data.login;
-            user.set(userData);
+    if (res.data.login !== null) {
+        const userData = res.data.login;
+        user.set(userData);
 
-            if (signinRedirect.to) {
-                goto(signinRedirect.to);
-                signinRedirect.to = null;
-            }
-
-            return userData;
+        if (signinRedirect.to) {
+            goto(signinRedirect.to);
+            signinRedirect.to = null;
         }
-    } catch (error) {
-        console.error(error);
+
+        return userData;
     }
-    return null;
 };
 
 export const logout = async () => {
@@ -98,36 +92,20 @@ export const fetchUser = async () => {
     return userData;
 };
 
-export const requestPasswordReset = async (email: string) => {
-    try {
-        const res = await client.mutate({
-            mutation: Mutation_RequesetPasswordReset,
-            variables: { input: { email } },
-        });
-
-        if (res.data.requestPasswordReset !== null) {
-            return res.data.requestPasswordReset.email;
-        }
-    } catch (error) {
-        return { error };
-    }
+export const requestPasswordReset = async (email: string): Promise<void> => {
+    await client.mutate({
+        mutation: Mutation_RequesetPasswordReset,
+        variables: { input: { email } },
+    });
 };
 
 export const confirmPasswordReset = async (
     email: string,
     token: string,
     newPassword: string
-): Promise<Error | null> => {
-    try {
-        await client.mutate({
-            mutation: Mutation_ConfirmPasswordReset,
-            variables: { input: { email, token, newPassword } },
-        });
-        return null;
-    } catch (error) {
-        if (!(error instanceof Error)) {
-            throw new Error("Expected Error");
-        }
-        return error;
-    }
+): Promise<void> => {
+    await client.mutate({
+        mutation: Mutation_ConfirmPasswordReset,
+        variables: { input: { email, token, newPassword } },
+    });
 };
