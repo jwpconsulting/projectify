@@ -11,6 +11,7 @@
     export let color: ButtonColor;
     export let size: ButtonSize;
     export let disabled: boolean;
+    export let label: string | null = null;
 
     $: innerColorStyle = {
         primary: {
@@ -57,6 +58,9 @@
             />
         {/if}
         <slot />
+        {#if label}
+            {label}
+        {/if}
         {#if style.icon && style.icon.position === "right"}
             <Icon
                 src={style.icon.icon}
@@ -76,12 +80,18 @@
                 class={`flex flex-row items-center justify-center gap-2.5 rounded-lg border px-4  py-2 font-bold group-disabled:bg-disabled group-disabled:text-disabled-primary-content ${innerColorStyle} ${innerSizeStyle}`}
             >
                 <slot />
+                {#if label}
+                    {label}
+                {/if}
             </div>
         {:else}
             <div
                 class={`flex flex-row items-center justify-center gap-2.5 rounded-lg border px-4  py-2 font-bold group-disabled:border-disabled-content group-disabled:bg-transparent group-disabled:text-disabled-content ${innerColorStyle} ${innerSizeStyle}`}
             >
                 <slot />
+                {#if label}
+                    {label}
+                {/if}
             </div>
         {/if}
     </button>
