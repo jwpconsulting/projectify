@@ -82,3 +82,6 @@ export const inputFieldStyles = ["search", "subTask", "field"] as const;
 export type InputFieldStyle = typeof inputFieldStyles[number];
 export const inputFieldSizes = ["extraSmall", "small", "normal"] as const;
 export type InputFieldSize = typeof inputFieldSizes[number];
+
+export const anchorSizes = ["extraSmall", "normal"] as const;
+export type AnchorSize = typeof anchorSizes[number];
