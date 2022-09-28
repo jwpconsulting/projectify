@@ -1,3 +1,5 @@
+import type { SettingKind } from "$lib/types/dashboard";
+
 export function getDashboardWorkspaceUrl(workspaceUuid: string) {
     return `/dashboard/workspace/${workspaceUuid}`;
 }
@@ -14,10 +16,7 @@ export function getDashboardTaskUrl(
     return `/dashboard/workspace-board/${workspaceBoardUuid}?task=${taskUuid}&view=${view}`;
 }
 
-export function getSettingsUrl(
-    workspaceUuid: string,
-    kind: "index" | "labels" | "team-members"
-) {
+export function getSettingsUrl(workspaceUuid: string, kind: SettingKind) {
     const root = `/dashboard/settings/${workspaceUuid}`;
     if (kind === "index") {
         return root;
