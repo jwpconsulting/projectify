@@ -1,11 +1,23 @@
 <script lang="ts">
+    import WorkspaceSettingsBar from "$lib/figma/WorkspaceSettingsBar.svelte";
     import LogIn from "$lib/figma/LogIn.svelte";
     import SignUp from "$lib/figma/SignUp.svelte";
     import RequestPasswordReset from "$lib/figma/RequestPasswordReset.svelte";
     import ConfirmPasswordReset from "$lib/figma/ConfirmPasswordReset.svelte";
+    import { settingKinds } from "$lib/types/dashboard";
 
-    import { fc } from "$lib/storybook";
+    import { fc, workspace } from "$lib/storybook";
+
+    import { browser } from "$app/env";
 </script>
+
+{#if browser}
+    <div class={fc}>
+        {#each settingKinds as activeSetting}
+            <WorkspaceSettingsBar {workspace} {activeSetting} />
+        {/each}
+    </div>
+{/if}
 
 <div class={fc}>
     <div class="w-[500px]">

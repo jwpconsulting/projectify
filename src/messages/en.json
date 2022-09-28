@@ -245,7 +245,11 @@
     "remove-section-tooltip-message": "You need to remove all tasks in order to delete this section",
     "edit-section": "Edit Section",
     "logout": "Logout",
-    "settings": "Settings",
+    "settings": {
+        "general": "General",
+        "members": "Members",
+        "billing": "Billing"
+    },
     "my-profile": "My Profile",
     "remove": "Remove",
     "new-member": "New member",
