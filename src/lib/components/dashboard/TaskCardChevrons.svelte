@@ -2,7 +2,7 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import { ChevronUp, ChevronDown } from "@steeze-ui/heroicons";
     import type { Task, WorkspaceBoardSection } from "$lib/types";
-    import { moveTaskAfter } from "$lib/stores/dashboard";
+    import { moveTaskAfter } from "$lib/repository/workspace";
 
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection | null = null;

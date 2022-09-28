@@ -1,11 +1,10 @@
 <script lang="ts">
     import {
-        assignUserToTask,
         currentTask,
         currentTaskUuid,
-        deleteTask,
         newTaskSectionUuid,
     } from "$lib/stores/dashboard";
+    import { assignUserToTask, deleteTask } from "$lib/repository/workspace";
 
     import {
         Mutation_AddTask,

@@ -5,7 +5,7 @@
     import SelectLabelFocus from "$lib/figma/SelectLabelFocus.svelte";
     import CircleIcon from "$lib/figma/CircleIcon.svelte";
     import { openDestructiveOverlay } from "$lib/stores/global-ui";
-    import { deleteLabel } from "$lib/stores/dashboard";
+    import { deleteLabel } from "$lib/repository/workspace";
 
     export let label: SelectLabel;
     export let checked: boolean;

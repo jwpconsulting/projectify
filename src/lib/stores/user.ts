@@ -9,7 +9,7 @@ import {
     Mutation_RequesetPasswordReset,
     Mutation_ConfirmPasswordReset,
 } from "$lib/graphql/operations";
-import { getUser } from "$lib/repository";
+import { getUser } from "$lib/repository/user";
 import { goto } from "$app/navigation";
 import type { User } from "$lib/types";
 

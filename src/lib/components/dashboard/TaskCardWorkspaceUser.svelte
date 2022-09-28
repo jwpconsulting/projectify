@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { assignUserToTask } from "$lib/stores/dashboard";
+    import { assignUserToTask } from "$lib/repository/workspace";
     import type { Task, WorkspaceUser } from "$lib/types";
     import WorkspaceUserAvatar from "$lib/components/WorkspaceUserAvatar.svelte";
     import UserPicker from "../userPicker.svelte";

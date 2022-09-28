@@ -3,9 +3,9 @@
         copyDashboardURL,
         currentWorkspaceBoardSections,
         currentWorkspaceBoardUuid,
-        deleteTask,
         openTaskDetails,
     } from "$lib/stores/dashboard";
+    import { moveTaskAfter, deleteTask } from "$lib/repository/workspace";
     import { _ } from "svelte-i18n";
     import IconTrash from "../icons/icon-trash.svelte";
     import IconArrowSRight from "../icons/icon-arrow-s-right.svelte";
@@ -21,7 +21,6 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import { DotsHorizontal } from "@steeze-ui/heroicons";
     import { getDropDown } from "../globalDropDown.svelte";
-    import { moveTaskAfter } from "$lib/stores/dashboard";
     import type { Task, WorkspaceBoardSection } from "$lib/types";
 
     export let task: Task;

@@ -1,17 +1,7 @@
-import {
-    Mutation_MoveTaskAfter,
-    Mutation_DeleteTask,
-    Mutation_AssignTask,
-    Mutation_AddLabelMutation,
-    Mutation_UpdateLabelMutation,
-    Mutation_DeleteLabelMutation,
-} from "./../graphql/operations";
 import { goto } from "$app/navigation";
 import Fuse from "fuse.js";
 import lodash from "lodash";
 import { writable, derived } from "svelte/store";
-import { client } from "$lib/graphql/client";
-import { getModal } from "$lib/components/dialogModal.svelte";
 import type {
     Customer,
     Label,
@@ -32,9 +22,9 @@ import {
     getWorkspace,
     getWorkspaces,
     getWorkspaceBoard,
-    getWorkspaceCustomer,
     getArchivedWorkspaceBoards,
-} from "$lib/repository";
+} from "$lib/repository/workspace";
+import { getWorkspaceCustomer } from "$lib/repository/corporate";
 import { browser } from "$app/env";
 import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
 import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
@@ -623,76 +613,6 @@ export function searchTasks(
         .map((res: Fuse.FuseResult<Task>) => res.item);
 }
 
-export async function moveTaskAfter(
-    taskUuid: string,
-    workspaceBoardSectionUuid: string,
-    afterTaskUuid: string | null = null
-): Promise<void> {
-    try {
-        const input: {
-            taskUuid: string;
-            workspaceBoardSectionUuid: string;
-            afterTaskUuid?: string;
-        } = {
-            taskUuid,
-            workspaceBoardSectionUuid,
-        };
-
-        if (afterTaskUuid) {
-            input.afterTaskUuid = afterTaskUuid;
-        }
-
-        await client.mutate({
-            mutation: Mutation_MoveTaskAfter,
-            variables: { input },
-        });
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-export async function deleteTask(task: Task): Promise<void> {
-    const modalRes = await getModal("deleteTaskConfirmModal").open();
-
-    if (!modalRes) {
-        return;
-    }
-
-    try {
-        await client.mutate({
-            mutation: Mutation_DeleteTask,
-            variables: {
-                input: {
-                    uuid: task.uuid,
-                },
-            },
-        });
-
-        closeTaskDetails();
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-export async function assignUserToTask(
-    userEmail: string | null,
-    taskUuid: string
-): Promise<void> {
-    try {
-        await client.mutate({
-            mutation: Mutation_AssignTask,
-            variables: {
-                input: {
-                    uuid: taskUuid,
-                    email: userEmail,
-                },
-            },
-        });
-    } catch (error) {
-        console.error(error);
-    }
-}
-
 export async function setWorkspaces() {
     workspaces.set(await getWorkspaces());
 }
@@ -744,45 +664,5 @@ export function toggleWorkspaceBoardSectionOpen(
             $workspaceBoardSectionClosed.add(workspaceBoardSectionUuid);
         }
         return $workspaceBoardSectionClosed;
-    });
-}
-
-// Label CRUD
-export async function createLabel(
-    workspace: Workspace,
-    name: string,
-    color: number
-) {
-    await client.mutate({
-        mutation: Mutation_AddLabelMutation,
-        variables: {
-            input: {
-                workspaceUuid: workspace.uuid,
-                name,
-                color,
-            },
-        },
-    });
-}
-export async function updateLabel(label: Label, name: string, color: number) {
-    await client.mutate({
-        mutation: Mutation_UpdateLabelMutation,
-        variables: {
-            input: {
-                uuid: label.uuid,
-                name,
-                color,
-            },
-        },
-    });
-}
-export async function deleteLabel(label: Label) {
-    await client.mutate({
-        mutation: Mutation_DeleteLabelMutation,
-        variables: {
-            input: {
-                uuid: label.uuid,
-            },
-        },
     });
 }

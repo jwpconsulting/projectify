@@ -4,13 +4,12 @@
     import DialogModal, { getModal } from "$lib/components/dialogModal.svelte";
     import LabelPill from "$lib/components/dashboard/LabelPill.svelte";
     import type { Label } from "$lib/types";
+    import { currentWorkspace, loading } from "$lib/stores/dashboard";
     import {
-        currentWorkspace,
-        loading,
         createLabel,
         deleteLabel,
         updateLabel,
-    } from "$lib/stores/dashboard";
+    } from "$lib/repository/workspace";
 
     let labels: Label[] = [];
 
