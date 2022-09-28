@@ -177,7 +177,8 @@ export type DestructiveOverlayType =
     | { kind: "deleteSection"; workspaceBoardSection: WorkspaceBoardSection }
     | { kind: "deleteTask"; task: Task }
     | { kind: "deleteSelectedTasks"; tasks: Task[] }
-    | { kind: "archiveBoard"; workspaceBoard: WorkspaceBoard };
+    | { kind: "archiveBoard"; workspaceBoard: WorkspaceBoard }
+    | { kind: "deleteBoard"; workspaceBoard: WorkspaceBoard };
 
 export type DestructiveOverlayAction =
     | { kind: "async"; action: () => Promise<void> }

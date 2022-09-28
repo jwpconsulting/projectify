@@ -13,6 +13,7 @@
         deleteTask: $_("destructive-overlay.delete-task"),
         deleteSelectedTasks: $_("destructive-overlay.delete-selected-tasks"),
         archiveBoard: $_("destructive-overlay.archive-board"),
+        deleteBoard: $_("destructive-overlay.delete-board"),
     }[target.kind];
     $: body1 = {
         deleteLabel: $_("destructive-overlay.delete-label-body-1"),
@@ -23,6 +24,7 @@
             "destructive-overlay.delete-selected-tasks-body-1"
         ),
         archiveBoard: $_("destructive-overlay.archive-board-body-1"),
+        deleteBoard: $_("destructive-overlay.delete-board-body-1"),
     }[target.kind];
     $: body2 = {
         deleteLabel: $_("destructive-overlay.delete-label-body-2"),
@@ -33,6 +35,7 @@
             "destructive-overlay.delete-selected-tasks-body-2"
         ),
         archiveBoard: $_("destructive-overlay.archive-board-body-2"),
+        deleteBoard: $_("destructive-overlay.delete-board-body-2"),
     }[target.kind];
     $: warning = {
         deleteLabel: $_("destructive-overlay.delete-label-body-warning"),
@@ -43,6 +46,7 @@
             "destructive-overlay.delete-selected-tasks-body-warning"
         ),
         archiveBoard: $_("destructive-overlay.archive-board-body-warning"),
+        deleteBoard: $_("destructive-overlay.delete-board-body-warning"),
     }[target.kind];
     $: buttonLabel = {
         deleteLabel: $_("destructive-overlay.delete-label-button"),
@@ -53,6 +57,7 @@
             "destructive-overlay.delete-selected-tasks-button"
         ),
         archiveBoard: $_("destructive-overlay.archive-board-button"),
+        deleteBoard: $_("destructive-overlay.delete-board-button"),
     }[target.kind];
     let targetName: string;
     $: {
@@ -69,6 +74,8 @@
         } else if (target.kind === "deleteSelectedTasks") {
             targetName = target.tasks.length.toString();
         } else if (target.kind === "archiveBoard") {
+            targetName = target.workspaceBoard.title;
+        } else if (target.kind === "deleteBoard") {
             targetName = target.workspaceBoard.title;
         }
     }

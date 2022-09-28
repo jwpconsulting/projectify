@@ -48,6 +48,10 @@
                 uuid: "",
             },
         },
+        {
+            kind: "deleteBoard" as const,
+            workspaceBoard,
+        },
     ];
 
     let contextMenus: ContextMenuType[] = [
