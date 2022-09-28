@@ -5,6 +5,8 @@ import type {
     WorkspaceUser,
     WorkspaceUserSelectionInput,
     WorkspaceBoard,
+    WorkspaceBoardSection,
+    Task,
 } from "$lib/types";
 import { labelColors, getIndexFromLabelColor } from "$lib/utils/colors";
 import type { LabelColor } from "$lib/utils/colors";
@@ -39,7 +41,7 @@ const mappedLabels: Label[] = labelColors.map((labelColor: LabelColor) => {
     return {
         name: labelColor,
         color: getIndexFromLabelColor(labelColor),
-        uuid: "",
+        uuid: "does-not-exist",
     };
 });
 
@@ -63,22 +65,48 @@ export const selectLabels: SelectLabel[] = [
     { kind: "noLabel" },
 ];
 
-const workspaceUser: WorkspaceUser = {
+export const workspaceUser: WorkspaceUser = {
     user: user1,
-    uuid: "helloWorld",
+    uuid: "does-not-exist",
     role: "OWNER",
     created: "",
     modified: "",
 };
+
 export const workspaceUserSelectionInputs: WorkspaceUserSelectionInput[] = [
     { kind: "unassigned" },
     { kind: "allWorkspaceUsers" },
     { kind: "workspaceUser", workspaceUser },
 ];
 
+export const workspace = {
+    uuid: "does-not-exist",
+    title: "This is a workspace",
+    created: "",
+    modified: "",
+};
+
 export const workspaceBoard: WorkspaceBoard = {
     uuid: "does-not-exist",
     title: "Project board",
     created: "",
     modified: "",
+};
+
+export const workspaceBoardSection: WorkspaceBoardSection = {
+    title: "section name",
+    created: "",
+    modified: "",
+    uuid: "does-not-exist",
+    _order: 0,
+};
+
+export const task: Task = {
+    title: "task name",
+    created: "",
+    modified: "",
+    uuid: "does-not-exist",
+    _order: 0,
+    number: 1,
+    labels: [],
 };

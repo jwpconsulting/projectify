@@ -9,7 +9,14 @@
         DestructiveOverlayType,
     } from "$lib/types";
     import { browser } from "$app/env";
-    import { fc } from "$lib/storybook";
+    import {
+        fc,
+        task,
+        workspaceUser,
+        workspace,
+        workspaceBoard,
+        workspaceBoardSection,
+    } from "$lib/storybook";
 
     const destructiveOverlays: DestructiveOverlayType[] = [
         {
@@ -18,52 +25,19 @@
         },
         {
             kind: "deleteMember" as const,
-            workspaceUser: {
-                user: {
-                    email: "hello@example.com",
-                    full_name: "Firstname Lastname",
-                },
-                uuid: "",
-                role: "",
-                created: "",
-                modified: "",
-            },
+            workspaceUser,
         },
         {
             kind: "deleteSection" as const,
-            workspaceBoardSection: {
-                title: "section name",
-                created: "",
-                modified: "",
-                uuid: "",
-                _order: 0,
-            },
+            workspaceBoardSection,
         },
         {
             kind: "deleteTask" as const,
-            task: {
-                title: "task name",
-                created: "",
-                modified: "",
-                uuid: "",
-                _order: 0,
-                number: 1,
-                labels: [],
-            },
+            task,
         },
         {
             kind: "deleteSelectedTasks" as const,
-            tasks: [
-                {
-                    title: "task name",
-                    created: "",
-                    modified: "",
-                    uuid: "",
-                    _order: 0,
-                    number: 1,
-                    labels: [],
-                },
-            ],
+            tasks: [task],
         },
         {
             kind: "archiveBoard" as const,
@@ -75,35 +49,6 @@
             },
         },
     ];
-
-    const workspace = {
-        uuid: "",
-        title: "This is a workspace",
-        created: "",
-        modified: "",
-    };
-    const workspaceBoard = {
-        title: "board name",
-        created: "",
-        modified: "",
-        uuid: "",
-    };
-    const workspaceBoardSection = {
-        title: "workspace board section",
-        created: "",
-        modified: "",
-        uuid: "",
-        _order: 0,
-    };
-    const task = {
-        title: "this is a task",
-        created: "",
-        modified: "",
-        uuid: "",
-        _order: 0,
-        labels: [],
-        number: 1,
-    };
 
     let contextMenus: ContextMenuType[] = [
         {
