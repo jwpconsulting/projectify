@@ -1,14 +1,20 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
-    function click() {
-        dispatch("click");
-    }
+    export let label: string;
+    export let href: string;
+    export let active: boolean;
+    export let grow: boolean = false;
 </script>
 
-<button
-    on:click={click}
-    class="flex-start flex max-w-fit flex-row p-2.5 text-sm font-bold uppercase text-secondary-text hover:text-base-content active:text-base-content"
+<a
+    {href}
+    class="border-b-2 p-2.5 text-sm font-bold uppercase hover:text-base-content"
+    class:border-base-content={active}
+    class:border-border={!active}
+    class:text-base-content={active}
+    class:text-utility={!active}
 >
-    <slot />
-</button>
+    {label}
+</a>
+{#if grow}
+    <div class="grow border-b-2 border-border" />
+{/if}
