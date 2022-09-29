@@ -248,7 +248,8 @@
     "settings": {
         "general": "General",
         "members": "Members",
-        "billing": "Billing"
+        "billing": "Billing",
+        "no-job-title": "No job title"
     },
     "my-profile": "My Profile",
     "remove": "Remove",
