@@ -110,14 +110,63 @@
         "member": "member",
         "observer": "observer"
     },
-    "edit-workspace-board": {},
-    "new-workspace-board": {},
-    "invite-member": {},
-    "invite-member-error": {},
-    "new-workspace-board-section": {},
-    "new-workspace": {},
-    "skip-onboarding": {},
-    "recover-workspace-board": {},
+    "edit-workspace-board": {
+        "title": "edit workspace board",
+        "workspace-board-name": "workspace board name",
+        "enter-a-workspace-board-name": "Enter a workspace board name",
+        "deadline": "deadline",
+        "select-date": "Select date",
+        "cancel": "Cancel",
+        "save": "Save"
+    },
+    "new-workspace-board": {
+        "title": "New workspace board",
+        "workspace-board-name": "Workspace board name",
+        "enter-a-workspace-board-name": "Enter a workspace board name",
+        "deadline": "Deadline",
+        "select-date": "Select date",
+        "cancel": "Cancel",
+        "create-board": "Create board"
+    },
+    "invite-member": {
+        "title": "Invite team members",
+        "notice": "You have 3 seats left in your plan",
+        "enter-email-address": "Enter email address separated by a comma",
+        "enter-an-email": "member@mail.com",
+        "cancel": "Cancel",
+        "invite": "Invite"
+    },
+    "invite-member-error": {
+        "title": "Invite team members",
+        "notice": "You have no more seats left in your plan",
+        "cancel": "Cancel",
+        "go-to-billing": "Go to billing"
+    },
+    "new-workspace-board-section": {
+        "title": "Create new section",
+        "new-section-name-label": "New section name",
+        "new-section-name": "New section name",
+        "cancel": "Cancel",
+        "create-section": "Create section"
+    },
+    "new-workspace": {
+        "title": "Create a new workspace",
+        "notice": "Are you sure you want to create a new workspace?",
+        "cancel": "Cancel",
+        "create-workspace": "Create workspace"
+    },
+    "skip-onboarding": {
+        "title": "Skip onboarding",
+        "notice": "Any progress you've made so far will be lost",
+        "cancel": "Cancel",
+        "skip-onboarding": "Skip onboarding"
+    },
+    "recover-workspace-board": {
+        "title": "Recover this board?",
+        "notice": "Recovering this board returns it to the dashboard",
+        "cancel": "Cancel",
+        "recover-board": "Recover board"
+    },
     "404": "404",
     "home": "Home",
     "signout": "Signout",
@@ -168,7 +217,6 @@
     "title": "title",
     "create": "Create",
     "board-name": "Board name",
-    "new-workspace-board": "New Workspace Board",
     "deadline": "Deadline",
     "new-section": "New Section",
     "new-task": "New task",
@@ -191,7 +239,6 @@
     "delete-task": "Delete Task",
     "remove-section-tooltip-message": "You need to remove all tasks in order to delete this section",
     "edit-section": "Edit Section",
-    "edit-workspace-board": "Edit Workspace Board",
     "logout": "Logout",
     "settings": "Settings",
     "my-profile": "My Profile",

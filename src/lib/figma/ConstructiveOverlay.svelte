@@ -12,20 +12,14 @@
 
     export let target: ConstructiveOverlayType;
     $: title = {
-        updateWorkspaceBoard: $_("constructive-overlay.please-edit-me-please"),
-        createWorkspaceBoard: $_("constructive-overlay.please-edit-me-please"),
-        inviteTeamMembers: $_("constructive-overlay.please-edit-me-please"),
-        inviteTeamMembersNoSeatsLeft: $_(
-            "constructive-overlay.please-edit-me-please"
-        ),
-        createWorkspaceBoardSection: $_(
-            "constructive-overlay.please-edit-me-please"
-        ),
-        createWorkspace: $_("constructive-overlay.please-edit-me-please"),
-        skipOnboarding: $_("constructive-overlay.please-edit-me-please"),
-        recoverWorkspaceBoard: $_(
-            "constructive-overlay.please-edit-me-please"
-        ),
+        updateWorkspaceBoard: $_("edit-workspace-board.title"),
+        createWorkspaceBoard: $_("new-workspace-board.title"),
+        inviteTeamMembers: $_("invite-member.title"),
+        inviteTeamMembersNoSeatsLeft: $_("invite-member-error.title"),
+        createWorkspaceBoardSection: $_("new-workspace-board-section.title"),
+        createWorkspace: $_("new-workspace.title"),
+        skipOnboarding: $_("skip-onboarding.title"),
+        recoverWorkspaceBoard: $_("recover-workspace-board.title"),
     }[target.kind];
 </script>
 

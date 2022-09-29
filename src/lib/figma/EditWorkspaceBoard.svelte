@@ -10,28 +10,20 @@
 </script>
 
 <div class="flex flex-col gap-2">
-    <div class="flex flex-col">
-        <label for="workspace-board-name"
-            >{$_("edit-workspace-board.please-edit-me")}</label
-        >
-        <InputField
-            name="workspace-board-name"
-            placeholder={$_("edit-workspace-board.please-edit-me")}
-            style={{ kind: "field", inputType: "text" }}
-        />
-    </div>
-    <div class="">
-        <label for="deadline"
-            >{$_("edit-workspace-board.please-edit-me")}</label
-        >
-        <InputField
-            name="deadline"
-            placeholder={$_("edit-workspace-board.please-edit-me")}
-            style={{ kind: "field", inputType: "text" }}
-        />
-    </div>
+    <InputField
+        label={$_("edit-workspace-board.workspace-board-name")}
+        name="workspace-board-name"
+        placeholder={$_("edit-workspace-board.enter-a-workspace-board-name")}
+        style={{ kind: "field", inputType: "text" }}
+    />
+    <InputField
+        name="deadline"
+        label={$_("edit-workspace-board.deadline")}
+        placeholder={$_("edit-workspace-board.deadline")}
+        style={{ kind: "field", inputType: "text" }}
+    />
 </div>
-<div class="flex flex-row">
+<div class="flex flex-row justify-center">
     <Button
         on:click={() => {
             console.error("Cancel not implemented");
@@ -40,9 +32,8 @@
         size="medium"
         disabled={false}
         color="blue"
-    >
-        {$_("edit-workspace-board.cancel")}
-    </Button>
+        label={$_("edit-workspace-board.cancel")}
+    />
     <Button
         on:click={() => {
             console.error("Save not implemented");
@@ -51,7 +42,6 @@
         size="medium"
         disabled={false}
         color="blue"
-    >
-        {$_("edit-workspace-board.save")}
-    </Button>
+        label={$_("edit-workspace-board.save")}
+    />
 </div>
