@@ -4,4 +4,4 @@ export const workspaceUserRoles = [
     "MAINTAINER",
     "OWNER",
 ] as const;
-export type WorkspaceUserRole = typeof workspaceUserRoles;
+export type WorkspaceUserRole = typeof workspaceUserRoles[number];
