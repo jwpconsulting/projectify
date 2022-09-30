@@ -20,3 +20,9 @@ export type SubTask = {
     order: number;
 } & TimestampedType &
     TitleDescriptionType;
+
+export type ChatMessage = {
+    author: WorkspaceUser;
+    uuid: string;
+    text: string;
+} & TimestampedType;
