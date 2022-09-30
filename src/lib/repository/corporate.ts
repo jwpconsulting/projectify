@@ -1,5 +1,5 @@
 import { getWithCredentialsJson } from "$lib/repository/util";
-import type { Customer } from "$lib/types";
+import type { Customer } from "$lib/types/corporate";
 
 export async function getWorkspaceCustomer(
     workspace_uuid: string

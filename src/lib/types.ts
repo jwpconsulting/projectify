@@ -110,13 +110,6 @@ export type Workspace = {
 } & TimestampedType &
     TitleDescriptionType;
 
-export type Customer = {
-    seats_remaining: number;
-    seats: number;
-    uuid: string;
-    subscription_status: string;
-};
-
 export type ThemeColors = {
     "primary": string;
     "primary-focus": string;
