@@ -1,7 +1,3 @@
-/**
- * Can be made globally available by placing this
- * inside `global.d.ts` and removing `export` keyword
- */
 import type {
     Label,
     WorkspaceUser,
@@ -29,12 +25,6 @@ export type Input = {
             error?: boolean;
             message?: string;
         };
-        // Todo:
-        // min?: number;
-        // max?: number;
-        // minLength?: number;
-        // maxLength?: number;
-        // pattern?: string;
     };
 };
 
