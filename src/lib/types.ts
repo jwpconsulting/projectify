@@ -3,6 +3,7 @@
  * inside `global.d.ts` and removing `export` keyword
  */
 import type { User } from "$lib/types/user";
+import type { TimestampedType, TitleDescriptionType } from "$lib/types/base";
 
 export interface Locals {
     userid: string;
@@ -33,16 +34,6 @@ export type Input = {
         // maxLength?: number;
         // pattern?: string;
     };
-};
-
-export type TimestampedType = {
-    created: string;
-    modified: string;
-};
-
-export type TitleDescriptionType = {
-    title: string;
-    description?: string;
 };
 
 export type WorkspaceUser = {
