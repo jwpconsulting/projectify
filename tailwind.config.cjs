@@ -1,11 +1,3 @@
-const factoryLightThemeColors = {};
-
-const factoryDarkThemeColors = {};
-
-const commonTheme = {
-    "fontFamily": "Roboto, sans-serif",
-    "--btn-text-case": "none",
-};
 // Conflicting color name resolutions
 const conflictColors = {
     "foreground": "#FFFFFF",
