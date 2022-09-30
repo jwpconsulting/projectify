@@ -1,4 +1,4 @@
-import type { TimestampedType } from "$lib/types/base";
+import type { TimestampedType, TitleDescriptionType } from "$lib/types/base";
 import type { User } from "$lib/types/user";
 
 export type WorkspaceUser = {
@@ -13,3 +13,10 @@ export type Label = {
     color: number;
     uuid: string;
 };
+
+export type SubTask = {
+    uuid: string;
+    done: boolean;
+    order: number;
+} & TimestampedType &
+    TitleDescriptionType;

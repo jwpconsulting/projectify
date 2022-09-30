@@ -17,7 +17,7 @@
     import { tick } from "svelte";
     import IconClose from "../icons/icon-close.svelte";
     import IconUpload from "../icons/icon-upload.svelte";
-    import type { SubTask } from "$lib/types";
+    import type { SubTask } from "$lib/types/workspace";
     import lodash from "lodash";
 
     export let taskUuid: string;
