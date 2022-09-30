@@ -1,9 +1,10 @@
 import { Plus } from "@steeze-ui/heroicons";
 import type { User } from "$lib/types/user";
-import type { WorkspaceUserSelectionInput, WorkspaceBoard } from "$lib/types";
+import type { WorkspaceUserSelectionInput } from "$lib/types";
 import type {
     Label,
     WorkspaceUser,
+    WorkspaceBoard,
     WorkspaceBoardSection,
     Task,
 } from "$lib/types/workspace";

@@ -7,8 +7,8 @@ import {
     Mutation_DeleteLabelMutation,
 } from "./../graphql/operations";
 import { getModal } from "$lib/components/dialogModal.svelte";
-import type { WorkspaceBoard, Workspace } from "$lib/types";
-import type { Label, Task } from "$lib/types/workspace";
+import type { Workspace } from "$lib/types";
+import type { Label, WorkspaceBoard, Task } from "$lib/types/workspace";
 import { getWithCredentialsJson } from "$lib/repository/util";
 
 import { client } from "$lib/graphql/client";

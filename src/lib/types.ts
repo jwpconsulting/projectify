@@ -8,6 +8,7 @@ import type {
     WorkspaceUser,
     Task,
     WorkspaceBoardSection,
+    WorkspaceBoard,
 } from "$lib/types/workspace";
 
 export interface Locals {
@@ -40,15 +41,6 @@ export type Input = {
         // pattern?: string;
     };
 };
-
-export type WorkspaceBoard = {
-    deadline?: string;
-    uuid: string;
-    workspace_board_sections?: WorkspaceBoardSection[];
-    archived?: string;
-    workspace?: Workspace;
-} & TimestampedType &
-    TitleDescriptionType;
 
 export type Workspace = {
     picture?: string;

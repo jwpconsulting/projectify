@@ -8,10 +8,10 @@ import type {
     Task,
     WorkspaceBoardSection,
     WorkspaceUser,
+    WorkspaceBoard,
 } from "$lib/types/workspace";
 import type {
     Workspace,
-    WorkspaceBoard,
     LabelSelection,
     LabelSelectionInput,
     WorkspaceUserSelectionInput,

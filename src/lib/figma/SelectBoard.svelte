@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import type { WorkspaceBoard } from "$lib/types";
+    import type { WorkspaceBoard } from "$lib/types/workspace";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Folder } from "@steeze-ui/heroicons";
     import { getModal } from "$lib/components/dialogModal.svelte";

@@ -2,7 +2,7 @@
     import { _ } from "svelte-i18n";
     import MenuButton from "$lib/figma/MenuButton.svelte";
     import { Pencil, Archive } from "@steeze-ui/heroicons";
-    import type { WorkspaceBoard } from "$lib/types";
+    import type { WorkspaceBoard } from "$lib/types/workspace";
 
     export let workspaceBoard: WorkspaceBoard;
 

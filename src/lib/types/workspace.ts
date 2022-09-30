@@ -1,6 +1,6 @@
 import type { TimestampedType, TitleDescriptionType } from "$lib/types/base";
 import type { User } from "$lib/types/user";
-import type { WorkspaceBoard } from "$lib/types";
+import type { Workspace } from "$lib/types";
 
 export type WorkspaceUser = {
     user: User;
@@ -46,5 +46,14 @@ export type WorkspaceBoardSection = {
     uuid: string;
     tasks?: Task[];
     workspace_board?: WorkspaceBoard;
+} & TimestampedType &
+    TitleDescriptionType;
+
+export type WorkspaceBoard = {
+    deadline?: string;
+    uuid: string;
+    workspace_board_sections?: WorkspaceBoardSection[];
+    archived?: string;
+    workspace?: Workspace;
 } & TimestampedType &
     TitleDescriptionType;
