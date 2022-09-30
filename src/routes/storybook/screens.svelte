@@ -3,6 +3,7 @@
     import MemberSettings from "$lib/figma/MemberSettings.svelte";
     import WorkspaceSettingsPage from "$lib/figma/WorkspaceSettingsPage.svelte";
     import WorkspaceSettingsGeneral from "$lib/figma/WorkspaceSettingsGeneral.svelte";
+    import WorkspaceSettingsMembers from "$lib/figma/WorkspaceSettingsMembers.svelte";
     import LogIn from "$lib/figma/LogIn.svelte";
     import SignUp from "$lib/figma/SignUp.svelte";
     import RequestPasswordReset from "$lib/figma/RequestPasswordReset.svelte";
@@ -25,9 +26,11 @@
         <MemberSettings {workspaceUser} />
     </div>
 
-    <WorkspaceSettingsPage {workspace} activeSetting={settingKinds[0]} />
-
-    <WorkspaceSettingsGeneral {workspace} />
+    <div class={fc}>
+        <WorkspaceSettingsPage {workspace} activeSetting={settingKinds[0]} />
+        <WorkspaceSettingsGeneral {workspace} />
+        <WorkspaceSettingsMembers {workspace} />
+    </div>
 {/if}
 
 <div class={fc}>

@@ -249,7 +249,11 @@
         "general": "General",
         "members": "Members",
         "billing": "Billing",
-        "no-job-title": "No job title"
+        "no-job-title": "No job title",
+        "filter-by-roles": "Filter by roles",
+        "role": "Role",
+        "member-details": "Member details",
+        "invite-new-members": "Invite new members"
     },
     "my-profile": "My Profile",
     "remove": "Remove",

@@ -84,6 +84,7 @@ export const workspace = {
     title: "This is a workspace",
     created: "",
     modified: "",
+    workspace_users: [workspaceUser],
 };
 
 export const workspaceBoard: WorkspaceBoard = {
