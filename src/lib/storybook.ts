@@ -1,11 +1,12 @@
 import { Plus } from "@steeze-ui/heroicons";
 import type { User } from "$lib/types/user";
+import type { WorkspaceUserSelectionInput, WorkspaceBoard } from "$lib/types";
 import type {
-    WorkspaceUserSelectionInput,
-    WorkspaceBoard,
+    Label,
+    WorkspaceUser,
     WorkspaceBoardSection,
-} from "$lib/types";
-import type { Label, WorkspaceUser, Task } from "$lib/types/workspace";
+    Task,
+} from "$lib/types/workspace";
 import { labelColors, getIndexFromLabelColor } from "$lib/utils/colors";
 import type { LabelColor } from "$lib/utils/colors";
 import type { ButtonStyle, LabelLabel, SelectLabel } from "$lib/figma/types";

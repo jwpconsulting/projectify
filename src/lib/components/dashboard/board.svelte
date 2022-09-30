@@ -18,7 +18,7 @@
 
     import TaskCard from "$lib/components/dashboard/TaskCard.svelte";
     import Loading from "../loading.svelte";
-    import type { WorkspaceBoardSection } from "$lib/types";
+    import type { WorkspaceBoardSection } from "$lib/types/workspace";
 
     async function onAddNewSection() {
         let modalRes = await getModal("newBoardSectionModal").open();

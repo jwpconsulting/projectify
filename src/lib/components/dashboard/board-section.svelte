@@ -7,7 +7,7 @@
     import TaskCard from "$lib/components/dashboard/TaskCard.svelte";
     import SectionHeader from "$lib/components/dashboard/SectionHeader.svelte";
     import { createEventDispatcher } from "svelte";
-    import type { WorkspaceBoardSection } from "$lib/types";
+    import type { WorkspaceBoardSection } from "$lib/types/workspace";
 
     export let section: WorkspaceBoardSection;
 

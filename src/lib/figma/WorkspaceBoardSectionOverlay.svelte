@@ -10,7 +10,7 @@
         Plus,
         Trash,
     } from "@steeze-ui/heroicons";
-    import type { WorkspaceBoardSection } from "$lib/types";
+    import type { WorkspaceBoardSection } from "$lib/types/workspace";
     import {
         workspaceBoardSectionClosed,
         toggleWorkspaceBoardSectionOpen,

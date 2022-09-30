@@ -3,7 +3,12 @@
  * inside `global.d.ts` and removing `export` keyword
  */
 import type { TimestampedType, TitleDescriptionType } from "$lib/types/base";
-import type { Label, WorkspaceUser, Task } from "$lib/types/workspace";
+import type {
+    Label,
+    WorkspaceUser,
+    Task,
+    WorkspaceBoardSection,
+} from "$lib/types/workspace";
 
 export interface Locals {
     userid: string;
@@ -35,14 +40,6 @@ export type Input = {
         // pattern?: string;
     };
 };
-
-export type WorkspaceBoardSection = {
-    _order: number;
-    uuid: string;
-    tasks?: Task[];
-    workspace_board?: WorkspaceBoard;
-} & TimestampedType &
-    TitleDescriptionType;
 
 export type WorkspaceBoard = {
     deadline?: string;

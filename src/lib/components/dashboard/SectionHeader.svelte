@@ -10,7 +10,7 @@
     import IconArrowSUp from "../icons/icon-arrow-s-up.svelte";
     import IconArrowSDown from "../icons/icon-arrow-s-down.svelte";
     import { createEventDispatcher } from "svelte";
-    import type { WorkspaceBoardSection } from "$lib/types";
+    import type { WorkspaceBoardSection } from "$lib/types/workspace";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { DotsHorizontal } from "@steeze-ui/heroicons";
 
