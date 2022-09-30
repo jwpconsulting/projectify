@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Input } from "$lib/types";
+    import type { Input } from "$lib/types/ui";
     import { getContext } from "svelte";
     import { _ } from "svelte-i18n";
     import InputDatePicker from "./inputDatePicker.svelte";

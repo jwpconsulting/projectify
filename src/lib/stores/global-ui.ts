@@ -5,7 +5,7 @@ import type {
     DestructiveOverlayAction,
     ContextMenuType,
     ContextMenuState,
-} from "$lib/types";
+} from "$lib/types/ui";
 
 export const destructiveOverlayState = writable<DestructiveOverlayState>({
     kind: "hidden",

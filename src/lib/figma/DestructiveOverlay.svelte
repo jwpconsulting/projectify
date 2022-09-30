@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { DestructiveOverlayType } from "$lib/types";
+    import type { DestructiveOverlayType } from "$lib/types/ui";
     import { _ } from "svelte-i18n";
     import Button from "$lib/figma/Button.svelte";
     import { createEventDispatcher } from "svelte";

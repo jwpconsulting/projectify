@@ -7,7 +7,7 @@
     import TaskOverlay from "$lib/figma/TaskOverlay.svelte";
     import HelpOverlay from "$lib/figma/HelpOverlay.svelte";
     import PermissionsOverlay from "$lib/figma/PermissionsOverlay.svelte";
-    import type { ContextMenuType } from "$lib/types";
+    import type { ContextMenuType } from "$lib/types/ui";
 
     export let target: ContextMenuType;
 </script>

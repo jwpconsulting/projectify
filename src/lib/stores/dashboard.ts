@@ -16,7 +16,7 @@ import type {
     LabelSelectionInput,
     WorkspaceUserSelectionInput,
     WorkspaceUserSelection,
-} from "$lib/types";
+} from "$lib/types/ui";
 import { getDashboardWorkspaceBoardUrl, getDashboardTaskUrl } from "$lib/urls";
 import { get } from "svelte/store";
 import {

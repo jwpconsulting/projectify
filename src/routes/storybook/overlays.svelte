@@ -7,7 +7,7 @@
         ContextMenuType,
         ConstructiveOverlayType,
         DestructiveOverlayType,
-    } from "$lib/types";
+    } from "$lib/types/ui";
     import { browser } from "$app/env";
     import {
         fc,

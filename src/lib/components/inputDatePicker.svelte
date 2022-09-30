@@ -4,7 +4,7 @@
     import { _ } from "svelte-i18n";
     import { getModal } from "./dialogModal.svelte";
     import IconCalendar from "./icons/icon-calendar.svelte";
-    import type { Input } from "$lib/types";
+    import type { Input } from "$lib/types/ui";
 
     export let placeholder = $_("select-date");
     export let input: Input;

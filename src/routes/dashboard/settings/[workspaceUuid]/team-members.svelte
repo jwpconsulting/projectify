@@ -28,7 +28,7 @@
         currentWorkspace,
         currentCustomer,
     } from "$lib/stores/dashboard";
-    import type { Input } from "$lib/types";
+    import type { Input } from "$lib/types/ui";
 
     let workspaceUsers: WorkspaceUser[] = [];
 

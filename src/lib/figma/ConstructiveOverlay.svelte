@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import type { ConstructiveOverlayType } from "$lib/types";
+    import type { ConstructiveOverlayType } from "$lib/types/ui";
     import EditWorkspaceBoard from "$lib/figma/EditWorkspaceBoard.svelte";
     import NewWorkspaceBoard from "$lib/figma/NewWorkspaceBoard.svelte";
     import InviteMember from "$lib/figma/InviteMember.svelte";

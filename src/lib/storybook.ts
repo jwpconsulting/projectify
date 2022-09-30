@@ -1,6 +1,6 @@
 import { Plus } from "@steeze-ui/heroicons";
 import type { User } from "$lib/types/user";
-import type { WorkspaceUserSelectionInput } from "$lib/types";
+import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
 import type {
     Label,
     WorkspaceUser,
