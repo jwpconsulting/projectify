@@ -3,6 +3,7 @@ end_of_line = lf
 insert_final_newline = true
 charset = utf-8
 
-[*.{js,cjs,svelte,css,yml}]
+[*.{json,ts,js,cjs,svelte,css,yml}]
 indent_style = space
 indent_size = 4
+max_line_length = 79
