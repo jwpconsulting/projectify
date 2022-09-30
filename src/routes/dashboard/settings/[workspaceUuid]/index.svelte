@@ -8,7 +8,7 @@
     import { Mutation_UpdateWorkspace } from "$lib/graphql/operations";
     import ProfilePicture from "$lib/components/profilePicture.svelte";
     import { uploadImage } from "$lib/utils/file";
-    import type { Workspace } from "$lib/types";
+    import type { Workspace } from "$lib/types/workspace";
     import { loading, currentWorkspace } from "$lib/stores/dashboard";
 
     let workspace: Workspace | null = null;

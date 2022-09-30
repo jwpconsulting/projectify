@@ -7,11 +7,11 @@ import type {
     Label,
     Task,
     WorkspaceBoardSection,
+    Workspace,
     WorkspaceUser,
     WorkspaceBoard,
 } from "$lib/types/workspace";
 import type {
-    Workspace,
     LabelSelection,
     LabelSelectionInput,
     WorkspaceUserSelectionInput,

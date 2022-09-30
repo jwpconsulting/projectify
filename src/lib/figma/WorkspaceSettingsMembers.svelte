@@ -1,7 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import type { Workspace } from "$lib/types";
-    import type { WorkspaceUser } from "$lib/types/workspace";
+    import type { Workspace, WorkspaceUser } from "$lib/types/workspace";
     import WorkspaceSettingsPage from "$lib/figma/WorkspaceSettingsPage.svelte";
     import InputField from "$lib/figma/InputField.svelte";
     import MemberSettings from "$lib/figma/MemberSettings.svelte";

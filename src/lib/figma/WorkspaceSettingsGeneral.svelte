@@ -4,7 +4,7 @@
     import WorkspaceSettingsPage from "$lib/figma/WorkspaceSettingsPage.svelte";
     import InputField from "$lib/figma/InputField.svelte";
     import Button from "$lib/figma/Button.svelte";
-    import type { Workspace } from "$lib/types";
+    import type { Workspace } from "$lib/types/workspace";
     export let workspace: Workspace;
 
     let title: string;

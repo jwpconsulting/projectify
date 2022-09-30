@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import type { Workspace } from "$lib/types";
+    import type { Workspace } from "$lib/types/workspace";
     import Button from "$lib/figma/Button.svelte";
 
     export let workspace: Workspace;

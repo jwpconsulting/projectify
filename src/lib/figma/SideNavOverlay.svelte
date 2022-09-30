@@ -9,7 +9,7 @@
         Archive,
         Cog,
     } from "@steeze-ui/heroicons";
-    import type { Workspace } from "$lib/types";
+    import type { Workspace } from "$lib/types/workspace";
 
     export let workspace: Workspace;
 </script>

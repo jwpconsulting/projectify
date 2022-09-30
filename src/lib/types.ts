@@ -2,13 +2,13 @@
  * Can be made globally available by placing this
  * inside `global.d.ts` and removing `export` keyword
  */
-import type { TimestampedType, TitleDescriptionType } from "$lib/types/base";
 import type {
     Label,
     WorkspaceUser,
     Task,
     WorkspaceBoardSection,
     WorkspaceBoard,
+    Workspace,
 } from "$lib/types/workspace";
 
 export interface Locals {
@@ -41,15 +41,6 @@ export type Input = {
         // pattern?: string;
     };
 };
-
-export type Workspace = {
-    picture?: string;
-    workspace_users?: WorkspaceUser[];
-    workspace_boards?: WorkspaceBoard[];
-    labels?: Label[];
-    uuid: string;
-} & TimestampedType &
-    TitleDescriptionType;
 
 export type ThemeColors = {
     "primary": string;
