@@ -3,8 +3,8 @@ import Fuse from "fuse.js";
 import lodash from "lodash";
 import { writable, derived } from "svelte/store";
 import type { Customer } from "$lib/types/corporate";
+import type { Label } from "$lib/types/workspace";
 import type {
-    Label,
     Task,
     WorkspaceBoardSection,
     Workspace,

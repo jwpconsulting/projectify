@@ -4,6 +4,7 @@
  */
 import type { User } from "$lib/types/user";
 import type { TimestampedType, TitleDescriptionType } from "$lib/types/base";
+import type { Label } from "$lib/types/workspace";
 
 export interface Locals {
     userid: string;
@@ -42,12 +43,6 @@ export type WorkspaceUser = {
     job_title?: string;
     role: string;
 } & TimestampedType;
-
-export type Label = {
-    name: string;
-    color: number;
-    uuid: string;
-};
 
 export type SubTask = {
     uuid: string;

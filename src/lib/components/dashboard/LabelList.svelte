@@ -2,7 +2,7 @@
     import { createEventDispatcher } from "svelte";
     import LabelPill from "$lib/components/dashboard/LabelPill.svelte";
     import Fuse from "fuse.js";
-    import type { Label } from "$lib/types";
+    import type { Label } from "$lib/types/workspace";
 
     export let labels: Label[];
     export let editable = false;

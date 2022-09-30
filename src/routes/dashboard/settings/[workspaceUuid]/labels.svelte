@@ -3,7 +3,7 @@
     import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
     import DialogModal, { getModal } from "$lib/components/dialogModal.svelte";
     import LabelPill from "$lib/components/dashboard/LabelPill.svelte";
-    import type { Label } from "$lib/types";
+    import type { Label } from "$lib/types/workspace";
     import { currentWorkspace, loading } from "$lib/stores/dashboard";
     import {
         createLabel,

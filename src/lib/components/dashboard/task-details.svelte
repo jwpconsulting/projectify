@@ -28,7 +28,8 @@
     import { writable } from "svelte/store";
     import IconClose from "../icons/icon-close.svelte";
     import TaskDetailsBreadcrumbs from "./task-details-breadcrumbs.svelte";
-    import type { Task, SubTask, Label, WorkspaceUser } from "$lib/types";
+    import type { Task, SubTask, WorkspaceUser } from "$lib/types";
+    import type { Label } from "$lib/types/workspace";
     import { getDashboardTaskUrl } from "$lib/urls";
 
     let task: Task | null = null;

@@ -1,6 +1,6 @@
 import type { IconSource } from "@steeze-ui/svelte-icon/types";
 import type { User } from "$lib/types/user";
-import type { Label } from "$lib/types";
+import type { Label } from "$lib/types/workspace";
 
 export type ButtonStyle =
     | { kind: "primary" }

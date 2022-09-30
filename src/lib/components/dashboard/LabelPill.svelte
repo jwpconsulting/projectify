@@ -1,6 +1,6 @@
 <script lang="ts">
     import IconClose from "../icons/icon-close.svelte";
-    import type { Label } from "$lib/types";
+    import type { Label } from "$lib/types/workspace";
     import {
         getLabelColorFromIndex,
         getLabelColorClass,
