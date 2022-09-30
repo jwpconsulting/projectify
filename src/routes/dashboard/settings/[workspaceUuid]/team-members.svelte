@@ -4,7 +4,7 @@
         Mutation_RemoveUserFromWorkspace,
         Mutation_UpdateWorkspaceUser,
     } from "$lib/graphql/operations";
-    import type { WorkspaceUser } from "$lib/types";
+    import type { WorkspaceUser } from "$lib/types/workspace";
 
     import { _ } from "svelte-i18n";
     import ProfilePicture from "$lib/components/profilePicture.svelte";

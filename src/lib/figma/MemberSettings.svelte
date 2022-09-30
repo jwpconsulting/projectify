@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { WorkspaceUser } from "$lib/types";
+    import type { WorkspaceUser } from "$lib/types/workspace";
     import AvatarV5 from "$lib/figma/AvatarV5.svelte";
     import { _ } from "svelte-i18n";
     import { getMessageNameForRole } from "$lib/utils/i18n";

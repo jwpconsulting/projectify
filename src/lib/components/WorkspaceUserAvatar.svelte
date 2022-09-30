@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import type { WorkspaceUser } from "$lib/types";
+    import type { WorkspaceUser } from "$lib/types/workspace";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { UserCircle, UserAdd } from "@steeze-ui/heroicons";
     import UserAvatar from "$lib/components/UserAvatar.svelte";

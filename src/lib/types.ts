@@ -2,9 +2,8 @@
  * Can be made globally available by placing this
  * inside `global.d.ts` and removing `export` keyword
  */
-import type { User } from "$lib/types/user";
 import type { TimestampedType, TitleDescriptionType } from "$lib/types/base";
-import type { Label } from "$lib/types/workspace";
+import type { Label, WorkspaceUser } from "$lib/types/workspace";
 
 export interface Locals {
     userid: string;
@@ -36,13 +35,6 @@ export type Input = {
         // pattern?: string;
     };
 };
-
-export type WorkspaceUser = {
-    user: User;
-    uuid: string;
-    job_title?: string;
-    role: string;
-} & TimestampedType;
 
 export type SubTask = {
     uuid: string;

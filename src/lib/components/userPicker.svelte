@@ -4,7 +4,7 @@
     import UserProfilePicture from "./userProfilePicture.svelte";
     import { createEventDispatcher } from "svelte";
     import { user } from "$lib/stores/user";
-    import type { WorkspaceUser } from "$lib/types";
+    import type { WorkspaceUser } from "$lib/types/workspace";
 
     import Fuse from "fuse.js";
     import SearchInput from "./search-input.svelte";
