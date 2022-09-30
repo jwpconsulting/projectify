@@ -87,7 +87,7 @@
         <div
             in:fly={{ duration: 300, y: -50, opacity: 0 }}
             out:fly={{ duration: 300, y: 50, opacity: 0 }}
-            class="d-modal-content card shadow-card bg-base-100 open:opacity-40"
+            class="d-modal-content card bg-base-100 shadow-card open:opacity-40"
         >
             <slot />
         </div>

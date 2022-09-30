@@ -28,13 +28,8 @@ const missingColors = {
     "disabled-content": "#CBD5E1",
     "destructive-secondary-hover": "#FEE2E2",
     "destructive-secondary-pressed": "#FCA5A5",
-    "disabled": "#E2E8F0",
-    "utility": "#64748B",
     "border-secondary": "#2563EB",
     "border-focus": "#1E293B",
-    "task-default": "#FFFFFF",
-    "task-hover": "#F8FAFC",
-    "task-pressed": "#F1F5F9",
 };
 const colors = {
     "accent": "#FEE2E2", // unused, renamed to destructive (already in colors)
@@ -120,15 +115,13 @@ module.exports = {
                 "2.5xl": "20px",
             },
             boxShadow: {
-                card: "0px 0px 4px 0px #1E202940",
-                sm: "0 1px 2px rgba(0, 0, 0, 0.15)",
-                lg: "0 2px 8px rgba(0, 0, 0, 0.25)",
-                xl: "0 4px 16px rgba(0, 0, 0, 0.15)",
-            },
-            colors: colors,
-            boxShadow: {
+                "card": "0px 0px 4px 0px #1E202940",
+                "sm": "0 1px 2px rgba(0, 0, 0, 0.15)",
+                "lg": "0 2px 8px rgba(0, 0, 0, 0.25)",
+                "xl": "0 4px 16px rgba(0, 0, 0, 0.15)",
                 "context-menu": "1px 4px 8px rgba(0, 0, 0, 0.25)",
             },
+            colors: colors,
         },
     },
     variants: {

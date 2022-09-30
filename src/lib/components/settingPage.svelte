@@ -35,7 +35,7 @@
                 <Loading />
             </div>
         {:else}
-            <div class="card min-h-8 shadow-card overflow-visible pt-6">
+            <div class="card min-h-8 overflow-visible pt-6 shadow-card">
                 <slot />
             </div>
         {/if}

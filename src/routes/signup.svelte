@@ -50,7 +50,7 @@
                 on:submit|preventDefault={() => submit()}
             >
                 <div
-                    class="card shadow-card w-full max-w-xl transform-gpu text-center"
+                    class="card w-full max-w-xl transform-gpu text-center shadow-card"
                     style={`transform:translateX(${$errorAnimation}px);`}
                 >
                     <div class="card-body items-center">
@@ -133,7 +133,7 @@
             </form>
         {:else}
             <div
-                class="card shadow-card w-full max-w-xl transform-gpu text-center"
+                class="card w-full max-w-xl transform-gpu text-center shadow-card"
             >
                 <div class="card-body items-center">
                     <div class="py-2">

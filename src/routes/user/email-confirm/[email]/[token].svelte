@@ -32,7 +32,7 @@
         <Loading />
     {:else if error}
         <div
-            class="card shadow-card w-full max-w-xl transform-gpu text-center"
+            class="card w-full max-w-xl transform-gpu text-center shadow-card"
         >
             <div class="card-body items-center">
                 <div class="py-2">
@@ -48,7 +48,7 @@
         </div>
     {:else}
         <div
-            class="card shadow-card w-full max-w-xl transform-gpu text-center"
+            class="card w-full max-w-xl transform-gpu text-center shadow-card"
         >
             <div class="card-body items-center">
                 <div class="py-2">
