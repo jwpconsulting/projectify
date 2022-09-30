@@ -6,7 +6,7 @@
     import { _ } from "svelte-i18n";
     import IllustrationSignupFinish from "$lib/components/illustrations/illustration-signup-finish.svelte";
     import Loading from "$lib/components/loading.svelte";
-    import type { User } from "$lib/types";
+    import type { User } from "$lib/types/user";
 
     let userData: User | null = null;
     let error: boolean;

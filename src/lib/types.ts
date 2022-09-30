@@ -2,6 +2,8 @@
  * Can be made globally available by placing this
  * inside `global.d.ts` and removing `export` keyword
  */
+import type { User } from "$lib/types/user";
+
 export interface Locals {
     userid: string;
 }
@@ -41,12 +43,6 @@ export type TimestampedType = {
 export type TitleDescriptionType = {
     title: string;
     description?: string;
-};
-
-export type User = {
-    email: string;
-    profile_picture?: string;
-    full_name?: string;
 };
 
 export type WorkspaceUser = {

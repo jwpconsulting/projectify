@@ -11,7 +11,7 @@ import {
 } from "$lib/graphql/operations";
 import { getUser } from "$lib/repository/user";
 import { goto } from "$app/navigation";
-import type { User } from "$lib/types";
+import type { User } from "$lib/types/user";
 
 export const user = writable<User | null>(null);
 export const userIsLoading = writable(true);

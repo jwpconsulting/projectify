@@ -1,7 +1,7 @@
 <script lang="ts">
     import AvatarV3 from "$lib/figma/AvatarV3.svelte";
     import { createEventDispatcher } from "svelte";
-    import type { User } from "$lib/types";
+    import type { User } from "$lib/types/user";
 
     export let user: User | null;
 

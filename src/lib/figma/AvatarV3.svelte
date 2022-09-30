@@ -1,6 +1,6 @@
 <script lang="ts">
     import UserAvatar from "$lib/components/UserAvatar.svelte";
-    import type { User } from "$lib/types";
+    import type { User } from "$lib/types/user";
     import type { AvatarV3Size } from "$lib/figma/types";
 
     export let user: User | null;

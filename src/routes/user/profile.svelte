@@ -12,7 +12,7 @@
     import { uploadImage } from "$lib/utils/file";
     import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
 
-    import type { User } from "$lib/types";
+    import type { User } from "$lib/types/user";
 
     let isEditMode = false;
     let isSaving = false;
