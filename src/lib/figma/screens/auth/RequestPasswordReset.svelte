@@ -15,27 +15,31 @@
 </script>
 
 <AuthScreen title={$_("request-password-reset.title")} action={submit}>
-    {$_("request-password-reset.explanation")}
-    <InputField
-        placeholder={$_("request-password-reset.enter-your-email")}
-        style={{ kind: "field", inputType: "text" }}
-        name="email"
-        label={$_("request-password-reset.email")}
-        bind:value={email}
-    />
-    <Button
-        on:click={submit}
-        style={{ kind: "primary" }}
-        color="blue"
-        disabled={false}
-        size="medium"
-        label={$_("request-password-reset.send-reset-password-link")}
-    />
-    <div class="">
-        <Anchor
-            href="/signup"
-            label={$_("request-password-reset.back-to-log-in")}
-            size="normal"
+    <div class="text-center">
+        {$_("request-password-reset.explanation")}
+    </div>
+    <div class="flex flex-col gap-6">
+        <InputField
+            placeholder={$_("request-password-reset.enter-your-email")}
+            style={{ kind: "field", inputType: "text" }}
+            name="email"
+            label={$_("request-password-reset.email")}
+            bind:value={email}
         />
+        <Button
+            on:click={submit}
+            style={{ kind: "primary" }}
+            color="blue"
+            disabled={false}
+            size="medium"
+            label={$_("request-password-reset.send-reset-password-link")}
+        />
+        <div class="text-center">
+            <Anchor
+                href="/signup"
+                label={$_("request-password-reset.return-to-log-in")}
+                size="normal"
+            />
+        </div>
     </div>
 </AuthScreen>

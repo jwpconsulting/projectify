@@ -17,26 +17,28 @@
 </script>
 
 <AuthScreen title={$_("confirm-password-reset.title")} action={submit}>
-    <InputField
-        placeholder={$_("confirm-password-reset.enter-new-password")}
-        style={{ kind: "field", inputType: "password" }}
-        name="password1"
-        label={$_("confirm-password-reset.new-password")}
-        bind:value={newPassword1}
-    />
-    <InputField
-        placeholder={$_("confirm-password-reset.confirm-new-password")}
-        style={{ kind: "field", inputType: "text" }}
-        name="password2"
-        label={$_("confirm-password-reset.confirm-new-password")}
-        bind:value={newPassword2}
-    />
-    <Button
-        on:click={submit}
-        style={{ kind: "primary" }}
-        color="blue"
-        disabled={false}
-        size="medium"
-        label={$_("confirm-password-reset.reset-password")}
-    />
+    <div class="flex flex-col gap-6">
+        <InputField
+            placeholder={$_("confirm-password-reset.enter-new-password")}
+            style={{ kind: "field", inputType: "password" }}
+            name="password1"
+            label={$_("confirm-password-reset.new-password")}
+            bind:value={newPassword1}
+        />
+        <InputField
+            placeholder={$_("confirm-password-reset.confirm-new-password")}
+            style={{ kind: "field", inputType: "text" }}
+            name="password2"
+            label={$_("confirm-password-reset.confirm-new-password")}
+            bind:value={newPassword2}
+        />
+        <Button
+            on:click={submit}
+            style={{ kind: "primary" }}
+            color="blue"
+            disabled={false}
+            size="medium"
+            label={$_("confirm-password-reset.reset-password")}
+        />
+    </div>
 </AuthScreen>

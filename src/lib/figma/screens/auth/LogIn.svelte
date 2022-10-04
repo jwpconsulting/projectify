@@ -16,7 +16,7 @@
 </script>
 
 <AuthScreen title={$_("log-in.title")} action={submit}>
-    <div class="TODO">
+    <div class="flex flex-col gap-6">
         <InputField
             placeholder={$_("log-in.enter-your-email")}
             style={{ kind: "field", inputType: "text" }}
@@ -35,21 +35,21 @@
                 label: $_("log-in.forgot-password"),
             }}
         />
-    </div>
-    <Button
-        on:click={submit}
-        style={{ kind: "primary" }}
-        color="blue"
-        disabled={false}
-        size="medium"
-        label={$_("log-in.log-in")}
-    />
-    <div class="">
-        {$_("log-in.no-account")}
-        <Anchor
-            href="/signup"
-            label={$_("log-in.sign-up-here")}
-            size="normal"
+        <Button
+            on:click={submit}
+            style={{ kind: "primary" }}
+            color="blue"
+            disabled={false}
+            size="medium"
+            label={$_("log-in.log-in")}
         />
+        <div class="text-center">
+            {$_("log-in.no-account")}
+            <Anchor
+                href="/signup"
+                label={$_("log-in.sign-up-here")}
+                size="normal"
+            />
+        </div>
     </div>
 </AuthScreen>
