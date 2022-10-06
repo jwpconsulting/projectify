@@ -96,3 +96,27 @@ export type ConstructiveOverlayType =
 export type ConstructiveOverlayState =
     | { kind: "hidden" }
     | { kind: "visible"; target: ConstructiveOverlayType };
+
+export type FeatureDescription = {
+    image: {
+        position: "left" | "right";
+        src: string;
+        alt: string;
+    };
+    header: string;
+    text: string;
+};
+
+export type SolutionsHeroContent = {
+    header: string;
+    text: string;
+    image: {
+        src: string;
+        alt: string;
+    };
+};
+
+export type SolutionsPageContent = {
+    heroContent: SolutionsHeroContent;
+    features: FeatureDescription[];
+};
