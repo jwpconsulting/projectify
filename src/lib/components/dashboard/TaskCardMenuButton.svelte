@@ -21,7 +21,8 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import { DotsHorizontal } from "@steeze-ui/heroicons";
     import { getDropDown } from "../globalDropDown.svelte";
-    import type { Task, WorkspaceBoardSection } from "$lib/types";
+    import type { WorkspaceBoardSection } from "$lib/types";
+    import type { Task } from "$lib/types/workspace";
 
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection | null;

@@ -5,7 +5,7 @@
     import { dateStringToLocal } from "$lib/utils/date";
     import UserProfilePicture from "../userProfilePicture.svelte";
     import { afterUpdate } from "svelte";
-    import type { Task } from "$lib/types";
+    import type { Task } from "$lib/types/workspace";
 
     export let task: Task;
 

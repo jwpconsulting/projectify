@@ -1,7 +1,6 @@
 <script lang="ts">
     import { assignUserToTask } from "$lib/repository/workspace";
-    import type { Task } from "$lib/types";
-    import type { WorkspaceUser } from "$lib/types/workspace";
+    import type { Task, WorkspaceUser } from "$lib/types/workspace";
     import WorkspaceUserAvatar from "$lib/components/WorkspaceUserAvatar.svelte";
     import UserPicker from "../userPicker.svelte";
     import { getDropDown } from "../globalDropDown.svelte";

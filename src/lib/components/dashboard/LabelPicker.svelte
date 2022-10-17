@@ -2,8 +2,7 @@
     import { client } from "$lib/graphql/client";
     import { Mutation_AssignLabel } from "$lib/graphql/operations";
     import { currentWorkspaceLabels } from "$lib/stores/dashboard";
-    import type { Task } from "$lib/types";
-    import type { Label } from "$lib/types/workspace";
+    import type { Task, Label } from "$lib/types/workspace";
     import LabelPill from "$lib/components/dashboard/LabelPill.svelte";
 
     import { createEventDispatcher, onMount } from "svelte";

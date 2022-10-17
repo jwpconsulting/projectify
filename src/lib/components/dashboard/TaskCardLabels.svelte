@@ -3,7 +3,7 @@
     import LabelList from "$lib/components/dashboard/LabelList.svelte";
     import LabelPicker from "./LabelPicker.svelte";
     import { getDropDown } from "../globalDropDown.svelte";
-    import type { Task } from "$lib/types";
+    import type { Task } from "$lib/types/workspace";
 
     export let task: Task;
     let labelPickerBtnRef: HTMLElement;

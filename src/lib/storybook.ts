@@ -4,9 +4,8 @@ import type {
     WorkspaceUserSelectionInput,
     WorkspaceBoard,
     WorkspaceBoardSection,
-    Task,
 } from "$lib/types";
-import type { Label, WorkspaceUser } from "$lib/types/workspace";
+import type { Label, WorkspaceUser, Task } from "$lib/types/workspace";
 import { labelColors, getIndexFromLabelColor } from "$lib/utils/colors";
 import type { LabelColor } from "$lib/utils/colors";
 import type { ButtonStyle, LabelLabel, SelectLabel } from "$lib/figma/types";

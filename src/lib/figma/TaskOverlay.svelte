@@ -11,7 +11,7 @@
         ChatAlt,
         Trash,
     } from "@steeze-ui/heroicons";
-    import type { Task } from "$lib/types";
+    import type { Task } from "$lib/types/workspace";
 
     export let task: Task;
     export let location: "dashboard" | "task";

@@ -6,7 +6,8 @@
     import TaskCardWorkspaceUser from "$lib/components/dashboard/TaskCardWorkspaceUser.svelte";
     import TaskCardChevrons from "$lib/components/dashboard/TaskCardChevrons.svelte";
     import TaskCardMenuButton from "$lib/components/dashboard/TaskCardMenuButton.svelte";
-    import type { WorkspaceBoardSection, Task } from "$lib/types";
+    import type { WorkspaceBoardSection } from "$lib/types";
+    import type { Task } from "$lib/types/workspace";
     import {
         currentWorkspaceBoardUuid,
         openTaskDetails,
