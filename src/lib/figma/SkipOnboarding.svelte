@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import Button from "$lib/figma/Button.svelte";
+    import Button from "$lib/figma/buttons/Button.svelte";
 </script>
 
 <p class="text-center text-error">

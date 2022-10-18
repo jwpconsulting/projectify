@@ -3,7 +3,7 @@
     import { signUp } from "$lib/stores/user";
     import AuthScreen from "$lib/figma/AuthScreen.svelte";
     import InputField from "$lib/figma/InputField.svelte";
-    import Button from "$lib/figma/Button.svelte";
+    import Button from "$lib/figma/buttons/Button.svelte";
     import Anchor from "$lib/figma/Anchor.svelte";
     import CheckBox from "$lib/figma/CheckBox.svelte";
 

@@ -2,7 +2,7 @@
     import { _ } from "svelte-i18n";
     import AuthScreen from "$lib/figma/AuthScreen.svelte";
     import InputField from "$lib/figma/InputField.svelte";
-    import Button from "$lib/figma/Button.svelte";
+    import Button from "$lib/figma/buttons/Button.svelte";
     import { confirmPasswordReset } from "$lib/stores/user";
 
     export let email: string;

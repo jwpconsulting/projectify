@@ -1,7 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import type { WorkspaceBoard } from "$lib/types/workspace";
-    import Button from "$lib/figma/Button.svelte";
+    import Button from "$lib/figma/buttons/Button.svelte";
 
     export let workspaceBoard: WorkspaceBoard;
     console.log("TODO do something with", workspaceBoard);

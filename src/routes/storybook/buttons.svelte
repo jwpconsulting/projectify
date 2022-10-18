@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import Button from "$lib/figma/Button.svelte";
+    import Button from "$lib/figma/buttons/Button.svelte";
     import SideMenuCreate from "$lib/figma/SideMenuCreate.svelte";
     import EllipsisSideNav from "$lib/figma/EllipsisSideNav.svelte";
     import CircleIcon from "$lib/figma/CircleIcon.svelte";
