@@ -3,7 +3,7 @@
     import MemberSettings from "$lib/figma/MemberSettings.svelte";
     import WorkspaceSettingsPage from "$lib/figma/WorkspaceSettingsPage.svelte";
     import WorkspaceSettingsGeneral from "$lib/figma/screens/WorkspaceSettingsGeneral.svelte";
-    import WorkspaceSettingsMembers from "$lib/figma/WorkspaceSettingsMembers.svelte";
+    import WorkspaceSettingsMembers from "$lib/figma/screens/WorkspaceSettingsMembers.svelte";
     import WorkspaceSettingsBilling from "$lib/figma/screens/WorkspaceSettingsBilling.svelte";
     import LogIn from "$lib/figma/LogIn.svelte";
     import SignUp from "$lib/figma/SignUp.svelte";
