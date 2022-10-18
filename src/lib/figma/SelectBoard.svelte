@@ -4,7 +4,7 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Folder } from "@steeze-ui/heroicons";
     import { getModal } from "$lib/components/dialogModal.svelte";
-    import CircleIcon from "$lib/figma/CircleIcon.svelte";
+    import CircleIcon from "$lib/figma/buttons/CircleIcon.svelte";
     import {
         Mutation_UpdateWorkspaceBoard,
         Mutation_ArchiveWorkspaceBoard,
