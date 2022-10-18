@@ -5,7 +5,7 @@
     import EllipsisSideNav from "$lib/figma/EllipsisSideNav.svelte";
     import CircleIcon from "$lib/figma/CircleIcon.svelte";
     import UploadAvatar from "$lib/figma/UploadAvatar.svelte";
-    import AddUserButton from "$lib/figma/AddUserButton.svelte";
+    import AddUserButton from "$lib/figma/buttons/AddUserButton.svelte";
     import NotificationButton from "$lib/figma/NotificationButton.svelte";
     import CancelSearch from "$lib/figma/CancelSearch.svelte";
     import WatcherButton from "$lib/figma/WatcherButton.svelte";
