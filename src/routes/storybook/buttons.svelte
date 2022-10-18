@@ -18,7 +18,7 @@
     import AddSeats from "$lib/figma/buttons/AddSeats.svelte";
     import SeatInput from "$lib/figma/SeatInput.svelte";
     import StepperComponent from "$lib/figma/buttons/StepperComponent.svelte";
-    import Stepper from "$lib/figma/Stepper.svelte";
+    import Stepper from "$lib/figma/buttons/Stepper.svelte";
     import MobileMenu from "$lib/figma/buttons/MobileMenu.svelte";
     import MobileSearchMenu from "$lib/figma/buttons/MobileSearchMenu.svelte";
     import SideNavMain from "$lib/figma/SideNavMain.svelte";
