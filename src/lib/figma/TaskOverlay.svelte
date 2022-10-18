@@ -1,7 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import MenuButton from "$lib/figma/buttons/MenuButton.svelte";
-    import SubMenuDropdown from "$lib/figma/SubMenuDropdown.svelte";
+    import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
     import {
         ArrowsExpand,
         SwitchVertical,

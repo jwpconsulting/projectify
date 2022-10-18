@@ -12,7 +12,7 @@
     import NotificationRead from "$lib/figma/buttons/NotificationRead.svelte";
     import WorkspaceMenuBar from "$lib/figma/buttons/WorkspaceMenuBar.svelte";
     import MenuButton from "$lib/figma/buttons/MenuButton.svelte";
-    import SubMenuDropdown from "$lib/figma/SubMenuDropdown.svelte";
+    import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
     import OnboardingSeats from "$lib/figma/buttons/OnboardingSeats.svelte";
     import MinusSeats from "$lib/figma/buttons/MinusSeats.svelte";
     import AddSeats from "$lib/figma/buttons/AddSeats.svelte";
