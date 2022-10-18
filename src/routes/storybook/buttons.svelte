@@ -4,7 +4,7 @@
     import SideMenuCreate from "$lib/figma/SideMenuCreate.svelte";
     import EllipsisSideNav from "$lib/figma/buttons/EllipsisSideNav.svelte";
     import CircleIcon from "$lib/figma/buttons/CircleIcon.svelte";
-    import UploadAvatar from "$lib/figma/UploadAvatar.svelte";
+    import UploadAvatar from "$lib/figma/buttons/UploadAvatar.svelte";
     import AddUserButton from "$lib/figma/buttons/AddUserButton.svelte";
     import NotificationButton from "$lib/figma/buttons/NotificationButton.svelte";
     import CancelSearch from "$lib/figma/CancelSearch.svelte";
