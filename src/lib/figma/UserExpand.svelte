@@ -1,6 +1,6 @@
 <script lang="ts">
     import Squoval from "$lib/figma/buttons/Squoval.svelte";
-    import FilterUserAvatar from "$lib/figma/FilterUserAvatar.svelte";
+    import FilterUserAvatar from "$lib/figma/buttons/FilterUserAvatar.svelte";
     import {
         currentWorkspace,
         selectedWorkspaceUser,

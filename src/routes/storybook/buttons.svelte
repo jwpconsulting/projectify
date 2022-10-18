@@ -26,7 +26,7 @@
     import Squoval from "$lib/figma/buttons/Squoval.svelte";
     import AvatarWithHover from "$lib/figma/buttons/AvatarWithHover.svelte";
     import Label from "$lib/figma/buttons/Label.svelte";
-    import FilterUserAvatar from "$lib/figma/FilterUserAvatar.svelte";
+    import FilterUserAvatar from "$lib/figma/buttons/FilterUserAvatar.svelte";
     import UserExpand from "$lib/figma/UserExpand.svelte";
     import LabelExpand from "$lib/figma/LabelExpand.svelte";
     import SideNavMenuCategory from "$lib/figma/SideNavMenuCategory.svelte";
