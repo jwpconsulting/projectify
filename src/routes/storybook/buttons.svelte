@@ -6,7 +6,7 @@
     import CircleIcon from "$lib/figma/CircleIcon.svelte";
     import UploadAvatar from "$lib/figma/UploadAvatar.svelte";
     import AddUserButton from "$lib/figma/buttons/AddUserButton.svelte";
-    import NotificationButton from "$lib/figma/NotificationButton.svelte";
+    import NotificationButton from "$lib/figma/buttons/NotificationButton.svelte";
     import CancelSearch from "$lib/figma/CancelSearch.svelte";
     import WatcherButton from "$lib/figma/WatcherButton.svelte";
     import NotificationRead from "$lib/figma/NotificationRead.svelte";
