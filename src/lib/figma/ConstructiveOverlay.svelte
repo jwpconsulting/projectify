@@ -6,7 +6,7 @@
     import InviteMember from "$lib/figma/InviteMember.svelte";
     import InviteMemberError from "$lib/figma/InviteMemberError.svelte";
     import NewWorkspaceBoardSection from "$lib/figma/NewWorkspaceBoardSection.svelte";
-    import NewWorkspace from "$lib/figma/NewWorkspace.svelte";
+    import NewWorkspace from "$lib/figma/overlays/NewWorkspace.svelte";
     import SkipOnboarding from "$lib/figma/SkipOnboarding.svelte";
     import RecoverWorkspaceBoard from "$lib/figma/RecoverWorkspaceBoard.svelte";
 
