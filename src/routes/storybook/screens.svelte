@@ -8,7 +8,7 @@
     import LogIn from "$lib/figma/screens/LogIn.svelte";
     import SignUp from "$lib/figma/screens/SignUp.svelte";
     import RequestPasswordReset from "$lib/figma/screens/RequestPasswordReset.svelte";
-    import ConfirmPasswordReset from "$lib/figma/ConfirmPasswordReset.svelte";
+    import ConfirmPasswordReset from "$lib/figma/screens/ConfirmPasswordReset.svelte";
     import { settingKinds } from "$lib/types/dashboard";
 
     import { fc, workspace, workspaceUser } from "$lib/storybook";
