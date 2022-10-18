@@ -1,5 +1,5 @@
 <script lang="ts">
-    import WorkspaceSettingsBar from "$lib/figma/WorkspaceSettingsBar.svelte";
+    import WorkspaceSettingsBar from "$lib/figma/screens/WorkspaceSettingsBar.svelte";
     import type { Workspace } from "$lib/types/workspace";
     import type { SettingKind } from "$lib/types/dashboard";
 

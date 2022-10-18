@@ -1,5 +1,5 @@
 <script lang="ts">
-    import WorkspaceSettingsBar from "$lib/figma/WorkspaceSettingsBar.svelte";
+    import WorkspaceSettingsBar from "$lib/figma/screens/WorkspaceSettingsBar.svelte";
     import MemberSettings from "$lib/figma/MemberSettings.svelte";
     import WorkspaceSettingsPage from "$lib/figma/WorkspaceSettingsPage.svelte";
     import WorkspaceSettingsGeneral from "$lib/figma/WorkspaceSettingsGeneral.svelte";
