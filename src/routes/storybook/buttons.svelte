@@ -24,7 +24,7 @@
     import SideNavMain from "$lib/figma/buttons/SideNavMain.svelte";
     import BoardButton from "$lib/figma/buttons/BoardButton.svelte";
     import Squoval from "$lib/figma/buttons/Squoval.svelte";
-    import AvatarWithHover from "$lib/figma/AvatarWithHover.svelte";
+    import AvatarWithHover from "$lib/figma/buttons/AvatarWithHover.svelte";
     import Label from "$lib/figma/Label.svelte";
     import FilterUserAvatar from "$lib/figma/FilterUserAvatar.svelte";
     import UserExpand from "$lib/figma/UserExpand.svelte";
