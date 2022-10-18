@@ -2,7 +2,7 @@
     import ProfileOverlay from "$lib/figma/overlays/ProfileOverlay.svelte";
     import WorkspaceOverlay from "$lib/figma/WorkspaceOverlay.svelte";
     import SideNavOverlay from "$lib/figma/overlays/SideNavOverlay.svelte";
-    import WorkspaceBoardOverlay from "$lib/figma/WorkspaceBoardOverlay.svelte";
+    import WorkspaceBoardOverlay from "$lib/figma/overlays/WorkspaceBoardOverlay.svelte";
     import WorkspaceBoardSectionOverlay from "$lib/figma/WorkspaceBoardSectionOverlay.svelte";
     import TaskOverlay from "$lib/figma/TaskOverlay.svelte";
     import HelpOverlay from "$lib/figma/HelpOverlay.svelte";
