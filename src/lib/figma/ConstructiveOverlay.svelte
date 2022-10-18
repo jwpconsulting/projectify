@@ -3,7 +3,7 @@
     import type { ConstructiveOverlayType } from "$lib/types/ui";
     import EditWorkspaceBoard from "$lib/figma/overlays/EditWorkspaceBoard.svelte";
     import NewWorkspaceBoard from "$lib/figma/overlays/NewWorkspaceBoard.svelte";
-    import InviteMember from "$lib/figma/InviteMember.svelte";
+    import InviteMember from "$lib/figma/overlays/InviteMember.svelte";
     import InviteMemberError from "$lib/figma/InviteMemberError.svelte";
     import NewWorkspaceBoardSection from "$lib/figma/NewWorkspaceBoardSection.svelte";
     import NewWorkspace from "$lib/figma/overlays/NewWorkspace.svelte";
