@@ -5,7 +5,7 @@
     import InputField from "$lib/figma/input-fields/InputField.svelte";
     import Button from "$lib/figma/buttons/Button.svelte";
     import Anchor from "$lib/figma/Anchor.svelte";
-    import CheckBox from "$lib/figma/CheckBox.svelte";
+    import CheckBox from "$lib/figma/select-controls/CheckBox.svelte";
 
     let email: string;
     let password: string;

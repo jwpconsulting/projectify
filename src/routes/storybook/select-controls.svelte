@@ -1,5 +1,5 @@
 <script lang="ts">
-    import CheckBox from "$lib/figma/CheckBox.svelte";
+    import CheckBox from "$lib/figma/select-controls/CheckBox.svelte";
     import SelectLabelFocus from "$lib/figma/SelectLabelFocus.svelte";
     import FilterUser from "$lib/figma/FilterUser.svelte";
     import FilterLabel from "$lib/figma/FilterLabel.svelte";
