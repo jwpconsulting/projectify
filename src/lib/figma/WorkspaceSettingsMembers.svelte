@@ -2,7 +2,7 @@
     import { _ } from "svelte-i18n";
     import type { Workspace, WorkspaceUser } from "$lib/types/workspace";
     import WorkspaceSettingsPage from "$lib/figma/WorkspaceSettingsPage.svelte";
-    import InputField from "$lib/figma/InputField.svelte";
+    import InputField from "$lib/figma/input-fields/InputField.svelte";
     import MemberSettings from "$lib/figma/MemberSettings.svelte";
     import Button from "$lib/figma/buttons/Button.svelte";
     export let workspace: Workspace;

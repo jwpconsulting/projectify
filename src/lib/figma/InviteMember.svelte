@@ -2,7 +2,7 @@
     import { _ } from "svelte-i18n";
     import type { Workspace } from "$lib/types/workspace";
     import Button from "$lib/figma/buttons/Button.svelte";
-    import InputField from "$lib/figma/InputField.svelte";
+    import InputField from "$lib/figma/input-fields/InputField.svelte";
 
     export let workspace: Workspace;
     console.log("TODO do something with", workspace);

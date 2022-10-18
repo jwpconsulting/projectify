@@ -6,7 +6,7 @@
         selectWorkspaceUser,
         deselectWorkspaceUser,
     } from "$lib/stores/dashboard";
-    import InputField from "$lib/figma/InputField.svelte";
+    import InputField from "$lib/figma/input-fields/InputField.svelte";
     import {
         selectedWorkspaceUser,
         tasksPerUser,

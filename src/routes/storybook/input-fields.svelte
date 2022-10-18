@@ -1,5 +1,5 @@
 <script lang="ts">
-    import InputField from "$lib/figma/InputField.svelte";
+    import InputField from "$lib/figma/input-fields/InputField.svelte";
     import { inputFieldSizes } from "$lib/figma/types";
     import type { InputFieldStyle } from "$lib/figma/types";
     import { fc, fr } from "$lib/storybook";

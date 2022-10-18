@@ -2,7 +2,7 @@
     import { _ } from "svelte-i18n";
     import { login } from "$lib/stores/user";
     import AuthScreen from "$lib/figma/AuthScreen.svelte";
-    import InputField from "$lib/figma/InputField.svelte";
+    import InputField from "$lib/figma/input-fields/InputField.svelte";
     import Button from "$lib/figma/buttons/Button.svelte";
     import Anchor from "$lib/figma/Anchor.svelte";
 

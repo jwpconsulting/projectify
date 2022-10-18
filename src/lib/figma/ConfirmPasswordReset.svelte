@@ -1,7 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import AuthScreen from "$lib/figma/AuthScreen.svelte";
-    import InputField from "$lib/figma/InputField.svelte";
+    import InputField from "$lib/figma/input-fields/InputField.svelte";
     import Button from "$lib/figma/buttons/Button.svelte";
     import { confirmPasswordReset } from "$lib/stores/user";
 
