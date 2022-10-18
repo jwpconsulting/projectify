@@ -1,5 +1,5 @@
 <script lang="ts">
-    import AvatarV3 from "$lib/figma/AvatarV3.svelte";
+    import AvatarV3 from "$lib/figma/navigation/AvatarV3.svelte";
     import AvatarV5 from "$lib/figma/AvatarV5.svelte";
     import { fr, fc, users, user1, user2 } from "$lib/storybook";
     import type { AvatarV5Content } from "$lib/figma/types";

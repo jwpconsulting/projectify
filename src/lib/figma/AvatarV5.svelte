@@ -1,5 +1,5 @@
 <script lang="ts">
-    import AvatarV3 from "$lib/figma/AvatarV3.svelte";
+    import AvatarV3 from "$lib/figma/navigation/AvatarV3.svelte";
     import type { AvatarV5Size, AvatarV5Content } from "$lib/figma/types";
 
     export let content: AvatarV5Content;

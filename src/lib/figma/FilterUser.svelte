@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
-    import AvatarV3 from "$lib/figma/AvatarV3.svelte";
+    import AvatarV3 from "$lib/figma/navigation/AvatarV3.svelte";
     import AvatarV5 from "$lib/figma/AvatarV5.svelte";
     import CheckBox from "$lib/figma/select-controls/CheckBox.svelte";
     import { _ } from "svelte-i18n";

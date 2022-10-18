@@ -1,5 +1,5 @@
 <script lang="ts">
-    import AvatarV3 from "$lib/figma/AvatarV3.svelte";
+    import AvatarV3 from "$lib/figma/navigation/AvatarV3.svelte";
     import { createEventDispatcher } from "svelte";
     import type { User } from "$lib/types/user";
 
