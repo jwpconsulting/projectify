@@ -21,7 +21,7 @@
     import Stepper from "$lib/figma/buttons/Stepper.svelte";
     import MobileMenu from "$lib/figma/buttons/MobileMenu.svelte";
     import MobileSearchMenu from "$lib/figma/buttons/MobileSearchMenu.svelte";
-    import SideNavMain from "$lib/figma/SideNavMain.svelte";
+    import SideNavMain from "$lib/figma/buttons/SideNavMain.svelte";
     import BoardButton from "$lib/figma/buttons/BoardButton.svelte";
     import Squoval from "$lib/figma/buttons/Squoval.svelte";
     import AvatarWithHover from "$lib/figma/AvatarWithHover.svelte";
