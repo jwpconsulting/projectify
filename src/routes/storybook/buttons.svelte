@@ -28,7 +28,7 @@
     import Label from "$lib/figma/buttons/Label.svelte";
     import FilterUserAvatar from "$lib/figma/buttons/FilterUserAvatar.svelte";
     import UserExpand from "$lib/figma/buttons/UserExpand.svelte";
-    import LabelExpand from "$lib/figma/LabelExpand.svelte";
+    import LabelExpand from "$lib/figma/buttons/LabelExpand.svelte";
     import SideNavMenuCategory from "$lib/figma/SideNavMenuCategory.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/SideNavMenuCategoryFocus.svelte";
     import SelectBoard from "$lib/figma/SelectBoard.svelte";
