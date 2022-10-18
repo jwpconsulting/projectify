@@ -13,7 +13,7 @@
     import WorkspaceMenuBar from "$lib/figma/WorkspaceMenuBar.svelte";
     import MenuButton from "$lib/figma/buttons/MenuButton.svelte";
     import SubMenuDropdown from "$lib/figma/SubMenuDropdown.svelte";
-    import OnboardingSeats from "$lib/figma/OnboardingSeats.svelte";
+    import OnboardingSeats from "$lib/figma/buttons/OnboardingSeats.svelte";
     import MinusSeats from "$lib/figma/MinusSeats.svelte";
     import AddSeats from "$lib/figma/buttons/AddSeats.svelte";
     import SeatInput from "$lib/figma/SeatInput.svelte";
