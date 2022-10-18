@@ -5,7 +5,7 @@
     import WorkspaceBoardOverlay from "$lib/figma/overlays/WorkspaceBoardOverlay.svelte";
     import WorkspaceBoardSectionOverlay from "$lib/figma/overlays/WorkspaceBoardSectionOverlay.svelte";
     import TaskOverlay from "$lib/figma/overlays/TaskOverlay.svelte";
-    import HelpOverlay from "$lib/figma/HelpOverlay.svelte";
+    import HelpOverlay from "$lib/figma/overlays/HelpOverlay.svelte";
     import PermissionsOverlay from "$lib/figma/PermissionsOverlay.svelte";
     import type { ContextMenuType } from "$lib/types/ui";
 
