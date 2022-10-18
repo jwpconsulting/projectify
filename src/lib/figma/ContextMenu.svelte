@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ProfileOverlay from "$lib/figma/ProfileOverlay.svelte";
+    import ProfileOverlay from "$lib/figma/overlays/ProfileOverlay.svelte";
     import WorkspaceOverlay from "$lib/figma/WorkspaceOverlay.svelte";
     import SideNavOverlay from "$lib/figma/SideNavOverlay.svelte";
     import WorkspaceBoardOverlay from "$lib/figma/WorkspaceBoardOverlay.svelte";
