@@ -8,7 +8,7 @@
     import AddUserButton from "$lib/figma/buttons/AddUserButton.svelte";
     import NotificationButton from "$lib/figma/buttons/NotificationButton.svelte";
     import CancelSearch from "$lib/figma/CancelSearch.svelte";
-    import WatcherButton from "$lib/figma/WatcherButton.svelte";
+    import WatcherButton from "$lib/figma/buttons/WatcherButton.svelte";
     import NotificationRead from "$lib/figma/NotificationRead.svelte";
     import WorkspaceMenuBar from "$lib/figma/WorkspaceMenuBar.svelte";
     import MenuButton from "$lib/figma/MenuButton.svelte";
