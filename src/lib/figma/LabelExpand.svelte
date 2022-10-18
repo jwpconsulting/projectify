@@ -7,7 +7,7 @@
         selectLabel,
     } from "$lib/stores/dashboard";
     import SelectLabelFocus from "$lib/figma/SelectLabelFocus.svelte";
-    import Squoval from "$lib/figma/Squoval.svelte";
+    import Squoval from "$lib/figma/buttons/Squoval.svelte";
 </script>
 
 <div class="flex flex-col items-center gap-6">
