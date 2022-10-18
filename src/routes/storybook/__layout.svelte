@@ -1,10 +1,6 @@
 <script lang="ts">
     const links = [
         {
-            title: "Navigation",
-            href: "/storybook/navigation",
-        },
-        {
             title: "Buttons",
             href: "/storybook/buttons",
         },
@@ -19,6 +15,10 @@
         {
             title: "Dropdown",
             href: "/storybook/dropdown",
+        },
+        {
+            title: "Navigation",
+            href: "/storybook/navigation",
         },
         {
             title: "Screens",
