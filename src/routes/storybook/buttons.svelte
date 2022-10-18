@@ -20,7 +20,7 @@
     import StepperComponent from "$lib/figma/StepperComponent.svelte";
     import Stepper from "$lib/figma/Stepper.svelte";
     import MobileMenu from "$lib/figma/MobileMenu.svelte";
-    import MobileSearchMenu from "$lib/figma/MobileSearchMenu.svelte";
+    import MobileSearchMenu from "$lib/figma/buttons/MobileSearchMenu.svelte";
     import SideNavMain from "$lib/figma/SideNavMain.svelte";
     import BoardButton from "$lib/figma/buttons/BoardButton.svelte";
     import Squoval from "$lib/figma/buttons/Squoval.svelte";
