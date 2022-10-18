@@ -22,7 +22,7 @@
     import MobileMenu from "$lib/figma/MobileMenu.svelte";
     import MobileSearchMenu from "$lib/figma/MobileSearchMenu.svelte";
     import SideNavMain from "$lib/figma/SideNavMain.svelte";
-    import BoardButton from "$lib/figma/BoardButton.svelte";
+    import BoardButton from "$lib/figma/buttons/BoardButton.svelte";
     import Squoval from "$lib/figma/Squoval.svelte";
     import AvatarWithHover from "$lib/figma/AvatarWithHover.svelte";
     import Label from "$lib/figma/Label.svelte";
