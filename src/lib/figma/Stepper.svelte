@@ -1,5 +1,5 @@
 <script lang="ts">
-    import StepperComponent from "$lib/figma/StepperComponent.svelte";
+    import StepperComponent from "$lib/figma/buttons/StepperComponent.svelte";
     import { gotoStep, numSteps, currentStep } from "$lib/stores/onboarding";
 
     const steps = [...Array(numSteps).keys()];
