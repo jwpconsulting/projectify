@@ -1,6 +1,6 @@
 <script lang="ts">
     import { seats, seatMinus, seatAdd } from "$lib/stores/onboarding";
-    import AddSeats from "$lib/figma/AddSeats.svelte";
+    import AddSeats from "$lib/figma/buttons/AddSeats.svelte";
     import MinusSeats from "$lib/figma/MinusSeats.svelte";
 </script>
 

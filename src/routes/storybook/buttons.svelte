@@ -15,7 +15,7 @@
     import SubMenuDropdown from "$lib/figma/SubMenuDropdown.svelte";
     import OnboardingSeats from "$lib/figma/OnboardingSeats.svelte";
     import MinusSeats from "$lib/figma/MinusSeats.svelte";
-    import AddSeats from "$lib/figma/AddSeats.svelte";
+    import AddSeats from "$lib/figma/buttons/AddSeats.svelte";
     import SeatInput from "$lib/figma/SeatInput.svelte";
     import StepperComponent from "$lib/figma/StepperComponent.svelte";
     import Stepper from "$lib/figma/Stepper.svelte";
