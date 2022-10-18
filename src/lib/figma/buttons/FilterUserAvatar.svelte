@@ -4,7 +4,7 @@
     import { CheckCircle } from "@steeze-ui/heroicons";
     import type { User } from "$lib/types/user";
     import type { AvatarV5Content } from "$lib/figma/types";
-    import AvatarV5 from "$lib/figma/AvatarV5.svelte";
+    import AvatarV5 from "$lib/figma/navigation/AvatarV5.svelte";
 
     export let user: User | null;
     export let active: boolean;
