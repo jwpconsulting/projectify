@@ -10,7 +10,7 @@
     import CancelSearch from "$lib/figma/CancelSearch.svelte";
     import WatcherButton from "$lib/figma/buttons/WatcherButton.svelte";
     import NotificationRead from "$lib/figma/NotificationRead.svelte";
-    import WorkspaceMenuBar from "$lib/figma/WorkspaceMenuBar.svelte";
+    import WorkspaceMenuBar from "$lib/figma/buttons/WorkspaceMenuBar.svelte";
     import MenuButton from "$lib/figma/buttons/MenuButton.svelte";
     import SubMenuDropdown from "$lib/figma/SubMenuDropdown.svelte";
     import OnboardingSeats from "$lib/figma/buttons/OnboardingSeats.svelte";

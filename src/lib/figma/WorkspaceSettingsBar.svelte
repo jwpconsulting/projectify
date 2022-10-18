@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import WorkspaceMenuBar from "$lib/figma/WorkspaceMenuBar.svelte";
+    import WorkspaceMenuBar from "$lib/figma/buttons/WorkspaceMenuBar.svelte";
     import { getSettingsUrl } from "$lib/urls";
     import type { Workspace } from "$lib/types/workspace";
     import type { SettingKind } from "$lib/types/dashboard";
