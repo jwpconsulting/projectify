@@ -8,7 +8,7 @@
     import IconSettings from "$lib/components/icons/icon-settings.svelte";
     import IconTag from "$lib/components/icons/icon-tag.svelte";
     import { getSettingsUrl, getArchiveUrl } from "$lib/urls";
-    import Filter from "$lib/figma/Filter.svelte";
+    import Filter from "$lib/figma/dropdown/Filter.svelte";
     import { Briefcase } from "@steeze-ui/heroicons";
     let dropDownMenuBtnRef: HTMLElement;
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Filter from "$lib/figma/Filter.svelte";
+    import Filter from "$lib/figma/dropdown/Filter.svelte";
     import { Tag } from "@steeze-ui/heroicons";
     import { fr, falseTrue } from "$lib/storybook";
 </script>
