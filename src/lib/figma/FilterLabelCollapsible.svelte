@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import SideNavMenuCategoryFocus from "$lib/figma/SideNavMenuCategoryFocus.svelte";
+    import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import FilterLabelMenu from "$lib/figma/FilterLabelMenu.svelte";
     import { Tag } from "@steeze-ui/heroicons";
     import { selectedLabels } from "$lib/stores/dashboard";

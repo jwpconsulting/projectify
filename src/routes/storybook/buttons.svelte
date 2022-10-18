@@ -30,7 +30,7 @@
     import UserExpand from "$lib/figma/buttons/UserExpand.svelte";
     import LabelExpand from "$lib/figma/buttons/LabelExpand.svelte";
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
-    import SideNavMenuCategoryFocus from "$lib/figma/SideNavMenuCategoryFocus.svelte";
+    import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import SelectBoard from "$lib/figma/SelectBoard.svelte";
     import { currentStep } from "$lib/stores/onboarding";
     import { Plus, Folder } from "@steeze-ui/heroicons";

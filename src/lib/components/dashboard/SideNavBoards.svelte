@@ -11,7 +11,7 @@
     import Loading from "$lib/components/loading.svelte";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Plus, Folder } from "@steeze-ui/heroicons";
-    import SideNavMenuCategoryFocus from "$lib/figma/SideNavMenuCategoryFocus.svelte";
+    import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import SelectBoard from "$lib/figma/SelectBoard.svelte";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 

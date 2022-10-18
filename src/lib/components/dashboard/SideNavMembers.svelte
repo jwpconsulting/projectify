@@ -1,7 +1,7 @@
 <script lang="ts">
     import { User } from "@steeze-ui/heroicons";
     import { _ } from "svelte-i18n";
-    import SideNavMenuCategoryFocus from "$lib/figma/SideNavMenuCategoryFocus.svelte";
+    import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import {
         selectWorkspaceUser,
         deselectWorkspaceUser,
