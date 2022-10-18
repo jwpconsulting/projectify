@@ -2,7 +2,7 @@
     import { _ } from "svelte-i18n";
     import type { SelectLabel } from "$lib/figma/types";
     import { createEventDispatcher } from "svelte";
-    import SelectLabelFocus from "$lib/figma/SelectLabelFocus.svelte";
+    import SelectLabelFocus from "$lib/figma/select-controls/SelectLabelFocus.svelte";
     import CircleIcon from "$lib/figma/buttons/CircleIcon.svelte";
     import { openDestructiveOverlay } from "$lib/stores/global-ui";
     import { deleteLabel } from "$lib/repository/workspace";

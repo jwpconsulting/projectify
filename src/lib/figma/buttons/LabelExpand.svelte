@@ -6,7 +6,7 @@
         toggleLabelExpandOpen,
         selectLabel,
     } from "$lib/stores/dashboard";
-    import SelectLabelFocus from "$lib/figma/SelectLabelFocus.svelte";
+    import SelectLabelFocus from "$lib/figma/select-controls/SelectLabelFocus.svelte";
     import Squoval from "$lib/figma/buttons/Squoval.svelte";
 </script>
 
