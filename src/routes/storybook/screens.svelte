@@ -5,7 +5,7 @@
     import WorkspaceSettingsGeneral from "$lib/figma/screens/WorkspaceSettingsGeneral.svelte";
     import WorkspaceSettingsMembers from "$lib/figma/screens/WorkspaceSettingsMembers.svelte";
     import WorkspaceSettingsBilling from "$lib/figma/screens/WorkspaceSettingsBilling.svelte";
-    import LogIn from "$lib/figma/LogIn.svelte";
+    import LogIn from "$lib/figma/screens/LogIn.svelte";
     import SignUp from "$lib/figma/SignUp.svelte";
     import RequestPasswordReset from "$lib/figma/RequestPasswordReset.svelte";
     import ConfirmPasswordReset from "$lib/figma/ConfirmPasswordReset.svelte";
