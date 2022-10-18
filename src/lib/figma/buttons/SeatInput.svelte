@@ -1,7 +1,7 @@
 <script lang="ts">
     import { seats, seatMinus, seatAdd } from "$lib/stores/onboarding";
     import AddSeats from "$lib/figma/buttons/AddSeats.svelte";
-    import MinusSeats from "$lib/figma/MinusSeats.svelte";
+    import MinusSeats from "$lib/figma/buttons/MinusSeats.svelte";
 </script>
 
 <div class="flex flex-row items-center gap-4">
