@@ -1,5 +1,5 @@
 <script lang="ts">
-    import DestructiveOverlay from "$lib/figma/DestructiveOverlay.svelte";
+    import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
     import {
         destructiveOverlayState,
         closeDestructiveOverlay,
