@@ -11,7 +11,7 @@
     import WatcherButton from "$lib/figma/buttons/WatcherButton.svelte";
     import NotificationRead from "$lib/figma/NotificationRead.svelte";
     import WorkspaceMenuBar from "$lib/figma/WorkspaceMenuBar.svelte";
-    import MenuButton from "$lib/figma/MenuButton.svelte";
+    import MenuButton from "$lib/figma/buttons/MenuButton.svelte";
     import SubMenuDropdown from "$lib/figma/SubMenuDropdown.svelte";
     import OnboardingSeats from "$lib/figma/OnboardingSeats.svelte";
     import MinusSeats from "$lib/figma/MinusSeats.svelte";

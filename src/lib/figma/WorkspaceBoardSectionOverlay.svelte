@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import MenuButton from "$lib/figma/MenuButton.svelte";
+    import MenuButton from "$lib/figma/buttons/MenuButton.svelte";
     import {
         Selector,
         Pencil,

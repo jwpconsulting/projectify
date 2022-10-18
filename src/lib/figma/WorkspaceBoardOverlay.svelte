@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import MenuButton from "$lib/figma/MenuButton.svelte";
+    import MenuButton from "$lib/figma/buttons/MenuButton.svelte";
     import { Pencil, Archive } from "@steeze-ui/heroicons";
     import type { WorkspaceBoard } from "$lib/types/workspace";
 
