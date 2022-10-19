@@ -2,7 +2,7 @@
     import WorkspaceMenu from "$lib/components/dashboard/WorkspaceMenu.svelte";
     import SideNavBoards from "./SideNavBoards.svelte";
     import SideNavMembers from "./SideNavMembers.svelte";
-    import FilterLabelCollapsible from "$lib/figma/FilterLabelCollapsible.svelte";
+    import FilterLabelCollapsible from "$lib/figma/composites/FilterLabelCollapsible.svelte";
     import SideNavBulkSelect from "./SideNavBulkSelect.svelte";
 </script>
 

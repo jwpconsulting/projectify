@@ -1,5 +1,5 @@
 <script lang="ts">
-    import FilterLabelCollapsible from "$lib/figma/FilterLabelCollapsible.svelte";
+    import FilterLabelCollapsible from "$lib/figma/composites/FilterLabelCollapsible.svelte";
     import FilterLabelMenu from "$lib/figma/FilterLabelMenu.svelte";
 
     import { setFirstWorkspace } from "$lib/stores/dashboard";
