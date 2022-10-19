@@ -8,7 +8,7 @@
     import NewWorkspaceBoardSection from "$lib/figma/overlays/NewWorkspaceBoardSection.svelte";
     import NewWorkspace from "$lib/figma/overlays/NewWorkspace.svelte";
     import SkipOnboarding from "$lib/figma/overlays/SkipOnboarding.svelte";
-    import RecoverWorkspaceBoard from "$lib/figma/RecoverWorkspaceBoard.svelte";
+    import RecoverWorkspaceBoard from "$lib/figma/overlays/RecoverWorkspaceBoard.svelte";
 
     export let target: ConstructiveOverlayType;
     $: title = {
