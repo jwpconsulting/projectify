@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ContextMenu from "$lib/figma/ContextMenu.svelte";
+    import ContextMenu from "$lib/figma/overlays/ContextMenu.svelte";
     import { contextMenuState, closeContextMenu } from "$lib/stores/global-ui";
 
     let contextMenu: HTMLElement;
