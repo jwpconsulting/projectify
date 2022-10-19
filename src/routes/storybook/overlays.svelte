@@ -2,7 +2,7 @@
     import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
     import ContextMenu from "$lib/figma/ContextMenu.svelte";
     import { setFirstWorkspace } from "$lib/stores/dashboard";
-    import ConstructiveOverlay from "$lib/figma/ConstructiveOverlay.svelte";
+    import ConstructiveOverlay from "$lib/figma/overlays/ConstructiveOverlay.svelte";
     import type {
         ContextMenuType,
         ConstructiveOverlayType,
