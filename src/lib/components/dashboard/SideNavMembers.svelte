@@ -13,7 +13,7 @@
         workspaceUserSearch,
         workspaceUserSearchResults,
     } from "$lib/stores/dashboard";
-    import FilterUser from "$lib/figma/FilterUser.svelte";
+    import FilterUser from "$lib/figma/select-controls/FilterUser.svelte";
 
     let open = true;
 
