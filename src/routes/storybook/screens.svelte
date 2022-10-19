@@ -5,10 +5,10 @@
     import WorkspaceSettingsGeneral from "$lib/figma/screens/WorkspaceSettingsGeneral.svelte";
     import WorkspaceSettingsMembers from "$lib/figma/screens/WorkspaceSettingsMembers.svelte";
     import WorkspaceSettingsBilling from "$lib/figma/screens/WorkspaceSettingsBilling.svelte";
-    import LogIn from "$lib/figma/screens/LogIn.svelte";
-    import SignUp from "$lib/figma/screens/SignUp.svelte";
-    import RequestPasswordReset from "$lib/figma/screens/RequestPasswordReset.svelte";
-    import ConfirmPasswordReset from "$lib/figma/screens/ConfirmPasswordReset.svelte";
+    import LogIn from "$lib/figma/screens/auth/LogIn.svelte";
+    import SignUp from "$lib/figma/screens/auth/SignUp.svelte";
+    import RequestPasswordReset from "$lib/figma/screens/auth/RequestPasswordReset.svelte";
+    import ConfirmPasswordReset from "$lib/figma/screens/auth/ConfirmPasswordReset.svelte";
     import { settingKinds } from "$lib/types/dashboard";
 
     import { fc, workspace, workspaceUser } from "$lib/storybook";
