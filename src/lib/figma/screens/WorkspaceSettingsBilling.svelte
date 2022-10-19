@@ -2,7 +2,7 @@
     import { _ } from "svelte-i18n";
     import WorkspaceSettingsPage from "$lib/figma/screens/WorkspaceSettingsPage.svelte";
     import type { Workspace } from "$lib/types/workspace";
-    import Anchor from "$lib/figma/Anchor.svelte";
+    import Anchor from "$lib/figma/typography/Anchor.svelte";
 
     export let workspace: Workspace;
 </script>

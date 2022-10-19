@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Anchor from "$lib/figma/Anchor.svelte";
+    import Anchor from "$lib/figma/typography/Anchor.svelte";
     import { anchorSizes } from "$lib/figma/types";
 </script>
 
