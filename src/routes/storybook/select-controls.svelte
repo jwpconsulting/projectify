@@ -2,7 +2,7 @@
     import CheckBox from "$lib/figma/select-controls/CheckBox.svelte";
     import SelectLabelFocus from "$lib/figma/select-controls/SelectLabelFocus.svelte";
     import FilterUser from "$lib/figma/FilterUser.svelte";
-    import FilterLabel from "$lib/figma/FilterLabel.svelte";
+    import FilterLabel from "$lib/figma/select-controls/FilterLabel.svelte";
 
     import {
         fr,

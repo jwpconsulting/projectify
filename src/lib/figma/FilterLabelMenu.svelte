@@ -1,7 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import InputField from "$lib/figma/input-fields/InputField.svelte";
-    import FilterLabel from "$lib/figma/FilterLabel.svelte";
+    import FilterLabel from "$lib/figma/select-controls/FilterLabel.svelte";
     import {
         selectedLabels,
         deselectLabel,
