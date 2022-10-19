@@ -1,10 +1,10 @@
 <script lang="ts">
-    import WorkspaceSettingsBar from "$lib/figma/screens/WorkspaceSettingsBar.svelte";
-    import MemberSettings from "$lib/figma/screens/MemberSettings.svelte";
-    import WorkspaceSettingsPage from "$lib/figma/screens/WorkspaceSettingsPage.svelte";
-    import WorkspaceSettingsGeneral from "$lib/figma/screens/WorkspaceSettingsGeneral.svelte";
-    import WorkspaceSettingsMembers from "$lib/figma/screens/WorkspaceSettingsMembers.svelte";
-    import WorkspaceSettingsBilling from "$lib/figma/screens/WorkspaceSettingsBilling.svelte";
+    import WorkspaceSettingsBar from "$lib/figma/screens/workspace-settings/WorkspaceSettingsBar.svelte";
+    import MemberSettings from "$lib/figma/screens/workspace-settings/MemberSettings.svelte";
+    import WorkspaceSettingsPage from "$lib/figma/screens/workspace-settings/WorkspaceSettingsPage.svelte";
+    import WorkspaceSettingsGeneral from "$lib/figma/screens/workspace-settings/WorkspaceSettingsGeneral.svelte";
+    import WorkspaceSettingsMembers from "$lib/figma/screens/workspace-settings/WorkspaceSettingsMembers.svelte";
+    import WorkspaceSettingsBilling from "$lib/figma/screens/workspace-settings/WorkspaceSettingsBilling.svelte";
     import LogIn from "$lib/figma/screens/auth/LogIn.svelte";
     import SignUp from "$lib/figma/screens/auth/SignUp.svelte";
     import RequestPasswordReset from "$lib/figma/screens/auth/RequestPasswordReset.svelte";

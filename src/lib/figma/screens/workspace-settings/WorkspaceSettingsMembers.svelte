@@ -1,9 +1,9 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import type { Workspace, WorkspaceUser } from "$lib/types/workspace";
-    import WorkspaceSettingsPage from "$lib/figma/screens/WorkspaceSettingsPage.svelte";
+    import WorkspaceSettingsPage from "$lib/figma/screens/workspace-settings/WorkspaceSettingsPage.svelte";
     import InputField from "$lib/figma/input-fields/InputField.svelte";
-    import MemberSettings from "$lib/figma/screens/MemberSettings.svelte";
+    import MemberSettings from "$lib/figma/screens/workspace-settings/MemberSettings.svelte";
     import Button from "$lib/figma/buttons/Button.svelte";
     export let workspace: Workspace;
 
