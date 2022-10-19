@@ -1,14 +1,14 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import type { ConstructiveOverlayType } from "$lib/types/ui";
-    import EditWorkspaceBoard from "$lib/figma/overlays/EditWorkspaceBoard.svelte";
-    import NewWorkspaceBoard from "$lib/figma/overlays/NewWorkspaceBoard.svelte";
-    import InviteMember from "$lib/figma/overlays/InviteMember.svelte";
-    import InviteMemberError from "$lib/figma/overlays/InviteMemberError.svelte";
-    import NewWorkspaceBoardSection from "$lib/figma/overlays/NewWorkspaceBoardSection.svelte";
-    import NewWorkspace from "$lib/figma/overlays/NewWorkspace.svelte";
-    import SkipOnboarding from "$lib/figma/overlays/SkipOnboarding.svelte";
-    import RecoverWorkspaceBoard from "$lib/figma/overlays/RecoverWorkspaceBoard.svelte";
+    import EditWorkspaceBoard from "$lib/figma/overlays/constructive/EditWorkspaceBoard.svelte";
+    import NewWorkspaceBoard from "$lib/figma/overlays/constructive/NewWorkspaceBoard.svelte";
+    import InviteMember from "$lib/figma/overlays/constructive/InviteMember.svelte";
+    import InviteMemberError from "$lib/figma/overlays/constructive/InviteMemberError.svelte";
+    import NewWorkspaceBoardSection from "$lib/figma/overlays/constructive/NewWorkspaceBoardSection.svelte";
+    import NewWorkspace from "$lib/figma/overlays/constructive/NewWorkspace.svelte";
+    import SkipOnboarding from "$lib/figma/overlays/constructive/SkipOnboarding.svelte";
+    import RecoverWorkspaceBoard from "$lib/figma/overlays/constructive/RecoverWorkspaceBoard.svelte";
 
     export let target: ConstructiveOverlayType;
     $: title = {
