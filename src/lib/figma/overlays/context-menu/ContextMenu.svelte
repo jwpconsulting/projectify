@@ -1,12 +1,12 @@
 <script lang="ts">
-    import ProfileOverlay from "$lib/figma/overlays/ProfileOverlay.svelte";
-    import WorkspaceOverlay from "$lib/figma/overlays/WorkspaceOverlay.svelte";
-    import SideNavOverlay from "$lib/figma/overlays/SideNavOverlay.svelte";
-    import WorkspaceBoardOverlay from "$lib/figma/overlays/WorkspaceBoardOverlay.svelte";
-    import WorkspaceBoardSectionOverlay from "$lib/figma/overlays/WorkspaceBoardSectionOverlay.svelte";
-    import TaskOverlay from "$lib/figma/overlays/TaskOverlay.svelte";
-    import HelpOverlay from "$lib/figma/overlays/HelpOverlay.svelte";
-    import PermissionsOverlay from "$lib/figma/overlays/PermissionsOverlay.svelte";
+    import ProfileOverlay from "$lib/figma/overlays/context-menu/ProfileOverlay.svelte";
+    import WorkspaceOverlay from "$lib/figma/overlays/context-menu/WorkspaceOverlay.svelte";
+    import SideNavOverlay from "$lib/figma/overlays/context-menu/SideNavOverlay.svelte";
+    import WorkspaceBoardOverlay from "$lib/figma/overlays/context-menu/WorkspaceBoardOverlay.svelte";
+    import WorkspaceBoardSectionOverlay from "$lib/figma/overlays/context-menu/WorkspaceBoardSectionOverlay.svelte";
+    import TaskOverlay from "$lib/figma/overlays/context-menu/TaskOverlay.svelte";
+    import HelpOverlay from "$lib/figma/overlays/context-menu/HelpOverlay.svelte";
+    import PermissionsOverlay from "$lib/figma/overlays/context-menu/PermissionsOverlay.svelte";
     import type { ContextMenuType } from "$lib/types/ui";
 
     export let target: ContextMenuType;

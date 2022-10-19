@@ -1,6 +1,6 @@
 <script lang="ts">
     import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
-    import ContextMenu from "$lib/figma/overlays/ContextMenu.svelte";
+    import ContextMenu from "$lib/figma/overlays/context-menu/ContextMenu.svelte";
     import { setFirstWorkspace } from "$lib/stores/dashboard";
     import ConstructiveOverlay from "$lib/figma/overlays/ConstructiveOverlay.svelte";
     import type {
