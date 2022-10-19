@@ -1,6 +1,10 @@
 <script lang="ts">
     const links = [
         {
+            title: "Typography",
+            href: "/storybook/typography",
+        },
+        {
             title: "Buttons",
             href: "/storybook/buttons",
         },
@@ -43,7 +47,7 @@
     ];
 </script>
 
-<div class="sticky top-0 flex flex-row justify-center gap-4">
+<div class="sticky top-0 flex flex-row flex-wrap justify-center gap-4">
     {#each links as link}
         <a
             href={link.href}
