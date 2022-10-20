@@ -3,7 +3,7 @@
     import { currentWorkspace } from "$lib/stores/dashboard";
     import { getDropDown } from "$lib/components/globalDropDown.svelte";
     import type { DropDownMenuItem } from "$lib/components/globalDropDown.svelte";
-    import EllipsisSideNav from "$lib/figma/buttons/EllipsisSideNav.svelte";
+    import WorkspaceSettings from "$lib/figma/buttons/WorkspaceSettings.svelte";
     import IconArchive from "$lib/components/icons/icon-archive.svelte";
     import IconSettings from "$lib/components/icons/icon-settings.svelte";
     import IconTag from "$lib/components/icons/icon-tag.svelte";
@@ -50,7 +50,7 @@
             open={false}
         />
         <div bind:this={dropDownMenuBtnRef}>
-            <EllipsisSideNav on:click={openDropDownMenu} />
+            <WorkspaceSettings on:click={openDropDownMenu} />
         </div>
     </div>
 </div>

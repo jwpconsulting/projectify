@@ -2,7 +2,7 @@
     import { _ } from "svelte-i18n";
     import Button from "$lib/figma/buttons/Button.svelte";
     import SideMenuCreate from "$lib/figma/buttons/SideMenuCreate.svelte";
-    import EllipsisSideNav from "$lib/figma/buttons/EllipsisSideNav.svelte";
+    import WorkspaceSettings from "$lib/figma/buttons/WorkspaceSettings.svelte";
     import CircleIcon from "$lib/figma/buttons/CircleIcon.svelte";
     import UploadAvatar from "$lib/figma/buttons/UploadAvatar.svelte";
     import AddUserButton from "$lib/figma/buttons/AddUserButton.svelte";
@@ -121,7 +121,7 @@ Side menu create
 </div>
 
 Ellipsis side nav
-<EllipsisSideNav on:click={console.log} />
+<WorkspaceSettings on:click={console.log} />
 Circle icons
 <div class={fr}>
     {#each circleIconSizes as size}
