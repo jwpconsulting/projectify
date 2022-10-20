@@ -15,7 +15,7 @@
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
     import OnboardingSeats from "$lib/figma/buttons/OnboardingSeats.svelte";
     import MinusSeats from "$lib/figma/buttons/MinusSeats.svelte";
-    import AddSeats from "$lib/figma/buttons/AddSeats.svelte";
+    import IncrementSeats from "$lib/figma/buttons/IncrementSeats.svelte";
     import SeatInput from "$lib/figma/buttons/SeatInput.svelte";
     import StepperComponent from "$lib/figma/buttons/StepperComponent.svelte";
     import Stepper from "$lib/figma/buttons/Stepper.svelte";
@@ -212,7 +212,7 @@ Minus seats
     {/each}
 </div>
 Add seats
-<AddSeats on:click={console.log} />
+<IncrementSeats on:click={console.log} />
 Seat input
 <SeatInput />
 Stepper components

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { seats, seatMinus, seatAdd } from "$lib/stores/onboarding";
-    import AddSeats from "$lib/figma/buttons/AddSeats.svelte";
+    import IncrementSeats from "$lib/figma/buttons/IncrementSeats.svelte";
     import MinusSeats from "$lib/figma/buttons/MinusSeats.svelte";
 </script>
 
@@ -12,5 +12,5 @@
         inputmode="numberic"
         bind:value={$seats}
     />
-    <AddSeats on:click={seatAdd} />
+    <IncrementSeats on:click={seatAdd} />
 </div>
