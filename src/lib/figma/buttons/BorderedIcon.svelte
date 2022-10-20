@@ -2,9 +2,9 @@
     import { createEventDispatcher } from "svelte";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Briefcase, Adjustments } from "@steeze-ui/heroicons";
-    import type { SideNavMainType } from "$lib/figma/types";
+    import type { BorderedIconType } from "$lib/figma/types";
 
-    export let type: SideNavMainType;
+    export let type: BorderedIconType;
 
     $: src = {
         workspace: Briefcase,

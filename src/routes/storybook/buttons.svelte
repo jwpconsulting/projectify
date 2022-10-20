@@ -21,7 +21,7 @@
     import Stepper from "$lib/figma/buttons/Stepper.svelte";
     import HamburgerMenu from "$lib/figma/buttons/HamburgerMenu.svelte";
     import SearchMobile from "$lib/figma/buttons/SearchMobile.svelte";
-    import SideNavMain from "$lib/figma/buttons/SideNavMain.svelte";
+    import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
     import WorkspaceBoardIcon from "$lib/figma/buttons/WorkspaceBoardIcon.svelte";
     import Squoval from "$lib/figma/buttons/Squoval.svelte";
     import UserAccount from "$lib/figma/buttons/UserAccount.svelte";
@@ -44,7 +44,7 @@
         menuButtonColors,
         stepperPositions,
         stepperActiveStates,
-        sideNavMainTypes,
+        borderedIconTypes,
         boardButtonStates,
         squovalIcons,
         squovalStates,
@@ -237,8 +237,8 @@ Mobile search menu
 <SearchMobile on:click={console.log} />
 Side nav main
 <div class={fr}>
-    {#each sideNavMainTypes as type}
-        <SideNavMain {type} on:click={console.log} />
+    {#each borderedIconTypes as type}
+        <BorderedIcon {type} on:click={console.log} />
     {/each}
 </div>
 Board button
