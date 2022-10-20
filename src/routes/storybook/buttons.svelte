@@ -19,7 +19,7 @@
     import SeatInput from "$lib/figma/buttons/SeatInput.svelte";
     import StepperComponent from "$lib/figma/buttons/StepperComponent.svelte";
     import Stepper from "$lib/figma/buttons/Stepper.svelte";
-    import MobileMenu from "$lib/figma/buttons/MobileMenu.svelte";
+    import HamburgerMenu from "$lib/figma/buttons/HamburgerMenu.svelte";
     import MobileSearchMenu from "$lib/figma/buttons/MobileSearchMenu.svelte";
     import SideNavMain from "$lib/figma/buttons/SideNavMain.svelte";
     import WorkspaceBoardIcon from "$lib/figma/buttons/WorkspaceBoardIcon.svelte";
@@ -230,7 +230,7 @@ Stepper ({$currentStep})
 Mobile Menu
 <div class={fr}>
     {#each falseTrue as isActive}
-        <MobileMenu {isActive} on:click={console.log} />
+        <HamburgerMenu {isActive} on:click={console.log} />
     {/each}
 </div>
 Mobile search menu
