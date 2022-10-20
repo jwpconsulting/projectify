@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Squoval from "$lib/figma/buttons/Squoval.svelte";
+    import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
     import {
         currentWorkspace,
@@ -12,7 +12,7 @@
 </script>
 
 <div class="flex flex-col items-center gap-6">
-    <Squoval
+    <SquovalIcon
         state="active"
         icon="member"
         on:click={toggleUserExpandOpen}

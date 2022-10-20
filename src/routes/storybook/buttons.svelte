@@ -23,7 +23,7 @@
     import SearchMobile from "$lib/figma/buttons/SearchMobile.svelte";
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
     import WorkspaceBoardIcon from "$lib/figma/buttons/WorkspaceBoardIcon.svelte";
-    import Squoval from "$lib/figma/buttons/Squoval.svelte";
+    import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
     import UserAccount from "$lib/figma/buttons/UserAccount.svelte";
     import Label from "$lib/figma/buttons/Label.svelte";
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
@@ -252,7 +252,7 @@ Squoval
     {#each squovalIcons as icon}
         <div class={fr}>
             {#each squovalStates as state}
-                <Squoval {icon} {state} on:click={console.log} />
+                <SquovalIcon {icon} {state} on:click={console.log} />
             {/each}
         </div>
     {/each}

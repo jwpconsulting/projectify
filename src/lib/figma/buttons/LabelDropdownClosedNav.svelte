@@ -7,11 +7,11 @@
         selectLabel,
     } from "$lib/stores/dashboard";
     import SelectLabelFocus from "$lib/figma/select-controls/SelectLabelFocus.svelte";
-    import Squoval from "$lib/figma/buttons/Squoval.svelte";
+    import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
 </script>
 
 <div class="flex flex-col items-center gap-6">
-    <Squoval
+    <SquovalIcon
         state="active"
         icon="label"
         on:click={toggleLabelDropdownClosedNavOpen}
