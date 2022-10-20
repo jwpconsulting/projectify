@@ -13,7 +13,7 @@
     import WorkspaceMenuBar from "$lib/figma/buttons/WorkspaceMenuBar.svelte";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
-    import OnboardingSeats from "$lib/figma/buttons/OnboardingSeats.svelte";
+    import SelectSeats from "$lib/figma/buttons/SelectSeats.svelte";
     import DecrementSeats from "$lib/figma/buttons/DecrementSeats.svelte";
     import IncrementSeats from "$lib/figma/buttons/IncrementSeats.svelte";
     import SeatInputStepper from "$lib/figma/buttons/SeatInputStepper.svelte";
@@ -202,7 +202,7 @@ Submenu dropdown
 Onboarding seats
 <div class={fr}>
     {#each onboardingSeats as seats}
-        <OnboardingSeats on:click={console.log} {seats} />
+        <SelectSeats on:click={console.log} {seats} />
     {/each}
 </div>
 Minus seats
