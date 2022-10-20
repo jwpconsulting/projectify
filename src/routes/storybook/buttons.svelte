@@ -22,7 +22,7 @@
     import MobileMenu from "$lib/figma/buttons/MobileMenu.svelte";
     import MobileSearchMenu from "$lib/figma/buttons/MobileSearchMenu.svelte";
     import SideNavMain from "$lib/figma/buttons/SideNavMain.svelte";
-    import BoardButton from "$lib/figma/buttons/BoardButton.svelte";
+    import WorkspaceBoardIcon from "$lib/figma/buttons/WorkspaceBoardIcon.svelte";
     import Squoval from "$lib/figma/buttons/Squoval.svelte";
     import UserAccount from "$lib/figma/buttons/UserAccount.svelte";
     import Label from "$lib/figma/buttons/Label.svelte";
@@ -244,7 +244,7 @@ Side nav main
 Board button
 <div class={fr}>
     {#each boardButtonStates as state}
-        <BoardButton {state} on:click={console.log} />
+        <WorkspaceBoardIcon {state} on:click={console.log} />
     {/each}
 </div>
 Squoval

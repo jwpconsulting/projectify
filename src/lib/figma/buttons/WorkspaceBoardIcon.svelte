@@ -2,9 +2,9 @@
     import { createEventDispatcher } from "svelte";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Folder } from "@steeze-ui/heroicons";
-    import type { BoardButtonState } from "$lib/figma/types";
+    import type { WorkspaceBoardIconState } from "$lib/figma/types";
 
-    export let state: BoardButtonState;
+    export let state: WorkspaceBoardIconState;
 
     $: style = {
         inactive: "invisible",
