@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import MenuButton from "$lib/figma/buttons/MenuButton.svelte";
+    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
     import {
         ArrowsExpand,
@@ -20,7 +20,7 @@
 </script>
 
 {#if location === "dashboard"}
-    <MenuButton
+    <ContextMenuButton
         kind={{ kind: "button" }}
         on:click={() => console.error("open task not implemented")}
         label={$_("task-overlay.open-task")}
@@ -34,14 +34,14 @@
     icon={SwitchVertical}
 />
 {#if location === "dashboard"}
-    <MenuButton
+    <ContextMenuButton
         kind={{ kind: "button" }}
         on:click={() => console.error("move to top not implemented")}
         label={$_("task-overlay.move-to-top")}
         state="normal"
         icon={SortAscending}
     />
-    <MenuButton
+    <ContextMenuButton
         kind={{ kind: "button" }}
         on:click={() => console.error("move to bottom not implemented")}
         label={$_("task-overlay.move-to-bottom")}
@@ -49,7 +49,7 @@
         icon={SortDescending}
     />
 {/if}
-<MenuButton
+<ContextMenuButton
     kind={{ kind: "button" }}
     on:click={() => console.error("copy link not implemented")}
     label={$_("task-overlay.copy-link")}
@@ -57,7 +57,7 @@
     icon={Duplicate}
 />
 {#if location === "dashboard"}
-    <MenuButton
+    <ContextMenuButton
         kind={{ kind: "button" }}
         on:click={() => console.error("go to updates not implemented")}
         label={$_("task-overlay.go-to-updates")}
@@ -65,7 +65,7 @@
         icon={ChatAlt}
     />
 {/if}
-<MenuButton
+<ContextMenuButton
     kind={{ kind: "button" }}
     on:click={() => console.error("delete task not implemented")}
     label={$_("task-overlay.delete-task")}

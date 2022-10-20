@@ -11,7 +11,7 @@
     import WatcherButton from "$lib/figma/buttons/WatcherButton.svelte";
     import NotificationRead from "$lib/figma/buttons/NotificationRead.svelte";
     import WorkspaceMenuBar from "$lib/figma/buttons/WorkspaceMenuBar.svelte";
-    import MenuButton from "$lib/figma/buttons/MenuButton.svelte";
+    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
     import OnboardingSeats from "$lib/figma/buttons/OnboardingSeats.svelte";
     import MinusSeats from "$lib/figma/buttons/MinusSeats.svelte";
@@ -184,7 +184,7 @@ Menu button
 <div class={`${fc} w-40`}>
     {#each menuButtonStates as state}
         {#each menuButtonColors as color}
-            <MenuButton
+            <ContextMenuButton
                 on:click={console.log}
                 {state}
                 {color}

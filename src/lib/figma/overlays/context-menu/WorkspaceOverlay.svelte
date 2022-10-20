@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import MenuButton from "$lib/figma/buttons/MenuButton.svelte";
+    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import { Briefcase, Plus } from "@steeze-ui/heroicons";
     import { getDashboardWorkspaceUrl } from "$lib/urls";
     import { workspaces } from "$lib/stores/dashboard";
@@ -9,7 +9,7 @@
 
 {#if $workspaces}
     {#each $workspaces as workspace}
-        <MenuButton
+        <ContextMenuButton
             kind={{
                 kind: "a",
                 href: getDashboardWorkspaceUrl(workspace.uuid),
@@ -22,7 +22,7 @@
 {:else}
     <Loading />
 {/if}
-<MenuButton
+<ContextMenuButton
     kind={{ kind: "button" }}
     on:click={() => console.error("add new workspace not implemented")}
     label={$_("workspace-overlay.add-new-workspace")}

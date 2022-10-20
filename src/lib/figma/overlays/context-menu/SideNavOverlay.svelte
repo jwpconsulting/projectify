@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import MenuButton from "$lib/figma/buttons/MenuButton.svelte";
+    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import { getArchiveUrl, getSettingsUrl } from "$lib/urls";
     import { sideNavOpen, toggleSideNavOpen } from "$lib/stores/dashboard";
     import {
@@ -14,7 +14,7 @@
     export let workspace: Workspace;
 </script>
 
-<MenuButton
+<ContextMenuButton
     kind={{ kind: "button" }}
     label={$sideNavOpen
         ? $_("side-nav-overlay.minimise-sidebar")
@@ -23,13 +23,13 @@
     on:click={toggleSideNavOpen}
     icon={$sideNavOpen ? ArrowCircleLeft : ArrowCircleRight}
 />
-<MenuButton
+<ContextMenuButton
     kind={{ kind: "a", href: getArchiveUrl(workspace.uuid) }}
     label={$_("side-nav-overlay.go-to-archive")}
     state="normal"
     icon={Archive}
 />
-<MenuButton
+<ContextMenuButton
     kind={{ kind: "a", href: getSettingsUrl(workspace.uuid, "index") }}
     label={$_("side-nav-overlay.workspace-settings")}
     state="normal"

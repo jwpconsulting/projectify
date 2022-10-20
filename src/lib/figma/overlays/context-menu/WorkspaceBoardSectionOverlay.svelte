@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import MenuButton from "$lib/figma/buttons/MenuButton.svelte";
+    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import {
         Selector,
         Pencil,
@@ -25,7 +25,7 @@
     // TODO this might have to be refactored to check if previous or next section exists
 </script>
 
-<MenuButton
+<ContextMenuButton
     kind={{ kind: "button" }}
     on:click={() =>
         toggleWorkspaceBoardSectionOpen(workspaceBoardSection.uuid)}
@@ -35,35 +35,35 @@
     state="normal"
     icon={closed ? Selector : X}
 />
-<MenuButton
+<ContextMenuButton
     kind={{ kind: "button" }}
     on:click={() => console.error("switch with previous not implemented")}
     label={$_("workspace-board-section-overlay.switch-previous")}
     state="normal"
     icon={ArrowUp}
 />
-<MenuButton
+<ContextMenuButton
     kind={{ kind: "button" }}
     on:click={() => console.error("switch with next not implemented")}
     label={$_("workspace-board-section-overlay.switch-next")}
     state="normal"
     icon={ArrowDown}
 />
-<MenuButton
+<ContextMenuButton
     kind={{ kind: "button" }}
     on:click={() => console.error("edit section title not implemented")}
     label={$_("workspace-board-section-overlay.edit-title")}
     state="normal"
     icon={Pencil}
 />
-<MenuButton
+<ContextMenuButton
     kind={{ kind: "button" }}
     on:click={() => console.error("add task not implemented")}
     label={$_("workspace-board-section-overlay.add-task")}
     state="normal"
     icon={Plus}
 />
-<MenuButton
+<ContextMenuButton
     kind={{ kind: "button" }}
     on:click={() => console.error("delete section not implemented")}
     label={$_("workspace-board-section-overlay.delete-section")}
