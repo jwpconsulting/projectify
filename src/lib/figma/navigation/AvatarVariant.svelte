@@ -1,9 +1,12 @@
 <script lang="ts">
     import AvatarState from "$lib/figma/navigation/AvatarState.svelte";
-    import type { AvatarV5Size, AvatarV5Content } from "$lib/figma/types";
+    import type {
+        AvatarVariantContent,
+        AvatarVariantSize,
+    } from "$lib/figma/types";
 
-    export let content: AvatarV5Content;
-    export let size: AvatarV5Size;
+    export let content: AvatarVariantContent;
+    export let size: AvatarVariantSize;
     export let hoverableParent: boolean = false;
 
     const zIndices = new Map<number, string>([

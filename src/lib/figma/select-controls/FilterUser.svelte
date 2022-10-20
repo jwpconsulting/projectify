@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
     import AvatarState from "$lib/figma/navigation/AvatarState.svelte";
-    import AvatarV5 from "$lib/figma/navigation/AvatarV5.svelte";
+    import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import CheckBox from "$lib/figma/select-controls/CheckBox.svelte";
     import { _ } from "svelte-i18n";
     import { createEventDispatcher } from "svelte";
@@ -29,7 +29,7 @@
         <CheckBox bind:checked={active} disabled={false} contained={true} />
         <div class="flex flex-row items-center justify-center gap-2">
             {#if workspaceUserSelectionInput.kind === "workspaceUser"}
-                <AvatarV5
+                <AvatarVariant
                     content={{
                         kind: "multiple",
                         users: [

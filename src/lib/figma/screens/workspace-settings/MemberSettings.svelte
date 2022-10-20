@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { WorkspaceUser } from "$lib/types/workspace";
-    import AvatarV5 from "$lib/figma/navigation/AvatarV5.svelte";
+    import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import { _ } from "svelte-i18n";
     import { getMessageNameForRole } from "$lib/utils/i18n";
     export let workspaceUser: WorkspaceUser;
@@ -21,7 +21,7 @@
         class="flex w-full flex-row items-center justify-between border-b border-border bg-foreground p-2 hover:bg-secondary-hover active:bg-disabled"
     >
         <div class="flex flex-row items-center gap-2">
-            <AvatarV5
+            <AvatarVariant
                 content={{ kind: "multiple", users: [workspaceUser.user] }}
                 size="medium"
             />

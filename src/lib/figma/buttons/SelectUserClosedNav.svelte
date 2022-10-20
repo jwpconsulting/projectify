@@ -3,13 +3,13 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import { CheckCircle } from "@steeze-ui/heroicons";
     import type { User } from "$lib/types/user";
-    import type { AvatarV5Content } from "$lib/figma/types";
-    import AvatarV5 from "$lib/figma/navigation/AvatarV5.svelte";
+    import type { AvatarVariantContent } from "$lib/figma/types";
+    import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
 
     export let user: User | null;
     export let active: boolean;
 
-    let content: AvatarV5Content;
+    let content: AvatarVariantContent;
     $: content = {
         kind: "multiple",
         users: [user],
@@ -39,6 +39,6 @@
         />
     {/if}
     <div class="relative z-0 p-0.5">
-        <AvatarV5 {content} size="hoverable" />
+        <AvatarVariant {content} size="hoverable" />
     </div>
 </button>
