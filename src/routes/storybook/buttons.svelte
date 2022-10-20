@@ -20,7 +20,7 @@
     import StepperComponent from "$lib/figma/buttons/StepperComponent.svelte";
     import Stepper from "$lib/figma/buttons/Stepper.svelte";
     import HamburgerMenu from "$lib/figma/buttons/HamburgerMenu.svelte";
-    import MobileSearchMenu from "$lib/figma/buttons/MobileSearchMenu.svelte";
+    import SearchMobile from "$lib/figma/buttons/SearchMobile.svelte";
     import SideNavMain from "$lib/figma/buttons/SideNavMain.svelte";
     import WorkspaceBoardIcon from "$lib/figma/buttons/WorkspaceBoardIcon.svelte";
     import Squoval from "$lib/figma/buttons/Squoval.svelte";
@@ -234,7 +234,7 @@ Mobile Menu
     {/each}
 </div>
 Mobile search menu
-<MobileSearchMenu on:click={console.log} />
+<SearchMobile on:click={console.log} />
 Side nav main
 <div class={fr}>
     {#each sideNavMainTypes as type}
