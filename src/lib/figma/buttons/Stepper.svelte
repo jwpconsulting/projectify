@@ -1,5 +1,5 @@
 <script lang="ts">
-    import StepperComponent from "$lib/figma/buttons/StepperComponent.svelte";
+    import StepperVariant from "$lib/figma/buttons/StepperVariant.svelte";
     import { gotoStep, numSteps, currentStep } from "$lib/stores/onboarding";
 
     const steps = [...Array(numSteps).keys()];
@@ -7,7 +7,7 @@
 
 <div class="flex flex-row">
     {#each steps as step}
-        <StepperComponent
+        <StepperVariant
             position={step === numSteps - 1 ? "last" : "not-last"}
             state={step > $currentStep
                 ? "inactive"

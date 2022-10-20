@@ -17,7 +17,7 @@
     import DecrementSeats from "$lib/figma/buttons/DecrementSeats.svelte";
     import IncrementSeats from "$lib/figma/buttons/IncrementSeats.svelte";
     import SeatInputStepper from "$lib/figma/buttons/SeatInputStepper.svelte";
-    import StepperComponent from "$lib/figma/buttons/StepperComponent.svelte";
+    import StepperVariant from "$lib/figma/buttons/StepperVariant.svelte";
     import Stepper from "$lib/figma/buttons/Stepper.svelte";
     import HamburgerMenu from "$lib/figma/buttons/HamburgerMenu.svelte";
     import SearchMobile from "$lib/figma/buttons/SearchMobile.svelte";
@@ -220,7 +220,7 @@ Stepper components
     {#each stepperPositions as position}
         <div class={fc}>
             {#each stepperActiveStates as state}
-                <StepperComponent {position} {state} on:click={console.log} />
+                <StepperVariant {position} {state} on:click={console.log} />
             {/each}
         </div>
     {/each}
