@@ -10,3 +10,4 @@ node_modules
 .output
 .netlify
 /tmp
+.mypy_cache/

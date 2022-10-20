@@ -3,13 +3,27 @@ executors:
     node:
         docker:
             - image: cimg/node:17.9.1
+    python:
+        docker:
+            - image: python:3.9.14
+              environment:
+                  PIPENV_PIPFILE: Pipfile-tools
 commands:
-    install_dependencies:
+    install_node_dependencies:
         description: Install dependencies
         steps:
             - run:
                   name: npm ci
                   command: npm ci
+    install_python_dependencies:
+        description: Install pipenv
+        steps:
+            - run:
+                  name: Install pipenv
+                  command: pip3 install pipenv
+            - run:
+                  name: Install pip packages
+                  command: pipenv sync --dev
 jobs:
     check:
         executor: node
@@ -17,7 +31,7 @@ jobs:
             - checkout
             - restore_cache:
                   key: npm-cache-v1-{{ checksum "package-lock.json" }}
-            - install_dependencies
+            - install_node_dependencies
             - save_cache:
                   key: npm-cache-v1-{{ checksum "package-lock.json" }}
                   paths:
@@ -31,12 +45,61 @@ jobs:
             - checkout
             - restore_cache:
                   key: npm-cache-v1-{{ checksum "package-lock.json" }}
-            - install_dependencies
+            - install_node_dependencies
             - run:
                   name: Run lint
                   command: npm run lint
+    pipenv_check:
+        executor: python
+        steps:
+            - checkout
+            - restore_cache:
+                  keys:
+                      - cache-{{ checksum "Pipfile.lock" }}
+            - install_python_dependencies
+            - save_cache:
+                  key: cache-{{ checksum "Pipfile.lock" }}
+                  paths:
+                      - ~/.local
+                      - ~/.cache
+    python_lint:
+        executor: python
+        steps:
+            - checkout
+            - restore_cache:
+                  keys:
+                      - cache-{{ checksum "Pipfile.lock" }}
+            - install_python_dependencies
+            - run:
+                  name: Run flake8
+                  command: pipenv run flake8
+    pytest:
+        executor: python
+        steps:
+            - checkout
+            - restore_cache:
+                  keys:
+                      - cache-{{ checksum "Pipfile.lock" }}
+            - install_python_dependencies
+            - run:
+                  name: Run pytest
+                  command: pipenv run python -m pytest
+    mypy:
+        executor: python
+        steps:
+            - checkout
+            - restore_cache:
+                  keys:
+                      - cache-{{ checksum "Pipfile.lock" }}
+            - install_python_dependencies
+            - run:
+                  name: Run mypy
+                  command: pipenv run mypy
 workflows:
     test_all:
         jobs:
             - check
             - lint
+            - pipenv_check
+            - python_lint
+            - mypy
