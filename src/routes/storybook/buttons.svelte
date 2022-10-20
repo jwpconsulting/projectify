@@ -24,7 +24,7 @@
     import SideNavMain from "$lib/figma/buttons/SideNavMain.svelte";
     import BoardButton from "$lib/figma/buttons/BoardButton.svelte";
     import Squoval from "$lib/figma/buttons/Squoval.svelte";
-    import AvatarWithHover from "$lib/figma/buttons/AvatarWithHover.svelte";
+    import UserAccount from "$lib/figma/buttons/UserAccount.svelte";
     import Label from "$lib/figma/buttons/Label.svelte";
     import FilterUserAvatar from "$lib/figma/buttons/FilterUserAvatar.svelte";
     import UserExpand from "$lib/figma/buttons/UserExpand.svelte";
@@ -262,9 +262,9 @@ Avatar with hover
     {#each users as user}
         <div class={fc}>
             {user ? user.email : "No user"}
-            <AvatarWithHover
+            <UserAccount
                 {user}
-                on:click={() => console.log("AvatarWithHover", user)}
+                on:click={() => console.log("UserAccount", user)}
             />
         </div>
     {/each}
