@@ -1,10 +1,10 @@
 <script lang="ts">
     import UserAvatar from "$lib/components/UserAvatar.svelte";
     import type { User } from "$lib/types/user";
-    import type { AvatarV3Size } from "$lib/figma/types";
+    import type { AvatarStateSize } from "$lib/figma/types";
 
     export let user: User | null;
-    export let size: AvatarV3Size;
+    export let size: AvatarStateSize;
 
     $: outerSize = {
         medium: "h-8 w-8",

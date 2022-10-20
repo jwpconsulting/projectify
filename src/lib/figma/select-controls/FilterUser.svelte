@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
-    import AvatarV3 from "$lib/figma/navigation/AvatarV3.svelte";
+    import AvatarState from "$lib/figma/navigation/AvatarState.svelte";
     import AvatarV5 from "$lib/figma/navigation/AvatarV5.svelte";
     import CheckBox from "$lib/figma/select-controls/CheckBox.svelte";
     import { _ } from "svelte-i18n";
@@ -39,7 +39,7 @@
                     size="small"
                 />
             {:else}
-                <AvatarV3 size="small" user={null} />
+                <AvatarState size="small" user={null} />
             {/if}
             <div class="text-regular text-xs capitalize">
                 {#if workspaceUserSelectionInput.kind === "unassigned"}

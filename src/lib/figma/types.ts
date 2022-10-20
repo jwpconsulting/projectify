@@ -59,8 +59,8 @@ export type SquovalIcon = typeof squovalIcons[number];
 export const squovalStates = ["inactive", "disabled", "active"] as const;
 export type SquovalState = typeof squovalStates[number];
 
-export const avatarV3Sizes = ["small", "medium", "hoverable"] as const;
-export type AvatarV3Size = typeof avatarV3Sizes[number];
+export const avatarStateSizes = ["small", "medium", "hoverable"] as const;
+export type AvatarStateSize = typeof avatarStateSizes[number];
 
 export const avatarV5Sizes = ["small", "medium", "hoverable"] as const;
 export type AvatarV5Size = typeof avatarV5Sizes[number];
