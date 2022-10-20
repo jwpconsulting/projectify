@@ -1,6 +1,6 @@
 <script lang="ts">
     import FilterLabelCollapsible from "$lib/figma/composites/FilterLabelCollapsible.svelte";
-    import FilterLabelMenu from "$lib/figma/composites/FilterLabelMenu.svelte";
+    import LabelMenu from "$lib/figma/composites/LabelMenu.svelte";
 
     import { setFirstWorkspace } from "$lib/stores/dashboard";
     import { browser } from "$app/env";
@@ -16,7 +16,7 @@ Filter label menu
 <div class={fr}>
     {#each filterLabelMenuStates as state}
         <div class="w-96">
-            <FilterLabelMenu {state} />
+            <LabelMenu {state} />
         </div>
     {/each}
 </div>
