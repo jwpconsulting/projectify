@@ -1,6 +1,6 @@
 <script lang="ts">
     import Squoval from "$lib/figma/buttons/Squoval.svelte";
-    import FilterUserAvatar from "$lib/figma/buttons/FilterUserAvatar.svelte";
+    import SelectUserCollapsed from "$lib/figma/buttons/SelectUserCollapsed.svelte";
     import {
         currentWorkspace,
         selectedWorkspaceUser,
@@ -20,7 +20,7 @@
     />
     {#if $userExpandOpen}
         <div class="flex flex-col items-center gap-2">
-            <FilterUserAvatar
+            <SelectUserCollapsed
                 user={null}
                 active={$selectedWorkspaceUser.kind === "unassigned"}
                 on:select={() => selectWorkspaceUser({ kind: "unassigned" })}
@@ -29,7 +29,7 @@
             />
             {#if $currentWorkspace && $currentWorkspace.workspace_users}
                 {#each $currentWorkspace.workspace_users as workspaceUser}
-                    <FilterUserAvatar
+                    <SelectUserCollapsed
                         user={workspaceUser.user}
                         active={$selectedWorkspaceUser.kind ===
                             "workspaceUsers" &&

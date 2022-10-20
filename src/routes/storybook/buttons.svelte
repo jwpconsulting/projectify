@@ -26,7 +26,7 @@
     import Squoval from "$lib/figma/buttons/Squoval.svelte";
     import UserAccount from "$lib/figma/buttons/UserAccount.svelte";
     import Label from "$lib/figma/buttons/Label.svelte";
-    import FilterUserAvatar from "$lib/figma/buttons/FilterUserAvatar.svelte";
+    import SelectUserCollapsed from "$lib/figma/buttons/SelectUserCollapsed.svelte";
     import UserExpand from "$lib/figma/buttons/UserExpand.svelte";
     import LabelExpand from "$lib/figma/buttons/LabelExpand.svelte";
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
@@ -289,7 +289,7 @@ Filter user avatar
     {#each users as user}
         <div class={fr}>
             {#each falseTrue as active}
-                <FilterUserAvatar {active} {user} />
+                <SelectUserCollapsed {active} {user} />
             {/each}
         </div>
     {/each}
