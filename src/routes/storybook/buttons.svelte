@@ -9,7 +9,7 @@
     import NotificationButton from "$lib/figma/buttons/NotificationButton.svelte";
     import CancelSearch from "$lib/figma/buttons/CancelSearch.svelte";
     import WatcherButton from "$lib/figma/buttons/WatcherButton.svelte";
-    import NotificationRead from "$lib/figma/buttons/NotificationRead.svelte";
+    import ReadNotification from "$lib/figma/buttons/ReadNotification.svelte";
     import WorkspaceMenuBar from "$lib/figma/buttons/WorkspaceMenuBar.svelte";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
@@ -171,7 +171,7 @@ Watcher
 Notification read
 <div class={fr}>
     {#each falseTrue as isRead}
-        <NotificationRead on:click={console.log} {isRead} />
+        <ReadNotification on:click={console.log} {isRead} />
     {/each}
 </div>
 Workspace menu bar
