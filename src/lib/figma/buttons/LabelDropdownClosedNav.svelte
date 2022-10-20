@@ -3,7 +3,7 @@
         currentWorkspace,
         selectedLabels,
         labelExpandOpen,
-        toggleLabelExpandOpen,
+        toggleLabelDropdownClosedNavOpen,
         selectLabel,
     } from "$lib/stores/dashboard";
     import SelectLabelFocus from "$lib/figma/select-controls/SelectLabelFocus.svelte";
@@ -14,7 +14,7 @@
     <Squoval
         state="active"
         icon="label"
-        on:click={toggleLabelExpandOpen}
+        on:click={toggleLabelDropdownClosedNavOpen}
         active={$selectedLabels.kind !== "allLabels"}
     />
     {#if $labelExpandOpen}

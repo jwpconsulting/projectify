@@ -646,7 +646,7 @@ export function toggleUserExpandOpen() {
     userExpandOpen.update((state) => !state);
 }
 export const labelExpandOpen = writable<boolean>(false);
-export function toggleLabelExpandOpen() {
+export function toggleLabelDropdownClosedNavOpen() {
     labelExpandOpen.update((state) => !state);
 }
 

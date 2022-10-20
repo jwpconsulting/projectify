@@ -28,7 +28,7 @@
     import Label from "$lib/figma/buttons/Label.svelte";
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
     import UserExpand from "$lib/figma/buttons/UserExpand.svelte";
-    import LabelExpand from "$lib/figma/buttons/LabelExpand.svelte";
+    import LabelDropdownClosedNav from "$lib/figma/buttons/LabelDropdownClosedNav.svelte";
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import SelectBoard from "$lib/figma/buttons/SelectBoard.svelte";
@@ -299,7 +299,7 @@ User expand
 <UserExpand />
 
 Label expand
-<LabelExpand />
+<LabelDropdownClosedNav />
 
 Side nav menu category
 <div class={fc}>
