@@ -18,7 +18,7 @@
     import IncrementSeats from "$lib/figma/buttons/IncrementSeats.svelte";
     import SeatInputStepper from "$lib/figma/buttons/SeatInputStepper.svelte";
     import StepperVariant from "$lib/figma/buttons/StepperVariant.svelte";
-    import Stepper from "$lib/figma/buttons/Stepper.svelte";
+    import ProgressStepper from "$lib/figma/buttons/ProgressStepper.svelte";
     import HamburgerMenu from "$lib/figma/buttons/HamburgerMenu.svelte";
     import SearchMobile from "$lib/figma/buttons/SearchMobile.svelte";
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
@@ -226,7 +226,7 @@ Stepper components
     {/each}
 </div>
 Stepper ({$currentStep})
-<Stepper />
+<ProgressStepper />
 Mobile Menu
 <div class={fr}>
     {#each falseTrue as isActive}
