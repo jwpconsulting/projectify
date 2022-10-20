@@ -10,7 +10,7 @@
     import CancelSearch from "$lib/figma/buttons/CancelSearch.svelte";
     import WatcherButton from "$lib/figma/buttons/WatcherButton.svelte";
     import ReadNotification from "$lib/figma/buttons/ReadNotification.svelte";
-    import WorkspaceMenuBar from "$lib/figma/buttons/WorkspaceMenuBar.svelte";
+    import TabElement from "$lib/figma/buttons/TabElement.svelte";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
     import SelectSeats from "$lib/figma/buttons/SelectSeats.svelte";
@@ -177,7 +177,7 @@ Notification read
 Workspace menu bar
 <div class={fr}>
     {#each falseTrue as active}
-        <WorkspaceMenuBar href="/" label="Members" {active} />
+        <TabElement href="/" label="Members" {active} />
     {/each}
 </div>
 Menu button
