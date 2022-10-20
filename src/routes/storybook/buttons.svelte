@@ -27,7 +27,7 @@
     import UserAccount from "$lib/figma/buttons/UserAccount.svelte";
     import Label from "$lib/figma/buttons/Label.svelte";
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
-    import UserExpand from "$lib/figma/buttons/UserExpand.svelte";
+    import UserDropdownClosedNav from "$lib/figma/buttons/UserDropdownClosedNav.svelte";
     import LabelDropdownClosedNav from "$lib/figma/buttons/LabelDropdownClosedNav.svelte";
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
@@ -296,7 +296,7 @@ Filter user avatar
 </div>
 
 User expand
-<UserExpand />
+<UserDropdownClosedNav />
 
 Label expand
 <LabelDropdownClosedNav />
