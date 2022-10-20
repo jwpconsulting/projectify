@@ -12,7 +12,7 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Plus, Folder } from "@steeze-ui/heroicons";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
-    import SelectBoard from "$lib/figma/buttons/SelectBoard.svelte";
+    import SelectWorkspaceBoard from "$lib/figma/buttons/SelectWorkspaceBoard.svelte";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
     let open = true;
@@ -60,7 +60,7 @@
     <div class="flex flex-col">
         {#if $currentWorkspace && $currentWorkspace.workspace_boards}
             {#each $currentWorkspace.workspace_boards as workspaceBoard (workspaceBoard.uuid)}
-                <SelectBoard {workspaceBoard} />
+                <SelectWorkspaceBoard {workspaceBoard} />
             {/each}
             <div>
                 <button
