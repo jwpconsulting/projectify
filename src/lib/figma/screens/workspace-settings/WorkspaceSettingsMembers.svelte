@@ -3,7 +3,7 @@
     import type { Workspace, WorkspaceUser } from "$lib/types/workspace";
     import WorkspaceSettingsPage from "$lib/figma/screens/workspace-settings/WorkspaceSettingsPage.svelte";
     import InputField from "$lib/figma/input-fields/InputField.svelte";
-    import MemberSettings from "$lib/figma/screens/workspace-settings/MemberSettings.svelte";
+    import WorkspaceSettingsMemberCard from "$lib/figma/screens/workspace-settings/WorkspaceSettingsMemberCard.svelte";
     import Button from "$lib/figma/buttons/Button.svelte";
     export let workspace: Workspace;
 
@@ -52,7 +52,7 @@
                 </div>
             </div>
             {#each workspaceUsers as workspaceUser}
-                <MemberSettings {workspaceUser} />
+                <WorkspaceSettingsMemberCard {workspaceUser} />
             {/each}
         </div>
     {:else}

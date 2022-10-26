@@ -1,6 +1,6 @@
 <script lang="ts">
     import WorkspaceSettingsBar from "$lib/figma/screens/workspace-settings/WorkspaceSettingsBar.svelte";
-    import MemberSettings from "$lib/figma/screens/workspace-settings/MemberSettings.svelte";
+    import WorkspaceSettingsMemberCard from "$lib/figma/screens/workspace-settings/WorkspaceSettingsMemberCard.svelte";
     import WorkspaceSettingsPage from "$lib/figma/screens/workspace-settings/WorkspaceSettingsPage.svelte";
     import WorkspaceSettingsGeneral from "$lib/figma/screens/workspace-settings/WorkspaceSettingsGeneral.svelte";
     import WorkspaceSettingsMembers from "$lib/figma/screens/workspace-settings/WorkspaceSettingsMembers.svelte";
@@ -24,7 +24,7 @@
     </div>
 
     <div class="w-96">
-        <MemberSettings {workspaceUser} />
+        <WorkspaceSettingsMemberCard {workspaceUser} />
     </div>
 
     <div class={fc}>
