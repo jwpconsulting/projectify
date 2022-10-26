@@ -1,6 +1,6 @@
 <script lang="ts">
     import CheckBox from "$lib/figma/select-controls/CheckBox.svelte";
-    import SelectLabelFocus from "$lib/figma/select-controls/SelectLabelFocus.svelte";
+    import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
     import FilterUser from "$lib/figma/select-controls/FilterUser.svelte";
     import FilterLabel from "$lib/figma/select-controls/FilterLabel.svelte";
 
@@ -41,7 +41,7 @@ Select label focus
                 {/if}
             </div>
             {#each falseTrue as checked}
-                <SelectLabelFocus {label} {checked} />
+                <SelectLabelCheckBox {label} {checked} />
             {/each}
         </div>
     {/each}

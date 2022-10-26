@@ -6,7 +6,7 @@
         toggleLabelDropdownClosedNavOpen,
         selectLabel,
     } from "$lib/stores/dashboard";
-    import SelectLabelFocus from "$lib/figma/select-controls/SelectLabelFocus.svelte";
+    import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
     import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
 </script>
 
@@ -20,18 +20,18 @@
     {#if $labelExpandOpen}
         <div class="flex flex-col items-center gap-2">
             {#if $currentWorkspace && $currentWorkspace.labels}
-                <SelectLabelFocus
+                <SelectLabelCheckBox
                     label={{ kind: "allLabels" }}
                     checked={$selectedLabels.kind === "allLabels"}
                     on:selected={() => selectLabel({ kind: "allLabels" })}
                 />
-                <SelectLabelFocus
+                <SelectLabelCheckBox
                     label={{ kind: "noLabel" }}
                     checked={$selectedLabels.kind === "noLabel"}
                     on:selected={() => selectLabel({ kind: "noLabel" })}
                 />
                 {#each $currentWorkspace.labels as label}
-                    <SelectLabelFocus
+                    <SelectLabelCheckBox
                         label={{ kind: "label", label: label }}
                         checked={$selectedLabels.kind === "labels"
                             ? $selectedLabels.labelUuids.has(label.uuid)
