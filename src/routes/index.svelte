@@ -84,6 +84,19 @@
                 <img src="/assets/landing/notifications.png" alt="" />
             </div>
         </div>
+        <div class="m-6 grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
+            <div>
+                <h4 class="mb-8 text-xl font-bold sm:mt-24 sm:text-4xl">
+                    {$_("index.feature-5-header")}
+                </h4>
+                <p class="text-l sm:text-l">
+                    {$_("index.feature-5-text")}
+                </p>
+            </div>
+            <div class="min-w-full max-w-md">
+                <img src="/assets/landing/responsive.png" alt="" />
+            </div>
+        </div>
         <div class="page bg base-200 mt-8 mb-8 p-6">
             <div class="mb-12 text-center">
                 <h2 class="mb-4 text-2xl font-bold sm:text-4xl">
@@ -98,7 +111,7 @@
             >
                 <div>
                     <img
-                        src="https://placedog.net/500/280"
+                        src="assets/solutions/hero-development.png"
                         alt=""
                         class="mb-4"
                     />
@@ -108,21 +121,21 @@
                 </div>
                 <div>
                     <img
-                        src="https://placedog.net/500/280"
+                        src="assets/solutions/hero-research.png"
                         alt=""
                         class="mb-4"
                     />
-                    <a href="solutions/project-management">
+                    <a href="solutions/research">
                         {$_("index.solution-2")}
                     </a>
                 </div>
                 <div>
                     <img
-                        src="https://placedog.net/500/280"
+                        src="assets/solutions/hero-project-management.png"
                         alt=""
                         class="mb-4"
                     />
-                    <a href="solutions/research">
+                    <a href="solutions/project-management">
                         {$_("index.solution-3")}
                     </a>
                 </div>
@@ -136,10 +149,10 @@
         <div class="m-6 grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
             <div>
                 <h4 class="mb-8 text-xl font-bold sm:mt-24 sm:text-4xl">
-                    {$_("index.feature-5-header")}
+                    {$_("index.feature-6-header")}
                 </h4>
                 <p class="text-l sm:text-l">
-                    {$_("index.feature-5-text")}
+                    {$_("index.feature-6-text")}
                 </p>
             </div>
             <div class="min-w-full max-w-md">
@@ -148,19 +161,6 @@
         </div>
         <div class="m-6 grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
             <div class="sm:order-last">
-                <h4 class="mb-8 text-xl font-bold sm:mt-24 sm:text-4xl">
-                    {$_("index.feature-6-header")}
-                </h4>
-                <p class="text-l sm:text-l">
-                    {$_("index.feature-6-text")}
-                </p>
-            </div>
-            <div class="min-w-full max-w-md">
-                <img src="/assets/landing/dark-mode.png" alt="" />
-            </div>
-        </div>
-        <div class="m-6 grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
-            <div>
                 <h4 class="mb-8 text-xl font-bold sm:text-4xl">
                     {$_("index.feature-7-header")}
                 </h4>
@@ -169,13 +169,9 @@
                 </p>
                 <br />
                 <a href="/" class="font-bold underline">Learn more</a>
-                <br /><br />
-                <p>
-                    {$_("index.feature-7-text-2")}
-                </p>
             </div>
             <div class="min-w-full max-w-md">
-                <img src="https://placedog.net/500/280" alt="" />
+                <img src="/assets/landing/open-source.png" alt="" />
             </div>
         </div>
     </main>
