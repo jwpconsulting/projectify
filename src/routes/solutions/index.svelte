@@ -2,6 +2,74 @@
     import { _ } from "svelte-i18n";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { ArrowRight } from "@steeze-ui/heroicons";
+
+    type Solution = {
+        href: string;
+        title: string;
+        image: {
+            src: string;
+            alt: string;
+        };
+        description: string;
+    };
+
+    let solutions: Solution[];
+    $: solutions = [
+        {
+            href: "/solutions/development-teams",
+            title: $_("solutions-page.developer"),
+            image: {
+                src: "assets/solutions/hero-development.png",
+                alt: "TODO",
+            },
+            description: $_("solutions-page.dev-description"),
+        },
+        {
+            href: "/solutions/research",
+            title: $_("solutions-page.research"),
+            image: {
+                src: "assets/solutions/hero-research.png",
+                alt: "TODO",
+            },
+            description: $_("solutions-page.research-description"),
+        },
+        {
+            href: "/solutions/project-management",
+            title: $_("solutions-page.project-management"),
+            image: {
+                src: "assets/solutions/hero-project-management.png",
+                alt: "TODO",
+            },
+            description: $_("solutions-page.project-description"),
+        },
+        {
+            href: "/solutions/academic",
+            title: $_("solutions-page.academic"),
+            image: {
+                src: "assets/solutions/hero-academic.png",
+                alt: "TODO",
+            },
+            description: $_("solutions-page.academic-description"),
+        },
+        {
+            href: "/solutions/remote",
+            title: $_("solutions-page.remote"),
+            image: {
+                src: "assets/solutions/hero-remote.png",
+                alt: "TODO",
+            },
+            description: $_("solutions-page.remote-description"),
+        },
+        {
+            href: "/solutions/personal-use",
+            title: $_("solutions-page.personal-use"),
+            image: {
+                src: "assets/solutions/hero-personal.png",
+                alt: "TODO",
+            },
+            description: $_("solutions-page.personal-description"),
+        },
+    ];
 </script>
 
 <div>
@@ -22,142 +90,33 @@
     </div>
 </div>
 <div class="m-8 grid grid-cols-1 gap-12 sm:grid-cols-3 sm:gap-8">
-    <div>
-        <a href="/solutions/development-teams" class="space-y-4">
-            <img
-                src="https://placedog.net/500/280"
-                alt=""
-                class="rounded-lg"
-            />
-            <div class="space-y-4 font-bold">
-                <p>
-                    {$_("solutions-page.developer")}
-                </p>
-                <p class="font-normal">
-                    {$_("solutions-page.dev-description")}
-                </p>
-                <div class="flex flex-row items-center gap-2 text-primary">
+    {#each solutions as solution}
+        <div>
+            <a href={solution.href} class="space-y-4">
+                <img
+                    src={solution.image.src}
+                    alt={solution.image.alt}
+                    class="rounded-lg"
+                />
+                <div class="space-y-4 font-bold">
                     <p>
-                        {$_("solutions-page.more")}
+                        {solution.title}
                     </p>
-                    <Icon src={ArrowRight} theme="outline" class="h-4 w-4" />
-                </div>
-            </div>
-        </a>
-    </div>
-    <div>
-        <a href="/solutions/project-management" class="space-y-4">
-            <img
-                src="https://placedog.net/500/280"
-                alt=""
-                class="rounded-lg"
-            />
-            <div class="space-y-4 font-bold">
-                <p>
-                    {$_("solutions-page.project-management")}
-                </p>
-                <p class="font-normal">
-                    {$_("solutions-page.project-description")}
-                </p>
-                <div class="flex flex-row items-center gap-2 text-primary">
-                    <p>
-                        {$_("solutions-page.more")}
+                    <p class="font-normal">
+                        {$_("solutions-page.dev-description")}
                     </p>
-                    <Icon src={ArrowRight} theme="outline" class="h-4 w-4" />
+                    <div class="flex flex-row items-center gap-2 text-primary">
+                        <p>
+                            {$_("solutions-page.more")}
+                        </p>
+                        <Icon
+                            src={ArrowRight}
+                            theme="outline"
+                            class="h-4 w-4"
+                        />
+                    </div>
                 </div>
-            </div>
-        </a>
-    </div>
-    <div>
-        <a href="/solutions/research" class="space-y-4">
-            <img
-                src="https://placedog.net/500/280"
-                alt=""
-                class="rounded-lg"
-            />
-            <div class="space-y-4 font-bold">
-                <p>
-                    {$_("solutions-page.research")}
-                </p>
-                <p class="font-normal">
-                    {$_("solutions-page.research-description")}
-                </p>
-                <div class="flex flex-row items-center gap-2 text-primary">
-                    <p>
-                        {$_("solutions-page.more")}
-                    </p>
-                    <Icon src={ArrowRight} theme="outline" class="h-4 w-4" />
-                </div>
-            </div>
-        </a>
-    </div>
-    <div>
-        <a href="/solutions/remote" class="space-y-4">
-            <img
-                src="https://placedog.net/500/280"
-                alt=""
-                class="rounded-lg"
-            />
-            <div class="space-y-4 font-bold">
-                <p>
-                    {$_("solutions-page.remote")}
-                </p>
-                <p class="font-normal">
-                    {$_("solutions-page.remote-description")}
-                </p>
-                <div class="flex flex-row items-center gap-2 text-primary">
-                    <p>
-                        {$_("solutions-page.more")}
-                    </p>
-                    <Icon src={ArrowRight} theme="outline" class="h-4 w-4" />
-                </div>
-            </div>
-        </a>
-    </div>
-    <div>
-        <a href="/solutions/academic" class="space-y-4">
-            <img
-                src="https://placedog.net/500/280"
-                alt=""
-                class="rounded-lg"
-            />
-            <div class="space-y-4 font-bold">
-                <p>
-                    {$_("solutions-page.academic")}
-                </p>
-                <p class="font-normal">
-                    {$_("solutions-page.academic-description")}
-                </p>
-                <div class="flex flex-row items-center gap-2 text-primary">
-                    <p>
-                        {$_("solutions-page.more")}
-                    </p>
-                    <Icon src={ArrowRight} theme="outline" class="h-4 w-4" />
-                </div>
-            </div>
-        </a>
-    </div>
-    <div>
-        <a href="/solutions/planning" class="space-y-4">
-            <img
-                src="https://placedog.net/500/280"
-                alt=""
-                class="rounded-lg"
-            />
-            <div class="space-y-4 font-bold">
-                <p>
-                    {$_("solutions-page.planning")}
-                </p>
-                <p class="font-normal">
-                    {$_("solutions-page.planning-description")}
-                </p>
-                <div class="flex flex-row items-center gap-2 text-primary">
-                    <p>
-                        {$_("solutions-page.more")}
-                    </p>
-                    <Icon src={ArrowRight} theme="outline" class="h-4 w-4" />
-                </div>
-            </div>
-        </a>
-    </div>
+            </a>
+        </div>
+    {/each}
 </div>
