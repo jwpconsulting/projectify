@@ -1,5 +1,5 @@
 <script lang="ts">
-    import WorkspaceSettingsBar from "$lib/figma/screens/workspace-settings/WorkspaceSettingsBar.svelte";
+    import WorkspaceSettingsTabBar from "$lib/figma/screens/workspace-settings/WorkspaceSettingsTabBar.svelte";
     import WorkspaceSettingsMemberCard from "$lib/figma/screens/workspace-settings/WorkspaceSettingsMemberCard.svelte";
     import WorkspaceSettingsPage from "$lib/figma/screens/workspace-settings/WorkspaceSettingsPage.svelte";
     import WorkspaceSettingsGeneral from "$lib/figma/screens/workspace-settings/WorkspaceSettingsGeneral.svelte";
@@ -19,7 +19,7 @@
 {#if browser}
     <div class={fc}>
         {#each settingKinds as activeSetting}
-            <WorkspaceSettingsBar {workspace} {activeSetting} />
+            <WorkspaceSettingsTabBar {workspace} {activeSetting} />
         {/each}
     </div>
 
