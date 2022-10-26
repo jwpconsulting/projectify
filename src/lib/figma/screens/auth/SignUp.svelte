@@ -12,6 +12,7 @@
     let tosPrivacyChecked: boolean;
 
     async function submit() {
+        // TODO form validation
         await signUp(email, password);
     }
 </script>

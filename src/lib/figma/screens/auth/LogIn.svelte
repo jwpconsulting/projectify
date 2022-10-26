@@ -10,6 +10,7 @@
     let password: string;
 
     async function submit() {
+        // TODO validate form
         await login(email, password);
     }
 </script>

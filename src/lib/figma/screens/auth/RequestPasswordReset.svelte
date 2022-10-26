@@ -9,6 +9,7 @@
     let email: string;
 
     async function submit() {
+        // TODO do some kind of validation here
         await requestPasswordReset(email);
     }
 </script>

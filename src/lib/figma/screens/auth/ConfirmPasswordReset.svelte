@@ -11,6 +11,7 @@
     let newPassword2: string;
 
     async function submit() {
+        // TODO validate form
         await confirmPasswordReset(email, token, newPassword1);
     }
 </script>
