@@ -1,0 +1,20 @@
+<script lang="ts">
+    import { _ } from "svelte-i18n";
+    import HelpDropdownButton from "$lib/figma/dropdown/HelpDropdownButton.svelte";
+    import HelpDropdownMenu from "$lib/figma/dropdown/HelpDropdownMenu.svelte";
+
+    export let open: boolean = true;
+
+    function toggleOpen() {
+        open = !open;
+    }
+</script>
+
+<HelpDropdownButton
+    label={$_("help.help-sections")}
+    on:click={toggleOpen}
+    {open}
+/>
+{#if open}
+    <HelpDropdownMenu />
+{/if}
