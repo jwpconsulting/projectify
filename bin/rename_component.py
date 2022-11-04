@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Rename a svelte component."""
-import argparse
+import csv
 import difflib
 import itertools
 import logging
@@ -14,6 +14,8 @@ from dataclasses import (
 from typing import (
     List,
 )
+
+import click
 
 
 logging.basicConfig(level=logging.INFO)
@@ -33,6 +35,14 @@ GIT_RESET = "git", "reset", str(src)
 GIT_CHECKOUT = "git", "checkout"
 GIT_APPLY = "git", "apply"
 GIT_APPLY_REVERSE = "git", "apply", "--reverse"
+
+
+@dataclass
+class ReplacementInvocation:
+    """Store all information needed for a single invocation."""
+
+    src_cmp: str
+    dst_cmp: str
 
 
 @dataclass
@@ -149,6 +159,12 @@ def attempt_cleanup(destructive_result: DestructiveResult) -> None:
     revert_diffs(destructive_result.diffs)
 
 
+def make_msg_prefix(dst_lib_path: pathlib.Path) -> str:
+    """Make a git commit message prefix."""
+    parent = dst_lib_path.parent
+    return "/".join([p.capitalize() for p in parent.parts])
+
+
 def destructive(ctx: ReplacementContext) -> DestructiveResult:
     """Perform all destructive actions."""
     diffs: List[FileDiff] = []
@@ -165,7 +181,7 @@ def destructive(ctx: ReplacementContext) -> DestructiveResult:
         subprocess.run(CHECK, check=True)
         subprocess.run(FORMAT, check=True)
         subprocess.run(GIT_ADD, check=True)
-        msg_prefix = ctx.dst_lib_path.parent
+        msg_prefix = make_msg_prefix(ctx.dst_lib_path)
         msg = (
             f"{msg_prefix}: {ctx.src_component_name} -> "
             f"{ctx.dst_component_name}"
@@ -194,7 +210,7 @@ def destructive(ctx: ReplacementContext) -> DestructiveResult:
     )
 
 
-def main(args: argparse.Namespace) -> None:
+def main(args: ReplacementInvocation) -> None:
     """Move from to, make sure all files track the path change."""
     src_cmp = pathlib.Path(args.src_cmp)
     dst_cmp = pathlib.Path(args.dst_cmp)
@@ -203,7 +219,7 @@ def main(args: argparse.Namespace) -> None:
             logger.info("Move has already been performed")
             return
         else:
-            raise ValueError("Source file does not exist")
+            raise ValueError(f"Source file {src_cmp} does not exist")
 
     ctx = ReplacementContext(
         src_cmp=src_cmp,
@@ -225,9 +241,44 @@ def main(args: argparse.Namespace) -> None:
         logger.info("Modified %s", p.tofile)
 
 
+@click.group()
+def cli() -> None:
+    """Group all commands."""
+    pass
+
+
+@cli.command()
+@click.argument("src_cmp", type=click.Path(exists=True))
+@click.argument("dst_cmp", type=click.Path())
+def single(src_cmp: str, dst_cmp: str) -> None:
+    """Do a single run."""
+    main(
+        ReplacementInvocation(
+            src_cmp=src_cmp,
+            dst_cmp=dst_cmp,
+        )
+    )
+
+
+@cli.command()
+@click.argument("csv_path", type=click.File())
+def multiple(csv_path: str) -> None:
+    """Do multiple."""
+    fieldnames = "src_cmp", "dst_cmp"
+    reader = csv.DictReader(csv_path, fieldnames=fieldnames)
+    todo: List[ReplacementInvocation] = []
+    # Skip first row
+    next(reader)
+    for row in reader:
+        todo.append(
+            ReplacementInvocation(
+                src_cmp=row["src_cmp"],
+                dst_cmp=row["dst_cmp"],
+            )
+        )
+    for t in todo:
+        main(t)
+
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("src_cmp", type=str)
-    parser.add_argument("dst_cmp", type=str)
-    args = parser.parse_args()
-    main(args)
+    cli()

@@ -16,6 +16,7 @@ mypy = "*"
 types-toml = "*"
 
 [packages]
+click = "*"
 toml = "*"
 
 [requires]
