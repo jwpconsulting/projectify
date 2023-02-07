@@ -20,8 +20,8 @@ pytest-django = "==4.5.2"
 
 [packages]
 celery = {extras = ["redis"], version = "==5.2.7"}
-channels = "==3.0.5"
-channels-redis = "==3.4.1"
+channels = {version = "==4.0.0", extras = ["daphne"]}
+channels-redis = "==4.0.0"
 dj-database-url = "==0.5.0"
 django = "==4.0.7"
 django-anymail = {extras = ["mailgun"], version = "==8.6"}
