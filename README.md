@@ -2,7 +2,7 @@
 
 # Requirements
 
-- Python >= 3.9.9
+- Python >= 3.10.9
 - pipenv
 - PostgreSQL
 - Redis (6 >= for production)
