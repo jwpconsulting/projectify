@@ -73,6 +73,9 @@ STRIPE_ENDPOINT_SECRET = os.environ["STRIPE_ENDPOINT_SECRET"]
 
 # REDIS
 ssl_context = ssl.SSLContext()
+# https://devcenter.heroku.com/articles/connecting-heroku-redis#connecting-in-python
+# Obviously, this isn't great
+ssl_context.verify_mode = ssl.CERT_NONE
 ssl_context.check_hostname = False
 
 heroku_redis_ssl_host = {
