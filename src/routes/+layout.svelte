@@ -1,36 +1,3 @@
-<script lang="ts" context="module">
-    import { browser } from "$app/env";
-    import { fetchUser, user } from "$lib/stores/user";
-    import routes from "$lib/routes";
-    import { get } from "svelte/store";
-
-    import "$lib/stores/global-ui";
-
-    export async function load({ url }: { url: URL }) {
-        if (browser) {
-            const route = routes.find((r) => {
-                if (r.to === url.pathname) {
-                    return true;
-                }
-
-                if (url.pathname.indexOf(r.to + "/") == 0) {
-                    return true;
-                }
-
-                return false;
-            });
-            if (
-                !get(user) &&
-                route &&
-                (route.authRequired || route.fetchUser)
-            ) {
-                await fetchUser();
-            }
-        }
-        return {};
-    }
-</script>
-
 <script lang="ts">
     import "../app.scss";
     import "../i18n.js";
@@ -40,6 +7,8 @@
     import GlobalDropDown from "$lib/components/globalDropDown.svelte";
     import DestructiveOverlayContainer from "$lib/components/DestructiveOverlayContainer.svelte";
     import ContextMenuContainer from "$lib/components/ContextMenuContainer.svelte";
+    import "$lib/stores/global-ui";
+    import { browser } from "$app/env";
 </script>
 
 <svelte:head>
