@@ -58,6 +58,17 @@ jobs:
       - run:
           name: Run flake8
           command: pipenv run flake8
+  collectstatic:
+    executor: python
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - cache-{{ checksum "Pipfile.lock" }}
+      - install_dependencies
+      - run:
+          name: Run collectstatic
+          command: env PIPENV_DOTENV_LOCATION=.env.test-collectstatic pipenv run ./manage.py collectstatic --noinput
   tests:
     executor: python_and_postgres
     parallelism: 8
@@ -103,3 +114,4 @@ workflows:
       - lint
       - tests
       - seeddb
+      - collectstatic
