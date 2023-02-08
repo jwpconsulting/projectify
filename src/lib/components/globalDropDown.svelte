@@ -205,7 +205,6 @@
                         <li>
                             <a
                                 title={it.tooltip}
-                                disabled={it.disabled}
                                 class:active={activeId === it.id}
                                 class="h-9 space-x-2 truncate px-0 text-xs font-bold"
                                 href={it.href}
@@ -248,7 +247,6 @@
                                         <li>
                                             <a
                                                 title={it.tooltip}
-                                                disabled={it.disabled}
                                                 class:active={activeId ===
                                                     it.id}
                                                 class="nowrap-ellipsis h-9 space-x-2 px-0 text-xs font-bold"
