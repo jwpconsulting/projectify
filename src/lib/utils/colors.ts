@@ -7,7 +7,7 @@ export const labelColorTypes = [
     "textBg",
     "textHoverBg",
 ] as const;
-export type LabelColorType = typeof labelColorTypes[number];
+export type LabelColorType = (typeof labelColorTypes)[number];
 export const labelColors = [
     "orange",
     "pink",
@@ -17,7 +17,7 @@ export const labelColors = [
     "red",
     "green",
 ] as const;
-export type LabelColor = typeof labelColors[number];
+export type LabelColor = (typeof labelColors)[number];
 export function getLabelColorFromIndex(index: number): LabelColor | null {
     const color = labelColors[index];
     if (!color) {

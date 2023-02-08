@@ -9,15 +9,15 @@ export type ButtonStyle =
     | { kind: "tertiary"; icon: { position: "right"; icon: IconSource } }
     | { kind: "tertiary"; icon: null };
 export const buttonColors = ["blue", "red"] as const;
-export type ButtonColor = typeof buttonColors[number];
+export type ButtonColor = (typeof buttonColors)[number];
 export const buttonSizes = ["medium", "small", "extra-small"] as const;
-export type ButtonSize = typeof buttonSizes[number];
+export type ButtonSize = (typeof buttonSizes)[number];
 
 export const sideMenuCreateSizes = ["extraSmall", "small"] as const;
-export type SideMenuCreateSize = typeof sideMenuCreateSizes[number];
+export type SideMenuCreateSize = (typeof sideMenuCreateSizes)[number];
 
 export const circleIconSizes = ["small", "medium"] as const;
-export type CircleIconSize = typeof circleIconSizes[number];
+export type CircleIconSize = (typeof circleIconSizes)[number];
 export const circleIconIcons = [
     "ellipsis",
     "edit",
@@ -26,24 +26,24 @@ export const circleIconIcons = [
     "down",
     "close",
 ] as const;
-export type CircleIconIcon = typeof circleIconIcons[number];
+export type CircleIconIcon = (typeof circleIconIcons)[number];
 
 export const menuButtonStates = ["normal", "accordion"] as const;
-export type MenuButtonState = typeof menuButtonStates[number];
+export type MenuButtonState = (typeof menuButtonStates)[number];
 export const menuButtonColors = ["base", "primary", "destructive"] as const;
-export type MenuButtonColor = typeof menuButtonColors[number];
+export type MenuButtonColor = (typeof menuButtonColors)[number];
 export type MenuButtonKind = { kind: "a"; href: string } | { kind: "button" };
 
 export const stepperPositions = ["not-last", "last"] as const;
-export type StepperPosition = typeof stepperPositions[number];
+export type StepperPosition = (typeof stepperPositions)[number];
 export const stepperActiveStates = ["inactive", "this", "next"] as const;
-export type StepperActiveState = typeof stepperActiveStates[number];
+export type StepperActiveState = (typeof stepperActiveStates)[number];
 
 export const borderedIconTypes = ["workspace", "filter"] as const;
-export type BorderedIconType = typeof borderedIconTypes[number];
+export type BorderedIconType = (typeof borderedIconTypes)[number];
 
 export const boardButtonStates = ["inactive", "disabled", "active"] as const;
-export type WorkspaceBoardIconState = typeof boardButtonStates[number];
+export type WorkspaceBoardIconState = (typeof boardButtonStates)[number];
 
 export const squovalIcons = [
     "board",
@@ -55,15 +55,15 @@ export const squovalIcons = [
     "delete",
     "ellipsis",
 ] as const;
-export type SquovalIcon = typeof squovalIcons[number];
+export type SquovalIcon = (typeof squovalIcons)[number];
 export const squovalStates = ["inactive", "disabled", "active"] as const;
-export type SquovalState = typeof squovalStates[number];
+export type SquovalState = (typeof squovalStates)[number];
 
 export const avatarStateSizes = ["small", "medium", "hoverable"] as const;
-export type AvatarStateSize = typeof avatarStateSizes[number];
+export type AvatarStateSize = (typeof avatarStateSizes)[number];
 
 export const avatarVariantSizes = ["small", "medium", "hoverable"] as const;
-export type AvatarVariantSize = typeof avatarVariantSizes[number];
+export type AvatarVariantSize = (typeof avatarVariantSizes)[number];
 export type AvatarVariantContent =
     | { kind: "assign"; users: [User | null, User | null] }
     | { kind: "multiple"; users: (User | null)[] };
@@ -77,7 +77,7 @@ export type SelectLabel =
     | { kind: "label"; label: Label };
 
 export const filterLabelMenuStates = ["list", "create"] as const;
-export type FilterLabelMenuState = typeof filterLabelMenuStates[number];
+export type FilterLabelMenuState = (typeof filterLabelMenuStates)[number];
 
 // TODO rename to InputFieldKind Justus 2022-09-22
 export type InputFieldStyle =
@@ -85,8 +85,8 @@ export type InputFieldStyle =
     | { kind: "subTask" }
     | { kind: "field"; inputType: "text" | "password" };
 export const inputFieldSizes = ["extraSmall", "small", "normal"] as const;
-export type InputFieldSize = typeof inputFieldSizes[number];
+export type InputFieldSize = (typeof inputFieldSizes)[number];
 export type InputFieldAnchor = { href: string; label: string };
 
 export const anchorSizes = ["extraSmall", "normal"] as const;
-export type AnchorSize = typeof anchorSizes[number];
+export type AnchorSize = (typeof anchorSizes)[number];

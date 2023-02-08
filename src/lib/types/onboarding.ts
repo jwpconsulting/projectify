@@ -11,4 +11,4 @@ export const onboardingStates = [
     "assign-task",
 ] as const;
 
-export type OnboardingState = typeof onboardingStates[number];
+export type OnboardingState = (typeof onboardingStates)[number];

@@ -5,4 +5,4 @@ export const settingKinds = [
     "team-members",
     "billing",
 ] as const;
-export type SettingKind = typeof settingKinds[number];
+export type SettingKind = (typeof settingKinds)[number];
