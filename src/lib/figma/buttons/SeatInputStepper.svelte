@@ -9,7 +9,7 @@
     <input
         class="w-10 text-xl font-bold text-base-content"
         type="text"
-        inputmode="numberic"
+        inputmode="numeric"
         bind:value={$seats}
     />
     <IncrementSeats on:click={seatAdd} />
