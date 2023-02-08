@@ -18,6 +18,12 @@
         text = text.replace(/\n/g, "<br>");
         return text;
     }
+
+    async function activateEditMode() {
+        editMode = true;
+        await tick();
+        textAreaEl.focus();
+    }
 </script>
 
 <textarea
@@ -33,11 +39,8 @@
 <div
     class:hidden={editMode}
     class="rich-textarea textarea textarea-bordered h-40 overflow-y-auto p-4 leading-normal"
-    on:click={async () => {
-        editMode = true;
-        await tick();
-        textAreaEl.focus();
-    }}
+    on:click={activateEditMode}
+    on:keydown={activateEditMode}
 >
     {#if content}
         {@html transform(content)}

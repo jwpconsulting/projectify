@@ -33,6 +33,7 @@
     this={kind.kind}
     href={kind.kind === "a" ? kind.href : undefined}
     on:click={click}
+    on:keydown={click}
     class={`flex-start flex flex-row items-center gap-2 px-4 py-3 text-left text-xs font-bold focus:bg-border-focus focus:text-base-content focus:outline-none ${colorStyle} ${style}`}
 >
     {#if icon}

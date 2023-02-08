@@ -63,6 +63,7 @@
 {#each filteredLabels as label}
     <div
         on:click|preventDefault={() => onLabelClick(label)}
+        on:keydown|preventDefault={() => onLabelClick(label)}
         class:cursor-pointer={editable}
         class:hover:opacity-60={editable}
         class="cursor-pointer transition-opacity duration-300 ease-out"

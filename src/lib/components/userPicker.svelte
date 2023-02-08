@@ -178,6 +178,7 @@
                 <div
                     class="footer-btn flex h-8 grow items-center justify-center text-primary"
                     on:click={clearSelection}
+                    on:keydown={clearSelection}
                 >
                     <div class="text-xs ">{$_("clear-selection")}</div>
                 </div>
@@ -185,6 +186,7 @@
                     <div
                         class="footer-btn flex h-8 grow items-center justify-center text-primary"
                         on:click={selectMe}
+                        on:keydown={selectMe}
                     >
                         <div class="text-xs ">{$_("select-me")}</div>
                     </div>

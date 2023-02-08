@@ -150,6 +150,7 @@
                                 <a
                                     href={social.url}
                                     target="_blank"
+                                    rel="noreferrer"
                                     class="shrink-0 text-base-content"
                                 >
                                     <svelte:component this={social.icon} />

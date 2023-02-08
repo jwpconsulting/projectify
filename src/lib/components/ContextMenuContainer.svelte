@@ -82,6 +82,7 @@
     class="fixed left-0 top-0 h-screen w-screen bg-transparent"
     class:invisible={$contextMenuState.kind === "hidden"}
     on:click={closeContextMenu}
+    on:keydown={closeContextMenu}
 />
 <div class="fixed" bind:this={contextMenu}>
     {#if $contextMenuState.kind === "visible"}

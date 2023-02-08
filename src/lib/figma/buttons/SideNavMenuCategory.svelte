@@ -23,6 +23,7 @@
 <svelte:element
     this={contained ? "div" : "button"}
     on:click={contained ? undefined : click}
+    on:keydown={contained ? undefined : click}
     class={`flex w-full flex-row justify-between gap-2 px-4 py-2 text-utility ${containedStyle}`}
 >
     <div class="flex flex-row items-center gap-4">

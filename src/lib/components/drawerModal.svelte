@@ -29,6 +29,7 @@
 >
     <div
         on:click={() => (open = !open)}
+        on:keydown={() => (open = !open)}
         class="d-modal-background fixed h-full w-full bg-[#000]"
     />
     {#if open}

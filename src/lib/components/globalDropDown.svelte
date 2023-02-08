@@ -151,7 +151,7 @@
         {#if component}
             <div
                 bind:this={focusEl}
-                tabindex="0"
+                tabindex="-1"
                 on:blur={(e) => {
                     if (!e.relatedTarget) {
                         console.log("Expected e.relatedTarget");
@@ -196,7 +196,7 @@
                         close();
                     }
                 }}
-                tabindex="0"
+                tabindex="-1"
                 class="dropdown-content menu min-w-[200px] rounded-lg
         border border-base-300 bg-base-100 py-2 shadow-xl"
             >

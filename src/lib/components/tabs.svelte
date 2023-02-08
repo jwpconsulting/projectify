@@ -30,7 +30,10 @@
                 class:tab-active={$activeTabId === item.id}
                 class="tab tab-bordered font-bold uppercase"
             >
-                <span on:click={() => selectTab(item.id)}>{item.label}</span>
+                <span
+                    on:click={() => selectTab(item.id)}
+                    on:keydown={() => selectTab(item.id)}>{item.label}</span
+                >
             </li>
         {/if}
     {/each}

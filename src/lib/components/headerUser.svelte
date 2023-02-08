@@ -25,7 +25,7 @@
         ]}
     >
         <!-- svelte-ignore a11y-label-has-associated-control -->
-        <label tabindex="0" class="btn btn-ghost space-x-2">
+        <label tabindex="-1" class="btn btn-ghost space-x-2">
             <UserAvatar user={$user} size={32} />
         </label>
     </DropDownMenu>

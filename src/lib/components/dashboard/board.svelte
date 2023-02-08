@@ -141,6 +141,7 @@
                 <div
                     class="ignore-elements m-2 flex shrink-0 space-x-4 bg-base-100 p-5 font-bold text-primary shadow-sm hover:cursor-pointer hover:ring"
                     on:click={() => onAddNewSection()}
+                    on:keydown={() => onAddNewSection()}
                 >
                     <IconPlus />
                     <div>{$_("new-section")}</div>

@@ -116,12 +116,14 @@
         <div
             class="cal-btn header-arrow header-arrow-prev"
             on:click={() => onPrev()}
+            on:keydown={() => onPrev()}
         >
             <div><IconArrowLeft /></div>
         </div>
         <div
             class="cal-btn flex h-12 grow items-center justify-center font-bold"
             on:click={() => onHeaderClick()}
+            on:keydown={() => onHeaderClick()}
         >
             <div class="flex space-x-2">
                 <div>{year}</div>
@@ -133,6 +135,7 @@
         <div
             class="cal-btn header-arrow header-arrow-next"
             on:click={() => onNext()}
+            on:keydown={() => onNext()}
         >
             <div><IconArrowRight /></div>
         </div>
@@ -161,6 +164,7 @@
                         class:weekend={inx % 7 >= 5}
                         class="day"
                         on:click={() => selectDate(day.date)}
+                        on:keydown={() => selectDate(day.date)}
                     >
                         <div>{day.inx}</div>
                     </div>
@@ -184,6 +188,7 @@
                         class:active={months[month] === m}
                         class="cal-btn active flex items-center justify-center capitalize"
                         on:click={() => selectMonth(inx)}
+                        on:keydown={() => selectMonth(inx)}
                     >
                         <div>{m.substring(0, 3)}</div>
                     </div>
@@ -195,6 +200,7 @@
         <div
             class="cal-btn flex h-8 grow items-center justify-center text-primary"
             on:click={() => selectDate(null)}
+            on:keydown={() => selectDate(null)}
         >
             <div class="text-xs ">Clear</div>
         </div>
@@ -203,6 +209,7 @@
                 class:active={date.getTime() === today.getTime()}
                 class="cal-btn flex h-8 grow items-center justify-center text-primary"
                 on:click={() => selectToday()}
+                on:keydown={() => selectToday()}
             >
                 <div class="text-xs ">Today</div>
             </div>
