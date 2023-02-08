@@ -7,6 +7,8 @@
     export let labels: Label[];
     export let editable = false;
     export let searchText = "";
+    // When? Why? XXX
+    export let flexIt = false;
 
     let searchEngine: Fuse<Label> | null = null;
     let filteredLabels: Label[] = [];
@@ -68,14 +70,8 @@
         class:hover:opacity-60={editable}
         class="cursor-pointer transition-opacity duration-300 ease-out"
     >
-        {#if $$slots.item}
-            <slot
-                name="item"
-                {label}
-                active={selectedLabelsInx.get(label.uuid)}
-            />
-        {:else}
+        <div class={flexIt ? "flex h-14 select-none items-center space-x-2  px-4 hover:bg-base-200" : ""}>
             <LabelPill {label} />
-        {/if}
+        </div>
     </div>
 {/each}

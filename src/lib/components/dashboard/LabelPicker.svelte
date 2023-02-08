@@ -89,20 +89,12 @@
             bind:searchText
             bind:selectedLabels
             editable={true}
-            let:label
             on:addLabel={({ detail }) => {
                 assignLabel(detail, true);
             }}
             on:removeLabel={({ detail }) => {
                 assignLabel(detail, false);
             }}
-        >
-            <div
-                slot="item"
-                class="flex h-14 select-none items-center space-x-2  px-4 hover:bg-base-200"
-            >
-                <LabelPill {label} />
-            </div>
-        </LabelList>
+        />
     </div>
 </div>
