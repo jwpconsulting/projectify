@@ -4,13 +4,13 @@ orbs:
 executors:
   python:
     docker:
-      - image: python:3.10.6
+      - image: python:3.10.9
         environment:
           DJANGO_SETTINGS_MODULE: projectify.settings.test
           DATABASE_URL: "postgres://projectify:projectify@localhost:5432/projectify"
   python_and_postgres:
     docker:
-      - image: python:3.10.6
+      - image: python:3.10.9
         environment:
           DJANGO_SETTINGS_MODULE: projectify.settings.test
           DATABASE_URL: "postgres://projectify:projectify@localhost:5432/projectify"
