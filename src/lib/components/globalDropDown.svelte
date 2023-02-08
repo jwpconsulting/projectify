@@ -200,18 +200,18 @@
                 class="dropdown-content menu min-w-[200px] rounded-lg
         border border-base-300 bg-base-100 py-2 shadow-xl"
             >
-                {#each items as it}
-                    {#if !it.hidden}
+                {#each items as item}
+                    {#if !item.hidden}
                         <li>
                             <a
-                                title={it.tooltip}
-                                class:active={activeId === it.id}
+                                title={item.tooltip}
+                                class:active={activeId === item.id}
                                 class="h-9 space-x-2 truncate px-0 text-xs font-bold"
-                                href={it.href}
+                                href={item.href}
                                 on:click={() => {
-                                    if (!it.items) {
-                                        if (it.onClick) {
-                                            it.onClick();
+                                    if (!item.items) {
+                                        if (item.onClick) {
+                                            item.onClick();
                                         }
                                         if (!focusEl) {
                                             throw new Error(
@@ -221,16 +221,16 @@
                                         focusEl.blur();
                                         close();
                                     } else {
-                                        it.open = !it.open;
+                                        item.open = !item.open;
                                     }
                                 }}
                             >
-                                <svelte:component this={it.icon} />
-                                <span class="grow">{it.label}</span>
+                                <svelte:component this={item.icon} />
+                                <span class="grow">{item.label}</span>
 
-                                {#if it.items}
+                                {#if item.items}
                                     <div
-                                        class:rotate-180={it.open}
+                                        class:rotate-180={item.open}
                                         class="icon-sm transition-all"
                                     >
                                         <IconChevronDown />
@@ -238,35 +238,35 @@
                                 {/if}
                             </a>
 
-                            {#if it.items}
+                            {#if item.items}
                                 <ul
-                                    class:h-0={!it.open}
+                                    class:h-0={!item.open}
                                     class="menu overflow-hidden pl-0"
                                 >
-                                    {#each it.items || [] as it}
+                                    {#each item.items as subItem}
                                         <li>
                                             <a
-                                                title={it.tooltip}
+                                                title={subItem.tooltip}
                                                 class:active={activeId ===
-                                                    it.id}
+                                                    subItem.id}
                                                 class="nowrap-ellipsis h-9 space-x-2 px-0 text-xs font-bold"
-                                                href={it.href}
+                                                href={subItem.href}
                                                 on:click={() => {
                                                     if (!focusEl) {
                                                         throw new Error(
                                                             "Expected focusEl"
                                                         );
                                                     }
-                                                    if (it.onClick) {
-                                                        it.onClick();
+                                                    if (subItem.onClick) {
+                                                        subItem.onClick();
                                                     }
                                                     focusEl.blur();
                                                 }}
                                             >
                                                 <svelte:component
-                                                    this={it.icon}
+                                                    this={subItem.icon}
                                                 />
-                                                <span>{it.label}</span>
+                                                <span>{subItem.label}</span>
                                             </a>
                                         </li>
                                     {/each}
