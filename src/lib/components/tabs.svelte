@@ -4,7 +4,7 @@
     import type { TabItem } from "$lib/components/types";
 
     export let items: TabItem[] = [];
-    export let activeTabId = writable(items[0]?.id);
+    export let activeTabId = writable<string>(items[0]?.id);
     export let dispatcher = createEventDispatcher();
 
     $: {
