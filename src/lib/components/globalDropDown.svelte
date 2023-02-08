@@ -29,7 +29,7 @@
     import { SvelteComponent, tick } from "svelte";
     import IconChevronDown from "./icons/icon-chevron-down.svelte";
 
-    let component: SvelteComponent | null = null;
+    let component: (typeof SvelteComponent) | null = null;
     let componentProps: any | null = null;
     let items: DropDownMenuItem[] | null = null;
     let target: HTMLElement | null = null;
@@ -121,7 +121,7 @@
     }
 
     async function openComponent(
-        comp: SvelteComponent,
+        comp: typeof SvelteComponent,
         trg: HTMLElement,
         props: any
     ) {
