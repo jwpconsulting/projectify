@@ -8,7 +8,7 @@
         ConstructiveOverlayType,
         DestructiveOverlayType,
     } from "$lib/types/ui";
-    import { browser } from "$app/env";
+    import { browser } from "$app/environment";
     import {
         fc,
         task,

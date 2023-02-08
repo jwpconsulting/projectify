@@ -8,7 +8,7 @@
     import DestructiveOverlayContainer from "$lib/components/DestructiveOverlayContainer.svelte";
     import ContextMenuContainer from "$lib/components/ContextMenuContainer.svelte";
     import "$lib/stores/global-ui";
-    import { browser } from "$app/env";
+    import { browser } from "$app/environment";
 </script>
 
 <svelte:head>

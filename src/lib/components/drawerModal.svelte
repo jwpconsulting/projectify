@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { browser } from "$app/env";
+    import { browser } from "$app/environment";
     import { fly } from "svelte/transition";
     import { setContext } from "svelte";
 

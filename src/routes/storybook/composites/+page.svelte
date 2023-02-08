@@ -3,7 +3,7 @@
     import LabelMenu from "$lib/figma/composites/LabelMenu.svelte";
 
     import { setFirstWorkspace } from "$lib/stores/dashboard";
-    import { browser } from "$app/env";
+    import { browser } from "$app/environment";
     import { falseTrue, fr } from "$lib/storybook";
     import { filterLabelMenuStates } from "$lib/figma/types";
 

@@ -1,4 +1,4 @@
-import { browser } from "$app/env";
+import { browser } from "$app/environment";
 import delay from "delay";
 import type { Subscriber } from "svelte/store";
 import { writable } from "svelte/store";

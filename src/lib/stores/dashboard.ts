@@ -27,7 +27,7 @@ import {
     getArchivedWorkspaceBoards,
 } from "$lib/repository/workspace";
 import { getWorkspaceCustomer } from "$lib/repository/corporate";
-import { browser } from "$app/env";
+import { browser } from "$app/environment";
 import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
 import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
 

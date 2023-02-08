@@ -59,7 +59,7 @@
         labels,
         workspaceBoard,
     } from "$lib/storybook";
-    import { browser } from "$app/env";
+    import { browser } from "$app/environment";
     import { setFirstWorkspace } from "$lib/stores/dashboard";
 
     const onboardingSeats = [5, 10, 15, 20, 25];

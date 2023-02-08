@@ -13,7 +13,7 @@
 
     import { fc, workspace, workspaceUser } from "$lib/storybook";
 
-    import { browser } from "$app/env";
+    import { browser } from "$app/environment";
 </script>
 
 {#if browser}

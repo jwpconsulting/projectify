@@ -2,7 +2,7 @@ import "$lib/stores/global-ui";
 
 import { get } from "svelte/store";
 
-import { browser } from "$app/env";
+import { browser } from "$app/environment";
 
 import { fetchUser, user } from "$lib/stores/user";
 import routes from "$lib/routes";
