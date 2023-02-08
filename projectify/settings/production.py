@@ -3,6 +3,12 @@ import os
 import ssl
 
 # flake8: noqa: F401, F403
+from ..redis import (
+    RedisConnection,
+)
+from redis.asyncio import (
+    connection,
+)
 from .base import *
 
 
@@ -72,16 +78,22 @@ STRIPE_PRICE_OBJECT = os.environ["STRIPE_PRICE_OBJECT"]
 STRIPE_ENDPOINT_SECRET = os.environ["STRIPE_ENDPOINT_SECRET"]
 
 # REDIS
-ssl_context = ssl.SSLContext()
 # https://devcenter.heroku.com/articles/connecting-heroku-redis#connecting-in-python
 # Obviously, this isn't great
-ssl_context.check_hostname = False
-ssl_context.verify_mode = ssl.CERT_NONE
+# https://github.com/django/channels_redis/issues/235
+# https://github.com/django/channels_redis/pull/337
+ssl_context = connection.RedisSSLContext(
+    check_hostname=False,
+    # cert_reqs is verify_mode from ssl.SSLContext
+    cert_reqs=ssl.CERT_NONE,
+)
 
 heroku_redis_ssl_host = {
     "address": os.environ["REDIS_TLS_URL"],
-    "ssl": ssl_context,
+    "connection_class": RedisConnection,
+    "ssl_context": ssl_context,
 }
+
 
 CHANNEL_LAYERS = {
     "default": {
