@@ -68,7 +68,9 @@ jobs:
       - install_dependencies
       - run:
           name: Run collectstatic
-          command: env PIPENV_DOTENV_LOCATION=.env.test-collectstatic pipenv run ./manage.py collectstatic --noinput
+          command: pipenv run ./manage.py collectstatic --noinput
+          environment:
+            TEST_STATICFILES_STORAGE:
   tests:
     executor: python_and_postgres
     parallelism: 8
