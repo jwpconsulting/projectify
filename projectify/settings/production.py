@@ -2,13 +2,11 @@
 import os
 import ssl
 
-# flake8: noqa: F401, F403
 from ..redis import (
     RedisConnection,
 )
-from redis.asyncio import (
-    connection,
-)
+
+# flake8: noqa: F401, F403
 from .base import *
 
 
@@ -82,25 +80,16 @@ STRIPE_ENDPOINT_SECRET = os.environ["STRIPE_ENDPOINT_SECRET"]
 # Obviously, this isn't great
 # https://github.com/django/channels_redis/issues/235
 # https://github.com/django/channels_redis/pull/337
-ssl_context = connection.RedisSSLContext(
-    check_hostname=False,
-    # cert_reqs is verify_mode from ssl.SSLContext
-    cert_reqs=ssl.CERT_NONE,
+redis_url = redis_helper.decode_redis_url(
+    os.environ["REDIS_TLS_URL"],
 )
-
-heroku_redis_ssl_host = {
-    "address": os.environ["REDIS_TLS_URL"],
-    "connection_class": RedisConnection,
-    "ssl_context": ssl_context,
-}
-
 
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.pubsub.RedisPubSubChannelLayer",
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [
-                heroku_redis_ssl_host,
+                redis_helper.make_channels_redis_host(redis_url),
             ],
             "symmetric_encryption_keys": [SECRET_KEY],
         },
