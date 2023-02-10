@@ -13,10 +13,17 @@ import os
 from pathlib import (
     Path,
 )
+from typing import (
+    Iterable,
+)
 
 import dj_database_url
 from dotenv import (
     load_dotenv,
+)
+
+from .types import (
+    ChannelLayers,
 )
 
 
@@ -31,7 +38,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS: Iterable[str] = []
 
 
 SESSION_COOKIE_SAMESITE = "None"
@@ -124,7 +131,7 @@ WSGI_APPLICATION = "projectify.wsgi.application"
 ASGI_APPLICATION = "projectify.asgi.application"
 
 # Channels
-CHANNEL_LAYERS = {
+CHANNEL_LAYERS: ChannelLayers = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer",
     },
