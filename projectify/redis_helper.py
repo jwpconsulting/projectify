@@ -5,6 +5,7 @@ from dataclasses import (
 from typing import (
     Any,
     Mapping,
+    Optional,
 )
 from urllib.parse import (
     urlparse,
@@ -19,10 +20,10 @@ from redis.asyncio import (
 class RedisUrlParts:
     """Contains the relevant parts of a Redis TLS URL."""
 
-    host: str
-    port: int
-    username: str
-    password: str
+    host: Optional[str]
+    port: Optional[int]
+    username: Optional[str]
+    password: Optional[str]
 
 
 def decode_redis_url(redis_url: str) -> RedisUrlParts:
