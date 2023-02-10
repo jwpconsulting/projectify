@@ -2,8 +2,8 @@
 import os
 import ssl
 
-from ..redis import (
-    RedisConnection,
+from .. import (
+    redis_helper,
 )
 
 # flake8: noqa: F401, F403
