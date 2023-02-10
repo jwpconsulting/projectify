@@ -58,6 +58,17 @@ jobs:
       - run:
           name: Run flake8
           command: pipenv run flake8
+  mypy:
+    executor: python
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - cache-{{ checksum "Pipfile.lock" }}
+      - install_dependencies
+      - run:
+          name: Run mypy
+          command: pipenv run mypy .
   collectstatic:
     executor: python
     steps:
@@ -114,6 +125,7 @@ workflows:
     jobs:
       - pipenv_check
       - lint
+      - mypy
       - tests
       - seeddb
       - collectstatic
