@@ -20,3 +20,101 @@ known_third_party = [
     "rest_framework"
 ]
 known_first_party = ["user"]
+
+# Library imports
+[[tool.mypy.overrides]]
+module = "celery.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "cloudinary.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "channels.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "django.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "django_extensions.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "dj_database_url.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "factory.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pgtrigger.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "redis.asyncio"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "rest_framework.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "rules"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "stripe"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tqdm.*"
+ignore_missing_imports = true
+
+# Our own modules
+[[tool.mypy.overrides]]
+module = "corporate.schema.types"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "projectify.urls"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "projectify.views"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "user.migrations.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "user.schema.mutation"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "user.schema.types"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "user.schema.query"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "workspace.migrations.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "workspace.serializers"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "workspace.schema.mutation"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "workspace.schema.types"
+ignore_errors = true
