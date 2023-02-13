@@ -4,5 +4,7 @@
 </script>
 
 {#each anchorSizes as size}
-    <Anchor {size} label="link" href={`#${size}`} />
+    <div id={size}>
+        <Anchor {size} label="link" href={`#${size}`} />
+    </div>
 {/each}

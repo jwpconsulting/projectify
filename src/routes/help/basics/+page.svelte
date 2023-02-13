@@ -47,7 +47,7 @@
 
     <div class="my-8 space-y-16">
         {#each sections as section}
-            <section id="workspace" class="space-y-4">
+            <section id={section.id} class="space-y-4">
                 <h3 class="text-3xl font-bold">
                     {$_("help-basics.workspace")}
                 </h3>
