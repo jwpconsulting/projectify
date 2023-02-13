@@ -20,9 +20,6 @@ const config = {
             fallback: "redirect.html",
             precompress: false,
         }),
-        prerender: {
-            default: true,
-        },
     },
 };
 

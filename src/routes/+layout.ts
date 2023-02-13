@@ -27,3 +27,5 @@ export async function load({ url }: { url: URL }) {
     }
     return {};
 }
+
+export const prerender = true;
