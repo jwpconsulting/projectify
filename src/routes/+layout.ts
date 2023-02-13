@@ -28,4 +28,4 @@ export async function load({ url }: { url: URL }) {
     return {};
 }
 
-export const prerender = "auto";
+export const prerender = true;

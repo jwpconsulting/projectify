@@ -19,6 +19,7 @@ const config = {
             assets: "build",
             fallback: "redirect.html",
             precompress: false,
+            strict: true,
         }),
     },
 };
