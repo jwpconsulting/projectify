@@ -90,3 +90,6 @@ export type InputFieldAnchor = { href: string; label: string };
 
 export const anchorSizes = ["extraSmall", "normal"] as const;
 export type AnchorSize = (typeof anchorSizes)[number];
+
+export const headerButtonTypes = ["dropdown", "button"] as const;
+export type HeaderButtonType = (typeof headerButtonTypes)[number];
