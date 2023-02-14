@@ -737,5 +737,16 @@
         "members-text": "Only users with the permission role of Owner can invite or remove users. Be aware that you will not be able to invite members if you do not have enough seats available in your workspace. In order to add more seats, please amend the seat numbers in your account.",
         "delete": "Delete your account",
         "delete-text": "To delete your account visit the billing page in workspace settings and cancel your subscription. Deleting your account will also remove members from any workspaces that you own.You can transfer ownership of the account to a different member before deletion to ensure that content and members can continue to use the workspace. Deleting your account without transferring ownership will delete all data including personal information and all content created on the platform will cease to exist."
+    },
+    "header": {
+        "features": "Features",
+        "solutions": "Solutions",
+        "resources": "Resources",
+        "company": "Company",
+        "pricing": "Pricing",
+        "log-in": "Log in",
+        "start-a-free-trial": "Start a free trial",
+        "continue-to-dashboard": "Continue to dashboard",
+        "skip": "Skip"
     }
 }
