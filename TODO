@@ -1,2 +1,3 @@
 - Update @steeze-ui/heroicons. Some of the icons have been renamed (search, eye, ...)
 - Warn about unused variables (possible just in svelte files)
+- Tertiary nav btns to be replaced by HeaderButton
