@@ -70,7 +70,11 @@
         class:hover:opacity-60={editable}
         class="cursor-pointer transition-opacity duration-300 ease-out"
     >
-        <div class={flexIt ? "flex h-14 select-none items-center space-x-2  px-4 hover:bg-base-200" : ""}>
+        <div
+            class={flexIt
+                ? "flex h-14 select-none items-center space-x-2  px-4 hover:bg-base-200"
+                : ""}
+        >
             <LabelPill {label} />
         </div>
     </div>
