@@ -235,6 +235,7 @@ Mobile Menu
 </div>
 Mobile search menu
 <SearchMobile on:click={console.log} />
+
 Side nav main
 <div class={fr}>
     {#each borderedIconTypes as type}
