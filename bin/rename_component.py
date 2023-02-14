@@ -3,7 +3,6 @@
 import csv
 import difflib
 import itertools
-import logging
 import pathlib
 import re
 import shutil
@@ -16,10 +15,6 @@ from typing import (
 )
 
 import click
-
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 
 extensions = "ts", "svelte"
@@ -134,7 +129,7 @@ def create_diffs(
 def apply_diffs(diffs: List[FileDiff]) -> None:
     """Apply diffs."""
     for diff in diffs:
-        logging.info("Patching %s", diff.tofile)
+        click.echo(f"Patching {diff.tofile}")
         patch = "".join(diff.diff).encode()
         subprocess.run(GIT_APPLY, input=patch, check=True)
 
@@ -143,13 +138,13 @@ def revert_diffs(diffs: List[FileDiff]) -> None:
     """Revert the diffs."""
     for diff in diffs:
         patch = "".join(diff.diff).encode()
-        logger.info("Unapplying %s", patch.decode())
+        click.echo(f"Unapplying {patch.decode()}")
         subprocess.run(GIT_APPLY_REVERSE, input=patch, check=True)
 
 
 def attempt_cleanup(destructive_result: DestructiveResult) -> None:
     """Attempt to clean up the mess."""
-    logger.info("Attempting cleanup")
+    click.echo("Attempting cleanup")
     subprocess.run(GIT_RESET, check=True)
     subprocess.run(
         (*GIT_CHECKOUT, destructive_result.deleted_file),
@@ -194,7 +189,7 @@ def destructive(ctx: ReplacementContext) -> DestructiveResult:
             check=True,
         )
     except Exception as e:
-        logger.error("Something went wrong", exc_info=e)
+        click.echo(f"Something went wrong: {e}")
         attempt_cleanup(
             DestructiveResult(
                 deleted_file=ctx.src_cmp,
@@ -216,7 +211,7 @@ def main(args: ReplacementInvocation) -> None:
     dst_cmp = pathlib.Path(args.dst_cmp)
     if not src_cmp.exists():
         if dst_cmp.exists():
-            logger.info("Move has already been performed")
+            click.echo("Move has already been performed")
             return
         else:
             raise ValueError(f"Source file {src_cmp} does not exist")
@@ -232,13 +227,12 @@ def main(args: ReplacementInvocation) -> None:
 
     destructive_result = destructive(ctx)
 
-    logger.info(
-        "Renamed %s to %s",
-        destructive_result.deleted_file,
-        destructive_result.new_file,
+    click.echo(
+        f"Renamed {destructive_result.deleted_file} to "
+        f"{destructive_result.new_file}",
     )
     for p in destructive_result.diffs:
-        logger.info("Modified %s", p.tofile)
+        click.echo(f"Modified {p.tofile}")
 
 
 @click.group()

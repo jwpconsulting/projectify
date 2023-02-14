@@ -19,3 +19,22 @@ npm run format
 ```
 npm run format | sort --key=2 -h
 ```
+
+## Installing the python tools
+
+```
+PIPENV_PIPFILE=Pipfile-tools pipenv sync --dev
+```
+
+And then
+
+```
+PIPENV_PIPFILE=Pipfile-tools pipenv run bin/rename_component.py
+```
+
+How to test
+
+```
+PIPENV_PIPFILE=Pipfile-tools pipenv run flake8
+PIPENV_PIPFILE=Pipfile-tools pipenv run mypy
+```
