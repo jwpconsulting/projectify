@@ -2,17 +2,12 @@
     import { _ } from "svelte-i18n";
     import HamburgerMenu from "$lib/figma/buttons/HamburgerMenu.svelte";
     import Button from "$lib/figma/buttons/Button.svelte";
+    import Header from "$lib/figma/navigation/header/Header.svelte";
     import HeaderMobile from "$lib/figma/navigation/header/HeaderMobile.svelte";
 </script>
 
-<div
-    class="hidden flex-row items-center justify-between border-b-2 border-border bg-foreground
-    py-4 px-6 lg:flex"
->
-    <div class="flex flex-row items-center gap-12">
-        <a href="/">
-            <img src="/assets/logo/polylogo.svg" alt="" />
-        </a>
+<Header logoVisible>
+    <slot slot="left">
         <div class="flex flex-row gap-4">
             <Button
                 style={{ kind: "tertiary", icon: null }}
@@ -52,9 +47,8 @@
                 />
             </a>
         </div>
-    </div>
-
-    <div class="flex flex-row gap-6">
+    </slot>
+    <slot slot="right">
         <a href="/signin">
             <Button
                 style={{ kind: "tertiary", icon: null }}
@@ -73,8 +67,8 @@
                 label={$_("header.start-a-free-trial")}
             />
         </a>
-    </div>
-</div>
+    </slot>
+</Header>
 
 <HeaderMobile logoVisible>
     <div>
