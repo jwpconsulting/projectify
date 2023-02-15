@@ -2,6 +2,7 @@
     import { _ } from "svelte-i18n";
     import HamburgerMenu from "$lib/figma/buttons/HamburgerMenu.svelte";
     import Button from "$lib/figma/buttons/Button.svelte";
+    import HeaderMobile from "$lib/figma/navigation/header/HeaderMobile.svelte";
 </script>
 
 <div
@@ -75,15 +76,8 @@
     </div>
 </div>
 
-<div
-    class="flex flex-row items-center justify-between border-b-2 border-border bg-foreground py-4 px-2 lg:hidden"
->
-    <div>
-        <a href="/">
-            <img src="/assets/logo/polylogo.svg" alt="" />
-        </a>
-    </div>
+<HeaderMobile logoVisible>
     <div>
         <HamburgerMenu isActive />
     </div>
-</div>
+</HeaderMobile>
