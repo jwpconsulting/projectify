@@ -1,4 +1,5 @@
 import "../src/app.scss";
+import "../src/i18n.js";
 
 export const parameters = {
     backgrounds: {
