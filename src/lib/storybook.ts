@@ -111,3 +111,9 @@ export const task: Task = {
     number: 1,
     labels: [],
 };
+
+export const mobileParameters = {
+    viewport: {
+        defaultViewport: "iphonese2",
+    },
+};
