@@ -93,3 +93,8 @@ export type AnchorSize = (typeof anchorSizes)[number];
 
 export const headerButtonTypes = ["dropdown", "button"] as const;
 export type HeaderButtonType = (typeof headerButtonTypes)[number];
+
+export const taskUpdateBarKinds = ["mobile", "desktop"] as const;
+export type TaskUpdateBarKind = (typeof taskUpdateBarKinds)[number];
+export const taskUpdateBarStates = ["task", "updates"] as const;
+export type TaskUpdateBarState = (typeof taskUpdateBarStates)[number];
