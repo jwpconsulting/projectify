@@ -213,6 +213,7 @@
         "reset-password": "Reset password"
     },
     "task-screen": {
+        "select-due-date": "Select due date",
         "due-soon": "Due soon!"
     },
     "404": "404",
