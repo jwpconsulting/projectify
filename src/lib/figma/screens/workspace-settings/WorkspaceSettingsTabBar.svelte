@@ -24,6 +24,6 @@
         href={getSettingsUrl(workspace.uuid, "billing")}
         label={$_("settings.billing")}
         active={activeSetting === "billing"}
-        grow={true}
     />
+    <div class="grow border-b-2 border-border" />
 </div>

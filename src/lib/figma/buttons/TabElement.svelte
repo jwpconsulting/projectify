@@ -2,7 +2,6 @@
     export let label: string;
     export let href: string;
     export let active: boolean;
-    export let grow: boolean = false;
 </script>
 
 <a
@@ -15,6 +14,3 @@
 >
     {label}
 </a>
-{#if grow}
-    <div class="grow border-b-2 border-border" />
-{/if}

@@ -174,12 +174,6 @@ Notification read
         <ReadNotification on:click={console.log} {isRead} />
     {/each}
 </div>
-Workspace menu bar
-<div class={fr}>
-    {#each falseTrue as active}
-        <TabElement href="/" label="Members" {active} />
-    {/each}
-</div>
 Menu button
 <div class={`${fc} w-40`}>
     {#each menuButtonStates as state}
