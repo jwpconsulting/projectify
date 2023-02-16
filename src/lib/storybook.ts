@@ -37,13 +37,15 @@ export const user2: User = {
 };
 export const users = [user1, user2, null];
 
-const mappedLabels: Label[] = labelColors.map((labelColor: LabelColor) => {
-    return {
-        name: labelColor,
-        color: getIndexFromLabelColor(labelColor),
-        uuid: "does-not-exist",
-    };
-});
+export const mappedLabels: Label[] = labelColors.map(
+    (labelColor: LabelColor) => {
+        return {
+            name: labelColor,
+            color: getIndexFromLabelColor(labelColor),
+            uuid: "does-not-exist",
+        };
+    }
+);
 
 export const labels: LabelLabel[] = [
     ...mappedLabels.map((label: Label) => {

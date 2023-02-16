@@ -72,6 +72,7 @@ export type AvatarVariantContent =
     | { kind: "assign"; users: [User | null, User | null] }
     | { kind: "multiple"; users: (User | null)[] };
 
+// TODO rename me LabelContent Justus 2023-03-07
 export type LabelLabel =
     | { kind: "applyLabel" }
     | { kind: "label"; label: Label };
