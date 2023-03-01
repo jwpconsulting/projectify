@@ -14,10 +14,10 @@
         "build-storybook": "storybook build"
     },
     "devDependencies": {
-        "@storybook/addon-essentials": "^7.0.0-beta.47",
-        "@storybook/addon-interactions": "^7.0.0-beta.47",
-        "@storybook/blocks": "^7.0.0-beta.54",
-        "@storybook/sveltekit": "^7.0.0-beta.54",
+        "@storybook/addon-essentials": "^7.0.0-beta.57",
+        "@storybook/addon-interactions": "^7.0.0-beta.57",
+        "@storybook/blocks": "^7.0.0-beta.57",
+        "@storybook/sveltekit": "^7.0.0-beta.57",
         "@storybook/testing-library": "^0.0.14-next.1",
         "@typescript-eslint/eslint-plugin": "^5.51.0",
         "@typescript-eslint/parser": "^5.51.0",
@@ -30,7 +30,7 @@
         "prettier-plugin-tailwindcss": "^0.2.2",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "storybook": "^7.0.0-beta.54"
+        "storybook": "^7.0.0-beta.57"
     },
     "type": "module",
     "dependencies": {
