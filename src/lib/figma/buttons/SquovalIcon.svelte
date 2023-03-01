@@ -11,6 +11,10 @@
         Users,
         Trash,
         DotsHorizontal,
+        Plus,
+        Pencil,
+        DotsVertical,
+        LightBulb,
     } from "@steeze-ui/heroicons";
     import type { SquovalIcon, SquovalState } from "$lib/figma/types";
 
@@ -21,9 +25,14 @@
         "label": Tag,
         "bulk": CheckCircle,
         "move": SwitchVertical,
+        // TODO rename me to filterMember Justus 2023-02-28
         "filter-member": Users,
         "delete": Trash,
         "ellipsis": DotsHorizontal,
+        "plus": Plus,
+        "edit": Pencil,
+        "dotsVertical": DotsVertical,
+        "help": LightBulb,
     }[icon];
     export let state: SquovalState;
     export let active: boolean = false;

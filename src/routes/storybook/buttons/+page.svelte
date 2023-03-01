@@ -23,7 +23,6 @@
     import SearchMobile from "$lib/figma/buttons/SearchMobile.svelte";
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
     import WorkspaceBoardIcon from "$lib/figma/buttons/WorkspaceBoardIcon.svelte";
-    import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
     import UserAccount from "$lib/figma/buttons/UserAccount.svelte";
     import Label from "$lib/figma/buttons/Label.svelte";
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
@@ -46,8 +45,6 @@
         stepperActiveStates,
         borderedIconTypes,
         boardButtonStates,
-        squovalIcons,
-        squovalStates,
     } from "$lib/figma/types";
     import {
         fr,
@@ -242,16 +239,7 @@ Board button
         <WorkspaceBoardIcon {state} on:click={console.log} />
     {/each}
 </div>
-Squoval
-<div class={fc}>
-    {#each squovalIcons as icon}
-        <div class={fr}>
-            {#each squovalStates as state}
-                <SquovalIcon {icon} {state} on:click={console.log} />
-            {/each}
-        </div>
-    {/each}
-</div>
+
 Avatar with hover
 <div class={fr}>
     {#each users as user}

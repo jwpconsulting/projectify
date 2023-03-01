@@ -54,6 +54,10 @@ export const squovalIcons = [
     "filter-member",
     "delete",
     "ellipsis",
+    "plus",
+    "edit",
+    "dotsVertical",
+    "help",
 ] as const;
 export type SquovalIcon = (typeof squovalIcons)[number];
 export const squovalStates = ["inactive", "disabled", "active"] as const;
