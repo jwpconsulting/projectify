@@ -55,10 +55,10 @@ jobs:
             - checkout
             - restore_cache:
                   keys:
-                      - cache-{{ checksum "Pipfile.lock" }}
+                      - cache-{{ checksum "Pipfile-tools.lock" }}
             - install_python_dependencies
             - save_cache:
-                  key: cache-{{ checksum "Pipfile.lock" }}
+                  key: cache-{{ checksum "Pipfile-tools.lock" }}
                   paths:
                       - ~/.local
                       - ~/.cache
@@ -68,7 +68,7 @@ jobs:
             - checkout
             - restore_cache:
                   keys:
-                      - cache-{{ checksum "Pipfile.lock" }}
+                      - cache-{{ checksum "Pipfile-tools.lock" }}
             - install_python_dependencies
             - run:
                   name: Run flake8
@@ -79,7 +79,7 @@ jobs:
             - checkout
             - restore_cache:
                   keys:
-                      - cache-{{ checksum "Pipfile.lock" }}
+                      - cache-{{ checksum "Pipfile-tools.lock" }}
             - install_python_dependencies
             - run:
                   name: Run pytest
@@ -90,7 +90,7 @@ jobs:
             - checkout
             - restore_cache:
                   keys:
-                      - cache-{{ checksum "Pipfile.lock" }}
+                      - cache-{{ checksum "Pipfile-tools.lock" }}
             - install_python_dependencies
             - run:
                   name: Run mypy
