@@ -17,7 +17,7 @@
     // TODO make buttons do something
 </script>
 
-<div class="flex flex-col">
+<div class="flex flex-col gap-4">
     <div class="flex flex-row justify-between">
         <div class="flex flex-row gap-4">
             <div>
