@@ -109,9 +109,11 @@ export const task: Task = {
     created: "",
     modified: "",
     uuid: "does-not-exist",
+    deadline: "2022-08-01",
     _order: 0,
     number: 1,
     labels: [],
+    assignee: workspaceUser,
 };
 
 export const mobileParameters = {
