@@ -212,6 +212,9 @@
         "confirm-new-password": "Confirm new password",
         "reset-password": "Reset password"
     },
+    "task-screen": {
+        "due-soon": "Due soon!"
+    },
     "404": "404",
     "home": "Home",
     "signout": "Signout",
