@@ -24,7 +24,6 @@
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
     import WorkspaceBoardIcon from "$lib/figma/buttons/WorkspaceBoardIcon.svelte";
     import UserAccount from "$lib/figma/buttons/UserAccount.svelte";
-    import Label from "$lib/figma/buttons/Label.svelte";
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
     import UserDropdownClosedNav from "$lib/figma/buttons/UserDropdownClosedNav.svelte";
     import LabelDropdownClosedNav from "$lib/figma/buttons/LabelDropdownClosedNav.svelte";
@@ -53,7 +52,6 @@
         falseTrue,
         buttonStyles,
         users,
-        labels,
         workspaceBoard,
     } from "$lib/storybook";
     import { browser } from "$app/environment";
@@ -249,20 +247,6 @@ Avatar with hover
                 {user}
                 on:click={() => console.log("UserAccount", user)}
             />
-        </div>
-    {/each}
-</div>
-
-Label v2
-<div class={fr}>
-    {#each labels as label}
-        <div class={`${fc} items-center`}>
-            <div class="capitalize">
-                {label.kind === "applyLabel"
-                    ? $_("label.apply-label")
-                    : label.kind}
-            </div>
-            <Label {label} />
         </div>
     {/each}
 </div>
