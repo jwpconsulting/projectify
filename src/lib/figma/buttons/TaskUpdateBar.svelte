@@ -10,7 +10,7 @@
     export let state: TaskUpdateBarState;
 </script>
 
-{#if kind === "mobile"}
+{#if kind === "desktop"}
     <div class="flex flex-row">
         {#if state === "task"}
             <TabElement href="#" label={$_("task")} active />
