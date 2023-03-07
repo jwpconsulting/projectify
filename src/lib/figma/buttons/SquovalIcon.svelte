@@ -34,6 +34,7 @@
         "dotsVertical": DotsVertical,
         "help": LightBulb,
     }[icon];
+    // TODO active state should be renamed to enabled Justus 2023-03-07
     export let state: SquovalState;
     export let active: boolean = false;
 
