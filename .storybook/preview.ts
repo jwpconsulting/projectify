@@ -1,5 +1,6 @@
 import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
 
+import "../src/storybook.css";
 import "../src/app.scss";
 import "../src/i18n.js";
 
