@@ -214,6 +214,7 @@
     },
     "task-screen": {
         "select-due-date": "Select due date",
+        "save": "Save",
         "due-soon": "Due soon!"
     },
     "404": "404",
