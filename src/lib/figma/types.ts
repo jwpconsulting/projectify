@@ -85,8 +85,11 @@ export const filterLabelMenuStates = ["list", "create"] as const;
 export type FilterLabelMenuState = (typeof filterLabelMenuStates)[number];
 
 // TODO rename to InputFieldKind Justus 2022-09-22
+// TODO we need to instead support "search", "erasable", and field
+// subTask should use erasable
 export type InputFieldStyle =
     | { kind: "search" }
+    // TODO make me "erasable"
     | { kind: "subTask" }
     | { kind: "field"; inputType: "text" | "password" };
 export const inputFieldSizes = ["extraSmall", "small", "normal"] as const;

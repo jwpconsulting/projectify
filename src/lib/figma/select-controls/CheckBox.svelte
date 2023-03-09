@@ -4,6 +4,7 @@
 
     export let checked: boolean;
     export let disabled: boolean;
+    // TODO document what this is for
     export let contained: boolean;
 
     let outerStyle: string;
