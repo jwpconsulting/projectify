@@ -6,6 +6,7 @@
         "build": "./bin/prebuild.sh && vite build",
         "package": "vite package",
         "preview": "vite preview --port 3000",
+        "format-and-check": "npm run format && npm run check",
         "check": "svelte-check --tsconfig ./tsconfig.json --threshold warning --diagnostic-sources js,svelte --fail-on-warnings --fail-on-hints",
         "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
         "lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. .",
