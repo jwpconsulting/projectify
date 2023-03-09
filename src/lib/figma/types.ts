@@ -103,3 +103,6 @@ export const taskUpdateBarKinds = ["mobile", "desktop"] as const;
 export type TaskUpdateBarKind = (typeof taskUpdateBarKinds)[number];
 export const taskUpdateBarStates = ["task", "updates"] as const;
 export type TaskUpdateBarState = (typeof taskUpdateBarStates)[number];
+
+export const subTaskStates = ["normal", "edit"] as const;
+export type SubTaskState = (typeof subTaskStates)[number];

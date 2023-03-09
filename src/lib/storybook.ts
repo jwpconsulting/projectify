@@ -4,6 +4,7 @@ import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
 import type {
     Label,
     WorkspaceUser,
+    SubTask,
     WorkspaceBoard,
     WorkspaceBoardSection,
     Task,
@@ -102,6 +103,16 @@ export const workspaceBoardSection: WorkspaceBoardSection = {
     modified: "",
     uuid: "does-not-exist",
     _order: 0,
+};
+
+export const subTask: SubTask = {
+    title: "Do the thing",
+    description: "Description should not be shown",
+    created: "",
+    modified: "",
+    uuid: "does-not-exist",
+    done: true,
+    order: 0,
 };
 
 export const task: Task = {

@@ -215,6 +215,7 @@
     "task-screen": {
         "select-due-date": "Select due date",
         "save": "Save",
+        "enter-a-subtask": "Enter a subtask",
         "due-soon": "Due soon!"
     },
     "404": "404",
