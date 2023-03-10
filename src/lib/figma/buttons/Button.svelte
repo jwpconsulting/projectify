@@ -77,7 +77,7 @@
     >
         {#if style.kind === "primary"}
             <div
-                class={`flex flex-row items-center justify-center gap-2.5 rounded-lg border px-4  py-2 font-bold group-disabled:bg-disabled group-disabled:text-disabled-primary-content ${innerColorStyle} ${innerSizeStyle}`}
+                class={`flex w-full flex-row items-center justify-center gap-2.5 rounded-lg border px-4  py-2 font-bold group-disabled:bg-disabled group-disabled:text-disabled-primary-content ${innerColorStyle} ${innerSizeStyle}`}
             >
                 <slot />
                 {#if label}
@@ -86,7 +86,7 @@
             </div>
         {:else}
             <div
-                class={`flex flex-row items-center justify-center gap-2.5 rounded-lg border px-4  py-2 font-bold group-disabled:border-disabled-content group-disabled:bg-transparent group-disabled:text-disabled-content ${innerColorStyle} ${innerSizeStyle}`}
+                class={`flex w-full flex-row items-center justify-center gap-2.5 rounded-lg border px-4  py-2 font-bold group-disabled:border-disabled-content group-disabled:bg-transparent group-disabled:text-disabled-content ${innerColorStyle} ${innerSizeStyle}`}
             >
                 <slot />
                 {#if label}
