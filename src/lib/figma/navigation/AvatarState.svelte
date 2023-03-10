@@ -7,11 +7,13 @@
     export let size: AvatarStateSize;
 
     $: outerSize = {
+        large: "h-24 w-24",
         medium: "h-8 w-8",
         small: "h-6 w-6",
         hoverable: "h-6 w-6 group-hover:h-8 group-hover:w-8",
     }[size];
     $: innerSize = {
+        large: 92,
         medium: 32,
         small: 24,
         hoverable: 32,

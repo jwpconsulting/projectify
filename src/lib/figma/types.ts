@@ -63,12 +63,23 @@ export type SquovalIcon = (typeof squovalIcons)[number];
 export const squovalStates = ["inactive", "disabled", "active"] as const;
 export type SquovalState = (typeof squovalStates)[number];
 
-export const avatarStateSizes = ["small", "medium", "hoverable"] as const;
+export const avatarStateSizes = [
+    "small",
+    "medium",
+    "large",
+    "hoverable",
+] as const;
 export type AvatarStateSize = (typeof avatarStateSizes)[number];
 
-export const avatarVariantSizes = ["small", "medium", "hoverable"] as const;
+export const avatarVariantSizes = [
+    "small",
+    "medium",
+    "large",
+    "hoverable",
+] as const;
 export type AvatarVariantSize = (typeof avatarVariantSizes)[number];
 export type AvatarVariantContent =
+    | { kind: "single"; user: User | null }
     | { kind: "assign"; users: [User | null, User | null] }
     | { kind: "multiple"; users: (User | null)[] };
 

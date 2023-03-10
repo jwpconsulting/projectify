@@ -24,8 +24,8 @@ export const Default: Story = {
     args: {
         size: "medium",
         content: {
-            kind: "multiple",
-            users: [null],
+            kind: "single",
+            user: null,
         },
     },
 };
@@ -34,8 +34,8 @@ export const User1: Story = {
     args: {
         size: "medium",
         content: {
-            kind: "multiple",
-            users: [user1],
+            kind: "single",
+            user: user1,
         },
     },
 };
@@ -44,8 +44,28 @@ export const User2: Story = {
     args: {
         size: "medium",
         content: {
+            kind: "single",
+            user: user2,
+        },
+    },
+};
+
+export const Multiple: Story = {
+    args: {
+        size: "medium",
+        content: {
             kind: "multiple",
-            users: [user2],
+            users: [user1, user2],
+        },
+    },
+};
+
+export const Assign: Story = {
+    args: {
+        size: "medium",
+        content: {
+            kind: "assign",
+            users: [user1, user2],
         },
     },
 };

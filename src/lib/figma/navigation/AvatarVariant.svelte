@@ -26,6 +26,7 @@
     $: assignStyle = {
         small: "w-9 h-9",
         medium: "w-12 h-12",
+        large: "w-24 h-24",
         hoverable: "w-12 h-12 group-hover:w-12 h-12",
     }[size];
 </script>
@@ -38,6 +39,10 @@
         <div class="absolute top-1/3 right-1/3">
             <AvatarState user={content.users[0]} {size} />
         </div>
+    </div>
+{:else if content.kind === "single"}
+    <div class="p-0.5">
+        <AvatarState user={content.user} {size} />
     </div>
 {:else}
     <div
