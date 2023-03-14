@@ -4,3 +4,5 @@
 - Tertiary nav btns to be replaced by HeaderButton
 - Solve issue where all headers have different heights (at least on Desktop)
 - Reintegrate mobile menu overlay as proper overlay (whatever that means)
+- Fix issue where buttons don't react well when placed inside an items-center
+  flex with column layout
