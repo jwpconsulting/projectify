@@ -125,6 +125,7 @@ export const task: Task = {
     number: 1,
     labels: [],
     assignee: workspaceUser,
+    sub_tasks: [subTask],
 };
 
 export const mobileParameters = {

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import ProgressButton from "$lib/components/ProgressButton.svelte";
+    import SubTaskProgress from "$lib/figma/buttons/SubTaskProgress.svelte";
     import TaskCardTitle from "$lib/components/dashboard/TaskCardTitle.svelte";
     import TaskCardLabels from "$lib/components/dashboard/TaskCardLabels.svelte";
     import TaskCardWorkspaceUser from "$lib/components/dashboard/TaskCardWorkspaceUser.svelte";
@@ -51,7 +51,7 @@
         </div>
         <div class="col-span-3 flex flex-row justify-self-end sm:col-span-2">
             <div class="flex flex-row items-center gap-4">
-                <ProgressButton {task} />
+                <SubTaskProgress {task} />
             </div>
             <div class="flex flex-row items-center">
                 <TaskCardWorkspaceUser {task} />
@@ -67,7 +67,7 @@
         </div>
         <div class="col-span-2 flex flex-row items-center justify-end gap-2">
             <div class="flex flex-row items-center gap-4">
-                <ProgressButton {task} />
+                <SubTaskProgress {task} />
             </div>
             <div class="flex flex-row items-center gap-2">
                 <TaskCardWorkspaceUser {task} />
