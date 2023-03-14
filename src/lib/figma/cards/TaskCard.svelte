@@ -27,40 +27,44 @@
 </script>
 
 <button
-    class="box-border rounded-lg border border-base-300 bg-base-100 p-2"
+    class="box-border w-full rounded-lg border border-base-300 bg-base-100 p-2"
     on:click={onClick}
     data-uuid={task.uuid}
 >
-    <div class="grid grid-cols-6 grid-rows-2 lg:hidden">
-        <div class="col-span-3 sm:col-span-4">
-            <Title {task} />
-        </div>
-        <div
-            class="col-span-3 flex flex-row items-center gap-2 justify-self-end sm:col-span-2"
-        >
-            <Chevrons {task} {isFirst} {isLast} {workspaceBoardSection} />
-            <MenuButton {task} {workspaceBoardSection} />
-        </div>
-        <div class="col-span-3 flex flex-row sm:col-span-4">
-            <Labels {task} />
-        </div>
-        <div class="col-span-3 flex flex-row justify-self-end sm:col-span-2">
-            <div class="flex flex-row items-center gap-4">
-                <SubTaskProgress {task} />
+    <div class="flex flex-col md:hidden">
+        <div class="flex flex-row justify-between">
+            <div class="">
+                <Title {task} />
             </div>
-            <div class="flex flex-row items-center">
-                <WorkspaceUser {task} />
+            <div class="flex flex-row items-center gap-2 justify-self-end">
+                <Chevrons {task} {isFirst} {isLast} {workspaceBoardSection} />
+                <MenuButton {task} {workspaceBoardSection} />
+            </div>
+        </div>
+        <div class="flex flex-row justify-between">
+            <div class="col-span-3 flex flex-row sm:col-span-4">
+                <Labels {task} />
+            </div>
+            <div
+                class="col-span-3 flex flex-row justify-self-end sm:col-span-2"
+            >
+                <div class="flex flex-row items-center gap-4">
+                    <SubTaskProgress {task} />
+                </div>
+                <div class="flex flex-row items-center">
+                    <WorkspaceUser {task} />
+                </div>
             </div>
         </div>
     </div>
-    <div class="hidden grid-cols-7 lg:grid">
-        <div class="col-span-3 flex flex-row items-center">
+    <div class="hidden w-full flex-row justify-between md:flex">
+        <div class="flex flex-row items-center">
             <Title {task} />
         </div>
-        <div class="col-span-2 flex flex-row items-center justify-start gap-6">
+        <div class="flex flex-row items-center justify-start gap-6">
             <Labels {task} />
         </div>
-        <div class="col-span-2 flex flex-row items-center justify-end gap-2">
+        <div class="flex flex-row items-center justify-end gap-2">
             <div class="flex flex-row items-center gap-4">
                 <SubTaskProgress {task} />
             </div>

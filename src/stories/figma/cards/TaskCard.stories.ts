@@ -10,6 +10,9 @@ const meta: Meta<TaskCard> = {
     args: {
         task,
     },
+    parameters: {
+        layout: "fullscreen",
+    },
 };
 export default meta;
 
