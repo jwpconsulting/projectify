@@ -13,7 +13,7 @@
     on:click={click}
 >
     <div
-        class="rounded-full border border-primary p-3 text-primary group-hover:bg-secondary-hover group-active:bg-disabled"
+        class="rounded-full border border-primary bg-foreground p-3 text-primary group-hover:bg-secondary-hover group-active:bg-disabled"
     >
         <Icon src={Camera} theme="outline" />
     </div>
