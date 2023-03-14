@@ -4,7 +4,7 @@
     import Title from "$lib/figma/cards/task-card/Title.svelte";
     import Labels from "$lib/figma/cards/task-card/Labels.svelte";
     import WorkspaceUser from "$lib/figma/cards/task-card/WorkspaceUser.svelte";
-    import TaskCardChevrons from "$lib/components/dashboard/TaskCardChevrons.svelte";
+    import Chevrons from "$lib/figma/cards/task-card/Chevrons.svelte";
     import TaskCardMenuButton from "$lib/components/dashboard/TaskCardMenuButton.svelte";
     import type { WorkspaceBoardSection, Task } from "$lib/types/workspace";
     import {
@@ -38,12 +38,7 @@
         <div
             class="col-span-3 flex flex-row items-center gap-2 justify-self-end sm:col-span-2"
         >
-            <TaskCardChevrons
-                {task}
-                {isFirst}
-                {isLast}
-                {workspaceBoardSection}
-            />
+            <Chevrons {task} {isFirst} {isLast} {workspaceBoardSection} />
             <TaskCardMenuButton {task} {workspaceBoardSection} />
         </div>
         <div class="col-span-3 flex flex-row sm:col-span-4">
@@ -73,7 +68,7 @@
                 <WorkspaceUser {task} />
                 <div>
                     <div class="flex flex-row items-center">
-                        <TaskCardChevrons
+                        <Chevrons
                             {task}
                             {isFirst}
                             {isLast}
