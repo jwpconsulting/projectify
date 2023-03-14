@@ -1,7 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import SubTaskProgress from "$lib/figma/buttons/SubTaskProgress.svelte";
-    import TaskCardTitle from "$lib/components/dashboard/TaskCardTitle.svelte";
+    import Title from "$lib/figma/cards/task-card/Title.svelte";
     import TaskCardLabels from "$lib/components/dashboard/TaskCardLabels.svelte";
     import TaskCardWorkspaceUser from "$lib/components/dashboard/TaskCardWorkspaceUser.svelte";
     import TaskCardChevrons from "$lib/components/dashboard/TaskCardChevrons.svelte";
@@ -33,7 +33,7 @@
 >
     <div class="grid grid-cols-6 grid-rows-2 lg:hidden">
         <div class="col-span-3 sm:col-span-4">
-            <TaskCardTitle {task} />
+            <Title {task} />
         </div>
         <div
             class="col-span-3 flex flex-row items-center gap-2 justify-self-end sm:col-span-2"
@@ -60,7 +60,7 @@
     </div>
     <div class="hidden grid-cols-7 lg:grid">
         <div class="col-span-3 flex flex-row items-center">
-            <TaskCardTitle {task} />
+            <Title {task} />
         </div>
         <div class="col-span-2 flex flex-row items-center justify-start gap-6">
             <TaskCardLabels {task} />
