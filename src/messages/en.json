@@ -218,6 +218,16 @@
         "enter-a-subtask": "Enter a subtask",
         "due-soon": "Due soon!"
     },
+    "user-account-settings": {
+        "your-current-avatar": "Your current avatar",
+        "name": "Full name",
+        "enter-your-full-name": "Enter your full name",
+        "change-password": "Change password",
+        "update-email": "Update email",
+        "save-changes": "Save changes",
+        "cancel": "Cancel",
+        "delete-account": "Delete account"
+    },
     "404": "404",
     "home": "Home",
     "signout": "Signout",
