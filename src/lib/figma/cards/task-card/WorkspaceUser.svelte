@@ -2,34 +2,12 @@
     import { assignUserToTask } from "$lib/repository/workspace";
     import type { Task, WorkspaceUser } from "$lib/types/workspace";
     import WorkspaceUserAvatar from "$lib/components/WorkspaceUserAvatar.svelte";
-    import UserPicker from "$lib/components/userPicker.svelte";
-    import { getDropDown } from "$lib/components/globalDropDown.svelte";
 
     export let task: Task;
 
     let userPickerBtnRef: HTMLElement;
 
-    function openUserPicker() {
-        let dropDown = getDropDown();
-        if (!dropDown) {
-            throw new Error("Expected dropDown");
-        }
-        dropDown.openComponent(UserPicker, userPickerBtnRef, {
-            selectedUser: task.assignee,
-            dispatch: async (name: string, data: { user: WorkspaceUser }) => {
-                if (!dropDown) {
-                    throw new Error("Expected dropDown");
-                }
-                if (name == "userSelected") {
-                    const userEmail = data.user.user
-                        ? data.user.user.email
-                        : null;
-                    await assignUserToTask(userEmail, task.uuid);
-                }
-                dropDown.close();
-            },
-        });
-    }
+    function openUserPicker() {}
 </script>
 
 {#if task.assignee}
