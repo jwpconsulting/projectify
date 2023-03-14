@@ -4,7 +4,7 @@
         openTaskDetails,
     } from "$lib/stores/dashboard";
     import { _ } from "svelte-i18n";
-    import TaskCard from "$lib/components/dashboard/TaskCard.svelte";
+    import TaskCard from "$lib/figma/cards/TaskCard.svelte";
     import SectionHeader from "$lib/components/dashboard/SectionHeader.svelte";
     import { createEventDispatcher } from "svelte";
     import type { WorkspaceBoardSection } from "$lib/types/workspace";

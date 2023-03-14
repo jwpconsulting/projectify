@@ -16,7 +16,7 @@
         taskSearchInput,
     } from "$lib/stores/dashboard";
 
-    import TaskCard from "$lib/components/dashboard/TaskCard.svelte";
+    import TaskCard from "$lib/figma/cards/TaskCard.svelte";
     import Loading from "$lib/components/loading.svelte";
     import type { WorkspaceBoardSection } from "$lib/types/workspace";
 
