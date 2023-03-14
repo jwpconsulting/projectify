@@ -3,7 +3,7 @@
     import SubTaskProgress from "$lib/figma/buttons/SubTaskProgress.svelte";
     import Title from "$lib/figma/cards/task-card/Title.svelte";
     import Labels from "$lib/figma/cards/task-card/Labels.svelte";
-    import TaskCardWorkspaceUser from "$lib/components/dashboard/TaskCardWorkspaceUser.svelte";
+    import WorkspaceUser from "$lib/figma/cards/task-card/WorkspaceUser.svelte";
     import TaskCardChevrons from "$lib/components/dashboard/TaskCardChevrons.svelte";
     import TaskCardMenuButton from "$lib/components/dashboard/TaskCardMenuButton.svelte";
     import type { WorkspaceBoardSection, Task } from "$lib/types/workspace";
@@ -54,7 +54,7 @@
                 <SubTaskProgress {task} />
             </div>
             <div class="flex flex-row items-center">
-                <TaskCardWorkspaceUser {task} />
+                <WorkspaceUser {task} />
             </div>
         </div>
     </div>
@@ -70,7 +70,7 @@
                 <SubTaskProgress {task} />
             </div>
             <div class="flex flex-row items-center gap-2">
-                <TaskCardWorkspaceUser {task} />
+                <WorkspaceUser {task} />
                 <div>
                     <div class="flex flex-row items-center">
                         <TaskCardChevrons
