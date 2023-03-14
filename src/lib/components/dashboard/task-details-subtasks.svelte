@@ -8,15 +8,15 @@
     } from "$lib/graphql/operations";
 
     import { client } from "$lib/graphql/client";
-    import IconTrash from "../icons/icon-trash.svelte";
-    import IconPlus from "../icons/icon-plus.svelte";
+    import IconTrash from "$lib/components/icons/icon-trash.svelte";
+    import IconPlus from "$lib/components/icons/icon-plus.svelte";
     import { _ } from "svelte-i18n";
-    import IconChevronDown from "../icons/icon-chevron-down.svelte";
-    import IconChevronUp from "../icons/icon-chevron-up.svelte";
-    import IconEdit from "../icons/icon-edit.svelte";
+    import IconChevronDown from "$lib/components/icons/icon-chevron-down.svelte";
+    import IconChevronUp from "$lib/components/icons/icon-chevron-up.svelte";
+    import IconEdit from "$lib/components/icons/icon-edit.svelte";
     import { tick } from "svelte";
-    import IconClose from "../icons/icon-close.svelte";
-    import IconUpload from "../icons/icon-upload.svelte";
+    import IconClose from "$lib/components/icons/icon-close.svelte";
+    import IconUpload from "$lib/components/icons/icon-upload.svelte";
     import type { SubTask } from "$lib/types/workspace";
     import lodash from "lodash";
 

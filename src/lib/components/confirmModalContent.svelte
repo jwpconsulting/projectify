@@ -2,7 +2,7 @@
     import type { Input } from "$lib/types/ui";
     import { getContext } from "svelte";
     import { _ } from "svelte-i18n";
-    import InputDatePicker from "./inputDatePicker.svelte";
+    import InputDatePicker from "$lib/components/inputDatePicker.svelte";
     import lodash from "lodash";
 
     export let title: string;

@@ -4,8 +4,8 @@
     import { _ } from "svelte-i18n";
     import { currentWorkspaceUuid } from "$lib/stores/dashboard";
 
-    import IconArrowLeft from "./icons/icon-arrow-left.svelte";
-    import Loading from "./loading.svelte";
+    import IconArrowLeft from "$lib/components/icons/icon-arrow-left.svelte";
+    import Loading from "$lib/components/loading.svelte";
     export let title: string | null = null;
     export let loading = false;
     export let onBack = () => {

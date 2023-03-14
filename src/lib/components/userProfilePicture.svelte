@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ProfilePicture from "./profilePicture.svelte";
+    import ProfilePicture from "$lib/components/profilePicture.svelte";
     export let pictureProps: any = {};
 </script>
 

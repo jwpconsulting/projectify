@@ -5,7 +5,7 @@ import {
     Mutation_AddLabelMutation,
     Mutation_UpdateLabelMutation,
     Mutation_DeleteLabelMutation,
-} from "./../graphql/operations";
+} from "$lib/graphql/operations";
 import { getModal } from "$lib/components/dialogModal.svelte";
 import type {
     Label,

@@ -3,12 +3,12 @@
     import { user } from "$lib/stores/user";
     import routes from "$lib/routes";
     import { _ } from "svelte-i18n";
-    import HeaderLogo from "./assets/headerLogo.svelte";
-    import HeaderUser from "./headerUser.svelte";
-    import IconHamburgerMenu from "./icons/icon-hamburger-menu.svelte";
-    import DrawerModal from "./drawerModal.svelte";
-    import IconClose from "./icons/icon-close.svelte";
-    import HeaderButtons from "./header-buttons.svelte";
+    import HeaderLogo from "$lib/components/assets/headerLogo.svelte";
+    import HeaderUser from "$lib/components/headerUser.svelte";
+    import IconHamburgerMenu from "$lib/components/icons/icon-hamburger-menu.svelte";
+    import DrawerModal from "$lib/components/drawerModal.svelte";
+    import IconClose from "$lib/components/icons/icon-close.svelte";
+    import HeaderButtons from "$lib/components/header-buttons.svelte";
     import BoardSearchBar from "$lib/components/BoardSearchBar.svelte";
 
     export let mode = "app";

@@ -1,8 +1,8 @@
 <script lang="ts">
-    import IconUserProfile from "./icons/icon-user-profile.svelte";
+    import IconUserProfile from "$lib/components/icons/icon-user-profile.svelte";
     import vars from "$lib/env";
-    import IconClose from "./icons/icon-close.svelte";
-    import IconUserPlusFill from "./icons/icon-user-plus-fill.svelte";
+    import IconClose from "$lib/components/icons/icon-close.svelte";
+    import IconUserPlusFill from "$lib/components/icons/icon-user-plus-fill.svelte";
 
     export let size = 32;
     export let url: string | null = null;

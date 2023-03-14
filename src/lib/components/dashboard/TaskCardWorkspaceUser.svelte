@@ -2,8 +2,8 @@
     import { assignUserToTask } from "$lib/repository/workspace";
     import type { Task, WorkspaceUser } from "$lib/types/workspace";
     import WorkspaceUserAvatar from "$lib/components/WorkspaceUserAvatar.svelte";
-    import UserPicker from "../userPicker.svelte";
-    import { getDropDown } from "../globalDropDown.svelte";
+    import UserPicker from "$lib/components/userPicker.svelte";
+    import { getDropDown } from "$lib/components/globalDropDown.svelte";
 
     export let task: Task;
 

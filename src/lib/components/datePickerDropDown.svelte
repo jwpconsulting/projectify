@@ -1,5 +1,5 @@
 <script lang="ts">
-    import DatePicker from "./datePicker.svelte";
+    import DatePicker from "$lib/components/datePicker.svelte";
     import { getContext } from "svelte";
 
     const modal = getContext<any>("modal");

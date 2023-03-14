@@ -2,8 +2,8 @@
     import { dateStringToLocal } from "$lib/utils/date";
     import { createEventDispatcher } from "svelte";
     import { _ } from "svelte-i18n";
-    import { getModal } from "./dialogModal.svelte";
-    import IconCalendar from "./icons/icon-calendar.svelte";
+    import { getModal } from "$lib/components/dialogModal.svelte";
+    import IconCalendar from "$lib/components/icons/icon-calendar.svelte";
     import type { Input } from "$lib/types/ui";
 
     export let placeholder = $_("select-date");

@@ -7,7 +7,7 @@
 
     import { createEventDispatcher, onMount } from "svelte";
 
-    import LabelList from "./LabelList.svelte";
+    import LabelList from "$lib/components/dashboard/LabelList.svelte";
 
     let searchText = "";
     export let task: Task;

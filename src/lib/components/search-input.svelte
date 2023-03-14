@@ -2,8 +2,8 @@
     import { createEventDispatcher } from "svelte";
 
     import { _ } from "svelte-i18n";
-    import IconClose from "./icons/icon-close.svelte";
-    import IconSearch from "./icons/icon-search.svelte";
+    import IconClose from "$lib/components/icons/icon-close.svelte";
+    import IconSearch from "$lib/components/icons/icon-search.svelte";
     export let placeholder = $_("search");
     export let searchText = "";
     export let inputElement: HTMLElement | null = null;

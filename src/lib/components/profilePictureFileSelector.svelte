@@ -1,9 +1,9 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
 
-    import IconPhotocamera from "./icons/icon-photocamera.svelte";
+    import IconPhotocamera from "$lib/components/icons/icon-photocamera.svelte";
 
-    import ProfilePicture from "./profilePicture.svelte";
+    import ProfilePicture from "$lib/components/profilePicture.svelte";
 
     export let url: string | null = null;
     let inputFileRef: HTMLElement | null = null;

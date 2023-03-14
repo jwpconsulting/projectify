@@ -13,21 +13,21 @@
     import { client } from "$lib/graphql/client";
     import { _ } from "svelte-i18n";
     import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard";
-    import ToolBar from "./toolBar.svelte";
-    import IconTrash from "../icons/icon-trash.svelte";
-    import UserPicker from "../userPicker.svelte";
-    import UserProfilePicture from "../userProfilePicture.svelte";
-    import ProfilePicture from "../profilePicture.svelte";
-    import TaskDetailsContent from "./task-details-content.svelte";
-    import Tabs from "../tabs.svelte";
-    import TaskDetailsDiscussion from "./task-details-discussion.svelte";
-    import Tab from "../tab.svelte";
+    import ToolBar from "$lib/components/dashboard/toolBar.svelte";
+    import IconTrash from "$lib/components/icons/icon-trash.svelte";
+    import UserPicker from "$lib/components/userPicker.svelte";
+    import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
+    import ProfilePicture from "$lib/components/profilePicture.svelte";
+    import TaskDetailsContent from "$lib/components/dashboard/task-details-content.svelte";
+    import Tabs from "$lib/components/tabs.svelte";
+    import TaskDetailsDiscussion from "$lib/components/dashboard/task-details-discussion.svelte";
+    import Tab from "$lib/components/tab.svelte";
     import { goto } from "$app/navigation";
-    import Loading from "../loading.svelte";
+    import Loading from "$lib/components/loading.svelte";
     import { page } from "$app/stores";
     import { writable } from "svelte/store";
-    import IconClose from "../icons/icon-close.svelte";
-    import TaskDetailsBreadcrumbs from "./task-details-breadcrumbs.svelte";
+    import IconClose from "$lib/components/icons/icon-close.svelte";
+    import TaskDetailsBreadcrumbs from "$lib/components/dashboard/task-details-breadcrumbs.svelte";
     import type {
         Task,
         Label,

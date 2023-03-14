@@ -1,13 +1,13 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import LabelPicker from "./LabelPicker.svelte";
-    import LabelList from "./LabelList.svelte";
+    import LabelPicker from "$lib/components/dashboard/LabelPicker.svelte";
+    import LabelList from "$lib/components/dashboard/LabelList.svelte";
 
-    import Subtasks from "./task-details-subtasks.svelte";
-    import ToolBar from "./toolBar.svelte";
-    import InputDatePicker from "../inputDatePicker.svelte";
-    import IconCheckCircle from "../icons/icon-check-circle.svelte";
-    import RichTextarea from "../rich-textarea.svelte";
+    import Subtasks from "$lib/components/dashboard/task-details-subtasks.svelte";
+    import ToolBar from "$lib/components/dashboard/toolBar.svelte";
+    import InputDatePicker from "$lib/components/inputDatePicker.svelte";
+    import IconCheckCircle from "$lib/components/icons/icon-check-circle.svelte";
+    import RichTextarea from "$lib/components/rich-textarea.svelte";
     import type { Task, SubTask, Label } from "$lib/types/workspace";
 
     export let taskModified = false;

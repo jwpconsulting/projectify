@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
 
-    import IconChevronDown from "./icons/icon-chevron-down.svelte";
+    import IconChevronDown from "$lib/components/icons/icon-chevron-down.svelte";
 
     export let label = "";
     export let open = false;

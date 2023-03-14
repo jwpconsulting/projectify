@@ -3,7 +3,7 @@
     import { Mutation_AddChatMessage } from "$lib/graphql/operations";
 
     import { dateStringToLocal } from "$lib/utils/date";
-    import UserProfilePicture from "../userProfilePicture.svelte";
+    import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
     import { afterUpdate } from "svelte";
     import type { Task } from "$lib/types/workspace";
 

@@ -27,7 +27,7 @@
 
 <script lang="ts">
     import { SvelteComponent, tick } from "svelte";
-    import IconChevronDown from "./icons/icon-chevron-down.svelte";
+    import IconChevronDown from "$lib/components/icons/icon-chevron-down.svelte";
 
     let component: typeof SvelteComponent | null = null;
     let componentProps: any | null = null;

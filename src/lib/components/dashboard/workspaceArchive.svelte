@@ -8,7 +8,7 @@
     import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
     import { _ } from "svelte-i18n";
     import { client } from "$lib/graphql/client";
-    import Loading from "../loading.svelte";
+    import Loading from "$lib/components/loading.svelte";
     import type { WorkspaceBoard } from "$lib/types/workspace";
     import { currentArchivedWorkspaceBoards } from "$lib/stores/dashboard";
 

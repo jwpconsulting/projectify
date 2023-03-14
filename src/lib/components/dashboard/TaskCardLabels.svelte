@@ -1,8 +1,8 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import LabelList from "$lib/components/dashboard/LabelList.svelte";
-    import LabelPicker from "./LabelPicker.svelte";
-    import { getDropDown } from "../globalDropDown.svelte";
+    import LabelPicker from "$lib/components/dashboard/LabelPicker.svelte";
+    import { getDropDown } from "$lib/components/globalDropDown.svelte";
     import type { Task } from "$lib/types/workspace";
 
     export let task: Task;

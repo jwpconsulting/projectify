@@ -1,11 +1,11 @@
 <script lang="ts">
-    import BoardSection from "./board-section.svelte";
+    import BoardSection from "$lib/components/dashboard/board-section.svelte";
     import {
         Mutation_AddWorkspaceBoardSection,
         Mutation_MoveWorkspaceBoardSection,
     } from "$lib/graphql/operations";
-    import IconPlus from "../icons/icon-plus.svelte";
-    import { getModal } from "../dialogModal.svelte";
+    import IconPlus from "$lib/components/icons/icon-plus.svelte";
+    import { getModal } from "$lib/components/dialogModal.svelte";
     import { client } from "$lib/graphql/client";
     import { _ } from "svelte-i18n";
     import {
@@ -17,7 +17,7 @@
     } from "$lib/stores/dashboard";
 
     import TaskCard from "$lib/components/dashboard/TaskCard.svelte";
-    import Loading from "../loading.svelte";
+    import Loading from "$lib/components/loading.svelte";
     import type { WorkspaceBoardSection } from "$lib/types/workspace";
 
     async function onAddNewSection() {

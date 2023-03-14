@@ -1,11 +1,11 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import HeaderLogo from "../assets/headerLogo.svelte";
-    import Header from "../Header.svelte";
-    import IconGithub from "../icons/icon-github.svelte";
-    import IconInstagram from "../icons/icon-instagram.svelte";
-    import IconTwitter from "../icons/icon-twitter.svelte";
+    import HeaderLogo from "$lib/components/assets/headerLogo.svelte";
+    import Header from "$lib/components/Header.svelte";
+    import IconGithub from "$lib/components/icons/icon-github.svelte";
+    import IconInstagram from "$lib/components/icons/icon-instagram.svelte";
+    import IconTwitter from "$lib/components/icons/icon-twitter.svelte";
 
     export let footerVisible = true;
     export let heightScreen = false;

@@ -2,7 +2,7 @@
     import { user, userIsLoading } from "$lib/stores/user";
     import Signin from "$lib/components/signin.svelte";
     import { _ } from "svelte-i18n";
-    import Loading from "./loading.svelte";
+    import Loading from "$lib/components/loading.svelte";
 </script>
 
 {#if $user}

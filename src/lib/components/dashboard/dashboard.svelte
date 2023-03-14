@@ -1,19 +1,19 @@
 <script lang="ts">
-    import Board from "./board.svelte";
-    import DrawerModal from "../drawerModal.svelte";
-    import TaskDetails from "./task-details.svelte";
+    import Board from "$lib/components/dashboard/board.svelte";
+    import DrawerModal from "$lib/components/drawerModal.svelte";
+    import TaskDetails from "$lib/components/dashboard/task-details.svelte";
     import {
         currentWorkspaceBoardUuid,
         drawerModalOpen,
         closeTaskDetails,
     } from "$lib/stores/dashboard";
-    import DialogModal from "../dialogModal.svelte";
+    import DialogModal from "$lib/components/dialogModal.svelte";
 
     import { page } from "$app/stores";
     import { onMount } from "svelte";
-    import ConfirmModalContent from "../confirmModalContent.svelte";
+    import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
     import { _ } from "svelte-i18n";
-    import SideNav from "./SideNav.svelte";
+    import SideNav from "$lib/components/dashboard/SideNav.svelte";
 
     let selectedWorkspaceUuid: string | null;
     let selectedTaskUuid: string | null;
