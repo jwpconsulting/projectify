@@ -6,9 +6,9 @@ component_file="lib/$path/$component.svelte"
 full_component_file="src/$component_file"
 stories_file="src/stories/$path/$component.stories.ts"
 
-if test ! -e "$component_file"
+if test ! -e "$full_component_file"
 then
-    cat <<EOF > "$component_file"
+    cat <<EOF > "$full_component_file"
 <script lang="ts">
 </script>
 
@@ -22,7 +22,7 @@ then
     cat <<EOF > "$stories_file"
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import $component from "\$$full_component_file";
+import $component from "\$$component_file";
 
 const meta: Meta<$component> = {
     component: $component,
