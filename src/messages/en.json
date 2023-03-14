@@ -226,6 +226,12 @@
         "update-email": "Update email",
         "save-changes": "Save changes",
         "cancel": "Cancel",
+        "current-password": "Current password",
+        "enter-password": "Enter your password",
+        "new-password": "New password",
+        "enter-new-password": "Enter the new password",
+        "confirm-password": "Confirm password",
+        "confirm-new-password": "Confirm the new password",
         "delete-account": "Delete account"
     },
     "404": "404",
