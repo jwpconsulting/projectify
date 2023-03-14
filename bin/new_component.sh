@@ -6,6 +6,8 @@ component_file="lib/$path/$component.svelte"
 full_component_file="src/$component_file"
 stories_file="src/stories/$path/$component.stories.ts"
 
+mkdir -p $(dirname "$full_component_file")
+
 if test ! -e "$full_component_file"
 then
     cat <<EOF > "$full_component_file"
@@ -15,6 +17,8 @@ then
 Hello, World
 EOF
 fi
+
+mkdir -p $(dirname "$stories_file")
 
 if test ! -e "$stories_file"
 then
