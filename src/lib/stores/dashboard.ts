@@ -1,4 +1,3 @@
-import { goto } from "$app/navigation";
 import Fuse from "fuse.js";
 import lodash from "lodash";
 import { writable, derived } from "svelte/store";
@@ -227,7 +226,8 @@ export function openTaskDetails(
 ) {
     drawerModalOpen.set(true);
     currentTaskUuid.set(taskUuid);
-    goto(getDashboardTaskUrl(workspaceBoardUuid, taskUuid, subView));
+    // TODO
+    // goto(getDashboardTaskUrl(workspaceBoardUuid, taskUuid, subView));
 }
 export function closeTaskDetails(): void {
     drawerModalOpen.set(false);
@@ -236,7 +236,8 @@ export function closeTaskDetails(): void {
     if (!boardUuid) {
         throw new Error("Expected boardUuid");
     }
-    goto(getDashboardWorkspaceBoardUrl(boardUuid));
+    // TODO
+    // goto(getDashboardWorkspaceBoardUrl(boardUuid));
 }
 
 export function copyDashboardURL(
@@ -255,7 +256,8 @@ export function pushTashUuidtoPath() {
     if (!boardUuid) {
         throw new Error("Expected boardUuid");
     }
-    goto(getDashboardWorkspaceBoardUrl(boardUuid));
+    // TODO
+    // goto(getDashboardWorkspaceBoardUrl(boardUuid));
 }
 
 export const currentWorkspaceLabels = derived<
@@ -638,7 +640,8 @@ export async function setFirstWorkspace() {
 
 export async function setAndNavigateWorkspaceBoard(uuid: string) {
     currentWorkspaceBoardUuid.set(uuid);
-    goto(getDashboardWorkspaceBoardUrl(uuid));
+    // TODO
+    // goto(getDashboardWorkspaceBoardUrl(uuid));
 }
 
 export const userExpandOpen = writable<boolean>(false);
