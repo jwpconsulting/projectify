@@ -5,7 +5,7 @@
     } from "$lib/stores/dashboard";
     import { _ } from "svelte-i18n";
     import TaskCard from "$lib/figma/cards/TaskCard.svelte";
-    import SectionHeader from "$lib/components/dashboard/SectionHeader.svelte";
+    import SectionTitle from "$lib/figma/cards/section-bar/SectionTitle.svelte";
     import { createEventDispatcher } from "svelte";
     import type { WorkspaceBoardSection } from "$lib/types/workspace";
 
@@ -40,7 +40,7 @@
     class="layout-list section isolate m-2 flex select-none rounded-b-2xl bg-base-100 shadow-sm"
 >
     <div class="flex grow flex-col">
-        <SectionHeader
+        <SectionTitle
             {isLast}
             {isFirst}
             {section}
