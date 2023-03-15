@@ -97,14 +97,6 @@ export const workspaceBoard: WorkspaceBoard = {
     modified: "",
 };
 
-export const workspaceBoardSection: WorkspaceBoardSection = {
-    title: "section name that is long",
-    created: "",
-    modified: "",
-    uuid: "does-not-exist",
-    _order: 0,
-};
-
 export const subTask: SubTask = {
     title: "Do the thing",
     description: "Description should not be shown",
@@ -126,6 +118,15 @@ export const task: Task = {
     labels: [],
     assignee: workspaceUser,
     sub_tasks: [subTask],
+};
+
+export const workspaceBoardSection: WorkspaceBoardSection = {
+    title: "section name that is long",
+    created: "",
+    modified: "",
+    uuid: "does-not-exist",
+    tasks: [task],
+    _order: 0,
 };
 
 export const mobileParameters = {
