@@ -1,5 +1,5 @@
 <script lang="ts">
-    import BoardSection from "$lib/components/dashboard/BoardSection.svelte";
+    import SectionBar from "$lib/figma/cards/SectionBar.svelte";
     import {
         Mutation_AddWorkspaceBoardSection,
         Mutation_MoveWorkspaceBoardSection,
@@ -129,7 +129,7 @@
                 class="section-layout-row flex grow flex-col overflow-y-auto p-2"
             >
                 {#each $currentWorkspaceBoardSections as section, index (section.uuid)}
-                    <BoardSection
+                    <SectionBar
                         {section}
                         isFirst={index == 0}
                         isLast={index ==
