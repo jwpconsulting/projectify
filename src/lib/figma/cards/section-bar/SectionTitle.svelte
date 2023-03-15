@@ -1,129 +1,57 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import { openNewTask } from "$lib/stores/dashboard";
-    import type { DropDownMenuItem } from "$lib/components/globalDropDown.svelte";
-    import { getDropDown } from "$lib/components/globalDropDown.svelte";
-    import IconPlus from "$lib/components/icons/icon-plus.svelte";
-    import IconChevronRight from "$lib/components/icons/icon-chevron-right.svelte";
-    import IconSelector from "$lib/components/icons/icon-selector.svelte";
-    import IconClose from "$lib/components/icons/icon-close.svelte";
-    import IconArrowSUp from "$lib/components/icons/icon-arrow-s-up.svelte";
-    import IconArrowSDown from "$lib/components/icons/icon-arrow-s-down.svelte";
-    import { createEventDispatcher } from "svelte";
-    import type { WorkspaceBoardSection } from "$lib/types/workspace";
     import { Icon } from "@steeze-ui/svelte-icon";
-    import { DotsHorizontal } from "@steeze-ui/heroicons";
+    import {
+        ChevronDown,
+        ChevronRight,
+        DotsHorizontal,
+    } from "@steeze-ui/heroicons";
+    import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
+
+    import type { WorkspaceBoardSection } from "$lib/types/workspace";
+    import type { SvelteComponent } from "svelte";
 
     export let section: WorkspaceBoardSection;
     export let toggleOpen: () => void;
     export let open: boolean;
+    // XXX These two are mutually exclusive
     export let isLast: boolean | null;
     export let isFirst: boolean | null;
 
-    const dispatch = createEventDispatcher();
-
-    $: openArrowDeg = open ? 90 : 0;
-    let dropDownMenuBtnRef: HTMLElement;
+    let dropDownMenuBtnRef: SvelteComponent;
 
     function openDropDownMenu() {
-        let dropDownItems: DropDownMenuItem[] = [
-            {
-                label: $_("expand-section"),
-                icon: IconSelector,
-                hidden: open,
-                onClick: () => {
-                    open = true;
-                },
-            },
-            {
-                label: $_("collapse-section"),
-                icon: IconClose,
-                hidden: !open,
-                onClick: () => {
-                    open = false;
-                },
-            },
-            {
-                label: $_("switch-with-previous-section"),
-                icon: IconArrowSUp,
-                hidden: isFirst === true,
-                onClick: () => {
-                    dispatch("switchWithPrevSection", { section });
-                },
-            },
-            {
-                label: $_("switch-with-next-section"),
-                icon: IconArrowSDown,
-                hidden: isLast === true,
-                onClick: () => {
-                    dispatch("switchWithNextSection", { section });
-                },
-            },
-            {
-                label: $_("add-task"),
-                icon: IconPlus,
-                onClick: () => {
-                    openNewTask(section.uuid);
-                },
-            },
-        ];
-        const dropDown = getDropDown();
-        if (!dropDown) {
-            throw new Error("Expected dropDown");
-        }
-        dropDown.open(dropDownItems, dropDownMenuBtnRef);
+        // TODO
+        console.log({ isFirst, isLast });
     }
 </script>
 
 <header
-    class:open
-    class="sticky -top-2 z-10 flex flex-row items-center justify-between bg-base-100 px-4 py-2"
+    class="flex w-full flex-row items-center justify-between bg-foreground px-4 py-2"
 >
-    <button class="flex flex-row gap-4" on:click={toggleOpen}>
-        <div
-            class="px-2 transition-transform"
-            style="transform: rotate({openArrowDeg}deg);"
-        >
-            <IconChevronRight />
-        </div>
-        <div class="grid grow text-base font-bold uppercase">
-            <span class="nowrap-ellipsis">
-                {section.title}
-                {#if section.tasks}
-                    ({section.tasks.length})
-                {/if}
-            </span>
-        </div>
-    </button>
-    <button
-        bind:this={dropDownMenuBtnRef}
-        on:click|stopPropagation={openDropDownMenu}
-        class="p-1"
+    <div
+        data-figma-name="Section header"
+        class="flex min-w-0 shrink flex-row gap-4 text-base-content"
     >
-        <Icon
-            src={DotsHorizontal}
-            theme="outline"
-            class="h-6 w-6 text-base-content"
+        <button on:click={toggleOpen}>
+            <Icon
+                src={open ? ChevronDown : ChevronRight}
+                class="h-6 w-6"
+                theme="outline"
+            />
+        </button>
+        <h1 class="nowrap-ellipsis min-w-0 shrink font-bold uppercase">
+            {section.title}
+        </h1>
+    </div>
+    <div class="flex shrink-0 flex-row gap-6" data-figma-name="Right side">
+        <SquovalIcon icon="plus" state="active" active={false} />
+        <SquovalIcon
+            icon="ellipsis"
+            state="active"
+            active={false}
+            bind:this={dropDownMenuBtnRef}
+            on:click={openDropDownMenu}
         />
-    </button>
+    </div>
 </header>
-
-<style lang="scss">
-    header {
-        &::after {
-            content: "";
-            position: absolute;
-
-            height: 1px;
-            @apply bottom-0 left-3 right-3 bg-base-300;
-            transition: all 300ms ease-in-out;
-            opacity: 0;
-        }
-
-        &.open {
-            &::after {
-                opacity: 1;
-            }
-        }
-    }
-</style>

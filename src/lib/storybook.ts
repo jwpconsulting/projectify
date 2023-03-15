@@ -98,7 +98,7 @@ export const workspaceBoard: WorkspaceBoard = {
 };
 
 export const workspaceBoardSection: WorkspaceBoardSection = {
-    title: "section name",
+    title: "section name that is long",
     created: "",
     modified: "",
     uuid: "does-not-exist",
