@@ -1,5 +1,5 @@
 <script lang="ts">
-    import BoardSection from "$lib/components/dashboard/board-section.svelte";
+    import BoardSection from "$lib/components/dashboard/BoardSection.svelte";
     import {
         Mutation_AddWorkspaceBoardSection,
         Mutation_MoveWorkspaceBoardSection,
