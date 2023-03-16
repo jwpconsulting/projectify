@@ -1,5 +1,5 @@
 <script lang="ts">
-    import WorkspaceMenu from "$lib/components/dashboard/WorkspaceMenu.svelte";
+    import WorkspaceMenu from "$lib/figma/buttons/WorkspaceMenu.svelte";
     import Boards from "$lib/figma/navigation/side-nav/Boards.svelte";
     import Members from "$lib/figma/navigation/side-nav/Members.svelte";
     import FilterLabelCollapsible from "$lib/figma/composites/FilterLabelCollapsible.svelte";
