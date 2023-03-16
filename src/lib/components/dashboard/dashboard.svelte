@@ -13,7 +13,7 @@
     import { onMount } from "svelte";
     import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
     import { _ } from "svelte-i18n";
-    import SideNav from "$lib/components/dashboard/SideNav.svelte";
+    import SideNav from "$lib/figma/navigation/SideNav.svelte";
 
     let selectedWorkspaceUuid: string | null;
     let selectedTaskUuid: string | null;
