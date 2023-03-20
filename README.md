@@ -38,3 +38,11 @@ How to test
 PIPENV_PIPFILE=Pipfile-tools pipenv run flake8
 PIPENV_PIPFILE=Pipfile-tools pipenv run mypy
 ```
+
+## Creating a new component
+
+This will create a component and story file for you automatically.
+
+```
+bin/new_component path/within/src NameOfComponent
+```
