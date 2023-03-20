@@ -46,6 +46,10 @@ export type WorkspaceUserSelection =
     | { kind: "workspaceUsers"; workspaceUserUuids: Set<string> }
     | { kind: "allWorkspaceUsers" }
     | { kind: "unassigned" };
+export type TasksPerUser = {
+    unassigned: number;
+    assigned: Map<string, number>;
+};
 
 export type DestructiveOverlayType =
     | { kind: "deleteLabel"; label: Label }

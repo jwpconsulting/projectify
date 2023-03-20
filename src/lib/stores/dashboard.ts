@@ -13,6 +13,7 @@ import type {
 import type {
     LabelSelection,
     LabelSelectionInput,
+    TasksPerUser,
     WorkspaceUserSelectionInput,
     WorkspaceUserSelection,
 } from "$lib/types/ui";
@@ -486,7 +487,6 @@ export const currentWorkspaceBoardSections = derived<
     []
 );
 
-type TasksPerUser = { unassigned: number; assigned: Map<string, number> };
 export const tasksPerUser = derived<
     [typeof currentWorkspaceBoardSections],
     TasksPerUser
