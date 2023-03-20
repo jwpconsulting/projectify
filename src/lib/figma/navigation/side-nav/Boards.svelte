@@ -1,9 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import {
-        currentWorkspace,
-        currentWorkspaceBoardUuid,
-    } from "$lib/stores/dashboard";
+    import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard";
     import { getModal } from "$lib/components/dialogModal.svelte";
     import { Mutation_AddWorkspaceBoard } from "$lib/graphql/operations";
     import { client } from "$lib/graphql/client";
@@ -13,7 +10,10 @@
     import { Plus, Folder } from "@steeze-ui/heroicons";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import SelectWorkspaceBoard from "$lib/figma/buttons/SelectWorkspaceBoard.svelte";
+    import type { Workspace } from "$lib/types/workspace";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
+
+    export let workspace: Workspace;
 
     let open = true;
 
@@ -28,9 +28,7 @@
             mutation: Mutation_AddWorkspaceBoard,
             variables: {
                 input: {
-                    workspaceUuid: $currentWorkspace
-                        ? $currentWorkspace.uuid
-                        : "",
+                    workspaceUuid: workspace.uuid,
                     title: modalRes.outputs.title,
                     deadline: modalRes.outputs.deadline,
                     description: "",
@@ -59,8 +57,8 @@
 />
 {#if open}
     <div class="flex flex-col">
-        {#if $currentWorkspace && $currentWorkspace.workspace_boards}
-            {#each $currentWorkspace.workspace_boards as workspaceBoard (workspaceBoard.uuid)}
+        {#if workspace.workspace_boards && workspace.workspace_boards.length > 0}
+            {#each workspace.workspace_boards as workspaceBoard (workspaceBoard.uuid)}
                 <SelectWorkspaceBoard {workspaceBoard} />
             {/each}
             <div>
@@ -78,8 +76,15 @@
                     </div>
                 </button>
             </div>
-        {:else}
-            <Loading />
+        {:else if workspace.workspace_boards === undefined}
+            <p>
+                <!--TODO change name from side-nav-overlay to side-nav-->
+                {$_("side-nav-overlay.could-not-retrieve-workspace-boards")}
+            </p>
+        {:else if workspace.workspace_boards.length === 0}
+            <p>
+                {$_("side-nav-overlay.there-are-no-workspace-boards")}
+            </p>
         {/if}
     </div>
 {/if}

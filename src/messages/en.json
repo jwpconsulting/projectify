@@ -77,6 +77,8 @@
         "add-new-workspace": "add new workspace"
     },
     "side-nav-overlay": {
+        "could-not-retrieve-workspace-boards": "Could not retrieve workspace boards for this workspace.",
+        "there-are-no-workspace-boards": "There are no workspace boards in this workspace.",
         "help-tips": "Help & tips",
         "minimise-sidebar": "minimise sidebar",
         "expand-sidebar": "expand sidebar",

@@ -82,19 +82,20 @@ export const workspaceUserSelectionInputs: WorkspaceUserSelectionInput[] = [
     { kind: "workspaceUser", workspaceUser },
 ];
 
-export const workspace = {
-    uuid: "does-not-exist",
-    title: "This is a workspace",
-    created: "",
-    modified: "",
-    workspace_users: [workspaceUser],
-};
-
 export const workspaceBoard: WorkspaceBoard = {
     uuid: "does-not-exist",
     title: "Project board",
     created: "",
     modified: "",
+};
+
+export const workspace = {
+    uuid: "does-not-exist",
+    title: "This is a workspace",
+    created: "",
+    modified: "",
+    workspace_boards: [workspaceBoard],
+    workspace_users: [workspaceUser],
 };
 
 export const subTask: SubTask = {
