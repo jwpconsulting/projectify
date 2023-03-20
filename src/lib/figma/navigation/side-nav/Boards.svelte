@@ -10,10 +10,11 @@
     import { Plus, Folder } from "@steeze-ui/heroicons";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import SelectWorkspaceBoard from "$lib/figma/buttons/SelectWorkspaceBoard.svelte";
-    import type { Workspace } from "$lib/types/workspace";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
+    import type { Readable } from "svelte/store";
+    import type { Workspace } from "$lib/types/workspace";
 
-    export let workspace: Workspace;
+    export let currentWorkspace: Readable<Workspace | null>;
 
     let open = true;
 
@@ -28,7 +29,9 @@
             mutation: Mutation_AddWorkspaceBoard,
             variables: {
                 input: {
-                    workspaceUuid: workspace.uuid,
+                    workspaceUuid: $currentWorkspace
+                        ? $currentWorkspace.uuid
+                        : "",
                     title: modalRes.outputs.title,
                     deadline: modalRes.outputs.deadline,
                     description: "",
@@ -57,8 +60,8 @@
 />
 {#if open}
     <div class="flex flex-col">
-        {#if workspace.workspace_boards && workspace.workspace_boards.length > 0}
-            {#each workspace.workspace_boards as workspaceBoard (workspaceBoard.uuid)}
+        {#if $currentWorkspace && $currentWorkspace.workspace_boards}
+            {#each $currentWorkspace.workspace_boards as workspaceBoard (workspaceBoard.uuid)}
                 <SelectWorkspaceBoard {workspaceBoard} />
             {/each}
             <div>
@@ -76,15 +79,8 @@
                     </div>
                 </button>
             </div>
-        {:else if workspace.workspace_boards === undefined}
-            <p>
-                <!--TODO change name from side-nav-overlay to side-nav-->
-                {$_("side-nav-overlay.could-not-retrieve-workspace-boards")}
-            </p>
-        {:else if workspace.workspace_boards.length === 0}
-            <p>
-                {$_("side-nav-overlay.there-are-no-workspace-boards")}
-            </p>
+        {:else}
+            <Loading />
         {/if}
     </div>
 {/if}
