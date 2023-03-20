@@ -7,7 +7,7 @@
     import { getModal } from "$lib/components/dialogModal.svelte";
     import { Mutation_AddWorkspaceBoard } from "$lib/graphql/operations";
     import { client } from "$lib/graphql/client";
-    import { goto } from "$app/navigation";
+    // import { goto } from "$app/navigation";
     import Loading from "$lib/components/loading.svelte";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Plus, Folder } from "@steeze-ui/heroicons";
@@ -41,7 +41,8 @@
         if (!$currentWorkspaceBoardUuid) {
             throw new Error("Expected $currentWorkspaceBoardUuid");
         }
-        goto(getDashboardWorkspaceBoardUrl($currentWorkspaceBoardUuid));
+        // TODO
+        // goto(getDashboardWorkspaceBoardUrl($currentWorkspaceBoardUuid));
     }
 
     function toggleOpen() {

@@ -15,7 +15,7 @@
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
     import { getDropDown } from "$lib/components/globalDropDown.svelte";
     import type { DropDownMenuItem } from "$lib/components/globalDropDown.svelte";
-    import { goto } from "$app/navigation";
+    // import { goto } from "$app/navigation";
     import {
         currentWorkspace,
         currentWorkspaceBoard,
@@ -67,7 +67,8 @@
                 if (!$currentWorkspace) {
                     throw new Error("Expected $currentWorkspace");
                 }
-                goto(getDashboardWorkspaceUrl($currentWorkspace.uuid));
+                // TODO
+                // goto(getDashboardWorkspaceUrl($currentWorkspace.uuid));
             }
         } else {
             throw new Error("Expected $currentWorkspaceBoard");
@@ -108,7 +109,8 @@
         if (workspaceBoard.uuid === $currentWorkspaceBoardUuid) {
             console.log("Already here");
         } else {
-            goto(getDashboardWorkspaceBoardUrl(workspaceBoard.uuid));
+            // TODO
+            // goto(getDashboardWorkspaceBoardUrl(workspaceBoard.uuid));
         }
     }
 </script>
