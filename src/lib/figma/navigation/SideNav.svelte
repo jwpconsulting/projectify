@@ -3,8 +3,26 @@
     import Boards from "$lib/figma/navigation/side-nav/Boards.svelte";
     import Members from "$lib/figma/navigation/side-nav/Members.svelte";
     import FilterLabelCollapsible from "$lib/figma/composites/FilterLabelCollapsible.svelte";
+    import type { WorkspaceUserSearchModule } from "$lib/types/stores";
 
-    import { currentWorkspace } from "$lib/stores/dashboard";
+    import {
+        currentWorkspace,
+        selectWorkspaceUser,
+        deselectWorkspaceUser,
+        selectedWorkspaceUser,
+        tasksPerUser,
+        workspaceUserSearch,
+        workspaceUserSearchResults,
+    } from "$lib/stores/dashboard";
+
+    const workspaceUserSearchModule: WorkspaceUserSearchModule = {
+        select: selectWorkspaceUser,
+        deselect: deselectWorkspaceUser,
+        selected: selectedWorkspaceUser,
+        tasksPerUser,
+        search: workspaceUserSearch,
+        searchResults: workspaceUserSearchResults,
+    };
 </script>
 
 <nav class="flex h-full w-72 shrink-0 flex-col bg-base-100 py-4 pr-px">
@@ -13,7 +31,7 @@
         {#if $currentWorkspace !== null}
             <Boards workspace={$currentWorkspace} />
         {/if}
-        <Members />
+        <Members {workspaceUserSearchModule} />
         <FilterLabelCollapsible />
     </div>
 </nav>
