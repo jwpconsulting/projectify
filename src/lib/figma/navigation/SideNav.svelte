@@ -2,7 +2,7 @@
     import WorkspaceMenu from "$lib/figma/buttons/WorkspaceMenu.svelte";
     import Boards from "$lib/figma/navigation/side-nav/Boards.svelte";
     import Members from "$lib/figma/navigation/side-nav/Members.svelte";
-    import FilterLabelCollapsible from "$lib/figma/composites/FilterLabelCollapsible.svelte";
+    import LabelDropdown from "$lib/figma/composites/LabelDropdown.svelte";
     import type { WorkspaceUserSearchModule } from "$lib/types/stores";
 
     import {
@@ -30,6 +30,6 @@
     <div class="flex flex-col overflow-x-auto overflow-y-scroll">
         <Boards {currentWorkspace} />
         <Members {workspaceUserSearchModule} />
-        <FilterLabelCollapsible />
+        <LabelDropdown />
     </div>
 </nav>

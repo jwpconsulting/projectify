@@ -1,5 +1,5 @@
 <script lang="ts">
-    import FilterLabelCollapsible from "$lib/figma/composites/FilterLabelCollapsible.svelte";
+    import LabelDropdown from "$lib/figma/composites/LabelDropdown.svelte";
     import LabelMenu from "$lib/figma/composites/LabelMenu.svelte";
 
     import { setFirstWorkspace } from "$lib/stores/dashboard";
@@ -25,7 +25,7 @@ Filter label collapsible
 <div class={fr}>
     {#each falseTrue as open}
         <div class="w-96">
-            <FilterLabelCollapsible {open} />
+            <LabelDropdown {open} />
         </div>
     {/each}
 </div>
