@@ -3,13 +3,28 @@
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import LabelMenu from "$lib/figma/composites/LabelMenu.svelte";
     import { Tag } from "@steeze-ui/heroicons";
-    import { selectedLabels } from "$lib/stores/dashboard";
+    import {
+        selectLabel,
+        deselectLabel,
+        selectedLabels,
+        labelSearch,
+        labelSearchResults,
+    } from "$lib/stores/dashboard";
+    import type { LabelSearchModule } from "$lib/types/stores";
 
     export let open: boolean = true;
 
     function toggleOpen() {
         open = !open;
     }
+
+    const labelSearchModule: LabelSearchModule = {
+        select: selectLabel,
+        deselect: deselectLabel,
+        selected: selectedLabels,
+        search: labelSearch,
+        searchResults: labelSearchResults,
+    };
 </script>
 
 <SideNavMenuCategoryFocus
@@ -20,5 +35,5 @@
     filtered={$selectedLabels.kind !== "allLabels"}
 />
 {#if open}
-    <LabelMenu />
+    <LabelMenu {labelSearchModule} />
 {/if}

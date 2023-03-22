@@ -2,16 +2,15 @@
     import { _ } from "svelte-i18n";
     import InputField from "$lib/figma/input-fields/InputField.svelte";
     import FilterLabel from "$lib/figma/select-controls/FilterLabel.svelte";
-    import {
-        selectedLabels,
-        deselectLabel,
-        selectLabel,
-        labelSearch,
-        labelSearchResults,
-    } from "$lib/stores/dashboard";
     import type { FilterLabelMenuState } from "$lib/figma/types";
+    import type { LabelSearchModule } from "$lib/types/stores";
+
+    export let labelSearchModule: LabelSearchModule;
 
     export let state: FilterLabelMenuState = "list";
+
+    let { select, deselect, selected, search, searchResults } =
+        labelSearchModule;
 </script>
 
 {#if state === "list"}
@@ -20,37 +19,37 @@
             {$_("dashboard.filter-labels")}
         </div>
         <InputField
-            bind:value={$labelSearch}
+            bind:value={$search}
             style={{ kind: "search" }}
             name="label-name"
             placeholder={$_("dashboard.label-name")}
         />
     </div>
     <div class="flex flex-col">
-        {#if $labelSearch === ""}
+        {#if $search === ""}
             <FilterLabel
                 label={{ kind: "allLabels" }}
-                checked={$selectedLabels.kind === "allLabels"}
-                on:checked={() => selectLabel({ kind: "allLabels" })}
-                on:unchecked={() => deselectLabel({ kind: "allLabels" })}
+                checked={$selected.kind === "allLabels"}
+                on:checked={() => select({ kind: "allLabels" })}
+                on:unchecked={() => deselect({ kind: "allLabels" })}
             />
             <FilterLabel
                 label={{ kind: "noLabel" }}
-                checked={$selectedLabels.kind === "noLabel"}
-                on:checked={() => selectLabel({ kind: "noLabel" })}
-                on:unchecked={() => deselectLabel({ kind: "noLabel" })}
+                checked={$selected.kind === "noLabel"}
+                on:checked={() => select({ kind: "noLabel" })}
+                on:unchecked={() => deselect({ kind: "noLabel" })}
             />
         {/if}
-        {#each $labelSearchResults as label (label.uuid)}
+        {#each $searchResults as label (label.uuid)}
             <FilterLabel
                 label={{ kind: "label", label }}
-                checked={$selectedLabels.kind === "labels"
-                    ? $selectedLabels.labelUuids.has(label.uuid)
+                checked={$selected.kind === "labels"
+                    ? $selected.labelUuids.has(label.uuid)
                     : false}
                 on:checked={() =>
-                    selectLabel({ kind: "label", labelUuid: label.uuid })}
+                    select({ kind: "label", labelUuid: label.uuid })}
                 on:unchecked={() =>
-                    deselectLabel({ kind: "label", labelUuid: label.uuid })}
+                    deselect({ kind: "label", labelUuid: label.uuid })}
             />
         {/each}
     </div>

@@ -12,6 +12,15 @@ import type {
 import { labelColors, getIndexFromLabelColor } from "$lib/utils/colors";
 import type { LabelColor } from "$lib/utils/colors";
 import type { ButtonStyle, LabelLabel, SelectLabel } from "$lib/figma/types";
+import { readable } from "svelte/store";
+import type { LabelSearchModule } from "$lib/types/stores";
+import {
+    selectLabel,
+    deselectLabel,
+    selectedLabels,
+    labelSearch,
+    labelSearchResults,
+} from "$lib/stores/dashboard";
 
 export const fr = "flex flex-row flex-wrap gap-2";
 export const fc = "flex flex-col flex-wrap gap-2";
@@ -43,7 +52,7 @@ export const mappedLabels: Label[] = labelColors.map(
         return {
             name: labelColor,
             color: getIndexFromLabelColor(labelColor),
-            uuid: "does-not-exist",
+            uuid: `does-not-exist-${labelColor}`,
         };
     }
 );
@@ -134,4 +143,12 @@ export const mobileParameters = {
     viewport: {
         defaultViewport: "iphonese2",
     },
+};
+
+export const labelSearchModule: LabelSearchModule = {
+    select: selectLabel,
+    deselect: deselectLabel,
+    selected: selectedLabels,
+    search: labelSearch,
+    searchResults: readable(mappedLabels),
 };
