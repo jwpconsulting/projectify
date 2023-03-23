@@ -3,8 +3,12 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import { Briefcase, Plus } from "@steeze-ui/heroicons";
     import { getDashboardWorkspaceUrl } from "$lib/urls";
-    import { workspaces } from "$lib/stores/dashboard";
     import Loading from "$lib/components/loading.svelte";
+    import type { WorkspaceSearchModule } from "$lib/types/stores";
+
+    export let workspaceSearchModule: WorkspaceSearchModule;
+
+    let { workspaces } = workspaceSearchModule;
 </script>
 
 {#if $workspaces}

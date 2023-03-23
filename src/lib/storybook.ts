@@ -14,6 +14,7 @@ import type { LabelColor } from "$lib/utils/colors";
 import type { ButtonStyle, LabelLabel, SelectLabel } from "$lib/figma/types";
 import { writable, readable } from "svelte/store";
 import type {
+    WorkspaceSearchModule,
     WorkspaceBoardSearchModule,
     WorkspaceUserSearchModule,
     LabelSearchModule,
@@ -147,6 +148,10 @@ export const mobileParameters = {
     viewport: {
         defaultViewport: "iphonese2",
     },
+};
+
+export const workspaceSearchModule: WorkspaceSearchModule = {
+    workspaces: readable([workspace]),
 };
 
 export const workspaceBoardSearchModule: WorkspaceBoardSearchModule = {

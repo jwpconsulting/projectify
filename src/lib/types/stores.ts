@@ -9,6 +9,11 @@ import type {
 } from "$lib/types/ui";
 import type { Workspace, WorkspaceUser, Label } from "$lib/types/workspace";
 
+export type WorkspaceSearchModule = {
+    // TODO for a consistent API we would have workspaces as searchResults here
+    workspaces: Readable<Workspace[] | null>;
+};
+
 export type WorkspaceBoardSearchModule = {
     // TODO for a consistent API we would have workspace boards as
     // searchResults here

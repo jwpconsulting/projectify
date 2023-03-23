@@ -7,9 +7,15 @@
     import TaskContextMenu from "$lib/figma/overlays/context-menu/TaskContextMenu.svelte";
     import HelpContextMenu from "$lib/figma/overlays/context-menu/HelpContextMenu.svelte";
     import PermissionsContextMenu from "$lib/figma/overlays/context-menu/PermissionsContextMenu.svelte";
+    import { workspaces } from "$lib/stores/dashboard";
     import type { ContextMenuType } from "$lib/types/ui";
+    import type { WorkspaceSearchModule } from "$lib/types/stores";
 
     export let target: ContextMenuType;
+
+    const workspaceSearchModule: WorkspaceSearchModule = {
+        workspaces,
+    };
 </script>
 
 <div
@@ -18,7 +24,7 @@
     {#if target.kind === "profile"}
         <ProfileContextMenu />
     {:else if target.kind === "workspace"}
-        <WorkspaceContextMenu />
+        <WorkspaceContextMenu {workspaceSearchModule} />
     {:else if target.kind === "sideNav"}
         <SideNavContextMenu workspace={target.workspace} />
     {:else if target.kind === "workspaceBoard"}
