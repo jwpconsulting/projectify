@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ProfileOverlay from "$lib/figma/overlays/context-menu/ProfileOverlay.svelte";
+    import ProfileContextMenu from "$lib/figma/overlays/context-menu/ProfileContextMenu.svelte";
     import WorkspaceOverlay from "$lib/figma/overlays/context-menu/WorkspaceOverlay.svelte";
     import SideNavOverlay from "$lib/figma/overlays/context-menu/SideNavOverlay.svelte";
     import WorkspaceBoardOverlay from "$lib/figma/overlays/context-menu/WorkspaceBoardOverlay.svelte";
@@ -16,7 +16,7 @@
     class="flex w-60 flex-col rounded-lg border border-border py-2 shadow-context-menu"
 >
     {#if target.kind === "profile"}
-        <ProfileOverlay />
+        <ProfileContextMenu />
     {:else if target.kind === "workspace"}
         <WorkspaceOverlay />
     {:else if target.kind === "sideNav"}
