@@ -7,7 +7,12 @@ import type {
     LabelSelection,
     LabelSelectionInput,
 } from "$lib/types/ui";
-import type { Workspace, WorkspaceUser, Label } from "$lib/types/workspace";
+import type {
+    Workspace,
+    WorkspaceBoard,
+    WorkspaceUser,
+    Label,
+} from "$lib/types/workspace";
 
 export type WorkspaceSearchModule = {
     // TODO for a consistent API we would have workspaces as searchResults here
@@ -17,6 +22,8 @@ export type WorkspaceSearchModule = {
 export type WorkspaceBoardSearchModule = {
     // TODO for a consistent API we would have workspace boards as
     // searchResults here
+    currentWorkspaceBoardUuid: Readable<string | null>;
+    currentWorkspaceBoard: Readable<WorkspaceBoard | null>;
     currentWorkspace: Readable<Workspace | null>;
 };
 

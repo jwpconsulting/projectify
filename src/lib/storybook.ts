@@ -19,13 +19,6 @@ import type {
     WorkspaceUserSearchModule,
     LabelSearchModule,
 } from "$lib/types/stores";
-import {
-    selectLabel,
-    deselectLabel,
-    selectedLabels,
-    labelSearch,
-    labelSearchResults,
-} from "$lib/stores/dashboard";
 
 export const fr = "flex flex-row flex-wrap gap-2";
 export const fc = "flex flex-col flex-wrap gap-2";
@@ -156,11 +149,15 @@ export const workspaceSearchModule: WorkspaceSearchModule = {
 
 export const workspaceBoardSearchModule: WorkspaceBoardSearchModule = {
     currentWorkspace: readable(workspace),
+    currentWorkspaceBoard: readable(workspaceBoard),
+    currentWorkspaceBoardUuid: readable("this-does-not-exist"),
 };
 
+const noop = () => {};
+
 export const workspaceUserSearchModule: WorkspaceUserSearchModule = {
-    select: () => {},
-    deselect: () => {},
+    select: noop,
+    deselect: noop,
     selected: writable({ kind: "allWorkspaceUsers" }),
     tasksPerUser: readable({ unassigned: 0, assigned: new Map() }),
     search: writable(""),
@@ -168,9 +165,9 @@ export const workspaceUserSearchModule: WorkspaceUserSearchModule = {
 };
 
 export const labelSearchModule: LabelSearchModule = {
-    select: selectLabel,
-    deselect: deselectLabel,
-    selected: selectedLabels,
-    search: labelSearch,
+    select: noop,
+    deselect: noop,
+    selected: writable({ kind: "allLabels" }),
+    search: writable(""),
     searchResults: readable(mappedLabels),
 };

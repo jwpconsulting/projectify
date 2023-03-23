@@ -1,6 +1,8 @@
 import Fuse from "fuse.js";
 import lodash from "lodash";
 import { writable, derived } from "svelte/store";
+
+import { goto } from "$app/navigation";
 import type { Customer } from "$lib/types/corporate";
 import type {
     Label,
@@ -227,8 +229,7 @@ export function openTaskDetails(
 ) {
     drawerModalOpen.set(true);
     currentTaskUuid.set(taskUuid);
-    // TODO
-    // goto(getDashboardTaskUrl(workspaceBoardUuid, taskUuid, subView));
+    goto(getDashboardTaskUrl(workspaceBoardUuid, taskUuid, subView));
 }
 export function closeTaskDetails(): void {
     drawerModalOpen.set(false);
@@ -237,8 +238,7 @@ export function closeTaskDetails(): void {
     if (!boardUuid) {
         throw new Error("Expected boardUuid");
     }
-    // TODO
-    // goto(getDashboardWorkspaceBoardUrl(boardUuid));
+    goto(getDashboardWorkspaceBoardUrl(boardUuid));
 }
 
 export function copyDashboardURL(
@@ -257,8 +257,7 @@ export function pushTashUuidtoPath() {
     if (!boardUuid) {
         throw new Error("Expected boardUuid");
     }
-    // TODO
-    // goto(getDashboardWorkspaceBoardUrl(boardUuid));
+    goto(getDashboardWorkspaceBoardUrl(boardUuid));
 }
 
 export const currentWorkspaceLabels = derived<
@@ -645,8 +644,7 @@ export async function setFirstWorkspace() {
 
 export async function setAndNavigateWorkspaceBoard(uuid: string) {
     currentWorkspaceBoardUuid.set(uuid);
-    // TODO
-    // goto(getDashboardWorkspaceBoardUrl(uuid));
+    goto(getDashboardWorkspaceBoardUrl(uuid));
 }
 
 export const userExpandOpen = writable<boolean>(false);

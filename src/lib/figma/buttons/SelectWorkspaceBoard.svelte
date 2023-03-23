@@ -3,55 +3,44 @@
     import type { WorkspaceBoard } from "$lib/types/workspace";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Folder } from "@steeze-ui/heroicons";
-    import { getModal } from "$lib/components/dialogModal.svelte";
     import CircleIcon from "$lib/figma/buttons/CircleIcon.svelte";
     import {
         Mutation_UpdateWorkspaceBoard,
         Mutation_ArchiveWorkspaceBoard,
     } from "$lib/graphql/operations";
     import { client } from "$lib/graphql/client";
-    import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard";
-    import { getDashboardWorkspaceUrl } from "$lib/urls";
-    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
-    import { getDropDown } from "$lib/components/globalDropDown.svelte";
-    import type { DropDownMenuItem } from "$lib/components/globalDropDown.svelte";
-    // import { goto } from "$app/navigation";
     import {
-        currentWorkspace,
-        currentWorkspaceBoard,
-    } from "$lib/stores/dashboard";
+        getDashboardWorkspaceBoardUrl,
+        getDashboardWorkspaceUrl,
+    } from "$lib/urls";
+    import type { WorkspaceBoardSearchModule } from "$lib/types/stores";
+    // import { goto } from "$app/navigation";
 
+    export let workspaceBoardSearchModule: WorkspaceBoardSearchModule;
     export let workspaceBoard: WorkspaceBoard;
+
+    let { currentWorkspaceBoardUuid, currentWorkspaceBoard } =
+        workspaceBoardSearchModule;
+
     let buttonRef: HTMLElement;
-    let dropDownItems: DropDownMenuItem[];
 
     async function onEdit() {
-        let modalRes = await getModal("editBoardModal").open(workspaceBoard);
-
-        if (!modalRes) {
-            return;
-        }
-
-        await client.mutate({
-            mutation: Mutation_UpdateWorkspaceBoard,
-            variables: {
-                input: {
-                    uuid: workspaceBoard.uuid,
-                    title: modalRes.outputs.title,
-                    deadline: modalRes.outputs.deadline,
-                    description: "",
-                },
-            },
-        });
+        // TODO modal
+        // await client.mutate({
+        //     mutation: Mutation_UpdateWorkspaceBoard,
+        //     variables: {
+        //         input: {
+        //             uuid: workspaceBoard.uuid,
+        //             title: modalRes.outputs.title,
+        //             deadline: modalRes.outputs.deadline,
+        //             description: "",
+        //         },
+        //     },
+        // });
     }
 
     async function onArchive() {
-        let modalRes = await getModal("archiveBoardConfirmModal").open();
-
-        if (!modalRes) {
-            return;
-        }
-
+        // TODO confirmation dialog
         await client.mutate({
             mutation: Mutation_ArchiveWorkspaceBoard,
             variables: {
@@ -62,47 +51,13 @@
             },
         });
 
-        if ($currentWorkspaceBoard) {
-            if ($currentWorkspaceBoard.uuid == workspaceBoard.uuid) {
-                if (!$currentWorkspace) {
-                    throw new Error("Expected $currentWorkspace");
-                }
-                // TODO
-                // goto(getDashboardWorkspaceUrl($currentWorkspace.uuid));
-            }
-        } else {
-            throw new Error("Expected $currentWorkspaceBoard");
-        }
-    }
-
-    $: {
-        dropDownItems = [
-            {
-                label: $_("select-board.edit-board"),
-                icon: null,
-                onClick: onEdit,
-            },
-            {
-                label: $_("select-board.archive-board"),
-                icon: null,
-                onClick: onArchive,
-            },
-        ];
+        // TODO here we ought to find out the URL of the workspace this
+        // workspace board belongs to
+        console.error("TODO");
     }
 
     function toggleMenu() {
-        const dropDown = getDropDown();
-        if (!dropDown) {
-            throw new Error("Expected dropDown");
-        }
-        dropDown.open(dropDownItems, buttonRef, {
-            dispatch: () => {
-                if (!dropDown) {
-                    throw new Error("Expected dropDown");
-                }
-                dropDown.close();
-            },
-        });
+        // TODO context menu
     }
 
     function selectBoard() {

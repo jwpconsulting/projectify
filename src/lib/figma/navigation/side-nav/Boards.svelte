@@ -1,6 +1,5 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard";
     import { getModal } from "$lib/components/dialogModal.svelte";
     import { Mutation_AddWorkspaceBoard } from "$lib/graphql/operations";
     import { client } from "$lib/graphql/client";
@@ -11,13 +10,13 @@
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import SelectWorkspaceBoard from "$lib/figma/buttons/SelectWorkspaceBoard.svelte";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
-    import type { Readable } from "svelte/store";
     import type { Workspace } from "$lib/types/workspace";
     import type { WorkspaceBoardSearchModule } from "$lib/types/stores";
 
     export let workspaceBoardSearchModule: WorkspaceBoardSearchModule;
 
-    let { currentWorkspace } = workspaceBoardSearchModule;
+    let { currentWorkspace, currentWorkspaceBoardUuid } =
+        workspaceBoardSearchModule;
 
     let open = true;
 
@@ -65,7 +64,10 @@
     <div class="flex flex-col">
         {#if $currentWorkspace && $currentWorkspace.workspace_boards}
             {#each $currentWorkspace.workspace_boards as workspaceBoard (workspaceBoard.uuid)}
-                <SelectWorkspaceBoard {workspaceBoard} />
+                <SelectWorkspaceBoard
+                    {workspaceBoardSearchModule}
+                    {workspaceBoard}
+                />
             {/each}
             <div>
                 <button

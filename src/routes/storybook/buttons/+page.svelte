@@ -29,7 +29,6 @@
     import LabelDropdownClosedNav from "$lib/figma/buttons/LabelDropdownClosedNav.svelte";
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
-    import SelectWorkspaceBoard from "$lib/figma/buttons/SelectWorkspaceBoard.svelte";
     import { currentStep } from "$lib/stores/onboarding";
     import { Plus, Folder } from "@steeze-ui/heroicons";
     import {
@@ -303,9 +302,4 @@ Side nav menu category focus
             {/each}
         </div>
     {/each}
-</div>
-
-Select board
-<div class="w-96">
-    <SelectWorkspaceBoard {workspaceBoard} />
 </div>

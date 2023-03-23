@@ -5,6 +5,7 @@
     import {
         closeTaskDetails,
         currentWorkspace,
+        currentWorkspaceBoard,
         currentWorkspaceBoardUuid,
         deselectLabel,
         deselectWorkspaceUser,
@@ -54,6 +55,8 @@
 
     const workspaceBoardSearchModule: WorkspaceBoardSearchModule = {
         currentWorkspace,
+        currentWorkspaceBoard,
+        currentWorkspaceBoardUuid,
     };
     const workspaceUserSearchModule: WorkspaceUserSearchModule = {
         select: selectWorkspaceUser,
