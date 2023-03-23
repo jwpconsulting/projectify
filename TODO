@@ -6,3 +6,4 @@
 - Reintegrate mobile menu overlay as proper overlay (whatever that means)
 - Fix issue where buttons don't react well when placed inside an items-center
   flex with column layout
+- Remember with sidenav menus have been open and not in localstorage
