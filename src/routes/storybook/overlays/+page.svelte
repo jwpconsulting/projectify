@@ -54,46 +54,6 @@
         },
     ];
 
-    let contextMenus: ContextMenuType[] = [
-        {
-            kind: "profile" as const,
-        },
-        {
-            kind: "workspace" as const,
-            workspaceSearchModule: {
-                workspaces,
-            },
-        },
-        {
-            kind: "sideNav" as const,
-            workspace,
-        },
-        {
-            kind: "workspaceBoard" as const,
-            workspaceBoard,
-        },
-        {
-            kind: "workspaceBoardSection" as const,
-            workspaceBoardSection,
-        },
-        {
-            kind: "task" as const,
-            task,
-            location: "dashboard",
-        },
-        {
-            kind: "task" as const,
-            task,
-            location: "task",
-        },
-        {
-            kind: "help",
-        },
-        {
-            kind: "permissions",
-        },
-    ];
-
     let constructiveOverlays: ConstructiveOverlayType[] = [
         { kind: "updateWorkspaceBoard", workspaceBoard },
         { kind: "createWorkspaceBoard", workspace },
@@ -115,14 +75,6 @@
 {#each destructiveOverlays as target}
     <DestructiveOverlay {target} />
 {/each}
-
-{#if browser}
-    <div class={fc}>
-        {#each contextMenus as target}
-            <ContextMenu {target} />
-        {/each}
-    </div>
-{/if}
 
 <div class={fc}>
     {#each constructiveOverlays as target}
