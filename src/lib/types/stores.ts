@@ -48,3 +48,9 @@ export type LabelSearchModule = {
     search: Writable<string>;
     searchResults: Readable<Label[]>;
 };
+
+export type SideNavModule = {
+    // TODO make readonly
+    sideNavOpen: Writable<boolean>;
+    toggleSideNavOpen: () => void;
+};

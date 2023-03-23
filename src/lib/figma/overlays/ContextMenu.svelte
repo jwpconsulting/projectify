@@ -8,7 +8,6 @@
     import HelpContextMenu from "$lib/figma/overlays/context-menu/HelpContextMenu.svelte";
     import PermissionsContextMenu from "$lib/figma/overlays/context-menu/PermissionsContextMenu.svelte";
     import type { ContextMenuType } from "$lib/types/ui";
-    import type { WorkspaceSearchModule } from "$lib/types/stores";
 
     export let target: ContextMenuType;
 </script>
@@ -23,7 +22,10 @@
             workspaceSearchModule={target.workspaceSearchModule}
         />
     {:else if target.kind === "sideNav"}
-        <SideNavContextMenu workspace={target.workspace} />
+        <SideNavContextMenu
+            workspace={target.workspace}
+            sideNavModule={target.sideNavModule}
+        />
     {:else if target.kind === "workspaceBoard"}
         <WorkspaceBoardContextMenu workspaceBoard={target.workspaceBoard} />
     {:else if target.kind === "workspaceBoardSection"}

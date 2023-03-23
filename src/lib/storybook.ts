@@ -18,6 +18,7 @@ import type {
     WorkspaceBoardSearchModule,
     WorkspaceUserSearchModule,
     LabelSearchModule,
+    SideNavModule,
 } from "$lib/types/stores";
 
 export const fr = "flex flex-row flex-wrap gap-2";
@@ -171,4 +172,9 @@ export const labelSearchModule: LabelSearchModule = {
     selected: writable({ kind: "allLabels" }),
     search: writable(""),
     searchResults: readable(mappedLabels),
+};
+
+export const sideNavModule: SideNavModule = {
+    sideNavOpen: writable(true),
+    toggleSideNavOpen: noop,
 };

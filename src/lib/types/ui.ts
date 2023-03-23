@@ -6,7 +6,7 @@ import type {
     WorkspaceBoard,
     Workspace,
 } from "$lib/types/workspace";
-import type { WorkspaceSearchModule } from "$lib/types/stores";
+import type { WorkspaceSearchModule, SideNavModule } from "$lib/types/stores";
 
 export type Input = {
     name?: string;
@@ -75,7 +75,7 @@ export type DestructiveOverlayState =
 export type ContextMenuType =
     | { kind: "profile" }
     | { kind: "workspace"; workspaceSearchModule: WorkspaceSearchModule }
-    | { kind: "sideNav"; workspace: Workspace }
+    | { kind: "sideNav"; workspace: Workspace; sideNavModule: SideNavModule }
     | { kind: "workspaceBoard"; workspaceBoard: WorkspaceBoard }
     | {
           kind: "workspaceBoardSection";
