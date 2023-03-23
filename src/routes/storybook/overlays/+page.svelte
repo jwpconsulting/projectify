@@ -1,7 +1,7 @@
 <script lang="ts">
     import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
     import ContextMenu from "$lib/figma/overlays/ContextMenu.svelte";
-    import { setFirstWorkspace } from "$lib/stores/dashboard";
+    import { workspaces, setFirstWorkspace } from "$lib/stores/dashboard";
     import ConstructiveOverlay from "$lib/figma/overlays/constructive/ConstructiveOverlay.svelte";
     import type {
         ContextMenuType,
@@ -60,6 +60,9 @@
         },
         {
             kind: "workspace" as const,
+            workspaceSearchModule: {
+                workspaces,
+            },
         },
         {
             kind: "sideNav" as const,
