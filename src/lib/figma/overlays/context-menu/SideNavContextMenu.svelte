@@ -2,6 +2,8 @@
     import { _ } from "svelte-i18n";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import { getArchiveUrl, getSettingsUrl } from "$lib/urls";
+    // TODO we would really like to mock this too and make it injectable
+    // for our stories Justus 2023-03-23
     import { sideNavOpen, toggleSideNavOpen } from "$lib/stores/dashboard";
     import {
         ArrowCircleLeft,
