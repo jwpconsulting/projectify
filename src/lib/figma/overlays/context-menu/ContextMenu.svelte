@@ -1,6 +1,6 @@
 <script lang="ts">
     import ProfileContextMenu from "$lib/figma/overlays/context-menu/ProfileContextMenu.svelte";
-    import WorkspaceOverlay from "$lib/figma/overlays/context-menu/WorkspaceOverlay.svelte";
+    import WorkspaceContextMenu from "$lib/figma/overlays/context-menu/WorkspaceContextMenu.svelte";
     import SideNavContextMenu from "$lib/figma/overlays/context-menu/SideNavContextMenu.svelte";
     import WorkspaceBoardContextMenu from "$lib/figma/overlays/context-menu/WorkspaceBoardContextMenu.svelte";
     import WorkspaceBoardSectionContextMenu from "$lib/figma/overlays/context-menu/WorkspaceBoardSectionContextMenu.svelte";
@@ -18,7 +18,7 @@
     {#if target.kind === "profile"}
         <ProfileContextMenu />
     {:else if target.kind === "workspace"}
-        <WorkspaceOverlay />
+        <WorkspaceContextMenu />
     {:else if target.kind === "sideNav"}
         <SideNavContextMenu workspace={target.workspace} />
     {:else if target.kind === "workspaceBoard"}
