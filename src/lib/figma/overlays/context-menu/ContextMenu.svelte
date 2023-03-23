@@ -6,7 +6,7 @@
     import WorkspaceBoardSectionOverlay from "$lib/figma/overlays/context-menu/WorkspaceBoardSectionOverlay.svelte";
     import TaskOverlay from "$lib/figma/overlays/context-menu/TaskOverlay.svelte";
     import HelpContextMenu from "$lib/figma/overlays/context-menu/HelpContextMenu.svelte";
-    import PermissionsOverlay from "$lib/figma/overlays/context-menu/PermissionsOverlay.svelte";
+    import PermissionsContextMenu from "$lib/figma/overlays/context-menu/PermissionsContextMenu.svelte";
     import type { ContextMenuType } from "$lib/types/ui";
 
     export let target: ContextMenuType;
@@ -32,6 +32,6 @@
     {:else if target.kind === "help"}
         <HelpContextMenu />
     {:else if target.kind === "permissions"}
-        <PermissionsOverlay />
+        <PermissionsContextMenu />
     {/if}
 </div>
