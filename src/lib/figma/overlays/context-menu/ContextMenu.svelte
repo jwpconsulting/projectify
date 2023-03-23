@@ -5,7 +5,7 @@
     import WorkspaceBoardOverlay from "$lib/figma/overlays/context-menu/WorkspaceBoardOverlay.svelte";
     import WorkspaceBoardSectionOverlay from "$lib/figma/overlays/context-menu/WorkspaceBoardSectionOverlay.svelte";
     import TaskOverlay from "$lib/figma/overlays/context-menu/TaskOverlay.svelte";
-    import HelpOverlay from "$lib/figma/overlays/context-menu/HelpOverlay.svelte";
+    import HelpContextMenu from "$lib/figma/overlays/context-menu/HelpContextMenu.svelte";
     import PermissionsOverlay from "$lib/figma/overlays/context-menu/PermissionsOverlay.svelte";
     import type { ContextMenuType } from "$lib/types/ui";
 
@@ -30,7 +30,7 @@
     {:else if target.kind === "task"}
         <TaskOverlay task={target.task} location={target.location} />
     {:else if target.kind === "help"}
-        <HelpOverlay />
+        <HelpContextMenu />
     {:else if target.kind === "permissions"}
         <PermissionsOverlay />
     {/if}
