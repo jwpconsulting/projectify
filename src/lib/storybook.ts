@@ -12,8 +12,12 @@ import type {
 import { labelColors, getIndexFromLabelColor } from "$lib/utils/colors";
 import type { LabelColor } from "$lib/utils/colors";
 import type { ButtonStyle, LabelLabel, SelectLabel } from "$lib/figma/types";
-import { readable } from "svelte/store";
-import type { LabelSearchModule } from "$lib/types/stores";
+import { writable, readable } from "svelte/store";
+import type {
+    WorkspaceBoardSearchModule,
+    WorkspaceUserSearchModule,
+    LabelSearchModule,
+} from "$lib/types/stores";
 import {
     selectLabel,
     deselectLabel,
@@ -143,6 +147,19 @@ export const mobileParameters = {
     viewport: {
         defaultViewport: "iphonese2",
     },
+};
+
+export const workspaceBoardSearchModule: WorkspaceBoardSearchModule = {
+    currentWorkspace: readable(workspace),
+};
+
+export const workspaceUserSearchModule: WorkspaceUserSearchModule = {
+    select: () => {},
+    deselect: () => {},
+    selected: writable({ kind: "allWorkspaceUsers" }),
+    tasksPerUser: readable({ unassigned: 0, assigned: new Map() }),
+    search: writable(""),
+    searchResults: readable([workspaceUser]),
 };
 
 export const labelSearchModule: LabelSearchModule = {

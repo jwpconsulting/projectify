@@ -7,7 +7,13 @@ import type {
     LabelSelection,
     LabelSelectionInput,
 } from "$lib/types/ui";
-import type { WorkspaceUser, Label } from "$lib/types/workspace";
+import type { Workspace, WorkspaceUser, Label } from "$lib/types/workspace";
+
+export type WorkspaceBoardSearchModule = {
+    // TODO for a consistent API we would have workspace boards as
+    // searchResults here
+    currentWorkspace: Readable<Workspace | null>;
+};
 
 export type WorkspaceUserSearchModule = {
     select: (selection: WorkspaceUserSelectionInput) => void;

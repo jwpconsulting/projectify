@@ -13,8 +13,11 @@
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
     import type { Readable } from "svelte/store";
     import type { Workspace } from "$lib/types/workspace";
+    import type { WorkspaceBoardSearchModule } from "$lib/types/stores";
 
-    export let currentWorkspace: Readable<Workspace | null>;
+    export let workspaceBoardSearchModule: WorkspaceBoardSearchModule;
+
+    let { currentWorkspace } = workspaceBoardSearchModule;
 
     let open = true;
 
