@@ -4,7 +4,7 @@
     import SideNavContextMenu from "$lib/figma/overlays/context-menu/SideNavContextMenu.svelte";
     import WorkspaceBoardOverlay from "$lib/figma/overlays/context-menu/WorkspaceBoardOverlay.svelte";
     import WorkspaceBoardSectionOverlay from "$lib/figma/overlays/context-menu/WorkspaceBoardSectionOverlay.svelte";
-    import TaskOverlay from "$lib/figma/overlays/context-menu/TaskOverlay.svelte";
+    import TaskContextMenu from "$lib/figma/overlays/context-menu/TaskContextMenu.svelte";
     import HelpContextMenu from "$lib/figma/overlays/context-menu/HelpContextMenu.svelte";
     import PermissionsContextMenu from "$lib/figma/overlays/context-menu/PermissionsContextMenu.svelte";
     import type { ContextMenuType } from "$lib/types/ui";
@@ -28,7 +28,7 @@
             workspaceBoardSection={target.workspaceBoardSection}
         />
     {:else if target.kind === "task"}
-        <TaskOverlay task={target.task} location={target.location} />
+        <TaskContextMenu task={target.task} location={target.location} />
     {:else if target.kind === "help"}
         <HelpContextMenu />
     {:else if target.kind === "permissions"}
