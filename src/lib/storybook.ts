@@ -145,6 +145,7 @@ export const mobileParameters = {
 
 export const workspaceSearchModule: WorkspaceSearchModule = {
     workspaces: readable([workspace]),
+    currentWorkspace: readable(workspace),
 };
 
 export const workspaceBoardSearchModule: WorkspaceBoardSearchModule = {

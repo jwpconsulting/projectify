@@ -1,6 +1,5 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import { currentWorkspace } from "$lib/stores/dashboard";
     import { getDropDown } from "$lib/components/globalDropDown.svelte";
     import type { DropDownMenuItem } from "$lib/components/globalDropDown.svelte";
     import WorkspaceSettings from "$lib/figma/buttons/WorkspaceSettings.svelte";
@@ -10,7 +9,13 @@
     import { getSettingsUrl, getArchiveUrl } from "$lib/urls";
     import Filter from "$lib/figma/dropdown/Filter.svelte";
     import { Briefcase } from "@steeze-ui/heroicons";
+    import type { WorkspaceSearchModule } from "$lib/types/stores";
+
     let dropDownMenuBtnRef: HTMLElement;
+
+    export let workspaceSearchModule: WorkspaceSearchModule;
+
+    let { currentWorkspace } = workspaceSearchModule;
 
     function openDropDownMenu() {
         if (!$currentWorkspace) {

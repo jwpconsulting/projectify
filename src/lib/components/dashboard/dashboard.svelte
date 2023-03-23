@@ -19,6 +19,7 @@
         tasksPerUser,
         workspaceUserSearch,
         workspaceUserSearchResults,
+        workspaces,
     } from "$lib/stores/dashboard";
     import DialogModal from "$lib/components/dialogModal.svelte";
 
@@ -29,6 +30,7 @@
     import SideNav from "$lib/figma/navigation/SideNav.svelte";
 
     import type {
+        WorkspaceSearchModule,
         WorkspaceBoardSearchModule,
         WorkspaceUserSearchModule,
         LabelSearchModule,
@@ -52,6 +54,11 @@
     }
 
     onMount(() => {});
+
+    const workspaceSearchModule: WorkspaceSearchModule = {
+        workspaces,
+        currentWorkspace,
+    };
 
     const workspaceBoardSearchModule: WorkspaceBoardSearchModule = {
         currentWorkspace,
@@ -78,6 +85,7 @@
 
 <div class="flex grow flex-row divide-x divide-base-300 overflow-hidden">
     <SideNav
+        {workspaceSearchModule}
         {workspaceBoardSearchModule}
         {workspaceUserSearchModule}
         {labelSearchModule}

@@ -17,6 +17,7 @@ import type {
 export type WorkspaceSearchModule = {
     // TODO for a consistent API we would have workspaces as searchResults here
     workspaces: Readable<Workspace[] | null>;
+    currentWorkspace: Readable<Workspace | null>;
 };
 
 export type WorkspaceBoardSearchModule = {
