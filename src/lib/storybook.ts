@@ -19,6 +19,7 @@ import type {
     WorkspaceUserSearchModule,
     LabelSearchModule,
     SideNavModule,
+    WorkspaceBoardSectionModule,
 } from "$lib/types/stores";
 
 export const fr = "flex flex-row flex-wrap gap-2";
@@ -177,4 +178,9 @@ export const labelSearchModule: LabelSearchModule = {
 export const sideNavModule: SideNavModule = {
     sideNavOpen: writable(true),
     toggleSideNavOpen: noop,
+};
+
+export const workspaceBoardSectionModule: WorkspaceBoardSectionModule = {
+    workspaceBoardSectionClosed: writable(new Set()),
+    toggleWorkspaceBoardSectionOpen: noop,
 };

@@ -6,7 +6,11 @@ import type {
     WorkspaceBoard,
     Workspace,
 } from "$lib/types/workspace";
-import type { WorkspaceSearchModule, SideNavModule } from "$lib/types/stores";
+import type {
+    WorkspaceSearchModule,
+    SideNavModule,
+    WorkspaceBoardSectionModule,
+} from "$lib/types/stores";
 
 export type Input = {
     name?: string;
@@ -80,6 +84,7 @@ export type ContextMenuType =
     | {
           kind: "workspaceBoardSection";
           workspaceBoardSection: WorkspaceBoardSection;
+          workspaceBoardSectionModule: WorkspaceBoardSectionModule;
       }
     | { kind: "task"; task: Task; location: "dashboard" }
     | { kind: "task"; task: Task; location: "task" }

@@ -31,6 +31,7 @@
     {:else if target.kind === "workspaceBoardSection"}
         <WorkspaceBoardSectionContextMenu
             workspaceBoardSection={target.workspaceBoardSection}
+            workspaceBoardSectionModule={target.workspaceBoardSectionModule}
         />
     {:else if target.kind === "task"}
         <TaskContextMenu task={target.task} location={target.location} />

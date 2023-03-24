@@ -11,12 +11,15 @@
         Trash,
     } from "@steeze-ui/heroicons";
     import type { WorkspaceBoardSection } from "$lib/types/workspace";
-    import {
-        workspaceBoardSectionClosed,
-        toggleWorkspaceBoardSectionOpen,
-    } from "$lib/stores/dashboard";
+    // TODO make injectable
+    import type { WorkspaceBoardSectionModule } from "$lib/types/stores";
 
     export let workspaceBoardSection: WorkspaceBoardSection;
+    export let workspaceBoardSectionModule: WorkspaceBoardSectionModule;
+
+    let { workspaceBoardSectionClosed, toggleWorkspaceBoardSectionOpen } =
+        workspaceBoardSectionModule;
+
     let closed: boolean;
     $: {
         closed = $workspaceBoardSectionClosed.has(workspaceBoardSection.uuid);

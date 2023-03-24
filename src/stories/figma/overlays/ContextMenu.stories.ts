@@ -11,6 +11,7 @@ import {
     task,
     workspaceSearchModule,
     sideNavModule,
+    workspaceBoardSectionModule,
 } from "$lib/storybook";
 
 const contextMenus: { [key: string]: ContextMenuType } = {
@@ -33,6 +34,7 @@ const contextMenus: { [key: string]: ContextMenuType } = {
     workspaceBoardSection: {
         kind: "workspaceBoardSection" as const,
         workspaceBoardSection,
+        workspaceBoardSectionModule,
     },
     taskDashboard: {
         kind: "task" as const,

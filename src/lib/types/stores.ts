@@ -14,6 +14,8 @@ import type {
     Label,
 } from "$lib/types/workspace";
 
+// It would make sense to rename all Module to Store
+
 export type WorkspaceSearchModule = {
     // TODO for a consistent API we would have workspaces as searchResults here
     workspaces: Readable<Workspace[] | null>;
@@ -53,4 +55,11 @@ export type SideNavModule = {
     // TODO make readonly
     sideNavOpen: Writable<boolean>;
     toggleSideNavOpen: () => void;
+};
+
+export type WorkspaceBoardSectionModule = {
+    workspaceBoardSectionClosed: Writable<Set<string>>;
+    toggleWorkspaceBoardSectionOpen: (
+        workspaceBoardSectionUuid: string
+    ) => void;
 };
