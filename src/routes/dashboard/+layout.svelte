@@ -1,13 +1,21 @@
 <script lang="ts">
-    import Board from "$lib/components/dashboard/board.svelte";
+    import AuthGuard from "$lib/components/authGuard.svelte";
+    import HeaderDashboard from "$lib/figma/navigation/header/Dashboard.svelte";
+    import SideNav from "$lib/figma/navigation/SideNav.svelte";
+
+    import type {
+        WorkspaceSearchModule,
+        WorkspaceBoardSearchModule,
+        WorkspaceUserSearchModule,
+        LabelSearchModule,
+    } from "$lib/types/stores";
+
     import {
-        closeTaskDetails,
         currentWorkspace,
         currentWorkspaceBoard,
         currentWorkspaceBoardUuid,
         deselectLabel,
         deselectWorkspaceUser,
-        drawerModalOpen,
         labelSearch,
         labelSearchResults,
         selectLabel,
@@ -20,36 +28,7 @@
         workspaces,
     } from "$lib/stores/dashboard";
 
-    import { page } from "$app/stores";
-    import { onMount } from "svelte";
-    import { _ } from "svelte-i18n";
-    import SideNav from "$lib/figma/navigation/SideNav.svelte";
-
-    import type {
-        WorkspaceSearchModule,
-        WorkspaceBoardSearchModule,
-        WorkspaceUserSearchModule,
-        LabelSearchModule,
-    } from "$lib/types/stores";
-
-    let selectedWorkspaceUuid: string | null;
-    let selectedTaskUuid: string | null;
-    $: {
-        $currentWorkspaceBoardUuid = $page.params["workspaceBoardUuid"];
-    }
-
-    $: {
-        if (
-            !$drawerModalOpen &&
-            selectedWorkspaceUuid &&
-            $currentWorkspaceBoardUuid &&
-            selectedTaskUuid
-        ) {
-            closeTaskDetails();
-        }
-    }
-
-    onMount(() => {});
+    import { user } from "$lib/stores/user";
 
     const workspaceSearchModule: WorkspaceSearchModule = {
         workspaces,
@@ -79,14 +58,19 @@
     };
 </script>
 
-<div class="flex grow flex-row divide-x divide-base-300 overflow-hidden">
-    <SideNav
-        {workspaceSearchModule}
-        {workspaceBoardSearchModule}
-        {workspaceUserSearchModule}
-        {labelSearchModule}
-    />
-    <div class="flex h-full grow overflow-y-auto">
-        <Board />
+<AuthGuard>
+    <div class="flex h-screen flex-col">
+        {#if $user}
+            <HeaderDashboard user={$user} />
+        {/if}
+        <div class="flex flex-row">
+            <SideNav
+                {workspaceSearchModule}
+                {workspaceBoardSearchModule}
+                {workspaceUserSearchModule}
+                {labelSearchModule}
+            />
+            <slot />
+        </div>
     </div>
-</div>
+</AuthGuard>

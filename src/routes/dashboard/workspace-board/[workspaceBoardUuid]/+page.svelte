@@ -1,11 +1,13 @@
 <script lang="ts">
-    import AuthGuard from "$lib/components/authGuard.svelte";
-    import Dashboard from "$lib/components/dashboard/Dashboard.svelte";
-    import PageLayout from "$lib/components/layouts/pageLayout.svelte";
+    import Board from "$lib/components/dashboard/board.svelte";
+    import { page } from "$app/stores";
+
+    import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard";
+
+    $: {
+        $currentWorkspaceBoardUuid = $page.params["workspaceBoardUuid"];
+        console.log($currentWorkspaceBoardUuid);
+    }
 </script>
 
-<PageLayout footerVisible={false} heightScreen={true}>
-    <AuthGuard>
-        <Dashboard />
-    </AuthGuard>
-</PageLayout>
+<Board />
