@@ -1,7 +1,5 @@
 <script lang="ts">
     import Board from "$lib/components/dashboard/board.svelte";
-    import DrawerModal from "$lib/components/drawerModal.svelte";
-    import TaskDetails from "$lib/components/dashboard/task-details.svelte";
     import {
         closeTaskDetails,
         currentWorkspace,
@@ -94,10 +92,6 @@
         <Board />
     </div>
 </div>
-
-<DrawerModal bind:open={$drawerModalOpen}>
-    <TaskDetails />
-</DrawerModal>
 
 <DialogModal id="newBoardModal">
     <ConfirmModalContent

@@ -6,7 +6,6 @@
     import HeaderLogo from "$lib/components/assets/headerLogo.svelte";
     import HeaderUser from "$lib/components/headerUser.svelte";
     import IconHamburgerMenu from "$lib/components/icons/icon-hamburger-menu.svelte";
-    import DrawerModal from "$lib/components/drawerModal.svelte";
     import IconClose from "$lib/components/icons/icon-close.svelte";
     import HeaderButtons from "$lib/components/header-buttons.svelte";
     import BoardSearchBar from "$lib/components/BoardSearchBar.svelte";
@@ -114,46 +113,6 @@
             >
         </div>
     </header>
-
-    <DrawerModal bind:open={drawerMenuOpen}>
-        <div class="flex min-h-[100%] min-w-[100vw] flex-col gap-6 p-6">
-            <div class="flex ">
-                <a href="/" class="mr-8 flex grow">
-                    <HeaderLogo />
-                </a>
-
-                <button
-                    on:click={() => (drawerMenuOpen = false)}
-                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-base-100 text-primary"
-                    ><IconClose />
-                </button>
-            </div>
-            <nav class="flex grow flex-col">
-                <ul class="flex flex-col divide-y divide-base-300">
-                    {#each items as it}
-                        <li
-                            class="flex text-xl"
-                            class:active={$page.url.pathname === it.to}
-                        >
-                            <a
-                                on:click={() => {
-                                    drawerMenuOpen = false;
-                                }}
-                                class="cursor-pointer p-2 font-bold capitalize"
-                                href={it.to}
-                            >
-                                {it.label}
-                            </a>
-                        </li>
-                    {/each}
-                </ul>
-            </nav>
-            <div class="grow" />
-            <nav class="flex flex-col gap-2">
-                <HeaderButtons {userData} />
-            </nav>
-        </div>
-    </DrawerModal>
 {:else}
     <header
         class="sticky top-0 z-10 flex h-[80px] items-center border-b border-base-300 bg-base-100 p-4"
