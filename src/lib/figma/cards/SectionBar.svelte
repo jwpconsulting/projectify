@@ -1,8 +1,4 @@
 <script lang="ts">
-    import {
-        currentWorkspaceBoardUuid,
-        openTaskDetails,
-    } from "$lib/stores/dashboard";
     import { _ } from "svelte-i18n";
     import TaskCard from "$lib/figma/cards/TaskCard.svelte";
     import SectionTitle from "$lib/figma/cards/section-bar/SectionTitle.svelte";
@@ -57,12 +53,6 @@
                 {task}
                 isFirst={inx === 0}
                 isLast={inx === tasks.length - 1}
-                on:click={() => {
-                    if (!$currentWorkspaceBoardUuid) {
-                        throw new Error("Expected $currentWorkspaceBoardUuid");
-                    }
-                    openTaskDetails($currentWorkspaceBoardUuid, task.uuid);
-                }}
             />
         {/each}
     </main>
