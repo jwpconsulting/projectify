@@ -1,7 +1,6 @@
 <script lang="ts">
     import "../app.scss";
     import "../i18n.js";
-    import DialogModal from "$lib/components/dialogModal.svelte";
     import DatePickerDropDown from "$lib/components/datePickerDropDown.svelte";
     import ConnectionStatus from "$lib/components/connectionStatus.svelte";
     import GlobalDropDown from "$lib/components/globalDropDown.svelte";
@@ -19,12 +18,6 @@
 <slot />
 
 <ConnectionStatus />
-
-{#if browser}
-    <DialogModal id="dataPicker">
-        <DatePickerDropDown />
-    </DialogModal>
-{/if}
 
 <GlobalDropDown />
 

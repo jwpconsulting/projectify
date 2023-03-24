@@ -8,7 +8,6 @@
 
     import { _ } from "svelte-i18n";
     import ProfilePicture from "$lib/components/profilePicture.svelte";
-    import DialogModal, { getModal } from "$lib/components/dialogModal.svelte";
     import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
     import { client } from "$lib/graphql/client";
     import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
@@ -42,75 +41,53 @@
     }
 
     async function onNewMember() {
-        let modalRes = await getModal("inviteTeamMemberToWorkspace").open();
-
-        if (!modalRes) {
-            return;
-        }
-
-        if (!modalRes.outputs?.email) {
-            goto("/billing");
-            return;
-        }
-
-        if (!$currentWorkspace) {
-            return;
-        }
-
-        await client.mutate({
-            mutation: Mutation_AddUserToWorkspace,
-            variables: {
-                input: {
-                    uuid: $currentWorkspace.uuid,
-                    email: modalRes.outputs.email,
-                },
-            },
-        });
+        // TODO if (!modalRes.outputs?.email) {
+        // TODO     goto("/billing");
+        // TODO     return;
+        // TODO }
+        // TODO if (!$currentWorkspace) {
+        // TODO     return;
+        // TODO }
+        // TODO await client.mutate({
+        // TODO     mutation: Mutation_AddUserToWorkspace,
+        // TODO     variables: {
+        // TODO         input: {
+        // TODO             uuid: $currentWorkspace.uuid,
+        // TODO             email: modalRes.outputs.email,
+        // TODO         },
+        // TODO     },
+        // TODO });
     }
     async function onRemoveUser(workspaceUser: WorkspaceUser) {
-        let modalRes = await getModal("removeTeamMemberFromWorkspace").open();
-
-        if (!modalRes) {
-            return;
-        }
-
-        if (!$currentWorkspace) {
-            return;
-        }
-
-        await client.mutate({
-            mutation: Mutation_RemoveUserFromWorkspace,
-            variables: {
-                input: {
-                    uuid: $currentWorkspace.uuid,
-                    email: workspaceUser.user.email,
-                },
-            },
-        });
+        // TODO if (!$currentWorkspace) {
+        // TODO     return;
+        // TODO }
+        // TODO await client.mutate({
+        // TODO     mutation: Mutation_RemoveUserFromWorkspace,
+        // TODO     variables: {
+        // TODO         input: {
+        // TODO             uuid: $currentWorkspace.uuid,
+        // TODO             email: workspaceUser.user.email,
+        // TODO         },
+        // TODO     },
+        // TODO });
     }
 
     async function onEditUser(workspaceUser: WorkspaceUser) {
-        let modalRes = await getModal("editTeamMember").open(workspaceUser);
-
-        if (!modalRes) {
-            return;
-        }
-
-        if (!$currentWorkspace) {
-            return;
-        }
-
-        await client.mutate({
-            mutation: Mutation_UpdateWorkspaceUser,
-            variables: {
-                input: {
-                    workspaceUuid: $currentWorkspace.uuid,
-                    email: modalRes.outputs.email,
-                    role: modalRes.outputs.role,
-                    jobTitle: modalRes.outputs.job_title || "",
-                },
-            },
-        });
+        // TODO if (!$currentWorkspace) {
+        // TODO     return;
+        // TODO }
+        // TODO await client.mutate({
+        // TODO     mutation: Mutation_UpdateWorkspaceUser,
+        // TODO     variables: {
+        // TODO         input: {
+        // TODO             workspaceUuid: $currentWorkspace.uuid,
+        // TODO             email: modalRes.outputs.email,
+        // TODO             role: modalRes.outputs.role,
+        // TODO             jobTitle: modalRes.outputs.job_title || "",
+        // TODO         },
+        // TODO     },
+        // TODO });
     }
 
     let roleFilter: string | null = null;
@@ -301,56 +278,3 @@
         </a>
     </div>
 </div>
-<DialogModal id="inviteTeamMemberToWorkspace">
-    {#if $currentCustomer?.seats_remaining}
-        <ConfirmModalContent
-            title={$_("invite-team-member")}
-            confirmLabel={$_("send")}
-            inputs={inviteTeamMemberInputs}
-        >
-            <div class="text-center text-xs">
-                {$_("you-have-seats-seats-left-in-your-plan", {
-                    values: { seats: $currentCustomer.seats_remaining },
-                })}
-            </div>
-        </ConfirmModalContent>
-    {:else}
-        <ConfirmModalContent
-            title={$_("invite-team-member")}
-            confirmLabel={"Go to Billing"}
-        >
-            <div class="text-center text-xs text-error">
-                {$_("you-have-0-seats-left-in-your-plan")}
-            </div>
-        </ConfirmModalContent>
-    {/if}
-</DialogModal>
-
-<DialogModal id="removeTeamMemberFromWorkspace">
-    <ConfirmModalContent
-        title={$_("remove-team-member")}
-        confirmLabel={$_("remove")}
-        confirmColor="accent"
-    >
-        <div class="text-center text-xs">
-            {$_("are-you-sure-you-want-to-remove-this-team-member")}
-        </div>
-    </ConfirmModalContent>
-</DialogModal>
-
-<DialogModal id="editTeamMember">
-    <ConfirmModalContent
-        title={$_("remove-team-member")}
-        confirmLabel={$_("remove")}
-        confirmColor="accent"
-    >
-        {"Ed"}
-    </ConfirmModalContent>
-</DialogModal>
-<DialogModal id="editTeamMember">
-    <ConfirmModalContent
-        title={$_("edit-team-member")}
-        confirmLabel={$_("Save")}
-        inputs={editTeamMemberInputs}
-    />
-</DialogModal>

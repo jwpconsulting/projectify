@@ -2,25 +2,24 @@
     import { dateStringToLocal } from "$lib/utils/date";
     import { createEventDispatcher } from "svelte";
     import { _ } from "svelte-i18n";
-    import { getModal } from "$lib/components/dialogModal.svelte";
     import IconCalendar from "$lib/components/icons/icon-calendar.svelte";
     import type { Input } from "$lib/types/ui";
 
     export let placeholder = $_("select-date");
     export let input: Input;
-    export let isEditing = false;
+    // TODO export let isEditing = false;
 
     const dispatch = createEventDispatcher();
 
     $: dateStr = input?.value ? dateStringToLocal(input.value) : "";
 
     async function openDataPicker() {
-        let modalRes = await getModal("dataPicker").open(input.value);
-        if (modalRes) {
-            input.value = modalRes.date;
-            isEditing = true;
-            dispatch("change", { date: input.value });
-        }
+        // TODO let modalRes = await getModal("dataPicker").open(input.value);
+        // TODO if (modalRes) {
+        // TODO     input.value = modalRes.date;
+        // TODO     isEditing = true;
+        // TODO     dispatch("change", { date: input.value });
+        // TODO }
     }
 </script>
 

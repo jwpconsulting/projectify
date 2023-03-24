@@ -4,8 +4,6 @@
         Mutation_DeleteWorkspaceBoard,
     } from "$lib/graphql/operations";
     import { dateStringToLocal } from "$lib/utils/date";
-    import DialogModal, { getModal } from "$lib/components/dialogModal.svelte";
-    import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
     import { _ } from "svelte-i18n";
     import { client } from "$lib/graphql/client";
     import Loading from "$lib/components/loading.svelte";
@@ -41,24 +39,22 @@
     }
 
     async function onDeleteItem(item: WorkspaceBoard) {
-        let modalRes = await getModal("deleteArchivedBoard").open();
-
-        if (!modalRes) {
-            return;
-        }
-
-        try {
-            await client.mutate({
-                mutation: Mutation_DeleteWorkspaceBoard,
-                variables: {
-                    input: {
-                        uuid: item.uuid,
-                    },
-                },
-            });
-        } catch (error) {
-            console.error(error);
-        }
+        // TODO let modalRes = await getModal("deleteArchivedBoard").open();
+        // TODO if (!modalRes) {
+        // TODO     return;
+        // TODO }
+        // TODO try {
+        // TODO     await client.mutate({
+        // TODO         mutation: Mutation_DeleteWorkspaceBoard,
+        // TODO         variables: {
+        // TODO             input: {
+        // TODO                 uuid: item.uuid,
+        // TODO             },
+        // TODO         },
+        // TODO     });
+        // TODO } catch (error) {
+        // TODO     console.error(error);
+        // TODO }
     }
 </script>
 
@@ -113,13 +109,3 @@
         {/if}
     </div>
 {/if}
-
-<DialogModal id="deleteArchivedBoard">
-    <ConfirmModalContent
-        title={"Delete Archive"}
-        confirmLabel={$_("Delete")}
-        confirmColor="accent"
-    >
-        {"Deleted archive cannot be returned. Would you like to delete this archive?"}
-    </ConfirmModalContent>
-</DialogModal>

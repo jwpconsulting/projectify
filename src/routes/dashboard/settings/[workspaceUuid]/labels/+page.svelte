@@ -1,7 +1,5 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
-    import DialogModal, { getModal } from "$lib/components/dialogModal.svelte";
     import LabelPill from "$lib/components/dashboard/LabelPill.svelte";
     import type { Label } from "$lib/types/workspace";
     import { currentWorkspace, loading } from "$lib/stores/dashboard";
@@ -23,45 +21,38 @@
     }
 
     async function onDeleteLabel(label: Label) {
-        let modalRes = await getModal("deleteLabel").open();
-
-        if (!modalRes) {
-            return;
-        }
-
-        await deleteLabel(label);
+        // TODO let modalRes = await getModal("deleteLabel").open();
+        // TODO if (!modalRes) {
+        // TODO     return;
+        // TODO }
+        // TODO await deleteLabel(label);
     }
 
     async function onEditLabel(label: Label) {
-        let modalRes = await getModal("editLabel").open({ ...label });
-
-        if (!modalRes) {
-            return;
-        }
-
-        await updateLabel(
-            label,
-            modalRes.outputs.name,
-            modalRes.outputs.color
-        );
+        // TODO let modalRes = await getModal("editLabel").open({ ...label });
+        // TODO if (!modalRes) {
+        // TODO     return;
+        // TODO }
+        // TODO await updateLabel(
+        // TODO     label,
+        // TODO     modalRes.outputs.name,
+        // TODO     modalRes.outputs.color
+        // TODO );
     }
 
     async function onNewLabel() {
-        let modalRes = await getModal("newLabel").open();
-
-        if (!modalRes) {
-            return;
-        }
-
-        if (!$currentWorkspace) {
-            return;
-        }
-
-        await createLabel(
-            $currentWorkspace,
-            modalRes.outputs.name,
-            modalRes.outputs.color
-        );
+        // TODO let modalRes = await getModal("newLabel").open();
+        // TODO if (!modalRes) {
+        // TODO     return;
+        // TODO }
+        // TODO if (!$currentWorkspace) {
+        // TODO     return;
+        // TODO }
+        // TODO await createLabel(
+        // TODO     $currentWorkspace,
+        // TODO     modalRes.outputs.name,
+        // TODO     modalRes.outputs.color
+        // TODO );
     }
 </script>
 
@@ -101,61 +92,3 @@
         </a>
     </div>
 </div>
-
-<DialogModal id="newLabel">
-    <ConfirmModalContent
-        title={$_("create-new-label")}
-        confirmLabel={$_("Save")}
-        inputs={[
-            {
-                name: "name",
-                label: $_("name"),
-                placeholder: $_("please-enter-a-label-name"),
-                validation: {
-                    required: true,
-                },
-            },
-            {
-                type: "colorPicker",
-                name: "color",
-                label: $_("color"),
-                placeholder: $_("please-enter-a-label-color"),
-                value: 0,
-            },
-        ]}
-    />
-</DialogModal>
-
-<DialogModal id="editLabel">
-    <ConfirmModalContent
-        title={$_("edit-label")}
-        confirmLabel={$_("Save")}
-        inputs={[
-            {
-                name: "name",
-                label: $_("name"),
-                placeholder: $_("please-enter-a-label-name"),
-                validation: {
-                    required: true,
-                },
-            },
-            {
-                type: "colorPicker",
-                name: "color",
-                label: $_("color"),
-                placeholder: $_("please-enter-a-label-color"),
-                value: 0,
-            },
-        ]}
-    />
-</DialogModal>
-
-<DialogModal id="deleteLabel">
-    <ConfirmModalContent
-        title={$_("delete-label")}
-        confirmLabel={$_("Delete")}
-        confirmColor="accent"
-    >
-        {$_("are-you-sure-you-want-to-delete-this-label")}
-    </ConfirmModalContent>
-</DialogModal>

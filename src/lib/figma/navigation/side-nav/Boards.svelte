@@ -1,6 +1,5 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import { getModal } from "$lib/components/dialogModal.svelte";
     import { Mutation_AddWorkspaceBoard } from "$lib/graphql/operations";
     import { client } from "$lib/graphql/client";
     // import { goto } from "$app/navigation";
@@ -21,29 +20,28 @@
     let open = true;
 
     async function onAddNewBoard() {
-        let modalRes = await getModal("newBoardModal").open();
-
-        if (!modalRes?.confirm) {
-            console.debug("Expected modalRes.confirm");
-            return;
-        }
-        let mRes = await client.mutate({
-            mutation: Mutation_AddWorkspaceBoard,
-            variables: {
-                input: {
-                    workspaceUuid: $currentWorkspace
-                        ? $currentWorkspace.uuid
-                        : "",
-                    title: modalRes.outputs.title,
-                    deadline: modalRes.outputs.deadline,
-                    description: "",
-                },
-            },
-        });
-        $currentWorkspaceBoardUuid = mRes.data.addWorkspaceBoard.uuid;
-        if (!$currentWorkspaceBoardUuid) {
-            throw new Error("Expected $currentWorkspaceBoardUuid");
-        }
+        // TODO let modalRes = await getModal("newBoardModal").open();
+        // TODO if (!modalRes?.confirm) {
+        // TODO     console.debug("Expected modalRes.confirm");
+        // TODO     return;
+        // TODO }
+        // TODO let mRes = await client.mutate({
+        // TODO     mutation: Mutation_AddWorkspaceBoard,
+        // TODO     variables: {
+        // TODO         input: {
+        // TODO             workspaceUuid: $currentWorkspace
+        // TODO                 ? $currentWorkspace.uuid
+        // TODO                 : "",
+        // TODO             title: modalRes.outputs.title,
+        // TODO             deadline: modalRes.outputs.deadline,
+        // TODO             description: "",
+        // TODO         },
+        // TODO     },
+        // TODO });
+        // TODO $currentWorkspaceBoardUuid = mRes.data.addWorkspaceBoard.uuid;
+        // TODO if (!$currentWorkspaceBoardUuid) {
+        // TODO     throw new Error("Expected $currentWorkspaceBoardUuid");
+        // TODO }
         // TODO
         // goto(getDashboardWorkspaceBoardUrl($currentWorkspaceBoardUuid));
     }

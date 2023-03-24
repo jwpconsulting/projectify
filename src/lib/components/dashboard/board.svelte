@@ -5,7 +5,6 @@
         Mutation_MoveWorkspaceBoardSection,
     } from "$lib/graphql/operations";
     import IconPlus from "$lib/components/icons/icon-plus.svelte";
-    import { getModal } from "$lib/components/dialogModal.svelte";
     import { client } from "$lib/graphql/client";
     import { _ } from "svelte-i18n";
     import {
@@ -21,35 +20,35 @@
     import type { WorkspaceBoardSection } from "$lib/types/workspace";
 
     async function onAddNewSection() {
-        let modalRes = await getModal("newBoardSectionModal").open();
-        if (modalRes?.confirm) {
-            try {
-                const newSection = {
-                    title: modalRes.outputs.title,
-                    description: "",
-                };
-                await client.mutate({
-                    mutation: Mutation_AddWorkspaceBoardSection,
-                    variables: {
-                        input: {
-                            workspaceBoardUuid: $currentWorkspaceBoardUuid,
-                            ...newSection,
-                        },
-                    },
-                    optimisticResponse: {
-                        addWorkspaceBoardSection: {
-                            uuid: "temp-id",
-                            __typename: "WorkspaceBoardSection",
-                            ...newSection,
-                            created: "",
-                            tasks: [],
-                        },
-                    },
-                });
-            } catch (error) {
-                console.error(error);
-            }
-        }
+        // TODO let modalRes = await getModal("newBoardSectionModal").open();
+        // TODO if (modalRes?.confirm) {
+        // TODO     try {
+        // TODO         const newSection = {
+        // TODO             title: modalRes.outputs.title,
+        // TODO             description: "",
+        // TODO         };
+        // TODO         await client.mutate({
+        // TODO             mutation: Mutation_AddWorkspaceBoardSection,
+        // TODO             variables: {
+        // TODO                 input: {
+        // TODO                     workspaceBoardUuid: $currentWorkspaceBoardUuid,
+        // TODO                     ...newSection,
+        // TODO                 },
+        // TODO             },
+        // TODO             optimisticResponse: {
+        // TODO                 addWorkspaceBoardSection: {
+        // TODO                     uuid: "temp-id",
+        // TODO                     __typename: "WorkspaceBoardSection",
+        // TODO                     ...newSection,
+        // TODO                     created: "",
+        // TODO                     tasks: [],
+        // TODO                 },
+        // TODO             },
+        // TODO         });
+        // TODO     } catch (error) {
+        // TODO         console.error(error);
+        // TODO     }
+        // TODO }
     }
 
     async function moveSection(

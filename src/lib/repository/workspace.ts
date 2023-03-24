@@ -6,7 +6,6 @@ import {
     Mutation_UpdateLabelMutation,
     Mutation_DeleteLabelMutation,
 } from "$lib/graphql/operations";
-import { getModal } from "$lib/components/dialogModal.svelte";
 import type {
     Label,
     WorkspaceBoard,
@@ -65,26 +64,23 @@ export async function moveTaskAfter(
 }
 
 export async function deleteTask(task: Task): Promise<void> {
-    const modalRes = await getModal("deleteTaskConfirmModal").open();
-
-    if (!modalRes) {
-        return;
-    }
-
-    try {
-        await client.mutate({
-            mutation: Mutation_DeleteTask,
-            variables: {
-                input: {
-                    uuid: task.uuid,
-                },
-            },
-        });
-
-        // closeTaskDetails(); TODO?
-    } catch (error) {
-        console.error(error);
-    }
+    // TODO const modalRes = await getModal("deleteTaskConfirmModal").open();
+    // TODO if (!modalRes) {
+    // TODO     return;
+    // TODO }
+    // TODO try {
+    // TODO     await client.mutate({
+    // TODO         mutation: Mutation_DeleteTask,
+    // TODO         variables: {
+    // TODO             input: {
+    // TODO                 uuid: task.uuid,
+    // TODO             },
+    // TODO         },
+    // TODO     });
+    // TODO     // closeTaskDetails(); TODO?
+    // TODO } catch (error) {
+    // TODO     console.error(error);
+    // TODO }
 }
 // Label CRUD
 export async function createLabel(

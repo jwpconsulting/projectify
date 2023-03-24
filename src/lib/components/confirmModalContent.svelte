@@ -109,7 +109,7 @@
             {#if input.type == "colorPicker"}
                 To be implemented
             {:else if input.type == "datePicker"}
-                <InputDatePicker bind:input bind:isEditing />
+                <InputDatePicker bind:input />
             {:else if input.type == "select"}
                 <select
                     class:select-error={!valid && input.error}
