@@ -7,6 +7,21 @@
 - PostgreSQL
 - Redis (6 >= for production)
 
+## Debian 11 (bullseye) installation
+
+Make sure you have Postgres 13 and its dev library installed.
+
+```
+sudo apt install postgresql-13 libpq-dev
+```
+
+Managing Python is convenient using asdf:
+
+```
+asdf plugin-add python
+asdf install python 3.10.9
+```
+
 # Quickstart
 
 ```
