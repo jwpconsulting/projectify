@@ -7,10 +7,6 @@
     import Chevrons from "$lib/figma/cards/task-card/Chevrons.svelte";
     import MenuButton from "$lib/figma/cards/task-card/MenuButton.svelte";
     import type { WorkspaceBoardSection, Task } from "$lib/types/workspace";
-    import {
-        currentWorkspaceBoardUuid,
-        openTaskDetails,
-    } from "$lib/stores/dashboard";
 
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection | null = null;
@@ -18,18 +14,12 @@
     export let isFirst = false;
     export let isLast = false;
 
-    function onClick() {
-        if (!$currentWorkspaceBoardUuid) {
-            throw new Error("Expected $currentWorkspaceBoardUuid");
-        }
-        openTaskDetails($currentWorkspaceBoardUuid, task.uuid);
-    }
+    // TODO determine link
 </script>
 
-<button
-    class="box-border w-full rounded-lg border border-base-300 bg-base-100 p-2"
-    on:click={onClick}
-    data-uuid={task.uuid}
+<a
+    class="box-border block w-full rounded-lg border border-base-300 bg-base-100 p-2"
+    href="/"
 >
     <div class="flex flex-col md:hidden">
         <div class="flex flex-row justify-between">
@@ -84,4 +74,4 @@
             </div>
         </div>
     </div>
-</button>
+</a>
