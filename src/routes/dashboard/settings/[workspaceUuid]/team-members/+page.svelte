@@ -8,7 +8,6 @@
 
     import { _ } from "svelte-i18n";
     import ProfilePicture from "$lib/components/profilePicture.svelte";
-    import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
     import { client } from "$lib/graphql/client";
     import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
     import SearchInput from "$lib/components/search-input.svelte";

@@ -22,7 +22,6 @@
 
     import { page } from "$app/stores";
     import { onMount } from "svelte";
-    import ConfirmModalContent from "$lib/components/confirmModalContent.svelte";
     import { _ } from "svelte-i18n";
     import SideNav from "$lib/figma/navigation/SideNav.svelte";
 
