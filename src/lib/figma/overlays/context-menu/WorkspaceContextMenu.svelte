@@ -8,7 +8,14 @@
 
     export let workspaceSearchModule: WorkspaceSearchModule;
 
-    let { workspaces } = workspaceSearchModule;
+    let { workspaces, setWorkspaces } = workspaceSearchModule;
+
+    $: {
+        // XXX this could be done in a more central location
+        if (!$workspaces) {
+            setWorkspaces();
+        }
+    }
 </script>
 
 {#if $workspaces}

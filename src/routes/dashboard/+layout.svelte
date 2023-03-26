@@ -2,12 +2,14 @@
     import AuthGuard from "$lib/components/authGuard.svelte";
     import HeaderDashboard from "$lib/figma/navigation/header/Dashboard.svelte";
     import SideNav from "$lib/figma/navigation/SideNav.svelte";
+    import { openContextMenu } from "$lib/stores/global-ui";
 
     import type {
         WorkspaceSearchModule,
         WorkspaceBoardSearchModule,
         WorkspaceUserSearchModule,
         LabelSearchModule,
+        SideNavModule,
     } from "$lib/types/stores";
 
     import {
@@ -26,6 +28,9 @@
         workspaceUserSearch,
         workspaceUserSearchResults,
         workspaces,
+        sideNavOpen,
+        toggleSideNavOpen,
+        setWorkspaces,
     } from "$lib/stores/dashboard";
 
     import { user } from "$lib/stores/user";
@@ -33,6 +38,7 @@
     const workspaceSearchModule: WorkspaceSearchModule = {
         workspaces,
         currentWorkspace,
+        setWorkspaces,
     };
 
     const workspaceBoardSearchModule: WorkspaceBoardSearchModule = {
@@ -56,6 +62,17 @@
         search: labelSearch,
         searchResults: labelSearchResults,
     };
+
+    const sideNavModule: SideNavModule = {
+        sideNavOpen,
+        toggleSideNavOpen,
+        showWorkspaceContextMenu: (anchor: HTMLElement) => {
+            openContextMenu(
+                { kind: "workspace", workspaceSearchModule },
+                anchor
+            );
+        },
+    };
 </script>
 
 <AuthGuard>
@@ -65,10 +82,10 @@
         {/if}
         <div class="flex flex-row">
             <SideNav
-                {workspaceSearchModule}
                 {workspaceBoardSearchModule}
                 {workspaceUserSearchModule}
                 {labelSearchModule}
+                {sideNavModule}
             />
             <slot />
         </div>

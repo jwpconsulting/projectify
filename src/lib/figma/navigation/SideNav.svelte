@@ -4,20 +4,22 @@
     import Members from "$lib/figma/navigation/side-nav/Members.svelte";
     import LabelDropdown from "$lib/figma/composites/LabelDropdown.svelte";
     import type {
-        WorkspaceSearchModule,
         WorkspaceBoardSearchModule,
         WorkspaceUserSearchModule,
         LabelSearchModule,
+        SideNavModule,
     } from "$lib/types/stores";
 
-    export let workspaceSearchModule: WorkspaceSearchModule;
     export let workspaceBoardSearchModule: WorkspaceBoardSearchModule;
     export let workspaceUserSearchModule: WorkspaceUserSearchModule;
     export let labelSearchModule: LabelSearchModule;
+    export let sideNavModule: SideNavModule;
+
+    let { showWorkspaceContextMenu } = sideNavModule;
 </script>
 
 <nav class="flex h-full w-72 shrink-0 flex-col bg-base-100 py-4 pr-px">
-    <WorkspaceMenu {workspaceSearchModule} />
+    <WorkspaceMenu {showWorkspaceContextMenu} />
     <div class="flex flex-col overflow-x-auto overflow-y-scroll">
         <Boards {workspaceBoardSearchModule} />
         <Members {workspaceUserSearchModule} />

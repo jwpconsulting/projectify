@@ -3,21 +3,21 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 import SideNav from "$lib/figma/navigation/SideNav.svelte";
 
 import {
-    workspaceSearchModule,
     workspaceBoardSearchModule,
     workspaceUserSearchModule,
     labelSearchModule,
     mobileParameters,
+    sideNavModule,
 } from "$lib/storybook";
 
 const meta: Meta<SideNav> = {
     component: SideNav,
     argTypes: {},
     args: {
-        workspaceSearchModule,
         workspaceBoardSearchModule,
         workspaceUserSearchModule,
         labelSearchModule,
+        sideNavModule,
     },
     parameters: {
         layout: "fullscreen",

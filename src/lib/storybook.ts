@@ -145,9 +145,12 @@ export const mobileParameters = {
     },
 };
 
+const noop = async () => {};
+
 export const workspaceSearchModule: WorkspaceSearchModule = {
     workspaces: readable([workspace]),
     currentWorkspace: readable(workspace),
+    setWorkspaces: noop,
 };
 
 export const workspaceBoardSearchModule: WorkspaceBoardSearchModule = {
@@ -155,8 +158,6 @@ export const workspaceBoardSearchModule: WorkspaceBoardSearchModule = {
     currentWorkspaceBoard: readable(workspaceBoard),
     currentWorkspaceBoardUuid: readable("this-does-not-exist"),
 };
-
-const noop = () => {};
 
 export const workspaceUserSearchModule: WorkspaceUserSearchModule = {
     select: noop,
@@ -178,6 +179,7 @@ export const labelSearchModule: LabelSearchModule = {
 export const sideNavModule: SideNavModule = {
     sideNavOpen: writable(true),
     toggleSideNavOpen: noop,
+    showWorkspaceContextMenu: noop,
 };
 
 export const workspaceBoardSectionModule: WorkspaceBoardSectionModule = {

@@ -20,6 +20,7 @@ export type WorkspaceSearchModule = {
     // TODO for a consistent API we would have workspaces as searchResults here
     workspaces: Readable<Workspace[] | null>;
     currentWorkspace: Readable<Workspace | null>;
+    setWorkspaces: () => Promise<void>;
 };
 
 export type WorkspaceBoardSearchModule = {
@@ -55,6 +56,7 @@ export type SideNavModule = {
     // TODO make readonly
     sideNavOpen: Writable<boolean>;
     toggleSideNavOpen: () => void;
+    showWorkspaceContextMenu: (anchor: HTMLElement) => void;
 };
 
 export type WorkspaceBoardSectionModule = {

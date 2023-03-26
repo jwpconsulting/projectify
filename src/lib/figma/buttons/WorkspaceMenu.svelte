@@ -12,50 +12,24 @@
     import type { WorkspaceSearchModule } from "$lib/types/stores";
 
     let dropDownMenuBtnRef: HTMLElement;
+    let workspaceContextMenuAnchor: HTMLElement;
 
-    export let workspaceSearchModule: WorkspaceSearchModule;
-
-    let { currentWorkspace } = workspaceSearchModule;
-
-    function openDropDownMenu() {
-        if (!$currentWorkspace) {
-            console.error("Expected $currentWorkspace");
-            return;
-        }
-        let dropDownItems: DropDownMenuItem[] = [
-            {
-                label: $_("edit-labels"),
-                icon: IconTag,
-                href: getSettingsUrl($currentWorkspace.uuid, "labels"),
-            },
-            {
-                label: $_("Archive"),
-                icon: IconArchive,
-                href: getArchiveUrl($currentWorkspace.uuid),
-            },
-            {
-                label: $_("settings"),
-                icon: IconSettings,
-                href: getSettingsUrl($currentWorkspace.uuid, "index"),
-            },
-        ];
-        const dropDown = getDropDown();
-        if (!dropDown) {
-            throw new Error("Expected dropDown");
-        }
-        dropDown.open(dropDownItems, dropDownMenuBtnRef);
-    }
+    export let showWorkspaceContextMenu: (anchor: HTMLElement) => void;
 </script>
 
 <div class="px-4 pb-4">
     <div class="flex flex-row items-center justify-between">
-        <Filter
-            icon={Briefcase}
-            label={$_("workspace-menu.workspace")}
-            open={false}
-        />
+        <div bind:this={workspaceContextMenuAnchor}>
+            <Filter
+                icon={Briefcase}
+                label={$_("workspace-menu.workspace")}
+                open={false}
+                on:click={() =>
+                    showWorkspaceContextMenu(workspaceContextMenuAnchor)}
+            />
+        </div>
         <div bind:this={dropDownMenuBtnRef}>
-            <WorkspaceSettings on:click={openDropDownMenu} />
+            <WorkspaceSettings />
         </div>
     </div>
 </div>
