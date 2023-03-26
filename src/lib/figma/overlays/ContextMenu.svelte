@@ -13,7 +13,7 @@
 </script>
 
 <div
-    class="flex w-60 flex-col rounded-lg border border-border py-2 shadow-context-menu"
+    class="flex w-60 flex-col rounded-lg border border-border bg-foreground py-2 shadow-context-menu"
 >
     {#if target.kind === "profile"}
         <ProfileContextMenu />
