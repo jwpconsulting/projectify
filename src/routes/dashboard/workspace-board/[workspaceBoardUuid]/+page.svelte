@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Board from "$lib/components/dashboard/board.svelte";
+    import Board from "$lib/components/dashboard/Board.svelte";
     import { page } from "$app/stores";
 
     import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard";
