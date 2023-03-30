@@ -109,7 +109,9 @@ workflows:
     test_all:
         jobs:
             - check
+            - build
             - lint
             - pipenv_check
             - python_lint
+            - pytest
             - mypy
