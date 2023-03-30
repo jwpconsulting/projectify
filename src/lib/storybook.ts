@@ -93,7 +93,7 @@ export const workspaceUserSelectionInputs: WorkspaceUserSelectionInput[] = [
 
 export const workspaceBoard: WorkspaceBoard = {
     uuid: "does-not-exist",
-    title: "Project board",
+    title: "Project board with a long name, it is long",
     created: "",
     modified: "",
 };

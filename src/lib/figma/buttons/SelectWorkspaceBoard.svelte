@@ -74,7 +74,7 @@
     class="group flex w-full flex-row justify-between py-2 px-4 hover:bg-base-200"
     on:click={selectBoard}
 >
-    <div class="flex flex-row items-center gap-2">
+    <div class="flex min-w-0 flex-row items-center gap-2">
         <div
             class={`rounded-md p-1 ${
                 workspaceBoard.uuid === $currentWorkspaceBoardUuid
@@ -92,9 +92,9 @@
                 }`}
             />
         </div>
-        <span class="nowrap-ellipsis text-xs font-bold capitalize"
-            >{workspaceBoard.title}</span
-        >
+        <div class="nowrap-ellipsis text-xs font-bold">
+            {workspaceBoard.title}
+        </div>
     </div>
     <div class="invisible group-hover:visible" bind:this={buttonRef}>
         <CircleIcon
