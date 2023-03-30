@@ -15,6 +15,7 @@
     let workspaceContextMenuAnchor: HTMLElement;
 
     export let showWorkspaceContextMenu: (anchor: HTMLElement) => void;
+    export let showSideNavContextMenu: (anchor: HTMLElement) => void;
 </script>
 
 <div class="px-4 pb-4">
@@ -28,8 +29,10 @@
                     showWorkspaceContextMenu(workspaceContextMenuAnchor)}
             />
         </div>
-        <div bind:this={dropDownMenuBtnRef}>
-            <WorkspaceSettings />
+        <div class="flex flex-row items-center" bind:this={dropDownMenuBtnRef}>
+            <WorkspaceSettings
+                on:click={() => showSideNavContextMenu(dropDownMenuBtnRef)}
+            />
         </div>
     </div>
 </div>

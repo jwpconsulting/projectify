@@ -57,6 +57,7 @@ export type SideNavModule = {
     sideNavOpen: Writable<boolean>;
     toggleSideNavOpen: () => void;
     showWorkspaceContextMenu: (anchor: HTMLElement) => void;
+    showSideNavContextMenu: (anchor: HTMLElement) => void;
 };
 
 export type WorkspaceBoardSectionModule = {

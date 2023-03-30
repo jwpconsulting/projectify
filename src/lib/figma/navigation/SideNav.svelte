@@ -15,11 +15,11 @@
     export let labelSearchModule: LabelSearchModule;
     export let sideNavModule: SideNavModule;
 
-    let { showWorkspaceContextMenu } = sideNavModule;
+    let { showWorkspaceContextMenu, showSideNavContextMenu } = sideNavModule;
 </script>
 
 <nav class="flex h-full w-72 shrink-0 flex-col bg-base-100 py-4 pr-px">
-    <WorkspaceMenu {showWorkspaceContextMenu} />
+    <WorkspaceMenu {showWorkspaceContextMenu} {showSideNavContextMenu} />
     <div class="flex flex-col overflow-x-auto overflow-y-scroll">
         <Boards {workspaceBoardSearchModule} />
         <Members {workspaceUserSearchModule} />

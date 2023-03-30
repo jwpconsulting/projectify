@@ -180,6 +180,7 @@ export const sideNavModule: SideNavModule = {
     sideNavOpen: writable(true),
     toggleSideNavOpen: noop,
     showWorkspaceContextMenu: noop,
+    showSideNavContextMenu: noop,
 };
 
 export const workspaceBoardSectionModule: WorkspaceBoardSectionModule = {

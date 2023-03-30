@@ -63,12 +63,27 @@
         searchResults: labelSearchResults,
     };
 
-    const sideNavModule: SideNavModule = {
+    let sideNavModule: SideNavModule;
+    $: sideNavModule = {
         sideNavOpen,
         toggleSideNavOpen,
         showWorkspaceContextMenu: (anchor: HTMLElement) => {
             openContextMenu(
                 { kind: "workspace", workspaceSearchModule },
+                anchor
+            );
+        },
+        showSideNavContextMenu: (anchor: HTMLElement) => {
+            if (!$currentWorkspace) {
+                throw new Error("Expected $currentWorkspace");
+            }
+            openContextMenu(
+                {
+                    kind: "sideNav",
+                    workspace: $currentWorkspace,
+                    // XXX circular reference, not cool Justus 2023-03-30
+                    sideNavModule,
+                },
                 anchor
             );
         },
