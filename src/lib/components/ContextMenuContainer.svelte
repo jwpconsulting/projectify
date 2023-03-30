@@ -84,7 +84,12 @@
     on:click={closeContextMenu}
     on:keydown={closeContextMenu}
 />
-<div class="fixed" bind:this={contextMenu}>
+<div
+    class="fixed"
+    bind:this={contextMenu}
+    on:click={closeContextMenu}
+    on:keydown={closeContextMenu}
+>
     {#if $contextMenuState.kind === "visible"}
         <ContextMenu target={$contextMenuState.target} />
     {/if}
