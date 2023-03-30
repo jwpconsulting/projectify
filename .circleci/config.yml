@@ -49,6 +49,16 @@ jobs:
             - run:
                   name: Run lint
                   command: npm run lint
+    build:
+        executor: node
+        steps:
+            - checkout
+            - restore_cache:
+                  key: npm-cache-v1-{{ checksum "package-lock.json" }}
+            - install_node_dependencies
+            - run:
+                  name: Run build
+                  command: npm run build
     pipenv_check:
         executor: python
         steps:
