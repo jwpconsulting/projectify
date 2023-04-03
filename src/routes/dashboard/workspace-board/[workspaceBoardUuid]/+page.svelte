@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Board from "$lib/components/dashboard/Board.svelte";
+    import Dashboard from "$lib/components/dashboard/Dashboard.svelte";
     import { page } from "$app/stores";
 
     import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard";
@@ -10,4 +10,4 @@
     }
 </script>
 
-<Board />
+<Dashboard />
