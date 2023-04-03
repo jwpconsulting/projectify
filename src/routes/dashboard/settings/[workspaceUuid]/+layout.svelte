@@ -1,6 +1,6 @@
 <script lang="ts">
     import PageLayout from "$lib/components/layouts/pageLayout.svelte";
-    import AuthGuard from "$lib/components/authGuard.svelte";
+    import AuthGuard from "$lib/components/AuthGuard.svelte";
     import SettingPage from "$lib/components/settingPage.svelte";
     import { browser } from "$app/environment";
     import { page } from "$app/stores";

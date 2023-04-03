@@ -1,5 +1,5 @@
 <script lang="ts">
-    import AuthGuard from "$lib/components/authGuard.svelte";
+    import AuthGuard from "$lib/components/AuthGuard.svelte";
     import SettingFooterEditSaveButtons from "$lib/components/settingFooterEditSaveButtons.svelte";
     import SettingPage from "$lib/components/settingPage.svelte";
     import ProfilePictureFileSelector from "$lib/components/profilePictureFileSelector.svelte";

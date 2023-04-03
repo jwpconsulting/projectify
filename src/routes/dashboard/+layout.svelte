@@ -1,5 +1,5 @@
 <script lang="ts">
-    import AuthGuard from "$lib/components/authGuard.svelte";
+    import AuthGuard from "$lib/components/AuthGuard.svelte";
     import HeaderDashboard from "$lib/figma/navigation/header/Dashboard.svelte";
     import SideNav from "$lib/figma/navigation/SideNav.svelte";
     import { openContextMenu } from "$lib/stores/global-ui";
