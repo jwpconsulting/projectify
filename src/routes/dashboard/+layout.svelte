@@ -95,7 +95,7 @@
         {#if $user}
             <HeaderDashboard user={$user} />
         {/if}
-        <div class="flex flex-row">
+        <div class="flex grow flex-row">
             <SideNav
                 {workspaceBoardSearchModule}
                 {workspaceUserSearchModule}
