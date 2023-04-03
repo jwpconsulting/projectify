@@ -124,9 +124,7 @@
             {/if}
         {:else}
             <!-- Sections -->
-            <div
-                class="section-layout-row flex grow flex-col overflow-y-auto p-2"
-            >
+            <div class="flex grow flex-col overflow-y-auto p-2">
                 {#each $currentWorkspaceBoardSections as section, index (section.uuid)}
                     <SectionBar
                         {section}
@@ -149,9 +147,3 @@
         {/if}
     </div>
 {/if}
-
-<style lang="scss">
-    .section-layout-row {
-        @apply flex-col;
-    }
-</style>
