@@ -123,7 +123,7 @@ export class WSSubscriptionStore {
         };
     }
 
-    debug(...arg0: any) {
+    debug(...arg0: unknown[]) {
         console.debug(this.url, ...arg0);
     }
 }

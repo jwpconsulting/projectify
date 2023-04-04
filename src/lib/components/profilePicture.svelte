@@ -1,4 +1,5 @@
 <script lang="ts">
+    import type { SvelteComponent } from "svelte";
     import IconUserProfile from "$lib/components/icons/icon-user-profile.svelte";
     import vars from "$lib/env";
     import IconClose from "$lib/components/icons/icon-close.svelte";
@@ -8,7 +9,7 @@
     export let url: string | null = null;
     export let prefix = vars.API_ENDPOINT;
     export let showPlus = false;
-    export let emptyIcon: any | null = IconUserProfile;
+    export let emptyIcon: typeof SvelteComponent | null = IconUserProfile;
     export let typogram: string | null = null;
 
     let src: string | null = null;

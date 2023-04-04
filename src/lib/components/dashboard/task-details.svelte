@@ -105,7 +105,11 @@
         };
 
         if (itsNew) {
-            let otherData: any = {};
+            let otherData: {
+                assignee?: string;
+                labels?: string[];
+                subTasks?: string[];
+            } = {};
             let assignee = task?.assignee?.user.email || null;
 
             if (assignee) {
@@ -117,7 +121,6 @@
             }
 
             if (subTasks) {
-                otherData.subTasks = subTasks;
                 otherData.subTasks = subTasks.map((s) => s.title);
             }
 

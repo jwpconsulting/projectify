@@ -1,5 +1,6 @@
 <script lang="ts">
     import ProfilePicture from "$lib/components/profilePicture.svelte";
+    // eslint-disable-next-line
     export let pictureProps: any = {};
 </script>
 

@@ -30,7 +30,7 @@ function openOverlay<Target, Action>(
     });
 }
 
-function closeOverlay(overlay: Writable<Overlay<any, any>>) {
+function closeOverlay(overlay: Writable<Overlay<unknown, unknown>>) {
     overlay.update(($overlay) => {
         if ($overlay.kind !== "visible") {
             throw new Error("Expected $overlay.kind to be visible");

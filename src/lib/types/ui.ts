@@ -17,16 +17,16 @@ export type Input = {
     name?: string;
     label?: string;
     type?: string;
-    value?: any;
+    value?: string;
     error?: string;
     placeholder?: string;
     readonly?: boolean;
-    selectOptions?: { label: string; value: any }[];
+    selectOptions?: { label: string; value: unknown }[];
     validation?: {
         required?: boolean;
         validator?: (
-            value: any,
-            data: any
+            value: unknown,
+            data: unknown
         ) => {
             error?: boolean;
             message?: string;
@@ -78,7 +78,7 @@ export type Overlay<Target, Action> =
 export type OverlayComponent = typeof SvelteComponentTyped<{
     // TODO this has to be something, the generic version of
     // DestructiveOverlayType
-    target: any;
+    target: unknown;
 }>;
 
 export type OverlayAction =
