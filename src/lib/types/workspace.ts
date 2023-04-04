@@ -40,13 +40,15 @@ export type Task = {
 } & TimestampedType &
     TitleDescriptionType;
 
+export type CreateWorkspaceBoardSection = TitleDescriptionType;
+
 export type WorkspaceBoardSection = {
     _order: number;
     uuid: string;
     tasks?: Task[];
     workspace_board?: WorkspaceBoard;
 } & TimestampedType &
-    TitleDescriptionType;
+    CreateWorkspaceBoardSection;
 
 export type WorkspaceBoard = {
     deadline?: string;

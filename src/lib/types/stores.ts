@@ -10,6 +10,7 @@ import type {
 import type {
     Workspace,
     WorkspaceBoard,
+    CreateWorkspaceBoardSection,
     WorkspaceUser,
     Label,
 } from "$lib/types/workspace";
@@ -64,5 +65,12 @@ export type WorkspaceBoardSectionModule = {
     workspaceBoardSectionClosed: Writable<Set<string>>;
     toggleWorkspaceBoardSectionOpen: (
         workspaceBoardSectionUuid: string
+    ) => void;
+};
+
+export type NewWorkspaceBoardSectionModule = {
+    createWorkspaceBoardSection: (
+        workspaceBoard: WorkspaceBoard,
+        workspaceBoardSection: CreateWorkspaceBoardSection
     ) => void;
 };

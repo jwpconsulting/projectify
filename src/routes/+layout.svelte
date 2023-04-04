@@ -6,8 +6,11 @@
     import OverlayContainer from "$lib/components/OverlayContainer.svelte";
     import ContextMenuContainer from "$lib/components/ContextMenuContainer.svelte";
     import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
+    import ConstructiveOverlay from "$lib/figma/overlays/constructive/ConstructiveOverlay.svelte";
     import "$lib/stores/global-ui";
     import {
+        constructiveOverlayState,
+        closeConstructiveOverlay,
         destructiveOverlayState,
         closeDestructiveOverlay,
         performDestructiveOverlay,
@@ -31,4 +34,12 @@
     close={closeDestructiveOverlay}
     perform={performDestructiveOverlay}
 />
+
+<OverlayContainer
+    overlay={ConstructiveOverlay}
+    store={constructiveOverlayState}
+    close={closeConstructiveOverlay}
+    perform={null}
+/>
+
 <ContextMenuContainer />

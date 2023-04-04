@@ -5,7 +5,7 @@
     export let overlay: OverlayComponent;
     export let store: Readable<Overlay<unknown, unknown>>;
     export let close: () => void;
-    export let perform: () => void;
+    export let perform: (() => void) | null;
 </script>
 
 {#if $store.kind === "visible"}

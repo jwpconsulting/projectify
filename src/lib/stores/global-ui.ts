@@ -1,6 +1,8 @@
 import type { Writable } from "svelte/store";
 import { writable } from "svelte/store";
 import type {
+    ConstructiveOverlayState,
+    ConstructiveOverlayType,
     DestructiveOverlayState,
     DestructiveOverlayType,
     OverlayAction,
@@ -8,6 +10,11 @@ import type {
     ContextMenuState,
     Overlay,
 } from "$lib/types/ui";
+
+// TODO make readonly
+export const constructiveOverlayState = writable<ConstructiveOverlayState>({
+    kind: "hidden",
+});
 
 export const destructiveOverlayState = writable<DestructiveOverlayState>({
     kind: "hidden",
@@ -72,6 +79,17 @@ export function performDestructiveOverlay() {
             return $destructiveOverlayState;
         }
     });
+}
+
+export function openConstructiveOverlay(
+    target: ConstructiveOverlayType,
+    action: OverlayAction
+) {
+    openOverlay(constructiveOverlayState, target, action);
+}
+
+export function closeConstructiveOverlay() {
+    closeOverlay(constructiveOverlayState);
 }
 
 export const contextMenuState = writable<ContextMenuState>({

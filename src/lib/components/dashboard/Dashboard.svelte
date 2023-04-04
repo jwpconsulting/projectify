@@ -14,36 +14,26 @@
     import Loading from "$lib/components/loading.svelte";
     import type { WorkspaceBoardSection } from "$lib/types/workspace";
 
-    async function onAddNewSection() {
-        // TODO let modalRes = await getModal("newBoardSectionModal").open();
-        // TODO if (modalRes?.confirm) {
-        // TODO     try {
-        // TODO         const newSection = {
-        // TODO             title: modalRes.outputs.title,
-        // TODO             description: "",
-        // TODO         };
-        // TODO         await client.mutate({
-        // TODO             mutation: Mutation_AddWorkspaceBoardSection,
-        // TODO             variables: {
-        // TODO                 input: {
-        // TODO                     workspaceBoardUuid: $currentWorkspaceBoardUuid,
-        // TODO                     ...newSection,
-        // TODO                 },
-        // TODO             },
-        // TODO             optimisticResponse: {
-        // TODO                 addWorkspaceBoardSection: {
-        // TODO                     uuid: "temp-id",
-        // TODO                     __typename: "WorkspaceBoardSection",
-        // TODO                     ...newSection,
-        // TODO                     created: "",
-        // TODO                     tasks: [],
-        // TODO                 },
-        // TODO             },
-        // TODO         });
-        // TODO     } catch (error) {
-        // TODO         console.error(error);
-        // TODO     }
-        // TODO }
+    import FloatingActionButton from "$lib/figma/buttons/FloatingActionButton.svelte";
+    import { openConstructiveOverlay } from "$lib/stores/global-ui";
+
+    function onAddNewSection() {
+        // TODO ideally, we would be creating Dashboard with a workspaceBoard
+        if (!$currentWorkspaceBoard) {
+            throw new Error("Expected $currentWorkspaceBoard");
+        }
+        openConstructiveOverlay(
+            {
+                kind: "createWorkspaceBoardSection",
+                workspaceBoard: $currentWorkspaceBoard,
+            },
+            {
+                kind: "sync",
+                action: () => {
+                    console.error("NOOP XXX");
+                },
+            }
+        );
     }
 
     async function moveSection(
@@ -130,14 +120,10 @@
                         on:switchWithNextSection={onSwitchWithNextSection}
                     />
                 {/each}
-                <div
-                    class="ignore-elements m-2 flex shrink-0 space-x-4 bg-base-100 p-5 font-bold text-primary shadow-sm hover:cursor-pointer hover:ring"
-                    on:click={() => onAddNewSection()}
-                    on:keydown={() => onAddNewSection()}
-                >
-                    <div>{$_("new-section")}</div>
-                </div>
             </div>
         {/if}
+        <div class="absolute bottom-4 right-4">
+            <FloatingActionButton icon="plus" action={onAddNewSection} />
+        </div>
     </div>
 {/if}

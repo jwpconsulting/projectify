@@ -5,10 +5,12 @@ import {
     Mutation_UpdateLabelMutation,
     Mutation_DeleteLabelMutation,
     Mutation_ArchiveWorkspaceBoard,
+    Mutation_AddWorkspaceBoardSection,
 } from "$lib/graphql/operations";
 import type {
     Label,
     WorkspaceBoard,
+    CreateWorkspaceBoardSection,
     Workspace,
     Task,
 } from "$lib/types/workspace";
@@ -187,4 +189,19 @@ export async function archiveWorkspaceBoard(workspaceBoard: WorkspaceBoard) {
     // TODO here we ought to find out the URL of the workspace this
     // workspace board belongs to
     console.error("TODO");
+}
+
+export async function createWorkspaceBoardSection(
+    workspaceBoard: WorkspaceBoard,
+    workspaceBoardSection: CreateWorkspaceBoardSection
+) {
+    await client.mutate({
+        mutation: Mutation_AddWorkspaceBoardSection,
+        variables: {
+            input: {
+                workspaceBoardUuid: workspaceBoard.uuid,
+                ...workspaceBoardSection,
+            },
+        },
+    });
 }

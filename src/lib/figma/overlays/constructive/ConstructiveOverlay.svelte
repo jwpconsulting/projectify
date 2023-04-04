@@ -1,6 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import type { ConstructiveOverlayType } from "$lib/types/ui";
+    import { closeConstructiveOverlay } from "$lib/stores/global-ui";
     import EditWorkspaceBoard from "$lib/figma/overlays/constructive/EditWorkspaceBoard.svelte";
     import NewWorkspaceBoard from "$lib/figma/overlays/constructive/NewWorkspaceBoard.svelte";
     import InviteMember from "$lib/figma/overlays/constructive/InviteMember.svelte";
@@ -9,8 +10,13 @@
     import NewWorkspace from "$lib/figma/overlays/constructive/NewWorkspace.svelte";
     import SkipOnboarding from "$lib/figma/overlays/constructive/SkipOnboarding.svelte";
     import RecoverWorkspaceBoard from "$lib/figma/overlays/constructive/RecoverWorkspaceBoard.svelte";
+    import type { NewWorkspaceBoardSectionModule } from "$lib/types/stores";
+    import { createWorkspaceBoardSection } from "$lib/repository/workspace";
 
     export let target: ConstructiveOverlayType;
+    const newWorkspaceBoardSectionModule: NewWorkspaceBoardSectionModule = {
+        createWorkspaceBoardSection,
+    };
     $: title = {
         updateWorkspaceBoard: $_("edit-workspace-board.title"),
         createWorkspaceBoard: $_("new-workspace-board.title"),
@@ -21,9 +27,13 @@
         skipOnboarding: $_("skip-onboarding.title"),
         recoverWorkspaceBoard: $_("recover-workspace-board.title"),
     }[target.kind];
+
+    function close() {
+        closeConstructiveOverlay();
+    }
 </script>
 
-<div class="flex flex-col gap-10 p-8">
+<div class="flex max-w-lg grow flex-col gap-10 rounded-lg bg-foreground p-8">
     <div class="text-center text-3xl font-bold">
         {title}
     </div>
@@ -37,7 +47,11 @@
         {:else if target.kind === "inviteTeamMembersNoSeatsLeft"}
             <InviteMemberError workspace={target.workspace} />
         {:else if target.kind === "createWorkspaceBoardSection"}
-            <NewWorkspaceBoardSection workspaceBoard={target.workspaceBoard} />
+            <NewWorkspaceBoardSection
+                workspaceBoard={target.workspaceBoard}
+                {close}
+                {newWorkspaceBoardSectionModule}
+            />
         {:else if target.kind === "createWorkspace"}
             <NewWorkspace />
         {:else if target.kind === "skipOnboarding"}
