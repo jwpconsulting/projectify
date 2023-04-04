@@ -532,7 +532,11 @@ export function filterSectionsTasks(
     let sections: WorkspaceBoardSection[] =
         currentFilter.workspaceBoardSections;
     if (currentFilter.labels.kind === "noLabel") {
+        // TODO filter by no label? Justus 2023-04-04
+        // eslint-disable-next-line
     } else if (currentFilter.labels.kind === "allLabels") {
+        // TODO what to do here?
+        // eslint-disable-next-line
     } else {
         const labelUuids = [...currentFilter.labels.labelUuids.keys()];
 
