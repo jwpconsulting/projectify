@@ -168,7 +168,7 @@ function stopWatchDog(): void {
     if (!watchDogTimer) {
         throw new Error("Expected watchDogTimer");
     }
-    let connectionActive = wsSubscriptionStores.size > 0;
+    const connectionActive = wsSubscriptionStores.size > 0;
     if (!connectionActive) {
         window.clearInterval(watchDogTimer);
     }
