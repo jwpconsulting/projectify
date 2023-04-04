@@ -145,7 +145,7 @@ export const mobileParameters = {
     },
 };
 
-const noop = async () => {};
+const noop = async () => console.error("noop");
 
 export const workspaceSearchModule: WorkspaceSearchModule = {
     workspaces: readable([workspace]),
