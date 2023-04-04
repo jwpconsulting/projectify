@@ -6,6 +6,7 @@ const meta: Meta<FloatingActionButton> = {
     component: FloatingActionButton,
     argTypes: { disabled: { control: "boolean" } },
     args: {
+        action: console.log,
         disabled: false,
     },
 };

@@ -4,6 +4,8 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Plus, X } from "@steeze-ui/heroicons";
 
+    export let action: () => void;
+
     export let icon: FloatingActionButtonIcon;
     export let disabled = false;
 
@@ -15,8 +17,10 @@
 </script>
 
 <button
-    class="group rounded-llg border border-transparent p-1 focus:border-border-focus focus:outline-none"
+    class="group inline rounded-llg border border-transparent p-1 focus:border-border-focus focus:outline-none"
     {disabled}
+    on:click={action}
+    on:keydown={action}
 >
     <div
         class="rounded-lg bg-primary px-7 py-2 text-primary-content shadow-context-menu group-hover:bg-primary-hover group-active:bg-primary-pressed group-disabled:bg-disabled group-disabled:text-disabled-primary-content"
