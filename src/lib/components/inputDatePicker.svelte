@@ -1,6 +1,6 @@
 <script lang="ts">
     import { dateStringToLocal } from "$lib/utils/date";
-    import { createEventDispatcher } from "svelte";
+    // import { createEventDispatcher } from "svelte";
     import { _ } from "svelte-i18n";
     import IconCalendar from "$lib/components/icons/icon-calendar.svelte";
     import type { Input } from "$lib/types/ui";
@@ -9,7 +9,7 @@
     export let input: Input;
     // TODO export let isEditing = false;
 
-    const dispatch = createEventDispatcher();
+    // const dispatch = createEventDispatcher();
 
     $: dateStr = input?.value ? dateStringToLocal(input.value) : "";
 

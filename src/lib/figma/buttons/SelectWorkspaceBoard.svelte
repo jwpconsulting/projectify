@@ -3,8 +3,6 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Folder } from "@steeze-ui/heroicons";
     import CircleIcon from "$lib/figma/buttons/CircleIcon.svelte";
-    import { Mutation_ArchiveWorkspaceBoard } from "$lib/graphql/operations";
-    import { client } from "$lib/graphql/client";
 
     import type { WorkspaceBoardSearchModule } from "$lib/types/stores";
     // import { goto } from "$app/navigation";
@@ -12,45 +10,13 @@
     export let workspaceBoardSearchModule: WorkspaceBoardSearchModule;
     export let workspaceBoard: WorkspaceBoard;
 
-    let { currentWorkspaceBoardUuid, currentWorkspaceBoard } =
-        workspaceBoardSearchModule;
+    let { currentWorkspaceBoardUuid } = workspaceBoardSearchModule;
 
     let buttonRef: HTMLElement;
 
-    async function onEdit() {
-        // TODO modal
-        // await client.mutate({
-        //     mutation: Mutation_UpdateWorkspaceBoard,
-        //     variables: {
-        //         input: {
-        //             uuid: workspaceBoard.uuid,
-        //             title: modalRes.outputs.title,
-        //             deadline: modalRes.outputs.deadline,
-        //             description: "",
-        //         },
-        //     },
-        // });
-    }
-
-    async function onArchive() {
-        // TODO confirmation dialog
-        await client.mutate({
-            mutation: Mutation_ArchiveWorkspaceBoard,
-            variables: {
-                input: {
-                    uuid: workspaceBoard.uuid,
-                    archived: true,
-                },
-            },
-        });
-
-        // TODO here we ought to find out the URL of the workspace this
-        // workspace board belongs to
-        console.error("TODO");
-    }
-
     function toggleMenu() {
         // TODO context menu
+        console.error("TODO use", buttonRef);
     }
 
     function selectBoard() {

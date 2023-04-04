@@ -4,6 +4,7 @@ import {
     Mutation_AddLabelMutation,
     Mutation_UpdateLabelMutation,
     Mutation_DeleteLabelMutation,
+    Mutation_ArchiveWorkspaceBoard,
 } from "$lib/graphql/operations";
 import type {
     Label,
@@ -153,4 +154,37 @@ export async function getArchivedWorkspaceBoards(
     return await getWithCredentialsJson<WorkspaceBoard[]>(
         `/workspace/workspace/${workspace_uuid}/workspace-boards-archived/`
     );
+}
+
+// These methods find refuge from SelectWorkspaceBoard.svelte here
+export async function updateWorkspaceBoard() {
+    // TODO modal
+    // await client.mutate({
+    //     mutation: Mutation_UpdateWorkspaceBoard,
+    //     variables: {
+    //         input: {
+    //             uuid: workspaceBoard.uuid,
+    //             title: modalRes.outputs.title,
+    //             deadline: modalRes.outputs.deadline,
+    //             description: "",
+    //         },
+    //     },
+    // });
+}
+
+export async function archiveWorkspaceBoard(workspaceBoard: WorkspaceBoard) {
+    // TODO confirmation dialog
+    await client.mutate({
+        mutation: Mutation_ArchiveWorkspaceBoard,
+        variables: {
+            input: {
+                uuid: workspaceBoard.uuid,
+                archived: true,
+            },
+        },
+    });
+
+    // TODO here we ought to find out the URL of the workspace this
+    // workspace board belongs to
+    console.error("TODO");
 }

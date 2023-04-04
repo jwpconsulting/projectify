@@ -29,6 +29,8 @@
 
 <button
     class="group rounded-2.5xl border border-transparent p-0.5 focus:border-border-focus focus:outline-none"
+    on:click={assignUser}
+    on:keydown={assignUser}
 >
     <div
         class="flex flex-row items-center gap-2 rounded-2.5xl border border-dashed border-primary px-2 py-1 text-xxs font-bold text-primary group-hover:bg-background group-active:bg-secondary-hover"
