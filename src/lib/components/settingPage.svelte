@@ -1,7 +1,6 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { getDashboardWorkspaceUrl } from "$lib/urls";
-    import { _ } from "svelte-i18n";
     import { currentWorkspaceUuid } from "$lib/stores/dashboard";
 
     import IconArrowLeft from "$lib/components/icons/icon-arrow-left.svelte";

@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
     import Button from "$lib/figma/buttons/Button.svelte";
     import SideMenuCreate from "$lib/figma/buttons/SideMenuCreate.svelte";
     import WorkspaceSettings from "$lib/figma/buttons/WorkspaceSettings.svelte";
@@ -10,7 +9,6 @@
     import CancelSearch from "$lib/figma/buttons/CancelSearch.svelte";
     import WatcherButton from "$lib/figma/buttons/WatcherButton.svelte";
     import ReadNotification from "$lib/figma/buttons/ReadNotification.svelte";
-    import TabElement from "$lib/figma/buttons/TabElement.svelte";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
     import SelectSeats from "$lib/figma/buttons/SelectSeats.svelte";
@@ -51,7 +49,6 @@
         falseTrue,
         buttonStyles,
         users,
-        workspaceBoard,
     } from "$lib/storybook";
     import { browser } from "$app/environment";
     import { setFirstWorkspace } from "$lib/stores/dashboard";

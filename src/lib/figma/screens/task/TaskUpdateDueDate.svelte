@@ -1,7 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import type { Label } from "$lib/types/workspace";
     // import Label from "$lib/figma/...";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Calendar } from "@steeze-ui/heroicons";

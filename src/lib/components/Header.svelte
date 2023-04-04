@@ -6,7 +6,6 @@
     import HeaderLogo from "$lib/components/assets/headerLogo.svelte";
     import HeaderUser from "$lib/components/headerUser.svelte";
     import IconHamburgerMenu from "$lib/components/icons/icon-hamburger-menu.svelte";
-    import IconClose from "$lib/components/icons/icon-close.svelte";
     import HeaderButtons from "$lib/components/header-buttons.svelte";
     import BoardSearchBar from "$lib/components/BoardSearchBar.svelte";
 

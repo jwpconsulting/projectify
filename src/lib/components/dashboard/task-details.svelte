@@ -87,7 +87,7 @@
         }
     }
 
-    let itsNew: boolean = false;
+    let itsNew = false;
     $: itsNew = $currentTaskUuid == null;
 
     $: saveEnabled = taskModified && task && task.title.length && !isSaving;

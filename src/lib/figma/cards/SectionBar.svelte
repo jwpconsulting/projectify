@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
     import TaskCard from "$lib/figma/cards/TaskCard.svelte";
     import SectionTitle from "$lib/figma/cards/section-bar/SectionTitle.svelte";
     import { createEventDispatcher } from "svelte";

@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
-
     import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
     import TaskFormFields from "$lib/figma/screens/task/TaskFormFields.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";

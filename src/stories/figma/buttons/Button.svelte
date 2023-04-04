@@ -3,7 +3,7 @@
     import Button from "$lib/figma/buttons/Button.svelte";
     import { action } from "@storybook/addon-actions";
 
-    import { buttonSizes, buttonColors } from "$lib/figma/types";
+    import { buttonSizes } from "$lib/figma/types";
     import { fr, fc, falseTrue } from "$lib/storybook";
     import type { ButtonColor } from "$lib/figma/types";
 

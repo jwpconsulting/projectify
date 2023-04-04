@@ -1,6 +1,5 @@
 import {
     Mutation_MoveTaskAfter,
-    Mutation_DeleteTask,
     Mutation_AssignTask,
     Mutation_AddLabelMutation,
     Mutation_UpdateLabelMutation,

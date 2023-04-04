@@ -1,11 +1,6 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
     import { Icon } from "@steeze-ui/svelte-icon";
-    import {
-        ChevronDown,
-        ChevronRight,
-        DotsHorizontal,
-    } from "@steeze-ui/heroicons";
+    import { ChevronDown, ChevronRight } from "@steeze-ui/heroicons";
     import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
 
     import type { WorkspaceBoardSection } from "$lib/types/workspace";

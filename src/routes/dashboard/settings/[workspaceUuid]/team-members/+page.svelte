@@ -1,14 +1,8 @@
 <script lang="ts">
-    import {
-        Mutation_AddUserToWorkspace,
-        Mutation_RemoveUserFromWorkspace,
-        Mutation_UpdateWorkspaceUser,
-    } from "$lib/graphql/operations";
     import type { WorkspaceUser } from "$lib/types/workspace";
 
     import { _ } from "svelte-i18n";
     import ProfilePicture from "$lib/components/profilePicture.svelte";
-    import { client } from "$lib/graphql/client";
     import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
     import SearchInput from "$lib/components/search-input.svelte";
     import Fuse from "fuse.js";
@@ -20,7 +14,6 @@
     import { workspaceUserRoles } from "$lib/types/workspaceUserRole";
     import IconEdit from "$lib/components/icons/icon-edit.svelte";
     import IconTrash from "$lib/components/icons/icon-trash.svelte";
-    import { goto } from "$app/navigation";
     import {
         loading,
         currentWorkspace,

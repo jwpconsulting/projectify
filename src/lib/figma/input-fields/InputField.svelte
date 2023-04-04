@@ -1,7 +1,6 @@
 <script lang="ts">
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Search, X } from "@steeze-ui/heroicons";
-    import { _ } from "svelte-i18n";
     import type { InputFieldStyle, InputFieldAnchor } from "$lib/figma/types";
     import Anchor from "$lib/figma/typography/Anchor.svelte";
 

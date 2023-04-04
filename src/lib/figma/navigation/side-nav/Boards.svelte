@@ -1,15 +1,11 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import { Mutation_AddWorkspaceBoard } from "$lib/graphql/operations";
-    import { client } from "$lib/graphql/client";
     // import { goto } from "$app/navigation";
     import Loading from "$lib/components/loading.svelte";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Plus, Folder } from "@steeze-ui/heroicons";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import SelectWorkspaceBoard from "$lib/figma/buttons/SelectWorkspaceBoard.svelte";
-    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
-    import type { Workspace } from "$lib/types/workspace";
     import type { WorkspaceBoardSearchModule } from "$lib/types/stores";
 
     export let workspaceBoardSearchModule: WorkspaceBoardSearchModule;

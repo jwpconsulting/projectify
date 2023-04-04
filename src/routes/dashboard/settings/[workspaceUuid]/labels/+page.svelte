@@ -3,11 +3,6 @@
     import LabelPill from "$lib/components/dashboard/LabelPill.svelte";
     import type { Label } from "$lib/types/workspace";
     import { currentWorkspace, loading } from "$lib/stores/dashboard";
-    import {
-        createLabel,
-        deleteLabel,
-        updateLabel,
-    } from "$lib/repository/workspace";
 
     let labels: Label[] = [];
 

@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
     import type { Task } from "$lib/types/workspace";
 
     export let task: Task;

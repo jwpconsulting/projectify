@@ -1,15 +1,10 @@
 <script lang="ts">
     import SectionBar from "$lib/figma/cards/SectionBar.svelte";
-    import {
-        Mutation_AddWorkspaceBoardSection,
-        Mutation_MoveWorkspaceBoardSection,
-    } from "$lib/graphql/operations";
-    import IconPlus from "$lib/components/icons/icon-plus.svelte";
+    import { Mutation_MoveWorkspaceBoardSection } from "$lib/graphql/operations";
     import { client } from "$lib/graphql/client";
     import { _ } from "svelte-i18n";
     import {
         currentWorkspaceBoard,
-        currentWorkspaceBoardUuid,
         currentWorkspaceBoardSections,
         currentSearchedTasks,
         taskSearchInput,
@@ -140,7 +135,6 @@
                     on:click={() => onAddNewSection()}
                     on:keydown={() => onAddNewSection()}
                 >
-                    <IconPlus />
                     <div>{$_("new-section")}</div>
                 </div>
             </div>

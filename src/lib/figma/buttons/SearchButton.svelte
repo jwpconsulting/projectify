@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
     import IconSearch from "$lib/components/icons/icon-search.svelte";
     import IconPlus from "$lib/components/icons/icon-plus.svelte";
 </script>

@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
     import SubTaskProgress from "$lib/figma/buttons/SubTaskProgress.svelte";
     import Title from "$lib/figma/cards/task-card/Title.svelte";
     import Labels from "$lib/figma/cards/task-card/Labels.svelte";

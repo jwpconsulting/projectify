@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { assignUserToTask } from "$lib/repository/workspace";
-    import type { Task, WorkspaceUser } from "$lib/types/workspace";
+    import type { Task } from "$lib/types/workspace";
     import WorkspaceUserAvatar from "$lib/components/WorkspaceUserAvatar.svelte";
 
     export let task: Task;

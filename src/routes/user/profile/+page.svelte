@@ -4,7 +4,6 @@
     import SettingPage from "$lib/components/settingPage.svelte";
     import ProfilePictureFileSelector from "$lib/components/profilePictureFileSelector.svelte";
     import { fetchUser, user } from "$lib/stores/user";
-    import { _ } from "svelte-i18n";
 
     import vars from "$lib/env";
     import { client } from "$lib/graphql/client";

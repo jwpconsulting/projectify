@@ -2,7 +2,6 @@
     import SettingFooterEditSaveButtons from "$lib/components/settingFooterEditSaveButtons.svelte";
     import ProfilePictureFileSelector from "$lib/components/profilePictureFileSelector.svelte";
     import SettingsField from "$lib/components/dashboard/settings-field.svelte";
-    import { _ } from "svelte-i18n";
     import { client } from "$lib/graphql/client";
     import vars from "$lib/env";
     import { Mutation_UpdateWorkspace } from "$lib/graphql/operations";

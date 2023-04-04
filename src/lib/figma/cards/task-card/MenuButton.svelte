@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { moveTaskAfter, deleteTask } from "$lib/repository/workspace";
-    import { _ } from "svelte-i18n";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { DotsHorizontal } from "@steeze-ui/heroicons";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";

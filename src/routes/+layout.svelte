@@ -1,14 +1,12 @@
 <script lang="ts">
     import "../app.scss";
     import "../i18n.js";
-    import DatePickerDropDown from "$lib/components/datePickerDropDown.svelte";
     import ConnectionStatus from "$lib/components/connectionStatus.svelte";
     import GlobalDropDown from "$lib/components/globalDropDown.svelte";
     import OverlayContainer from "$lib/components/OverlayContainer.svelte";
     import ContextMenuContainer from "$lib/components/ContextMenuContainer.svelte";
     import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
     import "$lib/stores/global-ui";
-    import { browser } from "$app/environment";
     import {
         destructiveOverlayState,
         closeDestructiveOverlay,

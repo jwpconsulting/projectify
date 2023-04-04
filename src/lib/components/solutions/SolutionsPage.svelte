@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
     import type { SolutionsPageContent } from "$lib/types/ui";
     import SolutionsHero from "$lib/components/solutions/SolutionsHero.svelte";
     import SolutionsFeature from "$lib/components/solutions/SolutionsFeature.svelte";

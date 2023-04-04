@@ -3,7 +3,6 @@
     import { Mutation_AssignLabel } from "$lib/graphql/operations";
     import { currentWorkspaceLabels } from "$lib/stores/dashboard";
     import type { Task, Label } from "$lib/types/workspace";
-    import LabelPill from "$lib/components/dashboard/LabelPill.svelte";
 
     import { createEventDispatcher, onMount } from "svelte";
 

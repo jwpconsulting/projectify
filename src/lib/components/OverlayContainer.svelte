@@ -1,11 +1,6 @@
 <script lang="ts">
     import type { Readable } from "svelte/store";
     import type { Overlay, OverlayComponent } from "$lib/types/ui";
-    import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
-    import {
-        closeDestructiveOverlay,
-        performDestructiveOverlay,
-    } from "$lib/stores/global-ui";
 
     export let overlay: OverlayComponent;
     export let store: Readable<Overlay<any, any>>;

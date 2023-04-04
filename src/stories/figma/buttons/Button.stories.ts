@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 import { Plus } from "@steeze-ui/heroicons";
 
 import { buttonColors } from "$lib/figma/types";
-import type { ButtonStyle } from "$lib/figma/types";
 
 import Button from "./Button.svelte";
 

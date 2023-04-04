@@ -1,8 +1,5 @@
 <script lang="ts">
-    import {
-        Mutation_ArchiveWorkspaceBoard,
-        Mutation_DeleteWorkspaceBoard,
-    } from "$lib/graphql/operations";
+    import { Mutation_ArchiveWorkspaceBoard } from "$lib/graphql/operations";
     import { dateStringToLocal } from "$lib/utils/date";
     import { _ } from "svelte-i18n";
     import { client } from "$lib/graphql/client";

@@ -1,18 +1,11 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
     import type { WorkspaceBoard } from "$lib/types/workspace";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Folder } from "@steeze-ui/heroicons";
     import CircleIcon from "$lib/figma/buttons/CircleIcon.svelte";
-    import {
-        Mutation_UpdateWorkspaceBoard,
-        Mutation_ArchiveWorkspaceBoard,
-    } from "$lib/graphql/operations";
+    import { Mutation_ArchiveWorkspaceBoard } from "$lib/graphql/operations";
     import { client } from "$lib/graphql/client";
-    import {
-        getDashboardWorkspaceBoardUrl,
-        getDashboardWorkspaceUrl,
-    } from "$lib/urls";
+
     import type { WorkspaceBoardSearchModule } from "$lib/types/stores";
     // import { goto } from "$app/navigation";
 

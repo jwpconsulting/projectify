@@ -1,9 +1,5 @@
-import type { SvelteComponentTyped, SvelteComponent } from "svelte";
-import type {
-    BaseMeta,
-    BaseAnnotations,
-    StoryContext,
-} from "@storybook/addons";
+import type { SvelteComponent } from "svelte";
+import type { BaseAnnotations } from "@storybook/addons";
 
 type DecoratorReturnType =
     | void
