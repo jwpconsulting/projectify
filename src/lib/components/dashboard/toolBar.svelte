@@ -1,8 +1,9 @@
 <script lang="ts" context="module">
+    import type { SvelteComponent } from "svelte";
     export type ToolBarItem = {
         label: string;
-        icon: any;
-        onClick: (...arg0: any[]) => void;
+        icon: typeof SvelteComponent;
+        onClick: (...arg0: unknown[]) => void;
         disabled?: boolean;
         hidden?: boolean;
         tooltip?: string;

@@ -1,11 +1,9 @@
 <script lang="ts">
-    import { getContext } from "svelte";
     import { _ } from "svelte-i18n";
 
     let title = "";
-    const modal = getContext<any>("modal");
     function submit() {
-        modal.close({ title });
+        console.error("TODO?");
     }
 </script>
 

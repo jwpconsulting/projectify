@@ -36,6 +36,7 @@
     }
 
     async function onDeleteItem(item: WorkspaceBoard) {
+        console.error("TODO delete item", item);
         // TODO let modalRes = await getModal("deleteArchivedBoard").open();
         // TODO if (!modalRes) {
         // TODO     return;

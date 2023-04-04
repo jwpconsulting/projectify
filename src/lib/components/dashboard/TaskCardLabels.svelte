@@ -15,7 +15,7 @@
         }
         dropDown.openComponent(LabelPicker, labelPickerBtnRef, {
             task,
-            dispatch: async (_name: string, _data: any) => {
+            dispatch: async (_name: string, _data: unknown) => {
                 if (!dropDown) {
                     throw new Error("Expected dropDown");
                 }

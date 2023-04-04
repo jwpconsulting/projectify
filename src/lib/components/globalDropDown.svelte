@@ -1,9 +1,10 @@
 <script context="module" lang="ts">
+    import type { SvelteComponent } from "svelte";
     export type DropDownMenuItem = {
-        id?: any;
+        id?: unknown;
         label: string;
-        icon: any;
-        onClick?: (...arg0: any) => void;
+        icon: typeof SvelteComponent | null;
+        onClick?: (...arg0: unknown[]) => void;
         href?: string;
         disabled?: boolean;
         hidden?: boolean;
@@ -13,9 +14,17 @@
     };
 
     type DropDown = {
-        open: (...arg0: any[]) => void;
-        openComponent: (...arg0: any[]) => void;
-        close: (...arg0: any[]) => void;
+        open: (
+            its: DropDownMenuItem[],
+            trg: HTMLElement,
+            aId: unknown | null
+        ) => void;
+        openComponent: (
+            comp: typeof SvelteComponent,
+            trg: HTMLElement,
+            props: { [key: string]: unknown }
+        ) => void;
+        close: (...arg0: unknown[]) => void;
     };
 
     let dropDown: DropDown | null = null;
@@ -26,15 +35,15 @@
 </script>
 
 <script lang="ts">
-    import { SvelteComponent, tick } from "svelte";
+    import { tick } from "svelte";
     import IconChevronDown from "$lib/components/icons/icon-chevron-down.svelte";
 
     let component: typeof SvelteComponent | null = null;
-    let componentProps: any | null = null;
+    let componentProps: { [key: string]: unknown } | null = null;
     let items: DropDownMenuItem[] | null = null;
     let target: HTMLElement | null = null;
     let focusEl: HTMLElement | null = null;
-    let activeId: any | null = null;
+    let activeId: unknown | null = null;
     let rootEl: HTMLElement | null;
     let startX: number;
     let startY: number;
@@ -111,7 +120,7 @@
     async function open(
         its: DropDownMenuItem[],
         trg: HTMLElement,
-        aId: any = null
+        aId: unknown | null = null
     ) {
         close();
         items = its;
@@ -123,7 +132,7 @@
     async function openComponent(
         comp: typeof SvelteComponent,
         trg: HTMLElement,
-        props: any
+        props: { [key: string]: unknown }
     ) {
         close();
         target = trg;

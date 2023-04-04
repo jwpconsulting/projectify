@@ -63,6 +63,7 @@ export async function moveTaskAfter(
 }
 
 export async function deleteTask(task: Task): Promise<void> {
+    console.error("TODO do something with", task);
     // TODO const modalRes = await getModal("deleteTaskConfirmModal").open();
     // TODO if (!modalRes) {
     // TODO     return;

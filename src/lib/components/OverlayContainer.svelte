@@ -3,7 +3,7 @@
     import type { Overlay, OverlayComponent } from "$lib/types/ui";
 
     export let overlay: OverlayComponent;
-    export let store: Readable<Overlay<any, any>>;
+    export let store: Readable<Overlay<unknown, unknown>>;
     export let close: () => void;
     export let perform: () => void;
 </script>

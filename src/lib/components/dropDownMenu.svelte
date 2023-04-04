@@ -1,9 +1,11 @@
 <script lang="ts" context="module">
+    import type { SvelteComponent } from "svelte";
+
     export type DropDownMenuItem = {
-        id?: any;
+        id?: unknown;
         label: string;
-        icon: any;
-        onClick?: (...arg0: any) => void;
+        icon: typeof SvelteComponent;
+        onClick?: (...arg0: unknown[]) => void;
         href?: string;
         disabled?: boolean;
         hidden?: boolean;
@@ -14,7 +16,7 @@
 <script lang="ts">
     let focusEl: HTMLElement;
     export let items: DropDownMenuItem[];
-    export let activeId: any = null;
+    export let activeId: unknown | null = null;
 </script>
 
 <div class="dropdown dropdown-end select-none">

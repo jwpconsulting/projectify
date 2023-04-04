@@ -6,7 +6,15 @@
 
     let userPickerBtnRef: HTMLElement;
 
-    function openUserPicker() {}
+    function openUserPicker() {
+        // TODO
+        console.error(
+            "TODO do something with task",
+            task,
+            "and",
+            userPickerBtnRef
+        );
+    }
 </script>
 
 {#if task.assignee}

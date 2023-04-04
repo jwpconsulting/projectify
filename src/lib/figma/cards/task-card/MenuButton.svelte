@@ -7,6 +7,13 @@
     export let workspaceBoardSection: WorkspaceBoardSection | null;
     let dropDownMenuBtnRef: HTMLElement;
 
+    $: console.log(
+        "TODO use task",
+        task,
+        "and html element",
+        dropDownMenuBtnRef
+    );
+
     function openDropDownMenu() {
         if (!workspaceBoardSection) {
             throw new Error("Expected workspaceBoardSection");
@@ -16,11 +23,13 @@
             throw new Error("Expected workspaceBoardSection.tasks");
         }
         const tasks = workspaceBoardSection.tasks;
-        let lastTask = tasks[tasks.length - 1];
-        let prevTask = tasks[tasks.indexOf(task) - 1];
-        let nextTask = tasks[tasks.indexOf(task) + 1];
-        let isFirst = task.uuid == tasks[0].uuid;
-        let isLast = task.uuid == lastTask.uuid;
+        // TODO
+        console.error("TODO Do something with", uuid, "and", tasks);
+        // let lastTask = tasks[tasks.length - 1];
+        // let prevTask = tasks[tasks.indexOf(task) - 1];
+        // let nextTask = tasks[tasks.indexOf(task) + 1];
+        // let isFirst = task.uuid == tasks[0].uuid;
+        // let isLast = task.uuid == lastTask.uuid;
         // TODO show menu
     }
 </script>

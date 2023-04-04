@@ -229,12 +229,6 @@
             id: "updates",
         },
     ];
-
-    import { getContext } from "svelte";
-    const modal = getContext<any>("modal");
-    function close() {
-        modal.close();
-    }
 </script>
 
 {#if loading}

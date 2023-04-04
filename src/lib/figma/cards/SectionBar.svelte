@@ -26,11 +26,11 @@
         }
     }
 
-    function switchWithPrevSection({ detail }: { detail: any }) {
+    function switchWithPrevSection({ detail }: { detail: unknown }) {
         dispatch("switchWithPrevSection", detail);
     }
 
-    function switchWithNextSection({ detail }: { detail: any }) {
+    function switchWithNextSection({ detail }: { detail: unknown }) {
         dispatch("switchWithNextSection", detail);
     }
 </script>

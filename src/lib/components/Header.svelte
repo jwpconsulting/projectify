@@ -17,7 +17,7 @@
         authRequired?: boolean;
         forceNaviagiation?: boolean;
         fetchUser?: boolean;
-        action?: (arg0: any) => void;
+        action?: () => void;
     };
 
     let items: HeaderItem[] = [];

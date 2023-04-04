@@ -10,8 +10,7 @@
 
     export let workspaceBoardSearchModule: WorkspaceBoardSearchModule;
 
-    let { currentWorkspace, currentWorkspaceBoardUuid } =
-        workspaceBoardSearchModule;
+    let { currentWorkspace } = workspaceBoardSearchModule;
 
     let open = true;
 
