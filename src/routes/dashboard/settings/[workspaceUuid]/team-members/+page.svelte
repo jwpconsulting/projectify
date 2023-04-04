@@ -135,7 +135,7 @@
         ];
 
         if (dropDown && filterRoleButton) {
-            dropDown.open(dropDownItems, filterRoleButton);
+            dropDown.open(dropDownItems, filterRoleButton, null);
         } else {
             throw new Error("Expected dropDown && filterRoleButton");
         }
