@@ -22,4 +22,15 @@ module.exports = {
         es2017: true,
         node: true,
     },
+    rules: {
+        "unused-imports/no-unused-imports": "error",
+        // https://stackoverflow.com/a//64150393
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": [
+            "error",
+            {
+                argsIgnorePattern: "_.*",
+            },
+        ],
+    },
 };
