@@ -16,6 +16,7 @@
     }
 
     async function onDeleteLabel(label: Label) {
+        console.error("TODO delete", label);
         // TODO let modalRes = await getModal("deleteLabel").open();
         // TODO if (!modalRes) {
         // TODO     return;
@@ -24,6 +25,7 @@
     }
 
     async function onEditLabel(label: Label) {
+        console.error("TODO edit", label);
         // TODO let modalRes = await getModal("editLabel").open({ ...label });
         // TODO if (!modalRes) {
         // TODO     return;

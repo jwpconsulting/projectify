@@ -51,6 +51,7 @@
         // TODO });
     }
     async function onRemoveUser(workspaceUser: WorkspaceUser) {
+        console.error("TODO remove", workspaceUser);
         // TODO if (!$currentWorkspace) {
         // TODO     return;
         // TODO }
@@ -66,6 +67,7 @@
     }
 
     async function onEditUser(workspaceUser: WorkspaceUser) {
+        console.error("TODO edit", workspaceUser);
         // TODO if (!$currentWorkspace) {
         // TODO     return;
         // TODO }
