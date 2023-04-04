@@ -1,8 +1,12 @@
 <script lang="ts">
+    import Loading from "$lib/components/loading.svelte";
     import Dashboard from "$lib/components/dashboard/Dashboard.svelte";
     import { page } from "$app/stores";
 
-    import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard";
+    import {
+        currentWorkspaceBoard,
+        currentWorkspaceBoardUuid,
+    } from "$lib/stores/dashboard";
 
     $: {
         $currentWorkspaceBoardUuid = $page.params["workspaceBoardUuid"];
@@ -10,4 +14,8 @@
     }
 </script>
 
-<Dashboard />
+{#if $currentWorkspaceBoard}
+    <Dashboard workspaceBoard={$currentWorkspaceBoard} />
+{:else}
+    <Loading />
+{/if}
