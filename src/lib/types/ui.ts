@@ -11,6 +11,7 @@ import type {
     SideNavModule,
     WorkspaceBoardSectionModule,
 } from "$lib/types/stores";
+import type { SvelteComponentTyped } from "svelte";
 
 export type Input = {
     name?: string;
@@ -65,16 +66,31 @@ export type DestructiveOverlayType =
     | { kind: "archiveBoard"; workspaceBoard: WorkspaceBoard }
     | { kind: "deleteBoard"; workspaceBoard: WorkspaceBoard };
 
-export type DestructiveOverlayAction =
-    | { kind: "async"; action: () => Promise<void> }
-    | { kind: "sync"; action: () => void };
-export type DestructiveOverlayState =
+export type Overlay<Target, Action> =
     | { kind: "hidden" }
     | {
           kind: "visible";
-          target: DestructiveOverlayType;
-          action: DestructiveOverlayAction;
+          target: Target;
+          action: Action;
       };
+
+// XXX need typeof here for some reason
+export type OverlayComponent = typeof SvelteComponentTyped<{
+    // TODO this has to be something, the generic version of
+    // DestructiveOverlayType
+    target: any;
+}>;
+
+export type OverlayAction =
+    | { kind: "async"; action: () => Promise<void> }
+    | { kind: "sync"; action: () => void };
+
+// TODO we could define some kind of UBER overlay type that also has a
+// reference to the container, ... some time in the future Justus 2023-04-04
+export type DestructiveOverlayState = Overlay<
+    DestructiveOverlayType,
+    OverlayAction
+>;
 
 export type ContextMenuType =
     | { kind: "profile" }
@@ -103,9 +119,10 @@ export type ConstructiveOverlayType =
     | { kind: "createWorkspace" }
     | { kind: "skipOnboarding" }
     | { kind: "recoverWorkspaceBoard"; workspaceBoard: WorkspaceBoard };
-export type ConstructiveOverlayState =
-    | { kind: "hidden" }
-    | { kind: "visible"; target: ConstructiveOverlayType };
+export type ConstructiveOverlayState = Overlay<
+    ConstructiveOverlayType,
+    OverlayAction
+>;
 
 export type FeatureDescription = {
     image: {

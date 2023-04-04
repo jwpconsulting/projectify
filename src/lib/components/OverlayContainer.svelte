@@ -1,26 +1,25 @@
 <script lang="ts">
+    import type { Readable } from "svelte/store";
+    import type { Overlay, OverlayComponent } from "$lib/types/ui";
     import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
     import {
-        destructiveOverlayState,
         closeDestructiveOverlay,
         performDestructiveOverlay,
     } from "$lib/stores/global-ui";
 
-    function close() {
-        closeDestructiveOverlay();
-    }
-
-    function perform() {
-        performDestructiveOverlay();
-    }
+    export let overlay: OverlayComponent;
+    export let store: Readable<Overlay<any, any>>;
+    export let close: () => void;
+    export let perform: () => void;
 </script>
 
-{#if $destructiveOverlayState.kind === "visible"}
+{#if $store.kind === "visible"}
     <div
         class="fixed top-0 left-0 flex h-screen w-screen items-center justify-center bg-black/50"
     >
-        <DestructiveOverlay
-            target={$destructiveOverlayState.target}
+        <svelte:component
+            this={overlay}
+            target={$store.target}
             on:cancel={close}
             on:destroy={perform}
         />

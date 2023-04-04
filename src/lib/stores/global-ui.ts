@@ -1,25 +1,26 @@
+import type { Writable } from "svelte/store";
 import { writable } from "svelte/store";
 import type {
     DestructiveOverlayState,
     DestructiveOverlayType,
-    DestructiveOverlayAction,
+    OverlayAction,
     ContextMenuType,
     ContextMenuState,
+    Overlay,
 } from "$lib/types/ui";
 
 export const destructiveOverlayState = writable<DestructiveOverlayState>({
     kind: "hidden",
 });
 
-export function openDestructiveOverlay(
-    target: DestructiveOverlayType,
-    action: DestructiveOverlayAction
+function openOverlay<Target, Action>(
+    overlay: Writable<Overlay<Target, Action>>,
+    target: Target,
+    action: Action
 ) {
-    destructiveOverlayState.update(($destructiveOverlayState) => {
-        if ($destructiveOverlayState.kind !== "hidden") {
-            throw new Error(
-                "Expected $destructiveOverlayState.kind to be hidden"
-            );
+    overlay.update(($overlay) => {
+        if ($overlay.kind !== "hidden") {
+            throw new Error("Expected $overlay.kind to be hidden");
         }
         return {
             kind: "visible",
@@ -29,17 +30,26 @@ export function openDestructiveOverlay(
     });
 }
 
-export function closeDestructiveOverlay() {
-    destructiveOverlayState.update(($destructiveOverlayState) => {
-        if ($destructiveOverlayState.kind !== "visible") {
-            throw new Error(
-                "Expected $destructiveOverlayState.kind to be visible"
-            );
+function closeOverlay(overlay: Writable<Overlay<any, any>>) {
+    overlay.update(($overlay) => {
+        if ($overlay.kind !== "visible") {
+            throw new Error("Expected $overlay.kind to be visible");
         }
         return {
             kind: "hidden",
         };
     });
+}
+
+export function openDestructiveOverlay(
+    target: DestructiveOverlayType,
+    action: OverlayAction
+) {
+    openOverlay(destructiveOverlayState, target, action);
+}
+
+export function closeDestructiveOverlay() {
+    closeOverlay(destructiveOverlayState);
 }
 
 export function performDestructiveOverlay() {

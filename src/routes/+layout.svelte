@@ -4,10 +4,16 @@
     import DatePickerDropDown from "$lib/components/datePickerDropDown.svelte";
     import ConnectionStatus from "$lib/components/connectionStatus.svelte";
     import GlobalDropDown from "$lib/components/globalDropDown.svelte";
-    import DestructiveOverlayContainer from "$lib/components/DestructiveOverlayContainer.svelte";
+    import OverlayContainer from "$lib/components/OverlayContainer.svelte";
     import ContextMenuContainer from "$lib/components/ContextMenuContainer.svelte";
+    import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
     import "$lib/stores/global-ui";
     import { browser } from "$app/environment";
+    import {
+        destructiveOverlayState,
+        closeDestructiveOverlay,
+        performDestructiveOverlay,
+    } from "$lib/stores/global-ui";
 </script>
 
 <svelte:head>
@@ -21,5 +27,10 @@
 
 <GlobalDropDown />
 
-<DestructiveOverlayContainer />
+<OverlayContainer
+    overlay={DestructiveOverlay}
+    store={destructiveOverlayState}
+    close={closeDestructiveOverlay}
+    perform={performDestructiveOverlay}
+/>
 <ContextMenuContainer />
