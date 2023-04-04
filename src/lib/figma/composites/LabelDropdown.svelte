@@ -6,7 +6,7 @@
     import type { LabelSearchModule } from "$lib/types/stores";
 
     export let labelSearchModule: LabelSearchModule;
-    export let open: boolean = true;
+    export let open = true;
 
     function toggleOpen() {
         open = !open;

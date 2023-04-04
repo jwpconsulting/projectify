@@ -10,7 +10,7 @@
     export let viewBackButton = false;
     export let nextMessage: string | null = null;
 
-    export let stepCount: number = 0;
+    export let stepCount = 0;
     export let step: number | null = null;
 
     $: steps = Array(stepCount)

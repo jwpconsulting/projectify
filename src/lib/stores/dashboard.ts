@@ -225,7 +225,7 @@ export function openNewTask(sectionUuid: string): void {
 export function openTaskDetails(
     workspaceBoardUuid: string,
     taskUuid: string,
-    subView: string = "details"
+    subView = "details"
 ) {
     drawerModalOpen.set(true);
     currentTaskUuid.set(taskUuid);

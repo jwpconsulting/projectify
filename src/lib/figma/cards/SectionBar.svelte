@@ -11,7 +11,7 @@
 
     const dispatch = createEventDispatcher();
 
-    let open: boolean = true;
+    let open = true;
 
     function toggleOpen() {
         open = !open;

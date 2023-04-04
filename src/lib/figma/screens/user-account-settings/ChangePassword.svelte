@@ -3,10 +3,10 @@
     import InputField from "$lib/figma/input-fields/InputField.svelte";
     import Button from "$lib/figma/buttons/Button.svelte";
 
-    let hasBeenEdited: boolean = false;
-    let currentPassword: string = "";
-    let newPassword1: string = "";
-    let newPassword2: string = "";
+    let hasBeenEdited = false;
+    let currentPassword = "";
+    let newPassword1 = "";
+    let newPassword2 = "";
     // TODO wiring
 </script>
 

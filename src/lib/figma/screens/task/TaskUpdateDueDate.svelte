@@ -12,7 +12,7 @@
     export let date: string | null;
 
     // TODO show Due soon!
-    export let dueSoon: boolean = false;
+    export let dueSoon = false;
 </script>
 
 <div class="flex flex-row items-center gap-4">

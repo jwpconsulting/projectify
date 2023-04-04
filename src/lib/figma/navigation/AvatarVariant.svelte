@@ -7,7 +7,7 @@
 
     export let content: AvatarVariantContent;
     export let size: AvatarVariantSize;
-    export let hoverableParent: boolean = false;
+    export let hoverableParent = false;
 
     const zIndices = new Map<number, string>([
         [0, "z-[110]"],

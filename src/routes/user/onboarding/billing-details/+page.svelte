@@ -12,7 +12,7 @@
     $: selectedBillingSeatInx = billingSeats.findIndex(
         (it) => it == numberOfSeats
     );
-    function increaseSeats(positive: boolean = true) {
+    function increaseSeats(positive = true) {
         if (positive) {
             numberOfSeats++;
         } else {

@@ -3,7 +3,7 @@
     import HelpDropdownButton from "$lib/figma/dropdown/HelpDropdownButton.svelte";
     import HelpDropdownMenu from "$lib/figma/dropdown/HelpDropdownMenu.svelte";
 
-    export let open: boolean = true;
+    export let open = true;
 
     function toggleOpen() {
         open = !open;

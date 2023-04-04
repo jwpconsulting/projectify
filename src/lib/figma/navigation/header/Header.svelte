@@ -1,6 +1,6 @@
 <script lang="ts">
     export let logoVisible: boolean;
-    export let alwaysVisible: boolean = false;
+    export let alwaysVisible = false;
 </script>
 
 <div
