@@ -25,7 +25,7 @@ commands:
                   name: Install pip packages
                   command: pipenv sync --dev
 jobs:
-    check:
+    svelte-check:
         executor: node
         steps:
             - checkout
@@ -37,8 +37,22 @@ jobs:
                   paths:
                       - ~/.npm
             - run:
-                  name: Run check
-                  command: npm run check
+                  name: Run svelte-check
+                  command: npm run svelte-check
+    eslint:
+        executor: node
+        steps:
+            - checkout
+            - restore_cache:
+                  key: npm-cache-v1-{{ checksum "package-lock.json" }}
+            - install_node_dependencies
+            - save_cache:
+                  key: npm-cache-v1-{{ checksum "package-lock.json" }}
+                  paths:
+                      - ~/.npm
+            - run:
+                  name: Run eslint
+                  command: npm run eslint
     lint:
         executor: node
         steps:
@@ -97,9 +111,10 @@ jobs:
 workflows:
     test_all:
         jobs:
-            - check
-            - build
+            - svelte-check
+            - eslint
             - lint
+            - build
             - pipenv_check
             - python_lint
             - mypy
