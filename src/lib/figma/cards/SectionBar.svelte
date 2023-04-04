@@ -45,7 +45,7 @@
         on:switchWithPrevSection={switchWithPrevSection}
         on:switchWithNextSection={switchWithNextSection}
     />
-    <main class="flex flex-col gap-2">
+    <main class="flex flex-col gap-2 rounded-b-2xl">
         {#each tasks as task, inx (task.uuid)}
             <TaskCard
                 workspaceBoardSection={section}

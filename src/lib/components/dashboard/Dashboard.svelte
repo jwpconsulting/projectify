@@ -103,7 +103,7 @@
         {/if}
     {:else}
         <!-- Sections -->
-        <div class="flex grow flex-col overflow-y-auto p-2">
+        <div class="flex grow flex-col gap-16 overflow-y-auto p-2">
             {#each $currentWorkspaceBoardSections as section, index (section.uuid)}
                 <SectionBar
                     {section}
