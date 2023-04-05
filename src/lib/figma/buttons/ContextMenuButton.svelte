@@ -5,13 +5,13 @@
     import type {
         MenuButtonState,
         MenuButtonColor,
-        MenuButtonKind,
+        ButtonAction,
     } from "$lib/figma/types";
     export let label: string;
     export let icon: IconSource | null;
     export let state: MenuButtonState;
     export let color: MenuButtonColor = "base";
-    export let kind: MenuButtonKind;
+    export let kind: ButtonAction;
 
     $: colorStyle = {
         base: "text-base-content",
