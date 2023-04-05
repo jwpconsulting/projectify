@@ -21,7 +21,7 @@
         <SquovalIcon
             icon="dotsVertical"
             state="active"
-            action={console.error}
+            action={{ kind: "button", action: console.error }}
         />
         <Button
             color="blue"

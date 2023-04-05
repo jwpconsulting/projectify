@@ -14,7 +14,11 @@
         DotsVertical,
         LightBulb,
     } from "@steeze-ui/heroicons";
-    import type { SquovalIcon, SquovalState } from "$lib/figma/types";
+    import type {
+        SquovalIcon,
+        SquovalState,
+        ButtonAction,
+    } from "$lib/figma/types";
 
     export let icon: SquovalIcon;
     $: src = {
@@ -36,11 +40,14 @@
     export let state: SquovalState;
     export let active = false;
 
-    export let action: () => void;
+    export let action: ButtonAction;
 </script>
 
-<button
-    on:click={action}
+<svelte:element
+    this={action.kind}
+    on:click={action.kind == "button" ? action.action : undefined}
+    on:keydown={action.kind == "button" ? action.action : undefined}
+    href={action.kind == "a" ? action.href : undefined}
     class="focus:base-content relative h-8 w-8 rounded-lg border border-transparent p-1 focus:border-base-content focus:outline-none active:text-display enabled:hover:bg-secondary-hover enabled:active:bg-primary"
     class:text-base-content={state === "active"}
     class:invisible={state === "inactive"}
@@ -53,4 +60,4 @@
         />
     {/if}
     <Icon {src} theme="outline" />
-</button>
+</svelte:element>

@@ -15,7 +15,7 @@
     <SquovalIcon
         state="active"
         icon="member"
-        action={toggleUserExpandOpen}
+        action={{ kind: "button", action: toggleUserExpandOpen }}
         active={$selectedWorkspaceUser.kind === "workspaceUsers"}
     />
     {#if $userExpandOpen}

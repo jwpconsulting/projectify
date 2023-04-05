@@ -26,11 +26,15 @@
             <div>{progressString}</div>
         </div>
         <div class="flex flex-row gap-6">
-            <SquovalIcon icon="plus" state="active" action={console.error} />
+            <SquovalIcon
+                icon="plus"
+                state="active"
+                action={{ kind: "button", action: console.error }}
+            />
             <SquovalIcon
                 icon="ellipsis"
                 state="active"
-                action={console.error}
+                action={{ kind: "button", action: console.error }}
             />
         </div>
     </div>
