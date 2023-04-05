@@ -6,9 +6,6 @@
 
     export let section: WorkspaceBoardSection;
 
-    export let isFirst: boolean | null = null;
-    export let isLast: boolean | null = null;
-
     const dispatch = createEventDispatcher();
 
     let open = true;
@@ -37,8 +34,6 @@
 
 <div class="flex flex-col">
     <SectionTitle
-        {isLast}
-        {isFirst}
         {section}
         {toggleOpen}
         bind:open

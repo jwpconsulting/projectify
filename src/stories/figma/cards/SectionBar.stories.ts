@@ -6,18 +6,9 @@ import { workspaceBoardSection } from "$lib/storybook";
 
 const meta: Meta<SectionBar> = {
     component: SectionBar,
-    argTypes: {
-        isFirst: {
-            control: "boolean",
-        },
-        isLast: {
-            control: "boolean",
-        },
-    },
+    argTypes: {},
     args: {
         section: workspaceBoardSection,
-        isFirst: true,
-        isLast: false,
     },
 };
 export default meta;

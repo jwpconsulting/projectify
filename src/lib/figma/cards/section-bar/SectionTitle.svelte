@@ -9,15 +9,12 @@
     export let section: WorkspaceBoardSection;
     export let toggleOpen: () => void;
     export let open: boolean;
-    // XXX These two are mutually exclusive
-    export let isLast: boolean | null;
-    export let isFirst: boolean | null;
 
     let dropDownMenuBtnRef: SvelteComponent;
 
     function openDropDownMenu() {
         // TODO
-        console.log({ isFirst, isLast });
+        console.log("Need to open drop down menu at", dropDownMenuBtnRef);
     }
 </script>
 

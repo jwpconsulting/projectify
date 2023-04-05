@@ -104,11 +104,9 @@
     {:else}
         <!-- Sections -->
         <div class="flex grow flex-col gap-16 overflow-y-auto p-2">
-            {#each $currentWorkspaceBoardSections as section, index (section.uuid)}
+            {#each $currentWorkspaceBoardSections as section (section.uuid)}
                 <SectionBar
                     {section}
-                    isFirst={index == 0}
-                    isLast={index == $currentWorkspaceBoardSections.length - 1}
                     on:switchWithPrevSection={onSwitchWithPrevSection}
                     on:switchWithNextSection={onSwitchWithNextSection}
                 />

@@ -10,18 +10,10 @@ const meta: Meta<SectionTitle> = {
         open: {
             control: "boolean",
         },
-        isLast: {
-            control: "boolean",
-        },
-        isFirst: {
-            control: "boolean",
-        },
     },
     args: {
         section: workspaceBoardSection,
         open: true,
-        isFirst: true,
-        isLast: false,
     },
 };
 export default meta;
