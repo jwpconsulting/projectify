@@ -34,8 +34,10 @@
     <Loading />
 {/if}
 <ContextMenuButton
-    kind={{ kind: "button" }}
-    on:click={() => console.error("add new workspace not implemented")}
+    kind={{
+        kind: "button",
+        action: () => console.error("add new workspace not implemented"),
+    }}
     label={$_("workspace-overlay.add-new-workspace")}
     state="normal"
     color="primary"

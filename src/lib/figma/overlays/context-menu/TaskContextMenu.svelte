@@ -21,8 +21,10 @@
 
 {#if location === "dashboard"}
     <ContextMenuButton
-        kind={{ kind: "button" }}
-        on:click={() => console.error("open task not implemented")}
+        kind={{
+            kind: "button",
+            action: () => console.error("open task not implemented"),
+        }}
         label={$_("task-overlay.open-task")}
         state="normal"
         icon={ArrowsExpand}
@@ -35,39 +37,49 @@
 />
 {#if location === "dashboard"}
     <ContextMenuButton
-        kind={{ kind: "button" }}
-        on:click={() => console.error("move to top not implemented")}
+        kind={{
+            kind: "button",
+            action: () => console.error("move to top not implemented"),
+        }}
         label={$_("task-overlay.move-to-top")}
         state="normal"
         icon={SortAscending}
     />
     <ContextMenuButton
-        kind={{ kind: "button" }}
-        on:click={() => console.error("move to bottom not implemented")}
+        kind={{
+            kind: "button",
+            action: () => console.error("move to bottom not implemented"),
+        }}
         label={$_("task-overlay.move-to-bottom")}
         state="normal"
         icon={SortDescending}
     />
 {/if}
 <ContextMenuButton
-    kind={{ kind: "button" }}
-    on:click={() => console.error("copy link not implemented")}
+    kind={{
+        kind: "button",
+        action: () => console.error("copy link not implemented"),
+    }}
     label={$_("task-overlay.copy-link")}
     state="normal"
     icon={Duplicate}
 />
 {#if location === "dashboard"}
     <ContextMenuButton
-        kind={{ kind: "button" }}
-        on:click={() => console.error("go to updates not implemented")}
+        kind={{
+            kind: "button",
+            action: () => console.error("go to updates not implemented"),
+        }}
         label={$_("task-overlay.go-to-updates")}
         state="normal"
         icon={ChatAlt}
     />
 {/if}
 <ContextMenuButton
-    kind={{ kind: "button" }}
-    on:click={() => console.error("delete task not implemented")}
+    kind={{
+        kind: "button",
+        action: () => console.error("delete task not implemented"),
+    }}
     label={$_("task-overlay.delete-task")}
     state="normal"
     color="destructive"

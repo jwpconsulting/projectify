@@ -29,9 +29,11 @@
 </script>
 
 <ContextMenuButton
-    kind={{ kind: "button" }}
-    on:click={() =>
-        toggleWorkspaceBoardSectionOpen(workspaceBoardSection.uuid)}
+    kind={{
+        kind: "button",
+        action: () =>
+            toggleWorkspaceBoardSectionOpen(workspaceBoardSection.uuid),
+    }}
     label={closed
         ? $_("workspace-board-section-overlay.expand-section")
         : $_("workspace-board-section-overlay.collapse-section")}
@@ -39,36 +41,46 @@
     icon={closed ? Selector : X}
 />
 <ContextMenuButton
-    kind={{ kind: "button" }}
-    on:click={() => console.error("switch with previous not implemented")}
+    kind={{
+        kind: "button",
+        action: () => console.error("switch with previous not implemented"),
+    }}
     label={$_("workspace-board-section-overlay.switch-previous")}
     state="normal"
     icon={ArrowUp}
 />
 <ContextMenuButton
-    kind={{ kind: "button" }}
-    on:click={() => console.error("switch with next not implemented")}
+    kind={{
+        kind: "button",
+        action: () => console.error("switch with next not implemented"),
+    }}
     label={$_("workspace-board-section-overlay.switch-next")}
     state="normal"
     icon={ArrowDown}
 />
 <ContextMenuButton
-    kind={{ kind: "button" }}
-    on:click={() => console.error("edit section title not implemented")}
+    kind={{
+        kind: "button",
+        action: () => console.error("edit section title not implemented"),
+    }}
     label={$_("workspace-board-section-overlay.edit-title")}
     state="normal"
     icon={Pencil}
 />
 <ContextMenuButton
-    kind={{ kind: "button" }}
-    on:click={() => console.error("add task not implemented")}
+    kind={{
+        kind: "button",
+        action: () => console.error("add task not implemented"),
+    }}
     label={$_("workspace-board-section-overlay.add-task")}
     state="normal"
     icon={Plus}
 />
 <ContextMenuButton
-    kind={{ kind: "button" }}
-    on:click={() => console.error("delete section not implemented")}
+    kind={{
+        kind: "button",
+        action: () => console.error("delete section not implemented"),
+    }}
     label={$_("workspace-board-section-overlay.delete-section")}
     state="normal"
     icon={Trash}

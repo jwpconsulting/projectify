@@ -170,10 +170,9 @@ Menu button
     {#each menuButtonStates as state}
         {#each menuButtonColors as color}
             <ContextMenuButton
-                on:click={console.log}
                 {state}
                 {color}
-                kind={{ kind: "button" }}
+                kind={{ kind: "button", action: console.log }}
                 icon={Plus}
                 label={state}
             />

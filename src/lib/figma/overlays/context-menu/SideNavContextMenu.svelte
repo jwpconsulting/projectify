@@ -19,12 +19,11 @@
 </script>
 
 <ContextMenuButton
-    kind={{ kind: "button" }}
+    kind={{ kind: "button", action: toggleSideNavOpen }}
     label={$sideNavOpen
         ? $_("side-nav-overlay.minimise-sidebar")
         : $_("side-nav-overlay.expand-sidebar")}
     state="normal"
-    on:click={toggleSideNavOpen}
     icon={$sideNavOpen ? ArrowCircleLeft : ArrowCircleRight}
 />
 <ContextMenuButton

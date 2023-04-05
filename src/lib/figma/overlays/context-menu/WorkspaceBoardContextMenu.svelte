@@ -11,15 +11,19 @@
 </script>
 
 <ContextMenuButton
-    kind={{ kind: "button" }}
-    on:click={() => console.error("edit board not implemented")}
+    kind={{
+        kind: "button",
+        action: () => console.error("edit board not implemented"),
+    }}
     label={$_("workspace-board-overlay.edit-board")}
     state="normal"
     icon={Pencil}
 />
 <ContextMenuButton
-    kind={{ kind: "button" }}
-    on:click={() => console.error("archive board not implemented")}
+    kind={{
+        kind: "button",
+        action: () => console.error("archive board not implemented"),
+    }}
     label={$_("workspace-board-overlay.archive-board")}
     state="normal"
     icon={Archive}

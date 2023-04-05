@@ -12,8 +12,7 @@
     icon={User}
 />
 <ContextMenuButton
-    kind={{ kind: "button" }}
-    on:click={() => console.error("not implemented")}
+    kind={{ kind: "button", action: () => console.error("not implemented") }}
     label={$_("profile-overlay.log-out")}
     state="normal"
     icon={Logout}
