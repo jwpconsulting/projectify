@@ -12,6 +12,10 @@
 
     let dropDownMenuBtnRef: SvelteComponent;
 
+    function newTask() {
+        console.error("TODO create new task for", section);
+    }
+
     function openDropDownMenu() {
         // TODO
         console.log("Need to open drop down menu at", dropDownMenuBtnRef);
@@ -37,13 +41,18 @@
         </h1>
     </div>
     <div class="flex shrink-0 flex-row gap-6" data-figma-name="Right side">
-        <SquovalIcon icon="plus" state="active" active={false} />
+        <SquovalIcon
+            action={newTask}
+            icon="plus"
+            state="active"
+            active={false}
+        />
         <SquovalIcon
             icon="ellipsis"
             state="active"
             active={false}
             bind:this={dropDownMenuBtnRef}
-            on:click={openDropDownMenu}
+            action={openDropDownMenu}
         />
     </div>
 </header>

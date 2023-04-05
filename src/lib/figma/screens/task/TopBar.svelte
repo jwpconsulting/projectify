@@ -18,7 +18,11 @@
         </div>
     </div>
     <div class="flex flex-row items-center gap-4">
-        <SquovalIcon icon="dotsVertical" state="active" />
+        <SquovalIcon
+            icon="dotsVertical"
+            state="active"
+            action={console.error}
+        />
         <Button
             color="blue"
             size="small"

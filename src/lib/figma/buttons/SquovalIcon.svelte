@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-
     import { Icon } from "@steeze-ui/svelte-icon";
     import {
         Folder,
@@ -38,14 +36,11 @@
     export let state: SquovalState;
     export let active = false;
 
-    const dispatch = createEventDispatcher();
-    function click() {
-        dispatch("click");
-    }
+    export let action: () => void;
 </script>
 
 <button
-    on:click={click}
+    on:click={action}
     class="focus:base-content relative h-8 w-8 rounded-lg border border-transparent p-1 focus:border-base-content focus:outline-none active:text-display enabled:hover:bg-secondary-hover enabled:active:bg-primary"
     class:text-base-content={state === "active"}
     class:invisible={state === "inactive"}

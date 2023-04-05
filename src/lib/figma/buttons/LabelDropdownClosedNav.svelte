@@ -14,7 +14,7 @@
     <SquovalIcon
         state="active"
         icon="label"
-        on:click={toggleLabelDropdownClosedNavOpen}
+        action={toggleLabelDropdownClosedNavOpen}
         active={$selectedLabels.kind !== "allLabels"}
     />
     {#if $labelExpandOpen}
