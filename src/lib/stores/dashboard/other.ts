@@ -1,31 +1,11 @@
 import { writable } from "svelte/store";
 
 import { goto } from "$app/navigation";
-import { getDashboardWorkspaceBoardUrl, getDashboardTaskUrl } from "$lib/urls";
-import { get } from "svelte/store";
+import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
 import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard/workspaceBoard";
 
 export const loading = writable<boolean>(false);
-
-export function copyDashboardURL(
-    workspaceBoardUuid: string,
-    taskUuid: string | null = null
-): void {
-    const path = taskUuid
-        ? getDashboardTaskUrl(workspaceBoardUuid, taskUuid, "details")
-        : getDashboardWorkspaceBoardUrl(workspaceBoardUuid);
-    const url = `${location.protocol}//${location.host}${path}`;
-    navigator.clipboard.writeText(url);
-}
-
-export function pushTashUuidtoPath() {
-    const boardUuid = get(currentWorkspaceBoardUuid);
-    if (!boardUuid) {
-        throw new Error("Expected boardUuid");
-    }
-    goto(getDashboardWorkspaceBoardUrl(boardUuid));
-}
 
 export async function setAndNavigateWorkspaceBoard(uuid: string) {
     currentWorkspaceBoardUuid.set(uuid);
