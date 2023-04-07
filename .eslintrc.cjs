@@ -6,7 +6,7 @@ module.exports = {
         "plugin:@typescript-eslint/recommended",
         "prettier",
     ],
-    plugins: ["svelte3", "@typescript-eslint", "unused-imports"],
+    plugins: ["svelte3", "@typescript-eslint", "unused-imports", "import"],
     ignorePatterns: ["*.cjs", "build/*"],
     overrides: [{ files: ["*.svelte"], processor: "svelte3/svelte3" }],
     settings: {
@@ -23,6 +23,7 @@ module.exports = {
         node: true,
     },
     rules: {
+        "import/no-unused-modules": [1, { unusedExports: true }],
         "unused-imports/no-unused-imports": "error",
         // https://stackoverflow.com/a//64150393
         "no-unused-vars": "off",

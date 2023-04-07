@@ -17,4 +17,6 @@ const config = {
         target: ["es2020"],
     },
 };
+
+// eslint-disable-next-line
 export default config;
