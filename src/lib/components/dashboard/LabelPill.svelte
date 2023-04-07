@@ -2,8 +2,8 @@
     import IconClose from "$lib/components/icons/icon-close.svelte";
     import type { Label } from "$lib/types/workspace";
     import {
-        getLabelColorFromIndex,
         getLabelColorClass,
+        getLabelColorFromIndex,
     } from "$lib/utils/colors";
 
     export let label: Label;

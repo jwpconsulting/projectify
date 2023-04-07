@@ -4,13 +4,13 @@ import ContextMenu from "$lib/figma/overlays/ContextMenu.svelte";
 
 import type { ContextMenuType } from "$lib/types/ui";
 import {
+    sideNavModule,
+    task,
     workspace,
     workspaceBoard,
     workspaceBoardSection,
-    task,
-    workspaceSearchModule,
-    sideNavModule,
     workspaceBoardSectionModule,
+    workspaceSearchModule,
 } from "$lib/storybook";
 
 const contextMenus: { [key: string]: ContextMenuType } = {

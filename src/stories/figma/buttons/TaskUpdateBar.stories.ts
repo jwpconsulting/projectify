@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
-import { taskUpdateBarStates, taskUpdateBarKinds } from "$lib/figma/types";
+import { taskUpdateBarKinds, taskUpdateBarStates } from "$lib/figma/types";
 
 const meta: Meta<TaskUpdateBar> = {
     component: TaskUpdateBar,

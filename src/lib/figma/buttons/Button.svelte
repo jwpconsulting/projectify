@@ -2,9 +2,9 @@
     import { createEventDispatcher } from "svelte";
     import { Icon } from "@steeze-ui/svelte-icon";
     import type {
-        ButtonStyle,
         ButtonColor,
         ButtonSize,
+        ButtonStyle,
     } from "$lib/figma/types";
 
     export let style: ButtonStyle;

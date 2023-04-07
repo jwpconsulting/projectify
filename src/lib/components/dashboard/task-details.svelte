@@ -3,6 +3,7 @@
         currentTask,
         currentTaskUuid,
         newTaskSectionUuid,
+        currentWorkspaceBoardUuid,
     } from "$lib/stores/dashboard";
     import { assignUserToTask, deleteTask } from "$lib/repository/workspace";
 
@@ -12,7 +13,6 @@
     } from "$lib/graphql/operations";
     import { client } from "$lib/graphql/client";
     import { _ } from "svelte-i18n";
-    import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard";
     import ToolBar from "$lib/components/dashboard/toolBar.svelte";
     import IconTrash from "$lib/components/icons/icon-trash.svelte";
     import UserPicker from "$lib/components/userPicker.svelte";
@@ -29,9 +29,9 @@
     import IconClose from "$lib/components/icons/icon-close.svelte";
     import TaskDetailsBreadcrumbs from "$lib/components/dashboard/task-details-breadcrumbs.svelte";
     import type {
-        Task,
         Label,
         SubTask,
+        Task,
         WorkspaceUser,
     } from "$lib/types/workspace";
     import { getDashboardTaskUrl } from "$lib/urls";

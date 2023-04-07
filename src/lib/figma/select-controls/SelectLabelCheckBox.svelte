@@ -2,8 +2,8 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Check } from "@steeze-ui/heroicons";
     import {
-        getLabelColorFromIndex,
         getLabelColorClass,
+        getLabelColorFromIndex,
     } from "$lib/utils/colors";
     import type { SelectLabel } from "$lib/figma/types";
     import { createEventDispatcher } from "svelte";

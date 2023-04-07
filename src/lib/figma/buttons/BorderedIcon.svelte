@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import { Icon } from "@steeze-ui/svelte-icon";
-    import { Briefcase, Adjustments } from "@steeze-ui/heroicons";
+    import { Adjustments, Briefcase } from "@steeze-ui/heroicons";
     import type { BorderedIconType } from "$lib/figma/types";
 
     export let type: BorderedIconType;

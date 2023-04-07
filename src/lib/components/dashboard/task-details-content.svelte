@@ -8,7 +8,7 @@
     import InputDatePicker from "$lib/components/inputDatePicker.svelte";
     import IconCheckCircle from "$lib/components/icons/icon-check-circle.svelte";
     import RichTextarea from "$lib/components/rich-textarea.svelte";
-    import type { Task, SubTask, Label } from "$lib/types/workspace";
+    import type { Label, SubTask, Task } from "$lib/types/workspace";
 
     export let taskModified = false;
     export let task: Task;

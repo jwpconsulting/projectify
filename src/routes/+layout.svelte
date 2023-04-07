@@ -7,12 +7,11 @@
     import ContextMenuContainer from "$lib/components/ContextMenuContainer.svelte";
     import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
     import ConstructiveOverlay from "$lib/figma/overlays/constructive/ConstructiveOverlay.svelte";
-    import "$lib/stores/global-ui";
     import {
-        constructiveOverlayState,
         closeConstructiveOverlay,
-        destructiveOverlayState,
         closeDestructiveOverlay,
+        constructiveOverlayState,
+        destructiveOverlayState,
         performDestructiveOverlay,
     } from "$lib/stores/global-ui";
 </script>

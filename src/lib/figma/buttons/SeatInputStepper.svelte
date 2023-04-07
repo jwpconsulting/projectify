@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { seats, seatMinus, seatAdd } from "$lib/stores/onboarding";
+    import { seatAdd, seatMinus, seats } from "$lib/stores/onboarding";
     import IncrementSeats from "$lib/figma/buttons/IncrementSeats.svelte";
     import DecrementSeats from "$lib/figma/buttons/DecrementSeats.svelte";
 </script>

@@ -3,7 +3,7 @@
     import PageLayout from "$lib/components/layouts/pageLayout.svelte";
 
     import Signin from "$lib/components/signin.svelte";
-    import { user, signinRedirect } from "$lib/stores/user";
+    import { signinRedirect, user } from "$lib/stores/user";
 
     const redirectUrl = "/dashboard";
     if ($user) {

@@ -1,11 +1,10 @@
 <script lang="ts">
-    import type { ButtonStyle } from "$lib/figma/types";
+    import type { ButtonStyle, ButtonColor } from "$lib/figma/types";
     import Button from "$lib/figma/buttons/Button.svelte";
     import { action } from "@storybook/addon-actions";
 
     import { buttonSizes } from "$lib/figma/types";
-    import { fr, fc, falseTrue } from "$lib/storybook";
-    import type { ButtonColor } from "$lib/figma/types";
+    import { falseTrue, fc, fr } from "$lib/storybook";
 
     export let label: string;
     export let style: ButtonStyle;

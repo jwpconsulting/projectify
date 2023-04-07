@@ -3,23 +3,23 @@ import type { User } from "$lib/types/user";
 import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
 import type {
     Label,
-    WorkspaceUser,
     SubTask,
+    Task,
     WorkspaceBoard,
     WorkspaceBoardSection,
-    Task,
+    WorkspaceUser,
 } from "$lib/types/workspace";
-import { labelColors, getIndexFromLabelColor } from "$lib/utils/colors";
+import { getIndexFromLabelColor, labelColors } from "$lib/utils/colors";
 import type { LabelColor } from "$lib/utils/colors";
 import type { ButtonStyle, LabelLabel, SelectLabel } from "$lib/figma/types";
-import { writable, readable } from "svelte/store";
+import { readable, writable } from "svelte/store";
 import type {
-    WorkspaceSearchModule,
-    WorkspaceBoardSearchModule,
-    WorkspaceUserSearchModule,
     LabelSearchModule,
     SideNavModule,
+    WorkspaceBoardSearchModule,
     WorkspaceBoardSectionModule,
+    WorkspaceSearchModule,
+    WorkspaceUserSearchModule,
 } from "$lib/types/stores";
 
 export const fr = "flex flex-row flex-wrap gap-2";

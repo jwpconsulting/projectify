@@ -3,8 +3,8 @@
     import { createEventDispatcher } from "svelte";
     import type { LabelColor } from "$lib/utils/colors";
     import {
-        getLabelColorFromIndex,
         getLabelColorClass,
+        getLabelColorFromIndex,
     } from "$lib/utils/colors";
     import type { LabelLabel } from "$lib/figma/types";
 

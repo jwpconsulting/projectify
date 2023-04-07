@@ -2,13 +2,13 @@
     import { _ } from "svelte-i18n";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import {
-        Selector,
-        Pencil,
-        X,
-        ArrowUp,
         ArrowDown,
+        ArrowUp,
+        Pencil,
         Plus,
+        Selector,
         Trash,
+        X,
     } from "@steeze-ui/heroicons";
     import type { WorkspaceBoardSection } from "$lib/types/workspace";
     // TODO make injectable

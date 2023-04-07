@@ -1,7 +1,7 @@
 <script lang="ts">
     import AvatarState from "$lib/figma/navigation/AvatarState.svelte";
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
-    import { fr, fc, users, user1, user2 } from "$lib/storybook";
+    import { fc, fr, user1, user2, users } from "$lib/storybook";
     import type { AvatarVariantContent } from "$lib/figma/types";
     import { avatarStateSizes, avatarVariantSizes } from "$lib/figma/types";
 

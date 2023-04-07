@@ -3,11 +3,11 @@
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
     import {
         currentWorkspace,
-        selectedWorkspaceUser,
-        selectWorkspaceUser,
         deselectWorkspaceUser,
-        userExpandOpen,
+        selectWorkspaceUser,
+        selectedWorkspaceUser,
         toggleUserExpandOpen,
+        userExpandOpen,
     } from "$lib/stores/dashboard";
 </script>
 

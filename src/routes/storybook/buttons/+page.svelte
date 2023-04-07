@@ -28,26 +28,26 @@
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import { currentStep } from "$lib/stores/onboarding";
-    import { Plus, Folder } from "@steeze-ui/heroicons";
+    import { Folder, Plus } from "@steeze-ui/heroicons";
     import {
-        buttonSizes,
-        buttonColors,
-        sideMenuCreateSizes,
-        circleIconSizes,
-        circleIconIcons,
-        menuButtonStates,
-        menuButtonColors,
-        stepperPositions,
-        stepperActiveStates,
-        borderedIconTypes,
         boardButtonStates,
+        borderedIconTypes,
+        buttonColors,
+        buttonSizes,
+        circleIconIcons,
+        circleIconSizes,
+        menuButtonColors,
+        menuButtonStates,
+        sideMenuCreateSizes,
+        stepperActiveStates,
+        stepperPositions,
     } from "$lib/figma/types";
     import {
-        fr,
-        fc,
-        trueFalse,
-        falseTrue,
         buttonStyles,
+        falseTrue,
+        fc,
+        fr,
+        trueFalse,
         users,
     } from "$lib/storybook";
     import { browser } from "$app/environment";

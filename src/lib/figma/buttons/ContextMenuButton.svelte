@@ -2,9 +2,9 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import type { IconSource } from "@steeze-ui/svelte-icon/types";
     import type {
-        MenuButtonState,
-        MenuButtonColor,
         ButtonAction,
+        MenuButtonColor,
+        MenuButtonState,
     } from "$lib/figma/types";
     export let label: string;
     export let icon: IconSource | null;

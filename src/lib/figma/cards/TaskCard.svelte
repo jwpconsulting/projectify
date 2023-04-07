@@ -5,7 +5,7 @@
     import WorkspaceUser from "$lib/figma/cards/task-card/WorkspaceUser.svelte";
     import Chevrons from "$lib/figma/cards/task-card/Chevrons.svelte";
     import MenuButton from "$lib/figma/cards/task-card/MenuButton.svelte";
-    import type { WorkspaceBoardSection, Task } from "$lib/types/workspace";
+    import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection | null = null;

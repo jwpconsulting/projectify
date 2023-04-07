@@ -1,15 +1,15 @@
 import type {
     Label,
-    WorkspaceUser,
     Task,
-    WorkspaceBoardSection,
-    WorkspaceBoard,
     Workspace,
+    WorkspaceBoard,
+    WorkspaceBoardSection,
+    WorkspaceUser,
 } from "$lib/types/workspace";
 import type {
-    WorkspaceSearchModule,
     SideNavModule,
     WorkspaceBoardSectionModule,
+    WorkspaceSearchModule,
 } from "$lib/types/stores";
 import type { SvelteComponentTyped } from "svelte";
 

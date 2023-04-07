@@ -3,12 +3,12 @@ import { writable } from "svelte/store";
 import type {
     ConstructiveOverlayState,
     ConstructiveOverlayType,
+    ContextMenuState,
+    ContextMenuType,
     DestructiveOverlayState,
     DestructiveOverlayType,
-    OverlayAction,
-    ContextMenuType,
-    ContextMenuState,
     Overlay,
+    OverlayAction,
 } from "$lib/types/ui";
 
 // TODO make readonly

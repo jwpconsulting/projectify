@@ -4,8 +4,8 @@
     import { client } from "$lib/graphql/client";
     import { _ } from "svelte-i18n";
     import {
-        currentWorkspaceBoardSections,
         currentSearchedTasks,
+        currentWorkspaceBoardSections,
         taskSearchInput,
     } from "$lib/stores/dashboard";
 

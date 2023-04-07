@@ -3,9 +3,9 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import { getArchiveUrl, getSettingsUrl } from "$lib/urls";
     import {
+        Archive,
         ArrowCircleLeft,
         ArrowCircleRight,
-        Archive,
         Cog,
     } from "@steeze-ui/heroicons";
     import type { Workspace } from "$lib/types/workspace";

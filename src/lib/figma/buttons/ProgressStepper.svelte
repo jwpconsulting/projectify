@@ -1,6 +1,6 @@
 <script lang="ts">
     import StepperVariant from "$lib/figma/buttons/StepperVariant.svelte";
-    import { gotoStep, numSteps, currentStep } from "$lib/stores/onboarding";
+    import { currentStep, gotoStep, numSteps } from "$lib/stores/onboarding";
 
     const steps = [...Array(numSteps).keys()];
 </script>

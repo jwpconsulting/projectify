@@ -1,10 +1,10 @@
 <script lang="ts">
     import {
         currentWorkspace,
-        selectedLabels,
         labelExpandOpen,
-        toggleLabelDropdownClosedNavOpen,
         selectLabel,
+        selectedLabels,
+        toggleLabelDropdownClosedNavOpen,
     } from "$lib/stores/dashboard";
     import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
     import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";

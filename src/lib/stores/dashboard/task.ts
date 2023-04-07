@@ -2,7 +2,7 @@ import Fuse from "fuse.js";
 import lodash from "lodash";
 import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
-import { writable, derived } from "svelte/store";
+import { get, derived, writable } from "svelte/store";
 import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard/workspaceBoard";
 import { selectedWorkspaceUser } from "$lib/stores/dashboard/workspaceUser";
 
@@ -94,9 +94,8 @@ export const currentTask = derived<[typeof currentTaskUuid], Task | null>(
 );
 
 // XXX Remove the following
-import { get } from "svelte/store";
 import { goto } from "$app/navigation";
-import { getDashboardWorkspaceBoardUrl, getDashboardTaskUrl } from "$lib/urls";
+import { getDashboardTaskUrl, getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
 export const drawerModalOpen = writable(false);
 export const newTaskSectionUuid = writable<string | null>(null);

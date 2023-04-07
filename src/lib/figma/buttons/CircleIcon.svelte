@@ -1,12 +1,12 @@
 <script lang="ts">
     import { Icon } from "@steeze-ui/svelte-icon";
-    import type { CircleIconSize, CircleIconIcon } from "$lib/figma/types";
+    import type { CircleIconIcon, CircleIconSize } from "$lib/figma/types";
     import {
+        ChevronDown,
+        ChevronUp,
         DotsHorizontal,
         Pencil,
         Trash,
-        ChevronUp,
-        ChevronDown,
         X,
     } from "@steeze-ui/heroicons";
     import { createEventDispatcher } from "svelte";

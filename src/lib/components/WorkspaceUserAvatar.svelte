@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { WorkspaceUser } from "$lib/types/workspace";
     import { Icon } from "@steeze-ui/svelte-icon";
-    import { UserCircle, UserAdd } from "@steeze-ui/heroicons";
+    import { UserAdd, UserCircle } from "@steeze-ui/heroicons";
     import UserAvatar from "$lib/components/UserAvatar.svelte";
 
     export let workspaceUser: WorkspaceUser | "unassigned" | "assign";

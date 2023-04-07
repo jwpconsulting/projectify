@@ -1,4 +1,4 @@
-import { writable, derived } from "svelte/store";
+import { derived, writable } from "svelte/store";
 import type { WorkspaceBoard } from "$lib/types/workspace";
 import { browser } from "$app/environment";
 import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";

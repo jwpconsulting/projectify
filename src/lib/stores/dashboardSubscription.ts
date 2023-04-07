@@ -1,7 +1,7 @@
 import vars from "$lib/env";
 import {
-    getSubscriptionFor,
     WSSubscriptionStore,
+    getSubscriptionFor,
 } from "$lib/stores/wsSubscription";
 
 export const getSubscriptionForCollection = (

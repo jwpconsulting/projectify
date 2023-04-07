@@ -1,18 +1,18 @@
 import type { Readable, Writable } from "svelte/store";
 
 import type {
-    WorkspaceUserSelection,
-    WorkspaceUserSelectionInput,
-    TasksPerUser,
     LabelSelection,
     LabelSelectionInput,
+    TasksPerUser,
+    WorkspaceUserSelection,
+    WorkspaceUserSelectionInput,
 } from "$lib/types/ui";
 import type {
+    CreateWorkspaceBoardSection,
+    Label,
     Workspace,
     WorkspaceBoard,
-    CreateWorkspaceBoardSection,
     WorkspaceUser,
-    Label,
 } from "$lib/types/workspace";
 
 // It would make sense to rename all Module to Store

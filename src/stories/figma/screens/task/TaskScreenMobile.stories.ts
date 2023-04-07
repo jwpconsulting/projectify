@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 
 import TaskScreenMobile from "$lib/figma/screens/task/TaskScreenMobile.svelte";
 
-import { task, mobileParameters } from "$lib/storybook";
+import { mobileParameters, task } from "$lib/storybook";
 
 const meta: Meta<TaskScreenMobile> = {
     component: TaskScreenMobile,

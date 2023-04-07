@@ -1,18 +1,18 @@
 import {
-    Mutation_MoveTaskAfter,
-    Mutation_AssignTask,
     Mutation_AddLabelMutation,
-    Mutation_UpdateLabelMutation,
-    Mutation_DeleteLabelMutation,
-    Mutation_ArchiveWorkspaceBoard,
     Mutation_AddWorkspaceBoardSection,
+    Mutation_ArchiveWorkspaceBoard,
+    Mutation_AssignTask,
+    Mutation_DeleteLabelMutation,
+    Mutation_MoveTaskAfter,
+    Mutation_UpdateLabelMutation,
 } from "$lib/graphql/operations";
 import type {
-    Label,
-    WorkspaceBoard,
     CreateWorkspaceBoardSection,
-    Workspace,
+    Label,
     Task,
+    Workspace,
+    WorkspaceBoard,
 } from "$lib/types/workspace";
 import { getWithCredentialsJson } from "$lib/repository/util";
 

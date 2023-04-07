@@ -1,7 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
-    import { Pencil, Archive } from "@steeze-ui/heroicons";
+    import { Archive, Pencil } from "@steeze-ui/heroicons";
     import type { WorkspaceBoard } from "$lib/types/workspace";
 
     export let workspaceBoard: WorkspaceBoard;

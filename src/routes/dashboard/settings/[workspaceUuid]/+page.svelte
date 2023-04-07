@@ -8,7 +8,7 @@
     import ProfilePicture from "$lib/components/profilePicture.svelte";
     import { uploadImage } from "$lib/utils/file";
     import type { Workspace } from "$lib/types/workspace";
-    import { loading, currentWorkspace } from "$lib/stores/dashboard";
+    import { currentWorkspace, loading } from "$lib/stores/dashboard";
 
     let workspace: Workspace | null = null;
     $: {

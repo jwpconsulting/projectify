@@ -1,8 +1,8 @@
-import { writable, derived } from "svelte/store";
+import { derived, writable } from "svelte/store";
 import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
 import type { Workspace } from "$lib/types/workspace";
 import { browser } from "$app/environment";
-import { getWorkspaces, getWorkspace } from "$lib/repository/workspace";
+import { getWorkspace, getWorkspaces } from "$lib/repository/workspace";
 import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
 
 import { currentWorkspaceBoard } from "$lib/stores/dashboard/workspaceBoard";

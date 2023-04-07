@@ -1,7 +1,7 @@
 <script lang="ts">
     import type {
-        StepperPosition,
         StepperActiveState,
+        StepperPosition,
     } from "$lib/figma/types";
     import { createEventDispatcher } from "svelte";
 

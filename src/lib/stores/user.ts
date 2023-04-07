@@ -2,12 +2,12 @@ import { writable } from "svelte/store";
 import { client } from "$lib/graphql/client";
 
 import {
-    Mutation_Signup,
+    Mutation_ConfirmPasswordReset,
     Mutation_EmailConfirmation,
     Mutation_Login,
     Mutation_Logout,
     Mutation_RequesetPasswordReset,
-    Mutation_ConfirmPasswordReset,
+    Mutation_Signup,
 } from "$lib/graphql/operations";
 import { getUser } from "$lib/repository/user";
 import { goto } from "$app/navigation";

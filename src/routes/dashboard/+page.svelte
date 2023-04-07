@@ -2,8 +2,8 @@
     import { browser } from "$app/environment";
     import {
         currentWorkspace,
-        setFirstWorkspace,
         setAndNavigateWorkspaceBoard,
+        setFirstWorkspace,
     } from "$lib/stores/dashboard";
 
     $: {

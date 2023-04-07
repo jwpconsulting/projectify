@@ -5,11 +5,11 @@
     import { openContextMenu } from "$lib/stores/global-ui";
 
     import type {
-        WorkspaceSearchModule,
-        WorkspaceBoardSearchModule,
-        WorkspaceUserSearchModule,
         LabelSearchModule,
         SideNavModule,
+        WorkspaceBoardSearchModule,
+        WorkspaceSearchModule,
+        WorkspaceUserSearchModule,
     } from "$lib/types/stores";
 
     import {
@@ -24,13 +24,13 @@
         selectWorkspaceUser,
         selectedLabels,
         selectedWorkspaceUser,
+        setWorkspaces,
+        sideNavOpen,
         tasksPerUser,
+        toggleSideNavOpen,
         workspaceUserSearch,
         workspaceUserSearchResults,
         workspaces,
-        sideNavOpen,
-        toggleSideNavOpen,
-        setWorkspaces,
     } from "$lib/stores/dashboard";
 
     import { user } from "$lib/stores/user";

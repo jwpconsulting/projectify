@@ -15,9 +15,9 @@
     import IconEdit from "$lib/components/icons/icon-edit.svelte";
     import IconTrash from "$lib/components/icons/icon-trash.svelte";
     import {
-        loading,
-        currentWorkspace,
         currentCustomer,
+        currentWorkspace,
+        loading,
     } from "$lib/stores/dashboard";
 
     let workspaceUsers: WorkspaceUser[] = [];

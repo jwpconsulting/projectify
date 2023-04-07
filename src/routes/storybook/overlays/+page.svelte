@@ -10,10 +10,10 @@
     import {
         fc,
         task,
-        workspaceUser,
         workspace,
         workspaceBoard,
         workspaceBoardSection,
+        workspaceUser,
     } from "$lib/storybook";
 
     const destructiveOverlays: DestructiveOverlayType[] = [

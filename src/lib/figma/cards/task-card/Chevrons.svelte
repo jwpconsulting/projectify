@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Icon } from "@steeze-ui/svelte-icon";
-    import { ChevronUp, ChevronDown } from "@steeze-ui/heroicons";
+    import { ChevronDown, ChevronUp } from "@steeze-ui/heroicons";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
     import { moveTaskAfter } from "$lib/repository/workspace";
 

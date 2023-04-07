@@ -4,7 +4,7 @@
     import HelpDropdown from "$lib/figma/dropdown/HelpDropdown.svelte";
     import HelpDropdownMenu from "$lib/figma/dropdown/HelpDropdownMenu.svelte";
     import { Tag } from "@steeze-ui/heroicons";
-    import { fr, falseTrue } from "$lib/storybook";
+    import { falseTrue, fr } from "$lib/storybook";
 </script>
 
 List Value

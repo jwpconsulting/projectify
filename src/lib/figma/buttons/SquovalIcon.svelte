@@ -1,23 +1,23 @@
 <script lang="ts">
     import { Icon } from "@steeze-ui/svelte-icon";
     import {
-        Folder,
-        User,
-        Tag,
         CheckCircle,
-        SwitchVertical,
-        Users,
-        Trash,
         DotsHorizontal,
-        Plus,
-        Pencil,
         DotsVertical,
+        Folder,
         LightBulb,
+        Pencil,
+        Plus,
+        SwitchVertical,
+        Tag,
+        Trash,
+        User,
+        Users,
     } from "@steeze-ui/heroicons";
     import type {
+        ButtonAction,
         SquovalIcon,
         SquovalState,
-        ButtonAction,
     } from "$lib/figma/types";
 
     export let icon: SquovalIcon;

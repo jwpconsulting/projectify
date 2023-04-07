@@ -5,11 +5,11 @@
     import FilterLabel from "$lib/figma/select-controls/FilterLabel.svelte";
 
     import {
-        fr,
-        fc,
-        trueFalse,
         falseTrue,
+        fc,
+        fr,
         selectLabels,
+        trueFalse,
         workspaceUserSelectionInputs,
     } from "$lib/storybook";
 </script>

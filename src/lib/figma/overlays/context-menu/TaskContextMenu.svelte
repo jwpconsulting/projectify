@@ -4,11 +4,11 @@
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
     import {
         ArrowsExpand,
-        SwitchVertical,
+        ChatAlt,
+        Duplicate,
         SortAscending,
         SortDescending,
-        Duplicate,
-        ChatAlt,
+        SwitchVertical,
         Trash,
     } from "@steeze-ui/heroicons";
     import type { Task } from "$lib/types/workspace";

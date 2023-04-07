@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import { Icon } from "@steeze-ui/svelte-icon";
-    import { EyeOff, Eye } from "@steeze-ui/heroicons";
+    import { Eye, EyeOff } from "@steeze-ui/heroicons";
     export let isActive: boolean;
     const dispatch = createEventDispatcher();
     function click() {

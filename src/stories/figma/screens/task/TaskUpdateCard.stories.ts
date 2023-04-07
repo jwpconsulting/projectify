@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 
 import TaskUpdateCard from "$lib/figma/screens/task/TaskUpdateCard.svelte";
 
-import { task, mobileParameters } from "$lib/storybook";
+import { mobileParameters, task } from "$lib/storybook";
 
 const meta: Meta<TaskUpdateCard> = {
     component: TaskUpdateCard,

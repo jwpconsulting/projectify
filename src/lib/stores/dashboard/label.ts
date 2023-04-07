@@ -1,5 +1,5 @@
 import Fuse from "fuse.js";
-import { writable, derived } from "svelte/store";
+import { derived, writable } from "svelte/store";
 import { fuseSearchThreshold } from "$lib/config";
 
 import type { Label } from "$lib/types/workspace";

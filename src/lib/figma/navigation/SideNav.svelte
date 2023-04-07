@@ -4,10 +4,10 @@
     import Members from "$lib/figma/navigation/side-nav/Members.svelte";
     import LabelDropdown from "$lib/figma/composites/LabelDropdown.svelte";
     import type {
-        WorkspaceBoardSearchModule,
-        WorkspaceUserSearchModule,
         LabelSearchModule,
         SideNavModule,
+        WorkspaceBoardSearchModule,
+        WorkspaceUserSearchModule,
     } from "$lib/types/stores";
 
     export let workspaceBoardSearchModule: WorkspaceBoardSearchModule;
