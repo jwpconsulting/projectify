@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { Folder, Plus } from "@steeze-ui/heroicons";
     import Button from "$lib/figma/buttons/Button.svelte";
     import SideMenuCreate from "$lib/figma/buttons/SideMenuCreate.svelte";
     import WorkspaceSettings from "$lib/figma/buttons/WorkspaceSettings.svelte";
@@ -28,7 +29,6 @@
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import { currentStep } from "$lib/stores/onboarding";
-    import { Folder, Plus } from "@steeze-ui/heroicons";
     import {
         boardButtonStates,
         borderedIconTypes,

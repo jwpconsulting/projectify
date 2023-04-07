@@ -1,8 +1,8 @@
 <script lang="ts">
-    import PageLayout from "$lib/components/layouts/pageLayout.svelte";
     import { _ } from "svelte-i18n";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Check } from "@steeze-ui/heroicons";
+    import PageLayout from "$lib/components/layouts/pageLayout.svelte";
     $: features = [
         $_("pricing-page.feature-1"),
         $_("pricing-page.feature-2"),

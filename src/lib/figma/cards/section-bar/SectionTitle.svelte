@@ -1,10 +1,10 @@
 <script lang="ts">
     import { Icon } from "@steeze-ui/svelte-icon";
     import { ChevronDown, ChevronRight } from "@steeze-ui/heroicons";
+    import type { SvelteComponent } from "svelte";
     import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
 
     import type { WorkspaceBoardSection } from "$lib/types/workspace";
-    import type { SvelteComponent } from "svelte";
 
     export let section: WorkspaceBoardSection;
     export let toggleOpen: () => void;

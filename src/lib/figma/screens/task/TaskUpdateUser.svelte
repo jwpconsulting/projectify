@@ -1,8 +1,8 @@
 <script lang="ts">
-    import type { User } from "$lib/types/user";
-    import UpdateUser from "$lib/figma/buttons/UpdateUser.svelte";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { User as UserIcon } from "@steeze-ui/heroicons";
+    import type { User } from "$lib/types/user";
+    import UpdateUser from "$lib/figma/buttons/UpdateUser.svelte";
 
     // Either a user has been assigned, or if not we should ask the user
     // to assign a user

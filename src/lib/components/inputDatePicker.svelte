@@ -1,7 +1,7 @@
 <script lang="ts">
+    import { _ } from "svelte-i18n";
     import { dateStringToLocal } from "$lib/utils/date";
     // import { createEventDispatcher } from "svelte";
-    import { _ } from "svelte-i18n";
     import IconCalendar from "$lib/components/icons/icon-calendar.svelte";
     import type { Input } from "$lib/types/ui";
 

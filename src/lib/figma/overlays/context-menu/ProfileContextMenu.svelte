@@ -1,8 +1,8 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+    import { Logout, User } from "@steeze-ui/heroicons";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import { getProfileUrl } from "$lib/urls";
-    import { Logout, User } from "@steeze-ui/heroicons";
 </script>
 
 <ContextMenuButton

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import { Briefcase, Plus } from "@steeze-ui/heroicons";
+    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import { getDashboardWorkspaceUrl } from "$lib/urls";
     import Loading from "$lib/components/loading.svelte";
     import type { WorkspaceSearchModule } from "$lib/types/stores";

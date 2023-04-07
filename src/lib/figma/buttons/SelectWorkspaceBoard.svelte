@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type { WorkspaceBoard } from "$lib/types/workspace";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Folder } from "@steeze-ui/heroicons";
+    import type { WorkspaceBoard } from "$lib/types/workspace";
     import CircleIcon from "$lib/figma/buttons/CircleIcon.svelte";
 
     import type { WorkspaceBoardSearchModule } from "$lib/types/stores";

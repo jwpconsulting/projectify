@@ -1,6 +1,5 @@
 <script lang="ts">
     import { Icon } from "@steeze-ui/svelte-icon";
-    import type { CircleIconIcon, CircleIconSize } from "$lib/figma/types";
     import {
         ChevronDown,
         ChevronUp,
@@ -10,6 +9,7 @@
         X,
     } from "@steeze-ui/heroicons";
     import { createEventDispatcher } from "svelte";
+    import type { CircleIconIcon, CircleIconSize } from "$lib/figma/types";
 
     export let size: CircleIconSize;
     export let icon: CircleIconIcon;

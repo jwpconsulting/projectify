@@ -1,7 +1,7 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
     import TaskCard from "$lib/figma/cards/TaskCard.svelte";
     import SectionTitle from "$lib/figma/cards/section-bar/SectionTitle.svelte";
-    import { createEventDispatcher } from "svelte";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
     export let section: WorkspaceBoardSection;

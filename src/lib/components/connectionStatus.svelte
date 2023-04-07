@@ -1,12 +1,12 @@
 <script lang="ts">
+    import { fade } from "svelte/transition";
+    import { _ } from "svelte-i18n";
     import {
         activeWSConnections,
         activeWSSubscriptions,
         online,
     } from "$lib/stores/wsSubscription";
     import IconsExclamation from "$lib/components/icons/icons-exclamation.svelte";
-    import { fade } from "svelte/transition";
-    import { _ } from "svelte-i18n";
 </script>
 
 {#if $activeWSSubscriptions != $activeWSConnections || ($online == false && $activeWSSubscriptions > 0)}

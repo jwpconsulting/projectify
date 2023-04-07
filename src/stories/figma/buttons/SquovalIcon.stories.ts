@@ -1,6 +1,5 @@
-import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
-
 import type { Meta, StoryObj } from "@storybook/svelte";
+import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
 
 import { squovalIcons, squovalStates } from "$lib/figma/types";
 

@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { workspaceUserRoles } from "$lib/types/workspaceUserRole";
     import { createEventDispatcher } from "svelte";
+    import { workspaceUserRoles } from "$lib/types/workspaceUserRole";
 
     export let role: string | null = null;
     export let dispatch = createEventDispatcher();

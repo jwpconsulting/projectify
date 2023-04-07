@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { _ } from "svelte-i18n";
+    import { writable } from "svelte/store";
     import {
         currentTask,
         currentTaskUuid,
@@ -12,7 +14,6 @@
         Mutation_UpdateTask,
     } from "$lib/graphql/operations";
     import { client } from "$lib/graphql/client";
-    import { _ } from "svelte-i18n";
     import ToolBar from "$lib/components/dashboard/toolBar.svelte";
     import IconTrash from "$lib/components/icons/icon-trash.svelte";
     import UserPicker from "$lib/components/userPicker.svelte";
@@ -25,7 +26,6 @@
     import { goto } from "$app/navigation";
     import Loading from "$lib/components/loading.svelte";
     import { page } from "$app/stores";
-    import { writable } from "svelte/store";
     import IconClose from "$lib/components/icons/icon-close.svelte";
     import TaskDetailsBreadcrumbs from "$lib/components/dashboard/task-details-breadcrumbs.svelte";
     import type {

@@ -2,9 +2,8 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 
 import { Plus } from "@steeze-ui/heroicons";
 
-import { buttonColors } from "$lib/figma/types";
-
 import Button from "./Button.svelte";
+import { buttonColors } from "$lib/figma/types";
 
 const meta: Meta<Button> = {
     component: Button,

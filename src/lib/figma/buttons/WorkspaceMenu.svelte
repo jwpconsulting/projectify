@@ -1,8 +1,8 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+    import { Briefcase } from "@steeze-ui/heroicons";
     import WorkspaceSettings from "$lib/figma/buttons/WorkspaceSettings.svelte";
     import Filter from "$lib/figma/dropdown/Filter.svelte";
-    import { Briefcase } from "@steeze-ui/heroicons";
 
     let dropDownMenuBtnRef: HTMLElement;
     let workspaceContextMenuAnchor: HTMLElement;

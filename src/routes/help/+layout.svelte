@@ -1,6 +1,6 @@
 <script lang="ts">
-    import PageLayout from "$lib/components/layouts/pageLayout.svelte";
     import { _ } from "svelte-i18n";
+    import PageLayout from "$lib/components/layouts/pageLayout.svelte";
     import HelpDropdown from "$lib/figma/dropdown/HelpDropdown.svelte";
 </script>
 

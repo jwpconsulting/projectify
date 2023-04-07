@@ -1,7 +1,5 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
-    import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
     import {
         ArrowsExpand,
         ChatAlt,
@@ -11,6 +9,8 @@
         SwitchVertical,
         Trash,
     } from "@steeze-ui/heroicons";
+    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
+    import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
     import type { Task } from "$lib/types/workspace";
 
     export let task: Task;

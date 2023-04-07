@@ -1,3 +1,4 @@
+import type { SvelteComponentTyped } from "svelte";
 import type {
     Label,
     Task,
@@ -11,7 +12,6 @@ import type {
     WorkspaceBoardSectionModule,
     WorkspaceSearchModule,
 } from "$lib/types/stores";
-import type { SvelteComponentTyped } from "svelte";
 
 export type Input = {
     name?: string;

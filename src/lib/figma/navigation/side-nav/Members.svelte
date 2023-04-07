@@ -1,7 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import type { WorkspaceUserSearchModule } from "$lib/types/stores";
     import { User } from "@steeze-ui/heroicons";
+    import type { WorkspaceUserSearchModule } from "$lib/types/stores";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import InputField from "$lib/figma/input-fields/InputField.svelte";
     import FilterUser from "$lib/figma/select-controls/FilterUser.svelte";

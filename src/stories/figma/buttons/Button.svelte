@@ -1,7 +1,7 @@
 <script lang="ts">
+    import { action } from "@storybook/addon-actions";
     import type { ButtonStyle, ButtonColor } from "$lib/figma/types";
     import Button from "$lib/figma/buttons/Button.svelte";
-    import { action } from "@storybook/addon-actions";
 
     import { buttonSizes } from "$lib/figma/types";
     import { falseTrue, fc, fr } from "$lib/storybook";

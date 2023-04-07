@@ -1,8 +1,8 @@
 <script lang="ts">
+    import { _ } from "svelte-i18n";
     import SectionBar from "$lib/figma/cards/SectionBar.svelte";
     import { Mutation_MoveWorkspaceBoardSection } from "$lib/graphql/operations";
     import { client } from "$lib/graphql/client";
-    import { _ } from "svelte-i18n";
     import {
         currentSearchedTasks,
         currentWorkspaceBoardSections,

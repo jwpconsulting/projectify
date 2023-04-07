@@ -1,8 +1,8 @@
 <script lang="ts">
     import { spring } from "svelte/motion";
     import delay from "delay";
-    import { login } from "$lib/stores/user";
     import { _ } from "svelte-i18n";
+    import { login } from "$lib/stores/user";
 
     let errorAnimation = spring(0, {
         stiffness: 0.3,

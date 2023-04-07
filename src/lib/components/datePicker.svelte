@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { getCalendar, months, weekDays } from "$lib/utils/date";
     import { createEventDispatcher } from "svelte";
-    import IconArrowLeft from "$lib/components/icons/icon-arrow-left.svelte";
-    import IconArrowRight from "$lib/components/icons/icon-arrow-right.svelte";
     import { scale } from "svelte/transition";
     import { quintOut } from "svelte/easing";
+    import { getCalendar, months, weekDays } from "$lib/utils/date";
+    import IconArrowLeft from "$lib/components/icons/icon-arrow-left.svelte";
+    import IconArrowRight from "$lib/components/icons/icon-arrow-right.svelte";
 
     const dispatch = createEventDispatcher();
 

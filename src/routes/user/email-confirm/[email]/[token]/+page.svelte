@@ -1,9 +1,9 @@
 <script lang="ts">
+    import { onMount } from "svelte";
+    import { _ } from "svelte-i18n";
     import { emailConfirmation } from "$lib/stores/user";
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";
-    import { onMount } from "svelte";
-    import { _ } from "svelte-i18n";
     import IllustrationSignupFinish from "$lib/components/illustrations/illustration-signup-finish.svelte";
     import Loading from "$lib/components/loading.svelte";
     import type { User } from "$lib/types/user";

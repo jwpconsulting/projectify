@@ -1,8 +1,8 @@
 import Fuse from "fuse.js";
 import lodash from "lodash";
+import { get, derived, writable } from "svelte/store";
 import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
-import { get, derived, writable } from "svelte/store";
 import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard/workspaceBoard";
 import { selectedWorkspaceUser } from "$lib/stores/dashboard/workspaceUser";
 

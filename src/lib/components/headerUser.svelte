@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { logout, user } from "$lib/stores/user";
     import { _ } from "svelte-i18n";
+    import { logout, user } from "$lib/stores/user";
     import DropDownMenu from "$lib/components/dropDownMenu.svelte";
     import IconLogout from "$lib/components/icons/icon-logout.svelte";
     import IconUser from "$lib/components/icons/icon-user.svelte";

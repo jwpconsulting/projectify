@@ -1,9 +1,9 @@
 <script lang="ts">
+    import { _ } from "svelte-i18n";
     import { page } from "$app/stores";
     import IllustrationErrotPage from "$lib/components/illustrations/illustration-errot-page.svelte";
 
     import PageLayout from "$lib/components/layouts/pageLayout.svelte";
-    import { _ } from "svelte-i18n";
 
     type Error = {
         message: string;

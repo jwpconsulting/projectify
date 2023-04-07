@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
-    import LabelPill from "$lib/components/dashboard/LabelPill.svelte";
     import Fuse from "fuse.js";
+    import LabelPill from "$lib/components/dashboard/LabelPill.svelte";
     import type { Label } from "$lib/types/workspace";
 
     export let labels: Label[];

@@ -1,13 +1,13 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
-    import { getArchiveUrl, getSettingsUrl } from "$lib/urls";
     import {
         Archive,
         ArrowCircleLeft,
         ArrowCircleRight,
         Cog,
     } from "@steeze-ui/heroicons";
+    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
+    import { getArchiveUrl, getSettingsUrl } from "$lib/urls";
     import type { Workspace } from "$lib/types/workspace";
     import type { SideNavModule } from "$lib/types/stores";
 

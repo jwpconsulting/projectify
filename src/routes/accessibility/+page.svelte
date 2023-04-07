@@ -1,6 +1,6 @@
 <script lang="ts">
-    import PageLayout from "$lib/components/layouts/pageLayout.svelte";
     import { _ } from "svelte-i18n";
+    import PageLayout from "$lib/components/layouts/pageLayout.svelte";
     $: sections = [
         {
             title: $_("accessibility.a-goals"),

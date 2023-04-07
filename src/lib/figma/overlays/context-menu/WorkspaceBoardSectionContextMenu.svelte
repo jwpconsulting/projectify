@@ -1,6 +1,5 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import {
         ArrowDown,
         ArrowUp,
@@ -10,6 +9,7 @@
         Trash,
         X,
     } from "@steeze-ui/heroicons";
+    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import type { WorkspaceBoardSection } from "$lib/types/workspace";
     // TODO make injectable
     import type { WorkspaceBoardSectionModule } from "$lib/types/stores";

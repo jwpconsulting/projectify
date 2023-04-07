@@ -1,10 +1,9 @@
 <script lang="ts">
+    import { createEventDispatcher, onMount } from "svelte";
     import { client } from "$lib/graphql/client";
     import { Mutation_AssignLabel } from "$lib/graphql/operations";
     import { currentWorkspaceLabels } from "$lib/stores/dashboard";
     import type { Label, Task } from "$lib/types/workspace";
-
-    import { createEventDispatcher, onMount } from "svelte";
 
     import LabelList from "$lib/components/dashboard/LabelList.svelte";
 

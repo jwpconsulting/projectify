@@ -1,8 +1,7 @@
 <script lang="ts">
-    import type { FloatingActionButtonIcon } from "$lib/figma/types";
-
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Plus, X } from "@steeze-ui/heroicons";
+    import type { FloatingActionButtonIcon } from "$lib/figma/types";
 
     export let action: () => void;
 

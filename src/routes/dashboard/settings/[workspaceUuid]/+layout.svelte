@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { _ } from "svelte-i18n";
     import PageLayout from "$lib/components/layouts/pageLayout.svelte";
     import AuthGuard from "$lib/components/AuthGuard.svelte";
     import SettingPage from "$lib/components/settingPage.svelte";
@@ -6,7 +7,6 @@
     import { page } from "$app/stores";
     import TabsSimple from "$lib/components/tabs-simple.svelte";
     import type { TabItem } from "$lib/components/types";
-    import { _ } from "svelte-i18n";
     import Loading from "$lib/components/loading.svelte";
     import {
         currentWorkspace,

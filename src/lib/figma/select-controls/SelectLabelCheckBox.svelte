@@ -1,12 +1,12 @@
 <script lang="ts">
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Check } from "@steeze-ui/heroicons";
+    import { createEventDispatcher } from "svelte";
     import {
         getLabelColorClass,
         getLabelColorFromIndex,
     } from "$lib/utils/colors";
     import type { SelectLabel } from "$lib/figma/types";
-    import { createEventDispatcher } from "svelte";
 
     export let label: SelectLabel;
     export let checked: boolean;

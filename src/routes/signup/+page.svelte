@@ -1,9 +1,9 @@
 <script lang="ts">
     import { spring } from "svelte/motion";
     import delay from "delay";
+    import { _ } from "svelte-i18n";
     import { signUp } from "$lib/stores/user";
     import { goto } from "$app/navigation";
-    import { _ } from "svelte-i18n";
     import PageLayout from "$lib/components/layouts/pageLayout.svelte";
     import IllustrationEmailSent from "$lib/components/illustrations/illustration-email-sent.svelte";
 

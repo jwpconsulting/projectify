@@ -1,8 +1,8 @@
 <script lang="ts">
+    import { _ } from "svelte-i18n";
     import { page } from "$app/stores";
     import { user } from "$lib/stores/user";
     import routes from "$lib/routes";
-    import { _ } from "svelte-i18n";
     import HeaderLogo from "$lib/components/assets/headerLogo.svelte";
     import HeaderUser from "$lib/components/headerUser.svelte";
     import IconHamburgerMenu from "$lib/components/icons/icon-hamburger-menu.svelte";

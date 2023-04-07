@@ -1,4 +1,5 @@
 import { Plus } from "@steeze-ui/heroicons";
+import { readable, writable } from "svelte/store";
 import type { User } from "$lib/types/user";
 import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
 import type {
@@ -12,7 +13,6 @@ import type {
 import { getIndexFromLabelColor, labelColors } from "$lib/utils/colors";
 import type { LabelColor } from "$lib/utils/colors";
 import type { ButtonStyle, LabelLabel, SelectLabel } from "$lib/figma/types";
-import { readable, writable } from "svelte/store";
 import type {
     LabelSearchModule,
     SideNavModule,

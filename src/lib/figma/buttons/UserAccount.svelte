@@ -1,6 +1,6 @@
 <script lang="ts">
-    import AvatarState from "$lib/figma/navigation/AvatarState.svelte";
     import { createEventDispatcher } from "svelte";
+    import AvatarState from "$lib/figma/navigation/AvatarState.svelte";
     import type { User } from "$lib/types/user";
 
     export let user: User | null;

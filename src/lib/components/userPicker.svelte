@@ -1,12 +1,12 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+    import { createEventDispatcher } from "svelte";
+    import Fuse from "fuse.js";
     import Loading from "$lib/components/loading.svelte";
     import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
-    import { createEventDispatcher } from "svelte";
     import { user } from "$lib/stores/user";
     import type { WorkspaceUser } from "$lib/types/workspace";
 
-    import Fuse from "fuse.js";
     import SearchInput from "$lib/components/search-input.svelte";
     import { currentWorkspace } from "$lib/stores/dashboard";
     import { fuseSearchThreshold } from "$lib/config";

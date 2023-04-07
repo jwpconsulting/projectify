@@ -1,8 +1,8 @@
 <script lang="ts">
-    import SubTaskProgressBar from "$lib/figma/screens/task/SubTaskProgressBar.svelte";
-    import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { CheckCircle } from "@steeze-ui/heroicons";
+    import SubTaskProgressBar from "$lib/figma/screens/task/SubTaskProgressBar.svelte";
+    import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
 
     export let progress: number;
     let progressString: string;
