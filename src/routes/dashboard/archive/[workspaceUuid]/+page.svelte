@@ -5,6 +5,7 @@
     import WorkspaceArchive from "$lib/components/dashboard/workspaceArchive.svelte";
     import { page } from "$app/stores";
     import { currentWorkspaceUuid } from "$lib/stores/dashboard";
+
     $: {
         const workspaceUuid = $page.params["workspaceUuid"];
         if (!workspaceUuid) {

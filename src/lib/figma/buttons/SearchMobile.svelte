@@ -2,6 +2,7 @@
     import { createEventDispatcher } from "svelte";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Search } from "@steeze-ui/heroicons";
+
     const dispatch = createEventDispatcher();
     function click() {
         dispatch("click");

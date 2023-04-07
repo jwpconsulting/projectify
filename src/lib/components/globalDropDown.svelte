@@ -1,5 +1,6 @@
 <script context="module" lang="ts">
     import type { SvelteComponent } from "svelte";
+
     export type DropDownMenuItem = {
         id?: unknown;
         label: string;

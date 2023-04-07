@@ -1,4 +1,5 @@
 import { browser } from "$app/environment";
+
 export const months = [
     "January",
     "February",

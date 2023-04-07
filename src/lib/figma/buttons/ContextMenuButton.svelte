@@ -6,6 +6,7 @@
         MenuButtonColor,
         MenuButtonState,
     } from "$lib/figma/types";
+
     export let label: string;
     export let icon: IconSource | null;
     export let state: MenuButtonState;

@@ -2,6 +2,7 @@
     import { createEventDispatcher } from "svelte";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { CheckCircle } from "@steeze-ui/heroicons";
+
     export let isRead: boolean;
     const dispatch = createEventDispatcher();
     $: classes = isRead

@@ -5,6 +5,7 @@
     import InputField from "$lib/figma/input-fields/InputField.svelte";
     import WorkspaceSettingsMemberCard from "$lib/figma/screens/workspace-settings/WorkspaceSettingsMemberCard.svelte";
     import Button from "$lib/figma/buttons/Button.svelte";
+
     export let workspace: Workspace;
 
     let workspaceUsers: WorkspaceUser[] | null;

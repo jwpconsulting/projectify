@@ -1,6 +1,7 @@
 <script lang="ts">
     import { openDestructiveOverlay } from "$lib/stores/global-ui";
     import Button from "$lib/figma/buttons/Button.svelte";
+
     const target = {
         kind: "deleteLabel" as const,
         label: { name: "This is a label", color: 0, uuid: "" },

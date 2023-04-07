@@ -1,6 +1,7 @@
 <script lang="ts">
     import Button from "$lib/figma/buttons/Button.svelte";
     import { openContextMenu } from "$lib/stores/global-ui";
+
     function open(target: HTMLElement) {
         openContextMenu({ kind: "profile" }, target);
     }

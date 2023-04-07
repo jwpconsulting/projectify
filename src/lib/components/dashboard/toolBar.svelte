@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
     import type { SvelteComponent } from "svelte";
+
     export type ToolBarItem = {
         label: string;
         icon: typeof SvelteComponent;

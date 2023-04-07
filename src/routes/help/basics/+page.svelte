@@ -1,5 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
     $: sections = [
         {
             title: $_("help-basics.workspace"),

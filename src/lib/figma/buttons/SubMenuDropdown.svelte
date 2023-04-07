@@ -3,6 +3,7 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import { ChevronDown } from "@steeze-ui/heroicons";
     import type { IconSource } from "@steeze-ui/svelte-icon/types";
+
     export let label: string;
     export let icon: IconSource;
 

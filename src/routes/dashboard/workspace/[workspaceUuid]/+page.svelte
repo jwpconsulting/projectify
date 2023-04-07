@@ -6,6 +6,7 @@
         currentWorkspaceUuid,
         setAndNavigateWorkspaceBoard,
     } from "$lib/stores/dashboard";
+
     $: {
         if ($currentWorkspace) {
             if (

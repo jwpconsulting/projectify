@@ -2,6 +2,7 @@
     import { createEventDispatcher } from "svelte";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Bell } from "@steeze-ui/heroicons";
+
     const dispatch = createEventDispatcher();
     export let isActive: boolean;
     function click() {

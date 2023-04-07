@@ -3,6 +3,7 @@
     import type { WorkspaceUser } from "$lib/types/workspace";
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import { getMessageNameForRole } from "$lib/utils/i18n";
+
     export let workspaceUser: WorkspaceUser;
 
     let fullName: string;

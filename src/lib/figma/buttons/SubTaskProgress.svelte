@@ -2,6 +2,7 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import { ViewList } from "@steeze-ui/heroicons";
     import type { Task } from "$lib/types/workspace";
+
     export let task: Task;
     let subTaskCompletionPercentage: number | null = null;
 

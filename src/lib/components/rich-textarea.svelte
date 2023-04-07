@@ -4,6 +4,7 @@
     export let modified = false;
     let editMode = false;
     import { tick } from "svelte";
+
     let textAreaEl: HTMLElement;
 
     function urlify(text: string) {

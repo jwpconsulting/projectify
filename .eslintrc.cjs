@@ -35,6 +35,7 @@ module.exports = {
         "unused-imports/no-unused-imports": "error",
         "import/no-unresolved": "off",
         "import/order": "error",
+        "import/newline-after-import": "error",
         // https://stackoverflow.com/a//64150393
         "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": [
