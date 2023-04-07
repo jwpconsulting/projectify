@@ -69,8 +69,6 @@
 
     let scrollY = 0;
     $: scrollToTop = scrollY < 20;
-
-    let drawerMenuOpen = false;
 </script>
 
 <svelte:window bind:scrollY />
@@ -106,7 +104,6 @@
             </nav>
 
             <button
-                on:click={() => (drawerMenuOpen = true)}
                 class="flex  h-10 w-10 shrink-0 items-center justify-center self-end rounded-full bg-base-100 text-primary md:hidden"
                 ><IconHamburgerMenu /></button
             >

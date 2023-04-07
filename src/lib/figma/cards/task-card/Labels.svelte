@@ -10,6 +10,7 @@
 
     function openLabelPicker() {
         // TODO
+        console.error("TODO", labelPickerBtnRef);
     }
 </script>
 

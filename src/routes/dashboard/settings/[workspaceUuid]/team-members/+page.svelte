@@ -19,7 +19,6 @@
         currentWorkspace,
         currentCustomer,
     } from "$lib/stores/dashboard";
-    import type { Input } from "$lib/types/ui";
 
     let workspaceUsers: WorkspaceUser[] = [];
 
@@ -139,55 +138,6 @@
         } else {
             throw new Error("Expected dropDown && filterRoleButton");
         }
-    }
-
-    let editTeamMemberInputs: Input[];
-    $: {
-        editTeamMemberInputs = [
-            {
-                name: "user.full_name",
-                label: $_("name-0"),
-                readonly: true,
-                validation: { required: false },
-            },
-            {
-                name: "user.email",
-                label: $_("email-0"),
-                readonly: true,
-                validation: { required: true },
-            },
-            {
-                name: "job_title",
-                label: $_("job-title"),
-                validation: { required: false },
-            },
-            {
-                name: "role",
-                label: $_("permissions"),
-                type: "select",
-                placeholder: $_("selecat-a-permission"),
-                selectOptions: workspaceUserRoles.map((role) => ({
-                    label: $_(role),
-                    value: role,
-                })),
-                validation: {
-                    required: true,
-                },
-            },
-        ];
-    }
-    let inviteTeamMemberInputs: Input[];
-    $: {
-        inviteTeamMemberInputs = [
-            {
-                name: "email",
-                label: $_("email"),
-                validation: {
-                    required: true,
-                },
-                placeholder: $_("please-enter-a-email-of-team-member"),
-            },
-        ];
     }
 </script>
 
