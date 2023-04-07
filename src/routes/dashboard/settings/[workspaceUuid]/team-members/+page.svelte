@@ -6,7 +6,7 @@
     import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
     import SearchInput from "$lib/components/search-input.svelte";
     import Fuse from "fuse.js";
-    import { fuseSearchThreshold } from "$lib/stores/dashboard";
+    import { fuseSearchThreshold } from "$lib/config";
     import DropdownButton from "$lib/components/dropdown-button.svelte";
     import IconLockClosed from "$lib/components/icons/icon-lock-closed.svelte";
     import { getDropDown } from "$lib/components/globalDropDown.svelte";

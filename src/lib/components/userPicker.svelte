@@ -8,10 +8,8 @@
 
     import Fuse from "fuse.js";
     import SearchInput from "$lib/components/search-input.svelte";
-    import {
-        currentWorkspace,
-        fuseSearchThreshold,
-    } from "$lib/stores/dashboard";
+    import { currentWorkspace } from "$lib/stores/dashboard";
+    import { fuseSearchThreshold } from "$lib/config";
 
     export let selectedUser: WorkspaceUser | null | "unassigned" = null;
     export let enableUnassignedSelection = false;
