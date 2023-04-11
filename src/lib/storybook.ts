@@ -128,6 +128,19 @@ export const task: Task = {
     labels: [],
     assignee: workspaceUser,
     sub_tasks: [subTask],
+    workspace_board_section: {
+        title: "section name that is long",
+        created: "",
+        modified: "",
+        uuid: "does-not-exist",
+        _order: 0,
+        workspace_board: {
+            uuid: "does-not-exist",
+            title: "Project board with a long name, it is long",
+            created: "",
+            modified: "",
+        },
+    },
 };
 
 export const workspaceBoardSection: WorkspaceBoardSection = {

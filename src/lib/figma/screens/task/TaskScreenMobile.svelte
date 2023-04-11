@@ -12,7 +12,7 @@
 </script>
 
 <div class="flex h-full flex-col gap-8 p-4">
-    <TopBar />
+    <TopBar {taskOrNewTask} />
     <TaskUpdateBar kind="mobile" {state} />
     {#if state === "task"}
         <TaskFormFields {taskOrNewTask} />

@@ -10,7 +10,7 @@
 </script>
 
 <div class="flex h-full w-full flex-col gap-8 p-4">
-    <TopBar />
+    <TopBar {taskOrNewTask} />
     <div class="flex h-full w-full flex-row gap-4">
         <div class="flex w-1/2 flex-col gap-8">
             <TaskUpdateBar kind="desktop" state="task" />
