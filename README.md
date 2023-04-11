@@ -57,6 +57,39 @@ To run a celery worker:
 - `STRIPE_PRICE_OBJECT`
 - `STRIPE_ENDPOINT_SECRET`
 
+# Postgres troubleshooting
+
+> psql: error: FATAL:  role "$USER" does not exist
+
+```
+CREATE ROLE $USER WITH LOGIN SUPERUSER;
+```
+
+> django.db.utils.OperationalError: fe_sendauth: no password supplied
+
+```
+--- /etc/postgresql/13/main/pg_hba.conf.backup	2023-04-11 11:43:00.074697069 +0900
++++ /etc/postgresql/13/main/pg_hba.conf	2023-04-11 11:43:25.015054408 +0900
+@@ -93,9 +93,9 @@
+ # "local" is for Unix domain socket connections only
+ local   all             all                                     peer
+ # IPv4 local connections:
+-host    all             all             127.0.0.1/32            md5
++host    all             all             127.0.0.1/32            trust
+ # IPv6 local connections:
+-host    all             all             ::1/128                 md5
++host    all             all             ::1/128                 trust
+ # Allow replication connections from localhost, by a user with the
+ # replication privilege.
+ local   replication     all                                     peer
+```
+
+Make sure to restart PostgreSQL, e.g. by running
+
+```
+sudo systemctl restart postgresql.service
+```
+
 # License
 
 This project is licensed under AGPL. See the LICENSE file in this repository.
