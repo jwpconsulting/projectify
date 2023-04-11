@@ -39,6 +39,7 @@ export type CreateTask = {
     assignee?: WorkspaceUser;
     workspace_board_section?: WorkspaceBoardSection;
     sub_tasks?: SubTask[];
+    deadline?: string;
 } & NewTask &
     TitleDescriptionType;
 
