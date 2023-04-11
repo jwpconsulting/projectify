@@ -271,6 +271,20 @@ class WorkspaceBoardDetailSerializer(WorkspaceBoardSerializer):
         )
 
 
+class WorkspaceBoardSectionDetailSerializer(WorkspaceBoardSectionSerializer):
+    """Workspace board section serializer."""
+
+    workspace_board = WorkspaceBoardBaseSerializer(read_only=True)
+
+    class Meta(WorkspaceBoardSectionSerializer.Meta):
+        """Meta."""
+
+        fields = (
+            *WorkspaceBoardSectionSerializer.Meta.fields,
+            "workspace_board",
+        )
+
+
 class WorkspaceSerializer(WorkspaceBaseSerializer):
     """Workspace serializer."""
 

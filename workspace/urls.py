@@ -22,6 +22,11 @@ urlpatterns = (
         name="workspace-board",
     ),
     path(
+        "workspace-board-section/<uuid:workspace_board_section_uuid>",
+        views.WorkspaceBoardSectionRetrieve.as_view(),
+        name="workspace-board-section",
+    ),
+    path(
         "user/workspaces/",
         views.WorkspaceList.as_view(),
         name="workspace-list",
