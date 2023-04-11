@@ -2,6 +2,7 @@
 from os import (
     environ,
 )
+
 # flake8: noqa: F401, F403
 from .base import *
 
@@ -25,4 +26,6 @@ STRIPE_ENDPOINT_SECRET = "null"
 # Copy static files storage from production settings to test
 # collectstatic
 if "TEST_STATICFILES_STORAGE" in environ:
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    STATICFILES_STORAGE = (
+        "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    )
