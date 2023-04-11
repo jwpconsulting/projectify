@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 import TaskUpdateUser from "$lib/figma/screens/task/TaskUpdateUser.svelte";
-import { user1 } from "$lib/storybook";
+import { workspaceUser } from "$lib/storybook";
 
 const meta: Meta<TaskUpdateUser> = {
     component: TaskUpdateUser,
@@ -12,6 +12,6 @@ type Story = StoryObj<TaskUpdateUser>;
 
 export const Default: Story = {
     args: {
-        user: user1,
+        workspaceUser,
     },
 };
