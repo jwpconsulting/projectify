@@ -8,6 +8,12 @@ export function getDashboardWorkspaceBoardUrl(workspaceBoardUuid: string) {
     return `/dashboard/workspace-board/${workspaceBoardUuid}`;
 }
 
+export function getDashboardWorkspaceBoardSectionUrl(
+    workspaceBoardSectionUuid: string
+) {
+    return `/dashboard/workspace-board-section/${workspaceBoardSectionUuid}`;
+}
+
 export function getDashboardTaskUrl(
     workspaceBoardUuid: string,
     taskUuid: string,

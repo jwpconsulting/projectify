@@ -10,6 +10,7 @@
         isBreadCrumbWorkspaceBoardSection,
         isBreadCrumbTask,
     } from "$lib/types/ui";
+    import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
 
     export let taskOrNewTask: TaskOrNewTask;
 
@@ -42,7 +43,9 @@
             <CircleIcon
                 action={{
                     kind: "a",
-                    href: "#",
+                    href: getDashboardWorkspaceBoardSectionUrl(
+                        breadCrumbTask.workspace_board_section.uuid
+                    ),
                 }}
                 size="medium"
                 icon="close"
