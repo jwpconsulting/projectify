@@ -32,6 +32,16 @@ export type NewTask = {
     workspace_board_section: WorkspaceBoardSection;
 };
 
+// What is submitted to the API to create the actual task
+// TODO
+export type CreateTask = {
+    labels: Label[];
+    assignee?: WorkspaceUser;
+    workspace_board_section?: WorkspaceBoardSection;
+    sub_tasks?: SubTask[];
+} & NewTask &
+    TitleDescriptionType;
+
 // All the info we can receive from the API
 export type Task = {
     _order: number;
