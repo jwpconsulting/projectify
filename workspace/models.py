@@ -371,8 +371,8 @@ class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
         self.save()
 
 
-class WorkspaceBoardSectionManager(models.Manager):
-    """Manager for WorkspaceBoard."""
+class WorkspaceBoardSectionQuerySet(models.QuerySet):
+    """QuerySet for WorkspaceBoard."""
 
     def filter_by_workspace_board_pks(self, keys):
         """Filter by workspace boards."""
@@ -395,7 +395,7 @@ class WorkspaceBoardSection(
         on_delete=models.CASCADE,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
-    objects = WorkspaceBoardSectionManager()
+    objects = WorkspaceBoardSectionQuerySet.as_manager()
 
     def add_task(self, title, description, deadline=None):
         """Add a task to this section."""
