@@ -13,6 +13,8 @@
     export let disabled: boolean;
     export let label: string | null = null;
 
+    // TODO refactor to use callback action prop instead
+
     $: innerColorStyle = {
         primary: {
             blue: "border-transparent bg-primary text-primary-content group-hover:bg-primary-hover group-active:bg-primary-pressed",

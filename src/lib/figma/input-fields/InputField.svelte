@@ -4,6 +4,7 @@
     import type { InputFieldAnchor, InputFieldStyle } from "$lib/figma/types";
     import Anchor from "$lib/figma/typography/Anchor.svelte";
 
+    // TODO make border customizable (e.g. in TaskFormFields)
     export let value = "";
     export let placeholder: string;
     export let style: InputFieldStyle;
