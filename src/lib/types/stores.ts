@@ -6,8 +6,10 @@ import type {
     TasksPerUser,
     WorkspaceUserSelection,
     WorkspaceUserSelectionInput,
+    TaskOrNewTask,
 } from "$lib/types/ui";
 import type {
+    CreateTask,
     CreateWorkspaceBoardSection,
     Label,
     Workspace,
@@ -73,4 +75,11 @@ export type NewWorkspaceBoardSectionModule = {
         workspaceBoard: WorkspaceBoard,
         workspaceBoardSection: CreateWorkspaceBoardSection
     ) => void;
+};
+
+export type TaskModule = {
+    createOrUpdateTask: () => void;
+    taskOrNewTask: Writable<TaskOrNewTask>;
+    createTask: Writable<CreateTask | null>;
+    canCreateOrUpdate: Readable<boolean>;
 };

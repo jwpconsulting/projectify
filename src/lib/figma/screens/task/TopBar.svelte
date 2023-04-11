@@ -11,8 +11,13 @@
         isBreadCrumbTask,
     } from "$lib/types/ui";
     import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
+    import type { TaskModule } from "$lib/types/stores";
+
+    export let taskModule: TaskModule;
 
     export let taskOrNewTask: TaskOrNewTask;
+
+    let { canCreateOrUpdate } = taskModule;
 
     let breadCrumbTask: BreadCrumbTask;
     $: {
@@ -34,6 +39,10 @@
                 workspace_board_section,
             };
         }
+    }
+
+    function createOrUpdate() {
+        taskModule.createOrUpdateTask();
     }
 </script>
 
@@ -67,9 +76,10 @@
         <Button
             color="blue"
             size="small"
-            disabled={true}
+            disabled={!$canCreateOrUpdate}
             style={{ kind: "primary" }}
             label={$_("task-screen.save")}
+            on:click={createOrUpdate}
         />
     </div>
 </div>

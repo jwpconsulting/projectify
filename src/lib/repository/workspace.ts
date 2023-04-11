@@ -1,5 +1,6 @@
 import {
     Mutation_AddLabelMutation,
+    Mutation_AddTask,
     Mutation_AddWorkspaceBoardSection,
     Mutation_ArchiveWorkspaceBoard,
     Mutation_AssignTask,
@@ -8,6 +9,7 @@ import {
     Mutation_UpdateLabelMutation,
 } from "$lib/graphql/operations";
 import type {
+    CreateTask,
     CreateWorkspaceBoardSection,
     Label,
     Task,
@@ -18,6 +20,21 @@ import type {
 import { getWithCredentialsJson } from "$lib/repository/util";
 
 import { client } from "$lib/graphql/client";
+
+export async function createTask(createTask: CreateTask): Promise<void> {
+    await client.mutate({
+        mutation: Mutation_AddTask,
+        variables: {
+            input: {
+                title: createTask.title,
+                description: createTask.description,
+                deadline: createTask.deadline,
+                workspaceBoardSectionUuid:
+                    createTask.workspace_board_section.uuid,
+            },
+        },
+    });
+}
 
 export async function assignUserToTask(
     userEmail: string | null,

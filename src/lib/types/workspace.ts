@@ -34,14 +34,20 @@ export type NewTask = {
 
 // What is submitted to the API to create the actual task
 // TODO
-export type CreateTask = {
-    labels: Label[];
-    assignee?: WorkspaceUser;
-    workspace_board_section?: WorkspaceBoardSection;
-    sub_tasks?: SubTask[];
-    deadline?: string;
-} & NewTask &
-    TitleDescriptionType;
+export type CreateTask = TitleDescriptionType &
+    NewTask & {
+        // XXX for some reason our API thinks this one is a required field
+        description: string;
+        labels: Label[];
+        assignee?: WorkspaceUser;
+        workspace_board_section?: WorkspaceBoardSection;
+        sub_tasks?: SubTask[];
+        // There is a mismatch for this in the backend and frontend
+        // Normally, we should be accepting undefined here as well?
+        // I get this error
+        // Uncaught (in promise) ApolloError: AddTaskInput.__init__() missing 1 required positional argument: 'deadline'
+        deadline: string | null;
+    };
 
 // All the info we can receive from the API
 export type Task = {

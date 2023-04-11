@@ -214,6 +214,8 @@
         "reset-password": "Reset password"
     },
     "task-screen": {
+        "new-task-name": "New task name",
+        "description": "Description",
         "select-due-date": "Select due date",
         "save": "Save",
         "enter-a-subtask": "Enter a subtask",
