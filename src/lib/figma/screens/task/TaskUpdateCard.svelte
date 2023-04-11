@@ -1,14 +1,38 @@
 <script lang="ts">
-    import TaskScreenMobile from "$lib/figma/screens/task/TaskScreenMobile.svelte";
-    import TaskScreenDesktop from "$lib/figma/screens/task/TaskScreenDesktop.svelte";
+    import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
+    import TaskFormFields from "$lib/figma/screens/task/TaskFormFields.svelte";
+    import TopBar from "$lib/figma/screens/task/TopBar.svelte";
+    import TaskUpdates from "$lib/figma/screens/task/TaskUpdates.svelte";
     import type { TaskOrNewTask } from "$lib/types/ui";
+    import type { TaskUpdateBarState } from "$lib/figma/types";
 
     export let taskOrNewTask: TaskOrNewTask;
+    export let state: TaskUpdateBarState = "task";
 </script>
 
 <div class="block lg:hidden">
-    <TaskScreenMobile {taskOrNewTask} />
+    <div class="flex h-full flex-col gap-8 p-4">
+        <TopBar {taskOrNewTask} />
+        <TaskUpdateBar kind="mobile" {state} />
+        {#if state === "task"}
+            <TaskFormFields {taskOrNewTask} />
+        {:else}
+            <TaskUpdates />
+        {/if}
+    </div>
 </div>
 <div class="hidden lg:block">
-    <TaskScreenDesktop {taskOrNewTask} />
+    <div class="flex h-full w-full flex-col gap-8 p-4">
+        <TopBar {taskOrNewTask} />
+        <div class="flex h-full w-full flex-row gap-4">
+            <div class="flex w-1/2 flex-col gap-8">
+                <TaskUpdateBar kind="desktop" state="task" />
+                <TaskFormFields {taskOrNewTask} />
+            </div>
+            <div class="flex w-1/2 flex-col gap-4">
+                <TaskUpdateBar kind="desktop" state="updates" />
+                <TaskUpdates />
+            </div>
+        </div>
+    </div>
 </div>
