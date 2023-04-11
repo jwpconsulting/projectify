@@ -52,6 +52,7 @@
     class:text-base-content={state === "active"}
     class:invisible={state === "inactive"}
     class:text-secondary-text={state === "disabled"}
+    class:block={action.kind === "a"}
     disabled={state !== "active"}
 >
     {#if active}
