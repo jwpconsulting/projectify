@@ -5,7 +5,7 @@
     import Anchor from "$lib/figma/typography/Anchor.svelte";
 
     // TODO make border customizable (e.g. in TaskFormFields)
-    export let value = "";
+    export let value: string | null = null;
     export let placeholder: string;
     export let style: InputFieldStyle;
     export let name: string;
