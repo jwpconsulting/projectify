@@ -31,3 +31,7 @@ export function getArchiveUrl(workspaceUuid: string) {
 export function getProfileUrl() {
     return "/user/profile";
 }
+
+export function getNewTaskUrl(workspaceBoardSectionUuid: string) {
+    return `/dashboard/workspace-board-section/${workspaceBoardSectionUuid}/new-task`;
+}

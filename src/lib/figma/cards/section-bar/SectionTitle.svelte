@@ -5,6 +5,7 @@
     import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
 
     import type { WorkspaceBoardSection } from "$lib/types/workspace";
+    import { getNewTaskUrl } from "$lib/urls";
 
     export let section: WorkspaceBoardSection;
     export let toggleOpen: () => void;
@@ -40,7 +41,7 @@
         <SquovalIcon
             action={{
                 kind: "a",
-                href: "#",
+                href: getNewTaskUrl(section.uuid),
             }}
             icon="plus"
             state="active"
