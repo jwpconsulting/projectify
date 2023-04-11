@@ -13,6 +13,7 @@ import type {
     Task,
     Workspace,
     WorkspaceBoard,
+    WorkspaceBoardSection,
 } from "$lib/types/workspace";
 import { getWithCredentialsJson } from "$lib/repository/util";
 
@@ -131,6 +132,14 @@ export async function getWorkspaceBoard(
 ): Promise<WorkspaceBoard> {
     return await getWithCredentialsJson<WorkspaceBoard>(
         `/workspace/workspace-board/${uuid}`
+    );
+}
+
+export async function getWorkspaceBoardSection(
+    uuid: string
+): Promise<WorkspaceBoardSection> {
+    return await getWithCredentialsJson<WorkspaceBoardSection>(
+        `/workspace/workspace-board-section/${uuid}`
     );
 }
 

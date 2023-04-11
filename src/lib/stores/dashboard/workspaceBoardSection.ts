@@ -1,4 +1,4 @@
-import { derived } from "svelte/store";
+import { writable, derived } from "svelte/store";
 
 import type { Label, Task, WorkspaceBoardSection } from "$lib/types/workspace";
 import { currentWorkspaceBoard } from "$lib/stores/dashboard/workspaceBoard";
@@ -10,6 +10,23 @@ import type {
 import { selectedWorkspaceUser } from "$lib/stores/dashboard/workspaceUser";
 
 import { selectedLabels } from "$lib/stores/dashboard/label";
+import { getWorkspaceBoardSection } from "$lib/repository/workspace";
+
+export const currentWorkspaceBoardSectionUuid = writable<string | null>(null);
+export const currentWorkspaceBoardSection = derived<
+    [typeof currentWorkspaceBoardSectionUuid],
+    WorkspaceBoardSection | null
+>(
+    [currentWorkspaceBoardSectionUuid],
+    ([$currentWorkspaceBoardSectionUuid], set) => {
+        if ($currentWorkspaceBoardSectionUuid == null) {
+            set(null);
+            return;
+        }
+        getWorkspaceBoardSection($currentWorkspaceBoardSectionUuid).then(set);
+    },
+    null
+);
 
 type CurrentFilter = {
     labels: LabelSelection;
