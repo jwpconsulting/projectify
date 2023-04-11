@@ -1,6 +1,7 @@
 import type { SvelteComponentTyped } from "svelte";
 import type {
     Label,
+    NewTask,
     Task,
     Workspace,
     WorkspaceBoard,
@@ -147,3 +148,7 @@ export type SolutionsPageContent = {
     heroContent: SolutionsHeroContent;
     features: FeatureDescription[];
 };
+
+export type TaskOrNewTask =
+    | { kind: "task"; task: Task }
+    | { kind: "newTask"; newTask: NewTask };

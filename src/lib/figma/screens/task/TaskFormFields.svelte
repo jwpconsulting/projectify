@@ -6,15 +6,23 @@
     import TaskUpdateLabel from "$lib/figma/screens/task/TaskUpdateLabel.svelte";
     import TaskUpdateDueDate from "$lib/figma/screens/task/TaskUpdateDueDate.svelte";
     import SubTaskBar from "$lib/figma/screens/task/SubTaskBar.svelte";
-    import type { Task } from "$lib/types/workspace";
+    import type { TaskOrNewTask } from "$lib/types/ui";
     import type { User } from "$lib/types/user";
+    import type { Label } from "$lib/types/workspace";
 
-    export let task: Task;
+    export let taskOrNewTask: TaskOrNewTask;
 
     let assignedUser: User | null = null;
+    let labels: Label[] = [];
+    let dueDate: string | null = null;
     $: {
-        if (task.assignee) {
-            assignedUser = task.assignee.user;
+        if (taskOrNewTask.kind === "task") {
+            const task = taskOrNewTask.task;
+            if (task.assignee) {
+                assignedUser = task.assignee.user;
+            }
+            labels = task.labels;
+            dueDate = task.deadline || null;
         }
     }
 </script>
@@ -24,9 +32,9 @@
     NEW TASK NAME
 </div>
 <TaskUpdateUser user={assignedUser} />
-<TaskUpdateLabel labels={task.labels} />
+<TaskUpdateLabel {labels} />
 <!-- TODO section -->
-<TaskUpdateDueDate date={task.deadline || null} />
+<TaskUpdateDueDate date={dueDate} />
 <!-- TODO select watcher -->
 <!-- TODO description -->
 <SubTaskBar progress={0} />

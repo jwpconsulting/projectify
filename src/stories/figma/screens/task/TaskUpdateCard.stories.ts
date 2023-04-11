@@ -9,21 +9,20 @@ const meta: Meta<TaskUpdateCard> = {
     parameters: {
         layout: "fullscreen",
     },
+    args: {
+        taskOrNewTask: {
+            kind: "task",
+            task,
+        },
+    },
 };
 export default meta;
 
 type Story = StoryObj<TaskUpdateCard>;
 
-export const Default: Story = {
-    args: {
-        task,
-    },
-};
+export const Default: Story = {};
 
 export const Mobile: Story = {
-    args: {
-        task,
-    },
     parameters: {
         ...mobileParameters,
     },

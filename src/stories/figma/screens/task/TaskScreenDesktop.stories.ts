@@ -9,13 +9,15 @@ const meta: Meta<TaskScreenDesktop> = {
     parameters: {
         layout: "fullscreen",
     },
+    args: {
+        taskOrNewTask: {
+            kind: "task",
+            task,
+        },
+    },
 };
 export default meta;
 
 type Story = StoryObj<TaskScreenDesktop>;
 
-export const Default: Story = {
-    args: {
-        task,
-    },
-};
+export const Default: Story = {};

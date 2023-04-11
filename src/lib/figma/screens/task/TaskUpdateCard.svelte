@@ -1,14 +1,14 @@
 <script lang="ts">
     import TaskScreenMobile from "$lib/figma/screens/task/TaskScreenMobile.svelte";
     import TaskScreenDesktop from "$lib/figma/screens/task/TaskScreenDesktop.svelte";
-    import type { Task } from "$lib/types/workspace";
+    import type { TaskOrNewTask } from "$lib/types/ui";
 
-    export let task: Task;
+    export let taskOrNewTask: TaskOrNewTask;
 </script>
 
 <div class="block lg:hidden">
-    <TaskScreenMobile {task} />
+    <TaskScreenMobile {taskOrNewTask} />
 </div>
 <div class="hidden lg:block">
-    <TaskScreenDesktop {task} />
+    <TaskScreenDesktop {taskOrNewTask} />
 </div>

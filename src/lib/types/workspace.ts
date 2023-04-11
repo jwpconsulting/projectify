@@ -27,6 +27,12 @@ export type ChatMessage = {
     text: string;
 } & TimestampedType;
 
+// What is needed to know at least to create a new task
+export type NewTask = {
+    workspace_board_section: WorkspaceBoardSection;
+};
+
+// All the info we can receive from the API
 export type Task = {
     _order: number;
     uuid: string;

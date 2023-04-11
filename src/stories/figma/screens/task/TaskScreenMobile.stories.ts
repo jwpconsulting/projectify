@@ -10,20 +10,21 @@ const meta: Meta<TaskScreenMobile> = {
         ...mobileParameters,
         layout: "fullscreen",
     },
+    args: {
+        taskOrNewTask: {
+            kind: "task",
+            task,
+        },
+    },
 };
 export default meta;
 
 type Story = StoryObj<TaskScreenMobile>;
 
-export const Task: Story = {
-    args: {
-        task,
-    },
-};
+export const Task: Story = {};
 
 export const Updates: Story = {
     args: {
-        task,
         state: "updates",
     },
 };

@@ -5,9 +5,9 @@
     import TaskUpdates from "$lib/figma/screens/task/TaskUpdates.svelte";
 
     import type { TaskUpdateBarState } from "$lib/figma/types";
-    import type { Task } from "$lib/types/workspace";
+    import type { TaskOrNewTask } from "$lib/types/ui";
 
-    export let task: Task;
+    export let taskOrNewTask: TaskOrNewTask;
     export let state: TaskUpdateBarState = "task";
 </script>
 
@@ -15,7 +15,7 @@
     <TopBar />
     <TaskUpdateBar kind="mobile" {state} />
     {#if state === "task"}
-        <TaskFormFields {task} />
+        <TaskFormFields {taskOrNewTask} />
     {:else}
         <TaskUpdates />
     {/if}
