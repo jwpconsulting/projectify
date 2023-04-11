@@ -60,7 +60,7 @@
             size="small"
             icon="ellipsis"
             disabled={false}
-            on:click={toggleMenu}
+            action={{ kind: "button", action: toggleMenu }}
         />
     </div>
 </button>

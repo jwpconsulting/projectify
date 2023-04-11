@@ -8,18 +8,18 @@
         Trash,
         X,
     } from "@steeze-ui/heroicons";
-    import { createEventDispatcher } from "svelte";
-    import type { CircleIconIcon, CircleIconSize } from "$lib/figma/types";
+    import type {
+        ButtonAction,
+        CircleIconIcon,
+        CircleIconSize,
+    } from "$lib/figma/types";
 
     export let size: CircleIconSize;
     export let icon: CircleIconIcon;
     // TODO consider making this optional
     export let disabled: boolean;
 
-    const dispatch = createEventDispatcher();
-    function click() {
-        dispatch("click");
-    }
+    export let action: ButtonAction;
 
     $: iconMapped = {
         ellipsis: DotsHorizontal,
@@ -35,10 +35,14 @@
     }[size];
 </script>
 
-<button
-    on:click|stopPropagation={click}
+<svelte:element
+    this={action.kind}
+    on:click={action.kind == "button" ? action.action : undefined}
+    on:keydown={action.kind == "button" ? action.action : undefined}
+    href={action.kind == "a" ? action.href : undefined}
     class={`${sizeMapped} rounded-full border border-transparent text-base-content hover:bg-secondary-hover focus:border-base-content focus:bg-base-100 focus:outline-none active:bg-disabled-background disabled:bg-transparent disabled:text-transparent`}
+    class:block={action.kind === "a"}
     {disabled}
 >
     <Icon src={iconMapped} style="outline" />
-</button>
+</svelte:element>

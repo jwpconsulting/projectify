@@ -39,7 +39,15 @@
 <div class="flex flex-row items-center justify-between">
     <div class="flex flex-row items-center gap-6">
         <div class="shrink-0">
-            <CircleIcon size="medium" icon="close" disabled={false} />
+            <CircleIcon
+                action={{
+                    kind: "a",
+                    href: "#",
+                }}
+                size="medium"
+                icon="close"
+                disabled={false}
+            />
         </div>
         <div class="text-sm font-bold text-utility">
             {breadCrumbTask.workspace_board_section.workspace_board.title} &gt;

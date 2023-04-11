@@ -80,13 +80,13 @@
                 size="small"
                 disabled={false}
                 icon="edit"
-                on:click={onEdit}
+                action={{ kind: "button", action: onEdit }}
             />
             <CircleIcon
                 size="small"
                 disabled={false}
                 icon="delete"
-                on:click={onDelete}
+                action={{ kind: "button", action: onDelete }}
             />
         {/if}
     </div>

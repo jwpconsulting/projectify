@@ -3,7 +3,6 @@
     import Button from "$lib/figma/buttons/Button.svelte";
     import SideMenuCreate from "$lib/figma/buttons/SideMenuCreate.svelte";
     import WorkspaceSettings from "$lib/figma/buttons/WorkspaceSettings.svelte";
-    import CircleIcon from "$lib/figma/buttons/CircleIcon.svelte";
     import UploadAvatar from "$lib/figma/buttons/UploadAvatar.svelte";
     import AddUserButton from "$lib/figma/buttons/AddUserButton.svelte";
     import NotificationButton from "$lib/figma/buttons/NotificationButton.svelte";
@@ -34,8 +33,6 @@
         borderedIconTypes,
         buttonColors,
         buttonSizes,
-        circleIconIcons,
-        circleIconSizes,
         menuButtonColors,
         menuButtonStates,
         sideMenuCreateSizes,
@@ -113,30 +110,7 @@ Side menu create
 
 Ellipsis side nav
 <WorkspaceSettings on:click={console.log} />
-Circle icons
-<div class={fr}>
-    {#each circleIconSizes as size}
-        <div>
-            <div class="capitalize">
-                {size}
-            </div>
-            <div class={fc}>
-                {#each circleIconIcons as icon}
-                    <div class={fr}>
-                        {#each trueFalse as disabled}
-                            <CircleIcon
-                                on:click={console.log}
-                                {icon}
-                                {disabled}
-                                {size}
-                            />
-                        {/each}
-                    </div>
-                {/each}
-            </div>
-        </div>
-    {/each}
-</div>
+
 Upload avatar
 <UploadAvatar on:click={console.log} />
 Add user
