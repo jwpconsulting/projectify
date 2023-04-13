@@ -1,6 +1,23 @@
 import vars from "$lib/env";
 
-export async function getWithCredentialsJson<T>(url: string): Promise<T> {
+import { browser } from "$app/environment";
+
+import type { RepositoryContext } from "$lib/types/repository";
+
+const defaultRepositoryContext: RepositoryContext | null = browser
+    ? {
+          fetch: window.fetch,
+      }
+    : null;
+
+export async function getWithCredentialsJson<T>(
+    url: string,
+    repositoryContext: RepositoryContext | null = defaultRepositoryContext
+): Promise<T> {
+    if (!repositoryContext) {
+        throw new Error("Expected repositoryContext");
+    }
+    const { fetch } = repositoryContext;
     const response = await fetch(`${vars.API_ENDPOINT}${url}`, {
         credentials: "include",
     });

@@ -18,6 +18,7 @@ import type {
     WorkspaceBoardSection,
 } from "$lib/types/workspace";
 import { getWithCredentialsJson } from "$lib/repository/util";
+import type { RepositoryContext } from "$lib/types/repository";
 
 import { client } from "$lib/graphql/client";
 
