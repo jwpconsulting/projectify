@@ -154,10 +154,12 @@ export async function getWorkspaceBoard(
 }
 
 export async function getWorkspaceBoardSection(
-    uuid: string
+    uuid: string,
+    repositoryContext?: RepositoryContext
 ): Promise<WorkspaceBoardSection> {
     return await getWithCredentialsJson<WorkspaceBoardSection>(
-        `/workspace/workspace-board-section/${uuid}`
+        `/workspace/workspace-board-section/${uuid}`,
+        repositoryContext
     );
 }
 
