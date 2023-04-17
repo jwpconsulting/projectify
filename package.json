@@ -10,6 +10,7 @@
         "svelte-check": "svelte-check --tsconfig tsconfig.json --diagnostic-sources js,svelte",
         "svelte-check:watch": "svelte-check --tsconfig tsconfig.json --diagnostic-sources js,svelte --watch",
         "eslint": "eslint .",
+        "eslint-fix": "eslint . --fix",
         "lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. --cache --cache-strategy metadata .",
         "format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. --cache --cache-strategy metadata .",
         "storybook": "storybook dev -p 6006 --no-open",
