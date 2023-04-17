@@ -41,3 +41,7 @@ export function getProfileUrl() {
 export function getNewTaskUrl(workspaceBoardSectionUuid: string) {
     return `/dashboard/workspace-board-section/${workspaceBoardSectionUuid}/new-task`;
 }
+
+export function getTaskUrl(taskUuid: string) {
+    return `/dashboard/task/${taskUuid}`;
+}

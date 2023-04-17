@@ -6,19 +6,18 @@
     import Chevrons from "$lib/figma/cards/task-card/Chevrons.svelte";
     import MenuButton from "$lib/figma/cards/task-card/MenuButton.svelte";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
+    import { getTaskUrl } from "$lib/urls";
 
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection | null = null;
 
     export let isFirst = false;
     export let isLast = false;
-
-    // TODO determine link
 </script>
 
 <a
     class="block rounded-llg border-2 border-transparent focus:border-base-content"
-    href="/"
+    href={getTaskUrl(task.uuid)}
 >
     <div class="w-full rounded-lg border border-base-300 bg-base-100 p-2">
         <div class="flex flex-col md:hidden">
