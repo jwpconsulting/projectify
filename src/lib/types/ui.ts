@@ -112,12 +112,10 @@ export type ContextMenuType =
     | {
           kind: "updateMember";
           workspaceUserSearchModule: WorkspaceUserSearchModule;
-          updateMember: (workspaceUser: WorkspaceUser) => void;
       }
     | {
           kind: "updateLabel";
           labelSearchModule: LabelSearchModule;
-          updateLabel: (label: Label) => void;
       };
 export type ContextMenuState =
     | { kind: "hidden" }

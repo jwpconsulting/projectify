@@ -11,6 +11,8 @@ import {
     workspaceBoardSection,
     workspaceBoardSectionModule,
     workspaceSearchModule,
+    workspaceUserSearchModule,
+    labelSearchModule,
 } from "$lib/storybook";
 
 const contextMenus: { [key: string]: ContextMenuType } = {
@@ -50,6 +52,14 @@ const contextMenus: { [key: string]: ContextMenuType } = {
     },
     permissions: {
         kind: "permissions",
+    },
+    updateMember: {
+        kind: "updateMember",
+        workspaceUserSearchModule,
+    },
+    updateLabel: {
+        kind: "updateLabel",
+        labelSearchModule,
     },
 };
 
@@ -112,5 +122,17 @@ export const Help: Story = {
 export const Permissions: Story = {
     args: {
         target: contextMenus.permissions,
+    },
+};
+
+export const UpdateMember: Story = {
+    args: {
+        target: contextMenus.updateMember,
+    },
+};
+
+export const UpdateLabel: Story = {
+    args: {
+        target: contextMenus.updateLabel,
     },
 };
