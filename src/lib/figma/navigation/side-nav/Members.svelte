@@ -3,12 +3,10 @@
     import { User } from "@steeze-ui/heroicons";
     import type { WorkspaceUserSearchModule } from "$lib/types/stores";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
-    import InputField from "$lib/figma/input-fields/InputField.svelte";
-    import FilterUser from "$lib/figma/select-controls/FilterUser.svelte";
+    import FilterMemberMenu from "$lib/figma/composites/FilterMemberMenu.svelte";
 
     export let workspaceUserSearchModule: WorkspaceUserSearchModule;
-    let { select, deselect, selected, tasksPerUser, search, searchResults } =
-        workspaceUserSearchModule;
+    let { selected } = workspaceUserSearchModule;
 
     let open = true;
 
@@ -25,46 +23,5 @@
     filtered={$selected.kind !== "allWorkspaceUsers"}
 />
 {#if open}
-    <div class="flex flex-col px-4 pt-2 pb-4">
-        <div class="color-base-content p-2 text-xs font-bold capitalize">
-            {$_("dashboard.filter-members")}
-        </div>
-        <InputField
-            bind:value={$search}
-            style={{ kind: "search" }}
-            name="member-name"
-            placeholder={$_("dashboard.member-name")}
-        />
-    </div>
-    <div class="flex flex-col">
-        <FilterUser
-            workspaceUserSelectionInput={{ kind: "unassigned" }}
-            active={$selected.kind === "unassigned"}
-            count={$tasksPerUser.unassigned}
-            on:select={() => select({ kind: "unassigned" })}
-            on:deselect={() => deselect({ kind: "unassigned" })}
-        />
-        {#each $searchResults as workspaceUser (workspaceUser.uuid)}
-            <FilterUser
-                workspaceUserSelectionInput={{
-                    kind: "workspaceUser",
-                    workspaceUser: workspaceUser,
-                }}
-                active={$selected.kind === "workspaceUsers"
-                    ? $selected.workspaceUserUuids.has(workspaceUser.uuid)
-                    : false}
-                count={$tasksPerUser.assigned.get(workspaceUser.uuid) || null}
-                on:select={() =>
-                    select({
-                        kind: "workspaceUser",
-                        workspaceUser,
-                    })}
-                on:deselect={() =>
-                    deselect({
-                        kind: "workspaceUser",
-                        workspaceUser,
-                    })}
-            />
-        {/each}
-    </div>
+    <FilterMemberMenu {workspaceUserSearchModule} />
 {/if}
