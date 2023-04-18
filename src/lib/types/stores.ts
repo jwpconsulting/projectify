@@ -86,4 +86,6 @@ export type TaskModule = {
     createTask: Writable<CreateTask | null> | null;
     updateTask: Writable<Task | null> | null;
     canCreateOrUpdate: Readable<boolean>;
+    workspaceUserSearchModule: WorkspaceUserSearchModule;
+    labelSearchModule: LabelSearchModule;
 };

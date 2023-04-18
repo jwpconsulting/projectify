@@ -1,10 +1,14 @@
 <script lang="ts">
-    import { derived, writable } from "svelte/store";
+    import { readable, derived, writable } from "svelte/store";
     import Loading from "$lib/components/loading.svelte";
     import { page } from "$app/stores";
     import TaskUpdateCard from "$lib/figma/screens/task/TaskUpdateCard.svelte";
-    import type { CreateTask, NewTask } from "$lib/types/workspace";
-    import type { TaskOrNewTask } from "$lib/types/ui";
+    import type { CreateTask, NewTask , Label, WorkspaceUser } from "$lib/types/workspace";
+    import type { TaskOrNewTask ,
+        LabelSelection,
+        TasksPerUser,
+        WorkspaceUserSelection,
+    } from "$lib/types/ui";
     import type { TaskModule } from "$lib/types/stores";
 
     import {
@@ -45,6 +49,29 @@
                     },
                     false
                 ),
+                // XXX this requires special logic because we can only
+                // assign users/labels after the task is already created
+                // TODO make workspace user menu so that "all" can not be
+                // selected
+                workspaceUserSearchModule: {
+                    select: console.error,
+                    deselect: console.error,
+                    selected: writable<WorkspaceUserSelection>(),
+                    // XXX find a way to postpone this, albeit useful, showing
+                    // the amount of tasks per users right from the beginning
+                    // will be more work
+                    tasksPerUser: readable<TasksPerUser>(),
+                    search: writable(""),
+                    searchResults: readable<WorkspaceUser[]>([]),
+                },
+                // TODO make label menu so that "all" can not be selected
+                labelSearchModule: {
+                    select: console.error,
+                    deselect: console.error,
+                    selected: writable<LabelSelection>(),
+                    search: writable(""),
+                    searchResults: readable<Label[]>([]),
+                },
             };
         }
     }

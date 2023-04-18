@@ -76,6 +76,9 @@
     }
 
     function assignUser() {
+        // create store
+        // open context menu with store
+        // get selection
         console.error("TODO assignUser");
     }
 </script>
