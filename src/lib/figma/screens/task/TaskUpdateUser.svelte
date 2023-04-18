@@ -7,11 +7,12 @@
     // Either a user has been assigned, or if not we should ask the user
     // to assign a user
     export let workspaceUser: WorkspaceUser | null;
+    export let action: () => void;
 </script>
 
 <div class="flex flex-row items-center gap-4">
     <div class="w-6">
         <Icon src={UserIcon} theme="outline" />
     </div>
-    <UpdateUser user={workspaceUser ? workspaceUser.user : null} />
+    <UpdateUser {action} user={workspaceUser ? workspaceUser.user : null} />
 </div>

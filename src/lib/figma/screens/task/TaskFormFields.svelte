@@ -74,6 +74,10 @@
             }
         }
     }
+
+    function assignUser() {
+        console.error("TODO assignUser");
+    }
 </script>
 
 <div class="flex flex-row gap-2">
@@ -85,7 +89,7 @@
         placeholder={$_("task-screen.new-task-name")}
     />
 </div>
-<TaskUpdateUser workspaceUser={assignedUser} />
+<TaskUpdateUser action={assignUser} workspaceUser={assignedUser} />
 <TaskUpdateLabel {labels} />
 <!-- TODO section -->
 <TaskUpdateDueDate date={dueDate} />

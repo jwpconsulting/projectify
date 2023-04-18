@@ -6,6 +6,9 @@ import { user1 } from "$lib/storybook";
 const meta: Meta<UpdateUser> = {
     component: UpdateUser,
     argTypes: {},
+    args: {
+        action: console.log,
+    },
 };
 export default meta;
 
