@@ -74,13 +74,6 @@
             }
         }
     }
-
-    function assignUser() {
-        // create store
-        // open context menu with store
-        // get selection
-        console.error("TODO assignUser");
-    }
 </script>
 
 <div class="flex flex-row gap-2">
@@ -92,8 +85,11 @@
         placeholder={$_("task-screen.new-task-name")}
     />
 </div>
-<TaskUpdateUser action={assignUser} workspaceUser={assignedUser} />
-<TaskUpdateLabel {labels} />
+<TaskUpdateUser
+    action={taskModule.showUpdateWorkspaceUser}
+    workspaceUser={assignedUser}
+/>
+<TaskUpdateLabel action={taskModule.showUpdateLabel} {labels} />
 <!-- TODO section -->
 <TaskUpdateDueDate date={dueDate} />
 <!-- TODO select watcher -->

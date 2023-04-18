@@ -88,4 +88,6 @@ export type TaskModule = {
     canCreateOrUpdate: Readable<boolean>;
     workspaceUserSearchModule: WorkspaceUserSearchModule;
     labelSearchModule: LabelSearchModule;
+    showUpdateWorkspaceUser: (anchor: HTMLElement) => void;
+    showUpdateLabel: (anchor: HTMLElement) => void;
 };

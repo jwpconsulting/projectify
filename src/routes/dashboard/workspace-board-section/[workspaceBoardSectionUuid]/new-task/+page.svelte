@@ -3,8 +3,14 @@
     import Loading from "$lib/components/loading.svelte";
     import { page } from "$app/stores";
     import TaskUpdateCard from "$lib/figma/screens/task/TaskUpdateCard.svelte";
-    import type { CreateTask, NewTask , Label, WorkspaceUser } from "$lib/types/workspace";
-    import type { TaskOrNewTask ,
+    import type {
+        CreateTask,
+        NewTask,
+        Label,
+        WorkspaceUser,
+    } from "$lib/types/workspace";
+    import type {
+        TaskOrNewTask,
         LabelSelection,
         TasksPerUser,
         WorkspaceUserSelection,
@@ -71,6 +77,12 @@
                     selected: writable<LabelSelection>(),
                     search: writable(""),
                     searchResults: readable<Label[]>([]),
+                },
+                showUpdateWorkspaceUser: () => {
+                    throw new Error("Not implement");
+                },
+                showUpdateLabel: () => {
+                    throw new Error("Not implement");
                 },
             };
         }

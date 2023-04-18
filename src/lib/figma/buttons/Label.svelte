@@ -1,6 +1,5 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import { createEventDispatcher } from "svelte";
     import type { LabelColor } from "$lib/utils/colors";
     import {
         getLabelColorClass,
@@ -9,6 +8,7 @@
     import type { LabelLabel } from "$lib/figma/types";
 
     export let label: LabelLabel;
+    export let action: () => void;
 
     let labelColor: LabelColor | null;
     $: labelColor =
@@ -43,14 +43,9 @@
         outerStyle = `group rounded-2.5xl border p-px focus:outline-none ${outerBorderStyle}`;
         innerStyle = `flex flex-row items-center justify-center rounded-2.5xl border px-3 py-1 text-xxs font-bold capitalize ${innerBorderStyle} ${bgStyle} ${hoverBgStyle} ${textStyle}`;
     }
-
-    const dispatch = createEventDispatcher();
-    function click() {
-        dispatch("click");
-    }
 </script>
 
-<button class={outerStyle} on:click={click}>
+<button class={outerStyle} on:click={action} on:keydown={action}>
     <div class={innerStyle}>
         {label.kind === "applyLabel"
             ? $_("label.apply-label")

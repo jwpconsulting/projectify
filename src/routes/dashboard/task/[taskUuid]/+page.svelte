@@ -4,15 +4,21 @@
     import { goto } from "$app/navigation";
     import TaskUpdateCard from "$lib/figma/screens/task/TaskUpdateCard.svelte";
     import type { Label, Task, WorkspaceUser } from "$lib/types/workspace";
-    import type { TaskOrNewTask ,
+    import type {
+        TaskOrNewTask,
         LabelSelection,
         TasksPerUser,
         WorkspaceUserSelection,
     } from "$lib/types/ui";
-    import type { TaskModule } from "$lib/types/stores";
+    import type {
+        LabelSearchModule,
+        WorkspaceUserSearchModule,
+        TaskModule,
+    } from "$lib/types/stores";
     import { currentTask } from "$lib/stores/dashboard";
     import { updateTask as performUpdateTask } from "$lib/repository/workspace";
     import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
+    import { openContextMenu } from "$lib/stores/global-ui";
 
     let taskOrNewTask: TaskOrNewTask | null = null;
     let taskModule: TaskModule | null = null;
@@ -43,7 +49,29 @@
                 task: $currentTask,
             };
             taskOrNewTaskStore = writable(taskOrNewTask);
-
+            const workspaceUserSearchModule: WorkspaceUserSearchModule = {
+                select: console.error,
+                deselect: console.error,
+                selected: writable<WorkspaceUserSelection>({
+                    kind: "unassigned",
+                }),
+                // XXX find a way to postpone this, albeit useful, showing
+                // the amount of tasks per users right from the beginning
+                // will be more work
+                tasksPerUser: readable<TasksPerUser>({
+                    unassigned: 0,
+                    assigned: new Map(),
+                }),
+                search: writable(""),
+                searchResults: readable<WorkspaceUser[]>([]),
+            };
+            const labelSearchModule: LabelSearchModule = {
+                select: console.error,
+                deselect: console.error,
+                selected: writable<LabelSelection>(),
+                search: writable(""),
+                searchResults: readable<Label[]>([]),
+            };
             taskModule = {
                 createOrUpdateTask,
                 taskOrNewTask: taskOrNewTaskStore,
@@ -58,24 +86,26 @@
                 ),
                 // TODO make workspace user menu so that "all" can not be
                 // selected
-                workspaceUserSearchModule: {
-                    select: console.error,
-                    deselect: console.error,
-                    selected: writable<WorkspaceUserSelection>(),
-                    // XXX find a way to postpone this, albeit useful, showing
-                    // the amount of tasks per users right from the beginning
-                    // will be more work
-                    tasksPerUser: readable<TasksPerUser>(),
-                    search: writable(""),
-                    searchResults: readable<WorkspaceUser[]>([]),
-                },
+                workspaceUserSearchModule,
+                labelSearchModule,
                 // TODO make label menu so that "all" can not be selected
-                labelSearchModule: {
-                    select: console.error,
-                    deselect: console.error,
-                    selected: writable<LabelSelection>(),
-                    search: writable(""),
-                    searchResults: readable<Label[]>([]),
+                showUpdateWorkspaceUser: (anchor: HTMLElement) => {
+                    openContextMenu(
+                        {
+                            kind: "updateMember",
+                            workspaceUserSearchModule,
+                        },
+                        anchor
+                    );
+                },
+                showUpdateLabel: (anchor: HTMLElement) => {
+                    openContextMenu(
+                        {
+                            kind: "updateLabel",
+                            labelSearchModule,
+                        },
+                        anchor
+                    );
                 },
             };
         }
