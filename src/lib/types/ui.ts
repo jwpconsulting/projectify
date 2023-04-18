@@ -12,6 +12,8 @@ import type {
     SideNavModule,
     WorkspaceBoardSectionModule,
     WorkspaceSearchModule,
+    WorkspaceUserSearchModule,
+    LabelSearchModule,
 } from "$lib/types/stores";
 
 export type Input = {
@@ -106,7 +108,17 @@ export type ContextMenuType =
     | { kind: "task"; task: Task; location: "dashboard" }
     | { kind: "task"; task: Task; location: "task" }
     | { kind: "help" }
-    | { kind: "permissions" };
+    | { kind: "permissions" }
+    | {
+          kind: "updateMember";
+          workspaceUserSearchModule: WorkspaceUserSearchModule;
+          updateMember: (workspaceUser: WorkspaceUser) => void;
+      }
+    | {
+          kind: "updateLabel";
+          labelSearchModule: LabelSearchModule;
+          updateLabel: (label: Label) => void;
+      };
 export type ContextMenuState =
     | { kind: "hidden" }
     | { kind: "visible"; target: ContextMenuType; anchor: HTMLElement };

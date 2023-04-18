@@ -7,6 +7,8 @@
     import TaskContextMenu from "$lib/figma/overlays/context-menu/TaskContextMenu.svelte";
     import HelpContextMenu from "$lib/figma/overlays/context-menu/HelpContextMenu.svelte";
     import PermissionsContextMenu from "$lib/figma/overlays/context-menu/PermissionsContextMenu.svelte";
+    import UpdateMemberOverlay from "$lib/figma/overlays/UpdateMemberOverlay.svelte";
+    import UpdateLabelOverlay from "$lib/figma/overlays/UpdateLabelOverlay.svelte";
     import type { ContextMenuType } from "$lib/types/ui";
 
     export let target: ContextMenuType;
@@ -39,5 +41,9 @@
         <HelpContextMenu />
     {:else if target.kind === "permissions"}
         <PermissionsContextMenu />
+    {:else if target.kind === "updateMember"}
+        <UpdateMemberOverlay />
+    {:else if target.kind === "updateLabel"}
+        <UpdateLabelOverlay />
     {/if}
 </div>
