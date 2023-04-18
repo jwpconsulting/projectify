@@ -9,8 +9,9 @@
 
     export let label: SelectLabel;
     export let checked: boolean;
+    export let canEdit = true;
 
-    $: editable = label.kind === "label";
+    $: editable = label.kind === "label" && canEdit;
 
     const dispatch = createEventDispatcher();
 

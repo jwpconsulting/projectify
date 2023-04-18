@@ -44,6 +44,6 @@
     {:else if target.kind === "updateMember"}
         <UpdateMemberOverlay />
     {:else if target.kind === "updateLabel"}
-        <UpdateLabelOverlay />
+        <UpdateLabelOverlay labelSearchModule={target.labelSearchModule} />
     {/if}
 </div>
