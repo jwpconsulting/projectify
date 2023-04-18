@@ -198,6 +198,8 @@ function checkAllConnectionStatus() {
     wsSubscriptionStores.forEach((wsSubscriptionStore) => {
         wsSubscriptionStore.retryConnection(true);
     });
+    // XXX
+    // This enters an infite loop here
 }
 
 // Online connection
