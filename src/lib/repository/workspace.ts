@@ -7,6 +7,7 @@ import {
     Mutation_DeleteLabelMutation,
     Mutation_MoveTaskAfter,
     Mutation_UpdateLabelMutation,
+    Mutation_UpdateTask,
 } from "$lib/graphql/operations";
 import type {
     CreateTask,
@@ -32,6 +33,24 @@ export async function createTask(createTask: CreateTask): Promise<void> {
                 deadline: createTask.deadline,
                 workspaceBoardSectionUuid:
                     createTask.workspace_board_section.uuid,
+            },
+        },
+    });
+}
+
+export async function updateTask(task: Task) {
+    await client.mutate({
+        mutation: Mutation_UpdateTask,
+        variables: {
+            input: {
+                uuid: task.uuid,
+                title: task.title,
+                description: task.description,
+                deadline: task.deadline || null,
+                // TODO
+                // labels: task.labels.map((l) => l.uuid),
+                // TODO
+                // assignee: task.assignee ? task.assignee.user.email : null,
             },
         },
     });

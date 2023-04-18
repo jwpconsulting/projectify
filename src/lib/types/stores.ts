@@ -12,6 +12,7 @@ import type {
     CreateTask,
     CreateWorkspaceBoardSection,
     Label,
+    Task,
     Workspace,
     WorkspaceBoard,
     WorkspaceUser,
@@ -77,9 +78,12 @@ export type NewWorkspaceBoardSectionModule = {
     ) => void;
 };
 
+// XXX
+// This is a mess!
 export type TaskModule = {
     createOrUpdateTask: () => void;
     taskOrNewTask: Writable<TaskOrNewTask>;
-    createTask: Writable<CreateTask | null>;
+    createTask: Writable<CreateTask | null> | null;
+    updateTask: Writable<Task | null> | null;
     canCreateOrUpdate: Readable<boolean>;
 };

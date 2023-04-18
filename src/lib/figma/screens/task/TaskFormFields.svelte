@@ -16,6 +16,7 @@
         WorkspaceUser,
     } from "$lib/types/workspace";
 
+    // if this is in a store, we can get rid of this param
     export let taskOrNewTask: TaskOrNewTask;
     export let taskModule: TaskModule;
 
@@ -26,29 +27,50 @@
     let dueDate: string | null = null;
 
     let createTask: CreateTask | null;
+    let initialized = false;
 
     $: {
-        if (taskOrNewTask.kind === "task") {
-            const task = taskOrNewTask.task;
-            if (task.assignee) {
-                assignedUser = task.assignee;
+        if (!initialized) {
+            if (taskOrNewTask.kind === "task") {
+                const { task } = taskOrNewTask;
+                title = task.title;
+                description = task.description || null;
+                if (task.assignee) {
+                    assignedUser = task.assignee;
+                }
+                labels = task.labels;
+                dueDate = task.deadline || null;
+                // Then: Subscribe to changes of fields an assign them back to
+                // taskOrNewTask.task
             }
-            labels = task.labels;
-            dueDate = task.deadline || null;
-            title = task.title;
+            initialized = true;
         } else {
-            // XXX form validation goes here
-            if (title && description) {
-                createTask = {
-                    title,
-                    description,
-                    labels,
-                    deadline: dueDate,
+            if (taskOrNewTask.kind === "task" && taskModule.updateTask) {
+                console.log("Updated");
+                const { task } = taskOrNewTask;
+                taskModule.updateTask.set({
+                    ...task,
+                    title: title || task.title,
+                    description: description || undefined,
                     assignee: assignedUser || undefined,
-                    workspace_board_section:
-                        taskOrNewTask.newTask.workspace_board_section,
-                };
-                taskModule.createTask.set(createTask);
+                    labels: labels,
+                    deadline: dueDate || undefined,
+                });
+            } else if (taskOrNewTask.kind === "newTask") {
+                // XXX form validation goes here
+                const { newTask } = taskOrNewTask;
+                if (title && description && taskModule.createTask) {
+                    createTask = {
+                        title,
+                        description,
+                        labels,
+                        deadline: dueDate,
+                        assignee: assignedUser || undefined,
+                        workspace_board_section:
+                            newTask.workspace_board_section,
+                    };
+                    taskModule.createTask.set(createTask);
+                }
             }
         }
     }

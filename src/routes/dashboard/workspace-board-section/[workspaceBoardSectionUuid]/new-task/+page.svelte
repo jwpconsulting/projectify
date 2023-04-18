@@ -37,6 +37,7 @@
                 createOrUpdateTask: createOrUpdateTask,
                 taskOrNewTask: writable(taskOrNewTask),
                 createTask,
+                updateTask: null,
                 canCreateOrUpdate: derived<[typeof createTask], boolean>(
                     [createTask],
                     ([$createTask], set) => {
