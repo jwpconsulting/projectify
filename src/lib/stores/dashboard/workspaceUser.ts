@@ -1,5 +1,6 @@
 import Fuse from "fuse.js";
 import { derived, writable } from "svelte/store";
+import type { Readable, Writable } from "svelte/store";
 
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 import type { WorkspaceUser } from "$lib/types/workspace";
@@ -10,7 +11,9 @@ import type {
 } from "$lib/types/ui";
 
 // WorkspaceUser Search and Selection
-export const currentWorkspaceUsers = derived<
+type CurrentWorkspaceUsers = Readable<WorkspaceUser[]>;
+
+export const currentWorkspaceUsers: CurrentWorkspaceUsers = derived<
     [typeof currentWorkspace],
     WorkspaceUser[]
 >(
@@ -28,7 +31,8 @@ export const currentWorkspaceUsers = derived<
     []
 );
 
-export const workspaceUserSearch = writable<string>("");
+type WorkspaceUserSearch = Writable<string>;
+export const workspaceUserSearch: WorkspaceUserSearch = writable<string>("");
 
 function searchWorkspaceUsers(
     workspaceUsers: WorkspaceUser[],
@@ -46,18 +50,34 @@ function searchWorkspaceUsers(
     return result.map((res: Fuse.FuseResult<WorkspaceUser>) => res.item);
 }
 
-export const workspaceUserSearchResults = derived<
-    [typeof currentWorkspaceUsers, typeof workspaceUserSearch],
-    WorkspaceUser[]
->(
-    [currentWorkspaceUsers, workspaceUserSearch],
-    ([$currentWorkspaceUsers, $workspaceUserSearch], set) => {
-        set(
-            searchWorkspaceUsers($currentWorkspaceUsers, $workspaceUserSearch)
-        );
-    },
-    []
-);
+type WorkspaceUserSearchResults = Readable<WorkspaceUser[]>;
+
+export function createWorkspaceUserSearchResults(
+    currentWorkspaceUsers: CurrentWorkspaceUsers,
+    workspaceUserSearch: WorkspaceUserSearch
+): WorkspaceUserSearchResults {
+    return derived<
+        [typeof currentWorkspaceUsers, typeof workspaceUserSearch],
+        WorkspaceUser[]
+    >(
+        [currentWorkspaceUsers, workspaceUserSearch],
+        ([$currentWorkspaceUsers, $workspaceUserSearch], set) => {
+            set(
+                searchWorkspaceUsers(
+                    $currentWorkspaceUsers,
+                    $workspaceUserSearch
+                )
+            );
+        },
+        []
+    );
+}
+
+export const workspaceUserSearchResults: WorkspaceUserSearchResults =
+    createWorkspaceUserSearchResults(
+        currentWorkspaceUsers,
+        workspaceUserSearch
+    );
 
 export const selectedWorkspaceUser = writable<WorkspaceUserSelection>({
     kind: "allWorkspaceUsers",
