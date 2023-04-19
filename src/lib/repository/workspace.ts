@@ -56,6 +56,8 @@ export async function updateTask(task: Task) {
     });
 }
 
+// XXX
+// taskUuid should be first (more invariant than userEmail)
 export async function assignUserToTask(
     userEmail: string | null,
     taskUuid: string

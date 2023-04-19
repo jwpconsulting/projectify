@@ -3,20 +3,28 @@
     import { readable, derived, writable } from "svelte/store";
     import { goto } from "$app/navigation";
     import TaskUpdateCard from "$lib/figma/screens/task/TaskUpdateCard.svelte";
-    import type { Label, Task, WorkspaceUser } from "$lib/types/workspace";
+    import type { Label, Task } from "$lib/types/workspace";
     import type {
         TaskOrNewTask,
         LabelSelection,
         TasksPerUser,
         WorkspaceUserSelection,
+        WorkspaceUserSelectionInput,
     } from "$lib/types/ui";
     import type {
         LabelSearchModule,
         WorkspaceUserSearchModule,
         TaskModule,
     } from "$lib/types/stores";
-    import { currentTask } from "$lib/stores/dashboard";
-    import { updateTask as performUpdateTask } from "$lib/repository/workspace";
+    import {
+        currentTask,
+        currentWorkspaceUsers,
+        createWorkspaceUserSearchResults,
+    } from "$lib/stores/dashboard";
+    import {
+        updateTask as performUpdateTask,
+        assignUserToTask,
+    } from "$lib/repository/workspace";
     import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
     import { openContextMenu } from "$lib/stores/global-ui";
 
@@ -49,8 +57,23 @@
                 task: $currentTask,
             };
             taskOrNewTaskStore = writable(taskOrNewTask);
+            const workspaceUserSearch = writable("");
             const workspaceUserSearchModule: WorkspaceUserSearchModule = {
-                select: console.error,
+                select: async (selection: WorkspaceUserSelectionInput) => {
+                    if (!$currentTask) {
+                        throw new Error("Expected $currentTask");
+                    }
+                    if (selection.kind === "unassigned") {
+                        await assignUserToTask(null, $currentTask.uuid);
+                    } else if (selection.kind === "allWorkspaceUsers") {
+                        throw new Error("Unsupported");
+                    } else {
+                        await assignUserToTask(
+                            selection.workspaceUser.user.email,
+                            $currentTask.uuid
+                        );
+                    }
+                },
                 deselect: console.error,
                 selected: writable<WorkspaceUserSelection>({
                     kind: "unassigned",
@@ -62,8 +85,11 @@
                     unassigned: 0,
                     assigned: new Map(),
                 }),
-                search: writable(""),
-                searchResults: readable<WorkspaceUser[]>([]),
+                search: workspaceUserSearch,
+                searchResults: createWorkspaceUserSearchResults(
+                    currentWorkspaceUsers,
+                    workspaceUserSearch
+                ),
             };
             const labelSearchModule: LabelSearchModule = {
                 select: console.error,
