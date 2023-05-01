@@ -3,7 +3,7 @@
     import { readable, derived, writable } from "svelte/store";
     import { goto } from "$app/navigation";
     import TaskUpdateCard from "$lib/figma/screens/task/TaskUpdateCard.svelte";
-    import type { Label, Task } from "$lib/types/workspace";
+    import type { Task } from "$lib/types/workspace";
     import type {
         TaskOrNewTask,
         LabelSelection,
@@ -17,6 +17,8 @@
         TaskModule,
     } from "$lib/types/stores";
     import {
+        createLabelSearchResults,
+        currentWorkspaceLabels,
         currentTask,
         currentWorkspaceUsers,
         createWorkspaceUserSearchResults,
@@ -104,12 +106,16 @@
                       labelUuids: new Set(task.labels.map((l) => l.uuid)),
                   }
                 : { kind: "noLabel" };
+            const labelSearch = writable("");
             const labelSearchModule: LabelSearchModule = {
                 select: console.error,
                 deselect: console.error,
                 selected: writable<LabelSelection>(labelSelected),
                 search: writable(""),
-                searchResults: readable<Label[]>([]),
+                searchResults: createLabelSearchResults(
+                    currentWorkspaceLabels,
+                    labelSearch
+                ),
             };
             taskModule = {
                 createOrUpdateTask,

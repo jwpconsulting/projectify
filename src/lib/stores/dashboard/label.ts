@@ -1,5 +1,6 @@
 import Fuse from "fuse.js";
 import { derived, writable } from "svelte/store";
+import type { Readable } from "svelte/store";
 import { fuseSearchThreshold } from "$lib/config";
 
 import type { Label } from "$lib/types/workspace";
@@ -7,7 +8,8 @@ import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
 
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 
-export const currentWorkspaceLabels = derived<
+type CurrentWorkspaceLabels = Readable<Label[]>;
+export const currentWorkspaceLabels: CurrentWorkspaceLabels = derived<
     [typeof currentWorkspace],
     Label[]
 >(
@@ -38,17 +40,27 @@ function searchLabels(labels: Label[], searchInput: string): Label[] {
     return result.map((res: Fuse.FuseResult<Label>) => res.item);
 }
 
+type LabelSearch = Readable<string>;
 export const labelSearch = writable<string>("");
 
-export const labelSearchResults = derived<
-    [typeof currentWorkspaceLabels, typeof labelSearch],
-    Label[]
->(
-    [currentWorkspaceLabels, labelSearch],
-    ([$currentWorkspaceLabels, $labelSearch], set) => {
-        set(searchLabels($currentWorkspaceLabels, $labelSearch));
-    },
-    []
+type LabelSearchResults = Readable<Label[]>;
+
+export function createLabelSearchResults(
+    currentWorkspaceLabels: CurrentWorkspaceLabels,
+    labelSearch: LabelSearch
+): LabelSearchResults {
+    return derived<[CurrentWorkspaceLabels, LabelSearch], Label[]>(
+        [currentWorkspaceLabels, labelSearch],
+        ([currentWorkspaceLabels, labelSearch], set) => {
+            set(searchLabels(currentWorkspaceLabels, labelSearch));
+        },
+        []
+    );
+}
+
+export const labelSearchResults: LabelSearchResults = createLabelSearchResults(
+    currentWorkspaceLabels,
+    labelSearch
 );
 
 export const selectedLabels = writable<LabelSelection>({ kind: "allLabels" });
