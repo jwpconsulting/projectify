@@ -98,10 +98,16 @@
                     workspaceUserSearch
                 ),
             };
+            const labelSelected: LabelSelection = task.labels
+                ? {
+                      kind: "labels",
+                      labelUuids: new Set(task.labels.map((l) => l.uuid)),
+                  }
+                : { kind: "noLabel" };
             const labelSearchModule: LabelSearchModule = {
                 select: console.error,
                 deselect: console.error,
-                selected: writable<LabelSelection>(),
+                selected: writable<LabelSelection>(labelSelected),
                 search: writable(""),
                 searchResults: readable<Label[]>([]),
             };
