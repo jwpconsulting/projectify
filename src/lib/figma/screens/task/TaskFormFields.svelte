@@ -31,18 +31,17 @@
     $: {
         if (taskOrNewTask.kind === "task") {
             const { task } = taskOrNewTask;
-            title = task.title;
-            description = task.description || null;
+            title ||= task.title;
+            description ||= task.description || null;
             if (task.assignee) {
-                assignedUser = task.assignee;
+                assignedUser ||= task.assignee;
             }
-            labels = task.labels;
-            dueDate = task.deadline || null;
+            labels ||= task.labels;
+            dueDate ||= task.deadline || null;
             // Then: Subscribe to changes of fields an assign them back to
             // taskOrNewTask.task
 
             if (taskModule.updateTask) {
-                console.log("Updated");
                 const { task } = taskOrNewTask;
                 taskModule.updateTask.set({
                     ...task,
