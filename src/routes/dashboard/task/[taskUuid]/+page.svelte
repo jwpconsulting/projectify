@@ -58,6 +58,16 @@
             };
             taskOrNewTaskStore = writable(taskOrNewTask);
             const workspaceUserSearch = writable("");
+            const selected: WorkspaceUserSelection = $currentTask.assignee
+                ? {
+                      kind: "workspaceUsers",
+                      workspaceUserUuids: new Set([
+                          $currentTask.assignee.uuid,
+                      ]),
+                  }
+                : {
+                      kind: "unassigned",
+                  };
             const workspaceUserSearchModule: WorkspaceUserSearchModule = {
                 select: async (selection: WorkspaceUserSelectionInput) => {
                     if (!$currentTask) {
@@ -75,9 +85,7 @@
                     }
                 },
                 deselect: console.error,
-                selected: writable<WorkspaceUserSelection>({
-                    kind: "unassigned",
-                }),
+                selected: writable<WorkspaceUserSelection>(selected),
                 // XXX find a way to postpone this, albeit useful, showing
                 // the amount of tasks per users right from the beginning
                 // will be more work
