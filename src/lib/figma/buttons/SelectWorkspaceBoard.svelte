@@ -6,7 +6,8 @@
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
     import type { WorkspaceBoardSearchModule } from "$lib/types/stores";
-    // import { goto } from "$app/navigation";
+
+    import { openContextMenu } from "$lib/stores/global-ui";
 
     export let workspaceBoardSearchModule: WorkspaceBoardSearchModule;
     export let workspaceBoard: WorkspaceBoard;
@@ -16,8 +17,16 @@
     let buttonRef: HTMLElement;
 
     function toggleMenu() {
-        // TODO context menu
-        console.error("TODO use", buttonRef);
+        // TODO: When the context menu is open, we should indicate that it
+        // belongs to a certain board by highlighting the board in blue (using
+        // the hover color)
+        openContextMenu(
+            {
+                kind: "workspaceBoard",
+                workspaceBoard,
+            },
+            buttonRef
+        );
     }
 </script>
 
