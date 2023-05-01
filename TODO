@@ -9,3 +9,4 @@
 - Remember with sidenav menus have been open and not in localstorage
 - dashboard/task/uuid does not support refetching
 - The drop down in user assignment does not indicate the current assignee
+- Update button to use ButtonAction
