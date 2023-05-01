@@ -3,6 +3,7 @@ import {
     Mutation_AddTask,
     Mutation_AddWorkspaceBoardSection,
     Mutation_ArchiveWorkspaceBoard,
+    Mutation_AssignLabel,
     Mutation_AssignTask,
     Mutation_DeleteLabelMutation,
     Mutation_MoveTaskAfter,
@@ -23,6 +24,8 @@ import type { RepositoryContext } from "$lib/types/repository";
 
 import { client } from "$lib/graphql/client";
 
+// Task CRUD
+// Create
 export async function createTask(createTask: CreateTask): Promise<void> {
     await client.mutate({
         mutation: Mutation_AddTask,
@@ -38,6 +41,7 @@ export async function createTask(createTask: CreateTask): Promise<void> {
     });
 }
 
+// Update
 export async function updateTask(task: Task) {
     await client.mutate({
         mutation: Mutation_UpdateTask,
@@ -105,6 +109,29 @@ export async function moveTaskAfter(
     }
 }
 
+export async function assignLabelToTask(
+    task: Task,
+    labelUuid: string,
+    assigned: boolean
+): Promise<void> {
+    const input: {
+        taskUuid: string;
+        labelUuid: string;
+        assigned: boolean;
+    } = {
+        taskUuid: task.uuid,
+        labelUuid,
+        assigned,
+    };
+    await client.mutate({
+        mutation: Mutation_AssignLabel,
+        variables: {
+            input,
+        },
+    });
+}
+
+// Delete
 export async function deleteTask(task: Task): Promise<void> {
     console.error("TODO do something with", task);
     // TODO const modalRes = await getModal("deleteTaskConfirmModal").open();

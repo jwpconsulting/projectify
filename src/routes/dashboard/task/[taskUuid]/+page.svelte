@@ -7,6 +7,7 @@
     import type {
         TaskOrNewTask,
         LabelSelection,
+        LabelSelectionInput,
         TasksPerUser,
         WorkspaceUserSelection,
         WorkspaceUserSelectionInput,
@@ -24,6 +25,7 @@
         createWorkspaceUserSearchResults,
     } from "$lib/stores/dashboard";
     import {
+        assignLabelToTask,
         updateTask as performUpdateTask,
         assignUserToTask,
     } from "$lib/repository/workspace";
@@ -53,7 +55,7 @@
 
     $: {
         // Only do this once in the beginning
-        if ($currentTask && !taskOrNewTask) {
+        if ($currentTask) {
             const task = $currentTask;
             taskOrNewTask = {
                 kind: "task",
@@ -100,16 +102,37 @@
                     workspaceUserSearch
                 ),
             };
-            const labelSelected: LabelSelection = task.labels
-                ? {
-                      kind: "labels",
-                      labelUuids: new Set(task.labels.map((l) => l.uuid)),
-                  }
-                : { kind: "noLabel" };
+            const labelSelected: LabelSelection =
+                task.labels && task.labels.length > 0
+                    ? {
+                          kind: "labels",
+                          labelUuids: new Set(task.labels.map((l) => l.uuid)),
+                      }
+                    : { kind: "noLabel" };
             const labelSearch = writable("");
+            const selectOrDeselectLabel = (
+                select: boolean,
+                labelSelectionInput: LabelSelectionInput
+            ) => {
+                const { kind } = labelSelectionInput;
+                if (kind === "noLabel") {
+                    console.error("No API for removing all labels");
+                    throw new Error("TODO");
+                } else if (kind === "allLabels") {
+                    console.error("No API for assigning all labels");
+                    throw new Error("TODO");
+                } else {
+                    const { labelUuid } = labelSelectionInput;
+                    assignLabelToTask(task, labelUuid, select);
+                }
+            };
             const labelSearchModule: LabelSearchModule = {
-                select: console.error,
-                deselect: console.error,
+                select: (labelSelectionInput: LabelSelectionInput) => {
+                    selectOrDeselectLabel(true, labelSelectionInput);
+                },
+                deselect: (labelSelectionInput: LabelSelectionInput) => {
+                    selectOrDeselectLabel(false, labelSelectionInput);
+                },
                 selected: writable<LabelSelection>(labelSelected),
                 search: writable(""),
                 searchResults: createLabelSearchResults(
