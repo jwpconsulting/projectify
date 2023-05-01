@@ -52,35 +52,34 @@
     $: {
         // Only do this once in the beginning
         if ($currentTask && !taskOrNewTask) {
+            const task = $currentTask;
             taskOrNewTask = {
                 kind: "task",
-                task: $currentTask,
+                task: task,
             };
             taskOrNewTaskStore = writable(taskOrNewTask);
             const workspaceUserSearch = writable("");
-            const selected: WorkspaceUserSelection = $currentTask.assignee
+            const selected: WorkspaceUserSelection = task.assignee
                 ? {
                       kind: "workspaceUsers",
-                      workspaceUserUuids: new Set([
-                          $currentTask.assignee.uuid,
-                      ]),
+                      workspaceUserUuids: new Set([task.assignee.uuid]),
                   }
                 : {
                       kind: "unassigned",
                   };
             const workspaceUserSearchModule: WorkspaceUserSearchModule = {
                 select: async (selection: WorkspaceUserSelectionInput) => {
-                    if (!$currentTask) {
+                    if (!task) {
                         throw new Error("Expected $currentTask");
                     }
                     if (selection.kind === "unassigned") {
-                        await assignUserToTask(null, $currentTask.uuid);
+                        await assignUserToTask(null, task.uuid);
                     } else if (selection.kind === "allWorkspaceUsers") {
                         throw new Error("Unsupported");
                     } else {
                         await assignUserToTask(
                             selection.workspaceUser.user.email,
-                            $currentTask.uuid
+                            task.uuid
                         );
                     }
                 },
