@@ -3,9 +3,24 @@
     import type { Workspace } from "$lib/types/workspace";
     import Button from "$lib/figma/buttons/Button.svelte";
     import InputField from "$lib/figma/input-fields/InputField.svelte";
+    import { createWorkspaceBoard } from "$lib/repository/workspace";
+    import { closeConstructiveOverlay } from "$lib/stores/global-ui";
 
     export let workspace: Workspace;
-    console.log("TODO do something with", workspace);
+
+    let title: string | null = null;
+
+    async function perform() {
+        if (!title) {
+            throw new Error("Not valid");
+        }
+        await createWorkspaceBoard(workspace, {
+            title,
+            description: "TODO",
+            deadline: null,
+        });
+        closeConstructiveOverlay();
+    }
 </script>
 
 <div class="flex flex-col gap-2">
@@ -14,6 +29,7 @@
         label={$_("new-workspace-board.workspace-board-name")}
         placeholder={$_("new-workspace-board.enter-a-workspace-board-name")}
         style={{ kind: "field", inputType: "text" }}
+        bind:value={title}
     />
     <InputField
         name="deadline"
@@ -34,9 +50,7 @@
         label={$_("new-workspace-board.cancel")}
     />
     <Button
-        on:click={() => {
-            console.error("Save not implemented");
-        }}
+        on:click={perform}
         style={{ kind: "primary" }}
         size="medium"
         disabled={false}

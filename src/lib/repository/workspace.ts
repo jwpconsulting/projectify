@@ -1,6 +1,7 @@
 import {
     Mutation_AddLabelMutation,
     Mutation_AddTask,
+    Mutation_AddWorkspaceBoard,
     Mutation_AddWorkspaceBoardSection,
     Mutation_ArchiveWorkspaceBoard,
     Mutation_AssignLabel,
@@ -193,6 +194,25 @@ export async function deleteLabel(label: Label) {
     });
 }
 
+// WorkspaceBoard CRUD
+// Create
+export async function createWorkspaceBoard(
+    workspace: Workspace,
+    workspaceBoard: { title: string; description: string; deadline: null }
+) {
+    const input = {
+        workspaceUuid: workspace.uuid,
+        ...workspaceBoard,
+    };
+    await client.mutate({
+        mutation: Mutation_AddWorkspaceBoard,
+        variables: {
+            input,
+        },
+    });
+}
+
+// Read
 export async function getWorkspaceBoard(
     uuid: string
 ): Promise<WorkspaceBoard> {
