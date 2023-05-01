@@ -27,25 +27,21 @@
     let dueDate: string | null = null;
 
     let createTask: CreateTask | null;
-    let initialized = false;
 
     $: {
-        if (!initialized) {
-            if (taskOrNewTask.kind === "task") {
-                const { task } = taskOrNewTask;
-                title = task.title;
-                description = task.description || null;
-                if (task.assignee) {
-                    assignedUser = task.assignee;
-                }
-                labels = task.labels;
-                dueDate = task.deadline || null;
-                // Then: Subscribe to changes of fields an assign them back to
-                // taskOrNewTask.task
+        if (taskOrNewTask.kind === "task") {
+            const { task } = taskOrNewTask;
+            title = task.title;
+            description = task.description || null;
+            if (task.assignee) {
+                assignedUser = task.assignee;
             }
-            initialized = true;
-        } else {
-            if (taskOrNewTask.kind === "task" && taskModule.updateTask) {
+            labels = task.labels;
+            dueDate = task.deadline || null;
+            // Then: Subscribe to changes of fields an assign them back to
+            // taskOrNewTask.task
+
+            if (taskModule.updateTask) {
                 console.log("Updated");
                 const { task } = taskOrNewTask;
                 taskModule.updateTask.set({
@@ -56,21 +52,20 @@
                     labels: labels,
                     deadline: dueDate || undefined,
                 });
-            } else if (taskOrNewTask.kind === "newTask") {
-                // XXX form validation goes here
-                const { newTask } = taskOrNewTask;
-                if (title && description && taskModule.createTask) {
-                    createTask = {
-                        title,
-                        description,
-                        labels,
-                        deadline: dueDate,
-                        assignee: assignedUser || undefined,
-                        workspace_board_section:
-                            newTask.workspace_board_section,
-                    };
-                    taskModule.createTask.set(createTask);
-                }
+            }
+        } else {
+            // XXX form validation goes here
+            const { newTask } = taskOrNewTask;
+            if (title && description && taskModule.createTask) {
+                createTask = {
+                    title,
+                    description,
+                    labels,
+                    deadline: dueDate,
+                    assignee: assignedUser || undefined,
+                    workspace_board_section: newTask.workspace_board_section,
+                };
+                taskModule.createTask.set(createTask);
             }
         }
     }
