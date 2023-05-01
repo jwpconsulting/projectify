@@ -37,7 +37,9 @@
 
 <svelte:element
     this={action.kind}
-    on:click={action.kind == "button" ? action.action : undefined}
+    on:click|preventDefault={action.kind == "button"
+        ? action.action
+        : undefined}
     on:keydown={action.kind == "button" ? action.action : undefined}
     href={action.kind == "a" ? action.href : undefined}
     class={`${sizeMapped} rounded-full border border-transparent text-base-content hover:bg-secondary-hover focus:border-base-content focus:bg-base-100 focus:outline-none active:bg-disabled-background disabled:bg-transparent disabled:text-transparent`}
