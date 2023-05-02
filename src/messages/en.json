@@ -13,8 +13,10 @@
         "search-task": "Search Task"
     },
     "filter-label-menu": {
-        "filter-labels": "filter labels",
-        "label-name": "label name"
+        "filter-labels": "Filter labels",
+        "label-name": "Label name",
+        "save": "Save",
+        "cancel": "Cancel"
     },
     "filter-label": {
         "all": "all",
