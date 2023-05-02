@@ -12,6 +12,9 @@
     export let size: ButtonSize;
     export let disabled: boolean;
     export let label: string | null = null;
+    // It does not yet seem to make sense to allow this being an anchor as well
+    // so I am not using $lib/figma/types/ButtonAction here
+    export let action: (() => void) | null = null;
 
     // TODO refactor to use callback action prop instead
 
@@ -42,6 +45,10 @@
 
     const dispatch = createEventDispatcher();
     function click() {
+        if (action) {
+            action();
+            return;
+        }
         dispatch("click");
     }
 </script>

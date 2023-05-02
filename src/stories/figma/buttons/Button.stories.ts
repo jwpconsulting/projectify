@@ -10,6 +10,7 @@ const meta: Meta<Button> = {
     args: {
         label: "Behold, for I am a label",
         color: "blue",
+        action: () => console.log("Hello, World! I am a button."),
     },
     argTypes: {
         label: {
