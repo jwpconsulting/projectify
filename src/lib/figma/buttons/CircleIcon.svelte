@@ -33,18 +33,21 @@
         small: "w-6 h-6 p-1",
         medium: "w-8 h-8 p-1.5",
     }[size];
+
+    $: styleClasses = `${sizeMapped} rounded-full border border-transparent text-base-content hover:bg-secondary-hover focus:border-base-content focus:bg-base-100 focus:outline-none active:bg-disabled-background`;
 </script>
 
-<svelte:element
-    this={action.kind}
-    on:click|preventDefault={action.kind == "button"
-        ? action.action
-        : undefined}
-    on:keydown={action.kind == "button" ? action.action : undefined}
-    href={action.kind == "a" ? action.href : undefined}
-    class={`${sizeMapped} rounded-full border border-transparent text-base-content hover:bg-secondary-hover focus:border-base-content focus:bg-base-100 focus:outline-none active:bg-disabled-background disabled:bg-transparent disabled:text-transparent`}
-    class:block={action.kind === "a"}
-    {disabled}
->
-    <Icon src={iconMapped} style="outline" />
-</svelte:element>
+{#if action.kind === "button"}
+    <button
+        on:click|preventDefault={action.action}
+        on:keydown={action.action}
+        {disabled}
+        class="{styleClasses} disabled:bg-transparent disabled:text-transparent"
+    >
+        <Icon src={iconMapped} style="outline" />
+    </button>
+{:else}
+    <a href={action.href} class="block {styleClasses}">
+        <Icon src={iconMapped} style="outline" />
+    </a>
+{/if}
