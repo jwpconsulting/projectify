@@ -10,6 +10,8 @@
 
     export let label: SelectLabel;
     export let checked: boolean;
+    // This should be required
+    export let name: string | undefined = undefined;
 
     let outerStyle: string;
     let outerStyleComputed: string;
@@ -56,6 +58,7 @@
     <input
         type="checkbox"
         bind:checked
+        {name}
         class="absolute top-0 left-0 h-7 w-11 appearance-none rounded-1.5xl border border-transparent focus:border-base-content focus:outline-none"
     />
 </div>
