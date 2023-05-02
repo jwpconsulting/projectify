@@ -3,6 +3,7 @@
     import Dashboard from "$lib/components/dashboard/Dashboard.svelte";
     import { page } from "$app/stores";
     import SideNav from "$lib/figma/navigation/SideNav.svelte";
+    import { createLabel as repositoryCreateLabel } from "$lib/repository/workspace";
 
     import { openContextMenu } from "$lib/stores/global-ui";
 
@@ -60,12 +61,24 @@
         searchResults: workspaceUserSearchResults,
     };
 
-    const labelSearchModule: LabelSearchModule = {
+    let labelSearchModule: LabelSearchModule;
+    // XXX
+    // Again, we need to make this using a factory thing somewhere
+    // Otherwise we duplicate code in 3 different locations (task creation,
+    // side nav, task updating)
+    // Justus 2023-05-02
+    $: labelSearchModule = {
         select: selectLabel,
         deselect: deselectLabel,
         selected: selectedLabels,
         search: labelSearch,
         searchResults: labelSearchResults,
+        async createLabel(color: number, name: string) {
+            if (!$currentWorkspace) {
+                throw new Error("Expected $currentWorkspace");
+            }
+            await repositoryCreateLabel($currentWorkspace, name, color);
+        },
     };
 
     let sideNavModule: SideNavModule;

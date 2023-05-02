@@ -13,6 +13,8 @@
 
     export let state: FilterLabelMenuState = "list";
 
+    let { createLabel } = labelSearchModule;
+
     // TODO cancel callback
     // TODO save callback
 
@@ -28,6 +30,7 @@
     });
 
     let chosenColor: Label | null = null;
+    let labelName: string | null = null;
 
     const makeIsLabelSelected = (color: null | number) =>
         Object.fromEntries(labelColors.map((_name, ix) => [ix, ix === color]));
@@ -39,12 +42,28 @@
             isLabelSelected = makeIsLabelSelected(chosenColor.color);
         }
     }
+    // Here is where we report back to our containing component that we cancel
+    // the label creation
+    export let cancelCreate: () => void;
+    // Report back successfull label creation
+    export let savedLabel: () => void;
+
+    async function save() {
+        if (!chosenColor) {
+            throw new Error("Expected chosenColor");
+        }
+        if (!labelName) {
+            throw new Error("Expected labelName");
+        }
+        await createLabel(chosenColor.color, labelName);
+        savedLabel();
+    }
 </script>
 
 {#if state === "list"}
     <FilterLabelMenu {labelSearchModule} />
 {:else}
-    <form class="flex flex-col gap-6">
+    <form class="flex flex-col gap-6" on:submit|preventDefault={save}>
         <div class="flex flex-col">
             <div class="px-4 pt-2 pb-4">
                 <InputField
@@ -52,6 +71,7 @@
                     placeholder={$_("filter-label-menu.label-name")}
                     label={$_("filter-label-menu.label-name")}
                     name="name"
+                    bind:value={labelName}
                 />
             </div>
             <div class="flex flex-col gap-4 px-7">
@@ -85,6 +105,7 @@
                 size="medium"
                 label={$_("filter-label-menu.cancel")}
                 disabled={false}
+                action={cancelCreate}
             />
             <Button
                 style={{ kind: "primary" }}
@@ -92,6 +113,7 @@
                 size="medium"
                 label={$_("filter-label-menu.save")}
                 disabled={false}
+                action={save}
             />
         </div>
     </form>

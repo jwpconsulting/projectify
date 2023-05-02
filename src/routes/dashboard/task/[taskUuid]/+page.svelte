@@ -4,6 +4,12 @@
     import { goto } from "$app/navigation";
     import TaskUpdateCard from "$lib/figma/screens/task/TaskUpdateCard.svelte";
     import type { Task } from "$lib/types/workspace";
+    import {
+        createLabel as repositoryCreateLabel,
+        assignLabelToTask,
+        updateTask as performUpdateTask,
+        assignUserToTask,
+    } from "$lib/repository/workspace";
     import type {
         TaskOrNewTask,
         LabelSelection,
@@ -24,11 +30,6 @@
         currentWorkspaceUsers,
         createWorkspaceUserSearchResults,
     } from "$lib/stores/dashboard";
-    import {
-        assignLabelToTask,
-        updateTask as performUpdateTask,
-        assignUserToTask,
-    } from "$lib/repository/workspace";
     import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
     import { openContextMenu } from "$lib/stores/global-ui";
 
@@ -61,6 +62,18 @@
                 kind: "task",
                 task: task,
             };
+            const { workspace_board_section: workspaceBoardSection } = task;
+            if (!workspaceBoardSection) {
+                throw new Error("Expected workspaceBoardSection");
+            }
+            const { workspace_board: workspaceBoard } = workspaceBoardSection;
+            if (!workspaceBoard) {
+                throw new Error("Expected workspaceBoard");
+            }
+            const { workspace } = workspaceBoard;
+            if (!workspace) {
+                throw new Error("Expected workspace");
+            }
             taskOrNewTaskStore = writable(taskOrNewTask);
             const workspaceUserSearch = writable("");
             const selected: WorkspaceUserSelection = task.assignee
@@ -126,6 +139,9 @@
                     assignLabelToTask(task, labelUuid, select);
                 }
             };
+            // XXX need someting like
+            // createLabelSearchModule(selectOrDeselectLabel, labelSelected,
+            // workspace, currentWorkspaceLabels)
             const labelSearchModule: LabelSearchModule = {
                 select: (labelSelectionInput: LabelSelectionInput) => {
                     selectOrDeselectLabel(true, labelSelectionInput);
@@ -139,6 +155,10 @@
                     currentWorkspaceLabels,
                     labelSearch
                 ),
+                // XXX horrible code duplication here
+                async createLabel(color: number, name: string) {
+                    await repositoryCreateLabel(workspace, name, color);
+                },
             };
             taskModule = {
                 createOrUpdateTask,

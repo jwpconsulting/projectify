@@ -187,6 +187,9 @@ export const labelSearchModule: LabelSearchModule = {
     selected: writable({ kind: "allLabels" }),
     search: writable(""),
     searchResults: readable(mappedLabels),
+    async createLabel(c: number, n: string) {
+        console.log("Creating label with color", c, "and name", n);
+    },
 };
 
 export const sideNavModule: SideNavModule = {

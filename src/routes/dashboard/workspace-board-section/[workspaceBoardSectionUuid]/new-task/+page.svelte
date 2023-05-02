@@ -16,12 +16,15 @@
         WorkspaceUserSelection,
     } from "$lib/types/ui";
     import type { TaskModule } from "$lib/types/stores";
+    import {
+        createLabel as repositoryCreateLabel,
+        createTask as createTaskFn,
+    } from "$lib/repository/workspace";
 
     import {
         currentWorkspaceBoardSection,
         currentWorkspaceBoardSectionUuid,
     } from "$lib/stores/dashboard";
-    import { createTask as createTaskFn } from "$lib/repository/workspace";
 
     $: {
         $currentWorkspaceBoardSectionUuid =
@@ -39,6 +42,16 @@
             newTask = {
                 workspace_board_section: $currentWorkspaceBoardSection,
             };
+            const { workspace_board: workspaceBoard } =
+                $currentWorkspaceBoardSection;
+            if (!workspaceBoard) {
+                throw new Error("Expected workspaceBoard");
+            }
+            const { workspace } = workspaceBoard;
+            if (!workspace) {
+                throw new Error("Expected workspace");
+            }
+
             taskOrNewTask = {
                 kind: "newTask",
                 newTask,
@@ -77,6 +90,9 @@
                     selected: writable<LabelSelection>(),
                     search: writable(""),
                     searchResults: readable<Label[]>([]),
+                    async createLabel(color: number, name: string) {
+                        await repositoryCreateLabel(workspace, name, color);
+                    },
                 },
                 showUpdateWorkspaceUser: () => {
                     throw new Error("Not implement");
