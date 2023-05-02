@@ -92,3 +92,21 @@ This can be pieced together like so:
     anchorTop={{href:"#help", label: "About the task search"}}
 />
 ```
+
+# Button
+
+Let's create a medium-sized, blue primary Button with the label "Click me".
+
+```
+<script lang="ts">
+    import Button from "$lib/figma/buttons/Button.svelte";
+</script>
+
+<Button
+    style={{ kind: "primary" }}
+    size="medium"
+    color="blue"
+    label="Click me"
+    disabled={false}
+/>
+```
