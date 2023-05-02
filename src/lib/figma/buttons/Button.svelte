@@ -56,7 +56,7 @@
 {#if style.kind === "tertiary"}
     <!-- XXX Not sure if this is the best place to put flex grow here -->
     <button
-        on:click={click}
+        on:click|preventDefault={click}
         class={`flex grow flex-row items-center justify-center gap-2 rounded-lg border border-transparent border-transparent px-4 py-2 font-bold focus:outline-none disabled:text-disabled-content ${innerColorStyle} focus:border-border-focus ${innerSizeStyle}`}
         {disabled}
     >
@@ -81,7 +81,7 @@
     </button>
 {:else}
     <button
-        on:click={click}
+        on:click|preventDefault={click}
         class={`group flex grow flex-col items-start gap-2 rounded-llg border border-transparent p-0.5 focus:border-border-focus focus:outline-none`}
         {disabled}
     >
