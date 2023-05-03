@@ -1,5 +1,4 @@
 import type { Writable } from "svelte/store";
-import { writable } from "svelte/store";
 import type {
     ConstructiveOverlayState,
     ConstructiveOverlayType,
@@ -12,14 +11,17 @@ import type {
 } from "$lib/types/ui";
 import { internallyWritable } from "$lib/stores/util";
 
-// TODO make readonly
-export const constructiveOverlayState = writable<ConstructiveOverlayState>({
-    kind: "hidden",
-});
+const { priv: _constructiveOverlayState, pub: constructiveOverlayState } =
+    internallyWritable<ConstructiveOverlayState>({
+        kind: "hidden",
+    });
+export { constructiveOverlayState };
 
-export const destructiveOverlayState = writable<DestructiveOverlayState>({
-    kind: "hidden",
-});
+const { priv: _destructiveOverlayState, pub: destructiveOverlayState } =
+    internallyWritable<DestructiveOverlayState>({
+        kind: "hidden",
+    });
+export { destructiveOverlayState };
 
 function openOverlay<Target, Action>(
     overlay: Writable<Overlay<Target, Action>>,
@@ -53,15 +55,15 @@ export function openDestructiveOverlay(
     target: DestructiveOverlayType,
     action: OverlayAction
 ) {
-    openOverlay(destructiveOverlayState, target, action);
+    openOverlay(_destructiveOverlayState, target, action);
 }
 
 export function closeDestructiveOverlay() {
-    closeOverlay(destructiveOverlayState);
+    closeOverlay(_destructiveOverlayState);
 }
 
 export function performDestructiveOverlay() {
-    destructiveOverlayState.update(($destructiveOverlayState) => {
+    _destructiveOverlayState.update(($destructiveOverlayState) => {
         if ($destructiveOverlayState.kind !== "visible") {
             throw new Error(
                 "Expected $destructiveOverlayState.kind to be visible"
@@ -73,7 +75,7 @@ export function performDestructiveOverlay() {
         } else {
             (async () => {
                 await $destructiveOverlayState.action.action();
-                destructiveOverlayState.set({
+                _destructiveOverlayState.set({
                     kind: "hidden",
                 });
             })();
@@ -86,11 +88,11 @@ export function openConstructiveOverlay(
     target: ConstructiveOverlayType,
     action: OverlayAction
 ) {
-    openOverlay(constructiveOverlayState, target, action);
+    openOverlay(_constructiveOverlayState, target, action);
 }
 
 export function closeConstructiveOverlay() {
-    closeOverlay(constructiveOverlayState);
+    closeOverlay(_constructiveOverlayState);
 }
 
 const { priv: _contextMenuState, pub: contextMenuState } =
