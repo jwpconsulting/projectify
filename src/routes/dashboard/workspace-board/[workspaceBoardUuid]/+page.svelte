@@ -16,13 +16,14 @@
     } from "$lib/types/stores";
 
     import {
+        createLabelSearchResults,
         currentWorkspace,
+        currentWorkspaceLabels,
         currentWorkspaceBoard,
         currentWorkspaceBoardUuid,
         deselectLabel,
         deselectWorkspaceUser,
         labelSearch,
-        labelSearchResults,
         selectLabel,
         selectWorkspaceUser,
         selectedLabels,
@@ -67,12 +68,16 @@
     // Otherwise we duplicate code in 3 different locations (task creation,
     // side nav, task updating)
     // Justus 2023-05-02
+
     $: labelSearchModule = {
         select: selectLabel,
         deselect: deselectLabel,
         selected: selectedLabels,
         search: labelSearch,
-        searchResults: labelSearchResults,
+        searchResults: createLabelSearchResults(
+            currentWorkspaceLabels,
+            labelSearch
+        ),
         async createLabel(color: number, name: string) {
             if (!$currentWorkspace) {
                 throw new Error("Expected $currentWorkspace");

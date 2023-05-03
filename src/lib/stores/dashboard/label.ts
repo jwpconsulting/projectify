@@ -58,11 +58,6 @@ export function createLabelSearchResults(
     );
 }
 
-export const labelSearchResults: LabelSearchResults = createLabelSearchResults(
-    currentWorkspaceLabels,
-    labelSearch
-);
-
 export const selectedLabels = writable<LabelSelection>({ kind: "allLabels" });
 
 export function selectLabel(selection: LabelSelectionInput) {
