@@ -282,7 +282,7 @@
         <button
             disabled={newSubTaskTitle.length < 1}
             on:click={() => addSubTask()}
-            class="btn btn-primary btn-square absolute top-0 right-0 rounded-l-none"
+            class="btn btn-primary btn-square absolute right-0 top-0 rounded-l-none"
             ><IconPlus /></button
         >
     </div>

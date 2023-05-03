@@ -104,7 +104,7 @@
             >
                 <!-- Top row -->
                 <div
-                    class="flex w-full flex-wrap items-start justify-between gap-y-4 gap-x-16 py-8"
+                    class="flex w-full flex-wrap items-start justify-between gap-x-16 gap-y-4 py-8"
                 >
                     <div class="flex flex-col gap-4">
                         <HeaderLogo />

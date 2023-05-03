@@ -4,7 +4,7 @@
     import MobileMenu from "$lib/figma/overlays/MobileMenu.svelte";
 </script>
 
-<div class="py-4 px-2">
+<div class="px-2 py-4">
     <MobileMenu />
     <div class="px-4">
         <a href="/dashboard">

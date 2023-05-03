@@ -59,6 +59,6 @@
         type="checkbox"
         bind:checked
         {name}
-        class="absolute top-0 left-0 h-7 w-11 appearance-none rounded-1.5xl border border-transparent focus:border-base-content focus:outline-none"
+        class="absolute left-0 top-0 h-7 w-11 appearance-none rounded-1.5xl border border-transparent focus:border-base-content focus:outline-none"
     />
 </div>

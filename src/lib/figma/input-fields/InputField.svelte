@@ -76,11 +76,11 @@
             {/if}
         {/if}
         <div
-            class="absolute top-0 left-0 z-0 h-full w-full rounded-xl border-2 border-transparent peer-focus:border-border"
+            class="absolute left-0 top-0 z-0 h-full w-full rounded-xl border-2 border-transparent peer-focus:border-border"
         />
         {#if style.kind === "search"}
             <div
-                class="absolute top-0.5 left-0.5 z-20 flex flex-row items-center justify-between"
+                class="absolute left-0.5 top-0.5 z-20 flex flex-row items-center justify-between"
             >
                 <div class="flex flex-row gap-2.5 p-3">
                     <Icon

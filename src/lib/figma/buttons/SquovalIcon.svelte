@@ -57,7 +57,7 @@
 >
     {#if active}
         <div
-            class="-2 border-base absolute top-1 left-5 h-2 w-2 rounded-full border bg-primary"
+            class="-2 border-base absolute left-5 top-1 h-2 w-2 rounded-full border bg-primary"
         />
     {/if}
     <Icon {src} theme="outline" />

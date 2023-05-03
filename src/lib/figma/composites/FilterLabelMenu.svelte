@@ -16,7 +16,7 @@
         labelSearchModule;
 </script>
 
-<div class="flex flex-col px-4 pt-2 pb-4">
+<div class="flex flex-col px-4 pb-4 pt-2">
     <div class="p-2 text-xs font-bold first-letter:capitalize">
         {$_("filter-label-menu.filter-labels")}
     </div>

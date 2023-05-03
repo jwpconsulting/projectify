@@ -84,7 +84,7 @@
                     on:input={unsetError}
                 />
             </div>
-            <div class="hi  form-pop-msg p-2 text-error" class:hidden={!error}>
+            <div class="hi form-pop-msg p-2 text-error" class:hidden={!error}>
                 {$_("wrong-email-or-password")}
             </div>
 

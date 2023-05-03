@@ -10,7 +10,7 @@
 
 {#if $store.kind === "visible"}
     <div
-        class="fixed top-0 left-0 flex h-screen w-screen items-center justify-center bg-black/50"
+        class="fixed left-0 top-0 flex h-screen w-screen items-center justify-center bg-black/50"
     >
         <svelte:component
             this={overlay}

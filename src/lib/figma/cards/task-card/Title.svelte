@@ -9,7 +9,7 @@
         #{task.number}
     </div>
     <div
-        class="justify-self-start overflow-hidden text-ellipsis text-left text-sm font-bold text-base-content line-clamp-2 lg:line-clamp-1"
+        class="line-clamp-2 justify-self-start overflow-hidden text-ellipsis text-left text-sm font-bold text-base-content lg:line-clamp-1"
     >
         {task.title}
     </div>

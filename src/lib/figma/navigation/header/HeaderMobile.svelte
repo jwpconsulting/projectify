@@ -3,7 +3,7 @@
 </script>
 
 <div
-    class="flex flex-row items-center justify-between border-b-2 border-border bg-foreground py-4 px-2 lg:hidden"
+    class="flex flex-row items-center justify-between border-b-2 border-border bg-foreground px-2 py-4 lg:hidden"
 >
     {#if logoVisible}
         <a href="/">

@@ -32,7 +32,7 @@
 </script>
 
 {#if task}
-    <main class="flex flex-col gap-4 py-6 px-4">
+    <main class="flex flex-col gap-4 px-4 py-6">
         <div class="flex flex-col gap-8 pt-4">
             <div class="flex flex-col gap-4">
                 <div class="text-xl font-bold uppercase">
@@ -91,7 +91,7 @@
                     </div>
                     {#if labelPickerOpen}
                         <div
-                            class="absolute top-0 left-0 right-20 z-10 max-w-md pb-6"
+                            class="absolute left-0 right-20 top-0 z-10 max-w-md pb-6"
                         >
                             <LabelPicker
                                 {task}

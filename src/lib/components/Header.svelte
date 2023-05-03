@@ -104,7 +104,7 @@
             </nav>
 
             <button
-                class="flex  h-10 w-10 shrink-0 items-center justify-center self-end rounded-full bg-base-100 text-primary md:hidden"
+                class="flex h-10 w-10 shrink-0 items-center justify-center self-end rounded-full bg-base-100 text-primary md:hidden"
                 ><IconHamburgerMenu /></button
             >
         </div>

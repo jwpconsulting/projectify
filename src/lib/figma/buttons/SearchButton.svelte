@@ -8,8 +8,8 @@
 >
     <IconSearch />
     <div class="flex flex-row items-center gap-1">
-        <div class="rounded-lg border border-border py-1 px-2 text-xs">⌘</div>
+        <div class="rounded-lg border border-border px-2 py-1 text-xs">⌘</div>
         <IconPlus />
-        <div class="rounded-lg border border-border py-1 px-2 text-xs">K</div>
+        <div class="rounded-lg border border-border px-2 py-1 text-xs">K</div>
     </div>
 </div>

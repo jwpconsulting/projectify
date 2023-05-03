@@ -22,7 +22,7 @@
         on:blur={() => dispatch("blur")}
     />
     <div
-        class="icon-sm absolute top-0 left-0 flex h-full w-10 items-center justify-center rounded-l-none"
+        class="icon-sm absolute left-0 top-0 flex h-full w-10 items-center justify-center rounded-l-none"
     >
         <IconSearch />
     </div>

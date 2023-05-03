@@ -33,10 +33,10 @@
 
 {#if content.kind === "assign"}
     <div class={`relative ${assignStyle}`} class:group={!hoverableParent}>
-        <div class="absolute left-1/3 bottom-1/3">
+        <div class="absolute bottom-1/3 left-1/3">
             <AvatarState user={content.users[1]} {size} />
         </div>
-        <div class="absolute top-1/3 right-1/3">
+        <div class="absolute right-1/3 top-1/3">
             <AvatarState user={content.users[0]} {size} />
         </div>
     </div>

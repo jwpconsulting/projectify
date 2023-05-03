@@ -41,7 +41,7 @@
 
     <button
         on:click={() => openDataPicker()}
-        class="btn btn-square btn-ghost absolute top-0 right-0 rounded-l-none"
+        class="btn btn-square btn-ghost absolute right-0 top-0 rounded-l-none"
         ><IconCalendar /></button
     >
 </div>

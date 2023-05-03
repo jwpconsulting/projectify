@@ -4,7 +4,7 @@
 </script>
 
 <div
-    class="hidden flex-row items-center justify-between border-b-2 border-border bg-foreground py-4 px-6 lg:flex"
+    class="hidden flex-row items-center justify-between border-b-2 border-border bg-foreground px-6 py-4 lg:flex"
     class:hidden={!alwaysVisible}
     class:flex={alwaysVisible}
 >

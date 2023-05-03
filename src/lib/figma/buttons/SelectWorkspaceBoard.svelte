@@ -31,7 +31,7 @@
 </script>
 
 <a
-    class="group block flex w-full flex-row justify-between py-2 px-4 hover:bg-base-200"
+    class="group block flex w-full flex-row justify-between px-4 py-2 hover:bg-base-200"
     href={getDashboardWorkspaceBoardUrl(workspaceBoard.uuid)}
 >
     <div class="flex min-w-0 flex-row items-center gap-2">

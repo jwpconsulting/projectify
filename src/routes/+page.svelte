@@ -97,7 +97,7 @@
                 <img src="/assets/landing/responsive.png" alt="" />
             </div>
         </div>
-        <div class="page bg base-200 mt-8 mb-8 p-6">
+        <div class="page bg base-200 mb-8 mt-8 p-6">
             <div class="mb-12 text-center">
                 <h2 class="mb-4 text-2xl font-bold sm:text-4xl">
                     {$_("index.solution-header")}

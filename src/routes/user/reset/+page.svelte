@@ -53,7 +53,7 @@
                         />
                     </div>
                     <div
-                        class="hi  form-pop-msg p-2 text-error"
+                        class="hi form-pop-msg p-2 text-error"
                         class:hidden={!error}
                     >
                         {$_("user-not-found")}

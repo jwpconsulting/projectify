@@ -14,7 +14,7 @@
     <figure class="flex flex-col items-center gap-7">
         <div class="relative flex w-max flex-col">
             <AvatarVariant size="large" content={{ kind: "single", user }} />
-            <div class="absolute -right-1/4 -bottom-1/4">
+            <div class="absolute -bottom-1/4 -right-1/4">
                 <UploadAvatar />
             </div>
         </div>

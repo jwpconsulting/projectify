@@ -138,7 +138,7 @@
         <SettingsField label="Danger Zone">
             <button
                 disabled={isSaving}
-                class="btn btn-outline  btn-accent btn-sm w-full rounded-full hover:bg-accent hover:text-accent-content"
+                class="btn btn-outline btn-accent btn-sm w-full rounded-full hover:bg-accent hover:text-accent-content"
                 on:click={onDelete}
             >
                 {"Delete Workspace"}

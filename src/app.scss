@@ -166,7 +166,7 @@ body {
     }
 
     .btn-dashed {
-        @apply rounded-full border border-dashed border-primary py-1 px-3 text-xs text-primary hover:ring;
+        @apply rounded-full border border-dashed border-primary px-3 py-1 text-xs text-primary hover:ring;
     }
 
     .icon-sm {

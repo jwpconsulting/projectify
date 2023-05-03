@@ -74,7 +74,7 @@
 {:else}
     <form class="flex flex-col gap-6" on:submit|preventDefault={save}>
         <div class="flex flex-col">
-            <div class="px-4 pt-2 pb-4">
+            <div class="px-4 pb-4 pt-2">
                 <InputField
                     style={{ kind: "field", inputType: "text" }}
                     placeholder={$_("filter-label-menu.label-name")}

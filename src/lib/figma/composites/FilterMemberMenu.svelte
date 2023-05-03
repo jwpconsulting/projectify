@@ -9,7 +9,7 @@
         workspaceUserSearchModule;
 </script>
 
-<div class="flex flex-col px-4 pt-2 pb-4">
+<div class="flex flex-col px-4 pb-4 pt-2">
     <div class="color-base-content p-2 text-xs font-bold capitalize">
         {$_("dashboard.filter-members")}
     </div>

@@ -100,12 +100,12 @@
                             />
                         </div>
                         <div
-                            class="hi  form-pop-msg p-2 text-error"
+                            class="hi form-pop-msg p-2 text-error"
                             class:hidden={!error}
                         >
                             {$_("user-already-exist")}
                         </div>
-                        <div class="flex  py-4">
+                        <div class="flex py-4">
                             <input
                                 type="checkbox"
                                 name="privacy"

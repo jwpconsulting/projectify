@@ -25,7 +25,7 @@
             <span class="nowrap-ellipsis">{label.name}</span>
             {#if deleteIcon}
                 <div
-                    class="relative mr-[-8px] ml-2 flex h-4 w-4 items-center justify-center rounded-full bg-current"
+                    class="relative ml-2 mr-[-8px] flex h-4 w-4 items-center justify-center rounded-full bg-current"
                 >
                     <div class="absolute top-[-1px] h-3 w-3 text-[#fff]">
                         <IconClose />

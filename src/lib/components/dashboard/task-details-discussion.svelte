@@ -47,14 +47,14 @@
 </script>
 
 <div
-    class="absolute top-0 left-0 flex h-full max-h-full w-full flex-col overflow-hidden"
+    class="absolute left-0 top-0 flex h-full max-h-full w-full flex-col overflow-hidden"
 >
     <div
         bind:this={messagesView}
         class="flex grow flex-col divide-y divide-base-300 overflow-y-auto px-4"
     >
         {#each task?.chat_messages || [] as message}
-            <div class="flex space-x-4  py-6">
+            <div class="flex space-x-4 py-6">
                 <div class="shrink-0">
                     {#if message.author}
                         <UserProfilePicture

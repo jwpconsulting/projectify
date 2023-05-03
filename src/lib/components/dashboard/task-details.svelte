@@ -294,7 +294,7 @@
                 on:click={() => save()}>{$_("save")}</button
             >
             {#if userPickerOpen}
-                <div class="absolute top-20 left-2 right-20 z-10 max-w-md">
+                <div class="absolute left-2 right-20 top-20 z-10 max-w-md">
                     <UserPicker
                         selectedUser={task.assignee}
                         on:userSelected={onUserSelected}

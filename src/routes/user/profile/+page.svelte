@@ -107,7 +107,7 @@
                     />
                 </ProfilePictureFileSelector>
 
-                <div class="text-xl font-bold ">
+                <div class="text-xl font-bold">
                     <input
                         class="nowrap-ellipsis input input-bordered grow rounded-md p-2 text-center text-xl font-bold"
                         placeholder={"Full name"}

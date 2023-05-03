@@ -174,7 +174,7 @@
 
         {#if viewMode === "month"}
             <div
-                class="absolute top-0 left-0 grid h-full w-full grid-cols-3 grid-rows-4 bg-base-100"
+                class="absolute left-0 top-0 grid h-full w-full grid-cols-3 grid-rows-4 bg-base-100"
                 transition:scale={{
                     duration: 300,
                     delay: 0,
@@ -202,7 +202,7 @@
             on:click={() => selectDate(null)}
             on:keydown={() => selectDate(null)}
         >
-            <div class="text-xs ">Clear</div>
+            <div class="text-xs">Clear</div>
         </div>
         {#if date}
             <div
@@ -211,7 +211,7 @@
                 on:click={() => selectToday()}
                 on:keydown={() => selectToday()}
             >
-                <div class="text-xs ">Today</div>
+                <div class="text-xs">Today</div>
             </div>
         {/if}
     </footer>
