@@ -36,7 +36,7 @@
             if (task.assignee) {
                 assignedUser ||= task.assignee;
             }
-            labels ||= task.labels;
+            labels = task.labels;
             dueDate ||= task.deadline || null;
             // Then: Subscribe to changes of fields an assign them back to
             // taskOrNewTask.task
