@@ -15,8 +15,6 @@ const meta: Meta<LabelMenu> = {
     },
     args: {
         labelSearchModule,
-        cancelCreate: () => console.log("Cancelling creation"),
-        savedLabel: () => console.log("Label was saved"),
     },
 };
 export default meta;

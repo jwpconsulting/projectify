@@ -1,15 +1,19 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+    import { Plus } from "@steeze-ui/heroicons";
+
     import type { LabelSearchModule } from "$lib/types/stores";
+    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
+    import InputField from "$lib/figma/input-fields/InputField.svelte";
+    import FilterLabel from "$lib/figma/select-controls/FilterLabel.svelte";
 
     export let labelSearchModule: LabelSearchModule;
     export let canEdit = true;
+    // If it is null, we don't show the create new label button
+    export let startCreateLabel: (() => void) | null = null;
 
     let { select, deselect, selected, search, searchResults } =
         labelSearchModule;
-
-    import InputField from "$lib/figma/input-fields/InputField.svelte";
-    import FilterLabel from "$lib/figma/select-controls/FilterLabel.svelte";
 </script>
 
 <div class="flex flex-col px-4 pt-2 pb-4">
@@ -50,4 +54,14 @@
                 deselect({ kind: "label", labelUuid: label.uuid })}
         />
     {/each}
+    {#if startCreateLabel}
+        <!-- Some left padding issues here, not aligned with FilterLabel TODO -->
+        <ContextMenuButton
+            label={$_("filter-label-menu.create-new-label")}
+            icon={Plus}
+            state="normal"
+            color="primary"
+            kind={{ kind: "button", action: startCreateLabel }}
+        />
+    {/if}
 </div>

@@ -9,6 +9,9 @@ const meta: Meta<FilterLabelMenu> = {
     argTypes: {},
     args: {
         labelSearchModule,
+        startCreateLabel() {
+            console.log("Here we go to the label creation menu");
+        },
     },
 };
 export default meta;

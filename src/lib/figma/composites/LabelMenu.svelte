@@ -11,6 +11,8 @@
 
     export let labelSearchModule: LabelSearchModule;
 
+    // Still exporting this one for better testability in storybook
+    // TODO or perhaps we can refactor the form to a new component?
     export let state: FilterLabelMenuState = "list";
 
     let { createLabel } = labelSearchModule;
@@ -42,11 +44,6 @@
             isLabelSelected = makeIsLabelSelected(chosenColor.color);
         }
     }
-    // Here is where we report back to our containing component that we cancel
-    // the label creation
-    export let cancelCreate: () => void;
-    // Report back successfull label creation
-    export let savedLabel: () => void;
 
     async function save() {
         if (!chosenColor) {
@@ -56,12 +53,24 @@
             throw new Error("Expected labelName");
         }
         await createLabel(chosenColor.color, labelName);
-        savedLabel();
+        state = "list";
+    }
+
+    function startCreateLabel() {
+        state = "create";
+    }
+
+    function cancelCreate() {
+        // Reset form
+        chosenColor = null;
+        labelName = null;
+        // Go back
+        state = "list";
     }
 </script>
 
 {#if state === "list"}
-    <FilterLabelMenu {labelSearchModule} />
+    <FilterLabelMenu {labelSearchModule} {startCreateLabel} />
 {:else}
     <form class="flex flex-col gap-6" on:submit|preventDefault={save}>
         <div class="flex flex-col">
