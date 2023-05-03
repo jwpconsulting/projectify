@@ -88,40 +88,43 @@ export const currentWorkspaceBoardSections =
         currentWorkspaceBoard
     );
 
-export const tasksPerUser = derived<
-    [typeof currentWorkspaceBoardSections],
-    TasksPerUser
->(
-    [currentWorkspaceBoardSections],
-    ([$currentWorkspaceBoardSections], set) => {
-        const userCounts = new Map<string, number>();
-        let unassignedCounts = 0;
-        $currentWorkspaceBoardSections.forEach((section) => {
-            if (!section.tasks) {
-                return;
-            }
-            section.tasks.forEach((task) => {
-                if (task.assignee) {
-                    const uuid = task.assignee.uuid;
-                    const count = userCounts.get(uuid);
-                    if (count) {
-                        userCounts.set(uuid, count + 1);
-                    } else {
-                        userCounts.set(uuid, 1);
-                    }
-                } else {
-                    unassignedCounts = unassignedCounts + 1;
+type CurrentTasksPerUser = Readable<TasksPerUser>;
+
+export function createTasksPerUser(
+    currentWorkspaceBoardSections: CurrentWorkspaceBoardSections
+): CurrentTasksPerUser {
+    return derived<[typeof currentWorkspaceBoardSections], TasksPerUser>(
+        [currentWorkspaceBoardSections],
+        ([$currentWorkspaceBoardSections], set) => {
+            const userCounts = new Map<string, number>();
+            let unassignedCounts = 0;
+            $currentWorkspaceBoardSections.forEach((section) => {
+                if (!section.tasks) {
+                    return;
                 }
+                section.tasks.forEach((task) => {
+                    if (task.assignee) {
+                        const uuid = task.assignee.uuid;
+                        const count = userCounts.get(uuid);
+                        if (count) {
+                            userCounts.set(uuid, count + 1);
+                        } else {
+                            userCounts.set(uuid, 1);
+                        }
+                    } else {
+                        unassignedCounts = unassignedCounts + 1;
+                    }
+                });
             });
-        });
-        const counts: TasksPerUser = {
-            unassigned: unassignedCounts,
-            assigned: userCounts,
-        };
-        set(counts);
-    },
-    { unassigned: 0, assigned: new Map<string, number>() }
-);
+            const counts: TasksPerUser = {
+                unassigned: unassignedCounts,
+                assigned: userCounts,
+            };
+            set(counts);
+        },
+        { unassigned: 0, assigned: new Map<string, number>() }
+    );
+}
 
 export function filterSectionsTasks(
     currentFilter: CurrentFilter
@@ -181,3 +184,5 @@ export function filterSectionsTasks(
 
     return sections;
 }
+
+export const tasksPerUser = createTasksPerUser(currentWorkspaceBoardSections);
