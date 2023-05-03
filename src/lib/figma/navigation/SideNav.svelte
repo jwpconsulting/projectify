@@ -25,11 +25,14 @@
     let workspaceContextMenuAnchor: HTMLElement;
     let sideNavContextMenuAnchor: HTMLElement;
 
-    export let open = true;
-
-    let { showWorkspaceContextMenu, showSideNavContextMenu } = sideNavModule;
+    let { sideNavOpen, showWorkspaceContextMenu, showSideNavContextMenu } =
+        sideNavModule;
 
     let { currentWorkspace } = workspaceBoardSearchModule;
+
+    export let open = true;
+
+    $: open = $sideNavOpen;
 </script>
 
 {#if open}

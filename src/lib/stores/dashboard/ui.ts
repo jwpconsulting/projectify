@@ -12,7 +12,7 @@ export function toggleLabelDropdownClosedNavOpen() {
     labelExpandOpen.update((state) => !state);
 }
 
-export const sideNavOpen = writable<boolean>(false);
+export const sideNavOpen = writable<boolean>(true);
 export function toggleSideNavOpen() {
     sideNavOpen.update(($sideNavOpen) => !$sideNavOpen);
 }
