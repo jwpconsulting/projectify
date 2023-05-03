@@ -1,6 +1,7 @@
 import Fuse from "fuse.js";
 import lodash from "lodash";
 import { get, derived, writable } from "svelte/store";
+import type { Readable } from "svelte/store";
 import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
 import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard/workspaceBoard";
@@ -27,19 +28,36 @@ currentWorkspaceBoardUuid.subscribe((_uuid) => {
     taskSearchInput.set("");
 });
 
-export const currentSearchedTasks = derived<
-    [typeof currentWorkspaceBoardSections, typeof taskSearchInput],
-    Task[] | null
->(
-    [currentWorkspaceBoardSections, taskSearchInput],
-    ([$currentWorkspaceBoardSections, $taskSearchInput], set) => {
-        if ($taskSearchInput == "") {
-            set(null);
-        } else {
-            set(searchTasks($currentWorkspaceBoardSections, $taskSearchInput));
-        }
-    },
-    null
+type CurrentSearchedTasks = Readable<Task[] | null>;
+
+export function createCurrentSearchedTasks(
+    currentWorkspaceBoardSections: Readable<WorkspaceBoardSection[]>,
+    taskSearchInput: Readable<string>
+): CurrentSearchedTasks {
+    return derived<
+        [typeof currentWorkspaceBoardSections, typeof taskSearchInput],
+        Task[] | null
+    >(
+        [currentWorkspaceBoardSections, taskSearchInput],
+        ([$currentWorkspaceBoardSections, $taskSearchInput], set) => {
+            if ($taskSearchInput == "") {
+                set(null);
+            } else {
+                set(
+                    searchTasks(
+                        $currentWorkspaceBoardSections,
+                        $taskSearchInput
+                    )
+                );
+            }
+        },
+        null
+    );
+}
+
+export const currentSearchedTasks = createCurrentSearchedTasks(
+    currentWorkspaceBoardSections,
+    taskSearchInput
 );
 
 export function searchTasks(
