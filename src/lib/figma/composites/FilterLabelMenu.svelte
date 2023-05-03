@@ -18,13 +18,13 @@
 
 <div class="flex flex-col px-4 pt-2 pb-4">
     <div class="p-2 text-xs font-bold first-letter:capitalize">
-        {$_("dashboard.filter-labels")}
+        {$_("filter-label-menu.filter-labels")}
     </div>
     <InputField
         bind:value={$search}
         style={{ kind: "search" }}
         name="label-name"
-        placeholder={$_("dashboard.label-name")}
+        placeholder={$_("filter-label-menu.label-name")}
     />
 </div>
 <div class="flex flex-col">
