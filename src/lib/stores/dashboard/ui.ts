@@ -1,27 +1,37 @@
 import { writable } from "svelte/store";
+import { internallyWritable } from "$lib/stores/util";
 
 // TODO loading needed?
 export const loading = writable<boolean>(false);
 
-export const userExpandOpen = writable<boolean>(false);
+const { priv: _userExpandOpen, pub: userExpandOpen } =
+    internallyWritable(false);
 export function toggleUserExpandOpen() {
-    userExpandOpen.update((state) => !state);
+    _userExpandOpen.update((state) => !state);
 }
-export const labelExpandOpen = writable<boolean>(false);
+export { userExpandOpen };
+
+const { priv: _labelExpandOpen, pub: labelExpandOpen } =
+    internallyWritable(false);
 export function toggleLabelDropdownClosedNavOpen() {
-    labelExpandOpen.update((state) => !state);
+    _labelExpandOpen.update((state) => !state);
 }
+export { labelExpandOpen };
 
-export const sideNavOpen = writable<boolean>(true);
+const { priv: _sideNavOpen, pub: sideNavOpen } = internallyWritable(true);
 export function toggleSideNavOpen() {
-    sideNavOpen.update(($sideNavOpen) => !$sideNavOpen);
+    _sideNavOpen.update(($sideNavOpen) => !$sideNavOpen);
 }
+export { sideNavOpen };
 
-export const workspaceBoardSectionClosed = writable<Set<string>>(new Set());
+const {
+    priv: _workspaceBoardSectionClosed,
+    pub: workspaceBoardSectionClosed,
+} = internallyWritable<Set<string>>(new Set());
 export function toggleWorkspaceBoardSectionOpen(
     workspaceBoardSectionUuid: string
 ) {
-    workspaceBoardSectionClosed.update(($workspaceBoardSectionClosed) => {
+    _workspaceBoardSectionClosed.update(($workspaceBoardSectionClosed) => {
         if ($workspaceBoardSectionClosed.has(workspaceBoardSectionUuid)) {
             $workspaceBoardSectionClosed.delete(workspaceBoardSectionUuid);
         } else {
@@ -30,3 +40,4 @@ export function toggleWorkspaceBoardSectionOpen(
         return $workspaceBoardSectionClosed;
     });
 }
+export { workspaceBoardSectionClosed };

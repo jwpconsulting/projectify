@@ -61,8 +61,7 @@ export type LabelSearchModule = {
 };
 
 export type SideNavModule = {
-    // TODO make readonly
-    sideNavOpen: Writable<boolean>;
+    sideNavOpen: Readable<boolean>;
     toggleSideNavOpen: () => void;
     showWorkspaceContextMenu: (anchor: HTMLElement) => void;
     showSideNavContextMenu: (anchor: HTMLElement) => void;
