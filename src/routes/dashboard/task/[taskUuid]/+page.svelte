@@ -4,28 +4,22 @@
     import { goto } from "$app/navigation";
     import TaskUpdateCard from "$lib/figma/screens/task/TaskUpdateCard.svelte";
     import type { Task } from "$lib/types/workspace";
+    import { createLabelSearchModule } from "$lib/stores/modules";
     import {
-        createLabel as repositoryCreateLabel,
-        assignLabelToTask,
         updateTask as performUpdateTask,
         assignUserToTask,
     } from "$lib/repository/workspace";
     import type {
         TaskOrNewTask,
-        LabelSelection,
-        LabelSelectionInput,
         TasksPerUser,
         WorkspaceUserSelection,
         WorkspaceUserSelectionInput,
     } from "$lib/types/ui";
     import type {
-        LabelSearchModule,
         WorkspaceUserSearchModule,
         TaskModule,
     } from "$lib/types/stores";
     import {
-        createLabelSearchResults,
-        currentWorkspaceLabels,
         currentTask,
         currentWorkspaceUsers,
         createWorkspaceUserSearchResults,
@@ -115,51 +109,7 @@
                     workspaceUserSearch
                 ),
             };
-            const labelSelected: LabelSelection =
-                task.labels && task.labels.length > 0
-                    ? {
-                          kind: "labels",
-                          labelUuids: new Set(task.labels.map((l) => l.uuid)),
-                      }
-                    : { kind: "noLabel" };
-            const labelSearch = writable("");
-            const selectOrDeselectLabel = (
-                select: boolean,
-                labelSelectionInput: LabelSelectionInput
-            ) => {
-                const { kind } = labelSelectionInput;
-                if (kind === "noLabel") {
-                    console.error("No API for removing all labels");
-                    throw new Error("TODO");
-                } else if (kind === "allLabels") {
-                    console.error("No API for assigning all labels");
-                    throw new Error("TODO");
-                } else {
-                    const { labelUuid } = labelSelectionInput;
-                    assignLabelToTask(task, labelUuid, select);
-                }
-            };
-            // XXX need someting like
-            // createLabelSearchModule(selectOrDeselectLabel, labelSelected,
-            // workspace, currentWorkspaceLabels)
-            const labelSearchModule: LabelSearchModule = {
-                select: (labelSelectionInput: LabelSelectionInput) => {
-                    selectOrDeselectLabel(true, labelSelectionInput);
-                },
-                deselect: (labelSelectionInput: LabelSelectionInput) => {
-                    selectOrDeselectLabel(false, labelSelectionInput);
-                },
-                selected: writable<LabelSelection>(labelSelected),
-                search: writable(""),
-                searchResults: createLabelSearchResults(
-                    currentWorkspaceLabels,
-                    labelSearch
-                ),
-                // XXX horrible code duplication here
-                async createLabel(color: number, name: string) {
-                    await repositoryCreateLabel(workspace, name, color);
-                },
-            };
+            const labelSearchModule = createLabelSearchModule(workspace, task);
             taskModule = {
                 createOrUpdateTask,
                 taskOrNewTask: taskOrNewTaskStore,
