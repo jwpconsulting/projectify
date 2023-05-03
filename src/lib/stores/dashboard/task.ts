@@ -5,7 +5,7 @@ import type { Readable } from "svelte/store";
 import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
 import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard/workspaceBoard";
-import { selectedWorkspaceUser } from "$lib/stores/dashboard/workspaceUser";
+import { selectWorkspaceUser } from "$lib/stores/dashboard/workspaceUser";
 
 import { selectedLabels } from "$lib/stores/dashboard/label";
 import { fuseSearchThreshold } from "$lib/config";
@@ -23,7 +23,7 @@ let currentTaskSubscriptionUnsubscribe: (() => void) | null = null;
 // Clear on workspace board change
 currentWorkspaceBoardUuid.subscribe((_uuid) => {
     selectedLabels.set({ kind: "allLabels" });
-    selectedWorkspaceUser.set({ kind: "allWorkspaceUsers" });
+    selectWorkspaceUser({ kind: "allWorkspaceUsers" });
     taskSearchInput.set("");
 });
 

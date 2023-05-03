@@ -9,6 +9,7 @@ import type {
     WorkspaceUserSelection,
     WorkspaceUserSelectionInput,
 } from "$lib/types/ui";
+import { internallyWritable } from "$lib/stores/util";
 
 // WorkspaceUser Search and Selection
 type CurrentWorkspaceUsers = Readable<WorkspaceUser[]>;
@@ -79,26 +80,30 @@ export const workspaceUserSearchResults: WorkspaceUserSearchResults =
         workspaceUserSearch
     );
 
-export const selectedWorkspaceUser = writable<WorkspaceUserSelection>({
-    kind: "allWorkspaceUsers",
-});
+const { priv: _selectedWorkspaceUser, pub: selectedWorkspaceUser } =
+    internallyWritable<WorkspaceUserSelection>({
+        kind: "allWorkspaceUsers",
+    });
+export { selectedWorkspaceUser };
 
 export function selectWorkspaceUser(selection: WorkspaceUserSelectionInput) {
-    selectedWorkspaceUser.update(
-        (currentSelection: WorkspaceUserSelection) => {
+    _selectedWorkspaceUser.update(
+        ($selectedWorkspaceUser: WorkspaceUserSelection) => {
             if (selection.kind === "allWorkspaceUsers") {
                 return { kind: "allWorkspaceUsers" };
             } else if (selection.kind === "unassigned") {
-                if (currentSelection.kind === "unassigned") {
+                if ($selectedWorkspaceUser.kind === "unassigned") {
                     return { kind: "allWorkspaceUsers" };
                 } else {
                     return { kind: "unassigned" };
                 }
             } else {
                 const selectionUuid = selection.workspaceUser.uuid;
-                if (currentSelection.kind === "workspaceUsers") {
-                    currentSelection.workspaceUserUuids.add(selectionUuid);
-                    return currentSelection;
+                if ($selectedWorkspaceUser.kind === "workspaceUsers") {
+                    $selectedWorkspaceUser.workspaceUserUuids.add(
+                        selectionUuid
+                    );
+                    return $selectedWorkspaceUser;
                 } else {
                     const workspaceUserUuids = new Set<string>();
                     workspaceUserUuids.add(selectionUuid);
@@ -110,24 +115,26 @@ export function selectWorkspaceUser(selection: WorkspaceUserSelectionInput) {
 }
 
 export function deselectWorkspaceUser(selection: WorkspaceUserSelectionInput) {
-    selectedWorkspaceUser.update(
-        (currentSelection: WorkspaceUserSelection) => {
+    _selectedWorkspaceUser.update(
+        ($selectedWorkspaceUser: WorkspaceUserSelection) => {
             if (selection.kind === "allWorkspaceUsers") {
                 return { kind: "allWorkspaceUsers" };
             } else if (selection.kind === "unassigned") {
-                if (currentSelection.kind === "unassigned") {
+                if ($selectedWorkspaceUser.kind === "unassigned") {
                     return { kind: "allWorkspaceUsers" };
                 } else {
                     return { kind: "unassigned" };
                 }
             } else {
                 const selectionUuid = selection.workspaceUser.uuid;
-                if (currentSelection.kind === "workspaceUsers") {
-                    currentSelection.workspaceUserUuids.delete(selectionUuid);
-                    if (currentSelection.workspaceUserUuids.size === 0) {
+                if ($selectedWorkspaceUser.kind === "workspaceUsers") {
+                    $selectedWorkspaceUser.workspaceUserUuids.delete(
+                        selectionUuid
+                    );
+                    if ($selectedWorkspaceUser.workspaceUserUuids.size === 0) {
                         return { kind: "allWorkspaceUsers" };
                     } else {
-                        return currentSelection;
+                        return $selectedWorkspaceUser;
                     }
                 } else {
                     return { kind: "allWorkspaceUsers" };
