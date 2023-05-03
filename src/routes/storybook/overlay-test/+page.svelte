@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { openDestructiveOverlay } from "$lib/stores/global-ui";
+    import { openDestructiveOverlay } from "$lib/stores/globalUi";
     import Button from "$lib/figma/buttons/Button.svelte";
 
     const target = {

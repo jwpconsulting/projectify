@@ -19,7 +19,7 @@ You have to bind show this somewhere, so bind an anchor HTMLElement:
 Open it up by calling
 
 ```
-import { openContextMenu } from "$lib/stores/global-ui";
+import { openContextMenu } from "$lib/stores/globalUi";
 openContextMenu(contextMenuType, contextMenuOpensHere)
 ```
 
@@ -30,7 +30,7 @@ Say you want an `<input>` field called "name", then create the following:
 ```
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import InputField from "$lib/figma/input-fields";
+    import InputField from "$lib/figma/input-fields/InputField.svelte";
 </script>
 
 <InputField

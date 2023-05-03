@@ -16,7 +16,7 @@
     } from "$lib/types/workspace";
 
     import FloatingActionButton from "$lib/figma/buttons/FloatingActionButton.svelte";
-    import { openConstructiveOverlay } from "$lib/stores/global-ui";
+    import { openConstructiveOverlay } from "$lib/stores/globalUi";
 
     export let workspaceBoard: WorkspaceBoard;
 

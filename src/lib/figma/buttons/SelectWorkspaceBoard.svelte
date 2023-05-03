@@ -7,7 +7,7 @@
 
     import type { WorkspaceBoardSearchModule } from "$lib/types/stores";
 
-    import { openContextMenu } from "$lib/stores/global-ui";
+    import { openContextMenu } from "$lib/stores/globalUi";
 
     export let workspaceBoardSearchModule: WorkspaceBoardSearchModule;
     export let workspaceBoard: WorkspaceBoard;

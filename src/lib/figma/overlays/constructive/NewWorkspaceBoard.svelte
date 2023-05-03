@@ -4,7 +4,7 @@
     import Button from "$lib/figma/buttons/Button.svelte";
     import InputField from "$lib/figma/input-fields/InputField.svelte";
     import { createWorkspaceBoard } from "$lib/repository/workspace";
-    import { closeConstructiveOverlay } from "$lib/stores/global-ui";
+    import { closeConstructiveOverlay } from "$lib/stores/globalUi";
 
     export let workspace: Workspace;
 

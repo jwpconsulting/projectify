@@ -1,4 +1,4 @@
-import "$lib/stores/global-ui";
+import "$lib/stores/globalUi";
 
 import { get } from "svelte/store";
 

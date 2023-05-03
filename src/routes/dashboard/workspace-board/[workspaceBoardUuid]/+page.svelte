@@ -5,7 +5,7 @@
     import SideNav from "$lib/figma/navigation/SideNav.svelte";
     import { createLabel as repositoryCreateLabel } from "$lib/repository/workspace";
 
-    import { openContextMenu } from "$lib/stores/global-ui";
+    import { openContextMenu } from "$lib/stores/globalUi";
 
     import type {
         LabelSearchModule,

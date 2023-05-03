@@ -1,4 +1,4 @@
-// XXX should be renamed modules maybe?
+// XXX "stores.ts" should be renamed "modules.ts" maybe?
 import type { Readable, Writable } from "svelte/store";
 
 import type {

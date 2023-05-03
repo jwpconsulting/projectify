@@ -1,7 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import type { ConstructiveOverlayType } from "$lib/types/ui";
-    import { closeConstructiveOverlay } from "$lib/stores/global-ui";
+    import { closeConstructiveOverlay } from "$lib/stores/globalUi";
     import EditWorkspaceBoard from "$lib/figma/overlays/constructive/EditWorkspaceBoard.svelte";
     import NewWorkspaceBoard from "$lib/figma/overlays/constructive/NewWorkspaceBoard.svelte";
     import InviteMember from "$lib/figma/overlays/constructive/InviteMember.svelte";

@@ -26,7 +26,7 @@
         createWorkspaceUserSearchResults,
     } from "$lib/stores/dashboard";
     import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
-    import { openContextMenu } from "$lib/stores/global-ui";
+    import { openContextMenu } from "$lib/stores/globalUi";
 
     let taskOrNewTask: TaskOrNewTask | null = null;
     let taskModule: TaskModule | null = null;

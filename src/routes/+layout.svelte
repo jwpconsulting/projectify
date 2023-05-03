@@ -13,7 +13,7 @@
         constructiveOverlayState,
         destructiveOverlayState,
         performDestructiveOverlay,
-    } from "$lib/stores/global-ui";
+    } from "$lib/stores/globalUi";
 </script>
 
 <svelte:head>

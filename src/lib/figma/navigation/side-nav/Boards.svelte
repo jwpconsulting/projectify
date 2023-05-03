@@ -7,7 +7,7 @@
     import SelectWorkspaceBoard from "$lib/figma/buttons/SelectWorkspaceBoard.svelte";
     import type { WorkspaceBoardSearchModule } from "$lib/types/stores";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
-    import { openConstructiveOverlay } from "$lib/stores/global-ui";
+    import { openConstructiveOverlay } from "$lib/stores/globalUi";
 
     export let workspaceBoardSearchModule: WorkspaceBoardSearchModule;
 
