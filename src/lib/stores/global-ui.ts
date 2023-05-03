@@ -10,6 +10,7 @@ import type {
     Overlay,
     OverlayAction,
 } from "$lib/types/ui";
+import { internallyWritable } from "$lib/stores/util";
 
 // TODO make readonly
 export const constructiveOverlayState = writable<ConstructiveOverlayState>({
@@ -92,11 +93,13 @@ export function closeConstructiveOverlay() {
     closeOverlay(constructiveOverlayState);
 }
 
-export const contextMenuState = writable<ContextMenuState>({
-    kind: "hidden",
-});
+const { priv: _contextMenuState, pub: contextMenuState } =
+    internallyWritable<ContextMenuState>({
+        kind: "hidden",
+    });
+export { contextMenuState };
 export function openContextMenu(target: ContextMenuType, anchor: HTMLElement) {
-    contextMenuState.update(($contextMenuState) => {
+    _contextMenuState.update(($contextMenuState) => {
         if ($contextMenuState.kind !== "hidden") {
             throw new Error("Expected $contextMenuState.kind to be hidden");
         }
@@ -108,7 +111,7 @@ export function openContextMenu(target: ContextMenuType, anchor: HTMLElement) {
     });
 }
 export function closeContextMenu() {
-    contextMenuState.update(($contextMenuState) => {
+    _contextMenuState.update(($contextMenuState) => {
         if ($contextMenuState.kind === "hidden") {
             throw new Error("Expected $contextMenuState.kind to be visible");
         }
