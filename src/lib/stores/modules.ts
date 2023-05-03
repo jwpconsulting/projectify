@@ -23,7 +23,7 @@ export function createLabelSearchModule(
                   labelUuids: new Set(task.labels.map((l) => l.uuid)),
               }
             : { kind: "noLabel" };
-    const labelSearch = writable("");
+    const search = writable("");
     const selectOrDeselectLabel = (
         select: boolean,
         labelSelectionInput: LabelSelectionInput
@@ -50,10 +50,10 @@ export function createLabelSearchModule(
             selectOrDeselectLabel(false, labelSelectionInput);
         },
         selected: writable<LabelSelection>(labelSelected),
-        search: writable(""),
+        search,
         searchResults: createLabelSearchResults(
             currentWorkspaceLabels,
-            labelSearch
+            search
         ),
         // XXX horrible code duplication here
         async createLabel(color: number, name: string) {
