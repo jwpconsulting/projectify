@@ -6,6 +6,7 @@
     import type { Task } from "$lib/types/workspace";
     import { createLabelSearchModule } from "$lib/stores/modules";
     import {
+        assignLabelToTask,
         updateTask as performUpdateTask,
         assignUserToTask,
     } from "$lib/repository/workspace";
@@ -109,7 +110,12 @@
                     workspaceUserSearch
                 ),
             };
-            const labelSearchModule = createLabelSearchModule(workspace, task);
+            const labelSearchModule = createLabelSearchModule(
+                workspace,
+                task,
+                (labelUuid: string, selected: boolean) =>
+                    assignLabelToTask(task, labelUuid, selected)
+            );
             taskModule = {
                 createOrUpdateTask,
                 taskOrNewTask: taskOrNewTaskStore,

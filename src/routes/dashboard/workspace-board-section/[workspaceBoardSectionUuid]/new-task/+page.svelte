@@ -6,20 +6,16 @@
     import type {
         CreateTask,
         NewTask,
-        Label,
         WorkspaceUser,
     } from "$lib/types/workspace";
     import type {
         TaskOrNewTask,
-        LabelSelection,
         TasksPerUser,
         WorkspaceUserSelection,
     } from "$lib/types/ui";
+    import { createLabelSearchModule } from "$lib/stores/modules";
     import type { TaskModule } from "$lib/types/stores";
-    import {
-        createLabel as repositoryCreateLabel,
-        createTask as createTaskFn,
-    } from "$lib/repository/workspace";
+    import { createTask as createTaskFn } from "$lib/repository/workspace";
 
     import {
         currentWorkspaceBoardSection,
@@ -56,6 +52,11 @@
                 kind: "newTask",
                 newTask,
             };
+            const labelSearchModule = createLabelSearchModule(
+                workspace,
+                null,
+                () => console.error("Not implemented")
+            );
             taskModule = {
                 createOrUpdateTask: createOrUpdateTask,
                 taskOrNewTask: writable(taskOrNewTask),
@@ -84,16 +85,7 @@
                     searchResults: readable<WorkspaceUser[]>([]),
                 },
                 // TODO make label menu so that "all" can not be selected
-                labelSearchModule: {
-                    select: console.error,
-                    deselect: console.error,
-                    selected: writable<LabelSelection>(),
-                    search: writable(""),
-                    searchResults: readable<Label[]>([]),
-                    async createLabel(color: number, name: string) {
-                        await repositoryCreateLabel(workspace, name, color);
-                    },
-                },
+                labelSearchModule,
                 showUpdateWorkspaceUser: () => {
                     throw new Error("Not implement");
                 },

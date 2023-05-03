@@ -1,8 +1,5 @@
 import { writable } from "svelte/store";
-import {
-    createLabel as repositoryCreateLabel,
-    assignLabelToTask,
-} from "$lib/repository/workspace";
+import { createLabel as repositoryCreateLabel } from "$lib/repository/workspace";
 import {
     createLabelSearchResults,
     currentWorkspaceLabels,
@@ -14,10 +11,11 @@ import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
 
 export function createLabelSearchModule(
     workspace: Workspace,
-    task: Task
+    task: Task | null,
+    selectCallback: (labelUuid: string, selected: boolean) => void
 ): LabelSearchModule {
     const labelSelected: LabelSelection =
-        task.labels && task.labels.length > 0
+        task && task.labels && task.labels.length > 0
             ? {
                   kind: "labels",
                   labelUuids: new Set(task.labels.map((l) => l.uuid)),
@@ -39,7 +37,7 @@ export function createLabelSearchModule(
             throw new Error("TODO");
         } else {
             const { labelUuid } = labelSelectionInput;
-            assignLabelToTask(task, labelUuid, select);
+            selectCallback(labelUuid, select);
         }
     };
     return {
@@ -55,7 +53,6 @@ export function createLabelSearchModule(
             currentWorkspaceLabels,
             search
         ),
-        // XXX horrible code duplication here
         async createLabel(color: number, name: string) {
             await repositoryCreateLabel(workspace, name, color);
         },
