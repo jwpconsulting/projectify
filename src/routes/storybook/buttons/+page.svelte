@@ -23,7 +23,6 @@
     import WorkspaceBoardIcon from "$lib/figma/buttons/WorkspaceBoardIcon.svelte";
     import UserAccount from "$lib/figma/buttons/UserAccount.svelte";
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
-    import LabelDropdownClosedNav from "$lib/figma/buttons/LabelDropdownClosedNav.svelte";
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import { currentStep } from "$lib/stores/onboarding";
@@ -229,9 +228,6 @@ Filter user avatar
         </div>
     {/each}
 </div>
-
-Label expand
-<LabelDropdownClosedNav />
 
 Side nav menu category
 <div class={fc}>
