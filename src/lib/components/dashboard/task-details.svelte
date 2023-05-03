@@ -20,9 +20,7 @@
     import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
     import ProfilePicture from "$lib/components/profilePicture.svelte";
     import TaskDetailsContent from "$lib/components/dashboard/task-details-content.svelte";
-    import Tabs from "$lib/components/tabs.svelte";
     import TaskDetailsDiscussion from "$lib/components/dashboard/task-details-discussion.svelte";
-    import Tab from "$lib/components/tab.svelte";
     import { goto } from "$app/navigation";
     import Loading from "$lib/components/loading.svelte";
     import { page } from "$app/stores";
@@ -217,18 +215,6 @@
         await assignUserToTask(userEmail ? userEmail : null, $currentTaskUuid);
         userPicked = false;
     }
-
-    $: tabItems = [
-        {
-            label: $_("task"),
-            id: "details",
-        },
-        {
-            label: $_("updates"),
-            hidden: itsNew,
-            id: "updates",
-        },
-    ];
 </script>
 
 {#if loading}
@@ -303,13 +289,7 @@
             {/if}
         </header>
 
-        <Tabs bind:activeTabId items={tabItems} autoPadding={false}>
-            <Tab id={"details"}>
-                <TaskDetailsContent bind:taskModified {task} />
-            </Tab>
-            <Tab id={"updates"}>
-                <TaskDetailsDiscussion {task} />
-            </Tab>
-        </Tabs>
+        <TaskDetailsContent bind:taskModified {task} />
+        <TaskDetailsDiscussion {task} />
     </div>
 {/if}
