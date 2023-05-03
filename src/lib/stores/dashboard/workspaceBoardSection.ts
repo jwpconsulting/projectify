@@ -184,5 +184,3 @@ export function filterSectionsTasks(
 
     return sections;
 }
-
-export const tasksPerUser = createTasksPerUser(currentWorkspaceBoardSections);

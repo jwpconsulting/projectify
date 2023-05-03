@@ -17,9 +17,11 @@
 
     import {
         createLabelSearchResults,
+        createTasksPerUser,
         currentWorkspace,
         currentWorkspaceLabels,
         currentWorkspaceBoard,
+        currentWorkspaceBoardSections,
         currentWorkspaceBoardUuid,
         deselectLabel,
         deselectWorkspaceUser,
@@ -30,7 +32,6 @@
         selectedWorkspaceUser,
         setWorkspaces,
         sideNavOpen,
-        tasksPerUser,
         toggleSideNavOpen,
         workspaceUserSearch,
         workspaceUserSearchResults,
@@ -57,7 +58,7 @@
         select: selectWorkspaceUser,
         deselect: deselectWorkspaceUser,
         selected: selectedWorkspaceUser,
-        tasksPerUser,
+        tasksPerUser: createTasksPerUser(currentWorkspaceBoardSections),
         search: workspaceUserSearch,
         searchResults: workspaceUserSearchResults,
     };
