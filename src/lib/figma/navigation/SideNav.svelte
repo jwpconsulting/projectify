@@ -4,6 +4,9 @@
     import Members from "$lib/figma/navigation/side-nav/Members.svelte";
     import LabelDropdown from "$lib/figma/composites/LabelDropdown.svelte";
     import WorkspaceSettings from "$lib/figma/buttons/WorkspaceSettings.svelte";
+    import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
+    import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
+
     import type {
         LabelSearchModule,
         SideNavModule,
@@ -12,17 +15,21 @@
     } from "$lib/types/stores";
     import LabelDropdownClosedNav from "$lib/figma/buttons/LabelDropdownClosedNav.svelte";
     import UserDropdownClosedNav from "$lib/figma/buttons/UserDropdownClosedNav.svelte";
+    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
     export let workspaceBoardSearchModule: WorkspaceBoardSearchModule;
     export let workspaceUserSearchModule: WorkspaceUserSearchModule;
     export let labelSearchModule: LabelSearchModule;
     export let sideNavModule: SideNavModule;
 
-    let dropDownMenuBtnRef: HTMLElement;
+    let workspaceContextMenuAnchor: HTMLElement;
+    let sideNavContextMenuAnchor: HTMLElement;
 
     export let open = true;
 
     let { showWorkspaceContextMenu, showSideNavContextMenu } = sideNavModule;
+
+    let { currentWorkspace } = workspaceBoardSearchModule;
 </script>
 
 {#if open}
@@ -35,21 +42,54 @@
         </div>
     </nav>
 {:else}
-    <nav class="inline-flex h-full flex-col gap-12 bg-foreground p-4">
-        <div class="flex flex-col justify-between">
-            <div>
-                <div class="flex flex-col gap-6 border-b border-border pb-12">
+    <!-- Figma says 72px but we only have 64 or 80 (16, 29 rem respectively)-->
+    <!-- Might we refactor this into something separate? -->
+    <nav
+        class="inline-flex h-full w-20 flex-col items-center gap-12 bg-foreground p-4"
+    >
+        <div class="flex flex-col items-center justify-between">
+            <div class="flex flex-col items-center gap-12">
+                <div
+                    class="flex flex-col items-center gap-6 border-b border-border pb-12"
+                    bind:this={sideNavContextMenuAnchor}
+                >
                     <WorkspaceSettings
                         on:click={showSideNavContextMenu.bind(
                             null,
-                            dropDownMenuBtnRef
+                            sideNavContextMenuAnchor
                         )}
                     />
-                    <div>TODO Boards</div>
+                    <div
+                        class="flex flex-col items-center gap-6"
+                        bind:this={workspaceContextMenuAnchor}
+                    >
+                        <BorderedIcon
+                            type="workspace"
+                            on:click={showWorkspaceContextMenu.bind(
+                                null,
+                                workspaceContextMenuAnchor
+                            )}
+                        />
+                        <div class="flex flex-col items-center gap-4">
+                            {#if $currentWorkspace && $currentWorkspace.workspace_boards}
+                                {#each $currentWorkspace.workspace_boards as board}
+                                    <SquovalIcon
+                                        icon="board"
+                                        state="active"
+                                        action={{
+                                            kind: "a",
+                                            href: getDashboardWorkspaceBoardUrl(
+                                                board.uuid
+                                            ),
+                                        }}
+                                    />
+                                {/each}
+                            {/if}
+                        </div>
+                    </div>
                 </div>
                 <div class="flex flex-col gap-8">
-                    <div>BorderedIcon</div>
-                    <div class="flex flex-col gap-6">
+                    <div class="flex flex-col items-center gap-6">
                         <UserDropdownClosedNav {workspaceUserSearchModule} />
                         <LabelDropdownClosedNav {labelSearchModule} />
                     </div>
