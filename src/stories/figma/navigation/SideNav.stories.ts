@@ -12,12 +12,17 @@ import {
 
 const meta: Meta<SideNav> = {
     component: SideNav,
-    argTypes: {},
+    argTypes: {
+        open: {
+            control: "boolean",
+        },
+    },
     args: {
         workspaceBoardSearchModule,
         workspaceUserSearchModule,
         labelSearchModule,
         sideNavModule,
+        open: true,
     },
     parameters: {
         layout: "fullscreen",
@@ -28,6 +33,12 @@ export default meta;
 type Story = StoryObj<SideNav>;
 
 export const Default: Story = {};
+
+export const Closed: Story = {
+    args: {
+        open: false,
+    },
+};
 
 export const Mobile: Story = {
     parameters: mobileParameters,
