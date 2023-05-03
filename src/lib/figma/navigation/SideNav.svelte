@@ -10,6 +10,8 @@
         WorkspaceBoardSearchModule,
         WorkspaceUserSearchModule,
     } from "$lib/types/stores";
+    import LabelDropdownClosedNav from "$lib/figma/buttons/LabelDropdownClosedNav.svelte";
+    import UserDropdownClosedNav from "$lib/figma/buttons/UserDropdownClosedNav.svelte";
 
     export let workspaceBoardSearchModule: WorkspaceBoardSearchModule;
     export let workspaceUserSearchModule: WorkspaceUserSearchModule;
@@ -48,8 +50,8 @@
                 <div class="flex flex-col gap-8">
                     <div>BorderedIcon</div>
                     <div class="flex flex-col gap-6">
-                        <div>UserDropdownClosedNav</div>
-                        <div>LabelDropdownClosedNav</div>
+                        <UserDropdownClosedNav {workspaceUserSearchModule} />
+                        <LabelDropdownClosedNav {labelSearchModule} />
                     </div>
                 </div>
             </div>
