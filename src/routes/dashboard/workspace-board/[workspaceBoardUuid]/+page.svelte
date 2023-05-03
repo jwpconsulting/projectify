@@ -16,6 +16,7 @@
     } from "$lib/types/stores";
 
     import {
+        createLabelSearch,
         createLabelSearchResults,
         createTasksPerUser,
         currentWorkspace,
@@ -25,7 +26,6 @@
         currentWorkspaceBoardUuid,
         deselectLabel,
         deselectWorkspaceUser,
-        labelSearch,
         selectLabel,
         selectWorkspaceUser,
         selectedLabels,
@@ -69,7 +69,7 @@
     // Otherwise we duplicate code in 3 different locations (task creation,
     // side nav, task updating)
     // Justus 2023-05-02
-
+    const labelSearch = createLabelSearch();
     $: labelSearchModule = {
         select: selectLabel,
         deselect: deselectLabel,

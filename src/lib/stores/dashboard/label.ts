@@ -41,7 +41,7 @@ function searchLabels(labels: Label[], searchInput: string): Label[] {
 }
 
 type LabelSearch = Readable<string>;
-export const labelSearch = writable<string>("");
+export const createLabelSearch = () => writable<string>("");
 
 type LabelSearchResults = Readable<Label[]>;
 
