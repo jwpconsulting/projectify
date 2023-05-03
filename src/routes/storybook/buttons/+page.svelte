@@ -23,7 +23,6 @@
     import WorkspaceBoardIcon from "$lib/figma/buttons/WorkspaceBoardIcon.svelte";
     import UserAccount from "$lib/figma/buttons/UserAccount.svelte";
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
-    import UserDropdownClosedNav from "$lib/figma/buttons/UserDropdownClosedNav.svelte";
     import LabelDropdownClosedNav from "$lib/figma/buttons/LabelDropdownClosedNav.svelte";
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
@@ -230,9 +229,6 @@ Filter user avatar
         </div>
     {/each}
 </div>
-
-User expand
-<UserDropdownClosedNav />
 
 Label expand
 <LabelDropdownClosedNav />
