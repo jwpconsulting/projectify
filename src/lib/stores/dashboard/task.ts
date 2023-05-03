@@ -8,7 +8,6 @@ import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard/workspaceBoard"
 import { selectedWorkspaceUser } from "$lib/stores/dashboard/workspaceUser";
 
 import { selectedLabels } from "$lib/stores/dashboard/label";
-import { currentWorkspaceBoardSections } from "$lib/stores/dashboard/workspaceBoardSection";
 import { fuseSearchThreshold } from "$lib/config";
 import { getTask } from "$lib/repository/workspace";
 import { browser } from "$app/environment";
@@ -54,11 +53,6 @@ export function createCurrentSearchedTasks(
         null
     );
 }
-
-export const currentSearchedTasks = createCurrentSearchedTasks(
-    currentWorkspaceBoardSections,
-    taskSearchInput
-);
 
 export function searchTasks(
     sections: WorkspaceBoardSection[],

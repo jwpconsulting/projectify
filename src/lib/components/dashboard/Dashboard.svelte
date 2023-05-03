@@ -4,7 +4,7 @@
     import { Mutation_MoveWorkspaceBoardSection } from "$lib/graphql/operations";
     import { client } from "$lib/graphql/client";
     import {
-        currentSearchedTasks,
+        createCurrentSearchedTasks,
         currentWorkspaceBoardSections,
         taskSearchInput,
     } from "$lib/stores/dashboard";
@@ -19,6 +19,11 @@
     import { openConstructiveOverlay } from "$lib/stores/global-ui";
 
     export let workspaceBoard: WorkspaceBoard;
+
+    const currentSearchedTasks = createCurrentSearchedTasks(
+        currentWorkspaceBoardSections,
+        taskSearchInput
+    );
 
     function onAddNewSection() {
         openConstructiveOverlay(
