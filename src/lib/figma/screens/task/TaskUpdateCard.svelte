@@ -17,7 +17,7 @@
 <div class="block lg:hidden">
     <div class="flex h-full flex-col gap-8 p-4">
         <TopBar {taskOrNewTask} {taskModule} />
-        <TaskUpdateBar kind="mobile" {state} />
+        <TaskUpdateBar kind="mobile" {state} {task} />
         {#if state === "task"}
             <TaskFormFields {task} {taskModule} />
         {:else}
@@ -30,11 +30,11 @@
         <TopBar {taskOrNewTask} {taskModule} />
         <div class="flex h-full w-full flex-row gap-4">
             <div class="flex w-1/2 flex-col gap-8">
-                <TaskUpdateBar kind="desktop" state="task" />
+                <TaskUpdateBar kind="desktop" state="task" {task} />
                 <TaskFormFields {task} {taskModule} />
             </div>
             <div class="flex w-1/2 flex-col gap-4">
-                <TaskUpdateBar kind="desktop" state="updates" />
+                <TaskUpdateBar kind="desktop" state="updates" {task} />
                 <TaskUpdates />
             </div>
         </div>

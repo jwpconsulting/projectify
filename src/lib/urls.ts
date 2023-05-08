@@ -46,6 +46,10 @@ export function getTaskUrl(taskUuid: string) {
     return `/dashboard/task/${taskUuid}`;
 }
 
+export function getTaskUpdatesUrl(taskUuid: string) {
+    return `/dashboard/task/${taskUuid}/updates`;
+}
+
 export function getTaskEditUrl(taskUuid: string) {
     return `/dashboard/task/${taskUuid}/update`;
 }
