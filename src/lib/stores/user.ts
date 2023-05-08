@@ -1,5 +1,6 @@
 import { writable } from "svelte/store";
 import { client } from "$lib/graphql/client";
+import type { RepositoryContext } from "$lib/types/repository";
 
 import {
     Mutation_ConfirmPasswordReset,
@@ -81,9 +82,9 @@ export const logout = async () => {
     userIsLoading.set(false);
 };
 
-export const fetchUser = async () => {
+export const fetchUser = async (repositoryContext?: RepositoryContext) => {
     userIsLoading.set(true);
-    const userData = await getUser();
+    const userData = await getUser(repositoryContext);
     if (!userData) {
         userIsLoading.set(false);
         return null;
