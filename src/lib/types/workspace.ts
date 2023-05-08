@@ -46,7 +46,6 @@ export type CreateTask = TitleDescriptionType &
         description: string;
         labels: Label[];
         assignee?: WorkspaceUser;
-        workspace_board_section?: WorkspaceBoardSection;
         sub_tasks?: SubTask[];
         // There is a mismatch for this in the backend and frontend
         // Normally, we should be accepting undefined here as well?

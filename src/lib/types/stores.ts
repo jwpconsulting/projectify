@@ -13,6 +13,7 @@ import type {
     CreateTask,
     CreateWorkspaceBoardSection,
     Label,
+    NewTask,
     Task,
     Workspace,
     WorkspaceBoard,
@@ -80,14 +81,23 @@ export type NewWorkspaceBoardSectionModule = {
 
 // XXX
 // This is a mess!
-export type TaskModule = {
+// this contains whatever is shared between creating / updating tasks
+export type CreateOrUpdateTaskModule = {
+    canCreateOrUpdate: Readable<boolean>;
     createOrUpdateTask: () => void;
+};
+
+export type TaskModule = {
     taskOrNewTask: Writable<TaskOrNewTask>;
     createTask: Writable<CreateTask | null> | null;
     updateTask: Writable<Task | null> | null;
-    canCreateOrUpdate: Readable<boolean>;
     workspaceUserSearchModule: WorkspaceUserSearchModule;
     labelSearchModule: LabelSearchModule;
     showUpdateWorkspaceUser: (anchor: HTMLElement) => void;
     showUpdateLabel: (anchor: HTMLElement) => void;
-};
+} & CreateOrUpdateTaskModule;
+
+export type CreateTaskModule = {
+    newTask: NewTask;
+    createTask: Writable<Partial<CreateTask>>;
+} & CreateOrUpdateTaskModule;

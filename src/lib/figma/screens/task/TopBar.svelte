@@ -11,10 +11,10 @@
         isBreadCrumbTask,
     } from "$lib/types/ui";
     import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
-    import type { TaskModule } from "$lib/types/stores";
+    import type { CreateOrUpdateTaskModule } from "$lib/types/stores";
 
-    export let taskModule: TaskModule;
-
+    export let taskModule: CreateOrUpdateTaskModule;
+    // TODO Can we pull this out of taskModule too? Justus 2023-05-08
     export let taskOrNewTask: TaskOrNewTask;
 
     let { canCreateOrUpdate } = taskModule;

@@ -3,7 +3,9 @@ import { readable, writable } from "svelte/store";
 import type { User } from "$lib/types/user";
 import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
 import type {
+    CreateTask,
     Label,
+    NewTask,
     SubTask,
     Task,
     WorkspaceBoard,
@@ -14,6 +16,7 @@ import { getIndexFromLabelColor, labelColors } from "$lib/utils/colors";
 import type { LabelColor } from "$lib/utils/colors";
 import type { ButtonStyle, LabelLabel, SelectLabel } from "$lib/figma/types";
 import type {
+    CreateTaskModule,
     LabelSearchModule,
     SideNavModule,
     WorkspaceBoardSearchModule,
@@ -143,6 +146,22 @@ export const task: Task = {
     },
 };
 
+export const newTask: NewTask = {
+    workspace_board_section: {
+        title: "section name that is long",
+        created: "",
+        modified: "",
+        uuid: "does-not-exist",
+        _order: 0,
+        workspace_board: {
+            uuid: "does-not-exist",
+            title: "Project board with a long name, it is long",
+            created: "",
+            modified: "",
+        },
+    },
+};
+
 export const workspaceBoardSection: WorkspaceBoardSection = {
     title: "section name that is long",
     created: "",
@@ -202,4 +221,13 @@ export const sideNavModule: SideNavModule = {
 export const workspaceBoardSectionModule: WorkspaceBoardSectionModule = {
     workspaceBoardSectionClosed: writable(new Set()),
     toggleWorkspaceBoardSectionOpen: noop,
+};
+
+export const createTaskModule: CreateTaskModule = {
+    newTask,
+    createTask: writable<Partial<CreateTask>>({}),
+    canCreateOrUpdate: readable(false),
+    createOrUpdateTask() {
+        console.log("Called createOrUpdateTask");
+    },
 };
