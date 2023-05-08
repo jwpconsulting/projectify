@@ -11,7 +11,6 @@
         assignUserToTask,
     } from "$lib/repository/workspace";
     import type {
-        TaskOrNewTask,
         TasksPerUser,
         WorkspaceUserSelection,
         WorkspaceUserSelectionInput,
@@ -28,10 +27,9 @@
     import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
     import { openContextMenu } from "$lib/stores/globalUi";
 
-    let taskOrNewTask: TaskOrNewTask | null = null;
+    let task: Task | null = null;
     let taskModule: TaskModule | null = null;
 
-    let taskOrNewTaskStore: Writable<TaskOrNewTask> | null = null;
     let updateTask: Writable<Task | null> = writable(null);
 
     async function createOrUpdateTask() {
@@ -52,11 +50,7 @@
     $: {
         // Only do this once in the beginning
         if ($currentTask) {
-            const task = $currentTask;
-            taskOrNewTask = {
-                kind: "task",
-                task: task,
-            };
+            task = $currentTask;
             const { workspace_board_section: workspaceBoardSection } = task;
             if (!workspaceBoardSection) {
                 throw new Error("Expected workspaceBoardSection");
@@ -69,7 +63,6 @@
             if (!workspace) {
                 throw new Error("Expected workspace");
             }
-            taskOrNewTaskStore = writable(taskOrNewTask);
             const workspaceUserSearch = writable("");
             const selected: WorkspaceUserSelection = task.assignee
                 ? {
@@ -113,13 +106,17 @@
             const labelSearchModule = createLabelSearchModule(
                 workspace,
                 task,
-                (labelUuid: string, selected: boolean) =>
-                    assignLabelToTask(task, labelUuid, selected)
+                (labelUuid: string, selected: boolean) => {
+                    if (!task) {
+                        // TODO make task non nullable here
+                        throw new Error("Expected task");
+                    }
+                    assignLabelToTask(task, labelUuid, selected);
+                }
             );
             taskModule = {
+                task,
                 createOrUpdateTask,
-                taskOrNewTask: taskOrNewTaskStore,
-                createTask: null,
                 updateTask,
                 canCreateOrUpdate: derived<[typeof updateTask], boolean>(
                     [updateTask],
@@ -156,6 +153,6 @@
     }
 </script>
 
-{#if taskOrNewTask && taskModule}
-    <TaskUpdateCard {taskOrNewTask} {taskModule} />
+{#if task && taskModule}
+    <TaskUpdateCard {task} {taskModule} />
 {/if}

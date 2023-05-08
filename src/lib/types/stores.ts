@@ -7,7 +7,6 @@ import type {
     TasksPerUser,
     WorkspaceUserSelection,
     WorkspaceUserSelectionInput,
-    TaskOrNewTask,
 } from "$lib/types/ui";
 import type {
     CreateTask,
@@ -90,9 +89,10 @@ export type CreateOrUpdateTaskModule = {
 };
 
 export type TaskModule = {
-    taskOrNewTask: Writable<TaskOrNewTask>;
-    createTask: Writable<CreateTask | null> | null;
-    updateTask: Writable<Task | null> | null;
+    task: Task;
+    // XXX make this Writable<Partial<Task>>, then all defined fields can be
+    // automatically copied into the task
+    updateTask: Writable<Task | null>;
     showUpdateWorkspaceUser: (anchor: HTMLElement) => void;
     showUpdateLabel: (anchor: HTMLElement) => void;
 } & CreateOrUpdateTaskModule;

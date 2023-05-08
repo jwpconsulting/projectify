@@ -7,69 +7,35 @@
     import TaskUpdateDescription from "$lib/figma/screens/task/TaskUpdateDescription.svelte";
     import SubTaskBarComposite from "$lib/figma/screens/task/SubTaskBarComposite.svelte";
     import type { TaskModule } from "$lib/types/stores";
-    import type { TaskOrNewTask } from "$lib/types/ui";
     import type {
-        CreateTask,
         Label,
         SubTask,
+        Task,
         WorkspaceUser,
     } from "$lib/types/workspace";
 
     // if this is in a store, we can get rid of this param
-    export let taskOrNewTask: TaskOrNewTask;
+    export let task: Task;
     export let taskModule: TaskModule;
 
-    let title: string | undefined = undefined;
-    let description: string | undefined = undefined;
-    let assignedUser: WorkspaceUser | null = null;
-    let labels: Label[] = [];
+    let title: string = task.title;
+    let description: string | undefined = task.description;
+    let assignedUser: WorkspaceUser | null = task.assignee || null;
+    let labels: Label[] = task.labels || [];
     let dueDate: string | null = null;
     let subTasks: SubTask[] = [];
 
-    let createTask: CreateTask | null;
-
     $: {
-        if (taskOrNewTask.kind === "task") {
-            const { task } = taskOrNewTask;
-            title ||= task.title;
-            description ||= task.description || undefined;
-            if (task.assignee) {
-                assignedUser ||= task.assignee;
-            }
-            labels = task.labels;
-            dueDate ||= task.deadline || null;
-            subTasks = task.sub_tasks || [];
-            // Then: Subscribe to changes of fields an assign them back to
-            // taskOrNewTask.task
-
-            if (taskModule.updateTask) {
-                // XXX what does this code here do?
-                const { task } = taskOrNewTask;
-                taskModule.updateTask.set({
-                    ...task,
-                    title: title || task.title,
-                    description: description || undefined,
-                    assignee: assignedUser || undefined,
-                    labels: labels,
-                    deadline: dueDate || undefined,
-                    sub_tasks: subTasks,
-                });
-            }
-        } else {
-            // XXX form validation goes here
-            const { newTask } = taskOrNewTask;
-            if (title && description && taskModule.createTask) {
-                createTask = {
-                    title,
-                    description,
-                    labels,
-                    deadline: dueDate,
-                    assignee: assignedUser || undefined,
-                    workspace_board_section: newTask.workspace_board_section,
-                };
-                taskModule.createTask.set(createTask);
-            }
-        }
+        // XXX what does this code here do?
+        taskModule.updateTask.set({
+            ...task,
+            title: title,
+            description: description,
+            assignee: assignedUser || undefined,
+            labels: labels,
+            deadline: dueDate || undefined,
+            sub_tasks: subTasks,
+        });
     }
 </script>
 

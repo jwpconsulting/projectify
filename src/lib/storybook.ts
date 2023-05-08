@@ -19,6 +19,7 @@ import type {
     CreateTaskModule,
     LabelSearchModule,
     SideNavModule,
+    TaskModule,
     WorkspaceBoardSearchModule,
     WorkspaceBoardSectionModule,
     WorkspaceSearchModule,
@@ -229,6 +230,23 @@ export const createTaskModule: CreateTaskModule = {
     canCreateOrUpdate: readable(false),
     createOrUpdateTask() {
         console.log("Called createOrUpdateTask");
+    },
+    workspaceUserSearchModule,
+    labelSearchModule,
+};
+
+export const taskModule: TaskModule = {
+    task,
+    updateTask: writable<Task | null>(null),
+    canCreateOrUpdate: readable(false),
+    createOrUpdateTask() {
+        console.log("Updating this task");
+    },
+    showUpdateWorkspaceUser() {
+        console.log("Showing workspace user context menu");
+    },
+    showUpdateLabel() {
+        console.log("Showing label context menu");
     },
     workspaceUserSearchModule,
     labelSearchModule,
