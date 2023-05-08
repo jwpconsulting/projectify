@@ -6,13 +6,14 @@
     import TaskUpdateUser from "$lib/figma/screens/task/TaskUpdateUser.svelte";
     import TaskUpdateLabel from "$lib/figma/screens/task/TaskUpdateLabel.svelte";
     import TaskUpdateDueDate from "$lib/figma/screens/task/TaskUpdateDueDate.svelte";
-    import SubTaskBar from "$lib/figma/screens/task/SubTaskBar.svelte";
+    import SubTaskBarComposite from "$lib/figma/screens/task/SubTaskBarComposite.svelte";
     import InputField from "$lib/figma/input-fields/InputField.svelte";
     import type { TaskModule } from "$lib/types/stores";
     import type { TaskOrNewTask } from "$lib/types/ui";
     import type {
         CreateTask,
         Label,
+        SubTask,
         WorkspaceUser,
     } from "$lib/types/workspace";
 
@@ -25,6 +26,7 @@
     let assignedUser: WorkspaceUser | null = null;
     let labels: Label[] = [];
     let dueDate: string | null = null;
+    let subTasks: SubTask[] = [];
 
     let createTask: CreateTask | null;
 
@@ -38,10 +40,12 @@
             }
             labels = task.labels;
             dueDate ||= task.deadline || null;
+            subTasks = task.sub_tasks || [];
             // Then: Subscribe to changes of fields an assign them back to
             // taskOrNewTask.task
 
             if (taskModule.updateTask) {
+                // XXX what does this code here do?
                 const { task } = taskOrNewTask;
                 taskModule.updateTask.set({
                     ...task,
@@ -50,6 +54,7 @@
                     assignee: assignedUser || undefined,
                     labels: labels,
                     deadline: dueDate || undefined,
+                    sub_tasks: subTasks,
                 });
             }
         } else {
@@ -96,4 +101,5 @@
         placeholder={$_("task-screen.description")}
     />
 </div>
-<SubTaskBar progress={0} />
+<!-- BIND me back -->
+<SubTaskBarComposite {subTasks} />
