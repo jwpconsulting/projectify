@@ -237,7 +237,7 @@ export const createTaskModule: CreateTaskModule = {
 
 export const taskModule: TaskModule = {
     task,
-    updateTask: writable<Task | null>(null),
+    updateTask: writable<Partial<Task>>({}),
     canCreateOrUpdate: readable(false),
     createOrUpdateTask() {
         console.log("Updating this task");

@@ -90,9 +90,7 @@ export type CreateOrUpdateTaskModule = {
 
 export type TaskModule = {
     task: Task;
-    // XXX make this Writable<Partial<Task>>, then all defined fields can be
-    // automatically copied into the task
-    updateTask: Writable<Task | null>;
+    updateTask: Writable<Partial<Task>>;
     showUpdateWorkspaceUser: (anchor: HTMLElement) => void;
     showUpdateLabel: (anchor: HTMLElement) => void;
 } & CreateOrUpdateTaskModule;

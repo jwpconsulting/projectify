@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Writable } from "svelte/store";
-    import { readable, derived, writable } from "svelte/store";
+    import { readable, writable } from "svelte/store";
     import { goto } from "$app/navigation";
     import TaskUpdateCard from "$lib/figma/screens/task/TaskUpdateCard.svelte";
     import type { Task } from "$lib/types/workspace";
@@ -30,18 +30,24 @@
     let task: Task | null = null;
     let taskModule: TaskModule | null = null;
 
-    let updateTask: Writable<Task | null> = writable(null);
+    let updateTask: Writable<Partial<Task>> = writable({});
 
     async function createOrUpdateTask() {
-        if (!$updateTask) {
-            throw new Error("Expected $updateTask");
+        if (!task) {
+            throw new Error("Expected task");
         }
-        await performUpdateTask($updateTask);
-        if (!$updateTask.workspace_board_section) {
+        // TOOD add rest here
+        const submitTask: Task = {
+            ...task,
+            title: $updateTask.title || task.title,
+            description: $updateTask.description || task.description,
+        };
+        await performUpdateTask(submitTask);
+        if (!task.workspace_board_section) {
             throw new Error("Expected $updateTask.workspace_board_section");
         }
         const url = getDashboardWorkspaceBoardSectionUrl(
-            $updateTask.workspace_board_section.uuid
+            task.workspace_board_section.uuid
         );
         // TODO figure out how to refresh the same page
         await goto(url);
@@ -118,13 +124,9 @@
                 task,
                 createOrUpdateTask,
                 updateTask,
-                canCreateOrUpdate: derived<[typeof updateTask], boolean>(
-                    [updateTask],
-                    ([$updateTask], set) => {
-                        set($updateTask !== null);
-                    },
-                    false
-                ),
+                // We might want to add some more sophisticated rules
+                // as to when and when not this can be updated
+                canCreateOrUpdate: readable(true),
                 // TODO make workspace user menu so that "all" can not be
                 // selected
                 workspaceUserSearchModule,
