@@ -68,7 +68,9 @@ const ensureWorkspaceUuid = derived<
             console.error("Expected $currentWorkspaceBoard.workspace");
             return;
         }
-        set($currentWorkspaceBoard.workspace.uuid);
+        const { uuid } = $currentWorkspaceBoard.workspace;
+        console.log("Setting workspace UUID to", uuid);
+        set(uuid);
     },
     null
 );
