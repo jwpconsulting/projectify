@@ -8,10 +8,12 @@ export const ssr = false;
 
 export async function load({
     params: { taskUuid },
+    fetch,
 }: {
     params: { taskUuid: string };
+    fetch: typeof window.fetch;
 }): Promise<{ task: Task }> {
-    const task = await getTask(taskUuid);
+    const task = await getTask(taskUuid, { fetch });
     const { workspace_board_section } = task;
     if (!workspace_board_section) {
         throw new Error("Expected workspace_board_section");

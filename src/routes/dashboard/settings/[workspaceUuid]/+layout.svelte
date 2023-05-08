@@ -1,7 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import PageLayout from "$lib/components/layouts/pageLayout.svelte";
-    import AuthGuard from "$lib/components/AuthGuard.svelte";
     import SettingPage from "$lib/components/settingPage.svelte";
     import { browser } from "$app/environment";
     import { page } from "$app/stores";
@@ -58,26 +57,24 @@
 
 <PageLayout>
     {#if browser}
-        <AuthGuard>
-            <SettingPage title={$_("workspace-settings")}>
-                <TabsSimple {items} {activeTabId} />
-                <main
-                    class="relative flex grow flex-col overflow-y-auto transition-all duration-300 ease-in-out"
-                >
-                    <div class="relative flex grow flex-col px-4 py-4">
-                        {#if $loading}
-                            <div
-                                class="flex min-h-[200px] items-center justify-center"
-                            >
-                                <Loading />
-                            </div>
-                        {/if}
-                        <div class:hidden={$loading}>
-                            <slot />
+        <SettingPage title={$_("workspace-settings")}>
+            <TabsSimple {items} {activeTabId} />
+            <main
+                class="relative flex grow flex-col overflow-y-auto transition-all duration-300 ease-in-out"
+            >
+                <div class="relative flex grow flex-col px-4 py-4">
+                    {#if $loading}
+                        <div
+                            class="flex min-h-[200px] items-center justify-center"
+                        >
+                            <Loading />
                         </div>
+                    {/if}
+                    <div class:hidden={$loading}>
+                        <slot />
                     </div>
-                </main>
-            </SettingPage>
-        </AuthGuard>
+                </div>
+            </main>
+        </SettingPage>
     {/if}
 </PageLayout>

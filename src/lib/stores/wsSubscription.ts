@@ -100,7 +100,7 @@ export class WSSubscriptionStore {
     }
 
     dispatch() {
-        this.debug(this.wsMessage, this.subscribers);
+        this.debug("Dispatching", this.wsMessage, this.subscribers);
         this.subscribers.forEach((subscriber) => {
             subscriber(this.wsMessage);
         });
@@ -123,8 +123,8 @@ export class WSSubscriptionStore {
         };
     }
 
-    debug(...arg0: unknown[]) {
-        console.debug(this.url, ...arg0);
+    debug(reason: string, ...arg0: unknown[]) {
+        console.debug(this.url, reason, ...arg0);
     }
 }
 

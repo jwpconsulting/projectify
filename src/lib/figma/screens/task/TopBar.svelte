@@ -41,13 +41,7 @@
         }
     }
 
-    function createOrUpdate() {
-        if (!taskModule) {
-            // TODO make this impossible to reach
-            throw new Error("NOOP");
-        }
-        taskModule.createOrUpdateTask();
-    }
+    const createOrUpdate = taskModule ? taskModule.createOrUpdateTask : null;
 </script>
 
 <div class="flex flex-row items-center justify-between">
@@ -77,13 +71,15 @@
             state="active"
             action={{ kind: "button", action: console.error }}
         />
-        <Button
-            color="blue"
-            size="small"
-            disabled={!$canCreateOrUpdate}
-            style={{ kind: "primary" }}
-            label={$_("task-screen.save")}
-            on:click={createOrUpdate}
-        />
+        {#if createOrUpdate}
+            <Button
+                color="blue"
+                size="small"
+                disabled={!$canCreateOrUpdate}
+                style={{ kind: "primary" }}
+                label={$_("task-screen.save")}
+                on:click={createOrUpdate}
+            />
+        {/if}
     </div>
 </div>
