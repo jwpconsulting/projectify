@@ -13,11 +13,11 @@
     import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
     import type { CreateOrUpdateTaskModule } from "$lib/types/stores";
 
-    export let taskModule: CreateOrUpdateTaskModule;
+    export let taskModule: CreateOrUpdateTaskModule | null;
     // TODO Can we pull this out of taskModule too? Justus 2023-05-08
     export let taskOrNewTask: TaskOrNewTask;
 
-    let { canCreateOrUpdate } = taskModule;
+    const canCreateOrUpdate = taskModule ? taskModule.canCreateOrUpdate : null;
 
     let breadCrumbTask: BreadCrumbTask;
     $: {
@@ -42,6 +42,10 @@
     }
 
     function createOrUpdate() {
+        if (!taskModule) {
+            // TODO make this impossible to reach
+            throw new Error("NOOP");
+        }
         taskModule.createOrUpdateTask();
     }
 </script>

@@ -45,3 +45,7 @@ export function getNewTaskUrl(workspaceBoardSectionUuid: string) {
 export function getTaskUrl(taskUuid: string) {
     return `/dashboard/task/${taskUuid}`;
 }
+
+export function getTaskEditUrl(taskUuid: string) {
+    return `/dashboard/task/${taskUuid}/update`;
+}

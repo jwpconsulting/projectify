@@ -243,8 +243,14 @@ export async function getWorkspace(uuid: string): Promise<Workspace> {
     );
 }
 
-export async function getTask(uuid: string): Promise<Task> {
-    return await getWithCredentialsJson<Task>(`/workspace/task/${uuid}`);
+export async function getTask(
+    uuid: string,
+    repositoryContext?: RepositoryContext
+): Promise<Task> {
+    return await getWithCredentialsJson<Task>(
+        `/workspace/task/${uuid}`,
+        repositoryContext
+    );
 }
 
 export async function getArchivedWorkspaceBoards(
