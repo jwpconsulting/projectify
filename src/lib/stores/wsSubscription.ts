@@ -43,6 +43,7 @@ export class WSSubscriptionStore {
     }
 
     createNewConnection(): WebSocket {
+        this.debug("Creating new connection");
         const socket = new WebSocket(this.url);
         socket.onmessage = ({ data, timeStamp }) => {
             this.debug("socket.onmessage", data, timeStamp);
@@ -69,6 +70,7 @@ export class WSSubscriptionStore {
     }
 
     recreateConnection() {
+        this.debug("Recreating connection");
         this.deleteConnection();
         this.createNewConnection();
     }
