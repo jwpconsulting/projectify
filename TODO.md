@@ -24,6 +24,7 @@
 -   Update button to use ButtonAction
 -   All overlays should use async functions so we can await them finishing /
     closing / whatever it is that they do
+-   Make undefined and null for empty form fields more consistent
 
 # Update Dependency
 

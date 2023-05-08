@@ -2,19 +2,11 @@
     import { readable, derived, writable } from "svelte/store";
     import Loading from "$lib/components/loading.svelte";
     import { page } from "$app/stores";
-    import TaskUpdateCard from "$lib/figma/screens/task/TaskUpdateCard.svelte";
-    import type {
-        CreateTask,
-        NewTask,
-        WorkspaceUser,
-    } from "$lib/types/workspace";
-    import type {
-        TaskOrNewTask,
-        TasksPerUser,
-        WorkspaceUserSelection,
-    } from "$lib/types/ui";
+    import TaskCreateCard from "$lib/figma/screens/task/TaskCreateCard.svelte";
+    import type { CreateTask, WorkspaceUser } from "$lib/types/workspace";
+    import type { TasksPerUser, WorkspaceUserSelection } from "$lib/types/ui";
     import { createLabelSearchModule } from "$lib/stores/modules";
-    import type { TaskModule } from "$lib/types/stores";
+    import type { CreateTaskModule } from "$lib/types/stores";
     import { createTask as createTaskFn } from "$lib/repository/workspace";
 
     import {
@@ -28,14 +20,14 @@
         console.log($currentWorkspaceBoardSectionUuid);
     }
 
-    let taskModule: TaskModule;
-    let newTask: NewTask;
-    let taskOrNewTask: TaskOrNewTask;
-    const createTask = writable<CreateTask | null>(null);
+    let createTaskModule: CreateTaskModule | null = null;
+    const createTask = writable<Partial<CreateTask>>({});
 
     $: {
+        // current workspace board section should be handed as data to this
+        // page
         if ($currentWorkspaceBoardSection) {
-            newTask = {
+            const newTask = {
                 workspace_board_section: $currentWorkspaceBoardSection,
             };
             const { workspace_board: workspaceBoard } =
@@ -48,20 +40,15 @@
                 throw new Error("Expected workspace");
             }
 
-            taskOrNewTask = {
-                kind: "newTask",
-                newTask,
-            };
             const labelSearchModule = createLabelSearchModule(
                 workspace,
                 null,
                 () => console.error("Not implemented")
             );
-            taskModule = {
+            createTaskModule = {
                 createOrUpdateTask: createOrUpdateTask,
-                taskOrNewTask: writable(taskOrNewTask),
                 createTask,
-                updateTask: null,
+                newTask,
                 canCreateOrUpdate: derived<[typeof createTask], boolean>(
                     [createTask],
                     ([$createTask], set) => {
@@ -86,26 +73,36 @@
                 },
                 // TODO make label menu so that "all" can not be selected
                 labelSearchModule,
-                showUpdateWorkspaceUser: () => {
-                    throw new Error("Not implement");
-                },
-                showUpdateLabel: () => {
-                    throw new Error("Not implement");
-                },
             };
         }
     }
 
     function createOrUpdateTask() {
-        if (!$createTask) {
-            throw new Error("Expected $createTask");
+        // TODO
+        // Get rid of $currentWorkspaceBoardSection store
+        if (!createTaskModule) {
+            throw new Error("FIXME");
         }
-        createTaskFn($createTask);
+        const { title, description } = $createTask;
+        if (!title || !description) {
+            throw new Error("Expected title and description");
+        }
+        const { newTask } = createTaskModule;
+        const createTaskFull: CreateTask = {
+            title,
+            description,
+            workspace_board_section: newTask.workspace_board_section,
+            // TODO
+            labels: [],
+            // TODO
+            deadline: null,
+        };
+        createTaskFn(createTaskFull);
     }
 </script>
 
-{#if taskOrNewTask}
-    <TaskUpdateCard {taskOrNewTask} {taskModule} />
+{#if createTaskModule}
+    <TaskCreateCard {createTaskModule} />
 {:else}
     <Loading />
 {/if}

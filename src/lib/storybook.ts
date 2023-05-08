@@ -230,4 +230,6 @@ export const createTaskModule: CreateTaskModule = {
     createOrUpdateTask() {
         console.log("Called createOrUpdateTask");
     },
+    workspaceUserSearchModule,
+    labelSearchModule,
 };

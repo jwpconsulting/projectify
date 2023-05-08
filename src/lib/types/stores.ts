@@ -85,14 +85,14 @@ export type NewWorkspaceBoardSectionModule = {
 export type CreateOrUpdateTaskModule = {
     canCreateOrUpdate: Readable<boolean>;
     createOrUpdateTask: () => void;
+    workspaceUserSearchModule: WorkspaceUserSearchModule;
+    labelSearchModule: LabelSearchModule;
 };
 
 export type TaskModule = {
     taskOrNewTask: Writable<TaskOrNewTask>;
     createTask: Writable<CreateTask | null> | null;
     updateTask: Writable<Task | null> | null;
-    workspaceUserSearchModule: WorkspaceUserSearchModule;
-    labelSearchModule: LabelSearchModule;
     showUpdateWorkspaceUser: (anchor: HTMLElement) => void;
     showUpdateLabel: (anchor: HTMLElement) => void;
 } & CreateOrUpdateTaskModule;
