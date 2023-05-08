@@ -14,14 +14,14 @@ type Story = StoryObj<SubTask>;
 
 export const Default: Story = {
     args: {
-        subTask,
+        createOrUpdateSubTask: { kind: "update", update: subTask },
         state: "normal",
     },
 };
 
 export const Edit: Story = {
     args: {
-        subTask,
+        createOrUpdateSubTask: { kind: "update", update: subTask },
         state: "edit",
     },
 };

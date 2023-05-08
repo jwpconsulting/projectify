@@ -5,23 +5,37 @@
     import InputField from "$lib/figma/input-fields/InputField.svelte";
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import type { SubTaskState } from "$lib/figma/types";
-    import type { SubTask } from "$lib/types/workspace";
+    import type { CreateOrUpdateSubTask } from "$lib/types/ui";
 
     export let state: SubTaskState;
-    export let subTask: SubTask;
+    export let createOrUpdateSubTask: CreateOrUpdateSubTask;
     // TODO missing:
     // proper input field
     // Wire into rest of application
     // Sub tasks need assignees
+
+    let title: string | undefined = undefined;
+    let done: boolean | undefined = undefined;
+
+    $: {
+        // XXX need to set isInitialized flag here?
+        if (createOrUpdateSubTask.kind == "update") {
+            const { update: subTask } = createOrUpdateSubTask;
+            title = subTask.title;
+            done = subTask.done;
+        }
+    }
 </script>
 
 <div class="flex w-full flex-row items-center justify-between gap-2 px-2 py-1">
     <div class="flex flex-row items-center gap-2">
-        <CheckBox checked={subTask.done} disabled={false} contained={false} />
+        <CheckBox checked={done || false} disabled={false} contained={false} />
+        <!-- XXX should be only editable when in edit mode -->
         <InputField
             style={{ kind: "subTask" }}
             placeholder={$_("task-screen.enter-a-subtask")}
             name="sub-task"
+            bind:value={title}
         />
     </div>
     {#if state === "normal"}

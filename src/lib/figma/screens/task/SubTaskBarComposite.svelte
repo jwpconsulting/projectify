@@ -13,7 +13,10 @@
 
 <SubTaskBar {progress} />
 <div class="flex flex-col">
-    {#each subTasks as subTask}
-        <SubTaskC {subTask} state="normal" />
+    {#each subTasks as update}
+        <SubTaskC
+            createOrUpdateSubTask={{ kind: "update", update }}
+            state="normal"
+        />
     {/each}
 </div>

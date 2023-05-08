@@ -1,7 +1,9 @@
 import type { SvelteComponentTyped } from "svelte";
 import type {
     Label,
+    NewSubTask,
     NewTask,
+    SubTask,
     Task,
     Workspace,
     WorkspaceBoard,
@@ -159,9 +161,19 @@ export type SolutionsPageContent = {
     features: FeatureDescription[];
 };
 
+// These types exist to cleanly separate between creating a new something
+// or updating an existing something
+// TODO we should cleanly abstract this with a generic type:
+type CreateOrUpdateT<CreateType, UpdateType> =
+    | { kind: "create"; create: CreateType }
+    | { kind: "update"; update: UpdateType };
+
+// TODO TaskOrNewTask = CreateOrUpdateT<NewTask, Task>
 export type TaskOrNewTask =
     | { kind: "task"; task: Task }
     | { kind: "newTask"; newTask: NewTask };
+
+export type CreateOrUpdateSubTask = CreateOrUpdateT<NewSubTask, SubTask>;
 
 // A task with all the properties and sub-properties made required
 // in order to properly render the breadcrumb

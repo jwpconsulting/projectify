@@ -21,6 +21,12 @@ export type SubTask = {
 } & TimestampedType &
     TitleDescriptionType;
 
+export type NewSubTask = {
+    task: Task;
+};
+
+export type CreateSubTask = TitleDescriptionType;
+
 export type ChatMessage = {
     author: WorkspaceUser;
     uuid: string;
