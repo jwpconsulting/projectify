@@ -17,6 +17,7 @@
 -   In the task card on the dashboard, the sub task progress is falsely shown as
     100 % for tasks with no sub tasks. Justus 2023-05-01
 -   Clicking cancel doesn't do anything in the constructive overlays
+-   It would be nice to show login after attempting to fetch user
 
 # Refactor
 
