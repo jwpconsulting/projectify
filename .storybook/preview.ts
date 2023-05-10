@@ -1,10 +1,11 @@
 import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
+import type { Preview, Parameters } from "@storybook/svelte";
 
 import "../src/storybook.css";
 import "../src/app.scss";
 import "../src/i18n.js";
 
-export const parameters = {
+export const parameters: Parameters = {
     backgrounds: {
         default: "light",
     },
@@ -19,3 +20,9 @@ export const parameters = {
         viewports: INITIAL_VIEWPORTS,
     },
 };
+
+const preview: Preview = {
+    parameters,
+};
+
+export default preview;
