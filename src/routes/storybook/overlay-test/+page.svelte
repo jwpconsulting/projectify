@@ -32,15 +32,13 @@
     color="blue"
     disabled={false}
     size="medium"
->
-    Open overlay
-</Button>
+    label="Open overlay"
+/>
 <Button
     on:click={openAsync}
     style={{ kind: "primary" }}
     color="blue"
     disabled={false}
     size="medium"
->
-    Open async overlay
-</Button>
+    label="Open async overlay"
+/>

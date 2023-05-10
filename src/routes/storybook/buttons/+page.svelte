@@ -82,9 +82,8 @@ Buttons
                                     {size}
                                     {color}
                                     {disabled}
-                                >
-                                    {disabled ? "Disabled" : "Button"}
-                                </Button>
+                                    label={disabled ? "Disabled" : "Button"}
+                                />
                             {/each}
                         </div>
                     {/each}

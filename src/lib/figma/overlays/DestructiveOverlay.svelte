@@ -112,18 +112,16 @@
                 disabled={false}
                 color="blue"
                 on:click={cancel}
-            >
-                {$_("destructive-overlay.cancel")}
-            </Button>
+                label={$_("destructive-overlay.cancel")}
+            />
             <Button
                 style={{ kind: "primary" }}
                 size="medium"
                 disabled={false}
                 color="red"
                 on:click={destroy}
-            >
-                {buttonLabel}
-            </Button>
+                label={buttonLabel}
+            />
         </div>
     </div>
 </div>

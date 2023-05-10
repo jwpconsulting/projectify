@@ -2,6 +2,7 @@
     import { createEventDispatcher } from "svelte";
     import { Icon } from "@steeze-ui/svelte-icon";
     import type {
+        ButtonAction,
         ButtonColor,
         ButtonSize,
         ButtonStyle,
@@ -10,13 +11,20 @@
     export let style: ButtonStyle;
     export let color: ButtonColor;
     export let size: ButtonSize;
-    export let disabled: boolean;
-    export let label: string | null = null;
-    // It does not yet seem to make sense to allow this being an anchor as well
-    // so I am not using $lib/figma/types/ButtonAction here
-    export let action: (() => void) | null = null;
+    export let disabled = false;
+    export let label: string;
+    export let action: ButtonAction | null = null;
 
     // TODO refactor to use callback action prop instead
+
+    const dispatch = createEventDispatcher();
+    function click() {
+        if (action && action.kind == "button") {
+            action.action();
+            return;
+        }
+        dispatch("click");
+    }
 
     $: innerColorStyle = {
         primary: {
@@ -43,66 +51,68 @@
         "extra-small": "h-4 w-4",
     }[size];
 
-    const dispatch = createEventDispatcher();
-    function click() {
-        if (action) {
-            action();
-            return;
-        }
-        dispatch("click");
-    }
+    $: outerStyle = {
+        // XXX Not sure if this is the best place to put flex grow here
+        primary: `group flex grow flex-col items-start gap-2 rounded-llg border border-transparent p-0.5 focus:border-border-focus focus:outline-none`,
+        secondary: `group flex grow flex-col items-start gap-2 rounded-llg border border-transparent p-0.5 focus:border-border-focus focus:outline-none`,
+        tertiary: `flex grow flex-row items-center justify-center gap-2 rounded-lg border border-transparent border-transparent px-4 py-2 font-bold focus:outline-none disabled:text-disabled-content ${innerColorStyle} focus:border-border-focus ${innerSizeStyle}`,
+    }[style.kind];
+
+    $: innerStyle = {
+        primary: `flex w-full flex-row items-center justify-center gap-2.5 rounded-lg border px-4 py-2 font-bold group-disabled:bg-disabled group-disabled:text-disabled-primary-content ${innerColorStyle} ${innerSizeStyle}`,
+        secondary: `flex w-full flex-row items-center justify-center gap-2.5 rounded-lg border px-4 py-2 font-bold group-disabled:bg-disabled group-disabled:text-disabled-primary-content ${innerColorStyle} ${innerSizeStyle}`,
+        tertiary: `flex w-full flex-row items-center justify-center gap-2.5 rounded-lg border px-4  py-2 font-bold group-disabled:border-disabled-content group-disabled:bg-transparent group-disabled:text-disabled-content ${innerColorStyle} ${innerSizeStyle}`,
+    }[style.kind];
 </script>
 
 {#if style.kind === "tertiary"}
-    <!-- XXX Not sure if this is the best place to put flex grow here -->
-    <button
-        on:click|preventDefault={click}
-        class={`flex grow flex-row items-center justify-center gap-2 rounded-lg border border-transparent border-transparent px-4 py-2 font-bold focus:outline-none disabled:text-disabled-content ${innerColorStyle} focus:border-border-focus ${innerSizeStyle}`}
-        {disabled}
-    >
-        {#if style.icon && style.icon.position === "left"}
-            <Icon
-                src={style.icon.icon}
-                theme="outline"
-                class={iconSizeStyle}
-            />
-        {/if}
-        <slot />
-        {#if label}
+    {#if action && action.kind === "a"}
+        <a href={action.href} class={outerStyle}>
+            {#if style.icon && style.icon.position === "left"}
+                <Icon
+                    src={style.icon.icon}
+                    theme="outline"
+                    class={iconSizeStyle}
+                />
+            {/if}
             {label}
-        {/if}
-        {#if style.icon && style.icon.position === "right"}
-            <Icon
-                src={style.icon.icon}
-                theme="outline"
-                class={iconSizeStyle}
-            />
-        {/if}
-    </button>
+            {#if style.icon && style.icon.position === "right"}
+                <Icon
+                    src={style.icon.icon}
+                    theme="outline"
+                    class={iconSizeStyle}
+                />
+            {/if}
+        </a>
+    {:else}
+        <button on:click|preventDefault={click} class={outerStyle} {disabled}>
+            {#if style.icon && style.icon.position === "left"}
+                <Icon
+                    src={style.icon.icon}
+                    theme="outline"
+                    class={iconSizeStyle}
+                />
+            {/if}
+            {label}
+            {#if style.icon && style.icon.position === "right"}
+                <Icon
+                    src={style.icon.icon}
+                    theme="outline"
+                    class={iconSizeStyle}
+                />
+            {/if}
+        </button>
+    {/if}
+{:else if action && action.kind === "a"}
+    <a href={action.href} class={outerStyle}>
+        <div class={innerStyle}>
+            {label}
+        </div>
+    </a>
 {:else}
-    <button
-        on:click|preventDefault={click}
-        class={`group flex grow flex-col items-start gap-2 rounded-llg border border-transparent p-0.5 focus:border-border-focus focus:outline-none`}
-        {disabled}
-    >
-        {#if style.kind === "primary"}
-            <div
-                class={`flex w-full flex-row items-center justify-center gap-2.5 rounded-lg border px-4  py-2 font-bold group-disabled:bg-disabled group-disabled:text-disabled-primary-content ${innerColorStyle} ${innerSizeStyle}`}
-            >
-                <slot />
-                {#if label}
-                    {label}
-                {/if}
-            </div>
-        {:else}
-            <div
-                class={`flex w-full flex-row items-center justify-center gap-2.5 rounded-lg border px-4  py-2 font-bold group-disabled:border-disabled-content group-disabled:bg-transparent group-disabled:text-disabled-content ${innerColorStyle} ${innerSizeStyle}`}
-            >
-                <slot />
-                {#if label}
-                    {label}
-                {/if}
-            </div>
-        {/if}
+    <button on:click|preventDefault={click} class={outerStyle} {disabled}>
+        <div class={innerStyle}>
+            {label}
+        </div>
     </button>
 {/if}

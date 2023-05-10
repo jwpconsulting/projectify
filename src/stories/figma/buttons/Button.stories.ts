@@ -4,13 +4,42 @@ import { Plus } from "@steeze-ui/heroicons";
 
 import Button from "./Button.svelte";
 import { buttonColors } from "$lib/figma/types";
+import type { ButtonAction, ButtonStyle } from "$lib/figma/types";
+
+const styles: { [k: string]: ButtonStyle } = {
+    primary: {
+        kind: "primary",
+    },
+    secondary: {
+        kind: "secondary",
+    },
+    tertiaryNoIcon: {
+        kind: "tertiary",
+        icon: null,
+    },
+    tertiaryIconLeft: {
+        kind: "tertiary",
+        icon: { position: "left", icon: Plus },
+    },
+    tertiaryIconRight: {
+        kind: "tertiary",
+        icon: { position: "right", icon: Plus },
+    },
+};
+
+const actions: { [k: string]: ButtonAction } = {
+    button: {
+        kind: "button",
+        action: () => console.log("Hello, World! I am a button."),
+    },
+    anchor: { kind: "a", href: "#" },
+};
 
 const meta: Meta<Button> = {
     component: Button,
     args: {
         label: "Behold, for I am a label",
         color: "blue",
-        action: () => console.log("Hello, World! I am a button."),
     },
     argTypes: {
         label: {
@@ -20,45 +49,53 @@ const meta: Meta<Button> = {
             control: "radio",
             options: buttonColors,
         },
-    },
-};
-export default meta;
-
-export const Primary: StoryObj = {
-    args: {
-        style: { kind: "primary" },
-    },
-};
-
-export const Secondary: StoryObj = {
-    args: {
         style: {
-            kind: "secondary",
+            defaultValue: "primary",
+            options: Object.keys(styles),
+            mapping: styles,
+            control: {
+                type: "radio",
+                labels: {
+                    primary: "Primary",
+                    secondary: "Secondary",
+                    tertiaryNoIcon: "Tertiary",
+                    tertiaryIconLeft: "Tertiary Icon Left",
+                    tertiaryIconRight: "Tertiary Icon Right",
+                },
+            },
         },
-    },
-};
-
-export const TertiaryNoIcon: StoryObj = {
-    args: {
-        style: { kind: "tertiary", icon: null },
-    },
-};
-export const TertiaryIconLeft: StoryObj = {
-    args: {
-        style: {
-            kind: "tertiary",
-            icon: { position: "left", icon: Plus },
-        },
-    },
-};
-export const TertiaryIconRight: StoryObj = {
-    args: {
-        style: {
-            kind: "tertiary",
-            icon: {
-                position: "right",
-                icon: Plus,
+        action: {
+            defaultValue: "button",
+            options: Object.keys(actions),
+            mapping: actions,
+            control: {
+                type: "radio",
+                labels: {
+                    button: "Button",
+                    anchor: "Anchor",
+                },
             },
         },
     },
+};
+
+export default meta;
+
+export const Primary: StoryObj = {
+    args: { action: "button", style: "primary" },
+};
+
+export const Secondary: StoryObj = {
+    args: { action: "button", style: "secondary" },
+};
+
+export const TertiaryNoIcon: StoryObj = {
+    args: { action: "button", style: "tertiaryNoIcon" },
+};
+
+export const TertiaryIconLeft: StoryObj = {
+    args: { action: "button", style: "tertiaryIconLeft" },
+};
+export const TertiaryIconRight: StoryObj = {
+    args: { action: "button", style: "tertiaryIconRight" },
 };

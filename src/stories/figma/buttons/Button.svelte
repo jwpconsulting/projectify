@@ -1,5 +1,9 @@
 <script lang="ts">
-    import type { ButtonStyle, ButtonColor } from "$lib/figma/types";
+    import type {
+        ButtonAction,
+        ButtonStyle,
+        ButtonColor,
+    } from "$lib/figma/types";
     import Button from "$lib/figma/buttons/Button.svelte";
 
     import { buttonSizes } from "$lib/figma/types";
@@ -8,7 +12,7 @@
     export let label: string;
     export let style: ButtonStyle;
     export let color: ButtonColor;
-    export let action: () => void;
+    export let action: ButtonAction;
 </script>
 
 <div class={fc}>

@@ -114,7 +114,7 @@
                 size="medium"
                 label={$_("filter-label-menu.cancel")}
                 disabled={false}
-                action={cancelCreate}
+                action={{ kind: "button", action: cancelCreate }}
             />
             <Button
                 style={{ kind: "primary" }}
@@ -122,7 +122,7 @@
                 size="medium"
                 label={$_("filter-label-menu.save")}
                 disabled={false}
-                action={save}
+                action={{ kind: "button", action: save }}
             />
         </div>
     </form>

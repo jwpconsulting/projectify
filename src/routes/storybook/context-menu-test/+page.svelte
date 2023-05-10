@@ -22,9 +22,8 @@
                 color="blue"
                 disabled={false}
                 size="medium"
-            >
-                Left
-            </Button>
+                label="Left"
+            />
         </div>
         <div bind:this={button2}>
             <Button
@@ -33,9 +32,8 @@
                 color="blue"
                 disabled={false}
                 size="medium"
-            >
-                Right
-            </Button>
+                label="Right"
+            />
         </div>
     </div>
     <div class="flex flex-row justify-center">
@@ -46,9 +44,8 @@
                 color="blue"
                 disabled={false}
                 size="medium"
-            >
-                Center
-            </Button>
+                label="Center"
+            />
         </div>
     </div>
     <div class="flex flex-row justify-between">
@@ -59,9 +56,8 @@
                 color="blue"
                 disabled={false}
                 size="medium"
-            >
-                Left
-            </Button>
+                label="Left"
+            />
         </div>
         <div bind:this={button5}>
             <Button
@@ -70,9 +66,8 @@
                 color="blue"
                 disabled={false}
                 size="medium"
-            >
-                Right
-            </Button>
+                label="Right"
+            />
         </div>
     </div>
 </div>
