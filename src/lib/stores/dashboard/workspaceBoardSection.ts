@@ -41,11 +41,11 @@ export const currentWorkspaceBoardSection = derived<
     null
 );
 
-type CurrentFilter = {
+interface CurrentFilter {
     labels: LabelSelection;
     workspaceUser: WorkspaceUserSelection;
     workspaceBoardSections: WorkspaceBoardSection[];
-};
+}
 
 type CurrentWorkspaceBoardSections = Readable<WorkspaceBoardSection[]>;
 

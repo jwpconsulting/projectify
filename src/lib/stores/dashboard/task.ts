@@ -62,7 +62,7 @@ export function searchTasks(
         sections.map((section) => (section.tasks ? section.tasks : []))
     );
 
-    const searchEngine: Fuse<Task> = new Fuse(tasks, {
+    const searchEngine = new Fuse<Task>(tasks, {
         keys: ["title"],
         threshold: fuseSearchThreshold,
     });

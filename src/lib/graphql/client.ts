@@ -2,28 +2,18 @@ import { ApolloClient, ApolloLink, InMemoryCache } from "@apollo/client/core";
 
 import { from } from "@apollo/client/link/core";
 import { HttpLink } from "@apollo/client/link/http";
-import { BatchHttpLink } from "@apollo/client/link/batch-http";
 import { onError } from "@apollo/client/link/error";
 
 import vars from "$lib/env";
-
-const batchLinkEnabled = false;
 
 const httpCommonOpts = {
     credentials: "include",
 };
 
-const httpLink = batchLinkEnabled
-    ? new BatchHttpLink({
-          ...httpCommonOpts,
-          uri: vars.GRAPHQL_ENDPOINT_BATCH,
-          batchMax: 10, // No more than 5 operations per batch
-          batchInterval: 20, // Wait no more than 20ms after first batched operation
-      })
-    : new HttpLink({
-          ...httpCommonOpts,
-          uri: vars.GRAPHQL_ENDPOINT,
-      });
+const httpLink = new HttpLink({
+    ...httpCommonOpts,
+    uri: vars.GRAPHQL_ENDPOINT,
+});
 
 const splitLink: ApolloLink = httpLink;
 

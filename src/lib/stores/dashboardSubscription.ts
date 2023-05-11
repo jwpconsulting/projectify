@@ -9,7 +9,7 @@ export const getSubscriptionForCollection = (
     uuid: string
 ): WSSubscriptionStore | null => {
     let wsEndPoint = vars.WS_ENDPOINT;
-    if (wsEndPoint.indexOf("/ws") == 0) {
+    if (wsEndPoint.startsWith("/ws")) {
         wsEndPoint = `ws://${location.host}${wsEndPoint}`;
     }
     const wsURL = `${wsEndPoint}/${collection}/${uuid}/`;

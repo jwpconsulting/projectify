@@ -21,33 +21,33 @@ import type {
 
 // It would make sense to rename all Module to Store
 
-export type WorkspaceSearchModule = {
+export interface WorkspaceSearchModule {
     // TODO for a consistent API we would have workspaces as searchResults here
     workspaces: Readable<Workspace[] | null>;
     currentWorkspace: Readable<Workspace | null>;
     setWorkspaces: () => Promise<void>;
-};
+}
 
 // XXX I took the liberty of adding workspace board creation into here
 // Not sure if that is good Justus 2023-05-01
-export type WorkspaceBoardSearchModule = {
+export interface WorkspaceBoardSearchModule {
     // TODO for a consistent API we would have workspace boards as
     // searchResults here
     currentWorkspaceBoardUuid: Readable<string | null>;
     currentWorkspaceBoard: Readable<WorkspaceBoard | null>;
     currentWorkspace: Readable<Workspace | null>;
-};
+}
 
-export type WorkspaceUserSearchModule = {
+export interface WorkspaceUserSearchModule {
     select: (selection: WorkspaceUserSelectionInput) => void;
     deselect: (selection: WorkspaceUserSelectionInput) => void;
     selected: Readable<WorkspaceUserSelection>;
     tasksPerUser: Readable<TasksPerUser>;
     search: Writable<string>;
     searchResults: Readable<WorkspaceUser[]>;
-};
+}
 
-export type LabelSearchModule = {
+export interface LabelSearchModule {
     select: (selection: LabelSelectionInput) => void;
     deselect: (selection: LabelSelectionInput) => void;
     selected: Readable<LabelSelection>;
@@ -55,38 +55,38 @@ export type LabelSearchModule = {
     search: Writable<string>;
     searchResults: Readable<Label[]>;
     createLabel: (color: number, name: string) => Promise<void>;
-};
+}
 
-export type SideNavModule = {
+export interface SideNavModule {
     sideNavOpen: Readable<boolean>;
     toggleSideNavOpen: () => void;
     showWorkspaceContextMenu: (anchor: HTMLElement) => void;
     showSideNavContextMenu: (anchor: HTMLElement) => void;
-};
+}
 
-export type WorkspaceBoardSectionModule = {
+export interface WorkspaceBoardSectionModule {
     workspaceBoardSectionClosed: Writable<Set<string>>;
     toggleWorkspaceBoardSectionOpen: (
         workspaceBoardSectionUuid: string
     ) => void;
-};
+}
 
-export type NewWorkspaceBoardSectionModule = {
+export interface NewWorkspaceBoardSectionModule {
     createWorkspaceBoardSection: (
         workspaceBoard: WorkspaceBoard,
         workspaceBoardSection: CreateWorkspaceBoardSection
     ) => void;
-};
+}
 
 // XXX
 // This is a mess!
 // this contains whatever is shared between creating / updating tasks
-export type CreateOrUpdateTaskModule = {
+export interface CreateOrUpdateTaskModule {
     canCreateOrUpdate: Readable<boolean>;
     createOrUpdateTask: () => void;
     workspaceUserSearchModule: WorkspaceUserSearchModule;
     labelSearchModule: LabelSearchModule;
-};
+}
 
 export type TaskModule = {
     task: Task;

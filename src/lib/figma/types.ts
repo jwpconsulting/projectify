@@ -109,7 +109,10 @@ export type InputFieldStyle =
     | { kind: "field"; inputType: "text" | "password" };
 export const inputFieldSizes = ["extraSmall", "small", "normal"] as const;
 export type InputFieldSize = (typeof inputFieldSizes)[number];
-export type InputFieldAnchor = { href: string; label: string };
+export interface InputFieldAnchor {
+    href: string;
+    label: string;
+}
 
 export const anchorSizes = ["extraSmall", "normal"] as const;
 export type AnchorSize = (typeof anchorSizes)[number];

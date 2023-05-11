@@ -1,11 +1,11 @@
-type routeItem = {
+interface routeItem {
     label: string;
     to?: string;
     authRequired?: boolean; // When is true user is fetched
     forceNavigation?: boolean; // Force visibility in the nav bar even if auth is required
     fetchUser?: boolean;
     action?: () => void;
-};
+}
 
 export default [
     {

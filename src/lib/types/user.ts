@@ -1,8 +1,8 @@
-export type User = {
+export interface User {
     email: string;
     profile_picture?: string;
     full_name?: string;
-};
+}
 
 export function getDisplayName(user: User): string {
     if (user.full_name) {

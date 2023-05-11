@@ -51,7 +51,7 @@ export async function updateTask(task: Task) {
                 uuid: task.uuid,
                 title: task.title,
                 description: task.description,
-                deadline: task.deadline || null,
+                deadline: task.deadline ?? null,
                 // TODO
                 // labels: task.labels.map((l) => l.uuid),
                 // TODO

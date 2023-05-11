@@ -8,11 +8,11 @@ export type WorkspaceUser = {
     role: string;
 } & TimestampedType;
 
-export type Label = {
+export interface Label {
     name: string;
     color: number;
     uuid: string;
-};
+}
 
 export type SubTask = {
     uuid: string;
@@ -21,9 +21,9 @@ export type SubTask = {
 } & TimestampedType &
     TitleDescriptionType;
 
-export type NewSubTask = {
+export interface NewSubTask {
     task: Task;
-};
+}
 
 export type CreateSubTask = TitleDescriptionType;
 
@@ -34,9 +34,9 @@ export type ChatMessage = {
 } & TimestampedType;
 
 // What is needed to know at least to create a new task
-export type NewTask = {
+export interface NewTask {
     workspace_board_section: WorkspaceBoardSection;
-};
+}
 
 // What is submitted to the API to create the actual task
 // TODO

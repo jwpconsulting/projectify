@@ -19,12 +19,11 @@ export const labelColors = [
 ] as const;
 export type LabelColor = (typeof labelColors)[number];
 export function getLabelColorFromIndex(index: number): LabelColor | null {
-    const color = labelColors[index];
-    if (!color) {
+    if (index > labelColors.length - 1) {
         console.error(`Expected color for ${index}`);
         return null;
     }
-    return color;
+    return labelColors[index];
 }
 export function getIndexFromLabelColor(color: LabelColor): number {
     const index = labelColors.indexOf(color);

@@ -1,9 +1,9 @@
-export type TimestampedType = {
+export interface TimestampedType {
     created: string;
     modified: string;
-};
+}
 
-export type TitleDescriptionType = {
+export interface TitleDescriptionType {
     title: string;
     description?: string;
-};
+}

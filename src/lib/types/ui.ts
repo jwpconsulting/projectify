@@ -18,7 +18,7 @@ import type {
     LabelSearchModule,
 } from "$lib/types/stores";
 
-export type Input = {
+export interface Input {
     name?: string;
     label?: string;
     type?: string;
@@ -37,7 +37,7 @@ export type Input = {
             message?: string;
         };
     };
-};
+}
 
 export type LabelSelectionInput =
     | { kind: "noLabel" }
@@ -57,10 +57,10 @@ export type WorkspaceUserSelection =
     | { kind: "workspaceUsers"; workspaceUserUuids: Set<string> }
     | { kind: "allWorkspaceUsers" }
     | { kind: "unassigned" };
-export type TasksPerUser = {
+export interface TasksPerUser {
     unassigned: number;
     assigned: Map<string, number>;
-};
+}
 
 export type DestructiveOverlayType =
     | { kind: "deleteLabel"; label: Label }
@@ -137,7 +137,7 @@ export type ConstructiveOverlayState = Overlay<
     OverlayAction
 >;
 
-export type FeatureDescription = {
+export interface FeatureDescription {
     image: {
         position: "left" | "right";
         src: string;
@@ -145,21 +145,21 @@ export type FeatureDescription = {
     };
     header: string;
     text: string;
-};
+}
 
-export type SolutionsHeroContent = {
+export interface SolutionsHeroContent {
     header: string;
     text: string;
     image: {
         src: string;
         alt: string;
     };
-};
+}
 
-export type SolutionsPageContent = {
+export interface SolutionsPageContent {
     heroContent: SolutionsHeroContent;
     features: FeatureDescription[];
-};
+}
 
 // These types exist to cleanly separate between creating a new something
 // or updating an existing something
@@ -184,10 +184,10 @@ export type BreadCrumbWorkspaceBoardSection = WorkspaceBoardSection & {
     };
 };
 
-export type BreadCrumbTask = {
+export interface BreadCrumbTask {
     number?: number;
     workspace_board_section: BreadCrumbWorkspaceBoardSection;
-};
+}
 
 // Woops, we can't use if-branch-based type narrowing here
 export function isBreadCrumbWorkspaceBoardSection(

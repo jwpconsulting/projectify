@@ -3,7 +3,10 @@ import type { Subscriber } from "svelte/store";
 import { writable } from "svelte/store";
 import { browser } from "$app/environment";
 
-type WSMessage = { message: string; at: number };
+interface WSMessage {
+    message: string;
+    at: number;
+}
 type WSSubscriber = Subscriber<WSMessage | null>;
 
 const wsSubscriptionStores = new Map<string, WSSubscriptionStore>();
@@ -103,7 +106,7 @@ export class WSSubscriptionStore {
             await delay(delayTime);
         }
 
-        if (this.socket && this.socket.readyState == WebSocket.CLOSED) {
+        if (this.socket.readyState == WebSocket.CLOSED) {
             this.recreateConnection();
         }
     }

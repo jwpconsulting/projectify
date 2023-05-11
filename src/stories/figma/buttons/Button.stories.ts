@@ -6,7 +6,7 @@ import Button from "./Button.svelte";
 import { buttonColors } from "$lib/figma/types";
 import type { ButtonAction, ButtonStyle } from "$lib/figma/types";
 
-const styles: { [k: string]: ButtonStyle } = {
+const styles: Record<string, ButtonStyle> = {
     primary: {
         kind: "primary",
     },
@@ -27,7 +27,7 @@ const styles: { [k: string]: ButtonStyle } = {
     },
 };
 
-const actions: { [k: string]: ButtonAction } = {
+const actions: Record<string, ButtonAction> = {
     button: {
         kind: "button",
         action: () => console.log("Hello, World! I am a button."),

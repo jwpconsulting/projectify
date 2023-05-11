@@ -15,7 +15,7 @@ import {
     labelSearchModule,
 } from "$lib/storybook";
 
-const contextMenus: { [key: string]: ContextMenuType } = {
+const contextMenus: Record<string, ContextMenuType> = {
     profile: {
         kind: "profile" as const,
     },

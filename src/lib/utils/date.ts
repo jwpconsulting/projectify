@@ -81,7 +81,7 @@ export function getWeekDays(lang: string | undefined = undefined): string[] {
     return weekDays;
 }
 
-export type Calendar = {
+export interface Calendar {
     year: number;
     month: number;
     days: {
@@ -89,7 +89,7 @@ export type Calendar = {
         moff: number;
         date: Date;
     }[];
-};
+}
 
 export function getCalendar(year: number, month: number): Calendar {
     const objDate = new Date();

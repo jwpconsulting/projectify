@@ -21,5 +21,6 @@ export async function load({
         // Unlikely
         throw new Error("Expected workspaceBoard");
     }
+    // eslint-disable-next-line @typescript-eslint/no-throw-literal
     throw redirect(302, getDashboardWorkspaceBoardUrl(workspaceBoard.uuid));
 }

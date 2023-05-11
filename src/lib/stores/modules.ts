@@ -15,7 +15,7 @@ export function createLabelSearchModule(
     selectCallback: (labelUuid: string, selected: boolean) => void
 ): LabelSearchModule {
     const labelSelected: LabelSelection =
-        task && task.labels && task.labels.length > 0
+        task?.labels && task.labels.length > 0
             ? {
                   kind: "labels",
                   labelUuids: new Set(task.labels.map((l) => l.uuid)),
