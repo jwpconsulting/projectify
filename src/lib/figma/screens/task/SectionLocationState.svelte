@@ -1,17 +1,16 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-
     export let label: string;
+    export let action: (() => void) | undefined = undefined;
 
-    const dispatch = createEventDispatcher();
-    function click() {
-        dispatch("click");
-    }
+    $: disabled = !action;
 </script>
 
 <button
-    on:click={click}
-    class="rounded-lg border border-transparent bg-task-hover p-2 text-xxs font-bold hover:bg-task-pressed focus:border-border-focus focus:bg-background focus:outline-none active:bg-secondary-hover"
+    on:click={action}
+    {disabled}
+    class="rounded-lg border border-transparent bg-task-hover p-2 text-xxs font-bold {disabled
+        ? ''
+        : 'hover:bg-task-pressed focus:border-border-focus focus:bg-background focus:outline-none active:bg-secondary-hover'}"
 >
     {label}
 </button>

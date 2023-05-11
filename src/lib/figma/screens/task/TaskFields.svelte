@@ -4,6 +4,7 @@
     import TaskUpdateTitle from "$lib/figma/screens/task/TaskUpdateTitle.svelte";
     import TaskUpdateUser from "$lib/figma/screens/task/TaskUpdateUser.svelte";
     import TaskUpdateLabel from "$lib/figma/screens/task/TaskUpdateLabel.svelte";
+    import TaskUpdateSection from "$lib/figma/screens/task/TaskUpdateSection.svelte";
 
     export let task: Task;
 </script>
@@ -26,5 +27,11 @@
     </dt>
     <dd>
         <TaskUpdateLabel labels={task.labels} />
+    </dd>
+    <dt aria-hidden="true" class="hidden">
+        {$_("task-screen.section")}
+    </dt>
+    <dd>
+        <TaskUpdateSection {task} />
     </dd>
 </dl>
