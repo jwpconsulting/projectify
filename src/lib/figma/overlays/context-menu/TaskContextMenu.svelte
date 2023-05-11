@@ -11,19 +11,19 @@
     } from "@steeze-ui/heroicons";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
+    import { getTaskUrl, getTaskUpdatesUrl } from "$lib/urls";
     import type { Task } from "$lib/types/workspace";
+    import { copyToClipboard } from "$lib/utils/clipboard";
 
     export let task: Task;
     export let location: "dashboard" | "task";
-    // TODO
-    console.log(task);
 </script>
 
 {#if location === "dashboard"}
     <ContextMenuButton
         kind={{
-            kind: "button",
-            action: () => console.error("open task not implemented"),
+            kind: "a",
+            href: getTaskUrl(task.uuid),
         }}
         label={$_("task-overlay.open-task")}
         state="normal"
@@ -58,7 +58,10 @@
 <ContextMenuButton
     kind={{
         kind: "button",
-        action: () => console.error("copy link not implemented"),
+        action: copyToClipboard.bind(
+            null,
+            new URL(getTaskUrl(task.uuid), document.baseURI).href
+        ),
     }}
     label={$_("task-overlay.copy-link")}
     state="normal"
@@ -67,8 +70,8 @@
 {#if location === "dashboard"}
     <ContextMenuButton
         kind={{
-            kind: "button",
-            action: () => console.error("go to updates not implemented"),
+            kind: "a",
+            href: getTaskUpdatesUrl(task.uuid),
         }}
         label={$_("task-overlay.go-to-updates")}
         state="normal"

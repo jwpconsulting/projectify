@@ -2,17 +2,11 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import { DotsHorizontal } from "@steeze-ui/heroicons";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
+    import { openContextMenu } from "$lib/stores/globalUi";
 
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection | null;
     let dropDownMenuBtnRef: HTMLElement;
-
-    $: console.log(
-        "TODO use task",
-        task,
-        "and html element",
-        dropDownMenuBtnRef
-    );
 
     function openDropDownMenu() {
         if (!workspaceBoardSection) {
@@ -23,8 +17,14 @@
             throw new Error("Expected workspaceBoardSection.tasks");
         }
         const tasks = workspaceBoardSection.tasks;
+        const contextMenu = {
+            kind: "task" as const,
+            task,
+            location: "dashboard" as const,
+        };
+        console.log("TODO use", { uuid, tasks });
+        openContextMenu(contextMenu, dropDownMenuBtnRef);
         // TODO
-        console.error("TODO Do something with", uuid, "and", tasks);
         // let lastTask = tasks[tasks.length - 1];
         // let prevTask = tasks[tasks.indexOf(task) - 1];
         // let nextTask = tasks[tasks.indexOf(task) + 1];
@@ -37,7 +37,7 @@
 <button
     class="flex h-5 w-5 flex-row items-center"
     bind:this={dropDownMenuBtnRef}
-    on:click|stopPropagation={openDropDownMenu}
+    on:click|preventDefault={openDropDownMenu}
     ><Icon
         src={DotsHorizontal}
         theme="outline"
