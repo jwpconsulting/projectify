@@ -10,6 +10,7 @@
     // XXX For now, we store dates a plain strings
     // TODO when select due date, we should show the text as text-utility
     export let date: string | null;
+    export let action: (() => void) | undefined = undefined;
 
     // TODO show Due soon!
     export let dueSoon = false;
@@ -20,7 +21,11 @@
     {#if date}
         <SectionLocationState label={date} />
     {:else}
-        <SectionLocationState label={$_("task-screen.select-due-date")} />
+        <SectionLocationState
+            label={action
+                ? $_("task-screen.select-due-date")
+                : $_("task-screen.no-due-date")}
+        />
     {/if}
     {#if dueSoon}
         <DueDateWarning />

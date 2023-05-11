@@ -5,6 +5,7 @@
     import TaskUpdateUser from "$lib/figma/screens/task/TaskUpdateUser.svelte";
     import TaskUpdateLabel from "$lib/figma/screens/task/TaskUpdateLabel.svelte";
     import TaskUpdateSection from "$lib/figma/screens/task/TaskUpdateSection.svelte";
+    import TaskUpdateDueDate from "$lib/figma/screens/task/TaskUpdateDueDate.svelte";
 
     export let task: Task;
 </script>
@@ -33,5 +34,11 @@
     </dt>
     <dd>
         <TaskUpdateSection {task} />
+    </dd>
+    <dt aria-hidden="true" class="hidden">
+        {$_("task-screen.due-date")}
+    </dt>
+    <dd>
+        <TaskUpdateDueDate date={task.deadline || null} />
     </dd>
 </dl>

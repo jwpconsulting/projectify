@@ -223,6 +223,7 @@
         "description": "Description",
         "section": "Workspace board section",
         "select-due-date": "Select due date",
+        "no-due-date": "No due date",
         "save": "Save",
         "edit": "Edit",
         "task-title": "Task title",
