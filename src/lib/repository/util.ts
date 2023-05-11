@@ -21,7 +21,7 @@ export async function getWithCredentialsJson<T>(
     const response = await fetch(`${vars.API_ENDPOINT}${url}`, {
         credentials: "include",
     });
-    const body = await response.json();
+    const body = (await response.json()) as T;
     if (!response.ok) {
         throw new Error(`${response.statusText}: ${JSON.stringify(body)}`);
     }

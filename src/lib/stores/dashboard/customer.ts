@@ -16,9 +16,14 @@ export const currentCustomer = derived<
             return;
         }
         set(null);
-        getWorkspaceCustomer($currentWorkspace.uuid).then((customer) =>
-            set(customer)
-        );
+        getWorkspaceCustomer($currentWorkspace.uuid)
+            .then((customer) => set(customer))
+            .catch((error: Error) => {
+                console.error(
+                    "An error happened when fetching the currentCustomer",
+                    { error }
+                );
+            });
     },
     null
 );

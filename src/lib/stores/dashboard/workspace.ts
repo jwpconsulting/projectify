@@ -29,9 +29,14 @@ export const currentWorkspace = derived<
             return;
         }
         set(null);
-        getWorkspace($currentWorkspaceUuid).then((workspace) =>
-            set(workspace)
-        );
+        getWorkspace($currentWorkspaceUuid)
+            .then((workspace) => set(workspace))
+            .catch((error: Error) => {
+                console.error(
+                    "An error happened when fetching $currentWorkspace",
+                    { error }
+                );
+            });
         if (currentWorkspaceSubscriptionUnsubscribe) {
             currentWorkspaceSubscriptionUnsubscribe();
         }

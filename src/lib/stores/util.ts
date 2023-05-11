@@ -31,17 +31,23 @@ export function createWsStore<T>(
         if (!$uuidReadable) {
             return;
         }
-        getter($uuidReadable).then((result) => set(result));
+        getter($uuidReadable)
+            .then((result) => set(result))
+            .catch((error: Error) => {
+                console.error("Failure when trying to get initialing thing", {
+                    error,
+                });
+            });
         const subscription = getSubscriptionForCollection(
             collection,
             $uuidReadable
         );
         if (!subscription) {
-            throw new Error("Expected currentWorkspaceBoardSubscription");
+            throw new Error("Expected subscription");
         }
         const unsubscriber: Unsubscriber = subscription.subscribe(
-            async (_value) => {
-                console.log("Refetching workspaceBoard", $uuidReadable);
+            async (_value): Promise<void> => {
+                console.log("Refetching thing", $uuidReadable);
                 set(await getter($uuidReadable));
             }
         );

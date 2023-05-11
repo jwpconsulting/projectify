@@ -84,7 +84,14 @@ export const currentTask = derived<[typeof currentTaskUuid], Task | null>(
             return;
         }
         set(null);
-        getTask($currentTaskUuid).then((task) => set(task));
+        getTask($currentTaskUuid)
+            .then((task) => set(task))
+            .catch((error: Error) => {
+                console.error(
+                    "An error happened when refetching $currentTask",
+                    { error }
+                );
+            });
         if (currentTaskSubscriptionUnsubscribe) {
             currentTaskSubscriptionUnsubscribe();
         }
@@ -117,21 +124,21 @@ export function openNewTask(sectionUuid: string): void {
     newTaskSectionUuid.set(sectionUuid);
     currentTaskUuid.set(null);
 }
-export function openTaskDetails(
+export async function openTaskDetails(
     workspaceBoardUuid: string,
     taskUuid: string,
     subView = "details"
 ) {
     drawerModalOpen.set(true);
     currentTaskUuid.set(taskUuid);
-    goto(getDashboardTaskUrl(workspaceBoardUuid, taskUuid, subView));
+    await goto(getDashboardTaskUrl(workspaceBoardUuid, taskUuid, subView));
 }
-export function closeTaskDetails(): void {
+export async function closeTaskDetails() {
     drawerModalOpen.set(false);
     currentTaskUuid.set(null);
     const boardUuid = get(currentWorkspaceBoardUuid);
     if (!boardUuid) {
         throw new Error("Expected boardUuid");
     }
-    goto(getDashboardWorkspaceBoardUrl(boardUuid));
+    await goto(getDashboardWorkspaceBoardUrl(boardUuid));
 }

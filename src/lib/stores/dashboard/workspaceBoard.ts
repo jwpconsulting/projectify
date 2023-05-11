@@ -22,9 +22,14 @@ export const currentWorkspaceBoard = derived<
         return;
     }
     set(null);
-    getWorkspaceBoard($currentWorkspaceBoardUuid).then((workspaceBoard) =>
-        set(workspaceBoard)
-    );
+    getWorkspaceBoard($currentWorkspaceBoardUuid)
+        .then((workspaceBoard) => set(workspaceBoard))
+        .catch((error: Error) => {
+            console.error(
+                "An error happened when fetching $currentWorkspaceBoard",
+                { error }
+            );
+        });
     if (currentWorkspaceBoardSubscriptionUnsubscribe) {
         currentWorkspaceBoardSubscriptionUnsubscribe();
     }

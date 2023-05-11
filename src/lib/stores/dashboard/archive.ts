@@ -13,9 +13,14 @@ export const currentArchivedWorkspaceBoards = derived<
         if (!$currentWorkspace) {
             return;
         }
-        getArchivedWorkspaceBoards($currentWorkspace.uuid).then(
-            (archivedWorkspaceBoards) => set(archivedWorkspaceBoards)
-        );
+        getArchivedWorkspaceBoards($currentWorkspace.uuid)
+            .then((archivedWorkspaceBoards) => set(archivedWorkspaceBoards))
+            .catch((error: Error) => {
+                console.error(
+                    "An error happened when retrieving currentArchivedWorkspaceBoards",
+                    { error }
+                );
+            });
     },
     []
 );

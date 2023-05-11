@@ -178,12 +178,17 @@ export const mobileParameters = {
     },
 };
 
-const noop = async () => console.error("noop");
+const noop = console.error.bind(null, "noop");
+
+const noopAsync = async () => {
+    await new Promise((resolve) => resolve(null));
+    console.error("noopAsync");
+};
 
 export const workspaceSearchModule: WorkspaceSearchModule = {
     workspaces: readable([workspace]),
     currentWorkspace: readable(workspace),
-    setWorkspaces: noop,
+    setWorkspaces: noopAsync,
 };
 
 export const workspaceBoardSearchModule: WorkspaceBoardSearchModule = {
@@ -208,6 +213,7 @@ export const labelSearchModule: LabelSearchModule = {
     search: writable(""),
     searchResults: readable(mappedLabels),
     async createLabel(c: number, n: string) {
+        await new Promise((resolve) => resolve(null));
         console.log("Creating label with color", c, "and name", n);
     },
 };

@@ -78,7 +78,11 @@ export function performDestructiveOverlay() {
                 _destructiveOverlayState.set({
                     kind: "hidden",
                 });
-            })();
+            })().catch((error: Error) => {
+                console.error("When resolving this Promise, this happened", {
+                    error,
+                });
+            });
             return $destructiveOverlayState;
         }
     });

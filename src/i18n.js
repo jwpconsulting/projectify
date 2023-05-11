@@ -4,7 +4,12 @@ import en from "./messages/en.json";
 
 addMessages("en", en);
 
-init({
+const initialization = init({
     fallbackLocale: "en",
     initialLocale: getLocaleFromNavigator(),
 });
+if (initialization) {
+    initialization.catch((error) => {
+        console.error("Something went wrong when adding messages:", error);
+    });
+}

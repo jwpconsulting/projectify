@@ -135,6 +135,7 @@ export async function assignLabelToTask(
 // Delete
 export async function deleteTask(task: Task): Promise<void> {
     console.error("TODO do something with", task);
+    await new Promise((resolve) => resolve(null));
     // TODO const modalRes = await getModal("deleteTaskConfirmModal").open();
     // TODO if (!modalRes) {
     // TODO     return;

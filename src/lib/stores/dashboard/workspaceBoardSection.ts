@@ -29,7 +29,14 @@ export const currentWorkspaceBoardSection = derived<
             set(null);
             return;
         }
-        getWorkspaceBoardSection($currentWorkspaceBoardSectionUuid).then(set);
+        getWorkspaceBoardSection($currentWorkspaceBoardSectionUuid)
+            .then(set)
+            .catch((error: Error) => {
+                console.error(
+                    "An error happened when fetching $currentWorkspaceBoardSection",
+                    { error }
+                );
+            });
     },
     null
 );

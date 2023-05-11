@@ -26,9 +26,8 @@ export const signUp = async (
         mutation: Mutation_Signup,
         variables: { input: { email, password } },
     });
-
-    if (res.data.signup !== null) {
-        const userData = res.data.signup;
+    const { signUp: userData } = res.data as { signUp: User | null };
+    if (userData !== null) {
         return userData.email;
     }
     return null;
@@ -40,8 +39,10 @@ export const emailConfirmation = async (email: string, token: string) => {
             mutation: Mutation_EmailConfirmation,
             variables: { input: { email, token } },
         });
-        if (res.data.emailConfirmation !== null) {
-            const userData = res.data.emailConfirmation;
+        const { emailConfirmation: userData } = res.data as {
+            emailConfirmation: User | null;
+        };
+        if (userData !== null) {
             return userData;
         }
     } catch (error) {
@@ -50,23 +51,27 @@ export const emailConfirmation = async (email: string, token: string) => {
     return null;
 };
 
-export const login = async (email: string, password: string) => {
+export const login = async (
+    email: string,
+    password: string
+): Promise<User | undefined> => {
     const res = await client.mutate({
         mutation: Mutation_Login,
         variables: { input: { email, password } },
     });
 
-    if (res.data.login !== null) {
-        const userData = res.data.login;
+    const { login: userData } = res.data as { login: User | null };
+    if (userData !== null) {
         user.set(userData);
 
         if (signinRedirect.to) {
-            goto(signinRedirect.to);
+            await goto(signinRedirect.to);
             signinRedirect.to = null;
         }
 
         return userData;
     }
+    return undefined;
 };
 
 export const logout = async () => {
@@ -74,7 +79,7 @@ export const logout = async () => {
         await client.mutate({
             mutation: Mutation_Logout,
         });
-        client.resetStore();
+        await client.resetStore();
     } catch (error) {
         console.error(error);
     }

@@ -46,7 +46,13 @@ export class WSSubscriptionStore {
     createNewConnection(): WebSocket {
         this.debug("Creating new connection");
         const socket = new WebSocket(this.url);
-        socket.onmessage = ({ data, timeStamp }) => {
+        socket.onmessage = ({
+            data,
+            timeStamp,
+        }: {
+            data: string;
+            timeStamp: number;
+        }) => {
             this.debug("socket.onmessage", data, timeStamp);
             this.wsMessage = {
                 message: data,
@@ -60,13 +66,13 @@ export class WSSubscriptionStore {
             this.retryingConnection = false;
             // this.dispatch();
         };
-        socket.onclose = (event) => {
+        socket.onclose = async (event) => {
             this.debug("socket.onclose", event);
-            this.retryConnection();
+            await this.retryConnection();
         };
-        socket.onerror = (event) => {
+        socket.onerror = async (event) => {
             this.debug("socket.onerror", event);
-            this.retryConnection();
+            await this.retryConnection();
         };
         return socket;
     }
@@ -109,11 +115,11 @@ export class WSSubscriptionStore {
         });
     }
 
-    public subscribe(subscriber: WSSubscriber): () => void {
+    public subscribe(subscriber: WSSubscriber): () => Promise<void> {
         this.subscribers.push(subscriber);
         this.debug("Pushing", subscriber);
 
-        return () => {
+        return async () => {
             const index = this.subscribers.indexOf(subscriber);
             if (index !== -1) {
                 this.subscribers.splice(index, 1);
@@ -121,7 +127,7 @@ export class WSSubscriptionStore {
             if (!this.subscribers.length) {
                 this.deleteConnection();
                 wsSubscriptionStores.delete(this.url);
-                stopWatchDog();
+                await stopWatchDog();
             }
         };
     }
@@ -163,15 +169,15 @@ function startWatchDog(): void {
     if (watchDogTimer) {
         window.clearInterval(watchDogTimer);
     }
-    watchDogTimer = window.setInterval(() => {
+    watchDogTimer = window.setInterval(async () => {
         const now = Date.now();
         watchDogLastTime = now;
 
-        checkAllConnectionStatus();
+        await checkAllConnectionStatus();
     }, watchDogInterval);
 }
 
-function stopWatchDog(): void {
+async function stopWatchDog(): Promise<void> {
     if (!watchDogTimer) {
         throw new Error("Expected watchDogTimer");
     }
@@ -179,10 +185,10 @@ function stopWatchDog(): void {
     if (!connectionActive) {
         window.clearInterval(watchDogTimer);
     }
-    checkAllConnectionStatus();
+    await checkAllConnectionStatus();
 }
 
-function checkAllConnectionStatus() {
+async function checkAllConnectionStatus() {
     const activeWSS = wsSubscriptionStores.size;
     let activeCon = 0;
 
@@ -203,9 +209,12 @@ function checkAllConnectionStatus() {
         return;
     }
     console.log("Retrying all connections");
-    wsSubscriptionStores.forEach((wsSubscriptionStore) => {
-        wsSubscriptionStore.retryConnection(true);
-    });
+    const promises = [...wsSubscriptionStores.values()].map(
+        (wsSubscriptionStore) => {
+            return wsSubscriptionStore.retryConnection(true);
+        }
+    );
+    await Promise.all(promises);
     // XXX
     // This enters an infite loop here
 }

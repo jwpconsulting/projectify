@@ -11,3 +11,4 @@ node_modules
 .netlify
 /tmp
 .mypy_cache/
+.eslintcache
