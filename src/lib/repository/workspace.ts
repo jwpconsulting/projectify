@@ -214,10 +214,12 @@ export async function createWorkspaceBoard(
 
 // Read
 export async function getWorkspaceBoard(
-    uuid: string
+    uuid: string,
+    repositoryContext?: RepositoryContext
 ): Promise<WorkspaceBoard> {
     return await getWithCredentialsJson<WorkspaceBoard>(
-        `/workspace/workspace-board/${uuid}`
+        `/workspace/workspace-board/${uuid}`,
+        repositoryContext
     );
 }
 

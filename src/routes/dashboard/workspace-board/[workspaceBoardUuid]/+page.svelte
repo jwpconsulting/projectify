@@ -1,7 +1,6 @@
 <script lang="ts">
-    import Loading from "$lib/components/loading.svelte";
+    import type { PageData } from "./$types";
     import Dashboard from "$lib/components/dashboard/Dashboard.svelte";
-    import { page } from "$app/stores";
     import SideNav from "$lib/figma/navigation/SideNav.svelte";
     import { createLabel as repositoryCreateLabel } from "$lib/repository/workspace";
 
@@ -38,10 +37,11 @@
         workspaces,
     } from "$lib/stores/dashboard";
 
-    $: {
-        $currentWorkspaceBoardUuid = $page.params["workspaceBoardUuid"];
-        console.log($currentWorkspaceBoardUuid);
-    }
+    export let data: PageData;
+
+    let { workspaceBoard } = data;
+
+    $: workspaceBoard = $currentWorkspaceBoard || workspaceBoard;
 
     const workspaceSearchModule: WorkspaceSearchModule = {
         workspaces,
@@ -114,16 +114,12 @@
     };
 </script>
 
-{#if $currentWorkspaceBoard}
-    <div class="flex grow flex-row">
-        <SideNav
-            {workspaceBoardSearchModule}
-            {workspaceUserSearchModule}
-            {labelSearchModule}
-            {sideNavModule}
-        />
-        <Dashboard workspaceBoard={$currentWorkspaceBoard} />
-    </div>
-{:else}
-    <Loading />
-{/if}
+<div class="flex grow flex-row">
+    <SideNav
+        {workspaceBoardSearchModule}
+        {workspaceUserSearchModule}
+        {labelSearchModule}
+        {sideNavModule}
+    />
+    <Dashboard {workspaceBoard} />
+</div>
