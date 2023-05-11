@@ -17,6 +17,8 @@
     // TODO Can we pull this out of taskModule too? Justus 2023-05-08
     export let taskOrNewTask: TaskOrNewTask;
 
+    export let editLink: string | null = null;
+
     const canCreateOrUpdate = taskModule ? taskModule.canCreateOrUpdate : null;
 
     let breadCrumbTask: BreadCrumbTask;
@@ -79,6 +81,15 @@
                 style={{ kind: "primary" }}
                 label={$_("task-screen.save")}
                 on:click={createOrUpdate}
+            />
+        {/if}
+        {#if editLink}
+            <Button
+                color="blue"
+                size="small"
+                style={{ kind: "primary" }}
+                label={$_("task-screen.edit")}
+                action={{ kind: "a", href: editLink }}
             />
         {/if}
     </div>

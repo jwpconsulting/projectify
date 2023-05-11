@@ -26,6 +26,7 @@
 -   All overlays should use async functions so we can await them finishing /
     closing / whatever it is that they do
 -   Make undefined and null for empty form fields more consistent
+-   Factor disabled state into ButtonAction (since anchors cannot be disabled)
 
 # Update Dependency
 

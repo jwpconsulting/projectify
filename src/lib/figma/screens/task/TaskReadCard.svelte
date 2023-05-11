@@ -3,6 +3,7 @@
     import TaskFields from "$lib/figma/screens/task/TaskFields.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import TaskC from "$lib/components/dashboard/task/Task.svelte";
+    import { getTaskEditUrl } from "$lib/urls";
     import type { Task } from "$lib/types/workspace";
     import type { TaskUpdateBarState } from "$lib/figma/types";
 
@@ -13,7 +14,12 @@
 </script>
 
 <TaskC>
-    <TopBar slot="top-bar" {taskOrNewTask} taskModule={null} />
+    <TopBar
+        slot="top-bar"
+        {taskOrNewTask}
+        taskModule={null}
+        editLink={getTaskEditUrl(task.uuid)}
+    />
     <TaskFields slot="content" {task} />
     <TaskUpdateBar slot="tab-bar-mobile" kind="mobile" {state} {task} />
     <TaskUpdateBar slot="tab-bar-desktop" kind="mobile" {state} {task} />

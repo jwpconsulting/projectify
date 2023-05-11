@@ -8,7 +8,7 @@
     import type { LabelLabel } from "$lib/figma/types";
 
     export let label: LabelLabel;
-    export let action: () => void;
+    export let action: (() => void) | undefined;
 
     let labelColor: LabelColor | null;
     $: labelColor =
@@ -40,12 +40,21 @@
             hoverBgStyle = "hover:bg-background";
             textStyle = "text-primary";
         }
+        // And then still remove hovering when it's disabled
+        if (!action) {
+            hoverBgStyle = "";
+        }
         outerStyle = `group rounded-2.5xl border p-px focus:outline-none ${outerBorderStyle}`;
         innerStyle = `flex flex-row items-center justify-center rounded-2.5xl border px-3 py-1 text-xxs font-bold capitalize ${innerBorderStyle} ${bgStyle} ${hoverBgStyle} ${textStyle}`;
     }
 </script>
 
-<button class={outerStyle} on:click={action} on:keydown={action}>
+<button
+    class={outerStyle}
+    on:click={action}
+    on:keydown={action}
+    disabled={!action}
+>
     <div class={innerStyle}>
         {label.kind === "applyLabel"
             ? $_("label.apply-label")

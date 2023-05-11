@@ -10,7 +10,9 @@
         "labels": "labels",
         "member-name": "member name",
         "filter-members": "filter members",
-        "search-task": "Search Task"
+        "search-task": "Search Task",
+        "assign-user": "Assign user",
+        "no-user-assigned": "No user assigned"
     },
     "filter-label-menu": {
         "filter-labels": "Filter labels",
@@ -221,6 +223,9 @@
         "description": "Description",
         "select-due-date": "Select due date",
         "save": "Save",
+        "edit": "Edit",
+        "task-title": "Task title",
+        "assignee": "Assignee",
         "enter-a-subtask": "Enter a subtask",
         "due-soon": "Due soon!"
     },
