@@ -183,16 +183,16 @@ function stopWatchDog(): void {
 }
 
 function checkAllConnectionStatus() {
-    let activeWSS = 0;
+    const activeWSS = wsSubscriptionStores.size;
     let activeCon = 0;
 
     wsSubscriptionStores.forEach((wsSubscriptionStore) => {
-        activeWSS++;
-        if (
-            wsSubscriptionStore.socketActive &&
-            wsSubscriptionStore.socket.readyState <= WebSocket.OPEN
-        ) {
+        const { socketActive } = wsSubscriptionStore;
+        const { readyState } = wsSubscriptionStore.socket;
+        if (socketActive && readyState <= WebSocket.OPEN) {
             activeCon++;
+        } else {
+            console.log({ wsSubscriptionStore, socketActive, readyState });
         }
     });
 
