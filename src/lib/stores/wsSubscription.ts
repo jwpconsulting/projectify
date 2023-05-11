@@ -11,24 +11,25 @@ const wsSubscriptionStores = new Map<string, WSSubscriptionStore>();
 export const activeWSSubscriptions = writable(0);
 export const activeWSConnections = writable(0);
 
+const retryTimeStart = 2000;
+const retryTimeMult = 1.1;
+const retryTimeJitter = 500;
+const maxRetryTime = 20000;
+
 export class WSSubscriptionStore {
-    public wsMessage: WSMessage | null = null;
+    wsMessage: WSMessage | null = null;
     subscribers: WSSubscriber[] = [];
     socket: WebSocket;
     socketActive = true;
     url: string;
 
     retryingConnection = false;
-    public retryTimeStart = 2000;
-    public retryTimeMult = 1.1;
-    public retryTimeJitter = 500;
-    public maxRetryTime = 20000;
 
     retryTime: number;
 
     constructor(url: string) {
         this.url = url;
-        this.retryTime = this.retryTimeStart;
+        this.retryTime = retryTimeStart;
         this.socket = this.createNewConnection();
         startWatchDog();
         this.debug("constructor");
@@ -55,7 +56,8 @@ export class WSSubscriptionStore {
         };
         socket.onopen = (event) => {
             this.debug("socket.onopen", event);
-            this.retryTime = this.retryTimeStart;
+            this.retryTime = retryTimeStart;
+            this.retryingConnection = false;
             // this.dispatch();
         };
         socket.onclose = (event) => {
@@ -76,17 +78,18 @@ export class WSSubscriptionStore {
     }
 
     async retryConnection(now = false) {
+        this.debug("Retrying connection", { now });
         if (this.retryingConnection) {
+            this.debug("Already retrying connection");
             return;
         }
 
         this.retryingConnection = true;
 
-        const delayTime =
-            this.retryTime + Math.random() * this.retryTimeJitter;
+        const delayTime = this.retryTime + Math.random() * retryTimeJitter;
 
-        this.retryTime *= this.retryTimeMult;
-        this.retryTime = Math.min(this.retryTime, this.maxRetryTime);
+        this.retryTime *= retryTimeMult;
+        this.retryTime = Math.min(this.retryTime, maxRetryTime);
 
         if (now) {
             this.retryTime = 0;
@@ -97,8 +100,6 @@ export class WSSubscriptionStore {
         if (this.socket && this.socket.readyState == WebSocket.CLOSED) {
             this.recreateConnection();
         }
-
-        this.retryingConnection = false;
     }
 
     dispatch() {
@@ -126,7 +127,7 @@ export class WSSubscriptionStore {
     }
 
     debug(reason: string, ...arg0: unknown[]) {
-        console.debug(this.url, reason, ...arg0);
+        console.debug(this.url, reason, { this: this }, ...arg0);
     }
 }
 
@@ -150,6 +151,10 @@ const watchDogInterval = 1000;
 
 function startWatchDog(): void {
     if (!browser) {
+        return;
+    }
+    if (watchDogTimer) {
+        console.log("Watchdog timer already created");
         return;
     }
     if (watchDogLastTime == 0) {
@@ -197,6 +202,7 @@ function checkAllConnectionStatus() {
     if (activeWSS === activeCon) {
         return;
     }
+    console.log("Retrying all connections");
     wsSubscriptionStores.forEach((wsSubscriptionStore) => {
         wsSubscriptionStore.retryConnection(true);
     });
