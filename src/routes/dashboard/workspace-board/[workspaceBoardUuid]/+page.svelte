@@ -39,9 +39,10 @@
 
     export let data: PageData;
 
-    let { workspaceBoard } = data;
+    let { workspaceBoard, workspace } = data;
 
     $: workspaceBoard = $currentWorkspaceBoard || workspaceBoard;
+    $: workspace = $currentWorkspace || workspace;
 
     const workspaceSearchModule: WorkspaceSearchModule = {
         workspaces,
@@ -80,10 +81,7 @@
             labelSearch
         ),
         async createLabel(color: number, name: string) {
-            if (!$currentWorkspace) {
-                throw new Error("Expected $currentWorkspace");
-            }
-            await repositoryCreateLabel($currentWorkspace, name, color);
+            await repositoryCreateLabel(workspace, name, color);
         },
     };
 
@@ -98,13 +96,10 @@
             );
         },
         showSideNavContextMenu: (anchor: HTMLElement) => {
-            if (!$currentWorkspace) {
-                throw new Error("Expected $currentWorkspace");
-            }
             openContextMenu(
                 {
                     kind: "sideNav",
-                    workspace: $currentWorkspace,
+                    workspace,
                     // XXX circular reference, not cool Justus 2023-03-30
                     sideNavModule,
                 },
