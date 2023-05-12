@@ -198,7 +198,9 @@ async function checkAllConnectionStatus() {
     wsSubscriptionStores.forEach((wsSubscriptionStore) => {
         const { socketActive } = wsSubscriptionStore;
         const { readyState } = wsSubscriptionStore.socket;
-        if (socketActive && readyState <= WebSocket.OPEN) {
+        const openOrConnecting =
+            readyState == WebSocket.OPEN || readyState == WebSocket.CONNECTING;
+        if (socketActive && openOrConnecting) {
             activeCon++;
         } else {
             console.log({ wsSubscriptionStore, socketActive, readyState });
