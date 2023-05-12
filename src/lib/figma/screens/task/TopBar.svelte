@@ -4,8 +4,13 @@
     import Button from "$lib/figma/buttons/Button.svelte";
     import CircleIcon from "$lib/figma/buttons/CircleIcon.svelte";
     import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
+    import { openContextMenu } from "$lib/stores/globalUi";
 
-    import type { TaskOrNewTask, BreadCrumbTask } from "$lib/types/ui";
+    import type {
+        TaskOrNewTask,
+        BreadCrumbTask,
+        ContextMenuType,
+    } from "$lib/types/ui";
     import {
         isBreadCrumbWorkspaceBoardSection,
         isBreadCrumbTask,
@@ -44,6 +49,18 @@
     }
 
     const createOrUpdate = taskModule ? taskModule.createOrUpdateTask : null;
+
+    let contextMenuRef: HTMLElement;
+    let contextMenuType: ContextMenuType | undefined;
+    $: contextMenuType =
+        taskOrNewTask.kind == "task"
+            ? {
+                  kind: "task",
+                  task: taskOrNewTask.task,
+                  location: "task",
+                  moveTaskModule: undefined,
+              }
+            : undefined;
 </script>
 
 <div class="flex flex-row items-center justify-between">
@@ -68,11 +85,22 @@
         </div>
     </div>
     <div class="flex flex-row items-center gap-4">
-        <SquovalIcon
-            icon="dotsVertical"
-            state="active"
-            action={{ kind: "button", action: console.error }}
-        />
+        <div bind:this={contextMenuRef}>
+            {#if contextMenuType}
+                <SquovalIcon
+                    icon="dotsVertical"
+                    state="active"
+                    action={{
+                        kind: "button",
+                        action: openContextMenu.bind(
+                            null,
+                            contextMenuType,
+                            contextMenuRef
+                        ),
+                    }}
+                />
+            {/if}
+        </div>
         {#if createOrUpdate}
             <Button
                 color="blue"
