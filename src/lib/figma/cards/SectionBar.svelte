@@ -3,6 +3,7 @@
     import TaskCard from "$lib/figma/cards/TaskCard.svelte";
     import SectionTitle from "$lib/figma/cards/section-bar/SectionTitle.svelte";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
+    import { createMoveTaskModule } from "$lib/stores/modules";
 
     export let section: WorkspaceBoardSection;
 
@@ -23,6 +24,7 @@
         }
     }
 
+    // TODO Turn these into props
     function switchWithPrevSection({ detail }: { detail: unknown }) {
         dispatch("switchWithPrevSection", detail);
     }
@@ -47,6 +49,7 @@
                 {task}
                 isFirst={inx === 0}
                 isLast={inx === tasks.length - 1}
+                moveTaskModule={createMoveTaskModule(section, task, tasks)}
             />
         {/each}
     </main>

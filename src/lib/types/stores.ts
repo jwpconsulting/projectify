@@ -16,6 +16,7 @@ import type {
     Task,
     Workspace,
     WorkspaceBoard,
+    WorkspaceBoardSection,
     WorkspaceUser,
 } from "$lib/types/workspace";
 
@@ -99,3 +100,12 @@ export type CreateTaskModule = {
     newTask: NewTask;
     createTask: Writable<Partial<CreateTask>>;
 } & CreateOrUpdateTaskModule;
+
+// Functions needed to move task around inside section or between sections
+export interface MoveTaskModule {
+    moveToBottom: () => Promise<void>;
+    moveToTop: () => Promise<void>;
+    moveToWorkspaceBoardSection: (
+        workspaceBoardSection: WorkspaceBoardSection
+    ) => Promise<void>;
+}

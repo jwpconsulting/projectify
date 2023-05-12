@@ -107,6 +107,7 @@ export class WSSubscriptionStore {
         }
 
         if (this.socket.readyState == WebSocket.CLOSED) {
+            this.debug("Socket is closed");
             this.recreateConnection();
         }
     }
@@ -200,7 +201,9 @@ async function checkAllConnectionStatus() {
         const { readyState } = wsSubscriptionStore.socket;
         const openOrConnecting =
             readyState == WebSocket.OPEN || readyState == WebSocket.CONNECTING;
-        if (socketActive && openOrConnecting) {
+        const { retryingConnection } = wsSubscriptionStore;
+        const isConnected = socketActive && openOrConnecting;
+        if (isConnected || retryingConnection) {
             activeCon++;
         } else {
             console.log({ wsSubscriptionStore, socketActive, readyState });

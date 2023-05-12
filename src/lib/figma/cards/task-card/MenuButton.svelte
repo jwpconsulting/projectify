@@ -3,9 +3,13 @@
     import { DotsHorizontal } from "@steeze-ui/heroicons";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
     import { openContextMenu } from "$lib/stores/globalUi";
+    import type { ContextMenuType } from "$lib/types/ui";
+    import type { MoveTaskModule } from "$lib/types/stores";
 
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection | null;
+    export let moveTaskModule: MoveTaskModule | undefined;
+
     let dropDownMenuBtnRef: HTMLElement;
 
     function openDropDownMenu() {
@@ -17,10 +21,11 @@
             throw new Error("Expected workspaceBoardSection.tasks");
         }
         const tasks = workspaceBoardSection.tasks;
-        const contextMenu = {
+        const contextMenu: ContextMenuType = {
             kind: "task" as const,
             task,
             location: "dashboard" as const,
+            moveTaskModule,
         };
         console.log("TODO use", { uuid, tasks });
         openContextMenu(contextMenu, dropDownMenuBtnRef);

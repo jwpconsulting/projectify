@@ -16,6 +16,7 @@ import type {
     WorkspaceSearchModule,
     WorkspaceUserSearchModule,
     LabelSearchModule,
+    MoveTaskModule,
 } from "$lib/types/stores";
 
 export interface Input {
@@ -107,8 +108,18 @@ export type ContextMenuType =
           workspaceBoardSection: WorkspaceBoardSection;
           workspaceBoardSectionModule: WorkspaceBoardSectionModule;
       }
-    | { kind: "task"; task: Task; location: "dashboard" }
-    | { kind: "task"; task: Task; location: "task" }
+    | {
+          kind: "task";
+          task: Task;
+          moveTaskModule: MoveTaskModule | undefined;
+          location: "dashboard";
+      }
+    | {
+          kind: "task";
+          task: Task;
+          moveTaskModule: MoveTaskModule | undefined;
+          location: "task";
+      }
     | { kind: "help" }
     | { kind: "permissions" }
     | {

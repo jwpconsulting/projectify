@@ -13,6 +13,7 @@ import {
     workspaceSearchModule,
     workspaceUserSearchModule,
     labelSearchModule,
+    moveTaskModule,
 } from "$lib/storybook";
 
 const contextMenus: Record<string, ContextMenuType> = {
@@ -41,11 +42,13 @@ const contextMenus: Record<string, ContextMenuType> = {
         kind: "task" as const,
         task,
         location: "dashboard",
+        moveTaskModule,
     },
     task: {
         kind: "task" as const,
         task,
         location: "task",
+        moveTaskModule,
     },
     help: {
         kind: "help",

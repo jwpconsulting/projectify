@@ -1,12 +1,19 @@
 import { writable } from "svelte/store";
-import { createLabel as repositoryCreateLabel } from "$lib/repository/workspace";
+import {
+    moveTaskAfter,
+    createLabel as repositoryCreateLabel,
+} from "$lib/repository/workspace";
 import {
     createLabelSearchResults,
     currentWorkspaceLabels,
 } from "$lib/stores/dashboard";
-import type { Workspace, Task } from "$lib/types/workspace";
+import type {
+    Workspace,
+    Task,
+    WorkspaceBoardSection,
+} from "$lib/types/workspace";
 
-import type { LabelSearchModule } from "$lib/types/stores";
+import type { LabelSearchModule, MoveTaskModule } from "$lib/types/stores";
 import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
 
 export function createLabelSearchModule(
@@ -56,5 +63,35 @@ export function createLabelSearchModule(
         async createLabel(color: number, name: string) {
             await repositoryCreateLabel(workspace, name, color);
         },
+    };
+}
+
+export function createMoveTaskModule(
+    { uuid: workspaceBoardSectionUuid }: WorkspaceBoardSection,
+    task: Task,
+    tasks: Task[]
+): MoveTaskModule {
+    if (!tasks.length) {
+        throw new Error("Expected tasks");
+    }
+    const { uuid: taskUuid } = task;
+    const lastTask = tasks[tasks.length - 1];
+    const { uuid: afterTaskUuid } = lastTask;
+
+    return {
+        moveToTop: moveTaskAfter.bind(
+            null,
+            taskUuid,
+            workspaceBoardSectionUuid,
+            null
+        ),
+        moveToBottom: moveTaskAfter.bind(
+            null,
+            taskUuid,
+            workspaceBoardSectionUuid,
+            afterTaskUuid
+        ),
+        moveToWorkspaceBoardSection: ({ uuid }: WorkspaceBoardSection) =>
+            moveTaskAfter(taskUuid, uuid),
     };
 }

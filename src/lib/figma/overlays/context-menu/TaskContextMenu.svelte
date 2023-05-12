@@ -14,8 +14,10 @@
     import { getTaskUrl, getTaskUpdatesUrl } from "$lib/urls";
     import type { Task } from "$lib/types/workspace";
     import { copyToClipboard } from "$lib/utils/clipboard";
+    import type { MoveTaskModule } from "$lib/types/stores";
 
     export let task: Task;
+    export let moveTaskModule: MoveTaskModule | undefined;
     export let location: "dashboard" | "task";
 </script>
 
@@ -35,11 +37,11 @@
     label={$_("task-overlay.move-to-section")}
     icon={SwitchVertical}
 />
-{#if location === "dashboard"}
+{#if location === "dashboard" && moveTaskModule}
     <ContextMenuButton
         kind={{
             kind: "button",
-            action: () => console.error("move to top not implemented"),
+            action: moveTaskModule.moveToTop,
         }}
         label={$_("task-overlay.move-to-top")}
         state="normal"
@@ -48,7 +50,7 @@
     <ContextMenuButton
         kind={{
             kind: "button",
-            action: () => console.error("move to bottom not implemented"),
+            action: moveTaskModule.moveToBottom,
         }}
         label={$_("task-overlay.move-to-bottom")}
         state="normal"

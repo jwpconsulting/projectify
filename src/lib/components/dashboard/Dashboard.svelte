@@ -96,7 +96,7 @@
         {#if $currentSearchedTasks.length}
             <div class="flex grow flex-col overflow-y-auto p-2">
                 {#each $currentSearchedTasks as task}
-                    <TaskCard {task} />
+                    <TaskCard {task} moveTaskModule={undefined} />
                 {/each}
             </div>
         {:else}

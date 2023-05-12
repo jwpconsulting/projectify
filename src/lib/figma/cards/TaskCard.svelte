@@ -7,9 +7,11 @@
     import MenuButton from "$lib/figma/cards/task-card/MenuButton.svelte";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
     import { getTaskUrl } from "$lib/urls";
+    import type { MoveTaskModule } from "$lib/types/stores";
 
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection | null = null;
+    export let moveTaskModule: MoveTaskModule | undefined;
 
     export let isFirst = false;
     export let isLast = false;
@@ -32,7 +34,11 @@
                         {isLast}
                         {workspaceBoardSection}
                     />
-                    <MenuButton {task} {workspaceBoardSection} />
+                    <MenuButton
+                        {task}
+                        {workspaceBoardSection}
+                        {moveTaskModule}
+                    />
                 </div>
             </div>
             <div class="flex flex-row justify-between">
@@ -72,7 +78,11 @@
                                 {isLast}
                                 {workspaceBoardSection}
                             />
-                            <MenuButton {task} {workspaceBoardSection} />
+                            <MenuButton
+                                {task}
+                                {workspaceBoardSection}
+                                {moveTaskModule}
+                            />
                         </div>
                     </div>
                 </div>

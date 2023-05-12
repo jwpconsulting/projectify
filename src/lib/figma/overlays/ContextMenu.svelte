@@ -36,7 +36,11 @@
             workspaceBoardSectionModule={target.workspaceBoardSectionModule}
         />
     {:else if target.kind === "task"}
-        <TaskContextMenu task={target.task} location={target.location} />
+        <TaskContextMenu
+            task={target.task}
+            location={target.location}
+            moveTaskModule={target.moveTaskModule}
+        />
     {:else if target.kind === "help"}
         <HelpContextMenu />
     {:else if target.kind === "permissions"}

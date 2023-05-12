@@ -18,6 +18,7 @@ import type { ButtonStyle, LabelLabel, SelectLabel } from "$lib/figma/types";
 import type {
     CreateTaskModule,
     LabelSearchModule,
+    MoveTaskModule,
     SideNavModule,
     TaskModule,
     WorkspaceBoardSearchModule,
@@ -256,4 +257,10 @@ export const taskModule: TaskModule = {
     },
     workspaceUserSearchModule,
     labelSearchModule,
+};
+
+export const moveTaskModule: MoveTaskModule = {
+    moveToBottom: noopAsync,
+    moveToTop: noopAsync,
+    moveToWorkspaceBoardSection: noopAsync,
 };
