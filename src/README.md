@@ -1,3 +1,62 @@
+# Page load function
+
+Use svelte kit types that are generated automatically for great comfort. This
+goes in `+page.ts`. `myParam` is part of the route like `/[myParam]/...`
+
+```
+import type { PageLoadEvent } from "./$types";
+
+interface Data {
+    theThing: TheThing
+}
+
+export async function load({
+    params: { myParam },
+    fetch,
+}: PageLoadEvent): Promise<Data> {
+    // If thing is fetched, use the fetch argument above
+    const theThing = new TheThing();
+    return { theThing };
+}
+
+export const prerender = false;
+export const ssr = false;
+```
+
+Then, when you use the data inside the svelte page, you can access them like
+so:
+
+```
+<script lang="ts">
+    import type { PageData } from "./$types";
+
+    export let data: PageData;
+
+    const { theThing } = data;
+</script>
+
+I have loaded { theThing }!
+```
+
+## Redirecting
+
+Import the following inside `+page.ts`:
+
+```
+import { redirect } from "@sveltejs/kit";
+```
+
+And throw the following inside the load function:
+
+```
+const theUrl = "/";
+throw redirect(302, theUrl)
+```
+
+Some of the redirect codes you might consider can be found in the [mdn web
+docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Redirections). 302
+isn't too bad.
+
 # Opening context menu
 
 Decide which kind of context menu you need
