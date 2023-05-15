@@ -22,6 +22,7 @@
     href={getTaskUrl(task.uuid)}
 >
     <div class="w-full rounded-lg border border-base-300 bg-base-100 p-2">
+        <!-- Compact view (< md)-->
         <div class="flex flex-col md:hidden">
             <div class="flex flex-row justify-between">
                 <div class="">
@@ -57,7 +58,8 @@
                 </div>
             </div>
         </div>
-        <div class="hidden w-full flex-row justify-between md:flex">
+        <!-- Wide view (md) -->
+        <div class="hidden w-full grid-cols-3 justify-between md:grid">
             <div class="flex flex-row items-center">
                 <Title {task} />
             </div>
