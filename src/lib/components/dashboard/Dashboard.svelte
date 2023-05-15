@@ -14,6 +14,7 @@
         WorkspaceBoard,
         WorkspaceBoardSection,
     } from "$lib/types/workspace";
+    import { createMoveTaskModule } from "$lib/stores/modules";
 
     import FloatingActionButton from "$lib/figma/buttons/FloatingActionButton.svelte";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
@@ -109,11 +110,12 @@
     {:else}
         <!-- Sections -->
         <div class="flex grow flex-col gap-16 overflow-y-auto p-2">
-            {#each $currentWorkspaceBoardSections as section (section.uuid)}
+            {#each $currentWorkspaceBoardSections as workspaceBoardSection (workspaceBoardSection.uuid)}
                 <SectionBar
-                    {section}
+                    {workspaceBoardSection}
                     on:switchWithPrevSection={onSwitchWithPrevSection}
                     on:switchWithNextSection={onSwitchWithNextSection}
+                    {createMoveTaskModule}
                 />
             {/each}
         </div>

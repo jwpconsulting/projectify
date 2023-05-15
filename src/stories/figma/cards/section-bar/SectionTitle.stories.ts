@@ -12,7 +12,7 @@ const meta: Meta<SectionTitle> = {
         },
     },
     args: {
-        section: workspaceBoardSection,
+        workspaceBoardSection,
         open: true,
     },
 };

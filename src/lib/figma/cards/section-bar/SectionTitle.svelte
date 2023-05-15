@@ -7,7 +7,7 @@
     import type { WorkspaceBoardSection } from "$lib/types/workspace";
     import { getNewTaskUrl } from "$lib/urls";
 
-    export let section: WorkspaceBoardSection;
+    export let workspaceBoardSection: WorkspaceBoardSection;
     export let toggleOpen: () => void;
     export let open: boolean;
 
@@ -34,14 +34,14 @@
             />
         </button>
         <h1 class="nowrap-ellipsis min-w-0 shrink font-bold uppercase">
-            {section.title}
+            {workspaceBoardSection.title}
         </h1>
     </div>
     <div class="flex shrink-0 flex-row gap-6" data-figma-name="Right side">
         <SquovalIcon
             action={{
                 kind: "a",
-                href: getNewTaskUrl(section.uuid),
+                href: getNewTaskUrl(workspaceBoardSection.uuid),
             }}
             icon="plus"
             state="active"

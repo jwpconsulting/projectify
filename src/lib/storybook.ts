@@ -264,3 +264,20 @@ export const moveTaskModule: MoveTaskModule = {
     moveToTop: noopAsync,
     moveToWorkspaceBoardSection: noopAsync,
 };
+
+export const createMoveTaskModule = (
+    a: WorkspaceBoardSection,
+    t: Task,
+    ts: Task[]
+): MoveTaskModule => {
+    console.debug("Calling dummy createMoveTaskModule with", {
+        a,
+        t,
+        ts,
+    });
+    return {
+        moveToBottom: noopAsync,
+        moveToTop: noopAsync,
+        moveToWorkspaceBoardSection: noopAsync,
+    };
+};

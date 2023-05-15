@@ -2,13 +2,20 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 
 import SectionBar from "$lib/figma/cards/SectionBar.svelte";
 
-import { workspaceBoardSection } from "$lib/storybook";
+import {
+    createMoveTaskModule,
+    mobileParameters,
+    workspaceBoardSection,
+} from "$lib/storybook";
 
 const meta: Meta<SectionBar> = {
     component: SectionBar,
     argTypes: {},
     args: {
-        section: workspaceBoardSection,
+        workspaceBoardSection,
+        createMoveTaskModule,
+        switchWithPrevSection: console.error,
+        switchWithNextSection: console.error,
     },
 };
 export default meta;
