@@ -23,3 +23,7 @@ export default meta;
 type Story = StoryObj<SectionBar>;
 
 export const Default: Story = {};
+
+export const Mobile: Story = {
+    parameters: mobileParameters,
+};

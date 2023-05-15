@@ -43,7 +43,9 @@
                 </div>
             </div>
             <div class="flex flex-row justify-between">
-                <div class="col-span-3 flex flex-row sm:col-span-4">
+                <div
+                    class="col-span-3 flex flex-shrink flex-row overflow-x-auto sm:col-span-4"
+                >
                     <Labels {task} />
                 </div>
                 <div

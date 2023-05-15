@@ -148,6 +148,19 @@ export const task: Task = {
     },
 };
 
+const task2: Task = {
+    title: "A second task, worthy of being a task, and having a wordy title",
+    created: "",
+    modified: "",
+    uuid: "does-not-exist-either",
+    deadline: "2022-08-01",
+    _order: 0,
+    number: 1337,
+    labels: mappedLabels.slice(4),
+    assignee: workspaceUser,
+    sub_tasks: [],
+};
+
 export const newTask: NewTask = {
     workspace_board_section: {
         title: "section name that is long",
@@ -169,7 +182,7 @@ export const workspaceBoardSection: WorkspaceBoardSection = {
     created: "",
     modified: "",
     uuid: "does-not-exist",
-    tasks: [task],
+    tasks: [task, task2],
     _order: 0,
 };
 
