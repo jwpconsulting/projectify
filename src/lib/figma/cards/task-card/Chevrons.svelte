@@ -1,8 +1,7 @@
 <script lang="ts">
-    import { Icon } from "@steeze-ui/svelte-icon";
-    import { ChevronDown, ChevronUp } from "@steeze-ui/heroicons";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
     import { moveTaskAfter } from "$lib/repository/workspace";
+    import CircleIcon from "$lib/figma/buttons/CircleIcon.svelte";
 
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection | null = null;
@@ -39,21 +38,16 @@
 </script>
 
 <div class="flex flex-row items-center gap-1">
-    <button
-        class="p-1.5"
-        class:text-base-content={!isFirst}
-        class:text-disabled-text={isFirst}
+    <CircleIcon
+        size="medium"
+        icon="up"
         disabled={isFirst}
-        on:click|stopPropagation={() => moveUp()}
-    >
-        <Icon src={ChevronUp} theme="outline" class="h-5 w-5" />
-    </button>
-    <button
-        class="p-1.5"
+        action={{ kind: "button", action: moveUp }}
+    />
+    <CircleIcon
+        size="medium"
+        icon="down"
         disabled={isLast}
-        class:text-base-content={!isLast}
-        class:text-disabled-text={isLast}
-        on:click|stopPropagation={() => moveDown()}
-        ><Icon src={ChevronDown} theme="outline" class="h-5 w-5" /></button
-    >
+        action={{ kind: "button", action: moveDown }}
+    />
 </div>
