@@ -1,4 +1,7 @@
 """Blog models."""
+from typing import (
+    TYPE_CHECKING,
+)
 
 from django.conf import (
     settings,
@@ -15,13 +18,19 @@ from django_extensions.db.models import (
 )
 
 
+if TYPE_CHECKING:
+    from user.models import (  # noqa: F401
+        User,
+    )
+
+
 class Post(TimeStampedModel):
     """Post Model."""
 
     title = models.CharField(max_length=300)
     content = models.TextField()
     slug = models.SlugField(unique=True)
-    author = models.ForeignKey(
+    author = models.ForeignKey["User"](
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
@@ -42,7 +51,7 @@ class Post(TimeStampedModel):
 class PostImage(TimeStampedModel):
     """Post Image Model."""
 
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey["Post"](Post, on_delete=models.CASCADE)
     image = models.ImageField(
         upload_to="post_image/",
     )

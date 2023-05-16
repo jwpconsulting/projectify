@@ -1,5 +1,8 @@
 """Workspace models."""
 import uuid
+from typing import (
+    TYPE_CHECKING,
+)
 
 from django.conf import (
     settings,
@@ -23,6 +26,13 @@ from user import models as user_models
 from . import (
     signal_defs,
 )
+
+
+if TYPE_CHECKING:
+    from user.models import (  # noqa: F401
+        User,
+        UserInvite,
+    )
 
 
 class WorkspaceQuerySet(models.QuerySet):
@@ -64,7 +74,7 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         settings.AUTH_USER_MODEL,
         through="WorkspaceUser",
         through_fields=("workspace", "user"),
-    )
+    )  # type: models.ManyToManyField["User", "WorkspaceUser"]
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     picture = models.ImageField(
         upload_to="workspace_picture/",
@@ -188,11 +198,11 @@ class WorkspaceUserInviteQuerySet(models.QuerySet):
 class WorkspaceUserInvite(TimeStampedModel, models.Model):
     """UserInvites belonging to this workspace."""
 
-    user_invite = models.ForeignKey(
+    user_invite = models.ForeignKey["UserInvite"](
         "user.UserInvite",
         on_delete=models.CASCADE,
     )
-    workspace = models.ForeignKey(
+    workspace = models.ForeignKey["Workspace"](
         Workspace,
         on_delete=models.CASCADE,
     )
@@ -263,11 +273,11 @@ OWNER_EQUIVALENT = [
 class WorkspaceUser(TimeStampedModel, models.Model):
     """Workspace to user mapping."""
 
-    workspace = models.ForeignKey(
+    workspace = models.ForeignKey["Workspace"](
         Workspace,
         on_delete=models.PROTECT,
     )
-    user = models.ForeignKey(
+    user = models.ForeignKey["User"](
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
@@ -327,7 +337,7 @@ class WorkspaceBoardQuerySet(models.QuerySet):
 class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
     """Workspace board."""
 
-    workspace = models.ForeignKey(
+    workspace = models.ForeignKey["Workspace"](
         Workspace,
         on_delete=models.PROTECT,
     )
@@ -390,7 +400,7 @@ class WorkspaceBoardSection(
 ):
     """Section of a WorkspaceBoard."""
 
-    workspace_board = models.ForeignKey(
+    workspace_board = models.ForeignKey["WorkspaceBoard"](
         WorkspaceBoard,
         on_delete=models.CASCADE,
     )
@@ -445,7 +455,7 @@ class WorkspaceBoardSection(
             models.UniqueConstraint(
                 fields=["workspace_board", "_order"],
                 name="unique_workspace_board_order",
-                deferrable=models.Deferrable.DEFERRED,
+                deferrable=models.Deferrable.DEFERRED,  # type:ignore
             )
         ]
 
@@ -548,17 +558,17 @@ class Task(
 ):
     """Task, belongs to workspace board section."""
 
-    workspace = models.ForeignKey(
+    workspace = models.ForeignKey["Workspace"](
         Workspace,
         on_delete=models.CASCADE,
     )
 
-    workspace_board_section = models.ForeignKey(
+    workspace_board_section = models.ForeignKey["WorkspaceBoardSection"](
         WorkspaceBoardSection,
         on_delete=models.CASCADE,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
-    assignee = models.ForeignKey(
+    assignee = models.ForeignKey["WorkspaceUser"](
         WorkspaceUser,
         null=True,
         blank=True,
@@ -573,7 +583,7 @@ class Task(
     labels = models.ManyToManyField(
         "workspace.Label",
         through="workspace.TaskLabel",
-    )
+    )  # type: models.ManyToManyField["Label", "TaskLabel"]
 
     number = models.PositiveIntegerField()
 
@@ -690,12 +700,12 @@ class Task(
             models.UniqueConstraint(
                 fields=["workspace_board_section", "_order"],
                 name="unique_task_order",
-                deferrable=models.Deferrable.DEFERRED,
+                deferrable=models.Deferrable.DEFERRED,  # type:ignore
             ),
             models.UniqueConstraint(
                 fields=["workspace", "number"],
                 name="unique_task_number",
-                deferrable=models.Deferrable.DEFERRED,
+                deferrable=models.Deferrable.DEFERRED,  # type:ignore
             ),
         ]
 
@@ -720,7 +730,7 @@ class Label(models.Model):
         help_text=_("Color index"),
         default=0,
     )
-    workspace = models.ForeignKey(
+    workspace = models.ForeignKey["Workspace"](
         Workspace,
         on_delete=models.CASCADE,
     )
@@ -745,11 +755,11 @@ class TaskLabelQuerySet(models.QuerySet):
 class TaskLabel(models.Model):
     """A label to task assignment."""
 
-    task = models.ForeignKey(
+    task = models.ForeignKey["Task"](
         Task,
         on_delete=models.CASCADE,
     )
-    label = models.ForeignKey(
+    label = models.ForeignKey["Label"](
         Label,
         on_delete=models.CASCADE,
     )
@@ -791,7 +801,7 @@ class SubTask(
 ):
     """SubTask, belongs to Task."""
 
-    task = models.ForeignKey(
+    task = models.ForeignKey["Task"](
         Task,
         on_delete=models.CASCADE,
     )
@@ -838,7 +848,7 @@ class SubTask(
             models.UniqueConstraint(
                 fields=["task", "_order"],
                 name="unique_sub_task_order",
-                deferrable=models.Deferrable.DEFERRED,
+                deferrable=models.Deferrable.DEFERRED,  # type:ignore
             )
         ]
 
@@ -863,13 +873,13 @@ class ChatMessageQuerySet(models.QuerySet):
 class ChatMessage(TimeStampedModel, models.Model):
     """ChatMessage, belongs to Task."""
 
-    task = models.ForeignKey(
+    task = models.ForeignKey["Task"](
         Task,
         on_delete=models.CASCADE,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     text = models.TextField()
-    author = models.ForeignKey(
+    author = models.ForeignKey["WorkspaceUser"](
         WorkspaceUser,
         on_delete=models.SET_NULL,
         blank=True,

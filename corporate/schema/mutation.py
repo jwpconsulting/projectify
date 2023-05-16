@@ -45,7 +45,7 @@ class Mutation:
         self, info, input: CreateCheckoutSessionInput
     ) -> types.CheckoutSession:
         """Create a Stripe checkout session."""
-        qs = workspace_models.Workspace.objects.filter_for_user_and_uuid(
+        qs = workspace_models.Workspace.objects.filter_for_user_and_uuid(  # type: ignore
             info.context.user,
             input.workspace_uuid,
         )
@@ -86,7 +86,7 @@ class Mutation:
         self, info, input: CreateBillingPortalSessionInput
     ) -> types.BillingPortalSession:
         """Allow accessing the billing portal."""
-        customer = models.Customer.objects.get_for_user_and_uuid(
+        customer = models.Customer.objects.get_for_user_and_uuid(  # type: ignore
             info.context.user,
             input.uuid,
         )

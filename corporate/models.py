@@ -1,11 +1,20 @@
 """Corporate models."""
 import uuid
+from typing import (
+    TYPE_CHECKING,
+)
 
 from django.db import (
     models,
     transaction,
 )
 from django.utils.translation import gettext_lazy as _
+
+
+if TYPE_CHECKING:
+    from workspace.models import (  # noqa: F401
+        Workspace,
+    )
 
 
 class CustomerQuerySet(models.QuerySet):
@@ -43,7 +52,7 @@ class CustomerSubscriptionStatus(models.TextChoices):
 class Customer(models.Model):
     """Customer model. One to one linked to workspace."""
 
-    workspace = models.OneToOneField(
+    workspace = models.OneToOneField["Workspace"](
         "workspace.Workspace",
         on_delete=models.CASCADE,
     )

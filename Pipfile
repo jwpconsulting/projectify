@@ -18,13 +18,15 @@ pytest = "==7.2.1"
 pytest-asyncio = "==0.20.3"
 pytest-celery = "==0.0.0"
 pytest-django = "==4.5.2"
+pyright = "*"
+django-types = "*"
 
 [packages]
 celery = {extras = ["redis"], version = "==5.2.7"}
 channels = {version = "==4.0.0", extras = ["daphne"]}
 channels-redis = "==4.0.0"
 dj-database-url = "==0.5.0"
-django = "==4.1.7"
+django = "==4.2.1"
 django-anymail = {extras = ["mailgun"], version = "==8.6"}
 django-celery-results = "==2.4.0"
 django-cloudinary-storage = "==0.3.0"
