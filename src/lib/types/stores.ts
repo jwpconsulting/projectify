@@ -72,12 +72,12 @@ export interface WorkspaceBoardSectionModule {
     toggleWorkspaceBoardSectionOpen: (
         workspaceBoardSectionUuid: string
     ) => void;
-    switchWithPrevSection:
-        | ((workspaceBoardSection: WorkspaceBoardSection) => Promise<void>)
-        | undefined;
-    switchWithNextSection:
-        | ((workspaceBoardSection: WorkspaceBoardSection) => Promise<void>)
-        | undefined;
+    switchWithPrevSection?: (
+        workspaceBoardSection: WorkspaceBoardSection
+    ) => Promise<void>;
+    switchWithNextSection?: (
+        workspaceBoardSection: WorkspaceBoardSection
+    ) => Promise<void>;
 }
 
 export interface NewWorkspaceBoardSectionModule {
