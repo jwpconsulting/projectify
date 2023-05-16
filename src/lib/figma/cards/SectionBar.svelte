@@ -8,8 +8,7 @@
     export let workspaceBoardSection: WorkspaceBoardSection;
     export let workspaceBoardSectionModule: WorkspaceBoardSectionModule;
 
-    const { workspaceBoardSectionClosed, toggleWorkspaceBoardSectionOpen } =
-        workspaceBoardSectionModule;
+    const { workspaceBoardSectionClosed } = workspaceBoardSectionModule;
 
     const { uuid } = workspaceBoardSection;
     $: open = !$workspaceBoardSectionClosed.has(uuid);
@@ -18,13 +17,11 @@
     $: tasks = open ? workspaceBoardSection.tasks ?? [] : [];
 
     export let createMoveTaskModule: typeof _createMoveTaskModule;
-    const toggleOpen = toggleWorkspaceBoardSectionOpen.bind(null, uuid);
 </script>
 
 <div class="flex flex-col">
     <SectionTitle
         {workspaceBoardSection}
-        {toggleOpen}
         {open}
         {workspaceBoardSectionModule}
     />

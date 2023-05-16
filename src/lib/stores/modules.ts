@@ -2,18 +2,27 @@ import { writable } from "svelte/store";
 import {
     moveTaskAfter,
     createLabel as repositoryCreateLabel,
+    moveWorkspaceBoardSection,
 } from "$lib/repository/workspace";
 import {
     createLabelSearchResults,
     currentWorkspaceLabels,
 } from "$lib/stores/dashboard";
+import {
+    toggleWorkspaceBoardSectionOpen,
+    workspaceBoardSectionClosed,
+} from "$lib/stores/dashboard/ui";
 import type {
     Workspace,
     Task,
     WorkspaceBoardSection,
 } from "$lib/types/workspace";
 
-import type { LabelSearchModule, MoveTaskModule } from "$lib/types/stores";
+import type {
+    LabelSearchModule,
+    MoveTaskModule,
+    WorkspaceBoardSectionModule,
+} from "$lib/types/stores";
 import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
 
 export function createLabelSearchModule(
@@ -94,4 +103,46 @@ export function createMoveTaskModule(
         moveToWorkspaceBoardSection: ({ uuid }: WorkspaceBoardSection) =>
             moveTaskAfter(taskUuid, uuid),
     };
+}
+
+export function createWorkspaceBoardSectionModule(
+    workspaceBoardSections: WorkspaceBoardSection[],
+    section: WorkspaceBoardSection
+): WorkspaceBoardSectionModule {
+    // XXX very convoluted, just to get a conditionally assigned fn...
+    const sectionIndex: number = workspaceBoardSections.findIndex(
+        (s: WorkspaceBoardSection) => s.uuid == section.uuid
+    );
+    const previousIndex = sectionIndex > 0 ? sectionIndex - 1 : undefined;
+    const nextIndex =
+        sectionIndex < workspaceBoardSections.length - 1
+            ? sectionIndex + 1
+            : undefined;
+    const previousSection: WorkspaceBoardSection | undefined =
+        previousIndex !== undefined
+            ? workspaceBoardSections[previousIndex]
+            : undefined;
+    const nextSection: WorkspaceBoardSection | undefined =
+        nextIndex !== undefined
+            ? workspaceBoardSections[nextIndex]
+            : undefined;
+
+    const switchWithPreviousSection = previousSection
+        ? async () => {
+              await moveWorkspaceBoardSection(section, previousSection._order);
+          }
+        : undefined;
+    const switchWithNextSection = nextSection
+        ? async () => {
+              await moveWorkspaceBoardSection(section, nextSection._order);
+          }
+        : undefined;
+
+    const workspaceBoardSectionModule: WorkspaceBoardSectionModule = {
+        workspaceBoardSectionClosed,
+        toggleWorkspaceBoardSectionOpen,
+        switchWithPrevSection: switchWithPreviousSection,
+        switchWithNextSection,
+    };
+    return workspaceBoardSectionModule;
 }

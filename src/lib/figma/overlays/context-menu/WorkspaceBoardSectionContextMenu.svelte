@@ -44,24 +44,28 @@
     state="normal"
     icon={closed ? Selector : X}
 />
-<ContextMenuButton
-    kind={{
-        kind: "button",
-        action: switchWithPrevSection.bind(null, workspaceBoardSection),
-    }}
-    label={$_("workspace-board-section-overlay.switch-previous")}
-    state="normal"
-    icon={ArrowUp}
-/>
-<ContextMenuButton
-    kind={{
-        kind: "button",
-        action: switchWithNextSection.bind(null, workspaceBoardSection),
-    }}
-    label={$_("workspace-board-section-overlay.switch-next")}
-    state="normal"
-    icon={ArrowDown}
-/>
+{#if switchWithPrevSection}
+    <ContextMenuButton
+        kind={{
+            kind: "button",
+            action: switchWithPrevSection.bind(null, workspaceBoardSection),
+        }}
+        label={$_("workspace-board-section-overlay.switch-previous")}
+        state="normal"
+        icon={ArrowUp}
+    />
+{/if}
+{#if switchWithNextSection}
+    <ContextMenuButton
+        kind={{
+            kind: "button",
+            action: switchWithNextSection.bind(null, workspaceBoardSection),
+        }}
+        label={$_("workspace-board-section-overlay.switch-next")}
+        state="normal"
+        icon={ArrowDown}
+    />
+{/if}
 <ContextMenuButton
     kind={{
         kind: "button",

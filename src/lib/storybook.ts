@@ -242,8 +242,8 @@ export const sideNavModule: SideNavModule = {
 export const workspaceBoardSectionModule: WorkspaceBoardSectionModule = {
     workspaceBoardSectionClosed: writable(new Set()),
     toggleWorkspaceBoardSectionOpen: noop,
-    switchWithPrevSection: noop,
-    switchWithNextSection: noop,
+    switchWithPrevSection: noopAsync,
+    switchWithNextSection: noopAsync,
 };
 
 export const createTaskModule: CreateTaskModule = {

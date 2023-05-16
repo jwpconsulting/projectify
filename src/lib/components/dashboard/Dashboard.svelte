@@ -8,20 +8,14 @@
     } from "$lib/stores/dashboard";
 
     import TaskCard from "$lib/figma/cards/TaskCard.svelte";
-    import type {
-        WorkspaceBoard,
-        WorkspaceBoardSection,
-    } from "$lib/types/workspace";
-    import { createMoveTaskModule } from "$lib/stores/modules";
+    import type { WorkspaceBoard } from "$lib/types/workspace";
+    import {
+        createMoveTaskModule,
+        createWorkspaceBoardSectionModule,
+    } from "$lib/stores/modules";
 
     import FloatingActionButton from "$lib/figma/buttons/FloatingActionButton.svelte";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
-    import type { WorkspaceBoardSectionModule } from "$lib/types/stores";
-    import {
-        toggleWorkspaceBoardSectionOpen,
-        workspaceBoardSectionClosed,
-    } from "$lib/stores/dashboard/ui";
-    import { moveWorkspaceBoardSection } from "$lib/repository/workspace";
 
     export let workspaceBoard: WorkspaceBoard;
 
@@ -44,37 +38,6 @@
             }
         );
     }
-
-    function switchWithPrevSection(section: WorkspaceBoardSection) {
-        const sectionIndex = $currentWorkspaceBoardSections.findIndex(
-            (s) => s.uuid == section.uuid
-        );
-        const prevSection = $currentWorkspaceBoardSections[sectionIndex - 1];
-
-        if (!prevSection) {
-            throw new Error("There is no previous section");
-        }
-        moveWorkspaceBoardSection(section, prevSection._order);
-    }
-    function switchWithNextSection(section: WorkspaceBoardSection) {
-        const sectionIndex: number = $currentWorkspaceBoardSections.findIndex(
-            (s: WorkspaceBoardSection) => s.uuid == section.uuid
-        );
-        const nextSection: WorkspaceBoardSection | null =
-            $currentWorkspaceBoardSections[sectionIndex + 1] || null;
-
-        if (!nextSection) {
-            throw new Error("There is no next section");
-        }
-        moveWorkspaceBoardSection(section, nextSection._order);
-    }
-
-    const workspaceBoardSectionModule: WorkspaceBoardSectionModule = {
-        workspaceBoardSectionClosed,
-        toggleWorkspaceBoardSectionOpen,
-        switchWithPrevSection,
-        switchWithNextSection,
-    };
 </script>
 
 <div class="relative flex h-full min-h-full grow flex-col bg-base-200">
@@ -100,7 +63,10 @@
                 <SectionBar
                     {workspaceBoardSection}
                     {createMoveTaskModule}
-                    {workspaceBoardSectionModule}
+                    workspaceBoardSectionModule={createWorkspaceBoardSectionModule(
+                        $currentWorkspaceBoardSections,
+                        workspaceBoardSection
+                    )}
                 />
             {/each}
         </div>

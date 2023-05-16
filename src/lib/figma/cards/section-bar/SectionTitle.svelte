@@ -11,9 +11,12 @@
 
     export let workspaceBoardSection: WorkspaceBoardSection;
     export let workspaceBoardSectionModule: WorkspaceBoardSectionModule;
-    export let toggleOpen: () => void;
     export let open: boolean;
 
+    const { toggleWorkspaceBoardSectionOpen } = workspaceBoardSectionModule;
+
+    const { uuid } = workspaceBoardSection;
+    const toggleOpen = toggleWorkspaceBoardSectionOpen.bind(null, uuid);
     let dropDownMenuBtnRef: HTMLElement;
 
     function openDropDownMenu() {
