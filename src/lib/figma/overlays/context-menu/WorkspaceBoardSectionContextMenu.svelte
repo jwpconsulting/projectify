@@ -35,8 +35,7 @@
 <ContextMenuButton
     kind={{
         kind: "button",
-        action: () =>
-            toggleWorkspaceBoardSectionOpen(workspaceBoardSection.uuid),
+        action: toggleWorkspaceBoardSectionOpen,
     }}
     label={closed
         ? $_("workspace-board-section-overlay.expand-section")

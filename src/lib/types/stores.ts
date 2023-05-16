@@ -68,16 +68,9 @@ export interface SideNavModule {
 export interface WorkspaceBoardSectionModule {
     // TODO Bind this to a specific uuid
     workspaceBoardSectionClosed: Readable<Set<string>>;
-    // TODO Bind this to a specific uuid
-    toggleWorkspaceBoardSectionOpen: (
-        workspaceBoardSectionUuid: string
-    ) => void;
-    switchWithPrevSection?: (
-        workspaceBoardSection: WorkspaceBoardSection
-    ) => Promise<void>;
-    switchWithNextSection?: (
-        workspaceBoardSection: WorkspaceBoardSection
-    ) => Promise<void>;
+    toggleWorkspaceBoardSectionOpen: () => void;
+    switchWithPrevSection?: () => Promise<void>;
+    switchWithNextSection?: () => Promise<void>;
 }
 
 export interface NewWorkspaceBoardSectionModule {

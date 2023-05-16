@@ -135,11 +135,12 @@ export function createWorkspaceBoardSectionModule(
             ? workspaceBoardSections[nextIndex]
             : undefined;
 
-    const switchWithPreviousSection = previousSection
-        ? async () => {
-              await moveWorkspaceBoardSection(section, previousSection._order);
-          }
-        : undefined;
+    const switchWithPreviousSection =
+        previousSection &&
+        (async () => {
+            await moveWorkspaceBoardSection(section, previousSection._order);
+        });
+
     const switchWithNextSection = nextSection
         ? async () => {
               await moveWorkspaceBoardSection(section, nextSection._order);
@@ -148,7 +149,10 @@ export function createWorkspaceBoardSectionModule(
 
     const workspaceBoardSectionModule: WorkspaceBoardSectionModule = {
         workspaceBoardSectionClosed,
-        toggleWorkspaceBoardSectionOpen,
+        toggleWorkspaceBoardSectionOpen: toggleWorkspaceBoardSectionOpen.bind(
+            null,
+            section.uuid
+        ),
         switchWithPrevSection: switchWithPreviousSection,
         switchWithNextSection,
     };
