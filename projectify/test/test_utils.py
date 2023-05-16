@@ -1,4 +1,5 @@
 """Test projectify utils."""
+import os
 from unittest import (
     mock,
 )
@@ -26,6 +27,7 @@ class TestCropImage:
         url = utils.crop_image(None, 100, 100)
         assert url is None
 
+    @mock.patch.dict(os.environ, {"CLOUDINARY_URL": "https://example.com"})
     def test_with_cloudinary(self, image, settings):
         """Test with cloudinary file storage."""
         settings.DEFAULT_FILE_STORAGE = settings.MEDIA_CLOUDINARY_STORAGE
