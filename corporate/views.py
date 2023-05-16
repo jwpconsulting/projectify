@@ -36,7 +36,7 @@ class WorkspaceCustomerRetrieve(generics.RetrieveAPIView):
 
     def get_queryset(self):
         """Filter by request user."""
-        return self.queryset.filter_by_user(self.request.user)
+        return self.queryset.filter_by_user(self.request.user)  # type: ignore
 
     def get_object(self):
         """Get customer."""
@@ -49,7 +49,7 @@ def handle_session_completed(event) -> bool:
     """Handle Stripe checkout.session.completed."""
     session = event["data"]["object"]
     customer_uuid = session.metadata.customer_uuid
-    customer = models.Customer.objects.get_by_uuid(customer_uuid)
+    customer = models.Customer.objects.get_by_uuid(customer_uuid)  # type: ignore
     customer.assign_stripe_customer_id(session.customer)
     customer.activate_subscription()
     return True
@@ -59,7 +59,7 @@ def handle_subscription_updated(event) -> bool:
     """Handle Stripe customer.subscription.updated."""
     subscription = event["data"]["object"]
     customer_id = subscription.customer
-    customer = models.Customer.objects.get_by_stripe_customer_id(customer_id)
+    customer = models.Customer.objects.get_by_stripe_customer_id(customer_id)  # type: ignore
     customer.set_number_of_seats(subscription.quantity)
     logger.info("Customer %s updated subscription: %s", customer, subscription)
     return True
@@ -70,7 +70,7 @@ def handle_payment_failure(event) -> bool:
     invoice = event["data"]["object"]
     if invoice.next_payment_attempt is None:
         stripe_customer_id = invoice.customer
-        customer = models.Customer.objects.get_by_stripe_customer_id(
+        customer = models.Customer.objects.get_by_stripe_customer_id(  # type: ignore
             stripe_customer_id
         )
         customer.cancel_subscription()
