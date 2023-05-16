@@ -108,7 +108,7 @@ class WorkspaceRetrieve(generics.RetrieveAPIView):
     ).prefetch_related(
         Prefetch(
             "workspaceboard_set",
-            queryset=models.WorkspaceBoard.objects.filter_by_archived(False),
+            queryset=models.WorkspaceBoard.objects.filter_by_archived(False),  # type: ignore
         ),
         Prefetch(
             "workspaceuser_set",
@@ -170,7 +170,7 @@ class TaskRetrieve(generics.RetrieveAPIView):
 class WorkspaceBoardArchivedList(generics.ListAPIView):
     """List archived workspace boards inside a workspace."""
 
-    queryset = models.WorkspaceBoard.objects.filter_by_archived()
+    queryset = models.WorkspaceBoard.objects.filter_by_archived()  # type: ignore
     serializer_class = serializers.WorkspaceBoardBaseSerializer
 
     def get_queryset(self):

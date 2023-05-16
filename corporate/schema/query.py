@@ -20,7 +20,7 @@ class Query:
         self, info, workspace_uuid: uuid.UUID
     ) -> types.Customer:
         """Resolve customer by workspace UUID."""
-        customer = models.Customer.objects.get_by_workspace_uuid(
+        customer = models.Customer.objects.get_by_workspace_uuid(  # type: ignore
             workspace_uuid
         )
         assert info.context.user.has_perm(

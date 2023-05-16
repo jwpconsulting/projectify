@@ -118,3 +118,8 @@ ignore_errors = true
 [[tool.mypy.overrides]]
 module = "workspace.schema.types"
 ignore_errors = true
+
+# Here is where we get strict again
+# [[tool.mypy.overrides]]
+# module = "workspace.signals"
+# disallow_untyped_defs = true
