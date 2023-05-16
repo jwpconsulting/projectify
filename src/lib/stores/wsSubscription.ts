@@ -1,5 +1,5 @@
 import Sarus from "@anephenix/sarus";
-import type { Subscriber } from "svelte/store";
+import type { Unsubscriber, Subscriber } from "svelte/store";
 import { writable } from "svelte/store";
 import { browser } from "$app/environment";
 
@@ -7,63 +7,55 @@ interface WSMessage {
     message: string;
     at: number;
 }
-type WSSubscriber = Subscriber<WSMessage | null>;
+type WSSubscriber = Subscriber<WSMessage>;
 
 const wsSubscriptionStores = new Map<string, WSSubscriptionStore>();
 
-export const activeWSSubscriptions = writable(0);
-export const activeWSConnections = writable(0);
-
-export class WSSubscriptionStore {
+export interface WSSubscriptionStore {
     sarus: Sarus;
-    subscribers: WSSubscriber[] = [];
+    subscribe: (run: WSSubscriber) => Unsubscriber;
     url: string;
+}
 
-    constructor(url: string) {
-        this.url = url;
-        this.sarus = new Sarus({ url });
-        const onmessage = ({
-            data,
-            timeStamp,
-        }: {
-            data: string;
-            timeStamp: number;
-        }) => {
-            this.debug("socket.onmessage", data, timeStamp);
-            this.dispatch({
-                message: data,
-                at: timeStamp,
-            });
-        };
-        this.sarus.on("message", onmessage);
-    }
+function makeWsSubscriptionStore(url: string): WSSubscriptionStore {
+    const subscribers = new Map<number, WSSubscriber>();
+    let nextSubscriberId = 0;
 
-    dispatch(wsMessage: WSMessage) {
-        this.debug("Dispatching", wsMessage, "to", this.subscribers);
-        this.subscribers.forEach((subscriber) => {
-            subscriber(wsMessage);
-        });
-    }
+    const message = ({
+        data: message,
+        timeStamp: at,
+    }: MessageEvent<string>) => {
+        subscribers.forEach((subscriber) => subscriber({ message, at }));
+    };
 
-    public subscribe(subscriber: WSSubscriber): () => void {
-        this.subscribers.push(subscriber);
-        this.debug("Subscribing", subscriber);
+    const sarus = new Sarus({
+        url,
+        eventListeners: {
+            open: [console.log.bind(null, "Connection opened to", url)],
+            close: [console.log.bind(null, "Connection closed to", url)],
+            error: [console.error.bind(null, "Connection error for", url)],
+            message: [message],
+        },
+    });
 
-        return () => {
-            const index = this.subscribers.indexOf(subscriber);
-            if (index !== -1) {
-                this.subscribers.splice(index, 1);
-            }
-            if (!this.subscribers.length) {
-                this.sarus.disconnect();
-                wsSubscriptionStores.delete(this.url);
-            }
-        };
-    }
-
-    debug(reason: string, ...arg0: unknown[]) {
-        console.debug(this.url, reason, { this: this }, ...arg0);
-    }
+    const unsubscribe = (id: number): void => {
+        subscribers.delete(id);
+        if (subscribers.size === 0) {
+            sarus.disconnect();
+            wsSubscriptionStores.delete(url);
+        }
+    };
+    const subscribe = (run: WSSubscriber): Unsubscriber => {
+        const subscriberId = nextSubscriberId;
+        subscribers.set(subscriberId, run);
+        nextSubscriberId++;
+        return unsubscribe.bind(null, subscriberId, run);
+    };
+    return {
+        sarus,
+        url,
+        subscribe,
+    };
 }
 
 export function getSubscriptionFor(url: string): WSSubscriptionStore | null {
@@ -75,7 +67,7 @@ export function getSubscriptionFor(url: string): WSSubscriptionStore | null {
     if (store) {
         return store;
     }
-    const newStore = new WSSubscriptionStore(url);
+    const newStore: WSSubscriptionStore = makeWsSubscriptionStore(url);
     wsSubscriptionStores.set(url, newStore);
     return newStore;
 }

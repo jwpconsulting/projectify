@@ -1,15 +1,11 @@
 <script lang="ts">
     import { fade } from "svelte/transition";
     import { _ } from "svelte-i18n";
-    import {
-        activeWSConnections,
-        activeWSSubscriptions,
-        online,
-    } from "$lib/stores/wsSubscription";
+    import { online } from "$lib/stores/wsSubscription";
     import IconsExclamation from "$lib/components/icons/icons-exclamation.svelte";
 </script>
 
-{#if $activeWSSubscriptions != $activeWSConnections || ($online == false && $activeWSSubscriptions > 0)}
+{#if $online == false}
     <div
         class="bg-base fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-opacity-50 p-2 backdrop-blur-sm"
         transition:fade={{ duration: 100 }}
