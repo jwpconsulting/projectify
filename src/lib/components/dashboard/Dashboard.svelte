@@ -1,8 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import SectionBar from "$lib/figma/cards/SectionBar.svelte";
-    import { Mutation_MoveWorkspaceBoardSection } from "$lib/graphql/operations";
-    import { client } from "$lib/graphql/client";
     import {
         createCurrentSearchedTasks,
         currentWorkspaceBoardSections,
@@ -23,6 +21,7 @@
         toggleWorkspaceBoardSectionOpen,
         workspaceBoardSectionClosed,
     } from "$lib/stores/dashboard/ui";
+    import { moveWorkspaceBoardSection } from "$lib/repository/workspace";
 
     export let workspaceBoard: WorkspaceBoard;
 
@@ -46,34 +45,16 @@
         );
     }
 
-    async function moveSection(
-        workspaceBoardSectionUuid: string,
-        order: number
-    ) {
-        try {
-            await client.mutate({
-                mutation: Mutation_MoveWorkspaceBoardSection,
-                variables: {
-                    input: {
-                        workspaceBoardSectionUuid,
-                        order,
-                    },
-                },
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
     function switchWithPrevSection(section: WorkspaceBoardSection) {
         const sectionIndex = $currentWorkspaceBoardSections.findIndex(
             (s) => s.uuid == section.uuid
         );
         const prevSection = $currentWorkspaceBoardSections[sectionIndex - 1];
 
-        if (prevSection) {
-            moveSection(section.uuid, prevSection._order);
+        if (!prevSection) {
+            throw new Error("There is no previous section");
         }
+        moveWorkspaceBoardSection(section, prevSection._order);
     }
     function switchWithNextSection(section: WorkspaceBoardSection) {
         const sectionIndex: number = $currentWorkspaceBoardSections.findIndex(
@@ -82,9 +63,10 @@
         const nextSection: WorkspaceBoardSection | null =
             $currentWorkspaceBoardSections[sectionIndex + 1] || null;
 
-        if (nextSection) {
-            moveSection(section.uuid, nextSection._order);
+        if (!nextSection) {
+            throw new Error("There is no next section");
         }
+        moveWorkspaceBoardSection(section, nextSection._order);
     }
 
     const workspaceBoardSectionModule: WorkspaceBoardSectionModule = {

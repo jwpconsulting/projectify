@@ -1,4 +1,5 @@
 import {
+    Mutation_MoveWorkspaceBoardSection,
     Mutation_AddLabelMutation,
     Mutation_AddTask,
     Mutation_AddWorkspaceBoard,
@@ -301,6 +302,8 @@ export async function archiveWorkspaceBoard(workspaceBoard: WorkspaceBoard) {
     console.error("TODO");
 }
 
+// WorkspaceBoardSection CRUD
+// Create
 export async function createWorkspaceBoardSection(
     workspaceBoard: WorkspaceBoard,
     workspaceBoardSection: CreateWorkspaceBoardSection
@@ -311,6 +314,23 @@ export async function createWorkspaceBoardSection(
             input: {
                 workspaceBoardUuid: workspaceBoard.uuid,
                 ...workspaceBoardSection,
+            },
+        },
+    });
+}
+
+// Read
+// Update
+export async function moveWorkspaceBoardSection(
+    { uuid }: WorkspaceBoardSection,
+    order: number
+) {
+    await client.mutate({
+        mutation: Mutation_MoveWorkspaceBoardSection,
+        variables: {
+            input: {
+                workspaceBoardSectionUuid: uuid,
+                order,
             },
         },
     });

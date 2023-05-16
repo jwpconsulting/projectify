@@ -17,8 +17,12 @@
     export let workspaceBoardSection: WorkspaceBoardSection;
     export let workspaceBoardSectionModule: WorkspaceBoardSectionModule;
 
-    let { workspaceBoardSectionClosed, toggleWorkspaceBoardSectionOpen } =
-        workspaceBoardSectionModule;
+    let {
+        workspaceBoardSectionClosed,
+        toggleWorkspaceBoardSectionOpen,
+        switchWithPrevSection,
+        switchWithNextSection,
+    } = workspaceBoardSectionModule;
 
     let closed: boolean;
     $: {
@@ -43,7 +47,7 @@
 <ContextMenuButton
     kind={{
         kind: "button",
-        action: () => console.error("switch with previous not implemented"),
+        action: switchWithPrevSection.bind(null, workspaceBoardSection),
     }}
     label={$_("workspace-board-section-overlay.switch-previous")}
     state="normal"
@@ -52,7 +56,7 @@
 <ContextMenuButton
     kind={{
         kind: "button",
-        action: () => console.error("switch with next not implemented"),
+        action: switchWithNextSection.bind(null, workspaceBoardSection),
     }}
     label={$_("workspace-board-section-overlay.switch-next")}
     state="normal"
