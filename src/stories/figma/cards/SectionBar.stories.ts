@@ -6,6 +6,7 @@ import {
     createMoveTaskModule,
     mobileParameters,
     workspaceBoardSection,
+    workspaceBoardSectionModule,
 } from "$lib/storybook";
 
 const meta: Meta<SectionBar> = {
@@ -13,9 +14,8 @@ const meta: Meta<SectionBar> = {
     argTypes: {},
     args: {
         workspaceBoardSection,
+        workspaceBoardSectionModule,
         createMoveTaskModule,
-        switchWithPrevSection: console.error,
-        switchWithNextSection: console.error,
     },
 };
 export default meta;

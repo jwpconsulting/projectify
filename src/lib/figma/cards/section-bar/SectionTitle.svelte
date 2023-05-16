@@ -1,21 +1,30 @@
 <script lang="ts">
     import { Icon } from "@steeze-ui/svelte-icon";
     import { ChevronDown, ChevronRight } from "@steeze-ui/heroicons";
-    import type { SvelteComponent } from "svelte";
+    import { openContextMenu } from "$lib/stores/globalUi";
     import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
 
     import type { WorkspaceBoardSection } from "$lib/types/workspace";
     import { getNewTaskUrl } from "$lib/urls";
+    import type { ContextMenuType } from "$lib/types/ui";
+    import type { WorkspaceBoardSectionModule } from "$lib/types/stores";
 
     export let workspaceBoardSection: WorkspaceBoardSection;
+    export let workspaceBoardSectionModule: WorkspaceBoardSectionModule;
     export let toggleOpen: () => void;
     export let open: boolean;
 
-    let dropDownMenuBtnRef: SvelteComponent;
+    let dropDownMenuBtnRef: HTMLElement;
 
     function openDropDownMenu() {
         // TODO
         console.log("Need to open drop down menu at", dropDownMenuBtnRef);
+        const contextMenuType: ContextMenuType = {
+            kind: "workspaceBoardSection",
+            workspaceBoardSection,
+            workspaceBoardSectionModule,
+        };
+        openContextMenu(contextMenuType, dropDownMenuBtnRef);
     }
 </script>
 
@@ -47,12 +56,13 @@
             state="active"
             active={false}
         />
-        <SquovalIcon
-            icon="ellipsis"
-            state="active"
-            active={false}
-            bind:this={dropDownMenuBtnRef}
-            action={{ kind: "button", action: openDropDownMenu }}
-        />
+        <div bind:this={dropDownMenuBtnRef}>
+            <SquovalIcon
+                icon="ellipsis"
+                state="active"
+                active={false}
+                action={{ kind: "button", action: openDropDownMenu }}
+            />
+        </div>
     </div>
 </header>

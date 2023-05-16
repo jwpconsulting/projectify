@@ -18,6 +18,11 @@
 
     import FloatingActionButton from "$lib/figma/buttons/FloatingActionButton.svelte";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
+    import type { WorkspaceBoardSectionModule } from "$lib/types/stores";
+    import {
+        toggleWorkspaceBoardSectionOpen,
+        workspaceBoardSectionClosed,
+    } from "$lib/stores/dashboard/ui";
 
     export let workspaceBoard: WorkspaceBoard;
 
@@ -60,11 +65,7 @@
         }
     }
 
-    function onSwitchWithPrevSection({
-        detail: { section },
-    }: {
-        detail: { section: WorkspaceBoardSection };
-    }) {
+    function switchWithPrevSection(section: WorkspaceBoardSection) {
         const sectionIndex = $currentWorkspaceBoardSections.findIndex(
             (s) => s.uuid == section.uuid
         );
@@ -74,11 +75,7 @@
             moveSection(section.uuid, prevSection._order);
         }
     }
-    function onSwitchWithNextSection({
-        detail: { section },
-    }: {
-        detail: { section: WorkspaceBoardSection };
-    }) {
+    function switchWithNextSection(section: WorkspaceBoardSection) {
         const sectionIndex: number = $currentWorkspaceBoardSections.findIndex(
             (s: WorkspaceBoardSection) => s.uuid == section.uuid
         );
@@ -89,6 +86,13 @@
             moveSection(section.uuid, nextSection._order);
         }
     }
+
+    const workspaceBoardSectionModule: WorkspaceBoardSectionModule = {
+        workspaceBoardSectionClosed,
+        toggleWorkspaceBoardSectionOpen,
+        switchWithPrevSection,
+        switchWithNextSection,
+    };
 </script>
 
 <div class="relative flex h-full min-h-full grow flex-col bg-base-200">
@@ -113,9 +117,8 @@
             {#each $currentWorkspaceBoardSections as workspaceBoardSection (workspaceBoardSection.uuid)}
                 <SectionBar
                     {workspaceBoardSection}
-                    on:switchWithPrevSection={onSwitchWithPrevSection}
-                    on:switchWithNextSection={onSwitchWithNextSection}
                     {createMoveTaskModule}
+                    {workspaceBoardSectionModule}
                 />
             {/each}
         </div>

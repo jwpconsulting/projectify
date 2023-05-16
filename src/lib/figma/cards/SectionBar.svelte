@@ -3,8 +3,10 @@
     import SectionTitle from "$lib/figma/cards/section-bar/SectionTitle.svelte";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
     import type { createMoveTaskModule as _createMoveTaskModule } from "$lib/stores/modules";
+    import type { WorkspaceBoardSectionModule } from "$lib/types/stores";
 
     export let workspaceBoardSection: WorkspaceBoardSection;
+    export let workspaceBoardSectionModule: WorkspaceBoardSectionModule;
 
     let open = true;
 
@@ -15,8 +17,6 @@
     let tasks: Task[] = [];
     $: tasks = open ? workspaceBoardSection.tasks ?? [] : [];
 
-    export let switchWithPrevSection: () => void;
-    export let switchWithNextSection: () => void;
     export let createMoveTaskModule: typeof _createMoveTaskModule;
 </script>
 
@@ -25,8 +25,7 @@
         {workspaceBoardSection}
         {toggleOpen}
         bind:open
-        on:switchWithPrevSection={switchWithPrevSection}
-        on:switchWithNextSection={switchWithNextSection}
+        {workspaceBoardSectionModule}
     />
     {#if tasks.length}
         <main class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4">

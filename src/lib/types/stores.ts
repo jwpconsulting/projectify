@@ -66,9 +66,15 @@ export interface SideNavModule {
 }
 
 export interface WorkspaceBoardSectionModule {
-    workspaceBoardSectionClosed: Writable<Set<string>>;
+    workspaceBoardSectionClosed: Readable<Set<string>>;
     toggleWorkspaceBoardSectionOpen: (
         workspaceBoardSectionUuid: string
+    ) => void;
+    switchWithPrevSection: (
+        workspaceBoardSection: WorkspaceBoardSection
+    ) => void;
+    switchWithNextSection: (
+        workspaceBoardSection: WorkspaceBoardSection
     ) => void;
 }
 

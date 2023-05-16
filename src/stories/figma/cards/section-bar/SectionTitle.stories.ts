@@ -2,7 +2,11 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 
 import SectionTitle from "$lib/figma/cards/section-bar/SectionTitle.svelte";
 
-import { mobileParameters, workspaceBoardSection } from "$lib/storybook";
+import {
+    mobileParameters,
+    workspaceBoardSection,
+    workspaceBoardSectionModule,
+} from "$lib/storybook";
 
 const meta: Meta<SectionTitle> = {
     component: SectionTitle,
@@ -13,6 +17,7 @@ const meta: Meta<SectionTitle> = {
     },
     args: {
         workspaceBoardSection,
+        workspaceBoardSectionModule,
         open: true,
     },
 };
