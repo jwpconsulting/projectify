@@ -41,6 +41,7 @@
     },
     "type": "module",
     "dependencies": {
+        "@anephenix/sarus": "^0.4.4",
         "@apollo/client": "^3.7.13",
         "@fontsource/fira-mono": "^4.5.10",
         "@steeze-ui/heroicons": "^1.1.1",
