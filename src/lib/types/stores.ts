@@ -111,8 +111,8 @@ export type CreateTaskModule = {
 
 // Functions needed to move task around inside section or between sections
 export interface MoveTaskModule {
-    moveToBottom: () => Promise<void>;
-    moveToTop: () => Promise<void>;
+    moveToBottom?: () => Promise<void>;
+    moveToTop?: () => Promise<void>;
     moveToWorkspaceBoardSection: (
         workspaceBoardSection: WorkspaceBoardSection
     ) => Promise<void>;

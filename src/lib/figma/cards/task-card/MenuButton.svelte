@@ -1,10 +1,9 @@
 <script lang="ts">
-    import { Icon } from "@steeze-ui/svelte-icon";
-    import { DotsHorizontal } from "@steeze-ui/heroicons";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
     import type { MoveTaskModule } from "$lib/types/stores";
+    import CircleIcon from "$lib/figma/buttons/CircleIcon.svelte";
 
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection | null;
@@ -20,7 +19,7 @@
         if (!workspaceBoardSection.tasks) {
             throw new Error("Expected workspaceBoardSection.tasks");
         }
-        const tasks = workspaceBoardSection.tasks;
+        const { tasks } = workspaceBoardSection;
         const contextMenu: ContextMenuType = {
             kind: "task" as const,
             task,
@@ -37,15 +36,10 @@
         // let isLast = task.uuid == lastTask.uuid;
         // TODO show menu
     }
+
+    const action = { kind: "button" as const, action: openDropDownMenu };
 </script>
 
-<button
-    class="flex h-5 w-5 flex-row items-center"
-    bind:this={dropDownMenuBtnRef}
-    on:click|preventDefault={openDropDownMenu}
-    ><Icon
-        src={DotsHorizontal}
-        theme="outline"
-        class="h-5 w-5 text-base-content"
-    /></button
->
+<div bind:this={dropDownMenuBtnRef}>
+    <CircleIcon icon="ellipsis" size="medium" {action} disabled={false} />
+</div>

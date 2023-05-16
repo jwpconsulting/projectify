@@ -37,25 +37,29 @@
     label={$_("task-overlay.move-to-section")}
     icon={SwitchVertical}
 />
-{#if location === "dashboard" && moveTaskModule}
-    <ContextMenuButton
-        kind={{
-            kind: "button",
-            action: moveTaskModule.moveToTop,
-        }}
-        label={$_("task-overlay.move-to-top")}
-        state="normal"
-        icon={SortAscending}
-    />
-    <ContextMenuButton
-        kind={{
-            kind: "button",
-            action: moveTaskModule.moveToBottom,
-        }}
-        label={$_("task-overlay.move-to-bottom")}
-        state="normal"
-        icon={SortDescending}
-    />
+{#if location === "dashboard"}
+    {#if moveTaskModule?.moveToTop}
+        <ContextMenuButton
+            kind={{
+                kind: "button",
+                action: moveTaskModule.moveToTop,
+            }}
+            label={$_("task-overlay.move-to-top")}
+            state="normal"
+            icon={SortAscending}
+        />
+    {/if}
+    {#if moveTaskModule?.moveToBottom}
+        <ContextMenuButton
+            kind={{
+                kind: "button",
+                action: moveTaskModule.moveToBottom,
+            }}
+            label={$_("task-overlay.move-to-bottom")}
+            state="normal"
+            icon={SortDescending}
+        />
+    {/if}
 {/if}
 <ContextMenuButton
     kind={{
