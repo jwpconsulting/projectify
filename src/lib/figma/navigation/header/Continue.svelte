@@ -2,7 +2,7 @@
     import { _ } from "svelte-i18n";
     import Header from "$lib/figma/navigation/header/Header.svelte";
     import HeaderMobile from "$lib/figma/navigation/header/HeaderMobile.svelte";
-    import Button from "$lib/figma/buttons/Button.svelte";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
     import HamburgerMenu from "$lib/figma/buttons/HamburgerMenu.svelte";
 </script>
 

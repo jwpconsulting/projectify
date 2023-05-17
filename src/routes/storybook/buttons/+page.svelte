@@ -1,6 +1,5 @@
 <script lang="ts">
     import { Folder, Plus } from "@steeze-ui/heroicons";
-    import Button from "$lib/figma/buttons/Button.svelte";
     import SideMenuCreate from "$lib/figma/buttons/SideMenuCreate.svelte";
     import WorkspaceSettings from "$lib/figma/buttons/WorkspaceSettings.svelte";
     import UploadAvatar from "$lib/figma/buttons/UploadAvatar.svelte";
@@ -29,22 +28,13 @@
     import {
         boardButtonStates,
         borderedIconTypes,
-        buttonColors,
-        buttonSizes,
         menuButtonColors,
         menuButtonStates,
         sideMenuCreateSizes,
         stepperActiveStates,
         stepperPositions,
     } from "$lib/figma/types";
-    import {
-        buttonStyles,
-        falseTrue,
-        fc,
-        fr,
-        trueFalse,
-        users,
-    } from "$lib/storybook";
+    import { falseTrue, fc, fr, trueFalse, users } from "$lib/storybook";
     import { browser } from "$app/environment";
     import { setFirstWorkspace } from "$lib/stores/dashboard";
 
@@ -53,45 +43,6 @@
         setFirstWorkspace();
     }
 </script>
-
-Buttons
-<div class={fr}>
-    {#each buttonStyles as style}
-        <div class={fc}>
-            <div class="capitalize">
-                {style.kind}
-                {#if style.kind === "tertiary"}
-                    {#if style.icon === null}
-                        no icon
-                    {:else}
-                        icon {style.icon.position}
-                    {/if}
-                {/if}
-            </div>
-            {#each buttonColors as color}
-                <div class={fc}>
-                    <div class="capitalize">
-                        {color}
-                    </div>
-                    {#each buttonSizes as size}
-                        <div class={fr}>
-                            {#each trueFalse as disabled}
-                                <Button
-                                    on:click={console.log}
-                                    {style}
-                                    {size}
-                                    {color}
-                                    {disabled}
-                                    label={disabled ? "Disabled" : "Button"}
-                                />
-                            {/each}
-                        </div>
-                    {/each}
-                </div>
-            {/each}
-        </div>
-    {/each}
-</div>
 
 Side menu create
 <div class={fc}>

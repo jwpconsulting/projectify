@@ -1,4 +1,3 @@
-import { Plus } from "@steeze-ui/heroicons";
 import { readable, writable } from "svelte/store";
 import type { User } from "$lib/types/user";
 import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
@@ -14,7 +13,7 @@ import type {
 } from "$lib/types/workspace";
 import { getIndexFromLabelColor, labelColors } from "$lib/utils/colors";
 import type { LabelColor } from "$lib/utils/colors";
-import type { ButtonStyle, LabelLabel, SelectLabel } from "$lib/figma/types";
+import type { LabelLabel, SelectLabel } from "$lib/figma/types";
 import type {
     CreateTaskModule,
     LabelSearchModule,
@@ -31,14 +30,6 @@ export const fr = "flex flex-row flex-wrap gap-2";
 export const fc = "flex flex-col flex-wrap gap-2";
 export const trueFalse = [true, false];
 export const falseTrue = [false, true];
-
-export const buttonStyles: ButtonStyle[] = [
-    { kind: "primary" },
-    { kind: "secondary" },
-    { kind: "tertiary", icon: { position: "left", icon: Plus } },
-    { kind: "tertiary", icon: { position: "right", icon: Plus } },
-    { kind: "tertiary", icon: null },
-];
 
 export const user1: User = {
     email: "hello@example.com",

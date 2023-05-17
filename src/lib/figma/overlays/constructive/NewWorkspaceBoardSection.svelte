@@ -5,7 +5,7 @@
         WorkspaceBoard,
     } from "$lib/types/workspace";
     import type { NewWorkspaceBoardSectionModule } from "$lib/types/stores";
-    import Button from "$lib/figma/buttons/Button.svelte";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/figma/input-fields/InputField.svelte";
 
     export let workspaceBoard: WorkspaceBoard;

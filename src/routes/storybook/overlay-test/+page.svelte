@@ -1,6 +1,6 @@
 <script lang="ts">
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
-    import Button from "$lib/figma/buttons/Button.svelte";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
 
     const target = {
         kind: "deleteLabel" as const,

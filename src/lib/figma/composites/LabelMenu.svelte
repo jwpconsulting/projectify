@@ -4,7 +4,7 @@
     import type { SelectLabel, FilterLabelMenuState } from "$lib/figma/types";
     import type { LabelSearchModule } from "$lib/types/stores";
     import InputField from "$lib/figma/input-fields/InputField.svelte";
-    import Button from "$lib/figma/buttons/Button.svelte";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
     import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
     import type { Label } from "$lib/types/workspace";
     import { labelColors } from "$lib/utils/colors";

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import Button from "$lib/figma/buttons/Button.svelte";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
     import MobileMenu from "$lib/figma/overlays/MobileMenu.svelte";
 </script>
 

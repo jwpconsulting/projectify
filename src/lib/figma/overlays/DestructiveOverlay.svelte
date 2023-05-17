@@ -2,7 +2,7 @@
     import { _ } from "svelte-i18n";
     import { createEventDispatcher } from "svelte";
     import type { DestructiveOverlayType } from "$lib/types/ui";
-    import Button from "$lib/figma/buttons/Button.svelte";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
 
     export let target: DestructiveOverlayType;
 

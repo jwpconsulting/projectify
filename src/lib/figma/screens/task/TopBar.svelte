@@ -1,7 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import Button from "$lib/figma/buttons/Button.svelte";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
     import CircleIcon from "$lib/figma/buttons/CircleIcon.svelte";
     import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
     import { openContextMenu } from "$lib/stores/globalUi";

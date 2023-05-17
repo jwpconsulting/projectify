@@ -1,17 +1,5 @@
-import type { IconSource } from "@steeze-ui/svelte-icon/types";
 import type { User } from "$lib/types/user";
 import type { Label } from "$lib/types/workspace";
-
-export type ButtonStyle =
-    | { kind: "primary" }
-    | { kind: "secondary" }
-    | { kind: "tertiary"; icon: { position: "left"; icon: IconSource } }
-    | { kind: "tertiary"; icon: { position: "right"; icon: IconSource } }
-    | { kind: "tertiary"; icon: null };
-export const buttonColors = ["blue", "red"] as const;
-export type ButtonColor = (typeof buttonColors)[number];
-export const buttonSizes = ["medium", "small", "extra-small"] as const;
-export type ButtonSize = (typeof buttonSizes)[number];
 
 export const sideMenuCreateSizes = ["extraSmall", "small"] as const;
 export type SideMenuCreateSize = (typeof sideMenuCreateSizes)[number];

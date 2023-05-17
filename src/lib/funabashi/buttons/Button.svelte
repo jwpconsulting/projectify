@@ -6,7 +6,7 @@
         ButtonColor,
         ButtonSize,
         ButtonStyle,
-    } from "$lib/figma/types";
+    } from "$lib/funabashi/types";
 
     export let style: ButtonStyle;
     export let color: ButtonColor;

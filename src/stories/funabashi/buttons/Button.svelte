@@ -3,10 +3,10 @@
         ButtonAction,
         ButtonStyle,
         ButtonColor,
-    } from "$lib/figma/types";
-    import Button from "$lib/figma/buttons/Button.svelte";
+    } from "$lib/funabashi/types";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
 
-    import { buttonSizes } from "$lib/figma/types";
+    import { buttonSizes } from "$lib/funabashi/types";
     import { falseTrue, fc, fr } from "$lib/storybook";
 
     export let label: string;

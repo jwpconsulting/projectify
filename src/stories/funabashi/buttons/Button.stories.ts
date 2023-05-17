@@ -3,8 +3,8 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 import { Plus } from "@steeze-ui/heroicons";
 
 import Button from "./Button.svelte";
-import { buttonColors } from "$lib/figma/types";
-import type { ButtonAction, ButtonStyle } from "$lib/figma/types";
+import { buttonColors } from "$lib/funabashi/types";
+import type { ButtonAction, ButtonStyle } from "$lib/funabashi/types";
 
 const styles: Record<string, ButtonStyle> = {
     primary: {

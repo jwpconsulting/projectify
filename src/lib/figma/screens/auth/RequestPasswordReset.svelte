@@ -2,7 +2,7 @@
     import { _ } from "svelte-i18n";
     import AuthScreen from "$lib/figma/screens/auth/AuthScreen.svelte";
     import InputField from "$lib/figma/input-fields/InputField.svelte";
-    import Button from "$lib/figma/buttons/Button.svelte";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
     import Anchor from "$lib/figma/typography/Anchor.svelte";
     import { requestPasswordReset } from "$lib/stores/user";
 

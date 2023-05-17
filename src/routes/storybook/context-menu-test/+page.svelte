@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Button from "$lib/figma/buttons/Button.svelte";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
     import { openContextMenu } from "$lib/stores/globalUi";
 
     function open(target: HTMLElement) {
