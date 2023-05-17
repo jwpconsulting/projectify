@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
     import { moveTaskAfter } from "$lib/repository/workspace";
-    import CircleIcon from "$lib/figma/buttons/CircleIcon.svelte";
+    import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
 
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection | null = null;

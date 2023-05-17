@@ -4,20 +4,6 @@ import type { Label } from "$lib/types/workspace";
 export const sideMenuCreateSizes = ["extraSmall", "small"] as const;
 export type SideMenuCreateSize = (typeof sideMenuCreateSizes)[number];
 
-export const circleIconSizes = ["small", "medium"] as const;
-export type CircleIconSize = (typeof circleIconSizes)[number];
-// TODO rename circleIcons
-export const circleIconIcons = [
-    "ellipsis",
-    "edit",
-    "delete",
-    "up",
-    "down",
-    "close",
-] as const;
-// TODO rename CircleIcon
-export type CircleIconIcon = (typeof circleIconIcons)[number];
-
 export const menuButtonStates = ["normal", "accordion"] as const;
 export type MenuButtonState = (typeof menuButtonStates)[number];
 export const menuButtonColors = ["base", "primary", "destructive"] as const;

@@ -3,7 +3,7 @@
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
     import type { MoveTaskModule } from "$lib/types/stores";
-    import CircleIcon from "$lib/figma/buttons/CircleIcon.svelte";
+    import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
 
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection | null;

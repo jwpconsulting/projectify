@@ -2,7 +2,7 @@
     import { _ } from "svelte-i18n";
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import CircleIcon from "$lib/figma/buttons/CircleIcon.svelte";
+    import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
     import { openContextMenu } from "$lib/stores/globalUi";
 

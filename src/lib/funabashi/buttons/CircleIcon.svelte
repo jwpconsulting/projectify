@@ -12,7 +12,7 @@
         ButtonAction,
         CircleIconIcon,
         CircleIconSize,
-    } from "$lib/figma/types";
+    } from "$lib/funabashi/types";
 
     export let size: CircleIconSize;
     export let icon: CircleIconIcon;

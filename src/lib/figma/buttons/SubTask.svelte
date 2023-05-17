@@ -1,7 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import CheckBox from "$lib/figma/select-controls/CheckBox.svelte";
-    import CircleIcon from "$lib/figma/buttons/CircleIcon.svelte";
+    import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import InputField from "$lib/figma/input-fields/InputField.svelte";
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import type { SubTaskState } from "$lib/figma/types";
