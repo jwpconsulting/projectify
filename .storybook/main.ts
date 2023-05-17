@@ -1,7 +1,7 @@
 import type { StorybookConfig } from "@storybook/sveltekit";
 
 const config: StorybookConfig = {
-    stories: ["../src/stories/figma/**/*.stories.ts"],
+    stories: ["../src/stories/**/*.stories.ts"],
     addons: ["@storybook/addon-essentials", "@storybook/addon-interactions"],
     framework: {
         name: "@storybook/sveltekit",
