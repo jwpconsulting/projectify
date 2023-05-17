@@ -2,7 +2,7 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import { createEventDispatcher } from "svelte";
     import { ChevronDown, ChevronUp } from "@steeze-ui/heroicons";
-    import type { HeaderButtonType } from "$lib/figma/types";
+    import type { HeaderButtonType } from "$lib/funabashi/types";
 
     export let label: string;
     export let type: HeaderButtonType;
