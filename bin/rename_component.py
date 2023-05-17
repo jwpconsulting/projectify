@@ -21,6 +21,10 @@ extensions = "ts", "svelte"
 src = pathlib.Path("src/")
 a_path = pathlib.Path("a/")
 b_path = pathlib.Path("b/")
+# Subtract src/lib and add src/stories path back
+component_lib_path = pathlib.Path("src/lib")
+src_stories_prefix = pathlib.Path("src/stories")
+stories_suffix = ".stories.ts"
 
 CHECK = "npm", "run", "check"
 FORMAT = "npm", "run", "format"
@@ -46,6 +50,8 @@ class ReplacementContext:
 
     src_cmp: pathlib.Path
     dst_cmp: pathlib.Path
+    src_stories_path: pathlib.Path
+    dst_stories_path: pathlib.Path
     src_lib_path: pathlib.Path
     dst_lib_path: pathlib.Path
     src_component_name: str
@@ -69,6 +75,8 @@ class DestructiveResult:
 
     deleted_file: pathlib.Path
     new_file: pathlib.Path
+    deleted_stories_file: pathlib.Path
+    new_stories_file: pathlib.Path
     diffs: List[FileDiff]
 
 
@@ -151,6 +159,11 @@ def attempt_cleanup(destructive_result: DestructiveResult) -> None:
         check=True,
     )
     destructive_result.new_file.unlink()
+    subprocess.run(
+        (*GIT_CHECKOUT, destructive_result.deleted_stories_file),
+        check=True,
+    )
+    destructive_result.new_stories_file.unlink()
     revert_diffs(destructive_result.diffs)
 
 
@@ -164,7 +177,10 @@ def destructive(ctx: ReplacementContext) -> DestructiveResult:
     """Perform all destructive actions."""
     diffs: List[FileDiff] = []
     try:
+        ctx.dst_cmp.parent.mkdir(parents=True, exist_ok=True)
         shutil.move(ctx.src_cmp, ctx.dst_cmp)
+        ctx.dst_stories_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(ctx.src_stories_path, ctx.dst_stories_path)
 
         rename_candidates = list(
             itertools.chain.from_iterable(
@@ -194,6 +210,8 @@ def destructive(ctx: ReplacementContext) -> DestructiveResult:
             DestructiveResult(
                 deleted_file=ctx.src_cmp,
                 new_file=ctx.dst_cmp,
+                deleted_stories_file=ctx.src_stories_path,
+                new_stories_file=ctx.dst_stories_path,
                 diffs=diffs,
             )
         )
@@ -201,6 +219,8 @@ def destructive(ctx: ReplacementContext) -> DestructiveResult:
     return DestructiveResult(
         deleted_file=ctx.src_cmp,
         new_file=ctx.dst_cmp,
+        deleted_stories_file=ctx.src_stories_path,
+        new_stories_file=ctx.dst_stories_path,
         diffs=diffs,
     )
 
@@ -216,11 +236,32 @@ def main(args: ReplacementInvocation) -> None:
         else:
             raise ValueError(f"Source file {src_cmp} does not exist")
 
+    # Guess the stories path
+    src_stories_path: pathlib.Path = (
+        src_stories_prefix / src_cmp.relative_to(component_lib_path)
+    ).with_suffix(stories_suffix)
+    dst_stories_path: pathlib.Path = (
+        src_stories_prefix / dst_cmp.relative_to(component_lib_path)
+    ).with_suffix(stories_suffix)
+    if not src_stories_path.exists():
+        if dst_stories_path.exists():
+            click.echo(
+                f"A stories file was found at {dst_stories_path}. "
+                f"Move already performed?"
+            )
+            return
+        raise ValueError(
+            f"Could not find corresponding story {src_stories_path} for "
+            f"component at {src_cmp}"
+        )
+
     ctx = ReplacementContext(
         src_cmp=src_cmp,
         dst_cmp=dst_cmp,
         src_lib_path=src_cmp.relative_to(src),
         dst_lib_path=dst_cmp.relative_to(src),
+        src_stories_path=src_stories_path,
+        dst_stories_path=dst_stories_path,
         src_component_name=src_cmp.stem,
         dst_component_name=dst_cmp.stem,
     )
