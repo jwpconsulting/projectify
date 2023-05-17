@@ -2,7 +2,7 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import { ChevronDown, ChevronRight } from "@steeze-ui/heroicons";
     import { openContextMenu } from "$lib/stores/globalUi";
-    import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
+    import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
 
     import type { WorkspaceBoardSection } from "$lib/types/workspace";
     import { getNewTaskUrl } from "$lib/urls";

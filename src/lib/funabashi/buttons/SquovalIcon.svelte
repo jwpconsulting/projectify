@@ -18,7 +18,7 @@
         ButtonAction,
         SquovalIcon,
         SquovalState,
-    } from "$lib/figma/types";
+    } from "$lib/funabashi/types";
 
     export let icon: SquovalIcon;
     $: src = {

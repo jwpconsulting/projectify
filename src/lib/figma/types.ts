@@ -23,24 +23,6 @@ export type BorderedIconType = (typeof borderedIconTypes)[number];
 export const boardButtonStates = ["inactive", "disabled", "active"] as const;
 export type WorkspaceBoardIconState = (typeof boardButtonStates)[number];
 
-export const squovalIcons = [
-    "board",
-    "member",
-    "label",
-    "bulk",
-    "move",
-    "filter-member",
-    "delete",
-    "ellipsis",
-    "plus",
-    "edit",
-    "dotsVertical",
-    "help",
-] as const;
-export type SquovalIcon = (typeof squovalIcons)[number];
-export const squovalStates = ["inactive", "disabled", "active"] as const;
-export type SquovalState = (typeof squovalStates)[number];
-
 export const avatarStateSizes = [
     "small",
     "medium",

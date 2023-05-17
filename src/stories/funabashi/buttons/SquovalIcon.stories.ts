@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
-import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
+import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
 
-import { squovalIcons, squovalStates } from "$lib/figma/types";
+import { squovalIcons, squovalStates } from "$lib/funabashi/types";
 
 const meta: Meta<SquovalIcon> = {
     component: SquovalIcon,
@@ -19,6 +19,11 @@ const meta: Meta<SquovalIcon> = {
             },
         },
     },
+    args: {
+        action: { kind: "button", action: console.log },
+        state: "active",
+        icon: "plus",
+    },
 };
 export default meta;
 
@@ -26,16 +31,12 @@ type Story = StoryObj<SquovalIcon>;
 
 export const Default: Story = {
     args: {
-        icon: "plus",
-        state: "active",
         active: false,
     },
 };
 
 export const Active: Story = {
     args: {
-        icon: "plus",
-        state: "active",
         active: true,
     },
 };

@@ -31,3 +31,22 @@ export const circleIconIcons = [
 ] as const;
 // TODO rename CircleIcon
 export type CircleIconIcon = (typeof circleIconIcons)[number];
+
+// For buttons/SquovalIcon.svelte
+export const squovalIcons = [
+    "board",
+    "member",
+    "label",
+    "bulk",
+    "move",
+    "filter-member",
+    "delete",
+    "ellipsis",
+    "plus",
+    "edit",
+    "dotsVertical",
+    "help",
+] as const;
+export type SquovalIcon = (typeof squovalIcons)[number];
+export const squovalStates = ["inactive", "disabled", "active"] as const;
+export type SquovalState = (typeof squovalStates)[number];

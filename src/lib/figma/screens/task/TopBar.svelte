@@ -3,7 +3,7 @@
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
-    import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
+    import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import { openContextMenu } from "$lib/stores/globalUi";
 
     import type {

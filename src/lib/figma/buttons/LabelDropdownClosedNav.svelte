@@ -6,7 +6,7 @@
         toggleLabelDropdownClosedNavOpen,
     } from "$lib/stores/dashboard/ui";
     import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
-    import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
+    import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import type { LabelSearchModule } from "$lib/types/stores";
 
     export let labelSearchModule: LabelSearchModule;

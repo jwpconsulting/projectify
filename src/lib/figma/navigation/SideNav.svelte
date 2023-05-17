@@ -5,7 +5,7 @@
     import LabelDropdown from "$lib/figma/composites/LabelDropdown.svelte";
     import WorkspaceSettings from "$lib/figma/buttons/WorkspaceSettings.svelte";
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
-    import SquovalIcon from "$lib/figma/buttons/SquovalIcon.svelte";
+    import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
 
     import type {
         LabelSearchModule,
