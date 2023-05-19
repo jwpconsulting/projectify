@@ -109,7 +109,7 @@ export const subTask: SubTask = {
     created: "",
     modified: "",
     uuid: "does-not-exist",
-    done: true,
+    done: false,
     order: 0,
 };
 
