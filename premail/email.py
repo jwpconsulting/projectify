@@ -1,9 +1,19 @@
 """Premail email templates."""
+from abc import (
+    ABCMeta,
+    abstractmethod,
+)
+from typing import (
+    Any,
+    Generic,
+    TypeVar,
+)
+
 from django.conf import (
     settings,
 )
-from django.shortcuts import (
-    render,
+from django.template import (
+    loader,
 )
 
 from projectify.context_processors import (
@@ -15,61 +25,66 @@ from .tasks import (
 )
 
 
-class TemplateEmail:
+Context = dict[str, Any]
+
+T = TypeVar("T")
+
+
+class TemplateEmail(Generic[T], metaclass=ABCMeta):
     """Email template."""
 
-    def __init__(self, obj):
+    template_prefix: str
+    obj: T
+
+    def __init__(self, obj: T):
         """Designate receiver."""
         self.obj = obj
 
-    def get_subject_template_path(self):
+    def get_subject_template_path(self) -> str:
         """Get path of subject template."""
         return f"{self.template_prefix}_subject.txt"
 
-    def get_body_template_path(self):
+    def get_body_template_path(self) -> str:
         """Get path of body template."""
         return f"{self.template_prefix}_body.txt"
 
-    def get_context(self):
+    def get_context(self) -> Context:
         """Get context. To override."""
         return {
             **frontend_url(None),
             "object": self.obj,
         }
 
-    def render_subject(self):
+    def render_subject(self) -> str:
         """Render subject."""
-        subject = render(
-            None,
+        subject = loader.render_to_string(
             self.get_subject_template_path(),
             self.get_context(),
         )
-        subject = subject.content.decode()
         subject = subject.replace("\n", "")
         subject = subject.strip()
         return subject
 
-    def render_body(self):
+    def render_body(self) -> str:
         """Render body."""
-        return render(
-            None,
+        return loader.render_to_string(
             self.get_body_template_path(),
             self.get_context(),
-        ).content.decode()
+        )
 
-    def get_to_email(self):
+    @abstractmethod
+    def get_to_email(self) -> str:
         """Return recipient email. To override."""
-        return self.obj.email
 
-    def send(self):
+    def send(self) -> None:
         """Send email to obj."""
         if settings.EMAIL_EAGER:
-            return send_mail(
+            send_mail(
                 self.render_subject(),
                 self.render_body(),
                 self.get_to_email(),
             )
-        return send_mail.delay(
+        send_mail.delay(
             self.render_subject(),
             self.render_body(),
             self.get_to_email(),

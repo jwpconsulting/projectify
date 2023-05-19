@@ -29,3 +29,6 @@ if "TEST_STATICFILES_STORAGE" in environ:
     STATICFILES_STORAGE = (
         "whitenoise.storage.CompressedManifestStaticFilesStorage"
     )
+
+# Celery
+CELERY_BROKER_URL = "memory://"

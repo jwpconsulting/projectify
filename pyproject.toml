@@ -29,6 +29,7 @@ strict_concatenate = true
 # Not possible because of factory, django_extensions, channels and rest_framework
 # disallow_subclassing_any = true
 disallow_any_generics = true
+disallow_untyped_calls = true
 
 # Library imports
 [[tool.mypy.overrides]]

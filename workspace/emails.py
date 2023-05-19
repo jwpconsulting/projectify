@@ -8,12 +8,12 @@ from . import (
 )
 
 
-class WorkspaceUserInviteEmail(TemplateEmail):
+class WorkspaceUserInviteEmail(TemplateEmail[models.WorkspaceUser]):
     """Email that informs users about an invite."""
 
     model = models.WorkspaceUserInvite
     template_prefix = "workspace/email/workspace_user_invite"
 
-    def get_to_email(self):
+    def get_to_email(self) -> str:
         """Return recipient email."""
         return self.obj.user_invite.email
