@@ -82,7 +82,7 @@ class Mutation:
             customer_email=info.context.user.email,
             metadata={"customer_uuid": customer.uuid},
         )
-        return session
+        return session  # type: ignore
 
     @strawberry.field
     def create_billing_portal_session(
@@ -101,4 +101,4 @@ class Mutation:
             customer=customer.stripe_customer_id,
             return_url=settings.FRONTEND_URL,
         )
-        return session
+        return session  # type: ignore

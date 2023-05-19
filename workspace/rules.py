@@ -120,7 +120,7 @@ def belongs_to_active_workspace(user: "User", target: HasWorkspace) -> bool:
     except models.WorkspaceUser.DoesNotExist:
         return False
     try:
-        customer = workspace.customer
+        customer: corporate_models.Customer = workspace.customer
     except corporate_models.Customer.DoesNotExist:
         return False
     return customer.active

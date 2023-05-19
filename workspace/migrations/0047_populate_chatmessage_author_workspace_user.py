@@ -37,7 +37,7 @@ def add_author_workspace_user_to_chat_message(
             )
         except WorkspaceUser.DoesNotExist:
             ws_user = None
-        chat_message.author_workspace_user = ws_user
+        chat_message.author_workspace_user = ws_user  # type: ignore
         chat_message.save()
 
 
