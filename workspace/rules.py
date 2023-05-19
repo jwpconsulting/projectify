@@ -3,6 +3,11 @@ Workspace app rules.
 
 The order of rules follows the ordering of models.
 """
+from typing import (
+    TYPE_CHECKING,
+    Protocol,
+)
+
 import rules
 from corporate import models as corporate_models
 
@@ -11,10 +16,20 @@ from . import (
 )
 
 
+if TYPE_CHECKING:
+    from user.models import User  # noqa: F401
+
+
+class HasWorkspace(Protocol):
+    """Workspace adjacent object that has .workspace."""
+
+    workspace: models.Workspace
+
+
 # Role predicates
 # Observer < Member < Maintainer < Owner
 @rules.predicate
-def is_at_least_observer(user, target):
+def is_at_least_observer(user: "User", target: HasWorkspace) -> bool:
     """Return True if a user is at least an observer of workspace parent."""
     workspace = target.workspace
     try:
@@ -33,7 +48,7 @@ def is_at_least_observer(user, target):
 
 
 @rules.predicate
-def is_at_least_member(user, target):
+def is_at_least_member(user: "User", target: HasWorkspace) -> bool:
     """Return True if a user is at least a member of workspace parent."""
     workspace = target.workspace
     try:
@@ -52,7 +67,7 @@ def is_at_least_member(user, target):
 
 
 @rules.predicate
-def is_at_least_maintainer(user, target):
+def is_at_least_maintainer(user: "User", target: HasWorkspace) -> bool:
     """Return True if a user is at least a maintainer of workspace parent."""
     workspace = target.workspace
     try:
@@ -71,7 +86,7 @@ def is_at_least_maintainer(user, target):
 
 
 @rules.predicate
-def is_at_least_owner(user, target):
+def is_at_least_owner(user: "User", target: HasWorkspace) -> bool:
     """Return True if a user is at least an owner of workspace parent."""
     workspace = target.workspace
     try:
@@ -90,7 +105,7 @@ def is_at_least_owner(user, target):
 
 
 @rules.predicate
-def belongs_to_active_workspace(user, target):
+def belongs_to_active_workspace(user: "User", target: HasWorkspace) -> bool:
     """
     Return True if target belongs to an active workspace.
 

@@ -45,7 +45,7 @@ class Mutation:
         self, info, input: CreateCheckoutSessionInput
     ) -> types.CheckoutSession:
         """Create a Stripe checkout session."""
-        qs = workspace_models.Workspace.objects.filter_for_user_and_uuid(  # type: ignore
+        qs = workspace_models.Workspace.objects.filter_for_user_and_uuid(
             info.context.user,
             input.workspace_uuid,
         )
