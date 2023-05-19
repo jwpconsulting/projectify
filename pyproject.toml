@@ -30,6 +30,7 @@ strict_concatenate = true
 # disallow_subclassing_any = true
 disallow_any_generics = true
 disallow_untyped_calls = true
+warn_unused_ignores = true
 
 # Library imports
 [[tool.mypy.overrides]]
@@ -110,11 +111,6 @@ module = "workspace.schema.types"
 ignore_errors = true
 
 # Here is where we get strict again
-[[tool.mypy.overrides]]
-module = "workspace"
-warn_unused_ignores = true
-check_untyped_defs = true
-
 [[tool.mypy.overrides]]
 module = "workspace.signals"
 disallow_untyped_defs = true

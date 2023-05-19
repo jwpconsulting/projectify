@@ -36,7 +36,7 @@ class WorkspaceCustomerRetrieve(generics.RetrieveAPIView):
 
     def get_queryset(self):
         """Filter by request user."""
-        return self.queryset.filter_by_user(self.request.user)  # type: ignore
+        return self.queryset.filter_by_user(self.request.user)
 
     def get_object(self):
         """Get customer."""
