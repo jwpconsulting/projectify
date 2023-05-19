@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="task",
             constraint=models.UniqueConstraint(
-                deferrable=django.db.models.constraints.Deferrable["DEFERRED"],
+                deferrable=django.db.models.constraints.Deferrable["DEFERRED"],  # type: ignore
                 fields=("workspace_board_section", "_order"),
                 name="unique_task_order",
             ),
@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="workspaceboardsection",
             constraint=models.UniqueConstraint(
-                deferrable=django.db.models.constraints.Deferrable["DEFERRED"],
+                deferrable=django.db.models.constraints.Deferrable["DEFERRED"],  # type: ignore
                 fields=("workspace_board", "_order"),
                 name="unique_workspace_board_order",
             ),
