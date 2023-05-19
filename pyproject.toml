@@ -112,5 +112,8 @@ ignore_errors = true
 
 # Here is where we get strict again
 [[tool.mypy.overrides]]
-module = "workspace.signals"
+module = [
+    "workspace.signals",
+    "workspace.models",
+]
 disallow_untyped_defs = true
