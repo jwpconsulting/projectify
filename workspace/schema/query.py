@@ -39,7 +39,7 @@ class Query:
             uuid,
         )
         workspace = get_object_or_404(qs)
-        return workspace
+        return workspace  # type: ignore
 
     @strawberry.field
     def workspace_board(
@@ -51,7 +51,7 @@ class Query:
             uuid,
         )
         workspace_board = get_object_or_404(qs)
-        return workspace_board
+        return workspace_board  # type: ignore
 
     @strawberry.field
     def workspace_board_section(
@@ -63,7 +63,7 @@ class Query:
             uuid,
         )
         workspace_board_section = get_object_or_404(qs)
-        return workspace_board_section
+        return workspace_board_section  # type: ignore
 
     @strawberry.field
     def task(self, info: Info, uuid: uuid.UUID) -> types.Task:
@@ -73,7 +73,7 @@ class Query:
             uuid,
         )
         task = get_object_or_404(qs)
-        return task
+        return task  # type: ignore
 
     @strawberry.field
     def sub_task(self, info: Info, uuid: uuid.UUID) -> types.SubTask:
@@ -83,7 +83,7 @@ class Query:
             uuid,
         )
         sub_task = get_object_or_404(qs)
-        return sub_task
+        return sub_task  # type: ignore
 
     @strawberry.field
     def chat_message(self, info: Info, uuid: uuid.UUID) -> types.ChatMessage:
@@ -93,4 +93,4 @@ class Query:
             uuid,
         )
         chat_message = get_object_or_404(qs)
-        return chat_message
+        return chat_message  # type: ignore

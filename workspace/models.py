@@ -6,7 +6,10 @@ from datetime import (
 from typing import (
     TYPE_CHECKING,
     Any,
+    Callable,
+    Iterable,
     Optional,
+    Sequence,
     cast,
 )
 
@@ -41,6 +44,10 @@ from . import (
 
 
 if TYPE_CHECKING:
+    from django.db.models.fields.related import RelatedField  # noqa: F401
+    from django.db.models.manager import RelatedManager  # noqa: F401
+
+    from corporate.models import Customer  # noqa: F401
     from user.models import (  # noqa: F401
         User,
         UserInvite,
@@ -48,6 +55,9 @@ if TYPE_CHECKING:
 
 
 Pks = list[str]
+
+GetOrder = Callable[[], Iterable[int]]
+SetOrder = Callable[[Sequence[int]], None]
 
 
 class WorkspaceQuerySet(models.QuerySet["Workspace"]):
@@ -103,15 +113,26 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
 
     objects = cast(WorkspaceQuerySet, WorkspaceQuerySet.as_manager())
 
+    if TYPE_CHECKING:
+        # Related fields
+        customer: RelatedField[None, "Customer"]
+
+        # Related sets
+        workspaceboard_set: RelatedManager["WorkspaceBoard"]
+        workspaceuser_set: RelatedManager["WorkspaceUser"]
+        workspaceuserinvite_set: RelatedManager["WorkspaceUserInvite"]
+        label_set: RelatedManager["Label"]
+
     def add_workspace_board(
         self, title: str, description: str, deadline: Optional[bool] = None
     ) -> "WorkspaceBoard":
         """Add workspace board."""
-        return self.workspaceboard_set.create(
+        workspace_board: WorkspaceBoard = self.workspaceboard_set.create(
             title=title,
             description=description,
             deadline=deadline,
         )
+        return workspace_board
 
     def add_user(self, user: AbstractBaseUser) -> AbstractBaseUser:
         """
@@ -150,9 +171,11 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         if already_user_qs.exists():
             raise ValueError(_("Email is already workspace user"))
         user_invite = user_models.UserInvite.objects.invite_user(email)
-        workspace_user_invite = self.workspaceuserinvite_set.create(
-            user_invite=user_invite,
-            workspace=self,
+        workspace_user_invite: WorkspaceUserInvite = (
+            self.workspaceuserinvite_set.create(
+                user_invite=user_invite,
+                workspace=self,
+            )
         )
         signal_defs.workspace_user_invited.send(
             sender=self.__class__,
@@ -319,6 +342,10 @@ class WorkspaceUser(TimeStampedModel, models.Model):
     # Sort of nonsensical
     objects = cast(WorkspaceUserQuerySet, WorkspaceUserQuerySet.as_manager())
 
+    if TYPE_CHECKING:
+        # Related
+        user_invite: RelatedField[None, "UserInvite"]
+
     def assign_role(self, role: str) -> None:
         """
         Assign a new role.
@@ -381,14 +408,25 @@ class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
 
     objects = cast(WorkspaceBoardQuerySet, WorkspaceBoardQuerySet.as_manager())
 
+    if TYPE_CHECKING:
+        # Related managers
+        workspaceboardsection_set: RelatedManager["WorkspaceBoardSection"]
+
+        # For ordering
+        get_workspaceboardsection_order: GetOrder
+        set_workspaceboardsection_order: SetOrder
+
     def add_workspace_board_section(
         self, title: str, description: str
     ) -> "WorkspaceBoardSection":
         """Add workspace board section to this workspace board."""
-        return self.workspaceboardsection_set.create(
-            title=title,
-            description=description,
+        workspace_board_section: WorkspaceBoardSection = (
+            self.workspaceboardsection_set.create(
+                title=title,
+                description=description,
+            )
         )
+        return workspace_board_section
 
     def archive(self) -> None:
         """
@@ -437,16 +475,27 @@ class WorkspaceBoardSection(
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     objects = WorkspaceBoardSectionQuerySet.as_manager()
 
+    if TYPE_CHECKING:
+        # Related managers
+        task_set: RelatedManager["Task"]
+
+        # For ordering
+        get_task_order: GetOrder
+        set_task_order: SetOrder
+        get_next_in_order: Callable[[], "WorkspaceBoardSection"]
+        _order: int
+
     def add_task(
         self, title: str, description: str, deadline: Optional[datetime] = None
     ) -> "Task":
         """Add a task to this section."""
-        return self.task_set.create(
+        task: Task = self.task_set.create(
             title=title,
             description=description,
             deadline=deadline,
             workspace=self.workspace_board.workspace,
         )
+        return task
 
     def move_to(self, order: int) -> None:
         """
@@ -626,8 +675,19 @@ class Task(
 
     objects = cast(TaskQuerySet, TaskQuerySet.as_manager())
 
+    if TYPE_CHECKING:
+        # Related fields
+        subtask_set: RelatedManager["SubTask"]
+        chatmessage_set: RelatedManager["ChatMessage"]
+        tasklabel_set: RelatedManager["TaskLabel"]
+
+        # Order related
+        get_subtask_order: GetOrder
+        set_subtask_order: SetOrder
+        _order: int
+
     def move_to(
-        self, workspace_board_section: WorkspaceBoard, order: int
+        self, workspace_board_section: WorkspaceBoardSection, order: int
     ) -> None:
         """
         Move to specified workspace board section and to order n.
@@ -640,12 +700,14 @@ class Task(
         if self.workspace_board_section != workspace_board_section:
             other_tasks = workspace_board_section.task_set.select_for_update()
         else:
-            other_tasks = []
+            # Same section, so no need to select other tasks
+            other_tasks = None
         with transaction.atomic():
             # Force both querysets to be evaluated to lock them for the time of
             # this transaction
             len(neighbor_tasks)
-            len(other_tasks)
+            if other_tasks:
+                len(other_tasks)
             # Set new WorkspaceBoardSection
             if self.workspace_board_section != workspace_board_section:
                 self.workspace_board_section = workspace_board_section
@@ -665,7 +727,7 @@ class Task(
         return self.subtask_set.create(title=title, description=description)
 
     def add_chat_message(
-        self, text: str, author: WorkspaceUser
+        self, text: str, author: AbstractBaseUser
     ) -> "ChatMessage":
         """Add a chat message."""
         workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(
@@ -674,7 +736,7 @@ class Task(
         )
         return self.chatmessage_set.create(text=text, author=workspace_user)
 
-    def assign_to(self, assignee: WorkspaceUser) -> None:
+    def assign_to(self, assignee: AbstractBaseUser) -> None:
         """
         Assign task to user.
 
@@ -696,21 +758,25 @@ class Task(
 
     def get_next_section(self) -> WorkspaceBoardSection:
         """Return instance of the next section."""
-        next_section = self.workspace_board_section.get_next_in_order()
+        next_section: WorkspaceBoardSection = (
+            self.workspace_board_section.get_next_in_order()
+        )
         return next_section
 
-    def add_label(self, label: "Label") -> "Label":
+    def add_label(self, label: "Label") -> "TaskLabel":
         """
         Add a label to this task.
 
         Returns task label.
         """
+        task_label: TaskLabel
         workspace = self.workspace_board_section.workspace_board.workspace
         # XXX can this be a db constraint?
         assert label.workspace == workspace
         with transaction.atomic():
             if self.tasklabel_set.filter(label=label).exists():
-                return self.tasklabel_set.get(label=label)
+                task_label = self.tasklabel_set.get(label=label)
+                return task_label
             task_label = self.tasklabel_set.create(label=label)
             return task_label
 
@@ -721,7 +787,7 @@ class Task(
         Returns label.
         """
         try:
-            task_label = self.tasklabel_set.get(label=label)
+            task_label: TaskLabel = self.tasklabel_set.get(label=label)
             task_label.delete()
         except TaskLabel.DoesNotExist:
             pass
@@ -858,6 +924,9 @@ class SubTask(
     )
 
     objects = cast(SubTaskQuerySet, SubTaskQuerySet.as_manager())
+
+    # Ordering related
+    _order: int
 
     def move_to(self, order: int) -> None:
         """

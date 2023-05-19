@@ -9,7 +9,7 @@ from . import (
 )
 
 
-class WorkspaceUserInline(admin.TabularInline[models.WorkspaceUserInvite]):
+class WorkspaceUserInline(admin.TabularInline[models.WorkspaceUser]):
     """WorkspaceUser Inline."""
 
     model = models.WorkspaceUser
@@ -130,7 +130,9 @@ class WorkspaceBoardSectionAdmin(
     readonly_fields = ("uuid",)
 
     @admin.display(description=_("Workspace board title"))
-    def workspace_board_title(self, instance: models.WorkspaceBoard) -> str:
+    def workspace_board_title(
+        self, instance: models.WorkspaceBoardSection
+    ) -> str:
         """Return the workspace board's title."""
         return instance.workspace_board.title
 
@@ -176,7 +178,7 @@ class TaskAdmin(admin.ModelAdmin[models.Task]):
     @admin.display(description=_("Number of labels"))
     def number_labels(self, instance: models.Task) -> str:
         """Return the workspace board's title."""
-        return instance.tasklabel_set.count()
+        return str(instance.tasklabel_set.count())
 
     @admin.display(description=_("Workspace board section title"))
     def workspace_board_section_title(self, instance: models.Task) -> str:

@@ -123,7 +123,7 @@ class Customer(models.Model):
         self.save()
 
     @property
-    def active(self):
+    def active(self) -> bool:
         """Return if active customer."""
         return self.subscription_status == CustomerSubscriptionStatus.ACTIVE
 

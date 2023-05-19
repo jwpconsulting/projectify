@@ -26,7 +26,7 @@ def crop_image(
     if settings.DEFAULT_FILE_STORAGE != settings.MEDIA_CLOUDINARY_STORAGE:
         return image.url
     cloudinary_image = CloudinaryImage(image.name)
-    url = cloudinary_image.build_url(
+    url: str = cloudinary_image.build_url(
         width=width,
         height=height,
         crop="thumb",

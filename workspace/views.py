@@ -69,7 +69,7 @@ class WorkspaceBoardRetrieve(generics.RetrieveAPIView):
             user,
             self.kwargs["workspace_board_uuid"],
         )
-        workspace_board = get_object_or_404(qs)
+        workspace_board: models.WorkspaceBoard = get_object_or_404(qs)
         return workspace_board
 
 
@@ -95,7 +95,9 @@ class WorkspaceBoardSectionRetrieve(generics.RetrieveAPIView):
             user,
             self.kwargs["workspace_board_section_uuid"],
         )
-        workspace_board_section = get_object_or_404(qs)
+        workspace_board_section: models.WorkspaceBoardSection = (
+            get_object_or_404(qs)
+        )
         return workspace_board_section
 
 
@@ -136,7 +138,7 @@ class WorkspaceRetrieve(generics.RetrieveAPIView):
             user,
             self.kwargs["workspace_uuid"],
         )
-        workspace = get_object_or_404(qs)
+        workspace: models.Workspace = get_object_or_404(qs)
         return workspace
 
 
@@ -167,7 +169,7 @@ class TaskRetrieve(generics.RetrieveAPIView):
 
     def get_object(self) -> models.Task:
         """Get object for user and uuid."""
-        return (
+        obj: models.Task = (
             self.get_queryset()
             .filter_for_user_and_uuid(
                 self.request.user,
@@ -175,6 +177,7 @@ class TaskRetrieve(generics.RetrieveAPIView):
             )
             .get()
         )
+        return obj
 
 
 class WorkspaceBoardArchivedList(generics.ListAPIView):
