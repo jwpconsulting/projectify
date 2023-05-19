@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="task",
             constraint=models.UniqueConstraint(
-                deferrable=django.db.models.constraints.Deferrable["DEFERRED"],
+                deferrable=django.db.models.constraints.Deferrable["DEFERRED"],  # type: ignore
                 fields=("workspace", "number"),
                 name="unique_task_number",
             ),
