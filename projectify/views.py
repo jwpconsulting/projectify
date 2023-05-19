@@ -2,9 +2,9 @@
 from dataclasses import (
     dataclass,
 )
-
-from django.contrib.auth import (
-    get_user_model,
+from typing import (
+    TYPE_CHECKING,
+    Union,
 )
 
 from strawberry.django import (
@@ -12,11 +12,17 @@ from strawberry.django import (
 )
 
 
+if TYPE_CHECKING:
+    from user.models import (
+        User,
+    )
+
+
 @dataclass
 class RequestContext:
     """Request context used in graphql view."""
 
-    user: get_user_model() | None
+    user: Union["User", None]
     session: type
     META: dict
 

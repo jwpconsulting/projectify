@@ -90,10 +90,6 @@ module = "projectify.urls"
 ignore_errors = true
 
 [[tool.mypy.overrides]]
-module = "projectify.views"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
 module = "user.migrations.*"
 ignore_errors = true
 
