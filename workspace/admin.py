@@ -9,14 +9,14 @@ from . import (
 )
 
 
-class WorkspaceUserInline(admin.TabularInline):
+class WorkspaceUserInline(admin.TabularInline[models.WorkspaceUserInvite]):
     """WorkspaceUser Inline."""
 
     model = models.WorkspaceUser
     extra = 0
 
 
-class WorkspaceBoardInline(admin.TabularInline):
+class WorkspaceBoardInline(admin.TabularInline[models.WorkspaceBoard]):
     """WorkspaceBoard Inline."""
 
     model = models.WorkspaceBoard
@@ -24,7 +24,7 @@ class WorkspaceBoardInline(admin.TabularInline):
 
 
 @admin.register(models.Workspace)
-class WorkspaceAdmin(admin.ModelAdmin):
+class WorkspaceAdmin(admin.ModelAdmin[models.Workspace]):
     """Workspace Admin."""
 
     inlines = (WorkspaceUserInline, WorkspaceBoardInline)
@@ -38,7 +38,7 @@ class WorkspaceAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.WorkspaceUserInvite)
-class WorkspaceUserInviteAdmin(admin.ModelAdmin):
+class WorkspaceUserInviteAdmin(admin.ModelAdmin[models.WorkspaceUserInvite]):
     """Workspace user invite admin."""
 
     list_display = ("workspace_title",)
@@ -51,7 +51,7 @@ class WorkspaceUserInviteAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.WorkspaceUser)
-class WorkspaceUserAdmin(admin.ModelAdmin):
+class WorkspaceUserAdmin(admin.ModelAdmin[models.WorkspaceUser]):
     """WorkspaceUser Admin."""
 
     list_display = (
@@ -76,7 +76,9 @@ class WorkspaceUserAdmin(admin.ModelAdmin):
         return instance.user.email
 
 
-class WorkspaceBoardSectionInline(admin.TabularInline):
+class WorkspaceBoardSectionInline(
+    admin.TabularInline[models.WorkspaceBoardSection]
+):
     """WorkspaceBoardSection inline admin."""
 
     model = models.WorkspaceBoardSection
@@ -84,7 +86,7 @@ class WorkspaceBoardSectionInline(admin.TabularInline):
 
 
 @admin.register(models.WorkspaceBoard)
-class WorkspaceBoardAdmin(admin.ModelAdmin):
+class WorkspaceBoardAdmin(admin.ModelAdmin[models.WorkspaceBoard]):
     """WorkspaceBoard Admin."""
 
     inlines = (WorkspaceBoardSectionInline,)
@@ -103,7 +105,7 @@ class WorkspaceBoardAdmin(admin.ModelAdmin):
         return instance.workspace.title
 
 
-class TaskInline(admin.TabularInline):
+class TaskInline(admin.TabularInline[models.Task]):
     """Task inline admin."""
 
     model = models.Task
@@ -111,7 +113,9 @@ class TaskInline(admin.TabularInline):
 
 
 @admin.register(models.WorkspaceBoardSection)
-class WorkspaceBoardSectionAdmin(admin.ModelAdmin):
+class WorkspaceBoardSectionAdmin(
+    admin.ModelAdmin[models.WorkspaceBoardSection]
+):
     """WorkspaceBoardSection Admin."""
 
     inlines = (TaskInline,)
@@ -136,14 +140,14 @@ class WorkspaceBoardSectionAdmin(admin.ModelAdmin):
         return instance.workspace_board.workspace.title
 
 
-class SubTaskInline(admin.TabularInline):
+class SubTaskInline(admin.TabularInline[models.SubTask]):
     """SubTask inline admin."""
 
     model = models.SubTask
     extra = 0
 
 
-class TaskLabelInline(admin.TabularInline):
+class TaskLabelInline(admin.TabularInline[models.TaskLabel]):
     """TaskLabel inline admin."""
 
     model = models.TaskLabel
@@ -151,7 +155,7 @@ class TaskLabelInline(admin.TabularInline):
 
 
 @admin.register(models.Task)
-class TaskAdmin(admin.ModelAdmin):
+class TaskAdmin(admin.ModelAdmin[models.Task]):
     """Task Admin."""
 
     inlines = (SubTaskInline, TaskLabelInline)
@@ -191,7 +195,7 @@ class TaskAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.Label)
-class LabelAdmin(admin.ModelAdmin):
+class LabelAdmin(admin.ModelAdmin[models.Label]):
     """Label admin."""
 
     list_display = (
@@ -208,7 +212,7 @@ class LabelAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.SubTask)
-class SubTaskAdmin(admin.ModelAdmin):
+class SubTaskAdmin(admin.ModelAdmin[models.SubTask]):
     """SubTask Admin."""
 
     list_display = (
@@ -248,7 +252,7 @@ class SubTaskAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.ChatMessage)
-class ChatMessageAdmin(admin.ModelAdmin):
+class ChatMessageAdmin(admin.ModelAdmin[models.ChatMessage]):
     """ChatMessage admin."""
 
     list_display = (
