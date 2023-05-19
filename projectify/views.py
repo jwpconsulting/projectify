@@ -24,7 +24,7 @@ class RequestContext:
 
     user: Union["User", None]
     session: type
-    META: dict
+    META: dict[str, str]
 
 
 class GraphQLView(views.GraphQLView):

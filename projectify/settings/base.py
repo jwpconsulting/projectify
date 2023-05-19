@@ -17,6 +17,10 @@ from typing import (
     Iterable,
 )
 
+from django.contrib import (
+    admin,
+)
+
 import dj_database_url
 from dotenv import (
     load_dotenv,
@@ -264,3 +268,8 @@ MEDIA_CLOUDINARY_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 # Debug
 DEBUG_TOOLBAR = False
 DEBUG = False
+
+# This monkey patching was done to fix typing issues. The instructions came from
+# here: https://github.com/sbdchd/django-types#install
+for cls in [admin.ModelAdmin, admin.TabularInline]:
+    cls.__class_getitem__ = classmethod(lambda cls, *args, **kwargs: cls)  # type: ignore [attr-defined]

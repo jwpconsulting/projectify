@@ -35,7 +35,7 @@ if TYPE_CHECKING:
     )
 
 
-class WorkspaceQuerySet(models.QuerySet):
+class WorkspaceQuerySet(models.QuerySet["Workspace"]):
     """Workspace Manager."""
 
     def get_for_user(self, user):
@@ -183,7 +183,7 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         return self
 
 
-class WorkspaceUserInviteQuerySet(models.QuerySet):
+class WorkspaceUserInviteQuerySet(models.QuerySet["WorkspaceUserInvite"]):
     """QuerySet for WorkspaceUserInvite."""
 
     def filter_by_workspace_pks(self, workspace_pks):
@@ -229,7 +229,7 @@ class WorkspaceUserInvite(TimeStampedModel, models.Model):
         unique_together = ("user_invite", "workspace")
 
 
-class WorkspaceUserQuerySet(models.QuerySet):
+class WorkspaceUserQuerySet(models.QuerySet["WorkspaceUser"]):
     """Workspace user queryset."""
 
     def filter_by_workspace_pks(self, workspace_pks):
@@ -310,7 +310,7 @@ class WorkspaceUser(TimeStampedModel, models.Model):
         unique_together = ("workspace", "user")
 
 
-class WorkspaceBoardQuerySet(models.QuerySet):
+class WorkspaceBoardQuerySet(models.QuerySet["WorkspaceBoard"]):
     """WorkspaceBoard Manager."""
 
     def filter_by_workspace(self, workspace):
@@ -381,7 +381,7 @@ class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
         self.save()
 
 
-class WorkspaceBoardSectionQuerySet(models.QuerySet):
+class WorkspaceBoardSectionQuerySet(models.QuerySet["WorkspaceBoardSection"]):
     """QuerySet for WorkspaceBoard."""
 
     def filter_by_workspace_board_pks(self, keys):
@@ -460,7 +460,7 @@ class WorkspaceBoardSection(
         ]
 
 
-class TaskQuerySet(models.QuerySet):
+class TaskQuerySet(models.QuerySet["Task"]):
     """Manager for Task."""
 
     def filter_by_workspace(self, workspace):
@@ -710,7 +710,7 @@ class Task(
         ]
 
 
-class LabelQuerySet(models.QuerySet):
+class LabelQuerySet(models.QuerySet["Label"]):
     """Label Queryset."""
 
     def filter_by_workspace_pks(self, workspace_pks):
@@ -744,7 +744,7 @@ class Label(models.Model):
         unique_together = ("workspace", "name")
 
 
-class TaskLabelQuerySet(models.QuerySet):
+class TaskLabelQuerySet(models.QuerySet["TaskLabel"]):
     """QuerySet for TaskLabel."""
 
     def filter_by_task_pks(self, pks):
@@ -777,7 +777,7 @@ class TaskLabel(models.Model):
         unique_together = ("task", "label")
 
 
-class SubTaskQuerySet(models.QuerySet):
+class SubTaskQuerySet(models.QuerySet["SubTask"]):
     """Sub task queryset."""
 
     def filter_by_task_pks(self, task_pks):
@@ -853,7 +853,7 @@ class SubTask(
         ]
 
 
-class ChatMessageQuerySet(models.QuerySet):
+class ChatMessageQuerySet(models.QuerySet["ChatMessage"]):
     """ChatMessage query set."""
 
     def filter_by_task_pks(self, task_pks):

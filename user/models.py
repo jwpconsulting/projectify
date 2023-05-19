@@ -28,7 +28,7 @@ from . import (
 )
 
 
-class UserManager(BaseUserManager):
+class UserManager(BaseUserManager["User"]):
     """Manager class for User."""
 
     def _create_user(self, email, password, is_staff, is_superuser, is_active):
@@ -129,7 +129,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             invitation.redeem(self)
 
 
-class UserInviteQuerySet(models.QuerySet):
+class UserInviteQuerySet(models.QuerySet["UserInvite"]):
     """User invite QuerySet."""
 
     def is_redeemed(self, redeemed=True):

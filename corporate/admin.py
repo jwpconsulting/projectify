@@ -10,7 +10,7 @@ from . import (
 
 
 @admin.register(models.Customer)
-class CustomerAdmin(admin.ModelAdmin):
+class CustomerAdmin(admin.ModelAdmin[models.Customer]):
     """Customer Admin."""
 
     list_display = ("workspace_title", "seats", "subscription_status")
