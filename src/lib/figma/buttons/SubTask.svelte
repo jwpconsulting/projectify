@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import CheckBox from "$lib/figma/select-controls/CheckBox.svelte";
+    import Checkbox from "$lib/funabashi/select-controls/Checkbox.svelte";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import InputField from "$lib/figma/input-fields/InputField.svelte";
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
@@ -29,7 +29,7 @@
 
 <div class="flex w-full flex-row items-center justify-between gap-2 px-2 py-1">
     <div class="flex flex-row items-center gap-2">
-        <CheckBox checked={done || false} disabled={false} contained={false} />
+        <Checkbox checked={done || false} disabled={false} contained={false} />
         <!-- XXX should be only editable when in edit mode -->
         <InputField
             style={{ kind: "subTask" }}

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import CheckBox from "$lib/figma/select-controls/CheckBox.svelte";
+    import Checkbox from "$lib/funabashi/select-controls/Checkbox.svelte";
     import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
     import FilterUser from "$lib/figma/select-controls/FilterUser.svelte";
     import FilterLabel from "$lib/figma/select-controls/FilterLabel.svelte";
@@ -21,7 +21,7 @@ Checkbox
         <div class={fc}>
             {#each falseTrue as checked}
                 Checked: {checked}
-                <CheckBox {checked} {disabled} contained={false} />
+                <Checkbox {checked} {disabled} contained={false} />
             {/each}
         </div>
     {/each}

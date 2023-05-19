@@ -4,7 +4,7 @@
     import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
     import AvatarState from "$lib/figma/navigation/AvatarState.svelte";
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
-    import CheckBox from "$lib/figma/select-controls/CheckBox.svelte";
+    import Checkbox from "$lib/funabashi/select-controls/Checkbox.svelte";
 
     export let workspaceUserSelectionInput: WorkspaceUserSelectionInput;
     export let active: boolean;
@@ -26,7 +26,7 @@
     on:click={click}
 >
     <div class="flex flex-row items-center gap-2">
-        <CheckBox bind:checked={active} disabled={false} contained={true} />
+        <Checkbox bind:checked={active} disabled={false} contained={true} />
         <div class="flex flex-row items-center justify-center gap-2">
             {#if workspaceUserSelectionInput.kind === "workspaceUser"}
                 <AvatarVariant

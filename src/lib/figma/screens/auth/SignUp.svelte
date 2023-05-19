@@ -5,7 +5,7 @@
     import InputField from "$lib/figma/input-fields/InputField.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import Anchor from "$lib/figma/typography/Anchor.svelte";
-    import CheckBox from "$lib/figma/select-controls/CheckBox.svelte";
+    import Checkbox from "$lib/funabashi/select-controls/Checkbox.svelte";
 
     let email: string;
     let password: string;
@@ -34,7 +34,7 @@
             bind:value={password}
         />
         <div class="flex flex-row items-center gap-2">
-            <CheckBox
+            <Checkbox
                 bind:checked={tosPrivacyChecked}
                 disabled={false}
                 contained={false}
