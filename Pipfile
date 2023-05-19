@@ -20,6 +20,7 @@ pytest-celery = "==0.0.0"
 pytest-django = "==4.5.2"
 pyright = "*"
 django-types = "*"
+pytest-xdist = {extras = ["psutil"], version = "*"}
 
 [packages]
 celery = {extras = ["redis"], version = "==5.2.7"}
