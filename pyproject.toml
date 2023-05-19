@@ -114,10 +114,6 @@ module = "workspace.migrations.*"
 ignore_errors = true
 
 [[tool.mypy.overrides]]
-module = "workspace.serializers"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
 module = "workspace.schema.mutation"
 ignore_errors = true
 
