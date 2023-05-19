@@ -20,7 +20,8 @@ class SuperUserTestMixin(UserPassesTestMixin):
 
     def test_func(self):
         """Assert that user is superuser."""
-        return self.request.user.is_superuser
+        # XXX
+        return self.request.user.is_superuser  # type: ignore
 
 
 class EmailList(SuperUserTestMixin, TemplateView):

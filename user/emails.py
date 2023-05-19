@@ -13,7 +13,7 @@ from premail.email import (
 
 
 if TYPE_CHECKING:
-    from user.models import User  # noqa: F401
+    from .models import User  # noqa: F401
 
 
 class UserEmailConfirmationEmail(TemplateEmail["User"]):

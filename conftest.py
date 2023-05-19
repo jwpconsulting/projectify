@@ -62,7 +62,7 @@ def redeemed_user_invite(user):
     return UserInviteFactory(redeemed=True, user=user, email=user.email)
 
 
-def dict_from_execution_result(result):
+def dict_from_execution_result(result) -> dict[str, object]:
     """Turn an execution result into a dict."""
     if result.errors:
         return {
