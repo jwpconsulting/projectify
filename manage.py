@@ -10,7 +10,7 @@ from dotenv import (
 load_dotenv()
 
 
-def main():
+def main() -> None:
     """Run administrative tasks."""
     try:
         from django.core.management import (

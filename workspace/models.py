@@ -94,7 +94,7 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
             deadline=deadline,
         )
 
-    def add_user(self, user):
+    def add_user(self, user: "User") -> "User":
         """
         Add user to workspace.
 
@@ -213,7 +213,7 @@ class WorkspaceUserInvite(TimeStampedModel, models.Model):
 
     objects = WorkspaceUserInviteQuerySet.as_manager()
 
-    def redeem(self):
+    def redeem(self) -> None:
         """
         Redeem invite.
 
