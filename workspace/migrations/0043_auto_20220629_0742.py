@@ -31,7 +31,7 @@ def add_assignee_workspace_user_to_task(
             )
         except WorkspaceUser.DoesNotExist:
             ws_user = None
-        task.assignee_workspace_user = ws_user
+        task.assignee_workspace_user = ws_user  # type: ignore
         task.save()
 
 

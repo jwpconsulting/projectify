@@ -19,5 +19,5 @@ class Query:
         """Resolve user field."""
         user = info.context.user
         if user.is_authenticated:
-            return user
+            return user  # type: ignore
         return None
