@@ -1,7 +1,12 @@
 """Workspace models."""
 import uuid
+from datetime import (
+    datetime,
+)
 from typing import (
     TYPE_CHECKING,
+    Any,
+    Optional,
 )
 
 from django.conf import (
@@ -21,6 +26,9 @@ from django_extensions.db.models import (
     TimeStampedModel,
     TitleDescriptionModel,
 )
+from typing_extensions import (
+    Self,
+)
 from user import models as user_models
 
 from . import (
@@ -35,14 +43,17 @@ if TYPE_CHECKING:
     )
 
 
+Pks = list[str]
+
+
 class WorkspaceQuerySet(models.QuerySet["Workspace"]):
     """Workspace Manager."""
 
-    def get_for_user(self, user):
+    def get_for_user(self, user: "User") -> Self:
         """Return workspaces for a user."""
         return self.filter(users=user)
 
-    def filter_for_user_and_uuid(self, user, uuid):
+    def filter_for_user_and_uuid(self, user: "User", uuid: str) -> Self:
         """Return workspace for user and uuid."""
         return self.get_for_user(user).filter(uuid=uuid)
 
@@ -86,7 +97,9 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
 
     objects = WorkspaceQuerySet.as_manager()
 
-    def add_workspace_board(self, title, description, deadline=None):
+    def add_workspace_board(
+        self, title: str, description: str, deadline: Optional[bool] = None
+    ) -> "WorkspaceBoard":
         """Add workspace board."""
         return self.workspaceboard_set.create(
             title=title,
@@ -104,7 +117,7 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         return user
 
     @transaction.atomic
-    def remove_user(self, user):
+    def remove_user(self, user: "User") -> "User":
         """
         Remove user from workspace.
 
@@ -117,7 +130,7 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         return user
 
     @transaction.atomic
-    def invite_user(self, email):
+    def invite_user(self, email: str) -> "WorkspaceUserInvite":
         """Invite a user to this workspace."""
         invite_check_qs = WorkspaceUserInvite.objects.filter(
             user_invite__email=email,
@@ -130,7 +143,7 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         )
         if already_user_qs.exists():
             raise ValueError(_("Email is already workspace user"))
-        user_invite = user_models.UserInvite.objects.invite_user(email)
+        user_invite = user_models.UserInvite.objects.invite_user(email)  # type: ignore
         workspace_user_invite = self.workspaceuserinvite_set.create(
             user_invite=user_invite,
             workspace=self,
@@ -142,7 +155,7 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         return workspace_user_invite
 
     @transaction.atomic
-    def uninvite_user(self, email):
+    def uninvite_user(self, email: str) -> None:
         """Remove a users invitation."""
         workspace_user_invite = self.workspaceuserinvite_set.get(
             user_invite__email=email,
@@ -150,7 +163,7 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         workspace_user_invite.delete()
 
     @transaction.atomic
-    def increment_highest_task_number(self):
+    def increment_highest_task_number(self) -> int:
         """
         Increment and return highest task number.
 
@@ -160,7 +173,9 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         qs.update(highest_task_number=models.F("highest_task_number") + 1)
         return qs.get().highest_task_number
 
-    def has_at_least_role(self, workspace_user, role):
+    def has_at_least_role(
+        self, workspace_user: "WorkspaceUser", role: str
+    ) -> bool:
         """Check if a workspace user has at least a given role."""
         if not workspace_user.workspace == self:
             return False
@@ -178,7 +193,7 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
             )
 
     @property
-    def workspace(self):
+    def workspace(self) -> Self:
         """Get workspace instance."""
         return self
 
@@ -186,11 +201,11 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
 class WorkspaceUserInviteQuerySet(models.QuerySet["WorkspaceUserInvite"]):
     """QuerySet for WorkspaceUserInvite."""
 
-    def filter_by_workspace_pks(self, workspace_pks):
+    def filter_by_workspace_pks(self, workspace_pks: Pks) -> Self:
         """Filter by workspace pks."""
         return self.filter(workspace__pk__in=workspace_pks)
 
-    def filter_by_redeemed(self, redeemed=True):
+    def filter_by_redeemed(self, redeemed: bool = True) -> Self:
         """Filter by redeemed workspace user invites."""
         return self.filter(redeemed=redeemed)
 
@@ -232,11 +247,13 @@ class WorkspaceUserInvite(TimeStampedModel, models.Model):
 class WorkspaceUserQuerySet(models.QuerySet["WorkspaceUser"]):
     """Workspace user queryset."""
 
-    def filter_by_workspace_pks(self, workspace_pks):
+    def filter_by_workspace_pks(self, workspace_pks: Pks) -> Self:
         """Filter by workspace pks."""
         return self.filter(workspace__pk__in=workspace_pks)
 
-    def get_by_workspace_and_user(self, workspace, user):
+    def get_by_workspace_and_user(
+        self, workspace: Workspace, user: "User"
+    ) -> "WorkspaceUser":
         """Get by workspace and user."""
         return self.get(workspace=workspace, user=user)
 
@@ -295,7 +312,7 @@ class WorkspaceUser(TimeStampedModel, models.Model):
 
     objects = WorkspaceUserQuerySet.as_manager()
 
-    def assign_role(self, role):
+    def assign_role(self, role: str) -> None:
         """
         Assign a new role.
 
@@ -313,23 +330,23 @@ class WorkspaceUser(TimeStampedModel, models.Model):
 class WorkspaceBoardQuerySet(models.QuerySet["WorkspaceBoard"]):
     """WorkspaceBoard Manager."""
 
-    def filter_by_workspace(self, workspace):
+    def filter_by_workspace(self, workspace: Workspace) -> Self:
         """Filter by workspace."""
         return self.filter(workspace=workspace)
 
-    def filter_by_user(self, user):
+    def filter_by_user(self, user: "User") -> Self:
         """Filter by user."""
         return self.filter(workspace__users=user)
 
-    def filter_by_workspace_pks(self, workspace_pks):
+    def filter_by_workspace_pks(self, workspace_pks: Pks) -> Self:
         """Filter by workspace pks."""
         return self.filter(workspace__pk__in=workspace_pks)
 
-    def filter_for_user_and_uuid(self, user, uuid):
+    def filter_for_user_and_uuid(self, user: "User", uuid: str) -> Self:
         """Get a workspace baord for user and uuid."""
         return self.filter_by_user(user).filter(uuid=uuid)
 
-    def filter_by_archived(self, archived=True):
+    def filter_by_archived(self, archived: bool = True) -> Self:
         """Filter by archived boards."""
         return self.filter(archived__isnull=not archived)
 
@@ -355,14 +372,16 @@ class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
 
     objects = WorkspaceBoardQuerySet.as_manager()
 
-    def add_workspace_board_section(self, title, description):
+    def add_workspace_board_section(
+        self, title: str, description: str
+    ) -> "WorkspaceBoardSection":
         """Add workspace board section to this workspace board."""
         return self.workspaceboardsection_set.create(
             title=title,
             description=description,
         )
 
-    def archive(self):
+    def archive(self) -> None:
         """
         Mark this workspace board as archived.
 
@@ -371,7 +390,7 @@ class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
         self.archived = now()
         self.save()
 
-    def unarchive(self):
+    def unarchive(self) -> None:
         """
         Mark this workspace board as not archived.
 
@@ -384,11 +403,11 @@ class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
 class WorkspaceBoardSectionQuerySet(models.QuerySet["WorkspaceBoardSection"]):
     """QuerySet for WorkspaceBoard."""
 
-    def filter_by_workspace_board_pks(self, keys):
+    def filter_by_workspace_board_pks(self, keys: Pks) -> Self:
         """Filter by workspace boards."""
         return self.filter(workspace_board__pk__in=keys)
 
-    def filter_for_user_and_uuid(self, user, uuid):
+    def filter_for_user_and_uuid(self, user: "User", uuid: str) -> Self:
         """Return a workspace for user and uuid."""
         return self.filter(workspace_board__workspace__users=user, uuid=uuid)
 
@@ -407,7 +426,9 @@ class WorkspaceBoardSection(
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     objects = WorkspaceBoardSectionQuerySet.as_manager()
 
-    def add_task(self, title, description, deadline=None):
+    def add_task(
+        self, title: str, description: str, deadline: Optional[datetime] = None
+    ) -> "Task":
         """Add a task to this section."""
         return self.task_set.create(
             title=title,
@@ -416,7 +437,7 @@ class WorkspaceBoardSection(
             workspace=self.workspace_board.workspace,
         )
 
-    def move_to(self, order):
+    def move_to(self, order: int) -> None:
         """
         Move to specified order n within workspace board.
 
@@ -443,7 +464,7 @@ class WorkspaceBoardSection(
             current_workspace_board.save()
 
     @property
-    def workspace(self):
+    def workspace(self) -> Workspace:
         """Get workspace instance."""
         return self.workspace_board.workspace
 
@@ -463,39 +484,42 @@ class WorkspaceBoardSection(
 class TaskQuerySet(models.QuerySet["Task"]):
     """Manager for Task."""
 
-    def filter_by_workspace(self, workspace):
+    def filter_by_workspace(self, workspace: Workspace) -> Self:
         """Filter by workspace."""
         return self.filter(
             workspace_board_section__workspace_board__workspace=workspace,
         )
 
-    def filter_by_assignee(self, assignee):
+    def filter_by_assignee(self, assignee: WorkspaceUser) -> Self:
         """Filter by assignee user."""
         return self.filter(assignee=assignee)
 
     def filter_by_workspace_board_section_pks(
         self,
-        workspace_board_section_pks,
-    ):
+        workspace_board_section_pks: Pks,
+    ) -> Self:
         """Filter by workspace board section pks."""
         return self.filter(
             workspace_board_section__pk__in=workspace_board_section_pks,
         )
 
-    def filter_by_workspace_board(self, workspace_board):
+    def filter_by_workspace_board(
+        self, workspace_board: WorkspaceBoard
+    ) -> Self:
         """Filter by tasks contained in workspace board."""
         return self.filter(
             workspace_board_section__workspace_board=workspace_board,
         )
 
-    def filter_for_user_and_uuid(self, user, uuid):
+    def filter_for_user_and_uuid(self, user: "User", uuid: str) -> Self:
         """Return task from user workspace corresponding to uuid."""
         return self.filter(
             workspace_board_section__workspace_board__workspace__users=user,
             uuid=uuid,
         )
 
-    def duplicate_task(self, task):
+    # XXX still used?
+    def duplicate_task(self, task: "Task") -> "Task":
         """Duplicate a task."""
         new_task = self.create(
             workspace_board_section=task.workspace_board_section,
@@ -589,7 +613,9 @@ class Task(
 
     objects = TaskQuerySet.as_manager()
 
-    def move_to(self, workspace_board_section, order):
+    def move_to(
+        self, workspace_board_section: WorkspaceBoard, order: int
+    ) -> None:
         """
         Move to specified workspace board section and to order n.
 
@@ -621,19 +647,21 @@ class Task(
             workspace_board_section.set_task_order(order_list)
             workspace_board_section.save()
 
-    def add_sub_task(self, title, description):
+    def add_sub_task(self, title: str, description: str) -> "SubTask":
         """Add a sub task."""
         return self.subtask_set.create(title=title, description=description)
 
-    def add_chat_message(self, text, author):
+    def add_chat_message(
+        self, text: str, author: WorkspaceUser
+    ) -> "ChatMessage":
         """Add a chat message."""
-        workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(
+        workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(  # type: ignore
             self.workspace,
             author,
         )
         return self.chatmessage_set.create(text=text, author=workspace_user)
 
-    def assign_to(self, assignee):
+    def assign_to(self, assignee: WorkspaceUser) -> None:
         """
         Assign task to user.
 
@@ -642,7 +670,7 @@ class Task(
         if assignee is not None:
             # Check if assignee is part of the task's workspace
             workspace = self.workspace_board_section.workspace_board.workspace
-            workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(
+            workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(  # type: ignore
                 workspace,
                 assignee,
             )
@@ -653,12 +681,12 @@ class Task(
         # Save
         self.save()
 
-    def get_next_section(self):
+    def get_next_section(self) -> WorkspaceBoardSection:
         """Return instance of the next section."""
         next_section = self.workspace_board_section.get_next_in_order()
         return next_section
 
-    def add_label(self, label):
+    def add_label(self, label: "Label") -> "Label":
         """
         Add a label to this task.
 
@@ -673,7 +701,7 @@ class Task(
             task_label = self.tasklabel_set.create(label=label)
             return task_label
 
-    def remove_label(self, label):
+    def remove_label(self, label: "Label") -> "Label":
         """
         Remove a label from this task. Is idempotent.
 
@@ -686,7 +714,8 @@ class Task(
             pass
         return label
 
-    def save(self, *args, **kwargs):
+    # TODO we can probably do better than any here
+    def save(self, *args: Any, **kwargs: Any) -> None:
         """Override save to add task number."""
         if self.number is None:
             self.number = self.workspace.increment_highest_task_number()
@@ -713,11 +742,11 @@ class Task(
 class LabelQuerySet(models.QuerySet["Label"]):
     """Label Queryset."""
 
-    def filter_by_workspace_pks(self, workspace_pks):
+    def filter_by_workspace_pks(self, workspace_pks: Pks) -> Self:
         """Filter by workspace pks."""
         return self.filter(workspace__pk__in=workspace_pks)
 
-    def filter_for_user_and_uuid(self, user, uuid):
+    def filter_for_user_and_uuid(self, user: "User", uuid: str) -> Self:
         """Return for matching workspace user and uuid."""
         return self.filter(workspace__users=user, uuid=uuid)
 
@@ -747,7 +776,7 @@ class Label(models.Model):
 class TaskLabelQuerySet(models.QuerySet["TaskLabel"]):
     """QuerySet for TaskLabel."""
 
-    def filter_by_task_pks(self, pks):
+    def filter_by_task_pks(self, pks: Pks) -> Self:
         """Filter by task pks."""
         return self.filter(task__pk__in=pks)
 
@@ -767,7 +796,7 @@ class TaskLabel(models.Model):
     objects = TaskLabelQuerySet.as_manager()
 
     @property
-    def workspace(self):
+    def workspace(self) -> Workspace:
         """Get workspace instance."""
         return self.label.workspace
 
@@ -780,11 +809,11 @@ class TaskLabel(models.Model):
 class SubTaskQuerySet(models.QuerySet["SubTask"]):
     """Sub task queryset."""
 
-    def filter_by_task_pks(self, task_pks):
+    def filter_by_task_pks(self, task_pks: Pks) -> Self:
         """Filter by task pks."""
         return self.filter(task__pk__in=task_pks)
 
-    def filter_for_user_and_uuid(self, user, uuid):
+    def filter_for_user_and_uuid(self, user: "User", uuid: str) -> Self:
         """Get sub task for a certain user and sub task uuid."""
         kwargs = {
             "task__workspace_board_section__workspace_board__"
@@ -813,7 +842,7 @@ class SubTask(
 
     objects = SubTaskQuerySet.as_manager()
 
-    def move_to(self, order):
+    def move_to(self, order: int) -> None:
         """
         Move to specified order n within task.
 
@@ -836,7 +865,7 @@ class SubTask(
             current_task.save()
 
     @property
-    def workspace(self):
+    def workspace(self) -> Workspace:
         """Get workspace instance."""
         return self.task.workspace_board_section.workspace_board.workspace
 
@@ -856,11 +885,11 @@ class SubTask(
 class ChatMessageQuerySet(models.QuerySet["ChatMessage"]):
     """ChatMessage query set."""
 
-    def filter_by_task_pks(self, task_pks):
+    def filter_by_task_pks(self, task_pks: Pks) -> Self:
         """Filter by task pks."""
         return self.filter(task__pk__in=task_pks)
 
-    def filter_for_user_and_uuid(self, user, uuid):
+    def filter_for_user_and_uuid(self, user: "User", uuid: str) -> Self:
         """Get for a specific workspace user and uuid."""
         kwargs = {
             "task__workspace_board_section__workspace_board__"
@@ -889,7 +918,7 @@ class ChatMessage(TimeStampedModel, models.Model):
     objects = ChatMessageQuerySet.as_manager()
 
     @property
-    def workspace(self):
+    def workspace(self) -> Workspace:
         """Get workspace instance."""
         return self.task.workspace_board_section.workspace_board.workspace
 
