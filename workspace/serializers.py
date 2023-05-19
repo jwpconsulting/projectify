@@ -37,7 +37,7 @@ class WorkspaceUserSerializer(serializers.ModelSerializer):
         """Meta."""
 
         model = models.WorkspaceUser
-        fields: Iterable = (
+        fields: Iterable[str] = (
             *timestamps,
             "user",
             "uuid",
@@ -53,7 +53,7 @@ class LabelSerializer(serializers.ModelSerializer):
         """Meta."""
 
         model = models.Label
-        fields: Iterable = (
+        fields: Iterable[str] = (
             "name",
             "color",
             "uuid",
@@ -67,7 +67,7 @@ class SubTaskBaseSerializer(serializers.ModelSerializer):
         """Meta."""
 
         model = models.SubTask
-        fields: Iterable = (
+        fields: Iterable[str] = (
             *timestamps,
             *title_description,
             "uuid",
@@ -85,7 +85,7 @@ class ChatMessageBaseSerializer(serializers.ModelSerializer):
         """Meta."""
 
         model = models.ChatMessage
-        fields: Iterable = (
+        fields: Iterable[str] = (
             *timestamps,
             "uuid",
             "text",
@@ -103,7 +103,7 @@ class TaskBaseSerializer(serializers.ModelSerializer):
         """Meta."""
 
         model = models.Task
-        fields: Iterable = (
+        fields: Iterable[str] = (
             *timestamps,
             *title_description,
             "_order",
@@ -128,7 +128,7 @@ class WorkspaceBaseSerializer(serializers.ModelSerializer):
         """Meta."""
 
         model = models.Workspace
-        fields: Iterable = (
+        fields: Iterable[str] = (
             *timestamps,
             *title_description,
             "uuid",
@@ -143,7 +143,7 @@ class WorkspaceBoardBaseSerializer(serializers.ModelSerializer):
         """Meta."""
 
         model = models.WorkspaceBoard
-        fields: Iterable = (
+        fields: Iterable[str] = (
             *timestamps,
             *title_description,
             "deadline",
@@ -160,7 +160,7 @@ class WorkspaceBoardUpSerializer(WorkspaceBoardBaseSerializer):
     class Meta(WorkspaceBoardBaseSerializer.Meta):
         """Meta."""
 
-        fields: Iterable = (
+        fields: Iterable[str] = (
             *WorkspaceBoardBaseSerializer.Meta.fields,
             "workspace",
         )
@@ -173,7 +173,7 @@ class WorkspaceBoardSectionBaseSerializer(serializers.ModelSerializer):
         """Meta."""
 
         model = models.WorkspaceBoardSection
-        fields: Iterable = (
+        fields: Iterable[str] = (
             *timestamps,
             *title_description,
             "_order",
@@ -205,7 +205,7 @@ class TaskWithSubTaskSerializer(TaskBaseSerializer):
     class Meta(TaskBaseSerializer.Meta):
         """Meta."""
 
-        fields: Iterable = (
+        fields: Iterable[str] = (
             *TaskBaseSerializer.Meta.fields,
             "sub_tasks",
         )
@@ -222,7 +222,7 @@ class TaskDetailSerializer(TaskWithSubTaskSerializer):
     class Meta(TaskWithSubTaskSerializer.Meta):
         """Meta."""
 
-        fields: Iterable = (
+        fields: Iterable[str] = (
             *TaskWithSubTaskSerializer.Meta.fields,
             "chat_messages",
             "workspace_board_section",
@@ -239,7 +239,7 @@ class WorkspaceBoardSectionSerializer(WorkspaceBoardSectionBaseSerializer):
     class Meta(WorkspaceBoardSectionBaseSerializer.Meta):
         """Meta."""
 
-        fields: Iterable = (
+        fields: Iterable[str] = (
             *WorkspaceBoardSectionBaseSerializer.Meta.fields,
             "tasks",
         )
@@ -255,7 +255,7 @@ class WorkspaceBoardSerializer(WorkspaceBoardBaseSerializer):
     class Meta(WorkspaceBoardBaseSerializer.Meta):
         """Meta."""
 
-        fields: Iterable = (
+        fields: Iterable[str] = (
             *WorkspaceBoardBaseSerializer.Meta.fields,
             "workspace_board_sections",
         )
@@ -269,7 +269,7 @@ class WorkspaceBoardDetailSerializer(WorkspaceBoardSerializer):
     class Meta(WorkspaceBoardSerializer.Meta):
         """Meta."""
 
-        fields: Iterable = (
+        fields: Iterable[str] = (
             *WorkspaceBoardSerializer.Meta.fields,
             "workspace",
         )
@@ -283,7 +283,7 @@ class WorkspaceBoardSectionDetailSerializer(WorkspaceBoardSectionSerializer):
     class Meta(WorkspaceBoardSectionSerializer.Meta):
         """Meta."""
 
-        fields: Iterable = (
+        fields: Iterable[str] = (
             *WorkspaceBoardSectionSerializer.Meta.fields,
             "workspace_board",
         )
@@ -303,7 +303,7 @@ class WorkspaceSerializer(WorkspaceBaseSerializer):
     class Meta(WorkspaceBaseSerializer.Meta):
         """Meta."""
 
-        fields: Iterable = (
+        fields: Iterable[str] = (
             *WorkspaceBaseSerializer.Meta.fields,
             "workspace_users",
             "workspace_boards",

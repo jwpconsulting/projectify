@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     )
 
 
-class CustomerQuerySet(models.QuerySet):
+class CustomerQuerySet(models.QuerySet["Customer"]):
     """Customer QuerySet."""
 
     def get_by_uuid(self, uuid):

@@ -16,6 +16,7 @@ Including another URLconf
 """
 from typing import (
     Iterable,
+    Union,
 )
 
 from django.conf import (
@@ -28,6 +29,8 @@ from django.contrib import (
     admin,
 )
 from django.urls import (
+    URLPattern,
+    URLResolver,
     include,
     path,
 )
@@ -50,7 +53,7 @@ from .views import (
 )
 
 
-urlpatterns: Iterable = (
+urlpatterns: Iterable[Union[URLResolver, URLPattern]] = (
     path("admin/", admin.site.urls),
     path(
         "graphql",
