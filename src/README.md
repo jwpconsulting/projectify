@@ -128,8 +128,8 @@ Some variations can be as follows.
 
 You can add an anchor top right or bottom right using the following two props:
 
--   `anchorTop`, and
--   `anchorBottom`
+- `anchorTop`, and
+- `anchorBottom`
 
 These should be an object like the following:
 
