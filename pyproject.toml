@@ -21,6 +21,12 @@ known_third_party = [
 ]
 known_first_party = ["user"]
 
+[tool.mypy]
+warn_unused_configs = true
+warn_redundant_casts = true
+strict_equality = true
+strict_concatenate = true
+
 # Library imports
 [[tool.mypy.overrides]]
 module = "celery.*"
@@ -120,6 +126,10 @@ module = "workspace.schema.types"
 ignore_errors = true
 
 # Here is where we get strict again
-# [[tool.mypy.overrides]]
-# module = "workspace.signals"
-# disallow_untyped_defs = true
+[[tool.mypy.overrides]]
+module = "workspace"
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = "workspace.signals"
+disallow_untyped_defs = true

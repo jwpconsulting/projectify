@@ -1,5 +1,8 @@
 """Workspace signals."""
 import logging
+from typing import (
+    TYPE_CHECKING,
+)
 
 from django.db import (
     transaction,
@@ -29,11 +32,22 @@ from . import (
 )
 
 
+if TYPE_CHECKING:
+    from user.models import (  # noqa: F401
+        User,
+    )
+
+
+Unknown = object
+
+
 logger = logging.getLogger(__name__)
 
 
 @receiver(signal_defs.workspace_user_invited)
-def send_invitation_email(instance: models.WorkspaceUser, **kwargs):
+def send_invitation_email(
+    instance: models.WorkspaceUser, **kwargs: object
+) -> None:
     """Send email when workspace user is invited."""
     # Avoid circular import
     from . import (
@@ -44,7 +58,7 @@ def send_invitation_email(instance: models.WorkspaceUser, **kwargs):
     email.send()
 
 
-def send_workspace_change_signal(instance: models.Workspace):
+def send_workspace_change_signal(instance: models.Workspace) -> None:
     """Send workspace.change signal to correct group."""
     uuid = str(instance.uuid)
     channel_layer = get_channel_layer()
@@ -59,7 +73,9 @@ def send_workspace_change_signal(instance: models.Workspace):
     )
 
 
-def send_workspace_board_change_signal(instance: models.WorkspaceBoard):
+def send_workspace_board_change_signal(
+    instance: models.WorkspaceBoard,
+) -> None:
     """Send workspace_board.change signal to correct group."""
     uuid = str(instance.uuid)
     channel_layer = get_channel_layer()
@@ -74,7 +90,7 @@ def send_workspace_board_change_signal(instance: models.WorkspaceBoard):
     )
 
 
-def send_task_change_signal(instance: models.Task):
+def send_task_change_signal(instance: models.Task) -> None:
     """Send task.change signal to correct group."""
     uuid = str(instance.uuid)
     channel_layer = get_channel_layer()
@@ -90,54 +106,62 @@ def send_task_change_signal(instance: models.Task):
 
 
 @receiver(post_save, sender=models.Workspace)
-def workspace_saved(sender, instance: models.Workspace, **kwargs):
+def workspace_saved(instance: models.Workspace, **kwargs: Unknown) -> None:
     """Broadcast changes."""
     send_workspace_change_signal(instance)
 
 
 @receiver(post_delete, sender=models.Workspace)
-def workspace_deleted(sender, instance: models.Workspace, **kwargs):
+def workspace_deleted(instance: models.Workspace, **kwargs: Unknown) -> None:
     """Broadcast changes upon workspace delete."""
     send_workspace_change_signal(instance)
 
 
 @receiver(post_save, sender=models.Label)
-def label_saved(sender, instance: models.Label, **kwargs):
+def label_saved(instance: models.Label, **kwargs: Unknown) -> None:
     """Broadcast changes upon label save."""
     workspace = instance.workspace
     send_workspace_change_signal(workspace)
 
 
 @receiver(post_delete, sender=models.Label)
-def label_deleted(sender, instance: models.Label, **kwargs):
+def label_deleted(instance: models.Label, **kwargs: Unknown) -> None:
     """Broadcast changes upon label delete."""
     workspace = instance.workspace
     send_workspace_change_signal(workspace)
 
 
 @receiver(post_save, sender=models.WorkspaceUser)
-def workspace_user_saved(sender, instance: models.WorkspaceUser, **kwargs):
+def workspace_user_saved(
+    instance: models.WorkspaceUser, **kwargs: Unknown
+) -> None:
     """Broadcast changes."""
     workspace = instance.workspace
     send_workspace_change_signal(workspace)
 
 
 @receiver(post_delete, sender=models.WorkspaceUser)
-def workspace_user_delete(sender, instance: models.WorkspaceUser, **kwargs):
+def workspace_user_delete(
+    instance: models.WorkspaceUser, **kwargs: Unknown
+) -> None:
     """Broadcast changes."""
     workspace = instance.workspace
     send_workspace_change_signal(workspace)
 
 
 @receiver(post_save, sender=models.WorkspaceBoard)
-def workspace_board_saved(sender, instance: models.WorkspaceBoard, **kwargs):
+def workspace_board_saved(
+    instance: models.WorkspaceBoard, **kwargs: Unknown
+) -> None:
     """Broadcast changes."""
     send_workspace_board_change_signal(instance)
     send_workspace_change_signal(instance.workspace)
 
 
 @receiver(post_delete, sender=models.WorkspaceBoard)
-def workspace_board_deleted(sender, instance: models.WorkspaceBoard, **kwargs):
+def workspace_board_deleted(
+    instance: models.WorkspaceBoard, **kwargs: Unknown
+) -> None:
     """Broadcast changes."""
     send_workspace_board_change_signal(instance)
     send_workspace_change_signal(instance.workspace)
@@ -145,8 +169,8 @@ def workspace_board_deleted(sender, instance: models.WorkspaceBoard, **kwargs):
 
 @receiver(post_save, sender=models.WorkspaceBoardSection)
 def workspace_board_section_saved(
-    sender, instance: models.WorkspaceBoardSection, **kwargs
-):
+    instance: models.WorkspaceBoardSection, **kwargs: Unknown
+) -> None:
     """Broadcast changes."""
     workspace_board = instance.workspace_board
     send_workspace_board_change_signal(workspace_board)
@@ -154,15 +178,15 @@ def workspace_board_section_saved(
 
 @receiver(post_delete, sender=models.WorkspaceBoardSection)
 def workspace_board_section_deleted(
-    sender, instance: models.WorkspaceBoardSection, **kwargs
-):
+    instance: models.WorkspaceBoardSection, **kwargs: Unknown
+) -> None:
     """Broadcast changes."""
     workspace_board = instance.workspace_board
     send_workspace_board_change_signal(workspace_board)
 
 
 @receiver(post_save, sender=models.Task)
-def task_saved(sender, instance: models.Task, **kwargs):
+def task_saved(instance: models.Task, **kwargs: Unknown) -> None:
     """Broadcast changes."""
     workspace_board = instance.workspace_board_section.workspace_board
     send_workspace_board_change_signal(workspace_board)
@@ -170,7 +194,7 @@ def task_saved(sender, instance: models.Task, **kwargs):
 
 
 @receiver(post_delete, sender=models.Task)
-def task_deleted(sender, instance: models.Task, **kwargs):
+def task_deleted(instance: models.Task, **kwargs: Unknown) -> None:
     """Broadcast changes."""
     workspace_board = instance.workspace_board_section.workspace_board
     send_workspace_board_change_signal(workspace_board)
@@ -178,7 +202,7 @@ def task_deleted(sender, instance: models.Task, **kwargs):
 
 
 @receiver(post_save, sender=models.TaskLabel)
-def task_label_saved(sender, instance: models.TaskLabel, **kwargs):
+def task_label_saved(instance: models.TaskLabel, **kwargs: Unknown) -> None:
     """Broadcast changes upon task label save."""
     task = instance.task
     workspace_board = task.workspace_board_section.workspace_board
@@ -187,7 +211,7 @@ def task_label_saved(sender, instance: models.TaskLabel, **kwargs):
 
 
 @receiver(post_delete, sender=models.TaskLabel)
-def task_label_deleted(sender, instance: models.TaskLabel, **kwargs):
+def task_label_deleted(instance: models.TaskLabel, **kwargs: Unknown) -> None:
     """Broadcast changes upon task label delete."""
     task = instance.task
     workspace_board = task.workspace_board_section.workspace_board
@@ -196,7 +220,7 @@ def task_label_deleted(sender, instance: models.TaskLabel, **kwargs):
 
 
 @receiver(post_save, sender=models.SubTask)
-def sub_task_saved(sender, instance: models.SubTask, **kwargs):
+def sub_task_saved(instance: models.SubTask, **kwargs: Unknown) -> None:
     """Broadcast changes."""
     task = instance.task
     workspace_board = task.workspace_board_section.workspace_board
@@ -205,7 +229,7 @@ def sub_task_saved(sender, instance: models.SubTask, **kwargs):
 
 
 @receiver(post_delete, sender=models.SubTask)
-def sub_task_deleted(sender, instance: models.SubTask, **kwargs):
+def sub_task_deleted(instance: models.SubTask, **kwargs: Unknown) -> None:
     """Broadcast changes."""
     task = instance.task
     workspace_board = task.workspace_board_section.workspace_board
@@ -214,14 +238,18 @@ def sub_task_deleted(sender, instance: models.SubTask, **kwargs):
 
 
 @receiver(post_save, sender=models.ChatMessage)
-def chat_message_saved(sender, instance: models.ChatMessage, **kwargs):
+def chat_message_saved(
+    instance: models.ChatMessage, **kwargs: Unknown
+) -> None:
     """Broadcast changes."""
     task = instance.task
     send_task_change_signal(task)
 
 
 @receiver(post_delete, sender=models.ChatMessage)
-def chat_message_deleted(sender, instance: models.ChatMessage, **kwargs):
+def chat_message_deleted(
+    instance: models.ChatMessage, **kwargs: Unknown
+) -> None:
     """Broadcast changes."""
     task = instance.task
     send_task_change_signal(task)
@@ -230,8 +258,8 @@ def chat_message_deleted(sender, instance: models.ChatMessage, **kwargs):
 @receiver(user_invitation_redeemed)
 @transaction.atomic
 def redeem_workspace_invitations(
-    user, instance: models.WorkspaceUserInvite, **kwargs
-):
+    user: "User", instance: models.WorkspaceUserInvite, **kwargs: Unknown
+) -> None:
     """Redeem workspace invitations."""
     qs = models.WorkspaceUserInvite.objects.filter(
         user_invite__user=user,
