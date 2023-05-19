@@ -86,7 +86,7 @@ class Mutation:
         self, info, input: CreateBillingPortalSessionInput
     ) -> types.BillingPortalSession:
         """Allow accessing the billing portal."""
-        customer = models.Customer.objects.get_for_user_and_uuid(  # type: ignore
+        customer = models.Customer.objects.get_for_user_and_uuid(
             info.context.user,
             input.uuid,
         )

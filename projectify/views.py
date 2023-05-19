@@ -3,8 +3,12 @@ from dataclasses import (
     dataclass,
 )
 from typing import (
-    TYPE_CHECKING,
     Union,
+)
+
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    AnonymousUser,
 )
 
 from strawberry.django import (
@@ -12,17 +16,11 @@ from strawberry.django import (
 )
 
 
-if TYPE_CHECKING:
-    from user.models import (
-        User,
-    )
-
-
 @dataclass
 class RequestContext:
     """Request context used in graphql view."""
 
-    user: Union["User", None]
+    user: Union[AnonymousUser, AbstractBaseUser, None]
     session: type
     META: dict[str, str]
 

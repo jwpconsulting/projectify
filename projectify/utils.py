@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 
 def crop_image(
-    image: "FieldFile", width: int, height: int, **kwargs: object
+    image: Optional["FieldFile"], width: int, height: int, **kwargs: object
 ) -> Optional[str]:
     """Crop an image using cloudinary's API, if available."""
     if not image:

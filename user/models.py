@@ -1,4 +1,9 @@
 """User models."""
+from typing import (
+    Optional,
+    cast,
+)
+
 from django.conf import (
     settings,
 )
@@ -22,6 +27,9 @@ from django.utils.translation import gettext_lazy as _
 from django_extensions.db.models import (
     TimeStampedModel,
 )
+from typing_extensions import (
+    Self,
+)
 
 from . import (
     signal_defs,
@@ -31,7 +39,14 @@ from . import (
 class UserManager(BaseUserManager["User"]):
     """Manager class for User."""
 
-    def _create_user(self, email, password, is_staff, is_superuser, is_active):
+    def _create_user(
+        self,
+        email: str,
+        password: Optional[str],
+        is_staff: bool,
+        is_superuser: bool,
+        is_active: bool,
+    ) -> "User":
         """Create and save a user with the given email, and password."""
         email = self.normalize_email(email)
         user = self.model(
@@ -45,7 +60,9 @@ class UserManager(BaseUserManager["User"]):
         user.redeem_invites()
         return user
 
-    def create_user(self, email, password=None):
+    def create_user(
+        self, email: str, password: Optional[str] = None
+    ) -> "User":
         """Create a normal user."""
         return self._create_user(
             email,
@@ -55,7 +72,9 @@ class UserManager(BaseUserManager["User"]):
             is_active=False,
         )
 
-    def create_superuser(self, email, password=None):
+    def create_superuser(
+        self, email: str, password: Optional[str] = None
+    ) -> "User":
         """Create a superuser."""
         return self._create_user(
             email,
@@ -97,32 +116,32 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = "email"
 
-    def get_email_confirmation_token(self):
+    def get_email_confirmation_token(self) -> str:
         """Return a secure email confirmation token."""
         return crypto.salted_hmac(
             key_salt=EMAIL_CONFIRMATION_TOKEN_SALT,
             value=self.email,
         ).hexdigest()
 
-    def check_email_confirmation_token(self, token):
+    def check_email_confirmation_token(self, token: str) -> bool:
         """Compare a hexdigest to the actual email confirmation token."""
         actual = self.get_email_confirmation_token()
         return crypto.constant_time_compare(token, actual)
 
-    def get_password_reset_token(self):
+    def get_password_reset_token(self) -> str:
         """Return a secure password reset token."""
         return crypto.salted_hmac(
             key_salt=PASSWORD_RESET_TOKEN_SALT,
             value=self.password,
         ).hexdigest()
 
-    def check_password_reset_token(self, token):
+    def check_password_reset_token(self, token: str) -> bool:
         """Compare a hexdigest to the actual password reset token."""
         actual = self.get_password_reset_token()
         return crypto.constant_time_compare(token, actual)
 
     @transaction.atomic
-    def redeem_invites(self):
+    def redeem_invites(self) -> None:
         """Redeem all invites."""
         invites = UserInvite.objects.is_redeemed(False).by_email(self.email)
         for invitation in invites.iterator():
@@ -132,16 +151,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 class UserInviteQuerySet(models.QuerySet["UserInvite"]):
     """User invite QuerySet."""
 
-    def is_redeemed(self, redeemed=True):
+    def is_redeemed(self, redeemed: bool = True) -> Self:
         """Return not self redeemed invites."""
         return self.filter(redeemed=redeemed)
 
-    def by_email(self, email):
+    def by_email(self, email: str) -> Self:
         """Filter by email."""
         return self.filter(email=email)
 
     @transaction.atomic()
-    def invite_user(self, email):
+    def invite_user(self, email: str) -> "UserInvite":
         """Invite a user."""
         user_qs = User.objects.filter(email=email)
         if user_qs.exists():
@@ -160,7 +179,7 @@ class UserInvite(TimeStampedModel, models.Model):
     email = models.EmailField(
         verbose_name=_("Email"),
     )
-    user = models.ForeignKey(
+    user = models.ForeignKey[User](
         settings.AUTH_USER_MODEL,
         null=True,
         blank=True,
@@ -172,7 +191,7 @@ class UserInvite(TimeStampedModel, models.Model):
         help_text=_("Has this invite been redeemed?"),
     )
 
-    def redeem(self, user):
+    def redeem(self, user: User) -> None:
         """
         Redeem this invite with a user.
 
@@ -188,4 +207,4 @@ class UserInvite(TimeStampedModel, models.Model):
             instance=self,
         )
 
-    objects = UserInviteQuerySet.as_manager()
+    objects = cast(UserInviteQuerySet, UserInviteQuerySet.as_manager())
