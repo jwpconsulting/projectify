@@ -16,3 +16,4 @@ class Query:
         user = info.context.user
         if user.is_authenticated:
             return user
+        return None

@@ -87,27 +87,13 @@ ignore_missing_imports = true
 
 # Our own modules
 [[tool.mypy.overrides]]
-module = "corporate.schema.types"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "user.schema.mutation"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "user.schema.types"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "user.schema.query"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "workspace.schema.mutation"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "workspace.schema.types"
+module = [
+    "corporate.schema.types",
+    "user.schema.mutation",
+    "user.schema.types",
+    "workspace.schema.mutation",
+    "workspace.schema.types",
+]
 ignore_errors = true
 
 # Here is where we get strict again
