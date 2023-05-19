@@ -86,10 +86,6 @@ module = "corporate.schema.types"
 ignore_errors = true
 
 [[tool.mypy.overrides]]
-module = "user.migrations.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
 module = "user.schema.mutation"
 ignore_errors = true
 
@@ -99,10 +95,6 @@ ignore_errors = true
 
 [[tool.mypy.overrides]]
 module = "user.schema.query"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = "workspace.migrations.*"
 ignore_errors = true
 
 [[tool.mypy.overrides]]
