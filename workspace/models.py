@@ -13,6 +13,9 @@ from typing import (
 from django.conf import (
     settings,
 )
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+)
 from django.db import (
     models,
     transaction,
@@ -50,11 +53,13 @@ Pks = list[str]
 class WorkspaceQuerySet(models.QuerySet["Workspace"]):
     """Workspace Manager."""
 
-    def get_for_user(self, user: "User") -> Self:
+    def get_for_user(self, user: AbstractBaseUser) -> Self:
         """Return workspaces for a user."""
         return self.filter(users=user)
 
-    def filter_for_user_and_uuid(self, user: "User", uuid: uuid.UUID) -> Self:
+    def filter_for_user_and_uuid(
+        self, user: AbstractBaseUser, uuid: uuid.UUID
+    ) -> Self:
         """Return workspace for user and uuid."""
         return self.get_for_user(user).filter(uuid=uuid)
 
@@ -86,7 +91,7 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         settings.AUTH_USER_MODEL,
         through="WorkspaceUser",
         through_fields=("workspace", "user"),
-    )  # type: models.ManyToManyField["User", "WorkspaceUser"]
+    )  # type: models.ManyToManyField[AbstractBaseUser, "WorkspaceUser"]
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     picture = models.ImageField(
         upload_to="workspace_picture/",
@@ -108,7 +113,7 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
             deadline=deadline,
         )
 
-    def add_user(self, user: "User") -> "User":
+    def add_user(self, user: AbstractBaseUser) -> AbstractBaseUser:
         """
         Add user to workspace.
 
@@ -144,7 +149,7 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         )
         if already_user_qs.exists():
             raise ValueError(_("Email is already workspace user"))
-        user_invite = user_models.UserInvite.objects.invite_user(email)  # type: ignore
+        user_invite = user_models.UserInvite.objects.invite_user(email)
         workspace_user_invite = self.workspaceuserinvite_set.create(
             user_invite=user_invite,
             workspace=self,
@@ -253,7 +258,7 @@ class WorkspaceUserQuerySet(models.QuerySet["WorkspaceUser"]):
         return self.filter(workspace__pk__in=workspace_pks)
 
     def get_by_workspace_and_user(
-        self, workspace: Workspace, user: "User"
+        self, workspace: Workspace, user: AbstractBaseUser
     ) -> "WorkspaceUser":
         """Get by workspace and user."""
         return self.get(workspace=workspace, user=user)
@@ -336,7 +341,7 @@ class WorkspaceBoardQuerySet(models.QuerySet["WorkspaceBoard"]):
         """Filter by workspace."""
         return self.filter(workspace=workspace)
 
-    def filter_by_user(self, user: "User") -> Self:
+    def filter_by_user(self, user: AbstractBaseUser) -> Self:
         """Filter by user."""
         return self.filter(workspace__users=user)
 
@@ -344,7 +349,9 @@ class WorkspaceBoardQuerySet(models.QuerySet["WorkspaceBoard"]):
         """Filter by workspace pks."""
         return self.filter(workspace__pk__in=workspace_pks)
 
-    def filter_for_user_and_uuid(self, user: "User", uuid: uuid.UUID) -> Self:
+    def filter_for_user_and_uuid(
+        self, user: AbstractBaseUser, uuid: uuid.UUID
+    ) -> Self:
         """Get a workspace baord for user and uuid."""
         return self.filter_by_user(user).filter(uuid=uuid)
 
@@ -409,7 +416,9 @@ class WorkspaceBoardSectionQuerySet(models.QuerySet["WorkspaceBoardSection"]):
         """Filter by workspace boards."""
         return self.filter(workspace_board__pk__in=keys)
 
-    def filter_for_user_and_uuid(self, user: "User", uuid: uuid.UUID) -> Self:
+    def filter_for_user_and_uuid(
+        self, user: AbstractBaseUser, uuid: uuid.UUID
+    ) -> Self:
         """Return a workspace for user and uuid."""
         return self.filter(workspace_board__workspace__users=user, uuid=uuid)
 
@@ -513,7 +522,9 @@ class TaskQuerySet(models.QuerySet["Task"]):
             workspace_board_section__workspace_board=workspace_board,
         )
 
-    def filter_for_user_and_uuid(self, user: "User", uuid: uuid.UUID) -> Self:
+    def filter_for_user_and_uuid(
+        self, user: AbstractBaseUser, uuid: uuid.UUID
+    ) -> Self:
         """Return task from user workspace corresponding to uuid."""
         return self.filter(
             workspace_board_section__workspace_board__workspace__users=user,
@@ -748,7 +759,9 @@ class LabelQuerySet(models.QuerySet["Label"]):
         """Filter by workspace pks."""
         return self.filter(workspace__pk__in=workspace_pks)
 
-    def filter_for_user_and_uuid(self, user: "User", uuid: uuid.UUID) -> Self:
+    def filter_for_user_and_uuid(
+        self, user: AbstractBaseUser, uuid: uuid.UUID
+    ) -> Self:
         """Return for matching workspace user and uuid."""
         return self.filter(workspace__users=user, uuid=uuid)
 
@@ -815,7 +828,9 @@ class SubTaskQuerySet(models.QuerySet["SubTask"]):
         """Filter by task pks."""
         return self.filter(task__pk__in=task_pks)
 
-    def filter_for_user_and_uuid(self, user: "User", uuid: uuid.UUID) -> Self:
+    def filter_for_user_and_uuid(
+        self, user: AbstractBaseUser, uuid: uuid.UUID
+    ) -> Self:
         """Get sub task for a certain user and sub task uuid."""
         kwargs = {
             "task__workspace_board_section__workspace_board__"
@@ -891,7 +906,9 @@ class ChatMessageQuerySet(models.QuerySet["ChatMessage"]):
         """Filter by task pks."""
         return self.filter(task__pk__in=task_pks)
 
-    def filter_for_user_and_uuid(self, user: "User", uuid: uuid.UUID) -> Self:
+    def filter_for_user_and_uuid(
+        self, user: AbstractBaseUser, uuid: uuid.UUID
+    ) -> Self:
         """Get for a specific workspace user and uuid."""
         kwargs = {
             "task__workspace_board_section__workspace_board__"

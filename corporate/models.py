@@ -2,8 +2,12 @@
 import uuid
 from typing import (
     TYPE_CHECKING,
+    cast,
 )
 
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+)
 from django.db import (
     models,
     transaction,
@@ -20,23 +24,25 @@ if TYPE_CHECKING:
 class CustomerQuerySet(models.QuerySet["Customer"]):
     """Customer QuerySet."""
 
-    def get_by_uuid(self, uuid):
+    def get_by_uuid(self, uuid: uuid.UUID) -> "Customer":
         """Get Customer by UUID."""
         return self.get(uuid=uuid)
 
-    def get_by_workspace_uuid(self, workspace_uuid):
+    def get_by_workspace_uuid(self, workspace_uuid: uuid.UUID) -> "Customer":
         """Get workpsace by UUID."""
         return self.get(workspace__uuid=workspace_uuid)
 
-    def filter_by_user(self, user):
+    def filter_by_user(self, user: AbstractBaseUser):
         """Filter by user."""
         return self.filter(workspace__users=user)
 
-    def get_for_user_and_uuid(self, user, uuid):
+    def get_for_user_and_uuid(
+        self, user: AbstractBaseUser, uuid: uuid.UUID
+    ) -> "Customer":
         """Get customer by user and uuid."""
         return self.filter_by_user(user).get(uuid=uuid)
 
-    def get_by_stripe_customer_id(self, stripe_customer_id):
+    def get_by_stripe_customer_id(self, stripe_customer_id: str) -> "Customer":
         """Get customer by stripe customer id."""
         return self.get(stripe_customer_id=stripe_customer_id)
 
@@ -72,9 +78,9 @@ class Customer(models.Model):
         # db_index=True,
     )
 
-    objects = CustomerQuerySet.as_manager()
+    objects = cast(CustomerQuerySet, CustomerQuerySet.as_manager())
 
-    def activate_subscription(self):
+    def activate_subscription(self) -> None:
         """
         Activate customer subscription.
 
@@ -83,7 +89,7 @@ class Customer(models.Model):
         self.subscription_status = CustomerSubscriptionStatus.ACTIVE
         self.save()
 
-    def cancel_subscription(self):
+    def cancel_subscription(self) -> None:
         """
         Cancel customer subscription.
 
@@ -92,7 +98,7 @@ class Customer(models.Model):
         self.subscription_status = CustomerSubscriptionStatus.CANCELLED
         self.save()
 
-    def assign_stripe_customer_id(self, stripe_customer_id):
+    def assign_stripe_customer_id(self, stripe_customer_id: str) -> None:
         """
         Assign stripe customer id.
 
@@ -101,14 +107,14 @@ class Customer(models.Model):
         self.stripe_customer_id = stripe_customer_id
         self.save()
 
-    def set_number_of_seats(self, seats):
+    def set_number_of_seats(self, seats: int) -> None:
         """
         Set the number of seats.
 
         Saves model instance.
         """
         if self.seats == seats:
-            return
+            return None
         self.seats = seats
         self.save()
 

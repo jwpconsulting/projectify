@@ -20,7 +20,7 @@ from .. import (
 class TestUserManager:
     """Test UserManager."""
 
-    def test_create_user(self):
+    def test_create_user(self) -> None:
         """Test creating a normal user."""
         u = models.User.objects.create_user("hello@example")
         assert u.is_active is False
