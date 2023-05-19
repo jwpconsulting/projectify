@@ -16,7 +16,7 @@ registry = {
 }
 
 
-def add_members(emails):
+def add_members(emails: object):
     """Add email templates to registry."""
     for name, obj in inspect.getmembers(emails):
         is_candidate = (

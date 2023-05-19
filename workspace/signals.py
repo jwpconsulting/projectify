@@ -2,6 +2,7 @@
 import logging
 from typing import (
     TYPE_CHECKING,
+    Mapping,
 )
 
 from django.db import (
@@ -58,13 +59,24 @@ def send_invitation_email(
     email.send()
 
 
-def send_workspace_change_signal(instance: models.Workspace) -> None:
-    """Send workspace.change signal to correct group."""
-    uuid = str(instance.uuid)
+def group_send(destination: str, message: Mapping[str, object]) -> None:
+    """Send message to a channels group."""
     channel_layer = get_channel_layer()
     if not channel_layer:
         raise Exception("Did not get channel layer")
-    async_to_sync(channel_layer.group_send)(
+    # TODO AsyncToSync is typed in a newer (unreleased) version of asgiref
+    # which we indirectly install with channels, which has not been
+    # renewed in a while Justus 2023-05-19
+    async_to_sync(channel_layer.group_send)(  # type: ignore
+        destination,
+        message,
+    )
+
+
+def send_workspace_change_signal(instance: models.Workspace) -> None:
+    """Send workspace.change signal to correct group."""
+    uuid = str(instance.uuid)
+    group_send(
         f"workspace-{uuid}",
         {
             "type": "workspace.change",
@@ -78,10 +90,7 @@ def send_workspace_board_change_signal(
 ) -> None:
     """Send workspace_board.change signal to correct group."""
     uuid = str(instance.uuid)
-    channel_layer = get_channel_layer()
-    if not channel_layer:
-        raise Exception("Did not get channel layer")
-    async_to_sync(channel_layer.group_send)(
+    group_send(
         f"workspace-board-{uuid}",
         {
             "type": "workspace.board.change",
@@ -93,10 +102,7 @@ def send_workspace_board_change_signal(
 def send_task_change_signal(instance: models.Task) -> None:
     """Send task.change signal to correct group."""
     uuid = str(instance.uuid)
-    channel_layer = get_channel_layer()
-    if not channel_layer:
-        raise Exception("Did not get channel layer")
-    async_to_sync(channel_layer.group_send)(
+    group_send(
         f"task-{uuid}",
         {
             "type": "task.change",
