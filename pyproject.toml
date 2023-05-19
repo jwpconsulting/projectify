@@ -93,13 +93,13 @@ module = [
     "user.schema.types",
     "workspace.schema.mutation",
     "workspace.schema.types",
+    "workspace.test.*",
 ]
 ignore_errors = true
 
 # Here is where we get strict again
 [[tool.mypy.overrides]]
 module = [
-    "workspace.signals",
-    "workspace.models",
+    "workspace.*",
 ]
 disallow_untyped_defs = true
