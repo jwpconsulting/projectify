@@ -86,10 +86,6 @@ module = "corporate.schema.types"
 ignore_errors = true
 
 [[tool.mypy.overrides]]
-module = "projectify.urls"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
 module = "user.migrations.*"
 ignore_errors = true
 
