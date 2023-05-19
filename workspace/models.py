@@ -7,6 +7,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Optional,
+    cast,
 )
 
 from django.conf import (
@@ -53,7 +54,7 @@ class WorkspaceQuerySet(models.QuerySet["Workspace"]):
         """Return workspaces for a user."""
         return self.filter(users=user)
 
-    def filter_for_user_and_uuid(self, user: "User", uuid: str) -> Self:
+    def filter_for_user_and_uuid(self, user: "User", uuid: uuid.UUID) -> Self:
         """Return workspace for user and uuid."""
         return self.get_for_user(user).filter(uuid=uuid)
 
@@ -95,7 +96,7 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
 
     highest_task_number = models.IntegerField(default=0)
 
-    objects = WorkspaceQuerySet.as_manager()
+    objects = cast(WorkspaceQuerySet, WorkspaceQuerySet.as_manager())
 
     def add_workspace_board(
         self, title: str, description: str, deadline: Optional[bool] = None
@@ -310,7 +311,8 @@ class WorkspaceUser(TimeStampedModel, models.Model):
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 
-    objects = WorkspaceUserQuerySet.as_manager()
+    # Sort of nonsensical
+    objects = cast(WorkspaceUserQuerySet, WorkspaceUserQuerySet.as_manager())
 
     def assign_role(self, role: str) -> None:
         """
@@ -342,7 +344,7 @@ class WorkspaceBoardQuerySet(models.QuerySet["WorkspaceBoard"]):
         """Filter by workspace pks."""
         return self.filter(workspace__pk__in=workspace_pks)
 
-    def filter_for_user_and_uuid(self, user: "User", uuid: str) -> Self:
+    def filter_for_user_and_uuid(self, user: "User", uuid: uuid.UUID) -> Self:
         """Get a workspace baord for user and uuid."""
         return self.filter_by_user(user).filter(uuid=uuid)
 
@@ -370,7 +372,7 @@ class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
         help_text=_("Workspace board's deadline"),
     )
 
-    objects = WorkspaceBoardQuerySet.as_manager()
+    objects = cast(WorkspaceBoardQuerySet, WorkspaceBoardQuerySet.as_manager())
 
     def add_workspace_board_section(
         self, title: str, description: str
@@ -407,7 +409,7 @@ class WorkspaceBoardSectionQuerySet(models.QuerySet["WorkspaceBoardSection"]):
         """Filter by workspace boards."""
         return self.filter(workspace_board__pk__in=keys)
 
-    def filter_for_user_and_uuid(self, user: "User", uuid: str) -> Self:
+    def filter_for_user_and_uuid(self, user: "User", uuid: uuid.UUID) -> Self:
         """Return a workspace for user and uuid."""
         return self.filter(workspace_board__workspace__users=user, uuid=uuid)
 
@@ -511,7 +513,7 @@ class TaskQuerySet(models.QuerySet["Task"]):
             workspace_board_section__workspace_board=workspace_board,
         )
 
-    def filter_for_user_and_uuid(self, user: "User", uuid: str) -> Self:
+    def filter_for_user_and_uuid(self, user: "User", uuid: uuid.UUID) -> Self:
         """Return task from user workspace corresponding to uuid."""
         return self.filter(
             workspace_board_section__workspace_board__workspace__users=user,
@@ -611,7 +613,7 @@ class Task(
 
     number = models.PositiveIntegerField()
 
-    objects = TaskQuerySet.as_manager()
+    objects = cast(TaskQuerySet, TaskQuerySet.as_manager())
 
     def move_to(
         self, workspace_board_section: WorkspaceBoard, order: int
@@ -655,7 +657,7 @@ class Task(
         self, text: str, author: WorkspaceUser
     ) -> "ChatMessage":
         """Add a chat message."""
-        workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(  # type: ignore
+        workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(
             self.workspace,
             author,
         )
@@ -670,7 +672,7 @@ class Task(
         if assignee is not None:
             # Check if assignee is part of the task's workspace
             workspace = self.workspace_board_section.workspace_board.workspace
-            workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(  # type: ignore
+            workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(
                 workspace,
                 assignee,
             )
@@ -746,7 +748,7 @@ class LabelQuerySet(models.QuerySet["Label"]):
         """Filter by workspace pks."""
         return self.filter(workspace__pk__in=workspace_pks)
 
-    def filter_for_user_and_uuid(self, user: "User", uuid: str) -> Self:
+    def filter_for_user_and_uuid(self, user: "User", uuid: uuid.UUID) -> Self:
         """Return for matching workspace user and uuid."""
         return self.filter(workspace__users=user, uuid=uuid)
 
@@ -813,7 +815,7 @@ class SubTaskQuerySet(models.QuerySet["SubTask"]):
         """Filter by task pks."""
         return self.filter(task__pk__in=task_pks)
 
-    def filter_for_user_and_uuid(self, user: "User", uuid: str) -> Self:
+    def filter_for_user_and_uuid(self, user: "User", uuid: uuid.UUID) -> Self:
         """Get sub task for a certain user and sub task uuid."""
         kwargs = {
             "task__workspace_board_section__workspace_board__"
@@ -840,7 +842,7 @@ class SubTask(
         help_text=_("Designate whether this sub task is done"),
     )
 
-    objects = SubTaskQuerySet.as_manager()
+    objects = cast(SubTaskQuerySet, SubTaskQuerySet.as_manager())
 
     def move_to(self, order: int) -> None:
         """
@@ -889,7 +891,7 @@ class ChatMessageQuerySet(models.QuerySet["ChatMessage"]):
         """Filter by task pks."""
         return self.filter(task__pk__in=task_pks)
 
-    def filter_for_user_and_uuid(self, user: "User", uuid: str) -> Self:
+    def filter_for_user_and_uuid(self, user: "User", uuid: uuid.UUID) -> Self:
         """Get for a specific workspace user and uuid."""
         kwargs = {
             "task__workspace_board_section__workspace_board__"
@@ -915,7 +917,8 @@ class ChatMessage(TimeStampedModel, models.Model):
         null=True,
     )
 
-    objects = ChatMessageQuerySet.as_manager()
+    # XXX
+    objects = cast(ChatMessageQuerySet, ChatMessageQuerySet.as_manager())
 
     @property
     def workspace(self) -> Workspace:

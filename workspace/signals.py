@@ -2,7 +2,9 @@
 import logging
 from typing import (
     TYPE_CHECKING,
+    Any,
     Mapping,
+    cast,
 )
 
 from django.db import (
@@ -16,9 +18,7 @@ from django.dispatch import (
     receiver,
 )
 
-from asgiref.sync import (
-    async_to_sync,
-)
+from asgiref.sync import async_to_sync as _async_to_sync
 from channels.layers import (
     get_channel_layer,
 )
@@ -44,6 +44,11 @@ Unknown = object
 
 logger = logging.getLogger(__name__)
 
+# TODO AsyncToSync is typed in a newer (unreleased) version of asgiref
+# which we indirectly install with channels, which has not been
+# renewed in a while Justus 2023-05-19
+async_to_sync = cast(Any, _async_to_sync)
+
 
 @receiver(signal_defs.workspace_user_invited)
 def send_invitation_email(
@@ -64,10 +69,7 @@ def group_send(destination: str, message: Mapping[str, object]) -> None:
     channel_layer = get_channel_layer()
     if not channel_layer:
         raise Exception("Did not get channel layer")
-    # TODO AsyncToSync is typed in a newer (unreleased) version of asgiref
-    # which we indirectly install with channels, which has not been
-    # renewed in a while Justus 2023-05-19
-    async_to_sync(channel_layer.group_send)(  # type: ignore
+    async_to_sync(channel_layer.group_send)(
         destination,
         message,
     )

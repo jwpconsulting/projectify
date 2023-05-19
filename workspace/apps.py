@@ -10,8 +10,6 @@ class WorkspaceConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "workspace"
 
-    def ready(self):
+    def ready(self) -> None:
         """Import signals."""
-        from . import (  # noqa: F401
-            signals,
-        )
+        from . import signals  # noqa: F401

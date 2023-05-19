@@ -2,6 +2,10 @@
 from datetime import (
     timezone,
 )
+from typing import (
+    TYPE_CHECKING,
+    Iterable,
+)
 
 import factory
 from factory import (
@@ -16,6 +20,10 @@ from . import (
 )
 
 
+if TYPE_CHECKING:
+    from user.models import User  # noqa: F401
+
+
 class WorkspaceFactory(django.DjangoModelFactory):
     """Workspace Factory."""
 
@@ -23,7 +31,13 @@ class WorkspaceFactory(django.DjangoModelFactory):
     description = factory.Faker("paragraph")
 
     @factory.post_generation
-    def add_users(self, created, extracted, *args, **kwargs):
+    def add_users(
+        self,
+        created: bool,
+        extracted: Iterable["User"],
+        *args: object,
+        **kwargs: object
+    ) -> None:
         """Add users to workspace."""
         if not created:
             return
@@ -90,7 +104,7 @@ class WorkspaceBoardSectionFactory(django.DjangoModelFactory):
         model = models.WorkspaceBoardSection
 
 
-def extract_assignee_workspace_user(task):
+def extract_assignee_workspace_user(task: models.Task) -> models.WorkspaceUser:
     """Extract author from chat_message by walking through workspace."""
     workspace_board = task.workspace_board_section.workspace_board
     workspace_user = workspace_board.workspace.workspaceuser_set.first()
@@ -101,7 +115,7 @@ def extract_assignee_workspace_user(task):
     return workspace_user
 
 
-def extract_workspace(task):
+def extract_workspace(task: models.Task) -> models.Workspace:
     """Extract author from chat_message by walking through workspace."""
     return task.workspace_board_section.workspace_board.workspace
 
@@ -161,7 +175,7 @@ class SubTaskFactory(django.DjangoModelFactory):
         model = models.SubTask
 
 
-def extract_author(chat_message):
+def extract_author(chat_message: models.ChatMessage) -> str:
     """Extract author from chat_message by walking through workspace."""
     workspace_board = chat_message.task.workspace_board_section.workspace_board
     workspace_user = workspace_board.workspace.workspaceuser_set.first()

@@ -1,6 +1,7 @@
 """Workspace app serializers."""
 from typing import (
     Iterable,
+    Optional,
 )
 
 from rest_framework import (
@@ -120,7 +121,7 @@ class WorkspaceBaseSerializer(serializers.ModelSerializer):
 
     picture = serializers.SerializerMethodField()
 
-    def get_picture(self, obj):
+    def get_picture(self, obj: models.Workspace) -> Optional[str]:
         """Return profile picture."""
         return utils.crop_image(obj.picture, 100, 100)
 

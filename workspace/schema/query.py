@@ -7,6 +7,10 @@ from django.shortcuts import (
 
 import strawberry
 
+from graphql import (
+    GraphQLResolveInfo,
+)
+
 from .. import (
     models,
 )
@@ -15,19 +19,22 @@ from . import (
 )
 
 
+Info = GraphQLResolveInfo
+
+
 @strawberry.type
 class Query:
     """Query."""
 
     @strawberry.field
-    def workspaces(self, info) -> list[types.Workspace]:
+    def workspaces(self, info: Info) -> list[types.Workspace]:
         """Resolve user's workspaces."""
         return models.Workspace.objects.get_for_user(info.context.user)  # type: ignore
 
     @strawberry.field
-    def workspace(self, info, uuid: uuid.UUID) -> types.Workspace:
+    def workspace(self, info: Info, uuid: uuid.UUID) -> types.Workspace:
         """Resolve workspace by UUID."""
-        qs = models.Workspace.objects.filter_for_user_and_uuid(  # type: ignore
+        qs = models.Workspace.objects.filter_for_user_and_uuid(
             info.context.user,
             uuid,
         )
@@ -35,9 +42,11 @@ class Query:
         return workspace
 
     @strawberry.field
-    def workspace_board(self, info, uuid: uuid.UUID) -> types.WorkspaceBoard:
+    def workspace_board(
+        self, info: Info, uuid: uuid.UUID
+    ) -> types.WorkspaceBoard:
         """Resolve a specific workspace board."""
-        qs = models.WorkspaceBoard.objects.filter_for_user_and_uuid(  # type: ignore
+        qs = models.WorkspaceBoard.objects.filter_for_user_and_uuid(
             info.context.user,
             uuid,
         )
@@ -46,7 +55,7 @@ class Query:
 
     @strawberry.field
     def workspace_board_section(
-        self, info, uuid: uuid.UUID
+        self, info: Info, uuid: uuid.UUID
     ) -> types.WorkspaceBoardSection:
         """Resolve a workspace board section."""
         qs = models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(  # type: ignore
@@ -57,9 +66,9 @@ class Query:
         return workspace_board_section
 
     @strawberry.field
-    def task(self, info, uuid: uuid.UUID) -> types.Task:
+    def task(self, info: Info, uuid: uuid.UUID) -> types.Task:
         """Resolve a task."""
-        qs = models.Task.objects.filter_for_user_and_uuid(  # type: ignore
+        qs = models.Task.objects.filter_for_user_and_uuid(
             info.context.user,
             uuid,
         )
@@ -67,9 +76,9 @@ class Query:
         return task
 
     @strawberry.field
-    def sub_task(self, info, uuid: uuid.UUID) -> types.SubTask:
+    def sub_task(self, info: Info, uuid: uuid.UUID) -> types.SubTask:
         """Resolve a sub task."""
-        qs = models.SubTask.objects.filter_for_user_and_uuid(  # type: ignore
+        qs = models.SubTask.objects.filter_for_user_and_uuid(
             info.context.user,
             uuid,
         )
@@ -77,9 +86,9 @@ class Query:
         return sub_task
 
     @strawberry.field
-    def chat_message(self, info, uuid: uuid.UUID) -> types.ChatMessage:
+    def chat_message(self, info: Info, uuid: uuid.UUID) -> types.ChatMessage:
         """Resolve a chat message."""
-        qs = models.ChatMessage.objects.filter_for_user_and_uuid(  # type: ignore
+        qs = models.ChatMessage.objects.filter_for_user_and_uuid(
             info.context.user,
             uuid,
         )

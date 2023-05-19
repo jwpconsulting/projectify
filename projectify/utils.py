@@ -1,4 +1,9 @@
 """Projectify utils."""
+from typing import (
+    TYPE_CHECKING,
+    Optional,
+)
+
 from django.conf import (
     settings,
 )
@@ -8,10 +13,16 @@ from cloudinary import (
 )
 
 
-def crop_image(image, width, height, **kwargs):
+if TYPE_CHECKING:
+    from django.db.models import FieldFile  # noqa: F401
+
+
+def crop_image(
+    image: "FieldFile", width: int, height: int, **kwargs: object
+) -> Optional[str]:
     """Crop an image using cloudinary's API, if available."""
     if not image:
-        return
+        return None
     if settings.DEFAULT_FILE_STORAGE != settings.MEDIA_CLOUDINARY_STORAGE:
         return image.url
     cloudinary_image = CloudinaryImage(image.name)
