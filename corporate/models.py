@@ -14,6 +14,10 @@ from django.db import (
 )
 from django.utils.translation import gettext_lazy as _
 
+from typing_extensions import (
+    Self,
+)
+
 
 if TYPE_CHECKING:
     from workspace.models import (  # noqa: F401
@@ -32,7 +36,7 @@ class CustomerQuerySet(models.QuerySet["Customer"]):
         """Get workpsace by UUID."""
         return self.get(workspace__uuid=workspace_uuid)
 
-    def filter_by_user(self, user: AbstractBaseUser):
+    def filter_by_user(self, user: AbstractBaseUser) -> Self:
         """Filter by user."""
         return self.filter(workspace__users=user)
 

@@ -45,7 +45,7 @@ class WorkspaceCustomerRetrieve(generics.RetrieveAPIView):
         )
 
 
-def handle_session_completed(event) -> bool:
+def handle_session_completed(event: stripe.Event) -> bool:
     """Handle Stripe checkout.session.completed."""
     session = event["data"]["object"]
     customer_uuid = session.metadata.customer_uuid
@@ -55,7 +55,7 @@ def handle_session_completed(event) -> bool:
     return True
 
 
-def handle_subscription_updated(event) -> bool:
+def handle_subscription_updated(event: stripe.Event) -> bool:
     """Handle Stripe customer.subscription.updated."""
     subscription = event["data"]["object"]
     customer_id = subscription.customer
@@ -65,7 +65,7 @@ def handle_subscription_updated(event) -> bool:
     return True
 
 
-def handle_payment_failure(event) -> bool:
+def handle_payment_failure(event: stripe.Event) -> bool:
     """Handle Stripe invoice.payment_failed."""
     invoice = event["data"]["object"]
     if invoice.next_payment_attempt is None:
@@ -85,7 +85,7 @@ def stripe_webhook(request):
     """Handle Stripe Webhooks."""
     payload = request.body
     sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
-    event = None
+    event: stripe.Event
 
     try:
         event = stripe.Webhook.construct_event(
