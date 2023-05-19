@@ -11,6 +11,9 @@ from django.shortcuts import (
 import strawberry
 
 import stripe
+from graphql import (
+    GraphQLResolveInfo,
+)
 from workspace import models as workspace_models
 
 from .. import (
@@ -42,7 +45,7 @@ class Mutation:
 
     @strawberry.field
     def create_checkout_session(
-        self, info, input: CreateCheckoutSessionInput
+        self, info: GraphQLResolveInfo, input: CreateCheckoutSessionInput
     ) -> types.CheckoutSession:
         """Create a Stripe checkout session."""
         qs = workspace_models.Workspace.objects.filter_for_user_and_uuid(
@@ -83,7 +86,7 @@ class Mutation:
 
     @strawberry.field
     def create_billing_portal_session(
-        self, info, input: CreateBillingPortalSessionInput
+        self, info: GraphQLResolveInfo, input: CreateBillingPortalSessionInput
     ) -> types.BillingPortalSession:
         """Allow accessing the billing portal."""
         customer = models.Customer.objects.get_for_user_and_uuid(

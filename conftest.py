@@ -12,6 +12,9 @@ from django.core.files.uploadedfile import (
 )
 
 import pytest
+from strawberry.types.execution import (
+    ExecutionResult,
+)
 
 from projectify.schema import (
     schema,
@@ -62,7 +65,7 @@ def redeemed_user_invite(user):
     return UserInviteFactory(redeemed=True, user=user, email=user.email)
 
 
-def dict_from_execution_result(result) -> dict[str, object]:
+def dict_from_execution_result(result: ExecutionResult) -> dict[str, object]:
     """Turn an execution result into a dict."""
     if result.errors:
         return {

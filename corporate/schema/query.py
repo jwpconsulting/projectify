@@ -3,6 +3,10 @@ import uuid
 
 import strawberry
 
+from graphql import (
+    GraphQLResolveInfo,
+)
+
 from .. import (
     models,
 )
@@ -17,7 +21,7 @@ class Query:
 
     @strawberry.field
     def customerByWorkspace(
-        self, info, workspace_uuid: uuid.UUID
+        self, info: GraphQLResolveInfo, workspace_uuid: uuid.UUID
     ) -> types.Customer:
         """Resolve customer by workspace UUID."""
         customer = models.Customer.objects.get_by_workspace_uuid(
