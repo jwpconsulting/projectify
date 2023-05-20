@@ -58,7 +58,7 @@ class Query:
         self, info: Info, uuid: uuid.UUID
     ) -> types.WorkspaceBoardSection:
         """Resolve a workspace board section."""
-        qs = models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(  # type: ignore
+        qs = models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
             info.context.user,
             uuid,
         )
@@ -92,5 +92,5 @@ class Query:
             info.context.user,
             uuid,
         )
-        chat_message = get_object_or_404(qs)
+        chat_message: models.ChatMessage = get_object_or_404(qs)
         return chat_message  # type: ignore

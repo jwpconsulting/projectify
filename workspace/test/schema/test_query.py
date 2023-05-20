@@ -1,8 +1,4 @@
 """Test workspace queries."""
-from django.contrib import (
-    auth,
-)
-
 import pytest
 
 from ... import (
@@ -223,6 +219,7 @@ query Workspace($uuid: UUID!) {
         workspace_user,
         graphql_query_user,
         workspace_user_invite,
+        user_model,
     ):
         """Ensure that invites disappear once redeemed."""
         query = """
@@ -260,8 +257,7 @@ query Workspace($uuid: UUID!) {
                 },
             },
         }
-        User = auth.get_user_model()
-        User.objects.create_user(email)
+        user_model.objects.create_user(email)
         result = graphql_query_user(
             query,
             variables={

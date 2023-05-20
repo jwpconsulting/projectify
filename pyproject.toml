@@ -97,7 +97,6 @@ module = [
     "projectify.test.*",
     "user.test.*",
     "workspace.schema.mutation",
-    "workspace.test.*",
 ]
 ignore_errors = true
 
@@ -133,3 +132,9 @@ module = [
 ]
 warn_return_any = false
 disable_error_code = ["attr-defined", "return-value"]
+
+[[tool.mypy.overrides]]
+module = [
+    "workspace.test.*",
+]
+disallow_untyped_defs = false
