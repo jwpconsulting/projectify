@@ -13,7 +13,7 @@ from projectify.celery import (
 
 # TODO turn into shared_task
 @app.task()
-def send_mail(subject, body, to_email):
+def send_mail(subject: str, body: str, to_email: str) -> None:
     """Send an email."""
     mail.send_mail(
         subject,
