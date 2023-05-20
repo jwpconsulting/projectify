@@ -22,6 +22,7 @@ pyright = "*"
 django-types = "*"
 pytest-xdist = {extras = ["psutil"], version = "*"}
 types-tqdm = "*"
+types-stripe = "*"
 
 [packages]
 celery = {extras = ["redis"], version = "==5.2.7"}
