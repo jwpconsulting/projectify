@@ -1,14 +1,25 @@
 """Top level conftest module."""
 import base64
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Mapping,
+    Optional,
+)
 from unittest import (
     mock,
 )
 
 from django.contrib.auth.models import (
+    AbstractBaseUser,
     AnonymousUser,
 )
 from django.core.files.uploadedfile import (
     SimpleUploadedFile,
+)
+from django.test import (
+    client,
 )
 
 import pytest
@@ -22,6 +33,7 @@ from projectify.schema import (
 from projectify.views import (
     RequestContext,
 )
+from user import models as user_models
 from user.factory import (
     SuperUserFactory,
     UserFactory,
@@ -30,42 +42,55 @@ from user.factory import (
 
 
 @pytest.fixture
-def user():
+def user() -> AbstractBaseUser:
     """Return a db user."""
-    return UserFactory.create()
+    user: AbstractBaseUser = UserFactory.create()
+    return user
 
 
 @pytest.fixture
-def superuser():
+def superuser() -> AbstractBaseUser:
     """Return a db super user."""
-    return SuperUserFactory.create()
+    user: AbstractBaseUser = SuperUserFactory.create()
+    return user
 
 
 @pytest.fixture
-def other_user():
+def other_user() -> AbstractBaseUser:
     """Return another db user."""
-    return UserFactory.create()
+    user: AbstractBaseUser = UserFactory.create()
+    return user
 
 
 @pytest.fixture
-def inactive_user():
+def inactive_user() -> AbstractBaseUser:
     """Return an inactive db user."""
-    return UserFactory.create(is_active=False)
+    user: AbstractBaseUser = UserFactory.create(is_active=False)
+    return user
 
 
 @pytest.fixture
-def user_invite():
+def user_invite() -> user_models.UserInvite:
     """Return a user invite."""
-    return UserInviteFactory()
+    user_invite: user_models.UserInvite = UserInviteFactory.create()
+    return user_invite
 
 
 @pytest.fixture
-def redeemed_user_invite(user):
+def redeemed_user_invite(user: user_models.User) -> user_models.UserInvite:
     """Return a redeemed user invite."""
-    return UserInviteFactory(redeemed=True, user=user, email=user.email)
+    user_invite: user_models.UserInvite = UserInviteFactory.create(
+        redeemed=True, user=user, email=user.email
+    )
+    return user_invite
 
 
-def dict_from_execution_result(result: ExecutionResult) -> dict[str, object]:
+Variables = Dict[str, Any]
+ExecutionResultDict = Mapping[str, object]
+QueryMethod = Callable[[str, Optional[Variables]], ExecutionResultDict]
+
+
+def dict_from_execution_result(result: ExecutionResult) -> ExecutionResultDict:
     """Turn an execution result into a dict."""
     if result.errors:
         return {
@@ -78,10 +103,12 @@ def dict_from_execution_result(result: ExecutionResult) -> dict[str, object]:
 
 
 @pytest.fixture
-def graphql_query():
+def graphql_query() -> QueryMethod:
     """Return a client query fn without logged in user."""
 
-    def func(query, variables=None):
+    def func(
+        query: str, variables: Optional[Variables] = None
+    ) -> ExecutionResultDict:
         result = schema.execute_sync(
             query,
             variable_values=variables,
@@ -97,10 +124,14 @@ def graphql_query():
 
 
 @pytest.fixture
-def graphql_query_user(user):
+def graphql_query_user(
+    user: AbstractBaseUser,
+) -> QueryMethod:
     """Return a client query fn."""
 
-    def func(query, variables=None):
+    def func(
+        query: str, variables: Optional[Variables] = None
+    ) -> ExecutionResultDict:
         result = schema.execute_sync(
             query,
             variable_values=variables,
@@ -116,21 +147,25 @@ def graphql_query_user(user):
 
 
 @pytest.fixture
-def user_client(client, user):
+def user_client(
+    client: client.Client, user: AbstractBaseUser
+) -> client.Client:
     """Return logged in client."""
     client.force_login(user)
     return client
 
 
 @pytest.fixture
-def superuser_client(client, superuser):
+def superuser_client(
+    client: client.Client, superuser: AbstractBaseUser
+) -> client.Client:
     """Return logged in super user client."""
     client.force_login(superuser)
     return client
 
 
 @pytest.fixture
-def png_image():
+def png_image() -> bytes:
     """Return a simple png file."""
     return base64.b64decode(
         "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAgAAAAAcoT2JAAAABGdBTUEAAYagMeiWX\
@@ -140,6 +175,6 @@ def png_image():
 
 
 @pytest.fixture
-def uploaded_file(png_image):
+def uploaded_file(png_image: bytes) -> SimpleUploadedFile:
     """Return an UploadFile instance of the above png file."""
     return SimpleUploadedFile("test.png", png_image)
