@@ -39,12 +39,9 @@ strict_concatenate = true
 check_untyped_defs = true
 
 # These shouldn't be too much additional work, but may be tricky to
-# get passing if you use a lot of untyped libraries
-# Therefore: Not done yet Justus 2023-05-20
-# Not possible because the factory decorator is not typed
-# disallow_untyped_decorators = true
-# Not possible because of factory, django_extensions, channels and rest_framework
-# disallow_subclassing_any = true
+# get passing if you use a lot of untyped libraries - done, sort of!
+disallow_untyped_decorators = true
+disallow_subclassing_any = true
 disallow_any_generics = true
 
 # These next few are various gradations of forcing use of type annotations
@@ -95,7 +92,6 @@ ignore_missing_imports = true
 # Our own modules
 [[tool.mypy.overrides]]
 module = [
-    "corporate.schema.types",
     "corporate.test.*",
     "premail.test.*",
     "projectify.test.*",
@@ -108,13 +104,27 @@ module = [
 ]
 ignore_errors = true
 
-# Here is where we get strict again
-# [[tool.mypy.overrides]]
-# module = [
-#     "blog.*",
-#     "corporate.*",
-#     "premail.*",
-#     "projectify.*",
-#     "user.*",
-#     "workspace.*",
-# ]
+[[tool.mypy.overrides]]
+module = [
+    "user.factory",
+    "workspace.factory",
+    "workspace.consumers",
+    "corporate.factory",
+]
+disallow_subclassing_any = false
+
+[[tool.mypy.overrides]]
+module = [
+    "workspace.rules",
+    "user.factory",
+    "workspace.factory",
+    "corporate.factory",
+    "premail.tasks",
+]
+disallow_untyped_decorators = false
+
+[[tool.mypy.overrides]]
+module = [
+    "corporate.schema.types",
+]
+strict_equality = false
