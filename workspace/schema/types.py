@@ -2,9 +2,15 @@
 import datetime
 import enum
 import uuid
+from typing import (
+    cast,
+)
 
 import strawberry
 
+from graphql import (
+    GraphQLResolveInfo,
+)
 from projectify import (
     utils,
 )
@@ -19,7 +25,7 @@ class Workspace:
     """Workspace."""
 
     @strawberry.field
-    def users(self, info) -> list["WorkspaceUser"]:
+    def users(self, info: GraphQLResolveInfo) -> list["WorkspaceUser"]:
         """Resolve workspace users."""
         # TODO data loader
         return self.workspaceuser_set.all()
@@ -49,13 +55,15 @@ class Workspace:
         invites = []
         qs = self.workspaceuserinvite_set.filter_by_redeemed(False)
         for invite in qs.iterator():
-            invites.append(UserInvitation(email=invite.user_invite.email))
+            i = UserInvitation(email=invite.user_invite.email)  # type:ignore
+            invites.append(i)
         return invites
 
     @strawberry.field
     def picture(self) -> str | None:
         """Resolve picture."""
-        return utils.crop_image(self.picture, 100, 100)
+        workspace = cast(models.Workspace, self)
+        return utils.crop_image(workspace.picture, 100, 100)
 
     created: datetime.datetime
     modified: datetime.datetime
@@ -128,13 +136,15 @@ class WorkspaceBoard:
     """WorkspaceBoard."""
 
     @strawberry.field
-    def sections(self, info) -> list["WorkspaceBoardSection"]:
+    def sections(
+        self, info: GraphQLResolveInfo
+    ) -> list["WorkspaceBoardSection"]:
         """Resolve workspace board sections."""
         # TODO data loader
         return self.workspaceboardsection_set.all()
 
     @strawberry.field
-    def workspace(self, info) -> "Workspace":
+    def workspace(self, info: GraphQLResolveInfo) -> "Workspace":
         """Resolve workspace."""
         return self.workspace
 
