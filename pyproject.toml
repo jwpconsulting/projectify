@@ -97,7 +97,6 @@ module = [
     "projectify.test.*",
     "user.test.*",
     "workspace.schema.mutation",
-    "workspace.schema.types",
     "workspace.test.*",
 ]
 ignore_errors = true
@@ -124,5 +123,13 @@ disallow_untyped_decorators = false
 [[tool.mypy.overrides]]
 module = [
     "corporate.schema.types",
+    "workspace.schema.types",
 ]
 strict_equality = false
+
+[[tool.mypy.overrides]]
+module = [
+    "workspace.schema.types",
+]
+warn_return_any = false
+disable_error_code = ["attr-defined", "return-value"]
