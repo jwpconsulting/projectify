@@ -21,6 +21,6 @@ class CustomerAdmin(admin.ModelAdmin[models.Customer]):
     )
 
     @admin.display(description=_("Workspace title"))
-    def workspace_title(self, instance):
+    def workspace_title(self, instance: models.Customer) -> str:
         """Return the workspace's title."""
         return instance.workspace.title
