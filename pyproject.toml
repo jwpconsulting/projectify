@@ -73,10 +73,6 @@ module = "channels.*"
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-module = "django.*"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
 module = "dj_database_url.*"
 ignore_missing_imports = true
 
