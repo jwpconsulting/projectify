@@ -95,10 +95,11 @@ ignore_missing_imports = true
 module = [
     "corporate.schema.types",
     "corporate.test.*",
+    "premail.test.*",
+    "projectify.test.*",
     "user.schema.mutation",
     "user.schema.types",
     "user.test.*",
-    "premail.test.*",
     "workspace.schema.mutation",
     "workspace.schema.types",
     "workspace.test.*",
@@ -108,9 +109,10 @@ ignore_errors = true
 # Here is where we get strict again
 [[tool.mypy.overrides]]
 module = [
-    "blogcorporate.*",
+    "blog.*",
     "corporate.*",
     "premail.*",
+    "projectify.*",
     "user.*",
     "workspace.*",
 ]

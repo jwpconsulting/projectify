@@ -10,6 +10,13 @@ from django.contrib.auth.models import (
     AbstractBaseUser,
     AnonymousUser,
 )
+from django.contrib.sessions.backends.base import (
+    SessionBase,
+)
+from django.http import (
+    HttpRequest,
+    HttpResponse,
+)
 
 from strawberry.django import (
     views,
@@ -21,14 +28,16 @@ class RequestContext:
     """Request context used in graphql view."""
 
     user: Union[AnonymousUser, AbstractBaseUser, None]
-    session: type
+    session: SessionBase
     META: dict[str, str]
 
 
 class GraphQLView(views.GraphQLView):
     """Default GraphQLView override."""
 
-    def get_context(self, request, response):
+    def get_context(
+        self, request: HttpRequest, response: HttpResponse
+    ) -> RequestContext:
         """Populate request context with useful variables."""
         return RequestContext(
             user=request.user,
