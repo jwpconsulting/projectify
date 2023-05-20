@@ -23,6 +23,7 @@ django-types = "*"
 pytest-xdist = {extras = ["psutil"], version = "*"}
 types-tqdm = "*"
 types-stripe = "*"
+djangorestframework-types = "*"
 
 [packages]
 celery = {extras = ["redis"], version = "==5.2.7"}
