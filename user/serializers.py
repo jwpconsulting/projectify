@@ -1,4 +1,8 @@
 """User app serializers."""
+from typing import (
+    Optional,
+)
+
 from rest_framework import (
     serializers,
 )
@@ -17,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     profile_picture = serializers.SerializerMethodField()
 
-    def get_profile_picture(self, obj):
+    def get_profile_picture(self, obj: models.User) -> Optional[str]:
         """Return profile picture."""
         return utils.crop_image(obj.profile_picture, 100, 100)
 

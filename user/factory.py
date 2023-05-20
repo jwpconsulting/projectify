@@ -23,7 +23,13 @@ class UserFactory(django.DjangoModelFactory):
     full_name = factory.Faker("name")
 
     @factory.post_generation
-    def password(self, created, extracted, *args, **kwargs):
+    def password(
+        self: models.User,
+        created: bool,
+        extracted: str,
+        *args: object,
+        **kwargs: object
+    ) -> None:
         """Set the password."""
         if not created:
             return
