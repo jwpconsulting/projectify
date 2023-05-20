@@ -1,6 +1,7 @@
 """User views."""
 from typing import (
     Optional,
+    cast,
 )
 
 from rest_framework import (
@@ -27,8 +28,9 @@ class ProfilePictureUploadView(views.APIView):
     ) -> response.Response:
         """Handle POST."""
         file_obj = request.data["file"]
-        request.user.profile_picture = file_obj
-        request.user.save()
+        user = cast(models.User, request.user)
+        user.profile_picture = file_obj
+        user.save()
         return response.Response(status=204)
 
 
@@ -41,5 +43,5 @@ class UserRetrieve(generics.RetrieveAPIView):
         """Return current user."""
         # This can only ever be AbstractBaseUser-ish because this endpoint is
         # only accessible after logging in
-        user: models.User = self.request.user
+        user = cast(models.User, self.request.user)
         return user

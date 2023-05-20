@@ -1,8 +1,14 @@
 """Corporate views."""
 import logging
+from typing import (
+    cast,
+)
 
 from django.conf import (
     settings,
+)
+from django.contrib.auth.models import (
+    AbstractBaseUser,
 )
 from django.http import (
     HttpRequest,
@@ -37,7 +43,8 @@ class WorkspaceCustomerRetrieve(generics.RetrieveAPIView):
 
     def get_queryset(self) -> models.CustomerQuerySet:
         """Filter by request user."""
-        return self.queryset.filter_by_user(self.request.user)
+        user = cast(AbstractBaseUser, self.request.user)
+        return self.queryset.filter_by_user(user)
 
     def get_object(self) -> models.Customer:
         """Get customer."""
