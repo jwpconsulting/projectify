@@ -96,7 +96,6 @@ module = [
     "premail.test.*",
     "projectify.test.*",
     "user.schema.mutation",
-    "user.schema.types",
     "user.test.*",
     "workspace.schema.mutation",
     "workspace.schema.types",
