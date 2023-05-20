@@ -18,6 +18,7 @@ class LocalhostStorage(FileSystemStorage):
     """Override file system storage."""
 
     @cached_property
-    def base_url(self):
+    def base_url(self) -> str:  # type: ignore
         """Override base url to point to localhost."""
-        return urljoin("http://localhost:8000", settings.MEDIA_URL)
+        url: str = urljoin("http://localhost:8000", settings.MEDIA_URL)
+        return url
