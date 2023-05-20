@@ -255,7 +255,9 @@ class WorkspaceUserInvite(TimeStampedModel, models.Model):
         help_text=_("Has this invite been redeemed?"),
     )
 
-    objects = WorkspaceUserInviteQuerySet.as_manager()
+    objects = cast(
+        WorkspaceUserInviteQuerySet, WorkspaceUserInviteQuerySet.as_manager()
+    )
 
     def redeem(self) -> None:
         """
@@ -473,7 +475,10 @@ class WorkspaceBoardSection(
         on_delete=models.CASCADE,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
-    objects = WorkspaceBoardSectionQuerySet.as_manager()
+    objects = cast(
+        WorkspaceBoardSectionQuerySet,
+        WorkspaceBoardSectionQuerySet.as_manager(),
+    )
 
     if TYPE_CHECKING:
         # Related managers
@@ -846,7 +851,7 @@ class Label(models.Model):
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 
-    objects = LabelQuerySet.as_manager()
+    objects = cast(LabelQuerySet, LabelQuerySet.as_manager())
 
     class Meta:
         """Meta."""
@@ -874,7 +879,7 @@ class TaskLabel(models.Model):
         on_delete=models.CASCADE,
     )
 
-    objects = TaskLabelQuerySet.as_manager()
+    objects = cast(TaskLabelQuerySet, TaskLabelQuerySet.as_manager())
 
     @property
     def workspace(self) -> Workspace:

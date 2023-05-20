@@ -1,4 +1,13 @@
 """Workspace test fixtures."""
+from typing import (
+    TYPE_CHECKING,
+    Type,
+    cast,
+)
+
+from django.contrib import (
+    auth,
+)
 from django.utils import (
     timezone,
 )
@@ -13,6 +22,10 @@ from .. import (
     factory,
     models,
 )
+
+
+if TYPE_CHECKING:
+    from user.models import User as _User  # noqa: F401
 
 
 @pytest.fixture
@@ -129,3 +142,9 @@ def chat_message(task, workspace_user):
         task=task,
         author=workspace_user,
     )
+
+
+@pytest.fixture
+def user_model() -> Type["_User"]:
+    """Return user model class."""
+    return cast(Type["_User"], auth.get_user_model())

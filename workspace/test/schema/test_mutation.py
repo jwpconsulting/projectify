@@ -999,6 +999,7 @@ mutation DuplicateTask($uuid: UUID!) {
             },
         )
         new_task = models.Task.objects.last()
+        assert new_task
         assert result == {
             "data": {
                 "duplicateTask": {
