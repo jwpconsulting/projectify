@@ -5,6 +5,7 @@ from django.conf import (
     settings,
 )
 from django.http import (
+    HttpRequest,
     HttpResponse,
 )
 from django.views.decorators.csrf import (
@@ -38,7 +39,7 @@ class WorkspaceCustomerRetrieve(generics.RetrieveAPIView):
         """Filter by request user."""
         return self.queryset.filter_by_user(self.request.user)
 
-    def get_object(self):
+    def get_object(self) -> models.Customer:
         """Get customer."""
         return self.get_queryset().get_by_workspace_uuid(
             self.kwargs["workspace_uuid"]
@@ -81,7 +82,7 @@ def handle_payment_failure(event: stripe.Event) -> bool:
 
 
 @csrf_exempt
-def stripe_webhook(request):
+def stripe_webhook(request: HttpRequest) -> HttpResponse:
     """Handle Stripe Webhooks."""
     payload = request.body
     sig_header = request.META["HTTP_STRIPE_SIGNATURE"]

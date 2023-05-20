@@ -93,6 +93,7 @@ ignore_missing_imports = true
 # Our own modules
 [[tool.mypy.overrides]]
 module = [
+    "corporate.test.*",
     "corporate.schema.types",
     "user.schema.mutation",
     "user.schema.types",
@@ -105,6 +106,7 @@ ignore_errors = true
 # Here is where we get strict again
 [[tool.mypy.overrides]]
 module = [
+    "corporate.*",
     "workspace.*",
 ]
 disallow_untyped_defs = true

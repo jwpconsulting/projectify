@@ -129,7 +129,7 @@ class Customer(models.Model):
 
     @property
     @transaction.atomic
-    def seats_remaining(self):
+    def seats_remaining(self) -> int:
         """Return the number of seats remaining."""
         num_users = len(self.workspace.users.all())
         invites_qs = self.workspace.workspaceuserinvite_set.all()
