@@ -52,6 +52,7 @@ class CheckoutSession:
         return self.id
 
     url: str
+    id: str
 
 
 @strawberry.type
