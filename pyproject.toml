@@ -92,10 +92,6 @@ ignore_missing_imports = true
 # Our own modules
 [[tool.mypy.overrides]]
 module = [
-    "corporate.test.*",
-    "premail.test.*",
-    "projectify.test.*",
-    "user.test.*",
     "workspace.schema.mutation",
 ]
 ignore_errors = true
@@ -135,6 +131,10 @@ disable_error_code = ["attr-defined", "return-value"]
 
 [[tool.mypy.overrides]]
 module = [
+    "corporate.test.*",
     "workspace.test.*",
+    "user.test.*",
+    "premail.test.*",
+    "projectify.test.*",
 ]
 disallow_untyped_defs = false
