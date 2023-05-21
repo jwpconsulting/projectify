@@ -72,7 +72,7 @@ mutation MoveWorkspaceBoardSection($uuid: UUID!) {
         workspace_user,
     ):
         """Test the query."""
-        factory.WorkspaceBoardSectionFactory(
+        factory.WorkspaceBoardSectionFactory.create(
             workspace_board=workspace_board_section.workspace_board,
         )
         result = graphql_query_user(
@@ -166,7 +166,7 @@ mutation MoveTaskAfter(
         workspace_user,
     ):
         """Test moving."""
-        other_other_task = factory.TaskFactory(
+        other_other_task = factory.TaskFactory.create(
             workspace_board_section=task.workspace_board_section,
         )
         tasks = list(models.Task.objects.all().values("uuid"))
@@ -261,7 +261,7 @@ mutation MoveSubTaskMutation($uuid: UUID!) {
         workspace_user,
     ):
         """Test the query."""
-        other_sub_task = factory.SubTaskFactory(
+        other_sub_task = factory.SubTaskFactory.create(
             task=sub_task.task,
         )
         assert list(task.subtask_set.all().values("uuid", "_order")) == [

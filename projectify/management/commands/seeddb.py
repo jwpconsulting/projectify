@@ -56,11 +56,11 @@ class Command(BaseCommand):
         """Create users."""
         if auth.get_user_model().objects.count():
             return None
-        super_user = SuperUserFactory(
+        super_user = SuperUserFactory.create(
             email="admin@localhost",
             password="password",
         )
-        guest_user = UserFactory(
+        guest_user = UserFactory.create(
             email="guest@localhost",
             password="password",
         )
@@ -86,7 +86,7 @@ class Command(BaseCommand):
     ) -> None:
         """Create tasks for a workspace board section."""
         for _ in tqdm.trange(10, desc="Tasks"):
-            task = TaskFactory(workspace_board_section=section)
+            task = TaskFactory.create(workspace_board_section=section)
             n_labels = random.randint(0, 3)
             chosen_labels = random.choices(labels, k=n_labels)
             for label in tqdm.tqdm(chosen_labels, desc="Labels"):
@@ -104,7 +104,7 @@ class Command(BaseCommand):
             self.SECTION_TITLES,
             desc="Workspace board sections",
         ):
-            section = WorkspaceBoardSectionFactory(
+            section = WorkspaceBoardSectionFactory.create(
                 workspace_board=board,
                 title=title,
             )

@@ -1,6 +1,6 @@
 """User app factories."""
-from django.contrib.auth import (
-    get_user_model,
+from typing import (
+    cast,
 )
 
 import factory
@@ -13,7 +13,7 @@ from . import (
 )
 
 
-class UserFactory(django.DjangoModelFactory):
+class UserFactory(django.DjangoModelFactory[models.User]):
     """User Factory."""
 
     email = factory.Faker("email")
@@ -23,22 +23,17 @@ class UserFactory(django.DjangoModelFactory):
     full_name = factory.Faker("name")
 
     @factory.post_generation
-    def password(
-        self: models.User,
-        created: bool,
-        extracted: str,
-        *args: object,
-        **kwargs: object
-    ) -> None:
+    def password(self, created: bool, extracted: str) -> None:
         """Set the password."""
         if not created:
             return
-        self.set_password(extracted or "password")
+        user = cast(models.User, self)
+        user.set_password(extracted or "password")
 
     class Meta:
         """Meta."""
 
-        model = get_user_model()
+        model = models.User
         django_get_or_create = ("email",)
 
 
@@ -50,7 +45,7 @@ class SuperUserFactory(UserFactory):
     is_active = True
 
 
-class UserInviteFactory(django.DjangoModelFactory):
+class UserInviteFactory(django.DjangoModelFactory[models.UserInvite]):
     """UserInvite factory."""
 
     email = factory.Faker("email")
