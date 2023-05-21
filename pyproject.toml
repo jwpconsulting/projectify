@@ -74,10 +74,6 @@ module = "dj_database_url.*"
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-module = "factory.*"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
 module = "pgtrigger.*"
 ignore_missing_imports = true
 

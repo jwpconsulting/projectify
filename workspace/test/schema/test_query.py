@@ -337,7 +337,7 @@ query {
     }
 }
 """
-        other_workspace_board = factory.WorkspaceBoardFactory(
+        other_workspace_board = factory.WorkspaceBoardFactory.create(
             workspace=workspace,
         )
         other_workspace_board.archive()

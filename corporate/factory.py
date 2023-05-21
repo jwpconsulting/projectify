@@ -9,7 +9,7 @@ from . import (
 )
 
 
-class CustomerFactory(django.DjangoModelFactory):
+class CustomerFactory(django.DjangoModelFactory[models.Customer]):
     """Customer factory."""
 
     workspace = factory.SubFactory("workspace.factory.WorkspaceFactory")
