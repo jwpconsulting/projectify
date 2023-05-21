@@ -347,21 +347,21 @@ class Mutation:
             User = get_user_model()
             user = User.objects.get_by_natural_key(input.assignee)
             task.assign_to(user)
-        if input.sub_tasks is not UNSET:
+        if input.sub_tasks is not UNSET and input.sub_tasks is not None:
             for title in input.sub_tasks:
                 task.add_sub_task(
                     title,
                     "",
                 )
-        if input.labels is not UNSET:
+        if input.labels is not UNSET and input.labels is not None:
             for label_uuid in input.labels:
-                qs = models.Label.objects.filter_for_user_and_uuid(
+                label_qs = models.Label.objects.filter_for_user_and_uuid(
                     info.context.user,
                     label_uuid,
                 )
-                label = get_object_or_404(qs)
+                label = get_object_or_404(label_qs)
                 task.add_label(label)
-        return task
+        return task  # type: ignore
 
     @strawberry.field
     def add_label(self, info, input: AddLabelInput) -> types.Label:
@@ -455,23 +455,27 @@ class Mutation:
     def move_task(self, info, input: MoveTaskInput) -> types.Task:
         """Move task."""
         # Find workspace board section
-        qs = models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
-            info.context.user,
-            input.workspace_board_section_uuid,
+        qs: models.WorkspaceBoardSectionQuerySet = (
+            models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
+                info.context.user,
+                input.workspace_board_section_uuid,
+            )
         )
         workspace_board_section = get_object_or_404(qs)
         # Find task
-        qs = models.Task.objects.filter_for_user_and_uuid(
-            info.context.user,
-            input.task_uuid,
+        task_qs: models.TaskQuerySet = (
+            models.Task.objects.filter_for_user_and_uuid(
+                info.context.user,
+                input.task_uuid,
+            )
         )
-        task = get_object_or_404(qs)
+        task: models.Task = get_object_or_404(task_qs)
         assert info.context.user.has_perm("workspace.can_update_task", task)
         # Reorder task
         task.move_to(workspace_board_section, input.order)
         # Return task
         task.refresh_from_db()
-        return task
+        return task  # type: ignore
 
     @strawberry.field
     def move_task_after(self, info, input: MoveTaskAfterInput) -> types.Task:
