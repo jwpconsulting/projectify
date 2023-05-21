@@ -124,7 +124,7 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         label_set: RelatedManager["Label"]
 
     def add_workspace_board(
-        self, title: str, description: str, deadline: Optional[bool] = None
+        self, title: str, description: str, deadline: Optional[datetime] = None
     ) -> "WorkspaceBoard":
         """Add workspace board."""
         workspace_board: WorkspaceBoard = self.workspaceboard_set.create(
@@ -741,7 +741,7 @@ class Task(
         )
         return self.chatmessage_set.create(text=text, author=workspace_user)
 
-    def assign_to(self, assignee: AbstractBaseUser) -> None:
+    def assign_to(self, assignee: Optional[AbstractBaseUser]) -> None:
         """
         Assign task to user.
 
