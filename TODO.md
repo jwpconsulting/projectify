@@ -1,3 +1,4 @@
 # Typing
 
-- Install types-factory-boy and don't ignore factory package
+- Maybe: Type AbstractBaseUser to be the django.contrib.auth.models User
+  instead
