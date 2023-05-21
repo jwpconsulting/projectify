@@ -12,9 +12,7 @@ import factory
 from factory import (
     django,
 )
-from user.factory import (
-    UserFactory,
-)
+from user import factory as user_factory
 
 from . import (
     models,
@@ -22,10 +20,10 @@ from . import (
 
 
 if TYPE_CHECKING:
-    from user.models import User  # noqa: F401
+    from user import models as user_models  # noqa: F401
 
 
-class WorkspaceFactory(django.DjangoModelFactory):
+class WorkspaceFactory(django.DjangoModelFactory[models.Workspace]):
     """Workspace Factory."""
 
     title = factory.Faker("word")
@@ -35,9 +33,7 @@ class WorkspaceFactory(django.DjangoModelFactory):
     def add_users(
         self,
         created: bool,
-        extracted: Iterable["User"],
-        *args: object,
-        **kwargs: object
+        extracted: Iterable["user_models.User"],
     ) -> None:
         """Add users to workspace."""
         if not created:
@@ -53,7 +49,9 @@ class WorkspaceFactory(django.DjangoModelFactory):
         model = models.Workspace
 
 
-class WorkspaceUserInviteFactory(django.DjangoModelFactory):
+class WorkspaceUserInviteFactory(
+    django.DjangoModelFactory[models.WorkspaceUserInvite]
+):
     """WorkspaceUserInvite factory."""
 
     workspace = factory.SubFactory(WorkspaceFactory)
@@ -65,10 +63,10 @@ class WorkspaceUserInviteFactory(django.DjangoModelFactory):
         model = models.WorkspaceUserInvite
 
 
-class WorkspaceUserFactory(django.DjangoModelFactory):
+class WorkspaceUserFactory(django.DjangoModelFactory[models.WorkspaceUser]):
     """WorkspaceUser factory."""
 
-    user = factory.SubFactory(UserFactory)
+    user = factory.SubFactory(user_factory.UserFactory)
     workspace = factory.SubFactory(WorkspaceFactory)
     job_title = factory.Faker("job")
 
@@ -78,7 +76,7 @@ class WorkspaceUserFactory(django.DjangoModelFactory):
         model = models.WorkspaceUser
 
 
-class WorkspaceBoardFactory(django.DjangoModelFactory):
+class WorkspaceBoardFactory(django.DjangoModelFactory[models.WorkspaceBoard]):
     """WorkspaceBoard factory."""
 
     title = factory.Faker("word")
@@ -92,7 +90,9 @@ class WorkspaceBoardFactory(django.DjangoModelFactory):
         model = models.WorkspaceBoard
 
 
-class WorkspaceBoardSectionFactory(django.DjangoModelFactory):
+class WorkspaceBoardSectionFactory(
+    django.DjangoModelFactory[models.WorkspaceBoardSection]
+):
     """WorkspaceBoard Section Factory."""
 
     title = factory.Faker("word")
@@ -110,7 +110,7 @@ def extract_assignee_workspace_user(task: models.Task) -> models.WorkspaceUser:
     workspace_board = task.workspace_board_section.workspace_board
     workspace_user = workspace_board.workspace.workspaceuser_set.first()
     if not workspace_user:
-        workspace_user = WorkspaceUserFactory(
+        workspace_user = WorkspaceUserFactory.create(
             workspace=workspace_board.workspace,
         )
     return workspace_user
@@ -121,7 +121,7 @@ def extract_workspace(task: models.Task) -> models.Workspace:
     return task.workspace_board_section.workspace_board.workspace
 
 
-class TaskFactory(django.DjangoModelFactory):
+class TaskFactory(django.DjangoModelFactory[models.Task]):
     """Task factory."""
 
     title = factory.Faker("word")
@@ -137,7 +137,7 @@ class TaskFactory(django.DjangoModelFactory):
         model = models.Task
 
 
-class LabelFactory(django.DjangoModelFactory):
+class LabelFactory(django.DjangoModelFactory[models.Label]):
     """Factory for Label."""
 
     name = factory.Faker("catch_phrase")
@@ -150,7 +150,7 @@ class LabelFactory(django.DjangoModelFactory):
         model = models.Label
 
 
-class TaskLabelFactory(django.DjangoModelFactory):
+class TaskLabelFactory(django.DjangoModelFactory[models.TaskLabel]):
     """Factory for Label."""
 
     task = factory.SubFactory(TaskFactory)
@@ -162,7 +162,7 @@ class TaskLabelFactory(django.DjangoModelFactory):
         model = models.TaskLabel
 
 
-class SubTaskFactory(django.DjangoModelFactory):
+class SubTaskFactory(django.DjangoModelFactory[models.SubTask]):
     """SubTask Factory."""
 
     title = factory.Faker("word")
@@ -192,7 +192,7 @@ def extract_author(chat_message: models.ChatMessage) -> models.WorkspaceUser:
     return workspace_user
 
 
-class ChatMessageFactory(django.DjangoModelFactory):
+class ChatMessageFactory(django.DjangoModelFactory[models.ChatMessage]):
     """ChatMessage Factory."""
 
     task = factory.SubFactory(TaskFactory)

@@ -14,17 +14,17 @@ from pathlib import (
     Path,
 )
 from typing import (
+    Any,
     Iterable,
 )
 
-from django.contrib import (
-    admin,
-)
+from django.contrib import admin  # For patching
 
 import dj_database_url
 from dotenv import (
     load_dotenv,
 )
+from factory import django  # for patching
 
 from .types import (
     ChannelLayers,
@@ -269,5 +269,11 @@ MEDIA_CLOUDINARY_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 DEBUG_TOOLBAR = False
 DEBUG = False
 
-for cls in [admin.ModelAdmin, admin.TabularInline]:
-    cls.__class_getitem__ = classmethod(lambda cls, *args, **kwargs: cls)  # type: ignore [attr-defined]
+patchable_classes: Iterable[Any] = (
+    admin.ModelAdmin,
+    admin.TabularInline,
+    django.DjangoModelFactory,
+)
+
+for cls in patchable_classes:
+    cls.__class_getitem__ = classmethod(lambda cls, *args, **kwargs: cls)

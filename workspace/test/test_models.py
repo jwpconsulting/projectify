@@ -515,7 +515,7 @@ class TestTask:
         task,
     ):
         """Test moving a task around within the same section."""
-        other_task = factory.TaskFactory(
+        other_task = factory.TaskFactory.create(
             workspace_board_section=workspace_board_section
         )
         assert list(workspace_board_section.task_set.all()) == [
@@ -532,17 +532,17 @@ class TestTask:
         self, workspace_board, workspace_board_section, task
     ):
         """Test moving a task around to another section."""
-        other_task = factory.TaskFactory(
+        other_task = factory.TaskFactory.create(
             workspace_board_section=workspace_board_section
         )
         assert list(workspace_board_section.task_set.all()) == [
             task,
             other_task,
         ]
-        other_section = factory.WorkspaceBoardSectionFactory(
+        other_section = factory.WorkspaceBoardSectionFactory.create(
             workspace_board=workspace_board
         )
-        other_section_task = factory.TaskFactory(
+        other_section_task = factory.TaskFactory.create(
             workspace_board_section=other_section,
         )
         assert list(other_section.task_set.all()) == [
@@ -562,7 +562,7 @@ class TestTask:
 
         We also see what happens when the id is set too high.
         """
-        other_section = factory.WorkspaceBoardSectionFactory(
+        other_section = factory.WorkspaceBoardSectionFactory.create(
             workspace_board=workspace_board
         )
         task.move_to(other_section, 1)
@@ -627,7 +627,7 @@ class TestTask:
 
     def test_get_next_section(self, workspace_board, task):
         """Test getting the next section."""
-        section = factory.WorkspaceBoardSectionFactory(
+        section = factory.WorkspaceBoardSectionFactory.create(
             workspace_board=workspace_board,
         )
         assert task.get_next_section() == section
@@ -780,10 +780,10 @@ class TestSubTask:
 
     def test_moving_sub_task(self, task, sub_task):
         """Test moving a sub task around."""
-        other_sub_task = factory.SubTaskFactory(
+        other_sub_task = factory.SubTaskFactory.create(
             task=task,
         )
-        other_other_sub_task = factory.SubTaskFactory(
+        other_other_sub_task = factory.SubTaskFactory.create(
             task=task,
         )
         assert list(task.subtask_set.all()) == [
