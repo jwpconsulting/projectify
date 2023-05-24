@@ -58,31 +58,15 @@ warn_return_any = true
 
 # Library imports
 [[tool.mypy.overrides]]
-module = "celery.*"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "cloudinary.*"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "channels.*"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "dj_database_url.*"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "pgtrigger.*"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "redis.asyncio"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "rules"
+module = [
+    "celery.*",
+    "cloudinary.*",
+    "channels.*",
+    "dj_database_url.*",
+    "pgtrigger.*",
+    "redis.asyncio",
+    "rules",
+]
 ignore_missing_imports = true
 
 # Our own modules
