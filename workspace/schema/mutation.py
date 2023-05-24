@@ -24,6 +24,10 @@ from strawberry.unset import (
     UNSET,
 )
 
+from graphql import (
+    GraphQLResolveInfo,
+)
+
 from .. import (
     models,
 )
@@ -301,7 +305,7 @@ class Mutation:
     # Add mutations
     @strawberry.field
     def add_workspace_board(
-        self, info, input: AddWorkspaceBoardInput
+        self, info: GraphQLResolveInfo, input: AddWorkspaceBoardInput
     ) -> types.WorkspaceBoard:
         """Add workspace board."""
         qs = models.Workspace.objects.filter_for_user_and_uuid(
@@ -326,7 +330,7 @@ class Mutation:
 
     @strawberry.field
     def add_workspace_board_section(
-        self, info, input: AddWorkspaceBoardSectionInput
+        self, info: GraphQLResolveInfo, input: AddWorkspaceBoardSectionInput
     ) -> types.WorkspaceBoardSection:
         """Add workspace board section."""
         qs = models.WorkspaceBoard.objects.filter_for_user_and_uuid(
@@ -344,7 +348,9 @@ class Mutation:
         return workspace_board_section
 
     @strawberry.field
-    def add_task(self, info, input: AddTaskInput) -> types.Task:
+    def add_task(
+        self, info: GraphQLResolveInfo, input: AddTaskInput
+    ) -> types.Task:
         """Add task."""
         qs = models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
             info.context.user,
@@ -380,7 +386,9 @@ class Mutation:
         return task  # type: ignore
 
     @strawberry.field
-    def add_label(self, info, input: AddLabelInput) -> types.Label:
+    def add_label(
+        self, info: GraphQLResolveInfo, input: AddLabelInput
+    ) -> types.Label:
         """Add label."""
         qs = models.Workspace.objects.filter_for_user_and_uuid(
             info.context.user,
@@ -397,7 +405,9 @@ class Mutation:
         return label
 
     @strawberry.field
-    def add_sub_task(self, info, input: AddSubTaskInput) -> types.SubTask:
+    def add_sub_task(
+        self, info: GraphQLResolveInfo, input: AddSubTaskInput
+    ) -> types.SubTask:
         """Add sub task."""
         qs = models.Task.objects.filter_for_user_and_uuid(
             info.context.user,
@@ -415,7 +425,7 @@ class Mutation:
 
     @strawberry.field
     def add_chat_message(
-        self, info, input: AddChatMessageInput
+        self, info: GraphQLResolveInfo, input: AddChatMessageInput
     ) -> types.ChatMessage:
         """Add chat message."""
         qs = models.Task.objects.filter_for_user_and_uuid(
@@ -434,7 +444,7 @@ class Mutation:
 
     @strawberry.field
     def change_sub_task_done(
-        self, info, input: ChangeSubTaskDoneInput
+        self, info: GraphQLResolveInfo, input: ChangeSubTaskDoneInput
     ) -> types.SubTask:
         """Change sub task done status."""
         qs = models.SubTask.objects.filter_for_user_and_uuid(
@@ -451,7 +461,7 @@ class Mutation:
 
     @strawberry.field
     def move_workspace_board_section(
-        self, info, input: MoveWorkspaceBoardSectionInput
+        self, info: GraphQLResolveInfo, input: MoveWorkspaceBoardSectionInput
     ) -> types.WorkspaceBoardSection:
         """Move workspace board section."""
         qs = models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
@@ -468,7 +478,9 @@ class Mutation:
         return workspace_board_section
 
     @strawberry.field
-    def move_task(self, info, input: MoveTaskInput) -> types.Task:
+    def move_task(
+        self, info: GraphQLResolveInfo, input: MoveTaskInput
+    ) -> types.Task:
         """Move task."""
         # Find workspace board section
         qs: models.WorkspaceBoardSectionQuerySet = (
@@ -494,7 +506,9 @@ class Mutation:
         return task  # type: ignore
 
     @strawberry.field
-    def move_task_after(self, info, input: MoveTaskAfterInput) -> types.Task:
+    def move_task_after(
+        self, info: GraphQLResolveInfo, input: MoveTaskAfterInput
+    ) -> types.Task:
         """Move task after another task."""
         # Find workspace board section
         workspace_board_section_qs = (
@@ -527,7 +541,9 @@ class Mutation:
         return task
 
     @strawberry.field
-    def move_sub_task(self, info, input: MoveSubTaskInput) -> types.SubTask:
+    def move_sub_task(
+        self, info: GraphQLResolveInfo, input: MoveSubTaskInput
+    ) -> types.SubTask:
         """Move sub task to a specified position."""
         # Find sub task
         qs = models.SubTask.objects.filter_for_user_and_uuid(
@@ -546,7 +562,7 @@ class Mutation:
 
     @strawberry.field
     def add_user_to_workspace(
-        self, info, input: AddUserToWorkspaceInput
+        self, info: GraphQLResolveInfo, input: AddUserToWorkspaceInput
     ) -> types.Workspace:
         """Add user to workspace."""
         # Find workspace
@@ -570,7 +586,7 @@ class Mutation:
 
     @strawberry.field
     def remove_user_from_workspace(
-        self, info, input: RemoveUserFromWorkspaceInput
+        self, info: GraphQLResolveInfo, input: RemoveUserFromWorkspaceInput
     ) -> types.Workspace:
         """Remove user from workspace."""
         qs = models.Workspace.objects.filter_for_user_and_uuid(
@@ -590,7 +606,9 @@ class Mutation:
         return workspace
 
     @strawberry.field
-    def assign_task(self, info, input: AssignTaskInput) -> types.Task:
+    def assign_task(
+        self, info: GraphQLResolveInfo, input: AssignTaskInput
+    ) -> types.Task:
         """Assign task to user."""
         qs = models.Task.objects.filter_for_user_and_uuid(
             info.context.user,
@@ -607,7 +625,9 @@ class Mutation:
         return task
 
     @strawberry.field
-    def duplicate_task(self, info, input: DuplicateTaskInput) -> types.Task:
+    def duplicate_task(
+        self, info: GraphQLResolveInfo, input: DuplicateTaskInput
+    ) -> types.Task:
         """Duplicate a task."""
         qs = models.Task.objects.filter_for_user_and_uuid(
             info.context.user,
@@ -622,7 +642,9 @@ class Mutation:
         return new_task
 
     @strawberry.field
-    def assign_label(self, info, input: AssignLabelInput) -> types.Task:
+    def assign_label(
+        self, info: GraphQLResolveInfo, input: AssignLabelInput
+    ) -> types.Task:
         """Assign or unassign a label."""
         task_qs = models.Task.objects.filter_for_user_and_uuid(
             info.context.user,
@@ -651,7 +673,7 @@ class Mutation:
     # Update
     @strawberry.field
     def update_workspace(
-        self, info, input: UpdateWorkspaceInput
+        self, info: GraphQLResolveInfo, input: UpdateWorkspaceInput
     ) -> types.Workspace:
         """Update workspace."""
         qs = models.Workspace.objects.filter_for_user_and_uuid(
@@ -670,7 +692,7 @@ class Mutation:
 
     @strawberry.field
     def update_workspace_user(
-        self, info, input: UpdateWorkspaceUserInput
+        self, info: GraphQLResolveInfo, input: UpdateWorkspaceUserInput
     ) -> types.WorkspaceUser:
         """Update workspace user."""
         qs = models.Workspace.objects.filter_for_user_and_uuid(
@@ -702,7 +724,7 @@ class Mutation:
 
     @strawberry.field
     def archive_workspace_board(
-        self, info, input: ArchiveWorkspaceBoardInput
+        self, info: GraphQLResolveInfo, input: ArchiveWorkspaceBoardInput
     ) -> types.WorkspaceBoard:
         """Archive workspace board."""
         qs = models.WorkspaceBoard.objects.filter_for_user_and_uuid(
@@ -722,7 +744,7 @@ class Mutation:
 
     @strawberry.field
     def update_workspace_board(
-        self, info, input: UpdateWorkspaceBoardInput
+        self, info: GraphQLResolveInfo, input: UpdateWorkspaceBoardInput
     ) -> types.WorkspaceBoard:
         """Update workspace board."""
         qs = models.WorkspaceBoard.objects.filter_for_user_and_uuid(
@@ -746,7 +768,7 @@ class Mutation:
 
     @strawberry.field
     def update_workspace_board_section(
-        self, info, input: UpdateWorkspaceBoardSectionInput
+        self, info: GraphQLResolveInfo, input: UpdateWorkspaceBoardSectionInput
     ) -> types.WorkspaceBoardSection:
         """Update workspace board."""
         qs = models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
@@ -764,7 +786,9 @@ class Mutation:
         return workspace_board_section
 
     @strawberry.field
-    def update_task(self, info, input: UpdateTaskInput) -> types.Task:
+    def update_task(
+        self, info: GraphQLResolveInfo, input: UpdateTaskInput
+    ) -> types.Task:
         """Update workspace board."""
         qs = models.Task.objects.filter_for_user_and_uuid(
             info.context.user,
@@ -786,7 +810,9 @@ class Mutation:
         return task
 
     @strawberry.field
-    def update_label(self, info, input: UpdateLabelInput) -> types.Label:
+    def update_label(
+        self, info: GraphQLResolveInfo, input: UpdateLabelInput
+    ) -> types.Label:
         """Update label."""
         qs = models.Label.objects.filter_for_user_and_uuid(
             info.context.user,
@@ -804,7 +830,7 @@ class Mutation:
 
     @strawberry.field
     def update_sub_task(
-        self, info, input: UpdateSubTaskInput
+        self, info: GraphQLResolveInfo, input: UpdateSubTaskInput
     ) -> types.SubTask:
         """Update workspace board."""
         qs = models.SubTask.objects.filter_for_user_and_uuid(
@@ -824,7 +850,7 @@ class Mutation:
     # Delete
     @strawberry.field
     def delete_workspace_board(
-        self, info, input: DeleteWorkspaceBoardInput
+        self, info: GraphQLResolveInfo, input: DeleteWorkspaceBoardInput
     ) -> types.WorkspaceBoard:
         """Delete workspace board."""
         qs = models.WorkspaceBoard.objects.filter_for_user_and_uuid(
@@ -841,7 +867,7 @@ class Mutation:
 
     @strawberry.field
     def delete_workspace_board_section(
-        self, info, input: DeleteWorkspaceBoardSectionInput
+        self, info: GraphQLResolveInfo, input: DeleteWorkspaceBoardSectionInput
     ) -> types.WorkspaceBoardSection:
         """Delete workspace section board."""
         with transaction.atomic():
@@ -863,7 +889,9 @@ class Mutation:
             return workspace_board_section
 
     @strawberry.field
-    def delete_task(self, info, input: DeleteTaskInput) -> types.Task:
+    def delete_task(
+        self, info: GraphQLResolveInfo, input: DeleteTaskInput
+    ) -> types.Task:
         """Delete task."""
         qs = models.Task.objects.filter_for_user_and_uuid(
             info.context.user,
@@ -878,7 +906,9 @@ class Mutation:
         return task
 
     @strawberry.field
-    def delete_label(self, info, input: DeleteLabelInput) -> types.Label:
+    def delete_label(
+        self, info: GraphQLResolveInfo, input: DeleteLabelInput
+    ) -> types.Label:
         """Delete label."""
         qs = models.Label.objects.filter_for_user_and_uuid(
             info.context.user,
@@ -894,7 +924,7 @@ class Mutation:
 
     @strawberry.field
     def delete_sub_task(
-        self, info, input: DeleteSubTaskInput
+        self, info: GraphQLResolveInfo, input: DeleteSubTaskInput
     ) -> types.SubTask:
         """Delete task."""
         qs = models.SubTask.objects.filter_for_user_and_uuid(
