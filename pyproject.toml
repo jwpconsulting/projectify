@@ -119,6 +119,5 @@ module = [
     "workspace.test.test_migrations",
     "user.test.*",
     "premail.test.*",
-    "projectify.test.*",
 ]
 disallow_untyped_defs = false
