@@ -61,7 +61,6 @@ warn_return_any = true
 module = [
     "celery.*",
     "cloudinary.*",
-    "channels.*",
     "dj_database_url.*",
     "pgtrigger.*",
     "redis.asyncio",
