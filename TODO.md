@@ -20,6 +20,7 @@
   100 % for tasks with no sub tasks. Justus 2023-05-01
 - Clicking cancel doesn't do anything in the constructive overlays
 - It would be nice to show login after attempting to fetch user
+- Fix storybook svelte kit goto import issue
 
 # Refactor
 
@@ -29,6 +30,11 @@
   closing / whatever it is that they do
 - Make undefined and null for empty form fields more consistent
 - Factor disabled state into ButtonAction (since anchors cannot be disabled)
+- Reintroduce calling the store from lib/figma components instead of module construct
+- Create a store factory for self-refreshing task / ws / ws board entities, then
+  1. Perform initial load in page ts, so that a page can definitely be rendered
+     with a entity instance,
+  2. Continuously reassign $entity to page data so it stays fresh.
 
 # Update Dependency
 
