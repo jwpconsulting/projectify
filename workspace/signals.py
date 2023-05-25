@@ -1,12 +1,16 @@
 """Workspace signals."""
 import logging
+from collections.abc import (
+    Mapping,
+)
 from typing import (
     TYPE_CHECKING,
     Any,
-    TypedDict,
+    Type,
     cast,
 )
 
+from django.db import models as django_models
 from django.db import (
     transaction,
 )
@@ -22,6 +26,7 @@ from asgiref.sync import async_to_sync as _async_to_sync
 from channels.layers import (
     get_channel_layer,
 )
+from rest_framework import serializers as drf_serializers
 
 from user.signal_defs import (
     user_invitation_redeemed,
@@ -29,7 +34,9 @@ from user.signal_defs import (
 
 from . import (
     models,
+    serializers,
     signal_defs,
+    types,
 )
 
 
@@ -50,13 +57,6 @@ logger = logging.getLogger(__name__)
 async_to_sync = cast(Any, _async_to_sync)
 
 
-class Message(TypedDict):
-    """Contains message to send to client."""
-
-    type: str
-    uuid: str
-
-
 @receiver(signal_defs.workspace_user_invited)
 def send_invitation_email(
     instance: models.WorkspaceUser, **kwargs: object
@@ -71,7 +71,7 @@ def send_invitation_email(
     email.send()
 
 
-def group_send(destination: str, message: Message) -> None:
+def group_send(destination: str, message: types.Message) -> None:
     """Send message to a channels group."""
     channel_layer = get_channel_layer()
     if not channel_layer:
@@ -82,14 +82,25 @@ def group_send(destination: str, message: Message) -> None:
     )
 
 
+def serialize(
+    serializer: Type[drf_serializers.ModelSerializer],
+    instance: django_models.Model,
+) -> Mapping[str, object]:
+    """Serialize a django model instance and then render it to JSON."""
+    serialized: Mapping[str, object] = serializer(instance).data
+    return serialized
+
+
 def send_workspace_change_signal(instance: models.Workspace) -> None:
     """Send workspace.change signal to correct group."""
     uuid = str(instance.uuid)
+    data = serialize(serializers.WorkspaceSerializer, instance)
     group_send(
         f"workspace-{uuid}",
         {
             "type": "workspace.change",
             "uuid": uuid,
+            "data": data,
         },
     )
 
@@ -99,11 +110,13 @@ def send_workspace_board_change_signal(
 ) -> None:
     """Send workspace_board.change signal to correct group."""
     uuid = str(instance.uuid)
+    data = serialize(serializers.WorkspaceBoardDetailSerializer, instance)
     group_send(
         f"workspace-board-{uuid}",
         {
             "type": "workspace.board.change",
             "uuid": uuid,
+            "data": data,
         },
     )
 
@@ -111,11 +124,13 @@ def send_workspace_board_change_signal(
 def send_task_change_signal(instance: models.Task) -> None:
     """Send task.change signal to correct group."""
     uuid = str(instance.uuid)
+    data = serialize(serializers.TaskDetailSerializer, instance)
     group_send(
         f"task-{uuid}",
         {
             "type": "task.change",
             "uuid": uuid,
+            "data": data,
         },
     )
 

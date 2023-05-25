@@ -1,6 +1,8 @@
 """Consumer tests."""
 from typing import (
     TYPE_CHECKING,
+    Any,
+    cast,
 )
 
 from django.db import models as django_models
@@ -124,6 +126,38 @@ def delete_model_instance(model_instance: django_models.Model) -> None:
     model_instance.delete()
 
 
+def is_workspace_message(workspace: models.Workspace, json: object) -> bool:
+    """Test if the message is correct."""
+    json_cast = cast(dict[str, Any], json)
+    return (
+        set(json_cast.keys()) == {"uuid", "type", "data"}
+        and json_cast["uuid"] == str(workspace.uuid)
+        and json_cast["data"]["uuid"] == str(workspace.uuid)
+    )
+
+
+def is_workspace_board_message(
+    workspace_board: models.WorkspaceBoard, json: object
+) -> bool:
+    """Test if the message is correct."""
+    json_cast = cast(dict[str, Any], json)
+    return (
+        set(json_cast.keys()) == {"uuid", "type", "data"}
+        and json_cast["uuid"] == str(workspace_board.uuid)
+        and json_cast["data"]["uuid"] == str(workspace_board.uuid)
+    )
+
+
+def is_task_message(task: models.Task, json: object) -> bool:
+    """Test if the message is correct."""
+    json_cast = cast(dict[str, Any], json)
+    return (
+        set(json_cast.keys()) == {"uuid", "type", "data"}
+        and json_cast["uuid"] == str(task.uuid)
+        and json_cast["data"]["uuid"] == str(task.uuid)
+    )
+
+
 @pytest.mark.django_db
 @pytest.mark.asyncio
 class TestWorkspaceConsumer:
@@ -140,16 +174,16 @@ class TestWorkspaceConsumer:
             resource,
         )
         communicator.scope["user"] = user
-        connected, subprotocol = await communicator.connect()
+        connected, _ = await communicator.connect()
         assert connected
         await save_model_instance(workspace)
         message = await communicator.receive_json_from()
-        assert message == str(workspace.uuid)
+        assert is_workspace_message(workspace, message)
         await delete_model_instance(workspace_user)
         await delete_model_instance(user)
         await delete_model_instance(workspace)
         message = await communicator.receive_json_from()
-        assert message == str(workspace.uuid)
+        assert is_workspace_message(workspace, message)
         await communicator.disconnect()
 
     async def test_label_saved_or_deleted(self) -> None:
@@ -164,14 +198,14 @@ class TestWorkspaceConsumer:
             resource,
         )
         communicator.scope["user"] = user
-        connected, subprotocol = await communicator.connect()
+        connected, _ = await communicator.connect()
         assert connected
         await save_model_instance(label)
         message = await communicator.receive_json_from()
-        assert message == str(workspace.uuid)
+        assert is_workspace_message(workspace, message)
         await delete_model_instance(label)
         message = await communicator.receive_json_from()
-        assert message == str(workspace.uuid)
+        assert is_workspace_message(workspace, message)
         await delete_model_instance(workspace_user)
         await delete_model_instance(user)
         await delete_model_instance(workspace)
@@ -188,14 +222,14 @@ class TestWorkspaceConsumer:
             resource,
         )
         communicator.scope["user"] = user
-        connected, subprotocol = await communicator.connect()
+        connected, _ = await communicator.connect()
         assert connected
         await save_model_instance(workspace_user)
         message = await communicator.receive_json_from()
-        assert message == str(workspace.uuid)
+        assert is_workspace_message(workspace, message)
         await delete_model_instance(workspace_user)
         message = await communicator.receive_json_from()
-        assert message == str(workspace.uuid)
+        assert is_workspace_message(workspace, message)
         await communicator.disconnect()
         await delete_model_instance(user)
         await delete_model_instance(workspace)
@@ -212,14 +246,14 @@ class TestWorkspaceConsumer:
             resource,
         )
         communicator.scope["user"] = user
-        connected, subprotocol = await communicator.connect()
+        connected, _ = await communicator.connect()
         assert connected
         await save_model_instance(workspace_board)
         message = await communicator.receive_json_from()
-        assert message == str(workspace.uuid)
+        assert is_workspace_message(workspace, message)
         await delete_model_instance(workspace_board)
         message = await communicator.receive_json_from()
-        assert message == str(workspace.uuid)
+        assert is_workspace_message(workspace, message)
         await communicator.disconnect()
         await delete_model_instance(workspace_user)
         await delete_model_instance(user)
@@ -243,14 +277,14 @@ class TestWorkspaceBoardConsumer:
             resource,
         )
         communicator.scope["user"] = user
-        connected, subprotocol = await communicator.connect()
+        connected, _ = await communicator.connect()
         assert connected
         await save_model_instance(workspace_board)
         message = await communicator.receive_json_from()
-        assert message == str(workspace_board.uuid)
+        assert is_workspace_board_message(workspace_board, message)
         await delete_model_instance(workspace_board)
         message = await communicator.receive_json_from()
-        assert message == str(workspace_board.uuid)
+        assert is_workspace_board_message(workspace_board, message)
         await communicator.disconnect()
         await delete_model_instance(workspace_user)
         await delete_model_instance(user)
@@ -271,14 +305,14 @@ class TestWorkspaceBoardConsumer:
             resource,
         )
         communicator.scope["user"] = user
-        connected, subprotocol = await communicator.connect()
+        connected, _ = await communicator.connect()
         assert connected
         await save_model_instance(workspace_board_section)
         message = await communicator.receive_json_from()
-        assert message == str(workspace_board.uuid)
+        assert is_workspace_board_message(workspace_board, message)
         await delete_model_instance(workspace_board_section)
         message = await communicator.receive_json_from()
-        assert message == str(workspace_board.uuid)
+        assert is_workspace_board_message(workspace_board, message)
         await communicator.disconnect()
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
@@ -301,14 +335,14 @@ class TestWorkspaceBoardConsumer:
             resource,
         )
         communicator.scope["user"] = user
-        connected, subprotocol = await communicator.connect()
+        connected, _ = await communicator.connect()
         assert connected
         await save_model_instance(task)
         message = await communicator.receive_json_from()
-        assert message == str(workspace_board.uuid)
+        assert is_workspace_board_message(workspace_board, message)
         await delete_model_instance(task)
         message = await communicator.receive_json_from()
-        assert message == str(workspace_board.uuid)
+        assert is_workspace_board_message(workspace_board, message)
         await communicator.disconnect()
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
@@ -333,14 +367,14 @@ class TestWorkspaceBoardConsumer:
             resource,
         )
         communicator.scope["user"] = user
-        connected, subprotocol = await communicator.connect()
+        connected, _ = await communicator.connect()
         assert connected
         await add_label(label, task)
         message = await communicator.receive_json_from()
-        assert message == str(workspace_board.uuid)
+        assert is_workspace_board_message(workspace_board, message)
         await remove_label(label, task)
         message = await communicator.receive_json_from()
-        assert message == str(workspace_board.uuid)
+        assert is_workspace_board_message(workspace_board, message)
         await communicator.disconnect()
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
@@ -366,14 +400,14 @@ class TestWorkspaceBoardConsumer:
             resource,
         )
         communicator.scope["user"] = user
-        connected, subprotocol = await communicator.connect()
+        connected, _ = await communicator.connect()
         assert connected
         await save_model_instance(sub_task)
         message = await communicator.receive_json_from()
-        assert message == str(workspace_board.uuid)
+        assert is_workspace_board_message(workspace_board, message)
         await delete_model_instance(sub_task)
         message = await communicator.receive_json_from()
-        assert message == str(workspace_board.uuid)
+        assert is_workspace_board_message(workspace_board, message)
         await communicator.disconnect()
         await delete_model_instance(task)
         await delete_model_instance(workspace_board_section)
@@ -401,14 +435,14 @@ class TestTaskConsumer:
         resource = f"ws/task/{task.uuid}/"
         communicator = WebsocketCommunicator(websocket_application, resource)
         communicator.scope["user"] = user
-        connected, subprotocol = await communicator.connect()
+        connected, _ = await communicator.connect()
         assert connected
         await save_model_instance(task)
         message = await communicator.receive_json_from()
-        assert message == str(task.uuid)
+        assert is_task_message(task, message)
         await delete_model_instance(task)
         message = await communicator.receive_json_from()
-        assert message == str(task.uuid)
+        assert is_task_message(task, message)
         await communicator.disconnect()
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
@@ -430,14 +464,14 @@ class TestTaskConsumer:
         resource = f"ws/task/{task.uuid}/"
         communicator = WebsocketCommunicator(websocket_application, resource)
         communicator.scope["user"] = user
-        connected, subprotocol = await communicator.connect()
+        connected, _ = await communicator.connect()
         assert connected
         await add_label(label, task)
         message = await communicator.receive_json_from()
-        assert message == str(task.uuid)
+        assert is_task_message(task, message)
         await remove_label(label, task)
         message = await communicator.receive_json_from()
-        assert message == str(task.uuid)
+        assert is_task_message(task, message)
         await communicator.disconnect()
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
@@ -460,14 +494,14 @@ class TestTaskConsumer:
         resource = f"ws/task/{task.uuid}/"
         communicator = WebsocketCommunicator(websocket_application, resource)
         communicator.scope["user"] = user
-        connected, subprotocol = await communicator.connect()
+        connected, _ = await communicator.connect()
         assert connected
         await save_model_instance(sub_task)
         message = await communicator.receive_json_from()
-        assert message == str(task.uuid)
+        assert is_task_message(task, message)
         await delete_model_instance(sub_task)
         message = await communicator.receive_json_from()
-        assert message == str(task.uuid)
+        assert is_task_message(task, message)
         await communicator.disconnect()
         await delete_model_instance(task)
         await delete_model_instance(workspace_board_section)
@@ -490,14 +524,14 @@ class TestTaskConsumer:
         resource = f"ws/task/{task.uuid}/"
         communicator = WebsocketCommunicator(websocket_application, resource)
         communicator.scope["user"] = user
-        connected, subprotocol = await communicator.connect()
+        connected, _ = await communicator.connect()
         assert connected
         await save_model_instance(chat_message)
         message = await communicator.receive_json_from()
-        assert message == str(task.uuid)
+        assert is_task_message(task, message)
         await delete_model_instance(chat_message)
         message = await communicator.receive_json_from()
-        assert message == str(task.uuid)
+        assert is_task_message(task, message)
         await communicator.disconnect()
         await delete_model_instance(task)
         await delete_model_instance(workspace_board_section)
