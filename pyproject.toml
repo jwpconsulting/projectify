@@ -77,18 +77,7 @@ disable_error_code = ["return-value"]
 
 [[tool.mypy.overrides]]
 module = [
-    "user.factory",
-    "workspace.factory",
-    "corporate.factory",
-]
-disallow_subclassing_any = false
-
-[[tool.mypy.overrides]]
-module = [
     "workspace.rules",
-    "user.factory",
-    "workspace.factory",
-    "corporate.factory",
     "premail.tasks",
 ]
 disallow_untyped_decorators = false
