@@ -79,7 +79,6 @@ disable_error_code = ["return-value"]
 module = [
     "user.factory",
     "workspace.factory",
-    "workspace.consumers",
     "corporate.factory",
 ]
 disallow_subclassing_any = false
@@ -120,3 +119,7 @@ module = [
     "premail.test.*",
 ]
 disallow_untyped_defs = false
+
+[tool.pyright]
+stubPath = "mypy/stubs"
+typeCheckingMode = "strict"
