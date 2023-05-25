@@ -1,4 +1,7 @@
 """Workspace test fixtures."""
+from datetime import (
+    datetime,
+)
 from typing import (
     TYPE_CHECKING,
     Type,
@@ -17,6 +20,7 @@ import pytest
 from corporate.factory import (
     CustomerFactory,
 )
+from user import models as user_models
 
 from .. import (
     factory,
@@ -29,38 +33,42 @@ if TYPE_CHECKING:
 
 
 @pytest.fixture
-def now():
+def now() -> datetime:
     """Return now."""
     return timezone.now()
 
 
 @pytest.fixture
-def workspace():
+def workspace() -> models.Workspace:
     """Return workspace."""
-    workspace = factory.WorkspaceFactory()
-    CustomerFactory(workspace=workspace)
+    workspace = factory.WorkspaceFactory.create()
+    CustomerFactory.create(workspace=workspace)
     return workspace
 
 
 @pytest.fixture
-def other_workspace():
+def other_workspace() -> models.Workspace:
     """Return workspace."""
-    return factory.WorkspaceFactory()
+    return factory.WorkspaceFactory.create()
 
 
 @pytest.fixture
-def workspace_user_invite(workspace, user_invite):
+def workspace_user_invite(
+    workspace: models.Workspace, user_invite: user_models.UserInvite
+) -> models.WorkspaceUserInvite:
     """Return workspace user invite."""
-    return factory.WorkspaceUserInviteFactory(
+    return factory.WorkspaceUserInviteFactory.create(
         user_invite=user_invite,
         workspace=workspace,
     )
 
 
 @pytest.fixture
-def workspace_user(workspace, user):
+def workspace_user(
+    workspace: models.Workspace, user: "_User"
+) -> models.WorkspaceUser:
     """Return workspace user with owner status."""
-    return factory.WorkspaceUserFactory(
+    return factory.WorkspaceUserFactory.create(
         workspace=workspace,
         user=user,
         role=models.WorkspaceUserRoles.OWNER,
@@ -68,77 +76,94 @@ def workspace_user(workspace, user):
 
 
 @pytest.fixture
-def other_workspace_user(workspace, other_user):
+def other_workspace_user(
+    workspace: models.Workspace, other_user: "_User"
+) -> models.WorkspaceUser:
     """Return workspace user for other_user."""
-    return factory.WorkspaceUserFactory(workspace=workspace, user=other_user)
+    return factory.WorkspaceUserFactory.create(
+        workspace=workspace, user=other_user
+    )
 
 
 @pytest.fixture
-def workspace_board(workspace):
+def workspace_board(workspace: models.Workspace) -> models.WorkspaceBoard:
     """Return workspace board."""
-    return factory.WorkspaceBoardFactory(workspace=workspace)
+    return factory.WorkspaceBoardFactory.create(workspace=workspace)
 
 
 @pytest.fixture
-def archived_workspace_board(workspace, now):
+def archived_workspace_board(
+    workspace: models.Workspace, now: datetime
+) -> models.WorkspaceBoard:
     """Return archived workspace board."""
-    return factory.WorkspaceBoardFactory(workspace=workspace, archived=now)
+    return factory.WorkspaceBoardFactory.create(
+        workspace=workspace, archived=now
+    )
 
 
 @pytest.fixture
-def workspace_board_section(workspace_board):
+def workspace_board_section(
+    workspace_board: models.WorkspaceBoard,
+) -> models.WorkspaceBoardSection:
     """Return workspace board section."""
-    return factory.WorkspaceBoardSectionFactory(
+    return factory.WorkspaceBoardSectionFactory.create(
         workspace_board=workspace_board,
     )
 
 
 @pytest.fixture
-def task(workspace_board_section, workspace_user):
+def task(
+    workspace_board_section: models.WorkspaceBoardSection,
+    workspace_user: models.WorkspaceUser,
+) -> models.Task:
     """Return task."""
-    return factory.TaskFactory(
+    return factory.TaskFactory.create(
         workspace_board_section=workspace_board_section,
         assignee=workspace_user,
     )
 
 
 @pytest.fixture
-def other_task(workspace_board_section):
+def other_task(
+    workspace_board_section: models.WorkspaceBoardSection,
+) -> models.Task:
     """Return another task belonging to the same workspace board section."""
-    return factory.TaskFactory(
+    return factory.TaskFactory.create(
         workspace_board_section=workspace_board_section,
     )
 
 
 @pytest.fixture
-def label(workspace):
+def label(workspace: models.Workspace) -> models.Label:
     """Return a label."""
-    return factory.LabelFactory(
+    return factory.LabelFactory.create(
         workspace=workspace,
     )
 
 
 @pytest.fixture
-def task_label(task, label):
+def task_label(task: models.Task, label: models.Label) -> models.TaskLabel:
     """Return a label."""
-    return factory.TaskLabelFactory(
+    return factory.TaskLabelFactory.create(
         task=task,
         label=label,
     )
 
 
 @pytest.fixture
-def sub_task(task):
+def sub_task(task: models.Task) -> models.SubTask:
     """Return subtask."""
-    return factory.SubTaskFactory(
+    return factory.SubTaskFactory.create(
         task=task,
     )
 
 
 @pytest.fixture
-def chat_message(task, workspace_user):
+def chat_message(
+    task: models.Task, workspace_user: models.WorkspaceUser
+) -> models.ChatMessage:
     """Return ChatMessage instance."""
-    return factory.ChatMessageFactory(
+    return factory.ChatMessageFactory.create(
         task=task,
         author=workspace_user,
     )
