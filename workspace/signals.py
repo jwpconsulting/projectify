@@ -3,7 +3,7 @@ import logging
 from typing import (
     TYPE_CHECKING,
     Any,
-    Mapping,
+    TypedDict,
     cast,
 )
 
@@ -50,6 +50,13 @@ logger = logging.getLogger(__name__)
 async_to_sync = cast(Any, _async_to_sync)
 
 
+class Message(TypedDict):
+    """Contains message to send to client."""
+
+    type: str
+    uuid: str
+
+
 @receiver(signal_defs.workspace_user_invited)
 def send_invitation_email(
     instance: models.WorkspaceUser, **kwargs: object
@@ -64,7 +71,7 @@ def send_invitation_email(
     email.send()
 
 
-def group_send(destination: str, message: Mapping[str, object]) -> None:
+def group_send(destination: str, message: Message) -> None:
     """Send message to a channels group."""
     channel_layer = get_channel_layer()
     if not channel_layer:
