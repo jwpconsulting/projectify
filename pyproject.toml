@@ -63,7 +63,6 @@ module = [
     "cloudinary.*",
     "dj_database_url.*",
     "pgtrigger.*",
-    "redis.asyncio",
 ]
 ignore_missing_imports = true
 
