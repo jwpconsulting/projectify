@@ -64,7 +64,6 @@ module = [
     "dj_database_url.*",
     "pgtrigger.*",
     "redis.asyncio",
-    "rules",
 ]
 ignore_missing_imports = true
 
@@ -77,7 +76,6 @@ disable_error_code = ["return-value"]
 
 [[tool.mypy.overrides]]
 module = [
-    "workspace.rules",
     "premail.tasks",
 ]
 disallow_untyped_decorators = false
@@ -102,7 +100,6 @@ module = [
     "workspace.test.schema.*",
     "workspace.test.test_models",
     "workspace.test.test_views",
-    "workspace.test.test_rules",
     "workspace.test.test_migrations",
     "user.test.*",
     "premail.test.*",
