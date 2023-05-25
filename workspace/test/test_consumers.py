@@ -1,4 +1,10 @@
 """Consumer tests."""
+from typing import (
+    TYPE_CHECKING,
+)
+
+from django.db import models as django_models
+
 import pytest
 from channels.db import (
     database_sync_to_async,
@@ -16,88 +22,104 @@ from user.factory import (
 
 from .. import (
     factory,
+    models,
 )
 
 
+if TYPE_CHECKING:
+    from user.models import User  # noqa: F401
+
+
 @database_sync_to_async
-def create_user():
+def create_user() -> "User":
     """Create a user."""
-    return UserFactory()
+    return UserFactory.create()
 
 
 @database_sync_to_async
-def create_workspace():
+def create_workspace() -> models.Workspace:
     """Create workspace."""
-    return factory.WorkspaceFactory()
+    return factory.WorkspaceFactory.create()
 
 
 @database_sync_to_async
-def create_workspace_user(workspace, user):
+def create_workspace_user(
+    workspace: models.Workspace, user: "User"
+) -> models.WorkspaceUser:
     """Create workspace user."""
-    return factory.WorkspaceUserFactory(workspace=workspace, user=user)
+    return factory.WorkspaceUserFactory.create(workspace=workspace, user=user)
 
 
 @database_sync_to_async
-def create_workspace_board(workspace):
+def create_workspace_board(
+    workspace: models.Workspace,
+) -> models.WorkspaceBoard:
     """Create workspace board."""
-    return factory.WorkspaceBoardFactory(workspace=workspace)
+    return factory.WorkspaceBoardFactory.create(workspace=workspace)
 
 
 @database_sync_to_async
-def create_workspace_board_section(workspace_board):
+def create_workspace_board_section(
+    workspace_board: models.WorkspaceBoard,
+) -> models.WorkspaceBoardSection:
     """Create workspace board section."""
-    return factory.WorkspaceBoardSectionFactory(
+    return factory.WorkspaceBoardSectionFactory.create(
         workspace_board=workspace_board,
     )
 
 
 @database_sync_to_async
-def create_task(workspace_board_section, assignee):
+def create_task(
+    workspace_board_section: models.WorkspaceBoardSection,
+    assignee: models.WorkspaceUser,
+) -> models.Task:
     """Create task."""
-    return factory.TaskFactory(
+    return factory.TaskFactory.create(
         workspace_board_section=workspace_board_section,
         assignee=assignee,
     )
 
 
 @database_sync_to_async
-def create_label(workspace):
+def create_label(workspace: models.Workspace) -> models.Label:
     """Create a label."""
-    return factory.LabelFactory(workspace=workspace)
+    return factory.LabelFactory.create(workspace=workspace)
 
 
 @database_sync_to_async
-def add_label(label, task):
+def add_label(label: models.Label, task: models.Task) -> None:
     """Add a label to a task."""
     task.add_label(label)
 
 
 @database_sync_to_async
-def remove_label(label, task):
+def remove_label(label: models.Label, task: models.Task) -> None:
     """Remove a label from a task."""
     task.remove_label(label)
 
 
 @database_sync_to_async
-def create_sub_task(task):
+def create_sub_task(task: models.Task) -> models.SubTask:
     """Create sub task."""
-    return factory.SubTaskFactory(task=task)
+    return factory.SubTaskFactory.create(task=task)
 
 
 @database_sync_to_async
-def create_chat_message(task, workspace_user):
+def create_chat_message(
+    task: models.Task, workspace_user: models.WorkspaceUser
+) -> models.ChatMessage:
     """Create chat message."""
-    return factory.ChatMessageFactory(task=task, author=workspace_user)
+    return factory.ChatMessageFactory.create(task=task, author=workspace_user)
 
 
 @database_sync_to_async
-def save_model_instance(model_instance):
+def save_model_instance(model_instance: django_models.Model) -> None:
     """Save model instance."""
     model_instance.save()
 
 
 @database_sync_to_async
-def delete_model_instance(model_instance):
+def delete_model_instance(model_instance: django_models.Model) -> None:
     """Delete model instance."""
     model_instance.delete()
 
@@ -107,7 +129,7 @@ def delete_model_instance(model_instance):
 class TestWorkspaceConsumer:
     """Test WorkspaceConsumer."""
 
-    async def test_workspace_saved_or_deleted(self):
+    async def test_workspace_saved_or_deleted(self) -> None:
         """Test signal firing on workspace change."""
         user = await create_user()
         workspace = await create_workspace()
@@ -130,7 +152,7 @@ class TestWorkspaceConsumer:
         assert message == str(workspace.uuid)
         await communicator.disconnect()
 
-    async def test_label_saved_or_deleted(self):
+    async def test_label_saved_or_deleted(self) -> None:
         """Test signal firing on workspace change."""
         user = await create_user()
         workspace = await create_workspace()
@@ -155,7 +177,7 @@ class TestWorkspaceConsumer:
         await delete_model_instance(workspace)
         await communicator.disconnect()
 
-    async def test_workspace_user_saved_or_deleted(self):
+    async def test_workspace_user_saved_or_deleted(self) -> None:
         """Test signal firing on workspace user save or delete."""
         user = await create_user()
         workspace = await create_workspace()
@@ -178,7 +200,7 @@ class TestWorkspaceConsumer:
         await delete_model_instance(user)
         await delete_model_instance(workspace)
 
-    async def test_workspace_board_saved_or_deleted(self):
+    async def test_workspace_board_saved_or_deleted(self) -> None:
         """Test signal firing on workspace board change."""
         user = await create_user()
         workspace = await create_workspace()
@@ -209,7 +231,7 @@ class TestWorkspaceConsumer:
 class TestWorkspaceBoardConsumer:
     """Test WorkspaceBoardConsumer."""
 
-    async def test_workspace_board_saved_or_deleted(self):
+    async def test_workspace_board_saved_or_deleted(self) -> None:
         """Test signal firing on workspace board change."""
         user = await create_user()
         workspace = await create_workspace()
@@ -234,7 +256,7 @@ class TestWorkspaceBoardConsumer:
         await delete_model_instance(user)
         await delete_model_instance(workspace)
 
-    async def test_workspace_board_section_saved_or_deleted(self):
+    async def test_workspace_board_section_saved_or_deleted(self) -> None:
         """Test signal firing on workspace board section change."""
         user = await create_user()
         workspace = await create_workspace()
@@ -263,7 +285,7 @@ class TestWorkspaceBoardConsumer:
         await delete_model_instance(user)
         await delete_model_instance(workspace)
 
-    async def test_task_saved_or_deleted(self):
+    async def test_task_saved_or_deleted(self) -> None:
         """Test signal firing on task change."""
         user = await create_user()
         workspace = await create_workspace()
@@ -294,7 +316,7 @@ class TestWorkspaceBoardConsumer:
         await delete_model_instance(user)
         await delete_model_instance(workspace)
 
-    async def test_label_added_or_removed(self):
+    async def test_label_added_or_removed(self) -> None:
         """Test workspace board update on task label add or remove."""
         user = await create_user()
         workspace = await create_workspace()
@@ -327,7 +349,7 @@ class TestWorkspaceBoardConsumer:
         await delete_model_instance(label)
         await delete_model_instance(workspace)
 
-    async def test_sub_task_saved_or_deleted(self):
+    async def test_sub_task_saved_or_deleted(self) -> None:
         """Test signal firing on sub task change."""
         user = await create_user()
         workspace = await create_workspace()
@@ -366,7 +388,7 @@ class TestWorkspaceBoardConsumer:
 class TestTaskConsumer:
     """Test TaskConsumer."""
 
-    async def test_task_saved_or_deleted(self):
+    async def test_task_saved_or_deleted(self) -> None:
         """Assert event is fired when task is saved or deleted."""
         user = await create_user()
         workspace = await create_workspace()
@@ -394,7 +416,7 @@ class TestTaskConsumer:
         await delete_model_instance(user)
         await delete_model_instance(workspace)
 
-    async def test_label_added_or_removed(self):
+    async def test_label_added_or_removed(self) -> None:
         """Test adding or removing a label."""
         user = await create_user()
         workspace = await create_workspace()
@@ -424,7 +446,7 @@ class TestTaskConsumer:
         await delete_model_instance(user)
         await delete_model_instance(workspace)
 
-    async def test_sub_task_saved_or_deleted(self):
+    async def test_sub_task_saved_or_deleted(self) -> None:
         """Assert event is fired when sub task is saved or deleted."""
         user = await create_user()
         workspace = await create_workspace()
@@ -454,7 +476,7 @@ class TestTaskConsumer:
         await delete_model_instance(user)
         await delete_model_instance(workspace)
 
-    async def test_chat_message_saved_or_deleted(self):
+    async def test_chat_message_saved_or_deleted(self) -> None:
         """Assert event is fired when chat message is saved or deleted."""
         user = await create_user()
         workspace = await create_workspace()
