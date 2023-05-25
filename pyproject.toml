@@ -112,7 +112,11 @@ disable_error_code = ["attr-defined", "return-value"]
 [[tool.mypy.overrides]]
 module = [
     "corporate.test.*",
-    "workspace.test.*",
+    "workspace.test.schema.*",
+    "workspace.test.test_models",
+    "workspace.test.test_views",
+    "workspace.test.test_rules",
+    "workspace.test.test_migrations",
     "user.test.*",
     "premail.test.*",
     "projectify.test.*",
