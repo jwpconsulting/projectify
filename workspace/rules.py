@@ -4,8 +4,15 @@ Workspace app rules.
 The order of rules follows the ordering of models.
 """
 from typing import (
-    TYPE_CHECKING,
     Protocol,
+    Union,
+)
+
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+)
+from django.db.models import (
+    ForeignKey,
 )
 
 import rules
@@ -16,20 +23,21 @@ from . import (
 )
 
 
-if TYPE_CHECKING:
-    from user.models import User  # noqa: F401
-
-
 class HasWorkspace(Protocol):
     """Workspace adjacent object that has .workspace."""
 
-    workspace: models.Workspace
+    @property
+    def workspace(
+        self,
+    ) -> Union[ForeignKey[models.Workspace], models.Workspace]:
+        """Return the workspace."""
+        ...
 
 
 # Role predicates
 # Observer < Member < Maintainer < Owner
 @rules.predicate
-def is_at_least_observer(user: "User", target: HasWorkspace) -> bool:
+def is_at_least_observer(user: AbstractBaseUser, target: HasWorkspace) -> bool:
     """Return True if a user is at least an observer of workspace parent."""
     workspace = target.workspace
     try:
@@ -48,7 +56,7 @@ def is_at_least_observer(user: "User", target: HasWorkspace) -> bool:
 
 
 @rules.predicate
-def is_at_least_member(user: "User", target: HasWorkspace) -> bool:
+def is_at_least_member(user: AbstractBaseUser, target: HasWorkspace) -> bool:
     """Return True if a user is at least a member of workspace parent."""
     workspace = target.workspace
     try:
@@ -67,7 +75,9 @@ def is_at_least_member(user: "User", target: HasWorkspace) -> bool:
 
 
 @rules.predicate
-def is_at_least_maintainer(user: "User", target: HasWorkspace) -> bool:
+def is_at_least_maintainer(
+    user: AbstractBaseUser, target: HasWorkspace
+) -> bool:
     """Return True if a user is at least a maintainer of workspace parent."""
     workspace = target.workspace
     try:
@@ -86,7 +96,7 @@ def is_at_least_maintainer(user: "User", target: HasWorkspace) -> bool:
 
 
 @rules.predicate
-def is_at_least_owner(user: "User", target: HasWorkspace) -> bool:
+def is_at_least_owner(user: AbstractBaseUser, target: HasWorkspace) -> bool:
     """Return True if a user is at least an owner of workspace parent."""
     workspace = target.workspace
     try:
@@ -105,7 +115,9 @@ def is_at_least_owner(user: "User", target: HasWorkspace) -> bool:
 
 
 @rules.predicate
-def belongs_to_active_workspace(user: "User", target: HasWorkspace) -> bool:
+def belongs_to_active_workspace(
+    user: AbstractBaseUser, target: HasWorkspace
+) -> bool:
     """
     Return True if target belongs to an active workspace.
 
