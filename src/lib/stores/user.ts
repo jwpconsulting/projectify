@@ -11,7 +11,7 @@ import {
     Mutation_Signup,
 } from "$lib/graphql/operations";
 import { getUser } from "$lib/repository/user";
-import { goto } from "$app/navigation";
+import { goto } from "$lib/navigation";
 import type { User } from "$lib/types/user";
 
 export const user = writable<User | null>(null);

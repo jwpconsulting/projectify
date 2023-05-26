@@ -62,6 +62,7 @@ isn't too bad.
 Decide which kind of context menu you need
 
 ```
+import type { ContextMenuType } from "$lib/types/ui";
 // See src/lib/types/ui.ts ContextMenuType
 const contextMenuType = {
     kind: "theKind",
