@@ -5,7 +5,7 @@
     import UserAvatar from "$lib/components/UserAvatar.svelte";
 
     export let workspaceUser: WorkspaceUser | "unassigned" | "assign";
-    export let size: number;
+    export let size: 24;
     const style = `width: ${size}px; height: ${size}px;`;
 </script>
 
