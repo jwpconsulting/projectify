@@ -1,20 +1,18 @@
+import type { Meta, StoryObj } from "@storybook/svelte";
+
 import Dashboard from "$lib/figma/navigation/header/Dashboard.svelte";
 import { mobileParameters, user1 } from "$lib/storybook";
 
-const component = Dashboard;
-const props = { user: user1 };
-
-export default {
-    component,
+const meta: Meta<Dashboard> = {
+    component: Dashboard,
+    argTypes: {},
+    args: { user: user1 },
 };
+export default meta;
 
-export const Default = () => ({
-    Component: component,
-    props,
-});
+type Story = StoryObj<Dashboard>;
 
-export const Mobile = () => ({
-    Component: component,
-    props,
-});
-Mobile.parameters = mobileParameters;
+export const Desktop: Story = {};
+export const Mobile: Story = {
+    parameters: mobileParameters,
+};
