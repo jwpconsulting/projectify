@@ -12,8 +12,17 @@ export default meta;
 
 type Story = StoryObj<WorkspaceUser>;
 
-export const Default: Story = {
+export const Assignee: Story = {
     args: {
         task,
+    },
+};
+
+export const NoAssignee: Story = {
+    args: {
+        task: {
+            ...task,
+            assignee: undefined,
+        },
     },
 };
