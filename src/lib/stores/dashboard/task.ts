@@ -10,15 +10,10 @@ import { selectWorkspaceUser } from "$lib/stores/dashboard/workspaceUser";
 import { selectedLabels } from "$lib/stores/dashboard/label";
 import { fuseSearchThreshold } from "$lib/config";
 import { getTask } from "$lib/repository/workspace";
-import { browser } from "$app/environment";
-import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
-import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
+import { createWsStore } from "$lib/stores/util";
 
 export const taskSearchInput = writable<string>("");
 export const currentTaskUuid = writable<string | null>(null);
-
-let currentTaskSubscription: WSSubscriptionStore | null = null;
-let currentTaskSubscriptionUnsubscribe: (() => void) | null = null;
 
 // Clear on workspace board change
 currentWorkspaceBoardUuid.subscribe((_uuid) => {
@@ -72,44 +67,10 @@ export function searchTasks(
         .map((res: Fuse.FuseResult<Task>) => res.item);
 }
 
-export const currentTask = derived<[typeof currentTaskUuid], Task | null>(
-    [currentTaskUuid],
-    ([$currentTaskUuid], set) => {
-        if (!browser) {
-            set(null);
-            return;
-        }
-        if (!$currentTaskUuid) {
-            set(null);
-            return;
-        }
-        set(null);
-        getTask($currentTaskUuid)
-            .then((task) => set(task))
-            .catch((error: Error) => {
-                console.error(
-                    "An error happened when refetching $currentTask",
-                    { error }
-                );
-            });
-        if (currentTaskSubscriptionUnsubscribe) {
-            currentTaskSubscriptionUnsubscribe();
-        }
-        currentTaskSubscription = getSubscriptionForCollection(
-            "task",
-            $currentTaskUuid
-        );
-        if (!currentTaskSubscription) {
-            throw new Error("Expected currentWorkspaceBoardSubscription");
-        }
-        currentTaskSubscriptionUnsubscribe = currentTaskSubscription.subscribe(
-            async (_value) => {
-                console.log("Refetching task", $currentTaskUuid);
-                set(await getTask($currentTaskUuid));
-            }
-        );
-    },
-    null
+export const currentTask = createWsStore<Task>(
+    "task",
+    currentTaskUuid,
+    getTask
 );
 
 // XXX Remove the following
