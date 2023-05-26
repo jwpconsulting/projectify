@@ -4,7 +4,7 @@
     import type { ContextMenuType } from "$lib/types/ui";
     import { openContextMenu } from "$lib/stores/globalUi";
 
-    export let user: User | null;
+    export let user: User;
 
     let contextMenuAnchor: HTMLElement;
 

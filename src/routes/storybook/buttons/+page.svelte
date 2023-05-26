@@ -20,7 +20,6 @@
     import SearchMobile from "$lib/figma/buttons/SearchMobile.svelte";
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
     import WorkspaceBoardIcon from "$lib/figma/buttons/WorkspaceBoardIcon.svelte";
-    import UserAccount from "$lib/figma/buttons/UserAccount.svelte";
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
@@ -152,19 +151,6 @@ Board button
 <div class={fr}>
     {#each boardButtonStates as state}
         <WorkspaceBoardIcon {state} on:click={console.log} />
-    {/each}
-</div>
-
-Avatar with hover
-<div class={fr}>
-    {#each users as user}
-        <div class={fc}>
-            {user ? user.email : "No user"}
-            <UserAccount
-                {user}
-                on:click={() => console.log("UserAccount", user)}
-            />
-        </div>
     {/each}
 </div>
 
