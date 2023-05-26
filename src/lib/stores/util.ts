@@ -1,8 +1,11 @@
+import Fuse from "fuse.js";
+
 import { derived, readonly, writable } from "svelte/store";
 import type { Readable, Writable } from "svelte/store";
 import { browser } from "$app/environment";
 import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
 import type { SubscriptionType } from "$lib/types/stores";
+import { fuseSearchThreshold } from "$lib/config";
 
 export function internallyWritable<T>(theThing: T): {
     pub: Readable<T>;
@@ -67,4 +70,19 @@ export function createWsStore<T>(
     return {
         subscribe,
     };
+}
+
+export function searchAmong<T>(
+    keys: (keyof T & string)[],
+    things: T[],
+    searchText: string
+): T[] {
+    const searchEngine = new Fuse<T>(things, {
+        keys: keys,
+        threshold: fuseSearchThreshold,
+    });
+
+    return searchEngine
+        .search(searchText)
+        .map((res: Fuse.FuseResult<T>) => res.item);
 }

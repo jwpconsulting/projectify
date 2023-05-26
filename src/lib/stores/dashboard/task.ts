@@ -1,4 +1,3 @@
-import Fuse from "fuse.js";
 import lodash from "lodash";
 import { get, derived, writable } from "svelte/store";
 import type { Readable } from "svelte/store";
@@ -8,9 +7,8 @@ import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard/workspaceBoard"
 import { selectWorkspaceUser } from "$lib/stores/dashboard/workspaceUser";
 
 import { selectedLabels } from "$lib/stores/dashboard/label";
-import { fuseSearchThreshold } from "$lib/config";
 import { getTask } from "$lib/repository/workspace";
-import { createWsStore } from "$lib/stores/util";
+import { createWsStore, searchAmong } from "$lib/stores/util";
 
 export const taskSearchInput = writable<string>("");
 export const currentTaskUuid = writable<string | null>(null);
@@ -57,14 +55,7 @@ export function searchTasks(
         sections.map((section) => (section.tasks ? section.tasks : []))
     );
 
-    const searchEngine = new Fuse<Task>(tasks, {
-        keys: ["title"],
-        threshold: fuseSearchThreshold,
-    });
-
-    return searchEngine
-        .search(searchText)
-        .map((res: Fuse.FuseResult<Task>) => res.item);
+    return searchAmong<Task>(["title"], tasks, searchText);
 }
 
 export const currentTask = createWsStore<Task>(
