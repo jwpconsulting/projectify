@@ -75,14 +75,10 @@ export const login = async (
 };
 
 export const logout = async () => {
-    try {
-        await client.mutate({
-            mutation: Mutation_Logout,
-        });
-        await client.resetStore();
-    } catch (error) {
-        console.error(error);
-    }
+    await client.mutate({
+        mutation: Mutation_Logout,
+    });
+    await client.resetStore();
     user.set(null);
     userIsLoading.set(false);
 };
