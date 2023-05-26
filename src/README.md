@@ -184,3 +184,43 @@ export const Mobile: Story = {
     parameters: mobileParameters,
 };
 ```
+
+## Using typed stories
+
+Convert this
+
+```typescript
+export default {
+  component: Component,
+};
+```
+
+into
+
+```typescript
+import type { Meta, StoryObj } from "@storybook/svelte";
+const meta: Meta<ComponentName> = {
+  component: ComponentName,
+  argTypes: {},
+  args: {},
+};
+export default meta;
+```
+
+Then, for each story:
+
+```typescript
+export const StoryName = () => ({
+  Component: ComponentName,
+});
+```
+
+becomes
+
+```typescript
+type Story = StoryObj<ComponentName>;
+
+export const StoryName: Story = {
+  args: {},
+};
+```

@@ -1,17 +1,18 @@
+import type { Meta, StoryObj } from "@storybook/svelte";
+
 import Access from "$lib/figma/navigation/header/Access.svelte";
 import { mobileParameters } from "$lib/storybook";
 
-const component = Access;
-
-export default {
+const meta: Meta<Access> = {
     component: Access,
+    argTypes: {},
+    args: {},
 };
+export default meta;
 
-export const Default = () => ({
-    Component: Access,
-});
+type Story = StoryObj<Access>;
 
-export const Mobile = () => ({
-    Component: component,
-});
-Mobile.parameters = mobileParameters;
+export const Desktop: Story = {};
+export const Mobile: Story = {
+    parameters: mobileParameters,
+};
