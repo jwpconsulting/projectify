@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Task } from "$lib/types/workspace";
-    import WorkspaceUserAvatar from "$lib/components/WorkspaceUserAvatar.svelte";
+    import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
 
     export let task: Task;
 
@@ -18,12 +18,15 @@
 </script>
 
 {#if task.assignee}
-    <WorkspaceUserAvatar size={24} workspaceUser={task.assignee} />
+    <AvatarVariant
+        content={{ kind: "single", user: task.assignee.user }}
+        size="small"
+    />
 {:else}
     <button
         bind:this={userPickerBtnRef}
         on:click|stopPropagation={() => openUserPicker()}
     >
-        <WorkspaceUserAvatar workspaceUser={"assign"} size={24} />
+        <AvatarVariant content={{ kind: "single", user: null }} size="small" />
     </button>
 {/if}
