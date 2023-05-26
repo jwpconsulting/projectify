@@ -1,17 +1,18 @@
+import type { Meta, StoryObj } from "@storybook/svelte";
+
 import Search from "$lib/figma/navigation/header/Search.svelte";
 import { mobileParameters } from "$lib/storybook";
 
-const component = Search;
-
-export default {
-    component,
+const meta: Meta<Search> = {
+    component: Search,
+    argTypes: {},
+    args: {},
 };
+export default meta;
 
-export const Default = () => ({
-    Component: component,
-});
+type Story = StoryObj<Search>;
 
-export const Mobile = () => ({
-    Component: component,
-});
-Mobile.parameters = mobileParameters;
+export const Desktop: Story = {};
+export const Mobile: Story = {
+    parameters: mobileParameters,
+};

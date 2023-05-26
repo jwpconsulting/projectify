@@ -1,14 +1,14 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import Header from "$lib/figma/navigation/header/Header.svelte";
+    import HeaderUniversal from "$lib/figma/navigation/header/HeaderUniversal.svelte";
     import InputField from "$lib/figma/input-fields/InputField.svelte";
 </script>
 
-<Header logoVisible={false} alwaysVisible>
+<HeaderUniversal alwaysVisible>
     <InputField
-        slot="center"
+        slot="desktop-center"
         style={{ kind: "search" }}
         placeholder={$_("dashboard.search-task")}
         name="search"
     />
-</Header>
+</HeaderUniversal>
