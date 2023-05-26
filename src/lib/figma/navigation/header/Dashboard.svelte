@@ -1,6 +1,5 @@
 <script lang="ts">
-    import Header from "$lib/figma/navigation/header/Header.svelte";
-    import HeaderMobile from "$lib/figma/navigation/header/HeaderMobile.svelte";
+    import HeaderUniversal from "$lib/figma/navigation/header/HeaderUniversal.svelte";
     import NotificationButton from "$lib/figma/buttons/NotificationButton.svelte";
     import UserAccount from "$lib/figma/buttons/UserAccount.svelte";
     import SearchButton from "$lib/figma/buttons/SearchButton.svelte";
@@ -11,8 +10,8 @@
     export let user: User;
 </script>
 
-<Header logoVisible>
-    <slot slot="right">
+<HeaderUniversal logoVisibleDesktop>
+    <slot slot="desktop-right">
         <SearchButton />
         <div class="flex flex-row gap-4">
             <a href="/notifications">
@@ -21,18 +20,17 @@
             <UserAccount {user} />
         </div>
     </slot>
-</Header>
+    <slot slot="mobile">
+        <div class="flex flex-row gap-4">
+            <HamburgerMenu isActive />
+            <SearchMobile />
+        </div>
 
-<HeaderMobile logoVisible={false}>
-    <div class="flex flex-row gap-4">
-        <HamburgerMenu isActive />
-        <SearchMobile />
-    </div>
-
-    <div class="flex flex-row gap-4">
-        <a href="/notifications">
-            <NotificationButton isActive />
-        </a>
-        <UserAccount {user} />
-    </div>
-</HeaderMobile>
+        <div class="flex flex-row gap-4">
+            <a href="/notifications">
+                <NotificationButton isActive />
+            </a>
+            <UserAccount {user} />
+        </div>
+    </slot>
+</HeaderUniversal>

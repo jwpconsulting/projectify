@@ -170,3 +170,17 @@ Let's create a medium-sized, blue primary Button with the label "Click me".
     disabled={false}
 />
 ```
+
+# Stories
+
+## Simulate mobile screen
+
+In a stories.ts file, add the following:
+
+```
+import { mobileParameters } from "$lib/storybook";
+
+export const Mobile: Story = {
+    parameters: mobileParameters,
+};
+```
