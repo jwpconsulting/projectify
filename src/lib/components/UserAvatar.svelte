@@ -5,7 +5,7 @@
     export let user: User;
     export let size: number;
     const profilePicture = user.profile_picture;
-    const name = user.full_name || user.email;
+    const name = `${user.email}${user.full_name || user.email}`;
 </script>
 
 {#if profilePicture}
@@ -15,5 +15,5 @@
         class="h-full w-full rounded-full object-cover object-center"
     />
 {:else}
-    <Avatar {size} name={`${user.email}${name}`} />
+    <Avatar {size} {name} />
 {/if}
