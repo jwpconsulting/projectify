@@ -1,9 +1,7 @@
 import { derived, writable } from "svelte/store";
-import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
+import { createWsStore } from "$lib/stores/util";
 import type { Workspace } from "$lib/types/workspace";
-import { browser } from "$app/environment";
 import { getWorkspace, getWorkspaces } from "$lib/repository/workspace";
-import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
 
 import { currentWorkspaceBoard } from "$lib/stores/dashboard/workspaceBoard";
 
@@ -11,49 +9,10 @@ export const workspaces = writable<Workspace[] | null>(null);
 
 export const currentWorkspaceUuid = writable<string | null>(null);
 
-let currentWorkspaceSubscription: WSSubscriptionStore | null = null;
-let currentWorkspaceSubscriptionUnsubscribe: (() => void) | null = null;
-
-export const currentWorkspace = derived<
-    [typeof currentWorkspaceUuid],
-    Workspace | null
->(
-    [currentWorkspaceUuid],
-    ([$currentWorkspaceUuid], set) => {
-        if (!browser) {
-            set(null);
-            return;
-        }
-        if (!$currentWorkspaceUuid) {
-            set(null);
-            return;
-        }
-        set(null);
-        getWorkspace($currentWorkspaceUuid)
-            .then((workspace) => set(workspace))
-            .catch((error: Error) => {
-                console.error(
-                    "An error happened when fetching $currentWorkspace",
-                    { error }
-                );
-            });
-        if (currentWorkspaceSubscriptionUnsubscribe) {
-            currentWorkspaceSubscriptionUnsubscribe();
-        }
-        currentWorkspaceSubscription = getSubscriptionForCollection(
-            "workspace",
-            $currentWorkspaceUuid
-        );
-        if (!currentWorkspaceSubscription) {
-            throw new Error("Expected currentWorkspaceSubscription");
-        }
-        currentWorkspaceSubscriptionUnsubscribe =
-            currentWorkspaceSubscription.subscribe(async (_value) => {
-                console.log("Refetching workspace", $currentWorkspaceUuid);
-                set(await getWorkspace($currentWorkspaceUuid));
-            });
-    },
-    null
+export const currentWorkspace = createWsStore<Workspace>(
+    "workspace",
+    currentWorkspaceUuid,
+    getWorkspace
 );
 
 const ensureWorkspaceUuid = derived<
