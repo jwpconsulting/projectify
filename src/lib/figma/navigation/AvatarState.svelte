@@ -12,12 +12,15 @@
         small: "h-6 w-6",
         hoverable: "h-6 w-6 group-hover:h-8 group-hover:w-8",
     }[size];
-    $: innerSize = {
+    type Size = 24 | 32 | 92;
+    let innerSize: Size;
+    const sizes: Record<AvatarStateSize, Size> = {
         large: 92,
         medium: 32,
         small: 24,
         hoverable: 32,
-    }[size];
+    } as const;
+    $: innerSize = sizes[size];
 </script>
 
 <div
