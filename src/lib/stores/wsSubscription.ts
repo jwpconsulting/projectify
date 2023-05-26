@@ -3,10 +3,17 @@ import type { Unsubscriber, Subscriber } from "svelte/store";
 import { writable } from "svelte/store";
 import { browser } from "$app/environment";
 
+interface Message {
+    type: string;
+    uuid: string;
+    data: unknown;
+}
+
 interface WSMessage {
-    message: string;
+    message: Message;
     at: number;
 }
+
 type WSSubscriber = Subscriber<WSMessage>;
 
 const wsSubscriptionStores = new Map<string, WSSubscriptionStore>();
@@ -21,10 +28,8 @@ function makeWsSubscriptionStore(url: string): WSSubscriptionStore {
     const subscribers = new Map<number, WSSubscriber>();
     let nextSubscriberId = 0;
 
-    const message = ({
-        data: message,
-        timeStamp: at,
-    }: MessageEvent<string>) => {
+    const message = ({ data, timeStamp: at }: MessageEvent<string>) => {
+        const message: Message = JSON.parse(data) as Message;
         subscribers.forEach((subscriber) => subscriber({ message, at }));
     };
 

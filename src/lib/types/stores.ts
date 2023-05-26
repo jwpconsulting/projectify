@@ -110,3 +110,10 @@ export interface MoveTaskModule {
         workspaceBoardSection: WorkspaceBoardSection
     ) => Promise<void>;
 }
+
+export const subscriptionTypes = [
+    "workspace",
+    "workspace-board",
+    "task",
+] as const;
+export type SubscriptionType = (typeof subscriptionTypes)[number];

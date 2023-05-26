@@ -2,6 +2,7 @@ import { derived, readonly, writable } from "svelte/store";
 import type { Readable, Writable } from "svelte/store";
 import { browser } from "$app/environment";
 import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
+import type { SubscriptionType } from "$lib/types/stores";
 
 export function internallyWritable<T>(theThing: T): {
     pub: Readable<T>;
@@ -17,14 +18,15 @@ export function internallyWritable<T>(theThing: T): {
 
 type Unsubscriber = () => void;
 
-type UuidStore = Readable<string>;
+type MaybeUuid = string | null;
+type UuidStore = Readable<MaybeUuid>;
 
 export function createWsStore<T>(
-    collection: "workspace" | "workspace-board" | "task",
+    collection: SubscriptionType,
     uuidReadable: UuidStore,
     getter: (uuid: string) => Promise<T>
 ): Readable<T | null> {
-    const derive = ($uuidReadable: string, set: (t: T) => void) => {
+    const derive = ($uuidReadable: MaybeUuid, set: (t: T) => void) => {
         if (!browser) {
             return;
         }
@@ -46,9 +48,10 @@ export function createWsStore<T>(
             throw new Error("Expected subscription");
         }
         const unsubscriber: Unsubscriber = subscription.subscribe(
-            async (_value): Promise<void> => {
-                console.log("Refetching thing", $uuidReadable);
-                set(await getter($uuidReadable));
+            ({ message }): void => {
+                const thing: T = message.data as T;
+                console.log("The thing is now", thing);
+                set(thing);
             }
         );
         // Supposedly, return this function will allow svelte/store
