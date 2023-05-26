@@ -235,9 +235,12 @@ export async function getWorkspaceBoardSection(
     );
 }
 
-export async function getWorkspaces(): Promise<Workspace[]> {
+export async function getWorkspaces(
+    repositoryContext?: RepositoryContext
+): Promise<Workspace[]> {
     return await getWithCredentialsJson<Workspace[]>(
-        `/workspace/user/workspaces/`
+        `/workspace/user/workspaces/`,
+        repositoryContext
     );
 }
 
