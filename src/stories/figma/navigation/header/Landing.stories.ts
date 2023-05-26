@@ -1,15 +1,18 @@
+import type { Meta, StoryObj } from "@storybook/svelte";
+
 import Landing from "$lib/figma/navigation/header/Landing.svelte";
 import { mobileParameters } from "$lib/storybook";
 
-export default {
+const meta: Meta<Landing> = {
     component: Landing,
+    argTypes: {},
+    args: {},
 };
+export default meta;
 
-export const Default = () => ({
-    Component: Landing,
-});
+type Story = StoryObj<Landing>;
 
-export const Mobile = () => ({
-    Component: Landing,
-});
-Mobile.parameters = mobileParameters;
+export const Desktop: Story = {};
+export const Mobile: Story = {
+    parameters: mobileParameters,
+};
