@@ -1,17 +1,18 @@
+import type { Meta, StoryObj } from "@storybook/svelte";
+
 import Continue from "$lib/figma/navigation/header/Continue.svelte";
 import { mobileParameters } from "$lib/storybook";
 
-const component = Continue;
-
-export default {
-    component,
+const meta: Meta<Continue> = {
+    component: Continue,
+    argTypes: {},
+    args: {},
 };
+export default meta;
 
-export const Default = () => ({
-    Component: component,
-});
+type Story = StoryObj<Continue>;
 
-export const Mobile = () => ({
-    Component: component,
-});
-Mobile.parameters = mobileParameters;
+export const Desktop: Story = {};
+export const Mobile: Story = {
+    parameters: mobileParameters,
+};

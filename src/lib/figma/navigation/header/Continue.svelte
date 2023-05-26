@@ -1,13 +1,12 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import Header from "$lib/figma/navigation/header/Header.svelte";
-    import HeaderMobile from "$lib/figma/navigation/header/HeaderMobile.svelte";
+    import HeaderUniversal from "$lib/figma/navigation/header/HeaderUniversal.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import HamburgerMenu from "$lib/figma/buttons/HamburgerMenu.svelte";
 </script>
 
-<Header logoVisible>
-    <slot slot="left">
+<HeaderUniversal logoVisibleDesktop logoVisibleMobile>
+    <slot slot="desktop-left">
         <div class="flex flex-row gap-4">
             <Button
                 style={{ kind: "tertiary", icon: null }}
@@ -48,7 +47,7 @@
             </a>
         </div>
     </slot>
-    <slot slot="right">
+    <slot slot="desktop-right">
         <a href="/dashboard">
             <Button
                 style={{ kind: "primary" }}
@@ -59,8 +58,5 @@
             />
         </a>
     </slot>
-</Header>
-
-<HeaderMobile logoVisible>
-    <HamburgerMenu isActive />
-</HeaderMobile>
+    <HamburgerMenu slot="mobile" isActive />
+</HeaderUniversal>
