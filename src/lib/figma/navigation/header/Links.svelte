@@ -1,26 +1,20 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import Button from "$lib/funabashi/buttons/Button.svelte";
+    import HeaderButton from "$lib/funabashi/buttons/HeaderButton.svelte";
 </script>
 
-<Button
-    style={{ kind: "tertiary", icon: null }}
-    color="blue"
-    disabled={false}
-    size="medium"
+<HeaderButton
+    type={{ kind: "button" }}
     label={$_("header.features")}
     action={{ kind: "a", href: "/features" }}
 />
-<Button
-    style={{ kind: "tertiary", icon: null }}
-    color="blue"
-    disabled={false}
-    size="medium"
+<HeaderButton
+    type={{ kind: "button" }}
     label={$_("header.solutions")}
     action={{ kind: "a", href: "/solutions" }}
 />
 <!-- what is this?
-<Button
+<HeaderButton
     style={{ kind: "tertiary", icon: null }}
     color="blue"
     disabled={false}
@@ -30,7 +24,7 @@
 />
 -->
 <!-- what is this?
-<Button
+<HeaderButton
     style={{ kind: "tertiary", icon: null }}
     color="blue"
     disabled={false}
@@ -39,11 +33,8 @@
     action={{ kind: "a", href: "/company" }}
 />
 -->
-<Button
-    style={{ kind: "tertiary", icon: null }}
-    color="blue"
-    disabled={false}
-    size="medium"
+<HeaderButton
+    type={{ kind: "button" }}
     label={$_("header.pricing")}
     action={{ kind: "a", href: "/pricing" }}
 />

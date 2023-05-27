@@ -257,3 +257,42 @@ export const createMoveTaskModule = (
         moveToWorkspaceBoardSection: noopAsync,
     };
 };
+
+type ArgTypeOption<T> = Record<string, T>;
+
+interface ArgType<T> {
+    defaultValue: string;
+    options: string[];
+    mapping: Record<string, T>;
+    control: {
+        type: "radio";
+        labels: Record<string, string>;
+    };
+}
+
+function slugify(t: string): string {
+    // https://stackoverflow.com/a/1054862
+    return t
+        .toLowerCase()
+        .replace(/ /g, "-")
+        .replace(/[^\w-]+/g, "");
+}
+
+export function makeStorybookSelect<T>(choices: ArgTypeOption<T>): ArgType<T> {
+    const labels = Object.fromEntries(
+        Object.entries(choices).map(([k, _v]) => [slugify(k), k])
+    );
+    const options = Object.keys(labels);
+    const mapping = Object.fromEntries(
+        Object.entries(choices).map(([k, v]) => [slugify(k), v])
+    );
+    return {
+        defaultValue: options[0],
+        options,
+        mapping,
+        control: {
+            type: "radio",
+            labels,
+        },
+    };
+}

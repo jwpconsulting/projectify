@@ -52,5 +52,11 @@ export const squovalStates = ["inactive", "disabled", "active"] as const;
 export type SquovalState = (typeof squovalStates)[number];
 
 // For buttons/HeaderButton.svelte
-export const headerButtonTypes = ["dropdown", "button"] as const;
-export type HeaderButtonType = (typeof headerButtonTypes)[number];
+export type HeaderButtonType =
+    | { kind: "dropdown"; open: boolean }
+    | { kind: "button" };
+export const headerButtonTypes: HeaderButtonType[] = [
+    { kind: "dropdown", open: false },
+    { kind: "dropdown", open: true },
+    { kind: "button" },
+];
