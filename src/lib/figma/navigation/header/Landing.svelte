@@ -3,48 +3,13 @@
     import HamburgerMenu from "$lib/figma/buttons/HamburgerMenu.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import HeaderUniversal from "$lib/figma/navigation/header/HeaderUniversal.svelte";
+    import Links from "$lib/figma/navigation/header/Links.svelte";
 </script>
 
 <HeaderUniversal logoVisibleDesktop logoVisibleMobile>
     <slot slot="desktop-left">
         <div class="flex flex-row gap-4">
-            <Button
-                style={{ kind: "tertiary", icon: null }}
-                color="blue"
-                disabled={false}
-                size="medium"
-                label={$_("header.features")}
-            />
-            <Button
-                style={{ kind: "tertiary", icon: null }}
-                color="blue"
-                disabled={false}
-                size="medium"
-                label={$_("header.solutions")}
-            />
-            <Button
-                style={{ kind: "tertiary", icon: null }}
-                color="blue"
-                disabled={false}
-                size="medium"
-                label={$_("header.resources")}
-            />
-            <Button
-                style={{ kind: "tertiary", icon: null }}
-                color="blue"
-                disabled={false}
-                size="medium"
-                label={$_("header.company")}
-            />
-            <a href="/pricing">
-                <Button
-                    style={{ kind: "tertiary", icon: null }}
-                    color="blue"
-                    disabled={false}
-                    size="medium"
-                    label={$_("header.pricing")}
-                />
-            </a>
+            <Links />
         </div>
     </slot>
     <slot slot="desktop-right">
