@@ -38,11 +38,6 @@ export interface LabelSearchModule {
     createLabel: (color: number, name: string) => Promise<void>;
 }
 
-export interface WorkspaceBoardSectionModule {
-    switchWithPrevSection?: () => Promise<void>;
-    switchWithNextSection?: () => Promise<void>;
-}
-
 // XXX
 // This is a mess!
 // this contains whatever is shared between creating / updating tasks

@@ -11,7 +11,6 @@ import type {
     WorkspaceUser,
 } from "$lib/types/workspace";
 import type {
-    WorkspaceBoardSectionModule,
     WorkspaceUserSearchModule,
     LabelSearchModule,
     MoveTaskModule,
@@ -103,8 +102,8 @@ export type ContextMenuType =
     | { kind: "workspaceBoard"; workspaceBoard: WorkspaceBoard }
     | {
           kind: "workspaceBoardSection";
+          workspaceBoard: WorkspaceBoard;
           workspaceBoardSection: WorkspaceBoardSection;
-          workspaceBoardSectionModule: WorkspaceBoardSectionModule;
       }
     | {
           kind: "task";

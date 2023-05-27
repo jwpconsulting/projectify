@@ -1,14 +1,17 @@
 <script lang="ts">
     import TaskCard from "$lib/figma/cards/TaskCard.svelte";
     import SectionTitle from "$lib/figma/cards/section-bar/SectionTitle.svelte";
-    import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
+    import type {
+        Task,
+        WorkspaceBoard,
+        WorkspaceBoardSection,
+    } from "$lib/types/workspace";
     import type { createMoveTaskModule as _createMoveTaskModule } from "$lib/stores/modules";
-    import type { WorkspaceBoardSectionModule } from "$lib/types/stores";
 
     import { workspaceBoardSectionClosed } from "$lib/stores/dashboard";
 
+    export let workspaceBoard: WorkspaceBoard;
     export let workspaceBoardSection: WorkspaceBoardSection;
-    export let workspaceBoardSectionModule: WorkspaceBoardSectionModule;
 
     const { uuid } = workspaceBoardSection;
     $: open = !$workspaceBoardSectionClosed.has(uuid);
@@ -20,11 +23,7 @@
 </script>
 
 <div class="flex flex-col">
-    <SectionTitle
-        {workspaceBoardSection}
-        {open}
-        {workspaceBoardSectionModule}
-    />
+    <SectionTitle {workspaceBoard} {workspaceBoardSection} {open} />
     {#if tasks.length}
         <main class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4">
             {#each tasks as task, inx (task.uuid)}

@@ -4,8 +4,8 @@ import SectionTitle from "$lib/figma/cards/section-bar/SectionTitle.svelte";
 
 import {
     mobileParameters,
+    workspaceBoard,
     workspaceBoardSection,
-    workspaceBoardSectionModule,
 } from "$lib/storybook";
 
 const meta: Meta<SectionTitle> = {
@@ -16,8 +16,8 @@ const meta: Meta<SectionTitle> = {
         },
     },
     args: {
+        workspaceBoard,
         workspaceBoardSection,
-        workspaceBoardSectionModule,
         open: true,
     },
 };

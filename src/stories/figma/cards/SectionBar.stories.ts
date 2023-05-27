@@ -5,16 +5,16 @@ import SectionBar from "$lib/figma/cards/SectionBar.svelte";
 import {
     createMoveTaskModule,
     mobileParameters,
+    workspaceBoard,
     workspaceBoardSection,
-    workspaceBoardSectionModule,
 } from "$lib/storybook";
 
 const meta: Meta<SectionBar> = {
     component: SectionBar,
     argTypes: {},
     args: {
+        workspaceBoard,
         workspaceBoardSection,
-        workspaceBoardSectionModule,
         createMoveTaskModule,
     },
 };

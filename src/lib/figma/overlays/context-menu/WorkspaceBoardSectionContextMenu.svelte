@@ -10,26 +10,73 @@
         X,
     } from "@steeze-ui/heroicons";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
-    import type { WorkspaceBoardSection } from "$lib/types/workspace";
+    import type {
+        WorkspaceBoard,
+        WorkspaceBoardSection,
+    } from "$lib/types/workspace";
     // TODO make injectable
-    import type { WorkspaceBoardSectionModule } from "$lib/types/stores";
     import {
         toggleWorkspaceBoardSectionOpen,
         workspaceBoardSectionClosed,
     } from "$lib/stores/dashboard";
+    import { moveWorkspaceBoardSection } from "$lib/repository/workspace";
 
+    export let workspaceBoard: WorkspaceBoard;
     export let workspaceBoardSection: WorkspaceBoardSection;
-    export let workspaceBoardSectionModule: WorkspaceBoardSectionModule;
-
-    let { switchWithPrevSection, switchWithNextSection } =
-        workspaceBoardSectionModule;
 
     let closed: boolean;
     $: {
         closed = $workspaceBoardSectionClosed.has(workspaceBoardSection.uuid);
     }
 
+    let workspaceBoardSections: WorkspaceBoardSection[] = [];
+    $: workspaceBoardSections = workspaceBoard.workspace_board_sections ?? [];
+
     // TODO this might have to be refactored to check if previous or next section exists
+
+    let sectionIndex: number | undefined;
+    let previousIndex: number | undefined;
+    let nextIndex: number | undefined;
+    let previousSection: WorkspaceBoardSection | undefined;
+    let nextSection: WorkspaceBoardSection | undefined;
+
+    $: {
+        sectionIndex = workspaceBoardSections.findIndex(
+            (s: WorkspaceBoardSection) => s.uuid == workspaceBoardSection.uuid
+        );
+        previousIndex = sectionIndex > 0 ? sectionIndex - 1 : undefined;
+        nextIndex =
+            sectionIndex < workspaceBoardSections.length - 1
+                ? sectionIndex + 1
+                : undefined;
+        previousSection =
+            previousIndex !== undefined
+                ? workspaceBoardSections[previousIndex]
+                : undefined;
+        nextSection =
+            nextIndex !== undefined
+                ? workspaceBoardSections[nextIndex]
+                : undefined;
+    }
+
+    async function switchWithPreviousSection() {
+        if (!previousSection) {
+            throw new Error("Expected previousSection");
+        }
+        await moveWorkspaceBoardSection(
+            workspaceBoardSection,
+            previousSection._order
+        );
+    }
+    async function switchWithNextSection() {
+        if (!nextSection) {
+            throw new Error("Expected nextSection");
+        }
+        await moveWorkspaceBoardSection(
+            workspaceBoardSection,
+            nextSection._order
+        );
+    }
 </script>
 
 <ContextMenuButton
@@ -46,22 +93,22 @@
     state="normal"
     icon={closed ? Selector : X}
 />
-{#if switchWithPrevSection}
+{#if previousSection}
     <ContextMenuButton
         kind={{
             kind: "button",
-            action: switchWithPrevSection.bind(null, workspaceBoardSection),
+            action: switchWithPreviousSection,
         }}
         label={$_("workspace-board-section-overlay.switch-previous")}
         state="normal"
         icon={ArrowUp}
     />
 {/if}
-{#if switchWithNextSection}
+{#if nextSection}
     <ContextMenuButton
         kind={{
             kind: "button",
-            action: switchWithNextSection.bind(null, workspaceBoardSection),
+            action: switchWithNextSection,
         }}
         label={$_("workspace-board-section-overlay.switch-next")}
         state="normal"

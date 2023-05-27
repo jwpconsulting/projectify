@@ -4,18 +4,20 @@
     import { openContextMenu } from "$lib/stores/globalUi";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
 
-    import type { WorkspaceBoardSection } from "$lib/types/workspace";
+    import type {
+        WorkspaceBoard,
+        WorkspaceBoardSection,
+    } from "$lib/types/workspace";
     import { getNewTaskUrl } from "$lib/urls";
     import type { ContextMenuType } from "$lib/types/ui";
-    import type { WorkspaceBoardSectionModule } from "$lib/types/stores";
     import { toggleWorkspaceBoardSectionOpen } from "$lib/stores/dashboard";
 
+    export let workspaceBoard: WorkspaceBoard;
     export let workspaceBoardSection: WorkspaceBoardSection;
-    export let workspaceBoardSectionModule: WorkspaceBoardSectionModule;
     export let open: boolean;
 
     const { uuid } = workspaceBoardSection;
-    const toggleOpen = toggleWorkspaceBoardSectionOpen.bind(null, uuid);
+    $: toggleOpen = toggleWorkspaceBoardSectionOpen.bind(null, uuid);
     let dropDownMenuBtnRef: HTMLElement;
 
     function openDropDownMenu() {
@@ -23,8 +25,8 @@
         console.log("Need to open drop down menu at", dropDownMenuBtnRef);
         const contextMenuType: ContextMenuType = {
             kind: "workspaceBoardSection",
+            workspaceBoard,
             workspaceBoardSection,
-            workspaceBoardSectionModule,
         };
         openContextMenu(contextMenuType, dropDownMenuBtnRef);
     }

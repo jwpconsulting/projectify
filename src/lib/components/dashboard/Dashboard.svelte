@@ -9,10 +9,7 @@
 
     import TaskCard from "$lib/figma/cards/TaskCard.svelte";
     import type { WorkspaceBoard } from "$lib/types/workspace";
-    import {
-        createMoveTaskModule,
-        createWorkspaceBoardSectionModule,
-    } from "$lib/stores/modules";
+    import { createMoveTaskModule } from "$lib/stores/modules";
 
     import FloatingActionButton from "$lib/figma/buttons/FloatingActionButton.svelte";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
@@ -61,12 +58,9 @@
         <div class="flex grow flex-col gap-16 overflow-y-auto p-2">
             {#each $currentWorkspaceBoardSections as workspaceBoardSection (workspaceBoardSection.uuid)}
                 <SectionBar
+                    {workspaceBoard}
                     {workspaceBoardSection}
                     {createMoveTaskModule}
-                    workspaceBoardSectionModule={createWorkspaceBoardSectionModule(
-                        $currentWorkspaceBoardSections,
-                        workspaceBoardSection
-                    )}
                 />
             {/each}
         </div>

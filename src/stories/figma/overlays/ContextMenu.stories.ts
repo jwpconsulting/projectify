@@ -8,7 +8,6 @@ import {
     workspace,
     workspaceBoard,
     workspaceBoardSection,
-    workspaceBoardSectionModule,
     workspaceUserSearchModule,
     labelSearchModule,
     moveTaskModule,
@@ -31,8 +30,8 @@ const contextMenus: Record<string, ContextMenuType> = {
     },
     workspaceBoardSection: {
         kind: "workspaceBoardSection" as const,
+        workspaceBoard,
         workspaceBoardSection,
-        workspaceBoardSectionModule,
     },
     taskDashboard: {
         kind: "task" as const,

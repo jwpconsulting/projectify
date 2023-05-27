@@ -19,7 +19,6 @@ import type {
     LabelSearchModule,
     MoveTaskModule,
     TaskModule,
-    WorkspaceBoardSectionModule,
     WorkspaceUserSearchModule,
 } from "$lib/types/stores";
 
@@ -206,11 +205,6 @@ export const labelSearchModule: LabelSearchModule = {
         await new Promise((resolve) => resolve(null));
         console.log("Creating label with color", c, "and name", n);
     },
-};
-
-export const workspaceBoardSectionModule: WorkspaceBoardSectionModule = {
-    switchWithPrevSection: noopAsync,
-    switchWithNextSection: noopAsync,
 };
 
 export const createTaskModule: CreateTaskModule = {
