@@ -9,7 +9,6 @@
 
     import type {
         LabelSearchModule,
-        WorkspaceBoardSearchModule,
         WorkspaceUserSearchModule,
     } from "$lib/types/stores";
     import LabelDropdownClosedNav from "$lib/figma/buttons/LabelDropdownClosedNav.svelte";
@@ -21,7 +20,6 @@
     import { sideNavOpen } from "$lib/stores/dashboard";
 
     export let workspace: Workspace;
-    export let workspaceBoardSearchModule: WorkspaceBoardSearchModule;
     export let workspaceUserSearchModule: WorkspaceUserSearchModule;
     export let labelSearchModule: LabelSearchModule;
 
@@ -56,7 +54,7 @@
     <nav class="flex h-full w-72 shrink-0 flex-col bg-base-100 py-4 pr-px">
         <WorkspaceMenu {showWorkspaceContextMenu} {showSideNavContextMenu} />
         <div class="flex flex-col overflow-x-auto overflow-y-scroll">
-            <Boards {workspaceBoardSearchModule} />
+            <Boards />
             <Members {workspaceUserSearchModule} />
             <LabelDropdown {labelSearchModule} />
         </div>

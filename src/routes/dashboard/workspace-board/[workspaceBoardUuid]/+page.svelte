@@ -6,7 +6,6 @@
 
     import type {
         LabelSearchModule,
-        WorkspaceBoardSearchModule,
         WorkspaceUserSearchModule,
     } from "$lib/types/stores";
 
@@ -35,9 +34,6 @@
     $: workspaceBoard = $currentWorkspaceBoard || workspaceBoard;
     $: workspace = $currentWorkspace || workspace;
 
-    const workspaceBoardSearchModule: WorkspaceBoardSearchModule = {
-        currentWorkspace,
-    };
     const workspaceUserSearchModule: WorkspaceUserSearchModule = {
         select: selectWorkspaceUser,
         deselect: deselectWorkspaceUser,
@@ -70,11 +66,6 @@
 </script>
 
 <div class="flex grow flex-row">
-    <SideNav
-        {workspace}
-        {workspaceBoardSearchModule}
-        {workspaceUserSearchModule}
-        {labelSearchModule}
-    />
+    <SideNav {workspace} {workspaceUserSearchModule} {labelSearchModule} />
     <Dashboard {workspaceBoard} />
 </div>

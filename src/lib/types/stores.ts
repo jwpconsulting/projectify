@@ -14,19 +14,12 @@ import type {
     Label,
     NewTask,
     Task,
-    Workspace,
     WorkspaceBoard,
     WorkspaceBoardSection,
     WorkspaceUser,
 } from "$lib/types/workspace";
 
 // It would make sense to rename all Module to Store
-
-// XXX I took the liberty of adding workspace board creation into here
-// Not sure if that is good Justus 2023-05-01
-export interface WorkspaceBoardSearchModule {
-    currentWorkspace: Readable<Workspace | null>;
-}
 
 export interface WorkspaceUserSearchModule {
     select: (selection: WorkspaceUserSelectionInput) => void;

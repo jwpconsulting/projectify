@@ -5,7 +5,6 @@ import SideNav from "$lib/figma/navigation/SideNav.svelte";
 import {
     labelSearchModule,
     mobileParameters,
-    workspaceBoardSearchModule,
     workspaceUserSearchModule,
 } from "$lib/storybook";
 
@@ -17,7 +16,6 @@ const meta: Meta<SideNav> = {
         },
     },
     args: {
-        workspaceBoardSearchModule,
         workspaceUserSearchModule,
         labelSearchModule,
         open: true,

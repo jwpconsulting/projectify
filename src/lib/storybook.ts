@@ -19,7 +19,6 @@ import type {
     LabelSearchModule,
     MoveTaskModule,
     TaskModule,
-    WorkspaceBoardSearchModule,
     WorkspaceBoardSectionModule,
     WorkspaceUserSearchModule,
 } from "$lib/types/stores";
@@ -186,10 +185,6 @@ const noop = console.error.bind(null, "noop");
 const noopAsync = async () => {
     await new Promise((resolve) => resolve(null));
     console.error("noopAsync");
-};
-
-export const workspaceBoardSearchModule: WorkspaceBoardSearchModule = {
-    currentWorkspace: readable(workspace),
 };
 
 export const workspaceUserSearchModule: WorkspaceUserSearchModule = {

@@ -5,13 +5,10 @@
     import Loading from "$lib/components/loading.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import SelectWorkspaceBoard from "$lib/figma/buttons/SelectWorkspaceBoard.svelte";
-    import type { WorkspaceBoardSearchModule } from "$lib/types/stores";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
 
-    export let workspaceBoardSearchModule: WorkspaceBoardSearchModule;
-
-    let { currentWorkspace } = workspaceBoardSearchModule;
+    import { currentWorkspace } from "$lib/stores/dashboard";
 
     let open = true;
 
