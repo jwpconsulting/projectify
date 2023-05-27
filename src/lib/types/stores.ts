@@ -10,11 +10,9 @@ import type {
 } from "$lib/types/ui";
 import type {
     CreateTask,
-    CreateWorkspaceBoardSection,
     Label,
     NewTask,
     Task,
-    WorkspaceBoard,
     WorkspaceBoardSection,
     WorkspaceUser,
 } from "$lib/types/workspace";
@@ -43,13 +41,6 @@ export interface LabelSearchModule {
 export interface WorkspaceBoardSectionModule {
     switchWithPrevSection?: () => Promise<void>;
     switchWithNextSection?: () => Promise<void>;
-}
-
-export interface NewWorkspaceBoardSectionModule {
-    createWorkspaceBoardSection: (
-        workspaceBoard: WorkspaceBoard,
-        workspaceBoardSection: CreateWorkspaceBoardSection
-    ) => void;
 }
 
 // XXX

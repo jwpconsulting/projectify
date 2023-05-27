@@ -10,13 +10,8 @@
     import NewWorkspace from "$lib/figma/overlays/constructive/NewWorkspace.svelte";
     import SkipOnboarding from "$lib/figma/overlays/constructive/SkipOnboarding.svelte";
     import RecoverWorkspaceBoard from "$lib/figma/overlays/constructive/RecoverWorkspaceBoard.svelte";
-    import type { NewWorkspaceBoardSectionModule } from "$lib/types/stores";
-    import { createWorkspaceBoardSection } from "$lib/repository/workspace";
 
     export let target: ConstructiveOverlayType;
-    const newWorkspaceBoardSectionModule: NewWorkspaceBoardSectionModule = {
-        createWorkspaceBoardSection,
-    };
     $: title = {
         updateWorkspaceBoard: $_("edit-workspace-board.title"),
         createWorkspaceBoard: $_("new-workspace-board.title"),
@@ -50,7 +45,6 @@
             <NewWorkspaceBoardSection
                 workspaceBoard={target.workspaceBoard}
                 {close}
-                {newWorkspaceBoardSectionModule}
             />
         {:else if target.kind === "createWorkspace"}
             <NewWorkspace />

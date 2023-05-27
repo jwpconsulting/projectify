@@ -4,18 +4,14 @@
         CreateWorkspaceBoardSection,
         WorkspaceBoard,
     } from "$lib/types/workspace";
-    import type { NewWorkspaceBoardSectionModule } from "$lib/types/stores";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/figma/input-fields/InputField.svelte";
+    import { createWorkspaceBoardSection } from "$lib/repository/workspace";
 
     export let workspaceBoard: WorkspaceBoard;
     export let close: () => void;
 
-    export let newWorkspaceBoardSectionModule: NewWorkspaceBoardSectionModule;
-
     let title: string;
-
-    let { createWorkspaceBoardSection } = newWorkspaceBoardSectionModule;
 
     function cancel() {
         close();
