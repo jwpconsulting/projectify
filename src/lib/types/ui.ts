@@ -13,7 +13,6 @@ import type {
 import type {
     SideNavModule,
     WorkspaceBoardSectionModule,
-    WorkspaceSearchModule,
     WorkspaceUserSearchModule,
     LabelSearchModule,
     MoveTaskModule,
@@ -100,7 +99,7 @@ export type DestructiveOverlayState = Overlay<
 
 export type ContextMenuType =
     | { kind: "profile" }
-    | { kind: "workspace"; workspaceSearchModule: WorkspaceSearchModule }
+    | { kind: "workspace" }
     | { kind: "sideNav"; workspace: Workspace; sideNavModule: SideNavModule }
     | { kind: "workspaceBoard"; workspaceBoard: WorkspaceBoard }
     | {

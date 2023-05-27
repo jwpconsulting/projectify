@@ -10,7 +10,6 @@
         LabelSearchModule,
         SideNavModule,
         WorkspaceBoardSearchModule,
-        WorkspaceSearchModule,
         WorkspaceUserSearchModule,
     } from "$lib/types/stores";
 
@@ -29,12 +28,10 @@
         selectWorkspaceUser,
         selectedLabels,
         selectedWorkspaceUser,
-        setWorkspaces,
         sideNavOpen,
         toggleSideNavOpen,
         workspaceUserSearch,
         workspaceUserSearchResults,
-        workspaces,
     } from "$lib/stores/dashboard";
 
     export let data: PageData;
@@ -43,12 +40,6 @@
 
     $: workspaceBoard = $currentWorkspaceBoard || workspaceBoard;
     $: workspace = $currentWorkspace || workspace;
-
-    const workspaceSearchModule: WorkspaceSearchModule = {
-        workspaces,
-        currentWorkspace,
-        setWorkspaces,
-    };
 
     const workspaceBoardSearchModule: WorkspaceBoardSearchModule = {
         currentWorkspace,
@@ -90,10 +81,7 @@
         sideNavOpen,
         toggleSideNavOpen,
         showWorkspaceContextMenu: (anchor: HTMLElement) => {
-            openContextMenu(
-                { kind: "workspace", workspaceSearchModule },
-                anchor
-            );
+            openContextMenu({ kind: "workspace" }, anchor);
         },
     };
 </script>

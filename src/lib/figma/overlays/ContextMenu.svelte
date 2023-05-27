@@ -20,9 +20,7 @@
     {#if target.kind === "profile"}
         <ProfileContextMenu />
     {:else if target.kind === "workspace"}
-        <WorkspaceContextMenu
-            workspaceSearchModule={target.workspaceSearchModule}
-        />
+        <WorkspaceContextMenu />
     {:else if target.kind === "sideNav"}
         <SideNavContextMenu
             workspace={target.workspace}

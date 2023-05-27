@@ -22,13 +22,6 @@ import type {
 
 // It would make sense to rename all Module to Store
 
-export interface WorkspaceSearchModule {
-    // TODO for a consistent API we would have workspaces as searchResults here
-    workspaces: Readable<Workspace[] | null>;
-    currentWorkspace: Readable<Workspace | null>;
-    setWorkspaces: () => Promise<void>;
-}
-
 // XXX I took the liberty of adding workspace board creation into here
 // Not sure if that is good Justus 2023-05-01
 export interface WorkspaceBoardSearchModule {

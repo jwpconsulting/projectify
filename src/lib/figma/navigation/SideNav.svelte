@@ -45,6 +45,12 @@
     function showSideNavContextMenu() {
         openContextMenu(sideNavContextMenuType, sideNavContextMenuAnchor);
     }
+
+    // TODO let workspaceContextMenuType: ContextMenuType;
+    // TODO $: workspaceContextMenuType = {
+    // TODO     kind: "workspace",
+    // TODO     workpsaceSearchModule,
+    // TODO }
 </script>
 
 {#if open}

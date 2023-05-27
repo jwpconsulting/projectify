@@ -22,7 +22,6 @@ import type {
     TaskModule,
     WorkspaceBoardSearchModule,
     WorkspaceBoardSectionModule,
-    WorkspaceSearchModule,
     WorkspaceUserSearchModule,
 } from "$lib/types/stores";
 
@@ -188,12 +187,6 @@ const noop = console.error.bind(null, "noop");
 const noopAsync = async () => {
     await new Promise((resolve) => resolve(null));
     console.error("noopAsync");
-};
-
-export const workspaceSearchModule: WorkspaceSearchModule = {
-    workspaces: readable([workspace]),
-    currentWorkspace: readable(workspace),
-    setWorkspaces: noopAsync,
 };
 
 export const workspaceBoardSearchModule: WorkspaceBoardSearchModule = {

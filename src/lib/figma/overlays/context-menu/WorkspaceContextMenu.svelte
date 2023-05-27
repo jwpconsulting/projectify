@@ -4,11 +4,7 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import { getDashboardWorkspaceUrl } from "$lib/urls";
     import Loading from "$lib/components/loading.svelte";
-    import type { WorkspaceSearchModule } from "$lib/types/stores";
-
-    export let workspaceSearchModule: WorkspaceSearchModule;
-
-    let { workspaces, setWorkspaces } = workspaceSearchModule;
+    import { workspaces, setWorkspaces } from "$lib/stores/dashboard";
 
     $: {
         // XXX this could be done in a more central location
