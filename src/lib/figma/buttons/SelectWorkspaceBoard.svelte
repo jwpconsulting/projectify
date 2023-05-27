@@ -5,14 +5,10 @@
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
-    import type { WorkspaceBoardSearchModule } from "$lib/types/stores";
-
     import { openContextMenu } from "$lib/stores/globalUi";
+    import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard";
 
-    export let workspaceBoardSearchModule: WorkspaceBoardSearchModule;
     export let workspaceBoard: WorkspaceBoard;
-
-    let { currentWorkspaceBoardUuid } = workspaceBoardSearchModule;
 
     let buttonRef: HTMLElement;
 

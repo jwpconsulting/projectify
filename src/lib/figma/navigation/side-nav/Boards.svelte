@@ -50,10 +50,7 @@
     <div class="flex flex-col">
         {#if $currentWorkspace && $currentWorkspace.workspace_boards}
             {#each $currentWorkspace.workspace_boards as workspaceBoard (workspaceBoard.uuid)}
-                <SelectWorkspaceBoard
-                    {workspaceBoardSearchModule}
-                    {workspaceBoard}
-                />
+                <SelectWorkspaceBoard {workspaceBoard} />
             {/each}
             <ContextMenuButton
                 label={$_("dashboard.create-board")}

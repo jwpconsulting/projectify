@@ -190,7 +190,6 @@ const noopAsync = async () => {
 
 export const workspaceBoardSearchModule: WorkspaceBoardSearchModule = {
     currentWorkspace: readable(workspace),
-    currentWorkspaceBoardUuid: readable("this-does-not-exist"),
 };
 
 export const workspaceUserSearchModule: WorkspaceUserSearchModule = {

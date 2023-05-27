@@ -25,9 +25,6 @@ import type {
 // XXX I took the liberty of adding workspace board creation into here
 // Not sure if that is good Justus 2023-05-01
 export interface WorkspaceBoardSearchModule {
-    // TODO for a consistent API we would have workspace boards as
-    // searchResults here
-    currentWorkspaceBoardUuid: Readable<string | null>;
     currentWorkspace: Readable<Workspace | null>;
 }
 

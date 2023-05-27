@@ -18,7 +18,6 @@
         currentWorkspaceLabels,
         currentWorkspaceBoard,
         currentWorkspaceBoardSections,
-        currentWorkspaceBoardUuid,
         deselectLabel,
         deselectWorkspaceUser,
         selectLabel,
@@ -38,7 +37,6 @@
 
     const workspaceBoardSearchModule: WorkspaceBoardSearchModule = {
         currentWorkspace,
-        currentWorkspaceBoardUuid,
     };
     const workspaceUserSearchModule: WorkspaceUserSearchModule = {
         select: selectWorkspaceUser,
