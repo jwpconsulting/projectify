@@ -51,12 +51,6 @@ export interface LabelSearchModule {
     createLabel: (color: number, name: string) => Promise<void>;
 }
 
-export interface SideNavModule {
-    sideNavOpen: Readable<boolean>;
-    toggleSideNavOpen: () => void;
-    showWorkspaceContextMenu: (anchor: HTMLElement) => void;
-}
-
 export interface WorkspaceBoardSectionModule {
     // TODO Bind this to a specific uuid
     workspaceBoardSectionClosed: Readable<Set<string>>;

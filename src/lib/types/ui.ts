@@ -11,7 +11,6 @@ import type {
     WorkspaceUser,
 } from "$lib/types/workspace";
 import type {
-    SideNavModule,
     WorkspaceBoardSectionModule,
     WorkspaceUserSearchModule,
     LabelSearchModule,
@@ -100,7 +99,7 @@ export type DestructiveOverlayState = Overlay<
 export type ContextMenuType =
     | { kind: "profile" }
     | { kind: "workspace" }
-    | { kind: "sideNav"; workspace: Workspace; sideNavModule: SideNavModule }
+    | { kind: "sideNav"; workspace: Workspace }
     | { kind: "workspaceBoard"; workspaceBoard: WorkspaceBoard }
     | {
           kind: "workspaceBoardSection";

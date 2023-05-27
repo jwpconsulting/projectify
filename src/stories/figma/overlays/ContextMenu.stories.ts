@@ -4,7 +4,6 @@ import ContextMenu from "$lib/figma/overlays/ContextMenu.svelte";
 
 import type { ContextMenuType } from "$lib/types/ui";
 import {
-    sideNavModule,
     task,
     workspace,
     workspaceBoard,
@@ -25,7 +24,6 @@ const contextMenus: Record<string, ContextMenuType> = {
     sideNav: {
         kind: "sideNav" as const,
         workspace,
-        sideNavModule,
     },
     workspaceBoard: {
         kind: "workspaceBoard" as const,

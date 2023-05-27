@@ -18,7 +18,6 @@ import type {
     CreateTaskModule,
     LabelSearchModule,
     MoveTaskModule,
-    SideNavModule,
     TaskModule,
     WorkspaceBoardSearchModule,
     WorkspaceBoardSectionModule,
@@ -214,12 +213,6 @@ export const labelSearchModule: LabelSearchModule = {
         await new Promise((resolve) => resolve(null));
         console.log("Creating label with color", c, "and name", n);
     },
-};
-
-export const sideNavModule: SideNavModule = {
-    sideNavOpen: writable(true),
-    toggleSideNavOpen: noop,
-    showWorkspaceContextMenu: noop,
 };
 
 export const workspaceBoardSectionModule: WorkspaceBoardSectionModule = {

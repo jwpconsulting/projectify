@@ -4,11 +4,8 @@
     import SideNav from "$lib/figma/navigation/SideNav.svelte";
     import { createLabel as repositoryCreateLabel } from "$lib/repository/workspace";
 
-    import { openContextMenu } from "$lib/stores/globalUi";
-
     import type {
         LabelSearchModule,
-        SideNavModule,
         WorkspaceBoardSearchModule,
         WorkspaceUserSearchModule,
     } from "$lib/types/stores";
@@ -28,8 +25,6 @@
         selectWorkspaceUser,
         selectedLabels,
         selectedWorkspaceUser,
-        sideNavOpen,
-        toggleSideNavOpen,
         workspaceUserSearch,
         workspaceUserSearchResults,
     } from "$lib/stores/dashboard";
@@ -75,15 +70,6 @@
             await repositoryCreateLabel(workspace, name, color);
         },
     };
-
-    let sideNavModule: SideNavModule;
-    $: sideNavModule = {
-        sideNavOpen,
-        toggleSideNavOpen,
-        showWorkspaceContextMenu: (anchor: HTMLElement) => {
-            openContextMenu({ kind: "workspace" }, anchor);
-        },
-    };
 </script>
 
 <div class="flex grow flex-row">
@@ -92,7 +78,6 @@
         {workspaceBoardSearchModule}
         {workspaceUserSearchModule}
         {labelSearchModule}
-        {sideNavModule}
     />
     <Dashboard {workspaceBoard} />
 </div>

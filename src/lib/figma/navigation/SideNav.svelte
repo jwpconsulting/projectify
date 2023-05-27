@@ -9,7 +9,6 @@
 
     import type {
         LabelSearchModule,
-        SideNavModule,
         WorkspaceBoardSearchModule,
         WorkspaceUserSearchModule,
     } from "$lib/types/stores";
@@ -19,17 +18,15 @@
     import type { ContextMenuType } from "$lib/types/ui";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { Workspace } from "$lib/types/workspace";
+    import { sideNavOpen } from "$lib/stores/dashboard";
 
     export let workspace: Workspace;
     export let workspaceBoardSearchModule: WorkspaceBoardSearchModule;
     export let workspaceUserSearchModule: WorkspaceUserSearchModule;
     export let labelSearchModule: LabelSearchModule;
-    export let sideNavModule: SideNavModule;
 
     let workspaceContextMenuAnchor: HTMLElement;
     let sideNavContextMenuAnchor: HTMLElement;
-
-    let { sideNavOpen, showWorkspaceContextMenu } = sideNavModule;
 
     export let open = true;
 
@@ -39,18 +36,20 @@
     $: sideNavContextMenuType = {
         kind: "sideNav" as const,
         workspace,
-        sideNavModule,
     };
 
     function showSideNavContextMenu() {
         openContextMenu(sideNavContextMenuType, sideNavContextMenuAnchor);
     }
 
-    // TODO let workspaceContextMenuType: ContextMenuType;
-    // TODO $: workspaceContextMenuType = {
-    // TODO     kind: "workspace",
-    // TODO     workpsaceSearchModule,
-    // TODO }
+    let workspaceContextMenuType: ContextMenuType;
+    $: workspaceContextMenuType = {
+        kind: "workspace",
+    };
+
+    function showWorkspaceContextMenu() {
+        openContextMenu(workspaceContextMenuType, workspaceContextMenuAnchor);
+    }
 </script>
 
 {#if open}

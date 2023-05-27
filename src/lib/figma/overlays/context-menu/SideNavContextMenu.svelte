@@ -9,11 +9,7 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import { getArchiveUrl, getSettingsUrl } from "$lib/urls";
     import type { Workspace } from "$lib/types/workspace";
-    import type { SideNavModule } from "$lib/types/stores";
-
-    export let sideNavModule: SideNavModule;
-
-    let { sideNavOpen, toggleSideNavOpen } = sideNavModule;
+    import { sideNavOpen, toggleSideNavOpen } from "$lib/stores/dashboard";
 
     export let workspace: Workspace;
 </script>
