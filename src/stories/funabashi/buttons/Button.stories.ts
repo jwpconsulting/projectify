@@ -5,35 +5,36 @@ import { Plus } from "@steeze-ui/heroicons";
 import Button from "./Button.svelte";
 import { buttonColors } from "$lib/funabashi/types";
 import type { ButtonAction, ButtonStyle } from "$lib/funabashi/types";
+import { makeStorybookSelect } from "$lib/storybook";
 
-const styles: Record<string, ButtonStyle> = {
-    primary: {
+const style = makeStorybookSelect<ButtonStyle>({
+    "Primary": {
         kind: "primary",
     },
-    secondary: {
+    "Secondary": {
         kind: "secondary",
     },
-    tertiaryNoIcon: {
+    "Tertiary No Icon": {
         kind: "tertiary",
         icon: null,
     },
-    tertiaryIconLeft: {
+    "Tertiary Icon Left": {
         kind: "tertiary",
         icon: { position: "left", icon: Plus },
     },
-    tertiaryIconRight: {
+    "Tertiary Icon Right": {
         kind: "tertiary",
         icon: { position: "right", icon: Plus },
     },
-};
+});
 
-const actions: Record<string, ButtonAction> = {
+const action = makeStorybookSelect<ButtonAction>({
     button: {
         kind: "button",
         action: () => console.log("Hello, World! I am a button."),
     },
     anchor: { kind: "a", href: "#" },
-};
+});
 
 const meta: Meta<Button> = {
     component: Button,
@@ -49,33 +50,8 @@ const meta: Meta<Button> = {
             control: "radio",
             options: buttonColors,
         },
-        style: {
-            defaultValue: "primary",
-            options: Object.keys(styles),
-            mapping: styles,
-            control: {
-                type: "radio",
-                labels: {
-                    primary: "Primary",
-                    secondary: "Secondary",
-                    tertiaryNoIcon: "Tertiary",
-                    tertiaryIconLeft: "Tertiary Icon Left",
-                    tertiaryIconRight: "Tertiary Icon Right",
-                },
-            },
-        },
-        action: {
-            defaultValue: "button",
-            options: Object.keys(actions),
-            mapping: actions,
-            control: {
-                type: "radio",
-                labels: {
-                    button: "Button",
-                    anchor: "Anchor",
-                },
-            },
-        },
+        style,
+        action,
     },
 };
 
