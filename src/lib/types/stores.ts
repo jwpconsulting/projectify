@@ -28,7 +28,6 @@ export interface WorkspaceBoardSearchModule {
     // TODO for a consistent API we would have workspace boards as
     // searchResults here
     currentWorkspaceBoardUuid: Readable<string | null>;
-    currentWorkspaceBoard: Readable<WorkspaceBoard | null>;
     currentWorkspace: Readable<Workspace | null>;
 }
 
