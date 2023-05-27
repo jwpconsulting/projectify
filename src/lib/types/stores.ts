@@ -62,7 +62,6 @@ export interface SideNavModule {
     sideNavOpen: Readable<boolean>;
     toggleSideNavOpen: () => void;
     showWorkspaceContextMenu: (anchor: HTMLElement) => void;
-    showSideNavContextMenu: (anchor: HTMLElement) => void;
 }
 
 export interface WorkspaceBoardSectionModule {

@@ -16,7 +16,11 @@
     import LabelDropdownClosedNav from "$lib/figma/buttons/LabelDropdownClosedNav.svelte";
     import UserDropdownClosedNav from "$lib/figma/buttons/UserDropdownClosedNav.svelte";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
+    import type { ContextMenuType } from "$lib/types/ui";
+    import { openContextMenu } from "$lib/stores/globalUi";
+    import type { Workspace } from "$lib/types/workspace";
 
+    export let workspace: Workspace;
     export let workspaceBoardSearchModule: WorkspaceBoardSearchModule;
     export let workspaceUserSearchModule: WorkspaceUserSearchModule;
     export let labelSearchModule: LabelSearchModule;
@@ -25,14 +29,22 @@
     let workspaceContextMenuAnchor: HTMLElement;
     let sideNavContextMenuAnchor: HTMLElement;
 
-    let { sideNavOpen, showWorkspaceContextMenu, showSideNavContextMenu } =
-        sideNavModule;
-
-    let { currentWorkspace } = workspaceBoardSearchModule;
+    let { sideNavOpen, showWorkspaceContextMenu } = sideNavModule;
 
     export let open = true;
 
     $: open = $sideNavOpen;
+
+    let sideNavContextMenuType: ContextMenuType;
+    $: sideNavContextMenuType = {
+        kind: "sideNav" as const,
+        workspace,
+        sideNavModule,
+    };
+
+    function showSideNavContextMenu() {
+        openContextMenu(sideNavContextMenuType, sideNavContextMenuAnchor);
+    }
 </script>
 
 {#if open}
@@ -56,12 +68,7 @@
                     class="flex flex-col items-center gap-6 border-b border-border pb-12"
                     bind:this={sideNavContextMenuAnchor}
                 >
-                    <WorkspaceSettings
-                        on:click={showSideNavContextMenu.bind(
-                            null,
-                            sideNavContextMenuAnchor
-                        )}
-                    />
+                    <WorkspaceSettings on:click={showSideNavContextMenu} />
                     <div
                         class="flex flex-col items-center gap-6"
                         bind:this={workspaceContextMenuAnchor}
@@ -74,8 +81,8 @@
                             )}
                         />
                         <div class="flex flex-col items-center gap-4">
-                            {#if $currentWorkspace && $currentWorkspace.workspace_boards}
-                                {#each $currentWorkspace.workspace_boards as board}
+                            {#if workspace.workspace_boards}
+                                {#each workspace.workspace_boards as board}
                                     <SquovalIcon
                                         icon="board"
                                         state="active"

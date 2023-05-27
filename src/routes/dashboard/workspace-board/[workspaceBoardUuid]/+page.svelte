@@ -95,22 +95,12 @@
                 anchor
             );
         },
-        showSideNavContextMenu: (anchor: HTMLElement) => {
-            openContextMenu(
-                {
-                    kind: "sideNav",
-                    workspace,
-                    // XXX circular reference, not cool Justus 2023-03-30
-                    sideNavModule,
-                },
-                anchor
-            );
-        },
     };
 </script>
 
 <div class="flex grow flex-row">
     <SideNav
+        {workspace}
         {workspaceBoardSearchModule}
         {workspaceUserSearchModule}
         {labelSearchModule}
