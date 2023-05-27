@@ -13,16 +13,16 @@
     import type { WorkspaceBoardSection } from "$lib/types/workspace";
     // TODO make injectable
     import type { WorkspaceBoardSectionModule } from "$lib/types/stores";
-    import { workspaceBoardSectionClosed } from "$lib/stores/dashboard";
+    import {
+        toggleWorkspaceBoardSectionOpen,
+        workspaceBoardSectionClosed,
+    } from "$lib/stores/dashboard";
 
     export let workspaceBoardSection: WorkspaceBoardSection;
     export let workspaceBoardSectionModule: WorkspaceBoardSectionModule;
 
-    let {
-        toggleWorkspaceBoardSectionOpen,
-        switchWithPrevSection,
-        switchWithNextSection,
-    } = workspaceBoardSectionModule;
+    let { switchWithPrevSection, switchWithNextSection } =
+        workspaceBoardSectionModule;
 
     let closed: boolean;
     $: {
@@ -35,7 +35,10 @@
 <ContextMenuButton
     kind={{
         kind: "button",
-        action: toggleWorkspaceBoardSectionOpen,
+        action: toggleWorkspaceBoardSectionOpen.bind(
+            null,
+            workspaceBoardSection.uuid
+        ),
     }}
     label={closed
         ? $_("workspace-board-section-overlay.expand-section")

@@ -8,12 +8,11 @@
     import { getNewTaskUrl } from "$lib/urls";
     import type { ContextMenuType } from "$lib/types/ui";
     import type { WorkspaceBoardSectionModule } from "$lib/types/stores";
+    import { toggleWorkspaceBoardSectionOpen } from "$lib/stores/dashboard";
 
     export let workspaceBoardSection: WorkspaceBoardSection;
     export let workspaceBoardSectionModule: WorkspaceBoardSectionModule;
     export let open: boolean;
-
-    const { toggleWorkspaceBoardSectionOpen } = workspaceBoardSectionModule;
 
     const { uuid } = workspaceBoardSection;
     const toggleOpen = toggleWorkspaceBoardSectionOpen.bind(null, uuid);

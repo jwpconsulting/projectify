@@ -52,7 +52,6 @@ export interface LabelSearchModule {
 }
 
 export interface WorkspaceBoardSectionModule {
-    toggleWorkspaceBoardSectionOpen: () => void;
     switchWithPrevSection?: () => Promise<void>;
     switchWithNextSection?: () => Promise<void>;
 }
