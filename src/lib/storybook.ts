@@ -216,7 +216,6 @@ export const labelSearchModule: LabelSearchModule = {
 };
 
 export const workspaceBoardSectionModule: WorkspaceBoardSectionModule = {
-    workspaceBoardSectionClosed: writable(new Set()),
     toggleWorkspaceBoardSectionOpen: noop,
     switchWithPrevSection: noopAsync,
     switchWithNextSection: noopAsync,

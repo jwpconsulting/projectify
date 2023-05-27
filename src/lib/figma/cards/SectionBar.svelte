@@ -5,10 +5,10 @@
     import type { createMoveTaskModule as _createMoveTaskModule } from "$lib/stores/modules";
     import type { WorkspaceBoardSectionModule } from "$lib/types/stores";
 
+    import { workspaceBoardSectionClosed } from "$lib/stores/dashboard";
+
     export let workspaceBoardSection: WorkspaceBoardSection;
     export let workspaceBoardSectionModule: WorkspaceBoardSectionModule;
-
-    const { workspaceBoardSectionClosed } = workspaceBoardSectionModule;
 
     const { uuid } = workspaceBoardSection;
     $: open = !$workspaceBoardSectionClosed.has(uuid);

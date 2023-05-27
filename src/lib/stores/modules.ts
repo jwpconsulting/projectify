@@ -8,10 +8,7 @@ import {
     createLabelSearchResults,
     currentWorkspaceLabels,
 } from "$lib/stores/dashboard";
-import {
-    toggleWorkspaceBoardSectionOpen,
-    workspaceBoardSectionClosed,
-} from "$lib/stores/dashboard/ui";
+import { toggleWorkspaceBoardSectionOpen } from "$lib/stores/dashboard/ui";
 import type {
     Workspace,
     Task,
@@ -148,7 +145,6 @@ export function createWorkspaceBoardSectionModule(
         : undefined;
 
     const workspaceBoardSectionModule: WorkspaceBoardSectionModule = {
-        workspaceBoardSectionClosed,
         toggleWorkspaceBoardSectionOpen: toggleWorkspaceBoardSectionOpen.bind(
             null,
             section.uuid

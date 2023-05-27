@@ -13,12 +13,12 @@
     import type { WorkspaceBoardSection } from "$lib/types/workspace";
     // TODO make injectable
     import type { WorkspaceBoardSectionModule } from "$lib/types/stores";
+    import { workspaceBoardSectionClosed } from "$lib/stores/dashboard";
 
     export let workspaceBoardSection: WorkspaceBoardSection;
     export let workspaceBoardSectionModule: WorkspaceBoardSectionModule;
 
     let {
-        workspaceBoardSectionClosed,
         toggleWorkspaceBoardSectionOpen,
         switchWithPrevSection,
         switchWithNextSection,

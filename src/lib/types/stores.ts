@@ -52,8 +52,6 @@ export interface LabelSearchModule {
 }
 
 export interface WorkspaceBoardSectionModule {
-    // TODO Bind this to a specific uuid
-    workspaceBoardSectionClosed: Readable<Set<string>>;
     toggleWorkspaceBoardSectionOpen: () => void;
     switchWithPrevSection?: () => Promise<void>;
     switchWithNextSection?: () => Promise<void>;
