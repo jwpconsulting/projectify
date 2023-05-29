@@ -72,20 +72,18 @@
     ];
 </script>
 
-<div>
-    <div class="page bg base-200">
-        <div class="m-6 grid grid-cols-1 gap-4 pt-4 sm:m-16 sm:grid-cols-2">
-            <div>
-                <h1 class="mb-8 text-4xl font-bold md:text-6xl">
-                    {$_("solutions-page.hero-header")}
-                </h1>
-                <p class="mb-8 max-w-md">
-                    {$_("solutions-page.hero-text")}
-                </p>
-            </div>
-            <div class="min-w-full max-w-md">
-                <img src="/assets/solutions/solution-hero.png" alt="" />
-            </div>
+<div class="bg-base-200 p-6">
+    <div class="m-6 grid grid-cols-1 gap-4 pt-4 sm:m-16 sm:grid-cols-2">
+        <div>
+            <h1 class="mb-8 text-4xl font-bold md:text-6xl">
+                {$_("solutions-page.hero-header")}
+            </h1>
+            <p class="mb-8 max-w-md">
+                {$_("solutions-page.hero-text")}
+            </p>
+        </div>
+        <div class="min-w-full max-w-md">
+            <img src="/assets/solutions/solution-hero.png" alt="TODO" />
         </div>
     </div>
 </div>
