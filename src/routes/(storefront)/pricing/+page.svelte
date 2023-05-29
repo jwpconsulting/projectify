@@ -2,7 +2,7 @@
     import { _ } from "svelte-i18n";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Check } from "@steeze-ui/heroicons";
-    import PageLayout from "$lib/components/layouts/pageLayout.svelte";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
 
     $: features = [
         $_("pricing-page.feature-1"),
@@ -36,92 +36,77 @@
     ];
 </script>
 
-<PageLayout headerMode={"landing"}>
-    <main class="page bg-base-100">
-        <div class="mt-8 text-center">
-            <h1 class="mb-4 text-4xl font-bold sm:text-6xl">
-                {$_("pricing-page.header")}
-            </h1>
-            <h4 class="sm-text-3xl text-3xl font-bold">
-                {$_("pricing-page.subtitle")}
-            </h4>
-        </div>
-        <div>
-            <div
-                class="page bg base-200 m-4 grid grid-cols-1 gap-4 p-12 text-center sm:m-16 sm:grid-cols-3"
-            >
+<main class="bg-base-100">
+    <header class="mt-8 text-center">
+        <h1 class="mb-4 text-4xl font-bold sm:text-6xl">
+            {$_("pricing-page.header")}
+        </h1>
+        <small class="sm-text-3xl text-3xl font-bold">
+            {$_("pricing-page.subtitle")}
+        </small>
+    </header>
+    <div
+        class="m-4 grid grid-cols-1 gap-4 bg-base-200 p-12 sm:m-16 sm:grid-cols-3"
+    >
+        <strong class="text-center text-3xl font-bold">
+            {$_("pricing-page.plan")}
+        </strong>
+        <div class="flex flex-row justify-center gap-4">
+            <strong class="text-5xl font-bold">
+                {$_("pricing-page.price")}
+            </strong>
+            <div class="flex flex-col justify-center">
                 <div>
-                    <h4 class="text-3xl font-bold">
-                        {$_("pricing-page.plan")}
-                    </h4>
-                </div>
-                <div class="flexbox flex justify-center gap-4">
-                    <div>
-                        <h2 class="text-5xl font-bold">
-                            {$_("pricing-page.price")}
-                        </h2>
-                    </div>
-                    <div>
-                        <div>
-                            {$_("pricing-page.seat")}
-                        </div>
-                        <div>
-                            {$_("pricing-page.month")}
-                        </div>
-                    </div>
+                    {$_("pricing-page.seat-per-month.seat")}
+                    {$_("pricing-page.seat-per-month.per")}
                 </div>
                 <div>
-                    <a
-                        href={"/signup"}
-                        class="btn btn-primary btn-md max-w-fit"
-                    >
-                        {$_("index.hero-button")}
-                    </a>
+                    {$_("pricing-page.seat-per-month.month")}
                 </div>
             </div>
         </div>
-        <div class="space-y-8 text-center text-2xl font-bold">
-            <p>
-                {$_("pricing-page.feature-title")}
-            </p>
-            <div class="flex justify-center text-xl">
-                <ul class="">
-                    {#each features as feature}
-                        <li class="ml-10 flex flex-row items-center gap-4">
-                            <div>
-                                <Icon
-                                    src={Check}
-                                    theme="outline"
-                                    class="h-4 w-4 text-base-content"
-                                />
-                            </div>
-                            {feature}
-                        </li>
-                    {/each}
-                </ul>
+        <Button
+            action={{ kind: "a", href: "/signup" }}
+            size="medium"
+            color="blue"
+            style={{ kind: "primary" }}
+            label={$_("index.hero-button")}
+        />
+    </div>
+    <div class="space-y-8 text-center font-bold">
+        <p class="text-2xl">
+            {$_("pricing-page.feature-title")}
+        </p>
+        <div class="flex justify-center text-xl">
+            <ul>
+                {#each features as feature}
+                    <li class="ml-10 flex flex-row items-center gap-4">
+                        <Icon
+                            src={Check}
+                            theme="outline"
+                            class="h-4 w-4 text-base-content"
+                        />
+                        {feature}
+                    </li>
+                {/each}
+            </ul>
+        </div>
+    </div>
+    <p class="mt-16 text-center text-3xl font-bold">
+        {$_("pricing-page.join")}
+    </p>
+    <dl
+        class="m-8 grid grid-cols-1 gap-8 text-center text-base-100 sm:m-16 sm:grid-cols-3"
+    >
+        {#each cards as card}
+            <div class="page rounded-lg bg-base-content p-6">
+                <dt class="text-5xl font-bold">
+                    {card.figure}
+                </dt>
+                <dd>
+                    {card.description}
+                </dd>
             </div>
-        </div>
-        <div class="mt-16 text-center text-3xl font-bold">
-            <h4>
-                {$_("pricing-page.join")}
-            </h4>
-        </div>
-        <div
-            class="m-8 grid grid-cols-1 gap-8 text-center text-base-100 sm:m-16 sm:grid-cols-3"
-        >
-            {#each cards as card}
-                <div class="page rounded-lg bg-base-content p-6">
-                    <h2 class="text-5xl font-bold">
-                        {card.figure}
-                    </h2>
-                    <p>
-                        {card.description}
-                    </p>
-                </div>
-            {/each}
-        </div>
-    </main>
-</PageLayout>
-
-<style lang="scss">
-</style>
+        {/each}
+    </dl>
+</main>

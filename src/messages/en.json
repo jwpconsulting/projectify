@@ -490,8 +490,11 @@
         "subtitle": "One plan. One price. All features.",
         "plan": "Universal Plan",
         "price": "$8",
-        "seat": "seat/",
-        "month": "month",
+        "seat-per-month": {
+            "seat": "seat",
+            "per": "/",
+            "month": "month"
+        },
         "feature-title": "What's included?",
         "feature-1": "Unlimited tasks",
         "feature-2": "Unlimited boards",
