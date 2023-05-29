@@ -20,23 +20,9 @@
         $_("pricing-page.feature-13"),
         $_("pricing-page.feature-14"),
     ];
-    $: cards = [
-        {
-            figure: $_("pricing-page.card-figure-1"),
-            description: $_("pricing-page.card-description-1"),
-        },
-        {
-            figure: $_("pricing-page.card-figure-2"),
-            description: $_("pricing-page.card-description-2"),
-        },
-        {
-            figure: $_("pricing-page.card-figure-3"),
-            description: $_("pricing-page.card-description-3"),
-        },
-    ];
 </script>
 
-<main class="bg-base-100">
+<main class="flex flex-col gap-20 bg-base-100">
     <header class="mt-8 text-center">
         <h1 class="mb-4 text-4xl font-bold sm:text-6xl">
             {$_("pricing-page.header")}
@@ -45,7 +31,26 @@
             {$_("pricing-page.subtitle")}
         </small>
     </header>
-    <div
+    <section class="space-y-8 text-center font-bold">
+        <p class="text-2xl">
+            {$_("pricing-page.feature-title")}
+        </p>
+        <div class="flex justify-center text-xl">
+            <ul>
+                {#each features as feature}
+                    <li class="ml-10 flex flex-row items-center gap-4">
+                        <Icon
+                            src={Check}
+                            theme="outline"
+                            class="h-4 w-4 text-base-content"
+                        />
+                        {feature}
+                    </li>
+                {/each}
+            </ul>
+        </div>
+    </section>
+    <section
         class="m-4 grid grid-cols-1 gap-4 bg-base-200 p-12 sm:m-16 sm:grid-cols-3"
     >
         <strong class="text-center text-3xl font-bold">
@@ -72,41 +77,5 @@
             style={{ kind: "primary" }}
             label={$_("index.hero-button")}
         />
-    </div>
-    <div class="space-y-8 text-center font-bold">
-        <p class="text-2xl">
-            {$_("pricing-page.feature-title")}
-        </p>
-        <div class="flex justify-center text-xl">
-            <ul>
-                {#each features as feature}
-                    <li class="ml-10 flex flex-row items-center gap-4">
-                        <Icon
-                            src={Check}
-                            theme="outline"
-                            class="h-4 w-4 text-base-content"
-                        />
-                        {feature}
-                    </li>
-                {/each}
-            </ul>
-        </div>
-    </div>
-    <p class="mt-16 text-center text-3xl font-bold">
-        {$_("pricing-page.join")}
-    </p>
-    <dl
-        class="m-8 grid grid-cols-1 gap-8 text-center text-base-100 sm:m-16 sm:grid-cols-3"
-    >
-        {#each cards as card}
-            <div class="page rounded-lg bg-base-content p-6">
-                <dt class="text-5xl font-bold">
-                    {card.figure}
-                </dt>
-                <dd>
-                    {card.description}
-                </dd>
-            </div>
-        {/each}
-    </dl>
+    </section>
 </main>
