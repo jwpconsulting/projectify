@@ -19,16 +19,6 @@
     color="blue"
     disabled={false}
     size="medium"
-    label={$_("header.resources")}
-    action={{ kind: "a", href: "/resources" }}
-/>
--->
-<!-- what is this?
-<HeaderButton
-    style={{ kind: "tertiary", icon: null }}
-    color="blue"
-    disabled={false}
-    size="medium"
     label={$_("header.company")}
     action={{ kind: "a", href: "/company" }}
 />
@@ -37,4 +27,9 @@
     type={{ kind: "button" }}
     label={$_("header.pricing")}
     action={{ kind: "a", href: "/pricing" }}
+/>
+<HeaderButton
+    type={{ kind: "button" }}
+    label={$_("header.help")}
+    action={{ kind: "a", href: "/help" }}
 />
