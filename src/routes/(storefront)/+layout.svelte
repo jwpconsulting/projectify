@@ -5,7 +5,7 @@
 </script>
 
 <div class="flex flex-col">
-    {#if user}
+    {#if $user}
         <Continue />
     {:else}
         <Landing />
