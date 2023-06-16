@@ -16,21 +16,19 @@ import type { User } from "$lib/types/user";
 
 export const user = writable<User | null>(null);
 export const userIsLoading = writable(true);
-export const signinRedirect: { to: null | string } = { to: null };
 
 export const signUp = async (
     email: string,
     password: string
-): Promise<string | null> => {
+): Promise<void> => {
     const res = await client.mutate({
         mutation: Mutation_Signup,
         variables: { input: { email, password } },
     });
-    const { signUp: userData } = res.data as { signUp: User | null };
-    if (userData !== null) {
-        return userData.email;
+    const { signup: userData } = res.data as { signup: User | null };
+    if (userData === null) {
+        throw new Error("Did not receive userData");
     }
-    return null;
 };
 
 export const emailConfirmation = async (email: string, token: string) => {
@@ -53,25 +51,24 @@ export const emailConfirmation = async (email: string, token: string) => {
 
 export const login = async (
     email: string,
-    password: string
-): Promise<User | undefined> => {
+    password: string,
+    redirectTo?: string
+): Promise<void> => {
     const res = await client.mutate({
         mutation: Mutation_Login,
         variables: { input: { email, password } },
     });
 
     const { login: userData } = res.data as { login: User | null };
-    if (userData !== null) {
-        user.set(userData);
-
-        if (signinRedirect.to) {
-            await goto(signinRedirect.to);
-            signinRedirect.to = null;
-        }
-
-        return userData;
+    if (userData === null) {
+        throw new Error("No userData");
     }
-    return undefined;
+
+    user.set(userData);
+
+    if (redirectTo) {
+        await goto(redirectTo);
+    }
 };
 
 export const logout = async () => {

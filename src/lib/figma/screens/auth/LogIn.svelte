@@ -6,16 +6,25 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import Anchor from "$lib/figma/typography/Anchor.svelte";
 
+    export let redirectTo: string = "/dashboard";
+
     let email: string;
     let password: string;
 
-    async function submit() {
+    let error: string | undefined;
+
+    async function action() {
         // TODO validate form
-        await login(email, password);
+        error = undefined;
+        try {
+            await login(email, password, redirectTo);
+        } catch {
+            error = $_("log-in.invalid-credentials");
+        }
     }
 </script>
 
-<AuthScreen title={$_("log-in.title")} action={submit}>
+<AuthScreen title={$_("log-in.title")} {action}>
     <div class="flex flex-col gap-6">
         <InputField
             placeholder={$_("log-in.enter-your-email")}
@@ -35,8 +44,13 @@
                 label: $_("log-in.forgot-password"),
             }}
         />
+        {#if error}
+            <div>
+                {error}
+            </div>
+        {/if}
         <Button
-            on:click={submit}
+            action={{ kind: "button", action }}
             style={{ kind: "primary" }}
             color="blue"
             disabled={false}

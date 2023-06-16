@@ -187,6 +187,7 @@
         "forgot-password": "Forgot password",
         "log-in": "Log in",
         "no-account": "Don't have an account yet?",
+        "invalid-credentials": "Invalid credentials. Please check email and password.",
         "sign-up-here": "Sign up here"
     },
     "sign-up": {
@@ -201,6 +202,7 @@
         "privacy-statement": "Privacy Statement",
         "sign-up": "Sign up",
         "already-have-an-account": "Already have an account?",
+        "invalid-credentials": "We are unable to sign you up with these credentials. Please confirm whether you have not signed up with this email already.",
         "log-in-here": "Log in here"
     },
     "request-password-reset": {

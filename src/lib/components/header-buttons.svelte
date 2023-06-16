@@ -11,7 +11,7 @@
     >
 {:else}
     <a
-        href="/signin"
+        href="/login"
         class="btn btn-primary btn-ghost btn-md rounded-full bg-base-100 text-primary"
         >{$_("log-in")}</a
     >

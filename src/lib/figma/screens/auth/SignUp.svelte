@@ -10,14 +10,20 @@
     let email: string;
     let password: string;
     let tosPrivacyChecked: boolean;
+    let error: string | undefined = undefined;
 
-    async function submit() {
+    async function action() {
         // TODO form validation
-        await signUp(email, password);
+        error = undefined;
+        try {
+            await signUp(email, password);
+        } catch {
+            error = $_("sign-up.invalid-credentials");
+        }
     }
 </script>
 
-<AuthScreen title={$_("sign-up.title")} action={submit}>
+<AuthScreen title={$_("sign-up.title")} {action}>
     <div class="flex flex-col gap-6">
         <InputField
             placeholder={$_("sign-up.enter-your-email")}
@@ -25,6 +31,7 @@
             name="email"
             label={$_("sign-up.email")}
             bind:value={email}
+            required
         />
         <InputField
             placeholder={$_("sign-up.enter-your-password")}
@@ -32,6 +39,7 @@
             name="password"
             label={$_("sign-up.password")}
             bind:value={password}
+            required
         />
         <div class="flex flex-row items-center gap-2">
             <Checkbox
@@ -54,8 +62,13 @@
                 />
             </p>
         </div>
+        {#if error}
+            <div>
+                {error}
+            </div>
+        {/if}
         <Button
-            on:click={submit}
+            action={{ kind: "button", action }}
             style={{ kind: "primary" }}
             color="blue"
             disabled={false}
@@ -65,7 +78,7 @@
         <div class="text-center">
             {$_("sign-up.already-have-an-account")}
             <Anchor
-                href="/signin"
+                href="/login"
                 label={$_("sign-up.log-in-here")}
                 size="normal"
             />

@@ -12,6 +12,7 @@
     export let label: string | null = null;
     export let anchorTop: InputFieldAnchor | null = null;
     export let anchorBottom: InputFieldAnchor | null = null;
+    export let required = false;
 
     const inputStyle =
         "text-regular placeholder:text-task-update-text peer relative top-0 left-0 z-10 h-full w-full rounded-lg border border-border pr-8 text-xs focus:outline-none";
@@ -47,6 +48,7 @@
                 {name}
                 bind:value
                 {placeholder}
+                {required}
             />
         {:else if style.kind === "subTask"}
             <input
@@ -55,6 +57,7 @@
                 {name}
                 bind:value
                 {placeholder}
+                {required}
             />
         {:else if style.kind === "field"}
             {#if style.inputType === "text"}
@@ -64,6 +67,7 @@
                     {name}
                     bind:value
                     {placeholder}
+                    {required}
                 />
             {:else if style.inputType === "password"}
                 <input
@@ -72,6 +76,7 @@
                     {name}
                     bind:value
                     {placeholder}
+                    {required}
                 />
             {/if}
         {/if}

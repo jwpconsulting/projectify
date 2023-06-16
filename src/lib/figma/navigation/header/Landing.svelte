@@ -13,8 +13,9 @@
         </div>
     </slot>
     <slot slot="desktop-right">
-        <a href="/signin">
+        <a href="/login">
             <Button
+                action={{ kind: "a", href: "/login" }}
                 style={{ kind: "tertiary", icon: null }}
                 color="blue"
                 disabled={false}

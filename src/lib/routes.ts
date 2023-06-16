@@ -16,7 +16,7 @@ export default [
         fetchUser: true,
     },
     { label: "signup", to: "/signup", authRequired: false },
-    { label: "signin", to: "/signin", authRequired: false },
+    { label: "signin", to: "/login", authRequired: false },
     {
         label: "dashboard.dashboard",
         to: "/dashboard",
