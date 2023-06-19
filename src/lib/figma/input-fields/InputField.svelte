@@ -2,7 +2,7 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Search, X } from "@steeze-ui/heroicons";
     import type { InputFieldAnchor, InputFieldStyle } from "$lib/figma/types";
-    import Anchor from "$lib/figma/typography/Anchor.svelte";
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
 
     // TODO make border customizable (e.g. in TaskFormFields)
     export let value: string | null = null;

@@ -4,7 +4,7 @@
     import AuthScreen from "$lib/figma/screens/auth/AuthScreen.svelte";
     import InputField from "$lib/figma/input-fields/InputField.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import Anchor from "$lib/figma/typography/Anchor.svelte";
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
 
     export let redirectTo: string = "/dashboard";
 
