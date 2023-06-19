@@ -2,7 +2,7 @@
     import { _ } from "svelte-i18n";
     import type { WorkspaceBoard } from "$lib/types/workspace";
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import InputField from "$lib/figma/input-fields/InputField.svelte";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
 
     // TODO do something with workspaceBoard
     export let workspaceBoard: WorkspaceBoard;

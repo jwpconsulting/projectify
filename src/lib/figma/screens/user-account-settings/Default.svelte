@@ -1,7 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import type { User } from "$lib/types/user";
-    import InputField from "$lib/figma/input-fields/InputField.svelte";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import UploadAvatar from "$lib/figma/buttons/UploadAvatar.svelte";

@@ -2,7 +2,7 @@
     import { _ } from "svelte-i18n";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { MenuAlt1 } from "@steeze-ui/heroicons";
-    import InputField from "$lib/figma/input-fields/InputField.svelte";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
 
     export let description: string | undefined;
 </script>

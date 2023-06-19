@@ -3,7 +3,7 @@
     import FilterLabelMenu from "$lib/figma/composites/FilterLabelMenu.svelte";
     import type { SelectLabel, FilterLabelMenuState } from "$lib/figma/types";
     import type { LabelSearchModule } from "$lib/types/stores";
-    import InputField from "$lib/figma/input-fields/InputField.svelte";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
     import type { Label } from "$lib/types/workspace";

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import InputField from "$lib/figma/input-fields/InputField.svelte";
+import InputField from "$lib/funabashi/input-fields/InputField.svelte";
 
 const meta: Meta<InputField> = {
     component: InputField,

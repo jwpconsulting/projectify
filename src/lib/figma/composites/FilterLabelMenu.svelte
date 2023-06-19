@@ -4,7 +4,7 @@
 
     import type { LabelSearchModule } from "$lib/types/stores";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
-    import InputField from "$lib/figma/input-fields/InputField.svelte";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import FilterLabel from "$lib/figma/select-controls/FilterLabel.svelte";
 
     export let labelSearchModule: LabelSearchModule;

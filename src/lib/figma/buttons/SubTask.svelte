@@ -2,7 +2,7 @@
     import { _ } from "svelte-i18n";
     import Checkbox from "$lib/funabashi/select-controls/Checkbox.svelte";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
-    import InputField from "$lib/figma/input-fields/InputField.svelte";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import type { SubTaskState } from "$lib/figma/types";
     import type { CreateOrUpdateSubTask } from "$lib/types/ui";

@@ -3,7 +3,7 @@
     import { _ } from "svelte-i18n";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Minus } from "@steeze-ui/heroicons";
-    import InputField from "$lib/figma/input-fields/InputField.svelte";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
 
     export let title: string | undefined;
 

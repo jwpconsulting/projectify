@@ -2,7 +2,7 @@
     import { _ } from "svelte-i18n";
     import { signUp } from "$lib/stores/user";
     import AuthScreen from "$lib/figma/screens/auth/AuthScreen.svelte";
-    import InputField from "$lib/figma/input-fields/InputField.svelte";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import Checkbox from "$lib/funabashi/select-controls/Checkbox.svelte";
