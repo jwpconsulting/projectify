@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
     import { Icon } from "@steeze-ui/svelte-icon";
     import type {
         ButtonAction,
@@ -14,17 +13,6 @@
     export let disabled = false;
     export let label: string;
     export let action: ButtonAction;
-
-    // TODO refactor to use callback action prop instead
-
-    const dispatch = createEventDispatcher();
-    function click() {
-        if (action && action.kind == "button") {
-            action.action();
-            return;
-        }
-        dispatch("click");
-    }
 
     $: innerColorStyle = {
         primary: {
@@ -66,7 +54,7 @@
 </script>
 
 {#if style.kind === "tertiary"}
-    {#if action && action.kind === "a"}
+    {#if action.kind === "a"}
         <a href={action.href} class={outerStyle}>
             {#if style.icon && style.icon.position === "left"}
                 <Icon
@@ -84,8 +72,12 @@
                 />
             {/if}
         </a>
-    {:else}
-        <button on:click|preventDefault={click} class={outerStyle} {disabled}>
+    {:else if action.kind === "button"}
+        <button
+            on:click|preventDefault={action.action}
+            class={outerStyle}
+            {disabled}
+        >
             {#if style.icon && style.icon.position === "left"}
                 <Icon
                     src={style.icon.icon}
@@ -102,17 +94,25 @@
                 />
             {/if}
         </button>
+    {:else}
+        Not supported
     {/if}
-{:else if action && action.kind === "a"}
+{:else if action.kind === "a"}
     <a href={action.href} class={outerStyle}>
         <div class={innerStyle}>
             {label}
         </div>
     </a>
-{:else}
-    <button on:click|preventDefault={click} class={outerStyle} {disabled}>
+{:else if action.kind === "button"}
+    <button
+        on:click|preventDefault={action.action}
+        class={outerStyle}
+        {disabled}
+    >
         <div class={innerStyle}>
             {label}
         </div>
     </button>
+{:else}
+    Not supported
 {/if}
