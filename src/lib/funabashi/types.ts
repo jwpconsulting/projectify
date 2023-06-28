@@ -3,7 +3,8 @@ import type { IconSource } from "@steeze-ui/svelte-icon/types";
 // For all buttons
 export type ButtonAction =
     | { kind: "a"; href: string }
-    | { kind: "button"; action: () => void };
+    | { kind: "button"; action: () => void }
+    | { kind: "submit" };
 
 // For buttons/Button.svelte
 export type ButtonStyle =

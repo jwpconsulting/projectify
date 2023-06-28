@@ -46,8 +46,10 @@
     >
         <Icon src={iconMapped} style="outline" />
     </button>
-{:else}
+{:else if action.kind === "a"}
     <a href={action.href} class="block {styleClasses}">
         <Icon src={iconMapped} style="outline" />
     </a>
+{:else}
+    Not supported
 {/if}
