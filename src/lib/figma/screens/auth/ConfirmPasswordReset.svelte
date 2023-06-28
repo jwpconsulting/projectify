@@ -33,7 +33,7 @@
             bind:value={newPassword2}
         />
         <Button
-            on:click={submit}
+            action={{ kind: "button", action: submit }}
             style={{ kind: "primary" }}
             color="blue"
             disabled={false}

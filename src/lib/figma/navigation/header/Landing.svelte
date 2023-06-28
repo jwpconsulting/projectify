@@ -13,25 +13,22 @@
         </div>
     </slot>
     <slot slot="desktop-right">
-        <a href="/login">
-            <Button
-                action={{ kind: "a", href: "/login" }}
-                style={{ kind: "tertiary", icon: null }}
-                color="blue"
-                disabled={false}
-                size="medium"
-                label={$_("header.log-in")}
-            />
-        </a>
-        <a href="/signup">
-            <Button
-                style={{ kind: "primary" }}
-                color="blue"
-                disabled={false}
-                size="medium"
-                label={$_("header.start-a-free-trial")}
-            />
-        </a>
+        <Button
+            action={{ kind: "a", href: "/login" }}
+            style={{ kind: "tertiary", icon: null }}
+            color="blue"
+            disabled={false}
+            size="medium"
+            label={$_("header.log-in")}
+        />
+        <Button
+            action={{ kind: "a", href: "/signup" }}
+            style={{ kind: "primary" }}
+            color="blue"
+            disabled={false}
+            size="medium"
+            label={$_("header.start-a-free-trial")}
+        />
     </slot>
     <div slot="mobile">
         <HamburgerMenu isActive />

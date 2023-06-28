@@ -38,7 +38,7 @@
 </div>
 <div class="flex flex-row justify-center">
     <Button
-        on:click={cancel}
+        action={{ kind: "button", action: cancel }}
         style={{ kind: "secondary" }}
         size="medium"
         disabled={false}
@@ -46,7 +46,7 @@
         label={$_("new-workspace-board-section.cancel")}
     />
     <Button
-        on:click={perform}
+        action={{ kind: "button", action: perform }}
         style={{ kind: "primary" }}
         size="medium"
         disabled={false}

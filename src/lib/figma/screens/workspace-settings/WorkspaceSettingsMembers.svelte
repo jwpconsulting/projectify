@@ -25,6 +25,7 @@
         />
         <div class="flex flex-row justify-between">
             <Button
+                action={{ kind: "button", action: console.error }}
                 label={$_("settings.filter-by-roles")}
                 style={{ kind: "secondary" }}
                 size="extra-small"
@@ -32,6 +33,7 @@
                 color="blue"
             />
             <Button
+                action={{ kind: "button", action: console.error }}
                 label={$_("settings.invite-new-members")}
                 style={{ kind: "primary" }}
                 size="extra-small"

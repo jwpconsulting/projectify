@@ -27,7 +27,7 @@
             bind:value={email}
         />
         <Button
-            on:click={submit}
+            action={{ kind: "button", action: submit }}
             style={{ kind: "primary" }}
             color="blue"
             disabled={false}

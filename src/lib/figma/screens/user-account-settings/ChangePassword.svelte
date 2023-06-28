@@ -38,6 +38,12 @@
         </div>
         <div class="flex flex-row gap-2">
             <Button
+                action={{
+                    kind: "button",
+                    action: () => {
+                        console.error("Cancel not implemented");
+                    },
+                }}
                 size="medium"
                 color="blue"
                 disabled={false}
@@ -45,6 +51,12 @@
                 label={$_("user-account-settings.cancel")}
             />
             <Button
+                action={{
+                    kind: "button",
+                    action: () => {
+                        console.error("Change password not implemented");
+                    },
+                }}
                 size="medium"
                 color="blue"
                 disabled={hasBeenEdited}

@@ -31,6 +31,13 @@
                 style={{ kind: "field", inputType: "text" }}
             />
             <Button
+                action={{
+                    kind: "button",
+                    action: console.error.bind(
+                        null,
+                        "Change password not implemented"
+                    ),
+                }}
                 size="medium"
                 color="blue"
                 disabled={false}
@@ -38,6 +45,13 @@
                 label={$_("user-account-settings.change-password")}
             />
             <Button
+                action={{
+                    kind: "button",
+                    action: console.error.bind(
+                        null,
+                        "Update email not implemented"
+                    ),
+                }}
                 size="medium"
                 color="blue"
                 disabled={false}
@@ -47,6 +61,13 @@
         </div>
         <div class="flex flex-col gap-2">
             <Button
+                action={{
+                    kind: "button",
+                    action: console.error.bind(
+                        null,
+                        "Save changes not implemented"
+                    ),
+                }}
                 size="medium"
                 color="blue"
                 disabled={hasBeenEdited}
@@ -54,6 +75,10 @@
                 label={$_("user-account-settings.save-changes")}
             />
             <Button
+                action={{
+                    kind: "button",
+                    action: console.error.bind(null, "Cancel not implemented"),
+                }}
                 size="medium"
                 color="blue"
                 disabled={false}
@@ -61,6 +86,13 @@
                 label={$_("user-account-settings.cancel")}
             />
             <Button
+                action={{
+                    kind: "button",
+                    action: console.error.bind(
+                        null,
+                        "Delete account not implemented"
+                    ),
+                }}
                 size="medium"
                 color="red"
                 disabled={false}

@@ -103,12 +103,17 @@
         </div>
         {#if createOrUpdate}
             <Button
+                action={{
+                    kind: "button",
+                    action: () => {
+                        console.error("Save not implemented");
+                    },
+                }}
                 color="blue"
                 size="small"
                 disabled={!$canCreateOrUpdate}
                 style={{ kind: "primary" }}
                 label={$_("task-screen.save")}
-                on:click={createOrUpdate}
             />
         {/if}
         {#if editLink}

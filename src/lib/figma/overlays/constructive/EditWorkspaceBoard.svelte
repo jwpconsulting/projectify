@@ -25,8 +25,9 @@
 </div>
 <div class="flex flex-row justify-center">
     <Button
-        on:click={() => {
-            console.error("Cancel not implemented");
+        action={{
+            kind: "button",
+            action: console.error.bind(null, "Cancel not implemented"),
         }}
         style={{ kind: "secondary" }}
         size="medium"
@@ -35,8 +36,9 @@
         label={$_("edit-workspace-board.cancel")}
     />
     <Button
-        on:click={() => {
-            console.error("Save not implemented");
+        action={{
+            kind: "button",
+            action: console.error.bind(null, "Save not implemented"),
         }}
         style={{ kind: "primary" }}
         size="medium"

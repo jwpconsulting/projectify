@@ -27,7 +27,7 @@
 </script>
 
 <Button
-    on:click={open}
+    action={{ kind: "button", action: open }}
     style={{ kind: "primary" }}
     color="blue"
     disabled={false}
@@ -35,7 +35,7 @@
     label="Open overlay"
 />
 <Button
-    on:click={openAsync}
+    action={{ kind: "button", action: openAsync }}
     style={{ kind: "primary" }}
     color="blue"
     disabled={false}

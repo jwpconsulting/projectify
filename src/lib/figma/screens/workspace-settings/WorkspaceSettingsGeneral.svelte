@@ -41,6 +41,7 @@
             label={$_("settings.enter-a-description")}
         />
         <Button
+            action={{ kind: "button", action: console.error }}
             size="medium"
             style={{ kind: "primary" }}
             color="red"

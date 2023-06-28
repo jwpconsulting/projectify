@@ -13,7 +13,7 @@
     export let size: ButtonSize;
     export let disabled = false;
     export let label: string;
-    export let action: ButtonAction | null = null;
+    export let action: ButtonAction;
 
     // TODO refactor to use callback action prop instead
 

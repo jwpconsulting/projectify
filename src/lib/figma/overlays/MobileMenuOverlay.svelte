@@ -7,14 +7,13 @@
 <div class="px-2 py-4">
     <MobileMenu />
     <div class="px-4">
-        <a href="/dashboard">
-            <Button
-                style={{ kind: "primary" }}
-                color="blue"
-                disabled={false}
-                size="medium"
-                label={$_("header.continue-to-dashboard")}
-            />
-        </a>
+        <Button
+            action={{ kind: "a", href: "/dashboard" }}
+            style={{ kind: "primary" }}
+            color="blue"
+            disabled={false}
+            size="medium"
+            label={$_("header.continue-to-dashboard")}
+        />
     </div>
 </div>

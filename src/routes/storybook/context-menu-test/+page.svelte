@@ -17,7 +17,7 @@
     <div class="flex flex-row justify-between">
         <div bind:this={button1}>
             <Button
-                on:click={() => open(button1)}
+                action={{ kind: "button", action: () => open(button1) }}
                 style={{ kind: "primary" }}
                 color="blue"
                 disabled={false}
@@ -27,7 +27,7 @@
         </div>
         <div bind:this={button2}>
             <Button
-                on:click={() => open(button2)}
+                action={{ kind: "button", action: () => open(button2) }}
                 style={{ kind: "primary" }}
                 color="blue"
                 disabled={false}
@@ -39,7 +39,7 @@
     <div class="flex flex-row justify-center">
         <div bind:this={button3}>
             <Button
-                on:click={() => open(button3)}
+                action={{ kind: "button", action: () => open(button3) }}
                 style={{ kind: "primary" }}
                 color="blue"
                 disabled={false}
@@ -51,7 +51,7 @@
     <div class="flex flex-row justify-between">
         <div bind:this={button4}>
             <Button
-                on:click={() => open(button4)}
+                action={{ kind: "button", action: () => open(button4) }}
                 style={{ kind: "primary" }}
                 color="blue"
                 disabled={false}
@@ -61,7 +61,7 @@
         </div>
         <div bind:this={button5}>
             <Button
-                on:click={() => open(button5)}
+                action={{ kind: "button", action: () => open(button5) }}
                 style={{ kind: "primary" }}
                 color="blue"
                 disabled={false}

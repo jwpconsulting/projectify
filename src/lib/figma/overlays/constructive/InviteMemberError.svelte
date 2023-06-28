@@ -12,8 +12,11 @@
 </p>
 <div class="flex flex-row justify-center">
     <Button
-        on:click={() => {
-            console.error("Cancel not implemented");
+        action={{
+            kind: "button",
+            action: () => {
+                console.error("Cancel not implemented");
+            },
         }}
         style={{ kind: "secondary" }}
         size="medium"
@@ -22,8 +25,11 @@
         label={$_("invite-member-error.cancel")}
     />
     <Button
-        on:click={() => {
-            console.error("Save not implemented");
+        action={{
+            kind: "button",
+            action: () => {
+                console.error("Save not implemented");
+            },
         }}
         style={{ kind: "primary" }}
         size="medium"

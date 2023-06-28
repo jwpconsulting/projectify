@@ -40,8 +40,11 @@
 </div>
 <div class="flex flex-row justify-center">
     <Button
-        on:click={() => {
-            console.error("Cancel not implemented");
+        action={{
+            kind: "button",
+            action: () => {
+                console.error("Cancel not implemented");
+            },
         }}
         style={{ kind: "secondary" }}
         size="medium"
@@ -50,7 +53,7 @@
         label={$_("new-workspace-board.cancel")}
     />
     <Button
-        on:click={perform}
+        action={{ kind: "button", action: perform }}
         style={{ kind: "primary" }}
         size="medium"
         disabled={false}
