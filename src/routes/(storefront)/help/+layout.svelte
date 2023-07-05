@@ -18,7 +18,7 @@
         </div>
     </div>
 </header>
-<div class="flex flex-row gap-8 sm:my-6 sm:flex sm:px-12">
+<div class="flex flex-row gap-8 bg-foreground sm:my-6 sm:flex sm:px-12">
     <HelpDropdown />
     <slot />
 </div>

@@ -30,8 +30,8 @@
     ];
 </script>
 
-<div>
-    <div class="page bg base-200 space-y-4 p-8">
+<div class="flex flex-col bg-foreground">
+    <div class="space-y-4 p-8">
         <p class="text-xl font-bold">
             {$_("help.skip")}
         </p>

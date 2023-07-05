@@ -4,7 +4,7 @@
     import { user } from "$lib/stores/user";
 </script>
 
-<div class="flex flex-col">
+<div class="flex h-full flex-col bg-background">
     {#if $user}
         <Continue />
     {:else}
