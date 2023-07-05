@@ -6,6 +6,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import Checkbox from "$lib/funabashi/select-controls/Checkbox.svelte";
+    import { goto } from "$lib/navigation";
 
     let email: string;
     let password: string;
@@ -17,6 +18,7 @@
         error = undefined;
         try {
             await signUp(email, password);
+            await goto("/email-confirmation-link-sent/");
         } catch {
             error = $_("sign-up.invalid-credentials");
         }
