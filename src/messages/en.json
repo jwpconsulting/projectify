@@ -203,7 +203,13 @@
         "sign-up": "Sign up",
         "already-have-an-account": "Already have an account?",
         "invalid-credentials": "We are unable to sign you up with these credentials. Please confirm whether you have not signed up with this email already.",
-        "log-in-here": "Log in here"
+        "log-in-here": "Log in here",
+        "confirmation-link-sent": {
+            "header": "Email confirmation link sent",
+            "illustration-alt": "Happy bird mascot indicating that a email confirm email is on its way to you",
+            "body": "Please go to your email and follow the instructions to activate your account",
+            "back-to-homepage": "Back to homepage"
+        }
     },
     "request-password-reset": {
         "title": "Reset your password",
