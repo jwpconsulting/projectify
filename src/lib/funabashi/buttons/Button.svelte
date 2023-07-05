@@ -114,5 +114,7 @@
         </div>
     </button>
 {:else}
-    Not supported
+    <div class={outerStyle}>
+        <input type="submit" value={label} class={innerStyle} />
+    </div>
 {/if}
