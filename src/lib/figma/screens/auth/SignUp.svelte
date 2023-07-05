@@ -70,7 +70,7 @@
             </div>
         {/if}
         <Button
-            action={{ kind: "button", action }}
+            action={{ kind: "submit" }}
             style={{ kind: "primary" }}
             color="blue"
             disabled={false}
