@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { Icon } from "@steeze-ui/svelte-icon";
-    import { Tag } from "@steeze-ui/heroicons";
+    import { _ } from "svelte-i18n";
     import type { Label } from "$lib/types/workspace";
     import LabelC from "$lib/figma/buttons/Label.svelte";
 
@@ -12,12 +11,13 @@
 </script>
 
 <div class="flex flex-row items-center gap-4">
-    <Icon src={Tag} class="w-6" theme="outline" />
     {#each labels as label}
         <LabelC
             label={{ kind: "label", label }}
             action={action ? action.bind(null, btnRef) : undefined}
         />
+    {:else}
+        {$_("task-screen.no-labels")}
     {/each}
     {#if action}
         <div bind:this={btnRef}>

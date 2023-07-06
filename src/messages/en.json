@@ -229,9 +229,12 @@
     "task-screen": {
         "new-task-name": "New task name",
         "description": "Description",
-        "section": "Workspace board section",
+        "labels": "Labels",
+        "no-labels": "No labels assigned",
+        "section": "Section",
         "select-due-date": "Select due date",
         "no-due-date": "No due date",
+        "due-date": "Due date",
         "save": "Save",
         "edit": "Edit",
         "task-title": "Task title",

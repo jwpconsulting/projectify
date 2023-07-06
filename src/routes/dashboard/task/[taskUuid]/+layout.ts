@@ -17,8 +17,7 @@ export function load({
     // XXX perhaps we can even init taskModule here
     currentTaskUuid.set(taskUuid);
 
-    // Messy callback right here
-    const unsubscribe = currentTask.subscribe(($currentTask) => {
+    currentTask.subscribe(($currentTask) => {
         if (!$currentTask) {
             return;
         }
@@ -35,7 +34,5 @@ export function load({
             throw new Error("Expected workspace");
         }
         currentWorkspaceUuid.set(workspace.uuid);
-        // Now we can let go :)
-        unsubscribe();
     });
 }

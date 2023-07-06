@@ -8,34 +8,37 @@
     import TaskUpdateDueDate from "$lib/figma/screens/task/TaskUpdateDueDate.svelte";
 
     export let task: Task;
+    // XXX refactor the dl dt dd structure into
+    // src/lib/figma/screens/task/TaskFieldsTemplate.svelte
+    // and add a slot for each form field thing
 </script>
 
-<dl class="flex flex-col gap-8">
-    <dt aria-hidden="true" class="hidden">
+<dl class="inline-grid max-w-sm auto-cols-min grid-cols-2 items-center gap-8">
+    <dt class="font-bold">
         {$_("task-screen.task-title")}
     </dt>
     <dd>
         <TaskUpdateTitle title={task.title} readonly />
     </dd>
-    <dt aria-hidden="true" class="hidden">
+    <dt class="font-bold">
         {$_("task-screen.assignee")}
     </dt>
     <dd>
         <TaskUpdateUser workspaceUser={task.assignee || null} />
     </dd>
-    <dt aria-hidden="true" class="hidden">
+    <dt class="font-bold">
         {$_("task-screen.labels")}
     </dt>
     <dd>
         <TaskUpdateLabel labels={task.labels} />
     </dd>
-    <dt aria-hidden="true" class="hidden">
+    <dt class="font-bold">
         {$_("task-screen.section")}
     </dt>
     <dd>
         <TaskUpdateSection {task} />
     </dd>
-    <dt aria-hidden="true" class="hidden">
+    <dt class="font-bold">
         {$_("task-screen.due-date")}
     </dt>
     <dd>

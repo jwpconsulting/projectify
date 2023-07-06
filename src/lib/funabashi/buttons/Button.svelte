@@ -120,11 +120,7 @@
         </div>
     </button>
 {:else}
-    <button
-        type="submit"
-        class={outerStyle}
-        {disabled}
-    >
+    <button type="submit" class={outerStyle} {disabled}>
         <div class={innerStyle}>
             {label}
         </div>

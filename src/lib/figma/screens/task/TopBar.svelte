@@ -84,7 +84,31 @@
             {#if breadCrumbTask.number}&gt; {breadCrumbTask.number}{/if}
         </div>
     </div>
-    <div class="flex flex-row items-center gap-4">
+    <div class="flex h-10 flex-row items-center gap-4">
+        {#if editLink}
+            <Button
+                color="blue"
+                size="small"
+                style={{ kind: "primary" }}
+                label={$_("task-screen.edit")}
+                action={{ kind: "a", href: editLink }}
+            />
+        {/if}
+        {#if createOrUpdate}
+            <Button
+                action={{
+                    kind: "button",
+                    action: () => {
+                        console.error("Save not implemented");
+                    },
+                }}
+                color="blue"
+                size="small"
+                disabled={!$canCreateOrUpdate}
+                style={{ kind: "primary" }}
+                label={$_("task-screen.save")}
+            />
+        {/if}
         <div bind:this={contextMenuRef}>
             {#if contextMenuType}
                 <SquovalIcon
@@ -101,29 +125,5 @@
                 />
             {/if}
         </div>
-        {#if createOrUpdate}
-            <Button
-                action={{
-                    kind: "button",
-                    action: () => {
-                        console.error("Save not implemented");
-                    },
-                }}
-                color="blue"
-                size="small"
-                disabled={!$canCreateOrUpdate}
-                style={{ kind: "primary" }}
-                label={$_("task-screen.save")}
-            />
-        {/if}
-        {#if editLink}
-            <Button
-                color="blue"
-                size="small"
-                style={{ kind: "primary" }}
-                label={$_("task-screen.edit")}
-                action={{ kind: "a", href: editLink }}
-            />
-        {/if}
     </div>
 </div>

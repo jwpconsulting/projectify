@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { Icon } from "@steeze-ui/svelte-icon";
-    import { User as UserIcon } from "@steeze-ui/heroicons";
     import type { WorkspaceUser } from "$lib/types/workspace";
     import UpdateUser from "$lib/figma/buttons/UpdateUser.svelte";
 
@@ -13,9 +11,6 @@
 </script>
 
 <div class="flex flex-row items-center gap-4">
-    <div class="w-6">
-        <Icon src={UserIcon} theme="outline" />
-    </div>
     <div bind:this={btnRef}>
         <UpdateUser
             action={action ? action.bind(null, btnRef) : undefined}
