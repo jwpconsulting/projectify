@@ -173,8 +173,6 @@
             <p class="text-l sm:text-l">
                 {$_("index.feature-7-text-1")}
             </p>
-            <br />
-            <a href="/" class="font-bold underline">Learn more</a>
         </div>
         <div class="min-w-full max-w-md">
             <img src="/assets/landing/open-source.png" alt="" />
