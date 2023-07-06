@@ -120,7 +120,13 @@
         </div>
     </button>
 {:else}
-    <div class={outerStyle}>
-        <input type="submit" value={label} class={innerStyle} />
-    </div>
+    <button
+        type="submit"
+        class={outerStyle}
+        {disabled}
+    >
+        <div class={innerStyle}>
+            {label}
+        </div>
+    </button>
 {/if}

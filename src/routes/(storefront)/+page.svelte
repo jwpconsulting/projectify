@@ -3,7 +3,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
 </script>
 
-<main class="page bg-foreground xl:p-24 2xl:p-24">
+<main class="flex flex-col gap-6 bg-foreground p-4 xl:p-24 2xl:p-24">
     <div class="grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
         <div class="flex flex-col gap-12">
             <header class="flex flex-col gap-10">
@@ -27,7 +27,7 @@
             <img src="/assets/landing/hero.png" alt={$_("index.hero-alt")} />
         </div>
     </div>
-    <div class="m-8 grid grid-cols-1 text-center sm:ml-32 sm:mr-32">
+    <div class="grid grid-cols-1 text-center sm:ml-32 sm:mr-32">
         <h2 class="mb-4 text-3xl font-bold md:text-5xl">
             {$_("index.trust-header-1")}
             <span class="text-primary">{$_("index.trust-header-2")}</span>
@@ -38,7 +38,7 @@
             {$_("index.trust-text")}
         </h4>
     </div>
-    <div class="m-6 grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
+    <div class="grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
         <div>
             <h4 class="mb-8 text-xl font-bold sm:mt-24 sm:text-4xl">
                 {$_("index.feature-1-header")}
@@ -51,7 +51,7 @@
             <img src="/assets/landing/task-menu.png" alt="" />
         </div>
     </div>
-    <div class="m-6 grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
+    <div class="grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
         <div class="sm:order-last">
             <h4 class="mb-8 text-xl font-bold sm:mt-24 sm:text-4xl">
                 {$_("index.feature-2-header")}
@@ -64,7 +64,7 @@
             <img src="/assets/landing/sub-task.png" alt="" />
         </div>
     </div>
-    <div class="m-6 grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
+    <div class="grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
         <div>
             <h4 class="mb-8 text-xl font-bold sm:mt-24 sm:text-4xl">
                 {$_("index.feature-3-header")}
@@ -77,7 +77,7 @@
             <img src="/assets/landing/filters.png" alt="" />
         </div>
     </div>
-    <div class="m-6 grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
+    <div class="grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
         <div class="sm:order-last">
             <h4 class="mb-8 text-xl font-bold sm:mt-24 sm:text-4xl">
                 {$_("index.feature-4-header")}
@@ -103,7 +103,7 @@
             <img src="/assets/landing/responsive.png" alt="" />
         </div>
     </div>
-    <div class="page bg base-200 mb-8 mt-8 p-6">
+    <div class="page bg base-200 mt-8 p-6">
         <div class="mb-12 text-center">
             <h2 class="mb-4 text-2xl font-bold sm:text-4xl">
                 {$_("index.solution-header")}
@@ -152,7 +152,7 @@
             </a>
         </div>
     </div>
-    <div class="m-6 grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
+    <div class="grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
         <div>
             <h4 class="mb-8 text-xl font-bold sm:mt-24 sm:text-4xl">
                 {$_("index.feature-6-header")}
@@ -165,7 +165,7 @@
             <img src="/assets/landing/privacy.png" alt="" />
         </div>
     </div>
-    <div class="m-6 grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
+    <div class="grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
         <div class="sm:order-last">
             <h4 class="mb-8 text-xl font-bold sm:text-4xl">
                 {$_("index.feature-7-header")}
