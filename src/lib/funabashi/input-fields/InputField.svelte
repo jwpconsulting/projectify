@@ -108,7 +108,8 @@
         {#if value}
             <button
                 class="absolute right-0.5 top-0.5 z-20 flex flex-row gap-2.5 p-3"
-                on:click={clear}
+                on:click|preventDefault={clear}
+                type="button"
             >
                 <Icon
                     src={X}
