@@ -1,22 +1,30 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
 </script>
 
-<main class="page bg-base-100 xl:p-24 2xl:p-24">
-    <div class="m-6 grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
-        <div class="">
-            <h1 class="mb-8 text-4xl font-bold md:text-6xl">
-                {$_("index.hero-header")}
-            </h1>
-            <p class="mb-8 max-w-md">
-                {$_("index.hero-text")}
-            </p>
-            <a href={"/"} class="btn btn-primary btn-md max-w-fit">
-                {$_("index.hero-button")}
-            </a>
+<main class="page bg-foreground xl:p-24 2xl:p-24">
+    <div class="grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
+        <div class="flex flex-col gap-12">
+            <header class="flex flex-col gap-10">
+                <h1 class="text-4xl font-bold md:text-6xl">
+                    {$_("index.hero-header")}
+                </h1>
+                <p class="max-w-md">
+                    {$_("index.hero-text")}
+                </p>
+            </header>
+            <Button
+                style={{ kind: "primary" }}
+                color="blue"
+                size="medium"
+                action={{ kind: "a", href: "/signup" }}
+                label={$_("index.hero-button")}
+                grow={false}
+            />
         </div>
         <div class="min-w-full max-w-md">
-            <img src="/assets/landing/hero.png" alt="" />
+            <img src="/assets/landing/hero.png" alt={$_("index.hero-alt")} />
         </div>
     </div>
     <div class="m-8 grid grid-cols-1 text-center sm:ml-32 sm:mr-32">
