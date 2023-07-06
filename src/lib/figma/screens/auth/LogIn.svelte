@@ -28,9 +28,10 @@
     <div class="flex flex-col gap-6">
         <InputField
             placeholder={$_("log-in.enter-your-email")}
-            style={{ kind: "field", inputType: "text" }}
+            style={{ kind: "field", inputType: "email" }}
             name="email"
             label={$_("log-in.email")}
+            required
             bind:value={email}
         />
         <InputField
@@ -39,6 +40,7 @@
             name="password"
             label={$_("log-in.password")}
             bind:value={password}
+            required
             anchorBottom={{
                 href: "/user/reset",
                 label: $_("log-in.forgot-password"),
