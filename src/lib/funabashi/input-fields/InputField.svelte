@@ -69,6 +69,15 @@
                     {placeholder}
                     {required}
                 />
+            {:else if style.inputType === "email"}
+                <input
+                    type="email"
+                    class={`${inputStyle} pl-2`}
+                    {name}
+                    bind:value
+                    {placeholder}
+                    {required}
+                />
             {:else if style.inputType === "password"}
                 <input
                     type="password"
