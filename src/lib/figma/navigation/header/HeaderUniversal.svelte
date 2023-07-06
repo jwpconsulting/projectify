@@ -12,7 +12,7 @@
     <div class="flex flex-row items-center gap-12">
         {#if logoVisibleDesktop}
             <a href="/">
-                <img src="/assets/logo/polylogo.svg" alt="" />
+                <img src="/assets/logo/polylogo.svg" alt="Projectify" />
             </a>
         {/if}
         <slot name="desktop-left" />
