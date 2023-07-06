@@ -13,6 +13,10 @@
     export let disabled = false;
     export let label: string;
     export let action: ButtonAction;
+    // XXX Hacky. Buttons have been inserted so far without caring for grow
+    // or not. Grow depends on the outside being flex. This means this Button
+    // is less "containerized" or "isolated".
+    export let grow = true;
 
     $: innerColorStyle = {
         primary: {
@@ -41,9 +45,11 @@
 
     $: outerStyle = {
         // XXX Not sure if this is the best place to put flex grow here
-        primary: `group flex grow flex-col items-start gap-2 rounded-llg border border-transparent p-0.5 focus:border-border-focus focus:outline-none`,
-        secondary: `group flex grow flex-col items-start gap-2 rounded-llg border border-transparent p-0.5 focus:border-border-focus focus:outline-none`,
-        tertiary: `flex grow flex-row items-center justify-center gap-2 rounded-lg border border-transparent border-transparent px-4 py-2 font-bold focus:outline-none disabled:text-disabled-content ${innerColorStyle} focus:border-border-focus ${innerSizeStyle}`,
+        primary: `group flex ${
+            grow ? "grow" : ""
+        } flex-col items-start gap-2 rounded-llg border border-transparent p-0.5 focus:border-border-focus focus:outline-none`,
+        secondary: `group flex grow ? "grow" : ""grow flex-col items-start gap-2 rounded-llg border border-transparent p-0.5 focus:border-border-focus focus:outline-none`,
+        tertiary: `flex grow ? "grow" : ""grow flex-row items-center justify-center gap-2 rounded-lg border border-transparent border-transparent px-4 py-2 font-bold focus:outline-none disabled:text-disabled-content ${innerColorStyle} focus:border-border-focus ${innerSizeStyle}`,
     }[style.kind];
 
     $: innerStyle = {
