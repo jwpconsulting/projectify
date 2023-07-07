@@ -5,6 +5,8 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { createWorkspaceBoard } from "$lib/repository/workspace";
     import { closeConstructiveOverlay } from "$lib/stores/globalUi";
+    import { goto } from "$lib/navigation";
+    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
     export let workspace: Workspace;
 
@@ -14,12 +16,13 @@
         if (!title) {
             throw new Error("Not valid");
         }
-        await createWorkspaceBoard(workspace, {
+        const { uuid } = await createWorkspaceBoard(workspace, {
             title,
             description: "TODO",
             deadline: null,
         });
         closeConstructiveOverlay();
+        await goto(getDashboardWorkspaceBoardUrl(uuid));
     }
 </script>
 

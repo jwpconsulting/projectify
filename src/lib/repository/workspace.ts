@@ -191,17 +191,25 @@ export async function deleteLabel(label: Label) {
 export async function createWorkspaceBoard(
     workspace: Workspace,
     workspaceBoard: { title: string; description: string; deadline: null }
-) {
+): Promise<{ uuid: string }> {
     const input = {
         workspaceUuid: workspace.uuid,
         ...workspaceBoard,
     };
-    await client.mutate({
+    interface result {
+        data: { addWorkspaceBoard: WorkspaceBoard };
+    }
+    const created = (await client.mutate({
         mutation: Mutation_AddWorkspaceBoard,
         variables: {
             input,
         },
-    });
+    })) as result;
+    console.log(created);
+    const {
+        data: { addWorkspaceBoard },
+    } = created;
+    return addWorkspaceBoard;
 }
 
 // Read
