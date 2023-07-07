@@ -98,9 +98,7 @@
             <Button
                 action={{
                     kind: "button",
-                    action: () => {
-                        console.error("Save not implemented");
-                    },
+                    action: createOrUpdate,
                 }}
                 color="blue"
                 size="small"
