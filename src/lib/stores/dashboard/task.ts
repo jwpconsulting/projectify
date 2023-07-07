@@ -7,7 +7,10 @@ import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard/workspaceBoard"
 import { selectWorkspaceUser } from "$lib/stores/dashboard/workspaceUser";
 
 import { selectedLabels } from "$lib/stores/dashboard/label";
-import { getTask } from "$lib/repository/workspace";
+import {
+    getTask,
+    deleteTask as repositoryDeleteTask,
+} from "$lib/repository/workspace";
 import { createWsStore, searchAmong } from "$lib/stores/util";
 
 export const taskSearchInput = writable<string>("");
@@ -63,6 +66,10 @@ export const currentTask = createWsStore<Task>(
     currentTaskUuid,
     getTask
 );
+
+export async function deleteTask(task: Task) {
+    await repositoryDeleteTask(task);
+}
 
 // XXX Remove the following
 import { goto } from "$app/navigation";

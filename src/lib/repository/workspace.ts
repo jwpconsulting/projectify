@@ -11,6 +11,7 @@ import {
     Mutation_MoveTaskAfter,
     Mutation_UpdateLabelMutation,
     Mutation_UpdateTask,
+    Mutation_DeleteTask,
 } from "$lib/graphql/operations";
 import type {
     CreateTask,
@@ -135,25 +136,14 @@ export async function assignLabelToTask(
 
 // Delete
 export async function deleteTask(task: Task): Promise<void> {
-    console.error("TODO do something with", task);
-    await new Promise((resolve) => resolve(null));
-    // TODO const modalRes = await getModal("deleteTaskConfirmModal").open();
-    // TODO if (!modalRes) {
-    // TODO     return;
-    // TODO }
-    // TODO try {
-    // TODO     await client.mutate({
-    // TODO         mutation: Mutation_DeleteTask,
-    // TODO         variables: {
-    // TODO             input: {
-    // TODO                 uuid: task.uuid,
-    // TODO             },
-    // TODO         },
-    // TODO     });
-    // TODO     // closeTaskDetails(); TODO?
-    // TODO } catch (error) {
-    // TODO     console.error(error);
-    // TODO }
+    await client.mutate({
+        mutation: Mutation_DeleteTask,
+        variables: {
+            input: {
+                uuid: task.uuid,
+            },
+        },
+    });
 }
 // Label CRUD
 export async function createLabel(

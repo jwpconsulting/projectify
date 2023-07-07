@@ -11,14 +11,39 @@
     } from "@steeze-ui/heroicons";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
-    import { getTaskUrl, getTaskUpdatesUrl } from "$lib/urls";
-    import type { Task } from "$lib/types/workspace";
+    import {
+        getTaskUrl,
+        getTaskUpdatesUrl,
+        getDashboardWorkspaceBoardSectionUrl,
+    } from "$lib/urls";
+    import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
     import { copyToClipboard } from "$lib/utils/clipboard";
     import type { MoveTaskModule } from "$lib/types/stores";
+    import { openDestructiveOverlay } from "$lib/stores/globalUi";
+    import { deleteTask } from "$lib/stores/dashboard";
+    import { goto } from "$lib/navigation";
 
     export let task: Task;
+    export let workspaceBoardSection: WorkspaceBoardSection;
     export let moveTaskModule: MoveTaskModule | undefined;
     export let location: "dashboard" | "task";
+
+    function promptDeleteTask() {
+        const { uuid } = workspaceBoardSection;
+        const target = {
+            kind: "deleteTask" as const,
+            task,
+        };
+        const action = {
+            kind: "async" as const,
+            action: async () => {
+                await deleteTask(task);
+                await goto(getDashboardWorkspaceBoardSectionUrl(uuid));
+            },
+        };
+
+        openDestructiveOverlay(target, action);
+    }
 </script>
 
 {#if location === "dashboard"}
@@ -87,7 +112,7 @@
 <ContextMenuButton
     kind={{
         kind: "button",
-        action: () => console.error("delete task not implemented"),
+        action: promptDeleteTask,
     }}
     label={$_("task-overlay.delete-task")}
     state="normal"

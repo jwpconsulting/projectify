@@ -38,12 +38,14 @@ const contextMenus: Record<string, ContextMenuType> = {
         task,
         location: "dashboard",
         moveTaskModule,
+        workspaceBoardSection,
     },
     task: {
         kind: "task" as const,
         task,
         location: "task",
         moveTaskModule,
+        workspaceBoardSection,
     },
     help: {
         kind: "help",

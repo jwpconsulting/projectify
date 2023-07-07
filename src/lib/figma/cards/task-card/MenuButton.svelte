@@ -25,6 +25,7 @@
             task,
             location: "dashboard" as const,
             moveTaskModule,
+            workspaceBoardSection,
         };
         console.log("TODO use", { uuid, tasks });
         openContextMenu(contextMenu, dropDownMenuBtnRef);

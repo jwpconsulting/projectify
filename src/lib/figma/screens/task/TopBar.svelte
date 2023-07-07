@@ -26,14 +26,27 @@
 
     const canCreateOrUpdate = taskModule ? taskModule.canCreateOrUpdate : null;
 
+    let contextMenuRef: HTMLElement;
+    let contextMenuType: ContextMenuType | undefined;
     let breadCrumbTask: BreadCrumbTask;
     $: {
         if (taskOrNewTask.kind === "task") {
             const { task } = taskOrNewTask;
+            const { workspace_board_section: workspaceBoardSection } = task;
+            if (!workspaceBoardSection) {
+                throw new Error("Expected workspaceBoardSection");
+            }
             if (!isBreadCrumbTask(task)) {
                 throw new Error(`Failed to crumble ${task}'s bread`);
             }
             breadCrumbTask = task;
+            contextMenuType = {
+                kind: "task",
+                task: taskOrNewTask.task,
+                location: "task",
+                moveTaskModule: undefined,
+                workspaceBoardSection,
+            };
         } else {
             const { newTask } = taskOrNewTask;
             const { workspace_board_section } = newTask;
@@ -49,18 +62,6 @@
     }
 
     const createOrUpdate = taskModule ? taskModule.createOrUpdateTask : null;
-
-    let contextMenuRef: HTMLElement;
-    let contextMenuType: ContextMenuType | undefined;
-    $: contextMenuType =
-        taskOrNewTask.kind == "task"
-            ? {
-                  kind: "task",
-                  task: taskOrNewTask.task,
-                  location: "task",
-                  moveTaskModule: undefined,
-              }
-            : undefined;
 </script>
 
 <div class="flex flex-row items-center justify-between">

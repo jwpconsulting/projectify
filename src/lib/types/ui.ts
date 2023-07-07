@@ -109,13 +109,8 @@ export type ContextMenuType =
           kind: "task";
           task: Task;
           moveTaskModule: MoveTaskModule | undefined;
-          location: "dashboard";
-      }
-    | {
-          kind: "task";
-          task: Task;
-          moveTaskModule: MoveTaskModule | undefined;
-          location: "task";
+          location: "dashboard" | "task";
+          workspaceBoardSection: WorkspaceBoardSection;
       }
     | { kind: "help" }
     | { kind: "permissions" }
