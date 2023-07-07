@@ -12,6 +12,12 @@
         "filter-members": "filter members",
         "search-task": "Search Task",
         "assign-user": "Assign user",
+        "section": {
+            "empty": {
+                "message": "No tasks in this section.",
+                "prompt": "Add a task here"
+            }
+        },
         "no-user-assigned": "No user assigned"
     },
     "filter-label-menu": {
