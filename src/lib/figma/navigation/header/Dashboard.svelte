@@ -8,28 +8,35 @@
     import type { User } from "$lib/types/user";
 
     export let user: User;
+
+    const showSearch = false;
+    const showNotificationButton = false;
 </script>
 
 <HeaderUniversal logoVisibleDesktop>
     <slot slot="desktop-right">
-        <SearchButton />
+        {#if showSearch}
+            <SearchButton />
+        {/if}
         <div class="flex flex-row gap-4">
-            <a href="/notifications">
+            {#if showNotificationButton}
                 <NotificationButton isActive />
-            </a>
+            {/if}
             <UserAccount {user} />
         </div>
     </slot>
     <slot slot="mobile">
         <div class="flex flex-row gap-4">
             <HamburgerMenu isActive />
-            <SearchMobile />
+            {#if showSearch}
+                <SearchMobile />
+            {/if}
         </div>
 
         <div class="flex flex-row gap-4">
-            <a href="/notifications">
+            {#if showNotificationButton}
                 <NotificationButton isActive />
-            </a>
+            {/if}
             <UserAccount {user} />
         </div>
     </slot>
