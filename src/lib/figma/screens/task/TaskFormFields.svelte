@@ -8,6 +8,7 @@
     import TaskUpdateDescription from "$lib/figma/screens/task/TaskUpdateDescription.svelte";
     import TaskUpdateSection from "$lib/figma/screens/task/TaskUpdateSection.svelte";
     import SubTaskBarComposite from "$lib/figma/screens/task/SubTaskBarComposite.svelte";
+    import TaskFieldsTemplate from "$lib/figma/screens/task/TaskFieldsTemplate.svelte";
     import type { TaskModule } from "$lib/types/stores";
     import type {
         Label,
@@ -41,45 +42,20 @@
     }
 </script>
 
-<dl class="inline-grid max-w-sm auto-cols-min grid-cols-2 items-center gap-8">
-    <dt class="font-bold">
-        {$_("task-screen.task-title")}
-    </dt>
-    <dd>
-        <TaskUpdateTitle bind:title />
-    </dd>
-    <dt class="font-bold">
-        {$_("task-screen.assignee")}
-    </dt>
-    <dd>
-        <TaskUpdateUser
-            action={taskModule.showUpdateWorkspaceUser}
-            workspaceUser={assignedUser}
-        />
-    </dd>
-    <dt class="font-bold">
-        {$_("task-screen.labels")}
-    </dt>
-    <dd>
-        <TaskUpdateLabel action={taskModule.showUpdateLabel} {labels} />
-    </dd>
-    <dt class="font-bold">
-        {$_("task-screen.section")}
-    </dt>
-    <dd>
-        <TaskUpdateSection {task} />
-    </dd>
-    <dt class="font-bold">
-        {$_("task-screen.due-date")}
-    </dt>
-    <dd>
-        <TaskUpdateDueDate date={dueDate} />
-    </dd>
-    <dt class="font-bold">
-        {$_("task-screen.description")}
-    </dt>
-    <dd>
-        <TaskUpdateDescription bind:description />
-    </dd>
-</dl>
+<TaskFieldsTemplate>
+    <TaskUpdateTitle slot="title" bind:title />
+    <TaskUpdateUser
+        slot="assignee"
+        action={taskModule.showUpdateWorkspaceUser}
+        workspaceUser={assignedUser}
+    />
+    <TaskUpdateLabel
+        slot="labels"
+        action={taskModule.showUpdateLabel}
+        {labels}
+    />
+    <TaskUpdateSection slot="section" {task} />
+    <TaskUpdateDueDate slot="due-date" date={dueDate} />
+    <TaskUpdateDescription slot="description" bind:description />
+</TaskFieldsTemplate>
 <SubTaskBarComposite {subTasks} />

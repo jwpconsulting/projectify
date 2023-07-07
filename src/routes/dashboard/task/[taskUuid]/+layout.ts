@@ -1,3 +1,5 @@
+import type { LayoutLoadEvent } from "./$types";
+
 import {
     currentTask,
     currentWorkspaceUuid,
@@ -7,11 +9,7 @@ import {
 export const prerender = false;
 export const ssr = false;
 
-export function load({
-    params: { taskUuid },
-}: {
-    params: { taskUuid: string };
-}) {
+export function load({ params: { taskUuid } }: LayoutLoadEvent) {
     // XXX Ideally we would already have set an instance of the task here,
     // then inside +page.svelte we would not have a nullable Task
     // XXX perhaps we can even init taskModule here
