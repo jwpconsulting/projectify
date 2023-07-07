@@ -8,6 +8,8 @@
     import type { CreateTaskModule } from "$lib/types/stores";
     import { createTask as createTaskFn } from "$lib/repository/workspace";
     import type { PageData } from "./$types";
+    import { goto } from "$lib/navigation";
+    import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
 
     export let data: PageData;
 
@@ -60,7 +62,7 @@
         labelSearchModule,
     };
 
-    function createOrUpdateTask() {
+    async function createOrUpdateTask() {
         const { title, description } = $createTask;
         if (!title || !description) {
             throw new Error("Expected title and description");
@@ -75,7 +77,10 @@
             // TODO
             deadline: null,
         };
-        createTaskFn(createTaskFull);
+        await createTaskFn(createTaskFull);
+        await goto(
+            getDashboardWorkspaceBoardSectionUrl(workspaceBoardSection.uuid)
+        );
     }
 </script>
 
