@@ -65,8 +65,8 @@ Decide which kind of context menu you need
 import type { ContextMenuType } from "$lib/types/ui";
 // See src/lib/types/ui.ts ContextMenuType
 const contextMenuType = {
-    kind: "theKind",
-    ...additionalData
+  kind: "theKind",
+  ...additionalData
 }
 ```
 
@@ -81,6 +81,33 @@ Open it up by calling
 ```
 import { openContextMenu } from "$lib/stores/globalUi";
 openContextMenu(contextMenuType, contextMenuOpensHere)
+```
+
+# Opening constructive overlay
+
+Decide the type
+
+```
+import type { ConstructiveOverlayType } from "$lib/types/ui";
+const constructiveOverlayType = {
+    kind: "theKind",
+    ...additionalDate,
+};
+```
+
+The action to be performed might be removed (no overlay uses it):
+
+```
+const action = {
+    kind: "sync",
+    action: console.log,
+};
+```
+
+Then open it
+
+```
+openConstructiveOverlay(constructiveOverlayType, action);
 ```
 
 # Creating an InputField
