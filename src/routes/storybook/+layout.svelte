@@ -9,10 +9,6 @@
             href: "/storybook/buttons",
         },
         {
-            title: "Input Fields",
-            href: "/storybook/input-fields",
-        },
-        {
             title: "Select controls",
             href: "/storybook/select-controls",
         },
