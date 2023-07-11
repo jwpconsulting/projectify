@@ -12,6 +12,7 @@ import {
     Mutation_UpdateLabelMutation,
     Mutation_UpdateTask,
     Mutation_DeleteTask,
+    Mutation_UpdateWorkspaceBoard,
 } from "$lib/graphql/operations";
 import type {
     CreateTask,
@@ -271,19 +272,18 @@ export async function getArchivedWorkspaceBoards(
 }
 
 // These methods find refuge from SelectWorkspaceBoard.svelte here
-export async function updateWorkspaceBoard() {
-    // TODO modal
-    // await client.mutate({
-    //     mutation: Mutation_UpdateWorkspaceBoard,
-    //     variables: {
-    //         input: {
-    //             uuid: workspaceBoard.uuid,
-    //             title: modalRes.outputs.title,
-    //             deadline: modalRes.outputs.deadline,
-    //             description: "",
-    //         },
-    //     },
-    // });
+export async function updateWorkspaceBoard(workspaceBoard: WorkspaceBoard) {
+    await client.mutate({
+        mutation: Mutation_UpdateWorkspaceBoard,
+        variables: {
+            input: {
+                uuid: workspaceBoard.uuid,
+                title: workspaceBoard.title,
+                deadline: workspaceBoard.deadline,
+                description: "",
+            },
+        },
+    });
 }
 
 export async function archiveWorkspaceBoard(workspaceBoard: WorkspaceBoard) {

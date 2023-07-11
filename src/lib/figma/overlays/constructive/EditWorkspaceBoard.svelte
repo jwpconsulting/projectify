@@ -3,10 +3,24 @@
     import type { WorkspaceBoard } from "$lib/types/workspace";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import { closeConstructiveOverlay } from "$lib/stores/globalUi";
+    import { updateWorkspaceBoard } from "$lib/repository/workspace";
 
     // TODO do something with workspaceBoard
     export let workspaceBoard: WorkspaceBoard;
-    console.log(workspaceBoard);
+
+    let title = workspaceBoard.title;
+    let deadline = workspaceBoard.deadline;
+
+    async function save() {
+        const updatedWorkspaceBoard = {
+            ...workspaceBoard,
+            title,
+            deadline,
+        };
+        await updateWorkspaceBoard(updatedWorkspaceBoard);
+        closeConstructiveOverlay();
+    }
 </script>
 
 <div class="flex flex-col gap-2">
@@ -15,6 +29,7 @@
         name="workspace-board-name"
         placeholder={$_("edit-workspace-board.enter-a-workspace-board-name")}
         style={{ kind: "field", inputType: "text" }}
+        bind:value={title}
     />
     <InputField
         name="deadline"
@@ -27,7 +42,7 @@
     <Button
         action={{
             kind: "button",
-            action: console.error.bind(null, "Cancel not implemented"),
+            action: closeConstructiveOverlay,
         }}
         style={{ kind: "secondary" }}
         size="medium"
@@ -38,7 +53,7 @@
     <Button
         action={{
             kind: "button",
-            action: console.error.bind(null, "Save not implemented"),
+            action: save,
         }}
         style={{ kind: "primary" }}
         size="medium"
