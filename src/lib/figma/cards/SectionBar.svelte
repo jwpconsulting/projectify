@@ -47,7 +47,7 @@
                     <Anchor
                         label={$_("dashboard.section.empty.prompt")}
                         size="normal"
-                        href="{getNewTaskUrl(workspaceBoardSection.uuid)}}"
+                        href={getNewTaskUrl(workspaceBoardSection.uuid)}
                     />
                 </p>
             {/each}
