@@ -12,6 +12,10 @@
         "filter-members": "filter members",
         "search-task": "Search Task",
         "assign-user": "Assign user",
+        "no-sections": {
+            "message": "There are no sections in this workspace board.",
+            "prompt": "Add a section"
+        },
         "section": {
             "empty": {
                 "message": "No tasks in this section.",
