@@ -1,5 +1,4 @@
 <script lang="ts">
-    import AuthGuard from "$lib/components/AuthGuard.svelte";
     import HeaderDashboard from "$lib/figma/navigation/header/Dashboard.svelte";
     import ConnectionStatus from "$lib/components/connectionStatus.svelte";
     import OverlayContainer from "$lib/components/OverlayContainer.svelte";
@@ -17,14 +16,12 @@
     import { user } from "$lib/stores/user";
 </script>
 
-<AuthGuard>
-    <div class="flex h-full flex-col">
-        {#if $user}
-            <HeaderDashboard user={$user} />
-        {/if}
-        <slot />
-    </div>
-</AuthGuard>
+<div class="flex h-full flex-col">
+    {#if $user}
+        <HeaderDashboard user={$user} />
+    {/if}
+    <slot />
+</div>
 
 <ConnectionStatus />
 
