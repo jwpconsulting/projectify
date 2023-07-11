@@ -14,6 +14,50 @@
     export let anchorBottom: InputFieldAnchor | null = null;
     export let required = false;
 
+    import type Pikaday from "pikaday";
+    import { browser } from "$app/environment";
+
+    async function getPikaday(): Promise<typeof Pikaday> {
+        // This deals with pikaday using window here
+        // https://github.com/Pikaday/Pikaday/blob/21f676e70d688d18b265f2c12fc38e8457c20645/pikaday.js#L38C21-L38C21
+        return (await import("pikaday")).default;
+    }
+
+    let pikadayAnchor: HTMLElement;
+    let pikaday: typeof Pikaday;
+
+    if (browser) {
+        getPikaday().then((p) => {
+            pikaday = p;
+        });
+    }
+
+    function dateToIso(date: Date): string {
+        return date.toISOString().substring(0, 10);
+    }
+
+    $: {
+        // TODO find out if we should avoid showing this on mobile
+        if (pikaday && pikadayAnchor) {
+            const pikadayConfig = {
+                field: pikadayAnchor,
+                format: "YYYY-MM-DD",
+                toString(date: Date, _format: string): string {
+                    return dateToIso(date);
+                },
+                parse(dateString: string, _format: string): Date {
+                    return new Date(dateString);
+                },
+                onSelect(date: Date) {
+                    // The two way binding falls apart when pikaday piks a date
+                    // for us. To mitigate, we set value here.
+                    value = dateToIso(date);
+                },
+            };
+            new pikaday(pikadayConfig);
+        }
+    }
+
     const inputStyle =
         "text-regular placeholder:text-task-update-text peer relative top-0 left-0 z-10 h-full w-full rounded-lg border border-border pr-8 text-xs focus:outline-none";
 
@@ -69,6 +113,15 @@
                     {placeholder}
                     {required}
                 />
+            {:else if style.inputType === "password"}
+                <input
+                    type="password"
+                    class={`${inputStyle} pl-2`}
+                    {name}
+                    bind:value
+                    {placeholder}
+                    {required}
+                />
             {:else if style.inputType === "email"}
                 <input
                     type="email"
@@ -78,12 +131,13 @@
                     {placeholder}
                     {required}
                 />
-            {:else if style.inputType === "password"}
+            {:else if style.inputType === "date"}
                 <input
-                    type="password"
+                    type="text"
                     class={`${inputStyle} pl-2`}
                     {name}
                     bind:value
+                    bind:this={pikadayAnchor}
                     {placeholder}
                     {required}
                 />

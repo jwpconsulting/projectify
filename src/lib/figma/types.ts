@@ -63,7 +63,7 @@ export type InputFieldStyle =
     | { kind: "search" }
     // TODO make me "erasable"
     | { kind: "subTask" }
-    | { kind: "field"; inputType: "text" | "password" | "email" };
+    | { kind: "field"; inputType: "text" | "password" | "email" | "date" };
 export const inputFieldSizes = ["extraSmall", "small", "normal"] as const;
 export type InputFieldSize = (typeof inputFieldSizes)[number];
 export interface InputFieldAnchor {

@@ -2,9 +2,38 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 
 import InputField from "$lib/funabashi/input-fields/InputField.svelte";
 
+import { makeStorybookSelect } from "$lib/storybook";
+import type { InputFieldStyle } from "$lib/figma/types";
+
+const style = makeStorybookSelect<InputFieldStyle>({
+    "Search": {
+        kind: "search",
+    },
+    "Sub Task": {
+        kind: "subTask",
+    },
+    "Text": {
+        kind: "field",
+        inputType: "text",
+    },
+    "Password": {
+        kind: "field",
+        inputType: "password",
+    },
+    "Email": {
+        kind: "field",
+        inputType: "email",
+    },
+    "Date": {
+        kind: "field",
+        inputType: "date",
+    },
+});
+
 const meta: Meta<InputField> = {
     component: InputField,
     argTypes: {
+        style,
         value: {
             control: "text",
         },
