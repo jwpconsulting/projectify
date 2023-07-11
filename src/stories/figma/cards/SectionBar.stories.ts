@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 import SectionBar from "$lib/figma/cards/SectionBar.svelte";
 
 import {
-    createMoveTaskModule,
     mobileParameters,
     workspaceBoard,
     workspaceBoardSection,
@@ -15,7 +14,6 @@ const meta: Meta<SectionBar> = {
     args: {
         workspaceBoard,
         workspaceBoardSection,
-        createMoveTaskModule,
     },
 };
 export default meta;

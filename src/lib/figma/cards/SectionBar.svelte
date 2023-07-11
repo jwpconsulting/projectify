@@ -7,7 +7,6 @@
         WorkspaceBoard,
         WorkspaceBoardSection,
     } from "$lib/types/workspace";
-    import type { createMoveTaskModule as _createMoveTaskModule } from "$lib/stores/modules";
 
     import { workspaceBoardSectionClosed } from "$lib/stores/dashboard";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
@@ -21,8 +20,6 @@
 
     let tasks: Task[] = [];
     $: tasks = open ? workspaceBoardSection.tasks ?? [] : [];
-
-    export let createMoveTaskModule: typeof _createMoveTaskModule;
 </script>
 
 <div class="flex flex-col">
@@ -32,14 +29,10 @@
             {#each tasks as task, inx (task.uuid)}
                 <TaskCard
                     {workspaceBoardSection}
+                    {tasks}
                     {task}
                     isFirst={inx === 0}
                     isLast={inx === tasks.length - 1}
-                    moveTaskModule={createMoveTaskModule(
-                        workspaceBoardSection,
-                        task,
-                        tasks
-                    )}
                 />
             {:else}
                 <p>
