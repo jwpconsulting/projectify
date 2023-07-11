@@ -5,7 +5,6 @@
 
     import Subtasks from "$lib/components/dashboard/task-details-subtasks.svelte";
     import ToolBar from "$lib/components/dashboard/toolBar.svelte";
-    import InputDatePicker from "$lib/components/inputDatePicker.svelte";
     import IconCheckCircle from "$lib/components/icons/icon-check-circle.svelte";
     import RichTextarea from "$lib/components/rich-textarea.svelte";
     import type { Label, SubTask, Task } from "$lib/types/workspace";
@@ -48,21 +47,6 @@
             <div class="flex flex-col gap-4">
                 <div class="text-xl font-bold uppercase">
                     {$_("deadline")}
-                </div>
-                <div>
-                    <InputDatePicker
-                        input={{
-                            value: task.deadline,
-                        }}
-                        placeholder={$_("deadline")}
-                        on:change={({ detail: { date } }) => {
-                            if (!task) {
-                                throw new Error("Expected task");
-                            }
-                            task.deadline = date;
-                            taskModified = true;
-                        }}
-                    />
                 </div>
             </div>
 
