@@ -1,5 +1,4 @@
 <script lang="ts">
-    import Checkbox from "$lib/funabashi/select-controls/Checkbox.svelte";
     import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
     import FilterUser from "$lib/figma/select-controls/FilterUser.svelte";
     import FilterLabel from "$lib/figma/select-controls/FilterLabel.svelte";
@@ -9,23 +8,9 @@
         fc,
         fr,
         selectLabels,
-        trueFalse,
         workspaceUserSelectionInputs,
     } from "$lib/storybook";
 </script>
-
-Checkbox
-<div class={`${fr} items-center`}>
-    {#each trueFalse as disabled}
-        Disabled: {disabled}
-        <div class={fc}>
-            {#each falseTrue as checked}
-                Checked: {checked}
-                <Checkbox {checked} {disabled} contained={false} />
-            {/each}
-        </div>
-    {/each}
-</div>
 
 Select label focus
 <div class={fr}>
