@@ -1,7 +1,10 @@
 <script lang="ts">
     import { Icon } from "@steeze-ui/svelte-icon";
     import { Search, X } from "@steeze-ui/heroicons";
-    import type { InputFieldAnchor, InputFieldStyle } from "$lib/figma/types";
+    import type {
+        InputFieldAnchor,
+        InputFieldStyle,
+    } from "$lib/funabashi/types";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
 
     // TODO make border customizable (e.g. in TaskFormFields)

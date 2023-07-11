@@ -61,3 +61,19 @@ export const headerButtonTypes: HeaderButtonType[] = [
     { kind: "dropdown", open: true },
     { kind: "button" },
 ];
+
+// For input-fields/InputField.svelte
+// TODO rename to InputFieldKind Justus 2022-09-22
+// TODO we need to instead support "search", "erasable", and field
+// subTask should use erasable
+export type InputFieldStyle =
+    | { kind: "search" }
+    // TODO make me "erasable"
+    | { kind: "subTask" }
+    | { kind: "field"; inputType: "text" | "password" | "email" | "date" };
+export const inputFieldSizes = ["extraSmall", "small", "normal"] as const;
+export type InputFieldSize = (typeof inputFieldSizes)[number];
+export interface InputFieldAnchor {
+    href: string;
+    label: string;
+}

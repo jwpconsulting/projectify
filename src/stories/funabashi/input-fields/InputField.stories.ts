@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 import InputField from "$lib/funabashi/input-fields/InputField.svelte";
 
 import { makeStorybookSelect } from "$lib/storybook";
-import type { InputFieldStyle } from "$lib/figma/types";
+import type { InputFieldStyle } from "$lib/funabashi/types";
 
 const style = makeStorybookSelect<InputFieldStyle>({
     "Search": {
