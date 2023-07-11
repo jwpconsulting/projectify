@@ -46,6 +46,9 @@
     }
 
     async function save() {
+        if (!createLabel) {
+            throw new Error("Expected createLabel");
+        }
         if (!chosenColor) {
             throw new Error("Expected chosenColor");
         }
@@ -71,7 +74,7 @@
 
 {#if state === "list"}
     <FilterLabelMenu {labelSearchModule} {startCreateLabel} />
-{:else}
+{:else if createLabel}
     <form class="flex flex-col gap-6" on:submit|preventDefault={save}>
         <div class="flex flex-col">
             <div class="px-4 pb-4 pt-2">
