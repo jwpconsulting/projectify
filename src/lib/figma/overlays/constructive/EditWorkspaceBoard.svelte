@@ -35,7 +35,8 @@
         name="deadline"
         label={$_("edit-workspace-board.deadline")}
         placeholder={$_("edit-workspace-board.deadline")}
-        style={{ kind: "field", inputType: "text" }}
+        style={{ kind: "field", inputType: "date" }}
+        bind:value={deadline}
     />
 </div>
 <div class="flex flex-row justify-center">
