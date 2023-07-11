@@ -1,28 +1,9 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import LabelList from "$lib/components/dashboard/LabelList.svelte";
-    import LabelPicker from "$lib/components/dashboard/LabelPicker.svelte";
-    import { getDropDown } from "$lib/components/globalDropDown.svelte";
     import type { Task } from "$lib/types/workspace";
 
     export let task: Task;
-    let labelPickerBtnRef: HTMLElement;
-
-    function openLabelPicker() {
-        let dropDown = getDropDown();
-        if (!dropDown) {
-            throw new Error("Expected dropDown");
-        }
-        dropDown.openComponent(LabelPicker, labelPickerBtnRef, {
-            task,
-            dispatch: async (_name: string, _data: unknown) => {
-                if (!dropDown) {
-                    throw new Error("Expected dropDown");
-                }
-                dropDown.close();
-            },
-        });
-    }
 </script>
 
 {#if task.labels.length}
@@ -34,9 +15,10 @@
         >
             <button
                 class="text-xxs font-bold text-primary"
-                bind:this={labelPickerBtnRef}
-                on:click|stopPropagation={() => openLabelPicker()}
-                >{$_("add-label")}</button
+                on:click|stopPropagation={console.error.bind(
+                    null,
+                    "not implemented"
+                )}>{$_("add-label")}</button
             >
         </div>
     </div>

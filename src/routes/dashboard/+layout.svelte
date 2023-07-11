@@ -2,7 +2,6 @@
     import AuthGuard from "$lib/components/AuthGuard.svelte";
     import HeaderDashboard from "$lib/figma/navigation/header/Dashboard.svelte";
     import ConnectionStatus from "$lib/components/connectionStatus.svelte";
-    import GlobalDropDown from "$lib/components/globalDropDown.svelte";
     import OverlayContainer from "$lib/components/OverlayContainer.svelte";
     import ContextMenuContainer from "$lib/components/ContextMenuContainer.svelte";
     import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
@@ -28,8 +27,6 @@
 </AuthGuard>
 
 <ConnectionStatus />
-
-<GlobalDropDown />
 
 <OverlayContainer
     overlay={DestructiveOverlay}

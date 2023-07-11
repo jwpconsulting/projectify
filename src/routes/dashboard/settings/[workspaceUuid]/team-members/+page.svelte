@@ -9,9 +9,6 @@
     import { fuseSearchThreshold } from "$lib/config";
     import DropdownButton from "$lib/components/dropdown-button.svelte";
     import IconLockClosed from "$lib/components/icons/icon-lock-closed.svelte";
-    import { getDropDown } from "$lib/components/globalDropDown.svelte";
-    import type { DropDownMenuItem } from "$lib/components/globalDropDown.svelte";
-    import { workspaceUserRoles } from "$lib/types/workspaceUserRole";
     import IconEdit from "$lib/components/icons/icon-edit.svelte";
     import IconTrash from "$lib/components/icons/icon-trash.svelte";
     import {
@@ -111,34 +108,6 @@
             );
         }
     }
-
-    let filterRoleButton: HTMLElement | null;
-    function openRolePicker() {
-        let dropDown = getDropDown();
-
-        let dropDownItems: DropDownMenuItem[] = [
-            {
-                label: $_("all-roles"),
-                icon: null,
-                onClick: () => {
-                    roleFilter = null;
-                },
-            },
-            ...workspaceUserRoles.map((role) => ({
-                label: $_(role),
-                icon: null,
-                onClick: () => {
-                    roleFilter = role;
-                },
-            })),
-        ];
-
-        if (dropDown && filterRoleButton) {
-            dropDown.open(dropDownItems, filterRoleButton, null);
-        } else {
-            throw new Error("Expected dropDown && filterRoleButton");
-        }
-    }
 </script>
 
 <div class="flex items-center justify-center gap-3 py-4">
@@ -150,8 +119,6 @@
     <DropdownButton
         label={roleFilter ? $_(roleFilter) : "Filter by role"}
         icon={IconLockClosed}
-        bind:target={filterRoleButton}
-        on:click={openRolePicker}
     />
 </div>
 <div class="divide-y divide-base-300">
