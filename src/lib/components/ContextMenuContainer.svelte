@@ -79,7 +79,7 @@
 </script>
 
 <div
-    class="fixed left-0 top-0 h-screen w-screen bg-transparent"
+    class="bg-red fixed left-0 top-0 h-full w-full"
     class:invisible={$contextMenuState.kind === "hidden"}
     on:click={closeContextMenu}
     on:keydown={closeContextMenu}
