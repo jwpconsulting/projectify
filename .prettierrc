@@ -3,5 +3,13 @@
     "singleQuote": false,
     "trailingComma": "es5",
     "printWidth": 79,
-    "quoteProps": "consistent"
+    "quoteProps": "consistent",
+    "overrides": [
+        {
+            "files": "*.md",
+            "options": {
+                "tabWidth": 2
+            }
+        }
+    ]
 }
