@@ -11,5 +11,11 @@ max_line_length = 79
 
 [*.md]
 indent_style = space
+# Why 2?
 indent_size = 2
+max_line_length = 79
+
+[docs/guide.md]
+indent_style = space
+indent_size = 4
 max_line_length = 79
