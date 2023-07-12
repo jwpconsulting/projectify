@@ -30,7 +30,7 @@ celery = {extras = ["redis"], version = "==5.2.7"}
 channels = {version = "==4.0.0", extras = ["daphne"]}
 channels-redis = "==4.0.0"
 dj-database-url = "==0.5.0"
-django = "==4.2.1"
+django = "==4.2.3"
 django-anymail = {extras = ["mailgun"], version = "==8.6"}
 django-celery-results = "==2.4.0"
 django-cloudinary-storage = "==0.3.0"
