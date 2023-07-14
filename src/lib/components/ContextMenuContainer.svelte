@@ -1,6 +1,7 @@
 <script lang="ts">
     import ContextMenu from "$lib/figma/overlays/ContextMenu.svelte";
     import { closeContextMenu, contextMenuState } from "$lib/stores/globalUi";
+    import type { ContextMenuState } from "$lib/types/ui";
 
     let contextMenu: HTMLElement;
     let resizeObserver: ResizeObserver | null;
@@ -10,16 +11,41 @@
             if (!contextMenu) {
                 throw new Error("Could not find contextMenu");
             }
-            const anchor = $contextMenuState.anchor;
-            repositioned = false;
-            resizeObserver = new ResizeObserver(() =>
-                repositionContextMenu(anchor)
-            );
-            resizeObserver.observe(contextMenu);
+            addObserver(contextMenu, $contextMenuState);
+            listenForEscape();
         } else {
             resizeObserver = null;
+            repositioned = false;
+            stopListeningForEscape();
         }
     });
+
+    function addObserver(
+        contextMenu: HTMLElement,
+        $contextMenuState: ContextMenuState & { kind: "visible" }
+    ) {
+        console.log($contextMenuState);
+        const anchor = $contextMenuState.anchor;
+        repositioned = false;
+        resizeObserver = new ResizeObserver(() =>
+            repositionContextMenu(anchor)
+        );
+        resizeObserver.observe(contextMenu);
+    }
+
+    function handleEscape(event: KeyboardEvent) {
+        if (event.key === "Escape") {
+            closeContextMenu();
+        }
+    }
+
+    function listenForEscape() {
+        window.addEventListener("keydown", handleEscape);
+    }
+
+    function stopListeningForEscape() {
+        window.removeEventListener("keydown", handleEscape);
+    }
 
     function repositionContextMenu(anchor: HTMLElement) {
         if (repositioned) {
