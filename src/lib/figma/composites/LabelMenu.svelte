@@ -8,14 +8,14 @@
     import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
     import type { Label } from "$lib/types/workspace";
     import { labelColors } from "$lib/utils/colors";
+    import { currentWorkspace } from "$lib/stores/dashboard";
+    import { createLabel } from "$lib/repository/workspace";
 
     export let labelSearchModule: LabelSearchModule;
 
     // Still exporting this one for better testability in storybook
     // TODO or perhaps we can refactor the form to a new component?
     export let state: FilterLabelMenuState = "list";
-
-    let { createLabel } = labelSearchModule;
 
     // TODO cancel callback
     // TODO save callback
@@ -46,7 +46,7 @@
     }
 
     async function save() {
-        if (!createLabel) {
+        if (!$currentWorkspace) {
             throw new Error("Expected createLabel");
         }
         if (!chosenColor) {
@@ -55,7 +55,7 @@
         if (!labelName) {
             throw new Error("Expected labelName");
         }
-        await createLabel(chosenColor.color, labelName);
+        await createLabel($currentWorkspace, labelName, chosenColor.color);
         state = "list";
     }
 
@@ -74,7 +74,7 @@
 
 {#if state === "list"}
     <FilterLabelMenu {labelSearchModule} {startCreateLabel} />
-{:else if createLabel}
+{:else if state === "create"}
     <form class="flex flex-col gap-6" on:submit|preventDefault={save}>
         <div class="flex flex-col">
             <div class="px-4 pb-4 pt-2">

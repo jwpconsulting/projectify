@@ -35,7 +35,6 @@ export interface LabelSearchModule {
     // TODO make readonly
     search: Writable<string>;
     searchResults: Readable<Label[]>;
-    createLabel?: (color: number, name: string) => Promise<void>;
 }
 
 // XXX

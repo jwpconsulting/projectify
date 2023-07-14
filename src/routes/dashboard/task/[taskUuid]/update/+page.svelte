@@ -108,7 +108,6 @@
             ),
         };
         const labelSearchModule = createLabelSearchModule(
-            workspace,
             task,
             (labelUuid: string, selected: boolean) => {
                 if (!task) {

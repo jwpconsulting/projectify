@@ -201,10 +201,6 @@ export const labelSearchModule: LabelSearchModule = {
     selected: writable({ kind: "allLabels" }),
     search: writable(""),
     searchResults: readable(mappedLabels),
-    async createLabel(c: number, n: string) {
-        await new Promise((resolve) => resolve(null));
-        console.log("Creating label with color", c, "and name", n);
-    },
 };
 
 export const createTaskModule: CreateTaskModule = {

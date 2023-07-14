@@ -29,7 +29,7 @@
         throw new Error("Expected workspace");
     }
 
-    const labelSearchModule = createLabelSearchModule(workspace, null, () =>
+    const labelSearchModule = createLabelSearchModule(null, () =>
         console.error("Not implemented")
     );
     const createTaskModule: CreateTaskModule = {

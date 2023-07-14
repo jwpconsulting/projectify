@@ -1,23 +1,15 @@
 import { writable } from "svelte/store";
-import {
-    moveTaskAfter,
-    createLabel as repositoryCreateLabel,
-} from "$lib/repository/workspace";
+import { moveTaskAfter } from "$lib/repository/workspace";
 import {
     createLabelSearchResults,
     currentWorkspaceLabels,
 } from "$lib/stores/dashboard";
-import type {
-    Workspace,
-    Task,
-    WorkspaceBoardSection,
-} from "$lib/types/workspace";
+import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
 import type { LabelSearchModule, MoveTaskModule } from "$lib/types/stores";
 import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
 
 export function createLabelSearchModule(
-    workspace: Workspace,
     task: Task | null,
     selectCallback: (labelUuid: string, selected: boolean) => void
 ): LabelSearchModule {
@@ -60,9 +52,6 @@ export function createLabelSearchModule(
             currentWorkspaceLabels,
             search
         ),
-        async createLabel(color: number, name: string) {
-            await repositoryCreateLabel(workspace, name, color);
-        },
     };
 }
 
