@@ -6,6 +6,7 @@
     export let disabled: boolean;
     // TODO document what this is for
     export let contained: boolean;
+    export let required = false;
 
     let outerStyle: string;
     $: {
@@ -39,5 +40,6 @@
         type="checkbox"
         bind:checked
         {disabled}
+        {required}
     />
 </div>
