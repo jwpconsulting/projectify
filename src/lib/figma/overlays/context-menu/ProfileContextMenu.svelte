@@ -3,7 +3,6 @@
     import { Logout, User } from "@steeze-ui/heroicons";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import { getProfileUrl } from "$lib/urls";
-    import { logout } from "$lib/stores/user";
 </script>
 
 <ContextMenuButton
@@ -13,7 +12,7 @@
     icon={User}
 />
 <ContextMenuButton
-    kind={{ kind: "button", action: logout }}
+    kind={{ kind: "a", href: "/logout" }}
     label={$_("profile-overlay.log-out")}
     state="normal"
     icon={Logout}

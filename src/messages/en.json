@@ -188,6 +188,13 @@
         "cancel": "Cancel",
         "recover-board": "Recover board"
     },
+    "auth": {
+        "logout": {
+            "success": "You have been logged out",
+            "log-back-in": "Log in again",
+            "landing": "Go to landing"
+        }
+    },
     "log-in": {
         "title": "Log in",
         "enter-your-email": "Enter your email",
