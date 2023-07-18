@@ -50,6 +50,7 @@ And throw the following inside the load function:
 
 ```
 const theUrl = "/";
+// eslint-disable-next-line @typescript-eslint/no-throw-literal
 throw redirect(302, theUrl)
 ```
 

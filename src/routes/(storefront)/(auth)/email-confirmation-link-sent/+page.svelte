@@ -4,9 +4,9 @@
     import illustration from "./illustration.svg";
 </script>
 
-<div class="flex h-full flex-col items-center justify-center">
+<div class="flex h-full flex-col items-center justify-center px-16 py-8">
     <div class="flex flex-col items-center gap-12">
-        <h1 class="text-4xl font-bold">
+        <h1 class="text-center text-4xl font-bold">
             {$_("auth.confirmation-link-sent.header")}
         </h1>
         <img
