@@ -189,6 +189,30 @@
         "recover-board": "Recover board"
     },
     "auth": {
+        "sign-up": {
+            "title": "Sign up",
+            "sub-title": "Sign up and start a free trial",
+            "enter-your-email": "Enter your email",
+            "email": "Email",
+            "enter-your-password": "Enter your password",
+            "password": "Password",
+            "tos-privacy": {
+                "i-agree": "I agree to the",
+                "terms": "Terms of Service",
+                "and": "and",
+                "privacy-statement": "Privacy Statement"
+            },
+            "sign-up": "Sign up",
+            "already-have-an-account": "Already have an account?",
+            "invalid-credentials": "We are unable to sign you up with these credentials. Please confirm whether you have not signed up with this email already.",
+            "log-in-here": "Log in here",
+            "confirmation-link-sent": {
+                "header": "Email confirmation link sent",
+                "illustration-alt": "Happy bird mascot indicating that a email confirm email is on its way to you",
+                "body": "Please go to your email and follow the instructions to activate your account",
+                "back-to-homepage": "Back to homepage"
+            }
+        },
         "logout": {
             "success": "You have been logged out",
             "log-back-in": "Log in again",
@@ -206,27 +230,6 @@
         "no-account": "Don't have an account yet?",
         "invalid-credentials": "Invalid credentials. Please check email and password.",
         "sign-up-here": "Sign up here"
-    },
-    "sign-up": {
-        "title": "Sign up",
-        "enter-your-email": "Enter your email",
-        "email": "Email",
-        "enter-your-password": "Enter your password",
-        "password": "Password",
-        "i-agree": "I agree to the",
-        "terms": "Terms of Service",
-        "and": "and",
-        "privacy-statement": "Privacy Statement",
-        "sign-up": "Sign up",
-        "already-have-an-account": "Already have an account?",
-        "invalid-credentials": "We are unable to sign you up with these credentials. Please confirm whether you have not signed up with this email already.",
-        "log-in-here": "Log in here",
-        "confirmation-link-sent": {
-            "header": "Email confirmation link sent",
-            "illustration-alt": "Happy bird mascot indicating that a email confirm email is on its way to you",
-            "body": "Please go to your email and follow the instructions to activate your account",
-            "back-to-homepage": "Back to homepage"
-        }
     },
     "request-password-reset": {
         "title": "Reset your password",

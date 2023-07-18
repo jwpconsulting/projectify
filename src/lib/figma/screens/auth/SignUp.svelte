@@ -20,26 +20,30 @@
             await signUp(email, password);
             await goto("/email-confirmation-link-sent/");
         } catch {
-            error = $_("sign-up.invalid-credentials");
+            error = $_("auth.sign-up.invalid-credentials");
         }
     }
 </script>
 
-<AuthScreen title={$_("sign-up.title")} {action}>
+<AuthScreen
+    title={$_("auth.sign-up.title")}
+    {action}
+    subTitle={$_("auth.sign-up.sub-title")}
+>
     <div class="flex flex-col gap-6">
         <InputField
-            placeholder={$_("sign-up.enter-your-email")}
+            placeholder={$_("auth.sign-up.enter-your-email")}
             style={{ kind: "field", inputType: "text" }}
             name="email"
-            label={$_("sign-up.email")}
+            label={$_("auth.sign-up.email")}
             bind:value={email}
             required
         />
         <InputField
-            placeholder={$_("sign-up.enter-your-password")}
+            placeholder={$_("auth.sign-up.enter-your-password")}
             style={{ kind: "field", inputType: "password" }}
             name="password"
-            label={$_("sign-up.password")}
+            label={$_("auth.sign-up.password")}
             bind:value={password}
             required
         />
@@ -48,18 +52,19 @@
                 bind:checked={tosPrivacyChecked}
                 disabled={false}
                 contained={false}
+                required
             />
             <p>
-                {$_("sign-up.i-agree")}
+                {$_("auth.sign-up.tos-privacy.i-agree")}
                 <Anchor
                     href="/tos"
-                    label={$_("sign-up.terms")}
+                    label={$_("auth.sign-up.tos-privacy.terms")}
                     size="normal"
                 />
-                {$_("sign-up.and")}
+                {$_("auth.sign-up.tos-privacy.and")}
                 <Anchor
                     href="/privacy"
-                    label={$_("sign-up.privacy-statement")}
+                    label={$_("auth.sign-up.tos-privacy.privacy-statement")}
                     size="normal"
                 />
             </p>
@@ -75,13 +80,13 @@
             color="blue"
             disabled={false}
             size="medium"
-            label={$_("sign-up.sign-up")}
+            label={$_("auth.sign-up.sign-up")}
         />
         <div class="text-center">
-            {$_("sign-up.already-have-an-account")}
+            {$_("auth.sign-up.already-have-an-account")}
             <Anchor
                 href="/login"
-                label={$_("sign-up.log-in-here")}
+                label={$_("auth.sign-up.log-in-here")}
                 size="normal"
             />
         </div>
