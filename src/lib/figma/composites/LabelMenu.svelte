@@ -32,7 +32,7 @@
     });
 
     let chosenColor: Label | null = null;
-    let labelName: string | null = null;
+    let labelName: string | undefined = undefined;
 
     const makeIsLabelSelected = (color: null | number) =>
         Object.fromEntries(labelColors.map((_name, ix) => [ix, ix === color]));
@@ -66,7 +66,7 @@
     function cancelCreate() {
         // Reset form
         chosenColor = null;
-        labelName = null;
+        labelName = undefined;
         // Go back
         state = "list";
     }

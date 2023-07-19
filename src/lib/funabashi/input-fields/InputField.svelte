@@ -8,7 +8,7 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
 
     // TODO make border customizable (e.g. in TaskFormFields)
-    export let value: string | null = null;
+    export let value: string | undefined = undefined;
     export let placeholder: string;
     export let style: InputFieldStyle;
     export let name: string;

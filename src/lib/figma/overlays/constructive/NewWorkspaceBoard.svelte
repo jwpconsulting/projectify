@@ -10,7 +10,7 @@
 
     export let workspace: Workspace;
 
-    let title: string | null = null;
+    let title: string | undefined = undefined;
 
     async function perform() {
         if (!title) {
