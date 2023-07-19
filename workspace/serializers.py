@@ -29,7 +29,9 @@ title_description = (
 )
 
 
-class WorkspaceUserSerializer(serializers.ModelSerializer):
+class WorkspaceUserSerializer(
+    serializers.ModelSerializer[models.WorkspaceUser]
+):
     """Workspace user serializer."""
 
     user = user_serializers.UserSerializer(read_only=True)
@@ -47,7 +49,7 @@ class WorkspaceUserSerializer(serializers.ModelSerializer):
         )
 
 
-class LabelSerializer(serializers.ModelSerializer):
+class LabelSerializer(serializers.ModelSerializer[models.Label]):
     """Label model serializer."""
 
     class Meta:
@@ -61,7 +63,7 @@ class LabelSerializer(serializers.ModelSerializer):
         )
 
 
-class SubTaskBaseSerializer(serializers.ModelSerializer):
+class SubTaskBaseSerializer(serializers.ModelSerializer[models.SubTask]):
     """SubTask model serializer."""
 
     class Meta:
@@ -77,7 +79,9 @@ class SubTaskBaseSerializer(serializers.ModelSerializer):
         )
 
 
-class ChatMessageBaseSerializer(serializers.ModelSerializer):
+class ChatMessageBaseSerializer(
+    serializers.ModelSerializer[models.ChatMessage]
+):
     """ChatMessage model serializer."""
 
     author = WorkspaceUserSerializer(read_only=True)
@@ -94,7 +98,7 @@ class ChatMessageBaseSerializer(serializers.ModelSerializer):
         )
 
 
-class TaskBaseSerializer(serializers.ModelSerializer):
+class TaskBaseSerializer(serializers.ModelSerializer[models.Task]):
     """Task model serializer."""
 
     labels = LabelSerializer(many=True, read_only=True)
@@ -116,7 +120,7 @@ class TaskBaseSerializer(serializers.ModelSerializer):
         )
 
 
-class WorkspaceBaseSerializer(serializers.ModelSerializer):
+class WorkspaceBaseSerializer(serializers.ModelSerializer[models.Workspace]):
     """Workspace base serializer."""
 
     picture = serializers.SerializerMethodField()
@@ -137,7 +141,9 @@ class WorkspaceBaseSerializer(serializers.ModelSerializer):
         )
 
 
-class WorkspaceBoardBaseSerializer(serializers.ModelSerializer):
+class WorkspaceBoardBaseSerializer(
+    serializers.ModelSerializer[models.WorkspaceBoard]
+):
     """Workspace board base serializer."""
 
     class Meta:
@@ -167,7 +173,9 @@ class WorkspaceBoardUpSerializer(WorkspaceBoardBaseSerializer):
         )
 
 
-class WorkspaceBoardSectionBaseSerializer(serializers.ModelSerializer):
+class WorkspaceBoardSectionBaseSerializer(
+    serializers.ModelSerializer[models.WorkspaceBoard]
+):
     """Workspace board section serializer."""
 
     class Meta:

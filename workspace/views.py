@@ -2,12 +2,8 @@
 import uuid
 from typing import (
     Optional,
-    cast,
 )
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
 from django.db.models import (
     Prefetch,
 )
@@ -41,7 +37,7 @@ class WorkspacePictureUploadView(views.APIView):
         format: Optional[str] = None,
     ) -> response.Response:
         """Handle POST."""
-        user = cast(AbstractBaseUser, request.user)
+        user = request.user
         file_obj = request.data["file"]
         qs = models.Workspace.objects.filter_for_user_and_uuid(
             user,
@@ -53,7 +49,13 @@ class WorkspacePictureUploadView(views.APIView):
         return response.Response(status=204)
 
 
-class WorkspaceBoardRetrieve(generics.RetrieveAPIView):
+class WorkspaceBoardRetrieve(
+    generics.RetrieveAPIView[
+        models.WorkspaceBoard,
+        models.WorkspaceBoardQuerySet,
+        serializers.WorkspaceBoardDetailSerializer,
+    ]
+):
     """Workspace board retrieve view."""
 
     queryset = models.WorkspaceBoard.objects.prefetch_related(
@@ -71,7 +73,7 @@ class WorkspaceBoardRetrieve(generics.RetrieveAPIView):
     def get_object(self) -> models.WorkspaceBoard:
         """Return queryset with authenticated user in mind."""
         user = self.request.user
-        qs = self.get_queryset()  # type: ignore
+        qs = self.get_queryset()
         qs = qs.filter_for_user_and_uuid(
             user,
             self.kwargs["workspace_board_uuid"],
@@ -80,7 +82,13 @@ class WorkspaceBoardRetrieve(generics.RetrieveAPIView):
         return workspace_board
 
 
-class WorkspaceBoardSectionRetrieve(generics.RetrieveAPIView):
+class WorkspaceBoardSectionRetrieve(
+    generics.RetrieveAPIView[
+        models.WorkspaceBoardSection,
+        models.WorkspaceBoardSectionQuerySet,
+        serializers.WorkspaceBoardSectionDetailSerializer,
+    ]
+):
     """Workspace board retrieve view."""
 
     queryset = models.WorkspaceBoardSection.objects.prefetch_related(
@@ -98,7 +106,7 @@ class WorkspaceBoardSectionRetrieve(generics.RetrieveAPIView):
     def get_object(self) -> models.WorkspaceBoardSection:
         """Return queryset with authenticated user in mind."""
         user = self.request.user
-        qs = self.get_queryset()  # type: ignore
+        qs = self.get_queryset()
         qs = qs.filter_for_user_and_uuid(
             user,
             self.kwargs["workspace_board_section_uuid"],
@@ -109,7 +117,13 @@ class WorkspaceBoardSectionRetrieve(generics.RetrieveAPIView):
         return workspace_board_section
 
 
-class WorkspaceList(generics.ListAPIView):
+class WorkspaceList(
+    generics.ListAPIView[
+        models.Workspace,
+        models.WorkspaceQuerySet,
+        serializers.WorkspaceBaseSerializer,
+    ]
+):
     """List all workspaces for a user."""
 
     queryset = models.Workspace.objects.all()
@@ -117,11 +131,17 @@ class WorkspaceList(generics.ListAPIView):
 
     def get_queryset(self) -> models.WorkspaceQuerySet:
         """Filter by user."""
-        user = cast(AbstractBaseUser, self.request.user)
+        user = self.request.user
         return self.queryset.get_for_user(user)
 
 
-class WorkspaceRetrieve(generics.RetrieveAPIView):
+class WorkspaceRetrieve(
+    generics.RetrieveAPIView[
+        models.Workspace,
+        models.WorkspaceQuerySet,
+        serializers.WorkspaceSerializer,
+    ]
+):
     """Workspace retrieve view."""
 
     queryset = models.Workspace.objects.prefetch_related(
@@ -143,7 +163,7 @@ class WorkspaceRetrieve(generics.RetrieveAPIView):
     def get_object(self) -> models.Workspace:
         """Return queryset with authenticated user in mind."""
         user = self.request.user
-        qs = self.get_queryset()  # type: ignore
+        qs = self.get_queryset()
         qs = qs.filter_for_user_and_uuid(
             user,
             self.kwargs["workspace_uuid"],
@@ -152,7 +172,11 @@ class WorkspaceRetrieve(generics.RetrieveAPIView):
         return workspace
 
 
-class TaskRetrieve(generics.RetrieveAPIView):
+class TaskRetrieve(
+    generics.RetrieveAPIView[
+        models.Task, models.TaskQuerySet, serializers.TaskDetailSerializer
+    ],
+):
     """Retrieve a task."""
 
     queryset = (
@@ -179,8 +203,8 @@ class TaskRetrieve(generics.RetrieveAPIView):
 
     def get_object(self) -> models.Task:
         """Get object for user and uuid."""
-        user = cast(AbstractBaseUser, self.request.user)
-        qs: models.TaskQuerySet = self.get_queryset()  # type: ignore
+        user = self.request.user
+        qs: models.TaskQuerySet = self.get_queryset()
         obj: models.Task = qs.filter_for_user_and_uuid(
             user,
             self.kwargs["task_uuid"],
@@ -188,7 +212,13 @@ class TaskRetrieve(generics.RetrieveAPIView):
         return obj
 
 
-class WorkspaceBoardArchivedList(generics.ListAPIView):
+class WorkspaceBoardArchivedList(
+    generics.ListAPIView[
+        models.WorkspaceBoard,
+        models.WorkspaceBoardQuerySet,
+        serializers.WorkspaceBoardBaseSerializer,
+    ]
+):
     """List archived workspace boards inside a workspace."""
 
     queryset = models.WorkspaceBoard.objects.filter_by_archived()
@@ -196,7 +226,7 @@ class WorkspaceBoardArchivedList(generics.ListAPIView):
 
     def get_queryset(self) -> models.WorkspaceBoardQuerySet:
         """Get queryset."""
-        user = cast(AbstractBaseUser, self.request.user)
+        user = self.request.user
         qs = models.Workspace.objects.filter_for_user_and_uuid(
             user,
             self.kwargs["workspace_uuid"],
