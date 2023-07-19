@@ -13,6 +13,9 @@ from django.urls import (
 )
 
 import pytest
+from rest_framework.test import (
+    APIClient,
+)
 
 from pytest_types import (
     DjangoAssertNumQueries,
@@ -25,6 +28,37 @@ from ... import (
 
 
 # Create
+@pytest.mark.django_db
+class TestWorkspaceCreate:
+    """Test workspace create."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("workspace:workspace-create")
+
+    def test_authenticated(
+        self,
+        user: AbstractBaseUser,
+        rest_user_client: APIClient,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Assert that we can create a new workspace."""
+        with django_assert_num_queries(9):
+            response = rest_user_client.post(
+                resource_url,
+                {
+                    "title": "New workspace, who dis?",
+                    "description": "Synergize vertical integration in Q4",
+                },
+            )
+        assert response.status_code == 201
+        assert models.Workspace.objects.count() == 1
+        workspace = models.Workspace.objects.get()
+        assert workspace.workspaceuser_set.get().user == user
+
+
 # Read
 @pytest.mark.django_db
 class TestWorkspaceList:

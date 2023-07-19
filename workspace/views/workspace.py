@@ -26,6 +26,25 @@ from .. import (
 
 
 # Create
+class WorkspaceCreate(
+    generics.CreateAPIView[
+        models.Workspace,
+        models.WorkspaceQuerySet,
+        serializers.WorkspaceBaseSerializer,
+    ]
+):
+    """Create a workspace."""
+
+    serializer_class = serializers.WorkspaceBaseSerializer
+
+    def perform_create(
+        self, serializer: serializers.WorkspaceBaseSerializer
+    ) -> None:
+        """Create the workspace and add this user."""
+        workspace: models.Workspace = serializer.save()
+        workspace.add_user(self.request.user)
+
+
 # Read
 class WorkspaceList(
     generics.ListAPIView[
