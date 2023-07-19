@@ -108,3 +108,4 @@ disallow_untyped_defs = false
 [tool.pyright]
 stubPath = "mypy/stubs"
 typeCheckingMode = "strict"
+typeshedPath = ""
