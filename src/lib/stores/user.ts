@@ -9,6 +9,7 @@ import {
     Mutation_Logout,
     Mutation_RequesetPasswordReset,
     Mutation_Signup,
+    Mutation_UpdateProfile,
 } from "$lib/graphql/operations";
 import { getUser } from "$lib/repository/user";
 import { goto } from "$lib/navigation";
@@ -108,3 +109,14 @@ export const confirmPasswordReset = async (
         variables: { input: { email, token, newPassword } },
     });
 };
+
+export async function updateUserProfile(fullName: string) {
+    await client.mutate({
+        mutation: Mutation_UpdateProfile,
+        variables: {
+            input: {
+                fullName: fullName,
+            },
+        },
+    });
+}
