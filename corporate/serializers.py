@@ -8,7 +8,7 @@ from . import (
 )
 
 
-class CustomerSerializer(serializers.ModelSerializer):
+class CustomerSerializer(serializers.ModelSerializer[models.Customer]):
     """Serializer for customer."""
 
     seats_remaining = serializers.IntegerField(read_only=True)

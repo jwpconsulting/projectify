@@ -10,7 +10,7 @@ from .models import (
 )
 
 
-class PostSerializer(serializers.ModelSerializer):
+class PostSerializer(serializers.ModelSerializer[Post]):
     """Post serializer."""
 
     class Meta:
@@ -28,7 +28,7 @@ class PostSerializer(serializers.ModelSerializer):
         ]
 
 
-class PostImageSerializer(serializers.ModelSerializer):
+class PostImageSerializer(serializers.ModelSerializer[PostImage]):
     """PostImage Serializer."""
 
     class Meta:
