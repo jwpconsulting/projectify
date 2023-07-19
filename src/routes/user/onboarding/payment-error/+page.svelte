@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import Onboarding from "$lib/components/onboarding.svelte";
+    import Onboarding from "$lib/components/Onboarding.svelte";
     import AppIllustration from "$lib/components/onboarding/app-illustration.svelte";
     import type { OnboardingState } from "$lib/types/onboarding";
 

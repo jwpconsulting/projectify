@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import onboarding from "$lib/components/onboarding.svelte";
+import Onboarding from "$lib/components/Onboarding.svelte";
 
-const meta: Meta<onboarding> = {
-    component: onboarding,
+const meta: Meta<Onboarding> = {
+    component: Onboarding,
     argTypes: {
         title: {
             control: "text",
@@ -43,6 +43,6 @@ const meta: Meta<onboarding> = {
 };
 export default meta;
 
-type Story = StoryObj<onboarding>;
+type Story = StoryObj<Onboarding>;
 
 export const Default: Story = {};

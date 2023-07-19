@@ -4,7 +4,9 @@
 
     export let hasContentPadding = false;
 
+    // TODO make required
     export let title: string | null = null;
+    // TODO make required or swap for slot
     export let prompt: string | null = null;
     // TODO make not optional
     export let backAction: (() => void) | undefined = undefined;

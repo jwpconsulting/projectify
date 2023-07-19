@@ -1,6 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import Onboarding from "$lib/components/onboarding.svelte";
+    import Onboarding from "$lib/components/Onboarding.svelte";
     import AppIllustration from "$lib/components/onboarding/app-illustration.svelte";
     import IconPlus from "$lib/components/icons/icon-plus.svelte";
     import IconMinus from "$lib/components/icons/icon-minus.svelte";
