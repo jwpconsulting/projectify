@@ -23,6 +23,9 @@ from django.test import (
 )
 
 import pytest
+from rest_framework.test import (
+    APIClient,
+)
 from strawberry.types.execution import (
     ExecutionResult,
 )
@@ -161,6 +164,14 @@ def superuser_client(
 ) -> client.Client:
     """Return logged in super user client."""
     client.force_login(superuser)
+    return client
+
+
+@pytest.fixture
+def rest_user_client(user: AbstractBaseUser) -> APIClient:
+    """Return a logged in client that we can use to test DRF views."""
+    client = APIClient()
+    client.force_authenticate(user)
     return client
 
 
