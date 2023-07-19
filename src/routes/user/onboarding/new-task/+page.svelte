@@ -1,7 +1,10 @@
 <script lang="ts">
+    import { _ } from "svelte-i18n";
+
     import Onboarding from "$lib/components/onboarding.svelte";
     import AppIllustration from "$lib/components/onboarding/app-illustration.svelte";
     import type { OnboardingState } from "$lib/types/onboarding";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
 
     let workspaceTitle = "";
     let boardTitle = "";
@@ -10,25 +13,21 @@
 </script>
 
 <Onboarding
-    title={"What is a task you’d like to complete?"}
+    title={$_("onboarding.new-task.title")}
     hasContentPadding={false}
     stepCount={5}
     step={2}
-    viewBackButton={true}
+    backAction={console.error}
 >
     <svelte:fragment slot="prompt">
-        <p>
-            Tasks can be further divided into sub tasks and contain detailed
-            descriptions.
-        </p>
+        <p>{$_("onboarding.new-task.prompt")}</p>
     </svelte:fragment>
 
     <svelte:fragment slot="inputs">
-        <input
-            type="text"
+        <InputField
+            style={{ kind: "field", inputType: "text" }}
             name="taskTitle"
-            class="input input-bordered"
-            placeholder="e.g. write document"
+            placeholder={$_("onboarding.new-task.task-title-placeholder")}
             bind:value={taskTitle}
         />
     </svelte:fragment>

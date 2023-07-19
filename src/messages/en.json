@@ -176,6 +176,44 @@
         "cancel": "Cancel",
         "create-workspace": "Create workspace"
     },
+    "onboarding": {
+        "continue": "Continue",
+        "back": "Back",
+        "about-you": {
+            "full-name": "Full name",
+            "title": "About you",
+            "prompt": "Write your full name below."
+        },
+        "assign-task": {
+            "continue": "Get started",
+            "prompt": {
+                "paragraph1": "You’re all set!",
+                "paragraph2": "If you wish to add new members to your workspace, please go to the workspace settings menu next to your workspace name."
+            }
+        },
+        "billing-details": {
+            "title": "Billing details",
+            "continue": "Continue to checkout",
+            "continue-message": "We use Stripe for our payment processing services."
+        },
+        "payment-error": {
+            "title": "Please finish setting up your billing account",
+            "continue": "Return to checkout",
+            "prompt": [
+                "Your free 31 day trial has not begun yet.",
+                "Your workspace does not yet have seats assigned to it.",
+                "Please return to Stripe to finish the checkout process."
+            ]
+        },
+        "new-section": {
+            "title": "We’ve put your task in a ‘To do’ section."
+        },
+        "new-task": {
+            "title": "What is a task you’d like to complete?",
+            "prompt": "Tasks can be further divided into sub tasks and contain detailed descriptions.",
+            "task-title-place-holder": "Tasks can be further divided into sub tasks and contain detailed descriptions."
+        }
+    },
     "skip-onboarding": {
         "title": "Skip onboarding",
         "notice": "Any progress you've made so far will be lost",

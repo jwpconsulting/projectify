@@ -1,22 +1,23 @@
 <script lang="ts">
+    import { _ } from "svelte-i18n";
     import Onboarding from "$lib/components/onboarding.svelte";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
 
     let fullName = "";
 </script>
 
 <Onboarding
-    title={"About you"}
-    prompt={"Write your full name below."}
-    nextBtnLabel={"Continue"}
+    title={$_("onboarding.about-you.title")}
+    prompt={$_("onboarding.about-you.prompt")}
     nextBtnDisabled={!fullName}
     hasContentPadding={true}
 >
     <svelte:fragment slot="inputs">
-        <input
-            type="text"
-            name="name"
-            class="input input-bordered"
+        <InputField
             bind:value={fullName}
+            placeholder={$_("onboarding.about-you.full-name")}
+            style={{ kind: "field", inputType: "text" }}
+            name="full-name"
         />
     </svelte:fragment>
 

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { _ } from "svelte-i18n";
     import Onboarding from "$lib/components/onboarding.svelte";
     import AppIllustration from "$lib/components/onboarding/app-illustration.svelte";
     import IconPlus from "$lib/components/icons/icon-plus.svelte";
@@ -27,9 +28,9 @@
 </script>
 
 <Onboarding
-    title={"Billing details"}
-    nextBtnLabel={"Continue to checkout"}
-    nextMessage={"We use Stripe for our payment processing services."}
+    title={$_("onboarding.billing-details.title")}
+    nextLabel={$_("onboarding.billing-details.continue")}
+    nextMessage={$_("onboarding.billing-details.continue-message")}
     hasContentPadding={false}
 >
     <svelte:fragment slot="prompt">

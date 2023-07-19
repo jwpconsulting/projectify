@@ -1,13 +1,18 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
+    import { _ } from "svelte-i18n";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
 
     export let hasContentPadding = false;
 
     export let title: string | null = null;
     export let prompt: string | null = null;
-    export let nextBtnLabel: string | null = null;
+    // TODO make not optional
+    export let backAction: (() => void) | undefined = undefined;
+    // TODO make not optional
+    export let nextAction: () => void = console.error;
+    export let nextLabel: string = $_("onboarding.continue");
+    // TODO rename nextActionDisabled
     export let nextBtnDisabled = false;
-    export let viewBackButton = false;
     export let nextMessage: string | null = null;
 
     export let stepCount = 0;
@@ -16,8 +21,6 @@
     $: steps = Array(stepCount)
         .fill({})
         .map((_, inx) => inx + 1);
-
-    const dispatch = createEventDispatcher();
 </script>
 
 <div class="flex w-[600px] flex-col gap-16 px-12 py-20 pb-8">
@@ -45,19 +48,24 @@
     <!-- Navigation buttons -->
     <div class="flex flex-col gap-2">
         <div class="flex gap-2">
-            {#if viewBackButton}
-                <button
-                    class="btn btn-ghost"
+            {#if backAction}
+                <Button
+                    style={{ kind: "tertiary", icon: null }}
                     disabled={nextBtnDisabled}
-                    on:click={() => dispatch("back")}>{"Back"}</button
-                >
+                    color="blue"
+                    size="medium"
+                    action={{ kind: "button", action: backAction }}
+                    label={$_("onboarding.back")}
+                />
             {/if}
-            <button
-                class="btn btn-primary"
+            <Button
+                style={{ kind: "primary" }}
                 disabled={nextBtnDisabled}
-                on:click={() => dispatch("next")}
-                >{nextBtnLabel || "Continue"}</button
-            >
+                color="blue"
+                size="medium"
+                action={{ kind: "button", action: nextAction }}
+                label={nextLabel}
+            />
         </div>
         {#if nextMessage}
             <div>

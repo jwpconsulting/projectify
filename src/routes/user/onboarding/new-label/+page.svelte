@@ -15,7 +15,7 @@
     hasContentPadding={false}
     stepCount={5}
     step={4}
-    viewBackButton={true}
+    backAction={console.error}
 >
     <svelte:fragment slot="prompt">
         <p>Labels help you to filter between the types of tasks.</p>

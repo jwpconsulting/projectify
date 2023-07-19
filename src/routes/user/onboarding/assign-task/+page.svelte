@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { _ } from "svelte-i18n";
+
     import Onboarding from "$lib/components/onboarding.svelte";
     import AppIllustration from "$lib/components/onboarding/app-illustration.svelte";
     import type { OnboardingState } from "$lib/types/onboarding";
@@ -15,15 +17,12 @@
     hasContentPadding={false}
     stepCount={5}
     step={5}
-    nextBtnLabel={"Get started"}
-    viewBackButton={true}
+    nextLabel={$_("onboarding.assign-task.continue")}
+    backAction={console.error}
 >
     <svelte:fragment slot="prompt">
-        <p>You’re all set!</p>
-        <p>
-            If you wish to add new members to your workspace, please go to the
-            workspace settings menu next to your workspace name.
-        </p>
+        <p>{$_("onboarding.assign-task.prompt.paragraph1")}</p>
+        <p>{$_("onboarding.assign-task.prompt.paragraph2")}</p>
     </svelte:fragment>
 
     <svelte:fragment slot="content">
