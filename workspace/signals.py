@@ -7,6 +7,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Type,
+    TypeVar,
     cast,
 )
 
@@ -82,9 +83,12 @@ def group_send(destination: str, message: types.Message) -> None:
     )
 
 
+M = TypeVar("M", bound=django_models.Model)
+
+
 def serialize(
-    serializer: Type[drf_serializers.ModelSerializer],
-    instance: django_models.Model,
+    serializer: Type[drf_serializers.ModelSerializer[M]],
+    instance: M,
 ) -> Mapping[str, object]:
     """Serialize a django model instance and then render it to JSON."""
     serialized: Mapping[str, object] = serializer(instance).data

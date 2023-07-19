@@ -4,6 +4,8 @@ from typing import (
     cast,
 )
 
+from django.db import models as django_models
+
 from rest_framework import (
     generics,
     parsers,
@@ -34,7 +36,13 @@ class ProfilePictureUploadView(views.APIView):
         return response.Response(status=204)
 
 
-class UserRetrieve(generics.RetrieveAPIView):
+class UserRetrieve(
+    generics.RetrieveAPIView[
+        models.User,
+        django_models.QuerySet[models.User],
+        serializers.UserSerializer,
+    ]
+):
     """Retrieve user."""
 
     serializer_class = serializers.UserSerializer

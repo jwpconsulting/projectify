@@ -16,7 +16,7 @@ from . import (
 )
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer[models.User]):
     """User serializer."""
 
     profile_picture = serializers.SerializerMethodField()

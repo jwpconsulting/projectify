@@ -22,7 +22,6 @@ django-types = "*"
 pytest-xdist = {extras = ["psutil"], version = "*"}
 types-tqdm = "*"
 types-stripe = "*"
-djangorestframework-types = "*"
 types-redis = "*"
 pdbpp = "*"
 
