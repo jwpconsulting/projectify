@@ -23,9 +23,18 @@
     $: steps = Array(stepCount)
         .fill({})
         .map((_, inx) => inx + 1);
+
+    function submit() {
+        if (!nextBtnDisabled) {
+            nextAction();
+        }
+    }
 </script>
 
-<div class="flex w-[600px] flex-col gap-16 px-12 py-20 pb-8">
+<form
+    class="flex w-[600px] flex-col gap-16 px-12 py-20 pb-8"
+    on:submit|preventDefault={submit}
+>
     <!-- Message -->
     <div class="flex flex-col gap-4">
         {#if title}
@@ -65,7 +74,7 @@
                 disabled={nextBtnDisabled}
                 color="blue"
                 size="medium"
-                action={{ kind: "button", action: nextAction }}
+                action={{ kind: "submit" }}
                 label={nextLabel}
             />
         </div>
@@ -87,7 +96,7 @@
             </ul>
         </div>
     {/if}
-</div>
+</form>
 
 <div
     class:p-12={hasContentPadding}
