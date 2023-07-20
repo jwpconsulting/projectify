@@ -24,6 +24,7 @@ types-tqdm = "*"
 types-stripe = "*"
 djangorestframework-types = "*"
 types-redis = "*"
+pdbpp = "*"
 
 [packages]
 celery = {extras = ["redis"], version = "==5.2.7"}
