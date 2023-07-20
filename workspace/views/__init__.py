@@ -19,7 +19,7 @@ from rest_framework import (
     views,
 )
 
-from . import (
+from .. import (
     models,
     serializers,
 )
