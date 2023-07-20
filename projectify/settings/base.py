@@ -14,24 +14,25 @@ from pathlib import (
     Path,
 )
 from typing import (
-    Any,
     Iterable,
 )
-
-from django.contrib import admin  # For patching
 
 import dj_database_url
 from dotenv import (
     load_dotenv,
 )
-from factory import django  # for patching
 
+from .monkeypatch import (
+    patch,
+)
 from .types import (
     ChannelLayers,
 )
 
 
 load_dotenv()
+
+patch()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -268,12 +269,3 @@ MEDIA_CLOUDINARY_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 # Debug
 DEBUG_TOOLBAR = False
 DEBUG = False
-
-patchable_classes: Iterable[Any] = (
-    admin.ModelAdmin,
-    admin.TabularInline,
-    django.DjangoModelFactory,
-)
-
-for cls in patchable_classes:
-    cls.__class_getitem__ = classmethod(lambda cls, *args, **kwargs: cls)
