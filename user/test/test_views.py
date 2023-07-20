@@ -44,10 +44,20 @@ class TestProfilePictureUploadView:
         }
 
     def test_unauthenticated(
-        self, client: Client, resource_url: str, headers: Headers
+        self,
+        client: Client,
+        resource_url: str,
+        headers: Headers,
+        uploaded_file: File,
     ) -> None:
         """Assert we can't view this while being logged out."""
-        response = client.post(resource_url, **headers)
+        response = client.post(
+            resource_url,
+            {"file": uploaded_file},
+            format="multipart",
+            **headers,
+        )
+
         assert response.status_code == 403, response.content
 
     def test_authenticated(
