@@ -57,7 +57,7 @@ whitenoise = "==6.2.0"
 factory-boy = "==3.2.1"
 
 [requires]
-python_version = "3.10"
+python_version = "3.11"
 
 [pipenv]
 allow_prereleases = true
