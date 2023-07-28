@@ -119,7 +119,8 @@ jobs:
           command: pipenv run ./manage.py migrate
       - run:
           name: Seed DB
-          command: pipenv run ./manage.py seeddb
+          command: pipenv run ./manage.py seeddb --n-users 3 --n-workspaces 1 --n-workspace-boards 1 --n-labels 1 --n-tasks 1
+
 workflows:
   test_all:
     jobs:
