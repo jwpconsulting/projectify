@@ -28,6 +28,8 @@ import type { RepositoryContext } from "$lib/types/repository";
 
 import { client } from "$lib/graphql/client";
 
+export * from "$lib/repository/workspace/workspace";
+
 // Task CRUD
 // Create
 export async function createTask(createTask: CreateTask): Promise<void> {
@@ -230,25 +232,6 @@ export async function getWorkspaceBoardSection(
 ): Promise<WorkspaceBoardSection> {
     return await getWithCredentialsJson<WorkspaceBoardSection>(
         `/workspace/workspace-board-section/${uuid}`,
-        repositoryContext
-    );
-}
-
-export async function getWorkspaces(
-    repositoryContext?: RepositoryContext
-): Promise<Workspace[]> {
-    return await getWithCredentialsJson<Workspace[]>(
-        `/workspace/user/workspaces/`,
-        repositoryContext
-    );
-}
-
-export async function getWorkspace(
-    uuid: string,
-    repositoryContext?: RepositoryContext
-): Promise<Workspace> {
-    return await getWithCredentialsJson<Workspace>(
-        `/workspace/workspace/${uuid}`,
         repositoryContext
     );
 }
