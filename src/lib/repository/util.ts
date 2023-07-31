@@ -27,3 +27,27 @@ export async function getWithCredentialsJson<T>(
     }
     return body;
 }
+
+export async function postWithCredentialsJson<T>(
+    url: string,
+    data: unknown,
+    repositoryContext: RepositoryContext | null = defaultRepositoryContext
+): Promise<T> {
+    if (!repositoryContext) {
+        throw new Error("Expected repositoryContext");
+    }
+    const { fetch } = repositoryContext;
+    const response = await fetch(`${vars.API_ENDPOINT}${url}`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    });
+    const body = (await response.json()) as T;
+    if (!response.ok) {
+        throw new Error(`${response.statusText}: ${JSON.stringify(body)}`);
+    }
+    return body;
+}
