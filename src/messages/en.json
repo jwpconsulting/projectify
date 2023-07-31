@@ -208,6 +208,11 @@
         "new-section": {
             "title": "We’ve put your task in a ‘To do’ section."
         },
+        "new-workspace": {
+            "title": "Let’s set up your first workspace, {who}.",
+            "prompt": "You can create and manage numerous workspaces",
+            "placeholder": "e.g. the name of your company"
+        },
         "new-task": {
             "title": "What is a task you’d like to complete?",
             "prompt": "Tasks can be further divided into sub tasks and contain detailed descriptions.",
