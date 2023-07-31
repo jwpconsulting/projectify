@@ -4,23 +4,27 @@
     import Onboarding from "$lib/components/Onboarding.svelte";
     import AppIllustration from "$lib/components/onboarding/app-illustration.svelte";
     import type { OnboardingState } from "$lib/types/onboarding";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
 
-    let workspaceTitle = "";
+    let workspaceTitle: string | undefined = undefined;
     let state: OnboardingState = "new-workspace";
+
+    $: workspaceTitleGiven = workspaceTitle && workspaceTitle.length > 0;
+
+    async function nextAction() {}
 </script>
 
 <Onboarding
-    title={"Let’s set up your first workspace, full name."}
-    prompt={"You can create and manage numerous workspaces"}
-    nextBtnDisabled={!workspaceTitle}
+    title={$_("onboarding.new-workspace.title")}
+    prompt={$_("onboarding.new-workspace.prompt")}
+    nextBtnDisabled={!workspaceTitleGiven}
     hasContentPadding={false}
 >
     <svelte:fragment slot="inputs">
-        <input
-            type="text"
+        <InputField
+            style={{ kind: "field", inputType: "text" }}
             name="workspaceTitle"
-            class="input input-bordered"
-            placeholder="e.g. the name of your company"
+            placeholder={$_("onboarding.new-workspace.placeholder")}
             bind:value={workspaceTitle}
         />
     </svelte:fragment>
