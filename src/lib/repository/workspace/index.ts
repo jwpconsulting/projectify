@@ -1,3 +1,5 @@
+import type { ApolloQueryResult } from "@apollo/client/core";
+
 import {
     Mutation_MoveWorkspaceBoardSection,
     Mutation_AddLabelMutation,
@@ -194,25 +196,20 @@ export async function deleteLabel(label: Label) {
 export async function createWorkspaceBoard(
     workspace: Workspace,
     workspaceBoard: { title: string; description: string; deadline: null }
-): Promise<{ uuid: string }> {
+): Promise<WorkspaceBoard> {
     const input = {
         workspaceUuid: workspace.uuid,
         ...workspaceBoard,
     };
-    interface result {
-        data: { addWorkspaceBoard: WorkspaceBoard };
-    }
-    const created = (await client.mutate({
+    const {
+        data: { addWorkspaceBoard: createdWorkspaceBoard },
+    } = (await client.mutate({
         mutation: Mutation_AddWorkspaceBoard,
         variables: {
             input,
         },
-    })) as result;
-    console.log(created);
-    const {
-        data: { addWorkspaceBoard },
-    } = created;
-    return addWorkspaceBoard;
+    })) as ApolloQueryResult<{ addWorkspaceBoard: WorkspaceBoard }>;
+    return createdWorkspaceBoard;
 }
 
 // Read
@@ -291,8 +288,10 @@ export async function archiveWorkspaceBoard(workspaceBoard: WorkspaceBoard) {
 export async function createWorkspaceBoardSection(
     workspaceBoard: WorkspaceBoard,
     workspaceBoardSection: CreateWorkspaceBoardSection
-) {
-    await client.mutate({
+): Promise<WorkspaceBoardSection> {
+    const {
+        data: { addWorkspaceBoardSection: workspaceBoardSectionCreated },
+    } = (await client.mutate({
         mutation: Mutation_AddWorkspaceBoardSection,
         variables: {
             input: {
@@ -300,7 +299,10 @@ export async function createWorkspaceBoardSection(
                 ...workspaceBoardSection,
             },
         },
-    });
+    })) as ApolloQueryResult<{
+        addWorkspaceBoardSection: WorkspaceBoardSection;
+    }>;
+    return workspaceBoardSectionCreated;
 }
 
 // Read
