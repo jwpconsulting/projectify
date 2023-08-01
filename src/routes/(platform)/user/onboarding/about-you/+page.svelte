@@ -4,8 +4,13 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { updateUserProfile } from "$lib/stores/user";
     import { goto } from "$lib/navigation";
+    import type { PageData } from "./$types";
 
-    let fullName: string | undefined = undefined;
+    export let data: PageData;
+
+    let { user } = data;
+
+    let fullName: string | undefined = user.full_name;
 
     $: nextBtnDisabled = fullName === undefined || fullName.length == 0;
 
