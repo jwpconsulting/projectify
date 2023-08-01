@@ -40,7 +40,7 @@
         {#if title}
             <h1 class="text-4xl font-bold">{title}</h1>
         {/if}
-        <div class="text-block text-lg">
+        <div class="text-lg">
             {#if prompt}
                 {prompt}
             {:else}
