@@ -9,6 +9,7 @@
     import { createWorkspace } from "$lib/repository/workspace";
     import { goto } from "$lib/navigation";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+    import { getNewWorkspaceBoardUrl } from "$lib/urls/user/onboarding";
 
     export let data: PageData;
     let { user, workspace } = data;
@@ -27,7 +28,7 @@
             "empty description TODO"
         );
 
-        const nextStep = `/user/onboarding/new-workspace-board/${uuid}`;
+        const nextStep = getNewWorkspaceBoardUrl(uuid);
         await goto(nextStep);
     }
 </script>
@@ -49,7 +50,7 @@
             <p>
                 <Anchor
                     size="large"
-                    href="/user/onboarding/new-workspace-board/{workspace.uuid}"
+                    href={getNewWorkspaceBoardUrl(workspace.uuid)}
                     label={"Create workspace board"}
                 />
             </p>

@@ -11,6 +11,7 @@
     } from "$lib/repository/workspace";
     import { goto } from "$app/navigation";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+    import { getDashboardWorkspaceBoardUrl, getNewTaskUrl } from "$lib/urls";
 
     export let data: PageData;
 
@@ -33,7 +34,7 @@
             title: "To Do",
             description: "",
         });
-        const nextStep = `/user/onboarding/new-task/${uuid}`;
+        const nextStep = getNewTaskUrl(uuid);
         await goto(nextStep);
     }
 </script>
@@ -66,7 +67,7 @@
                                 "onboarding.new-workspace-board.workspace-board-section-exists.prompt"
                             )}
                             size="large"
-                            href="/user/onboarding/new-task/{workspaceBoardSection.uuid}"
+                            href={getNewTaskUrl(workspaceBoardSection.uuid)}
                         />
                     </p>
                 </div>
@@ -84,7 +85,9 @@
                                 "onboarding.new-workspace-board.workspace-board-exists.prompt"
                             )}
                             size="large"
-                            href="/dashboard"
+                            href={getDashboardWorkspaceBoardUrl(
+                                workspaceBoard.uuid
+                            )}
                         />
                     </p>
                 </div>
