@@ -8,21 +8,24 @@
     import type { PageData } from "./$types";
     import { createWorkspace } from "$lib/repository/workspace";
     import { goto } from "$lib/navigation";
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
 
     export let data: PageData;
-    let { user } = data;
+    let { user, hasWorkspace } = data;
 
     let workspaceTitle: string | undefined = undefined;
     let state: OnboardingState = "new-workspace";
 
     $: workspaceTitleGiven = workspaceTitle && workspaceTitle.length > 0;
 
+    const nextStep = "/user/onboarding/new-workspace-board";
+
     async function nextAction() {
         if (!workspaceTitle) {
             throw new Error("Exepcted workspaceTitle");
         }
         await createWorkspace(workspaceTitle, "empty description TODO");
-        await goto("/user/onboarding/new-board");
+        await goto(nextStep);
     }
 </script>
 
@@ -30,11 +33,23 @@
     title={$_("onboarding.new-workspace.title", {
         values: { who: user.full_name },
     })}
-    prompt={$_("onboarding.new-workspace.prompt")}
+    prompt={hasWorkspace ? null : $_("onboarding.new-workspace.prompt")}
     {nextAction}
     nextBtnDisabled={!workspaceTitleGiven}
     hasContentPadding={false}
 >
+    <svelte:fragment slot="prompt">
+        <p>
+            {$_("onboarding.new-workspace.has-workspace")}
+        </p>
+        <p>
+            <Anchor
+                size="large"
+                href={nextStep}
+                label={"Create workspace board"}
+            />
+        </p>
+    </svelte:fragment>
     <svelte:fragment slot="inputs">
         <InputField
             style={{ kind: "field", inputType: "text" }}

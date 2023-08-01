@@ -211,6 +211,7 @@
         "new-workspace": {
             "title": "Let’s set up your first workspace, {who}.",
             "prompt": "You can create and manage numerous workspaces",
+            "has-workspace": "It looks like you already have a workspace, would you like to create a workspace board?",
             "placeholder": "e.g. the name of your company"
         },
         "new-task": {
