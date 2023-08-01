@@ -9,6 +9,7 @@
     $: anchorClass = {
         extraSmall: "text-xs",
         normal: "text-base",
+        large: "text-lg",
     }[size];
 </script>
 
