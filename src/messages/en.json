@@ -214,6 +214,27 @@
             "has-workspace": "It looks like you already have a workspace, would you like to create a workspace board?",
             "placeholder": "e.g. the name of your company"
         },
+        "new-workspace-board": {
+            "title": "Add your first board",
+            "prompt": [
+                "You can create unlimited boards per workspace.",
+                "They help you to focus on different projects you may be working on."
+            ],
+            "input": {
+                "label": "Board title",
+                "placeholder": "Release spring Aug 2023"
+            },
+            "default-name": "Your board",
+            "cancel": "Cancel",
+            "workspace-board-exists": {
+                "message": "It looks like you already have a workspace board called \"{title}\". Would you like to continue using it in the dashboard?",
+                "prompt": "Continue to dashboard"
+            },
+            "workspace-board-section-exists": {
+                "message": "It looks like you already have a workspace board called \"{title}\" and a workspace board section called \"{section}\". Would you like to continue using it?",
+                "prompt": "Continue with existing workspace board"
+            }
+        },
         "new-task": {
             "title": "What is a task you’d like to complete?",
             "prompt": "Tasks can be further divided into sub tasks and contain detailed descriptions.",

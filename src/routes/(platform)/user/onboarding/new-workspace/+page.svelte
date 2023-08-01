@@ -11,20 +11,23 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
 
     export let data: PageData;
-    let { user, hasWorkspace } = data;
+    let { user, workspace } = data;
 
-    let workspaceTitle: string | undefined = undefined;
+    let workspaceTitle: string | undefined = workspace?.title;
     let state: OnboardingState = "new-workspace";
 
     $: workspaceTitleGiven = workspaceTitle && workspaceTitle.length > 0;
-
-    const nextStep = "/user/onboarding/new-workspace-board";
 
     async function nextAction() {
         if (!workspaceTitle) {
             throw new Error("Exepcted workspaceTitle");
         }
-        await createWorkspace(workspaceTitle, "empty description TODO");
+        const { uuid } = await createWorkspace(
+            workspaceTitle,
+            "empty description TODO"
+        );
+
+        const nextStep = `/user/onboarding/new-workspace-board/${uuid}`;
         await goto(nextStep);
     }
 </script>
@@ -33,22 +36,24 @@
     title={$_("onboarding.new-workspace.title", {
         values: { who: user.full_name },
     })}
-    prompt={hasWorkspace ? null : $_("onboarding.new-workspace.prompt")}
+    prompt={workspace ? null : $_("onboarding.new-workspace.prompt")}
     {nextAction}
     nextBtnDisabled={!workspaceTitleGiven}
     hasContentPadding={false}
 >
     <svelte:fragment slot="prompt">
-        <p>
-            {$_("onboarding.new-workspace.has-workspace")}
-        </p>
-        <p>
-            <Anchor
-                size="large"
-                href={nextStep}
-                label={"Create workspace board"}
-            />
-        </p>
+        {#if workspace}
+            <p>
+                {$_("onboarding.new-workspace.has-workspace")}
+            </p>
+            <p>
+                <Anchor
+                    size="large"
+                    href="/user/onboarding/new-workspace-board/{workspace.uuid}"
+                    label={"Create workspace board"}
+                />
+            </p>
+        {/if}
     </svelte:fragment>
     <svelte:fragment slot="inputs">
         <InputField
