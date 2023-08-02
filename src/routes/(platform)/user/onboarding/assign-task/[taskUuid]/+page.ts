@@ -6,6 +6,7 @@ import type {
     Workspace,
     WorkspaceBoard,
 } from "$lib/types/workspace";
+import { unwrap } from "$lib/utils/type";
 
 interface returnType {
     task: Task;
@@ -18,17 +19,11 @@ export async function load({
     params: { taskUuid },
 }: PageLoadEvent): Promise<returnType> {
     const task = await getTask(taskUuid, { fetch });
-    const workspaceBoard = task.workspace_board_section?.workspace_board;
-    if (!workspaceBoard) {
-        throw new Error("Expected workspaceBoard");
-    }
-    const workspace = workspaceBoard.workspace;
-    if (!workspace) {
-        throw new Error("Expected workspace");
-    }
-    const label = task.labels.at(0);
-    if (!label) {
-        throw new Error("Expected label");
-    }
+    const workspaceBoard = unwrap(
+        task.workspace_board_section?.workspace_board,
+        "Expected workspaceBoard"
+    );
+    const workspace = unwrap(workspaceBoard.workspace, "Expected workspace");
+    const label = unwrap(task.labels.at(0), "Expected label");
     return { task, workspaceBoard, workspace, label };
 }
