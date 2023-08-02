@@ -4,25 +4,37 @@
     import Onboarding from "$lib/components/Onboarding.svelte";
     import AppIllustration from "$lib/components/onboarding/app-illustration.svelte";
     import type { OnboardingState } from "$lib/types/onboarding";
+    import type { PageData } from "./$types";
+    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
-    let workspaceTitle = "";
-    let boardTitle = "";
-    let taskTitle = "";
-    let labelName = "";
+    export let data: PageData;
+
+    const { task, workspaceBoard, workspace, label } = data;
+
+    let workspaceTitle = workspace.title;
+    let boardTitle = workspaceBoard.title;
+    let taskTitle = task.title;
+    let labelName = label.name;
     let state: OnboardingState = "assign-task";
 </script>
 
 <Onboarding
-    title={`Task ${taskTitle} has been assigned to you!`}
+    title={$_("onboarding.assign-task.title", { values: { taskTitle } })}
     hasContentPadding={false}
     stepCount={5}
     step={5}
     nextLabel={$_("onboarding.assign-task.continue")}
     backAction={console.error}
+    nextAction={{
+        kind: "a",
+        href: getDashboardWorkspaceBoardUrl(workspaceBoard.uuid),
+    }}
 >
     <svelte:fragment slot="prompt">
-        <p>{$_("onboarding.assign-task.prompt.paragraph1")}</p>
-        <p>{$_("onboarding.assign-task.prompt.paragraph2")}</p>
+        <div class="flex flex-col gap-4">
+            <p>{$_("onboarding.assign-task.prompt.finished")}</p>
+            <p>{$_("onboarding.assign-task.prompt.adding-members")}</p>
+        </div>
     </svelte:fragment>
 
     <svelte:fragment slot="content">

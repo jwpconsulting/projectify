@@ -14,12 +14,12 @@
     export let data: PageData;
     let { user, workspace } = data;
 
-    let workspaceTitle: string | undefined = workspace?.title;
+    let workspaceTitle: string | undefined = undefined;
     let state: OnboardingState = "new-workspace";
 
     $: workspaceTitleGiven = workspaceTitle && workspaceTitle.length > 0;
 
-    async function nextAction() {
+    async function action() {
         if (!workspaceTitle) {
             throw new Error("Exepcted workspaceTitle");
         }
@@ -38,7 +38,7 @@
         values: { who: user.full_name },
     })}
     prompt={workspace ? null : $_("onboarding.new-workspace.prompt")}
-    {nextAction}
+    nextAction={{ kind: "button", action }}
     nextBtnDisabled={!workspaceTitleGiven}
     hasContentPadding={false}
 >

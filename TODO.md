@@ -35,6 +35,7 @@
   1. Perform initial load in page ts, so that a page can definitely be rendered
      with a entity instance,
   2. Continuously reassign $entity to page data so it stays fresh.
+- A label should have title/description, not name
 
 # Update Dependency
 

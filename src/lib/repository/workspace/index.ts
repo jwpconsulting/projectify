@@ -34,8 +34,10 @@ export * from "$lib/repository/workspace/workspace";
 
 // Task CRUD
 // Create
-export async function createTask(createTask: CreateTask): Promise<void> {
-    await client.mutate({
+export async function createTask(createTask: CreateTask): Promise<Task> {
+    const {
+        data: { addTask: task },
+    } = (await client.mutate({
         mutation: Mutation_AddTask,
         variables: {
             input: {
@@ -46,7 +48,8 @@ export async function createTask(createTask: CreateTask): Promise<void> {
                     createTask.workspace_board_section.uuid,
             },
         },
-    });
+    })) as ApolloQueryResult<{ addTask: Task }>;
+    return task;
 }
 
 // Update
@@ -155,8 +158,10 @@ export async function createLabel(
     workspace: Workspace,
     name: string,
     color: number
-) {
-    await client.mutate({
+): Promise<Label> {
+    const {
+        data: { addLabel: label },
+    } = (await client.mutate({
         mutation: Mutation_AddLabelMutation,
         variables: {
             input: {
@@ -165,7 +170,8 @@ export async function createLabel(
                 color,
             },
         },
-    });
+    })) as ApolloQueryResult<{ addLabel: Label }>;
+    return label;
 }
 export async function updateLabel(label: Label, name: string, color: number) {
     await client.mutate({

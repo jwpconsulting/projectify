@@ -1,6 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import type { ButtonAction } from "$lib/figma/types";
 
     export let hasContentPadding = false;
 
@@ -10,8 +11,7 @@
     export let prompt: string | null = null;
     // TODO make not optional
     export let backAction: (() => void) | undefined = undefined;
-    // TODO make not optional
-    export let nextAction: () => void = console.error;
+    export let nextAction: ButtonAction = { kind: "a", href: "/" };
     export let nextLabel: string = $_("onboarding.continue");
     // TODO rename nextActionDisabled
     export let nextBtnDisabled = false;
@@ -25,9 +25,13 @@
         .map((_, inx) => inx + 1);
 
     function submit() {
-        if (!nextBtnDisabled) {
-            nextAction();
+        if (nextBtnDisabled) {
+            throw new Error("nextBtnDisabled");
         }
+        if (nextAction.kind === "a") {
+            throw new Error('nextAction.kind === "a"');
+        }
+        nextAction.action();
     }
 </script>
 
@@ -69,14 +73,25 @@
                     label={$_("onboarding.back")}
                 />
             {/if}
-            <Button
-                style={{ kind: "primary" }}
-                disabled={nextBtnDisabled}
-                color="blue"
-                size="medium"
-                action={{ kind: "submit" }}
-                label={nextLabel}
-            />
+            {#if nextAction.kind === "button"}
+                <Button
+                    style={{ kind: "primary" }}
+                    disabled={nextBtnDisabled}
+                    color="blue"
+                    size="medium"
+                    action={{ kind: "submit" }}
+                    label={nextLabel}
+                />
+            {:else}
+                <Button
+                    style={{ kind: "primary" }}
+                    disabled={nextBtnDisabled}
+                    color="blue"
+                    size="medium"
+                    action={nextAction}
+                    label={nextLabel}
+                />
+            {/if}
         </div>
         {#if nextMessage}
             <div>

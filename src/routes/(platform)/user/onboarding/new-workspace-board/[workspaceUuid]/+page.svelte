@@ -5,34 +5,27 @@
     import type { OnboardingState } from "$lib/types/onboarding";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import type { PageData } from "./$types";
-    import {
-        createWorkspaceBoard,
-        createWorkspaceBoardSection,
-    } from "$lib/repository/workspace";
+    import { createWorkspaceBoard } from "$lib/repository/workspace";
     import { goto } from "$app/navigation";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { getDashboardWorkspaceBoardUrl, getNewTaskUrl } from "$lib/urls";
+    import { getNewTaskUrl } from "$lib/urls/user/onboarding";
 
     export let data: PageData;
 
-    const { workspace, workspaceBoard, workspaceBoardSection } = data;
+    const { workspace, workspaceBoard } = data;
 
-    let title: string | undefined = workspaceBoard?.title;
+    let title: string | undefined = undefined;
     let state: OnboardingState = "new-board";
 
-    async function nextAction() {
+    async function action() {
         if (!title) {
             throw new Error("Expected title");
         }
-        const workspaceBoard = await createWorkspaceBoard(workspace, {
+        const { uuid } = await createWorkspaceBoard(workspace, {
             title,
             description: "",
             // TODO please make me optional
             deadline: null,
-        });
-        const { uuid } = await createWorkspaceBoardSection(workspaceBoard, {
-            title: "To Do",
-            description: "",
         });
         const nextStep = getNewTaskUrl(uuid);
         await goto(nextStep);
@@ -44,34 +37,11 @@
     hasContentPadding={false}
     stepCount={5}
     step={1}
-    {nextAction}
+    nextAction={{ kind: "button", action }}
 >
     <svelte:fragment slot="prompt">
         <div class="flex flex-col gap-8">
-            {#if workspaceBoard && workspaceBoardSection}
-                <div class="flex flex-col gap-4">
-                    <p>
-                        {$_(
-                            "onboarding.new-workspace-board.workspace-board-section-exists.message",
-                            {
-                                values: {
-                                    title: workspaceBoard.title,
-                                    section: workspaceBoardSection.title,
-                                },
-                            }
-                        )}
-                    </p>
-                    <p>
-                        <Anchor
-                            label={$_(
-                                "onboarding.new-workspace-board.workspace-board-section-exists.prompt"
-                            )}
-                            size="large"
-                            href={getNewTaskUrl(workspaceBoardSection.uuid)}
-                        />
-                    </p>
-                </div>
-            {:else if workspaceBoard}
+            {#if workspaceBoard}
                 <div class="flex flex-col gap-4">
                     <p>
                         {$_(
@@ -82,12 +52,11 @@
                     <p>
                         <Anchor
                             label={$_(
-                                "onboarding.new-workspace-board.workspace-board-exists.prompt"
+                                "onboarding.new-workspace-board.workspace-board-exists.prompt",
+                                { values: { title: workspaceBoard.title } }
                             )}
                             size="large"
-                            href={getDashboardWorkspaceBoardUrl(
-                                workspaceBoard.uuid
-                            )}
+                            href={getNewTaskUrl(workspaceBoard.uuid)}
                         />
                     </p>
                 </div>

@@ -14,7 +14,7 @@
 
     $: nextBtnDisabled = fullName === undefined || fullName.length == 0;
 
-    async function nextAction() {
+    async function action() {
         if (fullName == undefined) {
             throw new Error("Expected fullName");
         }
@@ -28,7 +28,7 @@
     prompt={$_("onboarding.about-you.prompt")}
     {nextBtnDisabled}
     hasContentPadding={true}
-    {nextAction}
+    nextAction={{ kind: "button", action }}
 >
     <svelte:fragment slot="inputs">
         <InputField

@@ -184,13 +184,6 @@
             "title": "About you",
             "prompt": "Write your full name below."
         },
-        "assign-task": {
-            "continue": "Get started",
-            "prompt": {
-                "paragraph1": "You’re all set!",
-                "paragraph2": "If you wish to add new members to your workspace, please go to the workspace settings menu next to your workspace name."
-            }
-        },
         "billing-details": {
             "title": "Billing details",
             "continue": "Continue to checkout",
@@ -227,18 +220,31 @@
             "default-name": "Your board",
             "cancel": "Cancel",
             "workspace-board-exists": {
-                "message": "It looks like you already have a workspace board called \"{title}\". Would you like to continue using it in the dashboard?",
-                "prompt": "Continue to dashboard"
-            },
-            "workspace-board-section-exists": {
-                "message": "It looks like you already have a workspace board called \"{title}\" and a workspace board section called \"{section}\". Would you like to continue using it?",
-                "prompt": "Continue with existing workspace board"
+                "message": "It looks like you already have a workspace board called \"{title}\". Would you like to continue adding a task for it?",
+                "prompt": "Continue adding task to \"{title}\""
             }
         },
         "new-task": {
             "title": "What is a task you’d like to complete?",
-            "prompt": "Tasks can be further divided into sub tasks and contain detailed descriptions.",
-            "task-title-place-holder": "Tasks can be further divided into sub tasks and contain detailed descriptions."
+            "workspace-board-section-title": "To do",
+            "prompt": {
+                "location": "This task will be placed in a section called \"{workspaceBoardSectionTitle}\"",
+                "explanation": "Tasks can be further divided into sub tasks and contain detailed descriptions."
+            },
+            "placeholder": "E.g., 'Add user permission dropdown'"
+        },
+        "new-label": {
+            "title": "Create a label for \"{taskTitle}\"",
+            "prompt": "Labels help you to filter between the types of tasks.",
+            "placeholder": "e.g., Bug"
+        },
+        "assign-task": {
+            "title": "Task \"{taskTitle}\" has been assigned to you!",
+            "continue": "Get started",
+            "prompt": {
+                "finished": "You’re all set!",
+                "adding-members": "If you wish to add new members to your workspace, please go to the workspace settings menu next to your workspace name."
+            }
         }
     },
     "skip-onboarding": {
