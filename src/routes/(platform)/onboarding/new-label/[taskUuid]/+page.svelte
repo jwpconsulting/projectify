@@ -7,7 +7,7 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { assignLabelToTask, createLabel } from "$lib/repository/workspace";
     import { goto } from "$lib/navigation";
-    import { getAssignTaskUrl } from "$lib/urls/user/onboarding";
+    import { getAssignTaskUrl } from "$lib/urls/onboarding";
 
     export let data: PageData;
 

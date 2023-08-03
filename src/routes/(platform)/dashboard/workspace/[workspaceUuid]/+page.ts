@@ -3,7 +3,7 @@ import type { PageLoadEvent } from "./$types";
 import type { Workspace } from "$lib/types/workspace";
 import { getWorkspace } from "$lib/repository/workspace";
 import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
-import { getNewWorkspaceBoardUrl } from "$lib/urls/user/onboarding";
+import { getNewWorkspaceBoardUrl } from "$lib/urls/onboarding";
 
 export const prerender = false;
 export const ssr = false;

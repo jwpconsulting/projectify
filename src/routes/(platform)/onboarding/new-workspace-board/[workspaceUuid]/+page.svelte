@@ -8,7 +8,7 @@
     import { createWorkspaceBoard } from "$lib/repository/workspace";
     import { goto } from "$app/navigation";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { getNewTaskUrl } from "$lib/urls/user/onboarding";
+    import { getNewTaskUrl } from "$lib/urls/onboarding";
 
     export let data: PageData;
 

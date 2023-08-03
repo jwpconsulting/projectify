@@ -9,7 +9,7 @@
     import { createWorkspace } from "$lib/repository/workspace";
     import { goto } from "$lib/navigation";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { getNewWorkspaceBoardUrl } from "$lib/urls/user/onboarding";
+    import { getNewWorkspaceBoardUrl } from "$lib/urls/onboarding";
 
     export let data: PageData;
     let { user, workspace } = data;

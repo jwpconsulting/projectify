@@ -13,7 +13,7 @@
     } from "$lib/repository/workspace";
     import type { CreateTask } from "$lib/types/workspace";
     import { goto } from "$lib/navigation";
-    import { getNewLabelUrl } from "$lib/urls/user/onboarding";
+    import { getNewLabelUrl } from "$lib/urls/onboarding";
 
     export let data: PageData;
 
