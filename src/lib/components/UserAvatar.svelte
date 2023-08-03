@@ -4,8 +4,8 @@
 
     export let user: User;
     export let size: 24 | 32 | 92;
-    const profilePicture = user.profile_picture;
-    const name = `${user.email}${user.full_name || user.email}`;
+    $: profilePicture = user.profile_picture;
+    $: name = `${user.email}${user.full_name || user.email}`;
 </script>
 
 {#if profilePicture}
