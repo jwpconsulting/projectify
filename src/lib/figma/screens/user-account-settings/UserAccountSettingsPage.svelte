@@ -1,16 +1,79 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import type { User } from "$lib/types/user";
-    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import UploadAvatar from "$lib/figma/buttons/UploadAvatar.svelte";
+    import { fetchUser, updateUserProfile } from "$lib/stores/user";
+
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import { unwrap } from "$lib/utils/type";
+    import { updateProfilePicture } from "$lib/repository/user";
+
+    let state: "viewing" | "editing" | "saving" = "viewing";
+
+    let imageFile: File | null = null;
 
     export let user: User;
-    const hasBeenEdited = false;
+
+    let { full_name: fullName } = user;
+
+    // TODO
+    // import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
+    // import ProfilePictureFileSelector from "$lib/components/profilePictureFileSelector.svelte";
+    // function onFileSelected({
+    //     detail: { src, file },
+    // }: {
+    //     detail: { src: string; file: File };
+    // }) {
+    //     imageFile = file;
+    //     state = "editing";
+    //     user.profile_picture = src;
+    // }
+
+    async function saveData() {
+        if (!fullName) {
+            throw new Error("Name was not given");
+        }
+        await updateUserProfile(fullName);
+    }
+
+    async function save() {
+        state = "saving";
+        let fileUpload: Promise<void> | null = null;
+        if (imageFile) {
+            fileUpload = updateProfilePicture(imageFile);
+        }
+        console.log(user);
+        await Promise.all([saveData(), fileUpload]);
+        user = unwrap(await fetchUser(), "Expected fetchUser");
+        // TODO show confirmation flash when saving complete Justus
+        // 2023-08-03
+        state = "viewing";
+        console.log(user);
+    }
+
+    function cancel() {
+        state = "viewing";
+    }
 </script>
 
 <div class="flex flex-col gap-12 rounded-lg bg-foreground p-4">
+    <!--
+
+            <ProfilePictureFileSelector
+                url={user.profile_picture}
+                on:fileSelected={onFileSelected}
+                let:src
+            >
+                <UserProfilePicture
+                    pictureProps={{
+                        url: src,
+                        size: 128,
+                    }}
+                />
+            </ProfilePictureFileSelector>
+-->
     <figure class="flex flex-col items-center gap-7">
         <div class="relative flex w-max flex-col">
             <AvatarVariant size="large" content={{ kind: "single", user }} />
@@ -28,6 +91,7 @@
                 label={$_("user-account-settings.name")}
                 placeholder={$_("user-account-settings.enter-your-full-name")}
                 name="full_name"
+                bind:value={fullName}
                 style={{ kind: "field", inputType: "text" }}
             />
             <Button
@@ -63,21 +127,18 @@
             <Button
                 action={{
                     kind: "button",
-                    action: console.error.bind(
-                        null,
-                        "Save changes not implemented"
-                    ),
+                    action: save,
                 }}
                 size="medium"
                 color="blue"
-                disabled={hasBeenEdited}
+                disabled={state === "editing"}
                 style={{ kind: "primary" }}
                 label={$_("user-account-settings.save-changes")}
             />
             <Button
                 action={{
                     kind: "button",
-                    action: console.error.bind(null, "Cancel not implemented"),
+                    action: cancel,
                 }}
                 size="medium"
                 color="blue"
