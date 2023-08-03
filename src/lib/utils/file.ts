@@ -19,7 +19,7 @@ function getCookie(name: string) {
 export async function uploadImage(
     imageFile: File,
     url: string
-): Promise<null> {
+): Promise<void> {
     const formData = new FormData();
     formData.append("file", imageFile);
     const csrftoken = getCookie("csrftoken");
@@ -30,5 +30,4 @@ export async function uploadImage(
         body: formData,
     });
     await response.text();
-    return null;
 }

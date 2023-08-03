@@ -5,12 +5,11 @@
     import ProfilePictureFileSelector from "$lib/components/profilePictureFileSelector.svelte";
     import { fetchUser, updateUserProfile } from "$lib/stores/user";
 
-    import vars from "$lib/env";
-    import { uploadImage } from "$lib/utils/file";
     import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
     import type { PageData } from "./$types";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { unwrap } from "$lib/utils/type";
+    import { updateProfilePicture } from "$lib/repository/user";
 
     export let data: PageData;
 
@@ -43,17 +42,14 @@
 
     async function onSave() {
         isSaving = true;
-        let fileUpload: Promise<null> | null = null;
+        let fileUpload: Promise<void> | null = null;
         if (imageFile) {
-            fileUpload = uploadImage(
-                imageFile,
-                vars.API_ENDPOINT + "/user/profile-picture-upload"
-            );
+            fileUpload = updateProfilePicture(imageFile);
         }
         try {
             await Promise.all([saveData(), fileUpload]);
-        } finally {
             currentUser = unwrap(await fetchUser(), "Expected fetchUser");
+        } finally {
             isSaving = false;
             isEditMode = false;
         }
