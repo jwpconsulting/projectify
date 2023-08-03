@@ -2,22 +2,29 @@
     import ContextMenu from "$lib/figma/overlays/ContextMenu.svelte";
     import { closeContextMenu, contextMenuState } from "$lib/stores/globalUi";
     import type { ContextMenuState } from "$lib/types/ui";
+    import { onMount } from "svelte";
 
-    let contextMenu: HTMLElement;
-    let resizeObserver: ResizeObserver | null;
+    let contextMenu: HTMLElement | null = null;
+    let resizeObserver: ResizeObserver | null = null;
     let repositioned = false;
-    contextMenuState.subscribe(($contextMenuState) => {
-        if ($contextMenuState.kind === "visible") {
-            if (!contextMenu) {
-                throw new Error("Could not find contextMenu");
+
+    onMount(() => {
+        contextMenuState.subscribe(($contextMenuState) => {
+            if ($contextMenuState.kind === "visible") {
+                if (!resizeObserver) {
+                    console.debug("resizeObserver not present");
+                }
+                if (!contextMenu) {
+                    throw new Error("Expected contextMenu");
+                }
+                addObserver(contextMenu, $contextMenuState);
+                listenForEscape();
+            } else {
+                resizeObserver = null;
+                repositioned = false;
+                stopListeningForEscape();
             }
-            addObserver(contextMenu, $contextMenuState);
-            listenForEscape();
-        } else {
-            resizeObserver = null;
-            repositioned = false;
-            stopListeningForEscape();
-        }
+        });
     });
 
     function addObserver(
@@ -48,6 +55,9 @@
     }
 
     function repositionContextMenu(anchor: HTMLElement) {
+        if (!contextMenu) {
+            throw new Error("Expected contextMenu");
+        }
         if (repositioned) {
             console.debug("already repositioned");
             return;
