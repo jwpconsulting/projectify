@@ -1,22 +1,19 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-
     import { _ } from "svelte-i18n";
 
-    export let isEditMode = false;
-    export let isSaving = false;
-
-    const dispatch = createEventDispatcher();
+    export let save: () => void;
+    export let cancel: () => void;
+    export let state: "viewing" | "editing" | "saving";
 </script>
 
 <footer
     class="item-center mt-4 flex justify-center space-x-2 border-t border-base-300 py-1 pt-4"
 >
-    {#if !isEditMode}
+    {#if state === "viewing"}
         <slot />
         <button
             class="btn btn-outline btn-primary max-w-[200px] grow rounded-full"
-            on:click={() => (isEditMode = true)}
+            on:click={() => (state = "editing")}
         >
             {$_("Edit")}
         </button>
@@ -24,16 +21,16 @@
         <button
             class="btn btn-outline btn-primary max-w-[200px] grow rounded-full"
             on:click={() => {
-                isEditMode = false;
-                dispatch("cancel");
+                state = "viewing";
+                cancel();
             }}
         >
             {$_("Cancel")}
         </button>
         <button
-            class:loading={isSaving}
+            class:loading={state === "saving"}
             class="btn btn-primary max-w-[200px] grow rounded-full"
-            on:click={() => dispatch("save")}
+            on:click={save}
         >
             {$_("Save")}
         </button>

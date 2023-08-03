@@ -13,8 +13,7 @@
 
     export let data: PageData;
 
-    let isEditMode = false;
-    let isSaving = false;
+    let state: "viewing" | "editing" | "saving" = "viewing";
 
     let imageFile: File | null = null;
 
@@ -27,7 +26,7 @@
         detail: { src: string; file: File };
     }) {
         imageFile = file;
-        isEditMode = true;
+        state = "editing";
         if (currentUser) {
             currentUser.profile_picture = src;
         }
@@ -40,8 +39,8 @@
         await updateUserProfile(fullName);
     }
 
-    async function onSave() {
-        isSaving = true;
+    async function save() {
+        state = "saving";
         let fileUpload: Promise<void> | null = null;
         if (imageFile) {
             fileUpload = updateProfilePicture(imageFile);
@@ -50,14 +49,12 @@
             await Promise.all([saveData(), fileUpload]);
             currentUser = unwrap(await fetchUser(), "Expected fetchUser");
         } finally {
-            isSaving = false;
-            isEditMode = false;
+            state = "viewing";
         }
     }
 
-    function onCancel() {
-        isSaving = false;
-        isEditMode = false;
+    function cancel() {
+        state = "viewing";
     }
 </script>
 
@@ -87,11 +84,6 @@
             />
         </header>
 
-        <SettingFooterEditSaveButtons
-            {isSaving}
-            bind:isEditMode
-            on:save={onSave}
-            on:cancel={onCancel}
-        />
+        <SettingFooterEditSaveButtons bind:state {save} {cancel} />
     </div>
 </SettingsPage>

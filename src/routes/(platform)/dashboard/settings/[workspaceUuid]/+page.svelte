@@ -16,13 +16,12 @@
     }
 
     $: {
-        if (!isEditMode && $currentWorkspace) {
+        if (state != "editing" && $currentWorkspace) {
             workspace = { ...$currentWorkspace };
         }
     }
 
-    let isEditMode = false;
-    let isSaving = false;
+    let state: "viewing" | "editing" | "saving" = "viewing";
 
     async function saveData() {
         if (!workspace) {
@@ -50,7 +49,7 @@
     }
 
     function fieldChanged() {
-        isEditMode = true;
+        state = "editing";
     }
 
     let imageFile: File | null = null;
@@ -60,18 +59,18 @@
         detail: { src: string; file: File };
     }) {
         imageFile = file;
-        isEditMode = true;
+        state = "editing";
         if (!workspace) {
             throw new Error("Expected workspace");
         }
         workspace.picture = src;
     }
 
-    async function onSave() {
+    async function save() {
         if (!$currentWorkspace) {
             throw new Error("Expected $currentWorkspace");
         }
-        isSaving = true;
+        state = "saving";
         if (imageFile) {
             await uploadImage(
                 imageFile,
@@ -80,12 +79,11 @@
             );
         }
         await saveData();
-        isSaving = false;
-        isEditMode = false;
+        state = "viewing";
     }
 
-    async function onCancel() {
-        isSaving = false;
+    async function cancel() {
+        state = "saving";
         console.log("cancel");
     }
     async function onDelete() {
@@ -95,7 +93,7 @@
 
 {#if workspace}
     <div
-        class:pointer-events-none={isSaving}
+        class:pointer-events-none={state === "saving"}
         class="flex flex-col space-y-4 divide-y divide-base-300"
     >
         <SettingsField label="Icon image" labelVAlign="start">
@@ -137,7 +135,7 @@
         </SettingsField>
         <SettingsField label="Danger Zone">
             <button
-                disabled={isSaving}
+                disabled={state === "saving"}
                 class="btn btn-outline btn-accent btn-sm w-full rounded-full hover:bg-accent hover:text-accent-content"
                 on:click={onDelete}
             >
@@ -147,9 +145,4 @@
     </div>
 {/if}
 
-<SettingFooterEditSaveButtons
-    {isSaving}
-    bind:isEditMode
-    on:save={onSave}
-    on:cancel={onCancel}
-/>
+<SettingFooterEditSaveButtons {state} {save} {cancel} />
