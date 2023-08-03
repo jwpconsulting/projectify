@@ -1,6 +1,6 @@
 <script lang="ts">
     import SettingFooterEditSaveButtons from "$lib/components/settingFooterEditSaveButtons.svelte";
-    import SettingPage from "$lib/components/settingPage.svelte";
+    import SettingsPage from "$lib/components/SettingsPage.svelte";
     import ProfilePictureFileSelector from "$lib/components/profilePictureFileSelector.svelte";
     import { fetchUser, user } from "$lib/stores/user";
 
@@ -87,7 +87,7 @@
     }
 </script>
 
-<SettingPage title="My Profile">
+<SettingsPage title="My Profile">
     <div class="space-y-8">
         <header
             class="mt-[-40px] flex flex-col items-center justify-center space-y-2"
@@ -122,4 +122,4 @@
             on:cancel={onCancel}
         />
     </div>
-</SettingPage>
+</SettingsPage>

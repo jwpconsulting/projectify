@@ -57,7 +57,7 @@
 
 <PageLayout>
     {#if browser}
-        <SettingPage title={$_("workspace-settings")}>
+        <SettingsPage title={$_("workspace-settings")}>
             <TabsSimple {items} {activeTabId} />
             <main
                 class="relative flex grow flex-col overflow-y-auto transition-all duration-300 ease-in-out"
@@ -75,6 +75,6 @@
                     </div>
                 </div>
             </main>
-        </SettingPage>
+        </SettingsPage>
     {/if}
 </PageLayout>

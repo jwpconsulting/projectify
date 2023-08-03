@@ -1,6 +1,6 @@
 <script lang="ts">
     import PageLayout from "$lib/components/layouts/pageLayout.svelte";
-    import SettingPage from "$lib/components/settingPage.svelte";
+    import SettingsPage from "$lib/components/SettingsPage.svelte";
     import WorkspaceArchive from "$lib/components/dashboard/workspaceArchive.svelte";
     import { page } from "$app/stores";
     import { currentWorkspaceUuid } from "$lib/stores/dashboard";
@@ -17,7 +17,7 @@
 </script>
 
 <PageLayout>
-    <SettingPage title="Archives">
+    <SettingsPage title="Archives">
         <WorkspaceArchive />
-    </SettingPage>
+    </SettingsPage>
 </PageLayout>
