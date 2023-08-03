@@ -81,7 +81,9 @@ export const logout = async () => {
     userIsLoading.set(false);
 };
 
-export const fetchUser = async (repositoryContext?: RepositoryContext) => {
+export const fetchUser = async (
+    repositoryContext?: RepositoryContext
+): Promise<User | null> => {
     userIsLoading.set(true);
     const userData = await getUser(repositoryContext);
     if (!userData) {
@@ -110,6 +112,7 @@ export const confirmPasswordReset = async (
     });
 };
 
+// TODO full name should be optional
 export async function updateUserProfile(fullName: string) {
     await client.mutate({
         mutation: Mutation_UpdateProfile,

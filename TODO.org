@@ -14,6 +14,15 @@
 ** Deadline -> Due date
     Due date sounds less threatening
 
+** Full name -> Preferred name
+   <2023-08-03 Thu>
+   We want to respect how a user wants to be called.
+
+   Asking them to provide a full name even if they don't want to be called that
+   way reeks of social media real name policies that only serve large
+   corporations and their need to moderate what they deem are undesirable
+   opinions. Word. Make things personal and respectful.
+
 * Unfinished
 
 ** Reintegrate mobile menu overlay as proper overlay (whatever that means)

@@ -1,40 +1,26 @@
 <script lang="ts">
+    import { _ } from "svelte-i18n";
     import SettingFooterEditSaveButtons from "$lib/components/settingFooterEditSaveButtons.svelte";
     import SettingsPage from "$lib/components/SettingsPage.svelte";
     import ProfilePictureFileSelector from "$lib/components/profilePictureFileSelector.svelte";
-    import { fetchUser, user } from "$lib/stores/user";
+    import { fetchUser, updateUserProfile } from "$lib/stores/user";
 
     import vars from "$lib/env";
-    import { client } from "$lib/graphql/client";
-    import { Mutation_UpdateProfile } from "$lib/graphql/operations";
     import { uploadImage } from "$lib/utils/file";
     import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
+    import type { PageData } from "./$types";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import { unwrap } from "$lib/utils/type";
 
-    import type { User } from "$lib/types/user";
+    export let data: PageData;
 
     let isEditMode = false;
     let isSaving = false;
 
     let imageFile: File | null = null;
 
-    function fieldChanged() {
-        isEditMode = true;
-    }
-
-    let currentUser: User | null = null;
-    let fullName: string | null;
-    $: {
-        if (!isEditMode) {
-            if ($user) {
-                currentUser = { ...$user };
-                fullName = currentUser
-                    ? currentUser.full_name
-                        ? currentUser.full_name
-                        : null
-                    : null;
-            }
-        }
-    }
+    let { user: currentUser } = data;
+    let fullName: string | undefined;
 
     function onFileSelected({
         detail: { src, file },
@@ -49,18 +35,10 @@
     }
 
     async function saveData() {
-        try {
-            await client.mutate({
-                mutation: Mutation_UpdateProfile,
-                variables: {
-                    input: {
-                        fullName: fullName || "",
-                    },
-                },
-            });
-        } catch (error) {
-            console.error(error);
+        if (!fullName) {
+            throw new Error("Name was not given");
         }
+        await updateUserProfile(fullName);
     }
 
     async function onSave() {
@@ -75,7 +53,7 @@
         try {
             await Promise.all([saveData(), fileUpload]);
         } finally {
-            await fetchUser();
+            currentUser = unwrap(await fetchUser(), "Expected fetchUser");
             isSaving = false;
             isEditMode = false;
         }
@@ -105,14 +83,12 @@
                 />
             </ProfilePictureFileSelector>
 
-            <div class="text-xl font-bold">
-                <input
-                    class="nowrap-ellipsis input input-bordered grow rounded-md p-2 text-center text-xl font-bold"
-                    placeholder={"Full name"}
-                    on:input={() => fieldChanged()}
-                    bind:value={fullName}
-                />
-            </div>
+            <InputField
+                style={{ kind: "field", inputType: "text" }}
+                bind:value={fullName}
+                name="full-name"
+                placeholder={$_("user.profile.full-name.placeholder")}
+            />
         </header>
 
         <SettingFooterEditSaveButtons
