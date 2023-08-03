@@ -7,6 +7,7 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import type { PageData } from "./$types";
     import {
+        assignUserToTask,
         createTask,
         createWorkspaceBoardSection,
     } from "$lib/repository/workspace";
@@ -16,7 +17,7 @@
 
     export let data: PageData;
 
-    const { workspace, workspaceBoard } = data;
+    const { user, workspace, workspaceBoard } = data;
 
     let workspaceTitle = workspace.title;
     let boardTitle = workspaceBoard.title;
@@ -44,6 +45,7 @@
             workspace_board_section: workspaceBoardSection,
         };
         const { uuid } = await createTask(task);
+        await assignUserToTask(user.email, uuid);
         await goto(getNewLabelUrl(uuid));
     }
 </script>
