@@ -89,6 +89,7 @@
             on:click|preventDefault={action.action}
             class={outerStyle}
             {disabled}
+            type="button"
         >
             {#if style.icon && style.icon.position === "left"}
                 <Icon
