@@ -35,7 +35,8 @@
     $: workspaceBoard = $currentWorkspaceBoard || workspaceBoard;
     $: workspace = $currentWorkspace || workspace;
 
-    const workspaceUserSearchModule: WorkspaceUserSearchModule = {
+    let workspaceUserSearchModule: WorkspaceUserSearchModule;
+    $: workspaceUserSearchModule = {
         select: selectWorkspaceUser,
         deselect: deselectWorkspaceUser,
         selected: selectedWorkspaceUser,
