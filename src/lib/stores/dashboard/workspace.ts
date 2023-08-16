@@ -1,6 +1,6 @@
-import { derived, writable } from "svelte/store";
+import { writable } from "svelte/store";
 import { createWsStore } from "$lib/stores/util";
-import type { Workspace } from "$lib/types/workspace";
+import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
 import { getWorkspace, getWorkspaces } from "$lib/repository/workspace";
 
 import { currentWorkspaceBoard } from "$lib/stores/dashboard/workspaceBoard";
@@ -15,35 +15,32 @@ export const currentWorkspace = createWsStore<Workspace>(
     getWorkspace
 );
 
-const ensureWorkspaceUuid = derived<
-    [typeof currentWorkspaceUuid, typeof currentWorkspaceBoard],
-    string | null
->(
-    [currentWorkspaceUuid, currentWorkspaceBoard],
-    ([$currentWorkspaceUuid, $currentWorkspaceBoard], set) => {
-        // $currentWorkspaceUuid has already been set
-        if ($currentWorkspaceUuid) {
-            return;
-        }
+currentWorkspaceBoard.subscribe(
+    ($currentWorkspaceBoard: WorkspaceBoard | null) => {
         if (!$currentWorkspaceBoard) {
             return;
         }
-        if (!$currentWorkspaceBoard.workspace) {
-            console.error("Expected $currentWorkspaceBoard.workspace");
-            return;
+        const { workspace } = $currentWorkspaceBoard;
+        if (!workspace) {
+            throw new Error("Expected $currentWorkspaceBoard.workspace");
         }
-        const { uuid } = $currentWorkspaceBoard.workspace;
-        console.log("Setting workspace UUID to", uuid);
-        set(uuid);
-    },
-    null
-);
-ensureWorkspaceUuid.subscribe((workspaceUuid: string | null) => {
-    if (!workspaceUuid) {
-        return;
+        const { uuid: workspaceUuid } = workspace;
+        currentWorkspaceUuid.update(
+            ($currentWorkspaceUuid: string | null): string | null => {
+                // Is our current workspace uuid already set?
+                // Is it equal to the current ws board's id?
+                // Apparently, returning the same primitive value in a svelte
+                // writable update will suppress subscriber callbacks
+                // https://stackoverflow.com/questions/75525283/how-to-cancel-an-update-in-a-svelte-store
+                if ($currentWorkspaceUuid == workspaceUuid) {
+                    return $currentWorkspaceUuid;
+                }
+                console.log("Setting workspace UUID to", workspaceUuid);
+                return workspaceUuid;
+            }
+        );
     }
-    currentWorkspaceUuid.set(workspaceUuid);
-});
+);
 
 export async function setWorkspaces() {
     workspaces.set(await getWorkspaces());
