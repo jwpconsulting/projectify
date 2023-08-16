@@ -5,7 +5,6 @@
     import { client } from "$lib/graphql/client";
     import vars from "$lib/env";
     import { Mutation_UpdateWorkspace } from "$lib/graphql/operations";
-    import ProfilePicture from "$lib/components/profilePicture.svelte";
     import { uploadImage } from "$lib/utils/file";
     import type { Workspace } from "$lib/types/workspace";
     import { currentWorkspace, loading } from "$lib/stores/dashboard";
@@ -100,17 +99,11 @@
             <ProfilePictureFileSelector
                 url={workspace.picture}
                 on:fileSelected={onFileSelected}
-                let:src
             >
                 <div
                     class="overflow-hidden rounded-md border border-base-300 bg-primary-content text-primary"
                 >
-                    <ProfilePicture
-                        typogram={workspace.title}
-                        emptyIcon={null}
-                        url={src ? src : null}
-                        size={128}
-                    />
+                    TODO: Show a ProfilePicture here?
                 </div>
             </ProfilePictureFileSelector>
         </SettingsField>

@@ -3,8 +3,6 @@
 
     import IconPhotocamera from "$lib/components/icons/icon-photocamera.svelte";
 
-    import ProfilePicture from "$lib/components/profilePicture.svelte";
-
     export let url: string | null = null;
     let inputFileRef: HTMLElement | null = null;
 
@@ -49,7 +47,7 @@
     {#if $$slots.default}
         <slot {src} />
     {:else}
-        <ProfilePicture size={128} url={src} />
+        Show a profile picture here
     {/if}
     <input
         bind:this={inputFileRef}

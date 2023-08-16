@@ -18,7 +18,6 @@
     import IconTrash from "$lib/components/icons/icon-trash.svelte";
     import UserPicker from "$lib/components/userPicker.svelte";
     import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
-    import ProfilePicture from "$lib/components/profilePicture.svelte";
     import TaskDetailsContent from "$lib/components/dashboard/task-details-content.svelte";
     import TaskDetailsDiscussion from "$lib/components/dashboard/task-details-discussion.svelte";
     import { goto } from "$app/navigation";
@@ -246,7 +245,7 @@
                         }}
                     />
                 {:else}
-                    <ProfilePicture showPlus={true} size={42} />
+                    TODO: A profile picture may be shown here
                 {/if}
             </a>
 
