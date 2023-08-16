@@ -7,6 +7,10 @@
     } from "$lib/funabashi/types";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { formatISO, parseISO } from "date-fns";
+    import type Pikaday from "pikaday";
+    import { browser } from "$app/environment";
+    import type { PikadayOptions } from "pikaday";
+    import { onMount } from "svelte";
 
     // TODO make border customizable (e.g. in TaskFormFields)
     export let value: string | undefined = undefined;
@@ -20,31 +24,28 @@
     export let readonly = false;
     export let onClick: (() => void) | undefined = undefined;
 
-    import type Pikaday from "pikaday";
-    import { browser } from "$app/environment";
-
-    async function getPikaday(): Promise<typeof Pikaday> {
-        // This deals with pikaday using window here
-        // https://github.com/Pikaday/Pikaday/blob/21f676e70d688d18b265f2c12fc38e8457c20645/pikaday.js#L38C21-L38C21
-        return (await import("pikaday")).default;
-    }
-
     let pikadayAnchor: HTMLElement;
     let pikaday: typeof Pikaday;
+    let datePicker: Pikaday | undefined = undefined;
 
-    if (browser) {
-        getPikaday().then((p) => {
-            pikaday = p;
-        });
-    }
+    onMount(async function () {
+        if (browser) {
+            pikaday = (await import("pikaday")).default;
+        }
+        return () => {
+            if (datePicker) {
+                datePicker.destroy();
+            }
+        };
+    });
 
     const formatIsoDate = (date: Date) =>
         formatISO(date, { representation: "date" });
 
     $: {
         // TODO find out if we should avoid showing this on mobile
-        if (pikaday && pikadayAnchor) {
-            const pikadayConfig = {
+        if (pikaday && pikadayAnchor && !readonly) {
+            const pikadayConfig: PikadayOptions = {
                 field: pikadayAnchor,
                 toString(date: Date, _format: string): string {
                     return formatIsoDate(date);
@@ -58,7 +59,9 @@
                     value = formatIsoDate(date);
                 },
             };
-            new pikaday(pikadayConfig);
+            datePicker = new pikaday(pikadayConfig);
+        } else if (datePicker && readonly) {
+            datePicker.destroy();
         }
     }
 
