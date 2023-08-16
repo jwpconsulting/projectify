@@ -17,6 +17,7 @@
     export let anchorBottom: InputFieldAnchor | null = null;
     export let required = false;
     export let readonly = false;
+    export let onClick: (() => void) | undefined = undefined;
 
     import type Pikaday from "pikaday";
     import { browser } from "$app/environment";
@@ -102,6 +103,7 @@
                 class={`${inputStyle} pl-8`}
                 {...inputProps}
                 bind:value
+                on:click={onClick}
             />
         {:else if style.kind === "subTask"}
             <input
@@ -109,6 +111,7 @@
                 class={`${inputStyle} pl-2`}
                 {...inputProps}
                 bind:value
+                on:click={onClick}
             />
         {:else if style.kind === "field"}
             {#if style.inputType === "text"}
@@ -117,6 +120,7 @@
                     class={`${inputStyle} pl-2`}
                     {...inputProps}
                     bind:value
+                    on:click={onClick}
                 />
             {:else if style.inputType === "password"}
                 <input
@@ -124,6 +128,7 @@
                     class={`${inputStyle} pl-2`}
                     {...inputProps}
                     bind:value
+                    on:click={onClick}
                 />
             {:else if style.inputType === "email"}
                 <input
@@ -131,6 +136,7 @@
                     class={`${inputStyle} pl-2`}
                     {...inputProps}
                     bind:value
+                    on:click={onClick}
                 />
             {:else if style.inputType === "date"}
                 <input
@@ -138,6 +144,7 @@
                     class={`${inputStyle} pl-2`}
                     {...inputProps}
                     bind:value
+                    on:click={onClick}
                     bind:this={pikadayAnchor}
                 />
             {/if}
