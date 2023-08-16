@@ -1,7 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
     import { confirmPasswordReset } from "$lib/stores/user";
-    import { goto } from "$app/navigation";
+    import { goto } from "$lib/navigation";
     import { page } from "$app/stores";
     import IllustrationPasswordResetComplete from "$lib/components/illustrations/illustration-password-reset-complete.svelte";
 

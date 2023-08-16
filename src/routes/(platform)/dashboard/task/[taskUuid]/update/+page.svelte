@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Writable } from "svelte/store";
     import { readable, writable } from "svelte/store";
-    import { goto } from "$app/navigation";
+    import { goto } from "$lib/navigation";
     import TaskUpdateCard from "$lib/figma/screens/task/TaskUpdateCard.svelte";
     import type { Task } from "$lib/types/workspace";
     import { createLabelSearchModule } from "$lib/stores/modules";

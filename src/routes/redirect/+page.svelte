@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { goto } from "$app/navigation";
+    import { goto } from "$lib/navigation";
 
     onMount(async () => {
         if (location.pathname != "/") {

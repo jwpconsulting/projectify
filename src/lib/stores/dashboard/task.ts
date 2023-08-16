@@ -72,7 +72,7 @@ export async function deleteTask(task: Task) {
 }
 
 // XXX Remove the following
-import { goto } from "$app/navigation";
+import { goto } from "$lib/navigation";
 import { getDashboardTaskUrl, getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
 export const drawerModalOpen = writable(false);

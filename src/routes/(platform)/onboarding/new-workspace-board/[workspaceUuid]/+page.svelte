@@ -6,7 +6,7 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import type { PageData } from "./$types";
     import { createWorkspaceBoard } from "$lib/repository/workspace";
-    import { goto } from "$app/navigation";
+    import { goto } from "$lib/navigation";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { getNewTaskUrl } from "$lib/urls/onboarding";
 

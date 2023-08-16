@@ -19,7 +19,7 @@
     import UserPicker from "$lib/components/userPicker.svelte";
     import TaskDetailsContent from "$lib/components/dashboard/task-details-content.svelte";
     import TaskDetailsDiscussion from "$lib/components/dashboard/task-details-discussion.svelte";
-    import { goto } from "$app/navigation";
+    import { goto } from "$lib/navigation";
     import Loading from "$lib/components/loading.svelte";
     import { page } from "$app/stores";
     import IconClose from "$lib/components/icons/icon-close.svelte";

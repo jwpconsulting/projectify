@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { goto } from "$app/navigation";
+    import { goto } from "$lib/navigation";
     import { getDashboardWorkspaceUrl } from "$lib/urls";
     import { currentWorkspaceUuid } from "$lib/stores/dashboard";
 

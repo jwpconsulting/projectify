@@ -1,4 +1,4 @@
-import { goto } from "$app/navigation";
+import { goto } from "$lib/navigation";
 import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
 import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard/workspaceBoard";
