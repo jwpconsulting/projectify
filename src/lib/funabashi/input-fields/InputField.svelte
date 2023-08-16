@@ -16,6 +16,7 @@
     export let anchorTop: InputFieldAnchor | null = null;
     export let anchorBottom: InputFieldAnchor | null = null;
     export let required = false;
+    export let readonly = false;
 
     import type Pikaday from "pikaday";
     import { browser } from "$app/environment";
@@ -72,6 +73,7 @@
         name,
         placeholder,
         required,
+        readonly: readonly || undefined,
     };
 </script>
 
@@ -156,7 +158,7 @@
                 </div>
             </div>
         {/if}
-        {#if value}
+        {#if value && !readonly}
             <button
                 class="absolute right-0.5 top-0.5 z-20 flex flex-row gap-2.5 p-3"
                 on:click|preventDefault={clear}

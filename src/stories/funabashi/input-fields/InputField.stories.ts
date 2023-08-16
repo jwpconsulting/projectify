@@ -46,6 +46,9 @@ const meta: Meta<InputField> = {
         label: {
             control: "text",
         },
+        readonly: {
+            control: "boolean",
+        },
     },
 };
 export default meta;
