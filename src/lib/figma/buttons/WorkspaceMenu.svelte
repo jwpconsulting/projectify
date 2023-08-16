@@ -40,7 +40,7 @@
             <div bind:this={workspaceContextMenuAnchor}>
                 <Filter
                     icon={Briefcase}
-                    label={$_("workspace-menu.workspace")}
+                    label={workspace.title}
                     open={false}
                     on:click={showWorkspaceContextMenu}
                 />

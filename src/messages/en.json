@@ -43,9 +43,6 @@
         "edit-board": "edit board",
         "archive-board": "archive board"
     },
-    "workspace-menu": {
-        "workspace": "workspace"
-    },
     "destructive-overlay": {
         "delete-label": "Delete label",
         "delete-label-body-1": "Would you like to delete the '",
