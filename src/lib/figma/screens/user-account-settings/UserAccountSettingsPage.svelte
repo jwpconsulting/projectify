@@ -93,6 +93,10 @@
                 name="full_name"
                 bind:value={fullName}
                 style={{ kind: "field", inputType: "text" }}
+                readonly={state !== "editing"}
+                onClick={() => {
+                    state = "editing";
+                }}
             />
             <Button
                 action={{
@@ -131,7 +135,7 @@
                 }}
                 size="medium"
                 color="blue"
-                disabled={state === "editing"}
+                disabled={state !== "editing"}
                 style={{ kind: "primary" }}
                 label={$_("user-account-settings.save-changes")}
             />
@@ -142,7 +146,7 @@
                 }}
                 size="medium"
                 color="blue"
-                disabled={false}
+                disabled={state !== "editing"}
                 style={{ kind: "secondary" }}
                 label={$_("user-account-settings.cancel")}
             />
