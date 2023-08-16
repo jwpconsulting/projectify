@@ -47,7 +47,7 @@
     {#if $$slots.default}
         <slot {src} />
     {:else}
-        Show a profile picture here
+        TODO: Show a profile picture here
     {/if}
     <input
         bind:this={inputFileRef}

@@ -17,7 +17,6 @@
     import ToolBar from "$lib/components/dashboard/toolBar.svelte";
     import IconTrash from "$lib/components/icons/icon-trash.svelte";
     import UserPicker from "$lib/components/userPicker.svelte";
-    import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
     import TaskDetailsContent from "$lib/components/dashboard/task-details-content.svelte";
     import TaskDetailsDiscussion from "$lib/components/dashboard/task-details-discussion.svelte";
     import { goto } from "$app/navigation";
@@ -238,12 +237,7 @@
                     (userPickerOpen = !userPickerOpen)}
             >
                 {#if task?.assignee}
-                    <UserProfilePicture
-                        pictureProps={{
-                            size: 42,
-                            url: task.assignee.user.profile_picture,
-                        }}
-                    />
+                    TODO: A user profile picture may be shown here
                 {:else}
                     TODO: A profile picture may be shown here
                 {/if}

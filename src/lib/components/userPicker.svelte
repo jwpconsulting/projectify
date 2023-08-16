@@ -3,7 +3,6 @@
     import { createEventDispatcher } from "svelte";
     import Fuse from "fuse.js";
     import Loading from "$lib/components/loading.svelte";
-    import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
     import { user } from "$lib/stores/user";
     import type { WorkspaceUser } from "$lib/types/workspace";
 
@@ -129,12 +128,7 @@
                             selectUser(workspaceUser);
                         }}
                     >
-                        <UserProfilePicture
-                            pictureProps={{
-                                url: workspaceUser.user.profile_picture,
-                                size: 42,
-                            }}
-                        />
+                        TODO: A profile picture may be shown here
 
                         <div class="flex grow flex-col justify-start">
                             <div class="text-xs">Interface designer</div>

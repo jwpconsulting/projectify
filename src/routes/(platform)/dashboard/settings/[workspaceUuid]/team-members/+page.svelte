@@ -3,7 +3,6 @@
     import Fuse from "fuse.js";
     import type { WorkspaceUser } from "$lib/types/workspace";
 
-    import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
     import SearchInput from "$lib/components/search-input.svelte";
     import { fuseSearchThreshold } from "$lib/config";
     import DropdownButton from "$lib/components/dropdown-button.svelte";
@@ -134,12 +133,7 @@
                 <tr class="border-t border-base-300">
                     <td class="flex gap-4 p-2">
                         <div class="flex p-2">
-                            <UserProfilePicture
-                                pictureProps={{
-                                    url: workspaceUser.user.profile_picture,
-                                    size: 42,
-                                }}
-                            />
+                            TODO: A user profile picture may be shown here
                         </div>
                         <div class="flex grow flex-col justify-center gap-2">
                             <div class="font-bold">

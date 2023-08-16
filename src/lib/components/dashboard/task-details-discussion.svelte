@@ -4,7 +4,6 @@
     import { Mutation_AddChatMessage } from "$lib/graphql/operations";
 
     import { dateStringToLocal } from "$lib/utils/date";
-    import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
     import type { Task } from "$lib/types/workspace";
 
     export let task: Task;
@@ -57,12 +56,7 @@
             <div class="flex space-x-4 py-6">
                 <div class="shrink-0">
                     {#if message.author}
-                        <UserProfilePicture
-                            pictureProps={{
-                                url: message.author.user.profile_picture,
-                                size: 32,
-                            }}
-                        />
+                        TODO: A user profile picture may be shown here
                     {/if}
                 </div>
                 <div class="grow space-y-2">
