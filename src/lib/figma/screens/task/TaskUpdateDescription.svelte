@@ -6,15 +6,10 @@
     export let readonly = false;
 </script>
 
-<div class="flex flex-row items-center gap-2">
-    {#if readonly}
-        <p>{description}</p>
-    {:else}
-        <InputField
-            name="description"
-            style={{ kind: "field", inputType: "text" }}
-            bind:value={description}
-            placeholder={$_("task-screen.description")}
-        />
-    {/if}
-</div>
+<InputField
+    name="description"
+    style={{ kind: "field", inputType: "text" }}
+    bind:value={description}
+    placeholder={$_("task-screen.description")}
+    {readonly}
+/>

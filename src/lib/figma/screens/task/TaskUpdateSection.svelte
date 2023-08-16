@@ -8,6 +8,4 @@
     $: label = task.workspace_board_section?.title || "missing";
 </script>
 
-<div class="flex flex-row items-center gap-5">
-    <SectionLocationState {label} {action} />
-</div>
+<SectionLocationState {label} {action} />

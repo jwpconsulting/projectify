@@ -8,15 +8,10 @@
     export let readonly = false;
 </script>
 
-<div class="flex flex-row items-center gap-2">
-    {#if readonly}
-        <div>{title}</div>
-    {:else}
-        <InputField
-            name="title"
-            style={{ kind: "field", inputType: "text" }}
-            bind:value={title}
-            placeholder={$_("task-screen.new-task-name")}
-        />
-    {/if}
-</div>
+<InputField
+    name="title"
+    style={{ kind: "field", inputType: "text" }}
+    bind:value={title}
+    placeholder={$_("task-screen.new-task-name")}
+    {readonly}
+/>
