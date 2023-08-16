@@ -6,6 +6,7 @@
         InputFieldStyle,
     } from "$lib/funabashi/types";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+    import { formatISO, parseISO } from "date-fns";
 
     // TODO make border customizable (e.g. in TaskFormFields)
     export let value: string | undefined = undefined;
@@ -37,26 +38,24 @@
         });
     }
 
-    function dateToIso(date: Date): string {
-        return date.toISOString().substring(0, 10);
-    }
+    const formatIsoDate = (date: Date) =>
+        formatISO(date, { representation: "date" });
 
     $: {
         // TODO find out if we should avoid showing this on mobile
         if (pikaday && pikadayAnchor) {
             const pikadayConfig = {
                 field: pikadayAnchor,
-                format: "YYYY-MM-DD",
                 toString(date: Date, _format: string): string {
-                    return dateToIso(date);
+                    return formatIsoDate(date);
                 },
                 parse(dateString: string, _format: string): Date {
-                    return new Date(dateString);
+                    return parseISO(dateString);
                 },
                 onSelect(date: Date) {
                     // The two way binding falls apart when pikaday piks a date
                     // for us. To mitigate, we set value here.
-                    value = dateToIso(date);
+                    value = formatIsoDate(date);
                 },
             };
             new pikaday(pikadayConfig);
