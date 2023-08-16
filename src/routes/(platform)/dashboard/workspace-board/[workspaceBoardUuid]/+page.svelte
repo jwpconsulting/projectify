@@ -25,6 +25,7 @@
         selectedWorkspaceUser,
         workspaceUserSearch,
         workspaceUserSearchResults,
+        sideNavOpen,
     } from "$lib/stores/dashboard";
 
     export let data: PageData;
@@ -66,6 +67,11 @@
 </script>
 
 <div class="flex grow flex-row">
-    <SideNav {workspace} {workspaceUserSearchModule} {labelSearchModule} />
+    <SideNav
+        open={$sideNavOpen}
+        {workspace}
+        {workspaceUserSearchModule}
+        {labelSearchModule}
+    />
     <Dashboard {workspaceBoard} />
 </div>

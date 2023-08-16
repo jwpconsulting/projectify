@@ -13,15 +13,12 @@
     import UserDropdownClosedNav from "$lib/figma/buttons/UserDropdownClosedNav.svelte";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
     import type { Workspace } from "$lib/types/workspace";
-    import { sideNavOpen } from "$lib/stores/dashboard";
 
     export let workspace: Workspace;
     export let workspaceUserSearchModule: WorkspaceUserSearchModule;
     export let labelSearchModule: LabelSearchModule;
 
     export let open = true;
-
-    $: open = $sideNavOpen;
 </script>
 
 {#if open}
