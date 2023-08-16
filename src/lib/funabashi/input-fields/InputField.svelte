@@ -67,6 +67,12 @@
     function clear() {
         value = "";
     }
+
+    $: inputProps = {
+        name,
+        placeholder,
+        required,
+    };
 </script>
 
 <div class="flex flex-col items-start">
@@ -92,57 +98,45 @@
             <input
                 type="text"
                 class={`${inputStyle} pl-8`}
-                {name}
+                {...inputProps}
                 bind:value
-                {placeholder}
-                {required}
             />
         {:else if style.kind === "subTask"}
             <input
                 type="text"
                 class={`${inputStyle} pl-2`}
-                {name}
+                {...inputProps}
                 bind:value
-                {placeholder}
-                {required}
             />
         {:else if style.kind === "field"}
             {#if style.inputType === "text"}
                 <input
                     type="text"
                     class={`${inputStyle} pl-2`}
-                    {name}
+                    {...inputProps}
                     bind:value
-                    {placeholder}
-                    {required}
                 />
             {:else if style.inputType === "password"}
                 <input
                     type="password"
                     class={`${inputStyle} pl-2`}
-                    {name}
+                    {...inputProps}
                     bind:value
-                    {placeholder}
-                    {required}
                 />
             {:else if style.inputType === "email"}
                 <input
                     type="email"
                     class={`${inputStyle} pl-2`}
-                    {name}
+                    {...inputProps}
                     bind:value
-                    {placeholder}
-                    {required}
                 />
             {:else if style.inputType === "date"}
                 <input
                     type="text"
                     class={`${inputStyle} pl-2`}
-                    {name}
+                    {...inputProps}
                     bind:value
                     bind:this={pikadayAnchor}
-                    {placeholder}
-                    {required}
                 />
             {/if}
         {/if}
