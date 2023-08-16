@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 import SideNav from "$lib/figma/navigation/SideNav.svelte";
 
 import {
+    workspace,
     labelSearchModule,
     mobileParameters,
     workspaceUserSearchModule,
@@ -16,6 +17,7 @@ const meta: Meta<SideNav> = {
         },
     },
     args: {
+        workspace,
         workspaceUserSearchModule,
         labelSearchModule,
         open: true,

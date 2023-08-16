@@ -25,7 +25,7 @@
     <nav class="flex h-full w-72 shrink-0 flex-col bg-base-100 py-4 pr-px">
         <WorkspaceMenu {workspace} {open} />
         <div class="flex flex-col overflow-x-auto overflow-y-scroll">
-            <Boards />
+            <Boards {workspace} />
             <Members {workspaceUserSearchModule} />
             <LabelDropdown {labelSearchModule} />
         </div>

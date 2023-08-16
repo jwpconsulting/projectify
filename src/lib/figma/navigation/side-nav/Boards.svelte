@@ -1,15 +1,15 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    // import { goto } from "$app/navigation";
+    // import { goto } from "$lib/navigation";
     import { Folder, Plus } from "@steeze-ui/heroicons";
     import Loading from "$lib/components/loading.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import SelectWorkspaceBoard from "$lib/figma/buttons/SelectWorkspaceBoard.svelte";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
+    import type { Workspace } from "$lib/types/workspace";
 
-    import { currentWorkspace } from "$lib/stores/dashboard";
-
+    export let workspace: Workspace;
     let open = true;
 
     function toggleOpen() {
@@ -17,16 +17,9 @@
     }
 
     function openCreateWorkspaceBoard() {
-        // XXX currentWorkspace is nullable in this context, but Boards
-        // should only ever be rendered if currentWorkspace is set... so...
-        // Don't make it depend on currentWorkspace from
-        // workspaceBoardSearchModule
-        if (!$currentWorkspace) {
-            throw new Error("Expected $currentWorkspace");
-        }
         const target = {
             kind: "createWorkspaceBoard" as const,
-            workspace: $currentWorkspace,
+            workspace,
         };
         const action = {
             kind: "sync" as const,
@@ -45,8 +38,8 @@
 />
 {#if open}
     <div class="flex flex-col">
-        {#if $currentWorkspace && $currentWorkspace.workspace_boards}
-            {#each $currentWorkspace.workspace_boards as workspaceBoard (workspaceBoard.uuid)}
+        {#if workspace.workspace_boards}
+            {#each workspace.workspace_boards as workspaceBoard (workspaceBoard.uuid)}
                 <SelectWorkspaceBoard {workspaceBoard} />
             {/each}
             <ContextMenuButton
