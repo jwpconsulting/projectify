@@ -51,13 +51,12 @@ workspaces.subscribe(($workspaces: Workspace[] | null) => {
     if ($workspaces === null) {
         return;
     }
-    let workspaceUuid;
-    if ($workspaces.length) {
-        workspaceUuid = $workspaces[0].uuid;
-        currentWorkspaceUuid.set(workspaceUuid);
-    } else {
-        throw new Error("No workspaces");
+    const workspace = $workspaces.at(0);
+    if (!workspace) {
+        throw new Error("Expected workspace");
     }
+    const { uuid } = workspace;
+    currentWorkspaceUuid.set(uuid);
 });
 
 export async function setFirstWorkspace() {

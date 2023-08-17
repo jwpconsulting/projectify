@@ -27,13 +27,7 @@ export const weekDays = [
 
 export function dateStringToLocal(dateStr: string, time = false): string {
     const date = new Date(dateStr);
-    let lang: string;
-
-    if (browser) {
-        lang = navigator.language;
-    } else {
-        lang = "en";
-    }
+    const lang: string = browser ? navigator.language : "en";
 
     if (isNaN(date.getTime())) {
         throw new Error(`Invalid date: ${dateStr}`);

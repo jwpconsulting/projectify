@@ -19,6 +19,9 @@ module.exports = {
             parserOptions: {
                 parser: "@typescript-eslint/parser",
             },
+            rules: {
+                "@typescript-eslint/init-declarations": "off",
+            },
         },
     ],
     ignorePatterns: [
@@ -77,6 +80,14 @@ module.exports = {
         "import/no-relative-packages": "error",
         // https://stackoverflow.com/a//64150393
         "no-unused-vars": "off",
+        // TODO find a way to apply me to svelte as well
+        // While ignoring export lets.
+        // This is useful because reactive code might refer to
+        // HTMLElements that are undefined? Is this true? Can
+        // reactive code blocks be run before a svelte component is
+        // mounted?
+        // Justus 2023-08-17
+        "@typescript-eslint/init-declarations": ["error", "always"],
         "@typescript-eslint/indent": "off",
         "@typescript-eslint/switch-exhaustiveness-check": "error",
         "@typescript-eslint/no-unused-vars": [
