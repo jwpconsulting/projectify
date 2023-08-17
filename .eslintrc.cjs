@@ -3,9 +3,8 @@ module.exports = {
     parser: "@typescript-eslint/parser",
     extends: [
         "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
-        "plugin:@typescript-eslint/strict",
+        "plugin:@typescript-eslint/strict-type-checked",
+        "plugin:@typescript-eslint/stylistic-type-checked",
         "prettier",
         "plugin:import/recommended",
         "plugin:import/typescript",
@@ -91,6 +90,12 @@ module.exports = {
         "import/no-relative-packages": "error",
         // https://stackoverflow.com/a//64150393
         "no-unused-vars": "off",
+        // TODO Remove me
+        "@typescript-eslint/prefer-optional-chain": "off",
+        // TODO Remove me
+        "@typescript-eslint/no-confusing-void-expression": "off",
+        // TODO Remove me
+        "@typescript-eslint/no-redundant-type-constituents": "off",
         // TODO find a way to apply me to svelte as well
         // While ignoring export lets.
         // This is useful because reactive code might refer to
