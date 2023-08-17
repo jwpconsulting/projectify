@@ -14,6 +14,7 @@
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
     import type { Workspace } from "$lib/types/workspace";
 
+    export let workspaces: Workspace[];
     export let workspace: Workspace;
     export let workspaceUserSearchModule: WorkspaceUserSearchModule;
     export let labelSearchModule: LabelSearchModule;
@@ -23,7 +24,7 @@
 
 {#if open}
     <nav class="flex h-full w-72 shrink-0 flex-col bg-base-100 py-4 pr-px">
-        <WorkspaceMenu {workspace} {open} />
+        <WorkspaceMenu {workspaces} {workspace} {open} />
         <div class="flex flex-col overflow-x-auto overflow-y-scroll">
             <Boards {workspace} />
             <Members {workspaceUserSearchModule} />
@@ -41,7 +42,7 @@
                 <div
                     class="flex flex-col items-center gap-6 border-b border-border pb-12"
                 >
-                    <WorkspaceMenu {workspace} {open} />
+                    <WorkspaceMenu {workspaces} {workspace} {open} />
                     <div class="flex flex-col items-center gap-6">
                         <div class="flex flex-col items-center gap-4">
                             {#if workspace.workspace_boards}

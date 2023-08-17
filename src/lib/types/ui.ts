@@ -98,7 +98,7 @@ export type DestructiveOverlayState = Overlay<
 
 export type ContextMenuType =
     | { kind: "profile" }
-    | { kind: "workspace" }
+    | { kind: "workspace"; workspaces: Workspace[] }
     | { kind: "sideNav"; workspace: Workspace }
     | { kind: "workspaceBoard"; workspaceBoard: WorkspaceBoard }
     | {

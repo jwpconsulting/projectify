@@ -9,6 +9,7 @@
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspace: Workspace;
+    export let workspaces: Workspace[];
     export let open = true;
 
     let sideNavContextMenuAnchor: HTMLElement;
@@ -27,6 +28,7 @@
     let workspaceContextMenuType: ContextMenuType;
     $: workspaceContextMenuType = {
         kind: "workspace",
+        workspaces,
     };
 
     function showWorkspaceContextMenu() {

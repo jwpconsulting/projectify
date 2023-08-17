@@ -30,7 +30,7 @@
 
     export let data: PageData;
 
-    let { workspaceBoard, workspace } = data;
+    let { workspaceBoard, workspace, workspaces } = data;
 
     $: workspaceBoard = $currentWorkspaceBoard || workspaceBoard;
     $: workspace = $currentWorkspace || workspace;
@@ -70,6 +70,7 @@
 <div class="flex grow flex-row">
     <SideNav
         open={$sideNavOpen}
+        {workspaces}
         {workspace}
         {workspaceUserSearchModule}
         {labelSearchModule}

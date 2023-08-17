@@ -19,6 +19,7 @@ const contextMenus: Record<string, ContextMenuType> = {
     },
     workspace: {
         kind: "workspace" as const,
+        workspaces: [workspace],
     },
     sideNav: {
         kind: "sideNav" as const,
