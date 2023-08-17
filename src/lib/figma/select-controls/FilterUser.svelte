@@ -26,9 +26,15 @@
     class="group flex w-full flex-row justify-between px-5 py-2 hover:bg-background"
     on:click={click}
 >
-    <div class="flex flex-row items-center gap-2">
-        <Checkbox bind:checked={active} disabled={false} contained={true} />
-        <div class="flex flex-row items-center justify-center gap-2">
+    <div class="flex min-w-0 flex-row items-center gap-2">
+        <div class="shrink-0">
+            <Checkbox
+                bind:checked={active}
+                disabled={false}
+                contained={true}
+            />
+        </div>
+        <div class="flex min-w-0 flex-row items-center gap-2">
             {#if workspaceUserSelectionInput.kind === "workspaceUser"}
                 <AvatarVariant
                     content={{
@@ -42,7 +48,7 @@
             {:else}
                 <AvatarState size="small" user={null} />
             {/if}
-            <div class="text-regular text-xs capitalize">
+            <div class="text-regular min-w-0 truncate text-xs">
                 {#if workspaceUserSelectionInput.kind === "unassigned"}
                     {$_("filter-workspace-user.assigned-nobody")}
                 {:else if workspaceUserSelectionInput.kind === "allWorkspaceUsers"}

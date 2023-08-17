@@ -29,7 +29,7 @@ export const trueFalse = [true, false];
 export const falseTrue = [false, true];
 
 export const user1: User = {
-    email: "hello@example.com",
+    email: "this-email-is-very-long-so-you-know-we-mean-business@example.com",
     full_name: undefined,
     profile_picture: undefined,
 };
