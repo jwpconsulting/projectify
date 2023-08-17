@@ -20,8 +20,8 @@ import type {
 // It would make sense to rename all Module to Store
 
 export interface WorkspaceUserSearchModule {
-    select: (selection: WorkspaceUserSelectionInput) => void;
-    deselect: (selection: WorkspaceUserSelectionInput) => void;
+    select: (selection: WorkspaceUserSelectionInput) => unknown;
+    deselect: (selection: WorkspaceUserSelectionInput) => unknown;
     selected: Readable<WorkspaceUserSelection>;
     tasksPerUser: Readable<TasksPerUser>;
     search: Writable<string>;
@@ -29,8 +29,8 @@ export interface WorkspaceUserSearchModule {
 }
 
 export interface LabelSearchModule {
-    select: (selection: LabelSelectionInput) => void;
-    deselect: (selection: LabelSelectionInput) => void;
+    select: (selection: LabelSelectionInput) => unknown;
+    deselect: (selection: LabelSelectionInput) => unknown;
     selected: Readable<LabelSelection>;
     // TODO make readonly
     search: Writable<string>;
@@ -42,7 +42,7 @@ export interface LabelSearchModule {
 // this contains whatever is shared between creating / updating tasks
 export interface CreateOrUpdateTaskModule {
     canCreateOrUpdate: Readable<boolean>;
-    createOrUpdateTask: () => void;
+    createOrUpdateTask: () => unknown;
     workspaceUserSearchModule: WorkspaceUserSearchModule;
     labelSearchModule: LabelSearchModule;
 }
