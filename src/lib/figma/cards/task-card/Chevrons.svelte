@@ -8,7 +8,7 @@
     export let isFirst = false;
     export let isLast = false;
 
-    function moveUp() {
+    async function moveUp() {
         if (!workspaceBoardSection) {
             throw new Error("Expected workspaceBoardSection");
         }
@@ -19,10 +19,14 @@
             workspaceBoardSection.tasks[
                 workspaceBoardSection.tasks.indexOf(task) - 1
             ];
-        moveTaskAfter(task.uuid, workspaceBoardSection.uuid, prevTask.uuid);
+        await moveTaskAfter(
+            task.uuid,
+            workspaceBoardSection.uuid,
+            prevTask.uuid
+        );
     }
 
-    function moveDown() {
+    async function moveDown() {
         if (!workspaceBoardSection) {
             throw new Error("Expected workspaceBoardSection");
         }
@@ -33,7 +37,11 @@
             workspaceBoardSection.tasks[
                 workspaceBoardSection.tasks.indexOf(task) + 1
             ];
-        moveTaskAfter(task.uuid, workspaceBoardSection.uuid, nextTask.uuid);
+        await moveTaskAfter(
+            task.uuid,
+            workspaceBoardSection.uuid,
+            nextTask.uuid
+        );
     }
 </script>
 

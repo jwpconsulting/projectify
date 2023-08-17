@@ -38,6 +38,7 @@
 
     async function onDeleteItem(item: WorkspaceBoard) {
         console.error("TODO delete item", item);
+        await new Promise(console.error);
         // TODO let modalRes = await getModal("deleteArchivedBoard").open();
         // TODO if (!modalRes) {
         // TODO     return;
@@ -85,15 +86,15 @@
                             class:loading={unarchivingItems.get(
                                 workspaceBoard.uuid
                             )}
-                            on:click={() => {
-                                onUnarchiveItem(workspaceBoard);
+                            on:click={async () => {
+                                await onUnarchiveItem(workspaceBoard);
                             }}
                             class="btn btn-primary btn-ghost btn-sm rounded-full text-primary"
                             >Return</button
                         >
                         <button
-                            on:click={() => {
-                                onDeleteItem(workspaceBoard);
+                            on:click={async () => {
+                                await onDeleteItem(workspaceBoard);
                             }}
                             class="btn btn-outline btn-accent btn-sm rounded-full"
                             >Delete</button

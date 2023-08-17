@@ -44,7 +44,8 @@
     on:keydown={activateEditMode}
 >
     {#if content}
-        {@html transform(content)}
+        <!--{@html transform(content)}-->
+        {transform(content)}
     {:else}
         <div class="placeholder">{placeholder}</div>
     {/if}

@@ -36,14 +36,13 @@
             return;
         }
 
-        let addLabel = true;
-        selectedLabels = selectedLabels.filter((l) => {
-            if (l.uuid == label.uuid) {
-                addLabel = false;
-                return false;
-            }
-            return true;
-        });
+        // It's not clear what addLabel contains
+        const addLabel = selectedLabels.some((l) => l.uuid === label.uuid);
+
+        selectedLabels = selectedLabels.filter((l) => l.uuid === label.uuid);
+        // TODO addLabel, logically, looks like it should be true as soon as
+        // selectedLabels is non-empty
+
         if (addLabel) {
             selectedLabelsInx.set(label.uuid, true);
             selectedLabels.push(label);

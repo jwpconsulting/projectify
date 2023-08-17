@@ -54,11 +54,27 @@
         }
     }
 
-    let searchFieldEl: HTMLElement;
+    let searchFieldEl: HTMLElement | undefined = undefined;
     $: {
         if (searchFieldEl) {
             searchFieldEl.focus();
         }
+    }
+
+    async function addLabel({
+        detail: label,
+    }: {
+        detail: Label;
+    }): Promise<void> {
+        await assignLabel(label, true);
+    }
+
+    async function removeLabel({
+        detail: label,
+    }: {
+        detail: Label;
+    }): Promise<void> {
+        await assignLabel(label, false);
     }
 </script>
 
@@ -87,12 +103,8 @@
             bind:searchText
             bind:selectedLabels
             editable={true}
-            on:addLabel={({ detail }) => {
-                assignLabel(detail, true);
-            }}
-            on:removeLabel={({ detail }) => {
-                assignLabel(detail, false);
-            }}
+            on:addLabel={addLabel}
+            on:removeLabel={removeLabel}
         />
     </div>
 </div>

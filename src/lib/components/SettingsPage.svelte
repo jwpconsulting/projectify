@@ -8,9 +8,9 @@
 
     export let title: string | null = null;
     export let loading = false;
-    export let onBack = () => {
+    export let onBack = async () => {
         if ($currentWorkspaceUuid) {
-            goto(getDashboardWorkspaceUrl($currentWorkspaceUuid));
+            await goto(getDashboardWorkspaceUrl($currentWorkspaceUuid));
         }
     };
 </script>
@@ -20,7 +20,7 @@
         <div class="flex items-center justify-start space-x-5">
             <button
                 class="btn btn-primary btn-circle shadow-md"
-                on:click={() => onBack()}
+                on:click={onBack}
             >
                 <div class="translate-x-1">
                     <IconArrowLeft />

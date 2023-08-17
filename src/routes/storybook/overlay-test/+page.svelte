@@ -20,6 +20,7 @@
         openDestructiveOverlay(target, {
             kind: "async",
             action: async () => {
+                await new Promise((resolve) => resolve(null));
                 console.log("Async action performed");
             },
         });

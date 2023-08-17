@@ -21,7 +21,7 @@ Select label focus
                     all labels
                 {:else if label.kind === "noLabel"}
                     no label
-                {:else}
+                {:else if label.kind === "label"}
                     {label.label.name}
                 {/if}
             </div>

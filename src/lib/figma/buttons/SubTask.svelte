@@ -30,7 +30,7 @@
 
 <div class="flex w-full flex-row items-center justify-between gap-2 px-2 py-1">
     <div class="flex flex-row items-center gap-2">
-        <Checkbox checked={done || false} disabled={false} contained={false} />
+        <Checkbox checked={done ?? false} disabled={false} contained={false} />
         <!-- XXX should be only editable when in edit mode -->
         <InputField
             style={{ kind: "subTask" }}

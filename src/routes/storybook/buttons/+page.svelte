@@ -1,5 +1,6 @@
 <script lang="ts">
     import { Folder, Plus } from "@steeze-ui/heroicons";
+    import { onMount } from "svelte";
 
     import { falseTrue, fc, fr, trueFalse, users } from "$lib/storybook";
 
@@ -40,9 +41,11 @@
     import { currentStep } from "$lib/stores/onboarding";
 
     const onboardingSeats = [5, 10, 15, 20, 25];
-    if (browser) {
-        setFirstWorkspace();
-    }
+    onMount(async () => {
+        if (browser) {
+            await setFirstWorkspace();
+        }
+    });
 </script>
 
 Side menu create

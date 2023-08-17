@@ -24,7 +24,7 @@
         if (!eventTarget.files) {
             throw new Error("Expected eventTarget.files");
         }
-        const file: File | null = eventTarget.files[0];
+        const file: File | null = eventTarget.files.item(0);
         if (!file) {
             return;
         }

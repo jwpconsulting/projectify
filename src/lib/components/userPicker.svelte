@@ -25,7 +25,7 @@
         loading = !$currentWorkspace;
     }
     $: {
-        if ($currentWorkspace && $currentWorkspace.workspace_users) {
+        if ($currentWorkspace?.workspace_users) {
             workspaceUsers = $currentWorkspace.workspace_users;
         }
         searchEngine = new Fuse(workspaceUsers, {
@@ -52,7 +52,7 @@
         dispatch("userSelected", { user });
     }
 
-    let searchFieldEl: HTMLElement;
+    let searchFieldEl: HTMLElement | undefined = undefined;
 
     $: {
         if (searchFieldEl) {

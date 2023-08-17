@@ -71,7 +71,7 @@
                 {$_("filter-label.all")}
             {:else if label.kind === "noLabel"}
                 {$_("filter-label.none")}
-            {:else}
+            {:else if label.kind === "label"}
                 {label.label.name}
             {/if}
         </div>

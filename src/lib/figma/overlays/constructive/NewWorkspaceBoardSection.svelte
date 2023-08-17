@@ -18,12 +18,15 @@
         close();
     }
 
-    function perform() {
+    async function perform() {
         const workspaceBoardSection: CreateWorkspaceBoardSection = {
             title: title,
             description: "",
         };
-        createWorkspaceBoardSection(workspaceBoard, workspaceBoardSection);
+        await createWorkspaceBoardSection(
+            workspaceBoard,
+            workspaceBoardSection
+        );
         close();
     }
 </script>

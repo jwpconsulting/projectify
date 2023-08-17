@@ -85,9 +85,11 @@
     async function cancel() {
         state = "saving";
         console.log("cancel");
+        await new Promise(console.error);
     }
     async function onDelete() {
         console.log("delete");
+        await new Promise(console.error);
     }
 </script>
 

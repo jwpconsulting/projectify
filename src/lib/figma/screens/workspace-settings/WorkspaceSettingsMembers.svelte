@@ -9,9 +9,10 @@
 
     export let workspace: Workspace;
 
-    let workspaceUsers: WorkspaceUser[] | null;
+    // TODO use undefined instead
+    let workspaceUsers: WorkspaceUser[] | null = null;
     $: {
-        workspaceUsers = workspace.workspace_users || null;
+        workspaceUsers = workspace.workspace_users ?? null;
     }
     let workspaceUserSearch: string;
 </script>

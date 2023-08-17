@@ -22,8 +22,8 @@
 
     let title: string = task.title;
     let description: string | undefined = task.description;
-    let assignedUser: WorkspaceUser | null = task.assignee || null;
-    let labels: Label[] = task.labels || [];
+    let assignedUser: WorkspaceUser | null = task.assignee ?? null;
+    let labels: Label[] = task.labels;
     let dueDate: string | null = null;
     let subTasks: SubTask[] = [];
 
@@ -33,9 +33,10 @@
             ...task,
             title: title,
             description: description,
-            assignee: assignedUser || undefined,
+            // XXX What would RMS do??
+            assignee: assignedUser ?? undefined,
             labels: labels,
-            deadline: dueDate || undefined,
+            deadline: dueDate ?? undefined,
             sub_tasks: subTasks,
         });
     }

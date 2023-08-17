@@ -19,8 +19,8 @@
             {
                 label: $_("logout"),
                 icon: IconLogout,
-                onClick: () => {
-                    logout();
+                onClick: async () => {
+                    await logout();
                 },
             },
         ]}

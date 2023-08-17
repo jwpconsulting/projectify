@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { onMount } from "svelte";
+
     import {
         fc,
         task,
@@ -53,7 +55,7 @@
         },
     ];
 
-    let constructiveOverlays: ConstructiveOverlayType[] = [
+    const constructiveOverlays: ConstructiveOverlayType[] = [
         { kind: "updateWorkspaceBoard", workspaceBoard },
         { kind: "createWorkspaceBoard", workspace },
         { kind: "inviteTeamMembers", workspace },
@@ -66,9 +68,11 @@
         { kind: "skipOnboarding" },
         { kind: "recoverWorkspaceBoard", workspaceBoard },
     ];
-    if (browser) {
-        setFirstWorkspace();
-    }
+    onMount(async () => {
+        if (browser) {
+            await setFirstWorkspace();
+        }
+    });
 </script>
 
 {#each destructiveOverlays as target}

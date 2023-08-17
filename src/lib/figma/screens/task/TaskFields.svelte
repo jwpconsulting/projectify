@@ -16,10 +16,10 @@
 
 <TaskFieldsTemplate>
     <TaskUpdateTitle slot="title" title={task.title} readonly />
-    <TaskUpdateUser slot="assignee" workspaceUser={task.assignee || null} />
+    <TaskUpdateUser slot="assignee" workspaceUser={task.assignee ?? null} />
     <TaskUpdateLabel slot="labels" labels={task.labels} />
     <TaskUpdateSection slot="section" {task} />
-    <TaskUpdateDueDate slot="due-date" date={task.deadline || null} />
+    <TaskUpdateDueDate slot="due-date" date={task.deadline ?? null} />
     <TaskUpdateDescription
         slot="description"
         readonly

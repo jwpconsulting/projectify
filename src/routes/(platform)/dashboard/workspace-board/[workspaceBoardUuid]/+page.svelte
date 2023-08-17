@@ -31,8 +31,8 @@
 
     let { workspaceBoard, workspace, workspaces } = data;
 
-    $: workspaceBoard = $currentWorkspaceBoard || workspaceBoard;
-    $: workspace = $currentWorkspace || workspace;
+    $: workspaceBoard = $currentWorkspaceBoard ?? workspaceBoard;
+    $: workspace = $currentWorkspace ?? workspace;
 
     let workspaceUserSearchModule: WorkspaceUserSearchModule;
     $: workspaceUserSearchModule = {

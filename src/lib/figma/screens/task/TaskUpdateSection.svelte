@@ -5,7 +5,9 @@
     export let task: Task;
     export let action: (() => void) | undefined = undefined;
 
-    $: label = task.workspace_board_section?.title || "missing";
+    // XXX Justus 2023-08-17
+    $: label =
+        task.workspace_board_section?.title ?? "XXX why could I be missing";
 </script>
 
 <SectionLocationState {label} {action} />

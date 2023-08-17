@@ -8,9 +8,9 @@
     export let workspaceUser: WorkspaceUser;
 
     let fullName: string;
-    $: fullName = workspaceUser.user.full_name || workspaceUser.user.email;
+    $: fullName = workspaceUser.user.full_name ?? workspaceUser.user.email;
     let jobTitle: string;
-    $: jobTitle = workspaceUser.job_title || $_("settings.no-job-title");
+    $: jobTitle = workspaceUser.job_title ?? $_("settings.no-job-title");
     let role: string;
     $: role = $_(getMessageNameForRole(workspaceUser.role));
 </script>

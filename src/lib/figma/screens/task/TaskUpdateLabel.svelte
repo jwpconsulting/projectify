@@ -24,7 +24,7 @@
         <div bind:this={btnRef}>
             <LabelC
                 label={{ kind: "applyLabel" }}
-                action={action ? action.bind(null, btnRef) : undefined}
+                action={action.bind(null, btnRef)}
             />
         </div>
     {/if}

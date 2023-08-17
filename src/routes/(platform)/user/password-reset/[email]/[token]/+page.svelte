@@ -19,8 +19,8 @@
         requestSent = true;
     }
 
-    function gotoTopPage() {
-        goto("/");
+    async function gotoTopPage() {
+        await goto("/");
     }
 </script>
 
@@ -95,7 +95,7 @@
 
                 <div class="pt-2">
                     <button
-                        on:click={() => gotoTopPage()}
+                        on:click={gotoTopPage}
                         class="btn btn-primary mt-4 w-28 rounded-full"
                     >
                         {$_("top-page")}

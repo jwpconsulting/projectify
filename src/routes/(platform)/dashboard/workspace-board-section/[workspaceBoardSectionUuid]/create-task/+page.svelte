@@ -42,7 +42,10 @@
         canCreateOrUpdate: derived<[typeof createTask], boolean>(
             [createTask],
             ([$createTask], set) => {
-                set($createTask !== null);
+                set(
+                    $createTask.title !== undefined &&
+                        $createTask.description !== undefined
+                );
             },
             false
         ),

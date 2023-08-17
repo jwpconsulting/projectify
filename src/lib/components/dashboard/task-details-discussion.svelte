@@ -1,4 +1,6 @@
 <script lang="ts">
+    /* eslint-disable */
+    // TODO this file shall be deleted
     import { afterUpdate } from "svelte";
 
     import { client } from "$lib/graphql/client";

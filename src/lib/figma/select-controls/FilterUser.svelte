@@ -47,9 +47,9 @@
                     {$_("filter-workspace-user.assigned-nobody")}
                 {:else if workspaceUserSelectionInput.kind === "allWorkspaceUsers"}
                     {$_("filter-workspace-user.all-users")}
-                {:else}
+                {:else if workspaceUserSelectionInput.kind === "workspaceUser"}
                     {workspaceUserSelectionInput.workspaceUser.user
-                        .full_name ||
+                        .full_name ??
                         workspaceUserSelectionInput.workspaceUser.user.email}
                 {/if}
             </div>

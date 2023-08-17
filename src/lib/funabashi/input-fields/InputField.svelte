@@ -25,8 +25,8 @@
     export let readonly = false;
     export let onClick: (() => void) | undefined = undefined;
 
-    let pikadayAnchor: HTMLElement;
-    let pikaday: typeof Pikaday;
+    let pikadayAnchor: HTMLElement | undefined = undefined;
+    let pikaday: typeof Pikaday | undefined = undefined;
     let datePicker: Pikaday | undefined = undefined;
 
     onMount(async function () {

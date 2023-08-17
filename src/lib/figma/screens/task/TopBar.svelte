@@ -37,7 +37,7 @@
                 throw new Error("Expected workspaceBoardSection");
             }
             if (!isBreadCrumbTask(task)) {
-                throw new Error(`Failed to crumble ${task}'s bread`);
+                throw new Error(`Failed to crumble task ${task.uuid}'s bread`);
             }
             breadCrumbTask = task;
             contextMenuType = {
@@ -52,7 +52,7 @@
             const { workspace_board_section } = newTask;
             if (!isBreadCrumbWorkspaceBoardSection(workspace_board_section)) {
                 throw new Error(
-                    `Failed to crumble ${workspace_board_section}'s bread`
+                    `Failed to crumble workspace board section ${workspace_board_section.uuid}'s bread`
                 );
             }
             breadCrumbTask = {

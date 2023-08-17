@@ -6,7 +6,7 @@
     export let user: User;
     export let size: 24 | 32 | 92;
     $: profilePicture = user.profile_picture;
-    $: name = `${user.email}${user.full_name || user.email}`;
+    $: name = `${user.email}${user.full_name ?? user.email}`;
 </script>
 
 {#if profilePicture}

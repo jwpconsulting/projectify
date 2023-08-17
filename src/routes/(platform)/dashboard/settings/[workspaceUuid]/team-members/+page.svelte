@@ -18,11 +18,13 @@
 
     let workspaceUsers: WorkspaceUser[] = [];
 
+    // TODO currentWorkspace shall instead be passing a by +page.ts
+
     $: {
         $loading = !($currentWorkspace && $currentCustomer);
     }
     $: {
-        if ($currentWorkspace && $currentWorkspace.workspace_users) {
+        if ($currentWorkspace?.workspace_users) {
             workspaceUsers = $currentWorkspace.workspace_users;
         }
     }
@@ -47,6 +49,7 @@
     }
     async function onRemoveUser(workspaceUser: WorkspaceUser) {
         console.error("TODO remove", workspaceUser);
+        await new Promise(console.error);
         // TODO if (!$currentWorkspace) {
         // TODO     return;
         // TODO }
@@ -63,6 +66,7 @@
 
     async function onEditUser(workspaceUser: WorkspaceUser) {
         console.error("TODO edit", workspaceUser);
+        await new Promise(console.error);
         // TODO if (!$currentWorkspace) {
         // TODO     return;
         // TODO }
@@ -85,7 +89,7 @@
     let filteredWorkspaceUsers: WorkspaceUser[];
 
     $: {
-        filteredWorkspaceUsers = workspaceUsers || [];
+        filteredWorkspaceUsers = workspaceUsers;
 
         if (roleFilter) {
             console.log(filteredWorkspaceUsers);

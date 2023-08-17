@@ -62,22 +62,30 @@
     }[target.kind];
     let targetName: string;
     $: {
-        if (target.kind === "deleteLabel") {
-            targetName = target.label.name;
-        } else if (target.kind === "deleteMember") {
-            targetName =
-                target.workspaceUser.user.full_name ||
-                target.workspaceUser.user.email;
-        } else if (target.kind === "deleteSection") {
-            targetName = target.workspaceBoardSection.title;
-        } else if (target.kind === "deleteTask") {
-            targetName = target.task.title;
-        } else if (target.kind === "deleteSelectedTasks") {
-            targetName = target.tasks.length.toString();
-        } else if (target.kind === "archiveBoard") {
-            targetName = target.workspaceBoard.title;
-        } else if (target.kind === "deleteBoard") {
-            targetName = target.workspaceBoard.title;
+        switch (target.kind) {
+            case "deleteLabel":
+                targetName = target.label.name;
+                break;
+            case "deleteMember":
+                targetName =
+                    target.workspaceUser.user.full_name ??
+                    target.workspaceUser.user.email;
+                break;
+            case "deleteSection":
+                targetName = target.workspaceBoardSection.title;
+                break;
+            case "deleteTask":
+                targetName = target.task.title;
+                break;
+            case "deleteSelectedTasks":
+                targetName = target.tasks.length.toString();
+                break;
+            case "archiveBoard":
+                targetName = target.workspaceBoard.title;
+                break;
+            case "deleteBoard":
+                targetName = target.workspaceBoard.title;
+                break;
         }
     }
 

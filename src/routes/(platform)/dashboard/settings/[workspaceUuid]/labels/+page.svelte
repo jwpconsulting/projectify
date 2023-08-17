@@ -8,7 +8,7 @@
     let labels: Label[] = [];
 
     $: {
-        if ($currentWorkspace && $currentWorkspace.labels) {
+        if ($currentWorkspace?.labels) {
             labels = $currentWorkspace.labels;
             $loading = false;
         } else {
@@ -18,6 +18,7 @@
 
     async function onDeleteLabel(label: Label) {
         console.error("TODO delete", label);
+        await new Promise(console.error);
         // TODO let modalRes = await getModal("deleteLabel").open();
         // TODO if (!modalRes) {
         // TODO     return;
@@ -27,6 +28,7 @@
 
     async function onEditLabel(label: Label) {
         console.error("TODO edit", label);
+        await new Promise(console.error);
         // TODO let modalRes = await getModal("editLabel").open({ ...label });
         // TODO if (!modalRes) {
         // TODO     return;
@@ -39,6 +41,7 @@
     }
 
     async function onNewLabel() {
+        await new Promise(console.error);
         // TODO let modalRes = await getModal("newLabel").open();
         // TODO if (!modalRes) {
         // TODO     return;

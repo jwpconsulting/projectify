@@ -4,6 +4,7 @@
         AvatarVariantContent,
         AvatarVariantSize,
     } from "$lib/figma/types";
+    import { unwrap } from "$lib/utils/type";
 
     export let content: AvatarVariantContent;
     export let size: AvatarVariantSize;
@@ -29,6 +30,8 @@
         large: "w-24 h-24",
         hoverable: "w-12 h-12 group-hover:w-12 h-12",
     }[size];
+
+    $: numUsers = content.kind === "multiple" ? content.users.length : 0;
 </script>
 
 {#if content.kind === "assign"}
@@ -44,7 +47,7 @@
     <div class="p-0.5">
         <AvatarState user={content.user} {size} />
     </div>
-{:else}
+{:else if content.kind === "multiple"}
     <div
         class="isolate flex flex-row"
         class:p-0.5={size === "medium"}
@@ -52,16 +55,10 @@
     >
         {#each content.users as user, inx}
             <div
-                class={`${zIndices.get(inx)} ${
-                    size === "small" && inx < content.users.length - 1
-                        ? "w-3"
-                        : ""
-                } ${
-                    size === "medium" && inx < content.users.length - 1
-                        ? "w-4"
-                        : ""
-                } ${
-                    size === "hoverable" && inx < content.users.length - 1
+                class={`${unwrap(zIndices.get(inx), "Invalid z-index")} ${
+                    size === "small" && inx < numUsers - 1 ? "w-3" : ""
+                } ${size === "medium" && inx < numUsers - 1 ? "w-4" : ""} ${
+                    size === "hoverable" && inx < numUsers - 1
                         ? "w-3 group-hover:w-4"
                         : ""
                 }`}
