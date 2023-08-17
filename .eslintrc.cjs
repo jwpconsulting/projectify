@@ -28,6 +28,13 @@ module.exports = {
         "*.cjs",
         "build/*",
     ],
+    ignorePatterns: [
+        "node_modules/*",
+        "vite.config.js",
+        "svelte.config.js",
+        "*.cjs",
+        "build/*",
+    ],
     settings: {
         "import/resolver": {
             typescript: {

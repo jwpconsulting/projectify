@@ -42,24 +42,27 @@
     const formatIsoDate = (date: Date) =>
         formatISO(date, { representation: "date" });
 
+    const getPikadayOptions = (field: HTMLElement): PikadayOptions => {
+        return {
+            field,
+            toString(date: Date, _format: string): string {
+                return formatIsoDate(date);
+            },
+            parse(dateString: string, _format: string): Date {
+                return parseISO(dateString);
+            },
+            onSelect(date: Date) {
+                // The two way binding falls apart when pikaday piks a date
+                // for us. To mitigate, we set value here.
+                value = formatIsoDate(date);
+            },
+        };
+    };
+
     $: {
         // TODO find out if we should avoid showing this on mobile
         if (pikaday && pikadayAnchor && !readonly) {
-            const pikadayConfig: PikadayOptions = {
-                field: pikadayAnchor,
-                toString(date: Date, _format: string): string {
-                    return formatIsoDate(date);
-                },
-                parse(dateString: string, _format: string): Date {
-                    return parseISO(dateString);
-                },
-                onSelect(date: Date) {
-                    // The two way binding falls apart when pikaday piks a date
-                    // for us. To mitigate, we set value here.
-                    value = formatIsoDate(date);
-                },
-            };
-            datePicker = new pikaday(pikadayConfig);
+            datePicker = new pikaday(getPikadayOptions(pikadayAnchor));
         } else if (datePicker && readonly) {
             datePicker.destroy();
         }
