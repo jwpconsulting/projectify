@@ -1,8 +1,9 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
     import { createEventDispatcher } from "svelte";
-    import type { DestructiveOverlayType } from "$lib/types/ui";
+    import { _ } from "svelte-i18n";
+
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import type { DestructiveOverlayType } from "$lib/types/ui";
 
     export let target: DestructiveOverlayType;
 

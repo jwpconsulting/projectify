@@ -1,10 +1,11 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
     import { createEventDispatcher } from "svelte";
-    import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
+    import { _ } from "svelte-i18n";
+
     import AvatarState from "$lib/figma/navigation/AvatarState.svelte";
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import Checkbox from "$lib/funabashi/select-controls/Checkbox.svelte";
+    import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
 
     export let workspaceUserSelectionInput: WorkspaceUserSelectionInput;
     export let active: boolean;

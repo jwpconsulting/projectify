@@ -1,13 +1,14 @@
 <script lang="ts">
-    import SubTaskProgress from "$lib/figma/buttons/SubTaskProgress.svelte";
-    import Title from "$lib/figma/cards/task-card/Title.svelte";
-    import Labels from "$lib/figma/cards/task-card/Labels.svelte";
-    import WorkspaceUser from "$lib/figma/cards/task-card/WorkspaceUser.svelte";
-    import Chevrons from "$lib/figma/cards/task-card/Chevrons.svelte";
-    import MenuButton from "$lib/figma/cards/task-card/MenuButton.svelte";
-    import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
     import { getTaskUrl } from "$lib/urls";
+
+    import SubTaskProgress from "$lib/figma/buttons/SubTaskProgress.svelte";
+    import Chevrons from "$lib/figma/cards/task-card/Chevrons.svelte";
+    import Labels from "$lib/figma/cards/task-card/Labels.svelte";
+    import MenuButton from "$lib/figma/cards/task-card/MenuButton.svelte";
+    import Title from "$lib/figma/cards/task-card/Title.svelte";
+    import WorkspaceUser from "$lib/figma/cards/task-card/WorkspaceUser.svelte";
     import { createMoveTaskModule } from "$lib/stores/modules";
+    import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
     export let task: Task;
     export let tasks: Task[] | undefined = undefined;

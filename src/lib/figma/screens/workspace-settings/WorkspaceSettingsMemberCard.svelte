@@ -1,7 +1,8 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import type { WorkspaceUser } from "$lib/types/workspace";
+
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
+    import type { WorkspaceUser } from "$lib/types/workspace";
     import { getMessageNameForRole } from "$lib/utils/i18n";
 
     export let workspaceUser: WorkspaceUser;

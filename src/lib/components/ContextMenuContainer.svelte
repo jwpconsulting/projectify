@@ -1,8 +1,9 @@
 <script lang="ts">
+    import { onMount } from "svelte";
+
     import ContextMenu from "$lib/figma/overlays/ContextMenu.svelte";
     import { closeContextMenu, contextMenuState } from "$lib/stores/globalUi";
     import type { ContextMenuState } from "$lib/types/ui";
-    import { onMount } from "svelte";
 
     let contextMenu: HTMLElement | null = null;
     let resizeObserver: ResizeObserver | null = null;

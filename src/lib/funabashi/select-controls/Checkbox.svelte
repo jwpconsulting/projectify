@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { Icon } from "@steeze-ui/svelte-icon";
     import { Check } from "@steeze-ui/heroicons";
+    import { Icon } from "@steeze-ui/svelte-icon";
 
     export let checked: boolean;
     export let disabled: boolean;

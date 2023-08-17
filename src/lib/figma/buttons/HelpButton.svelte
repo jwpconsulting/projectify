@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
-    import { Icon } from "@steeze-ui/svelte-icon";
     import { LightBulb } from "@steeze-ui/heroicons";
+    import { Icon } from "@steeze-ui/svelte-icon";
+    import { _ } from "svelte-i18n";
 </script>
 
 <a href="/help" class="w-full px-4 py-2">

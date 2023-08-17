@@ -1,8 +1,9 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import type { WorkspaceUserSearchModule } from "$lib/types/stores";
-    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+
     import FilterUser from "$lib/figma/select-controls/FilterUser.svelte";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import type { WorkspaceUserSearchModule } from "$lib/types/stores";
 
     export let workspaceUserSearchModule: WorkspaceUserSearchModule;
     let { select, deselect, selected, tasksPerUser, search, searchResults } =

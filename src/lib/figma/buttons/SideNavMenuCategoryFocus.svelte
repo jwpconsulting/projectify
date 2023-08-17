@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { IconSource } from "@steeze-ui/svelte-icon/types";
     import { createEventDispatcher } from "svelte";
+
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
 
     export let label: string;

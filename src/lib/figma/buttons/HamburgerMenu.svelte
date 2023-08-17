@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-    import { Icon } from "@steeze-ui/svelte-icon";
     import { Menu, X } from "@steeze-ui/heroicons";
+    import { Icon } from "@steeze-ui/svelte-icon";
+    import { createEventDispatcher } from "svelte";
 
     export let isActive: boolean;
     $: src = isActive ? Menu : X;

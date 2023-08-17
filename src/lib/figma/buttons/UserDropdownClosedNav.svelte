@@ -1,6 +1,6 @@
 <script lang="ts">
-    import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
+    import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     // TODO refactor these
     // Maybe a module like SideNavExpandStatesModule
     import {

@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { Task } from "$lib/types/workspace";
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
+    import type { Task } from "$lib/types/workspace";
 
     export let task: Task;
 

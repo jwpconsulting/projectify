@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
     import { Plus } from "@steeze-ui/heroicons";
+    import { _ } from "svelte-i18n";
 
-    import type { LabelSearchModule } from "$lib/types/stores";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
-    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import FilterLabel from "$lib/figma/select-controls/FilterLabel.svelte";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import type { LabelSearchModule } from "$lib/types/stores";
 
     export let labelSearchModule: LabelSearchModule;
     export let canEdit = true;

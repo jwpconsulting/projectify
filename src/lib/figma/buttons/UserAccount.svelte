@@ -1,8 +1,8 @@
 <script lang="ts">
     import AvatarState from "$lib/figma/navigation/AvatarState.svelte";
-    import type { User } from "$lib/types/user";
-    import type { ContextMenuType } from "$lib/types/ui";
     import { openContextMenu } from "$lib/stores/globalUi";
+    import type { ContextMenuType } from "$lib/types/ui";
+    import type { User } from "$lib/types/user";
 
     export let user: User;
 

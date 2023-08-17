@@ -1,5 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
     import PageLayout from "$lib/components/layouts/pageLayout.svelte";
 </script>
 

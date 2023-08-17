@@ -1,10 +1,10 @@
 <script lang="ts">
-    import HeaderDashboard from "$lib/figma/navigation/header/Dashboard.svelte";
     import ConnectionStatus from "$lib/components/connectionStatus.svelte";
-    import OverlayContainer from "$lib/components/OverlayContainer.svelte";
     import ContextMenuContainer from "$lib/components/ContextMenuContainer.svelte";
-    import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
+    import OverlayContainer from "$lib/components/OverlayContainer.svelte";
+    import HeaderDashboard from "$lib/figma/navigation/header/Dashboard.svelte";
     import ConstructiveOverlay from "$lib/figma/overlays/constructive/ConstructiveOverlay.svelte";
+    import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
     import {
         closeConstructiveOverlay,
         closeDestructiveOverlay,
@@ -12,7 +12,6 @@
         destructiveOverlayState,
         performDestructiveOverlay,
     } from "$lib/stores/globalUi";
-
     import { user } from "$lib/stores/user";
 </script>
 

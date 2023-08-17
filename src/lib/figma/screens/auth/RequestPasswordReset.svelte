@@ -1,8 +1,9 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
     import AuthScreen from "$lib/figma/screens/auth/AuthScreen.svelte";
-    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { requestPasswordReset } from "$lib/stores/user";
 

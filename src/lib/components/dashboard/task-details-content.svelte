@@ -1,8 +1,8 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import LabelPicker from "$lib/components/dashboard/LabelPicker.svelte";
-    import LabelList from "$lib/components/dashboard/LabelList.svelte";
 
+    import LabelList from "$lib/components/dashboard/LabelList.svelte";
+    import LabelPicker from "$lib/components/dashboard/LabelPicker.svelte";
     import Subtasks from "$lib/components/dashboard/task-details-subtasks.svelte";
     import ToolBar from "$lib/components/dashboard/toolBar.svelte";
     import IconCheckCircle from "$lib/components/icons/icon-check-circle.svelte";

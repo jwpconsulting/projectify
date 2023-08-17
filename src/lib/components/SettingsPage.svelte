@@ -1,10 +1,10 @@
 <script lang="ts">
     import { goto } from "$lib/navigation";
     import { getDashboardWorkspaceUrl } from "$lib/urls";
-    import { currentWorkspaceUuid } from "$lib/stores/dashboard";
 
     import IconArrowLeft from "$lib/components/icons/icon-arrow-left.svelte";
     import Loading from "$lib/components/loading.svelte";
+    import { currentWorkspaceUuid } from "$lib/stores/dashboard";
 
     export let title: string | null = null;
     export let loading = false;

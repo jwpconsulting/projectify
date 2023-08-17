@@ -1,9 +1,9 @@
 <script lang="ts">
-    import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
-    import { openContextMenu } from "$lib/stores/globalUi";
-    import type { ContextMenuType } from "$lib/types/ui";
-    import type { MoveTaskModule } from "$lib/types/stores";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
+    import { openContextMenu } from "$lib/stores/globalUi";
+    import type { MoveTaskModule } from "$lib/types/stores";
+    import type { ContextMenuType } from "$lib/types/ui";
+    import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection | null;

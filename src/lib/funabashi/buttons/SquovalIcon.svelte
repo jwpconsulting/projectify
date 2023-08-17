@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { Icon } from "@steeze-ui/svelte-icon";
     import {
         CheckCircle,
         DotsHorizontal,
@@ -14,6 +13,8 @@
         User,
         Users,
     } from "@steeze-ui/heroicons";
+    import { Icon } from "@steeze-ui/svelte-icon";
+
     import type {
         ButtonAction,
         SquovalIcon,

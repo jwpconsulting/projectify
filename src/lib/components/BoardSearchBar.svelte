@@ -1,5 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
     import SearchInput from "$lib/components/search-input.svelte";
     import { taskSearchInput } from "$lib/stores/dashboard";
 </script>

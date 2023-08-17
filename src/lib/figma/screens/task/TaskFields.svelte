@@ -1,13 +1,12 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
-    import type { Task } from "$lib/types/workspace";
-    import TaskUpdateTitle from "$lib/figma/screens/task/TaskUpdateTitle.svelte";
-    import TaskUpdateUser from "$lib/figma/screens/task/TaskUpdateUser.svelte";
+    import TaskFieldsTemplate from "$lib/figma/screens/task/TaskFieldsTemplate.svelte";
+    import TaskUpdateDescription from "$lib/figma/screens/task/TaskUpdateDescription.svelte";
+    import TaskUpdateDueDate from "$lib/figma/screens/task/TaskUpdateDueDate.svelte";
     import TaskUpdateLabel from "$lib/figma/screens/task/TaskUpdateLabel.svelte";
     import TaskUpdateSection from "$lib/figma/screens/task/TaskUpdateSection.svelte";
-    import TaskUpdateDueDate from "$lib/figma/screens/task/TaskUpdateDueDate.svelte";
-    import TaskUpdateDescription from "$lib/figma/screens/task/TaskUpdateDescription.svelte";
-    import TaskFieldsTemplate from "$lib/figma/screens/task/TaskFieldsTemplate.svelte";
+    import TaskUpdateTitle from "$lib/figma/screens/task/TaskUpdateTitle.svelte";
+    import TaskUpdateUser from "$lib/figma/screens/task/TaskUpdateUser.svelte";
+    import type { Task } from "$lib/types/workspace";
 
     export let task: Task;
     // XXX refactor the dl dt dd structure into

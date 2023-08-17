@@ -1,16 +1,17 @@
 <script lang="ts">
-    import { Icon } from "@steeze-ui/svelte-icon";
     import { ChevronDown, ChevronRight } from "@steeze-ui/heroicons";
-    import { openContextMenu } from "$lib/stores/globalUi";
-    import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
+    import { Icon } from "@steeze-ui/svelte-icon";
 
+    import { getNewTaskUrl } from "$lib/urls";
+
+    import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
+    import { toggleWorkspaceBoardSectionOpen } from "$lib/stores/dashboard";
+    import { openContextMenu } from "$lib/stores/globalUi";
+    import type { ContextMenuType } from "$lib/types/ui";
     import type {
         WorkspaceBoard,
         WorkspaceBoardSection,
     } from "$lib/types/workspace";
-    import { getNewTaskUrl } from "$lib/urls";
-    import type { ContextMenuType } from "$lib/types/ui";
-    import { toggleWorkspaceBoardSectionOpen } from "$lib/stores/dashboard";
 
     export let workspaceBoard: WorkspaceBoard;
     export let workspaceBoardSection: WorkspaceBoardSection;

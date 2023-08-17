@@ -1,9 +1,10 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
     import { User } from "@steeze-ui/heroicons";
-    import type { WorkspaceUserSearchModule } from "$lib/types/stores";
+    import { _ } from "svelte-i18n";
+
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import FilterMemberMenu from "$lib/figma/composites/FilterMemberMenu.svelte";
+    import type { WorkspaceUserSearchModule } from "$lib/types/stores";
 
     export let workspaceUserSearchModule: WorkspaceUserSearchModule;
     let { selected } = workspaceUserSearchModule;

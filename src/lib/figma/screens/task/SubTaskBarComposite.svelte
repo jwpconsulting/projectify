@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type { SubTask } from "$lib/types/workspace";
     import SubTaskC from "$lib/figma/buttons/SubTask.svelte";
     import SubTaskBar from "$lib/figma/screens/task/SubTaskBar.svelte";
+    import type { SubTask } from "$lib/types/workspace";
 
     export let subTasks: SubTask[];
 

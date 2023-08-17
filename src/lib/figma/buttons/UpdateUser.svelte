@@ -1,9 +1,10 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
+    import type { AvatarVariantContent } from "$lib/figma/types";
     import { getDisplayName } from "$lib/types/user";
     import type { User } from "$lib/types/user";
-    import type { AvatarVariantContent } from "$lib/figma/types";
 
     export let user: User | null;
     export let action: (() => void) | undefined;

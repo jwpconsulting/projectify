@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
     import type { SvelteComponent } from "svelte";
 
-    export type DropDownMenuItem = {
+    export interface DropDownMenuItem {
         id?: unknown;
         label: string;
         icon: typeof SvelteComponent;
@@ -10,7 +10,7 @@
         disabled?: boolean;
         hidden?: boolean;
         tooltip?: string;
-    };
+    }
 </script>
 
 <script lang="ts">

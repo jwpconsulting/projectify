@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
-
     import { _ } from "svelte-i18n";
+
     import IconClose from "$lib/components/icons/icon-close.svelte";
     import IconSearch from "$lib/components/icons/icon-search.svelte";
 

@@ -1,12 +1,12 @@
 <script lang="ts">
     // Refactor these
     // TODO Justus 2023-05-03
+    import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
+    import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import {
         labelExpandOpen,
         toggleLabelDropdownClosedNavOpen,
     } from "$lib/stores/dashboard/ui";
-    import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
-    import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import type { LabelSearchModule } from "$lib/types/stores";
 
     export let labelSearchModule: LabelSearchModule;

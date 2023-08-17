@@ -1,8 +1,8 @@
 <script lang="ts">
-    import TaskUpdates from "$lib/figma/screens/task/TaskUpdates.svelte";
-    import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import TaskC from "$lib/components/dashboard/task/Task.svelte";
     import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
+    import TaskUpdates from "$lib/figma/screens/task/TaskUpdates.svelte";
+    import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import type { TaskUpdateBarState } from "$lib/figma/types";
     import { currentTask } from "$lib/stores/dashboard";
 

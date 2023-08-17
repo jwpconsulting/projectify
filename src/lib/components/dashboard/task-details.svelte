@@ -1,36 +1,37 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
     import { writable } from "svelte/store";
+    import { _ } from "svelte-i18n";
+
+    import { goto } from "$lib/navigation";
+    import { getDashboardTaskUrl } from "$lib/urls";
+
+    import { page } from "$app/stores";
+    import TaskDetailsBreadcrumbs from "$lib/components/dashboard/task-details-breadcrumbs.svelte";
+    import TaskDetailsContent from "$lib/components/dashboard/task-details-content.svelte";
+    import TaskDetailsDiscussion from "$lib/components/dashboard/task-details-discussion.svelte";
+    import ToolBar from "$lib/components/dashboard/toolBar.svelte";
+    import IconClose from "$lib/components/icons/icon-close.svelte";
+    import IconTrash from "$lib/components/icons/icon-trash.svelte";
+    import Loading from "$lib/components/loading.svelte";
+    import UserPicker from "$lib/components/userPicker.svelte";
+    import { client } from "$lib/graphql/client";
+    import {
+        Mutation_AddTask,
+        Mutation_UpdateTask,
+    } from "$lib/graphql/operations";
+    import { assignUserToTask, deleteTask } from "$lib/repository/workspace";
     import {
         currentTask,
         currentTaskUuid,
         newTaskSectionUuid,
         currentWorkspaceBoardUuid,
     } from "$lib/stores/dashboard";
-    import { assignUserToTask, deleteTask } from "$lib/repository/workspace";
-
-    import {
-        Mutation_AddTask,
-        Mutation_UpdateTask,
-    } from "$lib/graphql/operations";
-    import { client } from "$lib/graphql/client";
-    import ToolBar from "$lib/components/dashboard/toolBar.svelte";
-    import IconTrash from "$lib/components/icons/icon-trash.svelte";
-    import UserPicker from "$lib/components/userPicker.svelte";
-    import TaskDetailsContent from "$lib/components/dashboard/task-details-content.svelte";
-    import TaskDetailsDiscussion from "$lib/components/dashboard/task-details-discussion.svelte";
-    import { goto } from "$lib/navigation";
-    import Loading from "$lib/components/loading.svelte";
-    import { page } from "$app/stores";
-    import IconClose from "$lib/components/icons/icon-close.svelte";
-    import TaskDetailsBreadcrumbs from "$lib/components/dashboard/task-details-breadcrumbs.svelte";
     import type {
         Label,
         SubTask,
         Task,
         WorkspaceUser,
     } from "$lib/types/workspace";
-    import { getDashboardTaskUrl } from "$lib/urls";
 
     let task: Task | null = null;
     let loading = true;
@@ -106,7 +107,7 @@
                 labels?: string[];
                 subTasks?: string[];
             } = {};
-            let assignee = task?.assignee?.user.email || null;
+            let assignee = task.assignee?.user.email || null;
 
             if (assignee) {
                 otherData.assignee = assignee;
@@ -188,7 +189,7 @@
             throw new Error("Expected task");
         }
         userPickerOpen = false;
-        if (user?.user.email == task?.assignee?.user.email) {
+        if (user?.user.email == task.assignee?.user.email) {
             task.assignee = undefined;
         } else if (user) {
             task.assignee = user;
@@ -236,7 +237,7 @@
                 on:click|preventDefault={() =>
                     (userPickerOpen = !userPickerOpen)}
             >
-                {#if task?.assignee}
+                {#if task.assignee}
                     TODO: A user profile picture may be shown here
                 {:else}
                     TODO: A profile picture may be shown here

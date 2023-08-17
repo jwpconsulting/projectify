@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
     import { Briefcase } from "@steeze-ui/heroicons";
+
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
     import WorkspaceSettings from "$lib/figma/buttons/WorkspaceSettings.svelte";
     import Filter from "$lib/figma/dropdown/Filter.svelte";
-    import type { ContextMenuType } from "$lib/types/ui";
     import { openContextMenu } from "$lib/stores/globalUi";
+    import type { ContextMenuType } from "$lib/types/ui";
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspace: Workspace;

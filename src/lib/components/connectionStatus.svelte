@@ -1,11 +1,12 @@
 <script lang="ts">
     import { fade } from "svelte/transition";
     import { _ } from "svelte-i18n";
-    import { online } from "$lib/stores/wsSubscription";
+
     import IconsExclamation from "$lib/components/icons/icons-exclamation.svelte";
+    import { online } from "$lib/stores/wsSubscription";
 </script>
 
-{#if $online == false}
+{#if !$online}
     <div
         class="bg-base fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-opacity-50 p-2 backdrop-blur-sm"
         transition:fade={{ duration: 100 }}

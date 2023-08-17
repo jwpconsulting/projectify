@@ -1,12 +1,15 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import Onboarding from "$lib/components/Onboarding.svelte";
-    import AppIllustration from "$lib/components/onboarding/app-illustration.svelte";
-    import type { OnboardingState } from "$lib/types/onboarding";
+
+    import { goto } from "$lib/navigation";
+
     import type { PageData } from "./$types";
+
+    import AppIllustration from "$lib/components/onboarding/app-illustration.svelte";
+    import Onboarding from "$lib/components/Onboarding.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { assignLabelToTask, createLabel } from "$lib/repository/workspace";
-    import { goto } from "$lib/navigation";
+    import type { OnboardingState } from "$lib/types/onboarding";
     import { getAssignTaskUrl } from "$lib/urls/onboarding";
 
     export let data: PageData;

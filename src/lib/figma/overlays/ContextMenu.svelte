@@ -1,14 +1,14 @@
 <script lang="ts">
-    import ProfileContextMenu from "$lib/figma/overlays/context-menu/ProfileContextMenu.svelte";
-    import WorkspaceContextMenu from "$lib/figma/overlays/context-menu/WorkspaceContextMenu.svelte";
-    import SideNavContextMenu from "$lib/figma/overlays/context-menu/SideNavContextMenu.svelte";
-    import WorkspaceBoardContextMenu from "$lib/figma/overlays/context-menu/WorkspaceBoardContextMenu.svelte";
-    import WorkspaceBoardSectionContextMenu from "$lib/figma/overlays/context-menu/WorkspaceBoardSectionContextMenu.svelte";
-    import TaskContextMenu from "$lib/figma/overlays/context-menu/TaskContextMenu.svelte";
     import HelpContextMenu from "$lib/figma/overlays/context-menu/HelpContextMenu.svelte";
     import PermissionsContextMenu from "$lib/figma/overlays/context-menu/PermissionsContextMenu.svelte";
-    import UpdateMemberOverlay from "$lib/figma/overlays/UpdateMemberOverlay.svelte";
+    import ProfileContextMenu from "$lib/figma/overlays/context-menu/ProfileContextMenu.svelte";
+    import SideNavContextMenu from "$lib/figma/overlays/context-menu/SideNavContextMenu.svelte";
+    import TaskContextMenu from "$lib/figma/overlays/context-menu/TaskContextMenu.svelte";
+    import WorkspaceBoardContextMenu from "$lib/figma/overlays/context-menu/WorkspaceBoardContextMenu.svelte";
+    import WorkspaceBoardSectionContextMenu from "$lib/figma/overlays/context-menu/WorkspaceBoardSectionContextMenu.svelte";
+    import WorkspaceContextMenu from "$lib/figma/overlays/context-menu/WorkspaceContextMenu.svelte";
     import UpdateLabelOverlay from "$lib/figma/overlays/UpdateLabelOverlay.svelte";
+    import UpdateMemberOverlay from "$lib/figma/overlays/UpdateMemberOverlay.svelte";
     import type { ContextMenuType } from "$lib/types/ui";
 
     export let target: ContextMenuType;

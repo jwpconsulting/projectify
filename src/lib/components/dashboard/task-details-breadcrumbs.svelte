@@ -3,9 +3,9 @@
 
     export let task: Task;
 
-    type PathLink = {
+    interface PathLink {
         label: string;
-    };
+    }
 
     let pathLinks: PathLink[];
     if (

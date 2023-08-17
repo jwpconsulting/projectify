@@ -1,12 +1,13 @@
 <script lang="ts">
-    import { Icon } from "@steeze-ui/svelte-icon";
     import { Folder } from "@steeze-ui/heroicons";
-    import type { WorkspaceBoard } from "$lib/types/workspace";
-    import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
+    import { Icon } from "@steeze-ui/svelte-icon";
+
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
-    import { openContextMenu } from "$lib/stores/globalUi";
+    import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard";
+    import { openContextMenu } from "$lib/stores/globalUi";
+    import type { WorkspaceBoard } from "$lib/types/workspace";
 
     export let workspaceBoard: WorkspaceBoard;
 

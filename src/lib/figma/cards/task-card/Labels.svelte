@@ -1,13 +1,14 @@
 <script lang="ts">
     // This is a partial used inside TaskCard
     // The label picker is TODO
-    import { _ } from "svelte-i18n";
-    import LabelList from "$lib/components/dashboard/LabelList.svelte";
-    import type { Task } from "$lib/types/workspace";
-    import { openContextMenu } from "$lib/stores/globalUi";
-    import type { ContextMenuType, LabelSelection } from "$lib/types/ui";
-    import type { LabelSearchModule } from "$lib/types/stores";
     import { readable, writable } from "svelte/store";
+    import { _ } from "svelte-i18n";
+
+    import LabelList from "$lib/components/dashboard/LabelList.svelte";
+    import { openContextMenu } from "$lib/stores/globalUi";
+    import type { LabelSearchModule } from "$lib/types/stores";
+    import type { ContextMenuType, LabelSelection } from "$lib/types/ui";
+    import type { Task } from "$lib/types/workspace";
 
     export let task: Task;
     let labelPickerBtnRef: HTMLElement;

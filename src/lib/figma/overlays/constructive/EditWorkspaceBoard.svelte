@@ -1,10 +1,11 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import type { WorkspaceBoard } from "$lib/types/workspace";
+
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
-    import { closeConstructiveOverlay } from "$lib/stores/globalUi";
     import { updateWorkspaceBoard } from "$lib/repository/workspace";
+    import { closeConstructiveOverlay } from "$lib/stores/globalUi";
+    import type { WorkspaceBoard } from "$lib/types/workspace";
 
     // TODO do something with workspaceBoard
     export let workspaceBoard: WorkspaceBoard;

@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
     import { Camera } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
+    import { createEventDispatcher } from "svelte";
 
     const dispatch = createEventDispatcher();
     function click() {

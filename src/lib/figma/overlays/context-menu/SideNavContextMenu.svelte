@@ -1,15 +1,17 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
     import {
         Archive,
         ArrowCircleLeft,
         ArrowCircleRight,
         Cog,
     } from "@steeze-ui/heroicons";
-    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
+    import { _ } from "svelte-i18n";
+
     import { getArchiveUrl, getSettingsUrl } from "$lib/urls";
-    import type { Workspace } from "$lib/types/workspace";
+
+    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import { sideNavOpen, toggleSideNavOpen } from "$lib/stores/dashboard";
+    import type { Workspace } from "$lib/types/workspace";
 
     export let workspace: Workspace;
 </script>

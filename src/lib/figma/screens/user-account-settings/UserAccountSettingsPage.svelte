@@ -1,14 +1,14 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import type { User } from "$lib/types/user";
-    import Button from "$lib/funabashi/buttons/Button.svelte";
-    import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
-    import UploadAvatar from "$lib/figma/buttons/UploadAvatar.svelte";
-    import { fetchUser, updateUserProfile } from "$lib/stores/user";
 
+    import UploadAvatar from "$lib/figma/buttons/UploadAvatar.svelte";
+    import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
-    import { unwrap } from "$lib/utils/type";
     import { updateProfilePicture } from "$lib/repository/user";
+    import { fetchUser, updateUserProfile } from "$lib/stores/user";
+    import type { User } from "$lib/types/user";
+    import { unwrap } from "$lib/utils/type";
 
     let state: "viewing" | "editing" | "saving" = "viewing";
 

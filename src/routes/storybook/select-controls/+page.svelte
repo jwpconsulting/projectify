@@ -1,8 +1,4 @@
 <script lang="ts">
-    import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
-    import FilterUser from "$lib/figma/select-controls/FilterUser.svelte";
-    import FilterLabel from "$lib/figma/select-controls/FilterLabel.svelte";
-
     import {
         falseTrue,
         fc,
@@ -10,6 +6,10 @@
         selectLabels,
         workspaceUserSelectionInputs,
     } from "$lib/storybook";
+
+    import FilterLabel from "$lib/figma/select-controls/FilterLabel.svelte";
+    import FilterUser from "$lib/figma/select-controls/FilterUser.svelte";
+    import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
 </script>
 
 Select label focus

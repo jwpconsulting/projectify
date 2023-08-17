@@ -1,11 +1,13 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
+    import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
+
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import { openContextMenu } from "$lib/stores/globalUi";
-
+    import type { CreateOrUpdateTaskModule } from "$lib/types/stores";
     import type {
         TaskOrNewTask,
         BreadCrumbTask,
@@ -15,8 +17,6 @@
         isBreadCrumbWorkspaceBoardSection,
         isBreadCrumbTask,
     } from "$lib/types/ui";
-    import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
-    import type { CreateOrUpdateTaskModule } from "$lib/types/stores";
 
     export let taskModule: CreateOrUpdateTaskModule | null;
     // TODO Can we pull this out of taskModule too? Justus 2023-05-08

@@ -1,6 +1,7 @@
 <script lang="ts">
-    import { Icon } from "@steeze-ui/svelte-icon";
     import { ViewList } from "@steeze-ui/heroicons";
+    import { Icon } from "@steeze-ui/svelte-icon";
+
     import type { Task } from "$lib/types/workspace";
 
     export let task: Task;
@@ -8,7 +9,7 @@
 
     if (task.sub_tasks) {
         const completed = task.sub_tasks.filter(
-            (subTask) => subTask.done === true
+            (subTask) => subTask.done
         ).length;
         const total = task.sub_tasks.length;
         if (completed == total) {

@@ -1,11 +1,12 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
 
-    type HelpItem = {
+    interface HelpItem {
         title: string;
         href: string;
-    };
+    }
     let helpItems: HelpItem[];
     $: helpItems = [
         {

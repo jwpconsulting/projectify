@@ -1,15 +1,16 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
     import FilterLabelMenu from "$lib/figma/composites/FilterLabelMenu.svelte";
-    import type { SelectLabel, FilterLabelMenuState } from "$lib/figma/types";
-    import type { LabelSearchModule } from "$lib/types/stores";
-    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
-    import Button from "$lib/funabashi/buttons/Button.svelte";
     import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
+    import type { SelectLabel, FilterLabelMenuState } from "$lib/figma/types";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import { createLabel } from "$lib/repository/workspace";
+    import { currentWorkspace } from "$lib/stores/dashboard";
+    import type { LabelSearchModule } from "$lib/types/stores";
     import type { Label } from "$lib/types/workspace";
     import { labelColors } from "$lib/utils/colors";
-    import { currentWorkspace } from "$lib/stores/dashboard";
-    import { createLabel } from "$lib/repository/workspace";
 
     export let labelSearchModule: LabelSearchModule;
 
@@ -36,8 +37,7 @@
 
     const makeIsLabelSelected = (color: null | number) =>
         Object.fromEntries(labelColors.map((_name, ix) => [ix, ix === color]));
-    let isLabelSelected: { [key: number]: boolean } =
-        makeIsLabelSelected(null);
+    let isLabelSelected: Record<number, boolean> = makeIsLabelSelected(null);
 
     $: {
         if (chosenColor) {

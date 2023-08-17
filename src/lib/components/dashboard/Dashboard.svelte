@@ -1,18 +1,17 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
+    import FloatingActionButton from "$lib/figma/buttons/FloatingActionButton.svelte";
     import SectionBar from "$lib/figma/cards/SectionBar.svelte";
+    import TaskCard from "$lib/figma/cards/TaskCard.svelte";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
     import {
         createCurrentSearchedTasks,
         currentWorkspaceBoardSections,
         taskSearchInput,
     } from "$lib/stores/dashboard";
-
-    import TaskCard from "$lib/figma/cards/TaskCard.svelte";
-    import type { WorkspaceBoard } from "$lib/types/workspace";
-
-    import FloatingActionButton from "$lib/figma/buttons/FloatingActionButton.svelte";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
-    import Button from "$lib/funabashi/buttons/Button.svelte";
+    import type { WorkspaceBoard } from "$lib/types/workspace";
 
     export let workspaceBoard: WorkspaceBoard;
 

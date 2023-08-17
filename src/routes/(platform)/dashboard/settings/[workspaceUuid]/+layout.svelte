@@ -1,12 +1,14 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import SettingsPage from "$lib/components/SettingsPage.svelte";
+
+    import { getSettingsUrl } from "$lib/urls";
+
     import { page } from "$app/stores";
+    import Loading from "$lib/components/loading.svelte";
+    import SettingsPage from "$lib/components/SettingsPage.svelte";
     import TabsSimple from "$lib/components/tabs-simple.svelte";
     import type { TabItem } from "$lib/components/types";
-    import Loading from "$lib/components/loading.svelte";
     import { currentWorkspace, loading } from "$lib/stores/dashboard";
-    import { getSettingsUrl } from "$lib/urls";
 
     let activeTabId: string;
 

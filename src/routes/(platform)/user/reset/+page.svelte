@@ -1,6 +1,8 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
     import { goto } from "$lib/navigation";
+
     import IllustrationEmailSent from "$lib/components/illustrations/illustration-email-sent.svelte";
     import { requestPasswordReset } from "$lib/stores/user";
 

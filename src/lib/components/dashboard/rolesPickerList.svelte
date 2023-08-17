@@ -1,5 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
+
     import { workspaceUserRoles } from "$lib/types/workspaceUserRole";
 
     export let role: string | null = null;

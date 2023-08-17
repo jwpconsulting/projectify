@@ -1,7 +1,7 @@
 <script lang="ts">
     import WorkspaceSettingsTabBar from "$lib/figma/screens/workspace-settings/WorkspaceSettingsTabBar.svelte";
-    import type { Workspace } from "$lib/types/workspace";
     import type { SettingKind } from "$lib/types/dashboard";
+    import type { Workspace } from "$lib/types/workspace";
 
     export let workspace: Workspace;
     export let activeSetting: SettingKind;

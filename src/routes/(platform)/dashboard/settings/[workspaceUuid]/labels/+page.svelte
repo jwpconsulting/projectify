@@ -1,8 +1,9 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
     import LabelPill from "$lib/components/dashboard/LabelPill.svelte";
-    import type { Label } from "$lib/types/workspace";
     import { currentWorkspace, loading } from "$lib/stores/dashboard";
+    import type { Label } from "$lib/types/workspace";
 
     let labels: Label[] = [];
 

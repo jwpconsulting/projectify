@@ -1,6 +1,6 @@
 <script lang="ts">
-    import IconSearch from "$lib/components/icons/icon-search.svelte";
     import IconPlus from "$lib/components/icons/icon-plus.svelte";
+    import IconSearch from "$lib/components/icons/icon-search.svelte";
 </script>
 
 <div

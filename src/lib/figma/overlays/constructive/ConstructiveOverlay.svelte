@@ -1,15 +1,16 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import type { ConstructiveOverlayType } from "$lib/types/ui";
-    import { closeConstructiveOverlay } from "$lib/stores/globalUi";
+
     import EditWorkspaceBoard from "$lib/figma/overlays/constructive/EditWorkspaceBoard.svelte";
-    import NewWorkspaceBoard from "$lib/figma/overlays/constructive/NewWorkspaceBoard.svelte";
     import InviteMember from "$lib/figma/overlays/constructive/InviteMember.svelte";
     import InviteMemberError from "$lib/figma/overlays/constructive/InviteMemberError.svelte";
-    import NewWorkspaceBoardSection from "$lib/figma/overlays/constructive/NewWorkspaceBoardSection.svelte";
     import NewWorkspace from "$lib/figma/overlays/constructive/NewWorkspace.svelte";
-    import SkipOnboarding from "$lib/figma/overlays/constructive/SkipOnboarding.svelte";
+    import NewWorkspaceBoard from "$lib/figma/overlays/constructive/NewWorkspaceBoard.svelte";
+    import NewWorkspaceBoardSection from "$lib/figma/overlays/constructive/NewWorkspaceBoardSection.svelte";
     import RecoverWorkspaceBoard from "$lib/figma/overlays/constructive/RecoverWorkspaceBoard.svelte";
+    import SkipOnboarding from "$lib/figma/overlays/constructive/SkipOnboarding.svelte";
+    import { closeConstructiveOverlay } from "$lib/stores/globalUi";
+    import type { ConstructiveOverlayType } from "$lib/types/ui";
 
     export let target: ConstructiveOverlayType;
     $: title = {

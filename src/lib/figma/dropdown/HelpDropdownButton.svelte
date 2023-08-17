@@ -1,7 +1,7 @@
 <script lang="ts">
+    import { ChevronDown, ChevronUp } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { createEventDispatcher } from "svelte";
-    import { ChevronDown, ChevronUp } from "@steeze-ui/heroicons";
 
     export let label: string;
     export let open: boolean;

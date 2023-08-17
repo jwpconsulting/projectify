@@ -1,11 +1,12 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
+    import type { LabelLabel } from "$lib/figma/types";
     import type { LabelColor } from "$lib/utils/colors";
     import {
         getLabelColorClass,
         getLabelColorFromIndex,
     } from "$lib/utils/colors";
-    import type { LabelLabel } from "$lib/figma/types";
 
     export let label: LabelLabel;
     export let action: (() => void) | undefined;

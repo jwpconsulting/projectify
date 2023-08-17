@@ -1,7 +1,8 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import type { WorkspaceBoard } from "$lib/types/workspace";
+
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import type { WorkspaceBoard } from "$lib/types/workspace";
 
     export let workspaceBoard: WorkspaceBoard;
     console.log("TODO do something with", workspaceBoard);

@@ -1,7 +1,8 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import Button from "$lib/funabashi/buttons/Button.svelte";
+
     import type { ButtonAction } from "$lib/figma/types";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
 
     export let hasContentPadding = false;
 
@@ -54,7 +55,7 @@
     </div>
 
     <!-- Inputs -->
-    {#if $$slots["inputs"]}
+    {#if $$slots.inputs}
         <div class="flex flex-col">
             <slot name="inputs" />
         </div>

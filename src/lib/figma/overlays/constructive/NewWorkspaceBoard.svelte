@@ -1,12 +1,14 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import type { Workspace } from "$lib/types/workspace";
+
+    import { goto } from "$lib/navigation";
+    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
+
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { createWorkspaceBoard } from "$lib/repository/workspace";
     import { closeConstructiveOverlay } from "$lib/stores/globalUi";
-    import { goto } from "$lib/navigation";
-    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
+    import type { Workspace } from "$lib/types/workspace";
 
     export let workspace: Workspace;
 

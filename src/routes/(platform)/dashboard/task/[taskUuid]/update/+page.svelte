@@ -1,30 +1,32 @@
 <script lang="ts">
     import type { Writable } from "svelte/store";
     import { readable, writable } from "svelte/store";
+
     import { goto } from "$lib/navigation";
+    import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
+
     import TaskUpdateCard from "$lib/figma/screens/task/TaskUpdateCard.svelte";
-    import type { Task } from "$lib/types/workspace";
-    import { createLabelSearchModule } from "$lib/stores/modules";
     import {
         assignLabelToTask,
         updateTask as performUpdateTask,
         assignUserToTask,
     } from "$lib/repository/workspace";
+    import {
+        currentWorkspaceUsers,
+        createWorkspaceUserSearchResults,
+    } from "$lib/stores/dashboard";
+    import { openContextMenu } from "$lib/stores/globalUi";
+    import { createLabelSearchModule } from "$lib/stores/modules";
+    import type {
+        WorkspaceUserSearchModule,
+        TaskModule,
+    } from "$lib/types/stores";
     import type {
         TasksPerUser,
         WorkspaceUserSelection,
         WorkspaceUserSelectionInput,
     } from "$lib/types/ui";
-    import type {
-        WorkspaceUserSearchModule,
-        TaskModule,
-    } from "$lib/types/stores";
-    import {
-        currentWorkspaceUsers,
-        createWorkspaceUserSearchResults,
-    } from "$lib/stores/dashboard";
-    import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
-    import { openContextMenu } from "$lib/stores/globalUi";
+    import type { Task } from "$lib/types/workspace";
 
     export let data: { task: Task };
     const { task } = data;

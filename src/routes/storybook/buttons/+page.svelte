@@ -1,29 +1,32 @@
 <script lang="ts">
     import { Folder, Plus } from "@steeze-ui/heroicons";
-    import SideMenuCreate from "$lib/figma/buttons/SideMenuCreate.svelte";
-    import WorkspaceSettings from "$lib/figma/buttons/WorkspaceSettings.svelte";
-    import UploadAvatar from "$lib/figma/buttons/UploadAvatar.svelte";
+
+    import { falseTrue, fc, fr, trueFalse, users } from "$lib/storybook";
+
+    import { browser } from "$app/environment";
     import AddUserButton from "$lib/figma/buttons/AddUserButton.svelte";
-    import NotificationButton from "$lib/figma/buttons/NotificationButton.svelte";
-    import CancelSearch from "$lib/figma/buttons/CancelSearch.svelte";
-    import WatcherButton from "$lib/figma/buttons/WatcherButton.svelte";
-    import ReadNotification from "$lib/figma/buttons/ReadNotification.svelte";
-    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
-    import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
-    import SelectSeats from "$lib/figma/buttons/SelectSeats.svelte";
-    import DecrementSeats from "$lib/figma/buttons/DecrementSeats.svelte";
-    import IncrementSeats from "$lib/figma/buttons/IncrementSeats.svelte";
-    import SeatInputStepper from "$lib/figma/buttons/SeatInputStepper.svelte";
-    import StepperVariant from "$lib/figma/buttons/StepperVariant.svelte";
-    import ProgressStepper from "$lib/figma/buttons/ProgressStepper.svelte";
-    import HamburgerMenu from "$lib/figma/buttons/HamburgerMenu.svelte";
-    import SearchMobile from "$lib/figma/buttons/SearchMobile.svelte";
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
-    import WorkspaceBoardIcon from "$lib/figma/buttons/WorkspaceBoardIcon.svelte";
+    import CancelSearch from "$lib/figma/buttons/CancelSearch.svelte";
+    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
+    import DecrementSeats from "$lib/figma/buttons/DecrementSeats.svelte";
+    import HamburgerMenu from "$lib/figma/buttons/HamburgerMenu.svelte";
+    import IncrementSeats from "$lib/figma/buttons/IncrementSeats.svelte";
+    import NotificationButton from "$lib/figma/buttons/NotificationButton.svelte";
+    import ProgressStepper from "$lib/figma/buttons/ProgressStepper.svelte";
+    import ReadNotification from "$lib/figma/buttons/ReadNotification.svelte";
+    import SearchMobile from "$lib/figma/buttons/SearchMobile.svelte";
+    import SeatInputStepper from "$lib/figma/buttons/SeatInputStepper.svelte";
+    import SelectSeats from "$lib/figma/buttons/SelectSeats.svelte";
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
+    import SideMenuCreate from "$lib/figma/buttons/SideMenuCreate.svelte";
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
-    import { currentStep } from "$lib/stores/onboarding";
+    import StepperVariant from "$lib/figma/buttons/StepperVariant.svelte";
+    import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
+    import UploadAvatar from "$lib/figma/buttons/UploadAvatar.svelte";
+    import WatcherButton from "$lib/figma/buttons/WatcherButton.svelte";
+    import WorkspaceBoardIcon from "$lib/figma/buttons/WorkspaceBoardIcon.svelte";
+    import WorkspaceSettings from "$lib/figma/buttons/WorkspaceSettings.svelte";
     import {
         boardButtonStates,
         borderedIconTypes,
@@ -33,9 +36,8 @@
         stepperActiveStates,
         stepperPositions,
     } from "$lib/figma/types";
-    import { falseTrue, fc, fr, trueFalse, users } from "$lib/storybook";
-    import { browser } from "$app/environment";
     import { setFirstWorkspace } from "$lib/stores/dashboard";
+    import { currentStep } from "$lib/stores/onboarding";
 
     const onboardingSeats = [5, 10, 15, 20, 25];
     if (browser) {

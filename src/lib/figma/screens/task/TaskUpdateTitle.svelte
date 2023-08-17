@@ -1,6 +1,7 @@
 <script lang="ts">
     // TODO rename to just Title or maybe TaskTitle
     import { _ } from "svelte-i18n";
+
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
 
     export let title: string | undefined;

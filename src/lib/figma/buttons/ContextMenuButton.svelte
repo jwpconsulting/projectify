@@ -1,6 +1,7 @@
 <script lang="ts">
     import { Icon } from "@steeze-ui/svelte-icon";
     import type { IconSource } from "@steeze-ui/svelte-icon/types";
+
     import type {
         ButtonAction,
         MenuButtonColor,

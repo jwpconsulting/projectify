@@ -1,19 +1,18 @@
 <script lang="ts">
-    import WorkspaceSettingsTabBar from "$lib/figma/screens/workspace-settings/WorkspaceSettingsTabBar.svelte";
-    import WorkspaceSettingsMemberCard from "$lib/figma/screens/workspace-settings/WorkspaceSettingsMemberCard.svelte";
-    import WorkspaceSettingsPage from "$lib/figma/screens/workspace-settings/WorkspaceSettingsPage.svelte";
-    import WorkspaceSettingsGeneral from "$lib/figma/screens/workspace-settings/WorkspaceSettingsGeneral.svelte";
-    import WorkspaceSettingsMembers from "$lib/figma/screens/workspace-settings/WorkspaceSettingsMembers.svelte";
-    import WorkspaceSettingsBilling from "$lib/figma/screens/workspace-settings/WorkspaceSettingsBilling.svelte";
-    import LogIn from "$lib/figma/screens/auth/LogIn.svelte";
-    import SignUp from "$lib/figma/screens/auth/SignUp.svelte";
-    import RequestPasswordReset from "$lib/figma/screens/auth/RequestPasswordReset.svelte";
-    import ConfirmPasswordReset from "$lib/figma/screens/auth/ConfirmPasswordReset.svelte";
-    import { settingKinds } from "$lib/types/dashboard";
-
     import { fc, workspace, workspaceUser } from "$lib/storybook";
 
     import { browser } from "$app/environment";
+    import ConfirmPasswordReset from "$lib/figma/screens/auth/ConfirmPasswordReset.svelte";
+    import LogIn from "$lib/figma/screens/auth/LogIn.svelte";
+    import RequestPasswordReset from "$lib/figma/screens/auth/RequestPasswordReset.svelte";
+    import SignUp from "$lib/figma/screens/auth/SignUp.svelte";
+    import WorkspaceSettingsBilling from "$lib/figma/screens/workspace-settings/WorkspaceSettingsBilling.svelte";
+    import WorkspaceSettingsGeneral from "$lib/figma/screens/workspace-settings/WorkspaceSettingsGeneral.svelte";
+    import WorkspaceSettingsMemberCard from "$lib/figma/screens/workspace-settings/WorkspaceSettingsMemberCard.svelte";
+    import WorkspaceSettingsMembers from "$lib/figma/screens/workspace-settings/WorkspaceSettingsMembers.svelte";
+    import WorkspaceSettingsPage from "$lib/figma/screens/workspace-settings/WorkspaceSettingsPage.svelte";
+    import WorkspaceSettingsTabBar from "$lib/figma/screens/workspace-settings/WorkspaceSettingsTabBar.svelte";
+    import { settingKinds } from "$lib/types/dashboard";
 </script>
 
 {#if browser}

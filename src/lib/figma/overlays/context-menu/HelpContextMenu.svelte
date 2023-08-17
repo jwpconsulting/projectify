@@ -1,5 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
 </script>
 

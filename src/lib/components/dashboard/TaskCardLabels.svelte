@@ -1,5 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
     import LabelList from "$lib/components/dashboard/LabelList.svelte";
     import type { Task } from "$lib/types/workspace";
 

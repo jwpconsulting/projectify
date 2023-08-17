@@ -1,8 +1,10 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
     import { Briefcase, Plus } from "@steeze-ui/heroicons";
-    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
+    import { _ } from "svelte-i18n";
+
     import { getDashboardWorkspaceUrl } from "$lib/urls";
+
+    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspaces: Workspace[];

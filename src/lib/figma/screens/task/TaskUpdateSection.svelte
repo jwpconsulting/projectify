@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { Task } from "$lib/types/workspace";
     import SectionLocationState from "$lib/figma/screens/task/SectionLocationState.svelte";
+    import type { Task } from "$lib/types/workspace";
 
     export let task: Task;
     export let action: (() => void) | undefined = undefined;

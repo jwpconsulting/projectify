@@ -1,17 +1,17 @@
 <script lang="ts">
+    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
+
+    import LabelDropdownClosedNav from "$lib/figma/buttons/LabelDropdownClosedNav.svelte";
+    import UserDropdownClosedNav from "$lib/figma/buttons/UserDropdownClosedNav.svelte";
     import WorkspaceMenu from "$lib/figma/buttons/WorkspaceMenu.svelte";
+    import LabelDropdown from "$lib/figma/composites/LabelDropdown.svelte";
     import Boards from "$lib/figma/navigation/side-nav/Boards.svelte";
     import Members from "$lib/figma/navigation/side-nav/Members.svelte";
-    import LabelDropdown from "$lib/figma/composites/LabelDropdown.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
-
     import type {
         LabelSearchModule,
         WorkspaceUserSearchModule,
     } from "$lib/types/stores";
-    import LabelDropdownClosedNav from "$lib/figma/buttons/LabelDropdownClosedNav.svelte";
-    import UserDropdownClosedNav from "$lib/figma/buttons/UserDropdownClosedNav.svelte";
-    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspaces: Workspace[];

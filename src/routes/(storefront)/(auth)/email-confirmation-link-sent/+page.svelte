@@ -1,7 +1,9 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import Button from "$lib/funabashi/buttons/Button.svelte";
+
     import illustration from "./illustration.svg";
+
+    import Button from "$lib/funabashi/buttons/Button.svelte";
 </script>
 
 <div class="flex h-full flex-col items-center justify-center px-16 py-8">

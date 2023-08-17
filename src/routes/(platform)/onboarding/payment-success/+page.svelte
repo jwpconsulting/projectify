@@ -1,6 +1,6 @@
 <script lang="ts">
-    import Onboarding from "$lib/components/Onboarding.svelte";
     import AppIllustration from "$lib/components/onboarding/app-illustration.svelte";
+    import Onboarding from "$lib/components/Onboarding.svelte";
     import type { OnboardingState } from "$lib/types/onboarding";
 
     let workspaceTitle = "";

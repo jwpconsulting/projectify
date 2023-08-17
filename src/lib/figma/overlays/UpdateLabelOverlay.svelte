@@ -1,7 +1,6 @@
 <script lang="ts">
-    import type { LabelSearchModule } from "$lib/types/stores";
-
     import FilterLabelMenu from "$lib/figma/composites/FilterLabelMenu.svelte";
+    import type { LabelSearchModule } from "$lib/types/stores";
 
     export let labelSearchModule: LabelSearchModule;
 </script>

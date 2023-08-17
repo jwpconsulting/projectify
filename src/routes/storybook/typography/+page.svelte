@@ -1,6 +1,6 @@
 <script lang="ts">
-    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { anchorSizes } from "$lib/figma/types";
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
 </script>
 
 {#each anchorSizes as size}

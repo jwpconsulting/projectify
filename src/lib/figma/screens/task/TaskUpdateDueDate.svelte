@@ -2,8 +2,8 @@
     import { _ } from "svelte-i18n";
 
     // import Label from "$lib/figma/...";
-    import SectionLocationState from "$lib/figma/screens/task/SectionLocationState.svelte";
     import DueDateWarning from "$lib/figma/buttons/DueDateWarning.svelte";
+    import SectionLocationState from "$lib/figma/screens/task/SectionLocationState.svelte";
 
     // XXX For now, we store dates a plain strings
     // TODO when select due date, we should show the text as text-utility

@@ -1,13 +1,13 @@
 <script lang="ts">
+    import { falseTrue, fc, fr } from "$lib/storybook";
+
+    import Button from "$lib/funabashi/buttons/Button.svelte";
     import type {
         ButtonAction,
         ButtonStyle,
         ButtonColor,
     } from "$lib/funabashi/types";
-    import Button from "$lib/funabashi/buttons/Button.svelte";
-
     import { buttonSizes } from "$lib/funabashi/types";
-    import { falseTrue, fc, fr } from "$lib/storybook";
 
     export let label: string;
     export let style: ButtonStyle;

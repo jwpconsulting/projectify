@@ -1,7 +1,8 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
 
     let hasBeenEdited = false;
     let currentPassword = "";

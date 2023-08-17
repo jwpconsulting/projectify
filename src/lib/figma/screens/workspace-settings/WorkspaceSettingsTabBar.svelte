@@ -1,9 +1,11 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import TabElement from "$lib/figma/buttons/TabElement.svelte";
+
     import { getSettingsUrl } from "$lib/urls";
-    import type { Workspace } from "$lib/types/workspace";
+
+    import TabElement from "$lib/figma/buttons/TabElement.svelte";
     import type { SettingKind } from "$lib/types/dashboard";
+    import type { Workspace } from "$lib/types/workspace";
 
     export let workspace: Workspace;
     export let activeSetting: SettingKind;

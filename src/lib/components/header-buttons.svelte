@@ -1,5 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
     import type { User } from "$lib/types/user";
 
     export let userData: User | null = null;

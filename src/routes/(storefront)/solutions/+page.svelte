@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
-    import { Icon } from "@steeze-ui/svelte-icon";
     import { ArrowRight } from "@steeze-ui/heroicons";
+    import { Icon } from "@steeze-ui/svelte-icon";
+    import { _ } from "svelte-i18n";
 
-    type Solution = {
+    interface Solution {
         href: string;
         title: string;
         image: {
@@ -11,7 +11,7 @@
             alt: string;
         };
         description: string;
-    };
+    }
 
     let solutions: Solution[];
     $: solutions = [

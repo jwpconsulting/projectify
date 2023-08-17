@@ -1,16 +1,17 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import TaskCard from "$lib/figma/cards/TaskCard.svelte";
+
+    import { getNewTaskUrl } from "$lib/urls";
+
     import SectionTitle from "$lib/figma/cards/section-bar/SectionTitle.svelte";
+    import TaskCard from "$lib/figma/cards/TaskCard.svelte";
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+    import { workspaceBoardSectionClosed } from "$lib/stores/dashboard";
     import type {
         Task,
         WorkspaceBoard,
         WorkspaceBoardSection,
     } from "$lib/types/workspace";
-
-    import { workspaceBoardSectionClosed } from "$lib/stores/dashboard";
-    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { getNewTaskUrl } from "$lib/urls";
 
     export let workspaceBoard: WorkspaceBoard;
     export let workspaceBoardSection: WorkspaceBoardSection;

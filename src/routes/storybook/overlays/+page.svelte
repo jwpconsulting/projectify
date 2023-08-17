@@ -1,12 +1,4 @@
 <script lang="ts">
-    import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
-    import { setFirstWorkspace } from "$lib/stores/dashboard";
-    import ConstructiveOverlay from "$lib/figma/overlays/constructive/ConstructiveOverlay.svelte";
-    import type {
-        ConstructiveOverlayType,
-        DestructiveOverlayType,
-    } from "$lib/types/ui";
-    import { browser } from "$app/environment";
     import {
         fc,
         task,
@@ -15,6 +7,15 @@
         workspaceBoardSection,
         workspaceUser,
     } from "$lib/storybook";
+
+    import { browser } from "$app/environment";
+    import ConstructiveOverlay from "$lib/figma/overlays/constructive/ConstructiveOverlay.svelte";
+    import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
+    import { setFirstWorkspace } from "$lib/stores/dashboard";
+    import type {
+        ConstructiveOverlayType,
+        DestructiveOverlayType,
+    } from "$lib/types/ui";
 
     const destructiveOverlays: DestructiveOverlayType[] = [
         {

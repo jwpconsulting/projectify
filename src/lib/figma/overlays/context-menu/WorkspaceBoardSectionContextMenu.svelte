@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
     import {
         ArrowDown,
         ArrowUp,
@@ -9,17 +8,19 @@
         Trash,
         X,
     } from "@steeze-ui/heroicons";
+    import { _ } from "svelte-i18n";
+
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
+    import { moveWorkspaceBoardSection } from "$lib/repository/workspace";
+    import {
+        toggleWorkspaceBoardSectionOpen,
+        workspaceBoardSectionClosed,
+    } from "$lib/stores/dashboard";
     import type {
         WorkspaceBoard,
         WorkspaceBoardSection,
     } from "$lib/types/workspace";
     // TODO make injectable
-    import {
-        toggleWorkspaceBoardSectionOpen,
-        workspaceBoardSectionClosed,
-    } from "$lib/stores/dashboard";
-    import { moveWorkspaceBoardSection } from "$lib/repository/workspace";
 
     export let workspaceBoard: WorkspaceBoard;
     export let workspaceBoardSection: WorkspaceBoardSection;

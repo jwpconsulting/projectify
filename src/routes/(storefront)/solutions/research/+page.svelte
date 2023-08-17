@@ -1,7 +1,8 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import type { SolutionsPageContent } from "$lib/types/ui";
+
     import SolutionsPage from "$lib/components/solutions/SolutionsPage.svelte";
+    import type { SolutionsPageContent } from "$lib/types/ui";
 
     let pageContent: SolutionsPageContent;
     $: pageContent = {

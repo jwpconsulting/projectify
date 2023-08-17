@@ -1,8 +1,9 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
     import WorkspaceSettingsPage from "$lib/figma/screens/workspace-settings/WorkspaceSettingsPage.svelte";
-    import type { Workspace } from "$lib/types/workspace";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+    import type { Workspace } from "$lib/types/workspace";
 
     export let workspace: Workspace;
 </script>

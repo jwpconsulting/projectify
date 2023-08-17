@@ -1,21 +1,21 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
     import { page } from "$app/stores";
     import IllustrationErrotPage from "$lib/components/illustrations/illustration-errot-page.svelte";
-
     import PageLayout from "$lib/components/layouts/pageLayout.svelte";
 
-    type Error = {
+    interface Error {
         message: string;
         backBtnLabel: string;
         backBtnUrl: string;
-    };
+    }
     const errorSomethingWrong: Error = {
         message: $_("something-went-wrong"),
         backBtnLabel: $_("go-to-homepage"),
         backBtnUrl: "/",
     };
-    const errors: Map<string, Error> = new Map([
+    const errors = new Map<string, Error>([
         ["something-wrong", errorSomethingWrong],
         [
             "workspace-not-found",
@@ -52,7 +52,7 @@
     ]);
 
     let code: string;
-    $: code = $page.params["code"];
+    $: code = $page.params.code;
     let error: Error | null;
     $: {
         if (code) {

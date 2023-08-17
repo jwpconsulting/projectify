@@ -1,8 +1,9 @@
 <script lang="ts">
-    import { Icon } from "@steeze-ui/svelte-icon";
     import { ChevronDown, ChevronUp } from "@steeze-ui/heroicons";
-    import type { HeaderButtonType } from "$lib/funabashi/types";
+    import { Icon } from "@steeze-ui/svelte-icon";
+
     import type { ButtonAction } from "$lib/figma/types";
+    import type { HeaderButtonType } from "$lib/funabashi/types";
 
     export let label: string;
     export let type: HeaderButtonType;

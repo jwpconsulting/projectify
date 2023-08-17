@@ -1,24 +1,26 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import { page } from "$app/stores";
-    import { user } from "$lib/stores/user";
+
     import routes from "$lib/routes";
+
+    import { page } from "$app/stores";
     import HeaderLogo from "$lib/components/assets/headerLogo.svelte";
+    import BoardSearchBar from "$lib/components/BoardSearchBar.svelte";
+    import HeaderButtons from "$lib/components/header-buttons.svelte";
     import HeaderUser from "$lib/components/headerUser.svelte";
     import IconHamburgerMenu from "$lib/components/icons/icon-hamburger-menu.svelte";
-    import HeaderButtons from "$lib/components/header-buttons.svelte";
-    import BoardSearchBar from "$lib/components/BoardSearchBar.svelte";
+    import { user } from "$lib/stores/user";
 
     export let mode = "app";
 
-    type HeaderItem = {
+    interface HeaderItem {
         label: string;
         to?: string;
         authRequired?: boolean;
         forceNaviagiation?: boolean;
         fetchUser?: boolean;
         action?: () => void;
-    };
+    }
 
     let items: HeaderItem[] = [];
 

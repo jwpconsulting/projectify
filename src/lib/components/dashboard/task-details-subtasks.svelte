@@ -1,7 +1,16 @@
 <script lang="ts">
     import lodash from "lodash";
-    import { _ } from "svelte-i18n";
     import { tick } from "svelte";
+    import { _ } from "svelte-i18n";
+
+    import IconChevronDown from "$lib/components/icons/icon-chevron-down.svelte";
+    import IconChevronUp from "$lib/components/icons/icon-chevron-up.svelte";
+    import IconClose from "$lib/components/icons/icon-close.svelte";
+    import IconEdit from "$lib/components/icons/icon-edit.svelte";
+    import IconPlus from "$lib/components/icons/icon-plus.svelte";
+    import IconTrash from "$lib/components/icons/icon-trash.svelte";
+    import IconUpload from "$lib/components/icons/icon-upload.svelte";
+    import { client } from "$lib/graphql/client";
     import {
         Mutation_AddSubTask,
         Mutation_ChangeSubTaskDone,
@@ -9,15 +18,6 @@
         Mutation_MoveSubTaskMutation,
         Mutation_UpdateSubTask,
     } from "$lib/graphql/operations";
-
-    import { client } from "$lib/graphql/client";
-    import IconTrash from "$lib/components/icons/icon-trash.svelte";
-    import IconPlus from "$lib/components/icons/icon-plus.svelte";
-    import IconChevronDown from "$lib/components/icons/icon-chevron-down.svelte";
-    import IconChevronUp from "$lib/components/icons/icon-chevron-up.svelte";
-    import IconEdit from "$lib/components/icons/icon-edit.svelte";
-    import IconClose from "$lib/components/icons/icon-close.svelte";
-    import IconUpload from "$lib/components/icons/icon-upload.svelte";
     import type { SubTask } from "$lib/types/workspace";
 
     export let taskUuid: string;

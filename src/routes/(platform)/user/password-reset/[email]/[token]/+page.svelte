@@ -1,16 +1,18 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import { confirmPasswordReset } from "$lib/stores/user";
+
     import { goto } from "$lib/navigation";
+
     import { page } from "$app/stores";
     import IllustrationPasswordResetComplete from "$lib/components/illustrations/illustration-password-reset-complete.svelte";
+    import { confirmPasswordReset } from "$lib/stores/user";
 
     let requestSent = false;
     let error: string | null = null;
     let passwordValue: string;
 
-    let email = $page.params["email"];
-    let token = $page.params["token"];
+    let email = $page.params.email;
+    let token = $page.params.token;
 
     async function submit() {
         await confirmPasswordReset(email, token, passwordValue);

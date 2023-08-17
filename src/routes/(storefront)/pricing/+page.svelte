@@ -1,7 +1,8 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
-    import { Icon } from "@steeze-ui/svelte-icon";
     import { Check } from "@steeze-ui/heroicons";
+    import { Icon } from "@steeze-ui/svelte-icon";
+    import { _ } from "svelte-i18n";
+
     import Button from "$lib/funabashi/buttons/Button.svelte";
 
     $: features = [

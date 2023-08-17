@@ -1,10 +1,10 @@
 <script lang="ts">
     import { afterUpdate } from "svelte";
+
     import { client } from "$lib/graphql/client";
     import { Mutation_AddChatMessage } from "$lib/graphql/operations";
-
-    import { dateStringToLocal } from "$lib/utils/date";
     import type { Task } from "$lib/types/workspace";
+    import { dateStringToLocal } from "$lib/utils/date";
 
     export let task: Task;
 
@@ -52,7 +52,7 @@
         bind:this={messagesView}
         class="flex grow flex-col divide-y divide-base-300 overflow-y-auto px-4"
     >
-        {#each task?.chat_messages || [] as message}
+        {#each task.chat_messages || [] as message}
             <div class="flex space-x-4 py-6">
                 <div class="shrink-0">
                     {#if message.author}

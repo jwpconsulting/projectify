@@ -1,6 +1,7 @@
 <script lang="ts">
-    import { Icon } from "@steeze-ui/svelte-icon";
     import { CheckCircle } from "@steeze-ui/heroicons";
+    import { Icon } from "@steeze-ui/svelte-icon";
+
     import SubTaskProgressBar from "$lib/figma/screens/task/SubTaskProgressBar.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
 

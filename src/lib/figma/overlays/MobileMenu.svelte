@@ -1,5 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
     import Button from "$lib/funabashi/buttons/Button.svelte";
 </script>
 

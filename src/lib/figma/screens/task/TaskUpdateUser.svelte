@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { WorkspaceUser } from "$lib/types/workspace";
     import UpdateUser from "$lib/figma/buttons/UpdateUser.svelte";
+    import type { WorkspaceUser } from "$lib/types/workspace";
 
     // Either a user has been assigned, or if not we should ask the user
     // to assign a user

@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { Icon } from "@steeze-ui/svelte-icon";
-    import { createEventDispatcher } from "svelte";
-    import type { IconSource } from "@steeze-ui/svelte-icon/types";
     import { ChevronDown, ChevronUp } from "@steeze-ui/heroicons";
+    import { Icon } from "@steeze-ui/svelte-icon";
+    import type { IconSource } from "@steeze-ui/svelte-icon/types";
+    import { createEventDispatcher } from "svelte";
 
     export let label: string;
     export let icon: IconSource;

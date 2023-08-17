@@ -1,5 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
 
     export let description: string | undefined;

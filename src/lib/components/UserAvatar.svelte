@@ -1,5 +1,6 @@
 <script lang="ts">
     import Avatar from "svelte-boring-avatars";
+
     import type { User } from "$lib/types/user";
 
     export let user: User;

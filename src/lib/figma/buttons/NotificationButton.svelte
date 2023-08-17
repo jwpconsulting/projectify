@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-    import { Icon } from "@steeze-ui/svelte-icon";
     import { Bell } from "@steeze-ui/heroicons";
+    import { Icon } from "@steeze-ui/svelte-icon";
+    import { createEventDispatcher } from "svelte";
 
     const dispatch = createEventDispatcher();
     export let isActive: boolean;

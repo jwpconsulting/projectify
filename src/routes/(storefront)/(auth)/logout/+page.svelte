@@ -1,6 +1,7 @@
 <script lang="ts">
-    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { _ } from "svelte-i18n";
+
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
 </script>
 
 <div class="flex flex-col gap-8 px-8 py-8">

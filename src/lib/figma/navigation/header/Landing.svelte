@@ -1,9 +1,10 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
     import HamburgerMenu from "$lib/figma/buttons/HamburgerMenu.svelte";
-    import Button from "$lib/funabashi/buttons/Button.svelte";
     import HeaderUniversal from "$lib/figma/navigation/header/HeaderUniversal.svelte";
     import Links from "$lib/figma/navigation/header/Links.svelte";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
 </script>
 
 <HeaderUniversal logoVisibleDesktop logoVisibleMobile>

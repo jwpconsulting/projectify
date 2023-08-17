@@ -1,11 +1,12 @@
 <script lang="ts">
+    import { getTaskEditUrl } from "$lib/urls";
+
+    import TaskC from "$lib/components/dashboard/task/Task.svelte";
     import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
     import TaskFields from "$lib/figma/screens/task/TaskFields.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
-    import TaskC from "$lib/components/dashboard/task/Task.svelte";
-    import { getTaskEditUrl } from "$lib/urls";
-    import type { Task } from "$lib/types/workspace";
     import type { TaskUpdateBarState } from "$lib/figma/types";
+    import type { Task } from "$lib/types/workspace";
 
     export let task: Task;
     export let state: TaskUpdateBarState = "task";

@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { Icon } from "@steeze-ui/svelte-icon";
     import {
         ChevronDown,
         ChevronUp,
@@ -8,6 +7,8 @@
         Trash,
         X,
     } from "@steeze-ui/heroicons";
+    import { Icon } from "@steeze-ui/svelte-icon";
+
     import type {
         ButtonAction,
         CircleIconIcon,

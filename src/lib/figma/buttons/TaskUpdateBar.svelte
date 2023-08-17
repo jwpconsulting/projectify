@@ -1,11 +1,13 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
+    import { getTaskUrl, getTaskUpdatesUrl } from "$lib/urls";
+
     import TabElement from "$lib/figma/buttons/TabElement.svelte";
     import type {
         TaskUpdateBarKind,
         TaskUpdateBarState,
     } from "$lib/figma/types";
-    import { getTaskUrl, getTaskUpdatesUrl } from "$lib/urls";
     import type { Task } from "$lib/types/workspace";
 
     export let task: Task;

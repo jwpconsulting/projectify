@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
     import {
         ArrowsExpand,
         ChatAlt,
@@ -9,19 +8,22 @@
         SwitchVertical,
         Trash,
     } from "@steeze-ui/heroicons";
-    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
-    import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
+    import { _ } from "svelte-i18n";
+
+    import { goto } from "$lib/navigation";
     import {
         getTaskUrl,
         getTaskUpdatesUrl,
         getDashboardWorkspaceBoardSectionUrl,
     } from "$lib/urls";
+
+    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
+    import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
+    import { deleteTask } from "$lib/stores/dashboard";
+    import { openDestructiveOverlay } from "$lib/stores/globalUi";
+    import type { MoveTaskModule } from "$lib/types/stores";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
     import { copyToClipboard } from "$lib/utils/clipboard";
-    import type { MoveTaskModule } from "$lib/types/stores";
-    import { openDestructiveOverlay } from "$lib/stores/globalUi";
-    import { deleteTask } from "$lib/stores/dashboard";
-    import { goto } from "$lib/navigation";
 
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection;

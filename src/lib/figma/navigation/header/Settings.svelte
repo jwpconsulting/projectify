@@ -1,7 +1,7 @@
 <script lang="ts">
-    import HeaderUniversal from "$lib/figma/navigation/header/HeaderUniversal.svelte";
     import NotificationButton from "$lib/figma/buttons/NotificationButton.svelte";
     import AvatarWithHover from "$lib/figma/buttons/UserAccount.svelte";
+    import HeaderUniversal from "$lib/figma/navigation/header/HeaderUniversal.svelte";
     import type { User } from "$lib/types/user";
 
     export let user: User;

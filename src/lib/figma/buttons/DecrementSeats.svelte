@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-    import { Icon } from "@steeze-ui/svelte-icon";
     import { Minus } from "@steeze-ui/heroicons";
+    import { Icon } from "@steeze-ui/svelte-icon";
+    import { createEventDispatcher } from "svelte";
 
     export let disabled: boolean;
 

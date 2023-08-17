@@ -1,11 +1,12 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
-    import { Mutation_ArchiveWorkspaceBoard } from "$lib/graphql/operations";
-    import { dateStringToLocal } from "$lib/utils/date";
-    import { client } from "$lib/graphql/client";
+
     import Loading from "$lib/components/loading.svelte";
-    import type { WorkspaceBoard } from "$lib/types/workspace";
+    import { client } from "$lib/graphql/client";
+    import { Mutation_ArchiveWorkspaceBoard } from "$lib/graphql/operations";
     import { currentArchivedWorkspaceBoards } from "$lib/stores/dashboard";
+    import type { WorkspaceBoard } from "$lib/types/workspace";
+    import { dateStringToLocal } from "$lib/utils/date";
 
     const unarchivingItems = new Map<string, boolean>();
     let loading: boolean;

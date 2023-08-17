@@ -1,10 +1,11 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-    import { Icon } from "@steeze-ui/svelte-icon";
     import { CheckCircle } from "@steeze-ui/heroicons";
-    import type { User } from "$lib/types/user";
-    import type { AvatarVariantContent } from "$lib/figma/types";
+    import { Icon } from "@steeze-ui/svelte-icon";
+    import { createEventDispatcher } from "svelte";
+
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
+    import type { AvatarVariantContent } from "$lib/figma/types";
+    import type { User } from "$lib/types/user";
 
     export let user: User | null;
     export let active: boolean;

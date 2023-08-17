@@ -1,7 +1,8 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
-    import { Icon } from "@steeze-ui/svelte-icon";
     import { Folder } from "@steeze-ui/heroicons";
+    import { Icon } from "@steeze-ui/svelte-icon";
+    import { createEventDispatcher } from "svelte";
+
     import type { WorkspaceBoardIconState } from "$lib/figma/types";
 
     export let state: WorkspaceBoardIconState;

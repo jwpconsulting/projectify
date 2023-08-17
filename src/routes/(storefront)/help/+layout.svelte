@@ -1,5 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
     import HelpDropdown from "$lib/figma/dropdown/HelpDropdown.svelte";
 </script>
 

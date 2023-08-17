@@ -1,14 +1,9 @@
 <script lang="ts">
     import type { PageData } from "./$types";
+
     import Dashboard from "$lib/components/dashboard/Dashboard.svelte";
     import SideNav from "$lib/figma/navigation/SideNav.svelte";
     import { createLabel as repositoryCreateLabel } from "$lib/repository/workspace";
-
-    import type {
-        LabelSearchModule,
-        WorkspaceUserSearchModule,
-    } from "$lib/types/stores";
-
     import {
         createLabelSearch,
         createLabelSearchResults,
@@ -27,6 +22,10 @@
         workspaceUserSearchResults,
         sideNavOpen,
     } from "$lib/stores/dashboard";
+    import type {
+        LabelSearchModule,
+        WorkspaceUserSearchModule,
+    } from "$lib/types/stores";
 
     export let data: PageData;
 

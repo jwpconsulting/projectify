@@ -1,11 +1,13 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import Onboarding from "$lib/components/Onboarding.svelte";
-    import AppIllustration from "$lib/components/onboarding/app-illustration.svelte";
-    import type { OnboardingState } from "$lib/types/onboarding";
-    import type { PageData } from "./$types";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
+
+    import type { PageData } from "./$types";
+
+    import AppIllustration from "$lib/components/onboarding/app-illustration.svelte";
+    import Onboarding from "$lib/components/Onboarding.svelte";
+    import type { OnboardingState } from "$lib/types/onboarding";
 
     export let data: PageData;
 
