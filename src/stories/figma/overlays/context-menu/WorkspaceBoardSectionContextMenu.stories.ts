@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { workspaceBoardSection } from "$lib/storybook";
+import { workspaceBoard, workspaceBoardSection } from "$lib/storybook";
 
 import WorkspaceBoardSectionContextMenu from "$lib/figma/overlays/context-menu/WorkspaceBoardSectionContextMenu.svelte";
 
 const meta: Meta<WorkspaceBoardSectionContextMenu> = {
     component: WorkspaceBoardSectionContextMenu,
     argTypes: {},
-    args: { workspaceBoardSection },
+    args: { workspaceBoard, workspaceBoardSection },
 };
 export default meta;
 
