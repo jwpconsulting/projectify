@@ -9,12 +9,26 @@ module.exports = {
         "prettier",
         "plugin:import/recommended",
         "plugin:import/typescript",
+        "plugin:svelte/recommended",
     ],
-    plugins: ["svelte3", "@typescript-eslint", "unused-imports", "import"],
-    ignorePatterns: ["vite.config.js", "svelte.config.js", "*.cjs", "build/*"],
-    overrides: [{ files: ["*.svelte"], processor: "svelte3/svelte3" }],
+    plugins: ["@typescript-eslint", "unused-imports", "import"],
+    overrides: [
+        {
+            files: ["*.svelte"],
+            parser: "svelte-eslint-parser",
+            parserOptions: {
+                parser: "@typescript-eslint/parser",
+            },
+        },
+    ],
+    ignorePatterns: [
+        "node_modules/*",
+        "vite.config.js",
+        "svelte.config.js",
+        "*.cjs",
+        "build/*",
+    ],
     settings: {
-        "svelte3/typescript": () => require("typescript"),
         "import/resolver": {
             typescript: {
                 project: "./tsconfig.json",
@@ -27,6 +41,7 @@ module.exports = {
         sourceType: "module",
         ecmaVersion: 2020,
         tsconfigRootDir: __dirname,
+        extraFileExtensions: [".svelte"],
     },
     env: {
         browser: true,
