@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import UserDropdownClosedNav from "$lib/figma/buttons/UserDropdownClosedNav.svelte";
 import { workspaceUserSearchModule } from "$lib/storybook";
+
+import UserDropdownClosedNav from "$lib/figma/buttons/UserDropdownClosedNav.svelte";
 
 const meta: Meta<UserDropdownClosedNav> = {
     component: UserDropdownClosedNav,

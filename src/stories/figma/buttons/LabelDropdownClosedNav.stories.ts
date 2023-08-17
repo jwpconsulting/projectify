@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import LabelDropdownClosedNav from "$lib/figma/buttons/LabelDropdownClosedNav.svelte";
 import { labelSearchModule } from "$lib/storybook";
+
+import LabelDropdownClosedNav from "$lib/figma/buttons/LabelDropdownClosedNav.svelte";
 
 const meta: Meta<LabelDropdownClosedNav> = {
     component: LabelDropdownClosedNav,

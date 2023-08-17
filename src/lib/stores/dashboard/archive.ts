@@ -1,7 +1,8 @@
 import { derived } from "svelte/store";
-import type { WorkspaceBoard } from "$lib/types/workspace";
-import { currentWorkspace } from "$lib/stores/dashboard/workspace";
+
 import { getArchivedWorkspaceBoards } from "$lib/repository/workspace";
+import { currentWorkspace } from "$lib/stores/dashboard/workspace";
+import type { WorkspaceBoard } from "$lib/types/workspace";
 
 export const currentArchivedWorkspaceBoards = derived<
     [typeof currentWorkspace],

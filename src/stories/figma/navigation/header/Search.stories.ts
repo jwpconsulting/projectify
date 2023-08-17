@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import Search from "$lib/figma/navigation/header/Search.svelte";
 import { mobileParameters } from "$lib/storybook";
+
+import Search from "$lib/figma/navigation/header/Search.svelte";
 
 const meta: Meta<Search> = {
     component: Search,

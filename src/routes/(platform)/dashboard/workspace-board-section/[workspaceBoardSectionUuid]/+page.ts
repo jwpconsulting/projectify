@@ -1,5 +1,7 @@
 import { redirect } from "@sveltejs/kit";
+
 import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
+
 import { getWorkspaceBoardSection } from "$lib/repository/workspace";
 
 export const prerender = false;

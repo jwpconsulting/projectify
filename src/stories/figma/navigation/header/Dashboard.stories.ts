@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import Dashboard from "$lib/figma/navigation/header/Dashboard.svelte";
 import { mobileParameters, user1 } from "$lib/storybook";
+
+import Dashboard from "$lib/figma/navigation/header/Dashboard.svelte";
 
 const meta: Meta<Dashboard> = {
     component: Dashboard,

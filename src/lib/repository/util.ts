@@ -1,7 +1,6 @@
 import vars from "$lib/env";
 
 import { browser } from "$app/environment";
-
 import type { RepositoryContext } from "$lib/types/repository";
 
 const defaultRepositoryContext: RepositoryContext | null = browser

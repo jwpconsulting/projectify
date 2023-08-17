@@ -1,7 +1,8 @@
 import { writable } from "svelte/store";
-import { client } from "$lib/graphql/client";
-import type { RepositoryContext } from "$lib/types/repository";
 
+import { goto } from "$lib/navigation";
+
+import { client } from "$lib/graphql/client";
 import {
     Mutation_ConfirmPasswordReset,
     Mutation_EmailConfirmation,
@@ -12,7 +13,7 @@ import {
     Mutation_UpdateProfile,
 } from "$lib/graphql/operations";
 import { getUser } from "$lib/repository/user";
-import { goto } from "$lib/navigation";
+import type { RepositoryContext } from "$lib/types/repository";
 import type { User } from "$lib/types/user";
 
 export const user = writable<User | null>(null);

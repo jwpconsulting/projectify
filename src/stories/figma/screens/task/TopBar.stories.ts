@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import TopBar from "$lib/figma/screens/task/TopBar.svelte";
-
 import { createTaskModule, newTask } from "$lib/storybook";
+
+import TopBar from "$lib/figma/screens/task/TopBar.svelte";
 
 const meta: Meta<TopBar> = {
     component: TopBar,

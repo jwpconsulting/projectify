@@ -1,8 +1,7 @@
 import { ApolloClient, ApolloLink, InMemoryCache } from "@apollo/client/core";
-
 import { from } from "@apollo/client/link/core";
-import { HttpLink } from "@apollo/client/link/http";
 import { onError } from "@apollo/client/link/error";
+import { HttpLink } from "@apollo/client/link/http";
 
 import vars from "$lib/env";
 

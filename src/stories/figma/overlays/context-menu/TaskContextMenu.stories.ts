@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import TaskContextMenu from "$lib/figma/overlays/context-menu/TaskContextMenu.svelte";
-
 import { task } from "$lib/storybook";
+
+import TaskContextMenu from "$lib/figma/overlays/context-menu/TaskContextMenu.svelte";
 
 const meta: Meta<TaskContextMenu> = {
     component: TaskContextMenu,

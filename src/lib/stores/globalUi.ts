@@ -1,4 +1,6 @@
 import type { Writable } from "svelte/store";
+
+import { internallyWritable } from "$lib/stores/util";
 import type {
     ConstructiveOverlayState,
     ConstructiveOverlayType,
@@ -9,7 +11,6 @@ import type {
     Overlay,
     OverlayAction,
 } from "$lib/types/ui";
-import { internallyWritable } from "$lib/stores/util";
 
 const { priv: _constructiveOverlayState, pub: constructiveOverlayState } =
     internallyWritable<ConstructiveOverlayState>({

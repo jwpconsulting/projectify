@@ -1,6 +1,15 @@
 import { readable, writable } from "svelte/store";
-import type { User } from "$lib/types/user";
+
+import type { LabelLabel, SelectLabel } from "$lib/figma/types";
+import type {
+    CreateTaskModule,
+    LabelSearchModule,
+    MoveTaskModule,
+    TaskModule,
+    WorkspaceUserSearchModule,
+} from "$lib/types/stores";
 import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
+import type { User } from "$lib/types/user";
 import type {
     CreateTask,
     Label,
@@ -13,14 +22,6 @@ import type {
 } from "$lib/types/workspace";
 import { getIndexFromLabelColor, labelColors } from "$lib/utils/colors";
 import type { LabelColor } from "$lib/utils/colors";
-import type { LabelLabel, SelectLabel } from "$lib/figma/types";
-import type {
-    CreateTaskModule,
-    LabelSearchModule,
-    MoveTaskModule,
-    TaskModule,
-    WorkspaceUserSearchModule,
-} from "$lib/types/stores";
 
 export const fr = "flex flex-row flex-wrap gap-2";
 export const fc = "flex flex-col flex-wrap gap-2";

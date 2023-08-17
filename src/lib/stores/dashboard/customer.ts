@@ -1,9 +1,8 @@
 import { derived } from "svelte/store";
 
-import type { Customer } from "$lib/types/corporate";
 import { getWorkspaceCustomer } from "$lib/repository/corporate";
-
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
+import type { Customer } from "$lib/types/corporate";
 
 export const currentCustomer = derived<
     [typeof currentWorkspace],

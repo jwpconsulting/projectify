@@ -1,11 +1,12 @@
 import Fuse from "fuse.js";
-
 import { derived, readonly, writable } from "svelte/store";
 import type { Readable, Writable } from "svelte/store";
+
+import { fuseSearchThreshold } from "$lib/config";
+
 import { browser } from "$app/environment";
 import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
 import type { SubscriptionType } from "$lib/types/stores";
-import { fuseSearchThreshold } from "$lib/config";
 
 export function internallyWritable<T>(theThing: T): {
     pub: Readable<T>;

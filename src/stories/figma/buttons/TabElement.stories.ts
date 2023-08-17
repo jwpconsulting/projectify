@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
+
 import TabElement from "$lib/figma/buttons/TabElement.svelte";
 
 const meta: Meta<TabElement> = {

@@ -1,7 +1,8 @@
 import type { PageLoadEvent } from "./$types";
+
+import { getWorkspaceBoard } from "$lib/repository/workspace";
 import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard";
 import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
-import { getWorkspaceBoard } from "$lib/repository/workspace";
 
 interface Data {
     workspaceBoard: WorkspaceBoard;

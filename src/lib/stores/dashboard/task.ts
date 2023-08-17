@@ -1,17 +1,19 @@
 import lodash from "lodash";
 import { get, derived, writable } from "svelte/store";
 import type { Readable } from "svelte/store";
-import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
-import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard/workspaceBoard";
-import { selectWorkspaceUser } from "$lib/stores/dashboard/workspaceUser";
+import { goto } from "$lib/navigation";
+import { getDashboardTaskUrl, getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
-import { selectedLabels } from "$lib/stores/dashboard/label";
 import {
     getTask,
     deleteTask as repositoryDeleteTask,
 } from "$lib/repository/workspace";
+import { selectedLabels } from "$lib/stores/dashboard/label";
+import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard/workspaceBoard";
+import { selectWorkspaceUser } from "$lib/stores/dashboard/workspaceUser";
 import { createWsStore, searchAmong } from "$lib/stores/util";
+import type { Task, WorkspaceBoardSection } from "$lib/types/workspace"; // XXX Remove this
 
 export const taskSearchInput = writable<string>("");
 export const currentTaskUuid = writable<string | null>(null);
@@ -70,10 +72,6 @@ export const currentTask = createWsStore<Task>(
 export async function deleteTask(task: Task) {
     await repositoryDeleteTask(task);
 }
-
-// XXX Remove the following
-import { goto } from "$lib/navigation";
-import { getDashboardTaskUrl, getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
 export const drawerModalOpen = writable(false);
 export const newTaskSectionUuid = writable<string | null>(null);

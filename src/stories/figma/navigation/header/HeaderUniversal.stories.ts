@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import HeaderUniversal from "$lib/figma/navigation/header/HeaderUniversal.svelte";
 import { mobileParameters } from "$lib/storybook";
+
+import HeaderUniversal from "$lib/figma/navigation/header/HeaderUniversal.svelte";
 
 const meta: Meta<HeaderUniversal> = {
     component: HeaderUniversal,

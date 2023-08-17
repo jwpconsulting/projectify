@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import UserAccountSettingsPage from "$lib/figma/screens/user-account-settings/UserAccountSettingsPage.svelte";
-
 import { user1 } from "$lib/storybook";
+
+import UserAccountSettingsPage from "$lib/figma/screens/user-account-settings/UserAccountSettingsPage.svelte";
 
 const meta: Meta<UserAccountSettingsPage> = {
     component: UserAccountSettingsPage,

@@ -1,5 +1,6 @@
 import type { ApolloQueryResult } from "@apollo/client/core";
 
+import { client } from "$lib/graphql/client";
 import {
     Mutation_MoveWorkspaceBoardSection,
     Mutation_AddLabelMutation,
@@ -16,6 +17,8 @@ import {
     Mutation_DeleteTask,
     Mutation_UpdateWorkspaceBoard,
 } from "$lib/graphql/operations";
+import { getWithCredentialsJson } from "$lib/repository/util";
+import type { RepositoryContext } from "$lib/types/repository";
 import type {
     CreateTask,
     CreateWorkspaceBoardSection,
@@ -25,10 +28,6 @@ import type {
     WorkspaceBoard,
     WorkspaceBoardSection,
 } from "$lib/types/workspace";
-import { getWithCredentialsJson } from "$lib/repository/util";
-import type { RepositoryContext } from "$lib/types/repository";
-
-import { client } from "$lib/graphql/client";
 
 export * from "$lib/repository/workspace/workspace";
 

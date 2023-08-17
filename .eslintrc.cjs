@@ -56,10 +56,29 @@ module.exports = {
         node: true,
     },
     rules: {
-        // "sort-imports": ["error", {}],
         "unused-imports/no-unused-imports": "error",
         "import/no-unresolved": "off",
-        "import/order": "error",
+        "import/order": [
+            "error",
+            {
+                "alphabetize": {
+                    order: "asc",
+                    caseInsensitive: true,
+                },
+                "groups": [
+                    "builtin",
+                    "external",
+                    "internal",
+                    "parent",
+                    "sibling",
+                    "index",
+                    "object",
+                ],
+                "newlines-between": "always",
+                "pathGroups": [{ pattern: "$lib/*", group: "internal" }],
+            },
+        ],
+        "import/first": "error",
         "import/newline-after-import": "error",
         "import/no-cycle": "error",
         "import/no-relative-packages": "error",

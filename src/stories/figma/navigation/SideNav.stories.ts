@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import SideNav from "$lib/figma/navigation/SideNav.svelte";
-
 import {
     workspace,
     labelSearchModule,
     mobileParameters,
     workspaceUserSearchModule,
 } from "$lib/storybook";
+
+import SideNav from "$lib/figma/navigation/SideNav.svelte";
 
 const meta: Meta<SideNav> = {
     component: SideNav,

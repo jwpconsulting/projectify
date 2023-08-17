@@ -1,13 +1,13 @@
 import { writable } from "svelte/store";
+
 import { moveTaskAfter } from "$lib/repository/workspace";
 import {
     createLabelSearchResults,
     currentWorkspaceLabels,
 } from "$lib/stores/dashboard";
-import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
-
 import type { LabelSearchModule, MoveTaskModule } from "$lib/types/stores";
 import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
+import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
 export function createLabelSearchModule(
     task: Task | null,

@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import Landing from "$lib/figma/navigation/header/Landing.svelte";
 import { mobileParameters } from "$lib/storybook";
+
+import Landing from "$lib/figma/navigation/header/Landing.svelte";
 
 const meta: Meta<Landing> = {
     component: Landing,

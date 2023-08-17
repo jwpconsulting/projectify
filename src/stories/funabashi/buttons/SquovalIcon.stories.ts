@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
-import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
 
+import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
 import { squovalIcons, squovalStates } from "$lib/funabashi/types";
 
 const meta: Meta<SquovalIcon> = {

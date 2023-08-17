@@ -1,22 +1,21 @@
 import { writable, derived } from "svelte/store";
 import type { Readable } from "svelte/store";
 
+import { getWorkspaceBoardSection } from "$lib/repository/workspace";
+import { selectedLabels } from "$lib/stores/dashboard/label";
+import { currentWorkspaceBoard } from "$lib/stores/dashboard/workspaceBoard";
+import { selectedWorkspaceUser } from "$lib/stores/dashboard/workspaceUser";
+import type {
+    LabelSelection,
+    TasksPerUser,
+    WorkspaceUserSelection,
+} from "$lib/types/ui";
 import type {
     WorkspaceBoard,
     Label,
     Task,
     WorkspaceBoardSection,
 } from "$lib/types/workspace";
-import { currentWorkspaceBoard } from "$lib/stores/dashboard/workspaceBoard";
-import type {
-    LabelSelection,
-    TasksPerUser,
-    WorkspaceUserSelection,
-} from "$lib/types/ui";
-import { selectedWorkspaceUser } from "$lib/stores/dashboard/workspaceUser";
-
-import { selectedLabels } from "$lib/stores/dashboard/label";
-import { getWorkspaceBoardSection } from "$lib/repository/workspace";
 
 export const currentWorkspaceBoardSectionUuid = writable<string | null>(null);
 export const currentWorkspaceBoardSection = derived<

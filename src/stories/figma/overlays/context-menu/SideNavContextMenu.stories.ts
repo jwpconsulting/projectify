@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import SideNavContextMenu from "$lib/figma/overlays/context-menu/SideNavContextMenu.svelte";
-
 import { workspace } from "$lib/storybook";
+
+import SideNavContextMenu from "$lib/figma/overlays/context-menu/SideNavContextMenu.svelte";
 
 const meta: Meta<SideNavContextMenu> = {
     component: SideNavContextMenu,

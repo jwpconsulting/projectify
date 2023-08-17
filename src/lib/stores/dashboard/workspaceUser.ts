@@ -2,14 +2,15 @@ import Fuse from "fuse.js";
 import { derived, writable } from "svelte/store";
 import type { Readable, Writable } from "svelte/store";
 
-import { currentWorkspace } from "$lib/stores/dashboard/workspace";
-import type { WorkspaceUser } from "$lib/types/workspace";
 import { fuseSearchThreshold } from "$lib/config";
+
+import { currentWorkspace } from "$lib/stores/dashboard/workspace";
+import { internallyWritable } from "$lib/stores/util";
 import type {
     WorkspaceUserSelection,
     WorkspaceUserSelectionInput,
 } from "$lib/types/ui";
-import { internallyWritable } from "$lib/stores/util";
+import type { WorkspaceUser } from "$lib/types/workspace";
 
 // WorkspaceUser Search and Selection
 type CurrentWorkspaceUsers = Readable<WorkspaceUser[]>;

@@ -1,7 +1,10 @@
 import { redirect } from "@sveltejs/kit";
-import type { PageLoadEvent } from "./$types";
-import { getWorkspaces } from "$lib/repository/workspace";
+
 import { getDashboardWorkspaceUrl } from "$lib/urls";
+
+import type { PageLoadEvent } from "./$types";
+
+import { getWorkspaces } from "$lib/repository/workspace";
 
 export const prerender = false;
 export const ssr = false;

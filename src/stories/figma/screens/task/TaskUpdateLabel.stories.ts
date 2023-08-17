@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import TaskUpdateLabel from "$lib/figma/screens/task/TaskUpdateLabel.svelte";
 import { mappedLabels } from "$lib/storybook";
+
+import TaskUpdateLabel from "$lib/figma/screens/task/TaskUpdateLabel.svelte";
 
 const labelChoices = [[], mappedLabels.slice(0, 1), mappedLabels.slice(0, 3)];
 

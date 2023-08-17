@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import LabelDropdown from "$lib/figma/composites/LabelDropdown.svelte";
-
 import { labelSearchModule } from "$lib/storybook";
+
+import LabelDropdown from "$lib/figma/composites/LabelDropdown.svelte";
 
 const meta: Meta<LabelDropdown> = {
     component: LabelDropdown,

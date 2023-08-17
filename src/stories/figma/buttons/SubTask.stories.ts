@@ -1,10 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import SubTask from "$lib/figma/buttons/SubTask.svelte";
-
-import { subTaskStates } from "$lib/figma/types";
-
 import { subTask } from "$lib/storybook";
+
+import SubTask from "$lib/figma/buttons/SubTask.svelte";
+import { subTaskStates } from "$lib/figma/types";
 
 const meta: Meta<SubTask> = {
     component: SubTask,

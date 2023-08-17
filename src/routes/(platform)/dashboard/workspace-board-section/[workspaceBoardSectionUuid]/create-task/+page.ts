@@ -1,6 +1,7 @@
 import type { PageLoadEvent } from "./$types";
-import type { WorkspaceBoardSection } from "$lib/types/workspace";
+
 import { getWorkspaceBoardSection } from "$lib/repository/workspace";
+import type { WorkspaceBoardSection } from "$lib/types/workspace";
 
 interface Data {
     workspaceBoardSection: WorkspaceBoardSection;

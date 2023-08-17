@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import CreateTaskFormFields from "$lib/figma/screens/task/CreateTaskFormFields.svelte";
-
 import { createTaskModule } from "$lib/storybook";
+
+import CreateTaskFormFields from "$lib/figma/screens/task/CreateTaskFormFields.svelte";
 
 const meta: Meta<CreateTaskFormFields> = {
     component: CreateTaskFormFields,

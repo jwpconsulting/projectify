@@ -1,8 +1,11 @@
 import { redirect } from "@sveltejs/kit";
-import type { PageLoadEvent } from "./$types";
-import type { Workspace } from "$lib/types/workspace";
-import { getWorkspace } from "$lib/repository/workspace";
+
 import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
+
+import type { PageLoadEvent } from "./$types";
+
+import { getWorkspace } from "$lib/repository/workspace";
+import type { Workspace } from "$lib/types/workspace";
 import { getNewWorkspaceBoardUrl } from "$lib/urls/onboarding";
 
 export const prerender = false;

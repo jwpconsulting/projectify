@@ -1,4 +1,5 @@
 import type { PageLoadEvent } from "./$types";
+
 import { getWorkspace } from "$lib/repository/workspace";
 import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
 

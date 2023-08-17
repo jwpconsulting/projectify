@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import LabelMenu from "$lib/figma/composites/LabelMenu.svelte";
-
 import { labelSearchModule } from "$lib/storybook";
+
+import LabelMenu from "$lib/figma/composites/LabelMenu.svelte";
 import { filterLabelMenuStates } from "$lib/figma/types";
 
 const meta: Meta<LabelMenu> = {

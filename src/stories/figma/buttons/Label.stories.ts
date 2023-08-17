@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import Label from "$lib/figma/buttons/Label.svelte";
 import { labels } from "$lib/storybook";
+
+import Label from "$lib/figma/buttons/Label.svelte";
 
 const meta: Meta<Label> = {
     component: Label,

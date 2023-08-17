@@ -1,6 +1,5 @@
-import { currentWorkspaceUuid } from "$lib/stores/dashboard";
-
 import { getTask } from "$lib/repository/workspace";
+import { currentWorkspaceUuid } from "$lib/stores/dashboard";
 import type { Task } from "$lib/types/workspace";
 
 export const prerender = false;

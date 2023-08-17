@@ -1,12 +1,12 @@
 import Fuse from "fuse.js";
 import { derived, writable } from "svelte/store";
 import type { Readable } from "svelte/store";
+
 import { fuseSearchThreshold } from "$lib/config";
 
-import type { Label } from "$lib/types/workspace";
-import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
-
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
+import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
+import type { Label } from "$lib/types/workspace";
 
 type CurrentWorkspaceLabels = Readable<Label[]>;
 export const currentWorkspaceLabels: CurrentWorkspaceLabels = derived<
