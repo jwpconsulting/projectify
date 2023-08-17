@@ -59,6 +59,7 @@ module.exports = {
         // https://stackoverflow.com/a//64150393
         "no-unused-vars": "off",
         "@typescript-eslint/indent": "off",
+        "@typescript-eslint/switch-exhaustiveness-check": "error",
         "@typescript-eslint/no-unused-vars": [
             "error",
             {
