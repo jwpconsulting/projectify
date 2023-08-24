@@ -24,7 +24,6 @@
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import StepperVariant from "$lib/figma/buttons/StepperVariant.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
-    import UploadAvatar from "$lib/figma/buttons/UploadAvatar.svelte";
     import WatcherButton from "$lib/figma/buttons/WatcherButton.svelte";
     import WorkspaceBoardIcon from "$lib/figma/buttons/WorkspaceBoardIcon.svelte";
     import WorkspaceSettings from "$lib/figma/buttons/WorkspaceSettings.svelte";
@@ -63,8 +62,6 @@ Side menu create
 Ellipsis side nav
 <WorkspaceSettings on:click={console.log} />
 
-Upload avatar
-<UploadAvatar on:click={console.log} />
 Add user
 <AddUserButton on:click={console.log} />
 Notifications

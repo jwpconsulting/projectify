@@ -12,24 +12,17 @@
 
     let state: "viewing" | "editing" | "saving" = "viewing";
 
-    let imageFile: File | null = null;
+    let imageFile: File | undefined = undefined;
 
     export let user: User;
 
     let { full_name: fullName } = user;
 
-    // TODO
-    // import UserProfilePicture from "$lib/components/userProfilePicture.svelte";
-    // import ProfilePictureFileSelector from "$lib/components/profilePictureFileSelector.svelte";
-    // function onFileSelected({
-    //     detail: { src, file },
-    // }: {
-    //     detail: { src: string; file: File };
-    // }) {
-    //     imageFile = file;
-    //     state = "editing";
-    //     user.profile_picture = src;
-    // }
+    function fileSelected(file: File, src: string) {
+        state = "editing";
+        imageFile = file;
+        user.profile_picture = src;
+    }
 
     async function saveData() {
         if (!fullName) {
@@ -44,13 +37,11 @@
         if (imageFile) {
             fileUpload = updateProfilePicture(imageFile);
         }
-        console.log(user);
         await Promise.all([saveData(), fileUpload]);
         user = unwrap(await fetchUser(), "Expected fetchUser");
         // TODO show confirmation flash when saving complete Justus
         // 2023-08-03
         state = "viewing";
-        console.log(user);
     }
 
     function cancel() {
@@ -59,26 +50,11 @@
 </script>
 
 <div class="flex flex-col gap-12 rounded-lg bg-foreground p-4">
-    <!--
-
-            <ProfilePictureFileSelector
-                url={user.profile_picture}
-                on:fileSelected={onFileSelected}
-                let:src
-            >
-                <UserProfilePicture
-                    pictureProps={{
-                        url: src,
-                        size: 128,
-                    }}
-                />
-            </ProfilePictureFileSelector>
--->
     <figure class="flex flex-col items-center gap-7">
         <div class="relative flex w-max flex-col">
             <AvatarVariant size="large" content={{ kind: "single", user }} />
             <div class="absolute -bottom-1/4 -right-1/4">
-                <UploadAvatar />
+                <UploadAvatar {fileSelected} />
             </div>
         </div>
         <figcaption>
