@@ -331,6 +331,7 @@
         "due-soon": "Due soon!"
     },
     "user-account-settings": {
+        "title": "User settings",
         "your-current-avatar": "Your current avatar",
         "name": "Full name",
         "enter-your-full-name": "Enter your full name",
