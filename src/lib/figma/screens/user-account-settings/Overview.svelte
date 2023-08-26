@@ -76,11 +76,8 @@
             />
             <Button
                 action={{
-                    kind: "button",
-                    action: console.error.bind(
-                        null,
-                        "Change password not implemented"
-                    ),
+                    kind: "a",
+                    href: "/user/profile/change-password",
                 }}
                 size="medium"
                 color="blue"
@@ -90,11 +87,8 @@
             />
             <Button
                 action={{
-                    kind: "button",
-                    action: console.error.bind(
-                        null,
-                        "Update email not implemented"
-                    ),
+                    kind: "a",
+                    href: "/user/profile/update-email",
                 }}
                 size="medium"
                 color="blue"

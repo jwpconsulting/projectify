@@ -1,13 +1,21 @@
 <script lang="ts">
+    import { onMount } from "svelte";
     import { _ } from "svelte-i18n";
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import type { User } from "$lib/types/user";
+
+    export let user: User;
 
     let hasBeenEdited = false;
     let currentPassword = "";
     let newPassword1 = "";
     let newPassword2 = "";
+
+    onMount(() => {
+        console.log("TODO", user);
+    });
     // TODO wiring
 </script>
 
@@ -40,10 +48,8 @@
         <div class="flex flex-row gap-2">
             <Button
                 action={{
-                    kind: "button",
-                    action: () => {
-                        console.error("Cancel not implemented");
-                    },
+                    kind: "a",
+                    href: "/user/profile",
                 }}
                 size="medium"
                 color="blue"
