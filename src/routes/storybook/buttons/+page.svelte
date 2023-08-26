@@ -137,7 +137,7 @@ Stepper ({$currentStep})
 Mobile Menu
 <div class={fr}>
     {#each falseTrue as isActive}
-        <HamburgerMenu {isActive} on:click={console.log} />
+        <HamburgerMenu {isActive} action={console.log} />
     {/each}
 </div>
 Mobile search menu

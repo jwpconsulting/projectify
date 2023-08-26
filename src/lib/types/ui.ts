@@ -70,6 +70,9 @@ export type DestructiveOverlayType =
     | { kind: "archiveBoard"; workspaceBoard: WorkspaceBoard }
     | { kind: "deleteBoard"; workspaceBoard: WorkspaceBoard };
 
+// Not sure what to add here
+export type MobileMenuType = object;
+
 export type Overlay<Target, Action> =
     | { kind: "hidden" }
     | {
@@ -95,6 +98,8 @@ export type DestructiveOverlayState = Overlay<
     DestructiveOverlayType,
     OverlayAction
 >;
+
+export type MobileMenuState = Overlay<MobileMenuType, OverlayAction>;
 
 export type ContextMenuType =
     | { kind: "profile" }

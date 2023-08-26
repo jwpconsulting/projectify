@@ -1,4 +1,4 @@
-import type { Writable } from "svelte/store";
+import { readable, type Readable, type Writable } from "svelte/store";
 
 import { internallyWritable } from "$lib/stores/util";
 import type {
@@ -8,6 +8,7 @@ import type {
     ContextMenuType,
     DestructiveOverlayState,
     DestructiveOverlayType,
+    MobileMenuState,
     Overlay,
     OverlayAction,
 } from "$lib/types/ui";
@@ -23,6 +24,12 @@ const { priv: _destructiveOverlayState, pub: destructiveOverlayState } =
         kind: "hidden",
     });
 export { destructiveOverlayState };
+
+const { priv: _mobileMenuState, pub: mobileMenuState } =
+    internallyWritable<MobileMenuState>({
+        kind: "hidden",
+    });
+export { mobileMenuState };
 
 function openOverlay<Target, Action>(
     overlay: Writable<Overlay<Target, Action>>,
@@ -103,6 +110,21 @@ export function closeConstructiveOverlay() {
     closeOverlay(_constructiveOverlayState);
 }
 
+export function openMobileMenu() {
+    openOverlay(
+        _mobileMenuState,
+        {},
+        {
+            kind: "sync",
+            action: console.error.bind(null, "Shouldn't be called TODO"),
+        }
+    );
+}
+
+export function closeMobileMenu() {
+    closeOverlay(_mobileMenuState);
+}
+
 const { priv: _contextMenuState, pub: contextMenuState } =
     internallyWritable<ContextMenuState>({
         kind: "hidden",
@@ -130,3 +152,19 @@ export function closeContextMenu() {
         };
     });
 }
+
+export const escape: Readable<KeyboardEvent> = readable<KeyboardEvent>(
+    undefined,
+    (set) => {
+        const listener = (e: KeyboardEvent) => {
+            if (e.key !== "Escape") {
+                return;
+            }
+            set(e);
+        };
+        document.body.addEventListener<"keypress">("keypress", listener);
+        return () => {
+            document.body.removeEventListener("keypress", listener);
+        };
+    }
+);

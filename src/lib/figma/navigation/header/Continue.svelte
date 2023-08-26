@@ -5,6 +5,7 @@
     import HeaderUniversal from "$lib/figma/navigation/header/HeaderUniversal.svelte";
     import Links from "$lib/figma/navigation/header/Links.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import { openMobileMenu } from "$lib/stores/globalUi";
 </script>
 
 <HeaderUniversal logoVisibleDesktop logoVisibleMobile>
@@ -21,5 +22,5 @@
             action={{ kind: "a", href: "/dashboard" }}
         />
     </slot>
-    <HamburgerMenu slot="mobile" isActive />
+    <HamburgerMenu slot="mobile" isActive action={openMobileMenu} />
 </HeaderUniversal>

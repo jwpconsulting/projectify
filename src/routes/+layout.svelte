@@ -1,14 +1,24 @@
 <script lang="ts">
     import "../app.scss";
     import "../i18n.js";
+    import OverlayContainer from "$lib/components/OverlayContainer.svelte";
+    import MobileMenuOverlay from "$lib/figma/overlays/MobileMenuOverlay.svelte";
+    import { closeMobileMenu, mobileMenuState } from "$lib/stores/globalUi";
 </script>
 
 <svelte:head>
     <title>Projectify</title>
     <meta
         name="description"
-        content="Projectify, free open source project managementProjects management app"
+        content="Projectify - Manage projects the right way"
     />
 </svelte:head>
 
 <slot />
+
+<OverlayContainer
+    overlay={MobileMenuOverlay}
+    store={mobileMenuState}
+    close={closeMobileMenu}
+    perform={null}
+/>
