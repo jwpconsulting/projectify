@@ -74,16 +74,19 @@ export function performDestructiveOverlay() {
             $destructiveOverlayState.action.action();
             return { kind: "hidden" };
         } else {
-            (async () => {
-                await $destructiveOverlayState.action.action();
-                _destructiveOverlayState.set({
-                    kind: "hidden",
+            $destructiveOverlayState.action
+                .action()
+                .then(() => closeOverlay(_destructiveOverlayState))
+                .catch((error: Error) => {
+                    console.error(
+                        "When resolving this Promise, this happened",
+                        {
+                            error,
+                        }
+                    );
                 });
-            })().catch((error: Error) => {
-                console.error("When resolving this Promise, this happened", {
-                    error,
-                });
-            });
+            // We don't set the state now, we wait for when the action
+            // finished performing
             return $destructiveOverlayState;
         }
     });
