@@ -1,4 +1,4 @@
-import type { SvelteComponentTyped } from "svelte";
+import type { SvelteComponent } from "svelte";
 
 import type {
     WorkspaceUserSearchModule,
@@ -79,7 +79,7 @@ export type Overlay<Target, Action> =
       };
 
 // XXX need typeof here for some reason
-export type OverlayComponent = typeof SvelteComponentTyped<{
+export type OverlayComponent = typeof SvelteComponent<{
     // TODO this has to be something, the generic version of
     // DestructiveOverlayType
     target: unknown;

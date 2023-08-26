@@ -1,9 +1,10 @@
 <script lang="ts" context="module">
+    // TODO remove me
     import type { SvelteComponent } from "svelte";
 
     export interface ToolBarItem {
         label: string;
-        icon: typeof SvelteComponent;
+        icon: typeof SvelteComponent<object>;
         onClick: (...arg0: unknown[]) => void;
         disabled?: boolean;
         hidden?: boolean;

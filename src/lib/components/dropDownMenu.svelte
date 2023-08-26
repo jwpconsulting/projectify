@@ -1,10 +1,11 @@
 <script lang="ts" context="module">
+    // TODO remove me
     import type { SvelteComponent } from "svelte";
 
     export interface DropDownMenuItem {
         id?: unknown;
         label: string;
-        icon: typeof SvelteComponent;
+        icon: typeof SvelteComponent<object>;
         onClick?: (...arg0: unknown[]) => void;
         href?: string;
         disabled?: boolean;
