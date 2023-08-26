@@ -285,7 +285,7 @@
             {/if}
         </header>
 
-        <TaskDetailsContent bind:taskModified {task} />
+        <TaskDetailsContent {task} />
         <TaskDetailsDiscussion {task} />
     </div>
 {/if}

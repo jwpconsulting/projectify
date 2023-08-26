@@ -8,10 +8,8 @@
     import Subtasks from "$lib/components/dashboard/task-details-subtasks.svelte";
     import ToolBar from "$lib/components/dashboard/toolBar.svelte";
     import IconCheckCircle from "$lib/components/icons/icon-check-circle.svelte";
-    import RichTextarea from "$lib/components/rich-textarea.svelte";
     import type { Label, SubTask, Task } from "$lib/types/workspace";
 
-    export let taskModified = false;
     export let task: Task;
     let subTasks: SubTask[];
     let labels: Label[];
@@ -39,11 +37,6 @@
                 <div class="text-xl font-bold uppercase">
                     {$_("description")}
                 </div>
-                <RichTextarea
-                    bind:content={task.description}
-                    placeholder={$_("please-enter-a-description")}
-                    bind:modified={taskModified}
-                />
             </div>
 
             <div class="flex flex-col gap-4">
