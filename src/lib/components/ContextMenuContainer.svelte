@@ -115,7 +115,7 @@
     }
 </script>
 
-<div
+<button
     class="bg-red fixed left-0 top-0 h-full w-full"
     class:invisible={$contextMenuState.kind === "hidden"}
     on:click={closeContextMenu}

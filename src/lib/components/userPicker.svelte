@@ -168,21 +168,21 @@
             class="min-h-8 flex divide-x divide-base-300 border-t border-base-300"
         >
             {#if selectedUser}
-                <div
+                <button
                     class="footer-btn flex h-8 grow items-center justify-center text-primary"
                     on:click={clearSelection}
                     on:keydown={clearSelection}
                 >
                     <div class="text-xs">{$_("clear-selection")}</div>
-                </div>
+                </button>
                 {#if selectedUser !== "unassigned"}
-                    <div
+                    <button
                         class="footer-btn flex h-8 grow items-center justify-center text-primary"
                         on:click={selectMe}
                         on:keydown={selectMe}
                     >
                         <div class="text-xs">{$_("select-me")}</div>
-                    </div>
+                    </button>
                 {/if}
             {/if}
         </footer>

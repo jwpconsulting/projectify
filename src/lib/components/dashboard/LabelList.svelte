@@ -63,7 +63,7 @@
 </script>
 
 {#each filteredLabels as label}
-    <div
+    <button
         on:click|preventDefault={() => onLabelClick(label)}
         on:keydown|preventDefault={() => onLabelClick(label)}
         class:cursor-pointer={editable}
@@ -77,5 +77,5 @@
         >
             <LabelPill {label} />
         </div>
-    </div>
+    </button>
 {/each}
