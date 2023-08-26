@@ -29,14 +29,20 @@
     let pikaday: typeof Pikaday | undefined = undefined;
     let datePicker: Pikaday | undefined = undefined;
 
-    onMount(async function () {
-        if (browser) {
-            pikaday = (await import("pikaday")).default;
+    // Possibly we can just have two onMount calls here, but I couldn't read
+    // from the svelte docs whether that is explicitly supported or not.
+    onMount(() => {
+        if (!browser) {
+            return;
         }
+        import("pikaday").then((mod) => {
+            pikaday = mod.default;
+        });
         return () => {
-            if (datePicker) {
-                datePicker.destroy();
+            if (!datePicker) {
+                return;
             }
+            datePicker.destroy();
         };
     });
 
