@@ -32,19 +32,31 @@
         closeContextMenu();
         kind.action();
     }
+
+    $: outerClass = `flex-start flex flex-row items-center gap-2 px-4 py-3 text-left text-xs font-bold focus:bg-border-focus focus:text-base-content focus:outline-none ${colorStyle} ${style}`;
 </script>
 
-<svelte:element
-    this={kind.kind}
-    href={kind.kind === "a" ? kind.href : undefined}
-    on:click={kind.kind == "button" ? action : closeContextMenu}
-    on:keydown={kind.kind == "button" ? action : closeContextMenu}
-    class={`flex-start flex flex-row items-center gap-2 px-4 py-3 text-left text-xs font-bold focus:bg-border-focus focus:text-base-content focus:outline-none ${colorStyle} ${style}`}
->
-    {#if icon}
-        <Icon src={icon} theme="outline" class="h-4 w-4" />
-    {/if}
-    <div class="first-letter:uppercase">
-        {label}
-    </div>
-</svelte:element>
+{#if kind.kind === "a"}
+    <a
+        href={kind.href}
+        class={outerClass}
+        on:click={closeContextMenu}
+        on:keydown={closeContextMenu}
+    >
+        {#if icon}
+            <Icon src={icon} theme="outline" class="h-4 w-4" />
+        {/if}
+        <div class="first-letter:uppercase">
+            {label}
+        </div>
+    </a>
+{:else}
+    <button on:click={action} on:keydown={action} class={outerClass}>
+        {#if icon}
+            <Icon src={icon} theme="outline" class="h-4 w-4" />
+        {/if}
+        <div class="first-letter:uppercase">
+            {label}
+        </div>
+    </button>
+{/if}
