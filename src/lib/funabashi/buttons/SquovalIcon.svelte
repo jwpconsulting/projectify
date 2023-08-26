@@ -44,8 +44,10 @@
     export let action: ButtonAction;
 </script>
 
+<!-- terrible hack. Ideally we don't support this being an anchor at all -->
 <svelte:element
     this={action.kind}
+    role={action.kind == "button" ? "button" : "link"}
     on:click={action.kind == "button" ? action.action : undefined}
     on:keydown={action.kind == "button" ? action.action : undefined}
     href={action.kind == "a" ? action.href : undefined}
