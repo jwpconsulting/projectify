@@ -9,7 +9,6 @@
     import NewWorkspaceBoardSection from "$lib/figma/overlays/constructive/NewWorkspaceBoardSection.svelte";
     import RecoverWorkspaceBoard from "$lib/figma/overlays/constructive/RecoverWorkspaceBoard.svelte";
     import SkipOnboarding from "$lib/figma/overlays/constructive/SkipOnboarding.svelte";
-    import { closeConstructiveOverlay } from "$lib/stores/globalUi";
     import type { ConstructiveOverlayType } from "$lib/types/ui";
 
     export let target: ConstructiveOverlayType;
@@ -23,10 +22,6 @@
         skipOnboarding: $_("skip-onboarding.title"),
         recoverWorkspaceBoard: $_("recover-workspace-board.title"),
     }[target.kind];
-
-    function close() {
-        closeConstructiveOverlay();
-    }
 </script>
 
 <div class="flex max-w-lg grow flex-col gap-10 rounded-lg bg-foreground p-8">
@@ -43,10 +38,7 @@
         {:else if target.kind === "inviteTeamMembersNoSeatsLeft"}
             <InviteMemberError workspace={target.workspace} />
         {:else if target.kind === "createWorkspaceBoardSection"}
-            <NewWorkspaceBoardSection
-                workspaceBoard={target.workspaceBoard}
-                {close}
-            />
+            <NewWorkspaceBoardSection workspaceBoard={target.workspaceBoard} />
         {:else if target.kind === "createWorkspace"}
             <NewWorkspace />
         {:else if target.kind === "skipOnboarding"}

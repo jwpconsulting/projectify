@@ -4,19 +4,15 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { createWorkspaceBoardSection } from "$lib/repository/workspace";
+    import { closeConstructiveOverlay } from "$lib/stores/globalUi";
     import type {
         CreateWorkspaceBoardSection,
         WorkspaceBoard,
     } from "$lib/types/workspace";
 
     export let workspaceBoard: WorkspaceBoard;
-    export let close: () => void;
 
     let title: string;
-
-    function cancel() {
-        close();
-    }
 
     async function perform() {
         const workspaceBoardSection: CreateWorkspaceBoardSection = {
@@ -42,7 +38,7 @@
 </div>
 <div class="flex flex-row justify-center">
     <Button
-        action={{ kind: "button", action: cancel }}
+        action={{ kind: "button", action: closeConstructiveOverlay }}
         style={{ kind: "secondary" }}
         size="medium"
         disabled={false}
