@@ -7,10 +7,8 @@
     import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
     import {
         closeConstructiveOverlay,
-        closeDestructiveOverlay,
         constructiveOverlayState,
         destructiveOverlayState,
-        performDestructiveOverlay,
     } from "$lib/stores/globalUi";
     import { user } from "$lib/stores/user";
 </script>
@@ -25,11 +23,7 @@
 <ConnectionStatus />
 
 <OverlayContainer store={destructiveOverlayState} let:target>
-    <DestructiveOverlay
-        {target}
-        on:cancel={closeDestructiveOverlay}
-        on:destroy={performDestructiveOverlay}
-    />
+    <DestructiveOverlay {target} />
 </OverlayContainer>
 
 <OverlayContainer store={constructiveOverlayState} let:target>

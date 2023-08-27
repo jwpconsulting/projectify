@@ -1,8 +1,11 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
     import { _ } from "svelte-i18n";
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import {
+        closeDestructiveOverlay,
+        performDestructiveOverlay,
+    } from "$lib/stores/globalUi";
     import type { DestructiveOverlayType } from "$lib/types/ui";
 
     export let target: DestructiveOverlayType;
@@ -88,14 +91,6 @@
                 break;
         }
     }
-
-    const dispatch = createEventDispatcher();
-    function cancel() {
-        dispatch("cancel");
-    }
-    function destroy() {
-        dispatch("destroy");
-    }
 </script>
 
 <div
@@ -120,7 +115,7 @@
                 size="medium"
                 disabled={false}
                 color="blue"
-                action={{ kind: "button", action: cancel }}
+                action={{ kind: "button", action: closeDestructiveOverlay }}
                 label={$_("destructive-overlay.cancel")}
             />
             <Button
@@ -128,7 +123,7 @@
                 size="medium"
                 disabled={false}
                 color="red"
-                action={{ kind: "button", action: destroy }}
+                action={{ kind: "button", action: performDestructiveOverlay }}
                 label={buttonLabel}
             />
         </div>
