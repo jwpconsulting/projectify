@@ -44,13 +44,13 @@
         on:keydown={action.action}
         class={buttonClass}
     >
-        <div class="text-base font-bold capitalize">
+        <div class="text-base font-bold">
             {label}
         </div>
     </button>
 {:else}
     <a href={action.href} class={buttonClass}>
-        <div class="text-base font-bold capitalize">
+        <div class="text-base font-bold">
             {label}
         </div>
     </a>
