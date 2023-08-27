@@ -1,48 +1,24 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import Button from "$lib/funabashi/buttons/Button.svelte";
+    import HeaderButton from "$lib/funabashi/buttons/HeaderButton.svelte";
+
+    $: links = [
+        { label: $_("header.features"), href: "/features" },
+        { label: $_("header.solutions"), href: "/solutions" },
+        { label: $_("header.help"), href: "/help" },
+        { label: $_("header.pricing"), href: "/pricing" },
+    ];
 </script>
 
-<div class="mb-8 flex flex-col divide-y divide-border p-4">
-    <div class="py-2">
-        <Button
-            action={{ kind: "a", href: "/features" }}
-            style={{ kind: "tertiary", icon: null }}
-            color="blue"
-            disabled={false}
-            size="medium"
-            label={$_("header.features")}
-        />
-    </div>
-    <div class="py-2">
-        <Button
-            action={{ kind: "a", href: "/solutions" }}
-            style={{ kind: "tertiary", icon: null }}
-            color="blue"
-            disabled={false}
-            size="medium"
-            label={$_("header.solutions")}
-        />
-    </div>
-    <div class="py-2">
-        <Button
-            action={{ kind: "a", href: "/help" }}
-            style={{ kind: "tertiary", icon: null }}
-            color="blue"
-            disabled={false}
-            size="medium"
-            label={$_("header.resources")}
-        />
-    </div>
-    <div class="py-2">
-        <Button
-            action={{ kind: "a", href: "/pricing" }}
-            style={{ kind: "tertiary", icon: null }}
-            color="blue"
-            disabled={false}
-            size="medium"
-            label={$_("header.pricing")}
-        />
-    </div>
+<div class="flex flex-col gap-4 divide-y divide-border">
+    {#each links as link}
+        <div>
+            <HeaderButton
+                action={{ kind: "a", href: link.href }}
+                type={{ kind: "button" }}
+                label={link.label}
+            />
+        </div>
+    {/each}
 </div>
