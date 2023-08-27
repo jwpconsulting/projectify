@@ -1,5 +1,3 @@
-import type { SvelteComponent } from "svelte";
-
 import type {
     WorkspaceUserSearchModule,
     LabelSearchModule,
@@ -80,13 +78,6 @@ export type Overlay<Target, Action> =
           target: Target;
           action: Action;
       };
-
-// XXX need typeof here for some reason
-export type OverlayComponent = typeof SvelteComponent<{
-    // TODO this has to be something, the generic version of
-    // DestructiveOverlayType
-    target: unknown;
-}>;
 
 export type OverlayAction =
     | { kind: "async"; action: () => Promise<void> }

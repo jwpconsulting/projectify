@@ -16,9 +16,6 @@
 
 <slot />
 
-<OverlayContainer
-    overlay={MobileMenuOverlay}
-    store={mobileMenuState}
-    close={closeMobileMenu}
-    perform={null}
-/>
+<OverlayContainer store={mobileMenuState} let:target>
+    <MobileMenuOverlay {target} on:cancel={closeMobileMenu} />
+</OverlayContainer>

@@ -24,18 +24,16 @@
 
 <ConnectionStatus />
 
-<OverlayContainer
-    overlay={DestructiveOverlay}
-    store={destructiveOverlayState}
-    close={closeDestructiveOverlay}
-    perform={performDestructiveOverlay}
-/>
+<OverlayContainer store={destructiveOverlayState} let:target>
+    <DestructiveOverlay
+        {target}
+        on:cancel={closeDestructiveOverlay}
+        on:destroy={performDestructiveOverlay}
+    />
+</OverlayContainer>
 
-<OverlayContainer
-    overlay={ConstructiveOverlay}
-    store={constructiveOverlayState}
-    close={closeConstructiveOverlay}
-    perform={null}
-/>
+<OverlayContainer store={constructiveOverlayState} let:target>
+    <ConstructiveOverlay {target} on:cancel={closeConstructiveOverlay} />
+</OverlayContainer>
 
 <ContextMenuContainer />
