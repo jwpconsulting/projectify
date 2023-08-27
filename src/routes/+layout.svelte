@@ -3,7 +3,7 @@
     import "../i18n.js";
     import OverlayContainer from "$lib/components/OverlayContainer.svelte";
     import MobileMenuOverlay from "$lib/figma/overlays/MobileMenuOverlay.svelte";
-    import { closeMobileMenu, mobileMenuState } from "$lib/stores/globalUi";
+    import { mobileMenuState } from "$lib/stores/globalUi";
 </script>
 
 <svelte:head>
@@ -17,5 +17,5 @@
 <slot />
 
 <OverlayContainer store={mobileMenuState} let:target>
-    <MobileMenuOverlay {target} on:cancel={closeMobileMenu} />
+    <MobileMenuOverlay {target} />
 </OverlayContainer>
