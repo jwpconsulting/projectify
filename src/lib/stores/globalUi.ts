@@ -9,6 +9,7 @@ import type {
     DestructiveOverlayState,
     DestructiveOverlayType,
     MobileMenuState,
+    MobileMenuType,
     Overlay,
     OverlayAction,
 } from "$lib/types/ui";
@@ -110,15 +111,11 @@ export function closeConstructiveOverlay() {
     closeOverlay(_constructiveOverlayState);
 }
 
-export function openMobileMenu() {
-    openOverlay(
-        _mobileMenuState,
-        {},
-        {
-            kind: "sync",
-            action: console.error.bind(null, "Shouldn't be called TODO"),
-        }
-    );
+export function openMobileMenu(type: MobileMenuType) {
+    openOverlay(_mobileMenuState, type, {
+        kind: "sync",
+        action: console.error.bind(null, "Shouldn't be called TODO"),
+    });
 }
 
 export function closeMobileMenu() {

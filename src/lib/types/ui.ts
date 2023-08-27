@@ -68,8 +68,12 @@ export type DestructiveOverlayType =
     | { kind: "archiveBoard"; workspaceBoard: WorkspaceBoard }
     | { kind: "deleteBoard"; workspaceBoard: WorkspaceBoard };
 
-// Not sure what to add here
-export type MobileMenuType = object;
+// These are the times when a header element is shown and a hamburger menu is
+// needed
+export type MobileMenuType =
+    | { kind: "landing" }
+    | { kind: "dashboard" }
+    | { kind: "continue" };
 
 export type Overlay<Target, Action> =
     | { kind: "hidden" }
@@ -137,6 +141,7 @@ export type ConstructiveOverlayState = Overlay<
     OverlayAction
 >;
 
+// TODO These can probably stay in their individual svelte pages
 export interface FeatureDescription {
     image: {
         position: "left" | "right";
@@ -160,6 +165,7 @@ export interface SolutionsPageContent {
     heroContent: SolutionsHeroContent;
     features: FeatureDescription[];
 }
+// END TODO
 
 // These types exist to cleanly separate between creating a new something
 // or updating an existing something

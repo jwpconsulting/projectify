@@ -28,7 +28,10 @@
     </slot>
     <slot slot="mobile">
         <div class="flex flex-row gap-4">
-            <HamburgerMenu isActive action={openMobileMenu} />
+            <HamburgerMenu
+                isActive
+                action={() => openMobileMenu({ kind: "dashboard" })}
+            />
             {#if showSearch}
                 <SearchMobile />
             {/if}

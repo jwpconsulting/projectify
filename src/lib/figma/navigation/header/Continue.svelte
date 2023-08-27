@@ -22,5 +22,9 @@
             action={{ kind: "a", href: "/dashboard" }}
         />
     </slot>
-    <HamburgerMenu slot="mobile" isActive action={openMobileMenu} />
+    <HamburgerMenu
+        slot="mobile"
+        isActive
+        action={() => openMobileMenu({ kind: "continue" })}
+    />
 </HeaderUniversal>

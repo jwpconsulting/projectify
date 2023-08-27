@@ -33,6 +33,9 @@
         />
     </slot>
     <div slot="mobile">
-        <HamburgerMenu action={openMobileMenu} isActive />
+        <HamburgerMenu
+            action={() => openMobileMenu({ kind: "landing" })}
+            isActive
+        />
     </div>
 </HeaderUniversal>

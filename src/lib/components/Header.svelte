@@ -1,4 +1,5 @@
 <script lang="ts">
+    // TODO can this component be deleted?
     import { _ } from "svelte-i18n";
 
     import routes from "$lib/routes";
