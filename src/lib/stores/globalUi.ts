@@ -1,4 +1,4 @@
-import { readable, type Readable, type Writable } from "svelte/store";
+import type { Writable } from "svelte/store";
 
 import { internallyWritable } from "$lib/stores/util";
 import type {
@@ -153,18 +153,15 @@ export function closeContextMenu() {
     });
 }
 
-export const escape: Readable<KeyboardEvent> = readable<KeyboardEvent>(
-    undefined,
-    (set) => {
-        const listener = (e: KeyboardEvent) => {
-            if (e.key !== "Escape") {
-                return;
-            }
-            set(e);
-        };
-        document.body.addEventListener<"keypress">("keypress", listener);
-        return () => {
-            document.body.removeEventListener("keypress", listener);
-        };
-    }
-);
+type EscapeCallback = (e: KeyboardEvent) => void;
+type Unsubscriber = () => void;
+export function handleEscape(callback: EscapeCallback): Unsubscriber {
+    const listener = (e: KeyboardEvent) => {
+        if (e.key !== "Escape") {
+            return;
+        }
+        callback(e);
+    };
+    document.addEventListener("keydown", listener);
+    return () => document.removeEventListener("keydown", listener);
+}
