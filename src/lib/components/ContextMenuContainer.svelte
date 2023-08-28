@@ -117,11 +117,15 @@
 
 <button
     class="bg-red fixed left-0 top-0 h-full w-full"
-    class:invisible={$contextMenuState.kind === "hidden"}
+    class:hidden={$contextMenuState.kind === "hidden"}
     on:click={closeContextMenu}
     on:keydown={closeContextMenu}
 />
-<div class="fixed" bind:this={contextMenu}>
+<div
+    class="fixed"
+    class:hidden={$contextMenuState.kind === "hidden"}
+    bind:this={contextMenu}
+>
     {#if $contextMenuState.kind === "visible"}
         <ContextMenu target={$contextMenuState.target} />
     {/if}
