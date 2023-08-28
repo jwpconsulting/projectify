@@ -3,7 +3,7 @@ import type { Preview, Parameters } from "@storybook/svelte";
 
 import "../src/storybook.css";
 import "../src/app.scss";
-import "../src/i18n.js";
+import "../src/lib/i18n";
 
 export const parameters: Parameters = {
     backgrounds: {
