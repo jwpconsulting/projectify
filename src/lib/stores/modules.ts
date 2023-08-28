@@ -2,6 +2,7 @@ import { writable } from "svelte/store";
 
 import { moveTaskAfter } from "$lib/repository/workspace";
 import {
+    createLabelSearch,
     createLabelSearchResults,
     currentWorkspaceLabels,
 } from "$lib/stores/dashboard";
@@ -20,7 +21,7 @@ export function createLabelSearchModule(
                   labelUuids: new Set(task.labels.map((l) => l.uuid)),
               }
             : { kind: "noLabel" };
-    const search = writable("");
+    const search = createLabelSearch();
     const selectOrDeselectLabel = (
         select: boolean,
         labelSelectionInput: LabelSelectionInput
