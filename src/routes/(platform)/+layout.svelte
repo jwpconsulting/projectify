@@ -5,7 +5,9 @@
     import HeaderDashboard from "$lib/figma/navigation/header/Dashboard.svelte";
     import ConstructiveOverlay from "$lib/figma/overlays/constructive/ConstructiveOverlay.svelte";
     import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
+    import MobileMenuOverlay from "$lib/figma/overlays/MobileMenuOverlay.svelte";
     import {
+        mobileMenuState,
         closeConstructiveOverlay,
         constructiveOverlayState,
         destructiveOverlayState,
@@ -17,7 +19,12 @@
     {#if $user}
         <HeaderDashboard user={$user} />
     {/if}
-    <slot />
+    <div class="relative h-full">
+        <slot />
+        <OverlayContainer fixed={false} store={mobileMenuState} let:target>
+            <MobileMenuOverlay {target} />
+        </OverlayContainer>
+    </div>
 </div>
 
 <ConnectionStatus />

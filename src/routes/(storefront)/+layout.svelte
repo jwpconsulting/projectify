@@ -1,6 +1,9 @@
 <script lang="ts">
+    import OverlayContainer from "$lib/components/OverlayContainer.svelte";
     import Continue from "$lib/figma/navigation/header/Continue.svelte";
     import Landing from "$lib/figma/navigation/header/Landing.svelte";
+    import MobileMenuOverlay from "$lib/figma/overlays/MobileMenuOverlay.svelte";
+    import { mobileMenuState } from "$lib/stores/globalUi";
     import { user } from "$lib/stores/user";
 </script>
 
@@ -10,5 +13,10 @@
     {:else}
         <Landing />
     {/if}
-    <slot />
+    <div class="relative">
+        <slot />
+        <OverlayContainer fixed={false} store={mobileMenuState} let:target>
+            <MobileMenuOverlay {target} />
+        </OverlayContainer>
+    </div>
 </div>

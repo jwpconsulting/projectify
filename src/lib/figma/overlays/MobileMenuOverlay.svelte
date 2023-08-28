@@ -2,7 +2,6 @@
     import { onMount } from "svelte";
     import { _ } from "svelte-i18n";
 
-    import HamburgerMenu from "$lib/figma/buttons/HamburgerMenu.svelte";
     import MobileMenu from "$lib/figma/overlays/MobileMenu.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { closeMobileMenu, handleEscape } from "$lib/stores/globalUi";
@@ -16,7 +15,6 @@
 </script>
 
 <div class="h-full w-full bg-foreground px-2 py-4" role="menu">
-    <HamburgerMenu action={closeMobileMenu} isActive />
     <div class="flex flex-col gap-8 p-4">
         <MobileMenu />
         {#if target.kind === "continue"}
