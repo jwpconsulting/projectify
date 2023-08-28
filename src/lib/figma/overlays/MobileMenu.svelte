@@ -2,6 +2,7 @@
     import { _ } from "svelte-i18n";
 
     import HeaderButton from "$lib/funabashi/buttons/HeaderButton.svelte";
+    import { closeMobileMenu } from "$lib/stores/globalUi";
 
     $: links = [
         { label: $_("header.features"), href: "/features" },
@@ -15,7 +16,11 @@
     {#each links as link}
         <div>
             <HeaderButton
-                action={{ kind: "a", href: link.href }}
+                action={{
+                    kind: "a",
+                    href: link.href,
+                    onInteract: closeMobileMenu,
+                }}
                 type={{ kind: "button" }}
                 label={link.label}
             />

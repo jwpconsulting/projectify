@@ -19,7 +19,14 @@
         <MobileMenu />
         {#if target.kind === "continue"}
             <Button
-                action={{ kind: "a", href: "/dashboard" }}
+                action={{
+                    kind: "a",
+                    href: "/dashboard",
+                    onInteract: () => {
+                        closeMobileMenu();
+                        console.log("closing");
+                    },
+                }}
                 style={{ kind: "primary" }}
                 color="blue"
                 disabled={false}
@@ -28,7 +35,11 @@
             />
         {:else if target.kind === "landing"}
             <Button
-                action={{ kind: "a", href: "/login" }}
+                action={{
+                    kind: "a",
+                    href: "/login",
+                    onInteract: closeMobileMenu,
+                }}
                 style={{ kind: "tertiary", icon: null }}
                 color="blue"
                 disabled={false}
@@ -36,7 +47,11 @@
                 label={$_("header.log-in")}
             />
             <Button
-                action={{ kind: "a", href: "/signup" }}
+                action={{
+                    kind: "a",
+                    href: "/signup",
+                    onInteract: closeMobileMenu,
+                }}
                 style={{ kind: "primary" }}
                 color="blue"
                 disabled={false}
