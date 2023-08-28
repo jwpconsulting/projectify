@@ -8,6 +8,15 @@
     import Boards from "$lib/figma/navigation/side-nav/Boards.svelte";
     import Members from "$lib/figma/navigation/side-nav/Members.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
+    import { createLabel as repositoryCreateLabel } from "$lib/repository/workspace";
+    import {
+        createLabelSearch,
+        createLabelSearchResults,
+        currentWorkspaceLabels,
+        deselectLabel,
+        selectLabel,
+        selectedLabels,
+    } from "$lib/stores/dashboard";
     import type {
         LabelSearchModule,
         WorkspaceUserSearchModule,
@@ -17,9 +26,29 @@
     export let workspaces: Workspace[];
     export let workspace: Workspace;
     export let workspaceUserSearchModule: WorkspaceUserSearchModule;
-    export let labelSearchModule: LabelSearchModule;
 
     export let open = true;
+
+    let labelSearchModule: LabelSearchModule;
+    // XXX
+    // Again, we need to make this using a factory thing somewhere
+    // Otherwise we duplicate code in 3 different locations (task creation,
+    // side nav, task updating)
+    // Justus 2023-05-02
+    const labelSearch = createLabelSearch();
+    $: labelSearchModule = {
+        select: selectLabel,
+        deselect: deselectLabel,
+        selected: selectedLabels,
+        search: labelSearch,
+        searchResults: createLabelSearchResults(
+            currentWorkspaceLabels,
+            labelSearch
+        ),
+        async createLabel(color: number, name: string) {
+            await repositoryCreateLabel(workspace, name, color);
+        },
+    };
 </script>
 
 {#if open}

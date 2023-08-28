@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 
 import {
     workspace,
-    labelSearchModule,
     mobileParameters,
     workspaceUserSearchModule,
 } from "$lib/storybook";
@@ -19,7 +18,6 @@ const meta: Meta<SideNav> = {
     args: {
         workspace,
         workspaceUserSearchModule,
-        labelSearchModule,
         open: true,
     },
     parameters: {
