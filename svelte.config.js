@@ -21,6 +21,14 @@ const config = {
             precompress: false,
             strict: true,
         }),
+        typescript: {
+            config(config) {
+                return {
+                    ...config,
+                    include: [...config.include, "../tailwind.config.ts"],
+                };
+            },
+        },
     },
 };
 

@@ -1,3 +1,5 @@
+import type { Config } from "tailwindcss";
+
 // Conflicting color name resolutions
 const conflictColors = {
     "foreground": "#FFFFFF",
@@ -89,7 +91,7 @@ const colors = {
     ...conflictColors,
 };
 
-module.exports = {
+const config: Config = {
     darkmode: "class",
     mode: "jit",
     content: ["./src/**/*.{json,html,js,svelte,ts}"],
@@ -141,6 +143,6 @@ module.exports = {
             "responsive",
         ],
     },
-
     plugins: [require("@tailwindcss/typography")],
 };
+export default config;
