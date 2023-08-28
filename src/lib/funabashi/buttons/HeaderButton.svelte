@@ -18,8 +18,8 @@
         type.kind === "dropdown" && type.open ? ChevronUp : ChevronDown;
 </script>
 
-{#if type.kind == "dropdown"}
-    {#if action.kind === "button"}
+{#if action.kind === "button"}
+    {#if type.kind === "dropdown"}
         <button
             on:click={action.action}
             on:keydown={action.action}
@@ -31,24 +31,18 @@
             <Icon src={dropdownButtonSrc} theme="outline" class="h-4 w-4" />
         </button>
     {:else}
-        <a href={action.href} class={dropdownClass}>
-            <div class="text-base font-bold capitalize">
+        <button
+            on:click={action.action}
+            on:keydown={action.action}
+            class={buttonClass}
+        >
+            <div class="text-base font-bold">
                 {label}
             </div>
-            <Icon src={dropdownButtonSrc} theme="outline" class="h-4 w-4" />
-        </a>
+        </button>
     {/if}
-{:else if action.kind === "button"}
-    <button
-        on:click={action.action}
-        on:keydown={action.action}
-        class={buttonClass}
-    >
-        <div class="text-base font-bold">
-            {label}
-        </div>
-    </button>
-{:else}
+{:else if action.kind === "a"}
+    <!-- we just ignore the dropdown case for now -->
     <a href={action.href} class={buttonClass}>
         <div class="text-base font-bold">
             {label}
