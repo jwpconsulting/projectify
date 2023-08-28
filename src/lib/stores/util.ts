@@ -78,6 +78,12 @@ export function searchAmong<T>(
     things: T[],
     searchText: string
 ): T[] {
+    // If there is nothing to search for, we return everything
+    // But it would be better if we had some kind of guaranteed non-empty
+    // string as an input here
+    if (searchText.length === 0) {
+        return things;
+    }
     const searchEngine = new Fuse<T>(things, {
         keys: keys,
         threshold: fuseSearchThreshold,
