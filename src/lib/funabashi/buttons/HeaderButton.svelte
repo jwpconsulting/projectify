@@ -3,7 +3,6 @@
     import { Icon } from "@steeze-ui/svelte-icon";
 
     import type { ButtonAction, HeaderButtonType } from "$lib/funabashi/types";
-    import { filterKey } from "$lib/stores/globalUi";
 
     export let label: string;
     export let type: HeaderButtonType;
@@ -20,11 +19,7 @@
 
 {#if action.kind === "button"}
     {#if type.kind === "dropdown"}
-        <button
-            on:click={action.action}
-            on:keydown={action.action}
-            class={dropdownClass}
-        >
+        <button on:click={action.action} class={dropdownClass}>
             <div class="text-base font-bold capitalize">
                 {label}
             </div>
@@ -43,12 +38,7 @@
     {/if}
 {:else if action.kind === "a"}
     <!-- we just ignore the dropdown case for now -->
-    <a
-        href={action.href}
-        class={buttonClass}
-        on:click={action.onInteract}
-        on:keydown={action.onInteract && filterKey("Enter", action.onInteract)}
-    >
+    <a href={action.href} class={buttonClass} on:click={action.onInteract}>
         <div class="text-base font-bold">
             {label}
         </div>
