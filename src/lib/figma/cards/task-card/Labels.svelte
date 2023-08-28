@@ -31,7 +31,9 @@
 </script>
 
 {#if task.labels.length}
-    <LabelList editable={false} labels={task.labels} />
+    <div class="flex flex-row overflow-x-scroll">
+        <LabelList editable={false} labels={task.labels} />
+    </div>
 {:else}
     <div class="p-0.5">
         <button
