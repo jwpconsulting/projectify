@@ -11,12 +11,14 @@
     let btnRef: HTMLElement;
 </script>
 
-<div class="flex flex-row items-center gap-4">
+<div class="flex flex-row items-center">
     {#each labels as label}
-        <LabelC
-            label={{ kind: "label", label }}
-            action={action ? action.bind(null, btnRef) : undefined}
-        />
+        <div class="shrink-0">
+            <LabelC
+                label={{ kind: "label", label }}
+                action={action ? action.bind(null, btnRef) : undefined}
+            />
+        </div>
     {:else}
         {$_("task-screen.no-labels")}
     {/each}
