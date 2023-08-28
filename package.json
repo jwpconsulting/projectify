@@ -7,6 +7,7 @@
         "package": "vite package",
         "preview": "vite preview --port 3000",
         "check": "npm run lint && npm run svelte-check && npm run eslint",
+        "fix": "npm run format && npm run eslint-fix && npm run svelte-check",
         "svelte-check": "svelte-check --tsconfig tsconfig.json --diagnostic-sources js,svelte",
         "svelte-check:watch": "svelte-check --tsconfig tsconfig.json --diagnostic-sources js,svelte --watch",
         "eslint": "eslint . --cache --ext .ts,.js,.svelte src",
