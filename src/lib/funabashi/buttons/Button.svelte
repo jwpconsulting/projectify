@@ -7,6 +7,7 @@
         ButtonSize,
         ButtonStyle,
     } from "$lib/funabashi/types";
+    import { filterKey } from "$lib/stores/globalUi";
 
     export let style: ButtonStyle;
     export let color: ButtonColor;
@@ -68,7 +69,13 @@
 
 {#if style.kind === "tertiary"}
     {#if action.kind === "a"}
-        <a href={action.href} class={outerStyle}>
+        <a
+            href={action.href}
+            class={outerStyle}
+            on:click={action.onInteract}
+            on:keydown={action.onInteract &&
+                filterKey("Enter", action.onInteract)}
+        >
             {#if style.icon && style.icon.position === "left"}
                 <Icon
                     src={style.icon.icon}
@@ -116,7 +123,7 @@
         href={action.href}
         class={outerStyle}
         on:click={action.onInteract}
-        on:keydown={action.onInteract}
+        on:keydown={action.onInteract && filterKey("Enter", action.onInteract)}
     >
         <div class={innerStyle}>
             {label}

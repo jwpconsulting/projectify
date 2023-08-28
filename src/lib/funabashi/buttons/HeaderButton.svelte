@@ -3,6 +3,7 @@
     import { Icon } from "@steeze-ui/svelte-icon";
 
     import type { ButtonAction, HeaderButtonType } from "$lib/funabashi/types";
+    import { filterKey } from "$lib/stores/globalUi";
 
     export let label: string;
     export let type: HeaderButtonType;
@@ -46,7 +47,7 @@
         href={action.href}
         class={buttonClass}
         on:click={action.onInteract}
-        on:keydown={action.onInteract}
+        on:keydown={action.onInteract && filterKey("Enter", action.onInteract)}
     >
         <div class="text-base font-bold">
             {label}
