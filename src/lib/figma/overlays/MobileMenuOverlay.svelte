@@ -4,13 +4,13 @@
 
     import MobileMenu from "$lib/figma/overlays/MobileMenu.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import { closeMobileMenu, handleEscape } from "$lib/stores/globalUi";
+    import { closeMobileMenu, handleKey } from "$lib/stores/globalUi";
     import type { MobileMenuType } from "$lib/types/ui";
 
     export let target: MobileMenuType;
     onMount(() => {
         console.log("TODO", target);
-        return handleEscape(closeMobileMenu);
+        return handleKey("Escape", closeMobileMenu);
     });
 </script>
 

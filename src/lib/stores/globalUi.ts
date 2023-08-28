@@ -172,11 +172,16 @@ export function closeContextMenu() {
     });
 }
 
-type EscapeCallback = (e: KeyboardEvent) => void;
+type KeyCallback = (e: KeyboardEvent) => void;
 type Unsubscriber = () => void;
-export function handleEscape(callback: EscapeCallback): Unsubscriber {
+// Let's whitelist keys we'd like to handle for now
+type KeyboardKey = "Escape" | "Enter";
+export function handleKey(
+    key: KeyboardKey,
+    callback: KeyCallback
+): Unsubscriber {
     const listener = (e: KeyboardEvent) => {
-        if (e.key !== "Escape") {
+        if (e.key !== key) {
             return;
         }
         callback(e);
