@@ -114,7 +114,7 @@ export function closeConstructiveOverlay() {
 export function openMobileMenu(type: MobileMenuType) {
     openOverlay(_mobileMenuState, type, {
         kind: "sync",
-        action: console.error.bind(null, "Shouldn't be called TODO"),
+        action: undefined,
     });
 }
 

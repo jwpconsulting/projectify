@@ -75,7 +75,7 @@ export type MobileMenuType =
     | { kind: "dashboard" }
     | { kind: "continue" };
 
-export type Overlay<Target, Action> =
+export type Overlay<Target, Action = undefined> =
     | { kind: "hidden" }
     | {
           kind: "visible";
@@ -94,7 +94,7 @@ export type DestructiveOverlayState = Overlay<
     OverlayAction
 >;
 
-export type MobileMenuState = Overlay<MobileMenuType, OverlayAction>;
+export type MobileMenuState = Overlay<MobileMenuType>;
 
 export type ContextMenuType =
     | { kind: "profile" }
