@@ -80,20 +80,18 @@
             <div class="flex flex-row items-center justify-end gap-2">
                 <div class="flex flex-row items-center gap-2">
                     <WorkspaceUser {task} />
-                    <div>
-                        <div class="flex flex-row items-center">
-                            <Chevrons
-                                {task}
-                                {isFirst}
-                                {isLast}
-                                {workspaceBoardSection}
-                            />
-                            <MenuButton
-                                {task}
-                                {workspaceBoardSection}
-                                {moveTaskModule}
-                            />
-                        </div>
+                    <div class="flex flex-row items-center">
+                        <Chevrons
+                            {task}
+                            {isFirst}
+                            {isLast}
+                            {workspaceBoardSection}
+                        />
+                        <MenuButton
+                            {task}
+                            {workspaceBoardSection}
+                            {moveTaskModule}
+                        />
                     </div>
                 </div>
             </div>
