@@ -1,10 +1,8 @@
-import Fuse from "fuse.js";
 import { derived, writable } from "svelte/store";
 import type { Readable } from "svelte/store";
 
-import { fuseSearchThreshold } from "$lib/config";
-
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
+import { searchAmong } from "$lib/stores/util";
 import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
 import type { Label } from "$lib/types/workspace";
 
@@ -27,21 +25,16 @@ export const currentWorkspaceLabels: CurrentWorkspaceLabels = derived<
     []
 );
 // LabelSearch and Selection
-function searchLabels(labels: Label[], searchInput: string): Label[] {
-    if (searchInput === "") {
+type SearchInput = string | undefined;
+function searchLabels(labels: Label[], searchInput: SearchInput): Label[] {
+    if (searchInput === undefined) {
         return labels;
     }
-    const searchEngine = new Fuse(labels, {
-        keys: ["name"],
-        threshold: fuseSearchThreshold,
-        shouldSort: false,
-    });
-    const result = searchEngine.search(searchInput);
-    return result.map((res: Fuse.FuseResult<Label>) => res.item);
+    return searchAmong(["name"], labels, searchInput);
 }
 
-type LabelSearch = Readable<string>;
-export const createLabelSearch = () => writable<string>("");
+type LabelSearch = Readable<SearchInput>;
+export const createLabelSearch = () => writable<string>(undefined);
 
 type LabelSearchResults = Readable<Label[]>;
 
