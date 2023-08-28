@@ -2,8 +2,7 @@
     import { ChevronDown, ChevronUp } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
 
-    import type { ButtonAction } from "$lib/figma/types";
-    import type { HeaderButtonType } from "$lib/funabashi/types";
+    import type { ButtonAction, HeaderButtonType } from "$lib/funabashi/types";
 
     export let label: string;
     export let type: HeaderButtonType;
@@ -43,7 +42,12 @@
     {/if}
 {:else if action.kind === "a"}
     <!-- we just ignore the dropdown case for now -->
-    <a href={action.href} class={buttonClass}>
+    <a
+        href={action.href}
+        class={buttonClass}
+        on:click={action.onInteract}
+        on:keydown={action.onInteract}
+    >
         <div class="text-base font-bold">
             {label}
         </div>
