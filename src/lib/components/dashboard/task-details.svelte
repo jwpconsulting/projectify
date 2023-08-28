@@ -15,25 +15,19 @@
     import IconClose from "$lib/components/icons/icon-close.svelte";
     import IconTrash from "$lib/components/icons/icon-trash.svelte";
     import Loading from "$lib/components/loading.svelte";
-    import UserPicker from "$lib/components/userPicker.svelte";
     import { client } from "$lib/graphql/client";
     import {
         Mutation_AddTask,
         Mutation_UpdateTask,
     } from "$lib/graphql/operations";
-    import { assignUserToTask, deleteTask } from "$lib/repository/workspace";
+    import { deleteTask } from "$lib/repository/workspace";
     import {
         currentTask,
         currentTaskUuid,
         newTaskSectionUuid,
         currentWorkspaceBoardUuid,
     } from "$lib/stores/dashboard";
-    import type {
-        Label,
-        SubTask,
-        Task,
-        WorkspaceUser,
-    } from "$lib/types/workspace";
+    import type { Label, SubTask, Task } from "$lib/types/workspace";
 
     let task: Task | null = null;
     let loading = true;
@@ -168,8 +162,6 @@
             }
         }
 
-        await saveTaskAssignment();
-
         isSaving = false;
     }
 
@@ -178,43 +170,6 @@
             throw new Error("Expected task");
         }
         deleteTask(task);
-    }
-
-    let userPickerOpen = false;
-    let userPicked = false;
-    function onUserSelected({
-        detail: { user },
-    }: {
-        detail: { user: WorkspaceUser | null };
-    }) {
-        if (!task) {
-            throw new Error("Expected task");
-        }
-        userPickerOpen = false;
-        if (user?.user.email == task.assignee?.user.email) {
-            task.assignee = undefined;
-        } else if (user) {
-            task.assignee = user;
-        } else {
-            throw new Error("Expected user");
-        }
-
-        userPicked = true;
-
-        saveTaskAssignment();
-    }
-
-    async function saveTaskAssignment() {
-        if (!userPicked) {
-            return;
-        }
-        if (!$currentTaskUuid) {
-            return;
-        }
-
-        const userEmail = task?.assignee?.user.email;
-        await assignUserToTask(userEmail ? userEmail : null, $currentTaskUuid);
-        userPicked = false;
     }
 </script>
 
@@ -233,12 +188,7 @@
             <TaskDetailsBreadcrumbs {task} />
         </div>
         <header class="relative mb-2 flex items-center gap-4 bg-base-100 p-4">
-            <a
-                href="/"
-                class="flex items-center justify-center"
-                on:click|preventDefault={() =>
-                    (userPickerOpen = !userPickerOpen)}
-            >
+            <a href="/" class="flex items-center justify-center">
                 {#if task.assignee}
                     TODO: A user profile picture may be shown here
                 {:else}
@@ -275,14 +225,6 @@
                 class="btn btn-primary btn-md shrink-0"
                 on:click={() => save()}>{$_("save")}</button
             >
-            {#if userPickerOpen}
-                <div class="absolute left-2 right-20 top-20 z-10 max-w-md">
-                    <UserPicker
-                        selectedUser={task.assignee}
-                        on:userSelected={onUserSelected}
-                    />
-                </div>
-            {/if}
         </header>
 
         <TaskDetailsContent {task} />
