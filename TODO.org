@@ -29,6 +29,22 @@
 
 * Bug
 
+** TODO Mobile menu overlay not closing consistently
+   <2023-08-28 Mon>
+   When clicking on the "continue to dashboard" link when logged in, the mobile
+   menu does not close consistently. Why is this? Adding an on:click handler to
+   the menu might solve the issue, somewhat, but it requires us messing around
+   with aria roles and feels hacky.
+
+   - Why does clicking on an anchor not reset everything?
+   - Could it be because our app issues redirects in a weird way that the
+     browser remembers?
+
+   In the network tab I was not able to see any requests fired when clicking on
+   the continue to dashboard link, from time to time.
+
+   Need to investigate further.
+
 ** Step count is not shown during onboarding
    Justus <2023-08-02>
 
