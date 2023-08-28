@@ -1,4 +1,4 @@
-import type { Writable } from "svelte/store";
+import { get, type Writable } from "svelte/store";
 
 import { internallyWritable } from "$lib/stores/util";
 import type {
@@ -120,6 +120,28 @@ export function openMobileMenu(type: MobileMenuType) {
 
 export function closeMobileMenu() {
     closeOverlay(_mobileMenuState);
+}
+
+export function toggleMobileMenu(type: MobileMenuType) {
+    // Not the store that we need, but the store that we deserve
+    // Cleaner to do with .update(), but then we would need to write it like
+    // this:
+    // _mobileMenuState.update(() => {
+    //     debugger;
+    //     if ($mobileMenuState.kind === "hidden") {
+    //         openMobileMenu(type);
+    //     } else {
+    //         closeMobileMenu();
+    //     }
+    //     // XXX here we overwrite the state :(
+    //     return $mobileMenuState;
+    // });
+    const $mobileMenuState = get(_mobileMenuState);
+    if ($mobileMenuState.kind === "hidden") {
+        openMobileMenu(type);
+    } else {
+        closeMobileMenu();
+    }
 }
 
 const { priv: _contextMenuState, pub: contextMenuState } =

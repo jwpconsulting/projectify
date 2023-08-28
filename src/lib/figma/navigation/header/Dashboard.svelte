@@ -5,7 +5,7 @@
     import SearchMobile from "$lib/figma/buttons/SearchMobile.svelte";
     import UserAccount from "$lib/figma/buttons/UserAccount.svelte";
     import HeaderUniversal from "$lib/figma/navigation/header/HeaderUniversal.svelte";
-    import { openMobileMenu } from "$lib/stores/globalUi";
+    import { toggleMobileMenu } from "$lib/stores/globalUi";
     import type { User } from "$lib/types/user";
 
     export let user: User;
@@ -30,7 +30,7 @@
         <div class="flex flex-row gap-4">
             <HamburgerMenu
                 isActive
-                action={() => openMobileMenu({ kind: "dashboard" })}
+                action={() => toggleMobileMenu({ kind: "dashboard" })}
             />
             {#if showSearch}
                 <SearchMobile />

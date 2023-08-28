@@ -5,7 +5,7 @@
     import HeaderUniversal from "$lib/figma/navigation/header/HeaderUniversal.svelte";
     import Links from "$lib/figma/navigation/header/Links.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import { openMobileMenu } from "$lib/stores/globalUi";
+    import { toggleMobileMenu } from "$lib/stores/globalUi";
 </script>
 
 <HeaderUniversal logoVisibleDesktop logoVisibleMobile>
@@ -34,7 +34,7 @@
     </slot>
     <div slot="mobile">
         <HamburgerMenu
-            action={() => openMobileMenu({ kind: "landing" })}
+            action={() => toggleMobileMenu({ kind: "landing" })}
             isActive
         />
     </div>
