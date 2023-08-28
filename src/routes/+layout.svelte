@@ -1,6 +1,5 @@
 <script lang="ts">
     import "../app.scss";
-    import "$lib/i18n";
 </script>
 
 <svelte:head>
