@@ -36,7 +36,9 @@
     }
 </script>
 
-<div class="flex min-h-full grow flex-col bg-base-200">
+<!-- XXX: setting overflow-x-auto here magically solves an overflowing task card
+    Why? Justus 2023-08-28 -->
+<div class="flex min-h-full flex-auto flex-col overflow-x-auto bg-base-200">
     {#if $currentSearchedTasks}
         <!-- Flat Tasks Results -->
         {#if $currentSearchedTasks.length}
