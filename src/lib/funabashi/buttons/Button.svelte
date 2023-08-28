@@ -112,7 +112,12 @@
         Not supported
     {/if}
 {:else if action.kind === "a"}
-    <a href={action.href} class={outerStyle}>
+    <a
+        href={action.href}
+        class={outerStyle}
+        on:click={action.onInteract}
+        on:keydown={action.onInteract}
+    >
         <div class={innerStyle}>
             {label}
         </div>

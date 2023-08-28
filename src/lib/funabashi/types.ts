@@ -1,8 +1,10 @@
 import type { IconSource } from "@steeze-ui/svelte-icon/types";
 
 // For all buttons
+// Using an additional onInteract property, we can catch clicking on an anchor
+// and close a menu in time. Not guaranteed to be supported by all components.
 export type ButtonAction =
-    | { kind: "a"; href: string }
+    | { kind: "a"; href: string; onInteract?: () => void }
     | { kind: "button"; action: () => void }
     | { kind: "submit" };
 
@@ -10,6 +12,7 @@ export type ButtonAction =
 export type ButtonStyle =
     | { kind: "primary" }
     | { kind: "secondary" }
+    // TODO make this icon? instead Justus 2023-08-28
     | { kind: "tertiary"; icon: { position: "left"; icon: IconSource } }
     | { kind: "tertiary"; icon: { position: "right"; icon: IconSource } }
     | { kind: "tertiary"; icon: null };
