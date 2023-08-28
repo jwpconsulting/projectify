@@ -60,6 +60,33 @@
 
 * Refactor
 
+** TODO Remove focus outlines
+   <2023-08-28 Mon>
+   The thought process is that users who rely on focus outlines the most are
+   those who use keyboards etc to navigate pages for, amongst other,
+   accessiblity reasons.
+
+   When we use our own styling, we deviate from the browser default. The browser
+   default is most likely what our users are already used to, given that they
+   use the browser they use to access Projectify for other applications.
+   For us, having consistent styling for focus outlines means that users
+   using the app in different browsers will experience a consistent experience.
+
+   But how often does that happen? Most likely, a user sticks with one browser,
+   and those who use multiple browsers on a daily base and overlap
+   venn-diagram-speaking with keyboard users already know what they are doing
+   in the first place.
+
+   We can therefore safely say that we can get rid of custom styled focus
+   states, since it will not affect users in a negative way, even when
+   considering a11y.
+
+   Furthermore, we've been having some quality issues with focus states not
+   styled correctly and debugging and fixing these issues takes too much time
+   away from focusing (lol) on real app development.
+
+   https://www.tjvantoll.com/2013/01/28/stop-messing-with-the-browsers-default-focus-outline/
+
 ** TODO Change OverlayContainer to accept overlay as slto
    <2023-08-27 Sun>
    This is more sveltonic?
