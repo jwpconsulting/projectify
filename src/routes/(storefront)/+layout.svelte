@@ -13,10 +13,10 @@
     {:else}
         <Landing />
     {/if}
-    <div class="relative">
-        <slot />
+    <div class="relative h-full">
         <OverlayContainer fixed={false} store={mobileMenuState} let:target>
-            <MobileMenuOverlay {target} />
+            <MobileMenuOverlay slot="default" {target} />
+            <slot slot="else" />
         </OverlayContainer>
     </div>
 </div>

@@ -20,9 +20,9 @@
         <HeaderDashboard user={$user} />
     {/if}
     <div class="relative h-full">
-        <slot />
         <OverlayContainer fixed={false} store={mobileMenuState} let:target>
             <MobileMenuOverlay {target} />
+            <slot slot="else" />
         </OverlayContainer>
     </div>
 </div>

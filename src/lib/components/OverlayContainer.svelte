@@ -8,6 +8,11 @@
     export let fixed = true;
 </script>
 
+{#if $$slots.else}
+    <div class="h-full" class:hidden={$store.kind !== "hidden"}>
+        <slot name="else" />
+    </div>
+{/if}
 {#if $store.kind === "visible"}
     <div
         class="left-0 flex items-center justify-center bg-black/50"
