@@ -36,7 +36,7 @@
     }
 </script>
 
-<div class="relative flex h-full min-h-full grow flex-col bg-base-200">
+<div class="flex min-h-full grow flex-col bg-base-200">
     {#if $currentSearchedTasks}
         <!-- Flat Tasks Results -->
         {#if $currentSearchedTasks.length}

@@ -66,7 +66,7 @@
     };
 </script>
 
-<div class="flex grow flex-row">
+<div class="flex h-full grow flex-row">
     <SideNav
         open={$sideNavOpen}
         {workspaces}
