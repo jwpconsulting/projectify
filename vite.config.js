@@ -4,14 +4,9 @@ import { sveltekit } from "@sveltejs/kit/vite";
 const config = {
     plugins: [sveltekit()],
     esbuild: {
+        // It could be useful to drop console etc. here using the following
+        // config
         // drop: ["console", "debugger"],
-    },
-    css: {
-        preprocessorOptions: {
-            scss: {
-                additionalData: '@use "src/variables.scss" as *;',
-            },
-        },
     },
     build: {
         target: ["es2020"],
