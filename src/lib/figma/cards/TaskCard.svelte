@@ -49,14 +49,10 @@
                 </div>
             </div>
             <div class="flex flex-row justify-between">
-                <div
-                    class="col-span-3 flex flex-shrink flex-row overflow-x-auto sm:col-span-4"
-                >
+                <div class="flex flex-row overflow-x-auto">
                     <Labels {task} />
                 </div>
-                <div
-                    class="col-span-3 flex flex-row justify-self-end sm:col-span-2"
-                >
+                <div class="flex flex-row justify-self-end">
                     <div class="flex flex-row items-center gap-4">
                         <SubTaskProgress {task} />
                     </div>

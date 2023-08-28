@@ -31,7 +31,7 @@
 </script>
 
 {#if task.labels.length}
-    <div class="flex flex-row overflow-x-scroll">
+    <div class="flex flex-row">
         <LabelList editable={false} labels={task.labels} />
     </div>
 {:else}

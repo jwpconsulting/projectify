@@ -40,13 +40,13 @@
     {#if $currentSearchedTasks}
         <!-- Flat Tasks Results -->
         {#if $currentSearchedTasks.length}
-            <div class="flex grow flex-col overflow-y-auto p-2">
+            <div class="flex flex-col p-2">
                 {#each $currentSearchedTasks as task}
                     <TaskCard {task} />
                 {/each}
             </div>
         {:else}
-            <div class="flex grow items-center justify-center">
+            <div class="flex items-center justify-center">
                 <div class="rounded-md bg-base-100 p-6 shadow-sm">
                     {$_("tasks-not-found-for")} "{$taskSearchInput}"
                 </div>
@@ -54,7 +54,7 @@
         {/if}
     {:else}
         <!-- Sections -->
-        <div class="flex grow flex-col gap-16 overflow-y-auto p-2">
+        <div class="flex flex-col gap-16 p-2">
             {#each $currentWorkspaceBoardSections as workspaceBoardSection (workspaceBoardSection.uuid)}
                 <SectionBar {workspaceBoard} {workspaceBoardSection} />
             {:else}
