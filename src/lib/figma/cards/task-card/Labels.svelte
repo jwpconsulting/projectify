@@ -1,27 +1,26 @@
 <script lang="ts">
     // This is a partial used inside TaskCard
     // The label picker is TODO
-    import { readable, writable } from "svelte/store";
     import { _ } from "svelte-i18n";
 
     import LabelList from "$lib/components/dashboard/LabelList.svelte";
+    import { assignLabelToTask } from "$lib/repository/workspace";
     import { openContextMenu } from "$lib/stores/globalUi";
+    import { createLabelSearchModule } from "$lib/stores/modules";
     import type { LabelSearchModule } from "$lib/types/stores";
-    import type { ContextMenuType, LabelSelection } from "$lib/types/ui";
+    import type { ContextMenuType } from "$lib/types/ui";
     import type { Task } from "$lib/types/workspace";
 
     export let task: Task;
     let labelPickerBtnRef: HTMLElement;
 
     function openLabelPicker() {
-        const selected = readable<LabelSelection>({ kind: "noLabel" });
-        const labelSearchModule: LabelSearchModule = {
-            select: console.log.bind(null, "Label has been selected"),
-            deselect: console.log.bind(null, "Label has been deselected"),
-            selected,
-            search: writable(""),
-            searchResults: readable([]),
-        };
+        const labelSearchModule: LabelSearchModule = createLabelSearchModule(
+            task,
+            (labelUuid: string, selected: boolean) => {
+                assignLabelToTask(task, labelUuid, selected);
+            }
+        );
         const contextMenuType: ContextMenuType = {
             kind: "updateLabel",
             labelSearchModule,
