@@ -4,7 +4,14 @@ import TaskDescription from "$lib/figma/screens/task/TaskDescription.svelte";
 
 const meta: Meta<TaskDescription> = {
     component: TaskDescription,
-    argTypes: {},
+    argTypes: {
+        description: { control: "text" },
+        readonly: { control: "boolean" },
+    },
+    args: {
+        description: "This is a description",
+        readonly: false,
+    },
 };
 export default meta;
 
