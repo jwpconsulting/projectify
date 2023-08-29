@@ -8,7 +8,6 @@
     import { getDashboardTaskUrl } from "$lib/urls";
 
     import { page } from "$app/stores";
-    import TaskDetailsContent from "$lib/components/dashboard/task-details-content.svelte";
     import TaskDetailsDiscussion from "$lib/components/dashboard/task-details-discussion.svelte";
     import ToolBar from "$lib/components/dashboard/toolBar.svelte";
     import IconClose from "$lib/components/icons/icon-close.svelte";
@@ -225,7 +224,6 @@
             >
         </header>
 
-        <TaskDetailsContent {task} />
         <TaskDetailsDiscussion {task} />
     </div>
 {/if}
