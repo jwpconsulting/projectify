@@ -55,9 +55,6 @@ export type SelectLabel =
 export const filterLabelMenuStates = ["list", "create"] as const;
 export type FilterLabelMenuState = (typeof filterLabelMenuStates)[number];
 
-export const anchorSizes = ["extraSmall", "normal", "large"] as const;
-export type AnchorSize = (typeof anchorSizes)[number];
-
 export const taskUpdateBarKinds = ["mobile", "desktop"] as const;
 export type TaskUpdateBarKind = (typeof taskUpdateBarKinds)[number];
 export const taskUpdateBarStates = ["task", "updates"] as const;

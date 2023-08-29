@@ -1,10 +1,6 @@
 <script lang="ts">
     const links = [
         {
-            title: "Typography",
-            href: "/storybook/typography",
-        },
-        {
             title: "Buttons",
             href: "/storybook/buttons",
         },

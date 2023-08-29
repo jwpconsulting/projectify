@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { AnchorSize } from "$lib/figma/types";
+    import type { AnchorSize } from "$lib/funabashi/types";
 
     export let href: string;
     export let label: string;
@@ -8,6 +8,7 @@
     let anchorClass: string;
     $: anchorClass = {
         extraSmall: "text-xs",
+        small: "text-sm",
         normal: "text-base",
         large: "text-lg",
     }[size];

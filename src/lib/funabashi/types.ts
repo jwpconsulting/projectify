@@ -1,5 +1,8 @@
 import type { IconSource } from "@steeze-ui/svelte-icon/types";
 
+export const anchorSizes = ["extraSmall", "small", "normal", "large"] as const;
+export type AnchorSize = (typeof anchorSizes)[number];
+
 // For all buttons
 // Using an additional onInteract property, we can catch clicking on an anchor
 // and close a menu in time. Not guaranteed to be supported by all components.
