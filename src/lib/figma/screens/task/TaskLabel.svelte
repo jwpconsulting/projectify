@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
-
     import LabelC from "$lib/figma/buttons/Label.svelte";
     import type { Label } from "$lib/types/workspace";
 
@@ -19,8 +17,6 @@
                 action={action ? action.bind(null, btnRef) : undefined}
             />
         </div>
-    {:else}
-        {$_("task-screen.no-labels")}
     {/each}
     {#if action}
         <div bind:this={btnRef}>

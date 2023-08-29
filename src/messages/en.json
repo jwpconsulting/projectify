@@ -318,7 +318,6 @@
         "new-task-name": "New task name",
         "description": "Description",
         "labels": "Labels",
-        "no-labels": "No labels assigned",
         "section": "Section",
         "select-due-date": "Select due date",
         "no-due-date": "No due date",
