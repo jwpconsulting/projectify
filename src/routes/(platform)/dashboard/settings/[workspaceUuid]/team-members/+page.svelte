@@ -4,9 +4,7 @@
 
     import { fuseSearchThreshold } from "$lib/config";
 
-    import DropdownButton from "$lib/components/dropdown-button.svelte";
     import IconEdit from "$lib/components/icons/icon-edit.svelte";
-    import IconLockClosed from "$lib/components/icons/icon-lock-closed.svelte";
     import IconTrash from "$lib/components/icons/icon-trash.svelte";
     import SearchInput from "$lib/components/search-input.svelte";
     import {
@@ -119,10 +117,7 @@
         bind:inputElement={searchFieldEl}
         bind:searchText
     />
-    <DropdownButton
-        label={roleFilter ? $_(roleFilter) : "Filter by role"}
-        icon={IconLockClosed}
-    />
+    <!-- TODO show dropdown button here? -->
 </div>
 <div class="divide-y divide-base-300">
     <table class="w-full table-auto">
