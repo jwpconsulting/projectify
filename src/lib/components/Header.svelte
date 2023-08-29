@@ -5,7 +5,6 @@
     import routes from "$lib/routes";
 
     import { page } from "$app/stores";
-    import HeaderUser from "$lib/components/headerUser.svelte";
     import IconHamburgerMenu from "$lib/components/icons/icon-hamburger-menu.svelte";
     import { user } from "$lib/stores/user";
 
@@ -122,9 +121,5 @@
                 {/each}
             </ul>
         </nav>
-
-        <div class="flex flex-row items-center gap-7">
-            <HeaderUser />
-        </div>
     </header>
 {/if}
