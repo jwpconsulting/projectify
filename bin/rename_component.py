@@ -94,7 +94,17 @@ def process_line(ctx: ReplacementContext, line: str) -> str:
 
     line2 = line.replace(src_import_stmt, dst_import_stmt)
     line3 = re.sub(src_tag, dst_tag, line2)
-    return line3
+
+    src_story_stuff = rf"(?P<prefix>Meta|StoryObj)<{ctx.src_component_name}>"
+    dst_story_stuff = rf"\g<prefix><{ctx.dst_component_name}>"
+
+    line4 = re.sub(src_story_stuff, dst_story_stuff, line3)
+
+    src_component = f"component: {ctx.src_component_name}"
+    dst_component = f"component: {ctx.dst_component_name}"
+
+    line5 = line4.replace(src_component, dst_component)
+    return line5
 
 
 def create_diffs(
