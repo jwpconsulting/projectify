@@ -40,12 +40,14 @@
         class:bg-task-hover={user !== null}
     >
         <AvatarVariant size="small" content={avatarContent} />
-        {#if user}
-            {displayName}
-        {:else if action}
-            {$_("dashboard.assign-user")}
-        {:else}
-            {$_("dashboard.no-user-assigned")}
-        {/if}
+        <div class="line-clamp-1 overflow-hidden">
+            {#if user}
+                {displayName}
+            {:else if action}
+                {$_("dashboard.assign-user")}
+            {:else}
+                {$_("dashboard.no-user-assigned")}
+            {/if}
+        </div>
     </div>
 </button>
