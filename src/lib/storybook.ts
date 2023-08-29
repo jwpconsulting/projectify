@@ -258,7 +258,6 @@ export const createMoveTaskModule = (
 type ArgTypeOption<T> = Record<string, T>;
 
 interface ArgType<T> {
-    defaultValue: string;
     options: string[];
     mapping: Record<string, T>;
     control: {
@@ -284,7 +283,6 @@ export function makeStorybookSelect<T>(choices: ArgTypeOption<T>): ArgType<T> {
         Object.entries(choices).map(([k, v]) => [slugify(k), v])
     );
     return {
-        defaultValue: options[0],
         options,
         mapping,
         control: {

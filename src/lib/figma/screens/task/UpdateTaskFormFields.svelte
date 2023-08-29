@@ -2,9 +2,9 @@
     // TODO rename to UpdateTaskFormFields.svelte
     import SubTaskBarComposite from "$lib/figma/screens/task/SubTaskBarComposite.svelte";
     import TaskFieldsTemplate from "$lib/figma/screens/task/TaskFieldsTemplate.svelte";
+    import TaskLabel from "$lib/figma/screens/task/TaskLabel.svelte";
     import TaskUpdateDescription from "$lib/figma/screens/task/TaskUpdateDescription.svelte";
     import TaskUpdateDueDate from "$lib/figma/screens/task/TaskUpdateDueDate.svelte";
-    import TaskUpdateLabel from "$lib/figma/screens/task/TaskUpdateLabel.svelte";
     import TaskUpdateSection from "$lib/figma/screens/task/TaskUpdateSection.svelte";
     import TaskUpdateTitle from "$lib/figma/screens/task/TaskUpdateTitle.svelte";
     import TaskUpdateUser from "$lib/figma/screens/task/TaskUpdateUser.svelte";
@@ -55,11 +55,7 @@
         action={taskModule.showUpdateWorkspaceUser}
         workspaceUser={assignedUser}
     />
-    <TaskUpdateLabel
-        slot="labels"
-        action={taskModule.showUpdateLabel}
-        {labels}
-    />
+    <TaskLabel slot="labels" action={taskModule.showUpdateLabel} {labels} />
     <TaskUpdateSection slot="section" {workspaceBoardSection} />
     <TaskUpdateDueDate slot="due-date" date={dueDate} />
     <TaskUpdateDescription slot="description" bind:description />
