@@ -1,7 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    // import Label from "$lib/figma/...";
     import DueDateWarning from "$lib/figma/buttons/DueDateWarning.svelte";
     import SectionLocationState from "$lib/figma/screens/task/SectionLocationState.svelte";
 
