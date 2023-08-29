@@ -5,7 +5,6 @@
     import routes from "$lib/routes";
 
     import { page } from "$app/stores";
-    import HeaderLogo from "$lib/components/assets/headerLogo.svelte";
     import HeaderButtons from "$lib/components/header-buttons.svelte";
     import HeaderUser from "$lib/components/headerUser.svelte";
     import IconHamburgerMenu from "$lib/components/icons/icon-hamburger-menu.svelte";
@@ -82,9 +81,6 @@
         class:shadow-lg={!scrollToTop}
     >
         <div class="container flex items-center">
-            <a href="/" class="mr-8 flex">
-                <HeaderLogo />
-            </a>
             <nav class="hidden grow md:flex">
                 <ul class="flex">
                     {#each items as it}
@@ -115,9 +111,6 @@
     <header
         class="sticky top-0 z-10 flex h-[80px] items-center border-b border-base-300 bg-base-100 p-4"
     >
-        <a href="/" class="mr-8 flex">
-            <HeaderLogo />
-        </a>
         <nav class="grow">
             <ul class="flex">
                 {#each items as it}
