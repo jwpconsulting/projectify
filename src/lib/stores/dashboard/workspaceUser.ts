@@ -1,14 +1,17 @@
-import { derived, writable } from "svelte/store";
+import { derived, readable, writable } from "svelte/store";
 import type { Readable, Writable } from "svelte/store";
 
+import { assignUserToTask } from "$lib/repository/workspace";
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 import { internallyWritable, searchAmong } from "$lib/stores/util";
 import type { SearchInput } from "$lib/types/base";
+import type { WorkspaceUserSearchModule } from "$lib/types/stores";
 import type {
+    TasksPerUser,
     WorkspaceUserSelection,
     WorkspaceUserSelectionInput,
 } from "$lib/types/ui";
-import type { WorkspaceUser } from "$lib/types/workspace";
+import type { Task, WorkspaceUser } from "$lib/types/workspace";
 
 // WorkspaceUser Search and Selection
 type CurrentWorkspaceUsers = Readable<WorkspaceUser[]>;
@@ -139,4 +142,45 @@ export function deselectWorkspaceUser(selection: WorkspaceUserSelectionInput) {
             }
         }
     );
+}
+
+export function createWorkspaceUserSearchModule(task: Task) {
+    const workspaceUserSearch = createWorkspaceUserSearch();
+    const selected: WorkspaceUserSelection = task.assignee
+        ? {
+              kind: "workspaceUsers",
+              workspaceUserUuids: new Set([task.assignee.uuid]),
+          }
+        : {
+              kind: "unassigned",
+          };
+    const workspaceUserSearchModule: WorkspaceUserSearchModule = {
+        select: async (selection: WorkspaceUserSelectionInput) => {
+            if (selection.kind === "unassigned") {
+                await assignUserToTask(null, task.uuid);
+            } else if (selection.kind === "allWorkspaceUsers") {
+                throw new Error("Unsupported");
+            } else {
+                await assignUserToTask(
+                    selection.workspaceUser.user.email,
+                    task.uuid
+                );
+            }
+        },
+        deselect: console.error,
+        selected: writable<WorkspaceUserSelection>(selected),
+        // XXX find a way to postpone this, albeit useful, showing
+        // the amount of tasks per users right from the beginning
+        // will be more work
+        tasksPerUser: readable<TasksPerUser>({
+            unassigned: 0,
+            assigned: new Map(),
+        }),
+        search: workspaceUserSearch,
+        searchResults: createWorkspaceUserSearchResults(
+            currentWorkspaceUsers,
+            workspaceUserSearch
+        ),
+    };
+    return workspaceUserSearchModule;
 }

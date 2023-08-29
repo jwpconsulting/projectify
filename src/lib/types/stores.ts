@@ -26,7 +26,7 @@ export interface WorkspaceUserSearchModule {
     deselect: (selection: WorkspaceUserSelectionInput) => unknown;
     selected: Readable<WorkspaceUserSelection>;
     tasksPerUser: Readable<TasksPerUser>;
-    search: Writable<string>;
+    search: Readable<SearchInput>;
     searchResults: Readable<WorkspaceUser[]>;
 }
 
