@@ -83,6 +83,9 @@ jobs:
                   paths:
                       - ~/.local
                       - ~/.cache
+            - run:
+                  name: Pipenv check
+                  command: pipenv check
     python_lint:
         executor: python
         steps:

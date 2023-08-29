@@ -18,6 +18,3 @@ types-toml = "*"
 [packages]
 click = "*"
 toml = "*"
-
-[requires]
-python_version = "3"
