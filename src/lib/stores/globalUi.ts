@@ -1,4 +1,4 @@
-import { get, type Writable } from "svelte/store";
+import type { Writable } from "svelte/store";
 
 import { internallyWritable } from "$lib/stores/util";
 import type {
@@ -14,23 +14,30 @@ import type {
     OverlayAction,
 } from "$lib/types/ui";
 
+const closedState = { kind: "hidden" as const };
+
 const { priv: _constructiveOverlayState, pub: constructiveOverlayState } =
-    internallyWritable<ConstructiveOverlayState>({
-        kind: "hidden",
-    });
+    internallyWritable<ConstructiveOverlayState>(closedState);
 export { constructiveOverlayState };
 
 const { priv: _destructiveOverlayState, pub: destructiveOverlayState } =
-    internallyWritable<DestructiveOverlayState>({
-        kind: "hidden",
-    });
+    internallyWritable<DestructiveOverlayState>(closedState);
 export { destructiveOverlayState };
 
 const { priv: _mobileMenuState, pub: mobileMenuState } =
-    internallyWritable<MobileMenuState>({
-        kind: "hidden",
-    });
+    internallyWritable<MobileMenuState>(closedState);
 export { mobileMenuState };
+
+function makeOpenState<Target, Action>(
+    target: Target,
+    action: Action
+): Overlay<Target, Action> {
+    return {
+        kind: "visible",
+        target,
+        action,
+    };
+}
 
 function openOverlay<Target, Action>(
     overlay: Writable<Overlay<Target, Action>>,
@@ -41,11 +48,7 @@ function openOverlay<Target, Action>(
         if ($overlay.kind !== "hidden") {
             throw new Error("Expected $overlay.kind to be hidden");
         }
-        return {
-            kind: "visible",
-            target,
-            action,
-        };
+        return makeOpenState(target, action);
     });
 }
 
@@ -54,9 +57,21 @@ function closeOverlay(overlay: Writable<Overlay<unknown, unknown>>) {
         if ($overlay.kind !== "visible") {
             throw new Error("Expected $overlay.kind to be visible");
         }
-        return {
-            kind: "hidden",
-        };
+        return closedState;
+    });
+}
+
+function toggleOverlay<Target, Action>(
+    overlay: Writable<Overlay<Target, Action>>,
+    target: Target,
+    action: Action
+) {
+    overlay.update(($overlay) => {
+        if ($overlay.kind === "hidden") {
+            return makeOpenState(target, action);
+        } else {
+            return closedState;
+        }
     });
 }
 
@@ -111,37 +126,12 @@ export function closeConstructiveOverlay() {
     closeOverlay(_constructiveOverlayState);
 }
 
-export function openMobileMenu(type: MobileMenuType) {
-    openOverlay(_mobileMenuState, type, {
-        kind: "sync",
-        action: undefined,
-    });
-}
-
 export function closeMobileMenu() {
     closeOverlay(_mobileMenuState);
 }
 
 export function toggleMobileMenu(type: MobileMenuType) {
-    // Not the store that we need, but the store that we deserve
-    // Cleaner to do with .update(), but then we would need to write it like
-    // this:
-    // _mobileMenuState.update(() => {
-    //     debugger;
-    //     if ($mobileMenuState.kind === "hidden") {
-    //         openMobileMenu(type);
-    //     } else {
-    //         closeMobileMenu();
-    //     }
-    //     // XXX here we overwrite the state :(
-    //     return $mobileMenuState;
-    // });
-    const $mobileMenuState = get(_mobileMenuState);
-    if ($mobileMenuState.kind === "hidden") {
-        openMobileMenu(type);
-    } else {
-        closeMobileMenu();
-    }
+    toggleOverlay(_mobileMenuState, type, undefined);
 }
 
 const { priv: _contextMenuState, pub: contextMenuState } =
