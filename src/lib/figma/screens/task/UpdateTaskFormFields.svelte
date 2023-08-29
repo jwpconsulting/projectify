@@ -7,7 +7,7 @@
     import TaskUpdateDueDate from "$lib/figma/screens/task/TaskUpdateDueDate.svelte";
     import TaskUpdateSection from "$lib/figma/screens/task/TaskUpdateSection.svelte";
     import TaskUpdateTitle from "$lib/figma/screens/task/TaskUpdateTitle.svelte";
-    import TaskUpdateUser from "$lib/figma/screens/task/TaskUpdateUser.svelte";
+    import TaskUser from "$lib/figma/screens/task/TaskUser.svelte";
     import type { TaskModule } from "$lib/types/stores";
     import type {
         Label,
@@ -50,7 +50,7 @@
 
 <TaskFieldsTemplate>
     <TaskUpdateTitle slot="title" bind:title />
-    <TaskUpdateUser
+    <TaskUser
         slot="assignee"
         action={taskModule.showUpdateWorkspaceUser}
         workspaceUser={assignedUser}

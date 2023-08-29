@@ -9,7 +9,7 @@
     import TaskUpdateDueDate from "$lib/figma/screens/task/TaskUpdateDueDate.svelte";
     import TaskUpdateSection from "$lib/figma/screens/task/TaskUpdateSection.svelte";
     import TaskUpdateTitle from "$lib/figma/screens/task/TaskUpdateTitle.svelte";
-    import TaskUpdateUser from "$lib/figma/screens/task/TaskUpdateUser.svelte";
+    import TaskUser from "$lib/figma/screens/task/TaskUser.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import type { TaskUpdateBarState } from "$lib/figma/types";
     import type { Task } from "$lib/types/workspace";
@@ -34,10 +34,7 @@
     />
     <TaskFieldsTemplate slot="content">
         <TaskUpdateTitle slot="title" title={task.title} readonly />
-        <TaskUpdateUser
-            slot="assignee"
-            workspaceUser={task.assignee ?? null}
-        />
+        <TaskUser slot="assignee" workspaceUser={task.assignee ?? null} />
         <TaskLabel slot="labels" labels={task.labels} />
         <TaskUpdateSection slot="section" {workspaceBoardSection} />
         <TaskUpdateDueDate slot="due-date" date={task.deadline ?? null} />
