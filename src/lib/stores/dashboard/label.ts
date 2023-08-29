@@ -3,6 +3,7 @@ import type { Readable } from "svelte/store";
 
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 import { searchAmong } from "$lib/stores/util";
+import type { SearchInput } from "$lib/types/base";
 import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
 import type { Label } from "$lib/types/workspace";
 
@@ -25,7 +26,6 @@ export const currentWorkspaceLabels: CurrentWorkspaceLabels = derived<
     []
 );
 // LabelSearch and Selection
-type SearchInput = string | undefined;
 function searchLabels(labels: Label[], searchInput: SearchInput): Label[] {
     if (searchInput === undefined) {
         return labels;

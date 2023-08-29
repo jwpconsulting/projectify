@@ -1,6 +1,8 @@
 // XXX "stores.ts" should be renamed "modules.ts" maybe?
 import type { Readable, Writable } from "svelte/store";
 
+import type { SearchInput } from "./base";
+
 import type {
     LabelSelection,
     LabelSelectionInput,
@@ -32,8 +34,7 @@ export interface LabelSearchModule {
     select: (selection: LabelSelectionInput) => unknown;
     deselect: (selection: LabelSelectionInput) => unknown;
     selected: Readable<LabelSelection>;
-    // TODO make readonly
-    search: Writable<string>;
+    search: Readable<SearchInput>;
     searchResults: Readable<Label[]>;
 }
 
