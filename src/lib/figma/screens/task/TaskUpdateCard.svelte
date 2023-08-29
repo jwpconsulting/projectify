@@ -1,8 +1,8 @@
 <script lang="ts">
     import TaskC from "$lib/components/dashboard/task/Task.svelte";
     import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
-    import TaskFormFields from "$lib/figma/screens/task/TaskFormFields.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
+    import UpdateTaskFormFields from "$lib/figma/screens/task/UpdateTaskFormFields.svelte";
     import type { TaskUpdateBarState } from "$lib/figma/types";
     import type { TaskModule } from "$lib/types/stores";
     import type { Task } from "$lib/types/workspace";
@@ -18,5 +18,5 @@
     <TopBar slot="top-bar" {taskOrNewTask} {taskModule} />
     <TaskUpdateBar slot="tab-bar-mobile" kind="mobile" {state} {task} />
     <TaskUpdateBar slot="tab-bar-desktop" kind="mobile" {state} {task} />
-    <TaskFormFields slot="content" {task} {taskModule} />
+    <UpdateTaskFormFields slot="content" {task} {taskModule} />
 </TaskC>
