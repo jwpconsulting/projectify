@@ -238,23 +238,6 @@ export const moveTaskModule: MoveTaskModule = {
     moveToWorkspaceBoardSection: noopAsync,
 };
 
-export const createMoveTaskModule = (
-    a: WorkspaceBoardSection,
-    t: Task,
-    ts: Task[]
-): MoveTaskModule => {
-    console.debug("Calling dummy createMoveTaskModule with", {
-        a,
-        t,
-        ts,
-    });
-    return {
-        moveToBottom: noopAsync,
-        moveToTop: noopAsync,
-        moveToWorkspaceBoardSection: noopAsync,
-    };
-};
-
 type ArgTypeOption<T> = Record<string, T>;
 
 interface ArgType<T> {
