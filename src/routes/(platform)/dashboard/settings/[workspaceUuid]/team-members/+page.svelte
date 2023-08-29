@@ -6,7 +6,6 @@
 
     import IconEdit from "$lib/components/icons/icon-edit.svelte";
     import IconTrash from "$lib/components/icons/icon-trash.svelte";
-    import SearchInput from "$lib/components/search-input.svelte";
     import {
         currentCustomer,
         currentWorkspace,
@@ -82,7 +81,6 @@
     }
 
     let roleFilter: string | null = null;
-    let searchFieldEl: HTMLElement;
     let searchText = "";
     let filteredWorkspaceUsers: WorkspaceUser[];
 
@@ -112,11 +110,7 @@
 </script>
 
 <div class="flex items-center justify-center gap-3 py-4">
-    <SearchInput
-        placeholder={"Search for a team member"}
-        bind:inputElement={searchFieldEl}
-        bind:searchText
-    />
+    <!-- TODO add search input -->
     <!-- TODO show dropdown button here? -->
 </div>
 <div class="divide-y divide-base-300">
