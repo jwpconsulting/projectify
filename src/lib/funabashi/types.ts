@@ -1,6 +1,6 @@
 import type { IconSource } from "@steeze-ui/svelte-icon/types";
 
-export const anchorSizes = ["extraSmall", "small", "normal", "large"] as const;
+const anchorSizes = ["extraSmall", "small", "normal", "large"] as const;
 export type AnchorSize = (typeof anchorSizes)[number];
 
 // For all buttons
@@ -62,11 +62,6 @@ export type SquovalState = (typeof squovalStates)[number];
 export type HeaderButtonType =
     | { kind: "dropdown"; open: boolean }
     | { kind: "button" };
-export const headerButtonTypes: HeaderButtonType[] = [
-    { kind: "dropdown", open: false },
-    { kind: "dropdown", open: true },
-    { kind: "button" },
-];
 
 // For input-fields/InputField.svelte
 // TODO rename to InputFieldKind Justus 2022-09-22
@@ -77,7 +72,7 @@ export type InputFieldStyle =
     // TODO make me "erasable"
     | { kind: "subTask" }
     | { kind: "field"; inputType: "text" | "password" | "email" | "date" };
-export const inputFieldSizes = ["extraSmall", "small", "normal"] as const;
+const inputFieldSizes = ["extraSmall", "small", "normal"] as const;
 export type InputFieldSize = (typeof inputFieldSizes)[number];
 export interface InputFieldAnchor {
     href: string;
