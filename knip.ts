@@ -8,6 +8,16 @@ const config: KnipConfig = {
         "src/routes/**/+{page,server,page.server,error,layout,layout.server}{,@*}.{js,ts,svelte}",
         "src/stories/**/*.stories.ts",
     ],
+    rules: {
+        binaries: "warn",
+        dependencies: "warn",
+        devDependencies: "warn",
+        exports: "warn",
+        files: "error",
+        nsExports: "warn",
+        types: "warn",
+        unlisted: "warn",
+    },
     paths: {
         // This ain't pretty, but Svelte basically does the same
         "$app/*": ["node_modules/@sveltejs/kit/src/runtime/app/*"],

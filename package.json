@@ -6,7 +6,7 @@
         "build": "bin/prebuild.sh && vite build",
         "package": "vite package",
         "preview": "vite preview --port 3000",
-        "check": "npm run check:prettier && npm run check:eslint && npm run check:svelte-check",
+        "check": "npm run check:prettier && npm run check:eslint && npm run check:svelte-check && npm run check:knip",
         "check:eslint": "eslint . --cache --ext .ts,.js,.svelte src",
         "check:prettier": "prettier --ignore-path .gitignore --check --plugin-search-dir=. --cache --cache-strategy metadata .",
         "check:svelte-check": "svelte-check --tsconfig tsconfig.json --diagnostic-sources js,svelte",
