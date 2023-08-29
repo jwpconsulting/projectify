@@ -1,13 +1,9 @@
 <script lang="ts">
     import SectionLocationState from "$lib/figma/screens/task/SectionLocationState.svelte";
-    import type { Task } from "$lib/types/workspace";
+    import type { WorkspaceBoardSection } from "$lib/types/workspace";
 
-    export let task: Task;
+    export let workspaceBoardSection: WorkspaceBoardSection;
     export let action: (() => void) | undefined = undefined;
-
-    // XXX Justus 2023-08-17
-    $: label =
-        task.workspace_board_section?.title ?? "XXX why could I be missing";
 </script>
 
-<SectionLocationState {label} {action} />
+<SectionLocationState label={workspaceBoardSection.title} {action} />

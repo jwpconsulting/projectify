@@ -7,18 +7,21 @@
     import TaskUpdateTitle from "$lib/figma/screens/task/TaskUpdateTitle.svelte";
     import TaskUpdateUser from "$lib/figma/screens/task/TaskUpdateUser.svelte";
     import type { Task } from "$lib/types/workspace";
+    import { unwrap } from "$lib/utils/type";
 
     export let task: Task;
-    // XXX refactor the dl dt dd structure into
-    // src/lib/figma/screens/task/TaskFieldsTemplate.svelte
-    // and add a slot for each form field thing
+
+    $: workspaceBoardSection = unwrap(
+        task.workspace_board_section,
+        "Expected workspace_board_section"
+    );
 </script>
 
 <TaskFieldsTemplate>
     <TaskUpdateTitle slot="title" title={task.title} readonly />
     <TaskUpdateUser slot="assignee" workspaceUser={task.assignee ?? null} />
     <TaskUpdateLabel slot="labels" labels={task.labels} />
-    <TaskUpdateSection slot="section" {task} />
+    <TaskUpdateSection slot="section" {workspaceBoardSection} />
     <TaskUpdateDueDate slot="due-date" date={task.deadline ?? null} />
     <TaskUpdateDescription
         slot="description"

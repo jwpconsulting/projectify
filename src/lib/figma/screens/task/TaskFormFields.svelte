@@ -15,10 +15,16 @@
         Task,
         WorkspaceUser,
     } from "$lib/types/workspace";
+    import { unwrap } from "$lib/utils/type";
 
     // if this is in a store, we can get rid of this param
     export let task: Task;
     export let taskModule: TaskModule;
+
+    $: workspaceBoardSection = unwrap(
+        task.workspace_board_section,
+        "Expected workspace_board_section"
+    );
 
     let title: string = task.title;
     let description: string | undefined = task.description;
@@ -54,7 +60,7 @@
         action={taskModule.showUpdateLabel}
         {labels}
     />
-    <TaskUpdateSection slot="section" {task} />
+    <TaskUpdateSection slot="section" {workspaceBoardSection} />
     <TaskUpdateDueDate slot="due-date" date={dueDate} />
     <TaskUpdateDescription slot="description" bind:description />
 </TaskFieldsTemplate>

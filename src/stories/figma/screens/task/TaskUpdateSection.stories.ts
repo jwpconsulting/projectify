@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { task } from "$lib/storybook";
+import { workspaceBoardSection } from "$lib/storybook";
 
 import TaskUpdateSection from "$lib/figma/screens/task/TaskUpdateSection.svelte";
 
 const meta: Meta<TaskUpdateSection> = {
     component: TaskUpdateSection,
-    args: { task },
+    args: { workspaceBoardSection },
 };
 export default meta;
 
