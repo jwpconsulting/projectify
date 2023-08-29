@@ -5,7 +5,6 @@
     import routes from "$lib/routes";
 
     import { page } from "$app/stores";
-    import HeaderButtons from "$lib/components/header-buttons.svelte";
     import HeaderUser from "$lib/components/headerUser.svelte";
     import IconHamburgerMenu from "$lib/components/icons/icon-hamburger-menu.svelte";
     import { user } from "$lib/stores/user";
@@ -97,9 +96,6 @@
                 </ul>
             </nav>
             <div class="grow" />
-            <nav class="hidden gap-2 md:flex">
-                <HeaderButtons {userData} />
-            </nav>
 
             <button
                 class="flex h-10 w-10 shrink-0 items-center justify-center self-end rounded-full bg-base-100 text-primary md:hidden"
