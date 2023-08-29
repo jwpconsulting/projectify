@@ -3,6 +3,7 @@ import type { KnipConfig } from "knip";
 const config: KnipConfig = {
     ignore: ["**/*.d.ts"],
     entry: [
+        "postcss.config.cjs",
         "svelte.config.js",
         "vite.config.ts",
         "src/routes/**/+{page,server,page.server,error,layout,layout.server}{,@*}.{js,ts,svelte}",
