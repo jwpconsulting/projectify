@@ -8,7 +8,6 @@
     import { getDashboardTaskUrl } from "$lib/urls";
 
     import { page } from "$app/stores";
-    import TaskDetailsBreadcrumbs from "$lib/components/dashboard/task-details-breadcrumbs.svelte";
     import TaskDetailsContent from "$lib/components/dashboard/task-details-content.svelte";
     import TaskDetailsDiscussion from "$lib/components/dashboard/task-details-discussion.svelte";
     import ToolBar from "$lib/components/dashboard/toolBar.svelte";
@@ -185,7 +184,6 @@
                 class="btn btn-ghost btn-circle h-[42px] min-h-[42px] w-[42px] min-w-[42px] shrink-0"
                 ><IconClose /></button
             >
-            <TaskDetailsBreadcrumbs {task} />
         </div>
         <header class="relative mb-2 flex items-center gap-4 bg-base-100 p-4">
             <a href="/" class="flex items-center justify-center">
