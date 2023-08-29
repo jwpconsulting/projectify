@@ -1,9 +1,6 @@
 import lodash from "lodash";
-import { get, derived, writable } from "svelte/store";
+import { derived, writable } from "svelte/store";
 import type { Readable } from "svelte/store";
-
-import { goto } from "$lib/navigation";
-import { getDashboardTaskUrl, getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
 import {
     getTask,
@@ -52,7 +49,7 @@ export function createCurrentSearchedTasks(
     );
 }
 
-export function searchTasks(
+function searchTasks(
     sections: WorkspaceBoardSection[],
     searchText: string
 ): Task[] {
@@ -71,31 +68,4 @@ export const currentTask = createWsStore<Task>(
 
 export async function deleteTask(task: Task) {
     await repositoryDeleteTask(task);
-}
-
-export const drawerModalOpen = writable(false);
-export const newTaskSectionUuid = writable<string | null>(null);
-
-export function openNewTask(sectionUuid: string): void {
-    drawerModalOpen.set(true);
-    newTaskSectionUuid.set(sectionUuid);
-    currentTaskUuid.set(null);
-}
-export async function openTaskDetails(
-    workspaceBoardUuid: string,
-    taskUuid: string,
-    subView = "details"
-) {
-    drawerModalOpen.set(true);
-    currentTaskUuid.set(taskUuid);
-    await goto(getDashboardTaskUrl(workspaceBoardUuid, taskUuid, subView));
-}
-export async function closeTaskDetails() {
-    drawerModalOpen.set(false);
-    currentTaskUuid.set(null);
-    const boardUuid = get(currentWorkspaceBoardUuid);
-    if (!boardUuid) {
-        throw new Error("Expected boardUuid");
-    }
-    await goto(getDashboardWorkspaceBoardUrl(boardUuid));
 }
