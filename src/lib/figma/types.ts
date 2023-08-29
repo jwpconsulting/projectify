@@ -63,6 +63,6 @@ export type TaskUpdateBarState = (typeof taskUpdateBarStates)[number];
 export const subTaskStates = ["normal", "edit"] as const;
 export type SubTaskState = (typeof subTaskStates)[number];
 
-export const floatingActionButtonIcons = ["plus", "close"] as const;
+const floatingActionButtonIcons = ["plus", "close"] as const;
 export type FloatingActionButtonIcon =
     (typeof floatingActionButtonIcons)[number];
