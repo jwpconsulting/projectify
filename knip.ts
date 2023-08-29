@@ -18,7 +18,7 @@ const config: KnipConfig = {
         files: "error",
         nsExports: "warn",
         types: "warn",
-        unlisted: "warn",
+        unlisted: "error",
     },
     paths: {
         // This ain't pretty, but Svelte basically does the same
