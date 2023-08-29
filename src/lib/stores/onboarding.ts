@@ -17,7 +17,7 @@ seats.subscribe((n) => {
 });
 
 export const numSteps = 5;
-export const firstStep = 0;
+const firstStep = 0;
 export const currentStep = writable<number>(firstStep);
 export function gotoStep(step: number) {
     currentStep.set(step);

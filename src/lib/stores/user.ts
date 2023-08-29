@@ -17,7 +17,7 @@ import type { RepositoryContext } from "$lib/types/repository";
 import type { User } from "$lib/types/user";
 
 export const user = writable<User | null>(null);
-export const userIsLoading = writable(true);
+const userIsLoading = writable(true);
 
 export const signUp = async (
     email: string,

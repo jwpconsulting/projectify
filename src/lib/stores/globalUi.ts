@@ -168,7 +168,7 @@ type KeyboardKey = "Escape" | "Enter";
 
 // Decorate a callback and only pass on events when we match the specified
 // key
-export function filterKey(key: KeyboardKey, fn: KeyCallback) {
+function filterKey(key: KeyboardKey, fn: KeyCallback) {
     return (e: KeyboardEvent) => {
         if (e.key !== key) {
             return;
