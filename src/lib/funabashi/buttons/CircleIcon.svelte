@@ -40,8 +40,7 @@
 
 {#if action.kind === "button"}
     <button
-        on:click|preventDefault={action.action}
-        on:keydown={action.action}
+        on:click|preventDefault|stopPropagation={action.action}
         {disabled}
         class="{styleClasses} disabled:bg-transparent disabled:text-transparent"
     >
