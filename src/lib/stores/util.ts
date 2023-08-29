@@ -6,7 +6,7 @@ import { fuseSearchThreshold } from "$lib/config";
 
 import { browser } from "$app/environment";
 import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
-import type { SearchInput } from "$lib/types/base";
+import type { RecursiveKeyOf, SearchInput } from "$lib/types/base";
 import type { SubscriptionType } from "$lib/types/stores";
 
 export function internallyWritable<T>(theThing: T): {
@@ -75,7 +75,7 @@ export function createWsStore<T>(
 }
 
 export function searchAmong<T extends object>(
-    keys: (keyof T & string)[],
+    keys: RecursiveKeyOf<T>[],
     things: T[],
     searchText: SearchInput
 ): T[] {
