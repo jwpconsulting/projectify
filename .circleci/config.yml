@@ -12,12 +12,14 @@ commands:
     install_node_dependencies:
         description: Install dependencies
         steps:
+            - checkout
             - run:
                   name: npm ci
                   command: npm ci
     install_python_dependencies:
         description: Install pipenv
         steps:
+            - checkout
             - run:
                   name: Install pipenv
                   command: pip3 install pipenv
@@ -28,7 +30,6 @@ jobs:
     svelte-check:
         executor: node
         steps:
-            - checkout
             - restore_cache:
                   key: npm-cache-v1-{{ checksum "package-lock.json" }}
             - install_node_dependencies
@@ -42,7 +43,6 @@ jobs:
     eslint:
         executor: node
         steps:
-            - checkout
             - restore_cache:
                   key: npm-cache-v1-{{ checksum "package-lock.json" }}
             - install_node_dependencies
@@ -56,7 +56,6 @@ jobs:
     prettier:
         executor: node
         steps:
-            - checkout
             - restore_cache:
                   key: npm-cache-v1-{{ checksum "package-lock.json" }}
             - install_node_dependencies
@@ -66,7 +65,6 @@ jobs:
     knip:
         executor: node
         steps:
-            - checkout
             - restore_cache:
                   key: npm-cache-v1-{{ checksum "package-lock.json" }}
             - install_node_dependencies
@@ -76,7 +74,6 @@ jobs:
     build:
         executor: node
         steps:
-            - checkout
             - restore_cache:
                   key: npm-cache-v1-{{ checksum "package-lock.json" }}
             - install_node_dependencies
@@ -86,7 +83,6 @@ jobs:
     pipenv_check:
         executor: python
         steps:
-            - checkout
             - restore_cache:
                   keys:
                       - cache-{{ checksum "Pipfile-tools.lock" }}
@@ -99,7 +95,6 @@ jobs:
     python_lint:
         executor: python
         steps:
-            - checkout
             - restore_cache:
                   keys:
                       - cache-{{ checksum "Pipfile-tools.lock" }}
@@ -110,7 +105,6 @@ jobs:
     mypy:
         executor: python
         steps:
-            - checkout
             - restore_cache:
                   keys:
                       - cache-{{ checksum "Pipfile-tools.lock" }}
