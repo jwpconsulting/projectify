@@ -42,7 +42,8 @@
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "storybook": "^7.0.7",
-        "svelte-check": "^3.4.3"
+        "svelte-check": "^3.4.3",
+        "svelte-eslint-parser": "^0.33.0"
     },
     "type": "module",
     "dependencies": {
