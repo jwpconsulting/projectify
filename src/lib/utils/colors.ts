@@ -1,4 +1,4 @@
-export const labelColorTypes = [
+const labelColorTypes = [
     "bg",
     "bgHover",
     "border",

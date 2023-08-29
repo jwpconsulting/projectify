@@ -69,9 +69,5 @@ export interface MoveTaskModule {
     ) => Promise<void>;
 }
 
-export const subscriptionTypes = [
-    "workspace",
-    "workspace-board",
-    "task",
-] as const;
+const subscriptionTypes = ["workspace", "workspace-board", "task"] as const;
 export type SubscriptionType = (typeof subscriptionTypes)[number];
