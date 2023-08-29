@@ -41,27 +41,34 @@
     export let state: SquovalState;
     export let active = false;
 
-    export let action: ButtonAction;
+    export let action: ButtonAction & { kind: "button" | "a" };
+
+    const style =
+        "focus:base-content relative h-8 w-8 rounded-lg border border-transparent p-1 focus:border-base-content focus:outline-none active:text-display enabled:hover:bg-secondary-hover enabled:active:bg-primary";
+    const activeStyle =
+        "border-base absolute left-5 top-1 h-2 w-2 rounded-full border bg-primary";
 </script>
 
 <!-- terrible hack. Ideally we don't support this being an anchor at all -->
-<svelte:element
-    this={action.kind}
-    role={action.kind == "button" ? "button" : "link"}
-    on:click={action.kind == "button" ? action.action : undefined}
-    on:keydown={action.kind == "button" ? action.action : undefined}
-    href={action.kind == "a" ? action.href : undefined}
-    class="focus:base-content relative h-8 w-8 rounded-lg border border-transparent p-1 focus:border-base-content focus:outline-none active:text-display enabled:hover:bg-secondary-hover enabled:active:bg-primary"
-    class:text-base-content={state === "active"}
-    class:invisible={state === "inactive"}
-    class:text-secondary-text={state === "disabled"}
-    class:block={action.kind === "a"}
-    disabled={state !== "active"}
->
-    {#if active}
-        <div
-            class="-2 border-base absolute left-5 top-1 h-2 w-2 rounded-full border bg-primary"
-        />
-    {/if}
-    <Icon {src} theme="outline" />
-</svelte:element>
+{#if action.kind === "button"}
+    <button
+        on:click={action.action}
+        class={style}
+        class:text-base-content={state === "active"}
+        class:invisible={state === "inactive"}
+        class:text-secondary-text={state === "disabled"}
+        disabled={state !== "active"}
+    >
+        {#if active}
+            <div class={activeStyle} />
+        {/if}
+        <Icon {src} theme="outline" />
+    </button>
+{:else}
+    <a href={action.href} class={style} class:block={action.kind === "a"}>
+        {#if active}
+            <div class={activeStyle} />
+        {/if}
+        <Icon {src} theme="outline" />
+    </a>
+{/if}
