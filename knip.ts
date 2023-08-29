@@ -13,7 +13,7 @@ const config: KnipConfig = {
     rules: {
         binaries: "error",
         dependencies: "error",
-        devDependencies: "warn",
+        devDependencies: "error",
         exports: "warn",
         files: "error",
         nsExports: "warn",
