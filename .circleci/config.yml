@@ -63,6 +63,16 @@ jobs:
             - run:
                   name: Run prettier
                   command: npm run check:prettier
+    knip:
+        executor: node
+        steps:
+            - checkout
+            - restore_cache:
+                  key: npm-cache-v1-{{ checksum "package-lock.json" }}
+            - install_node_dependencies
+            - run:
+                  name: Run knip
+                  command: npm run check:knip
     build:
         executor: node
         steps:
@@ -114,6 +124,7 @@ workflows:
             - svelte-check
             - eslint
             - prettier
+            - knip
             - build
             - pipenv_check
             - python_lint
