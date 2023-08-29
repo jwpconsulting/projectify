@@ -1,11 +1,9 @@
-import Fuse from "fuse.js";
 import { derived, writable } from "svelte/store";
 import type { Readable, Writable } from "svelte/store";
 
-import { fuseSearchThreshold } from "$lib/config";
-
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
-import { internallyWritable } from "$lib/stores/util";
+import { internallyWritable, searchAmong } from "$lib/stores/util";
+import type { SearchInput } from "$lib/types/base";
 import type {
     WorkspaceUserSelection,
     WorkspaceUserSelectionInput,
@@ -33,23 +31,21 @@ export const currentWorkspaceUsers: CurrentWorkspaceUsers = derived<
     []
 );
 
-type WorkspaceUserSearch = Writable<string>;
-export const workspaceUserSearch: WorkspaceUserSearch = writable<string>("");
+type WorkspaceUserSearch = Writable<SearchInput>;
+const createWorkspaceUserSearch = () => writable<SearchInput>(undefined);
+
+export const workspaceUserSearch: WorkspaceUserSearch =
+    createWorkspaceUserSearch();
 
 function searchWorkspaceUsers(
     workspaceUsers: WorkspaceUser[],
-    searchInput: string
+    searchInput: SearchInput
 ) {
-    if (searchInput === "") {
-        return workspaceUsers;
-    }
-    const searchEngine = new Fuse(workspaceUsers, {
-        keys: ["user.email", "user.full_name"],
-        threshold: fuseSearchThreshold,
-        shouldSort: false,
-    });
-    const result = searchEngine.search(searchInput);
-    return result.map((res: Fuse.FuseResult<WorkspaceUser>) => res.item);
+    return searchAmong(
+        ["user.email", "user.full_name"],
+        workspaceUsers,
+        searchInput
+    );
 }
 
 type WorkspaceUserSearchResults = Readable<WorkspaceUser[]>;
