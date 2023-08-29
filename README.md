@@ -10,14 +10,14 @@ cp .env.template .env
 ## Running tests & linter
 
 ```
+npm run fix
 npm run check
-npm run format
 ```
 
 ## Identifying slowly linted files
 
 ```
-npm run format | sort --key=2 -h
+npm run fix | sort --key=2 -h
 ```
 
 ## Installing the python tools

@@ -38,7 +38,7 @@ jobs:
                       - ~/.npm
             - run:
                   name: Run svelte-check
-                  command: npm run svelte-check
+                  command: npm run check:svelte-check
     eslint:
         executor: node
         steps:
@@ -52,8 +52,8 @@ jobs:
                       - ~/.npm
             - run:
                   name: Run eslint
-                  command: npm run eslint
-    lint:
+                  command: npm run check:eslint
+    prettier:
         executor: node
         steps:
             - checkout
@@ -61,8 +61,8 @@ jobs:
                   key: npm-cache-v1-{{ checksum "package-lock.json" }}
             - install_node_dependencies
             - run:
-                  name: Run lint
-                  command: npm run lint
+                  name: Run prettier
+                  command: npm run check:prettier
     build:
         executor: node
         steps:
@@ -113,7 +113,7 @@ workflows:
         jobs:
             - svelte-check
             - eslint
-            - lint
+            - prettier
             - build
             - pipenv_check
             - python_lint
