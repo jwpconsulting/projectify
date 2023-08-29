@@ -1,11 +1,15 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
+    import {
+        getDashboardWorkspaceBoardSectionUrl,
+        getDashboardWorkspaceBoardUrl,
+    } from "$lib/urls";
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { CreateOrUpdateTaskModule } from "$lib/types/stores";
     import type {
@@ -62,6 +66,13 @@
     }
 
     const createOrUpdate = taskModule ? taskModule.createOrUpdateTask : null;
+
+    $: workspaceBoardUrl = getDashboardWorkspaceBoardUrl(
+        breadCrumbTask.workspace_board_section.workspace_board.uuid
+    );
+    $: workspaceBoardSectionUrl = getDashboardWorkspaceBoardSectionUrl(
+        breadCrumbTask.workspace_board_section.uuid
+    );
 </script>
 
 <div class="flex flex-row items-center justify-between">
@@ -70,9 +81,7 @@
             <CircleIcon
                 action={{
                     kind: "a",
-                    href: getDashboardWorkspaceBoardSectionUrl(
-                        breadCrumbTask.workspace_board_section.uuid
-                    ),
+                    href: workspaceBoardSectionUrl,
                 }}
                 size="medium"
                 icon="close"
@@ -80,8 +89,17 @@
             />
         </div>
         <div class="text-sm font-bold text-utility">
-            {breadCrumbTask.workspace_board_section.workspace_board.title} &gt;
-            {breadCrumbTask.workspace_board_section.title}
+            <Anchor
+                label={breadCrumbTask.workspace_board_section.workspace_board
+                    .title}
+                size="small"
+                href={workspaceBoardUrl}
+            /> &gt;
+            <Anchor
+                label={breadCrumbTask.workspace_board_section.title}
+                size="small"
+                href={workspaceBoardSectionUrl}
+            />
             {#if breadCrumbTask.number}&gt; {breadCrumbTask.number}{/if}
         </div>
     </div>
