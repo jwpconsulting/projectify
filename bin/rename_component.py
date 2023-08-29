@@ -27,7 +27,7 @@ src_stories_prefix = pathlib.Path("src/stories")
 stories_suffix = ".stories.ts"
 
 CHECK = "npm", "run", "check"
-FORMAT = "npm", "run", "format"
+FIX = "npm", "run", "fix"
 GIT_ADD = "git", "add", str(src)
 GIT_COMMIT = "git", "commit", "-e", "-m"
 GIT_RESET = "git", "reset", str(src)
@@ -78,6 +78,16 @@ class DestructiveResult:
     deleted_stories_file: pathlib.Path
     new_stories_file: pathlib.Path
     diffs: List[FileDiff]
+
+
+class CheckError(Exception):
+    """Contain the data necessary to unwind the stack and return diffs."""
+
+    diffs: List[FileDiff]
+
+    def __init__(self, diffs: List[FileDiff]):
+        """Initialize with diff."""
+        self.diffs = diffs
 
 
 def process_line(ctx: ReplacementContext, line: str) -> str:
@@ -183,38 +193,50 @@ def make_msg_prefix(dst_lib_path: pathlib.Path) -> str:
     return "/".join([p.capitalize() for p in parent.parts])
 
 
+def _destructive(ctx: ReplacementContext) -> List[FileDiff]:
+    diffs: List[FileDiff] = []
+    ctx.dst_cmp.parent.mkdir(parents=True, exist_ok=True)
+    shutil.move(ctx.src_cmp, ctx.dst_cmp)
+    ctx.dst_stories_path.parent.mkdir(parents=True, exist_ok=True)
+    shutil.move(ctx.src_stories_path, ctx.dst_stories_path)
+
+    rename_candidates = list(
+        itertools.chain.from_iterable(
+            src.glob(f"**/*.{e}") for e in extensions
+        )
+    )
+    diffs = create_diffs(ctx, rename_candidates)
+    apply_diffs(diffs)
+
+    try:
+        subprocess.run(FIX, check=True)
+        subprocess.run(CHECK, check=True)
+    except subprocess.CalledProcessError:
+        raise CheckError(diffs)
+
+    subprocess.run(GIT_ADD, check=True)
+    msg_prefix = make_msg_prefix(ctx.dst_lib_path)
+    msg = (
+        f"{msg_prefix}: {ctx.src_component_name} -> "
+        f"{ctx.dst_component_name}"
+    )
+    subprocess.run(
+        (
+            *GIT_COMMIT,
+            msg,
+        ),
+        check=True,
+    )
+    return diffs
+
+
 def destructive(ctx: ReplacementContext) -> DestructiveResult:
     """Perform all destructive actions."""
-    diffs: List[FileDiff] = []
+    diffs: List[FileDiff]
     try:
-        ctx.dst_cmp.parent.mkdir(parents=True, exist_ok=True)
-        shutil.move(ctx.src_cmp, ctx.dst_cmp)
-        ctx.dst_stories_path.parent.mkdir(parents=True, exist_ok=True)
-        shutil.move(ctx.src_stories_path, ctx.dst_stories_path)
-
-        rename_candidates = list(
-            itertools.chain.from_iterable(
-                src.glob(f"**/*.{e}") for e in extensions
-            )
-        )
-        diffs = create_diffs(ctx, rename_candidates)
-        apply_diffs(diffs)
-        subprocess.run(CHECK, check=True)
-        subprocess.run(FORMAT, check=True)
-        subprocess.run(GIT_ADD, check=True)
-        msg_prefix = make_msg_prefix(ctx.dst_lib_path)
-        msg = (
-            f"{msg_prefix}: {ctx.src_component_name} -> "
-            f"{ctx.dst_component_name}"
-        )
-        subprocess.run(
-            (
-                *GIT_COMMIT,
-                msg,
-            ),
-            check=True,
-        )
-    except Exception as e:
+        diffs = _destructive(ctx)
+    except CheckError as e:
+        diffs = e.diffs
         click.echo(f"Something went wrong: {e}")
         attempt_cleanup(
             DestructiveResult(
