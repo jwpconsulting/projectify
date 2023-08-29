@@ -52,7 +52,7 @@
                 <div class="flex flex-row overflow-x-auto">
                     <Labels {task} />
                 </div>
-                <div class="flex flex-row justify-self-end">
+                <div class="flex shrink-0 flex-row justify-self-end">
                     <div class="flex flex-row items-center gap-4">
                         <SubTaskProgress {task} />
                     </div>
