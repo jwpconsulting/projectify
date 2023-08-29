@@ -2,10 +2,7 @@
     // TODO can this component be deleted?
     import { _ } from "svelte-i18n";
 
-    import routes from "$lib/routes";
-
     import { page } from "$app/stores";
-    import { user } from "$lib/stores/user";
 
     export let mode = "app";
 
@@ -20,7 +17,6 @@
 
     let items: HeaderItem[] = [];
 
-    $: userData = $user;
     $: {
         if (mode == "landing") {
             items = [
@@ -38,30 +34,7 @@
                 },
             ];
         } else {
-            items = [...routes]
-                .filter((it) => {
-                    if (it.forceNavigation) {
-                        return true;
-                    }
-
-                    if (it.forceNavigation === false) {
-                        return false;
-                    }
-
-                    if (!userData && it.authRequired === true) {
-                        return false;
-                    }
-
-                    if (userData && it.authRequired === false) {
-                        return false;
-                    }
-
-                    return true;
-                })
-                .map((it) => ({
-                    ...it,
-                    label: $_(it.label),
-                }));
+            items = [];
         }
     }
 
