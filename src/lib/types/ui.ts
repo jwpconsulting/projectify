@@ -15,27 +15,6 @@ import type {
     WorkspaceUser,
 } from "$lib/types/workspace";
 
-export interface Input {
-    name?: string;
-    label?: string;
-    type?: string;
-    value?: string;
-    error?: string;
-    placeholder?: string;
-    readonly?: boolean;
-    selectOptions?: { label: string; value: unknown }[];
-    validation?: {
-        required?: boolean;
-        validator?: (
-            value: unknown,
-            data: unknown
-        ) => {
-            error?: boolean;
-            message?: string;
-        };
-    };
-}
-
 export type LabelSelectionInput =
     | { kind: "noLabel" }
     | { kind: "allLabels" }
