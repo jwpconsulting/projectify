@@ -9,6 +9,7 @@ module.exports = {
         "plugin:import/recommended",
         "plugin:import/typescript",
         "plugin:svelte/recommended",
+        "plugin:storybook/recommended",
     ],
     plugins: ["@typescript-eslint", "unused-imports", "import"],
     overrides: [
