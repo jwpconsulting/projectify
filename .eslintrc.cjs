@@ -35,7 +35,13 @@ module.exports = {
             },
         },
     ],
-    ignorePatterns: ["node_modules/*", "svelte.config.js", "*.cjs", "build/*"],
+    ignorePatterns: [
+        "node_modules/*",
+        "svelte.config.js",
+        "*.cjs",
+        "build/*",
+        "storybook-static/*",
+    ],
     settings: {
         "import/resolver": {
             typescript: {
