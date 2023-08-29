@@ -3,10 +3,10 @@
     import SubTaskBarComposite from "$lib/figma/screens/task/SubTaskBarComposite.svelte";
     import TaskFieldsTemplate from "$lib/figma/screens/task/TaskFieldsTemplate.svelte";
     import TaskLabel from "$lib/figma/screens/task/TaskLabel.svelte";
+    import TaskTitle from "$lib/figma/screens/task/TaskTitle.svelte";
     import TaskUpdateDescription from "$lib/figma/screens/task/TaskUpdateDescription.svelte";
     import TaskUpdateDueDate from "$lib/figma/screens/task/TaskUpdateDueDate.svelte";
     import TaskUpdateSection from "$lib/figma/screens/task/TaskUpdateSection.svelte";
-    import TaskUpdateTitle from "$lib/figma/screens/task/TaskUpdateTitle.svelte";
     import TaskUser from "$lib/figma/screens/task/TaskUser.svelte";
     import type { TaskModule } from "$lib/types/stores";
     import type {
@@ -49,7 +49,7 @@
 </script>
 
 <TaskFieldsTemplate>
-    <TaskUpdateTitle slot="title" bind:title />
+    <TaskTitle slot="title" bind:title />
     <TaskUser
         slot="assignee"
         action={taskModule.showUpdateWorkspaceUser}
