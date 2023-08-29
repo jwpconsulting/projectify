@@ -8,7 +8,6 @@
     import { getDashboardTaskUrl } from "$lib/urls";
 
     import { page } from "$app/stores";
-    import TaskDetailsDiscussion from "$lib/components/dashboard/task-details-discussion.svelte";
     import ToolBar from "$lib/components/dashboard/toolBar.svelte";
     import IconClose from "$lib/components/icons/icon-close.svelte";
     import IconTrash from "$lib/components/icons/icon-trash.svelte";
@@ -223,7 +222,5 @@
                 on:click={() => save()}>{$_("save")}</button
             >
         </header>
-
-        <TaskDetailsDiscussion {task} />
     </div>
 {/if}

@@ -181,3 +181,41 @@ async function saveSubTask(subTask: SubTask) {
   editSubtaskUuid = null;
 }
 ```
+
+# task-details-discussion
+
+```typescript
+async function sendChatMessage() {
+  let msg = chatMessageText.trim();
+  chatMessageText = "";
+
+  if (!msg) {
+    return;
+  }
+
+  try {
+    await client.mutate({
+      mutation: Mutation_AddChatMessage,
+      variables: {
+        input: {
+          taskUuid: task.uuid,
+          text: msg,
+        },
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+let messagesView: HTMLDivElement;
+
+afterUpdate(() => {
+  if (!task.chat_messages) {
+    throw new Error("Expected task.chat_messages");
+  }
+  if (messagesView && task.chat_messages.length > 0) {
+    messagesView.scrollTo(0, messagesView.scrollHeight);
+  }
+});
+```
