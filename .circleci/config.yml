@@ -13,6 +13,8 @@ commands:
         description: Install dependencies
         steps:
             - checkout
+            - restore_cache:
+                  key: npm-cache-v1-{{ checksum "package-lock.json" }}
             - run:
                   name: npm ci
                   command: npm ci
@@ -20,6 +22,8 @@ commands:
         description: Install pipenv
         steps:
             - checkout
+            - restore_cache:
+                  keys: cache-{{ checksum "Pipfile-tools.lock" }}
             - run:
                   name: Install pipenv
                   command: pip3 install pipenv
@@ -30,8 +34,6 @@ jobs:
     svelte-check:
         executor: node
         steps:
-            - restore_cache:
-                  key: npm-cache-v1-{{ checksum "package-lock.json" }}
             - install_node_dependencies
             - save_cache:
                   key: npm-cache-v1-{{ checksum "package-lock.json" }}
@@ -43,8 +45,6 @@ jobs:
     eslint:
         executor: node
         steps:
-            - restore_cache:
-                  key: npm-cache-v1-{{ checksum "package-lock.json" }}
             - install_node_dependencies
             - save_cache:
                   key: npm-cache-v1-{{ checksum "package-lock.json" }}
@@ -56,8 +56,6 @@ jobs:
     prettier:
         executor: node
         steps:
-            - restore_cache:
-                  key: npm-cache-v1-{{ checksum "package-lock.json" }}
             - install_node_dependencies
             - run:
                   name: Run prettier
@@ -65,8 +63,6 @@ jobs:
     knip:
         executor: node
         steps:
-            - restore_cache:
-                  key: npm-cache-v1-{{ checksum "package-lock.json" }}
             - install_node_dependencies
             - run:
                   name: Run knip
@@ -74,8 +70,6 @@ jobs:
     build:
         executor: node
         steps:
-            - restore_cache:
-                  key: npm-cache-v1-{{ checksum "package-lock.json" }}
             - install_node_dependencies
             - run:
                   name: Run build
@@ -83,9 +77,6 @@ jobs:
     pipenv_check:
         executor: python
         steps:
-            - restore_cache:
-                  keys:
-                      - cache-{{ checksum "Pipfile-tools.lock" }}
             - install_python_dependencies
             - save_cache:
                   key: cache-{{ checksum "Pipfile-tools.lock" }}
@@ -95,9 +86,6 @@ jobs:
     python_lint:
         executor: python
         steps:
-            - restore_cache:
-                  keys:
-                      - cache-{{ checksum "Pipfile-tools.lock" }}
             - install_python_dependencies
             - run:
                   name: Run flake8
@@ -105,9 +93,6 @@ jobs:
     mypy:
         executor: python
         steps:
-            - restore_cache:
-                  keys:
-                      - cache-{{ checksum "Pipfile-tools.lock" }}
             - install_python_dependencies
             - run:
                   name: Run mypy
