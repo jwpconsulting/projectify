@@ -19,7 +19,11 @@ const config = {
             config(config) {
                 return {
                     ...config,
-                    include: [...config.include, "../tailwind.config.ts"],
+                    include: [
+                        ...config.include,
+                        "../tailwind.config.ts",
+                        "../knip.ts",
+                    ],
                 };
             },
         },
