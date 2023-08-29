@@ -5,7 +5,7 @@ import en from "../messages/en.json";
 
 const defaultLocale = "en";
 
-export function initializeI18n() {
+function initializeI18n() {
     addMessages("en", en);
     const initialization = init({
         fallbackLocale: defaultLocale,
