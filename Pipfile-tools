@@ -4,14 +4,14 @@ verify_ssl = true
 name = "pypi"
 
 [dev-packages]
-black = "==22.6.0"
-flake8 = "==4.0.1"
-flake8-black = "==0.3.3"
-flake8-docstrings = "==1.6.0"
-flake8-isort = "==4.1.1"
-ipython = "==8.4.0"
-isort = "==5.10.1"
-pytest = "==7.1.2"
+black = "~=22.6.0"
+flake8 = "~=4.0.1"
+flake8-black = "~=0.3.3"
+flake8-docstrings = "~=1.6.0"
+flake8-isort = "~=4.1.1"
+ipython = "~=8.4.0"
+isort = "~=5.10.1"
+pytest = "~=7.1.2"
 mypy = "*"
 types-toml = "*"
 
@@ -20,4 +20,4 @@ click = "*"
 toml = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3"
