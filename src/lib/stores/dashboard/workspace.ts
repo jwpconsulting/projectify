@@ -6,7 +6,7 @@ import { createWsStore } from "$lib/stores/util";
 import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
 
 // TODO rename to currentWorkspaces
-export const workspaces = writable<Workspace[] | null>(null);
+const workspaces = writable<Workspace[] | null>(null);
 
 export const currentWorkspaceUuid = writable<string | null>(null);
 
@@ -43,7 +43,7 @@ currentWorkspaceBoard.subscribe(
     }
 );
 
-export async function setWorkspaces() {
+async function setWorkspaces() {
     workspaces.set(await getWorkspaces());
 }
 

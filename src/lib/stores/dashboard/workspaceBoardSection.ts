@@ -108,7 +108,7 @@ export function createTasksPerUser(
     );
 }
 
-export function filterSectionsTasks(
+function filterSectionsTasks(
     currentFilter: CurrentFilter
 ): WorkspaceBoardSection[] {
     let sections: WorkspaceBoardSection[] =
