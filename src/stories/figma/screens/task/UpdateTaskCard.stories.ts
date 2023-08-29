@@ -6,9 +6,6 @@ import UpdateTaskCard from "$lib/figma/screens/task/UpdateTaskCard.svelte";
 
 const meta: Meta<UpdateTaskCard> = {
     component: UpdateTaskCard,
-    parameters: {
-        layout: "fullscreen",
-    },
     args: {
         task,
         taskModule,
