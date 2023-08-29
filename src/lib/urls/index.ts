@@ -14,14 +14,6 @@ export function getDashboardWorkspaceBoardSectionUrl(
     return `/dashboard/workspace-board-section/${workspaceBoardSectionUuid}`;
 }
 
-export function getDashboardTaskUrl(
-    workspaceBoardUuid: string,
-    taskUuid: string,
-    view: string
-) {
-    return `/dashboard/workspace-board/${workspaceBoardUuid}?task=${taskUuid}&view=${view}`;
-}
-
 export function getSettingsUrl(workspaceUuid: string, kind: SettingKind) {
     const root = `/dashboard/settings/${workspaceUuid}`;
     if (kind === "index") {
