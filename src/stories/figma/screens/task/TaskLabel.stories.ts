@@ -15,8 +15,7 @@ const meta: Meta<TaskLabel> = {
         }),
     },
     args: {
-        // XXX I can't specify 3-labels-selected here. Would be cool if I could
-        labels: mappedLabels.slice(1, 4),
+        labels: "3-labels-selected",
     },
 };
 export default meta;
@@ -27,6 +26,6 @@ export const Default: Story = {};
 
 export const ApplyLabel: Story = {
     args: {
-        labels: [],
+        labels: "0-labels-selected",
     },
 };
