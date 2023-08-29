@@ -69,7 +69,9 @@
             <div class="flex flex-row items-center">
                 <Title {task} />
             </div>
-            <div class="flex flex-row items-center justify-start gap-6">
+            <div
+                class="flex flex-row items-center justify-start gap-6 overflow-x-auto"
+            >
                 <Labels {task} />
             </div>
             <SubTaskProgress {task} />
