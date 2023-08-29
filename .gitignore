@@ -1,6 +1,8 @@
 .DS_Store
 node_modules
+# Build output
 /build
+storybook-static
 /.svelte-kit
 /package
 .env
