@@ -1,4 +1,4 @@
-export const onboardingStates = [
+const onboardingStates = [
     "about-you",
     "new-workspace",
     "billing-details",
