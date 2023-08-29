@@ -2,10 +2,10 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 
 import { mobileParameters, task, taskModule } from "$lib/storybook";
 
-import TaskUpdateCard from "$lib/figma/screens/task/TaskUpdateCard.svelte";
+import UpdateTaskCard from "$lib/figma/screens/task/UpdateTaskCard.svelte";
 
-const meta: Meta<TaskUpdateCard> = {
-    component: TaskUpdateCard,
+const meta: Meta<UpdateTaskCard> = {
+    component: UpdateTaskCard,
     parameters: {
         layout: "fullscreen",
     },
@@ -16,7 +16,7 @@ const meta: Meta<TaskUpdateCard> = {
 };
 export default meta;
 
-type Story = StoryObj<TaskUpdateCard>;
+type Story = StoryObj<UpdateTaskCard>;
 
 export const Default: Story = {};
 

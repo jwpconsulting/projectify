@@ -7,7 +7,7 @@
     import type { PageData } from "./$types";
 
     import Loading from "$lib/components/loading.svelte";
-    import TaskCreateCard from "$lib/figma/screens/task/TaskCreateCard.svelte";
+    import CreateTaskCard from "$lib/figma/screens/task/CreateTaskCard.svelte";
     import { createTask as createTaskFn } from "$lib/repository/workspace";
     import { createLabelSearchModule } from "$lib/stores/modules";
     import type { CreateTaskModule } from "$lib/types/stores";
@@ -91,7 +91,7 @@
 </script>
 
 {#if createTaskModule}
-    <TaskCreateCard {createTaskModule} />
+    <CreateTaskCard {createTaskModule} />
 {:else}
     <Loading />
 {/if}

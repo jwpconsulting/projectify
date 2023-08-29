@@ -2,15 +2,15 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 
 import { task } from "$lib/storybook";
 
-import TaskReadCard from "$lib/figma/screens/task/TaskReadCard.svelte";
+import ReadTaskCard from "$lib/figma/screens/task/ReadTaskCard.svelte";
 
-const meta: Meta<TaskReadCard> = {
-    component: TaskReadCard,
+const meta: Meta<ReadTaskCard> = {
+    component: ReadTaskCard,
     argTypes: {},
     args: { task },
 };
 export default meta;
 
-type Story = StoryObj<TaskReadCard>;
+type Story = StoryObj<ReadTaskCard>;
 
 export const Default: Story = {};

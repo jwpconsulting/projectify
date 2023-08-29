@@ -5,7 +5,7 @@
     import { goto } from "$lib/navigation";
     import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
 
-    import TaskUpdateCard from "$lib/figma/screens/task/TaskUpdateCard.svelte";
+    import UpdateTaskCard from "$lib/figma/screens/task/UpdateTaskCard.svelte";
     import {
         assignLabelToTask,
         updateTask as performUpdateTask,
@@ -21,6 +21,7 @@
 
     export let data: { task: Task };
     const { task } = data;
+    // XXX TODO why nullable?
     let taskModule: TaskModule | null = null;
 
     let updateTask: Writable<Partial<Task>> = writable({});
@@ -87,5 +88,5 @@
 </script>
 
 {#if taskModule}
-    <TaskUpdateCard {task} {taskModule} />
+    <UpdateTaskCard {task} {taskModule} />
 {/if}

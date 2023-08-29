@@ -1,8 +1,8 @@
 <script lang="ts">
-    import TaskReadCard from "$lib/figma/screens/task/TaskReadCard.svelte";
+    import ReadTaskCard from "$lib/figma/screens/task/ReadTaskCard.svelte";
     import { currentTask } from "$lib/stores/dashboard";
 </script>
 
 {#if $currentTask}
-    <TaskReadCard task={$currentTask} />
+    <ReadTaskCard task={$currentTask} />
 {/if}
