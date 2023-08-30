@@ -97,7 +97,7 @@ export async function openDestructiveOverlay(
 }
 
 // call only when failed
-export function closeDestructiveOverlay() {
+export function rejectDestructiveOverlay() {
     closeOverlay(_destructiveOverlayState, "failure");
 }
 

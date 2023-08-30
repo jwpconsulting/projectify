@@ -3,7 +3,7 @@
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import {
-        closeDestructiveOverlay,
+        rejectDestructiveOverlay,
         performDestructiveOverlay,
     } from "$lib/stores/globalUi";
     import type { DestructiveOverlayType } from "$lib/types/ui";
@@ -114,7 +114,7 @@
                 style={{ kind: "secondary" }}
                 size="medium"
                 color="blue"
-                action={{ kind: "button", action: closeDestructiveOverlay }}
+                action={{ kind: "button", action: rejectDestructiveOverlay }}
                 label={$_("destructive-overlay.cancel")}
             />
             <Button
