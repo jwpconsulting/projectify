@@ -101,3 +101,21 @@ It might fail around the end, with a
 
 Someone [else](https://github.com/vercel/turbo/issues/4612) appears to have
 this issue as well.
+
+# Running LSP
+
+For vim, you might enhance your config with something like this:
+
+```lua
+
+lspconfig.tsserver.setup {
+    cmd = { 'npm', 'run', 'typescript-language-server', '--', '--stdio' },
+}
+lspconfig.svelte.setup {
+    cmd = { 'npm', 'run', 'svelteserver', '--', '--stdio' },
+}
+```
+
+Also refer to these resources:
+
+- [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/tree/master)
