@@ -1,20 +1,19 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import PageLayout from "$lib/components/layouts/pageLayout.svelte";
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
 </script>
 
-<PageLayout>
-    <main
-        class="flex grow flex-col items-center justify-center bg-base-200 p-4"
-    >
-        <h1 class="pb-2 text-6xl">{$_("404")}</h1>
-        <div class="font-bold">{$_("page-not-found")}</div>
-        <div class="text-sm">
-            {$_("the-page-you-are-looking-for-could-not-be-found")}
-        </div>
-        <a href="/" class="btn-action btn btn-md m-3 rounded-full px-8"
-            >{$_("go-back")}</a
-        >
-    </main>
-</PageLayout>
+<div class="flex flex-col gap-12 p-20">
+    <header class="flex flex-col gap-12">
+        <h1 class="text-5xl font-bold">
+            {$_("page404.title")}
+        </h1>
+        <p class="text-xl font-bold">
+            {$_("page404.body")}
+        </p>
+    </header>
+    <section>
+        <Anchor label={$_("page404.home")} href="/" size="large" />
+    </section>
+</div>

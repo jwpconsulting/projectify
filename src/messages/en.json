@@ -24,6 +24,11 @@
         },
         "no-user-assigned": "No user assigned"
     },
+    "page404": {
+        "title": "Lost your way?",
+        "body": "The page you're looking for doesn't exist.",
+        "home": "Take me home"
+    },
     "filter-label-menu": {
         "filter-labels": "Filter labels",
         "create-new-label": "Create new label",
