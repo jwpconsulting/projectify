@@ -9,7 +9,6 @@
 
     export let target: MobileMenuType;
     onMount(() => {
-        console.log("TODO", target);
         return handleKey("Escape", closeMobileMenu);
     });
 </script>
