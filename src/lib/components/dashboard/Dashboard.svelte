@@ -21,18 +21,10 @@
     );
 
     function onAddNewSection() {
-        openConstructiveOverlaySync(
-            {
-                kind: "createWorkspaceBoardSection",
-                workspaceBoard,
-            },
-            {
-                kind: "sync",
-                action: () => {
-                    console.error("NOOP XXX");
-                },
-            }
-        );
+        openConstructiveOverlaySync({
+            kind: "createWorkspaceBoardSection",
+            workspaceBoard,
+        });
     }
 </script>
 

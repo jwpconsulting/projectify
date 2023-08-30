@@ -36,11 +36,7 @@
             kind: "deleteTask" as const,
             task,
         };
-        const action = {
-            kind: "sync" as const,
-            action: console.debug,
-        };
-        const result = await openDestructiveOverlay(target, action);
+        const result = await openDestructiveOverlay(target);
         if (result !== "success") {
             console.debug("User did not consent to task delete");
             return;

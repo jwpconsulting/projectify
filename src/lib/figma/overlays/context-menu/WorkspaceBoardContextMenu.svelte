@@ -16,11 +16,7 @@
             kind: "updateWorkspaceBoard",
             workspaceBoard,
         };
-        const action = {
-            kind: "sync" as const,
-            action: console.error.bind(null, "Don't call me"),
-        };
-        openConstructiveOverlaySync(constructiveOverlayType, action);
+        openConstructiveOverlaySync(constructiveOverlayType);
     }
 
     function archiveBoard() {

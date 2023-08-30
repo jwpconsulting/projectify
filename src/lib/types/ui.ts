@@ -56,25 +56,17 @@ export type MobileMenuType =
 
 export type OverlaySuccess = "success" | "failure" | "unknown";
 
-export type Overlay<Target, Action = undefined> =
+export type Overlay<Target> =
     | { kind: "hidden" }
     | {
           kind: "visible";
           target: Target;
-          action: Action;
           closeCallback?: (success: OverlaySuccess) => void;
       };
 
-export type OverlayAction =
-    | { kind: "async"; action: () => Promise<void> }
-    | { kind: "sync"; action: () => void };
-
 // TODO we could define some kind of UBER overlay type that also has a
 // reference to the container, ... some time in the future Justus 2023-04-04
-export type DestructiveOverlayState = Overlay<
-    DestructiveOverlayType,
-    OverlayAction
->;
+export type DestructiveOverlayState = Overlay<DestructiveOverlayType>;
 
 export type MobileMenuState = Overlay<MobileMenuType>;
 
@@ -118,10 +110,7 @@ export type ConstructiveOverlayType =
     | { kind: "createWorkspace" }
     | { kind: "skipOnboarding" }
     | { kind: "recoverWorkspaceBoard"; workspaceBoard: WorkspaceBoard };
-export type ConstructiveOverlayState = Overlay<
-    ConstructiveOverlayType,
-    OverlayAction
->;
+export type ConstructiveOverlayState = Overlay<ConstructiveOverlayType>;
 
 // TODO These can probably stay in their individual svelte pages
 export interface FeatureDescription {

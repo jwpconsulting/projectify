@@ -11,7 +11,6 @@ import type {
     MobileMenuState,
     MobileMenuType,
     Overlay,
-    OverlayAction,
     OverlaySuccess,
 } from "$lib/types/ui";
 
@@ -29,35 +28,32 @@ const { priv: _mobileMenuState, pub: mobileMenuState } =
     internallyWritable<MobileMenuState>(closedState);
 export { mobileMenuState };
 
-function makeOpenState<Target, Action>(
+function makeOpenState<Target>(
     target: Target,
-    action: Action,
     closeCallback?: (success: OverlaySuccess) => void
-): Overlay<Target, Action> {
+): Overlay<Target> {
     return {
         kind: "visible",
         target,
-        action,
         closeCallback,
     };
 }
 
-function openOverlay<Target, Action>(
-    overlay: Writable<Overlay<Target, Action>>,
+function openOverlay<Target>(
+    overlay: Writable<Overlay<Target>>,
     target: Target,
-    action: Action,
     closeCallback?: (success: OverlaySuccess) => void
 ) {
     overlay.update(($overlay) => {
         if ($overlay.kind !== "hidden") {
             throw new Error("Expected $overlay.kind to be hidden");
         }
-        return makeOpenState(target, action, closeCallback);
+        return makeOpenState(target, closeCallback);
     });
 }
 
 function closeOverlay(
-    overlay: Writable<Overlay<unknown, unknown>>,
+    overlay: Writable<Overlay<unknown>>,
     success: OverlaySuccess
 ) {
     overlay.update(($overlay) => {
@@ -71,14 +67,13 @@ function closeOverlay(
     });
 }
 
-function toggleOverlay<Target, Action>(
-    overlay: Writable<Overlay<Target, Action>>,
-    target: Target,
-    action: Action
+function toggleOverlay<Target>(
+    overlay: Writable<Overlay<Target>>,
+    target: Target
 ) {
     overlay.update(($overlay) => {
         if ($overlay.kind === "hidden") {
-            return makeOpenState(target, action);
+            return makeOpenState(target);
         } else {
             return closedState;
         }
@@ -86,12 +81,11 @@ function toggleOverlay<Target, Action>(
 }
 
 export async function openDestructiveOverlay(
-    target: DestructiveOverlayType,
-    action: OverlayAction
+    target: DestructiveOverlayType
 ): Promise<OverlaySuccess> {
     const finished = new Promise<OverlaySuccess>(
         (resolve: (success: OverlaySuccess) => void) => {
-            openOverlay(_destructiveOverlayState, target, action, resolve);
+            openOverlay(_destructiveOverlayState, target, resolve);
         }
     );
     return finished;
@@ -109,36 +103,15 @@ export function performDestructiveOverlay() {
                 "Expected $destructiveOverlayState.kind to be visible"
             );
         }
-        if ($destructiveOverlayState.action.kind === "sync") {
-            $destructiveOverlayState.action.action();
-            if ($destructiveOverlayState.closeCallback) {
-                $destructiveOverlayState.closeCallback("success");
-            }
-            return { kind: "hidden" };
-        } else {
-            $destructiveOverlayState.action
-                .action()
-                .then(() => closeOverlay(_destructiveOverlayState, "success"))
-                .catch((error: Error) => {
-                    console.error(
-                        "When resolving this Promise, this happened",
-                        {
-                            error,
-                        }
-                    );
-                });
-            // We don't set the state now, we wait for when the action
-            // finished performing
-            return $destructiveOverlayState;
+        if ($destructiveOverlayState.closeCallback) {
+            $destructiveOverlayState.closeCallback("success");
         }
+        return { kind: "hidden" };
     });
 }
 
-export function openConstructiveOverlaySync(
-    target: ConstructiveOverlayType,
-    action: OverlayAction
-) {
-    openOverlay(_constructiveOverlayState, target, action);
+export function openConstructiveOverlaySync(target: ConstructiveOverlayType) {
+    openOverlay(_constructiveOverlayState, target);
 }
 
 export function closeConstructiveOverlay() {
@@ -150,7 +123,7 @@ export function closeMobileMenu() {
 }
 
 export function toggleMobileMenu(type: MobileMenuType) {
-    toggleOverlay(_mobileMenuState, type, undefined);
+    toggleOverlay(_mobileMenuState, type);
 }
 
 const { priv: _contextMenuState, pub: contextMenuState } =

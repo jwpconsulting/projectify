@@ -3,7 +3,7 @@
 
     import type { Overlay } from "$lib/types/ui";
 
-    export let store: Readable<Overlay<unknown, unknown>>;
+    export let store: Readable<Overlay<unknown>>;
 
     export let fixed = true;
 </script>

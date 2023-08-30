@@ -8,12 +8,7 @@
     };
 
     async function open() {
-        await openDestructiveOverlay(target, {
-            kind: "sync",
-            action: () => {
-                console.log("Action performed");
-            },
-        });
+        await openDestructiveOverlay(target);
     }
 </script>
 

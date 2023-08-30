@@ -22,11 +22,7 @@
             kind: "createWorkspaceBoard" as const,
             workspace,
         };
-        const action = {
-            kind: "sync" as const,
-            action: console.log,
-        };
-        openConstructiveOverlaySync(target, action);
+        openConstructiveOverlaySync(target);
     }
 </script>
 
