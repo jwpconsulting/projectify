@@ -75,7 +75,7 @@ function toggleOverlay<Target, Action>(
     });
 }
 
-export function openDestructiveOverlay(
+export function openDestructiveOverlaySync(
     target: DestructiveOverlayType,
     action: OverlayAction
 ) {

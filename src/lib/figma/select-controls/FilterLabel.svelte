@@ -6,7 +6,7 @@
     import type { SelectLabel } from "$lib/figma/types";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { deleteLabel } from "$lib/repository/workspace";
-    import { openDestructiveOverlay } from "$lib/stores/globalUi";
+    import { openDestructiveOverlaySync } from "$lib/stores/globalUi";
 
     export let label: SelectLabel;
     export let checked: boolean;
@@ -43,7 +43,7 @@
             throw new Error("Expected label");
         }
         const l = label.label;
-        openDestructiveOverlay(
+        openDestructiveOverlaySync(
             { kind: "deleteLabel", label: l },
             {
                 kind: "async",

@@ -20,7 +20,7 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
     import { deleteTask } from "$lib/stores/dashboard";
-    import { openDestructiveOverlay } from "$lib/stores/globalUi";
+    import { openDestructiveOverlaySync } from "$lib/stores/globalUi";
     import type { MoveTaskModule } from "$lib/types/stores";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
     import { copyToClipboard } from "$lib/utils/clipboard";
@@ -44,7 +44,7 @@
             },
         };
 
-        openDestructiveOverlay(target, action);
+        openDestructiveOverlaySync(target, action);
     }
 </script>
 

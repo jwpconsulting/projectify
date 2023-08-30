@@ -1,6 +1,6 @@
 <script lang="ts">
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import { openDestructiveOverlay } from "$lib/stores/globalUi";
+    import { openDestructiveOverlaySync } from "$lib/stores/globalUi";
 
     const target = {
         kind: "deleteLabel" as const,
@@ -8,7 +8,7 @@
     };
 
     function open() {
-        openDestructiveOverlay(target, {
+        openDestructiveOverlaySync(target, {
             kind: "sync",
             action: () => {
                 console.log("Action performed");
@@ -17,7 +17,7 @@
     }
 
     function openAsync() {
-        openDestructiveOverlay(target, {
+        openDestructiveOverlaySync(target, {
             kind: "async",
             action: async () => {
                 await new Promise((resolve) => resolve(null));
