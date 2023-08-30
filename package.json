@@ -6,6 +6,8 @@
         "build": "bin/prebuild.sh && vite build",
         "package": "vite package",
         "preview": "vite preview --port 3000",
+        "typescript-language-server": "typescript-language-server",
+        "svelteserver": "svelteserver",
         "check": "npm run check:prettier && npm run check:eslint && npm run check:svelte-check && npm run check:knip",
         "check:eslint": "eslint . --cache --ext .ts,.js,.svelte src",
         "check:prettier": "prettier --ignore-path .gitignore --check --plugin-search-dir=. --cache --cache-strategy metadata .",
@@ -42,7 +44,9 @@
         "react-dom": "^18.2.0",
         "storybook": "^7.0.7",
         "svelte-check": "^3.4.3",
-        "svelte-eslint-parser": "^0.33.0"
+        "svelte-eslint-parser": "^0.33.0",
+        "svelte-language-server": "^0.15.18",
+        "typescript-language-server": "^3.3.2"
     },
     "type": "module",
     "dependencies": {
