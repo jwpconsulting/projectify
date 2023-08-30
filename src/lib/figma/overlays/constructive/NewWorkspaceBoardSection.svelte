@@ -4,7 +4,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { createWorkspaceBoardSection } from "$lib/repository/workspace";
-    import { closeConstructiveOverlay } from "$lib/stores/globalUi";
+    import { resolveConstructiveOverlay } from "$lib/stores/globalUi";
     import type {
         CreateWorkspaceBoardSection,
         WorkspaceBoard,
@@ -37,7 +37,7 @@
 </div>
 <div class="flex flex-row justify-center">
     <Button
-        action={{ kind: "button", action: closeConstructiveOverlay }}
+        action={{ kind: "button", action: resolveConstructiveOverlay }}
         style={{ kind: "secondary" }}
         size="medium"
         color="blue"

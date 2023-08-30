@@ -7,7 +7,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { createWorkspaceBoard } from "$lib/repository/workspace";
-    import { closeConstructiveOverlay } from "$lib/stores/globalUi";
+    import { resolveConstructiveOverlay } from "$lib/stores/globalUi";
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspace: Workspace;
@@ -23,7 +23,7 @@
             description: "TODO",
             deadline: null,
         });
-        closeConstructiveOverlay();
+        resolveConstructiveOverlay();
         await goto(getDashboardWorkspaceBoardUrl(uuid));
     }
 </script>

@@ -4,7 +4,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { updateWorkspaceBoard } from "$lib/repository/workspace";
-    import { closeConstructiveOverlay } from "$lib/stores/globalUi";
+    import { resolveConstructiveOverlay } from "$lib/stores/globalUi";
     import type { WorkspaceBoard } from "$lib/types/workspace";
 
     // TODO do something with workspaceBoard
@@ -20,7 +20,7 @@
             deadline,
         };
         await updateWorkspaceBoard(updatedWorkspaceBoard);
-        closeConstructiveOverlay();
+        resolveConstructiveOverlay();
     }
 </script>
 
@@ -44,7 +44,7 @@
     <Button
         action={{
             kind: "button",
-            action: closeConstructiveOverlay,
+            action: resolveConstructiveOverlay,
         }}
         style={{ kind: "secondary" }}
         size="medium"

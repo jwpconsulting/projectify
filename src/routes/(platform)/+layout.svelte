@@ -8,7 +8,7 @@
     import MobileMenuOverlay from "$lib/figma/overlays/MobileMenuOverlay.svelte";
     import {
         mobileMenuState,
-        closeConstructiveOverlay,
+        resolveConstructiveOverlay,
         constructiveOverlayState,
         destructiveOverlayState,
     } from "$lib/stores/globalUi";
@@ -34,7 +34,7 @@
 </OverlayContainer>
 
 <OverlayContainer store={constructiveOverlayState} let:target>
-    <ConstructiveOverlay {target} on:cancel={closeConstructiveOverlay} />
+    <ConstructiveOverlay {target} on:cancel={resolveConstructiveOverlay} />
 </OverlayContainer>
 
 <ContextMenuContainer />
