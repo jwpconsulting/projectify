@@ -57,11 +57,17 @@ function openOverlay<Target>(
 
 function closeOverlay(
     overlay: Writable<Overlay<unknown>>,
-    success: OverlaySuccess
+    success: OverlaySuccess,
+    expectVisible = true
 ) {
     overlay.update(($overlay) => {
         if ($overlay.kind !== "visible") {
-            throw new Error("Expected $overlay.kind to be visible");
+            if (expectVisible) {
+                throw new Error("Expected $overlay.kind to be visible");
+            } else {
+                console.debug("Tried to close overlay, but it wasn't visible");
+                return $overlay;
+            }
         }
         if (success == "success") {
             $overlay.resolve();
@@ -120,7 +126,7 @@ export function resolveConstructiveOverlay() {
 }
 
 export function closeMobileMenu() {
-    closeOverlay(_mobileMenuState, "success");
+    closeOverlay(_mobileMenuState, "success", false);
 }
 
 export async function toggleMobileMenu(type: MobileMenuType) {
