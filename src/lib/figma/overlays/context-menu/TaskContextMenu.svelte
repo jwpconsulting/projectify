@@ -20,7 +20,7 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
     import { deleteTask } from "$lib/stores/dashboard";
-    import { openDestructiveOverlaySync } from "$lib/stores/globalUi";
+    import { openDestructiveOverlay } from "$lib/stores/globalUi";
     import type { MoveTaskModule } from "$lib/types/stores";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
     import { copyToClipboard } from "$lib/utils/clipboard";
@@ -30,21 +30,23 @@
     export let moveTaskModule: MoveTaskModule | undefined;
     export let location: "dashboard" | "task";
 
-    function promptDeleteTask() {
+    async function promptDeleteTask() {
         const { uuid } = workspaceBoardSection;
         const target = {
             kind: "deleteTask" as const,
             task,
         };
         const action = {
-            kind: "async" as const,
-            action: async () => {
-                await deleteTask(task);
-                await goto(getDashboardWorkspaceBoardSectionUrl(uuid));
-            },
+            kind: "sync" as const,
+            action: console.debug,
         };
-
-        openDestructiveOverlaySync(target, action);
+        const result = await openDestructiveOverlay(target, action);
+        if (result !== "success") {
+            console.debug("User did not consent to task delete");
+            return;
+        }
+        await deleteTask(task);
+        await goto(getDashboardWorkspaceBoardSectionUrl(uuid));
     }
 </script>
 

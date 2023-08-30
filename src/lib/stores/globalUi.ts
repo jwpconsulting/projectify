@@ -12,6 +12,7 @@ import type {
     MobileMenuType,
     Overlay,
     OverlayAction,
+    OverlaySuccess,
 } from "$lib/types/ui";
 
 const closedState = { kind: "hidden" as const };
@@ -30,32 +31,41 @@ export { mobileMenuState };
 
 function makeOpenState<Target, Action>(
     target: Target,
-    action: Action
+    action: Action,
+    closeCallback?: (success: OverlaySuccess) => void
 ): Overlay<Target, Action> {
     return {
         kind: "visible",
         target,
         action,
+        closeCallback,
     };
 }
 
 function openOverlay<Target, Action>(
     overlay: Writable<Overlay<Target, Action>>,
     target: Target,
-    action: Action
+    action: Action,
+    closeCallback?: (success: OverlaySuccess) => void
 ) {
     overlay.update(($overlay) => {
         if ($overlay.kind !== "hidden") {
             throw new Error("Expected $overlay.kind to be hidden");
         }
-        return makeOpenState(target, action);
+        return makeOpenState(target, action, closeCallback);
     });
 }
 
-function closeOverlay(overlay: Writable<Overlay<unknown, unknown>>) {
+function closeOverlay(
+    overlay: Writable<Overlay<unknown, unknown>>,
+    success: OverlaySuccess
+) {
     overlay.update(($overlay) => {
         if ($overlay.kind !== "visible") {
             throw new Error("Expected $overlay.kind to be visible");
+        }
+        if ($overlay.closeCallback) {
+            $overlay.closeCallback(success);
         }
         return closedState;
     });
@@ -75,6 +85,18 @@ function toggleOverlay<Target, Action>(
     });
 }
 
+export async function openDestructiveOverlay(
+    target: DestructiveOverlayType,
+    action: OverlayAction
+): Promise<OverlaySuccess> {
+    const finished = new Promise<OverlaySuccess>(
+        (resolve: (success: OverlaySuccess) => void) => {
+            openOverlay(_destructiveOverlayState, target, action, resolve);
+        }
+    );
+    return finished;
+}
+
 export function openDestructiveOverlaySync(
     target: DestructiveOverlayType,
     action: OverlayAction
@@ -82,8 +104,9 @@ export function openDestructiveOverlaySync(
     openOverlay(_destructiveOverlayState, target, action);
 }
 
+// most likely called when unsuccessful
 export function closeDestructiveOverlay() {
-    closeOverlay(_destructiveOverlayState);
+    closeOverlay(_destructiveOverlayState, "unknown");
 }
 
 export function performDestructiveOverlay() {
@@ -95,11 +118,14 @@ export function performDestructiveOverlay() {
         }
         if ($destructiveOverlayState.action.kind === "sync") {
             $destructiveOverlayState.action.action();
+            if ($destructiveOverlayState.closeCallback) {
+                $destructiveOverlayState.closeCallback("success");
+            }
             return { kind: "hidden" };
         } else {
             $destructiveOverlayState.action
                 .action()
-                .then(() => closeOverlay(_destructiveOverlayState))
+                .then(() => closeOverlay(_destructiveOverlayState, "success"))
                 .catch((error: Error) => {
                     console.error(
                         "When resolving this Promise, this happened",
@@ -123,11 +149,11 @@ export function openConstructiveOverlay(
 }
 
 export function closeConstructiveOverlay() {
-    closeOverlay(_constructiveOverlayState);
+    closeOverlay(_constructiveOverlayState, "unknown");
 }
 
 export function closeMobileMenu() {
-    closeOverlay(_mobileMenuState);
+    closeOverlay(_mobileMenuState, "unknown");
 }
 
 export function toggleMobileMenu(type: MobileMenuType) {

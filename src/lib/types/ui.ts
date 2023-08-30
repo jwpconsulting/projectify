@@ -54,12 +54,15 @@ export type MobileMenuType =
     | { kind: "dashboard" }
     | { kind: "continue" };
 
+export type OverlaySuccess = "success" | "failure" | "unknown";
+
 export type Overlay<Target, Action = undefined> =
     | { kind: "hidden" }
     | {
           kind: "visible";
           target: Target;
           action: Action;
+          closeCallback?: (success: OverlaySuccess) => void;
       };
 
 export type OverlayAction =

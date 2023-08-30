@@ -6,7 +6,7 @@
     import type { SelectLabel } from "$lib/figma/types";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { deleteLabel } from "$lib/repository/workspace";
-    import { openDestructiveOverlaySync } from "$lib/stores/globalUi";
+    import { openDestructiveOverlay } from "$lib/stores/globalUi";
 
     export let label: SelectLabel;
     export let checked: boolean;
@@ -38,20 +38,23 @@
         // TODO
     }
 
-    function onDelete() {
+    async function onDelete() {
         if (label.kind !== "label") {
             throw new Error("Expected label");
         }
         const l = label.label;
-        openDestructiveOverlaySync(
+        const result = await openDestructiveOverlay(
             { kind: "deleteLabel", label: l },
             {
-                kind: "async",
-                action: async () => {
-                    await deleteLabel(l);
-                },
+                kind: "sync",
+                action: console.log,
             }
         );
+        if (result !== "success") {
+            console.debug("User did not consent");
+            return;
+        }
+        await deleteLabel(l);
     }
 </script>
 
