@@ -2,6 +2,7 @@
     import { _ } from "svelte-i18n";
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import { rejectConstructiveOverlay } from "$lib/stores/globalUi";
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspace: Workspace;
@@ -15,9 +16,7 @@
     <Button
         action={{
             kind: "button",
-            action: () => {
-                console.error("Cancel not implemented");
-            },
+            action: rejectConstructiveOverlay,
         }}
         style={{ kind: "secondary" }}
         size="medium"

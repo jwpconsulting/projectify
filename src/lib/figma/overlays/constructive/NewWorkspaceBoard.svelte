@@ -7,7 +7,10 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { createWorkspaceBoard } from "$lib/repository/workspace";
-    import { resolveConstructiveOverlay } from "$lib/stores/globalUi";
+    import {
+        rejectConstructiveOverlay,
+        resolveConstructiveOverlay,
+    } from "$lib/stores/globalUi";
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspace: Workspace;
@@ -23,8 +26,8 @@
             description: "TODO",
             deadline: null,
         });
-        resolveConstructiveOverlay();
         await goto(getDashboardWorkspaceBoardUrl(uuid));
+        resolveConstructiveOverlay();
     }
 </script>
 
@@ -47,9 +50,7 @@
     <Button
         action={{
             kind: "button",
-            action: () => {
-                console.error("Cancel not implemented");
-            },
+            action: rejectConstructiveOverlay,
         }}
         style={{ kind: "secondary" }}
         size="medium"

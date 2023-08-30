@@ -2,6 +2,7 @@
     import { _ } from "svelte-i18n";
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import { rejectConstructiveOverlay } from "$lib/stores/globalUi";
 </script>
 
 <p class="text-center">
@@ -11,9 +12,7 @@
     <Button
         action={{
             kind: "button",
-            action: () => {
-                console.error("Cancel not implemented");
-            },
+            action: rejectConstructiveOverlay,
         }}
         style={{ kind: "secondary" }}
         size="medium"

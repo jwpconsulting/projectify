@@ -3,6 +3,7 @@
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import { rejectConstructiveOverlay } from "$lib/stores/globalUi";
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspace: Workspace;
@@ -21,7 +22,7 @@
     <Button
         action={{
             kind: "button",
-            action: console.error.bind(null, "Cancel not implemented"),
+            action: rejectConstructiveOverlay,
         }}
         style={{ kind: "secondary" }}
         size="medium"

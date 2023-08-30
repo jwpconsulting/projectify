@@ -111,6 +111,10 @@ export async function openConstructiveOverlay(
     return openOverlay(_constructiveOverlayState, target);
 }
 
+export function rejectConstructiveOverlay() {
+    closeOverlay(_constructiveOverlayState, "failure");
+}
+
 export function resolveConstructiveOverlay() {
     closeOverlay(_constructiveOverlayState, "success");
 }
