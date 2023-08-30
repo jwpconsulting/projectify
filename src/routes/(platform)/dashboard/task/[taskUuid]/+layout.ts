@@ -1,3 +1,5 @@
+import type { Unsubscriber } from "svelte/store";
+
 import type { LayoutLoadEvent } from "./$types";
 
 import {
@@ -25,9 +27,10 @@ interface Data {
 export async function load({
     params: { taskUuid },
 }: LayoutLoadEvent): Promise<Data> {
-    currentTaskUuid.set(taskUuid);
-    return new Promise<Data>((resolve) => {
-        currentTask.subscribe(($currentTask) => {
+    let unsubscriber: Unsubscriber | undefined = undefined;
+    const data = new Promise<Data>((resolve) => {
+        // Retrieving the data for this page through a subscription is weird
+        unsubscriber = currentTask.subscribe(($currentTask) => {
             if (!$currentTask) {
                 return;
             }
@@ -51,6 +54,15 @@ export async function load({
                 workspaceBoard,
                 workspace,
             });
+            // I don't see a world where unsubscriber wouldn't be assigned, but
+            // we never know...
+            if (!unsubscriber) {
+                throw new Error("Expected unsubscriber");
+            }
+            // Sometimes we forget to unsubscribe
+            unsubscriber();
         });
     });
+    currentTaskUuid.set(taskUuid);
+    return await data;
 }

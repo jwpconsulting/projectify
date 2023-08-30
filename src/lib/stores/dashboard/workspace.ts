@@ -16,6 +16,7 @@ export const currentWorkspace = createWsStore<Workspace>(
     getWorkspace
 );
 
+// TODO see if we can't make this as a derived store Justus 2023-08-30
 currentWorkspaceBoard.subscribe(
     ($currentWorkspaceBoard: WorkspaceBoard | null) => {
         if (!$currentWorkspaceBoard) {
@@ -47,6 +48,7 @@ async function setWorkspaces() {
     workspaces.set(await getWorkspaces());
 }
 
+// TODO see if we can't make this as a derived store Justus 2023-08-30
 workspaces.subscribe(($workspaces: Workspace[] | null) => {
     if ($workspaces === null) {
         return;

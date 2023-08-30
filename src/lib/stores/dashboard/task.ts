@@ -16,6 +16,9 @@ export const taskSearchInput = writable<string>("");
 export const currentTaskUuid = writable<string | null>(null);
 
 // Clear on workspace board change
+// TODO clarify if this subscription still makes sense
+// It's good to unsubscribe whenever we can
+// Justus 2023-08-30
 currentWorkspaceBoardUuid.subscribe((_uuid) => {
     selectedLabels.set({ kind: "allLabels" });
     selectWorkspaceUser({ kind: "allWorkspaceUsers" });

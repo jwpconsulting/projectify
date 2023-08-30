@@ -10,6 +10,7 @@ export function seatMinus() {
 export function seatAdd() {
     seats.update((n) => n + seatUnit);
 }
+// TODO can we make this a derivation or just fix seatAdd? Justus 2023-08-30
 seats.subscribe((n) => {
     if (n > seatMax) {
         seats.set(seatMax);
