@@ -30,7 +30,7 @@
 
 <!-- TODO improve -->
 <div
-    class={`relative m-0.5 h-4 w-4 rounded border border-secondary-hover ${outerStyle}`}
+    class="relative m-0.5 h-4 w-4 rounded border border-secondary-hover {outerStyle}"
 >
     {#if checked && !disabled}
         <Icon src={Check} class="absolute" theme="outline" />
