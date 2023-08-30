@@ -32,15 +32,7 @@
 
     async function promptDeleteTask() {
         const { uuid } = workspaceBoardSection;
-        const target = {
-            kind: "deleteTask" as const,
-            task,
-        };
-        const result = await openDestructiveOverlay(target);
-        if (result !== "success") {
-            console.debug("User did not consent to task delete");
-            return;
-        }
+        await openDestructiveOverlay({ kind: "deleteTask" as const, task });
         await deleteTask(task);
         await goto(getDashboardWorkspaceBoardSectionUrl(uuid));
     }

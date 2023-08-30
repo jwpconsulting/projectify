@@ -54,14 +54,15 @@ export type MobileMenuType =
     | { kind: "dashboard" }
     | { kind: "continue" };
 
-export type OverlaySuccess = "success" | "failure" | "unknown";
+export type OverlaySuccess = "success" | "failure";
 
 export type Overlay<Target> =
     | { kind: "hidden" }
     | {
           kind: "visible";
           target: Target;
-          closeCallback: (success: OverlaySuccess) => void;
+          resolve: () => void;
+          reject: () => void;
       };
 
 // TODO we could define some kind of UBER overlay type that also has a

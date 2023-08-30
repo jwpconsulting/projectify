@@ -30,29 +30,29 @@ export { mobileMenuState };
 
 function makeOpenState<Target>(
     target: Target,
-    closeCallback: (success: OverlaySuccess) => void
+    resolve: () => void,
+    reject: () => void
 ): Overlay<Target> {
     return {
         kind: "visible",
         target,
-        closeCallback,
+        resolve,
+        reject,
     };
 }
 
 function openOverlay<Target>(
     overlay: Writable<Overlay<Target>>,
     target: Target
-) {
-    return new Promise<OverlaySuccess>(
-        (resolve: (success: OverlaySuccess) => void) => {
-            overlay.update(($overlay) => {
-                if ($overlay.kind !== "hidden") {
-                    throw new Error("Expected $overlay.kind to be hidden");
-                }
-                return makeOpenState(target, resolve);
-            });
-        }
-    );
+): Promise<void> {
+    return new Promise((resolve: () => void, reject: () => void) => {
+        overlay.update(($overlay) => {
+            if ($overlay.kind !== "hidden") {
+                throw new Error("Expected $overlay.kind to be hidden");
+            }
+            return makeOpenState(target, resolve, reject);
+        });
+    });
 }
 
 function closeOverlay(
@@ -63,7 +63,11 @@ function closeOverlay(
         if ($overlay.kind !== "visible") {
             throw new Error("Expected $overlay.kind to be visible");
         }
-        $overlay.closeCallback(success);
+        if (success == "success") {
+            $overlay.resolve();
+        } else {
+            $overlay.reject();
+        }
         return closedState;
     });
 }
@@ -71,15 +75,15 @@ function closeOverlay(
 function toggleOverlay<Target>(
     overlay: Writable<Overlay<Target>>,
     target: Target
-) {
-    return new Promise((resolve: (success: OverlaySuccess) => void) => {
+): Promise<void> {
+    return new Promise((resolve: () => void, reject: () => void) => {
         overlay.update(($overlay) => {
             if ($overlay.kind === "hidden") {
-                return makeOpenState(target, resolve);
+                return makeOpenState(target, resolve, reject);
             } else {
                 // If we resolve immediately like this, we might want to
                 // have another status than "success"
-                resolve("success");
+                resolve();
                 return closedState;
             }
         });
@@ -88,13 +92,13 @@ function toggleOverlay<Target>(
 
 export async function openDestructiveOverlay(
     target: DestructiveOverlayType
-): Promise<OverlaySuccess> {
+): Promise<void> {
     return openOverlay(_destructiveOverlayState, target);
 }
 
-// most likely called when unsuccessful
+// call only when failed
 export function closeDestructiveOverlay() {
-    closeOverlay(_destructiveOverlayState, "unknown");
+    closeOverlay(_destructiveOverlayState, "failure");
 }
 
 export function performDestructiveOverlay() {
@@ -104,23 +108,23 @@ export function performDestructiveOverlay() {
                 "Expected $destructiveOverlayState.kind to be visible"
             );
         }
-        $destructiveOverlayState.closeCallback("success");
+        $destructiveOverlayState.resolve();
         return { kind: "hidden" };
     });
 }
 
 export async function openConstructiveOverlay(
     target: ConstructiveOverlayType
-): Promise<OverlaySuccess> {
+): Promise<void> {
     return openOverlay(_constructiveOverlayState, target);
 }
 
 export function closeConstructiveOverlay() {
-    closeOverlay(_constructiveOverlayState, "unknown");
+    closeOverlay(_constructiveOverlayState, "success");
 }
 
 export function closeMobileMenu() {
-    closeOverlay(_mobileMenuState, "unknown");
+    closeOverlay(_mobileMenuState, "success");
 }
 
 export async function toggleMobileMenu(type: MobileMenuType) {
@@ -156,9 +160,7 @@ export function closeContextMenu() {
             console.warn("Context menu was already hidden", $contextMenuState);
             return $contextMenuState;
         }
-        return {
-            kind: "hidden",
-        };
+        return closedState;
     });
 }
 

@@ -43,14 +43,7 @@
             throw new Error("Expected label");
         }
         const l = label.label;
-        const result = await openDestructiveOverlay({
-            kind: "deleteLabel",
-            label: l,
-        });
-        if (result !== "success") {
-            console.debug("User did not consent");
-            return;
-        }
+        await openDestructiveOverlay({ kind: "deleteLabel", label: l });
         await deleteLabel(l);
     }
 </script>
