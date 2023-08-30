@@ -10,22 +10,29 @@
     let repositioned = false;
 
     onMount(() => {
-        contextMenuState.subscribe(($contextMenuState) => {
-            if ($contextMenuState.kind === "visible") {
-                if (!resizeObserver) {
-                    console.debug("resizeObserver not present");
+        const unsubscriber = contextMenuState.subscribe(
+            ($contextMenuState) => {
+                if ($contextMenuState.kind === "visible") {
+                    if (!resizeObserver) {
+                        console.debug("resizeObserver not present");
+                    }
+                    if (!contextMenu) {
+                        throw new Error("Expected contextMenu");
+                    }
+                    addObserver(contextMenu, $contextMenuState);
+                    listenForEscape();
+                } else {
+                    resizeObserver = null;
+                    repositioned = false;
+                    stopListeningForEscape();
                 }
-                if (!contextMenu) {
-                    throw new Error("Expected contextMenu");
-                }
-                addObserver(contextMenu, $contextMenuState);
-                listenForEscape();
-            } else {
-                resizeObserver = null;
-                repositioned = false;
-                stopListeningForEscape();
             }
-        });
+        );
+        return () => {
+            unsubscriber();
+            // Think about whether this one is necessary
+            closeContextMenu();
+        };
     });
 
     function addObserver(
