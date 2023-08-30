@@ -1,8 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import PageLayout from "$lib/components/layouts/pageLayout.svelte";
-
     $: sections = [
         {
             title: $_("accessibility.a-goals"),
@@ -60,48 +58,44 @@
     ];
 </script>
 
-<PageLayout headerMode={"landing"}>
-    <main class="page bg-base-100">
-        <div>
-            <div class="page bg base-200">
-                <div class="m-6 grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
-                    <div class="/">
-                        <h1 class="mb-8 text-4xl font-bold md:text-6xl">
-                            {$_("accessibility.hero-header")}
-                        </h1>
-                    </div>
-                    <div class="min-w-full max-w-md">
-                        <img
-                            src="/assets/accessibility/accessibility-hero.png"
-                            alt=""
-                        />
-                    </div>
-                </div>
-            </div>
-
-            <div class="m-16 flex flex-col justify-center">
-                {#each sections as section}
-                    <section class=" items-center text-3xl font-bold">
-                        {section.title}
-                        {#if section.contents}
-                            {#each section.contents as content}
-                                <p class="items-center text-sm font-bold">
-                                    {content}
-                                </p>
-                            {/each}
-                        {/if}
-                        {#if section.listItems}
-                            <ul class="list-disc">
-                                {#each section.listItems as listItem}
-                                    <li class="items-center text-sm font-bold">
-                                        {listItem}
-                                    </li>
-                                {/each}
-                            </ul>
-                        {/if}
-                    </section>
-                {/each}
+<main class="bg-base-100">
+    <div class="page bg-base-200">
+        <div class="m-6 grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
+            <h1 class="mb-8 text-4xl font-bold md:text-6xl">
+                {$_("accessibility.hero-header")}
+            </h1>
+            <div class="max-w-md">
+                <img
+                    src="/assets/accessibility/accessibility-hero.png"
+                    alt=""
+                />
             </div>
         </div>
-    </main>
-</PageLayout>
+    </div>
+
+    <div class="flex flex-col justify-center p-16">
+        {#each sections as section}
+            <section class="flex flex-col gap-2">
+                <h2 class="pt-4 text-3xl font-bold">
+                    {section.title}
+                </h2>
+                {#if section.contents}
+                    {#each section.contents as content}
+                        <p>
+                            {content}
+                        </p>
+                    {/each}
+                {/if}
+                {#if section.listItems}
+                    <ul>
+                        {#each section.listItems as listItem}
+                            <li>
+                                {listItem}
+                            </li>
+                        {/each}
+                    </ul>
+                {/if}
+            </section>
+        {/each}
+    </div>
+</main>
