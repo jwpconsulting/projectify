@@ -97,13 +97,6 @@ export async function openDestructiveOverlay(
     return finished;
 }
 
-export function openDestructiveOverlaySync(
-    target: DestructiveOverlayType,
-    action: OverlayAction
-) {
-    openOverlay(_destructiveOverlayState, target, action);
-}
-
 // most likely called when unsuccessful
 export function closeDestructiveOverlay() {
     closeOverlay(_destructiveOverlayState, "unknown");
