@@ -3,20 +3,19 @@
     import { _ } from "svelte-i18n";
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
-    import { openConstructiveOverlaySync } from "$lib/stores/globalUi";
+    import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type { ConstructiveOverlayType } from "$lib/types/ui";
     import type { WorkspaceBoard } from "$lib/types/workspace";
 
     export let workspaceBoard: WorkspaceBoard;
 
-    // TODO
-    function editBoard() {
+    async function editBoard() {
         // open constructive dialog
         const constructiveOverlayType: ConstructiveOverlayType = {
             kind: "updateWorkspaceBoard",
             workspaceBoard,
         };
-        openConstructiveOverlaySync(constructiveOverlayType);
+        await openConstructiveOverlay(constructiveOverlayType);
     }
 
     function archiveBoard() {

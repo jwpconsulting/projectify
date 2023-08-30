@@ -110,8 +110,14 @@ export function performDestructiveOverlay() {
     });
 }
 
-export function openConstructiveOverlaySync(target: ConstructiveOverlayType) {
-    openOverlay(_constructiveOverlayState, target);
+export async function openConstructiveOverlay(
+    target: ConstructiveOverlayType
+) {
+    return new Promise<OverlaySuccess>(
+        (resolve: (success: OverlaySuccess) => void) => {
+            openOverlay(_constructiveOverlayState, target, resolve);
+        }
+    );
 }
 
 export function closeConstructiveOverlay() {

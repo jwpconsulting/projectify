@@ -10,7 +10,7 @@
         currentWorkspaceBoardSections,
         taskSearchInput,
     } from "$lib/stores/dashboard";
-    import { openConstructiveOverlaySync } from "$lib/stores/globalUi";
+    import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type { WorkspaceBoard } from "$lib/types/workspace";
 
     export let workspaceBoard: WorkspaceBoard;
@@ -20,8 +20,8 @@
         taskSearchInput
     );
 
-    function onAddNewSection() {
-        openConstructiveOverlaySync({
+    async function onAddNewSection() {
+        await openConstructiveOverlay({
             kind: "createWorkspaceBoardSection",
             workspaceBoard,
         });
