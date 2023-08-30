@@ -8,7 +8,7 @@
         "preview": "vite preview --port 3000",
         "typescript-language-server": "typescript-language-server",
         "svelteserver": "svelteserver",
-        "check": "npm run check:prettier && npm run check:eslint && npm run check:svelte-check && npm run check:knip",
+        "check": "npm run check:prettier && npm run check:svelte-check && npm run check:eslint && npm run check:knip",
         "check:eslint": "eslint . --cache --ext .ts,.js,.svelte src",
         "check:prettier": "prettier --ignore-path .gitignore --check --plugin-search-dir=. --cache --cache-strategy metadata .",
         "check:svelte-check": "svelte-check --tsconfig tsconfig.json --diagnostic-sources js,svelte",
