@@ -41,15 +41,18 @@ function makeOpenState<Target>(
 
 function openOverlay<Target>(
     overlay: Writable<Overlay<Target>>,
-    target: Target,
-    closeCallback?: (success: OverlaySuccess) => void
+    target: Target
 ) {
-    overlay.update(($overlay) => {
-        if ($overlay.kind !== "hidden") {
-            throw new Error("Expected $overlay.kind to be hidden");
+    return new Promise<OverlaySuccess>(
+        (resolve: (success: OverlaySuccess) => void) => {
+            overlay.update(($overlay) => {
+                if ($overlay.kind !== "hidden") {
+                    throw new Error("Expected $overlay.kind to be hidden");
+                }
+                return makeOpenState(target, resolve);
+            });
         }
-        return makeOpenState(target, closeCallback);
-    });
+    );
 }
 
 function closeOverlay(
@@ -83,12 +86,7 @@ function toggleOverlay<Target>(
 export async function openDestructiveOverlay(
     target: DestructiveOverlayType
 ): Promise<OverlaySuccess> {
-    const finished = new Promise<OverlaySuccess>(
-        (resolve: (success: OverlaySuccess) => void) => {
-            openOverlay(_destructiveOverlayState, target, resolve);
-        }
-    );
-    return finished;
+    return openOverlay(_destructiveOverlayState, target);
 }
 
 // most likely called when unsuccessful
@@ -112,12 +110,8 @@ export function performDestructiveOverlay() {
 
 export async function openConstructiveOverlay(
     target: ConstructiveOverlayType
-) {
-    return new Promise<OverlaySuccess>(
-        (resolve: (success: OverlaySuccess) => void) => {
-            openOverlay(_constructiveOverlayState, target, resolve);
-        }
-    );
+): Promise<OverlaySuccess> {
+    return openOverlay(_constructiveOverlayState, target);
 }
 
 export function closeConstructiveOverlay() {
