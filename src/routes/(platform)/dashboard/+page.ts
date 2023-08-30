@@ -15,6 +15,5 @@ export async function load({ fetch }: PageLoadEvent): Promise<void> {
         throw new Error("No workspaces");
     }
     const [workspace, ..._rest] = workspaces;
-    // eslint-disable-next-line @typescript-eslint/no-throw-literal
     throw redirect(302, getDashboardWorkspaceUrl(workspace.uuid));
 }

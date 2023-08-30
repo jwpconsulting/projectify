@@ -27,11 +27,9 @@ export async function load({
     const first_workspace_board = workspace_boards.at(0);
     if (first_workspace_board) {
         const { uuid } = first_workspace_board;
-        // eslint-disable-next-line @typescript-eslint/no-throw-literal
         throw redirect(302, getDashboardWorkspaceBoardUrl(uuid));
     }
     // TODO maybe throw in a nice notification to the user here that we have
     // not found any workspace board for this workspace
-    // eslint-disable-next-line @typescript-eslint/no-throw-literal
     throw redirect(302, getNewWorkspaceBoardUrl(uuid));
 }

@@ -23,7 +23,6 @@ export async function load({
 
     const next = `/login?next=${url.href}`;
     console.log("Not logged in, redirecting to", next);
-    // eslint-disable-next-line @typescript-eslint/no-throw-literal
     throw redirect(302, next);
 }
 

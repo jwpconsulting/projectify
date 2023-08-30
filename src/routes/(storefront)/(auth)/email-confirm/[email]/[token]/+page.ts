@@ -10,6 +10,5 @@ export const ssr = false;
 export async function load({ params: { email, token } }: PageLoadEvent) {
     await emailConfirmation(email, token);
 
-    // eslint-disable-next-line @typescript-eslint/no-throw-literal
     throw redirect(302, "/login");
 }
