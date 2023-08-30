@@ -22,7 +22,18 @@
                 "prompt": "Add a task here"
             }
         },
-        "no-user-assigned": "No user assigned"
+        "no-user-assigned": "No user assigned",
+        "error": {
+            "title": "Error:",
+            "description": "We apologize for the error. There was an error loading your dashboard. The error details are as follows:",
+            "what-to-do": {
+                "message": "Unfortunately this means we are unable to load this page properly. To help resolve this:",
+                "options": [
+                    "Visit our troubleshooting section](XXX) for common solutions.",
+                    "Contact [our support here](XXX) for help."
+                ]
+            }
+        }
     },
     "page404": {
         "title": "Lost your way?",
