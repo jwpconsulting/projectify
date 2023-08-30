@@ -1,11 +1,36 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
+import { makeStorybookSelect } from "$lib/storybook";
+
 import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
-import { circleIconSizes, circleIconIcons } from "$lib/funabashi/types";
+import {
+    circleIconSizes,
+    circleIconIcons,
+    type ButtonAction,
+} from "$lib/funabashi/types";
+
+const action = makeStorybookSelect<ButtonAction>({
+    "Button": {
+        kind: "button",
+        action: () => console.log("Hello, World! I am a button."),
+    },
+    "Button Enabled": {
+        kind: "button",
+        action: () => console.log("Hello, World! I am a button."),
+        disabled: false,
+    },
+    "Button Disabled": {
+        kind: "button",
+        action: () => console.log("Hello, World! I am a button."),
+        disabled: true,
+    },
+    "Anchor": { kind: "a", href: "#" },
+});
 
 const meta: Meta<CircleIcon> = {
     component: CircleIcon,
     argTypes: {
+        action: action,
         icon: {
             options: circleIconIcons,
             control: {
@@ -18,18 +43,11 @@ const meta: Meta<CircleIcon> = {
                 type: "radio",
             },
         },
-        disabled: {
-            control: "boolean",
-        },
     },
     args: {
         icon: circleIconIcons[0],
         size: "medium",
-        disabled: false,
-        action: {
-            kind: "button",
-            action: console.error,
-        },
+        action: "button",
     },
 };
 export default meta;

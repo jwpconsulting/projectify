@@ -31,7 +31,6 @@
                 label={$_("settings.filter-by-roles")}
                 style={{ kind: "secondary" }}
                 size="extra-small"
-                disabled={false}
                 color="blue"
             />
             <Button
@@ -39,7 +38,6 @@
                 label={$_("settings.invite-new-members")}
                 style={{ kind: "primary" }}
                 size="extra-small"
-                disabled={false}
                 color="blue"
             />
         </div>

@@ -113,7 +113,6 @@
             <Button
                 style={{ kind: "secondary" }}
                 size="medium"
-                disabled={false}
                 color="blue"
                 action={{ kind: "button", action: closeDestructiveOverlay }}
                 label={$_("destructive-overlay.cancel")}
@@ -121,7 +120,6 @@
             <Button
                 style={{ kind: "primary" }}
                 size="medium"
-                disabled={false}
                 color="red"
                 action={{ kind: "button", action: performDestructiveOverlay }}
                 label={buttonLabel}

@@ -53,7 +53,6 @@
         }}
         style={{ kind: "secondary" }}
         size="medium"
-        disabled={false}
         color="blue"
         label={$_("new-workspace-board.cancel")}
     />
@@ -61,7 +60,6 @@
         action={{ kind: "button", action: perform }}
         style={{ kind: "primary" }}
         size="medium"
-        disabled={false}
         color="blue"
         label={$_("new-workspace-board.create-board")}
     />

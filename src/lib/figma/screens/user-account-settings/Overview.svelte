@@ -81,7 +81,6 @@
                 }}
                 size="medium"
                 color="blue"
-                disabled={false}
                 style={{ kind: "secondary" }}
                 label={$_("user-account-settings.change-password")}
             />
@@ -92,7 +91,6 @@
                 }}
                 size="medium"
                 color="blue"
-                disabled={false}
                 style={{ kind: "secondary" }}
                 label={$_("user-account-settings.update-email")}
             />
@@ -102,10 +100,10 @@
                 action={{
                     kind: "button",
                     action: save,
+                    disabled: state !== "editing",
                 }}
                 size="medium"
                 color="blue"
-                disabled={state !== "editing"}
                 style={{ kind: "primary" }}
                 label={$_("user-account-settings.save-changes")}
             />
@@ -113,10 +111,10 @@
                 action={{
                     kind: "button",
                     action: cancel,
+                    disabled: state !== "editing",
                 }}
                 size="medium"
                 color="blue"
-                disabled={state !== "editing"}
                 style={{ kind: "secondary" }}
                 label={$_("user-account-settings.cancel")}
             />
@@ -130,7 +128,6 @@
                 }}
                 size="medium"
                 color="red"
-                disabled={false}
                 style={{ kind: "secondary" }}
                 label={$_("user-account-settings.delete-account")}
             />

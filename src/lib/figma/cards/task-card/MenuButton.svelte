@@ -42,5 +42,5 @@
 </script>
 
 <div bind:this={dropDownMenuBtnRef}>
-    <CircleIcon icon="ellipsis" size="medium" {action} disabled={false} />
+    <CircleIcon icon="ellipsis" size="medium" {action} />
 </div>

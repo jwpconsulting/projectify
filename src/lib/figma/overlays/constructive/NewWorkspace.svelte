@@ -17,7 +17,6 @@
         }}
         style={{ kind: "secondary" }}
         size="medium"
-        disabled={false}
         color="blue"
         label={$_("new-workspace.cancel")}
     />
@@ -30,7 +29,6 @@
         }}
         style={{ kind: "primary" }}
         size="medium"
-        disabled={false}
         color="blue"
         label={$_("new-workspace.create-workspace")}
     />

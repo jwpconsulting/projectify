@@ -30,11 +30,21 @@ const style = makeStorybookSelect<ButtonStyle>({
 });
 
 const action = makeStorybookSelect<ButtonAction>({
-    button: {
+    "Button": {
         kind: "button",
         action: () => console.log("Hello, World! I am a button."),
     },
-    anchor: { kind: "a", href: "#" },
+    "Button Enabled": {
+        kind: "button",
+        action: () => console.log("Hello, World! I am a button."),
+        disabled: false,
+    },
+    "Button Disabled": {
+        kind: "button",
+        action: () => console.log("Hello, World! I am a button."),
+        disabled: true,
+    },
+    "Anchor": { kind: "a", href: "#" },
 });
 
 const meta: Meta<Button> = {
@@ -67,12 +77,12 @@ export const Secondary: StoryObj = {
 };
 
 export const TertiaryNoIcon: StoryObj = {
-    args: { action: "button", style: "tertiaryNoIcon" },
+    args: { action: "button", style: "tertiary-no-icon" },
 };
 
 export const TertiaryIconLeft: StoryObj = {
-    args: { action: "button", style: "tertiaryIconLeft" },
+    args: { action: "button", style: "tertiary-icon-left" },
 };
 export const TertiaryIconRight: StoryObj = {
-    args: { action: "button", style: "tertiaryIconRight" },
+    args: { action: "button", style: "tertiary-icon-right" },
 };

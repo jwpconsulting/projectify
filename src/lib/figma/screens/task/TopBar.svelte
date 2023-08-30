@@ -85,7 +85,6 @@
                 }}
                 size="medium"
                 icon="close"
-                disabled={false}
             />
         </div>
         <div class="text-sm font-bold text-utility">
@@ -118,10 +117,10 @@
                 action={{
                     kind: "button",
                     action: createOrUpdate,
+                    disabled: !$canCreateOrUpdate,
                 }}
                 color="blue"
                 size="small"
-                disabled={!$canCreateOrUpdate}
                 style={{ kind: "primary" }}
                 label={$_("task-screen.save")}
             />

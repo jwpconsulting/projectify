@@ -16,7 +16,6 @@
         <Button
             style={{ kind: "primary" }}
             color="blue"
-            disabled={false}
             size="medium"
             label={$_("header.continue-to-dashboard")}
             action={{ kind: "a", href: "/dashboard" }}

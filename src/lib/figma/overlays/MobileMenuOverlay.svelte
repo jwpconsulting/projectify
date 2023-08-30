@@ -29,7 +29,6 @@
                 }}
                 style={{ kind: "primary" }}
                 color="blue"
-                disabled={false}
                 size="medium"
                 label={$_("header.continue-to-dashboard")}
             />
@@ -42,7 +41,6 @@
                 }}
                 style={{ kind: "tertiary", icon: null }}
                 color="blue"
-                disabled={false}
                 size="medium"
                 label={$_("header.log-in")}
             />
@@ -54,7 +52,6 @@
                 }}
                 style={{ kind: "primary" }}
                 color="blue"
-                disabled={false}
                 size="medium"
                 label={$_("header.start-a-free-trial")}
             />

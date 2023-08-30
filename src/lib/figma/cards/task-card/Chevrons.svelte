@@ -49,13 +49,11 @@
     <CircleIcon
         size="medium"
         icon="up"
-        disabled={isFirst}
-        action={{ kind: "button", action: moveUp }}
+        action={{ kind: "button", action: moveUp, disabled: isFirst }}
     />
     <CircleIcon
         size="medium"
         icon="down"
-        disabled={isLast}
-        action={{ kind: "button", action: moveDown }}
+        action={{ kind: "button", action: moveDown, disabled: isLast }}
     />
 </div>

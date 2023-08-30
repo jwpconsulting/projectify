@@ -19,7 +19,6 @@
             action={{ kind: "a", href: "/login" }}
             style={{ kind: "tertiary", icon: null }}
             color="blue"
-            disabled={false}
             size="medium"
             label={$_("header.log-in")}
         />
@@ -27,7 +26,6 @@
             action={{ kind: "a", href: "/signup" }}
             style={{ kind: "primary" }}
             color="blue"
-            disabled={false}
             size="medium"
             label={$_("header.start-a-free-trial")}
         />

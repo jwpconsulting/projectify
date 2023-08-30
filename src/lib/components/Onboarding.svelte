@@ -1,8 +1,8 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import type { ButtonAction } from "$lib/figma/types";
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import type { ButtonAction } from "$lib/funabashi/types";
 
     export let hasContentPadding = false;
 
@@ -29,8 +29,11 @@
         if (nextBtnDisabled) {
             throw new Error("nextBtnDisabled");
         }
-        if (nextAction.kind === "a") {
-            throw new Error('nextAction.kind === "a"');
+        if (nextAction.kind !== "button") {
+            throw new Error("Expected nextAction.kind to be button");
+        }
+        if (nextAction.disabled ?? false) {
+            throw new Error("Expected nextAction.disabled to not be true");
         }
         nextAction.action();
     }
@@ -67,26 +70,27 @@
             {#if backAction}
                 <Button
                     style={{ kind: "tertiary", icon: null }}
-                    disabled={nextBtnDisabled}
                     color="blue"
                     size="medium"
-                    action={{ kind: "button", action: backAction }}
+                    action={{
+                        kind: "button",
+                        action: backAction,
+                        disabled: nextBtnDisabled,
+                    }}
                     label={$_("onboarding.back")}
                 />
             {/if}
             {#if nextAction.kind === "button"}
                 <Button
                     style={{ kind: "primary" }}
-                    disabled={nextBtnDisabled}
                     color="blue"
                     size="medium"
-                    action={{ kind: "submit" }}
+                    action={{ kind: "submit", disabled: nextBtnDisabled }}
                     label={nextLabel}
                 />
             {:else}
                 <Button
                     style={{ kind: "primary" }}
-                    disabled={nextBtnDisabled}
                     color="blue"
                     size="medium"
                     action={nextAction}

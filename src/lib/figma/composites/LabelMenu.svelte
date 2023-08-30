@@ -116,7 +116,6 @@
                 color="blue"
                 size="medium"
                 label={$_("filter-label-menu.cancel")}
-                disabled={false}
                 action={{ kind: "button", action: cancelCreate }}
             />
             <Button
@@ -124,7 +123,6 @@
                 color="blue"
                 size="medium"
                 label={$_("filter-label-menu.save")}
-                disabled={false}
                 action={{ kind: "button", action: save }}
             />
         </div>

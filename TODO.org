@@ -123,7 +123,8 @@
    API/DB and nothing could be found. [[See
    here][https://stackoverflow.com/questions/5076944/what-is-the-difference-between-null-and-undefined-in-javascript/57249968#57249968]].
 
-** Refactor ButtonAction
+** DONE Refactor ButtonAction
+   CLOSED: [2023-08-30 Wed 14:16]
    Factor disabled state into ButtonAction (since anchors cannot be disabled)
 
 ** Remove store modules

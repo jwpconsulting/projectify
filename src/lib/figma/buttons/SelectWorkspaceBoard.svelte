@@ -57,7 +57,6 @@
         <CircleIcon
             size="small"
             icon="ellipsis"
-            disabled={false}
             action={{ kind: "button", action: toggleMenu }}
         />
     </div>

@@ -20,7 +20,6 @@
                 action={{ kind: "button", action: () => open(button1) }}
                 style={{ kind: "primary" }}
                 color="blue"
-                disabled={false}
                 size="medium"
                 label="Left"
             />
@@ -30,7 +29,6 @@
                 action={{ kind: "button", action: () => open(button2) }}
                 style={{ kind: "primary" }}
                 color="blue"
-                disabled={false}
                 size="medium"
                 label="Right"
             />
@@ -42,7 +40,6 @@
                 action={{ kind: "button", action: () => open(button3) }}
                 style={{ kind: "primary" }}
                 color="blue"
-                disabled={false}
                 size="medium"
                 label="Center"
             />
@@ -54,7 +51,6 @@
                 action={{ kind: "button", action: () => open(button4) }}
                 style={{ kind: "primary" }}
                 color="blue"
-                disabled={false}
                 size="medium"
                 label="Left"
             />
@@ -64,7 +60,6 @@
                 action={{ kind: "button", action: () => open(button5) }}
                 style={{ kind: "primary" }}
                 color="blue"
-                disabled={false}
                 size="medium"
                 label="Right"
             />

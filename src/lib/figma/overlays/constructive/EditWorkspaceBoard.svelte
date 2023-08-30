@@ -48,7 +48,6 @@
         }}
         style={{ kind: "secondary" }}
         size="medium"
-        disabled={false}
         color="blue"
         label={$_("edit-workspace-board.cancel")}
     />
@@ -59,7 +58,6 @@
         }}
         style={{ kind: "primary" }}
         size="medium"
-        disabled={false}
         color="blue"
         label={$_("edit-workspace-board.save")}
     />

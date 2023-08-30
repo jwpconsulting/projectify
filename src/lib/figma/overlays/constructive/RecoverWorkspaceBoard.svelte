@@ -21,7 +21,6 @@
         }}
         style={{ kind: "secondary" }}
         size="medium"
-        disabled={false}
         color="blue"
         label={$_("recover-workspace-board.cancel")}
     />
@@ -34,7 +33,6 @@
         }}
         style={{ kind: "primary" }}
         size="medium"
-        disabled={false}
         color="blue"
         label={$_("recover-workspace-board.recover-board")}
     />

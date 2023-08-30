@@ -80,13 +80,11 @@
         {#if editable}
             <CircleIcon
                 size="small"
-                disabled={false}
                 icon="edit"
                 action={{ kind: "button", action: onEdit }}
             />
             <CircleIcon
                 size="small"
-                disabled={false}
                 icon="delete"
                 action={{ kind: "button", action: onDelete }}
             />

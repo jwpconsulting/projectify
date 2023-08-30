@@ -45,7 +45,6 @@
                 }}
                 size="medium"
                 color="blue"
-                disabled={false}
                 style={{ kind: "secondary" }}
                 label={$_("user-account-settings.cancel")}
             />
@@ -56,10 +55,10 @@
                         null,
                         "Update email not implemented"
                     ),
+                    disabled: hasBeenEdited,
                 }}
                 size="medium"
                 color="blue"
-                disabled={hasBeenEdited}
                 style={{ kind: "primary" }}
                 label={$_("user-account-settings.update-email")}
             />

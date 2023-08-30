@@ -41,7 +41,6 @@
         action={{ kind: "button", action: closeConstructiveOverlay }}
         style={{ kind: "secondary" }}
         size="medium"
-        disabled={false}
         color="blue"
         label={$_("new-workspace-board-section.cancel")}
     />
@@ -49,7 +48,6 @@
         action={{ kind: "button", action: perform }}
         style={{ kind: "primary" }}
         size="medium"
-        disabled={false}
         color="blue"
         label={$_("new-workspace-board-section.create-section")}
     />

@@ -53,7 +53,6 @@
                 }}
                 size="medium"
                 color="blue"
-                disabled={false}
                 style={{ kind: "secondary" }}
                 label={$_("user-account-settings.cancel")}
             />
@@ -63,10 +62,10 @@
                     action: () => {
                         console.error("Change password not implemented");
                     },
+                    disabled: !hasBeenEdited,
                 }}
                 size="medium"
                 color="blue"
-                disabled={hasBeenEdited}
                 style={{ kind: "primary" }}
                 label={$_("user-account-settings.change-password")}
             />

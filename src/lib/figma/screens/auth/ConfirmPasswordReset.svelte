@@ -37,7 +37,6 @@
             action={{ kind: "button", action: submit }}
             style={{ kind: "primary" }}
             color="blue"
-            disabled={false}
             size="medium"
             label={$_("confirm-password-reset.reset-password")}
         />

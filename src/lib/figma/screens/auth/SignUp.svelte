@@ -80,7 +80,6 @@
             action={{ kind: "submit" }}
             style={{ kind: "primary" }}
             color="blue"
-            disabled={false}
             size="medium"
             label={$_("auth.sign-up.sign-up")}
         />

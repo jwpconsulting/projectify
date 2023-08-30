@@ -11,13 +11,14 @@
     export let style: ButtonStyle;
     export let color: ButtonColor;
     export let size: ButtonSize;
-    export let disabled = false;
     export let label: string;
     export let action: ButtonAction;
     // XXX Hacky. Buttons have been inserted so far without caring for grow
     // or not. Grow depends on the outside being flex. This means this Button
     // is less "containerized" or "isolated".
     export let grow = true;
+
+    $: disabled = action.kind === "a" ? false : action.disabled ?? false;
 
     $: innerColorStyle = {
         primary: {

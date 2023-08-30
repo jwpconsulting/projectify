@@ -34,7 +34,6 @@
             style={{ kind: "primary" }}
             color="red"
             label={$_("settings.delete-workspace")}
-            disabled={false}
         />
     </form>
 </WorkspaceSettingsPage>

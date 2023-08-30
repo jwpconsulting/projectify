@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { falseTrue, fc, fr } from "$lib/storybook";
+    import { fc, fr } from "$lib/storybook";
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import type {
@@ -18,9 +18,7 @@
 <div class={fc}>
     {#each buttonSizes as size}
         <div class={fr}>
-            {#each falseTrue as disabled}
-                <Button {label} {style} {color} {size} {action} {disabled} />
-            {/each}
+            <Button {label} {style} {color} {size} {action} />
         </div>
     {/each}
 </div>

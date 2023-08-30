@@ -49,19 +49,16 @@
             <CircleIcon
                 size="medium"
                 icon="up"
-                disabled={false}
                 action={{ kind: "button", action: console.error }}
             />
             <CircleIcon
                 size="medium"
                 icon="down"
-                disabled={false}
                 action={{ kind: "button", action: console.error }}
             />
             <CircleIcon
                 size="medium"
                 icon="delete"
-                disabled={false}
                 action={{ kind: "button", action: console.error }}
             />
         </div>

@@ -56,7 +56,6 @@
             action={{ kind: "button", action }}
             style={{ kind: "primary" }}
             color="blue"
-            disabled={false}
             size="medium"
             label={$_("log-in.log-in")}
         />

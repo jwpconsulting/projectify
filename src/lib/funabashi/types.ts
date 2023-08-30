@@ -8,8 +8,11 @@ export type AnchorSize = (typeof anchorSizes)[number];
 // and close a menu in time. Not guaranteed to be supported by all components.
 export type ButtonAction =
     | { kind: "a"; href: string; onInteract?: () => void }
-    | { kind: "button"; action: () => void }
-    | { kind: "submit" };
+    | { kind: "button"; action: () => void; disabled?: boolean }
+    // For the case that a disabled button is disabled because no callback is
+    // present
+    | { kind: "button"; action?: undefined; disabled: true }
+    | { kind: "submit"; disabled?: boolean };
 
 // For buttons/Button.svelte
 export type ButtonStyle =

@@ -17,10 +17,10 @@
 
     export let size: CircleIconSize;
     export let icon: CircleIconIcon;
-    // TODO consider making this optional
-    export let disabled: boolean;
 
     export let action: ButtonAction;
+
+    $: disabled = action.kind === "a" ? false : action.disabled ?? false;
 
     $: iconMapped = {
         ellipsis: DotsHorizontal,
