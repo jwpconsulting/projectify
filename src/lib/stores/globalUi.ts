@@ -134,7 +134,7 @@ export function performDestructiveOverlay() {
     });
 }
 
-export function openConstructiveOverlay(
+export function openConstructiveOverlaySync(
     target: ConstructiveOverlayType,
     action: OverlayAction
 ) {

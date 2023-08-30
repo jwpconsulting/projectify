@@ -7,7 +7,7 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SelectWorkspaceBoard from "$lib/figma/buttons/SelectWorkspaceBoard.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
-    import { openConstructiveOverlay } from "$lib/stores/globalUi";
+    import { openConstructiveOverlaySync } from "$lib/stores/globalUi";
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspace: Workspace;
@@ -26,7 +26,7 @@
             kind: "sync" as const,
             action: console.log,
         };
-        openConstructiveOverlay(target, action);
+        openConstructiveOverlaySync(target, action);
     }
 </script>
 
