@@ -76,6 +76,15 @@
 
 * Refactor
 
+** TODO Change context menu to use overlay generic
+   <2023-08-30 Wed>
+   If we use a generic here, everything becomes simpler.
+   Destructive Overlay
+   Constructive Overlay
+   Mobile Menu
+   Context Menu
+   They all use the same logic yo
+
 ** TODO Remove focus outlines
    <2023-08-28 Mon>
    The thought process is that users who rely on focus outlines the most are
