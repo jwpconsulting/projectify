@@ -23,7 +23,6 @@
             workspaceBoard,
             workspaceBoardSection
         );
-        close();
     }
 </script>
 
