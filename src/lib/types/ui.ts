@@ -61,7 +61,7 @@ export type Overlay<Target> =
     | {
           kind: "visible";
           target: Target;
-          closeCallback?: (success: OverlaySuccess) => void;
+          closeCallback: (success: OverlaySuccess) => void;
       };
 
 // TODO we could define some kind of UBER overlay type that also has a

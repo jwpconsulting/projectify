@@ -30,7 +30,7 @@ export { mobileMenuState };
 
 function makeOpenState<Target>(
     target: Target,
-    closeCallback?: (success: OverlaySuccess) => void
+    closeCallback: (success: OverlaySuccess) => void
 ): Overlay<Target> {
     return {
         kind: "visible",
@@ -63,9 +63,7 @@ function closeOverlay(
         if ($overlay.kind !== "visible") {
             throw new Error("Expected $overlay.kind to be visible");
         }
-        if ($overlay.closeCallback) {
-            $overlay.closeCallback(success);
-        }
+        $overlay.closeCallback(success);
         return closedState;
     });
 }
@@ -74,12 +72,17 @@ function toggleOverlay<Target>(
     overlay: Writable<Overlay<Target>>,
     target: Target
 ) {
-    overlay.update(($overlay) => {
-        if ($overlay.kind === "hidden") {
-            return makeOpenState(target);
-        } else {
-            return closedState;
-        }
+    return new Promise((resolve: (success: OverlaySuccess) => void) => {
+        overlay.update(($overlay) => {
+            if ($overlay.kind === "hidden") {
+                return makeOpenState(target, resolve);
+            } else {
+                // If we resolve immediately like this, we might want to
+                // have another status than "success"
+                resolve("success");
+                return closedState;
+            }
+        });
     });
 }
 
@@ -101,9 +104,7 @@ export function performDestructiveOverlay() {
                 "Expected $destructiveOverlayState.kind to be visible"
             );
         }
-        if ($destructiveOverlayState.closeCallback) {
-            $destructiveOverlayState.closeCallback("success");
-        }
+        $destructiveOverlayState.closeCallback("success");
         return { kind: "hidden" };
     });
 }
@@ -122,8 +123,8 @@ export function closeMobileMenu() {
     closeOverlay(_mobileMenuState, "unknown");
 }
 
-export function toggleMobileMenu(type: MobileMenuType) {
-    toggleOverlay(_mobileMenuState, type);
+export async function toggleMobileMenu(type: MobileMenuType) {
+    await toggleOverlay(_mobileMenuState, type);
 }
 
 const { priv: _contextMenuState, pub: contextMenuState } =
