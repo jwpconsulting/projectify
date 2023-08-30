@@ -56,14 +56,18 @@ export type MobileMenuType =
 
 export type OverlaySuccess = "success" | "failure";
 
-export type Overlay<Target> =
+export type Overlay<Target, Anchor = void> =
     | { kind: "hidden" }
-    | {
+    | ({
           kind: "visible";
           target: Target;
           resolve: () => void;
           reject: () => void;
-      };
+      } & (Anchor extends HTMLElement
+          ? {
+                anchor: Anchor;
+            }
+          : unknown));
 
 // TODO we could define some kind of UBER overlay type that also has a
 // reference to the container, ... some time in the future Justus 2023-04-04
