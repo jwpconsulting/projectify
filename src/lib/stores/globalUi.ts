@@ -142,7 +142,13 @@ export { contextMenuState };
 export function openContextMenu(target: ContextMenuType, anchor: HTMLElement) {
     _contextMenuState.update(($contextMenuState) => {
         if ($contextMenuState.kind !== "hidden") {
-            throw new Error("Expected $contextMenuState.kind to be hidden");
+            // Context menus don't have any callback they need to resolve,
+            // so we can safely reopen it somewhere else and not degrade UX
+            console.warn(
+                "Context menu was already visible, changing target and anchor",
+                target,
+                anchor
+            );
         }
         return {
             kind: "visible",
@@ -154,7 +160,8 @@ export function openContextMenu(target: ContextMenuType, anchor: HTMLElement) {
 export function closeContextMenu() {
     _contextMenuState.update(($contextMenuState) => {
         if ($contextMenuState.kind === "hidden") {
-            throw new Error("Expected $contextMenuState.kind to be visible");
+            console.warn("Context menu was already hidden", $contextMenuState);
+            return $contextMenuState;
         }
         return {
             kind: "hidden",
