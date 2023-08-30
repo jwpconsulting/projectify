@@ -4,7 +4,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import {
         rejectDestructiveOverlay,
-        performDestructiveOverlay,
+        resolveDestructiveOverlay,
     } from "$lib/stores/globalUi";
     import type { DestructiveOverlayType } from "$lib/types/ui";
 
@@ -121,7 +121,7 @@
                 style={{ kind: "primary" }}
                 size="medium"
                 color="red"
-                action={{ kind: "button", action: performDestructiveOverlay }}
+                action={{ kind: "button", action: resolveDestructiveOverlay }}
                 label={buttonLabel}
             />
         </div>

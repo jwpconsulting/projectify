@@ -101,16 +101,8 @@ export function rejectDestructiveOverlay() {
     closeOverlay(_destructiveOverlayState, "failure");
 }
 
-export function performDestructiveOverlay() {
-    _destructiveOverlayState.update(($destructiveOverlayState) => {
-        if ($destructiveOverlayState.kind !== "visible") {
-            throw new Error(
-                "Expected $destructiveOverlayState.kind to be visible"
-            );
-        }
-        $destructiveOverlayState.resolve();
-        return { kind: "hidden" };
-    });
+export function resolveDestructiveOverlay() {
+    closeOverlay(_destructiveOverlayState, "success");
 }
 
 export async function openConstructiveOverlay(
