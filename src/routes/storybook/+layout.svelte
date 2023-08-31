@@ -28,10 +28,6 @@
             title: "Overlay test",
             href: "/storybook/overlay-test",
         },
-        {
-            title: "Context menu test",
-            href: "/storybook/context-menu-test",
-        },
     ];
 </script>
 

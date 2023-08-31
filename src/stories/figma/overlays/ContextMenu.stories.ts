@@ -1,72 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import {
-    task,
-    workspace,
-    workspaceBoard,
-    workspaceBoardSection,
-    workspaceUserSearchModule,
-    labelSearchModule,
-    moveTaskModule,
-} from "$lib/storybook";
+import { makeStorybookSelect } from "$lib/storybook";
+
+import { contextMenus } from "./config";
 
 import ContextMenu from "$lib/figma/overlays/ContextMenu.svelte";
-import type { ContextMenuType } from "$lib/types/ui";
-
-const contextMenus: Record<string, ContextMenuType> = {
-    profile: {
-        kind: "profile" as const,
-    },
-    workspace: {
-        kind: "workspace" as const,
-        workspaces: [workspace],
-    },
-    sideNav: {
-        kind: "sideNav" as const,
-        workspace,
-    },
-    workspaceBoard: {
-        kind: "workspaceBoard" as const,
-        workspaceBoard,
-    },
-    workspaceBoardSection: {
-        kind: "workspaceBoardSection" as const,
-        workspaceBoard,
-        workspaceBoardSection,
-    },
-    taskDashboard: {
-        kind: "task" as const,
-        task,
-        location: "dashboard",
-        moveTaskModule,
-        workspaceBoardSection,
-    },
-    task: {
-        kind: "task" as const,
-        task,
-        location: "task",
-        moveTaskModule,
-        workspaceBoardSection,
-    },
-    help: {
-        kind: "help",
-    },
-    permissions: {
-        kind: "permissions",
-    },
-    updateMember: {
-        kind: "updateMember",
-        workspaceUserSearchModule,
-    },
-    updateLabel: {
-        kind: "updateLabel",
-        labelSearchModule,
-    },
-};
 
 const meta: Meta<ContextMenu> = {
     component: ContextMenu,
-    argTypes: {},
+    argTypes: {
+        target: makeStorybookSelect(contextMenus),
+    },
 };
 export default meta;
 
