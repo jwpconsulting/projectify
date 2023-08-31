@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { fc, workspace, workspaceUser } from "$lib/storybook";
+    import { fc, workspace } from "$lib/storybook";
 
     import { browser } from "$app/environment";
     import ConfirmPasswordReset from "$lib/figma/screens/auth/ConfirmPasswordReset.svelte";
@@ -8,7 +8,6 @@
     import SignUp from "$lib/figma/screens/auth/SignUp.svelte";
     import WorkspaceSettingsBilling from "$lib/figma/screens/workspace-settings/WorkspaceSettingsBilling.svelte";
     import WorkspaceSettingsGeneral from "$lib/figma/screens/workspace-settings/WorkspaceSettingsGeneral.svelte";
-    import WorkspaceSettingsMemberCard from "$lib/figma/screens/workspace-settings/WorkspaceSettingsMemberCard.svelte";
     import WorkspaceSettingsMembers from "$lib/figma/screens/workspace-settings/WorkspaceSettingsMembers.svelte";
     import WorkspaceSettingsTabBar from "$lib/figma/screens/workspace-settings/WorkspaceSettingsTabBar.svelte";
     import { settingKinds } from "$lib/types/dashboard";
@@ -19,10 +18,6 @@
         {#each settingKinds as activeSetting}
             <WorkspaceSettingsTabBar {workspace} {activeSetting} />
         {/each}
-    </div>
-
-    <div class="w-96">
-        <WorkspaceSettingsMemberCard {workspaceUser} />
     </div>
 
     <div class={fc}>
