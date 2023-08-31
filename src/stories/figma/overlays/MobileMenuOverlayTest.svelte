@@ -26,37 +26,38 @@
     }
 </script>
 
-<p>
-    Status: {status}
-</p>
-<div class="flex flex-row">
-    <Button
-        action={{
-            kind: "button",
-            action: toggleMenu,
-        }}
-        style={{ kind: "primary" }}
-        color="blue"
-        size="medium"
-        label="Toggle mobile menu"
-    />
-    <Button
-        action={{
-            kind: "button",
-            action: closeMenu,
-        }}
-        style={{ kind: "secondary" }}
-        color="blue"
-        size="medium"
-        label="Close mobile menu"
-    />
-</div>
-<div class="h-20" />
-<div class="relative h-full">
-    <OverlayContainer fixed={false} store={mobileMenuState} let:target>
-        <MobileMenuOverlay slot="default" {target} />
-        <p slot="else">
-            MobileMenuOverlay comes here, but it is not visible right now
-        </p>
-    </OverlayContainer>
+<div class="flex h-full flex-col">
+    <p>
+        Status: {status}
+    </p>
+    <div class="flex flex-row">
+        <Button
+            action={{
+                kind: "button",
+                action: toggleMenu,
+            }}
+            style={{ kind: "primary" }}
+            color="blue"
+            size="medium"
+            label="Toggle mobile menu"
+        />
+        <Button
+            action={{
+                kind: "button",
+                action: closeMenu,
+            }}
+            style={{ kind: "secondary" }}
+            color="blue"
+            size="medium"
+            label="Close mobile menu"
+        />
+    </div>
+    <div class="relative grow">
+        <OverlayContainer fixed={false} store={mobileMenuState} let:target>
+            <MobileMenuOverlay slot="default" {target} />
+            <p slot="else">
+                MobileMenuOverlay comes here, but it is not visible right now
+            </p>
+        </OverlayContainer>
+    </div>
 </div>
