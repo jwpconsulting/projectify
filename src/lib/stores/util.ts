@@ -1,21 +1,22 @@
 import Fuse from "fuse.js";
-import { derived, readonly, writable } from "svelte/store";
-import type { Readable, Writable } from "svelte/store";
+import { readonly, writable } from "svelte/store";
+import type {
+    Subscriber,
+    Readable,
+    Writable,
+    Unsubscriber,
+} from "svelte/store";
 
 import { fuseSearchThreshold } from "$lib/config";
 import vars from "$lib/env";
 
-import { browser } from "$app/environment";
 import { getSubscriptionFor } from "$lib/stores/wsSubscription";
-import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
+import type {
+    WSSubscriptionStore,
+    WSMessage,
+} from "$lib/stores/wsSubscription";
 import type { RecursiveKeyOf, SearchInput } from "$lib/types/base";
 import type { SubscriptionType, WsResource } from "$lib/types/stores";
-
-type Unsubscriber = () => void;
-
-type MaybeUuid = string | null;
-// Maybe make a read only UuidStore type for our derivation step
-type UuidStore = Writable<MaybeUuid>;
 
 const getSubscriptionForCollection = (
     collection: "workspace" | "workspace-board" | "task",
@@ -30,71 +31,97 @@ const getSubscriptionForCollection = (
     return getSubscriptionFor(wsURL);
 };
 
+/* Subscribable WS Store
+ *
+ *  ┌─────┐   loadUuid  ┌─────┐ ──────────────┐
+ *  │Start│────────────►│Ready│               │ subscription update:
+ *  └─────┘             └─────┘ ◄─────────────┘ updateSubscribers()
+ *
+ * This thing basically just passes on ws updates to subscribers, plus
+ * one initial load
+ */
+
+type Subscribers<T> = Set<Subscriber<T>>;
+type WsStoreState<T> =
+    | { kind: "start"; subscribers: Subscribers<T> }
+    | {
+          kind: "ready";
+          uuid: string;
+          subscribers: Subscribers<T>;
+          unsubscriber: Unsubscriber;
+          value: T;
+      };
+
 export function createWsStore<T>(
     collection: SubscriptionType,
     getter: (uuid: string) => Promise<T>
 ): WsResource<T> {
-    const uuidReadable: UuidStore = writable<MaybeUuid>(null);
-    let setHack: ((t: T) => void) | undefined = undefined;
-    const derive = ($uuidReadable: MaybeUuid, set: (t: T) => void) => {
-        // If the uuid changes, does that mean we have to force unsubscribe
-        // from WS here?
-        // Justus 2023-08-31
-        // TODO: Research
-        setHack = set;
-        if (!browser) {
-            return;
+    type State = WsStoreState<T>;
+    let state: State = { kind: "start", subscribers: new Set() };
+
+    const receiveWsMessage = (message: WSMessage): void => {
+        if (state.kind === "start") {
+            throw new Error("State.kind is start");
         }
-        if (!$uuidReadable) {
-            return;
-        }
-        getter($uuidReadable)
-            .then((result) => set(result))
-            .catch((error: Error) => {
-                console.error("Failure when trying to get initialing thing", {
-                    error,
-                });
-            });
-        const subscription = getSubscriptionForCollection(
-            collection,
-            $uuidReadable
-        );
+        const value: T = message.message.data as T;
+        state = {
+            ...state,
+            value,
+        };
+        updateSubscribers(state);
+    };
+
+    const loadSubscription = (uuid: string): Unsubscriber => {
+        const subscription = getSubscriptionForCollection(collection, uuid);
         if (!subscription) {
             throw new Error("Expected subscription");
         }
-        const unsubscriber: Unsubscriber = subscription.subscribe(
-            ({ message }): void => {
-                const thing: T = message.data as T;
-                console.log("The thing is now", thing);
-                set(thing);
-            }
-        );
-        // Supposedly, return this function will allow svelte/store
-        // to call this when the derived store is unsubscribed fully
-        // TODO test this
-        return unsubscriber;
+        return subscription.subscribe(receiveWsMessage);
     };
-    const loadUuid = async (uuid: string): Promise<T> => {
-        const it = await getter(uuid);
-        // We want setHack to be there, but it's not on an initial pageload
-        // In the future, we just hide current*Uuid from the user
-        // Then we have all the freedom to do what we want to
-        if (!setHack) {
-            // This will trigger a load twice, maybe?
-            // Or svelte store is intelligent enough to notice that the
-            // uuid is the same, then maybe not...
-            uuidReadable.set(uuid);
-            console.error("We rely on a hack, and the hack did not work :(");
-        } else {
-            setHack(it);
+
+    const updateSubscribers = (state: State & { kind: "ready" }) => {
+        state.subscribers.forEach((subscriber) => subscriber(state.value));
+    };
+
+    const removeSubscriber = (subscriber: Subscriber<T>) => {
+        state.subscribers.delete(subscriber);
+        if (state.subscribers.size > 0) {
+            return;
         }
-        return it;
+        if (state.kind === "start") {
+            return;
+        }
+        state.unsubscriber();
+        state = {
+            kind: "start",
+            subscribers: state.subscribers,
+        };
     };
-    const { subscribe }: Readable<T | null> = derived<UuidStore, T | null>(
-        uuidReadable,
-        derive,
-        null
-    );
+
+    const loadUuid = async (uuid: string): Promise<T> => {
+        // We need to unsubscribe from the old ws thing before adding
+        // a new subscription here.
+        if (state.kind === "ready") {
+            state.unsubscriber();
+        }
+        const unsubscriber = loadSubscription(uuid);
+        const value = await getter(uuid);
+        state = { ...state, kind: "ready", uuid, unsubscriber, value };
+        updateSubscribers(state);
+        return value;
+    };
+
+    const subscribe = (run: Subscriber<T>): Unsubscriber => {
+        // This is surprisingly easy to implement!
+        // https://github.com/sveltejs/svelte/blob/8e76ef156e2bdd2a1e7a506a593c2d5f58c498b5/packages/svelte/src/runtime/store/index.js#L86
+        state.subscribers.add(run);
+        if (state.kind === "ready") {
+            run(state.value);
+        } else {
+            console.debug("Subscribed", run, "but no value there yet");
+        }
+        return () => removeSubscriber(run);
+    };
     return {
         subscribe,
         loadUuid,

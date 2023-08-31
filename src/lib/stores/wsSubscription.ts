@@ -10,7 +10,7 @@ interface Message {
     data: unknown;
 }
 
-interface WSMessage {
+export interface WSMessage {
     message: Message;
     at: number;
 }
