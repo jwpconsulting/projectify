@@ -10,24 +10,25 @@ interface Message {
     data: unknown;
 }
 
-export interface WSMessage {
+export interface WsMessage {
     message: Message;
-    at: number;
+    timeStamp: number;
 }
 
 // A svelte store subscriber that received WSMessages
-type WSSubscriber = Subscriber<WSMessage>;
+type WsSubscriber = Subscriber<WsMessage>;
 
-const wsSubscriptionStores = new Map<string, WSSubscriptionStore>();
+const wsSubscriptionStores = new Map<string, WsSubscriptionStore>();
 
-export type WSSubscriptionStore = Readable<WSMessage>;
+export type WsSubscriptionStore = Readable<WsMessage>;
 
-function makeWsSubscriptionStore(url: string): WSSubscriptionStore {
-    const subscribers = new Set<WSSubscriber>();
+function makeWsSubscriptionStore(url: string): WsSubscriptionStore {
+    const subscribers = new Set<WsSubscriber>();
 
-    const message = ({ data, timeStamp: at }: MessageEvent<string>) => {
-        const message: Message = JSON.parse(data) as Message;
-        subscribers.forEach((subscriber) => subscriber({ message, at }));
+    const onMessage = (event: MessageEvent<string>) => {
+        const message: Message = JSON.parse(event.data) as Message;
+        const { timeStamp } = event;
+        subscribers.forEach((run) => run({ message, timeStamp }));
     };
 
     const sarus = new Sarus({
@@ -36,11 +37,11 @@ function makeWsSubscriptionStore(url: string): WSSubscriptionStore {
             open: [console.debug.bind(null, "Connection opened to", url)],
             close: [console.debug.bind(null, "Connection closed to", url)],
             error: [console.error.bind(null, "Connection error for", url)],
-            message: [message],
+            message: [onMessage],
         },
     });
 
-    const unsubscribe = (run: WSSubscriber): void => {
+    const unsubscribe = (run: WsSubscriber): void => {
         subscribers.delete(run);
         if (subscribers.size > 0) {
             return;
@@ -49,7 +50,7 @@ function makeWsSubscriptionStore(url: string): WSSubscriptionStore {
         wsSubscriptionStores.delete(url);
         console.debug("Cleaned up store for", url);
     };
-    const subscribe = (run: WSSubscriber): Unsubscriber => {
+    const subscribe = (run: WsSubscriber): Unsubscriber => {
         subscribers.add(run);
         return () => unsubscribe(run);
     };
@@ -58,7 +59,7 @@ function makeWsSubscriptionStore(url: string): WSSubscriptionStore {
     };
 }
 
-export function getSubscriptionFor(url: string): WSSubscriptionStore | null {
+export function getSubscriptionFor(url: string): WsSubscriptionStore | null {
     if (!browser) {
         console.debug("Expected browser");
         return null;
@@ -67,7 +68,7 @@ export function getSubscriptionFor(url: string): WSSubscriptionStore | null {
     if (store) {
         return store;
     }
-    const newStore: WSSubscriptionStore = makeWsSubscriptionStore(url);
+    const newStore: WsSubscriptionStore = makeWsSubscriptionStore(url);
     wsSubscriptionStores.set(url, newStore);
     return newStore;
 }

@@ -12,8 +12,8 @@ import vars from "$lib/env";
 
 import { getSubscriptionFor } from "$lib/stores/wsSubscription";
 import type {
-    WSSubscriptionStore,
-    WSMessage,
+    WsSubscriptionStore,
+    WsMessage,
 } from "$lib/stores/wsSubscription";
 import type { RecursiveKeyOf, SearchInput } from "$lib/types/base";
 import type { SubscriptionType, WsResource } from "$lib/types/stores";
@@ -21,7 +21,7 @@ import type { SubscriptionType, WsResource } from "$lib/types/stores";
 const getSubscriptionForCollection = (
     collection: "workspace" | "workspace-board" | "task",
     uuid: string
-): WSSubscriptionStore | null => {
+): WsSubscriptionStore | null => {
     let wsEndPoint = vars.WS_ENDPOINT;
     if (wsEndPoint.startsWith("/ws")) {
         wsEndPoint = `ws://${location.host}${wsEndPoint}`;
@@ -59,7 +59,7 @@ export function createWsStore<T>(
     type State = WsStoreState<T>;
     let state: State = { kind: "start", subscribers: new Set() };
 
-    const receiveWsMessage = (message: WSMessage): void => {
+    const receiveWsMessage = (message: WsMessage): void => {
         if (state.kind === "start") {
             throw new Error("State.kind is start");
         }
