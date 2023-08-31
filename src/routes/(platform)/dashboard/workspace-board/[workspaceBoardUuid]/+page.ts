@@ -2,8 +2,8 @@ import type { PageLoadEvent } from "./$types";
 
 import { getWorkspaceBoard, getWorkspaces } from "$lib/repository/workspace";
 import {
+    currentWorkspace,
     currentWorkspaceBoardUuid,
-    currentWorkspaceUuid,
 } from "$lib/stores/dashboard";
 import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
 
@@ -22,12 +22,12 @@ export async function load({
     const workspaceBoard = await getWorkspaceBoard(workspaceBoardUuid, {
         fetch,
     });
-    const { workspace } = workspaceBoard;
-    if (!workspace) {
+    const workspaceUuid = workspaceBoard.workspace?.uuid;
+    if (!workspaceUuid) {
         throw new Error("Expected workspace");
     }
     currentWorkspaceBoardUuid.set(workspaceBoardUuid);
-    currentWorkspaceUuid.set(workspace.uuid);
+    const workspace = await currentWorkspace.loadUuid(workspaceUuid);
     // Might be able to do this asynchronously, meaning we don't need to wait
     // for it to finish here?
     const workspaces = await getWorkspaces();

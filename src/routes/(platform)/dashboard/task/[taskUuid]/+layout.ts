@@ -4,8 +4,8 @@ import type { LayoutLoadEvent } from "./$types";
 
 import {
     currentTask,
-    currentWorkspaceUuid,
     currentTaskUuid,
+    currentWorkspace,
 } from "$lib/stores/dashboard";
 import type {
     Task,
@@ -30,7 +30,7 @@ export async function load({
     let unsubscriber: Unsubscriber | undefined = undefined;
     const data = new Promise<Data>((resolve) => {
         // Retrieving the data for this page through a subscription is weird
-        unsubscriber = currentTask.subscribe(($currentTask) => {
+        unsubscriber = currentTask.subscribe(async ($currentTask) => {
             if (!$currentTask) {
                 return;
             }
@@ -43,11 +43,11 @@ export async function load({
             if (!workspaceBoard) {
                 throw new Error("Expected workspace_board");
             }
-            const { workspace } = workspaceBoard;
-            if (!workspace) {
-                throw new Error("Expected workspace");
+            const workspaceUuid = workspaceBoard.workspace?.uuid;
+            if (!workspaceUuid) {
+                throw new Error("Expected workspaceUuid");
             }
-            currentWorkspaceUuid.set(workspace.uuid);
+            const workspace = await currentWorkspace.loadUuid(workspaceUuid);
             resolve({
                 task: $currentTask,
                 workspaceBoardSection,

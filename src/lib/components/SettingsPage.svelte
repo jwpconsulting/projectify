@@ -4,13 +4,13 @@
 
     import IconArrowLeft from "$lib/components/icons/icon-arrow-left.svelte";
     import Loading from "$lib/components/loading.svelte";
-    import { currentWorkspaceUuid } from "$lib/stores/dashboard";
+    import { currentWorkspace } from "$lib/stores/dashboard";
 
     export let title: string | null = null;
     export let loading = false;
     export let onBack = async () => {
-        if ($currentWorkspaceUuid) {
-            await goto(getDashboardWorkspaceUrl($currentWorkspaceUuid));
+        if ($currentWorkspace) {
+            await goto(getDashboardWorkspaceUrl($currentWorkspace.uuid));
         }
     };
 </script>
