@@ -9,17 +9,9 @@
     import WorkspaceSettingsBilling from "$lib/figma/screens/workspace-settings/WorkspaceSettingsBilling.svelte";
     import WorkspaceSettingsGeneral from "$lib/figma/screens/workspace-settings/WorkspaceSettingsGeneral.svelte";
     import WorkspaceSettingsMembers from "$lib/figma/screens/workspace-settings/WorkspaceSettingsMembers.svelte";
-    import WorkspaceSettingsTabBar from "$lib/figma/screens/workspace-settings/WorkspaceSettingsTabBar.svelte";
-    import { settingKinds } from "$lib/types/dashboard";
 </script>
 
 {#if browser}
-    <div class={fc}>
-        {#each settingKinds as activeSetting}
-            <WorkspaceSettingsTabBar {workspace} {activeSetting} />
-        {/each}
-    </div>
-
     <div class={fc}>
         <WorkspaceSettingsGeneral {workspace} />
         <WorkspaceSettingsMembers {workspace} />
