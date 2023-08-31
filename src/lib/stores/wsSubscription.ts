@@ -59,11 +59,7 @@ function makeWsSubscriptionStore(url: string): WsSubscriptionStore {
     };
 }
 
-export function getSubscriptionFor(url: string): WsSubscriptionStore | null {
-    if (!browser) {
-        console.debug("Expected browser");
-        return null;
-    }
+export function getSubscriptionFor(url: string): WsSubscriptionStore {
     const store = wsSubscriptionStores.get(url);
     if (store) {
         return store;
