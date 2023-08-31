@@ -1,10 +1,8 @@
 <script lang="ts">
     import { Folder, Plus } from "@steeze-ui/heroicons";
-    import { onMount } from "svelte";
 
     import { falseTrue, fc, fr, trueFalse, users } from "$lib/storybook";
 
-    import { browser } from "$app/environment";
     import AddUserButton from "$lib/figma/buttons/AddUserButton.svelte";
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
     import CancelSearch from "$lib/figma/buttons/CancelSearch.svelte";
@@ -36,15 +34,9 @@
         stepperActiveStates,
         stepperPositions,
     } from "$lib/figma/types";
-    import { setFirstWorkspace } from "$lib/stores/dashboard";
     import { currentStep } from "$lib/stores/onboarding";
 
     const onboardingSeats = [5, 10, 15, 20, 25];
-    onMount(async () => {
-        if (browser) {
-            await setFirstWorkspace();
-        }
-    });
 </script>
 
 Side menu create

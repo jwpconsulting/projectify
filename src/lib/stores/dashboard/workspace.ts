@@ -1,12 +1,9 @@
 import { writable } from "svelte/store";
 
-import { getWorkspace, getWorkspaces } from "$lib/repository/workspace";
+import { getWorkspace } from "$lib/repository/workspace";
 import { currentWorkspaceBoard } from "$lib/stores/dashboard/workspaceBoard";
 import { createWsStore } from "$lib/stores/util";
 import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
-
-// TODO rename to currentWorkspaces
-const workspaces = writable<Workspace[] | null>(null);
 
 export const currentWorkspaceUuid = writable<string | null>(null);
 
@@ -43,24 +40,3 @@ currentWorkspaceBoard.subscribe(
         );
     }
 );
-
-async function setWorkspaces() {
-    workspaces.set(await getWorkspaces());
-}
-
-// TODO see if we can't make this as a derived store Justus 2023-08-30
-workspaces.subscribe(($workspaces: Workspace[] | null) => {
-    if ($workspaces === null) {
-        return;
-    }
-    const workspace = $workspaces.at(0);
-    if (!workspace) {
-        throw new Error("Expected workspace");
-    }
-    const { uuid } = workspace;
-    currentWorkspaceUuid.set(uuid);
-});
-
-export async function setFirstWorkspace() {
-    await setWorkspaces();
-}
