@@ -34,7 +34,7 @@ function createCurrentWorkspaceBoardSections(
         [
             typeof selectedLabels,
             typeof selectedWorkspaceUser,
-            typeof currentWorkspaceBoard
+            typeof currentWorkspaceBoard,
         ],
         WorkspaceBoardSection[]
     >(
