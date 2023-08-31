@@ -9,7 +9,8 @@ import {
 import { selectedLabels } from "$lib/stores/dashboard/label";
 import { currentWorkspaceBoard } from "$lib/stores/dashboard/workspaceBoard";
 import { selectWorkspaceUser } from "$lib/stores/dashboard/workspaceUser";
-import { createWsStore, searchAmong } from "$lib/stores/util";
+import { searchAmong } from "$lib/stores/util";
+import { createWsStore } from "$lib/stores/wsSubscription";
 import type { Task, WorkspaceBoardSection } from "$lib/types/workspace"; // XXX Remove this
 
 export const taskSearchInput = writable<string>("");
