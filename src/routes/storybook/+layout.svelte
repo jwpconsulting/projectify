@@ -20,10 +20,6 @@
             title: "Screens",
             href: "/storybook/screens",
         },
-        {
-            title: "Overlays",
-            href: "/storybook/overlays",
-        },
     ];
 </script>
 
