@@ -1,7 +1,10 @@
 import type { PageLoadEvent } from "./$types";
 
 import { getWorkspaceBoard, getWorkspaces } from "$lib/repository/workspace";
-import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard";
+import {
+    currentWorkspaceBoardUuid,
+    currentWorkspaceUuid,
+} from "$lib/stores/dashboard";
 import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
 
 interface Data {
@@ -24,6 +27,7 @@ export async function load({
         throw new Error("Expected workspace");
     }
     currentWorkspaceBoardUuid.set(workspaceBoardUuid);
+    currentWorkspaceUuid.set(workspace.uuid);
     // Might be able to do this asynchronously, meaning we don't need to wait
     // for it to finish here?
     const workspaces = await getWorkspaces();
