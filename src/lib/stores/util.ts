@@ -32,9 +32,9 @@ const getSubscriptionForCollection = (
 
 export function createWsStore<T>(
     collection: SubscriptionType,
-    uuidReadable: UuidStore,
     getter: (uuid: string) => Promise<T>
 ): WsResource<T> {
+    const uuidReadable: UuidStore = writable<MaybeUuid>(null);
     let setHack: ((t: T) => void) | undefined = undefined;
     const derive = ($uuidReadable: MaybeUuid, set: (t: T) => void) => {
         // If the uuid changes, does that mean we have to force unsubscribe
