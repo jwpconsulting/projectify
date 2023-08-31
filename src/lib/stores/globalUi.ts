@@ -138,32 +138,34 @@ const { priv: _contextMenuState, pub: contextMenuState } =
         kind: "hidden",
     });
 export { contextMenuState };
-export function openContextMenu(target: ContextMenuType, anchor: HTMLElement) {
-    _contextMenuState.update(($contextMenuState) => {
-        if ($contextMenuState.kind !== "hidden") {
-            // Context menus don't have any callback they need to resolve,
-            // so we can safely reopen it somewhere else and not degrade UX
-            console.warn(
-                "Context menu was already visible, changing target and anchor",
+export function openContextMenu(
+    target: ContextMenuType,
+    anchor: HTMLElement
+): Promise<void> {
+    return new Promise((resolve, reject) => {
+        _contextMenuState.update(($contextMenuState) => {
+            if ($contextMenuState.kind !== "hidden") {
+                // Context menus don't have any callback they need to resolve,
+                // so we can safely reopen it somewhere else and not degrade UX
+                console.warn(
+                    "Context menu was already visible, changing target and anchor",
+                    target,
+                    anchor
+                );
+            }
+            return {
+                kind: "visible",
                 target,
-                anchor
-            );
-        }
-        return {
-            kind: "visible",
-            target,
-            anchor,
-        };
+                anchor,
+                resolve,
+                reject,
+            };
+        });
     });
 }
+
 export function closeContextMenu() {
-    _contextMenuState.update(($contextMenuState) => {
-        if ($contextMenuState.kind === "hidden") {
-            console.warn("Context menu was already hidden", $contextMenuState);
-            return $contextMenuState;
-        }
-        return closedState;
-    });
+    closeOverlay(_contextMenuState, "success", false);
 }
 
 type KeyCallback = (e: KeyboardEvent) => void;

@@ -104,7 +104,14 @@ export type ContextMenuType =
       };
 export type ContextMenuState =
     | { kind: "hidden" }
-    | { kind: "visible"; target: ContextMenuType; anchor: HTMLElement };
+    | {
+          kind: "visible";
+          target: ContextMenuType;
+          anchor: HTMLElement;
+          resolve: () => void;
+          reject: () => void;
+      };
+// export type ContextMenuState = Overlay<ContextMenuType, HTMLElement>
 
 export type ConstructiveOverlayType =
     | { kind: "updateWorkspaceBoard"; workspaceBoard: WorkspaceBoard }
