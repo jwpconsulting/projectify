@@ -77,6 +77,11 @@
 
 * Refactor
 
+** DONE Use async in overlays
+   CLOSED: [2023-08-31 Thu 13:53]
+   All overlays should use async functions so we can await them finishing /
+   closing / whatever it is that they do
+
 ** Remove improvised storybook
    <2023-08-30 Wed>
    Basically, create stories for all files in src/routes/storybook.
@@ -132,10 +137,6 @@
    Done in f63689901
 
 ** Update button to use ButtonAction
-
-** Use async in overlays
-   All overlays should use async functions so we can await them finishing /
-   closing / whatever it is that they do
 
 ** Consistent undefined
    Make undefined and null for empty form fields more consistent. We want to
