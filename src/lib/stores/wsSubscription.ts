@@ -15,6 +15,7 @@ export interface WSMessage {
     at: number;
 }
 
+// A svelte store subscriber that received WSMessages
 type WSSubscriber = Subscriber<WSMessage>;
 
 const wsSubscriptionStores = new Map<string, WSSubscriptionStore>();
@@ -22,9 +23,7 @@ const wsSubscriptionStores = new Map<string, WSSubscriptionStore>();
 export type WSSubscriptionStore = Readable<WSMessage>;
 
 function makeWsSubscriptionStore(url: string): WSSubscriptionStore {
-    const subscribers = new Map<number, WSSubscriber>();
-    // We might just use a set here
-    let nextSubscriberId = 0;
+    const subscribers = new Set<WSSubscriber>();
 
     const message = ({ data, timeStamp: at }: MessageEvent<string>) => {
         const message: Message = JSON.parse(data) as Message;
@@ -41,18 +40,18 @@ function makeWsSubscriptionStore(url: string): WSSubscriptionStore {
         },
     });
 
-    const unsubscribe = (id: number): void => {
-        subscribers.delete(id);
-        if (subscribers.size === 0) {
-            sarus.disconnect();
-            wsSubscriptionStores.delete(url);
+    const unsubscribe = (run: WSSubscriber): void => {
+        subscribers.delete(run);
+        if (subscribers.size > 0) {
+            return;
         }
+        sarus.disconnect();
+        wsSubscriptionStores.delete(url);
+        console.debug("Cleaned up store for", url);
     };
     const subscribe = (run: WSSubscriber): Unsubscriber => {
-        const subscriberId = nextSubscriberId;
-        subscribers.set(subscriberId, run);
-        nextSubscriberId++;
-        return unsubscribe.bind(null, subscriberId, run);
+        subscribers.add(run);
+        return () => unsubscribe(run);
     };
     return {
         subscribe,
