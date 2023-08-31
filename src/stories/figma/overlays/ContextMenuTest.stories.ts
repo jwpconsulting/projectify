@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-// Now that's what I call lateral movement
 import { makeStorybookSelect, mobileParameters } from "$lib/storybook";
 
 import { contextMenus } from "./config";

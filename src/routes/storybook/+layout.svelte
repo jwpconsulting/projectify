@@ -24,10 +24,6 @@
             title: "Overlays",
             href: "/storybook/overlays",
         },
-        {
-            title: "Overlay test",
-            href: "/storybook/overlay-test",
-        },
     ];
 </script>
 
