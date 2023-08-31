@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 
 import { makeStorybookSelect } from "$lib/storybook";
 
-import MobileMenuOverlayContainer from "./MobileMenuOverlayContainer.svelte";
+import MobileMenuOverlayTest from "./MobileMenuOverlayTest.svelte";
 
 const mobileMenuType = makeStorybookSelect({
     Landing: { kind: "landing" },
@@ -10,8 +10,8 @@ const mobileMenuType = makeStorybookSelect({
     Continue: { kind: "continue" },
 });
 
-const meta: Meta<MobileMenuOverlayContainer> = {
-    component: MobileMenuOverlayContainer,
+const meta: Meta<MobileMenuOverlayTest> = {
+    component: MobileMenuOverlayTest,
     argTypes: {
         mobileMenuType,
     },
@@ -21,6 +21,6 @@ const meta: Meta<MobileMenuOverlayContainer> = {
 };
 export default meta;
 
-type Story = StoryObj<MobileMenuOverlayContainer>;
+type Story = StoryObj<MobileMenuOverlayTest>;
 
 export const Default: Story = {};
