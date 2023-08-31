@@ -1,10 +1,18 @@
 import type { LayoutLoadEvent } from "./$types";
 
-import { currentWorkspaceUuid } from "$lib/stores/dashboard";
+import { currentWorkspace } from "$lib/stores/dashboard";
+import type { Workspace } from "$lib/types/workspace";
 
 export const ssr = false;
 export const prerender = false;
 
-export function load({ params: { workspaceUuid } }: LayoutLoadEvent) {
-    currentWorkspaceUuid.set(workspaceUuid);
+interface Data {
+    workspace: Workspace;
+}
+
+export async function load({
+    params: { workspaceUuid },
+}: LayoutLoadEvent): Promise<Data> {
+    const workspace = await currentWorkspace.loadUuid(workspaceUuid);
+    return { workspace };
 }

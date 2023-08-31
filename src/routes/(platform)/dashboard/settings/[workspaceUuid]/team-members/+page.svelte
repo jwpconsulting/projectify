@@ -4,27 +4,23 @@
 
     import { fuseSearchThreshold } from "$lib/config";
 
+    import type { PageData } from "./$types";
+
     import IconEdit from "$lib/components/icons/icon-edit.svelte";
     import IconTrash from "$lib/components/icons/icon-trash.svelte";
     import {
-        currentCustomer,
         currentWorkspace,
-        loading,
     } from "$lib/stores/dashboard";
     import type { WorkspaceUser } from "$lib/types/workspace";
 
-    let workspaceUsers: WorkspaceUser[] = [];
+    export let data: PageData;
 
-    // TODO currentWorkspace shall instead be passing a by +page.ts
+    let { workspace } = data;
 
-    $: {
-        $loading = !($currentWorkspace && $currentCustomer);
-    }
-    $: {
-        if ($currentWorkspace?.workspace_users) {
-            workspaceUsers = $currentWorkspace.workspace_users;
-        }
-    }
+    $: workspace = $currentWorkspace ?? workspace;
+
+    let workspaceUsers: WorkspaceUser[];
+    $: workspaceUsers = workspace.workspace_users ?? [];
 
     async function onNewMember() {
         // TODO if (!modalRes.outputs?.email) {

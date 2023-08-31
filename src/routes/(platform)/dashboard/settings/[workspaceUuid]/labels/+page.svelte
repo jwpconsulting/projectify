@@ -1,20 +1,20 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
+    import type { PageData } from "./$types";
+
     import LabelPill from "$lib/components/dashboard/LabelPill.svelte";
-    import { currentWorkspace, loading } from "$lib/stores/dashboard";
+    import { currentWorkspace } from "$lib/stores/dashboard";
     import type { Label } from "$lib/types/workspace";
 
-    let labels: Label[] = [];
 
-    $: {
-        if ($currentWorkspace?.labels) {
-            labels = $currentWorkspace.labels;
-            $loading = false;
-        } else {
-            $loading = true;
-        }
-    }
+    export let data: PageData;
+
+    let {workspace} = data;
+
+    $: workspace = $currentWorkspace ?? workspace;
+
+    $: labels = workspace.labels ?? [];
 
     async function onDeleteLabel(label: Label) {
         console.error("TODO delete", label);

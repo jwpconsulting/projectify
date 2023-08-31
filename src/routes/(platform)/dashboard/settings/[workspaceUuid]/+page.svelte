@@ -1,43 +1,40 @@
 <script lang="ts">
     import vars from "$lib/env";
 
+    import type { PageData } from "./$types";
+
     import SettingsField from "$lib/components/dashboard/settings-field.svelte";
     import ProfilePictureFileSelector from "$lib/components/profilePictureFileSelector.svelte";
     import SettingFooterEditSaveButtons from "$lib/components/settingFooterEditSaveButtons.svelte";
     import { client } from "$lib/graphql/client";
     import { Mutation_UpdateWorkspace } from "$lib/graphql/operations";
-    import { currentWorkspace, loading } from "$lib/stores/dashboard";
+    import { currentWorkspace } from "$lib/stores/dashboard";
     import type { Workspace } from "$lib/types/workspace";
     import { uploadImage } from "$lib/utils/file";
 
-    let workspace: Workspace | null = null;
-    $: {
-        $loading = !$currentWorkspace;
-    }
+    export let data: PageData;
+
+    let { workspace: workspaceInitial } = data;
+
+    $: workspaceInitial = $currentWorkspace ?? workspaceInitial;
+
+    let workspace: Workspace = workspaceInitial;
 
     $: {
-        if (state != "editing" && $currentWorkspace) {
-            workspace = { ...$currentWorkspace };
+        if (state != "editing" && workspaceInitial) {
+            workspace = { ...workspaceInitial };
         }
     }
 
     let state: "viewing" | "editing" | "saving" = "viewing";
 
     async function saveData() {
-        if (!workspace) {
-            throw new Error("Expected workspace");
-        }
-
-        if (!$currentWorkspace) {
-            return;
-        }
-
         try {
             await client.mutate({
                 mutation: Mutation_UpdateWorkspace,
                 variables: {
                     input: {
-                        uuid: $currentWorkspace.uuid,
+                        uuid: workspaceInitial.uuid,
                         title: workspace.title,
                         description: workspace.description,
                     },
@@ -67,15 +64,12 @@
     }
 
     async function save() {
-        if (!$currentWorkspace) {
-            throw new Error("Expected $currentWorkspace");
-        }
         state = "saving";
         if (imageFile) {
             await uploadImage(
                 imageFile,
                 vars.API_ENDPOINT +
-                    `/workspace/workspace/${$currentWorkspace.uuid}/picture-upload`
+                    `/workspace/workspace/${workspaceInitial.uuid}/picture-upload`
             );
         }
         await saveData();
@@ -93,7 +87,6 @@
     }
 </script>
 
-{#if workspace}
     <div
         class:pointer-events-none={state === "saving"}
         class="flex flex-col space-y-4 divide-y divide-base-300"
@@ -139,6 +132,5 @@
             </button>
         </SettingsField>
     </div>
-{/if}
 
 <SettingFooterEditSaveButtons {state} {save} {cancel} />
