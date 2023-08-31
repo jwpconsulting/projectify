@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 
 import { mobileParameters } from "$lib/storybook";
 
+import { destructiveOverlays } from "./config";
 import DestructiveOverlayTest from "./DestructiveOverlayTest.svelte";
 
 // TODO
@@ -9,6 +10,12 @@ import DestructiveOverlayTest from "./DestructiveOverlayTest.svelte";
 // argTypes
 const meta: Meta<DestructiveOverlayTest> = {
     component: DestructiveOverlayTest,
+    argTypes: {
+        target: destructiveOverlays,
+    },
+    args: {
+        target: "delete-label",
+    },
     parameters: {
         layout: "fullscreen",
     },

@@ -6,6 +6,9 @@
         destructiveOverlayState,
         openDestructiveOverlay,
     } from "$lib/stores/globalUi";
+    import type { DestructiveOverlayType } from "$lib/types/ui";
+
+    export let target: DestructiveOverlayType;
 
     let disabled = false;
     let result = "";
@@ -14,10 +17,7 @@
         disabled = true;
         result = "waiting";
         try {
-            await openDestructiveOverlay({
-                kind: "deleteLabel" as const,
-                label: { name: "This is a label", color: 0, uuid: "" },
-            });
+            await openDestructiveOverlay(target);
             result = "resolved";
         } catch {
             result = "rejected";

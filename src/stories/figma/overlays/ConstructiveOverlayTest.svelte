@@ -6,6 +6,9 @@
         constructiveOverlayState,
         openConstructiveOverlay,
     } from "$lib/stores/globalUi";
+    import type { ConstructiveOverlayType } from "$lib/types/ui";
+
+    export let target: ConstructiveOverlayType;
 
     let disabled = false;
     let result = "";
@@ -14,7 +17,7 @@
         disabled = true;
         result = "waiting";
         try {
-            await openConstructiveOverlay({ kind: "skipOnboarding" });
+            await openConstructiveOverlay(target);
             result = "resolved";
         } catch {
             result = "rejected";
