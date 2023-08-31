@@ -1,21 +1,15 @@
+root = true
+
 [*]
 end_of_line = lf
 insert_final_newline = true
 charset = utf-8
 trim_trailing_whitespace = true
-
-[*.{prettierrc,html,scss,json,ts,js,cjs,svelte,css,yml}]
+max_line_length = 79
 indent_style = space
 indent_size = 4
-max_line_length = 79
 
 [*.md]
-indent_style = space
-# Why 2?
+# If we don't do this, lists will look weird
+# https://github.com/prettier/prettier/issues/5019
 indent_size = 2
-max_line_length = 79
-
-[docs/guide.md]
-indent_style = space
-indent_size = 4
-max_line_length = 79
