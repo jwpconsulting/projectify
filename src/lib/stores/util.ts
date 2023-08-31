@@ -3,29 +3,32 @@ import { derived, readonly, writable } from "svelte/store";
 import type { Readable, Writable } from "svelte/store";
 
 import { fuseSearchThreshold } from "$lib/config";
+import vars from "$lib/env";
 
 import { browser } from "$app/environment";
-import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
+import { getSubscriptionFor } from "$lib/stores/wsSubscription";
+import type { WSSubscriptionStore } from "$lib/stores/wsSubscription";
 import type { RecursiveKeyOf, SearchInput } from "$lib/types/base";
 import type { SubscriptionType, WsResource } from "$lib/types/stores";
-
-export function internallyWritable<T>(theThing: T): {
-    pub: Readable<T>;
-    priv: Writable<T>;
-} {
-    const priv = writable(theThing);
-    const pub = readonly(priv);
-    return {
-        priv,
-        pub,
-    };
-}
 
 type Unsubscriber = () => void;
 
 type MaybeUuid = string | null;
 // Maybe make a read only UuidStore type for our derivation step
 type UuidStore = Writable<MaybeUuid>;
+
+const getSubscriptionForCollection = (
+    collection: "workspace" | "workspace-board" | "task",
+    uuid: string
+): WSSubscriptionStore | null => {
+    let wsEndPoint = vars.WS_ENDPOINT;
+    if (wsEndPoint.startsWith("/ws")) {
+        wsEndPoint = `ws://${location.host}${wsEndPoint}`;
+    }
+    const wsURL = `${wsEndPoint}/${collection}/${uuid}/`;
+
+    return getSubscriptionFor(wsURL);
+};
 
 export function createWsStore<T>(
     collection: SubscriptionType,
@@ -120,4 +123,16 @@ export function searchAmong<T extends object>(
     return searchEngine
         .search(searchText)
         .map((res: Fuse.FuseResult<T>) => res.item);
+}
+
+export function internallyWritable<T>(theThing: T): {
+    pub: Readable<T>;
+    priv: Writable<T>;
+} {
+    const priv = writable(theThing);
+    const pub = readonly(priv);
+    return {
+        priv,
+        pub,
+    };
 }
