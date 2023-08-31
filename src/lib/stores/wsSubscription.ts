@@ -37,8 +37,8 @@ function makeWsSubscriptionStore(url: string): WSSubscriptionStore {
     const sarus = new Sarus({
         url,
         eventListeners: {
-            open: [console.log.bind(null, "Connection opened to", url)],
-            close: [console.log.bind(null, "Connection closed to", url)],
+            open: [console.debug.bind(null, "Connection opened to", url)],
+            close: [console.debug.bind(null, "Connection closed to", url)],
             error: [console.error.bind(null, "Connection error for", url)],
             message: [message],
         },
