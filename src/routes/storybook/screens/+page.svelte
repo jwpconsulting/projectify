@@ -1,23 +1,11 @@
 <script lang="ts">
-    import { fc, workspace } from "$lib/storybook";
+    import { fc } from "$lib/storybook";
 
-    import { browser } from "$app/environment";
     import ConfirmPasswordReset from "$lib/figma/screens/auth/ConfirmPasswordReset.svelte";
     import LogIn from "$lib/figma/screens/auth/LogIn.svelte";
     import RequestPasswordReset from "$lib/figma/screens/auth/RequestPasswordReset.svelte";
     import SignUp from "$lib/figma/screens/auth/SignUp.svelte";
-    import WorkspaceSettingsBilling from "$lib/figma/screens/workspace-settings/WorkspaceSettingsBilling.svelte";
-    import WorkspaceSettingsGeneral from "$lib/figma/screens/workspace-settings/WorkspaceSettingsGeneral.svelte";
-    import WorkspaceSettingsMembers from "$lib/figma/screens/workspace-settings/WorkspaceSettingsMembers.svelte";
 </script>
-
-{#if browser}
-    <div class={fc}>
-        <WorkspaceSettingsGeneral {workspace} />
-        <WorkspaceSettingsMembers {workspace} />
-        <WorkspaceSettingsBilling {workspace} />
-    </div>
-{/if}
 
 <div class={fc}>
     <div class="w-[500px]">
