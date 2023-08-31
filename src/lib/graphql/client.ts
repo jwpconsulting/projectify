@@ -1,20 +1,14 @@
-import { ApolloClient, ApolloLink, InMemoryCache } from "@apollo/client/core";
+import { ApolloClient, InMemoryCache } from "@apollo/client/core";
 import { from } from "@apollo/client/link/core";
 import { onError } from "@apollo/client/link/error";
 import { HttpLink } from "@apollo/client/link/http";
 
 import vars from "$lib/env";
 
-const httpCommonOpts = {
-    credentials: "include",
-};
-
 const httpLink = new HttpLink({
-    ...httpCommonOpts,
+    credentials: "include",
     uri: vars.GRAPHQL_ENDPOINT,
 });
-
-const splitLink: ApolloLink = httpLink;
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors) {
@@ -36,7 +30,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 export const client = new ApolloClient({
-    link: from([errorLink, splitLink]),
+    link: from([errorLink, httpLink]),
     uri: vars.GRAPHQL_ENDPOINT,
     cache: new InMemoryCache(),
     defaultOptions: {
