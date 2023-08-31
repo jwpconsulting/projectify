@@ -29,7 +29,8 @@
 
 * Bug
 
-** TODO Mobile menu overlay not closing consistently
+** DONE Mobile menu overlay not closing consistently
+   CLOSED: [2023-08-31 Thu 10:42]
    <2023-08-28 Mon>
    When clicking on the "continue to dashboard" link when logged in, the mobile
    menu does not close consistently. Why is this? Adding an on:click handler to
@@ -75,6 +76,10 @@
 ** Fix storybook svelte kit goto import issue
 
 * Refactor
+
+** Remove improvised storybook
+   <2023-08-30 Wed>
+   Basically, create stories for all files in src/routes/storybook.
 
 ** TODO Change context menu to use overlay generic
    <2023-08-30 Wed>
