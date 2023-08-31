@@ -43,12 +43,22 @@ function makeOpenState<Target>(
 
 function openOverlay<Target>(
     overlay: Writable<Overlay<Target>>,
-    target: Target
+    target: Target,
+    expectHidden = true
 ): Promise<void> {
     return new Promise((resolve: () => void, reject: () => void) => {
         overlay.update(($overlay) => {
             if ($overlay.kind !== "hidden") {
-                throw new Error("Expected $overlay.kind to be hidden");
+                if (expectHidden) {
+                    throw new Error("Expected $overlay.kind to be hidden");
+                } else {
+                    console.debug(
+                        "Tried to open overlay",
+                        overlay,
+                        ", but it was already visible with",
+                        target
+                    );
+                }
             }
             return makeOpenState(target, resolve, reject);
         });

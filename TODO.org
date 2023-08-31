@@ -81,7 +81,8 @@
    <2023-08-30 Wed>
    Basically, create stories for all files in src/routes/storybook.
 
-** TODO Change context menu to use overlay generic
+** DONE Change context menu to use overlay generic
+   CLOSED: [2023-08-31 Thu 11:22]
    <2023-08-30 Wed>
    If we use a generic here, everything becomes simpler.
    Destructive Overlay
@@ -89,6 +90,8 @@
    Mobile Menu
    Context Menu
    They all use the same logic yo
+   <2023-08-31 Thu>
+   I have decided to not go further than using the same type for both.
 
 ** TODO Remove focus outlines
    <2023-08-28 Mon>

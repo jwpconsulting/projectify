@@ -67,7 +67,7 @@ export type Overlay<Target, Anchor = void> =
           ? {
                 anchor: Anchor;
             }
-          : unknown));
+          : object));
 
 // TODO we could define some kind of UBER overlay type that also has a
 // reference to the container, ... some time in the future Justus 2023-04-04
@@ -102,16 +102,9 @@ export type ContextMenuType =
           kind: "updateLabel";
           labelSearchModule: LabelSearchModule;
       };
-export type ContextMenuState =
-    | { kind: "hidden" }
-    | {
-          kind: "visible";
-          target: ContextMenuType;
-          anchor: HTMLElement;
-          resolve: () => void;
-          reject: () => void;
-      };
-// export type ContextMenuState = Overlay<ContextMenuType, HTMLElement>
+// This is already pretty convoluted, so I shall go no further than this for
+// now Justus 2023-08-31
+export type ContextMenuState = Overlay<ContextMenuType, HTMLElement>;
 
 export type ConstructiveOverlayType =
     | { kind: "updateWorkspaceBoard"; workspaceBoard: WorkspaceBoard }
