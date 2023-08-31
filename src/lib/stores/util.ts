@@ -7,7 +7,7 @@ import { fuseSearchThreshold } from "$lib/config";
 import { browser } from "$app/environment";
 import { getSubscriptionForCollection } from "$lib/stores/dashboardSubscription";
 import type { RecursiveKeyOf, SearchInput } from "$lib/types/base";
-import type { SubscriptionType } from "$lib/types/stores";
+import type { SubscriptionType, WsResource } from "$lib/types/stores";
 
 export function internallyWritable<T>(theThing: T): {
     pub: Readable<T>;
@@ -24,14 +24,21 @@ export function internallyWritable<T>(theThing: T): {
 type Unsubscriber = () => void;
 
 type MaybeUuid = string | null;
-type UuidStore = Readable<MaybeUuid>;
+// Maybe make a read only UuidStore type for our derivation step
+type UuidStore = Writable<MaybeUuid>;
 
 export function createWsStore<T>(
     collection: SubscriptionType,
     uuidReadable: UuidStore,
     getter: (uuid: string) => Promise<T>
-): Readable<T | null> {
+): WsResource<T> {
+    let setHack: ((t: T) => void) | undefined = undefined;
     const derive = ($uuidReadable: MaybeUuid, set: (t: T) => void) => {
+        // If the uuid changes, does that mean we have to force unsubscribe
+        // from WS here?
+        // Justus 2023-08-31
+        // TODO: Research
+        setHack = set;
         if (!browser) {
             return;
         }
@@ -64,6 +71,22 @@ export function createWsStore<T>(
         // TODO test this
         return unsubscriber;
     };
+    const loadUuid = async (uuid: string): Promise<T> => {
+        const it = await getter(uuid);
+        // We want setHack to be there, but it's not on an initial pageload
+        // In the future, we just hide current*Uuid from the user
+        // Then we have all the freedom to do what we want to
+        if (!setHack) {
+            // This will trigger a load twice, maybe?
+            // Or svelte store is intelligent enough to notice that the
+            // uuid is the same, then maybe not...
+            uuidReadable.set(uuid);
+            console.error("We rely on a hack, and the hack did not work :(");
+        } else {
+            setHack(it);
+        }
+        return it;
+    };
     const { subscribe }: Readable<T | null> = derived<UuidStore, T | null>(
         uuidReadable,
         derive,
@@ -71,6 +94,7 @@ export function createWsStore<T>(
     );
     return {
         subscribe,
+        loadUuid,
     };
 }
 

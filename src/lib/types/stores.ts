@@ -71,3 +71,7 @@ export interface MoveTaskModule {
 
 const subscriptionTypes = ["workspace", "workspace-board", "task"] as const;
 export type SubscriptionType = (typeof subscriptionTypes)[number];
+
+export interface WsResource<T> extends Readable<T | null> {
+    loadUuid: (uuid: string) => Promise<T>;
+}
