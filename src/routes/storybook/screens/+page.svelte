@@ -10,7 +10,6 @@
     import WorkspaceSettingsGeneral from "$lib/figma/screens/workspace-settings/WorkspaceSettingsGeneral.svelte";
     import WorkspaceSettingsMemberCard from "$lib/figma/screens/workspace-settings/WorkspaceSettingsMemberCard.svelte";
     import WorkspaceSettingsMembers from "$lib/figma/screens/workspace-settings/WorkspaceSettingsMembers.svelte";
-    import WorkspaceSettingsPage from "$lib/figma/screens/workspace-settings/WorkspaceSettingsPage.svelte";
     import WorkspaceSettingsTabBar from "$lib/figma/screens/workspace-settings/WorkspaceSettingsTabBar.svelte";
     import { settingKinds } from "$lib/types/dashboard";
 </script>
@@ -27,7 +26,6 @@
     </div>
 
     <div class={fc}>
-        <WorkspaceSettingsPage {workspace} activeSetting={settingKinds[0]} />
         <WorkspaceSettingsGeneral {workspace} />
         <WorkspaceSettingsMembers {workspace} />
         <WorkspaceSettingsBilling {workspace} />
