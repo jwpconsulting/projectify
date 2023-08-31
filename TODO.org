@@ -127,7 +127,9 @@
     <2023-08-31 Thu>
     Turns out I already did this
 
-** Tertiary nav btns to be replaced by HeaderButton
+** DONE Tertiary nav btns to be replaced by HeaderButton
+   CLOSED: [2023-08-31 Thu 11:25]
+   Done in f63689901
 
 ** Update button to use ButtonAction
 
