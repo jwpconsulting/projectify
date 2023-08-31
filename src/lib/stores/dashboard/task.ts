@@ -13,7 +13,7 @@ import { createWsStore, searchAmong } from "$lib/stores/util";
 import type { Task, WorkspaceBoardSection } from "$lib/types/workspace"; // XXX Remove this
 
 export const taskSearchInput = writable<string>("");
-export const currentTaskUuid = writable<string | null>(null);
+const currentTaskUuid = writable<string | null>(null);
 
 // Clear on workspace board change
 // TODO clarify if this subscription still makes sense
