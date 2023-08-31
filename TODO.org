@@ -120,9 +120,12 @@
 
    https://www.tjvantoll.com/2013/01/28/stop-messing-with-the-browsers-default-focus-outline/
 
-** TODO Change OverlayContainer to accept overlay as slto
-   <2023-08-27 Sun>
-   This is more sveltonic?
+*** DONE Change OverlayContainer to accept overlay as slot
+    CLOSED: [2023-08-31 Thu 11:24]
+    <2023-08-27 Sun>
+    This is more sveltonic?
+    <2023-08-31 Thu>
+    Turns out I already did this
 
 ** Tertiary nav btns to be replaced by HeaderButton
 
