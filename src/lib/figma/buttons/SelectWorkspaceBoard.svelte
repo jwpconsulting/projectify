@@ -5,9 +5,11 @@
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
-    import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard";
+    import { currentWorkspaceBoard } from "$lib/stores/dashboard";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { WorkspaceBoard } from "$lib/types/workspace";
+
+    let currentWorkspaceBoardUuid = $currentWorkspaceBoard?.uuid;
 
     export let workspaceBoard: WorkspaceBoard;
 
@@ -34,7 +36,7 @@
     <div class="flex min-w-0 flex-row items-center gap-2">
         <div
             class={`rounded-md p-1 ${
-                workspaceBoard.uuid === $currentWorkspaceBoardUuid
+                workspaceBoard.uuid === currentWorkspaceBoardUuid
                     ? "bg-primary-focus"
                     : ""
             }`}
@@ -43,7 +45,7 @@
                 src={Folder}
                 theme="outline"
                 class={`h-4 w-4 ${
-                    workspaceBoard.uuid === $currentWorkspaceBoardUuid
+                    workspaceBoard.uuid === currentWorkspaceBoardUuid
                         ? "text-base-100"
                         : ""
                 }`}

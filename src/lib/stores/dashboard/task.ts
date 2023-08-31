@@ -7,7 +7,7 @@ import {
     deleteTask as repositoryDeleteTask,
 } from "$lib/repository/workspace";
 import { selectedLabels } from "$lib/stores/dashboard/label";
-import { currentWorkspaceBoardUuid } from "$lib/stores/dashboard/workspaceBoard";
+import { currentWorkspaceBoard } from "$lib/stores/dashboard/workspaceBoard";
 import { selectWorkspaceUser } from "$lib/stores/dashboard/workspaceUser";
 import { createWsStore, searchAmong } from "$lib/stores/util";
 import type { Task, WorkspaceBoardSection } from "$lib/types/workspace"; // XXX Remove this
@@ -19,7 +19,7 @@ export const currentTaskUuid = writable<string | null>(null);
 // TODO clarify if this subscription still makes sense
 // It's good to unsubscribe whenever we can
 // Justus 2023-08-30
-currentWorkspaceBoardUuid.subscribe((_uuid) => {
+currentWorkspaceBoard.subscribe((_$currentWorkspaceBoard) => {
     selectedLabels.set({ kind: "allLabels" });
     selectWorkspaceUser({ kind: "allWorkspaceUsers" });
     taskSearchInput.set("");

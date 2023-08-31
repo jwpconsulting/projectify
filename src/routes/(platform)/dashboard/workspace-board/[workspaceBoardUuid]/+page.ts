@@ -1,9 +1,9 @@
 import type { PageLoadEvent } from "./$types";
 
-import { getWorkspaceBoard, getWorkspaces } from "$lib/repository/workspace";
+import { getWorkspaces } from "$lib/repository/workspace";
 import {
     currentWorkspace,
-    currentWorkspaceBoardUuid,
+    currentWorkspaceBoard,
 } from "$lib/stores/dashboard";
 import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
 
@@ -16,17 +16,14 @@ export const prerender = false;
 export const ssr = false;
 
 export async function load({
-    params: { workspaceBoardUuid },
-    fetch,
+    params: { workspaceBoardUuid }, // TODO add fetch back and use in subscription somehow
 }: PageLoadEvent): Promise<Data> {
-    const workspaceBoard = await getWorkspaceBoard(workspaceBoardUuid, {
-        fetch,
-    });
+    const workspaceBoard =
+        await currentWorkspaceBoard.loadUuid(workspaceBoardUuid);
     const workspaceUuid = workspaceBoard.workspace?.uuid;
     if (!workspaceUuid) {
         throw new Error("Expected workspace");
     }
-    currentWorkspaceBoardUuid.set(workspaceBoardUuid);
     const workspace = await currentWorkspace.loadUuid(workspaceUuid);
     // Might be able to do this asynchronously, meaning we don't need to wait
     // for it to finish here?
