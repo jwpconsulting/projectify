@@ -1,5 +1,5 @@
 import Sarus from "@anephenix/sarus";
-import type { Unsubscriber, Subscriber } from "svelte/store";
+import type { Unsubscriber, Subscriber, Readable } from "svelte/store";
 import { writable } from "svelte/store";
 
 import { browser } from "$app/environment";
@@ -19,14 +19,11 @@ type WSSubscriber = Subscriber<WSMessage>;
 
 const wsSubscriptionStores = new Map<string, WSSubscriptionStore>();
 
-export interface WSSubscriptionStore {
-    sarus: Sarus;
-    subscribe: (run: WSSubscriber) => Unsubscriber;
-    url: string;
-}
+export type WSSubscriptionStore = Readable<WSMessage>;
 
 function makeWsSubscriptionStore(url: string): WSSubscriptionStore {
     const subscribers = new Map<number, WSSubscriber>();
+    // We might just use a set here
     let nextSubscriberId = 0;
 
     const message = ({ data, timeStamp: at }: MessageEvent<string>) => {
@@ -58,8 +55,6 @@ function makeWsSubscriptionStore(url: string): WSSubscriptionStore {
         return unsubscribe.bind(null, subscriberId, run);
     };
     return {
-        sarus,
-        url,
         subscribe,
     };
 }
