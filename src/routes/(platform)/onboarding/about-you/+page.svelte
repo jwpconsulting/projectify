@@ -44,7 +44,8 @@
     </svelte:fragment>
 
     <svelte:fragment slot="content-title">
-        Welcome{#if !nextBtnDisabled}, {/if}{fullName ?? ""}! 👋
+        Welcome{#if !nextBtnDisabled},
+        {/if}{fullName ?? ""}! 👋
     </svelte:fragment>
 
     <svelte:fragment slot="content">

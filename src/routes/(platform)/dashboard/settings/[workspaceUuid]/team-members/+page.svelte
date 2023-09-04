@@ -8,9 +8,7 @@
 
     import IconEdit from "$lib/components/icons/icon-edit.svelte";
     import IconTrash from "$lib/components/icons/icon-trash.svelte";
-    import {
-        currentWorkspace,
-    } from "$lib/stores/dashboard";
+    import { currentWorkspace } from "$lib/stores/dashboard";
     import type { WorkspaceUser } from "$lib/types/workspace";
 
     export let data: PageData;

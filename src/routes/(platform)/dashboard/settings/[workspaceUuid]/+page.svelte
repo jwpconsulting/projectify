@@ -87,50 +87,50 @@
     }
 </script>
 
-    <div
-        class:pointer-events-none={state === "saving"}
-        class="flex flex-col space-y-4 divide-y divide-base-300"
-    >
-        <SettingsField label="Icon image" labelVAlign="start">
-            <ProfilePictureFileSelector
-                url={workspace.picture}
-                on:fileSelected={onFileSelected}
+<div
+    class:pointer-events-none={state === "saving"}
+    class="flex flex-col space-y-4 divide-y divide-base-300"
+>
+    <SettingsField label="Icon image" labelVAlign="start">
+        <ProfilePictureFileSelector
+            url={workspace.picture}
+            on:fileSelected={onFileSelected}
+        >
+            <div
+                class="overflow-hidden rounded-md border border-base-300 bg-primary-content text-primary"
             >
-                <div
-                    class="overflow-hidden rounded-md border border-base-300 bg-primary-content text-primary"
-                >
-                    TODO: Show a ProfilePicture here?
-                </div>
-            </ProfilePictureFileSelector>
-        </SettingsField>
-        <SettingsField label="Project Name">
-            <input
-                type="text"
-                id="title"
-                name="title"
-                autocomplete="email"
-                placeholder={"Workspace title"}
-                class="input input-bordered w-full"
-                on:input={fieldChanged}
-                bind:value={workspace.title}
-            />
-        </SettingsField>
-        <SettingsField label="Description">
-            <textarea
-                rows="5"
-                class="textarea textarea-bordered w-full"
-                on:input={fieldChanged}>{workspace.description}</textarea
-            >
-        </SettingsField>
-        <SettingsField label="Danger Zone">
-            <button
-                disabled={state === "saving"}
-                class="btn btn-outline btn-accent btn-sm w-full rounded-full hover:bg-accent hover:text-accent-content"
-                on:click={onDelete}
-            >
-                {"Delete Workspace"}
-            </button>
-        </SettingsField>
-    </div>
+                TODO: Show a ProfilePicture here?
+            </div>
+        </ProfilePictureFileSelector>
+    </SettingsField>
+    <SettingsField label="Project Name">
+        <input
+            type="text"
+            id="title"
+            name="title"
+            autocomplete="email"
+            placeholder={"Workspace title"}
+            class="input input-bordered w-full"
+            on:input={fieldChanged}
+            bind:value={workspace.title}
+        />
+    </SettingsField>
+    <SettingsField label="Description">
+        <textarea
+            rows="5"
+            class="textarea textarea-bordered w-full"
+            on:input={fieldChanged}>{workspace.description}</textarea
+        >
+    </SettingsField>
+    <SettingsField label="Danger Zone">
+        <button
+            disabled={state === "saving"}
+            class="btn btn-outline btn-accent btn-sm w-full rounded-full hover:bg-accent hover:text-accent-content"
+            on:click={onDelete}
+        >
+            {"Delete Workspace"}
+        </button>
+    </SettingsField>
+</div>
 
 <SettingFooterEditSaveButtons {state} {save} {cancel} />

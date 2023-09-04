@@ -21,26 +21,23 @@
 
     let items: TabItem[] = [];
     $: {
-            items = [
-                {
-                    label: $_("settings.general"),
-                    id: "general",
-                    url: getSettingsUrl(workspace.uuid, "index"),
-                },
-                {
-                    label: $_("settings.labels"),
-                    id: "labels",
-                    url: getSettingsUrl(workspace.uuid, "labels"),
-                },
-                {
-                    label: $_("settings.team-members"),
-                    id: "team-members",
-                    url: getSettingsUrl(
-                        workspace.uuid,
-                        "team-members"
-                    ),
-                },
-            ];
+        items = [
+            {
+                label: $_("settings.general"),
+                id: "general",
+                url: getSettingsUrl(workspace.uuid, "index"),
+            },
+            {
+                label: $_("settings.labels"),
+                id: "labels",
+                url: getSettingsUrl(workspace.uuid, "labels"),
+            },
+            {
+                label: $_("settings.team-members"),
+                id: "team-members",
+                url: getSettingsUrl(workspace.uuid, "team-members"),
+            },
+        ];
         const activeTab = items.find((item) => item.url == $page.url.pathname);
         if (activeTab) {
             activeTabId = activeTab.id;

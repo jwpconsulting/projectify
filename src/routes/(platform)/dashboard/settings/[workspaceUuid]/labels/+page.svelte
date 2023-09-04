@@ -7,10 +7,9 @@
     import { currentWorkspace } from "$lib/stores/dashboard";
     import type { Label } from "$lib/types/workspace";
 
-
     export let data: PageData;
 
-    let {workspace} = data;
+    let { workspace } = data;
 
     $: workspace = $currentWorkspace ?? workspace;
 
