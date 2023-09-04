@@ -10,6 +10,7 @@
         "svelteserver": "svelteserver",
         "check": "npm run check:prettier && npm run check:svelte-check && npm run check:eslint && npm run check:knip",
         "check:eslint": "eslint --cache --ext .ts,.js,.svelte src",
+        "check:eslint:debug": "eslint --ext .ts,.js,.svelte --debug src",
         "check:prettier": "prettier --ignore-path .gitignore --plugin prettier-plugin-svelte --check --cache --cache-strategy metadata .",
         "check:svelte-check": "svelte-check --tsconfig tsconfig.json --diagnostic-sources js,svelte",
         "check:knip": "knip",
