@@ -90,6 +90,10 @@ export function getSubscriptionForCollection(
  *  ┌─────┐   loadUuid  ┌─────┐ ──────────────┐
  *  │Start│────────────►│Ready│               │ subscription update:
  *  └─────┘             └─────┘ ◄─────────────┘ updateSubscribers()
+ *                        ▲ │
+ *                        │ │ loadUuid
+ *                        │ │
+ *                        └─┘
  *
  * This thing basically just passes on ws updates to subscribers, plus
  * one initial load
@@ -143,10 +147,6 @@ export function createWsStore<T>(
             return;
         }
         state.unsubscriber();
-        state = {
-            kind: "start",
-            subscribers: state.subscribers,
-        };
     };
 
     const loadUuid = async (uuid: string): Promise<T> => {
