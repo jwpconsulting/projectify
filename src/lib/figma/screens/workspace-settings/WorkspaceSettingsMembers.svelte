@@ -5,16 +5,18 @@
     import WorkspaceSettingsPage from "$lib/figma/screens/workspace-settings/WorkspaceSettingsPage.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import { currentWorkspace } from "$lib/stores/dashboard";
     import type { Workspace, WorkspaceUser } from "$lib/types/workspace";
 
     export let workspace: Workspace;
 
-    // TODO use undefined instead
-    let workspaceUsers: WorkspaceUser[] | null = null;
+    let workspaceUsers: WorkspaceUser[];
     $: {
-        workspaceUsers = workspace.workspace_users ?? null;
+        workspaceUsers = workspace.workspace_users ?? [];
     }
     let workspaceUserSearch: string;
+
+    $: workspace = $currentWorkspace ?? workspace;
 </script>
 
 <WorkspaceSettingsPage {workspace} activeSetting="team-members">
