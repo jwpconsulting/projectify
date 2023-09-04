@@ -9,8 +9,11 @@
 
     export let workspaceUserSelectionInput: WorkspaceUserSelectionInput;
     export let active: boolean;
-    export let count: number | null;
+    export let count: number | undefined;
 
+    $: showCount = active && count !== undefined;
+
+    // TODO replace with callback props
     const dispatch = createEventDispatcher();
     function click() {
         active = !active;
@@ -61,12 +64,11 @@
             </div>
         </div>
     </div>
-    {#if count}
-        <div
-            class="flex flex-row items-center gap-2 rounded-2.5xl border-2 border-primary bg-foreground px-2 py-1 text-xs font-bold text-primary group-hover:visible"
-            class:invisible={!active}
-        >
-            {count}
-        </div>
-    {/if}
+    <div
+        class="shrink-0 flex-row items-center gap-2 rounded-2.5xl border-2 border-primary bg-foreground px-2 py-0.5 text-xs font-bold text-primary hover:flex group-hover:flex"
+        class:flex={showCount}
+        class:hidden={!showCount}
+    >
+        {count ?? ""}
+    </div>
 </button>

@@ -18,16 +18,19 @@ const meta: Meta<FilterUser> = {
                 "All workspace users": workspaceUserSelectionInputs[1],
                 "Workspace user": workspaceUserSelectionInputs[2],
             }),
-        count: {
-            control: "number",
-        },
+        count: makeStorybookSelect({
+            "Unknown tasks assigned": undefined,
+            "0 tasks assigned": 0,
+            "1 task assigned": 209,
+            "4909012 tasks assigned": 4909012,
+        }),
         active: {
             control: "boolean",
         },
     },
     args: {
         active: true,
-        count: 20,
+        count: "no-tasks-assigned",
         workspaceUserSelectionInput: workspaceUserSelectionInputs[2],
     },
 };

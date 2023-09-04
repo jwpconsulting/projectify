@@ -38,7 +38,7 @@
             active={$selected.kind === "workspaceUsers"
                 ? $selected.workspaceUserUuids.has(workspaceUser.uuid)
                 : false}
-            count={$tasksPerUser.assigned.get(workspaceUser.uuid) ?? null}
+            count={$tasksPerUser.assigned.get(workspaceUser.uuid)}
             on:select={() =>
                 select({
                     kind: "workspaceUser",
