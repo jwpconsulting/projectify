@@ -15,11 +15,13 @@ export function getDashboardWorkspaceBoardSectionUrl(
 }
 
 export function getSettingsUrl(workspaceUuid: string, kind: SettingKind) {
-    const root = `/dashboard/settings/${workspaceUuid}`;
-    if (kind === "index") {
-        return root;
-    }
-    return `${root}/${kind}`;
+    const suffix = {
+        "index": "",
+        "labels": "/labels",
+        "team-members": "/team-members",
+        "billing": "/billing",
+    }[kind];
+    return `/dashboard/workspace/${workspaceUuid}/settings${suffix}`;
 }
 
 export function getArchiveUrl(workspaceUuid: string) {

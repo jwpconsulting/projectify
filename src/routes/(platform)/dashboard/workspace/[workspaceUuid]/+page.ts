@@ -4,20 +4,13 @@ import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
 import type { PageLoadEvent } from "./$types";
 
-import { getWorkspace } from "$lib/repository/workspace";
-import type { Workspace } from "$lib/types/workspace";
 import { getNewWorkspaceBoardUrl } from "$lib/urls/onboarding";
 
 export const prerender = false;
 export const ssr = false;
 
-export async function load({
-    params: { workspaceUuid },
-    fetch,
-}: PageLoadEvent): Promise<void> {
-    const workspace: Workspace = await getWorkspace(workspaceUuid, {
-        fetch,
-    });
+export async function load({ parent }: PageLoadEvent): Promise<void> {
+    const { workspace } = await parent();
 
     const { uuid, workspace_boards } = workspace;
 
