@@ -11,20 +11,12 @@ type CurrentWorkspaceLabels = Readable<Label[]>;
 export const currentWorkspaceLabels: CurrentWorkspaceLabels = derived<
     [typeof currentWorkspace],
     Label[]
->(
-    [currentWorkspace],
-    ([$currentWorkspace], set) => {
-        if (!$currentWorkspace) {
-            set([]);
-            return;
-        }
-        if (!$currentWorkspace.labels) {
-            throw new Error("Expected $currentWorkspace.labels");
-        }
-        set($currentWorkspace.labels);
-    },
-    []
-);
+>([currentWorkspace], ([$currentWorkspace], set) => {
+    if (!$currentWorkspace.labels) {
+        throw new Error("Expected $currentWorkspace.labels");
+    }
+    set($currentWorkspace.labels);
+});
 // LabelSearch and Selection
 function searchLabels(labels: Label[], searchInput: SearchInput): Label[] {
     if (searchInput === undefined) {

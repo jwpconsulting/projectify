@@ -19,20 +19,12 @@ type CurrentWorkspaceUsers = Readable<WorkspaceUser[]>;
 export const currentWorkspaceUsers: CurrentWorkspaceUsers = derived<
     [typeof currentWorkspace],
     WorkspaceUser[]
->(
-    [currentWorkspace],
-    ([$currentWorkspace], set) => {
-        if (!$currentWorkspace) {
-            set([]);
-            return;
-        }
-        if (!$currentWorkspace.workspace_users) {
-            throw new Error("Expected $currentWorkspace.workspace_users");
-        }
-        set($currentWorkspace.workspace_users);
-    },
-    []
-);
+>([currentWorkspace], ([$currentWorkspace], set) => {
+    if (!$currentWorkspace.workspace_users) {
+        throw new Error("Expected $currentWorkspace.workspace_users");
+    }
+    set($currentWorkspace.workspace_users);
+});
 
 type WorkspaceUserSearch = Writable<SearchInput>;
 const createWorkspaceUserSearch = () => writable<SearchInput>(undefined);
