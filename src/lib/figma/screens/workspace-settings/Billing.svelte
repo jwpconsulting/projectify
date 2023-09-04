@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
+    import { _, number } from "svelte-i18n";
 
     import WorkspaceSettingsPage from "$lib/figma/screens/workspace-settings/WorkspaceSettingsPage.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
@@ -26,8 +26,8 @@
                 <dd>
                     {$_("workspace-settings.billing.seats.format", {
                         values: {
-                            seats: customer.seats,
-                            seats_remaining: customer.seats_remaining,
+                            seats: $number(customer.seats),
+                            seats_remaining: $number(customer.seats_remaining),
                         },
                     })}
                 </dd>

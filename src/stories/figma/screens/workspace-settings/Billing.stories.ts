@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { workspace } from "$lib/storybook";
+import { workspace, customer } from "$lib/storybook";
 
 import Billing from "$lib/figma/screens/workspace-settings/Billing.svelte";
 
 const meta: Meta<Billing> = {
     component: Billing,
-    args: { workspace },
+    args: { workspace, customer },
 };
 export default meta;
 

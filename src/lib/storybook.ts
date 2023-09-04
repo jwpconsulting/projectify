@@ -1,5 +1,7 @@
 import { readable, writable } from "svelte/store";
 
+import type { Customer } from "./types/corporate";
+
 import type { LabelLabel, SelectLabel } from "$lib/figma/types";
 import type {
     CreateTaskModule,
@@ -101,6 +103,13 @@ export const workspace = {
     modified: "",
     workspace_boards: [workspaceBoard],
     workspace_users: [workspaceUser],
+};
+
+export const customer: Customer = {
+    seats_remaining: 18923,
+    seats: 120899182918201,
+    uuid: "not-a-real-uuid",
+    subscription_status: "I SHOULD HAVE VALIDATION",
 };
 
 export const subTask: SubTask = {
