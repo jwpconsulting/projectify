@@ -103,10 +103,12 @@ export function getSubscriptionForCollection(
 type Subscribers<T> = Set<Subscriber<T>>;
 type WsStoreState<T> =
     | {
+          collection: SubscriptionType;
           kind: "start";
           subscribers: Subscribers<T>;
       }
     | {
+          collection: SubscriptionType;
           kind: "ready";
           uuid: string;
           subscribers: Subscribers<T>;
@@ -124,7 +126,7 @@ export function createWsStore<T>(
     getter: RepoGetter<T>
 ): WsResource<T> {
     type State = WsStoreState<T>;
-    let state: State = { kind: "start", subscribers: new Set() };
+    let state: State = { collection, kind: "start", subscribers: new Set() };
 
     const receiveWsMessage = (message: WsMessage): void => {
         if (state.kind === "start") {
