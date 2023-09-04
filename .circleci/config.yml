@@ -51,6 +51,9 @@ jobs:
                   paths:
                       - ~/.npm
             - run:
+                  name: Generate type information
+                  command: npm run sync-types
+            - run:
                   name: Run eslint
                   command: npm run check:eslint
     prettier:

@@ -13,6 +13,7 @@
         "check:prettier": "prettier --ignore-path .gitignore --check --cache --cache-strategy metadata .",
         "check:svelte-check": "svelte-check --tsconfig tsconfig.json --diagnostic-sources js,svelte",
         "check:knip": "knip",
+        "sync-types": "svelte-kit sync",
         "format": "npm run fix:prettier",
         "fix": "npm run fix:prettier && npm run fix:eslint",
         "fix:eslint": "eslint . --fix --cache --ext .ts,.js,.svelte src",

@@ -1,5 +1,7 @@
 #!/bin/bash
 set -e
+echo Aligning star charts
+npm run sync-types
 echo Finding fixpoint...
 npm run fix
 echo Inverting matrices...
