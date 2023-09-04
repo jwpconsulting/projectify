@@ -26,5 +26,7 @@ export async function load({
     throw redirect(302, next);
 }
 // Could we set one of the following to true here?
+// Prerender: This page is completely prerenderable, there is no user data here
 export const prerender = false;
+// SSR, this can be prerendered
 export const ssr = false;
