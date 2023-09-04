@@ -53,7 +53,12 @@
     <div class="relative flex w-max flex-col">
         <AvatarVariant size="large" content={{ kind: "single", user }} />
         <div class="absolute -bottom-1/4 -right-1/4">
-            <UploadAvatar {fileSelected} />
+            <UploadAvatar
+                {fileSelected}
+                label={$_(
+                    "user-account-settings.overview.upload-profile-picture"
+                )}
+            />
         </div>
     </div>
     <figcaption>
