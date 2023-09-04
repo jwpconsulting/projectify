@@ -16,19 +16,15 @@
         Label,
         SubTask,
         Task,
+        WorkspaceBoardSection,
         WorkspaceUser,
     } from "$lib/types/workspace";
-    import { unwrap } from "$lib/utils/type";
 
     // if this is in a store, we can get rid of this param
     export let task: Task;
+    export let workspaceBoardSection: WorkspaceBoardSection;
     export let taskModule: TaskModule;
     export let state: TaskUpdateBarState = "task";
-
-    $: workspaceBoardSection = unwrap(
-        task.workspace_board_section,
-        "Expected workspace_board_section"
-    );
 
     let title: string = task.title;
     let description: string | undefined = task.description;
@@ -50,12 +46,14 @@
             sub_tasks: subTasks,
         });
     }
-
-    $: taskOrNewTask = { kind: "task" as const, task };
 </script>
 
 <TaskC>
-    <TopBar slot="top-bar" {taskOrNewTask} {taskModule} />
+    <TopBar
+        slot="top-bar"
+        breadcrumb={{ task: task, workspaceBoardSection }}
+        {taskModule}
+    />
     <TaskUpdateBar slot="tab-bar-mobile" kind="mobile" {state} {task} />
     <TaskUpdateBar slot="tab-bar-desktop" kind="mobile" {state} {task} />
     <TaskFieldsTemplate slot="content">

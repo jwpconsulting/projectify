@@ -8,7 +8,10 @@ import type {
     TaskModule,
     WorkspaceUserSearchModule,
 } from "$lib/types/stores";
-import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
+import type {
+    BreadCrumbWorkspaceBoardSection,
+    WorkspaceUserSelectionInput,
+} from "$lib/types/ui";
 import type { User } from "$lib/types/user";
 import type {
     CreateTask,
@@ -173,6 +176,17 @@ export const workspaceBoardSection: WorkspaceBoardSection = {
     tasks: [task, task2],
     _order: 0,
 };
+
+export const breadCrumbWorkspaceBoardSection: BreadCrumbWorkspaceBoardSection =
+    {
+        title: "section name that is long",
+        created: "",
+        modified: "",
+        uuid: "does-not-exist",
+        tasks: [task, task2],
+        _order: 0,
+        workspace_board: workspaceBoard,
+    };
 
 export const mobileParameters = {
     viewport: {

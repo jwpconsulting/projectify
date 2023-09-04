@@ -5,6 +5,8 @@
     import { goto } from "$lib/navigation";
     import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
 
+    import type { PageData } from "./$types";
+
     import UpdateTaskCard from "$lib/figma/screens/task/UpdateTaskCard.svelte";
     import {
         assignLabelToTask,
@@ -19,10 +21,8 @@
     } from "$lib/types/stores";
     import type { Task } from "$lib/types/workspace";
 
-    export let data: { task: Task };
-    const { task } = data;
-    // XXX TODO why nullable?
-    let taskModule: TaskModule | null = null;
+    export let data: PageData;
+    let { task, workspaceBoardSection } = data;
 
     let updateTask: Writable<Partial<Task>> = writable({});
 
@@ -44,49 +44,45 @@
         await goto(url);
     }
 
-    $: {
-        const workspaceUserSearchModule: WorkspaceUserSearchModule =
-            createWorkspaceUserSearchModule(task);
-        const labelSearchModule = createLabelSearchModule(
-            task,
-            async (labelUuid: string, selected: boolean) => {
-                await assignLabelToTask(task, labelUuid, selected);
-            }
-        );
-        taskModule = {
-            task,
-            createOrUpdateTask,
-            updateTask,
-            // We might want to add some more sophisticated rules
-            // as to when and when not this can be updated
-            canCreateOrUpdate: readable(true),
-            // TODO make workspace user menu so that "all" can not be
-            // selected
-            workspaceUserSearchModule,
-            labelSearchModule,
-            // TODO make label menu so that "all" can not be selected
-            showUpdateWorkspaceUser: (anchor: HTMLElement) => {
-                openContextMenu(
-                    {
-                        kind: "updateMember",
-                        workspaceUserSearchModule,
-                    },
-                    anchor
-                );
-            },
-            showUpdateLabel: (anchor: HTMLElement) => {
-                openContextMenu(
-                    {
-                        kind: "updateLabel",
-                        labelSearchModule,
-                    },
-                    anchor
-                );
-            },
-        };
-    }
+    const workspaceUserSearchModule: WorkspaceUserSearchModule =
+        createWorkspaceUserSearchModule(task);
+    const labelSearchModule = createLabelSearchModule(
+        task,
+        async (labelUuid: string, selected: boolean) => {
+            await assignLabelToTask(task, labelUuid, selected);
+        }
+    );
+    let taskModule: TaskModule = {
+        task,
+        createOrUpdateTask,
+        updateTask,
+        // We might want to add some more sophisticated rules
+        // as to when and when not this can be updated
+        canCreateOrUpdate: readable(true),
+        // TODO make workspace user menu so that "all" can not be
+        // selected
+        workspaceUserSearchModule,
+        labelSearchModule,
+        // TODO make label menu so that "all" can not be selected
+        showUpdateWorkspaceUser: (anchor: HTMLElement) => {
+            openContextMenu(
+                {
+                    kind: "updateMember",
+                    workspaceUserSearchModule,
+                },
+                anchor
+            );
+        },
+        showUpdateLabel: (anchor: HTMLElement) => {
+            openContextMenu(
+                {
+                    kind: "updateLabel",
+                    labelSearchModule,
+                },
+                anchor
+            );
+        },
+    };
 </script>
 
-{#if taskModule}
-    <UpdateTaskCard {task} {taskModule} />
-{/if}
+<UpdateTaskCard {workspaceBoardSection} {task} {taskModule} />

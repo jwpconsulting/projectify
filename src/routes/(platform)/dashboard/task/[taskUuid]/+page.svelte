@@ -1,8 +1,11 @@
 <script lang="ts">
+    import type { PageData } from "./$types";
+
     import ReadTaskCard from "$lib/figma/screens/task/ReadTaskCard.svelte";
-    import { currentTask } from "$lib/stores/dashboard";
+
+    export let data: PageData;
+
+    let { task, workspaceBoardSection } = data;
 </script>
 
-{#if $currentTask}
-    <ReadTaskCard task={$currentTask} />
-{/if}
+<ReadTaskCard {task} {workspaceBoardSection} />

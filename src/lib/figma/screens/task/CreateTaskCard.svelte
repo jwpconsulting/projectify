@@ -6,19 +6,20 @@
     import TaskTitle from "$lib/figma/screens/task/TaskTitle.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import type { CreateTaskModule } from "$lib/types/stores";
+    import type { WorkspaceBoardSection } from "$lib/types/workspace";
 
     export let createTaskModule: CreateTaskModule;
+    export let workspaceBoardSection: WorkspaceBoardSection;
 
     let { newTask, createTask } = createTaskModule;
-
-    $: taskOrNewTask = {
-        kind: "newTask" as const,
-        newTask: createTaskModule.newTask,
-    };
 </script>
 
 <TaskC>
-    <TopBar slot="top-bar" {taskOrNewTask} taskModule={createTaskModule} />
+    <TopBar
+        slot="top-bar"
+        breadcrumb={{ workspaceBoardSection }}
+        taskModule={createTaskModule}
+    />
 
     <TaskFieldsTemplate slot="content">
         <TaskTitle slot="title" bind:title={$createTask.title} />

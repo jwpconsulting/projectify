@@ -12,24 +12,17 @@
     import TaskUser from "$lib/figma/screens/task/TaskUser.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import type { TaskUpdateBarState } from "$lib/figma/types";
-    import type { Task } from "$lib/types/workspace";
-    import { unwrap } from "$lib/utils/type";
+    import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
     export let task: Task;
+    export let workspaceBoardSection: WorkspaceBoardSection;
     export let state: TaskUpdateBarState = "task";
-
-    $: taskOrNewTask = { kind: "task" as const, task };
-    $: workspaceBoardSection = unwrap(
-        task.workspace_board_section,
-        "Expected workspace_board_section"
-    );
 </script>
 
 <TaskC>
     <TopBar
         slot="top-bar"
-        {taskOrNewTask}
-        taskModule={null}
+        breadcrumb={{ task, workspaceBoardSection }}
         editLink={getTaskEditUrl(task.uuid)}
     />
     <TaskFieldsTemplate slot="content">

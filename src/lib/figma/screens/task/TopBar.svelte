@@ -12,60 +12,58 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { CreateOrUpdateTaskModule } from "$lib/types/stores";
-    import type {
-        TaskOrNewTask,
-        BreadCrumbTask,
-        ContextMenuType,
-    } from "$lib/types/ui";
+    import type { BreadCrumbTask, ContextMenuType } from "$lib/types/ui";
     import {
         isBreadCrumbWorkspaceBoardSection,
         isBreadCrumbTask,
     } from "$lib/types/ui";
+    import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
-    export let taskModule: CreateOrUpdateTaskModule | null;
+    export let taskModule: CreateOrUpdateTaskModule | undefined = undefined;
     // TODO Can we pull this out of taskModule too? Justus 2023-05-08
-    export let taskOrNewTask: TaskOrNewTask;
+
+    export let breadcrumb: {
+        workspaceBoardSection: WorkspaceBoardSection;
+        task?: Task;
+    };
 
     export let editLink: string | null = null;
 
-    const canCreateOrUpdate = taskModule ? taskModule.canCreateOrUpdate : null;
+    $: canCreateOrUpdate = taskModule?.canCreateOrUpdate;
+    $: createOrUpdate = taskModule?.createOrUpdateTask;
 
     let contextMenuRef: HTMLElement;
     let contextMenuType: ContextMenuType | undefined;
     let breadCrumbTask: BreadCrumbTask;
     $: {
-        if (taskOrNewTask.kind === "task") {
-            const { task } = taskOrNewTask;
-            const { workspace_board_section: workspaceBoardSection } = task;
+        const { workspaceBoardSection } = breadcrumb;
+        if (breadcrumb.task !== undefined) {
+            const { task } = breadcrumb;
             if (!workspaceBoardSection) {
                 throw new Error("Expected workspaceBoardSection");
             }
-            if (!isBreadCrumbTask(task)) {
-                throw new Error(`Failed to crumble task ${task.uuid}'s bread`);
-            }
-            breadCrumbTask = task;
             contextMenuType = {
                 kind: "task",
-                task: taskOrNewTask.task,
+                task: task,
                 location: "task",
                 moveTaskModule: undefined,
                 workspaceBoardSection,
             };
+            if (!isBreadCrumbTask(task)) {
+                throw new Error(`Failed to crumble task ${task.uuid}'s bread`);
+            }
+            breadCrumbTask = task;
         } else {
-            const { newTask } = taskOrNewTask;
-            const { workspace_board_section } = newTask;
-            if (!isBreadCrumbWorkspaceBoardSection(workspace_board_section)) {
+            if (!isBreadCrumbWorkspaceBoardSection(workspaceBoardSection)) {
                 throw new Error(
-                    `Failed to crumble workspace board section ${workspace_board_section.uuid}'s bread`
+                    `Failed to crumble workspace board section ${workspaceBoardSection.uuid}'s bread`
                 );
             }
             breadCrumbTask = {
-                workspace_board_section,
+                workspace_board_section: workspaceBoardSection,
             };
         }
     }
-
-    const createOrUpdate = taskModule ? taskModule.createOrUpdateTask : null;
 
     $: workspaceBoardUrl = getDashboardWorkspaceBoardUrl(
         breadCrumbTask.workspace_board_section.workspace_board.uuid

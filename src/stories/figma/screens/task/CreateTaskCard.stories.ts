@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { createTaskModule } from "$lib/storybook";
+import {
+    breadCrumbWorkspaceBoardSection,
+    createTaskModule,
+} from "$lib/storybook";
 
 import CreateTaskCard from "$lib/figma/screens/task/CreateTaskCard.svelte";
 
@@ -9,6 +12,7 @@ const meta: Meta<CreateTaskCard> = {
     argTypes: {},
     args: {
         createTaskModule,
+        workspaceBoardSection: breadCrumbWorkspaceBoardSection,
     },
 };
 export default meta;

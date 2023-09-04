@@ -91,7 +91,7 @@
 </script>
 
 {#if createTaskModule}
-    <CreateTaskCard {createTaskModule} />
+    <CreateTaskCard {createTaskModule} {workspaceBoardSection} />
 {:else}
     <Loading />
 {/if}
