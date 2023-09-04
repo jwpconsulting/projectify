@@ -4,23 +4,16 @@ import { client } from "$lib/graphql/client";
 import {
     Mutation_MoveWorkspaceBoardSection,
     Mutation_AddLabelMutation,
-    Mutation_AddTask,
     Mutation_AddWorkspaceBoard,
     Mutation_AddWorkspaceBoardSection,
     Mutation_ArchiveWorkspaceBoard,
-    Mutation_AssignLabel,
-    Mutation_AssignTask,
     Mutation_DeleteLabelMutation,
-    Mutation_MoveTaskAfter,
     Mutation_UpdateLabelMutation,
-    Mutation_UpdateTask,
-    Mutation_DeleteTask,
     Mutation_UpdateWorkspaceBoard,
 } from "$lib/graphql/operations";
 import { getWithCredentialsJson } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
-    CreateTask,
     CreateWorkspaceBoardSection,
     Label,
     Task,
@@ -30,128 +23,8 @@ import type {
 } from "$lib/types/workspace";
 
 export * from "$lib/repository/workspace/workspace";
+export * from "$lib/repository/workspace/task";
 
-// Task CRUD
-// Create
-export async function createTask(createTask: CreateTask): Promise<Task> {
-    const {
-        data: { addTask: task },
-    } = (await client.mutate({
-        mutation: Mutation_AddTask,
-        variables: {
-            input: {
-                title: createTask.title,
-                description: createTask.description,
-                deadline: createTask.deadline,
-                workspaceBoardSectionUuid:
-                    createTask.workspace_board_section.uuid,
-            },
-        },
-    })) as ApolloQueryResult<{ addTask: Task }>;
-    return task;
-}
-
-// Update
-export async function updateTask(task: Task) {
-    await client.mutate({
-        mutation: Mutation_UpdateTask,
-        variables: {
-            input: {
-                uuid: task.uuid,
-                title: task.title,
-                description: task.description,
-                deadline: task.deadline ?? null,
-                // TODO
-                // labels: task.labels.map((l) => l.uuid),
-                // TODO
-                // assignee: task.assignee ? task.assignee.user.email : null,
-            },
-        },
-    });
-}
-
-// XXX
-// taskUuid should be first (more invariant than userEmail)
-export async function assignUserToTask(
-    userEmail: string | null,
-    taskUuid: string
-): Promise<void> {
-    try {
-        await client.mutate({
-            mutation: Mutation_AssignTask,
-            variables: {
-                input: {
-                    uuid: taskUuid,
-                    email: userEmail,
-                },
-            },
-        });
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-export async function moveTaskAfter(
-    taskUuid: string,
-    workspaceBoardSectionUuid: string,
-    afterTaskUuid: string | null = null
-): Promise<void> {
-    try {
-        const input: {
-            taskUuid: string;
-            workspaceBoardSectionUuid: string;
-            afterTaskUuid?: string;
-        } = {
-            taskUuid,
-            workspaceBoardSectionUuid,
-        };
-
-        if (afterTaskUuid) {
-            input.afterTaskUuid = afterTaskUuid;
-        }
-
-        await client.mutate({
-            mutation: Mutation_MoveTaskAfter,
-            variables: { input },
-        });
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-export async function assignLabelToTask(
-    task: Task,
-    labelUuid: string,
-    assigned: boolean
-): Promise<void> {
-    const input: {
-        taskUuid: string;
-        labelUuid: string;
-        assigned: boolean;
-    } = {
-        taskUuid: task.uuid,
-        labelUuid,
-        assigned,
-    };
-    await client.mutate({
-        mutation: Mutation_AssignLabel,
-        variables: {
-            input,
-        },
-    });
-}
-
-// Delete
-export async function deleteTask(task: Task): Promise<void> {
-    await client.mutate({
-        mutation: Mutation_DeleteTask,
-        variables: {
-            input: {
-                uuid: task.uuid,
-            },
-        },
-    });
-}
 // Label CRUD
 export async function createLabel(
     workspace: Workspace,
