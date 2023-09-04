@@ -162,26 +162,41 @@ export function createWsStore<T>(
         uuid: string,
         repositoryContext?: RepositoryContext
     ): Promise<T> => {
-        // We need to unsubscribe from the old ws thing before adding
-        // a new subscription here.
-        if (state.kind === "ready") {
-            state.unsubscriber();
-        }
-        const unsubscriber = loadSubscription(uuid);
-        // Since further reloads are independent of any fetch (the data comes
-        // from ws), we don't have to store the repositoryContext as part of
-        // the state. It's important that we don't reuse a user supplied
-        // fetch (aka repositoryContext) after page navigation, since in server
-        // side mode this is not guaranteed to work: SvelteKit might unload it.
+        // Fetch value early, since we need it either way
         const value = await getter(uuid, repositoryContext);
-        state = {
-            ...state,
-            kind: "ready",
-            uuid,
-            unsubscriber,
-            value,
-        };
+        // Then, when we find out we have already initialized for this uuid,
+        // we can skip the queue and return early without cleaning up an
+        // existing subscription.
+        if (state.kind === "ready" && uuid === state.uuid) {
+            state = {
+                ...state,
+                value,
+            };
+        } else {
+            // On the other hand, if the uuid is changing, we need to unsubscribe
+            // and create a new sub, as follows:
+            // We need to unsubscribe from the old ws thing before adding
+            // a new subscription here, if we are already initalized.
+            if (state.kind === "ready") {
+                state.unsubscriber();
+            }
+            const unsubscriber = loadSubscription(uuid);
+            // Since further reloads are independent of any fetch (the data comes
+            // from ws), we don't have to store the repositoryContext as part of
+            // the state. It's important that we don't reuse a user supplied
+            // fetch (aka repositoryContext) after page navigation, since in server
+            // side mode this is not guaranteed to work: SvelteKit might unload it.
+            state = {
+                ...state,
+                kind: "ready",
+                uuid,
+                unsubscriber,
+                value,
+            };
+        }
+        // Either way, we absolutely need to update our subscribers.
         updateSubscribers(state);
+        // And the caller of this method is definitely waiting for their result
         return value;
     };
 
