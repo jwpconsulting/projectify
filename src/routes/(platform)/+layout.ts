@@ -25,6 +25,6 @@ export async function load({
     console.log("Not logged in, redirecting to", next);
     throw redirect(302, next);
 }
-
+// Could we set one of the following to true here?
 export const prerender = false;
 export const ssr = false;

@@ -6,9 +6,6 @@ import type { PageLoadEvent } from "./$types";
 
 import { getNewWorkspaceBoardUrl } from "$lib/urls/onboarding";
 
-export const prerender = false;
-export const ssr = false;
-
 export async function load({ parent }: PageLoadEvent): Promise<void> {
     const { workspace } = await parent();
 

@@ -9,9 +9,6 @@ import type {
 } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
 
-export const prerender = false;
-export const ssr = false;
-
 interface Data {
     task: Task;
     workspaceBoardSection: WorkspaceBoardSection;

@@ -18,6 +18,3 @@ export async function load({
     );
     return { workspaceBoardSection };
 }
-
-export const prerender = false;
-export const ssr = false;

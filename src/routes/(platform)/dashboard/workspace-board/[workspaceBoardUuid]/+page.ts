@@ -12,8 +12,6 @@ interface Data {
     workspace: Workspace;
     workspaces: Workspace[];
 }
-export const prerender = false;
-export const ssr = false;
 
 export async function load({
     params: { workspaceBoardUuid }, // TODO add fetch back and use in subscription somehow

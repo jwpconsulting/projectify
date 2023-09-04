@@ -4,9 +4,6 @@ import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
 import { getWorkspaceBoardSection } from "$lib/repository/workspace";
 
-export const prerender = false;
-export const ssr = false;
-
 export async function load({
     fetch,
     params,
