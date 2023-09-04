@@ -461,6 +461,32 @@
     "remove-section-tooltip-message": "You need to remove all tasks in order to delete this section",
     "edit-section": "Edit Section",
     "logout": "Logout",
+    "workspace-settings": {
+        "general": {
+            "title": "General",
+            "save": "Save",
+            "delete": "Delete workspace",
+            "cancel": "Cancel",
+            "workspace-name": {
+                "label": "Workspace name",
+                "placeholder": "Enter a workspace name"
+            },
+            "description": {
+                "label": "Description",
+                "placeholder": "Enter a description"
+            },
+            "picture": {
+                "alt": "A picture used to identify this workspace",
+                "no-picture": "No picture uploaded."
+            }
+        },
+        "members": {
+            "title": "Members"
+        },
+        "billing": {
+            "title": "Billing"
+        }
+    },
     "settings": {
         "general": "General",
         "members": "Members",
@@ -581,7 +607,6 @@
         "owner": "Owner"
     },
     "edit-remove": "Edit/remove",
-    "workspace-settings": "Workspace Settings",
     "edit-team-member": "Edit team member",
     "name-0": "name",
     "email-0": "email",

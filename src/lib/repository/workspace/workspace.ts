@@ -1,9 +1,14 @@
+import type { ApolloQueryResult } from "@apollo/client";
+
+import { client } from "$lib/graphql/client";
+import { Mutation_UpdateWorkspace } from "$lib/graphql/operations";
 import {
     getWithCredentialsJson,
     postWithCredentialsJson,
 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { Workspace } from "$lib/types/workspace";
+import { unwrap } from "$lib/utils/type";
 
 // Create
 export async function createWorkspace(
@@ -38,4 +43,25 @@ export async function getWorkspace(
 }
 
 // Update
+//
+export async function updateWorkspace(
+    uuid: string,
+    title: string,
+    description?: string
+): Promise<Workspace> {
+    const result = (await client.mutate({
+        mutation: Mutation_UpdateWorkspace,
+        variables: {
+            input: {
+                uuid,
+                title,
+                description,
+            },
+        },
+    })) as ApolloQueryResult<{ updateWorkspace: Workspace }>;
+    return unwrap(
+        result.data.updateWorkspace,
+        "Expected updateWorkspace"
+    ) as Workspace;
+}
 // Delete

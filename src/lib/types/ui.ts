@@ -184,3 +184,8 @@ export function isBreadCrumbTask(t: Partial<Task>): t is BreadCrumbTask {
         t.workspace_board_section.workspace_board !== undefined
     );
 }
+
+export type EditableViewState =
+    | { kind: "viewing" }
+    | { kind: "editing" }
+    | { kind: "saving" };
