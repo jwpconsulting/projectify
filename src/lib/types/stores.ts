@@ -2,6 +2,7 @@
 import type { Readable, Writable } from "svelte/store";
 
 import type { SearchInput } from "./base";
+import type { RepositoryContext } from "./repository";
 
 import type {
     LabelSelection,
@@ -73,5 +74,8 @@ const subscriptionTypes = ["workspace", "workspace-board", "task"] as const;
 export type SubscriptionType = (typeof subscriptionTypes)[number];
 
 export interface WsResource<T> extends Readable<T | null> {
-    loadUuid: (uuid: string) => Promise<T>;
+    loadUuid: (
+        uuid: string,
+        repositoryContext?: RepositoryContext
+    ) => Promise<T>;
 }

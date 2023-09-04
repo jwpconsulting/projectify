@@ -12,7 +12,10 @@ interface Data {
 
 export async function load({
     params: { workspaceUuid },
+    fetch,
 }: LayoutLoadEvent): Promise<Data> {
-    const workspace = await currentWorkspace.loadUuid(workspaceUuid);
+    const workspace = await currentWorkspace.loadUuid(workspaceUuid, {
+        fetch,
+    });
     return { workspace };
 }

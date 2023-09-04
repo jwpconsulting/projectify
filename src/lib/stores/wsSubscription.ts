@@ -5,6 +5,7 @@ import { writable } from "svelte/store";
 import vars from "$lib/env";
 
 import { browser } from "$app/environment";
+import type { RepositoryContext } from "$lib/types/repository";
 import type { SubscriptionType, WsResource } from "$lib/types/stores";
 
 interface Message {
@@ -101,7 +102,10 @@ export function getSubscriptionForCollection(
 
 type Subscribers<T> = Set<Subscriber<T>>;
 type WsStoreState<T> =
-    | { kind: "start"; subscribers: Subscribers<T> }
+    | {
+          kind: "start";
+          subscribers: Subscribers<T>;
+      }
     | {
           kind: "ready";
           uuid: string;
@@ -110,9 +114,14 @@ type WsStoreState<T> =
           value: T;
       };
 
+type RepoGetter<T> = (
+    url: string,
+    repositoryContext?: RepositoryContext
+) => Promise<T>;
+
 export function createWsStore<T>(
     collection: SubscriptionType,
-    getter: (uuid: string) => Promise<T>
+    getter: RepoGetter<T>
 ): WsResource<T> {
     type State = WsStoreState<T>;
     let state: State = { kind: "start", subscribers: new Set() };
@@ -149,15 +158,29 @@ export function createWsStore<T>(
         state.unsubscriber();
     };
 
-    const loadUuid = async (uuid: string): Promise<T> => {
+    const loadUuid = async (
+        uuid: string,
+        repositoryContext?: RepositoryContext
+    ): Promise<T> => {
         // We need to unsubscribe from the old ws thing before adding
         // a new subscription here.
         if (state.kind === "ready") {
             state.unsubscriber();
         }
         const unsubscriber = loadSubscription(uuid);
-        const value = await getter(uuid);
-        state = { ...state, kind: "ready", uuid, unsubscriber, value };
+        // Since further reloads are independent of any fetch (the data comes
+        // from ws), we don't have to store the repositoryContext as part of
+        // the state. It's important that we don't reuse a user supplied
+        // fetch (aka repositoryContext) after page navigation, since in server
+        // side mode this is not guaranteed to work: SvelteKit might unload it.
+        const value = await getter(uuid, repositoryContext);
+        state = {
+            ...state,
+            kind: "ready",
+            uuid,
+            unsubscriber,
+            value,
+        };
         updateSubscribers(state);
         return value;
     };

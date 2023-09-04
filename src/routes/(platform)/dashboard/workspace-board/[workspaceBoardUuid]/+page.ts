@@ -17,16 +17,21 @@ export const ssr = false;
 
 export async function load({
     params: { workspaceBoardUuid }, // TODO add fetch back and use in subscription somehow
+    fetch,
 }: PageLoadEvent): Promise<Data> {
-    const workspaceBoard =
-        await currentWorkspaceBoard.loadUuid(workspaceBoardUuid);
+    const workspaceBoard = await currentWorkspaceBoard.loadUuid(
+        workspaceBoardUuid,
+        { fetch }
+    );
     const workspaceUuid = workspaceBoard.workspace?.uuid;
     if (!workspaceUuid) {
         throw new Error("Expected workspace");
     }
-    const workspace = await currentWorkspace.loadUuid(workspaceUuid);
+    const workspace = await currentWorkspace.loadUuid(workspaceUuid, {
+        fetch,
+    });
     // Might be able to do this asynchronously, meaning we don't need to wait
     // for it to finish here?
-    const workspaces = await getWorkspaces();
+    const workspaces = await getWorkspaces({ fetch });
     return { workspace, workspaceBoard, workspaces };
 }
