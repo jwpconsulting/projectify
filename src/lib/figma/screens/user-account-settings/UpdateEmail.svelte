@@ -18,20 +18,30 @@
     });
 </script>
 
-<div class="flex flex-col gap-12">
-    <h1>{$_("user-account-settings.change-password")}</h1>
-    <div class="flex flex-col gap-10">
+<div class="flex flex-col items-center gap-12">
+    <h1 class="text-2xl font-bold">
+        {$_("user-account-settings.update-email.title")}
+    </h1>
+    <div class="w-full flex flex-col gap-10">
         <div class="flex flex-col gap-4">
             <InputField
-                label={$_("user-account-settings.current-password")}
-                placeholder={$_("user-account-settings.enter-password")}
+                label={$_(
+                    "user-account-settings.update-email.current-password.label"
+                )}
+                placeholder={$_(
+                    "user-account-settings.update-email.current-password.placeholder"
+                )}
                 name="current-password"
                 style={{ kind: "field", inputType: "password" }}
                 bind:value={currentPassword}
             />
             <InputField
-                label={$_("user-account-settings.new-email")}
-                placeholder={$_("user-account-settings.enter-new-email")}
+                label={$_(
+                    "user-account-settings.update-email.new-email.label"
+                )}
+                placeholder={$_(
+                    "user-account-settings.update-email.new-email.placeholder"
+                )}
                 name="new-email"
                 style={{ kind: "field", inputType: "text" }}
                 bind:value={newEmail}
@@ -46,7 +56,7 @@
                 size="medium"
                 color="blue"
                 style={{ kind: "secondary" }}
-                label={$_("user-account-settings.cancel")}
+                label={$_("user-account-settings.update-email.cancel")}
             />
             <Button
                 action={{
@@ -60,7 +70,7 @@
                 size="medium"
                 color="blue"
                 style={{ kind: "primary" }}
-                label={$_("user-account-settings.update-email")}
+                label={$_("user-account-settings.update-email.save")}
             />
         </div>
     </div>

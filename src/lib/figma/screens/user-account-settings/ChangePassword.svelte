@@ -19,28 +19,42 @@
     // TODO wiring
 </script>
 
-<div class="flex flex-col gap-12">
-    <h1>{$_("user-account-settings.change-password")}</h1>
-    <div class="flex flex-col gap-10">
+<div class="flex flex-col items-center gap-12">
+    <h1 class="text-2xl font-bold">
+        {$_("user-account-settings.change-password.title")}
+    </h1>
+    <div class="w-full flex flex-col gap-10">
         <div class="flex flex-col gap-4">
             <InputField
-                label={$_("user-account-settings.current-password")}
-                placeholder={$_("user-account-settings.enter-password")}
+                label={$_(
+                    "user-account-settings.change-password.current-password.label"
+                )}
+                placeholder={$_(
+                    "user-account-settings.change-password.current-password.placeholder"
+                )}
                 name="current-password"
                 style={{ kind: "field", inputType: "password" }}
                 bind:value={currentPassword}
             />
             <InputField
-                label={$_("user-account-settings.new-password")}
-                placeholder={$_("user-account-settings.enter-new-password")}
-                name="new-password-1"
+                label={$_(
+                    "user-account-settings.change-password.new-password.label"
+                )}
+                placeholder={$_(
+                    "user-account-settings.change-password.new-password.placeholder"
+                )}
+                name="new-password"
                 style={{ kind: "field", inputType: "password" }}
                 bind:value={newPassword1}
             />
             <InputField
-                label={$_("user-account-settings.confirm-password")}
-                placeholder={$_("user-account-settings.confirm-new-password")}
-                name="new-password-2"
+                label={$_(
+                    "user-account-settings.change-password.confirm-password.label"
+                )}
+                placeholder={$_(
+                    "user-account-settings.change-password.confirm-password.placeholder"
+                )}
+                name="confirm-password"
                 style={{ kind: "field", inputType: "password" }}
                 bind:value={newPassword2}
             />
@@ -54,7 +68,7 @@
                 size="medium"
                 color="blue"
                 style={{ kind: "secondary" }}
-                label={$_("user-account-settings.cancel")}
+                label={$_("user-account-settings.change-password.cancel")}
             />
             <Button
                 action={{
@@ -67,7 +81,7 @@
                 size="medium"
                 color="blue"
                 style={{ kind: "primary" }}
-                label={$_("user-account-settings.change-password")}
+                label={$_("user-account-settings.change-password.save")}
             />
         </div>
     </div>

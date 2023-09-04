@@ -346,24 +346,49 @@
         "due-soon": "Due soon!"
     },
     "user-account-settings": {
-        "title": "User settings",
-        "your-current-avatar": "Your current avatar",
-        "name": "Full name",
-        "enter-your-full-name": "Enter your full name",
-        "change-password": "Change password",
-        "update-email": "Update email",
-        "save-changes": "Save changes",
-        "cancel": "Cancel",
-        "current-password": "Current password",
-        "enter-password": "Enter your password",
-        "new-password": "New password",
-        "enter-new-password": "Enter the new password",
-        "confirm-password": "Confirm password",
-        "confirm-new-password": "Confirm the new password",
-        "new-email": "New email",
-        "enter-new-email": "Enter your new email address",
-        "update-email": "Update email",
-        "delete-account": "Delete account"
+        "title": "User account settings",
+        "overview": {
+            "full-name": {
+                "label": "Full name",
+                "placeholder": "Enter your full name"
+            },
+            "your-current-avatar": "Your current avatar",
+            "update-email": "Update email address",
+            "change-password": "Change password",
+            "delete-account": "Delete account",
+            "cancel": "Go back",
+            "save": "Save changes"
+        },
+        "update-email": {
+            "title": "Change password",
+            "current-password": {
+                "label": "Current password",
+                "placeholder": "Enter your current password"
+            },
+            "new-email": {
+                "label": "New email",
+                "placeholder": "Enter your new email address"
+            },
+            "cancel": "Go back",
+            "save": "Update email"
+        },
+        "change-password": {
+            "title": "Change password",
+            "current-password": {
+                "label": "Current password",
+                "placeholder": "Enter your password"
+            },
+            "new-password": {
+                "label": "New password",
+                "placeholder": "Enter the new password"
+            },
+            "confirm-password": {
+                "label": "Confirm password",
+                "placeholder": "Confirm the new password"
+            },
+            "cancel": "Go back",
+            "save": "Change password"
+        }
     },
     "404": "404",
     "home": "Home",
@@ -451,13 +476,6 @@
         "edit-billing-details": "Edit billing details",
         "contact-us-to-request-changes": "Contact us to request changes to your plan",
         "billing-contact": "hello@projectifyapp.com"
-    },
-    "user": {
-        "profile": {
-            "full-name": {
-                "placeholder": "Enter your full name"
-            }
-        }
     },
     "my-profile": "My Profile",
     "remove": "Remove",

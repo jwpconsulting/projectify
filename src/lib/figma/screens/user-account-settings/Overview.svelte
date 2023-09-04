@@ -49,88 +49,88 @@
     }
 </script>
 
-<div class="flex flex-col gap-12 rounded-lg bg-foreground p-4">
-    <figure class="flex flex-col items-center gap-7">
-        <div class="relative flex w-max flex-col">
-            <AvatarVariant size="large" content={{ kind: "single", user }} />
-            <div class="absolute -bottom-1/4 -right-1/4">
-                <UploadAvatar {fileSelected} />
-            </div>
+<figure class="flex flex-col items-center gap-7">
+    <div class="relative flex w-max flex-col">
+        <AvatarVariant size="large" content={{ kind: "single", user }} />
+        <div class="absolute -bottom-1/4 -right-1/4">
+            <UploadAvatar {fileSelected} />
         </div>
-        <figcaption>
-            {$_("user-account-settings.your-current-avatar")}
-        </figcaption>
-    </figure>
-    <div class="flex flex-col gap-10">
-        <div class="flex flex-col gap-4">
-            <InputField
-                label={$_("user-account-settings.name")}
-                placeholder={$_("user-account-settings.enter-your-full-name")}
-                name="full_name"
-                bind:value={fullName}
-                style={{ kind: "field", inputType: "text" }}
-                readonly={state !== "editing"}
-                onClick={() => {
-                    state = "editing";
-                }}
-            />
-            <Button
-                action={{
-                    kind: "a",
-                    href: "/user/profile/change-password",
-                }}
-                size="medium"
-                color="blue"
-                style={{ kind: "secondary" }}
-                label={$_("user-account-settings.change-password")}
-            />
-            <Button
-                action={{
-                    kind: "a",
-                    href: "/user/profile/update-email",
-                }}
-                size="medium"
-                color="blue"
-                style={{ kind: "secondary" }}
-                label={$_("user-account-settings.update-email")}
-            />
-        </div>
-        <div class="flex flex-col gap-2">
-            <Button
-                action={{
-                    kind: "button",
-                    action: save,
-                    disabled: state !== "editing",
-                }}
-                size="medium"
-                color="blue"
-                style={{ kind: "primary" }}
-                label={$_("user-account-settings.save-changes")}
-            />
-            <Button
-                action={{
-                    kind: "button",
-                    action: cancel,
-                    disabled: state !== "editing",
-                }}
-                size="medium"
-                color="blue"
-                style={{ kind: "secondary" }}
-                label={$_("user-account-settings.cancel")}
-            />
-            <Button
-                action={{
-                    kind: "button",
-                    action: console.error.bind(
-                        null,
-                        "Delete account not implemented"
-                    ),
-                }}
-                size="medium"
-                color="red"
-                style={{ kind: "secondary" }}
-                label={$_("user-account-settings.delete-account")}
-            />
-        </div>
+    </div>
+    <figcaption>
+        {$_("user-account-settings.overview.your-current-avatar")}
+    </figcaption>
+</figure>
+<div class="flex flex-col gap-10">
+    <div class="flex flex-col gap-4">
+        <InputField
+            label={$_("user-account-settings.overview.full-name.label")}
+            placeholder={$_(
+                "user-account-settings.overview.full-name.placeholder"
+            )}
+            name="full_name"
+            bind:value={fullName}
+            style={{ kind: "field", inputType: "text" }}
+            readonly={state !== "editing"}
+            onClick={() => {
+                state = "editing";
+            }}
+        />
+        <Button
+            action={{
+                kind: "a",
+                href: "/user/profile/change-password",
+            }}
+            size="medium"
+            color="blue"
+            style={{ kind: "secondary" }}
+            label={$_("user-account-settings.overview.change-password")}
+        />
+        <Button
+            action={{
+                kind: "a",
+                href: "/user/profile/update-email",
+            }}
+            size="medium"
+            color="blue"
+            style={{ kind: "secondary" }}
+            label={$_("user-account-settings.overview.update-email")}
+        />
+    </div>
+    <div class="flex flex-col gap-2">
+        <Button
+            action={{
+                kind: "button",
+                action: save,
+                disabled: state !== "editing",
+            }}
+            size="medium"
+            color="blue"
+            style={{ kind: "primary" }}
+            label={$_("user-account-settings.overview.save")}
+        />
+        <Button
+            action={{
+                kind: "button",
+                action: cancel,
+                disabled: state !== "editing",
+            }}
+            size="medium"
+            color="blue"
+            style={{ kind: "secondary" }}
+            label={$_("user-account-settings.overview.cancel")}
+        />
+        <Button
+            action={{
+                kind: "button",
+                action: console.error.bind(
+                    null,
+                    "Delete account not implemented"
+                ),
+            }}
+            size="medium"
+            color="red"
+            style={{ kind: "secondary" }}
+            label={$_("user-account-settings.overview.delete-account")}
+        />
     </div>
 </div>

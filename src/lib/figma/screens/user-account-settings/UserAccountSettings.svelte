@@ -16,11 +16,13 @@
     <h1 class="text-2xl font-bold">
         {$_("user-account-settings.title")}
     </h1>
-    {#if mode === "overview"}
-        <Overview {user} />
-    {:else if mode === "change-password"}
-        <ChangePassword {user} />
-    {:else if mode === "update-email"}
-        <UpdateEmail {user} />
-    {/if}
+    <div class="flex flex-col gap-12 rounded-lg bg-foreground p-4">
+        {#if mode === "overview"}
+            <Overview {user} />
+        {:else if mode === "change-password"}
+            <ChangePassword {user} />
+        {:else if mode === "update-email"}
+            <UpdateEmail {user} />
+        {/if}
+    </div>
 </div>
