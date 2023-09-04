@@ -121,6 +121,8 @@ type RepoGetter<T> = (
     repositoryContext?: RepositoryContext
 ) => Promise<T>;
 
+// TODO warn when this store never updates a subscriber
+// warn when this store deinitializes without ever adding a subscriber
 export function createWsStore<T>(
     collection: SubscriptionType,
     getter: RepoGetter<T>
