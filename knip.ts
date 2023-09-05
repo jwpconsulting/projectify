@@ -25,7 +25,7 @@ const config: KnipConfig = {
         "$app/*": ["node_modules/@sveltejs/kit/src/runtime/app/*"],
         "$env/*": [".svelte-kit/ambient.d.ts"],
     },
-    ignoreBinaries: ["bin/prebuild.sh"],
+    ignoreBinaries: ["bin/prebuild.sh", "env"],
     project: ["src/**/*.{js,ts,svelte}"],
     compilers: {
         // https://github.com/webpro/knip/blob/7011a5107b6693f70a966a12bc3c31b6bc3353a8/docs/compilers.md
