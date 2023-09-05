@@ -10,13 +10,12 @@
         selectWorkspaceBoardUuid,
     } from "$lib/stores/dashboard";
     import { openContextMenu } from "$lib/stores/globalUi";
-    import type { WorkspaceBoard } from "$lib/types/workspace";
-    import { unwrap } from "$lib/utils/type";
+    import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
 
     $: currentWorkspaceBoardUuid = $currentWorkspaceBoard?.uuid;
 
     export let workspaceBoard: WorkspaceBoard;
-    let workspace = unwrap(workspaceBoard.workspace, "Expected workspace");
+    export let workspace: Workspace;
 
     let buttonRef: HTMLElement;
 
