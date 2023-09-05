@@ -30,28 +30,31 @@
     }
 </script>
 
-<div class="flex flex-col gap-2">
-    <InputField
-        name="workspace-board-name"
-        label={$_("new-workspace-board-section.new-section-name-label")}
-        placeholder={$_("new-workspace-board-section.new-section-name")}
-        style={{ kind: "field", inputType: "text" }}
-        bind:value={title}
-    />
-</div>
-<div class="flex flex-row justify-center">
-    <Button
-        action={{ kind: "button", action: rejectConstructiveOverlay }}
-        style={{ kind: "secondary" }}
-        size="medium"
-        color="blue"
-        label={$_("new-workspace-board-section.cancel")}
-    />
-    <Button
-        action={{ kind: "button", action: perform }}
-        style={{ kind: "primary" }}
-        size="medium"
-        color="blue"
-        label={$_("new-workspace-board-section.create-section")}
-    />
-</div>
+<form on:submit|preventDefault={perform}>
+    <div class="flex flex-col gap-2">
+        <InputField
+            name="workspace-board-name"
+            label={$_("new-workspace-board-section.new-section-name-label")}
+            placeholder={$_("new-workspace-board-section.new-section-name")}
+            style={{ kind: "field", inputType: "text" }}
+            bind:value={title}
+        />
+    </div>
+    <div class="flex flex-row justify-center">
+        <input type="submit" class="hidden" />
+        <Button
+            action={{ kind: "button", action: rejectConstructiveOverlay }}
+            style={{ kind: "secondary" }}
+            size="medium"
+            color="blue"
+            label={$_("new-workspace-board-section.cancel")}
+        />
+        <Button
+            action={{ kind: "submit" }}
+            style={{ kind: "primary" }}
+            size="medium"
+            color="blue"
+            label={$_("new-workspace-board-section.create-section")}
+        />
+    </div>
+</form>
