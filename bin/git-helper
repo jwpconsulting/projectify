@@ -1,17 +1,33 @@
 #!/bin/bash
-set -e
-echo Aligning star charts
-npm run sync-types
-echo Finding fixpoint...
+echo "Cleaning up build and .svelte-kit folder"
+rm -r build .svelte-kit
+
+if npm run sync-types
+then
+    echo "Star charts aligned"
+else
+    echo "Could not sync types?!"
+    exit 1
+fi
+
 # We want to not use the cache here, hoping that we really catch all the bugz
-npm run fix:nocache
-echo Instantiating hypergeometric series...
-echo "1 + 1 = 2"
-echo Ok...
-echo Verifying result...
-# 360 nocache
-npm run check:nocache
-echo Running build
-npm run build
-echo Splines reticulated
-echo Have a nice day
+if npm run check:nocache
+then
+    echo "All good"
+else
+    echo "This could've been a 5-star review, but..."
+    # 360 nocache
+    npm run fix:nocache
+    exit 1
+fi
+
+echo "Running build"
+if npm run build
+then
+    echo "Build worked"
+else
+    exit 1
+fi
+
+echo "Splines reticulated"
+echo "Have a nice day"
