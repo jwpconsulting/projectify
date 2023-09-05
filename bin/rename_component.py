@@ -83,38 +83,44 @@ class DestructiveResult:
 class CheckError(Exception):
     """Contain the data necessary to unwind the stack and return diffs."""
 
+    exception: Exception
     diffs: List[FileDiff]
 
-    def __init__(self, diffs: List[FileDiff]):
+    def __init__(self, exception: Exception, diffs: List[FileDiff]):
         """Initialize with diff."""
+        self.exception = exception
         self.diffs = diffs
 
 
 def process_line(ctx: ReplacementContext, line: str) -> str:
     """Process and return an individual line."""
-    src_import_stmt = (
-        f'import {ctx.src_component_name} from "${ctx.src_lib_path}";'
+    # Imports
+    line = line.replace(
+        f'import {ctx.src_component_name} from "${ctx.src_lib_path}";',
+        f'import {ctx.dst_component_name} from "${ctx.dst_lib_path}";',
     )
-    dst_import_stmt = (
-        f'import {ctx.dst_component_name} from "${ctx.dst_lib_path}";'
+    # Tags
+    line = re.sub(
+        f"<{ctx.src_component_name}(?P<suffix>$|\\s)",
+        f"<{ctx.dst_component_name}\\g<suffix>",
+        line,
+    )
+    line = line.replace(
+        f"</{ctx.src_component_name}>",
+        f"</{ctx.dst_component_name}>",
     )
 
-    src_tag = f"<{ctx.src_component_name}(?P<suffix>$|\\s)"
-    dst_tag = f"<{ctx.dst_component_name}\\g<suffix>"
-
-    line2 = line.replace(src_import_stmt, dst_import_stmt)
-    line3 = re.sub(src_tag, dst_tag, line2)
-
-    src_story_stuff = rf"(?P<prefix>Meta|StoryObj)<{ctx.src_component_name}>"
-    dst_story_stuff = rf"\g<prefix><{ctx.dst_component_name}>"
-
-    line4 = re.sub(src_story_stuff, dst_story_stuff, line3)
-
-    src_component = f"component: {ctx.src_component_name}"
-    dst_component = f"component: {ctx.dst_component_name}"
-
-    line5 = line4.replace(src_component, dst_component)
-    return line5
+    # Stories
+    line = re.sub(
+        rf"(?P<prefix>Meta|StoryObj)<{ctx.src_component_name}>",
+        rf"\g<prefix><{ctx.dst_component_name}>",
+        line,
+    )
+    line = line.replace(
+        f"component: {ctx.src_component_name}",
+        f"component: {ctx.dst_component_name}",
+    )
+    return line
 
 
 def create_diffs(
@@ -211,8 +217,8 @@ def _destructive(ctx: ReplacementContext) -> List[FileDiff]:
     try:
         subprocess.run(FIX, check=True)
         subprocess.run(CHECK, check=True)
-    except subprocess.CalledProcessError:
-        raise CheckError(diffs)
+    except subprocess.CalledProcessError as e:
+        raise CheckError(e, diffs)
 
     subprocess.run(GIT_ADD, check=True)
     msg_prefix = make_msg_prefix(ctx.dst_lib_path)
@@ -237,7 +243,7 @@ def destructive(ctx: ReplacementContext) -> DestructiveResult:
         diffs = _destructive(ctx)
     except CheckError as e:
         diffs = e.diffs
-        click.echo(f"Something went wrong: {e}")
+        click.echo(f"Something went wrong: {e.exception}")
         attempt_cleanup(
             DestructiveResult(
                 deleted_file=ctx.src_cmp,
@@ -247,7 +253,7 @@ def destructive(ctx: ReplacementContext) -> DestructiveResult:
                 diffs=diffs,
             )
         )
-        raise e
+        raise e.exception
     return DestructiveResult(
         deleted_file=ctx.src_cmp,
         new_file=ctx.dst_cmp,
