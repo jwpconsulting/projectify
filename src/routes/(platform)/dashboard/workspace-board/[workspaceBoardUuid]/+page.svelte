@@ -13,7 +13,6 @@
         selectedWorkspaceUser,
         workspaceUserSearch,
         workspaceUserSearchResults,
-        sideNavOpen,
     } from "$lib/stores/dashboard";
     import type { WorkspaceUserSearchModule } from "$lib/types/stores";
 
@@ -36,11 +35,6 @@
 </script>
 
 <div class="flex h-full grow flex-row">
-    <SideNav
-        open={$sideNavOpen}
-        {workspaces}
-        {workspace}
-        {workspaceUserSearchModule}
-    />
+    <SideNav {workspaces} {workspace} {workspaceUserSearchModule} />
     <Dashboard {workspaceBoard} />
 </div>

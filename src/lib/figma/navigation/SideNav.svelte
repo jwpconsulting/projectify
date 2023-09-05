@@ -16,6 +16,7 @@
         deselectLabel,
         selectLabel,
         selectedLabels,
+        sideNavOpen,
     } from "$lib/stores/dashboard";
     import type {
         LabelSearchModule,
@@ -26,8 +27,6 @@
     export let workspaces: Workspace[];
     export let workspace: Workspace;
     export let workspaceUserSearchModule: WorkspaceUserSearchModule;
-
-    export let open = true;
 
     let labelSearchModule: LabelSearchModule;
     // XXX
@@ -51,9 +50,9 @@
     };
 </script>
 
-{#if open}
+{#if $sideNavOpen}
     <nav class="flex h-full w-72 shrink-0 flex-col bg-base-100 py-4 pr-px">
-        <WorkspaceMenu {workspaces} {workspace} {open} />
+        <WorkspaceMenu {workspaces} {workspace} open={true} />
         <div class="flex flex-col overflow-x-auto overflow-y-scroll">
             <Boards {workspace} />
             <Members {workspaceUserSearchModule} />
@@ -71,7 +70,7 @@
                 <div
                     class="flex flex-col items-center gap-6 border-b border-border pb-12"
                 >
-                    <WorkspaceMenu {workspaces} {workspace} {open} />
+                    <WorkspaceMenu {workspaces} {workspace} open={false} />
                     <div class="flex flex-col items-center gap-6">
                         <div class="flex flex-col items-center gap-4">
                             {#if workspace.workspace_boards}

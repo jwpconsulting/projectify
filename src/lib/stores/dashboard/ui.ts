@@ -1,34 +1,58 @@
-import { writable } from "svelte/store";
-
-import { internallyWritable } from "$lib/stores/util";
+import { readonly, writable } from "svelte/store";
+import { persisted } from "svelte-local-storage-store";
 
 // TODO loading needed?
 export const loading = writable<boolean>(false);
 
-const { priv: _userExpandOpen, pub: userExpandOpen } =
-    internallyWritable(false);
+const _boardExpandOpen = persisted("board-expand-open", true);
+export const boardExpandOpen = readonly(_boardExpandOpen);
+export function toggleBoardExpandOpen() {
+    _boardExpandOpen.update((state) => !state);
+}
+
+const _userExpandOpen = persisted("user-expand-open", true);
+export const userExpandOpen = readonly(_userExpandOpen);
 export function toggleUserExpandOpen() {
     _userExpandOpen.update((state) => !state);
 }
-export { userExpandOpen };
 
-const { priv: _labelExpandOpen, pub: labelExpandOpen } =
-    internallyWritable(false);
+const _labelExpandOpen = persisted("label-expand-open", true);
+export const labelExpandOpen = readonly(_labelExpandOpen);
 export function toggleLabelDropdownClosedNavOpen() {
     _labelExpandOpen.update((state) => !state);
 }
-export { labelExpandOpen };
 
-const { priv: _sideNavOpen, pub: sideNavOpen } = internallyWritable(true);
+const _sideNavOpen = persisted("side-nav-open", true);
+export const sideNavOpen = readonly(_sideNavOpen);
 export function toggleSideNavOpen() {
-    _sideNavOpen.update(($sideNavOpen) => !$sideNavOpen);
+    _sideNavOpen.update((state) => !state);
 }
-export { sideNavOpen };
 
-const {
-    priv: _workspaceBoardSectionClosed,
-    pub: workspaceBoardSectionClosed,
-} = internallyWritable<Set<string>>(new Set());
+const _workspaceBoardSectionClosed = persisted(
+    "workspace-board-section-closed",
+    new Set<string>(),
+    {
+        serializer: {
+            // XXX Using json.parse, maybe a security problem?
+            parse(value: string): Set<string> {
+                const values = JSON.parse(value) as string[];
+                try {
+                    return new Set(values);
+                } catch {
+                    return new Set();
+                }
+            },
+            stringify(set: Set<string>): string {
+                const values: string[] = [...set];
+                return JSON.stringify(values);
+            },
+        },
+    }
+);
+export const workspaceBoardSectionClosed = readonly(
+    _workspaceBoardSectionClosed
+);
+
 export function toggleWorkspaceBoardSectionOpen(
     workspaceBoardSectionUuid: string
 ) {
@@ -41,4 +65,3 @@ export function toggleWorkspaceBoardSectionOpen(
         return $workspaceBoardSectionClosed;
     });
 }
-export { workspaceBoardSectionClosed };

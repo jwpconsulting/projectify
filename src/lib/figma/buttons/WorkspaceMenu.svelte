@@ -10,7 +10,7 @@
 
     export let workspace: Workspace;
     export let workspaces: Workspace[];
-    export let open = true;
+    export let open: boolean;
 
     let sideNavContextMenuAnchor: HTMLElement;
     let workspaceContextMenuAnchor: HTMLElement;
