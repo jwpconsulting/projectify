@@ -1,8 +1,5 @@
-import { readonly, writable } from "svelte/store";
+import { readonly } from "svelte/store";
 import { persisted } from "svelte-local-storage-store";
-
-// TODO loading needed?
-export const loading = writable<boolean>(false);
 
 const _boardExpandOpen = persisted("board-expand-open", true);
 export const boardExpandOpen = readonly(_boardExpandOpen);
