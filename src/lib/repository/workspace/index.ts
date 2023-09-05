@@ -1,4 +1,4 @@
-import type { ApolloQueryResult } from "@apollo/client/core";
+import type { ApolloQueryResult, FetchResult } from "@apollo/client/core";
 
 import { client } from "$lib/graphql/client";
 import {
@@ -167,9 +167,9 @@ export async function createWorkspaceBoardSection(
     workspaceBoard: WorkspaceBoard,
     workspaceBoardSection: CreateWorkspaceBoardSection
 ): Promise<WorkspaceBoardSection> {
-    const {
-        data: { addWorkspaceBoardSection: workspaceBoardSectionCreated },
-    } = (await client.mutate({
+    const result: FetchResult<{
+        addWorkspaceBoardSection: WorkspaceBoardSection;
+    }> = await client.mutate({
         mutation: Mutation_AddWorkspaceBoardSection,
         variables: {
             input: {
@@ -177,10 +177,11 @@ export async function createWorkspaceBoardSection(
                 ...workspaceBoardSection,
             },
         },
-    })) as ApolloQueryResult<{
-        addWorkspaceBoardSection: WorkspaceBoardSection;
-    }>;
-    return workspaceBoardSectionCreated;
+    });
+    if (!result.data) {
+        throw new Error("Expected result.data");
+    }
+    return result.data.addWorkspaceBoardSection;
 }
 
 // Read
