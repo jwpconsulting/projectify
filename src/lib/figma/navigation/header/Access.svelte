@@ -1,5 +1,5 @@
 <script lang="ts">
-    import HeaderUniversal from "$lib/figma/navigation/header/HeaderUniversal.svelte";
+    import Layout from "$lib/figma/navigation/header/Layout.svelte";
 </script>
 
-<HeaderUniversal logoVisibleDesktop logoVisibleMobile />
+<Layout logoVisibleDesktop logoVisibleMobile />

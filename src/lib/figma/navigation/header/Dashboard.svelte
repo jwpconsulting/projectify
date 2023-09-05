@@ -4,7 +4,7 @@
     import SearchButton from "$lib/figma/buttons/SearchButton.svelte";
     import SearchMobile from "$lib/figma/buttons/SearchMobile.svelte";
     import UserAccount from "$lib/figma/buttons/UserAccount.svelte";
-    import HeaderUniversal from "$lib/figma/navigation/header/HeaderUniversal.svelte";
+    import Layout from "$lib/figma/navigation/header/Layout.svelte";
     import { toggleMobileMenu } from "$lib/stores/globalUi";
     import type { User } from "$lib/types/user";
 
@@ -14,7 +14,7 @@
     const showNotificationButton = false;
 </script>
 
-<HeaderUniversal logoVisibleDesktop>
+<Layout logoVisibleDesktop>
     <slot slot="desktop-right">
         {#if showSearch}
             <SearchButton />
@@ -44,4 +44,4 @@
             <UserAccount {user} />
         </div>
     </slot>
-</HeaderUniversal>
+</Layout>

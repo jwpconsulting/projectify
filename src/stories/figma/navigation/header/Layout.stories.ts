@@ -2,10 +2,10 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 
 import { mobileParameters } from "$lib/storybook";
 
-import HeaderUniversal from "$lib/figma/navigation/header/HeaderUniversal.svelte";
+import Layout from "$lib/figma/navigation/header/Layout.svelte";
 
-const meta: Meta<HeaderUniversal> = {
-    component: HeaderUniversal,
+const meta: Meta<Layout> = {
+    component: Layout,
     argTypes: {},
     args: {
         logoVisibleDesktop: true,
@@ -14,7 +14,7 @@ const meta: Meta<HeaderUniversal> = {
 };
 export default meta;
 
-type Story = StoryObj<HeaderUniversal>;
+type Story = StoryObj<Layout>;
 
 export const Default: Story = {};
 
