@@ -4,15 +4,35 @@ import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
 import type { PageLoadEvent } from "./$types";
 
+import { selectedWorkspaceBoardUuids } from "$lib/stores/dashboard";
 import { getNewWorkspaceBoardUrl } from "$lib/urls/onboarding";
 
 export async function load({ parent }: PageLoadEvent): Promise<void> {
-    const { workspace } = await parent();
+    const [maybeWorkspaceBoardUuids, parentData] = await Promise.all([
+        await new Promise<Map<string, string>>(
+            selectedWorkspaceBoardUuids.subscribe
+        ),
+        await parent(),
+    ]);
+    const { workspace } = parentData;
 
     const { uuid, workspace_boards } = workspace;
 
     if (!workspace_boards) {
         throw new Error("Expected workspace_boards");
+    }
+
+    const maybeWorkspaceBoardUuid = maybeWorkspaceBoardUuids.get(
+        workspace.uuid
+    );
+    if (
+        maybeWorkspaceBoardUuid &&
+        workspace_boards.map((b) => b.uuid).includes(maybeWorkspaceBoardUuid)
+    ) {
+        throw redirect(
+            302,
+            getDashboardWorkspaceBoardUrl(maybeWorkspaceBoardUuid)
+        );
     }
     const first_workspace_board = workspace_boards.at(0);
     if (first_workspace_board) {

@@ -65,7 +65,12 @@
         <Icon {src} theme="outline" />
     </button>
 {:else}
-    <a href={action.href} class={style} class:block={action.kind === "a"}>
+    <a
+        href={action.href}
+        on:click={action.onInteract}
+        class={style}
+        class:block={action.kind === "a"}
+    >
         {#if active}
             <div class={activeStyle} />
         {/if}

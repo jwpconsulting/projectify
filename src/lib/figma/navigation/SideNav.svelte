@@ -15,6 +15,7 @@
         currentWorkspaceLabels,
         deselectLabel,
         selectLabel,
+        selectWorkspaceBoardUuid,
         selectedLabels,
         sideNavOpen,
     } from "$lib/stores/dashboard";
@@ -83,6 +84,12 @@
                                             href: getDashboardWorkspaceBoardUrl(
                                                 board.uuid
                                             ),
+                                            onInteract() {
+                                                selectWorkspaceBoardUuid(
+                                                    workspace.uuid,
+                                                    board.uuid
+                                                );
+                                            },
                                         }}
                                     />
                                 {/each}

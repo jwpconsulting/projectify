@@ -10,6 +10,40 @@ export function selectWorkspaceUuid(uuid: string) {
     _selectedWorkspaceUuid.set(uuid);
 }
 
+const _selectedWorkspaceBoardUuids = persisted<Map<string, string>>(
+    "selected-workspace-board-uuid",
+    new Map(),
+    {
+        serializer: {
+            // XXX Using json.parse, maybe a security problem?
+            parse(value: string): Map<string, string> {
+                const values = JSON.parse(value) as [string, string][];
+                try {
+                    return new Map(values);
+                } catch {
+                    return new Map();
+                }
+            },
+            stringify(map: Map<string, string>): string {
+                const values: [string, string][] = Array.from(map);
+                return JSON.stringify(values);
+            },
+        },
+    }
+);
+export const selectedWorkspaceBoardUuids = readonly(
+    _selectedWorkspaceBoardUuids
+);
+export function selectWorkspaceBoardUuid(
+    workspaceUuid: string,
+    workspaceBoardUuid: string
+) {
+    _selectedWorkspaceBoardUuids.update(($selectedWorkspaceBoardUuids) => {
+        $selectedWorkspaceBoardUuids.set(workspaceUuid, workspaceBoardUuid);
+        return $selectedWorkspaceBoardUuids;
+    });
+}
+
 const _boardExpandOpen = persisted("board-expand-open", true);
 export const boardExpandOpen = readonly(_boardExpandOpen);
 export function toggleBoardExpandOpen() {

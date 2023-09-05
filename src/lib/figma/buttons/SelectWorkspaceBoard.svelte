@@ -5,13 +5,18 @@
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
-    import { currentWorkspaceBoard } from "$lib/stores/dashboard";
+    import {
+        currentWorkspaceBoard,
+        selectWorkspaceBoardUuid,
+    } from "$lib/stores/dashboard";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { WorkspaceBoard } from "$lib/types/workspace";
+    import { unwrap } from "$lib/utils/type";
 
     $: currentWorkspaceBoardUuid = $currentWorkspaceBoard?.uuid;
 
     export let workspaceBoard: WorkspaceBoard;
+    let workspace = unwrap(workspaceBoard.workspace, "Expected workspace");
 
     let buttonRef: HTMLElement;
 
@@ -32,6 +37,8 @@
 <a
     class="group block flex w-full flex-row justify-between px-4 py-2 hover:bg-base-200"
     href={getDashboardWorkspaceBoardUrl(workspaceBoard.uuid)}
+    on:click={() =>
+        selectWorkspaceBoardUuid(workspace.uuid, workspaceBoard.uuid)}
 >
     <div class="flex min-w-0 flex-row items-center gap-2">
         <div
