@@ -2,6 +2,22 @@ type Message = string | string[] | { [property: string]: Message };
 
 type MessageCollection = Record<string, Message>;
 const messages: MessageCollection = {
+    "overlay": {
+        // TODO Put other constructive dialogs here
+        constructive: {
+            "edit-workspace-board": {
+                "title": "edit workspace board",
+                "workspace-board-name": "workspace board name",
+                "enter-a-workspace-board-name": "Enter a workspace board name",
+                "deadline": "deadline",
+                "select-date": "Select date",
+                "cancel": "Cancel",
+                "save": "Save",
+            },
+        },
+        // TODO Put other destructive dialogs here
+        destructive: {},
+    },
     "label": {
         "apply-label": "apply label",
     },
@@ -150,15 +166,6 @@ const messages: MessageCollection = {
         "maintainer": "maintainer",
         "member": "member",
         "observer": "observer",
-    },
-    "edit-workspace-board": {
-        "title": "edit workspace board",
-        "workspace-board-name": "workspace board name",
-        "enter-a-workspace-board-name": "Enter a workspace board name",
-        "deadline": "deadline",
-        "select-date": "Select date",
-        "cancel": "Cancel",
-        "save": "Save",
     },
     "new-workspace-board": {
         "title": "New workspace board",
