@@ -3,14 +3,14 @@ set -e
 echo Aligning star charts
 npm run sync-types
 echo Finding fixpoint...
-npm run fix
-echo Inverting matrices...
-npm run fix
+# We want to not use the cache here, hoping that we really catch all the bugz
+npm run fix:nocache
 echo Instantiating hypergeometric series...
 echo "1 + 1 = 2"
 echo Ok...
 echo Verifying result...
-npm run check
+# 360 nocache
+npm run check:nocache
 echo Running build
 npm run build
 echo Splines reticulated
