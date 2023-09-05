@@ -82,7 +82,7 @@ function closeOverlay(
         if (success == "success") {
             $overlay.resolve();
         } else {
-            $overlay.reject();
+            $overlay.reject(new Error("Overlay was cancelled"));
         }
         return closedState;
     });
@@ -114,7 +114,7 @@ export async function openDestructiveOverlay(
 
 // call only when failed
 export function rejectDestructiveOverlay() {
-    closeOverlay(_destructiveOverlayState, "failure");
+    closeOverlay(_destructiveOverlayState, "rejected");
 }
 
 export function resolveDestructiveOverlay() {
@@ -128,7 +128,7 @@ export async function openConstructiveOverlay(
 }
 
 export function rejectConstructiveOverlay() {
-    closeOverlay(_constructiveOverlayState, "failure");
+    closeOverlay(_constructiveOverlayState, "rejected");
 }
 
 export function resolveConstructiveOverlay() {

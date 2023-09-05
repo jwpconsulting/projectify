@@ -54,7 +54,7 @@ export type MobileMenuType =
     | { kind: "dashboard" }
     | { kind: "continue" };
 
-export type OverlaySuccess = "success" | "failure";
+export type OverlaySuccess = "success" | "rejected";
 
 export type Overlay<Target, Anchor = void> =
     | { kind: "hidden" }
@@ -62,7 +62,7 @@ export type Overlay<Target, Anchor = void> =
           kind: "visible";
           target: Target;
           resolve: () => void;
-          reject: () => void;
+          reject: (error: Error) => void;
       } & (Anchor extends HTMLElement
           ? {
                 anchor: Anchor;
