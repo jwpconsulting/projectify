@@ -2,18 +2,15 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import type { IconSource } from "@steeze-ui/svelte-icon/types";
 
-    import type {
-        ButtonAction,
-        MenuButtonColor,
-        MenuButtonState,
-    } from "$lib/figma/types";
+    import type { MenuButtonColor, MenuButtonState } from "$lib/figma/types";
+    import type { ButtonAction } from "$lib/funabashi/types";
     import { closeContextMenu } from "$lib/stores/globalUi";
 
     export let label: string;
     export let icon: IconSource | null;
     export let state: MenuButtonState;
     export let color: MenuButtonColor = "base";
-    export let kind: ButtonAction;
+    export let kind: ButtonAction & { kind: "button" | "a" };
 
     $: colorStyle = {
         base: "text-base-content",
@@ -27,22 +24,30 @@
 
     function action() {
         if (kind.kind !== "button") {
-            throw new Error("Expected kind.action");
+            throw new Error("Expected button");
+        }
+        if (kind.disabled) {
+            throw new Error("Button is disabled");
         }
         closeContextMenu();
         kind.action();
+    }
+
+    function interact() {
+        if (kind.kind !== "a") {
+            throw new Error("Expected a");
+        }
+        closeContextMenu();
+        if (kind.onInteract) {
+            kind.onInteract();
+        }
     }
 
     $: outerClass = `flex-start flex flex-row items-center gap-2 px-4 py-3 text-left text-xs font-bold focus:bg-border-focus focus:text-base-content focus:outline-none ${colorStyle} ${style}`;
 </script>
 
 {#if kind.kind === "a"}
-    <a
-        href={kind.href}
-        class={outerClass}
-        on:click={closeContextMenu}
-        on:keydown={closeContextMenu}
-    >
+    <a href={kind.href} class={outerClass} on:click={interact}>
         {#if icon}
             <Icon src={icon} theme="outline" class="h-4 w-4" />
         {/if}
@@ -51,7 +56,7 @@
         </div>
     </a>
 {:else}
-    <button on:click={action} on:keydown={action} class={outerClass}>
+    <button disabled={kind.disabled} on:click={action} class={outerClass}>
         {#if icon}
             <Icon src={icon} theme="outline" class="h-4 w-4" />
         {/if}
