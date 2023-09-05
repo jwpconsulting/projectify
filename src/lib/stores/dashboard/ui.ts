@@ -1,6 +1,15 @@
 import { readonly } from "svelte/store";
 import { persisted } from "svelte-local-storage-store";
 
+const _selectedWorkspaceUuid = persisted<string | null>(
+    "selected-workspace-uuid",
+    null
+);
+export const selectedWorkspaceUuid = readonly(_selectedWorkspaceUuid);
+export function selectWorkspaceUuid(uuid: string) {
+    _selectedWorkspaceUuid.set(uuid);
+}
+
 const _boardExpandOpen = persisted("board-expand-open", true);
 export const boardExpandOpen = readonly(_boardExpandOpen);
 export function toggleBoardExpandOpen() {

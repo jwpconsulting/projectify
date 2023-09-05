@@ -5,6 +5,7 @@
     import { getDashboardWorkspaceUrl } from "$lib/urls";
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
+    import { selectWorkspaceUuid } from "$lib/stores/dashboard";
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspaces: Workspace[];
@@ -15,6 +16,7 @@
         kind={{
             kind: "a",
             href: getDashboardWorkspaceUrl(workspace.uuid),
+            onInteract: () => selectWorkspaceUuid(workspace.uuid),
         }}
         label={workspace.title}
         state="normal"
