@@ -40,6 +40,9 @@ jobs:
                   paths:
                       - ~/.npm
             - run:
+                  name: Generate type information
+                  command: npm run sync-types
+            - run:
                   name: Run svelte-check
                   command: npm run check:svelte-check
     eslint:
