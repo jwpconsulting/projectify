@@ -55,14 +55,14 @@ jobs:
                   command: npm run sync-types
             - run:
                   name: Run eslint
-                  command: npm run check:eslint
+                  command: npm run check:eslint:nocache
     prettier:
         executor: node
         steps:
             - install_node_dependencies
             - run:
                   name: Run prettier
-                  command: npm run check:prettier
+                  command: npm run check:prettier:nocache
     knip:
         executor: node
         steps:
