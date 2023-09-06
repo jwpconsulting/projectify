@@ -64,7 +64,7 @@
 <WorkspaceSettingsPage {workspace} activeSetting="index">
     <form class="flex flex-col gap-6" on:submit={save} name="general">
         <div class="flex flex-col items-center">
-            <div class="w-24 h-24 relative flex w-max flex-col">
+            <div class="relative flex h-24 w-24 w-max flex-col">
                 {#if picture}
                     <img
                         src={picture}

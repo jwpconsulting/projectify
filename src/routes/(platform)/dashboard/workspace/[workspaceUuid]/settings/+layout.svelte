@@ -1,3 +1,3 @@
-<div class="px-0 sm:px-2 h-full bg-background flex flex-col items-center py-8">
+<div class="flex h-full flex-col items-center bg-background px-0 py-8 sm:px-2">
     <slot />
 </div>

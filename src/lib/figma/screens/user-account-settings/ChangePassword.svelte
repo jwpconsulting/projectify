@@ -23,7 +23,7 @@
     <h1 class="text-2xl font-bold">
         {$_("user-account-settings.change-password.title")}
     </h1>
-    <div class="w-full flex flex-col gap-10">
+    <div class="flex w-full flex-col gap-10">
         <div class="flex flex-col gap-4">
             <InputField
                 label={$_(

@@ -9,12 +9,12 @@
     export let activeSetting: SettingKind;
 </script>
 
-<div class="max-w-xl w-full flex gap-4 flex-col">
-    <h1 class="px-2 sm:px-0 text-2xl font-bold">
+<div class="flex w-full max-w-xl flex-col gap-4">
+    <h1 class="px-2 text-2xl font-bold sm:px-0">
         {$_("workspace-settings.title")}
     </h1>
     <main
-        class="w-full max-w-xl flex flex-col gap-6 rounded-lg p-4 shadow-context-menu bg-foreground"
+        class="flex w-full max-w-xl flex-col gap-6 rounded-lg bg-foreground p-4 shadow-context-menu"
     >
         <WorkspaceSettingsTabBar {workspace} {activeSetting} />
         <slot />

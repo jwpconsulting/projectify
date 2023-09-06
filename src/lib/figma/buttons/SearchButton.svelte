@@ -9,7 +9,7 @@
     <Icon src={Search} class="h-6" theme="outline" />
     <div class="flex flex-row items-center gap-1">
         <div class="rounded-lg border border-border px-2 py-1 text-xs">⌘</div>
-        <Icon src={Plus} class="shrink-0 h-6 w-6" theme="outline" />
+        <Icon src={Plus} class="h-6 w-6 shrink-0" theme="outline" />
         <div class="rounded-lg border border-border px-2 py-1 text-xs">K</div>
     </div>
 </div>
