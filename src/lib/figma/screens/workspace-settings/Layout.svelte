@@ -1,7 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import WorkspaceSettingsTabBar from "$lib/figma/screens/workspace-settings/WorkspaceSettingsTabBar.svelte";
+    import TabBar from "$lib/figma/screens/workspace-settings/TabBar.svelte";
     import type { SettingKind } from "$lib/types/dashboard";
     import type { Workspace } from "$lib/types/workspace";
 
@@ -16,7 +16,7 @@
     <main
         class="flex w-full max-w-xl flex-col gap-6 rounded-lg bg-foreground p-4 shadow-context-menu"
     >
-        <WorkspaceSettingsTabBar {workspace} {activeSetting} />
+        <TabBar {workspace} {activeSetting} />
         <slot />
     </main>
 </div>

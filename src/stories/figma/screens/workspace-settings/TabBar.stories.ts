@@ -4,15 +4,15 @@ import { workspace } from "$lib/storybook";
 
 import { activeSetting } from "./config";
 
-import WorkspaceSettingsTabBar from "$lib/figma/screens/workspace-settings/WorkspaceSettingsTabBar.svelte";
+import TabBar from "$lib/figma/screens/workspace-settings/TabBar.svelte";
 
-const meta: Meta<WorkspaceSettingsTabBar> = {
-    component: WorkspaceSettingsTabBar,
+const meta: Meta<TabBar> = {
+    component: TabBar,
     argTypes: { activeSetting },
     args: { workspace, activeSetting: "index" },
 };
 export default meta;
 
-type Story = StoryObj<WorkspaceSettingsTabBar>;
+type Story = StoryObj<TabBar>;
 
 export const Default: Story = {};
