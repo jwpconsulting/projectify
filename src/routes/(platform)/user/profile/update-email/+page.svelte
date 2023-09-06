@@ -1,10 +1,10 @@
 <script lang="ts">
     import type { PageData } from "./$types";
 
-    import UserAccountSettings from "$lib/figma/screens/user-account-settings/UserAccountSettings.svelte";
+    import Page from "$lib/figma/screens/user-account-settings/Page.svelte";
 
     export let data: PageData;
     let { user } = data;
 </script>
 
-<UserAccountSettings bind:user mode="update-email" />
+<Page bind:user mode="update-email" />
