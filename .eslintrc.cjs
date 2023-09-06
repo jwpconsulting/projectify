@@ -1,6 +1,5 @@
 module.exports = {
     root: true,
-    parser: "@typescript-eslint/parser",
     extends: [
         "eslint:recommended",
         "plugin:@typescript-eslint/strict-type-checked",
@@ -12,6 +11,13 @@ module.exports = {
         "plugin:storybook/recommended",
     ],
     plugins: ["@typescript-eslint", "unused-imports", "import"],
+    parser: "@typescript-eslint/parser",
+    parserOptions: {
+        project: ["./tsconfig.json"],
+        sourceType: "module",
+        ecmaVersion: 2020,
+        extraFileExtensions: [".svelte"],
+    },
     overrides: [
         {
             files: ["*.svelte"],
@@ -54,13 +60,6 @@ module.exports = {
                 $lib: "src",
             },
         },
-    },
-    parserOptions: {
-        project: ["./tsconfig.json"],
-        sourceType: "module",
-        ecmaVersion: 2020,
-        tsconfigRootDir: __dirname,
-        extraFileExtensions: [".svelte"],
     },
     env: {
         browser: true,
