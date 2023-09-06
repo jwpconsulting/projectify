@@ -1,7 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import EditWorkspaceBoard from "$lib/figma/overlays/constructive/EditWorkspaceBoard.svelte";
     import InviteMember from "$lib/figma/overlays/constructive/InviteMember.svelte";
     import InviteMemberError from "$lib/figma/overlays/constructive/InviteMemberError.svelte";
     import NewWorkspace from "$lib/figma/overlays/constructive/NewWorkspace.svelte";
@@ -9,6 +8,7 @@
     import NewWorkspaceBoardSection from "$lib/figma/overlays/constructive/NewWorkspaceBoardSection.svelte";
     import RecoverWorkspaceBoard from "$lib/figma/overlays/constructive/RecoverWorkspaceBoard.svelte";
     import SkipOnboarding from "$lib/figma/overlays/constructive/SkipOnboarding.svelte";
+    import UpdateWorkspaceBoard from "$lib/figma/overlays/constructive/UpdateWorkspaceBoard.svelte";
     import type { ConstructiveOverlayType } from "$lib/types/ui";
 
     export let target: ConstructiveOverlayType;
@@ -30,7 +30,7 @@
     </div>
     <form class="flex flex-col gap-8">
         {#if target.kind === "updateWorkspaceBoard"}
-            <EditWorkspaceBoard workspaceBoard={target.workspaceBoard} />
+            <UpdateWorkspaceBoard workspaceBoard={target.workspaceBoard} />
         {:else if target.kind === "createWorkspaceBoard"}
             <NewWorkspaceBoard workspace={target.workspace} />
         {:else if target.kind === "inviteTeamMembers"}
