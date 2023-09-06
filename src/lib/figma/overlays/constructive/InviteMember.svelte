@@ -16,38 +16,32 @@
         {$_("overlay.constructive.invite-member.title")}
     </svelte:fragment>
     <svelte:fragment slot="form">
-        <div class="flex flex-col gap-2">
-            <InputField
-                name="workspace-board-name"
-                label={$_(
-                    "overlay.constructive.invite-member.form.email.label"
-                )}
-                placeholder={$_(
-                    "overlay.constructive.invite-member.form.email.placeholder"
-                )}
-                style={{ kind: "field", inputType: "text" }}
-            />
-        </div>
-        <div class="flex flex-row justify-center">
-            <Button
-                action={{
-                    kind: "button",
-                    action: rejectConstructiveOverlay,
-                }}
-                style={{ kind: "secondary" }}
-                size="medium"
-                color="blue"
-                label={$_("overlay.constructive.invite-member.cancel")}
-            />
-            <Button
-                action={{
-                    kind: "submit",
-                }}
-                style={{ kind: "primary" }}
-                size="medium"
-                color="blue"
-                label={$_("overlay.constructive.invite-member.invite")}
-            />
-        </div>
+        <InputField
+            name="workspace-board-name"
+            label={$_("overlay.constructive.invite-member.form.email.label")}
+            placeholder={$_(
+                "overlay.constructive.invite-member.form.email.placeholder"
+            )}
+            style={{ kind: "field", inputType: "text" }}
+        />
+    </svelte:fragment>
+    <svelte:fragment slot="buttons">
+        <Button
+            action={{
+                kind: "button",
+                action: rejectConstructiveOverlay,
+            }}
+            style={{ kind: "secondary" }}
+            size="medium"
+            color="blue"
+            label={$_("overlay.constructive.invite-member.cancel")}
+        />
+        <Button
+            action={{ kind: "submit" }}
+            style={{ kind: "primary" }}
+            size="medium"
+            color="blue"
+            label={$_("overlay.constructive.invite-member.invite")}
+        />
     </svelte:fragment>
 </Layout>

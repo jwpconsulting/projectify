@@ -37,51 +37,47 @@
         {$_("overlay.constructive.create-workspace-board.title")}
     </svelte:fragment>
     <svelte:fragment slot="form">
-        <div class="flex flex-col gap-2">
-            <InputField
-                name="workspace-board-name"
-                label={$_(
-                    "overlay.constructive.create-workspace-board.form.title.label"
-                )}
-                placeholder={$_(
-                    "overlay.constructive.create-workspace-board.form.title.placeholder"
-                )}
-                style={{ kind: "field", inputType: "text" }}
-                bind:value={title}
-            />
-            <InputField
-                name="deadline"
-                label={$_(
-                    "overlay.constructive.create-workspace-board.form.deadline.label"
-                )}
-                placeholder={$_(
-                    "overlay.constructive.create-workspace-board.form.deadline.placeholder"
-                )}
-                style={{ kind: "field", inputType: "text" }}
-            />
-        </div>
-        <div class="flex flex-row justify-center">
-            <Button
-                action={{
-                    kind: "button",
-                    action: rejectConstructiveOverlay,
-                }}
-                style={{ kind: "secondary" }}
-                size="medium"
-                color="blue"
-                label={$_(
-                    "overlay.constructive.create-workspace-board.cancel"
-                )}
-            />
-            <Button
-                action={{ kind: "submit" }}
-                style={{ kind: "primary" }}
-                size="medium"
-                color="blue"
-                label={$_(
-                    "overlay.constructive.create-workspace-board.create-board"
-                )}
-            />
-        </div>
+        <InputField
+            name="workspace-board-name"
+            label={$_(
+                "overlay.constructive.create-workspace-board.form.title.label"
+            )}
+            placeholder={$_(
+                "overlay.constructive.create-workspace-board.form.title.placeholder"
+            )}
+            style={{ kind: "field", inputType: "text" }}
+            bind:value={title}
+        />
+        <InputField
+            name="deadline"
+            label={$_(
+                "overlay.constructive.create-workspace-board.form.deadline.label"
+            )}
+            placeholder={$_(
+                "overlay.constructive.create-workspace-board.form.deadline.placeholder"
+            )}
+            style={{ kind: "field", inputType: "text" }}
+        />
+    </svelte:fragment>
+    <svelte:fragment slot="buttons">
+        <Button
+            action={{
+                kind: "button",
+                action: rejectConstructiveOverlay,
+            }}
+            style={{ kind: "secondary" }}
+            size="medium"
+            color="blue"
+            label={$_("overlay.constructive.create-workspace-board.cancel")}
+        />
+        <Button
+            action={{ kind: "submit" }}
+            style={{ kind: "primary" }}
+            size="medium"
+            color="blue"
+            label={$_(
+                "overlay.constructive.create-workspace-board.create-board"
+            )}
+        />
     </svelte:fragment>
 </Layout>

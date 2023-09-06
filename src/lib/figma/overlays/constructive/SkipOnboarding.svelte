@@ -10,33 +10,31 @@
     <svelte:fragment slot="title">
         {$_("overlay.constructive.skip-onboarding.title")}
     </svelte:fragment>
-    <svelte:fragment slot="form">
+    <svelte:fragment slot="message">
         <p class="text-center text-error">
             {$_("overlay.constructive.skip-onboarding.notice")}
         </p>
-        <div class="flex flex-row justify-center">
-            <Button
-                action={{
-                    kind: "button",
-                    action: rejectConstructiveOverlay,
-                }}
-                style={{ kind: "secondary" }}
-                size="medium"
-                color="blue"
-                label={$_("overlay.constructive.skip-onboarding.cancel")}
-            />
-            <Button
-                action={{
-                    kind: "a",
-                    href: "/",
-                }}
-                style={{ kind: "primary" }}
-                size="medium"
-                color="blue"
-                label={$_(
-                    "overlay.constructive.skip-onboarding.skip-onboarding"
-                )}
-            />
-        </div>
+    </svelte:fragment>
+    <svelte:fragment slot="buttons">
+        <Button
+            action={{
+                kind: "button",
+                action: rejectConstructiveOverlay,
+            }}
+            style={{ kind: "secondary" }}
+            size="medium"
+            color="blue"
+            label={$_("overlay.constructive.skip-onboarding.cancel")}
+        />
+        <Button
+            action={{
+                kind: "a",
+                href: "/",
+            }}
+            style={{ kind: "primary" }}
+            size="medium"
+            color="blue"
+            label={$_("overlay.constructive.skip-onboarding.skip-onboarding")}
+        />
     </svelte:fragment>
 </Layout>

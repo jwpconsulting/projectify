@@ -10,35 +10,30 @@
     <svelte:fragment slot="title">
         {$_("overlay.constructive.create-workspace.title")}
     </svelte:fragment>
-    <svelte:fragment slot="form">
+    <svelte:fragment slot="message">
         <p class="text-center">
             {$_("overlay.constructive.create-workspace.notice")}
         </p>
-        <div class="flex flex-row justify-center">
-            <Button
-                action={{
-                    kind: "button",
-                    action: rejectConstructiveOverlay,
-                }}
-                style={{ kind: "secondary" }}
-                size="medium"
-                color="blue"
-                label={$_("overlay.constructive.create-workspace.cancel")}
-            />
-            <Button
-                action={{
-                    kind: "button",
-                    action: () => {
-                        console.error("Save not implemented");
-                    },
-                }}
-                style={{ kind: "primary" }}
-                size="medium"
-                color="blue"
-                label={$_(
-                    "overlay.constructive.create-workspace.create-workspace"
-                )}
-            />
-        </div>
+    </svelte:fragment>
+    <svelte:fragment slot="buttons">
+        <Button
+            action={{
+                kind: "button",
+                action: rejectConstructiveOverlay,
+            }}
+            style={{ kind: "secondary" }}
+            size="medium"
+            color="blue"
+            label={$_("overlay.constructive.create-workspace.cancel")}
+        />
+        <Button
+            action={{ kind: "submit" }}
+            style={{ kind: "primary" }}
+            size="medium"
+            color="blue"
+            label={$_(
+                "overlay.constructive.create-workspace.create-workspace"
+            )}
+        />
     </svelte:fragment>
 </Layout>

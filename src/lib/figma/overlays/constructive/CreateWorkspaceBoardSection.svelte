@@ -36,38 +36,36 @@
         {$_("overlay.constructive.create-workspace-board-section.title")}
     </svelte:fragment>
     <svelte:fragment slot="form">
-        <div class="flex flex-col gap-2">
-            <InputField
-                name="workspace-board-name"
-                label={$_(
-                    "overlay.constructive.create-workspace-board-section.form.title.label"
-                )}
-                placeholder={$_(
-                    "overlay.constructive.create-workspace-board-section.form.title.placeholder"
-                )}
-                style={{ kind: "field", inputType: "text" }}
-                bind:value={title}
-            />
-        </div>
-        <div class="flex flex-row justify-center">
-            <Button
-                action={{ kind: "button", action: rejectConstructiveOverlay }}
-                style={{ kind: "secondary" }}
-                size="medium"
-                color="blue"
-                label={$_(
-                    "overlay.constructive.create-workspace-board-section.cancel"
-                )}
-            />
-            <Button
-                action={{ kind: "submit" }}
-                style={{ kind: "primary" }}
-                size="medium"
-                color="blue"
-                label={$_(
-                    "overlay.constructive.create-workspace-board-section.create-section"
-                )}
-            />
-        </div>
+        <InputField
+            name="workspace-board-name"
+            label={$_(
+                "overlay.constructive.create-workspace-board-section.form.title.label"
+            )}
+            placeholder={$_(
+                "overlay.constructive.create-workspace-board-section.form.title.placeholder"
+            )}
+            style={{ kind: "field", inputType: "text" }}
+            bind:value={title}
+        />
+    </svelte:fragment>
+    <svelte:fragment slot="buttons">
+        <Button
+            action={{ kind: "button", action: rejectConstructiveOverlay }}
+            style={{ kind: "secondary" }}
+            size="medium"
+            color="blue"
+            label={$_(
+                "overlay.constructive.create-workspace-board-section.cancel"
+            )}
+        />
+        <Button
+            action={{ kind: "submit" }}
+            style={{ kind: "primary" }}
+            size="medium"
+            color="blue"
+            label={$_(
+                "overlay.constructive.create-workspace-board-section.create-section"
+            )}
+        />
     </svelte:fragment>
 </Layout>

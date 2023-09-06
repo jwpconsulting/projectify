@@ -14,37 +14,30 @@
     <svelte:fragment slot="title">
         {$_("overlay.constructive.recover-workspace-board.title")}
     </svelte:fragment>
-    <svelte:fragment slot="form">
+    <svelte:fragment slot="message">
         <p class="text-center text-error">
             {$_("overlay.constructive.recover-workspace-board.notice")}
         </p>
-        <div class="flex flex-row justify-center">
-            <Button
-                action={{
-                    kind: "button",
-                    action: rejectConstructiveOverlay,
-                }}
-                style={{ kind: "secondary" }}
-                size="medium"
-                color="blue"
-                label={$_(
-                    "overlay.constructive.recover-workspace-board.cancel"
-                )}
-            />
-            <Button
-                action={{
-                    kind: "button",
-                    action: () => {
-                        console.error("Save not implemented");
-                    },
-                }}
-                style={{ kind: "primary" }}
-                size="medium"
-                color="blue"
-                label={$_(
-                    "overlay.constructive.recover-workspace-board.recover-board"
-                )}
-            />
-        </div>
+    </svelte:fragment>
+    <svelte:fragment slot="buttons">
+        <Button
+            action={{
+                kind: "button",
+                action: rejectConstructiveOverlay,
+            }}
+            style={{ kind: "secondary" }}
+            size="medium"
+            color="blue"
+            label={$_("overlay.constructive.recover-workspace-board.cancel")}
+        />
+        <Button
+            action={{ kind: "submit" }}
+            style={{ kind: "primary" }}
+            size="medium"
+            color="blue"
+            label={$_(
+                "overlay.constructive.recover-workspace-board.recover-board"
+            )}
+        />
     </svelte:fragment>
 </Layout>

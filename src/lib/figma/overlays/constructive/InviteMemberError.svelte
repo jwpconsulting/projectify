@@ -14,33 +14,33 @@
     <svelte:fragment slot="title">
         {$_("overlay.constructive.invite-member-error.title")}
     </svelte:fragment>
-    <svelte:fragment slot="form">
+    <svelte:fragment slot="message">
         <p class="text-center text-error">
             {$_("overlay.constructive.invite-member-error.notice")}
         </p>
-        <div class="flex flex-row justify-center">
-            <Button
-                action={{
-                    kind: "button",
-                    action: rejectConstructiveOverlay,
-                }}
-                style={{ kind: "secondary" }}
-                size="medium"
-                color="blue"
-                label={$_("overlay.constructive.invite-member-error.cancel")}
-            />
-            <Button
-                action={{
-                    kind: "a",
-                    href: "/",
-                }}
-                style={{ kind: "primary" }}
-                size="medium"
-                color="blue"
-                label={$_(
-                    "overlay.constructive.invite-member-error.go-to-billing"
-                )}
-            />
-        </div>
+    </svelte:fragment>
+    <svelte:fragment slot="buttons">
+        <Button
+            action={{
+                kind: "button",
+                action: rejectConstructiveOverlay,
+            }}
+            style={{ kind: "secondary" }}
+            size="medium"
+            color="blue"
+            label={$_("overlay.constructive.invite-member-error.cancel")}
+        />
+        <Button
+            action={{
+                kind: "a",
+                href: "/",
+            }}
+            style={{ kind: "primary" }}
+            size="medium"
+            color="blue"
+            label={$_(
+                "overlay.constructive.invite-member-error.go-to-billing"
+            )}
+        />
     </svelte:fragment>
 </Layout>
