@@ -45,6 +45,7 @@ module.exports = {
         "import/ignore": [
             // TODO revisit this at some point in the future
             // Justus 2023-09-06
+            "dom-focus-lock/dist/index.esm.js",
             "@steeze-ui/heroicons.index.js",
         ],
         "import/resolver": {
