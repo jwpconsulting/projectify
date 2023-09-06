@@ -5,8 +5,8 @@
     import Onboarding from "$lib/components/Onboarding.svelte";
     import type { OnboardingState } from "$lib/types/onboarding";
 
-    let workspaceTitle = "";
-    let state: OnboardingState = "payment-error";
+    const workspaceTitle = "";
+    const state: OnboardingState = "payment-error";
 </script>
 
 <Onboarding

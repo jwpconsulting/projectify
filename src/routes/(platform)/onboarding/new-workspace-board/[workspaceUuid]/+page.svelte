@@ -18,7 +18,7 @@
     const { workspace, workspaceBoard } = data;
 
     let title: string | undefined = undefined;
-    let state: OnboardingState = "new-board";
+    const state: OnboardingState = "new-board";
 
     async function action() {
         if (!title) {

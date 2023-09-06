@@ -5,7 +5,7 @@
 
     export let data: PageData;
 
-    let { workspace } = data;
+    const { workspace } = data;
 </script>
 
 <WorkspaceSettingsMembers {workspace} />

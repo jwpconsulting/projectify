@@ -9,7 +9,8 @@
     import { currentTask } from "$lib/stores/dashboard";
 
     export let data: PageData;
-    let { task, workspaceBoardSection } = data;
+    let { task } = data;
+    const { workspaceBoardSection } = data;
 
     export let state: TaskUpdateBarState = "updates";
 

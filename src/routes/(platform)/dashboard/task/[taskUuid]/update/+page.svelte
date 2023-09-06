@@ -22,9 +22,9 @@
     import type { Task } from "$lib/types/workspace";
 
     export let data: PageData;
-    let { task, workspaceBoardSection } = data;
+    const { task, workspaceBoardSection } = data;
 
-    let updateTask: Writable<Partial<Task>> = writable({});
+    const updateTask: Writable<Partial<Task>> = writable({});
 
     async function createOrUpdateTask() {
         // TOOD add rest here
@@ -52,7 +52,7 @@
             await assignLabelToTask(task, labelUuid, selected);
         }
     );
-    let taskModule: TaskModule = {
+    const taskModule: TaskModule = {
         task,
         createOrUpdateTask,
         updateTask,

@@ -21,10 +21,10 @@
 
     const { user, workspace, workspaceBoard } = data;
 
-    let workspaceTitle = workspace.title;
-    let boardTitle = workspaceBoard.title;
+    const workspaceTitle = workspace.title;
+    const boardTitle = workspaceBoard.title;
     let taskTitle = "";
-    let state: OnboardingState = "new-task";
+    const state: OnboardingState = "new-task";
 
     $: workspaceBoardSectionTitle = $_(
         "onboarding.new-task.workspace-board-section-title"

@@ -17,7 +17,7 @@
     }
 
     async function onUnarchiveItem(item: WorkspaceBoard) {
-        let uuid = item.uuid;
+        const uuid = item.uuid;
 
         unarchivingItems.set(uuid, true);
         try {

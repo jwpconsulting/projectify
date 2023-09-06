@@ -8,7 +8,7 @@
 
     export let user: User;
 
-    let hasBeenEdited = false;
+    const hasBeenEdited = false;
     let currentPassword = "";
     let newEmail = "";
     // TODO wiring

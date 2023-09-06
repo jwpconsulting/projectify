@@ -7,8 +7,8 @@
     import Onboarding from "$lib/components/Onboarding.svelte";
     import type { OnboardingState } from "$lib/types/onboarding";
 
-    let workspaceTitle = "";
-    let state: OnboardingState = "billing-details";
+    const workspaceTitle = "";
+    const state: OnboardingState = "billing-details";
     let numberOfSeats = 1;
     const billingSeats = [1, 5, 10, 15, 25];
     $: selectedBillingSeatInx = billingSeats.findIndex(

@@ -11,7 +11,7 @@
 
     export let data: PageData;
 
-    let { user } = data;
+    const { user } = data;
 
     let fullName: string | undefined = user.full_name;
 

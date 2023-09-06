@@ -15,7 +15,7 @@
         if (!workspaceBoardSection.tasks) {
             throw new Error("Expected workspaceBoardSection.tasks");
         }
-        let prevTask =
+        const prevTask =
             workspaceBoardSection.tasks[
                 workspaceBoardSection.tasks.indexOf(task) - 1
             ];
@@ -33,7 +33,7 @@
         if (!workspaceBoardSection.tasks) {
             throw new Error("Expected workspaceBoardSection.tasks");
         }
-        let nextTask =
+        const nextTask =
             workspaceBoardSection.tasks[
                 workspaceBoardSection.tasks.indexOf(task) + 1
             ];

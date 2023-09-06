@@ -13,11 +13,11 @@
 
     const { task, workspaceBoard, workspace, label } = data;
 
-    let workspaceTitle = workspace.title;
-    let boardTitle = workspaceBoard.title;
-    let taskTitle = task.title;
-    let labelName = label.name;
-    let state: OnboardingState = "assign-task";
+    const workspaceTitle = workspace.title;
+    const boardTitle = workspaceBoard.title;
+    const taskTitle = task.title;
+    const labelName = label.name;
+    const state: OnboardingState = "assign-task";
 </script>
 
 <Onboarding

@@ -12,7 +12,7 @@
 
     export let labelSearchModule: LabelSearchModule;
 
-    let { selected } = labelSearchModule;
+    const { selected } = labelSearchModule;
 </script>
 
 <SideNavMenuCategoryFocus

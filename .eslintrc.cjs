@@ -20,6 +20,7 @@ module.exports = {
                 parser: "@typescript-eslint/parser",
             },
             rules: {
+                // TODO: Investigate whether any of these could be disabled
                 "@typescript-eslint/require-await": "off",
                 "@typescript-eslint/no-floating-promises": "off",
                 "@typescript-eslint/prefer-nullish-coalescing": "off",
@@ -61,6 +62,7 @@ module.exports = {
         node: true,
     },
     rules: {
+        "prefer-const": "error",
         "unused-imports/no-unused-imports": "error",
         "import/no-unresolved": "off",
         "import/order": [

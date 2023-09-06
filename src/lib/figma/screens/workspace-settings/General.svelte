@@ -14,7 +14,7 @@
 
     export let workspace: Workspace;
 
-    let uuid = workspace.uuid;
+    const uuid = workspace.uuid;
 
     let { title, description, picture } = workspace;
 

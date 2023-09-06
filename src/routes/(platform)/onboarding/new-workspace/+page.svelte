@@ -14,10 +14,10 @@
     import { getNewWorkspaceBoardUrl } from "$lib/urls/onboarding";
 
     export let data: PageData;
-    let { user, workspace } = data;
+    const { user, workspace } = data;
 
     let workspaceTitle: string | undefined = undefined;
-    let state: OnboardingState = "new-workspace";
+    const state: OnboardingState = "new-workspace";
 
     $: workspaceTitleGiven = workspaceTitle && workspaceTitle.length > 0;
 

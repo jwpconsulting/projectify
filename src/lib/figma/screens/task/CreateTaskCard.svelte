@@ -11,7 +11,7 @@
     export let createTaskModule: CreateTaskModule;
     export let workspaceBoardSection: WorkspaceBoardSection;
 
-    let { newTask, createTask } = createTaskModule;
+    const { newTask, createTask } = createTaskModule;
 </script>
 
 <TaskC>

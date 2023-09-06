@@ -26,10 +26,10 @@
         }
     }
 
-    let dispatch = createEventDispatcher();
+    const dispatch = createEventDispatcher();
 
     export let selectedLabels: Label[] = [];
-    let selectedLabelsInx = new Map<string, boolean>();
+    const selectedLabelsInx = new Map<string, boolean>();
 
     function onLabelClick(label: Label) {
         if (!editable) {

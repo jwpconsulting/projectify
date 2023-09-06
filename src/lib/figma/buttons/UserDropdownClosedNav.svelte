@@ -10,7 +10,7 @@
     import type { WorkspaceUserSearchModule } from "$lib/types/stores";
 
     export let workspaceUserSearchModule: WorkspaceUserSearchModule;
-    let { select, deselect, selected, searchResults } =
+    const { select, deselect, selected, searchResults } =
         workspaceUserSearchModule;
 </script>
 

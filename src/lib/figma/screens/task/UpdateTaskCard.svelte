@@ -28,10 +28,10 @@
 
     let title: string = task.title;
     let description: string | undefined = task.description;
-    let assignedUser: WorkspaceUser | null = task.assignee ?? null;
-    let labels: Label[] = task.labels;
-    let dueDate: string | null = null;
-    let subTasks: SubTask[] = [];
+    const assignedUser: WorkspaceUser | null = task.assignee ?? null;
+    const labels: Label[] = task.labels;
+    const dueDate: string | null = null;
+    const subTasks: SubTask[] = [];
 
     $: {
         // XXX what does this code here do?

@@ -16,11 +16,11 @@
 
     const { workspace, workspaceBoard, task } = data;
 
-    let workspaceTitle = workspace.title;
-    let boardTitle = workspaceBoard.title;
-    let taskTitle = task.title;
+    const workspaceTitle = workspace.title;
+    const boardTitle = workspaceBoard.title;
+    const taskTitle = task.title;
     let labelTitle: string | undefined = undefined;
-    let state: OnboardingState = "new-label";
+    const state: OnboardingState = "new-label";
 
     async function action() {
         if (!labelTitle) {

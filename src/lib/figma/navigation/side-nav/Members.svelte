@@ -11,7 +11,7 @@
     import type { WorkspaceUserSearchModule } from "$lib/types/stores";
 
     export let workspaceUserSearchModule: WorkspaceUserSearchModule;
-    let { selected } = workspaceUserSearchModule;
+    const { selected } = workspaceUserSearchModule;
 </script>
 
 <SideNavMenuCategoryFocus

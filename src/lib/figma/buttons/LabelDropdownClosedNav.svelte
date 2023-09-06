@@ -11,7 +11,7 @@
 
     export let labelSearchModule: LabelSearchModule;
 
-    let { select, selected, searchResults } = labelSearchModule;
+    const { select, selected, searchResults } = labelSearchModule;
 </script>
 
 <div class="flex flex-col items-center gap-6">

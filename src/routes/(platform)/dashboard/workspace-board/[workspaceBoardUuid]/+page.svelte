@@ -18,7 +18,8 @@
 
     export let data: PageData;
 
-    let { workspaceBoard, workspace, workspaces } = data;
+    let { workspaceBoard, workspace } = data;
+    const { workspaces } = data;
 
     $: workspaceBoard = $currentWorkspaceBoard ?? workspaceBoard;
     $: workspace = $currentWorkspace ?? workspace;

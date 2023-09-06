@@ -24,7 +24,7 @@
             outerStyle =
                 "bg-background border-utility group-hover:bg-border hover:bg-border text-utility";
         } else {
-            let color = getLabelColorFromIndex(label.label.color);
+            const color = getLabelColorFromIndex(label.label.color);
             if (!color) {
                 throw new Error("Expected color");
             }

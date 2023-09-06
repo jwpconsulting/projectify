@@ -12,7 +12,7 @@
     // If it is null, we don't show the create new label button
     export let startCreateLabel: (() => void) | null = null;
 
-    let { select, deselect, selected, search, searchResults } =
+    const { select, deselect, selected, search, searchResults } =
         labelSearchModule;
 </script>
 

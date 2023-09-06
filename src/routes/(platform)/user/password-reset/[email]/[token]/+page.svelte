@@ -11,8 +11,8 @@
     let error: string | null = null;
     let passwordValue: string;
 
-    let email = $page.params.email;
-    let token = $page.params.token;
+    const email = $page.params.email;
+    const token = $page.params.token;
 
     async function submit() {
         await confirmPasswordReset(email, token, passwordValue);

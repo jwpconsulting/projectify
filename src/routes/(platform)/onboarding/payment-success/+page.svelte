@@ -3,9 +3,9 @@
     import Onboarding from "$lib/components/Onboarding.svelte";
     import type { OnboardingState } from "$lib/types/onboarding";
 
-    let workspaceTitle = "";
-    let state: OnboardingState = "payment-success";
-    let numberOfSeats = 1;
+    const workspaceTitle = "";
+    const state: OnboardingState = "payment-success";
+    const numberOfSeats = 1;
 </script>
 
 <Onboarding title={"Your workspace is all set up!"} hasContentPadding={false}>

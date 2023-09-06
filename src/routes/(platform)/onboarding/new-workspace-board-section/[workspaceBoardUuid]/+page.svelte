@@ -5,10 +5,10 @@
     import Onboarding from "$lib/components/Onboarding.svelte";
     import type { OnboardingState } from "$lib/types/onboarding";
 
-    let workspaceTitle = "";
-    let boardTitle = "";
-    let taskTitle = "";
-    let state: OnboardingState = "new-section";
+    const workspaceTitle = "";
+    const boardTitle = "";
+    const taskTitle = "";
+    const state: OnboardingState = "new-section";
 </script>
 
 <Onboarding
