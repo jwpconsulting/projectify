@@ -10,7 +10,7 @@
 </script>
 
 <p class="text-center text-error">
-    {$_("recover-workspace-board.notice")}
+    {$_("overlay.constructive.recover-workspace-board.notice")}
 </p>
 <div class="flex flex-row justify-center">
     <Button
@@ -21,7 +21,7 @@
         style={{ kind: "secondary" }}
         size="medium"
         color="blue"
-        label={$_("recover-workspace-board.cancel")}
+        label={$_("overlay.constructive.recover-workspace-board.cancel")}
     />
     <Button
         action={{
@@ -33,6 +33,8 @@
         style={{ kind: "primary" }}
         size="medium"
         color="blue"
-        label={$_("recover-workspace-board.recover-board")}
+        label={$_(
+            "overlay.constructive.recover-workspace-board.recover-board"
+        )}
     />
 </div>

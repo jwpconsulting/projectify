@@ -17,7 +17,7 @@
 
     let title: string;
 
-    async function perform() {
+    async function save() {
         const workspaceBoardSection: CreateWorkspaceBoardSection = {
             title: title,
             description: "",
@@ -30,13 +30,17 @@
     }
 </script>
 
-<form on:submit|preventDefault={perform}>
+<form class="flex flex-col gap-8" on:submit|preventDefault={save}>
     <input type="submit" class="hidden" />
     <div class="flex flex-col gap-2">
         <InputField
             name="workspace-board-name"
-            label={$_("new-workspace-board-section.new-section-name-label")}
-            placeholder={$_("new-workspace-board-section.new-section-name")}
+            label={$_(
+                "overlay.constructive.create-workspace-board-section.form.title.label"
+            )}
+            placeholder={$_(
+                "overlay.constructive.create-workspace-board-section.form.title.placeholder"
+            )}
             style={{ kind: "field", inputType: "text" }}
             bind:value={title}
         />
@@ -47,14 +51,18 @@
             style={{ kind: "secondary" }}
             size="medium"
             color="blue"
-            label={$_("new-workspace-board-section.cancel")}
+            label={$_(
+                "overlay.constructive.create-workspace-board-section.cancel"
+            )}
         />
         <Button
             action={{ kind: "submit" }}
             style={{ kind: "primary" }}
             size="medium"
             color="blue"
-            label={$_("new-workspace-board-section.create-section")}
+            label={$_(
+                "overlay.constructive.create-workspace-board-section.create-section"
+            )}
         />
     </div>
 </form>

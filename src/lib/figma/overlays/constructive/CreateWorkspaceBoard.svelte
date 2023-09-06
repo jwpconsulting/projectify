@@ -17,7 +17,7 @@
 
     let title: string | undefined = undefined;
 
-    async function perform() {
+    async function save() {
         if (!title) {
             throw new Error("Not valid");
         }
@@ -31,22 +31,28 @@
     }
 </script>
 
-<form on:submit|preventDefault={perform}>
+<form class="flex flex-col gap-8" on:submit|preventDefault={save}>
     <input type="submit" class="hidden" />
     <div class="flex flex-col gap-2">
         <InputField
             name="workspace-board-name"
-            label={$_("new-workspace-board.workspace-board-name")}
+            label={$_(
+                "overlay.constructive.create-workspace-board.form.title.label"
+            )}
             placeholder={$_(
-                "new-workspace-board.enter-a-workspace-board-name"
+                "overlay.constructive.create-workspace-board.form.title.placeholder"
             )}
             style={{ kind: "field", inputType: "text" }}
             bind:value={title}
         />
         <InputField
             name="deadline"
-            label={$_("new-workspace-board.deadline")}
-            placeholder={$_("new-workspace-board.select-date")}
+            label={$_(
+                "overlay.constructive.create-workspace-board.form.deadline.label"
+            )}
+            placeholder={$_(
+                "overlay.constructive.create-workspace-board.form.deadline.placeholder"
+            )}
             style={{ kind: "field", inputType: "text" }}
         />
     </div>
@@ -59,14 +65,16 @@
             style={{ kind: "secondary" }}
             size="medium"
             color="blue"
-            label={$_("new-workspace-board.cancel")}
+            label={$_("overlay.constructive.create-workspace-board.cancel")}
         />
         <Button
             action={{ kind: "submit" }}
             style={{ kind: "primary" }}
             size="medium"
             color="blue"
-            label={$_("new-workspace-board.create-board")}
+            label={$_(
+                "overlay.constructive.create-workspace-board.create-board"
+            )}
         />
     </div>
 </form>

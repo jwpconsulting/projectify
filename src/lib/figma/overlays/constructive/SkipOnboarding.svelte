@@ -6,7 +6,7 @@
 </script>
 
 <p class="text-center text-error">
-    {$_("skip-onboarding.notice")}
+    {$_("overlay.constructive.skip-onboarding.notice")}
 </p>
 <div class="flex flex-row justify-center">
     <Button
@@ -17,18 +17,16 @@
         style={{ kind: "secondary" }}
         size="medium"
         color="blue"
-        label={$_("skip-onboarding.cancel")}
+        label={$_("overlay.constructive.skip-onboarding.cancel")}
     />
     <Button
         action={{
-            kind: "button",
-            action: () => {
-                console.error("Save not implemented");
-            },
+            kind: "a",
+            href: "/",
         }}
         style={{ kind: "primary" }}
         size="medium"
         color="blue"
-        label={$_("skip-onboarding.skip-onboarding")}
+        label={$_("overlay.constructive.skip-onboarding.skip-onboarding")}
     />
 </div>

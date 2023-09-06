@@ -10,7 +10,7 @@
 </script>
 
 <p class="text-center text-error">
-    {$_("invite-member-error.notice")}
+    {$_("overlay.constructive.invite-member-error.notice")}
 </p>
 <div class="flex flex-row justify-center">
     <Button
@@ -21,18 +21,16 @@
         style={{ kind: "secondary" }}
         size="medium"
         color="blue"
-        label={$_("invite-member-error.cancel")}
+        label={$_("overlay.constructive.invite-member-error.cancel")}
     />
     <Button
         action={{
-            kind: "button",
-            action: () => {
-                console.error("Save not implemented");
-            },
+            kind: "a",
+            href: "/",
         }}
         style={{ kind: "primary" }}
         size="medium"
         color="blue"
-        label={$_("invite-member-error.go-to-billing")}
+        label={$_("overlay.constructive.invite-member-error.go-to-billing")}
     />
 </div>

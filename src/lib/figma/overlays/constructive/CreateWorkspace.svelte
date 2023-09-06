@@ -6,7 +6,7 @@
 </script>
 
 <p class="text-center">
-    {$_("new-workspace.notice")}
+    {$_("overlay.constructive.create-workspace.notice")}
 </p>
 <div class="flex flex-row justify-center">
     <Button
@@ -17,7 +17,7 @@
         style={{ kind: "secondary" }}
         size="medium"
         color="blue"
-        label={$_("new-workspace.cancel")}
+        label={$_("overlay.constructive.create-workspace.cancel")}
     />
     <Button
         action={{
@@ -29,6 +29,6 @@
         style={{ kind: "primary" }}
         size="medium"
         color="blue"
-        label={$_("new-workspace.create-workspace")}
+        label={$_("overlay.constructive.create-workspace.create-workspace")}
     />
 </div>

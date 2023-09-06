@@ -3,16 +3,83 @@ type Message = string | string[] | { [property: string]: Message };
 type MessageCollection = Record<string, Message>;
 const messages: MessageCollection = {
     "overlay": {
-        // TODO Put other constructive dialogs here
         constructive: {
             "update-workspace-board": {
-                "title": "edit workspace board",
-                "workspace-board-name": "workspace board name",
-                "enter-a-workspace-board-name": "Enter a workspace board name",
-                "deadline": "deadline",
-                "select-date": "Select date",
+                title: "Edit workspace board",
+                form: {
+                    title: {
+                        label: "workspace board name",
+                        placeholder: "Enter a workspace board name",
+                    },
+                    deadline: {
+                        label: "deadline",
+                        placeholder: "Select date",
+                    },
+                },
+                cancel: "Cancel",
+                save: "Save",
+            },
+            "create-workspace-board": {
+                "title": "Create workspace board",
+                "form": {
+                    title: {
+                        label: "Workspace board name",
+                        placeholder: "Enter a workspace board name",
+                    },
+                    deadline: {
+                        label: "Deadline",
+                        placeholder: "Select date",
+                    },
+                },
                 "cancel": "Cancel",
-                "save": "Save",
+                "create-board": "Create board",
+            },
+            "invite-member": {
+                title: "Invite team members",
+                notice: "You have 3 seats left in your plan",
+                form: {
+                    email: {
+                        label: "Enter email address separated by a comma",
+                        placeholder: "member@mail.com",
+                    },
+                },
+                cancel: "Cancel",
+                invite: "Invite",
+            },
+            "invite-member-error": {
+                "title": "Invite team members",
+                "notice": "You have no more seats left in your plan",
+                "cancel": "Cancel",
+                "go-to-billing": "Go to billing",
+            },
+            "create-workspace-board-section": {
+                "title": "Create new section",
+                "form": {
+                    title: {
+                        label: "New section name",
+                        placeholder: "New section name",
+                    },
+                },
+                "cancel": "Cancel",
+                "create-section": "Create section",
+            },
+            "create-workspace": {
+                "title": "Create a new workspace",
+                "notice": "Are you sure you want to create a new workspace?",
+                "cancel": "Cancel",
+                "create-workspace": "Create workspace",
+            },
+            "skip-onboarding": {
+                "title": "Skip onboarding",
+                "notice": "Any progress you've made so far will be lost",
+                "cancel": "Cancel",
+                "skip-onboarding": "Skip onboarding",
+            },
+            "recover-workspace-board": {
+                "title": "Recover this board?",
+                "notice": "Recovering this board returns it to the dashboard",
+                "cancel": "Cancel",
+                "recover-board": "Recover board",
             },
         },
         // TODO Put other destructive dialogs here
@@ -167,42 +234,6 @@ const messages: MessageCollection = {
         "member": "member",
         "observer": "observer",
     },
-    "new-workspace-board": {
-        "title": "New workspace board",
-        "workspace-board-name": "Workspace board name",
-        "enter-a-workspace-board-name": "Enter a workspace board name",
-        "deadline": "Deadline",
-        "select-date": "Select date",
-        "cancel": "Cancel",
-        "create-board": "Create board",
-    },
-    "invite-member": {
-        "title": "Invite team members",
-        "notice": "You have 3 seats left in your plan",
-        "enter-email-address": "Enter email address separated by a comma",
-        "enter-an-email": "member@mail.com",
-        "cancel": "Cancel",
-        "invite": "Invite",
-    },
-    "invite-member-error": {
-        "title": "Invite team members",
-        "notice": "You have no more seats left in your plan",
-        "cancel": "Cancel",
-        "go-to-billing": "Go to billing",
-    },
-    "new-workspace-board-section": {
-        "title": "Create new section",
-        "new-section-name-label": "New section name",
-        "new-section-name": "New section name",
-        "cancel": "Cancel",
-        "create-section": "Create section",
-    },
-    "new-workspace": {
-        "title": "Create a new workspace",
-        "notice": "Are you sure you want to create a new workspace?",
-        "cancel": "Cancel",
-        "create-workspace": "Create workspace",
-    },
     "onboarding": {
         "continue": "Continue",
         "back": "Back",
@@ -279,18 +310,6 @@ const messages: MessageCollection = {
                     "If you wish to add new members to your workspace, please go to the workspace settings menu next to your workspace name.",
             },
         },
-    },
-    "skip-onboarding": {
-        "title": "Skip onboarding",
-        "notice": "Any progress you've made so far will be lost",
-        "cancel": "Cancel",
-        "skip-onboarding": "Skip onboarding",
-    },
-    "recover-workspace-board": {
-        "title": "Recover this board?",
-        "notice": "Recovering this board returns it to the dashboard",
-        "cancel": "Cancel",
-        "recover-board": "Recover board",
     },
     "auth": {
         "sign-up": {
