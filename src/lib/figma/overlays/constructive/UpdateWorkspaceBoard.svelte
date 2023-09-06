@@ -31,20 +31,20 @@
     <div class="flex flex-col gap-2">
         <InputField
             label={$_(
-                "overlay.constructive.edit-workspace-board.workspace-board-name"
+                "overlay.constructive.update-workspace-board.workspace-board-name"
             )}
             name="workspace-board-name"
             placeholder={$_(
-                "overlay.constructive.edit-workspace-board.enter-a-workspace-board-name"
+                "overlay.constructive.update-workspace-board.enter-a-workspace-board-name"
             )}
             style={{ kind: "field", inputType: "text" }}
             bind:value={title}
         />
         <InputField
             name="deadline"
-            label={$_("overlay.constructive.edit-workspace-board.deadline")}
+            label={$_("overlay.constructive.update-workspace-board.deadline")}
             placeholder={$_(
-                "overlay.constructive.edit-workspace-board.deadline"
+                "overlay.constructive.update-workspace-board.deadline"
             )}
             style={{ kind: "field", inputType: "date" }}
             bind:value={deadline}
@@ -59,7 +59,7 @@
             style={{ kind: "secondary" }}
             size="medium"
             color="blue"
-            label={$_("overlay.constructive.edit-workspace-board.cancel")}
+            label={$_("overlay.constructive.update-workspace-board.cancel")}
         />
         <Button
             action={{
@@ -68,7 +68,7 @@
             style={{ kind: "primary" }}
             size="medium"
             color="blue"
-            label={$_("overlay.constructive.edit-workspace-board.save")}
+            label={$_("overlay.constructive.update-workspace-board.save")}
         />
     </div>
 </form>

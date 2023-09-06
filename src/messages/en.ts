@@ -5,7 +5,7 @@ const messages: MessageCollection = {
     "overlay": {
         // TODO Put other constructive dialogs here
         constructive: {
-            "edit-workspace-board": {
+            "update-workspace-board": {
                 "title": "edit workspace board",
                 "workspace-board-name": "workspace board name",
                 "enter-a-workspace-board-name": "Enter a workspace board name",
