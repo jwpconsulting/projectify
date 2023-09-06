@@ -1,5 +1,7 @@
 * Features
 
+** Implement workspace board archive
+
 ** Figure out where we are with billing
    We spent a lot of time creating the thing in the backend. But does it work?
 
