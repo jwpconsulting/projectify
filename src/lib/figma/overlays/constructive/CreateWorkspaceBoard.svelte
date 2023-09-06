@@ -31,37 +31,42 @@
     }
 </script>
 
-<div class="flex flex-col gap-2">
-    <InputField
-        name="workspace-board-name"
-        label={$_("new-workspace-board.workspace-board-name")}
-        placeholder={$_("new-workspace-board.enter-a-workspace-board-name")}
-        style={{ kind: "field", inputType: "text" }}
-        bind:value={title}
-    />
-    <InputField
-        name="deadline"
-        label={$_("new-workspace-board.deadline")}
-        placeholder={$_("new-workspace-board.select-date")}
-        style={{ kind: "field", inputType: "text" }}
-    />
-</div>
-<div class="flex flex-row justify-center">
-    <Button
-        action={{
-            kind: "button",
-            action: rejectConstructiveOverlay,
-        }}
-        style={{ kind: "secondary" }}
-        size="medium"
-        color="blue"
-        label={$_("new-workspace-board.cancel")}
-    />
-    <Button
-        action={{ kind: "button", action: perform }}
-        style={{ kind: "primary" }}
-        size="medium"
-        color="blue"
-        label={$_("new-workspace-board.create-board")}
-    />
-</div>
+<form on:submit|preventDefault={perform}>
+    <input type="submit" class="hidden" />
+    <div class="flex flex-col gap-2">
+        <InputField
+            name="workspace-board-name"
+            label={$_("new-workspace-board.workspace-board-name")}
+            placeholder={$_(
+                "new-workspace-board.enter-a-workspace-board-name"
+            )}
+            style={{ kind: "field", inputType: "text" }}
+            bind:value={title}
+        />
+        <InputField
+            name="deadline"
+            label={$_("new-workspace-board.deadline")}
+            placeholder={$_("new-workspace-board.select-date")}
+            style={{ kind: "field", inputType: "text" }}
+        />
+    </div>
+    <div class="flex flex-row justify-center">
+        <Button
+            action={{
+                kind: "button",
+                action: rejectConstructiveOverlay,
+            }}
+            style={{ kind: "secondary" }}
+            size="medium"
+            color="blue"
+            label={$_("new-workspace-board.cancel")}
+        />
+        <Button
+            action={{ kind: "submit" }}
+            style={{ kind: "primary" }}
+            size="medium"
+            color="blue"
+            label={$_("new-workspace-board.create-board")}
+        />
+    </div>
+</form>
