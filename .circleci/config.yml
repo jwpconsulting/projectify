@@ -23,7 +23,7 @@ commands:
         steps:
             - checkout
             - restore_cache:
-                  keys: cache-{{ checksum "Pipfile-tools.lock" }}
+                  key: cache-{{ checksum "Pipfile-tools.lock" }}
             - run:
                   name: Install pipenv
                   command: pip3 install pipenv
