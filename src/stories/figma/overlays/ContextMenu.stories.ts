@@ -18,66 +18,66 @@ type Story = StoryObj<ContextMenu>;
 
 export const Profile: Story = {
     args: {
-        target: contextMenus.profile,
+        target: "profile",
     },
 };
 
 export const Workspace: Story = {
     args: {
-        target: contextMenus.workspace,
+        target: "workspace",
     },
 };
 
 export const SideNav: Story = {
     args: {
-        target: contextMenus.sideNav,
+        target: "sideNav",
     },
 };
 
 export const WorkspaceBoard: Story = {
     args: {
-        target: contextMenus.workspaceBoard,
+        target: "workspaceBoard",
     },
 };
 
 export const WorkspaceBoardSection: Story = {
     args: {
-        target: contextMenus.workspaceBoardSection,
+        target: "workspaceBoardSection",
     },
 };
 
 export const TaskDashboard: Story = {
     args: {
-        target: contextMenus.taskDashboard,
+        target: "taskDashboard",
     },
 };
 
 export const Task: Story = {
     args: {
-        target: contextMenus.task,
+        target: "task",
     },
 };
 
 export const Help: Story = {
     args: {
-        target: contextMenus.help,
+        target: "help",
     },
 };
 
 export const Permissions: Story = {
     args: {
-        target: contextMenus.permissions,
+        target: "permissions",
     },
 };
 
 export const UpdateMember: Story = {
     args: {
-        target: contextMenus.updateMember,
+        target: "updateMember",
     },
 };
 
 export const UpdateLabel: Story = {
     args: {
-        target: contextMenus.updateLabel,
+        target: "updateLabel",
     },
 };
