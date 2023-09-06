@@ -1,6 +1,55 @@
 * Features
 
-** Localstore remember
+** Figure out where we are with billing
+   We spent a lot of time creating the thing in the backend. But does it work?
+
+   A customer isn't automatically created, it seems.
+
+** Implement member edit screen in workspace settings
+   The scaffolding is there, but it doesn't work
+
+   Some features
+
+   *** Filter by roles
+   *** Job title assignment
+   *** Invite new members
+   *** Search member
+
+** Add action complete notifications
+   Here I list some of the possible ones we can add
+
+   *** Created / updated / deleted task
+   *** Assigned / Unassigned user to task
+   *** Assigned / Unassigned label to task
+   *** Created / updated / deleted label
+   *** Created / updated / deleted workspace board
+   *** Created / updated / deleted workspace board section
+
+** Hamburger menu should always allow me to go back to dashboard
+   If I open the hamburger menu from my profile page or workspace settings, I
+   can't get back to the dashboard. Actually, I can't get back to the dashboard
+   from anywhere.
+
+** Show side nav in new task page
+
+** Implement description rich text area for tasks
+
+** Allow assigning due date directly from create task page
+
+** Allow assigning labels directly from create task page
+
+** Allow assigning assignee directly from create task page
+
+** Merge read and update task page
+
+** Allow adding and updating deadline to ws board
+
+** Edit labels after clicking edit label pencil button in side nav
+
+** Add sub task CRUD in frontend back
+
+** DONE Localstore remember
+   CLOSED: [2023-09-06 Wed 10:01]
    Remember with sidenav menus have been open and not in localstorage
 
 ** DONE Date picker
@@ -23,11 +72,19 @@
    corporations and their need to moderate what they deem are undesirable
    opinions. Word. Make things personal and respectful.
 
-* Unfinished
-
-** Reintegrate mobile menu overlay as proper overlay (whatever that means)
-
 * Bug
+
+** Create ws board section button is too far down
+   It looks like it sticks to the bottom relative to the side nav?
+
+** With an expanded side nav, the dashboard looks buggy on narrow screens
+   It's better if we just add overflow-x-auto here
+
+** On first page load, mobile menu not accessible
+   When going to landing ~/~, clicking on the hamburger button doesn't
+   immediately open up the mobile menu. It seems like initializing the JS takes
+   some time. If some JS is required to be able to operate this button, then it
+   should not be shown at all.
 
 ** DONE Mobile menu overlay not closing consistently
    CLOSED: [2023-08-31 Thu 10:42]
@@ -59,7 +116,8 @@
 ** dashboard/task/uuid does not support refetching
    Is this still a bug? Justus <2023-05-01>
 
-** Overlay form submit
+** DONE Overlay form submit
+   CLOSED: [2023-09-06 Wed 10:02]
    Add new workspace board section overlay does not react well when pressing
    enter.
    Justus <2023-05-01>
@@ -69,11 +127,25 @@
    100 % for tasks with no sub tasks.
    Justus <2023-05-01>
 
-** Clicking cancel doesn't do anything in the constructive overlays
+** DONE Clicking cancel doesn't do anything in the constructive overlays
+   CLOSED: [2023-09-06 Wed 10:03]
+   Overlays are now rejected properly
 
 ** It would be nice to show login after attempting to fetch user
+   What does this mean? <2023-09-06 Wed>
 
 ** Fix storybook svelte kit goto import issue
+   It might be good to wait for a fix from the storybook svelte plugin. On the
+   other hand, we are now using our own goto() wrapper, so perhaps we can
+   consider this partially solved.
+
+* Accessiblity
+
+** Overlays use should <dialog /> like accessibility features
+   <2023-09-06 Wed>
+   The problem is that right now Overlays leave the background usable / focusable
+   Surely we can fix this using something
+   [[like this][https://www.npmjs.com/package/a11y-dialog]]
 
 * Refactor
 
@@ -154,13 +226,16 @@
    Reintroduce calling the store from lib/figma components instead of module
    construct
 
-** Better business object stores
-  Create a store factory for self-refreshing task / ws / ws board entities,
+** DONE Better business object stores
+   CLOSED: [2023-09-06 Wed 10:06]
+   Create a store factory for self-refreshing task / ws / ws board entities,
    then
 
-  1. Perform initial load in page ts, so that a page can definitely be rendered
-     with a entity instance,
-  2. Continuously reassign $entity to page data so it stays fresh.
+   1. Perform initial load in page ts, so that a page can definitely be rendered
+      with a entity instance,
+   2. Continuously reassign $entity to page data so it stays fresh.
+
+   Done as part of the wsSubscription refactor. It now uses our own store.
 
 ** A label should have title/description, not name
 
@@ -177,7 +252,10 @@
 
 ** Consider introducing shellcheck
 
-** Warn about unused variables (possible just in svelte files)
+** DONE Warn about unused variables (possible just in svelte files)
+   CLOSED: [2023-09-06 Wed 10:07]
+
+   We are using knip now
 
 * DONE The drop down in user assignment does not indicate the current
   assignee
