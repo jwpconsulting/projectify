@@ -18,8 +18,8 @@ commands:
             - restore_cache:
                   key: npm-cache-v1-{{ checksum "package-lock.json" }}
             - run:
-                  name: npm ci
-                  command: npm ci
+                  name: npm install
+                  command: npm install
     install_python_dependencies:
         description: Install pipenv
         steps:
