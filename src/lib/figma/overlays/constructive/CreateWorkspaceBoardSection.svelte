@@ -31,6 +31,7 @@
 </script>
 
 <form on:submit|preventDefault={perform}>
+    <input type="submit" class="hidden" />
     <div class="flex flex-col gap-2">
         <InputField
             name="workspace-board-name"
@@ -41,7 +42,6 @@
         />
     </div>
     <div class="flex flex-row justify-center">
-        <input type="submit" class="hidden" />
         <Button
             action={{ kind: "button", action: rejectConstructiveOverlay }}
             style={{ kind: "secondary" }}
