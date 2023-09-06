@@ -76,6 +76,11 @@
 
 * Bug
 
+** Buttons have irregular growth behavior
+   Inside flex, it goes wild! There is a hacky grow parameter inside there,
+   but it doesn't help much. To see where it goes wrong, look at the
+   constructive overlays.
+
 ** Create ws board section button is too far down
    It looks like it sticks to the bottom relative to the side nav?
 
