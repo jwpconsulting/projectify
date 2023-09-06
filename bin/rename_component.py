@@ -222,6 +222,14 @@ def _destructive(ctx: ReplacementContext) -> List[FileDiff]:
     try:
         subprocess.run(FIX, check=True)
         subprocess.run(CHECK, check=True)
+    except subprocess.CalledProcessError:
+        click.echo(
+            click.style("CHECK failed, trying FIX one more time", fg="red")
+        )
+        subprocess.run(FIX, check=True)
+
+    try:
+        subprocess.run(CHECK, check=True)
     except subprocess.CalledProcessError as e:
         raise CheckError(e, diffs)
 
