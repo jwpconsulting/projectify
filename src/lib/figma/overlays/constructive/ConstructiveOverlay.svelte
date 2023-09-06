@@ -1,10 +1,10 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
+    import CreateWorkspaceBoard from "$lib/figma/overlays/constructive/CreateWorkspaceBoard.svelte";
     import InviteMember from "$lib/figma/overlays/constructive/InviteMember.svelte";
     import InviteMemberError from "$lib/figma/overlays/constructive/InviteMemberError.svelte";
     import NewWorkspace from "$lib/figma/overlays/constructive/NewWorkspace.svelte";
-    import NewWorkspaceBoard from "$lib/figma/overlays/constructive/NewWorkspaceBoard.svelte";
     import NewWorkspaceBoardSection from "$lib/figma/overlays/constructive/NewWorkspaceBoardSection.svelte";
     import RecoverWorkspaceBoard from "$lib/figma/overlays/constructive/RecoverWorkspaceBoard.svelte";
     import SkipOnboarding from "$lib/figma/overlays/constructive/SkipOnboarding.svelte";
@@ -32,7 +32,7 @@
         {#if target.kind === "updateWorkspaceBoard"}
             <UpdateWorkspaceBoard workspaceBoard={target.workspaceBoard} />
         {:else if target.kind === "createWorkspaceBoard"}
-            <NewWorkspaceBoard workspace={target.workspace} />
+            <CreateWorkspaceBoard workspace={target.workspace} />
         {:else if target.kind === "inviteTeamMembers"}
             <InviteMember workspace={target.workspace} />
         {:else if target.kind === "inviteTeamMembersNoSeatsLeft"}
