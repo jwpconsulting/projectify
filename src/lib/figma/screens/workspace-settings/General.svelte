@@ -4,7 +4,7 @@
     import vars from "$lib/env";
 
     import UploadAvatar from "$lib/figma/buttons/UploadAvatar.svelte";
-    import WorkspaceSettingsPage from "$lib/figma/screens/workspace-settings/WorkspaceSettingsPage.svelte";
+    import Layout from "$lib/figma/screens/workspace-settings/Layout.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { updateWorkspace } from "$lib/repository/workspace";
@@ -61,7 +61,7 @@
     }
 </script>
 
-<WorkspaceSettingsPage {workspace} activeSetting="index">
+<Layout {workspace} activeSetting="index">
     <form class="flex flex-col gap-6" on:submit={save} name="general">
         <div class="flex flex-col items-center">
             <div class="relative flex h-24 w-24 w-max flex-col">
@@ -135,4 +135,4 @@
             />
         </div>
     </form>
-</WorkspaceSettingsPage>
+</Layout>

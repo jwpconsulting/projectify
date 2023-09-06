@@ -4,10 +4,10 @@ import { workspace } from "$lib/storybook";
 
 import { activeSetting } from "./config";
 
-import WorkspaceSettingsPage from "$lib/figma/screens/workspace-settings/WorkspaceSettingsPage.svelte";
+import Layout from "$lib/figma/screens/workspace-settings/Layout.svelte";
 
-const meta: Meta<WorkspaceSettingsPage> = {
-    component: WorkspaceSettingsPage,
+const meta: Meta<Layout> = {
+    component: Layout,
     argTypes: {
         activeSetting,
     },
@@ -15,6 +15,6 @@ const meta: Meta<WorkspaceSettingsPage> = {
 };
 export default meta;
 
-type Story = StoryObj<WorkspaceSettingsPage>;
+type Story = StoryObj<Layout>;
 
 export const Default: Story = {};

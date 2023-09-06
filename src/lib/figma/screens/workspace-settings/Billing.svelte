@@ -1,7 +1,7 @@
 <script lang="ts">
     import { _, number } from "svelte-i18n";
 
-    import WorkspaceSettingsPage from "$lib/figma/screens/workspace-settings/WorkspaceSettingsPage.svelte";
+    import Layout from "$lib/figma/screens/workspace-settings/Layout.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import type { Customer } from "$lib/types/corporate";
     import type { Workspace } from "$lib/types/workspace";
@@ -10,7 +10,7 @@
     export let customer: Customer;
 </script>
 
-<WorkspaceSettingsPage {workspace} activeSetting="billing">
+<Layout {workspace} activeSetting="billing">
     <div class="flex flex-col gap-6 border-b border-border px-4 py-6">
         <dl class="flex flex-col gap-6 text-base text-base-content">
             <div>
@@ -56,4 +56,4 @@
             size="normal"
         />
     </div>
-</WorkspaceSettingsPage>
+</Layout>

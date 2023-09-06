@@ -1,8 +1,8 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
+    import Layout from "$lib/figma/screens/workspace-settings/Layout.svelte";
     import WorkspaceSettingsMemberCard from "$lib/figma/screens/workspace-settings/WorkspaceSettingsMemberCard.svelte";
-    import WorkspaceSettingsPage from "$lib/figma/screens/workspace-settings/WorkspaceSettingsPage.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { currentWorkspace } from "$lib/stores/dashboard";
@@ -19,7 +19,7 @@
     $: workspace = $currentWorkspace ?? workspace;
 </script>
 
-<WorkspaceSettingsPage {workspace} activeSetting="team-members">
+<Layout {workspace} activeSetting="team-members">
     <div class="flex flex-col gap-4">
         <InputField
             style={{ kind: "search" }}
@@ -63,4 +63,4 @@
     {:else}
         no workspace users
     {/if}
-</WorkspaceSettingsPage>
+</Layout>
