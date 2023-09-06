@@ -84,6 +84,9 @@ jobs:
         steps:
             - install_node_dependencies
             - run:
+                  name: Generate type information
+                  command: npm run sync-types
+            - run:
                   name: Run knip
                   command: npm run check:knip
     build:
