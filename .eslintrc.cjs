@@ -42,6 +42,11 @@ module.exports = {
         "storybook-static/*",
     ],
     settings: {
+        "import/ignore": [
+            // TODO revisit this at some point in the future
+            // Justus 2023-09-06
+            "@steeze-ui/heroicons.index.js",
+        ],
         "import/resolver": {
             typescript: {
                 project: "./tsconfig.json",
