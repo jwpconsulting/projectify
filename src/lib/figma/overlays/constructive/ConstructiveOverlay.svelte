@@ -6,6 +6,7 @@
     import CreateWorkspaceBoardSection from "$lib/figma/overlays/constructive/CreateWorkspaceBoardSection.svelte";
     import InviteMember from "$lib/figma/overlays/constructive/InviteMember.svelte";
     import InviteMemberError from "$lib/figma/overlays/constructive/InviteMemberError.svelte";
+    import Layout from "$lib/figma/overlays/constructive/Layout.svelte";
     import RecoverWorkspaceBoard from "$lib/figma/overlays/constructive/RecoverWorkspaceBoard.svelte";
     import SkipOnboarding from "$lib/figma/overlays/constructive/SkipOnboarding.svelte";
     import UpdateWorkspaceBoard from "$lib/figma/overlays/constructive/UpdateWorkspaceBoard.svelte";
@@ -34,11 +35,11 @@
     }[target.kind];
 </script>
 
-<div class="flex max-w-lg grow flex-col gap-10 rounded-lg bg-foreground p-8">
-    <div class="text-center text-3xl font-bold">
+<Layout>
+    <svelte:fragment slot="title">
         {title}
-    </div>
-    <form class="flex flex-col gap-8">
+    </svelte:fragment>>
+    <svelte:fragment slot="form">
         {#if target.kind === "updateWorkspaceBoard"}
             <UpdateWorkspaceBoard workspaceBoard={target.workspaceBoard} />
         {:else if target.kind === "createWorkspaceBoard"}
@@ -58,5 +59,5 @@
         {:else if target.kind === "recoverWorkspaceBoard"}
             <RecoverWorkspaceBoard workspaceBoard={target.workspaceBoard} />
         {/if}
-    </form>
-</div>
+    </svelte:fragment>
+</Layout>
