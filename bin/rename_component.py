@@ -44,7 +44,7 @@ class ReplacementInvocation:
     dst_cmp: str
 
 
-@dataclass
+@dataclass(kw_only=True, frozen=True)
 class ReplacementContext:
     """Store rename relevant context."""
 
@@ -58,7 +58,7 @@ class ReplacementContext:
     dst_component_name: str
 
 
-@dataclass
+@dataclass(kw_only=True, frozen=True)
 class FileDiff:
     """Contain the diff for one file."""
 
@@ -69,7 +69,7 @@ class FileDiff:
     diff: List[str]
 
 
-@dataclass
+@dataclass(kw_only=True, frozen=True)
 class DestructiveResult:
     """Return all changes as part of the destructive operation."""
 
