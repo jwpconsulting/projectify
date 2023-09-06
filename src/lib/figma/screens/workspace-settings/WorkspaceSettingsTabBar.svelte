@@ -11,7 +11,7 @@
     export let activeSetting: SettingKind;
 </script>
 
-<div class="flex flex-row">
+<div class="flex flex-row flex-wrap">
     <TabElement
         href={getSettingsUrl(workspace.uuid, "index")}
         label={$_("settings.general")}

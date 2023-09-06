@@ -517,6 +517,7 @@ const messages: MessageCollection = {
     "edit-section": "Edit Section",
     "logout": "Logout",
     "workspace-settings": {
+        title: "Workspace settings",
         general: {
             "title": "General",
             "save": "Save",
