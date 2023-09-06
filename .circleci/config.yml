@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+    cli: circleci/circleci-cli@0.1.9
 executors:
     node:
         docker:
@@ -47,6 +49,7 @@ jobs:
                   command: npm run check:svelte-check
     eslint:
         executor: node
+        parallelism: 8
         steps:
             - install_node_dependencies
             - save_cache:
@@ -57,8 +60,16 @@ jobs:
                   name: Generate type information
                   command: npm run sync-types
             - run:
-                  name: Run eslint
-                  command: npm run check:eslint:nocache
+                  name: Collect files to check
+                  command: |
+                      circleci tests glob "src/**/*.{ts,js,svelte}" | circleci tests split --split-by=timings > /tmp/files-to-check
+            - store_artifacts:
+                  path: /tmp/files-to-check
+                  destination: files-checked
+            - run:
+                  name: Run eslint (split)
+                  command: npm exec --package=eslint -- eslint $(cat /tmp/files-to-check)
+
     prettier:
         executor: node
         steps:
