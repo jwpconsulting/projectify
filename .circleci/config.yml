@@ -5,7 +5,7 @@ executors:
             - image: cimg/node:19.6.0
     python:
         docker:
-            - image: python:3.9.16
+            - image: python:3.11.4
               environment:
                   PIPENV_PIPFILE: Pipfile-tools
 commands:
