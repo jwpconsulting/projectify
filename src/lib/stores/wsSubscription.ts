@@ -63,7 +63,11 @@ function makeWsSubscriptionStore(url: string): WsSubscriptionStore {
     };
 }
 
-function getSubscriptionFor(url: string): WsSubscriptionStore {
+function getSubscriptionForCollection(
+    collection: string,
+    uuid: string
+): WsSubscriptionStore {
+    const url = `${vars.WS_ENDPOINT}/${collection}/${uuid}/`;
     const store = wsSubscriptionStores.get(url);
     if (store) {
         return store;
@@ -71,19 +75,6 @@ function getSubscriptionFor(url: string): WsSubscriptionStore {
     const newStore: WsSubscriptionStore = makeWsSubscriptionStore(url);
     wsSubscriptionStores.set(url, newStore);
     return newStore;
-}
-
-export function getSubscriptionForCollection(
-    collection: string,
-    uuid: string
-): WsSubscriptionStore {
-    let wsEndPoint = vars.WS_ENDPOINT;
-    if (wsEndPoint.startsWith("/ws")) {
-        wsEndPoint = `ws://${location.host}${wsEndPoint}`;
-    }
-    const wsURL = `${wsEndPoint}/${collection}/${uuid}/`;
-
-    return getSubscriptionFor(wsURL);
 }
 
 /* Subscribable WS Store
