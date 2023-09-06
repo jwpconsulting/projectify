@@ -11,6 +11,7 @@
     import { _ } from "svelte-i18n";
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
+    import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import { moveWorkspaceBoardSection } from "$lib/repository/workspace";
     import {
         toggleWorkspaceBoardSectionOpen,
@@ -80,67 +81,69 @@
     }
 </script>
 
-<ContextMenuButton
-    kind={{
-        kind: "button",
-        action: toggleWorkspaceBoardSectionOpen.bind(
-            null,
-            workspaceBoardSection.uuid
-        ),
-    }}
-    label={closed
-        ? $_("workspace-board-section-overlay.expand-section")
-        : $_("workspace-board-section-overlay.collapse-section")}
-    state="normal"
-    icon={closed ? Selector : X}
-/>
-{#if previousSection}
+<Layout>
     <ContextMenuButton
         kind={{
             kind: "button",
-            action: switchWithPreviousSection,
+            action: toggleWorkspaceBoardSectionOpen.bind(
+                null,
+                workspaceBoardSection.uuid
+            ),
         }}
-        label={$_("workspace-board-section-overlay.switch-previous")}
+        label={closed
+            ? $_("workspace-board-section-overlay.expand-section")
+            : $_("workspace-board-section-overlay.collapse-section")}
         state="normal"
-        icon={ArrowUp}
+        icon={closed ? Selector : X}
     />
-{/if}
-{#if nextSection}
+    {#if previousSection}
+        <ContextMenuButton
+            kind={{
+                kind: "button",
+                action: switchWithPreviousSection,
+            }}
+            label={$_("workspace-board-section-overlay.switch-previous")}
+            state="normal"
+            icon={ArrowUp}
+        />
+    {/if}
+    {#if nextSection}
+        <ContextMenuButton
+            kind={{
+                kind: "button",
+                action: switchWithNextSection,
+            }}
+            label={$_("workspace-board-section-overlay.switch-next")}
+            state="normal"
+            icon={ArrowDown}
+        />
+    {/if}
     <ContextMenuButton
         kind={{
             kind: "button",
-            action: switchWithNextSection,
+            action: () => console.error("edit section title not implemented"),
         }}
-        label={$_("workspace-board-section-overlay.switch-next")}
+        label={$_("workspace-board-section-overlay.edit-title")}
         state="normal"
-        icon={ArrowDown}
+        icon={Pencil}
     />
-{/if}
-<ContextMenuButton
-    kind={{
-        kind: "button",
-        action: () => console.error("edit section title not implemented"),
-    }}
-    label={$_("workspace-board-section-overlay.edit-title")}
-    state="normal"
-    icon={Pencil}
-/>
-<ContextMenuButton
-    kind={{
-        kind: "button",
-        action: () => console.error("add task not implemented"),
-    }}
-    label={$_("workspace-board-section-overlay.add-task")}
-    state="normal"
-    icon={Plus}
-/>
-<ContextMenuButton
-    kind={{
-        kind: "button",
-        action: () => console.error("delete section not implemented"),
-    }}
-    label={$_("workspace-board-section-overlay.delete-section")}
-    state="normal"
-    icon={Trash}
-    color="destructive"
-/>
+    <ContextMenuButton
+        kind={{
+            kind: "button",
+            action: () => console.error("add task not implemented"),
+        }}
+        label={$_("workspace-board-section-overlay.add-task")}
+        state="normal"
+        icon={Plus}
+    />
+    <ContextMenuButton
+        kind={{
+            kind: "button",
+            action: () => console.error("delete section not implemented"),
+        }}
+        label={$_("workspace-board-section-overlay.delete-section")}
+        state="normal"
+        icon={Trash}
+        color="destructive"
+    />
+</Layout>

@@ -5,31 +5,34 @@
     import { getDashboardWorkspaceUrl } from "$lib/urls";
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
+    import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import { selectWorkspaceUuid } from "$lib/stores/dashboard";
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspaces: Workspace[];
 </script>
 
-{#each workspaces as workspace}
+<Layout>
+    {#each workspaces as workspace}
+        <ContextMenuButton
+            kind={{
+                kind: "a",
+                href: getDashboardWorkspaceUrl(workspace.uuid),
+                onInteract: () => selectWorkspaceUuid(workspace.uuid),
+            }}
+            label={workspace.title}
+            state="normal"
+            icon={Briefcase}
+        />
+    {/each}
     <ContextMenuButton
         kind={{
-            kind: "a",
-            href: getDashboardWorkspaceUrl(workspace.uuid),
-            onInteract: () => selectWorkspaceUuid(workspace.uuid),
+            kind: "button",
+            action: () => console.error("add new workspace not implemented"),
         }}
-        label={workspace.title}
+        label={$_("workspace-overlay.add-new-workspace")}
         state="normal"
-        icon={Briefcase}
+        color="primary"
+        icon={Plus}
     />
-{/each}
-<ContextMenuButton
-    kind={{
-        kind: "button",
-        action: () => console.error("add new workspace not implemented"),
-    }}
-    label={$_("workspace-overlay.add-new-workspace")}
-    state="normal"
-    color="primary"
-    icon={Plus}
-/>
+</Layout>

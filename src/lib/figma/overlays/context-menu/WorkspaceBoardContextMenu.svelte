@@ -3,6 +3,7 @@
     import { _ } from "svelte-i18n";
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
+    import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type { ConstructiveOverlayType } from "$lib/types/ui";
     import type { WorkspaceBoard } from "$lib/types/workspace";
@@ -23,21 +24,23 @@
     }
 </script>
 
-<ContextMenuButton
-    kind={{
-        kind: "button",
-        action: editBoard,
-    }}
-    label={$_("workspace-board-overlay.edit-board")}
-    state="normal"
-    icon={Pencil}
-/>
-<ContextMenuButton
-    kind={{
-        kind: "button",
-        action: archiveBoard,
-    }}
-    label={$_("workspace-board-overlay.archive-board")}
-    state="normal"
-    icon={Archive}
-/>
+<Layout>
+    <ContextMenuButton
+        kind={{
+            kind: "button",
+            action: editBoard,
+        }}
+        label={$_("workspace-board-overlay.edit-board")}
+        state="normal"
+        icon={Pencil}
+    />
+    <ContextMenuButton
+        kind={{
+            kind: "button",
+            action: archiveBoard,
+        }}
+        label={$_("workspace-board-overlay.archive-board")}
+        state="normal"
+        icon={Archive}
+    />
+</Layout>

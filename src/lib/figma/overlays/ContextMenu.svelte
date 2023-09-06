@@ -14,38 +14,34 @@
     export let target: ContextMenuType;
 </script>
 
-<div
-    class="flex w-60 flex-col rounded-lg border border-border bg-foreground py-2 shadow-context-menu"
->
-    {#if target.kind === "profile"}
-        <ProfileContextMenu />
-    {:else if target.kind === "workspace"}
-        <WorkspaceContextMenu workspaces={target.workspaces} />
-    {:else if target.kind === "sideNav"}
-        <SideNavContextMenu workspace={target.workspace} />
-    {:else if target.kind === "workspaceBoard"}
-        <WorkspaceBoardContextMenu workspaceBoard={target.workspaceBoard} />
-    {:else if target.kind === "workspaceBoardSection"}
-        <WorkspaceBoardSectionContextMenu
-            workspaceBoard={target.workspaceBoard}
-            workspaceBoardSection={target.workspaceBoardSection}
-        />
-    {:else if target.kind === "task"}
-        <TaskContextMenu
-            task={target.task}
-            location={target.location}
-            moveTaskModule={target.moveTaskModule}
-            workspaceBoardSection={target.workspaceBoardSection}
-        />
-    {:else if target.kind === "help"}
-        <HelpContextMenu />
-    {:else if target.kind === "permissions"}
-        <PermissionsContextMenu />
-    {:else if target.kind === "updateMember"}
-        <UpdateMemberOverlay
-            workspaceUserSearchModule={target.workspaceUserSearchModule}
-        />
-    {:else if target.kind === "updateLabel"}
-        <UpdateLabelOverlay labelSearchModule={target.labelSearchModule} />
-    {/if}
-</div>
+{#if target.kind === "profile"}
+    <ProfileContextMenu />
+{:else if target.kind === "workspace"}
+    <WorkspaceContextMenu workspaces={target.workspaces} />
+{:else if target.kind === "sideNav"}
+    <SideNavContextMenu workspace={target.workspace} />
+{:else if target.kind === "workspaceBoard"}
+    <WorkspaceBoardContextMenu workspaceBoard={target.workspaceBoard} />
+{:else if target.kind === "workspaceBoardSection"}
+    <WorkspaceBoardSectionContextMenu
+        workspaceBoard={target.workspaceBoard}
+        workspaceBoardSection={target.workspaceBoardSection}
+    />
+{:else if target.kind === "task"}
+    <TaskContextMenu
+        task={target.task}
+        location={target.location}
+        moveTaskModule={target.moveTaskModule}
+        workspaceBoardSection={target.workspaceBoardSection}
+    />
+{:else if target.kind === "help"}
+    <HelpContextMenu />
+{:else if target.kind === "permissions"}
+    <PermissionsContextMenu />
+{:else if target.kind === "updateMember"}
+    <UpdateMemberOverlay
+        workspaceUserSearchModule={target.workspaceUserSearchModule}
+    />
+{:else if target.kind === "updateLabel"}
+    <UpdateLabelOverlay labelSearchModule={target.labelSearchModule} />
+{/if}

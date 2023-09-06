@@ -30,25 +30,25 @@ export const Workspace: Story = {
 
 export const SideNav: Story = {
     args: {
-        target: "sideNav",
+        target: "side-nav",
     },
 };
 
 export const WorkspaceBoard: Story = {
     args: {
-        target: "workspaceBoard",
+        target: "workspace-board",
     },
 };
 
 export const WorkspaceBoardSection: Story = {
     args: {
-        target: "workspaceBoardSection",
+        target: "workspace-board-section",
     },
 };
 
 export const TaskDashboard: Story = {
     args: {
-        target: "taskDashboard",
+        target: "task-dashboard",
     },
 };
 
@@ -72,12 +72,12 @@ export const Permissions: Story = {
 
 export const UpdateMember: Story = {
     args: {
-        target: "updateMember",
+        target: "update-member",
     },
 };
 
 export const UpdateLabel: Story = {
     args: {
-        target: "updateLabel",
+        target: "update-label",
     },
 };

@@ -19,6 +19,7 @@
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
+    import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import { deleteTask } from "$lib/stores/dashboard";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
     import type { MoveTaskModule } from "$lib/types/stores";
@@ -38,76 +39,78 @@
     }
 </script>
 
-{#if location === "dashboard"}
-    <ContextMenuButton
-        kind={{
-            kind: "a",
-            href: getTaskUrl(task.uuid),
-        }}
-        label={$_("task-overlay.open-task")}
-        state="normal"
-        icon={ArrowsExpand}
-    />
-{/if}
-<SubMenuDropdown
-    on:click={() => console.error("move to section not implemented")}
-    label={$_("task-overlay.move-to-section")}
-    icon={SwitchVertical}
-/>
-{#if location === "dashboard"}
-    {#if moveTaskModule?.moveToTop}
+<Layout>
+    {#if location === "dashboard"}
         <ContextMenuButton
             kind={{
-                kind: "button",
-                action: moveTaskModule.moveToTop,
+                kind: "a",
+                href: getTaskUrl(task.uuid),
             }}
-            label={$_("task-overlay.move-to-top")}
+            label={$_("task-overlay.open-task")}
             state="normal"
-            icon={SortAscending}
+            icon={ArrowsExpand}
         />
     {/if}
-    {#if moveTaskModule?.moveToBottom}
-        <ContextMenuButton
-            kind={{
-                kind: "button",
-                action: moveTaskModule.moveToBottom,
-            }}
-            label={$_("task-overlay.move-to-bottom")}
-            state="normal"
-            icon={SortDescending}
-        />
+    <SubMenuDropdown
+        on:click={() => console.error("move to section not implemented")}
+        label={$_("task-overlay.move-to-section")}
+        icon={SwitchVertical}
+    />
+    {#if location === "dashboard"}
+        {#if moveTaskModule?.moveToTop}
+            <ContextMenuButton
+                kind={{
+                    kind: "button",
+                    action: moveTaskModule.moveToTop,
+                }}
+                label={$_("task-overlay.move-to-top")}
+                state="normal"
+                icon={SortAscending}
+            />
+        {/if}
+        {#if moveTaskModule?.moveToBottom}
+            <ContextMenuButton
+                kind={{
+                    kind: "button",
+                    action: moveTaskModule.moveToBottom,
+                }}
+                label={$_("task-overlay.move-to-bottom")}
+                state="normal"
+                icon={SortDescending}
+            />
+        {/if}
     {/if}
-{/if}
-<ContextMenuButton
-    kind={{
-        kind: "button",
-        action: copyToClipboard.bind(
-            null,
-            new URL(getTaskUrl(task.uuid), document.baseURI).href
-        ),
-    }}
-    label={$_("task-overlay.copy-link")}
-    state="normal"
-    icon={Duplicate}
-/>
-{#if location === "dashboard"}
     <ContextMenuButton
         kind={{
-            kind: "a",
-            href: getTaskUpdatesUrl(task.uuid),
+            kind: "button",
+            action: copyToClipboard.bind(
+                null,
+                new URL(getTaskUrl(task.uuid), document.baseURI).href
+            ),
         }}
-        label={$_("task-overlay.go-to-updates")}
+        label={$_("task-overlay.copy-link")}
         state="normal"
-        icon={ChatAlt}
+        icon={Duplicate}
     />
-{/if}
-<ContextMenuButton
-    kind={{
-        kind: "button",
-        action: promptDeleteTask,
-    }}
-    label={$_("task-overlay.delete-task")}
-    state="normal"
-    color="destructive"
-    icon={Trash}
-/>
+    {#if location === "dashboard"}
+        <ContextMenuButton
+            kind={{
+                kind: "a",
+                href: getTaskUpdatesUrl(task.uuid),
+            }}
+            label={$_("task-overlay.go-to-updates")}
+            state="normal"
+            icon={ChatAlt}
+        />
+    {/if}
+    <ContextMenuButton
+        kind={{
+            kind: "button",
+            action: promptDeleteTask,
+        }}
+        label={$_("task-overlay.delete-task")}
+        state="normal"
+        color="destructive"
+        icon={Trash}
+    />
+</Layout>
