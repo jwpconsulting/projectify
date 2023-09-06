@@ -1,6 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
+    import Layout from "$lib/figma/overlays/constructive/Layout.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { createWorkspaceBoardSection } from "$lib/repository/workspace";
@@ -17,7 +18,7 @@
 
     let title: string;
 
-    async function save() {
+    async function onSubmit() {
         const workspaceBoardSection: CreateWorkspaceBoardSection = {
             title: title,
             description: "",
@@ -30,39 +31,43 @@
     }
 </script>
 
-<form class="flex flex-col gap-8" on:submit|preventDefault={save}>
-    <input type="submit" class="hidden" />
-    <div class="flex flex-col gap-2">
-        <InputField
-            name="workspace-board-name"
-            label={$_(
-                "overlay.constructive.create-workspace-board-section.form.title.label"
-            )}
-            placeholder={$_(
-                "overlay.constructive.create-workspace-board-section.form.title.placeholder"
-            )}
-            style={{ kind: "field", inputType: "text" }}
-            bind:value={title}
-        />
-    </div>
-    <div class="flex flex-row justify-center">
-        <Button
-            action={{ kind: "button", action: rejectConstructiveOverlay }}
-            style={{ kind: "secondary" }}
-            size="medium"
-            color="blue"
-            label={$_(
-                "overlay.constructive.create-workspace-board-section.cancel"
-            )}
-        />
-        <Button
-            action={{ kind: "submit" }}
-            style={{ kind: "primary" }}
-            size="medium"
-            color="blue"
-            label={$_(
-                "overlay.constructive.create-workspace-board-section.create-section"
-            )}
-        />
-    </div>
-</form>
+<Layout {onSubmit}>
+    <svelte:fragment slot="title">
+        {$_("overlay.constructive.create-workspace-board-section.title")}
+    </svelte:fragment>
+    <svelte:fragment slot="form">
+        <div class="flex flex-col gap-2">
+            <InputField
+                name="workspace-board-name"
+                label={$_(
+                    "overlay.constructive.create-workspace-board-section.form.title.label"
+                )}
+                placeholder={$_(
+                    "overlay.constructive.create-workspace-board-section.form.title.placeholder"
+                )}
+                style={{ kind: "field", inputType: "text" }}
+                bind:value={title}
+            />
+        </div>
+        <div class="flex flex-row justify-center">
+            <Button
+                action={{ kind: "button", action: rejectConstructiveOverlay }}
+                style={{ kind: "secondary" }}
+                size="medium"
+                color="blue"
+                label={$_(
+                    "overlay.constructive.create-workspace-board-section.cancel"
+                )}
+            />
+            <Button
+                action={{ kind: "submit" }}
+                style={{ kind: "primary" }}
+                size="medium"
+                color="blue"
+                label={$_(
+                    "overlay.constructive.create-workspace-board-section.create-section"
+                )}
+            />
+        </div>
+    </svelte:fragment>
+</Layout>

@@ -1,6 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
+    import Layout from "$lib/figma/overlays/constructive/Layout.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { updateWorkspaceBoard } from "$lib/repository/workspace";
@@ -15,7 +16,7 @@
     let title = workspaceBoard.title;
     let deadline = workspaceBoard.deadline;
 
-    async function save() {
+    async function onSubmit() {
         const updatedWorkspaceBoard = {
             ...workspaceBoard,
             title,
@@ -26,51 +27,57 @@
     }
 </script>
 
-<form class="flex flex-col gap-8" on:submit|preventDefault={save}>
-    <input type="submit" class="hidden" />
-    <div class="flex flex-col gap-2">
-        <InputField
-            label={$_(
-                "overlay.constructive.update-workspace-board.form.title.label"
-            )}
-            name="workspace-board-name"
-            placeholder={$_(
-                "overlay.constructive.update-workspace-board.form.title.placeholder"
-            )}
-            style={{ kind: "field", inputType: "text" }}
-            bind:value={title}
-        />
-        <InputField
-            name="deadline"
-            label={$_(
-                "overlay.constructive.update-workspace-board.form.deadline.label"
-            )}
-            placeholder={$_(
-                "overlay.constructive.update-workspace-board.form.deadline.placeholder"
-            )}
-            style={{ kind: "field", inputType: "date" }}
-            bind:value={deadline}
-        />
-    </div>
-    <div class="flex flex-row justify-center">
-        <Button
-            action={{
-                kind: "button",
-                action: rejectConstructiveOverlay,
-            }}
-            style={{ kind: "secondary" }}
-            size="medium"
-            color="blue"
-            label={$_("overlay.constructive.update-workspace-board.cancel")}
-        />
-        <Button
-            action={{
-                kind: "submit",
-            }}
-            style={{ kind: "primary" }}
-            size="medium"
-            color="blue"
-            label={$_("overlay.constructive.update-workspace-board.save")}
-        />
-    </div>
-</form>
+<Layout {onSubmit}>
+    <svelte:fragment slot="title">
+        {$_("overlay.constructive.update-workspace-board.title")}
+    </svelte:fragment>
+    <svelte:fragment slot="form">
+        <div class="flex flex-col gap-2">
+            <InputField
+                label={$_(
+                    "overlay.constructive.update-workspace-board.form.title.label"
+                )}
+                name="workspace-board-name"
+                placeholder={$_(
+                    "overlay.constructive.update-workspace-board.form.title.placeholder"
+                )}
+                style={{ kind: "field", inputType: "text" }}
+                bind:value={title}
+            />
+            <InputField
+                name="deadline"
+                label={$_(
+                    "overlay.constructive.update-workspace-board.form.deadline.label"
+                )}
+                placeholder={$_(
+                    "overlay.constructive.update-workspace-board.form.deadline.placeholder"
+                )}
+                style={{ kind: "field", inputType: "date" }}
+                bind:value={deadline}
+            />
+        </div>
+        <div class="flex flex-row justify-center">
+            <Button
+                action={{
+                    kind: "button",
+                    action: rejectConstructiveOverlay,
+                }}
+                style={{ kind: "secondary" }}
+                size="medium"
+                color="blue"
+                label={$_(
+                    "overlay.constructive.update-workspace-board.cancel"
+                )}
+            />
+            <Button
+                action={{
+                    kind: "submit",
+                }}
+                style={{ kind: "primary" }}
+                size="medium"
+                color="blue"
+                label={$_("overlay.constructive.update-workspace-board.save")}
+            />
+        </div>
+    </svelte:fragment>
+</Layout>
