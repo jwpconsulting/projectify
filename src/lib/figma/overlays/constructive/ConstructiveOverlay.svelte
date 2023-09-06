@@ -1,10 +1,10 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
+    import CreateWorkspace from "$lib/figma/overlays/constructive/CreateWorkspace.svelte";
     import CreateWorkspaceBoard from "$lib/figma/overlays/constructive/CreateWorkspaceBoard.svelte";
     import InviteMember from "$lib/figma/overlays/constructive/InviteMember.svelte";
     import InviteMemberError from "$lib/figma/overlays/constructive/InviteMemberError.svelte";
-    import NewWorkspace from "$lib/figma/overlays/constructive/NewWorkspace.svelte";
     import NewWorkspaceBoardSection from "$lib/figma/overlays/constructive/NewWorkspaceBoardSection.svelte";
     import RecoverWorkspaceBoard from "$lib/figma/overlays/constructive/RecoverWorkspaceBoard.svelte";
     import SkipOnboarding from "$lib/figma/overlays/constructive/SkipOnboarding.svelte";
@@ -40,7 +40,7 @@
         {:else if target.kind === "createWorkspaceBoardSection"}
             <NewWorkspaceBoardSection workspaceBoard={target.workspaceBoard} />
         {:else if target.kind === "createWorkspace"}
-            <NewWorkspace />
+            <CreateWorkspace />
         {:else if target.kind === "skipOnboarding"}
             <SkipOnboarding />
         {:else if target.kind === "recoverWorkspaceBoard"}
