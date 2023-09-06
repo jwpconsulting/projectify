@@ -161,7 +161,7 @@ const task2: Task = {
     sub_tasks: [],
 };
 
-export const newTask: NewTask = {
+const newTask: NewTask = {
     workspace_board_section: {
         title: "section name that is long",
         created: "",
