@@ -32,6 +32,8 @@ const meta: Meta<FilterUser> = {
         active: true,
         count: "no-tasks-assigned",
         workspaceUserSelectionInput: workspaceUserSelectionInputs[2],
+        onSelect: console.error,
+        onDeselect: console.error,
     },
 };
 export default meta;

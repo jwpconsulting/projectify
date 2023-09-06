@@ -8,6 +8,8 @@
     export let workspaceUserSearchModule: WorkspaceUserSearchModule;
     const { select, deselect, selected, tasksPerUser, search, searchResults } =
         workspaceUserSearchModule;
+
+    // TODO The whole above could be turned into a store
 </script>
 
 <div class="flex flex-col px-4 pb-4 pt-2">
@@ -26,8 +28,8 @@
         workspaceUserSelectionInput={{ kind: "unassigned" }}
         active={$selected.kind === "unassigned"}
         count={$tasksPerUser.unassigned}
-        on:select={() => select({ kind: "unassigned" })}
-        on:deselect={() => deselect({ kind: "unassigned" })}
+        onSelect={select}
+        onDeselect={deselect}
     />
     {#each $searchResults as workspaceUser (workspaceUser.uuid)}
         <FilterUser
@@ -39,16 +41,8 @@
                 ? $selected.workspaceUserUuids.has(workspaceUser.uuid)
                 : false}
             count={$tasksPerUser.assigned.get(workspaceUser.uuid)}
-            on:select={() =>
-                select({
-                    kind: "workspaceUser",
-                    workspaceUser,
-                })}
-            on:deselect={() =>
-                deselect({
-                    kind: "workspaceUser",
-                    workspaceUser,
-                })}
+            onSelect={select}
+            onDeselect={deselect}
         />
     {/each}
 </div>

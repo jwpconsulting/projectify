@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte";
     import { _ } from "svelte-i18n";
 
     import AvatarState from "$lib/figma/navigation/AvatarState.svelte";
@@ -11,16 +10,18 @@
     export let active: boolean;
     export let count: number | undefined;
 
-    $: showCount = active && count !== undefined;
+    export let onSelect: (input: WorkspaceUserSelectionInput) => void;
+    export let onDeselect: (input: WorkspaceUserSelectionInput) => void;
 
-    // TODO replace with callback props
-    const dispatch = createEventDispatcher();
+    $: showCount = count !== undefined;
+    $: hideCount = !active || count === undefined;
+
     function click() {
         active = !active;
         if (active) {
-            dispatch("select");
+            onSelect(workspaceUserSelectionInput);
         } else {
-            dispatch("deselect");
+            onDeselect(workspaceUserSelectionInput);
         }
     }
 </script>
@@ -65,9 +66,11 @@
         </div>
     </div>
     <div
-        class="shrink-0 flex-row items-center gap-2 rounded-2.5xl border-2 border-primary bg-foreground px-2 py-0.5 text-xs font-bold text-primary hover:flex group-hover:flex"
-        class:flex={showCount}
-        class:hidden={!showCount}
+        class="shrink-0 flex-row items-center gap-2 rounded-2.5xl border-2 border-primary bg-foreground px-2 py-0.5 text-xs font-bold text-primary {showCount
+            ? 'hover:flex group-hover:flex'
+            : ''}"
+        class:flex={active}
+        class:hidden={hideCount}
     >
         {count ?? ""}
     </div>

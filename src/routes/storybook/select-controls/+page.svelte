@@ -1,14 +1,7 @@
 <script lang="ts">
-    import {
-        falseTrue,
-        fc,
-        fr,
-        selectLabels,
-        workspaceUserSelectionInputs,
-    } from "$lib/storybook";
+    import { falseTrue, fc, fr, selectLabels } from "$lib/storybook";
 
     import FilterLabel from "$lib/figma/select-controls/FilterLabel.svelte";
-    import FilterUser from "$lib/figma/select-controls/FilterUser.svelte";
     import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
 </script>
 
@@ -27,23 +20,6 @@ Select label focus
             </div>
             {#each falseTrue as checked}
                 <SelectLabelCheckBox {label} {checked} />
-            {/each}
-        </div>
-    {/each}
-</div>
-
-Filter user
-<div class={fc}>
-    {#each workspaceUserSelectionInputs as workspaceUserSelectionInput}
-        <div class={fr}>
-            {#each falseTrue as active}
-                <div class="w-96">
-                    <FilterUser
-                        {workspaceUserSelectionInput}
-                        {active}
-                        count={125}
-                    />
-                </div>
             {/each}
         </div>
     {/each}
