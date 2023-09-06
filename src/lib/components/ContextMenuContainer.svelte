@@ -1,6 +1,8 @@
 <script lang="ts">
+    import focusLock from "dom-focus-lock";
     import { onMount } from "svelte";
 
+    import { browser } from "$app/environment";
     import ContextMenu from "$lib/figma/overlays/ContextMenu.svelte";
     import { closeContextMenu, contextMenuState } from "$lib/stores/globalUi";
     import type { ContextMenuState } from "$lib/types/ui";
@@ -10,18 +12,23 @@
     let repositioned = false;
 
     onMount(() => {
+        if (!browser) {
+            return undefined;
+        }
         const unsubscriber = contextMenuState.subscribe(
             ($contextMenuState) => {
+                if (!contextMenu) {
+                    throw new Error("Expected contextMenu");
+                }
                 if ($contextMenuState.kind === "visible") {
                     if (!resizeObserver) {
                         console.debug("resizeObserver not present");
                     }
-                    if (!contextMenu) {
-                        throw new Error("Expected contextMenu");
-                    }
+                    focusLock.on(contextMenu);
                     addObserver(contextMenu, $contextMenuState);
                     listenForEscape();
                 } else {
+                    focusLock.off(contextMenu);
                     resizeObserver = null;
                     repositioned = false;
                     stopListeningForEscape();
@@ -29,6 +36,11 @@
             }
         );
         return () => {
+            if (!contextMenu) {
+                console.warn("Expected contextMenu");
+            } else {
+                focusLock.off(contextMenu);
+            }
             unsubscriber();
             // Think about whether this one is necessary
             closeContextMenu();
