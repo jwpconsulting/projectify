@@ -2,7 +2,7 @@
     import { _ } from "svelte-i18n";
 
     import Layout from "$lib/figma/screens/workspace-settings/Layout.svelte";
-    import WorkspaceSettingsMemberCard from "$lib/figma/screens/workspace-settings/WorkspaceSettingsMemberCard.svelte";
+    import MemberCard from "$lib/figma/screens/workspace-settings/MemberCard.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { currentWorkspace } from "$lib/stores/dashboard";
@@ -57,7 +57,7 @@
                 </div>
             </div>
             {#each workspaceUsers as workspaceUser}
-                <WorkspaceSettingsMemberCard {workspaceUser} />
+                <MemberCard {workspaceUser} />
             {/each}
         </div>
     {:else}
