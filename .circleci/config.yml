@@ -93,6 +93,11 @@ jobs:
             - run:
                   name: Run build
                   command: npm run build
+            - run:
+                  name: Compress artifacts
+                  command: tar --create --verbose --gzip --file=build.tar.gz build
+            - store_artifacts:
+                  path: build.tar.gz
     pipenv_check:
         executor: python
         steps:
