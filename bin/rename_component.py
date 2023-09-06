@@ -36,20 +36,20 @@ GIT_APPLY = "git", "apply"
 GIT_APPLY_REVERSE = "git", "apply", "--reverse"
 
 
-@dataclass
+@dataclass(kw_only=True, frozen=True)
 class ReplacementInvocation:
     """Store all information needed for a single invocation."""
 
-    src_cmp: str
-    dst_cmp: str
+    src_cmp: pathlib.Path
+    dst_cmp: pathlib.Path
+    story: bool = True
 
 
 @dataclass(kw_only=True, frozen=True)
 class ReplacementContext:
     """Store rename relevant context."""
 
-    src_cmp: pathlib.Path
-    dst_cmp: pathlib.Path
+    args: ReplacementInvocation
     src_stories_path: pathlib.Path
     dst_stories_path: pathlib.Path
     src_lib_path: pathlib.Path
@@ -201,10 +201,15 @@ def make_msg_prefix(dst_lib_path: pathlib.Path) -> str:
 
 def _destructive(ctx: ReplacementContext) -> List[FileDiff]:
     diffs: List[FileDiff] = []
-    ctx.dst_cmp.parent.mkdir(parents=True, exist_ok=True)
-    shutil.move(ctx.src_cmp, ctx.dst_cmp)
-    ctx.dst_stories_path.parent.mkdir(parents=True, exist_ok=True)
-    shutil.move(ctx.src_stories_path, ctx.dst_stories_path)
+    ctx.args.dst_cmp.parent.mkdir(parents=True, exist_ok=True)
+    shutil.move(ctx.args.src_cmp, ctx.args.dst_cmp)
+    if ctx.args.story:
+        ctx.dst_stories_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(ctx.src_stories_path, ctx.dst_stories_path)
+    else:
+        click.echo(
+            click.style("Assuming that there was no story to move", fg="red")
+        )
 
     rename_candidates = list(
         itertools.chain.from_iterable(
@@ -246,8 +251,8 @@ def destructive(ctx: ReplacementContext) -> DestructiveResult:
         click.echo(f"Something went wrong: {e.exception}")
         attempt_cleanup(
             DestructiveResult(
-                deleted_file=ctx.src_cmp,
-                new_file=ctx.dst_cmp,
+                deleted_file=ctx.args.src_cmp,
+                new_file=ctx.args.dst_cmp,
                 deleted_stories_file=ctx.src_stories_path,
                 new_stories_file=ctx.dst_stories_path,
                 diffs=diffs,
@@ -255,8 +260,8 @@ def destructive(ctx: ReplacementContext) -> DestructiveResult:
         )
         raise e.exception
     return DestructiveResult(
-        deleted_file=ctx.src_cmp,
-        new_file=ctx.dst_cmp,
+        deleted_file=ctx.args.src_cmp,
+        new_file=ctx.args.dst_cmp,
         deleted_stories_file=ctx.src_stories_path,
         new_stories_file=ctx.dst_stories_path,
         diffs=diffs,
@@ -281,7 +286,7 @@ def main(args: ReplacementInvocation) -> None:
     dst_stories_path: pathlib.Path = (
         src_stories_prefix / dst_cmp.relative_to(component_lib_path)
     ).with_suffix(stories_suffix)
-    if not src_stories_path.exists():
+    if args.story and not src_stories_path.exists():
         if dst_stories_path.exists():
             click.echo(
                 f"A stories file was found at {dst_stories_path}. "
@@ -294,14 +299,13 @@ def main(args: ReplacementInvocation) -> None:
         )
 
     ctx = ReplacementContext(
-        src_cmp=src_cmp,
-        dst_cmp=dst_cmp,
-        src_lib_path=src_cmp.relative_to(src),
-        dst_lib_path=dst_cmp.relative_to(src),
+        args=args,
+        src_lib_path=args.src_cmp.relative_to(src),
+        dst_lib_path=args.dst_cmp.relative_to(src),
         src_stories_path=src_stories_path,
         dst_stories_path=dst_stories_path,
         src_component_name=src_cmp.stem,
-        dst_component_name=dst_cmp.stem,
+        dst_component_name=args.dst_cmp.stem,
     )
 
     destructive_result = destructive(ctx)
@@ -321,14 +325,18 @@ def cli() -> None:
 
 
 @cli.command()
-@click.argument("src_cmp", type=click.Path(exists=True))
-@click.argument("dst_cmp", type=click.Path())
-def single(src_cmp: str, dst_cmp: str) -> None:
+@click.argument(
+    "src_cmp", type=click.Path(exists=True, path_type=pathlib.Path)
+)
+@click.argument("dst_cmp", type=click.Path(path_type=pathlib.Path))
+@click.option("--story/--no-story", default=True)
+def single(src_cmp: pathlib.Path, dst_cmp: pathlib.Path, story: bool) -> None:
     """Do a single run."""
     main(
         ReplacementInvocation(
             src_cmp=src_cmp,
             dst_cmp=dst_cmp,
+            story=story,
         )
     )
 
@@ -345,8 +353,8 @@ def multiple(csv_path: str) -> None:
     for row in reader:
         todo.append(
             ReplacementInvocation(
-                src_cmp=row["src_cmp"],
-                dst_cmp=row["dst_cmp"],
+                src_cmp=pathlib.Path(row["src_cmp"]),
+                dst_cmp=pathlib.Path(row["dst_cmp"]),
             )
         )
     for t in todo:
