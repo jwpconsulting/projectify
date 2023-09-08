@@ -16,8 +16,9 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 
 ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split(",")
 
-# Want forever-cacheable files and compression support? Just add this to your settings.py:
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STORAGES["staticfiles"][
+    "BACKEND"
+] = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 FRONTEND_URL = os.environ["FRONTEND_URL"]
 
@@ -51,11 +52,7 @@ CSRF_TRUSTED_ORIGINS = (
 GRAPHIQL_ENABLE = False
 
 # Cloudinary
-STORAGES = {
-    "default": {
-        "BACKEND": MEDIA_CLOUDINARY_STORAGE,
-    },
-}
+STORAGES["default"]["BACKEND"] = MEDIA_CLOUDINARY_STORAGE
 
 # Disable CSRF protection
 csrf_middleware = "django.middleware.csrf.CsrfViewMiddleware"
