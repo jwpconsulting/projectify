@@ -26,9 +26,9 @@ STRIPE_ENDPOINT_SECRET = "null"
 # Copy static files storage from production settings to test
 # collectstatic
 if "TEST_STATICFILES_STORAGE" in environ:
-    STATICFILES_STORAGE = (
-        "whitenoise.storage.CompressedManifestStaticFilesStorage"
-    )
+    STORAGES["staticfiles"][
+        "BACKEND"
+    ] = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Celery
 CELERY_BROKER_URL = "memory://"

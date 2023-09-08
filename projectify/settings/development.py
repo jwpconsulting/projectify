@@ -27,11 +27,7 @@ GRAPHIQL_ENABLE = True
 
 # Media
 SERVE_MEDIA = True
-STORAGES = {
-    "default": {
-        "BACKEND": "projectify.storage.LocalhostStorage",
-    },
-}
+STORAGES["default"]["BACKEND"] = "projectify.storage.LocalhostStorage"
 
 # Stripe
 STRIPE_PUBLISHABLE_KEY = os.environ["STRIPE_PUBLISHABLE_KEY"]
