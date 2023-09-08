@@ -51,7 +51,11 @@ CSRF_TRUSTED_ORIGINS = (
 GRAPHIQL_ENABLE = False
 
 # Cloudinary
-DEFAULT_FILE_STORAGE = MEDIA_CLOUDINARY_STORAGE
+STORAGES = {
+    "default": {
+        "BACKEND": MEDIA_CLOUDINARY_STORAGE,
+    },
+}
 
 # Disable CSRF protection
 csrf_middleware = "django.middleware.csrf.CsrfViewMiddleware"

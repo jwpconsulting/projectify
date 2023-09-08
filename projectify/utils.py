@@ -23,7 +23,8 @@ def crop_image(
     """Crop an image using cloudinary's API, if available."""
     if not image:
         return None
-    if settings.DEFAULT_FILE_STORAGE != settings.MEDIA_CLOUDINARY_STORAGE:
+    backend = settings.STORAGES["default"]["BACKEND"]
+    if backend != settings.MEDIA_CLOUDINARY_STORAGE:
         return image.url
     cloudinary_image = CloudinaryImage(image.name)
     url: str = cloudinary_image.build_url(

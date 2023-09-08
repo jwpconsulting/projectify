@@ -44,7 +44,12 @@ class TestCropImage:
         settings: Any,
     ) -> None:
         """Test with cloudinary file storage."""
-        settings.DEFAULT_FILE_STORAGE = settings.MEDIA_CLOUDINARY_STORAGE
+        settings.STORAGES = {
+            "default": {
+                "BACKEND": settings.MEDIA_CLOUDINARY_STORAGE,
+            },
+        }
+
         url = utils.crop_image(image, 100, 100, cloud_name="bbbbbbbbb")
         assert url == (
             "https://res.cloudinary.com/bbbbbbbbb"
