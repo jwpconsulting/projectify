@@ -57,7 +57,7 @@ class Workspace:
         for invite in qs.iterator():
             # workspace/schema/types.py:58: error: Unexpected keyword argument "email" for "UserInvitation"  [call-arg]
             # Why??? XXX Justus 2023-09-08
-            i = UserInvitation(email=invite.user_invite.email)  # type: ignore
+            i = UserInvitation(email=invite.user_invite.email)
             invites.append(i)
         return invites
 
