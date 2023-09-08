@@ -32,6 +32,9 @@ class RequestContext:
     META: dict[str, str]
 
 
+# projectify/views.py:35: error: Missing type parameters for generic type "GraphQLView"  [type-arg]
+# Why? XXX Justus 2023-09-08
+# class GraphQLView(views.GraphQLView):  # type: ignore
 class GraphQLView(views.GraphQLView):
     """Default GraphQLView override."""
 
