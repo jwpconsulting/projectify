@@ -55,7 +55,9 @@ class Workspace:
         invites = []
         qs = self.workspaceuserinvite_set.filter_by_redeemed(False)
         for invite in qs.iterator():
-            i = UserInvitation(email=invite.user_invite.email)  # type:ignore
+            # workspace/schema/types.py:58: error: Unexpected keyword argument "email" for "UserInvitation"  [call-arg]
+            # Why??? XXX Justus 2023-09-08
+            i = UserInvitation(email=invite.user_invite.email)  # type: ignore
             invites.append(i)
         return invites
 
