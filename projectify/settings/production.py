@@ -7,10 +7,7 @@ from .base import *
 
 # Redis URL
 # Heroku unsets REDIS_TLS_URL when migrating to premium redis
-if "REDIS_TLS_URL" not in os.environ:
-    REDIS_TLS_URL = os.environ["REDIS_URL"]
-else:
-    REDIS_TLS_URL = os.environ["REDIS_TLS_URL"]
+REDIS_TLS_URL = os.environ.get("REDIS_TLS_URL", os.environ["REDIS_URL"])
 
 SECRET_KEY = os.environ["SECRET_KEY"]
 
@@ -79,10 +76,12 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": {
-                "address": REDIS_TLS_URL,
-                "ssl_cert_reqs": None,
-            },
+            "hosts": [
+                {
+                    "address": REDIS_TLS_URL,
+                    "ssl_cert_reqs": None,
+                }
+            ],
             "symmetric_encryption_keys": [SECRET_KEY],
         },
     },
