@@ -1,3 +1,4 @@
 .env
 projectify/media/
 projectify/staticfiles/
+__pycache__
