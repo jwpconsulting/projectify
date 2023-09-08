@@ -56,6 +56,12 @@ jobs:
       - run:
           name: Poetry check
           command: poetry check
+      - run:
+          name: Create requirements.txt
+          command: poetry export --format requirements.txt --output requirements.txt
+      - run:
+          name: Check if requirements.txt up to date
+          command: git diff --exit-code HEAD -- requirements.txt
   lint:
     executor: python
     steps:
