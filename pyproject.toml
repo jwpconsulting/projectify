@@ -99,12 +99,10 @@ django-anymail = {extras = ["mailgun"], version = "~8.6"}
 django-celery-results = "~2.4.0"
 django-cloudinary-storage = "~0.3.0"
 django-cors-headers = "~3.13.0"
-django-debug-toolbar = "~3.5.0"
 django-extensions = "~3.2.0"
 django-ordered-model = "~3.6"
 django-pgtrigger = "~2.4.1"
 djangorestframework = "~3.14.0"
-factory-boy = "~3.2.1"
 gunicorn = "~20.1.0"
 newrelic = "~8.0"
 pillow = "~9.3.0"
@@ -116,10 +114,23 @@ rules = "~3.3"
 strawberry-graphql = "~0.205.0"
 strawberry-graphql-django = "~0.16.1"
 stripe = "~3.5.0"
-tqdm = "~4.64.0"
 uvicorn = "~0.17.6"
 websockets = "~10.3"
 whitenoise = "~6.2.0"
+
+# Might be worth using seeddb without factory-boy and tqdm, IDK
+factory-boy = "~3.2.1"
+tqdm = "~4.64.0"
+# v Looks like a candidate to be moved over to dev dependencies
+django-debug-toolbar = "~3.5.0"
+
+# Strictly only used for local development
+[tool.poetry.group.dev]
+
+[tool.poetry.group.dev.dependencies]
+ipython = "~8.10.0"
+pdbpp = "~0.10.3"
+pyright = "~1.1.318"
 
 [tool.poetry.group.test]
 
@@ -131,11 +142,8 @@ flake8 = "~4.0.1"
 flake8-black = "~0.3.3"
 flake8-docstrings = "~1.6.0"
 flake8-isort = "~4.1.1"
-ipython = "~8.10.0"
 isort = "~5.10.1"
 mypy = "~1.4.1"
-pdbpp = "~0.10.3"
-pyright = "~1.1.318"
 pytest = "~7.2.1"
 pytest-asyncio = "~0.20.3"
 pytest-celery = "~0.0.0"
@@ -144,7 +152,6 @@ pytest-xdist = {extras = ["psutil"], version = "~3.3.1"}
 types-redis = "~4.6.0.5"
 types-stripe = "~3.5.2.14"
 types-tqdm = "~4.66.0.2"
-
 
 [build-system]
 requires = ["poetry-core"]
