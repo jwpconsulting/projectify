@@ -2,12 +2,12 @@
 
 # Requirements
 
-- Python 3.11
-- pipenv
+- Python 3.11 (I recommend using [asdf](https://asdf-vm.com/))
+- [poetry](https://python-poetry.org/docs/)
 - PostgreSQL
 - Redis (6 >= for production)
 
-## Debian 11 (bullseye) installation
+## Debian 12 (bullseye) installation
 
 Make sure you have Postgres 13 and its dev library installed.
 
@@ -19,7 +19,8 @@ Managing Python is convenient using asdf:
 
 ```
 asdf plugin-add python
-asdf install python 3.10.9
+# This is the version used at the time of writing, subject to change
+asdf install python 3.11.4
 ```
 
 # Quickstart
@@ -27,8 +28,8 @@ asdf install python 3.10.9
 ```
 git clone git@github.com:jwp-consulting/projectify-backend.git
 cd projectify-backend
-pipenv install --dev
-pipenv shell
+poetry install --with dev --with test
+poetry shell
 cp .env.template .env
 vim .env
 # Edit DATABASE_URL
@@ -42,6 +43,12 @@ createdb projectify
 To run a celery worker:
 
 `celery -A projectify worker -c 1`
+
+To run neovim with the correct pyright:
+
+```
+poetry run nvim
+```
 
 # Production Environment Variables
 
