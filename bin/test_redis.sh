@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-pipenv run pytest \
+poetry run pytest \
     -x \
     --pdb \
     --ds=projectify.settings.test_redis \

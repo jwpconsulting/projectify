@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
 set -e
-export PIPENV_DOTENV_LOCATION=.env.test
+export DJANGO_SETTINGS_MODULE=projectify.settings.test
 export TEST_STATICFILES_STORAGE=
-pipenv run ./manage.py collectstatic --noinput
+poetry run ./manage.py collectstatic --noinput
