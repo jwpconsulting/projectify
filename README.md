@@ -64,6 +64,17 @@ poetry run nvim
 - `STRIPE_PRICE_OBJECT`
 - `STRIPE_ENDPOINT_SECRET`
 
+# Updating poetry dependencies
+
+When updating a package installed by poetry, make sure to recreate and check in
+requirements.txt by running
+
+```
+bin/update-requirements
+git add requirements.txt
+# Maybe git commit here
+```
+
 # Postgres troubleshooting
 
 > psql: error: FATAL:  role "$USER" does not exist
