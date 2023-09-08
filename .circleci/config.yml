@@ -104,11 +104,11 @@ jobs:
             circleci tests glob "*/test/test_*.py" "*/test/*/test_*.py" | circleci tests split --split-by=timings > /tmp/tests-to-run
       - run:
           name: Run pytest
-          command: poetry run pytest --junitxml=junit/pytest.xml $(cat /tmp/tests-to-run)
+          command: poetry run pytest --junitxml=test-results/junit.xml $(cat /tmp/tests-to-run)
       - store_test_results:
-          path: junit/
+          path: test-results
       - store_artifacts:
-          path: junit/
+          path: test-results
   seeddb:
     executor: python_and_postgres
     steps:
