@@ -25,36 +25,7 @@ known_first_party = ["user"]
 mypy_path = [
     "mypy/stubs",
 ]
-# https://mypy.readthedocs.io/en/stable/existing_code.html#introduce-stricter-options
-# Start off with these - done!
-warn_unused_configs = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-
-# Getting these passing should be easy - done!
-strict_equality = true
-strict_concatenate = true
-
-# Strongly recommend enabling this one as soon as you can - done!
-check_untyped_defs = true
-
-# These shouldn't be too much additional work, but may be tricky to
-# get passing if you use a lot of untyped libraries - done, sort of!
-disallow_untyped_decorators = true
-disallow_subclassing_any = true
-disallow_any_generics = true
-
-# These next few are various gradations of forcing use of type annotations
-# done!
-disallow_untyped_calls = true
-disallow_incomplete_defs = true
-disallow_untyped_defs = true
-
-# This one isn't too hard to get passing, but return on investment is lower
-no_implicit_reexport = true
-
-# This one can be tricky to get passing if you use a lot of untyped libraries
-warn_return_any = true
+strict = true
 
 # Library imports
 [[tool.mypy.overrides]]
