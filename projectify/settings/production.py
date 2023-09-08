@@ -1,5 +1,10 @@
 """Production settings."""
 import os
+import ssl
+
+from .. import (
+    redis_helper,
+)
 
 # flake8: noqa: F401, F403
 from .base import *
@@ -71,18 +76,22 @@ STRIPE_SECRET_KEY = os.environ["STRIPE_SECRET_KEY"]
 STRIPE_PRICE_OBJECT = os.environ["STRIPE_PRICE_OBJECT"]
 STRIPE_ENDPOINT_SECRET = os.environ["STRIPE_ENDPOINT_SECRET"]
 
-# Django Channels configuration
-# channels_redis
-# From:
-# https://github.com/django/channels_redis/blob/1e9b7387814f3c1dae5cab5034624e283f88b4bf/README.rst?plain=1#L76
+# REDIS
+# https://devcenter.heroku.com/articles/connecting-heroku-redis#connecting-in-python
+# Obviously, this isn't great
+# https://github.com/django/channels_redis/issues/235
+# https://github.com/django/channels_redis/pull/337
+redis_url = redis_helper.decode_redis_url(
+    os.environ["REDIS_TLS_URL"],
+)
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": {
-                "address": REDIS_TLS_URL,
-                "ssl_cert_reqs": None,
-            },
+            "hosts": [
+                redis_helper.make_channels_redis_host(redis_url),
+            ],
             "symmetric_encryption_keys": [SECRET_KEY],
         },
     },
