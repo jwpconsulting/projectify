@@ -22,64 +22,64 @@ executors:
 
 commands:
   install_dependencies:
-    description: Install pipenv
+    description: Install poetry
     steps:
-      - run:
-          name: Install pipenv
-          command: pip3 install pipenv
-      - run:
-          name: Install pip packages
-          command: pipenv sync --dev
-jobs:
-  pipenv_check:
-    executor: python
-    steps:
-      - checkout
       - restore_cache:
           keys:
-            - cache-{{ checksum "Pipfile.lock" }}
-      - install_dependencies
+            - poetry-cache-v1-{{ checksum "poetry.lock" }}
       - run:
-          name: Pipenv check
-          command: pipenv check
+          name: Create venv
+          command: python3 -m venv ~/.local/share/poetry
+      - run:
+          name: Install pip and setuptools
+          command: ~/.local/share/poetry/bin/pip install -U pip setuptools
+      - run:
+          name: Install poetry
+          command: ~/.local/share/poetry/bin/pip install poetry
+      - run:
+          name: Link poetry (XXX hack)
+          command: ln -sv ~/.local/share/poetry/bin/poetry /usr/local/bin
+      - run:
+          name: Install pip packages
+          command: poetry install --with test
       - save_cache:
-          key: cache-{{ checksum "Pipfile.lock" }}
+          key: poetry-cache-v1-{{ checksum "poetry.lock" }}
           paths:
             - ~/.local
             - ~/.cache
+jobs:
+  poetry_check:
+    executor: python
+    steps:
+      - checkout
+      - install_dependencies
+      - run:
+          name: Poetry check
+          command: poetry check
   lint:
     executor: python
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - cache-{{ checksum "Pipfile.lock" }}
       - install_dependencies
       - run:
           name: Run flake8
-          command: pipenv run flake8
+          command: poetry run flake8
   mypy:
     executor: python
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - cache-{{ checksum "Pipfile.lock" }}
       - install_dependencies
       - run:
           name: Run mypy
-          command: pipenv run mypy .
+          command: poetry run mypy .
   collectstatic:
     executor: python
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - cache-{{ checksum "Pipfile.lock" }}
       - install_dependencies
       - run:
           name: Run collectstatic
-          command: pipenv run ./manage.py collectstatic --noinput
+          command: poetry run ./manage.py collectstatic --noinput
           environment:
             TEST_STATICFILES_STORAGE:
   tests:
@@ -90,9 +90,6 @@ jobs:
       - run:
           name: Create junit folder
           command: mkdir junit
-      - restore_cache:
-          keys:
-            - cache-{{ checksum "Pipfile.lock" }}
       - install_dependencies
       - cli/install
       - run:
@@ -101,7 +98,7 @@ jobs:
             circleci tests glob "*/test/test_*.py" "*/test/*/test_*.py" | circleci tests split --split-by=timings > /tmp/tests-to-run
       - run:
           name: Run pytest
-          command: pipenv run pytest --junitxml=junit/pytest.xml $(cat /tmp/tests-to-run)
+          command: poetry run pytest --junitxml=junit/pytest.xml $(cat /tmp/tests-to-run)
       - store_test_results:
           path: junit/
       - store_artifacts:
@@ -110,21 +107,18 @@ jobs:
     executor: python_and_postgres
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - cache-{{ checksum "Pipfile.lock" }}
       - install_dependencies
       - run:
           name: Migrate
-          command: pipenv run ./manage.py migrate
+          command: poetry run ./manage.py migrate
       - run:
           name: Seed DB
-          command: pipenv run ./manage.py seeddb --n-users 3 --n-workspaces 1 --n-workspace-boards 1 --n-labels 1 --n-tasks 1
+          command: poetry run ./manage.py seeddb --n-users 3 --n-workspaces 1 --n-workspace-boards 1 --n-labels 1 --n-tasks 1
 
 workflows:
   test_all:
     jobs:
-      - pipenv_check
+      - poetry_check
       - lint
       - mypy
       - tests
