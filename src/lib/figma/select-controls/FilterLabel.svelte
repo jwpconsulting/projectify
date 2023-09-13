@@ -52,14 +52,14 @@
     class="group flex w-full flex-row items-center justify-between px-5 py-2 hover:bg-base-200"
     on:click={click}
 >
-    <div class="flex flex-row items-center gap-2">
+    <div class="flex min-w-0 flex-row items-center gap-2">
         <SelectLabelCheckBox
             {label}
             {checked}
             on:checked={onChecked}
             on:unchecked={onUnchecked}
         />
-        <div class="text-regular text-xs capitalize">
+        <div class="text-regular truncate text-xs">
             {#if label.kind === "allLabels"}
                 {$_("filter-label.all")}
             {:else if label.kind === "noLabel"}
