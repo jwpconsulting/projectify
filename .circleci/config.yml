@@ -4,7 +4,7 @@ orbs:
 executors:
     node:
         docker:
-            - image: cimg/node:19.6.0
+            - image: cimg/node:18.17.1
     python:
         docker:
             - image: python:3.11.4
