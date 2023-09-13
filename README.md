@@ -77,11 +77,32 @@ git add requirements.txt
 
 # Postgres troubleshooting
 
+## Creating a db after installing with MacPorts
+
+Connecting is a big finicky, as you need to navigate away from your home dir
+sub folder.
+
+```
+pushd /opt/local/lib/postgresl15; sudo -u postgres /opt/local/lib/postgresql15/bin/psql
+```
+
+## Psycopg2 installation with macports
+
+Try this:
+
+```
+env PATH="/opt/local/lib/postgresql15/bin:$PATH" poetry install
+```
+
+## No user role
+
 > psql: error: FATAL:  role "$USER" does not exist
 
 ```
-CREATE ROLE $USER WITH LOGIN SUPERUSER;
+CREATE USER $USER WITH CREATEDB;
 ```
+
+## Local password-less auth
 
 > django.db.utils.OperationalError: fe_sendauth: no password supplied
 
@@ -101,6 +122,8 @@ CREATE ROLE $USER WITH LOGIN SUPERUSER;
  # replication privilege.
  local   replication     all                                     peer
 ```
+
+## Restarting PostgreSQL
 
 Make sure to restart PostgreSQL, e.g. by running
 
