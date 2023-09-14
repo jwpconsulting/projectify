@@ -107,7 +107,6 @@ this issue as well.
 For vim, you might enhance your config with something like this:
 
 ```lua
-
 lspconfig.tsserver.setup {
     cmd = { 'npm', 'run', 'typescript-language-server', '--', '--stdio' },
 }
