@@ -1,11 +1,11 @@
 <script lang="ts">
-    import focusLock from "dom-focus-lock";
     import { onMount } from "svelte";
 
     import { browser } from "$app/environment";
     import ContextMenu from "$lib/figma/overlays/ContextMenu.svelte";
     import { closeContextMenu, contextMenuState } from "$lib/stores/globalUi";
     import type { ContextMenuState } from "$lib/types/ui";
+    import { keepFocusInside } from "$lib/utils/focus";
 
     let contextMenu: HTMLElement | null = null;
     let resizeObserver: ResizeObserver | null = null;
@@ -15,6 +15,8 @@
         if (!browser) {
             return undefined;
         }
+
+        let unfocus: undefined | (() => void) = undefined;
         const unsubscriber = contextMenuState.subscribe(
             ($contextMenuState) => {
                 if (!contextMenu) {
@@ -24,11 +26,14 @@
                     if (!resizeObserver) {
                         console.debug("resizeObserver not present");
                     }
-                    focusLock.on(contextMenu);
+                    unfocus = keepFocusInside(contextMenu);
                     addObserver(contextMenu, $contextMenuState);
                     listenForEscape();
                 } else {
-                    focusLock.off(contextMenu);
+                    if (unfocus) {
+                        unfocus();
+                        unfocus = undefined;
+                    }
                     resizeObserver = null;
                     repositioned = false;
                     stopListeningForEscape();
@@ -36,14 +41,14 @@
             }
         );
         return () => {
-            if (!contextMenu) {
-                console.warn("Expected contextMenu");
-            } else {
-                focusLock.off(contextMenu);
+            if (unfocus) {
+                unfocus();
+                unfocus = undefined;
             }
             unsubscriber();
             // Think about whether this one is necessary
             closeContextMenu();
+            stopListeningForEscape();
         };
     });
 

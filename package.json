@@ -73,7 +73,6 @@
         "@types/lodash": "^4.14.194",
         "autoprefixer": "^10.4.14",
         "date-fns": "^2.30.0",
-        "dom-focus-lock": "^1.1.0",
         "fuse.js": "^6.6.2",
         "lodash": "^4.17.21",
         "pikaday": "^1.8.2",

@@ -1,10 +1,10 @@
 <script lang="ts">
-    import focusLock from "dom-focus-lock";
     import { onMount } from "svelte";
     import type { Readable } from "svelte/store";
 
     import { browser } from "$app/environment";
     import type { Overlay } from "$lib/types/ui";
+    import { keepFocusInside } from "$lib/utils/focus";
 
     export let store: Readable<Overlay<unknown>>;
 
@@ -16,15 +16,23 @@
         if (!browser) {
             return undefined;
         }
+        let unfocus: undefined | (() => void) = undefined;
         const unsubscriber = store.subscribe(($store) => {
             if ($store.kind === "visible") {
-                focusLock.on(overlayElement);
+                console.log("visible now", overlayElement);
+                unfocus = keepFocusInside(overlayElement);
             } else {
-                focusLock.off(overlayElement);
+                if (unfocus) {
+                    unfocus();
+                    unfocus = undefined;
+                }
             }
         });
         return () => {
-            focusLock.off(overlayElement);
+            if (unfocus) {
+                unfocus();
+                unfocus = undefined;
+            }
             unsubscriber();
         };
     });
@@ -35,19 +43,20 @@
         <slot name="else" />
     </div>
 {/if}
-{#if $store.kind === "visible"}
-    <div
-        bind:this={overlayElement}
-        class="left-0 flex items-center justify-center bg-black/50"
-        class:fixed
-        class:top-0={fixed}
-        class:h-screen={fixed}
-        class:w-screen={fixed}
-        class:absolute={!fixed}
-        class:-top-0.5={!fixed}
-        class:h-full={!fixed}
-        class:w-full={!fixed}
-    >
+<div
+    bind:this={overlayElement}
+    class="left-0 flex items-center justify-center bg-black/50"
+    class:hidden={$store.kind === "hidden"}
+    class:fixed={$store.kind === "visible"}
+    class:top-0={fixed}
+    class:h-screen={fixed}
+    class:w-screen={fixed}
+    class:absolute={!fixed}
+    class:-top-0.5={!fixed}
+    class:h-full={!fixed}
+    class:w-full={!fixed}
+>
+    {#if $store.kind === "visible"}
         <slot target={$store.target} />
-    </div>
-{/if}
+    {/if}
+</div>
