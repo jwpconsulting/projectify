@@ -1,16 +1,12 @@
 <script lang="ts">
-    import { onMount } from "svelte";
     import { _ } from "svelte-i18n";
 
     import MobileMenu from "$lib/figma/overlays/MobileMenu.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import { closeMobileMenu, handleKey } from "$lib/stores/globalUi";
+    import { closeMobileMenu } from "$lib/stores/globalUi";
     import type { MobileMenuType } from "$lib/types/ui";
 
     export let target: MobileMenuType;
-    onMount(() => {
-        return handleKey("Escape", closeMobileMenu);
-    });
 </script>
 
 <div class="h-full w-full bg-foreground px-2 py-4" role="menu">

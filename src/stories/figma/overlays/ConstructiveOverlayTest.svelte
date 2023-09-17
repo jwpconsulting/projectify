@@ -5,6 +5,7 @@
     import {
         constructiveOverlayState,
         openConstructiveOverlay,
+        rejectConstructiveOverlay,
     } from "$lib/stores/globalUi";
     import type { ConstructiveOverlayType } from "$lib/types/ui";
 
@@ -38,6 +39,10 @@
     label="Open constructive overlay"
 />
 
-<OverlayContainer store={constructiveOverlayState} let:target>
+<OverlayContainer
+    closeOverlay={rejectConstructiveOverlay}
+    store={constructiveOverlayState}
+    let:target
+>
     <ConstructiveOverlay {target} />
 </OverlayContainer>

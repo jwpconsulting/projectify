@@ -3,10 +3,13 @@
     import type { Readable } from "svelte/store";
 
     import { browser } from "$app/environment";
+    import { handleKey } from "$lib/stores/globalUi";
     import type { Overlay } from "$lib/types/ui";
     import { keepFocusInside } from "$lib/utils/focus";
 
     export let store: Readable<Overlay<unknown>>;
+    // method used to close this overlay
+    export let closeOverlay: () => void;
 
     export let fixed = true;
 
@@ -17,14 +20,20 @@
             return undefined;
         }
         let unfocus: undefined | (() => void) = undefined;
+        let escapeUnsubscriber: (() => void) | undefined = undefined;
         const unsubscriber = store.subscribe(($store) => {
             if ($store.kind === "visible") {
                 console.log("visible now", overlayElement);
                 unfocus = keepFocusInside(overlayElement);
+                escapeUnsubscriber = handleKey("Escape", closeOverlay);
             } else {
                 if (unfocus) {
                     unfocus();
                     unfocus = undefined;
+                }
+                if (escapeUnsubscriber) {
+                    escapeUnsubscriber();
+                    escapeUnsubscriber = undefined;
                 }
             }
         });
@@ -32,6 +41,10 @@
             if (unfocus) {
                 unfocus();
                 unfocus = undefined;
+            }
+            if (escapeUnsubscriber) {
+                escapeUnsubscriber();
+                escapeUnsubscriber = undefined;
             }
             unsubscriber();
         };
@@ -43,6 +56,10 @@
         <slot name="else" />
     </div>
 {/if}
+<!-- This is how we catch the focus leaving the contex menu for a focusable
+    element after this. If this is inside an iframe or something, we could
+    accidentally leave the iframe... -->
+<button class="fixed h-0 w-0" aria-hidden="true" />
 <div
     bind:this={overlayElement}
     class="left-0 flex items-center justify-center bg-black/50"
@@ -60,3 +77,7 @@
         <slot target={$store.target} />
     {/if}
 </div>
+<!-- This is how we catch the focus leaving the contex menu for a focusable
+    element after this. If this is inside an iframe or something, we could
+    accidentally leave the iframe... -->
+<button class="fixed h-0 w-0" aria-hidden="true" />

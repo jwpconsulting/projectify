@@ -11,6 +11,9 @@
         resolveConstructiveOverlay,
         constructiveOverlayState,
         destructiveOverlayState,
+        rejectDestructiveOverlay,
+        rejectConstructiveOverlay,
+        closeMobileMenu,
     } from "$lib/stores/globalUi";
     import { user } from "$lib/stores/user";
 </script>
@@ -20,7 +23,12 @@
         <HeaderDashboard user={$user} />
     {/if}
     <div class="relative h-full">
-        <OverlayContainer fixed={false} store={mobileMenuState} let:target>
+        <OverlayContainer
+            closeOverlay={closeMobileMenu}
+            fixed={false}
+            store={mobileMenuState}
+            let:target
+        >
             <MobileMenuOverlay {target} />
             <slot slot="else" />
         </OverlayContainer>
@@ -29,11 +37,19 @@
 
 <ConnectionStatus />
 
-<OverlayContainer store={destructiveOverlayState} let:target>
+<OverlayContainer
+    closeOverlay={rejectDestructiveOverlay}
+    store={destructiveOverlayState}
+    let:target
+>
     <DestructiveOverlay {target} />
 </OverlayContainer>
 
-<OverlayContainer store={constructiveOverlayState} let:target>
+<OverlayContainer
+    closeOverlay={rejectConstructiveOverlay}
+    store={constructiveOverlayState}
+    let:target
+>
     <ConstructiveOverlay {target} on:cancel={resolveConstructiveOverlay} />
 </OverlayContainer>
 

@@ -142,7 +142,6 @@
     class="bg-red fixed left-0 top-0 h-full w-full"
     class:hidden={$contextMenuState.kind === "hidden"}
     on:click={closeContextMenu}
-    on:keydown={closeContextMenu}
 />
 <div
     class:fixed={$contextMenuState.kind === "visible"}

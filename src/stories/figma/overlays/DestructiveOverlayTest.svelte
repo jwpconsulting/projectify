@@ -5,6 +5,7 @@
     import {
         destructiveOverlayState,
         openDestructiveOverlay,
+        rejectDestructiveOverlay,
     } from "$lib/stores/globalUi";
     import type { DestructiveOverlayType } from "$lib/types/ui";
 
@@ -38,6 +39,10 @@
     label="Open destructive overlay"
 />
 
-<OverlayContainer store={destructiveOverlayState} let:target>
+<OverlayContainer
+    closeOverlay={rejectDestructiveOverlay}
+    store={destructiveOverlayState}
+    let:target
+>
     <DestructiveOverlay {target} />
 </OverlayContainer>

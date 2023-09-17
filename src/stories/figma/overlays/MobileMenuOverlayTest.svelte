@@ -53,7 +53,12 @@
         />
     </div>
     <div class="relative grow">
-        <OverlayContainer fixed={false} store={mobileMenuState} let:target>
+        <OverlayContainer
+            closeOverlay={closeMenu}
+            fixed={false}
+            store={mobileMenuState}
+            let:target
+        >
             <MobileMenuOverlay slot="default" {target} />
             <p slot="else">
                 MobileMenuOverlay comes here, but it is not visible right now
