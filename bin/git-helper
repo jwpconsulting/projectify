@@ -2,6 +2,14 @@
 echo "Cleaning up build and .svelte-kit folder"
 rm -r build .svelte-kit
 
+if npm ci
+then
+    echo "Performed node modules clean install"
+else
+    echo "Could not install dependencies"
+    exit 1
+fi
+
 if npm run sync-types
 then
     echo "Star charts aligned"
