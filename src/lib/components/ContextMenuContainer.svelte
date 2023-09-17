@@ -145,7 +145,7 @@
     on:keydown={closeContextMenu}
 />
 <div
-    class="fixed"
+    class:fixed={$contextMenuState.kind === "visible"}
     class:hidden={$contextMenuState.kind === "hidden"}
     bind:this={contextMenu}
 >
