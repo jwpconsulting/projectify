@@ -3,7 +3,11 @@
 
     import { browser } from "$app/environment";
     import ContextMenu from "$lib/figma/overlays/ContextMenu.svelte";
-    import { closeContextMenu, contextMenuState } from "$lib/stores/globalUi";
+    import {
+        closeContextMenu,
+        contextMenuState,
+        handleKey,
+    } from "$lib/stores/globalUi";
     import type { ContextMenuState } from "$lib/types/ui";
     import { keepFocusInside } from "$lib/utils/focus";
 
@@ -17,6 +21,7 @@
         }
 
         let unfocus: undefined | (() => void) = undefined;
+        let escapeUnsubscriber: (() => void) | undefined = undefined;
         const unsubscriber = contextMenuState.subscribe(
             ($contextMenuState) => {
                 if (!contextMenu) {
@@ -28,7 +33,7 @@
                     }
                     unfocus = keepFocusInside(contextMenu);
                     addObserver(contextMenu, $contextMenuState);
-                    listenForEscape();
+                    escapeUnsubscriber = handleKey("Escape", closeContextMenu);
                 } else {
                     if (unfocus) {
                         unfocus();
@@ -36,7 +41,10 @@
                     }
                     resizeObserver = null;
                     repositioned = false;
-                    stopListeningForEscape();
+                    if (escapeUnsubscriber) {
+                        escapeUnsubscriber();
+                        escapeUnsubscriber = undefined;
+                    }
                 }
             }
         );
@@ -50,7 +58,10 @@
             unsubscriber();
             // Think about whether this one is necessary
             closeContextMenu();
-            stopListeningForEscape();
+            if (escapeUnsubscriber) {
+                escapeUnsubscriber();
+                escapeUnsubscriber = undefined;
+            }
         };
     });
 
@@ -65,20 +76,6 @@
             repositionContextMenu(anchor)
         );
         resizeObserver.observe(contextMenu);
-    }
-
-    function handleEscape(event: KeyboardEvent) {
-        if (event.key === "Escape") {
-            closeContextMenu();
-        }
-    }
-
-    function listenForEscape() {
-        window.addEventListener("keydown", handleEscape);
-    }
-
-    function stopListeningForEscape() {
-        window.removeEventListener("keydown", handleEscape);
     }
 
     function repositionContextMenu(anchor: HTMLElement) {
