@@ -23,8 +23,8 @@
                     throw new Error("Expected contextMenu");
                 }
                 if ($contextMenuState.kind === "visible") {
-                    if (!resizeObserver) {
-                        console.debug("resizeObserver not present");
+                    if (resizeObserver) {
+                        throw new Error("There already was a resizeObserver");
                     }
                     unfocus = keepFocusInside(contextMenu);
                     addObserver(contextMenu, $contextMenuState);
@@ -41,6 +41,8 @@
             }
         );
         return () => {
+            // It follows that when a context menu is visible, there is a focus
+            // lock. Might be a good chance to do an integrity check here.
             if (unfocus) {
                 unfocus();
                 unfocus = undefined;
@@ -56,7 +58,7 @@
         contextMenu: HTMLElement,
         $contextMenuState: ContextMenuState & { kind: "visible" }
     ) {
-        console.log($contextMenuState);
+        console.debug($contextMenuState);
         const anchor = $contextMenuState.anchor;
         repositioned = false;
         resizeObserver = new ResizeObserver(() =>
@@ -88,10 +90,10 @@
             return;
         }
         if (contextMenu.offsetWidth == 0) {
-            console.log("waiting for contextMenu to grow");
+            console.debug("waiting for contextMenu to grow");
             return;
         }
-        console.log("repositioning");
+        console.debug("repositioning");
         const rect = anchor.getBoundingClientRect();
         const anchorLeft = rect.left;
         const anchorTop = rect.top;
@@ -102,10 +104,10 @@
         // Calculate how many pixels the right side of contextMenu will go
         // over the width
         const xOverlap = Math.max(0, xRightSide - viewPortWidth);
-        console.log("offsetWidth", contextMenu.offsetWidth);
-        console.log({ viewPortWidth, anchorLeft, xRightSide, xOverlap });
+        console.debug("offsetWidth", contextMenu.offsetWidth);
+        console.debug({ viewPortWidth, anchorLeft, xRightSide, xOverlap });
         if (xOverlap > 0) {
-            console.log("xOverlap", xOverlap);
+            console.debug("xOverlap", xOverlap);
         }
         // Subtract the overlapy from y
         const x = anchorLeft - xOverlap;
