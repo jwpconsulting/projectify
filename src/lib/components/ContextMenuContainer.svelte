@@ -153,3 +153,7 @@
         <ContextMenu target={$contextMenuState.target} />
     {/if}
 </div>
+<!-- This is how we catch the focus leaving the contex menu for a focusable
+    element after this. If this is inside an iframe or something, we could
+    accidentally leave the iframe... -->
+<button class="fixed h-0 w-0" aria-hidden="true" />
