@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { makeStorybookSelect } from "$lib/storybook";
+import { makeStorybookSelect, mobileParameters } from "$lib/storybook";
 
 import MobileMenuOverlay from "$lib/figma/overlays/MobileMenuOverlay.svelte";
 
@@ -24,3 +24,5 @@ export default meta;
 type Story = StoryObj<MobileMenuOverlay>;
 
 export const Default: Story = {};
+
+export const Mobile: Story = { parameters: mobileParameters };
