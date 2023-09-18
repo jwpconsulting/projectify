@@ -16,10 +16,10 @@
 
 <button
     on:click={click}
-    class="flex max-w-fit flex-row items-center gap-2 rounded-lg border border-border p-2 hover:bg-secondary-hover"
+    class="flex max-w-full flex-row items-center gap-2 overflow-x-hidden rounded-lg border border-border p-2 hover:bg-secondary-hover"
 >
     <Icon src={icon} theme="outline" class="h-6 w-6" />
-    <div class="truncate text-left text-sm font-bold capitalize">
+    <div class="min-w-0 shrink truncate text-left text-sm font-bold">
         {label}
     </div>
     <Icon
