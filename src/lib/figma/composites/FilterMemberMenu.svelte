@@ -5,9 +5,9 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import type { WorkspaceUserSearchStore } from "$lib/types/stores";
 
-    export let workspaceUserSearchModule: WorkspaceUserSearchStore;
+    export let workspaceUserFilter: WorkspaceUserSearchStore;
     const { select, deselect, selected, tasksPerUser, search, searchResults } =
-        workspaceUserSearchModule;
+        workspaceUserFilter;
 
     // TODO The whole above could be turned into a store
 </script>

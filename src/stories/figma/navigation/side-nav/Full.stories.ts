@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 
 import {
     workspace,
-    workspaceUserSearchModule,
+    workspaceUserFilter,
     labelSearchModule,
 } from "$lib/storybook";
 
@@ -13,7 +13,7 @@ const meta: Meta<Full> = {
     args: {
         workspace,
         workspaces: [workspace],
-        workspaceUserSearchModule,
+        workspaceUserFilter,
         labelSearchModule,
     },
 };

@@ -44,7 +44,7 @@
         await goto(url);
     }
 
-    const workspaceUserSearchModule: WorkspaceUserSearchStore =
+    const workspaceUserFilter: WorkspaceUserSearchStore =
         createWorkspaceUserSearchStore(task);
     const labelSearchModule = createLabelSearchStore(
         task,
@@ -61,14 +61,14 @@
         canCreateOrUpdate: readable(true),
         // TODO make workspace user menu so that "all" can not be
         // selected
-        workspaceUserSearchModule,
+        workspaceUserFilter,
         labelSearchModule,
         // TODO make label menu so that "all" can not be selected
         showUpdateWorkspaceUser: (anchor: HTMLElement) => {
             openContextMenu(
                 {
                     kind: "updateMember",
-                    workspaceUserSearchModule,
+                    workspaceUserFilter,
                 },
                 anchor
             );

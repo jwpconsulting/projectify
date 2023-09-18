@@ -8,9 +8,9 @@
         userExpandOpen,
         toggleUserExpandOpen,
     } from "$lib/stores/dashboard";
-    import { workspaceUserSearchModule } from "$lib/stores/dashboard/workspaceUserFilter";
+    import { workspaceUserFilter } from "$lib/stores/dashboard/workspaceUserFilter";
 
-    const { selected } = workspaceUserSearchModule;
+    const { selected } = workspaceUserFilter;
 </script>
 
 <SideNavMenuCategoryFocus
@@ -21,5 +21,5 @@
     filtered={$selected.kind !== "allWorkspaceUsers"}
 />
 {#if $userExpandOpen}
-    <FilterMemberMenu {workspaceUserSearchModule} />
+    <FilterMemberMenu {workspaceUserFilter} />
 {/if}

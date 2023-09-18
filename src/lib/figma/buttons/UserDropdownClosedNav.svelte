@@ -5,12 +5,11 @@
         toggleUserExpandOpen,
         userExpandOpen,
     } from "$lib/stores/dashboard/ui";
-    import { workspaceUserSearchModule } from "$lib/stores/dashboard/workspaceUserFilter";
+    import { workspaceUserFilter } from "$lib/stores/dashboard/workspaceUserFilter";
     // TODO refactor these
     // Maybe a module like SideNavExpandStatesModule
 
-    const { select, deselect, selected, searchResults } =
-        workspaceUserSearchModule;
+    const { select, deselect, selected, searchResults } = workspaceUserFilter;
 </script>
 
 <div class="flex flex-col items-center gap-6">

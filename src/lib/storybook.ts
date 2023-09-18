@@ -210,7 +210,7 @@ const noopAsync = async () => {
     console.error("noopAsync");
 };
 
-export const workspaceUserSearchModule: WorkspaceUserSearchStore = {
+export const workspaceUserFilter: WorkspaceUserSearchStore = {
     select: noop,
     deselect: noop,
     selected: writable({ kind: "allWorkspaceUsers" }),
@@ -235,7 +235,7 @@ export const createTaskModule: CreateTaskModule = {
     createOrUpdateTask() {
         console.log("Called createOrUpdateTask");
     },
-    workspaceUserSearchModule,
+    workspaceUserFilter,
     labelSearchModule,
 };
 
@@ -252,7 +252,7 @@ export const taskModule: TaskModule = {
     showUpdateLabel() {
         console.log("Showing label context menu");
     },
-    workspaceUserSearchModule,
+    workspaceUserFilter,
     labelSearchModule,
 };
 

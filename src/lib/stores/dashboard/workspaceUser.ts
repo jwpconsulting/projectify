@@ -157,7 +157,7 @@ export function createWorkspaceUserSearchStore(task: Task) {
         : {
               kind: "unassigned",
           };
-    const workspaceUserSearchModule: WorkspaceUserSearchStore = {
+    const workspaceUserFilter: WorkspaceUserSearchStore = {
         select: async (selection: WorkspaceUserSelectionInput) => {
             if (selection.kind === "unassigned") {
                 await assignUserToTask(null, task.uuid);
@@ -185,7 +185,7 @@ export function createWorkspaceUserSearchStore(task: Task) {
             workspaceUserSearch
         ),
     };
-    return workspaceUserSearchModule;
+    return workspaceUserFilter;
 }
 
 type CurrentTasksPerUser = Readable<TasksPerUser>;

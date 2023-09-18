@@ -12,7 +12,7 @@
     function openUserPicker() {
         const contextMenuType: ContextMenuType = {
             kind: "updateMember",
-            workspaceUserSearchModule: createWorkspaceUserSearchStore(task),
+            workspaceUserFilter: createWorkspaceUserSearchStore(task),
         };
         openContextMenu(contextMenuType, userPickerBtnRef);
     }

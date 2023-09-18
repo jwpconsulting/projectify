@@ -46,7 +46,7 @@ export interface LabelSearchStore {
 export interface CreateOrUpdateTaskModule {
     canCreateOrUpdate: Readable<boolean>;
     createOrUpdateTask: () => unknown;
-    workspaceUserSearchModule: WorkspaceUserSearchStore;
+    workspaceUserFilter: WorkspaceUserSearchStore;
     labelSearchModule: LabelSearchStore;
 }
 

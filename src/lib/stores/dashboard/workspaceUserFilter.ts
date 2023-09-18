@@ -23,7 +23,7 @@ const workspaceUserSearchResults: WorkspaceUserSearchResults =
         workspaceUserSearch
     );
 
-export const workspaceUserSearchModule: WorkspaceUserSearchStore = {
+export const workspaceUserFilter: WorkspaceUserSearchStore = {
     select: selectWorkspaceUser,
     deselect: deselectWorkspaceUser,
     selected: _selectedWorkspaceUser,

@@ -3,7 +3,7 @@ import {
     workspace,
     workspaceBoard,
     workspaceBoardSection,
-    workspaceUserSearchModule,
+    workspaceUserFilter,
     workspaceUser,
     labelSearchModule,
     makeStorybookSelect,
@@ -58,7 +58,7 @@ export const contextMenus: Record<string, ContextMenuType> = {
     },
     "Update member": {
         kind: "updateMember",
-        workspaceUserSearchModule,
+        workspaceUserFilter,
     },
     "Update label": {
         kind: "updateLabel",

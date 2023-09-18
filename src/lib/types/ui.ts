@@ -96,7 +96,7 @@ export type ContextMenuType =
     | { kind: "permissions" }
     | {
           kind: "updateMember";
-          workspaceUserSearchModule: WorkspaceUserSearchStore;
+          workspaceUserFilter: WorkspaceUserSearchStore;
       }
     | {
           kind: "updateLabel";

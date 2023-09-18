@@ -53,7 +53,7 @@
         // assign users/labels after the task is already created
         // TODO make workspace user menu so that "all" can not be
         // selected
-        workspaceUserSearchModule: {
+        workspaceUserFilter: {
             select: console.error,
             deselect: console.error,
             selected: writable<WorkspaceUserSelection>(),

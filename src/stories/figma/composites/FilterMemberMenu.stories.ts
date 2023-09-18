@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { workspaceUserSearchModule } from "$lib/storybook";
+import { workspaceUserFilter } from "$lib/storybook";
 
 import FilterMemberMenu from "$lib/figma/composites/FilterMemberMenu.svelte";
 
 const meta: Meta<FilterMemberMenu> = {
     component: FilterMemberMenu,
     argTypes: {},
-    args: { workspaceUserSearchModule },
+    args: { workspaceUserFilter },
 };
 export default meta;
 

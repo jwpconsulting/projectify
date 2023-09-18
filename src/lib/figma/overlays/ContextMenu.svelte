@@ -39,9 +39,7 @@
 {:else if target.kind === "permissions"}
     <PermissionsContextMenu />
 {:else if target.kind === "updateMember"}
-    <UpdateMemberOverlay
-        workspaceUserSearchModule={target.workspaceUserSearchModule}
-    />
+    <UpdateMemberOverlay workspaceUserFilter={target.workspaceUserFilter} />
 {:else if target.kind === "updateLabel"}
     <UpdateLabelOverlay labelSearchModule={target.labelSearchModule} />
 {/if}
