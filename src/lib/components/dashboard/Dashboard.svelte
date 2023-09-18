@@ -1,10 +1,9 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
+    import WorkspaceBoardSections from "$lib/components/dashboard/WorkspaceBoardSections.svelte";
     import FloatingActionButton from "$lib/figma/buttons/FloatingActionButton.svelte";
-    import SectionBar from "$lib/figma/cards/SectionBar.svelte";
     import TaskCard from "$lib/figma/cards/TaskCard.svelte";
-    import Button from "$lib/funabashi/buttons/Button.svelte";
     import {
         createCurrentSearchedTasks,
         currentWorkspaceBoardSections,
@@ -49,25 +48,7 @@
     {:else}
         <!-- Sections -->
         <div class="flex flex-col gap-16 p-2">
-            {#each $currentWorkspaceBoardSections as workspaceBoardSection (workspaceBoardSection.uuid)}
-                <SectionBar {workspaceBoard} {workspaceBoardSection} />
-            {:else}
-                <section
-                    class="py-2 px-4 gap-8 bg-foreground rounded-lg flex flex-col"
-                >
-                    <p>
-                        {$_("dashboard.no-sections.message")}
-                    </p>
-                    <Button
-                        style={{ kind: "primary" }}
-                        color="blue"
-                        size="small"
-                        grow={false}
-                        label={$_("dashboard.no-sections.prompt")}
-                        action={{ kind: "button", action: onAddNewSection }}
-                    />
-                </section>
-            {/each}
+            <WorkspaceBoardSections {workspaceBoard} />
         </div>
     {/if}
     <div class="absolute bottom-4 right-4">
