@@ -11,16 +11,10 @@
 import { derived, writable } from "svelte/store";
 import type { Readable, Writable } from "svelte/store";
 
-import { _selectedWorkspaceUser } from "./selectedWorkspaceUser";
-
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 import { searchAmong } from "$lib/stores/util";
 import type { SearchInput } from "$lib/types/base";
-import type {
-    TasksPerUser,
-    WorkspaceUserSelection,
-    WorkspaceUserSelectionInput,
-} from "$lib/types/ui";
+import type { TasksPerUser } from "$lib/types/ui";
 import type {
     Workspace,
     WorkspaceBoardSection,
@@ -83,64 +77,6 @@ export function createWorkspaceUserSearchResults(
             );
         },
         []
-    );
-}
-
-export function selectWorkspaceUser(selection: WorkspaceUserSelectionInput) {
-    _selectedWorkspaceUser.update(
-        ($selectedWorkspaceUser: WorkspaceUserSelection) => {
-            if (selection.kind === "allWorkspaceUsers") {
-                return { kind: "allWorkspaceUsers" };
-            } else if (selection.kind === "unassigned") {
-                if ($selectedWorkspaceUser.kind === "unassigned") {
-                    return { kind: "allWorkspaceUsers" };
-                } else {
-                    return { kind: "unassigned" };
-                }
-            } else {
-                const selectionUuid = selection.workspaceUser.uuid;
-                if ($selectedWorkspaceUser.kind === "workspaceUsers") {
-                    $selectedWorkspaceUser.workspaceUserUuids.add(
-                        selectionUuid
-                    );
-                    return $selectedWorkspaceUser;
-                } else {
-                    const workspaceUserUuids = new Set<string>();
-                    workspaceUserUuids.add(selectionUuid);
-                    return { kind: "workspaceUsers", workspaceUserUuids };
-                }
-            }
-        }
-    );
-}
-
-export function deselectWorkspaceUser(selection: WorkspaceUserSelectionInput) {
-    _selectedWorkspaceUser.update(
-        ($selectedWorkspaceUser: WorkspaceUserSelection) => {
-            if (selection.kind === "allWorkspaceUsers") {
-                return { kind: "allWorkspaceUsers" };
-            } else if (selection.kind === "unassigned") {
-                if ($selectedWorkspaceUser.kind === "unassigned") {
-                    return { kind: "allWorkspaceUsers" };
-                } else {
-                    return { kind: "unassigned" };
-                }
-            } else {
-                const selectionUuid = selection.workspaceUser.uuid;
-                if ($selectedWorkspaceUser.kind === "workspaceUsers") {
-                    $selectedWorkspaceUser.workspaceUserUuids.delete(
-                        selectionUuid
-                    );
-                    if ($selectedWorkspaceUser.workspaceUserUuids.size === 0) {
-                        return { kind: "allWorkspaceUsers" };
-                    } else {
-                        return $selectedWorkspaceUser;
-                    }
-                } else {
-                    return { kind: "allWorkspaceUsers" };
-                }
-            }
-        }
     );
 }
 
