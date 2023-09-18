@@ -5,27 +5,33 @@
 </script>
 
 <div
-    class="hidden flex-row items-center justify-between border-b-2 border-border bg-foreground px-6 py-4 lg:flex"
+    class="hidden flex-row items-center justify-between border-b-2 border-border bg-foreground px-6 py-4 md:flex"
     class:hidden={!alwaysVisible}
     class:flex={alwaysVisible}
 >
-    <div class="flex flex-row items-center gap-12">
+    <div class="flex flex-row items-center gap-4">
         {#if logoVisibleDesktop}
-            <a href="/">
+            <a href="/" class="shrink">
                 <img src="/assets/logo/polylogo.svg" alt="Projectify" />
             </a>
         {/if}
-        <slot name="desktop-left" />
+        {#if $$slots["desktop-left"]}
+            <div class="flex flex-row gap-2">
+                <slot name="desktop-left" />
+            </div>
+        {/if}
     </div>
     <slot name="desktop-center" />
-    <div class="flex flex-row gap-6">
-        <slot name="desktop-right" />
-    </div>
+    {#if $$slots["desktop-right"]}
+        <div class="flex shrink-0 flex-row gap-2">
+            <slot name="desktop-right" />
+        </div>
+    {/if}
 </div>
 
 {#if !alwaysVisible}
     <div
-        class="flex flex-row items-center justify-between border-b-2 border-border bg-foreground px-2 py-4 lg:hidden"
+        class="flex flex-row items-center justify-between border-b-2 border-border bg-foreground px-2 py-4 md:hidden"
     >
         {#if logoVisibleMobile}
             <a href="/">

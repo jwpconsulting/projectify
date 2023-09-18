@@ -9,9 +9,9 @@
 </script>
 
 <Layout logoVisibleDesktop logoVisibleMobile>
-    <slot slot="desktop-left">
-        <div class="flex flex-row gap-4"><Links /></div>
-    </slot>
+    <svelte:fragment slot="desktop-left">
+        <Links />
+    </svelte:fragment>
     <slot slot="desktop-right">
         <Button
             style={{ kind: "primary" }}
