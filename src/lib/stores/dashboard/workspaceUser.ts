@@ -8,23 +8,20 @@
  * Before I wrote these two things to be the same, even though that meant
  * unnecessarily shoehorning unrelated features into the same thing
  */
-import { derived, readable, writable } from "svelte/store";
+import { derived, writable } from "svelte/store";
 import type { Readable, Writable } from "svelte/store";
 
 import { _selectedWorkspaceUser } from "./selectedWorkspaceUser";
 
-import { assignUserToTask } from "$lib/repository/workspace";
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 import { searchAmong } from "$lib/stores/util";
 import type { SearchInput } from "$lib/types/base";
-import type { WorkspaceUserSearchStore } from "$lib/types/stores";
 import type {
     TasksPerUser,
     WorkspaceUserSelection,
     WorkspaceUserSelectionInput,
 } from "$lib/types/ui";
 import type {
-    Task,
     Workspace,
     WorkspaceBoardSection,
     WorkspaceUser,
@@ -145,47 +142,6 @@ export function deselectWorkspaceUser(selection: WorkspaceUserSelectionInput) {
             }
         }
     );
-}
-
-export function createWorkspaceUserSearchStore(task: Task) {
-    const workspaceUserSearch = createWorkspaceUserSearch();
-    const selected: WorkspaceUserSelection = task.assignee
-        ? {
-              kind: "workspaceUsers",
-              workspaceUserUuids: new Set([task.assignee.uuid]),
-          }
-        : {
-              kind: "unassigned",
-          };
-    const workspaceUserFilter: WorkspaceUserSearchStore = {
-        select: async (selection: WorkspaceUserSelectionInput) => {
-            if (selection.kind === "unassigned") {
-                await assignUserToTask(null, task.uuid);
-            } else if (selection.kind === "allWorkspaceUsers") {
-                throw new Error("Unsupported");
-            } else {
-                await assignUserToTask(
-                    selection.workspaceUser.user.email,
-                    task.uuid
-                );
-            }
-        },
-        deselect: console.error,
-        selected: writable<WorkspaceUserSelection>(selected),
-        // XXX find a way to postpone this, albeit useful, showing
-        // the amount of tasks per users right from the beginning
-        // will be more work
-        tasksPerUser: readable<TasksPerUser>({
-            unassigned: 0,
-            assigned: new Map(),
-        }),
-        search: workspaceUserSearch,
-        searchResults: createWorkspaceUserSearchResults(
-            currentWorkspaceUsers,
-            workspaceUserSearch
-        ),
-    };
-    return workspaceUserFilter;
 }
 
 type CurrentTasksPerUser = Readable<TasksPerUser>;
