@@ -6,7 +6,7 @@ import {
     getTask,
     deleteTask as repositoryDeleteTask,
 } from "$lib/repository/workspace";
-import { selectedLabels } from "$lib/stores/dashboard/label";
+import { selectedLabels } from "$lib/stores/dashboard/labelFilter";
 import { currentWorkspaceBoard } from "$lib/stores/dashboard/workspaceBoard";
 import { filterByWorkspaceUser } from "$lib/stores/dashboard/workspaceUserFilter";
 import { searchAmong } from "$lib/stores/util";

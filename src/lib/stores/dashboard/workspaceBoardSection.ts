@@ -1,7 +1,7 @@
 import { derived } from "svelte/store";
 import type { Readable } from "svelte/store";
 
-import { selectedLabels } from "$lib/stores/dashboard/label";
+import { selectedLabels } from "$lib/stores/dashboard/labelFilter";
 import { selectedWorkspaceUser } from "$lib/stores/dashboard/selectedWorkspaceUser";
 import { currentWorkspaceBoard } from "$lib/stores/dashboard/workspaceBoard";
 import type { LabelSelection, WorkspaceUserSelection } from "$lib/types/ui";
