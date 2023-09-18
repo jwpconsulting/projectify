@@ -17,11 +17,15 @@
 
 <div class="h-full w-full bg-foreground px-2 py-4" role="menu">
     <div class="flex flex-col gap-8 p-4">
-        {#if target.kind === "dashboard" && $currentWorkspaces !== undefined}
-            <SideNav
-                workspaces={$currentWorkspaces}
-                workspace={$currentWorkspace}
-            />
+        {#if target.kind === "dashboard"}
+            {#if $currentWorkspaces !== undefined}
+                <SideNav
+                    workspaces={$currentWorkspaces}
+                    workspace={$currentWorkspace}
+                />
+            {:else}
+                Warning: currentWorkspaces, currentWorkspace missing
+            {/if}
         {:else}
             <MobileMenu />
         {/if}
