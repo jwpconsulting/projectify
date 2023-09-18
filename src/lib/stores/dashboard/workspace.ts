@@ -1,4 +1,5 @@
 import { writable } from "svelte/store";
+import type { Readable } from "svelte/store";
 
 import { getWorkspace, getWorkspaces } from "$lib/repository/workspace";
 import { createWsStore } from "$lib/stores/wsSubscription";
@@ -10,9 +11,13 @@ export const currentWorkspace = createWsStore<Workspace>(
     getWorkspace
 );
 
+type HttpStore<T> = Readable<T | undefined> & {
+    load: (context?: RepositoryContext) => Promise<T>;
+};
+
 function createHttpStore<T>(
     getter: (context?: RepositoryContext) => Promise<T>
-) {
+): HttpStore<T> {
     const { set, subscribe } = writable<T | undefined>(undefined);
     const load = async (context?: RepositoryContext): Promise<T> => {
         const result = await getter(context);
