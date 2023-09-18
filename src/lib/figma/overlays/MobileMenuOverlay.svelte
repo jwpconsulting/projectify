@@ -1,8 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import SideNav from "../navigation/SideNav.svelte";
-
+    import SideNav from "$lib/figma/navigation/SideNav.svelte";
     import MobileMenu from "$lib/figma/overlays/MobileMenu.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import {

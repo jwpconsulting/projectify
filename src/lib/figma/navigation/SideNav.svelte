@@ -4,9 +4,7 @@
     import LabelDropdownClosedNav from "$lib/figma/buttons/LabelDropdownClosedNav.svelte";
     import UserDropdownClosedNav from "$lib/figma/buttons/UserDropdownClosedNav.svelte";
     import WorkspaceMenu from "$lib/figma/buttons/WorkspaceMenu.svelte";
-    import LabelDropdown from "$lib/figma/composites/LabelDropdown.svelte";
-    import Boards from "$lib/figma/navigation/side-nav/Boards.svelte";
-    import Members from "$lib/figma/navigation/side-nav/Members.svelte";
+    import Full from "$lib/figma/navigation/side-nav/Full.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import { createLabel as repositoryCreateLabel } from "$lib/repository/workspace";
     import {
@@ -68,16 +66,14 @@
 </script>
 
 {#if $sideNavOpen}
-    <nav
-        class="flex h-full max-w-xs shrink-0 flex-col bg-base-100 py-4 pr-px 2xl:max-w-md"
-    >
-        <WorkspaceMenu {workspaces} {workspace} open={true} />
-        <div class="flex flex-col overflow-x-auto overflow-y-scroll">
-            <Boards {workspace} />
-            <Members {workspaceUserSearchModule} />
-            <LabelDropdown {labelSearchModule} />
-        </div>
-    </nav>
+    <div class="max-w-xs 2xl:max-w-md">
+        <Full
+            {workspaces}
+            {workspace}
+            {workspaceUserSearchModule}
+            {labelSearchModule}
+        />
+    </div>
 {:else}
     <!-- Figma says 72px but we only have 64 or 80 (16, 29 rem respectively)-->
     <!-- Might we refactor this into something separate? -->
