@@ -1,9 +1,9 @@
 import type { PageLoadEvent } from "./$types";
 
-import { getWorkspaces } from "$lib/repository/workspace";
 import {
     currentWorkspace,
     currentWorkspaceBoard,
+    currentWorkspaces,
 } from "$lib/stores/dashboard";
 import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
 
@@ -30,6 +30,6 @@ export async function load({
     });
     // Might be able to do this asynchronously, meaning we don't need to wait
     // for it to finish here?
-    const workspaces = await getWorkspaces({ fetch });
+    const workspaces = await currentWorkspaces.load({ fetch });
     return { workspace, workspaceBoard, workspaces };
 }
