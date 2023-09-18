@@ -76,6 +76,12 @@
 
 * Bug
 
+** Mobile menu event handling not implement
+
+*** Close on anchor click
+    When clicking on an anchor inside <Full />, we most likely navigate to a
+    new ws board. Then we should close the mobile menu
+
 ** Buttons have irregular growth behavior
    Inside flex, it goes wild! There is a hacky grow parameter inside there,
    but it doesn't help much. To see where it goes wrong, look at the
@@ -148,11 +154,19 @@
 
 * Accessiblity
 
+** Mobile menu should be more obvious to dismiss
+   There is the sandwich button on top, of course, but it's a bit hard to find?
+   Or at least, having to jump all the way back to the top of the mobile
+   menu when fiddling with the filters in the bottom is a bit tough.
+
 ** Overlays use should <dialog /> like accessibility features
    <2023-09-06 Wed>
    The problem is that right now Overlays leave the background usable / focusable
    Surely we can fix this using something
    [[like this][https://www.npmjs.com/package/a11y-dialog]]
+
+   Also the rest of the content should be aria-hidden, so that something like
+   the VoiceOver focus can't go on it.
 
 * Refactor
 
