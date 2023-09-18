@@ -18,6 +18,13 @@
         selectWorkspaceBoardUuid,
         selectedLabels,
         sideNavOpen,
+        createTasksPerUser,
+        currentWorkspaceBoardSections,
+        deselectWorkspaceUser,
+        selectWorkspaceUser,
+        selectedWorkspaceUser,
+        workspaceUserSearch,
+        workspaceUserSearchResults,
     } from "$lib/stores/dashboard";
     import type {
         LabelSearchModule,
@@ -27,7 +34,16 @@
 
     export let workspaces: Workspace[];
     export let workspace: Workspace;
-    export let workspaceUserSearchModule: WorkspaceUserSearchModule;
+
+    let workspaceUserSearchModule: WorkspaceUserSearchModule;
+    $: workspaceUserSearchModule = {
+        select: selectWorkspaceUser,
+        deselect: deselectWorkspaceUser,
+        selected: selectedWorkspaceUser,
+        tasksPerUser: createTasksPerUser(currentWorkspaceBoardSections),
+        search: workspaceUserSearch,
+        searchResults: workspaceUserSearchResults,
+    };
 
     let labelSearchModule: LabelSearchModule;
     // XXX
