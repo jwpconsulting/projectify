@@ -6,7 +6,7 @@
     import MobileMenu from "$lib/figma/overlays/MobileMenu.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import {
-        currentWorkspaceBoard,
+        currentWorkspace,
         currentWorkspaces,
     } from "$lib/stores/dashboard";
     import { closeMobileMenu } from "$lib/stores/globalUi";
@@ -20,7 +20,7 @@
         {#if target.kind === "dashboard" && $currentWorkspaces !== undefined}
             <SideNav
                 workspaces={$currentWorkspaces}
-                workspace={$currentWorkspaceBoard}
+                workspace={$currentWorkspace}
             />
         {:else}
             <MobileMenu />
