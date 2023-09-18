@@ -14,7 +14,7 @@
     } from "$lib/repository/workspace";
     import { createWorkspaceUserSearchModule } from "$lib/stores/dashboard";
     import { openContextMenu } from "$lib/stores/globalUi";
-    import { createLabelSearchModule } from "$lib/stores/modules";
+    import { createLabelSearchStore } from "$lib/stores/modules";
     import type {
         WorkspaceUserSearchModule,
         TaskModule,
@@ -46,7 +46,7 @@
 
     const workspaceUserSearchModule: WorkspaceUserSearchModule =
         createWorkspaceUserSearchModule(task);
-    const labelSearchModule = createLabelSearchModule(
+    const labelSearchModule = createLabelSearchStore(
         task,
         async (labelUuid: string, selected: boolean) => {
             await assignLabelToTask(task, labelUuid, selected);

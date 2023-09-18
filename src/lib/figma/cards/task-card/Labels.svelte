@@ -6,8 +6,8 @@
     import LabelList from "$lib/components/dashboard/LabelList.svelte";
     import { assignLabelToTask } from "$lib/repository/workspace";
     import { openContextMenu } from "$lib/stores/globalUi";
-    import { createLabelSearchModule } from "$lib/stores/modules";
-    import type { LabelSearchModule } from "$lib/types/stores";
+    import { createLabelSearchStore } from "$lib/stores/modules";
+    import type { LabelSearchStore } from "$lib/types/stores";
     import type { ContextMenuType } from "$lib/types/ui";
     import type { Task } from "$lib/types/workspace";
 
@@ -15,7 +15,7 @@
     let labelPickerBtnRef: HTMLElement;
 
     function openLabelPicker() {
-        const labelSearchModule: LabelSearchModule = createLabelSearchModule(
+        const labelSearchModule: LabelSearchStore = createLabelSearchStore(
             task,
             (labelUuid: string, selected: boolean) => {
                 assignLabelToTask(task, labelUuid, selected);

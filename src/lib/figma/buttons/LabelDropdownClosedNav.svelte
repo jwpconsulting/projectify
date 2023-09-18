@@ -7,9 +7,9 @@
         labelExpandOpen,
         toggleLabelDropdownClosedNavOpen,
     } from "$lib/stores/dashboard/ui";
-    import type { LabelSearchModule } from "$lib/types/stores";
+    import type { LabelSearchStore } from "$lib/types/stores";
 
-    export let labelSearchModule: LabelSearchModule;
+    export let labelSearchModule: LabelSearchStore;
 
     const { select, selected, searchResults } = labelSearchModule;
 </script>

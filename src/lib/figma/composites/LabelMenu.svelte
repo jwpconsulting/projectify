@@ -8,11 +8,11 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { createLabel } from "$lib/repository/workspace";
     import { currentWorkspace } from "$lib/stores/dashboard";
-    import type { LabelSearchModule } from "$lib/types/stores";
+    import type { LabelSearchStore } from "$lib/types/stores";
     import type { Label } from "$lib/types/workspace";
     import { labelColors } from "$lib/utils/colors";
 
-    export let labelSearchModule: LabelSearchModule;
+    export let labelSearchModule: LabelSearchStore;
 
     // Still exporting this one for better testability in storybook
     // TODO or perhaps we can refactor the form to a new component?

@@ -5,7 +5,7 @@ import type { Customer } from "./types/corporate";
 import type { LabelLabel, SelectLabel } from "$lib/figma/types";
 import type {
     CreateTaskModule,
-    LabelSearchModule,
+    LabelSearchStore,
     MoveTaskModule,
     TaskModule,
     WorkspaceUserSearchModule,
@@ -219,7 +219,7 @@ export const workspaceUserSearchModule: WorkspaceUserSearchModule = {
     searchResults: readable([workspaceUser]),
 };
 
-export const labelSearchModule: LabelSearchModule = {
+export const labelSearchModule: LabelSearchStore = {
     select: noop,
     deselect: noop,
     selected: writable({ kind: "allLabels" }),

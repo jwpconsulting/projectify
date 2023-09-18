@@ -5,9 +5,9 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import FilterLabel from "$lib/figma/select-controls/FilterLabel.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
-    import type { LabelSearchModule } from "$lib/types/stores";
+    import type { LabelSearchStore } from "$lib/types/stores";
 
-    export let labelSearchModule: LabelSearchModule;
+    export let labelSearchModule: LabelSearchStore;
     export let canEdit = true;
     // If it is null, we don't show the create new label button
     export let startCreateLabel: (() => void) | null = null;

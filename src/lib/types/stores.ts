@@ -31,7 +31,7 @@ export interface WorkspaceUserSearchModule {
     searchResults: Readable<WorkspaceUser[]>;
 }
 
-export interface LabelSearchModule {
+export interface LabelSearchStore {
     select: (selection: LabelSelectionInput) => unknown;
     deselect: (selection: LabelSelectionInput) => unknown;
     selected: Readable<LabelSelection>;
@@ -47,7 +47,7 @@ export interface CreateOrUpdateTaskModule {
     canCreateOrUpdate: Readable<boolean>;
     createOrUpdateTask: () => unknown;
     workspaceUserSearchModule: WorkspaceUserSearchModule;
-    labelSearchModule: LabelSearchModule;
+    labelSearchModule: LabelSearchStore;
 }
 
 export type TaskModule = {

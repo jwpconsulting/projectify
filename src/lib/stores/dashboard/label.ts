@@ -5,7 +5,7 @@ import { createLabel as repositoryCreateLabel } from "$lib/repository/workspace"
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 import { searchAmong } from "$lib/stores/util";
 import type { SearchInput } from "$lib/types/base";
-import type { LabelSearchModule } from "$lib/types/stores";
+import type { LabelSearchStore } from "$lib/types/stores";
 import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
 import type { Label, Workspace } from "$lib/types/workspace";
 
@@ -100,7 +100,7 @@ export function deselectLabel(selection: LabelSelectionInput) {
 // side nav, task updating)
 // Justus 2023-05-02
 const labelSearch = createLabelSearch();
-export const labelSearchModule: LabelSearchModule = {
+export const labelSearchModule: LabelSearchStore = {
     select: selectLabel,
     deselect: deselectLabel,
     selected: selectedLabels,

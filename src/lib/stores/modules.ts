@@ -6,14 +6,14 @@ import {
     createLabelSearchResults,
     currentWorkspaceLabels,
 } from "$lib/stores/dashboard";
-import type { LabelSearchModule, MoveTaskModule } from "$lib/types/stores";
+import type { LabelSearchStore, MoveTaskModule } from "$lib/types/stores";
 import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
 import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
-export function createLabelSearchModule(
+export function createLabelSearchStore(
     task: Task | null,
     selectCallback: (labelUuid: string, selected: boolean) => void
-): LabelSearchModule {
+): LabelSearchStore {
     const labelSelected: LabelSelection =
         task?.labels && task.labels.length > 0
             ? {
