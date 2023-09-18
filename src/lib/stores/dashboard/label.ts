@@ -5,18 +5,26 @@ import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 import { searchAmong } from "$lib/stores/util";
 import type { SearchInput } from "$lib/types/base";
 import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
-import type { Label } from "$lib/types/workspace";
+import type { Label, Workspace } from "$lib/types/workspace";
 
 type CurrentWorkspaceLabels = Readable<Label[]>;
 export const currentWorkspaceLabels: CurrentWorkspaceLabels = derived<
-    [typeof currentWorkspace],
+    typeof currentWorkspace,
     Label[]
->([currentWorkspace], ([$currentWorkspace], set) => {
-    if (!$currentWorkspace.labels) {
-        throw new Error("Expected $currentWorkspace.labels");
-    }
-    set($currentWorkspace.labels);
-});
+    // Derived stores are initialized with undefined
+>(
+    currentWorkspace,
+    ($currentWorkspace: Workspace | undefined, set) => {
+        if (!$currentWorkspace) {
+            return;
+        }
+        if (!$currentWorkspace.labels) {
+            throw new Error("Expected $currentWorkspace.labels");
+        }
+        set($currentWorkspace.labels);
+    },
+    []
+);
 // LabelSearch and Selection
 function searchLabels(labels: Label[], searchInput: SearchInput): Label[] {
     if (searchInput === undefined) {

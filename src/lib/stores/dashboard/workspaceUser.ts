@@ -11,20 +11,28 @@ import type {
     WorkspaceUserSelection,
     WorkspaceUserSelectionInput,
 } from "$lib/types/ui";
-import type { Task, WorkspaceUser } from "$lib/types/workspace";
+import type { Task, Workspace, WorkspaceUser } from "$lib/types/workspace";
 
 // WorkspaceUser Search and Selection
 type CurrentWorkspaceUsers = Readable<WorkspaceUser[]>;
 
 export const currentWorkspaceUsers: CurrentWorkspaceUsers = derived<
-    [typeof currentWorkspace],
+    typeof currentWorkspace,
     WorkspaceUser[]
->([currentWorkspace], ([$currentWorkspace], set) => {
-    if (!$currentWorkspace.workspace_users) {
-        throw new Error("Expected $currentWorkspace.workspace_users");
-    }
-    set($currentWorkspace.workspace_users);
-});
+    // Derived stores are initialized with undefined
+>(
+    currentWorkspace,
+    ($currentWorkspace: Workspace | undefined, set) => {
+        if (!$currentWorkspace) {
+            return;
+        }
+        if (!$currentWorkspace.workspace_users) {
+            throw new Error("Expected $currentWorkspace.workspace_users");
+        }
+        set($currentWorkspace.workspace_users);
+    },
+    []
+);
 
 type WorkspaceUserSearch = Writable<SearchInput>;
 const createWorkspaceUserSearch = () => writable<SearchInput>(undefined);
