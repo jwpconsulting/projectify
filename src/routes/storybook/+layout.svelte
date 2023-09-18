@@ -5,10 +5,6 @@
             href: "/storybook/buttons",
         },
         {
-            title: "Select controls",
-            href: "/storybook/select-controls",
-        },
-        {
             title: "Dropdown",
             href: "/storybook/dropdown",
         },
