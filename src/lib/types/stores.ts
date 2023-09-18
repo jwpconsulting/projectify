@@ -20,9 +20,7 @@ import type {
     WorkspaceUser,
 } from "$lib/types/workspace";
 
-// It would make sense to rename all Module to Store
-
-export interface WorkspaceUserSearchModule {
+export interface WorkspaceUserSearchStore {
     select: (selection: WorkspaceUserSelectionInput) => unknown;
     deselect: (selection: WorkspaceUserSelectionInput) => unknown;
     selected: Readable<WorkspaceUserSelection>;
@@ -40,13 +38,15 @@ export interface LabelSearchStore {
     createLabel: (color: number, name: string) => Promise<void>;
 }
 
+// It would make sense to rename all Module to Store
+
 // XXX
 // This is a mess!
 // this contains whatever is shared between creating / updating tasks
 export interface CreateOrUpdateTaskModule {
     canCreateOrUpdate: Readable<boolean>;
     createOrUpdateTask: () => unknown;
-    workspaceUserSearchModule: WorkspaceUserSearchModule;
+    workspaceUserSearchModule: WorkspaceUserSearchStore;
     labelSearchModule: LabelSearchStore;
 }
 

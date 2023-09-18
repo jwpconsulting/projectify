@@ -12,11 +12,11 @@
         assignLabelToTask,
         updateTask as performUpdateTask,
     } from "$lib/repository/workspace";
-    import { createWorkspaceUserSearchModule } from "$lib/stores/dashboard";
+    import { createWorkspaceUserSearchStore } from "$lib/stores/dashboard";
     import { openContextMenu } from "$lib/stores/globalUi";
     import { createLabelSearchStore } from "$lib/stores/modules";
     import type {
-        WorkspaceUserSearchModule,
+        WorkspaceUserSearchStore,
         TaskModule,
     } from "$lib/types/stores";
     import type { Task } from "$lib/types/workspace";
@@ -44,8 +44,8 @@
         await goto(url);
     }
 
-    const workspaceUserSearchModule: WorkspaceUserSearchModule =
-        createWorkspaceUserSearchModule(task);
+    const workspaceUserSearchModule: WorkspaceUserSearchStore =
+        createWorkspaceUserSearchStore(task);
     const labelSearchModule = createLabelSearchStore(
         task,
         async (labelUuid: string, selected: boolean) => {

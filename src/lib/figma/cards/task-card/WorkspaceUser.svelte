@@ -1,6 +1,6 @@
 <script lang="ts">
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
-    import { createWorkspaceUserSearchModule } from "$lib/stores/dashboard";
+    import { createWorkspaceUserSearchStore } from "$lib/stores/dashboard";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
     import type { Task } from "$lib/types/workspace";
@@ -12,7 +12,7 @@
     function openUserPicker() {
         const contextMenuType: ContextMenuType = {
             kind: "updateMember",
-            workspaceUserSearchModule: createWorkspaceUserSearchModule(task),
+            workspaceUserSearchModule: createWorkspaceUserSearchStore(task),
         };
         openContextMenu(contextMenuType, userPickerBtnRef);
     }

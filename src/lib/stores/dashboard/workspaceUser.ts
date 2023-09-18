@@ -8,7 +8,7 @@ import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 import { currentWorkspaceBoardSections } from "$lib/stores/dashboard/workspaceBoardSection";
 import { searchAmong } from "$lib/stores/util";
 import type { SearchInput } from "$lib/types/base";
-import type { WorkspaceUserSearchModule } from "$lib/types/stores";
+import type { WorkspaceUserSearchStore } from "$lib/types/stores";
 import type {
     TasksPerUser,
     WorkspaceUserSelection,
@@ -146,7 +146,7 @@ export function deselectWorkspaceUser(selection: WorkspaceUserSelectionInput) {
     );
 }
 
-export function createWorkspaceUserSearchModule(task: Task) {
+export function createWorkspaceUserSearchStore(task: Task) {
     const workspaceUserSearch = createWorkspaceUserSearch();
     const selected: WorkspaceUserSelection = task.assignee
         ? {
@@ -156,7 +156,7 @@ export function createWorkspaceUserSearchModule(task: Task) {
         : {
               kind: "unassigned",
           };
-    const workspaceUserSearchModule: WorkspaceUserSearchModule = {
+    const workspaceUserSearchModule: WorkspaceUserSearchStore = {
         select: async (selection: WorkspaceUserSelectionInput) => {
             if (selection.kind === "unassigned") {
                 await assignUserToTask(null, task.uuid);
@@ -225,7 +225,7 @@ export function createTasksPerUser(
     );
 }
 
-export const workspaceUserSearchModule: WorkspaceUserSearchModule = {
+export const workspaceUserSearchModule: WorkspaceUserSearchStore = {
     select: selectWorkspaceUser,
     deselect: deselectWorkspaceUser,
     selected: _selectedWorkspaceUser,

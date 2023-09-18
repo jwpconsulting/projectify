@@ -7,9 +7,9 @@
         toggleUserExpandOpen,
         userExpandOpen,
     } from "$lib/stores/dashboard/ui";
-    import type { WorkspaceUserSearchModule } from "$lib/types/stores";
+    import type { WorkspaceUserSearchStore } from "$lib/types/stores";
 
-    export let workspaceUserSearchModule: WorkspaceUserSearchModule;
+    export let workspaceUserSearchModule: WorkspaceUserSearchStore;
     const { select, deselect, selected, searchResults } =
         workspaceUserSearchModule;
 </script>

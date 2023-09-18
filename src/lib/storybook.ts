@@ -8,7 +8,7 @@ import type {
     LabelSearchStore,
     MoveTaskModule,
     TaskModule,
-    WorkspaceUserSearchModule,
+    WorkspaceUserSearchStore,
 } from "$lib/types/stores";
 import type {
     BreadCrumbWorkspaceBoardSection,
@@ -210,7 +210,7 @@ const noopAsync = async () => {
     console.error("noopAsync");
 };
 
-export const workspaceUserSearchModule: WorkspaceUserSearchModule = {
+export const workspaceUserSearchModule: WorkspaceUserSearchStore = {
     select: noop,
     deselect: noop,
     selected: writable({ kind: "allWorkspaceUsers" }),
