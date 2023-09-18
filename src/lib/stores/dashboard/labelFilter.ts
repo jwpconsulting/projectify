@@ -17,7 +17,7 @@ import type { Workspace } from "$lib/types/workspace";
  */
 export const selectedLabels = writable<LabelSelection>({ kind: "allLabels" });
 
-export function selectLabel(selection: LabelSelectionInput) {
+export function filterByLabel(selection: LabelSelectionInput) {
     selectedLabels.update((selectedLabels) => {
         if (selection.kind == "label") {
             if (selectedLabels.kind === "labels") {
@@ -36,7 +36,7 @@ export function selectLabel(selection: LabelSelectionInput) {
         }
     });
 }
-export function deselectLabel(selection: LabelSelectionInput) {
+export function unfilterByLabel(selection: LabelSelectionInput) {
     selectedLabels.update((selectedLabels) => {
         if (selection.kind == "label") {
             if (selectedLabels.kind === "labels") {
@@ -56,15 +56,17 @@ export function deselectLabel(selection: LabelSelectionInput) {
     });
 }
 const labelSearch = createLabelSearch();
+// All the variables in this module should have labelFilter themed names
+export const labelFilterSearchResults = createLabelSearchResults(
+    currentWorkspaceLabels,
+    labelSearch
+);
 export const labelSearchModule: LabelSearchStore = {
-    select: selectLabel,
-    deselect: deselectLabel,
+    select: filterByLabel,
+    deselect: unfilterByLabel,
     selected: selectedLabels,
     search: labelSearch,
-    searchResults: createLabelSearchResults(
-        currentWorkspaceLabels,
-        labelSearch
-    ),
+    searchResults: labelFilterSearchResults,
     async createLabel(color: number, name: string) {
         // XXX hackish
         const $currentWorkspace = await new Promise<Workspace>((resolve) => {

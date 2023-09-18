@@ -25,6 +25,8 @@
     }
 
     function click() {
+        // TODO use callback props
+        //  Justus 2023-09-19
         if (checked) {
             dispatch("unchecked");
             checked = false;

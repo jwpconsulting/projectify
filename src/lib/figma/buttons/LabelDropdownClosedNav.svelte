@@ -3,13 +3,15 @@
     // TODO Justus 2023-05-03
     import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
-    import { labelSearchModule } from "$lib/stores/dashboard/labelFilter";
+    import {
+        filterByLabel,
+        selectedLabels,
+        labelFilterSearchResults,
+    } from "$lib/stores/dashboard/labelFilter";
     import {
         labelExpandOpen,
         toggleLabelDropdownClosedNavOpen,
     } from "$lib/stores/dashboard/ui";
-
-    const { select, selected, searchResults } = labelSearchModule;
 </script>
 
 <div class="flex flex-col items-center gap-6">
@@ -17,28 +19,28 @@
         state="active"
         icon="label"
         action={{ kind: "button", action: toggleLabelDropdownClosedNavOpen }}
-        active={$selected.kind !== "allLabels"}
+        active={$selectedLabels.kind !== "allLabels"}
     />
     {#if $labelExpandOpen}
         <div class="flex flex-col items-center gap-2">
             <SelectLabelCheckBox
                 label={{ kind: "allLabels" }}
-                checked={$selected.kind === "allLabels"}
-                on:selected={() => select({ kind: "allLabels" })}
+                checked={$selectedLabels.kind === "allLabels"}
+                on:selected={() => filterByLabel({ kind: "allLabels" })}
             />
             <SelectLabelCheckBox
                 label={{ kind: "noLabel" }}
-                checked={$selected.kind === "noLabel"}
-                on:selected={() => select({ kind: "noLabel" })}
+                checked={$selectedLabels.kind === "noLabel"}
+                on:selected={() => filterByLabel({ kind: "noLabel" })}
             />
-            {#each $searchResults as label}
+            {#each $labelFilterSearchResults as label}
                 <SelectLabelCheckBox
                     label={{ kind: "label", label: label }}
-                    checked={$selected.kind === "labels"
-                        ? $selected.labelUuids.has(label.uuid)
+                    checked={$selectedLabels.kind === "labels"
+                        ? $selectedLabels.labelUuids.has(label.uuid)
                         : false}
                     on:selected={() =>
-                        select({
+                        filterByLabel({
                             kind: "label",
                             labelUuid: label.uuid,
                         })}

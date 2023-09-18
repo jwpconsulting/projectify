@@ -5,15 +5,21 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import FilterLabel from "$lib/figma/select-controls/FilterLabel.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import {
+        filterByLabel,
+        unfilterByLabel,
+    } from "$lib/stores/dashboard/labelFilter";
     import type { LabelSearchStore } from "$lib/types/stores";
 
     export let labelSearchModule: LabelSearchStore;
+    // Here we need to distinguish between a label menu used to
+    // filter tasks by labels
+    // or assign a label to a task
     export let canEdit = true;
     // If it is null, we don't show the create new label button
     export let startCreateLabel: (() => void) | null = null;
 
-    const { select, deselect, selected, search, searchResults } =
-        labelSearchModule;
+    const { selected, search, searchResults } = labelSearchModule;
 </script>
 
 <div class="flex flex-col px-4 pb-4 pt-2">
@@ -32,14 +38,14 @@
         <FilterLabel
             label={{ kind: "allLabels" }}
             checked={$selected.kind === "allLabels"}
-            on:checked={() => select({ kind: "allLabels" })}
-            on:unchecked={() => deselect({ kind: "allLabels" })}
+            on:checked={() => filterByLabel({ kind: "allLabels" })}
+            on:unchecked={() => unfilterByLabel({ kind: "allLabels" })}
         />
         <FilterLabel
             label={{ kind: "noLabel" }}
             checked={$selected.kind === "noLabel"}
-            on:checked={() => select({ kind: "noLabel" })}
-            on:unchecked={() => deselect({ kind: "noLabel" })}
+            on:checked={() => filterByLabel({ kind: "noLabel" })}
+            on:unchecked={() => unfilterByLabel({ kind: "noLabel" })}
         />
     {/if}
     {#each $searchResults as label (label.uuid)}
@@ -49,9 +55,10 @@
                 ? $selected.labelUuids.has(label.uuid)
                 : false}
             {canEdit}
-            on:checked={() => select({ kind: "label", labelUuid: label.uuid })}
+            on:checked={() =>
+                filterByLabel({ kind: "label", labelUuid: label.uuid })}
             on:unchecked={() =>
-                deselect({ kind: "label", labelUuid: label.uuid })}
+                unfilterByLabel({ kind: "label", labelUuid: label.uuid })}
         />
     {/each}
     {#if startCreateLabel}
