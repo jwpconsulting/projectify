@@ -1,10 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import {
-    workspace,
-    mobileParameters,
-    workspaceUserSearchModule,
-} from "$lib/storybook";
+import { workspace, mobileParameters } from "$lib/storybook";
 
 import SideNav from "$lib/figma/navigation/SideNav.svelte";
 
@@ -17,7 +13,7 @@ const meta: Meta<SideNav> = {
     },
     args: {
         workspace,
-        workspaceUserSearchModule,
+        workspaces: [workspace],
         open: true,
     },
     parameters: {
