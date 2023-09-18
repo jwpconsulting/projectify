@@ -9,8 +9,14 @@ module.exports = {
         "plugin:import/typescript",
         "plugin:svelte/recommended",
         "plugin:storybook/recommended",
+        "plugin:@typescript-eslint/recommended",
     ],
-    plugins: ["@typescript-eslint", "unused-imports", "import"],
+    plugins: [
+        "@typescript-eslint",
+        "unused-imports",
+        "import",
+        "eslint-plugin-tsdoc",
+    ],
     parser: "@typescript-eslint/parser",
     parserOptions: {
         project: ["./tsconfig.json"],
