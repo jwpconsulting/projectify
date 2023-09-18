@@ -2,13 +2,9 @@ import { derived } from "svelte/store";
 import type { Readable } from "svelte/store";
 
 import { selectedLabels } from "$lib/stores/dashboard/label";
+import { selectedWorkspaceUser } from "$lib/stores/dashboard/selectedWorkspaceUser";
 import { currentWorkspaceBoard } from "$lib/stores/dashboard/workspaceBoard";
-import { selectedWorkspaceUser } from "$lib/stores/dashboard/workspaceUser";
-import type {
-    LabelSelection,
-    TasksPerUser,
-    WorkspaceUserSelection,
-} from "$lib/types/ui";
+import type { LabelSelection, WorkspaceUserSelection } from "$lib/types/ui";
 import type {
     WorkspaceBoard,
     Label,
@@ -62,51 +58,13 @@ function createCurrentWorkspaceBoardSections(
         []
     );
 }
-
+console.error(selectedLabels, selectedWorkspaceUser, currentWorkspaceBoard);
 export const currentWorkspaceBoardSections =
     createCurrentWorkspaceBoardSections(
         selectedLabels,
         selectedWorkspaceUser,
         currentWorkspaceBoard
     );
-
-type CurrentTasksPerUser = Readable<TasksPerUser>;
-
-export function createTasksPerUser(
-    currentWorkspaceBoardSections: CurrentWorkspaceBoardSections
-): CurrentTasksPerUser {
-    return derived<[typeof currentWorkspaceBoardSections], TasksPerUser>(
-        [currentWorkspaceBoardSections],
-        ([$currentWorkspaceBoardSections], set) => {
-            const userCounts = new Map<string, number>();
-            let unassignedCounts = 0;
-            $currentWorkspaceBoardSections.forEach((section) => {
-                if (!section.tasks) {
-                    return;
-                }
-                section.tasks.forEach((task) => {
-                    if (task.assignee) {
-                        const uuid = task.assignee.uuid;
-                        const count = userCounts.get(uuid);
-                        if (count) {
-                            userCounts.set(uuid, count + 1);
-                        } else {
-                            userCounts.set(uuid, 1);
-                        }
-                    } else {
-                        unassignedCounts = unassignedCounts + 1;
-                    }
-                });
-            });
-            const counts: TasksPerUser = {
-                unassigned: unassignedCounts,
-                assigned: userCounts,
-            };
-            set(counts);
-        },
-        { unassigned: 0, assigned: new Map<string, number>() }
-    );
-}
 
 function filterSectionsTasks(
     currentFilter: CurrentFilter

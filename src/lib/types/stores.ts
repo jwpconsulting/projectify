@@ -37,6 +37,7 @@ export interface LabelSearchModule {
     selected: Readable<LabelSelection>;
     search: Readable<SearchInput>;
     searchResults: Readable<Label[]>;
+    createLabel: (color: number, name: string) => Promise<void>;
 }
 
 // XXX

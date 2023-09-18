@@ -5,17 +5,15 @@
     import UserDropdownClosedNav from "$lib/figma/buttons/UserDropdownClosedNav.svelte";
     import WorkspaceMenu from "$lib/figma/buttons/WorkspaceMenu.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
-    import { selectWorkspaceBoardUuid } from "$lib/stores/dashboard";
-    import type {
-        LabelSearchModule,
-        WorkspaceUserSearchModule,
-    } from "$lib/types/stores";
+    import {
+        selectWorkspaceBoardUuid,
+        labelSearchModule,
+        workspaceUserSearchModule,
+    } from "$lib/stores/dashboard";
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspaces: Workspace[];
     export let workspace: Workspace;
-    export let labelSearchModule: LabelSearchModule;
-    export let workspaceUserSearchModule: WorkspaceUserSearchModule;
 </script>
 
 <nav class="inline-flex h-full flex-col items-center gap-12 bg-foreground p-4">

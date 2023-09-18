@@ -3,16 +3,14 @@
     import LabelDropdown from "$lib/figma/composites/LabelDropdown.svelte";
     import Boards from "$lib/figma/navigation/side-nav/Boards.svelte";
     import Members from "$lib/figma/navigation/side-nav/Members.svelte";
-    import type {
-        LabelSearchModule,
-        WorkspaceUserSearchModule,
-    } from "$lib/types/stores";
+    import {
+        workspaceUserSearchModule,
+        labelSearchModule,
+    } from "$lib/stores/dashboard";
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspaces: Workspace[];
     export let workspace: Workspace;
-    export let labelSearchModule: LabelSearchModule;
-    export let workspaceUserSearchModule: WorkspaceUserSearchModule;
 </script>
 
 <nav class="flex h-full shrink-0 flex-col bg-base-100 py-4 pr-px">

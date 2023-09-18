@@ -225,6 +225,7 @@ export const labelSearchModule: LabelSearchModule = {
     selected: writable({ kind: "allLabels" }),
     search: writable(""),
     searchResults: readable(mappedLabels),
+    createLabel: noopAsync,
 };
 
 export const createTaskModule: CreateTaskModule = {

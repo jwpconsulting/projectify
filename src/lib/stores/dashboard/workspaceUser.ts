@@ -1,9 +1,12 @@
 import { derived, readable, writable } from "svelte/store";
 import type { Readable, Writable } from "svelte/store";
 
+import { _selectedWorkspaceUser } from "./selectedWorkspaceUser";
+
 import { assignUserToTask } from "$lib/repository/workspace";
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
-import { internallyWritable, searchAmong } from "$lib/stores/util";
+import { currentWorkspaceBoardSections } from "$lib/stores/dashboard/workspaceBoardSection";
+import { searchAmong } from "$lib/stores/util";
 import type { SearchInput } from "$lib/types/base";
 import type { WorkspaceUserSearchModule } from "$lib/types/stores";
 import type {
@@ -11,7 +14,12 @@ import type {
     WorkspaceUserSelection,
     WorkspaceUserSelectionInput,
 } from "$lib/types/ui";
-import type { Task, Workspace, WorkspaceUser } from "$lib/types/workspace";
+import type {
+    Task,
+    Workspace,
+    WorkspaceBoardSection,
+    WorkspaceUser,
+} from "$lib/types/workspace";
 
 // WorkspaceUser Search and Selection
 type CurrentWorkspaceUsers = Readable<WorkspaceUser[]>;
@@ -79,12 +87,6 @@ export const workspaceUserSearchResults: WorkspaceUserSearchResults =
         currentWorkspaceUsers,
         workspaceUserSearch
     );
-
-const { priv: _selectedWorkspaceUser, pub: selectedWorkspaceUser } =
-    internallyWritable<WorkspaceUserSelection>({
-        kind: "allWorkspaceUsers",
-    });
-export { selectedWorkspaceUser };
 
 export function selectWorkspaceUser(selection: WorkspaceUserSelectionInput) {
     _selectedWorkspaceUser.update(
@@ -184,3 +186,50 @@ export function createWorkspaceUserSearchModule(task: Task) {
     };
     return workspaceUserSearchModule;
 }
+
+type CurrentTasksPerUser = Readable<TasksPerUser>;
+
+export function createTasksPerUser(
+    currentWorkspaceBoardSections: Readable<WorkspaceBoardSection[]>
+): CurrentTasksPerUser {
+    return derived<Readable<WorkspaceBoardSection[]>, TasksPerUser>(
+        currentWorkspaceBoardSections,
+        ($currentWorkspaceBoardSections, set) => {
+            const userCounts = new Map<string, number>();
+            let unassignedCounts = 0;
+            $currentWorkspaceBoardSections.forEach((section) => {
+                if (!section.tasks) {
+                    return;
+                }
+                section.tasks.forEach((task) => {
+                    if (task.assignee) {
+                        const uuid = task.assignee.uuid;
+                        const count = userCounts.get(uuid);
+                        if (count) {
+                            userCounts.set(uuid, count + 1);
+                        } else {
+                            userCounts.set(uuid, 1);
+                        }
+                    } else {
+                        unassignedCounts = unassignedCounts + 1;
+                    }
+                });
+            });
+            const counts: TasksPerUser = {
+                unassigned: unassignedCounts,
+                assigned: userCounts,
+            };
+            set(counts);
+        },
+        { unassigned: 0, assigned: new Map<string, number>() }
+    );
+}
+
+export const workspaceUserSearchModule: WorkspaceUserSearchModule = {
+    select: selectWorkspaceUser,
+    deselect: deselectWorkspaceUser,
+    selected: _selectedWorkspaceUser,
+    search: workspaceUserSearch,
+    searchResults: workspaceUserSearchResults,
+    tasksPerUser: createTasksPerUser(currentWorkspaceBoardSections),
+};

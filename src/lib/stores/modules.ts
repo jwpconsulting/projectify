@@ -53,6 +53,10 @@ export function createLabelSearchModule(
             currentWorkspaceLabels,
             search
         ),
+        async createLabel() {
+            await new Promise(console.error);
+            throw new Error("Not implemented");
+        },
     };
 }
 
