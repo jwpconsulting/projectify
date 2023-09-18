@@ -68,7 +68,9 @@
 </script>
 
 {#if $sideNavOpen}
-    <nav class="flex h-full w-72 shrink-0 flex-col bg-base-100 py-4 pr-px">
+    <nav
+        class="flex h-full max-w-xs shrink-0 flex-col bg-base-100 py-4 pr-px 2xl:max-w-md"
+    >
         <WorkspaceMenu {workspaces} {workspace} open={true} />
         <div class="flex flex-col overflow-x-auto overflow-y-scroll">
             <Boards {workspace} />
