@@ -15,7 +15,6 @@ import { _selectedWorkspaceUser } from "./selectedWorkspaceUser";
 
 import { assignUserToTask } from "$lib/repository/workspace";
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
-import { currentWorkspaceBoardSections } from "$lib/stores/dashboard/workspaceBoardSection";
 import { searchAmong } from "$lib/stores/util";
 import type { SearchInput } from "$lib/types/base";
 import type { WorkspaceUserSearchStore } from "$lib/types/stores";
@@ -34,7 +33,7 @@ import type {
 // WorkspaceUser Search and Selection
 type CurrentWorkspaceUsers = Readable<WorkspaceUser[]>;
 
-const currentWorkspaceUsers: CurrentWorkspaceUsers = derived<
+export const currentWorkspaceUsers: CurrentWorkspaceUsers = derived<
     typeof currentWorkspace,
     WorkspaceUser[]
     // Derived stores are initialized with undefined
@@ -52,10 +51,9 @@ const currentWorkspaceUsers: CurrentWorkspaceUsers = derived<
     []
 );
 
-type WorkspaceUserSearch = Writable<SearchInput>;
-const createWorkspaceUserSearch = () => writable<SearchInput>(undefined);
-
-const workspaceUserSearch: WorkspaceUserSearch = createWorkspaceUserSearch();
+export type WorkspaceUserSearch = Writable<SearchInput>;
+export const createWorkspaceUserSearch = () =>
+    writable<SearchInput>(undefined);
 
 function searchWorkspaceUsers(
     workspaceUsers: WorkspaceUser[],
@@ -68,9 +66,9 @@ function searchWorkspaceUsers(
     );
 }
 
-type WorkspaceUserSearchResults = Readable<WorkspaceUser[]>;
+export type WorkspaceUserSearchResults = Readable<WorkspaceUser[]>;
 
-function createWorkspaceUserSearchResults(
+export function createWorkspaceUserSearchResults(
     currentWorkspaceUsers: CurrentWorkspaceUsers,
     workspaceUserSearch: WorkspaceUserSearch
 ): WorkspaceUserSearchResults {
@@ -90,12 +88,6 @@ function createWorkspaceUserSearchResults(
         []
     );
 }
-
-const workspaceUserSearchResults: WorkspaceUserSearchResults =
-    createWorkspaceUserSearchResults(
-        currentWorkspaceUsers,
-        workspaceUserSearch
-    );
 
 export function selectWorkspaceUser(selection: WorkspaceUserSelectionInput) {
     _selectedWorkspaceUser.update(
@@ -125,7 +117,7 @@ export function selectWorkspaceUser(selection: WorkspaceUserSelectionInput) {
     );
 }
 
-function deselectWorkspaceUser(selection: WorkspaceUserSelectionInput) {
+export function deselectWorkspaceUser(selection: WorkspaceUserSelectionInput) {
     _selectedWorkspaceUser.update(
         ($selectedWorkspaceUser: WorkspaceUserSelection) => {
             if (selection.kind === "allWorkspaceUsers") {
@@ -198,7 +190,7 @@ export function createWorkspaceUserSearchStore(task: Task) {
 
 type CurrentTasksPerUser = Readable<TasksPerUser>;
 
-function createTasksPerUser(
+export function createTasksPerUser(
     currentWorkspaceBoardSections: Readable<WorkspaceBoardSection[]>
 ): CurrentTasksPerUser {
     return derived<Readable<WorkspaceBoardSection[]>, TasksPerUser>(
@@ -233,12 +225,3 @@ function createTasksPerUser(
         { unassigned: 0, assigned: new Map<string, number>() }
     );
 }
-
-export const workspaceUserSearchModule: WorkspaceUserSearchStore = {
-    select: selectWorkspaceUser,
-    deselect: deselectWorkspaceUser,
-    selected: _selectedWorkspaceUser,
-    search: workspaceUserSearch,
-    searchResults: workspaceUserSearchResults,
-    tasksPerUser: createTasksPerUser(currentWorkspaceBoardSections),
-};

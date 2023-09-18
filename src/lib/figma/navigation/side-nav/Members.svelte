@@ -7,8 +7,8 @@
     import {
         userExpandOpen,
         toggleUserExpandOpen,
-        workspaceUserSearchModule,
     } from "$lib/stores/dashboard";
+    import { workspaceUserSearchModule } from "$lib/stores/dashboard/workspaceUserFilter";
 
     const { selected } = workspaceUserSearchModule;
 </script>
