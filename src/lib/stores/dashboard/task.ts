@@ -8,7 +8,7 @@ import {
 } from "$lib/repository/workspace";
 import { selectedLabels } from "$lib/stores/dashboard/label";
 import { currentWorkspaceBoard } from "$lib/stores/dashboard/workspaceBoard";
-import { selectWorkspaceUser } from "$lib/stores/dashboard/workspaceUserFilter";
+import { filterByWorkspaceUser } from "$lib/stores/dashboard/workspaceUserFilter";
 import { searchAmong } from "$lib/stores/util";
 import { createWsStore } from "$lib/stores/wsSubscription";
 import type { Task, WorkspaceBoardSection } from "$lib/types/workspace"; // XXX Remove this
@@ -21,7 +21,7 @@ export const taskSearchInput = writable<string>("");
 // Justus 2023-08-30
 currentWorkspaceBoard.subscribe((_$currentWorkspaceBoard) => {
     selectedLabels.set({ kind: "allLabels" });
-    selectWorkspaceUser({ kind: "allWorkspaceUsers" });
+    filterByWorkspaceUser({ kind: "allWorkspaceUsers" });
     taskSearchInput.set("");
 });
 

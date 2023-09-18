@@ -19,7 +19,7 @@ import type {
 
 const workspaceUserSearch: WorkspaceUserSearch = createWorkspaceUserSearch();
 
-export function selectWorkspaceUser(selection: WorkspaceUserSelectionInput) {
+export function filterByWorkspaceUser(selection: WorkspaceUserSelectionInput) {
     _selectedWorkspaceUser.update(
         ($selectedWorkspaceUser: WorkspaceUserSelection) => {
             if (selection.kind === "allWorkspaceUsers") {
@@ -47,7 +47,9 @@ export function selectWorkspaceUser(selection: WorkspaceUserSelectionInput) {
     );
 }
 
-export function deselectWorkspaceUser(selection: WorkspaceUserSelectionInput) {
+export function unfilterByWorkspaceUser(
+    selection: WorkspaceUserSelectionInput
+) {
     _selectedWorkspaceUser.update(
         ($selectedWorkspaceUser: WorkspaceUserSelection) => {
             if (selection.kind === "allWorkspaceUsers") {
@@ -84,8 +86,8 @@ const workspaceUserSearchResults: WorkspaceUserSearchResults =
     );
 
 export const workspaceUserFilter: WorkspaceUserSearchStore = {
-    select: selectWorkspaceUser,
-    deselect: deselectWorkspaceUser,
+    select: filterByWorkspaceUser,
+    deselect: unfilterByWorkspaceUser,
     selected: _selectedWorkspaceUser,
     search: workspaceUserSearch,
     searchResults: workspaceUserSearchResults,
