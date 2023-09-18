@@ -13,7 +13,7 @@
     export let workspace: Workspace;
 </script>
 
-<nav class="flex h-full shrink-0 flex-col bg-base-100 py-4 pr-px">
+<nav class="flex h-full shrink-0 flex-col bg-base-100">
     <WorkspaceMenu {workspaces} {workspace} open={true} />
     <div class="flex flex-col overflow-x-auto overflow-y-scroll">
         <Boards {workspace} />

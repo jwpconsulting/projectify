@@ -9,7 +9,7 @@
 </script>
 
 {#if $sideNavOpen}
-    <div class="max-w-xs 2xl:max-w-md">
+    <div class="max-w-xs py-4 2xl:max-w-md">
         <Full {workspaces} {workspace} />
     </div>
 {:else}
