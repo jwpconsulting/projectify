@@ -3,13 +3,11 @@
     // TODO Justus 2023-05-03
     import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
+    import { labelSearchModule } from "$lib/stores/dashboard";
     import {
         labelExpandOpen,
         toggleLabelDropdownClosedNavOpen,
     } from "$lib/stores/dashboard/ui";
-    import type { LabelSearchStore } from "$lib/types/stores";
-
-    export let labelSearchModule: LabelSearchStore;
 
     const { select, selected, searchResults } = labelSearchModule;
 </script>

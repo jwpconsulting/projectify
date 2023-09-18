@@ -4,7 +4,7 @@
  *
  * - Selecting a user to be assigned to task (workspaceUserAssignment)
  * - Filtering tasks inside a ws board by ws user
- * (workspaceUserSearch)
+ * (workspaceUserFilter)
  * Before I wrote these two things to be the same, even though that meant
  * unnecessarily shoehorning unrelated features into the same thing
  */

@@ -5,11 +5,7 @@
     import UserDropdownClosedNav from "$lib/figma/buttons/UserDropdownClosedNav.svelte";
     import WorkspaceMenu from "$lib/figma/buttons/WorkspaceMenu.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
-    import {
-        selectWorkspaceBoardUuid,
-        labelSearchModule,
-        workspaceUserSearchModule,
-    } from "$lib/stores/dashboard";
+    import { selectWorkspaceBoardUuid } from "$lib/stores/dashboard";
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspaces: Workspace[];
@@ -50,8 +46,8 @@
             </div>
             <div class="flex flex-col gap-8">
                 <div class="flex flex-col items-center gap-6">
-                    <UserDropdownClosedNav {workspaceUserSearchModule} />
-                    <LabelDropdownClosedNav {labelSearchModule} />
+                    <UserDropdownClosedNav />
+                    <LabelDropdownClosedNav />
                 </div>
             </div>
         </div>

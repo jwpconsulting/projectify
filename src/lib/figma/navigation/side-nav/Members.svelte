@@ -7,10 +7,9 @@
     import {
         userExpandOpen,
         toggleUserExpandOpen,
+        workspaceUserSearchModule,
     } from "$lib/stores/dashboard";
-    import type { WorkspaceUserSearchStore } from "$lib/types/stores";
 
-    export let workspaceUserSearchModule: WorkspaceUserSearchStore;
     const { selected } = workspaceUserSearchModule;
 </script>
 

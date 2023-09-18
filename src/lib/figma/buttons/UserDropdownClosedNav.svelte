@@ -1,15 +1,14 @@
 <script lang="ts">
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
+    import { workspaceUserSearchModule } from "$lib/stores/dashboard";
     // TODO refactor these
     // Maybe a module like SideNavExpandStatesModule
     import {
         toggleUserExpandOpen,
         userExpandOpen,
     } from "$lib/stores/dashboard/ui";
-    import type { WorkspaceUserSearchStore } from "$lib/types/stores";
 
-    export let workspaceUserSearchModule: WorkspaceUserSearchStore;
     const { select, deselect, selected, searchResults } =
         workspaceUserSearchModule;
 </script>

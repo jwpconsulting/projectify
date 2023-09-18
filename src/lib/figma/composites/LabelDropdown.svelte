@@ -6,11 +6,9 @@
     import LabelMenu from "$lib/figma/composites/LabelMenu.svelte";
     import {
         labelExpandOpen,
+        labelSearchModule,
         toggleLabelDropdownClosedNavOpen,
     } from "$lib/stores/dashboard";
-    import type { LabelSearchStore } from "$lib/types/stores";
-
-    export let labelSearchModule: LabelSearchStore;
 
     const { selected } = labelSearchModule;
 </script>

@@ -3,10 +3,6 @@
     import LabelDropdown from "$lib/figma/composites/LabelDropdown.svelte";
     import Boards from "$lib/figma/navigation/side-nav/Boards.svelte";
     import Members from "$lib/figma/navigation/side-nav/Members.svelte";
-    import {
-        workspaceUserSearchModule,
-        labelSearchModule,
-    } from "$lib/stores/dashboard";
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspaces: Workspace[];
@@ -17,7 +13,7 @@
     <WorkspaceMenu {workspaces} {workspace} open={true} />
     <div class="flex flex-col overflow-x-auto overflow-y-scroll">
         <Boards {workspace} />
-        <Members {workspaceUserSearchModule} />
-        <LabelDropdown {labelSearchModule} />
+        <Members />
+        <LabelDropdown />
     </div>
 </nav>
