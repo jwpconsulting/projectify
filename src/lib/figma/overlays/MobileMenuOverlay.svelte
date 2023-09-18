@@ -1,8 +1,14 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
+    import SideNav from "../navigation/SideNav.svelte";
+
     import MobileMenu from "$lib/figma/overlays/MobileMenu.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import {
+        currentWorkspaceBoard,
+        currentWorkspaces,
+    } from "$lib/stores/dashboard";
     import { closeMobileMenu } from "$lib/stores/globalUi";
     import type { MobileMenuType } from "$lib/types/ui";
 
@@ -11,7 +17,14 @@
 
 <div class="h-full w-full bg-foreground px-2 py-4" role="menu">
     <div class="flex flex-col gap-8 p-4">
-        <MobileMenu />
+        {#if target.kind === "dashboard" && $currentWorkspaces !== undefined}
+            <SideNav
+                workspaces={$currentWorkspaces}
+                workspace={$currentWorkspaceBoard}
+            />
+        {:else}
+            <MobileMenu />
+        {/if}
         {#if target.kind === "continue"}
             <Button
                 action={{

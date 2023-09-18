@@ -18,6 +18,9 @@
 </script>
 
 <div class="flex h-full grow flex-row">
-    <SideNav {workspaces} {workspace} />
+    <!-- this breakpoint is in tune with the mobile menu breakpoint -->
+    <div class="hidden lg:block">
+        <SideNav {workspaces} {workspace} />
+    </div>
     <Dashboard {workspaceBoard} />
 </div>
