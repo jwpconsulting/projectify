@@ -5,11 +5,15 @@
         toggleUserExpandOpen,
         userExpandOpen,
     } from "$lib/stores/dashboard/ui";
-    import { workspaceUserFilter } from "$lib/stores/dashboard/workspaceUserFilter";
+    import {
+        workspaceUserFilter,
+        filterByWorkspaceUser,
+        unfilterByWorkspaceUser,
+    } from "$lib/stores/dashboard/workspaceUserFilter";
     // TODO refactor these
     // Maybe a module like SideNavExpandStatesModule
 
-    const { select, deselect, selected, searchResults } = workspaceUserFilter;
+    const { selected, searchResults } = workspaceUserFilter;
 </script>
 
 <div class="flex flex-col items-center gap-6">
@@ -24,8 +28,9 @@
             <SelectUserClosedNav
                 user={null}
                 active={$selected.kind === "unassigned"}
-                on:select={() => select({ kind: "unassigned" })}
-                on:deselect={() => deselect({ kind: "unassigned" })}
+                on:select={() => filterByWorkspaceUser({ kind: "unassigned" })}
+                on:deselect={() =>
+                    unfilterByWorkspaceUser({ kind: "unassigned" })}
             />
             {#each $searchResults as workspaceUser}
                 <SelectUserClosedNav
@@ -33,12 +38,12 @@
                     active={$selected.kind === "workspaceUsers" &&
                         $selected.workspaceUserUuids.has(workspaceUser.uuid)}
                     on:select={() =>
-                        select({
+                        filterByWorkspaceUser({
                             kind: "workspaceUser",
                             workspaceUser,
                         })}
                     on:deselect={() =>
-                        deselect({
+                        unfilterByWorkspaceUser({
                             kind: "workspaceUser",
                             workspaceUser,
                         })}

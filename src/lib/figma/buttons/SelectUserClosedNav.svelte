@@ -16,6 +16,7 @@
         users: [user],
     };
 
+    // TODO make select / deselect callback props instead Justus 2023-09-19
     const dispatch = createEventDispatcher();
     function click() {
         active = !active;

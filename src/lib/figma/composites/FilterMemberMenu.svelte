@@ -3,10 +3,14 @@
 
     import FilterUser from "$lib/figma/select-controls/FilterUser.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import {
+        filterByWorkspaceUser,
+        unfilterByWorkspaceUser,
+    } from "$lib/stores/dashboard/workspaceUserFilter";
     import type { WorkspaceUserSearchStore } from "$lib/types/stores";
 
     export let workspaceUserFilter: WorkspaceUserSearchStore;
-    const { select, deselect, selected, tasksPerUser, search, searchResults } =
+    const { selected, tasksPerUser, search, searchResults } =
         workspaceUserFilter;
 
     // TODO The whole above could be turned into a store
@@ -28,8 +32,8 @@
         workspaceUserSelectionInput={{ kind: "unassigned" }}
         active={$selected.kind === "unassigned"}
         count={$tasksPerUser.unassigned}
-        onSelect={select}
-        onDeselect={deselect}
+        onSelect={filterByWorkspaceUser}
+        onDeselect={unfilterByWorkspaceUser}
     />
     {#each $searchResults as workspaceUser (workspaceUser.uuid)}
         <FilterUser
@@ -41,8 +45,8 @@
                 ? $selected.workspaceUserUuids.has(workspaceUser.uuid)
                 : false}
             count={$tasksPerUser.assigned.get(workspaceUser.uuid)}
-            onSelect={select}
-            onDeselect={deselect}
+            onSelect={filterByWorkspaceUser}
+            onDeselect={unfilterByWorkspaceUser}
         />
     {/each}
 </div>
