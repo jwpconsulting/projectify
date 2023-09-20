@@ -1,4 +1,5 @@
-import { _selectedWorkspaceUser } from "./selectedWorkspaceUser";
+import { internallyWritable } from "../util";
+
 import type {
     WorkspaceUserSearch,
     WorkspaceUserSearchResults,
@@ -9,11 +10,16 @@ import {
     currentWorkspaceUsers,
     createWorkspaceUserFilter,
 } from "$lib/stores/dashboard/workspaceUser";
-import type { WorkspaceUserFilter } from "$lib/types/stores";
 import type {
     WorkspaceUserSelection,
     WorkspaceUserSelectionInput,
 } from "$lib/types/ui";
+
+const { priv: _selectedWorkspaceUser, pub: selectedWorkspaceUser } =
+    internallyWritable<WorkspaceUserSelection>({
+        kind: "allWorkspaceUsers",
+    });
+export { selectedWorkspaceUser };
 
 export const workspaceUserSearch: WorkspaceUserSearch =
     createWorkspaceUserFilter();
@@ -83,9 +89,3 @@ export const workspaceUserSearchResults: WorkspaceUserSearchResults =
         currentWorkspaceUsers,
         workspaceUserSearch
     );
-
-export const workspaceUserFilter: WorkspaceUserFilter = {
-    select: filterByWorkspaceUser,
-    deselect: unfilterByWorkspaceUser,
-    selected: _selectedWorkspaceUser,
-};

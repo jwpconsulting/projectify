@@ -1,4 +1,5 @@
 <script lang="ts">
+    // TODO rename FilterWorkspaceUser
     import { _ } from "svelte-i18n";
 
     import AvatarState from "$lib/figma/navigation/AvatarState.svelte";

@@ -6,14 +6,25 @@
     import { tasksPerUser } from "$lib/stores/dashboard";
     import {
         filterByWorkspaceUser,
+        selectedWorkspaceUser,
         unfilterByWorkspaceUser,
         workspaceUserSearch,
         workspaceUserSearchResults,
     } from "$lib/stores/dashboard/workspaceUserFilter";
-    import type { WorkspaceUserFilter } from "$lib/types/stores";
 
-    export let workspaceUserFilter: WorkspaceUserFilter;
-    const { selected } = workspaceUserFilter;
+    type FilterMemberMenuMode = { kind: "filter" } | { kind: "assign" };
+
+    // TODO make non-optional
+    export let mode: FilterMemberMenuMode = { kind: "filter" };
+
+    $: selected =
+        mode.kind === "filter" ? selectedWorkspaceUser : selectedWorkspaceUser;
+    $: select =
+        mode.kind === "filter" ? filterByWorkspaceUser : filterByWorkspaceUser;
+    $: deselect =
+        mode.kind === "filter"
+            ? unfilterByWorkspaceUser
+            : unfilterByWorkspaceUser;
 
     // TODO The whole above could be turned into a store
 </script>
@@ -34,8 +45,8 @@
         workspaceUserSelectionInput={{ kind: "unassigned" }}
         active={$selected.kind === "unassigned"}
         count={$tasksPerUser.unassigned}
-        onSelect={filterByWorkspaceUser}
-        onDeselect={unfilterByWorkspaceUser}
+        onSelect={select}
+        onDeselect={deselect}
     />
     {#each $workspaceUserSearchResults as workspaceUser (workspaceUser.uuid)}
         <FilterUser
@@ -47,8 +58,8 @@
                 ? $selected.workspaceUserUuids.has(workspaceUser.uuid)
                 : false}
             count={$tasksPerUser.assigned.get(workspaceUser.uuid)}
-            onSelect={filterByWorkspaceUser}
-            onDeselect={unfilterByWorkspaceUser}
+            onSelect={select}
+            onDeselect={deselect}
         />
     {/each}
 </div>

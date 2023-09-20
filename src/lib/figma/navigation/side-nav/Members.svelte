@@ -8,9 +8,7 @@
         userExpandOpen,
         toggleUserExpandOpen,
     } from "$lib/stores/dashboard";
-    import { workspaceUserFilter } from "$lib/stores/dashboard/workspaceUserFilter";
-
-    const { selected } = workspaceUserFilter;
+    import { selectedWorkspaceUser } from "$lib/stores/dashboard/workspaceUserFilter";
 </script>
 
 <SideNavMenuCategoryFocus
@@ -18,8 +16,8 @@
     icon={User}
     open={$userExpandOpen}
     on:click={toggleUserExpandOpen}
-    filtered={$selected.kind !== "allWorkspaceUsers"}
+    filtered={$selectedWorkspaceUser.kind !== "allWorkspaceUsers"}
 />
 {#if $userExpandOpen}
-    <FilterMemberMenu {workspaceUserFilter} />
+    <FilterMemberMenu />
 {/if}
