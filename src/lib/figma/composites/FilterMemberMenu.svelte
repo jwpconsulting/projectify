@@ -3,6 +3,7 @@
 
     import FilterUser from "$lib/figma/select-controls/FilterUser.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import { tasksPerUser } from "$lib/stores/dashboard";
     import {
         filterByWorkspaceUser,
         unfilterByWorkspaceUser,
@@ -12,7 +13,7 @@
     import type { WorkspaceUserFilter } from "$lib/types/stores";
 
     export let workspaceUserFilter: WorkspaceUserFilter;
-    const { selected, tasksPerUser } = workspaceUserFilter;
+    const { selected } = workspaceUserFilter;
 
     // TODO The whole above could be turned into a store
 </script>

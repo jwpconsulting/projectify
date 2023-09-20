@@ -5,7 +5,6 @@ import type { RepositoryContext } from "./repository";
 
 import type {
     LabelSelectionInput,
-    TasksPerUser,
     WorkspaceUserSelection,
     WorkspaceUserSelectionInput,
 } from "$lib/types/ui";
@@ -20,14 +19,12 @@ export interface WorkspaceUserFilter {
     select: (selection: WorkspaceUserSelectionInput) => unknown;
     deselect: (selection: WorkspaceUserSelectionInput) => unknown;
     selected: Readable<WorkspaceUserSelection>;
-    tasksPerUser: Readable<TasksPerUser>;
 }
 
 export interface WorkspaceUserAssignment {
     select: (selection: WorkspaceUserSelectionInput) => unknown;
     deselect: (selection: WorkspaceUserSelectionInput) => unknown;
     selected: Readable<WorkspaceUserSelection>;
-    tasksPerUser: Readable<TasksPerUser>;
 }
 
 export interface LabelFilter {

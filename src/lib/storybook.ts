@@ -214,7 +214,6 @@ export const workspaceUserFilter: WorkspaceUserFilter = {
     select: noop,
     deselect: noop,
     selected: writable({ kind: "allWorkspaceUsers" }),
-    tasksPerUser: readable({ unassigned: 0, assigned: new Map() }),
 };
 
 export const labelSearchModule: LabelFilter = {

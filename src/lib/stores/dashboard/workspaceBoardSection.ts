@@ -4,7 +4,11 @@ import type { Readable } from "svelte/store";
 import { selectedLabels } from "$lib/stores/dashboard/labelFilter";
 import { selectedWorkspaceUser } from "$lib/stores/dashboard/selectedWorkspaceUser";
 import { currentWorkspaceBoard } from "$lib/stores/dashboard/workspaceBoard";
-import type { LabelSelection, WorkspaceUserSelection } from "$lib/types/ui";
+import type {
+    LabelSelection,
+    TasksPerUser,
+    WorkspaceUserSelection,
+} from "$lib/types/ui";
 import type {
     WorkspaceBoard,
     Label,
@@ -124,3 +128,43 @@ function filterSectionsTasks(
 
     return sections;
 }
+
+type CurrentTasksPerUser = Readable<TasksPerUser>;
+
+export function createTasksPerUser(
+    currentWorkspaceBoardSections: Readable<WorkspaceBoardSection[]>
+): CurrentTasksPerUser {
+    return derived<Readable<WorkspaceBoardSection[]>, TasksPerUser>(
+        currentWorkspaceBoardSections,
+        ($currentWorkspaceBoardSections, set) => {
+            const userCounts = new Map<string, number>();
+            let unassignedCounts = 0;
+            $currentWorkspaceBoardSections.forEach((section) => {
+                if (!section.tasks) {
+                    return;
+                }
+                section.tasks.forEach((task) => {
+                    if (task.assignee) {
+                        const uuid = task.assignee.uuid;
+                        const count = userCounts.get(uuid);
+                        if (count) {
+                            userCounts.set(uuid, count + 1);
+                        } else {
+                            userCounts.set(uuid, 1);
+                        }
+                    } else {
+                        unassignedCounts = unassignedCounts + 1;
+                    }
+                });
+            });
+            const counts: TasksPerUser = {
+                unassigned: unassignedCounts,
+                assigned: userCounts,
+            };
+            set(counts);
+        },
+        { unassigned: 0, assigned: new Map<string, number>() }
+    );
+}
+
+export const tasksPerUser = createTasksPerUser(currentWorkspaceBoardSections);

@@ -1,9 +1,8 @@
-import { readable, writable } from "svelte/store";
+import { writable } from "svelte/store";
 
 import { assignUserToTask } from "$lib/repository/workspace";
 import type { WorkspaceUserFilter } from "$lib/types/stores";
 import type {
-    TasksPerUser,
     WorkspaceUserSelection,
     WorkspaceUserSelectionInput,
 } from "$lib/types/ui";
@@ -37,13 +36,6 @@ export function createWorkspaceUserSearchStore(task: Task) {
         },
         deselect: console.error,
         selected: writable<WorkspaceUserSelection>(selected),
-        // XXX find a way to postpone this, albeit useful, showing
-        // the amount of tasks per users right from the beginning
-        // will be more work
-        tasksPerUser: readable<TasksPerUser>({
-            unassigned: 0,
-            assigned: new Map(),
-        }),
     };
     return workspaceUserFilter;
 }

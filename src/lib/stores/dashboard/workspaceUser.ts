@@ -14,12 +14,7 @@ import type { Readable, Writable } from "svelte/store";
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 import { searchAmong } from "$lib/stores/util";
 import type { SearchInput } from "$lib/types/base";
-import type { TasksPerUser } from "$lib/types/ui";
-import type {
-    Workspace,
-    WorkspaceBoardSection,
-    WorkspaceUser,
-} from "$lib/types/workspace";
+import type { Workspace, WorkspaceUser } from "$lib/types/workspace";
 
 // WorkspaceUser Search and Selection
 type CurrentWorkspaceUsers = Readable<WorkspaceUser[]>;
@@ -77,43 +72,5 @@ export function createWorkspaceUserSearchResults(
             );
         },
         []
-    );
-}
-
-type CurrentTasksPerUser = Readable<TasksPerUser>;
-
-export function createTasksPerUser(
-    currentWorkspaceBoardSections: Readable<WorkspaceBoardSection[]>
-): CurrentTasksPerUser {
-    return derived<Readable<WorkspaceBoardSection[]>, TasksPerUser>(
-        currentWorkspaceBoardSections,
-        ($currentWorkspaceBoardSections, set) => {
-            const userCounts = new Map<string, number>();
-            let unassignedCounts = 0;
-            $currentWorkspaceBoardSections.forEach((section) => {
-                if (!section.tasks) {
-                    return;
-                }
-                section.tasks.forEach((task) => {
-                    if (task.assignee) {
-                        const uuid = task.assignee.uuid;
-                        const count = userCounts.get(uuid);
-                        if (count) {
-                            userCounts.set(uuid, count + 1);
-                        } else {
-                            userCounts.set(uuid, 1);
-                        }
-                    } else {
-                        unassignedCounts = unassignedCounts + 1;
-                    }
-                });
-            });
-            const counts: TasksPerUser = {
-                unassigned: unassignedCounts,
-                assigned: userCounts,
-            };
-            set(counts);
-        },
-        { unassigned: 0, assigned: new Map<string, number>() }
     );
 }

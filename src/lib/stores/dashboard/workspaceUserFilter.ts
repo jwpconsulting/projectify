@@ -4,11 +4,9 @@ import type {
     WorkspaceUserSearchResults,
 } from "./workspaceUser";
 
-import { currentWorkspaceBoardSections } from "$lib/stores/dashboard/workspaceBoardSection";
 import {
     createWorkspaceUserSearchResults,
     currentWorkspaceUsers,
-    createTasksPerUser,
     createWorkspaceUserFilter,
 } from "$lib/stores/dashboard/workspaceUser";
 import type { WorkspaceUserFilter } from "$lib/types/stores";
@@ -90,5 +88,4 @@ export const workspaceUserFilter: WorkspaceUserFilter = {
     select: filterByWorkspaceUser,
     deselect: unfilterByWorkspaceUser,
     selected: _selectedWorkspaceUser,
-    tasksPerUser: createTasksPerUser(currentWorkspaceBoardSections),
 };

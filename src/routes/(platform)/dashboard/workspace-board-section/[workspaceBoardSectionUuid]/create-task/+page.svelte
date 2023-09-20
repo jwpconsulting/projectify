@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { readable, derived, writable } from "svelte/store";
+    import { derived, writable } from "svelte/store";
 
     import { goto } from "$lib/navigation";
     import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
@@ -11,7 +11,7 @@
     import { createTask as createTaskFn } from "$lib/repository/workspace";
     import { createLabelSearchStore } from "$lib/stores/dashboard/labelAssignment";
     import type { CreateTaskModule } from "$lib/types/stores";
-    import type { TasksPerUser, WorkspaceUserSelection } from "$lib/types/ui";
+    import type { WorkspaceUserSelection } from "$lib/types/ui";
     import type { CreateTask } from "$lib/types/workspace";
 
     export let data: PageData;
@@ -57,10 +57,6 @@
             select: console.error,
             deselect: console.error,
             selected: writable<WorkspaceUserSelection>(),
-            // XXX find a way to postpone this, albeit useful, showing
-            // the amount of tasks per users right from the beginning
-            // will be more work
-            tasksPerUser: readable<TasksPerUser>(),
         },
         // TODO make label menu so that "all" can not be selected
         labelSearchModule,
