@@ -1,6 +1,6 @@
 <script lang="ts">
     import HelpContextMenu from "$lib/figma/overlays/context-menu/HelpContextMenu.svelte";
-    import PermissionsContextMenu from "$lib/figma/overlays/context-menu/PermissionsContextMenu.svelte";
+    import Permissions from "$lib/figma/overlays/context-menu/Permissions.svelte";
     import ProfileContextMenu from "$lib/figma/overlays/context-menu/ProfileContextMenu.svelte";
     import SideNavContextMenu from "$lib/figma/overlays/context-menu/SideNavContextMenu.svelte";
     import Task from "$lib/figma/overlays/context-menu/Task.svelte";
@@ -37,7 +37,7 @@
 {:else if target.kind === "help"}
     <HelpContextMenu />
 {:else if target.kind === "permissions"}
-    <PermissionsContextMenu />
+    <Permissions />
 {:else if target.kind === "updateMember"}
     <UpdateMemberOverlay
         workspaceUserAssignment={target.workspaceUserAssignment}
