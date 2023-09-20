@@ -21,8 +21,7 @@
               labelAssignment: LabelAssignment;
           };
 
-    // TODO make this non-optional
-    export let mode: FilterLabelMenuMode = { kind: "filter" as const };
+    export let mode: FilterLabelMenuMode;
     // Here we need to distinguish between a label menu used to
     // filter tasks by labels
     // or assign a label to a task

@@ -19,5 +19,5 @@
     filtered={$selectedWorkspaceUser.kind !== "allWorkspaceUsers"}
 />
 {#if $userExpandOpen}
-    <FilterMemberMenu />
+    <FilterMemberMenu mode={{ kind: "filter" }} />
 {/if}

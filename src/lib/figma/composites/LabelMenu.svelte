@@ -70,7 +70,7 @@
 </script>
 
 {#if state === "list"}
-    <FilterLabelMenu {startCreateLabel} />
+    <FilterLabelMenu {startCreateLabel} mode={{ kind: "filter" }} />
 {:else if state === "create"}
     <form class="flex flex-col gap-6" on:submit|preventDefault={save}>
         <div class="flex flex-col">

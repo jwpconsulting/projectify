@@ -18,7 +18,7 @@
         | { kind: "assign"; workspaceUserAssignment: WorkspaceUserAssignment };
 
     // TODO make non-optional
-    export let mode: FilterMemberMenuMode = { kind: "filter" };
+    export let mode: FilterMemberMenuMode;
 
     $: selected =
         mode.kind === "filter"
