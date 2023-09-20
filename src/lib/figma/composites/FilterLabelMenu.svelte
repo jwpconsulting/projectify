@@ -9,9 +9,9 @@
         filterByLabel,
         unfilterByLabel,
     } from "$lib/stores/dashboard/labelFilter";
-    import type { LabelSearchStore } from "$lib/types/stores";
+    import type { LabelAssignment } from "$lib/types/stores";
 
-    export let labelSearchModule: LabelSearchStore;
+    export let labelSearchModule: LabelAssignment;
     // Here we need to distinguish between a label menu used to
     // filter tasks by labels
     // or assign a label to a task

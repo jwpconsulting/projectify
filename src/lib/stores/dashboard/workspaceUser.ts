@@ -43,7 +43,7 @@ export const currentWorkspaceUsers: CurrentWorkspaceUsers = derived<
 );
 
 export type WorkspaceUserSearch = Writable<SearchInput>;
-export const createWorkspaceUserSearch = () =>
+export const createWorkspaceUserFilter = () =>
     writable<SearchInput>(undefined);
 
 function searchWorkspaceUsers(

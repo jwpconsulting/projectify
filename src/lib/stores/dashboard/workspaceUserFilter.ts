@@ -9,15 +9,15 @@ import {
     createWorkspaceUserSearchResults,
     currentWorkspaceUsers,
     createTasksPerUser,
-    createWorkspaceUserSearch,
+    createWorkspaceUserFilter,
 } from "$lib/stores/dashboard/workspaceUser";
-import type { WorkspaceUserSearchStore } from "$lib/types/stores";
+import type { WorkspaceUserFilter } from "$lib/types/stores";
 import type {
     WorkspaceUserSelection,
     WorkspaceUserSelectionInput,
 } from "$lib/types/ui";
 
-const workspaceUserSearch: WorkspaceUserSearch = createWorkspaceUserSearch();
+const workspaceUserSearch: WorkspaceUserSearch = createWorkspaceUserFilter();
 
 export function filterByWorkspaceUser(selection: WorkspaceUserSelectionInput) {
     _selectedWorkspaceUser.update(
@@ -85,7 +85,7 @@ const workspaceUserSearchResults: WorkspaceUserSearchResults =
         workspaceUserSearch
     );
 
-export const workspaceUserFilter: WorkspaceUserSearchStore = {
+export const workspaceUserFilter: WorkspaceUserFilter = {
     select: filterByWorkspaceUser,
     deselect: unfilterByWorkspaceUser,
     selected: _selectedWorkspaceUser,

@@ -24,7 +24,7 @@ export const currentWorkspaceLabels: CurrentWorkspaceLabels = derived<
     },
     []
 );
-// LabelSearch and Selection
+// LabelFilter and Selection
 function searchLabels(labels: Label[], searchInput: SearchInput): Label[] {
     if (searchInput === undefined) {
         return labels;
@@ -32,16 +32,16 @@ function searchLabels(labels: Label[], searchInput: SearchInput): Label[] {
     return searchAmong(["name"], labels, searchInput);
 }
 
-type LabelSearch = Readable<SearchInput>;
-export const createLabelSearch = () => writable<string>(undefined);
+type LabelFilter = Readable<SearchInput>;
+export const createLabelFilter = () => writable<string>(undefined);
 
 type LabelSearchResults = Readable<Label[]>;
 
 export function createLabelSearchResults(
     currentWorkspaceLabels: CurrentWorkspaceLabels,
-    labelSearch: LabelSearch
+    labelSearch: LabelFilter
 ): LabelSearchResults {
-    return derived<[CurrentWorkspaceLabels, LabelSearch], Label[]>(
+    return derived<[CurrentWorkspaceLabels, LabelFilter], Label[]>(
         [currentWorkspaceLabels, labelSearch],
         ([currentWorkspaceLabels, labelSearch], set) => {
             set(searchLabels(currentWorkspaceLabels, labelSearch));

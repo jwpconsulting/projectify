@@ -1,13 +1,13 @@
 import { readable, writable } from "svelte/store";
 
 import {
-    createWorkspaceUserSearch,
+    createWorkspaceUserFilter,
     createWorkspaceUserSearchResults,
     currentWorkspaceUsers,
 } from "./workspaceUser";
 
 import { assignUserToTask } from "$lib/repository/workspace";
-import type { WorkspaceUserSearchStore } from "$lib/types/stores";
+import type { WorkspaceUserFilter } from "$lib/types/stores";
 import type {
     TasksPerUser,
     WorkspaceUserSelection,
@@ -29,7 +29,7 @@ export async function assignWorkspaceUser(
 }
 
 export function createWorkspaceUserSearchStore(task: Task) {
-    const workspaceUserSearch = createWorkspaceUserSearch();
+    const workspaceUserSearch = createWorkspaceUserFilter();
     const selected: WorkspaceUserSelection = task.assignee
         ? {
               kind: "workspaceUsers",
@@ -38,7 +38,7 @@ export function createWorkspaceUserSearchStore(task: Task) {
         : {
               kind: "unassigned",
           };
-    const workspaceUserFilter: WorkspaceUserSearchStore = {
+    const workspaceUserFilter: WorkspaceUserFilter = {
         async select(selection: WorkspaceUserSelectionInput) {
             await assignWorkspaceUser(task, selection);
         },

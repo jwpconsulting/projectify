@@ -20,7 +20,7 @@ import type {
     WorkspaceUser,
 } from "$lib/types/workspace";
 
-export interface WorkspaceUserSearchStore {
+export interface WorkspaceUserFilter {
     select: (selection: WorkspaceUserSelectionInput) => unknown;
     deselect: (selection: WorkspaceUserSelectionInput) => unknown;
     selected: Readable<WorkspaceUserSelection>;
@@ -29,7 +29,25 @@ export interface WorkspaceUserSearchStore {
     searchResults: Readable<WorkspaceUser[]>;
 }
 
-export interface LabelSearchStore {
+export interface WorkspaceUserAssignment {
+    select: (selection: WorkspaceUserSelectionInput) => unknown;
+    deselect: (selection: WorkspaceUserSelectionInput) => unknown;
+    selected: Readable<WorkspaceUserSelection>;
+    tasksPerUser: Readable<TasksPerUser>;
+    search: Readable<SearchInput>;
+    searchResults: Readable<WorkspaceUser[]>;
+}
+
+export interface LabelFilter {
+    select: (selection: LabelSelectionInput) => unknown;
+    deselect: (selection: LabelSelectionInput) => unknown;
+    selected: Readable<LabelSelection>;
+    search: Readable<SearchInput>;
+    searchResults: Readable<Label[]>;
+    createLabel: (color: number, name: string) => Promise<void>;
+}
+
+export interface LabelAssignment {
     select: (selection: LabelSelectionInput) => unknown;
     deselect: (selection: LabelSelectionInput) => unknown;
     selected: Readable<LabelSelection>;
@@ -46,8 +64,8 @@ export interface LabelSearchStore {
 export interface CreateOrUpdateTaskModule {
     canCreateOrUpdate: Readable<boolean>;
     createOrUpdateTask: () => unknown;
-    workspaceUserFilter: WorkspaceUserSearchStore;
-    labelSearchModule: LabelSearchStore;
+    workspaceUserFilter: WorkspaceUserFilter;
+    labelSearchModule: LabelFilter;
 }
 
 export type TaskModule = {

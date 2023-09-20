@@ -7,7 +7,7 @@
     import { assignLabelToTask } from "$lib/repository/workspace";
     import { createLabelSearchStore } from "$lib/stores/dashboard/labelAssignment";
     import { openContextMenu } from "$lib/stores/globalUi";
-    import type { LabelSearchStore } from "$lib/types/stores";
+    import type { LabelAssignment } from "$lib/types/stores";
     import type { ContextMenuType } from "$lib/types/ui";
     import type { Task } from "$lib/types/workspace";
 
@@ -15,7 +15,7 @@
     let labelPickerBtnRef: HTMLElement;
 
     function openLabelPicker() {
-        const labelSearchModule: LabelSearchStore = createLabelSearchStore(
+        const labelSearchModule: LabelAssignment = createLabelSearchStore(
             task,
             (labelUuid: string, selected: boolean) => {
                 assignLabelToTask(task, labelUuid, selected);

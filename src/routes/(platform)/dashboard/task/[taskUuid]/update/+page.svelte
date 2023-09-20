@@ -15,10 +15,7 @@
     import { createLabelSearchStore } from "$lib/stores/dashboard/labelAssignment";
     import { createWorkspaceUserSearchStore } from "$lib/stores/dashboard/workspaceUserAssignment";
     import { openContextMenu } from "$lib/stores/globalUi";
-    import type {
-        WorkspaceUserSearchStore,
-        TaskModule,
-    } from "$lib/types/stores";
+    import type { TaskModule } from "$lib/types/stores";
     import type { Task } from "$lib/types/workspace";
 
     export let data: PageData;
@@ -44,8 +41,7 @@
         await goto(url);
     }
 
-    const workspaceUserFilter: WorkspaceUserSearchStore =
-        createWorkspaceUserSearchStore(task);
+    const workspaceUserFilter = createWorkspaceUserSearchStore(task);
     const labelSearchModule = createLabelSearchStore(
         task,
         async (labelUuid: string, selected: boolean) => {

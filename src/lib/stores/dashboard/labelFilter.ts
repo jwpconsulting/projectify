@@ -1,14 +1,14 @@
 import { writable } from "svelte/store";
 
 import {
-    createLabelSearch,
+    createLabelFilter,
     createLabelSearchResults,
     currentWorkspaceLabels,
 } from "./label";
 import { currentWorkspace } from "./workspace";
 
 import { createLabel as repositoryCreateLabel } from "$lib/repository/workspace";
-import type { LabelSearchStore } from "$lib/types/stores";
+import type { LabelFilter } from "$lib/types/stores";
 import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
 import type { Workspace } from "$lib/types/workspace";
 
@@ -55,13 +55,13 @@ export function unfilterByLabel(selection: LabelSelectionInput) {
         }
     });
 }
-const labelSearch = createLabelSearch();
+const labelSearch = createLabelFilter();
 // All the variables in this module should have labelFilter themed names
 export const labelFilterSearchResults = createLabelSearchResults(
     currentWorkspaceLabels,
     labelSearch
 );
-export const labelSearchModule: LabelSearchStore = {
+export const labelSearchModule: LabelFilter = {
     select: filterByLabel,
     deselect: unfilterByLabel,
     selected: selectedLabels,

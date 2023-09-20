@@ -5,10 +5,10 @@ import type { Customer } from "./types/corporate";
 import type { LabelLabel, SelectLabel } from "$lib/figma/types";
 import type {
     CreateTaskModule,
-    LabelSearchStore,
+    LabelFilter,
     MoveTaskModule,
     TaskModule,
-    WorkspaceUserSearchStore,
+    WorkspaceUserFilter,
 } from "$lib/types/stores";
 import type {
     BreadCrumbWorkspaceBoardSection,
@@ -210,7 +210,7 @@ const noopAsync = async () => {
     console.error("noopAsync");
 };
 
-export const workspaceUserFilter: WorkspaceUserSearchStore = {
+export const workspaceUserFilter: WorkspaceUserFilter = {
     select: noop,
     deselect: noop,
     selected: writable({ kind: "allWorkspaceUsers" }),
@@ -219,7 +219,7 @@ export const workspaceUserFilter: WorkspaceUserSearchStore = {
     searchResults: readable([workspaceUser]),
 };
 
-export const labelSearchModule: LabelSearchStore = {
+export const labelSearchModule: LabelFilter = {
     select: noop,
     deselect: noop,
     selected: writable({ kind: "allLabels" }),

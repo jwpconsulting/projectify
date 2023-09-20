@@ -7,9 +7,9 @@
         filterByWorkspaceUser,
         unfilterByWorkspaceUser,
     } from "$lib/stores/dashboard/workspaceUserFilter";
-    import type { WorkspaceUserSearchStore } from "$lib/types/stores";
+    import type { WorkspaceUserFilter } from "$lib/types/stores";
 
-    export let workspaceUserFilter: WorkspaceUserSearchStore;
+    export let workspaceUserFilter: WorkspaceUserFilter;
     const { selected, tasksPerUser, search, searchResults } =
         workspaceUserFilter;
 

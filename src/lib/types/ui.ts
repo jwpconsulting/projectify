@@ -1,6 +1,6 @@
 import type {
-    WorkspaceUserSearchStore,
-    LabelSearchStore,
+    WorkspaceUserFilter,
+    LabelFilter,
     MoveTaskModule,
 } from "$lib/types/stores";
 import type {
@@ -96,11 +96,11 @@ export type ContextMenuType =
     | { kind: "permissions" }
     | {
           kind: "updateMember";
-          workspaceUserFilter: WorkspaceUserSearchStore;
+          workspaceUserFilter: WorkspaceUserFilter;
       }
     | {
           kind: "updateLabel";
-          labelSearchModule: LabelSearchStore;
+          labelSearchModule: LabelFilter;
       };
 // This is already pretty convoluted, so I shall go no further than this for
 // now Justus 2023-08-31

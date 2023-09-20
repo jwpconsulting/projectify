@@ -6,18 +6,18 @@
 import { writable } from "svelte/store";
 
 import {
-    createLabelSearch,
+    createLabelFilter,
     createLabelSearchResults,
     currentWorkspaceLabels,
 } from "$lib/stores/dashboard";
-import type { LabelSearchStore } from "$lib/types/stores";
+import type { LabelAssignment } from "$lib/types/stores";
 import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
 import type { Task } from "$lib/types/workspace";
 
 export function createLabelSearchStore(
     task: Task | null,
     selectCallback: (labelUuid: string, selected: boolean) => void
-): LabelSearchStore {
+): LabelAssignment {
     const labelSelected: LabelSelection =
         task?.labels && task.labels.length > 0
             ? {
@@ -25,7 +25,7 @@ export function createLabelSearchStore(
                   labelUuids: new Set(task.labels.map((l) => l.uuid)),
               }
             : { kind: "noLabel" };
-    const search = createLabelSearch();
+    const search = createLabelFilter();
     const selectOrDeselectLabel = (
         select: boolean,
         labelSelectionInput: LabelSelectionInput
