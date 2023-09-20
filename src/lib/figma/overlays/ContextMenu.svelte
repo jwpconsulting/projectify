@@ -1,7 +1,7 @@
 <script lang="ts">
     import HelpContextMenu from "$lib/figma/overlays/context-menu/HelpContextMenu.svelte";
     import Permissions from "$lib/figma/overlays/context-menu/Permissions.svelte";
-    import ProfileContextMenu from "$lib/figma/overlays/context-menu/ProfileContextMenu.svelte";
+    import Profile from "$lib/figma/overlays/context-menu/Profile.svelte";
     import SideNavContextMenu from "$lib/figma/overlays/context-menu/SideNavContextMenu.svelte";
     import Task from "$lib/figma/overlays/context-menu/Task.svelte";
     import WorkspaceBoardContextMenu from "$lib/figma/overlays/context-menu/WorkspaceBoardContextMenu.svelte";
@@ -15,7 +15,7 @@
 </script>
 
 {#if target.kind === "profile"}
-    <ProfileContextMenu />
+    <Profile />
 {:else if target.kind === "workspace"}
     <WorkspaceContextMenu workspaces={target.workspaces} />
 {:else if target.kind === "sideNav"}
