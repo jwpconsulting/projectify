@@ -5,7 +5,7 @@
 
     import LabelList from "$lib/components/dashboard/LabelList.svelte";
     import { assignLabelToTask } from "$lib/repository/workspace";
-    import { createLabelSearchStore } from "$lib/stores/dashboard/labelAssignment";
+    import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { LabelAssignment } from "$lib/types/stores";
     import type { ContextMenuType } from "$lib/types/ui";
@@ -15,7 +15,7 @@
     let labelPickerBtnRef: HTMLElement;
 
     function openLabelPicker() {
-        const labelAssignment: LabelAssignment = createLabelSearchStore(
+        const labelAssignment: LabelAssignment = createLabelAssignment(
             task,
             (labelUuid: string, selected: boolean) => {
                 assignLabelToTask(task, labelUuid, selected);

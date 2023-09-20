@@ -12,8 +12,8 @@
         assignLabelToTask,
         updateTask as performUpdateTask,
     } from "$lib/repository/workspace";
-    import { createLabelSearchStore } from "$lib/stores/dashboard/labelAssignment";
-    import { createWorkspaceUserSearchStore } from "$lib/stores/dashboard/workspaceUserAssignment";
+    import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
+    import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { TaskModule } from "$lib/types/stores";
     import type { Task } from "$lib/types/workspace";
@@ -41,8 +41,8 @@
         await goto(url);
     }
 
-    const workspaceUserAssignment = createWorkspaceUserSearchStore(task);
-    const labelAssignment = createLabelSearchStore(
+    const workspaceUserAssignment = createWorkspaceUserAssignment(task);
+    const labelAssignment = createLabelAssignment(
         task,
         async (labelUuid: string, selected: boolean) => {
             await assignLabelToTask(task, labelUuid, selected);

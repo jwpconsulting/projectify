@@ -21,7 +21,7 @@ export async function assignWorkspaceUser(
     }
 }
 
-export function createWorkspaceUserSearchStore(
+export function createWorkspaceUserAssignment(
     task: Task
 ): WorkspaceUserAssignment {
     const selected: WorkspaceUserSelection = task.assignee

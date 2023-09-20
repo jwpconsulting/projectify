@@ -10,7 +10,7 @@ import type { LabelAssignment } from "$lib/types/stores";
 import type { LabelSelectionInput } from "$lib/types/ui";
 import type { Task } from "$lib/types/workspace";
 
-export function createLabelSearchStore(
+export function createLabelAssignment(
     task: Task | null,
     selectCallback: (labelUuid: string, selected: boolean) => void
 ): LabelAssignment {
