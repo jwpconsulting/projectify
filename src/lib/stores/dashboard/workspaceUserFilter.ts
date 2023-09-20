@@ -17,7 +17,8 @@ import type {
     WorkspaceUserSelectionInput,
 } from "$lib/types/ui";
 
-const workspaceUserSearch: WorkspaceUserSearch = createWorkspaceUserFilter();
+export const workspaceUserSearch: WorkspaceUserSearch =
+    createWorkspaceUserFilter();
 
 export function filterByWorkspaceUser(selection: WorkspaceUserSelectionInput) {
     _selectedWorkspaceUser.update(
@@ -79,7 +80,7 @@ export function unfilterByWorkspaceUser(
     );
 }
 
-const workspaceUserSearchResults: WorkspaceUserSearchResults =
+export const workspaceUserSearchResults: WorkspaceUserSearchResults =
     createWorkspaceUserSearchResults(
         currentWorkspaceUsers,
         workspaceUserSearch
@@ -89,7 +90,5 @@ export const workspaceUserFilter: WorkspaceUserFilter = {
     select: filterByWorkspaceUser,
     deselect: unfilterByWorkspaceUser,
     selected: _selectedWorkspaceUser,
-    search: workspaceUserSearch,
-    searchResults: workspaceUserSearchResults,
     tasksPerUser: createTasksPerUser(currentWorkspaceBoardSections),
 };

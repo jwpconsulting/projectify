@@ -12,7 +12,7 @@
     import { createLabelSearchStore } from "$lib/stores/dashboard/labelAssignment";
     import type { CreateTaskModule } from "$lib/types/stores";
     import type { TasksPerUser, WorkspaceUserSelection } from "$lib/types/ui";
-    import type { CreateTask, WorkspaceUser } from "$lib/types/workspace";
+    import type { CreateTask } from "$lib/types/workspace";
 
     export let data: PageData;
 
@@ -61,8 +61,6 @@
             // the amount of tasks per users right from the beginning
             // will be more work
             tasksPerUser: readable<TasksPerUser>(),
-            search: writable(""),
-            searchResults: readable<WorkspaceUser[]>([]),
         },
         // TODO make label menu so that "all" can not be selected
         labelSearchModule,

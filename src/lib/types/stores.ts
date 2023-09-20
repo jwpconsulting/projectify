@@ -1,7 +1,6 @@
 // XXX "stores.ts" should be renamed "modules.ts" maybe?
 import type { Readable, Writable } from "svelte/store";
 
-import type { SearchInput } from "./base";
 import type { RepositoryContext } from "./repository";
 
 import type {
@@ -15,7 +14,6 @@ import type {
     NewTask,
     Task,
     WorkspaceBoardSection,
-    WorkspaceUser,
 } from "$lib/types/workspace";
 
 export interface WorkspaceUserFilter {
@@ -23,8 +21,6 @@ export interface WorkspaceUserFilter {
     deselect: (selection: WorkspaceUserSelectionInput) => unknown;
     selected: Readable<WorkspaceUserSelection>;
     tasksPerUser: Readable<TasksPerUser>;
-    search: Readable<SearchInput>;
-    searchResults: Readable<WorkspaceUser[]>;
 }
 
 export interface WorkspaceUserAssignment {
@@ -32,8 +28,6 @@ export interface WorkspaceUserAssignment {
     deselect: (selection: WorkspaceUserSelectionInput) => unknown;
     selected: Readable<WorkspaceUserSelection>;
     tasksPerUser: Readable<TasksPerUser>;
-    search: Readable<SearchInput>;
-    searchResults: Readable<WorkspaceUser[]>;
 }
 
 export interface LabelFilter {

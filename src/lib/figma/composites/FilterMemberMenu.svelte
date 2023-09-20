@@ -6,12 +6,13 @@
     import {
         filterByWorkspaceUser,
         unfilterByWorkspaceUser,
+        workspaceUserSearch,
+        workspaceUserSearchResults,
     } from "$lib/stores/dashboard/workspaceUserFilter";
     import type { WorkspaceUserFilter } from "$lib/types/stores";
 
     export let workspaceUserFilter: WorkspaceUserFilter;
-    const { selected, tasksPerUser, search, searchResults } =
-        workspaceUserFilter;
+    const { selected, tasksPerUser } = workspaceUserFilter;
 
     // TODO The whole above could be turned into a store
 </script>
@@ -21,7 +22,7 @@
         {$_("dashboard.filter-members")}
     </div>
     <InputField
-        bind:value={$search}
+        bind:value={$workspaceUserSearch}
         style={{ kind: "search" }}
         name="member-name"
         placeholder={$_("dashboard.member-name")}
@@ -35,7 +36,7 @@
         onSelect={filterByWorkspaceUser}
         onDeselect={unfilterByWorkspaceUser}
     />
-    {#each $searchResults as workspaceUser (workspaceUser.uuid)}
+    {#each $workspaceUserSearchResults as workspaceUser (workspaceUser.uuid)}
         <FilterUser
             workspaceUserSelectionInput={{
                 kind: "workspaceUser",
