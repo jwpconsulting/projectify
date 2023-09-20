@@ -55,24 +55,25 @@ export function unfilterByLabel(selection: LabelSelectionInput) {
         }
     });
 }
-const labelSearch = createLabelFilter();
+
+export const labelSearch = createLabelFilter();
 // All the variables in this module should have labelFilter themed names
 export const labelFilterSearchResults = createLabelSearchResults(
     currentWorkspaceLabels,
     labelSearch
 );
+
+async function createLabel(color: number, name: string) {
+    // XXX hackish
+    const $currentWorkspace = await new Promise<Workspace>((resolve) => {
+        const unsubscribe = currentWorkspace.subscribe(resolve);
+        unsubscribe();
+    });
+    await repositoryCreateLabel($currentWorkspace, name, color);
+}
 export const labelSearchModule: LabelFilter = {
     select: filterByLabel,
     deselect: unfilterByLabel,
     selected: selectedLabels,
-    search: labelSearch,
-    searchResults: labelFilterSearchResults,
-    async createLabel(color: number, name: string) {
-        // XXX hackish
-        const $currentWorkspace = await new Promise<Workspace>((resolve) => {
-            const unsubscribe = currentWorkspace.subscribe(resolve);
-            unsubscribe();
-        });
-        await repositoryCreateLabel($currentWorkspace, name, color);
-    },
+    createLabel,
 };

@@ -223,8 +223,6 @@ export const labelSearchModule: LabelFilter = {
     select: noop,
     deselect: noop,
     selected: writable({ kind: "allLabels" }),
-    search: writable(""),
-    searchResults: readable(mappedLabels),
     createLabel: noopAsync,
 };
 

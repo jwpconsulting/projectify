@@ -13,7 +13,6 @@ import type {
 } from "$lib/types/ui";
 import type {
     CreateTask,
-    Label,
     NewTask,
     Task,
     WorkspaceBoardSection,
@@ -42,8 +41,6 @@ export interface LabelFilter {
     select: (selection: LabelSelectionInput) => unknown;
     deselect: (selection: LabelSelectionInput) => unknown;
     selected: Readable<LabelSelection>;
-    search: Readable<SearchInput>;
-    searchResults: Readable<Label[]>;
     createLabel: (color: number, name: string) => Promise<void>;
 }
 
@@ -51,8 +48,6 @@ export interface LabelAssignment {
     select: (selection: LabelSelectionInput) => unknown;
     deselect: (selection: LabelSelectionInput) => unknown;
     selected: Readable<LabelSelection>;
-    search: Readable<SearchInput>;
-    searchResults: Readable<Label[]>;
     createLabel: (color: number, name: string) => Promise<void>;
 }
 

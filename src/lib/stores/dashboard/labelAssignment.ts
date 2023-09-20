@@ -5,11 +5,6 @@
  */
 import { writable } from "svelte/store";
 
-import {
-    createLabelFilter,
-    createLabelSearchResults,
-    currentWorkspaceLabels,
-} from "$lib/stores/dashboard";
 import type { LabelAssignment } from "$lib/types/stores";
 import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
 import type { Task } from "$lib/types/workspace";
@@ -25,7 +20,6 @@ export function createLabelSearchStore(
                   labelUuids: new Set(task.labels.map((l) => l.uuid)),
               }
             : { kind: "noLabel" };
-    const search = createLabelFilter();
     const selectOrDeselectLabel = (
         select: boolean,
         labelSelectionInput: LabelSelectionInput
@@ -52,11 +46,6 @@ export function createLabelSearchStore(
             selectOrDeselectLabel(false, labelSelectionInput);
         },
         selected: writable<LabelSelection>(labelSelected),
-        search,
-        searchResults: createLabelSearchResults(
-            currentWorkspaceLabels,
-            search
-        ),
         async createLabel() {
             await new Promise(console.error);
             throw new Error("Not implemented");

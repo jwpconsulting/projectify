@@ -8,6 +8,8 @@
     import {
         filterByLabel,
         unfilterByLabel,
+        labelSearch,
+        labelFilterSearchResults,
     } from "$lib/stores/dashboard/labelFilter";
     import type { LabelAssignment } from "$lib/types/stores";
 
@@ -19,7 +21,7 @@
     // If it is null, we don't show the create new label button
     export let startCreateLabel: (() => void) | null = null;
 
-    const { selected, search, searchResults } = labelSearchModule;
+    const { selected } = labelSearchModule;
 </script>
 
 <div class="flex flex-col px-4 pb-4 pt-2">
@@ -27,14 +29,14 @@
         {$_("filter-label-menu.filter-labels")}
     </div>
     <InputField
-        bind:value={$search}
+        bind:value={$labelSearch}
         style={{ kind: "search" }}
         name="label-name"
         placeholder={$_("filter-label-menu.label-name")}
     />
 </div>
 <div class="flex flex-col">
-    {#if $search === ""}
+    {#if $labelSearch === ""}
         <FilterLabel
             label={{ kind: "allLabels" }}
             checked={$selected.kind === "allLabels"}
@@ -48,7 +50,7 @@
             on:unchecked={() => unfilterByLabel({ kind: "noLabel" })}
         />
     {/if}
-    {#each $searchResults as label (label.uuid)}
+    {#each $labelFilterSearchResults as label (label.uuid)}
         <FilterLabel
             label={{ kind: "label", label }}
             checked={$selected.kind === "labels"
