@@ -5,7 +5,7 @@
     import SideNavContextMenu from "$lib/figma/overlays/context-menu/SideNavContextMenu.svelte";
     import Task from "$lib/figma/overlays/context-menu/Task.svelte";
     import Workspace from "$lib/figma/overlays/context-menu/Workspace.svelte";
-    import WorkspaceBoardContextMenu from "$lib/figma/overlays/context-menu/WorkspaceBoardContextMenu.svelte";
+    import WorkspaceBoard from "$lib/figma/overlays/context-menu/WorkspaceBoard.svelte";
     import WorkspaceBoardSectionContextMenu from "$lib/figma/overlays/context-menu/WorkspaceBoardSectionContextMenu.svelte";
     import UpdateLabelOverlay from "$lib/figma/overlays/UpdateLabelOverlay.svelte";
     import UpdateMemberOverlay from "$lib/figma/overlays/UpdateMemberOverlay.svelte";
@@ -21,7 +21,7 @@
 {:else if target.kind === "sideNav"}
     <SideNavContextMenu workspace={target.workspace} />
 {:else if target.kind === "workspaceBoard"}
-    <WorkspaceBoardContextMenu workspaceBoard={target.workspaceBoard} />
+    <WorkspaceBoard workspaceBoard={target.workspaceBoard} />
 {:else if target.kind === "workspaceBoardSection"}
     <WorkspaceBoardSectionContextMenu
         workspaceBoard={target.workspaceBoard}
