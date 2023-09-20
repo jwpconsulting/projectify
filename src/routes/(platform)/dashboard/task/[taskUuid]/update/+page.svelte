@@ -12,9 +12,9 @@
         assignLabelToTask,
         updateTask as performUpdateTask,
     } from "$lib/repository/workspace";
+    import { createLabelSearchStore } from "$lib/stores/dashboard/labelAssignment";
     import { createWorkspaceUserSearchStore } from "$lib/stores/dashboard/workspaceUserAssignment";
     import { openContextMenu } from "$lib/stores/globalUi";
-    import { createLabelSearchStore } from "$lib/stores/modules";
     import type {
         WorkspaceUserSearchStore,
         TaskModule,

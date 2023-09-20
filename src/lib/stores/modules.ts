@@ -1,64 +1,6 @@
-import { writable } from "svelte/store";
-
 import { moveTaskAfter } from "$lib/repository/workspace";
-import {
-    createLabelSearch,
-    createLabelSearchResults,
-    currentWorkspaceLabels,
-} from "$lib/stores/dashboard";
-import type { LabelSearchStore, MoveTaskModule } from "$lib/types/stores";
-import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
+import type { MoveTaskModule } from "$lib/types/stores";
 import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
-
-export function createLabelSearchStore(
-    task: Task | null,
-    selectCallback: (labelUuid: string, selected: boolean) => void
-): LabelSearchStore {
-    const labelSelected: LabelSelection =
-        task?.labels && task.labels.length > 0
-            ? {
-                  kind: "labels",
-                  labelUuids: new Set(task.labels.map((l) => l.uuid)),
-              }
-            : { kind: "noLabel" };
-    const search = createLabelSearch();
-    const selectOrDeselectLabel = (
-        select: boolean,
-        labelSelectionInput: LabelSelectionInput
-    ) => {
-        const { kind } = labelSelectionInput;
-        if (kind === "noLabel") {
-            console.error("No API for removing all labels");
-            throw new Error("TODO");
-        } else if (kind === "allLabels") {
-            // XXX Clearly, allLabels only makes sense for side nav, not when
-            // assigning labels to tasks
-            console.error("No API for assigning all labels");
-            throw new Error("TODO");
-        } else {
-            const { labelUuid } = labelSelectionInput;
-            selectCallback(labelUuid, select);
-        }
-    };
-    return {
-        select: (labelSelectionInput: LabelSelectionInput) => {
-            selectOrDeselectLabel(true, labelSelectionInput);
-        },
-        deselect: (labelSelectionInput: LabelSelectionInput) => {
-            selectOrDeselectLabel(false, labelSelectionInput);
-        },
-        selected: writable<LabelSelection>(labelSelected),
-        search,
-        searchResults: createLabelSearchResults(
-            currentWorkspaceLabels,
-            search
-        ),
-        async createLabel() {
-            await new Promise(console.error);
-            throw new Error("Not implemented");
-        },
-    };
-}
 
 export function createMoveTaskModule(
     { uuid: workspaceBoardSectionUuid }: WorkspaceBoardSection,

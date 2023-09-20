@@ -5,8 +5,8 @@
 
     import LabelList from "$lib/components/dashboard/LabelList.svelte";
     import { assignLabelToTask } from "$lib/repository/workspace";
+    import { createLabelSearchStore } from "$lib/stores/dashboard/labelAssignment";
     import { openContextMenu } from "$lib/stores/globalUi";
-    import { createLabelSearchStore } from "$lib/stores/modules";
     import type { LabelSearchStore } from "$lib/types/stores";
     import type { ContextMenuType } from "$lib/types/ui";
     import type { Task } from "$lib/types/workspace";

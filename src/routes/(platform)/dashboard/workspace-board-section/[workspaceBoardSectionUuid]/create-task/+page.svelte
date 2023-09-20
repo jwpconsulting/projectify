@@ -9,7 +9,7 @@
     import Loading from "$lib/components/loading.svelte";
     import CreateTaskCard from "$lib/figma/screens/task/CreateTaskCard.svelte";
     import { createTask as createTaskFn } from "$lib/repository/workspace";
-    import { createLabelSearchStore } from "$lib/stores/modules";
+    import { createLabelSearchStore } from "$lib/stores/dashboard/labelAssignment";
     import type { CreateTaskModule } from "$lib/types/stores";
     import type { TasksPerUser, WorkspaceUserSelection } from "$lib/types/ui";
     import type { CreateTask, WorkspaceUser } from "$lib/types/workspace";
