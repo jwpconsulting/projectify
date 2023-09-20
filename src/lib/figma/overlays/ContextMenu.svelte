@@ -8,7 +8,7 @@
     import Workspace from "$lib/figma/overlays/context-menu/Workspace.svelte";
     import WorkspaceBoard from "$lib/figma/overlays/context-menu/WorkspaceBoard.svelte";
     import WorkspaceBoardSection from "$lib/figma/overlays/context-menu/WorkspaceBoardSection.svelte";
-    import UpdateMemberOverlay from "$lib/figma/overlays/UpdateMemberOverlay.svelte";
+    import WorkspaceUser from "$lib/figma/overlays/context-menu/WorkspaceUser.svelte";
     import type { ContextMenuType } from "$lib/types/ui";
 
     export let target: ContextMenuType;
@@ -39,9 +39,7 @@
 {:else if target.kind === "permissions"}
     <Permissions />
 {:else if target.kind === "updateMember"}
-    <UpdateMemberOverlay
-        workspaceUserAssignment={target.workspaceUserAssignment}
-    />
+    <WorkspaceUser workspaceUserAssignment={target.workspaceUserAssignment} />
 {:else if target.kind === "updateLabel"}
     <Label labelAssignment={target.labelAssignment} />
 {/if}

@@ -2,14 +2,14 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 
 import { workspaceUserAssignment } from "$lib/storybook";
 
-import UpdateMemberOverlay from "$lib/figma/overlays/UpdateMemberOverlay.svelte";
+import WorkspaceUser from "$lib/figma/overlays/context-menu/WorkspaceUser.svelte";
 
-const meta: Meta<UpdateMemberOverlay> = {
-    component: UpdateMemberOverlay,
+const meta: Meta<WorkspaceUser> = {
+    component: WorkspaceUser,
     args: { workspaceUserAssignment },
 };
 export default meta;
 
-type Story = StoryObj<UpdateMemberOverlay>;
+type Story = StoryObj<WorkspaceUser>;
 
 export const Default: Story = {};
