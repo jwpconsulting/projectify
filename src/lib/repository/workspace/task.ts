@@ -1,4 +1,4 @@
-import type { ApolloQueryResult } from "@apollo/client/core";
+import type { ApolloQueryResult, FetchResult } from "@apollo/client/core";
 
 import { client } from "$lib/graphql/client";
 import {
@@ -9,7 +9,7 @@ import {
     Mutation_UpdateTask,
     Mutation_DeleteTask,
 } from "$lib/graphql/operations";
-import type { CreateTask, Task } from "$lib/types/workspace";
+import type { CreateTask, Task, Label } from "$lib/types/workspace";
 // Task CRUD
 // Create
 export async function createTask(createTask: CreateTask): Promise<Task> {
@@ -31,8 +31,8 @@ export async function createTask(createTask: CreateTask): Promise<Task> {
 }
 
 // Update
-export async function updateTask(task: Task) {
-    await client.mutate({
+export async function updateTask(task: Task, labels: Label[]): Promise<Task> {
+    const { data }: FetchResult<{ updateTask: Task }> = await client.mutate({
         mutation: Mutation_UpdateTask,
         variables: {
             input: {
@@ -40,13 +40,17 @@ export async function updateTask(task: Task) {
                 title: task.title,
                 description: task.description,
                 deadline: task.deadline ?? null,
-                // TODO
-                // labels: task.labels.map((l) => l.uuid),
+                labels: labels.map((l) => l.uuid),
                 // TODO
                 // assignee: task.assignee ? task.assignee.user.email : null,
             },
         },
     });
+    if (!data) {
+        throw new Error("Expected data");
+    }
+    // Assign ws user
+    return data.updateTask;
 }
 
 // XXX
@@ -102,22 +106,21 @@ export async function assignLabelToTask(
     task: Task,
     labelUuid: string,
     assigned: boolean
-): Promise<void> {
-    const input: {
-        taskUuid: string;
-        labelUuid: string;
-        assigned: boolean;
-    } = {
-        taskUuid: task.uuid,
-        labelUuid,
-        assigned,
-    };
-    await client.mutate({
+): Promise<Task> {
+    const result: FetchResult<{ assignLabel: Task }> = await client.mutate({
         mutation: Mutation_AssignLabel,
         variables: {
-            input,
+            input: {
+                taskUuid: task.uuid,
+                labelUuid,
+                assigned,
+            },
         },
     });
+    if (!result.data) {
+        throw new Error("Expected result.data");
+    }
+    return result.data.assignLabel;
 }
 
 // Delete

@@ -30,7 +30,8 @@
             title: $updateTask.title ?? task.title,
             description: $updateTask.description ?? task.description,
         };
-        await performUpdateTask(submitTask);
+        // TODO add labels here
+        await performUpdateTask(submitTask, []);
         if (!task.workspace_board_section) {
             throw new Error("Expected $updateTask.workspace_board_section");
         }
