@@ -222,7 +222,6 @@ export const workspaceUserFilter: WorkspaceUserFilter = {
 export const labelSearchModule: LabelFilter = {
     select: noop,
     deselect: noop,
-    selected: writable({ kind: "allLabels" }),
 };
 
 export const createTaskModule: CreateTaskModule = {

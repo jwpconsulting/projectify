@@ -6,7 +6,6 @@ import {
     currentWorkspaceLabels,
 } from "./label";
 
-import type { LabelFilter } from "$lib/types/stores";
 import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
 
 /*
@@ -59,9 +58,3 @@ export const labelFilterSearchResults = createLabelSearchResults(
     currentWorkspaceLabels,
     labelSearch
 );
-
-export const labelSearchModule: LabelFilter = {
-    select: filterByLabel,
-    deselect: unfilterByLabel,
-    selected: selectedLabels,
-};

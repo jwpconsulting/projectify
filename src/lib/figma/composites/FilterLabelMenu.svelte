@@ -1,5 +1,6 @@
 <script lang="ts">
     import { Plus } from "@steeze-ui/heroicons";
+    import type { Readable } from "svelte/store";
     import { _ } from "svelte-i18n";
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
@@ -10,10 +11,21 @@
         unfilterByLabel,
         labelSearch,
         labelFilterSearchResults,
+        selectedLabels,
     } from "$lib/stores/dashboard/labelFilter";
-    import type { LabelAssignment } from "$lib/types/stores";
+    import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
 
-    export let labelSearchModule: LabelAssignment;
+    type FilterLabelMenuMode =
+        | { kind: "filter" }
+        | {
+              kind: "assign";
+              selected: Readable<LabelSelection>;
+              assign: (labelSelectionInput: LabelSelectionInput) => void;
+              unassign: (labelSelectionInput: LabelSelectionInput) => void;
+          };
+
+    // TODO make this non-optional
+    export let mode: FilterLabelMenuMode = { kind: "filter" as const };
     // Here we need to distinguish between a label menu used to
     // filter tasks by labels
     // or assign a label to a task
@@ -21,7 +33,7 @@
     // If it is null, we don't show the create new label button
     export let startCreateLabel: (() => void) | null = null;
 
-    const { selected } = labelSearchModule;
+    $: selected = mode.kind === "filter" ? selectedLabels : mode.selected;
 </script>
 
 <div class="flex flex-col px-4 pb-4 pt-2">
@@ -36,18 +48,18 @@
     />
 </div>
 <div class="flex flex-col">
-    {#if $labelSearch === ""}
+    {#if $labelSearch === "" && mode.kind == "filter"}
         <FilterLabel
             label={{ kind: "allLabels" }}
             checked={$selected.kind === "allLabels"}
-            on:checked={() => filterByLabel({ kind: "allLabels" })}
-            on:unchecked={() => unfilterByLabel({ kind: "allLabels" })}
+            onCheck={filterByLabel}
+            onUncheck={unfilterByLabel}
         />
         <FilterLabel
             label={{ kind: "noLabel" }}
             checked={$selected.kind === "noLabel"}
-            on:checked={() => filterByLabel({ kind: "noLabel" })}
-            on:unchecked={() => unfilterByLabel({ kind: "noLabel" })}
+            onCheck={filterByLabel}
+            onUncheck={unfilterByLabel}
         />
     {/if}
     {#each $labelFilterSearchResults as label (label.uuid)}
@@ -57,10 +69,8 @@
                 ? $selected.labelUuids.has(label.uuid)
                 : false}
             {canEdit}
-            on:checked={() =>
-                filterByLabel({ kind: "label", labelUuid: label.uuid })}
-            on:unchecked={() =>
-                unfilterByLabel({ kind: "label", labelUuid: label.uuid })}
+            onCheck={filterByLabel}
+            onUncheck={unfilterByLabel}
         />
     {/each}
     {#if startCreateLabel}

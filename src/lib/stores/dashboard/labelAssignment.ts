@@ -3,23 +3,15 @@
  * assignment (assigning a label to a task) and filter (filtering tasks by
  * labels)
  */
-import { writable } from "svelte/store";
 
 import type { LabelAssignment } from "$lib/types/stores";
-import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
+import type { LabelSelectionInput } from "$lib/types/ui";
 import type { Task } from "$lib/types/workspace";
 
 export function createLabelSearchStore(
     task: Task | null,
     selectCallback: (labelUuid: string, selected: boolean) => void
 ): LabelAssignment {
-    const labelSelected: LabelSelection =
-        task?.labels && task.labels.length > 0
-            ? {
-                  kind: "labels",
-                  labelUuids: new Set(task.labels.map((l) => l.uuid)),
-              }
-            : { kind: "noLabel" };
     const selectOrDeselectLabel = (
         select: boolean,
         labelSelectionInput: LabelSelectionInput
@@ -45,6 +37,5 @@ export function createLabelSearchStore(
         deselect: (labelSelectionInput: LabelSelectionInput) => {
             selectOrDeselectLabel(false, labelSelectionInput);
         },
-        selected: writable<LabelSelection>(labelSelected),
     };
 }

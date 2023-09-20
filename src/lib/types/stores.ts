@@ -5,7 +5,6 @@ import type { SearchInput } from "./base";
 import type { RepositoryContext } from "./repository";
 
 import type {
-    LabelSelection,
     LabelSelectionInput,
     TasksPerUser,
     WorkspaceUserSelection,
@@ -40,13 +39,11 @@ export interface WorkspaceUserAssignment {
 export interface LabelFilter {
     select: (selection: LabelSelectionInput) => unknown;
     deselect: (selection: LabelSelectionInput) => unknown;
-    selected: Readable<LabelSelection>;
 }
 
 export interface LabelAssignment {
     select: (selection: LabelSelectionInput) => unknown;
     deselect: (selection: LabelSelectionInput) => unknown;
-    selected: Readable<LabelSelection>;
 }
 
 // It would make sense to rename all Module to Store

@@ -8,9 +8,7 @@
         labelExpandOpen,
         toggleLabelDropdownClosedNavOpen,
     } from "$lib/stores/dashboard";
-    import { labelSearchModule } from "$lib/stores/dashboard/labelFilter";
-
-    const { selected } = labelSearchModule;
+    import { selectedLabels } from "$lib/stores/dashboard/labelFilter";
 </script>
 
 <SideNavMenuCategoryFocus
@@ -18,8 +16,8 @@
     icon={Tag}
     on:click={toggleLabelDropdownClosedNavOpen}
     open={$labelExpandOpen}
-    filtered={$selected.kind !== "allLabels"}
+    filtered={$selectedLabels.kind !== "allLabels"}
 />
 {#if $labelExpandOpen}
-    <LabelMenu {labelSearchModule} />
+    <LabelMenu />
 {/if}

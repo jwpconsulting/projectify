@@ -8,11 +8,8 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { createLabel } from "$lib/repository/workspace";
     import { currentWorkspace } from "$lib/stores/dashboard";
-    import type { LabelFilter } from "$lib/types/stores";
     import type { Label } from "$lib/types/workspace";
     import { labelColors } from "$lib/utils/colors";
-
-    export let labelSearchModule: LabelFilter;
 
     // Still exporting this one for better testability in storybook
     // TODO or perhaps we can refactor the form to a new component?
@@ -73,7 +70,7 @@
 </script>
 
 {#if state === "list"}
-    <FilterLabelMenu {labelSearchModule} {startCreateLabel} />
+    <FilterLabelMenu {startCreateLabel} />
 {:else if state === "create"}
     <form class="flex flex-col gap-6" on:submit|preventDefault={save}>
         <div class="flex flex-col">

@@ -41,5 +41,5 @@
 {:else if target.kind === "updateMember"}
     <UpdateMemberOverlay workspaceUserFilter={target.workspaceUserFilter} />
 {:else if target.kind === "updateLabel"}
-    <UpdateLabelOverlay labelSearchModule={target.labelSearchModule} />
+    <UpdateLabelOverlay />
 {/if}
