@@ -6,29 +6,24 @@
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { deleteLabel } from "$lib/repository/workspace";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
-    import type { LabelSelectionInput } from "$lib/types/ui";
 
     export let label: SelectLabel;
     export let checked: boolean;
     export let canEdit = true;
 
-    export let onCheck: (labelSelectionInput: LabelSelectionInput) => void;
-    export let onUncheck: (labelSelectionInput: LabelSelectionInput) => void;
+    export let onCheck: () => void;
+    export let onUncheck: () => void;
 
     $: editable = label.kind === "label" && canEdit;
-    $: labelSelectionInput =
-        label.kind === "label"
-            ? { kind: label.kind, labelUuid: label.label.uuid }
-            : label;
 
     function click() {
         // TODO use callback props
         //  Justus 2023-09-19
         if (checked) {
-            onCheck(labelSelectionInput);
+            onCheck();
             checked = false;
         } else {
-            onUncheck(labelSelectionInput);
+            onUncheck();
             checked = true;
         }
     }
@@ -55,8 +50,8 @@
         <SelectLabelCheckBox
             {label}
             {checked}
-            on:checked={() => onCheck(labelSelectionInput)}
-            on:unchecked={() => onUncheck(labelSelectionInput)}
+            on:checked={onCheck}
+            on:unchecked={onUncheck}
         />
         <div class="text-regular truncate text-xs">
             {#if label.kind === "allLabels"}

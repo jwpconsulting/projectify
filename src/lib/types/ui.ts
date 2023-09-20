@@ -15,24 +15,43 @@ import type {
     WorkspaceUser,
 } from "$lib/types/workspace";
 
+// TODO rename LabelFilterInput
 export type LabelSelectionInput =
     | { kind: "noLabel" }
     | { kind: "allLabels" }
     | { kind: "label"; labelUuid: string };
 
+// TODO rename LabelFilterState
 export type LabelSelection =
     | { kind: "noLabel" }
     | { kind: "allLabels" }
     | { kind: "labels"; labelUuids: Set<string> };
 
+export type LabelAssignmentInput = LabelSelectionInput & {
+    kind: "noLabel" | "label";
+};
+export type LabelAssignmentState = LabelSelection & {
+    kind: "noLabel" | "label";
+};
+
+// Rename WorkspaceUserFilterInput
 export type WorkspaceUserSelectionInput =
     | { kind: "workspaceUser"; workspaceUser: WorkspaceUser }
     | { kind: "allWorkspaceUsers" }
     | { kind: "unassigned" };
+// Rename WorkspaceUserFilterState
 export type WorkspaceUserSelection =
     | { kind: "workspaceUsers"; workspaceUserUuids: Set<string> }
     | { kind: "allWorkspaceUsers" }
     | { kind: "unassigned" };
+
+export type WorkspaceUserAssignmentInput = WorkspaceUserSelectionInput & {
+    kind: "workspaceUser" | "unassigned";
+};
+export type WorkspaceUserAssignmentState = WorkspaceUserSelection & {
+    kind: "workspaceUser" | "unassigned";
+};
+
 export interface TasksPerUser {
     unassigned: number;
     assigned: Map<string, number>;

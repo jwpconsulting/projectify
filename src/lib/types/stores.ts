@@ -4,8 +4,8 @@ import type { Readable, Writable } from "svelte/store";
 import type { RepositoryContext } from "./repository";
 
 import type {
+    LabelAssignmentInput,
     LabelSelection,
-    LabelSelectionInput,
     WorkspaceUserSelection,
     WorkspaceUserSelectionInput,
 } from "$lib/types/ui";
@@ -23,8 +23,8 @@ export interface WorkspaceUserAssignment {
 }
 
 export interface LabelAssignment {
-    select: (selection: LabelSelectionInput) => unknown;
-    deselect: (selection: LabelSelectionInput) => unknown;
+    select: (selection: LabelAssignmentInput) => unknown;
+    deselect: (selection: LabelAssignmentInput) => unknown;
     selected: Readable<LabelSelection>;
 }
 

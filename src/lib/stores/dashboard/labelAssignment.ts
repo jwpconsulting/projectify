@@ -7,7 +7,7 @@
 import { readable } from "svelte/store";
 
 import type { LabelAssignment } from "$lib/types/stores";
-import type { LabelSelectionInput } from "$lib/types/ui";
+import type { LabelAssignmentInput } from "$lib/types/ui";
 import type { Task } from "$lib/types/workspace";
 
 export function createLabelAssignment(
@@ -16,28 +16,23 @@ export function createLabelAssignment(
 ): LabelAssignment {
     const selectOrDeselectLabel = (
         select: boolean,
-        labelSelectionInput: LabelSelectionInput
+        labelAssignmentInput: LabelAssignmentInput
     ) => {
-        const { kind } = labelSelectionInput;
+        const { kind } = labelAssignmentInput;
         if (kind === "noLabel") {
             console.error("No API for removing all labels");
             throw new Error("TODO");
-        } else if (kind === "allLabels") {
-            // XXX Clearly, allLabels only makes sense for side nav, not when
-            // assigning labels to tasks
-            console.error("No API for assigning all labels");
-            throw new Error("TODO");
         } else {
-            const { labelUuid } = labelSelectionInput;
+            const { labelUuid } = labelAssignmentInput;
             selectCallback(labelUuid, select);
         }
     };
     return {
-        select: (labelSelectionInput: LabelSelectionInput) => {
-            selectOrDeselectLabel(true, labelSelectionInput);
+        select: (labelAssignmentInput: LabelAssignmentInput) => {
+            selectOrDeselectLabel(true, labelAssignmentInput);
         },
-        deselect: (labelSelectionInput: LabelSelectionInput) => {
-            selectOrDeselectLabel(false, labelSelectionInput);
+        deselect: (labelAssignmentInput: LabelAssignmentInput) => {
+            selectOrDeselectLabel(false, labelAssignmentInput);
         },
         // TODO
         selected: readable({ kind: "noLabel" }),
