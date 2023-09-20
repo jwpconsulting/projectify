@@ -67,6 +67,8 @@
         // Go back
         state = "list";
     }
+
+    // TODO refactor creation thing into new thing
 </script>
 
 {#if state === "list"}

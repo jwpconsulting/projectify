@@ -2,15 +2,15 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 
 import { task } from "$lib/storybook";
 
-import TaskContextMenu from "$lib/figma/overlays/context-menu/TaskContextMenu.svelte";
+import Task from "$lib/figma/overlays/context-menu/Task.svelte";
 
-const meta: Meta<TaskContextMenu> = {
-    component: TaskContextMenu,
+const meta: Meta<Task> = {
+    component: Task,
     argTypes: {},
     args: { task },
 };
 export default meta;
 
-type Story = StoryObj<TaskContextMenu>;
+type Story = StoryObj<Task>;
 
 export const Default: Story = {};
