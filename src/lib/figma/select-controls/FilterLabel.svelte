@@ -50,8 +50,8 @@
         <SelectLabelCheckBox
             {label}
             {checked}
-            on:checked={onCheck}
-            on:unchecked={onUncheck}
+            onChecked={onCheck}
+            onUnchecked={onUncheck}
         />
         <div class="text-regular truncate text-xs">
             {#if label.kind === "allLabels"}

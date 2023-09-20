@@ -52,8 +52,8 @@
         workspaceUserSelectionInput={{ kind: "unassigned" }}
         active={$selected.kind === "unassigned"}
         count={$tasksPerUser.unassigned}
-        onSelect={select}
-        onDeselect={deselect}
+        onSelect={() => select({ kind: "unassigned" })}
+        onDeselect={() => deselect({ kind: "unassigned" })}
     />
     {#each $workspaceUserSearchResults as workspaceUser (workspaceUser.uuid)}
         <FilterUser
@@ -65,8 +65,16 @@
                 ? $selected.workspaceUserUuids.has(workspaceUser.uuid)
                 : false}
             count={$tasksPerUser.assigned.get(workspaceUser.uuid)}
-            onSelect={select}
-            onDeselect={deselect}
+            onSelect={() =>
+                select({
+                    kind: "workspaceUser",
+                    workspaceUser: workspaceUser,
+                })}
+            onDeselect={() =>
+                deselect({
+                    kind: "workspaceUser",
+                    workspaceUser: workspaceUser,
+                })}
         />
     {/each}
 </div>

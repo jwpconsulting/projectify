@@ -95,7 +95,7 @@
                         <SelectLabelCheckBox
                             {label}
                             checked={isLabelSelected[ix]}
-                            on:checked={() => {
+                            onChecked={() => {
                                 if (label.kind != "label") {
                                     throw new Error(
                                         "Going down the sad code path"
@@ -103,6 +103,8 @@
                                 }
                                 chosenColor = label.label;
                             }}
+                            onUnchecked={() =>
+                                console.debug("Should we do something here?")}
                             name="label-color"
                         />
                     {/each}

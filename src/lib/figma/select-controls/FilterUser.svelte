@@ -11,8 +11,8 @@
     export let active: boolean;
     export let count: number | undefined;
 
-    export let onSelect: (input: WorkspaceUserSelectionInput) => void;
-    export let onDeselect: (input: WorkspaceUserSelectionInput) => void;
+    export let onSelect: () => void;
+    export let onDeselect: () => void;
 
     $: showCount = count !== undefined;
     $: hideCount = !active || count === undefined;
@@ -20,9 +20,9 @@
     function click() {
         active = !active;
         if (active) {
-            onSelect(workspaceUserSelectionInput);
+            onSelect();
         } else {
-            onDeselect(workspaceUserSelectionInput);
+            onDeselect();
         }
     }
 </script>

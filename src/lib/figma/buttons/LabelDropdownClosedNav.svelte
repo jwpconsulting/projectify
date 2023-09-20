@@ -7,6 +7,7 @@
         filterByLabel,
         selectedLabels,
         labelFilterSearchResults,
+        unfilterByLabel,
     } from "$lib/stores/dashboard/labelFilter";
     import {
         labelExpandOpen,
@@ -26,12 +27,14 @@
             <SelectLabelCheckBox
                 label={{ kind: "allLabels" }}
                 checked={$selectedLabels.kind === "allLabels"}
-                on:selected={() => filterByLabel({ kind: "allLabels" })}
+                onChecked={() => filterByLabel({ kind: "allLabels" })}
+                onUnchecked={() => unfilterByLabel({ kind: "allLabels" })}
             />
             <SelectLabelCheckBox
                 label={{ kind: "noLabel" }}
                 checked={$selectedLabels.kind === "noLabel"}
-                on:selected={() => filterByLabel({ kind: "noLabel" })}
+                onChecked={() => filterByLabel({ kind: "noLabel" })}
+                onUnchecked={() => unfilterByLabel({ kind: "noLabel" })}
             />
             {#each $labelFilterSearchResults as label}
                 <SelectLabelCheckBox
@@ -39,8 +42,13 @@
                     checked={$selectedLabels.kind === "labels"
                         ? $selectedLabels.labelUuids.has(label.uuid)
                         : false}
-                    on:selected={() =>
+                    onChecked={() =>
                         filterByLabel({
+                            kind: "label",
+                            labelUuid: label.uuid,
+                        })}
+                    onUnchecked={() =>
+                        unfilterByLabel({
                             kind: "label",
                             labelUuid: label.uuid,
                         })}

@@ -53,7 +53,7 @@
     />
 </div>
 <div class="flex flex-col">
-    {#if $labelSearch === "" && mode.kind == "filter"}
+    {#if ($labelSearch === "" || $labelSearch === undefined) && mode.kind == "filter"}
         <FilterLabel
             label={{ kind: "allLabels" }}
             checked={$selected.kind === "allLabels"}

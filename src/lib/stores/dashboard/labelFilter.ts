@@ -15,6 +15,7 @@ export const selectedLabels = writable<LabelSelection>({ kind: "allLabels" });
 
 export function filterByLabel(selection: LabelSelectionInput) {
     selectedLabels.update((selectedLabels) => {
+        console.log(selection, selectedLabels);
         if (selection.kind == "label") {
             if (selectedLabels.kind === "labels") {
                 selectedLabels.labelUuids.add(selection.labelUuid);
@@ -52,6 +53,7 @@ export function unfilterByLabel(selection: LabelSelectionInput) {
     });
 }
 
+// TODO move createLabelFilter here
 export const labelSearch = createLabelFilter();
 // All the variables in this module should have labelFilter themed names
 export const labelFilterSearchResults = createLabelSearchResults(

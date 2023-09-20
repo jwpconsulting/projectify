@@ -7,7 +7,7 @@ import type {
     LabelAssignmentInput,
     LabelSelection,
     WorkspaceUserSelection,
-    WorkspaceUserSelectionInput,
+    WorkspaceUserAssignmentInput,
 } from "$lib/types/ui";
 import type {
     CreateTask,
@@ -17,8 +17,8 @@ import type {
 } from "$lib/types/workspace";
 
 export interface WorkspaceUserAssignment {
-    select: (selection: WorkspaceUserSelectionInput) => unknown;
-    deselect: (selection: WorkspaceUserSelectionInput) => unknown;
+    select: (selection: WorkspaceUserAssignmentInput) => unknown;
+    deselect: (selection: WorkspaceUserAssignmentInput) => unknown;
     selected: Readable<WorkspaceUserSelection>;
 }
 
