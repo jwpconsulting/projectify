@@ -1,5 +1,6 @@
 <script lang="ts">
     import HelpContextMenu from "$lib/figma/overlays/context-menu/HelpContextMenu.svelte";
+    import Label from "$lib/figma/overlays/context-menu/Label.svelte";
     import Permissions from "$lib/figma/overlays/context-menu/Permissions.svelte";
     import Profile from "$lib/figma/overlays/context-menu/Profile.svelte";
     import SideNavContextMenu from "$lib/figma/overlays/context-menu/SideNavContextMenu.svelte";
@@ -7,7 +8,6 @@
     import Workspace from "$lib/figma/overlays/context-menu/Workspace.svelte";
     import WorkspaceBoard from "$lib/figma/overlays/context-menu/WorkspaceBoard.svelte";
     import WorkspaceBoardSection from "$lib/figma/overlays/context-menu/WorkspaceBoardSection.svelte";
-    import UpdateLabelOverlay from "$lib/figma/overlays/UpdateLabelOverlay.svelte";
     import UpdateMemberOverlay from "$lib/figma/overlays/UpdateMemberOverlay.svelte";
     import type { ContextMenuType } from "$lib/types/ui";
 
@@ -43,5 +43,5 @@
         workspaceUserAssignment={target.workspaceUserAssignment}
     />
 {:else if target.kind === "updateLabel"}
-    <UpdateLabelOverlay labelAssignment={target.labelAssignment} />
+    <Label labelAssignment={target.labelAssignment} />
 {/if}
