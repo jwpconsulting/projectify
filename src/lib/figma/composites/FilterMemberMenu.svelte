@@ -11,20 +11,27 @@
         workspaceUserSearch,
         workspaceUserSearchResults,
     } from "$lib/stores/dashboard/workspaceUserFilter";
+    import type { WorkspaceUserAssignment } from "$lib/types/stores";
 
-    type FilterMemberMenuMode = { kind: "filter" } | { kind: "assign" };
+    type FilterMemberMenuMode =
+        | { kind: "filter" }
+        | { kind: "assign"; workspaceUserAssignment: WorkspaceUserAssignment };
 
     // TODO make non-optional
     export let mode: FilterMemberMenuMode = { kind: "filter" };
 
     $: selected =
-        mode.kind === "filter" ? selectedWorkspaceUser : selectedWorkspaceUser;
+        mode.kind === "filter"
+            ? selectedWorkspaceUser
+            : mode.workspaceUserAssignment.selected;
     $: select =
-        mode.kind === "filter" ? filterByWorkspaceUser : filterByWorkspaceUser;
+        mode.kind === "filter"
+            ? filterByWorkspaceUser
+            : mode.workspaceUserAssignment.select;
     $: deselect =
         mode.kind === "filter"
             ? unfilterByWorkspaceUser
-            : unfilterByWorkspaceUser;
+            : mode.workspaceUserAssignment.deselect;
 
     // TODO The whole above could be turned into a store
 </script>

@@ -4,6 +4,8 @@
  * labels)
  */
 
+import { readable } from "svelte/store";
+
 import type { LabelAssignment } from "$lib/types/stores";
 import type { LabelSelectionInput } from "$lib/types/ui";
 import type { Task } from "$lib/types/workspace";
@@ -37,5 +39,7 @@ export function createLabelSearchStore(
         deselect: (labelSelectionInput: LabelSelectionInput) => {
             selectOrDeselectLabel(false, labelSelectionInput);
         },
+        // TODO
+        selected: readable({ kind: "noLabel" }),
     };
 }

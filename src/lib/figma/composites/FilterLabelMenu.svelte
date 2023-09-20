@@ -1,6 +1,5 @@
 <script lang="ts">
     import { Plus } from "@steeze-ui/heroicons";
-    import type { Readable } from "svelte/store";
     import { _ } from "svelte-i18n";
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
@@ -13,15 +12,13 @@
         labelFilterSearchResults,
         selectedLabels,
     } from "$lib/stores/dashboard/labelFilter";
-    import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
+    import type { LabelAssignment } from "$lib/types/stores";
 
     type FilterLabelMenuMode =
         | { kind: "filter" }
         | {
               kind: "assign";
-              selected: Readable<LabelSelection>;
-              assign: (labelSelectionInput: LabelSelectionInput) => void;
-              unassign: (labelSelectionInput: LabelSelectionInput) => void;
+              labelAssignment: LabelAssignment;
           };
 
     // TODO make this non-optional
@@ -33,7 +30,16 @@
     // If it is null, we don't show the create new label button
     export let startCreateLabel: (() => void) | null = null;
 
-    $: selected = mode.kind === "filter" ? selectedLabels : mode.selected;
+    $: selected =
+        mode.kind === "filter"
+            ? selectedLabels
+            : mode.labelAssignment.selected;
+    $: onCheck =
+        mode.kind === "filter" ? filterByLabel : mode.labelAssignment.select;
+    $: onUncheck =
+        mode.kind === "filter"
+            ? unfilterByLabel
+            : mode.labelAssignment.deselect;
 </script>
 
 <div class="flex flex-col px-4 pb-4 pt-2">
@@ -52,14 +58,14 @@
         <FilterLabel
             label={{ kind: "allLabels" }}
             checked={$selected.kind === "allLabels"}
-            onCheck={filterByLabel}
-            onUncheck={unfilterByLabel}
+            {onCheck}
+            {onUncheck}
         />
         <FilterLabel
             label={{ kind: "noLabel" }}
             checked={$selected.kind === "noLabel"}
-            onCheck={filterByLabel}
-            onUncheck={unfilterByLabel}
+            {onCheck}
+            {onUncheck}
         />
     {/if}
     {#each $labelFilterSearchResults as label (label.uuid)}
@@ -69,8 +75,8 @@
                 ? $selected.labelUuids.has(label.uuid)
                 : false}
             {canEdit}
-            onCheck={filterByLabel}
-            onUncheck={unfilterByLabel}
+            {onCheck}
+            {onUncheck}
         />
     {/each}
     {#if startCreateLabel}

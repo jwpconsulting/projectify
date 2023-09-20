@@ -1,4 +1,6 @@
 <script lang="ts">
+    // Rename to Help.svelte (other context menu names can be simplified as
+    // well)
     import { _ } from "svelte-i18n";
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";

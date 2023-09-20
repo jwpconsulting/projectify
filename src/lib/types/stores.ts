@@ -4,6 +4,7 @@ import type { Readable, Writable } from "svelte/store";
 import type { RepositoryContext } from "./repository";
 
 import type {
+    LabelSelection,
     LabelSelectionInput,
     WorkspaceUserSelection,
     WorkspaceUserSelectionInput,
@@ -24,6 +25,7 @@ export interface WorkspaceUserAssignment {
 export interface LabelAssignment {
     select: (selection: LabelSelectionInput) => unknown;
     deselect: (selection: LabelSelectionInput) => unknown;
+    selected: Readable<LabelSelection>;
 }
 
 // It would make sense to rename all Module to Store

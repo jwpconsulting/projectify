@@ -219,6 +219,7 @@ export const workspaceUserAssignment: WorkspaceUserAssignment = {
 export const labelAssignment: LabelAssignment = {
     select: noop,
     deselect: noop,
+    selected: readable({ kind: "noLabel" }),
 };
 
 export const createTaskModule: CreateTaskModule = {

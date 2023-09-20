@@ -39,7 +39,9 @@
 {:else if target.kind === "permissions"}
     <PermissionsContextMenu />
 {:else if target.kind === "updateMember"}
-    <UpdateMemberOverlay />
+    <UpdateMemberOverlay
+        workspaceUserAssignment={target.workspaceUserAssignment}
+    />
 {:else if target.kind === "updateLabel"}
-    <UpdateLabelOverlay />
+    <UpdateLabelOverlay labelAssignment={target.labelAssignment} />
 {/if}
