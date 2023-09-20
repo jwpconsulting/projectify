@@ -41,14 +41,12 @@ export interface LabelFilter {
     select: (selection: LabelSelectionInput) => unknown;
     deselect: (selection: LabelSelectionInput) => unknown;
     selected: Readable<LabelSelection>;
-    createLabel: (color: number, name: string) => Promise<void>;
 }
 
 export interface LabelAssignment {
     select: (selection: LabelSelectionInput) => unknown;
     deselect: (selection: LabelSelectionInput) => unknown;
     selected: Readable<LabelSelection>;
-    createLabel: (color: number, name: string) => Promise<void>;
 }
 
 // It would make sense to rename all Module to Store

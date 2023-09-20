@@ -46,9 +46,5 @@ export function createLabelSearchStore(
             selectOrDeselectLabel(false, labelSelectionInput);
         },
         selected: writable<LabelSelection>(labelSelected),
-        async createLabel() {
-            await new Promise(console.error);
-            throw new Error("Not implemented");
-        },
     };
 }

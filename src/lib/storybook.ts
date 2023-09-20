@@ -223,7 +223,6 @@ export const labelSearchModule: LabelFilter = {
     select: noop,
     deselect: noop,
     selected: writable({ kind: "allLabels" }),
-    createLabel: noopAsync,
 };
 
 export const createTaskModule: CreateTaskModule = {
