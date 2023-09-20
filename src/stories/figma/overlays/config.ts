@@ -3,9 +3,9 @@ import {
     workspace,
     workspaceBoard,
     workspaceBoardSection,
-    workspaceUserFilter,
+    workspaceUserAssignment,
     workspaceUser,
-    labelSearchModule,
+    labelAssignment,
     makeStorybookSelect,
     moveTaskModule,
 } from "$lib/storybook";
@@ -56,13 +56,14 @@ export const contextMenus: Record<string, ContextMenuType> = {
     "Permissions": {
         kind: "permissions",
     },
+    // TODO should be update workspace user assignment?
     "Update member": {
         kind: "updateMember",
-        workspaceUserFilter,
+        workspaceUserAssignment,
     },
     "Update label": {
         kind: "updateLabel",
-        labelSearchModule,
+        labelAssignment,
     },
 };
 // Have a nice day!

@@ -41,8 +41,8 @@
         await goto(url);
     }
 
-    const workspaceUserFilter = createWorkspaceUserSearchStore(task);
-    const labelSearchModule = createLabelSearchStore(
+    const workspaceUserAssignment = createWorkspaceUserSearchStore(task);
+    const labelAssignment = createLabelSearchStore(
         task,
         async (labelUuid: string, selected: boolean) => {
             await assignLabelToTask(task, labelUuid, selected);
@@ -57,14 +57,14 @@
         canCreateOrUpdate: readable(true),
         // TODO make workspace user menu so that "all" can not be
         // selected
-        workspaceUserFilter,
-        labelSearchModule,
+        workspaceUserAssignment,
+        labelAssignment,
         // TODO make label menu so that "all" can not be selected
         showUpdateWorkspaceUser: (anchor: HTMLElement) => {
             openContextMenu(
                 {
                     kind: "updateMember",
-                    workspaceUserFilter,
+                    workspaceUserAssignment,
                 },
                 anchor
             );
@@ -73,7 +73,7 @@
             openContextMenu(
                 {
                     kind: "updateLabel",
-                    labelSearchModule,
+                    labelAssignment,
                 },
                 anchor
             );

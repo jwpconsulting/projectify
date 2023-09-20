@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 
 import { assignUserToTask } from "$lib/repository/workspace";
-import type { WorkspaceUserFilter } from "$lib/types/stores";
+import type { WorkspaceUserAssignment } from "$lib/types/stores";
 import type {
     WorkspaceUserSelection,
     WorkspaceUserSelectionInput,
@@ -21,7 +21,9 @@ export async function assignWorkspaceUser(
     }
 }
 
-export function createWorkspaceUserSearchStore(task: Task) {
+export function createWorkspaceUserSearchStore(
+    task: Task
+): WorkspaceUserAssignment {
     const selected: WorkspaceUserSelection = task.assignee
         ? {
               kind: "workspaceUsers",
@@ -30,12 +32,11 @@ export function createWorkspaceUserSearchStore(task: Task) {
         : {
               kind: "unassigned",
           };
-    const workspaceUserFilter: WorkspaceUserFilter = {
+    return {
         async select(selection: WorkspaceUserSelectionInput) {
             await assignWorkspaceUser(task, selection);
         },
         deselect: console.error,
         selected: writable<WorkspaceUserSelection>(selected),
     };
-    return workspaceUserFilter;
 }

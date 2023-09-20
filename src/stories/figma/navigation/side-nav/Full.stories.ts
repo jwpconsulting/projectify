@@ -1,10 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import {
-    workspace,
-    workspaceUserFilter,
-    labelSearchModule,
-} from "$lib/storybook";
+import { workspace } from "$lib/storybook";
 
 import Full from "$lib/figma/navigation/side-nav/Full.svelte";
 
@@ -13,8 +9,6 @@ const meta: Meta<Full> = {
     args: {
         workspace,
         workspaces: [workspace],
-        workspaceUserFilter,
-        labelSearchModule,
     },
 };
 export default meta;

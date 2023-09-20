@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { labelSearchModule } from "$lib/storybook";
-
 import LabelMenu from "$lib/figma/composites/LabelMenu.svelte";
 import { filterLabelMenuStates } from "$lib/figma/types";
 
@@ -12,9 +10,6 @@ const meta: Meta<LabelMenu> = {
             control: "radio",
             options: filterLabelMenuStates,
         },
-    },
-    args: {
-        labelSearchModule,
     },
 };
 export default meta;

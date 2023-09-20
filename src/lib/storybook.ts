@@ -5,10 +5,10 @@ import type { Customer } from "./types/corporate";
 import type { LabelLabel, SelectLabel } from "$lib/figma/types";
 import type {
     CreateTaskModule,
-    LabelFilter,
+    LabelAssignment,
     MoveTaskModule,
     TaskModule,
-    WorkspaceUserFilter,
+    WorkspaceUserAssignment,
 } from "$lib/types/stores";
 import type {
     BreadCrumbWorkspaceBoardSection,
@@ -210,13 +210,13 @@ const noopAsync = async () => {
     console.error("noopAsync");
 };
 
-export const workspaceUserFilter: WorkspaceUserFilter = {
+export const workspaceUserAssignment: WorkspaceUserAssignment = {
     select: noop,
     deselect: noop,
     selected: writable({ kind: "allWorkspaceUsers" }),
 };
 
-export const labelSearchModule: LabelFilter = {
+export const labelAssignment: LabelAssignment = {
     select: noop,
     deselect: noop,
 };
@@ -228,8 +228,8 @@ export const createTaskModule: CreateTaskModule = {
     createOrUpdateTask() {
         console.log("Called createOrUpdateTask");
     },
-    workspaceUserFilter,
-    labelSearchModule,
+    workspaceUserAssignment,
+    labelAssignment,
 };
 
 export const taskModule: TaskModule = {
@@ -245,8 +245,8 @@ export const taskModule: TaskModule = {
     showUpdateLabel() {
         console.log("Showing label context menu");
     },
-    workspaceUserFilter,
-    labelSearchModule,
+    workspaceUserAssignment,
+    labelAssignment,
 };
 
 export const moveTaskModule: MoveTaskModule = {

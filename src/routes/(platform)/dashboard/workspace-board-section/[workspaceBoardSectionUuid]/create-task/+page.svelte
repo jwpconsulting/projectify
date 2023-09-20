@@ -32,7 +32,7 @@
         throw new Error("Expected workspace");
     }
 
-    const labelSearchModule = createLabelSearchStore(null, () =>
+    const labelAssignment = createLabelSearchStore(null, () =>
         console.error("Not implemented")
     );
     const createTaskModule: CreateTaskModule = {
@@ -53,13 +53,13 @@
         // assign users/labels after the task is already created
         // TODO make workspace user menu so that "all" can not be
         // selected
-        workspaceUserFilter: {
+        workspaceUserAssignment: {
             select: console.error,
             deselect: console.error,
             selected: writable<WorkspaceUserSelection>(),
         },
         // TODO make label menu so that "all" can not be selected
-        labelSearchModule,
+        labelAssignment,
     };
 
     async function createOrUpdateTask() {

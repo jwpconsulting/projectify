@@ -15,21 +15,10 @@ import type {
     WorkspaceBoardSection,
 } from "$lib/types/workspace";
 
-export interface WorkspaceUserFilter {
-    select: (selection: WorkspaceUserSelectionInput) => unknown;
-    deselect: (selection: WorkspaceUserSelectionInput) => unknown;
-    selected: Readable<WorkspaceUserSelection>;
-}
-
 export interface WorkspaceUserAssignment {
     select: (selection: WorkspaceUserSelectionInput) => unknown;
     deselect: (selection: WorkspaceUserSelectionInput) => unknown;
     selected: Readable<WorkspaceUserSelection>;
-}
-
-export interface LabelFilter {
-    select: (selection: LabelSelectionInput) => unknown;
-    deselect: (selection: LabelSelectionInput) => unknown;
 }
 
 export interface LabelAssignment {
@@ -45,8 +34,8 @@ export interface LabelAssignment {
 export interface CreateOrUpdateTaskModule {
     canCreateOrUpdate: Readable<boolean>;
     createOrUpdateTask: () => unknown;
-    workspaceUserFilter: WorkspaceUserFilter;
-    labelSearchModule: LabelFilter;
+    workspaceUserAssignment: WorkspaceUserAssignment;
+    labelAssignment: LabelAssignment;
 }
 
 export type TaskModule = {

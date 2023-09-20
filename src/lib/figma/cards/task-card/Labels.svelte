@@ -15,7 +15,7 @@
     let labelPickerBtnRef: HTMLElement;
 
     function openLabelPicker() {
-        const labelSearchModule: LabelAssignment = createLabelSearchStore(
+        const labelAssignment: LabelAssignment = createLabelSearchStore(
             task,
             (labelUuid: string, selected: boolean) => {
                 assignLabelToTask(task, labelUuid, selected);
@@ -23,7 +23,7 @@
         );
         const contextMenuType: ContextMenuType = {
             kind: "updateLabel",
-            labelSearchModule,
+            labelAssignment,
         };
         // TODO
         openContextMenu(contextMenuType, labelPickerBtnRef);
