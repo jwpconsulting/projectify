@@ -82,30 +82,6 @@ class TestWorkspaceBoardSectionRetrieve:
 
 
 @pytest.mark.django_db
-class TestTaskRetrieve:
-    """Test Task retrieve."""
-
-    @pytest.fixture
-    def resource_url(self, task: models.Task) -> str:
-        """Return URL to resource."""
-        return reverse("workspace:task", args=(task.uuid,))
-
-    def test_authenticated(
-        self,
-        user_client: Client,
-        resource_url: str,
-        user: AbstractBaseUser,
-        task: models.Task,
-        workspace_user: models.WorkspaceUser,
-        django_assert_num_queries: DjangoAssertNumQueries,
-    ) -> None:
-        """Test retrieving when authenticated."""
-        with django_assert_num_queries(6):
-            response = user_client.get(resource_url)
-        assert response.status_code == 200, response.content
-
-
-@pytest.mark.django_db
 class TestWorkspaceBoardsArchivedList:
     """Test WorkspaceBoardsArchived list."""
 

@@ -66,7 +66,7 @@ urlpatterns = (
     # Read
     path(
         "task/<uuid:task_uuid>",
-        views.TaskRetrieve.as_view(),
+        views.TaskRetrieveUpdate.as_view(),
         name="task",
     ),
     # Update

@@ -1,4 +1,5 @@
 from typing import (
+    Any,
     Optional,
 )
 
@@ -7,6 +8,9 @@ from django.template.response import (
 )
 
 class Response(SimpleTemplateResponse):
+
+    data: Any
+
     def __init__(
         self,
         data: Optional[object] = None,
