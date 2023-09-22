@@ -108,6 +108,7 @@ class TaskBaseSerializer(serializers.ModelSerializer[models.Task]):
         """Meta."""
 
         model = models.Task
+        read_only_fields = ("number",)
         fields: Iterable[str] = (
             *timestamps,
             *title_description,
