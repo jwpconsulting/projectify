@@ -4,12 +4,14 @@ import TaskDueDate from "$lib/figma/screens/task/TaskDueDate.svelte";
 
 const meta: Meta<TaskDueDate> = {
     component: TaskDueDate,
+    args: { readonly: false },
     argTypes: {
+        readonly: { control: "boolean" },
         date: {
             control: {
                 type: "radio",
             },
-            options: [null, "2024-01-01"],
+            options: [null, "2024-01-01", "2024-01-01T23:23"],
         },
     },
 };

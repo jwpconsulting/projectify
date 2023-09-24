@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
+    import { _, date as formatDate } from "svelte-i18n";
 
     import DueDateWarning from "$lib/figma/buttons/DueDateWarning.svelte";
     import SectionLocationState from "$lib/figma/screens/task/SectionLocationState.svelte";
@@ -14,12 +14,14 @@
 
     // TODO show Due soon!
     export let dueSoon = false;
+    // XXX assumes that its valid
+    $: valueAsDate = date ? new Date(date) : undefined;
 </script>
 
 <div class="flex flex-row items-center gap-4">
     {#if readonly}
-        {#if date}
-            <SectionLocationState label={date} />
+        {#if valueAsDate}
+            <SectionLocationState label={$formatDate(valueAsDate)} />
         {:else}
             <SectionLocationState
                 label={action
