@@ -98,7 +98,7 @@ def serialize(
 def send_workspace_change_signal(instance: models.Workspace) -> None:
     """Send workspace.change signal to correct group."""
     uuid = str(instance.uuid)
-    data = serialize(serializers.WorkspaceSerializer, instance)
+    data = serialize(serializers.WorkspaceDetailSerializer, instance)
     group_send(
         f"workspace-{uuid}",
         {

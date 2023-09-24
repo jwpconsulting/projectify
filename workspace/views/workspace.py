@@ -68,7 +68,7 @@ class WorkspaceRetrieve(
     generics.RetrieveAPIView[
         models.Workspace,
         models.WorkspaceQuerySet,
-        serializers.WorkspaceSerializer,
+        serializers.WorkspaceDetailSerializer,
     ]
 ):
     """Workspace retrieve view."""
@@ -87,7 +87,7 @@ class WorkspaceRetrieve(
             ),
         ),
     )
-    serializer_class = serializers.WorkspaceSerializer
+    serializer_class = serializers.WorkspaceDetailSerializer
 
     def get_object(self) -> models.Workspace:
         """Return queryset with authenticated user in mind."""
