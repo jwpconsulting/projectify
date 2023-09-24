@@ -4,6 +4,10 @@
         currentWorkspace,
         currentWorkspaces,
     } from "$lib/stores/dashboard";
+    import type { Workspace } from "$lib/types/workspace";
+
+    let workspace: Workspace | undefined = undefined;
+    let workspaces: Workspace[] = [];
 
     $: workspaces = $currentWorkspaces ?? [];
     $: workspace = $currentWorkspace;
@@ -12,7 +16,11 @@
 <div class="flex h-full grow flex-row">
     <!-- this breakpoint is in tune with the mobile menu breakpoint -->
     <div class="hidden md:block">
-        <SideNav {workspaces} {workspace} />
+        {#if workspace}
+            <SideNav {workspaces} {workspace} />
+        {:else}
+            Loading workspaces
+        {/if}
     </div>
     <div class="grow">
         <slot />

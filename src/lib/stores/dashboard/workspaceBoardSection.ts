@@ -62,7 +62,6 @@ function createCurrentWorkspaceBoardSections(
         []
     );
 }
-console.error(selectedLabels, selectedWorkspaceUser, currentWorkspaceBoard);
 export const currentWorkspaceBoardSections =
     createCurrentWorkspaceBoardSections(
         selectedLabels,

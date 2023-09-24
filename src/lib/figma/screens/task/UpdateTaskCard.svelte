@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { Writable } from "svelte/store";
     import { readable, writable } from "svelte/store";
+    import { _ } from "svelte-i18n";
 
     import { goto } from "$lib/navigation";
     import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
@@ -17,6 +18,7 @@
     import TaskUser from "$lib/figma/screens/task/TaskUser.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import type { TaskUpdateBarState } from "$lib/figma/types";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
     import { updateTask as performUpdateTask } from "$lib/repository/workspace";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
@@ -66,13 +68,11 @@
 
     const workspaceUserAssignment = createWorkspaceUserAssignment(task);
     const labelAssignment = createLabelAssignment(task);
+    // TODO
+    const canCreateOrUpdate = readable(true);
     const taskModule: TaskModule = {
         task,
-        createOrUpdateTask,
         updateTask,
-        // We might want to add some more sophisticated rules
-        // as to when and when not this can be updated
-        canCreateOrUpdate: readable(true),
         // TODO make workspace user menu so that "all" can not be
         // selected
         workspaceUserAssignment,
@@ -114,11 +114,21 @@
 </script>
 
 <TaskC>
-    <TopBar
-        slot="top-bar"
-        breadcrumb={{ task: task, workspaceBoardSection }}
-        {taskModule}
-    />
+    <TopBar slot="top-bar" breadcrumb={{ task: task, workspaceBoardSection }}>
+        <svelte:fragment slot="buttons">
+            <Button
+                action={{
+                    kind: "button",
+                    action: createOrUpdateTask,
+                    disabled: !$canCreateOrUpdate,
+                }}
+                color="blue"
+                size="small"
+                style={{ kind: "primary" }}
+                label={$_("task-screen.save")}
+            />
+        </svelte:fragment>
+    </TopBar>
     <TaskUpdateBar slot="tab-bar-mobile" kind="mobile" {state} {task} />
     <TaskUpdateBar slot="tab-bar-desktop" kind="mobile" {state} {task} />
     <TaskFieldsTemplate slot="content">

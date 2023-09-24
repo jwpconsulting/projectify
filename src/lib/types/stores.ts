@@ -35,8 +35,6 @@ export interface LabelAssignment {
 // This is a mess!
 // this contains whatever is shared between creating / updating tasks
 export interface CreateOrUpdateTaskModule {
-    canCreateOrUpdate: Readable<boolean>;
-    createOrUpdateTask: () => unknown;
     workspaceUserAssignment: WorkspaceUserAssignment;
     labelAssignment: LabelAssignment;
 }

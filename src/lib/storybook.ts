@@ -229,10 +229,6 @@ export const labelAssignment: LabelAssignment = {
 export const createTaskModule: CreateTaskModule = {
     newTask,
     createTask: writable<Partial<CreateTask>>({}),
-    canCreateOrUpdate: readable(false),
-    createOrUpdateTask() {
-        console.log("Called createOrUpdateTask");
-    },
     workspaceUserAssignment,
     labelAssignment,
 };
@@ -240,10 +236,6 @@ export const createTaskModule: CreateTaskModule = {
 export const taskModule: TaskModule = {
     task,
     updateTask: writable<Partial<Task>>({}),
-    canCreateOrUpdate: readable(false),
-    createOrUpdateTask() {
-        console.log("Updating this task");
-    },
     showUpdateWorkspaceUser() {
         console.log("Showing workspace user context menu");
     },

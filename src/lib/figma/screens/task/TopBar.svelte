@@ -1,17 +1,13 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
-
     import {
         getDashboardWorkspaceBoardSectionUrl,
         getDashboardWorkspaceBoardUrl,
     } from "$lib/urls";
 
-    import Button from "$lib/funabashi/buttons/Button.svelte";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { openContextMenu } from "$lib/stores/globalUi";
-    import type { CreateOrUpdateTaskModule } from "$lib/types/stores";
     import type { BreadCrumbTask, ContextMenuType } from "$lib/types/ui";
     import {
         isBreadCrumbWorkspaceBoardSection,
@@ -19,18 +15,10 @@
     } from "$lib/types/ui";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
-    export let taskModule: CreateOrUpdateTaskModule | undefined = undefined;
-    // TODO Can we pull this out of taskModule too? Justus 2023-05-08
-
     export let breadcrumb: {
         workspaceBoardSection: WorkspaceBoardSection;
         task?: Task;
     };
-
-    export let editLink: string | null = null;
-
-    $: canCreateOrUpdate = taskModule?.canCreateOrUpdate;
-    $: createOrUpdate = taskModule?.createOrUpdateTask;
 
     let contextMenuRef: HTMLElement;
     let contextMenuType: ContextMenuType | undefined;
@@ -101,28 +89,7 @@
         </div>
     </div>
     <div class="flex h-10 flex-row items-center gap-4">
-        {#if editLink}
-            <Button
-                color="blue"
-                size="small"
-                style={{ kind: "primary" }}
-                label={$_("task-screen.edit")}
-                action={{ kind: "a", href: editLink }}
-            />
-        {/if}
-        {#if createOrUpdate}
-            <Button
-                action={{
-                    kind: "button",
-                    action: createOrUpdate,
-                    disabled: !$canCreateOrUpdate,
-                }}
-                color="blue"
-                size="small"
-                style={{ kind: "primary" }}
-                label={$_("task-screen.save")}
-            />
-        {/if}
+        <slot name="buttons" />
         <div bind:this={contextMenuRef}>
             {#if contextMenuType}
                 <SquovalIcon

@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { _ } from "svelte-i18n";
+
     import { getTaskEditUrl } from "$lib/urls";
 
     import TaskC from "$lib/components/dashboard/task/Task.svelte";
@@ -12,6 +14,7 @@
     import TaskUser from "$lib/figma/screens/task/TaskUser.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import type { TaskUpdateBarState } from "$lib/figma/types";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
     export let task: Task;
@@ -20,11 +23,15 @@
 </script>
 
 <TaskC>
-    <TopBar
-        slot="top-bar"
-        breadcrumb={{ task, workspaceBoardSection }}
-        editLink={getTaskEditUrl(task.uuid)}
-    />
+    <TopBar slot="top-bar" breadcrumb={{ task, workspaceBoardSection }}>
+        <Button
+            color="blue"
+            size="small"
+            style={{ kind: "primary" }}
+            label={$_("task-screen.edit")}
+            action={{ kind: "a", href: getTaskEditUrl(task.uuid) }}
+        />
+    </TopBar>
     <TaskFieldsTemplate slot="content">
         <TaskTitle slot="title" title={task.title} readonly />
         <TaskUser slot="assignee" workspaceUser={task.assignee ?? null} />

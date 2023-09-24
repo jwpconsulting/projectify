@@ -1,89 +1,11 @@
 <script lang="ts">
-    import { derived, writable } from "svelte/store";
-
-    import { goto } from "$lib/navigation";
-    import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
-
     import type { PageData } from "./$types";
 
-    import Loading from "$lib/components/loading.svelte";
     import CreateTaskCard from "$lib/figma/screens/task/CreateTaskCard.svelte";
-    import { createTask as createTaskFn } from "$lib/repository/workspace";
-    import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
-    import type { CreateTaskModule } from "$lib/types/stores";
-    import type { WorkspaceUserSelection } from "$lib/types/ui";
-    import type { CreateTask } from "$lib/types/workspace";
 
     export let data: PageData;
 
     const { workspaceBoardSection } = data;
-
-    const createTask = writable<Partial<CreateTask>>({});
-
-    const newTask = {
-        workspace_board_section: workspaceBoardSection,
-    };
-    const { workspace_board: workspaceBoard } = workspaceBoardSection;
-    if (!workspaceBoard) {
-        throw new Error("Expected workspaceBoard");
-    }
-    const { workspace } = workspaceBoard;
-    if (!workspace) {
-        throw new Error("Expected workspace");
-    }
-
-    const labelAssignment = createLabelAssignment();
-    const createTaskModule: CreateTaskModule = {
-        createOrUpdateTask: createOrUpdateTask,
-        createTask,
-        newTask,
-        canCreateOrUpdate: derived<[typeof createTask], boolean>(
-            [createTask],
-            ([$createTask], set) => {
-                set(
-                    $createTask.title !== undefined &&
-                        $createTask.description !== undefined
-                );
-            },
-            false
-        ),
-        // XXX this requires special logic because we can only
-        // assign users/labels after the task is already created
-        // TODO make workspace user menu so that "all" can not be
-        // selected
-        workspaceUserAssignment: {
-            select: console.error,
-            deselect: console.error,
-            selected: writable<WorkspaceUserSelection>(),
-        },
-        // TODO make label menu so that "all" can not be selected
-        labelAssignment,
-    };
-
-    async function createOrUpdateTask() {
-        const { title, description } = $createTask;
-        if (!title || !description) {
-            throw new Error("Expected title and description");
-        }
-        const { newTask } = createTaskModule;
-        const createTaskFull: CreateTask = {
-            title,
-            description,
-            workspace_board_section: newTask.workspace_board_section,
-            // TODO
-            labels: [],
-            // TODO
-            deadline: null,
-        };
-        await createTaskFn(createTaskFull);
-        await goto(
-            getDashboardWorkspaceBoardSectionUrl(workspaceBoardSection.uuid)
-        );
-    }
 </script>
 
-{#if createTaskModule}
-    <CreateTaskCard {createTaskModule} {workspaceBoardSection} />
-{:else}
-    <Loading />
-{/if}
+<CreateTaskCard {workspaceBoardSection} />
