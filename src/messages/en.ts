@@ -377,6 +377,7 @@ const messages: MessageCollection = {
         "reset-password": "Reset password",
     },
     "task-screen": {
+        "new-task-breadcrumb": "New task (currently creating)",
         "new-task-name": "New task name",
         "description": "Description",
         "labels": "Labels",

@@ -3,7 +3,13 @@
     import { _ } from "svelte-i18n";
 
     import { goto } from "$lib/navigation";
-    import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
+    import {
+        getDashboardWorkspaceBoardSectionUrl,
+        getDashboardWorkspaceBoardUrl,
+        getNewTaskUrl,
+    } from "$lib/urls";
+
+    import Breadcrumbs from "./Breadcrumbs.svelte";
 
     import TaskC from "$lib/components/dashboard/task/Task.svelte";
     import TaskDescription from "$lib/figma/screens/task/TaskDescription.svelte";
@@ -84,10 +90,28 @@
             getDashboardWorkspaceBoardSectionUrl(workspaceBoardSection.uuid)
         );
     }
+
+    $: crumbs = [
+        {
+            label: workspaceBoard.title,
+            href: getDashboardWorkspaceBoardUrl(workspaceBoard.uuid),
+        },
+        {
+            label: workspaceBoardSection.title,
+            href: getDashboardWorkspaceBoardSectionUrl(
+                workspaceBoardSection.uuid
+            ),
+        },
+        {
+            label: $_("task-screen.new-task-breadcrumb"),
+            href: getNewTaskUrl(workspaceBoardSection.uuid),
+        },
+    ];
 </script>
 
 <TaskC>
-    <TopBar slot="top-bar" breadcrumb={{ workspaceBoardSection }}>
+    <TopBar slot="top-bar" {workspaceBoardSection}>
+        <Breadcrumbs slot="breadcrumbs" {crumbs} />
         <Button
             slot="buttons"
             action={{

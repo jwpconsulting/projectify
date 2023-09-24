@@ -1,10 +1,16 @@
 <script lang="ts">
     import type { Writable } from "svelte/store";
     import { readable, writable } from "svelte/store";
-    import { _ } from "svelte-i18n";
+    import { _, number } from "svelte-i18n";
 
     import { goto } from "$lib/navigation";
-    import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
+    import {
+        getDashboardWorkspaceBoardSectionUrl,
+        getDashboardWorkspaceBoardUrl,
+        getTaskUrl,
+    } from "$lib/urls";
+
+    import Breadcrumbs from "./Breadcrumbs.svelte";
 
     import TaskC from "$lib/components/dashboard/task/Task.svelte";
     import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
@@ -31,6 +37,7 @@
         WorkspaceBoardSection,
         WorkspaceUser,
     } from "$lib/types/workspace";
+    import { unwrap } from "$lib/utils/type";
 
     // if this is in a store, we can get rid of this param
     export let task: Task;
@@ -111,23 +118,43 @@
             sub_tasks: subTasks,
         });
     }
+
+    // TODO put me in PageData?
+    $: workspaceBoard = unwrap(
+        workspaceBoardSection.workspace_board,
+        "Expected workspaceBoard"
+    );
+
+    $: crumbs = [
+        {
+            label: workspaceBoard.title,
+            href: getDashboardWorkspaceBoardUrl(workspaceBoard.uuid),
+        },
+        {
+            label: workspaceBoardSection.title,
+            href: getDashboardWorkspaceBoardSectionUrl(
+                workspaceBoardSection.uuid
+            ),
+        },
+        { label: $number(task.number), href: getTaskUrl(task.uuid) },
+    ];
 </script>
 
 <TaskC>
-    <TopBar slot="top-bar" breadcrumb={{ task: task, workspaceBoardSection }}>
-        <svelte:fragment slot="buttons">
-            <Button
-                action={{
-                    kind: "button",
-                    action: createOrUpdateTask,
-                    disabled: !$canCreateOrUpdate,
-                }}
-                color="blue"
-                size="small"
-                style={{ kind: "primary" }}
-                label={$_("task-screen.save")}
-            />
-        </svelte:fragment>
+    <TopBar slot="top-bar" {workspaceBoardSection}>
+        <Breadcrumbs slot="breadcrumbs" {crumbs} />
+        <Button
+            slot="buttons"
+            action={{
+                kind: "button",
+                action: createOrUpdateTask,
+                disabled: !$canCreateOrUpdate,
+            }}
+            color="blue"
+            size="small"
+            style={{ kind: "primary" }}
+            label={$_("task-screen.save")}
+        />
     </TopBar>
     <TaskUpdateBar slot="tab-bar-mobile" kind="mobile" {state} {task} />
     <TaskUpdateBar slot="tab-bar-desktop" kind="mobile" {state} {task} />

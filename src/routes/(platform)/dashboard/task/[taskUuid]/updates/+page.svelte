@@ -1,8 +1,17 @@
 <script lang="ts">
+    import { number } from "svelte-i18n";
+
+    import {
+        getDashboardWorkspaceBoardSectionUrl,
+        getDashboardWorkspaceBoardUrl,
+        getTaskUpdatesUrl,
+    } from "$lib/urls";
+
     import type { PageData } from "../$types";
 
     import TaskC from "$lib/components/dashboard/task/Task.svelte";
     import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
+    import Breadcrumbs from "$lib/figma/screens/task/Breadcrumbs.svelte";
     import TaskUpdates from "$lib/figma/screens/task/TaskUpdates.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import type { TaskUpdateBarState } from "$lib/figma/types";
@@ -10,15 +19,31 @@
 
     export let data: PageData;
     let { task } = data;
-    const { workspaceBoardSection } = data;
+    const { workspaceBoardSection, workspaceBoard } = data;
 
     export let state: TaskUpdateBarState = "updates";
 
     $: task = $currentTask ?? task;
+
+    $: crumbs = [
+        {
+            label: workspaceBoard.title,
+            href: getDashboardWorkspaceBoardUrl(workspaceBoard.uuid),
+        },
+        {
+            label: workspaceBoardSection.title,
+            href: getDashboardWorkspaceBoardSectionUrl(
+                workspaceBoardSection.uuid
+            ),
+        },
+        { label: $number(task.number), href: getTaskUpdatesUrl(task.uuid) },
+    ];
 </script>
 
 <TaskC>
-    <TopBar slot="top-bar" breadcrumb={{ task, workspaceBoardSection }} />
+    <TopBar slot="top-bar" {workspaceBoardSection}>
+        <Breadcrumbs slot="breadcrumbs" {crumbs} />
+    </TopBar>
     <TaskUpdates slot="content" />
     <!-- TODO dry this up with the thing above -->
     <TaskUpdateBar slot="tab-bar-mobile" kind="mobile" {state} {task} />
