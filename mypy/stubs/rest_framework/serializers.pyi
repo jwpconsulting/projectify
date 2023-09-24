@@ -6,6 +6,7 @@ from typing import (
     Generic,
     Optional,
     TypeVar,
+    Union,
 )
 
 from django.db.models import (
@@ -14,7 +15,16 @@ from django.db.models import (
 
 from .fields import *
 
-class BaseSerializer: ...
+class BaseSerializer:
+    def __init__(
+        self,
+        instance: Optional[object] = None,
+        data: Union[object, type[empty]] = empty,
+        read_only: bool = False,
+        many: bool = False,
+        source: Optional[str] = None,
+        **kwargs: Any
+    ) -> None: ...
 
 T = TypeVar("T")
 M = TypeVar("M", bound=Model)
@@ -27,13 +37,6 @@ class Serializer(BaseSerializer):
     errors: Data
     validated_data: Data
 
-    def __init__(
-        self,
-        instance: Optional[Any] = None,
-        read_only: bool = False,
-        many: bool = False,
-        source: Optional[str] = None,
-    ) -> None: ...
     def update(self, instance: Any, validated_data: ValidatedData) -> Any: ...
     def create(self, validated_data: ValidatedData) -> Any: ...
     def save(self, **kwargs: Any) -> Any: ...
