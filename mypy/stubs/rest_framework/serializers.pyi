@@ -14,6 +14,7 @@ from django.db.models import (
 )
 
 from .fields import *
+from .relations import *
 
 class BaseSerializer:
     def __init__(
@@ -29,8 +30,8 @@ class BaseSerializer:
 T = TypeVar("T")
 M = TypeVar("M", bound=Model)
 
-Data = Mapping[str, object]
-ValidatedData = Mapping[str, object]
+Data = Mapping[str, Any]
+ValidatedData = dict[str, Any]
 
 class Serializer(BaseSerializer):
     data: Data
