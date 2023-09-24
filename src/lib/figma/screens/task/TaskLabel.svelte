@@ -19,7 +19,7 @@
         </div>
     {/each}
     {#if action}
-        <div bind:this={btnRef}>
+        <div class="shrink-0" bind:this={btnRef}>
             <LabelC
                 label={{ kind: "applyLabel" }}
                 action={action.bind(null, btnRef)}
