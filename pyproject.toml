@@ -26,6 +26,7 @@ mypy_path = [
     "mypy/stubs",
 ]
 strict = true
+exclude = [".git", "__pycache__", "docs", "whitelist.py"]
 
 # Library imports
 [[tool.mypy.overrides]]
@@ -152,7 +153,18 @@ pytest-xdist = {extras = ["psutil"], version = "~3.3.1"}
 types-redis = "~4.6.0.5"
 types-stripe = "~3.5.2.14"
 types-tqdm = "~4.66.0.2"
+vulture = "^2.9.1"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.vulture]
+ignore_decorators = ["@receiver", "@admin.register"]
+exclude = [
+    "apps.py",
+    "conftest.py",
+    "settings",
+    "schema",
+    "migrations",
+]
