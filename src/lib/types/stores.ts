@@ -1,5 +1,5 @@
 // XXX "stores.ts" should be renamed "modules.ts" maybe?
-import type { Readable, Writable } from "svelte/store";
+import type { Readable } from "svelte/store";
 
 import type { RepositoryContext } from "./repository";
 
@@ -9,12 +9,7 @@ import type {
     WorkspaceUserAssignmentInput,
     LabelAssignmentState,
 } from "$lib/types/ui";
-import type {
-    CreateTask,
-    NewTask,
-    Task,
-    WorkspaceBoardSection,
-} from "$lib/types/workspace";
+import type { WorkspaceBoardSection } from "$lib/types/workspace";
 
 export interface WorkspaceUserAssignment {
     select: (selection: WorkspaceUserAssignmentInput) => unknown;
@@ -30,26 +25,6 @@ export interface LabelAssignment {
 }
 
 // It would make sense to rename all Module to Store
-
-// XXX
-// This is a mess!
-// this contains whatever is shared between creating / updating tasks
-export interface CreateOrUpdateTaskModule {
-    workspaceUserAssignment: WorkspaceUserAssignment;
-    labelAssignment: LabelAssignment;
-}
-
-export type TaskModule = {
-    task: Task;
-    updateTask: Writable<Partial<Task>>;
-    showUpdateWorkspaceUser: (anchor: HTMLElement) => void;
-    showUpdateLabel: (anchor: HTMLElement) => void;
-} & CreateOrUpdateTaskModule;
-
-export type CreateTaskModule = {
-    newTask: NewTask;
-    createTask: Writable<Partial<CreateTask>>;
-} & CreateOrUpdateTaskModule;
 
 // Functions needed to move task around inside section or between sections
 export interface MoveTaskModule {

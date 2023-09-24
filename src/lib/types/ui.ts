@@ -6,7 +6,6 @@ import type {
 import type {
     Label,
     NewSubTask,
-    NewTask,
     SubTask,
     Task,
     Workspace,
@@ -169,40 +168,7 @@ type CreateOrUpdateT<CreateType, UpdateType> =
     | { kind: "create"; create: CreateType }
     | { kind: "update"; update: UpdateType };
 
-// TODO TaskOrNewTask = CreateOrUpdateT<NewTask, Task>
-export type TaskOrNewTask =
-    | { kind: "task"; task: Task }
-    | { kind: "newTask"; newTask: NewTask };
-
 export type CreateOrUpdateSubTask = CreateOrUpdateT<NewSubTask, SubTask>;
-
-// A task with all the properties and sub-properties made required
-// in order to properly render the breadcrumb
-export type BreadCrumbWorkspaceBoardSection = WorkspaceBoardSection & {
-    title: string;
-    workspace_board: WorkspaceBoard & {
-        title: string;
-    };
-};
-
-export interface BreadCrumbTask {
-    number?: number;
-    workspace_board_section: BreadCrumbWorkspaceBoardSection;
-}
-
-// Woops, we can't use if-branch-based type narrowing here
-export function isBreadCrumbWorkspaceBoardSection(
-    t: WorkspaceBoardSection
-): t is BreadCrumbWorkspaceBoardSection {
-    return t.workspace_board !== undefined;
-}
-export function isBreadCrumbTask(t: Partial<Task>): t is BreadCrumbTask {
-    return (
-        t.number !== undefined &&
-        t.workspace_board_section !== undefined &&
-        t.workspace_board_section.workspace_board !== undefined
-    );
-}
 
 export type EditableViewState =
     | { kind: "viewing" }

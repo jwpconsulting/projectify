@@ -1,6 +1,4 @@
 <script lang="ts">
-    import type { Writable } from "svelte/store";
-    import { readable, writable } from "svelte/store";
     import { _, number } from "svelte-i18n";
 
     import { goto } from "$lib/navigation";
@@ -29,7 +27,6 @@
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
     import { openContextMenu } from "$lib/stores/globalUi";
-    import type { TaskModule } from "$lib/types/stores";
     import type {
         Label,
         SubTask,
@@ -51,17 +48,15 @@
     const dueDate: string | undefined = undefined;
     const subTasks: SubTask[] = [];
 
-    const updateTask: Writable<Partial<Task>> = writable({});
-
-    async function createOrUpdateTask() {
+    async function updateTask() {
         // TOOD add rest here
         const submitTask: Task = {
             ...task,
-            title: $updateTask.title ?? task.title,
-            description: $updateTask.description ?? task.description,
+            title: title,
+            description: description,
         };
         // TODO add labels here
-        const labels = await taskModule.labelAssignment.evaluate();
+        const labels = await labelAssignment.evaluate();
         await performUpdateTask(submitTask, labels);
         if (!task.workspace_board_section) {
             throw new Error("Expected $updateTask.workspace_board_section");
@@ -72,52 +67,30 @@
         // TODO figure out how to refresh the same page
         await goto(url);
     }
+    function showUpdateWorkspaceUser(anchor: HTMLElement) {
+        openContextMenu(
+            {
+                kind: "updateMember",
+                workspaceUserAssignment,
+            },
+            anchor
+        );
+    }
+    function showUpdateLabel(anchor: HTMLElement) {
+        openContextMenu(
+            {
+                kind: "updateLabel",
+                labelAssignment,
+            },
+            anchor
+        );
+    }
 
     const workspaceUserAssignment = createWorkspaceUserAssignment(task);
     const labelAssignment = createLabelAssignment(task);
-    // TODO
-    const canCreateOrUpdate = readable(true);
-    const taskModule: TaskModule = {
-        task,
-        updateTask,
-        // TODO make workspace user menu so that "all" can not be
-        // selected
-        workspaceUserAssignment,
-        labelAssignment,
-        // TODO make label menu so that "all" can not be selected
-        showUpdateWorkspaceUser: (anchor: HTMLElement) => {
-            openContextMenu(
-                {
-                    kind: "updateMember",
-                    workspaceUserAssignment,
-                },
-                anchor
-            );
-        },
-        showUpdateLabel: (anchor: HTMLElement) => {
-            openContextMenu(
-                {
-                    kind: "updateLabel",
-                    labelAssignment,
-                },
-                anchor
-            );
-        },
-    };
 
-    $: {
-        // XXX what does this code here do?
-        taskModule.updateTask.set({
-            ...task,
-            title: title,
-            description: description,
-            // XXX What would RMS do??
-            assignee: assignedUser ?? undefined,
-            labels: labels,
-            deadline: dueDate ?? undefined,
-            sub_tasks: subTasks,
-        });
-    }
+    // TODO
+    $: canUpdate = true;
 
     // TODO put me in PageData?
     $: workspaceBoard = unwrap(
@@ -147,8 +120,8 @@
             slot="buttons"
             action={{
                 kind: "button",
-                action: createOrUpdateTask,
-                disabled: !$canCreateOrUpdate,
+                action: updateTask,
+                disabled: !canUpdate,
             }}
             color="blue"
             size="small"
@@ -162,14 +135,10 @@
         <TaskTitle slot="title" bind:title />
         <TaskUser
             slot="assignee"
-            action={taskModule.showUpdateWorkspaceUser}
+            action={showUpdateWorkspaceUser}
             workspaceUser={assignedUser}
         />
-        <TaskLabel
-            slot="labels"
-            action={taskModule.showUpdateLabel}
-            {labels}
-        />
+        <TaskLabel slot="labels" action={showUpdateLabel} {labels} />
         <TaskSection slot="section" {workspaceBoardSection} />
         <TaskDueDate slot="due-date" date={dueDate} />
         <TaskDescription slot="description" bind:description />

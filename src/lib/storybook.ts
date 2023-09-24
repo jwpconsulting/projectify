@@ -4,21 +4,14 @@ import type { Customer } from "./types/corporate";
 
 import type { LabelLabel, SelectLabel } from "$lib/figma/types";
 import type {
-    CreateTaskModule,
     LabelAssignment,
     MoveTaskModule,
-    TaskModule,
     WorkspaceUserAssignment,
 } from "$lib/types/stores";
-import type {
-    BreadCrumbWorkspaceBoardSection,
-    WorkspaceUserSelectionInput,
-} from "$lib/types/ui";
+import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
 import type { User } from "$lib/types/user";
 import type {
-    CreateTask,
     Label,
-    NewTask,
     SubTask,
     Task,
     WorkspaceBoard,
@@ -161,22 +154,6 @@ const task2: Task = {
     sub_tasks: [],
 };
 
-const newTask: NewTask = {
-    workspace_board_section: {
-        title: "section name that is long",
-        created: "",
-        modified: "",
-        uuid: "does-not-exist",
-        _order: 0,
-        workspace_board: {
-            uuid: "does-not-exist",
-            title: "Project board with a long name, it is long",
-            created: "",
-            modified: "",
-        },
-    },
-};
-
 export const workspaceBoardSection: WorkspaceBoardSection = {
     title: "section name that is long",
     created: "",
@@ -186,16 +163,15 @@ export const workspaceBoardSection: WorkspaceBoardSection = {
     _order: 0,
 };
 
-export const breadCrumbWorkspaceBoardSection: BreadCrumbWorkspaceBoardSection =
-    {
-        title: "section name that is long",
-        created: "",
-        modified: "",
-        uuid: "does-not-exist",
-        tasks: [task, task2],
-        _order: 0,
-        workspace_board: workspaceBoard,
-    };
+export const breadCrumbWorkspaceBoardSection: WorkspaceBoardSection = {
+    title: "section name that is long",
+    created: "",
+    modified: "",
+    uuid: "does-not-exist",
+    tasks: [task, task2],
+    _order: 0,
+    workspace_board: workspaceBoard,
+};
 
 export const mobileParameters = {
     viewport: {
@@ -224,26 +200,6 @@ export const labelAssignment: LabelAssignment = {
         await new Promise(console.log);
         return [];
     },
-};
-
-export const createTaskModule: CreateTaskModule = {
-    newTask,
-    createTask: writable<Partial<CreateTask>>({}),
-    workspaceUserAssignment,
-    labelAssignment,
-};
-
-export const taskModule: TaskModule = {
-    task,
-    updateTask: writable<Partial<Task>>({}),
-    showUpdateWorkspaceUser() {
-        console.log("Showing workspace user context menu");
-    },
-    showUpdateLabel() {
-        console.log("Showing label context menu");
-    },
-    workspaceUserAssignment,
-    labelAssignment,
 };
 
 export const moveTaskModule: MoveTaskModule = {

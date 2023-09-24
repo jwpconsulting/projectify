@@ -38,9 +38,9 @@
     // TODO add me back:
     // const labelAssignment = createLabelAssignment();
 
-    $: canCreateOrUpdate = title !== undefined && description !== undefined;
+    $: canCreate = title !== undefined && description !== undefined;
 
-    async function createOrUpdateTask() {
+    async function createTask() {
         if (!title || !description) {
             throw new Error("Expected title and description");
         }
@@ -86,8 +86,8 @@
             slot="buttons"
             action={{
                 kind: "button",
-                action: createOrUpdateTask,
-                disabled: !canCreateOrUpdate,
+                action: createTask,
+                disabled: !canCreate,
             }}
             color="blue"
             size="small"

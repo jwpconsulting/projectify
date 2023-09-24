@@ -1,20 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import {
-    createTaskModule,
-    task,
-    workspaceBoardSection,
-    workspaceBoard,
-} from "$lib/storybook";
+import { task, workspaceBoardSection, workspaceBoard } from "$lib/storybook";
 
 import TopBar from "$lib/figma/screens/task/TopBar.svelte";
 
 const meta: Meta<TopBar> = {
     component: TopBar,
     argTypes: {},
-    args: {
-        taskModule: createTaskModule,
-    },
+    args: {},
 };
 export default meta;
 

@@ -34,7 +34,7 @@ export type ChatMessage = {
 } & TimestampedType;
 
 // What is needed to know at least to create a new task
-export interface NewTask {
+interface NewTask {
     workspace_board_section: WorkspaceBoardSection;
 }
 
