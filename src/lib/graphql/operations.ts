@@ -141,18 +141,6 @@ export const Mutation_DeleteTask = gql`
     }
 `;
 
-export const Mutation_UpdateTask = gql`
-    mutation UpdateTask($input: UpdateTaskInput!) {
-        updateTask(input: $input) {
-            uuid
-            modified
-            title
-            description
-            deadline
-        }
-    }
-`;
-
 export const Mutation_MoveTask = gql`
     mutation MoveTask($input: MoveTaskInput!) {
         moveTask(input: $input) {

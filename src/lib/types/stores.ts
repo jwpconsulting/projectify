@@ -5,9 +5,9 @@ import type { RepositoryContext } from "./repository";
 
 import type {
     LabelAssignmentInput,
-    LabelSelection,
     WorkspaceUserSelection,
     WorkspaceUserAssignmentInput,
+    LabelAssignmentState,
 } from "$lib/types/ui";
 import type {
     CreateTask,
@@ -25,7 +25,8 @@ export interface WorkspaceUserAssignment {
 export interface LabelAssignment {
     select: (selection: LabelAssignmentInput) => unknown;
     deselect: (selection: LabelAssignmentInput) => unknown;
-    selected: Readable<LabelSelection>;
+    selected: Readable<LabelAssignmentState>;
+    evaluate: () => Promise<string[]>;
 }
 
 // It would make sense to rename all Module to Store

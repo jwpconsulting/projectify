@@ -31,7 +31,7 @@ export type LabelAssignmentInput = LabelSelectionInput & {
     kind: "noLabel" | "label";
 };
 export type LabelAssignmentState = LabelSelection & {
-    kind: "noLabel" | "label";
+    kind: "noLabel" | "labels";
 };
 
 // Rename WorkspaceUserFilterInput

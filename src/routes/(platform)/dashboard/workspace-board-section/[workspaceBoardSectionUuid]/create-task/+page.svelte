@@ -32,9 +32,7 @@
         throw new Error("Expected workspace");
     }
 
-    const labelAssignment = createLabelAssignment(null, () =>
-        console.error("Not implemented")
-    );
+    const labelAssignment = createLabelAssignment();
     const createTaskModule: CreateTaskModule = {
         createOrUpdateTask: createOrUpdateTask,
         createTask,

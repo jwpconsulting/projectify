@@ -30,7 +30,7 @@
         <TaskUser slot="assignee" workspaceUser={task.assignee ?? null} />
         <TaskLabel slot="labels" labels={task.labels} />
         <TaskSection slot="section" {workspaceBoardSection} />
-        <TaskDueDate slot="due-date" date={task.deadline ?? null} />
+        <TaskDueDate slot="due-date" date={task.deadline ?? undefined} />
         <TaskDescription
             slot="description"
             readonly

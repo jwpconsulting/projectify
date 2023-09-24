@@ -220,6 +220,10 @@ export const labelAssignment: LabelAssignment = {
     select: noop,
     deselect: noop,
     selected: readable({ kind: "noLabel" }),
+    evaluate: async () => {
+        await new Promise(console.log);
+        return [];
+    },
 };
 
 export const createTaskModule: CreateTaskModule = {

@@ -1,4 +1,10 @@
 <script lang="ts">
+    import type { Writable } from "svelte/store";
+    import { readable, writable } from "svelte/store";
+
+    import { goto } from "$lib/navigation";
+    import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
+
     import TaskC from "$lib/components/dashboard/task/Task.svelte";
     import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
     import SubTaskBarComposite from "$lib/figma/screens/task/SubTaskBarComposite.svelte";
@@ -11,6 +17,10 @@
     import TaskUser from "$lib/figma/screens/task/TaskUser.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import type { TaskUpdateBarState } from "$lib/figma/types";
+    import { updateTask as performUpdateTask } from "$lib/repository/workspace";
+    import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
+    import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
+    import { openContextMenu } from "$lib/stores/globalUi";
     import type { TaskModule } from "$lib/types/stores";
     import type {
         Label,
@@ -23,15 +33,70 @@
     // if this is in a store, we can get rid of this param
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection;
-    export let taskModule: TaskModule;
     export let state: TaskUpdateBarState = "task";
 
     let title: string = task.title;
     let description: string | undefined = task.description;
     const assignedUser: WorkspaceUser | null = task.assignee ?? null;
     const labels: Label[] = task.labels;
-    const dueDate: string | null = null;
+    const dueDate: string | undefined = undefined;
     const subTasks: SubTask[] = [];
+
+    const updateTask: Writable<Partial<Task>> = writable({});
+
+    async function createOrUpdateTask() {
+        // TOOD add rest here
+        const submitTask: Task = {
+            ...task,
+            title: $updateTask.title ?? task.title,
+            description: $updateTask.description ?? task.description,
+        };
+        // TODO add labels here
+        const labels = await taskModule.labelAssignment.evaluate();
+        await performUpdateTask(submitTask, labels);
+        if (!task.workspace_board_section) {
+            throw new Error("Expected $updateTask.workspace_board_section");
+        }
+        const url = getDashboardWorkspaceBoardSectionUrl(
+            task.workspace_board_section.uuid
+        );
+        // TODO figure out how to refresh the same page
+        await goto(url);
+    }
+
+    const workspaceUserAssignment = createWorkspaceUserAssignment(task);
+    const labelAssignment = createLabelAssignment(task);
+    const taskModule: TaskModule = {
+        task,
+        createOrUpdateTask,
+        updateTask,
+        // We might want to add some more sophisticated rules
+        // as to when and when not this can be updated
+        canCreateOrUpdate: readable(true),
+        // TODO make workspace user menu so that "all" can not be
+        // selected
+        workspaceUserAssignment,
+        labelAssignment,
+        // TODO make label menu so that "all" can not be selected
+        showUpdateWorkspaceUser: (anchor: HTMLElement) => {
+            openContextMenu(
+                {
+                    kind: "updateMember",
+                    workspaceUserAssignment,
+                },
+                anchor
+            );
+        },
+        showUpdateLabel: (anchor: HTMLElement) => {
+            openContextMenu(
+                {
+                    kind: "updateLabel",
+                    labelAssignment,
+                },
+                anchor
+            );
+        },
+    };
 
     $: {
         // XXX what does this code here do?

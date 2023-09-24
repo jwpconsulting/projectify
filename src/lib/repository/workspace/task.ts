@@ -6,10 +6,14 @@ import {
     Mutation_AssignLabel,
     Mutation_AssignTask,
     Mutation_MoveTaskAfter,
-    Mutation_UpdateTask,
     Mutation_DeleteTask,
 } from "$lib/graphql/operations";
-import type { CreateTask, Task, Label } from "$lib/types/workspace";
+import {
+    putWithCredentialsJson,
+    getWithCredentialsJson,
+} from "$lib/repository/util";
+import type { RepositoryContext } from "$lib/types/repository";
+import type { CreateTask, Task } from "$lib/types/workspace";
 // Task CRUD
 // Create
 export async function createTask(createTask: CreateTask): Promise<Task> {
@@ -30,27 +34,37 @@ export async function createTask(createTask: CreateTask): Promise<Task> {
     return task;
 }
 
+// Read
+export async function getTask(
+    uuid: string,
+    repositoryContext?: RepositoryContext
+): Promise<Task> {
+    return await getWithCredentialsJson<Task>(
+        `/workspace/task/${uuid}`,
+        repositoryContext
+    );
+}
+
 // Update
-export async function updateTask(task: Task, labels: Label[]): Promise<Task> {
-    const { data }: FetchResult<{ updateTask: Task }> = await client.mutate({
-        mutation: Mutation_UpdateTask,
-        variables: {
-            input: {
-                uuid: task.uuid,
-                title: task.title,
-                description: task.description,
-                deadline: task.deadline ?? null,
-                labels: labels.map((l) => l.uuid),
-                // TODO
-                // assignee: task.assignee ? task.assignee.user.email : null,
-            },
-        },
-    });
-    if (!data) {
-        throw new Error("Expected data");
-    }
-    // Assign ws user
-    return data.updateTask;
+export async function updateTask(
+    task: Task,
+    labels: string[],
+    repositoryContext?: RepositoryContext
+): Promise<Task> {
+    const { uuid } = task;
+    const data = {
+        title: task.title,
+        description: task.description,
+        // TODO labels
+        // TODO assignee
+        // TODO workspace board section
+        // TODO sub tasks
+    };
+    return await putWithCredentialsJson<Task>(
+        `/workspace/task/${uuid}`,
+        data,
+        repositoryContext
+    );
 }
 
 // XXX
