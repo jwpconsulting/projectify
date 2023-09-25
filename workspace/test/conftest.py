@@ -29,6 +29,7 @@ from .. import (
 
 
 if TYPE_CHECKING:
+    # TODO use AbstractBaseUser instead
     from user.models import User as _User  # noqa: F401
 
 
@@ -82,6 +83,16 @@ def other_workspace_user(
     """Return workspace user for other_user."""
     return factory.WorkspaceUserFactory.create(
         workspace=workspace, user=other_user
+    )
+
+
+@pytest.fixture
+def other_workspace_workspace_user(
+    other_workspace: models.Workspace, other_user: "_User"
+) -> models.WorkspaceUser:
+    """Return workspace user for other_user."""
+    return factory.WorkspaceUserFactory.create(
+        workspace=other_workspace, user=other_user
     )
 
 
