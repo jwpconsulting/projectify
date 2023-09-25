@@ -1,5 +1,6 @@
 """User models."""
 from typing import (
+    ClassVar,
     Optional,
     cast,
 )
@@ -112,7 +113,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         blank=True,
         null=True,
     )
-    objects = UserManager()
+    objects: ClassVar[UserManager] = UserManager()
 
     USERNAME_FIELD = "email"
 
@@ -207,4 +208,6 @@ class UserInvite(TimeStampedModel, models.Model):
             instance=self,
         )
 
-    objects = cast(UserInviteQuerySet, UserInviteQuerySet.as_manager())
+    objects: ClassVar[UserInviteQuerySet] = cast(  # type: ignore[assignment]
+        UserInviteQuerySet, UserInviteQuerySet.as_manager()
+    )

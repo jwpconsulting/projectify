@@ -2,6 +2,7 @@
 import uuid
 from typing import (
     TYPE_CHECKING,
+    ClassVar,
     cast,
 )
 
@@ -82,7 +83,9 @@ class Customer(models.Model):
         # db_index=True,
     )
 
-    objects = cast(CustomerQuerySet, CustomerQuerySet.as_manager())
+    objects: ClassVar[CustomerQuerySet] = cast(  # type: ignore[assignment]
+        CustomerQuerySet, CustomerQuerySet.as_manager()
+    )
 
     def activate_subscription(self) -> None:
         """
