@@ -2,6 +2,9 @@
 from django import (
     db,
 )
+from django.contrib.auth.models import (
+    AbstractUser,
+)
 from django.utils import (
     timezone,
 )
@@ -18,13 +21,23 @@ from .. import (
 class TestWorkspaceManager:
     """Test Workspace manager."""
 
-    def test_get_for_user(self, workspace_user, user, other_user):
+    def test_get_for_user(
+        self,
+        workspace_user: models.WorkspaceUser,
+        user: AbstractUser,
+        other_user: AbstractUser,
+    ) -> None:
         """Test getting workspaces for user."""
         workspace = workspace_user.workspace
         factory.WorkspaceFactory(add_users=[other_user])
         assert list(models.Workspace.objects.get_for_user(user)) == [workspace]
 
-    def test_filter_for_user_and_uuid(self, workspace_user, workspace, user):
+    def test_filter_for_user_and_uuid(
+        self,
+        workspace_user: models.WorkspaceUser,
+        workspace: models.Workspace,
+        user: AbstractUser,
+    ) -> None:
         """Test getting workspace for user and uuid."""
         assert (
             models.Workspace.objects.filter_for_user_and_uuid(
@@ -39,11 +52,11 @@ class TestWorkspaceManager:
 class TestWorkspace:
     """Test Workspace."""
 
-    def test_factory(self, workspace):
+    def test_factory(self, workspace: models.Workspace) -> None:
         """Assert that the creates."""
         assert workspace
 
-    def test_add_workspace_board(self, workspace):
+    def test_add_workspace_board(self, workspace: models.Workspace) -> None:
         """Test adding a workspace board."""
         assert workspace.workspaceboard_set.count() == 0
         board = workspace.add_workspace_board("foo", "bar")
@@ -55,18 +68,30 @@ class TestWorkspace:
             board2,
         ]
 
-    def test_add_user(self, workspace, user):
+    def test_add_user(
+        self, workspace: models.Workspace, user: AbstractUser
+    ) -> None:
         """Test adding a user."""
         assert workspace.users.count() == 0
         workspace.add_user(user)
         assert workspace.users.count() == 1
 
-    def test_add_user_twice(self, workspace, workspace_user, user):
+    def test_add_user_twice(
+        self,
+        workspace: models.Workspace,
+        workspace_user: models.WorkspaceUser,
+        user: AbstractUser,
+    ) -> None:
         """Test that adding a user twice won't work."""
         with pytest.raises(db.IntegrityError):
             workspace.add_user(user)
 
-    def test_remove_user(self, workspace, workspace_user, user):
+    def test_remove_user(
+        self,
+        workspace: models.Workspace,
+        workspace_user: models.WorkspaceUser,
+        user: AbstractUser,
+    ) -> None:
         """Test remove_user."""
         assert workspace.users.count() == 1
         workspace.remove_user(user)
@@ -74,11 +99,11 @@ class TestWorkspace:
 
     def test_remove_user_when_assigned(
         self,
-        workspace,
-        task,
-        workspace_user,
-        user,
-    ):
+        workspace: models.Workspace,
+        task: models.Task,
+        workspace_user: models.WorkspaceUser,
+        user: AbstractUser,
+    ) -> None:
         """Assert that the user is removed when removing the workspace user."""
         task.assign_to(user)
         task.refresh_from_db()
@@ -87,24 +112,32 @@ class TestWorkspace:
         task.refresh_from_db()
         assert task.assignee is None
 
-    def test_invite_user(self, workspace, mailoutbox):
+    # TODO
+    # We could probably use a more specific type for mailoutbox
+    def test_invite_user(
+        self, workspace: models.Workspace, mailoutbox: list[object]
+    ) -> None:
         """Test inviting a user."""
         workspace_user_invite = workspace.invite_user("hello@example.com")
         assert workspace_user_invite.workspace == workspace
         assert len(mailoutbox) == 1
 
-    def test_inviting_twice(self, workspace):
+    def test_inviting_twice(self, workspace: models.Workspace) -> None:
         """Test that inviting twice won't work."""
         workspace.invite_user("hello@example.com")
         with pytest.raises(ValueError):
             workspace.invite_user("hello@example.com")
 
-    def test_inviting_workspace_user(self, workspace, workspace_user):
+    def test_inviting_workspace_user(
+        self, workspace: models.Workspace, workspace_user: models.WorkspaceUser
+    ) -> None:
         """Test that inviting a pre-existing user won't work."""
         with pytest.raises(ValueError):
             workspace.invite_user(workspace_user.user.email)
 
-    def test_inviting_user(self, workspace, user):
+    def test_inviting_user(
+        self, workspace: models.Workspace, user: AbstractUser
+    ) -> None:
         """
         Test that inviting a user won't work.
 
@@ -113,14 +146,16 @@ class TestWorkspace:
         with pytest.raises(ValueError):
             workspace.invite_user(user.email)
 
-    def test_uninviting_user(self, workspace):
+    def test_uninviting_user(self, workspace: models.Workspace) -> None:
         """Test uninviting a user."""
         workspace.invite_user("hello@example.com")
         assert workspace.workspaceuserinvite_set.count() == 1
         workspace.uninvite_user("hello@example.com")
         assert workspace.workspaceuserinvite_set.count() == 0
 
-    def test_increment_highest_task_number(self, workspace):
+    def test_increment_highest_task_number(
+        self, workspace: models.Workspace
+    ) -> None:
         """Test set_highest_task_number."""
         num = workspace.highest_task_number
         new = workspace.increment_highest_task_number()
@@ -128,14 +163,18 @@ class TestWorkspace:
         workspace.refresh_from_db()
         assert workspace.highest_task_number == new
 
-    def test_wrong_highest_task_number(self, workspace, task):
+    def test_wrong_highest_task_number(
+        self, workspace: models.Workspace, task: models.Task
+    ) -> None:
         """Test db trigger when highest_task_number < highest child task."""
         with pytest.raises(db.InternalError):
             task.save()
             workspace.highest_task_number = 0
             workspace.save()
 
-    def test_has_at_least_role(self, workspace, workspace_user):
+    def test_has_at_least_role(
+        self, workspace: models.Workspace, workspace_user: models.WorkspaceUser
+    ) -> None:
         """Test has_at_least_role."""
         assert workspace.has_at_least_role(
             workspace_user,
@@ -152,15 +191,17 @@ class TestWorkspace:
         )
 
     def test_has_at_least_role_other_workspace(
-        self, other_workspace, workspace_user
-    ):
+        self,
+        other_workspace: models.Workspace,
+        workspace_user: models.WorkspaceUser,
+    ) -> None:
         """Test has_at_least_role with a different workspace."""
         assert not other_workspace.has_at_least_role(
             workspace_user,
             models.WorkspaceUserRoles.OBSERVER,
         )
 
-    def test_workspace(self, workspace):
+    def test_workspace(self, workspace: models.Workspace) -> None:
         """Test workspace property."""
         assert workspace.workspace == workspace
 
@@ -169,14 +210,22 @@ class TestWorkspace:
 class TestWorkspaceUserInviteQuerySet:
     """Test WorkspaceUserInviteQuerySet."""
 
-    def test_filter_by_workspace_pks(self, workspace, workspace_user_invite):
+    def test_filter_by_workspace_pks(
+        self,
+        workspace: models.Workspace,
+        workspace_user_invite: models.WorkspaceUserInvite,
+    ) -> None:
         """Test filter_by_workspace_pks."""
         qs = models.WorkspaceUserInvite.objects.filter_by_workspace_pks(
             [workspace.pk],
         )
         assert list(qs) == [workspace_user_invite]
 
-    def test_filter_by_redeemed(self, workspace, workspace_user_invite):
+    def test_filter_by_redeemed(
+        self,
+        workspace: models.Workspace,
+        workspace_user_invite: models.WorkspaceUserInvite,
+    ) -> None:
         """Test filter_by_redeemed."""
         qs = models.WorkspaceUserInvite.objects.filter_by_redeemed(False)
         assert qs.count() == 1
@@ -190,22 +239,33 @@ class TestWorkspaceUserInviteQuerySet:
 class TestWorkspaceUserInvite:
     """Test workspace user invite."""
 
-    def test_factory(self, workspace_user_invite):
+    def test_factory(
+        self, workspace_user_invite: models.WorkspaceUserInvite
+    ) -> None:
         """Test factory."""
         assert workspace_user_invite
 
-    def test_redeem(self, workspace_user_invite):
+    def test_redeem(
+        self, workspace_user_invite: models.WorkspaceUserInvite
+    ) -> None:
         """Test redeeming."""
         workspace_user_invite.redeem()
-        assert workspace_user_invite.redeem
+        workspace_user_invite.refresh_from_db()
+        assert workspace_user_invite.redeemed
 
-    def test_redeeming_twice(self, workspace_user_invite):
+    def test_redeeming_twice(
+        self, workspace_user_invite: models.WorkspaceUserInvite
+    ) -> None:
         """Test redeeming twice."""
         workspace_user_invite.redeem()
         with pytest.raises(AssertionError):
             workspace_user_invite.redeem()
 
-    def test_workspace(self, workspace_user_invite, workspace):
+    def test_workspace(
+        self,
+        workspace_user_invite: models.WorkspaceUserInvite,
+        workspace: models.Workspace,
+    ) -> None:
         """Test workspace property."""
         assert workspace_user_invite.workspace == workspace
 
@@ -214,14 +274,21 @@ class TestWorkspaceUserInvite:
 class TestWorkspaceUserManager:
     """Test workspace user manager."""
 
-    def test_filter_by_workspace_pks(self, workspace_user, workspace):
+    def test_filter_by_workspace_pks(
+        self, workspace_user: models.WorkspaceUser, workspace: models.Workspace
+    ) -> None:
         """Test filter_by_workspace_pks."""
         qs = models.WorkspaceUser.objects.filter_by_workspace_pks(
             [workspace.pk],
         )
         assert list(qs) == [workspace_user]
 
-    def test_get_by_workspace_and_user(self, workspace, user, workspace_user):
+    def test_get_by_workspace_and_user(
+        self,
+        workspace: models.Workspace,
+        user: AbstractUser,
+        workspace_user: models.WorkspaceUser,
+    ) -> None:
         """Test get_by_workspace_and_user."""
         assert (
             models.WorkspaceUser.objects.get_by_workspace_and_user(
@@ -236,15 +303,17 @@ class TestWorkspaceUserManager:
 class TestWorkspaceUser:
     """Test WorkspaceUser."""
 
-    def test_factory(self, workspace_user):
+    def test_factory(self, workspace_user: models.WorkspaceUser) -> None:
         """Test that the default rule is observer."""
         assert workspace_user.role == models.WorkspaceUserRoles.OWNER
 
-    def test_workspace(self, workspace, workspace_user):
+    def test_workspace(
+        self, workspace: models.Workspace, workspace_user: models.WorkspaceUser
+    ) -> None:
         """Test workspace property."""
         assert workspace_user.workspace == workspace
 
-    def test_assign_role(self, workspace_user):
+    def test_assign_role(self, workspace_user: models.WorkspaceUser) -> None:
         """Test assign_role."""
         workspace_user.assign_role(models.WorkspaceUserRoles.OWNER)
         workspace_user.refresh_from_db()
@@ -255,17 +324,29 @@ class TestWorkspaceUser:
 class TestWorkspaceBoardManager:
     """Test WorkspaceBoard manager."""
 
-    def test_filter_by_workspace(self, workspace, workspace_board):
+    def test_filter_by_workspace(
+        self,
+        workspace: models.Workspace,
+        workspace_board: models.WorkspaceBoard,
+    ) -> None:
         """Test filter_by_workspace_uuid."""
         qs = models.WorkspaceBoard.objects.filter_by_workspace(workspace)
         assert list(qs) == [workspace_board]
 
-    def test_filter_by_user(self, workspace_board, workspace_user):
+    def test_filter_by_user(
+        self,
+        workspace_board: models.WorkspaceBoard,
+        workspace_user: models.WorkspaceUser,
+    ) -> None:
         """Test filter_by_user."""
         qs = models.WorkspaceBoard.objects.filter_by_user(workspace_user.user)
         assert list(qs) == [workspace_board]
 
-    def test_filter_by_workspace_pks(self, workspace, workspace_board):
+    def test_filter_by_workspace_pks(
+        self,
+        workspace: models.Workspace,
+        workspace_board: models.WorkspaceBoard,
+    ) -> None:
         """Test filter_by_workspace_pks."""
         qs = models.WorkspaceBoard.objects.filter_by_workspace_pks(
             [workspace.pk],
@@ -274,10 +355,10 @@ class TestWorkspaceBoardManager:
 
     def test_filter_for_user_and_uuid(
         self,
-        workspace,
-        workspace_board,
-        workspace_user,
-    ):
+        workspace: models.Workspace,
+        workspace_board: models.WorkspaceBoard,
+        workspace_user: models.WorkspaceUser,
+    ) -> None:
         """Test that the workspace board is retrieved correctly."""
         factory.WorkspaceUserFactory(
             workspace=workspace,
@@ -289,7 +370,9 @@ class TestWorkspaceBoardManager:
         )
         assert actual.get() == workspace_board
 
-    def test_filter_by_archived(self, workspace_board):
+    def test_filter_by_archived(
+        self, workspace_board: models.WorkspaceBoard
+    ) -> None:
         """Test filter_by_archived."""
         qs_archived = models.WorkspaceBoard.objects.filter_by_archived(True)
         qs_unarchived = models.WorkspaceBoard.objects.filter_by_archived(False)
@@ -307,11 +390,17 @@ class TestWorkspaceBoardManager:
 class TestWorkspaceBoard:
     """Test WorkspaceBoard."""
 
-    def test_factory(self, workspace, workspace_board):
+    def test_factory(
+        self,
+        workspace: models.Workspace,
+        workspace_board: models.WorkspaceBoard,
+    ) -> None:
         """Test workspace board creation works."""
         assert workspace_board.workspace == workspace
 
-    def test_add_workspace_board_section(self, workspace_board):
+    def test_add_workspace_board_section(
+        self, workspace_board: models.WorkspaceBoard
+    ) -> None:
         """Test workspace board section creation."""
         assert workspace_board.workspaceboardsection_set.count() == 0
         section = workspace_board.add_workspace_board_section(
@@ -329,13 +418,13 @@ class TestWorkspaceBoard:
             section2,
         ]
 
-    def test_archive(self, workspace_board):
+    def test_archive(self, workspace_board: models.WorkspaceBoard) -> None:
         """Test archive method."""
         assert workspace_board.archived is None
         workspace_board.archive()
         assert workspace_board.archived is not None
 
-    def test_unarchive(self, workspace_board):
+    def test_unarchive(self, workspace_board: models.WorkspaceBoard) -> None:
         """Test unarchive method."""
         assert workspace_board.archived is None
         workspace_board.archive()
@@ -343,7 +432,11 @@ class TestWorkspaceBoard:
         workspace_board.unarchive()
         assert workspace_board.archived is None
 
-    def test_workspace(self, workspace, workspace_board):
+    def test_workspace(
+        self,
+        workspace: models.Workspace,
+        workspace_board: models.WorkspaceBoard,
+    ) -> None:
         """Test workspace property."""
         assert workspace_board.workspace == workspace
 
@@ -354,9 +447,9 @@ class TestWorkspaceBoardSectionManager:
 
     def test_filter_by_workspace_board_pks(
         self,
-        workspace_board,
-        workspace_board_section,
-    ):
+        workspace_board: models.WorkspaceBoard,
+        workspace_board_section: models.WorkspaceBoardSection,
+    ) -> None:
         """Test filter_by_workspace_board_pks."""
         objects = models.WorkspaceBoardSection.objects
         qs = objects.filter_by_workspace_board_pks(
@@ -366,10 +459,10 @@ class TestWorkspaceBoardSectionManager:
 
     def test_filter_for_user_and_uuid(
         self,
-        workspace,
-        workspace_board_section,
-        workspace_user,
-    ):
+        workspace: models.Workspace,
+        workspace_board_section: models.WorkspaceBoardSection,
+        workspace_user: models.WorkspaceUser,
+    ) -> None:
         """Test getting for user and uuid."""
         factory.WorkspaceUserFactory(
             workspace=workspace,
@@ -385,11 +478,17 @@ class TestWorkspaceBoardSectionManager:
 class TestWorkspaceBoardSection:
     """Test WorkspaceBoardSection."""
 
-    def test_factory(self, workspace_board_section, workspace_board):
+    def test_factory(
+        self,
+        workspace_board: models.WorkspaceBoard,
+        workspace_board_section: models.WorkspaceBoardSection,
+    ) -> None:
         """Test workspace board section creation works."""
         assert workspace_board_section.workspace_board == workspace_board
 
-    def test_add_task(self, workspace_board_section):
+    def test_add_task(
+        self, workspace_board_section: models.WorkspaceBoardSection
+    ) -> None:
         """Test adding tasks to a workspace board."""
         assert workspace_board_section.task_set.count() == 0
         task = workspace_board_section.add_task(title="foo", description="bar")
@@ -401,7 +500,9 @@ class TestWorkspaceBoardSection:
         assert workspace_board_section.task_set.count() == 2
         assert list(workspace_board_section.task_set.all()) == [task, task2]
 
-    def test_add_task_deadline(self, workspace_board_section):
+    def test_add_task_deadline(
+        self, workspace_board_section: models.WorkspaceBoardSection
+    ) -> None:
         """Test adding a task with a deadline."""
         task = workspace_board_section.add_task(
             title="foo",
@@ -410,7 +511,11 @@ class TestWorkspaceBoardSection:
         )
         assert task.deadline is not None
 
-    def test_moving_section(self, workspace_board, workspace_board_section):
+    def test_moving_section(
+        self,
+        workspace_board: models.WorkspaceBoard,
+        workspace_board_section: models.WorkspaceBoardSection,
+    ) -> None:
         """Test moving a section around."""
         other_section = factory.WorkspaceBoardSectionFactory(
             workspace_board=workspace_board,
@@ -444,9 +549,9 @@ class TestWorkspaceBoardSection:
 
     def test_moving_empty_section(
         self,
-        workspace_board,
-        workspace_board_section,
-    ):
+        workspace_board: models.WorkspaceBoard,
+        workspace_board_section: models.WorkspaceBoardSection,
+    ) -> None:
         """Test moving when there are no other sections."""
         assert list(workspace_board.workspaceboardsection_set.all()) == [
             workspace_board_section,
@@ -457,7 +562,11 @@ class TestWorkspaceBoardSection:
         ]
         assert workspace_board_section._order == 0
 
-    def test_workspace(self, workspace, workspace_board_section):
+    def test_workspace(
+        self,
+        workspace: models.Workspace,
+        workspace_board_section: models.WorkspaceBoardSection,
+    ) -> None:
         """Test workspace property."""
         assert workspace_board_section.workspace == workspace
 
@@ -467,15 +576,22 @@ class TestTaskManager:
     """Test TaskManager."""
 
     def test_filter_by_workspace_board_section_pks(
-        self, workspace_board_section, task
-    ):
+        self,
+        workspace_board_section: models.WorkspaceBoardSection,
+        task: models.Task,
+    ) -> None:
         """Test filter_by_workspace_board_section_pks."""
         qs = models.Task.objects.filter_by_workspace_board_section_pks(
             [workspace_board_section.pk],
         )
         assert list(qs) == [task]
 
-    def test_filter_for_user_and_uuid(self, workspace, task, workspace_user):
+    def test_filter_for_user_and_uuid(
+        self,
+        workspace: models.Workspace,
+        task: models.Task,
+        workspace_user: models.WorkspaceUser,
+    ) -> None:
         """Test filter_for_user_and_uuid."""
         factory.WorkspaceUserFactory(
             workspace=workspace,
@@ -486,7 +602,7 @@ class TestTaskManager:
         ).get()
         assert actual == task
 
-    def test_duplicate_task(self, task):
+    def test_duplicate_task(self, task: models.Task) -> None:
         """Test task duplication."""
         new_task = models.Task.objects.duplicate_task(task)
         assert new_task.workspace_board_section == task.workspace_board_section
@@ -500,20 +616,20 @@ class TestTask:
 
     def test_factory(
         self,
-        workspace_board_section,
-        workspace_user,
-        task,
-        user,
-    ):
+        workspace_board_section: models.WorkspaceBoardSection,
+        workspace_user: models.WorkspaceUser,
+        task: models.Task,
+        user: AbstractUser,
+    ) -> None:
         """Test that workspace_board_section is assigned correctly."""
         assert task.workspace_board_section == workspace_board_section
         assert task.deadline is not None
 
     def test_moving_task_within_section(
         self,
-        workspace_board_section,
-        task,
-    ):
+        workspace_board_section: models.WorkspaceBoardSection,
+        task: models.Task,
+    ) -> None:
         """Test moving a task around within the same section."""
         other_task = factory.TaskFactory.create(
             workspace_board_section=workspace_board_section
@@ -529,8 +645,11 @@ class TestTask:
         ]
 
     def test_moving_task_to_other_section(
-        self, workspace_board, workspace_board_section, task
-    ):
+        self,
+        workspace_board: models.WorkspaceBoard,
+        workspace_board_section: models.WorkspaceBoardSection,
+        task: models.Task,
+    ) -> None:
         """Test moving a task around to another section."""
         other_task = factory.TaskFactory.create(
             workspace_board_section=workspace_board_section
@@ -555,8 +674,11 @@ class TestTask:
         ]
 
     def test_moving_task_to_empty_section(
-        self, workspace_board, workspace_board_section, task
-    ):
+        self,
+        workspace_board: models.WorkspaceBoard,
+        workspace_board_section: models.WorkspaceBoardSection,
+        task: models.Task,
+    ) -> None:
         """
         Test what happens if we move it into an empty section.
 
@@ -572,13 +694,18 @@ class TestTask:
         task.refresh_from_db()
         assert task._order == 0
 
-    def test_add_sub_task(self, task):
+    def test_add_sub_task(self, task: models.Task) -> None:
         """Test adding a sub task."""
         assert task.subtask_set.count() == 0
         task.add_sub_task("foo", "bar")
         assert task.subtask_set.count() == 1
 
-    def test_add_chat_message(self, task, user, workspace_user):
+    def test_add_chat_message(
+        self,
+        task: models.Task,
+        user: AbstractUser,
+        workspace_user: models.WorkspaceUser,
+    ) -> None:
         """Test adding a chat message."""
         assert task.chatmessage_set.count() == 0
         chat_message = task.add_chat_message("Hello", user)
@@ -587,29 +714,42 @@ class TestTask:
 
     def test_assign_to(
         self,
-        workspace,
-        task,
-        other_user,
-        other_workspace_user,
-    ):
+        workspace: models.Workspace,
+        task: models.Task,
+        other_user: AbstractUser,
+        other_workspace_user: models.WorkspaceUser,
+    ) -> None:
         """Test assigning to a different workspace's user."""
         task.assign_to(other_user)
         assert task.assignee == other_workspace_user
 
-    def test_assign_then_delete_user(self, task, workspace_user):
+    def test_assign_then_delete_user(
+        self, task: models.Task, workspace_user: models.WorkspaceUser
+    ) -> None:
         """Assert that nothing happens to the task if the user is gone."""
         task.assign_to(workspace_user.user)
         workspace_user.user.delete()
         task.refresh_from_db()
         assert task.assignee is None
 
-    def test_assign_outside_of_workspace(self, workspace, task, other_user):
+    def test_assign_outside_of_workspace(
+        self,
+        workspace: models.Workspace,
+        task: models.Task,
+        other_user: AbstractUser,
+    ) -> None:
         """Test assigning to a different workspace's user."""
         # This time do not create a workspace_user
         with pytest.raises(models.WorkspaceUser.DoesNotExist):
             task.assign_to(other_user)
 
-    def test_assign_none(self, workspace, task, workspace_user, user):
+    def test_assign_none(
+        self,
+        workspace: models.Workspace,
+        task: models.Task,
+        workspace_user: models.WorkspaceUser,
+        user: AbstractUser,
+    ) -> None:
         """Test assigning to no user."""
         task.assign_to(user)
         task.assign_to(None)
@@ -617,27 +757,35 @@ class TestTask:
         assert task.assignee is None
 
     def test_assign_remove_workspace_user(
-        self, user, workspace, workspace_user, task
-    ):
+        self,
+        user: AbstractUser,
+        workspace: models.Workspace,
+        workspace_user: models.WorkspaceUser,
+        task: models.Task,
+    ) -> None:
         """Test what happens if a workspace user is removed."""
         assert task.assignee == workspace_user
         workspace.remove_user(user)
         task.refresh_from_db()
         assert task.assignee is None
 
-    def test_get_next_section(self, workspace_board, task):
+    def test_get_next_section(
+        self, workspace_board: models.WorkspaceBoard, task: models.Task
+    ) -> None:
         """Test getting the next section."""
         section = factory.WorkspaceBoardSectionFactory.create(
             workspace_board=workspace_board,
         )
         assert task.get_next_section() == section
 
-    def test_get_next_section_no_next_section(self, workspace_board, task):
+    def test_get_next_section_no_next_section(
+        self, workspace_board: models.WorkspaceBoard, task: models.Task
+    ) -> None:
         """Test getting the next section when there is none."""
         with pytest.raises(models.WorkspaceBoardSection.DoesNotExist):
             task.get_next_section()
 
-    def test_add_label(self, task, label):
+    def test_add_label(self, task: models.Task, label: models.Label) -> None:
         """Test adding a label."""
         assert task.tasklabel_set.count() == 0
         task.add_label(label)
@@ -646,7 +794,9 @@ class TestTask:
         task.add_label(label)
         assert task.tasklabel_set.count() == 1
 
-    def test_remove_label(self, task, label):
+    def test_remove_label(
+        self, task: models.Task, label: models.Label
+    ) -> None:
         """Test removing a label."""
         task.add_label(label)
         assert task.tasklabel_set.count() == 1
@@ -656,7 +806,9 @@ class TestTask:
         task.remove_label(label)
         assert task.tasklabel_set.count() == 0
 
-    def test_task_number(self, task, other_task):
+    def test_task_number(
+        self, task: models.Task, other_task: models.Task
+    ) -> None:
         """Test unique task number."""
         other_task.refresh_from_db()
         task.refresh_from_db()
@@ -664,26 +816,30 @@ class TestTask:
         task.workspace.refresh_from_db()
         assert task.workspace.highest_task_number == other_task.number
 
-    def test_save(self, task):
+    def test_save(self, task: models.Task) -> None:
         """Test saving and assert number does not change."""
         num = task.number
         task.save()
         assert task.number == num
 
-    def test_save_no_number(self, task, workspace):
+    def test_save_no_number(
+        self, task: models.Task, workspace: models.Workspace
+    ) -> None:
         """Test saving with no number."""
         with pytest.raises(db.InternalError):
-            task.number = None
+            task.number = None  # type: ignore[assignment]
             task.save()
             workspace.refresh_from_db()
 
-    def test_save_different_number(self, task):
+    def test_save_different_number(self, task: models.Task) -> None:
         """Test saving with different number."""
         with pytest.raises(db.InternalError):
             task.number = 154785787
             task.save()
 
-    def test_task_workspace_pgtrigger(self, task, other_workspace):
+    def test_task_workspace_pgtrigger(
+        self, task: models.Task, other_workspace: models.Workspace
+    ) -> None:
         """Test database trigger for wrong workspace assignment."""
         with pytest.raises(db.InternalError):
             task.workspace = other_workspace
@@ -694,13 +850,17 @@ class TestTask:
 class TestLabelManager:
     """Test Label queryset/manager."""
 
-    def test_filter_by_workspace_pks(self, label, workspace):
+    def test_filter_by_workspace_pks(
+        self, label: models.Label, workspace: models.Workspace
+    ) -> None:
         """Test filter_by_workspace_pks."""
         qs = models.Label.objects.filter_by_workspace_pks([workspace.pk])
         labels = [label]
         assert list(qs) == labels
 
-    def test_filter_for_user_and_uuid(self, label, workspace_user):
+    def test_filter_for_user_and_uuid(
+        self, label: models.Label, workspace_user: models.WorkspaceUser
+    ) -> None:
         """Test filter_for_user_and_uuid."""
         assert (
             models.Label.objects.filter_for_user_and_uuid(
@@ -715,11 +875,13 @@ class TestLabelManager:
 class TestLabel:
     """Test Label model."""
 
-    def test_factory(self, label):
+    def test_factory(self, label: models.Label) -> None:
         """Test factory."""
         assert label.color is not None
 
-    def test_workspace(self, workspace, label):
+    def test_workspace(
+        self, workspace: models.Workspace, label: models.Label
+    ) -> None:
         """Test workspace property."""
         assert label.workspace == workspace
 
@@ -728,7 +890,9 @@ class TestLabel:
 class TestLabelQuerySet:
     """Test LabelQuerySet."""
 
-    def test_filter_by_task_pks(self, label, task):
+    def test_filter_by_task_pks(
+        self, label: models.Label, task: models.Task
+    ) -> None:
         """Test filter_by_task_pks."""
         task_label = task.add_label(label)
         qs = models.TaskLabel.objects.filter_by_task_pks([task.pk])
@@ -740,12 +904,19 @@ class TestLabelQuerySet:
 class TestTaskLabel:
     """Test TaskLabel model."""
 
-    def test_factory(self, task_label, task, label):
+    def test_factory(
+        self,
+        task_label: models.TaskLabel,
+        task: models.Task,
+        label: models.Label,
+    ) -> None:
         """Test factory."""
         assert task_label.task == task
         assert task_label.label == label
 
-    def test_workspace(self, workspace, task_label):
+    def test_workspace(
+        self, workspace: models.Workspace, task_label: models.TaskLabel
+    ) -> None:
         """Test workspace property."""
         assert task_label.workspace == workspace
 
@@ -754,12 +925,16 @@ class TestTaskLabel:
 class TestSubTaskManager:
     """Test SubTask manager."""
 
-    def test_filter_by_task_pks(self, task, sub_task):
+    def test_filter_by_task_pks(
+        self, task: models.Task, sub_task: models.SubTask
+    ) -> None:
         """Test filter_by_task_pks."""
         qs = models.SubTask.objects.filter_by_task_pks([task.pk])
         assert list(qs) == [sub_task]
 
-    def test_filter_for_user_and_uuid(self, sub_task, workspace_user):
+    def test_filter_for_user_and_uuid(
+        self, sub_task: models.SubTask, workspace_user: models.WorkspaceUser
+    ) -> None:
         """Test filter_for_user_and_uuid."""
         assert (
             models.SubTask.objects.filter_for_user_and_uuid(
@@ -774,11 +949,15 @@ class TestSubTaskManager:
 class TestSubTask:
     """Test SubTask."""
 
-    def test_factory(self, task, sub_task):
+    def test_factory(
+        self, task: models.Task, sub_task: models.SubTask
+    ) -> None:
         """Test that sub task correctly belongs to task."""
         assert sub_task.task == task
 
-    def test_moving_sub_task(self, task, sub_task):
+    def test_moving_sub_task(
+        self, task: models.Task, sub_task: models.SubTask
+    ) -> None:
         """Test moving a sub task around."""
         other_sub_task = factory.SubTaskFactory.create(
             task=task,
@@ -812,9 +991,9 @@ class TestSubTask:
 
     def test_moving_within_empty_task(
         self,
-        task,
-        sub_task,
-    ):
+        task: models.Task,
+        sub_task: models.SubTask,
+    ) -> None:
         """Test moving when there are no other sub tasks."""
         assert list(task.subtask_set.all()) == [
             sub_task,
@@ -825,7 +1004,9 @@ class TestSubTask:
         ]
         assert sub_task._order == 0
 
-    def test_workspace(self, workspace, sub_task):
+    def test_workspace(
+        self, workspace: models.Workspace, sub_task: models.SubTask
+    ) -> None:
         """Test workspace property."""
         assert sub_task.workspace == workspace
 
@@ -834,12 +1015,18 @@ class TestSubTask:
 class TestChatMessageManager:
     """Test ChatMessage Manager."""
 
-    def test_filter_by_task_pks(self, chat_message, task):
+    def test_filter_by_task_pks(
+        self, chat_message: models.ChatMessage, task: models.Task
+    ) -> None:
         """Test filter_by_task_pks."""
         qs = models.ChatMessage.objects.filter_by_task_pks([task.pk])
         assert list(qs) == [chat_message]
 
-    def test_filter_for_user_and_uuid(self, chat_message, workspace_user):
+    def test_filter_for_user_and_uuid(
+        self,
+        chat_message: models.ChatMessage,
+        workspace_user: models.WorkspaceUser,
+    ) -> None:
         """Test filter_for_user_and_uuid."""
         assert (
             models.ChatMessage.objects.filter_for_user_and_uuid(
@@ -854,10 +1041,16 @@ class TestChatMessageManager:
 class TestChatMessage:
     """Test ChatMessage."""
 
-    def test_factory(self, workspace_user, chat_message):
+    def test_factory(
+        self,
+        workspace_user: models.WorkspaceUser,
+        chat_message: models.ChatMessage,
+    ) -> None:
         """Test that chat message belongs to user."""
         assert chat_message.author == workspace_user
 
-    def test_workspace(self, workspace, chat_message):
+    def test_workspace(
+        self, workspace: models.Workspace, chat_message: models.ChatMessage
+    ) -> None:
         """Test workspace property."""
         assert chat_message.workspace == workspace

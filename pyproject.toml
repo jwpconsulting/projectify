@@ -69,7 +69,6 @@ disable_error_code = ["attr-defined", "return-value"]
 module = [
     "corporate.test.*",
     "workspace.test.schema.*",
-    "workspace.test.test_models",
     "workspace.test.test_migrations",
     "user.test.schema.*",
     "user.test.test_models",
