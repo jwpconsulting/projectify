@@ -6,7 +6,10 @@ class empty: ...
 
 class Field:
     def __init__(
-        self, read_only: bool = False, write_only: bool = False
+        self,
+        read_only: bool = False,
+        write_only: bool = False,
+        allow_null: bool = False,
     ) -> None: ...
 
 class BooleanField(Field): ...

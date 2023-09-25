@@ -6,6 +6,14 @@ because ws board section requires importing the task serializer.
 """
 from typing import (
     Any,
+    Callable,
+)
+
+from django.contrib.auth import (
+    get_user_model,
+)
+from django.contrib.auth.models import (
+    AbstractBaseUser,
 )
 
 from rest_framework import (
@@ -62,9 +70,7 @@ class TaskUpdateSerializer(base.TaskBaseSerializer):
         child=serializers.UUIDField(),
         write_only=True,
     )
-    assignee = serializers.SlugRelatedField(
-        slug_field="uuid",
-        queryset=models.WorkspaceUser.objects.all(),
+    assignee = serializers.EmailField(
         allow_null=True,
         write_only=True,
     )
@@ -75,6 +81,7 @@ class TaskUpdateSerializer(base.TaskBaseSerializer):
         """Assign labels, assign assignee."""
         # Assign label
         label_uuids = validated_data.pop("labels")
+        workspace_user_email = validated_data.pop("assignee")
         task = super().update(instance, validated_data)
 
         # Restrict to this workspace's labels
@@ -82,4 +89,13 @@ class TaskUpdateSerializer(base.TaskBaseSerializer):
         labels = task.workspace.label_set.filter(uuid__in=label_uuids)
         task.set_labels(list(labels))
         # Assign ws user
+        # get_by_natural_key is right here
+        # https://github.com/django/django/blob/2128a73713735fb794ca6565fd5d7792293f5cfa/django/contrib/auth/base_user.py#L20
+        if workspace_user_email:
+            get_by_natural_key: Callable[
+                [str], AbstractBaseUser
+            ] = get_user_model().objects.get_by_natural_key  # type: ignore[attr-defined]
+            user: AbstractBaseUser = get_by_natural_key(workspace_user_email)
+            workspace_user = task.workspace.workspaceuser_set.get(user=user)
+            task.assign_to(workspace_user)
         return task
