@@ -44,6 +44,7 @@ from .task import (
 )
 from .types import (
     GetOrder,
+    Pks,
     SetOrder,
 )
 from .workspace import (
@@ -63,9 +64,6 @@ from .workspace_user_invite import (
 
 if TYPE_CHECKING:
     from django.db.models.manager import RelatedManager  # noqa: F401
-
-
-Pks = list[str]
 
 
 class WorkspaceBoardQuerySet(models.QuerySet["WorkspaceBoard"]):
