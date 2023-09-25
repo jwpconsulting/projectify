@@ -39,7 +39,7 @@ from typing_extensions import (
 )
 from user import models as user_models
 
-from . import (
+from .. import (
     signal_defs,
 )
 
