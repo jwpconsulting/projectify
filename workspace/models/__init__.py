@@ -345,6 +345,9 @@ class Label(models.Model):
         LabelQuerySet, LabelQuerySet.as_manager()
     )
 
+    if TYPE_CHECKING:
+        id: int
+
     class Meta:
         """Meta."""
 

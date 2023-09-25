@@ -58,9 +58,12 @@ class TestTaskRetrieve:
         data = {
             "title": "Hello world",
             "number": 2,
+            "labels": [],
+            "assignee": None,
         }
-        with django_assert_num_queries(14):
-            response = rest_user_client.put(resource_url, data)
+        # TODO so many queries...
+        with django_assert_num_queries(18):
+            response = rest_user_client.put(resource_url, data, format="json")
             assert response.status_code == 200, response.content
         assert response.data["title"] == "Hello world"
 
