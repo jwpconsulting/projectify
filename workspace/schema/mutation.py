@@ -40,6 +40,8 @@ if TYPE_CHECKING:
     from user.models import User as _User
 
 
+# TODO
+# Use this everywhere, refactor to some util module
 def get_user_model() -> Type["_User"]:
     """Return a correctly typed user model."""
     abstract_base_user: Type[AbstractBaseUser] = _get_user_model()
