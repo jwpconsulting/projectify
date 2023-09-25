@@ -3,6 +3,7 @@ import uuid
 from typing import (
     TYPE_CHECKING,
     ClassVar,
+    Self,
     cast,
 )
 
@@ -14,10 +15,6 @@ from django.db import (
     transaction,
 )
 from django.utils.translation import gettext_lazy as _
-
-from typing_extensions import (
-    Self,
-)
 
 
 if TYPE_CHECKING:

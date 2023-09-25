@@ -2,6 +2,7 @@
 import uuid
 from typing import (
     ClassVar,
+    Self,
     cast,
 )
 
@@ -17,9 +18,6 @@ from django.utils.translation import gettext_lazy as _
 from django_extensions.db.models import (
     TimeStampedModel,
     TitleDescriptionModel,
-)
-from typing_extensions import (
-    Self,
 )
 
 from .task import (
