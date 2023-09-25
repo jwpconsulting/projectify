@@ -35,6 +35,9 @@ from typing_extensions import (
 )
 
 from .const import WorkspaceUserRoles as WorkspaceUserRoles
+from .label import (
+    Label,
+)
 from .task import (
     Task,
     TaskQuerySet,
@@ -313,47 +316,6 @@ class WorkspaceBoardSection(
         ]
 
 
-class LabelQuerySet(models.QuerySet["Label"]):
-    """Label Queryset."""
-
-    def filter_by_workspace_pks(self, workspace_pks: Pks) -> Self:
-        """Filter by workspace pks."""
-        return self.filter(workspace__pk__in=workspace_pks)
-
-    def filter_for_user_and_uuid(
-        self, user: AbstractBaseUser, uuid: uuid.UUID
-    ) -> Self:
-        """Return for matching workspace user and uuid."""
-        return self.filter(workspace__users=user, uuid=uuid)
-
-
-class Label(models.Model):
-    """A label."""
-
-    name = models.CharField(max_length=255)
-    color = models.PositiveBigIntegerField(
-        help_text=_("Color index"),
-        default=0,
-    )
-    workspace = models.ForeignKey["Workspace"](
-        Workspace,
-        on_delete=models.CASCADE,
-    )
-    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
-
-    objects: ClassVar[LabelQuerySet] = cast(  # type: ignore[assignment]
-        LabelQuerySet, LabelQuerySet.as_manager()
-    )
-
-    if TYPE_CHECKING:
-        id: int
-
-    class Meta:
-        """Meta."""
-
-        unique_together = ("workspace", "name")
-
-
 class TaskLabelQuerySet(models.QuerySet["TaskLabel"]):
     """QuerySet for TaskLabel."""
 
@@ -524,6 +486,7 @@ class ChatMessage(TimeStampedModel, models.Model):
 
 
 __all__ = (
+    "Label",
     "Task",
     "TaskQuerySet",
     "Workspace",
