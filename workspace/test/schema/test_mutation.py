@@ -525,7 +525,7 @@ mutation AssignTask($uuid: UUID!, $email: String) {
         workspace_user,
     ):
         """Test query."""
-        task.assign_to(other_user)
+        task.assign_to(other_workspace_user)
         result = graphql_query_user(
             self.query,
             variables={
