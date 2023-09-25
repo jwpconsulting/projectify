@@ -1,4 +1,5 @@
 """Contains task model / qs / manager."""
+import logging
 import uuid
 from typing import (
     TYPE_CHECKING,
@@ -11,6 +12,13 @@ from typing import (
 
 from django.contrib.auth.models import (
     AbstractBaseUser,
+)
+from django.db import (
+    models,
+    transaction,
+)
+from django.db.models.signals import (
+    post_save,
 )
 from django.utils.translation import gettext_lazy as _
 
@@ -30,22 +38,21 @@ from .workspace import (
 )
 
 
+logger = logging.getLogger(__name__)
+
+
 if TYPE_CHECKING:
     from django.db.models.manager import RelatedManager  # noqa: F401
+
     from . import (
         ChatMessage,
-        WorkspaceUser,
-        WorkspaceBoard,
+        Label,
         SubTask,
         TaskLabel,
-        Label,
+        WorkspaceBoard,
         WorkspaceBoardSection,
+        WorkspaceUser,
     )
-
-from django.db import (
-    models,
-    transaction,
-)
 
 
 class TaskQuerySet(models.QuerySet["Task"]):
@@ -280,22 +287,54 @@ class Task(
         )
         return next_section
 
+    def set_labels(self, labels: list["Label"]) -> None:
+        """Set labels. Remove if unset."""
+        workspace = self.workspace
+        ws_labels = workspace.label_set
+        # We filter for labels as part of this workspace, to make sure we
+        # don't assign labels from another workspace
+        intersection_qs = ws_labels.filter(
+            id__in=[label.id for label in labels]
+        )
+        with transaction.atomic():
+            intersection = list(intersection_qs)
+            if not len(intersection) == len(labels):
+                logger.warn(
+                    "Some of the labels specified in %s are "
+                    "not part of this workspace",
+                    ", ".join(str(label.uuid) for label in labels),
+                )
+            self.labels.set(intersection)
+
+        # TODO maybe it makes more sense to fire signals from serializers,
+        # not manually patch things like the following...
+        post_save.send(sender=Task, instance=self)
+
     def add_label(self, label: "Label") -> "TaskLabel":
         """
         Add a label to this task.
 
         Returns task label.
         """
-        task_label: TaskLabel
+        from . import (
+            TaskLabel,
+        )
+
         workspace = self.workspace_board_section.workspace_board.workspace
+
         # XXX can this be a db constraint?
+        # Or done in the serializer?
         assert label.workspace == workspace
+
+        current_labels = self.labels.all()
+        this_label = self.tasklabel_set.filter(label=label)
+
         with transaction.atomic():
-            if self.tasklabel_set.filter(label=label).exists():
-                task_label = self.tasklabel_set.get(label=label)
-                return task_label
-            task_label = self.tasklabel_set.create(label=label)
-            return task_label
+            try:
+                return this_label.get()
+            except TaskLabel.DoesNotExist:
+                self.set_labels([*current_labels, label])
+                return self.tasklabel_set.get(label=label)
 
     def remove_label(self, label: "Label") -> "Label":
         """
@@ -303,15 +342,11 @@ class Task(
 
         Returns label.
         """
-        from . import (
-            TaskLabel,
-        )
+        labels_without = list(self.labels.exclude(id=label.id))
 
-        try:
-            task_label: "TaskLabel" = self.tasklabel_set.get(label=label)
-            task_label.delete()
-        except TaskLabel.DoesNotExist:
-            pass
+        with transaction.atomic():
+            self.set_labels(labels_without)
+
         return label
 
     # TODO we can probably do better than any here

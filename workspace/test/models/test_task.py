@@ -228,6 +228,34 @@ class TestTask:
         with pytest.raises(models.WorkspaceBoardSection.DoesNotExist):
             task.get_next_section()
 
+    def test_set_labels(
+        self, workspace: models.Workspace, task: models.Task
+    ) -> None:
+        """Test setting labels."""
+        assert task.labels.count() == 0
+        a, b, c, d, e = factory.LabelFactory.create_batch(
+            5,
+            workspace=workspace,
+        )
+        task.set_labels([a, b])
+        assert task.labels.count() == 2
+        assert list(task.labels.values_list("id", flat=True)) == [a.id, b.id]
+        task.set_labels([c, d, e])
+        assert task.labels.count() == 3
+        assert list(task.labels.values_list("id", flat=True)) == [
+            c.id,
+            d.id,
+            e.id,
+        ]
+        task.set_labels([])
+        assert task.labels.count() == 0
+        assert list(task.labels.values_list("id", flat=True)) == []
+
+        unrelated = factory.LabelFactory.create()
+        task.set_labels([unrelated])
+        assert task.labels.count() == 0
+        assert list(task.labels.values_list("id", flat=True)) == []
+
     def test_add_label(self, task: models.Task, label: models.Label) -> None:
         """Test adding a label."""
         assert task.tasklabel_set.count() == 0
