@@ -2,6 +2,10 @@
 # Create
 # Read
 # Update
+from typing import (
+    Union,
+)
+
 from django.db.models import (
     Prefetch,
 )
@@ -18,7 +22,11 @@ from .. import (
 
 class TaskRetrieveUpdate(
     generics.RetrieveUpdateAPIView[
-        models.Task, models.TaskQuerySet, serializers.TaskDetailSerializer
+        models.Task,
+        models.TaskQuerySet,
+        Union[
+            serializers.TaskDetailSerializer, serializers.TaskUpdateSerializer
+        ],
     ],
 ):
     """Retrieve a task."""
@@ -44,6 +52,17 @@ class TaskRetrieveUpdate(
         )
     )
     serializer_class = serializers.TaskDetailSerializer
+
+    def get_serializer_class(
+        self,
+    ) -> Union[
+        type[serializers.TaskDetailSerializer],
+        type[serializers.TaskUpdateSerializer],
+    ]:
+        """Return different serializer for get/put."""
+        if self.request.method in ("PUT", "PATCH"):
+            return serializers.TaskUpdateSerializer
+        return serializers.TaskDetailSerializer
 
     def get_object(self) -> models.Task:
         """Get object for user and uuid."""
