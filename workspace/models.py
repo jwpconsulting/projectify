@@ -7,6 +7,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
+    ClassVar,
     Iterable,
     Optional,
     Sequence,
@@ -111,7 +112,9 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
 
     highest_task_number = models.IntegerField(default=0)
 
-    objects = cast(WorkspaceQuerySet, WorkspaceQuerySet.as_manager())
+    objects: ClassVar[WorkspaceQuerySet] = cast(  # type: ignore[assignment]
+        WorkspaceQuerySet, WorkspaceQuerySet.as_manager()
+    )
 
     if TYPE_CHECKING:
         # Related fields
@@ -144,7 +147,7 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         return user
 
     @transaction.atomic
-    def remove_user(self, user: "User") -> "User":
+    def remove_user(self, user: AbstractBaseUser) -> AbstractBaseUser:
         """
         Remove user from workspace.
 
@@ -255,7 +258,7 @@ class WorkspaceUserInvite(TimeStampedModel, models.Model):
         help_text=_("Has this invite been redeemed?"),
     )
 
-    objects = cast(
+    objects: ClassVar[WorkspaceUserInviteQuerySet] = cast(  # type: ignore[assignment]
         WorkspaceUserInviteQuerySet, WorkspaceUserInviteQuerySet.as_manager()
     )
 
@@ -325,6 +328,7 @@ class WorkspaceUser(TimeStampedModel, models.Model):
         Workspace,
         on_delete=models.PROTECT,
     )
+    # This defo depends on the User in user/ app
     user = models.ForeignKey["User"](
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -342,7 +346,9 @@ class WorkspaceUser(TimeStampedModel, models.Model):
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 
     # Sort of nonsensical
-    objects = cast(WorkspaceUserQuerySet, WorkspaceUserQuerySet.as_manager())
+    objects: ClassVar[WorkspaceUserQuerySet] = cast(  # type: ignore[assignment]
+        WorkspaceUserQuerySet, WorkspaceUserQuerySet.as_manager()
+    )
 
     if TYPE_CHECKING:
         # Related
@@ -408,7 +414,9 @@ class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
         help_text=_("Workspace board's deadline"),
     )
 
-    objects = cast(WorkspaceBoardQuerySet, WorkspaceBoardQuerySet.as_manager())
+    objects: ClassVar[WorkspaceBoardQuerySet] = cast(  # type: ignore[assignment]
+        WorkspaceBoardQuerySet, WorkspaceBoardQuerySet.as_manager()
+    )
 
     if TYPE_CHECKING:
         # Related managers
@@ -475,7 +483,7 @@ class WorkspaceBoardSection(
         on_delete=models.CASCADE,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
-    objects = cast(
+    objects: ClassVar[WorkspaceBoardSectionQuerySet] = cast(  # type: ignore[assignment]
         WorkspaceBoardSectionQuerySet,
         WorkspaceBoardSectionQuerySet.as_manager(),
     )
@@ -541,7 +549,7 @@ class WorkspaceBoardSection(
             models.UniqueConstraint(
                 fields=["workspace_board", "_order"],
                 name="unique_workspace_board_order",
-                deferrable=models.Deferrable.DEFERRED,  # type:ignore
+                deferrable=models.Deferrable.DEFERRED,
             )
         ]
 
@@ -678,7 +686,9 @@ class Task(
 
     number = models.PositiveIntegerField()
 
-    objects = cast(TaskQuerySet, TaskQuerySet.as_manager())
+    objects: ClassVar[TaskQuerySet] = cast(  # type: ignore[assignment]
+        TaskQuerySet, TaskQuerySet.as_manager()
+    )
 
     if TYPE_CHECKING:
         # Related fields
@@ -813,12 +823,12 @@ class Task(
             models.UniqueConstraint(
                 fields=["workspace_board_section", "_order"],
                 name="unique_task_order",
-                deferrable=models.Deferrable.DEFERRED,  # type:ignore
+                deferrable=models.Deferrable.DEFERRED,
             ),
             models.UniqueConstraint(
                 fields=["workspace", "number"],
                 name="unique_task_number",
-                deferrable=models.Deferrable.DEFERRED,  # type:ignore
+                deferrable=models.Deferrable.DEFERRED,
             ),
         ]
 
@@ -851,7 +861,9 @@ class Label(models.Model):
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 
-    objects = cast(LabelQuerySet, LabelQuerySet.as_manager())
+    objects: ClassVar[LabelQuerySet] = cast(  # type: ignore[assignment]
+        LabelQuerySet, LabelQuerySet.as_manager()
+    )
 
     class Meta:
         """Meta."""
@@ -879,7 +891,9 @@ class TaskLabel(models.Model):
         on_delete=models.CASCADE,
     )
 
-    objects = cast(TaskLabelQuerySet, TaskLabelQuerySet.as_manager())
+    objects: ClassVar[TaskLabelQuerySet] = cast(  # type: ignore[assignment]
+        TaskLabelQuerySet, TaskLabelQuerySet.as_manager()
+    )
 
     @property
     def workspace(self) -> Workspace:
@@ -928,7 +942,9 @@ class SubTask(
         help_text=_("Designate whether this sub task is done"),
     )
 
-    objects = cast(SubTaskQuerySet, SubTaskQuerySet.as_manager())
+    objects: ClassVar[SubTaskQuerySet] = cast(  # type: ignore[assignment]
+        SubTaskQuerySet, SubTaskQuerySet.as_manager()
+    )
 
     # Ordering related
     _order: int
@@ -968,7 +984,7 @@ class SubTask(
             models.UniqueConstraint(
                 fields=["task", "_order"],
                 name="unique_sub_task_order",
-                deferrable=models.Deferrable.DEFERRED,  # type:ignore
+                deferrable=models.Deferrable.DEFERRED,
             )
         ]
 
@@ -1009,7 +1025,9 @@ class ChatMessage(TimeStampedModel, models.Model):
     )
 
     # XXX
-    objects = cast(ChatMessageQuerySet, ChatMessageQuerySet.as_manager())
+    objects: ClassVar[ChatMessageQuerySet] = cast(  # type: ignore[assignment]
+        ChatMessageQuerySet, ChatMessageQuerySet.as_manager()
+    )
 
     @property
     def workspace(self) -> Workspace:

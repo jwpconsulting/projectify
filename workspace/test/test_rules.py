@@ -99,7 +99,7 @@ class TestPredicates:
     def test_is_at_least_owner_other_workspace(
         self,
         user: AbstractBaseUser,
-        other_workspace: models.WorkspaceUser,
+        other_workspace: models.Workspace,
     ) -> None:
         """Test is_at_least_owner with other workspace."""
         assert not rules.is_at_least_owner(user, other_workspace)

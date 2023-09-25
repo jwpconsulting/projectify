@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="subtask",
             constraint=models.UniqueConstraint(
-                deferrable=django.db.models.constraints.Deferrable["DEFERRED"],  # type: ignore
+                deferrable=django.db.models.constraints.Deferrable["DEFERRED"],
                 fields=("task", "_order"),
                 name="unique_sub_task_order",
             ),

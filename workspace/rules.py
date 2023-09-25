@@ -5,14 +5,10 @@ The order of rules follows the ordering of models.
 """
 from typing import (
     Protocol,
-    Union,
 )
 
 from django.contrib.auth.models import (
     AbstractBaseUser,
-)
-from django.db.models import (
-    ForeignKey,
 )
 
 import rules
@@ -29,7 +25,7 @@ class HasWorkspace(Protocol):
     @property
     def workspace(
         self,
-    ) -> Union[ForeignKey[models.Workspace], models.Workspace]:
+    ) -> models.Workspace:
         """Return the workspace."""
         ...
 
