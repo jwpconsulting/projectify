@@ -3,6 +3,7 @@ import uuid
 from typing import (
     TYPE_CHECKING,
     ClassVar,
+    Self,
     cast,
 )
 
@@ -13,10 +14,6 @@ from django.db import (
     models,
 )
 from django.utils.translation import gettext_lazy as _
-
-from typing_extensions import (
-    Self,
-)
 
 from .types import (
     Pks,
