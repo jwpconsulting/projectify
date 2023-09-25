@@ -368,7 +368,12 @@ class Mutation:
         if input.assignee is not UNSET:
             User = get_user_model()
             user = User.objects.get_by_natural_key(input.assignee)
-            task.assign_to(user)
+            workspace_user = (
+                workspace_board_section.workspace.workspaceuser_set.get(
+                    user=user
+                )
+            )
+            task.assign_to(workspace_user)
         if input.sub_tasks is not UNSET and input.sub_tasks is not None:
             for title in input.sub_tasks:
                 task.add_sub_task(
@@ -621,7 +626,10 @@ class Mutation:
         else:
             User = get_user_model()
             assignee = User.objects.get_by_natural_key(input.email)
-            task.assign_to(assignee)
+            workspace_user = task.workspace.workspaceuser_set.get(
+                user=assignee
+            )
+            task.assign_to(workspace_user)
         return task
 
     @strawberry.field

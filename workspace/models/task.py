@@ -256,28 +256,16 @@ class Task(
         )
         return self.chatmessage_set.create(text=text, author=workspace_user)
 
-    def assign_to(self, assignee: Optional[AbstractBaseUser]) -> None:
+    def assign_to(self, assignee: Optional["WorkspaceUser"]) -> None:
         """
         Assign task to user.
 
         Saves after done.
         """
-        from . import (
-            WorkspaceUser,
-        )
-
-        if assignee is not None:
-            # Check if assignee is part of the task's workspace
-            workspace = self.workspace_board_section.workspace_board.workspace
-            workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(
-                workspace,
-                assignee,
-            )
-        else:
-            workspace_user = None
-        # Change assignee
-        self.assignee = workspace_user
-        # Save
+        # XXX I suppose we can use a database trigger for validation here!
+        if assignee:
+            self.workspace.workspaceuser_set.get(uuid=assignee.uuid)
+        self.assignee = assignee
         self.save()
 
     def get_next_section(self) -> "WorkspaceBoardSection":

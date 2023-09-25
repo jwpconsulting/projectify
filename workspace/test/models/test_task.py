@@ -159,18 +159,17 @@ class TestTask:
         self,
         workspace: models.Workspace,
         task: models.Task,
-        other_user: AbstractUser,
         other_workspace_user: models.WorkspaceUser,
     ) -> None:
         """Test assigning to a different workspace's user."""
-        task.assign_to(other_user)
+        task.assign_to(other_workspace_user)
         assert task.assignee == other_workspace_user
 
     def test_assign_then_delete_user(
         self, task: models.Task, workspace_user: models.WorkspaceUser
     ) -> None:
         """Assert that nothing happens to the task if the user is gone."""
-        task.assign_to(workspace_user.user)
+        task.assign_to(workspace_user)
         workspace_user.user.delete()
         task.refresh_from_db()
         assert task.assignee is None
@@ -179,22 +178,21 @@ class TestTask:
         self,
         workspace: models.Workspace,
         task: models.Task,
-        other_user: AbstractUser,
+        other_workspace_workspace_user: models.WorkspaceUser,
     ) -> None:
         """Test assigning to a different workspace's user."""
         # This time do not create a workspace_user
         with pytest.raises(models.WorkspaceUser.DoesNotExist):
-            task.assign_to(other_user)
+            task.assign_to(other_workspace_workspace_user)
 
     def test_assign_none(
         self,
         workspace: models.Workspace,
         task: models.Task,
         workspace_user: models.WorkspaceUser,
-        user: AbstractUser,
     ) -> None:
         """Test assigning to no user."""
-        task.assign_to(user)
+        task.assign_to(workspace_user)
         task.assign_to(None)
         task.refresh_from_db()
         assert task.assignee is None
