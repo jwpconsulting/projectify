@@ -24,14 +24,14 @@ function getTaskPosition(
     }
 }
 
-async function moveToTop(
+export async function moveToTop(
     workspaceBoardSection: WorkspaceBoardSection,
     task: Task
 ) {
     await moveTaskAfter(task.uuid, workspaceBoardSection.uuid, null);
 }
 
-async function moveToBottom(
+export async function moveToBottom(
     workspaceBoardSection: WorkspaceBoardSection,
     task: Task
 ) {

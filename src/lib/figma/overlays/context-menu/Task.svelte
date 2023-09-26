@@ -22,6 +22,7 @@
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import { deleteTask } from "$lib/stores/dashboard";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
+    import { moveToTop, moveToBottom } from "$lib/stores/modules";
     import type { MoveTaskModule } from "$lib/types/stores";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
     import { copyToClipboard } from "$lib/utils/clipboard";
@@ -61,7 +62,7 @@
             <ContextMenuButton
                 kind={{
                     kind: "button",
-                    action: moveTaskModule.moveToTop,
+                    action: () => moveToTop(workspaceBoardSection, task),
                 }}
                 label={$_("task-overlay.move-to-top")}
                 state="normal"
@@ -72,7 +73,7 @@
             <ContextMenuButton
                 kind={{
                     kind: "button",
-                    action: moveTaskModule.moveToBottom,
+                    action: () => moveToBottom(workspaceBoardSection, task),
                 }}
                 label={$_("task-overlay.move-to-bottom")}
                 state="normal"
