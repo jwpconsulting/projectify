@@ -44,7 +44,7 @@
     let title: string = task.title;
     let description: string | undefined = task.description;
     const assignedUser: WorkspaceUser | null = task.assignee ?? null;
-    const labels: Label[] = task.labels;
+    let labels: Label[] = task.labels;
     const dueDate: string | undefined = undefined;
     const subTasks: SubTask[] = [];
 
@@ -88,6 +88,10 @@
 
     const workspaceUserAssignment = createWorkspaceUserAssignment(task);
     const labelAssignment = createLabelAssignment(task);
+
+    $: {
+        labels = $labelAssignment;
+    }
 
     // TODO
     $: canUpdate = true;
