@@ -25,6 +25,7 @@
         await openContextMenu(contextMenuType, labelPickerBtnRef);
         const labels: Label[] = $labelAssignment;
         // TODO can we make updateTask accept whole labels instead?
+        // TODO skip update when no changes detected
         await updateTask(
             task,
             labels.map((label) => label.uuid),
@@ -35,7 +36,7 @@
 
 {#if task.labels.length}
     <div class="flex flex-row">
-        <LabelList editable={false} labels={task.labels} />
+        <LabelList labels={$labelAssignment} />
     </div>
 {:else}
     <div class="p-0.5">

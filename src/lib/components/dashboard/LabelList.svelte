@@ -1,81 +1,12 @@
 <script lang="ts">
-    import Fuse from "fuse.js";
-    import { createEventDispatcher } from "svelte";
-
     import LabelPill from "$lib/components/dashboard/LabelPill.svelte";
     import type { Label } from "$lib/types/workspace";
 
     export let labels: Label[];
-    export let editable = false;
-    export let searchText = "";
-    // When? Why? XXX
-    export let flexIt = false;
-
-    let searchEngine: Fuse<Label> | null = null;
-    let filteredLabels: Label[] = [];
-    $: {
-        searchEngine = new Fuse(labels, {
-            keys: ["name"],
-        });
-        if (searchText.length) {
-            filteredLabels = searchEngine
-                .search(searchText)
-                .map((res: Fuse.FuseResult<Label>) => res.item);
-        } else {
-            filteredLabels = labels;
-        }
-    }
-
-    const dispatch = createEventDispatcher();
-
-    export let selectedLabels: Label[] = [];
-    const selectedLabelsInx = new Map<string, boolean>();
-
-    function onLabelClick(label: Label) {
-        if (!editable) {
-            return;
-        }
-
-        // It's not clear what addLabel contains
-        const addLabel = selectedLabels.some((l) => l.uuid === label.uuid);
-
-        selectedLabels = selectedLabels.filter((l) => l.uuid === label.uuid);
-        // TODO addLabel, logically, looks like it should be true as soon as
-        // selectedLabels is non-empty
-
-        if (addLabel) {
-            selectedLabelsInx.set(label.uuid, true);
-            selectedLabels.push(label);
-            dispatch("addLabel", label);
-        } else {
-            selectedLabelsInx.delete(label.uuid);
-            dispatch("removeLabel", label);
-        }
-
-        dispatch("selectionChanged", selectedLabels);
-    }
-
-    $: {
-        selectedLabels.forEach((label) => {
-            selectedLabelsInx.set(label.uuid, true);
-        });
-    }
 </script>
 
-{#each filteredLabels as label}
-    <button
-        on:click|preventDefault={() => onLabelClick(label)}
-        on:keydown|preventDefault={() => onLabelClick(label)}
-        class:cursor-pointer={editable}
-        class:hover:opacity-60={editable}
-        class="cursor-pointer transition-opacity duration-300 ease-out"
-    >
-        <div
-            class={flexIt
-                ? "flex h-14 select-none items-center space-x-2  px-4 hover:bg-base-200"
-                : ""}
-        >
-            <LabelPill {label} />
-        </div>
+{#each labels as label}
+    <button>
+        <LabelPill {label} />
     </button>
 {/each}
