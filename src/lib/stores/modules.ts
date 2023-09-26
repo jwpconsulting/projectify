@@ -24,36 +24,38 @@ function getTaskPosition(
     }
 }
 
+async function moveToTop(
+    workspaceBoardSection: WorkspaceBoardSection,
+    task: Task
+) {
+    await moveTaskAfter(task.uuid, workspaceBoardSection.uuid, null);
+}
+
+async function moveToBottom(
+    workspaceBoardSection: WorkspaceBoardSection,
+    task: Task
+) {
+    const tasks = unwrap(workspaceBoardSection.tasks, "Expected tasks");
+    const lastTask = unwrap(tasks.at(-1), "Expected lastTask");
+    await moveTaskAfter(task.uuid, workspaceBoardSection.uuid, lastTask.uuid);
+}
+
 export function createMoveTaskModule(
+    // workspaceBoardSection: WorkspaceBoardSection & {tasks: Task[]},
     workspaceBoardSection: WorkspaceBoardSection,
     task: Task
 ): MoveTaskModule {
-    const tasks = unwrap(workspaceBoardSection.tasks, "Expected tasks");
     const position = getTaskPosition(workspaceBoardSection, task);
-    const lastTask = tasks[tasks.length - 1];
-
-    const moveToTop =
-        position === "start"
-            ? undefined
-            : moveTaskAfter.bind(
-                  null,
-                  task.uuid,
-                  workspaceBoardSection.uuid,
-                  null
-              );
-    const moveToBottom =
-        position === "end"
-            ? undefined
-            : moveTaskAfter.bind(
-                  null,
-                  task.uuid,
-                  workspaceBoardSection.uuid,
-                  lastTask.uuid
-              );
 
     return {
-        moveToTop,
-        moveToBottom,
+        moveToTop:
+            position === "start"
+                ? undefined
+                : moveToTop.bind(null, workspaceBoardSection, task),
+        moveToBottom:
+            position === "end"
+                ? undefined
+                : moveToBottom.bind(null, workspaceBoardSection, task),
         moveToWorkspaceBoardSection: ({ uuid }: WorkspaceBoardSection) =>
             moveTaskAfter(task.uuid, uuid),
     };
