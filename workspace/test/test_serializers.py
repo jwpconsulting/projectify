@@ -30,8 +30,11 @@ class TestTaskDetailSerializer:
 class TestTaskUpdateSerializer:
     """Test the task update serializer."""
 
-    def test_readonly_fields(self, task: models.Task) -> None:
+    def test_readonly_fields(
+        self, task: models.Task, workspace_user: models.WorkspaceUser
+    ) -> None:
         """Check that fields are actually readonly by trying a few."""
+        task.assign_to(workspace_user)
         serializer = serializers.TaskUpdateSerializer(
             task,
             data={
@@ -49,6 +52,9 @@ class TestTaskUpdateSerializer:
         assert "number" not in serializer.validated_data
         assert "uuid" not in serializer.validated_data
         assert "title" in serializer.validated_data
+        serializer.save()
+        assert list(task.labels.values_list("uuid", flat=True)) == []
+        assert task.assignee is None
 
     def test_assigning_label_and_workspace_user(
         self,
@@ -63,18 +69,11 @@ class TestTaskUpdateSerializer:
             task,
             data={
                 "title": task.title,
-                "number": 133337,
-                "uuid": 2,
                 "labels": label_uuids,
                 "assignee": workspace_user.user.email,
             },
         )
-        # it is_valid, because DRF just ignores the read only fields inside
-        # data
         serializer.is_valid(raise_exception=True)
-        # Here we prove that DRF ignores "number" and other r/o fields
-        assert "number" not in serializer.validated_data
-        assert "uuid" not in serializer.validated_data
         assert "title" in serializer.validated_data
         serializer.save()
         assert list(task.labels.values_list("uuid", flat=True)) == label_uuids

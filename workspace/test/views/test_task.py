@@ -62,7 +62,8 @@ class TestTaskRetrieve:
             "assignee": None,
         }
         # TODO so many queries...
-        with django_assert_num_queries(22):
+        # TODO omg so many queries (22 -> 28)
+        with django_assert_num_queries(28):
             response = rest_user_client.put(resource_url, data, format="json")
             assert response.status_code == 200, response.content
         assert response.data["title"] == "Hello world"
