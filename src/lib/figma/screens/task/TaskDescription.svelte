@@ -1,16 +1,17 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
-
     export let description: string | undefined;
     export let readonly = false;
 </script>
 
-<InputField
-    name="description"
-    style={{ kind: "field", inputType: "text" }}
-    bind:value={description}
-    placeholder={$_("task-screen.description")}
-    {readonly}
-/>
+<div class="w-full">
+    <textarea
+        class="w-full rounded-lg border border-border p-2"
+        rows="5"
+        name="description"
+        bind:value={description}
+        placeholder={$_("task-screen.description")}
+        {readonly}
+    />
+</div>
