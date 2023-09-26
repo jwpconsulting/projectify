@@ -30,7 +30,6 @@
             {#each tasks as task, inx (task.uuid)}
                 <TaskCard
                     {workspaceBoardSection}
-                    {tasks}
                     {task}
                     isFirst={inx === 0}
                     isLast={inx === tasks.length - 1}

@@ -1,41 +1,60 @@
 import { moveTaskAfter } from "$lib/repository/workspace";
 import type { MoveTaskModule } from "$lib/types/stores";
 import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
+import { unwrap } from "$lib/utils/type";
+
+type TaskPosition = "start" | "within" | "end" | "outside";
+
+function getTaskPosition(
+    workspaceBoardSection: WorkspaceBoardSection,
+    task: Task
+): TaskPosition {
+    const tasks = unwrap(workspaceBoardSection.tasks, "Expected tasks");
+    const taskIndex = tasks.findIndex((t) => t.uuid == task.uuid);
+    const lastIndex = tasks.length - 1;
+    switch (taskIndex) {
+        case -1:
+            return "outside";
+        case 0:
+            return "start";
+        case lastIndex:
+            return "end";
+        default:
+            return "within";
+    }
+}
 
 export function createMoveTaskModule(
-    { uuid: workspaceBoardSectionUuid }: WorkspaceBoardSection,
-    task: Task,
-    tasks: Task[]
+    workspaceBoardSection: WorkspaceBoardSection,
+    task: Task
 ): MoveTaskModule {
-    if (!tasks.length) {
-        throw new Error("Expected tasks");
-    }
+    const tasks = unwrap(workspaceBoardSection.tasks, "Expected tasks");
+    const position = getTaskPosition(workspaceBoardSection, task);
+    const lastTask = tasks[tasks.length - 1];
 
-    const { uuid: taskUuid } = task;
-    const taskIndex = tasks.findIndex((t) => t.uuid == taskUuid);
-    if (taskIndex === -1) {
-        throw new Error("task was not found in tasks");
-    }
-    const isFirstTask = taskIndex === 0;
-    const isLastTask = taskIndex === tasks.length - 1;
-    const lastTask = !isLastTask ? tasks[tasks.length - 1] : undefined;
-
-    const moveToTop = isFirstTask
-        ? undefined
-        : moveTaskAfter.bind(null, taskUuid, workspaceBoardSectionUuid, null);
-    const moveToBottom = lastTask
-        ? moveTaskAfter.bind(
-              null,
-              taskUuid,
-              workspaceBoardSectionUuid,
-              lastTask.uuid
-          )
-        : undefined;
+    const moveToTop =
+        position === "start"
+            ? undefined
+            : moveTaskAfter.bind(
+                  null,
+                  task.uuid,
+                  workspaceBoardSection.uuid,
+                  null
+              );
+    const moveToBottom =
+        position === "end"
+            ? undefined
+            : moveTaskAfter.bind(
+                  null,
+                  task.uuid,
+                  workspaceBoardSection.uuid,
+                  lastTask.uuid
+              );
 
     return {
         moveToTop,
         moveToBottom,
         moveToWorkspaceBoardSection: ({ uuid }: WorkspaceBoardSection) =>
-            moveTaskAfter(taskUuid, uuid),
+            moveTaskAfter(task.uuid, uuid),
     };
 }

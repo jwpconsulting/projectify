@@ -11,16 +11,15 @@
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
     export let task: Task;
-    export let tasks: Task[] | undefined = undefined;
-    export let workspaceBoardSection: WorkspaceBoardSection | null = null;
+    export let workspaceBoardSection: WorkspaceBoardSection | undefined =
+        undefined;
 
     export let isFirst = false;
     export let isLast = false;
 
     $: moveTaskModule =
-        workspaceBoardSection && tasks
-            ? createMoveTaskModule(workspaceBoardSection, task, tasks)
-            : undefined;
+        workspaceBoardSection &&
+        createMoveTaskModule(workspaceBoardSection, task);
 </script>
 
 <a

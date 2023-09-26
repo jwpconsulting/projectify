@@ -6,7 +6,7 @@
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
     export let task: Task;
-    export let workspaceBoardSection: WorkspaceBoardSection | null;
+    export let workspaceBoardSection: WorkspaceBoardSection | undefined;
     export let moveTaskModule: MoveTaskModule | undefined;
 
     let dropDownMenuBtnRef: HTMLElement;
