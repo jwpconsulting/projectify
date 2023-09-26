@@ -47,9 +47,9 @@ export type WorkspaceUserSelection =
 export type WorkspaceUserAssignmentInput = WorkspaceUserSelectionInput & {
     kind: "workspaceUser" | "unassigned";
 };
-export type WorkspaceUserAssignmentState = WorkspaceUserSelection & {
-    kind: "workspaceUser" | "unassigned";
-};
+export type WorkspaceUserAssignmentState =
+    | { kind: "workspaceUser"; workspaceUser: WorkspaceUser }
+    | { kind: "unassigned" };
 
 export interface TasksPerUser {
     unassigned: number;

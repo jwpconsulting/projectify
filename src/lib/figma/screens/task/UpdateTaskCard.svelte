@@ -43,7 +43,7 @@
 
     let title: string = task.title;
     let description: string | undefined = task.description;
-    const assignedUser: WorkspaceUser | null = task.assignee ?? null;
+    let assignedUser: WorkspaceUser | undefined = task.assignee;
     let labels: Label[] = task.labels;
     const dueDate: string | undefined = undefined;
     const subTasks: SubTask[] = [];
@@ -57,7 +57,7 @@
         };
         // TODO add labels here
         const labels = await labelAssignment.evaluate();
-        await performUpdateTask(submitTask, labels);
+        await performUpdateTask(submitTask, labels, $workspaceUserAssignment);
         if (!task.workspace_board_section) {
             throw new Error("Expected $updateTask.workspace_board_section");
         }
@@ -88,6 +88,8 @@
 
     const workspaceUserAssignment = createWorkspaceUserAssignment(task);
     const labelAssignment = createLabelAssignment(task);
+
+    $: assignedUser = $workspaceUserAssignment;
 
     $: {
         labels = $labelAssignment;

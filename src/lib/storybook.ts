@@ -189,7 +189,8 @@ const noopAsync = async () => {
 export const workspaceUserAssignment: WorkspaceUserAssignment = {
     select: noop,
     deselect: noop,
-    selected: writable({ kind: "allWorkspaceUsers" }),
+    subscribe: readable<WorkspaceUser | undefined>(undefined).subscribe,
+    selected: writable({ kind: "unassigned" }),
 };
 
 export const labelAssignment: LabelAssignment = {

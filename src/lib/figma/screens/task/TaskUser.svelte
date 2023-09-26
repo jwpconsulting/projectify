@@ -4,7 +4,7 @@
 
     // Either a user has been assigned, or if not we should ask the user
     // to assign a user
-    export let workspaceUser: WorkspaceUser | null;
+    export let workspaceUser: WorkspaceUser | undefined;
     export let action: ((anchor: HTMLElement) => void) | undefined = undefined;
 
     let btnRef: HTMLElement;
@@ -13,6 +13,6 @@
 <div class="flex flex-row items-center gap-4" bind:this={btnRef}>
     <UpdateUser
         action={action ? action.bind(null, btnRef) : undefined}
-        user={workspaceUser ? workspaceUser.user : null}
+        user={workspaceUser?.user ?? null}
     />
 </div>

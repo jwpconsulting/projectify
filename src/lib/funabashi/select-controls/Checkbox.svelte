@@ -8,6 +8,17 @@
     export let contained: boolean;
     export let required = false;
 
+    export let onSelect: (() => void) | undefined = undefined;
+    export let onDeselect: (() => void) | undefined = undefined;
+
+    function onChange() {
+        if (checked && onSelect) {
+            onSelect();
+        } else if (onDeselect) {
+            onDeselect();
+        }
+    }
+
     let outerStyle: string;
     $: {
         if (contained) {
@@ -39,6 +50,8 @@
         class="absolute -left-[3px] -top-[3px] h-5 w-5 appearance-none rounded-md border border-transparent focus:border-base-content focus:outline-none"
         type="checkbox"
         bind:checked
+        on:change={onChange}
+        on:click|stopPropagation
         {disabled}
         {required}
     />

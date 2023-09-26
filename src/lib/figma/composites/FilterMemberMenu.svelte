@@ -12,12 +12,16 @@
         workspaceUserSearchResults,
     } from "$lib/stores/dashboard/workspaceUserFilter";
     import type { WorkspaceUserAssignment } from "$lib/types/stores";
+    import type {
+        WorkspaceUserAssignmentState,
+        WorkspaceUserSelection,
+    } from "$lib/types/ui";
+    import type { WorkspaceUser } from "$lib/types/workspace";
 
     type FilterMemberMenuMode =
         | { kind: "filter" }
         | { kind: "assign"; workspaceUserAssignment: WorkspaceUserAssignment };
 
-    // TODO make non-optional
     export let mode: FilterMemberMenuMode;
 
     $: selected =
@@ -33,7 +37,17 @@
             ? unfilterByWorkspaceUser
             : mode.workspaceUserAssignment.deselect;
 
-    // TODO The whole above could be turned into a store
+    function isSelected(
+        $selected: WorkspaceUserAssignmentState | WorkspaceUserSelection,
+        workspaceUser: WorkspaceUser
+    ): boolean {
+        if ($selected.kind === "workspaceUsers") {
+            return $selected.workspaceUserUuids.has(workspaceUser.uuid);
+        } else if ($selected.kind === "workspaceUser") {
+            return workspaceUser.uuid === $selected.workspaceUser.uuid;
+        }
+        return false;
+    }
 </script>
 
 <div class="flex flex-col px-4 pb-4 pt-2">
@@ -61,9 +75,7 @@
                 kind: "workspaceUser",
                 workspaceUser: workspaceUser,
             }}
-            active={$selected.kind === "workspaceUsers"
-                ? $selected.workspaceUserUuids.has(workspaceUser.uuid)
-                : false}
+            active={isSelected($selected, workspaceUser)}
             count={$tasksPerUser.assigned.get(workspaceUser.uuid)}
             onSelect={() =>
                 select({

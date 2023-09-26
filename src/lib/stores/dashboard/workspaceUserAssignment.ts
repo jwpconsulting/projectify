@@ -1,12 +1,13 @@
-import { writable } from "svelte/store";
+import { derived, readonly, writable } from "svelte/store";
 
 import { assignUserToTask } from "$lib/repository/workspace";
 import type { WorkspaceUserAssignment } from "$lib/types/stores";
 import type {
-    WorkspaceUserSelection,
+    WorkspaceUserAssignmentInput,
+    WorkspaceUserAssignmentState,
     WorkspaceUserSelectionInput,
 } from "$lib/types/ui";
-import type { Task } from "$lib/types/workspace";
+import type { Task, WorkspaceUser } from "$lib/types/workspace";
 
 export async function assignWorkspaceUser(
     task: Task,
@@ -24,19 +25,44 @@ export async function assignWorkspaceUser(
 export function createWorkspaceUserAssignment(
     task: Task
 ): WorkspaceUserAssignment {
-    const selected: WorkspaceUserSelection = task.assignee
+    const maybeSelected: WorkspaceUserAssignmentState = task.assignee
         ? {
-              kind: "workspaceUsers",
-              workspaceUserUuids: new Set([task.assignee.uuid]),
+              kind: "workspaceUser",
+              workspaceUser: task.assignee,
           }
         : {
               kind: "unassigned",
           };
+    const selected = writable<WorkspaceUserAssignmentState>(maybeSelected);
+    const { subscribe } = derived<typeof selected, WorkspaceUser | undefined>(
+        selected,
+        ($selected, set) => {
+            if ($selected.kind == "unassigned") {
+                set(undefined);
+            } else {
+                const { workspaceUser } = $selected;
+                set(workspaceUser);
+            }
+        }
+    );
+    const select = (selection: WorkspaceUserAssignmentInput) => {
+        if (selection.kind === "unassigned") {
+            selected.set(selection);
+        } else {
+            selected.set({
+                kind: "workspaceUser",
+                workspaceUser: selection.workspaceUser,
+            });
+        }
+    };
+    // No matter what, we always unassign
+    const deselect = (_selection: WorkspaceUserAssignmentInput) => {
+        selected.set({ kind: "unassigned" });
+    };
     return {
-        async select(selection: WorkspaceUserSelectionInput) {
-            await assignWorkspaceUser(task, selection);
-        },
-        deselect: console.error,
-        selected: writable<WorkspaceUserSelection>(selected),
+        select,
+        deselect,
+        selected: readonly(selected),
+        subscribe,
     };
 }

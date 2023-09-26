@@ -89,7 +89,7 @@
     </TopBar>
     <TaskFieldsTemplate slot="content">
         <TaskTitle slot="title" title={task.title} readonly />
-        <TaskUser slot="assignee" workspaceUser={task.assignee ?? null} />
+        <TaskUser slot="assignee" workspaceUser={task.assignee} />
         <TaskLabel slot="labels" labels={task.labels} />
         <TaskSection slot="section" {workspaceBoardSection} />
         <TaskDueDate

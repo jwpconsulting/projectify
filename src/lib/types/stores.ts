@@ -5,22 +5,30 @@ import type { RepositoryContext } from "./repository";
 
 import type {
     LabelAssignmentInput,
-    WorkspaceUserSelection,
     WorkspaceUserAssignmentInput,
     LabelAssignmentState,
+    WorkspaceUserAssignmentState,
 } from "$lib/types/ui";
-import type { Label, WorkspaceBoardSection } from "$lib/types/workspace";
+import type {
+    Label,
+    WorkspaceBoardSection,
+    WorkspaceUser,
+} from "$lib/types/workspace";
 
-export interface WorkspaceUserAssignment {
+export interface WorkspaceUserAssignment
+    extends Readable<WorkspaceUser | undefined> {
     select: (selection: WorkspaceUserAssignmentInput) => unknown;
     deselect: (selection: WorkspaceUserAssignmentInput) => unknown;
-    selected: Readable<WorkspaceUserSelection>;
+    // Might even completely remove this:
+    selected: Readable<WorkspaceUserAssignmentState>;
 }
 
 export interface LabelAssignment extends Readable<Label[]> {
     select: (selection: LabelAssignmentInput) => unknown;
     deselect: (selection: LabelAssignmentInput) => unknown;
+    // Might even completely remove this:
     selected: Readable<LabelAssignmentState>;
+    // Might even completely remove this:
     evaluate: () => Promise<string[]>;
 }
 

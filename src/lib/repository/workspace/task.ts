@@ -13,7 +13,7 @@ import {
     getWithCredentialsJson,
 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
-import type { CreateTask, Task } from "$lib/types/workspace";
+import type { CreateTask, Task, WorkspaceUser } from "$lib/types/workspace";
 // Task CRUD
 // Create
 export async function createTask(createTask: CreateTask): Promise<Task> {
@@ -49,6 +49,7 @@ export async function getTask(
 export async function updateTask(
     task: Task,
     labels: string[],
+    workspaceUser: WorkspaceUser | undefined,
     repositoryContext?: RepositoryContext
 ): Promise<Task> {
     const { uuid } = task;
@@ -57,6 +58,7 @@ export async function updateTask(
         description: task.description,
         labels,
         // TODO assignee
+        assignee: workspaceUser?.user.email ?? null,
         // TODO workspace board section
         // TODO sub tasks
     };

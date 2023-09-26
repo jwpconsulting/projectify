@@ -17,6 +17,15 @@
     $: showCount = count !== undefined;
     $: hideCount = !active || count === undefined;
 
+    $: {
+        console.log(
+            "active for",
+            workspaceUserSelectionInput.kind,
+            "is",
+            active
+        );
+    }
+
     function click() {
         active = !active;
         if (active) {
@@ -34,9 +43,11 @@
     <div class="flex min-w-0 flex-row items-center gap-2">
         <div class="shrink-0">
             <Checkbox
-                bind:checked={active}
+                checked={active}
                 disabled={false}
                 contained={true}
+                {onSelect}
+                {onDeselect}
             />
         </div>
         <div class="flex min-w-0 flex-row items-center gap-2">
