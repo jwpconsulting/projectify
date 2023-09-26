@@ -17,14 +17,11 @@
     $: editable = label.kind === "label" && canEdit;
 
     function click() {
-        // TODO use callback props
-        //  Justus 2023-09-19
+        checked = !checked;
         if (checked) {
             onCheck();
-            checked = false;
         } else {
             onUncheck();
-            checked = true;
         }
     }
 
