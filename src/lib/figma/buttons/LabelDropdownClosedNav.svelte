@@ -27,14 +27,14 @@
             <SelectLabelCheckBox
                 label={{ kind: "allLabels" }}
                 checked={$selectedLabels.kind === "allLabels"}
-                onChecked={() => filterByLabel({ kind: "allLabels" })}
-                onUnchecked={() => unfilterByLabel({ kind: "allLabels" })}
+                onCheck={() => filterByLabel({ kind: "allLabels" })}
+                onUncheck={() => unfilterByLabel({ kind: "allLabels" })}
             />
             <SelectLabelCheckBox
                 label={{ kind: "noLabel" }}
                 checked={$selectedLabels.kind === "noLabel"}
-                onChecked={() => filterByLabel({ kind: "noLabel" })}
-                onUnchecked={() => unfilterByLabel({ kind: "noLabel" })}
+                onCheck={() => filterByLabel({ kind: "noLabel" })}
+                onUncheck={() => unfilterByLabel({ kind: "noLabel" })}
             />
             {#each $labelFilterSearchResults as label}
                 <SelectLabelCheckBox
@@ -42,12 +42,12 @@
                     checked={$selectedLabels.kind === "labels"
                         ? $selectedLabels.labelUuids.has(label.uuid)
                         : false}
-                    onChecked={() =>
+                    onCheck={() =>
                         filterByLabel({
                             kind: "label",
                             labelUuid: label.uuid,
                         })}
-                    onUnchecked={() =>
+                    onUncheck={() =>
                         unfilterByLabel({
                             kind: "label",
                             labelUuid: label.uuid,

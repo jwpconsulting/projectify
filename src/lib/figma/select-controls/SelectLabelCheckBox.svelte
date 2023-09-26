@@ -13,14 +13,15 @@
     // This should be required
     export let name: string | undefined = undefined;
 
-    export let onChecked: () => void;
-    export let onUnchecked: () => void;
+    // think about whether we really need these
+    export let onCheck: () => void;
+    export let onUncheck: () => void;
 
     function onChange() {
         if (checked) {
-            onChecked();
+            onCheck();
         } else {
-            onUnchecked();
+            onUncheck();
         }
     }
 
@@ -60,6 +61,7 @@
         type="checkbox"
         bind:checked
         on:change={onChange}
+        on:click|stopPropagation
         {name}
         class="absolute left-0 top-0 h-7 w-11 appearance-none rounded-1.5xl border border-transparent focus:border-base-content focus:outline-none"
     />
