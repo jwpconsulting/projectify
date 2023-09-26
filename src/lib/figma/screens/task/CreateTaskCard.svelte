@@ -10,7 +10,7 @@
 
     import Breadcrumbs from "./Breadcrumbs.svelte";
 
-    import TaskC from "$lib/components/dashboard/task/Task.svelte";
+    import Layout from "$lib/figma/screens/task/Layout.svelte";
     import TaskDescription from "$lib/figma/screens/task/TaskDescription.svelte";
     import TaskFieldsTemplate from "$lib/figma/screens/task/TaskFieldsTemplate.svelte";
     import TaskSection from "$lib/figma/screens/task/TaskSection.svelte";
@@ -79,7 +79,7 @@
     ];
 </script>
 
-<TaskC>
+<Layout>
     <TopBar slot="top-bar" {workspaceBoardSection}>
         <Breadcrumbs slot="breadcrumbs" {crumbs} />
         <Button
@@ -101,4 +101,4 @@
         <TaskSection slot="section" {workspaceBoardSection} />
         <TaskDescription slot="description" bind:description />
     </TaskFieldsTemplate>
-</TaskC>
+</Layout>

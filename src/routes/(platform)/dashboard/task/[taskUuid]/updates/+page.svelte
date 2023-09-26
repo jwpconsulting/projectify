@@ -9,9 +9,9 @@
 
     import type { PageData } from "../$types";
 
-    import TaskC from "$lib/components/dashboard/task/Task.svelte";
     import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
     import Breadcrumbs from "$lib/figma/screens/task/Breadcrumbs.svelte";
+    import Layout from "$lib/figma/screens/task/Layout.svelte";
     import TaskUpdates from "$lib/figma/screens/task/TaskUpdates.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import type { TaskUpdateBarState } from "$lib/figma/types";
@@ -40,7 +40,7 @@
     ];
 </script>
 
-<TaskC>
+<Layout>
     <TopBar slot="top-bar" {workspaceBoardSection}>
         <Breadcrumbs slot="breadcrumbs" {crumbs} />
     </TopBar>
@@ -48,4 +48,4 @@
     <!-- TODO dry this up with the thing above -->
     <TaskUpdateBar slot="tab-bar-mobile" kind="mobile" {state} {task} />
     <TaskUpdateBar slot="tab-bar-desktop" kind="mobile" {state} {task} />
-</TaskC>
+</Layout>

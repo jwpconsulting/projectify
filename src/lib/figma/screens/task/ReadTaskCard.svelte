@@ -10,8 +10,8 @@
 
     import Breadcrumbs from "./Breadcrumbs.svelte";
 
-    import TaskC from "$lib/components/dashboard/task/Task.svelte";
     import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
+    import Layout from "$lib/figma/screens/task/Layout.svelte";
     import TaskDescription from "$lib/figma/screens/task/TaskDescription.svelte";
     import TaskDueDate from "$lib/figma/screens/task/TaskDueDate.svelte";
     import TaskFieldsTemplate from "$lib/figma/screens/task/TaskFieldsTemplate.svelte";
@@ -54,7 +54,7 @@
     ];
 </script>
 
-<TaskC>
+<Layout>
     <TopBar slot="top-bar" {workspaceBoardSection}>
         <Breadcrumbs slot="breadcrumbs" {crumbs} />
         <svelte:fragment slot="buttons">
@@ -104,4 +104,4 @@
     </TaskFieldsTemplate>
     <TaskUpdateBar slot="tab-bar-mobile" kind="mobile" {state} {task} />
     <TaskUpdateBar slot="tab-bar-desktop" kind="mobile" {state} {task} />
-</TaskC>
+</Layout>
