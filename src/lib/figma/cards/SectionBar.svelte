@@ -27,13 +27,8 @@
     <SectionTitle {workspaceBoard} {workspaceBoardSection} {open} />
     {#if open}
         <main class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4">
-            {#each tasks as task, inx (task.uuid)}
-                <TaskCard
-                    {workspaceBoardSection}
-                    {task}
-                    isFirst={inx === 0}
-                    isLast={inx === tasks.length - 1}
-                />
+            {#each tasks as task (task.uuid)}
+                <TaskCard {workspaceBoardSection} {task} />
             {:else}
                 <p>
                     {$_("dashboard.section.empty.message")}

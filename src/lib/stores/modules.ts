@@ -30,6 +30,22 @@ export async function moveToTop(
     await moveTaskAfter(task.uuid, workspaceBoardSection.uuid, null);
 }
 
+export async function moveUp(
+    workspaceBoardSection: WorkspaceBoardSection,
+    task: Task
+) {
+    const tasks = unwrap(workspaceBoardSection.tasks, "Expected tasks");
+    const position = getTaskPosition(workspaceBoardSection, task);
+    if (!(position === "within" || position === "end")) {
+        throw new Error("Expected task to be within or at end");
+    }
+    const prevTask = unwrap(
+        tasks.at(tasks.indexOf(task) - 1),
+        "Expected prevTask"
+    );
+    await moveTaskAfter(task.uuid, workspaceBoardSection.uuid, prevTask.uuid);
+}
+
 export async function moveToBottom(
     workspaceBoardSection: WorkspaceBoardSection,
     task: Task
@@ -37,4 +53,20 @@ export async function moveToBottom(
     const tasks = unwrap(workspaceBoardSection.tasks, "Expected tasks");
     const lastTask = unwrap(tasks.at(-1), "Expected lastTask");
     await moveTaskAfter(task.uuid, workspaceBoardSection.uuid, lastTask.uuid);
+}
+
+export async function moveDown(
+    workspaceBoardSection: WorkspaceBoardSection,
+    task: Task
+) {
+    const position = getTaskPosition(workspaceBoardSection, task);
+    if (!(position === "start" || position === "within")) {
+        throw new Error("Expected task to be at start or within");
+    }
+    const tasks = unwrap(workspaceBoardSection.tasks, "Expected tasks");
+    const nextTask = unwrap(
+        tasks.at(tasks.indexOf(task) + 1),
+        "Expected nextTask"
+    );
+    await moveTaskAfter(task.uuid, workspaceBoardSection.uuid, nextTask.uuid);
 }

@@ -12,9 +12,6 @@
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection | undefined =
         undefined;
-
-    export let isFirst = false;
-    export let isLast = false;
 </script>
 
 <a
@@ -29,12 +26,9 @@
                     <Title {task} />
                 </div>
                 <div class="flex flex-row items-center gap-2 justify-self-end">
-                    <Chevrons
-                        {task}
-                        {isFirst}
-                        {isLast}
-                        {workspaceBoardSection}
-                    />
+                    {#if workspaceBoardSection}
+                        <Chevrons {task} {workspaceBoardSection} />
+                    {/if}
                     <MenuButton {task} {workspaceBoardSection} />
                 </div>
             </div>
@@ -69,12 +63,9 @@
                 <div class="flex flex-row items-center gap-2">
                     <WorkspaceUser {task} />
                     <div class="flex flex-row items-center">
-                        <Chevrons
-                            {task}
-                            {isFirst}
-                            {isLast}
-                            {workspaceBoardSection}
-                        />
+                        {#if workspaceBoardSection}
+                            <Chevrons {task} {workspaceBoardSection} />
+                        {/if}
                         <MenuButton {task} {workspaceBoardSection} />
                     </div>
                 </div>
