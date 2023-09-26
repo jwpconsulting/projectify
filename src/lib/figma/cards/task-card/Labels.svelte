@@ -3,7 +3,7 @@
     // The label picker is TODO
     import { _ } from "svelte-i18n";
 
-    import LabelList from "$lib/components/dashboard/LabelList.svelte";
+    import LabelPill from "$lib/components/dashboard/LabelPill.svelte";
     import { updateTask } from "$lib/repository/workspace";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { openContextMenu } from "$lib/stores/globalUi";
@@ -20,8 +20,6 @@
             kind: "updateLabel",
             labelAssignment,
         };
-        // TODO
-        // get the result of the picked label here?
         await openContextMenu(contextMenuType, labelPickerBtnRef);
         const labels: Label[] = $labelAssignment;
         // TODO can we make updateTask accept whole labels instead?
@@ -36,7 +34,11 @@
 
 {#if task.labels.length}
     <div class="flex flex-row">
-        <LabelList labels={$labelAssignment} />
+        {#each $labelAssignment as label}
+            <button on:click|preventDefault={openLabelPicker}>
+                <LabelPill {label} />
+            </button>
+        {/each}
     </div>
 {:else}
     <div class="p-0.5">
