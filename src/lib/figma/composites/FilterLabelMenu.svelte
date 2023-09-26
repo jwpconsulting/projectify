@@ -60,13 +60,13 @@
             onCheck={() => filterByLabel({ kind: "allLabels" })}
             onUncheck={() => unfilterByLabel({ kind: "allLabels" })}
         />
-        <FilterLabel
-            label={{ kind: "noLabel" }}
-            checked={$selected.kind === "noLabel"}
-            onCheck={() => onCheck({ kind: "noLabel" })}
-            onUncheck={() => onUncheck({ kind: "noLabel" })}
-        />
     {/if}
+    <FilterLabel
+        label={{ kind: "noLabel" }}
+        checked={$selected.kind === "noLabel"}
+        onCheck={() => onCheck({ kind: "noLabel" })}
+        onUncheck={() => onUncheck({ kind: "noLabel" })}
+    />
     {#each $labelFilterSearchResults as label (label.uuid)}
         <FilterLabel
             label={{ kind: "label", label }}
