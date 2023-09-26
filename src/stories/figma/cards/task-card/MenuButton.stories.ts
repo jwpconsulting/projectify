@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { task, workspaceBoardSection, moveTaskModule } from "$lib/storybook";
+import { task, workspaceBoardSection } from "$lib/storybook";
 
 import MenuButton from "$lib/figma/cards/task-card/MenuButton.svelte";
 
@@ -9,7 +9,6 @@ const meta: Meta<MenuButton> = {
     args: {
         task,
         workspaceBoardSection,
-        moveTaskModule,
     },
 };
 export default meta;

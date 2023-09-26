@@ -7,7 +7,6 @@
     import MenuButton from "$lib/figma/cards/task-card/MenuButton.svelte";
     import Title from "$lib/figma/cards/task-card/Title.svelte";
     import WorkspaceUser from "$lib/figma/cards/task-card/WorkspaceUser.svelte";
-    import { createMoveTaskModule } from "$lib/stores/modules";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
     export let task: Task;
@@ -16,10 +15,6 @@
 
     export let isFirst = false;
     export let isLast = false;
-
-    $: moveTaskModule =
-        workspaceBoardSection &&
-        createMoveTaskModule(workspaceBoardSection, task);
 </script>
 
 <a
@@ -40,11 +35,7 @@
                         {isLast}
                         {workspaceBoardSection}
                     />
-                    <MenuButton
-                        {task}
-                        {workspaceBoardSection}
-                        {moveTaskModule}
-                    />
+                    <MenuButton {task} {workspaceBoardSection} />
                 </div>
             </div>
             <div class="flex flex-row justify-between">
@@ -84,11 +75,7 @@
                             {isLast}
                             {workspaceBoardSection}
                         />
-                        <MenuButton
-                            {task}
-                            {workspaceBoardSection}
-                            {moveTaskModule}
-                        />
+                        <MenuButton {task} {workspaceBoardSection} />
                     </div>
                 </div>
             </div>

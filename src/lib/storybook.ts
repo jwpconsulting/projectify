@@ -5,7 +5,6 @@ import type { Customer } from "./types/corporate";
 import type { LabelLabel, SelectLabel } from "$lib/figma/types";
 import type {
     LabelAssignment,
-    MoveTaskModule,
     WorkspaceUserAssignment,
 } from "$lib/types/stores";
 import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
@@ -181,11 +180,6 @@ export const mobileParameters = {
 
 const noop = console.error.bind(null, "noop");
 
-const noopAsync = async () => {
-    await new Promise((resolve) => resolve(null));
-    console.error("noopAsync");
-};
-
 export const workspaceUserAssignment: WorkspaceUserAssignment = {
     select: noop,
     deselect: noop,
@@ -202,12 +196,6 @@ export const labelAssignment: LabelAssignment = {
         await new Promise(console.log);
         return [];
     },
-};
-
-export const moveTaskModule: MoveTaskModule = {
-    moveToBottom: noopAsync,
-    moveToTop: noopAsync,
-    moveToWorkspaceBoardSection: noopAsync,
 };
 
 type ArgTypeOption<T> = Record<string, T>;

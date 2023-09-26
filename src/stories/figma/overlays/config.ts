@@ -7,7 +7,6 @@ import {
     workspaceUser,
     labelAssignment,
     makeStorybookSelect,
-    moveTaskModule,
 } from "$lib/storybook";
 
 import type { ContextMenuType } from "$lib/types/ui";
@@ -40,14 +39,12 @@ export const contextMenus: Record<string, ContextMenuType> = {
         kind: "task" as const,
         task,
         location: "dashboard",
-        moveTaskModule,
         workspaceBoardSection,
     },
     "Task": {
         kind: "task" as const,
         task,
         location: "task",
-        moveTaskModule,
         workspaceBoardSection,
     },
     "Help": {

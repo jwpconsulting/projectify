@@ -22,14 +22,16 @@
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import { deleteTask } from "$lib/stores/dashboard";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
-    import { moveToTop, moveToBottom } from "$lib/stores/modules";
-    import type { MoveTaskModule } from "$lib/types/stores";
+    import {
+        moveToTop,
+        moveToBottom,
+        getTaskPosition,
+    } from "$lib/stores/modules";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
     import { copyToClipboard } from "$lib/utils/clipboard";
 
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection;
-    export let moveTaskModule: MoveTaskModule | undefined;
     export let location: "dashboard" | "task";
 
     async function promptDeleteTask() {
@@ -58,7 +60,7 @@
         icon={SwitchVertical}
     />
     {#if location === "dashboard"}
-        {#if moveTaskModule?.moveToTop}
+        {#if getTaskPosition(workspaceBoardSection, task) !== "start"}
             <ContextMenuButton
                 kind={{
                     kind: "button",
@@ -69,7 +71,7 @@
                 icon={SortAscending}
             />
         {/if}
-        {#if moveTaskModule?.moveToBottom}
+        {#if getTaskPosition(workspaceBoardSection, task) !== "end"}
             <ContextMenuButton
                 kind={{
                     kind: "button",

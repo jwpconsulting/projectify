@@ -1,7 +1,6 @@
 import type {
     WorkspaceUserAssignment,
     LabelAssignment,
-    MoveTaskModule,
 } from "$lib/types/stores";
 import type {
     Label,
@@ -106,7 +105,6 @@ export type ContextMenuType =
     | {
           kind: "task";
           task: Task;
-          moveTaskModule: MoveTaskModule | undefined;
           location: "dashboard" | "task";
           workspaceBoardSection: WorkspaceBoardSection;
       }

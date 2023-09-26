@@ -1,11 +1,10 @@
 import { moveTaskAfter } from "$lib/repository/workspace";
-import type { MoveTaskModule } from "$lib/types/stores";
 import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
 
 type TaskPosition = "start" | "within" | "end" | "outside";
 
-function getTaskPosition(
+export function getTaskPosition(
     workspaceBoardSection: WorkspaceBoardSection,
     task: Task
 ): TaskPosition {
@@ -38,25 +37,4 @@ export async function moveToBottom(
     const tasks = unwrap(workspaceBoardSection.tasks, "Expected tasks");
     const lastTask = unwrap(tasks.at(-1), "Expected lastTask");
     await moveTaskAfter(task.uuid, workspaceBoardSection.uuid, lastTask.uuid);
-}
-
-export function createMoveTaskModule(
-    // workspaceBoardSection: WorkspaceBoardSection & {tasks: Task[]},
-    workspaceBoardSection: WorkspaceBoardSection,
-    task: Task
-): MoveTaskModule {
-    const position = getTaskPosition(workspaceBoardSection, task);
-
-    return {
-        moveToTop:
-            position === "start"
-                ? undefined
-                : moveToTop.bind(null, workspaceBoardSection, task),
-        moveToBottom:
-            position === "end"
-                ? undefined
-                : moveToBottom.bind(null, workspaceBoardSection, task),
-        moveToWorkspaceBoardSection: ({ uuid }: WorkspaceBoardSection) =>
-            moveTaskAfter(task.uuid, uuid),
-    };
 }

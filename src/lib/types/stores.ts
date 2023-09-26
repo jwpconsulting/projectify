@@ -9,11 +9,7 @@ import type {
     LabelAssignmentState,
     WorkspaceUserAssignmentState,
 } from "$lib/types/ui";
-import type {
-    Label,
-    WorkspaceBoardSection,
-    WorkspaceUser,
-} from "$lib/types/workspace";
+import type { Label, WorkspaceUser } from "$lib/types/workspace";
 
 export interface WorkspaceUserAssignment
     extends Readable<WorkspaceUser | undefined> {
@@ -30,17 +26,6 @@ export interface LabelAssignment extends Readable<Label[]> {
     selected: Readable<LabelAssignmentState>;
     // Might even completely remove this:
     evaluate: () => Promise<string[]>;
-}
-
-// It would make sense to rename all Module to Store
-
-// Functions needed to move task around inside section or between sections
-export interface MoveTaskModule {
-    moveToBottom?: () => Promise<void>;
-    moveToTop?: () => Promise<void>;
-    moveToWorkspaceBoardSection: (
-        workspaceBoardSection: WorkspaceBoardSection
-    ) => Promise<void>;
 }
 
 const subscriptionTypes = ["workspace", "workspace-board", "task"] as const;

@@ -1,13 +1,11 @@
 <script lang="ts">
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { openContextMenu } from "$lib/stores/globalUi";
-    import type { MoveTaskModule } from "$lib/types/stores";
     import type { ContextMenuType } from "$lib/types/ui";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection | undefined;
-    export let moveTaskModule: MoveTaskModule | undefined;
 
     let dropDownMenuBtnRef: HTMLElement;
 
@@ -24,7 +22,6 @@
             kind: "task" as const,
             task,
             location: "dashboard" as const,
-            moveTaskModule,
             workspaceBoardSection,
         };
         console.log("TODO use", { uuid, tasks });

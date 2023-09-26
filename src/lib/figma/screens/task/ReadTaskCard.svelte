@@ -77,7 +77,6 @@
                                 kind: "task",
                                 task,
                                 location: "task",
-                                moveTaskModule: undefined,
                                 workspaceBoardSection,
                             },
                             contextMenuRef

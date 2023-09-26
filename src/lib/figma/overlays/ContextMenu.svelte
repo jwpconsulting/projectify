@@ -31,7 +31,6 @@
     <Task
         task={target.task}
         location={target.location}
-        moveTaskModule={target.moveTaskModule}
         workspaceBoardSection={target.workspaceBoardSection}
     />
 {:else if target.kind === "help"}
