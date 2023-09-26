@@ -4,29 +4,32 @@
     import { _ } from "svelte-i18n";
 
     import LabelList from "$lib/components/dashboard/LabelList.svelte";
-    import { assignLabelToTask } from "$lib/repository/workspace";
+    import { updateTask } from "$lib/repository/workspace";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { openContextMenu } from "$lib/stores/globalUi";
-    import type { LabelAssignment } from "$lib/types/stores";
     import type { ContextMenuType } from "$lib/types/ui";
-    import type { Task } from "$lib/types/workspace";
+    import type { Label, Task } from "$lib/types/workspace";
 
     export let task: Task;
     let labelPickerBtnRef: HTMLElement;
 
-    function openLabelPicker() {
-        const labelAssignment: LabelAssignment = createLabelAssignment(
-            task,
-            (labelUuid: string, selected: boolean) => {
-                assignLabelToTask(task, labelUuid, selected);
-            }
-        );
+    $: labelAssignment = createLabelAssignment(task);
+
+    async function openLabelPicker() {
         const contextMenuType: ContextMenuType = {
             kind: "updateLabel",
             labelAssignment,
         };
         // TODO
-        openContextMenu(contextMenuType, labelPickerBtnRef);
+        // get the result of the picked label here?
+        await openContextMenu(contextMenuType, labelPickerBtnRef);
+        const labels: Label[] = $labelAssignment;
+        // TODO can we make updateTask accept whole labels instead?
+        await updateTask(
+            task,
+            labels.map((label) => label.uuid),
+            task.assignee
+        );
     }
 </script>
 
