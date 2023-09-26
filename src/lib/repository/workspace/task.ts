@@ -55,7 +55,7 @@ export async function updateTask(
     const data = {
         title: task.title,
         description: task.description,
-        // TODO labels
+        labels,
         // TODO assignee
         // TODO workspace board section
         // TODO sub tasks
