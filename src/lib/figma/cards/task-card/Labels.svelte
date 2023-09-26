@@ -11,16 +11,18 @@
     import type { Label, Task } from "$lib/types/workspace";
 
     export let task: Task;
-    let labelPickerBtnRef: HTMLElement;
-
     $: labelAssignment = createLabelAssignment(task);
 
-    async function openLabelPicker() {
+    async function openLabelPicker(event: MouseEvent) {
+        const anchor = event.target;
+        if (!(anchor instanceof HTMLElement)) {
+            throw new Error("Expected HTMLElement");
+        }
         const contextMenuType: ContextMenuType = {
             kind: "updateLabel",
             labelAssignment,
         };
-        await openContextMenu(contextMenuType, labelPickerBtnRef);
+        await openContextMenu(contextMenuType, anchor);
         const labels: Label[] = $labelAssignment;
         // TODO can we make updateTask accept whole labels instead?
         // TODO skip update when no changes detected
@@ -29,10 +31,12 @@
             labels.map((label) => label.uuid),
             task.assignee
         );
+        // TODO There is a brief flash after updateTask finishes, the task is
+        // reloaded and labelAssignment is recreated
     }
 </script>
 
-{#if task.labels.length}
+{#if $labelAssignment.length}
     <div class="flex flex-row">
         {#each $labelAssignment as label}
             <button on:click|preventDefault={openLabelPicker}>
@@ -44,7 +48,6 @@
     <div class="p-0.5">
         <button
             class="flex flex-row items-center rounded-xl border border-dashed border-primary px-4 py-1 text-xxs font-bold text-primary"
-            bind:this={labelPickerBtnRef}
             on:click|preventDefault={openLabelPicker}
         >
             {$_("add-label")}</button
