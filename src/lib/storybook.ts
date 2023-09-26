@@ -196,6 +196,7 @@ export const labelAssignment: LabelAssignment = {
     select: noop,
     deselect: noop,
     selected: readable({ kind: "noLabel" }),
+    subscribe: readable<Label[]>([]).subscribe,
     evaluate: async () => {
         await new Promise(console.log);
         return [];

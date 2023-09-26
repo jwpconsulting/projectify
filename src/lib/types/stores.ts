@@ -9,7 +9,7 @@ import type {
     WorkspaceUserAssignmentInput,
     LabelAssignmentState,
 } from "$lib/types/ui";
-import type { WorkspaceBoardSection } from "$lib/types/workspace";
+import type { Label, WorkspaceBoardSection } from "$lib/types/workspace";
 
 export interface WorkspaceUserAssignment {
     select: (selection: WorkspaceUserAssignmentInput) => unknown;
@@ -17,7 +17,7 @@ export interface WorkspaceUserAssignment {
     selected: Readable<WorkspaceUserSelection>;
 }
 
-export interface LabelAssignment {
+export interface LabelAssignment extends Readable<Label[]> {
     select: (selection: LabelAssignmentInput) => unknown;
     deselect: (selection: LabelAssignmentInput) => unknown;
     selected: Readable<LabelAssignmentState>;

@@ -4,9 +4,11 @@
  * labels)
  */
 
-import { readonly, writable } from "svelte/store";
+import { derived, readonly, writable } from "svelte/store";
 
 import { getAsync } from "../util";
+
+import { currentWorkspaceLabels } from "./label";
 
 import type { LabelAssignment } from "$lib/types/stores";
 import type {
@@ -14,6 +16,13 @@ import type {
     LabelAssignmentState,
 } from "$lib/types/ui";
 import type { Label, Task } from "$lib/types/workspace";
+
+function evaluateLabelAssignment(state: LabelAssignmentState): string[] {
+    if (state.kind === "noLabel") {
+        return [];
+    }
+    return [...state.labelUuids];
+}
 
 export function createLabelAssignment(
     task?: Task,
@@ -29,6 +38,19 @@ export function createLabelAssignment(
               }
             : { kind: "noLabel" };
     const selected = writable<LabelAssignmentState>(selection);
+    const { subscribe } = derived<
+        [typeof selected, typeof currentWorkspaceLabels],
+        Label[]
+    >(
+        [selected, currentWorkspaceLabels],
+        ([$selected, $currentWorkspaceLabels], set) => {
+            const labelUuids = evaluateLabelAssignment($selected);
+            const labels = $currentWorkspaceLabels.filter((label) =>
+                labelUuids.includes(label.uuid)
+            );
+            set(labels);
+        }
+    );
     const selectOrDeselectLabel = (
         select: boolean,
         labelAssignmentInput: LabelAssignmentInput
@@ -44,12 +66,17 @@ export function createLabelAssignment(
                         kind: "labels",
                         labelUuids: new Set([labelUuid]),
                     };
-                } else {
-                    return {
-                        ...$selected,
-                        labelUuids: $selected.labelUuids.add(labelUuid),
-                    };
                 }
+                const { labelUuids } = $selected;
+                if (select) {
+                    labelUuids.add(labelUuid);
+                    return { ...$selected };
+                }
+                labelUuids.delete(labelUuid);
+                if (labelUuids.size == 0) {
+                    return { kind: "noLabel" };
+                }
+                return { ...$selected, labelUuids };
             });
             if (selectCallback) {
                 selectCallback(labelUuid, select);
@@ -63,14 +90,11 @@ export function createLabelAssignment(
         deselect: (labelAssignmentInput: LabelAssignmentInput) => {
             selectOrDeselectLabel(false, labelAssignmentInput);
         },
-        // TODO current selection should come from current task labels
         selected: readonly(selected),
+        subscribe,
         async evaluate(): Promise<string[]> {
             const state = await getAsync(selected);
-            if (state.kind === "noLabel") {
-                return [];
-            }
-            return [...state.labelUuids];
+            return evaluateLabelAssignment(state);
         },
     };
 }
