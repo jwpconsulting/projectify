@@ -97,5 +97,7 @@ class TaskUpdateSerializer(base.TaskBaseSerializer):
             ] = get_user_model().objects.get_by_natural_key  # type: ignore[attr-defined]
             user: AbstractBaseUser = get_by_natural_key(workspace_user_email)
             workspace_user = task.workspace.workspaceuser_set.get(user=user)
-            task.assign_to(workspace_user)
+        else:
+            workspace_user = None
+        task.assign_to(workspace_user)
         return task
