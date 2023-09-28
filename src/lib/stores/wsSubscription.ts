@@ -1,5 +1,5 @@
 import Sarus from "@anephenix/sarus";
-import type { Unsubscriber, Subscriber, Readable } from "svelte/store";
+import type { Unsubscriber, Subscriber } from "svelte/store";
 import { writable } from "svelte/store";
 
 import vars from "$lib/env";
@@ -22,8 +22,6 @@ interface WsMessage {
 // A svelte store subscriber that received WSMessages
 type WsSubscriber = Subscriber<WsMessage>;
 
-type WsSubscriptionStore = Readable<WsMessage>;
-
 function makeAbsoluteUrl(url: string): string {
     if (!url.startsWith("/")) {
         return url;
@@ -35,14 +33,23 @@ function makeAbsoluteUrl(url: string): string {
 
 type EventListener = (event: MessageEvent<string>) => void;
 
-function getSarus(maybeRelativeUrl: string, onMessage: EventListener): Sarus {
+function getSubscriptionForCollection(
+    collection: string,
+    uuid: string,
+    onWsMessage: WsSubscriber
+): Unsubscriber {
+    const onMessage: EventListener = (event: MessageEvent<string>) => {
+        const message: Message = JSON.parse(event.data) as Message;
+        const { timeStamp } = event;
+        onWsMessage({ message, timeStamp });
+    };
     // XXX
     // It appears that errors here are very hard to debug,
     // e.g., wrong URL schema
     // Check if we have a relative URL
-    const url = makeAbsoluteUrl(maybeRelativeUrl);
+    const url = makeAbsoluteUrl(`${vars.WS_ENDPOINT}/${collection}/${uuid}/`);
     try {
-        return new Sarus({
+        const sarus = new Sarus({
             url,
             eventListeners: {
                 open: [console.debug.bind(null, "Connection opened to", url)],
@@ -51,41 +58,11 @@ function getSarus(maybeRelativeUrl: string, onMessage: EventListener): Sarus {
                 message: [onMessage],
             },
         });
+        return () => sarus.disconnect();
     } catch (e) {
         console.error("When initializing Sarus", e);
         throw e;
     }
-}
-
-function getSubscriptionForCollection(
-    collection: string,
-    uuid: string
-): WsSubscriptionStore {
-    const url = `${vars.WS_ENDPOINT}/${collection}/${uuid}/`;
-    const subscribers = new Set<WsSubscriber>();
-
-    const onMessage = (event: MessageEvent<string>) => {
-        const message: Message = JSON.parse(event.data) as Message;
-        const { timeStamp } = event;
-        subscribers.forEach((run) => run({ message, timeStamp }));
-    };
-    const sarus = getSarus(url, onMessage);
-
-    const unsubscribe = (run: WsSubscriber): void => {
-        subscribers.delete(run);
-        if (subscribers.size > 0) {
-            return;
-        }
-        sarus.disconnect();
-        console.debug("Cleaned up store for", url);
-    };
-    const subscribe = (run: WsSubscriber): Unsubscriber => {
-        subscribers.add(run);
-        return () => unsubscribe(run);
-    };
-    return {
-        subscribe,
-    };
 }
 
 /* Subscribable WS Store
@@ -144,11 +121,6 @@ export function createWsStore<T>(
         updateSubscribers(state);
     };
 
-    const loadSubscription = (uuid: string): Unsubscriber => {
-        const store = getSubscriptionForCollection(collection, uuid);
-        return store.subscribe(receiveWsMessage);
-    };
-
     const updateSubscribers = (state: State & { kind: "ready" }) => {
         state.subscribers.forEach((subscriber) => subscriber(state.value));
     };
@@ -186,7 +158,11 @@ export function createWsStore<T>(
             if (state.kind === "ready") {
                 state.unsubscriber();
             }
-            const unsubscriber = loadSubscription(uuid);
+            const unsubscriber = getSubscriptionForCollection(
+                collection,
+                uuid,
+                receiveWsMessage
+            );
             // Since further reloads are independent of any fetch (the data comes
             // from ws), we don't have to store the repositoryContext as part of
             // the state. It's important that we don't reuse a user supplied
