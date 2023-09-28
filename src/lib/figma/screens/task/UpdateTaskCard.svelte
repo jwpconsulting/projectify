@@ -70,8 +70,8 @@
         // TODO figure out how to refresh the same page
         await goto(url);
     }
-    function showUpdateWorkspaceUser(anchor: HTMLElement) {
-        openContextMenu(
+    async function showUpdateWorkspaceUser(anchor: HTMLElement) {
+        await openContextMenu(
             {
                 kind: "updateMember",
                 workspaceUserAssignment,
@@ -79,8 +79,8 @@
             anchor
         );
     }
-    function showUpdateLabel(anchor: HTMLElement) {
-        openContextMenu(
+    async function showUpdateLabel(anchor: HTMLElement) {
+        await openContextMenu(
             {
                 kind: "updateLabel",
                 labelAssignment,

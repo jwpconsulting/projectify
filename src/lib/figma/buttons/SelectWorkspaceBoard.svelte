@@ -19,11 +19,11 @@
 
     let buttonRef: HTMLElement;
 
-    function toggleMenu() {
+    async function toggleMenu() {
         // TODO: When the context menu is open, we should indicate that it
         // belongs to a certain board by highlighting the board in blue (using
         // the hover color)
-        openContextMenu(
+        await openContextMenu(
             {
                 kind: "workspaceBoard",
                 workspaceBoard,

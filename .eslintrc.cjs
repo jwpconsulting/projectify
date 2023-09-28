@@ -34,7 +34,6 @@ module.exports = {
             rules: {
                 // TODO: Investigate whether any of these could be disabled
                 "@typescript-eslint/require-await": "off",
-                "@typescript-eslint/no-floating-promises": "off",
                 "@typescript-eslint/prefer-nullish-coalescing": "off",
                 "@typescript-eslint/restrict-template-expressions": "off",
                 "@typescript-eslint/no-unnecessary-condition": "off",

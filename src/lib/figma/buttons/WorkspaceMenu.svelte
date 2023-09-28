@@ -21,8 +21,11 @@
         workspace,
     };
 
-    function showSideNavContextMenu() {
-        openContextMenu(sideNavContextMenuType, sideNavContextMenuAnchor);
+    async function showSideNavContextMenu() {
+        await openContextMenu(
+            sideNavContextMenuType,
+            sideNavContextMenuAnchor
+        );
     }
 
     let workspaceContextMenuType: ContextMenuType;
@@ -31,8 +34,11 @@
         workspaces,
     };
 
-    function showWorkspaceContextMenu() {
-        openContextMenu(workspaceContextMenuType, workspaceContextMenuAnchor);
+    async function showWorkspaceContextMenu() {
+        await openContextMenu(
+            workspaceContextMenuType,
+            workspaceContextMenuAnchor
+        );
     }
 </script>
 

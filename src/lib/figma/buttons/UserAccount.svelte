@@ -12,8 +12,8 @@
         kind: "profile",
     };
 
-    function click() {
-        openContextMenu(contextMenuType, contextMenuAnchor);
+    async function click() {
+        await openContextMenu(contextMenuType, contextMenuAnchor);
     }
 </script>
 

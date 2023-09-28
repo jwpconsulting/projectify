@@ -21,7 +21,7 @@
     $: toggleOpen = toggleWorkspaceBoardSectionOpen.bind(null, uuid);
     let dropDownMenuBtnRef: HTMLElement;
 
-    function openDropDownMenu() {
+    async function openDropDownMenu() {
         // TODO
         console.log("Need to open drop down menu at", dropDownMenuBtnRef);
         const contextMenuType: ContextMenuType = {
@@ -29,7 +29,7 @@
             workspaceBoard,
             workspaceBoardSection,
         };
-        openContextMenu(contextMenuType, dropDownMenuBtnRef);
+        await openContextMenu(contextMenuType, dropDownMenuBtnRef);
     }
 </script>
 

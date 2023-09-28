@@ -9,10 +9,12 @@
 
     let dropDownMenuBtnRef: HTMLElement;
 
-    function openDropDownMenu() {
+    async function openDropDownMenu() {
+        // TODO refactor this using unwrap
         if (!workspaceBoardSection) {
             throw new Error("Expected workspaceBoardSection");
         }
+        // TODO refactor this using unwrap
         const uuid = workspaceBoardSection.uuid;
         if (!workspaceBoardSection.tasks) {
             throw new Error("Expected workspaceBoardSection.tasks");
@@ -25,7 +27,7 @@
             workspaceBoardSection,
         };
         console.log("TODO use", { uuid, tasks });
-        openContextMenu(contextMenu, dropDownMenuBtnRef);
+        await openContextMenu(contextMenu, dropDownMenuBtnRef);
         // TODO
         // let lastTask = tasks[tasks.length - 1];
         // let prevTask = tasks[tasks.indexOf(task) - 1];

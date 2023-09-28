@@ -47,9 +47,11 @@
             return;
         }
 
-        import("pikaday").then((mod) => {
-            pikaday = mod.default;
-        });
+        import("pikaday")
+            .then((mod) => {
+                pikaday = mod.default;
+            })
+            .catch(console.error);
         return () => {
             if (!datePicker) {
                 return;
