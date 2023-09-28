@@ -17,7 +17,6 @@
     import { createTask as createTaskFn } from "$lib/repository/workspace";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
-    import { openContextMenu } from "$lib/stores/globalUi";
     import type {
         CreateTask,
         Label,
@@ -71,25 +70,8 @@
     const workspaceUserAssignment = createWorkspaceUserAssignment();
     const labelAssignment = createLabelAssignment();
 
-    async function showUpdateWorkspaceUser(anchor: HTMLElement) {
-        await openContextMenu(
-            {
-                kind: "updateMember",
-                workspaceUserAssignment,
-            },
-            anchor
-        );
-    }
-
-    async function showUpdateLabel(anchor: HTMLElement) {
-        await openContextMenu(
-            {
-                kind: "updateLabel",
-                labelAssignment,
-            },
-            anchor
-        );
-    }
+    $: assignedUser = $workspaceUserAssignment;
+    $: labels = $labelAssignment;
 
     $: crumbs = [
         {
@@ -129,8 +111,8 @@
     <Form
         slot="content"
         {action}
-        {showUpdateWorkspaceUser}
-        {showUpdateLabel}
+        {workspaceUserAssignment}
+        {labelAssignment}
         bind:title
         bind:assignedUser
         bind:labels

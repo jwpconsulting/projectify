@@ -19,7 +19,6 @@
     import { updateTask as performUpdateTask } from "$lib/repository/workspace";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
-    import { openContextMenu } from "$lib/stores/globalUi";
     import type {
         Label,
         SubTask,
@@ -63,33 +62,12 @@
         // TODO figure out how to refresh the same page
         await goto(url);
     }
-    async function showUpdateWorkspaceUser(anchor: HTMLElement) {
-        await openContextMenu(
-            {
-                kind: "updateMember",
-                workspaceUserAssignment,
-            },
-            anchor
-        );
-    }
-    async function showUpdateLabel(anchor: HTMLElement) {
-        await openContextMenu(
-            {
-                kind: "updateLabel",
-                labelAssignment,
-            },
-            anchor
-        );
-    }
 
     const workspaceUserAssignment = createWorkspaceUserAssignment(task);
     const labelAssignment = createLabelAssignment(task);
 
     $: assignedUser = $workspaceUserAssignment;
-
-    $: {
-        labels = $labelAssignment;
-    }
+    $: labels = $labelAssignment;
 
     // TODO
     $: canUpdate = true;
@@ -135,8 +113,8 @@
     <Form
         slot="content"
         {action}
-        {showUpdateLabel}
-        {showUpdateWorkspaceUser}
+        {workspaceUserAssignment}
+        {labelAssignment}
         bind:title
         bind:assignedUser
         bind:labels

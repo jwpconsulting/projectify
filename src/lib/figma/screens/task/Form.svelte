@@ -7,6 +7,11 @@
     import TaskSection from "$lib/figma/screens/task/TaskSection.svelte";
     import TaskTitle from "$lib/figma/screens/task/TaskTitle.svelte";
     import TaskUser from "$lib/figma/screens/task/TaskUser.svelte";
+    import { openContextMenu } from "$lib/stores/globalUi";
+    import type {
+        LabelAssignment,
+        WorkspaceUserAssignment,
+    } from "$lib/types/stores";
     import type {
         Label,
         SubTask,
@@ -23,11 +28,28 @@
     export let dueDate: string | undefined;
     export let assignedUser: WorkspaceUser | undefined;
     export let subTasks: SubTask[];
-    export let showUpdateWorkspaceUser:
-        | ((anchor: HTMLElement) => void)
-        | undefined = undefined;
-    export let showUpdateLabel: ((anchor: HTMLElement) => void) | undefined =
-        undefined;
+
+    export let workspaceUserAssignment: WorkspaceUserAssignment;
+    export let labelAssignment: LabelAssignment;
+
+    async function showUpdateWorkspaceUser(anchor: HTMLElement) {
+        await openContextMenu(
+            {
+                kind: "updateMember",
+                workspaceUserAssignment,
+            },
+            anchor
+        );
+    }
+    async function showUpdateLabel(anchor: HTMLElement) {
+        await openContextMenu(
+            {
+                kind: "updateLabel",
+                labelAssignment,
+            },
+            anchor
+        );
+    }
 </script>
 
 <form on:submit|preventDefault={action}>
