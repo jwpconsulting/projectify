@@ -168,3 +168,26 @@ export const Readonly: Story = {
         readonly: true,
     },
 };
+
+export const LabelOnly: Story = {
+    args: {
+        placeholder: "This will never be shown",
+        name: "date",
+        style: { kind: "field", inputType: "date" },
+        label: "A date, but it's readonly",
+        value: "2012-12-31",
+    },
+};
+
+export const AnchorTopOnly: Story = {
+    args: {
+        placeholder: "This will never be shown",
+        name: "date",
+        style: { kind: "field", inputType: "date" },
+        value: "2012-12-31",
+        anchorTop: {
+            href: "#",
+            label: "I am the anchor on the top",
+        },
+    },
+};

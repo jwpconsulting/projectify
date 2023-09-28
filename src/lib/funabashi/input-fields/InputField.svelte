@@ -98,23 +98,29 @@
 </script>
 
 <div class="flex flex-col items-start">
-    <div class="flex w-full flex-row items-center justify-between">
-        {#if label}
-            <label
-                for={name}
-                class="p-2 text-xs font-bold text-base-content first-letter:uppercase"
-            >
-                {label}
-            </label>
-        {/if}
-        {#if anchorTop}
-            <Anchor
-                href={anchorTop.href}
-                label={anchorTop.label}
-                size="extraSmall"
-            />
-        {/if}
-    </div>
+    {#if label || anchorTop}
+        <div
+            class="flex w-full flex-row items-center"
+            class:justify-between={label}
+            class:justify-end={!label}
+        >
+            {#if label}
+                <label
+                    for={name}
+                    class="p-2 text-xs font-bold text-base-content first-letter:uppercase"
+                >
+                    {label}
+                </label>
+            {/if}
+            {#if anchorTop}
+                <Anchor
+                    href={anchorTop.href}
+                    label={anchorTop.label}
+                    size="extraSmall"
+                />
+            {/if}
+        </div>
+    {/if}
     <div class="relative isolate h-12 w-full p-1">
         {#if style.kind === "search"}
             <input
@@ -198,14 +204,13 @@
             </button>
         {/if}
     </div>
-    <div class="flex w-full flex-row items-center justify-between gap-1">
-        <div />
-        {#if anchorBottom}
+    {#if anchorBottom}
+        <div class="flex w-full flex-row items-end justify-end gap-1">
             <Anchor
                 href={anchorBottom.href}
                 label={anchorBottom.label}
                 size="extraSmall"
             />
-        {/if}
-    </div>
+        </div>
+    {/if}
 </div>
