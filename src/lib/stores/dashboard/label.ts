@@ -33,7 +33,9 @@ function searchLabels(labels: Label[], searchInput: SearchInput): Label[] {
 }
 
 type LabelFilter = Readable<SearchInput>;
-export const createLabelFilter = () => writable<string>(undefined);
+export function createLabelFilter(): LabelFilter {
+    return writable<SearchInput>(undefined);
+}
 
 type LabelSearchResults = Readable<Label[]>;
 

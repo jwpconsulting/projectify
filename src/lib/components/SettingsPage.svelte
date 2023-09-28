@@ -9,9 +9,7 @@
     export let title: string | null = null;
     export let loading = false;
     export let onBack = async () => {
-        if ($currentWorkspace) {
-            await goto(getDashboardWorkspaceUrl($currentWorkspace.uuid));
-        }
+        await goto(getDashboardWorkspaceUrl($currentWorkspace.uuid));
     };
 </script>
 

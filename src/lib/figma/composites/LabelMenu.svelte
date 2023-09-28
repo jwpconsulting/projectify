@@ -43,9 +43,6 @@
     }
 
     async function save() {
-        if (!$currentWorkspace) {
-            throw new Error("Expected createLabel");
-        }
         if (!chosenColor) {
             throw new Error("Expected chosenColor");
         }

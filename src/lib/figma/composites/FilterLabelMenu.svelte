@@ -39,6 +39,8 @@
         mode.kind === "filter"
             ? unfilterByLabel
             : mode.labelAssignment.deselect;
+
+    $: hasSearchInput = $labelSearch === "" || $labelSearch === undefined;
 </script>
 
 <div class="flex flex-col px-4 pb-4 pt-2">
@@ -53,7 +55,7 @@
     />
 </div>
 <div class="flex flex-col">
-    {#if ($labelSearch === "" || $labelSearch === undefined) && mode.kind == "filter"}
+    {#if mode.kind == "filter" && hasSearchInput}
         <FilterLabel
             label={{ kind: "allLabels" }}
             checked={$selected.kind === "allLabels"}

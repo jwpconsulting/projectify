@@ -18,7 +18,7 @@
         if (!eventTarget.files) {
             throw new Error("Expected eventTarget.files");
         }
-        const [file] = eventTarget.files;
+        const file = eventTarget.files.item(0);
         if (!file) {
             throw new Error("Expected file");
         }

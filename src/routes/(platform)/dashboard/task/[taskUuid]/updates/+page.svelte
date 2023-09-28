@@ -23,7 +23,7 @@
 
     export let state: TaskUpdateBarState = "updates";
 
-    $: task = $currentTask ?? task;
+    $: task = $currentTask;
 
     $: crumbs = [
         {

@@ -6,12 +6,13 @@
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection;
 
-    $: isFirst = workspaceBoardSection
-        ? getTaskPosition(workspaceBoardSection, task) === "start"
-        : false;
-    $: isLast = workspaceBoardSection
-        ? getTaskPosition(workspaceBoardSection, task) === "end"
-        : false;
+    let isFirst = false;
+    let isLast = false;
+    $: {
+        const position = getTaskPosition(workspaceBoardSection, task);
+        isFirst = position === "start";
+        isLast = position === "end";
+    }
 </script>
 
 <div class="flex flex-row items-center gap-1">

@@ -12,7 +12,7 @@
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
 
-    $: currentWorkspaceBoardUuid = $currentWorkspaceBoard?.uuid;
+    $: currentWorkspaceBoardUuid = $currentWorkspaceBoard.uuid;
 
     export let workspaceBoard: WorkspaceBoard;
     export let workspace: Workspace;
