@@ -130,7 +130,7 @@ function filterSectionsTasks(
 
 type CurrentTasksPerUser = Readable<TasksPerUser>;
 
-export function createTasksPerUser(
+function createTasksPerUser(
     currentWorkspaceBoardSections: Readable<WorkspaceBoardSection[]>
 ): CurrentTasksPerUser {
     return derived<Readable<WorkspaceBoardSection[]>, TasksPerUser>(
