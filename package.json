@@ -60,7 +60,8 @@
         "svelte-check": "^3.4.3",
         "svelte-eslint-parser": "^0.33.0",
         "svelte-language-server": "^0.15.18",
-        "typescript-language-server": "^3.3.2"
+        "typescript-language-server": "^3.3.2",
+        "typescript-svelte-plugin": "^0.3.33"
     },
     "type": "module",
     "dependencies": {
@@ -82,7 +83,7 @@
         "svelte-i18n": "^3.7.0",
         "svelte-local-storage-store": "^0.6.0",
         "tailwindcss": "^3.3.2",
-        "typescript": "^5.0.4",
+        "typescript": "^5.2.2",
         "vite": "^4.4.9"
     }
 }
