@@ -29,7 +29,7 @@
     $: workspaceBoardSectionTitle = $_(
         "onboarding.new-task.workspace-board-section-title"
     );
-
+    // TODO use new create task function here
     async function action() {
         const workspaceBoardSection = await createWorkspaceBoardSection(
             workspaceBoard,

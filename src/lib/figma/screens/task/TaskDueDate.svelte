@@ -35,8 +35,7 @@
     {:else}
         <InputField
             bind:value={date}
-            placeholder={$_("")}
-            label={$_("")}
+            placeholder={$_("task-screen.select-due-date")}
             name="due-date"
             style={{ kind: "field", inputType: "date" }}
         />

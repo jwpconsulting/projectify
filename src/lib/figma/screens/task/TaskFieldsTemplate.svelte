@@ -6,14 +6,12 @@
 </script>
 
 <table class="w-full max-w-4xl table-auto border-separate border-spacing-y-4">
-    <colgroup>
-        <col />
-        <col />
-    </colgroup>
     <tbody>
         <tr>
             <th scope="row" class={leftSideClass}>
-                {$_("task-screen.task-title")}
+                <label for="title">
+                    {$_("task-screen.task-title")}
+                </label>
             </th>
             <td class={rightSideClass}>
                 <slot name="title" />
@@ -21,7 +19,9 @@
         </tr>
         <tr>
             <th scope="row" class={leftSideClass}>
-                {$_("task-screen.assignee")}
+                <label for="assignee">
+                    {$_("task-screen.assignee")}
+                </label>
             </th>
             <td class={rightSideClass}>
                 <slot name="assignee" />
@@ -29,7 +29,9 @@
         </tr>
         <tr>
             <th scope="row" class={leftSideClass}>
-                {$_("task-screen.labels")}
+                <label for="labels">
+                    {$_("task-screen.labels")}
+                </label>
             </th>
             <td class={rightSideClass}>
                 <slot name="labels" />
@@ -37,7 +39,9 @@
         </tr>
         <tr>
             <th scope="row" class={leftSideClass}>
-                {$_("task-screen.section")}
+                <label for="section">
+                    {$_("task-screen.section")}
+                </label>
             </th>
             <td class={rightSideClass}>
                 <slot name="section" />
@@ -45,7 +49,9 @@
         </tr>
         <tr>
             <th scope="row" class={leftSideClass}>
-                {$_("task-screen.due-date")}
+                <label for="due-date">
+                    {$_("task-screen.due-date")}
+                </label>
             </th>
             <td class={rightSideClass}>
                 <slot name="due-date" />
@@ -53,7 +59,9 @@
         </tr>
         <tr>
             <th scope="row" class={leftSideClass}>
-                {$_("task-screen.description")}
+                <label for="description">
+                    {$_("task-screen.description")}
+                </label>
             </th>
             <td class={rightSideClass}>
                 <slot name="description" />

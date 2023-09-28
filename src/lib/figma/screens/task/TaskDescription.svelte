@@ -10,6 +10,7 @@
         class="w-full rounded-lg border border-border p-2"
         rows="5"
         name="description"
+        id="description"
         bind:value={description}
         placeholder={$_("task-screen.description")}
         {readonly}
