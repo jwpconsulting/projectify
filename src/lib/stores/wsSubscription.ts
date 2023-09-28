@@ -22,8 +22,6 @@ interface WsMessage {
 // A svelte store subscriber that received WSMessages
 type WsSubscriber = Subscriber<WsMessage>;
 
-const wsSubscriptionStores = new Map<string, WsSubscriptionStore>();
-
 type WsSubscriptionStore = Readable<WsMessage>;
 
 function makeAbsoluteUrl(url: string): string {
@@ -75,7 +73,6 @@ function makeWsSubscriptionStore(url: string): WsSubscriptionStore {
             return;
         }
         sarus.disconnect();
-        wsSubscriptionStores.delete(url);
         console.debug("Cleaned up store for", url);
     };
     const subscribe = (run: WsSubscriber): Unsubscriber => {
@@ -92,13 +89,7 @@ function getSubscriptionForCollection(
     uuid: string
 ): WsSubscriptionStore {
     const url = `${vars.WS_ENDPOINT}/${collection}/${uuid}/`;
-    const store = wsSubscriptionStores.get(url);
-    if (store) {
-        return store;
-    }
-    const newStore: WsSubscriptionStore = makeWsSubscriptionStore(url);
-    wsSubscriptionStores.set(url, newStore);
-    return newStore;
+    return makeWsSubscriptionStore(url);
 }
 
 /* Subscribable WS Store
