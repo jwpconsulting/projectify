@@ -13,3 +13,6 @@ indent_size = 4
 # If we don't do this, lists will look weird
 # https://github.com/prettier/prettier/issues/5019
 indent_size = 2
+
+[.git/COMMIT_EDITMSG]
+max_line_length=72
