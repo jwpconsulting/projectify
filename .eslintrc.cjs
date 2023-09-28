@@ -46,11 +46,11 @@ module.exports = {
         },
     ],
     ignorePatterns: [
-        "node_modules/*",
-        "svelte.config.js",
-        "*.cjs",
-        "build/*",
-        "storybook-static/*",
+        ".git",
+        ".mypy_cache",
+        "node_modules",
+        ".storebook",
+        ".svelte-kit",
     ],
     settings: {
         "import/ignore": [
