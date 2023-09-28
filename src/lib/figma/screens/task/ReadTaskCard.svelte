@@ -103,5 +103,4 @@
         />
     </TaskFieldsTemplate>
     <TaskUpdateBar slot="tab-bar-mobile" kind="mobile" {state} {task} />
-    <TaskUpdateBar slot="tab-bar-desktop" kind="mobile" {state} {task} />
 </Layout>

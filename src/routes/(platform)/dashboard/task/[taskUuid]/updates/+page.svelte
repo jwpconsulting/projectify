@@ -47,5 +47,4 @@
     <TaskUpdates slot="content" />
     <!-- TODO dry this up with the thing above -->
     <TaskUpdateBar slot="tab-bar-mobile" kind="mobile" {state} {task} />
-    <TaskUpdateBar slot="tab-bar-desktop" kind="mobile" {state} {task} />
 </Layout>

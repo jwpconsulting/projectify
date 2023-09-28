@@ -136,7 +136,6 @@
         />
     </TopBar>
     <TaskUpdateBar slot="tab-bar-mobile" kind="mobile" {state} {task} />
-    <TaskUpdateBar slot="tab-bar-desktop" kind="mobile" {state} {task} />
     <TaskFieldsTemplate slot="content">
         <TaskTitle slot="title" bind:title />
         <TaskUser
