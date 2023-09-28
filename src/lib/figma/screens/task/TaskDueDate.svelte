@@ -6,7 +6,7 @@
 
     // XXX For now, we store dates a plain strings
     // TODO when select due date, we should show the text as text-utility
-    export let date: string | undefined;
+    export let dueDate: string | undefined;
     export let action: (() => void) | undefined = undefined;
 
     export let readonly = false;
@@ -17,7 +17,7 @@
 
 <div class="flex flex-row items-center gap-4">
     <InputField
-        bind:value={date}
+        bind:value={dueDate}
         placeholder={$_("task-screen.select-due-date")}
         name="due-date"
         style={{ kind: "field", inputType: "date" }}

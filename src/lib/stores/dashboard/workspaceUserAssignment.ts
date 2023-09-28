@@ -8,9 +8,9 @@ import type {
 import type { Task, WorkspaceUser } from "$lib/types/workspace";
 
 export function createWorkspaceUserAssignment(
-    task: Task
+    task?: Task
 ): WorkspaceUserAssignment {
-    const maybeSelected: WorkspaceUserAssignmentState = task.assignee
+    const maybeSelected: WorkspaceUserAssignmentState = task?.assignee
         ? {
               kind: "workspaceUser",
               workspaceUser: task.assignee,

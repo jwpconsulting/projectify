@@ -50,12 +50,7 @@
     }
 </script>
 
-<button
-    class={outerStyle}
-    on:click={action}
-    on:keydown={action}
-    disabled={!action}
->
+<button class={outerStyle} on:click={action} disabled={!action}>
     <div class={innerStyle}>
         {label.kind === "applyLabel"
             ? $_("label.apply-label")

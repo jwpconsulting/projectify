@@ -9,18 +9,21 @@
     } from "$lib/urls";
 
     import Breadcrumbs from "./Breadcrumbs.svelte";
+    import Form from "./Form.svelte";
 
-    import Fields from "$lib/figma/screens/task/Fields.svelte";
     import Layout from "$lib/figma/screens/task/Layout.svelte";
-    import TaskDescription from "$lib/figma/screens/task/TaskDescription.svelte";
-    import TaskSection from "$lib/figma/screens/task/TaskSection.svelte";
-    import TaskTitle from "$lib/figma/screens/task/TaskTitle.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { createTask as createTaskFn } from "$lib/repository/workspace";
+    import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
+    import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
+    import { openContextMenu } from "$lib/stores/globalUi";
     import type {
         CreateTask,
+        Label,
+        SubTask,
         WorkspaceBoardSection,
+        WorkspaceUser,
     } from "$lib/types/workspace";
     import { unwrap } from "$lib/utils/type";
 
@@ -29,6 +32,10 @@
     // form fields
     let title: string | undefined = undefined;
     let description: string | undefined = undefined;
+    let assignedUser: WorkspaceUser | undefined = undefined;
+    let labels: Label[] = [];
+    let dueDate: string | undefined = undefined;
+    const subTasks: SubTask[] = [];
 
     const workspaceBoard = unwrap(
         workspaceBoardSection.workspace_board,
@@ -40,7 +47,7 @@
 
     $: canCreate = title !== undefined && description !== undefined;
 
-    async function createTask() {
+    async function action() {
         if (!title || !description) {
             throw new Error("Expected title and description");
         }
@@ -51,13 +58,36 @@
             // TODO
             labels: [],
             // TODO
-            deadline: null,
+            deadline: dueDate ?? null,
         };
         await createTaskFn(createTaskFull);
         // TODO allow player to keep editing this task
         // Like django admin's save then continue editing
         await goto(
             getDashboardWorkspaceBoardSectionUrl(workspaceBoardSection.uuid)
+        );
+    }
+
+    const workspaceUserAssignment = createWorkspaceUserAssignment();
+    const labelAssignment = createLabelAssignment();
+
+    async function showUpdateWorkspaceUser(anchor: HTMLElement) {
+        await openContextMenu(
+            {
+                kind: "updateMember",
+                workspaceUserAssignment,
+            },
+            anchor
+        );
+    }
+
+    async function showUpdateLabel(anchor: HTMLElement) {
+        await openContextMenu(
+            {
+                kind: "updateLabel",
+                labelAssignment,
+            },
+            anchor
         );
     }
 
@@ -86,7 +116,7 @@
             slot="buttons"
             action={{
                 kind: "button",
-                action: createTask,
+                action,
                 disabled: !canCreate,
             }}
             color="blue"
@@ -96,12 +126,17 @@
         />
     </TopBar>
 
-    <form on:submit|preventDefault={createTask} slot="content">
-        <input type="submit" class="hidden" />
-        <Fields>
-            <TaskTitle slot="title" bind:title />
-            <TaskSection slot="section" {workspaceBoardSection} />
-            <TaskDescription slot="description" bind:description />
-        </Fields>
-    </form>
+    <Form
+        slot="content"
+        {action}
+        {showUpdateWorkspaceUser}
+        {showUpdateLabel}
+        bind:title
+        bind:assignedUser
+        bind:labels
+        bind:workspaceBoardSection
+        bind:dueDate
+        bind:description
+        {subTasks}
+    />
 </Layout>

@@ -94,7 +94,7 @@
         <TaskSection slot="section" {workspaceBoardSection} />
         <TaskDueDate
             slot="due-date"
-            date={task.deadline && coerceIsoDate(task.deadline)}
+            dueDate={task.deadline && coerceIsoDate(task.deadline)}
             readonly
         />
         <TaskDescription

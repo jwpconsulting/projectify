@@ -9,17 +9,10 @@
     } from "$lib/urls";
 
     import Breadcrumbs from "./Breadcrumbs.svelte";
+    import Form from "./Form.svelte";
 
     import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
-    import Fields from "$lib/figma/screens/task/Fields.svelte";
     import Layout from "$lib/figma/screens/task/Layout.svelte";
-    import SubTaskBarComposite from "$lib/figma/screens/task/SubTaskBarComposite.svelte";
-    import TaskDescription from "$lib/figma/screens/task/TaskDescription.svelte";
-    import TaskDueDate from "$lib/figma/screens/task/TaskDueDate.svelte";
-    import TaskLabel from "$lib/figma/screens/task/TaskLabel.svelte";
-    import TaskSection from "$lib/figma/screens/task/TaskSection.svelte";
-    import TaskTitle from "$lib/figma/screens/task/TaskTitle.svelte";
-    import TaskUser from "$lib/figma/screens/task/TaskUser.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import type { TaskUpdateBarState } from "$lib/figma/types";
     import Button from "$lib/funabashi/buttons/Button.svelte";
@@ -50,7 +43,7 @@
         task.deadline && coerceIsoDate(task.deadline);
     const subTasks: SubTask[] = [];
 
-    async function updateTask() {
+    async function action() {
         // TOOD add rest here
         const submitTask: Task = {
             ...task,
@@ -129,7 +122,7 @@
             slot="buttons"
             action={{
                 kind: "button",
-                action: updateTask,
+                action,
                 disabled: !canUpdate,
             }}
             color="blue"
@@ -139,20 +132,17 @@
         />
     </TopBar>
     <TaskUpdateBar slot="tab-bar-mobile" kind="mobile" {state} {task} />
-    <form on:submit|preventDefault={updateTask} slot="content">
-        <input type="submit" class="hidden" />
-        <Fields>
-            <TaskTitle slot="title" bind:title />
-            <TaskUser
-                slot="assignee"
-                action={showUpdateWorkspaceUser}
-                workspaceUser={assignedUser}
-            />
-            <TaskLabel slot="labels" action={showUpdateLabel} {labels} />
-            <TaskSection slot="section" {workspaceBoardSection} />
-            <TaskDueDate slot="due-date" bind:date={dueDate} />
-            <TaskDescription slot="description" bind:description />
-        </Fields>
-        <SubTaskBarComposite {subTasks} />
-    </form>
+    <Form
+        slot="content"
+        {action}
+        {showUpdateLabel}
+        {showUpdateWorkspaceUser}
+        bind:title
+        bind:assignedUser
+        bind:labels
+        bind:workspaceBoardSection
+        bind:dueDate
+        bind:description
+        {subTasks}
+    />
 </Layout>
