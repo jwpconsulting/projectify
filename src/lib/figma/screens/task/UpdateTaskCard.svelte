@@ -136,17 +136,20 @@
         />
     </TopBar>
     <TaskUpdateBar slot="tab-bar-mobile" kind="mobile" {state} {task} />
-    <Fields slot="content">
-        <TaskTitle slot="title" bind:title />
-        <TaskUser
-            slot="assignee"
-            action={showUpdateWorkspaceUser}
-            workspaceUser={assignedUser}
-        />
-        <TaskLabel slot="labels" action={showUpdateLabel} {labels} />
-        <TaskSection slot="section" {workspaceBoardSection} />
-        <TaskDueDate slot="due-date" date={dueDate} />
-        <TaskDescription slot="description" bind:description />
-    </Fields>
-    <SubTaskBarComposite {subTasks} />
+    <form on:submit|preventDefault={updateTask} slot="content">
+        <input type="submit" class="hidden" />
+        <Fields>
+            <TaskTitle slot="title" bind:title />
+            <TaskUser
+                slot="assignee"
+                action={showUpdateWorkspaceUser}
+                workspaceUser={assignedUser}
+            />
+            <TaskLabel slot="labels" action={showUpdateLabel} {labels} />
+            <TaskSection slot="section" {workspaceBoardSection} />
+            <TaskDueDate slot="due-date" date={dueDate} />
+            <TaskDescription slot="description" bind:description />
+        </Fields>
+        <SubTaskBarComposite {subTasks} />
+    </form>
 </Layout>

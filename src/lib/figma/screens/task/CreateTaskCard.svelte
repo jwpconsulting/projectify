@@ -96,9 +96,12 @@
         />
     </TopBar>
 
-    <Fields slot="content">
-        <TaskTitle slot="title" bind:title />
-        <TaskSection slot="section" {workspaceBoardSection} />
-        <TaskDescription slot="description" bind:description />
-    </Fields>
+    <form on:submit|preventDefault={createTask} slot="content">
+        <input type="submit" class="hidden" />
+        <Fields>
+            <TaskTitle slot="title" bind:title />
+            <TaskSection slot="section" {workspaceBoardSection} />
+            <TaskDescription slot="description" bind:description />
+        </Fields>
+    </form>
 </Layout>
