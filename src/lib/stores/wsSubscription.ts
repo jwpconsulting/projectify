@@ -57,7 +57,11 @@ function getSarus(maybeRelativeUrl: string, onMessage: EventListener): Sarus {
     }
 }
 
-function makeWsSubscriptionStore(url: string): WsSubscriptionStore {
+function getSubscriptionForCollection(
+    collection: string,
+    uuid: string
+): WsSubscriptionStore {
+    const url = `${vars.WS_ENDPOINT}/${collection}/${uuid}/`;
     const subscribers = new Set<WsSubscriber>();
 
     const onMessage = (event: MessageEvent<string>) => {
@@ -82,14 +86,6 @@ function makeWsSubscriptionStore(url: string): WsSubscriptionStore {
     return {
         subscribe,
     };
-}
-
-function getSubscriptionForCollection(
-    collection: string,
-    uuid: string
-): WsSubscriptionStore {
-    const url = `${vars.WS_ENDPOINT}/${collection}/${uuid}/`;
-    return makeWsSubscriptionStore(url);
 }
 
 /* Subscribable WS Store
