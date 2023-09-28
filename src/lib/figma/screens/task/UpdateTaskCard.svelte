@@ -11,11 +11,11 @@
     import Breadcrumbs from "./Breadcrumbs.svelte";
 
     import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
+    import Fields from "$lib/figma/screens/task/Fields.svelte";
     import Layout from "$lib/figma/screens/task/Layout.svelte";
     import SubTaskBarComposite from "$lib/figma/screens/task/SubTaskBarComposite.svelte";
     import TaskDescription from "$lib/figma/screens/task/TaskDescription.svelte";
     import TaskDueDate from "$lib/figma/screens/task/TaskDueDate.svelte";
-    import TaskFieldsTemplate from "$lib/figma/screens/task/TaskFieldsTemplate.svelte";
     import TaskLabel from "$lib/figma/screens/task/TaskLabel.svelte";
     import TaskSection from "$lib/figma/screens/task/TaskSection.svelte";
     import TaskTitle from "$lib/figma/screens/task/TaskTitle.svelte";
@@ -136,7 +136,7 @@
         />
     </TopBar>
     <TaskUpdateBar slot="tab-bar-mobile" kind="mobile" {state} {task} />
-    <TaskFieldsTemplate slot="content">
+    <Fields slot="content">
         <TaskTitle slot="title" bind:title />
         <TaskUser
             slot="assignee"
@@ -147,6 +147,6 @@
         <TaskSection slot="section" {workspaceBoardSection} />
         <TaskDueDate slot="due-date" date={dueDate} />
         <TaskDescription slot="description" bind:description />
-    </TaskFieldsTemplate>
+    </Fields>
     <SubTaskBarComposite {subTasks} />
 </Layout>

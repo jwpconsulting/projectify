@@ -10,9 +10,9 @@
 
     import Breadcrumbs from "./Breadcrumbs.svelte";
 
+    import Fields from "$lib/figma/screens/task/Fields.svelte";
     import Layout from "$lib/figma/screens/task/Layout.svelte";
     import TaskDescription from "$lib/figma/screens/task/TaskDescription.svelte";
-    import TaskFieldsTemplate from "$lib/figma/screens/task/TaskFieldsTemplate.svelte";
     import TaskSection from "$lib/figma/screens/task/TaskSection.svelte";
     import TaskTitle from "$lib/figma/screens/task/TaskTitle.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
@@ -96,9 +96,9 @@
         />
     </TopBar>
 
-    <TaskFieldsTemplate slot="content">
+    <Fields slot="content">
         <TaskTitle slot="title" bind:title />
         <TaskSection slot="section" {workspaceBoardSection} />
         <TaskDescription slot="description" bind:description />
-    </TaskFieldsTemplate>
+    </Fields>
 </Layout>
