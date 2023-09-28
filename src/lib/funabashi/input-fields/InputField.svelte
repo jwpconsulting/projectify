@@ -18,6 +18,10 @@
     export let placeholder: string;
     export let style: InputFieldStyle;
     export let name: string;
+    /**
+     * Designate the id for this input element, falls back to name
+     */
+    export let id: string | undefined = undefined;
     export let label: string | null = null;
     export let anchorTop: InputFieldAnchor | null = null;
     export let anchorBottom: InputFieldAnchor | null = null;
@@ -28,6 +32,8 @@
     let pikadayAnchor: HTMLElement | undefined = undefined;
     let pikaday: typeof Pikaday | undefined = undefined;
     let datePicker: Pikaday | undefined = undefined;
+
+    $: id = id ?? name;
 
     // Possibly we can just have two onMount calls here, but I couldn't read
     // from the svelte docs whether that is explicitly supported or not.
@@ -83,6 +89,7 @@
     }
 
     $: inputProps = {
+        id,
         name,
         placeholder,
         required,
