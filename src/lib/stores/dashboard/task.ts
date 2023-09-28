@@ -1,4 +1,3 @@
-import lodash from "lodash";
 import { derived, writable } from "svelte/store";
 import type { Readable } from "svelte/store";
 
@@ -56,10 +55,10 @@ function searchTasks(
     sections: WorkspaceBoardSection[],
     searchText: string
 ): Task[] {
-    const tasks: Task[] = lodash.flatten(
-        sections.map((section) => (section.tasks ? section.tasks : []))
+    const sectionTasks: Task[][] = sections.map((section) =>
+        section.tasks ? section.tasks : []
     );
-
+    const tasks: Task[] = sectionTasks.flat();
     return searchAmong<Task>(["title"], tasks, searchText);
 }
 
