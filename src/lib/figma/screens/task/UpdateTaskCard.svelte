@@ -34,6 +34,7 @@
         WorkspaceBoardSection,
         WorkspaceUser,
     } from "$lib/types/workspace";
+    import { coerceIsoDate } from "$lib/utils/date";
     import { unwrap } from "$lib/utils/type";
 
     // if this is in a store, we can get rid of this param
@@ -45,15 +46,17 @@
     let description: string | undefined = task.description;
     let assignedUser: WorkspaceUser | undefined = task.assignee;
     let labels: Label[] = task.labels;
-    const dueDate: string | undefined = undefined;
+    let dueDate: string | undefined =
+        task.deadline && coerceIsoDate(task.deadline);
     const subTasks: SubTask[] = [];
 
     async function updateTask() {
         // TOOD add rest here
         const submitTask: Task = {
             ...task,
-            title: title,
-            description: description,
+            deadline: dueDate,
+            title,
+            description,
         };
         // TODO add labels here
         const labels = await labelAssignment.evaluate();
@@ -147,7 +150,7 @@
             />
             <TaskLabel slot="labels" action={showUpdateLabel} {labels} />
             <TaskSection slot="section" {workspaceBoardSection} />
-            <TaskDueDate slot="due-date" date={dueDate} />
+            <TaskDueDate slot="due-date" bind:date={dueDate} />
             <TaskDescription slot="description" bind:description />
         </Fields>
         <SubTaskBarComposite {subTasks} />

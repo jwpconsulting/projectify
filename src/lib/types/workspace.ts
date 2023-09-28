@@ -58,6 +58,7 @@ export type CreateTask = TitleDescriptionType &
 export type Task = {
     _order: number;
     uuid: string;
+    // TODO the following should be a Date
     deadline?: string;
     number: number;
     labels: Label[];

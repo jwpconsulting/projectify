@@ -25,6 +25,7 @@
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
+    import { coerceIsoDate } from "$lib/utils/date";
     import { unwrap } from "$lib/utils/type";
 
     export let task: Task;
@@ -93,7 +94,7 @@
         <TaskSection slot="section" {workspaceBoardSection} />
         <TaskDueDate
             slot="due-date"
-            date={task.deadline ?? undefined}
+            date={task.deadline && coerceIsoDate(task.deadline)}
             readonly
         />
         <TaskDescription

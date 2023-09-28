@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Search, X } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
-    import { formatISO, parseISO } from "date-fns";
+    import { parseISO } from "date-fns";
     import type Pikaday from "pikaday";
     import type { PikadayOptions } from "pikaday";
     import { onMount } from "svelte";
@@ -12,6 +12,7 @@
         InputFieldStyle,
     } from "$lib/funabashi/types";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+    import { formatIsoDate } from "$lib/utils/date";
 
     // TODO make border customizable (e.g. in TaskFormFields)
     export let value: string | undefined = undefined;
@@ -41,6 +42,11 @@
         if (!browser) {
             return;
         }
+        // We have no further business if no date picker
+        if (!(style.kind === "field" && style.inputType === "date")) {
+            return;
+        }
+
         import("pikaday").then((mod) => {
             pikaday = mod.default;
         });
@@ -51,9 +57,6 @@
             datePicker.destroy();
         };
     });
-
-    const formatIsoDate = (date: Date) =>
-        formatISO(date, { representation: "date" });
 
     const getPikadayOptions = (field: HTMLElement): PikadayOptions => {
         return {

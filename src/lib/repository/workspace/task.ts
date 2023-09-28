@@ -54,8 +54,7 @@ export async function updateTask(
 ): Promise<Task> {
     const { uuid } = task;
     const data = {
-        title: task.title,
-        description: task.description,
+        ...task,
         labels,
         // TODO assignee
         assignee: workspaceUser?.user.email ?? null,

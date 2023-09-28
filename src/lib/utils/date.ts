@@ -1,3 +1,5 @@
+import { formatISO, parseISO } from "date-fns";
+
 import { browser } from "$app/environment";
 
 export function dateStringToLocal(dateStr: string, time = false): string {
@@ -18,4 +20,12 @@ export function dateStringToLocal(dateStr: string, time = false): string {
     } else {
         return fDate;
     }
+}
+
+export function formatIsoDate(date: Date): string {
+    return formatISO(date, { representation: "date" });
+}
+
+export function coerceIsoDate(date: string): string {
+    return formatIsoDate(parseISO(date));
 }
