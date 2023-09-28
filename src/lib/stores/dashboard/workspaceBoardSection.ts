@@ -128,42 +128,28 @@ function filterSectionsTasks(
     return sections;
 }
 
-type CurrentTasksPerUser = Readable<TasksPerUser>;
-
-function createTasksPerUser(
-    currentWorkspaceBoardSections: Readable<WorkspaceBoardSection[]>
-): CurrentTasksPerUser {
-    return derived<Readable<WorkspaceBoardSection[]>, TasksPerUser>(
-        currentWorkspaceBoardSections,
-        ($currentWorkspaceBoardSections, set) => {
-            const userCounts = new Map<string, number>();
-            let unassignedCounts = 0;
-            $currentWorkspaceBoardSections.forEach((section) => {
-                if (!section.tasks) {
+export const tasksPerUser: Readable<TasksPerUser> = derived<
+    Readable<WorkspaceBoardSection[]>,
+    TasksPerUser
+>(
+    currentWorkspaceBoardSections,
+    ($currentWorkspaceBoardSections, set) => {
+        const assigned = new Map<string, number>();
+        let unassigned = 0;
+        $currentWorkspaceBoardSections.forEach((section) => {
+            if (!section.tasks) {
+                return;
+            }
+            section.tasks.forEach((task) => {
+                if (!task.assignee) {
+                    unassigned = unassigned + 1;
                     return;
                 }
-                section.tasks.forEach((task) => {
-                    if (task.assignee) {
-                        const uuid = task.assignee.uuid;
-                        const count = userCounts.get(uuid);
-                        if (count) {
-                            userCounts.set(uuid, count + 1);
-                        } else {
-                            userCounts.set(uuid, 1);
-                        }
-                    } else {
-                        unassignedCounts = unassignedCounts + 1;
-                    }
-                });
+                const uuid = task.assignee.uuid;
+                assigned.set(uuid, assigned.get(uuid) ?? 0 + 1);
             });
-            const counts: TasksPerUser = {
-                unassigned: unassignedCounts,
-                assigned: userCounts,
-            };
-            set(counts);
-        },
-        { unassigned: 0, assigned: new Map<string, number>() }
-    );
-}
-
-export const tasksPerUser = createTasksPerUser(currentWorkspaceBoardSections);
+        });
+        set({ unassigned, assigned });
+    },
+    { unassigned: 0, assigned: new Map<string, number>() }
+);
