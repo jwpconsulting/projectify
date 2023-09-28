@@ -9,65 +9,13 @@ import type {
     TasksPerUser,
     WorkspaceUserSelection,
 } from "$lib/types/ui";
-import type {
-    WorkspaceBoard,
-    Label,
-    Task,
-    WorkspaceBoardSection,
-} from "$lib/types/workspace";
+import type { Label, Task, WorkspaceBoardSection } from "$lib/types/workspace";
 
 interface CurrentFilter {
     labels: LabelSelection;
     workspaceUser: WorkspaceUserSelection;
     workspaceBoardSections: WorkspaceBoardSection[];
 }
-
-type CurrentWorkspaceBoardSections = Readable<WorkspaceBoardSection[]>;
-
-function createCurrentWorkspaceBoardSections(
-    selectedLabels: Readable<LabelSelection>,
-    selectedWorkspaceUser: Readable<WorkspaceUserSelection>,
-    // TODO here we should make sure that WorkspaceBoard can not be null
-    currentWorkspaceBoard: Readable<WorkspaceBoard | null>
-): CurrentWorkspaceBoardSections {
-    return derived<
-        [
-            typeof selectedLabels,
-            typeof selectedWorkspaceUser,
-            typeof currentWorkspaceBoard,
-        ],
-        WorkspaceBoardSection[]
-    >(
-        [selectedLabels, selectedWorkspaceUser, currentWorkspaceBoard],
-        (
-            [$selectedLabels, $selectedWorkspaceUser, $currentWorkspaceBoard],
-            set
-        ) => {
-            if (!$currentWorkspaceBoard) {
-                return;
-            }
-            const workspaceBoardSections =
-                $currentWorkspaceBoard.workspace_board_sections;
-            if (!workspaceBoardSections) {
-                return;
-            }
-            set(
-                filterSectionsTasks({
-                    labels: $selectedLabels,
-                    workspaceUser: $selectedWorkspaceUser,
-                    workspaceBoardSections,
-                })
-            );
-        },
-        []
-    );
-}
-export const currentWorkspaceBoardSections =
-    createCurrentWorkspaceBoardSections(
-        selectedLabels,
-        selectedWorkspaceUser,
-        currentWorkspaceBoard
-    );
 
 function filterSectionsTasks(
     currentFilter: CurrentFilter
@@ -127,6 +75,38 @@ function filterSectionsTasks(
 
     return sections;
 }
+
+export const currentWorkspaceBoardSections = derived<
+    [
+        typeof selectedLabels,
+        typeof selectedWorkspaceUser,
+        typeof currentWorkspaceBoard,
+    ],
+    WorkspaceBoardSection[]
+>(
+    [selectedLabels, selectedWorkspaceUser, currentWorkspaceBoard],
+    (
+        [$selectedLabels, $selectedWorkspaceUser, $currentWorkspaceBoard],
+        set
+    ) => {
+        if (!$currentWorkspaceBoard) {
+            return;
+        }
+        const workspaceBoardSections =
+            $currentWorkspaceBoard.workspace_board_sections;
+        if (!workspaceBoardSections) {
+            return;
+        }
+        set(
+            filterSectionsTasks({
+                labels: $selectedLabels,
+                workspaceUser: $selectedWorkspaceUser,
+                workspaceBoardSections,
+            })
+        );
+    },
+    []
+);
 
 export const tasksPerUser: Readable<TasksPerUser> = derived<
     Readable<WorkspaceBoardSection[]>,

@@ -1,25 +1,15 @@
 <script lang="ts">
-    import { goto } from "$lib/navigation";
-    import { getDashboardWorkspaceUrl } from "$lib/urls";
-
     import IconArrowLeft from "$lib/components/icons/icon-arrow-left.svelte";
     import Loading from "$lib/components/loading.svelte";
-    import { currentWorkspace } from "$lib/stores/dashboard";
 
     export let title: string | null = null;
     export let loading = false;
-    export let onBack = async () => {
-        await goto(getDashboardWorkspaceUrl($currentWorkspace.uuid));
-    };
 </script>
 
 <div class="page items-center justify-start p-8">
     <div class="w-full max-w-xl space-y-8">
         <div class="flex items-center justify-start space-x-5">
-            <button
-                class="btn btn-primary btn-circle shadow-md"
-                on:click={onBack}
-            >
+            <button class="btn btn-primary btn-circle shadow-md">
                 <div class="translate-x-1">
                     <IconArrowLeft />
                 </div>

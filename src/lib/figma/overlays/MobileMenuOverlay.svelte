@@ -1,6 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
+    import Loading from "$lib/components/loading.svelte";
     import Full from "$lib/figma/navigation/side-nav/Full.svelte";
     import MobileMenu from "$lib/figma/overlays/MobileMenu.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
@@ -17,13 +18,13 @@
 <div class="h-full w-full bg-foreground p-2" role="menu">
     <div class="flex flex-col gap-8 p-2">
         {#if target.kind === "dashboard"}
-            {#if $currentWorkspaces !== undefined}
+            {#if $currentWorkspaces !== undefined && $currentWorkspace !== undefined}
                 <Full
                     workspaces={$currentWorkspaces}
                     workspace={$currentWorkspace}
                 />
             {:else}
-                Warning: currentWorkspaces, currentWorkspace missing
+                <Loading />
             {/if}
         {:else}
             <MobileMenu />

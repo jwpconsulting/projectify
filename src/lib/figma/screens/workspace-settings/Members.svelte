@@ -16,7 +16,7 @@
     }
     let workspaceUserSearch: string;
 
-    $: workspace = $currentWorkspace;
+    $: workspace = $currentWorkspace ?? workspace;
 </script>
 
 <Layout {workspace} activeSetting="team-members">

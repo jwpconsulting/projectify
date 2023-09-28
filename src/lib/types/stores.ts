@@ -1,5 +1,5 @@
 // XXX "stores.ts" should be renamed "modules.ts" maybe?
-import type { Readable } from "svelte/store";
+import type { Readable, Subscriber } from "svelte/store";
 
 import type { RepositoryContext } from "./repository";
 
@@ -31,9 +31,12 @@ export interface LabelAssignment extends Readable<Label[]> {
 const subscriptionTypes = ["workspace", "workspace-board", "task"] as const;
 export type SubscriptionType = (typeof subscriptionTypes)[number];
 
-export interface WsResource<T> extends Readable<T> {
+// A subscriber that can deal with possible undefined values
+export type MaybeSubscriber<T> = Subscriber<T | undefined>;
+export interface WsResource<T> extends Readable<T | undefined> {
     loadUuid: (
         uuid: string,
         repositoryContext?: RepositoryContext
     ) => Promise<T>;
+    unwrap: () => T;
 }

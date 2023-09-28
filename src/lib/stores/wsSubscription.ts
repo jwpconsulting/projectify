@@ -1,12 +1,17 @@
 import Sarus from "@anephenix/sarus";
-import type { Unsubscriber, Subscriber } from "svelte/store";
+import type { Unsubscriber } from "svelte/store";
 import { writable } from "svelte/store";
 
 import vars from "$lib/env";
 
 import { browser } from "$app/environment";
 import type { RepositoryContext } from "$lib/types/repository";
-import type { SubscriptionType, WsResource } from "$lib/types/stores";
+import type {
+    MaybeSubscriber,
+    SubscriptionType,
+    WsResource,
+} from "$lib/types/stores";
+import { unwrap } from "$lib/utils/type";
 
 interface Message {
     type: string;
@@ -18,9 +23,6 @@ interface WsMessage {
     message: Message;
     timeStamp: number;
 }
-
-// A svelte store subscriber that received WSMessages
-type WsSubscriber = Subscriber<WsMessage>;
 
 function makeAbsoluteUrl(url: string): string {
     if (!url.startsWith("/")) {
@@ -36,7 +38,7 @@ type EventListener = (event: MessageEvent<string>) => void;
 function getSubscriptionForCollection(
     collection: string,
     uuid: string,
-    onWsMessage: WsSubscriber
+    onWsMessage: (wsMessage: WsMessage) => void
 ): Unsubscriber {
     const onMessage: EventListener = (event: MessageEvent<string>) => {
         const message: Message = JSON.parse(event.data) as Message;
@@ -79,7 +81,7 @@ function getSubscriptionForCollection(
  * one initial load
  */
 
-type Subscribers<T> = Set<Subscriber<T>>;
+type Subscribers<T> = Set<MaybeSubscriber<T>>;
 type WsStoreState<T> =
     | {
           collection: SubscriptionType;
@@ -125,12 +127,19 @@ export function createWsStore<T>(
         state.subscribers.forEach((subscriber) => subscriber(state.value));
     };
 
-    const removeSubscriber = (subscriber: Subscriber<T>) => {
+    const removeSubscriber = (subscriber: MaybeSubscriber<T>) => {
         state.subscribers.delete(subscriber);
         if (state.subscribers.size > 0) {
             return;
         }
+        // This could be an edge case, since we don't return to start, ever.
+        // So when someone subscribes and unsubscribes, that means a component
+        // or similar was unloaded prematurely. For this reason, we log that
+        // here until we gain some more insight on this issue.
         if (state.kind === "start") {
+            console.log(
+                `Removed subscriber for ${collection} collection before store was ever initialized`
+            );
             return;
         }
         state.unsubscriber();
@@ -182,20 +191,22 @@ export function createWsStore<T>(
         return value;
     };
 
-    const subscribe = (run: Subscriber<T>): Unsubscriber => {
-        // This is surprisingly easy to implement!
-        // https://github.com/sveltejs/svelte/blob/8e76ef156e2bdd2a1e7a506a593c2d5f58c498b5/packages/svelte/src/runtime/store/index.js#L86
-        state.subscribers.add(run);
-        if (state.kind === "ready") {
-            run(state.value);
-        } else {
-            console.debug("Subscribed", run, "but no value there yet");
-        }
-        return () => removeSubscriber(run);
-    };
     return {
-        subscribe,
         loadUuid,
+        subscribe(run: MaybeSubscriber<T>): Unsubscriber {
+            // This is surprisingly easy to implement!
+            // https://github.com/sveltejs/svelte/blob/8e76ef156e2bdd2a1e7a506a593c2d5f58c498b5/packages/svelte/src/runtime/store/index.js#L86
+            state.subscribers.add(run);
+            // If we have nothing, return undefined
+            run(state.kind === "ready" ? state.value : undefined);
+            return () => removeSubscriber(run);
+        },
+        unwrap(): T {
+            if (state.kind !== "ready") {
+                throw new Error("Store wasn't ready");
+            }
+            return unwrap(state.value, "Expected state.value to be present");
+        },
     };
 }
 // Online connection

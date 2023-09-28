@@ -8,7 +8,7 @@
 
     let { workspaceBoard } = data;
 
-    $: workspaceBoard = $currentWorkspaceBoard;
+    $: workspaceBoard = $currentWorkspaceBoard ?? workspaceBoard;
 </script>
 
 <Dashboard {workspaceBoard} />

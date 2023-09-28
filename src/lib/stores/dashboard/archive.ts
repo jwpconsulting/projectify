@@ -5,11 +5,15 @@ import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 import type { WorkspaceBoard } from "$lib/types/workspace";
 
 export const currentArchivedWorkspaceBoards = derived<
-    [typeof currentWorkspace],
+    typeof currentWorkspace,
     WorkspaceBoard[]
->([currentWorkspace], ([$currentWorkspace], set) => {
-    getArchivedWorkspaceBoards($currentWorkspace.uuid)
-        .then((archivedWorkspaceBoards) => set(archivedWorkspaceBoards))
+>(currentWorkspace, ($currentWorkspace, set) => {
+    const uuid = $currentWorkspace?.uuid;
+    if (!uuid) {
+        return;
+    }
+    getArchivedWorkspaceBoards(uuid)
+        .then(set)
         .catch((error: Error) => {
             console.error(
                 "An error happened when retrieving currentArchivedWorkspaceBoards",

@@ -49,7 +49,11 @@
         if (!labelName) {
             throw new Error("Expected labelName");
         }
-        await createLabel($currentWorkspace, labelName, chosenColor.color);
+        await createLabel(
+            currentWorkspace.unwrap(),
+            labelName,
+            chosenColor.color
+        );
         state = "list";
     }
 

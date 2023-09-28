@@ -17,15 +17,6 @@
     $: showCount = count !== undefined;
     $: hideCount = !active || count === undefined;
 
-    $: {
-        console.log(
-            "active for",
-            workspaceUserSelectionInput.kind,
-            "is",
-            active
-        );
-    }
-
     function click() {
         active = !active;
         if (active) {
