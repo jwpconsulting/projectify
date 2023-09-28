@@ -32,8 +32,8 @@ module.exports = {
                 parser: "@typescript-eslint/parser",
             },
             rules: {
-                // TODO: Investigate whether any of these could be disabled
-                "@typescript-eslint/require-await": "off",
+                // This is unfortunately required because of export let
+                // style svelte component prop declarations
                 "@typescript-eslint/init-declarations": "off",
             },
         },
