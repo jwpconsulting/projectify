@@ -35,12 +35,7 @@ module.exports = {
                 // TODO: Investigate whether any of these could be disabled
                 "@typescript-eslint/require-await": "off",
                 "@typescript-eslint/prefer-nullish-coalescing": "off",
-                "@typescript-eslint/restrict-template-expressions": "off",
                 "@typescript-eslint/no-unnecessary-condition": "off",
-                "@typescript-eslint/no-unsafe-member-access": "off",
-                "@typescript-eslint/prefer-optional-chain": "off",
-                "@typescript-eslint/no-unsafe-argument": "off",
-                "@typescript-eslint/no-unsafe-assignment": "off",
                 "@typescript-eslint/init-declarations": "off",
             },
         },
