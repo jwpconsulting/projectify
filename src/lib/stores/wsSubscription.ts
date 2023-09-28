@@ -26,6 +26,39 @@ const wsSubscriptionStores = new Map<string, WsSubscriptionStore>();
 
 type WsSubscriptionStore = Readable<WsMessage>;
 
+function makeAbsoluteUrl(url: string): string {
+    if (!url.startsWith("/")) {
+        return url;
+    }
+    const { host, protocol } = window.location;
+    const wsProtocol = protocol === "https:" ? "wss://" : "ws://";
+    return `${wsProtocol}${host}${url}`;
+}
+
+type EventListener = (event: MessageEvent<string>) => void;
+
+function getSarus(maybeRelativeUrl: string, onMessage: EventListener): Sarus {
+    // XXX
+    // It appears that errors here are very hard to debug,
+    // e.g., wrong URL schema
+    // Check if we have a relative URL
+    const url = makeAbsoluteUrl(maybeRelativeUrl);
+    try {
+        return new Sarus({
+            url,
+            eventListeners: {
+                open: [console.debug.bind(null, "Connection opened to", url)],
+                close: [console.debug.bind(null, "Connection closed to", url)],
+                error: [console.error.bind(null, "Connection error for", url)],
+                message: [onMessage],
+            },
+        });
+    } catch (e) {
+        console.error("When initializing Sarus", e);
+        throw e;
+    }
+}
+
 function makeWsSubscriptionStore(url: string): WsSubscriptionStore {
     const subscribers = new Set<WsSubscriber>();
 
@@ -34,16 +67,7 @@ function makeWsSubscriptionStore(url: string): WsSubscriptionStore {
         const { timeStamp } = event;
         subscribers.forEach((run) => run({ message, timeStamp }));
     };
-
-    const sarus = new Sarus({
-        url,
-        eventListeners: {
-            open: [console.debug.bind(null, "Connection opened to", url)],
-            close: [console.debug.bind(null, "Connection closed to", url)],
-            error: [console.error.bind(null, "Connection error for", url)],
-            message: [onMessage],
-        },
-    });
+    const sarus = getSarus(url, onMessage);
 
     const unsubscribe = (run: WsSubscriber): void => {
         subscribers.delete(run);
