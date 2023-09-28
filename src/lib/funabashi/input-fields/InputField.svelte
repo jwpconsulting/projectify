@@ -103,7 +103,7 @@
 </script>
 
 <div class="flex flex-col items-start">
-    {#if label || anchorTop}
+    {#if label !== null || anchorTop !== null}
         <div
             class="flex w-full flex-row items-center"
             class:justify-between={label}

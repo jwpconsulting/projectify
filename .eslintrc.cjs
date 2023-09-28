@@ -34,7 +34,6 @@ module.exports = {
             rules: {
                 // TODO: Investigate whether any of these could be disabled
                 "@typescript-eslint/require-await": "off",
-                "@typescript-eslint/prefer-nullish-coalescing": "off",
                 "@typescript-eslint/no-unnecessary-condition": "off",
                 "@typescript-eslint/init-declarations": "off",
             },
