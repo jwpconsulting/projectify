@@ -12,7 +12,12 @@
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
 
-    $: currentWorkspaceBoardUuid = $currentWorkspaceBoard.uuid;
+    // Hehe, apparently this IS necessary, because $currentWorkspaceBoard
+    // is evaluated despite the subscription never returning a value!
+    // That is a sveltism, I suppose.
+    // XXX TODO
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    $: currentWorkspaceBoardUuid = $currentWorkspaceBoard?.uuid;
 
     export let workspaceBoard: WorkspaceBoard;
     export let workspace: Workspace;
