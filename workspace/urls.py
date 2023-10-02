@@ -63,6 +63,11 @@ urlpatterns = (
     # Delete
     # Task
     # Create
+    path(
+        "task",
+        views.TaskCreate.as_view(),
+        name="task-create",
+    ),
     # Read
     path(
         "task/<uuid:task_uuid>",

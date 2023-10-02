@@ -20,12 +20,25 @@ from .. import (
 )
 
 
+class TaskCreate(
+    generics.CreateAPIView[
+        models.Task,
+        models.TaskQuerySet,
+        serializers.TaskCreateUpdateSerializer,
+    ],
+):
+    """Create a task."""
+
+    serializer_class = serializers.TaskCreateUpdateSerializer
+
+
 class TaskRetrieveUpdate(
     generics.RetrieveUpdateAPIView[
         models.Task,
         models.TaskQuerySet,
         Union[
-            serializers.TaskDetailSerializer, serializers.TaskUpdateSerializer
+            serializers.TaskDetailSerializer,
+            serializers.TaskCreateUpdateSerializer,
         ],
     ],
 ):
@@ -57,11 +70,11 @@ class TaskRetrieveUpdate(
         self,
     ) -> Union[
         type[serializers.TaskDetailSerializer],
-        type[serializers.TaskUpdateSerializer],
+        type[serializers.TaskCreateUpdateSerializer],
     ]:
         """Return different serializer for get/put."""
         if self.request.method in ("PUT", "PATCH"):
-            return serializers.TaskUpdateSerializer
+            return serializers.TaskCreateUpdateSerializer
         return serializers.TaskDetailSerializer
 
     def get_object(self) -> models.Task:
