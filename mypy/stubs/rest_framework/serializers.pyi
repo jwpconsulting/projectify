@@ -13,10 +13,16 @@ from django.db.models import (
     Model,
 )
 
+from .exceptions import (
+    ValidationError,
+)
 from .fields import *
 from .relations import *
 
 class BaseSerializer:
+
+    context: dict[str, Any]
+
     def __init__(
         self,
         instance: Optional[object] = None,
@@ -44,6 +50,10 @@ class Serializer(BaseSerializer):
     def is_valid(self, *_: Any, raise_exception: bool = False) -> bool: ...
 
 class ModelSerializer(Generic[M], Serializer):
+    instance: Optional[M]
+
     def update(self, instance: M, validated_data: ValidatedData) -> M: ...
     def create(self, validated_data: ValidatedData) -> M: ...
     def save(self, **kwargs: Any) -> M: ...
+
+__all__ = ("ValidationError",)
