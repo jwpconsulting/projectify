@@ -4,8 +4,8 @@ from .base import (
     WorkspaceBoardBaseSerializer,
 )
 from .task_detail import (
+    TaskCreateUpdateSerializer,
     TaskDetailSerializer,
-    TaskUpdateSerializer,
 )
 from .workspace import (
     WorkspaceDetailSerializer,
@@ -22,7 +22,7 @@ from .workspace_board_section import (
 # I don't like that we user the Base serializer here
 __all__ = [
     "TaskDetailSerializer",
-    "TaskUpdateSerializer",
+    "TaskCreateUpdateSerializer",
     "WorkspaceBaseSerializer",
     "WorkspaceBoardBaseSerializer",
     "WorkspaceBoardDetailSerializer",
