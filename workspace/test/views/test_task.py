@@ -1,12 +1,12 @@
 """Test task CRUD views."""
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
 from django.urls import (
     reverse,
 )
 
 import pytest
+from rest_framework.response import (
+    Response,
+)
 from rest_framework.test import (
     APIClient,
 )
@@ -20,9 +20,27 @@ from ... import (
 )
 
 
+class UnauthenticatedTestMixin:
+    """Test that resource cannot be accessed without authorization."""
+
+    def test_unauthenticated(
+        self, resource_url: str, test_client: APIClient
+    ) -> None:
+        """Test we cannot access the resource."""
+        response: Response = test_client.options(resource_url)
+        # It's not 403, because DRF does not return the www authenticate realm
+        # as a response to an API user.
+        # See
+        # https://github.com/encode/django-rest-framework/blob/605cc4f7367f58002056453d9befd3c1918f6a38/rest_framework/authentication.py#L112
+        # there is no "authenticate_header" method. If it existed, we would
+        # get a 401 instead. I was confused at first, but by their logic it
+        # makes some sense.
+        assert response.status_code == 403, response.data
+
+
 # Create
 @pytest.mark.django_db
-class TestTaskCreate:
+class TestTaskCreate(UnauthenticatedTestMixin):
     """Test task creation."""
 
     @pytest.fixture
@@ -30,31 +48,59 @@ class TestTaskCreate:
         """Return URL to resource."""
         return reverse("workspace:task-create")
 
-    def test_authenticated(
+    @pytest.fixture
+    def payload(
         self,
-        rest_user_client: APIClient,
-        resource_url: str,
-        workspace_user: models.WorkspaceUser,
         workspace_board_section: models.WorkspaceBoardSection,
-        django_assert_num_queries: DjangoAssertNumQueries,
-    ) -> None:
-        """Test retrieving when authenticated."""
-        data: dict[str, object] = {
+    ) -> dict[str, object]:
+        """Return a payload for API."""
+        return {
             "title": "bla",
             "labels": [],
             "assignee": None,
             "workspace_board_section": workspace_board_section.uuid,
         }
-        # 28?!
-        with django_assert_num_queries(28):
-            response = rest_user_client.post(resource_url, data, format="json")
+
+    def test_unauthorized(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        payload: dict[str, object],
+    ) -> None:
+        """Test creating when unauthorized."""
+        response = rest_user_client.post(resource_url, payload, format="json")
+        # We get 400 and NOT 403. We don't want to tell the user whether a
+        # workspace board section with the given UUID exists. Instead, we
+        # will treat it like a non-existent UUID. That makes sense, because to
+        # the user it *really* does not exist and anything else does not
+        # matter.
+        assert response.status_code == 400, response.data
+        assert models.Task.objects.count() == 0
+
+    def test_authenticated(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        workspace_user: models.WorkspaceUser,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        payload: dict[str, object],
+    ) -> None:
+        """Test creating when authenticated."""
+        # 6 queries just for assigning a user
+        with django_assert_num_queries(34):
+            response = rest_user_client.post(
+                resource_url,
+                {**payload, "assignee": workspace_user.uuid},
+                format="json",
+            )
             assert response.status_code == 201, response.data
         assert models.Task.objects.count() == 1
+        assert models.Task.objects.get().assignee == workspace_user
 
 
 # Read
 @pytest.mark.django_db
-class TestTaskRetrieve:
+class TestTaskRetrieve(UnauthenticatedTestMixin):
     """Test Task retrieve."""
 
     @pytest.fixture
@@ -62,12 +108,38 @@ class TestTaskRetrieve:
         """Return URL to resource."""
         return reverse("workspace:task", args=(task.uuid,))
 
+    @pytest.fixture
+    def payload(
+        self,
+        workspace_board_section: models.WorkspaceBoardSection,
+    ) -> dict[str, object]:
+        """Create payload."""
+        return {
+            "title": "Hello world",
+            "workspace_board_section": workspace_board_section.uuid,
+            "number": 2,
+            "labels": [],
+            "assignee": None,
+        }
+
+    def test_unauthorized(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        workspace_user: models.WorkspaceUser,
+        workspace: models.Workspace,
+    ) -> None:
+        """Test retrieving when logged in, but not authorized."""
+        workspace.remove_user(workspace_user.user)
+        with django_assert_num_queries(1):
+            response = rest_user_client.get(resource_url)
+        assert response.status_code == 404, response.data
+
     def test_authenticated(
         self,
         rest_user_client: APIClient,
         resource_url: str,
-        user: AbstractBaseUser,
-        task: models.Task,
         workspace_user: models.WorkspaceUser,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
@@ -76,30 +148,26 @@ class TestTaskRetrieve:
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.data
 
+        assert response.data["assignee"]["uuid"] == str(workspace_user.uuid)
+
     def test_update(
         self,
         rest_user_client: APIClient,
         resource_url: str,
-        task: models.Task,
-        user: AbstractBaseUser,
-        workspace_board_section: models.WorkspaceBoardSection,
-        workspace_user: models.WorkspaceUser,
         django_assert_num_queries: DjangoAssertNumQueries,
+        workspace_user: models.WorkspaceUser,
+        payload: dict[str, object],
     ) -> None:
-        """Assert we can GET this view this while being logged in."""
-        data: dict[str, object] = {
-            "title": "Hello world",
-            "workspace_board_section": workspace_board_section.uuid,
-            "number": 2,
-            "labels": [],
-            "assignee": None,
-        }
+        """Test updating a task when logged in correctly."""
         # TODO so many queries...
         # TODO omg so many queries (22 -> 28)
         # TODO even more queries (28 -> 29)
-        # TODO slightly better now (29 -> 23) thanks to caching
-        with django_assert_num_queries(23):
-            response = rest_user_client.put(resource_url, data, format="json")
+        with django_assert_num_queries(29):
+            response = rest_user_client.put(
+                resource_url,
+                {**payload, "assignee": workspace_user.uuid},
+                format="json",
+            )
             assert response.status_code == 200, response.content
         assert response.data["title"] == "Hello world"
 

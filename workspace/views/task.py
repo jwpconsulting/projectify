@@ -80,9 +80,9 @@ class TaskRetrieveUpdate(
     def get_object(self) -> models.Task:
         """Get object for user and uuid."""
         user = self.request.user
-        qs: models.TaskQuerySet = self.get_queryset()
-        obj: models.Task = qs.filter_for_user_and_uuid(
-            user,
-            self.kwargs["task_uuid"],
-        ).get()
+        qs: models.TaskQuerySet = self.get_queryset().filter_for_user_and_uuid(
+            user=user,
+            uuid=self.kwargs["task_uuid"],
+        )
+        obj: models.Task = generics.get_object_or_404(qs)
         return obj

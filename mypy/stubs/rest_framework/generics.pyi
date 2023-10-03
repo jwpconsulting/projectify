@@ -31,6 +31,10 @@ Q = TypeVar("Q")
 # Serializer
 S = TypeVar("S", bound=Serializer)
 
+def get_object_or_404(
+    queryset: models.QuerySet[M], *filter_args: object, **filter_kwargs: object
+) -> M: ...
+
 class SerializerContext(Generic[M, Q, S], TypedDict):
 
     request: Request

@@ -145,6 +145,7 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         self.workspaceuser_set.create(user=user)
         return user
 
+    # TODO I wish this worked with WorkspaceUser instead?
     @transaction.atomic
     def remove_user(self, user: AbstractBaseUser) -> AbstractBaseUser:
         """
