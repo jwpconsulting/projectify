@@ -34,12 +34,14 @@ export type ChatMessage = {
 } & TimestampedType;
 
 // What is needed to know at least to create a new task
+// TODO can we get rid of this?!
 interface NewTask {
     workspace_board_section: WorkspaceBoardSection;
 }
 
 // What is submitted to the API to create the actual task
 // TODO
+// I'm pretty sure we can just get rid of this
 export type CreateTask = TitleDescriptionType &
     NewTask & {
         // XXX for some reason our API thinks this one is a required field

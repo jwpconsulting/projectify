@@ -38,6 +38,8 @@
                 description: "",
             }
         );
+        // TODO get our workspaceUser instance here and then assign ourselves
+        // directly
         const task: CreateTask = {
             title: taskTitle,
             description: "",
@@ -45,6 +47,8 @@
             // TODO deadline should be optional
             deadline: null,
             workspace_board_section: workspaceBoardSection,
+            // TODO
+            assignee: undefined,
         };
         const { uuid } = await createTask(task);
         await assignUserToTask(user.email, uuid);

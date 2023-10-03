@@ -116,15 +116,6 @@ export const Mutation_RemoveUserFromWorkspace = gql`
     }
 `;
 
-export const Mutation_AddTask = gql`
-    mutation AddTask($input: AddTaskInput!) {
-        addTask(input: $input) {
-            uuid
-            created
-        }
-    }
-`;
-
 export const Mutation_UpdateSubTask = gql`
     mutation UpdateSubTask($input: UpdateSubTaskInput!) {
         updateSubTask(input: $input) {

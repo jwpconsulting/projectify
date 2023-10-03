@@ -1,5 +1,8 @@
 * Features
 
+** Implement save/create and continue editing
+   Django admin has this :thumbsup:
+
 ** Implement workspace board archive
 
 ** Figure out where we are with billing
@@ -32,15 +35,19 @@
    can't get back to the dashboard. Actually, I can't get back to the dashboard
    from anywhere.
 
-** Show side nav in new task page
+** DONE Show side nav in new task page
+   CLOSED: [2023-10-03 Tue 16:05]
 
 ** Implement description rich text area for tasks
 
-** Allow assigning due date directly from create task page
+** DONE Allow assigning due date directly from create task page
+   CLOSED: [2023-10-03 Tue 16:04]
 
-** Allow assigning labels directly from create task page
+** DONE Allow assigning labels directly from create task page
+   CLOSED: [2023-10-03 Tue 16:04]
 
-** Allow assigning assignee directly from create task page
+** DONE Allow assigning assignee directly from create task page
+   CLOSED: [2023-10-03 Tue 16:04]
 
 ** Merge read and update task page
 
@@ -170,6 +177,9 @@
 
 * Refactor
 
+** Stop using gql for mutating tasks
+   That includes changing the order.
+
 ** DONE Use async in overlays
    CLOSED: [2023-08-31 Thu 13:53]
    All overlays should use async functions so we can await them finishing /
@@ -263,6 +273,14 @@
 ** Rename /onboarding/assign-task
    It would be better if we named this something like
    ~/onboarding/finished/[taskUuid]~
+
+* Performance
+
+** Consider enabling SSR for some pages
+   <2023-10-03 Tue>
+   Perhaps we can acquire a JWT and query some things like the current
+   dashboard's contents, and then render this on the server directly? Sounds
+   like a whole new thing so we should do some research.
 
 * Update Dependency
 

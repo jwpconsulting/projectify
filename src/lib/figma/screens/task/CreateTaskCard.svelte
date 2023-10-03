@@ -54,9 +54,8 @@
             title,
             description,
             workspace_board_section: workspaceBoardSection,
-            // TODO
-            labels: [],
-            // TODO
+            labels,
+            assignee: assignedUser,
             deadline: dueDate ?? null,
         };
         await createTaskFn(createTaskFull);

@@ -1,8 +1,7 @@
-import type { ApolloQueryResult, FetchResult } from "@apollo/client/core";
+import type { FetchResult } from "@apollo/client/core";
 
 import { client } from "$lib/graphql/client";
 import {
-    Mutation_AddTask,
     Mutation_AssignLabel,
     Mutation_AssignTask,
     Mutation_MoveTaskAfter,
@@ -11,27 +10,40 @@ import {
 import {
     putWithCredentialsJson,
     getWithCredentialsJson,
+    postWithCredentialsJson,
 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { CreateTask, Task, WorkspaceUser } from "$lib/types/workspace";
+import { unwrap } from "$lib/utils/type";
 // Task CRUD
 // Create
-export async function createTask(createTask: CreateTask): Promise<Task> {
-    const {
-        data: { addTask: task },
-    } = (await client.mutate({
-        mutation: Mutation_AddTask,
-        variables: {
-            input: {
-                title: createTask.title,
-                description: createTask.description,
-                deadline: createTask.deadline,
-                workspaceBoardSectionUuid:
-                    createTask.workspace_board_section.uuid,
-            },
-        },
-    })) as ApolloQueryResult<{ addTask: Task }>;
-    return task;
+interface CreateUpdateTaskData {
+    title: string;
+    description: string | undefined;
+    labels: string[];
+    assignee: string | null;
+    workspace_board_section: string;
+    // TODO dueDate plz
+    deadline?: string;
+}
+export async function createTask(
+    createTask: CreateTask,
+    repositoryContext?: RepositoryContext
+): Promise<Task> {
+    const data: CreateUpdateTaskData = {
+        title: createTask.title,
+        description: createTask.description,
+        labels: createTask.labels.map((label) => label.uuid),
+        // TODO: Should the API just accept a missing value here?
+        assignee: createTask.assignee?.uuid ?? null,
+        workspace_board_section: createTask.workspace_board_section.uuid,
+        deadline: createTask.deadline ?? undefined,
+    };
+    return await postWithCredentialsJson<Task>(
+        "/workspace/task",
+        data,
+        repositoryContext
+    );
 }
 
 // Read
@@ -52,13 +64,19 @@ export async function updateTask(
     workspaceUser: WorkspaceUser | undefined,
     repositoryContext?: RepositoryContext
 ): Promise<Task> {
+    const { uuid: workspaceBoardSectionUuid } = unwrap(
+        task.workspace_board_section,
+        "Expected workspace_board_section"
+    );
     const { uuid } = task;
-    const data = {
-        ...task,
+    const data: CreateUpdateTaskData = {
+        title: task.title,
+        description: task.description ?? undefined,
+        // XXX
+        // Ideally, the two following arguments would just be part of the Task
         labels,
-        // TODO assignee
-        assignee: workspaceUser?.user.email ?? null,
-        // TODO workspace board section
+        assignee: workspaceUser?.uuid ?? null,
+        workspace_board_section: workspaceBoardSectionUuid,
         // TODO sub tasks
     };
     return await putWithCredentialsJson<Task>(
@@ -68,8 +86,8 @@ export async function updateTask(
     );
 }
 
-// XXX
-// taskUuid should be first (more invariant than userEmail)
+// TODO now that we have updateTask feature complete, we can remove
+// assignUser / assignLabel Justus 2023-10-03
 export async function assignUserToTask(
     userEmail: string | null,
     taskUuid: string
