@@ -41,9 +41,6 @@
         "Expected workspaceBoard"
     );
 
-    // TODO add me back:
-    // const labelAssignment = createLabelAssignment();
-
     $: canCreate = title !== undefined && description !== undefined;
 
     async function action() {
