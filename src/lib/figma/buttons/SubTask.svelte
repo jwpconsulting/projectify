@@ -1,39 +1,37 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
-
-    import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
-    import type { SubTaskState } from "$lib/figma/types";
-    import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
-    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
-    import Checkbox from "$lib/funabashi/select-controls/Checkbox.svelte";
-
-    export let state: SubTaskState;
     // TODO missing:
     // proper input field
     // Wire into rest of application
     // Sub tasks need assignees
+    import { _ } from "svelte-i18n";
 
-    let title: string | undefined = undefined;
-    const done: boolean | undefined = undefined;
+    import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import Checkbox from "$lib/funabashi/select-controls/Checkbox.svelte";
+    import type { SubTask } from "$lib/types/workspace";
+
+    export let subTask: Partial<SubTask>;
+
+    const { title, done } = subTask;
+
+    const showEditButtons = false;
 </script>
 
 <div class="flex w-full flex-row items-center justify-between gap-2 px-2 py-1">
-    <div class="flex flex-row items-center gap-2">
-        <Checkbox checked={done ?? false} disabled={false} contained={false} />
+    <div class="flex grow flex-row items-center gap-2">
+        <Checkbox checked={done ?? false} disabled={true} contained={false} />
         <!-- XXX should be only editable when in edit mode -->
-        <InputField
-            style={{ kind: "subTask" }}
-            placeholder={$_("task-screen.enter-a-subtask")}
-            name="sub-task"
-            bind:value={title}
-        />
+        <div class="grow">
+            <InputField
+                style={{ kind: "subTask" }}
+                placeholder={$_("task-screen.enter-a-subtask")}
+                name="sub-task"
+                value={title}
+                readonly
+            />
+        </div>
     </div>
-    {#if state === "normal"}
-        <AvatarVariant
-            size="small"
-            content={{ kind: "multiple", users: [null] }}
-        />
-    {:else}
+    {#if showEditButtons}
         <div class="flex flex-row gap-2">
             <CircleIcon
                 size="medium"

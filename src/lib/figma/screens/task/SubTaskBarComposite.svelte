@@ -11,9 +11,9 @@
 
 <SubTaskBar {progress} />
 {#if subTasks && subTasks.length > 0}
-    <div class="flex flex-col">
-        {#each subTasks as _subTask}
-            <SubTaskC state="normal" />
+    <div class="flex grow flex-col">
+        {#each subTasks as subTask}
+            <SubTaskC {subTask} />
         {/each}
     </div>
 {:else}
