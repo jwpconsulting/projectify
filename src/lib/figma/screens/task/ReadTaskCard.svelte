@@ -9,6 +9,7 @@
     } from "$lib/urls";
 
     import Breadcrumbs from "./Breadcrumbs.svelte";
+    import SubTaskBarComposite from "./SubTaskBarComposite.svelte";
 
     import { goto } from "$app/navigation";
     import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
@@ -37,6 +38,8 @@
     task = $currentTask ?? task;
 
     let contextMenuRef: HTMLElement;
+
+    $: subTasks = task.sub_tasks;
 
     async function onInteract() {
         await goto(getTaskEditUrl(task.uuid));
@@ -95,23 +98,35 @@
             </div>
         </svelte:fragment>
     </TopBar>
-    <Fields slot="content">
-        <TaskTitle slot="title" title={task.title} readonly {onInteract} />
-        <TaskUser slot="assignee" workspaceUser={task.assignee} {onInteract} />
-        <TaskLabel slot="labels" labels={task.labels} {onInteract} readonly />
-        <TaskSection slot="section" {workspaceBoardSection} />
-        <TaskDueDate
-            slot="due-date"
-            dueDate={task.deadline && coerceIsoDate(task.deadline)}
-            readonly
-            {onInteract}
-        />
-        <TaskDescription
-            slot="description"
-            readonly
-            description={task.description}
-            {onInteract}
-        />
-    </Fields>
     <TaskUpdateBar slot="tab-bar-mobile" kind="mobile" {state} {task} />
+    <svelte:fragment slot="content">
+        <Fields>
+            <TaskTitle slot="title" title={task.title} readonly {onInteract} />
+            <TaskUser
+                slot="assignee"
+                workspaceUser={task.assignee}
+                {onInteract}
+            />
+            <TaskLabel
+                slot="labels"
+                labels={task.labels}
+                {onInteract}
+                readonly
+            />
+            <TaskSection slot="section" {workspaceBoardSection} />
+            <TaskDueDate
+                slot="due-date"
+                dueDate={task.deadline && coerceIsoDate(task.deadline)}
+                readonly
+                {onInteract}
+            />
+            <TaskDescription
+                slot="description"
+                readonly
+                description={task.description}
+                {onInteract}
+            />
+        </Fields>
+        <SubTaskBarComposite {subTasks} />
+    </svelte:fragment>
 </Layout>

@@ -1,22 +1,20 @@
 <script lang="ts">
+    // This is just for showing sub tasks
     import SubTaskC from "$lib/figma/buttons/SubTask.svelte";
     import SubTaskBar from "$lib/figma/screens/task/SubTaskBar.svelte";
     import type { SubTask } from "$lib/types/workspace";
 
     export let subTasks: SubTask[] | undefined;
 
-    // TODO calculate progress
     const progress = 50;
-    // TODO determine correct state for children. Or should they do that
-    // themselves?
 </script>
 
 <SubTaskBar {progress} />
-{#if subTasks}
+{#if subTasks && subTasks.length > 0}
     <div class="flex flex-col">
-        {#each subTasks as update}
+        {#each subTasks as subTask}
             <SubTaskC
-                createOrUpdateSubTask={{ kind: "update", update }}
+                createOrUpdateSubTask={{ kind: "update", update: subTask }}
                 state="normal"
             />
         {/each}
