@@ -22,7 +22,9 @@
     let labelTitle: string | undefined = undefined;
     const state: OnboardingState = "new-label";
 
-    async function action() {
+    $: disabled = !labelTitle;
+
+    async function submit() {
         if (!labelTitle) {
             throw new Error("Expected labelTitle");
         }
@@ -39,7 +41,7 @@
     stepCount={5}
     step={4}
     backAction={{ kind: "a", href: getNewTaskUrl(workspaceBoard.uuid) }}
-    nextAction={{ kind: "button", action }}
+    nextAction={{ kind: "submit", disabled, submit }}
 >
     <svelte:fragment slot="prompt">
         <p>{$_("onboarding.new-label.prompt")}</p>

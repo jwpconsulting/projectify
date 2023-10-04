@@ -20,7 +20,9 @@
     let title: string | undefined = undefined;
     const state: OnboardingState = "new-board";
 
-    async function action() {
+    $: disabled = title === undefined;
+
+    async function submit() {
         if (!title) {
             throw new Error("Expected title");
         }
@@ -40,7 +42,11 @@
     hasContentPadding={false}
     stepCount={5}
     step={1}
-    nextAction={{ kind: "button", action }}
+    nextAction={{
+        kind: "submit",
+        disabled,
+        submit,
+    }}
 >
     <svelte:fragment slot="prompt">
         <div class="flex flex-col gap-8">

@@ -19,9 +19,9 @@
     let workspaceTitle: string | undefined = undefined;
     const state: OnboardingState = "new-workspace";
 
-    $: workspaceTitleGiven = workspaceTitle && workspaceTitle.length > 0;
+    $: disabled = workspaceTitle === undefined;
 
-    async function action() {
+    async function submit() {
         if (!workspaceTitle) {
             throw new Error("Exepcted workspaceTitle");
         }
@@ -40,8 +40,7 @@
         values: { who: user.full_name },
     })}
     prompt={workspace ? null : $_("onboarding.new-workspace.prompt")}
-    nextAction={{ kind: "button", action }}
-    nextBtnDisabled={!workspaceTitleGiven}
+    nextAction={{ kind: "submit", disabled, submit }}
     hasContentPadding={false}
 >
     <svelte:fragment slot="prompt">

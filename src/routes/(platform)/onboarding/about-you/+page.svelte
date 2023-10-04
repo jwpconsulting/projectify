@@ -15,9 +15,9 @@
 
     let fullName: string | undefined = user.full_name;
 
-    $: nextBtnDisabled = fullName === undefined || fullName.length == 0;
+    $: disabled = fullName === undefined;
 
-    async function action() {
+    async function submit() {
         if (fullName == undefined) {
             throw new Error("Expected fullName");
         }
@@ -29,9 +29,8 @@
 <Onboarding
     title={$_("onboarding.about-you.title")}
     prompt={$_("onboarding.about-you.prompt")}
-    {nextBtnDisabled}
     hasContentPadding={true}
-    nextAction={{ kind: "button", action }}
+    nextAction={{ kind: "submit", disabled, submit }}
 >
     <svelte:fragment slot="inputs">
         <InputField
@@ -44,7 +43,7 @@
     </svelte:fragment>
 
     <svelte:fragment slot="content-title">
-        Welcome{#if !nextBtnDisabled},
+        Welcome{#if !disabled},
         {/if}{fullName ?? ""}! 👋
     </svelte:fragment>
 

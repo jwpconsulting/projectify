@@ -23,14 +23,19 @@
 
     const workspaceTitle = workspace.title;
     const boardTitle = workspaceBoard.title;
-    let taskTitle = "";
+    let taskTitle: string | undefined = "";
     const state: OnboardingState = "new-task";
 
     $: workspaceBoardSectionTitle = $_(
         "onboarding.new-task.workspace-board-section-title"
     );
+
+    $: disabled = taskTitle === undefined;
     // TODO use new create task function here
-    async function action() {
+    async function submit() {
+        if (!taskTitle) {
+            throw new Error("Expected taskTitle");
+        }
         const workspaceBoardSection = await createWorkspaceBoardSection(
             workspaceBoard,
             {
@@ -59,7 +64,7 @@
     hasContentPadding={false}
     stepCount={5}
     step={2}
-    nextAction={{ kind: "button", action }}
+    nextAction={{ kind: "submit", disabled, submit }}
 >
     <svelte:fragment slot="prompt">
         <div class="flex flex-col gap-4">

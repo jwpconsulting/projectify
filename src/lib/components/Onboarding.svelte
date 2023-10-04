@@ -12,10 +12,19 @@
     export let prompt: string | null = null;
     // TODO make not optional
     export let backAction: ButtonAction | undefined = undefined;
-    export let nextAction: ButtonAction = { kind: "a", href: "/" };
+    type NextAction =
+        | (ButtonAction & { kind: "submit"; submit: () => void })
+        | (ButtonAction & { kind: "a" })
+        | (ButtonAction & { kind: "button" });
+    export let nextAction: NextAction | undefined = undefined;
+
+    $: submit =
+        nextAction && nextAction.kind === "submit"
+            ? nextAction.submit
+            : undefined;
+
     export let nextLabel: string = $_("onboarding.continue");
     // TODO rename nextActionDisabled
-    export let nextBtnDisabled = false;
     export let nextMessage: string | null = null;
 
     export let stepCount = 0;
@@ -24,19 +33,6 @@
     $: steps = Array(stepCount)
         .fill({})
         .map((_, inx) => inx + 1);
-
-    function submit() {
-        if (nextBtnDisabled) {
-            throw new Error("nextBtnDisabled");
-        }
-        if (nextAction.kind !== "button") {
-            throw new Error("Expected nextAction.kind to be button");
-        }
-        if (nextAction.disabled ?? false) {
-            throw new Error("Expected nextAction.disabled to not be true");
-        }
-        nextAction.action();
-    }
 </script>
 
 <form
@@ -76,15 +72,7 @@
                     label={$_("onboarding.back")}
                 />
             {/if}
-            {#if nextAction.kind === "button"}
-                <Button
-                    style={{ kind: "primary" }}
-                    color="blue"
-                    size="medium"
-                    action={{ kind: "submit", disabled: nextBtnDisabled }}
-                    label={nextLabel}
-                />
-            {:else}
+            {#if nextAction}
                 <Button
                     style={{ kind: "primary" }}
                     color="blue"
@@ -92,6 +80,8 @@
                     action={nextAction}
                     label={nextLabel}
                 />
+            {:else}
+                TODO nextAction
             {/if}
         </div>
         {#if nextMessage}
