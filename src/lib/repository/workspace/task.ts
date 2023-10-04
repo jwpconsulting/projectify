@@ -31,6 +31,7 @@ interface CreateUpdateTaskData {
     // TODO dueDate plz
     deadline?: string;
 }
+// TODO change me to accept CreateOrUpdateTaskData directly
 export async function createTask(
     createTask: CreateUpdateTask,
     repositoryContext?: RepositoryContext
@@ -63,6 +64,8 @@ export async function getTask(
 }
 
 // Update
+// TODO change me to accept CreateOrUpdateTaskData directly
+// Then we don't have to pass task, labels, ws user separately
 export async function updateTask(
     task: Task & { workspace_board_section: WorkspaceBoardSection },
     labels: string[],
