@@ -6,26 +6,15 @@
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Checkbox from "$lib/funabashi/select-controls/Checkbox.svelte";
-    import type { CreateOrUpdateSubTask } from "$lib/types/ui";
 
     export let state: SubTaskState;
-    export let createOrUpdateSubTask: CreateOrUpdateSubTask;
     // TODO missing:
     // proper input field
     // Wire into rest of application
     // Sub tasks need assignees
 
     let title: string | undefined = undefined;
-    let done: boolean | undefined = undefined;
-
-    $: {
-        // XXX need to set isInitialized flag here?
-        if (createOrUpdateSubTask.kind == "update") {
-            const { update: subTask } = createOrUpdateSubTask;
-            title = subTask.title;
-            done = subTask.done;
-        }
-    }
+    const done: boolean | undefined = undefined;
 </script>
 
 <div class="flex w-full flex-row items-center justify-between gap-2 px-2 py-1">

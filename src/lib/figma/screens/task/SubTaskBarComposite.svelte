@@ -12,11 +12,8 @@
 <SubTaskBar {progress} />
 {#if subTasks && subTasks.length > 0}
     <div class="flex flex-col">
-        {#each subTasks as subTask}
-            <SubTaskC
-                createOrUpdateSubTask={{ kind: "update", update: subTask }}
-                state="normal"
-            />
+        {#each subTasks as _subTask}
+            <SubTaskC state="normal" />
         {/each}
     </div>
 {:else}

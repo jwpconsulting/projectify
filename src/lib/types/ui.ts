@@ -4,8 +4,6 @@ import type {
 } from "$lib/types/stores";
 import type {
     Label,
-    NewSubTask,
-    SubTask,
     Task,
     Workspace,
     WorkspaceBoard,
@@ -158,15 +156,6 @@ export interface SolutionsPageContent {
     features: FeatureDescription[];
 }
 // END TODO
-
-// These types exist to cleanly separate between creating a new something
-// or updating an existing something
-// TODO we should cleanly abstract this with a generic type:
-type CreateOrUpdateT<CreateType, UpdateType> =
-    | { kind: "create"; create: CreateType }
-    | { kind: "update"; update: UpdateType };
-
-export type CreateOrUpdateSubTask = CreateOrUpdateT<NewSubTask, SubTask>;
 
 export type EditableViewState =
     | { kind: "viewing" }
