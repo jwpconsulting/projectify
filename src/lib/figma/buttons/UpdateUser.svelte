@@ -29,8 +29,8 @@
     class="group rounded-2.5xl border border-transparent p-0.5 {action
         ? 'focus:border-border-focus focus:outline-none'
         : ''}"
+    type="button"
     on:click={action}
-    on:keydown={action}
     disabled={!action}
 >
     <div
