@@ -18,8 +18,6 @@
     // is less "containerized" or "isolated".
     export let grow = true;
 
-    $: disabled = action.kind === "a" ? false : action.disabled ?? false;
-
     $: innerColorStyle = {
         primary: {
             blue: "border-transparent bg-primary text-primary-content group-hover:bg-primary-hover group-active:bg-primary-pressed",
@@ -65,6 +63,16 @@
             grow ? "w-full" : ""
         } flex-row items-center justify-center gap-2.5 rounded-lg border px-4  py-2 font-bold group-disabled:border-disabled-content group-disabled:bg-transparent group-disabled:text-disabled-content ${innerColorStyle} ${innerSizeStyle}`,
     }[style.kind];
+
+    // Outer element properties that button and submit share
+    $: formProps =
+        action.kind === "button" || action.kind === "submit"
+            ? {
+                  class: outerStyle,
+                  disabled: action.disabled,
+                  form: action.form,
+              }
+            : {};
 </script>
 
 {#if style.kind === "tertiary"}
@@ -89,8 +97,7 @@
     {:else if action.kind === "button"}
         <button
             on:click|preventDefault={action.action}
-            class={outerStyle}
-            {disabled}
+            {...formProps}
             type="button"
         >
             {#if style.icon && style.icon.position === "left"}
@@ -119,17 +126,13 @@
         </div>
     </a>
 {:else if action.kind === "button"}
-    <button
-        on:click|preventDefault={action.action}
-        class={outerStyle}
-        {disabled}
-    >
+    <button on:click|preventDefault={action.action} {...formProps}>
         <div class={innerStyle}>
             {label}
         </div>
     </button>
 {:else}
-    <button type="submit" class={outerStyle} {disabled}>
+    <button type="submit" {...formProps}>
         <div class={innerStyle}>
             {label}
         </div>
