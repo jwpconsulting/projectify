@@ -1,6 +1,5 @@
 <script lang="ts">
     import Fields from "$lib/figma/screens/task/Fields.svelte";
-    import SubTaskBarComposite from "$lib/figma/screens/task/SubTaskBarComposite.svelte";
     import TaskDescription from "$lib/figma/screens/task/TaskDescription.svelte";
     import TaskDueDate from "$lib/figma/screens/task/TaskDueDate.svelte";
     import TaskLabel from "$lib/figma/screens/task/TaskLabel.svelte";
@@ -12,7 +11,7 @@
         LabelAssignment,
         WorkspaceUserAssignment,
     } from "$lib/types/stores";
-    import type { SubTask, WorkspaceBoardSection } from "$lib/types/workspace";
+    import type { WorkspaceBoardSection } from "$lib/types/workspace";
 
     export let action: () => void;
 
@@ -20,7 +19,6 @@
     export let workspaceBoardSection: WorkspaceBoardSection;
     export let description: string | undefined;
     export let dueDate: string | undefined;
-    export let subTasks: SubTask[];
 
     export let workspaceUserAssignment: WorkspaceUserAssignment;
     export let labelAssignment: LabelAssignment;
@@ -63,5 +61,4 @@
         <TaskDueDate slot="due-date" bind:dueDate />
         <TaskDescription slot="description" bind:description />
     </Fields>
-    <SubTaskBarComposite {subTasks} />
 </form>

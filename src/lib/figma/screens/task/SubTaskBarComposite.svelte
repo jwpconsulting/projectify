@@ -3,7 +3,7 @@
     import SubTaskBar from "$lib/figma/screens/task/SubTaskBar.svelte";
     import type { SubTask } from "$lib/types/workspace";
 
-    export let subTasks: SubTask[];
+    export let subTasks: SubTask[] | undefined;
 
     // TODO calculate progress
     const progress = 50;
@@ -12,11 +12,15 @@
 </script>
 
 <SubTaskBar {progress} />
-<div class="flex flex-col">
-    {#each subTasks as update}
-        <SubTaskC
-            createOrUpdateSubTask={{ kind: "update", update }}
-            state="normal"
-        />
-    {/each}
-</div>
+{#if subTasks}
+    <div class="flex flex-col">
+        {#each subTasks as update}
+            <SubTaskC
+                createOrUpdateSubTask={{ kind: "update", update }}
+                state="normal"
+            />
+        {/each}
+    </div>
+{:else}
+    TODO no sub tasks
+{/if}

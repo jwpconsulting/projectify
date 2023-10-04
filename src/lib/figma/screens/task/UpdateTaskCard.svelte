@@ -10,6 +10,7 @@
 
     import Breadcrumbs from "./Breadcrumbs.svelte";
     import Form from "./Form.svelte";
+    import SubTaskBarComposite from "./SubTaskBarComposite.svelte";
 
     import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
     import Layout from "$lib/figma/screens/task/Layout.svelte";
@@ -121,15 +122,16 @@
         </svelte:fragment>
     </TopBar>
     <TaskUpdateBar slot="tab-bar-mobile" kind="mobile" {state} {task} />
-    <Form
-        slot="content"
-        action={action.bind(null, false)}
-        {workspaceUserAssignment}
-        {labelAssignment}
-        bind:title
-        bind:workspaceBoardSection
-        bind:dueDate
-        bind:description
-        {subTasks}
-    />
+    <svelte:fragment slot="content">
+        <Form
+            action={action.bind(null, false)}
+            {workspaceUserAssignment}
+            {labelAssignment}
+            bind:title
+            bind:workspaceBoardSection
+            bind:dueDate
+            bind:description
+        />
+        <SubTaskBarComposite {subTasks} />
+    </svelte:fragment>
 </Layout>

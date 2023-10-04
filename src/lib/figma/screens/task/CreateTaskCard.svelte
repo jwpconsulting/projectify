@@ -20,7 +20,6 @@
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
     import type {
         CreateUpdateTask,
-        SubTask,
         WorkspaceBoardSection,
     } from "$lib/types/workspace";
     import { unwrap } from "$lib/utils/type";
@@ -31,7 +30,9 @@
     let title: string | undefined = undefined;
     let description: string | undefined = undefined;
     let dueDate: string | undefined = undefined;
-    const subTasks: SubTask[] = [];
+    // TODO
+    // Allow us to create subtasks from here directly
+    // const subTasks: SubTask[] = [];
 
     const workspaceBoard = unwrap(
         workspaceBoardSection.workspace_board,
@@ -121,6 +122,6 @@
         bind:workspaceBoardSection
         bind:dueDate
         bind:description
-        {subTasks}
     />
+    <!-- TODO allow adding subtasks here -->
 </Layout>
