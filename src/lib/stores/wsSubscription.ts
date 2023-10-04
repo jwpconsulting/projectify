@@ -129,9 +129,6 @@ export function createWsStore<T>(
 
     const removeSubscriber = (subscriber: MaybeSubscriber<T>) => {
         state.subscribers.delete(subscriber);
-        if (state.subscribers.size > 0) {
-            return;
-        }
         // This could be an edge case, since we don't return to start, ever.
         // So when someone subscribes and unsubscribes, that means a component
         // or similar was unloaded prematurely. For this reason, we log that
@@ -142,7 +139,6 @@ export function createWsStore<T>(
             );
             return;
         }
-        state.unsubscriber();
     };
 
     const loadUuid = async (
