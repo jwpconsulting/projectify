@@ -127,6 +127,6 @@
                 {onInteract}
             />
         </Fields>
-        <SubTaskBarComposite {subTasks} />
+        <SubTaskBarComposite {subTasks} {onInteract} />
     </svelte:fragment>
 </Layout>

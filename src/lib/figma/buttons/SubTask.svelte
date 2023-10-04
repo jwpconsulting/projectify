@@ -11,6 +11,8 @@
     import type { SubTask } from "$lib/types/workspace";
 
     export let subTask: Partial<SubTask>;
+    export let readonly = true;
+    export let onInteract: (() => void) | undefined = undefined;
 
     const { title, done } = subTask;
 
@@ -19,7 +21,12 @@
 
 <div class="flex w-full flex-row items-center justify-between gap-2 px-2 py-1">
     <div class="flex grow flex-row items-center gap-2">
-        <Checkbox checked={done ?? false} disabled={true} contained={false} />
+        <Checkbox
+            checked={done ?? false}
+            disabled={readonly}
+            contained={false}
+            onClick={onInteract}
+        />
         <!-- XXX should be only editable when in edit mode -->
         <div class="grow">
             <InputField
@@ -27,7 +34,8 @@
                 placeholder={$_("task-screen.enter-a-subtask")}
                 name="sub-task"
                 value={title}
-                readonly
+                {readonly}
+                onClick={onInteract}
             />
         </div>
     </div>

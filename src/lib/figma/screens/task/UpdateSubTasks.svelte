@@ -15,7 +15,7 @@
 {#if $subTaskAssignment.length > 0}
     <div class="flex flex-col">
         {#each $subTaskAssignment as subTask}
-            <SubTaskC {subTask} />
+            <SubTaskC {subTask} readonly={false} />
         {/each}
     </div>
 {:else}

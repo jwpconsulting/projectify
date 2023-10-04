@@ -1,4 +1,5 @@
 <script lang="ts">
+    // TODO: Support onInteract
     import { CheckCircle } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
 

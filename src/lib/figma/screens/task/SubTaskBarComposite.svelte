@@ -5,6 +5,7 @@
     import type { SubTask } from "$lib/types/workspace";
 
     export let subTasks: SubTask[] | undefined;
+    export let onInteract: () => void;
 
     const progress = 50;
 </script>
@@ -13,7 +14,7 @@
 {#if subTasks && subTasks.length > 0}
     <div class="flex grow flex-col">
         {#each subTasks as subTask}
-            <SubTaskC {subTask} />
+            <SubTaskC {subTask} {onInteract} />
         {/each}
     </div>
 {:else}
