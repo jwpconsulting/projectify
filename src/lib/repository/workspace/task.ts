@@ -13,7 +13,11 @@ import {
     postWithCredentialsJson,
 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
-import type { CreateTask, Task, WorkspaceUser } from "$lib/types/workspace";
+import type {
+    CreateUpdateTask,
+    Task,
+    WorkspaceUser,
+} from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
 // Task CRUD
 // Create
@@ -27,7 +31,7 @@ interface CreateUpdateTaskData {
     deadline?: string;
 }
 export async function createTask(
-    createTask: CreateTask,
+    createTask: CreateUpdateTask,
     repositoryContext?: RepositoryContext
 ): Promise<Task> {
     const data: CreateUpdateTaskData = {

@@ -18,7 +18,7 @@
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
     import type {
-        CreateTask,
+        CreateUpdateTask,
         Label,
         SubTask,
         WorkspaceBoardSection,
@@ -50,13 +50,13 @@
         if (!title || !description) {
             throw new Error("Expected title and description");
         }
-        const createTaskFull: CreateTask = {
+        const createTaskFull: CreateUpdateTask = {
             title,
             description,
             workspace_board_section: workspaceBoardSection,
             labels,
             assignee: assignedUser,
-            deadline: dueDate ?? null,
+            deadline: dueDate,
         };
         await createTaskFn(createTaskFull);
         // TODO allow player to keep editing this task

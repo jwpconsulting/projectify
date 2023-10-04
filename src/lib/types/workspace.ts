@@ -33,28 +33,14 @@ export type ChatMessage = {
     text: string;
 } & TimestampedType;
 
-// What is needed to know at least to create a new task
-// TODO can we get rid of this?!
-interface NewTask {
+// Used for creating and updating tasks
+export type CreateUpdateTask = {
+    // TODO the following should be a Date
+    deadline?: string;
+    labels: Label[];
+    assignee?: WorkspaceUser;
     workspace_board_section: WorkspaceBoardSection;
-}
-
-// What is submitted to the API to create the actual task
-// TODO
-// I'm pretty sure we can just get rid of this
-export type CreateTask = TitleDescriptionType &
-    NewTask & {
-        // XXX for some reason our API thinks this one is a required field
-        description: string;
-        labels: Label[];
-        assignee?: WorkspaceUser;
-        sub_tasks?: SubTask[];
-        // There is a mismatch for this in the backend and frontend
-        // Normally, we should be accepting undefined here as well?
-        // I get this error
-        // Uncaught (in promise) ApolloError: AddTaskInput.__init__() missing 1 required positional argument: 'deadline'
-        deadline: string | null;
-    };
+} & TitleDescriptionType;
 
 // All the info we can receive from the API
 export type Task = {

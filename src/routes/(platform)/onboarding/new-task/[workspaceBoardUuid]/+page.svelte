@@ -14,7 +14,7 @@
         createWorkspaceBoardSection,
     } from "$lib/repository/workspace";
     import type { OnboardingState } from "$lib/types/onboarding";
-    import type { CreateTask } from "$lib/types/workspace";
+    import type { CreateUpdateTask } from "$lib/types/workspace";
     import { getNewLabelUrl } from "$lib/urls/onboarding";
 
     export let data: PageData;
@@ -40,12 +40,10 @@
         );
         // TODO get our workspaceUser instance here and then assign ourselves
         // directly
-        const task: CreateTask = {
+        const task: CreateUpdateTask = {
             title: taskTitle,
             description: "",
             labels: [],
-            // TODO deadline should be optional
-            deadline: null,
             workspace_board_section: workspaceBoardSection,
             // TODO
             assignee: undefined,
