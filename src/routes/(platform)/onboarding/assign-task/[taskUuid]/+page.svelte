@@ -26,7 +26,6 @@
     stepCount={5}
     step={5}
     nextLabel={$_("onboarding.assign-task.continue")}
-    backAction={console.error}
     nextAction={{
         kind: "a",
         href: getDashboardWorkspaceBoardUrl(workspaceBoard.uuid),

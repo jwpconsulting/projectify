@@ -59,7 +59,6 @@
     hasContentPadding={false}
     stepCount={5}
     step={2}
-    backAction={console.error}
     nextAction={{ kind: "button", action }}
 >
     <svelte:fragment slot="prompt">

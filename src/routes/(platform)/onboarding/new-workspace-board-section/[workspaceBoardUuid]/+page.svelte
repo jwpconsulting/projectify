@@ -16,7 +16,6 @@
     hasContentPadding={false}
     stepCount={5}
     step={3}
-    backAction={console.error}
 >
     <svelte:fragment slot="prompt">
         <p>Add new sections and customise your section names.</p>

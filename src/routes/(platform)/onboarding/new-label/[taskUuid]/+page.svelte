@@ -10,7 +10,7 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { assignLabelToTask, createLabel } from "$lib/repository/workspace";
     import type { OnboardingState } from "$lib/types/onboarding";
-    import { getAssignTaskUrl } from "$lib/urls/onboarding";
+    import { getAssignTaskUrl, getNewTaskUrl } from "$lib/urls/onboarding";
 
     export let data: PageData;
 
@@ -38,7 +38,7 @@
     hasContentPadding={false}
     stepCount={5}
     step={4}
-    backAction={console.error}
+    backAction={{ kind: "a", href: getNewTaskUrl(workspaceBoard.uuid) }}
     nextAction={{ kind: "button", action }}
 >
     <svelte:fragment slot="prompt">

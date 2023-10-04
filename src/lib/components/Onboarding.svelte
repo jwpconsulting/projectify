@@ -11,7 +11,7 @@
     // TODO make required or swap for slot
     export let prompt: string | null = null;
     // TODO make not optional
-    export let backAction: (() => void) | undefined = undefined;
+    export let backAction: ButtonAction | undefined = undefined;
     export let nextAction: ButtonAction = { kind: "a", href: "/" };
     export let nextLabel: string = $_("onboarding.continue");
     // TODO rename nextActionDisabled
@@ -72,11 +72,7 @@
                     style={{ kind: "tertiary", icon: null }}
                     color="blue"
                     size="medium"
-                    action={{
-                        kind: "button",
-                        action: backAction,
-                        disabled: nextBtnDisabled,
-                    }}
+                    action={backAction}
                     label={$_("onboarding.back")}
                 />
             {/if}
