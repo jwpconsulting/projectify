@@ -29,6 +29,8 @@
     import { unwrap } from "$lib/utils/type";
 
     // if this is in a store, we can get rid of this param
+    // TODO
+    // export let task: TaskWithWorkspaceBoardSection;
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection;
     export let state: TaskUpdateBarState = "task";
