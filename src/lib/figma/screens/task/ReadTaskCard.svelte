@@ -10,6 +10,7 @@
 
     import Breadcrumbs from "./Breadcrumbs.svelte";
 
+    import { goto } from "$app/navigation";
     import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
     import Fields from "$lib/figma/screens/task/Fields.svelte";
     import Layout from "$lib/figma/screens/task/Layout.svelte";
@@ -36,6 +37,10 @@
     task = $currentTask ?? task;
 
     let contextMenuRef: HTMLElement;
+
+    async function onInteract() {
+        await goto(getTaskEditUrl(task.uuid));
+    }
 
     // TODO put me in PageData?
     $: workspaceBoard = unwrap(
@@ -91,7 +96,7 @@
         </svelte:fragment>
     </TopBar>
     <Fields slot="content">
-        <TaskTitle slot="title" title={task.title} readonly />
+        <TaskTitle slot="title" title={task.title} readonly {onInteract} />
         <TaskUser slot="assignee" workspaceUser={task.assignee} />
         <TaskLabel slot="labels" labels={task.labels} />
         <TaskSection slot="section" {workspaceBoardSection} />
@@ -99,11 +104,13 @@
             slot="due-date"
             dueDate={task.deadline && coerceIsoDate(task.deadline)}
             readonly
+            {onInteract}
         />
         <TaskDescription
             slot="description"
             readonly
             description={task.description}
+            {onInteract}
         />
     </Fields>
     <TaskUpdateBar slot="tab-bar-mobile" kind="mobile" {state} {task} />

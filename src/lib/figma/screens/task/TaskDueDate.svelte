@@ -7,7 +7,7 @@
     // XXX For now, we store dates a plain strings
     // TODO when select due date, we should show the text as text-utility
     export let dueDate: string | undefined;
-    export let action: (() => void) | undefined = undefined;
+    export let onInteract: (() => void) | undefined = undefined;
 
     export let readonly = false;
 
@@ -21,7 +21,7 @@
         placeholder={$_("task-screen.select-due-date")}
         name="due-date"
         style={{ kind: "field", inputType: "date" }}
-        onClick={action}
+        onClick={onInteract}
         {readonly}
     />
     {#if dueSoon}

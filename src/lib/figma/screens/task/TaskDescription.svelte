@@ -3,6 +3,7 @@
 
     export let description: string | undefined;
     export let readonly = false;
+    export let onInteract: (() => void) | undefined = undefined;
 </script>
 
 <div class="w-full">
@@ -13,6 +14,7 @@
         id="description"
         bind:value={description}
         placeholder={$_("task-screen.description")}
+        on:click={onInteract}
         {readonly}
     />
 </div>
