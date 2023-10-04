@@ -2,7 +2,9 @@
     import LabelC from "$lib/figma/buttons/Label.svelte";
     import type { Label } from "$lib/types/workspace";
 
-    export let action: ((anchor: HTMLElement) => void) | undefined = undefined;
+    export let onInteract: ((anchor: HTMLElement) => void) | undefined =
+        undefined;
+    export let readonly = false;
 
     export let labels: Label[];
 
@@ -14,15 +16,15 @@
         <div class="shrink-0">
             <LabelC
                 label={{ kind: "label", label }}
-                action={action ? action.bind(null, btnRef) : undefined}
+                action={onInteract ? onInteract.bind(null, btnRef) : undefined}
             />
         </div>
     {/each}
-    {#if action}
+    {#if !readonly && onInteract}
         <div class="shrink-0" bind:this={btnRef}>
             <LabelC
                 label={{ kind: "applyLabel" }}
-                action={action.bind(null, btnRef)}
+                action={onInteract.bind(null, btnRef)}
             />
         </div>
     {/if}

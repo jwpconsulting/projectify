@@ -97,8 +97,8 @@
     </TopBar>
     <Fields slot="content">
         <TaskTitle slot="title" title={task.title} readonly {onInteract} />
-        <TaskUser slot="assignee" workspaceUser={task.assignee} />
-        <TaskLabel slot="labels" labels={task.labels} />
+        <TaskUser slot="assignee" workspaceUser={task.assignee} {onInteract} />
+        <TaskLabel slot="labels" labels={task.labels} {onInteract} readonly />
         <TaskSection slot="section" {workspaceBoardSection} />
         <TaskDueDate
             slot="due-date"

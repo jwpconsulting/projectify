@@ -49,12 +49,12 @@
         <TaskTitle slot="title" bind:title />
         <TaskUser
             slot="assignee"
-            action={showUpdateWorkspaceUser}
+            onInteract={showUpdateWorkspaceUser}
             workspaceUser={$workspaceUserAssignment}
         />
         <TaskLabel
             slot="labels"
-            action={showUpdateLabel}
+            onInteract={showUpdateLabel}
             labels={$labelAssignment}
         />
         <TaskSection slot="section" {workspaceBoardSection} />
