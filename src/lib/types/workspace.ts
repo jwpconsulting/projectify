@@ -57,6 +57,10 @@ export type Task = {
 } & TimestampedType &
     TitleDescriptionType;
 
+export type TaskWithWorkspaceBoardSection = Task & {
+    workspace_board_section: WorkspaceBoardSection;
+};
+
 export type CreateWorkspaceBoardSection = TitleDescriptionType;
 
 export type WorkspaceBoardSection = {

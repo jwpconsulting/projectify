@@ -8,9 +8,13 @@
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
-    import type { Label, Task } from "$lib/types/workspace";
+    import type {
+        Label,
+        Task,
+        WorkspaceBoardSection,
+    } from "$lib/types/workspace";
 
-    export let task: Task;
+    export let task: Task & { workspace_board_section: WorkspaceBoardSection };
     $: labelAssignment = createLabelAssignment(task);
 
     async function openLabelPicker(event: MouseEvent) {
@@ -27,7 +31,7 @@
         // TODO can we make updateTask accept whole labels instead?
         // TODO skip update when no changes detected
         await updateTask(
-            task,
+            { ...task },
             labels.map((label) => label.uuid),
             task.assignee
         );

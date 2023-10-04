@@ -4,9 +4,9 @@
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
-    import type { Task } from "$lib/types/workspace";
+    import type { TaskWithWorkspaceBoardSection } from "$lib/types/workspace";
 
-    export let task: Task;
+    export let task: TaskWithWorkspaceBoardSection;
 
     let userPickerBtnRef: HTMLElement;
 

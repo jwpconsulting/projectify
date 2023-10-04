@@ -16,6 +16,7 @@ import type { RepositoryContext } from "$lib/types/repository";
 import type {
     CreateUpdateTask,
     Task,
+    WorkspaceBoardSection,
     WorkspaceUser,
 } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
@@ -63,7 +64,7 @@ export async function getTask(
 
 // Update
 export async function updateTask(
-    task: Task,
+    task: Task & { workspace_board_section: WorkspaceBoardSection },
     labels: string[],
     workspaceUser: WorkspaceUser | undefined,
     repositoryContext?: RepositoryContext

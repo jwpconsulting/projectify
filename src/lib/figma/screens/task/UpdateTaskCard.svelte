@@ -23,6 +23,7 @@
         Label,
         SubTask,
         Task,
+        TaskWithWorkspaceBoardSection,
         WorkspaceBoardSection,
         WorkspaceUser,
     } from "$lib/types/workspace";
@@ -44,8 +45,9 @@
 
     async function action() {
         // TOOD add rest here
-        const submitTask: Task = {
+        const submitTask: TaskWithWorkspaceBoardSection = {
             ...task,
+            workspace_board_section: workspaceBoardSection,
             deadline: dueDate,
             title,
             description,

@@ -10,7 +10,11 @@ import { currentWorkspaceBoard } from "$lib/stores/dashboard/workspaceBoard";
 import { filterByWorkspaceUser } from "$lib/stores/dashboard/workspaceUserFilter";
 import { searchAmong } from "$lib/stores/util";
 import { createWsStore } from "$lib/stores/wsSubscription";
-import type { Task, WorkspaceBoardSection } from "$lib/types/workspace"; // XXX Remove this
+import type {
+    Task,
+    TaskWithWorkspaceBoardSection,
+    WorkspaceBoardSection,
+} from "$lib/types/workspace"; // XXX Remove this
 
 export const taskSearchInput = writable<string>("");
 
@@ -24,7 +28,8 @@ currentWorkspaceBoard.subscribe((_$currentWorkspaceBoard) => {
     taskSearchInput.set("");
 });
 
-type CurrentSearchedTasks = Readable<Task[] | null>;
+// TODO can we use undefined here instead?
+type CurrentSearchedTasks = Readable<TaskWithWorkspaceBoardSection[] | null>;
 
 export function createCurrentSearchedTasks(
     currentWorkspaceBoardSections: Readable<WorkspaceBoardSection[]>,
@@ -32,7 +37,7 @@ export function createCurrentSearchedTasks(
 ): CurrentSearchedTasks {
     return derived<
         [typeof currentWorkspaceBoardSections, typeof taskSearchInput],
-        Task[] | null
+        TaskWithWorkspaceBoardSection[] | null
     >(
         [currentWorkspaceBoardSections, taskSearchInput],
         ([$currentWorkspaceBoardSections, $taskSearchInput], set) => {
@@ -54,12 +59,19 @@ export function createCurrentSearchedTasks(
 function searchTasks(
     sections: WorkspaceBoardSection[],
     searchText: string
-): Task[] {
-    const sectionTasks: Task[][] = sections.map((section) =>
-        section.tasks ? section.tasks : []
+): TaskWithWorkspaceBoardSection[] {
+    const sectionTasks: TaskWithWorkspaceBoardSection[][] = sections.map(
+        (workspace_board_section) =>
+            (workspace_board_section.tasks ?? []).map((task: Task) => {
+                return { ...task, workspace_board_section };
+            })
     );
-    const tasks: Task[] = sectionTasks.flat();
-    return searchAmong<Task>(["title"], tasks, searchText);
+    const tasks = sectionTasks.flat();
+    return searchAmong<TaskWithWorkspaceBoardSection>(
+        ["title"],
+        tasks,
+        searchText
+    );
 }
 
 export const currentTask = createWsStore<Task>("task", getTask);

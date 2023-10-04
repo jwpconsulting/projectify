@@ -8,7 +8,6 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { workspaceBoardSectionClosed } from "$lib/stores/dashboard";
     import type {
-        Task,
         WorkspaceBoard,
         WorkspaceBoardSection,
     } from "$lib/types/workspace";
@@ -19,8 +18,7 @@
     const { uuid } = workspaceBoardSection;
     $: open = !$workspaceBoardSectionClosed.has(uuid);
 
-    let tasks: Task[] = [];
-    $: tasks = open ? workspaceBoardSection.tasks ?? [] : [];
+    $: tasks = workspaceBoardSection.tasks ?? [];
 </script>
 
 <div class="flex flex-col">
@@ -28,7 +26,13 @@
     {#if open}
         <main class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4">
             {#each tasks as task (task.uuid)}
-                <TaskCard {workspaceBoardSection} {task} />
+                <TaskCard
+                    {workspaceBoardSection}
+                    task={{
+                        ...task,
+                        workspace_board_section: workspaceBoardSection,
+                    }}
+                />
             {:else}
                 <p>
                     {$_("dashboard.section.empty.message")}

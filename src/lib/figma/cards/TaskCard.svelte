@@ -7,9 +7,12 @@
     import MenuButton from "$lib/figma/cards/task-card/MenuButton.svelte";
     import Title from "$lib/figma/cards/task-card/Title.svelte";
     import WorkspaceUser from "$lib/figma/cards/task-card/WorkspaceUser.svelte";
-    import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
+    import type {
+        TaskWithWorkspaceBoardSection,
+        WorkspaceBoardSection,
+    } from "$lib/types/workspace";
 
-    export let task: Task;
+    export let task: TaskWithWorkspaceBoardSection;
     export let workspaceBoardSection: WorkspaceBoardSection | undefined =
         undefined;
 </script>
