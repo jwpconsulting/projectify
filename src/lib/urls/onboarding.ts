@@ -3,8 +3,8 @@ export function getNewWorkspaceBoardUrl(workspaceUuid: string): string {
     return `/onboarding/new-workspace-board/${workspaceUuid}`;
 }
 
-export function getNewTaskUrl(workspaceBoardSectionUuid: string): string {
-    return `/onboarding/new-task/${workspaceBoardSectionUuid}`;
+export function getNewTaskUrl(workspaceBoardUuid: string): string {
+    return `/onboarding/new-task/${workspaceBoardUuid}`;
 }
 
 export function getNewLabelUrl(taskUuid: string): string {
