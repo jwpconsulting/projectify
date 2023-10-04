@@ -90,7 +90,7 @@
         "text-regular placeholder:text-task-update-text peer relative top-0 left-0 z-10 h-full w-full rounded-lg border border-border pr-8 text-xs focus:outline-none";
 
     function clear() {
-        value = "";
+        value = undefined;
     }
 
     $: inputProps = {
