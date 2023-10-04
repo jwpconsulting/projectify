@@ -12,21 +12,14 @@
         LabelAssignment,
         WorkspaceUserAssignment,
     } from "$lib/types/stores";
-    import type {
-        Label,
-        SubTask,
-        WorkspaceBoardSection,
-        WorkspaceUser,
-    } from "$lib/types/workspace";
+    import type { SubTask, WorkspaceBoardSection } from "$lib/types/workspace";
 
     export let action: () => void;
 
     export let title: string | undefined;
-    export let labels: Label[];
     export let workspaceBoardSection: WorkspaceBoardSection;
     export let description: string | undefined;
     export let dueDate: string | undefined;
-    export let assignedUser: WorkspaceUser | undefined;
     export let subTasks: SubTask[];
 
     export let workspaceUserAssignment: WorkspaceUserAssignment;
@@ -59,9 +52,13 @@
         <TaskUser
             slot="assignee"
             action={showUpdateWorkspaceUser}
-            workspaceUser={assignedUser}
+            workspaceUser={$workspaceUserAssignment}
         />
-        <TaskLabel slot="labels" action={showUpdateLabel} {labels} />
+        <TaskLabel
+            slot="labels"
+            action={showUpdateLabel}
+            labels={$labelAssignment}
+        />
         <TaskSection slot="section" {workspaceBoardSection} />
         <TaskDueDate slot="due-date" bind:dueDate />
         <TaskDescription slot="description" bind:description />

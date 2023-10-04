@@ -20,12 +20,10 @@
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
     import type {
-        Label,
         SubTask,
         Task,
         TaskWithWorkspaceBoardSection,
         WorkspaceBoardSection,
-        WorkspaceUser,
     } from "$lib/types/workspace";
     import { coerceIsoDate } from "$lib/utils/date";
     import { unwrap } from "$lib/utils/type";
@@ -37,8 +35,6 @@
 
     let title: string = task.title;
     let description: string | undefined = task.description;
-    let assignedUser: WorkspaceUser | undefined = task.assignee;
-    let labels: Label[] = task.labels;
     let dueDate: string | undefined =
         task.deadline && coerceIsoDate(task.deadline);
     const subTasks: SubTask[] = [];
@@ -65,11 +61,8 @@
         await goto(url);
     }
 
-    const workspaceUserAssignment = createWorkspaceUserAssignment(task);
-    const labelAssignment = createLabelAssignment(task);
-
-    $: assignedUser = $workspaceUserAssignment;
-    $: labels = $labelAssignment;
+    $: workspaceUserAssignment = createWorkspaceUserAssignment(task);
+    $: labelAssignment = createLabelAssignment(task);
 
     // TODO
     $: canUpdate = true;
@@ -118,8 +111,6 @@
         {workspaceUserAssignment}
         {labelAssignment}
         bind:title
-        bind:assignedUser
-        bind:labels
         bind:workspaceBoardSection
         bind:dueDate
         bind:description

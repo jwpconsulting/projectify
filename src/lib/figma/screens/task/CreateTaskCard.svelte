@@ -20,10 +20,8 @@
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
     import type {
         CreateUpdateTask,
-        Label,
         SubTask,
         WorkspaceBoardSection,
-        WorkspaceUser,
     } from "$lib/types/workspace";
     import { unwrap } from "$lib/utils/type";
 
@@ -32,8 +30,6 @@
     // form fields
     let title: string | undefined = undefined;
     let description: string | undefined = undefined;
-    let assignedUser: WorkspaceUser | undefined = undefined;
-    let labels: Label[] = [];
     let dueDate: string | undefined = undefined;
     const subTasks: SubTask[] = [];
 
@@ -52,8 +48,8 @@
             title,
             description,
             workspace_board_section: workspaceBoardSection,
-            labels,
-            assignee: assignedUser,
+            labels: $labelAssignment,
+            assignee: $workspaceUserAssignment,
             deadline: dueDate,
         };
         const { uuid } = await createTaskFn(createTaskFull);
@@ -68,9 +64,6 @@
 
     const workspaceUserAssignment = createWorkspaceUserAssignment();
     const labelAssignment = createLabelAssignment();
-
-    $: assignedUser = $workspaceUserAssignment;
-    $: labels = $labelAssignment;
 
     $: crumbs = [
         {
@@ -125,8 +118,6 @@
         {workspaceUserAssignment}
         {labelAssignment}
         bind:title
-        bind:assignedUser
-        bind:labels
         bind:workspaceBoardSection
         bind:dueDate
         bind:description
