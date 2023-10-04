@@ -17,4 +17,5 @@
     placeholder={$_("task-screen.new-task-name")}
     onClick={onInteract}
     {readonly}
+    required
 />
