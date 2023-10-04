@@ -42,10 +42,10 @@
         "Expected workspaceBoard"
     );
 
-    $: canCreate = title !== undefined && description !== undefined;
+    $: canCreate = title !== undefined;
 
     async function action(continueEditing = false) {
-        if (!title || !description) {
+        if (!title) {
             throw new Error("Expected title and description");
         }
         const createTaskFull: CreateUpdateTask = {
