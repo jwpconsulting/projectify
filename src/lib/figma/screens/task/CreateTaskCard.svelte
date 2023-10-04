@@ -40,7 +40,7 @@
 
     $: canCreate = title !== undefined;
 
-    async function action(continueEditing = false) {
+    async function action(continueEditing: boolean) {
         if (!title) {
             throw new Error("Expected title and description");
         }
@@ -114,7 +114,7 @@
 
     <Form
         slot="content"
-        {action}
+        action={action.bind(null, false)}
         {workspaceUserAssignment}
         {labelAssignment}
         bind:title

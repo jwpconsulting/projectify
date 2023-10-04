@@ -39,7 +39,7 @@
         task.deadline && coerceIsoDate(task.deadline);
     const subTasks: SubTask[] = [];
 
-    async function action() {
+    async function action(continueEditing: boolean) {
         // TOOD add rest here
         const submitTask: TaskWithWorkspaceBoardSection = {
             ...task,
@@ -54,11 +54,13 @@
         if (!task.workspace_board_section) {
             throw new Error("Expected $updateTask.workspace_board_section");
         }
-        const url = getDashboardWorkspaceBoardSectionUrl(
-            task.workspace_board_section.uuid
+        if (continueEditing) {
+            await goto(getTaskUrl(task.uuid));
+            return;
+        }
+        await goto(
+            getDashboardWorkspaceBoardSectionUrl(workspaceBoardSection.uuid)
         );
-        // TODO figure out how to refresh the same page
-        await goto(url);
     }
 
     $: workspaceUserAssignment = createWorkspaceUserAssignment(task);
@@ -91,23 +93,35 @@
 <Layout>
     <TopBar slot="top-bar" {workspaceBoardSection}>
         <Breadcrumbs slot="breadcrumbs" {crumbs} />
-        <Button
-            slot="buttons"
-            action={{
-                kind: "button",
-                action,
-                disabled: !canUpdate,
-            }}
-            color="blue"
-            size="small"
-            style={{ kind: "primary" }}
-            label={$_("task-screen.save")}
-        />
+        <svelte:fragment slot="buttons">
+            <Button
+                action={{
+                    kind: "submit",
+                    form: "task-form",
+                    disabled: !canUpdate,
+                }}
+                color="blue"
+                size="small"
+                style={{ kind: "primary" }}
+                label={$_("task-screen.update.update")}
+            />
+            <Button
+                action={{
+                    kind: "button",
+                    action: () => action(true),
+                    disabled: !canUpdate,
+                }}
+                color="blue"
+                size="small"
+                style={{ kind: "primary" }}
+                label={$_("task-screen.update.update-continue-editing")}
+            />
+        </svelte:fragment>
     </TopBar>
     <TaskUpdateBar slot="tab-bar-mobile" kind="mobile" {state} {task} />
     <Form
         slot="content"
-        {action}
+        action={action.bind(null, false)}
         {workspaceUserAssignment}
         {labelAssignment}
         bind:title

@@ -378,6 +378,10 @@ const messages: MessageCollection = {
         "reset-password": "Reset password",
     },
     "task-screen": {
+        "update": {
+            "update": "Update task",
+            "update-continue-editing": "Update task and stay",
+        },
         "create": {
             "create": "Create task",
             "create-continue-editing": "Create task and stay",
@@ -390,7 +394,6 @@ const messages: MessageCollection = {
         "select-due-date": "Select due date",
         "no-due-date": "No due date",
         "due-date": "Due date",
-        "save": "Save",
         "edit": "Edit",
         "task-title": "Task title",
         "assignee": "Assignee",
