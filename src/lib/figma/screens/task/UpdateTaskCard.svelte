@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { onMount } from "svelte";
     import { _, number } from "svelte-i18n";
 
     import { goto } from "$lib/navigation";
@@ -18,6 +19,7 @@
     import type { TaskUpdateBarState } from "$lib/figma/types";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { updateTask as performUpdateTask } from "$lib/repository/workspace";
+    import { currentTask } from "$lib/stores/dashboard";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
     import type {
@@ -36,11 +38,28 @@
     export let workspaceBoardSection: WorkspaceBoardSection;
     export let state: TaskUpdateBarState = "task";
 
-    let title: string = task.title;
-    let description: string | undefined = task.description;
-    let dueDate: string | undefined =
-        task.deadline && coerceIsoDate(task.deadline);
-    const subTasks: SubTask[] = [];
+    let title: string;
+    let description: string | undefined;
+    let dueDate: string | undefined;
+    // XXX
+    // This shouldn't be part of the form perhaps, we edit subtasks separately?
+    // not decided yet
+    let subTasks: SubTask[] | undefined;
+
+    onMount(() => {
+        populateForm();
+    });
+
+    function populateForm() {
+        if (!$currentTask) {
+            throw new Error("Expected currentTask");
+        }
+        title = $currentTask.title;
+        description = $currentTask.description;
+        dueDate =
+            $currentTask.deadline && coerceIsoDate($currentTask.deadline);
+        subTasks = $currentTask.sub_tasks;
+    }
 
     async function action(continueEditing: boolean) {
         // TOOD add rest here

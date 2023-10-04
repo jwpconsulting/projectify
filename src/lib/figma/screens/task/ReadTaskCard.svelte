@@ -23,6 +23,7 @@
     import type { TaskUpdateBarState } from "$lib/figma/types";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
+    import { currentTask } from "$lib/stores/dashboard";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
     import { coerceIsoDate } from "$lib/utils/date";
@@ -31,6 +32,8 @@
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection;
     export let state: TaskUpdateBarState = "task";
+
+    task = $currentTask ?? task;
 
     let contextMenuRef: HTMLElement;
 
