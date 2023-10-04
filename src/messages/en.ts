@@ -378,6 +378,10 @@ const messages: MessageCollection = {
         "reset-password": "Reset password",
     },
     "task-screen": {
+        "create": {
+            "create": "Create task",
+            "create-continue-editing": "Create task and stay",
+        },
         "new-task-breadcrumb": "New task (currently creating)",
         "new-task-name": "New task name",
         "description": "Description",

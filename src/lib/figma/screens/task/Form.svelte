@@ -52,7 +52,7 @@
     }
 </script>
 
-<form on:submit|preventDefault={action}>
+<form on:submit|preventDefault={action} id="task-form">
     <input type="submit" class="hidden" />
     <Fields>
         <TaskTitle slot="title" bind:title />

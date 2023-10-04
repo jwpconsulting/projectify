@@ -6,6 +6,7 @@
         getDashboardWorkspaceBoardSectionUrl,
         getDashboardWorkspaceBoardUrl,
         getNewTaskUrl,
+        getTaskUrl,
     } from "$lib/urls";
 
     import Breadcrumbs from "./Breadcrumbs.svelte";
@@ -43,7 +44,7 @@
 
     $: canCreate = title !== undefined && description !== undefined;
 
-    async function action() {
+    async function action(continueEditing = false) {
         if (!title || !description) {
             throw new Error("Expected title and description");
         }
@@ -55,9 +56,11 @@
             assignee: assignedUser,
             deadline: dueDate,
         };
-        await createTaskFn(createTaskFull);
-        // TODO allow player to keep editing this task
-        // Like django admin's save then continue editing
+        const { uuid } = await createTaskFn(createTaskFull);
+        if (continueEditing) {
+            await goto(getTaskUrl(uuid));
+            return;
+        }
         await goto(
             getDashboardWorkspaceBoardSectionUrl(workspaceBoardSection.uuid)
         );
@@ -90,18 +93,30 @@
 <Layout>
     <TopBar slot="top-bar" {workspaceBoardSection}>
         <Breadcrumbs slot="breadcrumbs" {crumbs} />
-        <Button
-            slot="buttons"
-            action={{
-                kind: "button",
-                action,
-                disabled: !canCreate,
-            }}
-            color="blue"
-            size="small"
-            style={{ kind: "primary" }}
-            label={$_("task-screen.save")}
-        />
+        <svelte:fragment slot="buttons">
+            <Button
+                action={{
+                    kind: "submit",
+                    form: "task-form",
+                    disabled: !canCreate,
+                }}
+                color="blue"
+                size="small"
+                style={{ kind: "primary" }}
+                label={$_("task-screen.create.create")}
+            />
+            <Button
+                action={{
+                    kind: "button",
+                    action: () => action(true),
+                    disabled: !canCreate,
+                }}
+                color="blue"
+                size="small"
+                style={{ kind: "secondary" }}
+                label={$_("task-screen.create.create-continue-editing")}
+            />
+        </svelte:fragment>
     </TopBar>
 
     <Form
