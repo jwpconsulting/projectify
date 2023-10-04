@@ -294,6 +294,7 @@ const messages: MessageCollection = {
             "prompt": {
                 location:
                     'This task will be placed in a section called "{workspaceBoardSectionTitle}"',
+                exists: 'It looks like you already have a workspace board section called "{workspaceBoardSectionTitle}". We will now create a task  and place it into that workspace board section.',
                 explanation:
                     "Tasks can be further divided into sub tasks and contain detailed descriptions.",
             },
