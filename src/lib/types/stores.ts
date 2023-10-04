@@ -9,7 +9,7 @@ import type {
     LabelAssignmentState,
     WorkspaceUserAssignmentState,
 } from "$lib/types/ui";
-import type { Label, WorkspaceUser } from "$lib/types/workspace";
+import type { Label, SubTask, WorkspaceUser } from "$lib/types/workspace";
 
 export interface WorkspaceUserAssignment
     extends Readable<WorkspaceUser | undefined> {
@@ -27,6 +27,8 @@ export interface LabelAssignment extends Readable<Label[]> {
     // Might even completely remove this:
     evaluate: () => Promise<string[]>;
 }
+
+export type SubTaskAssignment = Readable<Partial<SubTask>[]>;
 
 const subscriptionTypes = ["workspace", "workspace-board", "task"] as const;
 export type SubscriptionType = (typeof subscriptionTypes)[number];

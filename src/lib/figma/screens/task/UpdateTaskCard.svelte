@@ -11,7 +11,7 @@
 
     import Breadcrumbs from "./Breadcrumbs.svelte";
     import Form from "./Form.svelte";
-    import SubTaskBarComposite from "./SubTaskBarComposite.svelte";
+    import UpdateSubTasks from "./UpdateSubTasks.svelte";
 
     import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
     import Layout from "$lib/figma/screens/task/Layout.svelte";
@@ -19,11 +19,13 @@
     import type { TaskUpdateBarState } from "$lib/figma/types";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { updateTask as performUpdateTask } from "$lib/repository/workspace";
-    import { currentTask } from "$lib/stores/dashboard";
+    import {
+        currentTask,
+        createSubTaskAssignment,
+    } from "$lib/stores/dashboard";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
     import type {
-        SubTask,
         Task,
         TaskWithWorkspaceBoardSection,
         WorkspaceBoardSection,
@@ -41,10 +43,6 @@
     let title: string;
     let description: string | undefined;
     let dueDate: string | undefined;
-    // XXX
-    // This shouldn't be part of the form perhaps, we edit subtasks separately?
-    // not decided yet
-    let subTasks: SubTask[] | undefined;
 
     onMount(() => {
         populateForm();
@@ -58,7 +56,6 @@
         description = $currentTask.description;
         dueDate =
             $currentTask.deadline && coerceIsoDate($currentTask.deadline);
-        subTasks = $currentTask.sub_tasks;
     }
 
     async function action(continueEditing: boolean) {
@@ -87,9 +84,10 @@
 
     $: workspaceUserAssignment = createWorkspaceUserAssignment(task);
     $: labelAssignment = createLabelAssignment(task);
+    $: subTaskAssignment = createSubTaskAssignment(task);
 
-    // TODO
-    $: canUpdate = true;
+    // XXX I am sure we can have really fancy validation
+    $: canUpdate = title !== "";
 
     // TODO put me in PageData?
     $: workspaceBoard = unwrap(
@@ -151,6 +149,6 @@
             bind:dueDate
             bind:description
         />
-        <SubTaskBarComposite {subTasks} />
+        <UpdateSubTasks {subTaskAssignment} />
     </svelte:fragment>
 </Layout>
