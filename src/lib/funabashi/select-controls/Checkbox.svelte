@@ -10,6 +10,7 @@
 
     export let onSelect: (() => void) | undefined = undefined;
     export let onDeselect: (() => void) | undefined = undefined;
+    export let onClick: (() => void) | undefined = undefined;
 
     function onChange() {
         if (checked && onSelect) {
@@ -51,7 +52,7 @@
         type="checkbox"
         bind:checked
         on:change={onChange}
-        on:click|stopPropagation
+        on:click|stopPropagation={onClick}
         {disabled}
         {required}
     />
