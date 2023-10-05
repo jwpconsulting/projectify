@@ -13,6 +13,9 @@ from rest_framework.response import (
     Response,
 )
 
+# TODO would be cool if we could have data be the same SerializerData thing
+# from serializers.pyi
+
 class APIRequestFactory(DjangoRequestFactory): ...
 
 class APIClient(APIRequestFactory, DjangoClient):

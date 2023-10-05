@@ -19,6 +19,11 @@ from .exceptions import (
 from .fields import *
 from .relations import *
 
+# Ensure we don't pass in unserialized UUIDs
+SerializerData = Union[None, str, int, "SerializerList", "SerializerDict"]
+SerializerDict = Mapping[str, SerializerData]
+SerializerList = list[SerializerData]
+
 class BaseSerializer:
 
     context: dict[str, Any]
@@ -26,7 +31,7 @@ class BaseSerializer:
     def __init__(
         self,
         instance: Optional[object] = None,
-        data: Union[object, type[empty]] = empty,
+        data: Union[SerializerData, type[empty]] = empty,
         read_only: bool = False,
         many: bool = False,
         source: Optional[str] = None,
