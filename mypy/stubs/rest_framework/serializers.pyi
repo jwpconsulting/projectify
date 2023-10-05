@@ -1,5 +1,6 @@
 from collections.abc import (
     Mapping,
+    Sequence,
 )
 from typing import (
     Any,
@@ -22,7 +23,7 @@ from .relations import *
 # Ensure we don't pass in unserialized UUIDs
 SerializerData = Union[None, str, int, "SerializerList", "SerializerDict"]
 SerializerDict = Mapping[str, SerializerData]
-SerializerList = list[SerializerData]
+SerializerList = Sequence[SerializerData]
 
 class BaseSerializer:
 
