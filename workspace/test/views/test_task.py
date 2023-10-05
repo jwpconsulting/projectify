@@ -58,7 +58,9 @@ class TestTaskCreate(UnauthenticatedTestMixin):
             "title": "bla",
             "labels": [],
             "assignee": None,
-            "workspace_board_section": workspace_board_section.uuid,
+            "workspace_board_section": {
+                "uuid": str(workspace_board_section.uuid)
+            },
         }
 
     def test_unauthorized(
@@ -90,7 +92,7 @@ class TestTaskCreate(UnauthenticatedTestMixin):
         with django_assert_num_queries(34):
             response = rest_user_client.post(
                 resource_url,
-                {**payload, "assignee": workspace_user.uuid},
+                {**payload, "assignee": {"uuid": str(workspace_user.uuid)}},
                 format="json",
             )
             assert response.status_code == 201, response.data
@@ -116,7 +118,9 @@ class TestTaskRetrieve(UnauthenticatedTestMixin):
         """Create payload."""
         return {
             "title": "Hello world",
-            "workspace_board_section": workspace_board_section.uuid,
+            "workspace_board_section": {
+                "uuid": str(workspace_board_section.uuid)
+            },
             "number": 2,
             "labels": [],
             "assignee": None,
@@ -167,7 +171,7 @@ class TestTaskRetrieve(UnauthenticatedTestMixin):
         with django_assert_num_queries(33):
             response = rest_user_client.put(
                 resource_url,
-                {**payload, "assignee": workspace_user.uuid},
+                {**payload, "assignee": {"uuid": str(workspace_user.uuid)}},
                 format="json",
             )
             assert response.status_code == 200, response.content
