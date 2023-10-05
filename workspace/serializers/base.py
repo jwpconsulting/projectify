@@ -36,6 +36,12 @@ title_description: Sequence[str] = (
 )
 
 
+class UuidObjectSerializer(serializers.Serializer):
+    """This will deserialize the UUID for a any object with a UUID."""
+
+    uuid = serializers.UUIDField()
+
+
 class WorkspaceBaseSerializer(serializers.ModelSerializer[models.Workspace]):
     """Workspace base serializer."""
 

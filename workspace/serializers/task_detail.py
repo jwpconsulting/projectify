@@ -7,6 +7,7 @@ because ws board section requires importing the task serializer.
 from typing import (
     Any,
     Optional,
+    TypedDict,
 )
 from uuid import (
     UUID,
@@ -70,6 +71,12 @@ def assign_labels(task: models.Task, labels: list[models.Label]) -> None:
     task.set_labels(labels)
 
 
+class UuidDict(TypedDict):
+    """A dict containing a uuid."""
+
+    uuid: UUID
+
+
 # Make me TaskCreateUpdateSerializer
 class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
     """
@@ -79,24 +86,22 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
     assignee uuid and evaluates them.
     """
 
-    workspace_board_section = serializers.UUIDField(
-        write_only=True,
-    )
-    # TODO make label optional, when unset keep previous or on create
-    # do not assign
+    workspace_board_section = base.UuidObjectSerializer(write_only=True)
+    # TODO make label optional, when unset remove labels or on create
+    # do not assign label
     labels = serializers.ListField(
-        child=serializers.UUIDField(),
+        child=base.UuidObjectSerializer(),
         write_only=True,
+        # TODO required=False,
     )
     # TODO make assignee optional
-    # When unset, keep previous value or on create do not assign
-    assignee = serializers.UUIDField(
-        allow_null=True,
-        write_only=True,
-    )
+    # assignee = base.UuidObjectSerializer(required=False, write_only=True)
+    # Then interpret missing as delete assignee
+    assignee = base.UuidObjectSerializer(allow_null=True, write_only=True)
 
     def validate_workspace_board_section(
-        self, value: UUID
+        self,
+        value: UuidDict,
     ) -> models.WorkspaceBoardSection:
         """Validate the workspace board section."""
         request: Request = self.context["request"]
@@ -108,7 +113,7 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
             workspace_board_section = (
                 models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
                     user=user,
-                    uuid=value,
+                    uuid=value["uuid"],
                 ).get()
             )
         except models.WorkspaceBoardSection.DoesNotExist:
@@ -131,7 +136,9 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
 
         # Then we filter the list of labels for labels that are contained
         # in this workspace
-        label_uuids: list[UUID] = data.pop("labels")
+        label_uuids: list[UUID] = [
+            label["uuid"] for label in data.pop("labels")
+        ]
         # Restrict to this workspace's labels, if there are too many
         # labels throw a ValidationError
         labels = list(workspace.label_set.filter(uuid__in=label_uuids))
@@ -150,12 +157,12 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
             )
 
         # Then we check if the assignee is part of this workspace
-        assignee_uuid: Optional[str] = data.pop("assignee")
+        assignee_uuid: Optional[UuidDict] = data.pop("assignee")
         try:
             assignee = (
                 assignee_uuid
                 and workspace.workspaceuser_set.filter(
-                    uuid=assignee_uuid
+                    uuid=assignee_uuid["uuid"]
                 ).get()
             )
         except models.WorkspaceUser.DoesNotExist:

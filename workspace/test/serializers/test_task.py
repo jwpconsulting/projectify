@@ -66,7 +66,9 @@ class TestTaskUpdateSerializer:
                 "uuid": 2,
                 "labels": [],
                 "assignee": None,
-                "workspace_board_section": workspace_board_section.uuid,
+                "workspace_board_section": {
+                    "uuid": str(workspace_board_section.uuid),
+                },
             },
             context={"request": user_request},
         )
@@ -89,20 +91,21 @@ class TestTaskUpdateSerializer:
         user_request: Request,
     ) -> None:
         """Test creating a task."""
-        label_uuids = [label.uuid]
         serializer = serializers.TaskCreateUpdateSerializer(
             data={
                 "title": "This is a great task title.",
-                "labels": label_uuids,
-                "assignee": workspace_user.uuid,
-                "workspace_board_section": workspace_board_section.uuid,
+                "labels": [{"uuid": str(label.uuid)}],
+                "assignee": {"uuid": str(workspace_user.uuid)},
+                "workspace_board_section": {
+                    "uuid": str(workspace_board_section.uuid),
+                },
             },
             context={"request": user_request},
         )
         serializer.is_valid(raise_exception=True)
         assert "title" in serializer.validated_data
         task = serializer.save()
-        assert list(task.labels.values_list("uuid", flat=True)) == label_uuids
+        assert list(task.labels.values_list("uuid", flat=True)) == [label.uuid]
         assert task.assignee
         assert task.assignee.user.email == workspace_user.user.email
 
@@ -118,7 +121,9 @@ class TestTaskUpdateSerializer:
                 "title": "This is a great task title.",
                 "labels": [],
                 "assignee": None,
-                "workspace_board_section": workspace_board_section.uuid,
+                "workspace_board_section": {
+                    "uuid": str(workspace_board_section.uuid),
+                },
             },
             context={"request": user_request},
         )
@@ -135,21 +140,23 @@ class TestTaskUpdateSerializer:
     ) -> None:
         """Test updating a task."""
         # TODO try assigning one more
-        label_uuids = [label.uuid]
         serializer = serializers.TaskCreateUpdateSerializer(
             task,
+            # XXX mypy, why won't you accept label_uuids :(
             data={
                 "title": task.title,
-                "labels": label_uuids,
-                "assignee": workspace_user.uuid,
-                "workspace_board_section": workspace_board_section.uuid,
+                "labels": [{"uuid": str(label.uuid)}],
+                "assignee": {"uuid": str(workspace_user.uuid)},
+                "workspace_board_section": {
+                    "uuid": str(workspace_board_section.uuid),
+                },
             },
             context={"request": user_request},
         )
-        serializer.is_valid(raise_exception=True)
+        assert serializer.is_valid(), serializer.errors
         assert "title" in serializer.validated_data
         serializer.save()
-        assert list(task.labels.values_list("uuid", flat=True)) == label_uuids
+        assert list(task.labels.values_list("uuid", flat=True)) == [label.uuid]
         assert task.deadline is not None
         assert task.assignee
         assert task.assignee.user.email == workspace_user.user.email
@@ -167,7 +174,9 @@ class TestTaskUpdateSerializer:
                 "title": task.title,
                 "labels": [],
                 "assignee": None,
-                "workspace_board_section": workspace_board_section.uuid,
+                "workspace_board_section": {
+                    "uuid": str(workspace_board_section.uuid),
+                },
             },
             context={"request": user_request},
         )
@@ -191,7 +200,9 @@ class TestTaskUpdateSerializer:
                 "title": task.title,
                 "labels": [],
                 "assignee": None,
-                "workspace_board_section": workspace_board_section.uuid,
+                "workspace_board_section": {
+                    "uuid": str(workspace_board_section.uuid),
+                },
             },
             context={"request": user_request},
         )
@@ -211,13 +222,19 @@ class TestTaskUpdateSerializer:
             task,
             data={
                 "title": task.title,
-                "labels": [label.uuid, other_label.uuid],
+                "labels": [
+                    {"uuid": str(label.uuid)},
+                    {"uuid": str(other_label.uuid)},
+                ],
                 "assignee": None,
-                "workspace_board_section": task.workspace_board_section.uuid,
+                "workspace_board_section": {
+                    "uuid": str(task.workspace_board_section.uuid),
+                },
             },
             context={"request": user_request},
         )
         assert not serializer.is_valid()
+        assert "labels" in serializer.errors, serializer.errors
         (error,) = serializer.errors["labels"]
         assert "label could not be found" in error
 
@@ -233,8 +250,10 @@ class TestTaskUpdateSerializer:
             data={
                 "title": task.title,
                 "labels": [],
-                "assignee": assignee.uuid,
-                "workspace_board_section": task.workspace_board_section.uuid,
+                "assignee": {"uuid": str(assignee.uuid)},
+                "workspace_board_section": {
+                    "uuid": str(task.workspace_board_section.uuid),
+                },
             },
             context={"request": user_request},
         )
