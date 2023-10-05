@@ -156,13 +156,15 @@ class TestTaskRetrieve(UnauthenticatedTestMixin):
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
         workspace_user: models.WorkspaceUser,
+        workspace_board_section: models.WorkspaceBoardSection,
         payload: dict[str, object],
     ) -> None:
         """Test updating a task when logged in correctly."""
         # TODO so many queries...
         # TODO omg so many queries (22 -> 28)
         # TODO even more queries (28 -> 29)
-        with django_assert_num_queries(29):
+        # TODO it's even more now, but the data is more complete (29 -> 33)
+        with django_assert_num_queries(33):
             response = rest_user_client.put(
                 resource_url,
                 {**payload, "assignee": workspace_user.uuid},
@@ -170,6 +172,11 @@ class TestTaskRetrieve(UnauthenticatedTestMixin):
             )
             assert response.status_code == 200, response.content
         assert response.data["title"] == "Hello world"
+        # We get the whole nested thing
+        assert (
+            response.data["workspace_board_section"]["title"]
+            == workspace_board_section.title
+        )
 
 
 # Delete
