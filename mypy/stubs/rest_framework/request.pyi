@@ -23,4 +23,4 @@ class Request(HttpRequest):
     # XXX
     # We are conveniently ignoring for now that the user can be Anonymous as well
     user: AbstractBaseUser
-    data: Mapping[str, Any]
+    data: dict[str, Any]
