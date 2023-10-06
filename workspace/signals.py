@@ -91,8 +91,7 @@ def serialize(
     instance: M,
 ) -> Mapping[str, object]:
     """Serialize a django model instance and then render it to JSON."""
-    serialized: Mapping[str, object] = serializer(instance).data
-    return serialized
+    return serializer(instance).data
 
 
 def send_workspace_change_signal(instance: models.Workspace) -> None:
