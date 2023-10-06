@@ -41,7 +41,3 @@ export function internallyWritable<T>(theThing: T): {
         pub,
     };
 }
-
-export async function getAsync<T>(store: Readable<T>): Promise<T> {
-    return await new Promise(store.subscribe);
-}

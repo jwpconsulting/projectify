@@ -6,8 +6,6 @@
 
 import { derived, readonly, writable } from "svelte/store";
 
-import { getAsync } from "../util";
-
 import { currentWorkspaceLabels } from "./label";
 
 import type { LabelAssignment } from "$lib/types/stores";
@@ -92,9 +90,5 @@ export function createLabelAssignment(
         },
         selected: readonly(selected),
         subscribe,
-        async evaluate(): Promise<string[]> {
-            const state = await getAsync(selected);
-            return evaluateLabelAssignment(state);
-        },
     };
 }

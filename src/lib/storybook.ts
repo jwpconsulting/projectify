@@ -192,10 +192,6 @@ export const labelAssignment: LabelAssignment = {
     deselect: noop,
     selected: readable({ kind: "noLabel" }),
     subscribe: readable<Label[]>([]).subscribe,
-    evaluate: async () => {
-        await new Promise(console.log);
-        return [];
-    },
 };
 
 type ArgTypeOption<T> = Record<string, T>;

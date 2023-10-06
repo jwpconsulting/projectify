@@ -68,11 +68,11 @@
             description,
         };
         // TODO add labels here
-        const labels = await labelAssignment.evaluate();
-        await performUpdateTask(submitTask, labels, $workspaceUserAssignment);
-        if (!task.workspace_board_section) {
-            throw new Error("Expected $updateTask.workspace_board_section");
-        }
+        await performUpdateTask(
+            submitTask,
+            $labelAssignment,
+            $workspaceUserAssignment
+        );
         if (continueEditing) {
             await goto(getTaskUrl(task.uuid));
             return;

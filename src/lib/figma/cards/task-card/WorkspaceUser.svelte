@@ -21,11 +21,7 @@
         };
         await openContextMenu(contextMenuType, userPickerBtnRef);
         const workspaceUser = $workspaceUserAssignment;
-        await updateTask(
-            task,
-            task.labels.map((label) => label.uuid),
-            workspaceUser
-        );
+        await updateTask(task, task.labels, workspaceUser);
     }
 </script>
 

@@ -1,5 +1,5 @@
 // XXX "stores.ts" should be renamed "modules.ts" maybe?
-import type { Readable, Subscriber } from "svelte/store";
+import type { Readable, Subscriber, Writable } from "svelte/store";
 
 import type { RepositoryContext } from "./repository";
 
@@ -22,13 +22,13 @@ export interface WorkspaceUserAssignment
 export interface LabelAssignment extends Readable<Label[]> {
     select: (selection: LabelAssignmentInput) => unknown;
     deselect: (selection: LabelAssignmentInput) => unknown;
-    // Might even completely remove this:
+    // TODO Might even completely remove this:
     selected: Readable<LabelAssignmentState>;
-    // Might even completely remove this:
-    evaluate: () => Promise<string[]>;
 }
 
-export type SubTaskAssignment = Readable<Partial<SubTask>[]>;
+export interface SubTaskAssignment extends Writable<Partial<SubTask>[]> {
+    addSubTask: () => void;
+}
 
 const subscriptionTypes = ["workspace", "workspace-board", "task"] as const;
 export type SubscriptionType = (typeof subscriptionTypes)[number];

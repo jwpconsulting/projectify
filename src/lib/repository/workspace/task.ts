@@ -15,19 +15,20 @@ import {
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
     CreateUpdateTask,
+    Label,
     Task,
     WorkspaceBoardSection,
     WorkspaceUser,
 } from "$lib/types/workspace";
-import { unwrap } from "$lib/utils/type";
+
 // Task CRUD
 // Create
 interface CreateUpdateTaskData {
     title: string;
     description: string | undefined;
-    labels: string[];
-    assignee: string | null;
-    workspace_board_section: string;
+    labels: Label[];
+    assignee: WorkspaceUser | null;
+    workspace_board_section: WorkspaceBoardSection;
     // TODO dueDate plz
     deadline?: string;
 }
@@ -39,10 +40,10 @@ export async function createTask(
     const data: CreateUpdateTaskData = {
         title: createTask.title,
         description: createTask.description,
-        labels: createTask.labels.map((label) => label.uuid),
+        labels: createTask.labels,
         // TODO: Should the API just accept a missing value here?
-        assignee: createTask.assignee?.uuid ?? null,
-        workspace_board_section: createTask.workspace_board_section.uuid,
+        assignee: createTask.assignee ?? null,
+        workspace_board_section: createTask.workspace_board_section,
         deadline: createTask.deadline ?? undefined,
     };
     return await postWithCredentialsJson<Task>(
@@ -66,16 +67,14 @@ export async function getTask(
 // Update
 // TODO change me to accept CreateOrUpdateTaskData directly
 // Then we don't have to pass task, labels, ws user separately
+// This is possible now because the API accepts a whole task object,
+// incl. labels and so on
 export async function updateTask(
     task: Task & { workspace_board_section: WorkspaceBoardSection },
-    labels: string[],
+    labels: Label[],
     workspaceUser: WorkspaceUser | undefined,
     repositoryContext?: RepositoryContext
 ): Promise<Task> {
-    const { uuid: workspaceBoardSectionUuid } = unwrap(
-        task.workspace_board_section,
-        "Expected workspace_board_section"
-    );
     const { uuid } = task;
     const data: CreateUpdateTaskData = {
         title: task.title,
@@ -83,8 +82,8 @@ export async function updateTask(
         // XXX
         // Ideally, the two following arguments would just be part of the Task
         labels,
-        assignee: workspaceUser?.uuid ?? null,
-        workspace_board_section: workspaceBoardSectionUuid,
+        assignee: workspaceUser ?? null,
+        workspace_board_section: task.workspace_board_section,
         // TODO sub tasks
     };
     return await putWithCredentialsJson<Task>(
