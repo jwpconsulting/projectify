@@ -15,6 +15,7 @@ class Field:
         read_only: bool = False,
         write_only: bool = False,
         allow_null: bool = False,
+        required: bool = True,
     ) -> None: ...
 
 class BooleanField(Field): ...
