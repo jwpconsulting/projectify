@@ -1,9 +1,11 @@
 """Shared type definitions in workspace app."""
 from collections.abc import (
     Mapping,
+    Sequence,
 )
 from typing import (
     TypedDict,
+    Union,
 )
 
 
@@ -12,4 +14,4 @@ class Message(TypedDict):
 
     type: str
     uuid: str
-    data: Mapping[str, object]
+    data: Union[Mapping[str, object], Sequence[object]]

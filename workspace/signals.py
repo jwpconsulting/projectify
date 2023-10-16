@@ -2,12 +2,14 @@
 import logging
 from collections.abc import (
     Mapping,
+    Sequence,
 )
 from typing import (
     TYPE_CHECKING,
     Any,
     Type,
     TypeVar,
+    Union,
     cast,
 )
 
@@ -89,7 +91,7 @@ M = TypeVar("M", bound=django_models.Model)
 def serialize(
     serializer: Type[drf_serializers.ModelSerializer[M]],
     instance: M,
-) -> Mapping[str, object]:
+) -> Union[Mapping[str, Any], Sequence[Any]]:
     """Serialize a django model instance and then render it to JSON."""
     return serializer(instance).data
 

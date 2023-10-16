@@ -201,6 +201,7 @@ class Task(
         get_subtask_order: GetOrder
         set_subtask_order: SetOrder
         _order: int
+        id: int
 
     def move_to(
         self, workspace_board_section: "WorkspaceBoardSection", order: int
