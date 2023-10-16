@@ -28,6 +28,11 @@ from rest_framework.request import (
     Request,
 )
 
+from workspace.serializers.sub_task import (
+    SubTaskCreateUpdateSerializer,
+    SubTaskListSerializer,
+    ValidatedData,
+)
 from workspace.serializers.task import (
     TaskWithSubTaskSerializer,
 )
@@ -99,6 +104,8 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
     # Then interpret missing as delete assignee
     assignee = base.UuidObjectSerializer(allow_null=True, write_only=True)
 
+    sub_tasks = SubTaskCreateUpdateSerializer(many=True, required=False)
+
     def validate_workspace_board_section(
         self,
         value: UuidDict,
@@ -125,6 +132,12 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
             raise serializers.ValidationError(
                 _("This task cannot be assigned to another workspace"),
             )
+        # We pass the correct value back here, and use it for the three
+        # dependent values label, assignee and sub task.
+        # The question is whether we can put each into a separate validate_*
+        # method and make ws board section available to them instead using
+        # the serializer context.
+        self.context["workspace_board_section"] = workspace_board_section
         return workspace_board_section
 
     def validate(self, data: dict[str, Any]) -> dict[str, Any]:
@@ -196,8 +209,21 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
     ) -> models.Task:
         """Assign labels, assign assignee."""
         labels: list[models.Label] = validated_data.pop("labels")
+        sub_tasks: ValidatedData
+        if "sub_tasks" in validated_data:
+            sub_tasks = validated_data.pop("sub_tasks")
+        else:
+            sub_tasks = {"create_sub_tasks": [], "update_sub_tasks": []}
+
         task = super().update(instance, validated_data)
         assign_labels(task, labels)
+
+        sub_task_instances = list(task.subtask_set.all())
+        sub_task_serializer = self.fields["sub_tasks"]
+        if not isinstance(sub_task_serializer, SubTaskListSerializer):
+            raise ValueError(_("sub_tasks field has to be a DRF Serializer"))
+        sub_task_serializer.update(sub_task_instances, sub_tasks)
+
         return task
 
     class Meta(base.TaskBaseSerializer.Meta):
@@ -206,4 +232,5 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         fields = (
             *base.TaskBaseSerializer.Meta.fields,
             "workspace_board_section",
+            "sub_tasks",
         )
