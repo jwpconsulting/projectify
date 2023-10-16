@@ -39,7 +39,7 @@ class TestTaskDetailSerializer:
 
 
 @pytest.mark.django_db
-class TestTaskUpdateSerializer:
+class TestTaskCreateUpdateSerializer:
     """Test the task update serializer."""
 
     @pytest.fixture
@@ -54,9 +54,11 @@ class TestTaskUpdateSerializer:
         task: models.Task,
         workspace_user: models.WorkspaceUser,
         workspace_board_section: models.WorkspaceBoardSection,
+        sub_task: models.SubTask,
         user_request: Request,
     ) -> None:
         """Check that fields are actually readonly by trying a few."""
+        assert task.subtask_set.count() == 1
         task.assign_to(workspace_user)
         serializer = serializers.TaskCreateUpdateSerializer(
             task,
@@ -82,6 +84,9 @@ class TestTaskUpdateSerializer:
         serializer.save()
         assert list(task.labels.values_list("uuid", flat=True)) == []
         assert task.assignee is None
+
+        # Since we don't pass the sub task in, it will disappear
+        assert list(models.SubTask.objects.all()) == []
 
     def test_create(
         self,
@@ -136,13 +141,13 @@ class TestTaskUpdateSerializer:
         label: models.Label,
         workspace_user: models.WorkspaceUser,
         workspace_board_section: models.WorkspaceBoardSection,
+        sub_task: models.SubTask,
         user_request: Request,
     ) -> None:
         """Test updating a task."""
-        # TODO try assigning one more
+        assert len(task.subtask_set.all()) == 1
         serializer = serializers.TaskCreateUpdateSerializer(
             task,
-            # XXX mypy, why won't you accept label_uuids :(
             data={
                 "title": task.title,
                 "labels": [{"uuid": str(label.uuid)}],
@@ -150,16 +155,39 @@ class TestTaskUpdateSerializer:
                 "workspace_board_section": {
                     "uuid": str(workspace_board_section.uuid),
                 },
+                "sub_tasks": [
+                    {
+                        "title": "Frobnice fluffballs",
+                        "done": True,
+                    },
+                    {
+                        "uuid": str(sub_task.uuid),
+                        "title": "Settle Catan",
+                        "done": not sub_task.done,
+                    },
+                    {
+                        "title": "Frebnecize flerfbowls",
+                        "done": True,
+                    },
+                ],
             },
             context={"request": user_request},
         )
         assert serializer.is_valid(), serializer.errors
         assert "title" in serializer.validated_data
-        serializer.save()
-        assert list(task.labels.values_list("uuid", flat=True)) == [label.uuid]
+        task = serializer.save()
+
         assert task.deadline is not None
+
+        assert list(task.labels.values_list("uuid", flat=True)) == [label.uuid]
+
         assert task.assignee
         assert task.assignee.user.email == workspace_user.user.email
+
+        sub_tasks = list(task.subtask_set.all())
+        assert len(sub_tasks) == 3
+        assert sub_tasks[1].uuid == sub_task.uuid
+        assert sub_tasks[1].done == (not sub_task.done)
 
     def test_update_no_ws_board_section(
         self,
