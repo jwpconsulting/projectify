@@ -105,6 +105,21 @@ class TestSubTaskListSerializer:
         assert new_sub_task.title == payload_single["title"]
         assert new_sub_task.done == payload_single["done"]
 
+    def test_create_no_context(
+        self,
+        payload_single: PayloadSingle,
+        task: Task,
+    ) -> None:
+        """Test that without a context, we can still pass in the task."""
+        assert SubTask.objects.count() == 0
+        serializer = SubTaskCreateUpdateSerializer(
+            data=[payload_single],
+            many=True,
+        )
+        assert serializer.is_valid()
+        serializer.create(serializer.validated_data, task)
+        assert SubTask.objects.count() == 1
+
     def test_several_new_sub_tasks(
         self,
         payload_single: PayloadSingle,
@@ -390,6 +405,18 @@ class TestSubTaskCreateUpdateSerializer:
         )
         assert serializer.is_valid(), serializer.errors
         serializer.save()
+        assert SubTask.objects.count() == 1
+
+    def test_new_sub_task_no_context(
+        self,
+        payload_single: PayloadSingle,
+        task: Task,
+    ) -> None:
+        """Test we can create a new sub task even with no context."""
+        serializer = SubTaskCreateUpdateSerializer(data=payload_single)
+        assert serializer.is_valid(), serializer.errors
+        validated_data = serializer.validated_data
+        serializer.create(validated_data, task)
         assert SubTask.objects.count() == 1
 
     def test_update_sub_task(
