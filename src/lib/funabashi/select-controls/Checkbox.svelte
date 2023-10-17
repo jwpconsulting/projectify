@@ -2,7 +2,7 @@
     import { Check } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
 
-    export let checked: boolean;
+    export let checked: boolean | undefined;
     export let disabled: boolean;
     // TODO document what this is for
     export let contained: boolean;
