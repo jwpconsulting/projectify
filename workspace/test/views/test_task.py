@@ -89,7 +89,12 @@ class TestTaskCreate(UnauthenticatedTestMixin):
     ) -> None:
         """Test creating when authenticated."""
         # 6 queries just for assigning a user
-        with django_assert_num_queries(34):
+        # TODO We are going from 34 -> 43 queries. This means an increase of 9
+        # queries after we started firing a signal after serializer.save()
+        # The increase below for RetrieveUpdate was only 7. Maybe we can look
+        # into where the additional 2 queries on top of the 7 come. It could be
+        # somethign we failed to select or prefetch.
+        with django_assert_num_queries(43):
             response = rest_user_client.post(
                 resource_url,
                 {**payload, "assignee": {"uuid": str(workspace_user.uuid)}},
@@ -102,8 +107,8 @@ class TestTaskCreate(UnauthenticatedTestMixin):
 
 # Read
 @pytest.mark.django_db
-class TestTaskRetrieve(UnauthenticatedTestMixin):
-    """Test Task retrieve."""
+class TestTaskRetrieveUpdate(UnauthenticatedTestMixin):
+    """Test Task retrieval and update."""
 
     @pytest.fixture
     def resource_url(self, task: models.Task) -> str:
@@ -168,7 +173,11 @@ class TestTaskRetrieve(UnauthenticatedTestMixin):
         # TODO omg so many queries (22 -> 28)
         # TODO even more queries (28 -> 29)
         # TODO it's even more now, but the data is more complete (29 -> 33)
-        with django_assert_num_queries(33):
+        # TODO because of the signal, there are 7 more (33 -> 40)
+        # TODO would make sense to have the signal perform the additional
+        # queries in the background... or is that already happening and testing
+        # channels in memory we eagerly execute the tasks?
+        with django_assert_num_queries(40):
             response = rest_user_client.put(
                 resource_url,
                 {**payload, "assignee": {"uuid": str(workspace_user.uuid)}},
