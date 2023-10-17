@@ -40,9 +40,11 @@ Errors = Any
 # TODO Make me serialized data
 ValidatedData = Any
 
+Context = Mapping[str, Any]
+
 class BaseSerializer:
 
-    context: dict[str, Any]
+    context: Context
     initial_data: Optional[SerializerData]
     parent: Optional[Serializer]
     fields: Mapping[str, Union[BaseSerializer, Field]]
@@ -54,6 +56,7 @@ class BaseSerializer:
         read_only: bool = False,
         many: bool = False,
         source: Optional[str] = None,
+        context: Optional[Context] = None,
         **kwargs: Any
     ) -> None: ...
     def to_internal_value(self, data: Any) -> ValidatedData: ...
