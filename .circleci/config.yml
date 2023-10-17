@@ -8,8 +8,6 @@ executors:
     python:
         docker:
             - image: python:3.11.4
-              environment:
-                  PIPENV_PIPFILE: Pipfile-tools
 commands:
     install_node_dependencies:
         description: Install dependencies
@@ -26,19 +24,28 @@ commands:
                       - ~/.npm
                       - node_modules
     install_python_dependencies:
-        description: Install pipenv
+        description: Install poetry
         steps:
             - checkout
             - restore_cache:
-                  key: cache-v1-{{ checksum "Pipfile-tools.lock" }}
+                  keys: poetry-cache-v1-{{ checksum "poetry.lock" }}
             - run:
-                  name: Install pipenv
-                  command: pip3 install pipenv
+                  name: Create venv
+                  command: python3 -m venv ~/.local/share/poetry
+            - run:
+                  name: Install pip and setuptools
+                  command: ~/.local/share/poetry/bin/pip install -U pip setuptools
+            - run:
+                  name: Install poetry
+                  command: ~/.local/share/poetry/bin/pip install poetry
+            - run:
+                  name: Link poetry (XXX hack)
+                  command: ln -sv ~/.local/share/poetry/bin/poetry /usr/local/bin
             - run:
                   name: Install pip packages
-                  command: pipenv sync --dev
+                  command: poetry install --all-extras
             - save_cache:
-                  key: cache-v1-{{ checksum "Pipfile-tools.lock" }}
+                  key: poetry-cache-v1-{{ checksum "poetry.lock" }}
                   paths:
                       - ~/.local
                       - ~/.cache
@@ -101,27 +108,27 @@ jobs:
                   command: tar --create --verbose --gzip --file=build.tar.gz build
             - store_artifacts:
                   path: build.tar.gz
-    pipenv_check:
+    poetry_check:
         executor: python
         steps:
             - install_python_dependencies
             - run:
-                  name: Pipenv check
-                  command: pipenv check
+                  name: Poetry check
+                  command: poetry check
     python_lint:
         executor: python
         steps:
             - install_python_dependencies
             - run:
                   name: Run flake8
-                  command: pipenv run flake8 bin/rename-component
+                  command: poetry run flake8 bin/rename-component
     mypy:
         executor: python
         steps:
             - install_python_dependencies
             - run:
                   name: Run mypy
-                  command: pipenv run mypy bin/rename-component
+                  command: poetry run mypy bin/rename-component
 workflows:
     test_all:
         jobs:
@@ -130,6 +137,6 @@ workflows:
             - prettier
             - knip
             - build
-            - pipenv_check
+            - poetry_check
             - python_lint
             - mypy

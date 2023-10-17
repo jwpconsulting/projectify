@@ -23,20 +23,20 @@ npm run fix | sort --key=2 -h
 ## Installing the python tools
 
 ```
-PIPENV_PIPFILE=Pipfile-tools pipenv sync --dev
+poetry install --all-extras
 ```
 
 And then
 
 ```
-PIPENV_PIPFILE=Pipfile-tools pipenv run bin/rename_component.py
+poetry run bin/rename_component.py
 ```
 
 How to test
 
 ```
-PIPENV_PIPFILE=Pipfile-tools pipenv run flake8
-PIPENV_PIPFILE=Pipfile-tools pipenv run mypy
+poetry run flake8
+poetry run mypy
 ```
 
 ## Creating a new component
@@ -67,7 +67,7 @@ src/lib/figma/overlays/context-menu/WorkspaceOverlay.svelte,src/lib/figma/overla
 Then run
 
 ```
-PIPENV_PIPFILE=Pipfile-tools pipenv run bin/rename_component.py multiple rename.csv
+poetry run bin/rename_component.py multiple rename.csv
 ```
 
 # Updating Storybook
