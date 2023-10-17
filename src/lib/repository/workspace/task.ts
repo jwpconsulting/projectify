@@ -16,6 +16,7 @@ import type { RepositoryContext } from "$lib/types/repository";
 import type {
     CreateUpdateTask,
     Label,
+    SubTask,
     Task,
     TaskWithWorkspace,
     WorkspaceBoardSection,
@@ -32,6 +33,7 @@ interface CreateUpdateTaskData {
     workspace_board_section: WorkspaceBoardSection;
     // TODO dueDate plz
     deadline?: string;
+    sub_tasks?: SubTask[];
 }
 // TODO change me to accept CreateOrUpdateTaskData directly
 export async function createTask(
@@ -72,8 +74,11 @@ export async function getTask(
 // incl. labels and so on
 export async function updateTask(
     task: Task & { workspace_board_section: WorkspaceBoardSection },
+    // XXX please move the following three arguments back into the top task
+    // argument
     labels: Label[],
     workspaceUser: WorkspaceUser | undefined,
+    subTasks: SubTask[] | undefined,
     repositoryContext?: RepositoryContext
 ): Promise<Task> {
     const { uuid } = task;
@@ -83,9 +88,13 @@ export async function updateTask(
         // XXX
         // Ideally, the two following arguments would just be part of the Task
         labels,
+        // TODO
+        // Please be undefined, not null
+        // Might have to check if the backend already accepts undefined as
+        // unassign
         assignee: workspaceUser ?? null,
         workspace_board_section: task.workspace_board_section,
-        // TODO sub tasks
+        sub_tasks: subTasks,
     };
     return await putWithCredentialsJson<Task>(
         `/workspace/task/${uuid}`,

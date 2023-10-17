@@ -65,7 +65,8 @@
         await performUpdateTask(
             submitTask,
             $labelAssignment,
-            $workspaceUserAssignment
+            $workspaceUserAssignment,
+            undefined
         );
         if (continueEditing) {
             await goto(getTaskUrl(task.uuid));

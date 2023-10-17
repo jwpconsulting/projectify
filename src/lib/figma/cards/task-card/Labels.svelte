@@ -30,7 +30,7 @@
         const labels: Label[] = $labelAssignment;
         // TODO can we make updateTask accept whole labels instead?
         // TODO skip update when no changes detected
-        await updateTask(task, labels, task.assignee);
+        await updateTask(task, labels, task.assignee, task.sub_tasks);
         // TODO There is a brief flash after updateTask finishes, the task is
         // reloaded and labelAssignment is recreated
     }

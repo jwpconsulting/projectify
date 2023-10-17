@@ -21,7 +21,10 @@
         };
         await openContextMenu(contextMenuType, userPickerBtnRef);
         const workspaceUser = $workspaceUserAssignment;
-        await updateTask(task, task.labels, workspaceUser);
+        // XXX need to investigate what happens when sub tasks change while
+        // the user picker is open. Possibly, a sub task can be deleted if
+        // it is added
+        await updateTask(task, task.labels, workspaceUser, task.sub_tasks);
     }
 </script>
 
