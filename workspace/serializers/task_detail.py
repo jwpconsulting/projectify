@@ -19,6 +19,9 @@ from django.contrib.auth.models import (
 from django.db import (
     transaction,
 )
+from django.db.models.signals import (
+    post_save,
+)
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import (
@@ -225,6 +228,17 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         sub_task_serializer.update(sub_task_instances, sub_tasks)
 
         return task
+
+    def save(self, **kwargs: Any) -> models.Task:
+        """
+        Save, and fire signal.
+
+        If we don't override the serialized here, updating sub tasks will
+        not fire a signal as expected.
+        """
+        result = super().save(**kwargs)
+        post_save.send(sender=models.Task, instance=result)
+        return result
 
     class Meta(base.TaskBaseSerializer.Meta):
         """Meta."""
