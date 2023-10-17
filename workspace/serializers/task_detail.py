@@ -140,7 +140,6 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         # The question is whether we can put each into a separate validate_*
         # method and make ws board section available to them instead using
         # the serializer context.
-        self.context["workspace_board_section"] = workspace_board_section
         return workspace_board_section
 
     def validate(self, data: dict[str, Any]) -> dict[str, Any]:

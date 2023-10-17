@@ -89,7 +89,7 @@ class SubTaskListSerializer(serializers.ListSerializer[SubTask]):
         if self._task:
             return self._task
         if "task" in self.context:
-            task = self.context.pop("task")
+            task = self.context["task"]
         elif self.parent and self.parent.instance:
             task = self.parent.instance
         else:
