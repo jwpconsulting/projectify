@@ -15,14 +15,6 @@ else
     exit 1
 fi
 
-if npm run check:svelte-check
-then
-    echo "npm run svelte-check successful"
-else
-    echo "svelte-check didn't exit cleanly"
-    exit 1
-fi
-
 if npm run check:eslint
 then
     echo "npm run check:eslint successful"
@@ -42,6 +34,14 @@ else
         echo "Couldn't fix"
         exit 1
     fi
+fi
+
+if npm run check:svelte-check
+then
+    echo "npm run svelte-check successful"
+else
+    echo "svelte-check didn't exit cleanly"
+    exit 1
 fi
 
 if npm run check:knip
