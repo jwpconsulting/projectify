@@ -5,8 +5,11 @@
 
     import SubTaskProgressBar from "$lib/figma/screens/task/SubTaskProgressBar.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
+    import type { SubTaskAssignment } from "$lib/types/stores";
 
     export let progress: number;
+    export let subTaskAssignment: SubTaskAssignment | undefined = undefined;
+
     let progressString: string;
     $: {
         if (progress < 0 || progress > 100) {
@@ -27,18 +30,23 @@
             </div>
             <div>{progressString}</div>
         </div>
-        <div class="flex flex-row gap-6">
-            <SquovalIcon
-                icon="plus"
-                state="active"
-                action={{ kind: "button", action: console.error }}
-            />
-            <SquovalIcon
-                icon="ellipsis"
-                state="active"
-                action={{ kind: "button", action: console.error }}
-            />
-        </div>
+        {#if subTaskAssignment}
+            <div class="flex flex-row gap-6">
+                <SquovalIcon
+                    icon="plus"
+                    state="active"
+                    action={{
+                        kind: "button",
+                        action: subTaskAssignment.addSubTask,
+                    }}
+                />
+                <SquovalIcon
+                    icon="ellipsis"
+                    state="active"
+                    action={{ kind: "button", action: console.error }}
+                />
+            </div>
+        {/if}
     </div>
     <SubTaskProgressBar {progress} />
 </div>

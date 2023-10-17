@@ -66,7 +66,7 @@
             submitTask,
             $labelAssignment,
             $workspaceUserAssignment,
-            undefined
+            $subTasks
         );
         if (continueEditing) {
             await goto(getTaskUrl(task.uuid));
@@ -80,9 +80,10 @@
     $: workspaceUserAssignment = createWorkspaceUserAssignment(task);
     $: labelAssignment = createLabelAssignment(task);
     $: subTaskAssignment = createSubTaskAssignment(task);
+    $: subTasks = subTaskAssignment.subTasks;
 
     // XXX I am sure we can have really fancy validation
-    $: canUpdate = title !== "";
+    $: canUpdate = title !== "" && $subTasks !== undefined;
 
     // TODO put me in PageData?
     $: workspaceBoardSection = task.workspace_board_section;

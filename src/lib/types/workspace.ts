@@ -21,6 +21,12 @@ export type SubTask = {
 } & TimestampedType &
     TitleDescriptionType;
 
+export type CreateUpdateSubTask = {
+    done: boolean;
+    // This will only exist for a sub task that is already inside a task
+    uuid?: string;
+} & TitleDescriptionType;
+
 export type ChatMessage = {
     author: WorkspaceUser;
     uuid: string;

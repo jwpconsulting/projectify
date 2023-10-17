@@ -14,9 +14,9 @@ import {
 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
+    CreateUpdateSubTask,
     CreateUpdateTask,
     Label,
-    SubTask,
     Task,
     TaskWithWorkspace,
     WorkspaceBoardSection,
@@ -33,7 +33,7 @@ interface CreateUpdateTaskData {
     workspace_board_section: WorkspaceBoardSection;
     // TODO dueDate plz
     deadline?: string;
-    sub_tasks?: SubTask[];
+    sub_tasks?: CreateUpdateSubTask[];
 }
 // TODO change me to accept CreateOrUpdateTaskData directly
 export async function createTask(
@@ -78,7 +78,7 @@ export async function updateTask(
     // argument
     labels: Label[],
     workspaceUser: WorkspaceUser | undefined,
-    subTasks: SubTask[] | undefined,
+    subTasks: CreateUpdateSubTask[] | undefined,
     repositoryContext?: RepositoryContext
 ): Promise<Task> {
     const { uuid } = task;

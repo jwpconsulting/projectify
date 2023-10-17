@@ -11,11 +11,16 @@
     // themselves?
 </script>
 
-<SubTaskBar {progress} />
+<SubTaskBar {progress} {subTaskAssignment} />
 {#if $subTaskAssignment.length > 0}
     <div class="flex flex-col">
-        {#each $subTaskAssignment as subTask}
-            <SubTaskC {subTask} readonly={false} />
+        {#each $subTaskAssignment as subTask, index}
+            <SubTaskC
+                bind:subTask
+                readonly={false}
+                {index}
+                {subTaskAssignment}
+            />
         {/each}
     </div>
 {:else}

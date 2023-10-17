@@ -9,7 +9,11 @@ import type {
     LabelAssignmentState,
     WorkspaceUserAssignmentState,
 } from "$lib/types/ui";
-import type { Label, SubTask, WorkspaceUser } from "$lib/types/workspace";
+import type {
+    CreateUpdateSubTask,
+    Label,
+    WorkspaceUser,
+} from "$lib/types/workspace";
 
 export interface WorkspaceUserAssignment
     extends Readable<WorkspaceUser | undefined> {
@@ -26,8 +30,14 @@ export interface LabelAssignment extends Readable<Label[]> {
     selected: Readable<LabelAssignmentState>;
 }
 
-export interface SubTaskAssignment extends Writable<Partial<SubTask>[]> {
+export interface SubTaskAssignment
+    extends Writable<Partial<CreateUpdateSubTask>[]> {
     addSubTask: () => void;
+    // if all sub tasks are non-partial, an inner store will return the whole
+    // list of sub tasks.
+    subTasks: Readable<CreateUpdateSubTask[] | undefined>;
+    moveSubTaskUp: (where: number) => void;
+    moveSubTaskDown: (where: number) => void;
 }
 
 const subscriptionTypes = ["workspace", "workspace-board", "task"] as const;
