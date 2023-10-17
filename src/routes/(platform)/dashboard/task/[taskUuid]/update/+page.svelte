@@ -4,7 +4,7 @@
     import UpdateTaskCard from "$lib/figma/screens/task/UpdateTaskCard.svelte";
 
     export let data: PageData;
-    const { task, workspaceBoardSection } = data;
+    const { task } = data;
 </script>
 
-<UpdateTaskCard {workspaceBoardSection} {task} />
+<UpdateTaskCard {task} />

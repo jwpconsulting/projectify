@@ -20,17 +20,10 @@ export async function load({
     params: { taskUuid },
 }: PageLoadEvent): Promise<returnType> {
     const task = await getTask(taskUuid, { fetch });
-    const { workspace_board_section: workspaceBoardSection } = task;
-    if (!workspaceBoardSection) {
-        throw new Error("Expected workspaceBoardSection");
-    }
-    const { workspace_board: workspaceBoard } = workspaceBoardSection;
-    if (!workspaceBoard) {
-        throw new Error("Expected workspaceBoard");
-    }
-    const { workspace } = workspaceBoard;
-    if (!workspace) {
-        throw new Error("Expected workspace");
-    }
-    return { task, workspaceBoardSection, workspaceBoard, workspace };
+    return {
+        task,
+        workspaceBoardSection: task.workspace_board_section,
+        workspaceBoard: task.workspace_board_section.workspace_board,
+        workspace: task.workspace_board_section.workspace_board.workspace,
+    };
 }

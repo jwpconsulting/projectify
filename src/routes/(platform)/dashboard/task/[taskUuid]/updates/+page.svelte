@@ -19,11 +19,12 @@
 
     export let data: PageData;
     let { task } = data;
-    const { workspaceBoardSection, workspaceBoard } = data;
 
     export let state: TaskUpdateBarState = "updates";
 
     $: task = $currentTask ?? task;
+    $: workspaceBoardSection = task.workspace_board_section;
+    $: workspaceBoard = workspaceBoardSection.workspace_board;
 
     $: crumbs = [
         {

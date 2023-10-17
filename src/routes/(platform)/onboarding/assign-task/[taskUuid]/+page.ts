@@ -21,7 +21,7 @@ export async function load({
 }: PageLoadEvent): Promise<returnType> {
     const task = await getTask(taskUuid, { fetch });
     const workspaceBoard = unwrap(
-        task.workspace_board_section?.workspace_board,
+        task.workspace_board_section.workspace_board,
         "Expected workspaceBoard"
     );
     const workspace = unwrap(workspaceBoard.workspace, "Expected workspace");

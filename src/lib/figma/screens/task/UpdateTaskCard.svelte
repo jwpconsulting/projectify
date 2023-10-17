@@ -26,18 +26,13 @@
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
     import type {
-        Task,
+        TaskWithWorkspace,
         TaskWithWorkspaceBoardSection,
-        WorkspaceBoardSection,
     } from "$lib/types/workspace";
     import { coerceIsoDate } from "$lib/utils/date";
-    import { unwrap } from "$lib/utils/type";
 
     // if this is in a store, we can get rid of this param
-    // TODO
-    // export let task: TaskWithWorkspaceBoardSection;
-    export let task: Task;
-    export let workspaceBoardSection: WorkspaceBoardSection;
+    export let task: TaskWithWorkspace;
     export let state: TaskUpdateBarState = "task";
 
     let title: string;
@@ -62,7 +57,6 @@
         // TOOD add rest here
         const submitTask: TaskWithWorkspaceBoardSection = {
             ...task,
-            workspace_board_section: workspaceBoardSection,
             deadline: dueDate,
             title,
             description,
@@ -90,10 +84,8 @@
     $: canUpdate = title !== "";
 
     // TODO put me in PageData?
-    $: workspaceBoard = unwrap(
-        workspaceBoardSection.workspace_board,
-        "Expected workspaceBoard"
-    );
+    $: workspaceBoardSection = task.workspace_board_section;
+    $: workspaceBoard = workspaceBoardSection.workspace_board;
 
     $: crumbs = [
         {

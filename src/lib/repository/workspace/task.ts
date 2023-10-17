@@ -17,6 +17,7 @@ import type {
     CreateUpdateTask,
     Label,
     Task,
+    TaskWithWorkspace,
     WorkspaceBoardSection,
     WorkspaceUser,
 } from "$lib/types/workspace";
@@ -57,8 +58,8 @@ export async function createTask(
 export async function getTask(
     uuid: string,
     repositoryContext?: RepositoryContext
-): Promise<Task> {
-    return await getWithCredentialsJson<Task>(
+): Promise<TaskWithWorkspace> {
+    return await getWithCredentialsJson<TaskWithWorkspace>(
         `/workspace/task/${uuid}`,
         repositoryContext
     );

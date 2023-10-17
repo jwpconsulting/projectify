@@ -5,7 +5,7 @@
 
     export let data: PageData;
 
-    const { task, workspaceBoardSection } = data;
+    const { task } = data;
 </script>
 
-<ReadTaskCard {task} {workspaceBoardSection} />
+<ReadTaskCard {task} />

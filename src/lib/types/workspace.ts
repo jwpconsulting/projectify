@@ -55,6 +55,14 @@ export type TaskWithWorkspaceBoardSection = Task & {
     workspace_board_section: WorkspaceBoardSection;
 };
 
+export type TaskWithWorkspace = Task & {
+    workspace_board_section: WorkspaceBoardSection & {
+        workspace_board: WorkspaceBoard & {
+            workspace: Workspace;
+        };
+    };
+};
+
 export type CreateWorkspaceBoardSection = TitleDescriptionType;
 
 export type WorkspaceBoardSection = {

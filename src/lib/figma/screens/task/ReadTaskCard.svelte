@@ -27,12 +27,10 @@
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import { currentTask } from "$lib/stores/dashboard";
     import { openContextMenu } from "$lib/stores/globalUi";
-    import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
+    import type { TaskWithWorkspace } from "$lib/types/workspace";
     import { coerceIsoDate } from "$lib/utils/date";
-    import { unwrap } from "$lib/utils/type";
 
-    export let task: Task;
-    export let workspaceBoardSection: WorkspaceBoardSection;
+    export let task: TaskWithWorkspace;
     export let state: TaskUpdateBarState = "task";
 
     task = $currentTask ?? task;
@@ -46,10 +44,8 @@
     }
 
     // TODO put me in PageData?
-    $: workspaceBoard = unwrap(
-        workspaceBoardSection.workspace_board,
-        "Expected workspaceBoard"
-    );
+    $: workspaceBoardSection = task.workspace_board_section;
+    $: workspaceBoard = workspaceBoardSection.workspace_board;
 
     $: crumbs = [
         {

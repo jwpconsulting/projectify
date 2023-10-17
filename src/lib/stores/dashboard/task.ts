@@ -12,9 +12,11 @@ import { searchAmong } from "$lib/stores/util";
 import { createWsStore } from "$lib/stores/wsSubscription";
 import type {
     Task,
+    // XXX only use TaskWithWorkspace
     TaskWithWorkspaceBoardSection,
+    TaskWithWorkspace,
     WorkspaceBoardSection,
-} from "$lib/types/workspace"; // XXX Remove this
+} from "$lib/types/workspace";
 
 export const taskSearchInput = writable<string>("");
 
@@ -74,7 +76,7 @@ function searchTasks(
     );
 }
 
-export const currentTask = createWsStore<Task>("task", getTask);
+export const currentTask = createWsStore<TaskWithWorkspace>("task", getTask);
 
 export async function deleteTask(task: Task) {
     await repositoryDeleteTask(task);
