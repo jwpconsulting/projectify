@@ -61,6 +61,9 @@ class TestTaskCreate(UnauthenticatedTestMixin):
             "workspace_board_section": {
                 "uuid": str(workspace_board_section.uuid)
             },
+            "sub_tasks": [
+                {"title": "I am a sub task", "done": False},
+            ],
         }
 
     def test_unauthorized(
@@ -89,12 +92,12 @@ class TestTaskCreate(UnauthenticatedTestMixin):
     ) -> None:
         """Test creating when authenticated."""
         # 6 queries just for assigning a user
-        # TODO We are going from 34 -> 43 queries. This means an increase of 9
+        # TODO We are going from 34 -> 44 queries. This means an increase of 9
         # queries after we started firing a signal after serializer.save()
         # The increase below for RetrieveUpdate was only 7. Maybe we can look
-        # into where the additional 2 queries on top of the 7 come. It could be
+        # into where the additional 3 queries on top of the 7 come. It could be
         # somethign we failed to select or prefetch.
-        with django_assert_num_queries(43):
+        with django_assert_num_queries(44):
             response = rest_user_client.post(
                 resource_url,
                 {**payload, "assignee": {"uuid": str(workspace_user.uuid)}},

@@ -189,12 +189,25 @@ class SubTaskListSerializer(serializers.ListSerializer[SubTask]):
             ), "`create()` did not return an object instance."
         return self.instance
 
-    def create(self, validated_data: ValidatedData) -> list[SubTask]:
+    def create(
+        self, validated_data: ValidatedData, task: Optional[models.Task] = None
+    ) -> list[SubTask]:
         """Create several sub tasks."""
+        task = self.context.get("task", task)
+        if task is None:
+            raise ValueError(
+                "Task must either be provided as kwarg or in context"
+            )
         # XXX select task and sub tasks for update?
         create_sub_tasks = validated_data["create_sub_tasks"]
-        tasks: list[SubTask] = super().create(create_sub_tasks)
-        return tasks
+        if create_sub_tasks is None:
+            raise serializers.ValidationError(
+                _("No creatable sub tasks have been provided")
+            )
+        sub_tasks: list[SubTask] = SubTask.objects.bulk_create(
+            SubTask(task=task, **sub_task) for sub_task in create_sub_tasks
+        )
+        return sub_tasks
 
     def update(
         self,
@@ -290,15 +303,21 @@ class SubTaskCreateUpdateSerializer(serializers.ModelSerializer[SubTask]):
         #     )
         return value
 
-    def create(self, validated_data: dict[str, Any]) -> SubTask:
+    def create(
+        self,
+        validated_data: dict[str, Any],
+        task: Optional[models.Task] = None,
+    ) -> SubTask:
         """Override create behavior and add task id to validated data."""
         # We can't pop the value here, if this is called as part of a list
         # serializer, the task will disappear
-        task: models.Task = self.context["task"]
-        validated_data = {
-            **validated_data,
-            "task_id": task.id,
-        }
+        task = self.context.get("task", task)
+        if not task:
+            raise ValueError(
+                "Task was not found in context, it must be passed as a kwarg "
+                "to this method"
+            )
+        validated_data = {**validated_data, "task": task}
         return super().create(validated_data)
 
     class Meta:

@@ -202,8 +202,19 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
     def create(self, validated_data: dict[str, Any]) -> models.Task:
         """Create the task and assign label / ws user."""
         labels: list[models.Label] = validated_data.pop("labels")
+        sub_tasks: ValidatedData
+        if "sub_tasks" in validated_data:
+            sub_tasks = validated_data.pop("sub_tasks")
+        else:
+            sub_tasks = {"create_sub_tasks": [], "update_sub_tasks": []}
+
         task = super().create(validated_data)
         assign_labels(task, labels)
+
+        sub_task_serializer = self.fields["sub_tasks"]
+        if not isinstance(sub_task_serializer, SubTaskListSerializer):
+            raise ValueError(_("sub_tasks field has to be a DRF Serializer"))
+        sub_task_serializer.create(validated_data=sub_tasks, task=task)
         return task
 
     @transaction.atomic
