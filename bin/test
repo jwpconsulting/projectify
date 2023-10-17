@@ -1,0 +1,53 @@
+#!/bin/bash
+# Check and format code
+#
+# This is similar to running npm run check, except that it attempts to be more
+# "best-effort".
+# The difference is that if eslint fails, it will try to fix and run prettier.
+# For example, for unused imports, eslint will first clear the lines, and
+# then any remaining whitespace will be cleaned up by prettier.
+# For good measure, we check one more time after a potential cleanup.
+if npm run format
+then
+    echo "npm run format successful"
+else
+    echo "Couldn't format"
+    exit 1
+fi
+
+if npm run check:svelte-check
+then
+    echo "npm run svelte-check successful"
+else
+    echo "svelte-check didn't exit cleanly"
+    exit 1
+fi
+
+if npm run check:eslint
+then
+    echo "npm run check:eslint successful"
+else
+    echo "Couldn't eslint-fix, attempting to fix"
+    if npm run fix:eslint && npm run format
+    then
+        echo "Trying to check one more time"
+        if npm run check:eslint
+        then
+            echo "All good now"
+        else
+            echo "Still didn't work"
+            exit 1
+        fi
+    else
+        echo "Couldn't fix"
+        exit 1
+    fi
+fi
+
+if npm run check:knip
+then
+    echo "npm run knip successful"
+else
+    echo "knip didn't exit cleanly"
+    exit 1
+fi
