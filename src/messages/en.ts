@@ -386,6 +386,13 @@ const messages: MessageCollection = {
             "create": "Create task",
             "create-continue-editing": "Create task and stay",
         },
+        "sub-tasks": {
+            "empty-state":
+                "You have not added any sub tasks yet. You can add a sub task by clicking the add sub task button.",
+            "empty-state-read-only":
+                "This task has no sub tasks. You can add sub tasks by going to the task edit screen and clicking the add sub task button from there.",
+            "add-sub-task": "Add sub task",
+        },
         "new-task-breadcrumb": "New task (currently creating)",
         "new-task-name": "New task name",
         "description": "Description",

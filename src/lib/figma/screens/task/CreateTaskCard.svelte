@@ -11,11 +11,13 @@
 
     import Breadcrumbs from "./Breadcrumbs.svelte";
     import Form from "./Form.svelte";
+    import UpdateSubTasks from "./UpdateSubTasks.svelte";
 
     import Layout from "$lib/figma/screens/task/Layout.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { createTask as createTaskFn } from "$lib/repository/workspace";
+    import { createSubTaskAssignment } from "$lib/stores/dashboard";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
     import type {
@@ -52,6 +54,7 @@
             labels: $labelAssignment,
             assignee: $workspaceUserAssignment,
             deadline: dueDate,
+            sub_tasks: $subTasks,
         };
         const { uuid } = await createTaskFn(createTaskFull);
         if (continueEditing) {
@@ -65,6 +68,8 @@
 
     const workspaceUserAssignment = createWorkspaceUserAssignment();
     const labelAssignment = createLabelAssignment();
+    const subTaskAssignment = createSubTaskAssignment();
+    const subTasks = subTaskAssignment.subTasks;
 
     $: crumbs = [
         {
@@ -113,15 +118,16 @@
         </svelte:fragment>
     </TopBar>
 
-    <Form
-        slot="content"
-        action={action.bind(null, false)}
-        {workspaceUserAssignment}
-        {labelAssignment}
-        bind:title
-        bind:workspaceBoardSection
-        bind:dueDate
-        bind:description
-    />
-    <!-- TODO allow adding subtasks here -->
+    <svelte:fragment slot="content">
+        <Form
+            action={action.bind(null, false)}
+            {workspaceUserAssignment}
+            {labelAssignment}
+            bind:title
+            bind:workspaceBoardSection
+            bind:dueDate
+            bind:description
+        />
+        <UpdateSubTasks {subTaskAssignment} />
+    </svelte:fragment>
 </Layout>

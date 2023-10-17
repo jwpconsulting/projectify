@@ -40,6 +40,7 @@ export type CreateUpdateTask = {
     labels: Label[];
     assignee?: WorkspaceUser;
     workspace_board_section: WorkspaceBoardSection;
+    sub_tasks?: CreateUpdateSubTask[];
 } & TitleDescriptionType;
 
 // All the info we can receive from the API

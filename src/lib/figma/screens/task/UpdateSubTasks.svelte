@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { _ } from "svelte-i18n";
+
     import SubTaskC from "$lib/figma/buttons/SubTask.svelte";
     import SubTaskBar from "$lib/figma/screens/task/SubTaskBar.svelte";
     import type { SubTaskAssignment } from "$lib/types/stores";
@@ -24,5 +26,5 @@
         {/each}
     </div>
 {:else}
-    TODO no sub tasks
+    {$_("task-screen.sub-tasks.empty-state")}
 {/if}

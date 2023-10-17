@@ -1,5 +1,7 @@
 <script lang="ts">
     // This is just for showing sub tasks
+    import { _ } from "svelte-i18n";
+
     import SubTaskC from "$lib/figma/buttons/SubTask.svelte";
     import SubTaskBar from "$lib/figma/screens/task/SubTaskBar.svelte";
     import type { SubTask } from "$lib/types/workspace";
@@ -18,5 +20,5 @@
         {/each}
     </div>
 {:else}
-    TODO no sub tasks
+    {$_("task-screen.sub-tasks.empty-state-read-only")}
 {/if}

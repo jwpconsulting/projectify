@@ -1,9 +1,11 @@
 <script lang="ts">
     // TODO: Support onInteract
-    import { CheckCircle } from "@steeze-ui/heroicons";
+    import { Plus, CheckCircle } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
+    import { _ } from "svelte-i18n";
 
     import SubTaskProgressBar from "$lib/figma/screens/task/SubTaskProgressBar.svelte";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import type { SubTaskAssignment } from "$lib/types/stores";
 
@@ -31,10 +33,15 @@
             <div>{progressString}</div>
         </div>
         {#if subTaskAssignment}
-            <div class="flex flex-row gap-6">
-                <SquovalIcon
-                    icon="plus"
-                    state="active"
+            <div class="flex flex-row items-center gap-6">
+                <Button
+                    style={{
+                        kind: "tertiary",
+                        icon: { position: "left", icon: Plus },
+                    }}
+                    color="blue"
+                    size="medium"
+                    label={$_("task-screen.sub-tasks.add-sub-task")}
                     action={{
                         kind: "button",
                         action: subTaskAssignment.addSubTask,

@@ -27,8 +27,12 @@ import type {
 // Create
 interface CreateUpdateTaskData {
     title: string;
-    description: string | undefined;
+    description?: string;
+    // TODO this has to be optional in the backend -> undefined means unset
+    // labels
     labels: Label[];
+    // TODO this has to be optional in the backend -> undefined means unset
+    // assignee
     assignee: WorkspaceUser | null;
     workspace_board_section: WorkspaceBoardSection;
     // TODO dueDate plz
@@ -41,13 +45,9 @@ export async function createTask(
     repositoryContext?: RepositoryContext
 ): Promise<Task> {
     const data: CreateUpdateTaskData = {
-        title: createTask.title,
-        description: createTask.description,
-        labels: createTask.labels,
+        ...createTask,
         // TODO: Should the API just accept a missing value here?
         assignee: createTask.assignee ?? null,
-        workspace_board_section: createTask.workspace_board_section,
-        deadline: createTask.deadline ?? undefined,
     };
     return await postWithCredentialsJson<Task>(
         "/workspace/task",
