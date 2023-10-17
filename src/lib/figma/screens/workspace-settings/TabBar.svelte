@@ -14,17 +14,17 @@
 <div class="flex flex-row flex-wrap">
     <TabElement
         href={getSettingsUrl(workspace.uuid, "index")}
-        label={$_("settings.general")}
+        label={$_("workspace-settings.tab-bar.general")}
         active={activeSetting === "index"}
     />
     <TabElement
         href={getSettingsUrl(workspace.uuid, "team-members")}
-        label={$_("settings.members")}
+        label={$_("workspace-settings.tab-bar.team-members")}
         active={activeSetting === "team-members"}
     />
     <TabElement
         href={getSettingsUrl(workspace.uuid, "billing")}
-        label={$_("settings.billing")}
+        label={$_("workspace-settings.tab-bar.billing")}
         active={activeSetting === "billing"}
     />
     <div class="grow border-b-2 border-border" />

@@ -25,19 +25,19 @@
             style={{ kind: "search" }}
             name="workspaceUserSearch"
             bind:value={workspaceUserSearch}
-            placeholder={$_("settings.search-members")}
+            placeholder={$_("workspace-settings.members.search-members")}
         />
         <div class="flex flex-row justify-between">
             <Button
                 action={{ kind: "button", action: console.error }}
-                label={$_("settings.filter-by-roles")}
+                label={$_("workspace-settings.members.filter-by-roles")}
                 style={{ kind: "secondary" }}
                 size="extra-small"
                 color="blue"
             />
             <Button
                 action={{ kind: "button", action: console.error }}
-                label={$_("settings.invite-new-members")}
+                label={$_("workspace-settings.members.invite-new-members")}
                 style={{ kind: "primary" }}
                 size="extra-small"
                 color="blue"
@@ -50,10 +50,10 @@
                 class="flex flex-row justify-between border-b border-border px-2 pb-4 text-sm font-bold text-utility"
             >
                 <div>
-                    {$_("settings.member-details")}
+                    {$_("workspace-settings.members.member-details")}
                 </div>
                 <div>
-                    {$_("settings.role")}
+                    {$_("workspace-settings.members.role")}
                 </div>
             </div>
             {#each workspaceUsers as workspaceUser}

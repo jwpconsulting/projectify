@@ -533,8 +533,13 @@ const messages: MessageCollection = {
     "edit-section": "Edit Section",
     "logout": "Logout",
     "workspace-settings": {
-        title: "Workspace settings",
-        general: {
+        "title": "Workspace settings",
+        "tab-bar": {
+            "general": "General",
+            "team-members": "Team members",
+            "billing": "Billing",
+        },
+        "general": {
             "title": "General",
             "save": "Save",
             "delete": "Delete workspace",
@@ -552,10 +557,16 @@ const messages: MessageCollection = {
                 "no-picture": "No picture uploaded.",
             },
         },
-        members: {
-            title: "Members",
+        "members": {
+            "title": "Members",
+            "search-members": "Search members",
+            "no-job-title": "No job title",
+            "filter-by-roles": "Filter by roles",
+            "role": "Role",
+            "member-details": "Member details",
+            "invite-new-members": "Invite new members",
         },
-        billing: {
+        "billing": {
             "title": "Billing",
             "current-plan": "Current plan",
             "monthly-total": "Monthly total ($8 per seat/month):",
@@ -569,16 +580,6 @@ const messages: MessageCollection = {
                     "{seats} ({seats_remaining} {seats_remaining, plural, one {seat} other {seats}} remaining)",
             },
         },
-    },
-    "settings": {
-        "general": "General",
-        "members": "Members",
-        "billing": "Billing",
-        "no-job-title": "No job title",
-        "filter-by-roles": "Filter by roles",
-        "role": "Role",
-        "member-details": "Member details",
-        "invite-new-members": "Invite new members",
     },
     "my-profile": "My Profile",
     "remove": "Remove",
