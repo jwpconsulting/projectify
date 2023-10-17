@@ -5,7 +5,7 @@
 
     export let data: PageData;
 
-    const { workspace, customer } = data;
+    const { customer } = data;
 </script>
 
-<Billing {customer} {workspace} />
+<Billing {customer} />

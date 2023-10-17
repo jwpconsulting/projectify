@@ -1,7 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import Layout from "$lib/figma/screens/workspace-settings/Layout.svelte";
     import MemberCard from "$lib/figma/screens/workspace-settings/MemberCard.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
@@ -19,48 +18,46 @@
     $: workspace = $currentWorkspace ?? workspace;
 </script>
 
-<Layout {workspace} activeSetting="team-members">
-    <div class="flex flex-col gap-4">
-        <InputField
-            style={{ kind: "search" }}
-            name="workspaceUserSearch"
-            bind:value={workspaceUserSearch}
-            placeholder={$_("workspace-settings.members.search-members")}
+<div class="flex flex-col gap-4">
+    <InputField
+        style={{ kind: "search" }}
+        name="workspaceUserSearch"
+        bind:value={workspaceUserSearch}
+        placeholder={$_("workspace-settings.members.search-members")}
+    />
+    <div class="flex flex-row justify-between">
+        <Button
+            action={{ kind: "button", action: console.error }}
+            label={$_("workspace-settings.members.filter-by-roles")}
+            style={{ kind: "secondary" }}
+            size="extra-small"
+            color="blue"
         />
-        <div class="flex flex-row justify-between">
-            <Button
-                action={{ kind: "button", action: console.error }}
-                label={$_("workspace-settings.members.filter-by-roles")}
-                style={{ kind: "secondary" }}
-                size="extra-small"
-                color="blue"
-            />
-            <Button
-                action={{ kind: "button", action: console.error }}
-                label={$_("workspace-settings.members.invite-new-members")}
-                style={{ kind: "primary" }}
-                size="extra-small"
-                color="blue"
-            />
-        </div>
+        <Button
+            action={{ kind: "button", action: console.error }}
+            label={$_("workspace-settings.members.invite-new-members")}
+            style={{ kind: "primary" }}
+            size="extra-small"
+            color="blue"
+        />
     </div>
-    {#if workspaceUsers}
-        <div class="">
-            <div
-                class="flex flex-row justify-between border-b border-border px-2 pb-4 text-sm font-bold text-utility"
-            >
-                <div>
-                    {$_("workspace-settings.members.member-details")}
-                </div>
-                <div>
-                    {$_("workspace-settings.members.role")}
-                </div>
+</div>
+{#if workspaceUsers}
+    <div class="">
+        <div
+            class="flex flex-row justify-between border-b border-border px-2 pb-4 text-sm font-bold text-utility"
+        >
+            <div>
+                {$_("workspace-settings.members.member-details")}
             </div>
-            {#each workspaceUsers as workspaceUser}
-                <MemberCard {workspaceUser} />
-            {/each}
+            <div>
+                {$_("workspace-settings.members.role")}
+            </div>
         </div>
-    {:else}
-        no workspace users
-    {/if}
-</Layout>
+        {#each workspaceUsers as workspaceUser}
+            <MemberCard {workspaceUser} />
+        {/each}
+    </div>
+{:else}
+    no workspace users
+{/if}
