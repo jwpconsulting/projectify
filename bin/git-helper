@@ -25,18 +25,20 @@ then
 else
     echo "This could've been a 5-star review, but..."
     # 360 nocache
-    if npm run fix:nocache
+    # Do a prettier run in the end for good measure
+    if npm run fix:nocache && npm run format
     then
         echo "Some fixes were made"
-    else
-        echo "Fixes could not be performed. Trying again."
-        if npm run fix:nocache
+        if npm run check:nocache
         then
-            echo "Fixes were performed."
+            echo "It's all good now"
         else
-            echo "That didn't work at all"
+            echo "npm run check didn't work at all"
             exit 1
         fi
+    else
+        echo "Fixes could not be performed. Trying again."
+        exit 1
     fi
 fi
 
