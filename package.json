@@ -77,7 +77,7 @@
         "fuse.js": "~6.6.2",
         "pikaday": "~1.8.2",
         "svelte": "~4.0.0",
-        "svelte-boring-avatars": "~1.2.3",
+        "svelte-boring-avatars": "~1.2.4",
         "svelte-i18n": "~4.0.0",
         "svelte-local-storage-store": "~0.6.4",
         "tailwindcss": "~3.3.3",
