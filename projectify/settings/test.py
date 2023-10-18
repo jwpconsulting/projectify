@@ -1,8 +1,4 @@
 """Test settings."""
-from os import (
-    environ,
-)
-
 from .base import (
     Base,
 )
@@ -29,14 +25,16 @@ class Test(Base):
     STRIPE_SECRET_KEY = "null"
     STRIPE_ENDPOINT_SECRET = "null"
 
-    # TODO make extra settings object for this
-    # Copy static files storage from production settings to test
-    # collectstatic
-    if "TEST_STATICFILES_STORAGE" in environ:
-        STORAGES = Base.STORAGES
-        STORAGES["staticfiles"][
-            "BACKEND"
-        ] = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
     # Celery
     CELERY_BROKER_URL = "memory://"
+
+
+class TestCollectstatic(Test):
+    """Settings to test static file collection needed for whitenoise."""
+
+    STORAGES = {
+        **Base.STORAGES,
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
