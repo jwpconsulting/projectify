@@ -39,7 +39,7 @@
         "@storybook/addon-viewport": "~7.4.0",
         "@storybook/svelte": "~7.4.0",
         "@storybook/sveltekit": "~7.4.0",
-        "@types/pikaday": "~1.7.6",
+        "@types/pikaday": "~1.7.7",
         "@typescript-eslint/eslint-plugin": "~6.8.0",
         "@typescript-eslint/parser": "~6.8.0",
         "eslint": "~8.39.0",
