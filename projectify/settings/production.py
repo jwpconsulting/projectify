@@ -1,5 +1,9 @@
 """Production settings."""
 import os
+from collections.abc import (
+    Iterable,
+    Sequence,
+)
 
 from .. import (
     redis_helper,
@@ -21,6 +25,16 @@ def get_redis_tls_url() -> str:
     raise ValueError(
         "Neither REDIS_TLS_URL nor REDIS_URL could be found in the environment"
     )
+
+
+def remove_csrf_middleware(middleware: Sequence[str]) -> Iterable[str]:
+    """Remove CORS middleware. No idea why we should do that."""
+    csrf_middleware = "django.middleware.csrf.CsrfViewMiddleware"
+    for m in middleware:
+        if m == csrf_middleware:
+            yield "projectify.middleware.DisableCSRFMiddleware"
+        else:
+            yield m
 
 
 class Production(Base):
@@ -81,13 +95,11 @@ class Production(Base):
     # TODO override this in a cleaner way
     # XXX actually, I don't know why we have it in the first place,
     # and at this point I am afraid to ask.
-    csrf_middleware = "django.middleware.csrf.CsrfViewMiddleware"
-    if "DISABLE_CSRF_PROTECTION" in os.environ:
-        MIDDLEWARE = Base.MIDDLEWARE
-        csrf_middleware_index = MIDDLEWARE.index(csrf_middleware)
-        MIDDLEWARE[
-            csrf_middleware_index
-        ] = "projectify.middleware.DisableCSRFMiddleware"
+    MIDDLEWARE = (
+        list(remove_csrf_middleware(Base.MIDDLEWARE))
+        if "DISABLE_CSRF_PROTECTION" in os.environ
+        else Base.MIDDLEWARE
+    )
 
     CSRF_COOKIE_DOMAIN = ".projectifyapp.com"
 
