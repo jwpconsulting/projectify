@@ -72,7 +72,7 @@
         "@sveltejs/adapter-static": "~2.0.2",
         "@sveltejs/kit": "~1.23.0",
         "@tailwindcss/typography": "~0.5.9",
-        "autoprefixer": "~10.4.14",
+        "autoprefixer": "~10.4.16",
         "date-fns": "~2.30.0",
         "fuse.js": "~6.6.2",
         "pikaday": "~1.8.2",
