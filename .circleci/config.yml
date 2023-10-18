@@ -86,7 +86,7 @@ jobs:
           name: Run collectstatic
           command: poetry run ./manage.py collectstatic --noinput
           environment:
-            TEST_STATICFILES_STORAGE:
+            DJANGO_CONFIGURATION: TestCollectstatic
   tests:
     executor: python_and_postgres
     parallelism: 8
