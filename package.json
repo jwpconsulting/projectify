@@ -53,7 +53,7 @@
         "knip": "~2.20.2",
         "prettier": "~3.0.3",
         "prettier-plugin-svelte": "~3.0.3",
-        "prettier-plugin-tailwindcss": "~0.5.3",
+        "prettier-plugin-tailwindcss": "~0.5.6",
         "react": "~18.2.0",
         "react-dom": "~18.2.0",
         "storybook": "~7.4.6",
