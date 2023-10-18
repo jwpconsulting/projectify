@@ -1,15 +1,19 @@
+"""Redis test settings."""
+# TODO: This can be part of settings/test.py
 import os
-import ssl
 
 from .. import (
     redis_helper,
 )
-
-# flake8: noqa: F401, F403
-from .test import *
+from .test import (
+    Test,
+)
 
 
 class TestRedis(Test):
+    """Settings used to test the connection to Redis."""
+
+    # XXX when do we use this?
     # REDIS
     # https://devcenter.heroku.com/articles/connecting-heroku-redis#connecting-in-python
     # Obviously, this isn't great
