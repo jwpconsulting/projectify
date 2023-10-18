@@ -4,37 +4,41 @@ import os
 from .base import *
 
 
-SECRET_KEY = "development"
+class Development(Base):
+    """Development configuration."""
 
-# Debug
-DEBUG = True
-DEBUG_TOOLBAR = True
-INTERNAL_IPS = ("127.0.0.1",)
+    SECRET_KEY = "development"
 
-CORS_ALLOWED_ORIGINS = ("http://localhost:3000",)
-CSRF_TRUSTED_ORIGINS = ("http://localhost:3000",)
+    # Debug
+    DEBUG = True
+    DEBUG_TOOLBAR = True
+    INTERNAL_IPS = ("127.0.0.1",)
 
-FRONTEND_URL = "http://localhost:3000/"
+    CORS_ALLOWED_ORIGINS = ("http://localhost:3000",)
+    CSRF_TRUSTED_ORIGINS = ("http://localhost:3000",)
 
-CELERY_TASK_ALWAYS_EAGER = True
-CELERY_BROKER_URL = os.environ["REDIS_TLS_URL"]
+    FRONTEND_URL = "http://localhost:3000/"
 
-# Email
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    CELERY_TASK_ALWAYS_EAGER = True
+    CELERY_BROKER_URL = os.environ["REDIS_TLS_URL"]
 
-# GraphQL
-GRAPHIQL_ENABLE = True
+    # Email
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-# Media
-SERVE_MEDIA = True
-STORAGES["default"]["BACKEND"] = "projectify.storage.LocalhostStorage"
+    # GraphQL
+    GRAPHIQL_ENABLE = True
 
-# Stripe
-STRIPE_PUBLISHABLE_KEY = os.environ["STRIPE_PUBLISHABLE_KEY"]
-STRIPE_SECRET_KEY = os.environ["STRIPE_SECRET_KEY"]
-STRIPE_PRICE_OBJECT = os.environ["STRIPE_PRICE_OBJECT"]
-STRIPE_ENDPOINT_SECRET = os.environ["STRIPE_ENDPOINT_SECRET"]
+    # Media
+    SERVE_MEDIA = True
+    STORAGES = Base.STORAGES
+    STORAGES["default"]["BACKEND"] = "projectify.storage.LocalhostStorage"
 
-# Safari workaround for sessionid cookie
-SESSION_COOKIE_SECURE = False
-SESSION_COOKIE_SAMESITE = "Lax"
+    # Stripe
+    STRIPE_PUBLISHABLE_KEY = os.environ["STRIPE_PUBLISHABLE_KEY"]
+    STRIPE_SECRET_KEY = os.environ["STRIPE_SECRET_KEY"]
+    STRIPE_PRICE_OBJECT = os.environ["STRIPE_PRICE_OBJECT"]
+    STRIPE_ENDPOINT_SECRET = os.environ["STRIPE_ENDPOINT_SECRET"]
+
+    # Safari workaround for sessionid cookie
+    SESSION_COOKIE_SECURE = False
+    SESSION_COOKIE_SAMESITE = "Lax"
