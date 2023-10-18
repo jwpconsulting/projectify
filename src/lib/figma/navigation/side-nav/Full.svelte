@@ -2,7 +2,7 @@
     import WorkspaceMenu from "$lib/figma/buttons/WorkspaceMenu.svelte";
     import LabelDropdown from "$lib/figma/composites/LabelDropdown.svelte";
     import Boards from "$lib/figma/navigation/side-nav/Boards.svelte";
-    import Members from "$lib/figma/navigation/side-nav/Members.svelte";
+    import WorkspaceUsers from "$lib/figma/navigation/side-nav/WorkspaceUsers.svelte";
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspaces: Workspace[];
@@ -13,7 +13,7 @@
     <WorkspaceMenu {workspaces} {workspace} open={true} />
     <div class="flex flex-col overflow-x-auto overflow-y-scroll">
         <Boards {workspace} />
-        <Members />
+        <WorkspaceUsers />
         <LabelDropdown />
     </div>
 </nav>
