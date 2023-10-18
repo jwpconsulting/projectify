@@ -30,6 +30,8 @@ from .monkeypatch import (
 )
 from .types import (
     ChannelLayers,
+    StoragesConfig,
+    TemplatesConfig,
 )
 
 
@@ -133,23 +135,6 @@ class Base(Configuration):
 
     ROOT_URLCONF = "projectify.urls"
 
-    # TODO write type definition for me
-    TEMPLATES = [
-        {
-            "BACKEND": "django.template.backends.django.DjangoTemplates",
-            "DIRS": [],
-            "APP_DIRS": True,
-            "OPTIONS": {
-                "context_processors": [
-                    "django.template.context_processors.debug",
-                    "django.template.context_processors.request",
-                    "django.contrib.auth.context_processors.auth",
-                    "django.contrib.messages.context_processors.messages",
-                ],
-            },
-        },
-    ]
-
     WSGI_APPLICATION = "projectify.wsgi.application"
     ASGI_APPLICATION = "projectify.asgi.application"
 
@@ -221,9 +206,7 @@ class Base(Configuration):
 
     AUTH_USER_MODEL = "user.User"
 
-    # TODO This will override the above definition.
-    # Only use one.
-    TEMPLATES = [
+    TEMPLATES: TemplatesConfig = [
         {
             "BACKEND": "django.template.backends.django.DjangoTemplates",
             "APP_DIRS": True,
@@ -283,8 +266,7 @@ class Base(Configuration):
     MEDIA_CLOUDINARY_STORAGE = (
         "cloudinary_storage.storage.MediaCloudinaryStorage"
     )
-    # TODO write a type definition for this
-    STORAGES = {
+    STORAGES: StoragesConfig = {
         "default": {
             "BACKEND": "django.core.files.storage.FileSystemStorage",
         },
