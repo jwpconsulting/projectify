@@ -1,18 +1,18 @@
 """Production settings."""
 import os
-import ssl
 
 from .. import (
     redis_helper,
 )
-
-# flake8: noqa: F401, F403
-from .base import *
+from .base import (
+    Base,
+)
 
 
 class Production(Base):
     """Production configuration."""
 
+    # TODO write helper method for this if else
     # Redis URL
     # Heroku unsets REDIS_TLS_URL when migrating to premium redis
     if "REDIS_TLS_URL" not in os.environ:
@@ -24,6 +24,7 @@ class Production(Base):
 
     ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split(",")
 
+    # TODO override this in a cleaner way
     STORAGES = Base.STORAGES
     STORAGES["staticfiles"][
         "BACKEND"
@@ -58,12 +59,18 @@ class Production(Base):
     )
 
     # GraphQL
+    # TODO ideally we would never have to set it to False here, only once
+    # in the base settings
     GRAPHIQL_ENABLE = False
 
     # Cloudinary
+    # TODO override this in a cleaner way
     STORAGES["default"]["BACKEND"] = Base.MEDIA_CLOUDINARY_STORAGE
 
     # Disable CSRF protection
+    # TODO override this in a cleaner way
+    # XXX actually, I don't know why we have it in the first place,
+    # and at this point I am afraid to ask.
     csrf_middleware = "django.middleware.csrf.CsrfViewMiddleware"
     if "DISABLE_CSRF_PROTECTION" in os.environ:
         MIDDLEWARE = Base.MIDDLEWARE
