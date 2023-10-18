@@ -9,16 +9,25 @@ from .base import (
 )
 
 
+def get_redis_tls_url() -> str:
+    """Get the correct redis tls url, because Heroku."""
+    # I am looking at you, Heroku :(((
+    # Heroku unsets REDIS_TLS_URL when migrating to premium redis
+    # TODO consider leaving Heroku (after 10 years!)
+    if "REDIS_TLS_URL" in os.environ:
+        return os.environ["REDIS_TLS_URL"]
+    elif "REDIS_URL" in os.environ:
+        return os.environ["REDIS_URL"]
+    raise ValueError(
+        "Neither REDIS_TLS_URL nor REDIS_URL could be found in the environment"
+    )
+
+
 class Production(Base):
     """Production configuration."""
 
-    # TODO write helper method for this if else
     # Redis URL
-    # Heroku unsets REDIS_TLS_URL when migrating to premium redis
-    if "REDIS_TLS_URL" not in os.environ:
-        REDIS_TLS_URL = os.environ["REDIS_URL"]
-    else:
-        REDIS_TLS_URL = os.environ["REDIS_TLS_URL"]
+    REDIS_TLS_URL = get_redis_tls_url()
 
     SECRET_KEY = os.environ["SECRET_KEY"]
 
