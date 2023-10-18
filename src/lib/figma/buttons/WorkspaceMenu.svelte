@@ -44,8 +44,8 @@
 
 {#if open}
     <div class="px-4 pb-4">
-        <div class="flex flex-row items-center justify-between">
-            <div bind:this={workspaceContextMenuAnchor}>
+        <div class="flex flex-row items-center justify-between gap-4">
+            <div class="min-w-0" bind:this={workspaceContextMenuAnchor}>
                 <Filter
                     icon={Briefcase}
                     label={workspace.title}

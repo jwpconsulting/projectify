@@ -90,7 +90,7 @@ export const workspaceBoard: WorkspaceBoard = {
 
 export const workspace = {
     uuid: "does-not-exist",
-    title: "This is a workspace",
+    title: "This is a workspace, the title is veeeeeryyy loooong",
     created: "",
     modified: "",
     workspace_boards: [workspaceBoard],
