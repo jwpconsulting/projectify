@@ -2,8 +2,8 @@
     import CreateWorkspace from "$lib/figma/overlays/constructive/CreateWorkspace.svelte";
     import CreateWorkspaceBoard from "$lib/figma/overlays/constructive/CreateWorkspaceBoard.svelte";
     import CreateWorkspaceBoardSection from "$lib/figma/overlays/constructive/CreateWorkspaceBoardSection.svelte";
-    import InviteMemberError from "$lib/figma/overlays/constructive/InviteMemberError.svelte";
     import InviteWorkspaceUser from "$lib/figma/overlays/constructive/InviteWorkspaceUser.svelte";
+    import InviteWorkspaceUserError from "$lib/figma/overlays/constructive/InviteWorkspaceUserError.svelte";
     import RecoverWorkspaceBoard from "$lib/figma/overlays/constructive/RecoverWorkspaceBoard.svelte";
     import SkipOnboarding from "$lib/figma/overlays/constructive/SkipOnboarding.svelte";
     import UpdateWorkspaceBoard from "$lib/figma/overlays/constructive/UpdateWorkspaceBoard.svelte";
@@ -19,7 +19,7 @@
 {:else if target.kind === "inviteTeamMembers"}
     <InviteWorkspaceUser workspace={target.workspace} />
 {:else if target.kind === "inviteTeamMembersNoSeatsLeft"}
-    <InviteMemberError workspace={target.workspace} />
+    <InviteWorkspaceUserError workspace={target.workspace} />
 {:else if target.kind === "createWorkspaceBoardSection"}
     <CreateWorkspaceBoardSection workspaceBoard={target.workspaceBoard} />
 {:else if target.kind === "createWorkspace"}
