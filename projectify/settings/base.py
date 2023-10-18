@@ -11,21 +11,16 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from collections.abc import (
+    Iterable,
     Sequence,
 )
 from pathlib import (
     Path,
 )
-from typing import (
-    Iterable,
-)
 
 import dj_database_url
 from configurations.base import (
     Configuration,
-)
-from dotenv import (
-    load_dotenv,
 )
 
 from .monkeypatch import (
@@ -37,8 +32,6 @@ from .types import (
     TemplatesConfig,
 )
 
-
-load_dotenv()
 
 patch()
 
@@ -149,8 +142,7 @@ class Base(Configuration):
 
     # Database
     # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-    CONN_MAX_AGE = 0
-    DATABASES = {"default": dj_database_url.config(conn_max_age=CONN_MAX_AGE)}
+    DATABASES: dict[str, dj_database_url.DBConfig]
     # There was a reason why we added this - some weird issue
     # with channels timing out. I am commenting this out temporarily.
     # DATABASES["default"]["OPTIONS"] = {
@@ -160,6 +152,14 @@ class Base(Configuration):
     #         "-c idle_in_transaction_session_timeout=5000 "
     #     ),
     # }
+
+    @classmethod
+    def setup(cls) -> None:
+        """Load database config, after environment is correctly loaded."""
+        CONN_MAX_AGE = 0
+        cls.DATABASES = {
+            "default": dj_database_url.config(conn_max_age=CONN_MAX_AGE)
+        }
 
     # Password validation
     # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
