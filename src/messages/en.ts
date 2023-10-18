@@ -559,9 +559,14 @@ const messages: MessageCollection = {
         },
         "members": {
             "title": "Members",
+            "search": {
+                label: "Search team members",
+                placeholder: "Enter a query to search for team members",
+            },
             "search-members": "Search members",
             "no-job-title": "No job title",
-            "filter-by-roles": "Filter by roles",
+            "no-members-found":
+                "No members found for this search query. Please try another search.",
             "role": "Role",
             "member-details": "Member details",
             "invite-new-members": "Invite new members",

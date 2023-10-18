@@ -1,19 +1,19 @@
-import { internallyWritable } from "../util";
+/*
+ * Filter used to filter tasks by workspace users
+ */
+import { derived, writable } from "svelte/store";
+import type { Readable, Writable } from "svelte/store";
 
-import type {
-    WorkspaceUserSearch,
-    WorkspaceUserSearchResults,
-} from "./workspaceUser";
+import { internallyWritable, searchAmong } from "../util";
 
-import {
-    createWorkspaceUserSearchResults,
-    currentWorkspaceUsers,
-    createWorkspaceUserFilter,
-} from "$lib/stores/dashboard/workspaceUser";
+import { currentWorkspaceUsers } from "$lib/stores/dashboard/workspaceUser";
+import type { CurrentWorkspaceUsers } from "$lib/stores/dashboard/workspaceUser";
+import type { SearchInput } from "$lib/types/base";
 import type {
     WorkspaceUserSelection,
     WorkspaceUserSelectionInput,
 } from "$lib/types/ui";
+import type { WorkspaceUser } from "$lib/types/workspace";
 
 const { priv: _selectedWorkspaceUser, pub: selectedWorkspaceUser } =
     internallyWritable<WorkspaceUserSelection>({
@@ -21,8 +21,51 @@ const { priv: _selectedWorkspaceUser, pub: selectedWorkspaceUser } =
     });
 export { selectedWorkspaceUser };
 
+type WorkspaceUserSearch = Writable<SearchInput>;
+const createWorkspaceUserFilter = () => writable<SearchInput>(undefined);
+
+export function searchWorkspaceUsers(
+    workspaceUsers: WorkspaceUser[],
+    searchInput: SearchInput
+) {
+    return searchAmong(
+        ["user.email", "user.full_name"],
+        workspaceUsers,
+        searchInput
+    );
+}
+
+type WorkspaceUserSearchResults = Readable<WorkspaceUser[]>;
+
+function createWorkspaceUserSearchResults(
+    currentWorkspaceUsers: CurrentWorkspaceUsers,
+    workspaceUserSearch: WorkspaceUserSearch
+): WorkspaceUserSearchResults {
+    return derived<
+        [typeof currentWorkspaceUsers, typeof workspaceUserSearch],
+        WorkspaceUser[]
+    >(
+        [currentWorkspaceUsers, workspaceUserSearch],
+        ([$currentWorkspaceUsers, $workspaceUserSearch], set) => {
+            set(
+                searchWorkspaceUsers(
+                    $currentWorkspaceUsers,
+                    $workspaceUserSearch
+                )
+            );
+        },
+        []
+    );
+}
+
 export const workspaceUserSearch: WorkspaceUserSearch =
     createWorkspaceUserFilter();
+
+export const workspaceUserSearchResults: WorkspaceUserSearchResults =
+    createWorkspaceUserSearchResults(
+        currentWorkspaceUsers,
+        workspaceUserSearch
+    );
 
 export function filterByWorkspaceUser(selection: WorkspaceUserSelectionInput) {
     _selectedWorkspaceUser.update(
@@ -83,9 +126,3 @@ export function unfilterByWorkspaceUser(
         }
     );
 }
-
-export const workspaceUserSearchResults: WorkspaceUserSearchResults =
-    createWorkspaceUserSearchResults(
-        currentWorkspaceUsers,
-        workspaceUserSearch
-    );
