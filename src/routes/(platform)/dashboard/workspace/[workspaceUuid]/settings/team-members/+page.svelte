@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { PageData } from "./$types";
 
-    import Members from "$lib/figma/screens/workspace-settings/Members.svelte";
+    import WorkspaceUsers from "$lib/figma/screens/workspace-settings/WorkspaceUsers.svelte";
     import { currentWorkspace } from "$lib/stores/dashboard";
 
     export let data: PageData;
@@ -10,4 +10,4 @@
     $: workspace = $currentWorkspace ?? workspace;
 </script>
 
-<Members {workspace} />
+<WorkspaceUsers {workspace} />
