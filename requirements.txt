@@ -236,6 +236,9 @@ django-celery-results==2.4.0 ; python_version >= "3.11" and python_version < "3.
 django-cloudinary-storage==0.3.0 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:95c855c7334141b2a485ea7eb5716de87bb6ce0d848e205debb3a3ab7bbbd49a \
     --hash=sha256:debd403a5f225c9d35c4af508ff4abc7fdc262129464134b60b2feeb2c44d3e1
+django-configurations==2.4.1 ; python_version >= "3.11" and python_version < "3.12" \
+    --hash=sha256:8bf8866ae29db89ecf93a7743450b5d8974073cf7c194fd98764fd16deac218d \
+    --hash=sha256:a6c25c143834e67b20d34751512d08b3290684f25098ee212b1ee36804a59085
 django-cors-headers==3.13.0 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:37e42883b5f1f2295df6b4bba96eb2417a14a03270cb24b2a07f021cd4487cf4 \
     --hash=sha256:f9dc6b4e3f611c3199700b3e5f3398c28757dcd559c2f82932687f3d0443cfdf
