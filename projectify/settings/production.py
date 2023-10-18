@@ -33,12 +33,6 @@ class Production(Base):
 
     ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split(",")
 
-    # TODO override this in a cleaner way
-    STORAGES = Base.STORAGES
-    STORAGES["staticfiles"][
-        "BACKEND"
-    ] = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
     FRONTEND_URL = os.environ["FRONTEND_URL"]
 
     ANYMAIL = {
@@ -73,8 +67,15 @@ class Production(Base):
     GRAPHIQL_ENABLE = False
 
     # Cloudinary
-    # TODO override this in a cleaner way
-    STORAGES["default"]["BACKEND"] = Base.MEDIA_CLOUDINARY_STORAGE
+    STORAGES = {
+        **Base.STORAGES,
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+        "default": {
+            "BACKEND": Base.MEDIA_CLOUDINARY_STORAGE,
+        },
+    }
 
     # Disable CSRF protection
     # TODO override this in a cleaner way
