@@ -27,12 +27,19 @@ def get_redis_tls_url() -> str:
     )
 
 
-def remove_csrf_middleware(middleware: Sequence[str]) -> Iterable[str]:
+def populate_production_middleware(middleware: Sequence[str]) -> Iterable[str]:
     """Remove CORS middleware. No idea why we should do that."""
     csrf_middleware = "django.middleware.csrf.CsrfViewMiddleware"
+    gzip_middleware = "django.middleware.gzip.GZipMiddleware"
+    disable_csrf = "DISABLE_CSRF_PROTECTION" in os.environ
     for m in middleware:
-        if m == csrf_middleware:
+        if m == csrf_middleware and disable_csrf:
             yield "projectify.middleware.DisableCSRFMiddleware"
+            continue
+        elif m == gzip_middleware:
+            # Yield white noise *after* gzip
+            yield m
+            yield "whitenoise.middleware.WhiteNoiseMiddleware"
         else:
             yield m
 
@@ -95,11 +102,7 @@ class Production(Base):
     # TODO override this in a cleaner way
     # XXX actually, I don't know why we have it in the first place,
     # and at this point I am afraid to ask.
-    MIDDLEWARE = (
-        list(remove_csrf_middleware(Base.MIDDLEWARE))
-        if "DISABLE_CSRF_PROTECTION" in os.environ
-        else Base.MIDDLEWARE
-    )
+    MIDDLEWARE = list(populate_production_middleware(Base.MIDDLEWARE))
 
     CSRF_COOKIE_DOMAIN = ".projectifyapp.com"
 

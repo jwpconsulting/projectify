@@ -121,8 +121,6 @@ class Base(Configuration):
     MIDDLEWARE = [
         "django.middleware.security.SecurityMiddleware",
         "django.middleware.gzip.GZipMiddleware",
-        # TODO white noise middleware is only needed in production
-        "whitenoise.middleware.WhiteNoiseMiddleware",
         "corsheaders.middleware.CorsMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
         "django.middleware.common.CommonMiddleware",
