@@ -1,15 +1,37 @@
 """Development settings."""
 import os
+from collections.abc import (
+    Iterable,
+    Sequence,
+)
 
 from .base import (
     Base,
 )
 
 
+def add_debug_middleware(middleware: Sequence[str]) -> Iterable[str]:
+    """Add the debug toolbar to debug middleware."""
+    gzip_middleware = "django.middleware.gzip.GZipMiddleware"
+    for m in middleware:
+        if m == gzip_middleware:
+            yield m
+            yield "debug_toolbar.middleware.DebugToolbarMiddleware"
+        else:
+            yield m
+
+
 class Development(Base):
     """Development configuration."""
 
     SECRET_KEY = "development"
+
+    INSTALLED_APPS = (
+        *Base.INSTALLED_APPS,
+        "debug_toolbar",
+    )
+
+    MIDDLEWARE = list(add_debug_middleware(Base.MIDDLEWARE))
 
     # Debug
     DEBUG = True

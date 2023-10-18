@@ -10,6 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
+from collections.abc import (
+    Sequence,
+)
 from pathlib import (
     Path,
 )
@@ -86,9 +89,6 @@ class Base(Configuration):
     INSTALLED_APPS_THIRD_PARTY = (
         "cloudinary",
         "cloudinary_storage",
-        # TODO make this optional
-        # it should only ever be loaded in Development settings
-        "debug_toolbar",
         "django_celery_results",
         "django_extensions",
         # TODO
@@ -112,7 +112,7 @@ class Base(Configuration):
         "corporate",
     )
 
-    INSTALLED_APPS = (
+    INSTALLED_APPS: Sequence[str] = (
         INSTALLED_APPS_DJANGO
         + INSTALLED_APPS_THIRD_PARTY
         + INSTALLED_APPS_FIRST_PARTY
@@ -121,8 +121,7 @@ class Base(Configuration):
     MIDDLEWARE = [
         "django.middleware.security.SecurityMiddleware",
         "django.middleware.gzip.GZipMiddleware",
-        # XXX I don't like this being here in our Middleware unconditionally
-        "debug_toolbar.middleware.DebugToolbarMiddleware",
+        # TODO white noise middleware is only needed in production
         "whitenoise.middleware.WhiteNoiseMiddleware",
         "corsheaders.middleware.CorsMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
