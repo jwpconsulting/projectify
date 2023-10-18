@@ -59,6 +59,11 @@ class Base(Configuration):
     # SECURITY WARNING: don't run with debug turned on in production!
     ALLOWED_HOSTS: Iterable[str] = []
 
+    # Debug
+    DEBUG_TOOLBAR = False
+    DEBUG = False
+    GRAPHIQL_ENABLE = False
+
     SESSION_COOKIE_SAMESITE = "None"
     SESSION_COOKIE_SECURE = True
 
@@ -271,7 +276,3 @@ class Base(Configuration):
             "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
         },
     }
-
-    # Debug
-    DEBUG_TOOLBAR = False
-    DEBUG = False
