@@ -31,7 +31,6 @@ exclude = [".git", "__pycache__", "docs", "whitelist.py"]
 # Library imports
 [[tool.mypy.overrides]]
 module = [
-    "celery.*",
     "cloudinary.*",
     "dj_database_url.*",
     "pgtrigger.*",
@@ -137,6 +136,7 @@ pyright = "~1.1.318"
 
 [tool.poetry.group.test.dependencies]
 black = "~22.6.0"
+celery-types = "~0.20.0"
 django-test-migrations = "~1.2.0"
 django-types = "~0"
 flake8 = "~4.0.1"
