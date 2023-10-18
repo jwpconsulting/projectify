@@ -2,7 +2,7 @@
     // TODO can we name it workspace users instead?
     import { _ } from "svelte-i18n";
 
-    import MemberCard from "$lib/figma/screens/workspace-settings/MemberCard.svelte";
+    import WorkspaceUserCard from "$lib/figma/screens/workspace-settings/WorkspaceUserCard.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { currentWorkspaceUsers } from "$lib/stores/dashboard";
@@ -53,7 +53,7 @@
         </div>
     </div>
     {#each workspaceUsers as workspaceUser}
-        <MemberCard {workspaceUser} />
+        <WorkspaceUserCard {workspaceUser} />
     {:else}
         <p class="py-4">
             {$_("workspace-settings.members.no-members-found")}
