@@ -16,9 +16,6 @@ class Test(Base):
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
     EMAIL_EAGER = True
 
-    # GraphQL
-    GRAPHIQL_ENABLE = False
-
     # Stripe
     # TODO
     # Something other than null would be great, like Optional[str]
