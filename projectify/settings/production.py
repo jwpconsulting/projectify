@@ -82,11 +82,6 @@ class Production(Base):
         "http://localhost:3000",
     )
 
-    # GraphQL
-    # TODO ideally we would never have to set it to False here, only once
-    # in the base settings
-    GRAPHIQL_ENABLE = False
-
     # Cloudinary
     STORAGES = {
         **Base.STORAGES,
