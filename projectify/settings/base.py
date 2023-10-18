@@ -150,15 +150,16 @@ class Base(Configuration):
     # Database
     # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
     CONN_MAX_AGE = 0
-    # TODO inject OPTIONS cleanly when calling .config()
     DATABASES = {"default": dj_database_url.config(conn_max_age=CONN_MAX_AGE)}
-    DATABASES["default"]["OPTIONS"] = {
-        "options": (
-            "-c statement_timeout=5000 "
-            "-c lock_timeout=5000 "
-            "-c idle_in_transaction_session_timeout=5000 "
-        ),
-    }
+    # There was a reason why we added this - some weird issue
+    # with channels timing out. I am commenting this out temporarily.
+    # DATABASES["default"]["OPTIONS"] = {
+    #     "options": (
+    #         "-c statement_timeout=5000 "
+    #         "-c lock_timeout=5000 "
+    #         "-c idle_in_transaction_session_timeout=5000 "
+    #     ),
+    # }
 
     # Password validation
     # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

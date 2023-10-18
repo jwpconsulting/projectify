@@ -32,7 +32,6 @@ exclude = [".git", "__pycache__", "docs", "whitelist.py"]
 [[tool.mypy.overrides]]
 module = [
     "cloudinary.*",
-    "dj_database_url.*",
     "pgtrigger.*",
 ]
 ignore_missing_imports = true
@@ -92,7 +91,7 @@ readme = "README.md"
 celery = {extras = ["redis"], version = "~5.2.7"}
 channels = {version = "~4.0.0", extras = ["daphne"]}
 channels-redis = "~4.0.0"
-dj-database-url = "~0.5.0"
+dj-database-url = "~2.1.0"
 django = "~4.2.3"
 django-anymail = {extras = ["mailgun"], version = "~8.6"}
 django-celery-results = "~2.4.0"
@@ -167,3 +166,9 @@ exclude = [
     "schema",
     "migrations",
 ]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "projectify.settings.test"
+DJANGO_CONFIGURATION = "Test"
+asyncio_mode = "auto"
+junit_family = "xunit1"
