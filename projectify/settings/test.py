@@ -38,3 +38,20 @@ class TestCollectstatic(Test):
             "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
         },
     }
+
+
+class TestRedis(Test):
+    """
+    Settings used to test the connection to Redis on localhost.
+
+    See bin/test_redis.sh
+    """
+
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [("127.0.0.1", 6379)],
+            },
+        },
+    }
