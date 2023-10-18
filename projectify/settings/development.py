@@ -22,6 +22,7 @@ class Development(Base):
     FRONTEND_URL = "http://localhost:3000/"
 
     CELERY_TASK_ALWAYS_EAGER = True
+    # TODO if celery is eager, a broker should not be necessary, right?
     CELERY_BROKER_URL = os.environ["REDIS_TLS_URL"]
 
     # Email
@@ -32,11 +33,17 @@ class Development(Base):
 
     # Media
     SERVE_MEDIA = True
-    # TODO override this in a clean way
-    STORAGES = Base.STORAGES
-    STORAGES["default"]["BACKEND"] = "projectify.storage.LocalhostStorage"
+
+    STORAGES = {
+        **Base.STORAGES,
+        "default": {
+            "BACKEND": "projectify.storage.LocalhostStorage",
+        },
+    }
 
     # Stripe
+    # TODO here we can make these variables None if they are missing and
+    # warn the user about it.
     STRIPE_PUBLISHABLE_KEY = os.environ["STRIPE_PUBLISHABLE_KEY"]
     STRIPE_SECRET_KEY = os.environ["STRIPE_SECRET_KEY"]
     STRIPE_PRICE_OBJECT = os.environ["STRIPE_PRICE_OBJECT"]
