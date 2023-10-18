@@ -3,8 +3,9 @@ from os import (
     environ,
 )
 
-# flake8: noqa: F401, F403
-from .base import *
+from .base import (
+    Base,
+)
 
 
 class Test(Base):
@@ -20,12 +21,15 @@ class Test(Base):
     EMAIL_EAGER = True
 
     # GraphQL
-    GRAPHIQL_ENABLE = False  #
+    GRAPHIQL_ENABLE = False
 
     # Stripe
+    # TODO
+    # Something other than null would be great, like Optional[str]
     STRIPE_SECRET_KEY = "null"
     STRIPE_ENDPOINT_SECRET = "null"
 
+    # TODO make extra settings object for this
     # Copy static files storage from production settings to test
     # collectstatic
     if "TEST_STATICFILES_STORAGE" in environ:

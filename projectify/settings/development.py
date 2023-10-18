@@ -1,7 +1,9 @@
-# flake8: noqa: F401, F403
+"""Development settings."""
 import os
 
-from .base import *
+from .base import (
+    Base,
+)
 
 
 class Development(Base):
@@ -30,6 +32,7 @@ class Development(Base):
 
     # Media
     SERVE_MEDIA = True
+    # TODO override this in a clean way
     STORAGES = Base.STORAGES
     STORAGES["default"]["BACKEND"] = "projectify.storage.LocalhostStorage"
 

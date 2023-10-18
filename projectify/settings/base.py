@@ -42,30 +42,31 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 class Base(Configuration):
-    """Base configuration."""
+    """
+    Base configuration.
 
-    # Quick-start development settings - unsuitable for production
-    # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
+    Largely derived from Django quick-start development settings - unsuitable
+    for production.
+
+    See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
+    """
 
     # SECURITY WARNING: don't run with debug turned on in production!
-
     ALLOWED_HOSTS: Iterable[str] = []
 
     SESSION_COOKIE_SAMESITE = "None"
     SESSION_COOKIE_SECURE = True
 
     # CSRF
-
     CSRF_USE_SESSIONS = False
     CSRF_COOKIE_SAMESITE = "None"
     CSRF_COOKIE_SECURE = True
 
-    # Cors
-
+    # CORS
     CORS_ALLOW_CREDENTIALS = True
 
-    # Application definition
-
+    # Installed applications
+    # Applications from Django project
     INSTALLED_APPS_DJANGO = (
         "channels",
         "daphne",
@@ -77,14 +78,23 @@ class Base(Configuration):
         "django.contrib.staticfiles",
     )
 
+    # Any third party applications we are using
+    # It's wise to reduce our dependency on third party dependencies as much as
+    # we can, while avoiding to reinvent the wheel every time.
     INSTALLED_APPS_THIRD_PARTY = (
         "cloudinary",
         "cloudinary_storage",
+        # TODO make this optional
+        # it should only ever be loaded in Development settings
         "debug_toolbar",
         "django_celery_results",
         "django_extensions",
+        # TODO
+        # We don't want to use GraphQL anymore.
         "strawberry.django",
+        # XXX are we still using this?
         "ordered_model",
+        # TODO I think this is ours, not third party
         "premail",
         "rest_framework",
         "rules.apps.AutodiscoverRulesConfig",
@@ -92,6 +102,7 @@ class Base(Configuration):
     )
 
     INSTALLED_APPS_FIRST_PARTY = (
+        # TODO check if this can be alphabetized
         "projectify",
         "user",
         "workspace",
@@ -108,6 +119,7 @@ class Base(Configuration):
     MIDDLEWARE = [
         "django.middleware.security.SecurityMiddleware",
         "django.middleware.gzip.GZipMiddleware",
+        # XXX I don't like this being here in our Middleware unconditionally
         "debug_toolbar.middleware.DebugToolbarMiddleware",
         "whitenoise.middleware.WhiteNoiseMiddleware",
         "corsheaders.middleware.CorsMiddleware",
@@ -121,6 +133,7 @@ class Base(Configuration):
 
     ROOT_URLCONF = "projectify.urls"
 
+    # TODO write type definition for me
     TEMPLATES = [
         {
             "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -150,6 +163,7 @@ class Base(Configuration):
     # Database
     # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
     CONN_MAX_AGE = 0
+    # TODO inject OPTIONS cleanly when calling .config()
     DATABASES = {"default": dj_database_url.config(conn_max_age=CONN_MAX_AGE)}
     DATABASES["default"]["OPTIONS"] = {
         "options": (
@@ -161,7 +175,6 @@ class Base(Configuration):
 
     # Password validation
     # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
-
     AUTH_PASSWORD_VALIDATORS = [
         {
             "NAME": "django.contrib.auth.password_validation."
@@ -189,7 +202,6 @@ class Base(Configuration):
 
     # Internationalization
     # https://docs.djangoproject.com/en/3.2/topics/i18n/
-
     LANGUAGE_CODE = "en-us"
 
     TIME_ZONE = "UTC"
@@ -200,17 +212,17 @@ class Base(Configuration):
 
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/3.2/howto/static-files/
-
     STATIC_URL = "/static/"
     STATIC_ROOT = Path(BASE_DIR, "staticfiles")
 
     # Default primary key field type
     # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-
     DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
     AUTH_USER_MODEL = "user.User"
 
+    # TODO This will override the above definition.
+    # Only use one.
     TEMPLATES = [
         {
             "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -271,6 +283,7 @@ class Base(Configuration):
     MEDIA_CLOUDINARY_STORAGE = (
         "cloudinary_storage.storage.MediaCloudinaryStorage"
     )
+    # TODO write a type definition for this
     STORAGES = {
         "default": {
             "BACKEND": "django.core.files.storage.FileSystemStorage",
