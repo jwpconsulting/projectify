@@ -1,0 +1,64 @@
+#!/bin/bash
+# Use this handy tool if you would like to test whether the production settings
+# can boot successfully
+# Bonus: It launches celery as well!
+PORT=8000
+
+export DJANGO_SETTINGS_MODULE=projectify.settings.production
+export DJANGO_CONFIGURATION=Production
+
+# This won't work for everyone, sry
+export DATABASE_URL="postgres://$USER@localhost/projectify"
+
+# This won't work for everyone, sry
+export REDIS_TLS_URL=redis://localhost:6379/0
+
+export SECRET_KEY=$(openssl rand -hex 32)
+export ALLOWED_HOSTS=localhost
+export FRONTEND_URL=
+export MAILGUN_API_KEY=
+export MAILGUN_DOMAIN=
+
+export STRIPE_PUBLISHABLE_KEY=
+export STRIPE_SECRET_KEY=
+export STRIPE_PRICE_OBJECT=
+export STRIPE_ENDPOINT_SECRET=
+
+if ! poetry run ./manage.py collectstatic --no-input
+then
+    echo "Couldn't perform collectstatic"
+    exit 1
+fi
+
+poetry run newrelic-admin run-program \
+    gunicorn projectify.asgi \
+    --workers 1 \
+    --bind "0.0.0.0:$PORT" \
+    --worker-class uvicorn.workers.UvicornWorker \
+    --log-config gunicorn-error.log &
+PID1="$!"
+poetry run newrelic-admin run-program \
+    celery --app projectify \
+    worker \
+    --concurrency 1 &
+PID2="$!"
+
+trap "ps $PID1 && kill $PID1; ps $PID2 && $PID2" SIGINT SIGTERM EXIT
+
+echo "Waiting 5 seconds..."
+sleep 5
+echo "Killing $PID1 (gunicorn) and $PID2 (celery)"
+
+if ! kill "$PID1" "$PID2"
+then
+    echo "Couldn't kill server"
+    exit 1
+fi
+
+if wait "$PID1" "$PID2"
+then
+    echo "Server quit peacefully"
+else
+    echo "Server quit abnormally"
+    exit 1
+fi
