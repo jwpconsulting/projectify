@@ -5,6 +5,10 @@ from collections.abc import (
     Sequence,
 )
 
+from dotenv import (
+    load_dotenv,
+)
+
 from .base import (
     Base,
 )
@@ -74,3 +78,9 @@ class Development(Base):
     # Safari workaround for sessionid cookie
     SESSION_COOKIE_SECURE = False
     SESSION_COOKIE_SAMESITE = "Lax"
+
+    @classmethod
+    def pre_setup(cls) -> None:
+        """Load environment variables from .env."""
+        super().pre_setup()
+        load_dotenv()

@@ -1,4 +1,8 @@
 """Test settings."""
+from dotenv import (
+    load_dotenv,
+)
+
 from .base import (
     Base,
 )
@@ -24,6 +28,12 @@ class Test(Base):
 
     # Celery
     CELERY_BROKER_URL = "memory://"
+
+    @classmethod
+    def pre_setup(cls) -> None:
+        """Load environment variables from .env."""
+        super().pre_setup()
+        load_dotenv()
 
 
 class TestCollectstatic(Test):
