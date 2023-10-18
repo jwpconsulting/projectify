@@ -9,10 +9,6 @@ https://docs.djangoproject.com/en/3.2/howto/deployment/asgi/
 
 import os
 
-from django.core.asgi import (
-    get_asgi_application,
-)
-
 from channels.auth import (
     AuthMiddlewareStack,
 )
@@ -21,12 +17,21 @@ from channels.routing import (
     URLRouter,
 )
 
+from configurations.asgi import (
+    get_asgi_application,
+)
 
+
+# TODO still needed? We should just let the server crash when this env var is
+# unset
 os.environ.setdefault(
     "DJANGO_SETTINGS_MODULE", "projectify.settings.production"
 )
 asgi_application = get_asgi_application()
 
+# I believe we had to move this down here so that all applications can be
+# mounted correctly, since importing the URLs could otherwise import views
+# that use unitialized Django models. Justus 2023-10-18
 from .urls import (  # noqa: E402
     websocket_urlpatterns,
 )

@@ -53,6 +53,7 @@ poetry run nvim
 # Production Environment Variables
 
 - `DJANGO_SETTINGS_MODULE`
+- `DJANGO_CONFIGURATION`
 - `DATABASE_URL`
 - `SECRET_KEY`
 - `MAILGUN_API_KEY`

@@ -10,89 +10,93 @@ from .. import (
 from .base import *
 
 
-# Redis URL
-# Heroku unsets REDIS_TLS_URL when migrating to premium redis
-if "REDIS_TLS_URL" not in os.environ:
-    REDIS_TLS_URL = os.environ["REDIS_URL"]
-else:
-    REDIS_TLS_URL = os.environ["REDIS_TLS_URL"]
+class Production(Base):
+    """Production configuration."""
 
-SECRET_KEY = os.environ["SECRET_KEY"]
+    # Redis URL
+    # Heroku unsets REDIS_TLS_URL when migrating to premium redis
+    if "REDIS_TLS_URL" not in os.environ:
+        REDIS_TLS_URL = os.environ["REDIS_URL"]
+    else:
+        REDIS_TLS_URL = os.environ["REDIS_TLS_URL"]
 
-ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split(",")
+    SECRET_KEY = os.environ["SECRET_KEY"]
 
-STORAGES["staticfiles"][
-    "BACKEND"
-] = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split(",")
 
-FRONTEND_URL = os.environ["FRONTEND_URL"]
+    STORAGES = Base.STORAGES
+    STORAGES["staticfiles"][
+        "BACKEND"
+    ] = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-ANYMAIL = {
-    "MAILGUN_API_KEY": os.environ["MAILGUN_API_KEY"],
-    "MAILGUN_SENDER_DOMAIN": os.environ["MAILGUN_DOMAIN"],
-}
-EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+    FRONTEND_URL = os.environ["FRONTEND_URL"]
 
-# Celery
-CELERY_BROKER_URL = REDIS_TLS_URL
+    ANYMAIL = {
+        "MAILGUN_API_KEY": os.environ["MAILGUN_API_KEY"],
+        "MAILGUN_SENDER_DOMAIN": os.environ["MAILGUN_DOMAIN"],
+    }
+    EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
-CORS_ALLOWED_ORIGINS = (
-    "https://www.projectifyapp.com",
-    "https://staging.projectifyapp.com",
-    "http://localhost:3000",
-)
-CORS_ALLOWED_ORIGIN_REGEXES = (
-    r"^https://deploy-preview-\d+--projectifyapp.netlify.app$",
-    r"^https://.+--projectifyapp-staging.netlify.app$",
-)
+    # Celery
+    CELERY_BROKER_URL = REDIS_TLS_URL
 
-CSRF_TRUSTED_ORIGINS = (
-    "https://*.netlify.app",
-    "https://www.projectifyapp.com",
-    "https://staging.projectifyapp.com",
-    "http://localhost:3000",
-)
+    CORS_ALLOWED_ORIGINS = (
+        "https://www.projectifyapp.com",
+        "https://staging.projectifyapp.com",
+        "http://localhost:3000",
+    )
+    CORS_ALLOWED_ORIGIN_REGEXES = (
+        r"^https://deploy-preview-\d+--projectifyapp.netlify.app$",
+        r"^https://.+--projectifyapp-staging.netlify.app$",
+    )
 
-# GraphQL
-GRAPHIQL_ENABLE = False
+    CSRF_TRUSTED_ORIGINS = (
+        "https://*.netlify.app",
+        "https://www.projectifyapp.com",
+        "https://staging.projectifyapp.com",
+        "http://localhost:3000",
+    )
 
-# Cloudinary
-STORAGES["default"]["BACKEND"] = MEDIA_CLOUDINARY_STORAGE
+    # GraphQL
+    GRAPHIQL_ENABLE = False
 
-# Disable CSRF protection
-csrf_middleware = "django.middleware.csrf.CsrfViewMiddleware"
-if "DISABLE_CSRF_PROTECTION" in os.environ:
-    csrf_middleware_index = MIDDLEWARE.index(csrf_middleware)
-    MIDDLEWARE[
-        csrf_middleware_index
-    ] = "projectify.middleware.DisableCSRFMiddleware"
+    # Cloudinary
+    STORAGES["default"]["BACKEND"] = Base.MEDIA_CLOUDINARY_STORAGE
 
-CSRF_COOKIE_DOMAIN = ".projectifyapp.com"
+    # Disable CSRF protection
+    csrf_middleware = "django.middleware.csrf.CsrfViewMiddleware"
+    if "DISABLE_CSRF_PROTECTION" in os.environ:
+        MIDDLEWARE = Base.MIDDLEWARE
+        csrf_middleware_index = MIDDLEWARE.index(csrf_middleware)
+        MIDDLEWARE[
+            csrf_middleware_index
+        ] = "projectify.middleware.DisableCSRFMiddleware"
 
+    CSRF_COOKIE_DOMAIN = ".projectifyapp.com"
 
-# Stripe
-STRIPE_PUBLISHABLE_KEY = os.environ["STRIPE_PUBLISHABLE_KEY"]
-STRIPE_SECRET_KEY = os.environ["STRIPE_SECRET_KEY"]
-STRIPE_PRICE_OBJECT = os.environ["STRIPE_PRICE_OBJECT"]
-STRIPE_ENDPOINT_SECRET = os.environ["STRIPE_ENDPOINT_SECRET"]
+    # Stripe
+    STRIPE_PUBLISHABLE_KEY = os.environ["STRIPE_PUBLISHABLE_KEY"]
+    STRIPE_SECRET_KEY = os.environ["STRIPE_SECRET_KEY"]
+    STRIPE_PRICE_OBJECT = os.environ["STRIPE_PRICE_OBJECT"]
+    STRIPE_ENDPOINT_SECRET = os.environ["STRIPE_ENDPOINT_SECRET"]
 
-# REDIS
-# https://devcenter.heroku.com/articles/connecting-heroku-redis#connecting-in-python
-# Obviously, this isn't great
-# https://github.com/django/channels_redis/issues/235
-# https://github.com/django/channels_redis/pull/337
-redis_url = redis_helper.decode_redis_url(
-    os.environ["REDIS_TLS_URL"],
-)
+    # REDIS
+    # https://devcenter.heroku.com/articles/connecting-heroku-redis#connecting-in-python
+    # Obviously, this isn't great
+    # https://github.com/django/channels_redis/issues/235
+    # https://github.com/django/channels_redis/pull/337
+    redis_url = redis_helper.decode_redis_url(
+        os.environ["REDIS_TLS_URL"],
+    )
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [
-                redis_helper.make_channels_redis_host(redis_url),
-            ],
-            "symmetric_encryption_keys": [SECRET_KEY],
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [
+                    redis_helper.make_channels_redis_host(redis_url),
+                ],
+                "symmetric_encryption_keys": [SECRET_KEY],
+            },
         },
-    },
-}
+    }
