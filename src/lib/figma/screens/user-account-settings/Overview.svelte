@@ -56,13 +56,13 @@
             <UploadAvatar
                 {fileSelected}
                 label={$_(
-                    "user-account-settings.overview.upload-profile-picture"
+                    "user-account-settings.overview.profile-picture.prompt"
                 )}
             />
         </div>
     </div>
     <figcaption>
-        {$_("user-account-settings.overview.your-current-avatar")}
+        {$_("user-account-settings.overview.profile-picture.current")}
     </figcaption>
 </figure>
 <div class="flex flex-col gap-10">

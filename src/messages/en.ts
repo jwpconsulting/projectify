@@ -415,6 +415,10 @@ const messages: MessageCollection = {
                 label: "Full name",
                 placeholder: "Enter your full name",
             },
+            "profile-picture": {
+                prompt: "Upload a profile picture",
+                current: "Your current profile picture",
+            },
             "your-current-avatar": "Your current avatar",
             "update-email": "Update email address",
             "change-password": "Change password",
@@ -556,6 +560,7 @@ const messages: MessageCollection = {
             "picture": {
                 "alt": "A picture used to identify this workspace",
                 "no-picture": "No picture uploaded.",
+                "label": "Upload a picture",
             },
         },
         "workspace-users": {

@@ -10,7 +10,9 @@
     let fullName: string;
     $: fullName = workspaceUser.user.full_name ?? workspaceUser.user.email;
     let jobTitle: string;
-    $: jobTitle = workspaceUser.job_title ?? $_("settings.no-job-title");
+    $: jobTitle =
+        workspaceUser.job_title ??
+        $_("workspace-settings.workspace-users.no-job-title");
     let role: string;
     $: role = $_(getMessageNameForRole(workspaceUser.role));
 </script>
