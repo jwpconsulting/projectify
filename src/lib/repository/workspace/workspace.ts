@@ -43,7 +43,7 @@ export async function getWorkspace(
 }
 
 // Update
-//
+// TODO please make me a normal DRF API call
 export async function updateWorkspace(
     uuid: string,
     title: string,
@@ -65,3 +65,17 @@ export async function updateWorkspace(
     ) as Workspace;
 }
 // Delete
+
+// RPC
+export async function inviteUser(
+    workspace: Workspace,
+    email: string,
+    repositoryContext?: RepositoryContext
+): Promise<{ email: string }> {
+    const { uuid } = workspace;
+    return await postWithCredentialsJson<{ email: string }>(
+        `/workspace/workspace/${uuid}/invite-user`,
+        { email },
+        repositoryContext
+    );
+}
