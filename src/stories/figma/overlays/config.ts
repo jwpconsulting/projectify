@@ -53,9 +53,10 @@ export const contextMenus: Record<string, ContextMenuType> = {
     "Permissions": {
         kind: "permissions",
     },
-    // TODO should be update workspace user assignment?
-    "Update member": {
-        kind: "updateMember",
+    // TODO name of component / kind should be update workspace user assignment?
+    // TODO yep, I agree even one month later. Justus 2023-10-19
+    "Update workspace user": {
+        kind: "updateWorkspaceUser",
         workspaceUserAssignment,
     },
     "Update label": {
@@ -70,8 +71,8 @@ export const destructiveOverlays = makeStorybookSelect({
         kind: "deleteLabel" as const,
         label: { name: "This is a label", color: 0, uuid: "" },
     },
-    "Delete member": {
-        kind: "deleteMember" as const,
+    "Delete workspace user": {
+        kind: "deleteWorkspaceUser" as const,
         workspaceUser,
     },
     "Delete section": {
@@ -104,9 +105,9 @@ export const destructiveOverlays = makeStorybookSelect({
 export const constructiveOverlays = makeStorybookSelect({
     "Update workspace board": { kind: "updateWorkspaceBoard", workspaceBoard },
     "Create workspace board": { kind: "createWorkspaceBoard", workspace },
-    "Invite team members": { kind: "inviteTeamMembers", workspace },
-    "Invite team members (no seats left)": {
-        kind: "inviteTeamMembersNoSeatsLeft",
+    "Invite workspace users": { kind: "inviteWorkspaceUser", workspace },
+    "Invite workspace users (error)": {
+        kind: "inviteWorkspaceUserError",
         workspace,
     },
     "Create workspace board section": {

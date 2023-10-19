@@ -16,9 +16,9 @@
     <UpdateWorkspaceBoard workspaceBoard={target.workspaceBoard} />
 {:else if target.kind === "createWorkspaceBoard"}
     <CreateWorkspaceBoard workspace={target.workspace} />
-{:else if target.kind === "inviteTeamMembers"}
+{:else if target.kind === "inviteWorkspaceUser"}
     <InviteWorkspaceUser workspace={target.workspace} />
-{:else if target.kind === "inviteTeamMembersNoSeatsLeft"}
+{:else if target.kind === "inviteWorkspaceUserError"}
     <InviteWorkspaceUserError workspace={target.workspace} />
 {:else if target.kind === "createWorkspaceBoardSection"}
     <CreateWorkspaceBoardSection workspaceBoard={target.workspaceBoard} />

@@ -16,7 +16,7 @@
 
     async function openUserPicker() {
         const contextMenuType: ContextMenuType = {
-            kind: "updateMember",
+            kind: "updateWorkspaceUser",
             workspaceUserAssignment,
         };
         await openContextMenu(contextMenuType, userPickerBtnRef);

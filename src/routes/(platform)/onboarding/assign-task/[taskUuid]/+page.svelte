@@ -34,7 +34,7 @@
     <svelte:fragment slot="prompt">
         <div class="flex flex-col gap-4">
             <p>{$_("onboarding.assign-task.prompt.finished")}</p>
-            <p>{$_("onboarding.assign-task.prompt.adding-members")}</p>
+            <p>{$_("onboarding.assign-task.prompt.adding-workspace-users")}</p>
         </div>
     </svelte:fragment>
 

@@ -1,7 +1,8 @@
-# Workspace member settings
+# Workspace user settings
 
-Here is some code that was removed from the member settings page and could be
-useful again at some point
+Here is some code that was removed from the workspace user settings page and
+could be useful again at some point. We renamed member to workspace user, so
+some of the code below has to be adjusted accordingly.
 
 ```typescript
 async function onNewMember() {

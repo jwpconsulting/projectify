@@ -34,8 +34,8 @@
             href: "/help/labels",
         },
         {
-            title: $_("help.members"),
-            href: "/help/members",
+            title: $_("help.workspace-users"),
+            href: "/help/workspace-users",
         },
         {
             title: $_("help.bulk-select"),

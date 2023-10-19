@@ -44,12 +44,13 @@ export type CircleIconIcon = (typeof circleIconIcons)[number];
 
 // For buttons/SquovalIcon.svelte
 export const squovalIcons = [
+    // TODO rename workspaceBoard
     "board",
-    "member",
+    "workspaceUser",
     "label",
     "bulk",
     "move",
-    "filter-member",
+    "filterWorkspaceUser",
     "delete",
     "ellipsis",
     "plus",

@@ -1,4 +1,6 @@
 <script lang="ts">
+    // TODO if this is for assignment, we should call it
+    // context-menu/WorkspaceUserAssignment ?
     // Rename consistent with the other context menus
     import FilterWorkspaceUser from "$lib/figma/composites/FilterWorkspaceUser.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";

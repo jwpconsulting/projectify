@@ -18,7 +18,7 @@ export function getSettingsUrl(workspaceUuid: string, kind: SettingKind) {
     const suffix = {
         "index": "",
         "labels": "/labels",
-        "team-members": "/team-members",
+        "workspace-users": "/workspace-users",
         "billing": "/billing",
     }[kind];
     return `/dashboard/workspace/${workspaceUuid}/settings${suffix}`;

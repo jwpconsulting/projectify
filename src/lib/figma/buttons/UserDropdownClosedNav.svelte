@@ -17,7 +17,7 @@
 <div class="flex flex-col items-center gap-6">
     <SquovalIcon
         state="active"
-        icon="member"
+        icon="workspaceUser"
         action={{ kind: "button", action: toggleUserExpandOpen }}
         active={$selectedWorkspaceUser.kind === "workspaceUsers"}
     />

@@ -55,7 +55,7 @@ export interface TasksPerUser {
 
 export type DestructiveOverlayType =
     | { kind: "deleteLabel"; label: Label }
-    | { kind: "deleteMember"; workspaceUser: WorkspaceUser }
+    | { kind: "deleteWorkspaceUser"; workspaceUser: WorkspaceUser }
     | { kind: "deleteSection"; workspaceBoardSection: WorkspaceBoardSection }
     | { kind: "deleteTask"; task: Task }
     | { kind: "deleteSelectedTasks"; tasks: Task[] }
@@ -109,7 +109,7 @@ export type ContextMenuType =
     | { kind: "help" }
     | { kind: "permissions" }
     | {
-          kind: "updateMember";
+          kind: "updateWorkspaceUser";
           workspaceUserAssignment: WorkspaceUserAssignment;
       }
     | {
@@ -123,8 +123,8 @@ export type ContextMenuState = Overlay<ContextMenuType, HTMLElement>;
 export type ConstructiveOverlayType =
     | { kind: "updateWorkspaceBoard"; workspaceBoard: WorkspaceBoard }
     | { kind: "createWorkspaceBoard"; workspace: Workspace }
-    | { kind: "inviteTeamMembers"; workspace: Workspace }
-    | { kind: "inviteTeamMembersNoSeatsLeft"; workspace: Workspace }
+    | { kind: "inviteWorkspaceUser"; workspace: Workspace }
+    | { kind: "inviteWorkspaceUserError"; workspace: Workspace }
     | { kind: "createWorkspaceBoardSection"; workspaceBoard: WorkspaceBoard }
     | { kind: "createWorkspace" }
     | { kind: "skipOnboarding" }

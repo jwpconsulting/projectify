@@ -12,7 +12,7 @@
 </script>
 
 <SideNavMenuCategoryFocus
-    label={$_("dashboard.members")}
+    label={$_("dashboard.workspace-users")}
     icon={User}
     open={$userExpandOpen}
     on:click={toggleUserExpandOpen}

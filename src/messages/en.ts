@@ -1,3 +1,4 @@
+// TODO create a tool to show which message strings are unused
 type Message = string | string[] | { [property: string]: Message };
 
 type MessageCollection = Record<string, Message>;
@@ -37,20 +38,20 @@ const messages: MessageCollection = {
                 "cancel": "Cancel",
                 "create-board": "Create board",
             },
-            "invite-member": {
-                title: "Invite team members",
+            "invite-workspace-user": {
+                title: "Invite workspace users",
                 notice: "You have 3 seats left in your plan",
                 form: {
                     email: {
                         label: "Enter email address separated by a comma",
-                        placeholder: "member@mail.com",
+                        placeholder: "workspace-user@mail.com",
                     },
                 },
                 cancel: "Cancel",
                 invite: "Invite",
             },
-            "invite-member-error": {
-                "title": "Invite team members",
+            "invite-workspace-user-error": {
+                "title": "Invite workspace users",
                 "notice": "You have no more seats left in your plan",
                 "cancel": "Cancel",
                 "go-to-billing": "Go to billing",
@@ -95,10 +96,10 @@ const messages: MessageCollection = {
         "dashboard": "dashboard",
         "create-board": "create new board",
         "boards": "boards",
-        "members": "members",
+        "workspace-users": "workspace-users",
         "labels": "labels",
-        "member-name": "member name",
-        "filter-members": "filter members",
+        "workspace-user-name": "Workspace user name",
+        "filter-workspace-users": "Filter workspace users",
         "search-task": "Search Task",
         "assign-user": "Assign user",
         "no-sections": {
@@ -156,11 +157,11 @@ const messages: MessageCollection = {
         "delete-label-body-2": "' label?",
         "delete-label-button": "Delete",
         "delete-label-body-warning": "This action cannot be undone.",
-        "delete-member": "Remove member",
-        "delete-member-body-1": "Would you like to remove '",
-        "delete-member-body-2": "' from this workspace?",
-        "delete-member-body-warning": "This action cannot be undone.",
-        "delete-member-button": "Remove",
+        "delete-workspace-user": "Remove workspace user",
+        "delete-workspace-user-body-1": "Would you like to remove '",
+        "delete-workspace-user-body-2": "' from this workspace?",
+        "delete-workspace-user-body-warning": "This action cannot be undone.",
+        "delete-workspace-user-button": "Remove",
         "delete-section": "Delete section",
         "delete-section-body-1": "Would you like to delete the '",
         "delete-section-body-2": "' section?",
@@ -310,8 +311,8 @@ const messages: MessageCollection = {
             continue: "Get started",
             prompt: {
                 "finished": "You’re all set!",
-                "adding-members":
-                    "If you wish to add new members to your workspace, please go to the workspace settings menu next to your workspace name.",
+                "adding-workspace-users":
+                    "If you wish to add new workspace users to your workspace, please go to the workspace settings menu next to your workspace name.",
             },
         },
     },
@@ -536,7 +537,7 @@ const messages: MessageCollection = {
         "title": "Workspace settings",
         "tab-bar": {
             "general": "General",
-            "team-members": "Team members",
+            "workspace-users": "Workspace users",
             "billing": "Billing",
         },
         "general": {
@@ -557,19 +558,19 @@ const messages: MessageCollection = {
                 "no-picture": "No picture uploaded.",
             },
         },
-        "members": {
-            "title": "Members",
+        "workspace-users": {
+            "title": "Workspace users",
             "search": {
-                label: "Search team members",
-                placeholder: "Enter a query to search for team members",
+                label: "Search workspace users",
+                placeholder: "Enter a query to search for workspace users",
             },
-            "search-members": "Search members",
+            "search-workspace-users": "Search workspace users",
             "no-job-title": "No job title",
-            "no-members-found":
-                "No members found for this search query. Please try another search.",
+            "no-workspace-users-found":
+                "No workspace users found for this search query. Please try another search.",
             "role": "Role",
-            "member-details": "Member details",
-            "invite-new-members": "Invite new members",
+            "workspace-user-details": "Workspace user details",
+            "invite-new-workspace-users": "Invite new workspace users",
         },
         "billing": {
             "title": "Billing",
@@ -588,7 +589,7 @@ const messages: MessageCollection = {
     },
     "my-profile": "My Profile",
     "remove": "Remove",
-    "new-member": "New member",
+    "new-workspace-user": "New workspace user",
     "no-archived-boards-found": "No archived boards found.",
     "new-label": "Create New Label",
     "delete-label": "Delete label",
@@ -602,15 +603,8 @@ const messages: MessageCollection = {
     "edit-label": "Edit label",
     "this-field-is-required": "This field is required",
     "general": "General",
-    "team-members": "Team members",
     "labels": "Labels",
     "select-date": "Select date",
-    "invite-team-member": "Invite team member",
-    "please-enter-a-email-of-team-member":
-        "Please enter a email of team member.",
-    "remove-team-member": "Remove team member",
-    "are-you-sure-you-want-to-remove-this-team-member":
-        "Are you sure you want to remove this team member?",
     "apply-labels": "Apply labels",
     "disconnected-network": "Disconnected Network",
     "back-to-landing-page": "back to landing page",
@@ -620,7 +614,6 @@ const messages: MessageCollection = {
     "clear-labels-filter": "Clear labels filter",
     "filter-by-labels": "Filter by labels",
     "search": "Search",
-    "search-team-member": "Search team member",
     "clear-selection": "Clear Selection",
     "select-me": "Select Me",
     "page-not-found": "Page not found",
@@ -686,16 +679,8 @@ const messages: MessageCollection = {
     "continue-to-dashboard": "Continue to dashboard",
     "log-in-cta": "Log in",
     "add-label": "Add label",
-    "member-details": "Member details",
     "role": "Role",
-    "roles": {
-        observer: "Observer",
-        member: "Member",
-        maintainer: "Maintainer",
-        owner: "Owner",
-    },
     "edit-remove": "Edit/remove",
-    "edit-team-member": "Edit team member",
     "name-0": "name",
     "email-0": "email",
     "job-title": "job title",
@@ -706,7 +691,6 @@ const messages: MessageCollection = {
         "You have {seats} seats left in your plan",
     "you-have-0-seats-left-in-your-plan": "You have 0 seats left in your plan",
     "location": "Location",
-    "members": "Members",
     "index": {
         "hero-header": "Manage projects the right way.",
         "hero-text":
@@ -764,7 +748,7 @@ const messages: MessageCollection = {
         "feature-1": "Unlimited tasks",
         "feature-2": "Unlimited boards",
         "feature-3": "Unlimited update logs",
-        "feature-4": "Collaborate with members",
+        "feature-4": "Collaborate with workspace users",
         "feature-5": "Add multiple labels",
         "feature-6": "Role permissions",
         "feature-7": "Set due dates",
@@ -819,7 +803,7 @@ const messages: MessageCollection = {
             "Notifications provide you with all the information you need whilst also giving you conveniant 'reply' and 'go to task' actions. The notification center houses updates from all workspaces so you never miss a beat.",
         "feature-3-header": "Plan and execute",
         "feature-3-text":
-            "Set up and monitor pull requests, merges, bug fixes and more for multiple members of your team.",
+            "Set up and monitor pull requests, merges, bug fixes and more for multiple workspace users of your team.",
     },
     "research-solutions": {
         "hero-header": "Research solutions",
@@ -838,10 +822,10 @@ const messages: MessageCollection = {
     "project-solutions": {
         "hero-header": "Project management solutions",
         "hero-text":
-            "How project managers can use Projectify to efficiently manage tasks, projects and members of their team.",
+            "How project managers can use Projectify to efficiently manage tasks, projects and workspace users of their team.",
         "feature-1-header": "An ethical approach to management",
         "feature-1-text":
-            "View how many tasks a member has assigned to them, so the workload can be divided equally. Filter by member to see what individual colleagues are working on.",
+            "View how many tasks a workspace user has assigned to them, so the workload can be divided equally. Filter by workspace user to see what individual colleagues are working on.",
         "feature-2-header": "Live notifications",
         "feature-2-text":
             "Notifications provide you with all the information you need whilst also giving you conveniant 'reply' and 'go to task' actions. The notification center houses updates from all workspaces so you never miss a beat.",
@@ -893,7 +877,7 @@ const messages: MessageCollection = {
             "Need to plan an event? Want to create a list of achievements? Sub tasks help you to check off small tasks bit by bite.",
         "feature-3-header": "Add friends and family to your space",
         "feature-3-text":
-            "Get everyone on the same page by assigning task to different members.",
+            "Get everyone on the same page by assigning task to different workspace users.",
     },
     "accessibility": {
         "hero-header": "Accessibility statement",
@@ -958,7 +942,7 @@ const messages: MessageCollection = {
         "sections": "Sections",
         "tasks": "Tasks",
         "labels": "Labels",
-        "members": "Members",
+        "workspace-users": "Workspace users",
         "bulk-select": "Bulk select",
         "filters": "Filters",
         "notifications": "Notifications",
@@ -969,7 +953,7 @@ const messages: MessageCollection = {
     "help-basics": {
         "workspace": "What is a workspace?",
         "workspace-text":
-            "A workspace is an area where you can create projects, tasks, labels and invite various members of your organisation.In a workspace you can set permissions and customise the overall look and feel of your productivity center. For more information on workspaces please see Workspaces.",
+            "A workspace is an area where you can create projects, tasks, labels and invite various members of your organisation as workspace users. In a workspace you can set permissions and customise the overall look and feel of your productivity center. For more information on workspaces please see Workspaces.",
         "board": "What is a board?",
         "board-text":
             "A board is a specific project in your workspace that you would like to work on.You can create unlimited boards per workspace and have the freedom to rename and organise them.Completed boards can be archived to remove clutter from your workspace. For more information on boards please see Boards.",
@@ -981,7 +965,7 @@ const messages: MessageCollection = {
             "A task is a step in your project that needs to be completed. Tasks can be assigned to any member in your workspace. Labels and detailed information can be applied to tasks. For every task that is created, a unique task number is assigned to it for ease of reference and searching. Tasks can be further divided into sub tasks - sub tasks are great for keeping track of micro achievements per task. Due dates can also be set for tasks that need to be completed on a deadline.For more information on tasks please see Tasks.",
         "side-menu": "How to use the side menu",
         "side-menu-text":
-            "The side menu allows for full control of your workspace and projects.You are able to switch between workspaces or boards through this menu.Filtering between members and labels can also be performed here.Workspace settings such as permissions and billing can be accessed from this menu.The menu can be viewed in full expanded mode or in collapsed mode.",
+            "The side menu allows for full control of your workspace and projects.You are able to switch between workspaces or boards through this menu. Filtering between workspace users and labels can also be performed here.Workspace settings such as permissions and billing can be accessed from this menu.The menu can be viewed in full expanded mode or in collapsed mode.",
     },
     "help-workspaces": {
         "create": "Create a workspace",
@@ -1045,16 +1029,16 @@ const messages: MessageCollection = {
         "ways": "Ways to use labels",
         "ways-text": "/",
     },
-    "help-members": {
-        "invite": "Invite a member",
+    "help-workspace-users": {
+        "invite": "Invite a workspace user",
         "invite-text": "/",
-        "assign": "Assign a task to a member",
+        "assign": "Assign a task to a workspace user",
         "assign-text": "/",
-        "filter": "Filter by member",
+        "filter": "Filter by workspace user",
         "filter-text": "/",
-        "edit": "Edit member permissions",
+        "edit": "Edit workspace user permissions",
         "edit-text": "/",
-        "delete": "Delete a member",
+        "delete": "Delete a workspace user",
         "delete-text": "/",
     },
     "help-bulk": {
@@ -1068,8 +1052,8 @@ const messages: MessageCollection = {
         "delete-text": "/",
     },
     "help-filters": {
-        "member": "Filter and search by member",
-        "member-text": "/",
+        "workspace-user": "Filter and search by workspace user",
+        "workspace-user-text": "/",
         "label": "Filter and search by label",
         "label-text": "/",
         "keyword": "Search by keyword",
@@ -1100,12 +1084,12 @@ const messages: MessageCollection = {
         "workspace": "Removing/adding workspaces",
         "workspace-text":
             "Only users with the permission role of Owner can create and delete workspaces. You will need to provide your banking details for each workspace you create.",
-        "members": "Removing/adding members",
-        "members-text":
-            "Only users with the permission role of Owner can invite or remove users. Be aware that you will not be able to invite members if you do not have enough seats available in your workspace. In order to add more seats, please amend the seat numbers in your account.",
+        "workspace-users": "Removing/adding workspace users",
+        "workspace-users-text":
+            "Only users with the permission role of Owner can invite or remove users. Be aware that you will not be able to invite workspace users if you do not have enough seats available in your workspace. In order to add more seats, please amend the seat numbers in your account.",
         "delete": "Delete your account",
         "delete-text":
-            "To delete your account visit the billing page in workspace settings and cancel your subscription. Deleting your account will also remove members from any workspaces that you own.You can transfer ownership of the account to a different member before deletion to ensure that content and members can continue to use the workspace. Deleting your account without transferring ownership will delete all data including personal information and all content created on the platform will cease to exist.",
+            "To delete your account visit the billing page in workspace settings and cancel your subscription. Deleting your account will also remove workspace users from any workspaces that you own.You can transfer ownership of the account to a different workspace user before deletion to ensure that content and workspace users can continue to use the workspace. Deleting your account without transferring ownership will delete all data including personal information and all content created on the platform will cease to exist.",
     },
     "header": {
         "features": "Features",

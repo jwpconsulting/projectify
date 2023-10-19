@@ -37,7 +37,7 @@
     <HelpContextMenu />
 {:else if target.kind === "permissions"}
     <Permissions />
-{:else if target.kind === "updateMember"}
+{:else if target.kind === "updateWorkspaceUser"}
     <WorkspaceUser workspaceUserAssignment={target.workspaceUserAssignment} />
 {:else if target.kind === "updateLabel"}
     <Label labelAssignment={target.labelAssignment} />

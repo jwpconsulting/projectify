@@ -23,7 +23,7 @@ type Story = StoryObj<TabElement>;
 export const Default: Story = {
     args: {
         href: "/",
-        label: "Members",
+        label: "Workspace users",
         active: true,
     },
 };

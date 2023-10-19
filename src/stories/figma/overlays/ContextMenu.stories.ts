@@ -70,9 +70,9 @@ export const Permissions: Story = {
     },
 };
 
-export const UpdateMember: Story = {
+export const UpdateWorkspaceUser: Story = {
     args: {
-        target: "update-member",
+        target: "update-workspace-user",
     },
 };
 

@@ -13,14 +13,16 @@
 
 <Layout>
     <svelte:fragment slot="title">
-        {$_("overlay.constructive.invite-member.title")}
+        {$_("overlay.constructive.invite-workspace-user.title")}
     </svelte:fragment>
     <svelte:fragment slot="form">
         <InputField
             name="workspace-board-name"
-            label={$_("overlay.constructive.invite-member.form.email.label")}
+            label={$_(
+                "overlay.constructive.invite-workspace-user.form.email.label"
+            )}
             placeholder={$_(
-                "overlay.constructive.invite-member.form.email.placeholder"
+                "overlay.constructive.invite-workspace-user.form.email.placeholder"
             )}
             style={{ kind: "field", inputType: "text" }}
         />
@@ -34,14 +36,14 @@
             style={{ kind: "secondary" }}
             size="medium"
             color="blue"
-            label={$_("overlay.constructive.invite-member.cancel")}
+            label={$_("overlay.constructive.invite-workspace-user.cancel")}
         />
         <Button
             action={{ kind: "submit" }}
             style={{ kind: "primary" }}
             size="medium"
             color="blue"
-            label={$_("overlay.constructive.invite-member.invite")}
+            label={$_("overlay.constructive.invite-workspace-user.invite")}
         />
     </svelte:fragment>
 </Layout>

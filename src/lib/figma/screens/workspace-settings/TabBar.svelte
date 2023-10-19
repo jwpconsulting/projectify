@@ -18,9 +18,9 @@
         active={activeSetting === "index"}
     />
     <TabElement
-        href={getSettingsUrl(workspace.uuid, "team-members")}
-        label={$_("workspace-settings.tab-bar.team-members")}
-        active={activeSetting === "team-members"}
+        href={getSettingsUrl(workspace.uuid, "workspace-users")}
+        label={$_("workspace-settings.tab-bar.workspace-users")}
+        active={activeSetting === "workspace-users"}
     />
     <TabElement
         href={getSettingsUrl(workspace.uuid, "billing")}

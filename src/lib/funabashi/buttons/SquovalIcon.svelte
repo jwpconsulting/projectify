@@ -23,19 +23,18 @@
 
     export let icon: SquovalIcon;
     $: src = {
-        "board": Folder,
-        "member": User,
-        "label": Tag,
-        "bulk": CheckCircle,
-        "move": SwitchVertical,
-        // TODO rename me to filterMember Justus 2023-02-28
-        "filter-member": Users,
-        "delete": Trash,
-        "ellipsis": DotsHorizontal,
-        "plus": Plus,
-        "edit": Pencil,
-        "dotsVertical": DotsVertical,
-        "help": LightBulb,
+        board: Folder,
+        workspaceUser: User,
+        label: Tag,
+        bulk: CheckCircle,
+        move: SwitchVertical,
+        filterWorkspaceUser: Users,
+        delete: Trash,
+        ellipsis: DotsHorizontal,
+        plus: Plus,
+        edit: Pencil,
+        dotsVertical: DotsVertical,
+        help: LightBulb,
     }[icon];
     // TODO active state should be renamed to enabled Justus 2023-03-07
     export let state: SquovalState;

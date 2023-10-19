@@ -10,15 +10,15 @@
 
    A customer isn't automatically created, it seems.
 
-** Implement member edit screen in workspace settings
+** Implement workspace user edit screen in workspace settings
    The scaffolding is there, but it doesn't work
 
    Some features
 
    *** Filter by roles
    *** Job title assignment
-   *** Invite new members
-   *** Search member
+   *** Invite new workspace users
+   *** Search workspace user
 
 ** Add action complete notifications
    Here I list some of the possible ones we can add

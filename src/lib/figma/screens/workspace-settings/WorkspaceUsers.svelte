@@ -16,9 +16,9 @@
     let workspaceUsers: WorkspaceUser[];
     $: workspaceUsers = searchWorkspaceUsers($currentWorkspaceUsers, filter);
 
-    async function inviteMember() {
+    async function inviteWorkspaceUser() {
         await openConstructiveOverlay({
-            kind: "inviteTeamMembers",
+            kind: "inviteWorkspaceUser",
             workspace,
         });
     }
@@ -29,12 +29,16 @@
         style={{ kind: "search" }}
         name="workspaceUserSearch"
         bind:value={filter}
-        label={$_("workspace-settings.members.search.label")}
-        placeholder={$_("workspace-settings.members.search.placeholder")}
+        label={$_("workspace-settings.workspace-users.search.label")}
+        placeholder={$_(
+            "workspace-settings.workspace-users.search.placeholder"
+        )}
     />
     <Button
-        action={{ kind: "button", action: inviteMember }}
-        label={$_("workspace-settings.members.invite-new-members")}
+        action={{ kind: "button", action: inviteWorkspaceUser }}
+        label={$_(
+            "workspace-settings.workspace-users.invite-new-workspace-users"
+        )}
         style={{ kind: "primary" }}
         size="medium"
         color="blue"
@@ -46,17 +50,17 @@
         class="flex flex-row justify-between border-b border-border px-2 pb-4 text-sm font-bold text-utility"
     >
         <div>
-            {$_("workspace-settings.members.member-details")}
+            {$_("workspace-settings.workspace-users.workspace-user-details")}
         </div>
         <div>
-            {$_("workspace-settings.members.role")}
+            {$_("workspace-settings.workspace-users.role")}
         </div>
     </div>
     {#each workspaceUsers as workspaceUser}
         <WorkspaceUserCard {workspaceUser} />
     {:else}
         <p class="py-4">
-            {$_("workspace-settings.members.no-members-found")}
+            {$_("workspace-settings.workspace-users.no-workspace-users-found")}
         </p>
     {/each}
 </div>

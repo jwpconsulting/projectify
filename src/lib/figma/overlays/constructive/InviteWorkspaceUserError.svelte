@@ -12,11 +12,11 @@
 
 <Layout>
     <svelte:fragment slot="title">
-        {$_("overlay.constructive.invite-member-error.title")}
+        {$_("overlay.constructive.invite-workspace-user-error.title")}
     </svelte:fragment>
     <svelte:fragment slot="message">
         <p class="text-center text-error">
-            {$_("overlay.constructive.invite-member-error.notice")}
+            {$_("overlay.constructive.invite-workspace-user-error.notice")}
         </p>
     </svelte:fragment>
     <svelte:fragment slot="buttons">
@@ -28,7 +28,9 @@
             style={{ kind: "secondary" }}
             size="medium"
             color="blue"
-            label={$_("overlay.constructive.invite-member-error.cancel")}
+            label={$_(
+                "overlay.constructive.invite-workspace-user-error.cancel"
+            )}
         />
         <Button
             action={{
@@ -39,7 +41,7 @@
             size="medium"
             color="blue"
             label={$_(
-                "overlay.constructive.invite-member-error.go-to-billing"
+                "overlay.constructive.invite-workspace-user-error.go-to-billing"
             )}
         />
     </svelte:fragment>

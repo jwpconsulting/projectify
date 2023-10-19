@@ -26,7 +26,7 @@
     async function showUpdateWorkspaceUser(anchor: HTMLElement) {
         await openContextMenu(
             {
-                kind: "updateMember",
+                kind: "updateWorkspaceUser",
                 workspaceUserAssignment,
             },
             anchor

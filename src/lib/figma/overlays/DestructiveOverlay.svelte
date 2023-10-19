@@ -12,7 +12,7 @@
 
     $: title = {
         deleteLabel: $_("destructive-overlay.delete-label"),
-        deleteMember: $_("destructive-overlay.delete-member"),
+        deleteWorkspaceUser: $_("destructive-overlay.delete-workspace-user"),
         deleteSection: $_("destructive-overlay.delete-section"),
         deleteTask: $_("destructive-overlay.delete-task"),
         deleteSelectedTasks: $_("destructive-overlay.delete-selected-tasks"),
@@ -21,7 +21,9 @@
     }[target.kind];
     $: body1 = {
         deleteLabel: $_("destructive-overlay.delete-label-body-1"),
-        deleteMember: $_("destructive-overlay.delete-member-body-1"),
+        deleteWorkspaceUser: $_(
+            "destructive-overlay.delete-workspace-user-body-1"
+        ),
         deleteSection: $_("destructive-overlay.delete-section-body-1"),
         deleteTask: $_("destructive-overlay.delete-task-body-1"),
         deleteSelectedTasks: $_(
@@ -32,7 +34,9 @@
     }[target.kind];
     $: body2 = {
         deleteLabel: $_("destructive-overlay.delete-label-body-2"),
-        deleteMember: $_("destructive-overlay.delete-member-body-2"),
+        deleteWorkspaceUser: $_(
+            "destructive-overlay.delete-workspace-user-body-2"
+        ),
         deleteSection: $_("destructive-overlay.delete-section-body-2"),
         deleteTask: $_("destructive-overlay.delete-task-body-2"),
         deleteSelectedTasks: $_(
@@ -43,7 +47,9 @@
     }[target.kind];
     $: warning = {
         deleteLabel: $_("destructive-overlay.delete-label-body-warning"),
-        deleteMember: $_("destructive-overlay.delete-member-body-warning"),
+        deleteWorkspaceUser: $_(
+            "destructive-overlay.delete-workspace-user-body-warning"
+        ),
         deleteSection: $_("destructive-overlay.delete-section-body-warning"),
         deleteTask: $_("destructive-overlay.delete-task-body-warning"),
         deleteSelectedTasks: $_(
@@ -54,7 +60,9 @@
     }[target.kind];
     $: buttonLabel = {
         deleteLabel: $_("destructive-overlay.delete-label-button"),
-        deleteMember: $_("destructive-overlay.delete-member-button"),
+        deleteWorkspaceUser: $_(
+            "destructive-overlay.delete-workspace-user-button"
+        ),
         deleteSection: $_("destructive-overlay.delete-section-button"),
         deleteTask: $_("destructive-overlay.delete-task-button"),
         deleteSelectedTasks: $_(
@@ -69,7 +77,7 @@
             case "deleteLabel":
                 targetName = target.label.name;
                 break;
-            case "deleteMember":
+            case "deleteWorkspaceUser":
                 targetName =
                     target.workspaceUser.user.full_name ??
                     target.workspaceUser.user.email;
