@@ -288,7 +288,7 @@ class Task(
         with transaction.atomic():
             intersection = list(intersection_qs)
             if not len(intersection) == len(labels):
-                logger.warn(
+                logger.warning(
                     "Some of the labels specified in %s are "
                     "not part of this workspace",
                     ", ".join(str(label.uuid) for label in labels),
