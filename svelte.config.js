@@ -8,6 +8,9 @@ const config = {
     preprocess: [vitePreprocess()],
 
     kit: {
+        alias: {
+            $messages: "src/messages",
+        },
         adapter: adapter({
             pages: "build",
             assets: "build",
