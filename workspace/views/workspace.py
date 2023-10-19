@@ -10,10 +10,12 @@ from django.db.models import (
 from django.shortcuts import (
     get_object_or_404,
 )
+from django.utils.translation import gettext_lazy as _
 
 from rest_framework import (
     generics,
     parsers,
+    serializers,
     views,
 )
 from rest_framework.request import (
@@ -23,20 +25,27 @@ from rest_framework.response import (
     Response,
 )
 
-from projectify.utils import (
-    get_user_model,
-)
-from workspace.models.workspace import (
-    Workspace,
-    WorkspaceQuerySet,
-)
-from workspace.serializers.workspace import (
-    InviteUserToWorkspaceSerializer,
+from workspace.models.workspace_user_invite import (
+    add_or_invite_workspace_user,
 )
 
 from .. import (
     models,
-    serializers,
+)
+from ..exceptions import (
+    UserAlreadyAdded,
+    UserAlreadyInvited,
+)
+from ..models.workspace import (
+    Workspace,
+    WorkspaceQuerySet,
+)
+from ..serializers.base import (
+    WorkspaceBaseSerializer,
+)
+from ..serializers.workspace import (
+    InviteUserToWorkspaceSerializer,
+    WorkspaceDetailSerializer,
 )
 
 
@@ -45,16 +54,14 @@ class WorkspaceCreate(
     generics.CreateAPIView[
         models.Workspace,
         models.WorkspaceQuerySet,
-        serializers.WorkspaceBaseSerializer,
+        WorkspaceBaseSerializer,
     ]
 ):
     """Create a workspace."""
 
-    serializer_class = serializers.WorkspaceBaseSerializer
+    serializer_class = WorkspaceBaseSerializer
 
-    def perform_create(
-        self, serializer: serializers.WorkspaceBaseSerializer
-    ) -> None:
+    def perform_create(self, serializer: WorkspaceBaseSerializer) -> None:
         """Create the workspace and add this user."""
         workspace: models.Workspace = serializer.save()
         workspace.add_user(self.request.user)
@@ -65,13 +72,13 @@ class WorkspaceList(
     generics.ListAPIView[
         models.Workspace,
         models.WorkspaceQuerySet,
-        serializers.WorkspaceBaseSerializer,
+        WorkspaceBaseSerializer,
     ]
 ):
     """List all workspaces for a user."""
 
     queryset = models.Workspace.objects.all()
-    serializer_class = serializers.WorkspaceBaseSerializer
+    serializer_class = WorkspaceBaseSerializer
 
     def get_queryset(self) -> models.WorkspaceQuerySet:
         """Filter by user."""
@@ -83,7 +90,7 @@ class WorkspaceRetrieve(
     generics.RetrieveAPIView[
         models.Workspace,
         models.WorkspaceQuerySet,
-        serializers.WorkspaceDetailSerializer,
+        WorkspaceDetailSerializer,
     ]
 ):
     """Workspace retrieve view."""
@@ -102,7 +109,7 @@ class WorkspaceRetrieve(
             ),
         ),
     )
-    serializer_class = serializers.WorkspaceDetailSerializer
+    serializer_class = WorkspaceDetailSerializer
 
     def get_object(self) -> models.Workspace:
         """Return queryset with authenticated user in mind."""
@@ -172,9 +179,13 @@ class InviteUserToWorkspace(
         workspace = self.get_object()
 
         email = serializer.validated_data["email"]
-        User = get_user_model()
         try:
-            user = User.objects.get_by_natural_key(email)
-            workspace.add_user(user)
-        except User.DoesNotExist:
-            workspace.invite_user(email)
+            add_or_invite_workspace_user(workspace, email)
+        except UserAlreadyInvited:
+            raise serializers.ValidationError(
+                _("This user has already been invited")
+            )
+        except UserAlreadyAdded:
+            raise serializers.ValidationError(
+                _("This user has already been added")
+            )

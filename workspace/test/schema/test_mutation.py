@@ -9,6 +9,10 @@ from django.utils import (
 
 import pytest
 
+from workspace.models.workspace_user_invite import (
+    add_or_invite_workspace_user,
+)
+
 from ... import (
     factory,
     models,
@@ -442,7 +446,7 @@ mutation RemoveUserFromWorkspace($uuid: UUID!, $email: String!) {
         workspace_user,
     ):
         """Test query."""
-        workspace.invite_user("hello@example.com")
+        add_or_invite_workspace_user(workspace, "hello@example.com")
         result = graphql_query_user(
             self.query,
             variables={

@@ -21,6 +21,9 @@ from graphql import (
 from projectify.utils import (
     get_user_model,
 )
+from workspace.models.workspace_user_invite import (
+    add_or_invite_workspace_user,
+)
 
 from .. import (
     models,
@@ -563,14 +566,7 @@ class Mutation:
         assert info.context.user.has_perm(
             "workspace.can_create_workspace_user", workspace
         )
-        # Find user
-        User = get_user_model()
-        try:
-            user = User.objects.get_by_natural_key(input.email)
-            # Assign user to workspace
-            workspace.add_user(user)
-        except User.DoesNotExist:
-            workspace.invite_user(input.email)
+        add_or_invite_workspace_user(workspace, input.email)
         return workspace
 
     @strawberry.field
