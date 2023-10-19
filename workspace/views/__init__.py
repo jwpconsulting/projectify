@@ -1,7 +1,4 @@
 """Workspace views."""
-from django.db.models import (
-    Prefetch,
-)
 from django.shortcuts import (
     get_object_or_404,
 )
@@ -14,15 +11,6 @@ from .. import (
     models,
     serializers,
 )
-
-# flake8: noqa: F401
-from .task import *
-
-# flake8: noqa: F401
-from .workspace import *
-
-
-# Reexport
 
 
 class WorkspaceBoardRetrieve(
