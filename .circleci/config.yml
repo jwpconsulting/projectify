@@ -96,6 +96,16 @@ jobs:
             - run:
                   name: Run knip
                   command: npm run check:knip
+    check-i18n:
+        executor: node
+        steps:
+            - install_node_dependencies
+            - run:
+                  name: Generate type information
+                  command: npm run sync-types
+            - run:
+                  name: Check translations
+                  command: bin/check-i18n
     build:
         executor: node
         steps:
@@ -136,6 +146,7 @@ workflows:
             - eslint
             - prettier
             - knip
+            - check-i18n
             - build
             - poetry_check
             - python_lint

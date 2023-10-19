@@ -9,6 +9,7 @@ const config: KnipConfig = {
         "vite.config.ts",
         "src/routes/**/+{page,server,page.server,error,layout,layout.server}{,@*}.{js,ts,svelte}",
         "src/stories/**/*.stories.ts",
+        "src/bin/*.ts",
     ],
     rules: {
         binaries: "error",
@@ -25,7 +26,7 @@ const config: KnipConfig = {
         "$app/*": ["node_modules/@sveltejs/kit/src/runtime/app/*"],
         "$env/*": [".svelte-kit/ambient.d.ts"],
     },
-    ignoreBinaries: ["bin/prebuild.sh", "env", "poetry"],
+    ignoreBinaries: ["bin/prebuild.sh", "env", "poetry", "tsx"],
     project: ["src/**/*.{js,ts,svelte}"],
     compilers: {
         // https://github.com/webpro/knip/blob/7011a5107b6693f70a966a12bc3c31b6bc3353a8/docs/compilers.md

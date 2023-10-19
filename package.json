@@ -60,6 +60,7 @@
         "svelte-check": "~3.4.3",
         "svelte-eslint-parser": "~0.33.0",
         "svelte-language-server": "~0.15.20",
+        "tsx": "~3.14.0",
         "typescript-language-server": "~3.3.2",
         "typescript-svelte-plugin": "~0.3.33"
     },
