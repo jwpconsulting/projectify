@@ -1,16 +1,7 @@
 """Workspace schema mutations."""
 import datetime
 import uuid
-from typing import (
-    TYPE_CHECKING,
-    Type,
-    cast,
-)
 
-from django.contrib.auth import get_user_model as _get_user_model
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
 from django.db import (
     transaction,
 )
@@ -27,6 +18,9 @@ from strawberry.unset import (
 from graphql import (
     GraphQLResolveInfo,
 )
+from projectify.utils import (
+    get_user_model,
+)
 
 from .. import (
     models,
@@ -34,18 +28,6 @@ from .. import (
 from . import (
     types,
 )
-
-
-if TYPE_CHECKING:
-    from user.models import User as _User
-
-
-# TODO
-# Use this everywhere, refactor to some util module
-def get_user_model() -> Type["_User"]:
-    """Return a correctly typed user model."""
-    abstract_base_user: Type[AbstractBaseUser] = _get_user_model()
-    return cast(Type["_User"], abstract_base_user)
 
 
 # Add inputs

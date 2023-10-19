@@ -44,12 +44,15 @@ class SerializerContext(Generic[M, Q, S], TypedDict):
     view: GenericAPIView[M, Q, S]
 
 class GenericAPIView(Generic[M, Q, S], views.APIView):
+    lookup_field: str = "pk"
+    queryset: Q
+
     # TODO paginator: BasePagination
     def get_queryset(self) -> Q: ...
     def get_object(self) -> M: ...
     def get_serializer(
         self,
-        instance: M,
+        instance: Optional[M] = None,
         data: Optional[Mapping[str, Any]] = None,
         partial: Optional[bool] = False,
     ) -> S: ...

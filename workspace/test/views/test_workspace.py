@@ -1,6 +1,7 @@
 """Test workspace CRUD views."""
 from django.contrib.auth.models import (
     AbstractBaseUser,
+    AbstractUser,
 )
 from django.core.files import (
     File,
@@ -113,6 +114,10 @@ class TestWorkspaceRetrieveView:
 
 
 # Update
+
+# Delete
+
+# RPC
 @pytest.mark.django_db
 class TestWorkspacePictureUploadView:
     """Test WorkspacePictureUploadView."""
@@ -170,4 +175,47 @@ class TestWorkspacePictureUploadView:
         assert workspace.picture is not None
 
 
-# Delete
+@pytest.mark.django_db
+class TestInviteUserToWorkspace:
+    """Test InviteUserToWorkspace."""
+
+    @pytest.fixture
+    def resource_url(self, workspace_user: models.WorkspaceUser) -> str:
+        """Return URL to this view."""
+        return reverse(
+            "workspace:workspace-invite-user",
+            # Using the workspace_user fixture, we create a ws user and ws in
+            # one go! Mighty clever I dare say >:)
+            args=(workspace_user.workspace.uuid,),
+        )
+
+    def test_new_user(
+        self,
+        resource_url: str,
+        user_client: Client,
+        workspace: models.Workspace,
+    ) -> None:
+        """Test with a new, unregistered user."""
+        assert workspace.workspaceuserinvite_set.count() == 0
+        response = user_client.post(
+            resource_url,
+            {"email": "taro@yamamoto.jp"},
+        )
+        assert response.status_code == 201, response.content
+        assert workspace.workspaceuserinvite_set.count() == 1
+
+    def test_existing_user(
+        self,
+        resource_url: str,
+        user_client: Client,
+        workspace: models.Workspace,
+        other_user: AbstractUser,
+    ) -> None:
+        """Test by inviting an existing user."""
+        assert workspace.workspaceuserinvite_set.count() == 0
+        response = user_client.post(
+            resource_url,
+            {"email": other_user.email},
+        )
+        assert response.status_code == 201, response.content
+        assert workspace.workspaceuserinvite_set.count() == 0
