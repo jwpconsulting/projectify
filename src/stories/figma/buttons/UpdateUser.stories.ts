@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { user1 } from "$lib/storybook";
-
 import UpdateUser from "$lib/figma/buttons/UpdateUser.svelte";
+import { user1 } from "$lib/storybook";
 
 const meta: Meta<UpdateUser> = {
     component: UpdateUser,

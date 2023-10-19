@@ -2,22 +2,12 @@
     import { onMount } from "svelte";
     import { _, number } from "svelte-i18n";
 
-    import { goto } from "$lib/navigation";
-    import {
-        getDashboardWorkspaceBoardSectionUrl,
-        getDashboardWorkspaceBoardUrl,
-        getTaskUrl,
-    } from "$lib/urls";
-
-    import Breadcrumbs from "./Breadcrumbs.svelte";
-    import Form from "./Form.svelte";
-    import UpdateSubTasks from "./UpdateSubTasks.svelte";
-
     import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
     import Layout from "$lib/figma/screens/task/Layout.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import type { TaskUpdateBarState } from "$lib/figma/types";
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import { goto } from "$lib/navigation";
     import { updateTask as performUpdateTask } from "$lib/repository/workspace";
     import {
         currentTask,
@@ -29,7 +19,16 @@
         TaskWithWorkspace,
         TaskWithWorkspaceBoardSection,
     } from "$lib/types/workspace";
+    import {
+        getDashboardWorkspaceBoardSectionUrl,
+        getDashboardWorkspaceBoardUrl,
+        getTaskUrl,
+    } from "$lib/urls";
     import { coerceIsoDate } from "$lib/utils/date";
+
+    import Breadcrumbs from "./Breadcrumbs.svelte";
+    import Form from "./Form.svelte";
+    import UpdateSubTasks from "./UpdateSubTasks.svelte";
 
     // if this is in a store, we can get rid of this param
     export let task: TaskWithWorkspace;

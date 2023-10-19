@@ -1,13 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { makeStorybookSelect } from "$lib/storybook";
-
 import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
 import {
     circleIconSizes,
     circleIconIcons,
     type ButtonAction,
 } from "$lib/funabashi/types";
+import { makeStorybookSelect } from "$lib/storybook";
 
 const action = makeStorybookSelect<ButtonAction>({
     "Button": {

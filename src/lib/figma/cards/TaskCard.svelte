@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { getTaskUrl } from "$lib/urls";
-
     import SubTaskProgress from "$lib/figma/buttons/SubTaskProgress.svelte";
     import Chevrons from "$lib/figma/cards/task-card/Chevrons.svelte";
     import Labels from "$lib/figma/cards/task-card/Labels.svelte";
@@ -11,6 +9,7 @@
         TaskWithWorkspaceBoardSection,
         WorkspaceBoardSection,
     } from "$lib/types/workspace";
+    import { getTaskUrl } from "$lib/urls";
 
     export let task: TaskWithWorkspaceBoardSection;
     export let workspaceBoardSection: WorkspaceBoardSection | undefined =

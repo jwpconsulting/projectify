@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { constructiveOverlays } from "../config";
-
 import ConstructiveOverlay from "$lib/figma/overlays/constructive/ConstructiveOverlay.svelte";
+
+import { constructiveOverlays } from "../config";
 
 const meta: Meta<ConstructiveOverlay> = {
     component: ConstructiveOverlay,

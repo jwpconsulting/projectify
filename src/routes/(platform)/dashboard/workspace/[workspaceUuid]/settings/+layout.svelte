@@ -1,9 +1,10 @@
 <script lang="ts">
+    import Layout from "$lib/figma/screens/workspace-settings/Layout.svelte";
+    import type { SettingKind } from "$lib/types/dashboard";
+
     import type { LayoutData } from "./$types";
 
     import { page } from "$app/stores";
-    import Layout from "$lib/figma/screens/workspace-settings/Layout.svelte";
-    import type { SettingKind } from "$lib/types/dashboard";
 
     export let data: LayoutData;
     const { workspace } = data;

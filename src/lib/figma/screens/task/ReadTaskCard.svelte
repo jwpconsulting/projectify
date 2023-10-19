@@ -1,17 +1,6 @@
 <script lang="ts">
     import { _, number } from "svelte-i18n";
 
-    import {
-        getDashboardWorkspaceBoardSectionUrl,
-        getDashboardWorkspaceBoardUrl,
-        getTaskEditUrl,
-        getTaskUrl,
-    } from "$lib/urls";
-
-    import Breadcrumbs from "./Breadcrumbs.svelte";
-    import SubTaskBarComposite from "./SubTaskBarComposite.svelte";
-
-    import { goto } from "$app/navigation";
     import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
     import Fields from "$lib/figma/screens/task/Fields.svelte";
     import Layout from "$lib/figma/screens/task/Layout.svelte";
@@ -28,7 +17,18 @@
     import { currentTask } from "$lib/stores/dashboard";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { TaskWithWorkspace } from "$lib/types/workspace";
+    import {
+        getDashboardWorkspaceBoardSectionUrl,
+        getDashboardWorkspaceBoardUrl,
+        getTaskEditUrl,
+        getTaskUrl,
+    } from "$lib/urls";
     import { coerceIsoDate } from "$lib/utils/date";
+
+    import Breadcrumbs from "./Breadcrumbs.svelte";
+    import SubTaskBarComposite from "./SubTaskBarComposite.svelte";
+
+    import { goto } from "$app/navigation";
 
     export let task: TaskWithWorkspace;
     export let state: TaskUpdateBarState = "task";

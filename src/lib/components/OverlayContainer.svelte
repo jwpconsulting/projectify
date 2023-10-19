@@ -2,10 +2,11 @@
     import { onMount } from "svelte";
     import type { Readable } from "svelte/store";
 
-    import { browser } from "$app/environment";
     import { handleKey } from "$lib/stores/globalUi";
     import type { Overlay } from "$lib/types/ui";
     import { keepFocusInside } from "$lib/utils/focus";
+
+    import { browser } from "$app/environment";
 
     export let store: Readable<Overlay<unknown>>;
     // method used to close this overlay

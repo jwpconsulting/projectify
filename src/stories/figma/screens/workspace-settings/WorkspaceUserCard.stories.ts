@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { workspaceUser } from "$lib/storybook";
-
 import WorkspaceUserCard from "$lib/figma/screens/workspace-settings/WorkspaceUserCard.svelte";
+import { workspaceUser } from "$lib/storybook";
 
 const meta: Meta<WorkspaceUserCard> = {
     component: WorkspaceUserCard,

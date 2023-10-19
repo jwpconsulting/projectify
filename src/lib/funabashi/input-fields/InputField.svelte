@@ -6,13 +6,14 @@
     import type { PikadayOptions } from "pikaday";
     import { onMount } from "svelte";
 
-    import { browser } from "$app/environment";
     import type {
         InputFieldAnchor,
         InputFieldStyle,
     } from "$lib/funabashi/types";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { formatIsoDate } from "$lib/utils/date";
+
+    import { browser } from "$app/environment";
 
     // TODO make border customizable (e.g. in TaskFormFields)
     export let value: string | undefined = undefined;

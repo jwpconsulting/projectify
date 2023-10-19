@@ -1,10 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
+import TabBar from "$lib/figma/screens/workspace-settings/TabBar.svelte";
 import { workspace } from "$lib/storybook";
 
 import { activeSetting } from "./config";
-
-import TabBar from "$lib/figma/screens/workspace-settings/TabBar.svelte";
 
 const meta: Meta<TabBar> = {
     component: TabBar,

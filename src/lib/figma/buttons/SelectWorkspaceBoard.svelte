@@ -2,8 +2,6 @@
     import { Folder } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
 
-    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
-
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import {
         currentWorkspaceBoard,
@@ -11,6 +9,7 @@
     } from "$lib/stores/dashboard";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
+    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
     // Hehe, apparently this IS necessary, because $currentWorkspaceBoard
     // is evaluated despite the subscription never returning a value!

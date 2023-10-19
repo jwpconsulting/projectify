@@ -1,5 +1,3 @@
-import type { PageLoadEvent } from "./$types";
-
 import { getTask } from "$lib/repository/workspace";
 import type {
     Label,
@@ -8,6 +6,8 @@ import type {
     WorkspaceBoard,
 } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
+
+import type { PageLoadEvent } from "./$types";
 
 interface returnType {
     task: Task;

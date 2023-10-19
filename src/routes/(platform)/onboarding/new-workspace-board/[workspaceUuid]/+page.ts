@@ -1,7 +1,7 @@
-import type { PageLoadEvent } from "./$types";
-
 import { getWorkspace } from "$lib/repository/workspace";
 import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
+
+import type { PageLoadEvent } from "./$types";
 
 export async function load({
     params: { workspaceUuid },

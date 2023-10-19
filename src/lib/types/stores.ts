@@ -1,8 +1,6 @@
 // XXX "stores.ts" should be renamed "modules.ts" maybe?
 import type { Readable, Subscriber, Writable } from "svelte/store";
 
-import type { RepositoryContext } from "./repository";
-
 import type {
     LabelAssignmentInput,
     WorkspaceUserAssignmentInput,
@@ -14,6 +12,8 @@ import type {
     Label,
     WorkspaceUser,
 } from "$lib/types/workspace";
+
+import type { RepositoryContext } from "./repository";
 
 export interface WorkspaceUserAssignment
     extends Readable<WorkspaceUser | undefined> {

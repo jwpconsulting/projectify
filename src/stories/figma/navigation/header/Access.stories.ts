@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { mobileParameters } from "$lib/storybook";
-
 import Access from "$lib/figma/navigation/header/Access.svelte";
+import { mobileParameters } from "$lib/storybook";
 
 const meta: Meta<Access> = {
     component: Access,

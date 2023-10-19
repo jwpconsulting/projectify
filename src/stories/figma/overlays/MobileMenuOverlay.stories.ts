@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { makeStorybookSelect, mobileParameters } from "$lib/storybook";
-
 import MobileMenuOverlay from "$lib/figma/overlays/MobileMenuOverlay.svelte";
+import { makeStorybookSelect, mobileParameters } from "$lib/storybook";
 
 const target = makeStorybookSelect({
     Landing: { kind: "landing" },

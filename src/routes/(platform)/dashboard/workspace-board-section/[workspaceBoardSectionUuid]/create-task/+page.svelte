@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type { PageData } from "./$types";
-
     import CreateTaskCard from "$lib/figma/screens/task/CreateTaskCard.svelte";
+
+    import type { PageData } from "./$types";
 
     export let data: PageData;
 

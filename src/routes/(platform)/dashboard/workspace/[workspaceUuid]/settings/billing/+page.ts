@@ -1,7 +1,7 @@
-import type { PageLoadEvent } from "./$types";
-
 import { getWorkspaceCustomer } from "$lib/repository/corporate";
 import type { Customer } from "$lib/types/corporate";
+
+import type { PageLoadEvent } from "./$types";
 
 interface Data {
     customer: Customer;

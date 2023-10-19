@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { workspace, mobileParameters } from "$lib/storybook";
-
 import WorkspaceMenu from "$lib/figma/buttons/WorkspaceMenu.svelte";
+import { workspace, mobileParameters } from "$lib/storybook";
 
 const meta: Meta<WorkspaceMenu> = {
     component: WorkspaceMenu,

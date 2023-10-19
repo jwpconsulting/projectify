@@ -1,8 +1,6 @@
 <script lang="ts">
     import { Folder, Plus } from "@steeze-ui/heroicons";
 
-    import { falseTrue, fc, fr, trueFalse, users } from "$lib/storybook";
-
     import AddUserButton from "$lib/figma/buttons/AddUserButton.svelte";
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
     import CancelSearch from "$lib/figma/buttons/CancelSearch.svelte";
@@ -35,6 +33,7 @@
         stepperPositions,
     } from "$lib/figma/types";
     import { currentStep } from "$lib/stores/onboarding";
+    import { falseTrue, fc, fr, trueFalse, users } from "$lib/storybook";
 
     const onboardingSeats = [5, 10, 15, 20, 25];
 </script>

@@ -1,13 +1,10 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import { goto } from "$lib/navigation";
-
-    import type { PageData } from "./$types";
-
     import AppIllustration from "$lib/components/onboarding/app-illustration.svelte";
     import Onboarding from "$lib/components/Onboarding.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import { goto } from "$lib/navigation";
     import {
         createTask,
         createWorkspaceBoardSection,
@@ -16,6 +13,8 @@
     import type { CreateUpdateTask } from "$lib/types/workspace";
     import { getNewLabelUrl } from "$lib/urls/onboarding";
     import { unwrap } from "$lib/utils/type";
+
+    import type { PageData } from "./$types";
 
     export let data: PageData;
 

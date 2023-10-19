@@ -1,5 +1,3 @@
-import type { PageLoadEvent } from "./$types";
-
 import {
     currentWorkspace,
     currentWorkspaceBoard,
@@ -10,6 +8,8 @@ import type {
     WorkspaceBoardSection,
 } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
+
+import type { PageLoadEvent } from "./$types";
 
 export async function load({
     params: { workspaceBoardUuid },

@@ -1,14 +1,6 @@
 <script lang="ts">
     import { number } from "svelte-i18n";
 
-    import {
-        getDashboardWorkspaceBoardSectionUrl,
-        getDashboardWorkspaceBoardUrl,
-        getTaskUpdatesUrl,
-    } from "$lib/urls";
-
-    import type { PageData } from "../$types";
-
     import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
     import Breadcrumbs from "$lib/figma/screens/task/Breadcrumbs.svelte";
     import Layout from "$lib/figma/screens/task/Layout.svelte";
@@ -16,6 +8,13 @@
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import type { TaskUpdateBarState } from "$lib/figma/types";
     import { currentTask } from "$lib/stores/dashboard";
+    import {
+        getDashboardWorkspaceBoardSectionUrl,
+        getDashboardWorkspaceBoardUrl,
+        getTaskUpdatesUrl,
+    } from "$lib/urls";
+
+    import type { PageData } from "../$types";
 
     export let data: PageData;
     let { task } = data;

@@ -1,8 +1,7 @@
 <script lang="ts">
-    import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
-
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import type { WorkspaceBoardSection } from "$lib/types/workspace";
+    import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
 
     export let workspaceBoardSection: WorkspaceBoardSection;
 </script>

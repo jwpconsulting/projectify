@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { destructiveOverlays } from "./config";
-
 import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
+
+import { destructiveOverlays } from "./config";
 
 const meta: Meta<DestructiveOverlay> = {
     component: DestructiveOverlay,

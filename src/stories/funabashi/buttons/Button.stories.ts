@@ -1,12 +1,11 @@
 import { Plus } from "@steeze-ui/heroicons";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
+import { buttonColors } from "$lib/funabashi/types";
+import type { ButtonAction, ButtonStyle } from "$lib/funabashi/types";
 import { makeStorybookSelect } from "$lib/storybook";
 
 import Button from "./Button.svelte";
-
-import { buttonColors } from "$lib/funabashi/types";
-import type { ButtonAction, ButtonStyle } from "$lib/funabashi/types";
 
 const style = makeStorybookSelect<ButtonStyle>({
     "Primary": {

@@ -1,9 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { makeStorybookSelect, selectLabels } from "$lib/storybook";
-
 import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
 import type { SelectLabel } from "$lib/figma/types";
+import { makeStorybookSelect, selectLabels } from "$lib/storybook";
 
 const label = makeStorybookSelect(
     Object.fromEntries(

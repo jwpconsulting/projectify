@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { makeStorybookSelect } from "$lib/storybook";
-
 import Breadcrumbs from "$lib/figma/screens/task/Breadcrumbs.svelte";
+import { makeStorybookSelect } from "$lib/storybook";
 
 // TODO
 const choices = {

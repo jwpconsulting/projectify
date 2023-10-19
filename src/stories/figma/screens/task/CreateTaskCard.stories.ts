@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { breadCrumbWorkspaceBoardSection } from "$lib/storybook";
-
 import CreateTaskCard from "$lib/figma/screens/task/CreateTaskCard.svelte";
+import { breadCrumbWorkspaceBoardSection } from "$lib/storybook";
 
 const meta: Meta<CreateTaskCard> = {
     component: CreateTaskCard,

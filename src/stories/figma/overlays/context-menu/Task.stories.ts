@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { task } from "$lib/storybook";
-
 import Task from "$lib/figma/overlays/context-menu/Task.svelte";
+import { task } from "$lib/storybook";
 
 const meta: Meta<Task> = {
     component: Task,

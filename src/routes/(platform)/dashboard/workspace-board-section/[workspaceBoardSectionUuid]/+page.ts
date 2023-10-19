@@ -1,8 +1,7 @@
 import { redirect } from "@sveltejs/kit";
 
-import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
-
 import { getWorkspaceBoardSection } from "$lib/repository/workspace";
+import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
 export async function load({
     fetch,

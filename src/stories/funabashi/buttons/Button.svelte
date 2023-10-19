@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { fc, fr } from "$lib/storybook";
-
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import type {
         ButtonAction,
@@ -8,6 +6,7 @@
         ButtonColor,
     } from "$lib/funabashi/types";
     import { buttonSizes } from "$lib/funabashi/types";
+    import { fc, fr } from "$lib/storybook";
 
     export let label: string;
     export let style: ButtonStyle;

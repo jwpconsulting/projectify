@@ -4,8 +4,6 @@
 import { derived, writable } from "svelte/store";
 import type { Readable, Writable } from "svelte/store";
 
-import { internallyWritable, searchAmong } from "../util";
-
 import { currentWorkspaceUsers } from "$lib/stores/dashboard/workspaceUser";
 import type { CurrentWorkspaceUsers } from "$lib/stores/dashboard/workspaceUser";
 import type { SearchInput } from "$lib/types/base";
@@ -14,6 +12,8 @@ import type {
     WorkspaceUserSelectionInput,
 } from "$lib/types/ui";
 import type { WorkspaceUser } from "$lib/types/workspace";
+
+import { internallyWritable, searchAmong } from "../util";
 
 const { priv: _selectedWorkspaceUser, pub: selectedWorkspaceUser } =
     internallyWritable<WorkspaceUserSelection>({

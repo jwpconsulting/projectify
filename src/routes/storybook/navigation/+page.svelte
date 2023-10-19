@@ -1,10 +1,9 @@
 <script lang="ts">
-    import { fc, fr, user1, user2, users } from "$lib/storybook";
-
     import AvatarState from "$lib/figma/navigation/AvatarState.svelte";
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import type { AvatarVariantContent } from "$lib/figma/types";
     import { avatarStateSizes, avatarVariantSizes } from "$lib/figma/types";
+    import { fc, fr, user1, user2, users } from "$lib/storybook";
 
     const avatarV5Contents: AvatarVariantContent[] = [
         { kind: "assign", users: [user1, user2] },

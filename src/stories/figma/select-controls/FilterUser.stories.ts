@@ -1,12 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
+import FilterUser from "$lib/figma/select-controls/FilterUser.svelte";
 import {
     makeStorybookSelect,
     mobileParameters,
     workspaceUserSelectionInputs,
 } from "$lib/storybook";
-
-import FilterUser from "$lib/figma/select-controls/FilterUser.svelte";
 import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
 
 const meta: Meta<FilterUser> = {

@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { task, workspaceBoardSection } from "$lib/storybook";
-
 import ReadTaskCard from "$lib/figma/screens/task/ReadTaskCard.svelte";
+import { task, workspaceBoardSection } from "$lib/storybook";
 
 const meta: Meta<ReadTaskCard> = {
     component: ReadTaskCard,

@@ -1,13 +1,12 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import { goto } from "$lib/navigation";
-
-    import type { PageData } from "./$types";
-
     import Onboarding from "$lib/components/Onboarding.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import { goto } from "$lib/navigation";
     import { updateUserProfile } from "$lib/stores/user";
+
+    import type { PageData } from "./$types";
 
     export let data: PageData;
 

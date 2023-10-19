@@ -10,16 +10,10 @@
     } from "@steeze-ui/heroicons";
     import { _ } from "svelte-i18n";
 
-    import { goto } from "$lib/navigation";
-    import {
-        getTaskUrl,
-        getTaskUpdatesUrl,
-        getDashboardWorkspaceBoardSectionUrl,
-    } from "$lib/urls";
-
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
+    import { goto } from "$lib/navigation";
     import { deleteTask } from "$lib/stores/dashboard";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
     import {
@@ -28,6 +22,11 @@
         getTaskPosition,
     } from "$lib/stores/modules";
     import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
+    import {
+        getTaskUrl,
+        getTaskUpdatesUrl,
+        getDashboardWorkspaceBoardSectionUrl,
+    } from "$lib/urls";
     import { copyToClipboard } from "$lib/utils/clipboard";
 
     export let task: Task;

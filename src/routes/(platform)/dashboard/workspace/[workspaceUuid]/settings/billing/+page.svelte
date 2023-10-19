@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type { PageData } from "./$types";
-
     import Billing from "$lib/figma/screens/workspace-settings/Billing.svelte";
+
+    import type { PageData } from "./$types";
 
     export let data: PageData;
 

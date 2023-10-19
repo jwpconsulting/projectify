@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { user1 } from "$lib/storybook";
-
 import Overview from "$lib/figma/screens/user-account-settings/Overview.svelte";
+import { user1 } from "$lib/storybook";
 
 const meta: Meta<Overview> = {
     component: Overview,

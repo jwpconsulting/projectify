@@ -1,7 +1,5 @@
 import { readable, writable } from "svelte/store";
 
-import type { Customer } from "./types/corporate";
-
 import type { LabelLabel, SelectLabel } from "$lib/figma/types";
 import type {
     LabelAssignment,
@@ -19,6 +17,8 @@ import type {
 } from "$lib/types/workspace";
 import { getIndexFromLabelColor, labelColors } from "$lib/utils/colors";
 import type { LabelColor } from "$lib/utils/colors";
+
+import type { Customer } from "./types/corporate";
 
 export const fr = "flex flex-row flex-wrap gap-2";
 export const fc = "flex flex-col flex-wrap gap-2";

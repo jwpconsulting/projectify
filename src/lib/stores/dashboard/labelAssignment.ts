@@ -6,14 +6,14 @@
 
 import { derived, readonly, writable } from "svelte/store";
 
-import { currentWorkspaceLabels } from "./label";
-
 import type { LabelAssignment } from "$lib/types/stores";
 import type {
     LabelAssignmentInput,
     LabelAssignmentState,
 } from "$lib/types/ui";
 import type { Label, Task } from "$lib/types/workspace";
+
+import { currentWorkspaceLabels } from "./label";
 
 function evaluateLabelAssignment(state: LabelAssignmentState): string[] {
     if (state.kind === "noLabel") {

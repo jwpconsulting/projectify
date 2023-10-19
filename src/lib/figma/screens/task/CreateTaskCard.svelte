@@ -1,21 +1,10 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import { goto } from "$lib/navigation";
-    import {
-        getDashboardWorkspaceBoardSectionUrl,
-        getDashboardWorkspaceBoardUrl,
-        getNewTaskUrl,
-        getTaskUrl,
-    } from "$lib/urls";
-
-    import Breadcrumbs from "./Breadcrumbs.svelte";
-    import Form from "./Form.svelte";
-    import UpdateSubTasks from "./UpdateSubTasks.svelte";
-
     import Layout from "$lib/figma/screens/task/Layout.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import { goto } from "$lib/navigation";
     import { createTask as createTaskFn } from "$lib/repository/workspace";
     import { createSubTaskAssignment } from "$lib/stores/dashboard";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
@@ -24,7 +13,17 @@
         CreateUpdateTask,
         WorkspaceBoardSection,
     } from "$lib/types/workspace";
+    import {
+        getDashboardWorkspaceBoardSectionUrl,
+        getDashboardWorkspaceBoardUrl,
+        getNewTaskUrl,
+        getTaskUrl,
+    } from "$lib/urls";
     import { unwrap } from "$lib/utils/type";
+
+    import Breadcrumbs from "./Breadcrumbs.svelte";
+    import Form from "./Form.svelte";
+    import UpdateSubTasks from "./UpdateSubTasks.svelte";
 
     export let workspaceBoardSection: WorkspaceBoardSection;
 

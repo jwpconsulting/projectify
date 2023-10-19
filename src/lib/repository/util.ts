@@ -1,8 +1,8 @@
 import vars from "$lib/env";
-
-import { browser } from "$app/environment";
 import type { RepositoryContext } from "$lib/types/repository";
 import { getCookie } from "$lib/utils/cookie";
+
+import { browser } from "$app/environment";
 
 const getOptions: RequestInit = { credentials: "include" };
 

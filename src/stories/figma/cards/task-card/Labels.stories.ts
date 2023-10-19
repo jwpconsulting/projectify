@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { task } from "$lib/storybook";
-
 import Labels from "$lib/figma/cards/task-card/Labels.svelte";
+import { task } from "$lib/storybook";
 
 const meta: Meta<Labels> = {
     component: Labels,

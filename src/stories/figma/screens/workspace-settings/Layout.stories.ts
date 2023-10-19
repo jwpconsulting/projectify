@@ -1,10 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
+import Layout from "$lib/figma/screens/workspace-settings/Layout.svelte";
 import { workspace } from "$lib/storybook";
 
 import { activeSetting } from "./config";
-
-import Layout from "$lib/figma/screens/workspace-settings/Layout.svelte";
 
 const meta: Meta<Layout> = {
     component: Layout,

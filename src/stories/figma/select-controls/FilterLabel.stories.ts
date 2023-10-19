@@ -1,13 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
+import FilterLabel from "$lib/figma/select-controls/FilterLabel.svelte";
+import type { SelectLabel } from "$lib/figma/types";
 import {
     selectLabels,
     makeStorybookSelect,
     mobileParameters,
 } from "$lib/storybook";
-
-import FilterLabel from "$lib/figma/select-controls/FilterLabel.svelte";
-import type { SelectLabel } from "$lib/figma/types";
 
 const short: SelectLabel = {
     label: {

@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { workspaceBoard } from "$lib/storybook";
-
 import WorkspaceBoard from "$lib/figma/overlays/context-menu/WorkspaceBoard.svelte";
+import { workspaceBoard } from "$lib/storybook";
 
 const meta: Meta<WorkspaceBoard> = {
     component: WorkspaceBoard,

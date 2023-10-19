@@ -1,9 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { makeStorybookSelect } from "$lib/storybook";
-
 import InputField from "$lib/funabashi/input-fields/InputField.svelte";
 import type { InputFieldStyle } from "$lib/funabashi/types";
+import { makeStorybookSelect } from "$lib/storybook";
 
 const style = makeStorybookSelect<InputFieldStyle>({
     "Search": {

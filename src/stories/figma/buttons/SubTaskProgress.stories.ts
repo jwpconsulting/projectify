@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { task } from "$lib/storybook";
-
 import SubTaskProgress from "$lib/figma/buttons/SubTaskProgress.svelte";
+import { task } from "$lib/storybook";
 
 const meta: Meta<SubTaskProgress> = {
     component: SubTaskProgress,

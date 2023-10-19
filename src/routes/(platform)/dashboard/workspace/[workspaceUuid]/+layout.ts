@@ -1,7 +1,7 @@
-import type { LayoutLoadEvent } from "./$types";
-
 import { currentWorkspace } from "$lib/stores/dashboard";
 import type { Workspace } from "$lib/types/workspace";
+
+import type { LayoutLoadEvent } from "./$types";
 
 interface Data {
     workspace: Workspace;

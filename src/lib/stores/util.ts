@@ -3,7 +3,6 @@ import { readonly, writable } from "svelte/store";
 import type { Readable, Writable } from "svelte/store";
 
 import { fuseSearchThreshold } from "$lib/config";
-
 import type { RecursiveKeyOf, SearchInput } from "$lib/types/base";
 
 export function searchAmong<T extends object>(

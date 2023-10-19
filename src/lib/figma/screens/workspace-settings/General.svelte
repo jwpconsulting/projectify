@@ -2,7 +2,6 @@
     import { _ } from "svelte-i18n";
 
     import vars from "$lib/env";
-
     import UploadAvatar from "$lib/figma/buttons/UploadAvatar.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";

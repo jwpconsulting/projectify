@@ -2,8 +2,6 @@
     import { ChevronDown, ChevronRight } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
 
-    import { getNewTaskUrl } from "$lib/urls";
-
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import { toggleWorkspaceBoardSectionOpen } from "$lib/stores/dashboard";
     import { openContextMenu } from "$lib/stores/globalUi";
@@ -12,6 +10,7 @@
         WorkspaceBoard,
         WorkspaceBoardSection,
     } from "$lib/types/workspace";
+    import { getNewTaskUrl } from "$lib/urls";
 
     export let workspaceBoard: WorkspaceBoard;
     export let workspaceBoardSection: WorkspaceBoardSection;

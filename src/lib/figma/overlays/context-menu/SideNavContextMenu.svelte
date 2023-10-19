@@ -7,12 +7,11 @@
     } from "@steeze-ui/heroicons";
     import { _ } from "svelte-i18n";
 
-    import { getArchiveUrl, getSettingsUrl } from "$lib/urls";
-
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import { sideNavOpen, toggleSideNavOpen } from "$lib/stores/dashboard";
     import type { Workspace } from "$lib/types/workspace";
+    import { getArchiveUrl, getSettingsUrl } from "$lib/urls";
 
     export let workspace: Workspace;
 </script>

@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { mobileParameters } from "$lib/storybook";
-
 import Continue from "$lib/figma/navigation/header/Continue.svelte";
+import { mobileParameters } from "$lib/storybook";
 
 const meta: Meta<Continue> = {
     component: Continue,

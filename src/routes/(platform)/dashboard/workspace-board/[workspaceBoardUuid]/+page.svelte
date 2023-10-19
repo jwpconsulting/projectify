@@ -1,8 +1,8 @@
 <script lang="ts">
-    import type { PageData } from "./$types";
-
     import Dashboard from "$lib/components/dashboard/Dashboard.svelte";
     import { currentWorkspaceBoard } from "$lib/stores/dashboard";
+
+    import type { PageData } from "./$types";
 
     export let data: PageData;
 

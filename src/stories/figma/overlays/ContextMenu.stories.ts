@@ -1,10 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
+import ContextMenu from "$lib/figma/overlays/ContextMenu.svelte";
 import { makeStorybookSelect } from "$lib/storybook";
 
 import { contextMenus } from "./config";
-
-import ContextMenu from "$lib/figma/overlays/ContextMenu.svelte";
 
 const meta: Meta<ContextMenu> = {
     component: ContextMenu,

@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { workspace } from "$lib/storybook";
-
 import Full from "$lib/figma/navigation/side-nav/Full.svelte";
+import { workspace } from "$lib/storybook";
 
 const meta: Meta<Full> = {
     component: Full,

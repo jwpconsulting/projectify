@@ -1,8 +1,8 @@
 import { redirect } from "@sveltejs/kit";
 
-import type { PageLoadEvent } from "./$types";
-
 import { emailConfirmation } from "$lib/stores/user";
+
+import type { PageLoadEvent } from "./$types";
 
 export async function load({ params: { email, token } }: PageLoadEvent) {
     await emailConfirmation(email, token);

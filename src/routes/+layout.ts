@@ -4,8 +4,9 @@ import "$lib/i18n";
 
 import { locale } from "svelte-i18n";
 
-import { browser } from "$app/environment";
 import { fetchUser } from "$lib/stores/user";
+
+import { browser } from "$app/environment";
 
 export async function load({ fetch }: { fetch: typeof window.fetch }) {
     if (browser) {

@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { workspace } from "$lib/storybook";
-
 import Collapsed from "$lib/figma/navigation/side-nav/Collapsed.svelte";
+import { workspace } from "$lib/storybook";
 
 const meta: Meta<Collapsed> = {
     component: Collapsed,

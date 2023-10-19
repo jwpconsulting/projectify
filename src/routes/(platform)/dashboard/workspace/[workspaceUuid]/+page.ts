@@ -1,11 +1,10 @@
 import { redirect } from "@sveltejs/kit";
 
+import { selectedWorkspaceBoardUuids } from "$lib/stores/dashboard";
 import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
+import { getNewWorkspaceBoardUrl } from "$lib/urls/onboarding";
 
 import type { PageLoadEvent } from "./$types";
-
-import { selectedWorkspaceBoardUuids } from "$lib/stores/dashboard";
-import { getNewWorkspaceBoardUrl } from "$lib/urls/onboarding";
 
 export async function load({ parent }: PageLoadEvent): Promise<void> {
     const [maybeWorkspaceBoardUuids, parentData] = await Promise.all([

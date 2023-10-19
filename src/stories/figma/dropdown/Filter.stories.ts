@@ -1,9 +1,8 @@
 import { Briefcase } from "@steeze-ui/heroicons";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { mobileParameters } from "$lib/storybook";
-
 import Filter from "$lib/figma/dropdown/Filter.svelte";
+import { mobileParameters } from "$lib/storybook";
 
 const meta: Meta<Filter> = {
     component: Filter,

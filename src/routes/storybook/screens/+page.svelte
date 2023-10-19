@@ -1,10 +1,9 @@
 <script lang="ts">
-    import { fc } from "$lib/storybook";
-
     import ConfirmPasswordReset from "$lib/figma/screens/auth/ConfirmPasswordReset.svelte";
     import LogIn from "$lib/figma/screens/auth/LogIn.svelte";
     import RequestPasswordReset from "$lib/figma/screens/auth/RequestPasswordReset.svelte";
     import SignUp from "$lib/figma/screens/auth/SignUp.svelte";
+    import { fc } from "$lib/storybook";
 </script>
 
 <div class={fc}>

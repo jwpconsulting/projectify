@@ -1,11 +1,11 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
+    import IllustrationPasswordResetComplete from "$lib/components/illustrations/illustration-password-reset-complete.svelte";
     import { goto } from "$lib/navigation";
+    import { confirmPasswordReset } from "$lib/stores/user";
 
     import { page } from "$app/stores";
-    import IllustrationPasswordResetComplete from "$lib/components/illustrations/illustration-password-reset-complete.svelte";
-    import { confirmPasswordReset } from "$lib/stores/user";
 
     let requestSent = false;
     let error: string | null = null;

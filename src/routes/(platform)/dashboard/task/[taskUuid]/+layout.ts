@@ -1,7 +1,7 @@
-import type { LayoutLoadEvent } from "./$types";
-
 import { currentTask, currentWorkspace } from "$lib/stores/dashboard";
 import type { TaskWithWorkspace, Workspace } from "$lib/types/workspace";
+
+import type { LayoutLoadEvent } from "./$types";
 
 interface Data {
     task: TaskWithWorkspace;

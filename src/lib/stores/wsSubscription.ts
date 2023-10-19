@@ -3,8 +3,6 @@ import type { Unsubscriber } from "svelte/store";
 import { writable } from "svelte/store";
 
 import vars from "$lib/env";
-
-import { browser } from "$app/environment";
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
     MaybeSubscriber,
@@ -12,6 +10,8 @@ import type {
     WsResource,
 } from "$lib/types/stores";
 import { unwrap } from "$lib/utils/type";
+
+import { browser } from "$app/environment";
 
 interface Message {
     type: string;

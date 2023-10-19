@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { task, workspaceBoardSection, workspaceBoard } from "$lib/storybook";
-
 import TopBar from "$lib/figma/screens/task/TopBar.svelte";
+import { task, workspaceBoardSection, workspaceBoard } from "$lib/storybook";
 
 const meta: Meta<TopBar> = {
     component: TopBar,

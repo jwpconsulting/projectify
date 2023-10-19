@@ -1,10 +1,10 @@
 import { redirect } from "@sveltejs/kit";
 import { get } from "svelte/store";
 
-import type { LayoutLoadEvent } from "./$types";
-
 import { fetchUser, user } from "$lib/stores/user";
 import type { User } from "$lib/types/user";
+
+import type { LayoutLoadEvent } from "./$types";
 
 export async function load({
     url,

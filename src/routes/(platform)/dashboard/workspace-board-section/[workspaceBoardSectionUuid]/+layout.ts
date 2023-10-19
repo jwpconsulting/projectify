@@ -1,9 +1,9 @@
-import type { LayoutLoadEvent } from "./$types";
-
 import { getWorkspaceBoardSection } from "$lib/repository/workspace";
 import { currentWorkspace } from "$lib/stores/dashboard";
 import type { WorkspaceBoardSection } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
+
+import type { LayoutLoadEvent } from "./$types";
 
 interface Data {
     workspaceBoardSection: WorkspaceBoardSection;

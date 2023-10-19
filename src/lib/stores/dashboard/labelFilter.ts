@@ -1,12 +1,12 @@
 import { writable } from "svelte/store";
 
+import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
+
 import {
     createLabelFilter,
     createLabelSearchResults,
     currentWorkspaceLabels,
 } from "./label";
-
-import type { LabelSelection, LabelSelectionInput } from "$lib/types/ui";
 
 /*
  * Here come the shared methods for filtering all tasks by one or more labels

@@ -1,7 +1,5 @@
 import { writable } from "svelte/store";
 
-import { goto } from "$lib/navigation";
-
 import { client } from "$lib/graphql/client";
 import {
     Mutation_ConfirmPasswordReset,
@@ -12,6 +10,7 @@ import {
     Mutation_Signup,
     Mutation_UpdateProfile,
 } from "$lib/graphql/operations";
+import { goto } from "$lib/navigation";
 import { getUser } from "$lib/repository/user";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { User } from "$lib/types/user";

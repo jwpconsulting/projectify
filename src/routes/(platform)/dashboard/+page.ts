@@ -1,11 +1,10 @@
 import { error, redirect } from "@sveltejs/kit";
 
+import { getWorkspaces } from "$lib/repository/workspace";
+import { selectedWorkspaceUuid } from "$lib/stores/dashboard";
 import { getDashboardWorkspaceUrl } from "$lib/urls";
 
 import type { PageLoadEvent } from "./$types";
-
-import { getWorkspaces } from "$lib/repository/workspace";
-import { selectedWorkspaceUuid } from "$lib/stores/dashboard";
 
 export async function load({ fetch }: PageLoadEvent): Promise<void> {
     const maybeWorkspaceUuid: string | null = await new Promise(

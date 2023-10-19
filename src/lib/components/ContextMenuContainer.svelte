@@ -1,7 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
 
-    import { browser } from "$app/environment";
     import ContextMenu from "$lib/figma/overlays/ContextMenu.svelte";
     import {
         closeContextMenu,
@@ -10,6 +9,8 @@
     } from "$lib/stores/globalUi";
     import type { ContextMenuState } from "$lib/types/ui";
     import { keepFocusInside } from "$lib/utils/focus";
+
+    import { browser } from "$app/environment";
 
     let contextMenu: HTMLElement | null = null;
     let resizeObserver: ResizeObserver | null = null;

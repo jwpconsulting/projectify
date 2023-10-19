@@ -1,12 +1,11 @@
 <script lang="ts">
-    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
-
     import LabelDropdownClosedNav from "$lib/figma/buttons/LabelDropdownClosedNav.svelte";
     import UserDropdownClosedNav from "$lib/figma/buttons/UserDropdownClosedNav.svelte";
     import WorkspaceMenu from "$lib/figma/buttons/WorkspaceMenu.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import { selectWorkspaceBoardUuid } from "$lib/stores/dashboard";
     import type { Workspace } from "$lib/types/workspace";
+    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
     export let workspaces: Workspace[];
     export let workspace: Workspace;

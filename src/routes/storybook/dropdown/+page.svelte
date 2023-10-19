@@ -1,12 +1,11 @@
 <script lang="ts">
     import { Tag } from "@steeze-ui/heroicons";
 
-    import { falseTrue, fr } from "$lib/storybook";
-
     import Filter from "$lib/figma/dropdown/Filter.svelte";
     import HelpDropdown from "$lib/figma/dropdown/HelpDropdown.svelte";
     import HelpDropdownButton from "$lib/figma/dropdown/HelpDropdownButton.svelte";
     import HelpDropdownMenu from "$lib/figma/dropdown/HelpDropdownMenu.svelte";
+    import { falseTrue, fr } from "$lib/storybook";
 </script>
 
 List Value
