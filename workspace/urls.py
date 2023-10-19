@@ -3,6 +3,18 @@ from django.urls import (
     path,
 )
 
+from workspace.views.task import (
+    TaskCreate,
+    TaskRetrieveUpdate,
+)
+from workspace.views.workspace import (
+    InviteUserToWorkspace,
+    WorkspaceCreate,
+    WorkspaceList,
+    WorkspacePictureUploadView,
+    WorkspaceRetrieve,
+)
+
 from . import (
     views,
 )
@@ -15,18 +27,18 @@ urlpatterns = (
     # Create
     path(
         "workspaces/",
-        views.WorkspaceCreate.as_view(),
+        WorkspaceCreate.as_view(),
         name="workspace-create",
     ),
     # Read
     path(
         "user/workspaces/",
-        views.WorkspaceList.as_view(),
+        WorkspaceList.as_view(),
         name="workspace-list",
     ),
     path(
         "workspace/<uuid:workspace_uuid>",
-        views.WorkspaceRetrieve.as_view(),
+        WorkspaceRetrieve.as_view(),
         name="workspace",
     ),
     # Update
@@ -34,12 +46,12 @@ urlpatterns = (
     # RPC
     path(
         "workspace/<uuid:uuid>/picture-upload",
-        views.WorkspacePictureUploadView.as_view(),
+        WorkspacePictureUploadView.as_view(),
         name="workspace-picture-upload",
     ),
     path(
         "workspace/<uuid:uuid>/invite-user",
-        views.InviteUserToWorkspace.as_view(),
+        InviteUserToWorkspace.as_view(),
         name="workspace-invite-user",
     ),
     # WorkspaceBoard
@@ -71,13 +83,13 @@ urlpatterns = (
     # Create
     path(
         "task",
-        views.TaskCreate.as_view(),
+        TaskCreate.as_view(),
         name="task-create",
     ),
     # Read
     path(
         "task/<uuid:task_uuid>",
-        views.TaskRetrieveUpdate.as_view(),
+        TaskRetrieveUpdate.as_view(),
         name="task",
     ),
     # Update
