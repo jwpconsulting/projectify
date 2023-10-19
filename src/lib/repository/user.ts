@@ -7,7 +7,7 @@ import { uploadImage } from "$lib/utils/file";
 // Create
 // Read
 export async function getUser(
-    repositoryContext?: RepositoryContext
+    repositoryContext: RepositoryContext
 ): Promise<User | null> {
     try {
         return await getWithCredentialsJson<User>(

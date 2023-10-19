@@ -57,7 +57,7 @@
             workspace_board_section,
             assignee,
         };
-        const { uuid } = await createTask(task);
+        const { uuid } = await createTask(task, { fetch });
         await goto(getNewLabelUrl(uuid));
     }
 </script>

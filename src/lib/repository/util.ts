@@ -2,8 +2,6 @@ import vars from "$lib/env";
 import type { RepositoryContext } from "$lib/types/repository";
 import { getCookie } from "$lib/utils/cookie";
 
-import { browser } from "$app/environment";
-
 const getOptions: RequestInit = { credentials: "include" };
 
 function putPostOptions<T>(method: "POST" | "PUT", data: T): RequestInit {
@@ -21,12 +19,6 @@ function putPostOptions<T>(method: "POST" | "PUT", data: T): RequestInit {
     };
 }
 
-const defaultRepositoryContext: RepositoryContext | null = browser
-    ? {
-          fetch: window.fetch,
-      }
-    : null;
-
 async function parseResponse<T>(response: Response): Promise<T> {
     const body = (await response.json()) as T;
     if (!response.ok) {
@@ -37,11 +29,8 @@ async function parseResponse<T>(response: Response): Promise<T> {
 
 export async function getWithCredentialsJson<T>(
     url: string,
-    repositoryContext: RepositoryContext | null = defaultRepositoryContext
+    repositoryContext: RepositoryContext
 ): Promise<T> {
-    if (!repositoryContext) {
-        throw new Error("Expected repositoryContext");
-    }
     const { fetch } = repositoryContext;
     const response = await fetch(`${vars.API_ENDPOINT}${url}`, getOptions);
     return await parseResponse(response);
@@ -50,11 +39,8 @@ export async function getWithCredentialsJson<T>(
 export async function postWithCredentialsJson<T>(
     url: string,
     data: unknown,
-    repositoryContext: RepositoryContext | null = defaultRepositoryContext
+    repositoryContext: RepositoryContext
 ): Promise<T> {
-    if (!repositoryContext) {
-        throw new Error("Expected repositoryContext");
-    }
     const { fetch } = repositoryContext;
     const response = await fetch(
         `${vars.API_ENDPOINT}${url}`,
@@ -66,11 +52,8 @@ export async function postWithCredentialsJson<T>(
 export async function putWithCredentialsJson<T>(
     url: string,
     data: unknown,
-    repositoryContext: RepositoryContext | null = defaultRepositoryContext
+    repositoryContext: RepositoryContext
 ): Promise<T> {
-    if (!repositoryContext) {
-        throw new Error("Expected repositoryContext");
-    }
     const { fetch } = repositoryContext;
     const response = await fetch(
         `${vars.API_ENDPOINT}${url}`,

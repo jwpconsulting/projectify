@@ -21,7 +21,7 @@
         if (email === undefined) {
             throw new Error("No email");
         }
-        await inviteUser(workspace, email);
+        await inviteUser(workspace, email, { fetch });
         resolveConstructiveOverlay();
     }
 </script>

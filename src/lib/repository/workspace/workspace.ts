@@ -13,8 +13,8 @@ import { unwrap } from "$lib/utils/type";
 // Create
 export async function createWorkspace(
     title: string,
-    description?: string,
-    repositoryContext?: RepositoryContext
+    description: string | undefined,
+    repositoryContext: RepositoryContext
 ): Promise<Workspace> {
     return await postWithCredentialsJson<Workspace>(
         `/workspace/workspaces/`,
@@ -24,7 +24,7 @@ export async function createWorkspace(
 }
 // Read
 export async function getWorkspaces(
-    repositoryContext?: RepositoryContext
+    repositoryContext: RepositoryContext
 ): Promise<Workspace[]> {
     return await getWithCredentialsJson<Workspace[]>(
         `/workspace/user/workspaces/`,
@@ -34,7 +34,7 @@ export async function getWorkspaces(
 
 export async function getWorkspace(
     uuid: string,
-    repositoryContext?: RepositoryContext
+    repositoryContext: RepositoryContext
 ): Promise<Workspace> {
     return await getWithCredentialsJson<Workspace>(
         `/workspace/workspace/${uuid}`,
@@ -70,7 +70,7 @@ export async function updateWorkspace(
 export async function inviteUser(
     workspace: Workspace,
     email: string,
-    repositoryContext?: RepositoryContext
+    repositoryContext: RepositoryContext
 ): Promise<{ email: string }> {
     const { uuid } = workspace;
     return await postWithCredentialsJson<{ email: string }>(

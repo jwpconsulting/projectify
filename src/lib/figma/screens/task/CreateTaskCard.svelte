@@ -55,7 +55,7 @@
             deadline: dueDate,
             sub_tasks: $subTasks,
         };
-        const { uuid } = await createTaskFn(createTaskFull);
+        const { uuid } = await createTaskFn(createTaskFull, { fetch });
         if (continueEditing) {
             await goto(getTaskUrl(uuid));
             return;

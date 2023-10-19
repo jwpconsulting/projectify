@@ -12,7 +12,7 @@ export const currentArchivedWorkspaceBoards = derived<
     if (!uuid) {
         return;
     }
-    getArchivedWorkspaceBoards(uuid)
+    getArchivedWorkspaceBoards(uuid, { fetch })
         .then(set)
         .catch((error: Error) => {
             console.error(

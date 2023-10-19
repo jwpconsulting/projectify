@@ -6,6 +6,7 @@ import vars from "$lib/env";
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
     MaybeSubscriber,
+    RepoGetter,
     SubscriptionType,
     WsResource,
 } from "$lib/types/stores";
@@ -97,11 +98,6 @@ type WsStoreState<T> =
           value: T;
       };
 
-type RepoGetter<T> = (
-    url: string,
-    repositoryContext?: RepositoryContext
-) => Promise<T>;
-
 // TODO warn when this store never updates a subscriber
 // warn when this store deinitializes without ever adding a subscriber
 export function createWsStore<T>(
@@ -143,7 +139,7 @@ export function createWsStore<T>(
 
     const loadUuid = async (
         uuid: string,
-        repositoryContext?: RepositoryContext
+        repositoryContext: RepositoryContext
     ): Promise<T> => {
         // Fetch value early, since we need it either way
         const value = await getter(uuid, repositoryContext);

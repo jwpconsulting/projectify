@@ -65,7 +65,8 @@
             submitTask,
             $labelAssignment,
             $workspaceUserAssignment,
-            $subTasks
+            $subTasks,
+            { fetch }
         );
         if (continueEditing) {
             await goto(getTaskUrl(task.uuid));

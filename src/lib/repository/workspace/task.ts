@@ -42,7 +42,7 @@ interface CreateUpdateTaskData {
 // TODO change me to accept CreateOrUpdateTaskData directly
 export async function createTask(
     createTask: CreateUpdateTask,
-    repositoryContext?: RepositoryContext
+    repositoryContext: RepositoryContext
 ): Promise<Task> {
     const data: CreateUpdateTaskData = {
         ...createTask,
@@ -59,7 +59,7 @@ export async function createTask(
 // Read
 export async function getTask(
     uuid: string,
-    repositoryContext?: RepositoryContext
+    repositoryContext: RepositoryContext
 ): Promise<TaskWithWorkspace> {
     return await getWithCredentialsJson<TaskWithWorkspace>(
         `/workspace/task/${uuid}`,
@@ -79,7 +79,7 @@ export async function updateTask(
     labels: Label[],
     workspaceUser: WorkspaceUser | undefined,
     subTasks: CreateUpdateSubTask[] | undefined,
-    repositoryContext?: RepositoryContext
+    repositoryContext: RepositoryContext
 ): Promise<Task> {
     const { uuid } = task;
     const data: CreateUpdateTaskData = {

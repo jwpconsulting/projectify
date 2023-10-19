@@ -24,10 +24,9 @@
         if (!workspaceTitle) {
             throw new Error("Exepcted workspaceTitle");
         }
-        const { uuid } = await createWorkspace(
-            workspaceTitle,
-            "empty description TODO"
-        );
+        const { uuid } = await createWorkspace(workspaceTitle, undefined, {
+            fetch,
+        });
 
         const nextStep = getNewWorkspaceBoardUrl(uuid);
         await goto(nextStep);

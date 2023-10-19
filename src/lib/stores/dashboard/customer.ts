@@ -11,7 +11,9 @@ export const currentCustomer = derived<typeof currentWorkspace, Customer>(
         if (!uuid) {
             return;
         }
-        getWorkspaceCustomer(uuid)
+        // Hopefully this won't be run server-side, fetch is not available
+        // there
+        getWorkspaceCustomer(uuid, { fetch })
             .then(set)
             .catch((error: Error) => {
                 console.error(

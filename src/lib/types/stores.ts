@@ -45,10 +45,12 @@ export type SubscriptionType = (typeof subscriptionTypes)[number];
 
 // A subscriber that can deal with possible undefined values
 export type MaybeSubscriber<T> = Subscriber<T | undefined>;
+
+export type RepoGetter<T> = (
+    uuid: string,
+    repositoryContext: RepositoryContext
+) => Promise<T>;
 export interface WsResource<T> extends Readable<T | undefined> {
-    loadUuid: (
-        uuid: string,
-        repositoryContext?: RepositoryContext
-    ) => Promise<T>;
+    loadUuid: RepoGetter<T>;
     unwrap: () => T;
 }

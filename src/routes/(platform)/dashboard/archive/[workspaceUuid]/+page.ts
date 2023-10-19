@@ -9,7 +9,10 @@ interface Data {
 
 export async function load({
     params: { workspaceUuid },
+    fetch,
 }: PageLoadEvent): Promise<Data> {
-    const workspace = await currentWorkspace.loadUuid(workspaceUuid);
+    const workspace = await currentWorkspace.loadUuid(workspaceUuid, {
+        fetch,
+    });
     return { workspace };
 }

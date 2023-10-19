@@ -38,7 +38,7 @@
             fileUpload = updateProfilePicture(imageFile);
         }
         await Promise.all([saveData(), fileUpload]);
-        user = unwrap(await fetchUser(), "Expected fetchUser");
+        user = unwrap(await fetchUser({ fetch }), "Expected fetchUser");
         // TODO show confirmation flash when saving complete Justus
         // 2023-08-03
         state = "viewing";

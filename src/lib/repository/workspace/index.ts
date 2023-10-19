@@ -92,7 +92,7 @@ export async function createWorkspaceBoard(
 // Read
 export async function getWorkspaceBoard(
     uuid: string,
-    repositoryContext?: RepositoryContext
+    repositoryContext: RepositoryContext
 ): Promise<WorkspaceBoard> {
     return await getWithCredentialsJson<WorkspaceBoard>(
         `/workspace/workspace-board/${uuid}`,
@@ -102,7 +102,7 @@ export async function getWorkspaceBoard(
 
 export async function getWorkspaceBoardSection(
     uuid: string,
-    repositoryContext?: RepositoryContext
+    repositoryContext: RepositoryContext
 ): Promise<WorkspaceBoardSection> {
     return await getWithCredentialsJson<WorkspaceBoardSection>(
         `/workspace/workspace-board-section/${uuid}`,
@@ -111,10 +111,12 @@ export async function getWorkspaceBoardSection(
 }
 
 export async function getArchivedWorkspaceBoards(
-    workspace_uuid: string
+    workspace_uuid: string,
+    repositoryContext: RepositoryContext
 ): Promise<WorkspaceBoard[]> {
     return await getWithCredentialsJson<WorkspaceBoard[]>(
-        `/workspace/workspace/${workspace_uuid}/workspace-boards-archived/`
+        `/workspace/workspace/${workspace_uuid}/workspace-boards-archived/`,
+        repositoryContext
     );
 }
 

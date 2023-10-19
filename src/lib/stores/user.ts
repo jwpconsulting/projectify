@@ -82,7 +82,7 @@ export const logout = async () => {
 };
 
 export const fetchUser = async (
-    repositoryContext?: RepositoryContext
+    repositoryContext: RepositoryContext
 ): Promise<User | null> => {
     userIsLoading.set(true);
     const userData = await getUser(repositoryContext);
