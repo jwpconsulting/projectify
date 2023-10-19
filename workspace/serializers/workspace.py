@@ -1,4 +1,8 @@
 """Workspace serializers."""
+from rest_framework import (
+    serializers,
+)
+
 from . import (
     base,
 )
@@ -31,3 +35,9 @@ class WorkspaceDetailSerializer(base.WorkspaceBaseSerializer):
             "workspace_boards",
             "labels",
         )
+
+
+class InviteUserToWorkspaceSerializer(serializers.Serializer):
+    """Serialize information needed to invite a user to a workspace."""
+
+    email = serializers.EmailField()
