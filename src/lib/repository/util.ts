@@ -27,6 +27,14 @@ const defaultRepositoryContext: RepositoryContext | null = browser
       }
     : null;
 
+async function parseResponse<T>(response: Response): Promise<T> {
+    const body = (await response.json()) as T;
+    if (!response.ok) {
+        throw new Error(`${response.statusText}: ${JSON.stringify(body)}`);
+    }
+    return body;
+}
+
 export async function getWithCredentialsJson<T>(
     url: string,
     repositoryContext: RepositoryContext | null = defaultRepositoryContext
@@ -36,11 +44,7 @@ export async function getWithCredentialsJson<T>(
     }
     const { fetch } = repositoryContext;
     const response = await fetch(`${vars.API_ENDPOINT}${url}`, getOptions);
-    const body = (await response.json()) as T;
-    if (!response.ok) {
-        throw new Error(`${response.statusText}: ${JSON.stringify(body)}`);
-    }
-    return body;
+    return await parseResponse(response);
 }
 
 export async function postWithCredentialsJson<T>(
@@ -56,11 +60,7 @@ export async function postWithCredentialsJson<T>(
         `${vars.API_ENDPOINT}${url}`,
         putPostOptions("POST", data)
     );
-    const body = (await response.json()) as T;
-    if (!response.ok) {
-        throw new Error(`${response.statusText}: ${JSON.stringify(body)}`);
-    }
-    return body;
+    return await parseResponse(response);
 }
 
 export async function putWithCredentialsJson<T>(
@@ -76,9 +76,5 @@ export async function putWithCredentialsJson<T>(
         `${vars.API_ENDPOINT}${url}`,
         putPostOptions("PUT", data)
     );
-    const body = (await response.json()) as T;
-    if (!response.ok) {
-        throw new Error(`${response.statusText}: ${JSON.stringify(body)}`);
-    }
-    return body;
+    return await parseResponse(response);
 }
