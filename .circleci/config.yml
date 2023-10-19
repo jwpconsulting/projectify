@@ -71,13 +71,14 @@ jobs:
             - run:
                   name: Collect files to check
                   command: |
-                      circleci tests glob "src/**/*.{ts,js,svelte}" | circleci tests split --split-by=timings > /tmp/files-to-check
+                      circleci tests glob "src/**/*.{ts,js,svelte}" |
+                        circleci tests split --split-by=timings > /tmp/files-to-check
             - store_artifacts:
                   path: /tmp/files-to-check
                   destination: files-checked
             - run:
                   name: Run eslint (split)
-                  command: npm exec --package=eslint -- eslint $(cat /tmp/files-to-check)
+                  command: npx eslint $(cat /tmp/files-to-check)
 
     prettier:
         executor: node
