@@ -1,9 +1,6 @@
 // TODO create a tool to show which message strings are unused
-type Message = string | string[] | { [property: string]: Message };
+import type { MessageCollection } from "./types";
 
-type MessageCollection = Record<string, Message>;
-// TODO prohibit root level strings
-// TODO type MessageDirectory = Record<string, MessageCollection>;
 // TODO const messages: MessageDirectory = {
 const messages: MessageCollection = {
     "overlay": {
