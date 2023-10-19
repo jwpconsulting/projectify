@@ -5,6 +5,10 @@ from typing import (
 
 import pytest
 
+from workspace.models.workspace_user_invite import (
+    add_or_invite_workspace_user,
+)
+
 from .. import (
     models,
 )
@@ -22,7 +26,7 @@ class TestRedeemWorkspaceInvitations:
         self, workspace: models.Workspace, user_model: "User"
     ) -> None:
         """Test simple case."""
-        workspace.invite_user("hello@example.com")
+        add_or_invite_workspace_user(workspace, "hello@example.com")
         assert workspace.users.count() == 0
         user_model.objects.create_user("hello@example.com")
         assert workspace.users.count() == 1
@@ -31,7 +35,7 @@ class TestRedeemWorkspaceInvitations:
         self, workspace: models.Workspace, user_model: "User"
     ) -> None:
         """Test what happens if a user signs up twice."""
-        workspace.invite_user("hello@example.com")
+        add_or_invite_workspace_user(workspace, "hello@example.com")
         user = user_model.objects.create_user("hello@example.com")
         assert workspace.users.count() == 1
         user.delete()
@@ -44,7 +48,7 @@ class TestRedeemWorkspaceInvitations:
         self, workspace: models.Workspace, user_model: "User"
     ) -> None:
         """Test what happens when a user is uninvited."""
-        workspace.invite_user("hello@example.com")
+        add_or_invite_workspace_user(workspace, "hello@example.com")
         workspace.uninvite_user("hello@example.com")
         user_model.objects.create_user("hello@example.com")
         # The user is not added
