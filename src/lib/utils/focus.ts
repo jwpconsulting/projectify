@@ -29,7 +29,6 @@ export function keepFocusInside(inside: HTMLElement): () => void {
         const following = position & Node.DOCUMENT_POSITION_FOLLOWING;
         if (contained) {
             // We are inside, nothing to do
-            console.debug("Contained");
             return;
         }
         if (preceding) {
