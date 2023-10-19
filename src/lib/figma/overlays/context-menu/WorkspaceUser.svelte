@@ -1,6 +1,6 @@
 <script lang="ts">
     // Rename consistent with the other context menus
-    import FilterMemberMenu from "$lib/figma/composites/FilterMemberMenu.svelte";
+    import FilterWorkspaceUser from "$lib/figma/composites/FilterWorkspaceUser.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import type { WorkspaceUserAssignment } from "$lib/types/stores";
 
@@ -8,5 +8,5 @@
 </script>
 
 <Layout>
-    <FilterMemberMenu mode={{ kind: "assign", workspaceUserAssignment }} />
+    <FilterWorkspaceUser mode={{ kind: "assign", workspaceUserAssignment }} />
 </Layout>

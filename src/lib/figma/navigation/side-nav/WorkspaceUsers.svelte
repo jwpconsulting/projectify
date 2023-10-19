@@ -3,7 +3,7 @@
     import { _ } from "svelte-i18n";
 
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
-    import FilterMemberMenu from "$lib/figma/composites/FilterMemberMenu.svelte";
+    import FilterWorkspaceUser from "$lib/figma/composites/FilterWorkspaceUser.svelte";
     import {
         userExpandOpen,
         toggleUserExpandOpen,
@@ -19,5 +19,5 @@
     filtered={$selectedWorkspaceUser.kind !== "allWorkspaceUsers"}
 />
 {#if $userExpandOpen}
-    <FilterMemberMenu mode={{ kind: "filter" }} />
+    <FilterWorkspaceUser mode={{ kind: "filter" }} />
 {/if}
