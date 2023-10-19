@@ -172,3 +172,21 @@ DJANGO_SETTINGS_MODULE = "projectify.settings.test"
 DJANGO_CONFIGURATION = "Test"
 asyncio_mode = "auto"
 junit_family = "xunit1"
+filterwarnings = [
+    "error",
+    # Wait for celery to get kombu upgraded
+    "ignore:SelectableGroups dict interface is deprecated. Use select.:DeprecationWarning",
+    # Some issue with daphne or twisted
+    "ignore:'cgi' is deprecated and slated for removal in Python 3.13:DeprecationWarning",
+    # We will stop using strawberry eventually
+    "ignore:Argument name-based matching of 'info' is deprecated:DeprecationWarning",
+    # Some issue with django-configurations
+    "ignore:The USE_DEPRECATED_PYTZ setting:django.utils.deprecation.RemovedInDjango50Warning",
+    "ignore:The USE_L10N setting:django.utils.deprecation.RemovedInDjango50Warning",
+    "ignore:The CSRF_COOKIE_MASKED transitional setting:django.utils.deprecation.RemovedInDjango50Warning",
+    # Again, another issue with djagno-configurations
+    # https://github.com/jazzband/django-configurations/issues/367
+    "ignore:the imp module is deprecated:DeprecationWarning",
+    "ignore:ConfigurationImporter:ImportWarning",
+    "ignore:ConfigurationLoader:ImportWarning",
+]
