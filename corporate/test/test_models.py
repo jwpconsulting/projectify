@@ -7,6 +7,9 @@ import pytest
 
 from user import models as user_models
 from workspace import models as workspace_models
+from workspace.models.workspace_user_invite import (
+    add_or_invite_workspace_user,
+)
 
 from .. import (
     models,
@@ -127,5 +130,5 @@ class TestCustomer:
         assert customer.seats_remaining == customer.seats
         customer.workspace.add_user(user)
         assert customer.seats_remaining == customer.seats - 1
-        customer.workspace.invite_user(f"new+{user.email}")
+        add_or_invite_workspace_user(customer.workspace, f"new+{user.email}")
         assert customer.seats_remaining == customer.seats - 2

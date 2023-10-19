@@ -21,27 +21,19 @@ from django.db import (
     models,
     transaction,
 )
-from django.utils.translation import gettext_lazy as _
 
 import pgtrigger
 from django_extensions.db.models import (
     TimeStampedModel,
     TitleDescriptionModel,
 )
-from user import models as user_models
 
-from .. import (
-    signal_defs,
-)
 from .const import (
     MAINTAINER_EQUIVALENT,
     MEMBER_EQUIVALENT,
     OBSERVER_EQUIVALENT,
     OWNER_EQUIVALENT,
     WorkspaceUserRoles,
-)
-from .workspace_user_invite import (
-    WorkspaceUserInvite,
 )
 
 
@@ -57,6 +49,9 @@ if TYPE_CHECKING:
         Label,
         WorkspaceBoard,
         WorkspaceUser,
+    )
+    from .workspace_user_invite import (
+        WorkspaceUserInvite,
     )
 
 
@@ -136,14 +131,14 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         )
         return workspace_board
 
-    def add_user(self, user: AbstractBaseUser) -> AbstractBaseUser:
+    # TODO remove me or turn me into a plain function somewhere
+    def add_user(self, user: AbstractBaseUser) -> "WorkspaceUser":
         """
         Add user to workspace.
 
         Return user.
         """
-        self.workspaceuser_set.create(user=user)
-        return user
+        return self.workspaceuser_set.create(user=user)
 
     # TODO I wish this worked with WorkspaceUser instead?
     @transaction.atomic
@@ -158,33 +153,6 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         workspace_user = self.workspaceuser_set.get(user=user)
         workspace_user.delete()
         return user
-
-    @transaction.atomic
-    def invite_user(self, email: str) -> "WorkspaceUserInvite":
-        """Invite a user to this workspace."""
-        invite_check_qs = WorkspaceUserInvite.objects.filter(
-            user_invite__email=email,
-            workspace=self,
-        )
-        if invite_check_qs.exists():
-            raise ValueError(_("Email is already invited"))
-        already_user_qs = self.users.filter(
-            email=email,
-        )
-        if already_user_qs.exists():
-            raise ValueError(_("Email is already workspace user"))
-        user_invite = user_models.UserInvite.objects.invite_user(email)
-        workspace_user_invite: WorkspaceUserInvite = (
-            self.workspaceuserinvite_set.create(
-                user_invite=user_invite,
-                workspace=self,
-            )
-        )
-        signal_defs.workspace_user_invited.send(
-            sender=self.__class__,
-            instance=workspace_user_invite,
-        )
-        return workspace_user_invite
 
     @transaction.atomic
     def uninvite_user(self, email: str) -> None:
