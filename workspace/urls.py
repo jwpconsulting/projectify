@@ -30,12 +30,18 @@ urlpatterns = (
         name="workspace",
     ),
     # Update
+    # Delete
+    # RPC
     path(
         "workspace/<uuid:uuid>/picture-upload",
         views.WorkspacePictureUploadView.as_view(),
         name="workspace-picture-upload",
     ),
-    # Delete
+    path(
+        "workspace/<uuid:uuid>/invite-user",
+        views.InviteUserToWorkspace.as_view(),
+        name="workspace-invite-user",
+    ),
     # WorkspaceBoard
     # Create
     # Read
