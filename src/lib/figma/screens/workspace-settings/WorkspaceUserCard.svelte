@@ -14,7 +14,7 @@
         workspaceUser.job_title ??
         $_("workspace-settings.workspace-users.no-job-title");
     let role: string;
-    $: role = $_(getMessageNameForRole(workspaceUser.role));
+    $: role = getMessageNameForRole($_, workspaceUser.role);
 </script>
 
 <a

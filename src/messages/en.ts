@@ -1107,5 +1107,11 @@ const messages: MessageCollection = {
         "continue-to-dashboard": "Continue to dashboard",
         "skip": "Skip",
     },
+    "roles": {
+        observer: "Observer",
+        member: "Member",
+        maintainer: "Maintainer",
+        owner: "Owner",
+    },
 };
 export default messages;
