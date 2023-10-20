@@ -1,6 +1,7 @@
 """Workspace CRUD views."""
 import uuid
 from typing import (
+    Any,
     Optional,
 )
 
@@ -10,12 +11,10 @@ from django.db.models import (
 from django.shortcuts import (
     get_object_or_404,
 )
-from django.utils.translation import gettext_lazy as _
 
 from rest_framework import (
     generics,
     parsers,
-    serializers,
     views,
 )
 from rest_framework.request import (
@@ -25,16 +24,8 @@ from rest_framework.response import (
     Response,
 )
 
-from workspace.models.workspace_user_invite import (
-    add_or_invite_workspace_user,
-)
-
 from .. import (
     models,
-)
-from ..exceptions import (
-    UserAlreadyAdded,
-    UserAlreadyInvited,
 )
 from ..models.workspace import (
     Workspace,
@@ -163,6 +154,15 @@ class InviteUserToWorkspace(
     queryset = Workspace.objects.all()
     serializer_class = InviteUserToWorkspaceSerializer
 
+    # A given TypedDict is a bit hard to override...
+    def get_serializer_context(self) -> Any:
+        """Enrich serializer context with workspace."""
+        context = super().get_serializer_context()
+        return {
+            **context,
+            "workspace": self.get_object(),
+        }
+
     def get_queryset(self) -> WorkspaceQuerySet:
         """Search for workspace belonging to this user."""
         return models.Workspace.objects.filter_for_user_and_uuid(
@@ -171,21 +171,3 @@ class InviteUserToWorkspace(
             # XXX this queryset will only have 0 or 1 results.
             self.kwargs["uuid"],
         )
-
-    def perform_create(
-        self, serializer: InviteUserToWorkspaceSerializer
-    ) -> None:
-        """Invite the user."""
-        workspace = self.get_object()
-
-        email = serializer.validated_data["email"]
-        try:
-            add_or_invite_workspace_user(workspace, email)
-        except UserAlreadyInvited:
-            raise serializers.ValidationError(
-                _("This user has already been invited")
-            )
-        except UserAlreadyAdded:
-            raise serializers.ValidationError(
-                _("This user has already been added")
-            )
