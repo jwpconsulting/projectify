@@ -6,6 +6,7 @@
     import Layout from "$lib/figma/overlays/constructive/Layout.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import type { InputFieldValidation } from "$lib/funabashi/types";
     import { inviteUser } from "$lib/repository/workspace";
     import {
         rejectConstructiveOverlay,
@@ -16,13 +17,24 @@
     export let workspace: Workspace;
 
     let email: string | undefined;
+    let validation: InputFieldValidation | undefined = undefined;
 
     async function onSubmit() {
         if (email === undefined) {
             throw new Error("No email");
         }
-        await inviteUser(workspace, email, { fetch });
-        resolveConstructiveOverlay();
+        const result = await inviteUser(workspace, email, { fetch });
+        if (result.ok) {
+            validation = {
+                ok: true,
+                result: $_(
+                    "overlay.constructive.invite-workspace-user.form.email.validation.ok"
+                ),
+            };
+            resolveConstructiveOverlay();
+        } else {
+            validation = { ok: false, error: result.error.email };
+        }
     }
 </script>
 
@@ -42,6 +54,7 @@
             )}
             style={{ kind: "field", inputType: "email" }}
             required
+            {validation}
         />
     </svelte:fragment>
     <svelte:fragment slot="buttons">

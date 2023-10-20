@@ -37,11 +37,14 @@ const messages: MessageCollection = {
             },
             "invite-workspace-user": {
                 title: "Invite workspace users",
-                notice: "You have 3 seats left in your plan",
+                notice: "You have TODO 3 TODO seats left in your plan",
                 form: {
                     email: {
                         label: "Enter email address separated by a comma",
                         placeholder: "workspace-user@mail.com",
+                        validation: {
+                            ok: "The user was successfully invited",
+                        },
                     },
                 },
                 cancel: "Cancel",

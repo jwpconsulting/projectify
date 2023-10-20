@@ -49,3 +49,8 @@ type RecursiveKeyOfHandleValue<TValue, Text extends string> =
               | `${Text}${RecursiveKeyOfInner<TValue>}`
         : // Else, only return the current text as a string
           Text;
+
+// Lol monads
+export type Result<Ok, Error> =
+    | { ok: true; result: Ok }
+    | { ok: false; error: Error };

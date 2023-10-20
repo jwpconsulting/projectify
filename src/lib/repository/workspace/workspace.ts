@@ -7,6 +7,7 @@ import {
     handle404,
     postWithCredentialsJson,
 } from "$lib/repository/util";
+import type { Result } from "$lib/types/base";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { Workspace } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
@@ -81,19 +82,20 @@ export async function inviteUser(
     workspace: Workspace,
     email: string,
     repositoryContext: RepositoryContext
-): Promise<{ email: string }> {
+): Promise<Result<{ email: string }, { email: string }>> {
     const { uuid } = workspace;
-    const response = await postWithCredentialsJson<{ email: string }>(
+    const response = await postWithCredentialsJson<
+        { email: string },
+        { email: string }
+    >(
         `/workspace/workspace/${uuid}/invite-user`,
         { email },
         repositoryContext
     );
     if (response.kind === "ok") {
-        return response.data;
+        return { ok: true, result: response.data };
     } else if (response.kind === "badRequest") {
-        // TODO here we shall do something with the error
-        const { error } = response;
-        console.error(error);
+        return { ok: false, error: response.error };
     }
     throw new Error();
 }
