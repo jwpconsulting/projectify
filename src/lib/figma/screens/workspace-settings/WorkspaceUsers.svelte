@@ -13,7 +13,7 @@
 
     export let workspace: Workspace;
     let filter: SearchInput = undefined;
-    let workspaceUsers: WorkspaceUser[];
+    let workspaceUsers: WorkspaceUser[] = [];
     $: workspaceUsers = searchWorkspaceUsers($currentWorkspaceUsers, filter);
 
     async function inviteWorkspaceUser() {
@@ -45,22 +45,28 @@
     />
 </div>
 <!-- TODO plz make me a table -->
-<div>
-    <div
-        class="flex flex-row justify-between border-b border-border px-2 pb-4 text-sm font-bold text-utility"
-    >
-        <div>
-            {$_("workspace-settings.workspace-users.workspace-user-details")}
-        </div>
-        <div>
-            {$_("workspace-settings.workspace-users.role")}
-        </div>
-    </div>
-    {#each workspaceUsers as workspaceUser}
-        <WorkspaceUserCard {workspaceUser} />
-    {:else}
-        <p class="py-4">
-            {$_("workspace-settings.workspace-users.no-workspace-users-found")}
-        </p>
-    {/each}
-</div>
+<table class="grid w-full grid-cols-4 gap-y-4 px-2">
+    <thead class="contents">
+        <tr class="contents">
+            <th class="col-span-3 border-b border-border text-left font-bold"
+                >{$_(
+                    "workspace-settings.workspace-users.workspace-user-details"
+                )}</th
+            >
+            <th class="border-b border-border text-left font-bold"
+                >{$_("workspace-settings.workspace-users.role")}</th
+            >
+        </tr>
+    </thead>
+    <tbody class="contents">
+        {#each workspaceUsers as workspaceUser}
+            <WorkspaceUserCard {workspaceUser} />
+        {:else}
+            <td class="col-span-4">
+                {$_(
+                    "workspace-settings.workspace-users.no-workspace-users-found"
+                )}
+            </td>
+        {/each}
+    </tbody>
+</table>

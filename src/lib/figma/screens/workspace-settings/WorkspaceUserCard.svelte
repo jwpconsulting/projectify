@@ -17,29 +17,16 @@
     $: role = getMessageNameForRole($_, workspaceUser.role);
 </script>
 
-<a
-    class="flex grow flex-row border border-transparent p-2 focus:border-border-focus focus:outline-none"
-    href="#TODO"
->
-    <div
-        class="flex w-full flex-row items-center justify-between border-b border-border bg-foreground p-2 hover:bg-secondary-hover active:bg-disabled"
-    >
-        <div class="flex flex-row items-center gap-2">
-            <AvatarVariant
-                content={{ kind: "multiple", users: [workspaceUser.user] }}
-                size="medium"
-            />
-            <div class="flex flex-col gap-1">
-                <div class="text-sm font-bold text-base-content">
-                    {fullName}
-                </div>
-                <div class="text-sm text-base-content">
-                    {jobTitle}
-                </div>
-            </div>
+<tr class="contents">
+    <td class="col-span-3 flex flex-row items-center gap-2">
+        <AvatarVariant
+            content={{ kind: "multiple", users: [workspaceUser.user] }}
+            size="medium"
+        />
+        <div class="flex flex-col gap-1">
+            <div class="text-sm font-bold text-base-content">{fullName}</div>
+            <div class="text-sm text-base-content">{jobTitle}</div>
         </div>
-        <div class="text-sm text-base-content">
-            {role}
-        </div>
-    </div>
-</a>
+    </td>
+    <td class="text-sm text-base-content">{role}</td>
+</tr>
