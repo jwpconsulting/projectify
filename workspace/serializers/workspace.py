@@ -1,8 +1,26 @@
 """Workspace serializers."""
+from typing import (
+    Any,
+    Mapping,
+)
+
+from django.utils.translation import gettext_lazy as _
+
 from rest_framework import (
     serializers,
 )
 
+from workspace.exceptions import (
+    UserAlreadyAdded,
+    UserAlreadyInvited,
+)
+
+from ..models.workspace import (
+    Workspace,
+)
+from ..models.workspace_user_invite import (
+    add_or_invite_workspace_user,
+)
 from . import (
     base,
 )
@@ -41,3 +59,19 @@ class InviteUserToWorkspaceSerializer(serializers.Serializer):
     """Serialize information needed to invite a user to a workspace."""
 
     email = serializers.EmailField()
+
+    def create(self, validated_data: Mapping[str, Any]) -> Mapping[str, Any]:
+        """Perform invitation."""
+        workspace: Workspace = self.context["workspace"]
+        email: str = validated_data["email"]
+        try:
+            add_or_invite_workspace_user(workspace, email)
+        except UserAlreadyInvited:
+            raise serializers.ValidationError(
+                {"email": _("This user has already been invited")}
+            )
+        except UserAlreadyAdded:
+            raise serializers.ValidationError(
+                {"email": _("This user has already been added")}
+            )
+        return validated_data
