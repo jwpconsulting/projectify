@@ -219,3 +219,33 @@ class TestInviteUserToWorkspace:
         )
         assert response.status_code == 201, response.content
         assert workspace.workspaceuserinvite_set.count() == 0
+
+    def test_existing_workspace_user(
+        self,
+        resource_url: str,
+        rest_user_client: APIClient,
+        workspace_user: models.WorkspaceUser,
+    ) -> None:
+        """Test inviting an existing workspace user."""
+        response = rest_user_client.post(
+            resource_url,
+            {"email": workspace_user.user.email},
+        )
+        assert response.status_code == 400, response.data
+        assert "already been added" in response.data["email"], response.data
+
+    def test_existing_invitation(
+        self, resource_url: str, rest_user_client: APIClient
+    ) -> None:
+        """Test inviting someone twice."""
+        response = rest_user_client.post(
+            resource_url,
+            {"email": "hello@example.com"},
+        )
+        assert response.status_code == 201, response.content
+        response = rest_user_client.post(
+            resource_url,
+            {"email": "hello@example.com"},
+        )
+        assert response.status_code == 400, response.data
+        assert "already been invited" in response.data["email"], response.data
