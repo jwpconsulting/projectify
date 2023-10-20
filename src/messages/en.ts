@@ -576,6 +576,10 @@ const messages: MessageCollection = {
             "role": "Role",
             "workspace-user-details": "Workspace user details",
             "invite-new-workspace-users": "Invite new workspace users",
+            "actions": {
+                action: "Action",
+                remove: "Remove",
+            },
         },
         "billing": {
             "title": "Billing",

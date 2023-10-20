@@ -1,7 +1,10 @@
 <script lang="ts">
+    import { X } from "@steeze-ui/heroicons";
     import { _ } from "svelte-i18n";
 
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
+    import { openDestructiveOverlay } from "$lib/stores/globalUi";
     import type { WorkspaceUser } from "$lib/types/workspace";
     import { getMessageNameForRole } from "$lib/utils/i18n";
 
@@ -15,6 +18,13 @@
         $_("workspace-settings.workspace-users.no-job-title");
     let role: string;
     $: role = getMessageNameForRole($_, workspaceUser.role);
+
+    async function removeUser() {
+        await openDestructiveOverlay({
+            kind: "deleteWorkspaceUser",
+            workspaceUser,
+        });
+    }
 </script>
 
 <tr class="contents">
@@ -28,5 +38,14 @@
             <div class="text-sm text-base-content">{jobTitle}</div>
         </div>
     </td>
-    <td class="text-sm text-base-content">{role}</td>
+    <td class="text-right text-base-content">{role}</td>
+    <td class=""
+        ><Button
+            label={$_("workspace-settings.workspace-users.actions.remove")}
+            action={{ kind: "button", action: removeUser }}
+            style={{ kind: "tertiary", icon: { position: "left", icon: X } }}
+            color="red"
+            size="medium"
+        /></td
+    >
 </tr>

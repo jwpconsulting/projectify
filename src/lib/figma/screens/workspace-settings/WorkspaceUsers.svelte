@@ -45,7 +45,7 @@
     />
 </div>
 <!-- TODO plz make me a table -->
-<table class="grid w-full grid-cols-4 gap-y-4 px-2">
+<table class="grid w-full grid-cols-5 items-center gap-y-4 px-2">
     <thead class="contents">
         <tr class="contents">
             <th class="col-span-3 border-b border-border text-left font-bold"
@@ -53,8 +53,11 @@
                     "workspace-settings.workspace-users.workspace-user-details"
                 )}</th
             >
-            <th class="border-b border-border text-left font-bold"
+            <th class="border-b border-border text-right font-bold"
                 >{$_("workspace-settings.workspace-users.role")}</th
+            >
+            <th class="border-b border-border text-right font-bold"
+                >{$_("workspace-settings.workspace-users.actions.action")}</th
             >
         </tr>
     </thead>
