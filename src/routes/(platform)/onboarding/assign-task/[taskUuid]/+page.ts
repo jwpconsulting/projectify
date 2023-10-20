@@ -1,3 +1,5 @@
+import { error } from "@sveltejs/kit";
+
 import { getTask } from "$lib/repository/workspace";
 import type {
     Label,
@@ -20,6 +22,9 @@ export async function load({
     params: { taskUuid },
 }: PageLoadEvent): Promise<returnType> {
     const task = await getTask(taskUuid, { fetch });
+    if (!task) {
+        throw error(404);
+    }
     const workspaceBoard = unwrap(
         task.workspace_board_section.workspace_board,
         "Expected workspaceBoard"

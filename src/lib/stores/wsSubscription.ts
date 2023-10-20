@@ -95,7 +95,7 @@ type WsStoreState<T> =
           uuid: string;
           subscribers: Subscribers<T>;
           unsubscriber: Unsubscriber;
-          value: T;
+          value: T | undefined;
       };
 
 // TODO warn when this store never updates a subscriber
@@ -140,7 +140,7 @@ export function createWsStore<T>(
     const loadUuid = async (
         uuid: string,
         repositoryContext: RepositoryContext
-    ): Promise<T> => {
+    ): Promise<T | undefined> => {
         // Fetch value early, since we need it either way
         const value = await getter(uuid, repositoryContext);
         // Then, when we find out we have already initialized for this uuid,

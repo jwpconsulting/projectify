@@ -1,3 +1,5 @@
+import { error } from "@sveltejs/kit";
+
 import { currentWorkspace } from "$lib/stores/dashboard";
 import type { Workspace } from "$lib/types/workspace";
 
@@ -14,5 +16,8 @@ export async function load({
     const workspace = await currentWorkspace.loadUuid(workspaceUuid, {
         fetch,
     });
+    if (!workspace) {
+        throw error(404);
+    }
     return { workspace };
 }

@@ -11,6 +11,7 @@ import {
     putWithCredentialsJson,
     getWithCredentialsJson,
     postWithCredentialsJson,
+    handle404,
 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
@@ -49,21 +50,30 @@ export async function createTask(
         // TODO: Should the API just accept a missing value here?
         assignee: createTask.assignee ?? null,
     };
-    return await postWithCredentialsJson<Task>(
+    const response = await postWithCredentialsJson<Task>(
         "/workspace/task",
         data,
         repositoryContext
     );
+    if (response.ok) {
+        return response.data;
+    } else if (response.kind === "badRequest") {
+        // TODO show the user what the bad request was
+        console.error(response.error);
+    }
+    throw new Error();
 }
 
 // Read
 export async function getTask(
     uuid: string,
     repositoryContext: RepositoryContext
-): Promise<TaskWithWorkspace> {
-    return await getWithCredentialsJson<TaskWithWorkspace>(
-        `/workspace/task/${uuid}`,
-        repositoryContext
+): Promise<TaskWithWorkspace | undefined> {
+    return handle404(
+        await getWithCredentialsJson<TaskWithWorkspace>(
+            `/workspace/task/${uuid}`,
+            repositoryContext
+        )
     );
 }
 
@@ -80,7 +90,7 @@ export async function updateTask(
     workspaceUser: WorkspaceUser | undefined,
     subTasks: CreateUpdateSubTask[] | undefined,
     repositoryContext: RepositoryContext
-): Promise<Task> {
+): Promise<Task | undefined> {
     const { uuid } = task;
     const data: CreateUpdateTaskData = {
         title: task.title,
@@ -96,11 +106,19 @@ export async function updateTask(
         workspace_board_section: task.workspace_board_section,
         sub_tasks: subTasks,
     };
-    return await putWithCredentialsJson<Task>(
+    const response = await putWithCredentialsJson<Task>(
         `/workspace/task/${uuid}`,
         data,
         repositoryContext
     );
+    if (response.ok) {
+        return response.data;
+    } else if (response.kind === "badRequest") {
+        // TODO handle 400
+        console.error("Bad request");
+    }
+    console.error(response.error);
+    throw new Error();
 }
 
 // TODO now that we have updateTask feature complete, we can remove

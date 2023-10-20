@@ -13,14 +13,16 @@ export const currentWorkspace = createWsStore<Workspace>(
 
 // TODO This could be RepoGetter, except that RepoGetter takes a uuid
 type HttpStore<T> = Readable<T | undefined> & {
-    load: (context: RepositoryContext) => Promise<T>;
+    load: (context: RepositoryContext) => Promise<T | undefined>;
 };
 
 function createHttpStore<T>(
-    getter: (context: RepositoryContext) => Promise<T>
+    getter: (context: RepositoryContext) => Promise<T | undefined>
 ): HttpStore<T> {
     const { set, subscribe } = writable<T | undefined>(undefined);
-    const load = async (context: RepositoryContext): Promise<T> => {
+    const load = async (
+        context: RepositoryContext
+    ): Promise<T | undefined> => {
         const result = await getter(context);
         set(result);
         return result;

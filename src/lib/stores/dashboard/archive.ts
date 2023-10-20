@@ -6,7 +6,7 @@ import type { WorkspaceBoard } from "$lib/types/workspace";
 
 export const currentArchivedWorkspaceBoards = derived<
     typeof currentWorkspace,
-    WorkspaceBoard[]
+    WorkspaceBoard[] | undefined
 >(currentWorkspace, ($currentWorkspace, set) => {
     const uuid = $currentWorkspace?.uuid;
     if (!uuid) {

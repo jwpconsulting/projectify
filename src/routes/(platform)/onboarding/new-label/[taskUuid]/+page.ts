@@ -1,3 +1,8 @@
+// TODO it seems like we could bundle all these [taskUuid] dependent onboarding
+// pages like so:
+// onboarding/task/[taskUuid]/new-label/
+import { error } from "@sveltejs/kit";
+
 import { getTask } from "$lib/repository/workspace";
 import type {
     Task,
@@ -20,6 +25,9 @@ export async function load({
     params: { taskUuid },
 }: PageLoadEvent): Promise<returnType> {
     const task = await getTask(taskUuid, { fetch });
+    if (!task) {
+        throw error(404);
+    }
     return {
         task,
         workspaceBoardSection: task.workspace_board_section,

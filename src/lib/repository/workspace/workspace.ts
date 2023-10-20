@@ -4,6 +4,7 @@ import { client } from "$lib/graphql/client";
 import { Mutation_UpdateWorkspace } from "$lib/graphql/operations";
 import {
     getWithCredentialsJson,
+    handle404,
     postWithCredentialsJson,
 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
@@ -16,29 +17,38 @@ export async function createWorkspace(
     description: string | undefined,
     repositoryContext: RepositoryContext
 ): Promise<Workspace> {
-    return await postWithCredentialsJson<Workspace>(
+    const response = await postWithCredentialsJson<Workspace>(
         `/workspace/workspaces/`,
         { title, description },
         repositoryContext
     );
+    if (response.kind !== "ok") {
+        console.error("TODO handle", response);
+        throw new Error("Error while creating workspace");
+    }
+    return response.data;
 }
 // Read
 export async function getWorkspaces(
     repositoryContext: RepositoryContext
-): Promise<Workspace[]> {
-    return await getWithCredentialsJson<Workspace[]>(
-        `/workspace/user/workspaces/`,
-        repositoryContext
+): Promise<Workspace[] | undefined> {
+    return handle404(
+        await getWithCredentialsJson<Workspace[]>(
+            `/workspace/user/workspaces/`,
+            repositoryContext
+        )
     );
 }
 
 export async function getWorkspace(
     uuid: string,
     repositoryContext: RepositoryContext
-): Promise<Workspace> {
-    return await getWithCredentialsJson<Workspace>(
-        `/workspace/workspace/${uuid}`,
-        repositoryContext
+): Promise<Workspace | undefined> {
+    return handle404(
+        await getWithCredentialsJson<Workspace>(
+            `/workspace/workspace/${uuid}`,
+            repositoryContext
+        )
     );
 }
 
@@ -73,9 +83,17 @@ export async function inviteUser(
     repositoryContext: RepositoryContext
 ): Promise<{ email: string }> {
     const { uuid } = workspace;
-    return await postWithCredentialsJson<{ email: string }>(
+    const response = await postWithCredentialsJson<{ email: string }>(
         `/workspace/workspace/${uuid}/invite-user`,
         { email },
         repositoryContext
     );
+    if (response.kind === "ok") {
+        return response.data;
+    } else if (response.kind === "badRequest") {
+        // TODO here we shall do something with the error
+        const { error } = response;
+        console.error(error);
+    }
+    throw new Error();
 }

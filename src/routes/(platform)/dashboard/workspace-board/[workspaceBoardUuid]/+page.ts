@@ -1,3 +1,5 @@
+import { error } from "@sveltejs/kit";
+
 import {
     currentWorkspace,
     currentWorkspaceBoard,
@@ -21,6 +23,9 @@ export async function load({
         workspaceBoardUuid,
         { fetch }
     );
+    if (!workspaceBoard) {
+        throw error(404);
+    }
     const workspaceUuid = workspaceBoard.workspace?.uuid;
     if (!workspaceUuid) {
         throw new Error("Expected workspace");
@@ -28,8 +33,14 @@ export async function load({
     const workspace = await currentWorkspace.loadUuid(workspaceUuid, {
         fetch,
     });
-    // Might be able to do this asynchronously, meaning we don't need to wait
+    if (!workspace) {
+        throw error(404);
+    }
+    // XXX Might be able to do this asynchronously, meaning we don't need to wait
     // for it to finish here?
     const workspaces = await currentWorkspaces.load({ fetch });
+    if (!workspaces) {
+        throw error(404);
+    }
     return { workspace, workspaceBoard, workspaces };
 }

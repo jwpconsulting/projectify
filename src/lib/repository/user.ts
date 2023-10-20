@@ -8,15 +8,18 @@ import { uploadImage } from "$lib/utils/file";
 // Read
 export async function getUser(
     repositoryContext: RepositoryContext
-): Promise<User | null> {
-    try {
-        return await getWithCredentialsJson<User>(
-            `/user/user`,
-            repositoryContext
-        );
-    } catch {
-        return null;
+): Promise<User | undefined> {
+    const response = await getWithCredentialsJson<User>(
+        `/user/user`,
+        repositoryContext
+    );
+    if (response.ok) {
+        return response.data;
+    } else if (response.kind === "forbidden") {
+        return undefined;
     }
+    console.error(response);
+    throw new Error("There was a problem retrieving the user");
 }
 // Update
 export async function updateProfilePicture(imageFile: File): Promise<void> {

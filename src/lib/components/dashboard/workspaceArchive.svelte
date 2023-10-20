@@ -64,7 +64,7 @@
     </div>
 {:else}
     <div class="divide-y divide-base-300 p-4">
-        {#if $currentArchivedWorkspaceBoards.length > 0}
+        {#if $currentArchivedWorkspaceBoards}
             {#each $currentArchivedWorkspaceBoards as workspaceBoard}
                 <div class="flex space-x-2 py-4">
                     <div class="grid grow">

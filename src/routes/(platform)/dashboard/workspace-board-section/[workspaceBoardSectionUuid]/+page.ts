@@ -1,4 +1,4 @@
-import { redirect } from "@sveltejs/kit";
+import { redirect, error } from "@sveltejs/kit";
 
 import { getWorkspaceBoardSection } from "$lib/repository/workspace";
 import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
@@ -14,6 +14,9 @@ export async function load({
         params.workspaceBoardSectionUuid,
         { fetch }
     );
+    if (!workspaceBoardSection) {
+        throw error(404);
+    }
     const workspaceBoard = workspaceBoardSection.workspace_board;
     if (!workspaceBoard) {
         // Unlikely

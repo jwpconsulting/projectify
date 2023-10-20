@@ -1,5 +1,10 @@
 * Features
 
+** Localize 404 messages in frontend
+   <2023-10-20 Fri>
+   We throw error(404), but we don't give any messages. We first need to access
+   the localized messages in a load() function. How?
+
 ** Implement save/create and continue editing
    Django admin has this :thumbsup:
 

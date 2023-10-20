@@ -1,3 +1,5 @@
+import { error } from "@sveltejs/kit";
+
 import {
     currentWorkspace,
     currentWorkspaceBoard,
@@ -25,6 +27,9 @@ export async function load({
             fetch,
         }
     );
+    if (!workspaceBoard) {
+        throw error(404);
+    }
     const { uuid: workspaceUuid } = unwrap(
         workspaceBoard.workspace,
         "Expected workspace"
@@ -32,6 +37,9 @@ export async function load({
     const workspace = await currentWorkspace.loadUuid(workspaceUuid, {
         fetch,
     });
+    if (!workspace) {
+        throw error(404);
+    }
     const workspaceBoardSections =
         workspaceBoard.workspace_board_sections ?? [];
     const workspaceBoardSection = workspaceBoardSections.at(0);

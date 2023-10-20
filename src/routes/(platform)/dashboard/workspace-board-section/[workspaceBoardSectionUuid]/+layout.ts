@@ -1,3 +1,5 @@
+import { error } from "@sveltejs/kit";
+
 import { getWorkspaceBoardSection } from "$lib/repository/workspace";
 import { currentWorkspace } from "$lib/stores/dashboard";
 import type { WorkspaceBoardSection } from "$lib/types/workspace";
@@ -18,6 +20,9 @@ export async function load({
         workspaceBoardSectionUuid,
         { fetch }
     );
+    if (!workspaceBoardSection) {
+        throw error(404);
+    }
     const workspaceBoard = unwrap(
         workspaceBoardSection.workspace_board,
         "Expected workspace_board"

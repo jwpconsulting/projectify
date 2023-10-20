@@ -11,7 +11,7 @@ import {
     Mutation_UpdateLabelMutation,
     Mutation_UpdateWorkspaceBoard,
 } from "$lib/graphql/operations";
-import { getWithCredentialsJson } from "$lib/repository/util";
+import { getWithCredentialsJson, handle404 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
     CreateWorkspaceBoardSection,
@@ -93,30 +93,36 @@ export async function createWorkspaceBoard(
 export async function getWorkspaceBoard(
     uuid: string,
     repositoryContext: RepositoryContext
-): Promise<WorkspaceBoard> {
-    return await getWithCredentialsJson<WorkspaceBoard>(
-        `/workspace/workspace-board/${uuid}`,
-        repositoryContext
+): Promise<WorkspaceBoard | undefined> {
+    return handle404(
+        await getWithCredentialsJson<WorkspaceBoard>(
+            `/workspace/workspace-board/${uuid}`,
+            repositoryContext
+        )
     );
 }
 
 export async function getWorkspaceBoardSection(
     uuid: string,
     repositoryContext: RepositoryContext
-): Promise<WorkspaceBoardSection> {
-    return await getWithCredentialsJson<WorkspaceBoardSection>(
-        `/workspace/workspace-board-section/${uuid}`,
-        repositoryContext
+): Promise<WorkspaceBoardSection | undefined> {
+    return handle404(
+        await getWithCredentialsJson<WorkspaceBoardSection>(
+            `/workspace/workspace-board-section/${uuid}`,
+            repositoryContext
+        )
     );
 }
 
 export async function getArchivedWorkspaceBoards(
     workspace_uuid: string,
     repositoryContext: RepositoryContext
-): Promise<WorkspaceBoard[]> {
-    return await getWithCredentialsJson<WorkspaceBoard[]>(
-        `/workspace/workspace/${workspace_uuid}/workspace-boards-archived/`,
-        repositoryContext
+): Promise<undefined | WorkspaceBoard[]> {
+    return handle404(
+        await getWithCredentialsJson<WorkspaceBoard[]>(
+            `/workspace/workspace/${workspace_uuid}/workspace-boards-archived/`,
+            repositoryContext
+        )
     );
 }
 
