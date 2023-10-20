@@ -3,7 +3,6 @@ import type { FetchResult } from "@apollo/client/core";
 import { client } from "$lib/graphql/client";
 import {
     Mutation_AssignLabel,
-    Mutation_AssignTask,
     Mutation_MoveTaskAfter,
     Mutation_DeleteTask,
 } from "$lib/graphql/operations";
@@ -119,27 +118,6 @@ export async function updateTask(
     }
     console.error(response.error);
     throw new Error();
-}
-
-// TODO now that we have updateTask feature complete, we can remove
-// assignUser / assignLabel Justus 2023-10-03
-export async function assignUserToTask(
-    userEmail: string | null,
-    taskUuid: string
-): Promise<void> {
-    try {
-        await client.mutate({
-            mutation: Mutation_AssignTask,
-            variables: {
-                input: {
-                    uuid: taskUuid,
-                    email: userEmail,
-                },
-            },
-        });
-    } catch (error) {
-        console.error(error);
-    }
 }
 
 export async function moveTaskAfter(

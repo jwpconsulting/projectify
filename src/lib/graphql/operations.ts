@@ -100,25 +100,9 @@ export const Mutation_DeleteLabelMutation = gql`
     }
 `;
 
-export const Mutation_AddUserToWorkspace = gql`
-    mutation AddUserToWorkspace($input: AddUserToWorkspaceInput!) {
-        addUserToWorkspace(input: $input) {
-            uuid
-        }
-    }
-`;
-
 export const Mutation_RemoveUserFromWorkspace = gql`
     mutation RemoveUserFromWorkspace($input: RemoveUserFromWorkspaceInput!) {
         removeUserFromWorkspace(input: $input) {
-            uuid
-        }
-    }
-`;
-
-export const Mutation_UpdateSubTask = gql`
-    mutation UpdateSubTask($input: UpdateSubTaskInput!) {
-        updateSubTask(input: $input) {
             uuid
         }
     }
@@ -132,57 +116,9 @@ export const Mutation_DeleteTask = gql`
     }
 `;
 
-export const Mutation_MoveTask = gql`
-    mutation MoveTask($input: MoveTaskInput!) {
-        moveTask(input: $input) {
-            uuid
-        }
-    }
-`;
-
 export const Mutation_MoveTaskAfter = gql`
     mutation MoveTaskAfter($input: MoveTaskAfterInput!) {
         moveTaskAfter(input: $input) {
-            uuid
-        }
-    }
-`;
-
-export const Mutation_AddSubTask = gql`
-    mutation AddSubTask($input: AddSubTaskInput!) {
-        addSubTask(input: $input) {
-            uuid
-            created
-            title
-            description
-            done
-        }
-    }
-`;
-
-export const Mutation_ChangeSubTaskDone = gql`
-    mutation ChangeSubTaskDone($input: ChangeSubTaskDoneInput!) {
-        changeSubTaskDone(input: $input) {
-            uuid
-            modified
-            title
-            description
-            done
-        }
-    }
-`;
-
-export const Mutation_DeleteSubTaskMutation = gql`
-    mutation DeleteSubTaskMutation($input: DeleteSubTaskInput!) {
-        deleteSubTask(input: $input) {
-            uuid
-        }
-    }
-`;
-
-export const Mutation_MoveSubTaskMutation = gql`
-    mutation MoveSubTaskMutation($input: MoveSubTaskInput!) {
-        moveSubTask(input: $input) {
             uuid
         }
     }
