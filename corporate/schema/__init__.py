@@ -2,12 +2,6 @@
 from .mutation import (
     Mutation,
 )
-from .query import (
-    Query,
-)
 
 
-__all__ = (
-    "Query",
-    "Mutation",
-)
+__all__ = ("Mutation",)
