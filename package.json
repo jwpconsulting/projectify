@@ -30,6 +30,8 @@
         "fix:prettier:nocache": "prettier --ignore-path .gitignore --plugin prettier-plugin-svelte --plugin prettier-plugin-tailwindcss --log-level warn --write .",
         "fix:python": "npm run fix:python:black bin/rename-component",
         "fix:python:black": "poetry run black bin/rename-component",
+        "show:bundle:client": "open .svelte-kit/output/client/bundle.html",
+        "show:bundle:server": "open .svelte-kit/output/server/bundle.html",
         "storybook": "storybook dev -p 6006 --no-open",
         "build-storybook": "storybook build"
     },
@@ -77,6 +79,7 @@
         "date-fns": "~2.30.0",
         "fuse.js": "~6.6.2",
         "pikaday": "~1.8.2",
+        "rollup-plugin-visualizer": "~5.9.2",
         "svelte": "~4.0.0",
         "svelte-boring-avatars": "~1.2.4",
         "svelte-i18n": "~4.0.0",

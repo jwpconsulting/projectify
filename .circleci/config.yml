@@ -121,6 +121,21 @@ jobs:
                   command: tar --create --verbose --gzip --file=build.tar.gz build
             - store_artifacts:
                   path: build.tar.gz
+    visualize-bundle:
+        executor: node
+        environment:
+            NODE_ENV: production
+        steps:
+            - install_node_dependencies
+            - run:
+                  name: Run build
+                  command: npm run build -- --mode staging
+            - store_artifacts:
+                  path: .svelte-kit/output/client/bundle.html
+                  destination: client-bundle
+            - store_artifacts:
+                  path: .svelte-kit/output/server/bundle.html
+                  destination: server-bundle
     poetry_check:
         executor: python
         steps:
@@ -151,6 +166,7 @@ workflows:
             - knip
             - check-i18n
             - build
+            - visualize-bundle
             - poetry_check
             - python_lint
             - mypy
