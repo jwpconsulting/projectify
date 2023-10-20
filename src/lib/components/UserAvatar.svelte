@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Avatar from "svelte-boring-avatars";
+    import { AvatarMarble as Avatar } from "svelte-boring-avatars";
 
     import type { User } from "$lib/types/user";
 
