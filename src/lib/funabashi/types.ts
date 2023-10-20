@@ -82,3 +82,6 @@ export interface InputFieldAnchor {
     href: string;
     label: string;
 }
+export type InputFieldValidation =
+    | { ok: true; result: string }
+    | { ok: false; error: string };

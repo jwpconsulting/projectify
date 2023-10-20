@@ -190,3 +190,50 @@ export const AnchorTopOnly: Story = {
         },
     },
 };
+
+export const Error: Story = {
+    args: {
+        placeholder: "This will never be shown",
+        name: "email",
+        style: { kind: "field", inputType: "email" },
+        value: "hello@example.com",
+        anchorBottom: {
+            href: "#",
+            label: "I am the anchor on the bottom",
+        },
+        validation: {
+            ok: false,
+            error: "This email address is too awesome",
+        },
+    },
+};
+
+export const Ok: Story = {
+    args: {
+        placeholder: "This will never be shown",
+        name: "email",
+        style: { kind: "field", inputType: "email" },
+        value: "hello@example.com",
+        anchorBottom: {
+            href: "#",
+            label: "I am the anchor on the bottom",
+        },
+        validation: {
+            ok: true,
+            result: "Your email address is the right amount of awesome",
+        },
+    },
+};
+
+export const OkNoAnchors: Story = {
+    args: {
+        placeholder: "This will never be shown",
+        name: "email",
+        style: { kind: "field", inputType: "email" },
+        value: "hello@example.com",
+        validation: {
+            ok: true,
+            result: "Your email address is the right amount of awesome",
+        },
+    },
+};

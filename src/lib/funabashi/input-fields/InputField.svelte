@@ -9,6 +9,7 @@
     import type {
         InputFieldAnchor,
         InputFieldStyle,
+        InputFieldValidation,
     } from "$lib/funabashi/types";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { formatIsoDate } from "$lib/utils/date";
@@ -24,12 +25,19 @@
      * Designate the id for this input element, falls back to name
      */
     export let id: string | undefined = undefined;
+    // TODO
+    // export let label: string | undefined = undefined;
     export let label: string | null = null;
+    // TODO
+    // export let anchorTop: InputFieldAnchor | undefined = undefined;
     export let anchorTop: InputFieldAnchor | null = null;
+    // TODO
+    // export let anchorBottom: InputFieldAnchor | undefined = undefined;
     export let anchorBottom: InputFieldAnchor | null = null;
     export let required = false;
     export let readonly = false;
     export let onClick: (() => void) | undefined = undefined;
+    export let validation: InputFieldValidation | undefined = undefined;
 
     let pikadayAnchor: HTMLElement | undefined = undefined;
     let pikaday: typeof Pikaday | undefined = undefined;
@@ -103,7 +111,7 @@
     };
 </script>
 
-<div class="flex flex-col items-start">
+<div class="flex flex-col items-start gap-2">
     {#if label !== null || anchorTop !== null}
         <div
             class="flex w-full flex-row items-center"
@@ -122,7 +130,7 @@
                 <Anchor
                     href={anchorTop.href}
                     label={anchorTop.label}
-                    size="extraSmall"
+                    size="small"
                 />
             {/if}
         </div>
@@ -210,13 +218,32 @@
             </button>
         {/if}
     </div>
-    {#if anchorBottom}
-        <div class="flex w-full flex-row items-end justify-end gap-1">
-            <Anchor
-                href={anchorBottom.href}
-                label={anchorBottom.label}
-                size="extraSmall"
-            />
+    {#if anchorBottom !== null || validation !== undefined}
+        <div
+            class="flex w-full flex-row items-end justify-end gap-1 px-1"
+            class:justify-end={anchorBottom && !validation}
+            class:justify-between={anchorBottom && validation}
+        >
+            {#if validation}
+                <p
+                    class="text-s"
+                    class:text-success={validation.ok}
+                    class:text-error={!validation.ok}
+                >
+                    {#if validation.ok}
+                        {validation.result}
+                    {:else}
+                        {validation.error}
+                    {/if}
+                </p>
+            {/if}
+            {#if anchorBottom}
+                <Anchor
+                    href={anchorBottom.href}
+                    label={anchorBottom.label}
+                    size="small"
+                />
+            {/if}
         </div>
     {/if}
 </div>
