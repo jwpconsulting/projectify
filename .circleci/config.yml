@@ -109,6 +109,8 @@ jobs:
                   command: bin/check-i18n
     build:
         executor: node
+        environment:
+            NODE_ENV: production
         steps:
             - install_node_dependencies
             - run:
