@@ -68,10 +68,20 @@ class InviteUserToWorkspaceSerializer(serializers.Serializer):
             add_or_invite_workspace_user(workspace, email)
         except UserAlreadyInvited:
             raise serializers.ValidationError(
-                {"email": _("This user has already been invited")}
+                {
+                    "email": _(
+                        "User with email {email} has already been invited to "
+                        "this workspace."
+                    ).format(email=email)
+                }
             )
         except UserAlreadyAdded:
             raise serializers.ValidationError(
-                {"email": _("This user has already been added")}
+                {
+                    "email": _(
+                        "User with email {email} has already been added to "
+                        "this workspace."
+                    ).format(email=email)
+                }
             )
         return validated_data
