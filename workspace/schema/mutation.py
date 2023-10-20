@@ -21,9 +21,6 @@ from graphql import (
 from projectify.utils import (
     get_user_model,
 )
-from workspace.models.workspace_user_invite import (
-    add_or_invite_workspace_user,
-)
 
 from .. import (
     models,
@@ -54,34 +51,12 @@ class AddWorkspaceBoardSectionInput:
 
 
 @strawberry.input
-class AddTaskInput:
-    """Add task mutation input."""
-
-    workspace_board_section_uuid: uuid.UUID
-    title: str
-    description: str
-    deadline: datetime.datetime | None
-    assignee: str | None = UNSET
-    sub_tasks: list[str] | None = UNSET
-    labels: list[uuid.UUID] | None = UNSET
-
-
-@strawberry.input
 class AddLabelInput:
     """AddLabelMutation input."""
 
     workspace_uuid: uuid.UUID
     name: str
     color: int
-
-
-@strawberry.input
-class AddSubTaskInput:
-    """Add sub task mutation input."""
-
-    task_uuid: uuid.UUID
-    title: str
-    description: str
 
 
 @strawberry.input
@@ -94,26 +69,9 @@ class AddChatMessageInput:
 
 # Update inputs
 @strawberry.input
-class ChangeSubTaskDoneInput:
-    """ChangeSubTaskDoneMutation input."""
-
-    sub_task_uuid: uuid.UUID
-    done: bool
-
-
-@strawberry.input
 class MoveWorkspaceBoardSectionInput:
     """MoveWorkspaceBoardSectionMutation input."""
 
-    workspace_board_section_uuid: uuid.UUID
-    order: int
-
-
-@strawberry.input
-class MoveTaskInput:
-    """MoveTask mutation input."""
-
-    task_uuid: uuid.UUID
     workspace_board_section_uuid: uuid.UUID
     order: int
 
@@ -128,42 +86,11 @@ class MoveTaskAfterInput:
 
 
 @strawberry.input
-class MoveSubTaskInput:
-    """MoveSubTask mutation input."""
-
-    sub_task_uuid: uuid.UUID
-    order: int
-
-
-@strawberry.input
-class AddUserToWorkspaceInput:
-    """Input for AddUserToWorkspaceMutation."""
-
-    uuid: uuid.UUID
-    email: str
-
-
-@strawberry.input
 class RemoveUserFromWorkspaceInput:
     """Input for RemoveUserFromWorkspaceMutation."""
 
     uuid: uuid.UUID
     email: str
-
-
-@strawberry.input
-class AssignTaskInput:
-    """Input for AssignTaskMutation."""
-
-    uuid: uuid.UUID
-    email: str | None
-
-
-@strawberry.input
-class DuplicateTaskInput:
-    """DuplicateTaskMutation input."""
-
-    uuid: uuid.UUID
 
 
 @strawberry.input
@@ -278,13 +205,6 @@ class DeleteLabelInput:
     uuid: uuid.UUID
 
 
-@strawberry.input
-class DeleteSubTaskInput:
-    """DeleteTaskMutation input."""
-
-    uuid: uuid.UUID
-
-
 @strawberry.type
 class Mutation:
     """Mutation."""
@@ -335,49 +255,6 @@ class Mutation:
         return workspace_board_section
 
     @strawberry.field
-    def add_task(
-        self, info: GraphQLResolveInfo, input: AddTaskInput
-    ) -> types.Task:
-        """Add task."""
-        qs = models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
-            info.context.user,
-            input.workspace_board_section_uuid,
-        )
-        workspace_board_section = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_create_task", workspace_board_section
-        )
-        task = workspace_board_section.add_task(
-            input.title,
-            input.description,
-            input.deadline,
-        )
-        if input.assignee is not UNSET:
-            User = get_user_model()
-            user = User.objects.get_by_natural_key(input.assignee)
-            workspace_user = (
-                workspace_board_section.workspace.workspaceuser_set.get(
-                    user=user
-                )
-            )
-            task.assign_to(workspace_user)
-        if input.sub_tasks is not UNSET and input.sub_tasks is not None:
-            for title in input.sub_tasks:
-                task.add_sub_task(
-                    title,
-                    "",
-                )
-        if input.labels is not UNSET and input.labels is not None:
-            for label_uuid in input.labels:
-                label_qs = models.Label.objects.filter_for_user_and_uuid(
-                    info.context.user,
-                    label_uuid,
-                )
-                label = get_object_or_404(label_qs)
-                task.add_label(label)
-        return task  # type: ignore
-
-    @strawberry.field
     def add_label(
         self, info: GraphQLResolveInfo, input: AddLabelInput
     ) -> types.Label:
@@ -395,25 +272,6 @@ class Mutation:
             color=input.color,
         )
         return label
-
-    @strawberry.field
-    def add_sub_task(
-        self, info: GraphQLResolveInfo, input: AddSubTaskInput
-    ) -> types.SubTask:
-        """Add sub task."""
-        qs = models.Task.objects.filter_for_user_and_uuid(
-            info.context.user,
-            input.task_uuid,
-        )
-        task = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_create_sub_task", task
-        )
-        sub_task = task.add_sub_task(
-            input.title,
-            input.description,
-        )
-        return sub_task
 
     @strawberry.field
     def add_chat_message(
@@ -435,23 +293,6 @@ class Mutation:
         return chat_message
 
     @strawberry.field
-    def change_sub_task_done(
-        self, info: GraphQLResolveInfo, input: ChangeSubTaskDoneInput
-    ) -> types.SubTask:
-        """Change sub task done status."""
-        qs = models.SubTask.objects.filter_for_user_and_uuid(
-            info.context.user,
-            input.sub_task_uuid,
-        )
-        sub_task = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_update_sub_task", sub_task
-        )
-        sub_task.done = input.done
-        sub_task.save()
-        return sub_task
-
-    @strawberry.field
     def move_workspace_board_section(
         self, info: GraphQLResolveInfo, input: MoveWorkspaceBoardSectionInput
     ) -> types.WorkspaceBoardSection:
@@ -468,34 +309,6 @@ class Mutation:
         workspace_board_section.move_to(input.order)
         workspace_board_section.refresh_from_db()
         return workspace_board_section
-
-    @strawberry.field
-    def move_task(
-        self, info: GraphQLResolveInfo, input: MoveTaskInput
-    ) -> types.Task:
-        """Move task."""
-        # Find workspace board section
-        qs: models.WorkspaceBoardSectionQuerySet = (
-            models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
-                info.context.user,
-                input.workspace_board_section_uuid,
-            )
-        )
-        workspace_board_section = get_object_or_404(qs)
-        # Find task
-        task_qs: models.TaskQuerySet = (
-            models.Task.objects.filter_for_user_and_uuid(
-                info.context.user,
-                input.task_uuid,
-            )
-        )
-        task: models.Task = get_object_or_404(task_qs)
-        assert info.context.user.has_perm("workspace.can_update_task", task)
-        # Reorder task
-        task.move_to(workspace_board_section, input.order)
-        # Return task
-        task.refresh_from_db()
-        return task  # type: ignore
 
     @strawberry.field
     def move_task_after(
@@ -533,43 +346,6 @@ class Mutation:
         return task
 
     @strawberry.field
-    def move_sub_task(
-        self, info: GraphQLResolveInfo, input: MoveSubTaskInput
-    ) -> types.SubTask:
-        """Move sub task to a specified position."""
-        # Find sub task
-        qs = models.SubTask.objects.filter_for_user_and_uuid(
-            info.context.user,
-            input.sub_task_uuid,
-        )
-        sub_task = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_update_sub_task", sub_task
-        )
-        # Reorder sub task
-        sub_task.move_to(input.order)
-        # This is necessary to refresh the _order field
-        sub_task.refresh_from_db()
-        return sub_task
-
-    @strawberry.field
-    def add_user_to_workspace(
-        self, info: GraphQLResolveInfo, input: AddUserToWorkspaceInput
-    ) -> types.Workspace:
-        """Add user to workspace."""
-        # Find workspace
-        qs = models.Workspace.objects.filter_for_user_and_uuid(
-            info.context.user,
-            input.uuid,
-        )
-        workspace = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_create_workspace_user", workspace
-        )
-        add_or_invite_workspace_user(workspace, input.email)
-        return workspace
-
-    @strawberry.field
     def remove_user_from_workspace(
         self, info: GraphQLResolveInfo, input: RemoveUserFromWorkspaceInput
     ) -> types.Workspace:
@@ -589,45 +365,6 @@ class Mutation:
         except User.DoesNotExist:
             workspace.uninvite_user(input.email)
         return workspace
-
-    @strawberry.field
-    def assign_task(
-        self, info: GraphQLResolveInfo, input: AssignTaskInput
-    ) -> types.Task:
-        """Assign task to user."""
-        qs = models.Task.objects.filter_for_user_and_uuid(
-            info.context.user,
-            input.uuid,
-        )
-        task = get_object_or_404(qs)
-        assert info.context.user.has_perm("workspace.can_update_task", task)
-        if input.email is None:
-            task.assign_to(None)
-        else:
-            User = get_user_model()
-            assignee = User.objects.get_by_natural_key(input.email)
-            workspace_user = task.workspace.workspaceuser_set.get(
-                user=assignee
-            )
-            task.assign_to(workspace_user)
-        return task
-
-    @strawberry.field
-    def duplicate_task(
-        self, info: GraphQLResolveInfo, input: DuplicateTaskInput
-    ) -> types.Task:
-        """Duplicate a task."""
-        qs = models.Task.objects.filter_for_user_and_uuid(
-            info.context.user,
-            input.uuid,
-        )
-        task = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_create_task",
-            task.workspace,
-        )
-        new_task = models.Task.objects.duplicate_task(task)
-        return new_task
 
     @strawberry.field
     def assign_label(
@@ -774,30 +511,6 @@ class Mutation:
         return workspace_board_section
 
     @strawberry.field
-    def update_task(
-        self, info: GraphQLResolveInfo, input: UpdateTaskInput
-    ) -> types.Task:
-        """Update workspace board."""
-        qs = models.Task.objects.filter_for_user_and_uuid(
-            info.context.user,
-            input.uuid,
-        )
-        task = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_update_task",
-            task,
-        )
-        task.title = input.title
-        task.description = input.description
-        if input.deadline:
-            task.deadline = input.deadline
-            assert task.deadline.tzinfo
-        else:
-            task.deadline = None
-        task.save()
-        return task
-
-    @strawberry.field
     def update_label(
         self, info: GraphQLResolveInfo, input: UpdateLabelInput
     ) -> types.Label:
@@ -815,25 +528,6 @@ class Mutation:
         label.name = input.name
         label.save()
         return label
-
-    @strawberry.field
-    def update_sub_task(
-        self, info: GraphQLResolveInfo, input: UpdateSubTaskInput
-    ) -> types.SubTask:
-        """Update workspace board."""
-        qs = models.SubTask.objects.filter_for_user_and_uuid(
-            info.context.user,
-            input.uuid,
-        )
-        sub_task = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_update_sub_task",
-            sub_task,
-        )
-        sub_task.title = input.title
-        sub_task.description = input.description
-        sub_task.save()
-        return sub_task
 
     # Delete
     @strawberry.field
@@ -909,20 +603,3 @@ class Mutation:
         )
         label.delete()
         return label
-
-    @strawberry.field
-    def delete_sub_task(
-        self, info: GraphQLResolveInfo, input: DeleteSubTaskInput
-    ) -> types.SubTask:
-        """Delete task."""
-        qs = models.SubTask.objects.filter_for_user_and_uuid(
-            info.context.user,
-            input.uuid,
-        )
-        sub_task = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_delete_sub_task",
-            sub_task,
-        )
-        sub_task.delete()
-        return sub_task
