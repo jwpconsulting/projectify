@@ -3,28 +3,28 @@
 
     $: sections = [
         {
-            title: $_("help-basics.workspace"),
-            content: $_("help-basics.workspace-text"),
+            title: $_("help.basics.workspace"),
+            content: $_("help.basics.workspace-text"),
             id: "workspace",
         },
         {
-            title: $_("help-basics.board"),
-            content: $_("help-basics.board-text"),
+            title: $_("help.basics.board"),
+            content: $_("help.basics.board-text"),
             id: "board",
         },
         {
-            title: $_("help-basics.section"),
-            content: $_("help-basics.section-text"),
+            title: $_("help.basics.section"),
+            content: $_("help.basics.section-text"),
             id: "section",
         },
         {
-            title: $_("help-basics.task"),
-            content: $_("help-basics.task-text"),
+            title: $_("help.basics.task"),
+            content: $_("help.basics.task-text"),
             id: "task",
         },
         {
-            title: $_("help-basics.side-menu"),
-            content: $_("help-basics.side-menu-text"),
+            title: $_("help.basics.side-menu"),
+            content: $_("help.basics.side-menu-text"),
             id: "side-menu",
         },
     ];
@@ -50,7 +50,7 @@
         {#each sections as section}
             <section id={section.id} class="space-y-4">
                 <h3 class="text-3xl font-bold">
-                    {$_("help-basics.workspace")}
+                    {$_("help.basics.workspace")}
                 </h3>
                 <p>
                     {section.content}

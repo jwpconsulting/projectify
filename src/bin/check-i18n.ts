@@ -121,7 +121,6 @@ function printNotFound(notFound: MessageString[]) {
 async function check() {
     const defined = new Set(buildMessageStrings(messages));
     const messageStrings = await extractMessageStrings();
-    console.log(messageStrings);
 
     const stringsUsed = new Set(messageStrings.map((m) => m.message));
     const unused = difference(defined, stringsUsed);
@@ -136,7 +135,7 @@ async function check() {
         printNotFound(notFound);
     }
 
-    if (notFound.length > 0) {
+    if (unused.size > 0 || notFound.length > 0) {
         process.exit(1);
     }
 }

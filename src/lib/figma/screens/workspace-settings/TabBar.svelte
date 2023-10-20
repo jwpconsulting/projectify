@@ -13,17 +13,17 @@
 <div class="flex flex-row flex-wrap">
     <TabElement
         href={getSettingsUrl(workspace.uuid, "index")}
-        label={$_("workspace-settings.tab-bar.general")}
+        label={$_("workspace-settings.general.title")}
         active={activeSetting === "index"}
     />
     <TabElement
         href={getSettingsUrl(workspace.uuid, "workspace-users")}
-        label={$_("workspace-settings.tab-bar.workspace-users")}
+        label={$_("workspace-settings.workspace-users.title")}
         active={activeSetting === "workspace-users"}
     />
     <TabElement
         href={getSettingsUrl(workspace.uuid, "billing")}
-        label={$_("workspace-settings.tab-bar.billing")}
+        label={$_("workspace-settings.billing.title")}
         active={activeSetting === "billing"}
     />
     <div class="grow border-b-2 border-border" />
