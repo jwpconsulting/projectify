@@ -6,10 +6,8 @@ import {
     Mutation_AddLabelMutation,
     Mutation_AddWorkspaceBoard,
     Mutation_AddWorkspaceBoardSection,
-    Mutation_ArchiveWorkspaceBoard,
     Mutation_DeleteLabelMutation,
     Mutation_UpdateLabelMutation,
-    Mutation_UpdateWorkspaceBoard,
 } from "$lib/graphql/operations";
 import { getWithCredentialsJson, handle404 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
@@ -90,18 +88,6 @@ export async function createWorkspaceBoard(
 }
 
 // Read
-export async function getWorkspaceBoard(
-    uuid: string,
-    repositoryContext: RepositoryContext
-): Promise<WorkspaceBoard | undefined> {
-    return handle404(
-        await getWithCredentialsJson<WorkspaceBoard>(
-            `/workspace/workspace-board/${uuid}`,
-            repositoryContext
-        )
-    );
-}
-
 export async function getWorkspaceBoardSection(
     uuid: string,
     repositoryContext: RepositoryContext
@@ -112,50 +98,6 @@ export async function getWorkspaceBoardSection(
             repositoryContext
         )
     );
-}
-
-export async function getArchivedWorkspaceBoards(
-    workspace_uuid: string,
-    repositoryContext: RepositoryContext
-): Promise<undefined | WorkspaceBoard[]> {
-    return handle404(
-        await getWithCredentialsJson<WorkspaceBoard[]>(
-            `/workspace/workspace/${workspace_uuid}/workspace-boards-archived/`,
-            repositoryContext
-        )
-    );
-}
-
-// These methods find refuge from SelectWorkspaceBoard.svelte here
-export async function updateWorkspaceBoard(workspaceBoard: WorkspaceBoard) {
-    await client.mutate({
-        mutation: Mutation_UpdateWorkspaceBoard,
-        variables: {
-            input: {
-                uuid: workspaceBoard.uuid,
-                title: workspaceBoard.title,
-                deadline: workspaceBoard.deadline,
-                description: "",
-            },
-        },
-    });
-}
-
-export async function archiveWorkspaceBoard(workspaceBoard: WorkspaceBoard) {
-    // TODO confirmation dialog
-    await client.mutate({
-        mutation: Mutation_ArchiveWorkspaceBoard,
-        variables: {
-            input: {
-                uuid: workspaceBoard.uuid,
-                archived: true,
-            },
-        },
-    });
-
-    // TODO here we ought to find out the URL of the workspace this
-    // workspace board belongs to
-    console.error("TODO");
 }
 
 // WorkspaceBoardSection CRUD

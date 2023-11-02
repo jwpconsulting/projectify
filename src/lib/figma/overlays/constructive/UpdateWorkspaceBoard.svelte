@@ -4,7 +4,7 @@
     import Layout from "$lib/figma/overlays/constructive/Layout.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
-    import { updateWorkspaceBoard } from "$lib/repository/workspace";
+    import { updateWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
     import {
         rejectConstructiveOverlay,
         resolveConstructiveOverlay,
