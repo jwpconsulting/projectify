@@ -57,3 +57,12 @@ class APIClient(APIRequestFactory, DjangoClient):
         content_type: Optional[str] = None,
         **extra: object
     ) -> Response: ...
+    def delete(  # type: ignore[override]
+        self,
+        path: str,
+        data: Optional[Any] = None,
+        format: Optional[str] = None,
+        content_type: Optional[str] = None,
+        follow: bool = False,
+        **extra: object
+    ) -> Response: ...

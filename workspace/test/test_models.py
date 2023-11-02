@@ -1,7 +1,4 @@
 """Test workspace models."""
-from django.contrib.auth.models import (
-    AbstractUser,
-)
 from django.utils import (
     timezone,
 )
@@ -12,56 +9,6 @@ from .. import (
     factory,
     models,
 )
-
-
-@pytest.mark.django_db
-class TestWorkspaceUserManager:
-    """Test workspace user manager."""
-
-    def test_filter_by_workspace_pks(
-        self, workspace_user: models.WorkspaceUser, workspace: models.Workspace
-    ) -> None:
-        """Test filter_by_workspace_pks."""
-        qs = models.WorkspaceUser.objects.filter_by_workspace_pks(
-            [workspace.pk],
-        )
-        assert list(qs) == [workspace_user]
-
-    def test_get_by_workspace_and_user(
-        self,
-        workspace: models.Workspace,
-        user: AbstractUser,
-        workspace_user: models.WorkspaceUser,
-    ) -> None:
-        """Test get_by_workspace_and_user."""
-        assert (
-            models.WorkspaceUser.objects.get_by_workspace_and_user(
-                workspace,
-                user,
-            )
-            == workspace_user
-        )
-
-
-@pytest.mark.django_db
-class TestWorkspaceUser:
-    """Test WorkspaceUser."""
-
-    def test_factory(self, workspace_user: models.WorkspaceUser) -> None:
-        """Test that the default rule is observer."""
-        assert workspace_user.role == models.WorkspaceUserRoles.OWNER
-
-    def test_workspace(
-        self, workspace: models.Workspace, workspace_user: models.WorkspaceUser
-    ) -> None:
-        """Test workspace property."""
-        assert workspace_user.workspace == workspace
-
-    def test_assign_role(self, workspace_user: models.WorkspaceUser) -> None:
-        """Test assign_role."""
-        workspace_user.assign_role(models.WorkspaceUserRoles.OWNER)
-        workspace_user.refresh_from_db()
-        assert workspace_user.role == models.WorkspaceUserRoles.OWNER
 
 
 @pytest.mark.django_db

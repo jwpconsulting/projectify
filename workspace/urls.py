@@ -3,20 +3,22 @@ from django.urls import (
     path,
 )
 
-from workspace.views.task import (
+from . import (
+    views,
+)
+from .views.task import (
     TaskCreate,
     TaskRetrieveUpdate,
 )
-from workspace.views.workspace import (
+from .views.workspace import (
     InviteUserToWorkspace,
     WorkspaceCreate,
     WorkspaceList,
     WorkspacePictureUploadView,
     WorkspaceRetrieve,
 )
-
-from . import (
-    views,
+from .views.workspace_user import (
+    WorkspaceUserDestroy,
 )
 
 
@@ -54,6 +56,16 @@ urlpatterns = (
         InviteUserToWorkspace.as_view(),
         name="workspace-invite-user",
     ),
+    # WorkspaceUser
+    # Create
+    # Read
+    # Update
+    # Delete
+    path(
+        "workspace-user/<uuid:uuid>",
+        WorkspaceUserDestroy.as_view(),
+        name="workspace-user-delete",
+    ),
     # WorkspaceBoard
     # Create
     # Read
@@ -82,6 +94,7 @@ urlpatterns = (
     # Task
     # Create
     path(
+        # TODO should be "task/"
         "task",
         TaskCreate.as_view(),
         name="task-create",
