@@ -4,14 +4,13 @@ import { client } from "$lib/graphql/client";
 import {
     Mutation_AddWorkspaceBoard,
     Mutation_ArchiveWorkspaceBoard,
+    Mutation_DeleteWorkspaceBoard,
     Mutation_UpdateWorkspaceBoard,
 } from "$lib/graphql/operations";
 import { getWithCredentialsJson, handle404 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
-import type {
-    Workspace,
-    WorkspaceBoard,
-} from "$lib/types/workspace";
+import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
+
 // WorkspaceBoard CRUD
 // Create
 export async function createWorkspaceBoard(
@@ -58,7 +57,7 @@ export async function getArchivedWorkspaceBoards(
     );
 }
 
-// These methods find refuge from SelectWorkspaceBoard.svelte here
+// Update
 export async function updateWorkspaceBoard(workspaceBoard: WorkspaceBoard) {
     await client.mutate({
         mutation: Mutation_UpdateWorkspaceBoard,
@@ -72,20 +71,26 @@ export async function updateWorkspaceBoard(workspaceBoard: WorkspaceBoard) {
         },
     });
 }
-
-export async function archiveWorkspaceBoard(workspaceBoard: WorkspaceBoard) {
-    // TODO confirmation dialog
+// Delete
+export async function deleteWorkspaceBoard(workspaceBoard: WorkspaceBoard) {
+    const { uuid } = workspaceBoard;
     await client.mutate({
-        mutation: Mutation_ArchiveWorkspaceBoard,
+        mutation: Mutation_DeleteWorkspaceBoard,
         variables: {
             input: {
-                uuid: workspaceBoard.uuid,
-                archived: true,
+                uuid,
             },
         },
     });
+}
 
-    // TODO here we ought to find out the URL of the workspace this
-    // workspace board belongs to
-    console.error("TODO");
+export async function archiveWorkspaceBoard(
+    workspaceBoard: WorkspaceBoard,
+    archived = true
+) {
+    const { uuid } = workspaceBoard;
+    await client.mutate({
+        mutation: Mutation_ArchiveWorkspaceBoard,
+        variables: { input: { uuid, archived } },
+    });
 }

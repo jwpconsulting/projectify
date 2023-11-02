@@ -124,6 +124,13 @@ const messages: MessageCollection = {
             },
         },
     },
+    "workspace-board-archive": {
+        card: {
+            recover: "Recover",
+            delete: "Delete",
+            archived: "Archived",
+        },
+    },
     "page404": {
         title: "Lost your way?",
         body: "The page you're looking for doesn't exist.",
