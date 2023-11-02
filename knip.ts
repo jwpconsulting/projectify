@@ -10,6 +10,11 @@ const config: KnipConfig = {
         "src/routes/**/+{page,server,page.server,error,layout,layout.server}{,@*}.{js,ts,svelte}",
         "src/stories/**/*.stories.ts",
         "src/bin/*.ts",
+        // XXX We might have more luck convincing knip that we are importing
+        // src/app.scss in src/routes/+layout.svelte:
+        //   import "../app.scss";
+        // Instead of manually specifying the stylesheet here
+        "src/app.scss",
     ],
     rules: {
         binaries: "error",
@@ -32,7 +37,7 @@ const config: KnipConfig = {
         // https://github.com/webpro/knip/blob/7011a5107b6693f70a966a12bc3c31b6bc3353a8/docs/compilers.md
         svelte: (text: string) =>
             [...text.matchAll(/import[^;]+/g)].join("\n"),
-        css: (text: string) =>
+        scss: (text: string) =>
             [...text.matchAll(/(?<=@)import[^;]+/g)].join("\n"),
     },
 };

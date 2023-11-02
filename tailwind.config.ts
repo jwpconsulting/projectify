@@ -98,7 +98,7 @@ const config: Config = {
     theme: {
         extend: {
             fontFamily: {
-                Rampart: ["Roboto", "sans-serif"],
+                sans: ["Roboto", "sans-serif"],
             },
             fontSize: {
                 xxs: "10px",

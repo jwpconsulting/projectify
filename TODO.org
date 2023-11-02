@@ -303,3 +303,15 @@
 
 * DONE The drop down in user assignment does not indicate the current
   assignee
+
+* For Consideration
+
+** Remove Roboto
+   <2023-11-02 Thu>
+   We are now loading roboto directly, instead of as a Google fonts dependency.
+   But, the question remains of whether we even need to load a font? The
+   question is similar to having our custom focus style anywhere:
+
+   How much consistency do we need?
+
+   I say, we should get rid of it.
