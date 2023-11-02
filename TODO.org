@@ -189,6 +189,11 @@
    Also the rest of the content should be aria-hidden, so that something like
    the VoiceOver focus can't go on it.
 
+** Change task cards and dashboard to have table semantics
+   <2023-11-02 Thu>
+   We use a wild combination of flex and grid here. Let's simplify it
+   and also use <table> here, where we can.
+
 * Refactor
 
 ** Stop using gql for mutating tasks
