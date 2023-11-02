@@ -16,25 +16,30 @@
 
    A customer isn't automatically created, it seems.
 
-** Implement workspace user edit screen in workspace settings
+** DONE Implement workspace user edit screen in workspace settings
+   CLOSED: [2023-11-02 Thu 17:10]
    The scaffolding is there, but it doesn't work
 
    Some features
+   - [X] Invite new workspace users
+   - [X] Search workspace user
 
-   *** Filter by roles
-   *** Job title assignment
-   *** Invite new workspace users
-   *** Search workspace user
+   Won't do:
+   - [ ] Filter by roles
+   - [ ] Job title assignment
+
+** Allow setting workspace user role in workspace settings
+   Allow changing a workspace user role to owner / admin / etc.
 
 ** Add action complete notifications
    Here I list some of the possible ones we can add
 
-   *** Created / updated / deleted task
-   *** Assigned / Unassigned user to task
-   *** Assigned / Unassigned label to task
-   *** Created / updated / deleted label
-   *** Created / updated / deleted workspace board
-   *** Created / updated / deleted workspace board section
+   - Created / updated / deleted task
+   - Assigned / Unassigned user to task
+   - Assigned / Unassigned label to task
+   - Created / updated / deleted label
+   - Created / updated / deleted workspace board
+   - Created / updated / deleted workspace board section
 
 ** Hamburger menu should always allow me to go back to dashboard
    If I open the hamburger menu from my profile page or workspace settings, I
