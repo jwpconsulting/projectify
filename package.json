@@ -19,7 +19,7 @@
         "check:python:black": "poetry run black --check bin/rename-component",
         "check:python:flake8": "poetry run flake8 bin/rename-component",
         "check:python:mypy": "poetry run mypy bin/rename-component",
-        "check:svelte-check": "svelte-check --tsconfig tsconfig.json --diagnostic-sources js,svelte",
+        "check:svelte-check": "svelte-check --tsconfig tsconfig.json --fail-on-warnings",
         "sync-types": "svelte-kit sync",
         "format": "npm run fix:prettier",
         "fix": "npm run fix:prettier && npm run fix:eslint",
