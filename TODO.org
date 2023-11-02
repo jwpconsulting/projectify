@@ -5,7 +5,8 @@
    We throw error(404), but we don't give any messages. We first need to access
    the localized messages in a load() function. How?
 
-** Implement save/create and continue editing
+** DONE Implement save/create and continue editing
+   CLOSED: [2023-11-02 Thu 17:06]
    Django admin has this :thumbsup:
 
 ** Implement workspace board archive
@@ -90,9 +91,9 @@
 
 ** Mobile menu event handling not implement
 
-*** Close on anchor click
-    When clicking on an anchor inside <Full />, we most likely navigate to a
-    new ws board. Then we should close the mobile menu
+** Close on anchor click
+   When clicking on an anchor inside <Full />, we most likely navigate to a
+   new ws board. Then we should close the mobile menu
 
 ** Buttons have irregular growth behavior
    Inside flex, it goes wild! There is a hacky grow parameter inside there,
@@ -163,6 +164,9 @@
    It might be good to wait for a fix from the storybook svelte plugin. On the
    other hand, we are now using our own goto() wrapper, so perhaps we can
    consider this partially solved.
+
+** DONE The drop down in user assignment does not indicate the current
+   assignee
 
 * Accessiblity
 
@@ -300,9 +304,6 @@
    CLOSED: [2023-09-06 Wed 10:07]
 
    We are using knip now
-
-* DONE The drop down in user assignment does not indicate the current
-  assignee
 
 * For Consideration
 
