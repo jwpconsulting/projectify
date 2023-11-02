@@ -28,7 +28,7 @@
 </script>
 
 <tr class="contents">
-    <td class="col-span-3 flex flex-row items-center gap-2">
+    <td class="col-span-2 flex flex-row items-center gap-2">
         <AvatarVariant
             content={{ kind: "multiple", users: [workspaceUser.user] }}
             size="medium"
@@ -38,7 +38,7 @@
             <div class="text-sm text-base-content">{jobTitle}</div>
         </div>
     </td>
-    <td class="text-right text-base-content">{role}</td>
+    <td class="text-left text-base-content">{role}</td>
     <td class=""
         ><Button
             label={$_("workspace-settings.workspace-users.actions.remove")}
