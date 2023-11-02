@@ -125,11 +125,13 @@ const messages: MessageCollection = {
         },
     },
     "workspace-board-archive": {
+        title: "Workspace board archive",
         card: {
             recover: "Recover",
             delete: "Delete",
             archived: "Archived",
         },
+        empty: "No workspace boards have been archived.",
     },
     "page404": {
         title: "Lost your way?",
@@ -527,7 +529,6 @@ const messages: MessageCollection = {
             },
         },
     },
-    "no-archived-boards-found": "No archived boards found.",
     "disconnected-network": "Disconnected Network",
     "back-to-landing-page": "back to landing page",
     "tasks-not-found-for": "Tasks not found for",

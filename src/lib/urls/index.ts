@@ -25,7 +25,7 @@ export function getSettingsUrl(workspaceUuid: string, kind: SettingKind) {
 }
 
 export function getArchiveUrl(workspaceUuid: string) {
-    return `/dashboard/archive/${workspaceUuid}`;
+    return `/dashboard/workspace/${workspaceUuid}/archive`;
 }
 
 export function getProfileUrl() {
