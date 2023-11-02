@@ -6,7 +6,10 @@ import type { ApiResponse } from "./types";
 
 const getOptions: RequestInit = { credentials: "include" };
 
-function putPostOptions<T>(method: "POST" | "PUT", data: T): RequestInit {
+function putPostOptions<T>(
+    method: "POST" | "PUT" | "DELETE",
+    data: T
+): RequestInit {
     // These requests will certainly fail without a csrf token
     const baseHeaders = { "Content-Type": "application/json" };
     const csrftoken = getCookie("csrftoken");
@@ -24,7 +27,9 @@ function putPostOptions<T>(method: "POST" | "PUT", data: T): RequestInit {
 async function parseResponse<T, E = unknown>(
     response: Response
 ): Promise<ApiResponse<T, E>> {
-    const data: unknown = await response.json();
+    const content = await response.text();
+    // A response might be empty, so we can't just use await response.json()
+    const data: unknown = content === "" ? undefined : JSON.parse(content);
     if (response.ok) {
         return { kind: "ok", ok: true, data: data as T };
     }
@@ -78,6 +83,19 @@ export async function putWithCredentialsJson<T, E = unknown>(
     const response = await fetch(
         `${vars.API_ENDPOINT}${url}`,
         putPostOptions("PUT", data)
+    );
+    return await parseResponse<T, E>(response);
+}
+
+export async function deleteWithCredentialsJson<T, E = unknown>(
+    url: string,
+    data: unknown,
+    repositoryContext: RepositoryContext
+): Promise<ApiResponse<T, E>> {
+    const { fetch } = repositoryContext;
+    const response = await fetch(
+        `${vars.API_ENDPOINT}${url}`,
+        putPostOptions("DELETE", data)
     );
     return await parseResponse<T, E>(response);
 }

@@ -4,6 +4,7 @@
 
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import { deleteWorkspaceUser } from "$lib/repository/workspace/workspace_user";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
     import type { WorkspaceUser } from "$lib/types/workspace";
     import { getMessageNameForRole } from "$lib/utils/i18n";
@@ -24,6 +25,8 @@
             kind: "deleteWorkspaceUser",
             workspaceUser,
         });
+        // TODO: Do something with the result
+        await deleteWorkspaceUser(workspaceUser, { fetch });
     }
 </script>
 
