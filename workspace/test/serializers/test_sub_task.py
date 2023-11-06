@@ -63,7 +63,7 @@ class TestSubTaskListSerializer:
                 "uuid": str(sub_task.uuid),
                 "title": sub_task.title,
                 "description": sub_task.description,
-                "done": False,
+                "done": sub_task.done,
             }
         ]
         assert serializer.data == expected
@@ -391,7 +391,7 @@ class TestSubTaskCreateUpdateSerializer:
             "uuid": str(sub_task.uuid),
             "title": sub_task.title,
             "description": sub_task.description,
-            "done": False,
+            "done": sub_task.done,
         }
 
     def test_new_sub_task(
