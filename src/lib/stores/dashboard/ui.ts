@@ -1,6 +1,11 @@
 import { readonly } from "svelte/store";
 import { persisted } from "svelte-local-storage-store";
 
+/*
+ * Store which workspace we have seen last.
+ * When we fetch a workspace based on this uuid, we must invalidate it
+ * on a 404 workspace not found
+ */
 const _selectedWorkspaceUuid = persisted<string | null>(
     "selected-workspace-uuid",
     null
@@ -8,6 +13,17 @@ const _selectedWorkspaceUuid = persisted<string | null>(
 export const selectedWorkspaceUuid = readonly(_selectedWorkspaceUuid);
 export function selectWorkspaceUuid(uuid: string) {
     _selectedWorkspaceUuid.set(uuid);
+}
+/*
+ * Clear a selected workspace uuid, if it matches the uuid arg
+ */
+export function clearSelectedWorkspaceUuidIfMatch(uuid: string) {
+    _selectedWorkspaceUuid.update(($uuid) => {
+        if ($uuid === uuid) {
+            return null;
+        }
+        return $uuid;
+    });
 }
 
 const _selectedWorkspaceBoardUuids = persisted<Map<string, string>>(

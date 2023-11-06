@@ -1,6 +1,9 @@
 import { error } from "@sveltejs/kit";
 
-import { currentWorkspace } from "$lib/stores/dashboard";
+import {
+    clearSelectedWorkspaceUuidIfMatch,
+    currentWorkspace,
+} from "$lib/stores/dashboard";
 import type { Workspace } from "$lib/types/workspace";
 
 import type { LayoutLoadEvent } from "./$types";
@@ -17,6 +20,7 @@ export async function load({
         fetch,
     });
     if (!workspace) {
+        clearSelectedWorkspaceUuidIfMatch(workspaceUuid);
         throw error(404);
     }
     return { workspace };
