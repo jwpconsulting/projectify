@@ -10,6 +10,7 @@ import { currentWorkspaceBoard } from "$lib/stores/dashboard/workspaceBoard";
 import { filterByWorkspaceUser } from "$lib/stores/dashboard/workspaceUserFilter";
 import { searchAmong } from "$lib/stores/util";
 import { createWsStore } from "$lib/stores/wsSubscription";
+import type { SearchInput } from "$lib/types/base";
 import type {
     Task,
     // XXX only use TaskWithWorkspace
@@ -17,7 +18,6 @@ import type {
     TaskWithWorkspace,
     WorkspaceBoardSection,
 } from "$lib/types/workspace";
-import type { SearchInput } from "$lib/types/base";
 
 export const taskSearchInput = writable<SearchInput>(undefined);
 

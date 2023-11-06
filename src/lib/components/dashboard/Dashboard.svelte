@@ -47,7 +47,7 @@
             </div>
         {:else}
             <div class="flex items-center justify-center py-6">
-                <div class="rounded-md bg-base-100 p-6 shadow-sm font-bold">
+                <div class="rounded-md bg-base-100 p-6 font-bold shadow-sm">
                     {$_("dashboard.tasks-not-found-for", {
                         values: { search: $taskSearchInput },
                     })}
