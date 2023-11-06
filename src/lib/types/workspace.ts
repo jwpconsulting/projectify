@@ -89,6 +89,8 @@ export type WorkspaceBoard = {
 } & TimestampedType &
     TitleDescriptionType;
 
+export type ArchivedWorkspaceBoard = WorkspaceBoard & { archived: string };
+
 export type Workspace = {
     picture?: string;
     workspace_users?: WorkspaceUser[];

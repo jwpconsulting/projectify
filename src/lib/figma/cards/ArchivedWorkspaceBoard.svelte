@@ -1,4 +1,5 @@
 <script lang="ts">
+    import parseISO from "date-fns/parseISO";
     import { _ } from "svelte-i18n";
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
@@ -10,9 +11,10 @@
         openConstructiveOverlay,
         openDestructiveOverlay,
     } from "$lib/stores/globalUi";
-    import type { WorkspaceBoard } from "$lib/types/workspace";
+    import type { ArchivedWorkspaceBoard } from "$lib/types/workspace";
 
-    export let workspaceBoard: WorkspaceBoard;
+    export let workspaceBoard: ArchivedWorkspaceBoard;
+    $: archived = parseISO(workspaceBoard.archived);
 
     async function recoverAction() {
         await openConstructiveOverlay({
@@ -32,7 +34,11 @@
     <p class="text-truncate line-clamp-1 font-bold">{workspaceBoard.title}</p>
     <div class="flex flex-row items-center justify-between">
         <!--TODO show the archival date here-->
-        <p>{$_("workspace-board-archive.card.archived")}</p>
+        <p>
+            {$_("workspace-board-archive.card.archived", {
+                values: { archived },
+            })}
+        </p>
         <!-- Buttons here -->
         <div class="flex flex-row">
             <Button

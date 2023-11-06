@@ -9,7 +9,11 @@ import {
 } from "$lib/graphql/operations";
 import { getWithCredentialsJson, handle404 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
-import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
+import type {
+    ArchivedWorkspaceBoard,
+    Workspace,
+    WorkspaceBoard,
+} from "$lib/types/workspace";
 
 // WorkspaceBoard CRUD
 // Create
@@ -48,9 +52,9 @@ export async function getWorkspaceBoard(
 export async function getArchivedWorkspaceBoards(
     workspace_uuid: string,
     repositoryContext: RepositoryContext
-): Promise<undefined | WorkspaceBoard[]> {
+): Promise<undefined | ArchivedWorkspaceBoard[]> {
     return handle404(
-        await getWithCredentialsJson<WorkspaceBoard[]>(
+        await getWithCredentialsJson<ArchivedWorkspaceBoard[]>(
             `/workspace/workspace/${workspace_uuid}/workspace-boards-archived/`,
             repositoryContext
         )

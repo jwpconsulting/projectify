@@ -176,7 +176,7 @@ const messages: MessageCollection = {
         card: {
             recover: "Recover",
             delete: "Delete",
-            archived: "Archived",
+            archived: "Archived on {archived, date, medium}",
         },
         empty: "No workspace boards have been archived.",
     },

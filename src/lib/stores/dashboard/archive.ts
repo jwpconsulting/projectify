@@ -2,11 +2,11 @@ import { derived } from "svelte/store";
 
 import { getArchivedWorkspaceBoards } from "$lib/repository/workspace/workspaceBoard";
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
-import type { WorkspaceBoard } from "$lib/types/workspace";
+import type { ArchivedWorkspaceBoard } from "$lib/types/workspace";
 
 export const currentArchivedWorkspaceBoards = derived<
     typeof currentWorkspace,
-    WorkspaceBoard[] | undefined
+    ArchivedWorkspaceBoard[] | undefined
 >(currentWorkspace, ($currentWorkspace, set) => {
     const uuid = $currentWorkspace?.uuid;
     if (!uuid) {
