@@ -488,9 +488,6 @@ strawberry-graphql==0.205.0 ; python_version >= "3.11" and python_version < "3.1
 stripe==3.5.0 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:08f74cae6619d4a7d78f8162ff72bc3e9c913f53ec96ecd5ddc7d823c2e79ddd \
     --hash=sha256:69d5bf4611624a503bcec84a61b1f2a2b874bfc828432e4fd75cd120bcc3efef
-tqdm==4.64.1 ; python_version >= "3.11" and python_version < "3.12" \
-    --hash=sha256:5f4f682a004951c1b450bc753c710e9280c5746ce6ffedee253ddbcbf54cf1e4 \
-    --hash=sha256:6fee160d6ffcd1b1c68c65f14c829c22832bc401726335ce92c52d395944a6a1
 twisted-iocpsupport==1.0.4 ; python_version >= "3.11" and python_version < "3.12" and platform_system == "Windows" \
     --hash=sha256:0058c963c8957bcd3deda62122e89953c9de1e867a274facc9b15dde1a9f31e8 \
     --hash=sha256:0c1b5cf37f0b2d96cc3c9bc86fff16613b9f5d0ca565c96cf1f1fb8cfca4b81c \
