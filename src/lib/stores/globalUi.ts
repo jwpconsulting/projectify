@@ -41,12 +41,12 @@ function makeOpenState<Target>(
     };
 }
 
-function openOverlay<Target>(
+async function openOverlay<Target>(
     overlay: Writable<Overlay<Target>>,
     target: Target,
     expectHidden = true
 ): Promise<void> {
-    return new Promise((resolve: () => void, reject: () => void) => {
+    return await new Promise((resolve: () => void, reject: () => void) => {
         overlay.update(($overlay) => {
             if ($overlay.kind !== "hidden") {
                 if (expectHidden) {
@@ -88,11 +88,11 @@ function closeOverlay(
     });
 }
 
-function toggleOverlay<Target>(
+async function toggleOverlay<Target>(
     overlay: Writable<Overlay<Target>>,
     target: Target
 ): Promise<void> {
-    return new Promise((resolve: () => void, reject: () => void) => {
+    return await new Promise((resolve: () => void, reject: () => void) => {
         overlay.update(($overlay) => {
             if ($overlay.kind === "hidden") {
                 return makeOpenState(target, resolve, reject);
@@ -109,7 +109,7 @@ function toggleOverlay<Target>(
 export async function openDestructiveOverlay(
     target: DestructiveOverlayType
 ): Promise<void> {
-    return openOverlay(_destructiveOverlayState, target);
+    return await openOverlay(_destructiveOverlayState, target);
 }
 
 // call only when failed
@@ -148,11 +148,11 @@ const { priv: _contextMenuState, pub: contextMenuState } =
         kind: "hidden",
     });
 export { contextMenuState };
-export function openContextMenu(
+export async function openContextMenu(
     target: ContextMenuType,
     anchor: HTMLElement
 ): Promise<void> {
-    return new Promise((resolve, reject) => {
+    return await new Promise((resolve, reject) => {
         _contextMenuState.update(($contextMenuState) => {
             if ($contextMenuState.kind !== "hidden") {
                 // Context menus don't have any callback they need to resolve,
