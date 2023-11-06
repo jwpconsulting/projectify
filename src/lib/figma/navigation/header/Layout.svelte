@@ -2,10 +2,17 @@
     export let logoVisibleDesktop = false;
     export let logoVisibleMobile = false;
     export let alwaysVisible = false;
+
+    $: justCenter =
+        !$$slots["desktop-left"] &&
+        !$$slots["desktop-right"] &&
+        $$slots["desktop-center"];
 </script>
 
 <div
     class="hidden flex-row items-center justify-between border-b-2 border-border bg-foreground px-6 py-4 md:flex"
+    class:justify-between={!justCenter}
+    class:justify-center={justCenter}
     class:hidden={!alwaysVisible}
     class:flex={alwaysVisible}
 >

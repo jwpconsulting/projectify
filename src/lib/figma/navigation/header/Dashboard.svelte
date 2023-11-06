@@ -10,15 +10,12 @@
 
     export let user: User;
 
-    const showSearch = false;
     const showNotificationButton = false;
 </script>
 
 <Layout logoVisibleDesktop>
     <slot slot="desktop-right">
-        {#if showSearch}
-            <SearchButton />
-        {/if}
+        <SearchButton />
         <div class="flex flex-row gap-4">
             {#if showNotificationButton}
                 <NotificationButton isActive />
@@ -32,9 +29,7 @@
                 isActive
                 action={() => toggleMobileMenu({ kind: "dashboard" })}
             />
-            {#if showSearch}
-                <SearchMobile />
-            {/if}
+            <SearchMobile />
         </div>
 
         <div class="flex flex-row gap-4">

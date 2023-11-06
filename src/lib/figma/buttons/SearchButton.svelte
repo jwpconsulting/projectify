@@ -1,15 +1,14 @@
 <script lang="ts">
-    import { Plus, Search } from "@steeze-ui/heroicons";
+    import { Search } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
+    import { _ } from "svelte-i18n";
 </script>
 
-<div
-    class="flex h-fit w-fit flex-row items-center gap-2 rounded-lg border border-border p-2 hover:bg-task-hover focus:outline-none focus:ring-1 focus:ring-border-focus focus:ring-offset-2 active:bg-task-pressed"
+<button
+    class="flex flex-row items-center gap-2 rounded-lg border border-border p-2 px-4 hover:bg-task-hover focus:outline-none focus:ring-1 focus:ring-border-focus focus:ring-offset-2 active:bg-task-pressed"
 >
     <Icon src={Search} class="h-6" theme="outline" />
-    <div class="flex flex-row items-center gap-1">
-        <div class="rounded-lg border border-border px-2 py-1 text-xs">⌘</div>
-        <Icon src={Plus} class="h-6 w-6 shrink-0" theme="outline" />
-        <div class="rounded-lg border border-border px-2 py-1 text-xs">K</div>
-    </div>
-</div>
+    <p class="min-w-fit">
+        {$_("dashboard.search-task")}
+    </p>
+</button>
