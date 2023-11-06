@@ -140,30 +140,32 @@ class Command(BaseCommand):
             for label in chosen_labels:
                 task.add_label(label)
             self.stdout.write(f"Assigned {n_labels} labels to task {task}")
-            sub_tasks = SubTask.objects.bulk_create(
-                [
-                    SubTask(
-                        title=self.fake.word(),
-                        description=self.fake.paragraph(),
-                        task=task,
-                        done=self.fake.pybool(),
-                        _order=_order,
-                    )
-                    for _order in range(random.randint(0, 3))
-                ]
-            )
-            self.stdout.write(f"Created {len(sub_tasks)} sub tasks")
-            chat_messages = ChatMessage.objects.bulk_create(
-                [
-                    ChatMessage(
-                        task=task,
-                        text=self.fake.paragraph(),
-                        author=random.choice(workspace_users),
-                    )
-                    for _ in range(random.randint(0, 3))
-                ]
-            )
-            self.stdout.write(f"Created {len(chat_messages)} chat messages")
+        sub_tasks = SubTask.objects.bulk_create(
+            [
+                SubTask(
+                    title=self.fake.word(),
+                    description=self.fake.paragraph(),
+                    task=task,
+                    done=self.fake.pybool(),
+                    _order=_order,
+                )
+                for task in tasks
+                for _order in range(random.randint(0, 3))
+            ]
+        )
+        self.stdout.write(f"Created {len(sub_tasks)} sub tasks")
+        chat_messages = ChatMessage.objects.bulk_create(
+            [
+                ChatMessage(
+                    task=task,
+                    text=self.fake.paragraph(),
+                    author=random.choice(workspace_users),
+                )
+                for task in tasks
+                for _ in range(random.randint(0, 3))
+            ]
+        )
+        self.stdout.write(f"Created {len(chat_messages)} chat messages")
         self.stdout.write(f"Populated {n_tasks} tasks")
 
     def populate_workspace_board(
@@ -245,15 +247,16 @@ class Command(BaseCommand):
         for workspace, workspace_users in zip(
             workspaces, workspaces_workspace_users
         ):
-            labels = [
-                Label(
-                    name=self.fake.catch_phrase(),
-                    color=random.randint(0, 6),
-                    workspace=workspace,
-                )
-                for _ in range(n_labels)
-            ]
-            Label.objects.bulk_create(labels)
+            labels = Label.objects.bulk_create(
+                [
+                    Label(
+                        name=self.fake.catch_phrase(),
+                        color=random.randint(0, 6),
+                        workspace=workspace,
+                    )
+                    for _ in range(n_labels)
+                ]
+            )
             self.stdout.write(f"Created {n_labels} labels")
             workspace_boards = WorkspaceBoard.objects.bulk_create(
                 [
