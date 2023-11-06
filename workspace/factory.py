@@ -168,7 +168,7 @@ class SubTaskFactory(django.DjangoModelFactory[models.SubTask]):
     title = factory.Faker("word")
     description = factory.Faker("paragraph")
     task = factory.SubFactory(TaskFactory)
-    done = False
+    done = factory.Faker("pybool")
 
     class Meta:
         """Meta."""
