@@ -68,7 +68,13 @@ export const contextMenus: Record<string, ContextMenuType> = {
 export const destructiveOverlays = makeStorybookSelect({
     "Delete label": {
         kind: "deleteLabel" as const,
-        label: { name: "This is a label", color: 0, uuid: "" },
+        label: {
+            // XSS canary, not that we would ever forget to sanitize our
+            // strings, hehehe.
+            name: "<marquee>https://owasp.org/www-community/attacks/xss/</marquee>",
+            color: 0,
+            uuid: "",
+        },
     },
     "Delete workspace user": {
         kind: "deleteWorkspaceUser" as const,

@@ -56,10 +56,14 @@ export interface TasksPerUser {
 export type DestructiveOverlayType =
     | { kind: "deleteLabel"; label: Label }
     | { kind: "deleteWorkspaceUser"; workspaceUser: WorkspaceUser }
+    // TODO rename deleteWorkspaceBoardSection
     | { kind: "deleteSection"; workspaceBoardSection: WorkspaceBoardSection }
     | { kind: "deleteTask"; task: Task }
+    // XXX this is never used
     | { kind: "deleteSelectedTasks"; tasks: Task[] }
+    // TODO rename archiveWorkspaceBoard
     | { kind: "archiveBoard"; workspaceBoard: WorkspaceBoard }
+    // TODO rename deleteWorkspaceBoard
     | { kind: "deleteBoard"; workspaceBoard: WorkspaceBoard };
 
 // These are the times when a header element is shown and a hamburger menu is

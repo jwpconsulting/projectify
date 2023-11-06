@@ -67,7 +67,7 @@ async function walk(dir: string): Promise<string[]> {
 // "i-am-on-multiple-lines", {options: "yep"}
 // )
 // 4) Numbers
-// deleteBoard: $_("destructive-overlay.delete-board-body-2"),
+// deleteBoard: $_("overlay.destructive.delete-board.title"),
 const MESSAGE_RE = /\$_\(\s*?"(?<message>[a-z0-9.-]+)".*?\)/gs;
 
 /*

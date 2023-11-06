@@ -10,95 +10,111 @@
 
     export let target: DestructiveOverlayType;
 
-    $: title = {
-        deleteLabel: $_("destructive-overlay.delete-label"),
-        deleteWorkspaceUser: $_("destructive-overlay.delete-workspace-user"),
-        deleteSection: $_("destructive-overlay.delete-section"),
-        deleteTask: $_("destructive-overlay.delete-task"),
-        deleteSelectedTasks: $_("destructive-overlay.delete-selected-tasks"),
-        archiveBoard: $_("destructive-overlay.archive-board"),
-        deleteBoard: $_("destructive-overlay.delete-board"),
-    }[target.kind];
-    $: body1 = {
-        deleteLabel: $_("destructive-overlay.delete-label-body-1"),
-        deleteWorkspaceUser: $_(
-            "destructive-overlay.delete-workspace-user-body-1"
-        ),
-        deleteSection: $_("destructive-overlay.delete-section-body-1"),
-        deleteTask: $_("destructive-overlay.delete-task-body-1"),
-        deleteSelectedTasks: $_(
-            "destructive-overlay.delete-selected-tasks-body-1"
-        ),
-        archiveBoard: $_("destructive-overlay.archive-board-body-1"),
-        deleteBoard: $_("destructive-overlay.delete-board-body-1"),
-    }[target.kind];
-    $: body2 = {
-        deleteLabel: $_("destructive-overlay.delete-label-body-2"),
-        deleteWorkspaceUser: $_(
-            "destructive-overlay.delete-workspace-user-body-2"
-        ),
-        deleteSection: $_("destructive-overlay.delete-section-body-2"),
-        deleteTask: $_("destructive-overlay.delete-task-body-2"),
-        deleteSelectedTasks: $_(
-            "destructive-overlay.delete-selected-tasks-body-2"
-        ),
-        archiveBoard: $_("destructive-overlay.archive-board-body-2"),
-        deleteBoard: $_("destructive-overlay.delete-board-body-2"),
-    }[target.kind];
-    $: warning = {
-        deleteLabel: $_("destructive-overlay.delete-label-body-warning"),
-        deleteWorkspaceUser: $_(
-            "destructive-overlay.delete-workspace-user-body-warning"
-        ),
-        deleteSection: $_("destructive-overlay.delete-section-body-warning"),
-        deleteTask: $_("destructive-overlay.delete-task-body-warning"),
-        deleteSelectedTasks: $_(
-            "destructive-overlay.delete-selected-tasks-body-warning"
-        ),
-        archiveBoard: $_("destructive-overlay.archive-board-body-warning"),
-        deleteBoard: $_("destructive-overlay.delete-board-body-warning"),
-    }[target.kind];
-    $: buttonLabel = {
-        deleteLabel: $_("destructive-overlay.delete-label-button"),
-        deleteWorkspaceUser: $_(
-            "destructive-overlay.delete-workspace-user-button"
-        ),
-        deleteSection: $_("destructive-overlay.delete-section-button"),
-        deleteTask: $_("destructive-overlay.delete-task-button"),
-        deleteSelectedTasks: $_(
-            "destructive-overlay.delete-selected-tasks-button"
-        ),
-        archiveBoard: $_("destructive-overlay.archive-board-button"),
-        deleteBoard: $_("destructive-overlay.delete-board-button"),
-    }[target.kind];
-    let targetName: string;
+    let bodyValues: { values: Record<string, string> };
     $: {
         switch (target.kind) {
             case "deleteLabel":
-                targetName = target.label.name;
+                bodyValues = { values: { label: target.label.name } };
                 break;
             case "deleteWorkspaceUser":
-                targetName =
-                    target.workspaceUser.user.full_name ??
-                    target.workspaceUser.user.email;
+                // TODO use proper name interpolation method to be found
+                // somewhere in utils
+                bodyValues = {
+                    values: {
+                        workspaceUser:
+                            target.workspaceUser.user.full_name ??
+                            target.workspaceUser.user.email,
+                    },
+                };
                 break;
             case "deleteSection":
-                targetName = target.workspaceBoardSection.title;
+                bodyValues = {
+                    values: {
+                        workspaceBoardSection:
+                            target.workspaceBoardSection.title,
+                    },
+                };
                 break;
             case "deleteTask":
-                targetName = target.task.title;
+                bodyValues = { values: { task: target.task.title } };
                 break;
             case "deleteSelectedTasks":
-                targetName = target.tasks.length.toString();
+                // XXX not used, and even if, we should show all task titles
+                // instead of just a count
+                bodyValues = {
+                    values: { count: target.tasks.length.toString() },
+                };
                 break;
             case "archiveBoard":
-                targetName = target.workspaceBoard.title;
+                bodyValues = {
+                    values: { workspaceBoard: target.workspaceBoard.title },
+                };
                 break;
             case "deleteBoard":
-                targetName = target.workspaceBoard.title;
+                bodyValues = {
+                    values: { workspaceBoard: target.workspaceBoard.title },
+                };
                 break;
         }
     }
+
+    $: title = {
+        deleteLabel: $_("overlay.destructive.delete-label.title"),
+        deleteWorkspaceUser: $_(
+            "overlay.destructive.delete-workspace-user.title"
+        ),
+        deleteSection: $_("overlay.destructive.delete-section.title"),
+        deleteTask: $_("overlay.destructive.delete-task.title"),
+        deleteSelectedTasks: $_(
+            "overlay.destructive.delete-selected-tasks.title"
+        ),
+        archiveBoard: $_("overlay.destructive.archive-board.title"),
+        deleteBoard: $_("overlay.destructive.delete-board.title"),
+    }[target.kind];
+    $: body = {
+        deleteLabel: $_("overlay.destructive.delete-label.body", bodyValues),
+        deleteWorkspaceUser: $_(
+            "overlay.destructive.delete-workspace-user.body",
+            bodyValues
+        ),
+        deleteSection: $_(
+            "overlay.destructive.delete-section.body",
+            bodyValues
+        ),
+        deleteTask: $_("overlay.destructive.delete-task.body", bodyValues),
+        deleteSelectedTasks: $_(
+            "overlay.destructive.delete-selected-tasks.body",
+            bodyValues
+        ),
+        archiveBoard: $_("overlay.destructive.archive-board.body", bodyValues),
+        deleteBoard: $_("overlay.destructive.delete-board.body", bodyValues),
+    }[target.kind];
+    $: warning = {
+        deleteLabel: $_("overlay.destructive.delete-label.warning"),
+        deleteWorkspaceUser: $_(
+            "overlay.destructive.delete-workspace-user.warning"
+        ),
+        deleteSection: $_("overlay.destructive.delete-section.warning"),
+        deleteTask: $_("overlay.destructive.delete-task.warning"),
+        deleteSelectedTasks: $_(
+            "overlay.destructive.delete-selected-tasks.warning"
+        ),
+        archiveBoard: $_("overlay.destructive.archive-board.warning"),
+        deleteBoard: $_("overlay.destructive.delete-board.warning"),
+    }[target.kind];
+    $: buttonLabel = {
+        deleteLabel: $_("overlay.destructive.delete-label.button"),
+        deleteWorkspaceUser: $_(
+            "overlay.destructive.delete-workspace-user.button"
+        ),
+        deleteSection: $_("overlay.destructive.delete-section.button"),
+        deleteTask: $_("overlay.destructive.delete-task.button"),
+        deleteSelectedTasks: $_(
+            "overlay.destructive.delete-selected-tasks.button"
+        ),
+        archiveBoard: $_("overlay.destructive.archive-board.button"),
+        deleteBoard: $_("overlay.destructive.delete-board.button"),
+    }[target.kind];
 </script>
 
 <div
@@ -110,7 +126,9 @@
     <div class="flex flex-col items-center gap-8 border-t border-border pt-2">
         <div class="text-normal text-center text-base-content">
             <p>
-                {body1}<span class="text-primary">{targetName}</span>{body2}
+                <!-- {body1}<span class="text-primary">{targetName}</span>{body2}
+                     -->
+                {body}
             </p>
             <p class="text-destructive">
                 {warning}
@@ -123,7 +141,7 @@
                 size="medium"
                 color="blue"
                 action={{ kind: "button", action: rejectDestructiveOverlay }}
-                label={$_("destructive-overlay.cancel")}
+                label={$_("overlay.destructive.cancel")}
             />
             <Button
                 style={{ kind: "primary" }}

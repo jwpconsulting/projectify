@@ -84,8 +84,55 @@ const messages: MessageCollection = {
                 "recover-board": "Recover board",
             },
         },
-        // TODO Put other destructive dialogs here
-        destructive: {},
+        destructive: {
+            "delete-label": {
+                title: "Delete label",
+                body: "Would you like to delete the ''{label}'' label?",
+                button: "Delete",
+                warning: "This action cannot be undone.",
+            },
+            "delete-workspace-user": {
+                title: "Remove workspace user",
+                body: "Would you like to remove ''{workspaceUser}'' from this workspace?",
+                warning: "This action cannot be undone.",
+                button: "Remove",
+            },
+            // TODO rename "delete-workspace-board-section": {
+            "delete-section": {
+                title: "Delete section",
+                body: "Would you like to delete the ''{workspaceBoard}'' section?",
+                warning:
+                    "Deleting this section will also delete all tasks within it.",
+                button: "Delete",
+            },
+            "delete-task": {
+                title: "Delete task",
+                body: "Would you like to delete the ''{task}'' task?",
+                warning: "This action cannot be undone.",
+                button: "Delete",
+            },
+            "delete-selected-tasks": {
+                title: "Delete selected tasks",
+                body: "Would you like to delete {count, number} selected tasks?",
+                warning: "This action cannot be undone.",
+                button: "Delete",
+            },
+            // TODO rename "archive-workspace-board": {
+            "archive-board": {
+                title: "Archive workspace board",
+                body: "Would you like to archive this ''{workspaceBoard}'' workspace board?",
+                warning: "You can see archived boards in the archives section",
+                button: "Archive",
+            },
+            // TODO rename "delete-workspace-board": {
+            "delete-board": {
+                title: "Delete workspace board",
+                body: "Would you like to delete this ''{workspaceBoard}'' workspace board?",
+                warning: "This action cannot be undone",
+                button: "Delete",
+            },
+            "cancel": "Cancel",
+        },
     },
     "label": {
         "apply-label": "apply label",
@@ -152,46 +199,6 @@ const messages: MessageCollection = {
     "filter-workspace-user": {
         "all-users": "All users",
         "assigned-nobody": "Assigned to nobody",
-    },
-    "destructive-overlay": {
-        "delete-label": "Delete label",
-        "delete-label-body-1": "Would you like to delete the '",
-        "delete-label-body-2": "' label?",
-        "delete-label-button": "Delete",
-        "delete-label-body-warning": "This action cannot be undone.",
-        "delete-workspace-user": "Remove workspace user",
-        "delete-workspace-user-body-1": "Would you like to remove '",
-        "delete-workspace-user-body-2": "' from this workspace?",
-        "delete-workspace-user-body-warning": "This action cannot be undone.",
-        "delete-workspace-user-button": "Remove",
-        "delete-section": "Delete section",
-        "delete-section-body-1": "Would you like to delete the '",
-        "delete-section-body-2": "' section?",
-        "delete-section-body-warning":
-            "Deleting this section will also delete all tasks within it.",
-        "delete-section-button": "Delete",
-        "delete-task": "Delete task",
-        "delete-task-body-1": "Would you like to delete the '",
-        "delete-task-body-2": "' task?",
-        "delete-task-body-warning": "This action cannot be undone.",
-        "delete-task-button": "Delete",
-        "delete-selected-tasks": "Delete selected tasks",
-        "delete-selected-tasks-body-1": "Would you like to delete ",
-        "delete-selected-tasks-body-2": " selected tasks?",
-        "delete-selected-tasks-body-warning": "This action cannot be undone.",
-        "delete-selected-tasks-button": "Delete",
-        "archive-board": "Archive board",
-        "archive-board-body-1": "Would you like to archive this '",
-        "archive-board-body-2": "' board?",
-        "archive-board-body-warning":
-            "You can see archived boards in the archives section",
-        "archive-board-button": "Archive",
-        "delete-board": "Delete board",
-        "delete-board-body-1": "Would you like to delete this '",
-        "delete-board-body-2": "' board?",
-        "delete-board-body-warning": "This action cannot be undone",
-        "delete-board-button": "Delete",
-        "cancel": "Cancel",
     },
     "profile-overlay": {
         "my-profile": "my profile",
