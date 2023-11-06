@@ -27,6 +27,7 @@ from datetime import (
 )
 from itertools import (
     count,
+    groupby,
 )
 from typing import (
     Any,
@@ -59,6 +60,7 @@ from workspace.models import (
     ChatMessage,
     Label,
     Task,
+    TaskLabel,
     Workspace,
     WorkspaceBoard,
     WorkspaceBoardSection,
@@ -97,7 +99,7 @@ class Command(BaseCommand):
             )
             for _ in range(remaining_users)
         ]
-        self.stdout.write(f"Created {len(new_users)} remaining users")
+        self.stdout.write(f"Created {len(new_users)} new users")
         return list(User.objects.all())
 
     SECTION_TITLES = [
@@ -108,38 +110,51 @@ class Command(BaseCommand):
         "Done",
     ]
 
-    # TODO We can collect all workspace boards etc bottom-up and then
-    # bulk create all tasks at once. That might be much faster.
     def create_tasks(
         self,
         number: "count[int]",
-        section: WorkspaceBoardSection,
+        workspace: Workspace,
+        workspace_board_sections: Sequence[WorkspaceBoardSection],
         labels: Sequence[Label],
         workspace_users: Sequence[WorkspaceUser],
         n_tasks: int,
     ) -> None:
-        """Create tasks for a workspace board section."""
-        workspace = section.workspace
-        tasks = [
-            Task(
-                title=self.fake.word(),
-                description=self.fake.paragraph(),
-                workspace_board_section=section,
-                deadline=self.fake.date_time(tzinfo=timezone.utc),
-                workspace=workspace,
-                _order=_order,
-                number=next(number),
-            )
-            for _order in range(n_tasks)
-        ]
-        Task.objects.bulk_create(tasks)
-        self.stdout.write(f"Created {n_tasks} tasks")
-        for task in tasks:
-            n_labels = random.randint(0, 3)
-            chosen_labels = random.choices(labels, k=n_labels)
-            for label in chosen_labels:
-                task.add_label(label)
-            self.stdout.write(f"Assigned {n_labels} labels to task {task}")
+        """Create tasks for a sequence workspace board sections."""
+        tasks = Task.objects.bulk_create(
+            [
+                Task(
+                    title=self.fake.word(),
+                    description=self.fake.paragraph(),
+                    workspace_board_section=workspace_board_section,
+                    deadline=self.fake.date_time(tzinfo=timezone.utc),
+                    workspace=workspace,
+                    _order=_order,
+                    number=next(number),
+                    assignee=random.choice(workspace_users),
+                )
+                for workspace_board_section in workspace_board_sections
+                for _order in range(random.randint(n_tasks // 2, n_tasks))
+            ]
+        )
+        self.stdout.write(f"Created {len(tasks)} tasks")
+
+        task_labels = TaskLabel.objects.bulk_create(
+            [
+                TaskLabel(
+                    task=task,
+                    label=label,
+                )
+                for task in tasks
+                for label in random.sample(
+                    # Make sure we don't go over the amount of labels we have
+                    # actually created for this workspace
+                    labels,
+                    min(len(labels), random.randint(0, 3)),
+                )
+            ]
+        )
+        self.stdout.write(f"Created {len(task_labels)} task labels")
+
         sub_tasks = SubTask.objects.bulk_create(
             [
                 SubTask(
@@ -154,6 +169,7 @@ class Command(BaseCommand):
             ]
         )
         self.stdout.write(f"Created {len(sub_tasks)} sub tasks")
+
         chat_messages = ChatMessage.objects.bulk_create(
             [
                 ChatMessage(
@@ -166,38 +182,40 @@ class Command(BaseCommand):
             ]
         )
         self.stdout.write(f"Created {len(chat_messages)} chat messages")
-        self.stdout.write(f"Populated {n_tasks} tasks")
+        self.stdout.write(f"Populated {len(tasks)} tasks")
 
-    def populate_workspace_board(
+    def populate_workspace_boards(
         self,
         number: "count[int]",
-        workspace_board: WorkspaceBoard,
+        workspace: Workspace,
+        workspace_boards: Sequence[WorkspaceBoard],
         workspace_users: Sequence[WorkspaceUser],
         labels: Sequence[Label],
         n_tasks: int,
     ) -> None:
         """Populate a workspace board."""
-        sections = WorkspaceBoardSection.objects.bulk_create(
+        workspace_board_sections = WorkspaceBoardSection.objects.bulk_create(
             [
                 WorkspaceBoardSection(
                     workspace_board=workspace_board,
                     title=title,
                     _order=_order,
                 )
+                for workspace_board in workspace_boards
                 for _order, title in enumerate(self.SECTION_TITLES)
             ]
         )
         self.stdout.write(
             f"Created {len(self.SECTION_TITLES)} workspace board sections"
         )
-        for section in sections:
-            self.create_tasks(
-                number,
-                section,
-                labels,
-                workspace_users,
-                random.randint(n_tasks // 2, n_tasks),
-            )
+        self.create_tasks(
+            number,
+            workspace,
+            workspace_board_sections,
+            labels,
+            workspace_users,
+            n_tasks,
+        )
         self.stdout.write(
             f"Populated {len(self.SECTION_TITLES)} workspace board sections"
         )
@@ -227,55 +245,76 @@ class Command(BaseCommand):
                 for _ in range(remaining_workspaces)
             ]
         )
-        self.stdout.write(f"Created {len(workspaces)} remaining workspaces")
-        workspaces_workspace_users: list[list[WorkspaceUser]] = [
-            WorkspaceUser.objects.bulk_create(
-                [
-                    WorkspaceUser(
-                        workspace=workspace,
-                        user=user,
-                    )
-                    for user in random.sample(users, n_add_users)
-                ]
-            )
-            for workspace in workspaces
-        ]
+        self.stdout.write(f"Created {len(workspaces)} new workspaces")
+
+        workspaces_workspace_users = WorkspaceUser.objects.bulk_create(
+            [
+                WorkspaceUser(
+                    workspace=workspace,
+                    user=user,
+                )
+                for workspace in workspaces
+                for user in random.sample(users, n_add_users)
+            ]
+        )
         self.stdout.write(
-            f"Added users to {len(workspaces)} remaining workspaces"
+            f"Added {len(workspaces_workspace_users)} users to "
+            f"{len(workspaces)} new workspaces"
+        )
+        workspaces_labels = Label.objects.bulk_create(
+            [
+                Label(
+                    name=self.fake.catch_phrase(),
+                    color=random.randint(0, 6),
+                    workspace=workspace,
+                )
+                for workspace in workspaces
+                for _ in range(n_labels)
+            ]
+        )
+        self.stdout.write(f"Created {len(workspaces_labels)} labels")
+
+        workspaces_workspace_boards = WorkspaceBoard.objects.bulk_create(
+            [
+                WorkspaceBoard(
+                    title=self.fake.word(),
+                    description=self.fake.paragraph(),
+                    workspace=workspace,
+                    deadline=self.fake.date_time(tzinfo=timezone.utc),
+                )
+                for workspace in workspaces
+                for _ in range(n_workspace_boards)
+            ]
+        )
+        self.stdout.write(
+            f"Created {len(workspaces_workspace_boards)} workspace boards"
         )
 
-        for workspace, workspace_users in zip(
-            workspaces, workspaces_workspace_users
-        ):
-            labels = Label.objects.bulk_create(
-                [
-                    Label(
-                        name=self.fake.catch_phrase(),
-                        color=random.randint(0, 6),
-                        workspace=workspace,
-                    )
-                    for _ in range(n_labels)
-                ]
-            )
-            self.stdout.write(f"Created {n_labels} labels")
-            workspace_boards = WorkspaceBoard.objects.bulk_create(
-                [
-                    WorkspaceBoard(
-                        title=self.fake.word(),
-                        description=self.fake.paragraph(),
-                        workspace=workspace,
-                        deadline=self.fake.date_time(tzinfo=timezone.utc),
-                    )
-                    for _ in range(n_workspace_boards)
-                ]
-            )
+        altogether = zip(
+            groupby(workspaces_workspace_users, key=lambda u: u.workspace),
+            groupby(workspaces_labels, key=lambda l: l.workspace),
+            groupby(workspaces_workspace_boards, key=lambda b: b.workspace),
+        )
+
+        for (
+            (workspace, workspace_users),
+            (_, labels),
+            (_, workspace_boards_iter),
+        ) in altogether:
+            workspace_boards = list(workspace_boards_iter)
             number = count()
-            for workspace_board in workspace_boards:
-                self.populate_workspace_board(
-                    number, workspace_board, workspace_users, labels, n_tasks
-                )
+            self.populate_workspace_boards(
+                number,
+                workspace,
+                workspace_boards,
+                list(workspace_users),
+                list(labels),
+                n_tasks,
+            )
+            workspace.highest_task_number = next(number)
+            workspace.save()
             self.stdout.write(
-                f"Created {len(workspace_boards)} workspace boards"
+                f"Populated {len(workspace_boards)} workspace boards"
             )
         return workspaces
 
