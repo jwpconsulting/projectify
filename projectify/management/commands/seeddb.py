@@ -335,37 +335,40 @@ class Command(BaseCommand):
     def add_arguments(self, parser: ArgumentParser) -> None:
         """Add arguments."""
         parser.add_argument(
-            "--n-users", type=int, default=5, help="Ensure N users are created"
+            "--n-users",
+            type=int,
+            default=40,
+            help="Ensure N users are created",
         )
         parser.add_argument(
             "--n-workspaces",
             type=int,
-            default=5,
+            default=15,
             help="Ensure N workspaces are present",
         )
         parser.add_argument(
             "--n-workspace-boards",
             type=int,
-            default=3,
+            default=20,
             help="Ensure N workspace boards are added to a new workspace",
         )
         parser.add_argument(
             "--n-add-users",
             type=int,
-            default=3,
+            default=15,
             help="Ensure N users are added to new workspaces",
         )
         parser.add_argument(
             "--n-labels",
             type=int,
-            default=3,
+            default=20,
             help="Ensure N labels are added to a new workspace",
         )
         parser.add_argument(
             "--n-tasks",
             type=int,
-            default=10,
-            help="Ensure N tasks are added to a new workspace board",
+            default=40,
+            help="Ensure up to N tasks are in new workspace board section",
         )
 
     @transaction.atomic
