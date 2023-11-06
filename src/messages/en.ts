@@ -185,7 +185,7 @@ const messages: MessageCollection = {
         "archive-board-body-2": "' board?",
         "archive-board-body-warning":
             "You can see archived boards in the archives section",
-        "archive-board-button": "archive",
+        "archive-board-button": "Archive",
         "delete-board": "Delete board",
         "delete-board-body-1": "Would you like to delete this '",
         "delete-board-body-2": "' board?",

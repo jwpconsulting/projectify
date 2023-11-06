@@ -4,7 +4,11 @@
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
-    import { openConstructiveOverlay } from "$lib/stores/globalUi";
+    import { archiveWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
+    import {
+        openConstructiveOverlay,
+        openDestructiveOverlay,
+    } from "$lib/stores/globalUi";
     import type { ConstructiveOverlayType } from "$lib/types/ui";
     import type { WorkspaceBoard } from "$lib/types/workspace";
 
@@ -19,8 +23,9 @@
         await openConstructiveOverlay(constructiveOverlayType);
     }
 
-    function archiveBoard() {
-        // open archive dialog
+    async function archiveBoard() {
+        await openDestructiveOverlay({ kind: "archiveBoard", workspaceBoard });
+        await archiveWorkspaceBoard(workspaceBoard);
     }
 </script>
 
