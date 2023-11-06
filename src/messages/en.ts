@@ -91,14 +91,14 @@ const messages: MessageCollection = {
         "apply-label": "apply label",
     },
     "dashboard": {
-        "create-board": "create new board",
-        "boards": "boards",
-        "workspace-users": "workspace-users",
-        "labels": "labels",
+        "create-board": "Create new workspace board",
+        "boards": "Workspace boards",
+        "workspace-users": "Workspace users",
+        "labels": "Labels",
         "workspace-user-name": "Workspace user name",
         "filter-workspace-users": "Filter workspace users",
         "search-task": "Search Task",
-        "assign-user": "Assign user",
+        "assign-user": "Assign workspace user",
         "no-sections": {
             message: "There are no sections in this workspace board.",
             prompt: "Add a section",
@@ -109,7 +109,7 @@ const messages: MessageCollection = {
                 prompt: "Add a task here",
             },
         },
-        "no-user-assigned": "No user assigned",
+        "no-user-assigned": "No workspace user assigned",
         "error": {
             "title": "Error:",
             "description":
@@ -146,12 +146,12 @@ const messages: MessageCollection = {
         "cancel": "Cancel",
     },
     "filter-label": {
-        all: "all",
-        none: "none",
+        all: "All labels",
+        none: "No label",
     },
     "filter-workspace-user": {
-        "all-users": "all users",
-        "assigned-nobody": "assigned to nobody",
+        "all-users": "All users",
+        "assigned-nobody": "Assigned to nobody",
     },
     "destructive-overlay": {
         "delete-label": "Delete label",
