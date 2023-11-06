@@ -117,9 +117,8 @@ uvicorn = "~0.17.6"
 websockets = "~10.3"
 whitenoise = "~6.2.0"
 
-# Might be worth using seeddb without factory-boy and tqdm, IDK
+# Might be worth using seeddb without factory-boy
 factory-boy = "~3.2.1"
-tqdm = "~4.64.0"
 
 # Strictly only used for local development
 [tool.poetry.group.dev]

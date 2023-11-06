@@ -1,13 +1,23 @@
-"""Seeddb command."""
+"""
+Seeddb command.
+
+The various --n-* arguments can be used to ensure that the database contains at
+least N of each object.
+
+For workspaces that already exist, we don't touch them.
+
+For new workspaces, we add quantities of objects, as specified in the arguments
+"""
 import random
 from argparse import (
     ArgumentParser,
 )
+from collections.abc import (
+    Sequence,
+)
 from typing import (
     Any,
-    Iterable,
     Optional,
-    Sequence,
 )
 
 from django.contrib import (
@@ -23,7 +33,6 @@ from django.db import (
     transaction,
 )
 
-import tqdm
 from corporate.factory import (
     CustomerFactory,
 )
@@ -58,22 +67,23 @@ class Command(BaseCommand):
         self, n_users: int
     ) -> Optional[Sequence[AbstractBaseUser]]:
         """Create users."""
-        if auth.get_user_model().objects.count():
-            return None
-        super_user = SuperUserFactory.create(
-            email="admin@localhost",
-            password="password",
-        )
-        guest_user = UserFactory.create(
-            email="guest@localhost",
-            password="password",
-        )
-
-        users: Iterable[AbstractBaseUser] = super_user, guest_user
-        remaining_users = n_users - auth.get_user_model().objects.count()
-        UserFactory.create_batch(remaining_users)
-        users = list(auth.get_user_model().objects.all())
-        return users
+        User = auth.get_user_model()
+        existing_users = User.objects.count()
+        if existing_users == 0:
+            SuperUserFactory.create(
+                email="admin@localhost",
+                password="password",
+            )
+            self.stdout.write("Created super_user")
+            UserFactory.create(
+                email="guest@localhost",
+                password="password",
+            )
+            self.stdout.write("Created guest_user")
+        remaining_users = n_users - User.objects.count()
+        new_users = UserFactory.create_batch(remaining_users)
+        self.stdout.write(f"Created {len(new_users)} remaining users")
+        return list(User.objects.all())
 
     SECTION_TITLES = [
         "Backlog",
@@ -90,32 +100,40 @@ class Command(BaseCommand):
         n_tasks: int,
     ) -> None:
         """Create tasks for a workspace board section."""
-        for _ in tqdm.trange(n_tasks, desc="Tasks"):
+        for _ in range(n_tasks):
             task = TaskFactory.create(workspace_board_section=section)
             n_labels = random.randint(0, 3)
             chosen_labels = random.choices(labels, k=n_labels)
-            for label in tqdm.tqdm(chosen_labels, desc="Labels"):
+            for label in chosen_labels:
                 task.add_label(label)
-            for _ in tqdm.trange(3, desc="Subtasks & chat messages"):
+            self.stdout.write(f"Assigned {n_labels} labels to task {task}")
+            n_sub_tasks = random.randint(0, 3)
+            for _ in range(n_sub_tasks):
                 SubTaskFactory(task=task)
+            self.stdout.write(f"Created {n_sub_tasks} sub tasks")
+            n_chat_messages = random.randint(0, 3)
+            for _ in range(n_chat_messages):
                 ChatMessageFactory(task=task)
+            self.stdout.write(f"Created {n_chat_messages} chat messages")
+        self.stdout.write(f"Created {n_tasks} tasks")
 
-    def populate_workspace_board(
-        self, board: WorkspaceBoard, n_tasks: int
-    ) -> None:
+    def create_workspace_board(
+        self, workspace: Workspace, labels: Sequence[Label], n_tasks: int
+    ) -> WorkspaceBoard:
         """Populate a workspace board."""
-        labels = list(board.workspace.label_set.all())
-        if board.workspaceboardsection_set.count():
-            return None
-        for title in tqdm.tqdm(
-            self.SECTION_TITLES,
-            desc="Workspace board sections",
-        ):
+        board = WorkspaceBoardFactory.create(workspace=workspace)
+        for title in self.SECTION_TITLES:
             section = WorkspaceBoardSectionFactory.create(
                 workspace_board=board,
                 title=title,
             )
-            self.create_tasks(section, labels, n_tasks)
+            self.create_tasks(
+                section, labels, random.randint(n_tasks // 2, n_tasks)
+            )
+        self.stdout.write(
+            f"Created {len(self.SECTION_TITLES)} workspace board sections"
+        )
+        return board
 
     def create_workspaces(
         self,
@@ -125,40 +143,43 @@ class Command(BaseCommand):
         n_labels: int,
         n_tasks: int,
         n_add_users: int,
-    ) -> Iterable[Workspace]:
+    ) -> Sequence[Workspace]:
         """Create workspaces."""
         remaining_workspaces = n_workspaces - Workspace.objects.count()
-        for _ in tqdm.trange(
-            remaining_workspaces, desc="Workspaces with users"
-        ):
-            WorkspaceFactory(add_users=random.sample(users, n_add_users))
-        workspaces = Workspace.objects.all()
-        for workspace in tqdm.tqdm(workspaces, desc="Workspaces"):
-            n_labels_create = n_labels - workspace.label_set.count()
-            LabelFactory.create_batch(
-                n_labels_create,
+        workspaces = [
+            WorkspaceFactory.create(
+                add_users=random.sample(users, n_add_users)
+            )
+            for _ in range(remaining_workspaces)
+        ]
+        self.stdout.write(
+            f"Created {remaining_workspaces} remaining workspaces"
+        )
+
+        for workspace in workspaces:
+            labels = LabelFactory.create_batch(
+                n_labels,
                 workspace=workspace,
             )
-            n = n_workspace_boards - workspace.workspaceboard_set.count()
-            WorkspaceBoardFactory.create_batch(
-                n,
-                workspace=workspace,
-            )
-            boards = WorkspaceBoard.objects.all()
-            for board in tqdm.tqdm(boards, desc="Workspace boards"):
-                self.populate_workspace_board(board, n_tasks)
-        return list(Workspace.objects.all())
+            self.stdout.write(f"Created {n_labels} labels")
+            for _ in range(n_workspace_boards):
+                self.create_workspace_board(workspace, labels, n_tasks)
+            self.stdout.write(f"Created {n_workspace_boards} workspace boards")
+        return workspaces
 
     def create_corporate_accounts(
-        self, workspaces: Iterable[Workspace]
+        self, workspaces: Sequence[Workspace]
     ) -> None:
         """Create corporate accounts."""
-        for workspace in tqdm.tqdm(workspaces, desc="Corporate accounts"):
+        for workspace in workspaces:
             if not hasattr(workspace, "customer"):
                 CustomerFactory(
                     workspace=workspace,
                     subscription_status=CustomerSubscriptionStatus.ACTIVE,
                 )
+        self.stdout.write(
+            f"Created customers for {len(workspaces)} workspaces"
+        )
 
     def add_arguments(self, parser: ArgumentParser) -> None:
         """Add arguments."""
@@ -169,31 +190,31 @@ class Command(BaseCommand):
             "--n-workspaces",
             type=int,
             default=5,
-            help="Ensure N workspaces are created",
+            help="Ensure N workspaces are present",
         )
         parser.add_argument(
             "--n-workspace-boards",
             type=int,
             default=3,
-            help="Ensure N workspace boards are created",
+            help="Ensure N workspace boards are added to a new workspace",
         )
         parser.add_argument(
             "--n-add-users",
             type=int,
             default=3,
-            help="Ensure N users are added",
+            help="Ensure N users are added to new workspaces",
         )
         parser.add_argument(
             "--n-labels",
             type=int,
             default=3,
-            help="Ensure N labels are added to a workspace",
+            help="Ensure N labels are added to a new workspace",
         )
         parser.add_argument(
             "--n-tasks",
             type=int,
             default=10,
-            help="Ensure N tasks are added to a workspace board",
+            help="Ensure N tasks are added to a new workspace board",
         )
 
     @transaction.atomic
@@ -205,7 +226,16 @@ class Command(BaseCommand):
         n_labels: int = options["n_labels"]
         n_tasks: int = options["n_tasks"]
         n_add_users: int = options["n_add_users"]
-        users = self.create_users(n_users)
+        if n_add_users > n_users:
+            self.stdout.write(
+                f"You are trying to add more users to each workspace "
+                f"({n_add_users} users) than are "
+                f"requested to be created in the first place. "
+                f"({n_users} users) "
+                f"The amount of users created will be increase to "
+                f"{n_add_users}."
+            )
+        users = self.create_users(max(n_users, n_add_users))
         if not users:
             return
         workspaces = self.create_workspaces(
