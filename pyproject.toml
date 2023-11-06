@@ -116,15 +116,14 @@ stripe = "~3.5.0"
 uvicorn = "~0.17.6"
 websockets = "~10.3"
 whitenoise = "~6.2.0"
+faker = "^19.13.0"
 
-# Might be worth using seeddb without factory-boy
-factory-boy = "~3.2.1"
-
-# Strictly only used for local development
 [tool.poetry.group.dev]
 
 [tool.poetry.group.dev.dependencies]
+# Strictly only used for local development
 django-debug-toolbar = "~3.5.0"
+factory-boy = "~3.2.1"
 ipython = "~8.10.0"
 pdbpp = "~0.10.3"
 pyright = "~1.1.318"

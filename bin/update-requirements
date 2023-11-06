@@ -1,2 +1,7 @@
 #!/bin/bash
+if ! poetry check
+then
+    echo "Poetry check failed. Please fix any issues before using this tool"
+    exit 1
+fi
 poetry export --format requirements.txt --output requirements.txt
