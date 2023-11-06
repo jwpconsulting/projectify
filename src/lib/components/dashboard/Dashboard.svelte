@@ -29,19 +29,28 @@
 
 <!-- XXX: setting overflow-x-auto here magically solves an overflowing task card
     Why? Justus 2023-08-28 -->
-<div class="flex min-h-full flex-auto flex-col overflow-x-auto bg-base-200">
-    {#if $currentSearchedTasks}
+<div class="flex min-h-full flex-col overflow-x-auto bg-background">
+    {#if $currentSearchedTasks !== undefined}
         <!-- Flat Tasks Results -->
         {#if $currentSearchedTasks.length}
+            <div class="px-4 py-6">
+                <p class="text-xl font-bold">
+                    {$_("dashboard.showing-results-for-search", {
+                        values: { search: $taskSearchInput },
+                    })}
+                </p>
+            </div>
             <div class="flex flex-col p-2">
                 {#each $currentSearchedTasks as task}
                     <TaskCard {task} />
                 {/each}
             </div>
         {:else}
-            <div class="flex items-center justify-center">
-                <div class="rounded-md bg-base-100 p-6 shadow-sm">
-                    {$_("tasks-not-found-for")} "{$taskSearchInput}"
+            <div class="flex items-center justify-center py-6">
+                <div class="rounded-md bg-base-100 p-6 shadow-sm font-bold">
+                    {$_("dashboard.tasks-not-found-for", {
+                        values: { search: $taskSearchInput },
+                    })}
                 </div>
             </div>
         {/if}

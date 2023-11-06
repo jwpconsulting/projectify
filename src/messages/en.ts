@@ -138,6 +138,8 @@ const messages: MessageCollection = {
         "apply-label": "apply label",
     },
     "dashboard": {
+        "tasks-not-found-for": "Tasks not found for ''{search}''",
+        "showing-results-for-search": "Showing results for ''{search}''",
         "create-board": "Create new workspace board",
         "boards": "Workspace boards",
         "workspace-users": "Workspace users",
@@ -538,7 +540,6 @@ const messages: MessageCollection = {
     },
     "disconnected-network": "Disconnected Network",
     "back-to-landing-page": "back to landing page",
-    "tasks-not-found-for": "Tasks not found for",
     "updates": "Updates",
     "add-label": "Add label",
     "index": {

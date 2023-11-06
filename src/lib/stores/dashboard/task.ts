@@ -17,8 +17,9 @@ import type {
     TaskWithWorkspace,
     WorkspaceBoardSection,
 } from "$lib/types/workspace";
+import type { SearchInput } from "$lib/types/base";
 
-export const taskSearchInput = writable<string>("");
+export const taskSearchInput = writable<SearchInput>(undefined);
 
 // Clear on workspace board change
 // TODO clarify if this subscription still makes sense
@@ -27,24 +28,25 @@ export const taskSearchInput = writable<string>("");
 currentWorkspaceBoard.subscribe((_$currentWorkspaceBoard) => {
     selectedLabels.set({ kind: "allLabels" });
     filterByWorkspaceUser({ kind: "allWorkspaceUsers" });
-    taskSearchInput.set("");
+    taskSearchInput.set(undefined);
 });
 
-// TODO can we use undefined here instead?
-type CurrentSearchedTasks = Readable<TaskWithWorkspaceBoardSection[] | null>;
+type CurrentSearchedTasks = Readable<
+    TaskWithWorkspaceBoardSection[] | undefined
+>;
 
 export function createCurrentSearchedTasks(
     currentWorkspaceBoardSections: Readable<WorkspaceBoardSection[]>,
-    taskSearchInput: Readable<string>
+    taskSearchInput: Readable<SearchInput>
 ): CurrentSearchedTasks {
     return derived<
-        [typeof currentWorkspaceBoardSections, typeof taskSearchInput],
-        TaskWithWorkspaceBoardSection[] | null
+        [Readable<WorkspaceBoardSection[]>, Readable<SearchInput>],
+        TaskWithWorkspaceBoardSection[] | undefined
     >(
         [currentWorkspaceBoardSections, taskSearchInput],
         ([$currentWorkspaceBoardSections, $taskSearchInput], set) => {
-            if ($taskSearchInput == "") {
-                set(null);
+            if ($taskSearchInput === undefined) {
+                set(undefined);
             } else {
                 set(
                     searchTasks(
@@ -54,13 +56,13 @@ export function createCurrentSearchedTasks(
                 );
             }
         },
-        null
+        undefined
     );
 }
 
 function searchTasks(
     sections: WorkspaceBoardSection[],
-    searchText: string
+    searchText: SearchInput
 ): TaskWithWorkspaceBoardSection[] {
     const sectionTasks: TaskWithWorkspaceBoardSection[][] = sections.map(
         (workspace_board_section) =>
