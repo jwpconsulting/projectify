@@ -3,14 +3,22 @@
 
     import Layout from "$lib/figma/overlays/constructive/Layout.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import { rejectConstructiveOverlay } from "$lib/stores/globalUi";
+    import { archiveWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
+    import {
+        rejectConstructiveOverlay,
+        resolveConstructiveOverlay,
+    } from "$lib/stores/globalUi";
     import type { WorkspaceBoard } from "$lib/types/workspace";
 
     export let workspaceBoard: WorkspaceBoard;
-    console.log("TODO do something with", workspaceBoard);
+
+    async function onSubmit() {
+        await archiveWorkspaceBoard(workspaceBoard, false);
+        resolveConstructiveOverlay();
+    }
 </script>
 
-<Layout>
+<Layout {onSubmit}>
     <svelte:fragment slot="title">
         {$_("overlay.constructive.recover-workspace-board.title")}
     </svelte:fragment>

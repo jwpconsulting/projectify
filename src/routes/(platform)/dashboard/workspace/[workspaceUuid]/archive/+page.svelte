@@ -4,7 +4,6 @@
     import ArchiveWorkspaceBoard from "$lib/figma/cards/ArchiveWorkspaceBoard.svelte";
     import { currentArchivedWorkspaceBoards } from "$lib/stores/dashboard";
 
-    // TODO put me under dashboard/workspace/uuid/archive
     $: archivedWorkspaceBoards = $currentArchivedWorkspaceBoards ?? [];
 </script>
 
