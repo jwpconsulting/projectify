@@ -5,6 +5,7 @@ from abc import (
 )
 from typing import (
     Any,
+    Optional,
     cast,
 )
 from uuid import (
@@ -36,10 +37,13 @@ class BaseConsumer(JsonWebsocketConsumer, metaclass=ABCMeta):
         """Handle connect."""
         user = self.scope["user"]
         if user.is_anonymous:
+            self.close(403)
+            return
+        uuid: UUID = self.scope["url_route"]["kwargs"]["uuid"]
+        if self.get_object(user, uuid) is None:
+            self.close(404)
             return
         self.accept()
-        uuid: UUID = self.scope["url_route"]["kwargs"]["uuid"]
-        self.get_object(user, uuid)
         async_to_sync(self.channel_layer.group_add)(
             self.get_group_name(),
             self.channel_name,
@@ -62,7 +66,9 @@ class BaseConsumer(JsonWebsocketConsumer, metaclass=ABCMeta):
         ...
 
     @abstractmethod
-    def get_object(self, user: AbstractBaseUser, uuid: UUID) -> None:
+    def get_object(
+        self, user: AbstractBaseUser, uuid: UUID
+    ) -> Optional[object]:
         """Attempt getting the object to ensure the user has access to it."""
         ...
 
@@ -75,9 +81,16 @@ class WorkspaceConsumer(BaseConsumer):
         uuid = self.scope["url_route"]["kwargs"]["uuid"]
         return f"workspace-{uuid}"
 
-    def get_object(self, user: AbstractBaseUser, uuid: UUID) -> None:
+    def get_object(
+        self, user: AbstractBaseUser, uuid: UUID
+    ) -> Optional[models.Workspace]:
         """Find workspace belonging to this user."""
-        models.Workspace.objects.filter_for_user_and_uuid(user, uuid).get()
+        try:
+            return models.Workspace.objects.filter_for_user_and_uuid(
+                user, uuid
+            ).get()
+        except models.Workspace.DoesNotExist:
+            return None
 
     def workspace_change(self, event: types.Message) -> None:
         """Respond to workspace board change event."""
@@ -92,11 +105,16 @@ class WorkspaceBoardConsumer(BaseConsumer):
         uuid = self.scope["url_route"]["kwargs"]["uuid"]
         return f"workspace-board-{uuid}"
 
-    def get_object(self, user: AbstractBaseUser, uuid: UUID) -> None:
+    def get_object(
+        self, user: AbstractBaseUser, uuid: UUID
+    ) -> Optional[models.WorkspaceBoard]:
         """Get workspace board."""
-        models.WorkspaceBoard.objects.filter_for_user_and_uuid(
-            user, uuid
-        ).get()
+        try:
+            return models.WorkspaceBoard.objects.filter_for_user_and_uuid(
+                user, uuid
+            ).get()
+        except models.WorkspaceBoard.DoesNotExist:
+            return None
 
     def workspace_board_change(self, event: types.Message) -> None:
         """Respond to workspace board change event."""
@@ -111,9 +129,16 @@ class TaskConsumer(BaseConsumer):
         uuid = self.scope["url_route"]["kwargs"]["uuid"]
         return f"task-{uuid}"
 
-    def get_object(self, user: AbstractBaseUser, uuid: UUID) -> None:
+    def get_object(
+        self, user: AbstractBaseUser, uuid: UUID
+    ) -> Optional[models.Task]:
         """Get task."""
-        models.Task.objects.filter_for_user_and_uuid(user, uuid).get()
+        try:
+            return models.Task.objects.filter_for_user_and_uuid(
+                user, uuid
+            ).get()
+        except models.Task.DoesNotExist:
+            return None
 
     def task_change(self, event: types.Message) -> None:
         """Respond to workspace board change event."""
