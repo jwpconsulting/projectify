@@ -1,7 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import ArchiveWorkspaceBoard from "$lib/figma/cards/ArchiveWorkspaceBoard.svelte";
+    import ArchivedWorkspaceBoard from "$lib/figma/cards/ArchivedWorkspaceBoard.svelte";
     import { currentArchivedWorkspaceBoards } from "$lib/stores/dashboard";
 
     $: archivedWorkspaceBoards = $currentArchivedWorkspaceBoards ?? [];
@@ -14,7 +14,7 @@
         </h1>
         <div class="flex flex-col rounded-lg bg-foreground p-4 shadow-card">
             {#each archivedWorkspaceBoards as workspaceBoard}
-                <ArchiveWorkspaceBoard {workspaceBoard} />
+                <ArchivedWorkspaceBoard {workspaceBoard} />
             {:else}
                 {$_("workspace-board-archive.empty")}
             {/each}
