@@ -260,12 +260,9 @@ django==4.2.5 ; python_version >= "3.11" and python_version < "3.12" \
 djangorestframework==3.14.0 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:579a333e6256b09489cbe0a067e66abe55c6595d8926be6b99423786334350c8 \
     --hash=sha256:eb63f58c9f218e1a7d064d17a70751f528ed4e1d35547fdade9aaf4cd103fd08
-factory-boy==3.2.1 ; python_version >= "3.11" and python_version < "3.12" \
-    --hash=sha256:a98d277b0c047c75eb6e4ab8508a7f81fb03d2cb21986f627913546ef7a2a55e \
-    --hash=sha256:eb02a7dd1b577ef606b75a253b9818e6f9eaf996d94449c9d5ebb124f90dc795
-faker==19.4.0 ; python_version >= "3.11" and python_version < "3.12" \
-    --hash=sha256:0c3a7cbaa6497dcc18819bfe31ae916d2180c31a3b1ea8907c948d94eb06955d \
-    --hash=sha256:11f0d2a6632d212e8ab89fd9152a1b8db777816e42f3579f8c63c11e43cec873
+faker==19.13.0 ; python_version >= "3.11" and python_version < "3.12" \
+    --hash=sha256:14ccb0aec342d33aa3889a864a56e5b3c2d56bce1b89f9189f4fbc128b9afc1e \
+    --hash=sha256:da880a76322db7a879c848a0771e129338e0a680a9f695fd9a3e7a6ac82b45e1
 graphql-core==3.2.3 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:06d2aad0ac723e35b1cb47885d3e5c45e956a53bc1b209a9fc5369007fe46676 \
     --hash=sha256:5766780452bd5ec8ba133f8bf287dc92713e3868ddd83aee4faab9fc3e303dc3

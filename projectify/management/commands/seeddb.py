@@ -7,6 +7,13 @@ least N of each object.
 For workspaces that already exist, we don't touch them.
 
 For new workspaces, we add quantities of objects, as specified in the arguments
+
+Assuming your development database is called projectify, you can do a full test
+run by running
+dropdb projectify && \
+    createdb projectify && \
+    poetry run ./manage.py migrate && \
+    poetry run ./manage.py seeddb
 """
 import random
 from argparse import (
@@ -15,14 +22,17 @@ from argparse import (
 from collections.abc import (
     Sequence,
 )
+from datetime import (
+    timezone,
+)
+from itertools import (
+    count,
+)
 from typing import (
     Any,
     Optional,
 )
 
-from django.contrib import (
-    auth,
-)
 from django.contrib.auth.models import (
     AbstractBaseUser,
 )
@@ -39,49 +49,54 @@ from corporate.factory import (
 from corporate.models import (
     CustomerSubscriptionStatus,
 )
-from user.factory import (
-    SuperUserFactory,
-    UserFactory,
+from faker import (
+    Faker,
 )
-from workspace.factory import (
-    ChatMessageFactory,
-    LabelFactory,
-    SubTaskFactory,
-    TaskFactory,
-    WorkspaceBoardFactory,
-    WorkspaceBoardSectionFactory,
-    WorkspaceFactory,
+from user.models import (
+    User,
 )
 from workspace.models import (
+    ChatMessage,
     Label,
+    Task,
     Workspace,
     WorkspaceBoard,
     WorkspaceBoardSection,
+)
+from workspace.models.sub_task import (
+    SubTask,
+)
+from workspace.models.workspace_user import (
+    WorkspaceUser,
 )
 
 
 class Command(BaseCommand):
     """Command."""
 
-    def create_users(
-        self, n_users: int
-    ) -> Optional[Sequence[AbstractBaseUser]]:
+    fake: Faker
+
+    def create_users(self, n_users: int) -> Optional[Sequence["User"]]:
         """Create users."""
-        User = auth.get_user_model()
         existing_users = User.objects.count()
         if existing_users == 0:
-            SuperUserFactory.create(
+            User.objects.create_superuser(
                 email="admin@localhost",
                 password="password",
             )
-            self.stdout.write("Created super_user")
-            UserFactory.create(
+            self.stdout.write("Created superuser")
+            User.objects.create_user(
                 email="guest@localhost",
                 password="password",
             )
-            self.stdout.write("Created guest_user")
+            self.stdout.write("Created normal user")
         remaining_users = n_users - User.objects.count()
-        new_users = UserFactory.create_batch(remaining_users)
+        new_users = [
+            User.objects.create_user(
+                email=self.fake.email(),
+            )
+            for _ in range(remaining_users)
+        ]
         self.stdout.write(f"Created {len(new_users)} remaining users")
         return list(User.objects.all())
 
@@ -93,47 +108,97 @@ class Command(BaseCommand):
         "Done",
     ]
 
+    # TODO We can collect all workspace boards etc bottom-up and then
+    # bulk create all tasks at once. That might be much faster.
     def create_tasks(
         self,
+        number: "count[int]",
         section: WorkspaceBoardSection,
         labels: Sequence[Label],
+        workspace_users: Sequence[WorkspaceUser],
         n_tasks: int,
     ) -> None:
         """Create tasks for a workspace board section."""
-        for _ in range(n_tasks):
-            task = TaskFactory.create(workspace_board_section=section)
+        workspace = section.workspace
+        tasks = [
+            Task(
+                title=self.fake.word(),
+                description=self.fake.paragraph(),
+                workspace_board_section=section,
+                deadline=self.fake.date_time(tzinfo=timezone.utc),
+                workspace=workspace,
+                _order=_order,
+                number=next(number),
+            )
+            for _order in range(n_tasks)
+        ]
+        Task.objects.bulk_create(tasks)
+        self.stdout.write(f"Created {n_tasks} tasks")
+        for task in tasks:
             n_labels = random.randint(0, 3)
             chosen_labels = random.choices(labels, k=n_labels)
             for label in chosen_labels:
                 task.add_label(label)
             self.stdout.write(f"Assigned {n_labels} labels to task {task}")
-            n_sub_tasks = random.randint(0, 3)
-            for _ in range(n_sub_tasks):
-                SubTaskFactory(task=task)
-            self.stdout.write(f"Created {n_sub_tasks} sub tasks")
-            n_chat_messages = random.randint(0, 3)
-            for _ in range(n_chat_messages):
-                ChatMessageFactory(task=task)
-            self.stdout.write(f"Created {n_chat_messages} chat messages")
-        self.stdout.write(f"Created {n_tasks} tasks")
+            sub_tasks = SubTask.objects.bulk_create(
+                [
+                    SubTask(
+                        title=self.fake.word(),
+                        description=self.fake.paragraph(),
+                        task=task,
+                        done=self.fake.pybool(),
+                        _order=_order,
+                    )
+                    for _order in range(random.randint(0, 3))
+                ]
+            )
+            self.stdout.write(f"Created {len(sub_tasks)} sub tasks")
+            chat_messages = ChatMessage.objects.bulk_create(
+                [
+                    ChatMessage(
+                        task=task,
+                        text=self.fake.paragraph(),
+                        author=random.choice(workspace_users),
+                    )
+                    for _ in range(random.randint(0, 3))
+                ]
+            )
+            self.stdout.write(f"Created {len(chat_messages)} chat messages")
+        self.stdout.write(f"Populated {n_tasks} tasks")
 
-    def create_workspace_board(
-        self, workspace: Workspace, labels: Sequence[Label], n_tasks: int
-    ) -> WorkspaceBoard:
+    def populate_workspace_board(
+        self,
+        number: "count[int]",
+        workspace_board: WorkspaceBoard,
+        workspace_users: Sequence[WorkspaceUser],
+        labels: Sequence[Label],
+        n_tasks: int,
+    ) -> None:
         """Populate a workspace board."""
-        board = WorkspaceBoardFactory.create(workspace=workspace)
-        for title in self.SECTION_TITLES:
-            section = WorkspaceBoardSectionFactory.create(
-                workspace_board=board,
-                title=title,
-            )
-            self.create_tasks(
-                section, labels, random.randint(n_tasks // 2, n_tasks)
-            )
+        sections = WorkspaceBoardSection.objects.bulk_create(
+            [
+                WorkspaceBoardSection(
+                    workspace_board=workspace_board,
+                    title=title,
+                    _order=_order,
+                )
+                for _order, title in enumerate(self.SECTION_TITLES)
+            ]
+        )
         self.stdout.write(
             f"Created {len(self.SECTION_TITLES)} workspace board sections"
         )
-        return board
+        for section in sections:
+            self.create_tasks(
+                number,
+                section,
+                labels,
+                workspace_users,
+                random.randint(n_tasks // 2, n_tasks),
+            )
+        self.stdout.write(
+            f"Populated {len(self.SECTION_TITLES)} workspace board sections"
+        )
 
     def create_workspaces(
         self,
@@ -145,26 +210,70 @@ class Command(BaseCommand):
         n_add_users: int,
     ) -> Sequence[Workspace]:
         """Create workspaces."""
-        remaining_workspaces = n_workspaces - Workspace.objects.count()
-        workspaces = [
-            WorkspaceFactory.create(
-                add_users=random.sample(users, n_add_users)
+        existing_workspaces = Workspace.objects.count()
+        self.stdout.write(
+            f"There are already {existing_workspaces} workspaces"
+        )
+        remaining_workspaces = max(0, n_workspaces - existing_workspaces)
+
+        workspaces: list[Workspace] = Workspace.objects.bulk_create(
+            [
+                Workspace(
+                    title=self.fake.word(),
+                    description=self.fake.paragraph(),
+                )
+                for _ in range(remaining_workspaces)
+            ]
+        )
+        self.stdout.write(f"Created {len(workspaces)} remaining workspaces")
+        workspaces_workspace_users: list[list[WorkspaceUser]] = [
+            WorkspaceUser.objects.bulk_create(
+                [
+                    WorkspaceUser(
+                        workspace=workspace,
+                        user=user,
+                    )
+                    for user in random.sample(users, n_add_users)
+                ]
             )
-            for _ in range(remaining_workspaces)
+            for workspace in workspaces
         ]
         self.stdout.write(
-            f"Created {remaining_workspaces} remaining workspaces"
+            f"Added users to {len(workspaces)} remaining workspaces"
         )
 
-        for workspace in workspaces:
-            labels = LabelFactory.create_batch(
-                n_labels,
-                workspace=workspace,
-            )
+        for workspace, workspace_users in zip(
+            workspaces, workspaces_workspace_users
+        ):
+            labels = [
+                Label(
+                    name=self.fake.catch_phrase(),
+                    color=random.randint(0, 6),
+                    workspace=workspace,
+                )
+                for _ in range(n_labels)
+            ]
+            Label.objects.bulk_create(labels)
             self.stdout.write(f"Created {n_labels} labels")
-            for _ in range(n_workspace_boards):
-                self.create_workspace_board(workspace, labels, n_tasks)
-            self.stdout.write(f"Created {n_workspace_boards} workspace boards")
+            workspace_boards = WorkspaceBoard.objects.bulk_create(
+                [
+                    WorkspaceBoard(
+                        title=self.fake.word(),
+                        description=self.fake.paragraph(),
+                        workspace=workspace,
+                        deadline=self.fake.date_time(tzinfo=timezone.utc),
+                    )
+                    for _ in range(n_workspace_boards)
+                ]
+            )
+            number = count()
+            for workspace_board in workspace_boards:
+                self.populate_workspace_board(
+                    number, workspace_board, workspace_users, labels, n_tasks
+                )
+            self.stdout.write(
+                f"Created {len(workspace_boards)} workspace boards"
+            )
         return workspaces
 
     def create_corporate_accounts(
@@ -220,6 +329,7 @@ class Command(BaseCommand):
     @transaction.atomic
     def handle(self, *args: object, **options: Any) -> None:
         """Handle."""
+        self.fake = Faker()
         n_users: int = options["n_users"]
         n_workspaces: int = options["n_workspaces"]
         n_workspace_boards: int = options["n_workspace_boards"]
