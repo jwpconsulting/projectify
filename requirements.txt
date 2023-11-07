@@ -505,9 +505,9 @@ twisted-iocpsupport==1.0.4 ; python_version >= "3.11" and python_version < "3.12
     --hash=sha256:c27985e949b9b1a1fb4c20c71d315c10ea0f93fdf3ccdd4a8c158b5926edd8c8 \
     --hash=sha256:cc86c2ef598c15d824a243c2541c29459881c67fc3c0adb6efe2242f8f0ec3af \
     --hash=sha256:e311dfcb470696e3c077249615893cada598e62fa7c4e4ca090167bd2b7d331f
-twisted[tls]==23.8.0 ; python_version >= "3.11" and python_version < "3.12" \
-    --hash=sha256:3c73360add17336a622c0d811c2a2ce29866b6e59b1125fd6509b17252098a24 \
-    --hash=sha256:b8bdba145de120ffb36c20e6e071cce984e89fba798611ed0704216fb7f884cd
+twisted[tls]==23.10.0 ; python_version >= "3.11" and python_version < "3.12" \
+    --hash=sha256:4ae8bce12999a35f7fe6443e7f1893e6fe09588c8d2bed9c35cdce8ff2d5b444 \
+    --hash=sha256:987847a0790a2c597197613686e2784fd54167df3a55d0fb17c8412305d76ce5
 txaio==23.1.1 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:aaea42f8aad50e0ecfb976130ada140797e9dcb85fad2cf72b0f37f8cefcb490 \
     --hash=sha256:f9a9216e976e5e3246dfd112ad7ad55ca915606b60b84a757ac769bd404ff704
