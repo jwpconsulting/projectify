@@ -39,8 +39,8 @@ class TaskCreate(
     serializer_class = serializers.TaskCreateUpdateSerializer
 
 
-class TaskRetrieveUpdate(
-    generics.RetrieveUpdateAPIView[
+class TaskRetrieveUpdateDestroy(
+    generics.RetrieveUpdateDestroyAPIView[
         models.Task,
         models.TaskQuerySet,
         Union[
