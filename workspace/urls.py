@@ -8,7 +8,7 @@ from . import (
 )
 from .views.task import (
     TaskCreate,
-    TaskRetrieveUpdate,
+    TaskRetrieveUpdateDestroy,
 )
 from .views.workspace import (
     InviteUserToWorkspace,
@@ -99,12 +99,10 @@ urlpatterns = (
         TaskCreate.as_view(),
         name="task-create",
     ),
-    # Read
+    # Read, Update, Delete
     path(
         "task/<uuid:task_uuid>",
-        TaskRetrieveUpdate.as_view(),
+        TaskRetrieveUpdateDestroy.as_view(),
         name="task",
     ),
-    # Update
-    # Delete
 )

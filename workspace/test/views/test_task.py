@@ -14,6 +14,9 @@ from rest_framework.test import (
 from pytest_types import (
     DjangoAssertNumQueries,
 )
+from workspace.models.task import (
+    Task,
+)
 
 from ... import (
     models,
@@ -80,7 +83,7 @@ class TestTaskCreate(UnauthenticatedTestMixin):
         # the user it *really* does not exist and anything else does not
         # matter.
         assert response.status_code == 400, response.data
-        assert models.Task.objects.count() == 0
+        assert Task.objects.count() == 0
 
     def test_authenticated(
         self,
@@ -104,17 +107,17 @@ class TestTaskCreate(UnauthenticatedTestMixin):
                 format="json",
             )
             assert response.status_code == 201, response.data
-        assert models.Task.objects.count() == 1
-        assert models.Task.objects.get().assignee == workspace_user
+        assert Task.objects.count() == 1
+        assert Task.objects.get().assignee == workspace_user
 
 
 # Read
 @pytest.mark.django_db
-class TestTaskRetrieveUpdate(UnauthenticatedTestMixin):
-    """Test Task retrieval and update."""
+class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
+    """Test Task read, update and delete."""
 
     @pytest.fixture
-    def resource_url(self, task: models.Task) -> str:
+    def resource_url(self, task: Task) -> str:
         """Return URL to resource."""
         return reverse("workspace:task", args=(task.uuid,))
 
@@ -194,5 +197,17 @@ class TestTaskRetrieveUpdate(UnauthenticatedTestMixin):
             == workspace_board_section.title
         )
 
-
-# Delete
+    def test_delete(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test deleting a task."""
+        with django_assert_num_queries(10):
+            response = rest_user_client.delete(resource_url)
+            assert response.status_code == 204, response.content
+        # Ensure that the task is gone for good
+        with django_assert_num_queries(1):
+            response = rest_user_client.get(resource_url)
+            assert response.status_code == 404, response.content
