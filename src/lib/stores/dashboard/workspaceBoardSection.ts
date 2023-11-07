@@ -82,7 +82,7 @@ export const currentWorkspaceBoardSections = derived<
         typeof selectedWorkspaceUser,
         typeof currentWorkspaceBoard,
     ],
-    WorkspaceBoardSection[]
+    WorkspaceBoardSection[] | undefined
 >(
     [selectedLabels, selectedWorkspaceUser, currentWorkspaceBoard],
     (
@@ -90,11 +90,13 @@ export const currentWorkspaceBoardSections = derived<
         set
     ) => {
         if (!$currentWorkspaceBoard) {
+            set(undefined);
             return;
         }
         const workspaceBoardSections =
             $currentWorkspaceBoard.workspace_board_sections;
         if (!workspaceBoardSections) {
+            set(undefined);
             return;
         }
         set(
@@ -105,15 +107,18 @@ export const currentWorkspaceBoardSections = derived<
             })
         );
     },
-    []
+    undefined
 );
 
 export const tasksPerUser: Readable<TasksPerUser> = derived<
-    Readable<WorkspaceBoardSection[]>,
+    Readable<WorkspaceBoardSection[] | undefined>,
     TasksPerUser
 >(
     currentWorkspaceBoardSections,
     ($currentWorkspaceBoardSections, set) => {
+        if (!$currentWorkspaceBoardSections) {
+            return;
+        }
         const assigned = new Map<string, number>();
         let unassigned = 0;
         $currentWorkspaceBoardSections.forEach((section) => {

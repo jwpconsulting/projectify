@@ -5,9 +5,18 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { currentWorkspaceBoardSections } from "$lib/stores/dashboard";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
-    import type { WorkspaceBoard } from "$lib/types/workspace";
+    import type {
+        WorkspaceBoard,
+        WorkspaceBoardSection,
+    } from "$lib/types/workspace";
 
     export let workspaceBoard: WorkspaceBoard;
+
+    let workspaceBoardSections: WorkspaceBoardSection[];
+    $: workspaceBoardSections =
+        $currentWorkspaceBoardSections ??
+        workspaceBoard.workspace_board_sections ??
+        [];
 
     async function onAddNewSection() {
         await openConstructiveOverlay({
@@ -17,7 +26,7 @@
     }
 </script>
 
-{#each $currentWorkspaceBoardSections as workspaceBoardSection (workspaceBoardSection.uuid)}
+{#each workspaceBoardSections as workspaceBoardSection (workspaceBoardSection.uuid)}
     <SectionBar {workspaceBoard} {workspaceBoardSection} />
 {:else}
     <section class="py-2 px-4 gap-8 bg-foreground rounded-lg flex flex-col">

@@ -36,16 +36,21 @@ type CurrentSearchedTasks = Readable<
 >;
 
 export function createCurrentSearchedTasks(
-    currentWorkspaceBoardSections: Readable<WorkspaceBoardSection[]>,
+    currentWorkspaceBoardSections: Readable<
+        WorkspaceBoardSection[] | undefined
+    >,
     taskSearchInput: Readable<SearchInput>
 ): CurrentSearchedTasks {
     return derived<
-        [Readable<WorkspaceBoardSection[]>, Readable<SearchInput>],
+        [Readable<WorkspaceBoardSection[] | undefined>, Readable<SearchInput>],
         TaskWithWorkspaceBoardSection[] | undefined
     >(
         [currentWorkspaceBoardSections, taskSearchInput],
         ([$currentWorkspaceBoardSections, $taskSearchInput], set) => {
-            if ($taskSearchInput === undefined) {
+            if (
+                $currentWorkspaceBoardSections == undefined ||
+                $taskSearchInput === undefined
+            ) {
                 set(undefined);
             } else {
                 set(
