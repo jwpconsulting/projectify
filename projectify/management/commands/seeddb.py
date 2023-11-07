@@ -15,7 +15,6 @@ dropdb projectify && \
     poetry run ./manage.py migrate && \
     poetry run ./manage.py seeddb
 """
-import random
 from argparse import (
     ArgumentParser,
 )
@@ -25,6 +24,11 @@ from datetime import (
 from itertools import (
     count,
     groupby,
+)
+from random import (
+    choice,
+    randint,
+    sample,
 )
 from typing import (
     Any,
@@ -77,6 +81,30 @@ Altogether = TypedDict(
     },
 )
 
+WORKSPACE_TITLE_MIN_LENGTH = 20
+WORKSPACE_TITLE_MAX_LENGTH = 200
+
+WORKSPACE_BOARD_MIN_SECTIONS = 2
+WORKSPACE_BOARD_MAX_SECTIONS = 15
+WORKSPACE_BOARD_TITLE_MIN_LENGTH = 20
+WORKSPACE_BOARD_TITLE_MAX_LENGTH = 100
+
+SECTION_TITLE_MIN_LENGTH = 20
+SECTION_TITLE_MAX_LENGTH = 200
+
+TASK_TITLE_MIN_LENGTH = 40
+TASK_TITLE_MAX_LENGTH = 250
+TASK_DESCRIPTION_SENTENCES = 10
+TASK_MIN_LABEL_COUNT = 0
+TASK_MAX_LABEL_COUNT = 10
+TASK_MIN_CHAT_MESSAGE_COUNT = 0
+TASK_MAX_CHAT_MESSAGE_COUNT = 10
+
+SUB_TASKS_MIN_COUNT = 0
+SUB_TASKS_MAX_COUNT = 10
+SUB_TASK_TITLE_MIN_LENGTH = 40
+SUB_TASK_TITLE_MAX_LENGTH = 250
+
 
 class Command(BaseCommand):
     """Command."""
@@ -104,22 +132,19 @@ class Command(BaseCommand):
             )
             self.stdout.write("Created normal user")
         remaining_users = self.n_users - User.objects.count()
-        new_users = [
-            User.objects.create_user(
-                email=self.fake.email(),
-            )
-            for _ in range(remaining_users)
-        ]
+        new_users = User.objects.bulk_create(
+            [
+                User(
+                    email=self.fake.email(),
+                    full_name=self.fake.name() if randint(0, 1) else None,
+                    is_staff=False,
+                    is_superuser=False,
+                )
+                for _ in range(remaining_users)
+            ]
+        )
         self.stdout.write(f"Created {len(new_users)} new users")
         return list(User.objects.all())
-
-    SECTION_TITLES = [
-        "Backlog",
-        "To Do",
-        "Ongoing",
-        "Review",
-        "Done",
-    ]
 
     def create_tasks(self, altogether: list[Altogether]) -> None:
         """
@@ -134,22 +159,25 @@ class Command(BaseCommand):
             (together, workspace_board_section, _order)
             for together in altogether
             for workspace_board_section in together["workspace_board_sections"]
-            for _order in range(
-                random.randint(self.n_tasks // 2, self.n_tasks)
-            )
+            for _order in range(randint(self.n_tasks // 2, self.n_tasks))
         )
         tasks = Task.objects.bulk_create(
             [
                 Task(
-                    title=self.fake.word(),
-                    description=self.fake.paragraph(),
+                    title=self.fake.text(
+                        randint(TASK_TITLE_MIN_LENGTH, TASK_TITLE_MAX_LENGTH),
+                    ),
+                    description=self.fake.paragraph(
+                        TASK_DESCRIPTION_SENTENCES
+                    ),
                     workspace_board_section=workspace_board_section,
                     deadline=self.fake.date_time(tzinfo=timezone.utc),
                     workspace=together["workspace"],
                     _order=_order,
                     number=next(together["number"]),
-                    # Randomly assign or not
-                    assignee=random.choice(together["workspace_users"]),
+                    assignee=choice(together["workspace_users"])
+                    # 2 out of 3 tasks have an assignee
+                    if randint(0, 2) else None,
                 )
                 for (together, workspace_board_section, _order) in task_combos
             ]
@@ -169,11 +197,14 @@ class Command(BaseCommand):
                     label=label,
                 )
                 for together, task in something
-                for label in random.sample(
+                for label in sample(
                     # Make sure we don't go over the amount of labels we have
                     # actually created for this workspace
                     together["labels"],
-                    min(len(together["labels"]), random.randint(0, 3)),
+                    min(
+                        len(together["labels"]),
+                        randint(TASK_MIN_LABEL_COUNT, TASK_MAX_LABEL_COUNT),
+                    ),
                 )
             ]
         )
@@ -182,15 +213,21 @@ class Command(BaseCommand):
         sub_tasks = SubTask.objects.bulk_create(
             [
                 SubTask(
-                    title=self.fake.word(),
+                    title=self.fake.text(
+                        randint(
+                            SUB_TASK_TITLE_MIN_LENGTH,
+                            SUB_TASK_TITLE_MAX_LENGTH,
+                        )
+                    ),
                     description=self.fake.paragraph(),
                     task=task,
                     done=self.fake.pybool(),
                     _order=_order,
                 )
                 for task in tasks
-                # More sub tasks!
-                for _order in range(random.randint(0, 3))
+                for _order in range(
+                    randint(SUB_TASKS_MIN_COUNT, SUB_TASKS_MAX_COUNT)
+                )
             ]
         )
         self.stdout.write(f"Created {len(sub_tasks)} sub tasks")
@@ -200,10 +237,15 @@ class Command(BaseCommand):
                 ChatMessage(
                     task=task,
                     text=self.fake.paragraph(),
-                    author=random.choice(together["workspace_users"]),
+                    author=choice(together["workspace_users"]),
                 )
                 for together, task in something
-                for _ in range(random.randint(0, 3))
+                for _ in range(
+                    randint(
+                        TASK_MIN_CHAT_MESSAGE_COUNT,
+                        TASK_MAX_CHAT_MESSAGE_COUNT,
+                    )
+                )
             ]
         )
         self.stdout.write(f"Created {len(chat_messages)} chat messages")
@@ -223,7 +265,12 @@ class Command(BaseCommand):
         workspaces: list[Workspace] = Workspace.objects.bulk_create(
             [
                 Workspace(
-                    title=self.fake.word(),
+                    title=self.fake.text(
+                        randint(
+                            WORKSPACE_TITLE_MIN_LENGTH,
+                            WORKSPACE_TITLE_MAX_LENGTH,
+                        )
+                    ),
                     description=self.fake.paragraph(),
                 )
                 for _ in range(remaining_workspaces)
@@ -238,7 +285,7 @@ class Command(BaseCommand):
                     user=user,
                 )
                 for workspace in workspaces
-                for user in random.sample(users, self.n_add_users)
+                for user in sample(users, self.n_add_users)
             ]
         )
         self.stdout.write(
@@ -249,7 +296,7 @@ class Command(BaseCommand):
             [
                 Label(
                     name=self.fake.catch_phrase(),
-                    color=random.randint(0, 6),
+                    color=randint(0, 6),
                     workspace=workspace,
                 )
                 for workspace in workspaces
@@ -261,7 +308,12 @@ class Command(BaseCommand):
         workspaces_workspace_boards = WorkspaceBoard.objects.bulk_create(
             [
                 WorkspaceBoard(
-                    title=self.fake.word(),
+                    title=self.fake.text(
+                        randint(
+                            WORKSPACE_BOARD_TITLE_MIN_LENGTH,
+                            WORKSPACE_BOARD_TITLE_MAX_LENGTH,
+                        )
+                    ),
                     description=self.fake.paragraph(),
                     workspace=workspace,
                     deadline=self.fake.date_time(tzinfo=timezone.utc),
@@ -286,7 +338,20 @@ class Command(BaseCommand):
                         workspaces_workspace_boards, key=lambda b: b.workspace
                     )
                     for workspace_board in workspace_boards
-                    for _order, title in enumerate(self.SECTION_TITLES)
+                    for _order, title in enumerate(
+                        self.fake.text(
+                            randint(
+                                SECTION_TITLE_MIN_LENGTH,
+                                SECTION_TITLE_MAX_LENGTH,
+                            )
+                        )
+                        for _ in range(
+                            randint(
+                                WORKSPACE_BOARD_MIN_SECTIONS,
+                                WORKSPACE_BOARD_MAX_SECTIONS,
+                            )
+                        )
+                    )
                 ]
             )
         )
@@ -340,19 +405,18 @@ class Command(BaseCommand):
             together["workspace"].save()
         return workspaces
 
-    def create_corporate_accounts(
-        self, workspaces: list[Workspace]
-    ) -> None:
+    def create_corporate_accounts(self, workspaces: list[Workspace]) -> None:
         """Create corporate accounts."""
-        customers = Customer.objects.bulk_create([
-            Customer(
-                workspace=workspace,
-                subscription_status=CustomerSubscriptionStatus.ACTIVE,
-            ) for workspace in workspaces
-        ])
-        self.stdout.write(
-            f"Created customers for {len(customers)} workspaces"
+        customers = Customer.objects.bulk_create(
+            [
+                Customer(
+                    workspace=workspace,
+                    subscription_status=CustomerSubscriptionStatus.ACTIVE,
+                )
+                for workspace in workspaces
+            ]
         )
+        self.stdout.write(f"Created customers for {len(customers)} workspaces")
 
     def add_arguments(self, parser: ArgumentParser) -> None:
         """Add arguments."""
@@ -365,7 +429,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--n-workspaces",
             type=int,
-            default=15,
+            default=5,
             help="Ensure N workspaces are present",
         )
         parser.add_argument(
