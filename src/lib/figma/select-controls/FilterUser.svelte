@@ -6,6 +6,7 @@
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import Checkbox from "$lib/funabashi/select-controls/Checkbox.svelte";
     import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
+    import { getDisplayName } from "$lib/types/user";
 
     export let workspaceUserSelectionInput: WorkspaceUserSelectionInput;
     export let active: boolean;
@@ -61,9 +62,9 @@
                 {:else if workspaceUserSelectionInput.kind === "allWorkspaceUsers"}
                     {$_("filter-workspace-user.all-users")}
                 {:else if workspaceUserSelectionInput.kind === "workspaceUser"}
-                    {workspaceUserSelectionInput.workspaceUser.user
-                        .full_name ??
-                        workspaceUserSelectionInput.workspaceUser.user.email}
+                    {getDisplayName(
+                        workspaceUserSelectionInput.workspaceUser.user
+                    )}
                 {/if}
             </div>
         </div>

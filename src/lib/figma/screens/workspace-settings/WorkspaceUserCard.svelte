@@ -6,13 +6,15 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { deleteWorkspaceUser } from "$lib/repository/workspace/workspace_user";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
+    import { getDisplayName } from "$lib/types/user";
     import type { WorkspaceUser } from "$lib/types/workspace";
     import { getMessageNameForRole } from "$lib/utils/i18n";
 
     export let workspaceUser: WorkspaceUser;
 
+    // Rename to preferredName
     let fullName: string;
-    $: fullName = workspaceUser.user.full_name ?? workspaceUser.user.email;
+    $: fullName = getDisplayName(workspaceUser.user);
     let jobTitle: string;
     $: jobTitle =
         workspaceUser.job_title ??

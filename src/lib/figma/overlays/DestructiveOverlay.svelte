@@ -7,6 +7,7 @@
         resolveDestructiveOverlay,
     } from "$lib/stores/globalUi";
     import type { DestructiveOverlayType } from "$lib/types/ui";
+    import { getDisplayName } from "$lib/types/user";
 
     export let target: DestructiveOverlayType;
 
@@ -21,9 +22,9 @@
                 // somewhere in utils
                 bodyValues = {
                     values: {
-                        workspaceUser:
-                            target.workspaceUser.user.full_name ??
-                            target.workspaceUser.user.email,
+                        workspaceUser: getDisplayName(
+                            target.workspaceUser.user
+                        ),
                     },
                 };
                 break;

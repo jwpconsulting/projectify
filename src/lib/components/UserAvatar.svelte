@@ -1,12 +1,12 @@
 <script lang="ts">
     import { AvatarMarble as Avatar } from "svelte-boring-avatars";
 
-    import type { User } from "$lib/types/user";
+    import { getDisplayName, type User } from "$lib/types/user";
 
     export let user: User;
     export let size: 24 | 32 | 92;
     $: profilePicture = user.profile_picture;
-    $: name = `${user.email}${user.full_name ?? user.email}`;
+    $: name = `${user.email}${getDisplayName(user)}`;
 </script>
 
 {#if profilePicture}
