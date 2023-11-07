@@ -1,9 +1,8 @@
 <script lang="ts">
-    import { number } from "svelte-i18n";
     // TODO: Support onInteract
     import { Plus, CheckCircle } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
-    import { _ } from "svelte-i18n";
+    import { number, _ } from "svelte-i18n";
 
     import SubTaskProgressBar from "$lib/figma/screens/task/SubTaskProgressBar.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";

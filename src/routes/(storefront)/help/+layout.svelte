@@ -29,7 +29,7 @@
         <div class="grow">
             <HelpDropdown />
         </div>
-        <div class="flex flex-col gap-4 bg-foreground">
+        <div class="flex flex-col gap-7 bg-foreground">
             <slot />
         </div>
     </main>

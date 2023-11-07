@@ -1,8 +1,7 @@
 <script lang="ts">
-    import { json } from "svelte-i18n";
+    import { _, json } from "svelte-i18n";
 
-    import HelpSections from "$lib/components/help/HelpSections.svelte";
-    import SkipLinks from "$lib/components/help/SkipLinks.svelte";
+    import Layout from "$lib/components/help/Layout.svelte";
 
     $: sections = $json("help.basics.sections") as {
         id: string;
@@ -11,5 +10,4 @@
     }[];
 </script>
 
-<SkipLinks {sections} />
-<HelpSections {sections} />
+<Layout {sections} title={$_("help.basics.title")} />
