@@ -254,9 +254,9 @@ django-pgconnection==1.0.3 ; python_version >= "3.11" and python_version < "3.12
 django-pgtrigger==2.4.1 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:0c370d1bb44361faf9948cec67a0a983885ba8e36da9416aad8fda3b69fea992 \
     --hash=sha256:24938353f60898a57bf7ca6371f2f565fc473f506781c32719bd1538115d637e
-django==4.2.5 ; python_version >= "3.11" and python_version < "3.12" \
-    --hash=sha256:5e5c1c9548ffb7796b4a8a4782e9a2e5a3df3615259fc1bfd3ebc73b646146c1 \
-    --hash=sha256:b6b2b5cae821077f137dc4dade696a1c2aa292f892eca28fa8d7bfdf2608ddd4
+django==4.2.7 ; python_version >= "3.11" and python_version < "3.12" \
+    --hash=sha256:8e0f1c2c2786b5c0e39fe1afce24c926040fad47c8ea8ad30aaf1188df29fc41 \
+    --hash=sha256:e1d37c51ad26186de355cbcec16613ebdabfa9689bbade9c538835205a8abbe9
 djangorestframework==3.14.0 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:579a333e6256b09489cbe0a067e66abe55c6595d8926be6b99423786334350c8 \
     --hash=sha256:eb63f58c9f218e1a7d064d17a70751f528ed4e1d35547fdade9aaf4cd103fd08
