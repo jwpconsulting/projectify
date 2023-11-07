@@ -20,7 +20,6 @@ from argparse import (
     ArgumentParser,
 )
 from collections.abc import (
-    Mapping,
     Sequence,
 )
 from datetime import (
@@ -34,9 +33,6 @@ from typing import (
     Any,
     Optional,
     TypedDict,
-)
-from uuid import (
-    UUID,
 )
 
 from django.contrib.auth.models import (
@@ -75,6 +71,19 @@ from workspace.models.sub_task import (
 )
 from workspace.models.workspace_user import (
     WorkspaceUser,
+)
+
+
+Altogether = TypedDict(
+    "Altogether",
+    {
+        "workspace": Workspace,
+        "workspace_users": list[WorkspaceUser],
+        "labels": list[Label],
+        "workspace_boards": list[WorkspaceBoard],
+        "workspace_board_sections": list[WorkspaceBoardSection],
+        "number": "count[int]",
+    },
 )
 
 
@@ -117,14 +126,23 @@ class Command(BaseCommand):
 
     def create_tasks(
         self,
-        number: "count[int]",
-        workspace: Workspace,
-        workspace_board_sections: Sequence[WorkspaceBoardSection],
-        labels: Sequence[Label],
-        workspace_users: Sequence[WorkspaceUser],
+        altogether: list[Altogether],
         n_tasks: int,
     ) -> None:
-        """Create tasks for a sequence workspace board sections."""
+        """
+        Create tasks.
+
+        Takes in a combination of workspaces, boards and sections and creates
+        all tasks at once.
+        """
+        # We store all the combinations in a list here (using tee was
+        # evaluated for a second)
+        task_combos = list(
+            (together, workspace_board_section, _order)
+            for together in altogether
+            for workspace_board_section in together["workspace_board_sections"]
+            for _order in range(random.randint(n_tasks // 2, n_tasks))
+        )
         tasks = Task.objects.bulk_create(
             [
                 Task(
@@ -132,29 +150,35 @@ class Command(BaseCommand):
                     description=self.fake.paragraph(),
                     workspace_board_section=workspace_board_section,
                     deadline=self.fake.date_time(tzinfo=timezone.utc),
-                    workspace=workspace,
+                    workspace=together["workspace"],
                     _order=_order,
-                    number=next(number),
-                    assignee=random.choice(workspace_users),
+                    number=next(together["number"]),
+                    # Randomly assign or not
+                    assignee=random.choice(together["workspace_users"]),
                 )
-                for workspace_board_section in workspace_board_sections
-                for _order in range(random.randint(n_tasks // 2, n_tasks))
+                for (together, workspace_board_section, _order) in task_combos
             ]
         )
         self.stdout.write(f"Created {len(tasks)} tasks")
 
+        # That way we can zip it back together and create the task labels
+        # and still have a reference to the labels that were used for this
+        # task
+        something: list[tuple[Altogether, Task]] = list(
+            zip([together for together, _, _ in task_combos], tasks)
+        )
         task_labels = TaskLabel.objects.bulk_create(
             [
                 TaskLabel(
                     task=task,
                     label=label,
                 )
-                for task in tasks
+                for together, task in something
                 for label in random.sample(
                     # Make sure we don't go over the amount of labels we have
                     # actually created for this workspace
-                    labels,
-                    min(len(labels), random.randint(0, 3)),
+                    together["labels"],
+                    min(len(together["labels"]), random.randint(0, 3)),
                 )
             ]
         )
@@ -180,50 +204,14 @@ class Command(BaseCommand):
                 ChatMessage(
                     task=task,
                     text=self.fake.paragraph(),
-                    author=random.choice(workspace_users),
+                    author=random.choice(together["workspace_users"]),
                 )
-                for task in tasks
+                for together, task in something
                 for _ in range(random.randint(0, 3))
             ]
         )
         self.stdout.write(f"Created {len(chat_messages)} chat messages")
         self.stdout.write(f"Populated {len(tasks)} tasks")
-
-    def populate_workspace_boards(
-        self,
-        number: "count[int]",
-        workspace: Workspace,
-        workspace_boards: Sequence[WorkspaceBoard],
-        workspace_users: Sequence[WorkspaceUser],
-        labels: Sequence[Label],
-        n_tasks: int,
-    ) -> None:
-        """Populate a workspace board."""
-        workspace_board_sections = WorkspaceBoardSection.objects.bulk_create(
-            [
-                WorkspaceBoardSection(
-                    workspace_board=workspace_board,
-                    title=title,
-                    _order=_order,
-                )
-                for workspace_board in workspace_boards
-                for _order, title in enumerate(self.SECTION_TITLES)
-            ]
-        )
-        self.stdout.write(
-            f"Created {len(self.SECTION_TITLES)} workspace board sections"
-        )
-        self.create_tasks(
-            number,
-            workspace,
-            workspace_board_sections,
-            labels,
-            workspace_users,
-            n_tasks,
-        )
-        self.stdout.write(
-            f"Populated {len(self.SECTION_TITLES)} workspace board sections"
-        )
 
     def create_workspaces(
         self,
@@ -295,6 +283,27 @@ class Command(BaseCommand):
             f"Created {len(workspaces_workspace_boards)} workspace boards"
         )
 
+        workspaces_workspace_board_sections = (
+            WorkspaceBoardSection.objects.bulk_create(
+                [
+                    WorkspaceBoardSection(
+                        workspace_board=workspace_board,
+                        title=title,
+                        _order=_order,
+                    )
+                    for _, workspace_boards in groupby(
+                        workspaces_workspace_boards, key=lambda b: b.workspace
+                    )
+                    for workspace_board in workspace_boards
+                    for _order, title in enumerate(self.SECTION_TITLES)
+                ]
+            )
+        )
+        self.stdout.write(
+            f"Created {len(workspaces_workspace_board_sections)} workspace "
+            "board sections"
+        )
+
         # The idea here is that instead of going into each nested object in
         # a for loop, we create them altogether at once.
         # So:
@@ -303,51 +312,41 @@ class Command(BaseCommand):
         # Create all labels for all new workspaces
         # Create all workspace boards for all new workspaces
         # etc.
-        Altogether = TypedDict(
-            "Altogether",
+        altogether: list[Altogether] = [
             {
-                "workspace": Workspace,
-                "workspace_users": list[WorkspaceUser],
-                "labels": list[Label],
-                "workspace_boards": list[WorkspaceBoard],
-            },
-        )
-        altogether: Mapping[UUID, Altogether] = {
-            workspace.uuid: {
                 "workspace": workspace,
                 "workspace_users": list(workspace_users),
                 "labels": list(labels),
                 "workspace_boards": list(workspace_boards),
+                "workspace_board_sections": list(workspace_board_sections),
+                "number": count(1),
             }
             for (
                 (workspace, workspace_users),
                 (_, labels),
                 (_, workspace_boards),
+                (_, workspace_board_sections),
             ) in zip(
                 groupby(workspaces_workspace_users, key=lambda u: u.workspace),
                 groupby(workspaces_labels, key=lambda l: l.workspace),
                 groupby(
                     workspaces_workspace_boards, key=lambda b: b.workspace
                 ),
+                groupby(
+                    workspaces_workspace_board_sections,
+                    key=lambda b: b.workspace,
+                ),
             )
-        }
+        ]
 
-        for together in altogether.values():
-            number = count()
-            self.populate_workspace_boards(
-                number,
-                together["workspace"],
-                together["workspace_boards"],
-                list(together["workspace_users"]),
-                list(together["labels"]),
-                n_tasks,
+        self.create_tasks(altogether, n_tasks)
+
+        # Now we just have to adjust each workspace's highest task number
+        for together in altogether:
+            together["workspace"].highest_task_number = next(
+                together["number"]
             )
-            together["workspace"].highest_task_number = next(number)
             together["workspace"].save()
-            self.stdout.write(
-                f'Populated {len(together["workspace_boards"])} workspace '
-                f"boards"
-            )
         return workspaces
 
     def create_corporate_accounts(
