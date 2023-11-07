@@ -68,7 +68,9 @@ async function walk(dir: string): Promise<string[]> {
 // )
 // 4) Numbers
 // deleteBoard: $_("overlay.destructive.delete-board.title"),
-const MESSAGE_RE = /\$_\(\s*?"(?<message>[a-z0-9.-]+)".*?\)/gs;
+// 4) Json
+// $: sections = $json("help.basics.sections") as {
+const MESSAGE_RE = /\$(?:_|json)\(\s*?"(?<message>[a-z0-9.-]+)".*?\)/gs;
 
 /*
  * Extract message strings from ts and svelte files
