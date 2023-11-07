@@ -45,7 +45,8 @@
         }
     }
 
-    $: outerClass = `flex-start flex flex-row items-center gap-2 px-4 py-3 text-left text-xs font-bold focus:bg-border-focus focus:text-base-content focus:outline-none ${colorStyle} ${style}`;
+    // TODO remove px-4 from here and add it back into context menu
+    $: outerClass = `flex-start flex flex-row items-center gap-2 px-4 py-3 text-left text-xs font-bold ${colorStyle} ${style}`;
 </script>
 
 {#if kind.kind === "a"}
@@ -53,7 +54,7 @@
         {#if icon}
             <Icon src={icon} theme="outline" class="h-4 w-4" />
         {/if}
-        <div class="first-letter:uppercase">
+        <div>
             {label}
         </div>
     </a>
@@ -62,7 +63,7 @@
         {#if icon}
             <Icon src={icon} theme="outline" class="h-4 w-4" />
         {/if}
-        <div class="first-letter:uppercase">
+        <div>
             {label}
         </div>
     </button>
