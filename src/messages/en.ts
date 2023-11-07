@@ -781,22 +781,39 @@ const messages: MessageCollection = {
         "hero-text": "Learn to fly through projects with speed and agility",
         "help-sections": "Help sections",
         "basics": {
-            "title": "Basics",
-            "workspace": "What is a workspace?",
-            "workspace-text":
-                "A workspace is an area where you can create projects, tasks, labels and invite various members of your organisation as workspace users. In a workspace you can set permissions and customise the overall look and feel of your productivity center. For more information on workspaces please see Workspaces.",
-            "board": "What is a board?",
-            "board-text":
-                "A board is a specific project in your workspace that you would like to work on.You can create unlimited boards per workspace and have the freedom to rename and organise them.Completed boards can be archived to remove clutter from your workspace. For more information on boards please see Boards.",
-            "section": "What is a section?",
-            "section-text":
-                "A section is a category that you can divide tasks into. Popular categories include ‘To do’ ‘In progress’ and ‘Done’. Sections can be moved and edited freely. For more information on sections please see Sections.",
-            "task": "What is a task?",
-            "task-text":
-                "A task is a step in your project that needs to be completed. Tasks can be assigned to any member in your workspace. Labels and detailed information can be applied to tasks. For every task that is created, a unique task number is assigned to it for ease of reference and searching. Tasks can be further divided into sub tasks - sub tasks are great for keeping track of micro achievements per task. Due dates can also be set for tasks that need to be completed on a deadline.For more information on tasks please see Tasks.",
-            "side-menu": "How to use the side menu",
-            "side-menu-text":
-                "The side menu allows for full control of your workspace and projects.You are able to switch between workspaces or boards through this menu. Filtering between workspace users and labels can also be performed here.Workspace settings such as permissions and billing can be accessed from this menu.The menu can be viewed in full expanded mode or in collapsed mode.",
+            title: "Basics",
+            sections: [
+                {
+                    id: "workspace",
+                    title: "What is a workspace?",
+                    content:
+                        "A workspace is an area where you can create projects, tasks, labels and invite various members of your organisation as workspace users. In a workspace you can set permissions and customise the overall look and feel of your productivity center. For more information on workspaces please see Workspaces.",
+                },
+                {
+                    id: "workspace-board",
+                    title: "What is a board?",
+                    content:
+                        "A board is a specific project in your workspace that you would like to work on.You can create unlimited boards per workspace and have the freedom to rename and organise them.Completed boards can be archived to remove clutter from your workspace. For more information on boards please see Boards.",
+                },
+                {
+                    id: "workspace-board-section",
+                    title: "What is a section?",
+                    content:
+                        "A section is a category that you can divide tasks into. Popular categories include ‘To do’ ‘In progress’ and ‘Done’. Sections can be moved and edited freely. For more information on sections please see Sections.",
+                },
+                {
+                    id: "task",
+                    title: "What is a task?",
+                    content:
+                        "A task is a step in your project that needs to be completed. Tasks can be assigned to any member in your workspace. Labels and detailed information can be applied to tasks. For every task that is created, a unique task number is assigned to it for ease of reference and searching. Tasks can be further divided into sub tasks - sub tasks are great for keeping track of micro achievements per task. Due dates can also be set for tasks that need to be completed on a deadline.For more information on tasks please see Tasks.",
+                },
+                {
+                    id: "side-menu",
+                    title: "How to use the side menu",
+                    content:
+                        "The side menu allows for full control of your workspace and projects.You are able to switch between workspaces or boards through this menu. Filtering between workspace users and labels can also be performed here.Workspace settings such as permissions and billing can be accessed from this menu.The menu can be viewed in full expanded mode or in collapsed mode.",
+                },
+            ],
         },
         "workspaces": {
             title: "Workspaces",
