@@ -16,8 +16,12 @@
 
     export let task: Task & { workspace_board_section: WorkspaceBoardSection };
     $: labelAssignment = createLabelAssignment(task);
+    $: labels = $labelAssignment ?? task.labels;
 
     async function openLabelPicker(event: MouseEvent) {
+        if (!$labelAssignment) {
+            throw new Error("Expected $labelAssignment");
+        }
         const anchor = event.target;
         if (!(anchor instanceof HTMLElement)) {
             throw new Error("Expected HTMLElement");
@@ -38,9 +42,9 @@
     }
 </script>
 
-{#if $labelAssignment.length}
+{#if labels.length}
     <div class="flex flex-row">
-        {#each $labelAssignment as label}
+        {#each labels as label}
             <button on:click|preventDefault={openLabelPicker}>
                 <LabelPill {label} />
             </button>

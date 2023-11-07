@@ -44,7 +44,10 @@
 
     async function action(continueEditing: boolean) {
         if (!title) {
-            throw new Error("Expected title and description");
+            throw new Error("Expected title");
+        }
+        if (!$labelAssignment) {
+            throw new Error("Expected $labelAssignment");
         }
         const createTaskFull: CreateUpdateTask = {
             title,

@@ -52,11 +52,13 @@
             onInteract={showUpdateWorkspaceUser}
             workspaceUser={$workspaceUserAssignment}
         />
-        <TaskLabel
-            slot="labels"
-            onInteract={showUpdateLabel}
-            labels={$labelAssignment}
-        />
+        {#if $labelAssignment}
+            <TaskLabel
+                slot="labels"
+                onInteract={showUpdateLabel}
+                labels={$labelAssignment}
+            />
+        {/if}
         <TaskSection slot="section" {workspaceBoardSection} />
         <TaskDueDate slot="due-date" bind:dueDate />
         <TaskDescription slot="description" bind:description />

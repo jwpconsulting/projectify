@@ -23,7 +23,7 @@ export interface WorkspaceUserAssignment
     selected: Readable<WorkspaceUserAssignmentState>;
 }
 
-export interface LabelAssignment extends Readable<Label[]> {
+export interface LabelAssignment extends Readable<Label[] | undefined> {
     select: (selection: LabelAssignmentInput) => unknown;
     deselect: (selection: LabelAssignmentInput) => unknown;
     // TODO Might even completely remove this:

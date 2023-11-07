@@ -53,6 +53,9 @@
     }
 
     async function action(continueEditing: boolean) {
+        if (!$labelAssignment) {
+            throw new Error("Expected $labelAssignment");
+        }
         // TOOD add rest here
         const submitTask: TaskWithWorkspaceBoardSection = {
             ...task,

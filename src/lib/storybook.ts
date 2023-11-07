@@ -11,6 +11,7 @@ import type {
     Label,
     SubTask,
     Task,
+    TaskWithWorkspaceBoardSection,
     WorkspaceBoard,
     WorkspaceBoardSection,
     WorkspaceUser,
@@ -114,15 +115,15 @@ export const subTask: SubTask = {
     order: 0,
 };
 
-export const task: Task = {
-    title: "task name",
+export const task: TaskWithWorkspaceBoardSection = {
+    title: "This task has a very long name, yes, it's long, and as you know that will tell us whether we have overflow problems or not.",
     created: "",
     modified: "",
     uuid: "does-not-exist",
     deadline: "2022-08-01",
     _order: 0,
     number: 1,
-    labels: [],
+    labels: [...mappedLabels, ...mappedLabels],
     assignee: workspaceUser,
     sub_tasks: [subTask],
     workspace_board_section: {

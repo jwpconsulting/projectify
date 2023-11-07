@@ -38,16 +38,21 @@ export function createLabelAssignment(
     const selected = writable<LabelAssignmentState>(selection);
     const { subscribe } = derived<
         [typeof selected, typeof currentWorkspaceLabels],
-        Label[]
+        Label[] | undefined
     >(
         [selected, currentWorkspaceLabels],
         ([$selected, $currentWorkspaceLabels], set) => {
+            if ($currentWorkspaceLabels === undefined) {
+                set(undefined);
+                return;
+            }
             const labelUuids = evaluateLabelAssignment($selected);
             const labels = $currentWorkspaceLabels.filter((label) =>
                 labelUuids.includes(label.uuid)
             );
             set(labels);
-        }
+        },
+        undefined
     );
     const selectOrDeselectLabel = (
         select: boolean,
