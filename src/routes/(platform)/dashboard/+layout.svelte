@@ -22,7 +22,9 @@
             Loading workspaces
         {/if}
     </div>
-    <div class="grow">
+    <!-- not inserting min-w-0 will mean that this div will extend as much as
+    needed around whatever is inside the slot -->
+    <div class="min-w-0 grow">
         <slot />
     </div>
 </div>
