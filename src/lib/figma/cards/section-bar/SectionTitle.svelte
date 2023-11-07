@@ -46,7 +46,7 @@
                 theme="outline"
             />
         </button>
-        <h1 class="nowrap-ellipsis min-w-0 shrink font-bold uppercase">
+        <h1 class="line-clamp-1 min-w-0 shrink font-bold">
             {workspaceBoardSection.title}
         </h1>
     </div>

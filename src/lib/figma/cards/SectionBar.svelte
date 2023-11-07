@@ -1,4 +1,5 @@
 <script lang="ts">
+    // TODO rename me to WorkspaceBoardSection.svelte
     import { _ } from "svelte-i18n";
 
     import SectionTitle from "$lib/figma/cards/section-bar/SectionTitle.svelte";
@@ -12,6 +13,7 @@
     import { getNewTaskUrl } from "$lib/urls";
 
     export let workspaceBoard: WorkspaceBoard;
+    // TODO change this into a type that guarantees the existence of tasks
     export let workspaceBoardSection: WorkspaceBoardSection;
 
     const { uuid } = workspaceBoardSection;

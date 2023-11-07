@@ -61,7 +61,7 @@
                 }`}
             />
         </div>
-        <div class="nowrap-ellipsis text-xs font-bold">
+        <div class="line-clamp-1 text-xs font-bold">
             {workspaceBoard.title}
         </div>
     </div>

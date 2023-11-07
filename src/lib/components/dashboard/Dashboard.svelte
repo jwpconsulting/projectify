@@ -56,7 +56,7 @@
         {/if}
     {:else}
         <!-- Sections -->
-        <div class="flex flex-col gap-16 p-2">
+        <div class="flex flex-col gap-4 p-2">
             <WorkspaceBoardSections {workspaceBoard} />
         </div>
     {/if}
