@@ -20,6 +20,7 @@ from argparse import (
     ArgumentParser,
 )
 from collections.abc import (
+    Mapping,
     Sequence,
 )
 from datetime import (
@@ -32,6 +33,10 @@ from itertools import (
 from typing import (
     Any,
     Optional,
+    TypedDict,
+)
+from uuid import (
+    UUID,
 )
 
 from django.contrib.auth.models import (
@@ -290,31 +295,58 @@ class Command(BaseCommand):
             f"Created {len(workspaces_workspace_boards)} workspace boards"
         )
 
-        altogether = zip(
-            groupby(workspaces_workspace_users, key=lambda u: u.workspace),
-            groupby(workspaces_labels, key=lambda l: l.workspace),
-            groupby(workspaces_workspace_boards, key=lambda b: b.workspace),
+        # The idea here is that instead of going into each nested object in
+        # a for loop, we create them altogether at once.
+        # So:
+        # Create all workspaces
+        # Assign all users to all new workspaces
+        # Create all labels for all new workspaces
+        # Create all workspace boards for all new workspaces
+        # etc.
+        Altogether = TypedDict(
+            "Altogether",
+            {
+                "workspace": Workspace,
+                "workspace_users": list[WorkspaceUser],
+                "labels": list[Label],
+                "workspace_boards": list[WorkspaceBoard],
+            },
         )
+        altogether: Mapping[UUID, Altogether] = {
+            workspace.uuid: {
+                "workspace": workspace,
+                "workspace_users": list(workspace_users),
+                "labels": list(labels),
+                "workspace_boards": list(workspace_boards),
+            }
+            for (
+                (workspace, workspace_users),
+                (_, labels),
+                (_, workspace_boards),
+            ) in zip(
+                groupby(workspaces_workspace_users, key=lambda u: u.workspace),
+                groupby(workspaces_labels, key=lambda l: l.workspace),
+                groupby(
+                    workspaces_workspace_boards, key=lambda b: b.workspace
+                ),
+            )
+        }
 
-        for (
-            (workspace, workspace_users),
-            (_, labels),
-            (_, workspace_boards_iter),
-        ) in altogether:
-            workspace_boards = list(workspace_boards_iter)
+        for together in altogether.values():
             number = count()
             self.populate_workspace_boards(
                 number,
-                workspace,
-                workspace_boards,
-                list(workspace_users),
-                list(labels),
+                together["workspace"],
+                together["workspace_boards"],
+                list(together["workspace_users"]),
+                list(together["labels"]),
                 n_tasks,
             )
-            workspace.highest_task_number = next(number)
-            workspace.save()
+            together["workspace"].highest_task_number = next(number)
+            together["workspace"].save()
             self.stdout.write(
-                f"Populated {len(workspace_boards)} workspace boards"
+                f'Populated {len(together["workspace_boards"])} workspace '
+                f"boards"
             )
         return workspaces
 
