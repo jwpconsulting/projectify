@@ -18,12 +18,12 @@
             href: "/help/workspaces",
         },
         {
-            title: $_("help.boards.title"),
-            href: "/help/boards",
+            title: $_("help.workspace-boards.title"),
+            href: "/help/workspace-boards",
         },
         {
-            title: $_("help.sections.title"),
-            href: "/help/sections",
+            title: $_("help.workspace-board-sections.title"),
+            href: "/help/workspace-board-sections",
         },
         {
             title: $_("help.tasks.title"),
@@ -38,20 +38,8 @@
             href: "/help/workspace-users",
         },
         {
-            title: $_("help.bulk-select.title"),
-            href: "/help/bulk-select",
-        },
-        {
             title: $_("help.filters.title"),
             href: "/help/filters",
-        },
-        {
-            title: $_("help.notifications.title"),
-            href: "/help/notifications",
-        },
-        {
-            title: $_("help.pop-ups.title"),
-            href: "/help/pop-ups",
         },
         {
             title: $_("help.billing.title"),

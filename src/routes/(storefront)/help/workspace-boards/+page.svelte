@@ -3,11 +3,11 @@
 
     import Layout from "$lib/components/help/Layout.svelte";
 
-    $: sections = $json("help.workspaces.sections") as {
+    $: sections = $json("help.workspace-boards.sections") as {
         id: string;
         content: string;
         title: string;
     }[];
 </script>
 
-<Layout {sections} title={$_("help.workspaces.title")} />
+<Layout {sections} title={$_("help.workspace-boards.title")} />
