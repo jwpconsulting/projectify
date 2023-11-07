@@ -11,7 +11,7 @@
     }
 </script>
 
-<div class="flex flex-col">
+<nav class="flex flex-col">
     <HelpDropdownButton
         label={$_("help.help-sections")}
         on:click={toggleOpen}
@@ -20,4 +20,4 @@
     {#if open}
         <HelpDropdownMenu />
     {/if}
-</div>
+</nav>

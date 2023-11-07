@@ -4,7 +4,7 @@
     export let sections: { title: string; id: string }[];
 </script>
 
-<div class="flex flex-col gap-4 py-8">
+<div class="flex flex-col gap-4">
     <p class="text-xl font-bold">
         {$_("help.skip")}
     </p>

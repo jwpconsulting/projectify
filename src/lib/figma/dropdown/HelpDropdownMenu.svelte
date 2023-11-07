@@ -60,7 +60,7 @@
     ];
 </script>
 
-<div class="mx-4 flex w-96 flex-col px-4 sm:w-72">
+<div class="flex flex-col">
     {#each helpItems as helpItem}
         <ContextMenuButton
             kind={{ kind: "a", href: helpItem.href }}

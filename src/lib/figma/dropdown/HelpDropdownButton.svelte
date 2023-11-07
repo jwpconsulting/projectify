@@ -14,14 +14,14 @@
 
 <button
     on:click={click}
-    class="mx-4 flex w-96 flex-row items-center justify-between rounded-lg px-2 py-4 text-utility hover:text-disabled-primary-content focus:outline-none focus:ring-1 focus:ring-border-focus focus:ring-offset-2 active:text-base-content sm:w-72"
+    class="flex w-full flex-row items-center justify-between gap-2 rounded-lg py-2 text-utility hover:text-disabled-primary-content active:text-base-content"
 >
-    <div class="text-3xl font-bold capitalize">
+    <div class="w-full min-w-max text-left text-3xl font-bold">
         {label}
     </div>
     <Icon
         src={open ? ChevronUp : ChevronDown}
         theme="outline"
-        class="h-6 w-6"
+        class="h-6 w-6 shrink-0"
     />
 </button>

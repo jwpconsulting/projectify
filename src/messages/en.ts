@@ -777,8 +777,16 @@ const messages: MessageCollection = {
             "We welcome feedback on the accessibility of Projectify. If you encounter any acccessibility barriers whilst using the platform or website, please email hello@projectify.com. ",
     },
     "help": {
-        "hero-header": "Help and tips",
-        "hero-text": "Learn to fly through projects with speed and agility",
+        "hero": {
+            image: {
+                alt: "Our mascot poly flying into the air using a jetpack",
+            },
+            header: {
+                text: "Help and tips",
+                subtext:
+                    "Learn to fly through projects with speed and agility",
+            },
+        },
         "help-sections": "Help sections",
         "basics": {
             title: "Basics",

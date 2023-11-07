@@ -5,25 +5,32 @@
 </script>
 
 <div class="flex h-full flex-col">
-    <header class="bg-base-200 p-4">
-        <div class="grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
-            <div>
-                <h1 class="mb-8 text-4xl font-bold md:text-6xl">
-                    {$_("help.hero-header")}
+    <header class="bg-background px-4 py-8 md:px-16">
+        <div class="flex flex-col gap-4 sm:grid-cols-2 md:grid">
+            <heading class="flex flex-col gap-4">
+                <h1 class="text-4xl font-bold md:text-6xl">
+                    {$_("help.hero.header.text")}
                 </h1>
-                <p class="mb-8 max-w-md text-2xl">
-                    {$_("help.hero-text")}
+                <p class="max-w-md text-2xl">
+                    {$_("help.hero.header.subtext")}
                 </p>
-            </div>
+            </heading>
             <div class="min-w-full max-w-md">
-                <img src="/assets/help/help-hero.png" alt="TODO" />
+                <img
+                    src="/assets/help/help-hero.png"
+                    alt={$_("help.hero.image.alt")}
+                />
             </div>
         </div>
     </header>
-    <div class="flex grow flex-col gap-8 bg-foreground sm:px-12 md:flex-row">
-        <HelpDropdown />
-        <div class="flex flex-col bg-foreground p-8">
+    <main
+        class="flex grow flex-col gap-4 bg-foreground px-4 py-2 sm:flex-row sm:gap-8 sm:p-8 sm:px-12"
+    >
+        <div class="grow">
+            <HelpDropdown />
+        </div>
+        <div class="flex flex-col gap-4 bg-foreground">
             <slot />
         </div>
-    </div>
+    </main>
 </div>
