@@ -19,9 +19,6 @@ import random
 from argparse import (
     ArgumentParser,
 )
-from collections.abc import (
-    Sequence,
-)
 from datetime import (
     timezone,
 )
@@ -31,13 +28,9 @@ from itertools import (
 )
 from typing import (
     Any,
-    Optional,
     TypedDict,
 )
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
 from django.core.management.base import (
     BaseCommand,
 )
@@ -45,10 +38,8 @@ from django.db import (
     transaction,
 )
 
-from corporate.factory import (
-    CustomerFactory,
-)
 from corporate.models import (
+    Customer,
     CustomerSubscriptionStatus,
 )
 from faker import (
@@ -91,8 +82,14 @@ class Command(BaseCommand):
     """Command."""
 
     fake: Faker
+    n_users: int
+    n_workspaces: int
+    n_workspace_boards: int
+    n_labels: int
+    n_tasks: int
+    n_add_users: int
 
-    def create_users(self, n_users: int) -> Optional[Sequence["User"]]:
+    def create_users(self) -> list["User"]:
         """Create users."""
         existing_users = User.objects.count()
         if existing_users == 0:
@@ -106,7 +103,7 @@ class Command(BaseCommand):
                 password="password",
             )
             self.stdout.write("Created normal user")
-        remaining_users = n_users - User.objects.count()
+        remaining_users = self.n_users - User.objects.count()
         new_users = [
             User.objects.create_user(
                 email=self.fake.email(),
@@ -124,11 +121,7 @@ class Command(BaseCommand):
         "Done",
     ]
 
-    def create_tasks(
-        self,
-        altogether: list[Altogether],
-        n_tasks: int,
-    ) -> None:
+    def create_tasks(self, altogether: list[Altogether]) -> None:
         """
         Create tasks.
 
@@ -141,7 +134,9 @@ class Command(BaseCommand):
             (together, workspace_board_section, _order)
             for together in altogether
             for workspace_board_section in together["workspace_board_sections"]
-            for _order in range(random.randint(n_tasks // 2, n_tasks))
+            for _order in range(
+                random.randint(self.n_tasks // 2, self.n_tasks)
+            )
         )
         tasks = Task.objects.bulk_create(
             [
@@ -194,6 +189,7 @@ class Command(BaseCommand):
                     _order=_order,
                 )
                 for task in tasks
+                # More sub tasks!
                 for _order in range(random.randint(0, 3))
             ]
         )
@@ -215,19 +211,14 @@ class Command(BaseCommand):
 
     def create_workspaces(
         self,
-        users: Sequence[AbstractBaseUser],
-        n_workspaces: int,
-        n_workspace_boards: int,
-        n_labels: int,
-        n_tasks: int,
-        n_add_users: int,
-    ) -> Sequence[Workspace]:
+        users: list[User],
+    ) -> list[Workspace]:
         """Create workspaces."""
         existing_workspaces = Workspace.objects.count()
         self.stdout.write(
             f"There are already {existing_workspaces} workspaces"
         )
-        remaining_workspaces = max(0, n_workspaces - existing_workspaces)
+        remaining_workspaces = max(0, self.n_workspaces - existing_workspaces)
 
         workspaces: list[Workspace] = Workspace.objects.bulk_create(
             [
@@ -247,7 +238,7 @@ class Command(BaseCommand):
                     user=user,
                 )
                 for workspace in workspaces
-                for user in random.sample(users, n_add_users)
+                for user in random.sample(users, self.n_add_users)
             ]
         )
         self.stdout.write(
@@ -262,7 +253,7 @@ class Command(BaseCommand):
                     workspace=workspace,
                 )
                 for workspace in workspaces
-                for _ in range(n_labels)
+                for _ in range(self.n_labels)
             ]
         )
         self.stdout.write(f"Created {len(workspaces_labels)} labels")
@@ -276,7 +267,7 @@ class Command(BaseCommand):
                     deadline=self.fake.date_time(tzinfo=timezone.utc),
                 )
                 for workspace in workspaces
-                for _ in range(n_workspace_boards)
+                for _ in range(self.n_workspace_boards)
             ]
         )
         self.stdout.write(
@@ -339,7 +330,7 @@ class Command(BaseCommand):
             )
         ]
 
-        self.create_tasks(altogether, n_tasks)
+        self.create_tasks(altogether)
 
         # Now we just have to adjust each workspace's highest task number
         for together in altogether:
@@ -350,17 +341,17 @@ class Command(BaseCommand):
         return workspaces
 
     def create_corporate_accounts(
-        self, workspaces: Sequence[Workspace]
+        self, workspaces: list[Workspace]
     ) -> None:
         """Create corporate accounts."""
-        for workspace in workspaces:
-            if not hasattr(workspace, "customer"):
-                CustomerFactory(
-                    workspace=workspace,
-                    subscription_status=CustomerSubscriptionStatus.ACTIVE,
-                )
+        customers = Customer.objects.bulk_create([
+            Customer(
+                workspace=workspace,
+                subscription_status=CustomerSubscriptionStatus.ACTIVE,
+            ) for workspace in workspaces
+        ])
         self.stdout.write(
-            f"Created customers for {len(workspaces)} workspaces"
+            f"Created customers for {len(customers)} workspaces"
         )
 
     def add_arguments(self, parser: ArgumentParser) -> None:
@@ -406,30 +397,22 @@ class Command(BaseCommand):
     def handle(self, *args: object, **options: Any) -> None:
         """Handle."""
         self.fake = Faker()
-        n_users: int = options["n_users"]
-        n_workspaces: int = options["n_workspaces"]
-        n_workspace_boards: int = options["n_workspace_boards"]
-        n_labels: int = options["n_labels"]
-        n_tasks: int = options["n_tasks"]
-        n_add_users: int = options["n_add_users"]
-        if n_add_users > n_users:
+        self.n_users = options["n_users"]
+        self.n_workspaces = options["n_workspaces"]
+        self.n_workspace_boards = options["n_workspace_boards"]
+        self.n_labels = options["n_labels"]
+        self.n_tasks = options["n_tasks"]
+        self.n_add_users = options["n_add_users"]
+        if self.n_add_users > self.n_users:
             self.stdout.write(
                 f"You are trying to add more users to each workspace "
-                f"({n_add_users} users) than are "
+                f"({self.n_add_users} users) than are "
                 f"requested to be created in the first place. "
-                f"({n_users} users) "
+                f"({self.n_users} users) "
                 f"The amount of users created will be increase to "
-                f"{n_add_users}."
+                f"{self.n_add_users}."
             )
-        users = self.create_users(max(n_users, n_add_users))
-        if not users:
-            return
-        workspaces = self.create_workspaces(
-            users,
-            n_workspaces=n_workspaces,
-            n_workspace_boards=n_workspace_boards,
-            n_labels=n_labels,
-            n_add_users=n_add_users,
-            n_tasks=n_tasks,
-        )
+            self.n_users = max(self.n_users, self.n_add_users)
+        users = self.create_users()
+        workspaces = self.create_workspaces(users)
         self.create_corporate_accounts(workspaces)
