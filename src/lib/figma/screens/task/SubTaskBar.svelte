@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { number } from "svelte-i18n";
     // TODO: Support onInteract
     import { Plus, CheckCircle } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
@@ -9,18 +10,8 @@
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import type { SubTaskAssignment } from "$lib/types/stores";
 
-    export let progress: number;
+    export let progress: number | undefined;
     export let subTaskAssignment: SubTaskAssignment | undefined = undefined;
-
-    let progressString: string;
-    $: {
-        if (progress < 0 || progress > 100) {
-            throw new Error(
-                `Progress must be between 0 and 100. Given: ${progress}`
-            );
-        }
-        progressString = `${progress}%`;
-    }
     // TODO make buttons do something
 </script>
 
@@ -30,7 +21,11 @@
             <div>
                 <Icon src={CheckCircle} class="h-6" theme="outline" />
             </div>
-            <div>{progressString}</div>
+            <!-- TODO add a text saying something like "Sub task completion is: ... -->
+            {#if progress !== undefined}
+                <div>{$number(progress, { style: "percent" })}</div>
+            {/if}
+            <!-- TODO: and if there is no progress, display: This task has no sub tasks -->
         </div>
         {#if subTaskAssignment}
             <div class="flex flex-row items-center gap-6">
@@ -55,5 +50,7 @@
             </div>
         {/if}
     </div>
-    <SubTaskProgressBar {progress} />
+    {#if progress !== undefined}
+        <SubTaskProgressBar {progress} />
+    {/if}
 </div>

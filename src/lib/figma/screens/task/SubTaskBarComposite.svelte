@@ -5,11 +5,12 @@
     import SubTaskC from "$lib/figma/buttons/SubTask.svelte";
     import SubTaskBar from "$lib/figma/screens/task/SubTaskBar.svelte";
     import type { SubTask } from "$lib/types/workspace";
+    import { getSubTaskProgress } from "$lib/utils/workspace";
 
     export let subTasks: SubTask[] | undefined;
     export let onInteract: () => void;
 
-    const progress = 50;
+    $: progress = subTasks && getSubTaskProgress(subTasks);
 </script>
 
 <SubTaskBar {progress} />

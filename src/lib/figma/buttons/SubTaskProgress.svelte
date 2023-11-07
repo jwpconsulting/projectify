@@ -4,25 +4,13 @@
     import { number } from "svelte-i18n";
 
     import type { Task } from "$lib/types/workspace";
+    import { getSubTaskProgress } from "$lib/utils/workspace";
 
     export let task: Task;
     let subTaskCompletionPercentage: number | undefined = undefined;
-
-    $: {
-        if (task.sub_tasks !== undefined && task.sub_tasks.length > 0) {
-            const completed = task.sub_tasks.filter(
-                (subTask) => subTask.done
-            ).length;
-            const total = task.sub_tasks.length;
-            if (completed == total) {
-                subTaskCompletionPercentage = 1;
-            } else {
-                subTaskCompletionPercentage = completed / total;
-            }
-        } else {
-            subTaskCompletionPercentage = undefined;
-        }
-    }
+    $: subTaskCompletionPercentage = task.sub_tasks
+        ? getSubTaskProgress(task.sub_tasks)
+        : undefined;
 </script>
 
 <div class="flex shrink-0 flex-row items-center gap-2 px-2 py-1">
