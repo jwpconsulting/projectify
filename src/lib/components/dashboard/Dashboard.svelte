@@ -60,7 +60,7 @@
             <WorkspaceBoardSections {workspaceBoard} />
         </div>
     {/if}
-    <div class="absolute bottom-4 right-4">
+    <div class="self-end p-2">
         <FloatingActionButton icon="plus" action={onAddNewSection} />
     </div>
 </div>
