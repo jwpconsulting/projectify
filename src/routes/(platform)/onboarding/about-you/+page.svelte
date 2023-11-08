@@ -5,6 +5,7 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { goto } from "$lib/navigation";
     import { updateUserProfile } from "$lib/stores/user";
+    import { newWorkspaceUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
 
@@ -21,7 +22,7 @@
             throw new Error("Expected fullName");
         }
         await updateUserProfile(fullName);
-        await goto("/user/onboarding/new-workspace");
+        await goto(newWorkspaceUrl);
     }
 </script>
 
