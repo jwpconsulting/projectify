@@ -89,6 +89,11 @@ export type WorkspaceBoard = {
 } & TimestampedType &
     TitleDescriptionType;
 
+export type WorkspaceBoardDetail = Required<
+    Pick<WorkspaceBoard, "workspace_board_sections" | "workspace">
+> &
+    WorkspaceBoard;
+
 export type ArchivedWorkspaceBoard = WorkspaceBoard & { archived: string };
 
 export type Workspace = {
@@ -99,3 +104,8 @@ export type Workspace = {
     uuid: string;
 } & TimestampedType &
     TitleDescriptionType;
+
+export type WorkspaceDetail = Required<
+    Pick<Workspace, "workspace_boards" | "labels" | "workspace_users">
+> &
+    Workspace;

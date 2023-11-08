@@ -9,7 +9,7 @@ import {
 } from "$lib/repository/util";
 import type { Result } from "$lib/types/base";
 import type { RepositoryContext } from "$lib/types/repository";
-import type { Workspace } from "$lib/types/workspace";
+import type { Workspace, WorkspaceDetail } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
 
 // Create
@@ -44,9 +44,9 @@ export async function getWorkspaces(
 export async function getWorkspace(
     uuid: string,
     repositoryContext: RepositoryContext
-): Promise<Workspace | undefined> {
+): Promise<WorkspaceDetail | undefined> {
     return handle404(
-        await getWithCredentialsJson<Workspace>(
+        await getWithCredentialsJson<WorkspaceDetail>(
             `/workspace/workspace/${uuid}`,
             repositoryContext
         )

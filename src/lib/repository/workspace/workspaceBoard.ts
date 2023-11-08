@@ -13,6 +13,7 @@ import type {
     ArchivedWorkspaceBoard,
     Workspace,
     WorkspaceBoard,
+    WorkspaceBoardDetail,
 } from "$lib/types/workspace";
 
 // WorkspaceBoard CRUD
@@ -40,9 +41,9 @@ export async function createWorkspaceBoard(
 export async function getWorkspaceBoard(
     uuid: string,
     repositoryContext: RepositoryContext
-): Promise<WorkspaceBoard | undefined> {
+): Promise<WorkspaceBoardDetail | undefined> {
     return handle404(
-        await getWithCredentialsJson<WorkspaceBoard>(
+        await getWithCredentialsJson<WorkspaceBoardDetail>(
             `/workspace/workspace-board/${uuid}`,
             repositoryContext
         )

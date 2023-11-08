@@ -16,6 +16,6 @@ export async function load({
     if (!workspace) {
         throw error(404);
     }
-    const workspaceBoard = workspace.workspace_boards?.at(0);
+    const workspaceBoard = workspace.workspace_boards.at(0);
     return { workspace, workspaceBoard };
 }

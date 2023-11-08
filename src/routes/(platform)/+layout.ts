@@ -10,6 +10,9 @@ export async function load({
     url,
     fetch,
 }: LayoutLoadEvent): Promise<{ user: User }> {
+    // For reasons, fetchuser fires twice.
+    // We should have user contain some kind of hint that the user is now
+    // being fetched, so we don't fetch it twice.
     const currentUser = get(user);
     if (currentUser) {
         return { user: currentUser };

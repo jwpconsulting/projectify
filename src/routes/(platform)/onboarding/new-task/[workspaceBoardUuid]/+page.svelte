@@ -12,7 +12,6 @@
     import type { OnboardingState } from "$lib/types/onboarding";
     import type { CreateUpdateTask } from "$lib/types/workspace";
     import { getNewLabelUrl } from "$lib/urls/onboarding";
-    import { unwrap } from "$lib/utils/type";
 
     import type { PageData } from "./$types";
 
@@ -40,13 +39,8 @@
             // TODO allow description undefined
             { title: workspaceBoardSectionTitle, description: "" }
         );
-        const workspaceUsers = unwrap(
-            workspace.workspace_users,
-            "Expected workspace_users"
-        );
-
         // Find ourselves
-        const assignee = workspaceUsers.find(
+        const assignee = workspace.workspace_users.find(
             (w) => w.user.email === user.email
         );
         // TODO get our workspaceUser instance here and then assign ourselves

@@ -95,10 +95,6 @@ export const currentWorkspaceBoardSections = derived<
         }
         const workspaceBoardSections =
             $currentWorkspaceBoard.workspace_board_sections;
-        if (!workspaceBoardSections) {
-            set(undefined);
-            return;
-        }
         set(
             filterSectionsTasks({
                 labels: $selectedLabels,

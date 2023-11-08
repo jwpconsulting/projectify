@@ -26,7 +26,7 @@ export async function load({
     if (!workspaceBoard) {
         throw error(404);
     }
-    const workspaceUuid = workspaceBoard.workspace?.uuid;
+    const workspaceUuid = workspaceBoard.workspace.uuid;
     if (!workspaceUuid) {
         throw new Error("Expected workspace");
     }

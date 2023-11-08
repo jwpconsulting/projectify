@@ -5,11 +5,10 @@ import {
     currentWorkspaceBoard,
 } from "$lib/stores/dashboard";
 import type {
-    Workspace,
     WorkspaceBoard,
     WorkspaceBoardSection,
+    WorkspaceDetail,
 } from "$lib/types/workspace";
-import { unwrap } from "$lib/utils/type";
 
 import type { PageLoadEvent } from "./$types";
 
@@ -18,7 +17,7 @@ export async function load({
     fetch,
 }: PageLoadEvent): Promise<{
     workspaceBoard: WorkspaceBoard;
-    workspace: Workspace;
+    workspace: WorkspaceDetail;
     workspaceBoardSection?: WorkspaceBoardSection;
 }> {
     const workspaceBoard = await currentWorkspaceBoard.loadUuid(
@@ -30,18 +29,14 @@ export async function load({
     if (!workspaceBoard) {
         throw error(404);
     }
-    const { uuid: workspaceUuid } = unwrap(
-        workspaceBoard.workspace,
-        "Expected workspace"
-    );
+    const { uuid: workspaceUuid } = workspaceBoard.workspace;
     const workspace = await currentWorkspace.loadUuid(workspaceUuid, {
         fetch,
     });
     if (!workspace) {
         throw error(404);
     }
-    const workspaceBoardSections =
-        workspaceBoard.workspace_board_sections ?? [];
-    const workspaceBoardSection = workspaceBoardSections.at(0);
+    const workspaceBoardSection =
+        workspaceBoard.workspace_board_sections.at(0);
     return { workspaceBoard, workspace, workspaceBoardSection };
 }

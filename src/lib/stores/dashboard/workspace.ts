@@ -6,10 +6,7 @@ import { createWsStore } from "$lib/stores/wsSubscription";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { Workspace } from "$lib/types/workspace";
 
-export const currentWorkspace = createWsStore<Workspace>(
-    "workspace",
-    getWorkspace
-);
+export const currentWorkspace = createWsStore("workspace", getWorkspace);
 
 // TODO This could be RepoGetter, except that RepoGetter takes a uuid
 type HttpStore<T> = Readable<T | undefined> & {

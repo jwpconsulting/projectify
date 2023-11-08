@@ -15,8 +15,8 @@ import { getUser } from "$lib/repository/user";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { User } from "$lib/types/user";
 
+// TODO export const user = writable<User | undefined>(undefined);
 export const user = writable<User | null>(null);
-const userIsLoading = writable(true);
 
 export const signUp = async (
     email: string,
@@ -76,18 +76,17 @@ export const logout = async () => {
     await client.mutate({
         mutation: Mutation_Logout,
     });
+    // TODO remove apollo
     await client.resetStore();
     user.set(null);
-    userIsLoading.set(false);
 };
 
+// TODO return | undefined
 export const fetchUser = async (
     repositoryContext: RepositoryContext
 ): Promise<User | null> => {
-    userIsLoading.set(true);
     const userData = await getUser(repositoryContext);
     if (!userData) {
-        userIsLoading.set(false);
         return null;
     }
     user.set(userData);
