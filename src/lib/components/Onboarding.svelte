@@ -36,7 +36,7 @@
 </script>
 
 <form
-    class="flex w-[600px] flex-col gap-16 px-12 py-20 pb-8"
+    class="flex max-w-lg grow flex-col gap-16 px-12 py-20 pb-8"
     on:submit|preventDefault={submit}
 >
     <!-- Message -->
@@ -107,7 +107,7 @@
 <div
     class:p-12={hasContentPadding}
     class:py-20={hasContentPadding}
-    class="flex grow flex-col gap-6 bg-base-200"
+    class="flex h-full grow flex-col items-center justify-center bg-background"
 >
     {#if $$slots["content-title"]}
         <h1 class="text-4xl font-bold">

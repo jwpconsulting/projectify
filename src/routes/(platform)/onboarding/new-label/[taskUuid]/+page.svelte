@@ -1,25 +1,21 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import AppIllustration from "$lib/components/onboarding/app-illustration.svelte";
+    import DashboardPlaceholder from "$lib/components/onboarding/DashboardPlaceholder.svelte";
     import Onboarding from "$lib/components/Onboarding.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { goto } from "$lib/navigation";
     import { assignLabelToTask, createLabel } from "$lib/repository/workspace";
-    import type { OnboardingState } from "$lib/types/onboarding";
     import { getAssignTaskUrl, getNewTaskUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
 
     export let data: PageData;
 
-    const { workspace, workspaceBoard, task } = data;
+    const { workspace, workspaceBoard, workspaceBoardSection, task } = data;
 
-    const workspaceTitle = workspace.title;
-    const boardTitle = workspaceBoard.title;
     const taskTitle = task.title;
     let labelTitle: string | undefined = undefined;
-    const state: OnboardingState = "new-label";
 
     $: disabled = !labelTitle;
 
@@ -55,13 +51,15 @@
         />
     </svelte:fragment>
 
-    <svelte:fragment slot="content">
-        <AppIllustration
-            {state}
-            {workspaceTitle}
-            {boardTitle}
-            {taskTitle}
-            labelName={labelTitle}
-        />
-    </svelte:fragment>
+    <DashboardPlaceholder
+        slot="content"
+        state={{
+            kind: "new-label",
+            workspace,
+            workspaceBoard,
+            workspaceBoardSection,
+            task,
+            title: labelTitle ?? $_("onboarding.new-label.default-name"),
+        }}
+    />
 </Onboarding>

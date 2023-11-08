@@ -1,13 +1,12 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import AppIllustration from "$lib/components/onboarding/app-illustration.svelte";
+    import DashboardPlaceholder from "$lib/components/onboarding/DashboardPlaceholder.svelte";
     import Onboarding from "$lib/components/Onboarding.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
     import { createWorkspace } from "$lib/repository/workspace";
-    import type { OnboardingState } from "$lib/types/onboarding";
     import { getNewWorkspaceBoardUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
@@ -16,7 +15,6 @@
     const { user, workspace } = data;
 
     let workspaceTitle: string | undefined = undefined;
-    const state: OnboardingState = "new-workspace";
 
     $: disabled = workspaceTitle === undefined;
 
@@ -61,10 +59,16 @@
             name="workspaceTitle"
             placeholder={$_("onboarding.new-workspace.placeholder")}
             bind:value={workspaceTitle}
+            required
         />
     </svelte:fragment>
-
-    <svelte:fragment slot="content">
-        <AppIllustration {state} {workspaceTitle} />
-    </svelte:fragment>
+    <DashboardPlaceholder
+        slot="content"
+        state={{
+            kind: "new-workspace",
+            workspace,
+            title:
+                workspaceTitle ?? $_("onboarding.new-workspace.default-name"),
+        }}
+    />
 </Onboarding>

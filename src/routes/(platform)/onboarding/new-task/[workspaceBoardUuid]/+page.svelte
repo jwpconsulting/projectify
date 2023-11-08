@@ -1,7 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import AppIllustration from "$lib/components/onboarding/app-illustration.svelte";
+    import DashboardPlaceholder from "$lib/components/onboarding/DashboardPlaceholder.svelte";
     import Onboarding from "$lib/components/Onboarding.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { goto } from "$lib/navigation";
@@ -9,7 +9,6 @@
         createTask,
         createWorkspaceBoardSection,
     } from "$lib/repository/workspace";
-    import type { OnboardingState } from "$lib/types/onboarding";
     import type { CreateUpdateTask } from "$lib/types/workspace";
     import { getNewLabelUrl } from "$lib/urls/onboarding";
 
@@ -19,10 +18,7 @@
 
     const { user, workspace, workspaceBoard, workspaceBoardSection } = data;
 
-    const workspaceTitle = workspace.title;
-    const boardTitle = workspaceBoard.title;
     let taskTitle: string | undefined = undefined;
-    const state: OnboardingState = "new-task";
 
     $: workspaceBoardSectionTitle =
         workspaceBoardSection?.title ??
@@ -43,8 +39,6 @@
         const assignee = workspace.workspace_users.find(
             (w) => w.user.email === user.email
         );
-        // TODO get our workspaceUser instance here and then assign ourselves
-        // directly
         const task: CreateUpdateTask = {
             title: taskTitle,
             labels: [],
@@ -91,7 +85,14 @@
         />
     </svelte:fragment>
 
-    <svelte:fragment slot="content">
-        <AppIllustration {state} {workspaceTitle} {boardTitle} {taskTitle} />
-    </svelte:fragment>
+    <DashboardPlaceholder
+        slot="content"
+        state={{
+            kind: "new-task",
+            workspace,
+            workspaceBoard,
+            workspaceBoardSectionTitle,
+            title: taskTitle ?? $_("onboarding.new-task.default-name"),
+        }}
+    />
 </Onboarding>

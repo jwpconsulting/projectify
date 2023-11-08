@@ -12,7 +12,7 @@
 
     $: workspaceUserAssignment = createWorkspaceUserAssignment(task);
 
-    $: assignee = $workspaceUserAssignment;
+    $: assignee = task.assignee ?? $workspaceUserAssignment;
 
     async function openUserPicker() {
         const contextMenuType: ContextMenuType = {

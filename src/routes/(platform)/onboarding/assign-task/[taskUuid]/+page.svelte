@@ -1,22 +1,24 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import AppIllustration from "$lib/components/onboarding/app-illustration.svelte";
+    import DashboardPlaceholder from "$lib/components/onboarding/DashboardPlaceholder.svelte";
     import Onboarding from "$lib/components/Onboarding.svelte";
-    import type { OnboardingState } from "$lib/types/onboarding";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
     import type { PageData } from "./$types";
 
     export let data: PageData;
 
-    const { task, workspaceBoard, workspace, label } = data;
+    const {
+        task,
+        assignee,
+        workspaceBoard,
+        workspaceBoardSection,
+        workspace,
+        label,
+    } = data;
 
-    const workspaceTitle = workspace.title;
-    const boardTitle = workspaceBoard.title;
     const taskTitle = task.title;
-    const labelName = label.name;
-    const state: OnboardingState = "assign-task";
 </script>
 
 <Onboarding
@@ -37,13 +39,16 @@
         </div>
     </svelte:fragment>
 
-    <svelte:fragment slot="content">
-        <AppIllustration
-            {state}
-            {workspaceTitle}
-            {boardTitle}
-            {taskTitle}
-            {labelName}
-        />
-    </svelte:fragment>
+    <DashboardPlaceholder
+        slot="content"
+        state={{
+            kind: "assign-task",
+            task,
+            label,
+            workspace,
+            workspaceBoard,
+            workspaceBoardSection,
+            assignee,
+        }}
+    />
 </Onboarding>

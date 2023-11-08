@@ -60,7 +60,7 @@ export async function createTask(
         // TODO show the user what the bad request was
         console.error(response.error);
     }
-    throw new Error();
+    throw new Error("Don't know how to handle this");
 }
 
 // Read

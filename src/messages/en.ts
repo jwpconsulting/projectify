@@ -281,6 +281,7 @@ const messages: MessageCollection = {
             "has-workspace":
                 "It looks like you already have a workspace, would you like to create a workspace board?",
             "placeholder": "e.g. the name of your company",
+            "default-name": "Your workspace",
         },
         "new-workspace-board": {
             "title": "Add your first board",
@@ -302,6 +303,7 @@ const messages: MessageCollection = {
         "new-task": {
             "title": "What is a task you’d like to complete?",
             "workspace-board-section-title": "To do",
+            "default-name": "Your task",
             "prompt": {
                 location:
                     'This task will be placed in a section called "{workspaceBoardSectionTitle}"',
@@ -312,9 +314,10 @@ const messages: MessageCollection = {
             "placeholder": "E.g., 'Add user permission dropdown'",
         },
         "new-label": {
-            title: 'Create a label for "{taskTitle}"',
-            prompt: "Labels help you to filter between the types of tasks.",
-            placeholder: "e.g., Bug",
+            "title": 'Create a label for "{taskTitle}"',
+            "prompt": "Labels help you to filter between the types of tasks.",
+            "placeholder": "e.g., Bug",
+            "default-name": "Your label",
         },
         "assign-task": {
             title: 'Task "{taskTitle}" has been assigned to you!',

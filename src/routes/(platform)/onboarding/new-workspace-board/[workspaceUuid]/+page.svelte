@@ -1,13 +1,12 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
+    import { _, json } from "svelte-i18n";
 
-    import AppIllustration from "$lib/components/onboarding/app-illustration.svelte";
+    import DashboardPlaceholder from "$lib/components/onboarding/DashboardPlaceholder.svelte";
     import Onboarding from "$lib/components/Onboarding.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
     import { createWorkspaceBoard } from "$lib/repository/workspace";
-    import type { OnboardingState } from "$lib/types/onboarding";
     import { getNewTaskUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
@@ -17,7 +16,6 @@
     const { workspace, workspaceBoard } = data;
 
     let title: string | undefined = undefined;
-    const state: OnboardingState = "new-board";
 
     $: disabled = title === undefined;
 
@@ -34,6 +32,8 @@
         const nextStep = getNewTaskUrl(uuid);
         await goto(nextStep);
     }
+
+    $: prompts = $json("onboarding.new-workspace-board.prompt") as string[];
 </script>
 
 <Onboarding
@@ -69,8 +69,8 @@
                     </p>
                 </div>
             {:else}
-                <div>
-                    {#each $_("onboarding.new-workspace-board.prompt") as prompt}
+                <div class="flex flex-col gap-3">
+                    {#each prompts as prompt}
                         <p>{prompt}</p>
                     {/each}
                 </div>
@@ -87,15 +87,20 @@
                 "onboarding.new-workspace-board.input.placeholder"
             )}
             bind:value={title}
+            required
         />
     </svelte:fragment>
 
-    <svelte:fragment slot="content">
-        <AppIllustration
-            {state}
-            workspaceTitle={workspace.title}
-            boardTitle={title ??
-                $_("onboarding.new-workspace-board.default-name")}
-        />
-    </svelte:fragment>
+    <DashboardPlaceholder
+        slot="content"
+        state={{
+            kind: "new-workspace-board",
+            workspace,
+            workspaceBoard,
+            title:
+                title ??
+                workspaceBoard?.title ??
+                $_("onboarding.new-workspace-board.default-name"),
+        }}
+    />
 </Onboarding>

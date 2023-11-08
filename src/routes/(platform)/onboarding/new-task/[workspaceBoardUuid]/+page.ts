@@ -1,9 +1,7 @@
 import { error } from "@sveltejs/kit";
 
-import {
-    currentWorkspace,
-    currentWorkspaceBoard,
-} from "$lib/stores/dashboard";
+import { getWorkspace } from "$lib/repository/workspace";
+import { getWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
 import type {
     WorkspaceBoard,
     WorkspaceBoardSection,
@@ -20,17 +18,14 @@ export async function load({
     workspace: WorkspaceDetail;
     workspaceBoardSection?: WorkspaceBoardSection;
 }> {
-    const workspaceBoard = await currentWorkspaceBoard.loadUuid(
-        workspaceBoardUuid,
-        {
-            fetch,
-        }
-    );
+    const workspaceBoard = await getWorkspaceBoard(workspaceBoardUuid, {
+        fetch,
+    });
     if (!workspaceBoard) {
         throw error(404);
     }
     const { uuid: workspaceUuid } = workspaceBoard.workspace;
-    const workspace = await currentWorkspace.loadUuid(workspaceUuid, {
+    const workspace = await getWorkspace(workspaceUuid, {
         fetch,
     });
     if (!workspace) {

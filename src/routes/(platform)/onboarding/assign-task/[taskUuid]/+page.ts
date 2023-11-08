@@ -6,6 +6,8 @@ import type {
     Task,
     Workspace,
     WorkspaceBoard,
+    WorkspaceBoardSection,
+    WorkspaceUser,
 } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
 
@@ -13,9 +15,11 @@ import type { PageLoadEvent } from "./$types";
 
 interface returnType {
     task: Task;
+    workspaceBoardSection: WorkspaceBoardSection;
     workspaceBoard: WorkspaceBoard;
     workspace: Workspace;
     label: Label;
+    assignee: WorkspaceUser;
 }
 export async function load({
     fetch,
@@ -25,8 +29,17 @@ export async function load({
     if (!task) {
         throw error(404);
     }
-    const workspaceBoard = task.workspace_board_section.workspace_board;
+    const workspaceBoardSection = task.workspace_board_section;
+    const workspaceBoard = workspaceBoardSection.workspace_board;
     const { workspace } = workspaceBoard;
     const label = unwrap(task.labels.at(0), "Expected label");
-    return { task, workspaceBoard, workspace, label };
+    const assignee = unwrap(task.assignee, "Expected assignee");
+    return {
+        task,
+        assignee,
+        workspaceBoardSection,
+        workspaceBoard,
+        workspace,
+        label,
+    };
 }

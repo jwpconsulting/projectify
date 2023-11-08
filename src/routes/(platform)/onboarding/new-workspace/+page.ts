@@ -13,6 +13,6 @@ export async function load({
         // Undefined workspaces is unrecoverable
         throw error(500);
     }
-    const workspace = workspaces.length > 0 ? workspaces[0] : undefined;
+    const workspace = workspaces.at(0);
     return { workspace };
 }
