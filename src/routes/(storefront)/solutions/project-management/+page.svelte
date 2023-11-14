@@ -7,11 +7,11 @@
     let pageContent: SolutionsPageContent;
     $: pageContent = {
         heroContent: {
-            header: $_("project-solutions.hero-header"),
-            text: $_("project-solutions.hero-text"),
+            title: $_("solutions.project-management.hero.title"),
+            text: $_("solutions.project-management.hero.text"),
             image: {
                 src: "/assets/solutions/hero-project-management.png",
-                alt: "TODO",
+                alt: $_("solutions.project-management.hero.illustration.alt"),
             },
         },
         features: [
@@ -19,37 +19,61 @@
                 image: {
                     position: "right",
                     src: "/assets/solutions/project-member.png",
-                    alt: "TODO",
+                    alt: $_(
+                        "solutions.project-management.features.feature-1.illustration.alt"
+                    ),
                 },
-                header: $_("project-solutions.feature-1-header"),
-                text: $_("project-solutions.feature-1-text"),
+                title: $_(
+                    "solutions.project-management.features.feature-1.title"
+                ),
+                text: $_(
+                    "solutions.project-management.features.feature-1.text"
+                ),
             },
             {
                 image: {
                     position: "left",
                     src: "/assets/landing/notifications.png",
-                    alt: "TODO",
+                    alt: $_(
+                        "solutions.project-management.features.feature-2.illustration.alt"
+                    ),
                 },
-                header: $_("project-solutions.feature-2-header"),
-                text: $_("project-solutions.feature-2-text"),
+                title: $_(
+                    "solutions.project-management.features.feature-2.title"
+                ),
+                text: $_(
+                    "solutions.project-management.features.feature-2.text"
+                ),
             },
             {
                 image: {
                     position: "right",
                     src: "/assets/landing/filters.png",
-                    alt: "TODO",
+                    alt: $_(
+                        "solutions.project-management.features.feature-3.illustration.alt"
+                    ),
                 },
-                header: $_("project-solutions.feature-3-header"),
-                text: $_("project-solutions.feature-3-text"),
+                title: $_(
+                    "solutions.project-management.features.feature-3.title"
+                ),
+                text: $_(
+                    "solutions.project-management.features.feature-3.text"
+                ),
             },
             {
                 image: {
                     position: "left",
                     src: "/assets/solutions/project-permissions.png",
-                    alt: "TODO",
+                    alt: $_(
+                        "solutions.project-management.features.feature-4.illustration.alt"
+                    ),
                 },
-                header: $_("project-solutions.feature-4-header"),
-                text: $_("project-solutions.feature-4-text"),
+                title: $_(
+                    "solutions.project-management.features.feature-4.title"
+                ),
+                text: $_(
+                    "solutions.project-management.features.feature-4.text"
+                ),
             },
         ],
     };

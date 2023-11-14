@@ -12,7 +12,7 @@
             class="mb-8 flex flex-col gap-8 text-center font-bold text-foreground sm:text-left"
         >
             <h1 class="text-4xl">
-                {heroContent.header}
+                {heroContent.title}
             </h1>
             <p class="max-w-md text-xl">
                 {heroContent.text}

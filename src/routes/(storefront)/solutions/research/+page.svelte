@@ -7,11 +7,11 @@
     let pageContent: SolutionsPageContent;
     $: pageContent = {
         heroContent: {
-            header: $_("research-solutions.hero-header"),
-            text: $_("research-solutions.hero-text"),
+            title: $_("solutions.research.hero.title"),
+            text: $_("solutions.research.hero.text"),
             image: {
                 src: "/assets/solutions/hero-research.png",
-                alt: "TODO",
+                alt: $_("solutions.research.hero.illustration.alt"),
             },
         },
         features: [
@@ -19,28 +19,34 @@
                 image: {
                     position: "right",
                     src: "/assets/solutions/research-tasks.png",
-                    alt: "TODO",
+                    alt: $_(
+                        "solutions.research.features.feature-1.illustration.alt"
+                    ),
                 },
-                header: $_("research-solutions.feature-1-header"),
-                text: $_("research-solutions.feature-1-text"),
+                title: $_("solutions.research.features.feature-1.title"),
+                text: $_("solutions.research.features.feature-1.text"),
             },
             {
                 image: {
                     position: "left",
                     src: "/assets/solutions/research-update.png",
-                    alt: "TODO",
+                    alt: $_(
+                        "solutions.research.features.feature-2.illustration.alt"
+                    ),
                 },
-                header: $_("research-solutions.feature-2-header"),
-                text: $_("research-solutions.feature-2-text"),
+                title: $_("solutions.research.features.feature-2.title"),
+                text: $_("solutions.research.features.feature-2.text"),
             },
             {
                 image: {
                     position: "right",
                     src: "/assets/landing/filters.png",
-                    alt: "TODO",
+                    alt: $_(
+                        "solutions.research.features.feature-3.illustration.alt"
+                    ),
                 },
-                header: $_("research-solutions.feature-3-header"),
-                text: $_("research-solutions.feature-3-text"),
+                title: $_("solutions.research.features.feature-3.title"),
+                text: $_("solutions.research.features.feature-3.text"),
             },
         ],
     };

@@ -142,12 +142,12 @@ export interface FeatureDescription {
         src: string;
         alt: string;
     };
-    header: string;
+    title: string;
     text: string;
 }
 
 export interface SolutionsHeroContent {
-    header: string;
+    title: string;
     text: string;
     image: {
         src: string;

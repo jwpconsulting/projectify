@@ -532,6 +532,7 @@ const messages: MessageDirectory = {
         "back-to-landing": "Back to landing page",
     },
     "index": {
+        // TODO "hero": {},
         "hero-header": "Manage projects the right way.",
         "hero-text":
             "Warp drive your way to success with software that helps you to collaborate on and manage projects efficiently, with speed.",
@@ -543,6 +544,7 @@ const messages: MessageDirectory = {
         "trust-header-3": "and",
         "trust-header-4": "deliver faster",
         "trust-text": "The go-to project management tool for developers.",
+        // TODO "features": {},
         "feature-1-header":
             "Task cards that are accessible and keyboard friendly",
         "feature-1-text":
@@ -566,6 +568,7 @@ const messages: MessageDirectory = {
         "feature-7-header": "Projectify is 100% open source software",
         "feature-7-text-1":
             "We believe in transparency and being developer friendly, which is why our source code can be found online.",
+        // TODO "solutions": {},
         "solution-header": "Meeting diverse needs with practical solutions.",
         "solution-subtitle":
             "From companies big and small to individuals working alone, Projectify can be used to manage all kinds of tasks.",
@@ -584,6 +587,8 @@ const messages: MessageDirectory = {
             per: "/",
             month: "month",
         },
+        // TODO refactor to become
+        // "features": {title: "", featureList: { ... }},
         "feature-title": "What's included?",
         "feature-1": "Unlimited tasks",
         "feature-2": "Unlimited boards",
@@ -600,117 +605,201 @@ const messages: MessageDirectory = {
         "feature-13": "Accessible interface",
         "feature-14": "Open source software",
     },
-    "solutions-page": {
-        "hero-header": "Solutions for every type of user",
-        "hero-text":
-            "Explore the different ways users are using Projectify to meet deadlines, reach targets and be productive.",
-        "developer": "Development teams",
-        "dev-description":
-            "Monitor team progress throughout the whole software lifecyle.",
-        "project-management": "Project management",
-        "project-description":
-            "Faciliate rapid delivery across multiple projects for any industry.",
-        "research": "Research",
-        "research-description":
-            "Keep track of testing processes and results with incredible detail.",
-        "remote": "Remote work",
-        "remote-description":
-            "Asynchronous communication whether you're at home or away.",
-        "academic": "Academic endeavours",
-        "academic-description":
-            "Structure a thesis, organise a project or keep track of assignments.",
-        "personal-use": "Personal use",
-        "personal-description":
-            "Log an exercise routine, create a new diet or plan an adventure. The possibilities are endless.",
-        "more": "Learn more",
-    },
-    "development-solutions": {
-        "hero-header": "Development solutions",
-        "hero-text":
-            "How development teams can use Projectify to create tasks, monitor pulls requests and deploy faster.",
-        "feature-1-header": "Organise with labels and task numbers",
-        "feature-1-text":
-            "Use labels with terms like bug, enhancement or backend to categorize tasks. Filter with labels or search by task number to quickly locate what you're looking for.",
-        "feature-2-header": "Live notifications",
-        "feature-2-text":
-            "Notifications provide you with all the information you need whilst also giving you conveniant 'reply' and 'go to task' actions. The notification center houses updates from all workspaces so you never miss a beat.",
-        "feature-3-header": "Plan and execute",
-        "feature-3-text":
-            "Set up and monitor pull requests, merges, bug fixes and more for multiple workspace users of your team.",
-    },
-    "research-solutions": {
-        "hero-header": "Research solutions",
-        "hero-text":
-            "How researchers teams can use Projectify to collaborate on data with colleagues and meticulously catalogue findings.",
-        "feature-1-header": "Catergorize data with labels and numbers",
-        "feature-1-text":
-            "Labels simplify the process of categorizing tasks. Automatically assigned task numbers take organisation one step further",
-        "feature-2-header": "Provide and request updates on any task",
-        "feature-2-text":
-            "The updates sections allows you and your colleagues to share new details about how a test, experiment or study has gone.",
-        "feature-3-header": "Create and monitor multiple projects",
-        "feature-3-text":
-            "With unlimited project boards and tasks per workspace, you're free to perform as much research and testing as you require.",
-    },
-    "project-solutions": {
-        "hero-header": "Project management solutions",
-        "hero-text":
-            "How project managers can use Projectify to efficiently manage tasks, projects and workspace users of their team.",
-        "feature-1-header": "An ethical approach to management",
-        "feature-1-text":
-            "View how many tasks a workspace user has assigned to them, so the workload can be divided equally. Filter by workspace user to see what individual colleagues are working on.",
-        "feature-2-header": "Live notifications",
-        "feature-2-text":
-            "Notifications provide you with all the information you need whilst also giving you conveniant 'reply' and 'go to task' actions. The notification center houses updates from all workspaces so you never miss a beat.",
-        "feature-3-header": "Full control of your workspaces",
-        "feature-3-text":
-            "List and column views allow you to organise workflows and see the bigger picture. Split your workspace into boards to enable multi-project management. Filter by labels, users or keyboards to focus on specific tasks.",
-        "feature-4-header": "Permissions to control access",
-        "feature-4-text":
-            "Make sure nothing important gets deleted. With permission roles - Owner, Maintainer, Member and Observer, you can be safe in knowing there won't be any accidentally data loss.",
-    },
-    "academic-solutions": {
-        "hero-header": "Academic solutions",
-        "hero-text":
-            "How students can use Projectify to plan a thesis, collaborate, or keep track of assignments.",
-        "feature-1-header": "Deadlines become a lifeline",
-        "feature-1-text":
-            "Projectify notifies you of upcoming due dates for assignments, so you'll never miss a paper's deadline.",
-        "feature-2-header": "Checklists that aid your progress",
-        "feature-2-text":
-            "We know that projects and dissertations can be daunting, but we're here to help. Breaking tasks into smaller sub tasks allow you to micro-achieve your way to completion.",
-        "feature-3-header":
-            "Create notes on each task and coordinate with friends",
-        "feature-3-text":
-            "Invite friends and classmates into your workspace to collaborate, share ideas and more.",
-    },
-    "remote-solutions": {
-        "hero-header": "Remote solutions",
-        "hero-text":
-            "How remote workers can use Projectify to keep in tune with projects and stay connected.",
-        "feature-1-header": "Work together across timezones",
-        "feature-1-text":
-            "Asynchronous communication is vital for all teams be they remote or in the office. Assign tasks, create new projects and provide updates, anywhere, anytime.",
-        "feature-2-header": "Notifications and updates on any task",
-        "feature-2-text":
-            "Notifications allow for important information to be delivered, even if you're not around. When you're away from your computer, updates to task will stay unread in the notification center until you get back.",
-        "feature-3-header": "Assign tasks to users all over the world",
-        "feature-3-text":
-            "Whether it's Leo in the Phillipines or Valerie in Brazil, once you assign a task to someone they will be notified immediately with a pop-up.",
-    },
-    "personal-solutions": {
-        "hero-header": "Personal solutions",
-        "hero-text":
-            "How people can use Projectify for everyday life, whether it be keeping track fo your health or creating an itinerary for a trip.",
-        "feature-1-header": "Create tasks with ease",
-        "feature-1-text":
-            "Organise your tasks into individual projects with sections such as 'To do', 'In progress' and 'Done'. Provide descriptions for each task and set deadlines. Labels simplify the process of catergorizing tasks.",
-        "feature-2-header": "Check off sub tasks as you go",
-        "feature-2-text":
-            "Need to plan an event? Want to create a list of achievements? Sub tasks help you to check off small tasks bit by bite.",
-        "feature-3-header": "Add friends and family to your space",
-        "feature-3-text":
-            "Get everyone on the same page by assigning task to different workspace users.",
+    "solutions": {
+        "index": {
+            hero: {
+                title: "Solutions for every type of user",
+                text: "Explore the different ways users are using Projectify to meet deadlines, reach targets and be productive.",
+            },
+            solutions: {
+                "developer": {
+                    title: "Development teams",
+                    description:
+                        "Monitor team progress throughout the whole software lifecyle.",
+                    illustration: { alt: "TODO" },
+                },
+                "project-management": {
+                    title: "Project management",
+                    description:
+                        "Faciliate rapid delivery across multiple projects for any industry.",
+                    illustration: { alt: "TODO" },
+                },
+                "research": {
+                    title: "Research",
+                    description:
+                        "Keep track of testing processes and results with incredible detail.",
+                    illustration: { alt: "TODO" },
+                },
+                "remote-work": {
+                    title: "Remote work",
+                    description:
+                        "Asynchronous communication whether you're at home or away.",
+                    illustration: { alt: "TODO" },
+                },
+                "academic": {
+                    title: "Academic endeavours",
+                    description:
+                        "Structure a thesis, organise a project or keep track of assignments.",
+                    illustration: { alt: "TODO" },
+                },
+                "personal-use": {
+                    title: "Personal use",
+                    description:
+                        "Log an exercise routine, create a new diet or plan an adventure. The possibilities are endless.",
+                    illustration: { alt: "TODO" },
+                },
+            },
+            more: "Learn more",
+        },
+        "development": {
+            hero: {
+                title: "Development solutions",
+                text: "How development teams can use Projectify to create tasks, monitor pulls requests and deploy faster.",
+                illustration: { alt: "TODO" },
+            },
+            features: {
+                "feature-1": {
+                    title: "Organise with labels and task numbers",
+                    text: "Use labels with terms like bug, enhancement or backend to categorize tasks. Filter with labels or search by task number to quickly locate what you're looking for.",
+                    illustration: { alt: "TODO" },
+                },
+                "feature-2": {
+                    title: "Live notifications",
+                    text: "Notifications provide you with all the information you need whilst also giving you conveniant 'reply' and 'go to task' actions. The notification center houses updates from all workspaces so you never miss a beat.",
+                    illustration: { alt: "TODO" },
+                },
+                "feature-3": {
+                    title: "Plan and execute",
+                    text: "Set up and monitor pull requests, merges, bug fixes and more for multiple workspace users of your team.",
+                    illustration: { alt: "TODO" },
+                },
+            },
+        },
+        "research": {
+            hero: {
+                title: "Research solutions",
+                text: "How researchers teams can use Projectify to collaborate on data with colleagues and meticulously catalogue findings.",
+                illustration: { alt: "TODO" },
+            },
+            features: {
+                "feature-1": {
+                    title: "Catergorize data with labels and numbers",
+                    text: "Labels simplify the process of categorizing tasks. Automatically assigned task numbers take organisation one step further",
+                    illustration: { alt: "TODO" },
+                },
+                "feature-2": {
+                    title: "Provide and request updates on any task",
+                    text: "The updates sections allows you and your colleagues to share new details about how a test, experiment or study has gone.",
+                    illustration: { alt: "TODO" },
+                },
+                "feature-3": {
+                    title: "Create and monitor multiple projects",
+                    text: "With unlimited project boards and tasks per workspace, you're free to perform as much research and testing as you require.",
+                    illustration: { alt: "TODO" },
+                },
+            },
+        },
+        "project-management": {
+            hero: {
+                title: "Project management solutions",
+                text: "How project managers can use Projectify to efficiently manage tasks, projects and workspace users of their team.",
+                illustration: { alt: "TODO" },
+            },
+            features: {
+                "feature-1": {
+                    title: "An ethical approach to management",
+                    text: "View how many tasks a workspace user has assigned to them, so the workload can be divided equally. Filter by workspace user to see what individual colleagues are working on.",
+                    illustration: { alt: "TODO" },
+                },
+                "feature-2": {
+                    title: "Live notifications",
+                    text: "Notifications provide you with all the information you need whilst also giving you conveniant 'reply' and 'go to task' actions. The notification center houses updates from all workspaces so you never miss a beat.",
+                    illustration: { alt: "TODO" },
+                },
+                "feature-3": {
+                    title: "Full control of your workspaces",
+                    text: "List and column views allow you to organise workflows and see the bigger picture. Split your workspace into boards to enable multi-project management. Filter by labels, users or keyboards to focus on specific tasks.",
+                    illustration: { alt: "TODO" },
+                },
+                "feature-4": {
+                    title: "Permissions to control access",
+                    text: "Make sure nothing important gets deleted. With permission roles - Owner, Maintainer, Member and Observer, you can be safe in knowing there won't be any accidentally data loss.",
+                    illustration: { alt: "TODO" },
+                },
+            },
+        },
+        "academic": {
+            hero: {
+                title: "Academic solutions",
+                text: "How students can use Projectify to plan a thesis, collaborate, or keep track of assignments.",
+                illustration: { alt: "TODO" },
+            },
+            features: {
+                "feature-1": {
+                    title: "Deadlines become a lifeline",
+                    text: "Projectify notifies you of upcoming due dates for assignments, so you'll never miss a paper's deadline.",
+                    illustration: { alt: "TODO" },
+                },
+                "feature-2": {
+                    title: "Checklists that aid your progress",
+                    text: "We know that projects and dissertations can be daunting, but we're here to help. Breaking tasks into smaller sub tasks allow you to micro-achieve your way to completion.",
+                    illustration: { alt: "TODO" },
+                },
+                "feature-3": {
+                    title: "Create notes on each task and coordinate with friends",
+                    text: "Invite friends and classmates into your workspace to collaborate, share ideas and more.",
+                    illustration: { alt: "TODO" },
+                },
+            },
+        },
+        "remote-work": {
+            hero: {
+                title: "Remote solutions",
+                text: "How remote workers can use Projectify to keep in tune with projects and stay connected.",
+                illustration: { alt: "TODO" },
+            },
+            features: {
+                "feature-1": {
+                    title: "Work together across timezones",
+                    text: "Asynchronous communication is vital for all teams be they remote or in the office. Assign tasks, create new projects and provide updates, anywhere, anytime.",
+                    illustration: { alt: "TODO" },
+                },
+                "feature-2": {
+                    title: "Notifications and updates on any task",
+                    text: "Notifications allow for important information to be delivered, even if you're not around. When you're away from your computer, updates to task will stay unread in the notification center until you get back.",
+                    illustration: { alt: "TODO" },
+                },
+                "feature-3": {
+                    title: "Assign tasks to users all over the world",
+                    text: "Whether it's Leo in the Phillipines or Valerie in Brazil, once you assign a task to someone they will be notified immediately with a pop-up.",
+                    illustration: { alt: "TODO" },
+                },
+            },
+        },
+        "personal-use": {
+            hero: {
+                title: "Personal solutions",
+                text: "How people can use Projectify for everyday life, whether it be keeping track fo your health or creating an itinerary for a trip.",
+                illustration: { alt: "TODO" },
+            },
+            features: {
+                "feature-1": {
+                    title: "Create tasks with ease",
+                    text: "Organise your tasks into individual projects with sections such as 'To do', 'In progress' and 'Done'. Provide descriptions for each task and set deadlines. Labels simplify the process of catergorizing tasks.",
+                    illustration: { alt: "TODO" },
+                },
+                "feature-2": {
+                    title: "Check off sub tasks as you go",
+                    text: "Need to plan an event? Want to create a list of achievements? Sub tasks help you to check off small tasks bit by bite.",
+                    illustration: { alt: "TODO" },
+                },
+                "feature-3": {
+                    title: "Add friends and family to your space",
+                    text: "Get everyone on the same page by assigning task to different workspace users.",
+                    illustration: { alt: "TODO" },
+                },
+            },
+        },
     },
     "accessibility": {
         hero: {

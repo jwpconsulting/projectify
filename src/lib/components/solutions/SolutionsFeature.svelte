@@ -11,7 +11,7 @@
         }`}
     >
         <h4 class="text-xl font-bold sm:text-4xl">
-            {feature.header}
+            {feature.title}
         </h4>
         <p class="text-l">
             {feature.text}

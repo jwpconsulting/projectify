@@ -7,11 +7,11 @@
     let pageContent: SolutionsPageContent;
     $: pageContent = {
         heroContent: {
-            header: $_("academic-solutions.hero-header"),
-            text: $_("academic-solutions.hero-text"),
+            title: $_("solutions.academic.hero.title"),
+            text: $_("solutions.academic.hero.text"),
             image: {
                 src: "/assets/solutions/hero-academic.png",
-                alt: "TODO",
+                alt: $_("solutions.academic.hero.illustration.alt"),
             },
         },
         features: [
@@ -19,28 +19,34 @@
                 image: {
                     position: "right",
                     src: "/assets/solutions/academic-popup.png",
-                    alt: "TODO",
+                    alt: $_(
+                        "solutions.academic.features.feature-1.illustration.alt"
+                    ),
                 },
-                header: $_("academic-solutions.feature-1-header"),
-                text: $_("academic-solutions.feature-1-text"),
+                title: $_("solutions.academic.features.feature-1.title"),
+                text: $_("solutions.academic.features.feature-1.text"),
             },
             {
                 image: {
                     position: "left",
                     src: "/assets/solutions/academic-subtask.png",
-                    alt: "TODO",
+                    alt: $_(
+                        "solutions.academic.features.feature-2.illustration.alt"
+                    ),
                 },
-                header: $_("academic-solutions.feature-2-header"),
-                text: $_("academic-solutions.feature-2-text"),
+                title: $_("solutions.academic.features.feature-2.title"),
+                text: $_("solutions.academic.features.feature-2.text"),
             },
             {
                 image: {
                     position: "right",
                     src: "/assets/solutions/academic-update.png",
-                    alt: "TODO",
+                    alt: $_(
+                        "solutions.academic.features.feature-3.illustration.alt"
+                    ),
                 },
-                header: $_("academic-solutions.feature-3-header"),
-                text: $_("academic-solutions.feature-3-text"),
+                title: $_("solutions.academic.features.feature-3.title"),
+                text: $_("solutions.academic.features.feature-3.text"),
             },
         ],
     };
