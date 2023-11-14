@@ -6,10 +6,10 @@
     export let pageContent: SolutionsPageContent;
 </script>
 
-<div class="mb-20 flex flex-col gap-20">
+<div class="flex flex-col items-center gap-20 pb-20">
     <SolutionsHero heroContent={pageContent.heroContent} />
 
-    <div class="mx-6 flex flex-col gap-6 sm:mx-16 sm:gap-16">
+    <div class="flex max-w-3xl flex-col gap-6 px-8 sm:mx-16 sm:gap-16">
         {#each pageContent.features as feature}
             <SolutionsFeature {feature} />
         {/each}

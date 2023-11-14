@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { ArrowRight } from "@steeze-ui/heroicons";
-    import { Icon } from "@steeze-ui/svelte-icon";
     import { _ } from "svelte-i18n";
+
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
 
     interface Solution {
         href: string;
@@ -72,49 +72,48 @@
     ];
 </script>
 
-<div class="bg-base-200 p-6">
-    <div class="m-6 grid grid-cols-1 gap-4 pt-4 sm:m-16 sm:grid-cols-2">
-        <div>
-            <h1 class="mb-8 text-4xl font-bold md:text-6xl">
-                {$_("solutions-page.hero-header")}
-            </h1>
-            <p class="mb-8 max-w-md">
-                {$_("solutions-page.hero-text")}
-            </p>
-        </div>
-        <div class="min-w-full max-w-md">
-            <img src="/assets/solutions/solution-hero.png" alt="TODO" />
+<div class="flex flex-col gap-20 pb-20">
+    <div class="flex flex-col items-center bg-background p-6">
+        <div
+            class="flex max-w-4xl flex-col items-center gap-6 p-4 sm:grid sm:grid-cols-2 sm:p-20"
+        >
+            <div class="flex flex-col gap-6">
+                <h1 class="text-4xl font-bold md:text-6xl">
+                    {$_("solutions-page.hero-header")}
+                </h1>
+                <p class="max-w-md">
+                    {$_("solutions-page.hero-text")}
+                </p>
+            </div>
+            <div class="w-full max-w-xs">
+                <img src="/assets/solutions/solution-hero.png" alt="TODO" />
+            </div>
         </div>
     </div>
-</div>
-<div class="m-8 grid grid-cols-1 gap-12 sm:grid-cols-3 sm:gap-8">
-    {#each solutions as solution}
-        <div>
-            <a href={solution.href} class="space-y-4">
-                <img
-                    src={solution.image.src}
-                    alt={solution.image.alt}
-                    class="rounded-lg"
-                />
-                <div class="space-y-4 font-bold">
-                    <p>
+    <div class="grid grid-cols-1 gap-12 px-10 sm:grid-cols-3 sm:gap-8">
+        {#each solutions as solution}
+            <div class="flex flex-col gap-4">
+                <a href={solution.href}>
+                    <img
+                        src={solution.image.src}
+                        alt={solution.image.alt}
+                        class="rounded-lg"
+                    />
+                </a>
+                <div class="flex flex-col gap-4">
+                    <p class="font-bold">
                         {solution.title}
                     </p>
                     <p class="font-normal">
                         {$_("solutions-page.dev-description")}
                     </p>
-                    <div class="flex flex-row items-center gap-2 text-primary">
-                        <p>
-                            {$_("solutions-page.more")}
-                        </p>
-                        <Icon
-                            src={ArrowRight}
-                            theme="outline"
-                            class="h-4 w-4"
-                        />
-                    </div>
+                    <Anchor
+                        size="normal"
+                        href={solution.href}
+                        label={$_("solutions-page.more")}
+                    />
                 </div>
-            </a>
-        </div>
-    {/each}
+            </div>
+        {/each}
+    </div>
 </div>

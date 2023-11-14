@@ -4,8 +4,10 @@
     export let heroContent: SolutionsHeroContent;
 </script>
 
-<div class="bg-base-content p-6 sm:p-16">
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+<div class="flex w-full flex-col items-center bg-base-content p-6 sm:p-16">
+    <div
+        class="flex max-w-2xl flex-col items-center gap-4 sm:grid sm:grid-cols-2"
+    >
         <div
             class="mb-8 flex flex-col gap-8 text-center font-bold text-foreground sm:text-left"
         >
@@ -16,7 +18,7 @@
                 {heroContent.text}
             </p>
         </div>
-        <div class="min-w-full max-w-md">
+        <div class="w-full max-w-xs">
             <img src={heroContent.image.src} alt={heroContent.image.alt} />
         </div>
     </div>
