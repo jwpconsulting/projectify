@@ -4,40 +4,40 @@
     $: sections = [
         {
             title: $_("accessibility.goals.title"),
-            contents: [$_("accessibility.goals.text")],
+            text: $_("accessibility.goals.text"),
         },
         {
             title: $_("accessibility.measures.title"),
-            listItems: $json("accessibility.measures.list") as string[],
+            list: $json("accessibility.measures.list") as string[],
         },
         {
             title: $_("accessibility.conformance.title"),
-            contents: [$_("accessibility.conformance.text")],
+            text: $_("accessibility.conformance.text"),
         },
         {
             title: $_("accessibility.compatibility.title"),
-            contents: [$_("accessibility.compatibility.text")],
+            text: $_("accessibility.compatibility.text"),
         },
         {
             title: $_("accessibility.platform.title"),
-            contents: [$_("accessibility.platform.text")],
+            text: $_("accessibility.platform.text"),
         },
         {
             title: $_("accessibility.website.title"),
-            listItems: $json("accessibility.website.list") as string[],
+            list: $json("accessibility.website.list") as string[],
         },
         {
             title: $_("accessibility.limitations.title"),
-            contents: [$_("accessibility.limitations.text")],
-            listItems: $json("accessibility.limitations.list") as string[],
+            text: $_("accessibility.limitations.text"),
+            list: $json("accessibility.limitations.list") as string[],
         },
         {
             title: $_("accessibility.evaluation.title"),
-            contents: [$_("accessibility.evaluation.text")],
+            text: $_("accessibility.evaluation.text"),
         },
         {
             title: $_("accessibility.contact.title"),
-            contents: [$_("accessibility.contact.text")],
+            text: $_("accessibility.contact.text"),
         },
     ];
 </script>
@@ -63,18 +63,16 @@
                 <h2 class="pt-4 text-3xl font-bold">
                     {section.title}
                 </h2>
-                {#if section.contents}
-                    {#each section.contents as content}
-                        <p>
-                            {content}
-                        </p>
-                    {/each}
+                {#if section.text}
+                    <p>
+                        {section.text}
+                    </p>
                 {/if}
-                {#if section.listItems}
+                {#if section.list}
                     <ul>
-                        {#each section.listItems as listItem}
+                        {#each section.list as item}
                             <li>
-                                {listItem}
+                                {item}
                             </li>
                         {/each}
                     </ul>
