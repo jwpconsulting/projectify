@@ -361,35 +361,35 @@ const messages: MessageCollection = {
             "log-back-in": "Log in again",
             "landing": "Go to landing",
         },
-    },
-    "log-in": {
-        "title": "Log in",
-        "enter-your-email": "Enter your email",
-        "email": "Email",
-        "enter-your-password": "Enter your password",
-        "password": "Password",
-        "forgot-password": "Forgot password",
-        "log-in": "Log in",
-        "no-account": "Don't have an account yet?",
-        "invalid-credentials":
-            "Invalid credentials. Please check email and password.",
-        "sign-up-here": "Sign up here",
-    },
-    "request-password-reset": {
-        "title": "Reset your password",
-        "explanation":
-            "Enter the email associated with your account and we'll send you a link to reset your password.",
-        "enter-your-email": "Enter your email",
-        "email": "Email",
-        "send-reset-password-link": "Send reset password link",
-        "return-to-log-in": "Return to log in",
-    },
-    "confirm-password-reset": {
-        "title": "Reset your password",
-        "enter-new-password": "Enter new password",
-        "new-password": "New password",
-        "confirm-new-password": "Confirm new password",
-        "reset-password": "Reset password",
+        "log-in": {
+            "title": "Log in",
+            "enter-your-email": "Enter your email",
+            "email": "Email",
+            "enter-your-password": "Enter your password",
+            "password": "Password",
+            "forgot-password": "Forgot password",
+            "log-in": "Log in",
+            "no-account": "Don't have an account yet?",
+            "invalid-credentials":
+                "Invalid credentials. Please check email and password.",
+            "sign-up-here": "Sign up here",
+        },
+        "request-password-reset": {
+            "title": "Reset your password",
+            "explanation":
+                "Enter the email associated with your account and we'll send you a link to reset your password.",
+            "enter-your-email": "Enter your email",
+            "email": "Email",
+            "send-reset-password-link": "Send reset password link",
+            "return-to-log-in": "Return to log in",
+        },
+        "confirm-password-reset": {
+            "title": "Reset your password",
+            "enter-new-password": "Enter new password",
+            "new-password": "New password",
+            "confirm-new-password": "Confirm new password",
+            "reset-password": "Reset password",
+        },
     },
     "task-screen": {
         "update": {

@@ -15,16 +15,16 @@
     }
 </script>
 
-<AuthScreen title={$_("request-password-reset.title")} action={submit}>
+<AuthScreen title={$_("auth.request-password-reset.title")} action={submit}>
     <div class="text-center">
-        {$_("request-password-reset.explanation")}
+        {$_("auth.request-password-reset.explanation")}
     </div>
     <div class="flex flex-col gap-6">
         <InputField
-            placeholder={$_("request-password-reset.enter-your-email")}
+            placeholder={$_("auth.request-password-reset.enter-your-email")}
             style={{ kind: "field", inputType: "text" }}
             name="email"
-            label={$_("request-password-reset.email")}
+            label={$_("auth.request-password-reset.email")}
             bind:value={email}
         />
         <Button
@@ -32,12 +32,12 @@
             style={{ kind: "primary" }}
             color="blue"
             size="medium"
-            label={$_("request-password-reset.send-reset-password-link")}
+            label={$_("auth.request-password-reset.send-reset-password-link")}
         />
         <div class="text-center">
             <Anchor
                 href="/user/sign-up"
-                label={$_("request-password-reset.return-to-log-in")}
+                label={$_("auth.request-password-reset.return-to-log-in")}
                 size="normal"
             />
         </div>

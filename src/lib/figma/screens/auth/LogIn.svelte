@@ -21,31 +21,31 @@
         try {
             await login(email, password, redirectTo);
         } catch {
-            error = $_("log-in.invalid-credentials");
+            error = $_("auth.log-in.invalid-credentials");
         }
     }
 </script>
 
-<AuthScreen title={$_("log-in.title")} {action}>
+<AuthScreen title={$_("auth.log-in.title")} {action}>
     <div class="flex flex-col gap-6">
         <InputField
-            placeholder={$_("log-in.enter-your-email")}
+            placeholder={$_("auth.log-in.enter-your-email")}
             style={{ kind: "field", inputType: "email" }}
             name="email"
-            label={$_("log-in.email")}
+            label={$_("auth.log-in.email")}
             required
             bind:value={email}
         />
         <InputField
-            placeholder={$_("log-in.enter-your-password")}
+            placeholder={$_("auth.log-in.enter-your-password")}
             style={{ kind: "field", inputType: "password" }}
             name="password"
-            label={$_("log-in.password")}
+            label={$_("auth.log-in.password")}
             bind:value={password}
             required
             anchorBottom={{
                 href: requestPasswordResetUrl,
-                label: $_("log-in.forgot-password"),
+                label: $_("auth.log-in.forgot-password"),
             }}
         />
         {#if error}
@@ -58,13 +58,13 @@
             style={{ kind: "primary" }}
             color="blue"
             size="medium"
-            label={$_("log-in.log-in")}
+            label={$_("auth.log-in.log-in")}
         />
         <div class="text-center">
-            {$_("log-in.no-account")}
+            {$_("auth.log-in.no-account")}
             <Anchor
                 href={signUpUrl}
-                label={$_("log-in.sign-up-here")}
+                label={$_("auth.log-in.sign-up-here")}
                 size="normal"
             />
         </div>
