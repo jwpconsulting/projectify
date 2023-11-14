@@ -20,9 +20,17 @@
 {#if kind === "desktop"}
     <div class="flex flex-row">
         {#if state === "task"}
-            <TabElement href={taskUrl} label={$_("task")} active />
+            <TabElement
+                href={taskUrl}
+                label={$_("task-screen.bar.task")}
+                active
+            />
         {:else}
-            <TabElement href={taskUpdatesUrl} label={$_("updates")} active />
+            <TabElement
+                href={taskUpdatesUrl}
+                label={$_("task-screen.bar.updates")}
+                active
+            />
         {/if}
         <div class="grow border-b-2 border-base-content" />
     </div>
@@ -30,12 +38,12 @@
     <div class="flex flex-row">
         <TabElement
             href={taskUrl}
-            label={$_("task")}
+            label={$_("task-screen.bar.task")}
             active={state === "task"}
         />
         <TabElement
             href={taskUpdatesUrl}
-            label={$_("updates")}
+            label={$_("task-screen.bar.updates")}
             active={state === "updates"}
         />
         <div class="grow border-b-2 border-border" />

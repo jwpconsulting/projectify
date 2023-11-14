@@ -392,6 +392,10 @@ const messages: MessageCollection = {
         },
     },
     "task-screen": {
+        "bar": {
+            task: "Task",
+            updates: "Updates",
+        },
         "update": {
             "update": "Update task",
             "update-continue-editing": "Update task and stay",
@@ -468,7 +472,6 @@ const messages: MessageCollection = {
             "save": "Change password",
         },
     },
-    "task": "Task",
     "workspace-settings": {
         "title": "Workspace settings",
         "general": {
@@ -524,7 +527,6 @@ const messages: MessageCollection = {
     },
     "disconnected-network": "Disconnected Network",
     "back-to-landing-page": "back to landing page",
-    "updates": "Updates",
     "add-label": "Add label",
     "index": {
         "hero-header": "Manage projects the right way.",
