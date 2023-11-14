@@ -2,6 +2,8 @@
     import { _ } from "svelte-i18n";
 
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+    import { backToHomeUrl } from "$lib/urls";
+    import { logInUrl } from "$lib/urls/user";
 </script>
 
 <div class="flex flex-col gap-8 px-8 py-8">
@@ -10,10 +12,14 @@
         <Anchor
             size="normal"
             label={$_("auth.logout.log-back-in")}
-            href="/login"
+            href={logInUrl}
         />
     </p>
     <p>
-        <Anchor size="normal" label={$_("auth.logout.landing")} href="/" />
+        <Anchor
+            size="normal"
+            label={$_("auth.logout.landing")}
+            href={backToHomeUrl}
+        />
     </p>
 </div>

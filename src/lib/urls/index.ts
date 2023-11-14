@@ -1,5 +1,9 @@
 import type { SettingKind } from "$lib/types/dashboard";
 
+// This will be shown every time we suggest the user to go "back to home"
+// or similar
+export const backToHomeUrl = "/";
+
 export function getDashboardWorkspaceUrl(workspaceUuid: string) {
     return `/dashboard/workspace/${workspaceUuid}`;
 }

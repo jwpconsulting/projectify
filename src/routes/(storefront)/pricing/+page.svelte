@@ -72,7 +72,7 @@
             </div>
         </div>
         <Button
-            action={{ kind: "a", href: "/signup" }}
+            action={{ kind: "a", href: "/user/sign-up" }}
             size="medium"
             color="blue"
             style={{ kind: "primary" }}

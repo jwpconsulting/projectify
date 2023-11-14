@@ -72,7 +72,7 @@ export const login = async (
     }
 };
 
-export const logout = async () => {
+export const logOut = async () => {
     await client.mutate({
         mutation: Mutation_Logout,
     });

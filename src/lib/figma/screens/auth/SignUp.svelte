@@ -8,6 +8,7 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
     import { signUp } from "$lib/stores/user";
+    import { logInUrl, sentEmailConfirmationLinkUrl } from "$lib/urls/user";
 
     let email: string;
     let password: string;
@@ -19,7 +20,7 @@
         error = undefined;
         try {
             await signUp(email, password);
-            await goto("/email-confirmation-link-sent/");
+            await goto(sentEmailConfirmationLinkUrl);
         } catch {
             error = $_("auth.sign-up.invalid-credentials");
         }
@@ -85,7 +86,7 @@
         <div class="text-center">
             {$_("auth.sign-up.already-have-an-account")}
             <Anchor
-                href="/login"
+                href={logInUrl}
                 label={$_("auth.sign-up.log-in-here")}
                 size="normal"
             />

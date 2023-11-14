@@ -5,6 +5,7 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import { getProfileUrl } from "$lib/urls";
+    import { logOutUrl } from "$lib/urls/user";
 </script>
 
 <Layout>
@@ -15,7 +16,7 @@
         icon={User}
     />
     <ContextMenuButton
-        kind={{ kind: "a", href: "/logout" }}
+        kind={{ kind: "a", href: logOutUrl }}
         label={$_("profile-overlay.log-out")}
         state="normal"
         icon={Logout}

@@ -19,7 +19,7 @@
                 style={{ kind: "primary" }}
                 color="blue"
                 size="medium"
-                action={{ kind: "a", href: "/signup" }}
+                action={{ kind: "a", href: "/user/sign-up" }}
                 label={$_("index.hero-button")}
                 grow={false}
             />

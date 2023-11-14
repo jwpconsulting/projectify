@@ -36,7 +36,7 @@
         />
         <div class="text-center">
             <Anchor
-                href="/signup"
+                href="/user/sign-up"
                 label={$_("request-password-reset.return-to-log-in")}
                 size="normal"
             />

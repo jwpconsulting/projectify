@@ -59,7 +59,7 @@
             <Button
                 action={{
                     kind: "a",
-                    href: "/signup",
+                    href: "/user/sign-up",
                     onInteract: closeMobileMenu,
                 }}
                 style={{ kind: "primary" }}

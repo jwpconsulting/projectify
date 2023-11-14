@@ -6,6 +6,7 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { login } from "$lib/stores/user";
+    import { signUpUrl, requestPasswordResetUrl } from "$lib/urls/user";
 
     export let redirectTo = "/dashboard";
 
@@ -43,7 +44,7 @@
             bind:value={password}
             required
             anchorBottom={{
-                href: "/user/reset",
+                href: requestPasswordResetUrl,
                 label: $_("log-in.forgot-password"),
             }}
         />
@@ -62,7 +63,7 @@
         <div class="text-center">
             {$_("log-in.no-account")}
             <Anchor
-                href="/signup"
+                href={signUpUrl}
                 label={$_("log-in.sign-up-here")}
                 size="normal"
             />

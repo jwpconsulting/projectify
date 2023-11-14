@@ -468,25 +468,6 @@ const messages: MessageCollection = {
             "save": "Change password",
         },
     },
-    "email": "Email",
-    "please-enter-your-email": "Please enter your email",
-    "password": "Password",
-    "please-enter-a-password": "Please enter a password",
-    "i-sent-an-email-to": "I sent an email to",
-    "please-proceed-from-the-url-described-in-the-message":
-        "Please proceed from the url described in the message.",
-    "top-page": "Top page",
-    "password-reset": "Password reset",
-    "user-not-found": "User not found.",
-    "send": "Send",
-    "password-reset-email-sent": "Password reset email sent",
-    "please-enter-your-email-to-request-a-password-reset":
-        "Please enter your email to request a password reset.",
-    "password-can-not-be-empty": "Password can not be empty.",
-    "something-went-wrong": "Something went wrong.",
-    "password-reset-complete": "Password reset complete",
-    "user-password-reset-completed-msg":
-        "Your password has been changed. Please log in to continue using Projectify.",
     "task": "Task",
     "workspace-settings": {
         "title": "Workspace settings",

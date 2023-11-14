@@ -2,6 +2,7 @@
     import { _ } from "svelte-i18n";
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import { backToHomeUrl } from "$lib/urls";
 
     import illustration from "./illustration.svg";
 </script>
@@ -21,7 +22,7 @@
             size="medium"
             style={{ kind: "primary" }}
             color="blue"
-            action={{ kind: "a", href: "/" }}
+            action={{ kind: "a", href: backToHomeUrl }}
         />
     </div>
 </div>

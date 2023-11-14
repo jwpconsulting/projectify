@@ -14,14 +14,14 @@
     </svelte:fragment>
     <slot slot="desktop-right">
         <Button
-            action={{ kind: "a", href: "/login" }}
+            action={{ kind: "a", href: "/user/log-in" }}
             style={{ kind: "tertiary", icon: null }}
             color="blue"
             size="medium"
             label={$_("header.log-in")}
         />
         <Button
-            action={{ kind: "a", href: "/signup" }}
+            action={{ kind: "a", href: "/user/sign-up" }}
             style={{ kind: "primary" }}
             color="blue"
             size="medium"
