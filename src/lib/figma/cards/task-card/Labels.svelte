@@ -56,7 +56,7 @@
             class="flex flex-row items-center rounded-xl border border-dashed border-primary px-4 py-1 text-xxs font-bold text-primary"
             on:click|preventDefault={openLabelPicker}
         >
-            {$_("add-label")}</button
+            {$_("dashboard.task-card.add-label")}</button
         >
     </div>
 {/if}

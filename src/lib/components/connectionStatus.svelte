@@ -16,10 +16,10 @@
         >
             <div class="flex space-x-2 p-2 py-4">
                 <div><IconsExclamation /></div>
-                <div>{$_("disconnected-network")}</div>
+                <div>{$_("connection-status.disconnected")}</div>
             </div>
             <a class="link p-2 py-4 text-sm" href="/"
-                >{$_("back-to-landing-page")}</a
+                >{$_("connection-status.back-to-landing")}</a
             >
         </div>
     </div>

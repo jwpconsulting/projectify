@@ -1,7 +1,6 @@
-import type { MessageCollection } from "./types";
+import type { MessageDirectory } from "./types";
 
-// TODO const messages: MessageDirectory = {
-const messages: MessageCollection = {
+const messages: MessageDirectory = {
     "overlay": {
         constructive: {
             "update-workspace-board": {
@@ -138,6 +137,9 @@ const messages: MessageCollection = {
         "apply-label": "apply label",
     },
     "dashboard": {
+        "task-card": {
+            "add-label": "Add label",
+        },
         "tasks-not-found-for": "Tasks not found for ''{search}''",
         "showing-results-for-search": "Showing results for ''{search}''",
         "create-board": "Create new workspace board",
@@ -525,9 +527,10 @@ const messages: MessageCollection = {
             },
         },
     },
-    "disconnected-network": "Disconnected Network",
-    "back-to-landing-page": "back to landing page",
-    "add-label": "Add label",
+    "connection-status": {
+        "disconnected": "Not connected to Projectify",
+        "back-to-landing": "Back to landing page",
+    },
     "index": {
         "hero-header": "Manage projects the right way.",
         "hero-text":
