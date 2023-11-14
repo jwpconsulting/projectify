@@ -1,59 +1,43 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
+    import { _, json } from "svelte-i18n";
 
     $: sections = [
         {
-            title: $_("accessibility.a-goals"),
-            contents: [$_("accessibility.a-goals-text")],
+            title: $_("accessibility.goals.title"),
+            contents: [$_("accessibility.goals.text")],
         },
         {
-            title: $_("accessibility.a-measures"),
-            listItems: [
-                $_("accessibility.a-measures-list-1"),
-                $_("accessibility.a-measures-list-2"),
-                $_("accessibility.a-measures-list-3"),
-                $_("accessibility.a-measures-list-4"),
-                $_("accessibility.a-measures-list-5"),
-            ],
+            title: $_("accessibility.measures.title"),
+            listItems: $json("accessibility.measures.list") as string[],
         },
         {
-            title: $_("accessibility.a-conformance"),
-            contents: [$_("accessibility.a-conformance-text")],
+            title: $_("accessibility.conformance.title"),
+            contents: [$_("accessibility.conformance.text")],
         },
         {
-            title: $_("accessibility.a-compatibility"),
-            contents: [$_("accessibility.a-compatibility-text")],
+            title: $_("accessibility.compatibility.title"),
+            contents: [$_("accessibility.compatibility.text")],
         },
         {
-            title: $_("accessibility.a-platform"),
-            contents: [$_("accessibility.a-platform-text")],
+            title: $_("accessibility.platform.title"),
+            contents: [$_("accessibility.platform.text")],
         },
         {
-            title: $_("accessibility.a-website"),
-            listItems: [
-                $_("accessibility.a-website-list-1"),
-                $_("accessibility.a-website-list-2"),
-                $_("accessibility.a-website-list-3"),
-                $_("accessibility.a-website-list-4"),
-                $_("accessibility.a-website-list-5"),
-                $_("accessibility.a-website-list-6"),
-            ],
+            title: $_("accessibility.website.title"),
+            listItems: $json("accessibility.website.list") as string[],
         },
         {
-            title: $_("accessibility.a-limitations"),
-            contents: [$_("accessibility.a-limitations-text")],
-            listItems: [
-                $_("accessibility.a-limitations-list-1"),
-                $_("accessibility.a-limitations-list-2"),
-            ],
+            title: $_("accessibility.limitations.title"),
+            contents: [$_("accessibility.limitations.text")],
+            listItems: $json("accessibility.limitations.list") as string[],
         },
         {
-            title: $_("accessibility.a-evaluation"),
-            contents: [$_("accessibility.a-evaluation-text")],
+            title: $_("accessibility.evaluation.title"),
+            contents: [$_("accessibility.evaluation.text")],
         },
         {
-            title: $_("accessibility.a-contact"),
-            contents: [$_("accessibility.a-contact-text")],
+            title: $_("accessibility.contact.title"),
+            contents: [$_("accessibility.contact.text")],
         },
     ];
 </script>
@@ -62,12 +46,12 @@
     <div class="page bg-base-200">
         <div class="m-6 grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
             <h1 class="mb-8 text-4xl font-bold md:text-6xl">
-                {$_("accessibility.hero-header")}
+                {$_("accessibility.hero.title")}
             </h1>
             <div class="max-w-md">
                 <img
                     src="/assets/accessibility/accessibility-hero.png"
-                    alt=""
+                    alt={$_("accessibility.hero.illustration.alt")}
                 />
             </div>
         </div>

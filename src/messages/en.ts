@@ -713,57 +713,65 @@ const messages: MessageDirectory = {
             "Get everyone on the same page by assigning task to different workspace users.",
     },
     "accessibility": {
-        "hero-header": "Accessibility statement",
-        "a-goals": "Accessibility goals",
-        "a-goals-text":
-            "Projectify is committed to ensuring digital inclusivity and accessibility for people with diverse disabilities. We are continually improving the user experience for everyone, and applying the relevant accessibility standards. We are also aiming to improve the use of both our website and platform for users who employ assistive technologies.",
-        "a-measures": "Measures we take to support accessiblity",
-        "a-measures-list-1":
-            "Include accessibility as part of our mission statement",
-        "a-measures-list-2":
-            "Ensure designs meet a minimum accessibilty level (WCAG 2.1 level AA)",
-        "a-measures-list-3":
-            "Compatibility with different web browsers and assistive technology",
-        "a-measures-list-4":
-            "Include people with disabilities in our user personas",
-        "a-measures-list-5":
-            "Conduct usability tests with people who have disabilities",
-        "a-conformance": "Conformance status",
-        "a-conformance-text":
-            "The Web Content Accessibility Guidelines (WCAG) standard defines requirements to improve accessibility for people with disabilities. It defines three levels of conformance: Level A, Level AA, and Level AAA. 'Fully conforms' means that the content meets all of the WCAG requirements at the specified Level without exceptions. Although our goal is WCAG 2.1 Level AA conformance, we have also applied some Level AAA Success Criteria: Images of text are only used for decorative purposes. Content posted since May 2022 fully conforms to WCAG 2.1 Level AA. It partially conforms to Level AAA.Older content conforms to earlier versions of WCAG, for example, WCAG 2.0.",
-        "a-compatibility":
-            "Compatibility with browsers and assistive technologies",
-        "a-compatibility-text":
-            "The Projectify website and platform is designed to be compatible with assistive technologies and the last two versions of major browsers. The website and platform are not designed for Internet Explorer 11 and earlier versions.",
-        "a-platform": "Platform",
-        "a-platform-text":
-            "We are currently in the process of making our platform conform to accessiblity standards. Our main focus is to improve color contrast in both the light and dark modes of our platform, increase discoverability of features for users with vision impairments and enhance the usability of our main components.",
-        "a-website": "Website",
-        "a-website-list-1":
-            "Keyboard navigation: All menus, buttons , inputs and actions are accessible from a keyboard",
-        "a-website-list-2":
-            "Screen reader compatibility: Our code supports the use of screen readers for users who digest information through audio means",
-        "a-website-list-3":
-            "Images: All images are supported with descriptive and accurate alternative text which can be read by screen readers",
-        "a-website-list-4":
-            "Text: Our text size, weight and font style have been carefully chosen to be accessible to users with dyslexia and/or visual impairment. WCAG 2.0 level AA requires a contrast ratio of at least 4.5:1 for normal text and 3:1 for large text.",
-        "a-website-list-5":
-            "Color: WCAG 2.1 requires a contrast ratio of at least 3:1 for graphics and user interface components, which we meet",
-        "a-website-list-6":
-            "Magnification: For sight impaired users, all pages and content can be magnified using standard browser controls or magnification software",
-        "a-limitations": "Limitations",
-        "a-limitations-text":
-            "We are aware that, despite our best efforts, there may be limitations to the accessibilty of both the platform and website. Below is a description of known limitations. Please contact us if you discover an issue not listed below. Known limitations of the platform:",
-        "a-limitations-list-1":
-            "Tab selection not working on the calendar menu",
-        "a-limitations-list-2":
-            "Not all screen readers can read placeholder text",
-        "a-evaluation": "Evaluation report",
-        "a-evaluation-text":
-            "An evaluation report can be found here link. Assessment of both the platform and website was carried out by self-evaluation.",
-        "a-contact": "Contact us",
-        "a-contact-text":
-            "We welcome feedback on the accessibility of Projectify. If you encounter any acccessibility barriers whilst using the platform or website, please email hello@projectify.com. ",
+        hero: {
+            title: "Accessibility statement",
+            illustration: {
+                alt: "TODO",
+            },
+        },
+        goals: {
+            title: "Accessibility goals",
+            text: "Projectify is committed to ensuring digital inclusivity and accessibility for people with diverse disabilities. We are continually improving the user experience for everyone, and applying the relevant accessibility standards. We are also aiming to improve the use of both our website and platform for users who employ assistive technologies.",
+        },
+        measures: {
+            title: "Measures we take to support accessiblity",
+            list: [
+                "Include accessibility as part of our mission statement",
+                "Ensure designs meet a minimum accessibilty level (WCAG 2.1 level AA)",
+                "Compatibility with different web browsers and assistive technology",
+                "Include people with disabilities in our user personas",
+                "Conduct usability tests with people who have disabilities",
+            ],
+        },
+        conformance: {
+            title: "Conformance status",
+            text: "The Web Content Accessibility Guidelines (WCAG) standard defines requirements to improve accessibility for people with disabilities. It defines three levels of conformance: Level A, Level AA, and Level AAA. 'Fully conforms' means that the content meets all of the WCAG requirements at the specified Level without exceptions. Although our goal is WCAG 2.1 Level AA conformance, we have also applied some Level AAA Success Criteria: Images of text are only used for decorative purposes. Content posted since May 2022 fully conforms to WCAG 2.1 Level AA. It partially conforms to Level AAA.Older content conforms to earlier versions of WCAG, for example, WCAG 2.0.",
+        },
+        compatibility: {
+            title: "Compatibility with browsers and assistive technologies",
+            text: "The Projectify website and platform is designed to be compatible with assistive technologies and the last two versions of major browsers. The website and platform are not designed for Internet Explorer 11 and earlier versions.",
+        },
+        platform: {
+            title: "Platform",
+            text: "We are currently in the process of making our platform conform to accessiblity standards. Our main focus is to improve color contrast in both the light and dark modes of our platform, increase discoverability of features for users with vision impairments and enhance the usability of our main components.",
+        },
+        website: {
+            title: "Website",
+            list: [
+                "Keyboard navigation: All menus, buttons , inputs and actions are accessible from a keyboard",
+                "Screen reader compatibility: Our code supports the use of screen readers for users who digest information through audio means",
+                "Images: All images are supported with descriptive and accurate alternative text which can be read by screen readers",
+                "Text: Our text size, weight and font style have been carefully chosen to be accessible to users with dyslexia and/or visual impairment. WCAG 2.0 level AA requires a contrast ratio of at least 4.5:1 for normal text and 3:1 for large text.",
+                "Color: WCAG 2.1 requires a contrast ratio of at least 3:1 for graphics and user interface components, which we meet",
+                "Magnification: For sight impaired users, all pages and content can be magnified using standard browser controls or magnification software",
+            ],
+        },
+        limitations: {
+            title: "Limitations",
+            text: "We are aware that, despite our best efforts, there may be limitations to the accessibilty of both the platform and website. Below is a description of known limitations. Please contact us if you discover an issue not listed below. Known limitations of the platform:",
+            list: [
+                "Tab selection not working on the calendar menu",
+                "Not all screen readers can read placeholder text",
+            ],
+        },
+        evaluation: {
+            title: "Evaluation report",
+            text: "An evaluation report can be found here link. Assessment of both the platform and website was carried out by self-evaluation.",
+        },
+        contact: {
+            title: "Contact us",
+            text: "We welcome feedback on the accessibility of Projectify. If you encounter any acccessibility barriers whilst using the platform or website, please email hello@projectify.com. ",
+        },
     },
     "help": {
         "hero": {
