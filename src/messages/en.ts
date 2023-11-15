@@ -928,8 +928,10 @@ const messages: MessageDirectory = {
             },
         },
         "help-sections": "Help sections",
+        "go-to-section": "View this section",
         "basics": {
             title: "Basics",
+            description: "Your first steps towards productivity",
             sections: [
                 {
                     id: "workspace",
@@ -965,6 +967,7 @@ const messages: MessageDirectory = {
         },
         "workspaces": {
             title: "Workspaces",
+            description: "Independent spaces at your fingertips",
             sections: [
                 {
                     id: "create-workspace",
@@ -994,6 +997,7 @@ const messages: MessageDirectory = {
         },
         "workspace-boards": {
             title: "Workspace boards",
+            description: "Separate projects from each other",
             sections: [
                 {
                     id: "create-workspace-board",
@@ -1023,6 +1027,7 @@ const messages: MessageDirectory = {
         },
         "workspace-board-sections": {
             title: "Workspace board sections",
+            description: "Maximize the efficiency of your tasks",
             sections: [
                 {
                     id: "create-workspace-board-section",
@@ -1064,6 +1069,7 @@ const messages: MessageDirectory = {
         },
         "tasks": {
             title: "Tasks",
+            description: "All the ins and outs of task creation",
             sections: [
                 {
                     id: "create-task",
@@ -1100,6 +1106,7 @@ const messages: MessageDirectory = {
         },
         "labels": {
             title: "Labels",
+            description: "Create categories for your tasks",
             sections: [
                 {
                     id: "create-label",
@@ -1136,6 +1143,7 @@ const messages: MessageDirectory = {
         },
         "workspace-users": {
             title: "Workspace users",
+            description: "Collaboration starts with an invite",
             sections: [
                 {
                     id: "invite-a-workspace-user",
@@ -1172,6 +1180,7 @@ const messages: MessageDirectory = {
         // TODO Bulk select
         "filters": {
             title: "Filters",
+            description: "Streamline your workflow with filters",
             sections: [
                 {
                     id: "filter-and-search-by-workspace-user",
@@ -1195,6 +1204,7 @@ const messages: MessageDirectory = {
         },
         "billing": {
             title: "Billing and accounts",
+            description: "Payment and account information",
             sections: [
                 {
                     id: "billing-settings",

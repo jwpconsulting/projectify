@@ -22,7 +22,7 @@
             />
         </div>
     </div>
-    <div slot="side" class="grow">
+    <div slot="side" class="grow sm:max-w-xs">
         <HelpDropdown />
     </div>
     <div slot="content" class="flex flex-col gap-4">
