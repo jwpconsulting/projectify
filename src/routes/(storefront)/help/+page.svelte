@@ -2,7 +2,9 @@
     import { _ } from "svelte-i18n";
 
     import Layout from "$lib/components/solutions/Layout.svelte";
+    import SolutionsHero from "$lib/components/solutions/SolutionsHero.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+    import type { SolutionsHeroContent } from "$lib/types/ui";
 
     interface HelpTopic {
         title: string;
@@ -57,25 +59,18 @@
             href: "/help/billing",
         },
     ] satisfies HelpTopic[];
+    $: heroContent = {
+        title: $_("help.hero.header.text"),
+        text: $_("help.hero.header.subtext"),
+        image: {
+            src: "/assets/help/help-hero.png",
+            alt: $_("help.hero.image.alt"),
+        },
+    } satisfies SolutionsHeroContent;
 </script>
 
 <Layout>
-    <div slot="hero" class="flex flex-col gap-4 sm:grid-cols-2 md:grid">
-        <heading class="flex flex-col gap-4">
-            <h1 class="text-4xl font-bold md:text-6xl">
-                {$_("help.hero.header.text")}
-            </h1>
-            <p class="max-w-md text-2xl">
-                {$_("help.hero.header.subtext")}
-            </p>
-        </heading>
-        <div class="min-w-full max-w-md">
-            <img
-                src="/assets/help/help-hero.png"
-                alt={$_("help.hero.image.alt")}
-            />
-        </div>
-    </div>
+    <SolutionsHero slot="hero" {heroContent} />
     <div slot="content" class="flex flex-col gap-4">
         <div class="flex flex-col gap-6 sm:grid sm:grid-cols-2 md:grid-cols-3">
             {#each helpTopics as helpTopic}
