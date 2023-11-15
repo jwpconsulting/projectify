@@ -1,6 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
+    import Layout from "$lib/components/solutions/Layout.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
 
     interface Solution {
@@ -86,8 +87,11 @@
     ];
 </script>
 
-<div class="flex flex-col gap-20 pb-20">
-    <div class="flex flex-col items-center bg-background p-6">
+<Layout>
+    <div
+        slot="hero"
+        class="flex w-full flex-col items-center bg-background p-6"
+    >
         <div
             class="flex max-w-4xl flex-col items-center gap-6 p-4 sm:grid sm:grid-cols-2 sm:p-20"
         >
@@ -104,7 +108,10 @@
             </div>
         </div>
     </div>
-    <div class="grid grid-cols-1 gap-12 px-10 sm:grid-cols-3 sm:gap-8">
+    <div
+        slot="content"
+        class="grid grid-cols-1 gap-12 px-10 sm:grid-cols-3 sm:gap-8"
+    >
         {#each solutions as solution}
             <div class="flex flex-col gap-4">
                 <a href={solution.href}>
@@ -130,4 +137,4 @@
             </div>
         {/each}
     </div>
-</div>
+</Layout>
