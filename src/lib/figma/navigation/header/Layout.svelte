@@ -1,4 +1,8 @@
 <script lang="ts">
+    import { _ } from "svelte-i18n";
+
+    import PolyLogo from "$lib/figma/navigation/polylogo.svg";
+
     export let logoVisibleDesktop = false;
     export let logoVisibleMobile = false;
     export let alwaysVisible = false;
@@ -19,7 +23,7 @@
     <div class="flex flex-row items-center gap-4">
         {#if logoVisibleDesktop}
             <a href="/" class="shrink">
-                <img src="/assets/logo/polylogo.svg" alt="Projectify" />
+                <img src={PolyLogo} alt={$_("navigation.header.logo.alt")} />
             </a>
         {/if}
         {#if $$slots["desktop-left"]}
@@ -42,7 +46,7 @@
     >
         {#if logoVisibleMobile}
             <a href="/">
-                <img src="/assets/logo/polylogo.svg" alt="" />
+                <img src={PolyLogo} alt={$_("navigation.header.logo.alt")} />
             </a>
         {/if}
         <slot name="mobile" />

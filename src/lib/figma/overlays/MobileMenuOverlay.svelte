@@ -42,7 +42,7 @@
                 style={{ kind: "primary" }}
                 color="blue"
                 size="medium"
-                label={$_("header.continue-to-dashboard")}
+                label={$_("navigation.header.continue-to-dashboard")}
             />
         {:else if target.kind === "landing"}
             <Button
@@ -54,7 +54,7 @@
                 style={{ kind: "tertiary", icon: null }}
                 color="blue"
                 size="medium"
-                label={$_("header.log-in")}
+                label={$_("navigation.header.log-in")}
             />
             <Button
                 action={{
@@ -65,7 +65,7 @@
                 style={{ kind: "primary" }}
                 color="blue"
                 size="medium"
-                label={$_("header.start-a-free-trial")}
+                label={$_("navigation.header.start-a-free-trial")}
             />
         {/if}
     </div>

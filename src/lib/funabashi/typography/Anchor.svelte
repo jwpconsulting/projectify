@@ -3,11 +3,13 @@
 
     export let href: string;
     export let label: string;
-    export let size: AnchorSize;
+    export let size: AnchorSize = "normal";
 
     let anchorClass: string;
     $: anchorClass = {
+        // TODO remove this class
         extraSmall: "text-xs",
+        // TODO remove this class
         small: "text-sm",
         normal: "text-base",
         large: "text-lg",

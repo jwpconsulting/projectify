@@ -133,6 +133,55 @@ const messages: MessageDirectory = {
             "cancel": "Cancel",
         },
     },
+    // TODO factor the following into "overlay"
+    "profile-overlay": {
+        "my-profile": "my profile",
+        "log-out": "log out",
+    },
+    "workspace-overlay": {
+        "add-new-workspace": "add new workspace",
+    },
+    "side-nav-overlay": {
+        "help-tips": "Help & tips",
+        "minimise-sidebar": "minimise sidebar",
+        "expand-sidebar": "expand sidebar",
+        "go-to-archive": "go to archive",
+        "workspace-settings": "workspace settings",
+    },
+    "workspace-board-overlay": {
+        "edit-board": "edit board",
+        "archive-board": "archive board",
+    },
+    "workspace-board-section-overlay": {
+        "expand-section": "expand section",
+        "collapse-section": "collapse section",
+        "switch-previous": "switch with previous section",
+        "switch-next": "switch with next section",
+        "edit-title": "edit section title",
+        "add-task": "add task",
+        "delete-section": "delete section",
+    },
+    "task-overlay": {
+        "open-task": "open task",
+        "move-to-section": "move to section",
+        "move-to-top": "move to top",
+        "move-to-bottom": "move to bottom",
+        "copy-link": "copy link",
+        "go-to-updates": "go to updates",
+        "delete-task": "delete task",
+    },
+    "help-overlay": {
+        "help-and-tips": "help and tips",
+        "blog": "blog",
+    },
+    "permissions-overlay": {
+        "all-roles": "all roles",
+        "owner": "owner",
+        "maintainer": "maintainer",
+        "member": "member",
+        "observer": "observer",
+    },
+    // TODO find out if we can factor this into somewhere
     "label": {
         "apply-label": "apply label",
     },
@@ -184,11 +233,18 @@ const messages: MessageDirectory = {
         },
         empty: "No workspace boards have been archived.",
     },
+    // Factor this into a general error section
     "page404": {
         title: "Lost your way?",
         body: "The page you're looking for doesn't exist.",
         home: "Take me home",
     },
+    // Factor this into a general error section
+    "connection-status": {
+        "disconnected": "Not connected to Projectify",
+        "back-to-landing": "Back to landing page",
+    },
+    // TODO factor this into "dashboard"?
     "filter-label-menu": {
         "filter-labels": "Filter labels",
         "create-new-label": "Create new label",
@@ -196,60 +252,15 @@ const messages: MessageDirectory = {
         "save": "Save",
         "cancel": "Cancel",
     },
+    // TODO factor this into "dashboard"?
     "filter-label": {
         all: "All labels",
         none: "No label",
     },
+    // TODO factor this into "dashboard"?
     "filter-workspace-user": {
         "all-users": "All users",
         "assigned-nobody": "Assigned to nobody",
-    },
-    "profile-overlay": {
-        "my-profile": "my profile",
-        "log-out": "log out",
-    },
-    "workspace-overlay": {
-        "add-new-workspace": "add new workspace",
-    },
-    "side-nav-overlay": {
-        "help-tips": "Help & tips",
-        "minimise-sidebar": "minimise sidebar",
-        "expand-sidebar": "expand sidebar",
-        "go-to-archive": "go to archive",
-        "workspace-settings": "workspace settings",
-    },
-    "workspace-board-overlay": {
-        "edit-board": "edit board",
-        "archive-board": "archive board",
-    },
-    "workspace-board-section-overlay": {
-        "expand-section": "expand section",
-        "collapse-section": "collapse section",
-        "switch-previous": "switch with previous section",
-        "switch-next": "switch with next section",
-        "edit-title": "edit section title",
-        "add-task": "add task",
-        "delete-section": "delete section",
-    },
-    "task-overlay": {
-        "open-task": "open task",
-        "move-to-section": "move to section",
-        "move-to-top": "move to top",
-        "move-to-bottom": "move to bottom",
-        "copy-link": "copy link",
-        "go-to-updates": "go to updates",
-        "delete-task": "delete task",
-    },
-    "help-overlay": {
-        "help-and-tips": "help and tips",
-        "blog": "blog",
-    },
-    "permissions-overlay": {
-        "all-roles": "all roles",
-        "owner": "owner",
-        "maintainer": "maintainer",
-        "member": "member",
-        "observer": "observer",
     },
     "onboarding": {
         "continue": "Continue",
@@ -526,10 +537,6 @@ const messages: MessageDirectory = {
                     "{seats} ({seats_remaining} {seats_remaining, plural, one {seat} other {seats}} remaining)",
             },
         },
-    },
-    "connection-status": {
-        "disconnected": "Not connected to Projectify",
-        "back-to-landing": "Back to landing page",
     },
     "index": {
         // TODO "hero": {},
@@ -1217,15 +1224,48 @@ const messages: MessageDirectory = {
         },
         "skip": "Skip ahead to",
     },
-    "header": {
-        "features": "Features",
-        "solutions": "Solutions",
-        "help": "Help",
-        "company": "Company",
-        "pricing": "Pricing",
-        "log-in": "Log in",
-        "start-a-free-trial": "Start a free trial",
-        "continue-to-dashboard": "Continue to dashboard",
+    "navigation": {
+        header: {
+            "logo": {
+                alt: "Projectify",
+            },
+            "features": "Features",
+            "solutions": "Solutions",
+            "help": "Help",
+            "company": "Company",
+            "pricing": "Pricing",
+            "log-in": "Log in",
+            "start-a-free-trial": "Start a free trial",
+            "continue-to-dashboard": "Continue to dashboard",
+        },
+        footer: {
+            logo: {
+                alt: "Projectify",
+                heading: "Project management at pace.",
+            },
+            cta: "Start a free trial",
+            nav: {
+                product: {
+                    title: "Product",
+                    features: "Features",
+                    pricing: "Pricing",
+                },
+                resources: {
+                    "title": "Resources",
+                    "help-and-tips": "Help and tips",
+                },
+                company: {
+                    "title": "Company",
+                    "accessibility-statement": "Accessibility statement",
+                    "contact-us": "Contact us",
+                },
+                legal: {
+                    title: "Legal",
+                    privacy: "Privacy Policy",
+                    tos: "Terms of Service",
+                },
+            },
+        },
     },
     "roles": {
         observer: "Observer",

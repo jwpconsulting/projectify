@@ -18,14 +18,14 @@
             style={{ kind: "tertiary", icon: null }}
             color="blue"
             size="medium"
-            label={$_("header.log-in")}
+            label={$_("navigation.header.log-in")}
         />
         <Button
             action={{ kind: "a", href: "/user/sign-up" }}
             style={{ kind: "primary" }}
             color="blue"
             size="medium"
-            label={$_("header.start-a-free-trial")}
+            label={$_("navigation.header.start-a-free-trial")}
         />
     </slot>
     <div slot="mobile">

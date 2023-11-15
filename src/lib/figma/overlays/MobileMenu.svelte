@@ -5,10 +5,10 @@
     import { closeMobileMenu } from "$lib/stores/globalUi";
 
     $: links = [
-        { label: $_("header.features"), href: "/features" },
-        { label: $_("header.solutions"), href: "/solutions" },
-        { label: $_("header.help"), href: "/help" },
-        { label: $_("header.pricing"), href: "/pricing" },
+        { label: $_("navigation.header.features"), href: "/features" },
+        { label: $_("navigation.header.solutions"), href: "/solutions" },
+        { label: $_("navigation.header.help"), href: "/help" },
+        { label: $_("navigation.header.pricing"), href: "/pricing" },
     ];
 </script>
 

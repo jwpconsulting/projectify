@@ -6,12 +6,12 @@
 
 <HeaderButton
     type={{ kind: "button" }}
-    label={$_("header.features")}
+    label={$_("navigation.header.features")}
     action={{ kind: "a", href: "/features" }}
 />
 <HeaderButton
     type={{ kind: "button" }}
-    label={$_("header.solutions")}
+    label={$_("navigation.header.solutions")}
     action={{ kind: "a", href: "/solutions" }}
 />
 <!-- what is this?
@@ -20,17 +20,17 @@
     color="blue"
     disabled={false}
     size="medium"
-    label={$_("header.company")}
+    label={$_("navigation.header.company")}
     action={{ kind: "a", href: "/company" }}
 />
 -->
 <HeaderButton
     type={{ kind: "button" }}
-    label={$_("header.pricing")}
+    label={$_("navigation.header.pricing")}
     action={{ kind: "a", href: "/pricing" }}
 />
 <HeaderButton
     type={{ kind: "button" }}
-    label={$_("header.help")}
+    label={$_("navigation.header.help")}
     action={{ kind: "a", href: "/help" }}
 />

@@ -1,5 +1,6 @@
 <script lang="ts">
     import OverlayContainer from "$lib/components/OverlayContainer.svelte";
+    import Footer from "$lib/figma/navigation/Footer.svelte";
     import Continue from "$lib/figma/navigation/header/Continue.svelte";
     import Landing from "$lib/figma/navigation/header/Landing.svelte";
     import MobileMenuOverlay from "$lib/figma/overlays/MobileMenuOverlay.svelte";
@@ -21,7 +22,10 @@
             let:target
         >
             <MobileMenuOverlay slot="default" {target} />
-            <slot slot="else" />
+            <div slot="else" class="flex flex-col">
+                <slot />
+                <Footer />
+            </div>
         </OverlayContainer>
     </div>
 </div>

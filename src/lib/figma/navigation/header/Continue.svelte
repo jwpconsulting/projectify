@@ -17,7 +17,7 @@
             style={{ kind: "primary" }}
             color="blue"
             size="medium"
-            label={$_("header.continue-to-dashboard")}
+            label={$_("navigation.header.continue-to-dashboard")}
             action={{ kind: "a", href: "/dashboard" }}
         />
     </slot>
