@@ -47,6 +47,7 @@
         {#if logoVisibleMobile}
             <a href="/">
                 <img src={PolyLogo} alt={$_("navigation.header.logo.alt")} />
+                <!-- TODO add text that says "back to landing" for AT users -->
             </a>
         {/if}
         <slot name="mobile" />
