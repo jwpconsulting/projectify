@@ -2,7 +2,9 @@
     import { _ } from "svelte-i18n";
 
     import Layout from "$lib/components/solutions/Layout.svelte";
+    import SolutionsHero from "$lib/components/solutions/SolutionsHero.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+    import type { SolutionsHeroContent } from "$lib/types/ui";
 
     interface Solution {
         href: string;
@@ -14,18 +16,30 @@
         description: string;
     }
 
+    let heroContent: SolutionsHeroContent;
+    $: heroContent = {
+        title: $_("solutions.index.hero.title"),
+        text: $_("solutions.index.hero.text"),
+        image: {
+            src: "/assets/solutions/solution-hero.png",
+            alt: $_("solutions.index.hero.illustration.alt"),
+        },
+    };
+
     let solutions: Solution[];
     $: solutions = [
         {
             href: "/solutions/development-teams",
-            title: $_("solutions.index.solutions.developer.title"),
+            title: $_("solutions.index.solutions.development.title"),
             image: {
                 src: "assets/solutions/hero-development.png",
                 alt: $_(
-                    "solutions.index.solutions.developer.illustration.alt"
+                    "solutions.index.solutions.development.illustration.alt"
                 ),
             },
-            description: $_("solutions.index.solutions.developer.description"),
+            description: $_(
+                "solutions.index.solutions.development.description"
+            ),
         },
         {
             href: "/solutions/research",
@@ -88,53 +102,34 @@
 </script>
 
 <Layout>
-    <div
-        slot="hero"
-        class="flex w-full flex-col items-center bg-background p-6"
-    >
-        <div
-            class="flex max-w-4xl flex-col items-center gap-6 p-4 sm:grid sm:grid-cols-2 sm:p-20"
-        >
-            <div class="flex flex-col gap-6">
-                <h1 class="text-4xl font-bold md:text-6xl">
-                    {$_("solutions.index.hero.title")}
-                </h1>
-                <p class="max-w-md">
-                    {$_("solutions.index.hero.text")}
-                </p>
-            </div>
-            <div class="w-full max-w-xs">
-                <img src="/assets/solutions/solution-hero.png" alt="TODO" />
-            </div>
-        </div>
-    </div>
+    <SolutionsHero slot="hero" {heroContent} />
     <div
         slot="content"
-        class="grid grid-cols-1 gap-12 px-10 sm:grid-cols-3 sm:gap-8"
+        class="flex flex-col items-center gap-12 md:grid md:grid-cols-3 md:gap-8"
     >
         {#each solutions as solution}
-            <div class="flex flex-col gap-4">
-                <a href={solution.href}>
+            <section class="flex h-full flex-col justify-between gap-4">
+                <div class="flex flex-col gap-4">
                     <img
                         src={solution.image.src}
                         alt={solution.image.alt}
                         class="rounded-lg"
                     />
-                </a>
-                <div class="flex flex-col gap-4">
-                    <p class="font-bold">
-                        {solution.title}
-                    </p>
-                    <p class="font-normal">
-                        {solution.description}
-                    </p>
-                    <Anchor
-                        size="normal"
-                        href={solution.href}
-                        label={$_("solutions.index.more")}
-                    />
+                    <div class="flex h-full flex-col gap-4">
+                        <h2 class="font-bold">
+                            {solution.title}
+                        </h2>
+                        <p class="font-normal">
+                            {solution.description}
+                        </p>
+                    </div>
                 </div>
-            </div>
+                <Anchor
+                    size="normal"
+                    href={solution.href}
+                    label={$_("solutions.index.more")}
+                />
+            </section>
         {/each}
     </div>
 </Layout>

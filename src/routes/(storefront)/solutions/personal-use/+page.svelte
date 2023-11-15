@@ -11,7 +11,9 @@
             text: $_("solutions.personal-use.hero.text"),
             image: {
                 src: "/assets/solutions/hero-personal.png",
-                alt: $_("solutions.personal-use.hero.illustration.alt"),
+                alt: $_(
+                    "solutions.index.solutions.personal-use.illustration.alt"
+                ),
             },
         },
         features: [

@@ -11,9 +11,12 @@
 <Layout>
     <SolutionsHero slot="hero" heroContent={pageContent.heroContent} />
 
-    <svelte:fragment slot="content">
+    <div
+        slot="content"
+        class="flex w-full flex-col items-center gap-6 sm:gap-16"
+    >
         {#each pageContent.features as feature}
             <SolutionsFeature {feature} />
         {/each}
-    </svelte:fragment>
+    </div>
 </Layout>

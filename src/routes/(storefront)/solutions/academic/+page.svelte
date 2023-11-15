@@ -11,7 +11,7 @@
             text: $_("solutions.academic.hero.text"),
             image: {
                 src: "/assets/solutions/hero-academic.png",
-                alt: $_("solutions.academic.hero.illustration.alt"),
+                alt: $_("solutions.index.solutions.academic.illustration.alt"),
             },
         },
         features: [

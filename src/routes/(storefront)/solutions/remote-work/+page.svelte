@@ -11,7 +11,9 @@
             text: $_("solutions.remote-work.hero.text"),
             image: {
                 src: "/assets/solutions/hero-remote.png",
-                alt: $_("solutions.remote-work.hero.illustration.alt"),
+                alt: $_(
+                    "solutions.index.solutions.remote-work.illustration.alt"
+                ),
             },
         },
         features: [

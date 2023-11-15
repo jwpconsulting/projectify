@@ -610,43 +610,58 @@ const messages: MessageDirectory = {
             hero: {
                 title: "Solutions for every type of user",
                 text: "Explore the different ways users are using Projectify to meet deadlines, reach targets and be productive.",
+                illustration: {
+                    alt: "An illustration showing users of different backgrounds",
+                },
             },
             solutions: {
-                "developer": {
+                "development": {
                     title: "Development teams",
                     description:
                         "Monitor team progress throughout the whole software lifecyle.",
-                    illustration: { alt: "TODO" },
-                },
-                "project-management": {
-                    title: "Project management",
-                    description:
-                        "Faciliate rapid delivery across multiple projects for any industry.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "Our mascot Poly sitting in front of a computer, developing software and looking content",
+                    },
                 },
                 "research": {
                     title: "Research",
                     description:
                         "Keep track of testing processes and results with incredible detail.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "Two content looking Polys (our mascot) researching in a laboratory and taking down notes on a chalkboard",
+                    },
                 },
-                "remote-work": {
-                    title: "Remote work",
+                "project-management": {
+                    title: "Project management",
                     description:
-                        "Asynchronous communication whether you're at home or away.",
-                    illustration: { alt: "TODO" },
+                        "Faciliate rapid delivery across multiple projects for any industry.",
+                    illustration: {
+                        alt: "Two Polys in a factory pointing at machines symbolized by huge gears. The mascot on the left holds a wrench.",
+                    },
                 },
                 "academic": {
                     title: "Academic endeavours",
                     description:
                         "Structure a thesis, organise a project or keep track of assignments.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "Our mascot Poly celebrating their graduation from an educiational institution, wearing an academic dress, throwing a square academic cap into the air",
+                    },
+                },
+                "remote-work": {
+                    title: "Remote work",
+                    description:
+                        "Asynchronous communication whether you're at home or away.",
+                    illustration: {
+                        alt: "Our mascot Poly working at the beach looking happy",
+                    },
                 },
                 "personal-use": {
                     title: "Personal use",
                     description:
                         "Log an exercise routine, create a new diet or plan an adventure. The possibilities are endless.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "Our mascot Poly thinking about all the things they want to do, among them being running, taking pictures and eating something tasty, each thing symbolized by a thought bubble",
+                    },
                 },
             },
             more: "Learn more",
@@ -655,23 +670,28 @@ const messages: MessageDirectory = {
             hero: {
                 title: "Development solutions",
                 text: "How development teams can use Projectify to create tasks, monitor pulls requests and deploy faster.",
-                illustration: { alt: "TODO" },
             },
             features: {
                 "feature-1": {
                     title: "Organise with labels and task numbers",
                     text: "Use labels with terms like bug, enhancement or backend to categorize tasks. Filter with labels or search by task number to quickly locate what you're looking for.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "A illustration showing the label context menu used in Projectify",
+                    },
                 },
                 "feature-2": {
                     title: "Live notifications",
                     text: "Notifications provide you with all the information you need whilst also giving you conveniant 'reply' and 'go to task' actions. The notification center houses updates from all workspaces so you never miss a beat.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "An illustration showing the live notifications a user can receive in Projectify",
+                    },
                 },
                 "feature-3": {
                     title: "Plan and execute",
                     text: "Set up and monitor pull requests, merges, bug fixes and more for multiple workspace users of your team.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "An illlustration showing tasks in a section called 'In Progress'",
+                    },
                 },
             },
         },
@@ -679,23 +699,28 @@ const messages: MessageDirectory = {
             hero: {
                 title: "Research solutions",
                 text: "How researchers teams can use Projectify to collaborate on data with colleagues and meticulously catalogue findings.",
-                illustration: { alt: "TODO" },
             },
             features: {
                 "feature-1": {
-                    title: "Catergorize data with labels and numbers",
+                    title: "Categorize data with labels and numbers",
                     text: "Labels simplify the process of categorizing tasks. Automatically assigned task numbers take organisation one step further",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "An illustration showing tasks in a section called 'In Progress'",
+                    },
                 },
                 "feature-2": {
                     title: "Provide and request updates on any task",
                     text: "The updates sections allows you and your colleagues to share new details about how a test, experiment or study has gone.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "An illustration showing updates posted in a task by various users discussing organizing a meeting",
+                    },
                 },
                 "feature-3": {
                     title: "Create and monitor multiple projects",
                     text: "With unlimited project boards and tasks per workspace, you're free to perform as much research and testing as you require.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "An illustration suggesting the different ways labels can be assigned to different team members depending on their role, such as design or marketing",
+                    },
                 },
             },
         },
@@ -703,28 +728,35 @@ const messages: MessageDirectory = {
             hero: {
                 title: "Project management solutions",
                 text: "How project managers can use Projectify to efficiently manage tasks, projects and workspace users of their team.",
-                illustration: { alt: "TODO" },
             },
             features: {
                 "feature-1": {
                     title: "An ethical approach to management",
                     text: "View how many tasks a workspace user has assigned to them, so the workload can be divided equally. Filter by workspace user to see what individual colleagues are working on.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "An illustration showing how Projectify displays each workspace users assigned task count",
+                    },
                 },
                 "feature-2": {
                     title: "Live notifications",
-                    text: "Notifications provide you with all the information you need whilst also giving you conveniant 'reply' and 'go to task' actions. The notification center houses updates from all workspaces so you never miss a beat.",
-                    illustration: { alt: "TODO" },
+                    text: "Notifications provide you with all the information you need whilst also giving you convenient 'reply' and 'go to task' actions. The notification center houses updates from all workspaces so you never miss a beat.",
+                    illustration: {
+                        alt: "An illustration showing notifications arriving about tasks being updated",
+                    },
                 },
                 "feature-3": {
                     title: "Full control of your workspaces",
                     text: "List and column views allow you to organise workflows and see the bigger picture. Split your workspace into boards to enable multi-project management. Filter by labels, users or keyboards to focus on specific tasks.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "An illustration showing a collapsed dashboard side bar and various workspace users and labels",
+                    },
                 },
                 "feature-4": {
                     title: "Permissions to control access",
                     text: "Make sure nothing important gets deleted. With permission roles - Owner, Maintainer, Member and Observer, you can be safe in knowing there won't be any accidentally data loss.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "An illustration of a settings screen showing workspace users belonging to a workspace user and their role within the workspace. The illustration also shows a button allowing filtering by role and another button letting a user invite new workspace users",
+                    },
                 },
             },
         },
@@ -732,23 +764,28 @@ const messages: MessageDirectory = {
             hero: {
                 title: "Academic solutions",
                 text: "How students can use Projectify to plan a thesis, collaborate, or keep track of assignments.",
-                illustration: { alt: "TODO" },
             },
             features: {
                 "feature-1": {
                     title: "Deadlines become a lifeline",
                     text: "Projectify notifies you of upcoming due dates for assignments, so you'll never miss a paper's deadline.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "An illustration showing how Projectify will inform a user of different task deadlines and other important updates",
+                    },
                 },
                 "feature-2": {
                     title: "Checklists that aid your progress",
                     text: "We know that projects and dissertations can be daunting, but we're here to help. Breaking tasks into smaller sub tasks allow you to micro-achieve your way to completion.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "An illustration showing how users can track subtask progress for each task",
+                    },
                 },
                 "feature-3": {
                     title: "Create notes on each task and coordinate with friends",
                     text: "Invite friends and classmates into your workspace to collaborate, share ideas and more.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "An illustration showing the various features the task view has to offer, such as description, sub tasks, tracking task updates, and more",
+                    },
                 },
             },
         },
@@ -756,23 +793,28 @@ const messages: MessageDirectory = {
             hero: {
                 title: "Remote solutions",
                 text: "How remote workers can use Projectify to keep in tune with projects and stay connected.",
-                illustration: { alt: "TODO" },
             },
             features: {
                 "feature-1": {
                     title: "Work together across timezones",
                     text: "Asynchronous communication is vital for all teams be they remote or in the office. Assign tasks, create new projects and provide updates, anywhere, anytime.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "An illustration showing the updates screen of a task where two workspace users decide on when to organize a remote meeting",
+                    },
                 },
                 "feature-2": {
                     title: "Notifications and updates on any task",
                     text: "Notifications allow for important information to be delivered, even if you're not around. When you're away from your computer, updates to task will stay unread in the notification center until you get back.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "An illustration showing a notification popup telling the user about recent updates to the tasks in their workspace",
+                    },
                 },
                 "feature-3": {
                     title: "Assign tasks to users all over the world",
                     text: "Whether it's Leo in the Phillipines or Valerie in Brazil, once you assign a task to someone they will be notified immediately with a pop-up.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "An illustration showing the 'In Progress' section of a workspace board with tasks being assigned to different users",
+                    },
                 },
             },
         },
@@ -780,23 +822,28 @@ const messages: MessageDirectory = {
             hero: {
                 title: "Personal solutions",
                 text: "How people can use Projectify for everyday life, whether it be keeping track fo your health or creating an itinerary for a trip.",
-                illustration: { alt: "TODO" },
             },
             features: {
                 "feature-1": {
                     title: "Create tasks with ease",
                     text: "Organise your tasks into individual projects with sections such as 'To do', 'In progress' and 'Done'. Provide descriptions for each task and set deadlines. Labels simplify the process of catergorizing tasks.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "An illustration showing a 'To do' and 'Done' section, showing personal tasks that a user assigned to themselves, such as 'Book a ticket to Paris' or 'Learn French for beginners'",
+                    },
                 },
                 "feature-2": {
                     title: "Check off sub tasks as you go",
                     text: "Need to plan an event? Want to create a list of achievements? Sub tasks help you to check off small tasks bit by bite.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "An illustration showing various sub tasks that a user has created within a task, such as 'Swim freestyle for 10 lengths'",
+                    },
                 },
                 "feature-3": {
                     title: "Add friends and family to your space",
                     text: "Get everyone on the same page by assigning task to different workspace users.",
-                    illustration: { alt: "TODO" },
+                    illustration: {
+                        alt: "An illustration showing how different tasks in the 'In progress' section of a workspace board have been assigned to friends and family. The tasks are 'Trim back overgrown hedges', 'Polish wooden furnishings', and 'Replace extractor fan grating'",
+                    },
                 },
             },
         },
@@ -805,7 +852,7 @@ const messages: MessageDirectory = {
         hero: {
             title: "Accessibility statement",
             illustration: {
-                alt: "TODO",
+                alt: "Accessibility logo",
             },
         },
         goals: {

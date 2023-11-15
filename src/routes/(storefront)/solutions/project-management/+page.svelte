@@ -11,7 +11,9 @@
             text: $_("solutions.project-management.hero.text"),
             image: {
                 src: "/assets/solutions/hero-project-management.png",
-                alt: $_("solutions.project-management.hero.illustration.alt"),
+                alt: $_(
+                    "solutions.index.solutions.project-management.illustration.alt"
+                ),
             },
         },
         features: [

@@ -11,7 +11,9 @@
             text: $_("solutions.development.hero.text"),
             image: {
                 src: "/assets/solutions/hero-development.png",
-                alt: $_("solutions.development.hero.illustration.alt"),
+                alt: $_(
+                    "solutions.index.solutions.development.illustration.alt"
+                ),
             },
         },
         features: [
