@@ -11,9 +11,11 @@
         !$$slots["desktop-left"] &&
         !$$slots["desktop-right"] &&
         $$slots["desktop-center"];
+    // There are lots of conditionals here, it might make sense to refactor
+    // it a bit
 </script>
 
-<div
+<nav
     class="hidden flex-row items-center justify-between border-b-2 border-border bg-foreground px-6 py-4 md:flex"
     class:justify-between={!justCenter}
     class:justify-center={justCenter}
@@ -38,10 +40,10 @@
             <slot name="desktop-right" />
         </div>
     {/if}
-</div>
+</nav>
 
 {#if !alwaysVisible}
-    <div
+    <nav
         class="flex flex-row items-center justify-between border-b-2 border-border bg-foreground px-2 py-4 md:hidden"
     >
         {#if logoVisibleMobile}
@@ -51,5 +53,5 @@
             </a>
         {/if}
         <slot name="mobile" />
-    </div>
+    </nav>
 {/if}

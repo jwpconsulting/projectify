@@ -23,7 +23,9 @@
         >
             <MobileMenuOverlay slot="default" {target} />
             <div slot="else" class="flex grow flex-col justify-between">
-                <slot />
+                <main class="flex grow flex-col">
+                    <slot />
+                </main>
                 <Footer />
             </div>
         </OverlayContainer>
