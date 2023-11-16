@@ -7,7 +7,7 @@
     import { signUpUrl } from "$lib/urls/user";
 </script>
 
-<div class="flex w-full flex-col gap-6 bg-background p-8">
+<footer class="flex w-full flex-col gap-6 bg-background p-8">
     <div class="flex flex-col gap-8 sm:flex-row">
         <div class="flex flex-col gap-6">
             <div class="flex flex-col gap-2">
@@ -28,8 +28,8 @@
                 label={$_("navigation.footer.cta")}
             />
         </div>
-        <div class="flex flex-col gap-12 sm:flex-row">
-            <div class="flex flex-col gap-1">
+        <nav class="flex flex-col gap-12 sm:flex-row">
+            <section class="flex flex-col gap-1">
                 <h6 class="font-bold">
                     {$_("navigation.footer.nav.product.title")}
                 </h6>
@@ -49,8 +49,8 @@
                         />
                     </li>
                 </ul>
-            </div>
-            <div class="flex flex-col gap-1">
+            </section>
+            <section class="flex flex-col gap-1">
                 <h6 class="font-bold">
                     {$_("navigation.footer.nav.resources.title")}
                 </h6>
@@ -64,8 +64,8 @@
                         />
                     </li>
                 </ul>
-            </div>
-            <div class="flex flex-col gap-1">
+            </section>
+            <section class="flex flex-col gap-1">
                 <h6 class="font-bold">
                     {$_("navigation.footer.nav.company.title")}
                 </h6>
@@ -87,8 +87,8 @@
                         />
                     </li>
                 </ul>
-            </div>
-            <div class="flex flex-col gap-1">
+            </section>
+            <section class="flex flex-col gap-1">
                 <h6 class="font-bold">
                     {$_("navigation.footer.nav.legal.title")}
                 </h6>
@@ -106,7 +106,7 @@
                         />
                     </li>
                 </ul>
-            </div>
-        </div>
+            </section>
+        </nav>
     </div>
-</div>
+</footer>
