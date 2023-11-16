@@ -5,7 +5,7 @@
     export let heroContent: SolutionsHeroContent;
 </script>
 
-<div
+<header
     class="flex w-full flex-col items-center gap-4 {heroContent.image
         ? 'sm:grid sm:grid-cols-2'
         : ''}"
@@ -31,4 +31,4 @@
             <img src={heroContent.image.src} alt={heroContent.image.alt} />
         </div>
     {/if}
-</div>
+</header>
