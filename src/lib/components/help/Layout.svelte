@@ -19,7 +19,7 @@
         <HelpDropdown />
     </div>
     <div slot="content" class="flex flex-col gap-4">
-        <h1 class="text-4xl font-bold">{heroContent.title}</h1>
+        <h2 class="text-4xl font-bold">{heroContent.title}</h2>
         <SkipLinks {sections} />
         <HelpSections {sections} />
     </div>

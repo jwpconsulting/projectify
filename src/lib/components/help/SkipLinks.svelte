@@ -4,17 +4,13 @@
     export let sections: { title: string; id: string }[];
 </script>
 
-<div class="flex flex-col gap-4">
-    <p class="text-xl font-bold">
-        {$_("help.skip")}
-    </p>
+<nav class="flex flex-col gap-4">
+    <h3 class="text-xl font-bold">{$_("help.skip")}</h3>
     <ul class="space-y-1 text-primary">
         {#each sections as section}
             <li>
-                <a href={`#${section.id}`}>
-                    {section.title}
-                </a>
+                <a href={`#${section.id}`}>{section.title}</a>
             </li>
         {/each}
     </ul>
-</div>
+</nav>
