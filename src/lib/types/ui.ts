@@ -149,7 +149,7 @@ export interface FeatureDescription {
 export interface SolutionsHeroContent {
     title: string;
     text: string;
-    image: {
+    image?: {
         src: string;
         alt: string;
     };

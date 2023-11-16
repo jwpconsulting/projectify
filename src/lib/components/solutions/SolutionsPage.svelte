@@ -1,14 +1,13 @@
 <script lang="ts">
+    import HeroLayout from "$lib/components/layouts/HeroLayout.svelte";
     import SolutionsFeature from "$lib/components/solutions/SolutionsFeature.svelte";
     import SolutionsHero from "$lib/components/solutions/SolutionsHero.svelte";
     import type { SolutionsPageContent } from "$lib/types/ui";
 
-    import Layout from "./Layout.svelte";
-
     export let pageContent: SolutionsPageContent;
 </script>
 
-<Layout>
+<HeroLayout>
     <SolutionsHero slot="hero" heroContent={pageContent.heroContent} />
 
     <div
@@ -19,4 +18,4 @@
             <SolutionsFeature {feature} />
         {/each}
     </div>
-</Layout>
+</HeroLayout>

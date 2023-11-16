@@ -1,7 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import Layout from "$lib/components/solutions/Layout.svelte";
+    import HeroLayout from "$lib/components/layouts/HeroLayout.svelte";
     import SolutionsHero from "$lib/components/solutions/SolutionsHero.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import type { SolutionsHeroContent } from "$lib/types/ui";
@@ -69,7 +69,7 @@
     } satisfies SolutionsHeroContent;
 </script>
 
-<Layout>
+<HeroLayout>
     <SolutionsHero slot="hero" {heroContent} />
     <div slot="content" class="flex flex-col gap-4">
         <div class="flex flex-col gap-6 sm:grid sm:grid-cols-2 md:grid-cols-3">
@@ -87,4 +87,4 @@
             {/each}
         </div>
     </div>
-</Layout>
+</HeroLayout>
