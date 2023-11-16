@@ -11,10 +11,10 @@ const config: KnipConfig = {
         "src/stories/**/*.stories.ts",
         "src/bin/*.ts",
         // XXX We might have more luck convincing knip that we are importing
-        // src/app.scss in src/routes/+layout.svelte:
-        //   import "../app.scss";
+        // src/lib/app.scss in src/routes/+layout.svelte:
+        //   import "$lib/app.scss";
         // Instead of manually specifying the stylesheet here
-        "src/app.scss",
+        "src/lib/app.scss",
     ],
     rules: {
         binaries: "error",
