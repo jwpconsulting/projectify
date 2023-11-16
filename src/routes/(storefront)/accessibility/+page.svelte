@@ -1,6 +1,18 @@
 <script lang="ts">
     import { _, json } from "svelte-i18n";
 
+    import HeroLayout from "$lib/components/layouts/HeroLayout.svelte";
+    import SolutionsHero from "$lib/components/solutions/SolutionsHero.svelte";
+    import type { SolutionsHeroContent } from "$lib/types/ui";
+
+    $: heroContent = {
+        title: $_("accessibility.hero.title"),
+        image: {
+            src: "/assets/accessibility/accessibility-hero.png",
+            alt: $_("accessibility.hero.illustration.alt"),
+        },
+    } satisfies SolutionsHeroContent;
+
     $: sections = [
         {
             title: $_("accessibility.goals.title"),
@@ -42,24 +54,12 @@
     ];
 </script>
 
-<main class="bg-base-100">
-    <div class="page bg-base-200">
-        <div class="m-6 grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
-            <h1 class="mb-8 text-4xl font-bold md:text-6xl">
-                {$_("accessibility.hero.title")}
-            </h1>
-            <div class="max-w-md">
-                <img
-                    src="/assets/accessibility/accessibility-hero.png"
-                    alt={$_("accessibility.hero.illustration.alt")}
-                />
-            </div>
-        </div>
-    </div>
+<HeroLayout>
+    <SolutionsHero slot="hero" {heroContent} />
 
-    <div class="flex flex-col justify-center p-16">
+    <div slot="content" class="flex flex-col gap-4">
         {#each sections as section}
-            <section class="flex flex-col gap-2">
+            <section class="flex flex-col gap-4">
                 <h2 class="pt-4 text-3xl font-bold">
                     {section.title}
                 </h2>
@@ -80,4 +80,4 @@
             </section>
         {/each}
     </div>
-</main>
+</HeroLayout>

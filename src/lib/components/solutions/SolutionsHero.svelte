@@ -20,9 +20,11 @@
         <h1 class="text-4xl lg:text-6xl">
             {heroContent.title}
         </h1>
-        <p class="max-w-md text-xl">
-            {heroContent.text}
-        </p>
+        {#if heroContent.text}
+            <p class="max-w-md text-xl">
+                {heroContent.text}
+            </p>
+        {/if}
     </div>
     {#if heroContent.image}
         <div class="w-full max-w-xs justify-self-center">

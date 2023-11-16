@@ -148,7 +148,7 @@ export interface FeatureDescription {
 
 export interface SolutionsHeroContent {
     title: string;
-    text: string;
+    text?: string;
     image?: {
         src: string;
         alt: string;
