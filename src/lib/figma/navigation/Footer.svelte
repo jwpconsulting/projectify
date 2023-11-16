@@ -7,7 +7,7 @@
     import { signUpUrl } from "$lib/urls/user";
 </script>
 
-<div class="flex w-full flex-col gap-6 p-8">
+<div class="flex w-full flex-col gap-6 bg-background p-8">
     <div class="flex flex-col gap-8 sm:flex-row">
         <div class="flex flex-col gap-6">
             <div class="flex flex-col gap-2">

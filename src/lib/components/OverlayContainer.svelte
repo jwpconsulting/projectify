@@ -53,7 +53,10 @@
 </script>
 
 {#if $$slots.else}
-    <div class="h-full" class:hidden={$store.kind !== "hidden"}>
+    <div
+        class="flex h-full grow flex-col"
+        class:hidden={$store.kind !== "hidden"}
+    >
         <slot name="else" />
     </div>
 {/if}

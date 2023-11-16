@@ -8,13 +8,13 @@
     import { user } from "$lib/stores/user";
 </script>
 
-<div class="flex h-full flex-col bg-background">
+<div class="flex h-full grow flex-col bg-foreground">
     {#if $user}
         <Continue />
     {:else}
         <Landing />
     {/if}
-    <div class="relative h-full">
+    <div class="relative flex h-full grow flex-col">
         <OverlayContainer
             closeOverlay={closeMobileMenu}
             fixed={false}
@@ -22,7 +22,7 @@
             let:target
         >
             <MobileMenuOverlay slot="default" {target} />
-            <div slot="else" class="flex flex-col">
+            <div slot="else" class="flex grow flex-col justify-between">
                 <slot />
                 <Footer />
             </div>
