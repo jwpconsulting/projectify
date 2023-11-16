@@ -71,8 +71,10 @@
 
 <HeroLayout>
     <SolutionsHero slot="hero" {heroContent} />
-    <div slot="content" class="flex flex-col gap-4">
-        <div class="flex flex-col gap-6 sm:grid sm:grid-cols-2 md:grid-cols-3">
+    <div slot="content" class="flex w-full flex-col gap-4">
+        <div
+            class="flex w-full flex-col gap-6 sm:grid sm:grid-cols-2 md:grid-cols-3"
+        >
             {#each helpTopics as helpTopic}
                 <section class="flex flex-col gap-2">
                     <h1 class="text-lg font-bold">

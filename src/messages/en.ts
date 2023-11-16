@@ -927,6 +927,7 @@ const messages: MessageDirectory = {
                     "Learn to fly through projects with speed and agility",
             },
         },
+        "overview": "Overview",
         "help-sections": "Help sections",
         "go-to-section": "View this section",
         "basics": {

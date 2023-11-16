@@ -1,9 +1,9 @@
 <script lang="ts"></script>
 
 <!-- Common layout for solution layouts -->
-<div class="flex flex-col items-center gap-20 bg-foreground pb-20">
-    <div class="flex w-full flex-col items-center bg-background p-6 sm:p-16">
-        <div class="w-full max-w-3xl">
+<div class="flex flex-col items-center gap-10 bg-foreground pb-20 sm:gap-10">
+    <div class="flex w-full flex-col items-center bg-background">
+        <div class="w-full max-w-3xl px-6 py-6 sm:py-12">
             <slot name="hero" />
         </div>
     </div>
