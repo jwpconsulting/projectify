@@ -2,7 +2,6 @@
     import { Folder, Plus } from "@steeze-ui/heroicons";
     import { _ } from "svelte-i18n";
 
-    // import { goto } from "$lib/navigation";
     import Loading from "$lib/components/loading.svelte";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SelectWorkspaceBoard from "$lib/figma/buttons/SelectWorkspaceBoard.svelte";
