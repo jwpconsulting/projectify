@@ -15,10 +15,10 @@
         <div class="flex flex-col gap-12">
             <header class="flex flex-col gap-10">
                 <h1 class="text-4xl font-bold md:text-6xl">
-                    {$_("index.hero-header")}
+                    {$_("index.hero.header")}
                 </h1>
                 <p>
-                    {$_("index.hero-text")}
+                    {$_("index.hero.text")}
                 </p>
             </header>
             <Button
@@ -26,12 +26,12 @@
                 color="blue"
                 size="medium"
                 action={{ kind: "a", href: "/user/sign-up" }}
-                label={$_("index.hero-button")}
+                label={$_("index.hero.button")}
                 grow={false}
             />
         </div>
         <div class="max-w-md">
-            <img src="/assets/landing/hero.png" alt={$_("index.hero-alt")} />
+            <img src="/assets/landing/hero.png" alt={$_("index.hero.alt")} />
         </div>
     </section>
     <div slot="content" class="flex flex-col gap-16">

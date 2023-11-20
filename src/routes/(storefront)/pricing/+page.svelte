@@ -26,10 +26,10 @@
 <main class="flex flex-col gap-20 bg-base-100">
     <header class="mt-8 text-center">
         <h1 class="mb-4 text-4xl font-bold sm:text-6xl">
-            {$_("pricing-page.header")}
+            {$_("pricing-page.header.title")}
         </h1>
         <small class="sm-text-3xl text-3xl font-bold">
-            {$_("pricing-page.subtitle")}
+            {$_("pricing-page.header.subtitle")}
         </small>
     </header>
     <section class="space-y-8 text-center font-bold">
@@ -76,7 +76,7 @@
             size="medium"
             color="blue"
             style={{ kind: "primary" }}
-            label={$_("index.hero-button")}
+            label={$_("pricing-page.cta")}
         />
     </section>
 </main>

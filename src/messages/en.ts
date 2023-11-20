@@ -539,13 +539,12 @@ const messages: MessageDirectory = {
         },
     },
     "index": {
-        // TODO "hero": {},
-        "hero-header": "Manage projects the right way.",
-        "hero-text":
-            "Warp drive your way to success with software that helps you to collaborate on and manage projects efficiently, with speed.",
-        "hero-button": "Start a free trial",
-        "hero-alt":
-            "An illustration showing the look and feel of tasks in Projectify's user interface",
+        "hero": {
+            header: "Manage projects the right way.",
+            text: "Warp drive your way to success with software that helps you to collaborate on and manage projects efficiently, with speed.",
+            button: "Start a free trial",
+            alt: "An illustration showing the look and feel of tasks in Projectify's user interface",
+        },
         "trust": {
             header: 'Everything you need to <span class="text-primary">stay organized</span> and <span class="text-primary">deliver faster</span>',
             text: "The go-to project management tool for developers.",
@@ -597,8 +596,10 @@ const messages: MessageDirectory = {
         "solution-more": "See more use cases",
     },
     "pricing-page": {
-        "header": "Pricing",
-        "subtitle": "One plan. One price. All features.",
+        "header": {
+            title: "Pricing",
+            subtitle: "One plan. One price. All features.",
+        },
         "plan": "Universal Plan",
         "price": "$8",
         "seat-per-month": {
@@ -606,6 +607,7 @@ const messages: MessageDirectory = {
             per: "/",
             month: "month",
         },
+        "cta": "Start a free trial",
         // TODO refactor to become
         // "features": {title: "", featureList: { ... }},
         "feature-title": "What's included?",
