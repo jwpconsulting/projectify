@@ -36,14 +36,6 @@
                 <ul class="flex flex-col gap-2">
                     <li>
                         <Anchor
-                            href="/features"
-                            label={$_(
-                                "navigation.footer.nav.product.features"
-                            )}
-                        />
-                    </li>
-                    <li>
-                        <Anchor
                             href="/pricing"
                             label={$_("navigation.footer.nav.product.pricing")}
                         />

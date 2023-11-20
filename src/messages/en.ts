@@ -1240,10 +1240,8 @@ const messages: MessageDirectory = {
             "logo": {
                 alt: "Projectify",
             },
-            "features": "Features",
             "solutions": "Solutions",
             "help": "Help",
-            "company": "Company",
             "pricing": "Pricing",
             "log-in": "Log in",
             "start-a-free-trial": "Start a free trial",
@@ -1258,7 +1256,6 @@ const messages: MessageDirectory = {
             nav: {
                 product: {
                     title: "Product",
-                    features: "Features",
                     pricing: "Pricing",
                 },
                 resources: {
