@@ -60,21 +60,19 @@
 
 <HeroLayout>
     <SolutionsHero slot="hero" {heroContent} />
-    <div slot="side" class="grow sm:max-w-xs">
-        <nav class="flex flex-col gap-4">
-            <h2 class="text-3xl font-bold">
-                {$_("help.help-sections")}
-            </h2>
-            <!-- sections -->
-            <ul class="flex min-w-max list-inside list-disc flex-col gap-2">
-                {#each helpItems as helpItem}
-                    <li>
-                        <Anchor href={helpItem.href} label={helpItem.title} />
-                    </li>
-                {/each}
-            </ul>
-        </nav>
-    </div>
+    <nav slot="side" class="flex grow flex-col gap-4 sm:max-w-xs">
+        <h2 class="text-3xl font-bold">
+            {$_("help.help-sections")}
+        </h2>
+        <!-- sections -->
+        <ul class="flex min-w-max list-inside list-disc flex-col gap-2">
+            {#each helpItems as helpItem}
+                <li>
+                    <Anchor href={helpItem.href} label={helpItem.title} />
+                </li>
+            {/each}
+        </ul>
+    </nav>
     <div slot="content" class="flex flex-col gap-4">
         <h2 class="text-4xl font-bold">{heroContent.title}</h2>
         <!-- skip links -->
