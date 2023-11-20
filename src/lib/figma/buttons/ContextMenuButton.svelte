@@ -46,7 +46,7 @@
     }
 
     // TODO remove px-4 from here and add it back into context menu
-    $: outerClass = `flex-start flex flex-row items-center gap-2 px-4 py-3 text-left text-xs font-bold ${colorStyle} ${style}`;
+    $: outerClass = `flex-start flex flex-row items-center gap-2 px-4 py-2 text-left text-xs font-bold ${colorStyle} ${style}`;
 </script>
 
 {#if kind.kind === "a"}

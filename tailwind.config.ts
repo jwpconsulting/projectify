@@ -100,9 +100,6 @@ const config: Config = {
             fontFamily: {
                 sans: ["Roboto", "sans-serif"],
             },
-            fontSize: {
-                xxs: "10px",
-            },
             borderRadius: {
                 "llg": "10px",
                 "1.5xl": "14px",

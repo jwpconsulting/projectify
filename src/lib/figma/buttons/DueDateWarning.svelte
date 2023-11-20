@@ -10,7 +10,7 @@
 
 <button
     on:click={click}
-    class="inline-block rounded-2.5xl bg-destructive-secondary-hover px-2 py-1 text-xxs font-bold"
+    class="inline-block rounded-2.5xl bg-destructive-secondary-hover px-2 py-1 text-xs font-bold"
 >
     {$_("task-screen.due-soon")}
 </button>
