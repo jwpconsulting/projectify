@@ -546,12 +546,10 @@ const messages: MessageDirectory = {
         "hero-button": "Start a free trial",
         "hero-alt":
             "An illustration showing the look and feel of tasks in Projectify's user interface",
-        "trust-header-1": "Everything you need to",
-        "trust-header-2": "stay organised",
-        "trust-header-3": "and",
-        "trust-header-4": "deliver faster",
-        "trust-text": "The go-to project management tool for developers.",
-        // TODO "features": {},
+        "trust": {
+            header: 'Everything you need to <span class="text-primary">stay organized</span> and <span class="text-primary">deliver faster</span>',
+            text: "The go-to project management tool for developers.",
+        },
         "features": {
             "feature-1": {
                 header: "Task cards that are accessible and keyboard friendly",

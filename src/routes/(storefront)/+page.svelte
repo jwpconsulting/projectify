@@ -8,7 +8,7 @@
 </script>
 
 <HeroLayout heroBackground={false}>
-    <div
+    <section
         slot="hero"
         class="grid grid-cols-1 items-center gap-4 sm:grid-cols-2"
     >
@@ -33,19 +33,17 @@
         <div class="max-w-md">
             <img src="/assets/landing/hero.png" alt={$_("index.hero-alt")} />
         </div>
-    </div>
+    </section>
     <div slot="content" class="flex flex-col gap-16">
-        <div class="grid grid-cols-1 text-center">
-            <h2 class="mb-4 text-3xl font-bold md:text-5xl">
-                {$_("index.trust-header-1")}
-                <span class="text-primary">{$_("index.trust-header-2")}</span>
-                {$_("index.trust-header-3")}
-                <span class="text-primary">{$_("index.trust-header-4")}</span>
+        <section class="flex flex-col gap-4">
+            <h2 class="text-center text-3xl font-bold md:text-5xl">
+                <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                {@html $_("index.trust.header")}
             </h2>
-            <h4 class="text-2xl font-bold md:text-3xl">
-                {$_("index.trust-text")}
+            <h4 class="text-center text-2xl font-bold md:text-3xl">
+                {$_("index.trust.text")}
             </h4>
-        </div>
+        </section>
         <SolutionsFeature
             feature={{
                 title: $_("index.features.feature-1.header"),
