@@ -20,9 +20,7 @@
             </div>
         {/if}
         <div class="flex grow flex-col justify-between">
-            <main class="flex grow flex-col">
-                <slot />
-            </main>
+            <slot />
             <Footer />
         </div>
     </div>

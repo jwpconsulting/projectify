@@ -1,9 +1,14 @@
-<script lang="ts"></script>
+<script lang="ts">
+    export let heroBackground = true;
+</script>
 
 <!-- Common layout for solution layouts -->
-<div class="flex flex-col items-center gap-10 bg-foreground pb-20 sm:gap-10">
-    <div class="flex w-full flex-col items-center bg-background">
-        <div class="w-full max-w-3xl px-6 py-6 sm:py-12">
+<main class="flex flex-col items-center gap-10 bg-foreground pb-20 sm:gap-10">
+    <div
+        class="flex w-full flex-col items-center bg-background"
+        class:bg-background={heroBackground}
+    >
+        <div class="w-full max-w-4xl px-6 py-6 sm:py-12">
             <slot name="hero" />
         </div>
     </div>
@@ -15,8 +20,8 @@
             <slot name="content" />
         </div>
     {:else}
-        <div class="w-full max-w-3xl p-6">
+        <div class="w-full max-w-4xl p-6">
             <slot name="content" />
         </div>
     {/if}
-</div>
+</main>
