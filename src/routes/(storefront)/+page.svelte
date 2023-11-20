@@ -4,6 +4,7 @@
     import HeroLayout from "$lib/components/layouts/HeroLayout.svelte";
     import SolutionsFeature from "$lib/components/solutions/SolutionsFeature.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
 </script>
 
 <HeroLayout heroBackground={false}>
@@ -16,7 +17,7 @@
                 <h1 class="text-4xl font-bold md:text-6xl">
                     {$_("index.hero-header")}
                 </h1>
-                <p class="max-w-md">
+                <p>
                     {$_("index.hero-text")}
                 </p>
             </header>
@@ -29,12 +30,12 @@
                 grow={false}
             />
         </div>
-        <div class="min-w-full max-w-md">
+        <div class="max-w-md">
             <img src="/assets/landing/hero.png" alt={$_("index.hero-alt")} />
         </div>
     </div>
     <div slot="content" class="flex flex-col gap-16">
-        <div class="grid grid-cols-1 text-center sm:ml-32 sm:mr-32">
+        <div class="grid grid-cols-1 text-center">
             <h2 class="mb-4 text-3xl font-bold md:text-5xl">
                 {$_("index.trust-header-1")}
                 <span class="text-primary">{$_("index.trust-header-2")}</span>
@@ -104,55 +105,55 @@
                 },
             }}
         />
-        <div class="page bg base-200 mt-8 p-6">
-            <div class="mb-12 text-center">
-                <h2 class="mb-4 text-2xl font-bold sm:text-4xl">
+        <section class="flex flex-col gap-7">
+            <header class="flex flex-col gap-3">
+                <h2 class="text-2xl font-bold sm:text-4xl">
                     {$_("index.solution-header")}
                 </h2>
-                <p class="text-l">
+                <p>
                     {$_("index.solution-subtitle")}
                 </p>
-            </div>
-            <div
-                class="mb-8 grid grid-cols-1 gap-8 text-center text-xl font-bold underline sm:grid-cols-3 sm:text-3xl"
-            >
-                <div>
-                    <img
-                        src="assets/solutions/hero-development.png"
-                        alt=""
-                        class="mb-4"
-                    />
-                    <a href={"solutions/development-teams"} class="mt-4">
-                        {$_("index.solution-1")}
-                    </a>
+            </header>
+            <div class="flex flex-col gap-5 text-center">
+                <div class="grid grid-cols-1 gap-8 sm:grid-cols-3">
+                    <div class="flex flex-col gap-3">
+                        <img
+                            src="assets/solutions/hero-development.png"
+                            alt=""
+                        />
+                        <Anchor
+                            size="large"
+                            href={"solutions/development-teams"}
+                            label={$_("index.solution-1")}
+                        />
+                    </div>
+                    <div class="flex flex-col gap-3">
+                        <img src="assets/solutions/hero-research.png" alt="" />
+                        <Anchor
+                            size="large"
+                            href={"solutions/research"}
+                            label={$_("index.solution-2")}
+                        />
+                    </div>
+                    <div class="flex flex-col gap-3">
+                        <img
+                            src="assets/solutions/hero-project-management.png"
+                            alt=""
+                        />
+                        <Anchor
+                            size="large"
+                            href={"solutions/project-management"}
+                            label={$_("index.solution-3")}
+                        />
+                    </div>
                 </div>
-                <div>
-                    <img
-                        src="assets/solutions/hero-research.png"
-                        alt=""
-                        class="mb-4"
-                    />
-                    <a href="solutions/research">
-                        {$_("index.solution-2")}
-                    </a>
-                </div>
-                <div>
-                    <img
-                        src="assets/solutions/hero-project-management.png"
-                        alt=""
-                        class="mb-4"
-                    />
-                    <a href="solutions/project-management">
-                        {$_("index.solution-3")}
-                    </a>
-                </div>
+                <Anchor
+                    size="large"
+                    href={"solutions/"}
+                    label={$_("index.solution-more")}
+                />
             </div>
-            <div class="text-l text-center font-bold underline sm:text-xl">
-                <a href="/">
-                    {$_("index.solution-more")}
-                </a>
-            </div>
-        </div>
+        </section>
         <SolutionsFeature
             feature={{
                 title: $_("index.features.feature-6.header"),
