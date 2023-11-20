@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ConnectionStatus from "$lib/components/connectionStatus.svelte";
+    import ConnectionStatus from "$lib/components/ConnectionStatus.svelte";
     import ContextMenuContainer from "$lib/components/ContextMenuContainer.svelte";
     import OverlayContainer from "$lib/components/OverlayContainer.svelte";
     import HeaderDashboard from "$lib/figma/navigation/header/Dashboard.svelte";
