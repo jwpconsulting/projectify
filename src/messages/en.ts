@@ -552,29 +552,43 @@ const messages: MessageDirectory = {
         "trust-header-4": "deliver faster",
         "trust-text": "The go-to project management tool for developers.",
         // TODO "features": {},
-        "feature-1-header":
-            "Task cards that are accessible and keyboard friendly",
-        "feature-1-text":
-            "No more drag and drop disasters! Create and move tasks around the board with ease and speed. Organise and prioritize your workload with peace of mind.",
-        "feature-2-header":
-            "Transform mammoth tasks into smaller, feasible ones",
-        "feature-2-text":
-            "Sub tasks break up the workload to allow for large tasks and progress to become more realistic and achievable. Add, reorder, edit and delete limitless sub tasks.",
-        "feature-3-header": "Full control of your workspaces",
-        "feature-3-text":
-            "List and column views allow you to organise workflows and see the bigger picture. Split your workspace into boards to enable multi-project management. Filter by labels, users or keyboards to focus on specific tasks.",
-        "feature-4-header": "Keep an eye on important updates",
-        "feature-4-text":
-            "Whether its a question about a task, a change of assignee or simply a task moving to the next stage of development, notifications immediately let you know when there's an update.",
-        "feature-5-header": "Responsive for on-the-go",
-        "feature-5-text":
-            "Need to access your projects whilst away from the office? No app. No problem. A fully responsive experience to stay connected and keep projects on track.",
-        "feature-6-header": "We never sell your data. Ever.",
-        "feature-6-text":
-            "Our platform full complies with GDPR regulations, amongst others, so you can be rest assured that your private information, stays private.",
-        "feature-7-header": "Projectify is 100% open source software",
-        "feature-7-text-1":
-            "We believe in transparency and being developer friendly, which is why our source code can be found online.",
+        "features": {
+            "feature-1": {
+                header: "Task cards that are accessible and keyboard friendly",
+                text: "No more drag and drop disasters! Create and move tasks around the board with ease and speed. Organize and prioritize your workload with peace of mind.",
+                alt: "TODO",
+            },
+            "feature-2": {
+                header: "Transform mammoth tasks into smaller, feasible ones",
+                text: "Sub tasks break up the workload to allow for large tasks and progress to become more realistic and achievable. Add, reorder, edit and delete limitless sub tasks.",
+                alt: "TODO",
+            },
+            "feature-3": {
+                header: "Full control of your workspaces",
+                text: "List and column views allow you to organize workflows and see the bigger picture. Split your workspace into boards to enable multi-project management. Filter by labels, users, or keywords to focus on specific tasks.",
+                alt: "TODO",
+            },
+            "feature-4": {
+                header: "Keep an eye on important updates",
+                text: "Whether it's a question about a task, a change of assignee, or simply a task moving to the next stage of development, notifications immediately let you know when there's an update.",
+                alt: "TODO",
+            },
+            "feature-5": {
+                header: "Responsive for on-the-go",
+                text: "Need to access your projects while away from the office? No app. No problem. A fully responsive experience to stay connected and keep projects on track.",
+                alt: "TODO",
+            },
+            "feature-6": {
+                header: "We never sell your data. Ever.",
+                text: "Our platform fully complies with GDPR regulations, amongst others, so you can be rest assured that your private information stays private.",
+                alt: "TODO",
+            },
+            "feature-7": {
+                header: "Projectify is 100% open source software",
+                text: "We believe in transparency and being developer-friendly, which is why our source code can be found online.",
+                alt: "TODO",
+            },
+        },
         // TODO "solutions": {},
         "solution-header": "Meeting diverse needs with practical solutions.",
         "solution-subtitle":

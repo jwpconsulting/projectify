@@ -1,6 +1,7 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
+    import SolutionsFeature from "$lib/components/solutions/SolutionsFeature.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
 </script>
 
@@ -39,71 +40,65 @@
             {$_("index.trust-text")}
         </h4>
     </div>
-    <div class="grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
-        <div>
-            <h4 class="mb-8 text-xl font-bold sm:mt-24 sm:text-4xl">
-                {$_("index.feature-1-header")}
-            </h4>
-            <p class="text-l sm:text-l">
-                {$_("index.feature-1-text")}
-            </p>
-        </div>
-        <div class="min-w-full max-w-md">
-            <img src="/assets/landing/task-menu.png" alt="" />
-        </div>
-    </div>
-    <div class="grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
-        <div class="sm:order-last">
-            <h4 class="mb-8 text-xl font-bold sm:mt-24 sm:text-4xl">
-                {$_("index.feature-2-header")}
-            </h4>
-            <p class="text-l sm:text-l">
-                {$_("index.feature-2-text")}
-            </p>
-        </div>
-        <div class="min-w-full max-w-md">
-            <img src="/assets/landing/sub-task.png" alt="" />
-        </div>
-    </div>
-    <div class="grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
-        <div>
-            <h4 class="mb-8 text-xl font-bold sm:mt-24 sm:text-4xl">
-                {$_("index.feature-3-header")}
-            </h4>
-            <p class="text-l sm:text-l">
-                {$_("index.feature-3-text")}
-            </p>
-        </div>
-        <div class="min-w-full max-w-md">
-            <img src="/assets/landing/filters.png" alt="" />
-        </div>
-    </div>
-    <div class="grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
-        <div class="sm:order-last">
-            <h4 class="mb-8 text-xl font-bold sm:mt-24 sm:text-4xl">
-                {$_("index.feature-4-header")}
-            </h4>
-            <p class="text-l sm:text-l">
-                {$_("index.feature-4-text")}
-            </p>
-        </div>
-        <div class="min-w-full max-w-md">
-            <img src="/assets/landing/notifications.png" alt="" />
-        </div>
-    </div>
-    <div class="m-6 grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
-        <div>
-            <h4 class="mb-8 text-xl font-bold sm:mt-24 sm:text-4xl">
-                {$_("index.feature-5-header")}
-            </h4>
-            <p class="text-l sm:text-l">
-                {$_("index.feature-5-text")}
-            </p>
-        </div>
-        <div class="min-w-full max-w-md">
-            <img src="/assets/landing/responsive.png" alt="" />
-        </div>
-    </div>
+    <SolutionsFeature
+        feature={{
+            title: $_("index.features.feature-1.header"),
+            text: $_("index.features.feature-1.text"),
+            image: {
+                src: "/assets/landing/task-menu.png",
+                alt: $_("index.features.feature-1.alt"),
+                position: "right",
+            },
+        }}
+    />
+
+    <SolutionsFeature
+        feature={{
+            title: $_("index.features.feature-2.header"),
+            text: $_("index.features.feature-2.text"),
+            image: {
+                src: "/assets/landing/sub-task.png",
+                alt: $_("index.features.feature-2.alt"),
+                position: "left",
+            },
+        }}
+    />
+
+    <SolutionsFeature
+        feature={{
+            title: $_("index.features.feature-3.header"),
+            text: $_("index.features.feature-3.text"),
+            image: {
+                src: "/assets/landing/filters.png",
+                alt: $_("index.features.feature-3.alt"),
+                position: "right",
+            },
+        }}
+    />
+
+    <SolutionsFeature
+        feature={{
+            title: $_("index.features.feature-4.header"),
+            text: $_("index.features.feature-4.text"),
+            image: {
+                src: "/assets/landing/notifications.png",
+                alt: $_("index.features.feature-4.alt"),
+                position: "left",
+            },
+        }}
+    />
+
+    <SolutionsFeature
+        feature={{
+            title: $_("index.features.feature-5.header"),
+            text: $_("index.features.feature-5.text"),
+            image: {
+                src: "/assets/landing/responsive.png",
+                alt: $_("index.features.feature-5.alt"),
+                position: "right",
+            },
+        }}
+    />
     <div class="page bg base-200 mt-8 p-6">
         <div class="mb-12 text-center">
             <h2 class="mb-4 text-2xl font-bold sm:text-4xl">
@@ -153,30 +148,26 @@
             </a>
         </div>
     </div>
-    <div class="grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
-        <div>
-            <h4 class="mb-8 text-xl font-bold sm:mt-24 sm:text-4xl">
-                {$_("index.feature-6-header")}
-            </h4>
-            <p class="text-l sm:text-l">
-                {$_("index.feature-6-text")}
-            </p>
-        </div>
-        <div class="min-w-full max-w-md">
-            <img src="/assets/landing/privacy.png" alt="" />
-        </div>
-    </div>
-    <div class="grid grid-cols-1 gap-4 sm:m-16 sm:grid-cols-2">
-        <div class="sm:order-last">
-            <h4 class="mb-8 text-xl font-bold sm:text-4xl">
-                {$_("index.feature-7-header")}
-            </h4>
-            <p class="text-l sm:text-l">
-                {$_("index.feature-7-text-1")}
-            </p>
-        </div>
-        <div class="min-w-full max-w-md">
-            <img src="/assets/landing/open-source.png" alt="" />
-        </div>
-    </div>
+    <SolutionsFeature
+        feature={{
+            title: $_("index.features.feature-6.header"),
+            text: $_("index.features.feature-6.text"),
+            image: {
+                src: "/assets/landing/privacy.png",
+                alt: $_("index.features.feature-6.alt"),
+                position: "right",
+            },
+        }}
+    />
+    <SolutionsFeature
+        feature={{
+            title: $_("index.features.feature-7.header"),
+            text: $_("index.features.feature-7.text"),
+            image: {
+                src: "/assets/landing/open-source.png",
+                alt: $_("index.features.feature-7.alt"),
+                position: "left",
+            },
+        }}
+    />
 </main>
