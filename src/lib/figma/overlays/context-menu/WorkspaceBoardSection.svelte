@@ -21,6 +21,7 @@
         WorkspaceBoard,
         WorkspaceBoardSection,
     } from "$lib/types/workspace";
+
     // TODO make injectable
 
     export let workspaceBoard: WorkspaceBoard;
@@ -91,8 +92,10 @@
             ),
         }}
         label={closed
-            ? $_("workspace-board-section-overlay.expand-section")
-            : $_("workspace-board-section-overlay.collapse-section")}
+            ? $_("overlay.context-menu.workspace-board-section.expand-section")
+            : $_(
+                  "overlay.context-menu.workspace-board-section.collapse-section"
+              )}
         state="normal"
         icon={closed ? Selector : X}
     />
@@ -102,7 +105,9 @@
                 kind: "button",
                 action: switchWithPreviousSection,
             }}
-            label={$_("workspace-board-section-overlay.switch-previous")}
+            label={$_(
+                "overlay.context-menu.workspace-board-section.switch-previous"
+            )}
             state="normal"
             icon={ArrowUp}
         />
@@ -113,7 +118,9 @@
                 kind: "button",
                 action: switchWithNextSection,
             }}
-            label={$_("workspace-board-section-overlay.switch-next")}
+            label={$_(
+                "overlay.context-menu.workspace-board-section.switch-next"
+            )}
             state="normal"
             icon={ArrowDown}
         />
@@ -123,7 +130,7 @@
             kind: "button",
             action: () => console.error("edit section title not implemented"),
         }}
-        label={$_("workspace-board-section-overlay.edit-title")}
+        label={$_("overlay.context-menu.workspace-board-section.edit-title")}
         state="normal"
         icon={Pencil}
     />
@@ -132,7 +139,7 @@
             kind: "button",
             action: () => console.error("add task not implemented"),
         }}
-        label={$_("workspace-board-section-overlay.add-task")}
+        label={$_("overlay.context-menu.workspace-board-section.add-task")}
         state="normal"
         icon={Plus}
     />
@@ -141,7 +148,9 @@
             kind: "button",
             action: () => console.error("delete section not implemented"),
         }}
-        label={$_("workspace-board-section-overlay.delete-section")}
+        label={$_(
+            "overlay.context-menu.workspace-board-section.delete-section"
+        )}
         state="normal"
         icon={Trash}
         color="destructive"

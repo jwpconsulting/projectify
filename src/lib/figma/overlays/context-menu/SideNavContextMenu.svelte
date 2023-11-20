@@ -1,4 +1,5 @@
 <script lang="ts">
+    // TODO rename to just context-menu/ContextMenu
     import {
         Archive,
         ArrowCircleLeft,
@@ -20,20 +21,20 @@
     <ContextMenuButton
         kind={{ kind: "button", action: toggleSideNavOpen }}
         label={$sideNavOpen
-            ? $_("side-nav-overlay.minimise-sidebar")
-            : $_("side-nav-overlay.expand-sidebar")}
+            ? $_("overlay.context-menu.side-nav.minimise-sidebar")
+            : $_("overlay.context-menu.side-nav.expand-sidebar")}
         state="normal"
         icon={$sideNavOpen ? ArrowCircleLeft : ArrowCircleRight}
     />
     <ContextMenuButton
         kind={{ kind: "a", href: getArchiveUrl(workspace.uuid) }}
-        label={$_("side-nav-overlay.go-to-archive")}
+        label={$_("overlay.context-menu.side-nav.go-to-archive")}
         state="normal"
         icon={Archive}
     />
     <ContextMenuButton
         kind={{ kind: "a", href: getSettingsUrl(workspace.uuid, "index") }}
-        label={$_("side-nav-overlay.workspace-settings")}
+        label={$_("overlay.context-menu.side-nav.workspace-settings")}
         state="normal"
         icon={Cog}
     />

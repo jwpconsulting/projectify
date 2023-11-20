@@ -2,7 +2,7 @@ import type { MessageDirectory } from "./types";
 
 const messages: MessageDirectory = {
     "overlay": {
-        constructive: {
+        "constructive": {
             "update-workspace-board": {
                 title: "Edit workspace board",
                 form: {
@@ -83,7 +83,7 @@ const messages: MessageDirectory = {
                 "recover-board": "Recover board",
             },
         },
-        destructive: {
+        "destructive": {
             "delete-label": {
                 title: "Delete label",
                 body: "Would you like to delete the ''{label}'' label?",
@@ -132,54 +132,54 @@ const messages: MessageDirectory = {
             },
             "cancel": "Cancel",
         },
-    },
-    // TODO factor the following into "overlay"
-    "profile-overlay": {
-        "my-profile": "my profile",
-        "log-out": "log out",
-    },
-    "workspace-overlay": {
-        "add-new-workspace": "add new workspace",
-    },
-    "side-nav-overlay": {
-        "help-tips": "Help & tips",
-        "minimise-sidebar": "minimise sidebar",
-        "expand-sidebar": "expand sidebar",
-        "go-to-archive": "go to archive",
-        "workspace-settings": "workspace settings",
-    },
-    "workspace-board-overlay": {
-        "edit-board": "edit board",
-        "archive-board": "archive board",
-    },
-    "workspace-board-section-overlay": {
-        "expand-section": "expand section",
-        "collapse-section": "collapse section",
-        "switch-previous": "switch with previous section",
-        "switch-next": "switch with next section",
-        "edit-title": "edit section title",
-        "add-task": "add task",
-        "delete-section": "delete section",
-    },
-    "task-overlay": {
-        "open-task": "open task",
-        "move-to-section": "move to section",
-        "move-to-top": "move to top",
-        "move-to-bottom": "move to bottom",
-        "copy-link": "copy link",
-        "go-to-updates": "go to updates",
-        "delete-task": "delete task",
-    },
-    "help-overlay": {
-        "help-and-tips": "help and tips",
-        "blog": "blog",
-    },
-    "permissions-overlay": {
-        "all-roles": "all roles",
-        "owner": "owner",
-        "maintainer": "maintainer",
-        "member": "member",
-        "observer": "observer",
+        "context-menu": {
+            "profile": {
+                "my-profile": "my profile",
+                "log-out": "log out",
+            },
+            "workspace": {
+                "add-new-workspace": "add new workspace",
+            },
+            "side-nav": {
+                "minimise-sidebar": "minimise sidebar",
+                "expand-sidebar": "expand sidebar",
+                "go-to-archive": "go to archive",
+                "workspace-settings": "workspace settings",
+            },
+            "workspace-board": {
+                "edit-board": "edit board",
+                "archive-board": "archive board",
+            },
+            "workspace-board-section": {
+                "expand-section": "expand section",
+                "collapse-section": "collapse section",
+                "switch-previous": "switch with previous section",
+                "switch-next": "switch with next section",
+                "edit-title": "edit section title",
+                "add-task": "add task",
+                "delete-section": "delete section",
+            },
+            "task": {
+                "open-task": "open task",
+                "move-to-section": "move to section",
+                "move-to-top": "move to top",
+                "move-to-bottom": "move to bottom",
+                "copy-link": "copy link",
+                "go-to-updates": "go to updates",
+                "delete-task": "delete task",
+            },
+            "help": {
+                "help-and-tips": "help and tips",
+                "blog": "blog",
+            },
+            "permissions": {
+                "all-roles": "all roles",
+                "owner": "owner",
+                "maintainer": "maintainer",
+                "member": "member",
+                "observer": "observer",
+            },
+        },
     },
     // TODO find out if we can factor this into somewhere
     "label": {

@@ -48,14 +48,14 @@
                 kind: "a",
                 href: getTaskUrl(task.uuid),
             }}
-            label={$_("task-overlay.open-task")}
+            label={$_("overlay.context-menu.task.open-task")}
             state="normal"
             icon={ArrowsExpand}
         />
     {/if}
     <SubMenuDropdown
         on:click={() => console.error("move to section not implemented")}
-        label={$_("task-overlay.move-to-section")}
+        label={$_("overlay.context-menu.task.move-to-section")}
         icon={SwitchVertical}
     />
     {#if location === "dashboard"}
@@ -65,7 +65,7 @@
                     kind: "button",
                     action: () => moveToTop(workspaceBoardSection, task),
                 }}
-                label={$_("task-overlay.move-to-top")}
+                label={$_("overlay.context-menu.task.move-to-top")}
                 state="normal"
                 icon={SortAscending}
             />
@@ -76,7 +76,7 @@
                     kind: "button",
                     action: () => moveToBottom(workspaceBoardSection, task),
                 }}
-                label={$_("task-overlay.move-to-bottom")}
+                label={$_("overlay.context-menu.task.move-to-bottom")}
                 state="normal"
                 icon={SortDescending}
             />
@@ -90,7 +90,7 @@
                 new URL(getTaskUrl(task.uuid), document.baseURI).href
             ),
         }}
-        label={$_("task-overlay.copy-link")}
+        label={$_("overlay.context-menu.task.copy-link")}
         state="normal"
         icon={Duplicate}
     />
@@ -100,7 +100,7 @@
                 kind: "a",
                 href: getTaskUpdatesUrl(task.uuid),
             }}
-            label={$_("task-overlay.go-to-updates")}
+            label={$_("overlay.context-menu.task.go-to-updates")}
             state="normal"
             icon={ChatAlt}
         />
@@ -110,7 +110,7 @@
             kind: "button",
             action: promptDeleteTask,
         }}
-        label={$_("task-overlay.delete-task")}
+        label={$_("overlay.context-menu.task.delete-task")}
         state="normal"
         color="destructive"
         icon={Trash}

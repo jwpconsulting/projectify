@@ -12,7 +12,7 @@
             kind: "button",
             action: () => console.error("all roles not implemented"),
         }}
-        label={$_("permissions-overlay.all-roles")}
+        label={$_("overlay.context-menu.permissions.all-roles")}
         state="normal"
         icon={null}
     />
@@ -21,7 +21,7 @@
             kind: "button",
             action: () => console.error("owner not implemented"),
         }}
-        label={$_("permissions-overlay.owner")}
+        label={$_("overlay.context-menu.permissions.owner")}
         state="normal"
         icon={null}
     />
@@ -30,7 +30,7 @@
             kind: "button",
             action: () => console.error("maintainer not implemented"),
         }}
-        label={$_("permissions-overlay.maintainer")}
+        label={$_("overlay.context-menu.permissions.maintainer")}
         state="normal"
         icon={null}
     />
@@ -39,7 +39,7 @@
             kind: "button",
             action: () => console.error("member not implemented"),
         }}
-        label={$_("permissions-overlay.member")}
+        label={$_("overlay.context-menu.permissions.member")}
         state="normal"
         icon={null}
     />
@@ -48,7 +48,7 @@
             kind: "button",
             action: () => console.error("observer not implemented"),
         }}
-        label={$_("permissions-overlay.observer")}
+        label={$_("overlay.context-menu.permissions.observer")}
         state="normal"
         icon={null}
     />

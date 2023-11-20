@@ -120,7 +120,7 @@
             kind: "button",
             action: editBoard,
         }}
-        label={$_("workspace-board-overlay.edit-board")}
+        label={$_("overlay.context-menu.workspace-board.edit-board")}
         state="normal"
         icon={Pencil}
     />
@@ -129,7 +129,7 @@
             kind: "button",
             action: archiveBoard,
         }}
-        label={$_("workspace-board-overlay.archive-board")}
+        label={$_("overlay.context-menu.workspace-board.archive-board")}
         state="normal"
         icon={Archive}
     />

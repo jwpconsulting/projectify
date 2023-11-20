@@ -29,7 +29,7 @@
             kind: "button",
             action: () => console.error("add new workspace not implemented"),
         }}
-        label={$_("workspace-overlay.add-new-workspace")}
+        label={$_("overlay.context-menu.workspace.add-new-workspace")}
         state="normal"
         color="primary"
         icon={Plus}
