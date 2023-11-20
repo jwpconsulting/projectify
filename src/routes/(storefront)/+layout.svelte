@@ -1,10 +1,9 @@
 <script lang="ts">
-    import OverlayContainer from "$lib/components/OverlayContainer.svelte";
     import Footer from "$lib/figma/navigation/Footer.svelte";
     import Continue from "$lib/figma/navigation/header/Continue.svelte";
     import Landing from "$lib/figma/navigation/header/Landing.svelte";
     import MobileMenuOverlay from "$lib/figma/overlays/MobileMenuOverlay.svelte";
-    import { closeMobileMenu, mobileMenuState } from "$lib/stores/globalUi";
+    import { mobileMenuState } from "$lib/stores/globalUi";
     import { user } from "$lib/stores/user";
 </script>
 
@@ -15,19 +14,16 @@
         <Landing />
     {/if}
     <div class="relative flex h-full grow flex-col">
-        <OverlayContainer
-            closeOverlay={closeMobileMenu}
-            fixed={false}
-            store={mobileMenuState}
-            let:target
-        >
-            <MobileMenuOverlay slot="default" {target} />
-            <div slot="else" class="flex grow flex-col justify-between">
-                <main class="flex grow flex-col">
-                    <slot />
-                </main>
-                <Footer />
+        {#if $mobileMenuState.kind === "visible"}
+            <div class="w-full border-b-2 border-border md:hidden">
+                <MobileMenuOverlay target={$mobileMenuState.target} />
             </div>
-        </OverlayContainer>
+        {/if}
+        <div class="flex grow flex-col justify-between">
+            <main class="flex grow flex-col">
+                <slot />
+            </main>
+            <Footer />
+        </div>
     </div>
 </div>
