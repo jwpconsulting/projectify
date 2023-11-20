@@ -18,6 +18,11 @@ const config = {
             precompress: false,
             strict: true,
         }),
+        csp: {
+            directives: {
+                "script-src": ["self"],
+            },
+        },
         typescript: {
             config(config) {
                 return {
