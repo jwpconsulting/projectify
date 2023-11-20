@@ -6,8 +6,6 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import type { SolutionsHeroContent } from "$lib/types/ui";
 
-    import HelpSections from "./HelpSections.svelte";
-
     export let heroContent: SolutionsHeroContent;
     export let sections: { id: string; content: string; title: string }[];
 
@@ -93,6 +91,15 @@
                 {/each}
             </ul>
         </nav>
-        <HelpSections {sections} />
+        <main class="flex flex-col gap-2">
+            {#each sections as section}
+                <section id={section.id} class="flex flex-col gap-4">
+                    <h3 class="text-3xl font-bold">{section.title}</h3>
+                    <p>
+                        {section.content}
+                    </p>
+                </section>
+            {/each}
+        </main>
     </div>
 </HeroLayout>
