@@ -9,7 +9,7 @@
     export let workspace: Workspace;
 </script>
 
-<nav class="flex h-full shrink-0 flex-col bg-base-100 py-4">
+<nav class="flex h-full shrink-0 flex-col py-4">
     <WorkspaceMenu {workspaces} {workspace} open={true} />
     <div class="flex flex-col overflow-x-auto overflow-y-scroll">
         <Boards {workspace} />
