@@ -1,18 +1,7 @@
 <script lang="ts">
     import AvatarState from "$lib/figma/navigation/AvatarState.svelte";
-    import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
-    import type { AvatarVariantContent } from "$lib/figma/types";
-    import { avatarStateSizes, avatarVariantSizes } from "$lib/figma/types";
-    import { fc, fr, user1, user2, users } from "$lib/storybook";
-
-    const avatarV5Contents: AvatarVariantContent[] = [
-        { kind: "assign", users: [user1, user2] },
-        { kind: "assign", users: [null, user1] },
-        { kind: "assign", users: [user2, null] },
-        { kind: "multiple", users: [] },
-        { kind: "multiple", users: [user1] },
-        { kind: "multiple", users: [user1, user2, user1, user2, user1] },
-    ];
+    import { avatarStateSizes } from "$lib/figma/types";
+    import { fc, fr, users } from "$lib/storybook";
 </script>
 
 Avatar V3
@@ -26,23 +15,6 @@ Avatar V3
                 <div class="group">
                     <AvatarState {user} {size} />
                 </div>
-            {/each}
-        </div>
-    {/each}
-</div>
-
-Avatar V5
-<div class={fc}>
-    {#each avatarVariantSizes as size}
-        <div class="capitalize">
-            {size}
-        </div>
-        <div class={fr}>
-            {#each avatarV5Contents as content}
-                <div class="capitalize">
-                    {content.kind}
-                </div>
-                <AvatarVariant {size} {content} />
             {/each}
         </div>
     {/each}
