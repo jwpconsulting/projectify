@@ -539,61 +539,74 @@ const messages: MessageDirectory = {
         },
     },
     "index": {
-        "hero": {
+        hero: {
             header: "Manage projects the right way.",
             text: "Warp drive your way to success with software that helps you to collaborate on and manage projects efficiently, with speed.",
             button: "Start a free trial",
             alt: "An illustration showing the look and feel of tasks in Projectify's user interface",
         },
-        "trust": {
+        trust: {
             header: 'Everything you need to <span class="text-primary">stay organized</span> and <span class="text-primary">deliver faster</span>',
             text: "The go-to project management tool for developers.",
         },
-        "features": {
+        features: {
             "feature-1": {
                 header: "Task cards that are accessible and keyboard friendly",
                 text: "No more drag and drop disasters! Create and move tasks around the board with ease and speed. Organize and prioritize your workload with peace of mind.",
-                alt: "TODO",
+                alt: "A screenshot from the Projectify dashboard showing how the interface can be used without drag and drop",
             },
             "feature-2": {
                 header: "Transform mammoth tasks into smaller, feasible ones",
                 text: "Sub tasks break up the workload to allow for large tasks and progress to become more realistic and achievable. Add, reorder, edit and delete limitless sub tasks.",
-                alt: "TODO",
+                alt: "A screenshot from a task in the Projectify UI showing how sub tasks can be assigned to tasks",
             },
             "feature-3": {
                 header: "Full control of your workspaces",
-                text: "List and column views allow you to organize workflows and see the bigger picture. Split your workspace into boards to enable multi-project management. Filter by labels, users, or keywords to focus on specific tasks.",
-                alt: "TODO",
+                text: "List and column views allow you to organize workflows and see the bigger picture. Split your workspace into boards to enable multi-project management. Filter by labels, workspace users, or keywords to focus on specific tasks.",
+                alt: "An illustration showing how tasks can be filtered by workspace users or labels",
             },
             "feature-4": {
                 header: "Keep an eye on important updates",
                 text: "Whether it's a question about a task, a change of assignee, or simply a task moving to the next stage of development, notifications immediately let you know when there's an update.",
-                alt: "TODO",
+                alt: "An illustration showing notifications in the Projectify UI informing the user of recent updates to their tasks",
             },
             "feature-5": {
                 header: "Responsive for on-the-go",
                 text: "Need to access your projects while away from the office? No app. No problem. A fully responsive experience to stay connected and keep projects on track.",
-                alt: "TODO",
+                alt: "An illustration of a smartphone showing the Projectify UI in a landscape orientation.",
             },
             "feature-6": {
                 header: "We never sell your data. Ever.",
                 text: "Our platform fully complies with GDPR regulations, amongst others, so you can be rest assured that your private information stays private.",
-                alt: "TODO",
+                alt: "An illustration showing our mascot Poly safekeeping your data",
             },
             "feature-7": {
                 header: "Projectify is 100% open source software",
                 text: "We believe in transparency and being developer-friendly, which is why our source code can be found online.",
-                alt: "TODO",
+                alt: "An illustration showing our mascot Poly being freed from their gilded cage",
             },
         },
-        // TODO "solutions": {},
-        "solution-header": "Meeting diverse needs with practical solutions.",
-        "solution-subtitle":
-            "From companies big and small to individuals working alone, Projectify can be used to manage all kinds of tasks.",
-        "solution-1": "Development teams",
-        "solution-2": "Research",
-        "solution-3": "Project management",
-        "solution-more": "See more use cases",
+        solutions: {
+            header: {
+                title: "Meeting diverse needs with practical solutions.",
+                text: "From companies big and small to individuals working alone, Projectify can be used to manage all kinds of tasks.",
+            },
+            list: {
+                "development-teams": {
+                    text: "Development teams",
+                    alt: "An illustration showing our mascot Poly working at a computer",
+                },
+                "research": {
+                    text: "Research",
+                    alt: "An illustration showing our mascot researching in a laboratory",
+                },
+                "project-management": {
+                    text: "Project management",
+                    alt: "An illustration showing our mascot overseeing our factory",
+                },
+            },
+            more: "See more use cases",
+        },
     },
     "pricing": {
         header: {

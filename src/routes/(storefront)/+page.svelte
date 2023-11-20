@@ -106,10 +106,10 @@
         <section class="flex flex-col gap-7">
             <header class="flex flex-col gap-3">
                 <h2 class="text-2xl font-bold sm:text-4xl">
-                    {$_("index.solution-header")}
+                    {$_("index.solutions.header.title")}
                 </h2>
                 <p>
-                    {$_("index.solution-subtitle")}
+                    {$_("index.solutions.header.text")}
                 </p>
             </header>
             <div class="flex flex-col gap-5 text-center">
@@ -117,38 +117,49 @@
                     <div class="flex flex-col gap-3">
                         <img
                             src="assets/solutions/hero-development.png"
-                            alt=""
+                            alt={$_(
+                                "index.solutions.list.development-teams.alt"
+                            )}
                         />
                         <Anchor
                             size="large"
                             href={"solutions/development-teams"}
-                            label={$_("index.solution-1")}
+                            label={$_(
+                                "index.solutions.list.development-teams.text"
+                            )}
                         />
                     </div>
                     <div class="flex flex-col gap-3">
-                        <img src="assets/solutions/hero-research.png" alt="" />
+                        <img
+                            src="assets/solutions/hero-research.png"
+                            alt={$_("index.solutions.list.research.alt")}
+                        />
                         <Anchor
                             size="large"
                             href={"solutions/research"}
-                            label={$_("index.solution-2")}
+                            label={$_("index.solutions.list.research.text")}
                         />
                     </div>
                     <div class="flex flex-col gap-3">
                         <img
                             src="assets/solutions/hero-project-management.png"
-                            alt=""
+                            alt={$_(
+                                "index.solutions.list.project-management.alt"
+                            )}
                         />
                         <Anchor
                             size="large"
                             href={"solutions/project-management"}
-                            label={$_("index.solution-3")}
+                            label={$_(
+                                "index.solutions.list.project-management.text"
+                            )}
                         />
                     </div>
                 </div>
                 <Anchor
                     size="large"
                     href={"solutions/"}
-                    label={$_("index.solution-more")}
+                    label={$_("index.solutions.more")}
                 />
             </div>
         </section>
