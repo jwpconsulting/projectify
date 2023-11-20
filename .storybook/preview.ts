@@ -2,7 +2,7 @@ import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
 import type { Preview, Parameters } from "@storybook/svelte";
 
 import "../src/storybook.css";
-import "../src/app.scss";
+import "../src/lib/app.scss";
 import "../src/lib/i18n";
 
 export const parameters: Parameters = {
