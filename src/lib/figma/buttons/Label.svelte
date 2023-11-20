@@ -46,7 +46,7 @@
             hoverBgStyle = "";
         }
         outerStyle = `group rounded-2.5xl border p-px focus:outline-none ${outerBorderStyle}`;
-        innerStyle = `flex flex-row items-center justify-center rounded-2.5xl border px-3 py-1 text-xs font-bold capitalize ${innerBorderStyle} ${bgStyle} ${hoverBgStyle} ${textStyle}`;
+        innerStyle = `flex flex-row items-center justify-center rounded-2.5xl border px-3 py-1 text-xs font-bold ${innerBorderStyle} ${bgStyle} ${hoverBgStyle} ${textStyle}`;
     }
 </script>
 

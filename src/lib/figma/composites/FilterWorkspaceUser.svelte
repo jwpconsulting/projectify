@@ -51,7 +51,7 @@
 </script>
 
 <div class="flex flex-col px-4 pb-4 pt-2">
-    <div class="color-base-content p-2 text-xs font-bold capitalize">
+    <div class="color-base-content p-2 text-xs font-bold">
         {$_("dashboard.filter-workspace-users")}
     </div>
     <InputField
