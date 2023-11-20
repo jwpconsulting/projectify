@@ -13,16 +13,14 @@
 
 <div class="flex flex-col gap-4 divide-y divide-border">
     {#each links as link}
-        <div>
-            <HeaderButton
-                action={{
-                    kind: "a",
-                    href: link.href,
-                    onInteract: closeMobileMenu,
-                }}
-                type={{ kind: "button" }}
-                label={link.label}
-            />
-        </div>
+        <HeaderButton
+            action={{
+                kind: "a",
+                href: link.href,
+                onInteract: closeMobileMenu,
+            }}
+            type={{ kind: "button" }}
+            label={link.label}
+        />
     {/each}
 </div>
