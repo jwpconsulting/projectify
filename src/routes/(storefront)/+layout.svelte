@@ -7,13 +7,13 @@
     import { user } from "$lib/stores/user";
 </script>
 
-<div class="flex h-full grow flex-col bg-foreground">
+<div class="flex grow flex-col">
     {#if $user}
         <Continue />
     {:else}
         <Landing />
     {/if}
-    <div class="relative flex h-full grow flex-col">
+    <div class="flex grow flex-col">
         {#if $mobileMenuState.kind === "visible"}
             <div class="w-full border-b-2 border-border md:hidden">
                 <MobileMenuOverlay target={$mobileMenuState.target} />
