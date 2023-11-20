@@ -1,8 +1,8 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
+    import Hero from "$lib/components/layouts/Hero.svelte";
     import HeroLayout from "$lib/components/layouts/HeroLayout.svelte";
-    import SolutionsHero from "$lib/components/solutions/SolutionsHero.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import type { SolutionsHeroContent } from "$lib/types/ui";
 
@@ -70,7 +70,7 @@
 </script>
 
 <HeroLayout>
-    <SolutionsHero slot="hero" {heroContent} />
+    <Hero slot="hero" {heroContent} />
     <div slot="content" class="flex w-full flex-col gap-4">
         <div
             class="flex w-full flex-col gap-6 sm:grid sm:grid-cols-2 md:grid-cols-3"

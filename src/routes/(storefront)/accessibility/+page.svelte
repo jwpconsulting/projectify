@@ -1,8 +1,8 @@
 <script lang="ts">
     import { _, json } from "svelte-i18n";
 
+    import Hero from "$lib/components/layouts/Hero.svelte";
     import HeroLayout from "$lib/components/layouts/HeroLayout.svelte";
-    import SolutionsHero from "$lib/components/solutions/SolutionsHero.svelte";
     import type { SolutionsHeroContent } from "$lib/types/ui";
 
     $: heroContent = {
@@ -55,7 +55,7 @@
 </script>
 
 <HeroLayout>
-    <SolutionsHero slot="hero" {heroContent} />
+    <Hero slot="hero" {heroContent} />
 
     <div slot="content" class="flex flex-col gap-4">
         {#each sections as section}

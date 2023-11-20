@@ -1,8 +1,8 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
+    import Hero from "$lib/components/layouts/Hero.svelte";
     import HeroLayout from "$lib/components/layouts/HeroLayout.svelte";
-    import SolutionsHero from "$lib/components/solutions/SolutionsHero.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import type { SolutionsHeroContent } from "$lib/types/ui";
 
@@ -59,7 +59,7 @@
 </script>
 
 <HeroLayout>
-    <SolutionsHero slot="hero" {heroContent} />
+    <Hero slot="hero" {heroContent} />
     <nav slot="side" class="flex grow flex-col gap-4 sm:max-w-xs">
         <h2 class="text-3xl font-bold">
             {$_("help.help-sections")}
