@@ -7,8 +7,7 @@ const config: KnipConfig = {
         "postcss.config.cjs",
         "svelte.config.js",
         "vite.config.ts",
-        "src/routes/**/+{page,server,page.server,error,layout,layout.server}{,@*}.{js,ts,svelte}",
-        "src/stories/**/*.stories.ts",
+        "src/routes/**/+{page,error,layout}{,@*}.{ts,svelte}",
         "src/bin/*.ts",
         // XXX We might have more luck convincing knip that we are importing
         // src/lib/app.scss in src/routes/+layout.svelte:
