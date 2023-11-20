@@ -3,7 +3,7 @@
 </script>
 
 <!-- Common layout for solution layouts -->
-<main class="flex flex-col items-center gap-10 bg-foreground pb-20 sm:gap-10">
+<main class="flex flex-col items-center gap-10 bg-foreground pb-20">
     <div
         class="flex w-full flex-col items-center bg-background"
         class:bg-background={heroBackground}
