@@ -19,7 +19,6 @@
                 href: link.href,
                 onInteract: closeMobileMenu,
             }}
-            type={{ kind: "button" }}
             label={link.label}
         />
     {/each}

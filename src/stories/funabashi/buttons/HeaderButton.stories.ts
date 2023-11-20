@@ -1,27 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 import HeaderButton from "$lib/funabashi/buttons/HeaderButton.svelte";
-import type { HeaderButtonType } from "$lib/funabashi/types";
-import { makeStorybookSelect } from "$lib/storybook";
-
-const type = makeStorybookSelect<HeaderButtonType>({
-    "Dropdown Closed": {
-        kind: "dropdown",
-        open: false,
-    },
-    "Dropdown Opened": {
-        kind: "dropdown",
-        open: true,
-    },
-    "Button": {
-        kind: "button",
-    },
-});
 
 const meta: Meta<HeaderButton> = {
     component: HeaderButton,
     argTypes: {
-        type,
         label: {
             control: "text",
         },

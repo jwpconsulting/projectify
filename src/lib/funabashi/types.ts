@@ -62,11 +62,6 @@ export type SquovalIcon = (typeof squovalIcons)[number];
 export const squovalStates = ["inactive", "disabled", "active"] as const;
 export type SquovalState = (typeof squovalStates)[number];
 
-// For buttons/HeaderButton.svelte
-export type HeaderButtonType =
-    | { kind: "dropdown"; open: boolean }
-    | { kind: "button" };
-
 // For input-fields/InputField.svelte
 // TODO rename to InputFieldKind Justus 2022-09-22
 // TODO we need to instead support "search", "erasable", and field

@@ -5,17 +5,14 @@
 </script>
 
 <HeaderButton
-    type={{ kind: "button" }}
     label={$_("navigation.header.solutions")}
     action={{ kind: "a", href: "/solutions" }}
 />
 <HeaderButton
-    type={{ kind: "button" }}
     label={$_("navigation.header.pricing")}
     action={{ kind: "a", href: "/pricing" }}
 />
 <HeaderButton
-    type={{ kind: "button" }}
     label={$_("navigation.header.help")}
     action={{ kind: "a", href: "/help" }}
 />
