@@ -121,4 +121,8 @@ export async function updateUserProfile(fullName: string) {
             },
         },
     });
+    // We fetch the user to make sure the full name is updated
+    // Ideally, this would just store the result of the above operation
+    // in the user store
+    await fetchUser({ fetch });
 }
