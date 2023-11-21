@@ -25,7 +25,7 @@ from rest_framework.response import (
 )
 
 from workspace.services.workspace import (
-    workspace_add_user,
+    workspace_create,
 )
 
 from .. import (
@@ -58,8 +58,12 @@ class WorkspaceCreate(
 
     def perform_create(self, serializer: WorkspaceBaseSerializer) -> None:
         """Create the workspace and add this user."""
-        workspace: models.Workspace = serializer.save()
-        workspace_add_user(workspace, self.request.user)
+        workspace = workspace_create(
+            **serializer.validated_data, owner=self.request.user
+        )
+        # Kind of hacky, CreateAPIView relies on this being set when
+        # serializing the result
+        serializer.instance = workspace
 
 
 # Read
