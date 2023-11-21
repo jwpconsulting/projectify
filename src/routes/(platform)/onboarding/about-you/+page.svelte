@@ -45,6 +45,14 @@
     </svelte:fragment>
 
     <svelte:fragment slot="content">
-        <div>User Profile picture</div>
+        <h1 class="text-4xl font-bold">
+            {#if fullName}
+                {$_("onboarding.about-you.greeting.with-name", {
+                    values: { name: fullName },
+                })}
+            {:else}
+                {$_("onboarding.about-you.greeting.without-name")}
+            {/if}
+        </h1>
     </svelte:fragment>
 </Onboarding>

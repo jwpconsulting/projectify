@@ -269,6 +269,10 @@ const messages: MessageDirectory = {
             "full-name": "Full name",
             "title": "About you",
             "prompt": "Write your full name below.",
+            "greeting": {
+                "with-name": "Welcome, {name}! 👋",
+                "without-name": "Welcome! 👋",
+            },
         },
         "billing-details": {
             "title": "Billing details",
