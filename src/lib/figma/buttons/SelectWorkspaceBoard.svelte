@@ -1,4 +1,5 @@
 <script lang="ts">
+    // TODO Rename figma/navigation/side-nav/SelectWorkspaceBoard.svelte
     import { Folder } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
 

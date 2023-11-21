@@ -1,4 +1,5 @@
 <script lang="ts">
+    // Rename to figma/navigation/side-nav/Labels.svelte
     import { Tag } from "@steeze-ui/heroicons";
     import { _ } from "svelte-i18n";
 

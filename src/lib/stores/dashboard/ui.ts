@@ -74,6 +74,7 @@ export function toggleUserExpandOpen() {
 
 const _labelExpandOpen = persisted("label-expand-open", true);
 export const labelExpandOpen = readonly(_labelExpandOpen);
+// TODO rename toggleLabelExpandOpen
 export function toggleLabelDropdownClosedNavOpen() {
     _labelExpandOpen.update((state) => !state);
 }
