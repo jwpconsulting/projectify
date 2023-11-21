@@ -8,6 +8,7 @@ import pytest
 from workspace.models.workspace_user_invite import (
     add_or_invite_workspace_user,
 )
+from workspace.services.workspace import workspace_add_user
 
 from ... import (
     factory,
@@ -181,7 +182,7 @@ mutation RemoveUserFromWorkspace($uuid: UUID!, $email: String!) {
         workspace_user,
     ):
         """Test query."""
-        workspace.add_user(other_user)
+        workspace_add_user(workspace=workspace, user=other_user)
         assert workspace.users.count() == 2
         result = graphql_query_user(
             self.query,
@@ -207,7 +208,7 @@ mutation RemoveUserFromWorkspace($uuid: UUID!, $email: String!) {
         workspace,
     ):
         """Test query."""
-        workspace.add_user(other_user)
+        workspace_add_user(workspace, other_user)
         assert workspace.users.count() == 1
         result = graphql_query_user(
             self.query,

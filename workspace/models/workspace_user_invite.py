@@ -35,6 +35,9 @@ from workspace.exceptions import (
 from workspace.models.workspace_user import (
     WorkspaceUser,
 )
+from workspace.services.workspace import (
+    workspace_add_user,
+)
 
 from .types import (
     Pks,
@@ -156,7 +159,7 @@ def add_or_invite_workspace_user(
     """
     match email_or_user:
         case AbstractBaseUser() as user:
-            return workspace.add_user(user)
+            return workspace_add_user(workspace, user)
         case email:
             pass
 
@@ -164,7 +167,7 @@ def add_or_invite_workspace_user(
         case WorkspaceUser():
             raise UserAlreadyAdded()
         case AbstractBaseUser() as user:
-            return workspace.add_user(user)
+            return workspace_add_user(workspace, user)
         case None:
             pass
 

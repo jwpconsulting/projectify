@@ -34,6 +34,9 @@ from rest_framework import serializers as drf_serializers
 from user.signal_defs import (
     user_invitation_redeemed,
 )
+from workspace.services.workspace import (
+    workspace_add_user,
+)
 
 from . import (
     models,
@@ -223,6 +226,7 @@ def chat_message_changed(
     send_task_change_signal(task)
 
 
+# TODO this should be in services
 @receiver(user_invitation_redeemed)
 @transaction.atomic
 def redeem_workspace_invitations(
@@ -233,5 +237,6 @@ def redeem_workspace_invitations(
         user_invite__user=user,
     )
     for invite in qs:
-        invite.workspace.add_user(user)
+        workspace = invite.workspace
+        workspace_add_user(workspace, user)
         invite.redeem()

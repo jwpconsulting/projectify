@@ -10,6 +10,9 @@ from workspace import models as workspace_models
 from workspace.models.workspace_user_invite import (
     add_or_invite_workspace_user,
 )
+from workspace.services.workspace import (
+    workspace_add_user,
+)
 
 from .. import (
     models,
@@ -128,7 +131,7 @@ class TestCustomer:
     ) -> None:
         """Test seats remaining."""
         assert customer.seats_remaining == customer.seats
-        customer.workspace.add_user(user)
+        workspace_add_user(customer.workspace, user)
         assert customer.seats_remaining == customer.seats - 1
         add_or_invite_workspace_user(customer.workspace, f"new+{user.email}")
         assert customer.seats_remaining == customer.seats - 2

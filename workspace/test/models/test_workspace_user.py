@@ -8,6 +8,12 @@ import pytest
 from user.factory import (
     UserFactory,
 )
+from workspace.models.workspace import (
+    Workspace,
+)
+from workspace.services.workspace import (
+    workspace_add_user,
+)
 
 from ... import (
     models,
@@ -31,7 +37,9 @@ class TestWorkspaceUserManager:
         )
         assert list(qs) == [workspace_user]
 
-    def test_filter_by_user(self, workspace_user: WorkspaceUser) -> None:
+    def test_filter_by_user(
+        self, workspace: Workspace, workspace_user: WorkspaceUser
+    ) -> None:
         """Test filter_by_user."""
         assert (
             WorkspaceUser.objects.filter_by_user(workspace_user.user).count()
@@ -43,7 +51,7 @@ class TestWorkspaceUserManager:
             == 1
         )
         assert WorkspaceUser.objects.filter_by_user(unrelated).count() == 0
-        workspace_user.workspace.add_user(unrelated)
+        workspace_add_user(workspace, unrelated)
         assert WorkspaceUser.objects.filter_by_user(unrelated).count() == 2
 
     def test_get_by_workspace_and_user(

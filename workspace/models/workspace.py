@@ -130,15 +130,6 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         )
         return workspace_board
 
-    # TODO remove me or turn me into a plain function somewhere
-    def add_user(self, user: AbstractBaseUser) -> "WorkspaceUser":
-        """
-        Add user to workspace.
-
-        Return user.
-        """
-        return self.workspaceuser_set.create(user=user)
-
     # TODO I wish this worked with WorkspaceUser instead?
     @transaction.atomic
     def remove_user(self, user: AbstractBaseUser) -> AbstractBaseUser:

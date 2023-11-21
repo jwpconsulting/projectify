@@ -12,6 +12,10 @@ from rest_framework.request import (
     Request,
 )
 
+from workspace.services.workspace import (
+    workspace_add_user,
+)
+
 from ... import (
     factory,
     models,
@@ -221,7 +225,7 @@ class TestTaskCreateUpdateSerializer:
         """Test updating a task."""
         workspace_board_section = factory.WorkspaceBoardSectionFactory.create()
         workspace = workspace_board_section.workspace
-        workspace.add_user(workspace_user.user)
+        workspace_add_user(workspace, workspace_user.user)
         serializer = serializers.TaskCreateUpdateSerializer(
             task,
             data={
