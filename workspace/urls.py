@@ -21,7 +21,6 @@ from .views.workspace_user import (
     WorkspaceUserDestroy,
 )
 
-
 app_name = "workspace"
 
 urlpatterns = (

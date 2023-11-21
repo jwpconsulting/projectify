@@ -88,7 +88,7 @@ def print_caller() -> None:
             )
         )
     home = Path.home()
-    for (path, name, line) in caller_info:
+    for path, name, line in caller_info:
         if path.is_relative_to(home):
             path = path.relative_to(home)
         print(":".join((str(path), name, str(line))))

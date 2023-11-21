@@ -8,7 +8,6 @@ from typing import (
     Any,
 )
 
-
 Headers = Mapping[str, Any]
 DjangoAssertNumQueries = Callable[
     [int], contextlib.AbstractContextManager[None]

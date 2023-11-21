@@ -22,7 +22,6 @@ from .. import (
     models,
 )
 
-
 Headers = Mapping[str, Any]
 
 

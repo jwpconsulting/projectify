@@ -27,7 +27,6 @@ from .. import (
     models,
 )
 
-
 if TYPE_CHECKING:
     from user.models import User  # noqa: F401
 

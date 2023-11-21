@@ -19,7 +19,6 @@ from .registry import (
     registry,
 )
 
-
 if TYPE_CHECKING:
     from user.models import User  # noqa: F401
 

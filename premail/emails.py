@@ -11,7 +11,6 @@ from .email import (
     TemplateEmail,
 )
 
-
 if TYPE_CHECKING:
     from user.models import User  # noqa: F401
 

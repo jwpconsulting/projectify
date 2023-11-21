@@ -4,7 +4,6 @@ from celery import (
     Celery,
 )
 
-
 configurations.setup()
 
 app = Celery("proj")

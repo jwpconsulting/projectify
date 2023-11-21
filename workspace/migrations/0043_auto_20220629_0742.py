@@ -12,7 +12,6 @@ from django.db import (
     migrations,
 )
 
-
 if TYPE_CHECKING:
     from workspace.models import Task as _Task
 

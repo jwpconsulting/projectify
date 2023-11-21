@@ -13,7 +13,6 @@ from django.db import (
     migrations,
 )
 
-
 if TYPE_CHECKING:
     from workspace.models import WorkspaceBoard as _WorkspaceBoard
 
@@ -27,7 +26,6 @@ def ensure_correct_order(apps: Apps, schema_editor: object) -> None:
         for i, wbs in enumerate(
             workspaceboard.workspaceboardsection_set.all()
         ):
-
             wbs._order = i
             wbs.save()
             workspaceboard.save()

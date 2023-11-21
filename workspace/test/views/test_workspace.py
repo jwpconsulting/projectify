@@ -117,6 +117,7 @@ class TestWorkspaceRetrieveView:
 
 # Delete
 
+
 # RPC
 @pytest.mark.django_db
 class TestWorkspacePictureUploadView:

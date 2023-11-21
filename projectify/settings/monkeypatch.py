@@ -11,7 +11,6 @@ from django.views import generic  # For patching
 
 from factory import django  # For patching
 
-
 # XXX we actually need to patch GenericAPIView
 # from rest_framework import generics  # For patching
 # But if we import it at this point, importing from views will read the django

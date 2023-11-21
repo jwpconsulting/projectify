@@ -10,7 +10,6 @@ from django.contrib import (
 )
 
 import strawberry
-
 from graphql import (
     GraphQLResolveInfo,
 )
@@ -22,7 +21,6 @@ from ..emails import (
 from . import (
     types,
 )
-
 
 if TYPE_CHECKING:
     from ..models import User as _User  # noqa: F401

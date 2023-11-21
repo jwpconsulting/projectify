@@ -27,7 +27,6 @@ from .. import (
     models,
 )
 
-
 if TYPE_CHECKING:
     # TODO use AbstractBaseUser instead
     from user.models import User as _User  # noqa: F401

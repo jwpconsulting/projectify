@@ -42,7 +42,6 @@ from . import (
     types,
 )
 
-
 if TYPE_CHECKING:
     from user.models import (  # noqa: F401
         User,

@@ -13,7 +13,6 @@ from django.db import (
     migrations,
 )
 
-
 if TYPE_CHECKING:
     from workspace.models import ChatMessage as _ChatMessage
     from workspace.models import WorkspaceUser as _WorkspaceUser

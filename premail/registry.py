@@ -10,7 +10,6 @@ from .email import (
     TemplateEmail,
 )
 
-
 registry = {
     # 'user-email-confirmation': user_emails.UserEmailConfirmationEmail,
 }

@@ -12,12 +12,12 @@ import factory
 from factory import (
     django,
 )
+
 from user import factory as user_factory
 
 from . import (
     models,
 )
-
 
 if TYPE_CHECKING:
     from user import models as user_models  # noqa: F401

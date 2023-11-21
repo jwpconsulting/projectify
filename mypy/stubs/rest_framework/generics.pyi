@@ -38,7 +38,6 @@ def get_object_or_404(
 ) -> M: ...
 
 class SerializerContext(Generic[M, Q, S], TypedDict):
-
     request: Request
     format: str
     view: GenericAPIView[M, Q, S]

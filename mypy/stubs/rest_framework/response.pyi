@@ -8,7 +8,6 @@ from django.template.response import (
 )
 
 class Response(SimpleTemplateResponse):
-
     data: Any
 
     def __init__(

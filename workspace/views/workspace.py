@@ -117,6 +117,7 @@ class WorkspaceRetrieve(
 # Update
 # Delete
 
+
 # RPC
 # TODO the following two views are candidates for a GenericViewSet
 class WorkspacePictureUploadView(views.APIView):

@@ -32,7 +32,6 @@ from .types import (
     TemplatesConfig,
 )
 
-
 patch()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

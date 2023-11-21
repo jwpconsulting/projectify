@@ -31,7 +31,7 @@ class APIClient(APIRequestFactory, DjangoClient):
         path: str,
         data: Optional[Any] = None,
         follow: bool = False,
-        **extra: object
+        **extra: object,
     ) -> Response: ...
     def post(  # type: ignore[override]
         self,
@@ -39,7 +39,7 @@ class APIClient(APIRequestFactory, DjangoClient):
         data: Optional[Any] = None,
         format: Optional[str] = None,
         content_type: Optional[str] = None,
-        **extra: object
+        **extra: object,
     ) -> Response: ...
     def put(  # type: ignore[override]
         self,
@@ -47,7 +47,7 @@ class APIClient(APIRequestFactory, DjangoClient):
         data: Optional[Any] = None,
         format: Optional[str] = None,
         content_type: Optional[str] = None,
-        **extra: object
+        **extra: object,
     ) -> Response: ...
     def options(  # type: ignore[override]
         self,
@@ -55,7 +55,7 @@ class APIClient(APIRequestFactory, DjangoClient):
         data: Optional[Any] = None,
         format: Optional[str] = None,
         content_type: Optional[str] = None,
-        **extra: object
+        **extra: object,
     ) -> Response: ...
     def delete(  # type: ignore[override]
         self,
@@ -64,5 +64,5 @@ class APIClient(APIRequestFactory, DjangoClient):
         format: Optional[str] = None,
         content_type: Optional[str] = None,
         follow: bool = False,
-        **extra: object
+        **extra: object,
     ) -> Response: ...
