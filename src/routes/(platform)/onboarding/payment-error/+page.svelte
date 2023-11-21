@@ -10,10 +10,12 @@
 </script>
 
 <Onboarding
-    title={$_("onboarding.payment-error.title")}
     nextLabel={$_("onboarding.payment-error.continue")}
     hasContentPadding={false}
 >
+    <svelte:fragment slot="title"
+        >{$_("onboarding.payment-error.title")}</svelte:fragment
+    >
     <svelte:fragment slot="prompt">
         {#each $_("onboarding.payment-error.prompt") as prompt}
             <p>{prompt}</p>

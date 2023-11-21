@@ -6,8 +6,6 @@
 
     export let hasContentPadding = false;
 
-    // TODO make required
-    export let title: string | null = null;
     // TODO make not optional
     export let backAction: ButtonAction | undefined = undefined;
     type NextAction =
@@ -33,75 +31,77 @@
         .map((_, inx) => inx + 1);
 </script>
 
-<form
-    class="flex max-w-lg grow flex-col gap-16 px-12 py-20 pb-8"
-    on:submit|preventDefault={submit}
->
-    <!-- Message -->
-    <div class="flex flex-col gap-4">
-        {#if title}
-            <h1 class="text-4xl font-bold">{title}</h1>
-        {/if}
-        <div class="text-lg">
-            <slot name="prompt" />
+<main class="flex w-full grow flex-row">
+    <form
+        class="flex shrink grow flex-col gap-16 px-12 py-20 pb-8"
+        on:submit|preventDefault={submit}
+    >
+        <!-- Message -->
+        <div class="flex flex-col gap-4">
+            <h1 class="min-w-fit max-w-lg text-4xl font-bold">
+                <slot name="title" />
+            </h1>
+            <div class="text-lg">
+                <slot name="prompt" />
+            </div>
         </div>
-    </div>
 
-    <!-- Inputs -->
-    {#if $$slots.inputs}
-        <div class="flex flex-col">
-            <slot name="inputs" />
-        </div>
-    {/if}
-
-    <!-- Navigation buttons -->
-    <div class="flex flex-col gap-2">
-        <div class="flex gap-2">
-            {#if backAction}
-                <Button
-                    style={{ kind: "tertiary", icon: null }}
-                    color="blue"
-                    size="medium"
-                    action={backAction}
-                    label={$_("onboarding.back")}
-                />
-            {/if}
-            {#if nextAction}
-                <Button
-                    style={{ kind: "primary" }}
-                    color="blue"
-                    size="medium"
-                    action={nextAction}
-                    label={nextLabel}
-                />
-            {:else}
-                TODO nextAction
-            {/if}
-        </div>
-        {#if nextMessage}
-            <div>
-                {nextMessage}
+        <!-- Inputs -->
+        {#if $$slots.inputs}
+            <div class="flex flex-col">
+                <slot name="inputs" />
             </div>
         {/if}
-    </div>
 
-    <div class="grow" />
-
-    {#if step && stepCount}
-        <div class="flex justify-center">
-            <ul class="steps steps-horizontal">
-                {#each steps as _, inx}
-                    <li class:step-primary={inx < step} class="step" />
-                {/each}
-            </ul>
+        <!-- Navigation buttons -->
+        <div class="flex flex-col gap-2">
+            <div class="flex gap-2">
+                {#if backAction}
+                    <Button
+                        style={{ kind: "tertiary", icon: null }}
+                        color="blue"
+                        size="medium"
+                        action={backAction}
+                        label={$_("onboarding.back")}
+                    />
+                {/if}
+                {#if nextAction}
+                    <Button
+                        style={{ kind: "primary" }}
+                        color="blue"
+                        size="medium"
+                        action={nextAction}
+                        label={nextLabel}
+                    />
+                {:else}
+                    TODO nextAction
+                {/if}
+            </div>
+            {#if nextMessage}
+                <div>
+                    {nextMessage}
+                </div>
+            {/if}
         </div>
-    {/if}
-</form>
 
-<div
-    class:p-12={hasContentPadding}
-    class:py-20={hasContentPadding}
-    class="flex h-full grow flex-col items-center justify-center bg-background"
->
-    <slot name="content" />
-</div>
+        <div class="grow" />
+
+        {#if step && stepCount}
+            <div class="flex justify-center">
+                <ul class="steps steps-horizontal">
+                    {#each steps as _, inx}
+                        <li class:step-primary={inx < step} class="step" />
+                    {/each}
+                </ul>
+            </div>
+        {/if}
+    </form>
+
+    <div
+        class:p-12={hasContentPadding}
+        class:py-20={hasContentPadding}
+        class="hidden h-full min-w-0 shrink grow flex-col items-center justify-center overflow-hidden bg-background md:flex"
+    >
+        <slot name="content" />
+    </div>
+</main>

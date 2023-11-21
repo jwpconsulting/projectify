@@ -51,27 +51,27 @@
 </script>
 
 <Onboarding
-    title={$_("onboarding.new-task.title")}
     hasContentPadding={false}
     stepCount={5}
     step={2}
     nextAction={{ kind: "submit", disabled, submit }}
 >
+    <svelte:fragment slot="title"
+        >{$_("onboarding.new-task.title")}</svelte:fragment
+    >
     <svelte:fragment slot="prompt">
         <div class="flex flex-col gap-4">
-            {#if workspaceBoardSection}
-                <p>
+            <p>
+                {#if workspaceBoardSection}
                     {$_("onboarding.new-task.prompt.exists", {
                         values: { workspaceBoardSectionTitle },
                     })}
-                </p>
-            {:else}
-                <p>
+                {:else}
                     {$_("onboarding.new-task.prompt.location", {
                         values: { workspaceBoardSectionTitle },
                     })}
-                </p>
-            {/if}
+                {/if}
+            </p>
             <p>{$_("onboarding.new-task.prompt.explanation")}</p>
         </div>
     </svelte:fragment>

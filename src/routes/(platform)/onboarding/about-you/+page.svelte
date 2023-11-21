@@ -27,10 +27,12 @@
 </script>
 
 <Onboarding
-    title={$_("onboarding.about-you.title")}
     hasContentPadding={true}
     nextAction={{ kind: "submit", disabled, submit }}
 >
+    <svelte:fragment slot="title"
+        >{$_("onboarding.about-you.title")}</svelte:fragment
+    >
     <svelte:fragment slot="prompt">
         {$_("onboarding.about-you.prompt")}
     </svelte:fragment>

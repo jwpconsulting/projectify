@@ -29,11 +29,13 @@
 </script>
 
 <Onboarding
-    title={$_("onboarding.billing-details.title")}
     nextLabel={$_("onboarding.billing-details.continue")}
     nextMessage={$_("onboarding.billing-details.continue-message")}
     hasContentPadding={false}
 >
+    <svelte:fragment slot="title">
+        {$_("onboarding.billing-details.title")}
+    </svelte:fragment>
     <svelte:fragment slot="prompt">
         <p>
             Select the number of seats you’d like and then proceed to the

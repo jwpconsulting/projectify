@@ -8,7 +8,11 @@
     const numberOfSeats = 1;
 </script>
 
-<Onboarding title={"Your workspace is all set up!"} hasContentPadding={false}>
+<!-- TODO i18n -->
+<Onboarding hasContentPadding={false}>
+    <svelte:fragment slot="title"
+        >Your workspace is all set up!</svelte:fragment
+    >
     <svelte:fragment slot="prompt">
         <p>Your free 31 day trial has begun.</p>
         <p>

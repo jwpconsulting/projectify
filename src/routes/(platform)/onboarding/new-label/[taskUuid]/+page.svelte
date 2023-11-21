@@ -31,16 +31,20 @@
 </script>
 
 <Onboarding
-    title={$_("onboarding.new-label.title", { values: { taskTitle } })}
     hasContentPadding={false}
     stepCount={5}
     step={4}
     backAction={{ kind: "a", href: getNewTaskUrl(workspaceBoard.uuid) }}
     nextAction={{ kind: "submit", disabled, submit }}
 >
-    <svelte:fragment slot="prompt">
-        <p>{$_("onboarding.new-label.prompt")}</p>
-    </svelte:fragment>
+    <svelte:fragment slot="title"
+        >{$_("onboarding.new-label.title", {
+            values: { taskTitle },
+        })}</svelte:fragment
+    >
+    <svelte:fragment slot="prompt"
+        ><p>{$_("onboarding.new-label.prompt")}</p></svelte:fragment
+    >
 
     <svelte:fragment slot="inputs">
         <InputField

@@ -11,12 +11,10 @@
     const state: OnboardingState = "new-section";
 </script>
 
-<Onboarding
-    title={$_("onboarding.new-section.title")}
-    hasContentPadding={false}
-    stepCount={5}
-    step={3}
->
+<Onboarding hasContentPadding={false} stepCount={5} step={3}>
+    <svelte:fragment slot="title"
+        >{$_("onboarding.new-section.title")}</svelte:fragment
+    >
     <svelte:fragment slot="prompt">
         <p>Add new sections and customise your section names.</p>
     </svelte:fragment>

@@ -32,17 +32,17 @@
 </script>
 
 <Onboarding
-    title={$_("onboarding.new-workspace.title", {
-        values: { who: user.full_name },
-    })}
     nextAction={{ kind: "submit", disabled, submit }}
     hasContentPadding={false}
 >
+    <svelte:fragment slot="title"
+        >{$_("onboarding.new-workspace.title", {
+            values: { who: user.full_name },
+        })}</svelte:fragment
+    >
     <svelte:fragment slot="prompt">
         {#if workspace}
-            <p>
-                {$_("onboarding.new-workspace.has-workspace")}
-            </p>
+            <p>{$_("onboarding.new-workspace.has-workspace")}</p>
             <p>
                 <Anchor
                     size="large"
@@ -51,7 +51,7 @@
                 />
             </p>
         {:else}
-            {$_("onboarding.new-workspace.prompt")}
+            <p>{$_("onboarding.new-workspace.prompt")}</p>
         {/if}
     </svelte:fragment>
     <svelte:fragment slot="inputs">

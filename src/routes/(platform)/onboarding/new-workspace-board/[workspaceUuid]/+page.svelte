@@ -37,7 +37,6 @@
 </script>
 
 <Onboarding
-    title={$_("onboarding.new-workspace-board.title")}
     hasContentPadding={false}
     stepCount={5}
     step={1}
@@ -47,6 +46,9 @@
         submit,
     }}
 >
+    <svelte:fragment slot="title"
+        >{$_("onboarding.new-workspace-board.title")}</svelte:fragment
+    >
     <svelte:fragment slot="prompt">
         <div class="flex flex-col gap-8">
             {#if workspaceBoard}
@@ -75,8 +77,8 @@
                     {/each}
                 </div>
             {/if}
-        </div></svelte:fragment
-    >
+        </div>
+    </svelte:fragment>
 
     <svelte:fragment slot="inputs">
         <InputField

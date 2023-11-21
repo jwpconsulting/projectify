@@ -22,7 +22,6 @@
 </script>
 
 <Onboarding
-    title={$_("onboarding.assign-task.title", { values: { taskTitle } })}
     hasContentPadding={false}
     stepCount={5}
     step={5}
@@ -32,6 +31,11 @@
         href: getDashboardWorkspaceBoardUrl(workspaceBoard.uuid),
     }}
 >
+    <svelte:fragment slot="title"
+        >{$_("onboarding.assign-task.title", {
+            values: { taskTitle },
+        })}</svelte:fragment
+    >
     <svelte:fragment slot="prompt">
         <div class="flex flex-col gap-4">
             <p>{$_("onboarding.assign-task.prompt.finished")}</p>
