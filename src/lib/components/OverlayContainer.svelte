@@ -12,7 +12,7 @@
     // method used to close this overlay
     export let closeOverlay: () => void;
 
-    export let fixed = true;
+    const fixed = true;
 
     let overlayElement: HTMLElement;
 
