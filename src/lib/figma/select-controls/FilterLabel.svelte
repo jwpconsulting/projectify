@@ -40,7 +40,7 @@
 </script>
 
 <button
-    class="group flex w-full flex-row items-center justify-between px-5 py-2 hover:bg-base-200"
+    class="group flex w-full flex-row items-center justify-between px-5 hover:bg-base-200"
     on:click={click}
 >
     <div class="flex min-w-0 flex-row items-center gap-2">
