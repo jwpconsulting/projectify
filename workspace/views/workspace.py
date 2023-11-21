@@ -24,6 +24,10 @@ from rest_framework.response import (
     Response,
 )
 
+from workspace.services.workspace import (
+    workspace_add_user,
+)
+
 from .. import (
     models,
 )
@@ -55,7 +59,7 @@ class WorkspaceCreate(
     def perform_create(self, serializer: WorkspaceBaseSerializer) -> None:
         """Create the workspace and add this user."""
         workspace: models.Workspace = serializer.save()
-        workspace.add_user(self.request.user)
+        workspace_add_user(workspace, self.request.user)
 
 
 # Read
