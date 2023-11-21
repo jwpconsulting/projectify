@@ -1,5 +1,15 @@
 <script lang="ts">
-    import SideNav from "$lib/figma/navigation/SideNav.svelte";
+    import { onMount } from "svelte";
+
+    import Full from "$lib/figma/navigation/side-nav/Full.svelte";
+    import {
+        boardExpandOpen,
+        labelExpandOpen,
+        toggleBoardExpandOpen,
+        toggleLabelDropdownClosedNavOpen,
+        toggleUserExpandOpen,
+        userExpandOpen,
+    } from "$lib/stores/dashboard";
     import type {
         Label,
         Task,
@@ -44,6 +54,19 @@
         color: 0,
         uuid: "does-not-exist",
     };
+
+    onMount(() => {
+        // Ensure we have all side panels open
+        if (!$boardExpandOpen) {
+            toggleBoardExpandOpen();
+        }
+        if (!$labelExpandOpen) {
+            toggleLabelDropdownClosedNavOpen();
+        }
+        if (!$userExpandOpen) {
+            toggleUserExpandOpen();
+        }
+    });
 
     type State =
         | {
@@ -147,16 +170,18 @@
               }
             : undefined),
     } satisfies WorkspaceBoard;
+
+    const width = 500;
 </script>
 
-<div class="w-[600px] overflow-hidden" inert>
-    <div class="w-fit origin-left scale-[0.6]">
-        <div class="flex w-[1000px] flex-col">
-            <div class="flex flex-row">
-                <SideNav {workspaces} {workspace} />
-                <div class="min-w-0 grow">
-                    <Dashboard {workspaceBoard} />
-                </div>
+<div class="w-fit origin-center scale-[0.6]" style:width={width * 0.6} inert>
+    <div class="flex flex-col bg-foreground ring-4 ring-border" style:width>
+        <div class="flex flex-row">
+            <div class="max-w-xs shrink">
+                <Full {workspaces} {workspace} />
+            </div>
+            <div class="min-w-0 grow">
+                <Dashboard {workspaceBoard} />
             </div>
         </div>
     </div>
