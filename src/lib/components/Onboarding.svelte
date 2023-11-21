@@ -8,8 +8,6 @@
 
     // TODO make required
     export let title: string | null = null;
-    // TODO make required or swap for slot
-    export let prompt: string | null = null;
     // TODO make not optional
     export let backAction: ButtonAction | undefined = undefined;
     type NextAction =
@@ -45,11 +43,7 @@
             <h1 class="text-4xl font-bold">{title}</h1>
         {/if}
         <div class="text-lg">
-            {#if prompt}
-                {prompt}
-            {:else}
-                <slot name="prompt" />
-            {/if}
+            <slot name="prompt" />
         </div>
     </div>
 

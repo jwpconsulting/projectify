@@ -28,10 +28,12 @@
 
 <Onboarding
     title={$_("onboarding.about-you.title")}
-    prompt={$_("onboarding.about-you.prompt")}
     hasContentPadding={true}
     nextAction={{ kind: "submit", disabled, submit }}
 >
+    <svelte:fragment slot="prompt">
+        {$_("onboarding.about-you.prompt")}
+    </svelte:fragment>
     <svelte:fragment slot="inputs">
         <InputField
             bind:value={fullName}

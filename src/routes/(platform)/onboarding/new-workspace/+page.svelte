@@ -35,7 +35,6 @@
     title={$_("onboarding.new-workspace.title", {
         values: { who: user.full_name },
     })}
-    prompt={workspace ? null : $_("onboarding.new-workspace.prompt")}
     nextAction={{ kind: "submit", disabled, submit }}
     hasContentPadding={false}
 >
@@ -51,6 +50,8 @@
                     label={"Create workspace board"}
                 />
             </p>
+        {:else}
+            {$_("onboarding.new-workspace.prompt")}
         {/if}
     </svelte:fragment>
     <svelte:fragment slot="inputs">
