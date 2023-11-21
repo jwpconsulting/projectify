@@ -19,5 +19,7 @@
     filtered={$selectedWorkspaceUser.kind !== "allWorkspaceUsers"}
 />
 {#if $userExpandOpen}
-    <FilterWorkspaceUser mode={{ kind: "filter" }} />
+    <div class="shrink overflow-y-auto">
+        <FilterWorkspaceUser mode={{ kind: "filter" }} />
+    </div>
 {/if}

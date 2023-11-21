@@ -32,20 +32,20 @@
     filtered={false}
 />
 {#if $boardExpandOpen}
-    <div class="flex flex-col">
+    <div class="flex shrink flex-col overflow-y-auto">
         {#if workspace.workspace_boards === undefined}
             <Loading />
         {:else}
             {#each workspace.workspace_boards as workspaceBoard (workspaceBoard.uuid)}
                 <SelectWorkspaceBoard {workspace} {workspaceBoard} />
             {/each}
-            <ContextMenuButton
-                label={$_("dashboard.create-board")}
-                icon={Plus}
-                color="primary"
-                state="normal"
-                kind={{ kind: "button", action: openCreateWorkspaceBoard }}
-            />
         {/if}
     </div>
+    <ContextMenuButton
+        label={$_("dashboard.create-board")}
+        icon={Plus}
+        color="primary"
+        state="normal"
+        kind={{ kind: "button", action: openCreateWorkspaceBoard }}
+    />
 {/if}

@@ -19,5 +19,7 @@
     filtered={$selectedLabels.kind !== "allLabels"}
 />
 {#if $labelExpandOpen}
-    <LabelMenu />
+    <div class="shrink overflow-y-auto">
+        <LabelMenu />
+    </div>
 {/if}
