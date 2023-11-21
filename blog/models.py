@@ -19,7 +19,6 @@ from django_extensions.db.models import (
     TimeStampedModel,
 )
 
-
 if TYPE_CHECKING:
     from user.models import (  # noqa: F401
         User,

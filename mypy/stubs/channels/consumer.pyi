@@ -11,7 +11,6 @@ from .layers import (
 )
 
 class AsyncConsumer:
-
     scope: dict[str, Any]
     channel_layer: BaseChannelLayer
     channel_name: str

@@ -7,7 +7,6 @@ from . import (
     views,
 )
 
-
 app_name = "corporate"
 
 urlpatterns = [

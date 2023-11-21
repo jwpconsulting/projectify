@@ -36,7 +36,6 @@ from .const import (
     WorkspaceUserRoles,
 )
 
-
 if TYPE_CHECKING:
     from django.db.models.fields.related import RelatedField  # noqa: F401
     from django.db.models.manager import RelatedManager  # noqa: F401

@@ -24,7 +24,6 @@ from .. import (
     models,
 )
 
-
 timestamps: Sequence[str] = (
     "created",
     "modified",
@@ -37,7 +36,7 @@ title_description: Sequence[str] = (
 
 
 class UuidObjectSerializer(serializers.Serializer):
-    """This will deserialize the UUID for a any object with a UUID."""
+    """Deserialize the UUID for a any object with a UUID."""
 
     uuid = serializers.UUIDField()
 

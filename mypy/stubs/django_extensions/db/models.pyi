@@ -12,11 +12,9 @@ from django_extensions.db.fields import (
 )
 
 class TitleDescriptionModel(models.Model):
-
     title: models.CharField[str]
     description: models.TextField[Optional[str]]
 
 class TimeStampedModel(models.Model):
-
     created: CreationDateTimeField
     modified: ModificationDateTimeField

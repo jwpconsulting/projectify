@@ -26,7 +26,6 @@ from . import (
     types,
 )
 
-
 async_to_sync = cast(Any, _async_to_sync)
 
 

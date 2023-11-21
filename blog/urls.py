@@ -12,7 +12,6 @@ from .views import (
     PostListView,
 )
 
-
 urlpatterns = [
     path("posts/", PostListView.as_view()),
     path("post/<slug:slug>/", PostDetailView.as_view()),

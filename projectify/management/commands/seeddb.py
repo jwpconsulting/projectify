@@ -42,12 +42,13 @@ from django.db import (
     transaction,
 )
 
+from faker import (
+    Faker,
+)
+
 from corporate.models import (
     Customer,
     CustomerSubscriptionStatus,
-)
-from faker import (
-    Faker,
 )
 from user.models import (
     User,
@@ -67,7 +68,6 @@ from workspace.models.sub_task import (
 from workspace.models.workspace_user import (
     WorkspaceUser,
 )
-
 
 Altogether = TypedDict(
     "Altogether",
@@ -177,7 +177,8 @@ class Command(BaseCommand):
                     number=next(together["number"]),
                     assignee=choice(together["workspace_users"])
                     # 2 out of 3 tasks have an assignee
-                    if randint(0, 2) else None,
+                    if randint(0, 2)
+                    else None,
                 )
                 for (together, workspace_board_section, _order) in task_combos
             ]
@@ -384,7 +385,7 @@ class Command(BaseCommand):
                 (_, workspace_board_sections),
             ) in zip(
                 groupby(workspaces_workspace_users, key=lambda u: u.workspace),
-                groupby(workspaces_labels, key=lambda l: l.workspace),
+                groupby(workspaces_labels, key=lambda label: label.workspace),
                 groupby(
                     workspaces_workspace_boards, key=lambda b: b.workspace
                 ),

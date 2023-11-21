@@ -10,7 +10,6 @@ from django.contrib import (
 
 import strawberry
 
-
 if TYPE_CHECKING:
     from ..models import User as _User  # noqa: F401
 

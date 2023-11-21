@@ -8,7 +8,6 @@ from .models import (
     PostImage,
 )
 
-
 # Register your models here.
 admin.site.register(Post)
 admin.site.register(PostImage)

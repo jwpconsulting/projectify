@@ -11,13 +11,13 @@ from django.shortcuts import (
 from django.utils.translation import gettext_lazy as _
 
 import strawberry
+from graphql import (
+    GraphQLResolveInfo,
+)
 from strawberry.unset import (
     UNSET,
 )
 
-from graphql import (
-    GraphQLResolveInfo,
-)
 from projectify.utils import (
     get_user_model,
 )

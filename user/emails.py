@@ -11,7 +11,6 @@ from premail.email import (
     TemplateEmail,
 )
 
-
 if TYPE_CHECKING:
     from .models import User  # noqa: F401
 

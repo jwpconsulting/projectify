@@ -5,7 +5,6 @@ from collections.abc import (
 from typing import (
     Any,
     Generic,
-    Mapping,
     Optional,
     TypeVar,
     Union,
@@ -18,8 +17,9 @@ from django.db.models import (
 from .exceptions import (
     ValidationError,
 )
-from .fields import *
-from .relations import *
+from .fields import *  # noqa: F403
+from .fields import Field, empty
+from .relations import *  # noqa: F403
 
 # Ensure we don't pass in unserialized UUIDs
 SerializerData = Union[None, str, int, "SerializerList", "SerializerDict"]
@@ -43,7 +43,6 @@ ValidatedData = Any
 Context = Mapping[str, Any]
 
 class BaseSerializer:
-
     context: Context
     initial_data: Optional[SerializerData]
     parent: Optional[Serializer]
@@ -57,7 +56,7 @@ class BaseSerializer:
         many: bool = False,
         source: Optional[str] = None,
         context: Optional[Context] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None: ...
     def to_internal_value(self, data: Any) -> ValidatedData: ...
     def to_representation(self, instance: object) -> SerializerData: ...
@@ -73,7 +72,6 @@ T = TypeVar("T")
 M = TypeVar("M", bound=Model)
 
 class Serializer(BaseSerializer):
-
     # XXX not sure if some of these actually belong in the BaseSerializer
     data: SerializerData
     errors: Errors

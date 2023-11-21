@@ -9,7 +9,6 @@ from typing import (
 P = ParamSpec("P")
 
 class Predicate(Generic[P]):
-
     __call__: Callable[P, bool]
 
     def __and__(self, other: Predicate[P]) -> Predicate[P]: ...

@@ -16,11 +16,9 @@ from channels.routing import (
     ProtocolTypeRouter,
     URLRouter,
 )
-
 from configurations.asgi import (
     get_asgi_application,
 )
-
 
 # TODO still needed? We should just let the server crash when this env var is
 # unset
@@ -35,7 +33,6 @@ asgi_application = get_asgi_application()
 from .urls import (  # noqa: E402
     websocket_urlpatterns,
 )
-
 
 websocket_application = AuthMiddlewareStack(URLRouter(websocket_urlpatterns))
 

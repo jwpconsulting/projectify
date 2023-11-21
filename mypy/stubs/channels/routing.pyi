@@ -13,7 +13,6 @@ from django.urls import (
 )
 
 class ProtocolRoutes(TypedDict):
-
     http: ASGIHandler
     websocket: ASGIHandler
 

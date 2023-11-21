@@ -24,7 +24,6 @@ from .tasks import (
     send_mail,
 )
 
-
 Context = dict[str, Any]
 
 T = TypeVar("T")

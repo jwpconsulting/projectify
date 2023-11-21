@@ -8,7 +8,6 @@ from .views import (
     EmailPreview,
 )
 
-
 app_name = "premail"
 
 

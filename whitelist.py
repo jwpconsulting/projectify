@@ -1,3 +1,5 @@
+"""Whitelist for vulture. Not currently used for testing."""
+# ruff: noqa: F821
 app_name  # unused variable (workspace/urls.py:11)
 constraints  # unused variable (workspace/models.py:967)
 django_get_or_create  # unused variable (user/factory.py:37)

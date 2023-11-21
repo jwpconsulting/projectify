@@ -17,7 +17,6 @@ from .workspace_board_section import (
     WorkspaceBoardSectionDetailSerializer,
 )
 
-
 # XXX
 # I don't like that we user the Base serializer here
 __all__ = [
