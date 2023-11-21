@@ -103,10 +103,5 @@
     class:py-20={hasContentPadding}
     class="flex h-full grow flex-col items-center justify-center bg-background"
 >
-    {#if $$slots["content-title"]}
-        <h1 class="text-4xl font-bold">
-            <slot name="content-title" />
-        </h1>
-    {/if}
     <slot name="content" />
 </div>

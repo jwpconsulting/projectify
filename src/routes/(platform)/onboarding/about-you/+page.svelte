@@ -44,11 +44,6 @@
         />
     </svelte:fragment>
 
-    <svelte:fragment slot="content-title">
-        Welcome{#if !disabled},
-        {/if}{fullName ?? ""}! 👋
-    </svelte:fragment>
-
     <svelte:fragment slot="content">
         <div>User Profile picture</div>
     </svelte:fragment>
