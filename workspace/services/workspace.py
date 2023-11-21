@@ -17,6 +17,20 @@ from workspace.models.workspace_user import (
 )
 
 
+def workspace_create(
+    *,
+    title: str,
+    description: Optional[str] = None,
+    owner: Optional[AbstractBaseUser] = None,
+) -> Workspace:
+    """Create a workspace."""
+    workspace = Workspace(title=title, description=description)
+    workspace.save()
+    if owner is not None:
+        workspace_add_user(workspace=workspace, user=owner, role="OWNER")
+    return workspace
+
+
 def workspace_add_user(
     # TODO make *
     # TODO derive the correct role from an enum

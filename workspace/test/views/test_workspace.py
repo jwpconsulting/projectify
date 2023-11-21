@@ -57,7 +57,9 @@ class TestWorkspaceCreate:
         assert response.status_code == 201
         assert models.Workspace.objects.count() == 1
         workspace = models.Workspace.objects.get()
-        assert workspace.workspaceuser_set.get().user == user
+        workspace_user = workspace.workspaceuser_set.get()
+        assert workspace_user.user == user
+        assert workspace_user.role == "OWNER"
 
 
 # Read
