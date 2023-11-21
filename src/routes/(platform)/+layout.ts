@@ -3,6 +3,7 @@ import { get } from "svelte/store";
 
 import { fetchUser, user } from "$lib/stores/user";
 import type { User } from "$lib/types/user";
+import { getLogInWithNextUrl } from "$lib/urls/user";
 
 import type { LayoutLoadEvent } from "./$types";
 
@@ -24,7 +25,7 @@ export async function load({
         return { user: fetchedUser };
     }
 
-    const next = `/login?next=${url.href}`;
+    const next = getLogInWithNextUrl(url.href);
     console.log("Not logged in, redirecting to", next);
     throw redirect(302, next);
 }
