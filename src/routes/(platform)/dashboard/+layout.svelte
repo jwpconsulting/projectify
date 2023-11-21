@@ -13,9 +13,9 @@
     $: workspace = $currentWorkspace;
 </script>
 
-<div class="flex h-full grow flex-row">
+<div class="flex min-h-0 shrink flex-row">
     <!-- this breakpoint is in tune with the mobile menu breakpoint -->
-    <div class="hidden md:block">
+    <div class="hidden h-full shrink-0 overflow-y-scroll md:block">
         {#if workspace}
             <SideNav {workspaces} {workspace} />
         {:else}
@@ -24,7 +24,7 @@
     </div>
     <!-- not inserting min-w-0 will mean that this div will extend as much as
     needed around whatever is inside the slot -->
-    <div class="min-w-0 grow">
+    <div class="min-w-0 grow overflow-y-scroll">
         <slot />
     </div>
 </div>

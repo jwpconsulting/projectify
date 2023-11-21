@@ -10,7 +10,7 @@
 </script>
 
 <!-- XXX temporary fix to alleviate long side nav inside mobile menu -->
-<nav class="flex h-full max-h-screen flex-col py-4">
+<nav class="flex flex-col py-4">
     <WorkspaceMenu {workspaces} {workspace} open={true} />
     <div class="flex shrink flex-col overflow-x-auto overflow-y-scroll">
         <Boards {workspace} />

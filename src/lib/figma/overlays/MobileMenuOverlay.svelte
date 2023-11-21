@@ -15,8 +15,8 @@
     export let target: MobileMenuType;
 </script>
 
-<div class="h-full w-full bg-foreground p-2" role="menu">
-    <div class="flex flex-col gap-8 p-2">
+<div class="min-h-screen w-full bg-foreground p-2" role="menu">
+    <div class="flex h-full flex-col gap-8 p-2">
         {#if target.kind === "dashboard"}
             {#if $currentWorkspaces !== undefined && $currentWorkspace !== undefined}
                 <Full

@@ -29,7 +29,7 @@
 
 <!-- XXX: setting overflow-x-auto here magically solves an overflowing task card
     Why? Justus 2023-08-28 -->
-<div class="flex min-h-full flex-col overflow-x-auto bg-background">
+<div class="flex h-full flex-col overflow-y-auto bg-background">
     {#if $currentSearchedTasks !== undefined}
         <!-- Flat Tasks Results -->
         {#if $currentSearchedTasks.length}

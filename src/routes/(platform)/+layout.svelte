@@ -17,7 +17,7 @@
     import { user } from "$lib/stores/user";
 </script>
 
-<div class="flex grow flex-col">
+<div class="flex h-screen grow flex-col overflow-y-auto">
     {#if $user}
         <HeaderDashboard user={$user} />
     {/if}
