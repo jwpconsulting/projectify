@@ -13,7 +13,6 @@
         destructiveOverlayState,
         rejectDestructiveOverlay,
         rejectConstructiveOverlay,
-        closeMobileMenu,
     } from "$lib/stores/globalUi";
     import { user } from "$lib/stores/user";
 </script>
@@ -22,17 +21,10 @@
     {#if $user}
         <HeaderDashboard user={$user} />
     {/if}
-    <div class="relative h-full">
-        <OverlayContainer
-            closeOverlay={closeMobileMenu}
-            fixed={false}
-            store={mobileMenuState}
-            let:target
-        >
-            <MobileMenuOverlay {target} />
-            <slot slot="else" />
-        </OverlayContainer>
-    </div>
+    {#if $mobileMenuState.kind === "visible"}
+        <MobileMenuOverlay target={$mobileMenuState.target} />
+    {/if}
+    <slot />
 </div>
 
 <ConnectionStatus />
