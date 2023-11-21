@@ -1,25 +1,53 @@
-[tool.black]
+[tool.ruff]
 line-length=79
-
-[tool.isort]
-default_section = "FIRSTPARTY"
-force_grid_wrap = 1
-include_trailing_comma = true
-indent = '    '
-line_length = 79
-lines_after_imports = 2
-multi_line_output = 3
-sections = ["STDLIB", "DJANGO", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
-known_django = ["django"]
-known_third_party = [
-    "asgiref",
-    "channels",
-    "channels_graphql_ws",
-    "strawberry",
-    "pytest",
-    "rest_framework"
+extend-select = [
+    "I",
+    "E",
+    "D",
+    "C901",
+    # TODO add
+    # "C",
+    "F",
+    # TODO add
+    # "DJ",
+    # TODO add
+    # "T20",
+    # There are so many more out there, they all look interesting:
+    # https://docs.astral.sh/ruff/rules/
 ]
-known_first_party = ["user"]
+ignore = [
+    # Conflicting with D201
+    "D203",
+    # Conflicting with D213
+    "D212",
+    "E501",
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 6
+
+[tool.ruff.lint.isort]
+section-order = [
+    "future",
+    "standard-library",
+    "django",
+    "third-party",
+    "first-party",
+    "local-folder",
+]
+
+[tool.ruff.lint.isort.sections]
+django = [
+    "django"
+]
+# third-party = [
+#     "asgiref",
+#     "channels",
+#     "channels_graphql_ws",
+#     "strawberry",
+#     "pytest",
+#     "rest_framework"
+# ]
 
 [tool.mypy]
 mypy_path = [
@@ -127,19 +155,14 @@ factory-boy = "~3.2.1"
 ipython = "~8.10.0"
 pdbpp = "~0.10.3"
 pyright = "~1.1.318"
+ruff = "^0.1.6"
 
 [tool.poetry.group.test]
 
 [tool.poetry.group.test.dependencies]
-black = "~22.6.0"
 celery-types = "~0.20.0"
 django-test-migrations = "~1.2.0"
 django-types = "~0"
-flake8 = "~4.0.1"
-flake8-black = "~0.3.3"
-flake8-docstrings = "~1.6.0"
-flake8-isort = "~4.1.1"
-isort = "~5.10.1"
 mypy = "~1.4.1"
 pytest = "~7.2.1"
 pytest-asyncio = "~0.20.3"

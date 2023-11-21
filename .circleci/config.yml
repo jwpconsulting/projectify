@@ -69,8 +69,11 @@ jobs:
     steps:
       - install_dependencies
       - run:
-          name: Run flake8
-          command: poetry run flake8
+          name: Run ruff format
+          command: poetry run ruff format --check .
+      - run:
+          name: Run ruff
+          command: poetry run ruff .
   mypy:
     executor: python
     steps:
