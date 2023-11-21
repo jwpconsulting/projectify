@@ -16,7 +16,6 @@ from django.db import (
 )
 from django.utils.translation import gettext_lazy as _
 
-
 if TYPE_CHECKING:
     from workspace.models import (  # noqa: F401
         Workspace,

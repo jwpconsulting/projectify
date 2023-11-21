@@ -1,6 +1,5 @@
 from typing import (
     Any,
-    Mapping,
 )
 
 from django.contrib.auth.models import (

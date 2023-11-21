@@ -7,10 +7,10 @@ from typing import (
 )
 
 import strawberry
-
 from graphql import (
     GraphQLResolveInfo,
 )
+
 from projectify import (
     utils,
 )

@@ -40,7 +40,6 @@ from django.http import (
     HttpResponse,
 )
 
-
 GetResponse = Callable[[HttpRequest], HttpResponse]
 
 

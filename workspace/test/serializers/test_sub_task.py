@@ -20,7 +20,6 @@ from ...serializers.sub_task import (
     SubTaskCreateUpdateSerializer,
 )
 
-
 PayloadSingle = Any
 Context = dict[str, object]
 

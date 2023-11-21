@@ -7,7 +7,6 @@ from typing import (
     Callable,
 )
 
-
 Pks = list[str]
 
 GetOrder = Callable[[], Iterable[int]]

@@ -12,6 +12,7 @@ from django.contrib.auth.models import (
 )
 
 import rules
+
 from corporate import models as corporate_models
 
 from . import (

@@ -8,7 +8,6 @@ from typing import (
     TypedDict,
 )
 
-
 ChannelLayer = Mapping[str, Any]
 ChannelLayers = Mapping[str, ChannelLayer]
 

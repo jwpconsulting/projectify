@@ -18,6 +18,7 @@ from django.utils.translation import gettext_lazy as _
 from django_extensions.db.models import (
     TimeStampedModel,
 )
+
 from projectify.utils import (
     get_user_model,
 )

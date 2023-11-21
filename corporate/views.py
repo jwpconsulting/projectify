@@ -12,17 +12,15 @@ from django.views.decorators.csrf import (
     csrf_exempt,
 )
 
+import stripe
 from rest_framework import (
     generics,
 )
-
-import stripe
 
 from . import (
     models,
     serializers,
 )
-
 
 endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
 

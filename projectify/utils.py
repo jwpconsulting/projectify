@@ -18,7 +18,6 @@ from cloudinary import (
     CloudinaryImage,
 )
 
-
 if TYPE_CHECKING:
     from django.db.models import FieldFile  # noqa: F401
 
