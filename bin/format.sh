@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 set -e
-poetry run isort .
-poetry run black .
+poetry run ruff format .
+poetry run ruff --fix .
