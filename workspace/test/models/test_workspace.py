@@ -8,6 +8,10 @@ from django.contrib.auth.models import (
 
 import pytest
 
+from workspace.services.workspace import (
+    workspace_add_user,
+)
+
 from ... import (
     factory,
     models,
@@ -70,7 +74,7 @@ class TestWorkspace:
     ) -> None:
         """Test adding a user."""
         assert workspace.users.count() == 0
-        workspace.add_user(user)
+        workspace_add_user(workspace, user)
         assert workspace.users.count() == 1
 
     def test_add_user_twice(
@@ -81,7 +85,7 @@ class TestWorkspace:
     ) -> None:
         """Test that adding a user twice won't work."""
         with pytest.raises(db.IntegrityError):
-            workspace.add_user(user)
+            workspace_add_user(workspace, user)
 
     def test_remove_user(
         self,
