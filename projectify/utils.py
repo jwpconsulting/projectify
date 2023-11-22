@@ -1,6 +1,7 @@
 """Projectify utils."""
 from typing import (
     TYPE_CHECKING,
+    Any,
     Optional,
     Type,
     cast,
@@ -13,10 +14,13 @@ from django.contrib.auth import get_user_model as _get_user_model
 from django.contrib.auth.models import (
     AbstractBaseUser,
 )
+from django.core.exceptions import PermissionDenied
 
 from cloudinary import (
     CloudinaryImage,
 )
+
+from user.models import User
 
 if TYPE_CHECKING:
     from django.db.models import FieldFile  # noqa: F401
@@ -51,3 +55,16 @@ def crop_image(
         **kwargs,
     )
     return url
+
+
+# This is coupled to our own user model for now, otherwise we need to
+# do lots of weird casting with AbstractBaseUser vs. AbstractUser
+def validate_perm(
+    perm: str,
+    who: User,
+    what: Any,
+) -> bool:
+    """Verify if who has perm to do what. Raise PermissionDenied otherwise."""
+    if who.has_perm(perm, what):
+        return True
+    raise PermissionDenied(f"'{who}' can not '{perm}' for '{what}'")

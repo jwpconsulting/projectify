@@ -136,6 +136,7 @@ def belongs_to_active_workspace(
 
 
 # Workspace
+# Anyone should be able to create a workspace
 rules.add_perm(
     "workspace.can_create_workspace",
     is_at_least_owner,
