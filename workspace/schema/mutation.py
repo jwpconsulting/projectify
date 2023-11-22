@@ -21,6 +21,7 @@ from strawberry.unset import (
 from projectify.utils import (
     get_user_model,
 )
+from workspace.services.workspace_board import workspace_board_create
 
 from .. import (
     models,
@@ -228,7 +229,8 @@ class Mutation:
             deadline = input.deadline
         else:
             deadline = None
-        workspace_board = workspace.add_workspace_board(
+        workspace_board = workspace_board_create(
+            workspace=workspace,
             title=input.title,
             description=input.description,
             deadline=deadline,
