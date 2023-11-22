@@ -1,12 +1,8 @@
 """Contain workspace model and qs."""
 import uuid
-from datetime import (
-    datetime,
-)
 from typing import (
     TYPE_CHECKING,
     ClassVar,
-    Optional,
     Self,
     cast,
 )
@@ -118,17 +114,6 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         workspaceuser_set: RelatedManager["WorkspaceUser"]
         workspaceuserinvite_set: RelatedManager["WorkspaceUserInvite"]
         label_set: RelatedManager["Label"]
-
-    def add_workspace_board(
-        self, title: str, description: str, deadline: Optional[datetime] = None
-    ) -> "WorkspaceBoard":
-        """Add workspace board."""
-        workspace_board: "WorkspaceBoard" = self.workspaceboard_set.create(
-            title=title,
-            description=description,
-            deadline=deadline,
-        )
-        return workspace_board
 
     # TODO I wish this worked with WorkspaceUser instead?
     @transaction.atomic

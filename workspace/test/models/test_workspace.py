@@ -11,6 +11,7 @@ import pytest
 from workspace.services.workspace import (
     workspace_add_user,
 )
+from workspace.services.workspace_board import workspace_board_create
 
 from ... import (
     factory,
@@ -60,9 +61,13 @@ class TestWorkspace:
     def test_add_workspace_board(self, workspace: models.Workspace) -> None:
         """Test adding a workspace board."""
         assert workspace.workspaceboard_set.count() == 0
-        board = workspace.add_workspace_board("foo", "bar")
+        board = workspace_board_create(
+            workspace=workspace, title="foo", description="bar"
+        )
         assert workspace.workspaceboard_set.count() == 1
-        board2 = workspace.add_workspace_board("foo", "bar")
+        board2 = workspace_board_create(
+            workspace=workspace, title="foo", description="bar"
+        )
         assert workspace.workspaceboard_set.count() == 2
         assert list(workspace.workspaceboard_set.all()) == [
             board,
