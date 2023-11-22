@@ -8,6 +8,8 @@ from django.contrib.auth.models import (
 
 import pytest
 
+from user.models import User
+from workspace.models.workspace_user import WorkspaceUser
 from workspace.services.workspace import (
     workspace_add_user,
 )
@@ -58,15 +60,26 @@ class TestWorkspace:
         """Assert that the creates."""
         assert workspace
 
-    def test_add_workspace_board(self, workspace: models.Workspace) -> None:
+    def test_add_workspace_board(
+        self,
+        workspace: models.Workspace,
+        user: User,
+        workspace_user: WorkspaceUser,
+    ) -> None:
         """Test adding a workspace board."""
         assert workspace.workspaceboard_set.count() == 0
         board = workspace_board_create(
-            workspace=workspace, title="foo", description="bar"
+            workspace=workspace,
+            title="foo",
+            description="bar",
+            who=user,
         )
         assert workspace.workspaceboard_set.count() == 1
         board2 = workspace_board_create(
-            workspace=workspace, title="foo", description="bar"
+            workspace=workspace,
+            title="foo",
+            description="bar",
+            who=user,
         )
         assert workspace.workspaceboard_set.count() == 2
         assert list(workspace.workspaceboard_set.all()) == [

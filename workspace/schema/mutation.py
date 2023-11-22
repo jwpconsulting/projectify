@@ -221,9 +221,6 @@ class Mutation:
             input.workspace_uuid,
         )
         workspace = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_create_workspace_board", workspace
-        )
         if input.deadline is not UNSET and input.deadline:
             assert input.deadline.tzinfo
             deadline = input.deadline
@@ -234,6 +231,7 @@ class Mutation:
             title=input.title,
             description=input.description,
             deadline=deadline,
+            who=info.context.user,
         )
         return workspace_board
 

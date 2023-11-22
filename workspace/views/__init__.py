@@ -13,39 +13,6 @@ from .. import (
 )
 
 
-class WorkspaceBoardRetrieve(
-    generics.RetrieveAPIView[
-        models.WorkspaceBoard,
-        models.WorkspaceBoardQuerySet,
-        serializers.WorkspaceBoardDetailSerializer,
-    ]
-):
-    """Workspace board retrieve view."""
-
-    queryset = models.WorkspaceBoard.objects.prefetch_related(
-        "workspaceboardsection_set",
-        "workspaceboardsection_set__task_set",
-        "workspaceboardsection_set__task_set__assignee",
-        "workspaceboardsection_set__task_set__assignee__user",
-        "workspaceboardsection_set__task_set__labels",
-        "workspaceboardsection_set__task_set__subtask_set",
-    ).select_related(
-        "workspace",
-    )
-    serializer_class = serializers.WorkspaceBoardDetailSerializer
-
-    def get_object(self) -> models.WorkspaceBoard:
-        """Return queryset with authenticated user in mind."""
-        user = self.request.user
-        qs = self.get_queryset()
-        qs = qs.filter_for_user_and_uuid(
-            user,
-            self.kwargs["workspace_board_uuid"],
-        )
-        workspace_board: models.WorkspaceBoard = get_object_or_404(qs)
-        return workspace_board
-
-
 class WorkspaceBoardSectionRetrieve(
     generics.RetrieveAPIView[
         models.WorkspaceBoardSection,
