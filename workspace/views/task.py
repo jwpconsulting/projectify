@@ -31,6 +31,7 @@ from workspace.serializers.task_detail import (
     TaskCreateUpdateSerializer,
     TaskDetailSerializer,
 )
+from workspace.services.task import task_move_after
 
 from .. import (
     models,
@@ -156,7 +157,7 @@ class TaskMove(APIView):
         )
         after_task_uuid = data.get("after_task_uuid", None)
         if after_task_uuid is None:
-            new_order = 0
+            after_task = None
         else:
             after_task_qs = Task.objects.filter_for_user_and_uuid(
                 user=user,
@@ -170,9 +171,12 @@ class TaskMove(APIView):
                         "after_task_uuid": "Task with given uuid does not exist",
                     }
                 )
-            new_order = after_task._order
-        workspace_board_section = task.workspace_board_section
-        task.move_to(workspace_board_section, new_order)
+        task_move_after(
+            task=task,
+            who=user,
+            workspace_board_section=task.workspace_board_section,
+            after=after_task,
+        )
 
         task.refresh_from_db()
         output_serializer = TaskDetailSerializer(instance=task)
