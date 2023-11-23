@@ -299,6 +299,7 @@ class Mutation:
         )
         return chat_message
 
+    # DONE
     @strawberry.field
     def move_workspace_board_section(
         self, info: GraphQLResolveInfo, input: MoveWorkspaceBoardSectionInput
