@@ -1,7 +1,6 @@
 """User views."""
 from typing import (
     Optional,
-    cast,
 )
 
 from django.db import models as django_models
@@ -30,7 +29,7 @@ class ProfilePictureUploadView(views.APIView):
     ) -> response.Response:
         """Handle POST."""
         file_obj = request.data["file"]
-        user = cast(models.User, request.user)
+        user = request.user
         user.profile_picture = file_obj
         user.save()
         return response.Response(status=204)
@@ -51,5 +50,5 @@ class UserRetrieve(
         """Return current user."""
         # This can only ever be AbstractBaseUser-ish because this endpoint is
         # only accessible after logging in
-        user = cast(models.User, self.request.user)
+        user = self.request.user
         return user
