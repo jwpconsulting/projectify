@@ -22,6 +22,7 @@ from projectify.utils import (
     get_user_model,
 )
 from workspace.services.label import label_create
+from workspace.services.task import task_move_after
 from workspace.services.workspace_board import workspace_board_create
 from workspace.services.workspace_board_section import (
     workspace_board_section_create,
@@ -318,6 +319,7 @@ class Mutation:
         workspace_board_section.refresh_from_db()
         return workspace_board_section
 
+    # DONE
     @strawberry.field
     def move_task_after(
         self, info: GraphQLResolveInfo, input: MoveTaskAfterInput
@@ -337,18 +339,21 @@ class Mutation:
             input.task_uuid,
         )
         task = get_object_or_404(task_qs)
-        assert info.context.user.has_perm("workspace.can_update_task", task)
         # Find after task
         if input.after_task_uuid is not UNSET and input.after_task_uuid:
             after_task = models.Task.objects.filter_for_user_and_uuid(
                 info.context.user,
                 input.after_task_uuid,
             ).get()
-            new_order = after_task._order
         else:
-            new_order = 0
+            after_task = None
         # Reorder task
-        task.move_to(workspace_board_section, new_order)
+        task_move_after(
+            who=info.context.user,
+            task=task,
+            workspace_board_section=workspace_board_section,
+            after=after_task,
+        )
         # Return task
         task.refresh_from_db()
         return task
