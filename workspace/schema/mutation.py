@@ -24,7 +24,10 @@ from projectify.utils import (
 from workspace.services.label import label_create
 from workspace.services.task import task_move_after
 from workspace.services.workspace import workspace_update
-from workspace.services.workspace_board import workspace_board_create
+from workspace.services.workspace_board import (
+    workspace_board_archive,
+    workspace_board_create,
+)
 from workspace.services.workspace_board_section import (
     workspace_board_section_create,
     workspace_board_section_move,
@@ -463,6 +466,7 @@ class Mutation:
             job_title=input.job_title,
         )
 
+    # DONE
     @strawberry.field
     def archive_workspace_board(
         self, info: GraphQLResolveInfo, input: ArchiveWorkspaceBoardInput
@@ -473,15 +477,11 @@ class Mutation:
             input.uuid,
         )
         workspace_board = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_update_workspace_board",
-            workspace_board,
+        return workspace_board_archive(
+            workspace_board=workspace_board,
+            who=info.context.user,
+            archived=input.archived,
         )
-        if input.archived:
-            workspace_board.archive()
-        else:
-            workspace_board.unarchive()
-        return workspace_board
 
     @strawberry.field
     def update_workspace_board(

@@ -1,7 +1,7 @@
 """Workspace board views."""
 from uuid import UUID
 
-from rest_framework import generics, serializers
+from rest_framework import generics, serializers, status
 from rest_framework.generics import get_object_or_404
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -11,7 +11,10 @@ from workspace.models import Workspace, WorkspaceBoard, WorkspaceBoardQuerySet
 from workspace.serializers.workspace_board import (
     WorkspaceBoardDetailSerializer,
 )
-from workspace.services.workspace_board import workspace_board_create
+from workspace.services.workspace_board import (
+    workspace_board_archive,
+    workspace_board_create,
+)
 
 
 # TODO permission checking
@@ -85,3 +88,36 @@ class WorkspaceBoardRead(
         )
         workspace_board: WorkspaceBoard = get_object_or_404(qs)
         return workspace_board
+
+
+# RPC
+# TODO surely this can all be refactored
+class WorkspaceBoardArchive(APIView):
+    """Toggle the archived status of a board on or off."""
+
+    class InputSerializer(serializers.Serializer):
+        """Accept the desired archival status."""
+
+        archived = serializers.BooleanField()
+
+    def post(self, request: Request, workspace_board_uuid: UUID) -> Response:
+        """Process request."""
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        user = request.user
+        workspace_board_qs = WorkspaceBoard.objects.filter_for_user_and_uuid(
+            user=user,
+            uuid=workspace_board_uuid,
+        )
+        workspace_board = get_object_or_404(workspace_board_qs)
+        workspace_board_archive(
+            workspace_board=workspace_board,
+            archived=data["archived"],
+            who=user,
+        )
+        workspace_board.refresh_from_db()
+        output_serializer = WorkspaceBoardDetailSerializer(
+            instance=workspace_board,
+        )
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
