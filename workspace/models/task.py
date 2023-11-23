@@ -202,42 +202,6 @@ class Task(
         _order: int
         id: int
 
-    def move_to(
-        self, workspace_board_section: "WorkspaceBoardSection", order: int
-    ) -> None:
-        """
-        Move to specified workspace board section and to order n.
-
-        No save required.
-        """
-        neighbor_tasks = (
-            self.workspace_board_section.task_set.select_for_update()
-        )
-        if self.workspace_board_section != workspace_board_section:
-            other_tasks = workspace_board_section.task_set.select_for_update()
-        else:
-            # Same section, so no need to select other tasks
-            other_tasks = None
-        with transaction.atomic():
-            # Force both querysets to be evaluated to lock them for the time of
-            # this transaction
-            len(neighbor_tasks)
-            if other_tasks:
-                len(other_tasks)
-            # Set new WorkspaceBoardSection
-            if self.workspace_board_section != workspace_board_section:
-                self.workspace_board_section = workspace_board_section
-                self.save()
-
-            # Change order
-            order_list = list(workspace_board_section.get_task_order())
-            current_object_index = order_list.index(self.pk)
-            order_list.insert(order, order_list.pop(current_object_index))
-
-            # Set the order
-            workspace_board_section.set_task_order(order_list)
-            workspace_board_section.save()
-
     def add_sub_task(self, title: str, description: str) -> "SubTask":
         """Add a sub task."""
         return self.subtask_set.create(title=title, description=description)
