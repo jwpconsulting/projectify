@@ -2,6 +2,10 @@
 from datetime import datetime
 from typing import Optional
 
+from django.utils.timezone import (
+    now,
+)
+
 from projectify.utils import validate_perm
 from user.models import User
 from workspace.models import WorkspaceBoard
@@ -23,3 +27,23 @@ def workspace_board_create(
         description=description,
         deadline=deadline,
     )
+
+
+def workspace_board_archive(
+    *,
+    who: User,
+    workspace_board: WorkspaceBoard,
+    archived: bool,
+) -> WorkspaceBoard:
+    """Archive a workspace board, or not."""
+    validate_perm(
+        "workspace.can_update_workspace_board",
+        who,
+        workspace_board,
+    )
+    if archived:
+        workspace_board.archived = now()
+    else:
+        workspace_board.archived = None
+    workspace_board.save()
+    return workspace_board
