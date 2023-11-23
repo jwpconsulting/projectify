@@ -11,6 +11,7 @@ from workspace.views.workspace_board import (
 )
 from workspace.views.workspace_board_section import (
     WorkspaceBoardSectionCreate,
+    WorkspaceBoardSectionMove,
     WorkspaceBoardSectionRead,
 )
 
@@ -66,6 +67,12 @@ workspace_board_section_patterns = (
     ),
     # Update
     # Delete
+    # RPC
+    path(
+        "<uuid:workspace_board_section_uuid>/move",
+        WorkspaceBoardSectionMove.as_view(),
+        name="move",
+    ),
 )
 
 label_patterns = (
