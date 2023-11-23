@@ -4,6 +4,7 @@ from django.urls import (
 )
 
 import pytest
+from rest_framework import status
 from rest_framework.response import (
     Response,
 )
@@ -211,3 +212,37 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         with django_assert_num_queries(1):
             response = rest_user_client.get(resource_url)
             assert response.status_code == 404, response.content
+
+
+# RPC
+@pytest.mark.django_db
+class TestTaskMove:
+    """Test moving a task."""
+
+    @pytest.fixture
+    def resource_url(self, task: Task) -> str:
+        """Return URL to this view."""
+        return reverse(
+            "workspace:tasks:move",
+            args=(str(task.uuid),),
+        )
+
+    def test_authenticated_user(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        other_task: Task,
+    ) -> None:
+        """Test as an authenticated user."""
+        with django_assert_num_queries(30):
+            response = rest_user_client.post(
+                resource_url,
+                data={"after_task_uuid": str(other_task.uuid)},
+            )
+        assert response.status_code == status.HTTP_200_OK, response.data
+        with django_assert_num_queries(29):
+            response = rest_user_client.post(
+                resource_url, data={"after_task_uuid": None}, format="json"
+            )
+        assert response.status_code == status.HTTP_200_OK, response.data
