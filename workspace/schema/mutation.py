@@ -21,6 +21,7 @@ from strawberry.unset import (
 from projectify.utils import (
     get_user_model,
 )
+from workspace.services.label import label_create
 from workspace.services.workspace_board import workspace_board_create
 from workspace.services.workspace_board_section import (
     workspace_board_section_create,
@@ -267,10 +268,9 @@ class Mutation:
             input.workspace_uuid,
         )
         workspace = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_create_label", workspace
-        )
-        label = workspace.label_set.create(
+        label = label_create(
+            who=info.context.user,
+            workspace=workspace,
             name=input.name,
             color=input.color,
         )
