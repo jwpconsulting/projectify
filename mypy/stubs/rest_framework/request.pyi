@@ -2,12 +2,11 @@ from typing import (
     Any,
 )
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
 from django.http import (
     HttpRequest,
 )
+
+from user.models import User
 
 # XXX
 # The inheritance is not entirely accurate.
@@ -21,5 +20,8 @@ from django.http import (
 class Request(HttpRequest):
     # XXX
     # We are conveniently ignoring for now that the user can be Anonymous as well
-    user: AbstractBaseUser
+    # It's not perfect, but we are just using our own User model here for now
+    # Otherwise we have so many issues like AbstractUser providing has_perm
+    # but not AbstractBaseUser, but our user inheriting from AbstractBaseUser
+    user: User
     data: dict[str, Any]
