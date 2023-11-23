@@ -14,7 +14,9 @@ from rest_framework.test import (
 from pytest_types import (
     DjangoAssertNumQueries,
 )
-from workspace.models import WorkspaceBoard, WorkspaceBoardSection
+from workspace.models import TaskLabel, WorkspaceBoard, WorkspaceBoardSection
+from workspace.models.task import Task
+from workspace.models.workspace import Workspace
 from workspace.models.workspace_user import WorkspaceUser
 
 
@@ -55,3 +57,36 @@ class TestWorkspaceBoardSectionCreate:
             workspace_board_section.title
             == "New workspace board section, who dis??"
         )
+
+
+# Read
+@pytest.mark.django_db
+class TestWorkspaceBoardSectionRead:
+    """Test WorkspaceBoardSectionRetrieve view."""
+
+    @pytest.fixture
+    def resource_url(
+        self, workspace_board_section: WorkspaceBoardSection
+    ) -> str:
+        """Return URL to this view."""
+        return reverse(
+            "workspace:workspace-board-sections:read",
+            args=(workspace_board_section.uuid,),
+        )
+
+    def test_authenticated(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        user: AbstractBaseUser,
+        workspace: Workspace,
+        workspace_user: WorkspaceUser,
+        task: Task,
+        other_task: Task,
+        task_label: TaskLabel,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Assert we can post to this view this while being logged in."""
+        with django_assert_num_queries(6):
+            response = rest_user_client.get(resource_url)
+        assert response.status_code == 200, response.content

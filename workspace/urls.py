@@ -8,7 +8,10 @@ from workspace.views.workspace_board import (
     WorkspaceBoardCreate,
     WorkspaceBoardRead,
 )
-from workspace.views.workspace_board_section import WorkspaceBoardSectionCreate
+from workspace.views.workspace_board_section import (
+    WorkspaceBoardSectionCreate,
+    WorkspaceBoardSectionRead,
+)
 
 from . import (
     views,
@@ -55,6 +58,11 @@ workspace_board_section_patterns = (
         name="create",
     ),
     # Read
+    path(
+        "<uuid:workspace_board_section_uuid>",
+        WorkspaceBoardSectionRead.as_view(),
+        name="read",
+    ),
     # Update
     # Delete
 )
@@ -120,15 +128,6 @@ urlpatterns = (
             (workspace_board_section_patterns, "workspace-board-sections")
         ),
     ),
-    # Create
-    # Read
-    path(
-        "workspace-board-section/<uuid:workspace_board_section_uuid>",
-        views.WorkspaceBoardSectionRetrieve.as_view(),
-        name="workspace-board-section",
-    ),
-    # Update
-    # Delete
     # Task
     # Create
     path(
