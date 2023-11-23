@@ -26,6 +26,7 @@ from rest_framework.response import (
 
 from workspace.services.workspace import (
     workspace_create,
+    workspace_update,
 )
 
 from .. import (
@@ -85,8 +86,9 @@ class WorkspaceList(
         return self.queryset.get_for_user(user)
 
 
-class WorkspaceRetrieve(
-    generics.RetrieveAPIView[
+# Read + Update
+class WorkspaceReadUpdate(
+    generics.RetrieveUpdateAPIView[
         models.Workspace,
         models.WorkspaceQuerySet,
         WorkspaceDetailSerializer,
@@ -121,8 +123,22 @@ class WorkspaceRetrieve(
         workspace: models.Workspace = get_object_or_404(qs)
         return workspace
 
+    def perform_update(self, serializer: WorkspaceDetailSerializer) -> None:
+        """Perform update."""
+        instance = serializer.instance
+        # This should not happen -- the point of updating is that we already
+        # have an instance present
+        if instance is None:
+            raise ValueError("perform_update was called without instance")
+        data = serializer.validated_data
+        workspace_update(
+            workspace=instance,
+            title=data["title"],
+            description=data.get("description"),
+            who=self.request.user,
+        )
 
-# Update
+
 # Delete
 
 
