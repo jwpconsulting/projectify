@@ -5,6 +5,11 @@ from django.utils import (
 
 import pytest
 
+from workspace.models.workspace_user import WorkspaceUser
+from workspace.services.workspace_board_section import (
+    workspace_board_section_create,
+)
+
 from .. import (
     factory,
     models,
@@ -90,18 +95,24 @@ class TestWorkspaceBoard:
         assert workspace_board.workspace == workspace
 
     def test_add_workspace_board_section(
-        self, workspace_board: models.WorkspaceBoard
+        self,
+        workspace_board: models.WorkspaceBoard,
+        workspace_user: WorkspaceUser,
     ) -> None:
         """Test workspace board section creation."""
         assert workspace_board.workspaceboardsection_set.count() == 0
-        section = workspace_board.add_workspace_board_section(
-            "hello",
-            "world",
+        section = workspace_board_section_create(
+            who=workspace_user.user,
+            workspace_board=workspace_board,
+            title="hello",
+            description="world",
         )
         assert workspace_board.workspaceboardsection_set.count() == 1
-        section2 = workspace_board.add_workspace_board_section(
-            "hello",
-            "world",
+        section2 = workspace_board_section_create(
+            who=workspace_user.user,
+            workspace_board=workspace_board,
+            title="hello",
+            description="world",
         )
         assert workspace_board.workspaceboardsection_set.count() == 2
         assert list(workspace_board.workspaceboardsection_set.all()) == [

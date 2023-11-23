@@ -122,18 +122,6 @@ class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
         get_workspaceboardsection_order: GetOrder
         set_workspaceboardsection_order: SetOrder
 
-    def add_workspace_board_section(
-        self, title: str, description: str
-    ) -> "WorkspaceBoardSection":
-        """Add workspace board section to this workspace board."""
-        workspace_board_section: WorkspaceBoardSection = (
-            self.workspaceboardsection_set.create(
-                title=title,
-                description=description,
-            )
-        )
-        return workspace_board_section
-
     def archive(self) -> None:
         """
         Mark this workspace board as archived.
