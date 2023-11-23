@@ -14,6 +14,7 @@ from django.urls import (
 )
 
 import pytest
+from rest_framework import status
 from rest_framework.test import (
     APIClient,
 )
@@ -89,13 +90,15 @@ class TestWorkspaceList:
 
 
 @pytest.mark.django_db
-class TestWorkspaceRetrieveView:
-    """Test WorkspaceRetrieve view."""
+class TestWorkspaceReadUpdate:
+    """Test WorkspaceReadUpdate."""
 
     @pytest.fixture
     def resource_url(self, workspace: models.Workspace) -> str:
         """Return URL to this view."""
-        return reverse("workspace:workspace", args=(workspace.uuid,))
+        return reverse(
+            "workspace:workspaces:read-update", args=(workspace.uuid,)
+        )
 
     def test_authenticated(
         self,
@@ -114,8 +117,27 @@ class TestWorkspaceRetrieveView:
         assert response.status_code == 200, response.content
         assert len(response.json()["workspace_boards"]) == 1
 
+    def test_updating(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        user: AbstractBaseUser,
+        workspace: models.Workspace,
+        workspace_user: models.WorkspaceUser,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test updating a given workspace with a new title."""
+        with django_assert_num_queries(11):
+            response = rest_user_client.put(
+                resource_url,
+                data={
+                    "title": "New title",
+                },
+            )
+        assert response.status_code == status.HTTP_200_OK, response.data
+        workspace.refresh_from_db()
+        assert workspace.title == "New title"
 
-# Update
 
 # Delete
 

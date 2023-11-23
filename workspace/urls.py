@@ -28,13 +28,22 @@ from .views.workspace import (
     WorkspaceCreate,
     WorkspaceList,
     WorkspacePictureUploadView,
-    WorkspaceRetrieve,
+    WorkspaceReadUpdate,
 )
 from .views.workspace_user import (
     WorkspaceUserDestroy,
 )
 
 app_name = "workspace"
+
+workspace_patterns = (
+    # Read + Update
+    path(
+        "<uuid:workspace_uuid>/",
+        WorkspaceReadUpdate.as_view(),
+        name="read-update",
+    ),
+)
 
 workspace_board_patterns = (
     # Create
@@ -100,6 +109,11 @@ label_patterns = (
 # TODO Rename all views to use standard CRUD terminology
 urlpatterns = (
     # Workspace
+    path(
+        "workspace/",
+        include((workspace_patterns, "workspaces")),
+    ),
+    # TODO put the below paths into workspace_patterns as well
     # Create
     path(
         "workspaces/",
@@ -111,11 +125,6 @@ urlpatterns = (
         "user/workspaces/",
         WorkspaceList.as_view(),
         name="workspace-list",
-    ),
-    path(
-        "workspace/<uuid:workspace_uuid>",
-        WorkspaceRetrieve.as_view(),
-        name="workspace",
     ),
     # Archived workspace boards
     path(
