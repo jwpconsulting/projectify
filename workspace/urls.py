@@ -8,6 +8,7 @@ from workspace.views.workspace_board import (
     WorkspaceBoardCreate,
     WorkspaceBoardRead,
 )
+from workspace.views.workspace_board_section import WorkspaceBoardSectionCreate
 
 from . import (
     views,
@@ -42,6 +43,18 @@ workspace_board_patterns = (
         WorkspaceBoardRead.as_view(),
         name="read",
     ),
+    # Update
+    # Delete
+)
+
+workspace_board_section_patterns = (
+    # Create
+    path(
+        "",
+        WorkspaceBoardSectionCreate.as_view(),
+        name="create",
+    ),
+    # Read
     # Update
     # Delete
 )
@@ -95,11 +108,18 @@ urlpatterns = (
         WorkspaceUserDestroy.as_view(),
         name="workspace-user-delete",
     ),
+    # WorkspaceBoard
     path(
         "workspace-board/",
         include((workspace_board_patterns, "workspace-boards")),
     ),
     # WorkspaceBoardSection
+    path(
+        "workspace-board-section/",
+        include(
+            (workspace_board_section_patterns, "workspace-board-sections")
+        ),
+    ),
     # Create
     # Read
     path(
