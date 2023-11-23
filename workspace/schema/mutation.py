@@ -309,12 +309,10 @@ class Mutation:
             input.workspace_board_section_uuid,
         )
         workspace_board_section = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_update_workspace_board_section",
-            workspace_board_section,
-        )
         workspace_board_section_move(
-            workspace_board_section=workspace_board_section, order=input.order
+            workspace_board_section=workspace_board_section,
+            order=input.order,
+            who=info.context.user,
         )
         workspace_board_section.refresh_from_db()
         return workspace_board_section
