@@ -31,7 +31,7 @@ from .views.workspace import (
     WorkspaceReadUpdate,
 )
 from .views.workspace_user import (
-    WorkspaceUserDestroy,
+    WorkspaceUserReadUpdateDelete,
 )
 
 app_name = "workspace"
@@ -42,6 +42,15 @@ workspace_patterns = (
         "<uuid:workspace_uuid>/",
         WorkspaceReadUpdate.as_view(),
         name="read-update",
+    ),
+)
+
+workspace_user_patterns = (
+    # Read + Update + Destroy
+    path(
+        "<uuid:workspace_user_uuid>/",
+        WorkspaceUserReadUpdateDelete.as_view(),
+        name="read-update-delete",
     ),
 )
 
@@ -146,14 +155,9 @@ urlpatterns = (
         name="workspace-invite-user",
     ),
     # WorkspaceUser
-    # Create
-    # Read
-    # Update
-    # Delete
     path(
-        "workspace-user/<uuid:uuid>",
-        WorkspaceUserDestroy.as_view(),
-        name="workspace-user-delete",
+        "workspace-user/",
+        include((workspace_user_patterns, "workspace-users")),
     ),
     # WorkspaceBoard
     path(

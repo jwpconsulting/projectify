@@ -29,6 +29,7 @@ from workspace.services.workspace_board_section import (
     workspace_board_section_create,
     workspace_board_section_move,
 )
+from workspace.services.workspace_user import workspace_user_update
 
 from .. import (
     models,
@@ -430,6 +431,7 @@ class Mutation:
             description=input.description,
         )
 
+    # DONE
     @strawberry.field
     def update_workspace_user(
         self, info: GraphQLResolveInfo, input: UpdateWorkspaceUserInput
@@ -448,19 +450,18 @@ class Mutation:
                 user,
             )
         )
-        assert info.context.user.has_perm(
-            "workspace.can_update_workspace_user", workspace_user
-        )
         t = types.WorkspaceUserRole
-        workspace_user.role = {
-            t.OBSERVER: models.WorkspaceUserRoles.OBSERVER,
-            t.MEMBER: models.WorkspaceUserRoles.MEMBER,
-            t.MAINTAINER: models.WorkspaceUserRoles.MAINTAINER,
-            t.OWNER: models.WorkspaceUserRoles.OWNER,
-        }[input.role]
-        workspace_user.job_title = input.job_title
-        workspace_user.save()
-        return workspace_user
+        return workspace_user_update(
+            workspace_user=workspace_user,
+            who=info.context.user,
+            role={
+                t.OBSERVER: models.WorkspaceUserRoles.OBSERVER,
+                t.MEMBER: models.WorkspaceUserRoles.MEMBER,
+                t.MAINTAINER: models.WorkspaceUserRoles.MAINTAINER,
+                t.OWNER: models.WorkspaceUserRoles.OWNER,
+            }[input.role],
+            job_title=input.job_title,
+        )
 
     @strawberry.field
     def archive_workspace_board(

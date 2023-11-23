@@ -51,7 +51,7 @@ class WorkspaceUserQuerySet(models.QuerySet["WorkspaceUser"]):
         return self.filter(workspace__pk__in=workspace_pks)
 
     def filter_by_user(self, user: AbstractBaseUser) -> Self:
-        """Filter workspace users based this user's workspaces."""
+        """Filter workspace users based on this user's workspaces."""
         return self.filter(workspace__users=user)
 
     def get_by_workspace_and_user(
