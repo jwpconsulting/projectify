@@ -33,13 +33,21 @@ def workspace_board_section_create(
 
 @transaction.atomic
 def workspace_board_section_move(
-    *, workspace_board_section: WorkspaceBoardSection, order: int
+    *,
+    workspace_board_section: WorkspaceBoardSection,
+    order: int,
+    who: User,
 ) -> None:
     """
     Move to specified order n within workspace board.
 
     No save required.
     """
+    validate_perm(
+        "workspace.can_update_workspace_board_section",
+        who,
+        workspace_board_section,
+    )
     workspace_board = workspace_board_section.workspace_board
     neighbor_sections = (
         workspace_board.workspaceboardsection_set.select_for_update()
