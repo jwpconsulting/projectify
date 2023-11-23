@@ -22,6 +22,9 @@ from projectify.utils import (
     get_user_model,
 )
 from workspace.services.workspace_board import workspace_board_create
+from workspace.services.workspace_board_section import (
+    workspace_board_section_create,
+)
 
 from .. import (
     models,
@@ -211,6 +214,7 @@ class Mutation:
     """Mutation."""
 
     # Add mutations
+    # DONE
     @strawberry.field
     def add_workspace_board(
         self, info: GraphQLResolveInfo, input: AddWorkspaceBoardInput
@@ -245,10 +249,9 @@ class Mutation:
             input.workspace_board_uuid,
         )
         workspace_board = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_create_workspace_board_section", workspace_board
-        )
-        workspace_board_section = workspace_board.add_workspace_board_section(
+        workspace_board_section = workspace_board_section_create(
+            who=info.context.user,
+            workspace_board=workspace_board,
             title=input.title,
             description=input.description,
         )

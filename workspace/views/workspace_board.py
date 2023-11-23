@@ -38,6 +38,7 @@ class WorkspaceBoardCreate(APIView):
         workspace_qs = Workspace.objects.get_for_user(user).filter(
             uuid=workspace_uuid
         )
+        # Workspace not found -> Raise 400, not 404
         workspace = get_object_or_404(workspace_qs)
         workspace_board = workspace_board_create(
             title=serializer.validated_data["title"],
