@@ -240,6 +240,7 @@ class Mutation:
         )
         return workspace_board
 
+    # DONE
     @strawberry.field
     def add_workspace_board_section(
         self, info: GraphQLResolveInfo, input: AddWorkspaceBoardSectionInput
@@ -258,6 +259,7 @@ class Mutation:
         )
         return workspace_board_section
 
+    # DONE
     @strawberry.field
     def add_label(
         self, info: GraphQLResolveInfo, input: AddLabelInput
@@ -276,6 +278,7 @@ class Mutation:
         )
         return label
 
+    # SKIP: Do not port to drf views
     @strawberry.field
     def add_chat_message(
         self, info: GraphQLResolveInfo, input: AddChatMessageInput
