@@ -1,10 +1,6 @@
 """Views for workspace user."""
 from django.utils.translation import gettext_lazy as _
 
-# Create
-# Read
-# Update
-# Delete
 from rest_framework import (
     generics,
     serializers,
@@ -19,7 +15,13 @@ from ..models.workspace_user import (
     WorkspaceUserQuerySet,
 )
 
+# Create
+# Read
+# Update
+# Delete
 
+
+# TODO rename WorkspaceUserDelete
 class WorkspaceUserDestroy(
     generics.DestroyAPIView[
         WorkspaceUser, WorkspaceUserQuerySet, WorkspaceUserBaseSerializer
