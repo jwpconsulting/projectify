@@ -4,6 +4,7 @@ from django.urls import (
     path,
 )
 
+from workspace.views.label import LabelCreate
 from workspace.views.workspace_board import (
     WorkspaceBoardCreate,
     WorkspaceBoardRead,
@@ -63,6 +64,18 @@ workspace_board_section_patterns = (
         WorkspaceBoardSectionRead.as_view(),
         name="read",
     ),
+    # Update
+    # Delete
+)
+
+label_patterns = (
+    # Create
+    path(
+        "",
+        LabelCreate.as_view(),
+        name="create",
+    ),
+    # Read
     # Update
     # Delete
 )
@@ -142,4 +155,6 @@ urlpatterns = (
         TaskRetrieveUpdateDestroy.as_view(),
         name="task",
     ),
+    # Label
+    path("label/", include((label_patterns, "labels"))),
 )
