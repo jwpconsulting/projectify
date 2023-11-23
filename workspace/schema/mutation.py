@@ -23,6 +23,7 @@ from projectify.utils import (
 )
 from workspace.services.label import label_create
 from workspace.services.task import task_move_after
+from workspace.services.workspace import workspace_update
 from workspace.services.workspace_board import workspace_board_create
 from workspace.services.workspace_board_section import (
     workspace_board_section_create,
@@ -380,6 +381,7 @@ class Mutation:
             workspace.uninvite_user(input.email)
         return workspace
 
+    # DONE -- we should use update task instead in the frontend
     @strawberry.field
     def assign_label(
         self, info: GraphQLResolveInfo, input: AssignLabelInput
@@ -409,6 +411,7 @@ class Mutation:
             task.remove_label(label)
         return task
 
+    # DONE
     # Update
     @strawberry.field
     def update_workspace(
@@ -420,14 +423,12 @@ class Mutation:
             input.uuid,
         )
         workspace = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_update_workspace",
-            workspace,
+        return workspace_update(
+            workspace=workspace,
+            who=info.context.user,
+            title=input.title,
+            description=input.description,
         )
-        workspace.title = input.title
-        workspace.description = input.description
-        workspace.save()
-        return workspace
 
     @strawberry.field
     def update_workspace_user(

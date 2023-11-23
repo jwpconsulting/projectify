@@ -9,6 +9,8 @@ from django.contrib.auth.models import (
     AbstractBaseUser,
 )
 
+from projectify.utils import validate_perm
+from user.models import User
 from workspace.models.workspace import (
     Workspace,
 )
@@ -21,6 +23,8 @@ def workspace_create(
     *,
     title: str,
     description: Optional[str] = None,
+    # TODO Make this non-optional, a workspace should always have an owner
+    # TODO make this user.models.User
     owner: Optional[AbstractBaseUser] = None,
 ) -> Workspace:
     """Create a workspace."""
@@ -28,6 +32,25 @@ def workspace_create(
     workspace.save()
     if owner is not None:
         workspace_add_user(workspace=workspace, user=owner, role="OWNER")
+    return workspace
+
+
+def workspace_update(
+    *,
+    workspace: Workspace,
+    title: str,
+    description: Optional[str] = None,
+    who: User,
+) -> Workspace:
+    """Update a workspace."""
+    validate_perm(
+        "workspace.can_update_workspace",
+        who,
+        workspace,
+    )
+    workspace.title = title
+    workspace.description = description
+    workspace.save()
     return workspace
 
 
