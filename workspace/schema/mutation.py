@@ -358,6 +358,7 @@ class Mutation:
         task.refresh_from_db()
         return task
 
+    # DONE
     @strawberry.field
     def remove_user_from_workspace(
         self, info: GraphQLResolveInfo, input: RemoveUserFromWorkspaceInput
