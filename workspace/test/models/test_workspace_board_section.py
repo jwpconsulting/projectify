@@ -81,57 +81,6 @@ class TestWorkspaceBoardSection:
         )
         assert task.deadline is not None
 
-    def test_moving_section(
-        self,
-        workspace_board: models.WorkspaceBoard,
-        workspace_board_section: models.WorkspaceBoardSection,
-    ) -> None:
-        """Test moving a section around."""
-        other_section = factory.WorkspaceBoardSectionFactory(
-            workspace_board=workspace_board,
-        )
-        other_other_section = factory.WorkspaceBoardSectionFactory(
-            workspace_board=workspace_board,
-        )
-        assert list(workspace_board.workspaceboardsection_set.all()) == [
-            workspace_board_section,
-            other_section,
-            other_other_section,
-        ]
-        workspace_board_section.move_to(0)
-        assert list(workspace_board.workspaceboardsection_set.all()) == [
-            workspace_board_section,
-            other_section,
-            other_other_section,
-        ]
-        workspace_board_section.move_to(2)
-        assert list(workspace_board.workspaceboardsection_set.all()) == [
-            other_section,
-            other_other_section,
-            workspace_board_section,
-        ]
-        workspace_board_section.move_to(1)
-        assert list(workspace_board.workspaceboardsection_set.all()) == [
-            other_section,
-            workspace_board_section,
-            other_other_section,
-        ]
-
-    def test_moving_empty_section(
-        self,
-        workspace_board: models.WorkspaceBoard,
-        workspace_board_section: models.WorkspaceBoardSection,
-    ) -> None:
-        """Test moving when there are no other sections."""
-        assert list(workspace_board.workspaceboardsection_set.all()) == [
-            workspace_board_section,
-        ]
-        workspace_board_section.move_to(1)
-        assert list(workspace_board.workspaceboardsection_set.all()) == [
-            workspace_board_section,
-        ]
-        assert workspace_board_section._order == 0
-
     def test_workspace(
         self,
         workspace: models.Workspace,

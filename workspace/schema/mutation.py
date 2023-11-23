@@ -25,6 +25,7 @@ from workspace.services.label import label_create
 from workspace.services.workspace_board import workspace_board_create
 from workspace.services.workspace_board_section import (
     workspace_board_section_create,
+    workspace_board_section_move,
 )
 
 from .. import (
@@ -312,7 +313,9 @@ class Mutation:
             "workspace.can_update_workspace_board_section",
             workspace_board_section,
         )
-        workspace_board_section.move_to(input.order)
+        workspace_board_section_move(
+            workspace_board_section=workspace_board_section, order=input.order
+        )
         workspace_board_section.refresh_from_db()
         return workspace_board_section
 
