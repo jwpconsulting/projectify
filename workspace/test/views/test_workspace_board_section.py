@@ -7,6 +7,7 @@ from django.urls import (
 )
 
 import pytest
+from rest_framework import status
 from rest_framework.test import (
     APIClient,
 )
@@ -90,3 +91,50 @@ class TestWorkspaceBoardSectionRead:
         with django_assert_num_queries(6):
             response = rest_user_client.get(resource_url)
         assert response.status_code == 200, response.content
+
+
+# RPC
+@pytest.mark.django_db
+class TestWorkspaceBoardSectionMove:
+    """Test moving a workspace board section."""
+
+    @pytest.fixture
+    def resource_url(
+        self, workspace_board_section: WorkspaceBoardSection
+    ) -> str:
+        """Return URL to this view."""
+        return reverse(
+            "workspace:workspace-board-sections:move",
+            args=(str(workspace_board_section.uuid),),
+        )
+
+    def test_authenticated_user(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        workspace_board_section: WorkspaceBoardSection,
+        workspace_user: WorkspaceUser,
+    ) -> None:
+        """Test as an authenticated user."""
+        other_workspace_board_section = WorkspaceBoardSection(
+            workspace_board=workspace_board_section.workspace_board,
+            title="test",
+        )
+        other_workspace_board_section.save()
+        assert workspace_board_section._order == 0
+        assert other_workspace_board_section._order == 1
+        # XXX that's a whole lot of queries
+        with django_assert_num_queries(24):
+            response = rest_user_client.post(
+                resource_url,
+                data={
+                    "order": 1,
+                },
+            )
+
+        assert response.status_code == status.HTTP_200_OK, response.data
+        workspace_board_section.refresh_from_db()
+        other_workspace_board_section.refresh_from_db()
+        assert other_workspace_board_section._order == 0
+        assert workspace_board_section._order == 1
