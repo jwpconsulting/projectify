@@ -20,6 +20,7 @@ from workspace.serializers.workspace_board_section import (
 )
 from workspace.services.workspace_board_section import (
     workspace_board_section_create,
+    workspace_board_section_move,
 )
 
 
@@ -133,7 +134,10 @@ class WorkspaceBoardSectionMove(APIView):
             user,
             workspace_board_section,
         )
-        workspace_board_section.move_to(data["order"])
+        workspace_board_section_move(
+            workspace_board_section=workspace_board_section,
+            order=data["order"],
+        )
         workspace_board_section.refresh_from_db()
         output_serializer = WorkspaceBoardSectionDetailSerializer(
             instance=workspace_board_section,
