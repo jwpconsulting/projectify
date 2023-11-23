@@ -20,6 +20,7 @@ from . import (
 )
 from .views.task import (
     TaskCreate,
+    TaskMove,
     TaskRetrieveUpdateDestroy,
 )
 from .views.workspace import (
@@ -71,6 +72,15 @@ workspace_board_section_patterns = (
     path(
         "<uuid:workspace_board_section_uuid>/move",
         WorkspaceBoardSectionMove.as_view(),
+        name="move",
+    ),
+)
+
+task_patterns = (
+    # RPC
+    path(
+        "<uuid:task_uuid>/move",
+        TaskMove.as_view(),
         name="move",
     ),
 )
@@ -149,6 +159,11 @@ urlpatterns = (
         ),
     ),
     # Task
+    path(
+        "task/",
+        include((task_patterns, "tasks")),
+    ),
+    # TODO put into task_patterns
     # Create
     path(
         # TODO should be "task/"
