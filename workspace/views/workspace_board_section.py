@@ -9,7 +9,6 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from projectify.utils import validate_perm
 from workspace.models import (
     WorkspaceBoard,
     WorkspaceBoardSection,
@@ -129,14 +128,10 @@ class WorkspaceBoardSectionMove(APIView):
             )
         )
         workspace_board_section = get_object_or_404(workspace_board_section_qs)
-        validate_perm(
-            "workspace.can_update_workspace_board_section",
-            user,
-            workspace_board_section,
-        )
         workspace_board_section_move(
             workspace_board_section=workspace_board_section,
             order=data["order"],
+            who=user,
         )
         workspace_board_section.refresh_from_db()
         output_serializer = WorkspaceBoardSectionDetailSerializer(
