@@ -15,7 +15,7 @@ from graphql import (
     GraphQLResolveInfo,
 )
 
-from user.services.user import user_sign_up
+from user.services.user import user_confirm_email, user_sign_up
 
 from ..emails import (
     UserPasswordResetEmail,
@@ -93,13 +93,7 @@ class Mutation:
         input: EmailConfirmationInput,
     ) -> types.User | None:
         """Mutate."""
-        User = cast(Type["_User"], auth.get_user_model())
-        user = User.objects.get_by_natural_key(input.email)
-        if user.check_email_confirmation_token(input.token):
-            user.is_active = True
-            user.save()
-            return user  # type: ignore
-        return None
+        return user_confirm_email(email=input.email, token=input.token)  # type: ignore[return-value]
 
     @strawberry.mutation
     def login(
