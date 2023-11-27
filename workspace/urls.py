@@ -21,7 +21,7 @@ from . import (
 from .views.task import (
     TaskCreate,
     TaskMove,
-    TaskRetrieveUpdateDestroy,
+    TaskRetrieveUpdateDelete,
 )
 from .views.workspace import (
     InviteUserToWorkspace,
@@ -91,6 +91,12 @@ workspace_board_section_patterns = (
 )
 
 task_patterns = (
+    # Read, Update, Delete
+    path(
+        "<uuid:task_uuid>",
+        TaskRetrieveUpdateDelete.as_view(),
+        name="read-update-delete",
+    ),
     # RPC
     path(
         "<uuid:task_uuid>/move",
@@ -184,12 +190,6 @@ urlpatterns = (
         "task",
         TaskCreate.as_view(),
         name="task-create",
-    ),
-    # Read, Update, Delete
-    path(
-        "task/<uuid:task_uuid>",
-        TaskRetrieveUpdateDestroy.as_view(),
-        name="task",
     ),
     # Label
     path("label/", include((label_patterns, "labels"))),

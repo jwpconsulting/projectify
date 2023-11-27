@@ -579,6 +579,7 @@ class Mutation:
             return workspace_board_section
 
     # TODO remove me
+    # DONE
     @strawberry.field
     def delete_task(
         self, info: GraphQLResolveInfo, input: DeleteTaskInput
