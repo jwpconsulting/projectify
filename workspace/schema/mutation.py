@@ -20,7 +20,7 @@ from strawberry.unset import (
 from projectify.utils import (
     get_user_model,
 )
-from workspace.services.label import label_create, label_update
+from workspace.services.label import label_create, label_delete, label_update
 from workspace.services.task import task_delete, task_move_after
 from workspace.services.workspace import workspace_update
 from workspace.services.workspace_board import (
@@ -593,6 +593,7 @@ class Mutation:
         task_delete(task=task, who=info.context.user)
         return task
 
+    # DONE
     @strawberry.field
     def delete_label(
         self, info: GraphQLResolveInfo, input: DeleteLabelInput
@@ -603,9 +604,5 @@ class Mutation:
             input.uuid,
         )
         label = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_delete_label",
-            label,
-        )
-        label.delete()
+        label_delete(label=label, who=info.context.user)
         return label
