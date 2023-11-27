@@ -14,6 +14,7 @@ from workspace.serializers.workspace_board import (
 from workspace.services.workspace_board import (
     workspace_board_archive,
     workspace_board_create,
+    workspace_board_delete,
     workspace_board_update,
 )
 
@@ -59,9 +60,9 @@ class WorkspaceBoardCreate(APIView):
         return Response(data=output_serializer.data, status=201)
 
 
-# Read + Update
-class WorkspaceBoardReadUpdate(
-    generics.RetrieveUpdateAPIView[
+# Read + Update + Delete
+class WorkspaceBoardReadUpdateDelete(
+    generics.RetrieveUpdateDestroyAPIView[
         WorkspaceBoard,
         WorkspaceBoardQuerySet,
         WorkspaceBoardDetailSerializer,
@@ -106,6 +107,13 @@ class WorkspaceBoardReadUpdate(
             title=data["title"],
             description=data.get("description"),
             deadline=data.get("deadline"),
+        )
+
+    def perform_destroy(self, instance: WorkspaceBoard) -> None:
+        """Delete workspace board."""
+        workspace_board_delete(
+            who=self.request.user,
+            workspace_board=instance,
         )
 
 
