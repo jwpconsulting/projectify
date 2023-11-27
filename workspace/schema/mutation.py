@@ -21,7 +21,7 @@ from strawberry.unset import (
 from projectify.utils import (
     get_user_model,
 )
-from workspace.services.label import label_create
+from workspace.services.label import label_create, label_update
 from workspace.services.task import task_move_after
 from workspace.services.workspace import workspace_update
 from workspace.services.workspace_board import (
@@ -504,6 +504,7 @@ class Mutation:
             deadline=input.deadline,
         )
 
+    # DONE
     @strawberry.field
     def update_workspace_board_section(
         self, info: GraphQLResolveInfo, input: UpdateWorkspaceBoardSectionInput
@@ -531,14 +532,12 @@ class Mutation:
             input.uuid,
         )
         label = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_update_label",
-            label,
+        return label_update(
+            who=info.context.user,
+            label=label,
+            color=input.color,
+            name=input.name,
         )
-        label.color = input.color
-        label.name = input.name
-        label.save()
-        return label
 
     # Delete
     @strawberry.field
