@@ -1,10 +1,15 @@
 # Bug
 
-## Authorization (2023-10-20)
+## Permissions (2023-10-20)
 
-No authorization check is done beyond testing whether a user has access to a
+No permission checking is done beyond testing whether a user has access to a
 resource based on whether they belong to a workspace or not. Especially roles
 are not correctly considered at this point.
+
+Some of the missing authorization (as of 2023-11-27)
+
+- Task update
+- Any read
 
 # Typing
 
