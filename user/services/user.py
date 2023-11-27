@@ -88,3 +88,21 @@ def user_request_password_reset(
     user = User.objects.get_by_natural_key(email)
     password_reset_email = UserPasswordResetEmail(user)
     password_reset_email.send()
+
+
+def user_confirm_password_reset(
+    *,
+    email: str,
+    token: str,
+    new_password: str,
+    # TODO don't return anything here
+) -> Optional[User]:
+    """Reset a user's password given a new password and a reset token."""
+    # TODO raise ValidationError here on DoesNotExist
+    user = User.objects.get_by_natural_key(email)
+    if not user.check_password_reset_token(token):
+        # TODO raise a ValidationError here instead
+        return None
+    user.set_password(new_password)
+    user.save()
+    return user

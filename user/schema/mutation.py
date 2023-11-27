@@ -1,12 +1,7 @@
 """User schema mutations."""
 from typing import (
     TYPE_CHECKING,
-    Type,
     cast,
-)
-
-from django.contrib import (
-    auth,
 )
 
 import strawberry
@@ -16,6 +11,7 @@ from graphql import (
 
 from user.services.user import (
     user_confirm_email,
+    user_confirm_password_reset,
     user_log_in,
     user_log_out,
     user_request_password_reset,
@@ -131,13 +127,11 @@ class Mutation:
         input: ConfirmPasswordResetInput,
     ) -> types.User | None:
         """Mutate."""
-        User = cast(Type["_User"], auth.get_user_model())
-        user = User.objects.get_by_natural_key(input.email)
-        if user.check_password_reset_token(input.token):
-            user.set_password(input.new_password)
-            user.save()
-            return user  # type: ignore
-        return None
+        return user_confirm_password_reset(
+            email=input.email,
+            token=input.token,
+            new_password=input.new_password,
+        )  # type: ignore[return-value]
 
     @strawberry.mutation
     def update_profile(
