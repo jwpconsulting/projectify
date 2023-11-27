@@ -120,7 +120,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
     @pytest.fixture
     def resource_url(self, task: Task) -> str:
         """Return URL to resource."""
-        return reverse("workspace:task", args=(task.uuid,))
+        return reverse("workspace:tasks:read-update-delete", args=(task.uuid,))
 
     @pytest.fixture
     def payload(
@@ -205,7 +205,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test deleting a task."""
-        with django_assert_num_queries(10):
+        with django_assert_num_queries(15):
             response = rest_user_client.delete(resource_url)
             assert response.status_code == 204, response.content
         # Ensure that the task is gone for good

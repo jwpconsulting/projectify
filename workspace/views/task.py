@@ -31,7 +31,7 @@ from workspace.serializers.task_detail import (
     TaskCreateUpdateSerializer,
     TaskDetailSerializer,
 )
-from workspace.services.task import task_move_after
+from workspace.services.task import task_delete, task_move_after
 
 from .. import (
     models,
@@ -50,7 +50,7 @@ class TaskCreate(
     serializer_class = TaskCreateUpdateSerializer
 
 
-class TaskRetrieveUpdateDestroy(
+class TaskRetrieveUpdateDelete(
     generics.RetrieveUpdateDestroyAPIView[
         models.Task,
         models.TaskQuerySet,
@@ -131,6 +131,10 @@ class TaskRetrieveUpdateDestroy(
         instance = self.get_object()
         response_serializer = self.serializer_class(instance)
         return Response(response_serializer.data)
+
+    def perform_destroy(self, instance: Task) -> None:
+        """Delete task."""
+        task_delete(task=instance, who=self.request.user)
 
 
 # RPC
