@@ -1,7 +1,7 @@
 """User model services in user app."""
 from typing import Optional
 
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.backends import ModelBackend
 from django.http import HttpRequest
 
@@ -46,7 +46,7 @@ def user_log_in(
     password: str,
     request: HttpRequest,
 ) -> Optional[User]:
-    """Log a user's request in."""
+    """Log a user in, return cookies."""
     user = ModelBackend().authenticate(
         request,
         username=email,
@@ -64,3 +64,15 @@ def user_log_in(
     if not isinstance(user, User):
         raise ValueError("User is not User, why?")
     return user
+
+
+def user_log_out(
+    *,
+    request: HttpRequest,
+) -> None:
+    """Log a user out, update cookies."""
+    user = request.user
+    if user.is_anonymous:
+        # TODO raise a ValidationError here
+        return None
+    logout(request)

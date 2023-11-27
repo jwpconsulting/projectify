@@ -14,7 +14,12 @@ from graphql import (
     GraphQLResolveInfo,
 )
 
-from user.services.user import user_confirm_email, user_log_in, user_sign_up
+from user.services.user import (
+    user_confirm_email,
+    user_log_in,
+    user_log_out,
+    user_sign_up,
+)
 
 from ..emails import (
     UserPasswordResetEmail,
@@ -108,11 +113,9 @@ class Mutation:
     @strawberry.mutation
     def logout(self, info: GraphQLResolveInfo) -> types.User | None:
         """Mutate."""
-        user = cast("_User", info.context.user)
-        if user.is_anonymous:
-            return None
-        auth.logout(info.context)
-        return user  # type: ignore
+        user: "_User" = info.context.user
+        user_log_out(request=info.context)
+        return user  # type: ignore[return-value]
 
     @strawberry.mutation
     def request_password_reset(self, input: RequestPasswordResetInput) -> str:
