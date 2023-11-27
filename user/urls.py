@@ -1,23 +1,24 @@
 """User url patterns."""
 from django.urls import (
+    include,
     path,
 )
 
-from . import (
-    views,
-)
+from user.views import ProfilePictureUpload, UserRead
 
 app_name = "user"
 
-urlpatterns = (
+user_patterns = (
     path(
-        r"profile-picture-upload",
-        views.ProfilePictureUploadView.as_view(),
-        name="profile-picture-upload",
+        "",
+        UserRead.as_view(),
+        name="read",
     ),
     path(
-        "user",
-        views.UserRetrieve.as_view(),
-        name="user",
+        "profile-picture/upload",
+        ProfilePictureUpload.as_view(),
+        name="upload-profile-picture",
     ),
 )
+
+urlpatterns = (path("user", include((user_patterns, "users"))),)
