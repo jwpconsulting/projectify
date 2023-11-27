@@ -19,7 +19,7 @@ from .. import (
 )
 
 
-class ProfilePictureUploadView(views.APIView):
+class ProfilePictureUpload(views.APIView):
     """View that allows uploading a profile picture."""
 
     parser_classes = (parsers.MultiPartParser,)
@@ -35,14 +35,14 @@ class ProfilePictureUploadView(views.APIView):
         return response.Response(status=204)
 
 
-class UserRetrieve(
+class UserRead(
     generics.RetrieveAPIView[
         models.User,
         django_models.QuerySet[models.User],
         serializers.UserSerializer,
     ]
 ):
-    """Retrieve user."""
+    """Read user."""
 
     serializer_class = serializers.UserSerializer
 

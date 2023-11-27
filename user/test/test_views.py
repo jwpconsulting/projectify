@@ -32,7 +32,7 @@ class TestProfilePictureUploadView:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("user:profile-picture-upload")
+        return reverse("user:users:upload-profile-picture")
 
     @pytest.fixture
     def headers(self, png_image: File) -> Headers:
@@ -86,7 +86,7 @@ class TestUserRetrieve:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("user:user")
+        return reverse("user:users:read")
 
     def test_authenticated(
         self, user_client: Client, resource_url: str, user: models.User
