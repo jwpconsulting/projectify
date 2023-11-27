@@ -4,15 +4,15 @@ from django.urls import (
     path,
 )
 
-from user.views.user import ProfilePictureUpload, UserRead
+from user.views.user import ProfilePictureUpload, UserReadUpdate
 
 app_name = "user"
 
 user_patterns = (
     path(
         "",
-        UserRead.as_view(),
-        name="read",
+        UserReadUpdate.as_view(),
+        name="read-update",
     ),
     path(
         "profile-picture/upload",
