@@ -16,6 +16,7 @@ from user.services.user import (
     user_log_out,
     user_request_password_reset,
     user_sign_up,
+    user_update,
 )
 
 from . import (
@@ -142,7 +143,11 @@ class Mutation:
         """Mutate."""
         user = cast("_User", info.context.user)
         if not user.is_authenticated:
+            # Inaccurate, this method should only ever be callable when
+            # authenticated
             return None
-        user.full_name = input.full_name
-        user.save()
-        return user  # type: ignore
+        return user_update(
+            who=user,
+            user=user,
+            full_name=input.full_name,
+        )  # type: ignore[return-value]
