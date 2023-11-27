@@ -17,12 +17,54 @@ from django.urls import (
 )
 
 import pytest
+from rest_framework.status import HTTP_200_OK
+from rest_framework.test import APIClient
 
-from .. import (
-    models,
-)
+from pytest_types import DjangoAssertNumQueries
+
+from ...models import User
 
 Headers = Mapping[str, Any]
+
+
+@pytest.mark.django_db
+class TestUserReadUpdate:
+    """Test UserReadUpdate view."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("user:users:read-update")
+
+    def test_authenticated(
+        self, user_client: Client, resource_url: str, user: User
+    ) -> None:
+        """Assert we can post to this view this while being logged in."""
+        response = user_client.get(resource_url)
+        assert response.status_code == 200, response.content
+
+    def test_update(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        user: User,
+    ) -> None:
+        """Test updating."""
+        with django_assert_num_queries(1):
+            response = rest_user_client.put(
+                resource_url,
+                data={},
+            )
+            assert response.status_code == HTTP_200_OK, response.data
+        user.refresh_from_db()
+        assert user.full_name is None
+        response = rest_user_client.put(
+            resource_url,
+            data={"full_name": "Locutus of Blorb"},
+        )
+        user.refresh_from_db()
+        assert user.full_name == "Locutus of Blorb"
 
 
 @pytest.mark.django_db
@@ -65,7 +107,7 @@ class TestProfilePictureUploadView:
         resource_url: str,
         headers: Headers,
         uploaded_file: File,
-        user: models.User,
+        user: User,
     ) -> None:
         """Assert we can post to this view this while being logged in."""
         response = user_client.post(
@@ -77,20 +119,3 @@ class TestProfilePictureUploadView:
         assert response.status_code == 204, response.content
         user.refresh_from_db()
         assert user.profile_picture is not None
-
-
-@pytest.mark.django_db
-class TestUserRetrieve:
-    """Test UserRetrieve view."""
-
-    @pytest.fixture
-    def resource_url(self) -> str:
-        """Return URL to this view."""
-        return reverse("user:users:read")
-
-    def test_authenticated(
-        self, user_client: Client, resource_url: str, user: models.User
-    ) -> None:
-        """Assert we can post to this view this while being logged in."""
-        response = user_client.get(resource_url)
-        assert response.status_code == 200, response.content
