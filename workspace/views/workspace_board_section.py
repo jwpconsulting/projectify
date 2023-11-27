@@ -20,6 +20,7 @@ from workspace.serializers.workspace_board_section import (
 from workspace.services.workspace_board_section import (
     workspace_board_section_create,
     workspace_board_section_move,
+    workspace_board_section_update,
 )
 
 
@@ -70,9 +71,9 @@ class WorkspaceBoardSectionCreate(APIView):
         return Response(data=output_serializer.data, status=201)
 
 
-# Read
-class WorkspaceBoardSectionRead(
-    generics.RetrieveAPIView[
+# Read + Update
+class WorkspaceBoardSectionReadUpdate(
+    generics.RetrieveUpdateAPIView[
         WorkspaceBoardSection,
         WorkspaceBoardSectionQuerySet,
         WorkspaceBoardSectionDetailSerializer,
@@ -102,6 +103,20 @@ class WorkspaceBoardSectionRead(
         )
         workspace_board_section: WorkspaceBoardSection = get_object_or_404(qs)
         return workspace_board_section
+
+    def perform_update(
+        self, serializer: WorkspaceBoardSectionDetailSerializer
+    ) -> None:
+        """Update workspace board section."""
+        if serializer.instance is None:
+            raise ValueError("Expected serializer.instance")
+        data = serializer.validated_data
+        workspace_board_section_update(
+            who=self.request.user,
+            workspace_board_section=serializer.instance,
+            title=data["title"],
+            description=data.get("description"),
+        )
 
 
 # RPC
