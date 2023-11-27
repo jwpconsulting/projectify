@@ -5,7 +5,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.backends import ModelBackend
 from django.http import HttpRequest
 
-from user.emails import UserEmailConfirmationEmail
+from user.emails import UserEmailConfirmationEmail, UserPasswordResetEmail
 from user.models import User
 
 
@@ -76,3 +76,15 @@ def user_log_out(
         # TODO raise a ValidationError here
         return None
     logout(request)
+
+
+def user_request_password_reset(
+    *,
+    # Should this be taking in a user object instead?
+    email: str,
+) -> None:
+    """Send a password reset email to a user, given their email address."""
+    # TODO raise ValidationError here on DoesNotExist
+    user = User.objects.get_by_natural_key(email)
+    password_reset_email = UserPasswordResetEmail(user)
+    password_reset_email.send()
