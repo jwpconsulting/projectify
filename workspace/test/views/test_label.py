@@ -2,6 +2,7 @@
 from django.urls import reverse
 
 import pytest
+from rest_framework.status import HTTP_204_NO_CONTENT
 from rest_framework.test import APIClient
 
 from pytest_types import DjangoAssertNumQueries
@@ -43,13 +44,15 @@ class TestLabelCreate:
 
 
 @pytest.mark.django_db
-class TestLabelUpdate:
-    """Test updating labels."""
+class TestLabelUpdateDelete:
+    """Test updating and deleting labels."""
 
     @pytest.fixture
     def resource_url(self, label: Label) -> str:
         """Return URL to this view."""
-        return reverse("workspace:labels:update", args=(str(label.uuid),))
+        return reverse(
+            "workspace:labels:update-delete", args=(str(label.uuid),)
+        )
 
     def test_authenticated_user(
         self,
@@ -73,3 +76,17 @@ class TestLabelUpdate:
         assert label.name == "New name for a label"
         assert label.color == 2
         assert response.data["name"] == "New name for a label"
+
+    def test_deleting(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        workspace_user: WorkspaceUser,
+        label: Label,
+    ) -> None:
+        """Test deleting a label."""
+        with django_assert_num_queries(12):
+            response = rest_user_client.delete(resource_url)
+            assert response.status_code == HTTP_204_NO_CONTENT, response.data
+        assert Label.objects.count() == 0

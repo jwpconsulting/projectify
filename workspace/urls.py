@@ -4,7 +4,7 @@ from django.urls import (
     path,
 )
 
-from workspace.views.label import LabelCreate, LabelUpdate
+from workspace.views.label import LabelCreate, LabelUpdateDelete
 from workspace.views.workspace_board import (
     WorkspaceBoardCreate,
     WorkspaceBoardReadUpdateDelete,
@@ -116,8 +116,8 @@ label_patterns = (
     # Update
     path(
         "<uuid:label_uuid>",
-        LabelUpdate.as_view(),
-        name="update",
+        LabelUpdateDelete.as_view(),
+        name="update-delete",
     ),
     # Delete
 )
