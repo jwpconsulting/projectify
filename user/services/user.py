@@ -5,6 +5,9 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.backends import ModelBackend
 from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest
+from django.utils.translation import gettext_lazy as _
+
+from rest_framework import serializers
 
 from user.emails import UserEmailConfirmationEmail, UserPasswordResetEmail
 from user.models import User
@@ -49,11 +52,16 @@ def user_confirm_email(
     token: str,
 ) -> Optional[User]:
     """Confirm a user's email, return User on success."""
-    # TODO raise ValidationError on DoesNotExist
-    user = User.objects.get_by_natural_key(email)
-    # TODO raise ValidationError on wrong token
+    try:
+        user = User.objects.get_by_natural_key(email)
+    except User.DoesNotExist:
+        raise serializers.ValidationError(
+            {"email": _("No user could be found for this email address")}
+        )
     if not user.check_email_confirmation_token(token):
-        return None
+        raise serializers.ValidationError(
+            {"token": _("This email confirmation token is invalid")}
+        )
     user.is_active = True
     user.save()
     # TODO do not return User here
@@ -73,8 +81,9 @@ def user_log_in(
         password=password,
     )
     if user is None:
-        # TODO here we should give a proper error
-        return None
+        raise serializers.ValidationError(
+            _("No user could be found for these credentials")
+        )
     login(
         request,
         user,
@@ -94,8 +103,7 @@ def user_log_out(
     """Log a user out, update cookies."""
     user = request.user
     if user.is_anonymous:
-        # TODO raise a ValidationError here
-        return None
+        raise serializers.ValidationError(_("There is no logged in user"))
     logout(request)
 
 
@@ -105,8 +113,12 @@ def user_request_password_reset(
     email: str,
 ) -> None:
     """Send a password reset email to a user, given their email address."""
-    # TODO raise ValidationError here on DoesNotExist
-    user = User.objects.get_by_natural_key(email)
+    try:
+        user = User.objects.get_by_natural_key(email)
+    except User.DoesNotExist:
+        raise serializers.ValidationError(
+            {"email": _("No user could be found for this email")}
+        )
     password_reset_email = UserPasswordResetEmail(user)
     password_reset_email.send()
 
@@ -119,11 +131,16 @@ def user_confirm_password_reset(
     # TODO don't return anything here
 ) -> Optional[User]:
     """Reset a user's password given a new password and a reset token."""
-    # TODO raise ValidationError here on DoesNotExist
-    user = User.objects.get_by_natural_key(email)
+    try:
+        user = User.objects.get_by_natural_key(email)
+    except User.DoesNotExist:
+        raise serializers.ValidationError(
+            {"email": _("This email is not recognized")}
+        )
     if not user.check_password_reset_token(token):
-        # TODO raise a ValidationError here instead
-        return None
+        raise serializers.ValidationError(
+            {"token": _("This token is invalid")}
+        )
     user.set_password(new_password)
     user.save()
     # XXX consider if returning a user is necessary here

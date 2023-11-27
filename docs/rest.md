@@ -66,3 +66,18 @@ If a property is a list, then the semantics are similar:
 
 What happens to the previously nested list resources is
 implementation-specific, as with the singular case.
+
+## RPC operations
+
+There are plenty of operations that do not neatly fit into the ideas behind
+RESTful resources. In that case, we use a URL suffix for a given resource.
+The URL suffix should have follow verb-noun, so for example, updating
+a user's profile picture will be accessible via:
+
+```
+┌──────┬───┬──────┬───┬────────────────────────┐
+│ user │ / │ user │ / │ upload-profile-picture │
+└─ ▲ ──┴───┴── ▲ ─┴───┴─── ▲ ─── ▲ ────────────┘
+   │           │           │     │
+   App      Resource      verb  noun
+```
