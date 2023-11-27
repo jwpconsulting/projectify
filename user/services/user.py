@@ -15,7 +15,7 @@ def user_update(
     *,
     who: User,
     user: User,
-    full_name: str,
+    full_name: Optional[str],
 ) -> User:
     """Update a user."""
     if not who == user:
@@ -32,12 +32,14 @@ def user_sign_up(
     password: str,
 ) -> User:
     """Sign up a user."""
+    # Here we should validate the password with Django's validation criteria
     user = User.objects.create_user(
         email=email,
         password=password,
     )
     mail = UserEmailConfirmationEmail(user)
     mail.send()
+    # TODO do not return User here
     return user
 
 
@@ -54,6 +56,7 @@ def user_confirm_email(
         return None
     user.is_active = True
     user.save()
+    # TODO do not return User here
     return user
 
 
@@ -80,6 +83,7 @@ def user_log_in(
     )
     if not isinstance(user, User):
         raise ValueError("User is not User, why?")
+    # XXX consider if returning a user is necessary here
     return user
 
 
@@ -122,4 +126,5 @@ def user_confirm_password_reset(
         return None
     user.set_password(new_password)
     user.save()
+    # XXX consider if returning a user is necessary here
     return user
