@@ -12,6 +12,7 @@ from rest_framework import (
     serializers,
     views,
 )
+from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
@@ -29,7 +30,7 @@ from user.services.user import (
 
 
 # Create
-# Read
+# Read + Update
 class UserReadUpdate(
     generics.RetrieveUpdateAPIView[
         User,
@@ -71,13 +72,39 @@ class UserReadUpdate(
         return Response(data=output_serializer.data, status=HTTP_200_OK)
 
 
-# Update
 # Delete
 
 
 # RPC
+# TODO merge this into user_update
+class ProfilePictureUpload(views.APIView):
+    """View that allows uploading a profile picture."""
+
+    parser_classes = (parsers.MultiPartParser,)
+
+    def post(self, request: Request, format: Optional[str] = None) -> Response:
+        """Handle POST."""
+        file_obj = request.data["file"]
+        user = request.user
+        user.profile_picture = file_obj
+        user.save()
+        return Response(status=204)
+
+
+class LogOut(views.APIView):
+    """Log a user out."""
+
+    def post(self, request: Request) -> Response:
+        """Handle POST."""
+        user_log_out(request=request)
+        return Response(status=HTTP_204_NO_CONTENT)
+
+
+# The following views have no authentication required
 class SignUp(views.APIView):
     """Sign up a user."""
+
+    permission_classes = (AllowAny,)
 
     class InputSerializer(serializers.Serializer):
         """Take in email and password."""
@@ -100,6 +127,8 @@ class SignUp(views.APIView):
 class LogIn(views.APIView):
     """Log a user in."""
 
+    permission_classes = (AllowAny,)
+
     class InputSerializer(serializers.Serializer):
         """Take email and password."""
 
@@ -119,17 +148,10 @@ class LogIn(views.APIView):
         return Response(status=HTTP_204_NO_CONTENT)
 
 
-class LogOut(views.APIView):
-    """Log a user out."""
-
-    def post(self, request: Request) -> Response:
-        """Handle POST."""
-        user_log_out(request=request)
-        return Response(status=HTTP_204_NO_CONTENT)
-
-
 class PasswordResetRequest(views.APIView):
     """Request password to be reset."""
+
+    permission_classes = (AllowAny,)
 
     class InputSerializer(serializers.Serializer):
         """Take an email address."""
@@ -147,6 +169,8 @@ class PasswordResetRequest(views.APIView):
 
 class PasswordResetConfirm(views.APIView):
     """Reset a user's password."""
+
+    permission_classes = (AllowAny,)
 
     class InputSerializer(serializers.Serializer):
         """Take email, token and a new password."""
@@ -166,17 +190,3 @@ class PasswordResetConfirm(views.APIView):
             new_password=data["new_password"],
         )
         return Response(status=HTTP_204_NO_CONTENT)
-
-
-class ProfilePictureUpload(views.APIView):
-    """View that allows uploading a profile picture."""
-
-    parser_classes = (parsers.MultiPartParser,)
-
-    def post(self, request: Request, format: Optional[str] = None) -> Response:
-        """Handle POST."""
-        file_obj = request.data["file"]
-        user = request.user
-        user.profile_picture = file_obj
-        user.save()
-        return Response(status=204)
