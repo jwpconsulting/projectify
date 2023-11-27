@@ -7,13 +7,13 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK
+from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
 
 from workspace.models.label import Label
 from workspace.models.workspace import Workspace
 from workspace.serializers.base import LabelBaseSerializer
-from workspace.services.label import label_create, label_update
+from workspace.services.label import label_create, label_delete, label_update
 
 
 # Create
@@ -61,7 +61,7 @@ class LabelCreate(APIView):
         return Response(output_serializer.data, status=201)
 
 
-class LabelUpdate(APIView):
+class LabelUpdateDelete(APIView):
     """View for updating labels."""
 
     class InputSerializer(serializers.ModelSerializer[Label]):
@@ -73,12 +73,16 @@ class LabelUpdate(APIView):
             fields = "name", "color"
             model = Label
 
-    def put(self, request: Request, label_uuid: UUID) -> Response:
-        """Handle PUT."""
+    def get_label(self, request: Request, label_uuid: UUID) -> Label:
+        """Get the requested label."""
         label_qs = Label.objects.filter_for_user_and_uuid(
             user=request.user, uuid=label_uuid
         )
-        label = get_object_or_404(label_qs)
+        return get_object_or_404(label_qs)
+
+    def put(self, request: Request, label_uuid: UUID) -> Response:
+        """Handle PUT."""
+        label = self.get_label(request, label_uuid)
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
@@ -90,3 +94,9 @@ class LabelUpdate(APIView):
         )
         output_serializer = LabelBaseSerializer(instance=label)
         return Response(data=output_serializer.data, status=HTTP_200_OK)
+
+    def delete(self, request: Request, label_uuid: UUID) -> Response:
+        """Handle DELETE."""
+        label = self.get_label(request, label_uuid)
+        label_delete(label=label, who=request.user)
+        return Response(status=HTTP_204_NO_CONTENT)

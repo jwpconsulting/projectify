@@ -40,3 +40,10 @@ def label_update(
     label.color = color
     label.save()
     return label
+
+
+# Delete
+def label_delete(*, who: User, label: Label) -> None:
+    """Delete a label."""
+    validate_perm("workspace.can_delete_label", who, label)
+    label.delete()
