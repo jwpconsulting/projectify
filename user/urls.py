@@ -4,7 +4,7 @@ from django.urls import (
     path,
 )
 
-from user.views import ProfilePictureUpload, UserRead
+from user.views.user import ProfilePictureUpload, UserRead
 
 app_name = "user"
 
