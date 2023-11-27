@@ -19,6 +19,7 @@ from workspace.serializers.workspace_board_section import (
 )
 from workspace.services.workspace_board_section import (
     workspace_board_section_create,
+    workspace_board_section_delete,
     workspace_board_section_move,
     workspace_board_section_update,
 )
@@ -71,9 +72,9 @@ class WorkspaceBoardSectionCreate(APIView):
         return Response(data=output_serializer.data, status=201)
 
 
-# Read + Update
-class WorkspaceBoardSectionReadUpdate(
-    generics.RetrieveUpdateAPIView[
+# Read + Update + Delete
+class WorkspaceBoardSectionReadUpdateDelete(
+    generics.RetrieveUpdateDestroyAPIView[
         WorkspaceBoardSection,
         WorkspaceBoardSectionQuerySet,
         WorkspaceBoardSectionDetailSerializer,
@@ -116,6 +117,13 @@ class WorkspaceBoardSectionReadUpdate(
             workspace_board_section=serializer.instance,
             title=data["title"],
             description=data.get("description"),
+        )
+
+    def perform_destroy(self, instance: WorkspaceBoardSection) -> None:
+        """Destroy workspace board section."""
+        workspace_board_section_delete(
+            who=self.request.user,
+            workspace_board_section=instance,
         )
 
 

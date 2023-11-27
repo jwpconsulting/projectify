@@ -60,10 +60,10 @@ class TestWorkspaceBoardSectionCreate:
         )
 
 
-# Read
+# Read + Update + Delete
 @pytest.mark.django_db
-class TestWorkspaceBoardSectionRead:
-    """Test WorkspaceBoardSectionRetrieve view."""
+class TestWorkspaceBoardSectionReadUpdateDelete:
+    """Test WorkspaceBoardSectionReadUpdateDelete view."""
 
     @pytest.fixture
     def resource_url(
@@ -71,7 +71,7 @@ class TestWorkspaceBoardSectionRead:
     ) -> str:
         """Return URL to this view."""
         return reverse(
-            "workspace:workspace-board-sections:read-update",
+            "workspace:workspace-board-sections:read-update-delete",
             args=(workspace_board_section.uuid,),
         )
 
@@ -114,6 +114,21 @@ class TestWorkspaceBoardSectionRead:
         workspace_board_section.refresh_from_db()
         assert workspace_board_section.title == "New title"
         assert workspace_board_section.description == "New description"
+
+    def test_delete(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        workspace_user: WorkspaceUser,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test deleting."""
+        with django_assert_num_queries(11):
+            response = rest_user_client.delete(resource_url)
+            assert (
+                response.status_code == status.HTTP_204_NO_CONTENT
+            ), response.data
+        assert WorkspaceBoardSection.objects.count() == 0
 
 
 # RPC
