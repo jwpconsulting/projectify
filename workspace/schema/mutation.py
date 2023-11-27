@@ -8,7 +8,6 @@ from django.db import (
 from django.shortcuts import (
     get_object_or_404,
 )
-from django.utils.translation import gettext_lazy as _
 
 import strawberry
 from graphql import (
@@ -32,6 +31,7 @@ from workspace.services.workspace_board import (
 )
 from workspace.services.workspace_board_section import (
     workspace_board_section_create,
+    workspace_board_section_delete,
     workspace_board_section_move,
     workspace_board_section_update,
 )
@@ -571,16 +571,10 @@ class Mutation:
                 input.uuid,
             )
             workspace_board_section = get_object_or_404(qs)
-            assert info.context.user.has_perm(
-                "workspace.can_delete_workspace_board_section",
-                workspace_board_section,
+            workspace_board_section_delete(
+                who=info.context.user,
+                workspace_board_section=workspace_board_section,
             )
-            task_len = workspace_board_section.task_set.count()
-            if task_len:
-                raise ValueError(
-                    _("This workspace board section still has tasks"),
-                )
-            workspace_board_section.delete()
             return workspace_board_section
 
     # TODO remove me
