@@ -52,6 +52,20 @@ def workspace_board_update(
 
 
 # Delete
+def workspace_board_delete(
+    *,
+    who: User,
+    workspace_board: WorkspaceBoard,
+) -> None:
+    """Delete a workspace board."""
+    validate_perm(
+        "workspace.can_delete_workspace_board",
+        who,
+        workspace_board,
+    )
+    workspace_board.delete()
+
+
 # RPC
 def workspace_board_archive(
     *,
