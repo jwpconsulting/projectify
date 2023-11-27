@@ -12,7 +12,7 @@ from workspace.views.workspace_board import (
 from workspace.views.workspace_board_section import (
     WorkspaceBoardSectionCreate,
     WorkspaceBoardSectionMove,
-    WorkspaceBoardSectionReadUpdate,
+    WorkspaceBoardSectionReadUpdateDelete,
 )
 
 from . import (
@@ -76,14 +76,12 @@ workspace_board_section_patterns = (
         WorkspaceBoardSectionCreate.as_view(),
         name="create",
     ),
-    # Read + Update
+    # Read + Update + Delete
     path(
         "<uuid:workspace_board_section_uuid>",
-        WorkspaceBoardSectionReadUpdate.as_view(),
-        name="read-update",
+        WorkspaceBoardSectionReadUpdateDelete.as_view(),
+        name="read-update-delete",
     ),
-    # Update
-    # Delete
     # RPC
     path(
         "<uuid:workspace_board_section_uuid>/move",
