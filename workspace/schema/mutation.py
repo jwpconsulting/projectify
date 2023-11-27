@@ -27,6 +27,7 @@ from workspace.services.workspace import workspace_update
 from workspace.services.workspace_board import (
     workspace_board_archive,
     workspace_board_create,
+    workspace_board_delete,
     workspace_board_update,
 )
 from workspace.services.workspace_board_section import (
@@ -522,6 +523,7 @@ class Mutation:
             description=input.description,
         )
 
+    # DONE
     @strawberry.field
     def update_label(
         self, info: GraphQLResolveInfo, input: UpdateLabelInput
@@ -540,6 +542,7 @@ class Mutation:
         )
 
     # Delete
+    # DONE
     @strawberry.field
     def delete_workspace_board(
         self, info: GraphQLResolveInfo, input: DeleteWorkspaceBoardInput
@@ -550,11 +553,11 @@ class Mutation:
             input.uuid,
         )
         workspace_board = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_delete_workspace_board",
-            workspace_board,
+        workspace_board_delete(
+            who=info.context.user,
+            workspace_board=workspace_board,
         )
-        workspace_board.delete()
+        # Returning an object after it has been deleted is not productive
         return workspace_board
 
     @strawberry.field

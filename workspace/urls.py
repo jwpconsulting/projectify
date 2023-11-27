@@ -7,7 +7,7 @@ from django.urls import (
 from workspace.views.label import LabelCreate, LabelUpdate
 from workspace.views.workspace_board import (
     WorkspaceBoardCreate,
-    WorkspaceBoardReadUpdate,
+    WorkspaceBoardReadUpdateDelete,
 )
 from workspace.views.workspace_board_section import (
     WorkspaceBoardSectionCreate,
@@ -61,13 +61,12 @@ workspace_board_patterns = (
         WorkspaceBoardCreate.as_view(),
         name="create",
     ),
-    # Read + Update
+    # Read + Update + Delete
     path(
         "workspace-board/<uuid:workspace_board_uuid>",
-        WorkspaceBoardReadUpdate.as_view(),
-        name="read-update",
+        WorkspaceBoardReadUpdateDelete.as_view(),
+        name="read-update-delete",
     ),
-    # Delete
 )
 
 workspace_board_section_patterns = (

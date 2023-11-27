@@ -57,16 +57,16 @@ class TestWorkspaceBoardCreate:
         assert workspace_board.title == "New workspace board, who dis??"
 
 
-# Read + Update
+# Read + Update + Delete
 @pytest.mark.django_db
-class TestWorkspaceBoardReadUpdate:
-    """Test WorkspaceBoardReadUpdate view."""
+class TestWorkspaceBoardReadUpdateDelete:
+    """Test WorkspaceBoardReadUpdateDelete view."""
 
     @pytest.fixture
     def resource_url(self, workspace_board: WorkspaceBoard) -> str:
         """Return URL to this view."""
         return reverse(
-            "workspace:workspace-boards:read-update",
+            "workspace:workspace-boards:read-update-delete",
             args=(workspace_board.uuid,),
         )
 
@@ -106,3 +106,19 @@ class TestWorkspaceBoardReadUpdate:
                 format="json",
             )
             assert response.status_code == status.HTTP_200_OK, response.data
+
+    def test_deleting(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        workspace_user: WorkspaceUser,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test updating a ws board."""
+        with django_assert_num_queries(12):
+            response = rest_user_client.delete(
+                resource_url,
+            )
+            assert (
+                response.status_code == status.HTTP_204_NO_CONTENT
+            ), response.data
