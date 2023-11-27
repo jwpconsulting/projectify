@@ -1,8 +1,10 @@
 """Workspace board section services."""
-
 from typing import Optional
 
 from django.db import transaction
+from django.utils.translation import gettext_lazy as _
+
+from rest_framework import serializers
 
 from projectify.utils import validate_perm
 from user.models import User
@@ -50,6 +52,31 @@ def workspace_board_section_update(
     workspace_board_section.description = description
     workspace_board_section.save()
     return workspace_board_section
+
+
+# Delete
+@transaction.atomic
+def workspace_board_section_delete(
+    *,
+    who: User,
+    workspace_board_section: WorkspaceBoardSection,
+) -> None:
+    """Delete a workspace board section."""
+    validate_perm(
+        "workspace.can_delete_workspace_board_section",
+        who,
+        workspace_board_section,
+    )
+    task_len = workspace_board_section.task_set.count()
+    if task_len:
+        # For now, we use a stock ValidationError, but it would be good
+        # if we can bubble up service errors and turn them into
+        # ValidationErrors at some point in the distant future in a galaxy far
+        # far away
+        raise serializers.ValidationError(
+            _("This workspace board section still has tasks"),
+        )
+    workspace_board_section.delete()
 
 
 # RPC
