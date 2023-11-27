@@ -101,7 +101,7 @@ class WorkspaceBoardBaseSerializer(
 
 
 class WorkspaceBoardSectionBaseSerializer(
-    serializers.ModelSerializer[models.WorkspaceBoard]
+    serializers.ModelSerializer[models.WorkspaceBoardSection]
 ):
     """Workspace board section serializer."""
 

@@ -71,7 +71,7 @@ class TestWorkspaceBoardSectionRead:
     ) -> str:
         """Return URL to this view."""
         return reverse(
-            "workspace:workspace-board-sections:read",
+            "workspace:workspace-board-sections:read-update",
             args=(workspace_board_section.uuid,),
         )
 
@@ -91,6 +91,29 @@ class TestWorkspaceBoardSectionRead:
         with django_assert_num_queries(6):
             response = rest_user_client.get(resource_url)
         assert response.status_code == 200, response.content
+
+    def test_update(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        user: AbstractBaseUser,
+        workspace_user: WorkspaceUser,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        workspace_board_section: WorkspaceBoardSection,
+    ) -> None:
+        """Test updating a workspace board section."""
+        with django_assert_num_queries(10):
+            response = rest_user_client.put(
+                resource_url,
+                data={
+                    "title": "New title",
+                    "description": "New description",
+                },
+            )
+            assert response.status_code == status.HTTP_200_OK, response.data
+        workspace_board_section.refresh_from_db()
+        assert workspace_board_section.title == "New title"
+        assert workspace_board_section.description == "New description"
 
 
 # RPC

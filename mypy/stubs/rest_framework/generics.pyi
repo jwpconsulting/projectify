@@ -42,6 +42,7 @@ class SerializerContext(Generic[M, Q, S], TypedDict):
     format: str
     view: GenericAPIView[M, Q, S]
 
+# XXX this will not validate if S is a ModelSerializer for M
 class GenericAPIView(Generic[M, Q, S], views.APIView):
     lookup_field: str = "pk"
     queryset: Q
