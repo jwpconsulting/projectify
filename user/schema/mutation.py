@@ -1,7 +1,6 @@
 """User schema mutations."""
 from typing import (
     TYPE_CHECKING,
-    Optional,
     Type,
     cast,
 )
@@ -15,7 +14,7 @@ from graphql import (
     GraphQLResolveInfo,
 )
 
-from user.services.user import user_confirm_email, user_sign_up
+from user.services.user import user_confirm_email, user_log_in, user_sign_up
 
 from ..emails import (
     UserPasswordResetEmail,
@@ -100,26 +99,11 @@ class Mutation:
         self, input: LoginInput, info: GraphQLResolveInfo
     ) -> types.User | None:
         """Mutate."""
-        from django.contrib.auth.backends import (
-            ModelBackend,
-        )
-
-        user = cast(
-            "Optional[_User]",
-            ModelBackend().authenticate(
-                info.context,
-                username=input.email,
-                password=input.password,
-            ),
-        )
-        if user is None:
-            return None
-        auth.login(
-            info.context,
-            user,
-            backend="django.contrib.auth.backends.ModelBackend",
-        )
-        return user  # type: ignore
+        return user_log_in(
+            email=input.email,
+            password=input.password,
+            request=info.context,
+        )  # type: ignore[return-value]
 
     @strawberry.mutation
     def logout(self, info: GraphQLResolveInfo) -> types.User | None:
