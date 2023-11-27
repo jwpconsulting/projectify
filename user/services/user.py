@@ -3,12 +3,29 @@ from typing import Optional
 
 from django.contrib.auth import login, logout
 from django.contrib.auth.backends import ModelBackend
+from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest
 
 from user.emails import UserEmailConfirmationEmail, UserPasswordResetEmail
 from user.models import User
 
 
+# Update
+def user_update(
+    *,
+    who: User,
+    user: User,
+    full_name: str,
+) -> User:
+    """Update a user."""
+    if not who == user:
+        raise PermissionDenied("User can only update own user")
+    user.full_name = full_name
+    user.save()
+    return user
+
+
+# RPC style
 def user_sign_up(
     *,
     email: str,
