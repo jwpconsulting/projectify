@@ -11,6 +11,15 @@ from workspace.models.task import Task
 from workspace.models.workspace_board_section import WorkspaceBoardSection
 
 
+# Create
+# Update
+# Delete
+def task_delete(*, task: Task, who: User) -> None:
+    """Delete a task."""
+    validate_perm("workspace.can_delete_task", who, task)
+    task.delete()
+
+
 @transaction.atomic
 def task_move_after(
     *,

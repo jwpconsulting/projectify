@@ -21,7 +21,7 @@ from projectify.utils import (
     get_user_model,
 )
 from workspace.services.label import label_create, label_update
-from workspace.services.task import task_move_after
+from workspace.services.task import task_delete, task_move_after
 from workspace.services.workspace import workspace_update
 from workspace.services.workspace_board import (
     workspace_board_archive,
@@ -560,6 +560,7 @@ class Mutation:
         # Returning an object after it has been deleted is not productive
         return workspace_board
 
+    # DONE
     @strawberry.field
     def delete_workspace_board_section(
         self, info: GraphQLResolveInfo, input: DeleteWorkspaceBoardSectionInput
@@ -588,11 +589,7 @@ class Mutation:
             input.uuid,
         )
         task = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_delete_task",
-            task,
-        )
-        task.delete()
+        task_delete(task=task, who=info.context.user)
         return task
 
     @strawberry.field
