@@ -27,6 +27,7 @@ from workspace.services.workspace import workspace_update
 from workspace.services.workspace_board import (
     workspace_board_archive,
     workspace_board_create,
+    workspace_board_update,
 )
 from workspace.services.workspace_board_section import (
     workspace_board_section_create,
@@ -493,19 +494,13 @@ class Mutation:
             input.uuid,
         )
         workspace_board = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_update_workspace_board",
-            workspace_board,
+        return workspace_board_update(
+            who=info.context.user,
+            workspace_board=workspace_board,
+            title=input.title,
+            description=input.description,
+            deadline=input.deadline,
         )
-        workspace_board.title = input.title
-        workspace_board.description = input.description
-        if input.deadline:
-            assert input.deadline.tzinfo
-            workspace_board.deadline = input.deadline
-        else:
-            workspace_board.deadline = None
-        workspace_board.save()
-        return workspace_board
 
     @strawberry.field
     def update_workspace_board_section(
