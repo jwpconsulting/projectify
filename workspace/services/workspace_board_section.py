@@ -9,6 +9,7 @@ from user.models import User
 from workspace.models import WorkspaceBoard, WorkspaceBoardSection
 
 
+# Create
 def workspace_board_section_create(
     *,
     who: User,
@@ -31,6 +32,27 @@ def workspace_board_section_create(
     return workspace_board_section
 
 
+# Update
+def workspace_board_section_update(
+    *,
+    who: User,
+    workspace_board_section: WorkspaceBoardSection,
+    title: str,
+    description: Optional[str],
+) -> WorkspaceBoardSection:
+    """Update a workspace board section."""
+    validate_perm(
+        "workspace.can_update_workspace_board_section",
+        who,
+        workspace_board_section,
+    )
+    workspace_board_section.title = title
+    workspace_board_section.description = description
+    workspace_board_section.save()
+    return workspace_board_section
+
+
+# RPC
 @transaction.atomic
 def workspace_board_section_move(
     *,
