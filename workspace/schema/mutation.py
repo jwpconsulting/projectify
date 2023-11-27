@@ -32,6 +32,7 @@ from workspace.services.workspace_board import (
 from workspace.services.workspace_board_section import (
     workspace_board_section_create,
     workspace_board_section_move,
+    workspace_board_section_update,
 )
 from workspace.services.workspace_user import workspace_user_update
 
@@ -484,6 +485,7 @@ class Mutation:
             archived=input.archived,
         )
 
+    # DONE
     @strawberry.field
     def update_workspace_board(
         self, info: GraphQLResolveInfo, input: UpdateWorkspaceBoardInput
@@ -512,14 +514,12 @@ class Mutation:
             input.uuid,
         )
         workspace_board_section = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_update_workspace_board_section",
-            workspace_board_section,
+        return workspace_board_section_update(
+            who=info.context.user,
+            workspace_board_section=workspace_board_section,
+            title=input.title,
+            description=input.description,
         )
-        workspace_board_section.title = input.title
-        workspace_board_section.description = input.description
-        workspace_board_section.save()
-        return workspace_board_section
 
     @strawberry.field
     def update_label(
