@@ -15,8 +15,9 @@ from graphql import (
     GraphQLResolveInfo,
 )
 
+from user.services.user import user_sign_up
+
 from ..emails import (
-    UserEmailConfirmationEmail,
     UserPasswordResetEmail,
 )
 from . import (
@@ -81,14 +82,10 @@ class Mutation:
     @strawberry.mutation
     def signup(self, input: SignupInput) -> types.User:
         """Mutate."""
-        User = cast(Type["_User"], auth.get_user_model())
-        user = User.objects.create_user(
+        return user_sign_up(
             email=input.email,
             password=input.password,
-        )
-        mail = UserEmailConfirmationEmail(user)
-        mail.send()
-        return user  # type: ignore
+        )  # type: ignore[return-value]
 
     @strawberry.mutation
     def email_confirmation(
