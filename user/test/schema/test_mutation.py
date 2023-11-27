@@ -1,5 +1,9 @@
 """User app schema mutation tests."""
+from typing import Any
+
 import pytest
+
+from user.models import User
 
 
 @pytest.mark.django_db
@@ -70,7 +74,7 @@ mutation ($email: String!, $password: String!) {
 }
 """
 
-    def test_login_active_user(self, graphql_query, user):
+    def test_login_active_user(self, graphql_query: Any, user: User) -> None:
         """Test logging in an active user."""
         result = graphql_query(
             self.query,
@@ -87,7 +91,9 @@ mutation ($email: String!, $password: String!) {
             }
         }
 
-    def test_login_wrong_password(self, graphql_query, user):
+    def test_login_wrong_password(
+        self, graphql_query: Any, user: User
+    ) -> None:
         """Test logging in with a wrong password."""
         result = graphql_query(
             self.query,
@@ -96,9 +102,12 @@ mutation ($email: String!, $password: String!) {
                 "password": "wrongpassword",
             },
         )
-        assert result == {"data": {"login": None}}
+        assert result["data"] == {"login": None}
+        assert "could be found" in str(result["errors"])
 
-    def test_login_inactive_user(self, graphql_query, inactive_user):
+    def test_login_inactive_user(
+        self, graphql_query: Any, inactive_user: User
+    ) -> None:
         """Test logging in an inactive user."""
         result = graphql_query(
             self.query,
@@ -107,7 +116,8 @@ mutation ($email: String!, $password: String!) {
                 "password": "password",
             },
         )
-        assert result == {"data": {"login": None}}
+        assert result["data"] == {"login": None}
+        assert "could be found" in str(result["errors"])
 
 
 @pytest.mark.django_db
@@ -163,7 +173,7 @@ mutation ConfirmPasswordReset($token: String!, $email: String!) {
             }
         }
 
-    def test_invalid_token(self, graphql_query, user):
+    def test_invalid_token(self, graphql_query: Any, user: User) -> None:
         """Test with an invalid token."""
         result = graphql_query(
             self.query,
@@ -172,11 +182,8 @@ mutation ConfirmPasswordReset($token: String!, $email: String!) {
                 "email": user.email,
             },
         )
-        assert result == {
-            "data": {
-                "confirmPasswordReset": None,
-            }
-        }
+        assert result["data"] == {"confirmPasswordReset": None}
+        assert "errors" in result
 
 
 @pytest.mark.django_db

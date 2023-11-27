@@ -174,6 +174,12 @@ def test_client() -> APIClient:
 
 
 @pytest.fixture
+def rest_client() -> APIClient:
+    """Return a logged-out client to test DRF views."""
+    return APIClient()
+
+
+@pytest.fixture
 def rest_user_client(user: AbstractBaseUser) -> APIClient:
     """Return a logged in client that we can use to test DRF views."""
     client = APIClient()
