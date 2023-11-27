@@ -18,12 +18,10 @@ from user.services.user import (
     user_confirm_email,
     user_log_in,
     user_log_out,
+    user_request_password_reset,
     user_sign_up,
 )
 
-from ..emails import (
-    UserPasswordResetEmail,
-)
 from . import (
     types,
 )
@@ -83,6 +81,7 @@ class UpdateProfileInput:
 class Mutation:
     """."""
 
+    # DONE
     @strawberry.mutation
     def signup(self, input: SignupInput) -> types.User:
         """Mutate."""
@@ -91,6 +90,7 @@ class Mutation:
             password=input.password,
         )  # type: ignore[return-value]
 
+    # DONE
     @strawberry.mutation
     def email_confirmation(
         self,
@@ -99,6 +99,7 @@ class Mutation:
         """Mutate."""
         return user_confirm_email(email=input.email, token=input.token)  # type: ignore[return-value]
 
+    # DONE
     @strawberry.mutation
     def login(
         self, input: LoginInput, info: GraphQLResolveInfo
@@ -110,6 +111,7 @@ class Mutation:
             request=info.context,
         )  # type: ignore[return-value]
 
+    # DONE
     @strawberry.mutation
     def logout(self, info: GraphQLResolveInfo) -> types.User | None:
         """Mutate."""
@@ -120,10 +122,7 @@ class Mutation:
     @strawberry.mutation
     def request_password_reset(self, input: RequestPasswordResetInput) -> str:
         """Mutate."""
-        User = cast(Type["_User"], auth.get_user_model())
-        user = User.objects.get_by_natural_key(input.email)
-        password_reset_email = UserPasswordResetEmail(user)
-        password_reset_email.send()
+        user_request_password_reset(email=input.email)
         return input.email
 
     @strawberry.mutation
