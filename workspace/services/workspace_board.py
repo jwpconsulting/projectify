@@ -12,6 +12,7 @@ from workspace.models import WorkspaceBoard
 from workspace.models.workspace import Workspace
 
 
+# Create
 def workspace_board_create(
     *,
     who: User,
@@ -29,6 +30,29 @@ def workspace_board_create(
     )
 
 
+# Read
+# Update
+def workspace_board_update(
+    *,
+    who: User,
+    workspace_board: WorkspaceBoard,
+    title: str,
+    description: Optional[str],
+    deadline: Optional[datetime],
+) -> WorkspaceBoard:
+    """Update a workspace board."""
+    validate_perm("workspace.can_update_workspace_board", who, workspace_board)
+    workspace_board.title = title
+    workspace_board.description = description
+    if deadline and deadline.tzinfo is None:
+        raise ValueError(f"tzinfo must be specified, got {deadline}")
+    workspace_board.deadline = deadline
+    workspace_board.save()
+    return workspace_board
+
+
+# Delete
+# RPC
 def workspace_board_archive(
     *,
     who: User,
