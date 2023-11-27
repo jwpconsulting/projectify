@@ -1,42 +1,16 @@
-"""Test corporate app views."""
+"""Test stripe webhook."""
 from unittest import (
     mock,
 )
 
 from django.urls import (
-    reverse_lazy,
+    reverse,
 )
 
 import pytest
+from rest_framework.test import APIClient
 
-from .. import (
-    models,
-)
-
-
-@pytest.mark.django_db
-class TestWorkspaceCustomerRetrieve:
-    """Test WorkspaceCustomerRetrieve."""
-
-    @pytest.fixture
-    def resource_url(self, workspace):
-        """Return URL to resource."""
-        return reverse_lazy(
-            "corporate:workspace-customer", args=(workspace.uuid,)
-        )
-
-    def test_authenticated(
-        self,
-        user_client,
-        resource_url,
-        customer,
-        workspace_user_customer,
-        django_assert_num_queries,
-    ):
-        """Test as authenticated user."""
-        with django_assert_num_queries(8):
-            response = user_client.get(resource_url)
-        assert response.status_code == 200, response.content
+from ...models import Customer, CustomerSubscriptionStatus
 
 
 @pytest.mark.django_db
@@ -44,16 +18,16 @@ class TestStripeWebhook:
     """Test incoming webhooks from Stripe."""
 
     @pytest.fixture
-    def resource_url(self):
+    def resource_url(self) -> str:
         """Return URL to resource."""
-        return reverse_lazy("corporate:stripe-webhook")
+        return reverse("corporate:stripe-webhook")
 
     def test_checkout_session_completed(
         self,
-        unpaid_customer,
-        client,
-        resource_url,
-    ):
+        unpaid_customer: Customer,
+        client: APIClient,
+        resource_url: str,
+    ) -> None:
         """Test the handling of a checkout session."""
         header = {"HTTP_STRIPE_SIGNATURE": "dummy_sig"}
 
@@ -69,13 +43,13 @@ class TestStripeWebhook:
         unpaid_customer.refresh_from_db()
         assert (
             unpaid_customer.subscription_status
-            == models.CustomerSubscriptionStatus.ACTIVE
+            == CustomerSubscriptionStatus.ACTIVE
         )
         assert unpaid_customer.stripe_customer_id == "unique_stripe_id"
 
     def test_customer_subscription_updated(
-        self, customer, client, resource_url
-    ):
+        self, customer: Customer, client: APIClient, resource_url: str
+    ) -> None:
         """Test customer.subscription.updated."""
         header = {"HTTP_STRIPE_SIGNATURE": "dummy_sig"}
         new_seats = customer.seats + 1
@@ -93,8 +67,11 @@ class TestStripeWebhook:
         assert customer.seats == new_seats
 
     def test_customer_subscription_cancelled(
-        self, customer, client, resource_url
-    ):
+        self,
+        customer: Customer,
+        client: APIClient,
+        resource_url: str,
+    ) -> None:
         """Test cancelling Subscription when payment fails."""
         header = {"HTTP_STRIPE_SIGNATURE": "dummy_sig"}
         event = mock.MagicMock()
@@ -108,5 +85,5 @@ class TestStripeWebhook:
         customer.refresh_from_db()
         assert (
             customer.subscription_status
-            == models.CustomerSubscriptionStatus.CANCELLED
+            == CustomerSubscriptionStatus.CANCELLED
         )
