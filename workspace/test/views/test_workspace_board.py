@@ -5,8 +5,10 @@ from django.contrib.auth.models import (
 from django.urls import (
     reverse,
 )
+from django.utils.timezone import now
 
 import pytest
+from rest_framework import status
 from rest_framework.test import (
     APIClient,
 )
@@ -55,16 +57,17 @@ class TestWorkspaceBoardCreate:
         assert workspace_board.title == "New workspace board, who dis??"
 
 
-# Retrieve
+# Read + Update
 @pytest.mark.django_db
-class TestWorkspaceBoardRead:
-    """Test WorkspaceBoardRead view."""
+class TestWorkspaceBoardReadUpdate:
+    """Test WorkspaceBoardReadUpdate view."""
 
     @pytest.fixture
     def resource_url(self, workspace_board: WorkspaceBoard) -> str:
         """Return URL to this view."""
         return reverse(
-            "workspace:workspace-boards:read", args=(workspace_board.uuid,)
+            "workspace:workspace-boards:read-update",
+            args=(workspace_board.uuid,),
         )
 
     def test_authenticated(
@@ -83,3 +86,23 @@ class TestWorkspaceBoardRead:
         with django_assert_num_queries(7):
             response = rest_user_client.get(resource_url)
         assert response.status_code == 200, response.content
+
+    def test_updating(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        workspace_user: WorkspaceUser,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test updating a ws board."""
+        with django_assert_num_queries(12):
+            response = rest_user_client.put(
+                resource_url,
+                data={
+                    "title": "Project 1337",
+                    "description": "This is Project 1337",
+                    "deadline": now(),
+                },
+                format="json",
+            )
+            assert response.status_code == status.HTTP_200_OK, response.data

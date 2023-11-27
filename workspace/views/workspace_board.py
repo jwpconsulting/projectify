@@ -14,10 +14,12 @@ from workspace.serializers.workspace_board import (
 from workspace.services.workspace_board import (
     workspace_board_archive,
     workspace_board_create,
+    workspace_board_update,
 )
 
 
 # TODO permission checking
+# Create
 class WorkspaceBoardCreate(APIView):
     """Create a workspace board."""
 
@@ -57,8 +59,9 @@ class WorkspaceBoardCreate(APIView):
         return Response(data=output_serializer.data, status=201)
 
 
-class WorkspaceBoardRead(
-    generics.RetrieveAPIView[
+# Read + Update
+class WorkspaceBoardReadUpdate(
+    generics.RetrieveUpdateAPIView[
         WorkspaceBoard,
         WorkspaceBoardQuerySet,
         WorkspaceBoardDetailSerializer,
@@ -88,6 +91,22 @@ class WorkspaceBoardRead(
         )
         workspace_board: WorkspaceBoard = get_object_or_404(qs)
         return workspace_board
+
+    def perform_update(
+        self, serializer: WorkspaceBoardDetailSerializer
+    ) -> None:
+        """Update the workspace board."""
+        if serializer.instance is None:
+            # Unlikely to hit this, update can only be called with instance
+            raise ValueError("Expected serializer instance")
+        data = serializer.validated_data
+        workspace_board_update(
+            who=self.request.user,
+            workspace_board=serializer.instance,
+            title=data["title"],
+            description=data.get("description"),
+            deadline=data.get("deadline"),
+        )
 
 
 # RPC
