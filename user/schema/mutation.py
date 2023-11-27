@@ -1,6 +1,7 @@
 """User schema mutations."""
 from typing import (
     TYPE_CHECKING,
+    Optional,
     Type,
     cast,
 )
@@ -113,7 +114,7 @@ class Mutation:
         )
 
         user = cast(
-            "_User",
+            "Optional[_User]",
             ModelBackend().authenticate(
                 info.context,
                 username=input.email,
