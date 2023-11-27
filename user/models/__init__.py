@@ -32,7 +32,7 @@ from typing_extensions import (
     Self,
 )
 
-from . import (
+from .. import (
     signal_defs,
 )
 
