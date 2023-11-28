@@ -202,20 +202,6 @@ class Task(
         _order: int
         id: int
 
-    def add_chat_message(
-        self, text: str, author: AbstractBaseUser
-    ) -> "ChatMessage":
-        """Add a chat message."""
-        from . import (
-            WorkspaceUser,
-        )
-
-        workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(
-            self.workspace,
-            author,
-        )
-        return self.chatmessage_set.create(text=text, author=workspace_user)
-
     def assign_to(self, assignee: Optional["WorkspaceUser"]) -> None:
         """
         Assign task to user.

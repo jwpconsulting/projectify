@@ -68,18 +68,6 @@ class TestTask:
         assert task.workspace_board_section == workspace_board_section
         assert task.deadline is not None
 
-    def test_add_chat_message(
-        self,
-        task: models.Task,
-        user: AbstractUser,
-        workspace_user: models.WorkspaceUser,
-    ) -> None:
-        """Test adding a chat message."""
-        assert task.chatmessage_set.count() == 0
-        chat_message = task.add_chat_message("Hello", user)
-        assert task.chatmessage_set.count() == 1
-        assert chat_message.author == workspace_user
-
     def test_assign_to(
         self,
         workspace: models.Workspace,

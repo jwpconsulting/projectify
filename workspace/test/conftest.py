@@ -22,6 +22,7 @@ from corporate.models import Customer
 from corporate.services.customer import customer_activate_subscription
 from user import models as user_models
 from workspace.models.workspace_user import WorkspaceUser
+from workspace.services.chat_message import chat_message_create
 from workspace.services.sub_task import sub_task_create
 
 from .. import (
@@ -186,12 +187,15 @@ def sub_task(
 
 @pytest.fixture
 def chat_message(
-    task: models.Task, workspace_user: models.WorkspaceUser
+    task: models.Task,
+    workspace_user: models.WorkspaceUser,
+    faker: Faker,
 ) -> models.ChatMessage:
     """Return ChatMessage instance."""
-    return factory.ChatMessageFactory.create(
+    return chat_message_create(
+        who=workspace_user.user,
         task=task,
-        author=workspace_user,
+        text=faker.paragraph(),
     )
 
 
