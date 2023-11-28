@@ -1,6 +1,5 @@
 """Workspace models."""
 from typing import (
-    TYPE_CHECKING,
     ClassVar,
     Self,
     cast,
@@ -42,10 +41,6 @@ from .workspace_user_invite import (
 )
 
 # TODO Here we could be using __all__
-
-
-if TYPE_CHECKING:
-    from django.db.models.manager import RelatedManager  # noqa: F401
 
 
 class TaskLabelQuerySet(models.QuerySet["TaskLabel"]):
