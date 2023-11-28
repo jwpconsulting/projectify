@@ -15,12 +15,18 @@ from channels.testing import (
     WebsocketCommunicator,
 )
 
+from corporate.models import Customer
+from corporate.services.customer import customer_activate_subscription
 from projectify.asgi import (
     websocket_application,
 )
 from user.factory import (
     UserFactory,
 )
+from workspace.models.const import WorkspaceUserRoles
+from workspace.models.workspace_user import WorkspaceUser
+from workspace.services.sub_task import sub_task_create
+from workspace.services.workspace import workspace_add_user
 
 from .. import (
     factory,
@@ -39,8 +45,15 @@ def create_user() -> "User":
 
 @database_sync_to_async
 def create_workspace() -> models.Workspace:
-    """Create workspace."""
-    return factory.WorkspaceFactory.create()
+    """Create a paid for workspace."""
+    workspace = factory.WorkspaceFactory.create()
+    # XXX Ideally we would use customer_create here
+    customer = Customer.objects.create(workspace=workspace)
+    # XXX use same fixture as in corporate/test/conftest.py
+    customer_activate_subscription(
+        customer=customer, stripe_customer_id="stripe_"
+    )
+    return workspace
 
 
 @database_sync_to_async
@@ -48,7 +61,11 @@ def create_workspace_user(
     workspace: models.Workspace, user: "User"
 ) -> models.WorkspaceUser:
     """Create workspace user."""
-    return factory.WorkspaceUserFactory.create(workspace=workspace, user=user)
+    return workspace_add_user(
+        workspace=workspace,
+        user=user,
+        role=WorkspaceUserRoles.OWNER,
+    )
 
 
 @database_sync_to_async
@@ -100,9 +117,13 @@ def remove_label(label: models.Label, task: models.Task) -> None:
 
 
 @database_sync_to_async
-def create_sub_task(task: models.Task) -> models.SubTask:
+def create_sub_task(
+    task: models.Task, workspace_user: WorkspaceUser
+) -> models.SubTask:
     """Create sub task."""
-    return factory.SubTaskFactory.create(task=task)
+    return sub_task_create(
+        task=task, who=workspace_user.user, title="don't care", done=False
+    )
 
 
 @database_sync_to_async
@@ -392,7 +413,7 @@ class TestWorkspaceBoardConsumer:
         )
         workspace_user = await create_workspace_user(workspace, user)
         task = await create_task(workspace_board_section, workspace_user)
-        sub_task = await create_sub_task(task)
+        sub_task = await create_sub_task(task, workspace_user)
         resource = f"ws/workspace-board/{workspace_board.uuid}/"
         communicator = WebsocketCommunicator(
             websocket_application,
@@ -489,7 +510,7 @@ class TestTaskConsumer:
             workspace_board,
         )
         task = await create_task(workspace_board_section, workspace_user)
-        sub_task = await create_sub_task(task)
+        sub_task = await create_sub_task(task, workspace_user)
         resource = f"ws/task/{task.uuid}/"
         communicator = WebsocketCommunicator(websocket_application, resource)
         communicator.scope["user"] = user
