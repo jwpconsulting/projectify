@@ -89,6 +89,14 @@ def handle_payment_failure(event: stripe.Event) -> bool:
     return True
 
 
+# Handle events
+dispatch = {
+    "checkout.session.completed": handle_session_completed,
+    "customer.subscription.updated": handle_subscription_updated,
+    "invoice.payment_failed": handle_payment_failure,
+}
+
+
 @csrf_exempt
 def stripe_webhook(request: HttpRequest) -> HttpResponse:
     """Handle Stripe Webhooks."""
@@ -109,21 +117,13 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
         logger.exception("Invalid signature")
         return HttpResponse(status=400)
 
-    # Handle events
-    dispatch = {
-        "checkout.session.completed": handle_session_completed,
-        "customer.subscription.updated": handle_subscription_updated,
-        "invoice.payment_failed": handle_payment_failure,
-    }
+    event_type: str = event.type
 
-    if event.type in dispatch.keys():
-        handler_response = dispatch[event.type](event)
-        if handler_response:
-            # If we can successfully handled the event
-            return HttpResponse(status=200)
-        else:
-            logger.warning("Failed to handle event %s", event.type)
+    if event_type in dispatch.keys():
+        handler_response = dispatch[event_type](event)
+        if not handler_response:
+            logger.warning("Failed to handle event %s", event_type)
             return HttpResponse(status=400)
-    else:
-        logger.warning("Unhandled event type %s", event.type)
-        return HttpResponse(status=400)
+        return HttpResponse(status=200)
+    logger.warning("Unhandled event type %s", event_type)
+    return HttpResponse(status=400)
