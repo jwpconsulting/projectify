@@ -16,6 +16,11 @@ from django.views.decorators.csrf import (
 
 import stripe
 from rest_framework import serializers
+from rest_framework.status import (
+    HTTP_200_OK,
+    HTTP_400_BAD_REQUEST,
+    HTTP_500_INTERNAL_SERVER_ERROR,
+)
 
 from corporate.selectors.customer import (
     customer_find_by_stripe_customer_id,
@@ -27,12 +32,13 @@ from corporate.services.customer import (
     customer_update_seats,
 )
 
-endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
-
 logger = logging.getLogger(__name__)
 
 
-def handle_session_completed(event: stripe.Event) -> bool:
+endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
+
+
+def handle_session_completed(event: stripe.Event) -> None:
     """Handle Stripe checkout.session.completed."""
     session = event["data"]["object"]
     customer_uuid: UUID = session.metadata.customer_uuid
@@ -48,10 +54,9 @@ def handle_session_completed(event: stripe.Event) -> bool:
         customer=customer,
         stripe_customer_id=stripe_customer_id,
     )
-    return True
 
 
-def handle_subscription_updated(event: stripe.Event) -> bool:
+def handle_subscription_updated(event: stripe.Event) -> None:
     """Handle Stripe customer.subscription.updated."""
     subscription = event["data"]["object"]
     stripe_customer_id: str = subscription.customer
@@ -65,16 +70,21 @@ def handle_subscription_updated(event: stripe.Event) -> bool:
     seats: int = subscription.quantity
     customer_update_seats(customer=customer, seats=seats)
     logger.info("Customer %s updated subscription: %s", customer, subscription)
-    return True
 
 
-def handle_payment_failure(event: stripe.Event) -> bool:
+def handle_payment_failure(event: stripe.Event) -> None:
     """Handle Stripe invoice.payment_failed."""
     invoice = event["data"]["object"]
-    if invoice.next_payment_attempt is not None:
-        return True
 
-    stripe_customer_id = invoice.customer
+    # TODO should this be handled as some kind of error?
+    if invoice.next_payment_attempt is not None:
+        logger.warn(
+            "next_payment_attempt was given for invoice.payment_failed: %s",
+            invoice,
+        )
+        return
+
+    stripe_customer_id: str = invoice.customer
     customer = customer_find_by_stripe_customer_id(
         stripe_customer_id=stripe_customer_id
     )
@@ -86,7 +96,6 @@ def handle_payment_failure(event: stripe.Event) -> bool:
     logger.info(
         "Customer %s has failed to renew payment for their account.", customer
     )
-    return True
 
 
 # Handle events
@@ -97,6 +106,8 @@ dispatch = {
 }
 
 
+# TODO Refactor this as a DRF view function so that we can get nicer
+# errors
 @csrf_exempt
 def stripe_webhook(request: HttpRequest) -> HttpResponse:
     """Handle Stripe Webhooks."""
@@ -106,24 +117,34 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
 
     try:
         event = stripe.Webhook.construct_event(
-            payload, sig_header, endpoint_secret
+            payload=payload,
+            sig_header=sig_header,
+            secret=endpoint_secret,
         )
     except ValueError:
         # Invalid payload
         logger.exception("Invalid payload")
-        return HttpResponse(status=400)
+        return HttpResponse(status=HTTP_400_BAD_REQUEST)
     except stripe.error.SignatureVerificationError:
         # Invalid signature
         logger.exception("Invalid signature")
-        return HttpResponse(status=400)
+        return HttpResponse(status=HTTP_400_BAD_REQUEST)
 
     event_type: str = event.type
 
-    if event_type in dispatch.keys():
-        handler_response = dispatch[event_type](event)
-        if not handler_response:
-            logger.warning("Failed to handle event %s", event_type)
-            return HttpResponse(status=400)
-        return HttpResponse(status=200)
-    logger.warning("Unhandled event type %s", event_type)
-    return HttpResponse(status=400)
+    handler = dispatch.get(event_type)
+
+    if handler is None:
+        logger.warning("Unhandled event type %s", event_type)
+        return HttpResponse(status=HTTP_400_BAD_REQUEST)
+
+    try:
+        handler(event)
+    except serializers.ValidationError:
+        logger.exception("Invalid input for event %s", event_type)
+        return HttpResponse(status=HTTP_400_BAD_REQUEST)
+    except Exception:
+        logger.exception("Error encountered for %s", event_type)
+        return HttpResponse(status=HTTP_500_INTERNAL_SERVER_ERROR)
+
+    return HttpResponse(status=HTTP_200_OK)
