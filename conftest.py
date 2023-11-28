@@ -2,10 +2,10 @@
 import base64
 from typing import (
     Any,
-    Callable,
     Dict,
     Mapping,
     Optional,
+    Protocol,
 )
 from unittest import (
     mock,
@@ -90,7 +90,16 @@ def redeemed_user_invite(user: user_models.User) -> user_models.UserInvite:
 
 Variables = Dict[str, Any]
 ExecutionResultDict = Mapping[str, object]
-QueryMethod = Callable[[str, Optional[Variables]], ExecutionResultDict]
+
+
+class QueryMethod(Protocol):
+    """Protocol for graphql conftest query helper."""
+
+    def __call__(
+        self, query: str, variables: Optional[Variables] = None
+    ) -> ExecutionResultDict:
+        """Be callable with optional variables."""
+        ...
 
 
 def dict_from_execution_result(result: ExecutionResult) -> ExecutionResultDict:
