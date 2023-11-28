@@ -1,5 +1,16 @@
 """Services for customer model."""
 from corporate.models import Customer
+from projectify.utils import validate_perm
+from user.models import User
+from workspace.models.workspace import Workspace
+
+
+def customer_create(
+    *, who: User, workspace: Workspace, seats: int
+) -> Customer:
+    """Create a customer."""
+    validate_perm("corporate.can_create_customer", who, workspace)
+    return Customer.objects.create(workspace=workspace, seats=seats)
 
 
 def customer_activate_subscription(
