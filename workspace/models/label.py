@@ -40,6 +40,7 @@ class LabelQuerySet(models.QuerySet["Label"]):
 class Label(models.Model):
     """A label."""
 
+    # It should be fine to just use TitleDescription here
     name = models.CharField(max_length=255)
     color = models.PositiveBigIntegerField(
         help_text=_("Color index"),
