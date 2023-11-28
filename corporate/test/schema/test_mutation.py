@@ -8,7 +8,6 @@ import pytest
 
 from conftest import QueryMethod
 from corporate.models import Customer
-from workspace.models.workspace_user import WorkspaceUser
 
 
 @pytest.mark.django_db
@@ -30,7 +29,6 @@ mutation createCheckoutSession ($workspaceUuid: UUID!, $seats: Int!) {
         graphql_query_user: QueryMethod,
         unpaid_customer: Customer,
         settings: Any,
-        workspace_user_unpaid_customer: WorkspaceUser,
     ) -> None:
         """Test query with unpaid customer."""
         settings.STRIPE_PRICE_OBJECT = "price_aklsdjw5er"
@@ -53,11 +51,10 @@ mutation createCheckoutSession ($workspaceUuid: UUID!, $seats: Int!) {
 
     def test_query_no_customer(
         self,
-        graphql_query_user,
-        unpaid_customer,
-        settings,
-        workspace_user_unpaid_customer,
-    ):
+        graphql_query_user: QueryMethod,
+        unpaid_customer: Customer,
+        settings: Any,
+    ) -> None:
         """Test query with missing customer."""
         workspace = unpaid_customer.workspace
         unpaid_customer.delete()
@@ -81,13 +78,12 @@ mutation createCheckoutSession ($workspaceUuid: UUID!, $seats: Int!) {
 
     def test_query_paid_customer(
         self,
-        graphql_query_user,
-        customer,
-        settings,
-        workspace_user_customer,
-    ):
+        graphql_query_user: QueryMethod,
+        paid_customer: Customer,
+        settings: Any,
+    ) -> None:
         """Test query with paid customer."""
-        workspace = customer.workspace
+        workspace = paid_customer.workspace
         settings.STRIPE_PRICE_OBJECT = "price_aklsdjw5er"
         with mock.patch("stripe.checkout.Session.create") as create:
             create.return_value.id = "hello_world"
@@ -116,9 +112,8 @@ mutation CreateBillingPortalSession($workspaceUuid: UUID!) {
     def test_query_paid_customer(
         self,
         graphql_query_user: QueryMethod,
-        customer: Customer,
+        paid_customer: Customer,
         settings: Any,
-        workspace_user_customer: WorkspaceUser,
     ) -> None:
         """Test query with paid customer."""
 
@@ -132,7 +127,7 @@ mutation CreateBillingPortalSession($workspaceUuid: UUID!) {
             result = graphql_query_user(
                 self.query,
                 variables={
-                    "workspaceUuid": str(customer.workspace.uuid),
+                    "workspaceUuid": str(paid_customer.workspace.uuid),
                 },
             )
         assert result == {

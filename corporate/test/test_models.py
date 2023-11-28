@@ -4,14 +4,11 @@ from unittest import (
 )
 
 import pytest
+from faker import Faker
 
-from user import models as user_models
-from workspace import models as workspace_models
+from workspace.models.workspace_user import WorkspaceUser
 from workspace.models.workspace_user_invite import (
     add_or_invite_workspace_user,
-)
-from workspace.services.workspace import (
-    workspace_add_user,
 )
 
 from .. import (
@@ -23,57 +20,57 @@ from .. import (
 class TestCustomerManager:
     """Test Customer Manager."""
 
-    def test_get_by_uuid(self, customer: models.Customer) -> None:
+    def test_get_by_uuid(self, unpaid_customer: models.Customer) -> None:
         """Test get Customer by UUID."""
         customer_by_manager = models.Customer.objects.get_by_uuid(
-            customer.uuid
+            unpaid_customer.uuid
         )
-        assert customer == customer_by_manager
+        assert unpaid_customer == customer_by_manager
 
-    def test_get_by_workspace_uuid(self, customer: models.Customer) -> None:
+    def test_get_by_workspace_uuid(
+        self, unpaid_customer: models.Customer
+    ) -> None:
         """Test get_by_workspace_uuid."""
         assert (
             models.Customer.objects.get_by_workspace_uuid(
-                customer.workspace.uuid
+                unpaid_customer.workspace.uuid
             )
-            == customer
+            == unpaid_customer
         )
 
     def test_filter_by_user(
         self,
-        customer: models.Customer,
-        workspace_user_customer: workspace_models.WorkspaceUser,
+        unpaid_customer: models.Customer,
+        workspace_user: WorkspaceUser,
     ) -> None:
         """Test filter_by_user."""
-        qs = models.Customer.objects.filter_by_user(
-            workspace_user_customer.user
-        )
-        assert list(qs) == [customer]
+        qs = models.Customer.objects.filter_by_user(workspace_user.user)
+        assert list(qs) == [unpaid_customer]
 
     def test_get_for_user_and_uuid(
         self,
-        customer: models.Customer,
-        workspace_user_customer: workspace_models.WorkspaceUser,
+        unpaid_customer: models.Customer,
+        workspace_user: WorkspaceUser,
     ) -> None:
         """Test get_for_user_and_uuid."""
         assert (
             models.Customer.objects.get_for_user_and_uuid(
-                workspace_user_customer.user, customer.uuid
+                workspace_user.user, unpaid_customer.uuid
             )
-            == customer
+            == unpaid_customer
         )
 
     def test_get_by_stripe_customer_id(
-        self, customer: models.Customer
+        self, unpaid_customer: models.Customer
     ) -> None:
         """Test get_by_stripe_customer_id."""
-        customer.stripe_customer_id = "hello_world"
-        customer.save()
+        unpaid_customer.stripe_customer_id = "hello_world"
+        unpaid_customer.save()
         assert (
             models.Customer.objects.get_by_stripe_customer_id(
                 "hello_world",
             )
-            == customer
+            == unpaid_customer
         )
 
 
@@ -81,9 +78,9 @@ class TestCustomerManager:
 class TestCustomer:
     """Test customer model."""
 
-    def test_factory(self, customer: models.Customer) -> None:
+    def test_factory(self, unpaid_customer: models.Customer) -> None:
         """Test factory."""
-        assert customer.workspace
+        assert unpaid_customer.workspace
 
     def test_subscription_activation(
         self, unpaid_customer: models.Customer
@@ -94,31 +91,33 @@ class TestCustomer:
         unpaid_customer.refresh_from_db()
         assert unpaid_customer.active
 
-    def test_cancel_subscription(self, customer: models.Customer) -> None:
+    def test_cancel_subscription(self, paid_customer: models.Customer) -> None:
         """Test cancel_subscription."""
-        assert customer.active
-        customer.cancel_subscription()
-        customer.refresh_from_db()
-        assert not customer.active
+        assert paid_customer.active
+        paid_customer.cancel_subscription()
+        paid_customer.refresh_from_db()
+        assert not paid_customer.active
 
     def test_assign_stripe_customer_id(
-        self, customer: models.Customer
+        self, unpaid_customer: models.Customer
     ) -> None:
         """Test assign_stripe_customer_id."""
-        customer.assign_stripe_customer_id("Hello world")
-        customer.refresh_from_db()
-        assert customer.stripe_customer_id == "Hello world"
+        unpaid_customer.assign_stripe_customer_id("Hello world")
+        unpaid_customer.refresh_from_db()
+        assert unpaid_customer.stripe_customer_id == "Hello world"
 
-    def test_set_number_of_seats(self, customer: models.Customer) -> None:
+    def test_set_number_of_seats(
+        self, unpaid_customer: models.Customer
+    ) -> None:
         """Test set_number_of_seats."""
-        original_seats = customer.seats
-        customer.set_number_of_seats(original_seats + 1)
-        customer.refresh_from_db()
-        assert customer.seats == original_seats + 1
+        original_seats = unpaid_customer.seats
+        unpaid_customer.set_number_of_seats(original_seats + 1)
+        unpaid_customer.refresh_from_db()
+        assert unpaid_customer.seats == original_seats + 1
 
-        customer.save = mock.MagicMock()  # type: ignore
-        customer.set_number_of_seats(customer.seats)
-        assert not customer.save.called
+        unpaid_customer.save = mock.MagicMock()  # type: ignore
+        unpaid_customer.set_number_of_seats(unpaid_customer.seats)
+        assert not unpaid_customer.save.called
 
     def test_active(self, unpaid_customer: models.Customer) -> None:
         """Test active property."""
@@ -127,11 +126,10 @@ class TestCustomer:
         assert unpaid_customer.active
 
     def test_seats_remaining(
-        self, customer: models.Customer, user: user_models.User
+        self, unpaid_customer: models.Customer, faker: Faker
     ) -> None:
         """Test seats remaining."""
-        assert customer.seats_remaining == customer.seats
-        workspace_add_user(customer.workspace, user)
-        assert customer.seats_remaining == customer.seats - 1
-        add_or_invite_workspace_user(customer.workspace, f"new+{user.email}")
-        assert customer.seats_remaining == customer.seats - 2
+        # user is already added, so there is already one seat used up
+        assert unpaid_customer.seats_remaining == unpaid_customer.seats - 1
+        add_or_invite_workspace_user(unpaid_customer.workspace, faker.email())
+        assert unpaid_customer.seats_remaining == unpaid_customer.seats - 2

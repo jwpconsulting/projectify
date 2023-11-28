@@ -1,76 +1,56 @@
 """Corporate conftest."""
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
 
 import pytest
+from faker import Faker
 
-from workspace import factory as workspace_factory
-from workspace import models as workspace_models
-
-from .. import (
-    factory,
-    models,
+from corporate.models import Customer
+from corporate.services.customer import (
+    customer_activate_subscription,
+    customer_create,
 )
+from user.models import User
+from workspace.models.const import WorkspaceUserRoles
+from workspace.models.workspace import Workspace
+from workspace.models.workspace_user import WorkspaceUser
+from workspace.services.workspace import workspace_add_user
 
 
 @pytest.fixture
-def workspace() -> workspace_models.Workspace:
-    """Create workspace."""
-    workspace: workspace_models.Workspace = (
-        workspace_factory.WorkspaceFactory.create()
-    )
-    return workspace
+def workspace(faker: Faker) -> Workspace:
+    """Create a workspace."""
+    return Workspace.objects.create(title=faker.company())
 
 
 @pytest.fixture
-def customer(workspace: workspace_models.Workspace) -> models.Customer:
-    """Create customer."""
-    customer: models.Customer = factory.CustomerFactory.create(
-        workspace=workspace
-    )
-    return customer
-
-
-@pytest.fixture
-def unpaid_customer(workspace: workspace_models.Workspace) -> models.Customer:
-    """Create unpaid customer."""
-    customer: models.Customer = factory.CustomerFactory.create(
+def workspace_user(user: User, workspace: Workspace) -> WorkspaceUser:
+    """Create a workspace user."""
+    return workspace_add_user(
         workspace=workspace,
-        subscription_status=models.CustomerSubscriptionStatus.UNPAID,
+        user=user,
+        role=WorkspaceUserRoles.OWNER,
     )
-    return customer
 
 
 @pytest.fixture
-def workspace_user_unpaid_customer(
-    user: AbstractBaseUser,
-    unpaid_customer: models.Customer,
-    workspace: workspace_models.Workspace,
-) -> workspace_models.WorkspaceUser:
-    """Create workspace user for unpaid customer workspace."""
-    workspace_user: workspace_models.WorkspaceUser = (
-        workspace_factory.WorkspaceUserFactory.create(
-            user=user,
-            workspace=workspace,
-            role=workspace_models.WorkspaceUserRoles.OWNER,
-        )
+def unpaid_customer(
+    workspace_user: WorkspaceUser, workspace: Workspace, faker: Faker
+) -> Customer:
+    """Create customer."""
+    return customer_create(
+        who=workspace_user.user,
+        workspace=workspace,
+        seats=faker.pyint(min_value=1, max_value=98),
     )
-    return workspace_user
 
 
 @pytest.fixture
-def workspace_user_customer(
-    user: AbstractBaseUser,
-    customer: models.Customer,
-    workspace: workspace_models.Workspace,
-) -> workspace_models.WorkspaceUser:
-    """Create workspace user for paid customer workspace."""
-    workspace_user: workspace_models.WorkspaceUser = (
-        workspace_factory.WorkspaceUserFactory.create(
-            user=user,
-            workspace=workspace,
-            role=workspace_models.WorkspaceUserRoles.OWNER,
-        )
+def paid_customer(
+    unpaid_customer: Customer,
+    faker: Faker,
+) -> Customer:
+    """Create customer."""
+    customer_activate_subscription(
+        customer=unpaid_customer,
+        stripe_customer_id=faker.bothify("stripe_###???###"),
     )
-    return workspace_user
+    return unpaid_customer
