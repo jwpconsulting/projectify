@@ -1,7 +1,4 @@
 """Workspace board section model tests."""
-from django.utils import (
-    timezone,
-)
 
 import pytest
 
@@ -55,31 +52,6 @@ class TestWorkspaceBoardSection:
     ) -> None:
         """Test workspace board section creation works."""
         assert workspace_board_section.workspace_board == workspace_board
-
-    def test_add_task(
-        self, workspace_board_section: models.WorkspaceBoardSection
-    ) -> None:
-        """Test adding tasks to a workspace board."""
-        assert workspace_board_section.task_set.count() == 0
-        task = workspace_board_section.add_task(title="foo", description="bar")
-        assert workspace_board_section.task_set.count() == 1
-        task2 = workspace_board_section.add_task(
-            title="foo2",
-            description="bar2",
-        )
-        assert workspace_board_section.task_set.count() == 2
-        assert list(workspace_board_section.task_set.all()) == [task, task2]
-
-    def test_add_task_deadline(
-        self, workspace_board_section: models.WorkspaceBoardSection
-    ) -> None:
-        """Test adding a task with a deadline."""
-        task = workspace_board_section.add_task(
-            title="foo",
-            description="bar",
-            deadline=timezone.now(),
-        )
-        assert task.deadline is not None
 
     def test_workspace(
         self,

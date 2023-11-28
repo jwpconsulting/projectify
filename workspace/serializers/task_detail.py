@@ -85,7 +85,6 @@ class UuidDict(TypedDict):
     uuid: UUID
 
 
-# Make me TaskCreateUpdateSerializer
 class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
     """
     Serialize update information for a task.

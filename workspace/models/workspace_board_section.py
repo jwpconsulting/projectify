@@ -1,13 +1,9 @@
 """Workspace board section model."""
 import uuid
-from datetime import (
-    datetime,
-)
 from typing import (
     TYPE_CHECKING,
     Callable,
     ClassVar,
-    Optional,
     Self,
     cast,
 )
@@ -82,18 +78,6 @@ class WorkspaceBoardSection(
         set_task_order: SetOrder
         get_next_in_order: Callable[[], "WorkspaceBoardSection"]
         _order: int
-
-    def add_task(
-        self, title: str, description: str, deadline: Optional[datetime] = None
-    ) -> "Task":
-        """Add a task to this section."""
-        task: Task = self.task_set.create(
-            title=title,
-            description=description,
-            deadline=deadline,
-            workspace=self.workspace_board.workspace,
-        )
-        return task
 
     @property
     def workspace(self) -> Workspace:

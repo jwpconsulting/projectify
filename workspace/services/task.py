@@ -1,6 +1,5 @@
 """Task services."""
-
-
+from datetime import datetime
 from typing import Optional
 
 from django.db import transaction
@@ -9,9 +8,33 @@ from projectify.utils import validate_perm
 from user.models import User
 from workspace.models.task import Task
 from workspace.models.workspace_board_section import WorkspaceBoardSection
+from workspace.models.workspace_user import WorkspaceUser
 
 
 # Create
+def task_create(
+    *,
+    who: User,
+    workspace_board_section: WorkspaceBoardSection,
+    title: str,
+    description: Optional[str] = None,
+    deadline: Optional[datetime] = None,
+    assignee: Optional[WorkspaceUser] = None,
+) -> "Task":
+    """Add a task to this section."""
+    validate_perm("workspace.can_create_task", who, workspace_board_section)
+    # XXX Implicit N+1 here
+    workspace = workspace_board_section.workspace_board.workspace
+    return Task.objects.create(
+        workspace_board_section=workspace_board_section,
+        title=title,
+        description=description,
+        deadline=deadline,
+        workspace=workspace,
+        assignee=assignee,
+    )
+
+
 # Update
 # Delete
 def task_delete(*, task: Task, who: User) -> None:
