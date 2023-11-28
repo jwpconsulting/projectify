@@ -235,13 +235,13 @@ class TestTaskMove:
         other_task: Task,
     ) -> None:
         """Test as an authenticated user."""
-        with django_assert_num_queries(35):
+        with django_assert_num_queries(33):
             response = rest_user_client.post(
                 resource_url,
                 data={"after_task_uuid": str(other_task.uuid)},
             )
         assert response.status_code == status.HTTP_200_OK, response.data
-        with django_assert_num_queries(34):
+        with django_assert_num_queries(32):
             response = rest_user_client.post(
                 resource_url, data={"after_task_uuid": None}, format="json"
             )
