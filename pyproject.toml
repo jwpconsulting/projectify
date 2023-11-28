@@ -106,6 +106,7 @@ stubPath = "mypy/stubs"
 typeCheckingMode = "strict"
 typeshedPath = ""
 exclude = [
+    "**/__pycache__/",
     # TODO consider just removing whitelist.py
     "whitelist.py",
     # Created by django so we don't bother
@@ -135,6 +136,7 @@ reportIncompatibleVariableOverride = false
 reportTypeCommentUsage = false
 reportMissingTypeStubs = false
 reportUnknownMemberType = false
+reportUnusedImport = false
 
 [tool.poetry]
 name = "Projectify Backend"
@@ -182,7 +184,6 @@ django-debug-toolbar = "~3.5.0"
 factory-boy = "~3.2.1"
 ipython = "~8.10.0"
 pdbpp = "~0.10.3"
-pyright = "~1.1.318"
 ruff = "^0.1.6"
 
 [tool.poetry.group.test]
@@ -192,6 +193,7 @@ celery-types = "~0.20.0"
 django-test-migrations = "~1.2.0"
 django-types = "~0"
 mypy = "~1.4.1"
+pyright = "~1.1.318"
 pytest = "~7.2.1"
 pytest-asyncio = "~0.20.3"
 pytest-celery = "~0.0.0"

@@ -304,7 +304,7 @@ class Task(
     # TODO we can probably do better than any here
     def save(self, *args: Any, **kwargs: Any) -> None:
         """Override save to add task number."""
-        if self.number is None:
+        if cast(Optional[int], self.number) is None:
             self.number = self.workspace.increment_highest_task_number()
         super().save(*args, **kwargs)
 
