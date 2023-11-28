@@ -97,7 +97,6 @@ module = [
     "workspace.test.schema.*",
     "workspace.test.test_migrations",
     "user.test.schema.*",
-    "user.test.test_models",
     "user.test.test_emails",
     "premail.test.*",
 ]
