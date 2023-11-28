@@ -176,16 +176,3 @@ def extract_author(chat_message: models.ChatMessage) -> models.WorkspaceUser:
         )
         return other_workspace_user
     return workspace_user
-
-
-class ChatMessageFactory(django.DjangoModelFactory[models.ChatMessage]):
-    """ChatMessage Factory."""
-
-    task = factory.SubFactory(TaskFactory)
-    text = factory.Faker("paragraph")
-    author = factory.LazyAttribute(extract_author)
-
-    class Meta:
-        """Meta."""
-
-        model = models.ChatMessage

@@ -25,6 +25,7 @@ from user.factory import (
 )
 from workspace.models.const import WorkspaceUserRoles
 from workspace.models.workspace_user import WorkspaceUser
+from workspace.services.chat_message import chat_message_create
 from workspace.services.sub_task import sub_task_create
 from workspace.services.workspace import workspace_add_user
 
@@ -131,7 +132,11 @@ def create_chat_message(
     task: models.Task, workspace_user: models.WorkspaceUser
 ) -> models.ChatMessage:
     """Create chat message."""
-    return factory.ChatMessageFactory.create(task=task, author=workspace_user)
+    return chat_message_create(
+        who=workspace_user.user,
+        task=task,
+        text="Hello world",
+    )
 
 
 @database_sync_to_async
