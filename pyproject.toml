@@ -105,6 +105,36 @@ disallow_untyped_defs = false
 stubPath = "mypy/stubs"
 typeCheckingMode = "strict"
 typeshedPath = ""
+exclude = [
+    # TODO consider just removing whitelist.py
+    "whitelist.py",
+    # Created by django so we don't bother
+    "*/migrations/*.py",
+    # Missing type stub
+    "workspace/test/test_migrations.py",
+    # GraphQL code that will be removed
+    "*/schema/*.py",
+    "*/test/schema/*.py",
+    # This one is sort of covered by mypy
+    "projectify/settings/monkeypatch.py",
+    # TODO cloudinary stub
+    "projectify/utils.py",
+    # TODO django rules stub
+    "*/rules.py",
+    # TODO write typings
+    "premail/views.py",
+    "premail/test/test_views.py",
+    "premail/test/test_emails.py",
+    # pyright doesn't find stripe typings
+    "corporate/views/stripe.py",
+]
+# Mypy doesn't complain about these, so it's fine
+reportUnknownParameterType = true
+reportPrivateUsage = false
+reportIncompatibleVariableOverride = false
+reportTypeCommentUsage = false
+reportMissingTypeStubs = false
+reportUnknownMemberType = false
 
 [tool.poetry]
 name = "Projectify Backend"
