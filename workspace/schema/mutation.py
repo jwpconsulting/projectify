@@ -20,6 +20,7 @@ from strawberry.unset import (
 from projectify.utils import (
     get_user_model,
 )
+from workspace.services.chat_message import chat_message_create
 from workspace.services.label import label_create, label_delete, label_update
 from workspace.services.task import task_delete, task_move_after
 from workspace.services.workspace import workspace_update
@@ -299,14 +300,11 @@ class Mutation:
             input.task_uuid,
         )
         task = get_object_or_404(qs)
-        assert info.context.user.has_perm(
-            "workspace.can_create_chat_message", task
-        )
-        chat_message = task.add_chat_message(
+        return chat_message_create(
+            who=info.context.user,
+            task=task,
             text=input.text,
-            author=info.context.user,
         )
-        return chat_message
 
     # DONE
     @strawberry.field
