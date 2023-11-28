@@ -81,6 +81,13 @@ jobs:
       - run:
           name: Run mypy
           command: poetry run mypy .
+  pyright:
+    executor: python
+    steps:
+      - install_dependencies
+      - run:
+          name: Run pyright
+          command: poetry run pyright .
   collectstatic:
     executor: python
     steps:
@@ -127,6 +134,7 @@ workflows:
       - poetry_check
       - lint
       - mypy
+      - pyright
       - tests
       - seeddb
       - collectstatic
