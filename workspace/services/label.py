@@ -17,13 +17,11 @@ def label_create(
 ) -> Label:
     """Create a label."""
     validate_perm("workspace.can_create_label", who, workspace)
-    label = Label(
+    return Label.objects.create(
         workspace=workspace,
         name=name,
         color=color,
     )
-    label.save()
-    return label
 
 
 # Update
