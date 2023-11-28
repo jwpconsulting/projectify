@@ -48,6 +48,7 @@ class Mutation:
         self, info: GraphQLResolveInfo, input: CreateCheckoutSessionInput
     ) -> types.CheckoutSession:
         """Create a Stripe checkout session."""
+        # TODO use service
         qs = workspace_models.Workspace.objects.filter_for_user_and_uuid(
             info.context.user,
             input.workspace_uuid,
@@ -89,6 +90,7 @@ class Mutation:
         self, info: GraphQLResolveInfo, input: CreateBillingPortalSessionInput
     ) -> types.BillingPortalSession:
         """Allow accessing the billing portal."""
+        # TODO create service
         customer = models.Customer.objects.get_for_user_and_uuid(
             info.context.user,
             input.uuid,
