@@ -1,17 +1,20 @@
 """Test user emails."""
+from django.core.mail import EmailMessage
+
 import pytest
 
 from ..emails import (
     UserEmailConfirmationEmail,
     UserPasswordResetEmail,
 )
+from ..models import User
 
 
 @pytest.mark.django_db
 class TestUserEmailConfirmationEmail:
     """Test UserEmailConfirmationEmail."""
 
-    def test_send(self, user, mailoutbox):
+    def test_send(self, user: User, mailoutbox: list[EmailMessage]) -> None:
         """Test send."""
         user.email = "contains space@example.com"
         user.save()
@@ -27,7 +30,7 @@ class TestUserEmailConfirmationEmail:
 class TestUserPasswordResetEmail:
     """Test UserPasswordResetEmail."""
 
-    def test_send(self, user, mailoutbox):
+    def test_send(self, user: User, mailoutbox: list[EmailMessage]) -> None:
         """Test send."""
         mail = UserPasswordResetEmail(user)
         mail.send()
