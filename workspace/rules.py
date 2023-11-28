@@ -3,6 +3,7 @@ Workspace app rules.
 
 The order of rules follows the ordering of models.
 """
+import logging
 from typing import (
     Protocol,
 )
@@ -18,6 +19,8 @@ from corporate import models as corporate_models
 from . import (
     models,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class HasWorkspace(Protocol):
@@ -127,12 +130,17 @@ def belongs_to_active_workspace(
             user,
         )
     except models.WorkspaceUser.DoesNotExist:
+        logger.warning("No workspace user found for user %s", user)
         return False
     try:
         customer: corporate_models.Customer = workspace.customer
     except corporate_models.Customer.DoesNotExist:
+        logger.warning("No customer found for workspace %s", workspace)
         return False
-    return customer.active
+    active = customer.active
+    if not active:
+        logger.warning("Customer for workspace %s is inactive", workspace)
+    return active
 
 
 # Workspace
