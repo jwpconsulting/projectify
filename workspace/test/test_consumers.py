@@ -26,6 +26,7 @@ from user.factory import (
 from workspace.models.const import WorkspaceUserRoles
 from workspace.models.workspace_user import WorkspaceUser
 from workspace.services.chat_message import chat_message_create
+from workspace.services.label import label_create
 from workspace.services.sub_task import sub_task_create
 from workspace.services.workspace import workspace_add_user
 
@@ -100,9 +101,16 @@ def create_task(
 
 
 @database_sync_to_async
-def create_label(workspace: models.Workspace) -> models.Label:
+def create_label(
+    workspace: models.Workspace, workspace_user: WorkspaceUser
+) -> models.Label:
     """Create a label."""
-    return factory.LabelFactory.create(workspace=workspace)
+    return label_create(
+        workspace=workspace,
+        who=workspace_user.user,
+        color=0,
+        name="don't care",
+    )
 
 
 @database_sync_to_async
@@ -216,7 +224,7 @@ class TestWorkspaceConsumer:
         user = await create_user()
         workspace = await create_workspace()
         workspace_user = await create_workspace_user(workspace, user)
-        label = await create_label(workspace)
+        label = await create_label(workspace, workspace_user)
         resource = f"ws/workspace/{workspace.uuid}/"
         communicator = WebsocketCommunicator(
             websocket_application,
@@ -379,12 +387,12 @@ class TestWorkspaceBoardConsumer:
         """Test workspace board update on task label add or remove."""
         user = await create_user()
         workspace = await create_workspace()
-        label = await create_label(workspace)
+        workspace_user = await create_workspace_user(workspace, user)
+        label = await create_label(workspace, workspace_user)
         workspace_board = await create_workspace_board(workspace)
         workspace_board_section = await create_workspace_board_section(
             workspace_board,
         )
-        workspace_user = await create_workspace_user(workspace, user)
         task = await create_task(workspace_board_section, workspace_user)
         resource = f"ws/workspace-board/{workspace_board.uuid}/"
         communicator = WebsocketCommunicator(
@@ -485,7 +493,7 @@ class TestTaskConsumer:
             workspace_board,
         )
         task = await create_task(workspace_board_section, workspace_user)
-        label = await create_label(workspace)
+        label = await create_label(workspace, workspace_user)
         resource = f"ws/task/{task.uuid}/"
         communicator = WebsocketCommunicator(websocket_application, resource)
         communicator.scope["user"] = user

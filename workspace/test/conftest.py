@@ -21,9 +21,13 @@ from faker import Faker
 from corporate.models import Customer
 from corporate.services.customer import customer_activate_subscription
 from user import models as user_models
+from workspace.models.label import Label
+from workspace.models.workspace import Workspace
 from workspace.models.workspace_user import WorkspaceUser
 from workspace.services.chat_message import chat_message_create
+from workspace.services.label import label_create
 from workspace.services.sub_task import sub_task_create
+from workspace.services.workspace import workspace_add_user
 
 from .. import (
     factory,
@@ -60,7 +64,18 @@ def workspace() -> models.Workspace:
 @pytest.fixture
 def other_workspace() -> models.Workspace:
     """Return workspace."""
-    return factory.WorkspaceFactory.create()
+    workspace = factory.WorkspaceFactory.create()
+    # XXX we have to copy the code from above
+    # XXX Ideally we would use customer_create here
+    customer = Customer.objects.create(workspace=workspace)
+    # XXX use same fixture as in corporate/test/conftest.py
+    customer_activate_subscription(
+        customer=customer, stripe_customer_id="stripe_"
+    )
+    # TODO right now our tests depend on the workspace being paid for
+    # We should also be able to test most actions here for a workspace that
+    # isn't paid.
+    return workspace
 
 
 @pytest.fixture
@@ -101,8 +116,10 @@ def other_workspace_workspace_user(
     other_workspace: models.Workspace, other_user: "_User"
 ) -> models.WorkspaceUser:
     """Return workspace user for other_user."""
-    return factory.WorkspaceUserFactory.create(
-        workspace=other_workspace, user=other_user
+    return workspace_add_user(
+        workspace=other_workspace,
+        user=other_user,
+        role=models.WorkspaceUserRoles.OWNER,
     )
 
 
@@ -155,16 +172,37 @@ def other_task(
 
 
 @pytest.fixture
-def label(workspace: models.Workspace) -> models.Label:
+def label(
+    faker: Faker, workspace: models.Workspace, workspace_user: WorkspaceUser
+) -> models.Label:
     """Return a label."""
-    return factory.LabelFactory.create(
+    return label_create(
         workspace=workspace,
+        name=faker.catch_phrase(),
+        who=workspace_user.user,
+        color=faker.pyint(min_value=0, max_value=6),
     )
+
+
+@pytest.fixture
+def labels(workspace: Workspace, workspace_user: WorkspaceUser) -> list[Label]:
+    """Create several sub tasks."""
+    N = 5
+    return [
+        label_create(
+            who=workspace_user.user,
+            workspace=workspace,
+            name=f"Label {i}",
+            color=i,
+        )
+        for i in range(N)
+    ]
 
 
 @pytest.fixture
 def task_label(task: models.Task, label: models.Label) -> models.TaskLabel:
     """Return a label."""
+    # TODO we will use a task_add_label service here in the future
     return task.add_label(label)
 
 

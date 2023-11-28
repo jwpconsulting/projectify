@@ -12,6 +12,8 @@ from rest_framework.request import (
     Request,
 )
 
+from workspace.models.workspace_user import WorkspaceUser
+from workspace.services.label import label_create
 from workspace.services.workspace import (
     workspace_add_user,
 )
@@ -247,9 +249,16 @@ class TestTaskCreateUpdateSerializer:
         task: models.Task,
         user_request: Request,
         label: models.Label,
+        workspace_user: WorkspaceUser,
+        other_workspace_workspace_user: WorkspaceUser,
     ) -> None:
         """Test updating a task."""
-        other_label = factory.LabelFactory.create()
+        other_label = label_create(
+            workspace=other_workspace_workspace_user.workspace,
+            who=other_workspace_workspace_user.user,
+            color=0,
+            name="don't care",
+        )
         serializer = serializers.TaskCreateUpdateSerializer(
             task,
             data={
@@ -265,7 +274,7 @@ class TestTaskCreateUpdateSerializer:
             },
             context={"request": user_request},
         )
-        assert not serializer.is_valid()
+        assert not serializer.is_valid(), serializer.validated_data
         assert "labels" in serializer.errors, serializer.errors
         (error,) = serializer.errors["labels"]
         assert "label could not be found" in error

@@ -8,6 +8,11 @@ from django.contrib.auth.models import (
 
 import pytest
 
+from workspace.models.label import Label
+from workspace.models.workspace import Workspace
+from workspace.models.workspace_user import WorkspaceUser
+from workspace.services.label import label_create
+
 from ... import (
     factory,
     models,
@@ -140,14 +145,17 @@ class TestTask:
             task.get_next_section()
 
     def test_set_labels(
-        self, workspace: models.Workspace, task: models.Task
+        self,
+        workspace: Workspace,
+        task: models.Task,
+        labels: list[Label],
+        workspace_user: WorkspaceUser,
+        other_workspace: Workspace,
+        other_workspace_workspace_user: WorkspaceUser,
     ) -> None:
         """Test setting labels."""
         assert task.labels.count() == 0
-        a, b, c, d, e = factory.LabelFactory.create_batch(
-            5,
-            workspace=workspace,
-        )
+        a, b, c, d, e = labels
         task.set_labels([a, b])
         assert task.labels.count() == 2
         assert list(task.labels.values_list("id", flat=True)) == [a.id, b.id]
@@ -162,7 +170,12 @@ class TestTask:
         assert task.labels.count() == 0
         assert list(task.labels.values_list("id", flat=True)) == []
 
-        unrelated = factory.LabelFactory.create()
+        unrelated = label_create(
+            workspace=other_workspace,
+            who=other_workspace_workspace_user.user,
+            color=0,
+            name="don't care",
+        )
         task.set_labels([unrelated])
         assert task.labels.count() == 0
         assert list(task.labels.values_list("id", flat=True)) == []
