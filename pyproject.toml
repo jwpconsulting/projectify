@@ -93,7 +93,7 @@ disable_error_code = ["attr-defined", "return-value"]
 
 [[tool.mypy.overrides]]
 module = [
-    "corporate.test.*",
+    "corporate.test.schema.test_mutation",
     "workspace.test.schema.*",
     "workspace.test.test_migrations",
     "user.test.schema.*",
