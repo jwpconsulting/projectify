@@ -137,19 +137,6 @@ class TaskFactory(django.DjangoModelFactory[models.Task]):
         model = models.Task
 
 
-class LabelFactory(django.DjangoModelFactory[models.Label]):
-    """Factory for Label."""
-
-    name = factory.Faker("catch_phrase")
-    color = factory.Faker("pyint", min_value=0, max_value=6)
-    workspace = factory.SubFactory(WorkspaceFactory)
-
-    class Meta:
-        """Meta."""
-
-        model = models.Label
-
-
 def extract_author(chat_message: models.ChatMessage) -> models.WorkspaceUser:
     """Extract author from chat_message by walking through workspace."""
     workspace_board = chat_message.task.workspace_board_section.workspace_board
