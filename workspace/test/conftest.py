@@ -2,6 +2,9 @@
 from datetime import (
     datetime,
 )
+from datetime import (
+    timezone as dt_timezone,
+)
 from typing import (
     TYPE_CHECKING,
     Type,
@@ -27,6 +30,7 @@ from workspace.models.workspace_user import WorkspaceUser
 from workspace.services.chat_message import chat_message_create
 from workspace.services.label import label_create
 from workspace.services.sub_task import sub_task_create
+from workspace.services.task import task_create
 from workspace.services.workspace import workspace_add_user
 
 from .. import (
@@ -153,21 +157,31 @@ def workspace_board_section(
 def task(
     workspace_board_section: models.WorkspaceBoardSection,
     workspace_user: models.WorkspaceUser,
+    faker: Faker,
 ) -> models.Task:
     """Return task."""
-    return factory.TaskFactory.create(
+    return task_create(
+        who=workspace_user.user,
         workspace_board_section=workspace_board_section,
-        assignee=workspace_user,
+        title=faker.sentence(),
+        description=faker.paragraph() if faker.pybool() else None,
+        assignee=workspace_user if faker.pybool() else None,
+        deadline=faker.date_time(tzinfo=dt_timezone.utc)
+        if faker.pybool()
+        else None,
     )
 
 
 @pytest.fixture
 def other_task(
     workspace_board_section: models.WorkspaceBoardSection,
+    workspace_user: models.WorkspaceUser,
 ) -> models.Task:
     """Return another task belonging to the same workspace board section."""
-    return factory.TaskFactory.create(
+    return task_create(
+        who=workspace_user.user,
         workspace_board_section=workspace_board_section,
+        title="I am the other task",
     )
 
 
