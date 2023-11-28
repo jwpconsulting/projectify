@@ -150,18 +150,6 @@ class LabelFactory(django.DjangoModelFactory[models.Label]):
         model = models.Label
 
 
-class TaskLabelFactory(django.DjangoModelFactory[models.TaskLabel]):
-    """Factory for Label."""
-
-    task = factory.SubFactory(TaskFactory)
-    label = factory.SubFactory(LabelFactory)
-
-    class Meta:
-        """Meta."""
-
-        model = models.TaskLabel
-
-
 def extract_author(chat_message: models.ChatMessage) -> models.WorkspaceUser:
     """Extract author from chat_message by walking through workspace."""
     workspace_board = chat_message.task.workspace_board_section.workspace_board
