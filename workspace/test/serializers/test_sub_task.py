@@ -9,9 +9,9 @@ from uuid import (
 
 import pytest
 
-from ...factory import (
-    SubTaskFactory,
-)
+from workspace.models.workspace_user import WorkspaceUser
+from workspace.services.sub_task import sub_task_create
+
 from ...models import (
     SubTask,
     Task,
@@ -39,6 +39,21 @@ def payload_single() -> PayloadSingle:
 def context(task: Task) -> Context:
     """Return serializer context."""
     return {"task": task}
+
+
+@pytest.fixture
+def sub_tasks(task: Task, workspace_user: WorkspaceUser) -> list[SubTask]:
+    """Create several sub tasks."""
+    N = 5
+    return [
+        sub_task_create(
+            who=workspace_user.user,
+            task=task,
+            title="don't care",
+            done=False,
+        )
+        for _ in range(N)
+    ]
 
 
 @pytest.mark.django_db
@@ -202,11 +217,13 @@ class TestSubTaskListSerializer:
         assert sub_task.title == new_title
 
     def test_update_several_existing_sub_tasks(
-        self, task: Task, context: Context
+        self,
+        task: Task,
+        context: Context,
+        workspace_user: WorkspaceUser,
+        sub_tasks: list[SubTask],
     ) -> None:
         """Test updating several existing sub tasks."""
-        N = 5
-        sub_tasks = SubTaskFactory.create_batch(N, task=task)
         new_title = "fancy factory fabricates fakes"
         serializer = SubTaskCreateUpdateSerializer(
             None,
@@ -223,7 +240,7 @@ class TestSubTaskListSerializer:
         )
         assert serializer.is_valid(), serializer.errors
         serializer.save()
-        assert SubTask.objects.count() == N
+        assert SubTask.objects.count() == len(sub_tasks)
         for sub_task in task.subtask_set.all():
             assert sub_task.title == new_title
 
@@ -261,10 +278,11 @@ class TestSubTaskListSerializer:
         assert a.title == new_title
         assert b.title == update_title
 
-    def test_change_order(self, task: Task, context: Context) -> None:
+    def test_change_order(
+        self, sub_tasks: list[SubTask], task: Task, context: Context
+    ) -> None:
         """Test changing the order of several sub tasks."""
-        N = 5
-        a, b, c, d, e = SubTaskFactory.create_batch(N, task=task)
+        a, b, c, d, e = sub_tasks
         title = "asd"
         serializer = SubTaskCreateUpdateSerializer(
             None,
@@ -300,7 +318,7 @@ class TestSubTaskListSerializer:
         )
         assert serializer.is_valid(), serializer.errors
         serializer.save()
-        assert SubTask.objects.count() == N
+        assert SubTask.objects.count() == len(sub_tasks)
         new_order: list[UUID] = list(
             task.subtask_set.values_list("uuid", flat=True)
         )
@@ -332,7 +350,10 @@ class TestSubTaskListSerializer:
         assert new_sub_task.uuid != sub_task.uuid
 
     def test_create_and_change_order(
-        self, task: Task, context: Context
+        self,
+        task: Task,
+        context: Context,
+        sub_tasks: list[SubTask],
     ) -> None:
         """
         Test creating sub tasks and changing the order of existing ones.
@@ -340,7 +361,7 @@ class TestSubTaskListSerializer:
         1) The new tasks shall be inserted at the right place.
         2) Updated tasks shall be moved.
         """
-        a, b = SubTaskFactory.create_batch(2, task=task)
+        a, b, _c, _d, _e = sub_tasks
         title = "asd"
         new_title = "i am a new sub task"
         serializer = SubTaskCreateUpdateSerializer(

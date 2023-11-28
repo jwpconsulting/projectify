@@ -16,10 +16,13 @@ from django.utils import (
 )
 
 import pytest
+from faker import Faker
 
 from corporate.models import Customer
 from corporate.services.customer import customer_activate_subscription
 from user import models as user_models
+from workspace.models.workspace_user import WorkspaceUser
+from workspace.services.sub_task import sub_task_create
 
 from .. import (
     factory,
@@ -168,10 +171,16 @@ def task_label(task: models.Task, label: models.Label) -> models.TaskLabel:
 
 
 @pytest.fixture
-def sub_task(task: models.Task) -> models.SubTask:
+def sub_task(
+    faker: Faker, task: models.Task, workspace_user: WorkspaceUser
+) -> models.SubTask:
     """Return subtask."""
-    return factory.SubTaskFactory.create(
+    return sub_task_create(
+        who=workspace_user.user,
         task=task,
+        title=faker.sentence(),
+        description=faker.paragraph() if faker.pybool() else None,
+        done=faker.pybool(),
     )
 
 
