@@ -1,8 +1,10 @@
 """Test workspace models."""
 import pytest
 
+from workspace.models.workspace_user import WorkspaceUser
+from workspace.services.sub_task import sub_task_create
+
 from .. import (
-    factory,
     models,
 )
 
@@ -117,14 +119,23 @@ class TestSubTask:
         assert sub_task.task == task
 
     def test_moving_sub_task(
-        self, task: models.Task, sub_task: models.SubTask
+        self,
+        task: models.Task,
+        sub_task: models.SubTask,
+        workspace_user: WorkspaceUser,
     ) -> None:
         """Test moving a sub task around."""
-        other_sub_task = factory.SubTaskFactory.create(
+        other_sub_task = sub_task_create(
             task=task,
+            who=workspace_user.user,
+            title="don't care",
+            done=False,
         )
-        other_other_sub_task = factory.SubTaskFactory.create(
+        other_other_sub_task = sub_task_create(
             task=task,
+            who=workspace_user.user,
+            title="don't care",
+            done=False,
         )
         assert list(task.subtask_set.all()) == [
             sub_task,

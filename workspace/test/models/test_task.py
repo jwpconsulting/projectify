@@ -68,12 +68,6 @@ class TestTask:
         assert task.workspace_board_section == workspace_board_section
         assert task.deadline is not None
 
-    def test_add_sub_task(self, task: models.Task) -> None:
-        """Test adding a sub task."""
-        assert task.subtask_set.count() == 0
-        task.add_sub_task("foo", "bar")
-        assert task.subtask_set.count() == 1
-
     def test_add_chat_message(
         self,
         task: models.Task,

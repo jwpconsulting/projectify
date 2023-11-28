@@ -162,20 +162,6 @@ class TaskLabelFactory(django.DjangoModelFactory[models.TaskLabel]):
         model = models.TaskLabel
 
 
-class SubTaskFactory(django.DjangoModelFactory[models.SubTask]):
-    """SubTask Factory."""
-
-    title = factory.Faker("word")
-    description = factory.Faker("paragraph")
-    task = factory.SubFactory(TaskFactory)
-    done = factory.Faker("pybool")
-
-    class Meta:
-        """Meta."""
-
-        model = models.SubTask
-
-
 def extract_author(chat_message: models.ChatMessage) -> models.WorkspaceUser:
     """Extract author from chat_message by walking through workspace."""
     workspace_board = chat_message.task.workspace_board_section.workspace_board

@@ -56,9 +56,10 @@ def workspace_update(
 
 def workspace_add_user(
     # TODO make *
-    # TODO derive the correct role from an enum
     workspace: Workspace,
     user: AbstractBaseUser,
+    # TODO derive the correct role from an enum
+    # Can we just use WorkspaceUserRoles here?
     role: str = "OBSERVER",
 ) -> WorkspaceUser:
     """Add user to workspace. Return new workspace user."""

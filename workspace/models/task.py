@@ -202,10 +202,6 @@ class Task(
         _order: int
         id: int
 
-    def add_sub_task(self, title: str, description: str) -> "SubTask":
-        """Add a sub task."""
-        return self.subtask_set.create(title=title, description=description)
-
     def add_chat_message(
         self, text: str, author: AbstractBaseUser
     ) -> "ChatMessage":
