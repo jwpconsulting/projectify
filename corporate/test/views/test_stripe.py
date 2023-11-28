@@ -48,27 +48,27 @@ class TestStripeWebhook:
         assert unpaid_customer.stripe_customer_id == "unique_stripe_id"
 
     def test_customer_subscription_updated(
-        self, customer: Customer, client: APIClient, resource_url: str
+        self, paid_customer: Customer, client: APIClient, resource_url: str
     ) -> None:
         """Test customer.subscription.updated."""
         header = {"HTTP_STRIPE_SIGNATURE": "dummy_sig"}
-        new_seats = customer.seats + 1
+        new_seats = paid_customer.seats + 1
 
         event = mock.MagicMock()
         event.type = "customer.subscription.updated"
-        event["data"]["object"].customer = customer.stripe_customer_id
+        event["data"]["object"].customer = paid_customer.stripe_customer_id
         event["data"]["object"].quantity = new_seats
 
         with mock.patch("stripe.Webhook.construct_event") as construct_event:
             construct_event.return_value = event
             response = client.post(resource_url, **header)
         assert response.status_code == 200
-        customer.refresh_from_db()
-        assert customer.seats == new_seats
+        paid_customer.refresh_from_db()
+        assert paid_customer.seats == new_seats
 
     def test_customer_subscription_cancelled(
         self,
-        customer: Customer,
+        paid_customer: Customer,
         client: APIClient,
         resource_url: str,
     ) -> None:
@@ -76,14 +76,14 @@ class TestStripeWebhook:
         header = {"HTTP_STRIPE_SIGNATURE": "dummy_sig"}
         event = mock.MagicMock()
         event.type = "invoice.payment_failed"
-        event["data"]["object"].customer = customer.stripe_customer_id
+        event["data"]["object"].customer = paid_customer.stripe_customer_id
         event["data"]["object"].next_payment_attempt = None
         with mock.patch("stripe.Webhook.construct_event") as construct_event:
             construct_event.return_value = event
             response = client.post(resource_url, **header)
         assert response.status_code == 200
-        customer.refresh_from_db()
+        paid_customer.refresh_from_db()
         assert (
-            customer.subscription_status
+            paid_customer.subscription_status
             == CustomerSubscriptionStatus.CANCELLED
         )

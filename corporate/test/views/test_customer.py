@@ -8,6 +8,7 @@ from django.urls import (
 )
 
 import pytest
+from faker import Faker
 from rest_framework.test import APIClient
 
 from pytest_types import DjangoAssertNumQueries
@@ -23,7 +24,9 @@ class TestWorkspaceCustomerRetrieve:
     """Test WorkspaceCustomerRetrieve."""
 
     @pytest.fixture
-    def resource_url(self, customer: Customer, workspace: Workspace) -> str:
+    def resource_url(
+        self, paid_customer: Customer, workspace: Workspace
+    ) -> str:
         """Return URL to resource."""
         return reverse("corporate:workspace-customer", args=(workspace.uuid,))
 
@@ -31,7 +34,7 @@ class TestWorkspaceCustomerRetrieve:
         self,
         user_client: APIClient,
         resource_url: str,
-        workspace_user_customer: WorkspaceUser,
+        workspace_user: WorkspaceUser,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test as authenticated user."""
@@ -50,9 +53,10 @@ class MockSession:
 @pytest.fixture
 def mock_stripe_checkout(
     settings: LazySettings,
+    faker: Faker,
 ) -> Iterable[mock.MagicMock]:
     """Mock stripe checkout session creation."""
-    settings.STRIPE_PRICE_OBJECT = "price_abcdefg1hi"
+    settings.STRIPE_PRICE_OBJECT = faker.bothify("price_???????#??")
     with mock.patch("stripe.checkout.Session.create") as m:
         m.return_value = MockSession()
         yield m
@@ -71,11 +75,15 @@ class TestWorkspaceCheckoutSessionCreate:
     """Test creating a checkout session."""
 
     @pytest.fixture
-    def resource_url(self, workspace: Workspace) -> str:
+    def resource_url(
+        self,
+        # Assuming unpaid customer
+        unpaid_customer: Customer,
+    ) -> str:
         """Return URL to this view."""
         return reverse(
             "corporate:customers:create-checkout-session",
-            args=(str(workspace.uuid),),
+            args=(str(unpaid_customer.workspace.uuid),),
         )
 
     def test_posting_normal_data(
@@ -84,8 +92,6 @@ class TestWorkspaceCheckoutSessionCreate:
         rest_user_client: APIClient,
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
-        # Assuming unpaid customer here
-        workspace_user_unpaid_customer: Workspace,
     ) -> None:
         """Test we can get a url when posting valid data."""
         with django_assert_num_queries(4):
@@ -102,11 +108,11 @@ class TestWorkspaceBillingPortalSessionCreate:
     """Test creating billing portal sessions."""
 
     @pytest.fixture
-    def resource_url(self, workspace: Workspace) -> str:
+    def resource_url(self, paid_customer: Customer) -> str:
         """Return URL to this view."""
         return reverse(
             "corporate:customers:create-billing-portal-session",
-            args=(str(workspace.uuid),),
+            args=(str(paid_customer.workspace.uuid),),
         )
 
     def test_with_paying_customer(
@@ -115,8 +121,6 @@ class TestWorkspaceBillingPortalSessionCreate:
         rest_user_client: APIClient,
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
-        # Assuming that our customer is paying here
-        workspace_user_customer: Customer,
     ) -> None:
         """Test calling this with a paying customer."""
         with django_assert_num_queries(4):

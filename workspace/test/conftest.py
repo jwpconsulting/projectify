@@ -17,9 +17,8 @@ from django.utils import (
 
 import pytest
 
-from corporate.factory import (
-    CustomerFactory,
-)
+from corporate.models import Customer
+from corporate.services.customer import customer_activate_subscription
 from user import models as user_models
 
 from .. import (
@@ -42,7 +41,15 @@ def now() -> datetime:
 def workspace() -> models.Workspace:
     """Return workspace."""
     workspace = factory.WorkspaceFactory.create()
-    CustomerFactory.create(workspace=workspace)
+    # XXX Ideally we would use customer_create here
+    customer = Customer.objects.create(workspace=workspace)
+    # XXX use same fixture as in corporate/test/conftest.py
+    customer_activate_subscription(
+        customer=customer, stripe_customer_id="stripe_"
+    )
+    # TODO right now our tests depend on the workspace being paid for
+    # We should also be able to test most actions here for a workspace that
+    # isn't paid.
     return workspace
 
 
