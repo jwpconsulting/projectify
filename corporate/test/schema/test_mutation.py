@@ -1,9 +1,14 @@
 """Test Corporate mutations."""
+from typing import Any
 from unittest import (
     mock,
 )
 
 import pytest
+
+from conftest import QueryMethod
+from corporate.models import Customer
+from workspace.models.workspace_user import WorkspaceUser
 
 
 @pytest.mark.django_db
@@ -22,11 +27,11 @@ mutation createCheckoutSession ($workspaceUuid: UUID!, $seats: Int!) {
 
     def test_query_unpaid_customer(
         self,
-        graphql_query_user,
-        unpaid_customer,
-        settings,
-        workspace_user_unpaid_customer,
-    ):
+        graphql_query_user: QueryMethod,
+        unpaid_customer: Customer,
+        settings: Any,
+        workspace_user_unpaid_customer: WorkspaceUser,
+    ) -> None:
         """Test query with unpaid customer."""
         settings.STRIPE_PRICE_OBJECT = "price_aklsdjw5er"
         with mock.patch("stripe.checkout.Session.create") as create:
@@ -101,8 +106,8 @@ class TestCreateBillingPortalSession:
     """Test createBillingPortalSession mutation."""
 
     query = """
-mutation CreateBillingPortalSession($customerUuid: UUID!) {
-    createBillingPortalSession(input: {uuid: $customerUuid}) {
+mutation CreateBillingPortalSession($workspaceUuid: UUID!) {
+    createBillingPortalSession(input: {workspaceUuid: $workspaceUuid}) {
         url
     }
 }
@@ -110,11 +115,11 @@ mutation CreateBillingPortalSession($customerUuid: UUID!) {
 
     def test_query_paid_customer(
         self,
-        graphql_query_user,
-        customer,
-        settings,
-        workspace_user_customer,
-    ):
+        graphql_query_user: QueryMethod,
+        customer: Customer,
+        settings: Any,
+        workspace_user_customer: WorkspaceUser,
+    ) -> None:
         """Test query with paid customer."""
 
         class Session:
@@ -127,7 +132,7 @@ mutation CreateBillingPortalSession($customerUuid: UUID!) {
             result = graphql_query_user(
                 self.query,
                 variables={
-                    "customerUuid": str(customer.uuid),
+                    "workspaceUuid": str(customer.workspace.uuid),
                 },
             )
         assert result == {
