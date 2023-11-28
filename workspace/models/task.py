@@ -242,8 +242,11 @@ class Task(
 
         # TODO maybe it makes more sense to fire signals from serializers,
         # not manually patch things like the following...
+        # 2023-11-28: Now that I have a lot of success refactoring into
+        # services, this should be handled in a service
         post_save.send(sender=Task, instance=self)
 
+    # TODO refactor into service
     def add_label(self, label: "Label") -> "TaskLabel":
         """
         Add a label to this task.

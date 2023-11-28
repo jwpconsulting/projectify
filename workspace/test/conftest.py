@@ -165,10 +165,7 @@ def label(workspace: models.Workspace) -> models.Label:
 @pytest.fixture
 def task_label(task: models.Task, label: models.Label) -> models.TaskLabel:
     """Return a label."""
-    return factory.TaskLabelFactory.create(
-        task=task,
-        label=label,
-    )
+    return task.add_label(label)
 
 
 @pytest.fixture
