@@ -28,6 +28,7 @@ from workspace.models.workspace_user import WorkspaceUser
 from workspace.services.chat_message import chat_message_create
 from workspace.services.label import label_create
 from workspace.services.sub_task import sub_task_create
+from workspace.services.task import task_create
 from workspace.services.workspace import workspace_add_user
 
 from .. import (
@@ -94,9 +95,11 @@ def create_task(
     assignee: models.WorkspaceUser,
 ) -> models.Task:
     """Create task."""
-    return factory.TaskFactory.create(
+    return task_create(
         workspace_board_section=workspace_board_section,
+        who=assignee.user,
         assignee=assignee,
+        title="I am a task",
     )
 
 
