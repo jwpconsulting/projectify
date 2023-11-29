@@ -1,52 +1,6 @@
 import { gql } from "@apollo/client/core";
 
 // Mutation
-export const Mutation_Signup = gql`
-    mutation Signup($input: SignupInput!) {
-        signup(input: $input) {
-            email
-        }
-    }
-`;
-
-export const Mutation_EmailConfirmation = gql`
-    mutation EmailConfirmation($input: EmailConfirmationInput!) {
-        emailConfirmation(input: $input) {
-            email
-        }
-    }
-`;
-
-export const Mutation_Login = gql`
-    mutation Login($input: LoginInput!) {
-        login(input: $input) {
-            email
-        }
-    }
-`;
-
-export const Mutation_Logout = gql`
-    mutation Logout {
-        logout {
-            email
-        }
-    }
-`;
-
-export const Mutation_RequesetPasswordReset = gql`
-    mutation RequesetPasswordReset($input: RequestPasswordResetInput!) {
-        requestPasswordReset(input: $input)
-    }
-`;
-
-export const Mutation_ConfirmPasswordReset = gql`
-    mutation ConfirmPasswordReset($input: ConfirmPasswordResetInput!) {
-        confirmPasswordReset(input: $input) {
-            email
-        }
-    }
-`;
-
 export const Mutation_DeleteTask = gql`
     mutation DeleteTask($input: DeleteTaskInput!) {
         deleteTask(input: $input) {

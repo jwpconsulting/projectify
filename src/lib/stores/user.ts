@@ -1,70 +1,23 @@
 import { writable } from "svelte/store";
 
 import { client } from "$lib/graphql/client";
-import {
-    Mutation_ConfirmPasswordReset,
-    Mutation_EmailConfirmation,
-    Mutation_Login,
-    Mutation_Logout,
-    Mutation_RequesetPasswordReset,
-    Mutation_Signup,
-} from "$lib/graphql/operations";
 import { goto } from "$lib/navigation";
 import { getUser, updateUser } from "$lib/repository/user";
+import * as userRepository from "$lib/repository/user";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { User } from "$lib/types/user";
 
 // TODO export const user = writable<User | undefined>(undefined);
 export const user = writable<User | null>(null);
 
-export const signUp = async (
-    email: string,
-    password: string
-): Promise<void> => {
-    const res = await client.mutate({
-        mutation: Mutation_Signup,
-        variables: { input: { email, password } },
-    });
-    const { signup: userData } = res.data as { signup: User | null };
-    if (userData === null) {
-        throw new Error("Did not receive userData");
-    }
-};
-
-export const emailConfirmation = async (email: string, token: string) => {
-    try {
-        const res = await client.mutate({
-            mutation: Mutation_EmailConfirmation,
-            variables: { input: { email, token } },
-        });
-        const { emailConfirmation: userData } = res.data as {
-            emailConfirmation: User | null;
-        };
-        if (userData !== null) {
-            return userData;
-        }
-    } catch (error) {
-        console.error(error);
-    }
-    return null;
-};
-
+// TODo rename this
 export const login = async (
     email: string,
     password: string,
     redirectTo?: string
 ): Promise<void> => {
-    const res = await client.mutate({
-        mutation: Mutation_Login,
-        variables: { input: { email, password } },
-    });
-
-    const { login: userData } = res.data as { login: User | null };
-    if (userData === null) {
-        throw new Error("No userData");
-    }
-
-    user.set(userData);
+    const response = await userRepository.logIn(email, password, { fetch });
+    user.set(response);
 
     if (redirectTo) {
         await goto(redirectTo);
@@ -72,9 +25,8 @@ export const login = async (
 };
 
 export const logOut = async () => {
-    await client.mutate({
-        mutation: Mutation_Logout,
-    });
+    // TODO add repository context
+    await userRepository.logOut({ fetch });
     // TODO remove apollo
     await client.resetStore();
     user.set(null);
@@ -92,21 +44,19 @@ export const fetchUser = async (
     return userData;
 };
 
+// TODO add repo argument
 export const requestPasswordReset = async (email: string): Promise<void> => {
-    await client.mutate({
-        mutation: Mutation_RequesetPasswordReset,
-        variables: { input: { email } },
-    });
+    await userRepository.requestPasswordReset(email, { fetch });
 };
 
+// TODO add repo argument
 export const confirmPasswordReset = async (
     email: string,
     token: string,
     newPassword: string
 ): Promise<void> => {
-    await client.mutate({
-        mutation: Mutation_ConfirmPasswordReset,
-        variables: { input: { email, token, newPassword } },
+    await userRepository.confirmPasswordReset(email, token, newPassword, {
+        fetch,
     });
 };
 

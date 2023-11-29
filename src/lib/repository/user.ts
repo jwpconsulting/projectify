@@ -1,6 +1,8 @@
 import vars from "$lib/env";
 import {
+    failOrOk,
     getWithCredentialsJson,
+    postWithCredentialsJson,
     putWithCredentialsJson,
 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
@@ -45,4 +47,87 @@ export async function updateProfilePicture(imageFile: File): Promise<void> {
         vars.API_ENDPOINT + "/user/user/profile-picture/upload"
     );
 }
+
 // Delete
+// RPC
+export async function signUp(
+    email: string,
+    password: string,
+    repositoryContext: RepositoryContext
+): Promise<void> {
+    failOrOk(
+        await postWithCredentialsJson(
+            "/user/user/sign-up",
+            { email, password },
+            repositoryContext
+        )
+    );
+}
+
+export async function confirmEmail(
+    email: string,
+    token: string,
+    repositoryContext: RepositoryContext
+): Promise<void> {
+    failOrOk(
+        await postWithCredentialsJson(
+            "/user/user/confirm-email",
+            { email, token },
+            repositoryContext
+        )
+    );
+}
+
+export async function logIn(
+    email: string,
+    password: string,
+    repositoryContext: RepositoryContext
+): Promise<User> {
+    return failOrOk(
+        await postWithCredentialsJson<User>(
+            "/user/user/log-in",
+            { email, password },
+            repositoryContext
+        )
+    );
+}
+
+export async function logOut(
+    repositoryContext: RepositoryContext
+): Promise<void> {
+    failOrOk(
+        await postWithCredentialsJson(
+            "/user/user/log-out",
+            undefined,
+            repositoryContext
+        )
+    );
+}
+
+export async function requestPasswordReset(
+    email: string,
+    repositoryContext: RepositoryContext
+): Promise<void> {
+    failOrOk(
+        await postWithCredentialsJson(
+            "/user/user/request-password-reset",
+            { email },
+            repositoryContext
+        )
+    );
+}
+
+export async function confirmPasswordReset(
+    email: string,
+    token: string,
+    newPassword: string,
+    repositoryContext: RepositoryContext
+): Promise<void> {
+    failOrOk(
+        await postWithCredentialsJson(
+            "/user/user/confirm-password-reset",
+            { email, token, new_password: newPassword },
+            repositoryContext
+        )
+    );
+}

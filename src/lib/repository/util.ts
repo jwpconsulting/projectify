@@ -116,3 +116,11 @@ export function handle404<T>(result: ApiResponse<T, unknown>): T | undefined {
         throw new Error(`Error: ${JSON.stringify(result.error)}`);
     }
 }
+
+export function failOrOk<T>(result: ApiResponse<T, unknown>): T {
+    if (result.ok) {
+        return result.data;
+    }
+    console.error("Request error:", result.error);
+    throw new Error("Request failed");
+}

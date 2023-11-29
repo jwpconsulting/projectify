@@ -7,7 +7,7 @@
     import Checkbox from "$lib/funabashi/select-controls/Checkbox.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
-    import { signUp } from "$lib/stores/user";
+    import { signUp } from "$lib/repository/user";
     import { logInUrl, sentEmailConfirmationLinkUrl } from "$lib/urls/user";
 
     let email: string;
@@ -19,11 +19,11 @@
         // TODO form validation
         error = undefined;
         try {
-            await signUp(email, password);
-            await goto(sentEmailConfirmationLinkUrl);
+            await signUp(email, password, { fetch });
         } catch {
             error = $_("auth.sign-up.invalid-credentials");
         }
+        await goto(sentEmailConfirmationLinkUrl);
     }
 </script>
 
