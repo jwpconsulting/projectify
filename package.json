@@ -8,6 +8,7 @@
         "preview": "vite preview --port 3000",
         "typescript-language-server": "typescript-language-server",
         "svelteserver": "svelteserver",
+        "test": "bin/test",
         "check": "npm run check:prettier && npm run check:svelte-check && npm run check:eslint && npm run check:knip",
         "check:nocache": "npm run check:prettier:nocache && npm run check:svelte-check && npm run check:eslint:nocache && npm run check:knip",
         "check:eslint": "eslint --cache --cache-strategy content --ext .ts,.js,.svelte src",
