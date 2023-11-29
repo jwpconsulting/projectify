@@ -4,16 +4,26 @@
     import AuthScreen from "$lib/figma/screens/auth/AuthScreen.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import { goto } from "$lib/navigation";
     import { confirmPasswordReset } from "$lib/stores/user";
+    import { logInUrl } from "$lib/urls/user";
 
     export let email: string;
     export let token: string;
+    // TODO should be string | undefined
     let newPassword1: string;
     let newPassword2: string;
 
     async function submit() {
         // TODO validate form
-        await confirmPasswordReset(email, token, newPassword1);
+        // TODO show error
+        try {
+            await confirmPasswordReset(email, token, newPassword1);
+            await goto(logInUrl);
+        } catch (error) {
+            console.error("password reset went wrong", error);
+            throw error;
+        }
     }
 </script>
 
@@ -30,7 +40,7 @@
             placeholder={$_(
                 "auth.confirm-password-reset.confirm-new-password"
             )}
-            style={{ kind: "field", inputType: "text" }}
+            style={{ kind: "field", inputType: "password" }}
             name="password2"
             label={$_("auth.confirm-password-reset.confirm-new-password")}
             bind:value={newPassword2}

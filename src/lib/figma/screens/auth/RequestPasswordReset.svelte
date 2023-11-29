@@ -12,6 +12,7 @@
     async function submit() {
         // TODO do some kind of validation here
         await requestPasswordReset(email);
+        // TODO redirect when successful
     }
 </script>
 
@@ -22,13 +23,14 @@
     <div class="flex flex-col gap-6">
         <InputField
             placeholder={$_("auth.request-password-reset.enter-your-email")}
-            style={{ kind: "field", inputType: "text" }}
+            style={{ kind: "field", inputType: "email" }}
             name="email"
             label={$_("auth.request-password-reset.email")}
             bind:value={email}
+            required
         />
         <Button
-            action={{ kind: "button", action: submit }}
+            action={{ kind: "submit" }}
             style={{ kind: "primary" }}
             color="blue"
             size="medium"

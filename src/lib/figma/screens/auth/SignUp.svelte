@@ -20,10 +20,10 @@
         error = undefined;
         try {
             await signUp(email, password, { fetch });
+            await goto(sentEmailConfirmationLinkUrl);
         } catch {
             error = $_("auth.sign-up.invalid-credentials");
         }
-        await goto(sentEmailConfirmationLinkUrl);
     }
 </script>
 
