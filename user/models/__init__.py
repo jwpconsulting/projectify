@@ -93,6 +93,7 @@ PASSWORD_RESET_TOKEN_SALT = "password-reset-token-salt"
 class User(AbstractBaseUser, PermissionsMixin):
     """User class."""
 
+    # TODO add created timestamp
     email = models.EmailField(
         verbose_name=_("Email"),
         unique=True,
