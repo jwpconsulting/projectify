@@ -20,7 +20,7 @@ user_patterns = (
     # Create
     # Read + Update
     path(
-        "",
+        "current-user",
         UserReadUpdate.as_view(),
         name="read-update",
     ),
@@ -59,4 +59,4 @@ user_patterns = (
     ),
 )
 
-urlpatterns = (path("user", include((user_patterns, "users"))),)
+urlpatterns = (path("user/", include((user_patterns, "users"))),)
