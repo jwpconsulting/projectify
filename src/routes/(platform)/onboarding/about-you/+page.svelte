@@ -21,7 +21,7 @@
         if (fullName == undefined) {
             throw new Error("Expected fullName");
         }
-        await updateUserProfile(fullName);
+        await updateUserProfile(fullName, { fetch });
         await goto(newWorkspaceUrl);
     }
 </script>

@@ -8,10 +8,9 @@ import {
     Mutation_Logout,
     Mutation_RequesetPasswordReset,
     Mutation_Signup,
-    Mutation_UpdateProfile,
 } from "$lib/graphql/operations";
 import { goto } from "$lib/navigation";
-import { getUser } from "$lib/repository/user";
+import { getUser, updateUser } from "$lib/repository/user";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { User } from "$lib/types/user";
 
@@ -112,17 +111,13 @@ export const confirmPasswordReset = async (
 };
 
 // TODO full name should be optional
-export async function updateUserProfile(fullName: string) {
-    await client.mutate({
-        mutation: Mutation_UpdateProfile,
-        variables: {
-            input: {
-                fullName: fullName,
-            },
-        },
-    });
+export async function updateUserProfile(
+    fullName: string,
+    repositoryContext: RepositoryContext
+) {
+    await updateUser({ full_name: fullName }, repositoryContext);
     // We fetch the user to make sure the full name is updated
     // Ideally, this would just store the result of the above operation
     // in the user store
-    await fetchUser({ fetch });
+    await fetchUser(repositoryContext);
 }

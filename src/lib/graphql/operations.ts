@@ -1,16 +1,6 @@
 import { gql } from "@apollo/client/core";
 
 // Mutation
-export const Mutation_UpdateProfile = gql`
-    mutation UpdateProfile($input: UpdateProfileInput!) {
-        updateProfile(input: $input) {
-            email
-            fullName
-            profilePicture
-        }
-    }
-`;
-
 export const Mutation_Signup = gql`
     mutation Signup($input: SignupInput!) {
         signup(input: $input) {

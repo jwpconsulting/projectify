@@ -28,7 +28,7 @@
         if (!fullName) {
             throw new Error("Name was not given");
         }
-        await updateUserProfile(fullName);
+        await updateUserProfile(fullName, { fetch });
     }
 
     async function save() {
