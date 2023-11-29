@@ -17,7 +17,6 @@ export async function deleteWorkspaceUser(
 ): Promise<Result<undefined, DeleteError>> {
     const result = await deleteWithCredentialsJson(
         `/workspace/workspace-user/${workspaceUser.uuid}`,
-        {},
         repositoryContext
     );
     if (result.kind === "ok") {

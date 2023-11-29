@@ -8,7 +8,7 @@ const getOptions: RequestInit = { credentials: "include" };
 
 function putPostOptions<T>(
     method: "POST" | "PUT" | "DELETE",
-    data: T
+    data?: T
 ): RequestInit {
     // These requests will certainly fail without a csrf token
     const baseHeaders = { "Content-Type": "application/json" };
@@ -16,7 +16,7 @@ function putPostOptions<T>(
     return {
         method,
         // TODO serialize using new FormData()
-        body: JSON.stringify(data),
+        body: data === undefined ? undefined : JSON.stringify(data),
         credentials: "include",
         headers: csrftoken
             ? { ...baseHeaders, "X-CSRFToken": csrftoken }
@@ -89,13 +89,12 @@ export async function putWithCredentialsJson<T, E = unknown>(
 
 export async function deleteWithCredentialsJson<T, E = unknown>(
     url: string,
-    data: unknown,
     repositoryContext: RepositoryContext
 ): Promise<ApiResponse<T, E>> {
     const { fetch } = repositoryContext;
     const response = await fetch(
         `${vars.API_ENDPOINT}${url}`,
-        putPostOptions("DELETE", data)
+        putPostOptions("DELETE")
     );
     return await parseResponse<T, E>(response);
 }
