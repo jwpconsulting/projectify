@@ -154,6 +154,16 @@ def workspace_board_section(
 
 
 @pytest.fixture
+def other_workspace_board_section(
+    workspace_board: models.WorkspaceBoard,
+) -> models.WorkspaceBoardSection:
+    """Return workspace board section."""
+    return factory.WorkspaceBoardSectionFactory.create(
+        workspace_board=workspace_board,
+    )
+
+
+@pytest.fixture
 def task(
     workspace_board_section: models.WorkspaceBoardSection,
     workspace_user: models.WorkspaceUser,

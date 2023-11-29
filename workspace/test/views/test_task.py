@@ -18,6 +18,7 @@ from pytest_types import (
 from workspace.models.task import (
     Task,
 )
+from workspace.models.workspace_board_section import WorkspaceBoardSection
 
 from ... import (
     models,
@@ -216,18 +217,57 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
 
 # RPC
 @pytest.mark.django_db
-class TestTaskMove:
+class TestMoveTaskToWorkspaceBoardSection:
+    """Test moving a task to a workspace board section."""
+
+    @pytest.fixture
+    def resource_url(self, task: Task) -> str:
+        """Return URL to this view."""
+        return reverse(
+            "workspace:tasks:move-to-workspace-board-section",
+            args=(str(task.uuid),),
+        )
+
+    def test_simple(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        workspace_board_section: WorkspaceBoardSection,
+        other_workspace_board_section: WorkspaceBoardSection,
+        task: Task,
+    ) -> None:
+        """Test moving a task."""
+        assert task.workspace_board_section == workspace_board_section
+        with django_assert_num_queries(46):
+            response = rest_user_client.post(
+                resource_url,
+                data={
+                    "workspace_board_section_uuid": str(
+                        other_workspace_board_section.uuid
+                    )
+                },
+            )
+            assert response.status_code == status.HTTP_200_OK, response.data
+
+        task.refresh_from_db()
+        assert task.workspace_board_section == other_workspace_board_section
+        assert task._order == 0
+
+
+@pytest.mark.django_db
+class TestTaskMoveAfterTask:
     """Test moving a task."""
 
     @pytest.fixture
     def resource_url(self, task: Task) -> str:
         """Return URL to this view."""
         return reverse(
-            "workspace:tasks:move",
+            "workspace:tasks:move-after-task",
             args=(str(task.uuid),),
         )
 
-    def test_authenticated_user(
+    def test_simple(
         self,
         rest_user_client: APIClient,
         resource_url: str,
@@ -235,14 +275,9 @@ class TestTaskMove:
         other_task: Task,
     ) -> None:
         """Test as an authenticated user."""
-        with django_assert_num_queries(33):
+        with django_assert_num_queries(34):
             response = rest_user_client.post(
                 resource_url,
-                data={"after_task_uuid": str(other_task.uuid)},
+                data={"task_uuid": str(other_task.uuid)},
             )
-        assert response.status_code == status.HTTP_200_OK, response.data
-        with django_assert_num_queries(32):
-            response = rest_user_client.post(
-                resource_url, data={"after_task_uuid": None}, format="json"
-            )
-        assert response.status_code == status.HTTP_200_OK, response.data
+            assert response.status_code == status.HTTP_200_OK, response.data

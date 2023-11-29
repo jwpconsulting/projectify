@@ -70,7 +70,6 @@ def test_moving_task_within_section(
     task_move_after(
         who=workspace_user.user,
         task=task,
-        workspace_board_section=workspace_board_section,
         after=other_task,
     )
     assert list(workspace_board_section.task_set.all()) == [
@@ -106,8 +105,7 @@ def test_moving_task_to_other_section(
     task_move_after(
         who=workspace_user.user,
         task=task,
-        workspace_board_section=other_section,
-        after=None,
+        after=other_section,
     )
     assert list(other_section.task_set.all()) == [
         task,
@@ -133,8 +131,7 @@ def test_moving_task_to_empty_section(
     task_move_after(
         who=workspace_user.user,
         task=task,
-        workspace_board_section=other_section,
-        after=None,
+        after=other_section,
     )
     assert list(other_section.task_set.all()) == [
         task,
