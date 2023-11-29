@@ -6,7 +6,7 @@
     import type { SelectLabel, FilterLabelMenuState } from "$lib/figma/types";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
-    import { createLabel } from "$lib/repository/workspace";
+    import { createLabel } from "$lib/repository/workspace/label";
     import { currentWorkspace } from "$lib/stores/dashboard";
     import type { Label } from "$lib/types/workspace";
     import { labelColors } from "$lib/utils/colors";

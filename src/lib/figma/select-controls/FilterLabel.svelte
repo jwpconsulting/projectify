@@ -4,7 +4,7 @@
     import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
     import type { SelectLabel } from "$lib/figma/types";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
-    import { deleteLabel } from "$lib/repository/workspace";
+    import { deleteLabel } from "$lib/repository/workspace/label";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
 
     export let label: SelectLabel;
