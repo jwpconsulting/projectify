@@ -114,6 +114,9 @@ def is_at_least_owner(user: AbstractBaseUser, target: HasWorkspace) -> bool:
     )
 
 
+# TODO this will work for a paid workspace, but what about the trial
+# we would like to implement?
+# The workspace should also be deemed active if the user is within trial limits
 @rules.predicate
 def belongs_to_active_workspace(
     user: AbstractBaseUser, target: HasWorkspace
