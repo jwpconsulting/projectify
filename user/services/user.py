@@ -1,9 +1,10 @@
 """User model services in user app."""
+import logging
 from typing import Optional
 
-from django.contrib.auth import login, logout
-from django.contrib.auth.backends import ModelBackend
+from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import PermissionDenied
+from django.db import transaction
 from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
@@ -12,6 +13,8 @@ from rest_framework import serializers
 from user.emails import UserEmailConfirmationEmail, UserPasswordResetEmail
 from user.models import User
 from user.selectors.user import user_find_by_email
+
+logger = logging.getLogger(__name__)
 
 
 # Update
@@ -84,21 +87,33 @@ def user_log_in(
     request: HttpRequest,
 ) -> Optional[User]:
     """Log a user in, return cookies."""
-    user = ModelBackend().authenticate(
-        request,
-        username=email,
-        password=password,
-    )
+    user = authenticate(request, username=email, password=password)
     if user is None:
-        raise serializers.ValidationError(
-            _("No user could be found for these credentials")
+        maybe_user = user_find_by_email(email=email)
+        if maybe_user is None:
+            logger.warning("Could not find a user for %s", email)
+            raise serializers.ValidationError(
+                {"email": _("No user could be found for this email address")}
+            )
+        if not maybe_user.is_active:
+            logger.warning(
+                "Tried to log in for inactive user with email %s", email
+            )
+            raise serializers.ValidationError(
+                {
+                    "email": _(
+                        "This email address has not been confirmed. "
+                        "Please check your email inbox for a confirmation email or contact our support if you need further help."
+                    )
+                }
+            )
+        logger.warning(
+            "User with email %s found but authentication failed", email
         )
-    login(
-        request,
-        user,
-        # The backend is hardcoded here ... hopefully that won't be an issue
-        backend="django.contrib.auth.backends.ModelBackend",
-    )
+        raise serializers.ValidationError(
+            {"password": _("No user could be found for this email address")}
+        )
+    login(request, user)
     if not isinstance(user, User):
         raise ValueError("User is not User, why?")
     # XXX consider if returning a user is necessary here
