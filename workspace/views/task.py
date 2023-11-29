@@ -1,7 +1,4 @@
 """Task CRUD views."""
-# Create
-# Read
-# Update
 from typing import (
     Any,
     Union,
@@ -12,12 +9,14 @@ from django.db.models import (
     Prefetch,
 )
 from django.shortcuts import get_object_or_404
+from django.utils.translation import gettext_lazy as _
 
 from rest_framework import (
     generics,
     serializers,
     status,
 )
+from rest_framework.exceptions import NotFound
 from rest_framework.request import (
     Request,
 )
@@ -27,6 +26,10 @@ from rest_framework.response import (
 from rest_framework.views import APIView
 
 from workspace.models.task import Task
+from workspace.selectors.task import find_task_for_user_and_uuid
+from workspace.selectors.workspace_board_section import (
+    find_workspace_board_section_for_user_and_uuid,
+)
 from workspace.serializers.task_detail import (
     TaskCreateUpdateSerializer,
     TaskDetailSerializer,
@@ -38,6 +41,7 @@ from .. import (
 )
 
 
+# Create
 class TaskCreate(
     generics.CreateAPIView[
         models.Task,
@@ -50,6 +54,7 @@ class TaskCreate(
     serializer_class = TaskCreateUpdateSerializer
 
 
+# Read + Update + Delete
 class TaskRetrieveUpdateDelete(
     generics.RetrieveUpdateDestroyAPIView[
         models.Task,
@@ -138,13 +143,13 @@ class TaskRetrieveUpdateDelete(
 
 
 # RPC
-class TaskMove(APIView):
-    """Move a task right behind another task."""
+class TaskMoveToWorkspaceBoardSection(APIView):
+    """Move a task to the beginning of a workspace board section."""
 
     class InputSerializer(serializers.Serializer):
-        """Accept a task uuid after which this task should be moved."""
+        """Accept the target workspace board section uuid."""
 
-        after_task_uuid = serializers.UUIDField(allow_null=True)
+        workspace_board_section_uuid = serializers.UUIDField()
 
     def post(self, request: Request, task_uuid: UUID) -> Response:
         """Process the request."""
@@ -152,36 +157,56 @@ class TaskMove(APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
-        task_qs = Task.objects.filter_for_user_and_uuid(
-            user=user,
-            uuid=task_uuid,
-        )
-        task = get_object_or_404(
-            task_qs,
-        )
-        after_task_uuid = data.get("after_task_uuid", None)
-        if after_task_uuid is None:
-            after_task = None
-        else:
-            after_task_qs = Task.objects.filter_for_user_and_uuid(
+        task = find_task_for_user_and_uuid(user=user, task_uuid=task_uuid)
+        if task is None:
+            raise NotFound(_("Task for this UUID not found"))
+        workspace_board_section = (
+            find_workspace_board_section_for_user_and_uuid(
+                workspace_board_section_uuid=data[
+                    "workspace_board_section_uuid"
+                ],
                 user=user,
-                uuid=data["after_task_uuid"],
             )
-            try:
-                after_task = after_task_qs.get()
-            except Task.DoesNotExist:
-                raise serializers.ValidationError(
-                    {
-                        "after_task_uuid": "Task with given uuid does not exist",
-                    }
-                )
-        task_move_after(
-            task=task,
-            who=user,
-            workspace_board_section=task.workspace_board_section,
-            after=after_task,
         )
+        if workspace_board_section is None:
+            raise serializers.ValidationError(
+                {
+                    "workspace_board_section_uuid": _(
+                        "No workspace board section was found for the given uuid"
+                    )
+                }
+            )
+        task_move_after(task=task, who=user, after=workspace_board_section)
+        task.refresh_from_db()
+        output_serializer = TaskDetailSerializer(instance=task)
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
 
+
+class TaskMoveAfterTask(APIView):
+    """Move a task right behind another task."""
+
+    class InputSerializer(serializers.Serializer):
+        """Accept a task uuid after which this task should be moved."""
+
+        task_uuid = serializers.UUIDField()
+
+    def post(self, request: Request, task_uuid: UUID) -> Response:
+        """Process the request."""
+        user = request.user
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        task = find_task_for_user_and_uuid(user=user, task_uuid=task_uuid)
+        if task is None:
+            raise NotFound(_("Task for this UUID not found"))
+        after = find_task_for_user_and_uuid(
+            task_uuid=data["task_uuid"], user=user
+        )
+        if after is None:
+            raise serializers.ValidationError(
+                {"after_task_uuid": _("No task was found for the given uuid")}
+            )
+        task_move_after(task=task, who=user, after=after)
         task.refresh_from_db()
         output_serializer = TaskDetailSerializer(instance=task)
         return Response(output_serializer.data, status=status.HTTP_200_OK)

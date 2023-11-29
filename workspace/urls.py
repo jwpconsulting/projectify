@@ -20,7 +20,8 @@ from . import (
 )
 from .views.task import (
     TaskCreate,
-    TaskMove,
+    TaskMoveAfterTask,
+    TaskMoveToWorkspaceBoardSection,
     TaskRetrieveUpdateDelete,
 )
 from .views.workspace import (
@@ -99,9 +100,14 @@ task_patterns = (
     ),
     # RPC
     path(
-        "<uuid:task_uuid>/move",
-        TaskMove.as_view(),
-        name="move",
+        "<uuid:task_uuid>/move-to-workspace-board-section",
+        TaskMoveToWorkspaceBoardSection.as_view(),
+        name="move-to-workspace-board-section",
+    ),
+    path(
+        "<uuid:task_uuid>/move-after-task",
+        TaskMoveAfterTask.as_view(),
+        name="move-after-task",
     ),
 )
 

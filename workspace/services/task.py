@@ -1,6 +1,6 @@
 """Task services."""
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
 from django.db import transaction
 
@@ -48,36 +48,29 @@ def task_move_after(
     *,
     who: User,
     task: Task,
-    after: Optional[Task],
-    workspace_board_section: Optional[WorkspaceBoardSection],
+    after: Union[Task, WorkspaceBoardSection],
 ) -> Task:
-    """Move a task after another task. If no after is given, move to front."""
+    """Move a task after a task or in front of a workspace board section."""
     validate_perm("workspace.can_update_task", who, task)
-    # TODO this can be expressed more elegantly
-    workspace_board_section = (
-        workspace_board_section or task.workspace_board_section
-    )
-    if after is not None:
-        order = after._order
-    else:
-        order = 0
-    neighbor_tasks = task.workspace_board_section.task_set.select_for_update()
-    # TODO this can be expressed more elegantly
+    match after:
+        case Task():
+            workspace_board_section = after.workspace_board_section
+            order = after._order
+        case WorkspaceBoardSection():
+            workspace_board_section = after
+            order = 0
+
+    # Lock tasks in own workspace board section
+    neighbor_tasks = workspace_board_section.task_set.select_for_update()
+    len(neighbor_tasks)
+
+    # Depending on whether we move within the same workspace board section, we
+    # might have to lock only this workspace board section, or the destination
+    # as well.
     if task.workspace_board_section != workspace_board_section:
         other_tasks = workspace_board_section.task_set.select_for_update()
-    else:
-        # Same section, so no need to select other tasks
-        other_tasks = None
-
-    # Force both querysets to be evaluated to lock them for the time of
-    # this transaction
-    len(neighbor_tasks)
-    # TODO this can be expressed more elegantly
-    if other_tasks:
         len(other_tasks)
-    # Set new WorkspaceBoardSection
-    # TODO this can be expressed more elegantly
-    if task.workspace_board_section != workspace_board_section:
+        # And assign task's workspace board section
         task.workspace_board_section = workspace_board_section
         task.save()
 
