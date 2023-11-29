@@ -36,6 +36,15 @@ def user_sign_up(
     password: str,
 ) -> User:
     """Sign up a user."""
+    # Check if user exists
+    if user_find_by_email(email=email) is not None:
+        raise serializers.ValidationError(
+            {
+                "email": _(
+                    "A user with this email address is already registered"
+                )
+            }
+        )
     # Here we should validate the password with Django's validation criteria
     user = User.objects.create_user(
         email=email,
