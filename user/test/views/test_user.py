@@ -183,7 +183,7 @@ class TestSignUp:
     ) -> None:
         """Test signing up a new user."""
         assert User.objects.count() == 0
-        with django_assert_num_queries(4):
+        with django_assert_num_queries(5):
             response = rest_client.post(
                 resource_url,
                 # TODO of course, we will validate password strength here in
