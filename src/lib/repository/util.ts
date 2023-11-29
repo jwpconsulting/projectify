@@ -11,6 +11,8 @@ function putPostOptions<T>(
     data?: T
 ): RequestInit {
     // These requests will certainly fail without a csrf token
+    // XXX or will they? Seems like we generously disabled CSRF checking
+    // hehehe...
     const baseHeaders = { "Content-Type": "application/json" };
     const csrftoken = getCookie("csrftoken");
     return {
