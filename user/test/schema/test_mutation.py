@@ -117,7 +117,7 @@ mutation ($email: String!, $password: String!) {
             },
         )
         assert result["data"] == {"login": None}
-        assert "could be found" in str(result["errors"])
+        assert "not been confirmed" in str(result["errors"])
 
 
 @pytest.mark.django_db
