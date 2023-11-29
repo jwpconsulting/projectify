@@ -146,6 +146,7 @@ def user_request_password_reset(
     password_reset_email.send()
 
 
+@transaction.atomic
 def user_confirm_password_reset(
     *,
     email: str,
@@ -156,14 +157,20 @@ def user_confirm_password_reset(
     """Reset a user's password given a new password and a reset token."""
     user = user_find_by_email(email=email)
     if user is None:
+        logger.warning(
+            "Could not find email %s when attempting to reset a password",
+            email,
+        )
         raise serializers.ValidationError(
             {"email": _("This email is not recognized")}
         )
     if not user.check_password_reset_token(token):
+        logger.warning("Could not match a reset token to email %s", email)
         raise serializers.ValidationError(
             {"token": _("This token is invalid")}
         )
     user.set_password(new_password)
     user.save()
+    logger.info("Reset password for user with email %s", email)
     # XXX consider if returning a user is necessary here
     return user
