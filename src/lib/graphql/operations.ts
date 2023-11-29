@@ -1,14 +1,6 @@
 import { gql } from "@apollo/client/core";
 
 // Mutation
-export const Mutation_UpdateWorkspaceUser = gql`
-    mutation UpdateWorkspaceUser($input: UpdateWorkspaceUserInput!) {
-        updateWorkspaceUser(input: $input) {
-            email
-        }
-    }
-`;
-
 export const Mutation_UpdateProfile = gql`
     mutation UpdateProfile($input: UpdateProfileInput!) {
         updateProfile(input: $input) {
@@ -73,25 +65,9 @@ export const Mutation_AddLabelMutation = gql`
     }
 `;
 
-export const Mutation_UpdateLabelMutation = gql`
-    mutation UpdateLabelMutation($input: UpdateLabelInput!) {
-        updateLabel(input: $input) {
-            uuid
-        }
-    }
-`;
-
 export const Mutation_DeleteLabelMutation = gql`
     mutation DeleteLabelMutation($input: DeleteLabelInput!) {
         deleteLabel(input: $input) {
-            uuid
-        }
-    }
-`;
-
-export const Mutation_RemoveUserFromWorkspace = gql`
-    mutation RemoveUserFromWorkspace($input: RemoveUserFromWorkspaceInput!) {
-        removeUserFromWorkspace(input: $input) {
             uuid
         }
     }
@@ -134,29 +110,6 @@ export const Mutation_AddWorkspaceBoardSection = gql`
     }
 `;
 
-export const Mutation_UpdateWorkspaceBoardSection = gql`
-    mutation UpdateWorkspaceBoardSection(
-        $input: UpdateWorkspaceBoardSectionInput!
-    ) {
-        updateWorkspaceBoardSection(input: $input) {
-            uuid
-            created
-            title
-            description
-        }
-    }
-`;
-
-export const Mutation_DeleteWorkspaceBoardSection = gql`
-    mutation DeleteWorkspaceBoardSection(
-        $input: DeleteWorkspaceBoardSectionInput!
-    ) {
-        deleteWorkspaceBoardSection(input: $input) {
-            uuid
-        }
-    }
-`;
-
 export const Mutation_UpdateWorkspaceBoard = gql`
     mutation UpdateWorkspaceBoard($input: UpdateWorkspaceBoardInput!) {
         updateWorkspaceBoard(input: $input) {
@@ -184,25 +137,9 @@ export const Mutation_ArchiveWorkspaceBoard = gql`
     }
 `;
 
-export const Mutation_AssignTask = gql`
-    mutation AssignTask($input: AssignTaskInput!) {
-        assignTask(input: $input) {
-            uuid
-        }
-    }
-`;
-
 export const Mutation_AssignLabel = gql`
     mutation AssignLabel($input: AssignLabelInput!) {
         assignLabel(input: $input) {
-            uuid
-        }
-    }
-`;
-
-export const Mutation_AddChatMessage = gql`
-    mutation AddChatMessage($input: AddChatMessageInput!) {
-        addChatMessage(input: $input) {
             uuid
         }
     }

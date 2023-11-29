@@ -6,7 +6,6 @@ import {
     Mutation_AddLabelMutation,
     Mutation_AddWorkspaceBoardSection,
     Mutation_DeleteLabelMutation,
-    Mutation_UpdateLabelMutation,
 } from "$lib/graphql/operations";
 import { getWithCredentialsJson, handle404 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
@@ -40,18 +39,6 @@ export async function createLabel(
         },
     })) as ApolloQueryResult<{ addLabel: Label }>;
     return label;
-}
-export async function updateLabel(label: Label, name: string, color: number) {
-    await client.mutate({
-        mutation: Mutation_UpdateLabelMutation,
-        variables: {
-            input: {
-                uuid: label.uuid,
-                name,
-                color,
-            },
-        },
-    });
 }
 
 export async function deleteLabel(label: Label) {
