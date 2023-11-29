@@ -21,6 +21,7 @@ from rest_framework.status import HTTP_200_OK
 from rest_framework.test import APIClient
 
 from pytest_types import DjangoAssertNumQueries
+from user.services.user import user_sign_up
 
 from ...models import User
 
@@ -191,6 +192,37 @@ class TestSignUp:
             )
             assert response.status_code == 204, response.data
         assert User.objects.count() == 1
+
+
+@pytest.mark.django_db
+class TestConfirmEmail:
+    """Test confirming a newly registered user's email address."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("user:users:confirm-email")
+
+    def test_confirm_for_new_user(
+        self,
+        rest_client: APIClient,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test the thing that I want to test."""
+        user = user_sign_up(
+            email="hello@world.com", password="random_password"
+        )
+        token = user.get_email_confirmation_token()
+        with django_assert_num_queries(2):
+            response = rest_client.post(
+                resource_url,
+                data={"email": "hello@world.com", "token": token},
+            )
+        assert response.status_code == 204, response.data
+
+        user.refresh_from_db()
+        assert user.is_active
 
 
 @pytest.mark.django_db
