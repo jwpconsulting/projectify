@@ -2,12 +2,10 @@
  * Repository functions for label
  */
 
-import { client } from "$lib/graphql/client";
-import { Mutation_DeleteLabelMutation } from "$lib/graphql/operations";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { Label, Workspace } from "$lib/types/workspace";
 
-import { postWithCredentialsJson } from "../util";
+import { deleteWithCredentialsJson, postWithCredentialsJson } from "../util";
 
 export async function createLabel(
     workspace: Workspace,
@@ -26,13 +24,17 @@ export async function createLabel(
     return response.data;
 }
 
-export async function deleteLabel(label: Label) {
-    await client.mutate({
-        mutation: Mutation_DeleteLabelMutation,
-        variables: {
-            input: {
-                uuid: label.uuid,
-            },
-        },
-    });
+export async function deleteLabel(
+    label: Label,
+    repositoryContext: RepositoryContext
+) {
+    const response = await deleteWithCredentialsJson<Label>(
+        `/workspace/label/${label.uuid}`,
+        repositoryContext
+    );
+    if (response.kind !== "ok") {
+        console.error("TODO handle", response);
+        throw new Error("Error while creating label");
+    }
+    return response.data;
 }

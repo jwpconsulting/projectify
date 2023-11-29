@@ -57,14 +57,6 @@ export const Mutation_ConfirmPasswordReset = gql`
     }
 `;
 
-export const Mutation_DeleteLabelMutation = gql`
-    mutation DeleteLabelMutation($input: DeleteLabelInput!) {
-        deleteLabel(input: $input) {
-            uuid
-        }
-    }
-`;
-
 export const Mutation_DeleteTask = gql`
     mutation DeleteTask($input: DeleteTaskInput!) {
         deleteTask(input: $input) {

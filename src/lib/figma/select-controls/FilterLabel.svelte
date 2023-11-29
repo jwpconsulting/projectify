@@ -35,7 +35,7 @@
         }
         const l = label.label;
         await openDestructiveOverlay({ kind: "deleteLabel", label: l });
-        await deleteLabel(l);
+        await deleteLabel(l, { fetch });
     }
 </script>
 
