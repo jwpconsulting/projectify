@@ -21,7 +21,10 @@
         moveToBottom,
         getTaskPosition,
     } from "$lib/stores/modules";
-    import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
+    import type {
+        TaskWithWorkspaceBoardSection,
+        WorkspaceBoardSection,
+    } from "$lib/types/workspace";
     import {
         getTaskUrl,
         getTaskUpdatesUrl,
@@ -29,7 +32,7 @@
     } from "$lib/urls";
     import { copyToClipboard } from "$lib/utils/clipboard";
 
-    export let task: Task;
+    export let task: TaskWithWorkspaceBoardSection;
     export let workspaceBoardSection: WorkspaceBoardSection;
     export let location: "dashboard" | "task";
 
@@ -59,22 +62,24 @@
         icon={SwitchVertical}
     />
     {#if location === "dashboard"}
-        {#if getTaskPosition(workspaceBoardSection, task) !== "start"}
+        {#if getTaskPosition(workspaceBoardSection, task).kind !== "start"}
             <ContextMenuButton
                 kind={{
                     kind: "button",
-                    action: () => moveToTop(workspaceBoardSection, task),
+                    action: () =>
+                        moveToTop(workspaceBoardSection, task, { fetch }),
                 }}
                 label={$_("overlay.context-menu.task.move-to-top")}
                 state="normal"
                 icon={SortAscending}
             />
         {/if}
-        {#if getTaskPosition(workspaceBoardSection, task) !== "end"}
+        {#if getTaskPosition(workspaceBoardSection, task).kind !== "end"}
             <ContextMenuButton
                 kind={{
                     kind: "button",
-                    action: () => moveToBottom(workspaceBoardSection, task),
+                    action: () =>
+                        moveToBottom(workspaceBoardSection, task, { fetch }),
                 }}
                 label={$_("overlay.context-menu.task.move-to-bottom")}
                 state="normal"

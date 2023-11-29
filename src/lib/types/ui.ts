@@ -5,6 +5,7 @@ import type {
 import type {
     Label,
     Task,
+    TaskWithWorkspaceBoardSection,
     Workspace,
     WorkspaceBoard,
     WorkspaceBoardSection,
@@ -106,7 +107,7 @@ export type ContextMenuType =
       }
     | {
           kind: "task";
-          task: Task;
+          task: TaskWithWorkspaceBoardSection;
           location: "dashboard" | "task";
           workspaceBoardSection: WorkspaceBoardSection;
       }

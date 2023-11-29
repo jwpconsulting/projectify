@@ -2,9 +2,12 @@
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
-    import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
+    import type {
+        TaskWithWorkspaceBoardSection,
+        WorkspaceBoardSection,
+    } from "$lib/types/workspace";
 
-    export let task: Task;
+    export let task: TaskWithWorkspaceBoardSection;
     export let workspaceBoardSection: WorkspaceBoardSection | undefined;
 
     let dropDownMenuBtnRef: HTMLElement;

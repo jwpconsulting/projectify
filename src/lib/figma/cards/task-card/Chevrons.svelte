@@ -10,8 +10,8 @@
     let isLast = false;
     $: {
         const position = getTaskPosition(workspaceBoardSection, task);
-        isFirst = position === "start";
-        isLast = position === "end";
+        isFirst = position.kind === "start";
+        isLast = position.kind === "end";
     }
 </script>
 
@@ -21,7 +21,7 @@
         icon="up"
         action={{
             kind: "button",
-            action: () => moveUp(workspaceBoardSection, task),
+            action: () => moveUp(workspaceBoardSection, task, { fetch }),
             disabled: isFirst,
         }}
     />
@@ -30,7 +30,7 @@
         icon="down"
         action={{
             kind: "button",
-            action: () => moveDown(workspaceBoardSection, task),
+            action: () => moveDown(workspaceBoardSection, task, { fetch }),
             disabled: isLast,
         }}
     />

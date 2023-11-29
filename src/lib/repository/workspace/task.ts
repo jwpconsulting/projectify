@@ -1,10 +1,7 @@
 import type { FetchResult } from "@apollo/client/core";
 
 import { client } from "$lib/graphql/client";
-import {
-    Mutation_AssignLabel,
-    Mutation_MoveTaskAfter,
-} from "$lib/graphql/operations";
+import { Mutation_AssignLabel } from "$lib/graphql/operations";
 import {
     putWithCredentialsJson,
     getWithCredentialsJson,
@@ -121,32 +118,32 @@ export async function updateTask(
     throw new Error();
 }
 
-export async function moveTaskAfter(
-    taskUuid: string,
-    workspaceBoardSectionUuid: string,
-    afterTaskUuid: string | null = null
+export async function moveTaskToWorkspaceBoardSection(
+    task: Task,
+    { uuid }: WorkspaceBoardSection,
+    repositoryContext: RepositoryContext
 ): Promise<void> {
-    try {
-        const input: {
-            taskUuid: string;
-            workspaceBoardSectionUuid: string;
-            afterTaskUuid?: string;
-        } = {
-            taskUuid,
-            workspaceBoardSectionUuid,
-        };
+    failOrOk(
+        await postWithCredentialsJson(
+            `/workspace/task/${task.uuid}/move-to-workspace-board-section`,
+            { workspace_board_section_uuid: uuid },
+            repositoryContext
+        )
+    );
+}
 
-        if (afterTaskUuid) {
-            input.afterTaskUuid = afterTaskUuid;
-        }
-
-        await client.mutate({
-            mutation: Mutation_MoveTaskAfter,
-            variables: { input },
-        });
-    } catch (error) {
-        console.error(error);
-    }
+export async function moveTaskAfterTask(
+    task: Task,
+    { uuid }: Task,
+    repositoryContext: RepositoryContext
+): Promise<void> {
+    failOrOk(
+        await postWithCredentialsJson(
+            `/workspace/task/${task.uuid}/move-after-task`,
+            { task_uuid: uuid },
+            repositoryContext
+        )
+    );
 }
 
 export async function assignLabelToTask(

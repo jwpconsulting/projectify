@@ -1,8 +1,22 @@
-import { moveTaskAfter } from "$lib/repository/workspace";
-import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
+// TODO consider putting this either in repository or make it part of the
+// task store file
+import {
+    moveTaskAfterTask,
+    moveTaskToWorkspaceBoardSection,
+} from "$lib/repository/workspace";
+import type { RepositoryContext } from "$lib/types/repository";
+import type {
+    Task,
+    TaskWithWorkspaceBoardSection,
+    WorkspaceBoardSection,
+} from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
 
-type TaskPosition = "start" | "within" | "end" | "outside";
+type TaskPosition =
+    | { kind: "start"; position: 0 }
+    | { kind: "within"; position: number }
+    | { kind: "end"; position: number }
+    | { kind: "outside" };
 
 export function getTaskPosition(
     workspaceBoardSection: WorkspaceBoardSection,
@@ -13,60 +27,68 @@ export function getTaskPosition(
     const lastIndex = tasks.length - 1;
     switch (taskIndex) {
         case -1:
-            return "outside";
+            return { kind: "outside" };
         case 0:
-            return "start";
+            return { kind: "start", position: 0 };
         case lastIndex:
-            return "end";
+            return { kind: "end", position: lastIndex };
         default:
-            return "within";
+            return { kind: "within", position: taskIndex };
     }
 }
 
 export async function moveToTop(
     workspaceBoardSection: WorkspaceBoardSection,
-    task: Task
+    task: TaskWithWorkspaceBoardSection,
+    repositoryContext: RepositoryContext
 ) {
-    await moveTaskAfter(task.uuid, workspaceBoardSection.uuid, null);
-}
-
-export async function moveUp(
-    workspaceBoardSection: WorkspaceBoardSection,
-    task: Task
-) {
-    const tasks = unwrap(workspaceBoardSection.tasks, "Expected tasks");
-    const position = getTaskPosition(workspaceBoardSection, task);
-    if (!(position === "within" || position === "end")) {
-        throw new Error("Expected task to be within or at end");
-    }
-    const prevTask = unwrap(
-        tasks.at(tasks.indexOf(task) - 1),
-        "Expected prevTask"
+    await moveTaskToWorkspaceBoardSection(
+        task,
+        workspaceBoardSection,
+        repositoryContext
     );
-    await moveTaskAfter(task.uuid, workspaceBoardSection.uuid, prevTask.uuid);
 }
 
 export async function moveToBottom(
     workspaceBoardSection: WorkspaceBoardSection,
-    task: Task
+    task: Task,
+    repositoryContext: RepositoryContext
 ) {
     const tasks = unwrap(workspaceBoardSection.tasks, "Expected tasks");
     const lastTask = unwrap(tasks.at(-1), "Expected lastTask");
-    await moveTaskAfter(task.uuid, workspaceBoardSection.uuid, lastTask.uuid);
+    await moveTaskAfterTask(task, lastTask, repositoryContext);
+}
+
+export async function moveUp(
+    workspaceBoardSection: WorkspaceBoardSection,
+    task: Task,
+    repositoryContext: RepositoryContext
+) {
+    const tasks = unwrap(workspaceBoardSection.tasks, "Expected tasks");
+    const position = getTaskPosition(workspaceBoardSection, task);
+    if (!(position.kind === "within" || position.kind === "end")) {
+        throw new Error("Expected task to be within or at end");
+    }
+    const prevTask = unwrap(
+        tasks.at(position.position - 1),
+        "Expected prevTask"
+    );
+    await moveTaskAfterTask(task, prevTask, repositoryContext);
 }
 
 export async function moveDown(
     workspaceBoardSection: WorkspaceBoardSection,
-    task: Task
+    task: Task,
+    repositoryContext: RepositoryContext
 ) {
     const position = getTaskPosition(workspaceBoardSection, task);
-    if (!(position === "start" || position === "within")) {
+    if (!(position.kind === "start" || position.kind === "within")) {
         throw new Error("Expected task to be at start or within");
     }
     const tasks = unwrap(workspaceBoardSection.tasks, "Expected tasks");
     const nextTask = unwrap(
-        tasks.at(tasks.indexOf(task) + 1),
+        tasks.at(position.position + 1),
         "Expected nextTask"
     );
-    await moveTaskAfter(task.uuid, workspaceBoardSection.uuid, nextTask.uuid);
+    await moveTaskAfterTask(task, nextTask, repositoryContext);
 }

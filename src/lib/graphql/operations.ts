@@ -1,14 +1,6 @@
 import { gql } from "@apollo/client/core";
 
 // Mutation
-export const Mutation_MoveTaskAfter = gql`
-    mutation MoveTaskAfter($input: MoveTaskAfterInput!) {
-        moveTaskAfter(input: $input) {
-            uuid
-        }
-    }
-`;
-
 export const Mutation_MoveWorkspaceBoardSection = gql`
     mutation MoveWorkspaceBoardSection(
         $input: MoveWorkspaceBoardSectionInput!
