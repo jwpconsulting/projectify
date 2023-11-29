@@ -1,16 +1,12 @@
-import type { ApolloQueryResult } from "@apollo/client";
-
-import { client } from "$lib/graphql/client";
-import { Mutation_UpdateWorkspace } from "$lib/graphql/operations";
 import {
     getWithCredentialsJson,
     handle404,
     postWithCredentialsJson,
+    putWithCredentialsJson,
 } from "$lib/repository/util";
 import type { Result } from "$lib/types/base";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { Workspace, WorkspaceDetail } from "$lib/types/workspace";
-import { unwrap } from "$lib/utils/type";
 
 // Create
 export async function createWorkspace(
@@ -54,26 +50,23 @@ export async function getWorkspace(
 }
 
 // Update
-// TODO please make me a normal DRF API call
 export async function updateWorkspace(
+    // TODO take workspace type instead of uuid string
     uuid: string,
     title: string,
-    description?: string
+    description: string | undefined,
+    repositoryContext: RepositoryContext
 ): Promise<Workspace> {
-    const result = (await client.mutate({
-        mutation: Mutation_UpdateWorkspace,
-        variables: {
-            input: {
-                uuid,
-                title,
-                description,
-            },
-        },
-    })) as ApolloQueryResult<{ updateWorkspace: Workspace }>;
-    return unwrap(
-        result.data.updateWorkspace,
-        "Expected updateWorkspace"
-    ) as Workspace;
+    const response = await putWithCredentialsJson<Workspace>(
+        `/workspace/workspace/${uuid}`,
+        { title, description },
+        repositoryContext
+    );
+    if (response.kind !== "ok") {
+        console.error("TODO handle", response);
+        throw new Error("Error while creating workspace");
+    }
+    return response.data;
 }
 // Delete
 

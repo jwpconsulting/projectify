@@ -43,7 +43,7 @@
                     `/workspace/workspace/${uuid}/picture-upload`
             );
         }
-        workspace = await updateWorkspace(uuid, title, description);
+        workspace = await updateWorkspace(uuid, title, description, { fetch });
         resetForm();
         state = { kind: "viewing" };
     }
