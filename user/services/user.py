@@ -11,6 +11,7 @@ from rest_framework import serializers
 
 from user.emails import UserEmailConfirmationEmail, UserPasswordResetEmail
 from user.models import User
+from user.selectors.user import user_find_by_email
 
 
 # Update
@@ -52,9 +53,8 @@ def user_confirm_email(
     token: str,
 ) -> Optional[User]:
     """Confirm a user's email, return User on success."""
-    try:
-        user = User.objects.get_by_natural_key(email)
-    except User.DoesNotExist:
+    user = user_find_by_email(email=email)
+    if user is None:
         raise serializers.ValidationError(
             {"email": _("No user could be found for this email address")}
         )
@@ -113,9 +113,8 @@ def user_request_password_reset(
     email: str,
 ) -> None:
     """Send a password reset email to a user, given their email address."""
-    try:
-        user = User.objects.get_by_natural_key(email)
-    except User.DoesNotExist:
+    user = user_find_by_email(email=email)
+    if user is None:
         raise serializers.ValidationError(
             {"email": _("No user could be found for this email")}
         )
@@ -131,9 +130,8 @@ def user_confirm_password_reset(
     # TODO don't return anything here
 ) -> Optional[User]:
     """Reset a user's password given a new password and a reset token."""
-    try:
-        user = User.objects.get_by_natural_key(email)
-    except User.DoesNotExist:
+    user = user_find_by_email(email=email)
+    if user is None:
         raise serializers.ValidationError(
             {"email": _("This email is not recognized")}
         )
