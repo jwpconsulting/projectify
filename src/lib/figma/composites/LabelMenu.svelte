@@ -51,8 +51,8 @@
         }
         await createLabel(
             currentWorkspace.unwrap(),
-            labelName,
-            chosenColor.color
+            { name: labelName, color: chosenColor.color },
+            { fetch }
         );
         state = "list";
     }

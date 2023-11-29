@@ -24,7 +24,11 @@
         if (!labelTitle) {
             throw new Error("Expected labelTitle");
         }
-        const { uuid } = await createLabel(workspace, labelTitle, 0);
+        const { uuid } = await createLabel(
+            workspace,
+            { name: labelTitle, color: 0 },
+            { fetch }
+        );
         // TODO use new update task end point for this
         await assignLabelToTask(task, uuid, true);
         // TODO handle if label with this name already exists

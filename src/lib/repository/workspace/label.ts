@@ -1,33 +1,29 @@
 /*
  * Repository functions for label
  */
-import type { ApolloQueryResult } from "@apollo/client/core";
 
 import { client } from "$lib/graphql/client";
-import {
-    Mutation_AddLabelMutation,
-    Mutation_DeleteLabelMutation,
-} from "$lib/graphql/operations";
+import { Mutation_DeleteLabelMutation } from "$lib/graphql/operations";
+import type { RepositoryContext } from "$lib/types/repository";
 import type { Label, Workspace } from "$lib/types/workspace";
+
+import { postWithCredentialsJson } from "../util";
 
 export async function createLabel(
     workspace: Workspace,
-    name: string,
-    color: number
+    { name, color }: Pick<Label, "name" | "color">,
+    repositoryContext: RepositoryContext
 ): Promise<Label> {
-    const {
-        data: { addLabel: label },
-    } = (await client.mutate({
-        mutation: Mutation_AddLabelMutation,
-        variables: {
-            input: {
-                workspaceUuid: workspace.uuid,
-                name,
-                color,
-            },
-        },
-    })) as ApolloQueryResult<{ addLabel: Label }>;
-    return label;
+    const response = await postWithCredentialsJson<Label>(
+        `/workspace/label/`,
+        { workspace_uuid: workspace.uuid, name, color },
+        repositoryContext
+    );
+    if (response.kind !== "ok") {
+        console.error("TODO handle", response);
+        throw new Error("Error while creating label");
+    }
+    return response.data;
 }
 
 export async function deleteLabel(label: Label) {
