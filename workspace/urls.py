@@ -39,7 +39,7 @@ app_name = "workspace"
 workspace_patterns = (
     # Read + Update
     path(
-        "<uuid:workspace_uuid>/",
+        "<uuid:workspace_uuid>",
         WorkspaceReadUpdate.as_view(),
         name="read-update",
     ),
@@ -48,7 +48,7 @@ workspace_patterns = (
 workspace_user_patterns = (
     # Read + Update + Destroy
     path(
-        "<uuid:workspace_user_uuid>/",
+        "<uuid:workspace_user_uuid>",
         WorkspaceUserReadUpdateDelete.as_view(),
         name="read-update-delete",
     ),
@@ -57,13 +57,13 @@ workspace_user_patterns = (
 workspace_board_patterns = (
     # Create
     path(
-        "workspace-board",
+        "",
         WorkspaceBoardCreate.as_view(),
         name="create",
     ),
     # Read + Update + Delete
     path(
-        "workspace-board/<uuid:workspace_board_uuid>",
+        "<uuid:workspace_board_uuid>",
         WorkspaceBoardReadUpdateDelete.as_view(),
         name="read-update-delete",
     ),
