@@ -1,14 +1,6 @@
 import { gql } from "@apollo/client/core";
 
 // Mutation
-export const Mutation_DeleteTask = gql`
-    mutation DeleteTask($input: DeleteTaskInput!) {
-        deleteTask(input: $input) {
-            uuid
-        }
-    }
-`;
-
 export const Mutation_MoveTaskAfter = gql`
     mutation MoveTaskAfter($input: MoveTaskAfterInput!) {
         moveTaskAfter(input: $input) {

@@ -4,13 +4,14 @@ import { client } from "$lib/graphql/client";
 import {
     Mutation_AssignLabel,
     Mutation_MoveTaskAfter,
-    Mutation_DeleteTask,
 } from "$lib/graphql/operations";
 import {
     putWithCredentialsJson,
     getWithCredentialsJson,
     postWithCredentialsJson,
     handle404,
+    failOrOk,
+    deleteWithCredentialsJson,
 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
@@ -171,12 +172,9 @@ export async function assignLabelToTask(
 
 // Delete
 export async function deleteTask(task: Task): Promise<void> {
-    await client.mutate({
-        mutation: Mutation_DeleteTask,
-        variables: {
-            input: {
-                uuid: task.uuid,
-            },
-        },
-    });
+    failOrOk(
+        await deleteWithCredentialsJson(`/workspace/task/${task.uuid}`, {
+            fetch,
+        })
+    );
 }
