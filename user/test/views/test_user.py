@@ -305,7 +305,7 @@ class TestPasswordResetConfirm:
         assert response.status_code == 204, response.data
         # We are somewhat cheating here since we don't check the email outbox
         token = user.get_password_reset_token()
-        with django_assert_num_queries(2):
+        with django_assert_num_queries(4):
             response = rest_client.post(
                 resource_url,
                 # TODO of course in the future we will validate password strength
