@@ -28,6 +28,8 @@ def workspace_create(
     owner: Optional[AbstractBaseUser] = None,
 ) -> Workspace:
     """Create a workspace."""
+    # TODO validate that user can only create 1 unpaid workspace
+    # TODO use Workspace.objects.create
     workspace = Workspace(title=title, description=description)
     workspace.save()
     if owner is not None:
