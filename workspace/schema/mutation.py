@@ -22,7 +22,7 @@ from projectify.utils import (
 )
 from workspace.services.chat_message import chat_message_create
 from workspace.services.label import label_create, label_delete, label_update
-from workspace.services.task import task_delete, task_move_after
+from workspace.services.task import task_delete
 from workspace.services.workspace import workspace_update
 from workspace.services.workspace_board import (
     workspace_board_archive,
@@ -324,45 +324,6 @@ class Mutation:
         )
         workspace_board_section.refresh_from_db()
         return workspace_board_section
-
-    # DONE
-    @strawberry.field
-    def move_task_after(
-        self, info: GraphQLResolveInfo, input: MoveTaskAfterInput
-    ) -> types.Task:
-        """Move task after another task."""
-        # Find workspace board section
-        workspace_board_section_qs = (
-            models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
-                info.context.user,
-                input.workspace_board_section_uuid,
-            )
-        )
-        workspace_board_section = get_object_or_404(workspace_board_section_qs)
-        # Find task
-        task_qs = models.Task.objects.filter_for_user_and_uuid(
-            info.context.user,
-            input.task_uuid,
-        )
-        task = get_object_or_404(task_qs)
-        # Find after task
-        if input.after_task_uuid is not UNSET and input.after_task_uuid:
-            after_task = models.Task.objects.filter_for_user_and_uuid(
-                info.context.user,
-                input.after_task_uuid,
-            ).get()
-        else:
-            after_task = None
-        # Reorder task
-        task_move_after(
-            who=info.context.user,
-            task=task,
-            workspace_board_section=workspace_board_section,
-            after=after_task,
-        )
-        # Return task
-        task.refresh_from_db()
-        return task
 
     # DONE
     @strawberry.field
