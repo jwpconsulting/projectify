@@ -182,6 +182,8 @@ class TaskMoveToWorkspaceBoardSection(APIView):
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
 
+# TODO inaccuracy: Might want to be able to move in front of a given task as
+# well
 class TaskMoveAfterTask(APIView):
     """Move a task right behind another task."""
 
