@@ -1,13 +1,14 @@
-import type { ApolloQueryResult } from "@apollo/client/core";
-
 import { client } from "$lib/graphql/client";
 import {
-    Mutation_AddWorkspaceBoard,
     Mutation_ArchiveWorkspaceBoard,
     Mutation_DeleteWorkspaceBoard,
     Mutation_UpdateWorkspaceBoard,
 } from "$lib/graphql/operations";
-import { getWithCredentialsJson, handle404 } from "$lib/repository/util";
+import {
+    getWithCredentialsJson,
+    handle404,
+    postWithCredentialsJson,
+} from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
     ArchivedWorkspaceBoard,
@@ -20,21 +21,21 @@ import type {
 // Create
 export async function createWorkspaceBoard(
     workspace: Workspace,
-    workspaceBoard: { title: string; description: string; deadline: null }
+    workspaceBoard: { title: string; description: string; deadline?: string },
+    repositoryContext: RepositoryContext
 ): Promise<WorkspaceBoard> {
-    const input = {
-        workspaceUuid: workspace.uuid,
-        ...workspaceBoard,
-    };
-    const {
-        data: { addWorkspaceBoard: createdWorkspaceBoard },
-    } = (await client.mutate({
-        mutation: Mutation_AddWorkspaceBoard,
-        variables: {
-            input,
-        },
-    })) as ApolloQueryResult<{ addWorkspaceBoard: WorkspaceBoard }>;
-    return createdWorkspaceBoard;
+    const { title, description, deadline } = workspaceBoard;
+    const { uuid: workspace_uuid } = workspace;
+    const response = await postWithCredentialsJson<Workspace>(
+        `/workspace/workspace-board/`,
+        { workspace_uuid, title, description, deadline },
+        repositoryContext
+    );
+    if (response.kind !== "ok") {
+        console.error("TODO handle", response);
+        throw new Error("Error while creating workspace  board");
+    }
+    return response.data;
 }
 
 // Read

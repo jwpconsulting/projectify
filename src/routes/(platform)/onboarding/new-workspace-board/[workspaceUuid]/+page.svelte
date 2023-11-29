@@ -6,7 +6,7 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
-    import { createWorkspaceBoard } from "$lib/repository/workspace";
+    import { createWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
     import { getNewTaskUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
@@ -23,12 +23,14 @@
         if (!title) {
             throw new Error("Expected title");
         }
-        const { uuid } = await createWorkspaceBoard(workspace, {
-            title,
-            description: "",
-            // TODO please make me optional
-            deadline: null,
-        });
+        const { uuid } = await createWorkspaceBoard(
+            workspace,
+            {
+                title,
+                description: "",
+            },
+            { fetch }
+        );
         const nextStep = getNewTaskUrl(uuid);
         await goto(nextStep);
     }

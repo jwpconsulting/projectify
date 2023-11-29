@@ -5,7 +5,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { goto } from "$lib/navigation";
-    import { createWorkspaceBoard } from "$lib/repository/workspace";
+    import { createWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
     import {
         rejectConstructiveOverlay,
         resolveConstructiveOverlay,
@@ -21,11 +21,14 @@
         if (!title) {
             throw new Error("Not valid");
         }
-        const { uuid } = await createWorkspaceBoard(workspace, {
-            title,
-            description: "TODO",
-            deadline: null,
-        });
+        const { uuid } = await createWorkspaceBoard(
+            workspace,
+            {
+                title,
+                description: "TODO",
+            },
+            { fetch }
+        );
         await goto(getDashboardWorkspaceBoardUrl(uuid));
         resolveConstructiveOverlay();
     }

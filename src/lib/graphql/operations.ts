@@ -157,15 +157,6 @@ export const Mutation_DeleteWorkspaceBoardSection = gql`
     }
 `;
 
-export const Mutation_AddWorkspaceBoard = gql`
-    mutation AddWorkspaceBoard($input: AddWorkspaceBoardInput!) {
-        addWorkspaceBoard(input: $input) {
-            uuid
-            created
-        }
-    }
-`;
-
 export const Mutation_UpdateWorkspaceBoard = gql`
     mutation UpdateWorkspaceBoard($input: UpdateWorkspaceBoardInput!) {
         updateWorkspaceBoard(input: $input) {

@@ -4,7 +4,6 @@ import { client } from "$lib/graphql/client";
 import {
     Mutation_MoveWorkspaceBoardSection,
     Mutation_AddLabelMutation,
-    Mutation_AddWorkspaceBoard,
     Mutation_AddWorkspaceBoardSection,
     Mutation_DeleteLabelMutation,
     Mutation_UpdateLabelMutation,
@@ -64,27 +63,6 @@ export async function deleteLabel(label: Label) {
             },
         },
     });
-}
-
-// WorkspaceBoard CRUD
-// Create
-export async function createWorkspaceBoard(
-    workspace: Workspace,
-    workspaceBoard: { title: string; description: string; deadline: null }
-): Promise<WorkspaceBoard> {
-    const input = {
-        workspaceUuid: workspace.uuid,
-        ...workspaceBoard,
-    };
-    const {
-        data: { addWorkspaceBoard: createdWorkspaceBoard },
-    } = (await client.mutate({
-        mutation: Mutation_AddWorkspaceBoard,
-        variables: {
-            input,
-        },
-    })) as ApolloQueryResult<{ addWorkspaceBoard: WorkspaceBoard }>;
-    return createdWorkspaceBoard;
 }
 
 // Read
