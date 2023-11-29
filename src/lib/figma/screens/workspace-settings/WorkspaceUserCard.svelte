@@ -4,7 +4,7 @@
 
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import { deleteWorkspaceUser } from "$lib/repository/workspace/workspace_user";
+    import { deleteWorkspaceUser } from "$lib/repository/workspace/workspaceUser";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
     import { getDisplayName } from "$lib/types/user";
     import type { WorkspaceUser } from "$lib/types/workspace";
