@@ -20,6 +20,7 @@ from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 from user.models import User
 from user.serializers import UserSerializer
 from user.services.user import (
+    user_confirm_email,
     user_confirm_password_reset,
     user_log_in,
     user_log_out,
@@ -120,6 +121,29 @@ class SignUp(views.APIView):
         user_sign_up(
             email=data["email"],
             password=data["password"],
+        )
+        return Response(status=HTTP_204_NO_CONTENT)
+
+
+class ConfirmEmail(views.APIView):
+    """Log a user in."""
+
+    permission_classes = (AllowAny,)
+
+    class InputSerializer(serializers.Serializer):
+        """Take email and password."""
+
+        email = serializers.EmailField()
+        token = serializers.CharField()
+
+    def post(self, request: Request) -> Response:
+        """Handle POST."""
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        user_confirm_email(
+            email=data["email"],
+            token=data["token"],
         )
         return Response(status=HTTP_204_NO_CONTENT)
 

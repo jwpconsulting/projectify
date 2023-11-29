@@ -5,6 +5,7 @@ from django.urls import (
 )
 
 from user.views.user import (
+    ConfirmEmail,
     LogIn,
     LogOut,
     PasswordResetConfirm,
@@ -41,6 +42,11 @@ user_patterns = (
         "sign-up",
         SignUp.as_view(),
         name="sign-up",
+    ),
+    path(
+        "confirm-email",
+        ConfirmEmail.as_view(),
+        name="confirm-email",
     ),
     path(
         "log-in",
