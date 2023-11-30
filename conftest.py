@@ -41,9 +41,9 @@ from user import models as user_models
 from user.factory import (
     SuperUserFactory,
     UserFactory,
-    UserInviteFactory,
 )
-from user.services.user_invite import user_invite_create
+from user.services.user import user_create
+from user.services.user_invite import user_invite_create, user_invite_redeem
 
 
 @pytest.fixture
@@ -84,11 +84,14 @@ def user_invite(faker: Faker) -> user_models.UserInvite:
 
 
 @pytest.fixture
-def redeemed_user_invite(user: user_models.User) -> user_models.UserInvite:
+def redeemed_user_invite(faker: Faker) -> user_models.UserInvite:
     """Return a redeemed user invite."""
-    user_invite: user_models.UserInvite = UserInviteFactory.create(
-        redeemed=True, user=user, email=user.email
-    )
+    email = faker.email()
+    user_invite = user_invite_create(email=email)
+    if user_invite is None:
+        raise AssertionError("Expected user_invite")
+    user = user_create(email=email)
+    user_invite_redeem(user=user, user_invite=user_invite)
     return user_invite
 
 
