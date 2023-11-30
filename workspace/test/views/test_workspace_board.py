@@ -85,7 +85,7 @@ class TestWorkspaceBoardReadUpdateDelete:
         """Assert we can post to this view this while being logged in."""
         with django_assert_num_queries(7):
             response = rest_user_client.get(resource_url)
-        assert response.status_code == 200, response.content
+            assert response.status_code == 200, response.content
 
     def test_updating(
         self,

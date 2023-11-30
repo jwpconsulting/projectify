@@ -158,6 +158,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         rest_user_client: APIClient,
         resource_url: str,
         workspace_user: models.WorkspaceUser,
+        task: Task,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test retrieving when authenticated."""
@@ -165,7 +166,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.data
 
-        assert response.data["assignee"]["uuid"] == str(workspace_user.uuid)
+        assert response.data["uuid"] == str(task.uuid)
 
     def test_update(
         self,

@@ -123,7 +123,8 @@ class TestTask:
         task: models.Task,
     ) -> None:
         """Test what happens if a workspace user is removed."""
-        assert task.assignee == workspace_user
+        task.assignee = workspace_user
+        task.save()
         workspace.remove_user(user)
         task.refresh_from_db()
         assert task.assignee is None
