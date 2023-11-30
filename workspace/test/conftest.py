@@ -32,6 +32,9 @@ from workspace.services.label import label_create
 from workspace.services.sub_task import sub_task_create
 from workspace.services.task import task_create
 from workspace.services.workspace import workspace_add_user
+from workspace.services.workspace_board_section import (
+    workspace_board_section_create,
+)
 
 from .. import (
     factory,
@@ -111,7 +114,9 @@ def other_workspace_user(
 ) -> models.WorkspaceUser:
     """Return workspace user for other_user."""
     return factory.WorkspaceUserFactory.create(
-        workspace=workspace, user=other_user
+        workspace=workspace,
+        user=other_user,
+        role=models.WorkspaceUserRoles.OWNER,
     )
 
 
@@ -146,20 +151,31 @@ def archived_workspace_board(
 @pytest.fixture
 def workspace_board_section(
     workspace_board: models.WorkspaceBoard,
+    # Another workspace user creates it, so that we can correctly assess
+    # permissions and not implicitly associate the main user with this
+    # workspace
+    other_workspace_user: WorkspaceUser,
+    faker: Faker,
 ) -> models.WorkspaceBoardSection:
     """Return workspace board section."""
-    return factory.WorkspaceBoardSectionFactory.create(
+    return workspace_board_section_create(
+        who=other_workspace_user.user,
         workspace_board=workspace_board,
+        title=faker.sentence(),
     )
 
 
 @pytest.fixture
 def other_workspace_board_section(
     workspace_board: models.WorkspaceBoard,
+    workspace_user: WorkspaceUser,
+    faker: Faker,
 ) -> models.WorkspaceBoardSection:
     """Return workspace board section."""
-    return factory.WorkspaceBoardSectionFactory.create(
+    return workspace_board_section_create(
+        who=workspace_user.user,
         workspace_board=workspace_board,
+        title=faker.sentence(),
     )
 
 
