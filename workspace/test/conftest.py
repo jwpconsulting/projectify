@@ -190,7 +190,7 @@ def task(
         who=workspace_user.user,
         workspace_board_section=workspace_board_section,
         title=faker.sentence(),
-        description=faker.paragraph() if faker.pybool() else None,
+        description=faker.paragraph(),
         assignee=workspace_user,
         deadline=faker.date_time(tzinfo=dt_timezone.utc),
     )
@@ -253,7 +253,7 @@ def sub_task(
         who=workspace_user.user,
         task=task,
         title=faker.sentence(),
-        description=faker.paragraph() if faker.pybool() else None,
+        description=faker.paragraph(),
         done=faker.pybool(),
     )
 
