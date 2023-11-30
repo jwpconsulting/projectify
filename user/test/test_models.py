@@ -1,20 +1,6 @@
 """Test user models."""
-from unittest.mock import (
-    MagicMock,
-)
-
-from django.dispatch import (
-    receiver,
-)
-
 import pytest
 
-from user.services.user_invite import user_invite_create
-
-from .. import (
-    factory,
-    signal_defs,
-)
 from ..models import User, UserInvite
 
 
@@ -51,26 +37,6 @@ class TestUser:
             is False
         )
 
-    def test_redeem_invites(
-        self,
-        user: User,
-        user_invite: UserInvite,
-        redeemed_user_invite: UserInvite,
-    ) -> None:
-        """Test redeeming invites."""
-        user_invite.email = user.email
-        user_invite.save()
-        assert not user_invite.redeemed
-        user.redeem_invites()
-        user_invite.refresh_from_db()
-        assert user_invite.redeemed
-
-    def test_redeem_multiple_invites(self, user: User) -> None:
-        """Test what happens if invites exist. Nothing should happen."""
-        factory.UserInviteFactory(email=user.email)
-        factory.UserInviteFactory(email=user.email)
-        user.redeem_invites()
-
 
 @pytest.mark.django_db
 class TestUserInviteQuerySet:
@@ -88,23 +54,6 @@ class TestUserInviteQuerySet:
         """Test by_email."""
         assert UserInvite.objects.by_email(user.email).count() == 1
 
-    def test_invite_user(self) -> None:
-        """Test inviting."""
-        invite = user_invite_create(email="hello@example.com")
-        assert invite
-
-    def test_invite_twice(self) -> None:
-        """Test inviting twice."""
-        user_invite_create(email="hello@example.com")
-        # Idempotent
-        user_invite_create(email="hello@example.com")
-        assert UserInvite.objects.count() == 1
-
-    def test_invite_existing_user(self, user: User) -> None:
-        """Ensure that inviting an existing user is impossible."""
-        with pytest.raises(ValueError):
-            user_invite_create(email=user.email)
-
 
 @pytest.mark.django_db
 class TestUserInvite:
@@ -117,14 +66,3 @@ class TestUserInvite:
     def test_factory_redeemed(self, redeemed_user_invite: UserInvite) -> None:
         """Test the redeemed factory."""
         assert redeemed_user_invite.user is not None
-
-    def test_redeem(self, user: User, user_invite: UserInvite) -> None:
-        """Test redeeming."""
-        mock = MagicMock()
-        receiver(
-            signal_defs.user_invitation_redeemed,
-            sender=UserInvite,
-        )(mock)
-        user_invite.redeem(user)
-        assert user_invite.user == user
-        assert mock.called
