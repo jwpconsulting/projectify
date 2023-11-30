@@ -27,6 +27,10 @@ from user import models as user_models
 from workspace.models.label import Label
 from workspace.models.workspace import Workspace
 from workspace.models.workspace_user import WorkspaceUser
+from workspace.models.workspace_user_invite import (
+    WorkspaceUserInvite,
+    add_or_invite_workspace_user,
+)
 from workspace.services.chat_message import chat_message_create
 from workspace.services.label import label_create
 from workspace.services.sub_task import sub_task_create
@@ -91,13 +95,17 @@ def other_workspace() -> models.Workspace:
 
 @pytest.fixture
 def workspace_user_invite(
-    workspace: models.Workspace, user_invite: user_models.UserInvite
+    workspace: models.Workspace,
+    user_invite: user_models.UserInvite,
+    faker: Faker,
 ) -> models.WorkspaceUserInvite:
     """Return workspace user invite."""
-    return factory.WorkspaceUserInviteFactory.create(
-        user_invite=user_invite,
-        workspace=workspace,
+    email: str = faker.email()
+    invite = add_or_invite_workspace_user(
+        workspace=workspace, email_or_user=email
     )
+    assert isinstance(invite, WorkspaceUserInvite)
+    return invite
 
 
 @pytest.fixture
