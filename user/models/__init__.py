@@ -14,7 +14,6 @@ from django.contrib.auth.models import (
 )
 from django.db import (
     models,
-    transaction,
 )
 from django.utils import (
     crypto,
@@ -26,10 +25,6 @@ from django_extensions.db.models import (
 )
 from typing_extensions import (
     Self,
-)
-
-from .. import (
-    signal_defs,
 )
 
 
@@ -93,13 +88,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         actual = self.get_password_reset_token()
         return crypto.constant_time_compare(token, actual)
 
-    @transaction.atomic
-    def redeem_invites(self) -> None:
-        """Redeem all invites."""
-        invites = UserInvite.objects.is_redeemed(False).by_email(self.email)
-        for invitation in invites.iterator():
-            invitation.redeem(self)
-
 
 class UserInviteQuerySet(models.QuerySet["UserInvite"]):
     """User invite QuerySet."""
@@ -130,22 +118,6 @@ class UserInvite(TimeStampedModel, models.Model):
         default=False,
         help_text=_("Has this invite been redeemed?"),
     )
-
-    def redeem(self, user: User) -> None:
-        """
-        Redeem this invite with a user.
-
-        Saves.
-        """
-        assert not self.redeemed
-        self.redeemed = True
-        self.user = user
-        self.save()
-        signal_defs.user_invitation_redeemed.send(
-            sender=self.__class__,
-            user=user,
-            instance=self,
-        )
 
     objects: ClassVar[UserInviteQuerySet] = cast(  # type: ignore[assignment]
         UserInviteQuerySet, UserInviteQuerySet.as_manager()
