@@ -43,15 +43,3 @@ class SuperUserFactory(UserFactory):
     is_superuser = True
     is_staff = True
     is_active = True
-
-
-class UserInviteFactory(django.DjangoModelFactory[models.UserInvite]):
-    """UserInvite factory."""
-
-    email = factory.Faker("email")
-    user = None
-
-    class Meta:
-        """Meta."""
-
-        model = models.UserInvite
