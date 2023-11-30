@@ -105,7 +105,7 @@ def workspace_user(
     workspace: models.Workspace, user: "_User"
 ) -> models.WorkspaceUser:
     """Return workspace user with owner status."""
-    return factory.WorkspaceUserFactory.create(
+    return workspace_add_user(
         workspace=workspace,
         user=user,
         role=models.WorkspaceUserRoles.OWNER,
@@ -117,7 +117,7 @@ def other_workspace_user(
     workspace: models.Workspace, other_user: "_User"
 ) -> models.WorkspaceUser:
     """Return workspace user for other_user."""
-    return factory.WorkspaceUserFactory.create(
+    return workspace_add_user(
         workspace=workspace,
         user=other_user,
         role=models.WorkspaceUserRoles.OWNER,
