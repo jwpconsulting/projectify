@@ -25,6 +25,7 @@ from projectify.utils import (
 from user.models import (  # noqa: F401
     UserInvite,
 )
+from user.services.user_invite import user_invite_create
 from workspace import (
     signal_defs,
 )
@@ -95,6 +96,8 @@ class WorkspaceUserInvite(TimeStampedModel, models.Model):
         unique_together = ("user_invite", "workspace")
 
 
+# TODO The following methods shall be moved to
+# workspace/services/workspace_user_invite.py
 def try_find_workspace_user(
     workspace: "Workspace", email: str
 ) -> Union[None, "AbstractBaseUser", "WorkspaceUser"]:
@@ -179,7 +182,7 @@ def add_or_invite_workspace_user(
         case UserInvite() as found:
             user_invite = found
         case None:
-            user_invite = UserInvite.objects.invite_user(email)
+            user_invite = user_invite_create(email=email)
 
     workspace_user_invite: WorkspaceUserInvite = (
         workspace.workspaceuserinvite_set.create(user_invite=user_invite)

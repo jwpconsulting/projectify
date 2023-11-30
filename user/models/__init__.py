@@ -161,19 +161,6 @@ class UserInviteQuerySet(models.QuerySet["UserInvite"]):
         """Filter by email."""
         return self.filter(email=email)
 
-    @transaction.atomic()
-    def invite_user(self, email: str) -> "UserInvite":
-        """Invite a user."""
-        user_qs = User.objects.filter(email=email)
-        if user_qs.exists():
-            raise ValueError(_("User already exists."))
-        invite_qs = self.by_email(email).is_redeemed(False)
-        if invite_qs.exists():
-            invite = invite_qs.get()
-        else:
-            invite = self.create(email=email)
-        return invite
-
 
 class UserInvite(TimeStampedModel, models.Model):
     """User invite model."""

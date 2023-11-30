@@ -9,6 +9,8 @@ from django.dispatch import (
 
 import pytest
 
+from user.services.user_invite import user_invite_create
+
 from .. import (
     factory,
     signal_defs,
@@ -103,20 +105,20 @@ class TestUserInviteQuerySet:
 
     def test_invite_user(self) -> None:
         """Test inviting."""
-        invite = UserInvite.objects.invite_user("hello@example.com")
+        invite = user_invite_create(email="hello@example.com")
         assert invite
 
     def test_invite_twice(self) -> None:
         """Test inviting twice."""
-        UserInvite.objects.invite_user("hello@example.com")
-        # Works
-        UserInvite.objects.invite_user("hello@example.com")
+        user_invite_create(email="hello@example.com")
+        # Idempotent
+        user_invite_create(email="hello@example.com")
         assert UserInvite.objects.count() == 1
 
     def test_invite_existing_user(self, user: User) -> None:
         """Ensure that inviting an existing user is impossible."""
         with pytest.raises(ValueError):
-            UserInvite.objects.invite_user(user.email)
+            user_invite_create(email=user.email)
 
 
 @pytest.mark.django_db
