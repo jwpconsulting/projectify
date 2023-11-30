@@ -780,7 +780,7 @@ mutation DeleteWorkspaceBoard($uuid: UUID!) {
         workspace_user,
     ):
         """Test query."""
-        assert models.WorkspaceBoard.objects.count() == 1
+        count = models.WorkspaceBoard.objects.count()
         result = graphql_query_user(
             self.query,
             variables={
@@ -794,11 +794,11 @@ mutation DeleteWorkspaceBoard($uuid: UUID!) {
                 }
             }
         }
-        assert models.WorkspaceBoard.objects.count() == 0
+        assert models.WorkspaceBoard.objects.count() == count - 1
 
     def test_query_unauthorized(self, graphql_query_user, workspace_board):
         """Test query."""
-        assert models.WorkspaceBoard.objects.count() == 1
+        count = models.WorkspaceBoard.objects.count()
         result = graphql_query_user(
             self.query,
             variables={
@@ -806,7 +806,7 @@ mutation DeleteWorkspaceBoard($uuid: UUID!) {
             },
         )
         assert "errors" in result
-        assert models.WorkspaceBoard.objects.count() == 1
+        assert models.WorkspaceBoard.objects.count() == count
 
 
 @pytest.mark.django_db
@@ -828,7 +828,7 @@ mutation DeleteWorkspaceBoardSection($uuid: UUID!) {
         workspace_user,
     ):
         """Test query."""
-        assert models.WorkspaceBoardSection.objects.count() == 1
+        count = models.WorkspaceBoardSection.objects.count()
         result = graphql_query_user(
             self.query,
             variables={
@@ -842,7 +842,7 @@ mutation DeleteWorkspaceBoardSection($uuid: UUID!) {
                 }
             }
         }
-        assert models.WorkspaceBoardSection.objects.count() == 0
+        assert models.WorkspaceBoardSection.objects.count() == count - 1
 
     def test_query_unauthorized(
         self,
@@ -850,13 +850,14 @@ mutation DeleteWorkspaceBoardSection($uuid: UUID!) {
         workspace_board_section,
     ):
         """Test query."""
-        assert models.WorkspaceBoardSection.objects.count() == 1
+        count = models.WorkspaceBoardSection.objects.count()
         result = graphql_query_user(
             self.query,
             variables={
                 "uuid": str(workspace_board_section.uuid),
             },
         )
+        assert models.WorkspaceBoardSection.objects.count() == count
         assert "errors" in result
 
     def test_still_has_tasks(
@@ -867,7 +868,7 @@ mutation DeleteWorkspaceBoardSection($uuid: UUID!) {
         task,
     ):
         """Assert section is not deleted if tasks still exist."""
-        assert models.WorkspaceBoardSection.objects.count() == 1
+        count = models.WorkspaceBoardSection.objects.count()
         result = graphql_query_user(
             self.query,
             variables={
@@ -875,7 +876,7 @@ mutation DeleteWorkspaceBoardSection($uuid: UUID!) {
             },
         )
         assert "still has tasks" in str(result)
-        assert models.WorkspaceBoardSection.objects.count() == 1
+        assert models.WorkspaceBoardSection.objects.count() == count
 
 
 @pytest.mark.django_db
@@ -899,7 +900,7 @@ mutation DeleteTask($uuid: UUID!) {
         sub_task,
     ):
         """Test query."""
-        assert models.Task.objects.count() == 1
+        count = models.Task.objects.count()
         result = graphql_query_user(
             self.query,
             variables={
@@ -913,20 +914,21 @@ mutation DeleteTask($uuid: UUID!) {
                 }
             }
         }
-        assert models.Task.objects.count() == 0
+        assert models.Task.objects.count() == count - 1
 
     def test_query_unauthorized(
         self, graphql_query_user, task, workspace_user
     ):
         """Test query."""
         workspace_user.delete()
-        assert models.Task.objects.count() == 1
+        count = models.Task.objects.count()
         result = graphql_query_user(
             self.query,
             variables={
                 "uuid": str(task.uuid),
             },
         )
+        assert models.Task.objects.count() == count
         assert "errors" in result
 
 
@@ -944,7 +946,7 @@ mutation DeleteLabel($uuid: UUID!) {
 
     def test_query(self, graphql_query_user, label, workspace_user):
         """Test query."""
-        assert models.Label.objects.count() == 1
+        count = models.Label.objects.count()
         result = graphql_query_user(
             self.query,
             variables={
@@ -958,4 +960,4 @@ mutation DeleteLabel($uuid: UUID!) {
                 },
             },
         }
-        assert models.Label.objects.count() == 0
+        assert models.Label.objects.count() == count - 1

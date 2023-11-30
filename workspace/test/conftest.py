@@ -175,10 +175,8 @@ def task(
         workspace_board_section=workspace_board_section,
         title=faker.sentence(),
         description=faker.paragraph() if faker.pybool() else None,
-        assignee=workspace_user if faker.pybool() else None,
-        deadline=faker.date_time(tzinfo=dt_timezone.utc)
-        if faker.pybool()
-        else None,
+        assignee=workspace_user,
+        deadline=faker.date_time(tzinfo=dt_timezone.utc),
     )
 
 
