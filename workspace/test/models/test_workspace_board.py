@@ -54,7 +54,8 @@ class TestWorkspaceBoardManager:
         WorkspaceUserFactory(
             workspace=workspace,
         )
-        assert workspace_board.workspace.users.count() == 2
+        # The third user is other_workspace_user, the created of this board
+        assert workspace_board.workspace.users.count() == 3
         actual = WorkspaceBoard.objects.filter_for_user_and_uuid(
             workspace_user.user,
             workspace_board.uuid,

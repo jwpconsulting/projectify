@@ -32,6 +32,10 @@ from workspace.services.label import label_create
 from workspace.services.sub_task import sub_task_create
 from workspace.services.task import task_create
 from workspace.services.workspace import workspace_add_user
+from workspace.services.workspace_board import (
+    workspace_board_archive,
+    workspace_board_create,
+)
 from workspace.services.workspace_board_section import (
     workspace_board_section_create,
 )
@@ -133,19 +137,42 @@ def other_workspace_workspace_user(
 
 
 @pytest.fixture
-def workspace_board(workspace: models.Workspace) -> models.WorkspaceBoard:
+def workspace_board(
+    other_workspace_user: WorkspaceUser,
+    faker: Faker,
+    workspace: models.Workspace,
+) -> models.WorkspaceBoard:
     """Return workspace board."""
-    return factory.WorkspaceBoardFactory.create(workspace=workspace)
+    return workspace_board_create(
+        who=other_workspace_user.user,
+        title=faker.text(),
+        description=faker.paragraph(),
+        workspace=workspace,
+        # XXX another victim to non-determinism
+        deadline=faker.date_time(tzinfo=dt_timezone.utc),
+    )
 
 
 @pytest.fixture
 def archived_workspace_board(
-    workspace: models.Workspace, now: datetime
+    workspace: models.Workspace,
+    now: datetime,
+    other_workspace_user: WorkspaceUser,
+    faker: Faker,
 ) -> models.WorkspaceBoard:
     """Return archived workspace board."""
-    return factory.WorkspaceBoardFactory.create(
-        workspace=workspace, archived=now
+    workspace_board = workspace_board_create(
+        who=other_workspace_user.user,
+        title=faker.text(),
+        description=faker.paragraph(),
+        workspace=workspace,
     )
+    workspace_board_archive(
+        who=other_workspace_user.user,
+        workspace_board=workspace_board,
+        archived=True,
+    )
+    return workspace_board
 
 
 @pytest.fixture
