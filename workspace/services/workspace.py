@@ -56,6 +56,7 @@ def workspace_update(
     return workspace
 
 
+# TODO auth required here?
 def workspace_add_user(
     # TODO make *
     workspace: Workspace,
