@@ -1,12 +1,18 @@
 """Shared type definitions in workspace app."""
-from collections.abc import (
-    Mapping,
-    Sequence,
-)
 from typing import (
+    Mapping,
+    Optional,
+    Sequence,
     TypedDict,
     Union,
 )
+
+
+class ConsumerEvent(TypedDict):
+    """Contains event data about what to send to client."""
+
+    type: str
+    uuid: str
 
 
 class Message(TypedDict):
@@ -14,4 +20,5 @@ class Message(TypedDict):
 
     type: str
     uuid: str
-    data: Union[Mapping[str, object], Sequence[object]]
+    # TODO Sequence required here?
+    data: Optional[Union[Mapping[str, object], Sequence[object]]]

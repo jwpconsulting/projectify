@@ -168,11 +168,9 @@ def delete_model_instance(model_instance: django_models.Model) -> None:
 def is_workspace_message(workspace: models.Workspace, json: object) -> bool:
     """Test if the message is correct."""
     json_cast = cast(dict[str, Any], json)
-    return (
-        set(json_cast.keys()) == {"uuid", "type", "data"}
-        and json_cast["uuid"] == str(workspace.uuid)
-        and json_cast["data"]["uuid"] == str(workspace.uuid)
-    )
+    return set(json_cast.keys()) == {"uuid", "type", "data"} and json_cast[
+        "uuid"
+    ] == str(workspace.uuid)
 
 
 def is_workspace_board_message(
@@ -180,21 +178,17 @@ def is_workspace_board_message(
 ) -> bool:
     """Test if the message is correct."""
     json_cast = cast(dict[str, Any], json)
-    return (
-        set(json_cast.keys()) == {"uuid", "type", "data"}
-        and json_cast["uuid"] == str(workspace_board.uuid)
-        and json_cast["data"]["uuid"] == str(workspace_board.uuid)
-    )
+    return set(json_cast.keys()) == {"uuid", "type", "data"} and json_cast[
+        "uuid"
+    ] == str(workspace_board.uuid)
 
 
 def is_task_message(task: models.Task, json: object) -> bool:
     """Test if the message is correct."""
     json_cast = cast(dict[str, Any], json)
-    return (
-        set(json_cast.keys()) == {"uuid", "type", "data"}
-        and json_cast["uuid"] == str(task.uuid)
-        and json_cast["data"]["uuid"] == str(task.uuid)
-    )
+    return set(json_cast.keys()) == {"uuid", "type", "data"} and json_cast[
+        "uuid"
+    ] == str(task.uuid)
 
 
 @pytest.mark.django_db
@@ -219,11 +213,12 @@ class TestWorkspaceConsumer:
         message = await communicator.receive_json_from()
         assert is_workspace_message(workspace, message)
         await delete_model_instance(workspace_user)
-        await delete_model_instance(user)
         await delete_model_instance(workspace)
         message = await communicator.receive_json_from()
         assert is_workspace_message(workspace, message)
         await communicator.disconnect()
+        # If we delete the user before disconnecting, we're in trouble
+        await delete_model_instance(user)
 
     async def test_label_saved_or_deleted(self) -> None:
         """Test signal firing on workspace change."""
@@ -246,9 +241,9 @@ class TestWorkspaceConsumer:
         message = await communicator.receive_json_from()
         assert is_workspace_message(workspace, message)
         await delete_model_instance(workspace_user)
-        await delete_model_instance(user)
         await delete_model_instance(workspace)
         await communicator.disconnect()
+        await delete_model_instance(user)
 
     async def test_workspace_user_saved_or_deleted(self) -> None:
         """Test signal firing on workspace user save or delete."""

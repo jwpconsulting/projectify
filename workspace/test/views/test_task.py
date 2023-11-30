@@ -102,7 +102,7 @@ class TestTaskCreate(UnauthenticatedTestMixin):
         # The increase below for RetrieveUpdate was only 7. Maybe we can look
         # into where the additional 3 queries on top of the 7 come. It could be
         # somethign we failed to select or prefetch.
-        with django_assert_num_queries(44):
+        with django_assert_num_queries(16):
             response = rest_user_client.post(
                 resource_url,
                 {**payload, "assignee": {"uuid": str(workspace_user.uuid)}},
@@ -178,15 +178,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         payload: dict[str, object],
     ) -> None:
         """Test updating a task when logged in correctly."""
-        # TODO so many queries...
-        # TODO omg so many queries (22 -> 28)
-        # TODO even more queries (28 -> 29)
-        # TODO it's even more now, but the data is more complete (29 -> 33)
-        # TODO because of the signal, there are 7 more (33 -> 40)
-        # TODO would make sense to have the signal perform the additional
-        # queries in the background... or is that already happening and testing
-        # channels in memory we eagerly execute the tasks?
-        with django_assert_num_queries(40):
+        with django_assert_num_queries(19):
             response = rest_user_client.put(
                 resource_url,
                 {**payload, "assignee": {"uuid": str(workspace_user.uuid)}},
@@ -207,7 +199,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test deleting a task."""
-        with django_assert_num_queries(15):
+        with django_assert_num_queries(13):
             response = rest_user_client.delete(resource_url)
             assert response.status_code == 204, response.content
         # Ensure that the task is gone for good
@@ -240,7 +232,7 @@ class TestMoveTaskToWorkspaceBoardSection:
     ) -> None:
         """Test moving a task."""
         assert task.workspace_board_section == workspace_board_section
-        with django_assert_num_queries(46):
+        with django_assert_num_queries(26):
             response = rest_user_client.post(
                 resource_url,
                 data={
@@ -276,7 +268,7 @@ class TestTaskMoveAfterTask:
         other_task: Task,
     ) -> None:
         """Test as an authenticated user."""
-        with django_assert_num_queries(34):
+        with django_assert_num_queries(25):
             response = rest_user_client.post(
                 resource_url,
                 data={"task_uuid": str(other_task.uuid)},

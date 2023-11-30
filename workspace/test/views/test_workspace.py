@@ -47,7 +47,7 @@ class TestWorkspaceCreate:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert that we can create a new workspace."""
-        with django_assert_num_queries(9):
+        with django_assert_num_queries(2):
             response = rest_user_client.post(
                 resource_url,
                 {
@@ -55,7 +55,7 @@ class TestWorkspaceCreate:
                     "description": "Synergize vertical integration in Q4",
                 },
             )
-        assert response.status_code == 201
+            assert response.status_code == 201
         assert models.Workspace.objects.count() == 1
         workspace = models.Workspace.objects.get()
         workspace_user = workspace.workspaceuser_set.get()
