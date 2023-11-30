@@ -5,6 +5,7 @@ from typing import (
 
 import pytest
 
+from user.services.user import user_create
 from workspace.models.workspace_user_invite import (
     add_or_invite_workspace_user,
 )
@@ -27,7 +28,7 @@ class TestRedeemWorkspaceInvitations:
         """Test simple case."""
         add_or_invite_workspace_user(workspace, "hello@example.com")
         assert workspace.users.count() == 0
-        user_model.objects.create_user("hello@example.com")
+        user_create("hello@example.com")
         assert workspace.users.count() == 1
 
     def test_signs_up_twice(
@@ -35,11 +36,11 @@ class TestRedeemWorkspaceInvitations:
     ) -> None:
         """Test what happens if a user signs up twice."""
         add_or_invite_workspace_user(workspace, "hello@example.com")
-        user = user_model.objects.create_user("hello@example.com")
+        user = user_create("hello@example.com")
         assert workspace.users.count() == 1
         user.delete()
         assert workspace.users.count() == 0
-        user = user_model.objects.create_user("hello@example.com")
+        user = user_create("hello@example.com")
         # The user is not automatically added
         assert workspace.users.count() == 0
 
@@ -49,6 +50,6 @@ class TestRedeemWorkspaceInvitations:
         """Test what happens when a user is uninvited."""
         add_or_invite_workspace_user(workspace, "hello@example.com")
         workspace.uninvite_user("hello@example.com")
-        user_model.objects.create_user("hello@example.com")
+        user_create("hello@example.com")
         # The user is not added
         assert workspace.users.count() == 0

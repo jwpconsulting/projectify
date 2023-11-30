@@ -3,6 +3,7 @@ import logging
 from typing import Optional
 
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.hashers import make_password
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http import HttpRequest
@@ -11,10 +12,63 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
 from user.emails import UserEmailConfirmationEmail, UserPasswordResetEmail
-from user.models import User
+from user.models import User, UserManager
 from user.selectors.user import user_find_by_email
 
 logger = logging.getLogger(__name__)
+
+
+# Create
+def _user_create(
+    email: str,
+    password: Optional[str],
+    is_staff: bool,
+    is_superuser: bool,
+    is_active: bool,
+) -> "User":
+    """Create and save a user with the given email, and password."""
+    email = UserManager.normalize_email(email)
+    user = User(
+        email=email,
+        is_staff=is_staff,
+        is_superuser=is_superuser,
+        is_active=is_active,
+    )
+    user.password = make_password(password)
+    # XXX self._db needed? user.save(using=self._db)
+    user.save()
+    user.redeem_invites()
+    return user
+
+
+def user_create(
+    # TODO add initial *
+    email: str,
+    password: Optional[str] = None,
+) -> "User":
+    """Create a normal user."""
+    return _user_create(
+        email,
+        password,
+        is_staff=False,
+        is_superuser=False,
+        is_active=False,
+    )
+
+
+def user_create_superuser(
+    # TODO add initial *
+    email: str,
+    password: Optional[str] = None,
+) -> "User":
+    """Create a superuser."""
+    return _user_create(
+        email,
+        password,
+        is_staff=True,
+        is_superuser=True,
+        is_active=True,
+    )
 
 
 # Update
@@ -49,7 +103,7 @@ def user_sign_up(
             }
         )
     # Here we should validate the password with Django's validation criteria
-    user = User.objects.create_user(
+    user = user_create(
         email=email,
         password=password,
     )

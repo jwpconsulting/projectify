@@ -53,6 +53,7 @@ from corporate.models import (
 from user.models import (
     User,
 )
+from user.services.user import user_create, user_create_superuser
 from workspace.models import (
     ChatMessage,
     Label,
@@ -121,12 +122,12 @@ class Command(BaseCommand):
         """Create users."""
         existing_users = User.objects.count()
         if existing_users == 0:
-            User.objects.create_superuser(
+            user_create_superuser(
                 email="admin@localhost",
                 password="password",
             )
             self.stdout.write("Created superuser")
-            User.objects.create_user(
+            user_create(
                 email="guest@localhost",
                 password="password",
             )
