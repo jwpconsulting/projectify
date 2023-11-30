@@ -102,35 +102,3 @@ class WorkspaceBoardSectionFactory(
         """Meta."""
 
         model = models.WorkspaceBoardSection
-
-
-def extract_assignee_workspace_user(task: models.Task) -> models.WorkspaceUser:
-    """Extract author from chat_message by walking through workspace."""
-    workspace_board = task.workspace_board_section.workspace_board
-    workspace_user = workspace_board.workspace.workspaceuser_set.first()
-    if not workspace_user:
-        workspace_user = WorkspaceUserFactory.create(
-            workspace=workspace_board.workspace,
-        )
-    return workspace_user
-
-
-def extract_workspace(task: models.Task) -> models.Workspace:
-    """Extract author from chat_message by walking through workspace."""
-    return task.workspace_board_section.workspace_board.workspace
-
-
-class TaskFactory(django.DjangoModelFactory[models.Task]):
-    """Task factory."""
-
-    title = factory.Faker("word")
-    description = factory.Faker("paragraph")
-    workspace_board_section = factory.SubFactory(WorkspaceBoardSectionFactory)
-    assignee = factory.LazyAttribute(extract_assignee_workspace_user)
-    deadline = factory.Faker("date_time", tzinfo=timezone.utc)
-    workspace = factory.LazyAttribute(extract_workspace)
-
-    class Meta:
-        """Meta."""
-
-        model = models.Task
