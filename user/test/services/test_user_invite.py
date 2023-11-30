@@ -35,10 +35,7 @@ def test_invite_twice() -> None:
 @pytest.mark.django_db
 def test_invite_existing_user(user: User) -> None:
     """Ensure that inviting an existing user is impossible."""
-    with pytest.raises(ValueError):
-        # TODO in the future, there will be no ValueError and we will
-        # get None instead.
-        user_invite_create(email=user.email)
+    assert user_invite_create(email=user.email) is None
 
 
 @pytest.mark.django_db

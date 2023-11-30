@@ -1,6 +1,7 @@
 """Contains workspace user invite qs / manager / model."""
 from typing import (
     ClassVar,
+    Optional,
     Self,
     Union,
     cast,
@@ -174,7 +175,9 @@ def add_or_invite_workspace_user(
         case None:
             pass
 
-    user_invite: UserInvite
+    # XXX
+    # Turn this back into non-optional
+    user_invite: Optional[UserInvite]
 
     match try_find_invitation(workspace, email):
         case WorkspaceUserInvite():
@@ -183,6 +186,11 @@ def add_or_invite_workspace_user(
             user_invite = found
         case None:
             user_invite = user_invite_create(email=email)
+
+    # TODO remove me again, we should just be optimistically creating a user
+    # invite uncoditonally
+    if user_invite is None:
+        raise AssertionError("This shouldn't be hit")
 
     workspace_user_invite: WorkspaceUserInvite = (
         workspace.workspaceuserinvite_set.create(user_invite=user_invite)
