@@ -35,11 +35,3 @@ class UserFactory(django.DjangoModelFactory[models.User]):
 
         model = models.User
         django_get_or_create = ("email",)
-
-
-class SuperUserFactory(UserFactory):
-    """Super user factory."""
-
-    is_superuser = True
-    is_staff = True
-    is_active = True

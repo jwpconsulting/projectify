@@ -92,6 +92,7 @@ class ProfilePictureUpload(views.APIView):
         return Response(status=204)
 
 
+# TODO these should be in user/views/auth.py
 class LogOut(views.APIView):
     """Log a user out."""
 
