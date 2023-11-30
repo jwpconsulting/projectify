@@ -3,7 +3,7 @@ from datetime import datetime
 
 import pytest
 
-from workspace.factory import TaskFactory, WorkspaceBoardSectionFactory
+from workspace.factory import WorkspaceBoardSectionFactory
 from workspace.models import WorkspaceBoard
 from workspace.models.task import Task
 from workspace.models.workspace_board_section import WorkspaceBoardSection
@@ -60,8 +60,10 @@ def test_moving_task_within_section(
     workspace_user: WorkspaceUser,
 ) -> None:
     """Test moving a task around within the same section."""
-    other_task = TaskFactory.create(
-        workspace_board_section=workspace_board_section
+    other_task = task_create(
+        who=workspace_user.user,
+        title="don't care",
+        workspace_board_section=workspace_board_section,
     )
     assert list(workspace_board_section.task_set.all()) == [
         task,
@@ -86,8 +88,10 @@ def test_moving_task_to_other_section(
     workspace_user: WorkspaceUser,
 ) -> None:
     """Test moving a task around to another section."""
-    other_task = TaskFactory.create(
-        workspace_board_section=workspace_board_section
+    other_task = task_create(
+        who=workspace_user.user,
+        title="don't care",
+        workspace_board_section=workspace_board_section,
     )
     assert list(workspace_board_section.task_set.all()) == [
         task,
@@ -96,7 +100,9 @@ def test_moving_task_to_other_section(
     other_section = WorkspaceBoardSectionFactory.create(
         workspace_board=workspace_board
     )
-    other_section_task = TaskFactory.create(
+    other_section_task = task_create(
+        who=workspace_user.user,
+        title="don't care",
         workspace_board_section=other_section,
     )
     assert list(other_section.task_set.all()) == [
