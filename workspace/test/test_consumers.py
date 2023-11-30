@@ -1,6 +1,5 @@
 """Consumer tests."""
 from typing import (
-    TYPE_CHECKING,
     Any,
     cast,
 )
@@ -23,6 +22,7 @@ from projectify.asgi import (
 from user.factory import (
     UserFactory,
 )
+from user.models import User
 from workspace.models.const import WorkspaceUserRoles
 from workspace.models.workspace_user import WorkspaceUser
 from workspace.services.chat_message import chat_message_create
@@ -30,14 +30,12 @@ from workspace.services.label import label_create
 from workspace.services.sub_task import sub_task_create
 from workspace.services.task import task_create
 from workspace.services.workspace import workspace_add_user
+from workspace.services.workspace_board import workspace_board_create
 
 from .. import (
     factory,
     models,
 )
-
-if TYPE_CHECKING:
-    from user.models import User  # noqa: F401
 
 
 @database_sync_to_async
@@ -74,9 +72,14 @@ def create_workspace_user(
 @database_sync_to_async
 def create_workspace_board(
     workspace: models.Workspace,
+    user: User,
 ) -> models.WorkspaceBoard:
     """Create workspace board."""
-    return factory.WorkspaceBoardFactory.create(workspace=workspace)
+    return workspace_board_create(
+        who=user,
+        title="Don't care",
+        workspace=workspace,
+    )
 
 
 @database_sync_to_async
@@ -274,8 +277,8 @@ class TestWorkspaceConsumer:
         """Test signal firing on workspace board change."""
         user = await create_user()
         workspace = await create_workspace()
-        workspace_board = await create_workspace_board(workspace)
         workspace_user = await create_workspace_user(workspace, user)
+        workspace_board = await create_workspace_board(workspace, user)
         resource = f"ws/workspace/{workspace.uuid}/"
         communicator = WebsocketCommunicator(
             websocket_application,
@@ -305,8 +308,8 @@ class TestWorkspaceBoardConsumer:
         """Test signal firing on workspace board change."""
         user = await create_user()
         workspace = await create_workspace()
-        workspace_board = await create_workspace_board(workspace)
         workspace_user = await create_workspace_user(workspace, user)
+        workspace_board = await create_workspace_board(workspace, user)
         resource = f"ws/workspace-board/{workspace_board.uuid}/"
         communicator = WebsocketCommunicator(
             websocket_application,
@@ -330,11 +333,11 @@ class TestWorkspaceBoardConsumer:
         """Test signal firing on workspace board section change."""
         user = await create_user()
         workspace = await create_workspace()
-        workspace_board = await create_workspace_board(workspace)
+        workspace_user = await create_workspace_user(workspace, user)
+        workspace_board = await create_workspace_board(workspace, user)
         workspace_board_section = await create_workspace_board_section(
             workspace_board,
         )
-        workspace_user = await create_workspace_user(workspace, user)
         resource = f"ws/workspace-board/{workspace_board.uuid}/"
         communicator = WebsocketCommunicator(
             websocket_application,
@@ -359,11 +362,11 @@ class TestWorkspaceBoardConsumer:
         """Test signal firing on task change."""
         user = await create_user()
         workspace = await create_workspace()
-        workspace_board = await create_workspace_board(workspace)
+        workspace_user = await create_workspace_user(workspace, user)
+        workspace_board = await create_workspace_board(workspace, user)
         workspace_board_section = await create_workspace_board_section(
             workspace_board,
         )
-        workspace_user = await create_workspace_user(workspace, user)
         task = await create_task(workspace_board_section, workspace_user)
         resource = f"ws/workspace-board/{workspace_board.uuid}/"
         communicator = WebsocketCommunicator(
@@ -392,7 +395,7 @@ class TestWorkspaceBoardConsumer:
         workspace = await create_workspace()
         workspace_user = await create_workspace_user(workspace, user)
         label = await create_label(workspace, workspace_user)
-        workspace_board = await create_workspace_board(workspace)
+        workspace_board = await create_workspace_board(workspace, user)
         workspace_board_section = await create_workspace_board_section(
             workspace_board,
         )
@@ -423,11 +426,11 @@ class TestWorkspaceBoardConsumer:
         """Test signal firing on sub task change."""
         user = await create_user()
         workspace = await create_workspace()
-        workspace_board = await create_workspace_board(workspace)
+        workspace_user = await create_workspace_user(workspace, user)
+        workspace_board = await create_workspace_board(workspace, user)
         workspace_board_section = await create_workspace_board_section(
             workspace_board,
         )
-        workspace_user = await create_workspace_user(workspace, user)
         task = await create_task(workspace_board_section, workspace_user)
         sub_task = await create_sub_task(task, workspace_user)
         resource = f"ws/workspace-board/{workspace_board.uuid}/"
@@ -463,7 +466,7 @@ class TestTaskConsumer:
         user = await create_user()
         workspace = await create_workspace()
         workspace_user = await create_workspace_user(workspace, user)
-        workspace_board = await create_workspace_board(workspace)
+        workspace_board = await create_workspace_board(workspace, user)
         workspace_board_section = await create_workspace_board_section(
             workspace_board,
         )
@@ -491,7 +494,7 @@ class TestTaskConsumer:
         user = await create_user()
         workspace = await create_workspace()
         workspace_user = await create_workspace_user(workspace, user)
-        workspace_board = await create_workspace_board(workspace)
+        workspace_board = await create_workspace_board(workspace, user)
         workspace_board_section = await create_workspace_board_section(
             workspace_board,
         )
@@ -521,7 +524,7 @@ class TestTaskConsumer:
         user = await create_user()
         workspace = await create_workspace()
         workspace_user = await create_workspace_user(workspace, user)
-        workspace_board = await create_workspace_board(workspace)
+        workspace_board = await create_workspace_board(workspace, user)
         workspace_board_section = await create_workspace_board_section(
             workspace_board,
         )
@@ -551,7 +554,7 @@ class TestTaskConsumer:
         user = await create_user()
         workspace = await create_workspace()
         workspace_user = await create_workspace_user(workspace, user)
-        workspace_board = await create_workspace_board(workspace)
+        workspace_board = await create_workspace_board(workspace, user)
         workspace_board_section = await create_workspace_board_section(
             workspace_board,
         )
