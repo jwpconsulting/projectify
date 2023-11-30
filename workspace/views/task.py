@@ -5,9 +5,6 @@ from typing import (
 )
 from uuid import UUID
 
-from django.db.models import (
-    Prefetch,
-)
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 
@@ -26,7 +23,10 @@ from rest_framework.response import (
 from rest_framework.views import APIView
 
 from workspace.models.task import Task
-from workspace.selectors.task import find_task_for_user_and_uuid
+from workspace.selectors.task import (
+    TaskDetailQuerySet,
+    find_task_for_user_and_uuid,
+)
 from workspace.selectors.workspace_board_section import (
     find_workspace_board_section_for_user_and_uuid,
 )
@@ -67,27 +67,6 @@ class TaskRetrieveUpdateDelete(
 ):
     """Retrieve a task."""
 
-    objects = models.Task.objects
-    queryset = (
-        objects.select_related(
-            "workspace_board_section__workspace_board__workspace",
-            "assignee",
-            "assignee__user",
-        )
-        .prefetch_related(
-            "labels",
-            "subtask_set",
-        )
-        .prefetch_related(
-            Prefetch(
-                "chatmessage_set",
-                queryset=models.ChatMessage.objects.select_related(
-                    "author",
-                    "author__user",
-                ),
-            ),
-        )
-    )
     serializer_class = TaskDetailSerializer
 
     def get_object(self, full: bool = True) -> models.Task:
@@ -101,9 +80,9 @@ class TaskRetrieveUpdateDelete(
         user = self.request.user
         qs: models.TaskQuerySet
         if full:
-            qs = self.get_queryset()
+            qs = TaskDetailQuerySet
         else:
-            qs = self.objects
+            qs = Task.objects.all()
         qs = qs.filter_for_user_and_uuid(
             user=user,
             uuid=self.kwargs["task_uuid"],
