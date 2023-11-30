@@ -77,7 +77,10 @@ def inactive_user() -> AbstractBaseUser:
 @pytest.fixture
 def user_invite(faker: Faker) -> user_models.UserInvite:
     """Return a user invite."""
-    return user_invite_create(email=faker.email())
+    user_invite = user_invite_create(email=faker.email())
+    if user_invite is None:
+        raise ValueError("Expected user_invite")
+    return user_invite
 
 
 @pytest.fixture

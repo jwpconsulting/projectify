@@ -1,7 +1,8 @@
 """User invite services."""
 
+from typing import Optional
+
 from django.db import transaction
-from django.utils.translation import gettext_lazy as _
 
 from user import signal_defs
 from user.models import User, UserInvite
@@ -9,12 +10,11 @@ from user.selectors.user import user_find_by_email
 
 
 @transaction.atomic
-def user_invite_create(*, email: str) -> UserInvite:
+def user_invite_create(*, email: str) -> Optional[UserInvite]:
     """Invite a user by email address."""
     user = user_find_by_email(email=email)
     if user:
-        # TODO make this return None instead
-        raise ValueError(_("User already exists."))
+        return None
     # TODO make this a selector
     invite_qs = UserInvite.objects.by_email(email).is_redeemed(False)
     if invite_qs.exists():
