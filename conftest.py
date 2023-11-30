@@ -38,40 +38,43 @@ from projectify.views import (
     RequestContext,
 )
 from user import models as user_models
-from user.factory import (
-    SuperUserFactory,
-    UserFactory,
-)
-from user.services.user import user_create
+from user.services.user import user_create, user_create_superuser
 from user.services.user_invite import user_invite_create, user_invite_redeem
 
 
 @pytest.fixture
-def user() -> AbstractBaseUser:
+def password(faker: Faker) -> str:
+    """Set default password."""
+    pw: str = faker.password(length=20)
+    return pw
+
+
+@pytest.fixture
+def user(faker: Faker, password: str) -> user_models.User:
     """Return a db user."""
-    user: AbstractBaseUser = UserFactory.create()
+    user = user_create(email=faker.email(), password=password)
+    user.is_active = True
+    user.full_name = faker.name()
+    user.save()
     return user
 
 
 @pytest.fixture
-def superuser() -> AbstractBaseUser:
+def superuser(faker: Faker) -> user_models.User:
     """Return a db super user."""
-    user: AbstractBaseUser = SuperUserFactory.create()
-    return user
+    return user_create_superuser(email=faker.email())
 
 
 @pytest.fixture
-def other_user() -> AbstractBaseUser:
+def other_user(faker: Faker) -> user_models.User:
     """Return another db user."""
-    user: AbstractBaseUser = UserFactory.create()
-    return user
+    return user_create(email=faker.email())
 
 
 @pytest.fixture
-def inactive_user() -> AbstractBaseUser:
+def inactive_user(faker: Faker) -> user_models.User:
     """Return an inactive db user."""
-    user: AbstractBaseUser = UserFactory.create(is_active=False)
-    return user
+    return user_create(email=faker.email())
 
 
 @pytest.fixture
