@@ -5,7 +5,6 @@ from datetime import (
 from typing import (
     TYPE_CHECKING,
     Iterable,
-    Optional,
 )
 
 import factory
@@ -135,19 +134,3 @@ class TaskFactory(django.DjangoModelFactory[models.Task]):
         """Meta."""
 
         model = models.Task
-
-
-def extract_author(chat_message: models.ChatMessage) -> models.WorkspaceUser:
-    """Extract author from chat_message by walking through workspace."""
-    workspace_board = chat_message.task.workspace_board_section.workspace_board
-    workspace_user: Optional[
-        models.WorkspaceUser
-    ] = workspace_board.workspace.workspaceuser_set.first()
-    if not workspace_user:
-        other_workspace_user: models.WorkspaceUser = (
-            WorkspaceUserFactory.create(
-                workspace=workspace_board.workspace,
-            )
-        )
-        return other_workspace_user
-    return workspace_user
