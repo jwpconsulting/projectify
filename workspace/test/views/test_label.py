@@ -30,7 +30,7 @@ class TestLabelCreate:
         workspace_user: WorkspaceUser,
     ) -> None:
         """Test as an authenticated user."""
-        with django_assert_num_queries(10):
+        with django_assert_num_queries(6):
             response = rest_user_client.post(
                 resource_url,
                 data={
@@ -63,7 +63,7 @@ class TestLabelUpdateDelete:
         label: Label,
     ) -> None:
         """Test as an authenticated user."""
-        with django_assert_num_queries(11):
+        with django_assert_num_queries(7):
             response = rest_user_client.put(
                 resource_url,
                 data={
@@ -86,7 +86,7 @@ class TestLabelUpdateDelete:
         label: Label,
     ) -> None:
         """Test deleting a label."""
-        with django_assert_num_queries(12):
+        with django_assert_num_queries(8):
             response = rest_user_client.delete(resource_url)
             assert response.status_code == HTTP_204_NO_CONTENT, response.data
         assert Label.objects.count() == 0

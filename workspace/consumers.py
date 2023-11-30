@@ -6,6 +6,8 @@ from abc import (
 from typing import (
     Any,
     Optional,
+    Type,
+    TypeVar,
     cast,
 )
 from uuid import (
@@ -15,31 +17,64 @@ from uuid import (
 from django.contrib.auth.models import (
     AbstractBaseUser,
 )
+from django.db import models
 
 from asgiref.sync import async_to_sync as _async_to_sync
 from channels.generic.websocket import (
     JsonWebsocketConsumer,
 )
+from rest_framework import serializers
 
-from . import (
-    models,
-    types,
+from user.models import User
+from workspace.models.task import Task
+from workspace.models.workspace import Workspace
+from workspace.models.workspace_board import WorkspaceBoard
+from workspace.selectors.task import find_task_for_user_and_uuid
+from workspace.selectors.workspace import workspace_find_by_workspace_uuid
+from workspace.selectors.workspace_board import (
+    workspace_board_find_by_workspace_uuid,
 )
+from workspace.serializers.task_detail import TaskDetailSerializer
+from workspace.serializers.workspace import WorkspaceDetailSerializer
+from workspace.serializers.workspace_board import (
+    WorkspaceBoardDetailSerializer,
+)
+from workspace.types import ConsumerEvent, Message
 
 async_to_sync = cast(Any, _async_to_sync)
+
+
+M = TypeVar("M", bound=models.Model)
+
+
+def serialize(
+    serializer: Type[serializers.ModelSerializer[M]],
+    instance: Optional[M],
+    event: ConsumerEvent,
+) -> Message:
+    """Serialize a django model instance and then render it to JSON."""
+    return {
+        "type": event["type"],
+        "uuid": event["uuid"],
+        # If the instance has been deleted, we return null / None
+        "data": serializer(instance).data if instance else None,
+    }
 
 
 class BaseConsumer(JsonWebsocketConsumer, metaclass=ABCMeta):
     """Base class we use for all consumers below."""
 
+    user: User
+    uuid: UUID
+
     def connect(self) -> None:
         """Handle connect."""
-        user = self.scope["user"]
-        if user.is_anonymous:
+        self.user = self.scope["user"]
+        if self.user.is_anonymous:
             self.close(403)
             return
-        uuid: UUID = self.scope["url_route"]["kwargs"]["uuid"]
-        if self.get_object(user, uuid) is None:
+        self.uuid = self.scope["url_route"]["kwargs"]["uuid"]
+        if self.get_object(self.user, self.uuid) is None:
             self.close(404)
             return
         self.accept()
@@ -65,9 +100,7 @@ class BaseConsumer(JsonWebsocketConsumer, metaclass=ABCMeta):
         ...
 
     @abstractmethod
-    def get_object(
-        self, user: AbstractBaseUser, uuid: UUID
-    ) -> Optional[object]:
+    def get_object(self, user: User, uuid: UUID) -> Optional[object]:
         """Attempt getting the object to ensure the user has access to it."""
         ...
 
@@ -80,20 +113,18 @@ class WorkspaceConsumer(BaseConsumer):
         uuid = self.scope["url_route"]["kwargs"]["uuid"]
         return f"workspace-{uuid}"
 
-    def get_object(
-        self, user: AbstractBaseUser, uuid: UUID
-    ) -> Optional[models.Workspace]:
+    def get_object(self, user: User, uuid: UUID) -> Optional[Workspace]:
         """Find workspace belonging to this user."""
-        try:
-            return models.Workspace.objects.filter_for_user_and_uuid(
-                user, uuid
-            ).get()
-        except models.Workspace.DoesNotExist:
-            return None
+        return workspace_find_by_workspace_uuid(who=user, workspace_uuid=uuid)
 
-    def workspace_change(self, event: types.Message) -> None:
+    def workspace_change(self, event: ConsumerEvent) -> None:
         """Respond to workspace board change event."""
-        self.send_json(event)
+        workspace = workspace_find_by_workspace_uuid(
+            who=self.user,
+            workspace_uuid=self.uuid,
+        )
+        serialized = serialize(WorkspaceDetailSerializer, workspace, event)
+        self.send_json(serialized)
 
 
 class WorkspaceBoardConsumer(BaseConsumer):
@@ -106,18 +137,25 @@ class WorkspaceBoardConsumer(BaseConsumer):
 
     def get_object(
         self, user: AbstractBaseUser, uuid: UUID
-    ) -> Optional[models.WorkspaceBoard]:
+    ) -> Optional[WorkspaceBoard]:
         """Get workspace board."""
         try:
-            return models.WorkspaceBoard.objects.filter_for_user_and_uuid(
+            return WorkspaceBoard.objects.filter_for_user_and_uuid(
                 user, uuid
             ).get()
-        except models.WorkspaceBoard.DoesNotExist:
+        except WorkspaceBoard.DoesNotExist:
             return None
 
-    def workspace_board_change(self, event: types.Message) -> None:
+    def workspace_board_change(self, event: ConsumerEvent) -> None:
         """Respond to workspace board change event."""
-        self.send_json(event)
+        workspace_board = workspace_board_find_by_workspace_uuid(
+            who=self.user,
+            workspace_board_uuid=self.uuid,
+        )
+        serialized = serialize(
+            WorkspaceBoardDetailSerializer, workspace_board, event
+        )
+        self.send_json(serialized)
 
 
 class TaskConsumer(BaseConsumer):
@@ -128,17 +166,12 @@ class TaskConsumer(BaseConsumer):
         uuid = self.scope["url_route"]["kwargs"]["uuid"]
         return f"task-{uuid}"
 
-    def get_object(
-        self, user: AbstractBaseUser, uuid: UUID
-    ) -> Optional[models.Task]:
+    def get_object(self, user: User, uuid: UUID) -> Optional[Task]:
         """Get task."""
-        try:
-            return models.Task.objects.filter_for_user_and_uuid(
-                user, uuid
-            ).get()
-        except models.Task.DoesNotExist:
-            return None
+        return find_task_for_user_and_uuid(user=user, task_uuid=uuid)
 
-    def task_change(self, event: types.Message) -> None:
+    def task_change(self, event: ConsumerEvent) -> None:
         """Respond to workspace board change event."""
-        self.send_json(event)
+        task = find_task_for_user_and_uuid(user=self.user, task_uuid=self.uuid)
+        serialized = serialize(TaskDetailSerializer, task, event)
+        self.send_json(serialized)
