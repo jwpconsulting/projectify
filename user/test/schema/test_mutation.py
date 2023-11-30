@@ -74,13 +74,15 @@ mutation ($email: String!, $password: String!) {
 }
 """
 
-    def test_login_active_user(self, graphql_query: Any, user: User) -> None:
+    def test_login_active_user(
+        self, password: str, graphql_query: Any, user: User
+    ) -> None:
         """Test logging in an active user."""
         result = graphql_query(
             self.query,
             variables={
                 "email": user.email,
-                "password": "password",
+                "password": password,
             },
         )
         assert result == {
@@ -106,14 +108,14 @@ mutation ($email: String!, $password: String!) {
         assert "could be found" in str(result["errors"])
 
     def test_login_inactive_user(
-        self, graphql_query: Any, inactive_user: User
+        self, graphql_query: Any, inactive_user: User, password: str
     ) -> None:
         """Test logging in an inactive user."""
         result = graphql_query(
             self.query,
             variables={
                 "email": inactive_user.email,
-                "password": "password",
+                "password": password,
             },
         )
         assert result["data"] == {"login": None}

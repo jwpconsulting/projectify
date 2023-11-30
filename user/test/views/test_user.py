@@ -128,6 +128,7 @@ class TestProfilePictureUploadView:
         assert user.profile_picture is not None
 
 
+# TODO these should be in user/test/views/test_auth.py
 @pytest.mark.django_db
 class TestLogOut:
     """Test logging out."""
@@ -149,12 +150,13 @@ class TestLogOut:
         log_in_url: str,
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
+        password: str,
     ) -> None:
         """Test as an authenticated user."""
         # Not using rest_user_client here since it's forced logged in
         response = rest_client.post(
             log_in_url,
-            data={"email": user.email, "password": "password"},
+            data={"email": user.email, "password": password},
         )
         assert response.status_code == 204, response.data
         with django_assert_num_queries(4):
@@ -240,12 +242,13 @@ class TestLogIn:
         resource_url: str,
         user: User,
         django_assert_num_queries: DjangoAssertNumQueries,
+        password: str,
     ) -> None:
         """Test as an authenticated user."""
         with django_assert_num_queries(9):
             response = rest_client.post(
                 resource_url,
-                data={"email": user.email, "password": "password"},
+                data={"email": user.email, "password": password},
             )
             assert response.status_code == 204, response.data
 
