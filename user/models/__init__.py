@@ -1,15 +1,11 @@
 """User models."""
 from typing import (
     ClassVar,
-    Optional,
     cast,
 )
 
 from django.conf import (
     settings,
-)
-from django.contrib.auth.hashers import (
-    make_password,
 )
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -39,51 +35,6 @@ from .. import (
 
 class UserManager(BaseUserManager["User"]):
     """Manager class for User."""
-
-    def _create_user(
-        self,
-        email: str,
-        password: Optional[str],
-        is_staff: bool,
-        is_superuser: bool,
-        is_active: bool,
-    ) -> "User":
-        """Create and save a user with the given email, and password."""
-        email = self.normalize_email(email)
-        user = self.model(
-            email=email,
-            is_staff=is_staff,
-            is_superuser=is_superuser,
-            is_active=is_active,
-        )
-        user.password = make_password(password)
-        user.save(using=self._db)
-        user.redeem_invites()
-        return user
-
-    def create_user(
-        self, email: str, password: Optional[str] = None
-    ) -> "User":
-        """Create a normal user."""
-        return self._create_user(
-            email,
-            password,
-            is_staff=False,
-            is_superuser=False,
-            is_active=False,
-        )
-
-    def create_superuser(
-        self, email: str, password: Optional[str] = None
-    ) -> "User":
-        """Create a superuser."""
-        return self._create_user(
-            email,
-            password,
-            is_staff=True,
-            is_superuser=True,
-            is_active=True,
-        )
 
 
 EMAIL_CONFIRMATION_TOKEN_SALT = "email-confirmation-token-salt"
