@@ -14,6 +14,7 @@ from rest_framework import serializers
 from user.emails import UserEmailConfirmationEmail, UserPasswordResetEmail
 from user.models import User, UserManager
 from user.selectors.user import user_find_by_email
+from user.services.user_invite import user_invite_redeem_many
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +38,7 @@ def _user_create(
     user.password = make_password(password)
     # XXX self._db needed? user.save(using=self._db)
     user.save()
-    user.redeem_invites()
+    user_invite_redeem_many(user=user)
     return user
 
 
