@@ -23,6 +23,7 @@ from django.test import (
 )
 
 import pytest
+from faker import Faker
 from rest_framework.test import (
     APIClient,
 )
@@ -42,6 +43,7 @@ from user.factory import (
     UserFactory,
     UserInviteFactory,
 )
+from user.services.user_invite import user_invite_create
 
 
 @pytest.fixture
@@ -73,10 +75,9 @@ def inactive_user() -> AbstractBaseUser:
 
 
 @pytest.fixture
-def user_invite() -> user_models.UserInvite:
+def user_invite(faker: Faker) -> user_models.UserInvite:
     """Return a user invite."""
-    user_invite: user_models.UserInvite = UserInviteFactory.create()
-    return user_invite
+    return user_invite_create(email=faker.email())
 
 
 @pytest.fixture
