@@ -43,7 +43,7 @@ class TestWorkspaceBoardCreate:
         workspace_user: WorkspaceUser,
     ) -> None:
         """Assert that we can create a new workspace board."""
-        with django_assert_num_queries(12):
+        with django_assert_num_queries(7):
             response = rest_user_client.post(
                 resource_url,
                 {
@@ -95,10 +95,7 @@ class TestWorkspaceBoardReadUpdateDelete:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating a ws board."""
-        # TODO I hope there is no N+1 prob here, it used to be 12 queries
-        # but with the addition of other_workspace_user as part of the fixture
-        # it increased
-        with django_assert_num_queries(13):
+        with django_assert_num_queries(8):
             response = rest_user_client.put(
                 resource_url,
                 data={
@@ -118,8 +115,7 @@ class TestWorkspaceBoardReadUpdateDelete:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating a ws board."""
-        # Another victim to non-determinism / N+1
-        with django_assert_num_queries(13):
+        with django_assert_num_queries(8):
             response = rest_user_client.delete(
                 resource_url,
             )
