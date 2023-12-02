@@ -1,4 +1,5 @@
 """Test user services."""
+from django.contrib.auth.models import AnonymousUser
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse
@@ -14,6 +15,7 @@ from user.services.user import (
     user_create,
     user_create_superuser,
     user_log_in,
+    user_log_out,
     user_sign_up,
 )
 
@@ -74,6 +76,7 @@ def session_request(
     request = rf.get("/")
     session_middleware.process_request(request)
     request.session.save()
+    request.user = AnonymousUser()
     return request
 
 
@@ -127,5 +130,29 @@ def test_user_log_in_inactive(
 
 
 # - user_log_out
+@pytest.mark.django_db
+def test_user_log_out(
+    session_request: HttpRequest, user: User, password: str
+) -> None:
+    """Test logging a user out."""
+    # First we log in
+    user_log_in(email=user.email, password=password, request=session_request)
+    assert "_auth_user_id" in session_request.session.keys()
+    user_log_out(request=session_request)
+    assert "_auth_user_id" not in session_request.session.keys()
+
+
+@pytest.mark.django_db
+def test_user_log_out_not_logged_in(
+    session_request: HttpRequest,
+) -> None:
+    """Test logging when not logged in."""
+    assert "_auth_user_id" not in session_request.session.keys()
+    with pytest.raises(ValidationError) as error:
+        user_log_out(request=session_request)
+    assert "no logged in user" in error.exconly()
+    assert "_auth_user_id" not in session_request.session.keys()
+
+
 # - user_request_password_reset
 # - user_confirm_password_reset

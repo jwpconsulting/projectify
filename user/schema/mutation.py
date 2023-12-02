@@ -60,14 +60,6 @@ class UpdateProfileInput:
 class Mutation:
     """."""
 
-    # DONE
-    @strawberry.mutation
-    def logout(self, info: GraphQLResolveInfo) -> types.User | None:
-        """Mutate."""
-        user: "_User" = info.context.user
-        user_log_out(request=info.context)
-        return user  # type: ignore[return-value]
-
     @strawberry.mutation
     def request_password_reset(self, input: RequestPasswordResetInput) -> str:
         """Mutate."""
