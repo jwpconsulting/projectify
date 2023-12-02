@@ -23,10 +23,7 @@ from rest_framework.response import (
 from rest_framework.views import APIView
 
 from workspace.models.task import Task
-from workspace.selectors.task import (
-    TaskDetailQuerySet,
-    find_task_for_user_and_uuid,
-)
+from workspace.selectors.task import TaskDetailQuerySet, task_find_by_task_uuid
 from workspace.selectors.workspace_board_section import (
     find_workspace_board_section_for_user_and_uuid,
 )
@@ -136,7 +133,7 @@ class TaskMoveToWorkspaceBoardSection(APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
-        task = find_task_for_user_and_uuid(user=user, task_uuid=task_uuid)
+        task = task_find_by_task_uuid(who=user, task_uuid=task_uuid)
         if task is None:
             raise NotFound(_("Task for this UUID not found"))
         workspace_board_section = (
@@ -177,12 +174,10 @@ class TaskMoveAfterTask(APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
-        task = find_task_for_user_and_uuid(user=user, task_uuid=task_uuid)
+        task = task_find_by_task_uuid(who=user, task_uuid=task_uuid)
         if task is None:
             raise NotFound(_("Task for this UUID not found"))
-        after = find_task_for_user_and_uuid(
-            task_uuid=data["task_uuid"], user=user
-        )
+        after = task_find_by_task_uuid(task_uuid=data["task_uuid"], who=user)
         if after is None:
             raise serializers.ValidationError(
                 {"after_task_uuid": _("No task was found for the given uuid")}

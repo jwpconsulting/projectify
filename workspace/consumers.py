@@ -29,7 +29,7 @@ from user.models import User
 from workspace.models.task import Task
 from workspace.models.workspace import Workspace
 from workspace.models.workspace_board import WorkspaceBoard
-from workspace.selectors.task import find_task_for_user_and_uuid
+from workspace.selectors.task import task_find_by_task_uuid
 from workspace.selectors.workspace import workspace_find_by_workspace_uuid
 from workspace.selectors.workspace_board import (
     workspace_board_find_by_workspace_uuid,
@@ -168,10 +168,10 @@ class TaskConsumer(BaseConsumer):
 
     def get_object(self, user: User, uuid: UUID) -> Optional[Task]:
         """Get task."""
-        return find_task_for_user_and_uuid(user=user, task_uuid=uuid)
+        return task_find_by_task_uuid(who=user, task_uuid=uuid)
 
     def task_change(self, event: ConsumerEvent) -> None:
         """Respond to workspace board change event."""
-        task = find_task_for_user_and_uuid(user=self.user, task_uuid=self.uuid)
+        task = task_find_by_task_uuid(who=self.user, task_uuid=self.uuid)
         serialized = serialize(TaskDetailSerializer, task, event)
         self.send_json(serialized)
