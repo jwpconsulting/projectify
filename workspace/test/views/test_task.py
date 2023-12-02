@@ -51,7 +51,7 @@ class TestTaskCreate(UnauthenticatedTestMixin):
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to resource."""
-        return reverse("workspace:task-create")
+        return reverse("workspace:tasks:create")
 
     @pytest.fixture
     def payload(
