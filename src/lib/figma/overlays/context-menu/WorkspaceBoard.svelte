@@ -110,7 +110,7 @@
         // TODO move awaiting a closed context menu away from awaiting a
         // successful dialog. Reason: We should separate concerns here.
         await openDestructiveOverlay({ kind: "archiveBoard", workspaceBoard });
-        await archiveWorkspaceBoard(workspaceBoard);
+        await archiveWorkspaceBoard(workspaceBoard, true, { fetch });
     }
 </script>
 

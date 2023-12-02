@@ -21,7 +21,7 @@
             kind: "recoverWorkspaceBoard",
             workspaceBoard,
         });
-        await archiveWorkspaceBoard(workspaceBoard, false);
+        await archiveWorkspaceBoard(workspaceBoard, false, { fetch });
     }
 
     async function deleteAction() {

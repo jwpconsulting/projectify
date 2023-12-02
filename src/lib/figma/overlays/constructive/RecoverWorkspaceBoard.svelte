@@ -13,7 +13,7 @@
     export let workspaceBoard: WorkspaceBoard;
 
     async function onSubmit() {
-        await archiveWorkspaceBoard(workspaceBoard, false);
+        await archiveWorkspaceBoard(workspaceBoard, false, { fetch });
         resolveConstructiveOverlay();
     }
 </script>
