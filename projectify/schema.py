@@ -1,7 +1,6 @@
 """Projectify project schema."""
 import strawberry
 
-import corporate.schema
 import workspace.schema
 
 
@@ -22,7 +21,6 @@ class Query:
 @strawberry.type
 class Mutation(
     workspace.schema.Mutation,
-    corporate.schema.Mutation,
 ):
     """Mutation object."""
 

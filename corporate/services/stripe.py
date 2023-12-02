@@ -64,7 +64,9 @@ def stripe_checkout_session_create_for_workspace_uuid(
             who=who, workspace_uuid=workspace_uuid
         )
         if workspace is None:
-            raise ValueError("Expected workspace")
+            raise serializers.ValidationError(
+                {"workspace_uuid": _("No workspace found for this uuid")}
+            )
         customer = customer_create(who=who, workspace=workspace, seats=seats)
 
     return stripe_checkout_session_create(
