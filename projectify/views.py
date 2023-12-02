@@ -46,9 +46,3 @@ class GraphQLView(views.GraphQLView):  # type: ignore
             session=request.session,
             META=request.META,
         )
-
-
-class GraphQLBatchView(GraphQLView):
-    """GraphQL view with batching enabled."""
-
-    # TODO

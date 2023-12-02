@@ -51,7 +51,6 @@ from . import (
     schema,
 )
 from .views import (
-    GraphQLBatchView,
     GraphQLView,
 )
 
@@ -66,16 +65,6 @@ urlpatterns: Iterable[Union[URLResolver, URLPattern]] = (
             ),
         ),
         name="graphql",
-    ),
-    path(
-        "graphql-batch",
-        csrf.csrf_exempt(
-            GraphQLBatchView.as_view(
-                schema=schema.schema,
-                graphiql=settings.GRAPHIQL_ENABLE,
-            ),
-        ),
-        name="graphql-batch",
     ),
     path(
         r"premail/",
