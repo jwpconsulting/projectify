@@ -1,13 +1,21 @@
 """Workspace board views."""
 from uuid import UUID
 
+from django.utils.translation import gettext_lazy as _
+
 from rest_framework import generics, serializers, status
+from rest_framework.exceptions import NotFound
 from rest_framework.generics import get_object_or_404
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from workspace.models import Workspace, WorkspaceBoard, WorkspaceBoardQuerySet
+from workspace.selectors.workspace import workspace_find_by_workspace_uuid
+from workspace.selectors.workspace_board import (
+    workspace_board_find_by_workspace_uuid,
+)
+from workspace.serializers.base import WorkspaceBoardBaseSerializer
 from workspace.serializers.workspace_board import (
     WorkspaceBoardDetailSerializer,
 )
@@ -19,7 +27,6 @@ from workspace.services.workspace_board import (
 )
 
 
-# TODO permission checking
 # Create
 class WorkspaceBoardCreate(APIView):
     """Create a workspace board."""
@@ -115,6 +122,29 @@ class WorkspaceBoardReadUpdateDelete(
             who=self.request.user,
             workspace_board=instance,
         )
+
+
+# List
+class WorkspaceBoardArchivedList(APIView):
+    """List archived workspace boards inside a workspace."""
+
+    def get(self, request: Request, workspace_uuid: UUID) -> Response:
+        """Get queryset."""
+        workspace = workspace_find_by_workspace_uuid(
+            workspace_uuid=workspace_uuid, who=request.user
+        )
+        if workspace is None:
+            raise NotFound(_("No workspace found for this UUID"))
+        workspace_boards = workspace_board_find_by_workspace_uuid(
+            who=request.user,
+            workspace_uuid=workspace_uuid,
+            archived=True,
+        )
+        serializer = WorkspaceBoardBaseSerializer(
+            instance=workspace_boards,
+            many=True,
+        )
+        return Response(serializer.data)
 
 
 # RPC

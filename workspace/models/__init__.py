@@ -40,9 +40,8 @@ from .workspace_user_invite import (
     WorkspaceUserInvite,
 )
 
-# TODO Here we could be using __all__
 
-
+# TODO put me into workspace/models/task_label.py
 class TaskLabelQuerySet(models.QuerySet["TaskLabel"]):
     """QuerySet for TaskLabel."""
 
@@ -51,6 +50,7 @@ class TaskLabelQuerySet(models.QuerySet["TaskLabel"]):
         return self.filter(task__pk__in=pks)
 
 
+# TODO put me into workspace/models/task_label.py
 class TaskLabel(models.Model):
     """A label to task assignment."""
 
@@ -78,6 +78,7 @@ class TaskLabel(models.Model):
         unique_together = ("task", "label")
 
 
+# TODO get rid of trunk export
 __all__ = (
     "ChatMessage",
     "ChatMessageQuerySet",
