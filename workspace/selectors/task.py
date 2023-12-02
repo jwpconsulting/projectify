@@ -31,17 +31,17 @@ TaskDetailQuerySet: TaskQuerySet = (
 )
 
 
-# TODO:
-# Rename task_find_by_task_uuid
-# Rename user to who
-def find_task_for_user_and_uuid(
-    *, task_uuid: UUID, user: User
+def task_find_by_task_uuid(
+    *, task_uuid: UUID, who: User, qs: Optional[TaskQuerySet] = None
 ) -> Optional[Task]:
     """Find a task given a user and uuid."""
-    # TODO factor filter_for_user_and_uuid into here
+    # Special care is needed, one can't write qs or Task.objects since that
+    # would cause the given qs to be prematurely evaluated
+    qs = Task.objects if qs is None else qs
     try:
-        return Task.objects.filter_for_user_and_uuid(
-            user=user, uuid=task_uuid
-        ).get()
+        return qs.get(
+            workspace_board_section__workspace_board__workspace__users=who,
+            uuid=task_uuid,
+        )
     except Task.DoesNotExist:
         return None
