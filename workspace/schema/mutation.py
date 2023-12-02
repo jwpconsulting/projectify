@@ -20,6 +20,7 @@ from strawberry.unset import (
 from projectify.utils import (
     get_user_model,
 )
+from workspace.selectors.task import task_find_by_task_uuid
 from workspace.services.chat_message import chat_message_create
 from workspace.services.label import label_create, label_delete, label_update
 from workspace.services.task import task_delete
@@ -295,11 +296,11 @@ class Mutation:
         self, info: GraphQLResolveInfo, input: AddChatMessageInput
     ) -> types.ChatMessage:
         """Add chat message."""
-        qs = models.Task.objects.filter_for_user_and_uuid(
-            info.context.user,
-            input.task_uuid,
+        task = task_find_by_task_uuid(
+            who=info.context.user,
+            task_uuid=input.task_uuid,
         )
-        task = get_object_or_404(qs)
+        assert task is not None
         return chat_message_create(
             who=info.context.user,
             task=task,
@@ -353,11 +354,11 @@ class Mutation:
         self, info: GraphQLResolveInfo, input: AssignLabelInput
     ) -> types.Task:
         """Assign or unassign a label."""
-        task_qs = models.Task.objects.filter_for_user_and_uuid(
-            info.context.user,
-            input.task_uuid,
+        task = task_find_by_task_uuid(
+            who=info.context.user,
+            task_uuid=input.task_uuid,
         )
-        task = get_object_or_404(task_qs)
+        assert task is not None
         label_qs = models.Label.objects.filter_for_user_and_uuid(
             info.context.user,
             input.label_uuid,
@@ -544,11 +545,11 @@ class Mutation:
         self, info: GraphQLResolveInfo, input: DeleteTaskInput
     ) -> types.Task:
         """Delete task."""
-        qs = models.Task.objects.filter_for_user_and_uuid(
-            info.context.user,
-            input.uuid,
+        task = task_find_by_task_uuid(
+            who=info.context.user,
+            task_uuid=input.uuid,
         )
-        task = get_object_or_404(qs)
+        assert task is not None
         task_delete(task=task, who=info.context.user)
         return task
 

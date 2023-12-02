@@ -10,9 +10,6 @@ from typing import (
     cast,
 )
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
 from django.db import (
     models,
     transaction,
@@ -82,15 +79,6 @@ class TaskQuerySet(models.QuerySet["Task"]):
         """Filter by tasks contained in workspace board."""
         return self.filter(
             workspace_board_section__workspace_board=workspace_board,
-        )
-
-    def filter_for_user_and_uuid(
-        self, user: AbstractBaseUser, uuid: uuid.UUID
-    ) -> Self:
-        """Return task from user workspace corresponding to uuid."""
-        return self.filter(
-            workspace_board_section__workspace_board__workspace__users=user,
-            uuid=uuid,
         )
 
     # XXX still used?
