@@ -2,7 +2,6 @@
 import strawberry
 
 import corporate.schema
-import user.schema
 import workspace.schema
 
 
@@ -23,7 +22,6 @@ class Query:
 @strawberry.type
 class Mutation(
     workspace.schema.Mutation,
-    user.schema.Mutation,
     corporate.schema.Mutation,
 ):
     """Mutation object."""
