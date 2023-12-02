@@ -108,6 +108,7 @@ def unrelated_workspace() -> models.Workspace:
 @pytest.fixture
 def workspace_user_invite(
     workspace: models.Workspace,
+    # TODO user_invite needed to redeem invite, right? verify.
     user_invite: user_models.UserInvite,
     faker: Faker,
 ) -> models.WorkspaceUserInvite:
@@ -174,6 +175,23 @@ def workspace_board(
 
 
 @pytest.fixture
+def unrelated_workspace_board(
+    unrelated_workspace_user: WorkspaceUser,
+    faker: Faker,
+    unrelated_workspace: models.Workspace,
+) -> models.WorkspaceBoard:
+    """Return an unrelated workspace board."""
+    return workspace_board_create(
+        who=unrelated_workspace_user.user,
+        title=faker.text(),
+        description=faker.paragraph(),
+        workspace=unrelated_workspace,
+        # XXX another victim to non-determinism
+        deadline=faker.date_time(tzinfo=dt_timezone.utc),
+    )
+
+
+@pytest.fixture
 def archived_workspace_board(
     workspace: models.Workspace,
     now: datetime,
@@ -227,6 +245,20 @@ def other_workspace_board_section(
 
 
 @pytest.fixture
+def unrelated_workspace_board_section(
+    unrelated_workspace_board: models.WorkspaceBoard,
+    unrelated_workspace_user: WorkspaceUser,
+    faker: Faker,
+) -> models.WorkspaceBoardSection:
+    """Return unrelated workspace board section."""
+    return workspace_board_section_create(
+        who=unrelated_workspace_user.user,
+        workspace_board=unrelated_workspace_board,
+        title=faker.sentence(),
+    )
+
+
+@pytest.fixture
 def task(
     workspace_board_section: models.WorkspaceBoardSection,
     workspace_user: models.WorkspaceUser,
@@ -253,6 +285,19 @@ def other_task(
         who=workspace_user.user,
         workspace_board_section=workspace_board_section,
         title="I am the other task",
+    )
+
+
+@pytest.fixture
+def unrelated_task(
+    unrelated_workspace_board_section: models.WorkspaceBoardSection,
+    unrelated_workspace_user: models.WorkspaceUser,
+) -> models.Task:
+    """Return another task belonging to the same workspace board section."""
+    return task_create(
+        who=unrelated_workspace_user.user,
+        workspace_board_section=unrelated_workspace_board_section,
+        title="I am an unrelated task",
     )
 
 
@@ -319,6 +364,7 @@ def chat_message(
     )
 
 
+# TODO remove me
 @pytest.fixture
 def user_model() -> Type["_User"]:
     """Return user model class."""
