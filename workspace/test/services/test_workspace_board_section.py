@@ -1,7 +1,6 @@
 """Test workspace board section services."""
 import pytest
 
-from workspace.factory import WorkspaceBoardSectionFactory
 from workspace.models import WorkspaceBoard
 from workspace.models.workspace_board_section import WorkspaceBoardSection
 from workspace.models.workspace_user import WorkspaceUser
@@ -14,19 +13,15 @@ from workspace.services.workspace_board_section import (
 def test_moving_section(
     workspace_board: WorkspaceBoard,
     workspace_board_section: WorkspaceBoardSection,
+    other_workspace_board_section: WorkspaceBoardSection,
+    other_other_workspace_board_section: WorkspaceBoardSection,
     workspace_user: WorkspaceUser,
 ) -> None:
     """Test moving a section around."""
-    other_section = WorkspaceBoardSectionFactory(
-        workspace_board=workspace_board,
-    )
-    other_other_section = WorkspaceBoardSectionFactory(
-        workspace_board=workspace_board,
-    )
     assert list(workspace_board.workspaceboardsection_set.all()) == [
         workspace_board_section,
-        other_section,
-        other_other_section,
+        other_workspace_board_section,
+        other_other_workspace_board_section,
     ]
     workspace_board_section_move(
         workspace_board_section=workspace_board_section,
@@ -35,8 +30,8 @@ def test_moving_section(
     )
     assert list(workspace_board.workspaceboardsection_set.all()) == [
         workspace_board_section,
-        other_section,
-        other_other_section,
+        other_workspace_board_section,
+        other_other_workspace_board_section,
     ]
     workspace_board_section_move(
         workspace_board_section=workspace_board_section,
@@ -44,8 +39,8 @@ def test_moving_section(
         who=workspace_user.user,
     )
     assert list(workspace_board.workspaceboardsection_set.all()) == [
-        other_section,
-        other_other_section,
+        other_workspace_board_section,
+        other_other_workspace_board_section,
         workspace_board_section,
     ]
     workspace_board_section_move(
@@ -54,9 +49,9 @@ def test_moving_section(
         who=workspace_user.user,
     )
     assert list(workspace_board.workspaceboardsection_set.all()) == [
-        other_section,
+        other_workspace_board_section,
         workspace_board_section,
-        other_other_section,
+        other_other_workspace_board_section,
     ]
 
 

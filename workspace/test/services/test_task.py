@@ -3,7 +3,6 @@ from datetime import datetime
 
 import pytest
 
-from workspace.factory import WorkspaceBoardSectionFactory
 from workspace.models import WorkspaceBoard
 from workspace.models.task import Task
 from workspace.models.workspace_board_section import WorkspaceBoardSection
@@ -82,8 +81,10 @@ def test_moving_task_within_section(
 
 @pytest.mark.django_db
 def test_moving_task_to_other_section(
+    # TODO this fixture might not be needed
     workspace_board: WorkspaceBoard,
     workspace_board_section: WorkspaceBoardSection,
+    other_workspace_board_section: WorkspaceBoardSection,
     task: Task,
     workspace_user: WorkspaceUser,
 ) -> None:
@@ -97,23 +98,20 @@ def test_moving_task_to_other_section(
         task,
         other_task,
     ]
-    other_section = WorkspaceBoardSectionFactory.create(
-        workspace_board=workspace_board
-    )
     other_section_task = task_create(
         who=workspace_user.user,
         title="don't care",
-        workspace_board_section=other_section,
+        workspace_board_section=other_workspace_board_section,
     )
-    assert list(other_section.task_set.all()) == [
+    assert list(other_workspace_board_section.task_set.all()) == [
         other_section_task,
     ]
     task_move_after(
         who=workspace_user.user,
         task=task,
-        after=other_section,
+        after=other_workspace_board_section,
     )
-    assert list(other_section.task_set.all()) == [
+    assert list(other_workspace_board_section.task_set.all()) == [
         task,
         other_section_task,
     ]
@@ -121,8 +119,10 @@ def test_moving_task_to_other_section(
 
 @pytest.mark.django_db
 def test_moving_task_to_empty_section(
+    # TODO the following two fixtures might not be needed
     workspace_board: WorkspaceBoard,
     workspace_board_section: WorkspaceBoardSection,
+    other_workspace_board_section: WorkspaceBoardSection,
     task: Task,
     workspace_user: WorkspaceUser,
 ) -> None:
@@ -131,15 +131,12 @@ def test_moving_task_to_empty_section(
 
     We also see what happens when the id is set too high.
     """
-    other_section = WorkspaceBoardSectionFactory.create(
-        workspace_board=workspace_board
-    )
     task_move_after(
         who=workspace_user.user,
         task=task,
-        after=other_section,
+        after=other_workspace_board_section,
     )
-    assert list(other_section.task_set.all()) == [
+    assert list(other_workspace_board_section.task_set.all()) == [
         task,
     ]
     task.refresh_from_db()
