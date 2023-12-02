@@ -29,7 +29,7 @@ from user.models import User
 from workspace.models.task import Task
 from workspace.models.workspace import Workspace
 from workspace.models.workspace_board import WorkspaceBoard
-from workspace.selectors.task import task_find_by_task_uuid
+from workspace.selectors.task import TaskDetailQuerySet, task_find_by_task_uuid
 from workspace.selectors.workspace import workspace_find_by_workspace_uuid
 from workspace.selectors.workspace_board import (
     workspace_board_find_by_workspace_uuid,
@@ -119,6 +119,7 @@ class WorkspaceConsumer(BaseConsumer):
 
     def workspace_change(self, event: ConsumerEvent) -> None:
         """Respond to workspace board change event."""
+        # TODO need to prefetch/select related here to avoid N+1
         workspace = workspace_find_by_workspace_uuid(
             who=self.user,
             workspace_uuid=self.uuid,
@@ -148,6 +149,7 @@ class WorkspaceBoardConsumer(BaseConsumer):
 
     def workspace_board_change(self, event: ConsumerEvent) -> None:
         """Respond to workspace board change event."""
+        # TODO prefetch / select related here
         workspace_board = workspace_board_find_by_workspace_uuid(
             who=self.user,
             workspace_board_uuid=self.uuid,
@@ -172,6 +174,8 @@ class TaskConsumer(BaseConsumer):
 
     def task_change(self, event: ConsumerEvent) -> None:
         """Respond to workspace board change event."""
-        task = task_find_by_task_uuid(who=self.user, task_uuid=self.uuid)
+        task = task_find_by_task_uuid(
+            who=self.user, task_uuid=self.uuid, qs=TaskDetailQuerySet
+        )
         serialized = serialize(TaskDetailSerializer, task, event)
         self.send_json(serialized)
