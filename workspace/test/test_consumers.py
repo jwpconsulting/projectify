@@ -19,10 +19,8 @@ from corporate.services.customer import customer_activate_subscription
 from projectify.asgi import (
     websocket_application,
 )
-from user.factory import (
-    UserFactory,
-)
 from user.models import User
+from user.services.user import user_create
 from workspace.models.const import WorkspaceUserRoles
 from workspace.models.workspace import Workspace
 from workspace.services.chat_message import chat_message_create
@@ -43,7 +41,7 @@ from .. import (
 @database_sync_to_async
 def create_user() -> "User":
     """Create a user."""
-    return UserFactory.create()
+    return user_create(email="consumer-test@example.com")
 
 
 @database_sync_to_async
