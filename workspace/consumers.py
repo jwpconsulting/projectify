@@ -32,7 +32,7 @@ from workspace.models.workspace_board import WorkspaceBoard
 from workspace.selectors.task import TaskDetailQuerySet, task_find_by_task_uuid
 from workspace.selectors.workspace import workspace_find_by_workspace_uuid
 from workspace.selectors.workspace_board import (
-    workspace_board_find_by_workspace_uuid,
+    workspace_board_find_by_workspace_board_uuid,
 )
 from workspace.serializers.task_detail import TaskDetailSerializer
 from workspace.serializers.workspace import WorkspaceDetailSerializer
@@ -150,7 +150,7 @@ class WorkspaceBoardConsumer(BaseConsumer):
     def workspace_board_change(self, event: ConsumerEvent) -> None:
         """Respond to workspace board change event."""
         # TODO prefetch / select related here
-        workspace_board = workspace_board_find_by_workspace_uuid(
+        workspace_board = workspace_board_find_by_workspace_board_uuid(
             who=self.user,
             workspace_board_uuid=self.uuid,
         )
