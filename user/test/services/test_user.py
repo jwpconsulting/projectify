@@ -3,7 +3,12 @@ import pytest
 from faker import Faker
 
 from user.models import User
-from user.services.user import user_create, user_create_superuser, user_sign_up
+from user.services.user import (
+    user_confirm_email,
+    user_create,
+    user_create_superuser,
+    user_sign_up,
+)
 
 
 @pytest.mark.django_db
@@ -30,6 +35,26 @@ def test_user_sign_up(faker: Faker) -> None:
 
 # TODO
 # - user_confirm_email
+@pytest.mark.django_db
+def test_user_confirm_email(user: User, inactive_user: User) -> None:
+    """Test activating an active and inactive user."""
+    assert user.is_active
+    user_confirm_email(
+        email=user.email,
+        token=user.get_email_confirmation_token(),
+    )
+    user.refresh_from_db()
+    assert user.is_active
+
+    assert not inactive_user.is_active
+    user_confirm_email(
+        email=inactive_user.email,
+        token=inactive_user.get_email_confirmation_token(),
+    )
+    inactive_user.refresh_from_db()
+    assert inactive_user.is_active
+
+
 # - user_log_in
 # - user_log_out
 # - user_request_password_reset

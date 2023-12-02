@@ -7,39 +7,6 @@ from user.models import User
 
 
 @pytest.mark.django_db
-class TestEmailConfirmationMutation:
-    """Test Email Confirmation Mutation."""
-
-    query = """
-mutation($email: String!, $token: String!) {
-    emailConfirmation(input: {email: $email, token: $token}) {
-        email
-    }
-}
-"""
-
-    def test_user_is_activated(self, graphql_query, inactive_user):
-        """Assert that user is activated."""
-        assert inactive_user.is_active is False
-        result = graphql_query(
-            self.query,
-            variables={
-                "email": inactive_user.email,
-                "token": inactive_user.get_email_confirmation_token(),
-            },
-        )
-        assert result == {
-            "data": {
-                "emailConfirmation": {
-                    "email": inactive_user.email,
-                }
-            }
-        }
-        inactive_user.refresh_from_db()
-        assert inactive_user.is_active is True
-
-
-@pytest.mark.django_db
 class TestLoginMutation:
     """Test LoginMutation."""
 
