@@ -44,7 +44,6 @@ django = [
 #     "asgiref",
 #     "channels",
 #     "channels_graphql_ws",
-#     "strawberry",
 #     "pytest",
 #     "rest_framework"
 # ]
@@ -168,8 +167,6 @@ python = "~3.11"
 python-dotenv = "~0.20.0"
 redis = "~4.5.4"
 rules = "~3.3"
-strawberry-graphql = "~0.205.0"
-strawberry-graphql-django = "~0.16.1"
 stripe = "~3.5.0"
 uvicorn = "~0.17.6"
 websockets = "~10.3"
@@ -228,8 +225,6 @@ filterwarnings = [
     "ignore:SelectableGroups dict interface is deprecated. Use select.:DeprecationWarning",
     # Some issue with daphne or twisted
     "ignore:'cgi' is deprecated and slated for removal in Python 3.13:DeprecationWarning",
-    # We will stop using strawberry eventually
-    "ignore:Argument name-based matching of 'info' is deprecated:DeprecationWarning",
     # Some issue with django-configurations
     "ignore:The USE_DEPRECATED_PYTZ setting:django.utils.deprecation.RemovedInDjango50Warning",
     "ignore:The USE_L10N setting:django.utils.deprecation.RemovedInDjango50Warning",
