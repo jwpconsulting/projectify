@@ -3,14 +3,14 @@ from uuid import UUID
 
 from django.utils.translation import gettext_lazy as _
 
-from rest_framework import generics, serializers, status
+from rest_framework import serializers, status
 from rest_framework.exceptions import NotFound
 from rest_framework.generics import get_object_or_404
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from workspace.models import Workspace, WorkspaceBoard, WorkspaceBoardQuerySet
+from workspace.models import Workspace, WorkspaceBoard
 from workspace.selectors.workspace import workspace_find_by_workspace_uuid
 from workspace.selectors.workspace_board import (
     WorkspaceBoardDetail,
@@ -70,37 +70,8 @@ class WorkspaceBoardCreate(APIView):
 
 
 # Read + Update + Delete
-class WorkspaceBoardReadUpdateDelete(
-    generics.UpdateAPIView[
-        WorkspaceBoard,
-        WorkspaceBoardQuerySet,
-        WorkspaceBoardDetailSerializer,
-    ],
-):
+class WorkspaceBoardReadUpdateDelete(APIView):
     """Workspace board retrieve view."""
-
-    queryset = WorkspaceBoard.objects.prefetch_related(
-        "workspaceboardsection_set",
-        "workspaceboardsection_set__task_set",
-        "workspaceboardsection_set__task_set__assignee",
-        "workspaceboardsection_set__task_set__assignee__user",
-        "workspaceboardsection_set__task_set__labels",
-        "workspaceboardsection_set__task_set__subtask_set",
-    ).select_related(
-        "workspace",
-    )
-    serializer_class = WorkspaceBoardDetailSerializer
-
-    def get_object(self) -> WorkspaceBoard:
-        """Return queryset with authenticated user in mind."""
-        user = self.request.user
-        qs = self.get_queryset()
-        qs = qs.filter_for_user_and_uuid(
-            user,
-            self.kwargs["workspace_board_uuid"],
-        )
-        workspace_board: WorkspaceBoard = get_object_or_404(qs)
-        return workspace_board
 
     def get(self, request: Request, workspace_board_uuid: UUID) -> Response:
         """Handle GET."""
@@ -116,21 +87,28 @@ class WorkspaceBoardReadUpdateDelete(
         )
         return Response(serializer.data)
 
-    def perform_update(
-        self, serializer: WorkspaceBoardDetailSerializer
-    ) -> None:
-        """Update the workspace board."""
-        if serializer.instance is None:
-            # Unlikely to hit this, update can only be called with instance
-            raise ValueError("Expected serializer instance")
+    def put(self, request: Request, workspace_board_uuid: UUID) -> Response:
+        """Handle PUT."""
+        workspace_board = workspace_board_find_by_workspace_board_uuid(
+            who=request.user,
+            workspace_board_uuid=workspace_board_uuid,
+        )
+        if workspace_board is None:
+            raise NotFound(_("No workspace board found for this uuid"))
+        serializer = WorkspaceBoardBaseSerializer(
+            instance=workspace_board,
+            data=request.data,
+        )
+        serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         workspace_board_update(
             who=self.request.user,
-            workspace_board=serializer.instance,
+            workspace_board=workspace_board,
             title=data["title"],
             description=data.get("description"),
             deadline=data.get("deadline"),
         )
+        return Response(data, status.HTTP_200_OK)
 
     def delete(self, request: Request, workspace_board_uuid: UUID) -> Response:
         """Handle DELETE."""
