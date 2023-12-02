@@ -10,7 +10,6 @@ from graphql import (
 )
 
 from user.services.user import (
-    user_confirm_password_reset,
     user_update,
 )
 
@@ -23,15 +22,6 @@ if TYPE_CHECKING:
 
 
 @strawberry.input
-class ConfirmPasswordResetInput:
-    """ConfirmPasswordReset input."""
-
-    email: str
-    token: str
-    new_password: str
-
-
-@strawberry.input
 class UpdateProfileInput:
     """UpdateProfile input."""
 
@@ -41,18 +31,6 @@ class UpdateProfileInput:
 @strawberry.type
 class Mutation:
     """."""
-
-    @strawberry.mutation
-    def confirm_password_reset(
-        self,
-        input: ConfirmPasswordResetInput,
-    ) -> types.User | None:
-        """Mutate."""
-        return user_confirm_password_reset(
-            email=input.email,
-            token=input.token,
-            new_password=input.new_password,
-        )  # type: ignore[return-value]
 
     @strawberry.mutation
     def update_profile(
