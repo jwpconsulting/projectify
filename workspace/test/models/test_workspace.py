@@ -9,6 +9,7 @@ from django.contrib.auth.models import (
 import pytest
 
 from user.models import User
+from workspace.models.workspace import Workspace
 from workspace.models.workspace_user import WorkspaceUser
 from workspace.services.workspace import (
     workspace_add_user,
@@ -16,7 +17,6 @@ from workspace.services.workspace import (
 from workspace.services.workspace_board import workspace_board_create
 
 from ... import (
-    factory,
     models,
 )
 
@@ -27,13 +27,16 @@ class TestWorkspaceManager:
 
     def test_get_for_user(
         self,
-        workspace_user: models.WorkspaceUser,
         user: AbstractUser,
-        other_user: AbstractUser,
+        # This workplace shall be retrievable by the user
+        workspace: Workspace,
+        workspace_user: models.WorkspaceUser,
+        # This workpace will not be retrieved since the user does not have a
+        # workspace user for it
+        unrelated_workspace_user: AbstractUser,
+        unrelated_workspace: Workspace,
     ) -> None:
         """Test getting workspaces for user."""
-        workspace = workspace_user.workspace
-        factory.WorkspaceFactory(add_users=[other_user])
         assert list(models.Workspace.objects.get_for_user(user)) == [workspace]
 
     def test_filter_for_user_and_uuid(
