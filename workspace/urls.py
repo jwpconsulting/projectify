@@ -92,6 +92,12 @@ workspace_board_section_patterns = (
 )
 
 task_patterns = (
+    # Create
+    path(
+        "",
+        TaskCreate.as_view(),
+        name="create",
+    ),
     # Read, Update, Delete
     path(
         "<uuid:task_uuid>",
@@ -191,12 +197,6 @@ urlpatterns = (
     ),
     # TODO put into task_patterns
     # Create
-    path(
-        # TODO should be "task/"
-        "task",
-        TaskCreate.as_view(),
-        name="task-create",
-    ),
     # Label
     path("label/", include((label_patterns, "labels"))),
 )
