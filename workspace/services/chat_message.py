@@ -10,6 +10,7 @@ from workspace.models.task import Task
 from workspace.models.workspace_user import WorkspaceUser
 
 
+# TODO this could take an author instead of who -> user is derived from author
 def chat_message_create(
     *,
     who: User,
