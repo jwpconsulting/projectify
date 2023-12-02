@@ -54,7 +54,7 @@ export async function getArchivedWorkspaceBoards(
 ): Promise<undefined | ArchivedWorkspaceBoard[]> {
     return handle404(
         await getWithCredentialsJson<ArchivedWorkspaceBoard[]>(
-            `/workspace/workspace/${workspace_uuid}/workspace-boards-archived/`,
+            `/workspace/workspace/${workspace_uuid}/archived-workspace-boards/`,
             repositoryContext
         )
     );
