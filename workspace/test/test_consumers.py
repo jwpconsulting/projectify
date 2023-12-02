@@ -24,13 +24,15 @@ from user.factory import (
 )
 from user.models import User
 from workspace.models.const import WorkspaceUserRoles
-from workspace.models.workspace_user import WorkspaceUser
 from workspace.services.chat_message import chat_message_create
 from workspace.services.label import label_create
 from workspace.services.sub_task import sub_task_create
 from workspace.services.task import task_create
 from workspace.services.workspace import workspace_add_user
 from workspace.services.workspace_board import workspace_board_create
+from workspace.services.workspace_board_section import (
+    workspace_board_section_create,
+)
 
 from .. import (
     factory,
@@ -85,10 +87,13 @@ def create_workspace_board(
 @database_sync_to_async
 def create_workspace_board_section(
     workspace_board: models.WorkspaceBoard,
+    user: User,
 ) -> models.WorkspaceBoardSection:
     """Create workspace board section."""
-    return factory.WorkspaceBoardSectionFactory.create(
+    return workspace_board_section_create(
         workspace_board=workspace_board,
+        who=user,
+        title="I am a workspace board section",
     )
 
 
@@ -107,13 +112,11 @@ def create_task(
 
 
 @database_sync_to_async
-def create_label(
-    workspace: models.Workspace, workspace_user: WorkspaceUser
-) -> models.Label:
+def create_label(workspace: models.Workspace, user: User) -> models.Label:
     """Create a label."""
     return label_create(
         workspace=workspace,
-        who=workspace_user.user,
+        who=user,
         color=0,
         name="don't care",
     )
@@ -132,13 +135,9 @@ def remove_label(label: models.Label, task: models.Task) -> None:
 
 
 @database_sync_to_async
-def create_sub_task(
-    task: models.Task, workspace_user: WorkspaceUser
-) -> models.SubTask:
+def create_sub_task(task: models.Task, user: User) -> models.SubTask:
     """Create sub task."""
-    return sub_task_create(
-        task=task, who=workspace_user.user, title="don't care", done=False
-    )
+    return sub_task_create(task=task, who=user, title="don't care", done=False)
 
 
 @database_sync_to_async
@@ -225,7 +224,7 @@ class TestWorkspaceConsumer:
         user = await create_user()
         workspace = await create_workspace()
         workspace_user = await create_workspace_user(workspace, user)
-        label = await create_label(workspace, workspace_user)
+        label = await create_label(workspace, user)
         resource = f"ws/workspace/{workspace.uuid}/"
         communicator = WebsocketCommunicator(
             websocket_application,
@@ -332,6 +331,7 @@ class TestWorkspaceBoardConsumer:
         workspace_board = await create_workspace_board(workspace, user)
         workspace_board_section = await create_workspace_board_section(
             workspace_board,
+            user,
         )
         resource = f"ws/workspace-board/{workspace_board.uuid}/"
         communicator = WebsocketCommunicator(
@@ -361,6 +361,7 @@ class TestWorkspaceBoardConsumer:
         workspace_board = await create_workspace_board(workspace, user)
         workspace_board_section = await create_workspace_board_section(
             workspace_board,
+            user,
         )
         task = await create_task(workspace_board_section, workspace_user)
         resource = f"ws/workspace-board/{workspace_board.uuid}/"
@@ -389,10 +390,11 @@ class TestWorkspaceBoardConsumer:
         user = await create_user()
         workspace = await create_workspace()
         workspace_user = await create_workspace_user(workspace, user)
-        label = await create_label(workspace, workspace_user)
+        label = await create_label(workspace, user)
         workspace_board = await create_workspace_board(workspace, user)
         workspace_board_section = await create_workspace_board_section(
             workspace_board,
+            user,
         )
         task = await create_task(workspace_board_section, workspace_user)
         resource = f"ws/workspace-board/{workspace_board.uuid}/"
@@ -424,10 +426,10 @@ class TestWorkspaceBoardConsumer:
         workspace_user = await create_workspace_user(workspace, user)
         workspace_board = await create_workspace_board(workspace, user)
         workspace_board_section = await create_workspace_board_section(
-            workspace_board,
+            workspace_board, user
         )
         task = await create_task(workspace_board_section, workspace_user)
-        sub_task = await create_sub_task(task, workspace_user)
+        sub_task = await create_sub_task(task, user)
         resource = f"ws/workspace-board/{workspace_board.uuid}/"
         communicator = WebsocketCommunicator(
             websocket_application,
@@ -463,7 +465,7 @@ class TestTaskConsumer:
         workspace_user = await create_workspace_user(workspace, user)
         workspace_board = await create_workspace_board(workspace, user)
         workspace_board_section = await create_workspace_board_section(
-            workspace_board,
+            workspace_board, user
         )
         task = await create_task(workspace_board_section, workspace_user)
         resource = f"ws/task/{task.uuid}/"
@@ -491,10 +493,10 @@ class TestTaskConsumer:
         workspace_user = await create_workspace_user(workspace, user)
         workspace_board = await create_workspace_board(workspace, user)
         workspace_board_section = await create_workspace_board_section(
-            workspace_board,
+            workspace_board, user
         )
         task = await create_task(workspace_board_section, workspace_user)
-        label = await create_label(workspace, workspace_user)
+        label = await create_label(workspace, user)
         resource = f"ws/task/{task.uuid}/"
         communicator = WebsocketCommunicator(websocket_application, resource)
         communicator.scope["user"] = user
@@ -521,10 +523,10 @@ class TestTaskConsumer:
         workspace_user = await create_workspace_user(workspace, user)
         workspace_board = await create_workspace_board(workspace, user)
         workspace_board_section = await create_workspace_board_section(
-            workspace_board,
+            workspace_board, user
         )
         task = await create_task(workspace_board_section, workspace_user)
-        sub_task = await create_sub_task(task, workspace_user)
+        sub_task = await create_sub_task(task, user)
         resource = f"ws/task/{task.uuid}/"
         communicator = WebsocketCommunicator(websocket_application, resource)
         communicator.scope["user"] = user
@@ -551,7 +553,7 @@ class TestTaskConsumer:
         workspace_user = await create_workspace_user(workspace, user)
         workspace_board = await create_workspace_board(workspace, user)
         workspace_board_section = await create_workspace_board_section(
-            workspace_board,
+            workspace_board, user
         )
         task = await create_task(workspace_board_section, workspace_user)
         chat_message = await create_chat_message(task, workspace_user)

@@ -14,7 +14,6 @@ from workspace.models.workspace_user import WorkspaceUser
 from workspace.services.label import label_create
 
 from ... import (
-    factory,
     models,
 )
 
@@ -114,13 +113,13 @@ class TestTask:
         assert task.assignee is None
 
     def test_get_next_section(
-        self, workspace_board: models.WorkspaceBoard, task: models.Task
+        self,
+        workspace_board: models.WorkspaceBoard,
+        task: models.Task,
+        other_workspace_board_section: models.WorkspaceBoardSection,
     ) -> None:
         """Test getting the next section."""
-        section = factory.WorkspaceBoardSectionFactory.create(
-            workspace_board=workspace_board,
-        )
-        assert task.get_next_section() == section
+        assert task.get_next_section() == other_workspace_board_section
 
     def test_get_next_section_no_next_section(
         self, workspace_board: models.WorkspaceBoard, task: models.Task

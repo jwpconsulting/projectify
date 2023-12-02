@@ -11,7 +11,6 @@ from workspace.models.workspace_user_invite import (
 from workspace.services.workspace import workspace_add_user
 
 from ... import (
-    factory,
     models,
 )
 
@@ -34,13 +33,11 @@ mutation MoveWorkspaceBoardSection($uuid: UUID!) {
     def test_query(
         self,
         workspace_board_section,
+        other_workspace_board_section,
         graphql_query_user,
         workspace_user,
     ):
         """Test the query."""
-        factory.WorkspaceBoardSectionFactory.create(
-            workspace_board=workspace_board_section.workspace_board,
-        )
         result = graphql_query_user(
             self.query,
             variables={

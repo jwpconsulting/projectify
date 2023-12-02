@@ -87,18 +87,3 @@ class WorkspaceBoardFactory(django.DjangoModelFactory[models.WorkspaceBoard]):
         """Meta."""
 
         model = models.WorkspaceBoard
-
-
-class WorkspaceBoardSectionFactory(
-    django.DjangoModelFactory[models.WorkspaceBoardSection]
-):
-    """WorkspaceBoard Section Factory."""
-
-    title = factory.Faker("word")
-    description = factory.Faker("paragraph")
-    workspace_board = factory.SubFactory(WorkspaceBoardFactory)
-
-    class Meta:
-        """Meta."""
-
-        model = models.WorkspaceBoardSection
