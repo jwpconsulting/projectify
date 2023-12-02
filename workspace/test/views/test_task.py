@@ -141,17 +141,15 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
 
     def test_unauthorized(
         self,
-        rest_user_client: APIClient,
+        rest_meddling_client: APIClient,
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
-        workspace_user: models.WorkspaceUser,
         workspace: models.Workspace,
     ) -> None:
         """Test retrieving when logged in, but not authorized."""
-        workspace.remove_user(workspace_user.user)
         with django_assert_num_queries(1):
-            response = rest_user_client.get(resource_url)
-        assert response.status_code == 404, response.data
+            response = rest_meddling_client.get(resource_url)
+            assert response.status_code == 404, response.data
 
     def test_authenticated(
         self,
