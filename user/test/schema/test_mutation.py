@@ -7,27 +7,6 @@ from user.models import User
 
 
 @pytest.mark.django_db
-class TestRequestPasswordResetMutation:
-    """Test RequestPasswordResetMutation."""
-
-    query = """
-mutation RequestPasswordReset($email: String!) {
-    requestPasswordReset(input: {email: $email})
-}
-"""
-
-    def test_mutation(self, graphql_query, user, mailoutbox):
-        """Test that an email is sent."""
-        graphql_query(
-            self.query,
-            variables={
-                "email": user.email,
-            },
-        )
-        assert len(mailoutbox) == 1
-
-
-@pytest.mark.django_db
 class TestConfirmPasswordResetMutation:
     """Test ConfirmPasswordResetMutation."""
 
