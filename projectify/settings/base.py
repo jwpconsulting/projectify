@@ -88,8 +88,6 @@ class Base(Configuration):
         "django_celery_results",
         "django_extensions",
         # TODO
-        # We don't want to use GraphQL anymore.
-        "strawberry.django",
         # XXX are we still using this?
         "ordered_model",
         # TODO I think this is ours, not third party
