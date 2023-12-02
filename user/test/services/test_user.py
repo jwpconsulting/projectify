@@ -16,6 +16,7 @@ from user.services.user import (
     user_create_superuser,
     user_log_in,
     user_log_out,
+    user_request_password_reset,
     user_sign_up,
 )
 
@@ -155,4 +156,18 @@ def test_user_log_out_not_logged_in(
 
 
 # - user_request_password_reset
+@pytest.mark.django_db
+def test_request_password_reset(
+    user: User, faker: Faker, mailoutbox: list[object]
+) -> None:
+    """Test pw reset requests."""
+    assert len(mailoutbox) == 0
+    user_request_password_reset(email=user.email)
+    assert len(mailoutbox) == 1
+    with pytest.raises(ValidationError) as error:
+        user_request_password_reset(email=faker.email())
+    assert error.match("No user could be found")
+    assert len(mailoutbox) == 1
+
+
 # - user_confirm_password_reset

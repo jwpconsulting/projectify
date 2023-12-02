@@ -11,9 +11,6 @@ from graphql import (
 
 from user.services.user import (
     user_confirm_password_reset,
-    user_log_in,
-    user_log_out,
-    user_request_password_reset,
     user_update,
 )
 
@@ -23,21 +20,6 @@ from . import (
 
 if TYPE_CHECKING:
     from ..models import User as _User  # noqa: F401
-
-
-@strawberry.input
-class LoginInput:
-    """Login input."""
-
-    email: str
-    password: str
-
-
-@strawberry.input
-class RequestPasswordResetInput:
-    """RequestPasswordReset input."""
-
-    email: str
 
 
 @strawberry.input
@@ -59,12 +41,6 @@ class UpdateProfileInput:
 @strawberry.type
 class Mutation:
     """."""
-
-    @strawberry.mutation
-    def request_password_reset(self, input: RequestPasswordResetInput) -> str:
-        """Mutate."""
-        user_request_password_reset(email=input.email)
-        return input.email
 
     @strawberry.mutation
     def confirm_password_reset(
