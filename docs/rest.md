@@ -81,3 +81,8 @@ a user's profile picture will be accessible via:
    │           │           │     │
    App      Resource      verb  noun
 ```
+
+## Return values
+
+Any operation, C(R)UD or RPC, except for an operation using the DELETE HTTP
+verb must return the new state of the newly created or updated resource
