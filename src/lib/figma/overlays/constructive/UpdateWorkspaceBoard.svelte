@@ -22,7 +22,7 @@
             title,
             deadline,
         };
-        await updateWorkspaceBoard(updatedWorkspaceBoard);
+        await updateWorkspaceBoard(updatedWorkspaceBoard, { fetch });
         resolveConstructiveOverlay();
     }
 </script>
@@ -42,6 +42,7 @@
             )}
             style={{ kind: "field", inputType: "text" }}
             bind:value={title}
+            required
         />
         <InputField
             name="deadline"

@@ -2,12 +2,13 @@ import { client } from "$lib/graphql/client";
 import {
     Mutation_ArchiveWorkspaceBoard,
     Mutation_DeleteWorkspaceBoard,
-    Mutation_UpdateWorkspaceBoard,
 } from "$lib/graphql/operations";
 import {
+    failOrOk,
     getWithCredentialsJson,
     handle404,
     postWithCredentialsJson,
+    putWithCredentialsJson,
 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
@@ -64,18 +65,20 @@ export async function getArchivedWorkspaceBoards(
 }
 
 // Update
-export async function updateWorkspaceBoard(workspaceBoard: WorkspaceBoard) {
-    await client.mutate({
-        mutation: Mutation_UpdateWorkspaceBoard,
-        variables: {
-            input: {
-                uuid: workspaceBoard.uuid,
-                title: workspaceBoard.title,
-                deadline: workspaceBoard.deadline,
-                description: "",
-            },
-        },
-    });
+export async function updateWorkspaceBoard(
+    workspaceBoard: Pick<
+        WorkspaceBoard,
+        "title" | "description" | "uuid" | "deadline"
+    >,
+    repositoryContext: RepositoryContext
+) {
+    return failOrOk(
+        await putWithCredentialsJson(
+            `/workspace/workspace-board/${workspaceBoard.uuid}`,
+            workspaceBoard,
+            repositoryContext
+        )
+    );
 }
 // Delete
 export async function deleteWorkspaceBoard(workspaceBoard: WorkspaceBoard) {
