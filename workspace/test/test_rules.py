@@ -40,13 +40,13 @@ class TestPredicates:
         # In the beginning the user is owner
         assert rules.is_at_least_observer(user, workspace)
 
-    def test_is_at_least_observer_other_workspace(
+    def test_is_at_least_observer_unrelated_workspace(
         self,
         user: AbstractBaseUser,
-        other_workspace: models.Workspace,
+        unrelated_workspace: models.Workspace,
     ) -> None:
         """Test is_at_least_observer with other workspace."""
-        assert not rules.is_at_least_observer(user, other_workspace)
+        assert not rules.is_at_least_observer(user, unrelated_workspace)
 
     def test_is_at_least_member(
         self,
@@ -59,14 +59,14 @@ class TestPredicates:
         observer.assign_role(models.WorkspaceUserRoles.MEMBER)
         assert rules.is_at_least_member(user, workspace)
 
-    def test_is_at_least_member_other_workspace(
+    def test_is_at_least_member_unrelated_workspace(
         self,
         user: AbstractBaseUser,
-        other_workspace: models.Workspace,
+        unrelated_workspace: models.Workspace,
         observer: models.WorkspaceUser,
     ) -> None:
         """Test is_at_least_member with other workspace."""
-        assert not rules.is_at_least_member(user, other_workspace)
+        assert not rules.is_at_least_member(user, unrelated_workspace)
 
     def test_is_at_least_maintainer(
         self,
@@ -79,11 +79,11 @@ class TestPredicates:
         observer.assign_role(models.WorkspaceUserRoles.MAINTAINER)
         assert rules.is_at_least_maintainer(user, workspace)
 
-    def test_is_at_least_maintainer_other_workspace(
-        self, user: AbstractBaseUser, other_workspace: models.Workspace
+    def test_is_at_least_maintainer_unrelated_workspace(
+        self, user: AbstractBaseUser, unrelated_workspace: models.Workspace
     ) -> None:
         """Test is_at_least_maintainer with other workspace."""
-        assert not rules.is_at_least_maintainer(user, other_workspace)
+        assert not rules.is_at_least_maintainer(user, unrelated_workspace)
 
     def test_is_at_least_owner(
         self,
@@ -96,13 +96,13 @@ class TestPredicates:
         observer.assign_role(models.WorkspaceUserRoles.OWNER)
         assert rules.is_at_least_owner(user, workspace)
 
-    def test_is_at_least_owner_other_workspace(
+    def test_is_at_least_owner_unrelated_workspace(
         self,
         user: AbstractBaseUser,
-        other_workspace: models.Workspace,
+        unrelated_workspace: models.Workspace,
     ) -> None:
         """Test is_at_least_owner with other workspace."""
-        assert not rules.is_at_least_owner(user, other_workspace)
+        assert not rules.is_at_least_owner(user, unrelated_workspace)
 
     def test_belongs_to_active_workspace(
         self,
@@ -142,14 +142,14 @@ class TestPredicates:
             workspace,
         )
 
-    def test_belongs_to_active_workspace_other_workspace(
+    def test_belongs_to_active_workspace_unrelated_workspace(
         self,
         user: AbstractBaseUser,
-        other_workspace: models.Workspace,
+        unrelated_workspace: models.Workspace,
         observer: models.WorkspaceUser,
     ) -> None:
         """Test belongs_to_active_workspace with other workspace."""
         assert not rules.belongs_to_active_workspace(
             user,
-            other_workspace,
+            unrelated_workspace,
         )

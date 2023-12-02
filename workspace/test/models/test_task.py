@@ -80,12 +80,12 @@ class TestTask:
         self,
         workspace: models.Workspace,
         task: models.Task,
-        other_workspace_workspace_user: models.WorkspaceUser,
+        unrelated_workspace_user: models.WorkspaceUser,
     ) -> None:
         """Test assigning to a different workspace's user."""
         # This time do not create a workspace_user
         with pytest.raises(models.WorkspaceUser.DoesNotExist):
-            task.assign_to(other_workspace_workspace_user)
+            task.assign_to(unrelated_workspace_user)
 
     def test_assign_none(
         self,
@@ -135,8 +135,8 @@ class TestTask:
         task: models.Task,
         labels: list[Label],
         workspace_user: WorkspaceUser,
-        other_workspace: Workspace,
-        other_workspace_workspace_user: WorkspaceUser,
+        unrelated_workspace: Workspace,
+        unrelated_workspace_user: WorkspaceUser,
     ) -> None:
         """Test setting labels."""
         assert task.labels.count() == 0
@@ -156,8 +156,8 @@ class TestTask:
         assert list(task.labels.values_list("id", flat=True)) == []
 
         unrelated = label_create(
-            workspace=other_workspace,
-            who=other_workspace_workspace_user.user,
+            workspace=unrelated_workspace,
+            who=unrelated_workspace_user.user,
             color=0,
             name="don't care",
         )
@@ -218,9 +218,9 @@ class TestTask:
             task.save()
 
     def test_task_workspace_pgtrigger(
-        self, task: models.Task, other_workspace: models.Workspace
+        self, task: models.Task, unrelated_workspace: models.Workspace
     ) -> None:
         """Test database trigger for wrong workspace assignment."""
         with pytest.raises(db.InternalError):
-            task.workspace = other_workspace
+            task.workspace = unrelated_workspace
             task.save()

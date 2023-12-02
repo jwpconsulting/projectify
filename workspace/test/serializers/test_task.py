@@ -250,12 +250,12 @@ class TestTaskCreateUpdateSerializer:
         user_request: Request,
         label: models.Label,
         workspace_user: WorkspaceUser,
-        other_workspace_workspace_user: WorkspaceUser,
+        unrelated_workspace_user: WorkspaceUser,
     ) -> None:
         """Test updating a task."""
         other_label = label_create(
-            workspace=other_workspace_workspace_user.workspace,
-            who=other_workspace_workspace_user.user,
+            workspace=unrelated_workspace_user.workspace,
+            who=unrelated_workspace_user.user,
             color=0,
             name="don't care",
         )

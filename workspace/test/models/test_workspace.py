@@ -168,13 +168,13 @@ class TestWorkspace:
             models.WorkspaceUserRoles.OWNER,
         )
 
-    def test_has_at_least_role_other_workspace(
+    def test_has_at_least_role_unrelated_workspace(
         self,
-        other_workspace: models.Workspace,
+        unrelated_workspace: models.Workspace,
         workspace_user: models.WorkspaceUser,
     ) -> None:
         """Test has_at_least_role with a different workspace."""
-        assert not other_workspace.has_at_least_role(
+        assert not unrelated_workspace.has_at_least_role(
             workspace_user,
             models.WorkspaceUserRoles.OBSERVER,
         )
