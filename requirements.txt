@@ -263,9 +263,6 @@ djangorestframework==3.14.0 ; python_version >= "3.11" and python_version < "3.1
 faker==19.13.0 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:14ccb0aec342d33aa3889a864a56e5b3c2d56bce1b89f9189f4fbc128b9afc1e \
     --hash=sha256:da880a76322db7a879c848a0771e129338e0a680a9f695fd9a3e7a6ac82b45e1
-graphql-core==3.2.3 ; python_version >= "3.11" and python_version < "3.12" \
-    --hash=sha256:06d2aad0ac723e35b1cb47885d3e5c45e956a53bc1b209a9fc5369007fe46676 \
-    --hash=sha256:5766780452bd5ec8ba133f8bf287dc92713e3868ddd83aee4faab9fc3e303dc3
 gunicorn==20.1.0 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:9dcc4547dbb1cb284accfb15ab5667a0e5d1881cc443e0677b4882a4067a807e \
     --hash=sha256:e0a968b5ba15f8a328fdfd7ab1fcb5af4470c28aaf7e55df02a99bc13138e6e8
@@ -476,12 +473,6 @@ six==1.16.0 ; python_version >= "3.11" and python_version < "3.12" \
 sqlparse==0.4.4 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:5430a4fe2ac7d0f93e66f1efc6e1338a41884b7ddf2a350cedd20ccc4d9d28f3 \
     --hash=sha256:d446183e84b8349fa3061f0fe7f06ca94ba65b426946ffebe6e3e8295332420c
-strawberry-graphql-django==0.16.1 ; python_version >= "3.11" and python_version < "3.12" \
-    --hash=sha256:07a421d9dfbd605b726ed6ad62a97ae78e28d8297a755764d3f3160c6f33d756 \
-    --hash=sha256:d51cc6627f6cab7e168eb0fc2a367338311c7a16a5ed90e7fa45c2defbd72152
-strawberry-graphql==0.205.0 ; python_version >= "3.11" and python_version < "3.12" \
-    --hash=sha256:7f545441a31d1b528a06183127fe2f09695446d2930964bbc3c5812d7217e719 \
-    --hash=sha256:b666a7b153c4349a82bdaacc92a14d0863466b81e75286c8841ebcb1ba2f5f7f
 stripe==3.5.0 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:08f74cae6619d4a7d78f8162ff72bc3e9c913f53ec96ecd5ddc7d823c2e79ddd \
     --hash=sha256:69d5bf4611624a503bcec84a61b1f2a2b874bfc828432e4fd75cd120bcc3efef
