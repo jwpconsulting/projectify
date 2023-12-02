@@ -1,8 +1,6 @@
 """Projectify project schema."""
 import strawberry
 
-import workspace.schema
-
 
 @strawberry.type
 class Query:
@@ -18,14 +16,4 @@ class Query:
         return None
 
 
-@strawberry.type
-class Mutation(
-    workspace.schema.Mutation,
-):
-    """Mutation object."""
-
-
-schema = strawberry.Schema(
-    query=Query,
-    mutation=Mutation,
-)
+schema = strawberry.Schema(query=Query)
