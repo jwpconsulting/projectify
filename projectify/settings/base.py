@@ -54,7 +54,6 @@ class Base(Configuration):
     # Debug
     DEBUG_TOOLBAR = False
     DEBUG = False
-    GRAPHIQL_ENABLE = False
 
     SESSION_COOKIE_SAMESITE = "None"
     SESSION_COOKIE_SECURE = True
