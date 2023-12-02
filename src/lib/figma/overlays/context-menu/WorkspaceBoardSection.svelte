@@ -68,7 +68,8 @@
         }
         await moveWorkspaceBoardSection(
             workspaceBoardSection,
-            previousSection._order
+            previousSection._order,
+            { fetch }
         );
     }
     async function switchWithNextSection() {
@@ -77,7 +78,8 @@
         }
         await moveWorkspaceBoardSection(
             workspaceBoardSection,
-            nextSection._order
+            nextSection._order,
+            { fetch }
         );
     }
 </script>

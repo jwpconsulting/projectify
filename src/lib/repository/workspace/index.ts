@@ -1,11 +1,13 @@
 import type { FetchResult } from "@apollo/client/core";
 
 import { client } from "$lib/graphql/client";
+import { Mutation_AddWorkspaceBoardSection } from "$lib/graphql/operations";
 import {
-    Mutation_MoveWorkspaceBoardSection,
-    Mutation_AddWorkspaceBoardSection,
-} from "$lib/graphql/operations";
-import { getWithCredentialsJson, handle404 } from "$lib/repository/util";
+    failOrOk,
+    getWithCredentialsJson,
+    handle404,
+    postWithCredentialsJson,
+} from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
     CreateWorkspaceBoardSection,
@@ -58,15 +60,14 @@ export async function createWorkspaceBoardSection(
 // Update
 export async function moveWorkspaceBoardSection(
     { uuid }: WorkspaceBoardSection,
-    order: number
+    order: number,
+    repositoryContext: RepositoryContext
 ) {
-    await client.mutate({
-        mutation: Mutation_MoveWorkspaceBoardSection,
-        variables: {
-            input: {
-                workspaceBoardSectionUuid: uuid,
-                order,
-            },
-        },
-    });
+    return failOrOk(
+        await postWithCredentialsJson(
+            `/workspace/workspace-board-section/${uuid}/move`,
+            { order },
+            repositoryContext
+        )
+    );
 }

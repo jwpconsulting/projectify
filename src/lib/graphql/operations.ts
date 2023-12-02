@@ -1,16 +1,6 @@
 import { gql } from "@apollo/client/core";
 
 // Mutation
-export const Mutation_MoveWorkspaceBoardSection = gql`
-    mutation MoveWorkspaceBoardSection(
-        $input: MoveWorkspaceBoardSectionInput!
-    ) {
-        moveWorkspaceBoardSection(input: $input) {
-            uuid
-        }
-    }
-`;
-
 export const Mutation_AddWorkspaceBoardSection = gql`
     mutation AddWorkspaceBoardSection($input: AddWorkspaceBoardSectionInput!) {
         addWorkspaceBoardSection(input: $input) {
