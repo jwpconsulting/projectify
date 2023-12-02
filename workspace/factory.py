@@ -47,17 +47,3 @@ class WorkspaceFactory(django.DjangoModelFactory[models.Workspace]):
         """Meta."""
 
         model = models.Workspace
-
-
-class WorkspaceUserInviteFactory(
-    django.DjangoModelFactory[models.WorkspaceUserInvite]
-):
-    """WorkspaceUserInvite factory."""
-
-    workspace = factory.SubFactory(WorkspaceFactory)
-    user_invite = factory.SubFactory("user.factory.UserInviteFactory")
-
-    class Meta:
-        """Meta."""
-
-        model = models.WorkspaceUserInvite
