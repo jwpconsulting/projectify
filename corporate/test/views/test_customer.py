@@ -74,26 +74,37 @@ def mock_stripe_billing_portal() -> Iterable[mock.MagicMock]:
 class TestWorkspaceCheckoutSessionCreate:
     """Test creating a checkout session."""
 
-    @pytest.fixture
-    def resource_url(
+    def test_invalid_uuid(
         self,
-        # Assuming unpaid customer
-        unpaid_customer: Customer,
-    ) -> str:
-        """Return URL to this view."""
-        return reverse(
+        mock_stripe_checkout: mock.MagicMock,
+        rest_user_client: APIClient,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        faker: Faker,
+    ) -> None:
+        """Test passing in an invalid uuid."""
+        resource_url = reverse(
             "corporate:customers:create-checkout-session",
-            args=(str(unpaid_customer.workspace.uuid),),
+            args=(str(faker.uuid4()),),
         )
+        with django_assert_num_queries(2):
+            response = rest_user_client.post(
+                resource_url,
+                data={"seats": 1337},
+            )
+            assert response.status_code == 400, response.data
 
     def test_posting_normal_data(
         self,
         mock_stripe_checkout: mock.MagicMock,
         rest_user_client: APIClient,
-        resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
+        unpaid_customer: Customer,
     ) -> None:
         """Test we can get a url when posting valid data."""
+        resource_url = reverse(
+            "corporate:customers:create-checkout-session",
+            args=(str(unpaid_customer.workspace.uuid),),
+        )
         with django_assert_num_queries(4):
             response = rest_user_client.post(
                 resource_url,
@@ -102,27 +113,81 @@ class TestWorkspaceCheckoutSessionCreate:
             assert response.status_code == 200, response.data
         assert response.data == {"url": "https://www.example.com"}
 
+    def test_no_customer(
+        self,
+        mock_stripe_checkout: mock.MagicMock,
+        rest_user_client: APIClient,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        workspace_user: WorkspaceUser,
+        workspace: Workspace,
+    ) -> None:
+        """Test it works even with no customer."""
+        resource_url = reverse(
+            "corporate:customers:create-checkout-session",
+            args=(str(workspace.uuid),),
+        )
+        # More queries since we create a customer here
+        with django_assert_num_queries(8):
+            response = rest_user_client.post(
+                resource_url,
+                data={"seats": 1337},
+            )
+            assert response.status_code == 200, response.data
+        assert response.data == {"url": "https://www.example.com"}
+
+    def test_paid_customer(
+        self,
+        mock_stripe_checkout: mock.MagicMock,
+        rest_user_client: APIClient,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        paid_customer: Customer,
+    ) -> None:
+        """Test that there is an error on paid customer."""
+        resource_url = reverse(
+            "corporate:customers:create-checkout-session",
+            args=(str(paid_customer.workspace.uuid),),
+        )
+        with django_assert_num_queries(2):
+            response = rest_user_client.post(
+                resource_url,
+                data={"seats": 1337},
+            )
+            assert response.status_code == 400, response.data
+
 
 @pytest.mark.django_db
 class TestWorkspaceBillingPortalSessionCreate:
     """Test creating billing portal sessions."""
 
-    @pytest.fixture
-    def resource_url(self, paid_customer: Customer) -> str:
-        """Return URL to this view."""
-        return reverse(
+    def test_with_unpaid_customer(
+        self,
+        mock_stripe_billing_portal: mock.MagicMock,
+        rest_user_client: APIClient,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        unpaid_customer: Customer,
+    ) -> None:
+        """Test calling this with an unpaid customer."""
+        resource_url = reverse(
             "corporate:customers:create-billing-portal-session",
-            args=(str(paid_customer.workspace.uuid),),
+            args=(str(unpaid_customer.workspace.uuid),),
         )
+        with django_assert_num_queries(4):
+            response = rest_user_client.post(resource_url)
+            assert response.status_code == 200, response.data
+        assert response.data == {"url": "https://www.example.com"}
 
     def test_with_paying_customer(
         self,
         mock_stripe_billing_portal: mock.MagicMock,
         rest_user_client: APIClient,
-        resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
+        paid_customer: Customer,
     ) -> None:
         """Test calling this with a paying customer."""
+        resource_url = reverse(
+            "corporate:customers:create-billing-portal-session",
+            args=(str(paid_customer.workspace.uuid),),
+        )
         with django_assert_num_queries(4):
             response = rest_user_client.post(resource_url)
             assert response.status_code == 200, response.data
