@@ -5,6 +5,8 @@ Fixture name convention
 
 - the_thing: Fixture for a model instance
 - other_the_thing: Fixture for a model instance belonging to the same workspace
+- other_other_the_thing: Fixture for yet another model instance belonging to
+  the same workspace
 - unrelated_the_thing: Fixture for a model instance belonging to another
   workspace
 
@@ -241,7 +243,21 @@ def other_workspace_board_section(
     workspace_user: WorkspaceUser,
     faker: Faker,
 ) -> models.WorkspaceBoardSection:
-    """Return workspace board section."""
+    """Create another workspace board section."""
+    return workspace_board_section_create(
+        who=workspace_user.user,
+        workspace_board=workspace_board,
+        title=faker.sentence(),
+    )
+
+
+@pytest.fixture
+def other_other_workspace_board_section(
+    workspace_board: models.WorkspaceBoard,
+    workspace_user: WorkspaceUser,
+    faker: Faker,
+) -> models.WorkspaceBoardSection:
+    """Create yet another workspace board section."""
     return workspace_board_section_create(
         who=workspace_user.user,
         workspace_board=workspace_board,
