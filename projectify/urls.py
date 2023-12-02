@@ -38,25 +38,14 @@ from django.urls import (
     path,
 )
 
-from strawberry.django.views import GraphQLView
-
 from workspace.consumers import (
     TaskConsumer,
     WorkspaceBoardConsumer,
     WorkspaceConsumer,
 )
 
-from . import (
-    schema,
-)
-
 urlpatterns: Iterable[Union[URLResolver, URLPattern]] = (
     path("admin/", admin.site.urls),
-    path(
-        "graphql",
-        GraphQLView.as_view(schema=schema.schema),
-        name="graphql",
-    ),
     path(
         r"premail/",
         include("premail.urls"),
