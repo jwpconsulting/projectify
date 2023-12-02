@@ -25,7 +25,8 @@
         };
         await createWorkspaceBoardSection(
             workspaceBoard,
-            workspaceBoardSection
+            workspaceBoardSection,
+            { fetch }
         );
         resolveConstructiveOverlay();
     }

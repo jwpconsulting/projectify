@@ -1,7 +1,3 @@
-import type { FetchResult } from "@apollo/client/core";
-
-import { client } from "$lib/graphql/client";
-import { Mutation_AddWorkspaceBoardSection } from "$lib/graphql/operations";
 import {
     failOrOk,
     getWithCredentialsJson,
@@ -10,7 +6,6 @@ import {
 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
-    CreateWorkspaceBoardSection,
     WorkspaceBoard,
     WorkspaceBoardSection,
 } from "$lib/types/workspace";
@@ -36,24 +31,20 @@ export async function getWorkspaceBoardSection(
 // WorkspaceBoardSection CRUD
 // Create
 export async function createWorkspaceBoardSection(
-    workspaceBoard: WorkspaceBoard,
-    workspaceBoardSection: CreateWorkspaceBoardSection
+    { uuid: workspace_board_uuid }: WorkspaceBoard,
+    {
+        title,
+        description,
+    }: Pick<WorkspaceBoardSection, "title" | "description">,
+    repositoryContext: RepositoryContext
 ): Promise<WorkspaceBoardSection> {
-    const result: FetchResult<{
-        addWorkspaceBoardSection: WorkspaceBoardSection;
-    }> = await client.mutate({
-        mutation: Mutation_AddWorkspaceBoardSection,
-        variables: {
-            input: {
-                workspaceBoardUuid: workspaceBoard.uuid,
-                ...workspaceBoardSection,
-            },
-        },
-    });
-    if (!result.data) {
-        throw new Error("Expected result.data");
-    }
-    return result.data.addWorkspaceBoardSection;
+    return failOrOk(
+        await postWithCredentialsJson(
+            `/workspace/workspace-board-section/`,
+            { workspace_board_uuid, title, description },
+            repositoryContext
+        )
+    );
 }
 
 // Read

@@ -25,15 +25,14 @@
         $_("onboarding.new-task.workspace-board-section-title");
 
     $: disabled = taskTitle === undefined;
-    // TODO use new create task function here
     async function submit() {
         if (!taskTitle) {
             throw new Error("Expected taskTitle");
         }
         const workspace_board_section = await createWorkspaceBoardSection(
             workspaceBoard,
-            // TODO allow description undefined
-            { title: workspaceBoardSectionTitle, description: "" }
+            { title: workspaceBoardSectionTitle },
+            { fetch }
         );
         // Find ourselves
         const assignee = workspace.workspace_users.find(
