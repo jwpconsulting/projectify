@@ -1,14 +1,6 @@
 import { gql } from "@apollo/client/core";
 
 // Mutation
-export const Mutation_DeleteWorkspaceBoard = gql`
-    mutation DeleteWorkspaceBoard($input: DeleteWorkspaceBoardInput!) {
-        deleteWorkspaceBoard(input: $input) {
-            uuid
-        }
-    }
-`;
-
 export const Mutation_ArchiveWorkspaceBoard = gql`
     mutation ArchiveWorkspaceBoard($input: ArchiveWorkspaceBoardInput!) {
         archiveWorkspaceBoard(input: $input) {

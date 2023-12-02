@@ -1,9 +1,7 @@
 import { client } from "$lib/graphql/client";
+import { Mutation_ArchiveWorkspaceBoard } from "$lib/graphql/operations";
 import {
-    Mutation_ArchiveWorkspaceBoard,
-    Mutation_DeleteWorkspaceBoard,
-} from "$lib/graphql/operations";
-import {
+    deleteWithCredentialsJson,
     failOrOk,
     getWithCredentialsJson,
     handle404,
@@ -81,16 +79,16 @@ export async function updateWorkspaceBoard(
     );
 }
 // Delete
-export async function deleteWorkspaceBoard(workspaceBoard: WorkspaceBoard) {
-    const { uuid } = workspaceBoard;
-    await client.mutate({
-        mutation: Mutation_DeleteWorkspaceBoard,
-        variables: {
-            input: {
-                uuid,
-            },
-        },
-    });
+export async function deleteWorkspaceBoard(
+    { uuid }: WorkspaceBoard,
+    repositoryContext: RepositoryContext
+): Promise<void> {
+    failOrOk(
+        await deleteWithCredentialsJson(
+            `/workspace/workspace-board/${uuid}`,
+            repositoryContext
+        )
+    );
 }
 
 export async function archiveWorkspaceBoard(

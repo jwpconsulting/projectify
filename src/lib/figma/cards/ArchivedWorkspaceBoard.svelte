@@ -26,7 +26,7 @@
 
     async function deleteAction() {
         await openDestructiveOverlay({ kind: "deleteBoard", workspaceBoard });
-        await deleteWorkspaceBoard(workspaceBoard);
+        await deleteWorkspaceBoard(workspaceBoard, { fetch });
     }
 </script>
 
