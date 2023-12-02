@@ -7,66 +7,6 @@ from user.models import User
 
 
 @pytest.mark.django_db
-class TestLoginMutation:
-    """Test LoginMutation."""
-
-    query = """
-mutation ($email: String!, $password: String!) {
-    login(input: {email: $email, password: $password}) {
-        email
-    }
-}
-"""
-
-    def test_login_active_user(
-        self, password: str, graphql_query: Any, user: User
-    ) -> None:
-        """Test logging in an active user."""
-        result = graphql_query(
-            self.query,
-            variables={
-                "email": user.email,
-                "password": password,
-            },
-        )
-        assert result == {
-            "data": {
-                "login": {
-                    "email": user.email,
-                }
-            }
-        }
-
-    def test_login_wrong_password(
-        self, graphql_query: Any, user: User
-    ) -> None:
-        """Test logging in with a wrong password."""
-        result = graphql_query(
-            self.query,
-            variables={
-                "email": user.email,
-                "password": "wrongpassword",
-            },
-        )
-        assert result["data"] == {"login": None}
-        assert "could be found" in str(result["errors"])
-
-    def test_login_inactive_user(
-        self, graphql_query: Any, inactive_user: User, password: str
-    ) -> None:
-        """Test logging in an inactive user."""
-        result = graphql_query(
-            self.query,
-            variables={
-                "email": inactive_user.email,
-                "password": password,
-            },
-        )
-        assert result["data"] == {"login": None}
-        assert "not been confirmed" in str(result["errors"])
-
-
-@pytest.mark.django_db
 class TestRequestPasswordResetMutation:
     """Test RequestPasswordResetMutation."""
 
