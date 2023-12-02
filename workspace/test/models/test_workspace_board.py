@@ -1,7 +1,6 @@
 """Workspace board model tests."""
 import pytest
 
-from workspace.factory import WorkspaceUserFactory
 from workspace.models.workspace import Workspace
 from workspace.models.workspace_board import WorkspaceBoard
 from workspace.models.workspace_user import WorkspaceUser
@@ -46,16 +45,14 @@ class TestWorkspaceBoardManager:
 
     def test_filter_for_user_and_uuid(
         self,
-        workspace: Workspace,
         workspace_board: WorkspaceBoard,
         workspace_user: WorkspaceUser,
+        # TODO what do these fixtures achieve?
+        workspace: Workspace,
+        other_workspace_user: WorkspaceUser,
     ) -> None:
         """Test that the workspace board is retrieved correctly."""
-        WorkspaceUserFactory(
-            workspace=workspace,
-        )
-        # The third user is other_workspace_user, the created of this board
-        assert workspace_board.workspace.users.count() == 3
+        assert workspace_board.workspace.users.count() == 2
         actual = WorkspaceBoard.objects.filter_for_user_and_uuid(
             workspace_user.user,
             workspace_board.uuid,
