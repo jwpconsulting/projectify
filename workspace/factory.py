@@ -1,7 +1,4 @@
 """Workspace factories."""
-from datetime import (
-    timezone,
-)
 from typing import (
     TYPE_CHECKING,
     Iterable,
@@ -73,17 +70,3 @@ class WorkspaceUserFactory(django.DjangoModelFactory[models.WorkspaceUser]):
         """Meta."""
 
         model = models.WorkspaceUser
-
-
-class WorkspaceBoardFactory(django.DjangoModelFactory[models.WorkspaceBoard]):
-    """WorkspaceBoard factory."""
-
-    title = factory.Faker("word")
-    description = factory.Faker("paragraph")
-    workspace = factory.SubFactory(WorkspaceFactory)
-    deadline = factory.Faker("date_time", tzinfo=timezone.utc)
-
-    class Meta:
-        """Meta."""
-
-        model = models.WorkspaceBoard
