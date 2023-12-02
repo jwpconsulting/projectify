@@ -320,6 +320,21 @@ def label(
 
 
 @pytest.fixture
+def unrelated_label(
+    faker: Faker,
+    unrelated_workspace: models.Workspace,
+    unrelated_workspace_user: WorkspaceUser,
+) -> models.Label:
+    """Create an unrelated label."""
+    return label_create(
+        workspace=unrelated_workspace,
+        name=faker.catch_phrase(),
+        who=unrelated_workspace_user.user,
+        color=faker.pyint(min_value=0, max_value=6),
+    )
+
+
+@pytest.fixture
 def labels(workspace: Workspace, workspace_user: WorkspaceUser) -> list[Label]:
     """Create several sub tasks."""
     N = 5

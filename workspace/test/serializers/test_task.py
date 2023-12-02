@@ -2,25 +2,26 @@
 from unittest.mock import (
     MagicMock,
 )
-
-from django.contrib.auth.models import (
-    AbstractUser,
-)
+from uuid import uuid4
 
 import pytest
 from rest_framework.request import (
     Request,
 )
 
+from projectify.utils import validate_perm
+from user.models import User
+from workspace.models.label import Label
+from workspace.models.sub_task import SubTask
+from workspace.models.task import Task
+from workspace.models.workspace import Workspace
+from workspace.models.workspace_board_section import WorkspaceBoardSection
 from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.label import label_create
 from workspace.services.workspace import (
     workspace_add_user,
 )
 
 from ... import (
-    factory,
-    models,
     serializers,
 )
 
@@ -29,7 +30,7 @@ from ... import (
 class TestTaskDetailSerializer:
     """Test the task detail serializer."""
 
-    def test_readonly_fields(self, task: models.Task) -> None:
+    def test_readonly_fields(self, task: Task) -> None:
         """Check that fields are actually readonly by trying a few."""
         serializer = serializers.TaskDetailSerializer(
             task,
@@ -49,7 +50,7 @@ class TestTaskCreateUpdateSerializer:
     """Test the task update serializer."""
 
     @pytest.fixture
-    def user_request(self, user: AbstractUser) -> Request:
+    def user_request(self, user: User) -> Request:
         """Return a request with a user."""
         user_request = MagicMock()
         user_request.user = user
@@ -57,10 +58,10 @@ class TestTaskCreateUpdateSerializer:
 
     def test_readonly_fields(
         self,
-        task: models.Task,
-        workspace_user: models.WorkspaceUser,
-        workspace_board_section: models.WorkspaceBoardSection,
-        sub_task: models.SubTask,
+        task: Task,
+        workspace_user: WorkspaceUser,
+        workspace_board_section: WorkspaceBoardSection,
+        sub_task: SubTask,
         user_request: Request,
     ) -> None:
         """Check that fields are actually readonly by trying a few."""
@@ -92,13 +93,13 @@ class TestTaskCreateUpdateSerializer:
         assert task.assignee is None
 
         # Since we don't pass the sub task in, it will disappear
-        assert list(models.SubTask.objects.all()) == []
+        assert list(SubTask.objects.all()) == []
 
     def test_create(
         self,
-        label: models.Label,
-        workspace_user: models.WorkspaceUser,
-        workspace_board_section: models.WorkspaceBoardSection,
+        label: Label,
+        workspace_user: WorkspaceUser,
+        workspace_board_section: WorkspaceBoardSection,
         user_request: Request,
     ) -> None:
         """Test creating a task."""
@@ -122,18 +123,18 @@ class TestTaskCreateUpdateSerializer:
 
     def test_create_unrelated_workspace_board_section(
         self,
-        workspace_user: models.WorkspaceUser,
+        workspace_user: WorkspaceUser,
         user_request: Request,
+        unrelated_workspace_board_section: WorkspaceBoardSection,
     ) -> None:
         """Test creating a task but the ws board section is wrong."""
-        workspace_board_section = factory.WorkspaceBoardSectionFactory.create()
         serializer = serializers.TaskCreateUpdateSerializer(
             data={
                 "title": "This is a great task title.",
                 "labels": [],
                 "assignee": None,
                 "workspace_board_section": {
-                    "uuid": str(workspace_board_section.uuid),
+                    "uuid": str(unrelated_workspace_board_section.uuid),
                 },
             },
             context={"request": user_request},
@@ -143,11 +144,11 @@ class TestTaskCreateUpdateSerializer:
 
     def test_update(
         self,
-        task: models.Task,
-        label: models.Label,
-        workspace_user: models.WorkspaceUser,
-        workspace_board_section: models.WorkspaceBoardSection,
-        sub_task: models.SubTask,
+        task: Task,
+        label: Label,
+        workspace_user: WorkspaceUser,
+        workspace_board_section: WorkspaceBoardSection,
+        sub_task: SubTask,
         user_request: Request,
     ) -> None:
         """Test updating a task."""
@@ -197,11 +198,10 @@ class TestTaskCreateUpdateSerializer:
 
     def test_update_no_ws_board_section(
         self,
-        task: models.Task,
+        task: Task,
         user_request: Request,
     ) -> None:
-        """Test updating a task."""
-        workspace_board_section = factory.WorkspaceBoardSectionFactory.create()
+        """Test updating a task when a board does not exist."""
         serializer = serializers.TaskCreateUpdateSerializer(
             task,
             data={
@@ -209,7 +209,7 @@ class TestTaskCreateUpdateSerializer:
                 "labels": [],
                 "assignee": None,
                 "workspace_board_section": {
-                    "uuid": str(workspace_board_section.uuid),
+                    "uuid": str(uuid4()),
                 },
             },
             context={"request": user_request},
@@ -220,14 +220,22 @@ class TestTaskCreateUpdateSerializer:
 
     def test_update_wrong_workspace(
         self,
-        task: models.Task,
-        workspace_user: models.WorkspaceUser,
+        task: Task,
+        workspace_user: WorkspaceUser,
         user_request: Request,
+        unrelated_workspace_board_section: WorkspaceBoardSection,
+        unrelated_workspace: Workspace,
     ) -> None:
-        """Test updating a task."""
-        workspace_board_section = factory.WorkspaceBoardSectionFactory.create()
-        workspace = workspace_board_section.workspace
-        workspace_add_user(workspace, workspace_user.user)
+        """Test assigning a task to an unrelated ws board section."""
+        # We need to add ourselves to make sure we have access to the
+        # workspace board section
+        workspace_add_user(unrelated_workspace, workspace_user.user)
+        # test for sanity
+        validate_perm(
+            "workspace.can_read_workspace_board_section",
+            workspace_user.user,
+            unrelated_workspace_board_section,
+        )
         serializer = serializers.TaskCreateUpdateSerializer(
             task,
             data={
@@ -235,7 +243,7 @@ class TestTaskCreateUpdateSerializer:
                 "labels": [],
                 "assignee": None,
                 "workspace_board_section": {
-                    "uuid": str(workspace_board_section.uuid),
+                    "uuid": str(unrelated_workspace_board_section.uuid),
                 },
             },
             context={"request": user_request},
@@ -246,26 +254,21 @@ class TestTaskCreateUpdateSerializer:
 
     def test_update_missing_label(
         self,
-        task: models.Task,
+        task: Task,
         user_request: Request,
-        label: models.Label,
+        label: Label,
         workspace_user: WorkspaceUser,
         unrelated_workspace_user: WorkspaceUser,
+        unrelated_label: Label,
     ) -> None:
-        """Test updating a task."""
-        other_label = label_create(
-            workspace=unrelated_workspace_user.workspace,
-            who=unrelated_workspace_user.user,
-            color=0,
-            name="don't care",
-        )
+        """Test updating with an unrelated label."""
         serializer = serializers.TaskCreateUpdateSerializer(
             task,
             data={
                 "title": task.title,
                 "labels": [
                     {"uuid": str(label.uuid)},
-                    {"uuid": str(other_label.uuid)},
+                    {"uuid": str(unrelated_label.uuid)},
                 ],
                 "assignee": None,
                 "workspace_board_section": {
@@ -281,17 +284,17 @@ class TestTaskCreateUpdateSerializer:
 
     def test_update_wrong_assignee(
         self,
-        task: models.Task,
+        task: Task,
         user_request: Request,
+        unrelated_workspace_user: WorkspaceUser,
     ) -> None:
         """Test updating a task."""
-        assignee = factory.WorkspaceUserFactory.create()
         serializer = serializers.TaskCreateUpdateSerializer(
             task,
             data={
                 "title": task.title,
                 "labels": [],
-                "assignee": {"uuid": str(assignee.uuid)},
+                "assignee": {"uuid": str(unrelated_workspace_user.uuid)},
                 "workspace_board_section": {
                     "uuid": str(task.workspace_board_section.uuid),
                 },
