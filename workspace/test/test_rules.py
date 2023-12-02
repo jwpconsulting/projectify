@@ -6,9 +6,9 @@ from django.contrib.auth.models import (
 import pytest
 
 from corporate import models as corporate_models
+from workspace.services.workspace import workspace_add_user
 
 from .. import (
-    factory,
     models,
     rules,
 )
@@ -19,7 +19,7 @@ def observer(
     workspace: models.Workspace, user: AbstractBaseUser
 ) -> models.WorkspaceUser:
     """Return an observer workspace user."""
-    return factory.WorkspaceUserFactory.create(
+    return workspace_add_user(
         workspace=workspace,
         user=user,
         role=models.WorkspaceUserRoles.OBSERVER,

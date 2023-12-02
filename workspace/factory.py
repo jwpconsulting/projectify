@@ -2,6 +2,7 @@
 from typing import (
     TYPE_CHECKING,
     Iterable,
+    cast,
 )
 
 import factory
@@ -9,7 +10,8 @@ from factory import (
     django,
 )
 
-from user import factory as user_factory
+from workspace.models.workspace import Workspace
+from workspace.services.workspace import workspace_add_user
 
 from . import (
     models,
@@ -37,7 +39,9 @@ class WorkspaceFactory(django.DjangoModelFactory[models.Workspace]):
         if not extracted:
             return
         for user in extracted:
-            WorkspaceUserFactory(workspace=self, user=user)
+            workspace_add_user(
+                workspace=cast(Workspace, self), role="OBSERVER", user=user
+            )
 
     class Meta:
         """Meta."""
@@ -57,16 +61,3 @@ class WorkspaceUserInviteFactory(
         """Meta."""
 
         model = models.WorkspaceUserInvite
-
-
-class WorkspaceUserFactory(django.DjangoModelFactory[models.WorkspaceUser]):
-    """WorkspaceUser factory."""
-
-    user = factory.SubFactory(user_factory.UserFactory)
-    workspace = factory.SubFactory(WorkspaceFactory)
-    job_title = factory.Faker("job")
-
-    class Meta:
-        """Meta."""
-
-        model = models.WorkspaceUser
