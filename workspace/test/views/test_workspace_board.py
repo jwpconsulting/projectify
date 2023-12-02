@@ -74,7 +74,7 @@ class TestWorkspaceBoardReadUpdateDelete:
             args=(workspace_board.uuid,),
         )
 
-    def test_authenticated(
+    def test_getting(
         self,
         rest_user_client: APIClient,
         resource_url: str,

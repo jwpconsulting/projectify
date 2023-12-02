@@ -13,6 +13,8 @@ from rest_framework.views import APIView
 from workspace.models import Workspace, WorkspaceBoard, WorkspaceBoardQuerySet
 from workspace.selectors.workspace import workspace_find_by_workspace_uuid
 from workspace.selectors.workspace_board import (
+    WorkspaceBoardDetail,
+    workspace_board_find_by_workspace_board_uuid,
     workspace_board_find_by_workspace_uuid,
 )
 from workspace.serializers.base import WorkspaceBoardBaseSerializer
@@ -69,11 +71,16 @@ class WorkspaceBoardCreate(APIView):
 
 # Read + Update + Delete
 class WorkspaceBoardReadUpdateDelete(
-    generics.RetrieveUpdateDestroyAPIView[
+    generics.UpdateAPIView[
         WorkspaceBoard,
         WorkspaceBoardQuerySet,
         WorkspaceBoardDetailSerializer,
-    ]
+    ],
+    generics.DestroyAPIView[
+        WorkspaceBoard,
+        WorkspaceBoardQuerySet,
+        WorkspaceBoardDetailSerializer,
+    ],
 ):
     """Workspace board retrieve view."""
 
@@ -99,6 +106,20 @@ class WorkspaceBoardReadUpdateDelete(
         )
         workspace_board: WorkspaceBoard = get_object_or_404(qs)
         return workspace_board
+
+    def get(self, request: Request, workspace_board_uuid: UUID) -> Response:
+        """Handle GET."""
+        workspace_board = workspace_board_find_by_workspace_board_uuid(
+            who=request.user,
+            workspace_board_uuid=workspace_board_uuid,
+            qs=WorkspaceBoardDetail,
+        )
+        if workspace_board is None:
+            raise NotFound(_("No workspace board found for this uuid"))
+        serializer = WorkspaceBoardDetailSerializer(
+            instance=workspace_board,
+        )
+        return Response(serializer.data)
 
     def perform_update(
         self, serializer: WorkspaceBoardDetailSerializer
