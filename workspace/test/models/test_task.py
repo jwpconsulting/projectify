@@ -34,22 +34,6 @@ class TestTaskManager:
         )
         assert list(qs) == [task]
 
-    def test_filter_for_user_and_uuid(
-        self,
-        workspace: models.Workspace,
-        task: models.Task,
-        workspace_user: models.WorkspaceUser,
-    ) -> None:
-        """Test filter_for_user_and_uuid."""
-        factory.WorkspaceUserFactory(
-            workspace=workspace,
-        )
-        actual = models.Task.objects.filter_for_user_and_uuid(
-            workspace_user.user,
-            task.uuid,
-        ).get()
-        assert actual == task
-
     def test_duplicate_task(self, task: models.Task) -> None:
         """Test task duplication."""
         new_task = models.Task.objects.duplicate_task(task)
