@@ -1,6 +1,5 @@
 import { writable } from "svelte/store";
 
-import { client } from "$lib/graphql/client";
 import { goto } from "$lib/navigation";
 import { getUser, updateUser } from "$lib/repository/user";
 import * as userRepository from "$lib/repository/user";
@@ -28,7 +27,6 @@ export const logOut = async () => {
     // TODO add repository context
     await userRepository.logOut({ fetch });
     // TODO remove apollo
-    await client.resetStore();
     user.set(null);
 };
 

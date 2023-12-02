@@ -51,12 +51,6 @@ function getProxyConfig(
         return undefined;
     }
     return {
-        // We crash here if these variables are not there
-        "/graphql": {
-            target: getFromEnv(env, "VITE_PROXY_GRAPHQL_ENDPOINT"),
-            changeOrigin: true,
-            rewrite: (path: string) => path.replace(/^\/graphql/, ""),
-        },
         "/ws": {
             target: getFromEnv(env, "VITE_PROXY_WS_ENDPOINT"),
             changeOrigin: true,
