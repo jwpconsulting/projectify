@@ -12,6 +12,7 @@ from rest_framework.exceptions import ValidationError
 from user.models import User
 from user.services.user import (
     user_confirm_email,
+    user_confirm_password_reset,
     user_create,
     user_create_superuser,
     user_log_in,
@@ -155,7 +156,6 @@ def test_user_log_out_not_logged_in(
     assert "_auth_user_id" not in session_request.session.keys()
 
 
-# - user_request_password_reset
 @pytest.mark.django_db
 def test_request_password_reset(
     user: User, faker: Faker, mailoutbox: list[object]
@@ -170,4 +170,55 @@ def test_request_password_reset(
     assert len(mailoutbox) == 1
 
 
-# - user_confirm_password_reset
+@pytest.mark.django_db
+def test_confirm_password_reset(
+    user: User, password: str, faker: Faker
+) -> None:
+    """Test password reset confirmation."""
+    new_password = faker.password()
+
+    # First with right email, wrong token
+    with pytest.raises(ValidationError) as error:
+        user_confirm_password_reset(
+            email=user.email,
+            new_password=new_password,
+            token="wrong token",
+        )
+    assert error.match("token is invalid")
+    user.refresh_from_db()
+    assert user.check_password(password)
+    assert not user.check_password(new_password)
+
+    # Then with right token, wrong email
+    token = user.get_password_reset_token()
+    with pytest.raises(ValidationError) as error:
+        user_confirm_password_reset(
+            email=faker.email(),
+            new_password=new_password,
+            token=token,
+        )
+    assert error.match("email is not recognized")
+    user.refresh_from_db()
+    assert not user.check_password(new_password)
+
+    # Then with right token, right email
+    user_confirm_password_reset(
+        email=user.email,
+        new_password=new_password,
+        token=token,
+    )
+    user.refresh_from_db()
+    assert user.check_password(new_password)
+
+    # Then reuse old token, right email
+    new_new_password = faker.password()
+    with pytest.raises(ValidationError) as error:
+        user_confirm_password_reset(
+            email=user.email,
+            new_password=new_new_password,
+            token=token,
+        )
+    assert error.match("token is invalid")
+    user.refresh_from_db()
+    assert user.check_password(new_password)
+    assert not user.check_password(new_new_password)
