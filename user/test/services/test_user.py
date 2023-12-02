@@ -19,6 +19,7 @@ from user.services.user import (
     user_log_out,
     user_request_password_reset,
     user_sign_up,
+    user_update,
 )
 
 
@@ -34,6 +35,15 @@ def test_user_create_superuser() -> None:
     """Test creating a superuser. A superuser should be active."""
     u = user_create_superuser("hello@example")
     assert u.is_active is True
+
+
+@pytest.mark.django_db
+def test_user_update(user: User, faker: Faker) -> None:
+    """Test updating a user."""
+    new_name = faker.name()
+    user_update(who=user, user=user, full_name=new_name)
+    user.refresh_from_db()
+    assert user.full_name == new_name
 
 
 @pytest.mark.django_db
