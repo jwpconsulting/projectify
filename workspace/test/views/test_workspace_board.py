@@ -99,7 +99,7 @@ class TestWorkspaceBoardReadUpdateDelete:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating a ws board."""
-        with django_assert_num_queries(8):
+        with django_assert_num_queries(7):
             response = rest_user_client.put(
                 resource_url,
                 data={
