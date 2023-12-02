@@ -16,9 +16,10 @@ from rest_framework.test import (
 from pytest_types import (
     DjangoAssertNumQueries,
 )
-from workspace.models import TaskLabel, WorkspaceBoard
+from workspace.models import TaskLabel
 from workspace.models.task import Task
 from workspace.models.workspace import Workspace
+from workspace.models.workspace_board import WorkspaceBoard
 from workspace.models.workspace_user import WorkspaceUser
 from workspace.selectors.workspace_board import (
     workspace_board_find_by_workspace_uuid,
@@ -125,6 +126,37 @@ class TestWorkspaceBoardReadUpdateDelete:
             assert (
                 response.status_code == status.HTTP_204_NO_CONTENT
             ), response.data
+
+
+# Read (list)
+@pytest.mark.django_db
+class TestWorkspaceBoardsArchivedList:
+    """Test WorkspaceBoardsArchived list."""
+
+    @pytest.fixture
+    def resource_url(self, workspace: Workspace) -> str:
+        """Return URL to this view."""
+        return reverse(
+            "workspace:workspaces:archived-workspace-boards",
+            args=(workspace.uuid,),
+        )
+
+    def test_authenticated(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        workspace_user: WorkspaceUser,
+        # In total 2 workspace boards, but only one shall be returned
+        workspace_board: WorkspaceBoard,
+        archived_workspace_board: WorkspaceBoard,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Assert we can GET this view this while being logged in."""
+        with django_assert_num_queries(2):
+            response = rest_user_client.get(resource_url)
+            assert response.status_code == 200, response.content
+        assert len(response.data) == 1
+        assert response.data[0]["uuid"] == str(archived_workspace_board.uuid)
 
 
 # RPC

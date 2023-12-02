@@ -7,6 +7,7 @@ from django.urls import (
 from workspace.views.label import LabelCreate, LabelUpdateDelete
 from workspace.views.workspace_board import (
     WorkspaceBoardArchive,
+    WorkspaceBoardArchivedList,
     WorkspaceBoardCreate,
     WorkspaceBoardReadUpdateDelete,
 )
@@ -16,9 +17,6 @@ from workspace.views.workspace_board_section import (
     WorkspaceBoardSectionReadUpdateDelete,
 )
 
-from . import (
-    views,
-)
 from .views.task import (
     TaskCreate,
     TaskMoveAfterTask,
@@ -44,6 +42,12 @@ workspace_patterns = (
         "<uuid:workspace_uuid>",
         WorkspaceReadUpdate.as_view(),
         name="read-update",
+    ),
+    # Archived workspace boards
+    path(
+        "<uuid:workspace_uuid>/archived-workspace-boards/",
+        WorkspaceBoardArchivedList.as_view(),
+        name="archived-workspace-boards",
     ),
 )
 
@@ -160,12 +164,6 @@ urlpatterns = (
         "user/workspaces/",
         WorkspaceList.as_view(),
         name="workspace-list",
-    ),
-    # Archived workspace boards
-    path(
-        "workspace/<uuid:workspace_uuid>/workspace-boards-archived/",
-        views.WorkspaceBoardArchivedList.as_view(),
-        name="workspace-boards-archived",
     ),
     # Update
     # Delete
