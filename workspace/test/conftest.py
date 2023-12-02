@@ -1,4 +1,16 @@
-"""Workspace test fixtures."""
+"""
+Workspace test fixtures.
+
+Fixture name convention
+
+- the_thing: Fixture for a model instance
+- other_the_thing: Fixture for a model instance belonging to the same workspace
+- unrelated_the_thing: Fixture for a model instance belonging to another
+  workspace
+
+Anything that is unrelated can be used to test if users see only objects that
+they are allowed to see.
+"""
 from datetime import (
     datetime,
 )
@@ -77,7 +89,7 @@ def workspace() -> models.Workspace:
 
 
 @pytest.fixture
-def other_workspace() -> models.Workspace:
+def unrelated_workspace() -> models.Workspace:
     """Return workspace."""
     workspace = factory.WorkspaceFactory.create()
     # XXX we have to copy the code from above
@@ -133,12 +145,12 @@ def other_workspace_user(
 
 
 @pytest.fixture
-def other_workspace_workspace_user(
-    other_workspace: models.Workspace, other_user: "_User"
+def unrelated_workspace_user(
+    unrelated_workspace: models.Workspace, other_user: "_User"
 ) -> models.WorkspaceUser:
     """Return workspace user for other_user."""
     return workspace_add_user(
-        workspace=other_workspace,
+        workspace=unrelated_workspace,
         user=other_user,
         role=models.WorkspaceUserRoles.OWNER,
     )
