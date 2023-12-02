@@ -15,7 +15,6 @@ from user.services.user import (
     user_log_in,
     user_log_out,
     user_request_password_reset,
-    user_sign_up,
     user_update,
 )
 
@@ -25,14 +24,6 @@ from . import (
 
 if TYPE_CHECKING:
     from ..models import User as _User  # noqa: F401
-
-
-@strawberry.input
-class SignupInput:
-    """Signup input."""
-
-    email: str
-    password: str
 
 
 @strawberry.input
@@ -77,15 +68,6 @@ class UpdateProfileInput:
 @strawberry.type
 class Mutation:
     """."""
-
-    # DONE
-    @strawberry.mutation
-    def signup(self, input: SignupInput) -> types.User:
-        """Mutate."""
-        return user_sign_up(
-            email=input.email,
-            password=input.password,
-        )  # type: ignore[return-value]
 
     # DONE
     @strawberry.mutation

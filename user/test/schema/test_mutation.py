@@ -7,29 +7,6 @@ from user.models import User
 
 
 @pytest.mark.django_db
-class TestSignupMutation:
-    """Test Signup Mutation."""
-
-    def test_user_is_created(self, graphql_query):
-        """Assert that user is created."""
-        query = """
-mutation {
-    signup(input: {email: "hello@example.com", password: "password"}) {
-        email
-    }
-}
-"""
-        result = graphql_query(query)
-        assert result == {
-            "data": {
-                "signup": {
-                    "email": "hello@example.com",
-                },
-            },
-        }
-
-
-@pytest.mark.django_db
 class TestEmailConfirmationMutation:
     """Test Email Confirmation Mutation."""
 
