@@ -6,6 +6,7 @@ from django.urls import (
 
 from workspace.views.label import LabelCreate, LabelUpdateDelete
 from workspace.views.workspace_board import (
+    WorkspaceBoardArchive,
     WorkspaceBoardCreate,
     WorkspaceBoardReadUpdateDelete,
 )
@@ -67,6 +68,12 @@ workspace_board_patterns = (
         "<uuid:workspace_board_uuid>",
         WorkspaceBoardReadUpdateDelete.as_view(),
         name="read-update-delete",
+    ),
+    # RPC
+    path(
+        "<uuid:workspace_board_uuid>/archive",
+        WorkspaceBoardArchive.as_view(),
+        name="archive",
     ),
 )
 

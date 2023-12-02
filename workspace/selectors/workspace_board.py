@@ -3,7 +3,21 @@ from typing import Optional
 from uuid import UUID
 
 from user.models import User
-from workspace.models.workspace_board import WorkspaceBoard
+from workspace.models.workspace_board import (
+    WorkspaceBoard,
+    WorkspaceBoardQuerySet,
+)
+
+
+def workspace_board_find_by_workspace_uuid(
+    *, workspace_uuid: UUID, who: User, archived: Optional[bool]
+) -> WorkspaceBoardQuerySet:
+    """Find workspace boards for a workspace."""
+    qs = WorkspaceBoard.objects.filter_by_user(who)
+    if archived is not None:
+        qs = qs.filter_by_archived(archived)
+    qs = qs.filter(workspace__uuid=workspace_uuid)
+    return qs
 
 
 def workspace_board_find_by_workspace_board_uuid(

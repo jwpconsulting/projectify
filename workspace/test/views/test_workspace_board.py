@@ -20,6 +20,9 @@ from workspace.models import TaskLabel, WorkspaceBoard
 from workspace.models.task import Task
 from workspace.models.workspace import Workspace
 from workspace.models.workspace_user import WorkspaceUser
+from workspace.selectors.workspace_board import (
+    workspace_board_find_by_workspace_uuid,
+)
 
 
 # Create
@@ -122,3 +125,64 @@ class TestWorkspaceBoardReadUpdateDelete:
             assert (
                 response.status_code == status.HTTP_204_NO_CONTENT
             ), response.data
+
+
+# RPC
+@pytest.mark.django_db
+class TestWorkspaceBoardArchive:
+    """Test workspace board archival."""
+
+    @pytest.fixture
+    def resource_url(self, workspace_board: WorkspaceBoard) -> str:
+        """Return URL to this view."""
+        return reverse(
+            "workspace:workspace-boards:archive",
+            args=(str(workspace_board.uuid),),
+        )
+
+    def test_archiving_and_unarchiving(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        workspace: Workspace,
+        workspace_user: WorkspaceUser,
+    ) -> None:
+        """Test archiving a board and then unarchiving it."""
+        count = len(
+            workspace_board_find_by_workspace_uuid(
+                who=workspace_user.user,
+                workspace_uuid=workspace.uuid,
+                archived=False,
+            )
+        )
+        with django_assert_num_queries(10):
+            response = rest_user_client.post(
+                resource_url,
+                data={"archived": True},
+            )
+            assert response.status_code == 200, response.data
+        assert (
+            count
+            == len(
+                workspace_board_find_by_workspace_uuid(
+                    who=workspace_user.user,
+                    workspace_uuid=workspace.uuid,
+                    archived=False,
+                )
+            )
+            + 1
+        )
+        with django_assert_num_queries(10):
+            response = rest_user_client.post(
+                resource_url,
+                data={"archived": False},
+            )
+            assert response.status_code == 200, response.data
+        assert count == len(
+            workspace_board_find_by_workspace_uuid(
+                who=workspace_user.user,
+                workspace_uuid=workspace.uuid,
+                archived=False,
+            )
+        )
