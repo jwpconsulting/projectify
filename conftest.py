@@ -72,6 +72,12 @@ def other_user(faker: Faker) -> user_models.User:
 
 
 @pytest.fixture
+def unrelated_user(faker: Faker) -> user_models.User:
+    """Return unrelated user normally not in the same workspace."""
+    return user_create(email=faker.email())
+
+
+@pytest.fixture
 def meddling_user(faker: Faker, password: str) -> user_models.User:
     """Create a canary user to check permissions."""
     user = user_create(email=faker.email(), password=password)

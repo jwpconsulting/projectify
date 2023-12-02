@@ -5,9 +5,7 @@ from django.contrib.auth.models import (
 
 import pytest
 
-from user.factory import (
-    UserFactory,
-)
+from user.models import User
 from workspace.models.workspace import (
     Workspace,
 )
@@ -37,22 +35,34 @@ class TestWorkspaceUserManager:
         )
         assert list(qs) == [workspace_user]
 
-    def test_filter_by_user(
-        self, workspace: Workspace, workspace_user: WorkspaceUser
-    ) -> None:
+    def test_filter_by_user(self, workspace_user: WorkspaceUser) -> None:
         """Test filter_by_user."""
         assert (
             WorkspaceUser.objects.filter_by_user(workspace_user.user).count()
             == 1
         )
-        unrelated = UserFactory.create()
+
+    def test_filter_by_user_with_unrelated_workspace_user(
+        self,
+        workspace: Workspace,
+        workspace_user: WorkspaceUser,
+        unrelated_user: User,
+    ) -> None:
+        """Test filtering when an unrelated workspace user exists."""
         assert (
             WorkspaceUser.objects.filter_by_user(workspace_user.user).count()
             == 1
         )
-        assert WorkspaceUser.objects.filter_by_user(unrelated).count() == 0
-        workspace_add_user(workspace, unrelated)
-        assert WorkspaceUser.objects.filter_by_user(unrelated).count() == 2
+        assert (
+            WorkspaceUser.objects.filter_by_user(
+                unrelated_user,
+            ).count()
+            == 0
+        )
+        workspace_add_user(workspace, unrelated_user)
+        assert (
+            WorkspaceUser.objects.filter_by_user(unrelated_user).count() == 2
+        )
 
     def test_get_by_workspace_and_user(
         self,
