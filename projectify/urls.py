@@ -37,9 +37,8 @@ from django.urls import (
     include,
     path,
 )
-from django.views.decorators import (
-    csrf,
-)
+
+from strawberry.django.views import GraphQLView
 
 from workspace.consumers import (
     TaskConsumer,
@@ -50,20 +49,12 @@ from workspace.consumers import (
 from . import (
     schema,
 )
-from .views import (
-    GraphQLView,
-)
 
 urlpatterns: Iterable[Union[URLResolver, URLPattern]] = (
     path("admin/", admin.site.urls),
     path(
         "graphql",
-        csrf.csrf_exempt(
-            GraphQLView.as_view(
-                schema=schema.schema,
-                graphiql=settings.GRAPHIQL_ENABLE,
-            ),
-        ),
+        GraphQLView.as_view(schema=schema.schema),
         name="graphql",
     ),
     path(

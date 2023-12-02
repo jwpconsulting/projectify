@@ -54,9 +54,6 @@ class Development(Base):
     # Email
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-    # GraphQL
-    GRAPHIQL_ENABLE = True
-
     # Media
     SERVE_MEDIA = True
 
