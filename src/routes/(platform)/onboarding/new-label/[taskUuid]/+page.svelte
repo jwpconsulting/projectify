@@ -5,7 +5,7 @@
     import Onboarding from "$lib/components/Onboarding.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { goto } from "$lib/navigation";
-    import { assignLabelToTask } from "$lib/repository/workspace";
+    import { updateTask } from "$lib/repository/workspace";
     import { createLabel } from "$lib/repository/workspace/label";
     import { getAssignTaskUrl, getNewTaskUrl } from "$lib/urls/onboarding";
 
@@ -24,13 +24,12 @@
         if (!labelTitle) {
             throw new Error("Expected labelTitle");
         }
-        const { uuid } = await createLabel(
+        const label = await createLabel(
             workspace,
             { name: labelTitle, color: 0 },
             { fetch }
         );
-        // TODO use new update task end point for this
-        await assignLabelToTask(task, uuid, true);
+        await updateTask(task, [label], task.assignee, [], { fetch });
         // TODO handle if label with this name already exists
         await goto(getAssignTaskUrl(task.uuid));
     }

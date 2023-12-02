@@ -1,7 +1,3 @@
-import type { FetchResult } from "@apollo/client/core";
-
-import { client } from "$lib/graphql/client";
-import { Mutation_AssignLabel } from "$lib/graphql/operations";
 import {
     putWithCredentialsJson,
     getWithCredentialsJson,
@@ -80,7 +76,9 @@ export async function getTask(
 // This is possible now because the API accepts a whole task object,
 // incl. labels and so on
 export async function updateTask(
-    task: Task & { workspace_board_section: WorkspaceBoardSection },
+    task: Task & {
+        workspace_board_section: Pick<WorkspaceBoardSection, "uuid">;
+    },
     // XXX please move the following three arguments back into the top task
     // argument
     labels: Label[],
@@ -144,27 +142,6 @@ export async function moveTaskAfterTask(
             repositoryContext
         )
     );
-}
-
-export async function assignLabelToTask(
-    task: Task,
-    labelUuid: string,
-    assigned: boolean
-): Promise<Task> {
-    const result: FetchResult<{ assignLabel: Task }> = await client.mutate({
-        mutation: Mutation_AssignLabel,
-        variables: {
-            input: {
-                taskUuid: task.uuid,
-                labelUuid,
-                assigned,
-            },
-        },
-    });
-    if (!result.data) {
-        throw new Error("Expected result.data");
-    }
-    return result.data.assignLabel;
 }
 
 // Delete

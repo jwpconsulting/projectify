@@ -5,7 +5,7 @@ import { error } from "@sveltejs/kit";
 
 import { getTask } from "$lib/repository/workspace";
 import type {
-    Task,
+    TaskWithWorkspaceBoardSection,
     Workspace,
     WorkspaceBoard,
     WorkspaceBoardSection,
@@ -14,7 +14,7 @@ import type {
 import type { PageLoadEvent } from "./$types";
 
 interface returnType {
-    task: Task;
+    task: TaskWithWorkspaceBoardSection;
     workspaceBoardSection: WorkspaceBoardSection;
     workspaceBoard: WorkspaceBoard;
     workspace: Workspace;
