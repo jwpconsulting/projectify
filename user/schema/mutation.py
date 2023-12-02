@@ -10,7 +10,6 @@ from graphql import (
 )
 
 from user.services.user import (
-    user_confirm_email,
     user_confirm_password_reset,
     user_log_in,
     user_log_out,
@@ -24,14 +23,6 @@ from . import (
 
 if TYPE_CHECKING:
     from ..models import User as _User  # noqa: F401
-
-
-@strawberry.input
-class EmailConfirmationInput:
-    """EmailConfirmation input."""
-
-    email: str
-    token: str
 
 
 @strawberry.input
@@ -68,15 +59,6 @@ class UpdateProfileInput:
 @strawberry.type
 class Mutation:
     """."""
-
-    # DONE
-    @strawberry.mutation
-    def email_confirmation(
-        self,
-        input: EmailConfirmationInput,
-    ) -> types.User | None:
-        """Mutate."""
-        return user_confirm_email(email=input.email, token=input.token)  # type: ignore[return-value]
 
     # DONE
     @strawberry.mutation
