@@ -1,19 +1,8 @@
 """Top level conftest module."""
 import base64
-from typing import (
-    Any,
-    Dict,
-    Mapping,
-    Optional,
-    Protocol,
-)
-from unittest import (
-    mock,
-)
 
 from django.contrib.auth.models import (
     AbstractBaseUser,
-    AnonymousUser,
 )
 from django.core.files.uploadedfile import (
     SimpleUploadedFile,
@@ -27,16 +16,7 @@ from faker import Faker
 from rest_framework.test import (
     APIClient,
 )
-from strawberry.types.execution import (
-    ExecutionResult,
-)
 
-from projectify.schema import (
-    schema,
-)
-from projectify.views import (
-    RequestContext,
-)
 from user import models as user_models
 from user.services.user import user_create, user_create_superuser
 from user.services.user_invite import user_invite_create, user_invite_redeem
@@ -114,74 +94,18 @@ def redeemed_user_invite(faker: Faker) -> user_models.UserInvite:
     return user_invite
 
 
-Variables = Dict[str, Any]
-ExecutionResultDict = Mapping[str, object]
-
-
-class QueryMethod(Protocol):
-    """Protocol for graphql conftest query helper."""
-
-    def __call__(
-        self, query: str, variables: Optional[Variables] = None
-    ) -> ExecutionResultDict:
-        """Be callable with optional variables."""
-        ...
-
-
-def dict_from_execution_result(result: ExecutionResult) -> ExecutionResultDict:
-    """Turn an execution result into a dict."""
-    if result.errors:
-        return {
-            "data": result.data,
-            "errors": result.errors,
-        }
-    return {
-        "data": result.data,
-    }
-
-
 @pytest.fixture
-def graphql_query() -> QueryMethod:
+def graphql_query() -> None:
     """Return a client query fn without logged in user."""
-
-    def func(
-        query: str, variables: Optional[Variables] = None
-    ) -> ExecutionResultDict:
-        result = schema.execute_sync(
-            query,
-            variable_values=variables,
-            context_value=RequestContext(
-                user=AnonymousUser(),
-                session=mock.MagicMock(),
-                META={},
-            ),
-        )
-        return dict_from_execution_result(result)
-
-    return func
+    return None
 
 
 @pytest.fixture
 def graphql_query_user(
     user: AbstractBaseUser,
-) -> QueryMethod:
+) -> None:
     """Return a client query fn."""
-
-    def func(
-        query: str, variables: Optional[Variables] = None
-    ) -> ExecutionResultDict:
-        result = schema.execute_sync(
-            query,
-            variable_values=variables,
-            context_value=RequestContext(
-                user=user,
-                session=mock.MagicMock(),
-                META={},
-            ),
-        )
-        return dict_from_execution_result(result)
-
-    return func
+    return None
 
 
 @pytest.fixture
