@@ -8,6 +8,17 @@ from workspace.models.workspace_board import (
     WorkspaceBoardQuerySet,
 )
 
+WorkspaceBoardDetail = WorkspaceBoard.objects.prefetch_related(
+    "workspaceboardsection_set",
+    "workspaceboardsection_set__task_set",
+    "workspaceboardsection_set__task_set__assignee",
+    "workspaceboardsection_set__task_set__assignee__user",
+    "workspaceboardsection_set__task_set__labels",
+    "workspaceboardsection_set__task_set__subtask_set",
+).select_related(
+    "workspace",
+)
+
 
 def workspace_board_find_by_workspace_uuid(
     *, workspace_uuid: UUID, who: User, archived: Optional[bool]
@@ -21,11 +32,15 @@ def workspace_board_find_by_workspace_uuid(
 
 
 def workspace_board_find_by_workspace_board_uuid(
-    *, workspace_board_uuid: UUID, who: User
+    *,
+    workspace_board_uuid: UUID,
+    who: User,
+    qs: Optional[WorkspaceBoardQuerySet] = None,
 ) -> Optional[WorkspaceBoard]:
     """Find a workspace by uuid for a given user."""
+    qs = WorkspaceBoard.objects.all() if qs is None else qs
     try:
-        return WorkspaceBoard.objects.filter_for_user_and_uuid(
+        return qs.filter_for_user_and_uuid(
             user=who, uuid=workspace_board_uuid
         ).get()
     except WorkspaceBoard.DoesNotExist:
