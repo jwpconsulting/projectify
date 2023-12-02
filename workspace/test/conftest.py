@@ -57,7 +57,6 @@ from workspace.services.workspace_board_section import (
 )
 
 from .. import (
-    factory,
     models,
 )
 
@@ -73,9 +72,12 @@ def now() -> datetime:
 
 
 @pytest.fixture
-def workspace() -> models.Workspace:
+def workspace(faker: Faker) -> models.Workspace:
     """Return workspace."""
-    workspace = factory.WorkspaceFactory.create()
+    # TODO go through service to create workspace
+    workspace = Workspace.objects.create(
+        title=faker.company(),
+    )
     # XXX Ideally we would use customer_create here
     customer = Customer.objects.create(workspace=workspace)
     # XXX use same fixture as in corporate/test/conftest.py
@@ -89,9 +91,12 @@ def workspace() -> models.Workspace:
 
 
 @pytest.fixture
-def unrelated_workspace() -> models.Workspace:
+def unrelated_workspace(faker: Faker) -> models.Workspace:
     """Return workspace."""
-    workspace = factory.WorkspaceFactory.create()
+    # TODO go through service to create workspace
+    workspace = Workspace.objects.create(
+        title=faker.company(),
+    )
     # XXX we have to copy the code from above
     # XXX Ideally we would use customer_create here
     customer = Customer.objects.create(workspace=workspace)
