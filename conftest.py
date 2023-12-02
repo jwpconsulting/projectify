@@ -72,6 +72,16 @@ def other_user(faker: Faker) -> user_models.User:
 
 
 @pytest.fixture
+def meddling_user(faker: Faker, password: str) -> user_models.User:
+    """Create a canary user to check permissions."""
+    user = user_create(email=faker.email(), password=password)
+    user.is_active = True
+    user.full_name = faker.name()
+    user.save()
+    return user
+
+
+@pytest.fixture
 def inactive_user(faker: Faker) -> user_models.User:
     """Return an inactive db user."""
     return user_create(email=faker.email())
@@ -203,6 +213,14 @@ def rest_user_client(user: AbstractBaseUser) -> APIClient:
     """Return a logged in client that we can use to test DRF views."""
     client = APIClient()
     client.force_authenticate(user)
+    return client
+
+
+@pytest.fixture
+def rest_meddling_client(meddling_user: AbstractBaseUser) -> APIClient:
+    """Return a test client to check third party logged in access."""
+    client = APIClient()
+    client.force_authenticate(meddling_user)
     return client
 
 
