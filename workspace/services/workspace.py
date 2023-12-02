@@ -56,7 +56,8 @@ def workspace_update(
     return workspace
 
 
-# TODO auth required here?
+# TODO we might want to put this in workspace_user_create instead and
+# explicitly check authorization.
 def workspace_add_user(
     # TODO make *
     workspace: Workspace,

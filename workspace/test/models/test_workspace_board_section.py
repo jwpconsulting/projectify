@@ -3,7 +3,6 @@
 import pytest
 
 from ... import (
-    factory,
     models,
 )
 
@@ -26,14 +25,13 @@ class TestWorkspaceBoardSectionManager:
 
     def test_filter_for_user_and_uuid(
         self,
-        workspace: models.Workspace,
         workspace_board_section: models.WorkspaceBoardSection,
         workspace_user: models.WorkspaceUser,
+        # TODO are these two fixtures needed?
+        workspace: models.Workspace,
+        other_workspace_user: models.WorkspaceUser,
     ) -> None:
         """Test getting for user and uuid."""
-        factory.WorkspaceUserFactory(
-            workspace=workspace,
-        )
         actual = models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
             workspace_user.user,
             workspace_board_section.uuid,

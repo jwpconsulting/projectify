@@ -10,9 +10,6 @@ from rest_framework.test import (
 )
 
 from pytest_types import DjangoAssertNumQueries
-from workspace.factory import (
-    WorkspaceUserFactory,
-)
 
 from ...models.workspace_user import (
     WorkspaceUser,
@@ -82,12 +79,12 @@ class TestWorkspaceUserReadUpdateDelete:
         self,
         rest_user_client: APIClient,
         workspace_user: WorkspaceUser,
+        other_workspace_user: WorkspaceUser,
     ) -> None:
         """Test deleting another user."""
-        other = WorkspaceUserFactory.create(workspace=workspace_user.workspace)
         resource_url = reverse(
             "workspace:workspace-users:read-update-delete",
-            args=(str(other.uuid),),
+            args=(str(other_workspace_user.uuid),),
         )
         response = rest_user_client.delete(resource_url)
         assert response.status_code == 204, response.data
