@@ -24,6 +24,7 @@ from user.factory import (
 )
 from user.models import User
 from workspace.models.const import WorkspaceUserRoles
+from workspace.models.workspace import Workspace
 from workspace.services.chat_message import chat_message_create
 from workspace.services.label import label_create
 from workspace.services.sub_task import sub_task_create
@@ -35,7 +36,6 @@ from workspace.services.workspace_board_section import (
 )
 
 from .. import (
-    factory,
     models,
 )
 
@@ -49,7 +49,9 @@ def create_user() -> "User":
 @database_sync_to_async
 def create_workspace() -> models.Workspace:
     """Create a paid for workspace."""
-    workspace = factory.WorkspaceFactory.create()
+    workspace = Workspace.objects.create(
+        title="Workspace title",
+    )
     # XXX Ideally we would use customer_create here
     customer = Customer.objects.create(workspace=workspace)
     # XXX use same fixture as in corporate/test/conftest.py
