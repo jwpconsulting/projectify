@@ -48,7 +48,7 @@ export async function createTask(
         assignee: createTask.assignee ?? null,
     };
     const response = await postWithCredentialsJson<Task>(
-        "/workspace/task",
+        "/workspace/task/",
         data,
         repositoryContext
     );
