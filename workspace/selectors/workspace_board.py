@@ -6,7 +6,7 @@ from user.models import User
 from workspace.models.workspace_board import WorkspaceBoard
 
 
-def workspace_board_find_by_workspace_uuid(
+def workspace_board_find_by_workspace_board_uuid(
     *, workspace_board_uuid: UUID, who: User
 ) -> Optional[WorkspaceBoard]:
     """Find a workspace by uuid for a given user."""
