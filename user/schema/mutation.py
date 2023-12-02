@@ -62,18 +62,6 @@ class Mutation:
 
     # DONE
     @strawberry.mutation
-    def login(
-        self, input: LoginInput, info: GraphQLResolveInfo
-    ) -> types.User | None:
-        """Mutate."""
-        return user_log_in(
-            email=input.email,
-            password=input.password,
-            request=info.context,
-        )  # type: ignore[return-value]
-
-    # DONE
-    @strawberry.mutation
     def logout(self, info: GraphQLResolveInfo) -> types.User | None:
         """Mutate."""
         user: "_User" = info.context.user

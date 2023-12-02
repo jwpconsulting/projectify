@@ -88,9 +88,9 @@ def meddling_user(faker: Faker, password: str) -> user_models.User:
 
 
 @pytest.fixture
-def inactive_user(faker: Faker) -> user_models.User:
+def inactive_user(faker: Faker, password: str) -> user_models.User:
     """Return an inactive db user."""
-    return user_create(email=faker.email())
+    return user_create(email=faker.email(), password=password)
 
 
 @pytest.fixture

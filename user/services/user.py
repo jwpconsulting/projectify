@@ -166,7 +166,7 @@ def user_log_in(
             "User with email %s found but authentication failed", email
         )
         raise serializers.ValidationError(
-            {"password": _("No user could be found for this email address")}
+            {"password": _("The password is incorrect. Please try again.")}
         )
     login(request, user)
     if not isinstance(user, User):
