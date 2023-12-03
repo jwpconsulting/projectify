@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 import stripe
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied
 from stripe.api_resources.billing_portal.session import (
     Session as BillingPortalSession,
 )
@@ -76,19 +77,8 @@ def stripe_checkout_session_create_for_workspace_uuid(
     )
 
 
-def create_billing_portal_session(
-    *,
-    who: User,
-    customer: Customer,
-) -> BillingPortalSession:
-    """Allow accessing the billing portal."""
-    validate_perm("corporate.can_update_customer", who, customer)
-    return stripe.billing_portal.Session.create(
-        customer=customer.stripe_customer_id,
-        return_url=settings.FRONTEND_URL,
-    )
-
-
+# TODO change to create_billing_portal_session_for_workspace
+# throw 404 in view instead
 def create_billing_portal_session_for_workspace_uuid(
     *,
     who: User,
@@ -103,4 +93,17 @@ def create_billing_portal_session_for_workspace_uuid(
         raise serializers.ValidationError(
             {"workspace_uuid": _("No customer found for this workspace_uuid")}
         )
-    return create_billing_portal_session(customer=customer, who=who)
+    validate_perm("corporate.can_update_customer", who, customer)
+    customer_id = customer.stripe_customer_id
+    if customer_id is None:
+        raise PermissionDenied(
+            _(
+                "Can not create billing portal session because no "
+                "subscription is active. If you believe this is an error, "
+                "please contact support."
+            )
+        )
+    return stripe.billing_portal.Session.create(
+        customer=customer.stripe_customer_id,
+        return_url=settings.FRONTEND_URL,
+    )
