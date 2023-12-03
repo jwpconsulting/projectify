@@ -1,9 +1,11 @@
 """Development settings."""
+import logging
 import os
 from collections.abc import (
     Iterable,
     Sequence,
 )
+from typing import Optional
 
 from dotenv import (
     load_dotenv,
@@ -12,6 +14,8 @@ from dotenv import (
 from .base import (
     Base,
 )
+
+logger = logging.getLogger(__name__)
 
 
 def add_debug_middleware(middleware: Sequence[str]) -> Iterable[str]:
@@ -23,6 +27,17 @@ def add_debug_middleware(middleware: Sequence[str]) -> Iterable[str]:
             yield "debug_toolbar.middleware.DebugToolbarMiddleware"
         else:
             yield m
+
+
+def environ_get_or_warn(key: str) -> Optional[str]:
+    """Get an environment variable or warn that it is not set."""
+    value = os.environ.get(key)
+
+    if value is not None:
+        return value
+
+    logger.warn(f"{key} needed for settings was not set in environment")
+    return None
 
 
 class Development(Base):
@@ -65,12 +80,10 @@ class Development(Base):
     }
 
     # Stripe
-    # TODO here we can make these variables None if they are missing and
-    # warn the user about it.
-    STRIPE_PUBLISHABLE_KEY = os.environ["STRIPE_PUBLISHABLE_KEY"]
-    STRIPE_SECRET_KEY = os.environ["STRIPE_SECRET_KEY"]
-    STRIPE_PRICE_OBJECT = os.environ["STRIPE_PRICE_OBJECT"]
-    STRIPE_ENDPOINT_SECRET = os.environ["STRIPE_ENDPOINT_SECRET"]
+    STRIPE_PUBLISHABLE_KEY = environ_get_or_warn("STRIPE_PUBLISHABLE_KEY")
+    STRIPE_SECRET_KEY = environ_get_or_warn("STRIPE_SECRET_KEY")
+    STRIPE_PRICE_OBJECT = environ_get_or_warn("STRIPE_PRICE_OBJECT")
+    STRIPE_ENDPOINT_SECRET = environ_get_or_warn("STRIPE_ENDPOINT_SECRET")
 
     # Safari workaround for sessionid cookie
     SESSION_COOKIE_SECURE = False
