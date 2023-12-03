@@ -17,6 +17,7 @@ from collections.abc import (
 from pathlib import (
     Path,
 )
+from typing import Optional
 
 import dj_database_url
 from configurations.base import (
@@ -273,3 +274,7 @@ class Base(Configuration):
             "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
         },
     }
+
+    # Stripe
+    STRIPE_SECRET_KEY: Optional[str] = None
+    STRIPE_ENDPOINT_SECRET: Optional[str] = None

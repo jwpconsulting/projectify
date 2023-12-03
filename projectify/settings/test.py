@@ -20,12 +20,6 @@ class Test(Base):
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
     EMAIL_EAGER = True
 
-    # Stripe
-    # TODO
-    # Something other than null would be great, like Optional[str]
-    STRIPE_SECRET_KEY = "null"
-    STRIPE_ENDPOINT_SECRET = "null"
-
     # Celery
     CELERY_BROKER_URL = "memory://"
 
