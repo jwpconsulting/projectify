@@ -2,9 +2,21 @@
     import { _, number } from "svelte-i18n";
 
     import { pricePerSeat } from "$lib/config";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+    import { goto } from "$lib/navigation";
+    import { createBillingPortalSession } from "$lib/repository/corporate";
     import type { Customer } from "$lib/types/corporate";
+    import type { Workspace } from "$lib/types/workspace";
 
+    async function editBillingDetails() {
+        const { url } = await createBillingPortalSession(workspace.uuid, {
+            fetch,
+        });
+        await goto(url);
+    }
+
+    export let workspace: Workspace;
     export let customer: Customer;
 </script>
 
@@ -51,10 +63,12 @@
             </dd>
         </div>
     </dl>
-    <Anchor
+    <Button
+        action={{ kind: "button", action: editBillingDetails }}
+        color="blue"
+        style={{ kind: "primary" }}
         label={$_("workspace-settings.billing.edit-billing-details")}
-        href="#TODO"
-        size="normal"
+        size="medium"
     />
 </div>
 
