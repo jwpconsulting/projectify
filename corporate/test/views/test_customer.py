@@ -28,7 +28,7 @@ class TestWorkspaceCustomerRetrieve:
         self, paid_customer: Customer, workspace: Workspace
     ) -> str:
         """Return URL to resource."""
-        return reverse("corporate:workspace-customer", args=(workspace.uuid,))
+        return reverse("corporate:customers:read", args=(workspace.uuid,))
 
     def test_authenticated(
         self,
