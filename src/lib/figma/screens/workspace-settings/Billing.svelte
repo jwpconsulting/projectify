@@ -1,6 +1,7 @@
 <script lang="ts">
     import { _, number } from "svelte-i18n";
 
+    import { pricePerSeat } from "$lib/config";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import type { Customer } from "$lib/types/corporate";
 
@@ -11,9 +12,18 @@
     <dl class="flex flex-col gap-6 text-base text-base-content">
         <div>
             <dt class="font-bold">
-                {$_("workspace-settings.billing.current-plan")}
+                {$_("workspace-settings.billing.subscription-status.title")}
             </dt>
-            <dd>PLAN NAME GOES HERE</dd>
+            <dd>
+                {#if customer.subscription_status === "ACTIVE"}{$_(
+                        "workspace-settings.billing.subscription-status.active"
+                    )}
+                {:else}
+                    {$_(
+                        "workspace-settings.billing.subscription-status.inactive"
+                    )}
+                {/if}
+            </dd>
         </div>
         <div>
             <dt class="font-bold">
@@ -23,16 +33,22 @@
                 {$_("workspace-settings.billing.seats.format", {
                     values: {
                         seats: $number(customer.seats),
-                        seats_remaining: $number(customer.seats_remaining),
+                        seatsRemaining: $number(customer.seats_remaining),
                     },
                 })}
             </dd>
         </div>
         <div>
             <dt class="font-bold">
-                {$_("workspace-settings.billing.monthly-total")}
+                {$_("workspace-settings.billing.monthly-total.title", {
+                    values: { pricePerSeat },
+                })}
             </dt>
-            <dd>TODO calculate monthly total</dd>
+            <dd>
+                {$_("workspace-settings.billing.monthly-total.status", {
+                    values: { total: customer.seats * pricePerSeat },
+                })}
+            </dd>
         </div>
     </dl>
     <Anchor

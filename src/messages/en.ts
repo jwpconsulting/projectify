@@ -529,8 +529,15 @@ const messages: MessageDirectory = {
         },
         "billing": {
             "title": "Billing",
-            "current-plan": "Current plan",
-            "monthly-total": "Monthly total ($8 per seat/month):",
+            "subscription-status": {
+                title: "Current subscription status",
+                active: "Your subscription is currently active",
+                inactive: "Your subscription is currently inactive",
+            },
+            "monthly-total": {
+                title: "Monthly total ({pricePerSeat, number, ::currency/USD} per seat/month):",
+                status: "{total, number, ::currency/USD}",
+            },
             "edit-billing-details": "Edit billing details",
             "contact-us-to-request-changes":
                 "Contact us to request changes to your plan",
@@ -538,7 +545,7 @@ const messages: MessageDirectory = {
             "seats": {
                 "number-of-seats": "Number of seats:",
                 "format":
-                    "{seats} ({seats_remaining} {seats_remaining, plural, one {seat} other {seats}} remaining)",
+                    "{seats} in total, {seatsRemaining} {seatsRemaining, plural, one {seat} other {seats}} remaining",
             },
         },
     },
