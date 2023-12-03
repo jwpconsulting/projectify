@@ -16,6 +16,40 @@ from workspace.services.workspace import workspace_add_user
 
 
 @pytest.fixture
+def stripe_publishable_key(faker: Faker) -> str:
+    """Return a convincing looking stripe publishable key."""
+    key: str = faker.hexify(
+        "pk_test_^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    )
+    return key
+
+
+@pytest.fixture
+def stripe_secret_key(faker: Faker) -> str:
+    """Return a convincing looking stripe secret key."""
+    key: str = faker.hexify(
+        "sk_test_^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    )
+    return key
+
+
+@pytest.fixture
+def stripe_price_object(faker: Faker) -> str:
+    """Return a convincing looking stripe price object."""
+    key: str = faker.hexify("price_^^^^^^^^^^^^^^^^^^^^^^^^")
+    return key
+
+
+@pytest.fixture
+def stripe_endpoint_secret(faker: Faker) -> str:
+    """Return a convincing looking stripe endpoint secret."""
+    key: str = faker.hexify(
+        "whsec_^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    )
+    return key
+
+
+@pytest.fixture
 def workspace(faker: Faker) -> Workspace:
     """Create a workspace."""
     return Workspace.objects.create(title=faker.company())

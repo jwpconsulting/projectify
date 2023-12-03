@@ -53,10 +53,10 @@ class MockSession:
 @pytest.fixture
 def mock_stripe_checkout(
     settings: LazySettings,
-    faker: Faker,
+    stripe_price_object: str,
 ) -> Iterable[mock.MagicMock]:
     """Mock stripe checkout session creation."""
-    settings.STRIPE_PRICE_OBJECT = faker.bothify("price_???????#??")
+    settings.STRIPE_PRICE_OBJECT = stripe_price_object
     with mock.patch("stripe.checkout.Session.create") as m:
         m.return_value = MockSession()
         yield m
@@ -161,20 +161,19 @@ class TestWorkspaceBillingPortalSessionCreate:
 
     def test_with_unpaid_customer(
         self,
-        mock_stripe_billing_portal: mock.MagicMock,
         rest_user_client: APIClient,
         django_assert_num_queries: DjangoAssertNumQueries,
         unpaid_customer: Customer,
     ) -> None:
-        """Test calling this with an unpaid customer."""
+        """Assert that an unpaid customer cannot access this view."""
         resource_url = reverse(
             "corporate:customers:create-billing-portal-session",
             args=(str(unpaid_customer.workspace.uuid),),
         )
         with django_assert_num_queries(4):
             response = rest_user_client.post(resource_url)
-            assert response.status_code == 200, response.data
-        assert response.data == {"url": "https://www.example.com"}
+            assert response.status_code == 403, response.data
+        assert "no subscription is active" in response.data["detail"]
 
     def test_with_paying_customer(
         self,
