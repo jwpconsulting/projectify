@@ -14,6 +14,13 @@ from corporate.views.stripe import stripe_webhook
 app_name = "corporate"
 
 customer_url_patterns = (
+    # Read
+    path(
+        "<uuid:workspace_uuid>/customer",
+        WorkspaceCustomerRetrieve.as_view(),
+        name="read",
+    ),
+    # RPC
     path(
         "<uuid:workspace_uuid>/create-checkout-session",
         WorkspaceCheckoutSessionCreate.as_view(),
@@ -28,12 +35,7 @@ customer_url_patterns = (
 
 urlpatterns = [
     # Customer
-    path("customer", include((customer_url_patterns, "customers"))),
-    path(
-        "workspace/<uuid:workspace_uuid>/customer",
-        WorkspaceCustomerRetrieve.as_view(),
-        name="workspace-customer",
-    ),
+    path("workspace/", include((customer_url_patterns, "customers"))),
     # Stripe
     path("stripe-webhook/", stripe_webhook, name="stripe-webhook"),
 ]
