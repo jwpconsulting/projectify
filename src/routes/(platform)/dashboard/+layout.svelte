@@ -13,7 +13,7 @@
     $: workspace = $currentWorkspace;
 </script>
 
-<div class="flex min-h-0 shrink flex-row">
+<div class="flex min-h-0 shrink grow flex-row">
     <!-- this breakpoint is in tune with the mobile menu breakpoint -->
     <div class="hidden h-full shrink-0 overflow-y-scroll md:block">
         {#if workspace}
