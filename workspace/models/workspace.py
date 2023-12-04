@@ -130,14 +130,6 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
         return user
 
     @transaction.atomic
-    def uninvite_user(self, email: str) -> None:
-        """Remove a users invitation."""
-        workspace_user_invite = self.workspaceuserinvite_set.get(
-            user_invite__email=email,
-        )
-        workspace_user_invite.delete()
-
-    @transaction.atomic
     def increment_highest_task_number(self) -> int:
         """
         Increment and return highest task number.

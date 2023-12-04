@@ -7,8 +7,9 @@ import pytest
 
 from user.services.user import user_create
 from workspace.models.workspace_user import WorkspaceUser
-from workspace.models.workspace_user_invite import (
+from workspace.services.workspace_user_invite import (
     add_or_invite_workspace_user,
+    uninvite_user,
 )
 
 from .. import (
@@ -75,7 +76,11 @@ class TestRedeemWorkspaceInvitations:
             email_or_user="hello@example.com",
         )
         assert workspace.users.count() == count
-        workspace.uninvite_user("hello@example.com")
+        uninvite_user(
+            who=workspace_user.user,
+            workspace=workspace,
+            email="hello@example.com",
+        )
         user_create("hello@example.com")
         # The user is not added
         assert workspace.users.count() == count

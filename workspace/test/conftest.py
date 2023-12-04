@@ -43,7 +43,6 @@ from workspace.models.workspace import Workspace
 from workspace.models.workspace_user import WorkspaceUser
 from workspace.models.workspace_user_invite import (
     WorkspaceUserInvite,
-    add_or_invite_workspace_user,
 )
 from workspace.services.chat_message import chat_message_create
 from workspace.services.label import label_create
@@ -56,6 +55,9 @@ from workspace.services.workspace_board import (
 )
 from workspace.services.workspace_board_section import (
     workspace_board_section_create,
+)
+from workspace.services.workspace_user_invite import (
+    add_or_invite_workspace_user,
 )
 
 from .. import (
