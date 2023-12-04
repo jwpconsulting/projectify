@@ -16,12 +16,12 @@ from workspace.exceptions import (
     UserAlreadyAdded,
     UserAlreadyInvited,
 )
+from workspace.services.workspace_user_invite import (
+    add_or_invite_workspace_user,
+)
 
 from ..models.workspace import (
     Workspace,
-)
-from ..models.workspace_user_invite import (
-    add_or_invite_workspace_user,
 )
 from . import (
     base,

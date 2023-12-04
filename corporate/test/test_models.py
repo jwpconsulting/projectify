@@ -7,7 +7,7 @@ import pytest
 from faker import Faker
 
 from workspace.models.workspace_user import WorkspaceUser
-from workspace.models.workspace_user_invite import (
+from workspace.services.workspace_user_invite import (
     add_or_invite_workspace_user,
 )
 
