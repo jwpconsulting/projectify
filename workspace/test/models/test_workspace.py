@@ -181,7 +181,3 @@ class TestWorkspace:
             workspace_user,
             models.WorkspaceUserRoles.OBSERVER,
         )
-
-    def test_workspace(self, workspace: models.Workspace) -> None:
-        """Test workspace property."""
-        assert workspace.workspace == workspace

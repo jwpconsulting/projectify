@@ -21,6 +21,9 @@ from workspace.models.workspace_board import WorkspaceBoard
 from workspace.models.workspace_board_section import WorkspaceBoardSection
 from workspace.models.workspace_user import WorkspaceUser
 from workspace.models.workspace_user_invite import WorkspaceUserInvite
+from workspace.selectors.workspace_user import (
+    workspace_user_find_for_workspace,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -29,81 +32,79 @@ HasWorkspace = Union[
     Label,
     Task,
     TaskLabel,
-    Workspace,
     WorkspaceBoard,
     WorkspaceBoardSection,
     WorkspaceUser,
     WorkspaceUserInvite,
 ]
+WorkspaceTarget = Union[
+    HasWorkspace,
+    Workspace,
+]
+
+
+def get_workspace_from_target(target: WorkspaceTarget) -> Workspace:
+    """Return a workspace."""
+    match target:
+        case Workspace() as workspace:
+            return workspace
+        case target:
+            return target.workspace
+
+
+def check_permissions_for(
+    role: WorkspaceUserRoles, user: User, target: WorkspaceTarget
+) -> bool:
+    """Check whether a user has required role for target."""
+    workspace = get_workspace_from_target(target)
+    workspace_user = workspace_user_find_for_workspace(
+        workspace=workspace,
+        user=user,
+    )
+    if workspace_user is None:
+        return False
+    return workspace.has_at_least_role(workspace_user, role)
 
 
 # Role predicates
 # Observer < Member < Maintainer < Owner
 @rules.predicate
-def is_at_least_observer(user: User, target: HasWorkspace) -> bool:
+def is_at_least_observer(user: User, target: WorkspaceTarget) -> bool:
     """Return True if a user is at least an observer of workspace parent."""
-    workspace = target.workspace
-    try:
-        workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(
-            workspace,
-            user,
-        )
-    except WorkspaceUser.DoesNotExist:
-        return False
-    return workspace.has_at_least_role(
-        workspace_user,
+    return check_permissions_for(
         WorkspaceUserRoles.OBSERVER,
+        user,
+        target,
     )
 
 
 @rules.predicate
-def is_at_least_member(user: User, target: HasWorkspace) -> bool:
+def is_at_least_member(user: User, target: WorkspaceTarget) -> bool:
     """Return True if a user is at least a member of workspace parent."""
-    workspace = target.workspace
-    try:
-        workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(
-            workspace,
-            user,
-        )
-    except WorkspaceUser.DoesNotExist:
-        return False
-    return workspace.has_at_least_role(
-        workspace_user,
+    return check_permissions_for(
         WorkspaceUserRoles.MEMBER,
+        user,
+        target,
     )
 
 
 @rules.predicate
-def is_at_least_maintainer(user: User, target: HasWorkspace) -> bool:
+def is_at_least_maintainer(user: User, target: WorkspaceTarget) -> bool:
     """Return True if a user is at least a maintainer of workspace parent."""
-    workspace = target.workspace
-    try:
-        workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(
-            workspace,
-            user,
-        )
-    except WorkspaceUser.DoesNotExist:
-        return False
-    return workspace.has_at_least_role(
-        workspace_user,
+    return check_permissions_for(
         WorkspaceUserRoles.MAINTAINER,
+        user,
+        target,
     )
 
 
 @rules.predicate
-def is_at_least_owner(user: User, target: HasWorkspace) -> bool:
+def is_at_least_owner(user: User, target: WorkspaceTarget) -> bool:
     """Return True if a user is at least an owner of workspace parent."""
-    workspace = target.workspace
-    try:
-        workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(
-            workspace,
-            user,
-        )
-    except WorkspaceUser.DoesNotExist:
-        return False
-    return workspace.has_at_least_role(
-        workspace_user,
+    return check_permissions_for(
         WorkspaceUserRoles.OWNER,
+        user,
+        target,
     )
 
 
@@ -111,19 +112,18 @@ def is_at_least_owner(user: User, target: HasWorkspace) -> bool:
 # we would like to implement?
 # The workspace should also be deemed active if the user is within trial limits
 @rules.predicate
-def belongs_to_active_workspace(user: User, target: HasWorkspace) -> bool:
+def belongs_to_active_workspace(user: User, target: WorkspaceTarget) -> bool:
     """
     Return True if target belongs to an active workspace.
 
     Also returns True if target is an active workspace itself.
     """
-    workspace = target.workspace
-    try:
-        WorkspaceUser.objects.get_by_workspace_and_user(
-            workspace,
-            user,
-        )
-    except WorkspaceUser.DoesNotExist:
+    workspace = get_workspace_from_target(target)
+    workspace_user = workspace_user_find_for_workspace(
+        workspace=workspace,
+        user=user,
+    )
+    if workspace_user is None:
         logger.warning("No workspace user found for user %s", user)
         return False
     try:
@@ -136,6 +136,13 @@ def belongs_to_active_workspace(user: User, target: HasWorkspace) -> bool:
         logger.warning("Customer for workspace %s is inactive", workspace)
     return active
 
+
+# TODO rules should be of the format
+# <app>.<action>_<resource>
+# and not as currently
+# <app>.can_<action>_<resource>
+# Going here by the django-rules guide:
+# https://github.com/dfunckt/django-rules#setting-up-rules
 
 # Workspace
 # Anyone should be able to create a workspace
