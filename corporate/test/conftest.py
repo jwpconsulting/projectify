@@ -78,13 +78,19 @@ def unpaid_customer(
 
 
 @pytest.fixture
+def stripe_customer_id(faker: Faker) -> str:
+    """Return a convincing stripe customer id."""
+    stripe_customer_id: str = faker.bothify("stripe_###???###")
+    return stripe_customer_id
+
+
+@pytest.fixture
 def paid_customer(
-    unpaid_customer: Customer,
-    faker: Faker,
+    unpaid_customer: Customer, stripe_customer_id: str
 ) -> Customer:
     """Create customer."""
     customer_activate_subscription(
         customer=unpaid_customer,
-        stripe_customer_id=faker.bothify("stripe_###???###"),
+        stripe_customer_id=stripe_customer_id,
     )
     return unpaid_customer

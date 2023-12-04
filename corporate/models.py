@@ -93,45 +93,6 @@ class Customer(models.Model):
         CustomerQuerySet, CustomerQuerySet.as_manager()
     )
 
-    # TODO these four methods should be part of a service
-    def activate_subscription(self) -> None:
-        """
-        Activate customer subscription.
-
-        Saves model instance.
-        """
-        self.subscription_status = CustomerSubscriptionStatus.ACTIVE
-        self.save()
-
-    def cancel_subscription(self) -> None:
-        """
-        Cancel customer subscription.
-
-        Saves model instance.
-        """
-        self.subscription_status = CustomerSubscriptionStatus.CANCELLED
-        self.save()
-
-    def assign_stripe_customer_id(self, stripe_customer_id: str) -> None:
-        """
-        Assign stripe customer id.
-
-        Saves model instance.
-        """
-        self.stripe_customer_id = stripe_customer_id
-        self.save()
-
-    def set_number_of_seats(self, seats: int) -> None:
-        """
-        Set the number of seats.
-
-        Saves model instance.
-        """
-        if self.seats == seats:
-            return None
-        self.seats = seats
-        self.save()
-
     # TODO this should be a selector.
     # XXX this prop can have an n+1 as a side effect
     @property
