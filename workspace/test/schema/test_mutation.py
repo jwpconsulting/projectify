@@ -64,7 +64,11 @@ mutation RemoveUserFromWorkspace($uuid: UUID!, $email: String!) {
         workspace_user,
     ):
         """Test query."""
-        add_or_invite_workspace_user(workspace, "hello@example.com")
+        add_or_invite_workspace_user(
+            who=workspace_user.user,
+            workspace=workspace,
+            email_or_user="hello@example.com",
+        )
         result = graphql_query_user(
             self.query,
             variables={

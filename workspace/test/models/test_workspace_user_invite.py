@@ -1,9 +1,9 @@
 """Test WorkspaceUserInvite model."""
-from django.contrib.auth.models import (
-    AbstractUser,
-)
 
 import pytest
+
+from user.models import User
+from workspace.models.workspace_user import WorkspaceUser
 
 from ... import (
     models,
@@ -87,39 +87,72 @@ class TestAddOrInviteWorkspaceUser:
 
     # We could probably use a more specific type for mailoutbox
     def test_invite_user(
-        self, workspace: models.Workspace, mailoutbox: list[object]
+        self,
+        workspace: models.Workspace,
+        mailoutbox: list[object],
+        workspace_user: WorkspaceUser,
     ) -> None:
         """Test inviting a user."""
         workspace_user_invite = add_or_invite_workspace_user(
-            workspace, "hello@example.com"
+            who=workspace_user.user,
+            workspace=workspace,
+            email_or_user="hello@example.com",
         )
         assert workspace_user_invite.workspace == workspace
         assert len(mailoutbox) == 1
 
-    def test_inviting_twice(self, workspace: models.Workspace) -> None:
+    def test_inviting_twice(
+        self, workspace: models.Workspace, workspace_user: WorkspaceUser
+    ) -> None:
         """Test that inviting twice won't work."""
-        add_or_invite_workspace_user(workspace, "hello@example.com")
+        add_or_invite_workspace_user(
+            who=workspace_user.user,
+            workspace=workspace,
+            email_or_user="hello@example.com",
+        )
         with pytest.raises(UserAlreadyInvited):
-            add_or_invite_workspace_user(workspace, "hello@example.com")
+            add_or_invite_workspace_user(
+                who=workspace_user.user,
+                workspace=workspace,
+                email_or_user="hello@example.com",
+            )
 
     def test_inviting_workspace_user(
         self, workspace: models.Workspace, workspace_user: models.WorkspaceUser
     ) -> None:
         """Test that inviting a pre-existing user won't work."""
         with pytest.raises(UserAlreadyAdded):
-            add_or_invite_workspace_user(workspace, workspace_user.user.email)
+            add_or_invite_workspace_user(
+                workspace=workspace,
+                who=workspace_user.user,
+                email_or_user=workspace_user.user.email,
+            )
 
     def test_inviting_user(
-        self, workspace: models.Workspace, user: AbstractUser
+        self,
+        workspace: models.Workspace,
+        unrelated_user: User,
+        workspace_user: WorkspaceUser,
     ) -> None:
         """Test that inviting an existing user will work."""
-        assert workspace.workspaceuser_set.count() == 0
-        add_or_invite_workspace_user(workspace, user.email)
-        assert workspace.workspaceuser_set.count() == 1
+        count = workspace.workspaceuser_set.count()
+        add_or_invite_workspace_user(
+            workspace=workspace,
+            who=workspace_user.user,
+            email_or_user=unrelated_user.email,
+        )
+        assert workspace.workspaceuser_set.count() == count + 1
 
-    def test_uninviting_user(self, workspace: models.Workspace) -> None:
+    def test_uninviting_user(
+        self, workspace_user: WorkspaceUser, workspace: models.Workspace
+    ) -> None:
         """Test uninviting a user."""
-        add_or_invite_workspace_user(workspace, "hello@example.com")
-        assert workspace.workspaceuserinvite_set.count() == 1
+        count = workspace.workspaceuserinvite_set.count()
+        add_or_invite_workspace_user(
+            who=workspace_user.user,
+            workspace=workspace,
+            email_or_user="hello@example.com",
+        )
+        assert workspace.workspaceuserinvite_set.count() == count + 1
         workspace.uninvite_user("hello@example.com")
-        assert workspace.workspaceuserinvite_set.count() == 0
+        assert workspace.workspaceuserinvite_set.count() == count
