@@ -1,5 +1,6 @@
 """Top level conftest module."""
 import base64
+import random
 
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -168,3 +169,9 @@ def png_image() -> bytes:
 def uploaded_file(png_image: bytes) -> SimpleUploadedFile:
     """Return an UploadFile instance of the above png file."""
     return SimpleUploadedFile("test.png", png_image)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def faker_seed() -> int:
+    """Return a random seed every session."""
+    return random.randint(0, 2**16)
