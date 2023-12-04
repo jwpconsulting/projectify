@@ -415,7 +415,7 @@ class Command(BaseCommand):
             [
                 Customer(
                     workspace=workspace,
-                    subscription_status=CustomerSubscriptionStatus.ACTIVE,
+                    subscription_status=CustomerSubscriptionStatus.CUSTOM,
                     seats=seats,
                 )
                 for workspace in workspaces
