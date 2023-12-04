@@ -115,6 +115,7 @@ def unrelated_workspace(faker: Faker) -> models.Workspace:
 @pytest.fixture
 def workspace_user_invite(
     workspace: models.Workspace,
+    workspace_user: WorkspaceUser,
     # TODO user_invite needed to redeem invite, right? verify.
     user_invite: user_models.UserInvite,
     faker: Faker,
@@ -122,7 +123,7 @@ def workspace_user_invite(
     """Return workspace user invite."""
     email: str = faker.email()
     invite = add_or_invite_workspace_user(
-        workspace=workspace, email_or_user=email
+        who=workspace_user.user, workspace=workspace, email_or_user=email
     )
     assert isinstance(invite, WorkspaceUserInvite)
     return invite

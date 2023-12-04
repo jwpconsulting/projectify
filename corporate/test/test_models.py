@@ -126,10 +126,17 @@ class TestCustomer:
         assert unpaid_customer.active
 
     def test_seats_remaining(
-        self, unpaid_customer: models.Customer, faker: Faker
+        self,
+        paid_customer: models.Customer,
+        faker: Faker,
+        workspace_user: WorkspaceUser,
     ) -> None:
         """Test seats remaining."""
         # user is already added, so there is already one seat used up
-        assert unpaid_customer.seats_remaining == unpaid_customer.seats - 1
-        add_or_invite_workspace_user(unpaid_customer.workspace, faker.email())
-        assert unpaid_customer.seats_remaining == unpaid_customer.seats - 2
+        assert paid_customer.seats_remaining == paid_customer.seats - 1
+        add_or_invite_workspace_user(
+            who=workspace_user.user,
+            workspace=paid_customer.workspace,
+            email_or_user=faker.email(),
+        )
+        assert paid_customer.seats_remaining == paid_customer.seats - 2
