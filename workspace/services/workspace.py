@@ -56,8 +56,9 @@ def workspace_update(
     return workspace
 
 
-# TODO we might want to put this in workspace_user_create instead and
-# explicitly check authorization.
+# TODO put in
+# workspace/services/workspace_user_invite.py:workspace_user_invite_create
+# TODO explicitly check authorization.
 def workspace_add_user(
     # TODO make *
     workspace: Workspace,
