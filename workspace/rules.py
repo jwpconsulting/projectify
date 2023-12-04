@@ -8,13 +8,10 @@ from typing import (
     Union,
 )
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
-
 import rules
 
 from corporate import models as corporate_models
+from user.models import User
 from workspace.models.const import WorkspaceUserRoles
 from workspace.models.label import Label
 from workspace.models.task import Task
@@ -43,7 +40,7 @@ HasWorkspace = Union[
 # Role predicates
 # Observer < Member < Maintainer < Owner
 @rules.predicate
-def is_at_least_observer(user: AbstractBaseUser, target: HasWorkspace) -> bool:
+def is_at_least_observer(user: User, target: HasWorkspace) -> bool:
     """Return True if a user is at least an observer of workspace parent."""
     workspace = target.workspace
     try:
@@ -60,7 +57,7 @@ def is_at_least_observer(user: AbstractBaseUser, target: HasWorkspace) -> bool:
 
 
 @rules.predicate
-def is_at_least_member(user: AbstractBaseUser, target: HasWorkspace) -> bool:
+def is_at_least_member(user: User, target: HasWorkspace) -> bool:
     """Return True if a user is at least a member of workspace parent."""
     workspace = target.workspace
     try:
@@ -77,9 +74,7 @@ def is_at_least_member(user: AbstractBaseUser, target: HasWorkspace) -> bool:
 
 
 @rules.predicate
-def is_at_least_maintainer(
-    user: AbstractBaseUser, target: HasWorkspace
-) -> bool:
+def is_at_least_maintainer(user: User, target: HasWorkspace) -> bool:
     """Return True if a user is at least a maintainer of workspace parent."""
     workspace = target.workspace
     try:
@@ -96,7 +91,7 @@ def is_at_least_maintainer(
 
 
 @rules.predicate
-def is_at_least_owner(user: AbstractBaseUser, target: HasWorkspace) -> bool:
+def is_at_least_owner(user: User, target: HasWorkspace) -> bool:
     """Return True if a user is at least an owner of workspace parent."""
     workspace = target.workspace
     try:
@@ -116,9 +111,7 @@ def is_at_least_owner(user: AbstractBaseUser, target: HasWorkspace) -> bool:
 # we would like to implement?
 # The workspace should also be deemed active if the user is within trial limits
 @rules.predicate
-def belongs_to_active_workspace(
-    user: AbstractBaseUser, target: HasWorkspace
-) -> bool:
+def belongs_to_active_workspace(user: User, target: HasWorkspace) -> bool:
     """
     Return True if target belongs to an active workspace.
 
