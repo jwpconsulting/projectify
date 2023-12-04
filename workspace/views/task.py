@@ -47,6 +47,7 @@ def get_object(request: Request, task_uuid: UUID) -> models.Task:
     return obj
 
 
+# TODO make this a normal APIView
 # Create
 class TaskCreate(
     generics.CreateAPIView[
@@ -138,7 +139,9 @@ class TaskMoveToWorkspaceBoardSection(APIView):
                 }
             )
         task_move_after(task=task, who=user, after=workspace_board_section)
-        task.refresh_from_db()
+        task = task_find_by_task_uuid(
+            who=user, task_uuid=task_uuid, qs=TaskDetailQuerySet
+        )
         output_serializer = TaskDetailSerializer(instance=task)
         return Response(output_serializer.data, status=status.HTTP_200_OK)
 
@@ -168,6 +171,8 @@ class TaskMoveAfterTask(APIView):
                 {"after_task_uuid": _("No task was found for the given uuid")}
             )
         task_move_after(task=task, who=user, after=after)
-        task.refresh_from_db()
+        task = task_find_by_task_uuid(
+            who=user, task_uuid=task_uuid, qs=TaskDetailQuerySet
+        )
         output_serializer = TaskDetailSerializer(instance=task)
         return Response(output_serializer.data, status=status.HTTP_200_OK)

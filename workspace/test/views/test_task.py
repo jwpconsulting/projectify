@@ -230,7 +230,7 @@ class TestMoveTaskToWorkspaceBoardSection:
     ) -> None:
         """Test moving a task."""
         assert task.workspace_board_section == workspace_board_section
-        with django_assert_num_queries(26):
+        with django_assert_num_queries(21):
             response = rest_user_client.post(
                 resource_url,
                 data={
@@ -266,7 +266,7 @@ class TestTaskMoveAfterTask:
         other_task: Task,
     ) -> None:
         """Test as an authenticated user."""
-        with django_assert_num_queries(25):
+        with django_assert_num_queries(20):
             response = rest_user_client.post(
                 resource_url,
                 data={"task_uuid": str(other_task.uuid)},

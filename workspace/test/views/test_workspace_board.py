@@ -87,6 +87,9 @@ class TestWorkspaceBoardReadUpdateDelete:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can post to this view this while being logged in."""
+        # Make sure section -> task -> workspace_user -> user is resolved
+        task.assignee = workspace_user
+        task.save()
         with django_assert_num_queries(7):
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.content
