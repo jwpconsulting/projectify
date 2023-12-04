@@ -22,8 +22,10 @@ from django_extensions.db.models import (
 
 from projectify.utils import (
     get_user_model,
+    validate_perm,
 )
 from user.models import (  # noqa: F401
+    User,
     UserInvite,
 )
 from user.services.user_invite import user_invite_create
@@ -144,7 +146,10 @@ def try_find_invitation(
 
 @transaction.atomic
 def add_or_invite_workspace_user(
-    workspace: "Workspace", email_or_user: Union[AbstractBaseUser, str]
+    *,
+    workspace: "Workspace",
+    email_or_user: Union[AbstractBaseUser, str],
+    who: User,
 ) -> Union["WorkspaceUser", "WorkspaceUserInvite"]:
     """
     Add or invite a new workspace user. Accept either email or user instance.
@@ -161,6 +166,7 @@ def add_or_invite_workspace_user(
     5) No user registration, never invited to this workspace:
     Create a UserInvite and a WorkspaceUserInvite
     """
+    validate_perm("workspace.can_create_workspace_user", who, workspace)
     match email_or_user:
         case AbstractBaseUser() as user:
             return workspace_add_user(workspace, user)

@@ -2,6 +2,7 @@
 from typing import (
     Any,
     Mapping,
+    Optional,
 )
 
 from django.utils.translation import gettext_lazy as _
@@ -9,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import (
     serializers,
 )
+from rest_framework.request import Request
 
 from workspace.exceptions import (
     UserAlreadyAdded,
@@ -62,10 +64,16 @@ class InviteUserToWorkspaceSerializer(serializers.Serializer):
 
     def create(self, validated_data: Mapping[str, Any]) -> Mapping[str, Any]:
         """Perform invitation."""
+        request: Optional[Request] = self.context.get("request")
+        if request is None:
+            raise ValueError("context must contain request")
+        user = request.user
         workspace: Workspace = self.context["workspace"]
         email: str = validated_data["email"]
         try:
-            add_or_invite_workspace_user(workspace, email)
+            add_or_invite_workspace_user(
+                who=user, workspace=workspace, email_or_user=email
+            )
         except UserAlreadyInvited:
             raise serializers.ValidationError(
                 {
