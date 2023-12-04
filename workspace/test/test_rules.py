@@ -3,11 +3,12 @@ import pytest
 from faker import Faker
 
 from corporate.models import CustomerSubscriptionStatus
+from user.models import User
 from user.services.user import user_create
 from workspace.models.const import WorkspaceUserRoles
 from workspace.models.workspace import Workspace
 from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.workspace import workspace_add_user
+from workspace.services.workspace import workspace_add_user, workspace_create
 
 from .. import (
     rules,
@@ -109,9 +110,9 @@ class TestPredicates:
         workspace: Workspace,
         observer: WorkspaceUser,
     ) -> None:
-        """Test belongs_to_active_workspace."""
+        """Test belongs_to_full_workspace."""
         # Active
-        assert rules.belongs_to_active_workspace(
+        assert rules.belongs_to_full_workspace(
             observer.user,
             workspace,
         )
@@ -119,10 +120,23 @@ class TestPredicates:
         workspace.customer.subscription_status = (
             CustomerSubscriptionStatus.CANCELLED
         )
-        assert not rules.belongs_to_active_workspace(
+        assert not rules.belongs_to_full_workspace(
             observer.user,
             workspace,
         )
+        # Also not trial
+        assert not rules.belongs_to_trial_workspace(
+            observer.user,
+            workspace,
+        )
+
+    def test_belongs_to_trial_workspace(self, user: User) -> None:
+        """Test that a user is recognized as belonging to a trial workspace."""
+        workspace = workspace_create(
+            owner=user,
+            title="blabla",
+        )
+        assert rules.belongs_to_trial_workspace(user=user, target=workspace)
 
     @pytest.mark.xfail(
         reason="Workspaces should not exist without customers. Consider "
@@ -133,13 +147,13 @@ class TestPredicates:
         workspace: Workspace,
         observer: WorkspaceUser,
     ) -> None:
-        """Test belongs_to_active_workspace."""
+        """Test belongs_to_full_workspace."""
         # The workspace fixture creates an active customer so we have to delete
         # it
         workspace.customer.delete()
         # The attribute has to be evicted by refreshing from db
         workspace.refresh_from_db()
-        assert not rules.belongs_to_active_workspace(
+        assert not rules.belongs_to_full_workspace(
             observer.user,
             workspace,
         )
@@ -149,8 +163,8 @@ class TestPredicates:
         unrelated_workspace: Workspace,
         observer: WorkspaceUser,
     ) -> None:
-        """Test belongs_to_active_workspace with other workspace."""
-        assert not rules.belongs_to_active_workspace(
+        """Test belongs_to_full_workspace with other workspace."""
+        assert not rules.belongs_to_full_workspace(
             observer.user,
             unrelated_workspace,
         )
