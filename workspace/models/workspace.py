@@ -158,8 +158,3 @@ class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
             raise ValueError(
                 f"This just happened: {workspace_user} {role} {self}"
             )
-
-    @property
-    def workspace(self) -> Self:
-        """Get workspace instance."""
-        return self

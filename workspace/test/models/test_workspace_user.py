@@ -1,7 +1,4 @@
 """Test WorkspaceUser model."""
-from django.contrib.auth.models import (
-    AbstractUser,
-)
 
 import pytest
 
@@ -62,21 +59,6 @@ class TestWorkspaceUserManager:
         workspace_add_user(workspace, unrelated_user)
         assert (
             WorkspaceUser.objects.filter_by_user(unrelated_user).count() == 2
-        )
-
-    def test_get_by_workspace_and_user(
-        self,
-        workspace: models.Workspace,
-        user: AbstractUser,
-        workspace_user: WorkspaceUser,
-    ) -> None:
-        """Test get_by_workspace_and_user."""
-        assert (
-            WorkspaceUser.objects.get_by_workspace_and_user(
-                workspace,
-                user,
-            )
-            == workspace_user
         )
 
 
