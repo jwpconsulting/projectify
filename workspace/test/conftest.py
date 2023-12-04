@@ -19,14 +19,7 @@ from datetime import (
 from datetime import (
     timezone as dt_timezone,
 )
-from typing import (
-    Type,
-    cast,
-)
 
-from django.contrib import (
-    auth,
-)
 from django.utils import (
     timezone,
 )
@@ -402,10 +395,3 @@ def chat_message(
         task=task,
         text=faker.paragraph(),
     )
-
-
-# TODO remove me
-@pytest.fixture
-def user_model() -> Type[User]:
-    """Return user model class."""
-    return cast(Type[User], auth.get_user_model())

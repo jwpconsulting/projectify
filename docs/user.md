@@ -20,5 +20,4 @@ class MyModel(models.Model):
 
 ## Testing
 
-Prefer using AbstractUser over AbstractBaseUser for the return type of a user
-generating fixture.
+Prefer using User over AbstractBaseUser or AbstractUser.

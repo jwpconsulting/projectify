@@ -1,7 +1,6 @@
 """Test workspace signals."""
-from typing import (
-    TYPE_CHECKING,
-)
+# TODO instead of signals, we should just perform the relevant action in
+# services
 
 import pytest
 
@@ -16,9 +15,6 @@ from .. import (
     models,
 )
 
-if TYPE_CHECKING:
-    from user.models import User  # noqa: F401
-
 
 @pytest.mark.django_db
 class TestRedeemWorkspaceInvitations:
@@ -27,7 +23,6 @@ class TestRedeemWorkspaceInvitations:
     def test_simple(
         self,
         workspace: models.Workspace,
-        user_model: "User",
         workspace_user: WorkspaceUser,
     ) -> None:
         """Test simple case."""
@@ -44,7 +39,6 @@ class TestRedeemWorkspaceInvitations:
     def test_signs_up_twice(
         self,
         workspace: models.Workspace,
-        user_model: "User",
         workspace_user: WorkspaceUser,
     ) -> None:
         """Test what happens if a user signs up twice."""
@@ -65,7 +59,6 @@ class TestRedeemWorkspaceInvitations:
     def test_after_uninvite(
         self,
         workspace: models.Workspace,
-        user_model: "User",
         workspace_user: WorkspaceUser,
     ) -> None:
         """Test what happens when a user is uninvited."""
