@@ -12,8 +12,10 @@ import rules
 
 from corporate import models as corporate_models
 from user.models import User
+from workspace.models.chat_message import ChatMessage
 from workspace.models.const import WorkspaceUserRoles
 from workspace.models.label import Label
+from workspace.models.sub_task import SubTask
 from workspace.models.task import Task
 from workspace.models.task_label import TaskLabel
 from workspace.models.workspace import Workspace
@@ -28,26 +30,37 @@ from workspace.selectors.workspace_user import (
 logger = logging.getLogger(__name__)
 
 
-HasWorkspace = Union[
+WorkspaceTarget = Union[
+    ChatMessage,
     Label,
+    SubTask,
     Task,
     TaskLabel,
+    Workspace,
     WorkspaceBoard,
     WorkspaceBoardSection,
     WorkspaceUser,
     WorkspaceUserInvite,
-]
-WorkspaceTarget = Union[
-    HasWorkspace,
-    Workspace,
 ]
 
 
 def get_workspace_from_target(target: WorkspaceTarget) -> Workspace:
     """Return a workspace."""
     match target:
-        case Workspace() as workspace:
-            return workspace
+        case Workspace():
+            return target
+        case WorkspaceBoardSection():
+            return target.workspace_board.workspace
+        case TaskLabel():
+            return target.label.workspace
+        case ChatMessage():
+            return (
+                target.task.workspace_board_section.workspace_board.workspace
+            )
+        case SubTask():
+            return (
+                target.task.workspace_board_section.workspace_board.workspace
+            )
         case target:
             return target.workspace
 

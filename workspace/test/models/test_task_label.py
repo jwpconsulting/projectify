@@ -34,9 +34,3 @@ class TestTaskLabel:
         """Test factory."""
         assert task_label.task == task
         assert task_label.label == label
-
-    def test_workspace(
-        self, workspace: models.Workspace, task_label: models.TaskLabel
-    ) -> None:
-        """Test workspace property."""
-        assert task_label.workspace == workspace

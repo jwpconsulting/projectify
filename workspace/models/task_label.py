@@ -16,9 +16,6 @@ from .task import (
     Task,
 )
 from .types import Pks
-from .workspace import (
-    Workspace,
-)
 
 
 class TaskLabelQuerySet(models.QuerySet["TaskLabel"]):
@@ -44,11 +41,6 @@ class TaskLabel(models.Model):
     objects: ClassVar[TaskLabelQuerySet] = cast(  # type: ignore[assignment]
         TaskLabelQuerySet, TaskLabelQuerySet.as_manager()
     )
-
-    @property
-    def workspace(self) -> Workspace:
-        """Get workspace instance."""
-        return self.label.workspace
 
     class Meta:
         """Meta."""

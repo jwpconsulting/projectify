@@ -50,11 +50,3 @@ class TestWorkspaceBoardSection:
     ) -> None:
         """Test workspace board section creation works."""
         assert workspace_board_section.workspace_board == workspace_board
-
-    def test_workspace(
-        self,
-        workspace: models.Workspace,
-        workspace_board_section: models.WorkspaceBoardSection,
-    ) -> None:
-        """Test workspace property."""
-        assert workspace_board_section.workspace == workspace

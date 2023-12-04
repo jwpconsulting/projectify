@@ -392,7 +392,7 @@ class Command(BaseCommand):
                 ),
                 groupby(
                     workspaces_workspace_board_sections,
-                    key=lambda b: b.workspace,
+                    key=lambda b: b.workspace_board.workspace,
                 ),
             )
         ]
