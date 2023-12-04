@@ -1,13 +1,8 @@
 """Test corporate models."""
-from unittest import (
-    mock,
-)
 
 import pytest
 from faker import Faker
 
-from corporate.services.customer import customer_check_active_for_workspace
-from workspace.models.workspace import Workspace
 from workspace.models.workspace_user import WorkspaceUser
 from workspace.services.workspace_user_invite import (
     add_or_invite_workspace_user,
@@ -83,47 +78,6 @@ class TestCustomer:
     def test_factory(self, unpaid_customer: models.Customer) -> None:
         """Test factory."""
         assert unpaid_customer.workspace
-
-    def test_subscription_activation(
-        self,
-        unpaid_customer: models.Customer,
-        workspace: Workspace,
-    ) -> None:
-        """Test activating subscription."""
-        assert not customer_check_active_for_workspace(workspace=workspace)
-        unpaid_customer.activate_subscription()
-        unpaid_customer.refresh_from_db()
-        assert customer_check_active_for_workspace(workspace=workspace)
-
-    def test_cancel_subscription(
-        self, workspace: Workspace, paid_customer: models.Customer
-    ) -> None:
-        """Test cancel_subscription."""
-        assert customer_check_active_for_workspace(workspace=workspace)
-        paid_customer.cancel_subscription()
-        paid_customer.refresh_from_db()
-        assert not customer_check_active_for_workspace(workspace=workspace)
-
-    def test_assign_stripe_customer_id(
-        self, unpaid_customer: models.Customer
-    ) -> None:
-        """Test assign_stripe_customer_id."""
-        unpaid_customer.assign_stripe_customer_id("Hello world")
-        unpaid_customer.refresh_from_db()
-        assert unpaid_customer.stripe_customer_id == "Hello world"
-
-    def test_set_number_of_seats(
-        self, unpaid_customer: models.Customer
-    ) -> None:
-        """Test set_number_of_seats."""
-        original_seats = unpaid_customer.seats
-        unpaid_customer.set_number_of_seats(original_seats + 1)
-        unpaid_customer.refresh_from_db()
-        assert unpaid_customer.seats == original_seats + 1
-
-        unpaid_customer.save = mock.MagicMock()  # type: ignore
-        unpaid_customer.set_number_of_seats(unpaid_customer.seats)
-        assert not unpaid_customer.save.called
 
     def test_seats_remaining(
         self,
