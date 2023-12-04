@@ -6,6 +6,7 @@ from ... import (
 )
 
 
+# TODO rename TestTaskLabelQuerySet
 @pytest.mark.django_db
 class TestLabelQuerySet:
     """Test LabelQuerySet."""

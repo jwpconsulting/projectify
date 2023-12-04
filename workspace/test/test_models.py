@@ -9,6 +9,7 @@ from .. import (
 )
 
 
+# TODO extract into workspace/test/models/test_label.py
 @pytest.mark.django_db
 class TestLabelManager:
     """Test Label queryset/manager."""
@@ -34,6 +35,7 @@ class TestLabelManager:
         )
 
 
+# TODO extract into workspace/test/models/test_label.py
 @pytest.mark.django_db
 class TestLabel:
     """Test Label model."""
@@ -49,6 +51,7 @@ class TestLabel:
         assert label.workspace == workspace
 
 
+# TODO extract into workspace/test/models/test_sub_task.py
 @pytest.mark.django_db
 class TestSubTaskManager:
     """Test SubTask manager."""
@@ -73,6 +76,7 @@ class TestSubTaskManager:
         )
 
 
+# TODO extract into workspace/test/models/test_sub_task.py
 @pytest.mark.django_db
 class TestSubTask:
     """Test SubTask."""
@@ -148,6 +152,7 @@ class TestSubTask:
         assert sub_task.workspace == workspace
 
 
+# TODO extract into workspace/test/models/test_chat_message.py
 @pytest.mark.django_db
 class TestChatMessageManager:
     """Test ChatMessage Manager."""
@@ -174,6 +179,7 @@ class TestChatMessageManager:
         )
 
 
+# TODO extract into workspace/test/models/test_chat_message.py
 @pytest.mark.django_db
 class TestChatMessage:
     """Test ChatMessage."""
