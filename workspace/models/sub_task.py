@@ -94,11 +94,6 @@ class SubTask(
             current_task.set_subtask_order(order_list)
             current_task.save()
 
-    @property
-    def workspace(self) -> Workspace:
-        """Get workspace instance."""
-        return self.task.workspace_board_section.workspace_board.workspace
-
     class Meta:
         """Meta."""
 

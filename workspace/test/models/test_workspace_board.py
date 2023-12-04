@@ -120,11 +120,3 @@ class TestWorkspaceBoard:
             section,
             section2,
         ]
-
-    def test_workspace(
-        self,
-        workspace: Workspace,
-        workspace_board: WorkspaceBoard,
-    ) -> None:
-        """Test workspace property."""
-        assert workspace_board.workspace == workspace

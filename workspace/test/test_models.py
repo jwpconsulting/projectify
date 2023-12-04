@@ -44,12 +44,6 @@ class TestLabel:
         """Test factory."""
         assert label.color is not None
 
-    def test_workspace(
-        self, workspace: models.Workspace, label: models.Label
-    ) -> None:
-        """Test workspace property."""
-        assert label.workspace == workspace
-
 
 # TODO extract into workspace/test/models/test_sub_task.py
 @pytest.mark.django_db
@@ -145,12 +139,6 @@ class TestSubTask:
         ]
         assert sub_task._order == 0
 
-    def test_workspace(
-        self, workspace: models.Workspace, sub_task: models.SubTask
-    ) -> None:
-        """Test workspace property."""
-        assert sub_task.workspace == workspace
-
 
 # TODO extract into workspace/test/models/test_chat_message.py
 @pytest.mark.django_db
@@ -191,9 +179,3 @@ class TestChatMessage:
     ) -> None:
         """Test that chat message belongs to user."""
         assert chat_message.author == workspace_user
-
-    def test_workspace(
-        self, workspace: models.Workspace, chat_message: models.ChatMessage
-    ) -> None:
-        """Test workspace property."""
-        assert chat_message.workspace == workspace

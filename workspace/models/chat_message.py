@@ -19,9 +19,6 @@ from .task import (
     Task,
 )
 from .types import Pks
-from .workspace import (
-    Workspace,
-)
 from .workspace_user import (
     WorkspaceUser,
 )
@@ -66,11 +63,6 @@ class ChatMessage(TimeStampedModel, models.Model):
     objects: ClassVar[ChatMessageQuerySet] = cast(  # type: ignore[assignment]
         ChatMessageQuerySet, ChatMessageQuerySet.as_manager()
     )
-
-    @property
-    def workspace(self) -> Workspace:
-        """Get workspace instance."""
-        return self.task.workspace_board_section.workspace_board.workspace
 
     class Meta:
         """Meta."""
