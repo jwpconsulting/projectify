@@ -57,7 +57,7 @@ def workspace_update(
 # workspace/services/workspace_user_invite.py:workspace_user_invite_create
 # TODO explicitly check authorization.
 def workspace_add_user(
-    # TODO make *
+    *,
     workspace: Workspace,
     user: AbstractBaseUser,
     # TODO derive the correct role from an enum
