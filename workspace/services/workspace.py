@@ -9,6 +9,7 @@ from django.contrib.auth.models import (
     AbstractBaseUser,
 )
 
+from corporate.services.customer import customer_create
 from projectify.utils import validate_perm
 from user.models import User
 from workspace.models.workspace import (
@@ -31,6 +32,13 @@ def workspace_create(
     workspace = Workspace(title=title, description=description)
     workspace.save()
     workspace_add_user(workspace=workspace, user=owner, role="OWNER")
+    customer_create(
+        who=owner,
+        workspace=workspace,
+        # TODO not sure if this is good or not. Every workspace starts as a
+        # trial workspace with 2 seats.
+        seats=2,
+    )
     return workspace
 
 

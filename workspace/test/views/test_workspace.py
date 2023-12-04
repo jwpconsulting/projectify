@@ -47,7 +47,7 @@ class TestWorkspaceCreate:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert that we can create a new workspace."""
-        with django_assert_num_queries(2):
+        with django_assert_num_queries(5):
             response = rest_user_client.post(
                 resource_url,
                 {
