@@ -4,7 +4,6 @@ import pytest
 from workspace.models.workspace_user_invite import (
     add_or_invite_workspace_user,
 )
-from workspace.services.workspace import workspace_add_user
 
 from ... import (
     models,
@@ -25,35 +24,6 @@ mutation RemoveUserFromWorkspace($uuid: UUID!, $email: String!) {
     }
 }
 """
-
-    # TODO: Check if this test is in view tests
-    @pytest.mark.xfail
-    def test_query(
-        self,
-        other_user,
-        graphql_query_user,
-        workspace,
-        workspace_user,
-    ):
-        """Test query."""
-        workspace_add_user(workspace=workspace, user=other_user)
-        assert workspace.users.count() == 2
-        result = graphql_query_user(
-            self.query,
-            variables={
-                "uuid": str(workspace.uuid),
-                "email": other_user.email,
-            },
-        )
-        assert result == {
-            "data": {
-                "removeUserFromWorkspace": {
-                    "uuid": str(workspace.uuid),
-                    "userInvitations": [],
-                },
-            },
-        }
-        assert workspace.users.count() == 1
 
     # TODO: Check if this test is in view tests
     @pytest.mark.xfail
