@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import generics, serializers, status
+from rest_framework.exceptions import NotFound
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -13,6 +14,9 @@ from workspace.models import (
     WorkspaceBoard,
     WorkspaceBoardSection,
     WorkspaceBoardSectionQuerySet,
+)
+from workspace.selectors.workspace_board_section import (
+    find_workspace_board_section_for_user_and_uuid,
 )
 from workspace.serializers.workspace_board_section import (
     WorkspaceBoardSectionDetailSerializer,
@@ -74,7 +78,7 @@ class WorkspaceBoardSectionCreate(APIView):
 
 # Read + Update + Delete
 class WorkspaceBoardSectionReadUpdateDelete(
-    generics.RetrieveUpdateDestroyAPIView[
+    generics.RetrieveUpdateAPIView[
         WorkspaceBoardSection,
         WorkspaceBoardSectionQuerySet,
         WorkspaceBoardSectionDetailSerializer,
@@ -82,6 +86,8 @@ class WorkspaceBoardSectionReadUpdateDelete(
 ):
     """Workspace board retrieve view."""
 
+    # TODO make me
+    # workspace/selectors/workspace_board_section.py:WorkspaceBoardSectionDetail
     queryset = WorkspaceBoardSection.objects.prefetch_related(
         "task_set",
         "task_set__assignee",
@@ -119,12 +125,25 @@ class WorkspaceBoardSectionReadUpdateDelete(
             description=data.get("description"),
         )
 
-    def perform_destroy(self, instance: WorkspaceBoardSection) -> None:
-        """Destroy workspace board section."""
+    def delete(
+        self, request: Request, workspace_board_section_uuid: UUID
+    ) -> Response:
+        """Handle DELETE."""
+        workspace_board_section = (
+            find_workspace_board_section_for_user_and_uuid(
+                user=request.user,
+                workspace_board_section_uuid=workspace_board_section_uuid,
+            )
+        )
+        if workspace_board_section is None:
+            raise NotFound(
+                _("Workspace board section not found for this UUID")
+            )
         workspace_board_section_delete(
             who=self.request.user,
-            workspace_board_section=instance,
+            workspace_board_section=workspace_board_section,
         )
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # RPC

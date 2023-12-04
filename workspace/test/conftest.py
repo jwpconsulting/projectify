@@ -179,8 +179,9 @@ def workspace_board(
         title=faker.text(),
         description=faker.paragraph(),
         workspace=workspace,
-        # XXX another victim to non-determinism
-        deadline=faker.date_time(tzinfo=dt_timezone.utc),
+        deadline=faker.date_time(tzinfo=dt_timezone.utc)
+        if faker.pybool()
+        else None,
     )
 
 
@@ -294,7 +295,7 @@ def task(
         workspace_board_section=workspace_board_section,
         title=faker.sentence(),
         description=faker.paragraph(),
-        assignee=workspace_user,
+        assignee=workspace_user if faker.pybool() else None,
         deadline=faker.date_time(tzinfo=dt_timezone.utc),
     )
 

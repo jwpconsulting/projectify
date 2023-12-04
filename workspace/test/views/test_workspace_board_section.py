@@ -75,7 +75,7 @@ class TestWorkspaceBoardSectionReadUpdateDelete:
             args=(workspace_board_section.uuid,),
         )
 
-    def test_authenticated(
+    def test_get(
         self,
         rest_user_client: APIClient,
         resource_url: str,
@@ -88,6 +88,9 @@ class TestWorkspaceBoardSectionReadUpdateDelete:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can post to this view this while being logged in."""
+        # Make sure task -> workspace_user -> user is resolved
+        task.assignee = workspace_user
+        task.save()
         with django_assert_num_queries(6):
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.content
@@ -123,7 +126,7 @@ class TestWorkspaceBoardSectionReadUpdateDelete:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test deleting."""
-        with django_assert_num_queries(10):
+        with django_assert_num_queries(12):
             response = rest_user_client.delete(resource_url)
             assert (
                 response.status_code == status.HTTP_204_NO_CONTENT
