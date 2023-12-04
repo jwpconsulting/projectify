@@ -407,13 +407,16 @@ class Command(BaseCommand):
             together["workspace"].save()
         return workspaces
 
-    def create_corporate_accounts(self, workspaces: list[Workspace]) -> None:
+    def create_corporate_accounts(
+        self, seats: int, workspaces: list[Workspace]
+    ) -> None:
         """Create corporate accounts."""
         customers = Customer.objects.bulk_create(
             [
                 Customer(
                     workspace=workspace,
                     subscription_status=CustomerSubscriptionStatus.ACTIVE,
+                    seats=seats,
                 )
                 for workspace in workspaces
             ]
@@ -481,4 +484,6 @@ class Command(BaseCommand):
             self.n_users = max(self.n_users, self.n_add_users)
         users = self.create_users()
         workspaces = self.create_workspaces(users)
-        self.create_corporate_accounts(workspaces)
+        self.create_corporate_accounts(
+            seats=self.n_users, workspaces=workspaces
+        )
