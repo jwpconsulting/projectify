@@ -5,7 +5,7 @@ The order of rules follows the ordering of models.
 """
 import logging
 from typing import (
-    Protocol,
+    Union,
 )
 
 from django.contrib.auth.models import (
@@ -15,23 +15,29 @@ from django.contrib.auth.models import (
 import rules
 
 from corporate import models as corporate_models
-
-from . import (
-    models,
-)
+from workspace.models.const import WorkspaceUserRoles
+from workspace.models.label import Label
+from workspace.models.task import Task
+from workspace.models.task_label import TaskLabel
+from workspace.models.workspace import Workspace
+from workspace.models.workspace_board import WorkspaceBoard
+from workspace.models.workspace_board_section import WorkspaceBoardSection
+from workspace.models.workspace_user import WorkspaceUser
+from workspace.models.workspace_user_invite import WorkspaceUserInvite
 
 logger = logging.getLogger(__name__)
 
 
-class HasWorkspace(Protocol):
-    """Workspace adjacent object that has .workspace."""
-
-    @property
-    def workspace(
-        self,
-    ) -> models.Workspace:
-        """Return the workspace."""
-        ...
+HasWorkspace = Union[
+    Label,
+    Task,
+    TaskLabel,
+    Workspace,
+    WorkspaceBoard,
+    WorkspaceBoardSection,
+    WorkspaceUser,
+    WorkspaceUserInvite,
+]
 
 
 # Role predicates
@@ -41,17 +47,15 @@ def is_at_least_observer(user: AbstractBaseUser, target: HasWorkspace) -> bool:
     """Return True if a user is at least an observer of workspace parent."""
     workspace = target.workspace
     try:
-        workspace_user = (
-            models.WorkspaceUser.objects.get_by_workspace_and_user(
-                workspace,
-                user,
-            )
+        workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(
+            workspace,
+            user,
         )
-    except models.WorkspaceUser.DoesNotExist:
+    except WorkspaceUser.DoesNotExist:
         return False
     return workspace.has_at_least_role(
         workspace_user,
-        models.WorkspaceUserRoles.OBSERVER,
+        WorkspaceUserRoles.OBSERVER,
     )
 
 
@@ -60,17 +64,15 @@ def is_at_least_member(user: AbstractBaseUser, target: HasWorkspace) -> bool:
     """Return True if a user is at least a member of workspace parent."""
     workspace = target.workspace
     try:
-        workspace_user = (
-            models.WorkspaceUser.objects.get_by_workspace_and_user(
-                workspace,
-                user,
-            )
+        workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(
+            workspace,
+            user,
         )
-    except models.WorkspaceUser.DoesNotExist:
+    except WorkspaceUser.DoesNotExist:
         return False
     return workspace.has_at_least_role(
         workspace_user,
-        models.WorkspaceUserRoles.MEMBER,
+        WorkspaceUserRoles.MEMBER,
     )
 
 
@@ -81,17 +83,15 @@ def is_at_least_maintainer(
     """Return True if a user is at least a maintainer of workspace parent."""
     workspace = target.workspace
     try:
-        workspace_user = (
-            models.WorkspaceUser.objects.get_by_workspace_and_user(
-                workspace,
-                user,
-            )
+        workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(
+            workspace,
+            user,
         )
-    except models.WorkspaceUser.DoesNotExist:
+    except WorkspaceUser.DoesNotExist:
         return False
     return workspace.has_at_least_role(
         workspace_user,
-        models.WorkspaceUserRoles.MAINTAINER,
+        WorkspaceUserRoles.MAINTAINER,
     )
 
 
@@ -100,17 +100,15 @@ def is_at_least_owner(user: AbstractBaseUser, target: HasWorkspace) -> bool:
     """Return True if a user is at least an owner of workspace parent."""
     workspace = target.workspace
     try:
-        workspace_user = (
-            models.WorkspaceUser.objects.get_by_workspace_and_user(
-                workspace,
-                user,
-            )
+        workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(
+            workspace,
+            user,
         )
-    except models.WorkspaceUser.DoesNotExist:
+    except WorkspaceUser.DoesNotExist:
         return False
     return workspace.has_at_least_role(
         workspace_user,
-        models.WorkspaceUserRoles.OWNER,
+        WorkspaceUserRoles.OWNER,
     )
 
 
@@ -128,11 +126,11 @@ def belongs_to_active_workspace(
     """
     workspace = target.workspace
     try:
-        models.WorkspaceUser.objects.get_by_workspace_and_user(
+        WorkspaceUser.objects.get_by_workspace_and_user(
             workspace,
             user,
         )
-    except models.WorkspaceUser.DoesNotExist:
+    except WorkspaceUser.DoesNotExist:
         logger.warning("No workspace user found for user %s", user)
         return False
     try:
