@@ -7,7 +7,9 @@ from projectify.utils import validate_perm
 from user.models import User
 from workspace.models.chat_message import ChatMessage
 from workspace.models.task import Task
-from workspace.models.workspace_user import WorkspaceUser
+from workspace.selectors.workspace_user import (
+    workspace_user_find_for_workspace,
+)
 
 
 # TODO this could take an author instead of who -> user is derived from author
@@ -19,9 +21,9 @@ def chat_message_create(
 ) -> ChatMessage:
     """Create a chat message for a task."""
     validate_perm("workspace.can_create_chat_message", who, task)
-    workspace_user = WorkspaceUser.objects.get_by_workspace_and_user(
-        task.workspace,
-        who,
+    workspace_user = workspace_user_find_for_workspace(
+        workspace=task.workspace,
+        user=who,
     )
     return ChatMessage.objects.create(
         task=task, text=text, author=workspace_user

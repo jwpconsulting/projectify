@@ -54,12 +54,6 @@ class WorkspaceUserQuerySet(models.QuerySet["WorkspaceUser"]):
         """Filter workspace users based on this user's workspaces."""
         return self.filter(workspace__users=user)
 
-    def get_by_workspace_and_user(
-        self, workspace: Workspace, user: AbstractBaseUser
-    ) -> "WorkspaceUser":
-        """Get by workspace and user."""
-        return self.get(workspace=workspace, user=user)
-
 
 class WorkspaceUser(TimeStampedModel, models.Model):
     """Workspace to user mapping."""
