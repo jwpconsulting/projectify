@@ -139,7 +139,7 @@ def belongs_to_active_workspace(user: User, target: WorkspaceTarget) -> bool:
     if workspace_user is None:
         logger.warning("No workspace user found for user %s", user)
         return False
-    return customer_check_active_for_workspace(workspace=workspace)
+    return customer_check_active_for_workspace(workspace=workspace) == "full"
 
 
 # TODO rules should be of the format
@@ -167,6 +167,13 @@ rules.add_perm(
     "workspace.can_delete_workspace",
     is_at_least_owner,
 )
+
+# Requirements for trial plan
+# Be able to create 10 boards with 10 sections in each board
+# Be able to to create 100 tasks in that workspace
+# Be able to add one more user, therefore that workspace being limited to having
+# 2 workspace users in total.
+# Be able to create 10 labels
 
 # Workspace user invite
 rules.add_perm(

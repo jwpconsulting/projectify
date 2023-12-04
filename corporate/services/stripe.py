@@ -14,7 +14,6 @@ from stripe.api_resources.checkout.session import Session
 
 from corporate.selectors.customer import customer_find_by_workspace_uuid
 from corporate.services.customer import (
-    customer_check_active_for_workspace,
     customer_create,
 )
 from projectify.utils import validate_perm
@@ -31,9 +30,9 @@ def stripe_checkout_session_create(
     seats: int,
 ) -> Session:
     """Generate the URL for a checkout session."""
-    if customer_check_active_for_workspace(workspace=customer.workspace):
+    if customer.stripe_customer_id is not None:
         raise serializers.ValidationError(
-            _("This customer already has an active subscription")
+            _("This customer already activated a subscription before")
         )
     validate_perm("corporate.can_update_customer", who, customer)
     session = stripe.checkout.Session.create(

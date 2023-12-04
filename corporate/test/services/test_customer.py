@@ -20,12 +20,12 @@ def test_subscription_activation(
     stripe_customer_id: str,
 ) -> None:
     """Test activating subscription."""
-    assert not customer_check_active_for_workspace(workspace=workspace)
+    assert customer_check_active_for_workspace(workspace=workspace) == "trial"
     customer_activate_subscription(
         customer=unpaid_customer, stripe_customer_id=stripe_customer_id
     )
     unpaid_customer.refresh_from_db()
-    assert customer_check_active_for_workspace(workspace=workspace)
+    assert customer_check_active_for_workspace(workspace=workspace) == "full"
 
 
 @pytest.mark.django_db
@@ -36,7 +36,9 @@ def test_cancel_subscription(
     assert customer_check_active_for_workspace(workspace=workspace)
     customer_cancel_subscription(customer=paid_customer)
     paid_customer.refresh_from_db()
-    assert not customer_check_active_for_workspace(workspace=workspace)
+    assert (
+        customer_check_active_for_workspace(workspace=workspace) == "inactive"
+    )
 
 
 @pytest.mark.django_db
@@ -60,8 +62,8 @@ def test_active(
     stripe_customer_id: str, workspace: Workspace, unpaid_customer: Customer
 ) -> None:
     """Test active property."""
-    assert not customer_check_active_for_workspace(workspace=workspace)
+    assert customer_check_active_for_workspace(workspace=workspace) == "trial"
     customer_activate_subscription(
         customer=unpaid_customer, stripe_customer_id=stripe_customer_id
     )
-    assert customer_check_active_for_workspace(workspace=workspace)
+    assert customer_check_active_for_workspace(workspace=workspace) == "full"
