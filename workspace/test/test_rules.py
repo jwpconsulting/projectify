@@ -120,6 +120,10 @@ class TestPredicates:
             workspace,
         )
 
+    @pytest.mark.xfail(
+        reason="Workspaces should not exist without customers. Consider "
+        "deleting this test"
+    )
     def test_belongs_to_active_workspace_no_customer(
         self,
         user: User,

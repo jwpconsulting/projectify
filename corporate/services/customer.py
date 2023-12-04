@@ -2,6 +2,7 @@
 import logging
 
 from corporate.models import Customer, CustomerSubscriptionStatus
+from corporate.types import WorkspaceFeatures
 from projectify.utils import validate_perm
 from user.models import User
 from workspace.models.workspace import Workspace
@@ -52,18 +53,26 @@ def customer_cancel_subscription(*, customer: Customer) -> None:
 
 
 # TODO permissions needed?
-def customer_check_active_for_workspace(*, workspace: Workspace) -> bool:
+# TODO check whether a workspace is in trial, then check further conditions
+# TODO rename customer_check_workspace_features
+def customer_check_active_for_workspace(
+    *, workspace: Workspace
+) -> WorkspaceFeatures:
     """Check if a customer is active for a given workspace."""
     try:
         customer = workspace.customer
     except Customer.DoesNotExist:
-        logger.warning("No customer found for workspace %s", workspace)
-        return False
+        raise ValueError(f"No customer found for workspace {workspace}")
     match customer.subscription_status:
         case CustomerSubscriptionStatus.ACTIVE:
-            return True
+            return "full"
         case CustomerSubscriptionStatus.CUSTOM:
-            return True
-        case _:
+            return "full"
+        case CustomerSubscriptionStatus.UNPAID:
             logger.warning("Customer for workspace %s is inactive", workspace)
-            return False
+            return "trial"
+        case CustomerSubscriptionStatus.CANCELLED:
+            logger.warning("Customer for workspace %s is inactive", workspace)
+            return "inactive"
+        case status:
+            raise ValueError(f"Unknown status {status}")
