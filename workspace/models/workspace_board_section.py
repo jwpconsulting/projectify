@@ -28,9 +28,6 @@ from .types import (
     Pks,
     SetOrder,
 )
-from .workspace import (
-    Workspace,
-)
 
 if TYPE_CHECKING:
     from django.db.models.manager import RelatedManager  # noqa: F401
@@ -78,11 +75,6 @@ class WorkspaceBoardSection(
         set_task_order: SetOrder
         get_next_in_order: Callable[[], "WorkspaceBoardSection"]
         _order: int
-
-    @property
-    def workspace(self) -> Workspace:
-        """Get workspace instance."""
-        return self.workspace_board.workspace
 
     class Meta:
         """Meta."""

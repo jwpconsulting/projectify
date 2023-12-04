@@ -60,11 +60,3 @@ class TestWorkspaceUserInvite:
         workspace_user_invite.redeem()
         with pytest.raises(AssertionError):
             workspace_user_invite.redeem()
-
-    def test_workspace(
-        self,
-        workspace_user_invite: models.WorkspaceUserInvite,
-        workspace: models.Workspace,
-    ) -> None:
-        """Test workspace property."""
-        assert workspace_user_invite.workspace == workspace

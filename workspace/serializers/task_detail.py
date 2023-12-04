@@ -129,7 +129,8 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
             raise serializers.ValidationError(
                 _("Workspace board section does not exist"),
             )
-        workspace: models.Workspace = workspace_board_section.workspace
+        # TODO select related
+        workspace = workspace_board_section.workspace_board.workspace
         if self.instance and self.instance.workspace != workspace:
             raise serializers.ValidationError(
                 _("This task cannot be assigned to another workspace"),
@@ -146,7 +147,8 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         workspace_board_section: models.WorkspaceBoardSection = data[
             "workspace_board_section"
         ]
-        workspace: models.Workspace = workspace_board_section.workspace
+        # TODO select related
+        workspace = workspace_board_section.workspace_board.workspace
 
         # Then we filter the list of labels for labels that are contained
         # in this workspace

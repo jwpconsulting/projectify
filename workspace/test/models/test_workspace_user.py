@@ -70,12 +70,6 @@ class TestWorkspaceUser:
         """Test that the default rule is observer."""
         assert workspace_user.role == WorkspaceUserRoles.OWNER
 
-    def test_workspace(
-        self, workspace: models.Workspace, workspace_user: WorkspaceUser
-    ) -> None:
-        """Test workspace property."""
-        assert workspace_user.workspace == workspace
-
     def test_assign_role(self, workspace_user: WorkspaceUser) -> None:
         """Test assign_role."""
         workspace_user.assign_role(WorkspaceUserRoles.OWNER)
