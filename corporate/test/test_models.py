@@ -3,6 +3,7 @@
 import pytest
 from faker import Faker
 
+from user.models import User
 from workspace.models.workspace_user import WorkspaceUser
 from workspace.services.workspace_user_invite import (
     add_or_invite_workspace_user,
@@ -83,13 +84,13 @@ class TestCustomer:
         self,
         paid_customer: models.Customer,
         faker: Faker,
-        workspace_user: WorkspaceUser,
+        user: User,
     ) -> None:
         """Test seats remaining."""
         # user is already added, so there is already one seat used up
         assert paid_customer.seats_remaining == paid_customer.seats - 1
         add_or_invite_workspace_user(
-            who=workspace_user.user,
+            who=user,
             workspace=paid_customer.workspace,
             email_or_user=faker.email(),
         )

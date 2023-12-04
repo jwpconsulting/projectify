@@ -6,13 +6,14 @@ from faker import Faker
 from corporate.models import Customer
 from corporate.services.customer import (
     customer_activate_subscription,
-    customer_create,
 )
 from user.models import User
-from workspace.models.const import WorkspaceUserRoles
 from workspace.models.workspace import Workspace
 from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.workspace import workspace_add_user
+from workspace.selectors.workspace_user import (
+    workspace_user_find_for_workspace,
+)
+from workspace.services.workspace import workspace_create
 
 
 @pytest.fixture
@@ -50,31 +51,28 @@ def stripe_endpoint_secret(faker: Faker) -> str:
 
 
 @pytest.fixture
-def workspace(faker: Faker) -> Workspace:
+def workspace(user: User, faker: Faker) -> Workspace:
     """Create a workspace."""
-    return Workspace.objects.create(title=faker.company())
+    return workspace_create(
+        owner=user,
+        title=faker.numerify("Corporate conftest workspace #####"),
+    )
 
 
 @pytest.fixture
 def workspace_user(user: User, workspace: Workspace) -> WorkspaceUser:
     """Create a workspace user."""
-    return workspace_add_user(
-        workspace=workspace,
-        user=user,
-        role=WorkspaceUserRoles.OWNER,
+    workspace_user = workspace_user_find_for_workspace(
+        workspace=workspace, user=user
     )
+    assert workspace_user
+    return workspace_user
 
 
 @pytest.fixture
-def unpaid_customer(
-    workspace_user: WorkspaceUser, workspace: Workspace, faker: Faker
-) -> Customer:
+def unpaid_customer(workspace: Workspace) -> Customer:
     """Create customer."""
-    return customer_create(
-        who=workspace_user.user,
-        workspace=workspace,
-        seats=faker.pyint(min_value=1, max_value=98),
-    )
+    return workspace.customer
 
 
 @pytest.fixture
