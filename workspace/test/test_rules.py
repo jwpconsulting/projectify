@@ -1,11 +1,8 @@
 """Test workspace app rules."""
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
-
 import pytest
 
 from corporate import models as corporate_models
+from user.models import User
 from workspace.services.workspace import workspace_add_user
 
 from .. import (
@@ -15,9 +12,7 @@ from .. import (
 
 
 @pytest.fixture
-def observer(
-    workspace: models.Workspace, user: AbstractBaseUser
-) -> models.WorkspaceUser:
+def observer(workspace: models.Workspace, user: User) -> models.WorkspaceUser:
     """Return an observer workspace user."""
     return workspace_add_user(
         workspace=workspace,
@@ -32,7 +27,7 @@ class TestPredicates:
 
     def test_is_at_least_observer(
         self,
-        user: AbstractBaseUser,
+        user: User,
         workspace: models.Workspace,
         observer: models.WorkspaceUser,
     ) -> None:
@@ -42,7 +37,7 @@ class TestPredicates:
 
     def test_is_at_least_observer_unrelated_workspace(
         self,
-        user: AbstractBaseUser,
+        user: User,
         unrelated_workspace: models.Workspace,
     ) -> None:
         """Test is_at_least_observer with other workspace."""
@@ -50,7 +45,7 @@ class TestPredicates:
 
     def test_is_at_least_member(
         self,
-        user: AbstractBaseUser,
+        user: User,
         workspace: models.Workspace,
         observer: models.WorkspaceUser,
     ) -> None:
@@ -61,7 +56,7 @@ class TestPredicates:
 
     def test_is_at_least_member_unrelated_workspace(
         self,
-        user: AbstractBaseUser,
+        user: User,
         unrelated_workspace: models.Workspace,
         observer: models.WorkspaceUser,
     ) -> None:
@@ -70,7 +65,7 @@ class TestPredicates:
 
     def test_is_at_least_maintainer(
         self,
-        user: AbstractBaseUser,
+        user: User,
         workspace: models.Workspace,
         observer: models.WorkspaceUser,
     ) -> None:
@@ -80,14 +75,14 @@ class TestPredicates:
         assert rules.is_at_least_maintainer(user, workspace)
 
     def test_is_at_least_maintainer_unrelated_workspace(
-        self, user: AbstractBaseUser, unrelated_workspace: models.Workspace
+        self, user: User, unrelated_workspace: models.Workspace
     ) -> None:
         """Test is_at_least_maintainer with other workspace."""
         assert not rules.is_at_least_maintainer(user, unrelated_workspace)
 
     def test_is_at_least_owner(
         self,
-        user: AbstractBaseUser,
+        user: User,
         workspace: models.Workspace,
         observer: models.WorkspaceUser,
     ) -> None:
@@ -98,7 +93,7 @@ class TestPredicates:
 
     def test_is_at_least_owner_unrelated_workspace(
         self,
-        user: AbstractBaseUser,
+        user: User,
         unrelated_workspace: models.Workspace,
     ) -> None:
         """Test is_at_least_owner with other workspace."""
@@ -106,7 +101,7 @@ class TestPredicates:
 
     def test_belongs_to_active_workspace(
         self,
-        user: AbstractBaseUser,
+        user: User,
         workspace: models.Workspace,
         observer: models.WorkspaceUser,
     ) -> None:
@@ -127,7 +122,7 @@ class TestPredicates:
 
     def test_belongs_to_active_workspace_no_customer(
         self,
-        user: AbstractBaseUser,
+        user: User,
         workspace: models.Workspace,
         observer: models.WorkspaceUser,
     ) -> None:
@@ -144,7 +139,7 @@ class TestPredicates:
 
     def test_belongs_to_active_workspace_unrelated_workspace(
         self,
-        user: AbstractBaseUser,
+        user: User,
         unrelated_workspace: models.Workspace,
         observer: models.WorkspaceUser,
     ) -> None:
