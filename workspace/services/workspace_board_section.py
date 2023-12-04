@@ -55,6 +55,7 @@ def workspace_board_section_update(
 
 
 # Delete
+# TODO how would one go about deleting a section with entries then?
 @transaction.atomic
 def workspace_board_section_delete(
     *,
