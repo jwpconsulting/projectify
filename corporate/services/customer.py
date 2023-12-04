@@ -22,24 +22,33 @@ def customer_activate_subscription(
     *, customer: Customer, stripe_customer_id: str
 ) -> None:
     """Active a subscription for a customer."""
-    # TODO:
-    # The two following method can be refactored as well.
-    customer.assign_stripe_customer_id(stripe_customer_id)
-    customer.activate_subscription()
+    customer.stripe_customer_id = stripe_customer_id
+    customer.subscription_status = CustomerSubscriptionStatus.ACTIVE
+    customer.save()
 
 
 # TODO permissions needed?
 def customer_update_seats(*, customer: Customer, seats: int) -> None:
     """Update the number of seats for a customer."""
-    # TODO refactor the following method into here
-    customer.set_number_of_seats(seats)
+    # TODO Check why returning None is required
+    if customer.seats == seats:
+        logger.warning(
+            "Customer %s set the same number of seats (%d) as before",
+            str(customer.uuid),
+            seats,
+        )
+        return None
+    customer.seats = seats
+    customer.save()
 
 
 # TODO permissions needed?
+# Since this will be called by Stripe, the who could be an explicit Stripe
+# identifier
 def customer_cancel_subscription(*, customer: Customer) -> None:
     """Cancel a customer's subscription."""
-    # TODO the following method should be refactored into here
-    customer.cancel_subscription()
+    customer.subscription_status = CustomerSubscriptionStatus.CANCELLED
+    customer.save()
 
 
 # TODO permissions needed?
