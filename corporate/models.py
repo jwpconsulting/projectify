@@ -132,11 +132,6 @@ class Customer(models.Model):
         self.seats = seats
         self.save()
 
-    @property
-    def active(self) -> bool:
-        """Return if active customer."""
-        return self.subscription_status == CustomerSubscriptionStatus.ACTIVE
-
     # TODO this should be a selector.
     # XXX this prop can have an n+1 as a side effect
     @property
