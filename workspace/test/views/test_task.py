@@ -73,12 +73,14 @@ class TestTaskCreate(UnauthenticatedTestMixin):
 
     def test_unauthorized(
         self,
-        rest_user_client: APIClient,
+        rest_meddling_client: APIClient,
         resource_url: str,
         payload: dict[str, object],
     ) -> None:
         """Test creating when unauthorized."""
-        response = rest_user_client.post(resource_url, payload, format="json")
+        response = rest_meddling_client.post(
+            resource_url, payload, format="json"
+        )
         # We get 400 and NOT 403. We don't want to tell the user whether a
         # workspace board section with the given UUID exists. Instead, we
         # will treat it like a non-existent UUID. That makes sense, because to

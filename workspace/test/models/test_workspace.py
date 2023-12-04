@@ -92,22 +92,23 @@ class TestWorkspace:
 
     # TODO these tests should be in workspace service tests
     def test_add_user(
-        self, workspace: models.Workspace, user: AbstractUser
+        self, workspace: models.Workspace, other_user: User
     ) -> None:
         """Test adding a user."""
         count = workspace.users.count()
-        workspace_add_user(workspace=workspace, user=user)
+        workspace_add_user(workspace=workspace, user=other_user)
         assert workspace.users.count() == count + 1
 
     def test_add_user_twice(
         self,
         workspace: models.Workspace,
         workspace_user: models.WorkspaceUser,
-        user: AbstractUser,
+        other_user: AbstractUser,
     ) -> None:
         """Test that adding a user twice won't work."""
+        workspace_add_user(workspace=workspace, user=other_user)
         with pytest.raises(db.IntegrityError):
-            workspace_add_user(workspace=workspace, user=user)
+            workspace_add_user(workspace=workspace, user=other_user)
 
     def test_remove_user(
         self,

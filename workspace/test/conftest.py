@@ -20,7 +20,6 @@ from datetime import (
     timezone as dt_timezone,
 )
 from typing import (
-    TYPE_CHECKING,
     Type,
     cast,
 )
@@ -35,20 +34,22 @@ from django.utils import (
 import pytest
 from faker import Faker
 
-from corporate.models import Customer
 from corporate.services.customer import customer_activate_subscription
-from user import models as user_models
+from user.models import User, UserInvite
 from workspace.models.label import Label
 from workspace.models.workspace import Workspace
 from workspace.models.workspace_user import WorkspaceUser
 from workspace.models.workspace_user_invite import (
     WorkspaceUserInvite,
 )
+from workspace.selectors.workspace_user import (
+    workspace_user_find_for_workspace,
+)
 from workspace.services.chat_message import chat_message_create
 from workspace.services.label import label_create
 from workspace.services.sub_task import sub_task_create
 from workspace.services.task import task_create
-from workspace.services.workspace import workspace_add_user
+from workspace.services.workspace import workspace_add_user, workspace_create
 from workspace.services.workspace_board import (
     workspace_board_archive,
     workspace_board_create,
@@ -64,10 +65,6 @@ from .. import (
     models,
 )
 
-if TYPE_CHECKING:
-    # TODO use AbstractBaseUser instead
-    from user.models import User as _User  # noqa: F401
-
 
 @pytest.fixture
 def now() -> datetime:
@@ -76,14 +73,14 @@ def now() -> datetime:
 
 
 @pytest.fixture
-def workspace(faker: Faker) -> models.Workspace:
+def workspace(faker: Faker, user: User) -> models.Workspace:
     """Return workspace."""
-    # TODO go through service to create workspace
-    workspace = Workspace.objects.create(
+    workspace = workspace_create(
         title=faker.company(),
+        description=faker.paragraph(),
+        owner=user,
     )
-    # XXX Ideally we would use customer_create here
-    customer = Customer.objects.create(workspace=workspace)
+    customer = workspace.customer
     # XXX use same fixture as in corporate/test/conftest.py
     customer_activate_subscription(
         customer=customer, stripe_customer_id="stripe_"
@@ -95,15 +92,16 @@ def workspace(faker: Faker) -> models.Workspace:
 
 
 @pytest.fixture
-def unrelated_workspace(faker: Faker) -> models.Workspace:
+def unrelated_workspace(
+    faker: Faker, unrelated_user: User
+) -> models.Workspace:
     """Return workspace."""
-    # TODO go through service to create workspace
-    workspace = Workspace.objects.create(
+    workspace = workspace_create(
         title=faker.company(),
+        description=faker.paragraph(),
+        owner=unrelated_user,
     )
-    # XXX we have to copy the code from above
-    # XXX Ideally we would use customer_create here
-    customer = Customer.objects.create(workspace=workspace)
+    customer = workspace.customer
     # XXX use same fixture as in corporate/test/conftest.py
     customer_activate_subscription(
         customer=customer, stripe_customer_id="stripe_"
@@ -119,7 +117,7 @@ def workspace_user_invite(
     workspace: models.Workspace,
     workspace_user: WorkspaceUser,
     # TODO user_invite needed to redeem invite, right? verify.
-    user_invite: user_models.UserInvite,
+    user_invite: UserInvite,
     faker: Faker,
 ) -> models.WorkspaceUserInvite:
     """Return workspace user invite."""
@@ -133,38 +131,40 @@ def workspace_user_invite(
 
 @pytest.fixture
 def workspace_user(
-    workspace: models.Workspace, user: "_User"
+    workspace: models.Workspace, user: User
 ) -> models.WorkspaceUser:
     """Return workspace user with owner status."""
-    return workspace_add_user(
-        workspace=workspace,
-        user=user,
-        role=models.WorkspaceUserRoles.OWNER,
+    workspace_user = workspace_user_find_for_workspace(
+        workspace=workspace, user=user
     )
+    assert workspace_user
+    return workspace_user
 
 
 @pytest.fixture
 def other_workspace_user(
-    workspace: models.Workspace, other_user: "_User"
+    workspace: models.Workspace, other_user: User
 ) -> models.WorkspaceUser:
     """Return workspace user for other_user."""
-    return workspace_add_user(
+    workspace_user = workspace_add_user(
         workspace=workspace,
         user=other_user,
         role=models.WorkspaceUserRoles.OWNER,
     )
+    assert workspace_user
+    return workspace_user
 
 
 @pytest.fixture
 def unrelated_workspace_user(
-    unrelated_workspace: models.Workspace, other_user: "_User"
+    unrelated_workspace: models.Workspace, unrelated_user: User
 ) -> models.WorkspaceUser:
     """Return workspace user for other_user."""
-    return workspace_add_user(
-        workspace=unrelated_workspace,
-        user=other_user,
-        role=models.WorkspaceUserRoles.OWNER,
+    workspace_user = workspace_user_find_for_workspace(
+        workspace=unrelated_workspace, user=unrelated_user
     )
+    assert workspace_user
+    return workspace_user
 
 
 @pytest.fixture
@@ -406,6 +406,6 @@ def chat_message(
 
 # TODO remove me
 @pytest.fixture
-def user_model() -> Type["_User"]:
+def user_model() -> Type[User]:
     """Return user model class."""
-    return cast(Type["_User"], auth.get_user_model())
+    return cast(Type[User], auth.get_user_model())
