@@ -51,9 +51,16 @@ class CustomerQuerySet(models.QuerySet["Customer"]):
 class CustomerSubscriptionStatus(models.TextChoices):
     """Customer subscription status choices."""
 
+    # A subscription has been created with our billing provider
     ACTIVE = "ACTIVE", _("Active")
+    # A subscription has never been created with our billing provider
+    # TODO this should be "TRIAL"
     UNPAID = "UNPAID", _("Unpaid")
+    # An existing subscription with our billing provider has been cancelled
     CANCELLED = "CANCELLED", _("Cancelled")
+    # A subscription does not exist, but the workspace can be used without
+    # restriction
+    CUSTOM = "CUSTOM", _("Custom subscription")
 
 
 class Customer(models.Model):
@@ -75,6 +82,9 @@ class Customer(models.Model):
         null=True,
         blank=True,
         # XXX
+        # Looks mysterious. Should probably uncomment these:
+        # Justus 2023-12-03
+        # XXX
         # unique=True,
         # db_index=True,
     )
@@ -83,6 +93,7 @@ class Customer(models.Model):
         CustomerQuerySet, CustomerQuerySet.as_manager()
     )
 
+    # TODO these four methods should be part of a service
     def activate_subscription(self) -> None:
         """
         Activate customer subscription.
@@ -126,6 +137,8 @@ class Customer(models.Model):
         """Return if active customer."""
         return self.subscription_status == CustomerSubscriptionStatus.ACTIVE
 
+    # TODO this should be a selector.
+    # XXX this prop can have an n+1 as a side effect
     @property
     @transaction.atomic
     def seats_remaining(self) -> int:
