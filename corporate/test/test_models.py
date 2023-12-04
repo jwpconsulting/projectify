@@ -6,6 +6,8 @@ from unittest import (
 import pytest
 from faker import Faker
 
+from corporate.services.customer import customer_check_active_for_workspace
+from workspace.models.workspace import Workspace
 from workspace.models.workspace_user import WorkspaceUser
 from workspace.services.workspace_user_invite import (
     add_or_invite_workspace_user,
@@ -83,20 +85,24 @@ class TestCustomer:
         assert unpaid_customer.workspace
 
     def test_subscription_activation(
-        self, unpaid_customer: models.Customer
+        self,
+        unpaid_customer: models.Customer,
+        workspace: Workspace,
     ) -> None:
         """Test activating subscription."""
-        assert not unpaid_customer.active
+        assert not customer_check_active_for_workspace(workspace=workspace)
         unpaid_customer.activate_subscription()
         unpaid_customer.refresh_from_db()
-        assert unpaid_customer.active
+        assert customer_check_active_for_workspace(workspace=workspace)
 
-    def test_cancel_subscription(self, paid_customer: models.Customer) -> None:
+    def test_cancel_subscription(
+        self, workspace: Workspace, paid_customer: models.Customer
+    ) -> None:
         """Test cancel_subscription."""
-        assert paid_customer.active
+        assert customer_check_active_for_workspace(workspace=workspace)
         paid_customer.cancel_subscription()
         paid_customer.refresh_from_db()
-        assert not paid_customer.active
+        assert not customer_check_active_for_workspace(workspace=workspace)
 
     def test_assign_stripe_customer_id(
         self, unpaid_customer: models.Customer
@@ -118,12 +124,6 @@ class TestCustomer:
         unpaid_customer.save = mock.MagicMock()  # type: ignore
         unpaid_customer.set_number_of_seats(unpaid_customer.seats)
         assert not unpaid_customer.save.called
-
-    def test_active(self, unpaid_customer: models.Customer) -> None:
-        """Test active property."""
-        assert not unpaid_customer.active
-        unpaid_customer.activate_subscription()
-        assert unpaid_customer.active
 
     def test_seats_remaining(
         self,

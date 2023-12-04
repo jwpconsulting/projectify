@@ -13,7 +13,10 @@ from stripe.api_resources.billing_portal.session import (
 from stripe.api_resources.checkout.session import Session
 
 from corporate.selectors.customer import customer_find_by_workspace_uuid
-from corporate.services.customer import customer_create
+from corporate.services.customer import (
+    customer_check_active_for_workspace,
+    customer_create,
+)
 from projectify.utils import validate_perm
 from user.models import User
 from workspace.selectors.workspace import workspace_find_by_workspace_uuid
@@ -28,7 +31,7 @@ def stripe_checkout_session_create(
     seats: int,
 ) -> Session:
     """Generate the URL for a checkout session."""
-    if customer.active:
+    if customer_check_active_for_workspace(workspace=customer.workspace):
         raise serializers.ValidationError(
             _("This customer already has an active subscription")
         )
