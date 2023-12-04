@@ -23,17 +23,14 @@ def workspace_create(
     *,
     title: str,
     description: Optional[str] = None,
-    # TODO Make this non-optional, a workspace should always have an owner
-    # TODO make this user.models.User
-    owner: Optional[AbstractBaseUser] = None,
+    owner: User,
 ) -> Workspace:
     """Create a workspace."""
     # TODO validate that user can only create 1 unpaid workspace
     # TODO use Workspace.objects.create
     workspace = Workspace(title=title, description=description)
     workspace.save()
-    if owner is not None:
-        workspace_add_user(workspace=workspace, user=owner, role="OWNER")
+    workspace_add_user(workspace=workspace, user=owner, role="OWNER")
     return workspace
 
 
