@@ -10,7 +10,7 @@ from typing import (
 
 import rules
 
-from corporate import models as corporate_models
+from corporate.services.customer import customer_check_active_for_workspace
 from user.models import User
 from workspace.models.chat_message import ChatMessage
 from workspace.models.const import WorkspaceUserRoles
@@ -139,15 +139,7 @@ def belongs_to_active_workspace(user: User, target: WorkspaceTarget) -> bool:
     if workspace_user is None:
         logger.warning("No workspace user found for user %s", user)
         return False
-    try:
-        customer: corporate_models.Customer = workspace.customer
-    except corporate_models.Customer.DoesNotExist:
-        logger.warning("No customer found for workspace %s", workspace)
-        return False
-    active = customer.active
-    if not active:
-        logger.warning("Customer for workspace %s is inactive", workspace)
-    return active
+    return customer_check_active_for_workspace(workspace=workspace)
 
 
 # TODO rules should be of the format
