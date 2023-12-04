@@ -43,7 +43,6 @@ django = [
 # third-party = [
 #     "asgiref",
 #     "channels",
-#     "channels_graphql_ws",
 #     "pytest",
 #     "rest_framework"
 # ]
@@ -66,36 +65,14 @@ ignore_missing_imports = true
 # Our own modules
 [[tool.mypy.overrides]]
 module = [
-    "workspace.schema.mutation",
-]
-disable_error_code = ["return-value"]
-
-[[tool.mypy.overrides]]
-module = [
     "premail.tasks",
 ]
 disallow_untyped_decorators = false
 
-[[tool.mypy.overrides]]
-module = [
-    "corporate.schema.types",
-    "workspace.schema.types",
-]
-strict_equality = false
 
 [[tool.mypy.overrides]]
 module = [
-    "workspace.schema.types",
-]
-warn_return_any = false
-disable_error_code = ["attr-defined", "return-value"]
-
-[[tool.mypy.overrides]]
-module = [
-    "corporate.test.schema.test_mutation",
-    "workspace.test.schema.*",
     "workspace.test.test_migrations",
-    "user.test.schema.*",
     "premail.test.*",
 ]
 disallow_untyped_defs = false
@@ -112,9 +89,6 @@ exclude = [
     "*/migrations/*.py",
     # Missing type stub
     "workspace/test/test_migrations.py",
-    # GraphQL code that will be removed
-    "*/schema/*.py",
-    "*/test/schema/*.py",
     # This one is sort of covered by mypy
     "projectify/settings/monkeypatch.py",
     # TODO cloudinary stub
@@ -210,7 +184,6 @@ exclude = [
     "apps.py",
     "conftest.py",
     "settings",
-    "schema",
     "migrations",
 ]
 
