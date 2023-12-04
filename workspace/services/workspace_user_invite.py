@@ -114,7 +114,7 @@ def add_or_invite_workspace_user(
     validate_perm("workspace.can_create_workspace_user", who, workspace)
     match email_or_user:
         case AbstractBaseUser() as user:
-            return workspace_add_user(workspace, user)
+            return workspace_add_user(workspace=workspace, user=user)
         case email:
             pass
 
@@ -122,7 +122,7 @@ def add_or_invite_workspace_user(
         case WorkspaceUser():
             raise UserAlreadyAdded()
         case AbstractBaseUser() as user:
-            return workspace_add_user(workspace, user)
+            return workspace_add_user(workspace=workspace, user=user)
         case None:
             pass
 

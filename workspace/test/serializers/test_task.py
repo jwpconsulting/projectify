@@ -229,7 +229,9 @@ class TestTaskCreateUpdateSerializer:
         """Test assigning a task to an unrelated ws board section."""
         # We need to add ourselves to make sure we have access to the
         # workspace board section
-        workspace_add_user(unrelated_workspace, workspace_user.user)
+        workspace_add_user(
+            workspace=unrelated_workspace, user=workspace_user.user
+        )
         # test for sanity
         validate_perm(
             "workspace.can_read_workspace_board_section",

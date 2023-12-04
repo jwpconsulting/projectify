@@ -217,5 +217,5 @@ def redeem_workspace_invitations(
     )
     for invite in qs:
         workspace = invite.workspace
-        workspace_add_user(workspace, user)
+        workspace_add_user(workspace=workspace, user=user)
         invite.redeem()
