@@ -96,20 +96,6 @@ def redeemed_user_invite(faker: Faker) -> user_models.UserInvite:
 
 
 @pytest.fixture
-def graphql_query() -> None:
-    """Return a client query fn without logged in user."""
-    return None
-
-
-@pytest.fixture
-def graphql_query_user(
-    user: AbstractBaseUser,
-) -> None:
-    """Return a client query fn."""
-    return None
-
-
-@pytest.fixture
 def user_client(
     client: client.Client, user: AbstractBaseUser
 ) -> client.Client:
