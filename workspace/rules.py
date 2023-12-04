@@ -11,6 +11,7 @@ from typing import (
 import rules
 
 from corporate.services.customer import customer_check_active_for_workspace
+from corporate.types import WorkspaceFeatures
 from user.models import User
 from workspace.models.chat_message import ChatMessage
 from workspace.models.const import WorkspaceUserRoles
@@ -121,16 +122,12 @@ def is_at_least_owner(user: User, target: WorkspaceTarget) -> bool:
     )
 
 
-# TODO this will work for a paid workspace, but what about the trial
-# we would like to implement?
-# The workspace should also be deemed active if the user is within trial limits
-@rules.predicate
-def belongs_to_active_workspace(user: User, target: WorkspaceTarget) -> bool:
-    """
-    Return True if target belongs to an active workspace.
-
-    Also returns True if target is an active workspace itself.
-    """
+# It is perhaps not necessary to check if the workspace exists,
+# or we can cache it as part of the predicate invocation
+def check_available_features(
+    features: WorkspaceFeatures, user: User, target: WorkspaceTarget
+) -> bool:
+    """Return True if a workspace has a feature set active."""
     workspace = get_workspace_from_target(target)
     workspace_user = workspace_user_find_for_workspace(
         workspace=workspace,
@@ -139,7 +136,23 @@ def belongs_to_active_workspace(user: User, target: WorkspaceTarget) -> bool:
     if workspace_user is None:
         logger.warning("No workspace user found for user %s", user)
         return False
-    return customer_check_active_for_workspace(workspace=workspace) == "full"
+    return customer_check_active_for_workspace(workspace=workspace) == features
+
+
+@rules.predicate
+def belongs_to_full_workspace(user: User, target: WorkspaceTarget) -> bool:
+    """
+    Return True if target belongs to a full workspace.
+
+    Also returns True if target is an active workspace itself.
+    """
+    return check_available_features("full", user, target)
+
+
+@rules.predicate
+def belongs_to_trial_workspace(user: User, target: WorkspaceTarget) -> bool:
+    """Return True if target belongs to a workspace."""
+    return check_available_features("trial", user, target)
 
 
 # TODO rules should be of the format
@@ -178,162 +191,162 @@ rules.add_perm(
 # Workspace user invite
 rules.add_perm(
     "workspace.can_create_workspace_user_invite",
-    is_at_least_owner & belongs_to_active_workspace,
+    is_at_least_owner & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_read_workspace_user_invite",
-    is_at_least_owner & belongs_to_active_workspace,
+    is_at_least_owner & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_update_workspace_user_invite",
-    is_at_least_owner & belongs_to_active_workspace,
+    is_at_least_owner & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_delete_workspace_user_invite",
-    is_at_least_owner & belongs_to_active_workspace,
+    is_at_least_owner & belongs_to_full_workspace,
 )
 
 # Workspace user
 rules.add_perm(
     "workspace.can_create_workspace_user",
-    is_at_least_owner & belongs_to_active_workspace,
+    is_at_least_owner & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_read_workspace_user",
-    is_at_least_observer & belongs_to_active_workspace,
+    is_at_least_observer & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_update_workspace_user",
-    is_at_least_owner & belongs_to_active_workspace,
+    is_at_least_owner & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_delete_workspace_user",
-    is_at_least_owner & belongs_to_active_workspace,
+    is_at_least_owner & belongs_to_full_workspace,
 )
 
 # Workspace board
 rules.add_perm(
     "workspace.can_create_workspace_board",
-    is_at_least_maintainer & belongs_to_active_workspace,
+    is_at_least_maintainer & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_read_workspace_board",
-    is_at_least_observer & belongs_to_active_workspace,
+    is_at_least_observer & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_update_workspace_board",
-    is_at_least_maintainer & belongs_to_active_workspace,
+    is_at_least_maintainer & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_delete_workspace_board",
-    is_at_least_maintainer & belongs_to_active_workspace,
+    is_at_least_maintainer & belongs_to_full_workspace,
 )
 
 # Workspace board section
 rules.add_perm(
     "workspace.can_create_workspace_board_section",
-    is_at_least_maintainer & belongs_to_active_workspace,
+    is_at_least_maintainer & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_read_workspace_board_section",
-    is_at_least_observer & belongs_to_active_workspace,
+    is_at_least_observer & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_update_workspace_board_section",
-    is_at_least_maintainer & belongs_to_active_workspace,
+    is_at_least_maintainer & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_delete_workspace_board_section",
-    is_at_least_maintainer & belongs_to_active_workspace,
+    is_at_least_maintainer & belongs_to_full_workspace,
 )
 
 # Task
 rules.add_perm(
     "workspace.can_create_task",
-    is_at_least_member & belongs_to_active_workspace,
+    is_at_least_member & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_read_task",
-    is_at_least_observer & belongs_to_active_workspace,
+    is_at_least_observer & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_update_task",
-    is_at_least_member & belongs_to_active_workspace,
+    is_at_least_member & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_delete_task",
-    is_at_least_maintainer & belongs_to_active_workspace,
+    is_at_least_maintainer & belongs_to_full_workspace,
 )
 
 # Label
 rules.add_perm(
     "workspace.can_create_label",
-    is_at_least_maintainer & belongs_to_active_workspace,
+    is_at_least_maintainer & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_read_label",
-    is_at_least_observer & belongs_to_active_workspace,
+    is_at_least_observer & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_update_label",
-    is_at_least_maintainer & belongs_to_active_workspace,
+    is_at_least_maintainer & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_delete_label",
-    is_at_least_maintainer & belongs_to_active_workspace,
+    is_at_least_maintainer & belongs_to_full_workspace,
 )
 
 # Task label
 rules.add_perm(
     "workspace.can_create_task_label",
-    is_at_least_member & belongs_to_active_workspace,
+    is_at_least_member & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_read_task_label",
-    is_at_least_observer & belongs_to_active_workspace,
+    is_at_least_observer & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_update_task_label",
-    is_at_least_member & belongs_to_active_workspace,
+    is_at_least_member & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_delete_task_label",
-    is_at_least_member & belongs_to_active_workspace,
+    is_at_least_member & belongs_to_full_workspace,
 )
 
 
 # Sub task
 rules.add_perm(
     "workspace.can_create_sub_task",
-    is_at_least_member & belongs_to_active_workspace,
+    is_at_least_member & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_read_sub_task",
-    is_at_least_observer & belongs_to_active_workspace,
+    is_at_least_observer & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_update_sub_task",
-    is_at_least_member & belongs_to_active_workspace,
+    is_at_least_member & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_delete_sub_task",
-    is_at_least_member & belongs_to_active_workspace,
+    is_at_least_member & belongs_to_full_workspace,
 )
 
 # Chat message
 rules.add_perm(
     "workspace.can_create_chat_message",
-    is_at_least_member & belongs_to_active_workspace,
+    is_at_least_member & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_read_chat_message",
-    is_at_least_observer & belongs_to_active_workspace,
+    is_at_least_observer & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_update_chat_message",
-    is_at_least_member & belongs_to_active_workspace,
+    is_at_least_member & belongs_to_full_workspace,
 )
 rules.add_perm(
     "workspace.can_delete_chat_message",
-    is_at_least_maintainer & belongs_to_active_workspace,
+    is_at_least_maintainer & belongs_to_full_workspace,
 )
