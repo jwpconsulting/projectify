@@ -15,7 +15,6 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
 from projectify.utils import (
-    get_user_model,
     validate_perm,
 )
 from user.models import (  # noqa: F401
@@ -52,7 +51,7 @@ def _try_find_workspace_user(
     If not found return just the user.
     If no user found, return None.
     """
-    User = get_user_model()
+    # This part could be in user/selectors/user
     try:
         user = User.objects.get_by_natural_key(email)
     except User.DoesNotExist:
