@@ -39,6 +39,7 @@ class TestWorkspaceUserManager:
             == 1
         )
 
+    # TODO make me a selector
     def test_filter_by_user_with_unrelated_workspace_user(
         self,
         workspace: Workspace,
@@ -56,7 +57,7 @@ class TestWorkspaceUserManager:
             ).count()
             == 0
         )
-        workspace_add_user(workspace, unrelated_user)
+        workspace_add_user(workspace=workspace, user=unrelated_user)
         assert (
             WorkspaceUser.objects.filter_by_user(unrelated_user).count() == 2
         )
