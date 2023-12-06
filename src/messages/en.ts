@@ -289,9 +289,6 @@ const messages: MessageDirectory = {
                 "Please return to Stripe to finish the checkout process.",
             ],
         },
-        "new-section": {
-            title: "We’ve put your task in a ‘To do’ section.",
-        },
         "new-workspace": {
             "title": "Let’s set up your first workspace, {who}.",
             "prompt": "You can create and manage numerous workspaces",
