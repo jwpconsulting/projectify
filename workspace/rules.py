@@ -5,6 +5,7 @@ The order of rules follows the ordering of models.
 """
 import logging
 from typing import (
+    Literal,
     Union,
 )
 
@@ -48,6 +49,7 @@ WorkspaceTarget = Union[
 def get_workspace_from_target(target: WorkspaceTarget) -> Workspace:
     """Return a workspace."""
     match target:
+        # TODO alphabetize like in WorkspaceTarget
         case Workspace():
             return target
         case WorkspaceBoardSection():
@@ -155,6 +157,144 @@ def belongs_to_trial_workspace(user: User, target: WorkspaceTarget) -> bool:
     return check_available_features("trial", user, target)
 
 
+CreateWhat = Literal[
+    "ChatMessage",
+    "Label",
+    "SubTask",
+    "Task",
+    "TaskLabel",
+    "WorkspaceBoard",
+    "WorkspaceBoardSection",
+    "WorkspaceUser",
+    "WorkspaceUserInvite",
+]
+
+
+def check_trial_conditions(
+    create_what: CreateWhat, target: WorkspaceTarget
+) -> bool:
+    """
+    Return True if for a target type, something can still be created.
+
+    Limitations for trial plan:
+    Be able to create 10 boards with 10 sections in each board
+    Be able to create 100 tasks in that workspace
+    Be able to create 10 * 100 sub tasks
+    Be able to add one more user, therefore that workspace being limited to having
+    2 workspace users in total.
+    Be able to create 10 labels, assign them to all tasks
+    Limitations for a trial workspace are
+    - ChatMessage: 0 chat messages,
+    - Label: 10 labels
+    - SubTask: 1000 sub tasks,
+    - Task: 1000 tasks,
+    - TaskLabel: unlimited,
+    - WorkspaceBoard: 10,
+    - WorkspaceBoardSection: 100,
+    - WorkspaceUser + WorkspaceUserInivite(unredeemed): 2
+    """
+    workspace = get_workspace_from_target(target)
+    match create_what:
+        case "ChatMessage":
+            # XXX At the moment, chat messages are not supported
+            return False
+        case "Label":
+            return Label.objects.filter(workspace=workspace).count() < 10
+        case "SubTask":
+            return (
+                SubTask.objects.filter(task__workspace=workspace).count()
+                < 1000
+            )
+        case "Task":
+            return (
+                Task.objects.filter(
+                    workspace_board_section__workspace_board__workspace=workspace
+                ).count()
+                < 100
+            )
+        case "TaskLabel":
+            return True
+        case "WorkspaceBoard":
+            return workspace.workspaceboard_set.count() < 10
+        case "WorkspaceBoardSection":
+            return (
+                WorkspaceBoardSection.objects.filter(
+                    workspaceboard__workspace=workspace
+                ).count()
+                < 100
+            )
+        case "WorkspaceUser" | "WorkspaceUserInvite":
+            user_count = workspace.users.count()
+            invite_count = workspace.workspaceuserinvite_set.filter(
+                redeemed=False
+            ).count()
+            return user_count + invite_count < 2
+
+
+@rules.predicate
+def within_trial_chat_message_quota(
+    user: User, target: WorkspaceTarget
+) -> bool:
+    """Return True if a chat message can be created for workspace."""
+    return check_trial_conditions("ChatMessage", target)
+
+
+@rules.predicate
+def within_trial_label_quota(user: User, target: WorkspaceTarget) -> bool:
+    """Return True if a label can be created for workspace."""
+    return check_trial_conditions("Label", target)
+
+
+@rules.predicate
+def within_trial_sub_task_quota(user: User, target: WorkspaceTarget) -> bool:
+    """Return True if a sub task can be created in workspace."""
+    return check_trial_conditions("SubTask", target)
+
+
+@rules.predicate
+def within_trial_ask_quota(user: User, target: WorkspaceTarget) -> bool:
+    """Return True if a task can be created in workspace."""
+    return check_trial_conditions("Task", target)
+
+
+@rules.predicate
+def within_trial_task_label_quota(user: User, target: WorkspaceTarget) -> bool:
+    """Return True if a task label can be created for a task."""
+    return check_trial_conditions("TaskLabel", target)
+
+
+@rules.predicate
+def within_trial_workspace_board_quota(
+    user: User, target: WorkspaceTarget
+) -> bool:
+    """Return True if a workspace board can be created in workspace."""
+    return check_trial_conditions("WorkspaceBoard", target)
+
+
+@rules.predicate
+def within_trial_workspace_board_section_quota(
+    user: User, target: WorkspaceTarget
+) -> bool:
+    """Return True if a section can be created in a workspace."""
+    return check_trial_conditions("WorkspaceBoardSection", target)
+
+
+@rules.predicate
+def within_trial_workspace_user_quota(
+    user: User, target: WorkspaceTarget
+) -> bool:
+    """Return True if a workspace user can be added to a workspace."""
+    return check_trial_conditions("WorkspaceUser", target)
+
+
+@rules.predicate
+def within_trial_workspace_user_invite_quota(
+    user: User, target: WorkspaceTarget
+) -> bool:
+    """Return True if a workspace user invite can be sent for a workspace."""
+    return check_trial_conditions("WorkspaceUserInvite", target)
+
+
 # TODO rules should be of the format
 # <app>.<action>_<resource>
 # and not as currently
@@ -166,6 +306,8 @@ def belongs_to_trial_workspace(user: User, target: WorkspaceTarget) -> bool:
 # Anyone should be able to create a workspace
 rules.add_perm(
     "workspace.can_create_workspace",
+    # TODO use this instead:
+    # rules.is_active,
     is_at_least_owner,
 )
 rules.add_perm(
@@ -181,17 +323,17 @@ rules.add_perm(
     is_at_least_owner,
 )
 
-# Requirements for trial plan
-# Be able to create 10 boards with 10 sections in each board
-# Be able to to create 100 tasks in that workspace
-# Be able to add one more user, therefore that workspace being limited to having
-# 2 workspace users in total.
-# Be able to create 10 labels
-
 # Workspace user invite
 rules.add_perm(
     "workspace.can_create_workspace_user_invite",
-    is_at_least_owner & belongs_to_full_workspace,
+    is_at_least_owner
+    & (
+        belongs_to_full_workspace  # type: ignore[operator]
+        | (
+            belongs_to_trial_workspace
+            & within_trial_workspace_user_invite_quota
+        )
+    ),
 )
 rules.add_perm(
     "workspace.can_read_workspace_user_invite",
@@ -209,7 +351,11 @@ rules.add_perm(
 # Workspace user
 rules.add_perm(
     "workspace.can_create_workspace_user",
-    is_at_least_owner & belongs_to_full_workspace,
+    is_at_least_owner
+    & (
+        belongs_to_full_workspace  # type: ignore[operator]
+        | (belongs_to_trial_workspace & within_trial_workspace_user_quota)
+    ),
 )
 rules.add_perm(
     "workspace.can_read_workspace_user",
@@ -227,7 +373,11 @@ rules.add_perm(
 # Workspace board
 rules.add_perm(
     "workspace.can_create_workspace_board",
-    is_at_least_maintainer & belongs_to_full_workspace,
+    is_at_least_maintainer
+    & (
+        belongs_to_full_workspace  # type: ignore[operator]
+        | (belongs_to_trial_workspace & within_trial_workspace_board_quota)
+    ),
 )
 rules.add_perm(
     "workspace.can_read_workspace_board",
@@ -245,7 +395,14 @@ rules.add_perm(
 # Workspace board section
 rules.add_perm(
     "workspace.can_create_workspace_board_section",
-    is_at_least_maintainer & belongs_to_full_workspace,
+    is_at_least_maintainer
+    & (
+        belongs_to_full_workspace  # type: ignore[operator]
+        | (
+            belongs_to_trial_workspace
+            & within_trial_workspace_board_section_quota
+        )
+    ),
 )
 rules.add_perm(
     "workspace.can_read_workspace_board_section",
@@ -263,7 +420,11 @@ rules.add_perm(
 # Task
 rules.add_perm(
     "workspace.can_create_task",
-    is_at_least_member & belongs_to_full_workspace,
+    is_at_least_member
+    & (
+        belongs_to_full_workspace  # type: ignore[operator]
+        | (belongs_to_trial_workspace & within_trial_ask_quota)
+    ),
 )
 rules.add_perm(
     "workspace.can_read_task",
@@ -281,7 +442,11 @@ rules.add_perm(
 # Label
 rules.add_perm(
     "workspace.can_create_label",
-    is_at_least_maintainer & belongs_to_full_workspace,
+    is_at_least_maintainer
+    & (
+        belongs_to_full_workspace  # type: ignore[operator]
+        | (belongs_to_trial_workspace & within_trial_label_quota)
+    ),
 )
 rules.add_perm(
     "workspace.can_read_label",
@@ -299,7 +464,11 @@ rules.add_perm(
 # Task label
 rules.add_perm(
     "workspace.can_create_task_label",
-    is_at_least_member & belongs_to_full_workspace,
+    is_at_least_member
+    & (
+        belongs_to_full_workspace  # type: ignore[operator]
+        | (belongs_to_trial_workspace & within_trial_task_label_quota)
+    ),
 )
 rules.add_perm(
     "workspace.can_read_task_label",
@@ -318,7 +487,11 @@ rules.add_perm(
 # Sub task
 rules.add_perm(
     "workspace.can_create_sub_task",
-    is_at_least_member & belongs_to_full_workspace,
+    is_at_least_member
+    & (
+        belongs_to_full_workspace  # type: ignore[operator]
+        | (belongs_to_trial_workspace & within_trial_sub_task_quota)
+    ),
 )
 rules.add_perm(
     "workspace.can_read_sub_task",
@@ -336,7 +509,11 @@ rules.add_perm(
 # Chat message
 rules.add_perm(
     "workspace.can_create_chat_message",
-    is_at_least_member & belongs_to_full_workspace,
+    is_at_least_member
+    & (
+        belongs_to_full_workspace  # type: ignore[operator]
+        | (belongs_to_trial_workspace & within_trial_chat_message_quota)
+    ),
 )
 rules.add_perm(
     "workspace.can_read_chat_message",
