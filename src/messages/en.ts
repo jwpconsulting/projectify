@@ -518,24 +518,40 @@ const messages: MessageDirectory = {
         },
         "billing": {
             "title": "Billing",
-            "subscription-status": {
-                title: "Current subscription status",
-                active: "Your subscription is currently active",
-                inactive: "Your subscription is currently inactive",
+            "active": {
+                "status": {
+                    title: "Current subscription status",
+                    explanation: "Your subscription is currently active",
+                },
+                "monthly-total": {
+                    title: "Monthly total ({pricePerSeat, number, ::currency/USD} per seat/month):",
+                    status: "{total, number, ::currency/USD}",
+                },
+                "seats": {
+                    title: "Number of seats:",
+                    status: "{seats} seats in total, {seatsRemaining} {seatsRemaining, plural, one {seat} other {seats}} remaining",
+                },
+                "edit-billing-details": "Edit billing details",
             },
-            "monthly-total": {
-                title: "Monthly total ({pricePerSeat, number, ::currency/USD} per seat/month):",
-                status: "{total, number, ::currency/USD}",
+            "unpaid": {
+                status: {
+                    title: "Trial mode",
+                    explanation:
+                        "You are currently using this workspace in trial mode. To create a subscription and use all available features for this workspace, please continue using the checkout below.",
+                },
+                checkout: {
+                    title: "Checkout",
+                    seats: {
+                        explanation:
+                            "Select the amount of workspace seats. For each workspace user that is invited or added, a seat is used up.",
+                        label: "Workspace seats",
+                    },
+                    action: "Go to checkout",
+                },
             },
-            "edit-billing-details": "Edit billing details",
-            "contact-us-to-request-changes":
-                "Contact us to request changes to your plan",
+            "contact-us":
+                "Contact us if you have any questions regarding billing.",
             "billing-contact": "hello@projectifyapp.com",
-            "seats": {
-                "number-of-seats": "Number of seats:",
-                "format":
-                    "{seats} in total, {seatsRemaining} {seatsRemaining, plural, one {seat} other {seats}} remaining",
-            },
         },
     },
     "index": {

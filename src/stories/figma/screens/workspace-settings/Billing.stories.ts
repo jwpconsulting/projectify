@@ -1,11 +1,23 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 import Billing from "$lib/figma/screens/workspace-settings/Billing.svelte";
-import { workspace, customer } from "$lib/storybook";
+import {
+    workspace,
+    customer,
+    makeStorybookSelect,
+    trialCustomer,
+} from "$lib/storybook";
+import type { Customer } from "$lib/types/corporate";
+
+const customers = makeStorybookSelect<Customer>({
+    "Paid customer": customer,
+    "Trial customer": trialCustomer,
+});
 
 const meta: Meta<Billing> = {
     component: Billing,
-    args: { workspace, customer },
+    argTypes: { customer: customers },
+    args: { workspace, customer: "paid-customer" },
 };
 export default meta;
 

@@ -102,7 +102,14 @@ export const customer: Customer = {
     seats_remaining: 18923,
     seats: 120899182918201,
     uuid: "not-a-real-uuid",
-    subscription_status: "I SHOULD HAVE VALIDATION",
+    subscription_status: "ACTIVE",
+};
+
+export const trialCustomer: Customer = {
+    seats_remaining: 18923,
+    seats: 120899182918201,
+    uuid: "not-a-real-uuid",
+    subscription_status: "UNPAID",
 };
 
 export const subTask: SubTask = {

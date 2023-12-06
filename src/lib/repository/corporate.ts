@@ -22,6 +22,20 @@ interface StripeSession {
     url: string;
 }
 
+export async function createCheckoutSession(
+    workspace_uuid: string,
+    seats: number,
+    repositoryContext: RepositoryContext
+): Promise<StripeSession> {
+    return failOrOk(
+        await postWithCredentialsJson<StripeSession>(
+            `/corporate/workspace/${workspace_uuid}/create-checkout-session`,
+            { seats },
+            repositoryContext
+        )
+    );
+}
+
 export async function createBillingPortalSession(
     workspace_uuid: string,
     repositoryContext: RepositoryContext
