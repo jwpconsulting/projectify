@@ -68,6 +68,8 @@
         }
     });
 
+    // TODO factor into an types/onboarding.ts type so that we can test this
+    // in storybook
     type State =
         | {
               kind: "new-workspace";

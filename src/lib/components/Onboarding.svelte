@@ -10,16 +10,11 @@
         | (ButtonAction & { kind: "submit"; submit: () => void })
         | (ButtonAction & { kind: "a" })
         | (ButtonAction & { kind: "button" });
-    export let nextAction: NextAction | undefined = undefined;
+    export let nextAction: NextAction;
 
-    $: submit =
-        nextAction && nextAction.kind === "submit"
-            ? nextAction.submit
-            : undefined;
+    $: submit = nextAction.kind === "submit" ? nextAction.submit : undefined;
 
     export let nextLabel: string = $_("onboarding.continue");
-    // TODO rename nextActionDisabled
-    export let nextMessage: string | null = null;
 
     export let stepCount = 0;
     export let step: number | null = null;
@@ -63,23 +58,14 @@
                         label={$_("onboarding.back")}
                     />
                 {/if}
-                {#if nextAction}
-                    <Button
-                        style={{ kind: "primary" }}
-                        color="blue"
-                        size="medium"
-                        action={nextAction}
-                        label={nextLabel}
-                    />
-                {:else}
-                    TODO nextAction
-                {/if}
+                <Button
+                    style={{ kind: "primary" }}
+                    color="blue"
+                    size="medium"
+                    action={nextAction}
+                    label={nextLabel}
+                />
             </div>
-            {#if nextMessage}
-                <div>
-                    {nextMessage}
-                </div>
-            {/if}
         </div>
 
         <div class="grow" />

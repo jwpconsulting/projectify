@@ -14,9 +14,6 @@ const meta: Meta<Onboarding> = {
         nextLabel: {
             control: "text",
         },
-        nextMessage: {
-            control: "text",
-        },
         stepCount: {
             control: { type: "range", min: 1, max: 9999 },
         },
@@ -28,9 +25,9 @@ const meta: Meta<Onboarding> = {
         title: "Hello world",
         prompt: "Choose your destiny",
         nextLabel: "Continue now",
+        nextAction: { kind: "a", href: "#" },
         stepCount: 9999,
         step: 1337,
-        nextMessage: "It is perfectly safe to continue",
     },
 };
 export default meta;

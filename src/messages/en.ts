@@ -281,21 +281,6 @@ const messages: MessageDirectory = {
                 "without-name": "Welcome! 👋",
             },
         },
-        "billing-details": {
-            "title": "Billing details",
-            "continue": "Continue to checkout",
-            "continue-message":
-                "We use Stripe for our payment processing services.",
-        },
-        "payment-error": {
-            title: "Please finish setting up your billing account",
-            continue: "Return to checkout",
-            prompt: [
-                "Your free 31 day trial has not begun yet.",
-                "Your workspace does not yet have seats assigned to it.",
-                "Please return to Stripe to finish the checkout process.",
-            ],
-        },
         "new-workspace": {
             "title": "Let’s set up your first workspace, {who}.",
             "prompt": "You can create and manage numerous workspaces",
