@@ -62,4 +62,5 @@ class Label(models.Model):
     class Meta:
         """Meta."""
 
+        # TODO remove this restriction, just let users do what they want to
         unique_together = ("workspace", "name")

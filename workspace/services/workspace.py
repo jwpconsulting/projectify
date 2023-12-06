@@ -61,9 +61,8 @@ def workspace_update(
     return workspace
 
 
-# TODO put in
-# workspace/services/workspace_user_invite.py:workspace_user_invite_create
-# TODO explicitly check authorization.
+# TODO looks like this is a private method only to be used to create the
+# initial user
 def workspace_add_user(
     *,
     workspace: Workspace,
