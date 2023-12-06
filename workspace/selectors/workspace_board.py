@@ -21,7 +21,7 @@ WorkspaceBoardDetail = WorkspaceBoard.objects.prefetch_related(
 
 
 def workspace_board_find_by_workspace_uuid(
-    *, workspace_uuid: UUID, who: User, archived: Optional[bool]
+    *, workspace_uuid: UUID, who: User, archived: Optional[bool] = None
 ) -> WorkspaceBoardQuerySet:
     """Find workspace boards for a workspace."""
     qs = WorkspaceBoard.objects.filter_by_user(who)
