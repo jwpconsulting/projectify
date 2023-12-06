@@ -1,36 +1,22 @@
 <script lang="ts">
-    import { _ } from "svelte-i18n";
+    import { _, json } from "svelte-i18n";
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
 
-    $: features = [
-        $_("pricing.features.list.feature-1"),
-        $_("pricing.features.list.feature-2"),
-        $_("pricing.features.list.feature-3"),
-        $_("pricing.features.list.feature-4"),
-        $_("pricing.features.list.feature-5"),
-        $_("pricing.features.list.feature-6"),
-        $_("pricing.features.list.feature-7"),
-        $_("pricing.features.list.feature-8"),
-        $_("pricing.features.list.feature-9"),
-        $_("pricing.features.list.feature-10"),
-        $_("pricing.features.list.feature-11"),
-        $_("pricing.features.list.feature-12"),
-        $_("pricing.features.list.feature-13"),
-        $_("pricing.features.list.feature-14"),
-    ];
+    $: features = $json("pricing.features.list") as string[];
+    $: limitations = $json("pricing.trial-mode.limitations.list") as string[];
 </script>
 
-<main class="flex w-full flex-col items-center py-10">
-    <div class="flex w-full max-w-4xl flex-col items-center gap-8">
+<main class="flex w-full flex-col items-center px-8 py-10">
+    <div class="flex w-full max-w-xl flex-col gap-4 sm:items-center sm:gap-8">
         <!-- explain that we have one price to rule them all -->
         <header class="flex w-full flex-col gap-4">
-            <h1 class="text-center text-4xl font-bold sm:text-6xl">
+            <h1 class="text-4xl font-bold sm:text-center sm:text-6xl">
                 {$_("pricing.header.title")}
             </h1>
-            <small class="text-center text-3xl font-bold">
+            <p class="sm:text-center sm:text-3xl sm:font-bold">
                 {$_("pricing.header.subtitle")}
-            </small>
+            </p>
         </header>
         <!-- list the features -->
         <section class="flex flex-col gap-2">
@@ -45,14 +31,14 @@
         </section>
         <!-- colorful box with CTA -->
         <section
-            class="flex w-full max-w-xl flex-col items-center gap-8 rounded-xl bg-background px-4 py-6"
+            class="flex w-full max-w-xl flex-col gap-4 rounded-xl bg-background px-4 py-6 sm:items-center sm:gap-8"
         >
             <div class="flex flex-col gap-4">
-                <h2 class="text-center text-xl font-bold">
-                    {$_("pricing.plan")}
+                <h2 class="text-xl font-bold sm:text-center">
+                    {$_("pricing.plan.title")}
                 </h2>
                 <strong class="text-4xl font-bold">
-                    {$_("pricing.price", { values: { price: 8 } })}
+                    {$_("pricing.plan.price", { values: { price: 8 } })}
                 </strong>
             </div>
             <Button
@@ -60,8 +46,26 @@
                 size="medium"
                 color="blue"
                 style={{ kind: "primary" }}
-                label={$_("pricing.cta")}
+                label={$_("pricing.plan.cta")}
             />
+        </section>
+        <!-- explain trial mode -->
+        <section id="trial-mode" class="flex flex-col gap-2">
+            <h2 class="text-2xl sm:text-center">
+                {$_("pricing.trial-mode.title")}
+            </h2>
+            <p>
+                {$_("pricing.trial-mode.explanation")}
+            </p>
+            <h3 class="text-xl sm:text-center">
+                {$_("pricing.trial-mode.limitations.title")}
+            </h3>
+            <ul class="list-inside list-disc sm:self-center">
+                {#each limitations as limitation}
+                    <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                    <li>{@html limitation}</li>
+                {/each}
+            </ul>
         </section>
     </div>
 </main>

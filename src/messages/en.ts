@@ -609,30 +609,47 @@ const messages: MessageDirectory = {
         },
     },
     "pricing": {
-        header: {
+        "header": {
             title: "Pricing",
             subtitle: "One plan. One price. All features.",
         },
-        plan: "Universal Plan",
-        price: "{price, number, ::currency/USD} per seat per month",
-        cta: "Start a free trial",
-        features: {
+        "plan": {
+            title: "Universal Plan",
+            price: "{price, number, ::currency/USD} / seat per month",
+            cta: "Start a free trial",
+        },
+        "features": {
             title: "What's included?",
-            list: {
-                "feature-1": "Unlimited tasks",
-                "feature-2": "Unlimited boards",
-                "feature-3": "Unlimited update logs",
-                "feature-4": "Collaborate with workspace users",
-                "feature-5": "Add multiple labels",
-                "feature-6": "Role permissions",
-                "feature-7": "Set due dates",
-                "feature-8": "Customize your workspace",
-                "feature-9": "Archive completed boards",
-                "feature-10": "Real-time notifications",
-                "feature-11": "File storage of 3 GB",
-                "feature-12": "Filter by label or assignee",
-                "feature-13": "Accessible interface",
-                "feature-14": "Open source software",
+            list: [
+                "Unlimited tasks",
+                "Unlimited workspace boards",
+                "Collaborate with workspace users",
+                "Add multiple labels",
+                "Role permissions",
+                // "Set due dates",
+                "Customize your workspace",
+                "Archive completed workspace boards",
+                // "Real-time notifications",
+                // "File storage of 3 GB",
+                "Filter by label or assignee",
+                "Accessible interface",
+            ],
+        },
+        "trial-mode": {
+            title: "Trial mode available",
+            explanation:
+                "You can use a Projectify workspace in trial mode free of charge. The trial allows you to evaluate whether the Projectify project management software suits your needs. While your workspace is in trial mode, the following limitations will apply.",
+            limitations: {
+                title: "Trial mode limitations",
+                list: [
+                    // TODO mention chat messages when available -
+                    "A workspace can have up to <strong>2</strong> workspace users",
+                    "A workspace can hold up to <strong>10</strong> workspace boards",
+                    "You can create up to <strong>100</strong> workspace board sections",
+                    "You can create up to <strong>1000</strong> tasks",
+                    "You can create up to <strong>1000</strong> sub tasks",
+                    "You can create up to <strong>10</strong> labels",
+                ],
             },
         },
     },
