@@ -19,8 +19,9 @@
         // TODO validate form
         error = undefined;
         try {
-            await login(email, password, redirectTo);
+            await login(email, password, redirectTo, { fetch });
         } catch {
+            // TODO set the error to something meaningful
             error = $_("auth.log-in.invalid-credentials");
         }
     }

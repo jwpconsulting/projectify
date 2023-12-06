@@ -5,13 +5,13 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { requestPasswordReset } from "$lib/stores/user";
+    import { requestPasswordReset } from "$lib/repository/user";
 
     let email: string;
 
     async function submit() {
         // TODO do some kind of validation here
-        await requestPasswordReset(email);
+        await requestPasswordReset(email, { fetch });
         // TODO redirect when successful
     }
 </script>

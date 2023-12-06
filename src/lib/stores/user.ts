@@ -6,61 +6,43 @@ import * as userRepository from "$lib/repository/user";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { User } from "$lib/types/user";
 
-// TODO export const user = writable<User | undefined>(undefined);
-export const user = writable<User | null>(null);
+export const user = writable<User | undefined>(undefined);
 
-// TODo rename this
-export const login = async (
+// TODO rename this to logIn
+export async function login(
     email: string,
     password: string,
-    redirectTo?: string
-): Promise<void> => {
-    const response = await userRepository.logIn(email, password, { fetch });
+    redirectTo: string | undefined,
+    repositoryContext: RepositoryContext
+): Promise<void> {
+    const response = await userRepository.logIn(
+        email,
+        password,
+        repositoryContext
+    );
     user.set(response);
 
     if (redirectTo) {
         await goto(redirectTo);
     }
-};
+}
 
-export const logOut = async () => {
-    // TODO add repository context
-    await userRepository.logOut({ fetch });
-    // TODO remove apollo
-    user.set(null);
-};
+export async function logOut(repositoryContext: RepositoryContext) {
+    await userRepository.logOut(repositoryContext);
+    user.set(undefined);
+}
 
-// TODO return | undefined
-export const fetchUser = async (
+export async function fetchUser(
     repositoryContext: RepositoryContext
-): Promise<User | null> => {
+): Promise<User | undefined> {
     const userData = await getUser(repositoryContext);
-    if (!userData) {
-        return null;
-    }
     user.set(userData);
     return userData;
-};
+}
 
-// TODO add repo argument
-export const requestPasswordReset = async (email: string): Promise<void> => {
-    await userRepository.requestPasswordReset(email, { fetch });
-};
-
-// TODO add repo argument
-export const confirmPasswordReset = async (
-    email: string,
-    token: string,
-    newPassword: string
-): Promise<void> => {
-    await userRepository.confirmPasswordReset(email, token, newPassword, {
-        fetch,
-    });
-};
-
-// TODO full name should be optional
 export async function updateUserProfile(
-    fullName: string,
+    // TODO fullName -> displayName
+    fullName: string | undefined,
     repositoryContext: RepositoryContext
 ) {
     await updateUser({ full_name: fullName }, repositoryContext);

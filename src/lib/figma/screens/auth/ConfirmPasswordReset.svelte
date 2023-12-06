@@ -5,7 +5,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { goto } from "$lib/navigation";
-    import { confirmPasswordReset } from "$lib/stores/user";
+    import { confirmPasswordReset } from "$lib/repository/user";
     import { logInUrl } from "$lib/urls/user";
 
     export let email: string;
@@ -18,7 +18,7 @@
         // TODO validate form
         // TODO show error
         try {
-            await confirmPasswordReset(email, token, newPassword1);
+            await confirmPasswordReset(email, token, newPassword1, { fetch });
             await goto(logInUrl);
         } catch (error) {
             console.error("password reset went wrong", error);
