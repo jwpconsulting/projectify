@@ -10,13 +10,16 @@
     import { getNewWorkspaceBoardUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
+    import { user } from "$lib/stores/user";
 
     export let data: PageData;
-    const { user, workspace } = data;
+    const { workspace } = data;
 
     let workspaceTitle: string | undefined = undefined;
 
     $: disabled = workspaceTitle === undefined;
+
+    $: who = $user?.full_name ?? data.user.full_name;
 
     async function submit() {
         if (!workspaceTitle) {
@@ -37,7 +40,7 @@
 >
     <svelte:fragment slot="title"
         >{$_("onboarding.new-workspace.title", {
-            values: { who: user.full_name },
+            values: { who },
         })}</svelte:fragment
     >
     <svelte:fragment slot="prompt">
