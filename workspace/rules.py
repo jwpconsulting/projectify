@@ -165,9 +165,21 @@ CreateWhat = Literal[
     "TaskLabel",
     "WorkspaceBoard",
     "WorkspaceBoardSection",
-    "WorkspaceUser",
-    "WorkspaceUserInvite",
+    "WorkspaceUserAndInvite",
 ]
+
+
+Limitation = Union[None, int]
+trial_conditions: dict[CreateWhat, Limitation] = {
+    "ChatMessage": 0,
+    "Label": 10,
+    "SubTask": 1000,
+    "Task": 1000,
+    "TaskLabel": None,
+    "WorkspaceBoard": 10,
+    "WorkspaceBoardSection": 100,
+    "WorkspaceUserAndInvite": 2,
+}
 
 
 def check_trial_conditions(
@@ -194,41 +206,51 @@ def check_trial_conditions(
     - WorkspaceUser + WorkspaceUserInivite(unredeemed): 2
     """
     workspace = get_workspace_from_target(target)
+    limit = trial_conditions[create_what]
+    # Short circuit
+    if limit is None:
+        return True
     match create_what:
         case "ChatMessage":
             # XXX At the moment, chat messages are not supported
-            return False
+            return (
+                ChatMessage.objects.filter(task__workspace=workspace).count()
+                < limit
+            )
         case "Label":
-            return Label.objects.filter(workspace=workspace).count() < 10
+            return Label.objects.filter(workspace=workspace).count() < limit
         case "SubTask":
             return (
                 SubTask.objects.filter(task__workspace=workspace).count()
-                < 1000
+                < limit
             )
         case "Task":
             return (
                 Task.objects.filter(
                     workspace_board_section__workspace_board__workspace=workspace
                 ).count()
-                < 100
+                < limit
             )
         case "TaskLabel":
-            return True
+            return (
+                TaskLabel.objects.filter(label__workspace=workspace).count()
+                < limit
+            )
         case "WorkspaceBoard":
-            return workspace.workspaceboard_set.count() < 10
+            return workspace.workspaceboard_set.count() < limit
         case "WorkspaceBoardSection":
             return (
                 WorkspaceBoardSection.objects.filter(
-                    workspaceboard__workspace=workspace
+                    workspace_board__workspace=workspace
                 ).count()
-                < 100
+                < limit
             )
-        case "WorkspaceUser" | "WorkspaceUserInvite":
+        case "WorkspaceUserAndInvite":
             user_count = workspace.users.count()
             invite_count = workspace.workspaceuserinvite_set.filter(
                 redeemed=False
             ).count()
-            return user_count + invite_count < 2
+            return user_count + invite_count < limit
 
 
 @rules.predicate
@@ -284,7 +306,7 @@ def within_trial_workspace_user_quota(
     user: User, target: WorkspaceTarget
 ) -> bool:
     """Return True if a workspace user can be added to a workspace."""
-    return check_trial_conditions("WorkspaceUser", target)
+    return check_trial_conditions("WorkspaceUserAndInvite", target)
 
 
 @rules.predicate
@@ -292,7 +314,7 @@ def within_trial_workspace_user_invite_quota(
     user: User, target: WorkspaceTarget
 ) -> bool:
     """Return True if a workspace user invite can be sent for a workspace."""
-    return check_trial_conditions("WorkspaceUserInvite", target)
+    return check_trial_conditions("WorkspaceUserAndInvite", target)
 
 
 # TODO rules should be of the format
