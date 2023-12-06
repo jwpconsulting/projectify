@@ -265,6 +265,13 @@ const messages: MessageDirectory = {
     "onboarding": {
         "continue": "Continue",
         "back": "Back",
+        "welcome": {
+            title: "Welcome",
+            prompt: [
+                "In the following steps you will create a new workspace and create your first task.",
+                "You can use the workspace in trial mode at the beginning, and upgrade to a paid version anytime by going to the workspace settings.",
+            ],
+        },
         "about-you": {
             "full-name": "Full name",
             "title": "About you",
