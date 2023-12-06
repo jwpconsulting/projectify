@@ -9,7 +9,7 @@
 </script>
 
 <!-- TODO i18n -->
-<Onboarding hasContentPadding={false}>
+<Onboarding>
     <svelte:fragment slot="title"
         >Your workspace is all set up!</svelte:fragment
     >

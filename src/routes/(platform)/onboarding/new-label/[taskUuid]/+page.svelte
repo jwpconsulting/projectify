@@ -36,7 +36,6 @@
 </script>
 
 <Onboarding
-    hasContentPadding={false}
     stepCount={5}
     step={4}
     backAction={{ kind: "a", href: getNewTaskUrl(workspaceBoard.uuid) }}

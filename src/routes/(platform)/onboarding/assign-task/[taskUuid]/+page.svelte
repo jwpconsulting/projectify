@@ -22,7 +22,6 @@
 </script>
 
 <Onboarding
-    hasContentPadding={false}
     stepCount={5}
     step={5}
     nextLabel={$_("onboarding.assign-task.continue")}

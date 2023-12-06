@@ -31,7 +31,6 @@
 <Onboarding
     nextLabel={$_("onboarding.billing-details.continue")}
     nextMessage={$_("onboarding.billing-details.continue-message")}
-    hasContentPadding={false}
 >
     <svelte:fragment slot="title">
         {$_("onboarding.billing-details.title")}

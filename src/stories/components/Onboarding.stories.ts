@@ -23,12 +23,6 @@ const meta: Meta<Onboarding> = {
         step: {
             control: { type: "range", min: 1, max: 9999 },
         },
-        hasContentPadding: {
-            control: "boolean",
-        },
-        nextBtnDisabled: {
-            control: "boolean",
-        },
     },
     args: {
         title: "Hello world",
@@ -37,8 +31,6 @@ const meta: Meta<Onboarding> = {
         stepCount: 9999,
         step: 1337,
         nextMessage: "It is perfectly safe to continue",
-        hasContentPadding: false,
-        nextBtnDisabled: false,
     },
 };
 export default meta;

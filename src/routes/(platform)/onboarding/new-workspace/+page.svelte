@@ -7,10 +7,10 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
     import { createWorkspace } from "$lib/repository/workspace";
+    import { user } from "$lib/stores/user";
     import { getNewWorkspaceBoardUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
-    import { user } from "$lib/stores/user";
 
     export let data: PageData;
     const { workspace } = data;
@@ -34,10 +34,7 @@
     }
 </script>
 
-<Onboarding
-    nextAction={{ kind: "submit", disabled, submit }}
-    hasContentPadding={false}
->
+<Onboarding nextAction={{ kind: "submit", disabled, submit }}>
     <svelte:fragment slot="title"
         >{$_("onboarding.new-workspace.title", {
             values: { who },

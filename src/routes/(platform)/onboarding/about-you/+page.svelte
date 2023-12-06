@@ -26,10 +26,7 @@
     }
 </script>
 
-<Onboarding
-    hasContentPadding={true}
-    nextAction={{ kind: "submit", disabled, submit }}
->
+<Onboarding nextAction={{ kind: "submit", disabled, submit }}>
     <svelte:fragment slot="title"
         >{$_("onboarding.about-you.title")}</svelte:fragment
     >

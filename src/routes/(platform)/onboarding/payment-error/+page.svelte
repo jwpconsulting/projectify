@@ -9,10 +9,7 @@
     const state: OnboardingState = "payment-error";
 </script>
 
-<Onboarding
-    nextLabel={$_("onboarding.payment-error.continue")}
-    hasContentPadding={false}
->
+<Onboarding nextLabel={$_("onboarding.payment-error.continue")}>
     <svelte:fragment slot="title"
         >{$_("onboarding.payment-error.title")}</svelte:fragment
     >

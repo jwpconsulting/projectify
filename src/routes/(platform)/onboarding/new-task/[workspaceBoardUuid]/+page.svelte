@@ -50,7 +50,6 @@
 </script>
 
 <Onboarding
-    hasContentPadding={false}
     stepCount={5}
     step={2}
     nextAction={{ kind: "submit", disabled, submit }}

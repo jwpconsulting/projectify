@@ -4,8 +4,6 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import type { ButtonAction } from "$lib/funabashi/types";
 
-    export let hasContentPadding = false;
-
     // TODO make not optional
     export let backAction: ButtonAction | undefined = undefined;
     type NextAction =
@@ -31,9 +29,9 @@
         .map((_, inx) => inx + 1);
 </script>
 
-<main class="flex w-full grow flex-row">
+<main class="flex grow flex-col md:grid md:grid-cols-2 lg:grid-cols-3">
     <form
-        class="flex shrink grow flex-col gap-16 px-12 py-20 pb-8"
+        class="col-span-1 flex shrink grow flex-col gap-16 px-12 py-20 pb-8"
         on:submit|preventDefault={submit}
     >
         <!-- Message -->
@@ -41,7 +39,7 @@
             <h1 class="min-w-fit max-w-lg text-4xl font-bold">
                 <slot name="title" />
             </h1>
-            <div class="text-lg">
+            <div class="flex flex-col gap-2 text-lg">
                 <slot name="prompt" />
             </div>
         </div>
@@ -98,9 +96,7 @@
     </form>
 
     <div
-        class:p-12={hasContentPadding}
-        class:py-20={hasContentPadding}
-        class="hidden h-full min-w-0 shrink grow flex-col items-center justify-center overflow-hidden bg-background md:flex"
+        class="hidden h-full min-w-0 shrink grow flex-col items-center justify-center overflow-hidden bg-background md:flex lg:col-span-2"
     >
         <slot name="content" />
     </div>
