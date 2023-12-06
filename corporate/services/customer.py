@@ -69,10 +69,8 @@ def customer_check_active_for_workspace(
         case CustomerSubscriptionStatus.CUSTOM:
             return "full"
         case CustomerSubscriptionStatus.UNPAID:
-            logger.warning("Customer for workspace %s is inactive", workspace)
             return "trial"
         case CustomerSubscriptionStatus.CANCELLED:
-            logger.warning("Customer for workspace %s is inactive", workspace)
-            return "inactive"
+            return "trial"
         case status:
             raise ValueError(f"Unknown status {status}")

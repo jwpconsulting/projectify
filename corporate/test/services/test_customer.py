@@ -32,13 +32,11 @@ def test_subscription_activation(
 def test_cancel_subscription(
     workspace: Workspace, paid_customer: Customer
 ) -> None:
-    """Test cancel_subscription."""
+    """Test cancel_subscription will revert a workspace to trial."""
     assert customer_check_active_for_workspace(workspace=workspace)
     customer_cancel_subscription(customer=paid_customer)
     paid_customer.refresh_from_db()
-    assert (
-        customer_check_active_for_workspace(workspace=workspace) == "inactive"
-    )
+    assert customer_check_active_for_workspace(workspace=workspace) == "trial"
 
 
 @pytest.mark.django_db
