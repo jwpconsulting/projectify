@@ -33,7 +33,7 @@
                     "user-account-settings.change-password.current-password.placeholder"
                 )}
                 name="current-password"
-                style={{ kind: "field", inputType: "password" }}
+                style={{ inputType: "password" }}
                 bind:value={currentPassword}
             />
             <InputField
@@ -44,7 +44,7 @@
                     "user-account-settings.change-password.new-password.placeholder"
                 )}
                 name="new-password"
-                style={{ kind: "field", inputType: "password" }}
+                style={{ inputType: "password" }}
                 bind:value={newPassword1}
             />
             <InputField
@@ -55,7 +55,7 @@
                     "user-account-settings.change-password.confirm-password.placeholder"
                 )}
                 name="confirm-password"
-                style={{ kind: "field", inputType: "password" }}
+                style={{ inputType: "password" }}
                 bind:value={newPassword2}
             />
         </div>

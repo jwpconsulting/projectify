@@ -40,7 +40,7 @@
             placeholder={$_(
                 "overlay.constructive.update-workspace-board.form.title.placeholder"
             )}
-            style={{ kind: "field", inputType: "text" }}
+            style={{ inputType: "text" }}
             bind:value={title}
             required
         />
@@ -52,7 +52,7 @@
             placeholder={$_(
                 "overlay.constructive.update-workspace-board.form.deadline.placeholder"
             )}
-            style={{ kind: "field", inputType: "date" }}
+            style={{ inputType: "date" }}
             bind:value={deadline}
         />
     </svelte:fragment>

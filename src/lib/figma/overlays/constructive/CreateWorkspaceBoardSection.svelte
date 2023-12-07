@@ -45,7 +45,7 @@
             placeholder={$_(
                 "overlay.constructive.create-workspace-board-section.form.title.placeholder"
             )}
-            style={{ kind: "field", inputType: "text" }}
+            style={{ inputType: "text" }}
             bind:value={title}
         />
     </svelte:fragment>

@@ -51,7 +51,7 @@
     <InputField
         bind:value={$labelSearch}
         label={undefined}
-        style={{ kind: "field", inputType: "text" }}
+        style={{ inputType: "text" }}
         name="label-name"
         placeholder={$_("filter-label-menu.label-name")}
     >

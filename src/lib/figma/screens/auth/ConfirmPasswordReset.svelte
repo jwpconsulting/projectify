@@ -31,7 +31,7 @@
     <div class="flex flex-col gap-6">
         <InputField
             placeholder={$_("auth.confirm-password-reset.enter-new-password")}
-            style={{ kind: "field", inputType: "password" }}
+            style={{ inputType: "password" }}
             name="password1"
             label={$_("auth.confirm-password-reset.new-password")}
             bind:value={newPassword1}
@@ -40,7 +40,7 @@
             placeholder={$_(
                 "auth.confirm-password-reset.confirm-new-password"
             )}
-            style={{ kind: "field", inputType: "password" }}
+            style={{ inputType: "password" }}
             name="password2"
             label={$_("auth.confirm-password-reset.confirm-new-password")}
             bind:value={newPassword2}

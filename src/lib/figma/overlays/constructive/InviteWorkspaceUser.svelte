@@ -52,7 +52,7 @@
             placeholder={$_(
                 "overlay.constructive.invite-workspace-user.form.email.placeholder"
             )}
-            style={{ kind: "field", inputType: "email" }}
+            style={{ inputType: "email" }}
             required
             {validation}
         />

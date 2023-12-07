@@ -76,7 +76,7 @@
 
     <svelte:fragment slot="inputs">
         <InputField
-            style={{ kind: "field", inputType: "text" }}
+            style={{ inputType: "text" }}
             name="task-title"
             label={$_("onboarding.new-task.input.label")}
             placeholder={$_("onboarding.new-task.input.placeholder")}

@@ -28,7 +28,7 @@
 
 <div class="flex flex-col gap-4">
     <InputField
-        style={{ kind: "field", inputType: "text" }}
+        style={{ inputType: "text" }}
         name="workspaceUserSearch"
         bind:value={filter}
         label={$_("workspace-settings.workspace-users.search.label")}

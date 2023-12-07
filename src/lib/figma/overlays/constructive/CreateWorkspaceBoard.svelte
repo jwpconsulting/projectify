@@ -47,7 +47,7 @@
             placeholder={$_(
                 "overlay.constructive.create-workspace-board.form.title.placeholder"
             )}
-            style={{ kind: "field", inputType: "text" }}
+            style={{ inputType: "text" }}
             bind:value={title}
         />
         <InputField
@@ -58,7 +58,7 @@
             placeholder={$_(
                 "overlay.constructive.create-workspace-board.form.deadline.placeholder"
             )}
-            style={{ kind: "field", inputType: "text" }}
+            style={{ inputType: "text" }}
         />
     </svelte:fragment>
     <svelte:fragment slot="buttons">

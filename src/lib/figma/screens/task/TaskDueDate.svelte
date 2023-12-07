@@ -21,7 +21,7 @@
         label={undefined}
         placeholder={$_("task-screen.select-due-date")}
         name="due-date"
-        style={{ kind: "field", inputType: "date" }}
+        style={{ inputType: "date" }}
         onClick={onInteract}
         {readonly}
     />

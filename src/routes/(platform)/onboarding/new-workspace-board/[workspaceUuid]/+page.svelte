@@ -83,7 +83,7 @@
 
     <svelte:fragment slot="inputs">
         <InputField
-            style={{ kind: "field", inputType: "text" }}
+            style={{ inputType: "text" }}
             name="title"
             label={$_("onboarding.new-workspace-board.input.label")}
             placeholder={$_(

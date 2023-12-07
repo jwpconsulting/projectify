@@ -56,7 +56,7 @@
     </svelte:fragment>
     <svelte:fragment slot="inputs">
         <InputField
-            style={{ kind: "field", inputType: "text" }}
+            style={{ inputType: "text" }}
             name="workspaceTitle"
             label={$_("onboarding.new-workspace.label")}
             placeholder={$_("onboarding.new-workspace.placeholder")}

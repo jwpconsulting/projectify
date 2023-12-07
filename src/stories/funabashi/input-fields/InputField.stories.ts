@@ -6,23 +6,18 @@ import { makeStorybookSelect } from "$lib/storybook";
 
 const style = makeStorybookSelect<InputFieldStyle>({
     Text: {
-        kind: "field",
         inputType: "text",
     },
     Password: {
-        kind: "field",
         inputType: "password",
     },
     Email: {
-        kind: "field",
         inputType: "email",
     },
     Date: {
-        kind: "field",
         inputType: "date",
     },
     Numeric: {
-        kind: "field",
         inputType: "numeric",
     },
 });
@@ -132,7 +127,7 @@ export const Readonly: Story = {
     args: {
         placeholder: "This will never be shown",
         name: "date",
-        style: { kind: "field", inputType: "date" },
+        style: { inputType: "date" },
         label: "A date, but it's readonly",
         value: "2012-12-31",
         anchorTop: {
@@ -151,7 +146,7 @@ export const LabelOnly: Story = {
     args: {
         placeholder: "This will never be shown",
         name: "date",
-        style: { kind: "field", inputType: "date" },
+        style: { inputType: "date" },
         label: "A date, but it's readonly",
         value: "2012-12-31",
     },
@@ -161,7 +156,7 @@ export const AnchorTopOnly: Story = {
     args: {
         placeholder: "This will never be shown",
         name: "date",
-        style: { kind: "field", inputType: "date" },
+        style: { inputType: "date" },
         value: "2012-12-31",
         anchorTop: {
             href: "#",
@@ -174,7 +169,7 @@ export const Error: Story = {
     args: {
         placeholder: "This will never be shown",
         name: "email",
-        style: { kind: "field", inputType: "email" },
+        style: { inputType: "email" },
         value: "hello@example.com",
         anchorBottom: {
             href: "#",
@@ -208,7 +203,7 @@ export const OkNoAnchors: Story = {
     args: {
         placeholder: "This will never be shown",
         name: "email",
-        style: { kind: "field", inputType: "email" },
+        style: { inputType: "email" },
         value: "hello@example.com",
         validation: {
             ok: true,

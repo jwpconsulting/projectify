@@ -34,7 +34,7 @@
             </label>
             <InputField
                 label={undefined}
-                style={{ kind: "field", inputType: "text" }}
+                style={{ inputType: "text" }}
                 placeholder={$_("task-screen.enter-a-subtask")}
                 name="sub-task"
                 bind:value={subTask.title}

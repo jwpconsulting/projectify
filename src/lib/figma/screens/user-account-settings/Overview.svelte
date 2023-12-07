@@ -74,7 +74,7 @@
             )}
             name="full_name"
             bind:value={fullName}
-            style={{ kind: "field", inputType: "text" }}
+            style={{ inputType: "text" }}
             readonly={state !== "editing"}
             onClick={() => {
                 state = "editing";

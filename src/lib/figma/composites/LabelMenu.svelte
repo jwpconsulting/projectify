@@ -79,7 +79,7 @@
         <div class="flex flex-col">
             <div class="px-4 pb-4 pt-2">
                 <InputField
-                    style={{ kind: "field", inputType: "text" }}
+                    style={{ inputType: "text" }}
                     placeholder={$_("filter-label-menu.label-name")}
                     label={$_("filter-label-menu.label-name")}
                     name="name"

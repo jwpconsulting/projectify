@@ -61,7 +61,7 @@
     </label>
     <InputField
         bind:value={$workspaceUserSearch}
-        style={{ kind: "field", inputType: "text" }}
+        style={{ inputType: "text" }}
         label={undefined}
         name="workspace-user-name"
         placeholder={$_("dashboard.workspace-user-name")}

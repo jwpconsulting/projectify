@@ -31,7 +31,7 @@
     <div class="flex flex-col gap-6">
         <InputField
             placeholder={$_("auth.log-in.enter-your-email")}
-            style={{ kind: "field", inputType: "email" }}
+            style={{ inputType: "email" }}
             name="email"
             label={$_("auth.log-in.email")}
             required
@@ -39,7 +39,7 @@
         />
         <InputField
             placeholder={$_("auth.log-in.enter-your-password")}
-            style={{ kind: "field", inputType: "password" }}
+            style={{ inputType: "password" }}
             name="password"
             label={$_("auth.log-in.password")}
             bind:value={password}

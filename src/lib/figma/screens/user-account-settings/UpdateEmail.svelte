@@ -32,7 +32,7 @@
                     "user-account-settings.update-email.current-password.placeholder"
                 )}
                 name="current-password"
-                style={{ kind: "field", inputType: "password" }}
+                style={{ inputType: "password" }}
                 bind:value={currentPassword}
             />
             <InputField
@@ -43,7 +43,7 @@
                     "user-account-settings.update-email.new-email.placeholder"
                 )}
                 name="new-email"
-                style={{ kind: "field", inputType: "text" }}
+                style={{ inputType: "text" }}
                 bind:value={newEmail}
             />
         </div>

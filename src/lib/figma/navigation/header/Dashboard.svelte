@@ -25,7 +25,7 @@
             >{$_("dashboard.search-task")}</label
         >
         <InputField
-            style={{ kind: "field", inputType: "text" }}
+            style={{ inputType: "text" }}
             label={undefined}
             placeholder={$_("dashboard.search-task")}
             name="search"

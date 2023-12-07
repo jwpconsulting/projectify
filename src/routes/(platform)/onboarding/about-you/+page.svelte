@@ -38,7 +38,7 @@
             bind:value={fullName}
             label={$_("onboarding.about-you.input.label")}
             placeholder={$_("onboarding.about-you.input.placeholder")}
-            style={{ kind: "field", inputType: "text" }}
+            style={{ inputType: "text" }}
             name="full-name"
             required
         />

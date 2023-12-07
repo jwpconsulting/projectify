@@ -92,7 +92,7 @@
                 "workspace-settings.general.workspace-name.placeholder"
             )}
             onClick={fieldChanged}
-            style={{ kind: "field", inputType: "text" }}
+            style={{ inputType: "text" }}
             name="title"
             label={$_("workspace-settings.general.workspace-name.label")}
         />
@@ -102,7 +102,7 @@
                 "workspace-settings.general.description.placeholder"
             )}
             onClick={fieldChanged}
-            style={{ kind: "field", inputType: "text" }}
+            style={{ inputType: "text" }}
             name="title"
             label={$_("workspace-settings.general.description.label")}
         />
