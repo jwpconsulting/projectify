@@ -34,7 +34,6 @@ export const user2: User = {
     full_name: undefined,
     profile_picture: undefined,
 };
-export const users = [user1, user2, null];
 
 const nullUuid = "00000000-0000-0000-0000-000000000000";
 
