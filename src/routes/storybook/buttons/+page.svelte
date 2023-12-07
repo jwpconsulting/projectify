@@ -2,7 +2,6 @@
     import { Folder, Plus } from "@steeze-ui/heroicons";
 
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
-    import CancelSearch from "$lib/figma/buttons/CancelSearch.svelte";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import HamburgerMenu from "$lib/figma/buttons/HamburgerMenu.svelte";
     import NotificationButton from "$lib/figma/buttons/NotificationButton.svelte";
@@ -44,12 +43,6 @@ Notifications
 <div class={fr}>
     {#each falseTrue as isActive}
         <NotificationButton on:click={console.log} {isActive} />
-    {/each}
-</div>
-Cancel search
-<div class={fr}>
-    {#each falseTrue as isActive}
-        <CancelSearch on:click={console.log} {isActive} />
     {/each}
 </div>
 Notification read
