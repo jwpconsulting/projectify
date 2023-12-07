@@ -8,13 +8,9 @@
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
-    import WorkspaceSettings from "$lib/figma/buttons/WorkspaceSettings.svelte";
     import { menuButtonColors, menuButtonStates } from "$lib/figma/types";
     import { falseTrue, fc, fr, users } from "$lib/storybook";
 </script>
-
-Ellipsis side nav
-<WorkspaceSettings on:click={console.log} />
 
 Notifications
 <div class={fr}>
