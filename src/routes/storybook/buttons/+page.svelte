@@ -1,28 +1,12 @@
 <script lang="ts">
     import { Plus } from "@steeze-ui/heroicons";
 
-    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SearchMobile from "$lib/figma/buttons/SearchMobile.svelte";
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
-    import { menuButtonColors, menuButtonStates } from "$lib/figma/types";
     import { falseTrue, fc, fr, users } from "$lib/storybook";
 </script>
 
-Menu button
-<div class={`${fc} w-40`}>
-    {#each menuButtonStates as state}
-        {#each menuButtonColors as color}
-            <ContextMenuButton
-                {state}
-                {color}
-                kind={{ kind: "button", action: console.log }}
-                icon={Plus}
-                label={state}
-            />
-        {/each}
-    {/each}
-</div>
 Submenu dropdown
 <div class={`${fc} w-40`}>
     <SubMenuDropdown on:click={console.log} label="Button" icon={Plus} />

@@ -1,9 +1,9 @@
 import type { User } from "$lib/types/user";
 import type { Label } from "$lib/types/workspace";
 
-export const menuButtonStates = ["normal", "accordion"] as const;
+const menuButtonStates = ["normal", "accordion"] as const;
 export type MenuButtonState = (typeof menuButtonStates)[number];
-export const menuButtonColors = ["base", "primary", "destructive"] as const;
+const menuButtonColors = ["base", "primary", "destructive"] as const;
 export type MenuButtonColor = (typeof menuButtonColors)[number];
 
 const borderedIconTypes = ["workspace", "filter"] as const;
