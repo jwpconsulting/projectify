@@ -36,7 +36,7 @@
     </div>
     <slot name="desktop-center" />
     {#if $$slots["desktop-right"]}
-        <div class="flex shrink-0 flex-row gap-2">
+        <div class="flex shrink-0 flex-row items-center gap-2">
             <slot name="desktop-right" />
         </div>
     {/if}
