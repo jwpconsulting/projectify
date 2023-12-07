@@ -1,11 +1,12 @@
 import {
-    failOrOk,
     getWithCredentialsJson,
     handle404,
     postWithCredentialsJson,
 } from "$lib/repository/util";
 import type { Customer } from "$lib/types/corporate";
 import type { RepositoryContext } from "$lib/types/repository";
+
+import type { ApiResponse } from "./types";
 
 export async function getWorkspaceCustomer(
     workspace_uuid: string,
@@ -26,25 +27,21 @@ export async function createCheckoutSession(
     workspace_uuid: string,
     seats: number,
     repositoryContext: RepositoryContext
-): Promise<StripeSession> {
-    return failOrOk(
-        await postWithCredentialsJson<StripeSession>(
-            `/corporate/workspace/${workspace_uuid}/create-checkout-session`,
-            { seats },
-            repositoryContext
-        )
+): Promise<ApiResponse<StripeSession, unknown>> {
+    return await postWithCredentialsJson<StripeSession>(
+        `/corporate/workspace/${workspace_uuid}/create-checkout-session`,
+        { seats },
+        repositoryContext
     );
 }
 
 export async function createBillingPortalSession(
     workspace_uuid: string,
     repositoryContext: RepositoryContext
-): Promise<StripeSession> {
-    return failOrOk(
-        await postWithCredentialsJson<StripeSession>(
-            `/corporate/workspace/${workspace_uuid}/create-billing-portal-session`,
-            {},
-            repositoryContext
-        )
+): Promise<ApiResponse<StripeSession, unknown>> {
+    return await postWithCredentialsJson<StripeSession>(
+        `/corporate/workspace/${workspace_uuid}/create-billing-portal-session`,
+        {},
+        repositoryContext
     );
 }

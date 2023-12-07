@@ -21,19 +21,31 @@
         } catch {
             throw new Error("Expected valid seats");
         }
-        const { url } = await createCheckoutSession(
+        const response = await createCheckoutSession(
             workspace.uuid,
             checkoutSeats,
-            {
-                fetch,
-            }
+            { fetch }
         );
+        if (!response.ok) {
+            // XXX not pretty
+            checkoutError = JSON.stringify(response.error);
+            console.error(response);
+            return;
+        }
+        const { url } = response.data;
         await goto(url);
     }
     async function editBillingDetails() {
-        const { url } = await createBillingPortalSession(workspace.uuid, {
+        const response = await createBillingPortalSession(workspace.uuid, {
             fetch,
         });
+        if (!response.ok) {
+            // XXX not pretty
+            editBillingError = JSON.stringify(response.error);
+            console.error(response);
+            return;
+        }
+        const { url } = response.data;
         await goto(url);
     }
 
@@ -41,6 +53,8 @@
     export let customer: Customer;
 
     let checkoutSeatsRaw = "1";
+    let checkoutError: string | undefined = undefined;
+    let editBillingError: string | undefined = undefined;
 
     $: customer = $currentCustomer ?? customer;
 </script>
@@ -84,6 +98,9 @@
                 })}
             </p>
         </section>
+        {#if editBillingError}
+            <p>{editBillingError}</p>
+        {/if}
         <Button
             action={{ kind: "button", action: editBillingDetails }}
             color="blue"
@@ -127,6 +144,9 @@
                 )}
                 style={{ inputType: "numeric", min: 1, max: 100 }}
             />
+            {#if checkoutError}
+                <p>{checkoutError}</p>
+            {/if}
             <Button
                 style={{ kind: "primary" }}
                 color="blue"
