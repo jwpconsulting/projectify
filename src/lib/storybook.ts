@@ -23,7 +23,6 @@ import type { Customer } from "./types/corporate";
 
 export const fr = "flex flex-row flex-wrap gap-2";
 export const fc = "flex flex-col flex-wrap gap-2";
-export const falseTrue = [false, true];
 
 export const user1: User = {
     email: "this-email-is-very-long-so-you-know-we-mean-business@example.com",

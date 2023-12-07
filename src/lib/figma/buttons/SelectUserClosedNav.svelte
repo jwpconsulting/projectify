@@ -7,6 +7,7 @@
     import type { AvatarVariantContent } from "$lib/figma/types";
     import type { User } from "$lib/types/user";
 
+    // TODO use undefined
     export let user: User | null;
     export let active: boolean;
 
