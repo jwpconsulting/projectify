@@ -54,7 +54,8 @@
         <InputField
             style={{ kind: "field", inputType: "text" }}
             name="label-title"
-            placeholder={$_("onboarding.new-label.placeholder")}
+            label={$_("onboarding.new-label.input.label")}
+            placeholder={$_("onboarding.new-label.input.placeholder")}
             bind:value={labelTitle}
         />
     </svelte:fragment>

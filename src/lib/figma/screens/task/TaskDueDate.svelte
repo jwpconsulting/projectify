@@ -18,6 +18,7 @@
 <div class="flex flex-row items-center gap-4">
     <InputField
         bind:value={dueDate}
+        label={undefined}
         placeholder={$_("task-screen.select-due-date")}
         name="due-date"
         style={{ kind: "field", inputType: "date" }}

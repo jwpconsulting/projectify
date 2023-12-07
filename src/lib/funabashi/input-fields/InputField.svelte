@@ -23,11 +23,10 @@
     export let name: string;
     /**
      * Designate the id for this input element, falls back to name
+     * XXX not guaranteed to be unique - problematic!
      */
     export let id: string | undefined = undefined;
-    // TODO
-    // export let label: string | undefined = undefined;
-    export let label: string | null = null;
+    export let label: string | undefined;
     // TODO
     // export let anchorTop: InputFieldAnchor | undefined = undefined;
     export let anchorTop: InputFieldAnchor | null = null;
@@ -112,7 +111,7 @@
 </script>
 
 <div class="flex flex-col items-start gap-2">
-    {#if label !== null || anchorTop !== null}
+    {#if label !== undefined || anchorTop !== null}
         <div
             class="flex w-full flex-row items-center"
             class:justify-between={label}

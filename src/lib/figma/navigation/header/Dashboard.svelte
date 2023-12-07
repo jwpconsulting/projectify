@@ -18,8 +18,13 @@
 
 <Layout logoVisibleDesktop>
     <slot slot="desktop-right">
+        <!-- XXX definitely not ideal, placeholder will disappear after input -->
+        <label class="sr-only" for="search"
+            >{$_("dashboard.search-task")}</label
+        >
         <InputField
             style={{ kind: "search" }}
+            label={undefined}
             placeholder={$_("dashboard.search-task")}
             name="search"
             bind:value={$taskSearchInput}

@@ -51,12 +51,16 @@
 </script>
 
 <div class="flex flex-col px-4 pb-4 pt-2">
-    <div class="color-base-content p-2 text-xs font-bold">
+    <label
+        for="workspace-user-name"
+        class="color-base-content p-2 text-xs font-bold"
+    >
         {$_("dashboard.filter-workspace-users")}
-    </div>
+    </label>
     <InputField
         bind:value={$workspaceUserSearch}
         style={{ kind: "search" }}
+        label={undefined}
         name="workspace-user-name"
         placeholder={$_("dashboard.workspace-user-name")}
     />

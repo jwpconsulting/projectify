@@ -78,7 +78,8 @@
         <InputField
             style={{ kind: "field", inputType: "text" }}
             name="task-title"
-            placeholder={$_("onboarding.new-task.placeholder")}
+            label={$_("onboarding.new-task.input.label")}
+            placeholder={$_("onboarding.new-task.input.placeholder")}
             bind:value={taskTitle}
         />
     </svelte:fragment>

@@ -14,6 +14,7 @@
     name="title"
     style={{ kind: "field", inputType: "text" }}
     bind:value={title}
+    label={undefined}
     placeholder={$_("task-screen.new-task-name")}
     onClick={onInteract}
     {readonly}

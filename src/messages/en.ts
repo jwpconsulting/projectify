@@ -273,10 +273,13 @@ const messages: MessageDirectory = {
             ],
         },
         "about-you": {
-            "full-name": "Full name",
-            "title": "About you",
-            "prompt": "Write your full name below.",
-            "greeting": {
+            title: "About you",
+            input: {
+                label: "Full name",
+                placeholder: "Your full name",
+            },
+            prompt: "Write your full name below.",
+            greeting: {
                 "with-name": "Welcome, {name}! 👋",
                 "without-name": "Welcome! 👋",
             },
@@ -286,6 +289,7 @@ const messages: MessageDirectory = {
             "prompt": "You can create and manage numerous workspaces",
             "has-workspace":
                 "It looks like you already have a workspace, would you like to create a workspace board?",
+            "label": "Workspace name",
             "placeholder": "e.g. the name of your company",
             "default-name": "Your workspace",
         },
@@ -317,12 +321,18 @@ const messages: MessageDirectory = {
                 explanation:
                     "Tasks can be further divided into sub tasks and contain detailed descriptions.",
             },
-            "placeholder": "E.g., 'Add user permission dropdown'",
+            "input": {
+                label: "Task name",
+                placeholder: "E.g., 'Add user permission dropdown'",
+            },
         },
         "new-label": {
             "title": 'Create a label for "{taskTitle}"',
             "prompt": "Labels help you to filter between the types of tasks.",
-            "placeholder": "e.g., Bug",
+            "input": {
+                placeholder: "e.g., Bug",
+                label: "Label name",
+            },
             "default-name": "Your label",
         },
         "assign-task": {

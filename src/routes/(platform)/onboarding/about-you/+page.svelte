@@ -36,7 +36,8 @@
     <svelte:fragment slot="inputs">
         <InputField
             bind:value={fullName}
-            placeholder={$_("onboarding.about-you.full-name")}
+            label={$_("onboarding.about-you.input.label")}
+            placeholder={$_("onboarding.about-you.input.placeholder")}
             style={{ kind: "field", inputType: "text" }}
             name="full-name"
             required

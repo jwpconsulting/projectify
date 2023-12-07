@@ -44,11 +44,12 @@
 </script>
 
 <div class="flex flex-col px-4 pb-4 pt-2">
-    <div class="p-2 text-xs font-bold">
+    <label for="label-name" class="p-2 text-xs font-bold">
         {$_("filter-label-menu.filter-labels")}
-    </div>
+    </label>
     <InputField
         bind:value={$labelSearch}
+        label={undefined}
         style={{ kind: "search" }}
         name="label-name"
         placeholder={$_("filter-label-menu.label-name")}
