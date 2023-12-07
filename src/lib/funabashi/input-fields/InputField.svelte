@@ -97,7 +97,8 @@
         }
     }
 
-    const inputStyle = tw`text-regular placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2 text-xs focus:outline-none`;
+    // TODO remove text-xs
+    const inputStyle = tw`placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2 text-xs`;
 
     function clear() {
         value = undefined;
@@ -120,9 +121,10 @@
             class:justify-end={!label}
         >
             {#if label}
+                <!-- TODO remove text-xs -->
                 <label
                     for={id}
-                    class="p-2 text-xs font-bold text-base-content first-letter:uppercase"
+                    class="text-xs font-bold text-base-content first-letter:uppercase"
                 >
                     {label}
                 </label>
