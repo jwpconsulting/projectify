@@ -21,6 +21,10 @@ const style = makeStorybookSelect<InputFieldStyle>({
         kind: "field",
         inputType: "date",
     },
+    Numeric: {
+        kind: "field",
+        inputType: "numeric",
+    },
 });
 
 const meta: Meta<InputField> = {
@@ -48,49 +52,11 @@ export default meta;
 
 type Story = StoryObj<InputField>;
 
-export const Search: Story = {
-    args: {
-        placeholder: "Enter something to search for",
-        name: "search",
-        style: { kind: "search" },
-        label: "This is a label for the search",
-        value: undefined,
-        anchorTop: {
-            href: "#",
-            label: "I am the anchor on the top",
-        },
-        anchorBottom: {
-            href: "#",
-            label: "I am the anchor on the bottom",
-        },
-        readonly: false,
-    },
-};
-
-export const SubTask: Story = {
-    args: {
-        placeholder: "Enter the name of a sub task",
-        name: "sub-task",
-        style: { kind: "subTask" },
-        label: "Your sub task",
-        value: undefined,
-        anchorTop: {
-            href: "#",
-            label: "I am the anchor on the top",
-        },
-        anchorBottom: {
-            href: "#",
-            label: "I am the anchor on the bottom",
-        },
-        readonly: false,
-    },
-};
-
 export const Text: Story = {
     args: {
         placeholder: "This is a placeholder for your text",
         name: "text",
-        style: { kind: "field", inputType: "text" },
+        style: "text",
         label: "This is a label",
         value: undefined,
         anchorTop: {
@@ -109,7 +75,7 @@ export const Password: Story = {
     args: {
         placeholder: "Enter a password. It will look password-y",
         name: "password",
-        style: { kind: "field", inputType: "text" },
+        style: "password",
         label: "This is a label",
         value: "",
         anchorTop: {
@@ -128,8 +94,27 @@ export const Date: Story = {
     args: {
         placeholder: "A date comes here",
         name: "date",
-        style: { kind: "field", inputType: "date" },
+        style: "date",
         label: "Date for when the thing happens",
+        value: "",
+        anchorTop: {
+            href: "#",
+            label: "I am the anchor on the top",
+        },
+        anchorBottom: {
+            href: "#",
+            label: "I am the anchor on the bottom",
+        },
+        readonly: false,
+    },
+};
+
+export const Numeric: Story = {
+    args: {
+        placeholder: "Number goes here",
+        name: "date",
+        style: "numeric",
+        label: "Enter a number",
         value: "",
         anchorTop: {
             href: "#",
@@ -206,7 +191,7 @@ export const Ok: Story = {
     args: {
         placeholder: "This will never be shown",
         name: "email",
-        style: { kind: "field", inputType: "email" },
+        style: "email",
         value: "hello@example.com",
         anchorBottom: {
             href: "#",

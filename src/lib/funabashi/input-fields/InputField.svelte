@@ -173,6 +173,16 @@
                 on:click={onClick}
                 bind:this={pikadayAnchor}
             />
+        {:else if style.inputType === "numeric"}
+            <input
+                type="number"
+                inputmode="numeric"
+                class={inputStyle}
+                {...inputProps}
+                bind:value
+                on:click={onClick}
+                bind:this={pikadayAnchor}
+            />
         {/if}
         <button
             class="flex flex-row"
