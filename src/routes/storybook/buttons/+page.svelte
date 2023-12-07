@@ -5,10 +5,8 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import HamburgerMenu from "$lib/figma/buttons/HamburgerMenu.svelte";
     import NotificationButton from "$lib/figma/buttons/NotificationButton.svelte";
-    import ReadNotification from "$lib/figma/buttons/ReadNotification.svelte";
     import SearchMobile from "$lib/figma/buttons/SearchMobile.svelte";
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
-    import SideMenuCreate from "$lib/figma/buttons/SideMenuCreate.svelte";
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
@@ -19,22 +17,9 @@
         borderedIconTypes,
         menuButtonColors,
         menuButtonStates,
-        sideMenuCreateSizes,
     } from "$lib/figma/types";
     import { falseTrue, fc, fr, users } from "$lib/storybook";
 </script>
-
-Side menu create
-<div class={fc}>
-    {#each sideMenuCreateSizes as size}
-        <SideMenuCreate
-            on:click={console.log}
-            {size}
-            icon={Plus}
-            label="Create New Label"
-        />
-    {/each}
-</div>
 
 Ellipsis side nav
 <WorkspaceSettings on:click={console.log} />
@@ -43,12 +28,6 @@ Notifications
 <div class={fr}>
     {#each falseTrue as isActive}
         <NotificationButton on:click={console.log} {isActive} />
-    {/each}
-</div>
-Notification read
-<div class={fr}>
-    {#each falseTrue as isRead}
-        <ReadNotification on:click={console.log} {isRead} />
     {/each}
 </div>
 Menu button
