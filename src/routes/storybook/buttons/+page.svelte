@@ -3,7 +3,6 @@
 
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
-    import HamburgerMenu from "$lib/figma/buttons/HamburgerMenu.svelte";
     import NotificationButton from "$lib/figma/buttons/NotificationButton.svelte";
     import SearchMobile from "$lib/figma/buttons/SearchMobile.svelte";
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
@@ -46,12 +45,7 @@ Submenu dropdown
 <div class={`${fc} w-40`}>
     <SubMenuDropdown on:click={console.log} label="Button" icon={Plus} />
 </div>
-Mobile Menu
-<div class={fr}>
-    {#each falseTrue as isActive}
-        <HamburgerMenu {isActive} action={console.log} />
-    {/each}
-</div>
+
 Mobile search menu
 <SearchMobile on:click={console.log} />
 
