@@ -271,6 +271,10 @@ const messages: MessageDirectory = {
                 "In the following steps you will create a new workspace and create your first task.",
                 "You can use the workspace in trial mode at the beginning, and upgrade to a paid version anytime by going to the workspace settings.",
             ],
+            help: {
+                "trial-mode-features":
+                    "Learn more about features available during trial mode",
+            },
         },
         "about-you": {
             title: "About you",
@@ -336,12 +340,16 @@ const messages: MessageDirectory = {
             "default-name": "Your label",
         },
         "assign-task": {
-            title: 'Task "{taskTitle}" has been assigned to you!',
-            continue: "Get started",
-            prompt: {
+            "title": 'Task "{taskTitle}" has been assigned to you!',
+            "continue": "Get started",
+            "prompt": {
                 "finished": "You’re all set!",
                 "adding-workspace-users":
                     "If you wish to add new workspace users to your workspace, please go to the workspace settings menu next to your workspace name.",
+            },
+            "follow-up": {
+                "billing-help": "Learn more about workspace billing settings",
+                "go-to-billing-settings": "Go to workspace billing settings",
             },
         },
     },

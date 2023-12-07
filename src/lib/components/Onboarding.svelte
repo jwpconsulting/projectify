@@ -24,7 +24,7 @@
         .map((_, inx) => inx + 1);
 </script>
 
-<main class="flex grow flex-col md:grid md:grid-cols-2 lg:grid-cols-3">
+<main class="flex grow flex-col md:grid md:grid-cols-2 xl:grid-cols-3">
     <form
         class="col-span-1 flex shrink grow flex-col gap-16 px-12 py-20 pb-8"
         on:submit|preventDefault={submit}
@@ -82,7 +82,7 @@
     </form>
 
     <div
-        class="hidden h-full min-w-0 shrink grow flex-col items-center justify-center overflow-hidden bg-background md:flex lg:col-span-2"
+        class="hidden h-full min-w-0 shrink grow flex-col items-center justify-center overflow-hidden bg-background md:flex xl:col-span-2"
     >
         <slot name="content" />
     </div>
