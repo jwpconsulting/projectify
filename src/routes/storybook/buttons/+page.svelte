@@ -10,10 +10,8 @@
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
-    import WorkspaceBoardIcon from "$lib/figma/buttons/WorkspaceBoardIcon.svelte";
     import WorkspaceSettings from "$lib/figma/buttons/WorkspaceSettings.svelte";
     import {
-        boardButtonStates,
         borderedIconTypes,
         menuButtonColors,
         menuButtonStates,
@@ -61,12 +59,6 @@ Side nav main
 <div class={fr}>
     {#each borderedIconTypes as type}
         <BorderedIcon {type} on:click={console.log} />
-    {/each}
-</div>
-Board button
-<div class={fr}>
-    {#each boardButtonStates as state}
-        <WorkspaceBoardIcon {state} on:click={console.log} />
     {/each}
 </div>
 
