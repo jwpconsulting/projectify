@@ -2,7 +2,6 @@
     import { _, number } from "svelte-i18n";
 
     import { pricePerSeat } from "$lib/config";
-    import SeatInputStepper from "$lib/figma/buttons/SeatInputStepper.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
@@ -10,14 +9,20 @@
         createBillingPortalSession,
         createCheckoutSession,
     } from "$lib/repository/corporate";
-    import { seats } from "$lib/stores/onboarding";
     import type { Customer } from "$lib/types/corporate";
     import type { Workspace } from "$lib/types/workspace";
 
     async function goToCheckout() {
-        const { url } = await createCheckoutSession(workspace.uuid, $seats, {
-            fetch,
-        });
+        if (!checkoutSeats) {
+            throw new Error("Expected checkoutSeats");
+        }
+        const { url } = await createCheckoutSession(
+            workspace.uuid,
+            checkoutSeats,
+            {
+                fetch,
+            }
+        );
         await goto(url);
     }
     async function editBillingDetails() {
@@ -29,6 +34,8 @@
 
     export let workspace: Workspace;
     export let customer: Customer;
+
+    let checkoutSeats: number | undefined = undefined;
 </script>
 
 <section class="flex flex-col gap-6 px-4 py-6">
@@ -101,7 +108,12 @@
             <p>
                 {$_("workspace-settings.billing.unpaid.checkout.seats.label")}
             </p>
-            <SeatInputStepper />
+            <input
+                class=""
+                type="number"
+                inputmode="numeric"
+                bind:value={checkoutSeats}
+            />
             <Button
                 style={{ kind: "primary" }}
                 color="blue"

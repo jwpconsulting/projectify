@@ -9,11 +9,6 @@ export type MenuButtonState = (typeof menuButtonStates)[number];
 export const menuButtonColors = ["base", "primary", "destructive"] as const;
 export type MenuButtonColor = (typeof menuButtonColors)[number];
 
-export const stepperPositions = ["not-last", "last"] as const;
-export type StepperPosition = (typeof stepperPositions)[number];
-export const stepperActiveStates = ["inactive", "this", "next"] as const;
-export type StepperActiveState = (typeof stepperActiveStates)[number];
-
 export const borderedIconTypes = ["workspace", "filter"] as const;
 export type BorderedIconType = (typeof borderedIconTypes)[number];
 

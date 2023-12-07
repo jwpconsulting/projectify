@@ -5,20 +5,14 @@
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
     import CancelSearch from "$lib/figma/buttons/CancelSearch.svelte";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
-    import DecrementSeats from "$lib/figma/buttons/DecrementSeats.svelte";
     import HamburgerMenu from "$lib/figma/buttons/HamburgerMenu.svelte";
-    import IncrementSeats from "$lib/figma/buttons/IncrementSeats.svelte";
     import NotificationButton from "$lib/figma/buttons/NotificationButton.svelte";
-    import ProgressStepper from "$lib/figma/buttons/ProgressStepper.svelte";
     import ReadNotification from "$lib/figma/buttons/ReadNotification.svelte";
     import SearchMobile from "$lib/figma/buttons/SearchMobile.svelte";
-    import SeatInputStepper from "$lib/figma/buttons/SeatInputStepper.svelte";
-    import SelectSeats from "$lib/figma/buttons/SelectSeats.svelte";
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
     import SideMenuCreate from "$lib/figma/buttons/SideMenuCreate.svelte";
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
-    import StepperVariant from "$lib/figma/buttons/StepperVariant.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
     import WatcherButton from "$lib/figma/buttons/WatcherButton.svelte";
     import WorkspaceBoardIcon from "$lib/figma/buttons/WorkspaceBoardIcon.svelte";
@@ -29,13 +23,8 @@
         menuButtonColors,
         menuButtonStates,
         sideMenuCreateSizes,
-        stepperActiveStates,
-        stepperPositions,
     } from "$lib/figma/types";
-    import { currentStep } from "$lib/stores/onboarding";
-    import { falseTrue, fc, fr, trueFalse, users } from "$lib/storybook";
-
-    const onboardingSeats = [5, 10, 15, 20, 25];
+    import { falseTrue, fc, fr, users } from "$lib/storybook";
 </script>
 
 Side menu create
@@ -97,34 +86,6 @@ Submenu dropdown
 <div class={`${fc} w-40`}>
     <SubMenuDropdown on:click={console.log} label="Button" icon={Plus} />
 </div>
-Onboarding seats
-<div class={fr}>
-    {#each onboardingSeats as seats}
-        <SelectSeats on:click={console.log} {seats} />
-    {/each}
-</div>
-Minus seats
-<div class={fr}>
-    {#each trueFalse as disabled}
-        <DecrementSeats on:click={console.log} {disabled} />
-    {/each}
-</div>
-Add seats
-<IncrementSeats on:click={console.log} />
-Seat input
-<SeatInputStepper />
-Stepper components
-<div class={fr}>
-    {#each stepperPositions as position}
-        <div class={fc}>
-            {#each stepperActiveStates as state}
-                <StepperVariant {position} {state} on:click={console.log} />
-            {/each}
-        </div>
-    {/each}
-</div>
-Stepper ({$currentStep})
-<ProgressStepper />
 Mobile Menu
 <div class={fr}>
     {#each falseTrue as isActive}

@@ -23,4 +23,6 @@ export default meta;
 
 type Story = StoryObj<Billing>;
 
-export const Default: Story = {};
+export const Default: Story = { args: { customer: "trial-customer" } };
+
+export const Paid: Story = {};
