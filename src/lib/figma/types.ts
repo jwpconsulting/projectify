@@ -6,7 +6,7 @@ export type MenuButtonState = (typeof menuButtonStates)[number];
 export const menuButtonColors = ["base", "primary", "destructive"] as const;
 export type MenuButtonColor = (typeof menuButtonColors)[number];
 
-export const borderedIconTypes = ["workspace", "filter"] as const;
+const borderedIconTypes = ["workspace", "filter"] as const;
 export type BorderedIconType = (typeof borderedIconTypes)[number];
 
 export const avatarStateSizes = [

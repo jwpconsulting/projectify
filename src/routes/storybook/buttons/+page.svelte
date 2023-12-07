@@ -1,7 +1,6 @@
 <script lang="ts">
     import { Folder, Plus } from "@steeze-ui/heroicons";
 
-    import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import NotificationButton from "$lib/figma/buttons/NotificationButton.svelte";
     import SearchMobile from "$lib/figma/buttons/SearchMobile.svelte";
@@ -10,11 +9,7 @@
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
     import WorkspaceSettings from "$lib/figma/buttons/WorkspaceSettings.svelte";
-    import {
-        borderedIconTypes,
-        menuButtonColors,
-        menuButtonStates,
-    } from "$lib/figma/types";
+    import { menuButtonColors, menuButtonStates } from "$lib/figma/types";
     import { falseTrue, fc, fr, users } from "$lib/storybook";
 </script>
 
@@ -48,13 +43,6 @@ Submenu dropdown
 
 Mobile search menu
 <SearchMobile on:click={console.log} />
-
-Side nav main
-<div class={fr}>
-    {#each borderedIconTypes as type}
-        <BorderedIcon {type} on:click={console.log} />
-    {/each}
-</div>
 
 Filter user avatar
 <div class={fc}>
