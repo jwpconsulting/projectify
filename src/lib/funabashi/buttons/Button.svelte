@@ -19,21 +19,21 @@
     // is less "containerized" or "isolated".
     export let grow = true;
 
-    $: innerColorStyle = {
+    $: colorStyle = {
         primary: {
-            blue: tw`border-transparent bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed`,
-            red: tw`border-transparent bg-destructive text-destructive-content hover:bg-destructive-hover active:bg-destructive-pressed`,
+            blue: tw`bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed`,
+            red: tw`bg-destructive text-destructive-content hover:bg-destructive-hover active:bg-destructive-pressed`,
         },
         secondary: {
-            blue: tw`border-secondary text-secondary-content hover:border-secondary-content-hover hover:bg-secondary-hover hover:text-secondary-content-hover active:border-border-secondary active:bg-secondary-pressed active:text-secondary-content-hover`,
-            red: tw`border-destructive text-destructive hover:bg-destructive-secondary-hover hover:text-destructive-hover active:border-destructive active:bg-destructive-secondary-pressed active:text-destructive-pressed`,
+            blue: tw`text-secondary-content hover:bg-secondary-hover hover:text-secondary-content-hover active:bg-secondary-pressed active:text-secondary-content-hover`,
+            red: tw`text-destructive hover:bg-destructive-secondary-hover hover:text-destructive-hover active:bg-destructive-secondary-pressed active:text-destructive-pressed`,
         },
         tertiary: {
             blue: tw`text-tertiary-content hover:text-tertiary-content-hover active:bg-tertiary-pressed active:text-tertiary-content-hover`,
             red: tw`active:bg-destructive-secondary-presed text-destructive hover:text-destructive-hover active:text-destructive-hover`,
         },
     }[style.kind][color];
-    $: innerSizeStyle = {
+    $: sizeStyle = {
         "medium": tw`text-base`,
         "small": tw`text-sm`,
         "extra-small": tw`text-xs`,
@@ -46,10 +46,11 @@
 
     $: outerGrowStyle = grow ? tw`w-full` : "";
 
+    $: sharedStyle = tw`${outerGrowStyle} ${colorStyle} ${sizeStyle} flex flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold`;
     $: outerStyle = {
-        primary: tw`${outerGrowStyle} rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content ${innerColorStyle} ${innerSizeStyle}`,
-        secondary: tw`${outerGrowStyle} rounded-lg rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content ${innerColorStyle} ${innerSizeStyle}`,
-        tertiary: tw`${outerGrowStyle} flex flex-row justify-center rounded-lg px-4 py-2 font-bold disabled:text-disabled-content ${innerColorStyle} ${innerSizeStyle}`,
+        primary: tw`${sharedStyle} disabled:bg-disabled disabled:text-disabled-primary-content`,
+        secondary: tw`${sharedStyle} disabled:bg-disabled disabled:text-disabled-primary-content`,
+        tertiary: tw`${sharedStyle} disabled:bg-transparent disabled:text-disabled-content`,
     }[style.kind];
 
     // Outer element properties that button and submit share
@@ -63,66 +64,58 @@
             : {};
 </script>
 
-{#if style.kind === "tertiary"}
-    {#if action.kind === "a"}
-        <a href={action.href} class={outerStyle} on:click={action.onInteract}>
-            {#if style.icon && style.icon.position === "left"}
-                <Icon
-                    src={style.icon.icon}
-                    theme="outline"
-                    class={iconSizeStyle}
-                />
-            {/if}
-            {label}
-            {#if style.icon && style.icon.position === "right"}
-                <Icon
-                    src={style.icon.icon}
-                    theme="outline"
-                    class={iconSizeStyle}
-                />
-            {/if}
-        </a>
-    {:else if action.kind === "button"}
-        <button
-            on:click|preventDefault={action.action}
-            {...formProps}
-            type="button"
-        >
-            {#if style.icon && style.icon.position === "left"}
-                <Icon
-                    src={style.icon.icon}
-                    theme="outline"
-                    class={iconSizeStyle}
-                />
-            {/if}
-            {label}
-            {#if style.icon && style.icon.position === "right"}
-                <Icon
-                    src={style.icon.icon}
-                    theme="outline"
-                    class={iconSizeStyle}
-                />
-            {/if}
-        </button>
-    {:else}
-        Not supported
-    {/if}
-{:else if action.kind === "a"}
+{#if action.kind === "a"}
     <a href={action.href} class={outerStyle} on:click={action.onInteract}>
-        <div>
-            {label}
-        </div>
+        {#if style.kind === "tertiary" && style.icon && style.icon.position === "left"}
+            <Icon
+                src={style.icon.icon}
+                theme="outline"
+                class={iconSizeStyle}
+            />
+        {/if}
+        {label}
+        {#if style.kind === "tertiary" && style.icon && style.icon.position === "right"}
+            <Icon
+                src={style.icon.icon}
+                theme="outline"
+                class={iconSizeStyle}
+            />
+        {/if}
     </a>
 {:else if action.kind === "button"}
     <button on:click|preventDefault={action.action} {...formProps}>
-        <div>
-            {label}
-        </div>
+        {#if style.kind === "tertiary" && style.icon && style.icon.position === "left"}
+            <Icon
+                src={style.icon.icon}
+                theme="outline"
+                class={iconSizeStyle}
+            />
+        {/if}
+        {label}
+        {#if style.kind === "tertiary" && style.icon && style.icon.position === "right"}
+            <Icon
+                src={style.icon.icon}
+                theme="outline"
+                class={iconSizeStyle}
+            />
+        {/if}
     </button>
 {:else}
     <button type="submit" {...formProps}>
-        <div>
-            {label}
-        </div>
+        {#if style.kind === "tertiary" && style.icon && style.icon.position === "left"}
+            <Icon
+                src={style.icon.icon}
+                theme="outline"
+                class={iconSizeStyle}
+            />
+        {/if}
+        {label}
+        {#if style.kind === "tertiary" && style.icon && style.icon.position === "right"}
+            <Icon
+                src={style.icon.icon}
+                theme="outline"
+                class={iconSizeStyle}
+            />
+        {/if}
     </button>
 {/if}
