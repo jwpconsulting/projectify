@@ -1,10 +1,9 @@
 <script lang="ts">
-    import { Folder, Plus } from "@steeze-ui/heroicons";
+    import { Plus } from "@steeze-ui/heroicons";
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SearchMobile from "$lib/figma/buttons/SearchMobile.svelte";
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
-    import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
     import { menuButtonColors, menuButtonStates } from "$lib/figma/types";
     import { falseTrue, fc, fr, users } from "$lib/storybook";
@@ -38,24 +37,6 @@ Filter user avatar
         <div class={fr}>
             {#each falseTrue as active}
                 <SelectUserClosedNav {active} {user} />
-            {/each}
-        </div>
-    {/each}
-</div>
-
-Side nav menu category focus
-<div class={fc}>
-    {#each falseTrue as open}
-        <div class={fr}>
-            {#each falseTrue as filtered}
-                <div class="w-56">
-                    <SideNavMenuCategoryFocus
-                        label="boards"
-                        {open}
-                        {filtered}
-                        icon={Folder}
-                    />
-                </div>
             {/each}
         </div>
     {/each}
