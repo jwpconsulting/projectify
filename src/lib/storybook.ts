@@ -21,9 +21,6 @@ import type { LabelColor } from "$lib/utils/colors";
 
 import type { Customer } from "./types/corporate";
 
-export const fr = "flex flex-row flex-wrap gap-2";
-export const fc = "flex flex-col flex-wrap gap-2";
-
 export const user1: User = {
     email: "this-email-is-very-long-so-you-know-we-mean-business@example.com",
     full_name: undefined,

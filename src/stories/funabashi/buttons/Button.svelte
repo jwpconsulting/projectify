@@ -6,7 +6,6 @@
         ButtonColor,
     } from "$lib/funabashi/types";
     import { buttonSizes } from "$lib/funabashi/types";
-    import { fc, fr } from "$lib/storybook";
 
     export let label: string;
     export let style: ButtonStyle;
@@ -14,10 +13,8 @@
     export let action: ButtonAction;
 </script>
 
-<div class={fc}>
+<div class="flex flex-col flex-wrap gap-2">
     {#each buttonSizes as size}
-        <div class={fr}>
-            <Button {label} {style} {color} {size} {action} />
-        </div>
+        <Button {label} {style} {color} {size} {action} />
     {/each}
 </div>
