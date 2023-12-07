@@ -2,7 +2,6 @@
     import { Folder, Plus } from "@steeze-ui/heroicons";
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
-    import NotificationButton from "$lib/figma/buttons/NotificationButton.svelte";
     import SearchMobile from "$lib/figma/buttons/SearchMobile.svelte";
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
@@ -12,12 +11,6 @@
     import { falseTrue, fc, fr, users } from "$lib/storybook";
 </script>
 
-Notifications
-<div class={fr}>
-    {#each falseTrue as isActive}
-        <NotificationButton on:click={console.log} {isActive} />
-    {/each}
-</div>
 Menu button
 <div class={`${fc} w-40`}>
     {#each menuButtonStates as state}

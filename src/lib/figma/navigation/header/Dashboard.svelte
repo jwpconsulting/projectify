@@ -4,7 +4,6 @@
     import { _ } from "svelte-i18n";
 
     import HamburgerMenu from "$lib/figma/buttons/HamburgerMenu.svelte";
-    import NotificationButton from "$lib/figma/buttons/NotificationButton.svelte";
     import SearchMobile from "$lib/figma/buttons/SearchMobile.svelte";
     import UserAccount from "$lib/figma/buttons/UserAccount.svelte";
     import Layout from "$lib/figma/navigation/header/Layout.svelte";
@@ -14,8 +13,6 @@
     import type { User } from "$lib/types/user";
 
     export let user: User;
-
-    const showNotificationButton = false;
 </script>
 
 <Layout logoVisibleDesktop>
@@ -34,9 +31,6 @@
             <Icon slot="left" src={Search} class="w-4" theme="outline" />
         </InputField>
         <div class="flex flex-row gap-4">
-            {#if showNotificationButton}
-                <NotificationButton isActive />
-            {/if}
             <UserAccount {user} />
         </div>
     </slot>
@@ -50,9 +44,6 @@
         </div>
 
         <div class="flex flex-row gap-4">
-            {#if showNotificationButton}
-                <NotificationButton isActive />
-            {/if}
             <UserAccount {user} />
         </div>
     </slot>
