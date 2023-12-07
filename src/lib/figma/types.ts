@@ -1,9 +1,6 @@
 import type { User } from "$lib/types/user";
 import type { Label } from "$lib/types/workspace";
 
-export const sideMenuCreateSizes = ["extraSmall", "small"] as const;
-export type SideMenuCreateSize = (typeof sideMenuCreateSizes)[number];
-
 export const menuButtonStates = ["normal", "accordion"] as const;
 export type MenuButtonState = (typeof menuButtonStates)[number];
 export const menuButtonColors = ["base", "primary", "destructive"] as const;
@@ -11,9 +8,6 @@ export type MenuButtonColor = (typeof menuButtonColors)[number];
 
 export const borderedIconTypes = ["workspace", "filter"] as const;
 export type BorderedIconType = (typeof borderedIconTypes)[number];
-
-export const boardButtonStates = ["inactive", "disabled", "active"] as const;
-export type WorkspaceBoardIconState = (typeof boardButtonStates)[number];
 
 export const avatarStateSizes = [
     "small",
