@@ -1,7 +1,6 @@
 <script lang="ts">
     import { Folder, Plus } from "@steeze-ui/heroicons";
 
-    import AddUserButton from "$lib/figma/buttons/AddUserButton.svelte";
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
     import CancelSearch from "$lib/figma/buttons/CancelSearch.svelte";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
@@ -41,8 +40,6 @@ Side menu create
 Ellipsis side nav
 <WorkspaceSettings on:click={console.log} />
 
-Add user
-<AddUserButton on:click={console.log} />
 Notifications
 <div class={fr}>
     {#each falseTrue as isActive}
