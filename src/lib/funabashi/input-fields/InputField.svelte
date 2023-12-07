@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Search, X } from "@steeze-ui/heroicons";
+    import { X } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { parseISO } from "date-fns";
     import type Pikaday from "pikaday";
@@ -42,6 +42,7 @@
     let pikaday: typeof Pikaday | undefined = undefined;
     let datePicker: Pikaday | undefined = undefined;
 
+    // XXX not guaranteed to be unique
     $: id = id ?? name;
 
     // Possibly we can just have two onMount calls here, but I couldn't read
@@ -51,7 +52,7 @@
             return;
         }
         // We have no further business if no date picker
-        if (!(style.kind === "field" && style.inputType === "date")) {
+        if (style.inputType !== "date") {
             return;
         }
 
@@ -134,68 +135,47 @@
             {/if}
         </div>
     {/if}
-    <div class="relative isolate h-12 w-full p-1">
-        {#if style.kind === "search"}
+    <div class="flex h-12 w-full flex-row items-center gap-2 p-1">
+        {#if $$slots.left}
+            <slot name="left" />
+        {/if}
+        {#if style.inputType === "text"}
             <input
                 type="text"
-                class={`${inputStyle} pl-8`}
+                class={`${inputStyle} pl-2`}
                 {...inputProps}
                 bind:value
                 on:click={onClick}
             />
-        {:else if style.kind === "field"}
-            {#if style.inputType === "text"}
-                <input
-                    type="text"
-                    class={`${inputStyle} pl-2`}
-                    {...inputProps}
-                    bind:value
-                    on:click={onClick}
-                />
-            {:else if style.inputType === "password"}
-                <input
-                    type="password"
-                    class={`${inputStyle} pl-2`}
-                    {...inputProps}
-                    bind:value
-                    on:click={onClick}
-                />
-            {:else if style.inputType === "email"}
-                <input
-                    type="email"
-                    class={`${inputStyle} pl-2`}
-                    {...inputProps}
-                    bind:value
-                    on:click={onClick}
-                />
-            {:else if style.inputType === "date"}
-                <input
-                    type="text"
-                    class={`${inputStyle} pl-2`}
-                    {...inputProps}
-                    bind:value
-                    on:click={onClick}
-                    bind:this={pikadayAnchor}
-                />
-            {/if}
+        {:else if style.inputType === "password"}
+            <input
+                type="password"
+                class={`${inputStyle} pl-2`}
+                {...inputProps}
+                bind:value
+                on:click={onClick}
+            />
+        {:else if style.inputType === "email"}
+            <input
+                type="email"
+                class={`${inputStyle} pl-2`}
+                {...inputProps}
+                bind:value
+                on:click={onClick}
+            />
+        {:else if style.inputType === "date"}
+            <input
+                type="text"
+                class={`${inputStyle} pl-2`}
+                {...inputProps}
+                bind:value
+                on:click={onClick}
+                bind:this={pikadayAnchor}
+            />
         {/if}
         <div
             class="absolute left-0 top-0 z-0 h-full w-full rounded-xl border-2 border-transparent peer-focus:border-border"
         />
-        {#if style.kind === "search"}
-            <!-- XXX not centered horizontally... -->
-            <div
-                class="absolute left-0.5 top-0.5 z-20 flex flex-row items-center justify-between"
-            >
-                <div class="flex flex-row gap-2.5 p-3">
-                    <Icon
-                        src={Search}
-                        theme="outline"
-                        class="h-4 w-4 text-base-content"
-                    />
-                </div>
-            </div>
-        {/if}
         {#if value && !readonly}
             <button
                 class="absolute right-0.5 top-0.5 z-20 flex flex-row gap-2.5 p-3"

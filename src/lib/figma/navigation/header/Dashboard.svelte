@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { Search } from "@steeze-ui/heroicons";
+    import { Icon } from "@steeze-ui/svelte-icon";
     import { _ } from "svelte-i18n";
 
     import HamburgerMenu from "$lib/figma/buttons/HamburgerMenu.svelte";
@@ -23,12 +25,14 @@
             >{$_("dashboard.search-task")}</label
         >
         <InputField
-            style={{ kind: "search" }}
+            style={{ kind: "field", inputType: "text" }}
             label={undefined}
             placeholder={$_("dashboard.search-task")}
             name="search"
             bind:value={$taskSearchInput}
-        />
+        >
+            <Icon slot="left" src={Search} class="w-4" theme="outline" />
+        </InputField>
         <div class="flex flex-row gap-4">
             {#if showNotificationButton}
                 <NotificationButton isActive />

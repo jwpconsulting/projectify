@@ -1,5 +1,7 @@
 <script lang="ts">
     // TODO can we name it workspace users instead?
+    import { Search } from "@steeze-ui/heroicons";
+    import { Icon } from "@steeze-ui/svelte-icon";
     import { _ } from "svelte-i18n";
 
     import WorkspaceUserCard from "$lib/figma/screens/workspace-settings/WorkspaceUserCard.svelte";
@@ -26,14 +28,16 @@
 
 <div class="flex flex-col gap-4">
     <InputField
-        style={{ kind: "search" }}
+        style={{ kind: "field", inputType: "text" }}
         name="workspaceUserSearch"
         bind:value={filter}
         label={$_("workspace-settings.workspace-users.search.label")}
         placeholder={$_(
             "workspace-settings.workspace-users.search.placeholder"
         )}
-    />
+    >
+        <Icon slot="left" src={Search} class="w-4" theme="outline" />
+    </InputField>
     <Button
         action={{ kind: "button", action: inviteWorkspaceUser }}
         label={$_(

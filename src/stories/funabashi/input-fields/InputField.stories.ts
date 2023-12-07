@@ -5,9 +5,6 @@ import type { InputFieldStyle } from "$lib/funabashi/types";
 import { makeStorybookSelect } from "$lib/storybook";
 
 const style = makeStorybookSelect<InputFieldStyle>({
-    Search: {
-        kind: "search",
-    },
     Text: {
         kind: "field",
         inputType: "text",

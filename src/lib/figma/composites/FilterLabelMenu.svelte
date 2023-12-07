@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { Plus } from "@steeze-ui/heroicons";
+    import { Search, Plus } from "@steeze-ui/heroicons";
+    import { Icon } from "@steeze-ui/svelte-icon";
     import { _ } from "svelte-i18n";
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
@@ -50,10 +51,12 @@
     <InputField
         bind:value={$labelSearch}
         label={undefined}
-        style={{ kind: "search" }}
+        style={{ kind: "field", inputType: "text" }}
         name="label-name"
         placeholder={$_("filter-label-menu.label-name")}
-    />
+    >
+        <Icon slot="left" src={Search} class="w-4" theme="outline" />
+    </InputField>
 </div>
 <div class="flex flex-col">
     {#if mode.kind == "filter" && hasSearchInput}

@@ -66,9 +66,10 @@ export type SquovalState = (typeof squovalStates)[number];
 // TODO rename to InputFieldKind Justus 2022-09-22
 // TODO we need to instead support "search", "erasable", and field
 // subTask should use erasable
-export type InputFieldStyle =
-    | { kind: "search" }
-    | { kind: "field"; inputType: "text" | "password" | "email" | "date" };
+export interface InputFieldStyle {
+    kind: "field";
+    inputType: "text" | "password" | "email" | "date";
+}
 export interface InputFieldAnchor {
     href: string;
     label: string;

@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { Search } from "@steeze-ui/heroicons";
+    import { Icon } from "@steeze-ui/svelte-icon";
     import { _ } from "svelte-i18n";
 
     import FilterUser from "$lib/figma/select-controls/FilterUser.svelte";
@@ -59,11 +61,18 @@
     </label>
     <InputField
         bind:value={$workspaceUserSearch}
-        style={{ kind: "search" }}
+        style={{ kind: "field", inputType: "text" }}
         label={undefined}
         name="workspace-user-name"
         placeholder={$_("dashboard.workspace-user-name")}
-    />
+    >
+        <Icon
+            slot="left"
+            src={Search}
+            class="w-4"
+            theme="outline"
+        /></InputField
+    >
 </div>
 <div class="flex flex-col">
     <FilterUser
