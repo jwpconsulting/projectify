@@ -44,6 +44,7 @@
 
     // XXX not guaranteed to be unique
     $: id = id ?? name;
+    $: hideClearButton = value === undefined || readonly;
 
     // Possibly we can just have two onMount calls here, but I couldn't read
     // from the svelte docs whether that is explicitly supported or not.
@@ -96,7 +97,7 @@
     }
 
     const inputStyle =
-        "text-regular placeholder:text-task-update-text peer relative top-0 left-0 z-10 h-full w-full rounded-lg border border-border pr-8 text-xs focus:outline-none";
+        "text-regular placeholder:text-task-update-text peer  z-10 h-full w-full rounded-lg border border-border py-2 pr-8 text-xs focus:outline-none pl-2";
 
     function clear() {
         value = undefined;
@@ -120,7 +121,7 @@
         >
             {#if label}
                 <label
-                    for={name}
+                    for={id}
                     class="p-2 text-xs font-bold text-base-content first-letter:uppercase"
                 >
                     {label}
@@ -135,14 +136,14 @@
             {/if}
         </div>
     {/if}
-    <div class="flex h-12 w-full flex-row items-center gap-2 p-1">
+    <div class="flex w-full flex-row items-center gap-2">
         {#if $$slots.left}
             <slot name="left" />
         {/if}
         {#if style.inputType === "text"}
             <input
                 type="text"
-                class={`${inputStyle} pl-2`}
+                class={inputStyle}
                 {...inputProps}
                 bind:value
                 on:click={onClick}
@@ -150,7 +151,7 @@
         {:else if style.inputType === "password"}
             <input
                 type="password"
-                class={`${inputStyle} pl-2`}
+                class={inputStyle}
                 {...inputProps}
                 bind:value
                 on:click={onClick}
@@ -158,7 +159,7 @@
         {:else if style.inputType === "email"}
             <input
                 type="email"
-                class={`${inputStyle} pl-2`}
+                class={inputStyle}
                 {...inputProps}
                 bind:value
                 on:click={onClick}
@@ -166,29 +167,22 @@
         {:else if style.inputType === "date"}
             <input
                 type="text"
-                class={`${inputStyle} pl-2`}
+                class={inputStyle}
                 {...inputProps}
                 bind:value
                 on:click={onClick}
                 bind:this={pikadayAnchor}
             />
         {/if}
-        <div
-            class="absolute left-0 top-0 z-0 h-full w-full rounded-xl border-2 border-transparent peer-focus:border-border"
-        />
-        {#if value && !readonly}
-            <button
-                class="absolute right-0.5 top-0.5 z-20 flex flex-row gap-2.5 p-3"
-                on:click|preventDefault={clear}
-                type="button"
-            >
-                <Icon
-                    src={X}
-                    theme="outline"
-                    class="h-4 w-4 text-base-content"
-                />
-            </button>
-        {/if}
+        <button
+            class="flex flex-row"
+            on:click|preventDefault={clear}
+            type="button"
+            disabled={hideClearButton}
+            class:invisible={hideClearButton}
+        >
+            <Icon src={X} theme="outline" class="h-4 w-4" />
+        </button>
     </div>
     {#if anchorBottom !== null || validation !== undefined}
         <div
