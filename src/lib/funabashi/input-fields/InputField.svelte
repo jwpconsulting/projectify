@@ -182,6 +182,8 @@
                 bind:value
                 on:click={onClick}
                 bind:this={pikadayAnchor}
+                min={style.min}
+                max={style.max}
             />
         {/if}
         <button

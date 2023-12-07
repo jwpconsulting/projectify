@@ -5,20 +5,25 @@ import type { InputFieldStyle } from "$lib/funabashi/types";
 import { makeStorybookSelect } from "$lib/storybook";
 
 const style = makeStorybookSelect<InputFieldStyle>({
-    Text: {
+    "Text": {
         inputType: "text",
     },
-    Password: {
+    "Password": {
         inputType: "password",
     },
-    Email: {
+    "Email": {
         inputType: "email",
     },
-    Date: {
+    "Date": {
         inputType: "date",
     },
-    Numeric: {
+    "Numeric": {
         inputType: "numeric",
+    },
+    "Numeric, 0 to 100": {
+        inputType: "numeric",
+        min: 0,
+        max: 100,
     },
 });
 
@@ -110,7 +115,7 @@ export const Numeric: Story = {
         name: "date",
         style: "numeric",
         label: "Enter a number",
-        value: "",
+        value: "0",
         anchorTop: {
             href: "#",
             label: "I am the anchor on the top",
