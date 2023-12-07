@@ -111,6 +111,11 @@
                     "workspace-settings.billing.unpaid.checkout.seats.explanation"
                 )}
             </p>
+        </section>
+        <form
+            on:submit|preventDefault={goToCheckout}
+            class="flex flex-col gap-4"
+        >
             <InputField
                 label={$_(
                     "workspace-settings.billing.unpaid.checkout.seats.label"
@@ -126,10 +131,10 @@
                 style={{ kind: "primary" }}
                 color="blue"
                 size="medium"
-                action={{ kind: "button", action: goToCheckout }}
+                action={{ kind: "submit" }}
                 label={$_("workspace-settings.billing.unpaid.checkout.action")}
             />
-        </section>
+        </form>
     {/if}
 </section>
 
