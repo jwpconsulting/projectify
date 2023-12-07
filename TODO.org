@@ -196,7 +196,8 @@
 
 * Refactor
 
-** Stop using gql for mutating tasks
+** DONE Stop using gql for mutating tasks
+   CLOSED: [2023-12-07 Thu 15:03]
    That includes changing the order.
 
 ** DONE Use async in overlays
