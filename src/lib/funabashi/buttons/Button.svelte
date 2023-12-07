@@ -21,12 +21,12 @@
 
     $: innerColorStyle = {
         primary: {
-            blue: tw`border-transparent bg-primary text-primary-content group-hover:bg-primary-hover group-active:bg-primary-pressed`,
-            red: tw`border-transparent bg-destructive text-destructive-content group-hover:bg-destructive-hover group-active:bg-destructive-pressed`,
+            blue: tw`border-transparent bg-primary text-primary-content hover:bg-primary-hover active:bg-primary-pressed`,
+            red: tw`border-transparent bg-destructive text-destructive-content hover:bg-destructive-hover active:bg-destructive-pressed`,
         },
         secondary: {
-            blue: tw`border-secondary text-secondary-content group-hover:border-secondary-content-hover group-hover:bg-secondary-hover group-hover:text-secondary-content-hover group-active:border-border-secondary group-active:bg-secondary-pressed group-active:text-secondary-content-hover`,
-            red: tw`border-destructive text-destructive group-hover:bg-destructive-secondary-hover group-hover:text-destructive-hover group-active:border-destructive group-active:bg-destructive-secondary-pressed group-active:text-destructive-pressed`,
+            blue: tw`border-secondary text-secondary-content hover:border-secondary-content-hover hover:bg-secondary-hover hover:text-secondary-content-hover active:border-border-secondary active:bg-secondary-pressed active:text-secondary-content-hover`,
+            red: tw`border-destructive text-destructive hover:bg-destructive-secondary-hover hover:text-destructive-hover active:border-destructive active:bg-destructive-secondary-pressed active:text-destructive-pressed`,
         },
         tertiary: {
             blue: tw`text-tertiary-content hover:text-tertiary-content-hover active:bg-tertiary-pressed active:text-tertiary-content-hover`,
@@ -47,15 +47,14 @@
     $: outerGrowStyle = grow ? tw`w-full` : "";
 
     $: outerStyle = {
-        // XXX Not sure if this is the best place to put flex grow here
-        primary: tw`${outerGrowStyle} group rounded-llg`,
-        secondary: tw`${outerGrowStyle} group rounded-llg `,
+        primary: tw`${outerGrowStyle} group rounded-llg disabled:bg-disabled disabled:text-disabled-primary-content ${innerColorStyle} ${innerSizeStyle}`,
+        secondary: tw`${outerGrowStyle} group rounded-llg disabled:bg-disabled disabled:text-disabled-primary-content ${innerColorStyle} ${innerSizeStyle}`,
         tertiary: tw`${outerGrowStyle} flex flex-row justify-center rounded-lg px-4 py-2 font-bold disabled:text-disabled-content ${innerColorStyle} ${innerSizeStyle}`,
     }[style.kind];
 
     $: innerStyle = {
-        primary: tw`rounded-lg border px-4 py-2 font-bold group-disabled:bg-disabled group-disabled:text-disabled-primary-content ${innerColorStyle} ${innerSizeStyle}`,
-        secondary: tw`rounded-lg border px-4 py-2 font-bold group-disabled:bg-disabled group-disabled:text-disabled-primary-content ${innerColorStyle} ${innerSizeStyle}`,
+        primary: tw`rounded-lg border px-4 py-2 font-bold`,
+        secondary: tw`rounded-lg border px-4 py-2 font-bold`,
         tertiary: "",
     }[style.kind];
 
