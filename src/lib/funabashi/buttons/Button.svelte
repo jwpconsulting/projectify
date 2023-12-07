@@ -7,6 +7,7 @@
         ButtonSize,
         ButtonStyle,
     } from "$lib/funabashi/types";
+    import { tw } from "$lib/utils/ui";
 
     export let style: ButtonStyle;
     export let color: ButtonColor;
@@ -20,46 +21,46 @@
 
     $: innerColorStyle = {
         primary: {
-            blue: "border-transparent bg-primary text-primary-content group-hover:bg-primary-hover group-active:bg-primary-pressed",
-            red: "bg-destructive border-transparent text-destructive-content group-hover:bg-destructive-hover group-active:bg-destructive-pressed",
+            blue: tw`border-transparent bg-primary text-primary-content group-hover:bg-primary-hover group-active:bg-primary-pressed`,
+            red: tw`border-transparent bg-destructive text-destructive-content group-hover:bg-destructive-hover group-active:bg-destructive-pressed`,
         },
         secondary: {
-            blue: "text-secondary-content border-secondary group-hover:bg-secondary-hover group-hover:text-secondary-content-hover group-hover:border-secondary-content-hover group-active:bg-secondary-pressed group-active:border-border-secondary group-active:text-secondary-content-hover group-focus:bg-transparent group-focus:text-secondary-content",
-            red: "text-destructive border-destructive group-hover:bg-destructive-secondary-hover group-hover:text-destructive-hover group-active:bg-destructive-secondary-pressed group-active:text-destructive-pressed group-active:border-destructive",
+            blue: tw`border-secondary text-secondary-content group-hover:border-secondary-content-hover group-hover:bg-secondary-hover group-hover:text-secondary-content-hover group-active:border-border-secondary group-active:bg-secondary-pressed group-active:text-secondary-content-hover`,
+            red: tw`border-destructive text-destructive group-hover:bg-destructive-secondary-hover group-hover:text-destructive-hover group-active:border-destructive group-active:bg-destructive-secondary-pressed group-active:text-destructive-pressed`,
         },
         tertiary: {
-            blue: "text-tertiary-content hover:text-tertiary-content-hover active:text-tertiary-content-hover active:bg-tertiary-pressed focus:text-tertiary-content-hover",
-            red: "text-destructive hover:text-destructive-hover active:bg-destructive-secondary-presed active:text-destructive-hover focus:text-destructive-hover",
+            blue: tw`text-tertiary-content hover:text-tertiary-content-hover active:bg-tertiary-pressed active:text-tertiary-content-hover`,
+            red: tw`active:bg-destructive-secondary-presed text-destructive hover:text-destructive-hover active:text-destructive-hover`,
         },
     }[style.kind][color];
     $: innerSizeStyle = {
-        "medium": "text-base",
-        "small": "text-sm",
-        "extra-small": "text-xs",
+        "medium": tw`text-base`,
+        "small": tw`text-sm`,
+        "extra-small": tw`text-xs`,
     }[size];
     $: iconSizeStyle = {
-        "medium": "h-6 w-6",
-        "small": "h-5 w-5",
-        "extra-small": "h-4 w-4",
+        "medium": tw`h-6 w-6`,
+        "small": tw`h-5 w-5`,
+        "extra-small": tw`h-4 w-4`,
     }[size];
 
     $: outerStyle = {
         // XXX Not sure if this is the best place to put flex grow here
-        primary: `group flex ${
+        primary: tw`group flex ${
             grow ? "grow" : ""
-        } flex-col items-start gap-2 rounded-llg border border-transparent p-0.5 focus:border-border-focus focus:outline-none`,
-        secondary: `group flex grow ? "grow" : ""grow flex-col items-start gap-2 rounded-llg border border-transparent p-0.5 focus:border-border-focus focus:outline-none`,
-        tertiary: `flex grow ? "grow" : ""grow flex-row items-center justify-center gap-2 rounded-lg border border-transparent border-transparent px-4 py-2 font-bold focus:outline-none disabled:text-disabled-content ${innerColorStyle} focus:border-border-focus ${innerSizeStyle}`,
+        } flex-col items-start gap-2 rounded-llg border border-transparent p-0.5 `,
+        secondary: tw`? "grow" : ""grow group flex grow flex-col items-start gap-2 rounded-llg border border-transparent p-0.5 `,
+        tertiary: tw`? "grow" : ""grow flex grow flex-row items-center justify-center gap-2 rounded-lg border border-transparent border-transparent px-4 py-2 font-bold disabled:text-disabled-content ${innerColorStyle} ${innerSizeStyle}`,
     }[style.kind];
 
     $: innerStyle = {
-        primary: `flex ${
+        primary: tw`flex ${
             grow ? "w-full" : ""
         } flex-row items-center justify-center gap-2.5 rounded-lg border px-4 py-2 font-bold group-disabled:bg-disabled group-disabled:text-disabled-primary-content ${innerColorStyle} ${innerSizeStyle}`,
-        secondary: `flex ${
+        secondary: tw`flex ${
             grow ? "w-full" : ""
         } flex-row items-center justify-center gap-2.5 rounded-lg border px-4 py-2 font-bold group-disabled:bg-disabled group-disabled:text-disabled-primary-content ${innerColorStyle} ${innerSizeStyle}`,
-        tertiary: `flex ${
+        tertiary: tw`flex ${
             grow ? "w-full" : ""
         } flex-row items-center justify-center gap-2.5 rounded-lg border px-4  py-2 font-bold group-disabled:border-disabled-content group-disabled:bg-transparent group-disabled:text-disabled-content ${innerColorStyle} ${innerSizeStyle}`,
     }[style.kind];
