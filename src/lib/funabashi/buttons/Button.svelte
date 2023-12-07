@@ -48,9 +48,13 @@
         // XXX Not sure if this is the best place to put flex grow here
         primary: tw`group flex ${
             grow ? "grow" : ""
-        } flex-col items-start rounded-llg border border-transparent p-0.5 `,
-        secondary: tw`? "grow" : ""grow group flex grow flex-col items-start rounded-llg border border-transparent p-0.5 `,
-        tertiary: tw`? "grow" : ""grow flex grow flex-row items-center justify-center rounded-lg border border-transparent border-transparent px-4 py-2 font-bold disabled:text-disabled-content ${innerColorStyle} ${innerSizeStyle}`,
+        } flex-col items-start rounded-llg`,
+        secondary: tw`${
+            grow ? "grow" : ""
+        } group flex grow grow flex-col items-start rounded-llg `,
+        tertiary: tw`${
+            grow ? "grow" : ""
+        } flex grow grow flex-row items-center justify-center rounded-lg px-4 py-2 font-bold disabled:text-disabled-content ${innerColorStyle} ${innerSizeStyle}`,
     }[style.kind];
 
     $: innerStyle = {
