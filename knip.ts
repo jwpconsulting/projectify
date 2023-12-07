@@ -1,14 +1,13 @@
 import type { KnipConfig } from "knip";
 
 const config: KnipConfig = {
-    // TODO completely disregard homebrew storybook pages
-    // ignore: ["**/*.d.ts", "src/routes/storybook/**"],
     ignore: ["**/*.d.ts"],
     entry: [
         ".eslintrc.cjs",
         "postcss.config.cjs",
         "svelte.config.js",
         "vite.config.ts",
+        "src/stories/**/*.stories.ts",
         "src/routes/**/+{page,error,layout}{,@*}.{ts,svelte}",
         "src/bin/*.ts",
         // XXX We might have more luck convincing knip that we are importing
