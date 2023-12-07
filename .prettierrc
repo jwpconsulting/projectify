@@ -2,5 +2,6 @@
     "singleQuote": false,
     "trailingComma": "es5",
     "quoteProps": "consistent",
-    "plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss"]
+    "plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss"],
+    "tailwindFunctions": ["tw"]
 }

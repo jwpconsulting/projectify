@@ -97,7 +97,7 @@
     }
 
     const inputStyle =
-        "text-regular placeholder:text-task-update-text peer  z-10 h-full w-full rounded-lg border border-border py-2 pr-8 text-xs focus:outline-none pl-2";
+        "text-regular placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border py-2 pr-8 text-xs focus:outline-none pl-2";
 
     function clear() {
         value = undefined;
