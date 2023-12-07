@@ -37,12 +37,14 @@ export const user2: User = {
 };
 export const users = [user1, user2, null];
 
+const nullUuid = "00000000-0000-0000-0000-000000000000";
+
 export const mappedLabels: Label[] = labelColors.map(
     (labelColor: LabelColor) => {
         return {
             name: labelColor,
             color: getIndexFromLabelColor(labelColor),
-            uuid: `does-not-exist-${labelColor}`,
+            uuid: nullUuid,
         };
     }
 );
@@ -69,7 +71,7 @@ export const selectLabels: SelectLabel[] = [
 
 export const workspaceUser: WorkspaceUser = {
     user: user1,
-    uuid: "does-not-exist",
+    uuid: nullUuid,
     role: "OWNER",
     created: "",
     modified: "",
@@ -82,14 +84,14 @@ export const workspaceUserSelectionInputs: WorkspaceUserSelectionInput[] = [
 ];
 
 export const workspaceBoard: WorkspaceBoard = {
-    uuid: "does-not-exist",
+    uuid: nullUuid,
     title: "Project board with a long name, it is long",
     created: "",
     modified: "",
 };
 
 export const workspace = {
-    uuid: "does-not-exist",
+    uuid: nullUuid,
     title: "This is a workspace, the title is veeeeeryyy loooong",
     created: "",
     modified: "",
@@ -116,7 +118,7 @@ export const subTask: SubTask = {
     description: "Description should not be shown",
     created: "",
     modified: "",
-    uuid: "does-not-exist",
+    uuid: nullUuid,
     done: false,
     order: 0,
 };
@@ -125,7 +127,7 @@ export const task: TaskWithWorkspaceBoardSection = {
     title: "This task has a very long name, yes, it's long, and as you know that will tell us whether we have overflow problems or not.",
     created: "",
     modified: "",
-    uuid: "does-not-exist",
+    uuid: nullUuid,
     deadline: "2022-08-01",
     _order: 0,
     number: 1,
@@ -136,10 +138,10 @@ export const task: TaskWithWorkspaceBoardSection = {
         title: "section name that is long",
         created: "",
         modified: "",
-        uuid: "does-not-exist",
+        uuid: nullUuid,
         _order: 0,
         workspace_board: {
-            uuid: "does-not-exist",
+            uuid: nullUuid,
             title: "Project board with a long name, it is long",
             created: "",
             modified: "",
@@ -151,7 +153,7 @@ const task2: Task = {
     title: "A second task, worthy of being a task, and having a wordy title",
     created: "",
     modified: "",
-    uuid: "does-not-exist-either",
+    uuid: nullUuid,
     deadline: "2022-08-01",
     _order: 0,
     number: 1337,
@@ -164,7 +166,7 @@ export const workspaceBoardSection: WorkspaceBoardSection = {
     title: "section name that is long",
     created: "",
     modified: "",
-    uuid: "does-not-exist",
+    uuid: nullUuid,
     tasks: [task, task2],
     _order: 0,
 };
@@ -173,7 +175,7 @@ export const breadCrumbWorkspaceBoardSection: WorkspaceBoardSection = {
     title: "section name that is long",
     created: "",
     modified: "",
-    uuid: "does-not-exist",
+    uuid: nullUuid,
     tasks: [task, task2],
     _order: 0,
     workspace_board: workspaceBoard,
