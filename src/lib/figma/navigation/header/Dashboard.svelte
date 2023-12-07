@@ -8,15 +8,30 @@
     import Layout from "$lib/figma/navigation/header/Layout.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import { goto } from "$lib/navigation";
+    import { currentWorkspaceBoard } from "$lib/stores/dashboard";
     import { toggleMobileMenu } from "$lib/stores/globalUi";
     import type { User } from "$lib/types/user";
+    import { getWorkspaceBoardSearchUrl } from "$lib/urls/dashboard";
+    import { unwrap } from "$lib/utils/type";
 
     export let user: User;
     let searchInput: string | undefined = undefined;
 
-    function performSearch() {
-        console.log("Searching for", searchInput);
+    async function performSearch() {
+        const workspaceBoard = unwrap(
+            $currentWorkspaceBoard,
+            "Expected $currentWorkspaceBoard"
+        );
+        await goto(
+            getWorkspaceBoardSearchUrl(
+                workspaceBoard,
+                unwrap(searchInput, "Expected searchInput")
+            )
+        );
     }
+
+    $: canSearch = searchInput !== undefined;
 </script>
 
 <Layout logoVisibleDesktop>
@@ -39,7 +54,7 @@
             />
             <Button
                 label={$_("dashboard.search-task")}
-                action={{ kind: "submit" }}
+                action={{ kind: "submit", disabled: !canSearch }}
                 style={{
                     kind: "tertiary",
                     icon: { position: "left", icon: Search },
