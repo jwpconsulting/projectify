@@ -47,15 +47,9 @@
     $: outerGrowStyle = grow ? tw`w-full` : "";
 
     $: outerStyle = {
-        primary: tw`${outerGrowStyle} group rounded-llg disabled:bg-disabled disabled:text-disabled-primary-content ${innerColorStyle} ${innerSizeStyle}`,
-        secondary: tw`${outerGrowStyle} group rounded-llg disabled:bg-disabled disabled:text-disabled-primary-content ${innerColorStyle} ${innerSizeStyle}`,
+        primary: tw`${outerGrowStyle} rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content ${innerColorStyle} ${innerSizeStyle}`,
+        secondary: tw`${outerGrowStyle} rounded-lg rounded-lg px-4 py-2 font-bold disabled:bg-disabled disabled:text-disabled-primary-content ${innerColorStyle} ${innerSizeStyle}`,
         tertiary: tw`${outerGrowStyle} flex flex-row justify-center rounded-lg px-4 py-2 font-bold disabled:text-disabled-content ${innerColorStyle} ${innerSizeStyle}`,
-    }[style.kind];
-
-    $: innerStyle = {
-        primary: tw`rounded-lg border px-4 py-2 font-bold`,
-        secondary: tw`rounded-lg border px-4 py-2 font-bold`,
-        tertiary: "",
     }[style.kind];
 
     // Outer element properties that button and submit share
@@ -115,19 +109,19 @@
     {/if}
 {:else if action.kind === "a"}
     <a href={action.href} class={outerStyle} on:click={action.onInteract}>
-        <div class={innerStyle}>
+        <div>
             {label}
         </div>
     </a>
 {:else if action.kind === "button"}
     <button on:click|preventDefault={action.action} {...formProps}>
-        <div class={innerStyle}>
+        <div>
             {label}
         </div>
     </button>
 {:else}
     <button type="submit" {...formProps}>
-        <div class={innerStyle}>
+        <div>
             {label}
         </div>
     </button>
