@@ -5,25 +5,22 @@ import type { InputFieldStyle } from "$lib/funabashi/types";
 import { makeStorybookSelect } from "$lib/storybook";
 
 const style = makeStorybookSelect<InputFieldStyle>({
-    "Search": {
+    Search: {
         kind: "search",
     },
-    "Sub Task": {
-        kind: "subTask",
-    },
-    "Text": {
+    Text: {
         kind: "field",
         inputType: "text",
     },
-    "Password": {
+    Password: {
         kind: "field",
         inputType: "password",
     },
-    "Email": {
+    Email: {
         kind: "field",
         inputType: "email",
     },
-    "Date": {
+    Date: {
         kind: "field",
         inputType: "date",
     },

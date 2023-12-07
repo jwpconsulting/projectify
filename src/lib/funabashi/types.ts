@@ -68,8 +68,6 @@ export type SquovalState = (typeof squovalStates)[number];
 // subTask should use erasable
 export type InputFieldStyle =
     | { kind: "search" }
-    // TODO make me "erasable"
-    | { kind: "subTask" }
     | { kind: "field"; inputType: "text" | "password" | "email" | "date" };
 export interface InputFieldAnchor {
     href: string;

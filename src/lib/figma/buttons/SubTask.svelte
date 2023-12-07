@@ -30,7 +30,7 @@
         <!-- XXX should be only editable when in edit mode -->
         <div class="grow">
             <InputField
-                style={{ kind: "subTask" }}
+                style={{ kind: "field", inputType: "text" }}
                 placeholder={$_("task-screen.enter-a-subtask")}
                 name="sub-task"
                 bind:value={subTask.title}

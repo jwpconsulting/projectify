@@ -144,14 +144,6 @@
                 bind:value
                 on:click={onClick}
             />
-        {:else if style.kind === "subTask"}
-            <input
-                type="text"
-                class={`${inputStyle} pl-2`}
-                {...inputProps}
-                bind:value
-                on:click={onClick}
-            />
         {:else if style.kind === "field"}
             {#if style.inputType === "text"}
                 <input
