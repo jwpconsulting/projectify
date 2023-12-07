@@ -554,6 +554,7 @@ const messages: MessageDirectory = {
                     seats: {
                         explanation:
                             "Select the amount of workspace seats. For each workspace user that is invited or added, a seat is used up.",
+                        placeholder: "Number of workspace seats",
                         label: "Workspace seats",
                     },
                     action: "Go to checkout",

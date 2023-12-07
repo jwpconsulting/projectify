@@ -3,6 +3,7 @@
 
     import { pricePerSeat } from "$lib/config";
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
     import {
@@ -14,8 +15,11 @@
     import type { Workspace } from "$lib/types/workspace";
 
     async function goToCheckout() {
-        if (!checkoutSeats) {
-            throw new Error("Expected checkoutSeats");
+        let checkoutSeats: number;
+        try {
+            checkoutSeats = parseInt(checkoutSeatsRaw, 10);
+        } catch {
+            throw new Error("Expected valid seats");
         }
         const { url } = await createCheckoutSession(
             workspace.uuid,
@@ -36,7 +40,7 @@
     export let workspace: Workspace;
     export let customer: Customer;
 
-    let checkoutSeats: number | undefined = undefined;
+    let checkoutSeatsRaw = "1";
 
     $: customer = $currentCustomer ?? customer;
 </script>
@@ -107,15 +111,16 @@
                     "workspace-settings.billing.unpaid.checkout.seats.explanation"
                 )}
             </p>
-            <!--TODO make this an actual <label> -->
-            <p>
-                {$_("workspace-settings.billing.unpaid.checkout.seats.label")}
-            </p>
-            <input
-                class=""
-                type="number"
-                inputmode="numeric"
-                bind:value={checkoutSeats}
+            <InputField
+                label={$_(
+                    "workspace-settings.billing.unpaid.checkout.seats.label"
+                )}
+                bind:value={checkoutSeatsRaw}
+                name="checkout-seats"
+                placeholder={$_(
+                    "workspace-settings.billing.unpaid.checkout.seats.placeholder"
+                )}
+                style={{ inputType: "numeric", min: 1, max: 100 }}
             />
             <Button
                 style={{ kind: "primary" }}
