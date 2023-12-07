@@ -9,6 +9,7 @@
         createBillingPortalSession,
         createCheckoutSession,
     } from "$lib/repository/corporate";
+    import { currentCustomer } from "$lib/stores/dashboard";
     import type { Customer } from "$lib/types/corporate";
     import type { Workspace } from "$lib/types/workspace";
 
@@ -36,6 +37,8 @@
     export let customer: Customer;
 
     let checkoutSeats: number | undefined = undefined;
+
+    $: customer = $currentCustomer ?? customer;
 </script>
 
 <section class="flex flex-col gap-6 px-4 py-6">
