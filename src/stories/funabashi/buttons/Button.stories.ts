@@ -43,6 +43,10 @@ const action = makeStorybookSelect<ButtonAction>({
         action: () => console.log("Hello, World! I am a button."),
         disabled: true,
     },
+    "Submit Disabled": {
+        kind: "submit",
+        disabled: true,
+    },
     "Anchor": { kind: "a", href: "#" },
 });
 
