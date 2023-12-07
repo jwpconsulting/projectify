@@ -4,34 +4,74 @@ import { getCookie } from "$lib/utils/cookie";
 
 import type { ApiResponse } from "./types";
 
-const getOptions: RequestInit = { credentials: "include" };
+const getOptions: RequestInit = {
+    credentials: "include",
+    headers: {
+        Accept: "application/json",
+    },
+};
 
-function putPostOptions<T>(
+function putPostDeleteOptions<T>(
     method: "POST" | "PUT" | "DELETE",
     data?: T
 ): RequestInit {
     // These requests will certainly fail without a csrf token
     // XXX or will they? Seems like we generously disabled CSRF checking
     // hehehe...
-    const baseHeaders = { "Content-Type": "application/json" };
     const csrftoken = getCookie("csrftoken");
     return {
         method,
         // TODO serialize using new FormData()
         body: data === undefined ? undefined : JSON.stringify(data),
         credentials: "include",
-        headers: csrftoken
-            ? { ...baseHeaders, "X-CSRFToken": csrftoken }
-            : baseHeaders,
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            ...(csrftoken ? { "X-CSRFToken": csrftoken } : undefined),
+        },
     };
 }
 
-async function parseResponse<T, E = unknown>(
-    response: Response
+/*
+ * Carefully parse a DRF response, keeping in mind that not JSON, but a plain
+ * string might be returned.
+ */
+function parseResponseData(data: string): unknown | string | undefined {
+    if (data === "") {
+        return undefined;
+    }
+    try {
+        return JSON.parse(data) as unknown;
+    } catch {
+        return data;
+    }
+}
+
+async function fetchResponse<T, E = unknown>(
+    url: string,
+    options: RequestInit,
+    { fetch }: RepositoryContext
 ): Promise<ApiResponse<T, E>> {
+    let response: Response | undefined = undefined;
+    try {
+        response = await fetch(`${vars.API_ENDPOINT}${url}`, options);
+    } catch (error) {
+        if (!(error instanceof Error)) {
+            console.error(error);
+            throw new Error("Unhandleable error");
+        }
+        console.error(
+            "Something went wrong when making an API request:",
+            error
+        );
+        return { kind: "error", ok: false, error };
+    }
     const content = await response.text();
-    // A response might be empty, so we can't just use await response.json()
-    const data: unknown = content === "" ? undefined : JSON.parse(content);
+    // TODO
+    // Not very clean, we still don't correctly handle DRF just returning
+    // a string -- here we might reconfigure DRF to always return JSON,
+    // even when erroring
+    const data: unknown = parseResponseData(content);
     if (response.ok) {
         return { kind: "ok", ok: true, data: data as T };
     }
@@ -58,9 +98,7 @@ export async function getWithCredentialsJson<T, E = unknown>(
     url: string,
     repositoryContext: RepositoryContext
 ): Promise<ApiResponse<T, E>> {
-    const { fetch } = repositoryContext;
-    const response = await fetch(`${vars.API_ENDPOINT}${url}`, getOptions);
-    return await parseResponse<T, E>(response);
+    return await fetchResponse<T, E>(url, getOptions, repositoryContext);
 }
 
 export async function postWithCredentialsJson<T, E = unknown>(
@@ -68,12 +106,11 @@ export async function postWithCredentialsJson<T, E = unknown>(
     data: unknown,
     repositoryContext: RepositoryContext
 ): Promise<ApiResponse<T, E>> {
-    const { fetch } = repositoryContext;
-    const response = await fetch(
-        `${vars.API_ENDPOINT}${url}`,
-        putPostOptions("POST", data)
+    return await fetchResponse<T, E>(
+        url,
+        putPostDeleteOptions("POST", data),
+        repositoryContext
     );
-    return await parseResponse<T, E>(response);
 }
 
 export async function putWithCredentialsJson<T, E = unknown>(
@@ -81,24 +118,22 @@ export async function putWithCredentialsJson<T, E = unknown>(
     data: unknown,
     repositoryContext: RepositoryContext
 ): Promise<ApiResponse<T, E>> {
-    const { fetch } = repositoryContext;
-    const response = await fetch(
-        `${vars.API_ENDPOINT}${url}`,
-        putPostOptions("PUT", data)
+    return await fetchResponse<T, E>(
+        url,
+        putPostDeleteOptions("PUT", data),
+        repositoryContext
     );
-    return await parseResponse<T, E>(response);
 }
 
 export async function deleteWithCredentialsJson<T, E = unknown>(
     url: string,
     repositoryContext: RepositoryContext
 ): Promise<ApiResponse<T, E>> {
-    const { fetch } = repositoryContext;
-    const response = await fetch(
+    return await fetchResponse<T, E>(
         `${vars.API_ENDPOINT}${url}`,
-        putPostOptions("DELETE")
+        putPostDeleteOptions("DELETE"),
+        repositoryContext
     );
-    return await parseResponse<T, E>(response);
 }
 
 /*
