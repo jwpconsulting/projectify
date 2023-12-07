@@ -14,7 +14,6 @@
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
     import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
-    import WatcherButton from "$lib/figma/buttons/WatcherButton.svelte";
     import WorkspaceBoardIcon from "$lib/figma/buttons/WorkspaceBoardIcon.svelte";
     import WorkspaceSettings from "$lib/figma/buttons/WorkspaceSettings.svelte";
     import {
@@ -54,12 +53,6 @@ Cancel search
 <div class={fr}>
     {#each falseTrue as isActive}
         <CancelSearch on:click={console.log} {isActive} />
-    {/each}
-</div>
-Watcher
-<div class={fr}>
-    {#each falseTrue as isActive}
-        <WatcherButton on:click={console.log} {isActive} />
     {/each}
 </div>
 Notification read
