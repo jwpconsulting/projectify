@@ -71,8 +71,6 @@ export type InputFieldStyle =
     // TODO make me "erasable"
     | { kind: "subTask" }
     | { kind: "field"; inputType: "text" | "password" | "email" | "date" };
-const inputFieldSizes = ["extraSmall", "small", "normal"] as const;
-export type InputFieldSize = (typeof inputFieldSizes)[number];
 export interface InputFieldAnchor {
     href: string;
     label: string;

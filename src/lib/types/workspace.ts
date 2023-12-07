@@ -27,7 +27,7 @@ export type CreateUpdateSubTask = {
     uuid?: string;
 } & TitleDescriptionType;
 
-export type ChatMessage = {
+type ChatMessage = {
     author: WorkspaceUser;
     uuid: string;
     text: string;

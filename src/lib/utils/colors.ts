@@ -7,7 +7,7 @@ const labelColorTypes = [
     "textBg",
     "textHoverBg",
 ] as const;
-export type LabelColorType = (typeof labelColorTypes)[number];
+type LabelColorType = (typeof labelColorTypes)[number];
 export const labelColors = [
     "orange",
     "pink",
