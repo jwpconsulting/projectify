@@ -45,7 +45,9 @@
 
     // XXX not guaranteed to be unique
     $: id = id ?? name;
-    $: hideClearButton = value === undefined || readonly;
+    // Should we show a clear button - at all?
+    export let showClearButton = true;
+    $: hideClearButton = !showClearButton || value === undefined || readonly;
 
     // Possibly we can just have two onMount calls here, but I couldn't read
     // from the svelte docs whether that is explicitly supported or not.
@@ -188,15 +190,17 @@
                 max={style.max}
             />
         {/if}
-        <button
-            class="flex flex-row"
-            on:click|preventDefault={clear}
-            type="button"
-            disabled={hideClearButton}
-            class:invisible={hideClearButton}
-        >
-            <Icon src={X} theme="outline" class="h-4 w-4" />
-        </button>
+        {#if showClearButton}
+            <button
+                class="flex flex-row"
+                on:click|preventDefault={clear}
+                type="button"
+                disabled={hideClearButton}
+                class:invisible={hideClearButton}
+            >
+                <Icon src={X} theme="outline" class="h-4 w-4" />
+            </button>
+        {/if}
     </div>
     {#if anchorBottom !== null || validation !== undefined}
         <div
