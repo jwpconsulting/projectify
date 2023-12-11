@@ -46,7 +46,7 @@
     // XXX not guaranteed to be unique
     $: id = id ?? name;
     // Should we show a clear button - at all?
-    export let showClearButton = true;
+    export let showClearButton = false;
     $: hideClearButton = !showClearButton || value === undefined || readonly;
 
     // Possibly we can just have two onMount calls here, but I couldn't read
