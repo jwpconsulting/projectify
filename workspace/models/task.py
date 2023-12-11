@@ -21,9 +21,10 @@ from django.utils.translation import gettext_lazy as _
 
 import pgtrigger
 from django_extensions.db.models import (
-    TimeStampedModel,
     TitleDescriptionModel,
 )
+
+from projectify.lib.models import BaseModel
 
 from .types import (
     GetOrder,
@@ -138,11 +139,7 @@ class TaskQuerySet(models.QuerySet["Task"]):
               END;""",
     )
 )
-class Task(
-    TitleDescriptionModel,
-    TimeStampedModel,
-    models.Model,
-):
+class Task(TitleDescriptionModel, BaseModel):
     """Task, belongs to workspace board section."""
 
     workspace = models.ForeignKey[Workspace](

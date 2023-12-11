@@ -20,9 +20,10 @@ from django.db import (
 
 import pgtrigger
 from django_extensions.db.models import (
-    TimeStampedModel,
     TitleDescriptionModel,
 )
+
+from projectify.lib.models import BaseModel
 
 from .const import (
     MAINTAINER_EQUIVALENT,
@@ -84,7 +85,7 @@ class WorkspaceQuerySet(models.QuerySet["Workspace"]):
               END;""",
     )
 )
-class Workspace(TitleDescriptionModel, TimeStampedModel, models.Model):
+class Workspace(TitleDescriptionModel, BaseModel):
     """Workspace."""
 
     users = models.ManyToManyField(

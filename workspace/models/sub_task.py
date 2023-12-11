@@ -16,9 +16,10 @@ from django.db import (
 from django.utils.translation import gettext_lazy as _
 
 from django_extensions.db.models import (
-    TimeStampedModel,
     TitleDescriptionModel,
 )
+
+from projectify.lib.models import BaseModel
 
 from .task import (
     Task,
@@ -48,11 +49,7 @@ class SubTaskQuerySet(models.QuerySet["SubTask"]):
         return self.filter(**kwargs)
 
 
-class SubTask(
-    TitleDescriptionModel,
-    TimeStampedModel,
-    models.Model,
-):
+class SubTask(TitleDescriptionModel, BaseModel):
     """SubTask, belongs to Task."""
 
     task = models.ForeignKey[Task](

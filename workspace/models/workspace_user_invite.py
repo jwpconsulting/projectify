@@ -11,9 +11,7 @@ from django.db import (
 )
 from django.utils.translation import gettext_lazy as _
 
-from django_extensions.db.models import (
-    TimeStampedModel,
-)
+from projectify.lib.models import BaseModel
 
 from .types import (
     Pks,
@@ -36,7 +34,7 @@ class WorkspaceUserInviteQuerySet(models.QuerySet["WorkspaceUserInvite"]):
         return self.filter(redeemed=redeemed)
 
 
-class WorkspaceUserInvite(TimeStampedModel, models.Model):
+class WorkspaceUserInvite(BaseModel):
     """UserInvites belonging to this workspace."""
 
     user_invite = models.ForeignKey["UserInvite"](

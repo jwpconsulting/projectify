@@ -49,6 +49,7 @@ class CustomerQuerySet(models.QuerySet["Customer"]):
         return self.get(stripe_customer_id=stripe_customer_id)
 
 
+# TODO use BaseModel
 class Customer(models.Model):
     """Customer model. One to one linked to workspace."""
 

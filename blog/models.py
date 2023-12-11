@@ -15,9 +15,7 @@ from django.template.defaultfilters import (
     slugify,
 )
 
-from django_extensions.db.models import (
-    TimeStampedModel,
-)
+from projectify.lib.models import BaseModel
 
 if TYPE_CHECKING:
     from user.models import (  # noqa: F401
@@ -25,7 +23,7 @@ if TYPE_CHECKING:
     )
 
 
-class Post(TimeStampedModel):
+class Post(BaseModel):
     """Post Model."""
 
     title = models.CharField(max_length=300)
@@ -60,7 +58,7 @@ class Post(TimeStampedModel):
         return self.title
 
 
-class PostImage(TimeStampedModel):
+class PostImage(BaseModel):
     """Post Image Model."""
 
     post = models.ForeignKey["Post"](Post, on_delete=models.CASCADE)

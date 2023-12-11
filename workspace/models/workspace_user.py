@@ -17,9 +17,7 @@ from django.db import (
     models,
 )
 
-from django_extensions.db.models import (
-    TimeStampedModel,
-)
+from projectify.lib.models import BaseModel
 
 from .const import (
     WorkspaceUserRoles,
@@ -55,7 +53,7 @@ class WorkspaceUserQuerySet(models.QuerySet["WorkspaceUser"]):
         return self.filter(workspace__users=user)
 
 
-class WorkspaceUser(TimeStampedModel, models.Model):
+class WorkspaceUser(BaseModel):
     """Workspace to user mapping."""
 
     workspace = models.ForeignKey["Workspace"](
