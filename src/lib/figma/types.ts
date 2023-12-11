@@ -9,19 +9,18 @@ export type MenuButtonColor = (typeof menuButtonColors)[number];
 const borderedIconTypes = ["workspace", "filter"] as const;
 export type BorderedIconType = (typeof borderedIconTypes)[number];
 
-const avatarStateSizes = ["small", "medium", "large", "hoverable"] as const;
-export type AvatarStateSize = (typeof avatarStateSizes)[number];
-
-export const avatarVariantSizes = [
+export const avatarStateSizes = [
     "small",
     "medium",
     "large",
     "hoverable",
 ] as const;
-export type AvatarVariantSize = (typeof avatarVariantSizes)[number];
-export type AvatarVariantContent =
-    | { kind: "single"; user: User | null }
-    | { kind: "assign"; users: [User | null, User | null] };
+export type AvatarStateSize = (typeof avatarStateSizes)[number];
+
+export interface AvatarVariantContent {
+    kind: "single";
+    user?: User;
+}
 
 // TODO rename me LabelContent Justus 2023-03-07
 export type LabelLabel =

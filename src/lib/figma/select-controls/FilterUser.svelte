@@ -51,7 +51,7 @@
                     size="small"
                 />
             {:else}
-                <AvatarState size="small" user={null} />
+                <AvatarState size="small" user={undefined} />
             {/if}
             <div class="text-regular min-w-0 truncate text-sm">
                 {#if workspaceUserSelectionInput.kind === "unassigned"}

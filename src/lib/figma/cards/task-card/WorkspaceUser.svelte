@@ -40,6 +40,6 @@
         bind:this={userPickerBtnRef}
         on:click|preventDefault={openUserPicker}
     >
-        <AvatarVariant content={{ kind: "single", user: null }} size="small" />
+        <AvatarVariant content={{ kind: "single" }} size="small" />
     </button>
 {/if}

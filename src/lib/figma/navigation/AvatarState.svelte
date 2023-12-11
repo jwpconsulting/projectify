@@ -3,7 +3,7 @@
     import type { AvatarStateSize } from "$lib/figma/types";
     import type { User } from "$lib/types/user";
 
-    export let user: User | null;
+    export let user: User | undefined;
     export let size: AvatarStateSize;
 
     $: outerSize = {
@@ -25,7 +25,7 @@
 
 <div
     class={`flex ${outerSize} items-center justify-center rounded-full border border-primary`}
-    class:bg-background={user === null}
+    class:bg-background={user === undefined}
 >
     {#if user}
         <UserAvatar {user} size={innerSize} />

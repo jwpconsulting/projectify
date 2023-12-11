@@ -17,6 +17,6 @@
 <div class="flex flex-row items-center gap-4" bind:this={btnRef}>
     <UpdateUser
         action={onInteract ? onInteract.bind(null, btnRef) : undefined}
-        user={workspaceUser?.user ?? null}
+        user={workspaceUser?.user}
     />
 </div>

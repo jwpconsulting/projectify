@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
-import { avatarVariantSizes } from "$lib/figma/types";
+import { avatarStateSizes } from "$lib/figma/types";
 import { user1, user2 } from "$lib/storybook";
 
 const meta: Meta<AvatarVariant> = {
     component: AvatarVariant,
     argTypes: {
         size: {
-            options: avatarVariantSizes,
+            options: avatarStateSizes,
             control: {
                 type: "radio",
             },

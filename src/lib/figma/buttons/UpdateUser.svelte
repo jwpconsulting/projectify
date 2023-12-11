@@ -6,12 +6,11 @@
     import { getDisplayName } from "$lib/types/user";
     import type { User } from "$lib/types/user";
 
-    export let user: User | null;
+    export let user: User | undefined;
     export let action: (() => void) | undefined;
 
     let avatarContent: AvatarVariantContent = {
         kind: "single",
-        user: null,
     };
     $: {
         avatarContent = {
@@ -19,9 +18,9 @@
             user,
         };
     }
-    let displayName: string | null = null;
+    let displayName: string | undefined = undefined;
     $: {
-        displayName = user ? getDisplayName(user) : null;
+        displayName = user ? getDisplayName(user) : undefined;
     }
 </script>
 
@@ -37,7 +36,7 @@
         class="flex flex-row items-center gap-2 rounded-2.5xl border border-dashed border-primary px-2 py-1 text-sm font-bold text-primary {action
             ? 'group-hover:bg-background group-active:bg-secondary-hover'
             : ''}"
-        class:bg-task-hover={user !== null}
+        class:bg-task-hover={user !== undefined}
     >
         <AvatarVariant size="small" content={avatarContent} />
         <div class="line-clamp-1 overflow-hidden">

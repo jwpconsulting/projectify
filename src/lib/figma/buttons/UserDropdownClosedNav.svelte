@@ -24,7 +24,7 @@
     {#if $userExpandOpen}
         <div class="flex flex-col items-center gap-2">
             <SelectUserClosedNav
-                user={null}
+                user={undefined}
                 active={$selectedWorkspaceUser.kind === "unassigned"}
                 on:select={() => filterByWorkspaceUser({ kind: "unassigned" })}
                 on:deselect={() =>
