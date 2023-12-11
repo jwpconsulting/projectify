@@ -37,6 +37,7 @@ class LabelQuerySet(models.QuerySet["Label"]):
         return self.filter(workspace__users=user, uuid=uuid)
 
 
+# TODO use BaseModel
 class Label(models.Model):
     """A label."""
 

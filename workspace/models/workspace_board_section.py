@@ -16,9 +16,10 @@ from django.db import (
 )
 
 from django_extensions.db.models import (
-    TimeStampedModel,
     TitleDescriptionModel,
 )
+
+from projectify.lib.models import BaseModel
 
 from .task import (
     Task,
@@ -49,11 +50,7 @@ class WorkspaceBoardSectionQuerySet(models.QuerySet["WorkspaceBoardSection"]):
         return self.filter(workspace_board__workspace__users=user, uuid=uuid)
 
 
-class WorkspaceBoardSection(
-    TitleDescriptionModel,
-    TimeStampedModel,
-    models.Model,
-):
+class WorkspaceBoardSection(TitleDescriptionModel, BaseModel):
     """Section of a WorkspaceBoard."""
 
     workspace_board = models.ForeignKey["WorkspaceBoard"](

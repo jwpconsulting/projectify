@@ -20,12 +20,11 @@ from django.utils import (
 )
 from django.utils.translation import gettext_lazy as _
 
-from django_extensions.db.models import (
-    TimeStampedModel,
-)
 from typing_extensions import (
     Self,
 )
+
+from projectify.lib.models import BaseModel
 
 
 class UserManager(BaseUserManager["User"]):
@@ -101,7 +100,7 @@ class UserInviteQuerySet(models.QuerySet["UserInvite"]):
         return self.filter(email=email)
 
 
-class UserInvite(TimeStampedModel, models.Model):
+class UserInvite(BaseModel):
     """User invite model."""
 
     email = models.EmailField(

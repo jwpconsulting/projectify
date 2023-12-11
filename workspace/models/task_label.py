@@ -26,6 +26,7 @@ class TaskLabelQuerySet(models.QuerySet["TaskLabel"]):
         return self.filter(task__pk__in=pks)
 
 
+# TODO use BaseModel
 class TaskLabel(models.Model):
     """A label to task assignment."""
 

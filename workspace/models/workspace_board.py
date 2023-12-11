@@ -16,9 +16,10 @@ from django.db import (
 from django.utils.translation import gettext_lazy as _
 
 from django_extensions.db.models import (
-    TimeStampedModel,
     TitleDescriptionModel,
 )
+
+from projectify.lib.models import BaseModel
 
 from .types import Pks
 from .workspace import (
@@ -66,7 +67,7 @@ class WorkspaceBoardQuerySet(models.QuerySet["WorkspaceBoard"]):
         return self.filter(archived__isnull=not archived)
 
 
-class WorkspaceBoard(TitleDescriptionModel, TimeStampedModel, models.Model):
+class WorkspaceBoard(TitleDescriptionModel, BaseModel):
     """Workspace board."""
 
     workspace = models.ForeignKey["Workspace"](

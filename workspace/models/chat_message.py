@@ -11,9 +11,7 @@ from django.db import (
     models,
 )
 
-from django_extensions.db.models import (
-    TimeStampedModel,
-)
+from projectify.lib.models import BaseModel
 
 from .task import (
     Task,
@@ -43,7 +41,7 @@ class ChatMessageQuerySet(models.QuerySet["ChatMessage"]):
         return self.filter(**kwargs)
 
 
-class ChatMessage(TimeStampedModel, models.Model):
+class ChatMessage(BaseModel):
     """ChatMessage, belongs to Task."""
 
     task = models.ForeignKey["Task"](
