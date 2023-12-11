@@ -45,10 +45,8 @@
             {#if workspaceUserSelectionInput.kind === "workspaceUser"}
                 <AvatarVariant
                     content={{
-                        kind: "multiple",
-                        users: [
-                            workspaceUserSelectionInput.workspaceUser.user,
-                        ],
+                        kind: "single",
+                        user: workspaceUserSelectionInput.workspaceUser.user,
                     }}
                     size="small"
                 />

@@ -21,8 +21,7 @@ export const avatarVariantSizes = [
 export type AvatarVariantSize = (typeof avatarVariantSizes)[number];
 export type AvatarVariantContent =
     | { kind: "single"; user: User | null }
-    | { kind: "assign"; users: [User | null, User | null] }
-    | { kind: "multiple"; users: (User | null)[] };
+    | { kind: "assign"; users: [User | null, User | null] };
 
 // TODO rename me LabelContent Justus 2023-03-07
 export type LabelLabel =

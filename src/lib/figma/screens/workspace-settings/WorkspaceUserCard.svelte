@@ -35,7 +35,7 @@
 <tr class="contents">
     <td class="col-span-2 flex flex-row items-center gap-2">
         <AvatarVariant
-            content={{ kind: "multiple", users: [workspaceUser.user] }}
+            content={{ kind: "single", user: workspaceUser.user }}
             size="medium"
         />
         <div class="flex flex-col gap-1">

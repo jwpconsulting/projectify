@@ -13,8 +13,8 @@
 
     let content: AvatarVariantContent;
     $: content = {
-        kind: "multiple",
-        users: [user],
+        kind: "single",
+        user,
     };
 
     // TODO make select / deselect callback props instead Justus 2023-09-19

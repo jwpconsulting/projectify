@@ -10,13 +10,13 @@
     export let action: (() => void) | undefined;
 
     let avatarContent: AvatarVariantContent = {
-        kind: "multiple",
-        users: [null],
+        kind: "single",
+        user: null,
     };
     $: {
         avatarContent = {
-            kind: "multiple",
-            users: [user],
+            kind: "single",
+            user,
         };
     }
     let displayName: string | null = null;
