@@ -46,7 +46,7 @@
 
     $: outerGrowStyle = grow ? tw`w-full` : "";
 
-    $: sharedStyle = tw`${outerGrowStyle} ${colorStyle} ${sizeStyle} flex flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold`;
+    $: sharedStyle = tw`${outerGrowStyle} ${colorStyle} ${sizeStyle} flex min-w-max flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold`;
     $: composedStyle = {
         primary: tw`${sharedStyle} disabled:bg-disabled disabled:text-disabled-primary-content`,
         secondary: tw`${sharedStyle} disabled:bg-disabled disabled:text-disabled-primary-content`,
