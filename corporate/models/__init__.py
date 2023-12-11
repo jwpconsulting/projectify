@@ -14,7 +14,8 @@ from django.db import (
     models,
     transaction,
 )
-from django.utils.translation import gettext_lazy as _
+
+from corporate.types import CustomerSubscriptionStatus
 
 if TYPE_CHECKING:
     from workspace.models import (  # noqa: F401
@@ -46,21 +47,6 @@ class CustomerQuerySet(models.QuerySet["Customer"]):
     def get_by_stripe_customer_id(self, stripe_customer_id: str) -> "Customer":
         """Get customer by stripe customer id."""
         return self.get(stripe_customer_id=stripe_customer_id)
-
-
-class CustomerSubscriptionStatus(models.TextChoices):
-    """Customer subscription status choices."""
-
-    # A subscription has been created with our billing provider
-    ACTIVE = "ACTIVE", _("Active")
-    # A subscription has never been created with our billing provider
-    # TODO this should be "TRIAL"
-    UNPAID = "UNPAID", _("Unpaid")
-    # An existing subscription with our billing provider has been cancelled
-    CANCELLED = "CANCELLED", _("Cancelled")
-    # A subscription does not exist, but the workspace can be used without
-    # restriction
-    CUSTOM = "CUSTOM", _("Custom subscription")
 
 
 class Customer(models.Model):

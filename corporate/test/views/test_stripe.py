@@ -10,7 +10,9 @@ from django.urls import (
 import pytest
 from rest_framework.test import APIClient
 
-from ...models import Customer, CustomerSubscriptionStatus
+from corporate.types import CustomerSubscriptionStatus
+
+from ...models import Customer
 
 
 @pytest.mark.django_db

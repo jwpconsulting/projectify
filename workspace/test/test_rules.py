@@ -2,8 +2,8 @@
 import pytest
 from faker import Faker
 
-from corporate.models import CustomerSubscriptionStatus
 from corporate.services.customer import customer_cancel_subscription
+from corporate.types import CustomerSubscriptionStatus
 from user.models import User
 from user.services.user import user_create
 from workspace.models.const import WorkspaceUserRoles

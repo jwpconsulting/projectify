@@ -48,8 +48,8 @@ from faker import (
 
 from corporate.models import (
     Customer,
-    CustomerSubscriptionStatus,
 )
+from corporate.types import CustomerSubscriptionStatus
 from user.models import (
     User,
 )

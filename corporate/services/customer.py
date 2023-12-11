@@ -1,8 +1,8 @@
 """Services for customer model."""
 import logging
 
-from corporate.models import Customer, CustomerSubscriptionStatus
-from corporate.types import WorkspaceFeatures
+from corporate.models import Customer
+from corporate.types import CustomerSubscriptionStatus, WorkspaceFeatures
 from projectify.utils import validate_perm
 from user.models import User
 from workspace.models.workspace import Workspace
