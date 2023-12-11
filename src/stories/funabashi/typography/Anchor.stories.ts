@@ -13,10 +13,9 @@ const meta: Meta<Anchor> = {
     },
     argTypes: {
         size: makeStorybookSelect({
-            "Extra small": "extraSmall",
-            "Small": "small",
-            "Normal": "normal",
-            "Large": "large",
+            Small: "small",
+            Normal: "normal",
+            Large: "large",
         } satisfies Record<string, AnchorSize>),
         href: { control: "text" },
         label: { control: "text" },

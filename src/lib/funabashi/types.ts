@@ -1,6 +1,6 @@
 import type { IconSource } from "@steeze-ui/svelte-icon/types";
 
-const anchorSizes = ["extraSmall", "small", "normal", "large"] as const;
+const anchorSizes = ["small", "normal", "large"] as const;
 export type AnchorSize = (typeof anchorSizes)[number];
 
 // For all buttons

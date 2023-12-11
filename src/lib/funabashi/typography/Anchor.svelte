@@ -8,8 +8,6 @@
     let anchorClass: string;
     $: anchorClass = {
         // TODO remove this class
-        extraSmall: "text-xs",
-        // TODO remove this class
         small: "text-sm",
         normal: "text-base",
         large: "text-lg",
