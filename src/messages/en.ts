@@ -197,7 +197,10 @@ const messages: MessageDirectory = {
         "labels": "Labels",
         "workspace-user-name": "Workspace user name",
         "filter-workspace-users": "Filter workspace users",
-        "search-task": "Search Task",
+        "search-task": {
+            button: "Search tasks",
+            input: { placeholder: "Enter search terms", label: "Task search" },
+        },
         "assign-user": "Assign workspace user",
         "no-sections": {
             message: "There are no sections in this workspace board.",
