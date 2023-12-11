@@ -25,7 +25,8 @@ export type ButtonStyle =
       };
 export const buttonColors = ["blue", "red"] as const;
 export type ButtonColor = (typeof buttonColors)[number];
-export const buttonSizes = ["medium", "small", "extra-small"] as const;
+// TODO remove small
+export const buttonSizes = ["medium", "small"] as const;
 export type ButtonSize = (typeof buttonSizes)[number];
 
 // For buttons/CircleIcon.svelte

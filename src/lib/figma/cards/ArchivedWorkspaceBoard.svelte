@@ -43,7 +43,7 @@
         <div class="flex flex-row">
             <Button
                 style={{ kind: "secondary" }}
-                size="extra-small"
+                size="small"
                 color="blue"
                 label={$_("workspace-board-archive.card.recover")}
                 action={{ kind: "button", action: recoverAction }}
@@ -51,7 +51,7 @@
 
             <Button
                 style={{ kind: "primary" }}
-                size="extra-small"
+                size="small"
                 color="red"
                 label={$_("workspace-board-archive.card.delete")}
                 action={{ kind: "button", action: deleteAction }}

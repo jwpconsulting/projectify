@@ -34,14 +34,12 @@
         },
     }[style.kind][color];
     $: sizeStyle = {
-        "medium": tw`text-base`,
-        "small": tw`text-sm`,
-        "extra-small": tw`text-xs`,
+        medium: tw`text-base`,
+        small: tw`text-sm`,
     }[size];
     $: iconSizeStyle = {
-        "medium": tw`h-6 w-6`,
-        "small": tw`h-5 w-5`,
-        "extra-small": tw`h-4 w-4`,
+        medium: tw`h-6 w-6`,
+        small: tw`h-5 w-5`,
     }[size];
 
     $: outerGrowStyle = grow ? tw`w-full` : "";
