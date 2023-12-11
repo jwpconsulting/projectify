@@ -97,9 +97,6 @@ const config: Config = {
     content: ["./src/**/*.{json,html,js,svelte,ts}"],
     theme: {
         extend: {
-            fontFamily: {
-                sans: ["Roboto", "sans-serif"],
-            },
             borderRadius: {
                 "llg": "10px",
                 "1.5xl": "14px",
