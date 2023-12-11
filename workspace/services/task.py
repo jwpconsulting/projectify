@@ -4,7 +4,7 @@ from typing import Optional, Union
 
 from django.db import transaction
 
-from projectify.utils import validate_perm
+from projectify.lib.auth import validate_perm
 from user.models import User
 from workspace.models.task import Task
 from workspace.models.workspace_board_section import WorkspaceBoardSection

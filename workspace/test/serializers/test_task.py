@@ -9,7 +9,7 @@ from rest_framework.request import (
     Request,
 )
 
-from projectify.utils import validate_perm
+from projectify.lib.auth import validate_perm
 from user.models import User
 from workspace.models.label import Label
 from workspace.models.sub_task import SubTask

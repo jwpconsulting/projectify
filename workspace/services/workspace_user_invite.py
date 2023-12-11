@@ -14,7 +14,7 @@ from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 
-from projectify.utils import (
+from projectify.lib.auth import (
     validate_perm,
 )
 from user.models import (  # noqa: F401

@@ -1,7 +1,7 @@
 """Sub task services."""
 from typing import Optional
 
-from projectify.utils import validate_perm
+from projectify.lib.auth import validate_perm
 from user.models import User
 from workspace.models.sub_task import SubTask
 from workspace.models.task import Task
