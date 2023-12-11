@@ -10,7 +10,7 @@ from django.contrib.auth.models import (
 )
 
 from corporate.services.customer import customer_create
-from projectify.utils import validate_perm
+from projectify.lib.auth import validate_perm
 from user.models import User
 from workspace.models.workspace import (
     Workspace,

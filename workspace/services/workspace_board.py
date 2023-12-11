@@ -6,7 +6,7 @@ from django.utils.timezone import (
     now,
 )
 
-from projectify.utils import validate_perm
+from projectify.lib.auth import validate_perm
 from user.models import User
 from workspace.models import WorkspaceBoard
 from workspace.models.workspace import Workspace

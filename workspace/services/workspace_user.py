@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 
-from projectify.utils import validate_perm
+from projectify.lib.auth import validate_perm
 from user.models import User
 from workspace.models.workspace_user import WorkspaceUser
 

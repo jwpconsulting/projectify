@@ -3,7 +3,7 @@ from typing import Optional
 
 from django.db import transaction
 
-from projectify.utils import validate_perm
+from projectify.lib.auth import validate_perm
 from user.models import User
 from workspace.models import WorkspaceBoard, WorkspaceBoardSection
 
