@@ -62,7 +62,7 @@
                 }`}
             />
         </div>
-        <div class="line-clamp-1 min-w-0 text-xs font-bold">
+        <div class="line-clamp-1 min-w-0 text-sm font-bold">
             {workspaceBoard.title}
         </div>
     </div>

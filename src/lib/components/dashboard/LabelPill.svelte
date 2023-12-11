@@ -21,7 +21,7 @@
 <div class="p-0.5">
     <div class="rounded-xl p-0.5">
         <div
-            class={`label max-w-xs whitespace-nowrap rounded-full px-3 py-1 text-xs font-bold ${bgColorClass} ${textColorClass}`}
+            class={`label max-w-xs whitespace-nowrap rounded-full px-3 py-1 text-sm font-bold ${bgColorClass} ${textColorClass}`}
         >
             <span class="nowrap-ellipsis">{label.name}</span>
         </div>

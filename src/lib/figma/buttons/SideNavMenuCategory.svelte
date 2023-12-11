@@ -28,7 +28,7 @@
         <div class="flex flex-row items-center gap-4">
             <div class="flex flex-row items-center gap-2">
                 <Icon src={icon} theme="outline" class="h-5 w-5" />
-                <div class="text-xs font-bold">
+                <div class="text-sm font-bold">
                     {label}
                 </div>
             </div>
@@ -47,7 +47,7 @@
         <div class="flex flex-row items-center gap-4">
             <div class="flex flex-row items-center gap-2">
                 <Icon src={icon} theme="outline" class="h-5 w-5" />
-                <div class="text-xs font-bold uppercase">
+                <div class="text-sm font-bold uppercase">
                     {label}
                 </div>
             </div>

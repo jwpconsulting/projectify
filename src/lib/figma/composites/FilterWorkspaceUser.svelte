@@ -55,7 +55,7 @@
 <div class="flex flex-col px-4 pb-4 pt-2">
     <label
         for="workspace-user-name"
-        class="color-base-content p-2 text-xs font-bold"
+        class="color-base-content p-2 text-sm font-bold"
     >
         {$_("dashboard.filter-workspace-users")}
     </label>

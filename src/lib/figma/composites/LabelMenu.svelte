@@ -87,7 +87,7 @@
                 />
             </div>
             <div class="flex flex-col gap-4 px-7">
-                <div class="text-xs font-bold">Select label color</div>
+                <div class="text-sm font-bold">Select label color</div>
                 <!-- XXX Hacky hacky radio emulation because Svelte wants radio
                 inputs to be contained in the same file in order to be grouped
                 together -->
