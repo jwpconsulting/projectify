@@ -57,8 +57,18 @@ class Development(Base):
     DEBUG_TOOLBAR = True
     INTERNAL_IPS = ("127.0.0.1",)
 
-    CORS_ALLOWED_ORIGINS = ("http://localhost:3000",)
-    CSRF_TRUSTED_ORIGINS = ("http://localhost:3000",)
+    CORS_ALLOWED_ORIGINS = (
+        # Vite dev
+        "http://localhost:3000",
+        # Storybook
+        "http://localhost:6006",
+    )
+    CSRF_TRUSTED_ORIGINS = (
+        # Vite dev
+        "http://localhost:3000",
+        # Storybook
+        "http://localhost:6006",
+    )
 
     FRONTEND_URL = "http://localhost:3000/"
 
