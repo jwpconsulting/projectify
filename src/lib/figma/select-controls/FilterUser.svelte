@@ -16,7 +16,6 @@
     export let onDeselect: () => void;
 
     $: showCount = count !== undefined;
-    $: hideCount = !active || count === undefined;
 
     function click() {
         active = !active;
@@ -70,11 +69,11 @@
         </div>
     </div>
     <div
-        class="shrink-0 flex-row items-center gap-2 rounded-2.5xl border-2 border-primary bg-foreground px-2 py-0.5 text-sm font-bold text-primary {showCount
-            ? 'hover:flex group-hover:flex'
+        class="flex shrink-0 flex-row items-center gap-2 rounded-2.5xl border border-primary bg-foreground px-2 py-0.5 text-sm font-bold text-primary {showCount
+            ? 'hover:visible group-hover:visible'
             : ''}"
-        class:flex={active}
-        class:hidden={hideCount}
+        class:invisible={!active}
+        class:visible={active}
     >
         {count ?? ""}
     </div>
