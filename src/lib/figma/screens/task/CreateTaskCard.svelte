@@ -126,7 +126,6 @@
             {workspaceUserAssignment}
             {labelAssignment}
             bind:title
-            bind:workspaceBoardSection
             bind:dueDate
             bind:description
         />

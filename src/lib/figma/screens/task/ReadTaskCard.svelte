@@ -7,7 +7,6 @@
     import TaskDescription from "$lib/figma/screens/task/TaskDescription.svelte";
     import TaskDueDate from "$lib/figma/screens/task/TaskDueDate.svelte";
     import TaskLabel from "$lib/figma/screens/task/TaskLabel.svelte";
-    import TaskSection from "$lib/figma/screens/task/TaskSection.svelte";
     import TaskTitle from "$lib/figma/screens/task/TaskTitle.svelte";
     import TaskUser from "$lib/figma/screens/task/TaskUser.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
@@ -109,7 +108,6 @@
                 {onInteract}
                 readonly
             />
-            <TaskSection slot="section" {workspaceBoardSection} />
             <TaskDueDate
                 slot="due-date"
                 dueDate={task.deadline && coerceIsoDate(task.deadline)}

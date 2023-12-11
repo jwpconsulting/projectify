@@ -39,16 +39,6 @@
         </tr>
         <tr>
             <th scope="row" class={leftSideClass}>
-                <label for="section">
-                    {$_("task-screen.section")}
-                </label>
-            </th>
-            <td class={rightSideClass}>
-                <slot name="section" />
-            </td>
-        </tr>
-        <tr>
-            <th scope="row" class={leftSideClass}>
                 <label for="due-date">
                     {$_("task-screen.due-date")}
                 </label>

@@ -439,7 +439,6 @@ const messages: MessageDirectory = {
         "new-task-name": "New task name",
         "description": "Description",
         "labels": "Labels",
-        "section": "Section",
         "select-due-date": "Select due date",
         "due-date": "Due date",
         "edit": "Edit",
