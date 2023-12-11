@@ -1,6 +1,3 @@
-import { derived, writable } from "svelte/store";
-import type { Readable } from "svelte/store";
-
 import {
     getTask,
     deleteTask as repositoryDeleteTask,
@@ -19,8 +16,6 @@ import type {
     WorkspaceBoardSection,
 } from "$lib/types/workspace";
 
-export const taskSearchInput = writable<SearchInput>(undefined);
-
 // Clear on workspace board change
 // TODO clarify if this subscription still makes sense
 // It's good to unsubscribe whenever we can
@@ -28,44 +23,9 @@ export const taskSearchInput = writable<SearchInput>(undefined);
 currentWorkspaceBoard.subscribe((_$currentWorkspaceBoard) => {
     selectedLabels.set({ kind: "allLabels" });
     filterByWorkspaceUser({ kind: "allWorkspaceUsers" });
-    taskSearchInput.set(undefined);
 });
 
-type CurrentSearchedTasks = Readable<
-    TaskWithWorkspaceBoardSection[] | undefined
->;
-
-export function createCurrentSearchedTasks(
-    currentWorkspaceBoardSections: Readable<
-        WorkspaceBoardSection[] | undefined
-    >,
-    taskSearchInput: Readable<SearchInput>
-): CurrentSearchedTasks {
-    return derived<
-        [Readable<WorkspaceBoardSection[] | undefined>, Readable<SearchInput>],
-        TaskWithWorkspaceBoardSection[] | undefined
-    >(
-        [currentWorkspaceBoardSections, taskSearchInput],
-        ([$currentWorkspaceBoardSections, $taskSearchInput], set) => {
-            if (
-                $currentWorkspaceBoardSections == undefined ||
-                $taskSearchInput === undefined
-            ) {
-                set(undefined);
-            } else {
-                set(
-                    searchTasks(
-                        $currentWorkspaceBoardSections,
-                        $taskSearchInput
-                    )
-                );
-            }
-        },
-        undefined
-    );
-}
-
-function searchTasks(
+export function searchTasks(
     sections: WorkspaceBoardSection[],
     searchText: SearchInput
 ): TaskWithWorkspaceBoardSection[] {

@@ -7,7 +7,7 @@ import {
 } from "$lib/stores/dashboard";
 import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
 
-import type { PageLoadEvent } from "./$types";
+import type { LayoutLoadEvent } from "./$types";
 
 interface Data {
     workspaceBoard: WorkspaceBoard;
@@ -18,7 +18,7 @@ interface Data {
 export async function load({
     params: { workspaceBoardUuid }, // TODO add fetch back and use in subscription somehow
     fetch,
-}: PageLoadEvent): Promise<Data> {
+}: LayoutLoadEvent): Promise<Data> {
     const workspaceBoard = await currentWorkspaceBoard.loadUuid(
         workspaceBoardUuid,
         { fetch }
