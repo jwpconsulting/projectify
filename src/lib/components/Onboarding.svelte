@@ -51,7 +51,7 @@
             <div class="flex gap-2">
                 {#if backAction}
                     <Button
-                        style={{ kind: "tertiary", icon: null }}
+                        style={{ kind: "tertiary" }}
                         color="blue"
                         size="medium"
                         action={backAction}

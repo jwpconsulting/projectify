@@ -16,7 +16,6 @@ const style = makeStorybookSelect<ButtonStyle>({
     },
     "Tertiary No Icon": {
         kind: "tertiary",
-        icon: null,
     },
     "Tertiary Icon Left": {
         kind: "tertiary",

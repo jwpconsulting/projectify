@@ -19,9 +19,10 @@ export type ButtonStyle =
     | { kind: "primary" }
     | { kind: "secondary" }
     // TODO make this icon? instead Justus 2023-08-28
-    | { kind: "tertiary"; icon: { position: "left"; icon: IconSource } }
-    | { kind: "tertiary"; icon: { position: "right"; icon: IconSource } }
-    | { kind: "tertiary"; icon: null };
+    | {
+          kind: "tertiary";
+          icon?: { position: "right" | "left"; icon: IconSource };
+      };
 export const buttonColors = ["blue", "red"] as const;
 export type ButtonColor = (typeof buttonColors)[number];
 export const buttonSizes = ["medium", "small", "extra-small"] as const;

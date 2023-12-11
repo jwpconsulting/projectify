@@ -15,7 +15,7 @@
     <slot slot="desktop-right">
         <Button
             action={{ kind: "a", href: "/user/log-in" }}
-            style={{ kind: "tertiary", icon: null }}
+            style={{ kind: "tertiary" }}
             color="blue"
             size="medium"
             label={$_("navigation.header.log-in")}

@@ -51,7 +51,7 @@
                     href: "/login",
                     onInteract: closeMobileMenu,
                 }}
-                style={{ kind: "tertiary", icon: null }}
+                style={{ kind: "tertiary" }}
                 color="blue"
                 size="medium"
                 label={$_("navigation.header.log-in")}

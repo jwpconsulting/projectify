@@ -47,7 +47,7 @@
     $: outerGrowStyle = grow ? tw`w-full` : "";
 
     $: sharedStyle = tw`${outerGrowStyle} ${colorStyle} ${sizeStyle} flex flex-row justify-center gap-2 rounded-lg px-4 py-2 font-bold`;
-    $: outerStyle = {
+    $: composedStyle = {
         primary: tw`${sharedStyle} disabled:bg-disabled disabled:text-disabled-primary-content`,
         secondary: tw`${sharedStyle} disabled:bg-disabled disabled:text-disabled-primary-content`,
         tertiary: tw`${sharedStyle} disabled:bg-transparent disabled:text-disabled-content`,
@@ -57,7 +57,7 @@
     $: formProps =
         action.kind === "button" || action.kind === "submit"
             ? {
-                  class: outerStyle,
+                  class: composedStyle,
                   disabled: action.disabled,
                   form: action.form,
               }
@@ -65,7 +65,7 @@
 </script>
 
 {#if action.kind === "a"}
-    <a href={action.href} class={outerStyle} on:click={action.onInteract}>
+    <a href={action.href} class={composedStyle} on:click={action.onInteract}>
         {#if style.kind === "tertiary" && style.icon && style.icon.position === "left"}
             <Icon
                 src={style.icon.icon}
