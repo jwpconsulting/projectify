@@ -3,7 +3,7 @@
     import { Tag } from "@steeze-ui/heroicons";
     import { _ } from "svelte-i18n";
 
-    import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
+    import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import LabelMenu from "$lib/figma/composites/LabelMenu.svelte";
     import {
         labelExpandOpen,
@@ -12,7 +12,7 @@
     import { selectedLabels } from "$lib/stores/dashboard/labelFilter";
 </script>
 
-<SideNavMenuCategoryFocus
+<SideNavMenuCategory
     label={$_("dashboard.labels")}
     icon={Tag}
     on:click={toggleLabelDropdownClosedNavOpen}

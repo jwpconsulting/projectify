@@ -5,7 +5,7 @@
     import Loading from "$lib/components/loading.svelte";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SelectWorkspaceBoard from "$lib/figma/buttons/SelectWorkspaceBoard.svelte";
-    import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
+    import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import {
         boardExpandOpen,
         toggleBoardExpandOpen,
@@ -24,7 +24,7 @@
     }
 </script>
 
-<SideNavMenuCategoryFocus
+<SideNavMenuCategory
     label={$_("dashboard.boards")}
     icon={Folder}
     open={$boardExpandOpen}

@@ -5,18 +5,15 @@ import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
 
 const meta: Meta<SideNavMenuCategory> = {
     component: SideNavMenuCategory,
-    args: {
-        label: "asd",
-        icon: Search,
-        filtered: false,
-        open: false,
-        contained: false,
-    },
     argTypes: {
-        label: { control: "text" },
         filtered: { control: "boolean" },
         open: { control: "boolean" },
-        contained: { control: "boolean" },
+    },
+    args: {
+        label: "Hello world",
+        icon: Search,
+        filtered: true,
+        open: false,
     },
 };
 export default meta;
@@ -24,6 +21,3 @@ export default meta;
 type Story = StoryObj<SideNavMenuCategory>;
 
 export const Default: Story = {};
-export const Contained: Story = {
-    args: { contained: true },
-};

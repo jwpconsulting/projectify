@@ -2,7 +2,7 @@
     import { User } from "@steeze-ui/heroicons";
     import { _ } from "svelte-i18n";
 
-    import SideNavMenuCategoryFocus from "$lib/figma/buttons/SideNavMenuCategoryFocus.svelte";
+    import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import FilterWorkspaceUser from "$lib/figma/composites/FilterWorkspaceUser.svelte";
     import {
         userExpandOpen,
@@ -11,7 +11,7 @@
     import { selectedWorkspaceUser } from "$lib/stores/dashboard/workspaceUserFilter";
 </script>
 
-<SideNavMenuCategoryFocus
+<SideNavMenuCategory
     label={$_("dashboard.workspace-users")}
     icon={User}
     open={$userExpandOpen}
