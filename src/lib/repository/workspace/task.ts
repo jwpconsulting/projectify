@@ -90,6 +90,7 @@ export async function updateTask(
     const data: CreateUpdateTaskData = {
         title: task.title,
         description: task.description ?? undefined,
+        deadline: task.deadline,
         // XXX
         // Ideally, the two following arguments would just be part of the Task
         labels,
