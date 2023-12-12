@@ -1,8 +1,8 @@
 <script lang="ts">
-    import SubTaskProgress from "$lib/figma/buttons/SubTaskProgress.svelte";
     import Chevrons from "$lib/figma/cards/task-card/Chevrons.svelte";
     import Labels from "$lib/figma/cards/task-card/Labels.svelte";
     import MenuButton from "$lib/figma/cards/task-card/MenuButton.svelte";
+    import SubTaskProgress from "$lib/figma/cards/task-card/SubTaskProgress.svelte";
     import Title from "$lib/figma/cards/task-card/Title.svelte";
     import WorkspaceUser from "$lib/figma/cards/task-card/WorkspaceUser.svelte";
     import type {
