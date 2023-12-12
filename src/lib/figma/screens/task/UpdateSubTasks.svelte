@@ -1,8 +1,8 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import SubTaskC from "$lib/figma/buttons/SubTask.svelte";
     import SubTaskBar from "$lib/figma/screens/task/SubTaskBar.svelte";
+    import SubTaskLine from "$lib/figma/screens/task/SubTaskLine.svelte";
     import type { SubTaskAssignment } from "$lib/types/stores";
 
     export let subTaskAssignment: SubTaskAssignment;
@@ -17,7 +17,7 @@
 {#if $subTaskAssignment.length > 0}
     <div class="flex flex-col">
         {#each $subTaskAssignment as subTask, index}
-            <SubTaskC
+            <SubTaskLine
                 bind:subTask
                 readonly={false}
                 {index}

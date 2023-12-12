@@ -2,8 +2,8 @@
     // This is just for showing sub tasks
     import { _ } from "svelte-i18n";
 
-    import SubTaskC from "$lib/figma/buttons/SubTask.svelte";
     import SubTaskBar from "$lib/figma/screens/task/SubTaskBar.svelte";
+    import SubTaskLine from "$lib/figma/screens/task/SubTaskLine.svelte";
     import type { SubTask } from "$lib/types/workspace";
     import { getSubTaskProgress } from "$lib/utils/workspace";
 
@@ -17,7 +17,7 @@
 {#if subTasks && subTasks.length > 0}
     <div class="flex grow flex-col">
         {#each subTasks as subTask}
-            <SubTaskC {subTask} {onInteract} />
+            <SubTaskLine {subTask} {onInteract} />
         {/each}
     </div>
 {:else}
