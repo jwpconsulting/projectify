@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import SubTaskBarComposite from "$lib/figma/screens/task/SubTaskBarComposite.svelte";
+import ReadSubTasks from "$lib/figma/screens/task/ReadSubTasks.svelte";
 import { subTask } from "$lib/storybook";
 
-const meta: Meta<SubTaskBarComposite> = {
-    component: SubTaskBarComposite,
+const meta: Meta<ReadSubTasks> = {
+    component: ReadSubTasks,
 };
 export default meta;
 
-type Story = StoryObj<SubTaskBarComposite>;
+type Story = StoryObj<ReadSubTasks>;
 
 export const Default: Story = {
     args: {

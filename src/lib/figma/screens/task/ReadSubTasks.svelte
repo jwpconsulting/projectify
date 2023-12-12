@@ -1,5 +1,4 @@
 <script lang="ts">
-    // This is just for showing sub tasks
     import { _ } from "svelte-i18n";
 
     import SubTaskBar from "$lib/figma/screens/task/SubTaskBar.svelte";

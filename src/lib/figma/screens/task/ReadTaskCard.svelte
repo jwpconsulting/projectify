@@ -25,7 +25,7 @@
     import { coerceIsoDate } from "$lib/utils/date";
 
     import Breadcrumbs from "./Breadcrumbs.svelte";
-    import SubTaskBarComposite from "./SubTaskBarComposite.svelte";
+    import ReadSubTasks from "./ReadSubTasks.svelte";
 
     import { goto } from "$app/navigation";
 
@@ -121,6 +121,6 @@
                 {onInteract}
             />
         </Fields>
-        <SubTaskBarComposite {subTasks} {onInteract} />
+        <ReadSubTasks {subTasks} {onInteract} />
     </svelte:fragment>
 </Layout>
