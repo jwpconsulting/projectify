@@ -1,0 +1,1 @@
+"""Corporate model tests."""
