@@ -4,11 +4,12 @@
     import SubTaskBar from "$lib/figma/screens/task/SubTaskBar.svelte";
     import SubTaskLine from "$lib/figma/screens/task/SubTaskLine.svelte";
     import type { SubTaskAssignment } from "$lib/types/stores";
+    import { getSubTaskProgress } from "$lib/utils/workspace";
 
     export let subTaskAssignment: SubTaskAssignment;
 
-    // TODO calculate progress
-    const progress = 50;
+    $: progress = getSubTaskProgress($subTaskAssignment);
+    // What does the following TODO mean? Justus 2023-12-12
     // TODO determine correct state for children. Or should they do that
     // themselves?
 </script>
