@@ -130,7 +130,7 @@ export async function deleteWithCredentialsJson<T, E = unknown>(
     repositoryContext: RepositoryContext
 ): Promise<ApiResponse<T, E>> {
     return await fetchResponse<T, E>(
-        `${vars.API_ENDPOINT}${url}`,
+        url,
         putPostDeleteOptions("DELETE"),
         repositoryContext
     );
