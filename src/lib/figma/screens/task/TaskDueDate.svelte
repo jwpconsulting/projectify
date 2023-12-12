@@ -1,7 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import DueDateWarning from "$lib/figma/buttons/DueDateWarning.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
 
     // XXX For now, we store dates a plain strings
@@ -10,9 +9,6 @@
     export let onInteract: (() => void) | undefined = undefined;
 
     export let readonly = false;
-
-    // TODO show Due soon!
-    export let dueSoon = false;
 </script>
 
 <div class="flex flex-row items-center gap-4">
@@ -25,7 +21,4 @@
         onClick={onInteract}
         {readonly}
     />
-    {#if dueSoon}
-        <DueDateWarning />
-    {/if}
 </div>
