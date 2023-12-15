@@ -97,7 +97,7 @@ const messages: MessageDirectory = {
                 button: "Remove",
             },
             // TODO rename "delete-workspace-board-section": {
-            "delete-section": {
+            "delete-workspace-board-section": {
                 title: "Delete section",
                 body: "Would you like to delete the ''{workspaceBoard}'' section?",
                 warning:
@@ -157,7 +157,7 @@ const messages: MessageDirectory = {
                 "switch-next": "Switch with next section",
                 "edit-title": "Edit section title",
                 "add-task": "Add task",
-                "delete-section": "Delete section",
+                "delete-workspace-board-section": "Delete section",
             },
             "task": {
                 "open-task": "Open task",

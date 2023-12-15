@@ -65,7 +65,7 @@
             "overlay.destructive.delete-workspace-user.title"
         ),
         deleteWorkspaceBoardSection: $_(
-            "overlay.destructive.delete-section.title"
+            "overlay.destructive.delete-workspace-board-section.title"
         ),
         deleteTask: $_("overlay.destructive.delete-task.title"),
         deleteSelectedTasks: $_(
@@ -83,7 +83,7 @@
             bodyValues
         ),
         deleteWorkspaceBoardSection: $_(
-            "overlay.destructive.delete-section.body",
+            "overlay.destructive.delete-workspace-board-section.body",
             bodyValues
         ),
         deleteTask: $_("overlay.destructive.delete-task.body", bodyValues),
@@ -106,7 +106,7 @@
             "overlay.destructive.delete-workspace-user.warning"
         ),
         deleteWorkspaceBoardSection: $_(
-            "overlay.destructive.delete-section.warning"
+            "overlay.destructive.delete-workspace-board-section.warning"
         ),
         deleteTask: $_("overlay.destructive.delete-task.warning"),
         deleteSelectedTasks: $_(
@@ -123,7 +123,7 @@
             "overlay.destructive.delete-workspace-user.button"
         ),
         deleteWorkspaceBoardSection: $_(
-            "overlay.destructive.delete-section.button"
+            "overlay.destructive.delete-workspace-board-section.button"
         ),
         deleteTask: $_("overlay.destructive.delete-task.button"),
         deleteSelectedTasks: $_(

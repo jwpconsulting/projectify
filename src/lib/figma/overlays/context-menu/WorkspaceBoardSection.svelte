@@ -151,7 +151,7 @@
             action: () => console.error("delete section not implemented"),
         }}
         label={$_(
-            "overlay.context-menu.workspace-board-section.delete-section"
+            "overlay.context-menu.workspace-board-section.delete-workspace-board-section"
         )}
         state="normal"
         icon={Trash}
