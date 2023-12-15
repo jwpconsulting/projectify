@@ -1,7 +1,6 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import SectionBar from "$lib/figma/cards/SectionBar.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { currentWorkspaceBoardSections } from "$lib/stores/dashboard";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
@@ -9,6 +8,8 @@
         WorkspaceBoard,
         WorkspaceBoardSection,
     } from "$lib/types/workspace";
+
+    import WorkspaceBoardSectionC from "$lib/figma/cards/WorkspaceBoardSection.svelte";
 
     export let workspaceBoard: WorkspaceBoard;
 
@@ -27,7 +28,7 @@
 </script>
 
 {#each workspaceBoardSections as workspaceBoardSection (workspaceBoardSection.uuid)}
-    <SectionBar {workspaceBoard} {workspaceBoardSection} />
+    <WorkspaceBoardSectionC {workspaceBoard} {workspaceBoardSection} />
 {:else}
     <section class="py-2 px-4 gap-8 bg-foreground rounded-lg flex flex-col">
         <p>
