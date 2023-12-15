@@ -14,8 +14,8 @@
         Label,
         Task,
         Workspace,
-        WorkspaceBoard,
         WorkspaceBoardSection,
+        WorkspaceBoardDetail,
         WorkspaceUser,
     } from "$lib/types/workspace";
 
@@ -27,11 +27,13 @@
         created: "",
         modified: "",
     };
-    const workspaceBoardFallback: WorkspaceBoard = {
+    const workspaceBoardFallback: WorkspaceBoardDetail = {
         uuid: "does-not-exist",
         title: "",
         modified: "",
         created: "",
+        workspace_board_sections: [],
+        workspace: workspaceFallback,
     };
     const workspaceBoardSectionFallback: WorkspaceBoardSection = {
         title: "",
@@ -79,20 +81,20 @@
         | {
               kind: "new-workspace-board";
               workspace: Workspace;
-              workspaceBoard?: WorkspaceBoard;
+              workspaceBoard?: WorkspaceBoardDetail;
               title: string;
           }
         | {
               kind: "new-task";
               workspace: Workspace;
-              workspaceBoard: WorkspaceBoard;
+              workspaceBoard: WorkspaceBoardDetail;
               workspaceBoardSectionTitle: string;
               title: string;
           }
         | {
               kind: "new-label";
               workspace: Workspace;
-              workspaceBoard: WorkspaceBoard;
+              workspaceBoard: WorkspaceBoardDetail;
               workspaceBoardSection: WorkspaceBoardSection;
               task: Task;
               title: string;
@@ -100,7 +102,7 @@
         | {
               kind: "assign-task";
               workspace: Workspace;
-              workspaceBoard: WorkspaceBoard;
+              workspaceBoard: WorkspaceBoardDetail;
               workspaceBoardSection: WorkspaceBoardSection;
               task: Task;
               label: Label;
@@ -125,7 +127,7 @@
             ? undefined
             : state.workspaceBoard) ?? workspaceBoardFallback),
         ...(state.kind === "new-workspace-board"
-            ? { title: state.title }
+            ? { title: state.title, workspace_board_sections: [] }
             : undefined),
         ...(state.kind === "new-task"
             ? {
@@ -171,7 +173,7 @@
                   ],
               }
             : undefined),
-    } satisfies WorkspaceBoard;
+    } satisfies WorkspaceBoardDetail;
 
     const width = 500;
 </script>

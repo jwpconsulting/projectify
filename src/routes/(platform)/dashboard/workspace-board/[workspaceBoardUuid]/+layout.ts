@@ -5,12 +5,12 @@ import {
     currentWorkspaceBoard,
     currentWorkspaces,
 } from "$lib/stores/dashboard";
-import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
+import type { Workspace, WorkspaceBoardDetail } from "$lib/types/workspace";
 
 import type { LayoutLoadEvent } from "./$types";
 
 interface Data {
-    workspaceBoard: WorkspaceBoard;
+    workspaceBoard: WorkspaceBoardDetail;
     workspace: Workspace;
     workspaces: Workspace[];
 }

@@ -1,23 +1,21 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
+    import WorkspaceBoardSectionC from "$lib/figma/cards/WorkspaceBoardSection.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { currentWorkspaceBoardSections } from "$lib/stores/dashboard";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type {
-        WorkspaceBoard,
-        WorkspaceBoardSection,
+        WorkspaceBoardSectionWithTasks,
+        WorkspaceBoardDetail,
     } from "$lib/types/workspace";
 
-    import WorkspaceBoardSectionC from "$lib/figma/cards/WorkspaceBoardSection.svelte";
+    export let workspaceBoard: WorkspaceBoardDetail;
 
-    export let workspaceBoard: WorkspaceBoard;
-
-    let workspaceBoardSections: WorkspaceBoardSection[];
+    let workspaceBoardSections: WorkspaceBoardSectionWithTasks[];
     $: workspaceBoardSections =
         $currentWorkspaceBoardSections ??
-        workspaceBoard.workspace_board_sections ??
-        [];
+        workspaceBoard.workspace_board_sections;
 
     async function onAddNewSection() {
         await openConstructiveOverlay({

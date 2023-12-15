@@ -4,32 +4,29 @@
     import type { ContextMenuType } from "$lib/types/ui";
     import type {
         TaskWithWorkspaceBoardSection,
+        WorkspaceBoardDetail,
         WorkspaceBoardSection,
     } from "$lib/types/workspace";
 
     export let task: TaskWithWorkspaceBoardSection;
+    export let workspaceBoard: WorkspaceBoardDetail;
+    // TODO section already contained in task
     export let workspaceBoardSection: WorkspaceBoardSection | undefined;
 
     let dropDownMenuBtnRef: HTMLElement;
 
     async function openDropDownMenu() {
-        // TODO refactor this using unwrap
+        // TODO task already has workspaceBoardSection
         if (!workspaceBoardSection) {
             throw new Error("Expected workspaceBoardSection");
         }
-        // TODO refactor this using unwrap
-        const uuid = workspaceBoardSection.uuid;
-        if (!workspaceBoardSection.tasks) {
-            throw new Error("Expected workspaceBoardSection.tasks");
-        }
-        const { tasks } = workspaceBoardSection;
         const contextMenu: ContextMenuType = {
             kind: "task" as const,
             task,
             location: "dashboard" as const,
             workspaceBoardSection,
+            workspaceBoard,
         };
-        console.log("TODO use", { uuid, tasks });
         await openContextMenu(contextMenu, dropDownMenuBtnRef);
         // TODO
         // let lastTask = tasks[tasks.length - 1];

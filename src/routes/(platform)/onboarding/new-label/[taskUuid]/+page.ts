@@ -4,10 +4,11 @@
 import { error } from "@sveltejs/kit";
 
 import { getTask } from "$lib/repository/workspace";
+import { getWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
 import type {
     TaskWithWorkspaceBoardSection,
     Workspace,
-    WorkspaceBoard,
+    WorkspaceBoardDetail,
     WorkspaceBoardSection,
 } from "$lib/types/workspace";
 
@@ -16,7 +17,7 @@ import type { PageLoadEvent } from "./$types";
 interface returnType {
     task: TaskWithWorkspaceBoardSection;
     workspaceBoardSection: WorkspaceBoardSection;
-    workspaceBoard: WorkspaceBoard;
+    workspaceBoard: WorkspaceBoardDetail;
     workspace: Workspace;
 }
 
@@ -28,10 +29,15 @@ export async function load({
     if (!task) {
         throw error(404);
     }
-    return {
-        task,
-        workspaceBoardSection: task.workspace_board_section,
-        workspaceBoard: task.workspace_board_section.workspace_board,
-        workspace: task.workspace_board_section.workspace_board.workspace,
-    };
+    const { workspace_board_section: workspaceBoardSection } = task;
+    const workspaceBoardUuid =
+        task.workspace_board_section.workspace_board.uuid;
+    const workspaceBoard = await getWorkspaceBoard(workspaceBoardUuid, {
+        fetch,
+    });
+    if (!workspaceBoard) {
+        throw new Error("Expected workspaceBoard");
+    }
+    const { workspace } = workspaceBoard;
+    return { task, workspaceBoardSection, workspaceBoard, workspace };
 }

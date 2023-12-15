@@ -2,9 +2,9 @@
     import WorkspaceBoardSections from "$lib/components/dashboard/WorkspaceBoardSections.svelte";
     import FloatingActionButton from "$lib/figma/buttons/FloatingActionButton.svelte";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
-    import type { WorkspaceBoard } from "$lib/types/workspace";
+    import type { WorkspaceBoardDetail } from "$lib/types/workspace";
 
-    export let workspaceBoard: WorkspaceBoard;
+    export let workspaceBoard: WorkspaceBoardDetail;
 
     async function onAddNewSection() {
         await openConstructiveOverlay({

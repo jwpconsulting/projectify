@@ -1,11 +1,12 @@
 import { error } from "@sveltejs/kit";
 
+import { getWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
 import { currentTask } from "$lib/stores/dashboard";
 import type {
     Label,
     Task,
     Workspace,
-    WorkspaceBoard,
+    WorkspaceBoardDetail,
     WorkspaceBoardSection,
     WorkspaceUser,
 } from "$lib/types/workspace";
@@ -16,7 +17,7 @@ import type { PageLoadEvent } from "./$types";
 interface returnType {
     task: Task;
     workspaceBoardSection: WorkspaceBoardSection;
-    workspaceBoard: WorkspaceBoard;
+    workspaceBoard: WorkspaceBoardDetail;
     workspace: Workspace;
     label: Label;
     assignee: WorkspaceUser;
@@ -30,7 +31,13 @@ export async function load({
         throw error(404);
     }
     const workspaceBoardSection = task.workspace_board_section;
-    const workspaceBoard = workspaceBoardSection.workspace_board;
+    const workspaceBoardUuid = workspaceBoardSection.workspace_board.uuid;
+    const workspaceBoard = await getWorkspaceBoard(workspaceBoardUuid, {
+        fetch,
+    });
+    if (!workspaceBoard) {
+        throw new Error("Expected workspaceBoard");
+    }
     const { workspace } = workspaceBoard;
     const label = unwrap(task.labels.at(0), "Expected label");
     const assignee = unwrap(task.assignee, "Expected assignee");

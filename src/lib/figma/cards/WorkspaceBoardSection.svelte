@@ -7,28 +7,26 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { workspaceBoardSectionClosed } from "$lib/stores/dashboard";
     import type {
-        WorkspaceBoard,
-        WorkspaceBoardSection,
+        WorkspaceBoardDetail,
+        WorkspaceBoardSectionWithTasks,
     } from "$lib/types/workspace";
     import { getNewTaskUrl } from "$lib/urls";
 
-    export let workspaceBoard: WorkspaceBoard;
-    // TODO change this into a type that guarantees the existence of tasks
-    export let workspaceBoardSection: WorkspaceBoardSection;
+    export let workspaceBoard: WorkspaceBoardDetail;
+    export let workspaceBoardSection: WorkspaceBoardSectionWithTasks;
 
     const { uuid } = workspaceBoardSection;
     $: open = !$workspaceBoardSectionClosed.has(uuid);
-
-    $: tasks = workspaceBoardSection.tasks ?? [];
 </script>
 
-<div class="flex flex-col">
+<section class="flex flex-col">
     <SectionTitle {workspaceBoard} {workspaceBoardSection} {open} />
     {#if open}
-        <main class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4">
-            {#each tasks as task (task.uuid)}
+        <div class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4">
+            {#each workspaceBoardSection.tasks as task (task.uuid)}
                 <TaskCard
                     {workspaceBoardSection}
+                    {workspaceBoard}
                     task={{
                         ...task,
                         workspace_board_section: workspaceBoardSection,
@@ -44,6 +42,6 @@
                     />
                 </p>
             {/each}
-        </main>
+        </div>
     {/if}
-</div>
+</section>

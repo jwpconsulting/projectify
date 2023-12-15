@@ -7,11 +7,13 @@
     import WorkspaceUser from "$lib/figma/cards/task-card/WorkspaceUser.svelte";
     import type {
         TaskWithWorkspaceBoardSection,
+        WorkspaceBoardDetail,
         WorkspaceBoardSection,
     } from "$lib/types/workspace";
     import { getTaskUrl } from "$lib/urls";
 
     export let task: TaskWithWorkspaceBoardSection;
+    export let workspaceBoard: WorkspaceBoardDetail;
     // This should instead be a parameter to determine whether this TaskCard is
     // being shown as part of search results or not.
     // workspaceBoardSection is part of task already (see type above)
@@ -34,7 +36,11 @@
                     {#if workspaceBoardSection}
                         <Chevrons {task} {workspaceBoardSection} />
                     {/if}
-                    <MenuButton {task} {workspaceBoardSection} />
+                    <MenuButton
+                        {task}
+                        {workspaceBoardSection}
+                        {workspaceBoard}
+                    />
                 </div>
             </div>
             <div class="flex flex-row justify-between">
@@ -71,7 +77,11 @@
                         {#if workspaceBoardSection}
                             <Chevrons {task} {workspaceBoardSection} />
                         {/if}
-                        <MenuButton {task} {workspaceBoardSection} />
+                        <MenuButton
+                            {task}
+                            {workspaceBoardSection}
+                            {workspaceBoard}
+                        />
                     </div>
                 </div>
             </div>

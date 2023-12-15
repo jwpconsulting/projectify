@@ -9,31 +9,37 @@ import type {
     TasksPerUser,
     WorkspaceUserSelection,
 } from "$lib/types/ui";
-import type { Label, Task, WorkspaceBoardSection } from "$lib/types/workspace";
+import type {
+    Label,
+    Task,
+    WorkspaceBoardSection,
+    WorkspaceBoardSectionWithTasks,
+} from "$lib/types/workspace";
 
 interface CurrentFilter {
     labels: LabelSelection;
     workspaceUser: WorkspaceUserSelection;
-    workspaceBoardSections: WorkspaceBoardSection[];
+    workspaceBoardSections: WorkspaceBoardSectionWithTasks[];
 }
 
 function filterSectionsTasks(
     currentFilter: CurrentFilter
-): WorkspaceBoardSection[] {
-    let sections: WorkspaceBoardSection[] =
+): WorkspaceBoardSectionWithTasks[] {
+    let sections: WorkspaceBoardSectionWithTasks[] =
         currentFilter.workspaceBoardSections;
     if (currentFilter.labels.kind === "noLabel") {
         // TODO filter by no label? Justus 2023-04-04
         // eslint-disable-next-line
+        // Maybe: return sections;
     } else if (currentFilter.labels.kind === "allLabels") {
         // TODO what to do here?
         // eslint-disable-next-line
+        // Maybe: return sections;
     } else {
         const labelUuids = [...currentFilter.labels.labelUuids.keys()];
 
         sections = sections.map((section) => {
-            const sectionTasks = section.tasks ? section.tasks : [];
-            const tasks = sectionTasks.filter((task: Task) => {
+            const tasks = section.tasks.filter((task: Task) => {
                 return (
                     task.labels.findIndex((l: Label) =>
                         labelUuids.find((labelUuid) => l.uuid === labelUuid)
@@ -43,18 +49,14 @@ function filterSectionsTasks(
                 );
             });
 
-            return {
-                ...section,
-                tasks,
-            };
+            return { ...section, tasks };
         });
     }
 
     const workspaceUserSelection = currentFilter.workspaceUser;
     if (workspaceUserSelection.kind !== "allWorkspaceUsers") {
         sections = sections.map((section) => {
-            const sectionTasks = section.tasks ? section.tasks : [];
-            const tasks = sectionTasks.filter((task: Task) => {
+            const tasks = section.tasks.filter((task: Task) => {
                 if (workspaceUserSelection.kind === "unassigned") {
                     return !task.assignee;
                 } else {
@@ -66,10 +68,7 @@ function filterSectionsTasks(
                 }
             });
 
-            return {
-                ...section,
-                tasks,
-            };
+            return { ...section, tasks };
         });
     }
 
@@ -82,7 +81,7 @@ export const currentWorkspaceBoardSections = derived<
         typeof selectedWorkspaceUser,
         typeof currentWorkspaceBoard,
     ],
-    WorkspaceBoardSection[] | undefined
+    WorkspaceBoardSectionWithTasks[] | undefined
 >(
     [selectedLabels, selectedWorkspaceUser, currentWorkspaceBoard],
     (

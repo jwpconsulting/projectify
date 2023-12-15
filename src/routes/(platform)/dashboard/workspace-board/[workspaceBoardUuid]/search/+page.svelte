@@ -6,6 +6,7 @@
     import type { PageData } from "./$types";
 
     export let data: PageData;
+    $: workspaceBoard = data.workspaceBoard;
     $: tasks = data.tasks;
     $: search = data.search;
 </script>
@@ -20,7 +21,7 @@
     </div>
     <div class="flex flex-col p-2">
         {#each tasks as task}
-            <TaskCard {task} />
+            <TaskCard {task} {workspaceBoard} />
         {/each}
     </div>
 {:else}

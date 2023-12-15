@@ -39,6 +39,13 @@ export const contextMenus: Record<string, ContextMenuType> = {
         task,
         location: "dashboard",
         workspaceBoardSection,
+        workspaceBoard: {
+            ...workspaceBoard,
+            workspace_board_sections: [
+                { ...workspaceBoardSection, tasks: [task] },
+            ],
+            workspace,
+        },
     },
     "Task": {
         kind: "task" as const,

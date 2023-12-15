@@ -32,6 +32,9 @@
         task={target.task}
         location={target.location}
         workspaceBoardSection={target.workspaceBoardSection}
+        workspaceBoard={target.location === "dashboard"
+            ? target.workspaceBoard
+            : undefined}
     />
 {:else if target.kind === "help"}
     <HelpContextMenu />

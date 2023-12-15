@@ -3,7 +3,7 @@ import { error } from "@sveltejs/kit";
 import { getWorkspace } from "$lib/repository/workspace";
 import { getWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
 import type {
-    WorkspaceBoard,
+    WorkspaceBoardDetail,
     WorkspaceBoardSection,
     WorkspaceDetail,
 } from "$lib/types/workspace";
@@ -14,7 +14,7 @@ export async function load({
     params: { workspaceBoardUuid },
     fetch,
 }: PageLoadEvent): Promise<{
-    workspaceBoard: WorkspaceBoard;
+    workspaceBoard: WorkspaceBoardDetail;
     workspace: WorkspaceDetail;
     workspaceBoardSection?: WorkspaceBoardSection;
 }> {

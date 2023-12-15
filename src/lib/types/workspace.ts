@@ -80,6 +80,9 @@ export type WorkspaceBoardSection = {
 } & TimestampedType &
     CreateWorkspaceBoardSection;
 
+export type WorkspaceBoardSectionWithTasks = WorkspaceBoardSection &
+    Required<Pick<WorkspaceBoardSection, "tasks">>;
+
 export type WorkspaceBoard = {
     deadline?: string;
     uuid: string;
@@ -89,10 +92,10 @@ export type WorkspaceBoard = {
 } & TimestampedType &
     TitleDescriptionType;
 
-export type WorkspaceBoardDetail = Required<
-    Pick<WorkspaceBoard, "workspace_board_sections" | "workspace">
-> &
-    WorkspaceBoard;
+export type WorkspaceBoardDetail = WorkspaceBoard & {
+    workspace: Workspace;
+    workspace_board_sections: WorkspaceBoardSectionWithTasks[];
+};
 
 export type ArchivedWorkspaceBoard = WorkspaceBoard & { archived: string };
 

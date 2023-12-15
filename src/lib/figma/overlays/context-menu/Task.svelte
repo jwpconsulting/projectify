@@ -24,6 +24,7 @@
     } from "$lib/stores/modules";
     import type {
         TaskWithWorkspaceBoardSection,
+        WorkspaceBoardDetail,
         WorkspaceBoardSection,
     } from "$lib/types/workspace";
     import {
@@ -35,6 +36,7 @@
 
     export let task: TaskWithWorkspaceBoardSection;
     export let workspaceBoardSection: WorkspaceBoardSection;
+    export let workspaceBoard: WorkspaceBoardDetail | undefined;
     export let location: "dashboard" | "task";
 
     async function promptDeleteTask() {
