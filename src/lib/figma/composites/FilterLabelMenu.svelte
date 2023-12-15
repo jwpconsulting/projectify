@@ -41,7 +41,7 @@
             ? unfilterByLabel
             : mode.labelAssignment.deselect;
 
-    $: hasSearchInput = $labelSearch === "" || $labelSearch === undefined;
+    $: hasSearchInput = $labelSearch !== "" && $labelSearch !== undefined;
 </script>
 
 <div class="flex flex-col px-4 pb-4 pt-2">
