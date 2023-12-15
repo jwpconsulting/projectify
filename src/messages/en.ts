@@ -98,8 +98,8 @@ const messages: MessageDirectory = {
             },
             // TODO rename "delete-workspace-board-section": {
             "delete-workspace-board-section": {
-                title: "Delete section",
-                body: "Would you like to delete the ''{workspaceBoard}'' section?",
+                title: "Delete workspace board section",
+                body: "Would you like to delete the ''{workspaceBoardSection}'' workspace board section?",
                 warning:
                     "Deleting this section will also delete all tasks within it.",
                 button: "Delete",
@@ -120,7 +120,8 @@ const messages: MessageDirectory = {
             "archive-workspace-board": {
                 title: "Archive workspace board",
                 body: "Would you like to archive this ''{workspaceBoard}'' workspace board?",
-                warning: "You can see archived boards in the archives section",
+                warning:
+                    "You can see archived workspace boards in the archives section",
                 button: "Archive",
             },
             // TODO rename "delete-workspace-board": {
