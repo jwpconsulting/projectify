@@ -205,10 +205,11 @@ const messages: MessageDirectory = {
             prompt: "Add a section",
         },
         "section": {
-            empty: {
+            "empty": {
                 message: "No tasks in this section.",
                 prompt: "Add a task here",
             },
+            "add-task": "Add task",
         },
         "no-user-assigned": "No workspace user assigned",
         "error": {

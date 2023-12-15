@@ -38,6 +38,7 @@
     }[icon];
     // TODO active state should be renamed to enabled Justus 2023-03-07
     export let state: SquovalState;
+    // XXX what is active again?
     export let active = false;
 
     export let action: ButtonAction & { kind: "button" | "a" };

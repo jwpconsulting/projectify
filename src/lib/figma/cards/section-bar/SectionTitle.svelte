@@ -1,7 +1,9 @@
 <script lang="ts">
-    import { ChevronDown, ChevronRight } from "@steeze-ui/heroicons";
+    import { ChevronDown, ChevronRight, Plus } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
+    import { _ } from "svelte-i18n";
 
+    import Button from "$lib/funabashi/buttons/Button.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import { toggleWorkspaceBoardSectionOpen } from "$lib/stores/dashboard";
     import { openContextMenu } from "$lib/stores/globalUi";
@@ -50,15 +52,22 @@
             {workspaceBoardSection.title}
         </h1>
     </div>
-    <div class="flex shrink-0 flex-row gap-6" data-figma-name="Right side">
-        <SquovalIcon
+    <div
+        class="flex shrink-0 flex-row items-center gap-1"
+        data-figma-name="Right side"
+    >
+        <Button
             action={{
                 kind: "a",
                 href: getNewTaskUrl(workspaceBoardSection.uuid),
             }}
-            icon="plus"
-            state="active"
-            active={false}
+            style={{
+                kind: "tertiary",
+                icon: { position: "left", icon: Plus },
+            }}
+            size="medium"
+            color="blue"
+            label={$_("dashboard.section.add-task")}
         />
         <div bind:this={dropDownMenuBtnRef}>
             <SquovalIcon
