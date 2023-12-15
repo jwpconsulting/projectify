@@ -95,7 +95,7 @@ export const destructiveOverlays = makeStorybookSelect({
     "Archive board": {
         kind: "archiveWorkspaceBoard" as const,
         workspaceBoard: {
-            title: "board name",
+            title: "veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryvery long word",
             created: "",
             modified: "",
             uuid: "",

@@ -158,7 +158,7 @@ const task2: Task = {
 };
 
 export const workspaceBoardSection: WorkspaceBoardSection = {
-    title: "section name that is long",
+    title: "section name that is very very very very very very long",
     created: "",
     modified: "",
     uuid: nullUuid,

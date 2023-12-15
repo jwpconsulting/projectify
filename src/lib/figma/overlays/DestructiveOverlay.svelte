@@ -143,21 +143,19 @@
 </script>
 
 <div
-    class="flex w-[500px] flex-col items-center gap-4 rounded-lg bg-foreground p-8"
+    class="flex w-full max-w-lg flex-col items-center gap-4 rounded-lg bg-foreground p-8"
 >
     <div class="text-center text-3xl font-bold text-base-content">
         {title}
     </div>
-    <div class="flex flex-col items-center gap-8 border-t border-border pt-2">
-        <div class="text-normal text-center text-base-content">
-            <p>
-                <!-- {body1}<span class="text-primary">{targetName}</span>{body2}
-                     -->
-                {body}
-            </p>
-            <p class="text-destructive">
-                {warning}
-            </p>
+    <div
+        class="flex w-full flex-col items-center gap-8 border-t border-border pt-2"
+    >
+        <div
+            class="text-normal w-full overflow-auto text-center text-base-content"
+        >
+            <p>{body}</p>
+            <p class="text-destructive">{warning}</p>
         </div>
         <div class="flex flex-row items-center justify-center gap-2">
             <!-- TODO make buttons grow -->
