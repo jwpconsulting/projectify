@@ -1,3 +1,7 @@
+<!--
+@component
+Up and down chevrons for task movement within a workspace board section
+-->
 <script lang="ts">
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { getTaskPosition, moveUp, moveDown } from "$lib/stores/modules";
@@ -6,12 +10,16 @@
     export let task: Task;
     export let workspaceBoardSection: WorkspaceBoardSection;
 
-    let isFirst = false;
-    let isLast = false;
+    let upDisabled = true;
+    let downDisabled = true;
     $: {
         const position = getTaskPosition(workspaceBoardSection, task);
-        isFirst = position.kind === "start";
-        isLast = position.kind === "end";
+        upDisabled = position.kind === "start";
+        // If we are the only task, we don't want to show the down chevron.
+        downDisabled =
+            position.kind === "start"
+                ? position.isOnly
+                : position.kind === "end";
     }
 </script>
 
@@ -22,7 +30,7 @@
         action={{
             kind: "button",
             action: () => moveUp(workspaceBoardSection, task, { fetch }),
-            disabled: isFirst,
+            disabled: upDisabled,
         }}
     />
     <CircleIcon
@@ -31,7 +39,7 @@
         action={{
             kind: "button",
             action: () => moveDown(workspaceBoardSection, task, { fetch }),
-            disabled: isLast,
+            disabled: downDisabled,
         }}
     />
 </div>

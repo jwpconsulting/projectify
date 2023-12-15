@@ -13,7 +13,7 @@ import type {
 import { unwrap } from "$lib/utils/type";
 
 type TaskPosition =
-    | { kind: "start"; position: 0 }
+    | { kind: "start"; position: 0; isOnly: boolean }
     | { kind: "within"; position: number }
     | { kind: "end"; position: number }
     | { kind: "outside" };
@@ -29,7 +29,7 @@ export function getTaskPosition(
         case -1:
             return { kind: "outside" };
         case 0:
-            return { kind: "start", position: 0 };
+            return { kind: "start", position: 0, isOnly: tasks.length === 1 };
         case lastIndex:
             return { kind: "end", position: lastIndex };
         default:
