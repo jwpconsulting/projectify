@@ -124,7 +124,7 @@ const messages: MessageDirectory = {
                 button: "Archive",
             },
             // TODO rename "delete-workspace-board": {
-            "delete-board": {
+            "delete-workspace-board": {
                 title: "Delete workspace board",
                 body: "Would you like to delete this ''{workspaceBoard}'' workspace board?",
                 warning: "This action cannot be undone",

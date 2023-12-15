@@ -74,7 +74,9 @@
         archiveWorkspaceBoard: $_(
             "overlay.destructive.archive-workspace-board.title"
         ),
-        deleteWorkspaceBoard: $_("overlay.destructive.delete-board.title"),
+        deleteWorkspaceBoard: $_(
+            "overlay.destructive.delete-workspace-board.title"
+        ),
     }[target.kind];
     $: body = {
         deleteLabel: $_("overlay.destructive.delete-label.body", bodyValues),
@@ -96,7 +98,7 @@
             bodyValues
         ),
         deleteWorkspaceBoard: $_(
-            "overlay.destructive.delete-board.body",
+            "overlay.destructive.delete-workspace-board.body",
             bodyValues
         ),
     }[target.kind];
@@ -115,7 +117,9 @@
         archiveWorkspaceBoard: $_(
             "overlay.destructive.archive-workspace-board.warning"
         ),
-        deleteWorkspaceBoard: $_("overlay.destructive.delete-board.warning"),
+        deleteWorkspaceBoard: $_(
+            "overlay.destructive.delete-workspace-board.warning"
+        ),
     }[target.kind];
     $: buttonLabel = {
         deleteLabel: $_("overlay.destructive.delete-label.button"),
@@ -132,7 +136,9 @@
         archiveWorkspaceBoard: $_(
             "overlay.destructive.archive-workspace-board.button"
         ),
-        deleteWorkspaceBoard: $_("overlay.destructive.delete-board.button"),
+        deleteWorkspaceBoard: $_(
+            "overlay.destructive.delete-workspace-board.button"
+        ),
     }[target.kind];
 </script>
 
