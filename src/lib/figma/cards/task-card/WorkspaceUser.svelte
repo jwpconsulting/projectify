@@ -30,16 +30,9 @@
     }
 </script>
 
-{#if assignee}
+<button bind:this={userPickerBtnRef} on:click|preventDefault={openUserPicker}>
     <AvatarVariant
-        content={{ kind: "single", user: assignee.user }}
+        content={{ kind: "single", user: assignee?.user }}
         size="small"
     />
-{:else}
-    <button
-        bind:this={userPickerBtnRef}
-        on:click|preventDefault={openUserPicker}
-    >
-        <AvatarVariant content={{ kind: "single" }} size="small" />
-    </button>
-{/if}
+</button>
