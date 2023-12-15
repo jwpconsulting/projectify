@@ -14,7 +14,6 @@
         }}
         label={$_("overlay.context-menu.permissions.all-roles")}
         state="normal"
-        icon={null}
     />
     <ContextMenuButton
         kind={{
@@ -23,7 +22,6 @@
         }}
         label={$_("overlay.context-menu.permissions.owner")}
         state="normal"
-        icon={null}
     />
     <ContextMenuButton
         kind={{
@@ -32,7 +30,6 @@
         }}
         label={$_("overlay.context-menu.permissions.maintainer")}
         state="normal"
-        icon={null}
     />
     <ContextMenuButton
         kind={{
@@ -41,7 +38,6 @@
         }}
         label={$_("overlay.context-menu.permissions.member")}
         state="normal"
-        icon={null}
     />
     <ContextMenuButton
         kind={{
@@ -50,6 +46,5 @@
         }}
         label={$_("overlay.context-menu.permissions.observer")}
         state="normal"
-        icon={null}
     />
 </Layout>

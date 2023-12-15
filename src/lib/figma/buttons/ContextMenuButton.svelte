@@ -7,9 +7,7 @@
     import { closeContextMenu } from "$lib/stores/globalUi";
 
     export let label: string;
-    // TODO
-    // Should be optional and use undefined
-    export let icon: IconSource | null;
+    export let icon: IconSource | undefined = undefined;
     export let state: MenuButtonState;
     export let color: MenuButtonColor = "base";
     export let kind: ButtonAction & { kind: "button" | "a" };
