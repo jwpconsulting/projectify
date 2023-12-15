@@ -81,7 +81,7 @@ export const destructiveOverlays = makeStorybookSelect({
         workspaceUser,
     },
     "Delete section": {
-        kind: "deleteSection" as const,
+        kind: "deleteWorkspaceBoardSection" as const,
         workspaceBoardSection,
     },
     "Delete task": {

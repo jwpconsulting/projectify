@@ -28,7 +28,7 @@
                     },
                 };
                 break;
-            case "deleteSection":
+            case "deleteWorkspaceBoardSection":
                 bodyValues = {
                     values: {
                         workspaceBoardSection:
@@ -64,7 +64,9 @@
         deleteWorkspaceUser: $_(
             "overlay.destructive.delete-workspace-user.title"
         ),
-        deleteSection: $_("overlay.destructive.delete-section.title"),
+        deleteWorkspaceBoardSection: $_(
+            "overlay.destructive.delete-section.title"
+        ),
         deleteTask: $_("overlay.destructive.delete-task.title"),
         deleteSelectedTasks: $_(
             "overlay.destructive.delete-selected-tasks.title"
@@ -78,7 +80,7 @@
             "overlay.destructive.delete-workspace-user.body",
             bodyValues
         ),
-        deleteSection: $_(
+        deleteWorkspaceBoardSection: $_(
             "overlay.destructive.delete-section.body",
             bodyValues
         ),
@@ -98,7 +100,9 @@
         deleteWorkspaceUser: $_(
             "overlay.destructive.delete-workspace-user.warning"
         ),
-        deleteSection: $_("overlay.destructive.delete-section.warning"),
+        deleteWorkspaceBoardSection: $_(
+            "overlay.destructive.delete-section.warning"
+        ),
         deleteTask: $_("overlay.destructive.delete-task.warning"),
         deleteSelectedTasks: $_(
             "overlay.destructive.delete-selected-tasks.warning"
@@ -111,7 +115,9 @@
         deleteWorkspaceUser: $_(
             "overlay.destructive.delete-workspace-user.button"
         ),
-        deleteSection: $_("overlay.destructive.delete-section.button"),
+        deleteWorkspaceBoardSection: $_(
+            "overlay.destructive.delete-section.button"
+        ),
         deleteTask: $_("overlay.destructive.delete-task.button"),
         deleteSelectedTasks: $_(
             "overlay.destructive.delete-selected-tasks.button"

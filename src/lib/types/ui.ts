@@ -58,7 +58,10 @@ export type DestructiveOverlayType =
     | { kind: "deleteLabel"; label: Label }
     | { kind: "deleteWorkspaceUser"; workspaceUser: WorkspaceUser }
     // TODO rename deleteWorkspaceBoardSection
-    | { kind: "deleteSection"; workspaceBoardSection: WorkspaceBoardSection }
+    | {
+          kind: "deleteWorkspaceBoardSection";
+          workspaceBoardSection: WorkspaceBoardSection;
+      }
     | { kind: "deleteTask"; task: Task }
     // XXX this is never used
     | { kind: "deleteSelectedTasks"; tasks: Task[] }
