@@ -96,7 +96,6 @@ const messages: MessageDirectory = {
                 warning: "This action cannot be undone.",
                 button: "Remove",
             },
-            // TODO rename "delete-workspace-board-section": {
             "delete-workspace-board-section": {
                 title: "Delete workspace board section",
                 body: "Would you like to delete the ''{workspaceBoardSection}'' workspace board section?",
@@ -116,7 +115,6 @@ const messages: MessageDirectory = {
                 warning: "This action cannot be undone.",
                 button: "Delete",
             },
-            // TODO rename "archive-workspace-board": {
             "archive-workspace-board": {
                 title: "Archive workspace board",
                 body: "Would you like to archive this ''{workspaceBoard}'' workspace board?",
@@ -124,7 +122,6 @@ const messages: MessageDirectory = {
                     "You can see archived workspace boards in the archives section",
                 button: "Archive",
             },
-            // TODO rename "delete-workspace-board": {
             "delete-workspace-board": {
                 title: "Delete workspace board",
                 body: "Would you like to delete this ''{workspaceBoard}'' workspace board?",
