@@ -71,7 +71,9 @@
         deleteSelectedTasks: $_(
             "overlay.destructive.delete-selected-tasks.title"
         ),
-        archiveWorkspaceBoard: $_("overlay.destructive.archive-board.title"),
+        archiveWorkspaceBoard: $_(
+            "overlay.destructive.archive-workspace-board.title"
+        ),
         deleteWorkspaceBoard: $_("overlay.destructive.delete-board.title"),
     }[target.kind];
     $: body = {
@@ -90,7 +92,7 @@
             bodyValues
         ),
         archiveWorkspaceBoard: $_(
-            "overlay.destructive.archive-board.body",
+            "overlay.destructive.archive-workspace-board.body",
             bodyValues
         ),
         deleteWorkspaceBoard: $_(
@@ -110,7 +112,9 @@
         deleteSelectedTasks: $_(
             "overlay.destructive.delete-selected-tasks.warning"
         ),
-        archiveWorkspaceBoard: $_("overlay.destructive.archive-board.warning"),
+        archiveWorkspaceBoard: $_(
+            "overlay.destructive.archive-workspace-board.warning"
+        ),
         deleteWorkspaceBoard: $_("overlay.destructive.delete-board.warning"),
     }[target.kind];
     $: buttonLabel = {
@@ -125,7 +129,9 @@
         deleteSelectedTasks: $_(
             "overlay.destructive.delete-selected-tasks.button"
         ),
-        archiveWorkspaceBoard: $_("overlay.destructive.archive-board.button"),
+        archiveWorkspaceBoard: $_(
+            "overlay.destructive.archive-workspace-board.button"
+        ),
         deleteWorkspaceBoard: $_("overlay.destructive.delete-board.button"),
     }[target.kind];
 </script>

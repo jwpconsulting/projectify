@@ -132,7 +132,9 @@
             kind: "button",
             action: archiveWorkspaceBoard,
         }}
-        label={$_("overlay.context-menu.workspace-board.archive-board")}
+        label={$_(
+            "overlay.context-menu.workspace-board.archive-workspace-board"
+        )}
         state="normal"
         icon={Archive}
     />

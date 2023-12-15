@@ -117,7 +117,7 @@ const messages: MessageDirectory = {
                 button: "Delete",
             },
             // TODO rename "archive-workspace-board": {
-            "archive-board": {
+            "archive-workspace-board": {
                 title: "Archive workspace board",
                 body: "Would you like to archive this ''{workspaceBoard}'' workspace board?",
                 warning: "You can see archived boards in the archives section",
@@ -148,7 +148,7 @@ const messages: MessageDirectory = {
             },
             "workspace-board": {
                 "edit-board": "Edit board",
-                "archive-board": "Archive board",
+                "archive-workspace-board": "Archive board",
             },
             "workspace-board-section": {
                 "expand-section": "Expand section",
@@ -1091,7 +1091,7 @@ const messages: MessageDirectory = {
                         "To edit a workspace board, hover over the workspace board and click the ellipsis button that appears. This will bring up a sub menu with an option to edit the board. Click Edit board to bring up an overlay that allows you to edit the board name.",
                 },
                 {
-                    id: "archive-board",
+                    id: "archive-workspace-board",
                     title: "Archive a workspace board",
                     content:
                         "To archive a workspace board, hover over the workspace board and click the ellipsis button that appears. This will bring up a sub menu with an option to archive the workspace board. Click Archive workspace board to bring up an overlay that allows you to archive the board.",
