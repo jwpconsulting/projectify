@@ -102,7 +102,7 @@ export const destructiveOverlays = makeStorybookSelect({
         },
     },
     "Delete board": {
-        kind: "deleteBoard" as const,
+        kind: "deleteWorkspaceBoard" as const,
         workspaceBoard,
     },
 });

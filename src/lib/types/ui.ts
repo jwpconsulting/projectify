@@ -65,7 +65,7 @@ export type DestructiveOverlayType =
     // TODO rename archiveWorkspaceBoard
     | { kind: "archiveBoard"; workspaceBoard: WorkspaceBoard }
     // TODO rename deleteWorkspaceBoard
-    | { kind: "deleteBoard"; workspaceBoard: WorkspaceBoard };
+    | { kind: "deleteWorkspaceBoard"; workspaceBoard: WorkspaceBoard };
 
 // These are the times when a header element is shown and a hamburger menu is
 // needed
