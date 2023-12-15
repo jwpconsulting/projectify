@@ -66,7 +66,7 @@ export type DestructiveOverlayType =
     // XXX this is never used
     | { kind: "deleteSelectedTasks"; tasks: Task[] }
     // TODO rename archiveWorkspaceBoard
-    | { kind: "archiveBoard"; workspaceBoard: WorkspaceBoard }
+    | { kind: "archiveWorkspaceBoard"; workspaceBoard: WorkspaceBoard }
     // TODO rename deleteWorkspaceBoard
     | { kind: "deleteWorkspaceBoard"; workspaceBoard: WorkspaceBoard };
 

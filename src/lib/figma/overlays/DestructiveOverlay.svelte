@@ -46,7 +46,7 @@
                     values: { count: target.tasks.length.toString() },
                 };
                 break;
-            case "archiveBoard":
+            case "archiveWorkspaceBoard":
                 bodyValues = {
                     values: { workspaceBoard: target.workspaceBoard.title },
                 };
@@ -71,7 +71,7 @@
         deleteSelectedTasks: $_(
             "overlay.destructive.delete-selected-tasks.title"
         ),
-        archiveBoard: $_("overlay.destructive.archive-board.title"),
+        archiveWorkspaceBoard: $_("overlay.destructive.archive-board.title"),
         deleteWorkspaceBoard: $_("overlay.destructive.delete-board.title"),
     }[target.kind];
     $: body = {
@@ -89,7 +89,10 @@
             "overlay.destructive.delete-selected-tasks.body",
             bodyValues
         ),
-        archiveBoard: $_("overlay.destructive.archive-board.body", bodyValues),
+        archiveWorkspaceBoard: $_(
+            "overlay.destructive.archive-board.body",
+            bodyValues
+        ),
         deleteWorkspaceBoard: $_(
             "overlay.destructive.delete-board.body",
             bodyValues
@@ -107,7 +110,7 @@
         deleteSelectedTasks: $_(
             "overlay.destructive.delete-selected-tasks.warning"
         ),
-        archiveBoard: $_("overlay.destructive.archive-board.warning"),
+        archiveWorkspaceBoard: $_("overlay.destructive.archive-board.warning"),
         deleteWorkspaceBoard: $_("overlay.destructive.delete-board.warning"),
     }[target.kind];
     $: buttonLabel = {
@@ -122,7 +125,7 @@
         deleteSelectedTasks: $_(
             "overlay.destructive.delete-selected-tasks.button"
         ),
-        archiveBoard: $_("overlay.destructive.archive-board.button"),
+        archiveWorkspaceBoard: $_("overlay.destructive.archive-board.button"),
         deleteWorkspaceBoard: $_("overlay.destructive.delete-board.button"),
     }[target.kind];
 </script>

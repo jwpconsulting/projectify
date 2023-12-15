@@ -4,7 +4,7 @@
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
-    import { archiveWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
+    import { archiveWorkspaceBoard as repoArchiveWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
     import {
         openConstructiveOverlay,
         openDestructiveOverlay,
@@ -20,7 +20,7 @@
         });
     }
 
-    async function archiveBoard() {
+    async function archiveWorkspaceBoard() {
         // XXX this gives off a bit of a smell, because we accidentally
         // involve the context menu itself in a stack trace when the overlay
         // is cancelled:
@@ -109,8 +109,11 @@
          */
         // TODO move awaiting a closed context menu away from awaiting a
         // successful dialog. Reason: We should separate concerns here.
-        await openDestructiveOverlay({ kind: "archiveBoard", workspaceBoard });
-        await archiveWorkspaceBoard(workspaceBoard, true, { fetch });
+        await openDestructiveOverlay({
+            kind: "archiveWorkspaceBoard",
+            workspaceBoard,
+        });
+        await repoArchiveWorkspaceBoard(workspaceBoard, true, { fetch });
     }
 </script>
 
@@ -127,7 +130,7 @@
     <ContextMenuButton
         kind={{
             kind: "button",
-            action: archiveBoard,
+            action: archiveWorkspaceBoard,
         }}
         label={$_("overlay.context-menu.workspace-board.archive-board")}
         state="normal"

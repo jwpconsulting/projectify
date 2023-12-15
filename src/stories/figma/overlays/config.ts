@@ -93,7 +93,7 @@ export const destructiveOverlays = makeStorybookSelect({
         tasks: [task],
     },
     "Archive board": {
-        kind: "archiveBoard" as const,
+        kind: "archiveWorkspaceBoard" as const,
         workspaceBoard: {
             title: "board name",
             created: "",
