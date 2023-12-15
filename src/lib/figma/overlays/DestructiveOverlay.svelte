@@ -145,7 +145,7 @@
 <div
     class="flex w-[500px] flex-col items-center gap-4 rounded-lg bg-foreground p-8"
 >
-    <div class="text-3xl font-bold text-base-content">
+    <div class="text-center text-3xl font-bold text-base-content">
         {title}
     </div>
     <div class="flex flex-col items-center gap-8 border-t border-border pt-2">
