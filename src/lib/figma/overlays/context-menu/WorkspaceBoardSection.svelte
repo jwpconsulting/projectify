@@ -21,6 +21,7 @@
         WorkspaceBoard,
         WorkspaceBoardSection,
     } from "$lib/types/workspace";
+    import { getNewTaskUrl } from "$lib/urls";
 
     // TODO make injectable
 
@@ -138,8 +139,8 @@
     />
     <ContextMenuButton
         kind={{
-            kind: "button",
-            action: () => console.error("add task not implemented"),
+            kind: "a",
+            href: getNewTaskUrl(workspaceBoardSection.uuid),
         }}
         label={$_("overlay.context-menu.workspace-board-section.add-task")}
         state="normal"
