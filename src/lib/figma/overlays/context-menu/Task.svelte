@@ -15,6 +15,7 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import { goto } from "$lib/navigation";
+    import { moveTaskToWorkspaceBoardSection } from "$lib/repository/workspace";
     import { deleteTask } from "$lib/stores/dashboard";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
     import {
@@ -51,6 +52,10 @@
     function toggleMoveToSection() {
         moveToSectionOpened = !moveToSectionOpened;
     }
+
+    async function moveToSection(section: WorkspaceBoardSection) {
+        await moveTaskToWorkspaceBoardSection(task, section, { fetch });
+    }
 </script>
 
 <Layout>
@@ -64,16 +69,26 @@
             state="normal"
             icon={ArrowsExpand}
         />
-    {/if}
-    <ContextMenuButton
-        kind={{ kind: "button", action: toggleMoveToSection }}
-        label={$_("overlay.context-menu.task.move-to-section")}
-        state="normal"
-        closeOnInteract={false}
-        icon={SwitchVertical}
-        iconRight={moveToSectionOpened ? ChevronUp : ChevronDown}
-    />
-    {#if location === "dashboard"}
+        <ContextMenuButton
+            kind={{ kind: "button", action: toggleMoveToSection }}
+            label={$_("overlay.context-menu.task.move-to-section")}
+            state="normal"
+            closeOnInteract={false}
+            icon={SwitchVertical}
+            iconRight={moveToSectionOpened ? ChevronUp : ChevronDown}
+        />
+        {#if moveToSectionOpened && workspaceBoard}
+            {#each workspaceBoard.workspace_board_sections as section}
+                <ContextMenuButton
+                    state="normal"
+                    label={section.title}
+                    kind={{
+                        kind: "button",
+                        action: moveToSection.bind(null, section),
+                    }}
+                />
+            {/each}
+        {/if}
         {#if getTaskPosition(workspaceBoardSection, task).kind !== "start"}
             <ContextMenuButton
                 kind={{
