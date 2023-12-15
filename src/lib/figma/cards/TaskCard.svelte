@@ -12,6 +12,9 @@
     import { getTaskUrl } from "$lib/urls";
 
     export let task: TaskWithWorkspaceBoardSection;
+    // This should instead be a parameter to determine whether this TaskCard is
+    // being shown as part of search results or not.
+    // workspaceBoardSection is part of task already (see type above)
     export let workspaceBoardSection: WorkspaceBoardSection | undefined =
         undefined;
 </script>

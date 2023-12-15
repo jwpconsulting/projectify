@@ -8,9 +8,11 @@
 
     export let label: string;
     export let icon: IconSource | undefined = undefined;
+    export let iconRight: IconSource | undefined = undefined;
     export let state: MenuButtonState;
     export let color: MenuButtonColor = "base";
     export let kind: ButtonAction & { kind: "button" | "a" };
+    export let closeOnInteract = true;
 
     $: colorStyle = {
         base: "text-base-content",
@@ -29,7 +31,9 @@
         if (kind.disabled) {
             throw new Error("Button is disabled");
         }
-        closeContextMenu();
+        if (closeOnInteract) {
+            closeContextMenu();
+        }
         kind.action();
     }
 
@@ -37,32 +41,29 @@
         if (kind.kind !== "a") {
             throw new Error("Expected a");
         }
-        closeContextMenu();
+        if (closeOnInteract) {
+            closeContextMenu();
+        }
         if (kind.onInteract) {
             kind.onInteract();
         }
     }
 
-    // TODO remove px-4 from here and add it back into context menu
     $: outerClass = `flex-start flex flex-row items-center gap-2 px-4 py-2 text-left text-sm font-bold ${colorStyle} ${style}`;
 </script>
 
 {#if kind.kind === "a"}
     <a href={kind.href} class={outerClass} on:click={interact}>
-        {#if icon}
-            <Icon src={icon} theme="outline" class="h-4 w-4" />
-        {/if}
-        <div>
-            {label}
-        </div>
+        {#if icon}<Icon src={icon} theme="outline" class="h-4 w-4" />{/if}
+        <div>{label}</div>
+        {#if iconRight}
+            <Icon src={iconRight} theme="outline" class="h-4 w-4" />{/if}
     </a>
 {:else}
     <button disabled={kind.disabled} on:click={action} class={outerClass}>
-        {#if icon}
-            <Icon src={icon} theme="outline" class="h-4 w-4" />
-        {/if}
-        <div>
-            {label}
-        </div>
+        {#if icon}<Icon src={icon} theme="outline" class="h-4 w-4" />{/if}
+        <div>{label}</div>
+        {#if iconRight}
+            <Icon src={iconRight} theme="outline" class="h-4 w-4" />{/if}
     </button>
 {/if}

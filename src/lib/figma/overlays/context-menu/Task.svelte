@@ -2,6 +2,8 @@
     import {
         ArrowsExpand,
         ChatAlt,
+        ChevronDown,
+        ChevronUp,
         Duplicate,
         SortAscending,
         SortDescending,
@@ -11,7 +13,6 @@
     import { _ } from "svelte-i18n";
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
-    import SubMenuDropdown from "$lib/figma/buttons/SubMenuDropdown.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import { goto } from "$lib/navigation";
     import { deleteTask } from "$lib/stores/dashboard";
@@ -42,6 +43,12 @@
         await deleteTask(task);
         await goto(getDashboardWorkspaceBoardSectionUrl(uuid));
     }
+
+    let moveToSectionOpened = false;
+
+    function toggleMoveToSection() {
+        moveToSectionOpened = !moveToSectionOpened;
+    }
 </script>
 
 <Layout>
@@ -56,10 +63,13 @@
             icon={ArrowsExpand}
         />
     {/if}
-    <SubMenuDropdown
-        on:click={() => console.error("move to section not implemented")}
+    <ContextMenuButton
+        kind={{ kind: "button", action: toggleMoveToSection }}
         label={$_("overlay.context-menu.task.move-to-section")}
+        state="normal"
+        closeOnInteract={false}
         icon={SwitchVertical}
+        iconRight={moveToSectionOpened ? ChevronUp : ChevronDown}
     />
     {#if location === "dashboard"}
         {#if getTaskPosition(workspaceBoardSection, task).kind !== "start"}
