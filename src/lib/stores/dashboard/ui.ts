@@ -1,5 +1,7 @@
-import { readonly } from "svelte/store";
+import { derived, readonly } from "svelte/store";
 import { persisted } from "svelte-local-storage-store";
+
+import { page } from "$app/stores";
 
 /*
  * Store which workspace we have seen last.
@@ -122,3 +124,22 @@ export function toggleWorkspaceBoardSectionOpen(
         return $workspaceBoardSectionClosed;
     });
 }
+
+// Adjust this if the dashboard URLs ever change
+const showFilterRouteIds = [
+    "/(platform)/dashboard/workspace-board/[workspaceBoardUuid]",
+];
+
+/*
+ * showFilters is true only for pages for which we show the user
+ * the filter user / label options
+ */
+export const showFilters = derived<typeof page, boolean>(
+    page,
+    ($page, set) => {
+        const { route } = $page;
+        const { id } = route;
+        set(showFilterRouteIds.find((i) => i === id) !== undefined);
+    },
+    false
+);

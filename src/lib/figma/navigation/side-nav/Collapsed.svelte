@@ -3,7 +3,10 @@
     import UserDropdownClosedNav from "$lib/figma/buttons/UserDropdownClosedNav.svelte";
     import WorkspaceMenu from "$lib/figma/buttons/WorkspaceMenu.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
-    import { selectWorkspaceBoardUuid } from "$lib/stores/dashboard";
+    import {
+        selectWorkspaceBoardUuid,
+        showFilters,
+    } from "$lib/stores/dashboard";
     import type { Workspace } from "$lib/types/workspace";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
@@ -43,12 +46,14 @@
                     </div>
                 </div>
             </div>
-            <div class="flex flex-col gap-8">
-                <div class="flex flex-col items-center gap-6">
-                    <UserDropdownClosedNav />
-                    <LabelDropdownClosedNav />
+            {#if $showFilters}
+                <div class="flex flex-col gap-8">
+                    <div class="flex flex-col items-center gap-6">
+                        <UserDropdownClosedNav />
+                        <LabelDropdownClosedNav />
+                    </div>
                 </div>
-            </div>
+            {/if}
         </div>
     </div>
 </nav>
