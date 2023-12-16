@@ -1,9 +1,11 @@
 <script lang="ts">
-    import UserAvatar from "$lib/components/UserAvatar.svelte";
+    import { AvatarMarble as Avatar } from "svelte-boring-avatars";
+
     import type {
         AvatarStateSize,
         AvatarVariantContent,
     } from "$lib/figma/types";
+    import { getDisplayName } from "$lib/types/user";
     import { tw } from "$lib/utils/ui";
 
     export let content: AvatarVariantContent;
@@ -25,6 +27,8 @@
         hoverable: 32,
     } as const;
     $: innerSize = sizes[size];
+    $: profilePicture = user ? user.profile_picture : undefined;
+    $: name = user ? `${user.email}${getDisplayName(user)}` : undefined;
 </script>
 
 <div class="p-0.5">
@@ -32,8 +36,14 @@
         class="flex {outerSize} items-center justify-center rounded-full border border-primary"
         class:bg-background={user === undefined}
     >
-        {#if user}
-            <UserAvatar {user} size={innerSize} />
+        {#if profilePicture}
+            <img
+                src={profilePicture}
+                alt={name}
+                class="h-full w-full rounded-full object-cover object-center"
+            />
+        {:else if name}
+            <Avatar size={innerSize} {name} />
         {/if}
     </div>
 </div>
