@@ -181,11 +181,11 @@ const messages: MessageDirectory = {
     },
     // TODO find out if we can factor this into somewhere
     "label": {
-        "apply-label": "apply label",
+        "apply-label": "Assign label",
     },
     "dashboard": {
         "task-card": {
-            "add-label": "Add label",
+            "add-label": "Assign label",
         },
         "tasks-not-found-for": "Tasks not found for ''{search}''",
         "showing-results-for-search": "Showing results for ''{search}''",
