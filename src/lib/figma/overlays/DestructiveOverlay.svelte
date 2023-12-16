@@ -126,12 +126,12 @@
             <p>{body}</p>
             <p class="text-destructive">{warning}</p>
         </div>
-        <div class="flex flex-row items-center justify-center gap-2">
-            <!-- TODO make buttons grow -->
+        <div class="flex w-full flex-row items-center justify-center gap-2">
             <Button
                 style={{ kind: "secondary" }}
                 size="medium"
                 color="blue"
+                grow
                 action={{ kind: "button", action: rejectDestructiveOverlay }}
                 label={$_("overlay.destructive.cancel")}
             />
@@ -139,6 +139,7 @@
                 style={{ kind: "primary" }}
                 size="medium"
                 color="red"
+                grow
                 action={{ kind: "button", action: resolveDestructiveOverlay }}
                 label={buttonLabel}
             />
