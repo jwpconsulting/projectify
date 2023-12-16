@@ -23,11 +23,8 @@
         moveToBottom,
         getTaskPosition,
     } from "$lib/stores/modules";
-    import type {
-        TaskWithWorkspaceBoardSection,
-        WorkspaceBoardDetail,
-        WorkspaceBoardSection,
-    } from "$lib/types/workspace";
+    import type { ContextMenuType } from "$lib/types/ui";
+    import type { WorkspaceBoardSection } from "$lib/types/workspace";
     import {
         getTaskUrl,
         getTaskUpdatesUrl,
@@ -35,15 +32,15 @@
     } from "$lib/urls";
     import { copyToClipboard } from "$lib/utils/clipboard";
 
-    export let task: TaskWithWorkspaceBoardSection;
-    export let workspaceBoardSection: WorkspaceBoardSection;
-    export let workspaceBoard: WorkspaceBoardDetail | undefined;
-    export let location: "dashboard" | "task";
+    export let kind: ContextMenuType & { kind: "task" };
 
     async function promptDeleteTask() {
-        const { uuid } = workspaceBoardSection;
-        await openDestructiveOverlay({ kind: "deleteTask" as const, task });
-        await deleteTask(task);
+        const { uuid } = kind.workspaceBoardSection;
+        await openDestructiveOverlay({
+            kind: "deleteTask" as const,
+            task: kind.task,
+        });
+        await deleteTask(kind.task);
         await goto(getDashboardWorkspaceBoardSectionUrl(uuid));
     }
 
@@ -54,16 +51,21 @@
     }
 
     async function moveToSection(section: WorkspaceBoardSection) {
-        await moveTaskToWorkspaceBoardSection(task, section, { fetch });
+        await moveTaskToWorkspaceBoardSection(kind.task, section, { fetch });
     }
+
+    $: taskPosition =
+        kind.location === "dashboard"
+            ? getTaskPosition(kind.workspaceBoardSection, kind.task)
+            : undefined;
 </script>
 
 <Layout>
-    {#if location === "dashboard"}
+    {#if kind.location === "dashboard"}
         <ContextMenuButton
             kind={{
                 kind: "a",
-                href: getTaskUrl(task.uuid),
+                href: getTaskUrl(kind.task.uuid),
             }}
             label={$_("overlay.context-menu.task.open-task")}
             state="normal"
@@ -77,8 +79,8 @@
             icon={SwitchVertical}
             iconRight={moveToSectionOpened ? ChevronUp : ChevronDown}
         />
-        {#if moveToSectionOpened && workspaceBoard}
-            {#each workspaceBoard.workspace_board_sections as section}
+        {#if moveToSectionOpened}
+            {#each kind.workspaceBoard.workspace_board_sections as section}
                 <ContextMenuButton
                     state="normal"
                     label={section.title}
@@ -89,24 +91,32 @@
                 />
             {/each}
         {/if}
-        {#if getTaskPosition(workspaceBoardSection, task).kind !== "start"}
+        {#if taskPosition && taskPosition.kind !== "start"}
             <ContextMenuButton
                 kind={{
                     kind: "button",
-                    action: () =>
-                        moveToTop(workspaceBoardSection, task, { fetch }),
+                    action: moveToTop.bind(
+                        null,
+                        kind.workspaceBoardSection,
+                        kind.task,
+                        { fetch }
+                    ),
                 }}
                 label={$_("overlay.context-menu.task.move-to-top")}
                 state="normal"
                 icon={SortAscending}
             />
         {/if}
-        {#if getTaskPosition(workspaceBoardSection, task).kind !== "end"}
+        {#if taskPosition && taskPosition.kind !== "end" && taskPosition.kind === "start" && !taskPosition.isOnly}
             <ContextMenuButton
                 kind={{
                     kind: "button",
-                    action: () =>
-                        moveToBottom(workspaceBoardSection, task, { fetch }),
+                    action: moveToBottom.bind(
+                        null,
+                        kind.workspaceBoardSection,
+                        kind.task,
+                        { fetch }
+                    ),
                 }}
                 label={$_("overlay.context-menu.task.move-to-bottom")}
                 state="normal"
@@ -119,18 +129,18 @@
             kind: "button",
             action: copyToClipboard.bind(
                 null,
-                new URL(getTaskUrl(task.uuid), document.baseURI).href
+                new URL(getTaskUrl(kind.task.uuid), document.baseURI).href
             ),
         }}
         label={$_("overlay.context-menu.task.copy-link")}
         state="normal"
         icon={Duplicate}
     />
-    {#if location === "dashboard"}
+    {#if kind.location === "dashboard"}
         <ContextMenuButton
             kind={{
                 kind: "a",
-                href: getTaskUpdatesUrl(task.uuid),
+                href: getTaskUpdatesUrl(kind.task.uuid),
             }}
             label={$_("overlay.context-menu.task.go-to-updates")}
             state="normal"

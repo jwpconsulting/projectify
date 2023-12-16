@@ -28,14 +28,7 @@
         workspaceBoardSection={target.workspaceBoardSection}
     />
 {:else if target.kind === "task"}
-    <Task
-        task={target.task}
-        location={target.location}
-        workspaceBoardSection={target.workspaceBoardSection}
-        workspaceBoard={target.location === "dashboard"
-            ? target.workspaceBoard
-            : undefined}
-    />
+    <Task kind={target} />
 {:else if target.kind === "help"}
     <HelpContextMenu />
 {:else if target.kind === "permissions"}

@@ -5,10 +5,13 @@ Up and down chevrons for task movement within a workspace board section
 <script lang="ts">
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { getTaskPosition, moveUp, moveDown } from "$lib/stores/modules";
-    import type { Task, WorkspaceBoardSection } from "$lib/types/workspace";
+    import type {
+        Task,
+        WorkspaceBoardSectionWithTasks,
+    } from "$lib/types/workspace";
 
     export let task: Task;
-    export let workspaceBoardSection: WorkspaceBoardSection;
+    export let workspaceBoardSection: WorkspaceBoardSectionWithTasks;
 
     let upDisabled = true;
     let downDisabled = true;

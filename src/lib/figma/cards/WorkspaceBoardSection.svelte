@@ -25,7 +25,6 @@
         <div class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4">
             {#each workspaceBoardSection.tasks as task (task.uuid)}
                 <TaskCard
-                    {workspaceBoardSection}
                     {workspaceBoard}
                     task={{
                         ...task,

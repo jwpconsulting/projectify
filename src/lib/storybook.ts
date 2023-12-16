@@ -14,6 +14,7 @@ import type {
     TaskWithWorkspaceBoardSection,
     WorkspaceBoard,
     WorkspaceBoardSection,
+    WorkspaceBoardSectionWithTasks,
     WorkspaceUser,
 } from "$lib/types/workspace";
 import { getIndexFromLabelColor, labelColors } from "$lib/utils/colors";
@@ -157,7 +158,7 @@ const task2: Task = {
     sub_tasks: [],
 };
 
-export const workspaceBoardSection: WorkspaceBoardSection = {
+export const workspaceBoardSection: WorkspaceBoardSectionWithTasks = {
     title: "section name that is very very very very very very long",
     created: "",
     modified: "",

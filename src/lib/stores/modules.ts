@@ -8,7 +8,7 @@ import type { RepositoryContext } from "$lib/types/repository";
 import type {
     Task,
     TaskWithWorkspaceBoardSection,
-    WorkspaceBoardSection,
+    WorkspaceBoardSectionWithTasks,
 } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
 
@@ -19,10 +19,10 @@ type TaskPosition =
     | { kind: "outside" };
 
 export function getTaskPosition(
-    workspaceBoardSection: WorkspaceBoardSection,
+    workspaceBoardSection: WorkspaceBoardSectionWithTasks,
     task: Task
 ): TaskPosition {
-    const tasks = unwrap(workspaceBoardSection.tasks, "Expected tasks");
+    const { tasks } = workspaceBoardSection;
     const taskIndex = tasks.findIndex((t) => t.uuid == task.uuid);
     const lastIndex = tasks.length - 1;
     switch (taskIndex) {
@@ -38,7 +38,7 @@ export function getTaskPosition(
 }
 
 export async function moveToTop(
-    workspaceBoardSection: WorkspaceBoardSection,
+    workspaceBoardSection: WorkspaceBoardSectionWithTasks,
     task: TaskWithWorkspaceBoardSection,
     repositoryContext: RepositoryContext
 ) {
@@ -50,7 +50,7 @@ export async function moveToTop(
 }
 
 export async function moveToBottom(
-    workspaceBoardSection: WorkspaceBoardSection,
+    workspaceBoardSection: WorkspaceBoardSectionWithTasks,
     task: Task,
     repositoryContext: RepositoryContext
 ) {
@@ -60,7 +60,7 @@ export async function moveToBottom(
 }
 
 export async function moveUp(
-    workspaceBoardSection: WorkspaceBoardSection,
+    workspaceBoardSection: WorkspaceBoardSectionWithTasks,
     task: Task,
     repositoryContext: RepositoryContext
 ) {
@@ -77,7 +77,7 @@ export async function moveUp(
 }
 
 export async function moveDown(
-    workspaceBoardSection: WorkspaceBoardSection,
+    workspaceBoardSection: WorkspaceBoardSectionWithTasks,
     task: Task,
     repositoryContext: RepositoryContext
 ) {

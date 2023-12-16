@@ -10,6 +10,7 @@ import type {
     WorkspaceBoard,
     WorkspaceBoardDetail,
     WorkspaceBoardSection,
+    WorkspaceBoardSectionWithTasks,
     WorkspaceUser,
 } from "$lib/types/workspace";
 
@@ -120,8 +121,8 @@ export type ContextMenuType =
           kind: "task";
           task: TaskWithWorkspaceBoardSection;
           location: "dashboard";
-          // TODO remove this property
-          workspaceBoardSection: WorkspaceBoardSection;
+          // TODO remove this property?
+          workspaceBoardSection: WorkspaceBoardSectionWithTasks;
           workspaceBoard: WorkspaceBoardDetail;
       }
     | { kind: "help" }

@@ -8,17 +8,22 @@
     import type {
         TaskWithWorkspaceBoardSection,
         WorkspaceBoardDetail,
-        WorkspaceBoardSection,
+        WorkspaceBoardSectionWithTasks,
     } from "$lib/types/workspace";
     import { getTaskUrl } from "$lib/urls";
+    import { unwrap } from "$lib/utils/type";
 
     export let task: TaskWithWorkspaceBoardSection;
     export let workspaceBoard: WorkspaceBoardDetail;
-    // This should instead be a parameter to determine whether this TaskCard is
-    // being shown as part of search results or not.
-    // workspaceBoardSection is part of task already (see type above)
-    export let workspaceBoardSection: WorkspaceBoardSection | undefined =
-        undefined;
+    export let isSearchResult = false;
+    let workspaceBoardSections: WorkspaceBoardSectionWithTasks[];
+    $: workspaceBoardSections = workspaceBoard.workspace_board_sections;
+    $: workspaceBoardSection = unwrap(
+        workspaceBoardSections.find(
+            (s) => (s.uuid = task.workspace_board_section.uuid)
+        ),
+        "expected workspaceBoardSection"
+    );
 </script>
 
 <a
@@ -33,13 +38,13 @@
                     <Title {task} />
                 </div>
                 <div class="flex flex-row items-center gap-2 justify-self-end">
-                    {#if workspaceBoardSection}
+                    {#if !isSearchResult && workspaceBoardSection}
                         <Chevrons {task} {workspaceBoardSection} />
                     {/if}
                     <MenuButton
                         {task}
-                        {workspaceBoardSection}
                         {workspaceBoard}
+                        {workspaceBoardSection}
                     />
                 </div>
             </div>
@@ -74,13 +79,13 @@
                 <div class="flex flex-row items-center gap-2">
                     <WorkspaceUser {task} />
                     <div class="flex flex-row items-center">
-                        {#if workspaceBoardSection}
+                        {#if !isSearchResult && workspaceBoardSection}
                             <Chevrons {task} {workspaceBoardSection} />
                         {/if}
                         <MenuButton
                             {task}
-                            {workspaceBoardSection}
                             {workspaceBoard}
+                            {workspaceBoardSection}
                         />
                     </div>
                 </div>
