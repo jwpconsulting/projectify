@@ -17,6 +17,7 @@
         toggleWorkspaceBoardSectionOpen,
         workspaceBoardSectionClosed,
     } from "$lib/stores/dashboard";
+    import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type {
         WorkspaceBoard,
         WorkspaceBoardSection,
@@ -83,6 +84,13 @@
             { fetch }
         );
     }
+
+    async function updateWorkspaceBoardSection() {
+        await openConstructiveOverlay({
+            kind: "updateWorkspaceBoardSection",
+            workspaceBoardSection,
+        });
+    }
 </script>
 
 <Layout>
@@ -131,7 +139,7 @@
     <ContextMenuButton
         kind={{
             kind: "button",
-            action: () => console.error("edit section title not implemented"),
+            action: updateWorkspaceBoardSection,
         }}
         label={$_("overlay.context-menu.workspace-board-section.edit-title")}
         state="normal"

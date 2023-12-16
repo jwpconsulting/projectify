@@ -9,6 +9,8 @@
     import UpdateWorkspaceBoard from "$lib/figma/overlays/constructive/UpdateWorkspaceBoard.svelte";
     import type { ConstructiveOverlayType } from "$lib/types/ui";
 
+    import UpdateWorkspaceBoardSection from "./UpdateWorkspaceBoardSection.svelte";
+
     export let target: ConstructiveOverlayType;
 </script>
 
@@ -22,6 +24,10 @@
     <InviteWorkspaceUserError workspace={target.workspace} />
 {:else if target.kind === "createWorkspaceBoardSection"}
     <CreateWorkspaceBoardSection workspaceBoard={target.workspaceBoard} />
+{:else if target.kind === "updateWorkspaceBoardSection"}
+    <UpdateWorkspaceBoardSection
+        workspaceBoardSection={target.workspaceBoardSection}
+    />
 {:else if target.kind === "createWorkspace"}
     <CreateWorkspace />
 {:else if target.kind === "skipOnboarding"}

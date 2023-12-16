@@ -31,7 +31,7 @@ const messages: MessageDirectory = {
                     },
                 },
                 "cancel": "Cancel",
-                "create-board": "Create board",
+                "create-board": "Create",
             },
             "invite-workspace-user": {
                 title: "Invite workspace users",
@@ -54,21 +54,32 @@ const messages: MessageDirectory = {
                 "go-to-billing": "Go to billing",
             },
             "create-workspace-board-section": {
-                "title": "Create new section",
+                "title": "Create new workspace board section",
                 "form": {
                     title: {
-                        label: "New section name",
-                        placeholder: "New section name",
+                        label: "New workspace board section name",
+                        placeholder: "New workspace board section name",
                     },
                 },
                 "cancel": "Cancel",
-                "create-section": "Create section",
+                "create-section": "Create",
+            },
+            "update-workspace-board-section": {
+                title: "Edit workspace board section",
+                form: {
+                    title: {
+                        label: "Workspace board section title",
+                        placeholder: "Enter new workspace board section title",
+                    },
+                },
+                cancel: "Cancel",
+                update: "Save",
             },
             "create-workspace": {
                 "title": "Create a new workspace",
                 "notice": "Are you sure you want to create a new workspace?",
                 "cancel": "Cancel",
-                "create-workspace": "Create workspace",
+                "create-workspace": "Create",
             },
             "skip-onboarding": {
                 "title": "Skip onboarding",

@@ -145,6 +145,10 @@ export type ConstructiveOverlayType =
     | { kind: "inviteWorkspaceUser"; workspace: Workspace }
     | { kind: "inviteWorkspaceUserError"; workspace: Workspace }
     | { kind: "createWorkspaceBoardSection"; workspaceBoard: WorkspaceBoard }
+    | {
+          kind: "updateWorkspaceBoardSection";
+          workspaceBoardSection: WorkspaceBoardSection;
+      }
     | { kind: "createWorkspace" }
     | { kind: "skipOnboarding" }
     | { kind: "recoverWorkspaceBoard"; workspaceBoard: WorkspaceBoard };

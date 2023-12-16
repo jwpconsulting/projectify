@@ -8,7 +8,7 @@ import {
     labelAssignment,
     makeStorybookSelect,
 } from "$lib/storybook";
-import type { ContextMenuType } from "$lib/types/ui";
+import type { ConstructiveOverlayType, ContextMenuType } from "$lib/types/ui";
 
 // Initiating lateral export in 3... 2... 1...
 // Reticulating splines...
@@ -114,22 +114,30 @@ export const destructiveOverlays = makeStorybookSelect({
     },
 });
 
-export const constructiveOverlays = makeStorybookSelect({
-    "Update workspace board": { kind: "updateWorkspaceBoard", workspaceBoard },
-    "Create workspace board": { kind: "createWorkspaceBoard", workspace },
-    "Invite workspace users": { kind: "inviteWorkspaceUser", workspace },
-    "Invite workspace users (error)": {
-        kind: "inviteWorkspaceUserError",
-        workspace,
-    },
-    "Create workspace board section": {
-        kind: "createWorkspaceBoardSection",
-        workspaceBoard,
-    },
-    "Create workspace": { kind: "createWorkspace" },
-    "Skip onboarding": { kind: "skipOnboarding" },
-    "Recover workspace board": {
-        kind: "recoverWorkspaceBoard",
-        workspaceBoard,
-    },
-});
+export const constructiveOverlays =
+    makeStorybookSelect<ConstructiveOverlayType>({
+        "Update workspace board": {
+            kind: "updateWorkspaceBoard",
+            workspaceBoard,
+        },
+        "Create workspace board": { kind: "createWorkspaceBoard", workspace },
+        "Invite workspace users": { kind: "inviteWorkspaceUser", workspace },
+        "Invite workspace users (error)": {
+            kind: "inviteWorkspaceUserError",
+            workspace,
+        },
+        "Create workspace board section": {
+            kind: "createWorkspaceBoardSection",
+            workspaceBoard,
+        },
+        "Update workspace board section": {
+            kind: "updateWorkspaceBoardSection",
+            workspaceBoardSection,
+        },
+        "Create workspace": { kind: "createWorkspace" },
+        "Skip onboarding": { kind: "skipOnboarding" },
+        "Recover workspace board": {
+            kind: "recoverWorkspaceBoard",
+            workspaceBoard,
+        },
+    });
