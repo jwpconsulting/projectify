@@ -2,9 +2,6 @@
 from typing import Optional
 
 from django.db import transaction
-from django.utils.translation import gettext_lazy as _
-
-from rest_framework import serializers
 
 from projectify.utils import validate_perm
 from user.models import User
@@ -55,7 +52,6 @@ def workspace_board_section_update(
 
 
 # Delete
-# TODO how would one go about deleting a section with entries then?
 @transaction.atomic
 def workspace_board_section_delete(
     *,
@@ -68,15 +64,6 @@ def workspace_board_section_delete(
         who,
         workspace_board_section,
     )
-    task_len = workspace_board_section.task_set.count()
-    if task_len:
-        # For now, we use a stock ValidationError, but it would be good
-        # if we can bubble up service errors and turn them into
-        # ValidationErrors at some point in the distant future in a galaxy far
-        # far away
-        raise serializers.ValidationError(
-            _("This workspace board section still has tasks"),
-        )
     workspace_board_section.delete()
 
 
