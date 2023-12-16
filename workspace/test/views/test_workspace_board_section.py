@@ -126,7 +126,7 @@ class TestWorkspaceBoardSectionReadUpdateDelete:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test deleting."""
-        with django_assert_num_queries(12):
+        with django_assert_num_queries(11):
             response = rest_user_client.delete(resource_url)
             assert (
                 response.status_code == status.HTTP_204_NO_CONTENT
