@@ -2,7 +2,6 @@
     // TODO rename FilterWorkspaceUser
     import { _ } from "svelte-i18n";
 
-    import AvatarState from "$lib/figma/navigation/AvatarState.svelte";
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import Checkbox from "$lib/funabashi/select-controls/Checkbox.svelte";
     import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
@@ -51,7 +50,12 @@
                     size="small"
                 />
             {:else}
-                <AvatarState size="small" user={undefined} />
+                <AvatarVariant
+                    content={{
+                        kind: "single",
+                    }}
+                    size="small"
+                />
             {/if}
             <div class="text-regular min-w-0 truncate text-sm">
                 {#if workspaceUserSelectionInput.kind === "unassigned"}
