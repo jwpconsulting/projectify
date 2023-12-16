@@ -11,19 +11,12 @@
         WorkspaceBoardSectionWithTasks,
     } from "$lib/types/workspace";
     import { getTaskUrl } from "$lib/urls";
-    import { unwrap } from "$lib/utils/type";
 
     export let task: TaskWithWorkspaceBoardSection;
     export let workspaceBoard: WorkspaceBoardDetail;
-    export let isSearchResult = false;
-    let workspaceBoardSections: WorkspaceBoardSectionWithTasks[];
-    $: workspaceBoardSections = workspaceBoard.workspace_board_sections;
-    $: workspaceBoardSection = unwrap(
-        workspaceBoardSections.find(
-            (s) => (s.uuid = task.workspace_board_section.uuid)
-        ),
-        "expected workspaceBoardSection"
-    );
+    export let workspaceBoardSection:
+        | WorkspaceBoardSectionWithTasks
+        | undefined = undefined;
 </script>
 
 <a
@@ -38,7 +31,7 @@
                     <Title {task} />
                 </div>
                 <div class="flex flex-row items-center gap-2 justify-self-end">
-                    {#if !isSearchResult && workspaceBoardSection}
+                    {#if workspaceBoardSection}
                         <Chevrons {task} {workspaceBoardSection} />
                     {/if}
                     <MenuButton
@@ -79,7 +72,7 @@
                 <div class="flex flex-row items-center gap-2">
                     <WorkspaceUser {task} />
                     <div class="flex flex-row items-center">
-                        {#if !isSearchResult && workspaceBoardSection}
+                        {#if workspaceBoardSection}
                             <Chevrons {task} {workspaceBoardSection} />
                         {/if}
                         <MenuButton
