@@ -40,7 +40,7 @@
             <img
                 src={profilePicture}
                 alt={name}
-                class="h-full w-full rounded-full object-cover object-center"
+                class="h-full w-full overflow-x-auto rounded-full object-cover object-center"
             />
         {:else if name}
             <Avatar size={innerSize} {name} />
