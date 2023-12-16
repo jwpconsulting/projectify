@@ -1,6 +1,6 @@
 import { error } from "@sveltejs/kit";
 
-import { getWorkspaceBoardSection } from "$lib/repository/workspace";
+import { getWorkspaceBoardSection } from "$lib/repository/workspace/workspaceBoardSection";
 import { currentWorkspace } from "$lib/stores/dashboard";
 import type { WorkspaceBoardSection } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";

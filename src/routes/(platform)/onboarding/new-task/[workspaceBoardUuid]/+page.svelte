@@ -5,10 +5,8 @@
     import Onboarding from "$lib/components/Onboarding.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { goto } from "$lib/navigation";
-    import {
-        createTask,
-        createWorkspaceBoardSection,
-    } from "$lib/repository/workspace";
+    import { createTask } from "$lib/repository/workspace";
+    import { createWorkspaceBoardSection } from "$lib/repository/workspace/workspaceBoardSection";
     import type { CreateUpdateTask } from "$lib/types/workspace";
     import { getNewLabelUrl } from "$lib/urls/onboarding";
 

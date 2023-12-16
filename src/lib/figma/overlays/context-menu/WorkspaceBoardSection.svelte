@@ -12,7 +12,7 @@
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
-    import { moveWorkspaceBoardSection } from "$lib/repository/workspace";
+    import { moveWorkspaceBoardSection } from "$lib/repository/workspace/workspaceBoardSection";
     import {
         toggleWorkspaceBoardSectionOpen,
         workspaceBoardSectionClosed,
