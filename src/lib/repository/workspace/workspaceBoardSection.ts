@@ -2,6 +2,7 @@
  * Repository functions for workspace board sections
  */
 import {
+    deleteWithCredentialsJson,
     failOrOk,
     getWithCredentialsJson,
     handle404,
@@ -63,6 +64,18 @@ export async function updateWorkspaceBoardSection(
 }
 
 // Delete
+export async function deleteWorkspaceBoardSection(
+    { uuid }: Pick<WorkspaceBoardSection, "uuid">,
+    repositoryContext: RepositoryContext
+): Promise<void> {
+    return failOrOk(
+        await deleteWithCredentialsJson(
+            `/workspace/workspace-board-section/${uuid}`,
+            repositoryContext
+        )
+    );
+}
+
 // RPC
 export async function moveWorkspaceBoardSection(
     { uuid }: WorkspaceBoardSection,

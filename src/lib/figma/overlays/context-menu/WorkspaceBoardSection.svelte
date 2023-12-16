@@ -12,19 +12,23 @@
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
-    import { moveWorkspaceBoardSection } from "$lib/repository/workspace/workspaceBoardSection";
+    import {
+        moveWorkspaceBoardSection,
+        deleteWorkspaceBoardSection as repoDeleteWorkspaceBoardSection,
+    } from "$lib/repository/workspace/workspaceBoardSection";
     import {
         toggleWorkspaceBoardSectionOpen,
         workspaceBoardSectionClosed,
     } from "$lib/stores/dashboard";
-    import { openConstructiveOverlay } from "$lib/stores/globalUi";
+    import {
+        openConstructiveOverlay,
+        openDestructiveOverlay,
+    } from "$lib/stores/globalUi";
     import type {
         WorkspaceBoard,
         WorkspaceBoardSection,
     } from "$lib/types/workspace";
     import { getNewTaskUrl } from "$lib/urls";
-
-    // TODO make injectable
 
     export let workspaceBoard: WorkspaceBoard;
     export let workspaceBoardSection: WorkspaceBoardSection;
@@ -89,6 +93,16 @@
         await openConstructiveOverlay({
             kind: "updateWorkspaceBoardSection",
             workspaceBoardSection,
+        });
+    }
+
+    async function deleteWorkspaceBoardSection() {
+        await openDestructiveOverlay({
+            kind: "deleteWorkspaceBoardSection",
+            workspaceBoardSection,
+        });
+        await repoDeleteWorkspaceBoardSection(workspaceBoardSection, {
+            fetch,
         });
     }
 </script>
@@ -157,7 +171,7 @@
     <ContextMenuButton
         kind={{
             kind: "button",
-            action: () => console.error("delete section not implemented"),
+            action: deleteWorkspaceBoardSection,
         }}
         label={$_(
             "overlay.context-menu.workspace-board-section.delete-workspace-board-section"
