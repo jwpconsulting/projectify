@@ -4,6 +4,7 @@
     import Layout from "$lib/figma/overlays/constructive/Layout.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import { updateWorkspaceBoardSection } from "$lib/repository/workspace/workspaceBoardSection";
     import {
         rejectConstructiveOverlay,
         resolveConstructiveOverlay,
@@ -15,8 +16,10 @@
     let { title } = workspaceBoardSection;
 
     async function onSubmit() {
-        // NOOP
-        await new Promise(console.log);
+        await updateWorkspaceBoardSection(
+            { ...workspaceBoardSection, title },
+            { fetch }
+        );
         resolveConstructiveOverlay();
     }
 </script>

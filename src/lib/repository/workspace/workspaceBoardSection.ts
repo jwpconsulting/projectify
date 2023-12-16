@@ -6,6 +6,7 @@ import {
     getWithCredentialsJson,
     handle404,
     postWithCredentialsJson,
+    putWithCredentialsJson,
 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
@@ -43,7 +44,24 @@ export async function getWorkspaceBoardSection(
         )
     );
 }
+
 // Update
+export async function updateWorkspaceBoardSection(
+    workspaceBoardSection: Pick<
+        WorkspaceBoardSection,
+        "uuid" | "title" | "description"
+    >,
+    repositoryContext: RepositoryContext
+): Promise<void> {
+    return failOrOk(
+        await putWithCredentialsJson(
+            `/workspace/workspace-board-section/${workspaceBoardSection.uuid}`,
+            workspaceBoardSection,
+            repositoryContext
+        )
+    );
+}
+
 // Delete
 // RPC
 export async function moveWorkspaceBoardSection(
