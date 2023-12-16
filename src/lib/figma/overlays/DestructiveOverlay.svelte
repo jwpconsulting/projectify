@@ -11,143 +11,112 @@
 
     export let target: DestructiveOverlayType;
 
-    let bodyValues: { values: Record<string, string> };
+    let title: string;
+    let body: string;
+    let warning: string;
+    let buttonLabel: string;
     $: {
         switch (target.kind) {
             case "deleteLabel":
-                bodyValues = { values: { label: target.label.name } };
+                title = $_("overlay.destructive.delete-label.title");
+                body = $_("overlay.destructive.delete-label.body", {
+                    values: { label: target.label.name },
+                });
+                warning = $_("overlay.destructive.delete-label.warning");
+                buttonLabel = $_("overlay.destructive.delete-label.button");
                 break;
             case "deleteWorkspaceUser":
-                // TODO use proper name interpolation method to be found
-                // somewhere in utils
-                bodyValues = {
+                title = $_("overlay.destructive.delete-workspace-user.title");
+                body = $_("overlay.destructive.delete-workspace-user.body", {
                     values: {
                         workspaceUser: getDisplayName(
                             target.workspaceUser.user
                         ),
                     },
-                };
+                });
+                warning = $_(
+                    "overlay.destructive.delete-workspace-user.warning"
+                );
+                buttonLabel = $_(
+                    "overlay.destructive.delete-workspace-user.button"
+                );
                 break;
             case "deleteWorkspaceBoardSection":
-                bodyValues = {
-                    values: {
-                        workspaceBoardSection:
-                            target.workspaceBoardSection.title,
-                    },
-                };
+                title = $_(
+                    "overlay.destructive.delete-workspace-board-section.title"
+                );
+                body = $_(
+                    "overlay.destructive.delete-workspace-board-section.body",
+                    {
+                        values: {
+                            workspaceBoardSection:
+                                target.workspaceBoardSection.title,
+                        },
+                    }
+                );
+                warning = $_(
+                    "overlay.destructive.delete-workspace-board-section.warning"
+                );
+                buttonLabel = $_(
+                    "overlay.destructive.delete-workspace-board-section.button"
+                );
                 break;
             case "deleteTask":
-                bodyValues = { values: { task: target.task.title } };
+                title = $_("overlay.destructive.delete-task.title");
+                body = $_("overlay.destructive.delete-task.body", {
+                    values: { task: target.task.title },
+                });
+                warning = $_("overlay.destructive.delete-task.warning");
+                buttonLabel = $_("overlay.destructive.delete-task.button");
                 break;
             case "deleteSelectedTasks":
+                title = $_("overlay.destructive.delete-selected-tasks.title");
                 // XXX not used, and even if, we should show all task titles
                 // instead of just a count
-                bodyValues = {
+                body = $_("overlay.destructive.delete-selected-tasks.body", {
                     values: { count: target.tasks.length.toString() },
-                };
+                });
+                warning = $_(
+                    "overlay.destructive.delete-selected-tasks.warning"
+                );
+                buttonLabel = $_(
+                    "overlay.destructive.delete-selected-tasks.button"
+                );
                 break;
             case "archiveWorkspaceBoard":
-                bodyValues = {
+                title = $_(
+                    "overlay.destructive.archive-workspace-board.title"
+                );
+                body = $_("overlay.destructive.archive-workspace-board.body", {
                     values: { workspaceBoard: target.workspaceBoard.title },
-                };
+                });
+                warning = $_(
+                    "overlay.destructive.archive-workspace-board.warning"
+                );
+                buttonLabel = $_(
+                    "overlay.destructive.archive-workspace-board.button"
+                );
                 break;
             case "deleteWorkspaceBoard":
-                bodyValues = {
+                title = $_("overlay.destructive.delete-workspace-board.title");
+                body = $_("overlay.destructive.delete-workspace-board.body", {
                     values: { workspaceBoard: target.workspaceBoard.title },
-                };
+                });
+                warning = $_(
+                    "overlay.destructive.delete-workspace-board.warning"
+                );
+                buttonLabel = $_(
+                    "overlay.destructive.delete-workspace-board.button"
+                );
                 break;
         }
     }
-
-    $: title = {
-        deleteLabel: $_("overlay.destructive.delete-label.title"),
-        deleteWorkspaceUser: $_(
-            "overlay.destructive.delete-workspace-user.title"
-        ),
-        deleteWorkspaceBoardSection: $_(
-            "overlay.destructive.delete-workspace-board-section.title"
-        ),
-        deleteTask: $_("overlay.destructive.delete-task.title"),
-        deleteSelectedTasks: $_(
-            "overlay.destructive.delete-selected-tasks.title"
-        ),
-        archiveWorkspaceBoard: $_(
-            "overlay.destructive.archive-workspace-board.title"
-        ),
-        deleteWorkspaceBoard: $_(
-            "overlay.destructive.delete-workspace-board.title"
-        ),
-    }[target.kind];
-    $: body = {
-        deleteLabel: $_("overlay.destructive.delete-label.body", bodyValues),
-        deleteWorkspaceUser: $_(
-            "overlay.destructive.delete-workspace-user.body",
-            bodyValues
-        ),
-        deleteWorkspaceBoardSection: $_(
-            "overlay.destructive.delete-workspace-board-section.body",
-            bodyValues
-        ),
-        deleteTask: $_("overlay.destructive.delete-task.body", bodyValues),
-        deleteSelectedTasks: $_(
-            "overlay.destructive.delete-selected-tasks.body",
-            bodyValues
-        ),
-        archiveWorkspaceBoard: $_(
-            "overlay.destructive.archive-workspace-board.body",
-            bodyValues
-        ),
-        deleteWorkspaceBoard: $_(
-            "overlay.destructive.delete-workspace-board.body",
-            bodyValues
-        ),
-    }[target.kind];
-    $: warning = {
-        deleteLabel: $_("overlay.destructive.delete-label.warning"),
-        deleteWorkspaceUser: $_(
-            "overlay.destructive.delete-workspace-user.warning"
-        ),
-        deleteWorkspaceBoardSection: $_(
-            "overlay.destructive.delete-workspace-board-section.warning"
-        ),
-        deleteTask: $_("overlay.destructive.delete-task.warning"),
-        deleteSelectedTasks: $_(
-            "overlay.destructive.delete-selected-tasks.warning"
-        ),
-        archiveWorkspaceBoard: $_(
-            "overlay.destructive.archive-workspace-board.warning"
-        ),
-        deleteWorkspaceBoard: $_(
-            "overlay.destructive.delete-workspace-board.warning"
-        ),
-    }[target.kind];
-    $: buttonLabel = {
-        deleteLabel: $_("overlay.destructive.delete-label.button"),
-        deleteWorkspaceUser: $_(
-            "overlay.destructive.delete-workspace-user.button"
-        ),
-        deleteWorkspaceBoardSection: $_(
-            "overlay.destructive.delete-workspace-board-section.button"
-        ),
-        deleteTask: $_("overlay.destructive.delete-task.button"),
-        deleteSelectedTasks: $_(
-            "overlay.destructive.delete-selected-tasks.button"
-        ),
-        archiveWorkspaceBoard: $_(
-            "overlay.destructive.archive-workspace-board.button"
-        ),
-        deleteWorkspaceBoard: $_(
-            "overlay.destructive.delete-workspace-board.button"
-        ),
-    }[target.kind];
 </script>
 
 <div
     class="flex w-full max-w-lg flex-col items-center gap-4 rounded-lg bg-foreground p-8"
 >
-    <div class="text-center text-3xl font-bold text-base-content">
-        {title}
-    </div>
+    <div class="text-center text-3xl font-bold text-base-content">{title}</div>
     <div
         class="flex w-full flex-col items-center gap-8 border-t border-border pt-2"
     >
