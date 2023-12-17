@@ -11,6 +11,8 @@
     } from "$lib/stores/dashboard";
     import { closeMobileMenu } from "$lib/stores/globalUi";
     import type { MobileMenuType } from "$lib/types/ui";
+    import { dashboardUrl } from "$lib/urls/dashboard";
+    import { logInUrl, signUpUrl } from "$lib/urls/user";
 
     export let target: MobileMenuType;
 </script>
@@ -33,7 +35,7 @@
             <Button
                 action={{
                     kind: "a",
-                    href: "/dashboard",
+                    href: dashboardUrl,
                     onInteract: () => {
                         closeMobileMenu();
                         console.log("closing");
@@ -48,7 +50,7 @@
             <Button
                 action={{
                     kind: "a",
-                    href: "/login",
+                    href: logInUrl,
                     onInteract: closeMobileMenu,
                 }}
                 style={{ kind: "tertiary" }}
@@ -59,7 +61,7 @@
             <Button
                 action={{
                     kind: "a",
-                    href: "/user/sign-up",
+                    href: signUpUrl,
                     onInteract: closeMobileMenu,
                 }}
                 style={{ kind: "primary" }}

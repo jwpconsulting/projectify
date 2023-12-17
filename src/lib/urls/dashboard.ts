@@ -1,8 +1,9 @@
 /*
  * Dashboard urls
  */
-
 import type { WorkspaceBoard } from "$lib/types/workspace";
+
+export const dashboardUrl = "/dashboard";
 
 export function getWorkspaceBoardSearchUrl({
     uuid,
