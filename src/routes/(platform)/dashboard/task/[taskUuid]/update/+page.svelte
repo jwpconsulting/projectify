@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { onMount } from "svelte";
     import { _, number } from "svelte-i18n";
 
     import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
@@ -27,35 +26,33 @@
 
     export let data: PageData;
     const { task } = data;
+    const { workspace_board_section: workspaceBoardSection } = task;
+    const { workspace_board: workspaceBoard } = workspaceBoardSection;
 
     const state: TaskUpdateBarState = "task";
 
-    let title: string;
-    let description: string | undefined;
-    let dueDate: string | undefined;
+    // Initial data
+    let { title, description } = task;
+    let dueDate = task.deadline && coerceIsoDate(task.deadline);
 
-    onMount(() => {
-        populateForm();
-    });
+    $: workspaceUserAssignment = createWorkspaceUserAssignment(task);
+    $: labelAssignment = createLabelAssignment(task);
+    $: subTaskAssignment = createSubTaskAssignment(task);
+    $: subTasks = subTaskAssignment.subTasks;
 
-    function populateForm() {
-        title = task.title;
-        description = task.description;
-        dueDate = task.deadline && coerceIsoDate(task.deadline);
-    }
+    // XXX I am sure we can have really fancy validation
+    $: canUpdate = title !== "" && $subTasks !== undefined;
 
     async function action(continueEditing: boolean) {
         if (!$labelAssignment) {
             throw new Error("Expected $labelAssignment");
         }
-        // TOOD add rest here
         const submitTask: TaskWithWorkspaceBoardSection = {
             ...task,
             deadline: dueDate,
             title,
             description,
         };
-        // TODO add labels here
         await performUpdateTask(
             submitTask,
             $labelAssignment,
@@ -72,18 +69,6 @@
         );
     }
 
-    $: workspaceUserAssignment = createWorkspaceUserAssignment(task);
-    $: labelAssignment = createLabelAssignment(task);
-    $: subTaskAssignment = createSubTaskAssignment(task);
-    $: subTasks = subTaskAssignment.subTasks;
-
-    // XXX I am sure we can have really fancy validation
-    $: canUpdate = title !== "" && $subTasks !== undefined;
-
-    // TODO put me in PageData?
-    $: workspaceBoardSection = task.workspace_board_section;
-    $: workspaceBoard = workspaceBoardSection.workspace_board;
-
     $: crumbs = [
         {
             label: workspaceBoard.title,
@@ -95,6 +80,8 @@
                 workspaceBoardSection.uuid
             ),
         },
+        // We could add a better task name here, or even
+        // extract the whole thing as a layout for any task/[taskUuid] route
         { label: $number(task.number), href: getTaskUrl(task.uuid) },
     ];
 </script>
