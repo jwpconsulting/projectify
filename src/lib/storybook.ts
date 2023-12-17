@@ -13,7 +13,6 @@ import type {
     Task,
     TaskWithWorkspaceBoardSection,
     WorkspaceBoard,
-    WorkspaceBoardSection,
     WorkspaceBoardSectionWithTasks,
     WorkspaceUser,
 } from "$lib/types/workspace";
@@ -165,16 +164,6 @@ export const workspaceBoardSection: WorkspaceBoardSectionWithTasks = {
     uuid: nullUuid,
     tasks: [task, task2],
     _order: 0,
-};
-
-export const breadCrumbWorkspaceBoardSection: WorkspaceBoardSection = {
-    title: "section name that is long",
-    created: "",
-    modified: "",
-    uuid: nullUuid,
-    tasks: [task, task2],
-    _order: 0,
-    workspace_board: workspaceBoard,
 };
 
 export const mobileParameters = {
