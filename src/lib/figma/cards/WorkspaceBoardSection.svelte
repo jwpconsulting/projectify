@@ -30,6 +30,7 @@
                         ...task,
                         workspace_board_section: workspaceBoardSection,
                     }}
+                    {workspaceBoardSection}
                 />
             {:else}
                 <p>
