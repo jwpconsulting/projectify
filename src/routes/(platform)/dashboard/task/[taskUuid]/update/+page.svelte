@@ -41,7 +41,9 @@
     $: subTasks = subTaskAssignment.subTasks;
 
     // XXX I am sure we can have really fancy validation
-    $: canUpdate = title !== "" && $subTasks !== undefined;
+    $: canUpdate = !updating && title !== "" && $subTasks !== undefined;
+
+    let updating = false;
 
     async function action(continueEditing: boolean) {
         if (!$labelAssignment) {
@@ -53,20 +55,28 @@
             title,
             description,
         };
-        await performUpdateTask(
-            submitTask,
-            $labelAssignment,
-            $workspaceUserAssignment,
-            $subTasks,
-            { fetch }
-        );
-        if (continueEditing) {
-            await goto(getTaskUrl(task.uuid));
-            return;
+        updating = true;
+        try {
+            await performUpdateTask(
+                submitTask,
+                $labelAssignment,
+                $workspaceUserAssignment,
+                $subTasks,
+                { fetch }
+            );
+            if (continueEditing) {
+                await goto(getTaskUrl(task.uuid));
+                return;
+            }
+            await goto(
+                getDashboardWorkspaceBoardSectionUrl(
+                    workspaceBoardSection.uuid
+                )
+            );
+        } catch (e) {
+            updating = false;
+            throw e;
         }
-        await goto(
-            getDashboardWorkspaceBoardSectionUrl(workspaceBoardSection.uuid)
-        );
     }
 
     $: crumbs = [

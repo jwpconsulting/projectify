@@ -39,7 +39,9 @@
     const subTaskAssignment = createSubTaskAssignment();
     $: subTasks = subTaskAssignment.subTasks;
 
-    $: canCreate = title !== undefined;
+    $: canCreate = !creating && title !== undefined;
+
+    let creating = false;
 
     async function action(continueEditing: boolean) {
         if (!title) {
@@ -57,14 +59,23 @@
             deadline: dueDate,
             sub_tasks: $subTasks,
         };
-        const { uuid } = await createTaskFn(createTaskFull, { fetch });
-        if (continueEditing) {
-            await goto(getTaskUrl(uuid));
+        creating = true;
+        try {
+            const { uuid } = await createTaskFn(createTaskFull, { fetch });
+            if (continueEditing) {
+                await goto(getTaskUrl(uuid));
+                return;
+            }
+            await goto(
+                getDashboardWorkspaceBoardSectionUrl(
+                    workspaceBoardSection.uuid
+                )
+            );
             return;
+        } catch (e) {
+            creating = false;
+            throw e;
         }
-        await goto(
-            getDashboardWorkspaceBoardSectionUrl(workspaceBoardSection.uuid)
-        );
     }
 
     $: crumbs = [
