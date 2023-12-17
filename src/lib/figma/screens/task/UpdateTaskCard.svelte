@@ -9,10 +9,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { goto } from "$lib/navigation";
     import { updateTask as performUpdateTask } from "$lib/repository/workspace";
-    import {
-        currentTask,
-        createSubTaskAssignment,
-    } from "$lib/stores/dashboard";
+    import { createSubTaskAssignment } from "$lib/stores/dashboard";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
     import type {
@@ -43,13 +40,9 @@
     });
 
     function populateForm() {
-        if (!$currentTask) {
-            throw new Error("Expected currentTask");
-        }
-        title = $currentTask.title;
-        description = $currentTask.description;
-        dueDate =
-            $currentTask.deadline && coerceIsoDate($currentTask.deadline);
+        title = task.title;
+        description = task.description;
+        dueDate = task.deadline && coerceIsoDate(task.deadline);
     }
 
     async function action(continueEditing: boolean) {
