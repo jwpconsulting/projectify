@@ -83,6 +83,9 @@ export type WorkspaceBoardSection = {
 export type WorkspaceBoardSectionWithTasks = WorkspaceBoardSection &
     Required<Pick<WorkspaceBoardSection, "tasks">>;
 
+export type WorkspaceBoardSectionDetail = WorkspaceBoardSection &
+    Required<Pick<WorkspaceBoardSection, "workspace_board" | "tasks">>;
+
 export type WorkspaceBoard = {
     deadline?: string;
     uuid: string;

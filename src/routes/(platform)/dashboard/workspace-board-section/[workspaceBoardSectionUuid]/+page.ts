@@ -18,9 +18,5 @@ export async function load({
         throw error(404);
     }
     const workspaceBoard = workspaceBoardSection.workspace_board;
-    if (!workspaceBoard) {
-        // Unlikely
-        throw new Error("Expected workspaceBoard");
-    }
     throw redirect(302, getDashboardWorkspaceBoardUrl(workspaceBoard.uuid));
 }

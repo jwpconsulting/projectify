@@ -2,13 +2,13 @@ import { error } from "@sveltejs/kit";
 
 import { getWorkspaceBoardSection } from "$lib/repository/workspace/workspaceBoardSection";
 import { currentWorkspace } from "$lib/stores/dashboard";
-import type { WorkspaceBoardSection } from "$lib/types/workspace";
+import type { WorkspaceBoardSectionDetail } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
 
 import type { LayoutLoadEvent } from "./$types";
 
 interface Data {
-    workspaceBoardSection: WorkspaceBoardSection;
+    workspaceBoardSection: WorkspaceBoardSectionDetail;
 }
 
 export async function load({

@@ -13,6 +13,7 @@ import type { RepositoryContext } from "$lib/types/repository";
 import type {
     WorkspaceBoard,
     WorkspaceBoardSection,
+    WorkspaceBoardSectionDetail,
 } from "$lib/types/workspace";
 
 // Create
@@ -37,9 +38,9 @@ export async function createWorkspaceBoardSection(
 export async function getWorkspaceBoardSection(
     uuid: string,
     repositoryContext: RepositoryContext
-): Promise<WorkspaceBoardSection | undefined> {
+): Promise<WorkspaceBoardSectionDetail | undefined> {
     return handle404(
-        await getWithCredentialsJson<WorkspaceBoardSection>(
+        await getWithCredentialsJson(
             `/workspace/workspace-board-section/${uuid}`,
             repositoryContext
         )

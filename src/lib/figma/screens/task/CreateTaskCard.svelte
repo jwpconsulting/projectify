@@ -11,7 +11,7 @@
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
     import type {
         CreateUpdateTask,
-        WorkspaceBoardSection,
+        WorkspaceBoardSectionDetail,
     } from "$lib/types/workspace";
     import {
         getDashboardWorkspaceBoardSectionUrl,
@@ -19,23 +19,19 @@
         getNewTaskUrl,
         getTaskUrl,
     } from "$lib/urls";
-    import { unwrap } from "$lib/utils/type";
 
     import Breadcrumbs from "./Breadcrumbs.svelte";
     import Form from "./Form.svelte";
     import UpdateSubTasks from "./UpdateSubTasks.svelte";
 
-    export let workspaceBoardSection: WorkspaceBoardSection;
+    export let workspaceBoardSection: WorkspaceBoardSectionDetail;
 
     // form fields
     let title: string | undefined = undefined;
     let description: string | undefined = undefined;
     let dueDate: string | undefined = undefined;
 
-    const workspaceBoard = unwrap(
-        workspaceBoardSection.workspace_board,
-        "Expected workspaceBoard"
-    );
+    $: workspaceBoard = workspaceBoardSection.workspace_board;
 
     $: canCreate = title !== undefined;
 
