@@ -10,6 +10,7 @@ const config = {
     kit: {
         alias: {
             $messages: "src/messages",
+            $routes: "src/routes",
         },
         adapter: adapter({
             pages: "build",
