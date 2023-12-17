@@ -1,29 +1,23 @@
 <script lang="ts">
-    // TODO: Support onInteract
-    import { Plus, CheckCircle } from "@steeze-ui/heroicons";
-    import { Icon } from "@steeze-ui/svelte-icon";
-    import { number, _ } from "svelte-i18n";
+    import { Plus } from "@steeze-ui/heroicons";
+    import { _ } from "svelte-i18n";
 
-    import SubTaskProgressBar from "$lib/figma/screens/task/SubTaskProgressBar.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import type { SubTaskAssignment } from "$lib/types/stores";
 
     export let progress: number | undefined;
     export let subTaskAssignment: SubTaskAssignment | undefined = undefined;
     // TODO make buttons do something
+    // TODO: Support onInteract
 </script>
 
 <div class="flex flex-col gap-4">
-    <div class="flex flex-row justify-between">
-        <div class="flex flex-row gap-4">
-            <div>
-                <Icon src={CheckCircle} class="h-6" theme="outline" />
-            </div>
-            <!-- TODO add a text saying something like "Sub task completion is: ... -->
-            {#if progress !== undefined}
-                <div>{$number(progress, { style: "percent" })}</div>
-            {/if}
+    <div class="flex flex-row items-center justify-between">
+        <div class="flex flex-row items-center gap-4">
+            <!-- no idea if h4 is correct here XXX -->
+            <h4 class="text-xl font-bold">
+                {$_("task-screen.sub-tasks.title")}
+            </h4>
             <!-- TODO: and if there is no progress, display: This task has no sub tasks -->
         </div>
         {#if subTaskAssignment}
@@ -35,21 +29,28 @@
                     }}
                     color="blue"
                     size="medium"
-                    label={$_("task-screen.sub-tasks.add-sub-task")}
+                    label={$_("task-screen.sub-tasks.add-sub-task.button")}
                     action={{
                         kind: "button",
                         action: subTaskAssignment.addSubTask,
                     }}
                 />
-                <SquovalIcon
-                    icon="ellipsis"
-                    state="active"
-                    action={{ kind: "button", action: console.error }}
-                />
             </div>
         {/if}
     </div>
     {#if progress !== undefined}
-        <SubTaskProgressBar {progress} />
+        <div class="flex flex-row items-center gap-4">
+            <div class="h-2 w-full overflow-hidden rounded bg-disabled">
+                <div
+                    class="h-full bg-primary"
+                    style:width="{progress * 100}%"
+                />
+            </div>
+            <p class="min-w-max font-bold">
+                {$_("task-screen.sub-tasks.completion", {
+                    values: { progress },
+                })}
+            </p>
+        </div>
     {/if}
 </div>

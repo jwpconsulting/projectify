@@ -31,9 +31,6 @@
     let title: string | undefined = undefined;
     let description: string | undefined = undefined;
     let dueDate: string | undefined = undefined;
-    // TODO
-    // Allow us to create subtasks from here directly
-    // const subTasks: SubTask[] = [];
 
     const workspaceBoard = unwrap(
         workspaceBoardSection.workspace_board,
