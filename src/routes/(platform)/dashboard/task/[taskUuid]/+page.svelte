@@ -1,7 +1,6 @@
 <script lang="ts">
     import { _, number } from "svelte-i18n";
 
-    import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
     import Breadcrumbs from "$lib/figma/screens/task/Breadcrumbs.svelte";
     import Fields from "$lib/figma/screens/task/Fields.svelte";
     import Layout from "$lib/figma/screens/task/Layout.svelte";
@@ -12,7 +11,6 @@
     import TaskTitle from "$lib/figma/screens/task/TaskTitle.svelte";
     import TaskUser from "$lib/figma/screens/task/TaskUser.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
-    import type { TaskUpdateBarState } from "$lib/figma/types";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import { currentTask } from "$lib/stores/dashboard";
@@ -30,7 +28,6 @@
     import { goto } from "$app/navigation";
 
     export let data: PageData;
-    const state: TaskUpdateBarState = "task";
 
     $: task = $currentTask ?? data.task;
     $: subTasks = task.sub_tasks;
@@ -91,7 +88,6 @@
             </div>
         </svelte:fragment>
     </TopBar>
-    <TaskUpdateBar slot="tab-bar-mobile" kind="mobile" {state} {task} />
     <svelte:fragment slot="content">
         <Fields>
             <TaskTitle slot="title" title={task.title} readonly {onInteract} />

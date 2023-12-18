@@ -1,13 +1,11 @@
 <script lang="ts">
     import { _, number } from "svelte-i18n";
 
-    import TaskUpdateBar from "$lib/figma/buttons/TaskUpdateBar.svelte";
     import Breadcrumbs from "$lib/figma/screens/task/Breadcrumbs.svelte";
     import Form from "$lib/figma/screens/task/Form.svelte";
     import Layout from "$lib/figma/screens/task/Layout.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
     import UpdateSubTasks from "$lib/figma/screens/task/UpdateSubTasks.svelte";
-    import type { TaskUpdateBarState } from "$lib/figma/types";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { goto } from "$lib/navigation";
     import { updateTask as performUpdateTask } from "$lib/repository/workspace";
@@ -28,8 +26,6 @@
     const { task } = data;
     const { workspace_board_section: workspaceBoardSection } = task;
     const { workspace_board: workspaceBoard } = workspaceBoardSection;
-
-    const state: TaskUpdateBarState = "task";
 
     // Initial data
     let { title, description } = task;
@@ -126,7 +122,6 @@
             />
         </svelte:fragment>
     </TopBar>
-    <TaskUpdateBar slot="tab-bar-mobile" kind="mobile" {state} {task} />
     <svelte:fragment slot="content">
         <Form
             action={action.bind(null, false)}

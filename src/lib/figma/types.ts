@@ -38,11 +38,6 @@ export type SelectLabel =
 export const filterLabelMenuStates = ["list", "create"] as const;
 export type FilterLabelMenuState = (typeof filterLabelMenuStates)[number];
 
-export const taskUpdateBarKinds = ["mobile", "desktop"] as const;
-export type TaskUpdateBarKind = (typeof taskUpdateBarKinds)[number];
-export const taskUpdateBarStates = ["task", "updates"] as const;
-export type TaskUpdateBarState = (typeof taskUpdateBarStates)[number];
-
 const floatingActionButtonIcons = ["plus", "close"] as const;
 export type FloatingActionButtonIcon =
     (typeof floatingActionButtonIcons)[number];

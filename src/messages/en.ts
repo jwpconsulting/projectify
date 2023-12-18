@@ -429,10 +429,6 @@ const messages: MessageDirectory = {
         },
     },
     "task-screen": {
-        "bar": {
-            task: "Task",
-            updates: "Updates",
-        },
         "update": {
             "update": "Update task",
             "update-continue-editing": "Update task and stay",
