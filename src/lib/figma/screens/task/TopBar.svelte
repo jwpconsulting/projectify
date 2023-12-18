@@ -16,7 +16,7 @@
                 action={{
                     kind: "a",
                     href: getDashboardWorkspaceBoardSectionUrl(
-                        workspaceBoardSection.uuid
+                        workspaceBoardSection.uuid,
                     ),
                 }}
                 size="medium"

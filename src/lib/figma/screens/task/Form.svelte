@@ -26,7 +26,7 @@
                 kind: "updateWorkspaceUser",
                 workspaceUserAssignment,
             },
-            anchor
+            anchor,
         );
     }
     async function showUpdateLabel(anchor: HTMLElement) {
@@ -35,7 +35,7 @@
                 kind: "updateLabel",
                 labelAssignment,
             },
-            anchor
+            anchor,
         );
     }
 </script>

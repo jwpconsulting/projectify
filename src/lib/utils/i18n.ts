@@ -3,7 +3,7 @@ import { workspaceUserRoles } from "$lib/types/workspaceUserRole";
 
 export function getMessageNameForRole(
     $_: (id: string) => string,
-    role: string
+    role: string,
 ) {
     // This casting should be done further upstream
     // TODO Justus 2022-09-29

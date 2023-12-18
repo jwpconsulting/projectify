@@ -31,5 +31,5 @@ export const currentWorkspaceUsers: CurrentWorkspaceUsers = derived<
         }
         set($currentWorkspace.workspace_users);
     },
-    []
+    [],
 );

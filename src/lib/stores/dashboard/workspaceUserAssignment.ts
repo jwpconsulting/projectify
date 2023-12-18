@@ -8,7 +8,7 @@ import type {
 import type { Task, WorkspaceUser } from "$lib/types/workspace";
 
 export function createWorkspaceUserAssignment(
-    task?: Task
+    task?: Task,
 ): WorkspaceUserAssignment {
     const maybeSelected: WorkspaceUserAssignmentState = task?.assignee
         ? {
@@ -28,7 +28,7 @@ export function createWorkspaceUserAssignment(
                 const { workspaceUser } = $selected;
                 set(workspaceUser);
             }
-        }
+        },
     );
     const select = (selection: WorkspaceUserAssignmentInput) => {
         if (selection.kind === "unassigned") {

@@ -20,7 +20,7 @@ export async function load({
     }
     const workspace = await currentWorkspace.loadUuid(
         task.workspace_board_section.workspace_board.workspace.uuid,
-        { fetch }
+        { fetch },
     );
     if (!workspace) {
         throw error(404);

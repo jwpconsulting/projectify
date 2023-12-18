@@ -18,23 +18,23 @@ export async function load({
     // If thing is fetched, use the fetch argument above
     const workspaceBoardSection = await getWorkspaceBoardSection(
         workspaceBoardSectionUuid,
-        { fetch }
+        { fetch },
     );
     if (!workspaceBoardSection) {
         throw error(404);
     }
     const workspaceBoard = unwrap(
         workspaceBoardSection.workspace_board,
-        "Expected workspace_board"
+        "Expected workspace_board",
     );
     const { uuid: workspaceUuid } = unwrap(
         workspaceBoard.workspace,
-        "Expected workspace"
+        "Expected workspace",
     );
     currentWorkspace.loadUuid(workspaceUuid, { fetch }).catch((reason) => {
         console.error(
             "Tried to load currentWorkspace in background, but failed with",
-            reason
+            reason,
         );
     });
     return { workspaceBoardSection };

@@ -19,14 +19,14 @@ import type {
 export async function createWorkspaceBoard(
     workspace: Workspace,
     workspaceBoard: { title: string; description: string; deadline?: string },
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<WorkspaceBoard> {
     const { title, description, deadline } = workspaceBoard;
     const { uuid: workspace_uuid } = workspace;
     const response = await postWithCredentialsJson<Workspace>(
         `/workspace/workspace-board/`,
         { workspace_uuid, title, description, deadline },
-        repositoryContext
+        repositoryContext,
     );
     if (response.kind !== "ok") {
         console.error("TODO handle", response);
@@ -38,25 +38,25 @@ export async function createWorkspaceBoard(
 // Read
 export async function getWorkspaceBoard(
     uuid: string,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<WorkspaceBoardDetail | undefined> {
     return handle404(
         await getWithCredentialsJson<WorkspaceBoardDetail>(
             `/workspace/workspace-board/${uuid}`,
-            repositoryContext
-        )
+            repositoryContext,
+        ),
     );
 }
 
 export async function getArchivedWorkspaceBoards(
     workspace_uuid: string,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<undefined | ArchivedWorkspaceBoard[]> {
     return handle404(
         await getWithCredentialsJson<ArchivedWorkspaceBoard[]>(
             `/workspace/workspace/${workspace_uuid}/archived-workspace-boards/`,
-            repositoryContext
-        )
+            repositoryContext,
+        ),
     );
 }
 
@@ -66,39 +66,39 @@ export async function updateWorkspaceBoard(
         WorkspaceBoard,
         "title" | "description" | "uuid" | "deadline"
     >,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ) {
     return failOrOk(
         await putWithCredentialsJson(
             `/workspace/workspace-board/${workspaceBoard.uuid}`,
             workspaceBoard,
-            repositoryContext
-        )
+            repositoryContext,
+        ),
     );
 }
 // Delete
 export async function deleteWorkspaceBoard(
     { uuid }: WorkspaceBoard,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<void> {
     failOrOk(
         await deleteWithCredentialsJson(
             `/workspace/workspace-board/${uuid}`,
-            repositoryContext
-        )
+            repositoryContext,
+        ),
     );
 }
 
 export async function archiveWorkspaceBoard(
     { uuid }: WorkspaceBoard,
     archived: boolean,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ) {
     failOrOk(
         await postWithCredentialsJson(
             `/workspace/workspace-board/${uuid}/archive`,
             { archived },
-            repositoryContext
-        )
+            repositoryContext,
+        ),
     );
 }

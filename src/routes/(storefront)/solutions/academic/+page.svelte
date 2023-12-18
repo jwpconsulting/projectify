@@ -20,7 +20,7 @@
                     position: "right",
                     src: "/assets/solutions/academic-popup.png",
                     alt: $_(
-                        "solutions.academic.features.feature-1.illustration.alt"
+                        "solutions.academic.features.feature-1.illustration.alt",
                     ),
                 },
                 title: $_("solutions.academic.features.feature-1.title"),
@@ -31,7 +31,7 @@
                     position: "left",
                     src: "/assets/solutions/academic-subtask.png",
                     alt: $_(
-                        "solutions.academic.features.feature-2.illustration.alt"
+                        "solutions.academic.features.feature-2.illustration.alt",
                     ),
                 },
                 title: $_("solutions.academic.features.feature-2.title"),
@@ -42,7 +42,7 @@
                     position: "right",
                     src: "/assets/solutions/academic-update.png",
                     alt: $_(
-                        "solutions.academic.features.feature-3.illustration.alt"
+                        "solutions.academic.features.feature-3.illustration.alt",
                     ),
                 },
                 title: $_("solutions.academic.features.feature-3.title"),

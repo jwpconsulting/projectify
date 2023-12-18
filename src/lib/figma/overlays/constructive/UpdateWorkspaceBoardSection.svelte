@@ -18,7 +18,7 @@
     async function onSubmit() {
         await updateWorkspaceBoardSection(
             { ...workspaceBoardSection, title },
-            { fetch }
+            { fetch },
         );
         resolveConstructiveOverlay();
     }
@@ -32,10 +32,10 @@
         <InputField
             name="workspace-board-name"
             label={$_(
-                "overlay.constructive.update-workspace-board-section.form.title.label"
+                "overlay.constructive.update-workspace-board-section.form.title.label",
             )}
             placeholder={$_(
-                "overlay.constructive.update-workspace-board-section.form.title.placeholder"
+                "overlay.constructive.update-workspace-board-section.form.title.placeholder",
             )}
             style={{ inputType: "text" }}
             bind:value={title}
@@ -48,7 +48,7 @@
             size="medium"
             color="blue"
             label={$_(
-                "overlay.constructive.update-workspace-board-section.cancel"
+                "overlay.constructive.update-workspace-board-section.cancel",
             )}
         />
         <Button
@@ -57,7 +57,7 @@
             size="medium"
             color="blue"
             label={$_(
-                "overlay.constructive.update-workspace-board-section.update"
+                "overlay.constructive.update-workspace-board-section.update",
             )}
         />
     </svelte:fragment>

@@ -8,7 +8,7 @@ import type { RecursiveKeyOf, SearchInput } from "$lib/types/base";
 export function searchAmong<T extends object>(
     keys: RecursiveKeyOf<T>[],
     things: T[],
-    searchText: SearchInput
+    searchText: SearchInput,
 ): T[] {
     // If there is nothing to search for, we return everything
     // But it would be better if we had some kind of guaranteed non-empty

@@ -61,7 +61,7 @@
                     kind: "button",
                     action: subTaskAssignment.moveSubTaskDown.bind(
                         null,
-                        index
+                        index,
                     ),
                     disabled: index >= $subTaskAssignment.length - 1,
                 }}

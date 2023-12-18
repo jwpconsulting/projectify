@@ -26,10 +26,10 @@
         <div class="flex flex-col gap-4">
             <InputField
                 label={$_(
-                    "user-account-settings.update-email.current-password.label"
+                    "user-account-settings.update-email.current-password.label",
                 )}
                 placeholder={$_(
-                    "user-account-settings.update-email.current-password.placeholder"
+                    "user-account-settings.update-email.current-password.placeholder",
                 )}
                 name="current-password"
                 style={{ inputType: "password" }}
@@ -37,10 +37,10 @@
             />
             <InputField
                 label={$_(
-                    "user-account-settings.update-email.new-email.label"
+                    "user-account-settings.update-email.new-email.label",
                 )}
                 placeholder={$_(
-                    "user-account-settings.update-email.new-email.placeholder"
+                    "user-account-settings.update-email.new-email.placeholder",
                 )}
                 name="new-email"
                 style={{ inputType: "text" }}
@@ -63,7 +63,7 @@
                     kind: "button",
                     action: console.error.bind(
                         null,
-                        "Update email not implemented"
+                        "Update email not implemented",
                     ),
                     disabled: hasBeenEdited,
                 }}

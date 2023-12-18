@@ -12,7 +12,7 @@ export async function load({
 }) {
     const workspaceBoardSection = await getWorkspaceBoardSection(
         params.workspaceBoardSectionUuid,
-        { fetch }
+        { fetch },
     );
     if (!workspaceBoardSection) {
         throw error(404);

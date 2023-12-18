@@ -64,7 +64,7 @@
                     {$_("filter-workspace-user.all-users")}
                 {:else if workspaceUserSelectionInput.kind === "workspaceUser"}
                     {getDisplayName(
-                        workspaceUserSelectionInput.workspaceUser.user
+                        workspaceUserSelectionInput.workspaceUser.user,
                     )}
                 {/if}
             </div>

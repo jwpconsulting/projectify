@@ -27,7 +27,7 @@
         const label = await createLabel(
             workspace,
             { name: labelTitle, color: 0 },
-            { fetch }
+            { fetch },
         );
         await updateTask(task, [label], task.assignee, [], { fetch });
         // TODO handle if label with this name already exists

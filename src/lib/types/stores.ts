@@ -49,7 +49,7 @@ export type MaybeSubscriber<T> = Subscriber<T | undefined>;
 
 export type RepoGetter<T> = (
     uuid: string,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ) => Promise<T | undefined>;
 export interface WsResource<T> extends Readable<T | undefined> {
     loadUuid: RepoGetter<T>;

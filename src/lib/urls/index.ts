@@ -19,7 +19,7 @@ export function getDashboardWorkspaceBoardUrl(workspaceBoardUuid: string) {
 // TODO put me into dashboard urls
 export function getDashboardWorkspaceBoardSectionUrl(
     // TODO accept workspaceBoardSection directly
-    workspaceBoardSectionUuid: string
+    workspaceBoardSectionUuid: string,
 ) {
     return `/dashboard/workspace-board-section/${workspaceBoardSectionUuid}`;
 }

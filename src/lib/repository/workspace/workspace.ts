@@ -12,12 +12,12 @@ import type { Workspace, WorkspaceDetail } from "$lib/types/workspace";
 export async function createWorkspace(
     title: string,
     description: string | undefined,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<Workspace> {
     const response = await postWithCredentialsJson<Workspace>(
         `/workspace/workspaces/`,
         { title, description },
-        repositoryContext
+        repositoryContext,
     );
     if (response.kind !== "ok") {
         console.error("TODO handle", response);
@@ -27,25 +27,25 @@ export async function createWorkspace(
 }
 // Read
 export async function getWorkspaces(
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<Workspace[] | undefined> {
     return handle404(
         await getWithCredentialsJson<Workspace[]>(
             `/workspace/user/workspaces/`,
-            repositoryContext
-        )
+            repositoryContext,
+        ),
     );
 }
 
 export async function getWorkspace(
     uuid: string,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<WorkspaceDetail | undefined> {
     return handle404(
         await getWithCredentialsJson<WorkspaceDetail>(
             `/workspace/workspace/${uuid}`,
-            repositoryContext
-        )
+            repositoryContext,
+        ),
     );
 }
 
@@ -55,12 +55,12 @@ export async function updateWorkspace(
     uuid: string,
     title: string,
     description: string | undefined,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<Workspace> {
     const response = await putWithCredentialsJson<Workspace>(
         `/workspace/workspace/${uuid}`,
         { title, description },
-        repositoryContext
+        repositoryContext,
     );
     if (response.kind !== "ok") {
         console.error("TODO handle", response);
@@ -74,7 +74,7 @@ export async function updateWorkspace(
 export async function inviteUser(
     workspace: Workspace,
     email: string,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<Result<{ email: string }, { email: string }>> {
     const { uuid } = workspace;
     const response = await postWithCredentialsJson<
@@ -83,7 +83,7 @@ export async function inviteUser(
     >(
         `/workspace/workspace/${uuid}/invite-user`,
         { email },
-        repositoryContext
+        repositoryContext,
     );
     if (response.kind === "ok") {
         return { ok: true, result: response.data };

@@ -133,7 +133,7 @@
             action: archiveWorkspaceBoard,
         }}
         label={$_(
-            "overlay.context-menu.workspace-board.archive-workspace-board"
+            "overlay.context-menu.workspace-board.archive-workspace-board",
         )}
         state="normal"
         icon={Archive}

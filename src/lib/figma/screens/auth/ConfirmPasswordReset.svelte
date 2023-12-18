@@ -38,7 +38,7 @@
         />
         <InputField
             placeholder={$_(
-                "auth.confirm-password-reset.confirm-new-password"
+                "auth.confirm-password-reset.confirm-new-password",
             )}
             style={{ inputType: "password" }}
             name="password2"

@@ -5,7 +5,7 @@ import type { SubTaskAssignment } from "$lib/types/stores";
 import type { CreateUpdateSubTask, Task } from "$lib/types/workspace";
 
 function filterSubTasks(
-    subTasks: Partial<CreateUpdateSubTask>[]
+    subTasks: Partial<CreateUpdateSubTask>[],
 ): CreateUpdateSubTask[] | undefined {
     const nonPartials = subTasks.map((el: Partial<CreateUpdateSubTask>) => {
         if (el.done !== undefined && el.title !== undefined) {
@@ -19,7 +19,7 @@ function filterSubTasks(
         return undefined;
     });
     const filtered: CreateUpdateSubTask[] = nonPartials.flatMap((el) =>
-        el ? [el] : []
+        el ? [el] : [],
     );
     if (nonPartials.length !== filtered.length) {
         return;
@@ -53,7 +53,7 @@ export function createSubTaskAssignment(task?: Task): SubTaskAssignment {
             }
             set(filtered);
         },
-        undefined
+        undefined,
     );
     return {
         subscribe,

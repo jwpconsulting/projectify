@@ -47,10 +47,10 @@
             }
             outerStyle = `${getLabelColorClass(
                 "bg",
-                color
+                color,
             )} ${getLabelColorClass("border", color)} ${getLabelColorClass(
                 "bgHover",
-                color
+                color,
             )} ${getLabelColorClass("text", color)}`;
         }
         outerStyleComputed = `flex h-6 w-10 flex-row items-center justify-center rounded-2.5xl border border-2 px-2.5 ${outerStyle}`;

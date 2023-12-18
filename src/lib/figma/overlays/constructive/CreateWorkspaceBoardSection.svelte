@@ -26,7 +26,7 @@
         await createWorkspaceBoardSection(
             workspaceBoard,
             workspaceBoardSection,
-            { fetch }
+            { fetch },
         );
         resolveConstructiveOverlay();
     }
@@ -40,10 +40,10 @@
         <InputField
             name="workspace-board-name"
             label={$_(
-                "overlay.constructive.create-workspace-board-section.form.title.label"
+                "overlay.constructive.create-workspace-board-section.form.title.label",
             )}
             placeholder={$_(
-                "overlay.constructive.create-workspace-board-section.form.title.placeholder"
+                "overlay.constructive.create-workspace-board-section.form.title.placeholder",
             )}
             style={{ inputType: "text" }}
             bind:value={title}
@@ -56,7 +56,7 @@
             size="medium"
             color="blue"
             label={$_(
-                "overlay.constructive.create-workspace-board-section.cancel"
+                "overlay.constructive.create-workspace-board-section.cancel",
             )}
         />
         <Button
@@ -65,7 +65,7 @@
             size="medium"
             color="blue"
             label={$_(
-                "overlay.constructive.create-workspace-board-section.create-section"
+                "overlay.constructive.create-workspace-board-section.create-section",
             )}
         />
     </svelte:fragment>

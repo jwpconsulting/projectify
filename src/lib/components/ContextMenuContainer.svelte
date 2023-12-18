@@ -47,7 +47,7 @@
                         escapeUnsubscriber = undefined;
                     }
                 }
-            }
+            },
         );
         return () => {
             // It follows that when a context menu is visible, there is a focus
@@ -68,13 +68,13 @@
 
     function addObserver(
         contextMenu: HTMLElement,
-        $contextMenuState: ContextMenuState & { kind: "visible" }
+        $contextMenuState: ContextMenuState & { kind: "visible" },
     ) {
         console.debug($contextMenuState);
         const anchor = $contextMenuState.anchor;
         repositioned = false;
         resizeObserver = new ResizeObserver(() =>
-            repositionContextMenu(anchor)
+            repositionContextMenu(anchor),
         );
         resizeObserver.observe(contextMenu);
     }
@@ -113,7 +113,7 @@
         const viewPortHeight = document.body.clientHeight;
         // Calculate how many pixels from anchor bottom to viewport bottom
         const anchorBottomToViewPortBottom = Math.abs(
-            viewPortHeight - (anchorTop + anchor.offsetHeight)
+            viewPortHeight - (anchorTop + anchor.offsetHeight),
         );
         // Calculate how many pixels high the context menu is
         const contextMenuHeight = contextMenu.offsetHeight;

@@ -20,7 +20,7 @@ type TaskPosition =
 
 export function getTaskPosition(
     workspaceBoardSection: WorkspaceBoardSectionWithTasks,
-    task: Task
+    task: Task,
 ): TaskPosition {
     const { tasks } = workspaceBoardSection;
     const taskIndex = tasks.findIndex((t) => t.uuid == task.uuid);
@@ -40,19 +40,19 @@ export function getTaskPosition(
 export async function moveToTop(
     workspaceBoardSection: WorkspaceBoardSectionWithTasks,
     task: TaskWithWorkspaceBoardSection,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ) {
     await moveTaskToWorkspaceBoardSection(
         task,
         workspaceBoardSection,
-        repositoryContext
+        repositoryContext,
     );
 }
 
 export async function moveToBottom(
     workspaceBoardSection: WorkspaceBoardSectionWithTasks,
     task: Task,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ) {
     const tasks = unwrap(workspaceBoardSection.tasks, "Expected tasks");
     const lastTask = unwrap(tasks.at(-1), "Expected lastTask");
@@ -62,7 +62,7 @@ export async function moveToBottom(
 export async function moveUp(
     workspaceBoardSection: WorkspaceBoardSectionWithTasks,
     task: Task,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ) {
     const tasks = unwrap(workspaceBoardSection.tasks, "Expected tasks");
     const position = getTaskPosition(workspaceBoardSection, task);
@@ -71,7 +71,7 @@ export async function moveUp(
     }
     const prevTask = unwrap(
         tasks.at(position.position - 1),
-        "Expected prevTask"
+        "Expected prevTask",
     );
     await moveTaskAfterTask(task, prevTask, repositoryContext);
 }
@@ -79,7 +79,7 @@ export async function moveUp(
 export async function moveDown(
     workspaceBoardSection: WorkspaceBoardSectionWithTasks,
     task: Task,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ) {
     const position = getTaskPosition(workspaceBoardSection, task);
     if (!(position.kind === "start" || position.kind === "within")) {
@@ -88,7 +88,7 @@ export async function moveDown(
     const tasks = unwrap(workspaceBoardSection.tasks, "Expected tasks");
     const nextTask = unwrap(
         tasks.at(position.position + 1),
-        "Expected nextTask"
+        "Expected nextTask",
     );
     await moveTaskAfterTask(task, nextTask, repositoryContext);
 }

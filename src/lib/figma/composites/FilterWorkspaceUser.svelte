@@ -41,7 +41,7 @@
 
     function isSelected(
         $selected: WorkspaceUserAssignmentState | WorkspaceUserSelection,
-        workspaceUser: WorkspaceUser
+        workspaceUser: WorkspaceUser,
     ): boolean {
         if ($selected.kind === "workspaceUsers") {
             return $selected.workspaceUserUuids.has(workspaceUser.uuid);

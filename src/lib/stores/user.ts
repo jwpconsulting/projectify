@@ -13,12 +13,12 @@ export async function login(
     email: string,
     password: string,
     redirectTo: string | undefined,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<void> {
     const response = await userRepository.logIn(
         email,
         password,
-        repositoryContext
+        repositoryContext,
     );
     user.set(response);
 
@@ -33,7 +33,7 @@ export async function logOut(repositoryContext: RepositoryContext) {
 }
 
 export async function fetchUser(
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<User | undefined> {
     const userData = await getUser(repositoryContext);
     user.set(userData);
@@ -43,7 +43,7 @@ export async function fetchUser(
 export async function updateUserProfile(
     // TODO fullName -> displayName
     fullName: string | undefined,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ) {
     await updateUser({ full_name: fullName }, repositoryContext);
     // We fetch the user to make sure the full name is updated

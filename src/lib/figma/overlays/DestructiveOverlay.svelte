@@ -30,20 +30,20 @@
                 body = $_("overlay.destructive.delete-workspace-user.body", {
                     values: {
                         workspaceUser: getDisplayName(
-                            target.workspaceUser.user
+                            target.workspaceUser.user,
                         ),
                     },
                 });
                 warning = $_(
-                    "overlay.destructive.delete-workspace-user.warning"
+                    "overlay.destructive.delete-workspace-user.warning",
                 );
                 buttonLabel = $_(
-                    "overlay.destructive.delete-workspace-user.button"
+                    "overlay.destructive.delete-workspace-user.button",
                 );
                 break;
             case "deleteWorkspaceBoardSection":
                 title = $_(
-                    "overlay.destructive.delete-workspace-board-section.title"
+                    "overlay.destructive.delete-workspace-board-section.title",
                 );
                 body = $_(
                     "overlay.destructive.delete-workspace-board-section.body",
@@ -52,13 +52,13 @@
                             workspaceBoardSection:
                                 target.workspaceBoardSection.title,
                         },
-                    }
+                    },
                 );
                 warning = $_(
-                    "overlay.destructive.delete-workspace-board-section.warning"
+                    "overlay.destructive.delete-workspace-board-section.warning",
                 );
                 buttonLabel = $_(
-                    "overlay.destructive.delete-workspace-board-section.button"
+                    "overlay.destructive.delete-workspace-board-section.button",
                 );
                 break;
             case "deleteTask":
@@ -77,24 +77,24 @@
                     values: { count: target.tasks.length.toString() },
                 });
                 warning = $_(
-                    "overlay.destructive.delete-selected-tasks.warning"
+                    "overlay.destructive.delete-selected-tasks.warning",
                 );
                 buttonLabel = $_(
-                    "overlay.destructive.delete-selected-tasks.button"
+                    "overlay.destructive.delete-selected-tasks.button",
                 );
                 break;
             case "archiveWorkspaceBoard":
                 title = $_(
-                    "overlay.destructive.archive-workspace-board.title"
+                    "overlay.destructive.archive-workspace-board.title",
                 );
                 body = $_("overlay.destructive.archive-workspace-board.body", {
                     values: { workspaceBoard: target.workspaceBoard.title },
                 });
                 warning = $_(
-                    "overlay.destructive.archive-workspace-board.warning"
+                    "overlay.destructive.archive-workspace-board.warning",
                 );
                 buttonLabel = $_(
-                    "overlay.destructive.archive-workspace-board.button"
+                    "overlay.destructive.archive-workspace-board.button",
                 );
                 break;
             case "deleteWorkspaceBoard":
@@ -103,10 +103,10 @@
                     values: { workspaceBoard: target.workspaceBoard.title },
                 });
                 warning = $_(
-                    "overlay.destructive.delete-workspace-board.warning"
+                    "overlay.destructive.delete-workspace-board.warning",
                 );
                 buttonLabel = $_(
-                    "overlay.destructive.delete-workspace-board.button"
+                    "overlay.destructive.delete-workspace-board.button",
                 );
                 break;
         }

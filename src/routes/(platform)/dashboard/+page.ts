@@ -9,7 +9,7 @@ import type { PageLoadEvent } from "./$types";
 
 export async function load({ fetch }: PageLoadEvent): Promise<void> {
     const maybeWorkspaceUuid: string | null = await new Promise(
-        selectedWorkspaceUuid.subscribe
+        selectedWorkspaceUuid.subscribe,
     );
     if (maybeWorkspaceUuid) {
         throw redirect(302, getDashboardWorkspaceUrl(maybeWorkspaceUuid));

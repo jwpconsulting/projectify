@@ -58,7 +58,7 @@
                 $labelAssignment,
                 $workspaceUserAssignment,
                 $subTasks,
-                { fetch }
+                { fetch },
             );
             if (continueEditing) {
                 await goto(getTaskUrl(task.uuid));
@@ -66,8 +66,8 @@
             }
             await goto(
                 getDashboardWorkspaceBoardSectionUrl(
-                    workspaceBoardSection.uuid
-                )
+                    workspaceBoardSection.uuid,
+                ),
             );
         } catch (e) {
             updating = false;
@@ -83,7 +83,7 @@
         {
             label: workspaceBoardSection.title,
             href: getDashboardWorkspaceBoardSectionUrl(
-                workspaceBoardSection.uuid
+                workspaceBoardSection.uuid,
             ),
         },
         // We could add a better task name here, or even

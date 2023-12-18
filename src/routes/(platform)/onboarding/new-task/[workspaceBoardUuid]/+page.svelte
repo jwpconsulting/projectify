@@ -30,11 +30,11 @@
         const workspace_board_section = await createWorkspaceBoardSection(
             workspaceBoard,
             { title: workspaceBoardSectionTitle },
-            { fetch }
+            { fetch },
         );
         // Find ourselves
         const assignee = workspace.workspace_users.find(
-            (w) => w.user.email === user.email
+            (w) => w.user.email === user.email,
         );
         const task: CreateUpdateTask = {
             title: taskTitle,

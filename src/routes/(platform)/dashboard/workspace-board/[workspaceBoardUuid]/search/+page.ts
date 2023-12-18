@@ -17,7 +17,7 @@ export async function load({ url, parent }: PageLoadEvent): Promise<Data> {
     const search: SearchInput = url.searchParams.get("search") ?? undefined;
     const tasks = searchTasks(
         unwrap(workspaceBoardSections, "Expected workspaceBoardSections"),
-        search
+        search,
     );
     return { tasks, search };
 }

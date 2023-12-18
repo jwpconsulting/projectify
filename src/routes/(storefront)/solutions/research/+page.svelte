@@ -20,7 +20,7 @@
                     position: "right",
                     src: "/assets/solutions/research-tasks.png",
                     alt: $_(
-                        "solutions.research.features.feature-1.illustration.alt"
+                        "solutions.research.features.feature-1.illustration.alt",
                     ),
                 },
                 title: $_("solutions.research.features.feature-1.title"),
@@ -31,7 +31,7 @@
                     position: "left",
                     src: "/assets/solutions/research-update.png",
                     alt: $_(
-                        "solutions.research.features.feature-2.illustration.alt"
+                        "solutions.research.features.feature-2.illustration.alt",
                     ),
                 },
                 title: $_("solutions.research.features.feature-2.title"),
@@ -42,7 +42,7 @@
                     position: "right",
                     src: "/assets/landing/filters.png",
                     alt: $_(
-                        "solutions.research.features.feature-3.illustration.alt"
+                        "solutions.research.features.feature-3.illustration.alt",
                     ),
                 },
                 title: $_("solutions.research.features.feature-3.title"),

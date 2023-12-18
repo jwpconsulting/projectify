@@ -6,8 +6,8 @@ import { makeStorybookSelect, selectLabels } from "$lib/storybook";
 
 const label = makeStorybookSelect(
     Object.fromEntries(
-        selectLabels.map((l, i): [string, SelectLabel] => [i.toString(), l])
-    )
+        selectLabels.map((l, i): [string, SelectLabel] => [i.toString(), l]),
+    ),
 );
 
 const meta: Meta<SelectLabelCheckBox> = {

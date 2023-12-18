@@ -33,7 +33,7 @@
                 kind: "workspaceBoard",
                 workspaceBoard,
             },
-            buttonRef
+            buttonRef,
         );
     }
 </script>

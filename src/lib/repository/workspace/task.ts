@@ -36,7 +36,7 @@ interface CreateUpdateTaskData {
 // TODO change me to accept CreateOrUpdateTaskData directly
 export async function createTask(
     createTask: CreateUpdateTask,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<Task> {
     const data: CreateUpdateTaskData = {
         ...createTask,
@@ -46,7 +46,7 @@ export async function createTask(
     const response = await postWithCredentialsJson<Task>(
         "/workspace/task/",
         data,
-        repositoryContext
+        repositoryContext,
     );
     if (response.ok) {
         return response.data;
@@ -60,13 +60,13 @@ export async function createTask(
 // Read
 export async function getTask(
     uuid: string,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<TaskWithWorkspace | undefined> {
     return handle404(
         await getWithCredentialsJson<TaskWithWorkspace>(
             `/workspace/task/${uuid}`,
-            repositoryContext
-        )
+            repositoryContext,
+        ),
     );
 }
 
@@ -84,7 +84,7 @@ export async function updateTask(
     labels: Label[],
     workspaceUser: WorkspaceUser | undefined,
     subTasks: CreateUpdateSubTask[] | undefined,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<Task | undefined> {
     const { uuid } = task;
     const data: CreateUpdateTaskData = {
@@ -105,7 +105,7 @@ export async function updateTask(
     const response = await putWithCredentialsJson<Task>(
         `/workspace/task/${uuid}`,
         data,
-        repositoryContext
+        repositoryContext,
     );
     if (response.ok) {
         return response.data;
@@ -120,28 +120,28 @@ export async function updateTask(
 export async function moveTaskToWorkspaceBoardSection(
     task: Task,
     { uuid }: WorkspaceBoardSection,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<void> {
     failOrOk(
         await postWithCredentialsJson(
             `/workspace/task/${task.uuid}/move-to-workspace-board-section`,
             { workspace_board_section_uuid: uuid },
-            repositoryContext
-        )
+            repositoryContext,
+        ),
     );
 }
 
 export async function moveTaskAfterTask(
     task: Task,
     { uuid }: Task,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<void> {
     failOrOk(
         await postWithCredentialsJson(
             `/workspace/task/${task.uuid}/move-after-task`,
             { task_uuid: uuid },
-            repositoryContext
-        )
+            repositoryContext,
+        ),
     );
 }
 
@@ -150,6 +150,6 @@ export async function deleteTask(task: Task): Promise<void> {
     failOrOk(
         await deleteWithCredentialsJson(`/workspace/task/${task.uuid}`, {
             fetch,
-        })
+        }),
     );
 }

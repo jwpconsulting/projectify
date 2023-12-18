@@ -56,7 +56,7 @@
             <UploadAvatar
                 {fileSelected}
                 label={$_(
-                    "user-account-settings.overview.profile-picture.prompt"
+                    "user-account-settings.overview.profile-picture.prompt",
                 )}
             />
         </div>
@@ -70,7 +70,7 @@
         <InputField
             label={$_("user-account-settings.overview.full-name.label")}
             placeholder={$_(
-                "user-account-settings.overview.full-name.placeholder"
+                "user-account-settings.overview.full-name.placeholder",
             )}
             name="full_name"
             bind:value={fullName}
@@ -129,7 +129,7 @@
                 kind: "button",
                 action: console.error.bind(
                     null,
-                    "Delete account not implemented"
+                    "Delete account not implemented",
                 ),
             }}
             size="medium"

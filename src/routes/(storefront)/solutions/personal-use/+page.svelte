@@ -12,7 +12,7 @@
             image: {
                 src: "/assets/solutions/hero-personal.png",
                 alt: $_(
-                    "solutions.index.solutions.personal-use.illustration.alt"
+                    "solutions.index.solutions.personal-use.illustration.alt",
                 ),
             },
         },
@@ -22,7 +22,7 @@
                     position: "right",
                     src: "/assets/solutions/personal-tasks.png",
                     alt: $_(
-                        "solutions.personal-use.features.feature-1.illustration.alt"
+                        "solutions.personal-use.features.feature-1.illustration.alt",
                     ),
                 },
                 title: $_("solutions.personal-use.features.feature-1.title"),
@@ -33,7 +33,7 @@
                     position: "left",
                     src: "/assets/solutions/personal-subtask.png",
                     alt: $_(
-                        "solutions.personal-use.features.feature-2.illustration.alt"
+                        "solutions.personal-use.features.feature-2.illustration.alt",
                     ),
                 },
                 title: $_("solutions.personal-use.features.feature-2.title"),
@@ -44,7 +44,7 @@
                     position: "right",
                     src: "/assets/solutions/personal-task-collab.png",
                     alt: $_(
-                        "solutions.personal-use.features.feature-3.illustration.alt"
+                        "solutions.personal-use.features.feature-3.illustration.alt",
                     ),
                 },
                 title: $_("solutions.personal-use.features.feature-3.title"),

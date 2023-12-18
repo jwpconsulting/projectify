@@ -34,11 +34,11 @@
     <svelte:fragment slot="form">
         <InputField
             label={$_(
-                "overlay.constructive.update-workspace-board.form.title.label"
+                "overlay.constructive.update-workspace-board.form.title.label",
             )}
             name="workspace-board-name"
             placeholder={$_(
-                "overlay.constructive.update-workspace-board.form.title.placeholder"
+                "overlay.constructive.update-workspace-board.form.title.placeholder",
             )}
             style={{ inputType: "text" }}
             bind:value={title}
@@ -47,10 +47,10 @@
         <InputField
             name="deadline"
             label={$_(
-                "overlay.constructive.update-workspace-board.form.deadline.label"
+                "overlay.constructive.update-workspace-board.form.deadline.label",
             )}
             placeholder={$_(
-                "overlay.constructive.update-workspace-board.form.deadline.placeholder"
+                "overlay.constructive.update-workspace-board.form.deadline.placeholder",
             )}
             style={{ inputType: "date" }}
             bind:value={deadline}

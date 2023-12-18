@@ -118,14 +118,14 @@
                         <img
                             src="assets/solutions/hero-development.png"
                             alt={$_(
-                                "index.solutions.list.development-teams.alt"
+                                "index.solutions.list.development-teams.alt",
                             )}
                         />
                         <Anchor
                             size="large"
                             href={"solutions/development-teams"}
                             label={$_(
-                                "index.solutions.list.development-teams.text"
+                                "index.solutions.list.development-teams.text",
                             )}
                         />
                     </div>
@@ -144,14 +144,14 @@
                         <img
                             src="assets/solutions/hero-project-management.png"
                             alt={$_(
-                                "index.solutions.list.project-management.alt"
+                                "index.solutions.list.project-management.alt",
                             )}
                         />
                         <Anchor
                             size="large"
                             href={"solutions/project-management"}
                             label={$_(
-                                "index.solutions.list.project-management.text"
+                                "index.solutions.list.project-management.text",
                             )}
                         />
                     </div>

@@ -17,7 +17,7 @@ export const currentArchivedWorkspaceBoards = derived<
         .catch((error: Error) => {
             console.error(
                 "An error happened when retrieving currentArchivedWorkspaceBoards",
-                { error }
+                { error },
             );
         });
 });

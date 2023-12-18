@@ -28,7 +28,7 @@
             validation = {
                 ok: true,
                 result: $_(
-                    "overlay.constructive.invite-workspace-user.form.email.validation.ok"
+                    "overlay.constructive.invite-workspace-user.form.email.validation.ok",
                 ),
             };
             resolveConstructiveOverlay();
@@ -47,10 +47,10 @@
             name="workspace-board-name"
             bind:value={email}
             label={$_(
-                "overlay.constructive.invite-workspace-user.form.email.label"
+                "overlay.constructive.invite-workspace-user.form.email.label",
             )}
             placeholder={$_(
-                "overlay.constructive.invite-workspace-user.form.email.placeholder"
+                "overlay.constructive.invite-workspace-user.form.email.placeholder",
             )}
             style={{ inputType: "email" }}
             required

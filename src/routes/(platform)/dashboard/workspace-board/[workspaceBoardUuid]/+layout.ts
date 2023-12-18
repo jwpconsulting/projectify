@@ -21,7 +21,7 @@ export async function load({
 }: LayoutLoadEvent): Promise<Data> {
     const workspaceBoard = await currentWorkspaceBoard.loadUuid(
         workspaceBoardUuid,
-        { fetch }
+        { fetch },
     );
     if (!workspaceBoard) {
         throw error(404);

@@ -68,8 +68,8 @@
             }
             await goto(
                 getDashboardWorkspaceBoardSectionUrl(
-                    workspaceBoardSection.uuid
-                )
+                    workspaceBoardSection.uuid,
+                ),
             );
             return;
         } catch (e) {
@@ -86,7 +86,7 @@
         {
             label: workspaceBoardSection.title,
             href: getDashboardWorkspaceBoardSectionUrl(
-                workspaceBoardSection.uuid
+                workspaceBoardSection.uuid,
             ),
         },
         {

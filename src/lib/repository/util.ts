@@ -13,7 +13,7 @@ const getOptions: RequestInit = {
 
 function putPostDeleteOptions<T>(
     method: "POST" | "PUT" | "DELETE",
-    data?: T
+    data?: T,
 ): RequestInit {
     // These requests will certainly fail without a csrf token
     // XXX or will they? Seems like we generously disabled CSRF checking
@@ -50,7 +50,7 @@ function parseResponseData(data: string): unknown | string | undefined {
 async function fetchResponse<T, E = unknown>(
     url: string,
     options: RequestInit,
-    { fetch }: RepositoryContext
+    { fetch }: RepositoryContext,
 ): Promise<ApiResponse<T, E>> {
     let response: Response | undefined = undefined;
     try {
@@ -62,7 +62,7 @@ async function fetchResponse<T, E = unknown>(
         }
         console.error(
             "Something went wrong when making an API request:",
-            error
+            error,
         );
         return { kind: "error", ok: false, error };
     }
@@ -88,7 +88,7 @@ async function fetchResponse<T, E = unknown>(
             kind: "error",
             ok: false,
             error: new Error(
-                `${response.statusText}: ${JSON.stringify(data)}`
+                `${response.statusText}: ${JSON.stringify(data)}`,
             ),
         };
     }
@@ -96,7 +96,7 @@ async function fetchResponse<T, E = unknown>(
 
 export async function getWithCredentialsJson<T, E = unknown>(
     url: string,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<ApiResponse<T, E>> {
     return await fetchResponse<T, E>(url, getOptions, repositoryContext);
 }
@@ -104,35 +104,35 @@ export async function getWithCredentialsJson<T, E = unknown>(
 export async function postWithCredentialsJson<T, E = unknown>(
     url: string,
     data: unknown,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<ApiResponse<T, E>> {
     return await fetchResponse<T, E>(
         url,
         putPostDeleteOptions("POST", data),
-        repositoryContext
+        repositoryContext,
     );
 }
 
 export async function putWithCredentialsJson<T, E = unknown>(
     url: string,
     data: unknown,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<ApiResponse<T, E>> {
     return await fetchResponse<T, E>(
         url,
         putPostDeleteOptions("PUT", data),
-        repositoryContext
+        repositoryContext,
     );
 }
 
 export async function deleteWithCredentialsJson<T, E = unknown>(
     url: string,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<ApiResponse<T, E>> {
     return await fetchResponse<T, E>(
         url,
         putPostDeleteOptions("DELETE"),
-        repositoryContext
+        repositoryContext,
     );
 }
 

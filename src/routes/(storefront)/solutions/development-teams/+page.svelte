@@ -12,7 +12,7 @@
             image: {
                 src: "/assets/solutions/hero-development.png",
                 alt: $_(
-                    "solutions.index.solutions.development.illustration.alt"
+                    "solutions.index.solutions.development.illustration.alt",
                 ),
             },
         },
@@ -22,7 +22,7 @@
                     position: "right",
                     src: "/assets/solutions/dev-filter.png",
                     alt: $_(
-                        "solutions.development.features.feature-1.illustration.alt"
+                        "solutions.development.features.feature-1.illustration.alt",
                     ),
                 },
                 title: $_("solutions.development.features.feature-1.title"),
@@ -33,7 +33,7 @@
                     position: "left",
                     src: "/assets/landing/notifications.png",
                     alt: $_(
-                        "solutions.development.features.feature-2.illustration.alt"
+                        "solutions.development.features.feature-2.illustration.alt",
                     ),
                 },
                 title: $_("solutions.development.features.feature-2.title"),
@@ -44,7 +44,7 @@
                     position: "right",
                     src: "/assets/solutions/dev-tasks.png",
                     alt: $_(
-                        "solutions.development.features.feature-3.illustration.alt"
+                        "solutions.development.features.feature-3.illustration.alt",
                     ),
                 },
                 title: $_("solutions.development.features.feature-3.title"),

@@ -33,7 +33,7 @@
         bind:value={filter}
         label={$_("workspace-settings.workspace-users.search.label")}
         placeholder={$_(
-            "workspace-settings.workspace-users.search.placeholder"
+            "workspace-settings.workspace-users.search.placeholder",
         )}
     >
         <Icon slot="left" src={Search} class="w-4" theme="outline" />
@@ -41,7 +41,7 @@
     <Button
         action={{ kind: "button", action: inviteWorkspaceUser }}
         label={$_(
-            "workspace-settings.workspace-users.invite-new-workspace-users"
+            "workspace-settings.workspace-users.invite-new-workspace-users",
         )}
         style={{ kind: "primary" }}
         size="medium"
@@ -54,7 +54,7 @@
         <tr class="contents">
             <th class="col-span-2 border-b border-border text-left font-bold"
                 >{$_(
-                    "workspace-settings.workspace-users.workspace-user-details"
+                    "workspace-settings.workspace-users.workspace-user-details",
                 )}</th
             >
             <th class="border-b border-border text-left font-bold"
@@ -71,7 +71,7 @@
         {:else}
             <td class="col-span-4">
                 {$_(
-                    "workspace-settings.workspace-users.no-workspace-users-found"
+                    "workspace-settings.workspace-users.no-workspace-users-found",
                 )}
             </td>
         {/each}

@@ -51,7 +51,7 @@
 
     $: {
         sectionIndex = workspaceBoardSections.findIndex(
-            (s: WorkspaceBoardSection) => s.uuid == workspaceBoardSection.uuid
+            (s: WorkspaceBoardSection) => s.uuid == workspaceBoardSection.uuid,
         );
         previousIndex = sectionIndex > 0 ? sectionIndex - 1 : undefined;
         nextIndex =
@@ -75,7 +75,7 @@
         await moveWorkspaceBoardSection(
             workspaceBoardSection,
             previousSection._order,
-            { fetch }
+            { fetch },
         );
     }
     async function switchWithNextSection() {
@@ -85,7 +85,7 @@
         await moveWorkspaceBoardSection(
             workspaceBoardSection,
             nextSection._order,
-            { fetch }
+            { fetch },
         );
     }
 
@@ -113,13 +113,13 @@
             kind: "button",
             action: toggleWorkspaceBoardSectionOpen.bind(
                 null,
-                workspaceBoardSection.uuid
+                workspaceBoardSection.uuid,
             ),
         }}
         label={closed
             ? $_("overlay.context-menu.workspace-board-section.expand-section")
             : $_(
-                  "overlay.context-menu.workspace-board-section.collapse-section"
+                  "overlay.context-menu.workspace-board-section.collapse-section",
               )}
         state="normal"
         icon={closed ? Selector : X}
@@ -131,7 +131,7 @@
                 action: switchWithPreviousSection,
             }}
             label={$_(
-                "overlay.context-menu.workspace-board-section.switch-previous"
+                "overlay.context-menu.workspace-board-section.switch-previous",
             )}
             state="normal"
             icon={ArrowUp}
@@ -144,7 +144,7 @@
                 action: switchWithNextSection,
             }}
             label={$_(
-                "overlay.context-menu.workspace-board-section.switch-next"
+                "overlay.context-menu.workspace-board-section.switch-next",
             )}
             state="normal"
             icon={ArrowDown}
@@ -174,7 +174,7 @@
             action: deleteWorkspaceBoardSection,
         }}
         label={$_(
-            "overlay.context-menu.workspace-board-section.delete-workspace-board-section"
+            "overlay.context-menu.workspace-board-section.delete-workspace-board-section",
         )}
         state="normal"
         icon={Trash}

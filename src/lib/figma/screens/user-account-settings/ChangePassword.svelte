@@ -27,10 +27,10 @@
         <div class="flex flex-col gap-4">
             <InputField
                 label={$_(
-                    "user-account-settings.change-password.current-password.label"
+                    "user-account-settings.change-password.current-password.label",
                 )}
                 placeholder={$_(
-                    "user-account-settings.change-password.current-password.placeholder"
+                    "user-account-settings.change-password.current-password.placeholder",
                 )}
                 name="current-password"
                 style={{ inputType: "password" }}
@@ -38,10 +38,10 @@
             />
             <InputField
                 label={$_(
-                    "user-account-settings.change-password.new-password.label"
+                    "user-account-settings.change-password.new-password.label",
                 )}
                 placeholder={$_(
-                    "user-account-settings.change-password.new-password.placeholder"
+                    "user-account-settings.change-password.new-password.placeholder",
                 )}
                 name="new-password"
                 style={{ inputType: "password" }}
@@ -49,10 +49,10 @@
             />
             <InputField
                 label={$_(
-                    "user-account-settings.change-password.confirm-password.label"
+                    "user-account-settings.change-password.confirm-password.label",
                 )}
                 placeholder={$_(
-                    "user-account-settings.change-password.confirm-password.placeholder"
+                    "user-account-settings.change-password.confirm-password.placeholder",
                 )}
                 name="confirm-password"
                 style={{ inputType: "password" }}

@@ -100,7 +100,7 @@ const colors = {
 };
 export function getLabelColorClass(
     colorType: LabelColorType,
-    color: LabelColor
+    color: LabelColor,
 ): string {
     return colors[colorType][color];
 }

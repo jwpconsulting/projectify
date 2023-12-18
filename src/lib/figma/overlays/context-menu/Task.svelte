@@ -99,7 +99,7 @@
                         null,
                         kind.workspaceBoardSection,
                         kind.task,
-                        { fetch }
+                        { fetch },
                     ),
                 }}
                 label={$_("overlay.context-menu.task.move-to-top")}
@@ -115,7 +115,7 @@
                         null,
                         kind.workspaceBoardSection,
                         kind.task,
-                        { fetch }
+                        { fetch },
                     ),
                 }}
                 label={$_("overlay.context-menu.task.move-to-bottom")}
@@ -129,7 +129,7 @@
             kind: "button",
             action: copyToClipboard.bind(
                 null,
-                new URL(getTaskUrl(kind.task.uuid), document.baseURI).href
+                new URL(getTaskUrl(kind.task.uuid), document.baseURI).href,
             ),
         }}
         label={$_("overlay.context-menu.task.copy-link")}

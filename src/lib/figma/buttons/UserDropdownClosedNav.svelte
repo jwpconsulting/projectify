@@ -35,7 +35,7 @@
                     user={workspaceUser.user}
                     active={$selectedWorkspaceUser.kind === "workspaceUsers" &&
                         $selectedWorkspaceUser.workspaceUserUuids.has(
-                            workspaceUser.uuid
+                            workspaceUser.uuid,
                         )}
                     on:select={() =>
                         filterByWorkspaceUser({

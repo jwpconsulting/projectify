@@ -44,7 +44,7 @@
             size="medium"
             color="blue"
             label={$_(
-                "overlay.constructive.recover-workspace-board.recover-board"
+                "overlay.constructive.recover-workspace-board.recover-board",
             )}
         />
     </svelte:fragment>

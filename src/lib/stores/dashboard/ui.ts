@@ -10,7 +10,7 @@ import { page } from "$app/stores";
  */
 const _selectedWorkspaceUuid = persisted<string | null>(
     "selected-workspace-uuid",
-    null
+    null,
 );
 export const selectedWorkspaceUuid = readonly(_selectedWorkspaceUuid);
 export function selectWorkspaceUuid(uuid: string) {
@@ -47,14 +47,14 @@ const _selectedWorkspaceBoardUuids = persisted<Map<string, string>>(
                 return JSON.stringify(values);
             },
         },
-    }
+    },
 );
 export const selectedWorkspaceBoardUuids = readonly(
-    _selectedWorkspaceBoardUuids
+    _selectedWorkspaceBoardUuids,
 );
 export function selectWorkspaceBoardUuid(
     workspaceUuid: string,
-    workspaceBoardUuid: string
+    workspaceBoardUuid: string,
 ) {
     _selectedWorkspaceBoardUuids.update(($selectedWorkspaceBoardUuids) => {
         $selectedWorkspaceBoardUuids.set(workspaceUuid, workspaceBoardUuid);
@@ -106,14 +106,14 @@ const _workspaceBoardSectionClosed = persisted(
                 return JSON.stringify(values);
             },
         },
-    }
+    },
 );
 export const workspaceBoardSectionClosed = readonly(
-    _workspaceBoardSectionClosed
+    _workspaceBoardSectionClosed,
 );
 
 export function toggleWorkspaceBoardSectionOpen(
-    workspaceBoardSectionUuid: string
+    workspaceBoardSectionUuid: string,
 ) {
     _workspaceBoardSectionClosed.update(($workspaceBoardSectionClosed) => {
         if ($workspaceBoardSectionClosed.has(workspaceBoardSectionUuid)) {
@@ -141,5 +141,5 @@ export const showFilters = derived<typeof page, boolean>(
         const { id } = route;
         set(showFilterRouteIds.find((i) => i === id) !== undefined);
     },
-    false
+    false,
 );

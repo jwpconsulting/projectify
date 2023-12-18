@@ -26,12 +26,12 @@ const createWorkspaceUserFilter = () => writable<SearchInput>(undefined);
 
 export function searchWorkspaceUsers(
     workspaceUsers: WorkspaceUser[],
-    searchInput: SearchInput
+    searchInput: SearchInput,
 ) {
     return searchAmong(
         ["user.email", "user.full_name"],
         workspaceUsers,
-        searchInput
+        searchInput,
     );
 }
 
@@ -39,7 +39,7 @@ type WorkspaceUserSearchResults = Readable<WorkspaceUser[]>;
 
 function createWorkspaceUserSearchResults(
     currentWorkspaceUsers: CurrentWorkspaceUsers,
-    workspaceUserSearch: WorkspaceUserSearch
+    workspaceUserSearch: WorkspaceUserSearch,
 ): WorkspaceUserSearchResults {
     return derived<
         [typeof currentWorkspaceUsers, typeof workspaceUserSearch],
@@ -50,11 +50,11 @@ function createWorkspaceUserSearchResults(
             set(
                 searchWorkspaceUsers(
                     $currentWorkspaceUsers,
-                    $workspaceUserSearch
-                )
+                    $workspaceUserSearch,
+                ),
             );
         },
-        []
+        [],
     );
 }
 
@@ -64,7 +64,7 @@ export const workspaceUserSearch: WorkspaceUserSearch =
 export const workspaceUserSearchResults: WorkspaceUserSearchResults =
     createWorkspaceUserSearchResults(
         currentWorkspaceUsers,
-        workspaceUserSearch
+        workspaceUserSearch,
     );
 
 export function filterByWorkspaceUser(selection: WorkspaceUserSelectionInput) {
@@ -82,7 +82,7 @@ export function filterByWorkspaceUser(selection: WorkspaceUserSelectionInput) {
                 const selectionUuid = selection.workspaceUser.uuid;
                 if ($selectedWorkspaceUser.kind === "workspaceUsers") {
                     $selectedWorkspaceUser.workspaceUserUuids.add(
-                        selectionUuid
+                        selectionUuid,
                     );
                     return $selectedWorkspaceUser;
                 } else {
@@ -91,12 +91,12 @@ export function filterByWorkspaceUser(selection: WorkspaceUserSelectionInput) {
                     return { kind: "workspaceUsers", workspaceUserUuids };
                 }
             }
-        }
+        },
     );
 }
 
 export function unfilterByWorkspaceUser(
-    selection: WorkspaceUserSelectionInput
+    selection: WorkspaceUserSelectionInput,
 ) {
     _selectedWorkspaceUser.update(
         ($selectedWorkspaceUser: WorkspaceUserSelection) => {
@@ -112,7 +112,7 @@ export function unfilterByWorkspaceUser(
                 const selectionUuid = selection.workspaceUser.uuid;
                 if ($selectedWorkspaceUser.kind === "workspaceUsers") {
                     $selectedWorkspaceUser.workspaceUserUuids.delete(
-                        selectionUuid
+                        selectionUuid,
                     );
                     if ($selectedWorkspaceUser.workspaceUserUuids.size === 0) {
                         return { kind: "allWorkspaceUsers" };
@@ -123,6 +123,6 @@ export function unfilterByWorkspaceUser(
                     return { kind: "allWorkspaceUsers" };
                 }
             }
-        }
+        },
     );
 }

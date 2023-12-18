@@ -51,7 +51,7 @@
                         <Anchor
                             href="/help"
                             label={$_(
-                                "navigation.footer.nav.resources.help-and-tips"
+                                "navigation.footer.nav.resources.help-and-tips",
                             )}
                         />
                     </li>
@@ -66,7 +66,7 @@
                         <Anchor
                             href="/accessibility"
                             label={$_(
-                                "navigation.footer.nav.company.accessibility-statement"
+                                "navigation.footer.nav.company.accessibility-statement",
                             )}
                         />
                     </li>
@@ -74,7 +74,7 @@
                         <Anchor
                             href="/"
                             label={$_(
-                                "navigation.footer.nav.company.contact-us"
+                                "navigation.footer.nav.company.contact-us",
                             )}
                         />
                     </li>

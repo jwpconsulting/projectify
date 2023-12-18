@@ -24,7 +24,7 @@
         const response = await createCheckoutSession(
             workspace.uuid,
             checkoutSeats,
-            { fetch }
+            { fetch },
         );
         if (!response.ok) {
             // XXX not pretty
@@ -106,7 +106,7 @@
             color="blue"
             style={{ kind: "primary" }}
             label={$_(
-                "workspace-settings.billing.active.edit-billing-details"
+                "workspace-settings.billing.active.edit-billing-details",
             )}
             size="medium"
         />
@@ -125,7 +125,7 @@
             </p>
             <p>
                 {$_(
-                    "workspace-settings.billing.unpaid.checkout.seats.explanation"
+                    "workspace-settings.billing.unpaid.checkout.seats.explanation",
                 )}
             </p>
         </section>
@@ -135,12 +135,12 @@
         >
             <InputField
                 label={$_(
-                    "workspace-settings.billing.unpaid.checkout.seats.label"
+                    "workspace-settings.billing.unpaid.checkout.seats.label",
                 )}
                 bind:value={checkoutSeatsRaw}
                 name="checkout-seats"
                 placeholder={$_(
-                    "workspace-settings.billing.unpaid.checkout.seats.placeholder"
+                    "workspace-settings.billing.unpaid.checkout.seats.placeholder",
                 )}
                 style={{ inputType: "numeric", min: 1, max: 100 }}
             />

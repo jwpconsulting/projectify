@@ -39,7 +39,7 @@ type EventListener = (event: MessageEvent<string>) => void;
 function getSubscriptionForCollection(
     collection: string,
     uuid: string,
-    onWsMessage: (wsMessage: WsMessage) => void
+    onWsMessage: (wsMessage: WsMessage) => void,
 ): Unsubscriber {
     const onMessage: EventListener = (event: MessageEvent<string>) => {
         const message: Message = JSON.parse(event.data) as Message;
@@ -102,7 +102,7 @@ type WsStoreState<T> =
 // warn when this store deinitializes without ever adding a subscriber
 export function createWsStore<T>(
     collection: SubscriptionType,
-    getter: RepoGetter<T>
+    getter: RepoGetter<T>,
 ): WsResource<T> {
     type State = WsStoreState<T>;
     let state: State = { collection, kind: "start", subscribers: new Set() };
@@ -131,7 +131,7 @@ export function createWsStore<T>(
         // here until we gain some more insight on this issue.
         if (state.kind === "start") {
             console.log(
-                `Removed subscriber for ${collection} collection before store was ever initialized`
+                `Removed subscriber for ${collection} collection before store was ever initialized`,
             );
             return;
         }
@@ -139,7 +139,7 @@ export function createWsStore<T>(
 
     const loadUuid = async (
         uuid: string,
-        repositoryContext: RepositoryContext
+        repositoryContext: RepositoryContext,
     ): Promise<T | undefined> => {
         // Fetch value early, since we need it either way
         const value = await getter(uuid, repositoryContext);
@@ -162,7 +162,7 @@ export function createWsStore<T>(
             const unsubscriber = getSubscriptionForCollection(
                 collection,
                 uuid,
-                receiveWsMessage
+                receiveWsMessage,
             );
             // Since further reloads are independent of any fetch (the data comes
             // from ws), we don't have to store the repositoryContext as part of

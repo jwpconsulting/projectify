@@ -23,7 +23,7 @@ interface CurrentFilter {
 }
 
 function filterSectionsTasks(
-    currentFilter: CurrentFilter
+    currentFilter: CurrentFilter,
 ): WorkspaceBoardSectionWithTasks[] {
     let sections: WorkspaceBoardSectionWithTasks[] =
         currentFilter.workspaceBoardSections;
@@ -44,7 +44,7 @@ function filterSectionsTasks(
                     task.labels.findIndex((l: Label) =>
                         labelUuids.find((labelUuid) => l.uuid === labelUuid)
                             ? true
-                            : false
+                            : false,
                     ) >= 0
                 );
             });
@@ -62,7 +62,7 @@ function filterSectionsTasks(
                 } else {
                     return task.assignee
                         ? workspaceUserSelection.workspaceUserUuids.has(
-                              task.assignee.uuid
+                              task.assignee.uuid,
                           )
                         : false;
                 }
@@ -86,7 +86,7 @@ export const currentWorkspaceBoardSections = derived<
     [selectedLabels, selectedWorkspaceUser, currentWorkspaceBoard],
     (
         [$selectedLabels, $selectedWorkspaceUser, $currentWorkspaceBoard],
-        set
+        set,
     ) => {
         if (!$currentWorkspaceBoard) {
             set(undefined);
@@ -99,10 +99,10 @@ export const currentWorkspaceBoardSections = derived<
                 labels: $selectedLabels,
                 workspaceUser: $selectedWorkspaceUser,
                 workspaceBoardSections,
-            })
+            }),
         );
     },
-    undefined
+    undefined,
 );
 
 export const tasksPerUser: Readable<TasksPerUser> = derived<
@@ -131,5 +131,5 @@ export const tasksPerUser: Readable<TasksPerUser> = derived<
         });
         set({ unassigned, assigned });
     },
-    { unassigned: 0, assigned: new Map<string, number>() }
+    { unassigned: 0, assigned: new Map<string, number>() },
 );

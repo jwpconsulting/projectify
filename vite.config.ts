@@ -45,7 +45,7 @@ function getFromEnv(env: Record<string, string>, key: string): string {
 }
 
 function getProxyConfig(
-    env: Record<string, string>
+    env: Record<string, string>,
 ): Record<string, ProxyOptions> | undefined {
     if (env.VITE_USE_LOCAL_PROXY === undefined) {
         return undefined;

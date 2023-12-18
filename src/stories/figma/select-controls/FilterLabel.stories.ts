@@ -29,7 +29,7 @@ const labelTuples: [string, SelectLabel][] = selectLabels.map((l) =>
                   },
               },
           ]
-        : [l.kind, l]
+        : [l.kind, l],
 );
 const label: Record<string, SelectLabel> = {
     ...Object.fromEntries(labelTuples),

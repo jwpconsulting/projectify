@@ -21,7 +21,7 @@ export const currentWorkspaceLabels: CurrentWorkspaceLabels = derived<
         }
         set($currentWorkspace.labels);
     },
-    undefined
+    undefined,
 );
 // LabelFilter and Selection
 function searchLabels(labels: Label[], searchInput: SearchInput): Label[] {
@@ -40,7 +40,7 @@ type LabelSearchResults = Readable<Label[]>;
 
 export function createLabelSearchResults(
     currentWorkspaceLabels: CurrentWorkspaceLabels,
-    labelSearch: LabelFilter
+    labelSearch: LabelFilter,
 ): LabelSearchResults {
     return derived<[CurrentWorkspaceLabels, LabelFilter], Label[]>(
         [currentWorkspaceLabels, labelSearch],
@@ -50,6 +50,6 @@ export function createLabelSearchResults(
             }
             set(searchLabels($currentWorkspaceLabels, $labelSearch));
         },
-        []
+        [],
     );
 }

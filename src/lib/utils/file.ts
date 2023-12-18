@@ -3,7 +3,7 @@ import { getCookie } from "./cookie";
 // TODO refactor me together with the other repository util functions
 export async function uploadImage(
     imageFile: File,
-    url: string
+    url: string,
 ): Promise<void> {
     const formData = new FormData();
     formData.append("file", imageFile);

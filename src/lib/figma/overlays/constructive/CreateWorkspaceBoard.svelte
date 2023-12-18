@@ -27,7 +27,7 @@
                 title,
                 description: "TODO",
             },
-            { fetch }
+            { fetch },
         );
         await goto(getDashboardWorkspaceBoardUrl(uuid));
         resolveConstructiveOverlay();
@@ -42,10 +42,10 @@
         <InputField
             name="workspace-board-name"
             label={$_(
-                "overlay.constructive.create-workspace-board.form.title.label"
+                "overlay.constructive.create-workspace-board.form.title.label",
             )}
             placeholder={$_(
-                "overlay.constructive.create-workspace-board.form.title.placeholder"
+                "overlay.constructive.create-workspace-board.form.title.placeholder",
             )}
             style={{ inputType: "text" }}
             bind:value={title}
@@ -53,10 +53,10 @@
         <InputField
             name="deadline"
             label={$_(
-                "overlay.constructive.create-workspace-board.form.deadline.label"
+                "overlay.constructive.create-workspace-board.form.deadline.label",
             )}
             placeholder={$_(
-                "overlay.constructive.create-workspace-board.form.deadline.placeholder"
+                "overlay.constructive.create-workspace-board.form.deadline.placeholder",
             )}
             style={{ inputType: "text" }}
         />
@@ -78,7 +78,7 @@
             size="medium"
             color="blue"
             label={$_(
-                "overlay.constructive.create-workspace-board.create-board"
+                "overlay.constructive.create-workspace-board.create-board",
             )}
         />
     </svelte:fragment>

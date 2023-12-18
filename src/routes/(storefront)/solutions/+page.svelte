@@ -34,11 +34,11 @@
             image: {
                 src: "assets/solutions/hero-development.png",
                 alt: $_(
-                    "solutions.index.solutions.development.illustration.alt"
+                    "solutions.index.solutions.development.illustration.alt",
                 ),
             },
             description: $_(
-                "solutions.index.solutions.development.description"
+                "solutions.index.solutions.development.description",
             ),
         },
         {
@@ -56,11 +56,11 @@
             image: {
                 src: "assets/solutions/hero-project-management.png",
                 alt: $_(
-                    "solutions.index.solutions.project-management.illustration.alt"
+                    "solutions.index.solutions.project-management.illustration.alt",
                 ),
             },
             description: $_(
-                "solutions.index.solutions.project-management.description"
+                "solutions.index.solutions.project-management.description",
             ),
         },
         {
@@ -78,11 +78,11 @@
             image: {
                 src: "assets/solutions/hero-remote.png",
                 alt: $_(
-                    "solutions.index.solutions.remote-work.illustration.alt"
+                    "solutions.index.solutions.remote-work.illustration.alt",
                 ),
             },
             description: $_(
-                "solutions.index.solutions.remote-work.description"
+                "solutions.index.solutions.remote-work.description",
             ),
         },
         {
@@ -91,11 +91,11 @@
             image: {
                 src: "assets/solutions/hero-personal.png",
                 alt: $_(
-                    "solutions.index.solutions.personal-use.illustration.alt"
+                    "solutions.index.solutions.personal-use.illustration.alt",
                 ),
             },
             description: $_(
-                "solutions.index.solutions.personal-use.description"
+                "solutions.index.solutions.personal-use.description",
             ),
         },
     ];

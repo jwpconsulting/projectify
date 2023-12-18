@@ -31,12 +31,12 @@
                                     action={{
                                         kind: "a",
                                         href: getDashboardWorkspaceBoardUrl(
-                                            board.uuid
+                                            board.uuid,
                                         ),
                                         onInteract() {
                                             selectWorkspaceBoardUuid(
                                                 workspace.uuid,
-                                                board.uuid
+                                                board.uuid,
                                             );
                                         },
                                     }}

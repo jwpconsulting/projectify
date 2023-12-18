@@ -27,19 +27,19 @@ currentWorkspaceBoard.subscribe((_$currentWorkspaceBoard) => {
 
 export function searchTasks(
     sections: WorkspaceBoardSection[],
-    searchText: SearchInput
+    searchText: SearchInput,
 ): TaskWithWorkspaceBoardSection[] {
     const sectionTasks: TaskWithWorkspaceBoardSection[][] = sections.map(
         (workspace_board_section) =>
             (workspace_board_section.tasks ?? []).map((task: Task) => {
                 return { ...task, workspace_board_section };
-            })
+            }),
     );
     const tasks = sectionTasks.flat();
     return searchAmong<TaskWithWorkspaceBoardSection>(
         ["title"],
         tasks,
-        searchText
+        searchText,
     );
 }
 

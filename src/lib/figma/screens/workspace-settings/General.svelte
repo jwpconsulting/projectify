@@ -40,7 +40,7 @@
             await uploadImage(
                 imageFile,
                 vars.API_ENDPOINT +
-                    `/workspace/workspace/${uuid}/picture-upload`
+                    `/workspace/workspace/${uuid}/picture-upload`,
             );
         }
         workspace = await updateWorkspace(uuid, title, description, { fetch });
@@ -89,7 +89,7 @@
         <InputField
             bind:value={title}
             placeholder={$_(
-                "workspace-settings.general.workspace-name.placeholder"
+                "workspace-settings.general.workspace-name.placeholder",
             )}
             onClick={fieldChanged}
             style={{ inputType: "text" }}
@@ -99,7 +99,7 @@
         <InputField
             bind:value={description}
             placeholder={$_(
-                "workspace-settings.general.description.placeholder"
+                "workspace-settings.general.description.placeholder",
             )}
             onClick={fieldChanged}
             style={{ inputType: "text" }}

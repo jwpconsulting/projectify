@@ -32,7 +32,7 @@
             size="medium"
             color="blue"
             label={$_(
-                "overlay.constructive.create-workspace.create-workspace"
+                "overlay.constructive.create-workspace.create-workspace",
             )}
         />
     </svelte:fragment>

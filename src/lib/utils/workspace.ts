@@ -12,13 +12,13 @@ import type { SubTask } from "$lib/types/workspace";
 export function getSubTaskProgress(
     // We are only interested in done, and other properties may not
     // be given when creating new sub tasks
-    sub_tasks: Partial<Pick<SubTask, "done">>[]
+    sub_tasks: Partial<Pick<SubTask, "done">>[],
 ): number | undefined {
     if (sub_tasks.length === 0) {
         return undefined;
     }
     const completed = sub_tasks.filter(
-        (subTask) => subTask.done === true
+        (subTask) => subTask.done === true,
     ).length;
     const total = sub_tasks.length;
     if (completed == total) {

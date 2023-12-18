@@ -29,7 +29,7 @@
                 title,
                 description: "",
             },
-            { fetch }
+            { fetch },
         );
         const nextStep = getNewTaskUrl(uuid);
         await goto(nextStep);
@@ -57,14 +57,14 @@
                     <p>
                         {$_(
                             "onboarding.new-workspace-board.workspace-board-exists.message",
-                            { values: { title: workspaceBoard.title } }
+                            { values: { title: workspaceBoard.title } },
                         )}
                     </p>
                     <p>
                         <Anchor
                             label={$_(
                                 "onboarding.new-workspace-board.workspace-board-exists.prompt",
-                                { values: { title: workspaceBoard.title } }
+                                { values: { title: workspaceBoard.title } },
                             )}
                             size="large"
                             href={getNewTaskUrl(workspaceBoard.uuid)}
@@ -87,7 +87,7 @@
             name="title"
             label={$_("onboarding.new-workspace-board.input.label")}
             placeholder={$_(
-                "onboarding.new-workspace-board.input.placeholder"
+                "onboarding.new-workspace-board.input.placeholder",
             )}
             bind:value={title}
             required

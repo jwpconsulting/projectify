@@ -20,12 +20,12 @@ function buildMessageStrings(collection: MessageCollection): string[] {
             return [`${parent}`];
         } else {
             return Object.entries(msg).flatMap(([subParent, v]) =>
-                concatenateStrings(`${parent}.${subParent}`, v)
+                concatenateStrings(`${parent}.${subParent}`, v),
             );
         }
     };
     return Object.entries(collection).flatMap(([k, v]) =>
-        concatenateStrings(k, v)
+        concatenateStrings(k, v),
     );
 }
 
@@ -50,7 +50,7 @@ async function walk(dir: string): Promise<string[]> {
             } else {
                 return [];
             }
-        })
+        }),
     );
     return promises.flat();
 }
@@ -94,7 +94,7 @@ async function extractMessageStrings(): Promise<MessageString[]> {
                     },
                 ];
             });
-        })
+        }),
     );
     return promises.flat();
 }
@@ -131,7 +131,7 @@ async function check() {
         console.warn();
     }
     const notFound = messageStrings.filter(
-        (string) => !defined.has(string.message)
+        (string) => !defined.has(string.message),
     );
     if (notFound.length > 0) {
         printNotFound(notFound);

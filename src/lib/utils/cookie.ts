@@ -8,7 +8,7 @@ export function getCookie(name: string): string | undefined {
     const cookies = document.cookie.split(";");
     const cookiesTrimmed = cookies.map((cookie) => cookie.trim());
     const maybeCookie = cookiesTrimmed.find((cookie) =>
-        cookie.startsWith(`${name}=`)
+        cookie.startsWith(`${name}=`),
     );
     if (!maybeCookie) {
         return undefined;

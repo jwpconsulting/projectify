@@ -29,7 +29,7 @@
             size="medium"
             color="blue"
             label={$_(
-                "overlay.constructive.invite-workspace-user-error.cancel"
+                "overlay.constructive.invite-workspace-user-error.cancel",
             )}
         />
         <Button
@@ -41,7 +41,7 @@
             size="medium"
             color="blue"
             label={$_(
-                "overlay.constructive.invite-workspace-user-error.go-to-billing"
+                "overlay.constructive.invite-workspace-user-error.go-to-billing",
             )}
         />
     </svelte:fragment>

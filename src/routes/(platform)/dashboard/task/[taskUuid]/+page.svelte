@@ -48,7 +48,7 @@
         {
             label: workspaceBoardSection.title,
             href: getDashboardWorkspaceBoardSectionUrl(
-                workspaceBoardSection.uuid
+                workspaceBoardSection.uuid,
             ),
         },
         { label: $number(task.number), href: getTaskUrl(task.uuid) },
@@ -81,7 +81,7 @@
                                 location: "task",
                                 workspaceBoardSection,
                             },
-                            contextMenuRef
+                            contextMenuRef,
                         ),
                     }}
                 />

@@ -21,7 +21,7 @@ export const currentCustomer: CurrentCustomer = derived<
         .catch((error: Error) => {
             console.error(
                 "An error happened when fetching the currentCustomer",
-                { error }
+                { error },
             );
         });
 });

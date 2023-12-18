@@ -58,5 +58,5 @@ export const labelSearch = createLabelFilter();
 // All the variables in this module should have labelFilter themed names
 export const labelFilterSearchResults = createLabelSearchResults(
     currentWorkspaceLabels,
-    labelSearch
+    labelSearch,
 );

@@ -42,13 +42,13 @@
         if (state.kind === "update") {
             await updateLabel(
                 { ...state.label, name: labelName, color },
-                { fetch }
+                { fetch },
             );
         } else {
             await createLabel(
                 currentWorkspace.unwrap(),
                 { name: labelName, color },
-                { fetch }
+                { fetch },
             );
         }
         state = { kind: "list" };
@@ -120,17 +120,17 @@
                         style={{ inputType: "text" }}
                         placeholder={state.kind === "update"
                             ? $_(
-                                  "dashboard.side-nav.filter-labels.update-input.placeholder"
+                                  "dashboard.side-nav.filter-labels.update-input.placeholder",
                               )
                             : $_(
-                                  "dashboard.side-nav.filter-labels.create-input.placeholder"
+                                  "dashboard.side-nav.filter-labels.create-input.placeholder",
                               )}
                         label={state.kind === "update"
                             ? $_(
-                                  "dashboard.side-nav.filter-labels.update-input.label"
+                                  "dashboard.side-nav.filter-labels.update-input.label",
                               )
                             : $_(
-                                  "dashboard.side-nav.filter-labels.create-input.label"
+                                  "dashboard.side-nav.filter-labels.create-input.label",
                               )}
                         name="name"
                         bind:value={labelName}
@@ -150,7 +150,7 @@
                                     }}
                                     onUncheck={() =>
                                         console.debug(
-                                            "Should we do something here?"
+                                            "Should we do something here?",
                                         )}
                                     name="label-color-{labelColor}"
                                 />

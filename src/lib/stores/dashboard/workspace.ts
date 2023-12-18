@@ -14,11 +14,11 @@ type HttpStore<T> = Readable<T | undefined> & {
 };
 
 function createHttpStore<T>(
-    getter: (context: RepositoryContext) => Promise<T | undefined>
+    getter: (context: RepositoryContext) => Promise<T | undefined>,
 ): HttpStore<T> {
     const { set, subscribe } = writable<T | undefined>(undefined);
     const load = async (
-        context: RepositoryContext
+        context: RepositoryContext,
     ): Promise<T | undefined> => {
         const result = await getter(context);
         set(result);

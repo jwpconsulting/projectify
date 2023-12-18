@@ -13,11 +13,11 @@ interface DeleteError {
 }
 export async function deleteWorkspaceUser(
     workspaceUser: WorkspaceUser,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<Result<undefined, DeleteError>> {
     const result = await deleteWithCredentialsJson(
         `/workspace/workspace-user/${workspaceUser.uuid}`,
-        repositoryContext
+        repositoryContext,
     );
     if (result.kind === "ok") {
         return { ok: true, result: undefined };

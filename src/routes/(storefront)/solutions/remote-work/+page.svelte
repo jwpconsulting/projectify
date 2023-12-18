@@ -12,7 +12,7 @@
             image: {
                 src: "/assets/solutions/hero-remote.png",
                 alt: $_(
-                    "solutions.index.solutions.remote-work.illustration.alt"
+                    "solutions.index.solutions.remote-work.illustration.alt",
                 ),
             },
         },
@@ -22,7 +22,7 @@
                     position: "right",
                     src: "/assets/solutions/remote-update.png",
                     alt: $_(
-                        "solutions.remote-work.features.feature-1.illustration.alt"
+                        "solutions.remote-work.features.feature-1.illustration.alt",
                     ),
                 },
                 title: $_("solutions.remote-work.features.feature-1.title"),
@@ -33,7 +33,7 @@
                     position: "left",
                     src: "/assets/landing/notifications.png",
                     alt: $_(
-                        "solutions.remote-work.features.feature-2.illustration.alt"
+                        "solutions.remote-work.features.feature-2.illustration.alt",
                     ),
                 },
                 title: $_("solutions.remote-work.features.feature-2.title"),
@@ -44,7 +44,7 @@
                     position: "right",
                     src: "/assets/solutions/remote-tasks.png",
                     alt: $_(
-                        "solutions.remote-work.features.feature-3.illustration.alt"
+                        "solutions.remote-work.features.feature-3.illustration.alt",
                     ),
                 },
                 title: $_("solutions.remote-work.features.feature-3.title"),

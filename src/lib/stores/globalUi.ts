@@ -31,7 +31,7 @@ export { mobileMenuState };
 function makeOpenState<Target>(
     target: Target,
     resolve: () => void,
-    reject: () => void
+    reject: () => void,
 ): Overlay<Target> {
     return {
         kind: "visible",
@@ -44,7 +44,7 @@ function makeOpenState<Target>(
 async function openOverlay<Target>(
     overlay: Writable<Overlay<Target>>,
     target: Target,
-    expectHidden = true
+    expectHidden = true,
 ): Promise<void> {
     return await new Promise((resolve: () => void, reject: () => void) => {
         overlay.update(($overlay) => {
@@ -56,7 +56,7 @@ async function openOverlay<Target>(
                         "Tried to open overlay",
                         overlay,
                         ", but it was already visible with",
-                        target
+                        target,
                     );
                 }
             }
@@ -68,7 +68,7 @@ async function openOverlay<Target>(
 function closeOverlay(
     overlay: Writable<Overlay<unknown>>,
     success: OverlaySuccess,
-    expectVisible = true
+    expectVisible = true,
 ) {
     overlay.update(($overlay) => {
         if ($overlay.kind !== "visible") {
@@ -90,7 +90,7 @@ function closeOverlay(
 
 async function toggleOverlay<Target>(
     overlay: Writable<Overlay<Target>>,
-    target: Target
+    target: Target,
 ): Promise<void> {
     return await new Promise((resolve: () => void, reject: () => void) => {
         overlay.update(($overlay) => {
@@ -107,7 +107,7 @@ async function toggleOverlay<Target>(
 }
 
 export async function openDestructiveOverlay(
-    target: DestructiveOverlayType
+    target: DestructiveOverlayType,
 ): Promise<void> {
     return await openOverlay(_destructiveOverlayState, target);
 }
@@ -122,7 +122,7 @@ export function resolveDestructiveOverlay() {
 }
 
 export async function openConstructiveOverlay(
-    target: ConstructiveOverlayType
+    target: ConstructiveOverlayType,
 ): Promise<void> {
     return openOverlay(_constructiveOverlayState, target);
 }
@@ -150,7 +150,7 @@ const { priv: _contextMenuState, pub: contextMenuState } =
 export { contextMenuState };
 export async function openContextMenu(
     target: ContextMenuType,
-    anchor: HTMLElement
+    anchor: HTMLElement,
 ): Promise<void> {
     return await new Promise((resolve, reject) => {
         _contextMenuState.update(($contextMenuState) => {
@@ -160,7 +160,7 @@ export async function openContextMenu(
                 console.warn(
                     "Context menu was already visible, changing target and anchor",
                     target,
-                    anchor
+                    anchor,
                 );
             }
             return {
@@ -197,7 +197,7 @@ type Unsubscriber = () => void;
 
 export function handleKey(
     key: KeyboardKey,
-    callback: KeyCallback
+    callback: KeyCallback,
 ): Unsubscriber {
     const listener = filterKey(key, callback);
     document.addEventListener("keydown", listener);

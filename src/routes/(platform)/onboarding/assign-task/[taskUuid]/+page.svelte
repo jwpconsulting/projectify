@@ -47,7 +47,7 @@
             <Anchor
                 href={getSettingsUrl(workspace.uuid, "billing")}
                 label={$_(
-                    "onboarding.assign-task.follow-up.go-to-billing-settings"
+                    "onboarding.assign-task.follow-up.go-to-billing-settings",
                 )}
             />
         </div>

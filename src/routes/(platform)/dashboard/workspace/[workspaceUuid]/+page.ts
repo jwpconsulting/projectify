@@ -9,7 +9,7 @@ import type { PageLoadEvent } from "./$types";
 export async function load({ parent }: PageLoadEvent): Promise<void> {
     const [maybeWorkspaceBoardUuids, parentData] = await Promise.all([
         await new Promise<Map<string, string>>(
-            selectedWorkspaceBoardUuids.subscribe
+            selectedWorkspaceBoardUuids.subscribe,
         ),
         await parent(),
     ]);
@@ -22,7 +22,7 @@ export async function load({ parent }: PageLoadEvent): Promise<void> {
     }
 
     const maybeWorkspaceBoardUuid = maybeWorkspaceBoardUuids.get(
-        workspace.uuid
+        workspace.uuid,
     );
     if (
         maybeWorkspaceBoardUuid &&
@@ -30,7 +30,7 @@ export async function load({ parent }: PageLoadEvent): Promise<void> {
     ) {
         throw redirect(
             302,
-            getDashboardWorkspaceBoardUrl(maybeWorkspaceBoardUuid)
+            getDashboardWorkspaceBoardUrl(maybeWorkspaceBoardUuid),
         );
     }
     const first_workspace_board = workspace_boards.at(0);

@@ -23,27 +23,27 @@ export async function createWorkspaceBoardSection(
         title,
         description,
     }: Pick<WorkspaceBoardSection, "title" | "description">,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<WorkspaceBoardSection> {
     return failOrOk(
         await postWithCredentialsJson(
             `/workspace/workspace-board-section/`,
             { workspace_board_uuid, title, description },
-            repositoryContext
-        )
+            repositoryContext,
+        ),
     );
 }
 
 // Read
 export async function getWorkspaceBoardSection(
     uuid: string,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<WorkspaceBoardSectionDetail | undefined> {
     return handle404(
         await getWithCredentialsJson(
             `/workspace/workspace-board-section/${uuid}`,
-            repositoryContext
-        )
+            repositoryContext,
+        ),
     );
 }
 
@@ -53,27 +53,27 @@ export async function updateWorkspaceBoardSection(
         WorkspaceBoardSection,
         "uuid" | "title" | "description"
     >,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<void> {
     return failOrOk(
         await putWithCredentialsJson(
             `/workspace/workspace-board-section/${workspaceBoardSection.uuid}`,
             workspaceBoardSection,
-            repositoryContext
-        )
+            repositoryContext,
+        ),
     );
 }
 
 // Delete
 export async function deleteWorkspaceBoardSection(
     { uuid }: Pick<WorkspaceBoardSection, "uuid">,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<void> {
     return failOrOk(
         await deleteWithCredentialsJson(
             `/workspace/workspace-board-section/${uuid}`,
-            repositoryContext
-        )
+            repositoryContext,
+        ),
     );
 }
 
@@ -81,13 +81,13 @@ export async function deleteWorkspaceBoardSection(
 export async function moveWorkspaceBoardSection(
     { uuid }: WorkspaceBoardSection,
     order: number,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ) {
     return failOrOk(
         await postWithCredentialsJson(
             `/workspace/workspace-board-section/${uuid}/move`,
             { order },
-            repositoryContext
-        )
+            repositoryContext,
+        ),
     );
 }

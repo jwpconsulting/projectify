@@ -16,12 +16,12 @@ import {
 export async function createLabel(
     workspace: Workspace,
     { name, color }: Pick<Label, "name" | "color">,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<Label> {
     const response = await postWithCredentialsJson<Label>(
         `/workspace/label/`,
         { workspace_uuid: workspace.uuid, name, color },
-        repositoryContext
+        repositoryContext,
     );
     if (response.kind !== "ok") {
         console.error("TODO handle", response);
@@ -35,25 +35,25 @@ export async function createLabel(
 // TODO not sure if we can return Label here
 export async function updateLabel(
     label: Label,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ): Promise<void> {
     return failOrOk(
         await putWithCredentialsJson(
             `/workspace/label/${label.uuid}`,
             label,
-            repositoryContext
-        )
+            repositoryContext,
+        ),
     );
 }
 
 // Delete
 export async function deleteLabel(
     label: Label,
-    repositoryContext: RepositoryContext
+    repositoryContext: RepositoryContext,
 ) {
     const response = await deleteWithCredentialsJson<Label>(
         `/workspace/label/${label.uuid}`,
-        repositoryContext
+        repositoryContext,
     );
     if (response.kind !== "ok") {
         console.error("TODO handle", response);

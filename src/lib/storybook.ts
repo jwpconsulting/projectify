@@ -41,7 +41,7 @@ export const mappedLabels: Label[] = labelColors.map(
             color: getIndexFromLabelColor(labelColor),
             uuid: nullUuid,
         };
-    }
+    },
 );
 
 export const labels: LabelLabel[] = [
@@ -209,11 +209,11 @@ function slugify(t: string): string {
 
 export function makeStorybookSelect<T>(choices: ArgTypeOption<T>): ArgType<T> {
     const labels = Object.fromEntries(
-        Object.entries(choices).map(([k, _v]) => [slugify(k), k])
+        Object.entries(choices).map(([k, _v]) => [slugify(k), k]),
     );
     const options = Object.keys(labels);
     const mapping = Object.fromEntries(
-        Object.entries(choices).map(([k, v]) => [slugify(k), v])
+        Object.entries(choices).map(([k, v]) => [slugify(k), v]),
     );
     return {
         options,

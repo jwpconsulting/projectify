@@ -24,7 +24,7 @@
     async function showSideNavContextMenu() {
         await openContextMenu(
             sideNavContextMenuType,
-            sideNavContextMenuAnchor
+            sideNavContextMenuAnchor,
         );
     }
 
@@ -37,7 +37,7 @@
     async function showWorkspaceContextMenu() {
         await openContextMenu(
             workspaceContextMenuType,
-            workspaceContextMenuAnchor
+            workspaceContextMenuAnchor,
         );
     }
 </script>
