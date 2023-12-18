@@ -81,13 +81,13 @@
         {:else if state === "create"}
             <form class="flex flex-col gap-4" on:submit|preventDefault={save}>
                 <div class="flex flex-col gap-2">
-                        <InputField
-                            style={{ inputType: "text" }}
-                            placeholder={$_("filter-label-menu.label-name")}
-                            label={$_("filter-label-menu.label-name")}
-                            name="name"
-                            bind:value={labelName}
-                        />
+                    <InputField
+                        style={{ inputType: "text" }}
+                        placeholder={$_("filter-label-menu.label-name")}
+                        label={$_("filter-label-menu.label-name")}
+                        name="name"
+                        bind:value={labelName}
+                    />
                     <div class="flex flex-col gap-4">
                         <div class="text-sm font-bold">Select label color</div>
                         <!-- XXX Hacky hacky radio emulation because Svelte wants radio

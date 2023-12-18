@@ -2,7 +2,7 @@
     import WorkspaceMenu from "$lib/figma/buttons/WorkspaceMenu.svelte";
     import Boards from "$lib/figma/navigation/side-nav/Boards.svelte";
     import FilterLabels from "$lib/figma/navigation/side-nav/FilterLabels.svelte";
-    import WorkspaceUsers from "$lib/figma/navigation/side-nav/WorkspaceUsers.svelte";
+    import FilterWorkspaceUsers from "$lib/figma/navigation/side-nav/FilterWorkspaceUsers.svelte";
     import { showFilters } from "$lib/stores/dashboard";
     import type { Workspace } from "$lib/types/workspace";
 
@@ -16,7 +16,7 @@
     <div class="flex shrink flex-col overflow-x-auto overflow-y-scroll">
         <Boards {workspace} />
         {#if $showFilters}
-            <WorkspaceUsers />
+            <FilterWorkspaceUsers />
             <FilterLabels />
         {/if}
     </div>
