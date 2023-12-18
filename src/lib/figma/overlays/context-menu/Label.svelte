@@ -7,8 +7,5 @@
 </script>
 
 <Layout>
-    <FilterLabelMenu
-        canEdit={false}
-        mode={{ kind: "assign", labelAssignment }}
-    />
+    <FilterLabelMenu mode={{ kind: "assign", labelAssignment }} />
 </Layout>

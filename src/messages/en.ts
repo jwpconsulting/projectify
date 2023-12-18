@@ -203,7 +203,6 @@ const messages: MessageDirectory = {
         "create-board": "Create new workspace board",
         "boards": "Workspace boards",
         "workspace-users": "Workspace users",
-        "labels": "Labels",
         "workspace-user-name": "Workspace user name",
         "filter-workspace-users": "Filter workspace users",
         "search-task": {
@@ -236,6 +235,30 @@ const messages: MessageDirectory = {
                 ],
             },
         },
+        "side-nav": {
+            "filter-labels": {
+                "title": "Filter labels",
+                "create-new-label": "Create new label",
+                "input": {
+                    label: "Label name",
+                    placeholder: "Filter by label name",
+                },
+                "create-input": {
+                    label: "Label name",
+                    placeholder: "New label name",
+                },
+                "update-input": {
+                    label: "Label name",
+                    placeholder: "New name for label",
+                },
+                "state": {
+                    update: "Updating label {label}",
+                    create: "New label",
+                },
+                "save": "Save",
+                "cancel": "Cancel",
+            },
+        },
     },
     "workspace-board-archive": {
         title: "Workspace board archive",
@@ -256,14 +279,6 @@ const messages: MessageDirectory = {
     "connection-status": {
         "disconnected": "Not connected to Projectify",
         "back-to-landing": "Back to landing page",
-    },
-    // TODO factor this into "dashboard"?
-    "filter-label-menu": {
-        "filter-labels": "Filter labels",
-        "create-new-label": "Create new label",
-        "label-name": "Label name",
-        "save": "Save",
-        "cancel": "Cancel",
     },
     // TODO factor this into "dashboard"?
     "filter-label": {

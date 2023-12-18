@@ -13,19 +13,16 @@
         selectedLabels,
     } from "$lib/stores/dashboard/labelFilter";
     import type { LabelAssignment } from "$lib/types/stores";
+    import type { Label } from "$lib/types/workspace";
 
     type FilterLabelMenuMode =
-        | { kind: "filter" }
+        | { kind: "filter"; startUpdate?: (label: Label) => void }
         | {
               kind: "assign";
               labelAssignment: LabelAssignment;
           };
 
     export let mode: FilterLabelMenuMode;
-    // Here we need to distinguish between a label menu used to
-    // filter tasks by labels
-    // or assign a label to a task
-    export let canEdit = true;
 
     $: selected =
         mode.kind === "filter"
@@ -41,13 +38,13 @@
     $: hasSearchInput = $labelSearch !== "" && $labelSearch !== undefined;
 </script>
 
-<div class="flex flex-col px-4 pb-4 pt-2">
+<div class="flex flex-col px-4 pb-4">
     <InputField
         bind:value={$labelSearch}
-        label={$_("filter-label-menu.filter-labels")}
+        label={$_("dashboard.side-nav.filter-labels.input.label")}
         style={{ inputType: "text" }}
         name="label-name"
-        placeholder={$_("filter-label-menu.label-name")}
+        placeholder={$_("dashboard.side-nav.filter-labels.input.placeholder")}
     >
         <Icon slot="left" src={Search} class="w-4" theme="outline" />
     </InputField>
@@ -73,7 +70,9 @@
             checked={$selected.kind === "labels"
                 ? $selected.labelUuids.has(label.uuid)
                 : false}
-            {canEdit}
+            onEdit={mode.kind === "filter"
+                ? mode.startUpdate?.bind(null, label)
+                : undefined}
             onCheck={() => onCheck({ kind: "label", labelUuid: label.uuid })}
             onUncheck={() =>
                 onUncheck({ kind: "label", labelUuid: label.uuid })}

@@ -5,8 +5,14 @@
 import type { RepositoryContext } from "$lib/types/repository";
 import type { Label, Workspace } from "$lib/types/workspace";
 
-import { deleteWithCredentialsJson, postWithCredentialsJson } from "../util";
+import {
+    deleteWithCredentialsJson,
+    failOrOk,
+    postWithCredentialsJson,
+    putWithCredentialsJson,
+} from "../util";
 
+// Create
 export async function createLabel(
     workspace: Workspace,
     { name, color }: Pick<Label, "name" | "color">,
@@ -24,6 +30,23 @@ export async function createLabel(
     return response.data;
 }
 
+// Read
+// Update
+// TODO not sure if we can return Label here
+export async function updateLabel(
+    label: Label,
+    repositoryContext: RepositoryContext
+): Promise<void> {
+    return failOrOk(
+        await putWithCredentialsJson(
+            `/workspace/label/${label.uuid}`,
+            label,
+            repositoryContext
+        )
+    );
+}
+
+// Delete
 export async function deleteLabel(
     label: Label,
     repositoryContext: RepositoryContext

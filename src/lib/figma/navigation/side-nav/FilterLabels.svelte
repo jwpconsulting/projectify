@@ -9,17 +9,19 @@
     import type { FilterLabelMenuState } from "$lib/figma/types";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
-    import { createLabel } from "$lib/repository/workspace/label";
+    import { createLabel, updateLabel } from "$lib/repository/workspace/label";
     import {
         labelExpandOpen,
         toggleLabelDropdownClosedNavOpen,
         currentWorkspace,
     } from "$lib/stores/dashboard";
     import { selectedLabels } from "$lib/stores/dashboard/labelFilter";
+    import type { Label } from "$lib/types/workspace";
     import {
         labelColors,
         type LabelColor,
         getIndexFromLabelColor,
+        getLabelColorFromIndex,
     } from "$lib/utils/colors";
 
     // Still exporting this one for better testability in storybook
@@ -29,26 +31,36 @@
     let chosenColor: LabelColor | undefined = undefined;
     let labelName: string | undefined = undefined;
 
-    async function save() {
+    async function createOrUpdate() {
         if (!chosenColor) {
             throw new Error("Expected chosenColor");
         }
         if (!labelName) {
             throw new Error("Expected labelName");
         }
-        await createLabel(
-            currentWorkspace.unwrap(),
-            { name: labelName, color: getIndexFromLabelColor(chosenColor) },
-            { fetch }
-        );
+        const color = getIndexFromLabelColor(chosenColor);
+        if (state.kind === "update") {
+            await updateLabel(
+                { ...state.label, name: labelName, color },
+                { fetch }
+            );
+        } else {
+            await createLabel(
+                currentWorkspace.unwrap(),
+                { name: labelName, color },
+                { fetch }
+            );
+        }
         state = { kind: "list" };
     }
 
     function startCreateLabel() {
         state = { kind: "create" };
+        chosenColor = undefined;
+        labelName = undefined;
     }
 
-    function cancelCreate() {
+    function cancelCreateOrUpdate() {
         // Reset form
         chosenColor = undefined;
         labelName = undefined;
@@ -56,11 +68,21 @@
         state = { kind: "list" };
     }
 
+    function startUpdate(label: Label) {
+        state = { kind: "update", label };
+        const labelColor = getLabelColorFromIndex(label.color);
+        if (!labelColor) {
+            console.warn("No color found for", label);
+        }
+        chosenColor = labelColor ?? labelColors[0];
+        labelName = label.name;
+    }
+
     // TODO refactor creation thing into new thing
 </script>
 
 <SideNavMenuCategory
-    label={$_("dashboard.labels")}
+    label={$_("dashboard.side-nav.filter-labels.title")}
     icon={Tag}
     on:click={toggleLabelDropdownClosedNavOpen}
     open={$labelExpandOpen}
@@ -69,22 +91,47 @@
 {#if $labelExpandOpen}
     <div class="shrink overflow-y-auto">
         {#if state.kind === "list"}
-            <FilterLabelMenu mode={{ kind: "filter" }} />
+            <FilterLabelMenu mode={{ kind: "filter", startUpdate }} />
             <!-- Some left padding issues here, not aligned with the rest above -->
             <ContextMenuButton
-                label={$_("filter-label-menu.create-new-label")}
+                label={$_("dashboard.side-nav.filter-labels.create-new-label")}
                 icon={Plus}
                 state="normal"
                 color="primary"
                 kind={{ kind: "button", action: startCreateLabel }}
             />
-        {:else if state.kind === "create"}
-            <form class="flex flex-col gap-4" on:submit|preventDefault={save}>
+        {:else}
+            <!-- all this px-4 bizniz is sub-optimal -->
+            <form
+                class="flex flex-col gap-4 px-4"
+                on:submit|preventDefault={createOrUpdate}
+            >
+                <p>
+                    {#if state.kind === "update"}
+                        {$_("dashboard.side-nav.filter-labels.state.update", {
+                            values: { label: state.label.name },
+                        })}
+                    {:else}
+                        {$_("dashboard.side-nav.filter-labels.state.create")}
+                    {/if}
+                </p>
                 <div class="flex flex-col gap-2">
                     <InputField
                         style={{ inputType: "text" }}
-                        placeholder={$_("filter-label-menu.label-name")}
-                        label={$_("filter-label-menu.label-name")}
+                        placeholder={state.kind === "update"
+                            ? $_(
+                                  "dashboard.side-nav.filter-labels.update-input.placeholder"
+                              )
+                            : $_(
+                                  "dashboard.side-nav.filter-labels.create-input.placeholder"
+                              )}
+                        label={state.kind === "update"
+                            ? $_(
+                                  "dashboard.side-nav.filter-labels.update-input.label"
+                              )
+                            : $_(
+                                  "dashboard.side-nav.filter-labels.create-input.label"
+                              )}
                         name="name"
                         bind:value={labelName}
                     />
@@ -93,7 +140,7 @@
                         <!-- XXX Hacky hacky radio emulation because Svelte wants radio
                 inputs to be contained in the same file in order to be grouped
                 together -->
-                        <fieldset class="flex flex-row flex-wrap gap-7">
+                        <fieldset class="flex flex-row flex-wrap gap-3">
                             {#each labelColors as labelColor}
                                 <SelectLabelCheckBox
                                     label={{ kind: "createLabel", labelColor }}
@@ -116,20 +163,21 @@
                         style={{ kind: "secondary" }}
                         color="blue"
                         size="medium"
-                        label={$_("filter-label-menu.cancel")}
-                        action={{ kind: "button", action: cancelCreate }}
+                        label={$_("dashboard.side-nav.filter-labels.cancel")}
+                        action={{
+                            kind: "button",
+                            action: cancelCreateOrUpdate,
+                        }}
                     />
                     <Button
                         style={{ kind: "primary" }}
                         color="blue"
                         size="medium"
-                        label={$_("filter-label-menu.save")}
-                        action={{ kind: "button", action: save }}
+                        label={$_("dashboard.side-nav.filter-labels.save")}
+                        action={{ kind: "submit" }}
                     />
                 </div>
             </form>
-        {:else if state.kind === "update"}
-            updating label
         {/if}
     </div>
 {/if}

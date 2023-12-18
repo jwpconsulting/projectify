@@ -9,12 +9,10 @@
 
     export let label: SelectLabel;
     export let checked: boolean;
-    export let canEdit = true;
 
     export let onCheck: () => void;
     export let onUncheck: () => void;
-
-    $: editable = label.kind === "label" && canEdit;
+    export let onEdit: (() => void) | undefined = undefined;
 
     function click() {
         checked = !checked;
@@ -23,10 +21,6 @@
         } else {
             onUncheck();
         }
-    }
-
-    function onEdit() {
-        // TODO
     }
 
     async function onDelete() {
@@ -56,7 +50,7 @@
         </div>
     </div>
     <div class="flex flex-row items-center gap-2">
-        {#if editable}
+        {#if label.kind === "label" && onEdit}
             <CircleIcon
                 size="small"
                 icon="edit"
