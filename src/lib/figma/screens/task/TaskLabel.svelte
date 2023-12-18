@@ -11,7 +11,7 @@
     let btnRef: HTMLElement;
 </script>
 
-<div class="flex flex-row flex-wrap items-center gap-y-2">
+<div class="flex flex-row flex-wrap items-center gap-x-1 gap-y-2">
     {#each labels as label}
         <div class="shrink-0">
             <LabelC
