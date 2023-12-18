@@ -4,6 +4,8 @@
     import SolutionsPage from "$lib/components/solutions/SolutionsPage.svelte";
     import type { SolutionsPageContent } from "$lib/types/ui";
 
+    import Filters from "../../assets/filters.png";
+    import Notifications from "../../assets/notifications.png";
     import HeroProjectManagement from "../assets/hero-project-management.png";
     import ProjectManagementPermissions from "../assets/project-management-permissions.png";
     import ProjectManagementWorkspaceUser from "../assets/project-management-workspace-user.png";
@@ -38,7 +40,7 @@
             {
                 image: {
                     position: "left",
-                    src: "/assets/landing/notifications.png",
+                    src: Notifications,
                     alt: $_(
                         "solutions.project-management.features.feature-2.illustration.alt",
                     ),
@@ -53,7 +55,7 @@
             {
                 image: {
                     position: "right",
-                    src: "/assets/landing/filters.png",
+                    src: Filters,
                     alt: $_(
                         "solutions.project-management.features.feature-3.illustration.alt",
                     ),

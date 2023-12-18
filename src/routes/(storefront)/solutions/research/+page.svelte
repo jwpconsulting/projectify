@@ -4,6 +4,7 @@
     import SolutionsPage from "$lib/components/solutions/SolutionsPage.svelte";
     import type { SolutionsPageContent } from "$lib/types/ui";
 
+    import Filters from "../../assets/filters.png";
     import HeroResearch from "../assets/hero-research.png";
     import ResearchTasks from "../assets/research-tasks.png";
     import ResearchUpdate from "../assets/research-update.png";
@@ -43,7 +44,7 @@
             {
                 image: {
                     position: "right",
-                    src: "/assets/landing/filters.png",
+                    src: Filters,
                     alt: $_(
                         "solutions.research.features.feature-3.illustration.alt",
                     ),

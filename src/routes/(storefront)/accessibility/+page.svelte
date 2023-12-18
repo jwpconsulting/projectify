@@ -5,10 +5,12 @@
     import HeroLayout from "$lib/components/layouts/HeroLayout.svelte";
     import type { SolutionsHeroContent } from "$lib/types/ui";
 
+    import HeroAccessibility from "./hero-accessibility.png";
+
     $: heroContent = {
         title: $_("accessibility.hero.title"),
         image: {
-            src: "/assets/accessibility/accessibility-hero.png",
+            src: HeroAccessibility,
             alt: $_("accessibility.hero.illustration.alt"),
         },
     } satisfies SolutionsHeroContent;

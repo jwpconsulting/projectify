@@ -4,6 +4,7 @@
     import SolutionsPage from "$lib/components/solutions/SolutionsPage.svelte";
     import type { SolutionsPageContent } from "$lib/types/ui";
 
+    import Notifications from "../../assets/notifications.png";
     import DevelopmentTeamsFilter from "../assets/development-teams-filter.png";
     import DevelopmentTeamsTasks from "../assets/development-teams-tasks.png";
     import HeroDevelopmentTeams from "../assets/hero-development-teams.png";
@@ -34,7 +35,7 @@
             {
                 image: {
                     position: "left",
-                    src: "/assets/landing/notifications.png",
+                    src: Notifications,
                     alt: $_(
                         "solutions.development.features.feature-2.illustration.alt",
                     ),

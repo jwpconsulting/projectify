@@ -5,6 +5,18 @@
     import SolutionsFeature from "$lib/components/solutions/SolutionsFeature.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+
+    import Filters from "./assets/filters.png";
+    import Hero from "./assets/hero.png";
+    import Notifications from "./assets/notifications.png";
+    import OpenSource from "./assets/open-source.png";
+    import Privacy from "./assets/privacy.png";
+    import Responsive from "./assets/responsive.png";
+    import SubTask from "./assets/sub-task.png";
+    import TaskMenu from "./assets/task-menu.png";
+    import HeroDevelopmentTeams from "./solutions/assets/hero-development-teams.png";
+    import HeroProjectManagement from "./solutions/assets/hero-project-management.png";
+    import HeroResearch from "./solutions/assets/hero-research.png";
 </script>
 
 <HeroLayout heroBackground={false}>
@@ -31,7 +43,7 @@
             />
         </div>
         <div class="max-w-md">
-            <img src="/assets/landing/hero.png" alt={$_("index.hero.alt")} />
+            <img src={Hero} alt={$_("index.hero.alt")} />
         </div>
     </section>
     <div slot="content" class="flex flex-col gap-16">
@@ -49,7 +61,7 @@
                 title: $_("index.features.feature-1.header"),
                 text: $_("index.features.feature-1.text"),
                 image: {
-                    src: "/assets/landing/task-menu.png",
+                    src: TaskMenu,
                     alt: $_("index.features.feature-1.alt"),
                     position: "right",
                 },
@@ -61,7 +73,7 @@
                 title: $_("index.features.feature-2.header"),
                 text: $_("index.features.feature-2.text"),
                 image: {
-                    src: "/assets/landing/sub-task.png",
+                    src: SubTask,
                     alt: $_("index.features.feature-2.alt"),
                     position: "left",
                 },
@@ -73,7 +85,7 @@
                 title: $_("index.features.feature-3.header"),
                 text: $_("index.features.feature-3.text"),
                 image: {
-                    src: "/assets/landing/filters.png",
+                    src: Filters,
                     alt: $_("index.features.feature-3.alt"),
                     position: "right",
                 },
@@ -85,7 +97,7 @@
                 title: $_("index.features.feature-4.header"),
                 text: $_("index.features.feature-4.text"),
                 image: {
-                    src: "/assets/landing/notifications.png",
+                    src: Notifications,
                     alt: $_("index.features.feature-4.alt"),
                     position: "left",
                 },
@@ -97,7 +109,7 @@
                 title: $_("index.features.feature-5.header"),
                 text: $_("index.features.feature-5.text"),
                 image: {
-                    src: "/assets/landing/responsive.png",
+                    src: Responsive,
                     alt: $_("index.features.feature-5.alt"),
                     position: "right",
                 },
@@ -116,7 +128,7 @@
                 <div class="grid grid-cols-1 gap-8 sm:grid-cols-3">
                     <div class="flex flex-col gap-3">
                         <img
-                            src="assets/solutions/hero-development.png"
+                            src={HeroDevelopmentTeams}
                             alt={$_(
                                 "index.solutions.list.development-teams.alt",
                             )}
@@ -131,7 +143,7 @@
                     </div>
                     <div class="flex flex-col gap-3">
                         <img
-                            src="assets/solutions/hero-research.png"
+                            src={HeroResearch}
                             alt={$_("index.solutions.list.research.alt")}
                         />
                         <Anchor
@@ -142,7 +154,7 @@
                     </div>
                     <div class="flex flex-col gap-3">
                         <img
-                            src="assets/solutions/hero-project-management.png"
+                            src={HeroProjectManagement}
                             alt={$_(
                                 "index.solutions.list.project-management.alt",
                             )}
@@ -168,7 +180,7 @@
                 title: $_("index.features.feature-6.header"),
                 text: $_("index.features.feature-6.text"),
                 image: {
-                    src: "/assets/landing/privacy.png",
+                    src: Privacy,
                     alt: $_("index.features.feature-6.alt"),
                     position: "right",
                 },
@@ -179,7 +191,7 @@
                 title: $_("index.features.feature-7.header"),
                 text: $_("index.features.feature-7.text"),
                 image: {
-                    src: "/assets/landing/open-source.png",
+                    src: OpenSource,
                     alt: $_("index.features.feature-7.alt"),
                     position: "left",
                 },

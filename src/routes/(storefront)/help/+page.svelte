@@ -6,6 +6,8 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import type { SolutionsHeroContent } from "$lib/types/ui";
 
+    import HeroHelp from "./hero-help.png";
+
     interface HelpTopic {
         title: string;
         description: string;
@@ -63,7 +65,7 @@
         title: $_("help.hero.header.text"),
         text: $_("help.hero.header.subtext"),
         image: {
-            src: "/assets/help/help-hero.png",
+            src: HeroHelp,
             alt: $_("help.hero.image.alt"),
         },
     } satisfies SolutionsHeroContent;

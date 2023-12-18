@@ -13,7 +13,6 @@
         title: string;
         href: string;
     }
-    let helpItems: HelpItem[];
     $: helpItems = [
         {
             title: $_("help.overview"),
@@ -55,7 +54,7 @@
             title: $_("help.billing.title"),
             href: "/help/billing",
         },
-    ];
+    ] as HelpItem[];
 </script>
 
 <HeroLayout>

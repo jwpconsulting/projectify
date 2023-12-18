@@ -4,6 +4,7 @@
     import SolutionsPage from "$lib/components/solutions/SolutionsPage.svelte";
     import type { SolutionsPageContent } from "$lib/types/ui";
 
+    import Notifications from "../../assets/notifications.png";
     import HeroRemoteWork from "../assets/hero-remote-work.png";
     import RemoteWorkTasks from "../assets/remote-work-tasks.png";
     import RemoteWorkUpdate from "../assets/remote-work-update.png";
@@ -34,7 +35,7 @@
             {
                 image: {
                     position: "left",
-                    src: "/assets/landing/notifications.png",
+                    src: Notifications,
                     alt: $_(
                         "solutions.remote-work.features.feature-2.illustration.alt",
                     ),
