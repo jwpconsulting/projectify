@@ -22,3 +22,10 @@ export const Apply: Story = {
         label: labels[labels.length - 1],
     },
 };
+
+export const WithAction: Story = {
+    args: {
+        label: labels[labels.length - 1],
+        action: console.log,
+    },
+};
