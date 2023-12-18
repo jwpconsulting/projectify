@@ -24,7 +24,7 @@
 
     // Still exporting this one for better testability in storybook
     // TODO or perhaps we can refactor the form to a new component?
-    export let state: FilterLabelMenuState = "list";
+    export let state: FilterLabelMenuState = { kind: "list" };
 
     let chosenColor: LabelColor | undefined = undefined;
     let labelName: string | undefined = undefined;
@@ -41,11 +41,11 @@
             { name: labelName, color: getIndexFromLabelColor(chosenColor) },
             { fetch }
         );
-        state = "list";
+        state = { kind: "list" };
     }
 
     function startCreateLabel() {
-        state = "create";
+        state = { kind: "create" };
     }
 
     function cancelCreate() {
@@ -53,7 +53,7 @@
         chosenColor = undefined;
         labelName = undefined;
         // Go back
-        state = "list";
+        state = { kind: "list" };
     }
 
     // TODO refactor creation thing into new thing
@@ -68,7 +68,7 @@
 />
 {#if $labelExpandOpen}
     <div class="shrink overflow-y-auto">
-        {#if state === "list"}
+        {#if state.kind === "list"}
             <FilterLabelMenu mode={{ kind: "filter" }} />
             <!-- Some left padding issues here, not aligned with the rest above -->
             <ContextMenuButton
@@ -78,7 +78,7 @@
                 color="primary"
                 kind={{ kind: "button", action: startCreateLabel }}
             />
-        {:else if state === "create"}
+        {:else if state.kind === "create"}
             <form class="flex flex-col gap-4" on:submit|preventDefault={save}>
                 <div class="flex flex-col gap-2">
                     <InputField
@@ -128,6 +128,8 @@
                     />
                 </div>
             </form>
+        {:else if state.kind === "update"}
+            updating label
         {/if}
     </div>
 {/if}

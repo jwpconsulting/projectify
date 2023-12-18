@@ -2,11 +2,12 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 
 import FilterLabels from "$lib/figma/navigation/side-nav/FilterLabels.svelte";
 import type { FilterLabelMenuState } from "$lib/figma/types";
-import { makeStorybookSelect } from "$lib/storybook";
+import { makeStorybookSelect, mappedLabels } from "$lib/storybook";
 
 const states = makeStorybookSelect<FilterLabelMenuState>({
-    List: "list",
-    Create: "create",
+    List: { kind: "list" },
+    Create: { kind: "create" },
+    Update: { kind: "update", label: mappedLabels[0] },
 });
 
 const meta: Meta<FilterLabels> = {
@@ -27,5 +28,10 @@ export const List: Story = {
 export const Create: Story = {
     args: {
         state: "create",
+    },
+};
+export const Update: Story = {
+    args: {
+        state: "update",
     },
 };
