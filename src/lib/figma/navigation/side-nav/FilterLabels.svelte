@@ -26,9 +26,6 @@
     // TODO or perhaps we can refactor the form to a new component?
     export let state: FilterLabelMenuState = "list";
 
-    // TODO cancel callback
-    // TODO save callback
-
     let chosenColor: LabelColor | undefined = undefined;
     let labelName: string | undefined = undefined;
 
@@ -82,9 +79,8 @@
                 kind={{ kind: "button", action: startCreateLabel }}
             />
         {:else if state === "create"}
-            <form class="flex flex-col gap-6" on:submit|preventDefault={save}>
-                <div class="flex flex-col">
-                    <div class="px-4 pb-4 pt-2">
+            <form class="flex flex-col gap-4" on:submit|preventDefault={save}>
+                <div class="flex flex-col gap-2">
                         <InputField
                             style={{ inputType: "text" }}
                             placeholder={$_("filter-label-menu.label-name")}
@@ -92,8 +88,7 @@
                             name="name"
                             bind:value={labelName}
                         />
-                    </div>
-                    <div class="flex flex-col gap-4 px-7">
+                    <div class="flex flex-col gap-4">
                         <div class="text-sm font-bold">Select label color</div>
                         <!-- XXX Hacky hacky radio emulation because Svelte wants radio
                 inputs to be contained in the same file in order to be grouped
@@ -116,7 +111,7 @@
                         </fieldset>
                     </div>
                 </div>
-                <div class="flex flex-row gap-4 px-2">
+                <div class="flex flex-row gap-4">
                     <Button
                         style={{ kind: "secondary" }}
                         color="blue"
