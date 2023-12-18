@@ -1,9 +1,8 @@
 <script lang="ts">
-    import { Search, Plus } from "@steeze-ui/heroicons";
+    import { Search } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { _ } from "svelte-i18n";
 
-    import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import FilterLabel from "$lib/figma/select-controls/FilterLabel.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import {
@@ -27,8 +26,6 @@
     // filter tasks by labels
     // or assign a label to a task
     export let canEdit = true;
-    // If it is null, we don't show the create new label button
-    export let startCreateLabel: (() => void) | undefined = undefined;
 
     $: selected =
         mode.kind === "filter"
@@ -85,14 +82,4 @@
                 onUncheck({ kind: "label", labelUuid: label.uuid })}
         />
     {/each}
-    {#if startCreateLabel}
-        <!-- Some left padding issues here, not aligned with FilterLabel TODO -->
-        <ContextMenuButton
-            label={$_("filter-label-menu.create-new-label")}
-            icon={Plus}
-            state="normal"
-            color="primary"
-            kind={{ kind: "button", action: startCreateLabel }}
-        />
-    {/if}
 </div>

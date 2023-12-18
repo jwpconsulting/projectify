@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { Plus } from "@steeze-ui/heroicons";
     import { _ } from "svelte-i18n";
 
     import FilterLabelMenu from "$lib/figma/composites/FilterLabelMenu.svelte";
@@ -10,6 +11,8 @@
     import { currentWorkspace } from "$lib/stores/dashboard";
     import type { Label } from "$lib/types/workspace";
     import { labelColors } from "$lib/utils/colors";
+
+    import ContextMenuButton from "../buttons/ContextMenuButton.svelte";
 
     // Still exporting this one for better testability in storybook
     // TODO or perhaps we can refactor the form to a new component?
@@ -73,7 +76,15 @@
 </script>
 
 {#if state === "list"}
-    <FilterLabelMenu {startCreateLabel} mode={{ kind: "filter" }} />
+    <FilterLabelMenu mode={{ kind: "filter" }} />
+    <!-- Some left padding issues here, not aligned with the rest above -->
+    <ContextMenuButton
+        label={$_("filter-label-menu.create-new-label")}
+        icon={Plus}
+        state="normal"
+        color="primary"
+        kind={{ kind: "button", action: startCreateLabel }}
+    />
 {:else if state === "create"}
     <form class="flex flex-col gap-6" on:submit|preventDefault={save}>
         <div class="flex flex-col">

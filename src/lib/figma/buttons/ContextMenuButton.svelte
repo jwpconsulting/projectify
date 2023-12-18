@@ -49,7 +49,7 @@
         }
     }
 
-    $: outerClass = `flex-start flex flex-row items-center gap-2 px-4 py-2 text-left text-sm font-bold ${colorStyle} ${style}`;
+    $: outerClass = `w-full flex-start flex flex-row items-center gap-2 px-4 py-2 text-left text-sm font-bold ${colorStyle} ${style}`;
 </script>
 
 {#if kind.kind === "a"}
