@@ -2,20 +2,13 @@ import type { KnipConfig } from "knip";
 
 const config: KnipConfig = {
     ignore: ["**/*.d.ts"],
-    entry: [
-        ".eslintrc.cjs",
-        "postcss.config.cjs",
-        "svelte.config.js",
-        "vite.config.ts",
-        "src/stories/**/*.stories.ts",
-        "src/routes/**/+{page,error,layout}{,@*}.{ts,svelte}",
-        "src/bin/*.ts",
-        // XXX We might have more luck convincing knip that we are importing
-        // src/lib/app.scss in src/routes/+layout.svelte:
-        //   import "$lib/app.scss";
-        // Instead of manually specifying the stylesheet here
-        "src/lib/app.scss",
-    ],
+    entry: ["postcss.config.cjs", "bin/check-i18n", "src/bin/check-i18n.ts"],
+    /* Extensions looked up by running the following in fish:
+     * for file in (find src -type f)
+     * path extension "$file"
+     * end | sort | uniq
+     */
+    project: ["static/**/*.png", "src/**/*.{css,html,scss,svg,png,ts,svelte}"],
     rules: {
         binaries: "error",
         dependencies: "error",
@@ -31,15 +24,7 @@ const config: KnipConfig = {
         "$app/*": ["node_modules/@sveltejs/kit/src/runtime/app/*"],
         "$env/*": [".svelte-kit/ambient.d.ts"],
     },
-    ignoreBinaries: [
-        "bin/prebuild.sh",
-        "env",
-        "poetry",
-        "tsx",
-        "open",
-        "bin/test",
-    ],
-    project: ["src/**/*.{ts,svelte}"],
+    ignoreBinaries: ["env", "poetry", "tsx", "open", "bin/test"],
     compilers: {
         // https://github.com/webpro/knip/blob/7011a5107b6693f70a966a12bc3c31b6bc3353a8/docs/compilers.md
         svelte: (text: string) =>
