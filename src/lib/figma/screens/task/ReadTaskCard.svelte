@@ -66,6 +66,7 @@
         <Breadcrumbs slot="breadcrumbs" {crumbs} />
         <svelte:fragment slot="buttons">
             <Button
+                grow={false}
                 color="blue"
                 size="small"
                 style={{ kind: "primary" }}

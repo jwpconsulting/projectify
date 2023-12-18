@@ -101,6 +101,7 @@
         <Breadcrumbs slot="breadcrumbs" {crumbs} />
         <svelte:fragment slot="buttons">
             <Button
+                grow={false}
                 action={{
                     kind: "submit",
                     form: "task-form",
@@ -112,6 +113,7 @@
                 label={$_("task-screen.create.create")}
             />
             <Button
+                grow={false}
                 action={{
                     kind: "button",
                     action: () => action(true),
