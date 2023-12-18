@@ -35,7 +35,7 @@ export type SelectLabel =
     | { kind: "noLabel" }
     | { kind: "label"; label: Label };
 
-export const filterLabelMenuStates = ["list", "create"] as const;
+const filterLabelMenuStates = ["list", "create"] as const;
 export type FilterLabelMenuState = (typeof filterLabelMenuStates)[number];
 
 const floatingActionButtonIcons = ["plus", "close"] as const;
