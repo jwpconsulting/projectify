@@ -28,7 +28,7 @@
     // or assign a label to a task
     export let canEdit = true;
     // If it is null, we don't show the create new label button
-    export let startCreateLabel: (() => void) | null = null;
+    export let startCreateLabel: (() => void) | undefined = undefined;
 
     $: selected =
         mode.kind === "filter"
