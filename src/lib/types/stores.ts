@@ -33,6 +33,7 @@ export interface LabelAssignment extends Readable<Label[] | undefined> {
 export interface SubTaskAssignment
     extends Writable<Partial<CreateUpdateSubTask>[]> {
     addSubTask: () => void;
+    removeSubTask: (where: number) => void;
     // if all sub tasks are non-partial, an inner store will return the whole
     // list of sub tasks.
     subTasks: Readable<CreateUpdateSubTask[] | undefined>;

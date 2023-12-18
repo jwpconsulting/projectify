@@ -36,6 +36,11 @@ export function createSubTaskAssignment(task?: Task): SubTaskAssignment {
             return [...$subTasks, { done: false }];
         });
     };
+    const removeSubTask = (where: number) => {
+        update(($subTasks) => {
+            return $subTasks.filter((_s, ix) => ix !== where);
+        });
+    };
     const subTasks = derived<
         Readable<Partial<CreateUpdateSubTask>[]>,
         CreateUpdateSubTask[]
@@ -55,6 +60,7 @@ export function createSubTaskAssignment(task?: Task): SubTaskAssignment {
         set,
         update,
         addSubTask,
+        removeSubTask,
         subTasks,
         // [head?, before, where, tail?] ->
         // [head?, where, before, tail?]

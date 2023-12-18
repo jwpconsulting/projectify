@@ -69,7 +69,10 @@
             <CircleIcon
                 size="medium"
                 icon="delete"
-                action={{ kind: "button", action: console.error }}
+                action={{
+                    kind: "button",
+                    action: subTaskAssignment.removeSubTask.bind(null, index),
+                }}
             />
         </div>
     {/if}
