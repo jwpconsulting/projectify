@@ -8,7 +8,7 @@ It would be best if we use regular InputFields with labels. TODO
 
     import { tw } from "$lib/utils/ui";
 
-    const leftSideClass = tw`min-w-content col-span-1 text-left font-bold`;
+    const leftSideClass = tw`col-span-1 text-left font-bold`;
     const rightSideClass = tw`col-span-3`;
     const rowClass = tw`contents`;
 </script>

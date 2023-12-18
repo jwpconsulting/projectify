@@ -35,29 +35,24 @@
 </script>
 
 <button
-    class="group rounded-2.5xl border border-transparent p-0.5 {action
-        ? 'focus:border-border-focus focus:outline-none'
+    class="flex w-full flex-row items-center gap-2 rounded-2.5xl border border-dashed border-primary px-2 py-1 text-sm font-bold text-primary {action !==
+    undefined
+        ? 'hover:bg-background active:bg-secondary-hover'
         : ''}"
+    class:bg-task-hover={user !== undefined}
     type="button"
     on:click={action}
     disabled={!action}
     bind:this={btnRef}
 >
-    <div
-        class="flex flex-row items-center gap-2 rounded-2.5xl border border-dashed border-primary px-2 py-1 text-sm font-bold text-primary {action
-            ? 'group-hover:bg-background group-active:bg-secondary-hover'
-            : ''}"
-        class:bg-task-hover={user !== undefined}
-    >
-        <AvatarVariant size="small" content={avatarContent} />
-        <div class="line-clamp-1 overflow-hidden">
-            {#if user}
-                {displayName}
-            {:else if action}
-                {$_("dashboard.assign-user")}
-            {:else}
-                {$_("dashboard.no-user-assigned")}
-            {/if}
-        </div>
+    <AvatarVariant size="small" content={avatarContent} />
+    <div class="truncate">
+        {#if user}
+            {displayName}
+        {:else if action}
+            {$_("dashboard.assign-user")}
+        {:else}
+            {$_("dashboard.no-user-assigned")}
+        {/if}
     </div>
 </button>

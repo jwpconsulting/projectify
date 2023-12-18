@@ -7,7 +7,7 @@ const meta: Meta<TaskUser> = {
     component: TaskUser,
     args: {
         workspaceUser,
-        action: console.log,
+        onInteract: console.log,
     },
 };
 export default meta;
@@ -15,3 +15,7 @@ export default meta;
 type Story = StoryObj<TaskUser>;
 
 export const Default: Story = {};
+
+export const NoUser: Story = { args: { workspaceUser: undefined } };
+
+export const NoAction: Story = { args: { onInteract: undefined } };
