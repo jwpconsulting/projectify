@@ -1,7 +1,7 @@
 <script lang="ts">
     import WorkspaceMenu from "$lib/figma/buttons/WorkspaceMenu.svelte";
-    import LabelDropdown from "$lib/figma/composites/LabelDropdown.svelte";
     import Boards from "$lib/figma/navigation/side-nav/Boards.svelte";
+    import FilterLabels from "$lib/figma/navigation/side-nav/FilterLabels.svelte";
     import WorkspaceUsers from "$lib/figma/navigation/side-nav/WorkspaceUsers.svelte";
     import { showFilters } from "$lib/stores/dashboard";
     import type { Workspace } from "$lib/types/workspace";
@@ -17,7 +17,7 @@
         <Boards {workspace} />
         {#if $showFilters}
             <WorkspaceUsers />
-            <LabelDropdown />
+            <FilterLabels />
         {/if}
     </div>
 </nav>
