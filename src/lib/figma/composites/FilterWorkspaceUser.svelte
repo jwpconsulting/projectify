@@ -52,7 +52,8 @@
     }
 </script>
 
-<div class="flex flex-col px-4 pb-4 pt-2">
+<!-- TODO remove px/pt here -->
+<div class="flex flex-col px-4 pt-2">
     <InputField
         bind:value={$workspaceUserSearch}
         style={{ inputType: "text" }}
