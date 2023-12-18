@@ -6,9 +6,12 @@
     import {
         getLabelColorClass,
         getLabelColorFromIndex,
+        type LabelColor,
     } from "$lib/utils/colors";
 
-    export let label: SelectLabel;
+    export let label:
+        | SelectLabel
+        | { kind: "createLabel"; labelColor: LabelColor };
     export let checked: boolean;
     // This should be required
     export let name: string | undefined = undefined;
@@ -35,7 +38,10 @@
             outerStyle =
                 "bg-background border-utility group-hover:bg-border hover:bg-border text-utility";
         } else {
-            const color = getLabelColorFromIndex(label.label.color);
+            const color =
+                label.kind === "createLabel"
+                    ? label.labelColor
+                    : getLabelColorFromIndex(label.label.color);
             if (!color) {
                 throw new Error("Expected color");
             }

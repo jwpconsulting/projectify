@@ -6,7 +6,7 @@
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import FilterLabelMenu from "$lib/figma/composites/FilterLabelMenu.svelte";
     import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
-    import type { SelectLabel, FilterLabelMenuState } from "$lib/figma/types";
+    import type { FilterLabelMenuState } from "$lib/figma/types";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { createLabel } from "$lib/repository/workspace/label";
@@ -16,8 +16,11 @@
         currentWorkspace,
     } from "$lib/stores/dashboard";
     import { selectedLabels } from "$lib/stores/dashboard/labelFilter";
-    import type { Label } from "$lib/types/workspace";
-    import { labelColors } from "$lib/utils/colors";
+    import {
+        labelColors,
+        type LabelColor,
+        getIndexFromLabelColor,
+    } from "$lib/utils/colors";
 
     // Still exporting this one for better testability in storybook
     // TODO or perhaps we can refactor the form to a new component?
@@ -26,29 +29,8 @@
     // TODO cancel callback
     // TODO save callback
 
-    const labelColorChoices: SelectLabel[] = labelColors.map((name, i) => {
-        return {
-            kind: "label",
-            label: {
-                uuid: "i-dont-exist",
-                color: i,
-                name,
-            },
-        };
-    });
-
-    let chosenColor: Label | null = null;
+    let chosenColor: LabelColor | undefined = undefined;
     let labelName: string | undefined = undefined;
-
-    const makeIsLabelSelected = (color: null | number) =>
-        Object.fromEntries(labelColors.map((_name, ix) => [ix, ix === color]));
-    let isLabelSelected: Record<number, boolean> = makeIsLabelSelected(null);
-
-    $: {
-        if (chosenColor) {
-            isLabelSelected = makeIsLabelSelected(chosenColor.color);
-        }
-    }
 
     async function save() {
         if (!chosenColor) {
@@ -59,7 +41,7 @@
         }
         await createLabel(
             currentWorkspace.unwrap(),
-            { name: labelName, color: chosenColor.color },
+            { name: labelName, color: getIndexFromLabelColor(chosenColor) },
             { fetch }
         );
         state = "list";
@@ -71,7 +53,7 @@
 
     function cancelCreate() {
         // Reset form
-        chosenColor = null;
+        chosenColor = undefined;
         labelName = undefined;
         // Go back
         state = "list";
@@ -117,23 +99,18 @@
                 inputs to be contained in the same file in order to be grouped
                 together -->
                         <fieldset class="flex flex-row flex-wrap gap-7">
-                            {#each labelColorChoices as label, ix}
+                            {#each labelColors as labelColor}
                                 <SelectLabelCheckBox
-                                    {label}
-                                    checked={isLabelSelected[ix]}
+                                    label={{ kind: "createLabel", labelColor }}
+                                    checked={chosenColor === labelColor}
                                     onCheck={() => {
-                                        if (label.kind != "label") {
-                                            throw new Error(
-                                                "Going down the sad code path"
-                                            );
-                                        }
-                                        chosenColor = label.label;
+                                        chosenColor = labelColor;
                                     }}
                                     onUncheck={() =>
                                         console.debug(
                                             "Should we do something here?"
                                         )}
-                                    name="label-color"
+                                    name="label-color-{labelColor}"
                                 />
                             {/each}
                         </fieldset>
