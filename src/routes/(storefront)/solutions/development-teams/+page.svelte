@@ -4,13 +4,16 @@
     import SolutionsPage from "$lib/components/solutions/SolutionsPage.svelte";
     import type { SolutionsPageContent } from "$lib/types/ui";
 
-    let pageContent: SolutionsPageContent;
+    import DevelopmentTeamsFilter from "../assets/development-teams-filter.png";
+    import DevelopmentTeamsTasks from "../assets/development-teams-tasks.png";
+    import HeroDevelopmentTeams from "../assets/hero-development-teams.png";
+
     $: pageContent = {
         heroContent: {
             title: $_("solutions.development.hero.title"),
             text: $_("solutions.development.hero.text"),
             image: {
-                src: "/assets/solutions/hero-development.png",
+                src: HeroDevelopmentTeams,
                 alt: $_(
                     "solutions.index.solutions.development.illustration.alt",
                 ),
@@ -20,7 +23,7 @@
             {
                 image: {
                     position: "right",
-                    src: "/assets/solutions/dev-filter.png",
+                    src: DevelopmentTeamsFilter,
                     alt: $_(
                         "solutions.development.features.feature-1.illustration.alt",
                     ),
@@ -42,7 +45,7 @@
             {
                 image: {
                     position: "right",
-                    src: "/assets/solutions/dev-tasks.png",
+                    src: DevelopmentTeamsTasks,
                     alt: $_(
                         "solutions.development.features.feature-3.illustration.alt",
                     ),
@@ -51,7 +54,7 @@
                 text: $_("solutions.development.features.feature-3.text"),
             },
         ],
-    };
+    } as SolutionsPageContent;
 </script>
 
 <SolutionsPage {pageContent} />

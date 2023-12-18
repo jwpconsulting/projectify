@@ -4,13 +4,16 @@
     import SolutionsPage from "$lib/components/solutions/SolutionsPage.svelte";
     import type { SolutionsPageContent } from "$lib/types/ui";
 
-    let pageContent: SolutionsPageContent;
+    import HeroProjectManagement from "../assets/hero-project-management.png";
+    import ProjectManagementPermissions from "../assets/project-management-permissions.png";
+    import ProjectManagementWorkspaceUser from "../assets/project-management-workspace-user.png";
+
     $: pageContent = {
         heroContent: {
             title: $_("solutions.project-management.hero.title"),
             text: $_("solutions.project-management.hero.text"),
             image: {
-                src: "/assets/solutions/hero-project-management.png",
+                src: HeroProjectManagement,
                 alt: $_(
                     "solutions.index.solutions.project-management.illustration.alt",
                 ),
@@ -20,7 +23,7 @@
             {
                 image: {
                     position: "right",
-                    src: "/assets/solutions/project-member.png",
+                    src: ProjectManagementWorkspaceUser,
                     alt: $_(
                         "solutions.project-management.features.feature-1.illustration.alt",
                     ),
@@ -65,7 +68,7 @@
             {
                 image: {
                     position: "left",
-                    src: "/assets/solutions/project-permissions.png",
+                    src: ProjectManagementPermissions,
                     alt: $_(
                         "solutions.project-management.features.feature-4.illustration.alt",
                     ),
@@ -78,7 +81,7 @@
                 ),
             },
         ],
-    };
+    } satisfies SolutionsPageContent;
 </script>
 
 <SolutionsPage {pageContent} />

@@ -4,13 +4,16 @@
     import SolutionsPage from "$lib/components/solutions/SolutionsPage.svelte";
     import type { SolutionsPageContent } from "$lib/types/ui";
 
-    let pageContent: SolutionsPageContent;
+    import HeroResearch from "../assets/hero-research.png";
+    import ResearchTasks from "../assets/research-tasks.png";
+    import ResearchUpdate from "../assets/research-update.png";
+
     $: pageContent = {
         heroContent: {
             title: $_("solutions.research.hero.title"),
             text: $_("solutions.research.hero.text"),
             image: {
-                src: "/assets/solutions/hero-research.png",
+                src: HeroResearch,
                 alt: $_("solutions.index.solutions.research.illustration.alt"),
             },
         },
@@ -18,7 +21,7 @@
             {
                 image: {
                     position: "right",
-                    src: "/assets/solutions/research-tasks.png",
+                    src: ResearchTasks,
                     alt: $_(
                         "solutions.research.features.feature-1.illustration.alt",
                     ),
@@ -29,7 +32,7 @@
             {
                 image: {
                     position: "left",
-                    src: "/assets/solutions/research-update.png",
+                    src: ResearchUpdate,
                     alt: $_(
                         "solutions.research.features.feature-2.illustration.alt",
                     ),
@@ -49,7 +52,7 @@
                 text: $_("solutions.research.features.feature-3.text"),
             },
         ],
-    };
+    } satisfies SolutionsPageContent;
 </script>
 
 <SolutionsPage {pageContent} />

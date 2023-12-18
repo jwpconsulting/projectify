@@ -4,13 +4,16 @@
     import SolutionsPage from "$lib/components/solutions/SolutionsPage.svelte";
     import type { SolutionsPageContent } from "$lib/types/ui";
 
-    let pageContent: SolutionsPageContent;
+    import HeroRemoteWork from "../assets/hero-remote-work.png";
+    import RemoteWorkTasks from "../assets/remote-work-tasks.png";
+    import RemoteWorkUpdate from "../assets/remote-work-update.png";
+
     $: pageContent = {
         heroContent: {
             title: $_("solutions.remote-work.hero.title"),
             text: $_("solutions.remote-work.hero.text"),
             image: {
-                src: "/assets/solutions/hero-remote.png",
+                src: HeroRemoteWork,
                 alt: $_(
                     "solutions.index.solutions.remote-work.illustration.alt",
                 ),
@@ -20,7 +23,7 @@
             {
                 image: {
                     position: "right",
-                    src: "/assets/solutions/remote-update.png",
+                    src: RemoteWorkUpdate,
                     alt: $_(
                         "solutions.remote-work.features.feature-1.illustration.alt",
                     ),
@@ -42,7 +45,7 @@
             {
                 image: {
                     position: "right",
-                    src: "/assets/solutions/remote-tasks.png",
+                    src: RemoteWorkTasks,
                     alt: $_(
                         "solutions.remote-work.features.feature-3.illustration.alt",
                     ),
@@ -51,7 +54,7 @@
                 text: $_("solutions.remote-work.features.feature-3.text"),
             },
         ],
-    };
+    } satisfies SolutionsPageContent;
 </script>
 
 <SolutionsPage {pageContent} />

@@ -6,6 +6,14 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import type { SolutionsHeroContent } from "$lib/types/ui";
 
+    import HeroAcademic from "./assets/hero-academic.png";
+    import HeroDevelopmentTeams from "./assets/hero-development-teams.png";
+    import HeroPersonal from "./assets/hero-personal.png";
+    import HeroProjectManagement from "./assets/hero-project-management.png";
+    import HeroRemoteWork from "./assets/hero-remote-work.png";
+    import HeroResearch from "./assets/hero-research.png";
+    import HeroSolutions from "./assets/hero-solutions.png";
+
     interface Solution {
         href: string;
         title: string;
@@ -16,23 +24,21 @@
         description: string;
     }
 
-    let heroContent: SolutionsHeroContent;
     $: heroContent = {
         title: $_("solutions.index.hero.title"),
         text: $_("solutions.index.hero.text"),
         image: {
-            src: "/assets/solutions/solution-hero.png",
+            src: HeroSolutions,
             alt: $_("solutions.index.hero.illustration.alt"),
         },
-    };
+    } satisfies SolutionsHeroContent;
 
-    let solutions: Solution[];
     $: solutions = [
         {
             href: "/solutions/development-teams",
             title: $_("solutions.index.solutions.development.title"),
             image: {
-                src: "assets/solutions/hero-development.png",
+                src: HeroDevelopmentTeams,
                 alt: $_(
                     "solutions.index.solutions.development.illustration.alt",
                 ),
@@ -45,7 +51,7 @@
             href: "/solutions/research",
             title: $_("solutions.index.solutions.research.title"),
             image: {
-                src: "assets/solutions/hero-research.png",
+                src: HeroResearch,
                 alt: $_("solutions.index.solutions.research.illustration.alt"),
             },
             description: $_("solutions.index.solutions.research.description"),
@@ -54,7 +60,7 @@
             href: "/solutions/project-management",
             title: $_("solutions.index.solutions.project-management.title"),
             image: {
-                src: "assets/solutions/hero-project-management.png",
+                src: HeroProjectManagement,
                 alt: $_(
                     "solutions.index.solutions.project-management.illustration.alt",
                 ),
@@ -67,7 +73,7 @@
             href: "/solutions/academic",
             title: $_("solutions.index.solutions.academic.title"),
             image: {
-                src: "assets/solutions/hero-academic.png",
+                src: HeroAcademic,
                 alt: $_("solutions.index.solutions.academic.illustration.alt"),
             },
             description: $_("solutions.index.solutions.academic.description"),
@@ -76,7 +82,7 @@
             href: "/solutions/remote-work",
             title: $_("solutions.index.solutions.remote-work.title"),
             image: {
-                src: "assets/solutions/hero-remote.png",
+                src: HeroRemoteWork,
                 alt: $_(
                     "solutions.index.solutions.remote-work.illustration.alt",
                 ),
@@ -89,7 +95,7 @@
             href: "/solutions/personal-use",
             title: $_("solutions.index.solutions.personal-use.title"),
             image: {
-                src: "assets/solutions/hero-personal.png",
+                src: HeroPersonal,
                 alt: $_(
                     "solutions.index.solutions.personal-use.illustration.alt",
                 ),
@@ -98,7 +104,7 @@
                 "solutions.index.solutions.personal-use.description",
             ),
         },
-    ];
+    ] satisfies Solution[];
 </script>
 
 <HeroLayout>

@@ -4,13 +4,17 @@
     import SolutionsPage from "$lib/components/solutions/SolutionsPage.svelte";
     import type { SolutionsPageContent } from "$lib/types/ui";
 
-    let pageContent: SolutionsPageContent;
+    import AcademicPopup from "../assets/academic-popup.png";
+    import AcademicSubTask from "../assets/academic-sub-task.png";
+    import AcademicUpdate from "../assets/academic-update.png";
+    import HeroAcademic from "../assets/hero-academic.png";
+
     $: pageContent = {
         heroContent: {
             title: $_("solutions.academic.hero.title"),
             text: $_("solutions.academic.hero.text"),
             image: {
-                src: "/assets/solutions/hero-academic.png",
+                src: HeroAcademic,
                 alt: $_("solutions.index.solutions.academic.illustration.alt"),
             },
         },
@@ -18,7 +22,7 @@
             {
                 image: {
                     position: "right",
-                    src: "/assets/solutions/academic-popup.png",
+                    src: AcademicPopup,
                     alt: $_(
                         "solutions.academic.features.feature-1.illustration.alt",
                     ),
@@ -29,7 +33,7 @@
             {
                 image: {
                     position: "left",
-                    src: "/assets/solutions/academic-subtask.png",
+                    src: AcademicSubTask,
                     alt: $_(
                         "solutions.academic.features.feature-2.illustration.alt",
                     ),
@@ -40,7 +44,7 @@
             {
                 image: {
                     position: "right",
-                    src: "/assets/solutions/academic-update.png",
+                    src: AcademicUpdate,
                     alt: $_(
                         "solutions.academic.features.feature-3.illustration.alt",
                     ),
@@ -49,7 +53,7 @@
                 text: $_("solutions.academic.features.feature-3.text"),
             },
         ],
-    };
+    } satisfies SolutionsPageContent;
 </script>
 
 <SolutionsPage {pageContent} />

@@ -4,13 +4,17 @@
     import SolutionsPage from "$lib/components/solutions/SolutionsPage.svelte";
     import type { SolutionsPageContent } from "$lib/types/ui";
 
-    let pageContent: SolutionsPageContent;
+    import HeroPersonal from "../assets/hero-personal.png";
+    import PersonalSubTask from "../assets/personal-sub-task.png";
+    import PersonalTaskCollab from "../assets/personal-task-collab.png";
+    import PersonalTasks from "../assets/personal-tasks.png";
+
     $: pageContent = {
         heroContent: {
             title: $_("solutions.personal-use.hero.title"),
             text: $_("solutions.personal-use.hero.text"),
             image: {
-                src: "/assets/solutions/hero-personal.png",
+                src: HeroPersonal,
                 alt: $_(
                     "solutions.index.solutions.personal-use.illustration.alt",
                 ),
@@ -20,7 +24,7 @@
             {
                 image: {
                     position: "right",
-                    src: "/assets/solutions/personal-tasks.png",
+                    src: PersonalTasks,
                     alt: $_(
                         "solutions.personal-use.features.feature-1.illustration.alt",
                     ),
@@ -31,7 +35,7 @@
             {
                 image: {
                     position: "left",
-                    src: "/assets/solutions/personal-subtask.png",
+                    src: PersonalSubTask,
                     alt: $_(
                         "solutions.personal-use.features.feature-2.illustration.alt",
                     ),
@@ -42,7 +46,7 @@
             {
                 image: {
                     position: "right",
-                    src: "/assets/solutions/personal-task-collab.png",
+                    src: PersonalTaskCollab,
                     alt: $_(
                         "solutions.personal-use.features.feature-3.illustration.alt",
                     ),
@@ -51,7 +55,7 @@
                 text: $_("solutions.personal-use.features.feature-3.text"),
             },
         ],
-    };
+    } satisfies SolutionsPageContent;
 </script>
 
 <SolutionsPage {pageContent} />
