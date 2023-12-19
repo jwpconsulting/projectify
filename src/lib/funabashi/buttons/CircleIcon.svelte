@@ -18,7 +18,7 @@
     export let size: CircleIconSize;
     export let icon: CircleIconIcon;
 
-    export let action: ButtonAction;
+    export let action: ButtonAction & { kind: "a" | "button" };
 
     $: disabled = action.kind === "a" ? false : action.disabled ?? false;
 
@@ -50,6 +50,4 @@
     <a href={action.href} class="block {styleClasses}">
         <Icon src={iconMapped} style="outline" />
     </a>
-{:else}
-    Not supported
 {/if}
