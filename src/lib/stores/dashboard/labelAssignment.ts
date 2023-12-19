@@ -22,11 +22,7 @@ function evaluateLabelAssignment(state: LabelAssignmentState): string[] {
     return [...state.labelUuids];
 }
 
-export function createLabelAssignment(
-    task?: Task,
-    // TODO maybe we can get rid of selectCallback this completely?
-    selectCallback?: (labelUuid: string, selected: boolean) => void,
-): LabelAssignment {
+export function createLabelAssignment(task?: Task): LabelAssignment {
     const maybeLabels: Label[] = task?.labels ?? [];
     const selection: LabelAssignmentState =
         maybeLabels.length > 0
@@ -81,9 +77,6 @@ export function createLabelAssignment(
                 }
                 return { ...$selected, labelUuids };
             });
-            if (selectCallback) {
-                selectCallback(labelUuid, select);
-            }
         }
     };
     return {
