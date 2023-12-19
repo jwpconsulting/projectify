@@ -40,8 +40,10 @@ def workspace_board_find_by_workspace_board_uuid(
     """Find a workspace by uuid for a given user."""
     qs = WorkspaceBoard.objects.all() if qs is None else qs
     try:
-        return qs.filter_for_user_and_uuid(
-            user=who, uuid=workspace_board_uuid
-        ).get()
+        return (
+            qs.filter_for_user_and_uuid(user=who, uuid=workspace_board_uuid)
+            .filter(archived__isnull=True)
+            .get()
+        )
     except WorkspaceBoard.DoesNotExist:
         return None
