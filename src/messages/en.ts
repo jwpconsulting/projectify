@@ -198,6 +198,7 @@ const messages: MessageDirectory = {
     "dashboard": {
         "task-card": {
             "add-label": "Assign label",
+            "task-number": "#{number}",
         },
         "tasks-not-found-for": "Tasks not found for ''{search}''",
         "showing-results-for-search": "Showing results for ''{search}''",
