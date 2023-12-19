@@ -13,7 +13,7 @@ from rest_framework.views import APIView
 from workspace.models import Workspace, WorkspaceBoard
 from workspace.selectors.workspace import workspace_find_by_workspace_uuid
 from workspace.selectors.workspace_board import (
-    WorkspaceBoardDetail,
+    WorkspaceBoardDetailQuerySet,
     workspace_board_find_by_workspace_board_uuid,
     workspace_board_find_by_workspace_uuid,
 )
@@ -78,7 +78,7 @@ class WorkspaceBoardReadUpdateDelete(APIView):
         workspace_board = workspace_board_find_by_workspace_board_uuid(
             who=request.user,
             workspace_board_uuid=workspace_board_uuid,
-            qs=WorkspaceBoardDetail,
+            qs=WorkspaceBoardDetailQuerySet,
         )
         if workspace_board is None:
             raise NotFound(_("No workspace board found for this uuid"))
