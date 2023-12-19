@@ -10,11 +10,10 @@
     import type { ContextMenuType } from "$lib/types/ui";
     import type {
         Label,
-        Task,
-        WorkspaceBoardSection,
+        TaskWithWorkspaceBoardSection,
     } from "$lib/types/workspace";
 
-    export let task: Task & { workspace_board_section: WorkspaceBoardSection };
+    export let task: TaskWithWorkspaceBoardSection;
     $: labelAssignment = createLabelAssignment(task);
     $: labels = $labelAssignment ?? task.labels;
 
