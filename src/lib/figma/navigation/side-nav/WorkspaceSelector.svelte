@@ -52,20 +52,20 @@
 {#if open}
     <div class="px-4 pb-4">
         <div class="flex flex-row items-center justify-between gap-4">
-            <div class="min-w-0" bind:this={workspaceContextMenuAnchor}>
+            <div class="min-w-0 grow" bind:this={workspaceContextMenuAnchor}>
                 <button
                     on:click={showWorkspaceContextMenu}
-                    class="flex max-w-full flex-row items-center gap-2 overflow-x-hidden rounded-lg border border-border p-2 hover:bg-secondary-hover"
+                    class="flex w-full flex-row items-center justify-between gap-2 rounded-lg border border-border p-2 hover:bg-secondary-hover"
                 >
-                    <Icon
-                        src={Briefcase}
-                        theme="outline"
-                        class="h-4 w-4 shrink-0"
-                    />
-                    <div
-                        class="min-w-0 shrink truncate text-left text-sm font-bold"
-                    >
-                        {workspace.title}
+                    <div class="flex min-w-0 flex-row items-center gap-2">
+                        <Icon
+                            src={Briefcase}
+                            theme="outline"
+                            class="h-4 w-4 shrink-0"
+                        />
+                        <div class="min-w-0 truncate text-sm font-bold">
+                            {workspace.title}
+                        </div>
                     </div>
                     <Icon
                         src={workspaceContextMenuOpen
