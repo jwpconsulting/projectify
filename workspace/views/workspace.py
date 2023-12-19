@@ -5,9 +5,6 @@ from typing import (
     Optional,
 )
 
-from django.db.models import (
-    Prefetch,
-)
 from django.shortcuts import (
     get_object_or_404,
 )
@@ -24,6 +21,7 @@ from rest_framework.response import (
     Response,
 )
 
+from workspace.selectors.workspace import WorkspaceDetailQuerySet
 from workspace.services.workspace import (
     workspace_create,
     workspace_update,
@@ -96,26 +94,12 @@ class WorkspaceReadUpdate(
 ):
     """Workspace retrieve view."""
 
-    queryset = models.Workspace.objects.prefetch_related(
-        "label_set",
-    ).prefetch_related(
-        Prefetch(
-            "workspaceboard_set",
-            queryset=models.WorkspaceBoard.objects.filter_by_archived(False),
-        ),
-        Prefetch(
-            "workspaceuser_set",
-            queryset=models.WorkspaceUser.objects.select_related(
-                "user",
-            ),
-        ),
-    )
     serializer_class = WorkspaceDetailSerializer
 
     def get_object(self) -> models.Workspace:
         """Return queryset with authenticated user in mind."""
         user = self.request.user
-        qs = self.get_queryset()
+        qs = WorkspaceDetailQuerySet
         qs = qs.filter_for_user_and_uuid(
             user,
             self.kwargs["workspace_uuid"],
