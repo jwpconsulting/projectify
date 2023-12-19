@@ -30,7 +30,10 @@ from workspace.models.task import Task
 from workspace.models.workspace import Workspace
 from workspace.models.workspace_board import WorkspaceBoard
 from workspace.selectors.task import TaskDetailQuerySet, task_find_by_task_uuid
-from workspace.selectors.workspace import workspace_find_by_workspace_uuid
+from workspace.selectors.workspace import (
+    WorkspaceDetailQuerySet,
+    workspace_find_by_workspace_uuid,
+)
 from workspace.selectors.workspace_board import (
     workspace_board_find_by_workspace_board_uuid,
 )
@@ -123,6 +126,7 @@ class WorkspaceConsumer(BaseConsumer):
         workspace = workspace_find_by_workspace_uuid(
             who=self.user,
             workspace_uuid=self.uuid,
+            qs=WorkspaceDetailQuerySet,
         )
         serialized = serialize(WorkspaceDetailSerializer, workspace, event)
         self.send_json(serialized)
