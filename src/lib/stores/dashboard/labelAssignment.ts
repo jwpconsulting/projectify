@@ -39,8 +39,8 @@ export function createLabelAssignment(task?: Task): LabelAssignment {
         [selected, currentWorkspaceLabels],
         ([$selected, $currentWorkspaceLabels], set) => {
             if ($currentWorkspaceLabels === undefined) {
-                set(undefined);
-                return;
+                // This should not be hit
+                throw new Error("Expected $currentWorkspaceLabels");
             }
             const labelUuids = evaluateLabelAssignment($selected);
             const labels = $currentWorkspaceLabels.filter((label) =>

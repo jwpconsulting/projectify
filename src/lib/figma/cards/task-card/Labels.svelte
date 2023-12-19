@@ -30,7 +30,24 @@
             labelAssignment,
         };
         await openContextMenu(contextMenuType, anchor);
+        // 1. update task 1's labels using the label picker
+        // 2. while the update request is stil happening, open task 2's label
+        // picker
+        // 3. wait for task 1's request to finish - the workspace board will
+        // re-render
+        // 4. click on any label, it the labels shown in the task card
+        // will not refresh
+        // Reason: labelAssignment is recreated (as a reactive dependency of
+        // task). When we arrive in labels = $labelAssignment, we are
+        // retrieving the newly created labelAssignment store's values.
+        // Mitigation ideas:
+        // 1. Lock the dashboard until the label is updated
+        // 2. Ensure we don't recreate labelAssignment (what is a component
+        // lifecycle in Svelte anyway?! Research)
+        // TODO: Think on it
+
         const labels: Label[] = $labelAssignment;
+        console.log("Labels are", labels);
         // TODO can we make updateTask accept whole labels instead?
         // TODO skip update when no changes detected
         await updateTask(task, labels, task.assignee, task.sub_tasks, {
