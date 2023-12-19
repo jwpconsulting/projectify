@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { Briefcase } from "@steeze-ui/heroicons";
+    import { Briefcase, ChevronDown, ChevronUp } from "@steeze-ui/heroicons";
+    import { Icon } from "@steeze-ui/svelte-icon";
 
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
-    import Filter from "$lib/figma/dropdown/Filter.svelte";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
@@ -34,11 +34,18 @@
         workspaces,
     };
 
+    let workspaceContextMenuOpen = false;
+
     async function showWorkspaceContextMenu() {
-        await openContextMenu(
-            workspaceContextMenuType,
-            workspaceContextMenuAnchor,
-        );
+        workspaceContextMenuOpen = true;
+        try {
+            await openContextMenu(
+                workspaceContextMenuType,
+                workspaceContextMenuAnchor,
+            );
+        } finally {
+            workspaceContextMenuOpen = false;
+        }
     }
 </script>
 
@@ -46,12 +53,28 @@
     <div class="px-4 pb-4">
         <div class="flex flex-row items-center justify-between gap-4">
             <div class="min-w-0" bind:this={workspaceContextMenuAnchor}>
-                <Filter
-                    icon={Briefcase}
-                    label={workspace.title}
-                    open={false}
+                <button
                     on:click={showWorkspaceContextMenu}
-                />
+                    class="flex max-w-full flex-row items-center gap-2 overflow-x-hidden rounded-lg border border-border p-2 hover:bg-secondary-hover"
+                >
+                    <Icon
+                        src={Briefcase}
+                        theme="outline"
+                        class="h-4 w-4 shrink-0"
+                    />
+                    <div
+                        class="min-w-0 shrink truncate text-left text-sm font-bold"
+                    >
+                        {workspace.title}
+                    </div>
+                    <Icon
+                        src={workspaceContextMenuOpen
+                            ? ChevronUp
+                            : ChevronDown}
+                        theme="outline"
+                        class="h-4 w-4 shrink-0"
+                    />
+                </button>
             </div>
             <div bind:this={sideNavContextMenuAnchor}>
                 <CircleIcon
