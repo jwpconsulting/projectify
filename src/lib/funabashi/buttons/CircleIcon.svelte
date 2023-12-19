@@ -31,11 +31,12 @@
         close: X,
     }[icon];
     $: sizeMapped = {
+        // TODO remove small
         small: "w-6 h-6 p-1",
         medium: "w-8 h-8 p-1.5",
     }[size];
 
-    $: styleClasses = `${sizeMapped} rounded-full border border-transparent text-base-content hover:bg-secondary-hover focus:border-base-content focus:bg-base-100 focus:outline-none active:bg-disabled-background`;
+    $: styleClasses = `${sizeMapped} rounded-full border border-transparent text-base-content hover:bg-secondary-hover active:bg-disabled-background`;
 </script>
 
 {#if action.kind === "button"}

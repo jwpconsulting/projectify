@@ -1,5 +1,6 @@
 import type { IconSource } from "@steeze-ui/svelte-icon/types";
 
+// TODO remove small
 const anchorSizes = ["small", "normal", "large"] as const;
 export type AnchorSize = (typeof anchorSizes)[number];
 
@@ -30,6 +31,7 @@ export const buttonSizes = ["medium", "small"] as const;
 export type ButtonSize = (typeof buttonSizes)[number];
 
 // For buttons/CircleIcon.svelte
+// TODO remove small
 export const circleIconSizes = ["small", "medium"] as const;
 export type CircleIconSize = (typeof circleIconSizes)[number];
 // TODO rename circleIcons
