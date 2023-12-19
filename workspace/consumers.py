@@ -35,6 +35,7 @@ from workspace.selectors.workspace import (
     workspace_find_by_workspace_uuid,
 )
 from workspace.selectors.workspace_board import (
+    WorkspaceBoardDetailQuerySet,
     workspace_board_find_by_workspace_board_uuid,
 )
 from workspace.serializers.task_detail import TaskDetailSerializer
@@ -122,7 +123,6 @@ class WorkspaceConsumer(BaseConsumer):
 
     def workspace_change(self, event: ConsumerEvent) -> None:
         """Respond to workspace board change event."""
-        # TODO need to prefetch/select related here to avoid N+1
         workspace = workspace_find_by_workspace_uuid(
             who=self.user,
             workspace_uuid=self.uuid,
@@ -153,10 +153,10 @@ class WorkspaceBoardConsumer(BaseConsumer):
 
     def workspace_board_change(self, event: ConsumerEvent) -> None:
         """Respond to workspace board change event."""
-        # TODO prefetch / select related here
         workspace_board = workspace_board_find_by_workspace_board_uuid(
             who=self.user,
             workspace_board_uuid=self.uuid,
+            qs=WorkspaceBoardDetailQuerySet,
         )
         serialized = serialize(
             WorkspaceBoardDetailSerializer, workspace_board, event

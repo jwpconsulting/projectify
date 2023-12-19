@@ -8,7 +8,7 @@ from workspace.models.workspace_board import (
     WorkspaceBoardQuerySet,
 )
 
-WorkspaceBoardDetail = WorkspaceBoard.objects.prefetch_related(
+WorkspaceBoardDetailQuerySet = WorkspaceBoard.objects.prefetch_related(
     "workspaceboardsection_set",
     "workspaceboardsection_set__task_set",
     "workspaceboardsection_set__task_set__assignee",
