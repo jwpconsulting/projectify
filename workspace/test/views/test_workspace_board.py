@@ -24,6 +24,7 @@ from workspace.models.workspace_user import WorkspaceUser
 from workspace.selectors.workspace_board import (
     workspace_board_find_by_workspace_uuid,
 )
+from workspace.services.workspace_board import workspace_board_archive
 
 
 # Create
@@ -78,7 +79,7 @@ class TestWorkspaceBoardReadUpdateDelete:
         self,
         rest_user_client: APIClient,
         resource_url: str,
-        user: AbstractBaseUser,
+        workspace_board: WorkspaceBoard,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         task: Task,
@@ -93,6 +94,16 @@ class TestWorkspaceBoardReadUpdateDelete:
         with django_assert_num_queries(7):
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.content
+        workspace_board_archive(
+            who=workspace_user.user,
+            workspace_board=workspace_board,
+            archived=True,
+        )
+
+        # When we archive the board, it will return 404
+        with django_assert_num_queries(1):
+            response = rest_user_client.get(resource_url)
+            assert response.status_code == 404, response.content
 
     def test_updating(
         self,
