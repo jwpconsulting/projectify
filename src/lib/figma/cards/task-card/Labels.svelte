@@ -7,6 +7,7 @@
     import { updateTask } from "$lib/repository/workspace";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { openContextMenu } from "$lib/stores/globalUi";
+    import type { LabelAssignment } from "$lib/types/stores";
     import type { ContextMenuType } from "$lib/types/ui";
     import type {
         Label,
@@ -14,10 +15,20 @@
     } from "$lib/types/workspace";
 
     export let task: TaskWithWorkspaceBoardSection;
-    $: labelAssignment = createLabelAssignment(task);
+
+    let labelPickerOpen = false;
+
+    let labelAssignment: LabelAssignment;
+    $: {
+        if (!labelPickerOpen) {
+            labelAssignment = createLabelAssignment(task);
+        }
+    }
+
     $: labels = $labelAssignment ?? task.labels;
 
     async function openLabelPicker(event: MouseEvent) {
+        labelPickerOpen = true;
         if (!$labelAssignment) {
             throw new Error("Expected $labelAssignment");
         }
@@ -29,7 +40,8 @@
             kind: "updateLabel",
             labelAssignment,
         };
-        await openContextMenu(contextMenuType, anchor);
+        // By locking labelAssignment with labelPickerOpen, we prevent the
+        // following race condition from happening:
         // 1. update task 1's labels using the label picker
         // 2. while the update request is stil happening, open task 2's label
         // picker
@@ -45,14 +57,17 @@
         // 2. Ensure we don't recreate labelAssignment (what is a component
         // lifecycle in Svelte anyway?! Research)
         // TODO: Think on it
+        try {
+            await openContextMenu(contextMenuType, anchor);
 
-        const labels: Label[] = $labelAssignment;
-        console.log("Labels are", labels);
-        // TODO can we make updateTask accept whole labels instead?
-        // TODO skip update when no changes detected
-        await updateTask(task, labels, task.assignee, task.sub_tasks, {
-            fetch,
-        });
+            const labels: Label[] = $labelAssignment;
+            // TODO skip update when no changes detected
+            await updateTask(task, labels, task.assignee, task.sub_tasks, {
+                fetch,
+            });
+        } finally {
+            labelPickerOpen = false;
+        }
         // TODO There is a brief flash after updateTask finishes, the task is
         // reloaded and labelAssignment is recreated
     }
