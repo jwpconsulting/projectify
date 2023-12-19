@@ -2,8 +2,8 @@
     import { Briefcase } from "@steeze-ui/heroicons";
 
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
-    import WorkspaceSettings from "$lib/figma/buttons/WorkspaceSettings.svelte";
     import Filter from "$lib/figma/dropdown/Filter.svelte";
+    import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
     import type { Workspace } from "$lib/types/workspace";
@@ -53,11 +53,12 @@
                     on:click={showWorkspaceContextMenu}
                 />
             </div>
-            <div
-                class="flex flex-row items-center"
-                bind:this={sideNavContextMenuAnchor}
-            >
-                <WorkspaceSettings on:click={showSideNavContextMenu} />
+            <div bind:this={sideNavContextMenuAnchor}>
+                <CircleIcon
+                    icon="ellipsis"
+                    size="medium"
+                    action={{ kind: "button", action: showSideNavContextMenu }}
+                />
             </div>
         </div>
     </div>
@@ -70,7 +71,11 @@
             />
         </div>
         <div bind:this={sideNavContextMenuAnchor}>
-            <WorkspaceSettings on:click={showSideNavContextMenu} />
+            <CircleIcon
+                icon="ellipsis"
+                size="medium"
+                action={{ kind: "button", action: showSideNavContextMenu }}
+            />
         </div>
     </div>
 {/if}
