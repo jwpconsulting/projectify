@@ -147,6 +147,7 @@ const messages: MessageDirectory = {
                 "log-out": "Log out",
             },
             "workspace": {
+                "select-workspace": "Switch to workspace:",
                 "add-new-workspace": "Add new workspace",
             },
             "side-nav": {

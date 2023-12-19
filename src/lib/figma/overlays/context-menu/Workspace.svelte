@@ -12,6 +12,9 @@
 </script>
 
 <Layout>
+    <p class="px-4 py-2 text-sm font-bold">
+        {$_("overlay.context-menu.workspace.select-workspace")}
+    </p>
     {#each workspaces as workspace}
         <ContextMenuButton
             kind={{

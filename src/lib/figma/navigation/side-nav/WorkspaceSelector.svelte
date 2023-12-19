@@ -50,7 +50,7 @@
 </script>
 
 {#if open}
-    <div class="px-4 pb-4">
+    <div class="flex flex-col gap-2 px-4 pb-4">
         <div class="flex flex-row items-center justify-between gap-4">
             <div class="min-w-0 grow" bind:this={workspaceContextMenuAnchor}>
                 <button
