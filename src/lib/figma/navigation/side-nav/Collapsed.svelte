@@ -1,7 +1,7 @@
 <script lang="ts">
     import LabelDropdownClosedNav from "$lib/figma/buttons/LabelDropdownClosedNav.svelte";
     import UserDropdownClosedNav from "$lib/figma/buttons/UserDropdownClosedNav.svelte";
-    import WorkspaceMenu from "$lib/figma/buttons/WorkspaceMenu.svelte";
+    import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import {
         selectWorkspaceBoardUuid,
@@ -20,7 +20,7 @@
             <div
                 class="flex flex-col items-center gap-6 border-b border-border pb-12"
             >
-                <WorkspaceMenu {workspaces} {workspace} open={false} />
+                <WorkspaceSelector {workspaces} {workspace} open={false} />
                 <div class="flex flex-col items-center gap-6">
                     <div class="flex flex-col items-center gap-4">
                         {#if workspace.workspace_boards}

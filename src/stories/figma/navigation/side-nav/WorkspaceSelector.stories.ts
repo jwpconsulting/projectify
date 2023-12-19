@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import WorkspaceMenu from "$lib/figma/buttons/WorkspaceMenu.svelte";
+import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
 import { workspace, mobileParameters } from "$lib/storybook";
 
-const meta: Meta<WorkspaceMenu> = {
-    component: WorkspaceMenu,
+const meta: Meta<WorkspaceSelector> = {
+    component: WorkspaceSelector,
     args: {
         workspace,
         workspaces: [workspace],
@@ -14,7 +14,7 @@ const meta: Meta<WorkspaceMenu> = {
 };
 export default meta;
 
-type Story = StoryObj<WorkspaceMenu>;
+type Story = StoryObj<WorkspaceSelector>;
 
 export const Open: Story = {};
 
