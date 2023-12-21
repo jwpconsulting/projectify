@@ -18,6 +18,8 @@ const config: KnipConfig = {
         nsExports: "error",
         types: "error",
         unlisted: "error",
+        // False positive for *.html?raw
+        unresolved: "off",
     },
     paths: {
         // This ain't pretty, but Svelte basically does the same
