@@ -72,7 +72,7 @@
                     </li>
                     <li>
                         <Anchor
-                            href="/"
+                            href="/contact-us"
                             label={$_(
                                 "navigation.footer.nav.company.contact-us",
                             )}

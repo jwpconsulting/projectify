@@ -960,6 +960,20 @@ const messages: MessageDirectory = {
             },
         },
     },
+    "contact-us": {
+        title: "Contact",
+        body: {
+            title: "Contact information",
+            text: "Should you have any questions, suggestions, or other inquiries regarding Projectify, please contact us using the following email address written below. We try to answer all inquiries within two working days. Please be patient if it takes longer.",
+        },
+        email: {
+            href: "mailto:hello@projectifyapp.com?subject=Projectify contact",
+            label: "hello@projectifyapp.com",
+        },
+        illustration: {
+            alt: "An illustration of a phone booth",
+        },
+    },
     "accessibility": {
         hero: {
             title: "Accessibility statement",
