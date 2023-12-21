@@ -960,6 +960,22 @@ const messages: MessageDirectory = {
             },
         },
     },
+    "terms-of-service": {
+        nav: {
+            "title": "Terms of service",
+            "japanese": "Japanese (original)",
+            "english": "English (translation)",
+            "go-back": "Jump back to top",
+        },
+    },
+    "privacy-policy": {
+        nav: {
+            "title": "Privacy Policy",
+            "japanese": "Japanese (original)",
+            "english": "English (translation)",
+            "go-back": "Jump back to top",
+        },
+    },
     "contact-us": {
         title: "Contact",
         body: {

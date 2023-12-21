@@ -16,6 +16,6 @@
 
 <a
     {href}
-    class={`text-primary hover:text-primary-hover active:text-primary-pressed ${anchorClass}`}
+    class={`font-medium text-primary underline hover:text-primary-hover active:text-primary-pressed ${anchorClass}`}
     >{label}</a
 >
