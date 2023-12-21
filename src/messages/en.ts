@@ -1385,6 +1385,7 @@ const messages: MessageDirectory = {
                     "title": "Company",
                     "accessibility-statement": "Accessibility statement",
                     "contact-us": "Contact us",
+                    "corporate-info": "Corporate information",
                 },
                 legal: {
                     title: "Legal",

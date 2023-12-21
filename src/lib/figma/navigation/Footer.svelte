@@ -78,6 +78,14 @@
                             )}
                         />
                     </li>
+                    <li>
+                        <Anchor
+                            href="https://www.jwpconsulting.net"
+                            label={$_(
+                                "navigation.footer.nav.company.corporate-info",
+                            )}
+                        />
+                    </li>
                 </ul>
             </section>
             <section class="flex flex-col gap-1">
