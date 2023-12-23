@@ -1,4 +1,3 @@
-<!doctype html>
 <h1>Projectify Terms of Use</h1>
 <p>
     This Projectify Terms of Use (hereinafter referred to as the "Terms of
@@ -1026,4 +1025,4 @@
 </p>
 <p>Supplementary Provisions</p>
 <p>Enacted on December 20, 2023</p>
-<p>JWP Consulting, GK</p>
+<p>JWP Consulting GK</p>

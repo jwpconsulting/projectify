@@ -1,4 +1,3 @@
-<!doctype html>
 <h1>プライバシーポリシー</h1>
 <p>
     JWP
@@ -161,7 +160,7 @@
         <ol>
             <li>
                 <p>
-                    　アメリカ合衆国（連邦）<a
+                    アメリカ合衆国（連邦）<a
                         href="https://www.ppc.go.jp/files/pdf/USA_report.pdf"
                         >https://www.ppc.go.jp/files/pdf/USA_report.pdf</a
                     >
@@ -169,7 +168,7 @@
             </li>
             <li>
                 <p>
-                    　アメリカ合衆国（イリノイ州）<a
+                    アメリカ合衆国（イリノイ州）<a
                         href="https://www.ppc.go.jp/files/pdf/illinoi_report.pdf"
                         >https://www.ppc.go.jp/files/pdf/illinoi_report.pdf</a
                     >
@@ -177,7 +176,7 @@
             </li>
             <li>
                 <p>
-                    　アメリカ合衆国（カリフォルニア州）<a
+                    アメリカ合衆国（カリフォルニア州）<a
                         href="https://www.ppc.go.jp/files/pdf/california_report.pdf"
                         >https://www.ppc.go.jp/files/pdf/california_report.pdf</a
                     >
@@ -185,7 +184,7 @@
             </li>
             <li>
                 <p>
-                    　アメリカ合衆国（ニューヨーク州）<a
+                    アメリカ合衆国（ニューヨーク州）<a
                         href="https://www.ppc.go.jp/files/pdf/newyork_report.pdf"
                         >https://www.ppc.go.jp/files/pdf/newyork_report.pdf</a
                     >
@@ -242,14 +241,12 @@
 <p>名称（個人情報取扱事業者）：JWP Consulting合同会社</p>
 <p>代表者：代表社員 Perlwitz Justus Wilhelm</p>
 <p>住所：東京都世田谷区北沢２ー３７ー３ 下北沢振効舎ビル ３０５号室</p>
-<!--
-<p>電話番号：＋81-●●</p>
--->
+<p>電話番号：+81 50 5806 5251</p>
 <p>Eメール： hello@jwpconsulting.net</p>
 <h2>第１２条（改訂）</h2>
 <p>
     当社は、当社が必要と判断した場合、本プライバシーポリシーを改訂することができ、ご利用者は、これを予め承諾するものとします。本プライバシーポリシーの変更は、当社サイト等への掲載によって効力を生じるものとします。
 </p>
 <p>附則</p>
-<p>２０２３年１２月２０日　制定</p>
+<p>２０２３年１２月２０日 制定</p>
 <p>JWP Consulting合同会社</p>

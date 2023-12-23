@@ -971,8 +971,10 @@ const messages: MessageDirectory = {
     "privacy-policy": {
         nav: {
             "title": "Privacy Policy",
-            "japanese": "Japanese (original)",
-            "english": "English (translation)",
+            "japanese": "Japanese Privacy Policy (original)",
+            "english": "English Privacy Policy (translation)",
+            "japanese-gdpr": "Japanese GDPR Privacy Policy (original)",
+            "english-gdpr": "English GDPR Privacy Policy (translation)",
             "go-back": "Jump back to top",
         },
     },

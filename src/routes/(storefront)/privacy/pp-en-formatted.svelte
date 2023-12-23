@@ -358,9 +358,7 @@
     Address: Shimokitazawashinkosha Bldg. Room 305 Kitazawa 2-37-3 Setagaya
     City, Tokyo-to
 </p>
-<!--
-<p>Telephone Number: +81-●●●</p>
--->
+<p>Telephone Number: +81 50 5806 5251</p>
 <p>E-mail: hello@jwpconsulting.net</p>
 <h2>Article 12 (Revision)</h2>
 <p>
