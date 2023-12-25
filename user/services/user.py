@@ -12,7 +12,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
 from user.emails import UserEmailConfirmationEmail, UserPasswordResetEmail
-from user.models import User, UserManager
+from user.models.user import User, UserManager
 from user.selectors.user import user_find_by_email
 from user.services.user_invite import user_invite_redeem_many
 
