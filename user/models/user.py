@@ -16,6 +16,8 @@ from django.utils import (
 )
 from django.utils.translation import gettext_lazy as _
 
+from projectify.lib.models import BaseModel
+
 EMAIL_CONFIRMATION_TOKEN_SALT = "email-confirmation-token-salt"
 PASSWORD_RESET_TOKEN_SALT = "password-reset-token-salt"
 
@@ -24,11 +26,9 @@ class UserManager(BaseUserManager["User"]):
     """Manager class for User."""
 
 
-# TODO use BaseModel
-class User(AbstractBaseUser, PermissionsMixin):
+class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     """User class."""
 
-    # TODO add created timestamp
     email = models.EmailField(
         verbose_name=_("Email"),
         unique=True,

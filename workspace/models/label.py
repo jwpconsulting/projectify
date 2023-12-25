@@ -15,6 +15,8 @@ from django.db import (
 )
 from django.utils.translation import gettext_lazy as _
 
+from projectify.lib.models import BaseModel
+
 from .types import (
     Pks,
 )
@@ -37,8 +39,7 @@ class LabelQuerySet(models.QuerySet["Label"]):
         return self.filter(workspace__users=user, uuid=uuid)
 
 
-# TODO use BaseModel
-class Label(models.Model):
+class Label(BaseModel):
     """A label."""
 
     # It should be fine to just use TitleDescription here

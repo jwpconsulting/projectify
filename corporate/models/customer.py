@@ -15,6 +15,7 @@ from django.db import (
 )
 
 from corporate.types import CustomerSubscriptionStatus
+from projectify.lib.models import BaseModel
 from workspace.models import Workspace
 
 
@@ -44,8 +45,7 @@ class CustomerQuerySet(models.QuerySet["Customer"]):
         return self.get(stripe_customer_id=stripe_customer_id)
 
 
-# TODO use BaseModel
-class Customer(models.Model):
+class Customer(BaseModel):
     """Customer model. One to one linked to workspace."""
 
     workspace = models.OneToOneField[Workspace](
