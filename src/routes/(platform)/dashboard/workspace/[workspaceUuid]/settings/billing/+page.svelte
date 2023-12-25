@@ -4,21 +4,26 @@
     import { pricePerSeat } from "$lib/config";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import type { InputFieldValidation } from "$lib/funabashi/types";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
     import {
         createBillingPortalSession,
         createCheckoutSession,
+        redeemCoupon,
     } from "$lib/repository/corporate";
     import { currentCustomer } from "$lib/stores/dashboard";
 
     import type { PageData } from "./$types";
+
+    import { invalidateAll } from "$app/navigation";
 
     export let data: PageData;
 
     $: customer = $currentCustomer ?? data.customer;
     $: workspace = data.workspace;
 
+    // Unpaid
     async function goToCheckout() {
         let checkoutSeats: number;
         try {
@@ -40,6 +45,33 @@
         const { url } = response.data;
         await goto(url);
     }
+
+    async function submitRedeemCoupon() {
+        if (!couponCode) {
+            throw new Error("Expected couponCode");
+        }
+        const response = await redeemCoupon(workspace, couponCode, { fetch });
+        if (!response.ok) {
+            // XXX not pretty
+            console.error(response);
+            if (typeof response.error === "string") {
+                couponError = response.error;
+            } else if (response.error.code !== undefined) {
+                couponCodeValidation = {
+                    ok: false,
+                    error: response.error.code,
+                };
+            } else {
+                couponError = $_(
+                    "workspace-settings.billing.unpaid.coupon.unknown-error",
+                );
+            }
+            return;
+        }
+        await invalidateAll();
+    }
+
+    // Paid
     async function editBillingDetails() {
         const response = await createBillingPortalSession(workspace.uuid, {
             fetch,
@@ -54,12 +86,20 @@
         await goto(url);
     }
 
+    // Unpaid user:
+    // Checkout
     let checkoutSeatsRaw = "1";
     let checkoutError: string | undefined = undefined;
+    // Coupon
+    let couponCode: string | undefined = undefined;
+    let couponError: string | undefined = undefined;
+    let couponCodeValidation: InputFieldValidation | undefined = undefined;
+
+    // Paid user:
     let editBillingError: string | undefined = undefined;
 </script>
 
-<section class="flex flex-col gap-6 px-4 py-6">
+<section class="flex flex-col gap-12 px-4 py-6">
     {#if customer.subscription_status === "ACTIVE"}
         <section>
             <p class="font-bold">
@@ -119,20 +159,20 @@
                 {$_("workspace-settings.billing.unpaid.status.explanation")}
             </p>
         </section>
-        <section>
-            <p class="font-bold">
-                {$_("workspace-settings.billing.unpaid.checkout.title")}
-            </p>
-            <p>
-                {$_(
-                    "workspace-settings.billing.unpaid.checkout.seats.explanation",
-                )}
-            </p>
-        </section>
         <form
             on:submit|preventDefault={goToCheckout}
             class="flex flex-col gap-4"
         >
+            <header class="flex flex-col gap-1">
+                <h2 class="font-bold">
+                    {$_("workspace-settings.billing.unpaid.checkout.title")}
+                </h2>
+                <p>
+                    {$_(
+                        "workspace-settings.billing.unpaid.checkout.seats.explanation",
+                    )}
+                </p>
+            </header>
             <InputField
                 label={$_(
                     "workspace-settings.billing.unpaid.checkout.seats.label",
@@ -143,6 +183,7 @@
                     "workspace-settings.billing.unpaid.checkout.seats.placeholder",
                 )}
                 style={{ inputType: "numeric", min: 1, max: 100 }}
+                required
             />
             {#if checkoutError}
                 <p>{checkoutError}</p>
@@ -153,6 +194,44 @@
                 size="medium"
                 action={{ kind: "submit" }}
                 label={$_("workspace-settings.billing.unpaid.checkout.action")}
+            />
+        </form>
+        <form
+            on:submit|preventDefault={submitRedeemCoupon}
+            class="flex flex-col gap-4"
+        >
+            <header class="flex flex-col gap-1">
+                <h2 class="font-bold">
+                    {$_("workspace-settings.billing.unpaid.coupon.title")}
+                </h2>
+                <p>
+                    {$_(
+                        "workspace-settings.billing.unpaid.coupon.description",
+                    )}
+                </p>
+            </header>
+            <InputField
+                label={$_(
+                    "workspace-settings.billing.unpaid.coupon.code.label",
+                )}
+                bind:value={couponCode}
+                name="code"
+                placeholder={$_(
+                    "workspace-settings.billing.unpaid.coupon.code.placeholder",
+                )}
+                style={{ inputType: "text" }}
+                validation={couponCodeValidation}
+                required
+            />
+            {#if couponError}
+                <p>{couponError}</p>
+            {/if}
+            <Button
+                style={{ kind: "primary" }}
+                color="blue"
+                size="medium"
+                action={{ kind: "submit" }}
+                label={$_("workspace-settings.billing.unpaid.coupon.action")}
             />
         </form>
     {/if}

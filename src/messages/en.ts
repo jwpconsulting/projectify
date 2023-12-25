@@ -584,7 +584,7 @@ const messages: MessageDirectory = {
                 status: {
                     title: "Trial mode",
                     explanation:
-                        "You are currently using this workspace in trial mode. To create a subscription and use all available features for this workspace, please continue using the checkout below.",
+                        "You are currently using this workspace in trial mode. To create a subscription and use all available features for this workspace, please continue using the checkout below. Alternatively, you can enter a coupon code further below.",
                 },
                 checkout: {
                     title: "Checkout",
@@ -595,6 +595,17 @@ const messages: MessageDirectory = {
                         label: "Workspace seats",
                     },
                     action: "Go to checkout",
+                },
+                coupon: {
+                    "title": "Use a coupon code",
+                    "description":
+                        "If someone has given you a coupon code, you can use it here to upgrade your workspace. Please refer to the details given to you for more information on what features will be unlocked for your workspace. If you have any questions, please ask the person who gave you the coupon code or contact us.",
+                    "code": {
+                        placeholder: "Enter coupon code",
+                        label: "Coupon code",
+                    },
+                    "unknown-error": "An unknown error has occured",
+                    "action": "Redeem coupon code",
                 },
             },
             "contact-us":
