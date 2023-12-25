@@ -95,6 +95,10 @@ class WorkspaceUser(BaseModel):
         self.role = role
         self.save()
 
+    def __str__(self) -> str:
+        """Return title."""
+        return self.user.email
+
     class Meta:
         """Meta."""
 

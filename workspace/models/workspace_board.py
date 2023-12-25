@@ -97,3 +97,7 @@ class WorkspaceBoard(TitleDescriptionModel, BaseModel):
         # For ordering
         get_workspaceboardsection_order: GetOrder
         set_workspaceboardsection_order: SetOrder
+
+    def __str__(self) -> str:
+        """Return title."""
+        return self.title

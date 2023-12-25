@@ -159,3 +159,7 @@ class Workspace(TitleDescriptionModel, BaseModel):
             raise ValueError(
                 f"This just happened: {workspace_user} {role} {self}"
             )
+
+    def __str__(self) -> str:
+        """Return title."""
+        return self.title

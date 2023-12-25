@@ -110,6 +110,7 @@ class TaskInline(admin.TabularInline[models.Task]):
 
     model = models.Task
     extra = 0
+    readonly_fields = ("assignee",)
 
 
 @admin.register(models.WorkspaceBoardSection)
@@ -163,7 +164,6 @@ class TaskAdmin(admin.ModelAdmin[models.Task]):
     inlines = (SubTaskInline, TaskLabelInline)
     list_display = (
         "title",
-        "number_labels",
         "workspace_board_section_title",
         "workspace_board_title",
         "workspace_title",
@@ -173,12 +173,7 @@ class TaskAdmin(admin.ModelAdmin[models.Task]):
     list_select_related = (
         "workspace_board_section__workspace_board__workspace",
     )
-    readonly_fields = ("uuid",)
-
-    @admin.display(description=_("Number of labels"))
-    def number_labels(self, instance: models.Task) -> str:
-        """Return the workspace board's title."""
-        return str(instance.tasklabel_set.count())
+    readonly_fields = ("uuid", "assignee")
 
     @admin.display(description=_("Workspace board section title"))
     def workspace_board_section_title(self, instance: models.Task) -> str:
@@ -205,6 +200,7 @@ class LabelAdmin(admin.ModelAdmin[models.Label]):
         "color",
         "workspace_title",
     )
+    list_select_related = ("workspace",)
     readonly_fields = ("uuid",)
 
     @admin.display(description=_("Workspace title"))
@@ -268,7 +264,7 @@ class ChatMessageAdmin(admin.ModelAdmin[models.ChatMessage]):
     list_select_related = (
         "task__workspace_board_section__workspace_board__workspace",
     )
-    readonly_fields = ("uuid",)
+    readonly_fields = ("uuid", "author")
 
     @admin.display(description=_("Task title"))
     def task_title(self, instance: models.ChatMessage) -> str:

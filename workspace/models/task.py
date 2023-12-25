@@ -278,6 +278,10 @@ class Task(TitleDescriptionModel, BaseModel):
             self.number = self.workspace.increment_highest_task_number()
         super().save(*args, **kwargs)
 
+    def __str__(self) -> str:
+        """Return title."""
+        return self.title
+
     class Meta:
         """Meta."""
 
