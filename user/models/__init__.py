@@ -35,6 +35,8 @@ EMAIL_CONFIRMATION_TOKEN_SALT = "email-confirmation-token-salt"
 PASSWORD_RESET_TOKEN_SALT = "password-reset-token-salt"
 
 
+# TODO use BaseModel
+# TODO refactor into user/models/user.py
 class User(AbstractBaseUser, PermissionsMixin):
     """User class."""
 
@@ -100,6 +102,7 @@ class UserInviteQuerySet(models.QuerySet["UserInvite"]):
         return self.filter(email=email)
 
 
+# TODO refactor into user/models/user_invite.py
 class UserInvite(BaseModel):
     """User invite model."""
 

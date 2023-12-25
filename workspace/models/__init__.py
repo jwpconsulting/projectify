@@ -30,20 +30,24 @@ from .workspace_user_invite import (
     WorkspaceUserInvite,
 )
 
-# TODO get rid of trunk export
 __all__ = (
     "ChatMessage",
+    # TODO get rid of this QuerySet export
     "ChatMessageQuerySet",
     "Label",
     "SubTask",
     "Task",
     "TaskLabel",
+    # TODO get rid of this QuerySet export
     "TaskQuerySet",
     "Workspace",
     "WorkspaceBoard",
+    # TODO get rid of this QuerySet export
     "WorkspaceBoardQuerySet",
     "WorkspaceBoardSection",
+    # TODO get rid of this QuerySet export
     "WorkspaceBoardSectionQuerySet",
+    # TODO get rid of this QuerySet export
     "WorkspaceQuerySet",
     "WorkspaceUser",
     "WorkspaceUserInvite",

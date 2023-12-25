@@ -4,6 +4,7 @@ from django.urls import (
     path,
 )
 
+from corporate.views.custom_code import CustomCodeRedeem
 from corporate.views.customer import (
     WorkspaceBillingPortalSessionCreate,
     WorkspaceCheckoutSessionCreate,
@@ -33,9 +34,20 @@ customer_url_patterns = (
     ),
 )
 
+custom_code_url_patterns = (
+    # RPC
+    path(
+        "<uuid:workspace_uuid>/redeem-custom-code",
+        CustomCodeRedeem.as_view(),
+        name="redeem-custom-code",
+    ),
+)
+
 urlpatterns = [
     # Customer
     path("workspace/", include((customer_url_patterns, "customers"))),
+    # Custom code
+    path("workspace/", include((custom_code_url_patterns, "custom-codes"))),
     # Stripe
     path("stripe-webhook/", stripe_webhook, name="stripe-webhook"),
 ]

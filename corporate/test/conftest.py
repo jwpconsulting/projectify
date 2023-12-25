@@ -4,6 +4,8 @@ import pytest
 from faker import Faker
 
 from corporate.models import Customer
+from corporate.models.custom_code import CustomCode
+from corporate.services.custom_code import custom_code_create
 from corporate.services.customer import (
     customer_activate_subscription,
 )
@@ -92,3 +94,11 @@ def paid_customer(
         stripe_customer_id=stripe_customer_id,
     )
     return unpaid_customer
+
+
+@pytest.fixture
+def custom_code(superuser: User) -> CustomCode:
+    """Create a working custom code."""
+    return custom_code_create(
+        who=superuser, seats=20, prefix="i-am-a-test-custom-code"
+    )
