@@ -22,6 +22,7 @@ class CustomerAdmin(admin.ModelAdmin[models.Customer]):
     """Customer Admin."""
 
     list_display = ("workspace_title", "seats", "subscription_status")
+    list_filter = ("subscription_status",)
     list_select_related = ("workspace",)
     readonly_fields = (
         "uuid",
