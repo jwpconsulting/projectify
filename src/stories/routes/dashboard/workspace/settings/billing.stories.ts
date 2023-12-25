@@ -41,6 +41,6 @@ export default meta;
 
 type Story = StoryObj<Billing>;
 
-export const Default: Story = { args: { data: "trial-customer" } };
+export const Trial: Story = { args: { data: "trial-customer" } };
 
-export const Paid: Story = {};
+export const Paid: Story = { args: { data: "paid-customer" } };
