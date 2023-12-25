@@ -64,7 +64,7 @@ async function fetchResponse<T, E = unknown>(
             "Something went wrong when making an API request:",
             error,
         );
-        return { kind: "error", ok: false, error };
+        throw error;
     }
     const content = await response.text();
     // TODO
@@ -83,14 +83,7 @@ async function fetchResponse<T, E = unknown>(
     } else if (response.status === 404) {
         return { kind: "notFound", ok: false, error };
     } else {
-        // Unrecoverable
-        return {
-            kind: "error",
-            ok: false,
-            error: new Error(
-                `${response.statusText}: ${JSON.stringify(data)}`,
-            ),
-        };
+        throw new Error(`${response.statusText}: ${JSON.stringify(data)}`);
     }
 }
 
