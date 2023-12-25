@@ -38,7 +38,7 @@ class CustomerAdmin(admin.ModelAdmin[models.Customer]):
 class CouponAdmin(admin.ModelAdmin[Coupon]):
     """Customer Admin."""
 
-    list_display = ("seats", "customer", "used", "code")
+    list_display = ("code", "customer", "used", "seats")
     readonly_fields = ("code",)
     list_select_related = ("customer",)
 
