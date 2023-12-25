@@ -1,5 +1,5 @@
 """Corporate models."""
-from .custom_code import CustomCode
+from .coupon import Coupon
 from .customer import Customer
 
-__all__ = ("Customer", "CustomCode")
+__all__ = ("Customer", "Coupon")

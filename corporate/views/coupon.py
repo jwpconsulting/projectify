@@ -1,4 +1,4 @@
-"""Custom code views."""
+"""Coupon views."""
 from uuid import UUID
 
 from django.utils.translation import gettext_lazy as _
@@ -8,15 +8,15 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from corporate.services.custom_code import custom_code_redeem
+from corporate.services.coupon import coupon_redeem
 from workspace.selectors.workspace import workspace_find_by_workspace_uuid
 
 
-class CustomCodeRedeem(APIView):
-    """Redeem a custom code for a workspace customer."""
+class CouponRedeem(APIView):
+    """Redeem a coupon for a workspace customer."""
 
     class InputSerializer(serializers.Serializer):
-        """Serializer that takes in a CustomCode's code."""
+        """Serializer that takes in a Coupon's code."""
 
         code = serializers.CharField()
 
@@ -35,8 +35,6 @@ class CustomCodeRedeem(APIView):
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
 
-        # Redeem custom code here
-        custom_code_redeem(
-            who=request.user, code=data["code"], workspace=workspace
-        )
+        # Redeem coupon here
+        coupon_redeem(who=request.user, code=data["code"], workspace=workspace)
         return Response(status=status.HTTP_204_NO_CONTENT)

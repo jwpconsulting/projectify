@@ -1,10 +1,10 @@
-"""Test custom code views."""
+"""Test coupon views."""
 from django.urls import reverse
 
 import pytest
 from rest_framework.test import APIClient
 
-from corporate.models.custom_code import CustomCode
+from corporate.models.coupon import Coupon
 from corporate.models.customer import Customer
 from corporate.services.customer import customer_check_active_for_workspace
 from pytest_types import DjangoAssertNumQueries
@@ -12,14 +12,14 @@ from workspace.models.workspace import Workspace
 
 
 @pytest.mark.django_db
-class TestCustomCodeRedeem:
-    """Test redeeming custom codes."""
+class TestCouponRedeem:
+    """Test redeeming coupons."""
 
     @pytest.fixture
     def resource_url(self, workspace: Workspace) -> str:
         """Return URL to this view."""
         return reverse(
-            "corporate:custom-codes:redeem-custom-code",
+            "corporate:coupons:redeem-coupon",
             args=(str(workspace.uuid),),
         )
 
@@ -49,7 +49,7 @@ class TestCustomCodeRedeem:
         rest_user_client: APIClient,
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
-        custom_code: CustomCode,
+        coupon: Coupon,
         workspace: Workspace,
         unpaid_customer: Customer,
     ) -> None:
@@ -61,7 +61,7 @@ class TestCustomCodeRedeem:
         with django_assert_num_queries(9):
             response = rest_user_client.post(
                 resource_url,
-                data={"code": custom_code.code},
+                data={"code": coupon.code},
             )
             assert response.status_code == 204, response.data
 

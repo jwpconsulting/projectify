@@ -8,8 +8,8 @@ from django.contrib import (
 from django.http.request import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
-from corporate.models.custom_code import CustomCode
-from corporate.services.custom_code import custom_code_create
+from corporate.models.coupon import Coupon
+from corporate.services.coupon import coupon_create
 from user.models import User
 
 from . import (
@@ -34,16 +34,16 @@ class CustomerAdmin(admin.ModelAdmin[models.Customer]):
         return instance.workspace.title
 
 
-@admin.register(CustomCode)
-class CustomCodeAdmin(admin.ModelAdmin[CustomCode]):
+@admin.register(Coupon)
+class CouponAdmin(admin.ModelAdmin[Coupon]):
     """Customer Admin."""
 
     list_display = ("seats", "customer", "used", "code")
     readonly_fields = ("code",)
     list_select_related = ("customer",)
 
-    class CustomCodeForm(forms.ModelForm):
-        """Form for custom code creation."""
+    class CouponForm(forms.ModelForm):
+        """Form for coupon creation."""
 
         seats = forms.IntegerField(min_value=1, initial=1)
         code_prefix = forms.CharField(min_length=5, max_length=50)
@@ -52,24 +52,24 @@ class CustomCodeAdmin(admin.ModelAdmin[CustomCode]):
             """Specify model."""
 
             fields = ("seats",)
-            model = CustomCode
+            model = Coupon
 
     def get_form(
         self,
         request: HttpRequest,
-        obj: Optional[CustomCode] = None,
+        obj: Optional[Coupon] = None,
         change: bool = False,
         **kwargs: Any,
     ) -> type[forms.ModelForm]:
         """Return a custom form for creation, otherwise return regular."""
         if obj:
             return super().get_form(request, obj, change, **kwargs)  # type: ignore[no-any-return]
-        return self.CustomCodeForm
+        return self.CouponForm
 
     def save_model(
         self,
         request: HttpRequest,
-        obj: CustomCode,
+        obj: Coupon,
         form: forms.Form,
         change: bool = False,
     ) -> None:
@@ -82,7 +82,7 @@ class CustomCodeAdmin(admin.ModelAdmin[CustomCode]):
         if not isinstance(user, User):
             raise ValueError("Expected user to be User")
         data = form.cleaned_data
-        custom_code_create(
+        coupon_create(
             who=user,
             seats=data["seats"],
             prefix=data["code_prefix"],
