@@ -73,6 +73,10 @@ class WorkspaceBoardSection(TitleDescriptionModel, BaseModel):
         get_next_in_order: Callable[[], "WorkspaceBoardSection"]
         _order: int
 
+    def __str__(self) -> str:
+        """Return title."""
+        return self.title
+
     class Meta:
         """Meta."""
 

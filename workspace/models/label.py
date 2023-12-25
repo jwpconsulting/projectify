@@ -60,6 +60,10 @@ class Label(models.Model):
     if TYPE_CHECKING:
         id: int
 
+    def __str__(self) -> str:
+        """Return name."""
+        return self.name
+
     class Meta:
         """Meta."""
 
