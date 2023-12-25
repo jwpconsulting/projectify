@@ -9,6 +9,8 @@ from django.db import (
     models,
 )
 
+from projectify.lib.models import BaseModel
+
 from .label import (
     Label,
 )
@@ -26,8 +28,7 @@ class TaskLabelQuerySet(models.QuerySet["TaskLabel"]):
         return self.filter(task__pk__in=pks)
 
 
-# TODO use BaseModel
-class TaskLabel(models.Model):
+class TaskLabel(BaseModel):
     """A label to task assignment."""
 
     task = models.ForeignKey["Task"](
