@@ -234,6 +234,15 @@
                 label={$_("workspace-settings.billing.unpaid.coupon.action")}
             />
         </form>
+    {:else if customer.subscription_status === "CUSTOM"}
+        <section class="flex flex-col gap-2">
+            <p class="font-bold">
+                {$_("workspace-settings.billing.custom.status.title")}
+            </p>
+            <p>
+                {$_("workspace-settings.billing.custom.status.explanation")}
+            </p>
+        </section>
     {/if}
 </section>
 

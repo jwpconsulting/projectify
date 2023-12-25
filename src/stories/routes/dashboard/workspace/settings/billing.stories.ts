@@ -6,6 +6,7 @@ import {
     makeStorybookSelect,
     trialCustomer,
     user1,
+    customCustomer,
 } from "$lib/storybook";
 import type { Customer } from "$lib/types/corporate";
 import type { User } from "$lib/types/user";
@@ -30,6 +31,11 @@ const data = makeStorybookSelect<PageData>({
         workspace,
         customer: trialCustomer,
     },
+    "Custom customer": {
+        user: user1,
+        workspace,
+        customer: customCustomer,
+    },
 });
 
 const meta: Meta<Billing> = {
@@ -44,3 +50,5 @@ type Story = StoryObj<Billing>;
 export const Trial: Story = { args: { data: "trial-customer" } };
 
 export const Paid: Story = { args: { data: "paid-customer" } };
+
+export const Custom: Story = { args: { data: "custom-customer" } };

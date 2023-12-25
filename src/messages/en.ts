@@ -608,6 +608,13 @@ const messages: MessageDirectory = {
                     "action": "Redeem coupon code",
                 },
             },
+            "custom": {
+                status: {
+                    title: "Custom subscription active",
+                    explanation:
+                        "You have activated a custom subscription for this workspace using a coupon code. If you have any questions about your subscription or if you would like to make changes, please contact us.",
+                },
+            },
             "contact-us":
                 "Contact us if you have any questions regarding billing.",
             "billing-contact": "hello@projectifyapp.com",
