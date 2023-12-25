@@ -391,11 +391,11 @@ const messages: MessageDirectory = {
             "email": "Email",
             "enter-your-password": "Enter your password",
             "password": "Password",
-            "tos-privacy": {
-                "i-agree": "I agree to the",
-                "terms": "Terms of Service",
-                "and": "and",
-                "privacy-statement": "Privacy Statement",
+            "tos": {
+                label: 'I agree to the <a href="{tosUrl}">Terms of Service</a>',
+            },
+            "privacy-policy": {
+                label: 'I agree to the <a href="{privacyPolicyUrl}">Privacy Policy</a>',
             },
             "sign-up": "Sign up",
             "already-have-an-account": "Already have an account?",

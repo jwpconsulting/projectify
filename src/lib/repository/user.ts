@@ -53,12 +53,19 @@ export async function updateProfilePicture(imageFile: File): Promise<void> {
 export async function signUp(
     email: string,
     password: string,
+    tosAgreed: boolean,
+    privacyPolicyAgreed: boolean,
     repositoryContext: RepositoryContext,
 ): Promise<void> {
     failOrOk(
         await postWithCredentialsJson(
             "/user/user/sign-up",
-            { email, password },
+            {
+                email,
+                password,
+                tos_agreed: tosAgreed,
+                privacy_policy_agreed: privacyPolicyAgreed,
+            },
             repositoryContext,
         ),
     );

@@ -12,14 +12,17 @@
 
     let email: string;
     let password: string;
-    let tosPrivacyChecked: boolean;
+    let tosAgreed: boolean;
+    let privacyPolicyAgreed: boolean;
     let error: string | undefined = undefined;
 
     async function action() {
         // TODO form validation
         error = undefined;
         try {
-            await signUp(email, password, { fetch });
+            await signUp(email, password, tosAgreed, privacyPolicyAgreed, {
+                fetch,
+            });
             await goto(sentEmailConfirmationLinkUrl);
         } catch {
             error = $_("auth.sign-up.invalid-credentials");
@@ -49,28 +52,42 @@
             bind:value={password}
             required
         />
-        <div class="flex flex-row items-center gap-2">
+        <!-- XXX false positive -->
+        <!-- svelte-ignore a11y-label-has-associated-control -->
+        <label class="flex flex-row items-center gap-2">
             <Checkbox
-                bind:checked={tosPrivacyChecked}
+                bind:checked={tosAgreed}
                 disabled={false}
                 contained={false}
                 required
             />
-            <p>
-                {$_("auth.sign-up.tos-privacy.i-agree")}
-                <Anchor
-                    href="/tos"
-                    label={$_("auth.sign-up.tos-privacy.terms")}
-                    size="normal"
-                />
-                {$_("auth.sign-up.tos-privacy.and")}
-                <Anchor
-                    href="/privacy"
-                    label={$_("auth.sign-up.tos-privacy.privacy-statement")}
-                    size="normal"
-                />
-            </p>
-        </div>
+            <span class="prose">
+                <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                {@html $_("auth.sign-up.tos.label", {
+                    values: {
+                        tosUrl: "/tos",
+                    },
+                })}</span
+            >
+        </label>
+        <!-- XXX false positive -->
+        <!-- svelte-ignore a11y-label-has-associated-control -->
+        <label class="flex flex-row items-center gap-2">
+            <Checkbox
+                bind:checked={privacyPolicyAgreed}
+                disabled={false}
+                contained={false}
+                required
+            />
+            <span class="prose">
+                <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                {@html $_("auth.sign-up.privacy-policy.label", {
+                    values: {
+                        privacyPolicyUrl: "/privacy",
+                    },
+                })}</span
+            >
+        </label>
         {#if error}
             <div>
                 {error}
