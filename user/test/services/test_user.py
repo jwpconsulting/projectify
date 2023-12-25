@@ -7,6 +7,7 @@ from django.test import RequestFactory
 
 import pytest
 from faker import Faker
+from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from user.models import User
@@ -22,22 +23,21 @@ from user.services.user import (
     user_update,
 )
 
+pytestmark = pytest.mark.django_db
 
-@pytest.mark.django_db
+
 def test_user_create() -> None:
     """Test creating a normal user."""
     u = user_create("hello@example")
     assert u.is_active is False
 
 
-@pytest.mark.django_db
 def test_user_create_superuser() -> None:
     """Test creating a superuser. A superuser should be active."""
     u = user_create_superuser("hello@example")
     assert u.is_active is True
 
 
-@pytest.mark.django_db
 def test_user_update(user: User, faker: Faker) -> None:
     """Test updating a user."""
     new_name = faker.name()
@@ -46,15 +46,47 @@ def test_user_update(user: User, faker: Faker) -> None:
     assert user.full_name == new_name
 
 
-@pytest.mark.django_db
+def test_user_sign_up_no_agree(faker: Faker) -> None:
+    """Test signing up a new user."""
+    assert User.objects.count() == 0
+    with pytest.raises(serializers.ValidationError):
+        user_sign_up(
+            email=faker.email(),
+            password=faker.password(),
+            tos_agreed=False,
+            privacy_policy_agreed=False,
+        )
+    with pytest.raises(serializers.ValidationError) as error:
+        user_sign_up(
+            email=faker.email(),
+            password=faker.password(),
+            tos_agreed=False,
+            privacy_policy_agreed=True,
+        )
+    assert error.match("terms of service")
+    with pytest.raises(serializers.ValidationError) as error:
+        user_sign_up(
+            email=faker.email(),
+            password=faker.password(),
+            tos_agreed=True,
+            privacy_policy_agreed=False,
+        )
+    assert error.match("privacy policy")
+    assert User.objects.count() == 0
+
+
 def test_user_sign_up(faker: Faker) -> None:
     """Test signing up a new user."""
     assert User.objects.count() == 0
-    user_sign_up(email=faker.email(), password=faker.password())
+    user_sign_up(
+        email=faker.email(),
+        password=faker.password(),
+        tos_agreed=True,
+        privacy_policy_agreed=True,
+    )
     assert User.objects.count() == 1
 
 
-@pytest.mark.django_db
 def test_user_confirm_email(user: User, inactive_user: User) -> None:
     """Test activating an active and inactive user."""
     assert user.is_active
@@ -92,7 +124,6 @@ def session_request(
     return request
 
 
-@pytest.mark.django_db
 def test_user_log_in(
     user: User,
     password: str,
@@ -104,7 +135,6 @@ def test_user_log_in(
     assert "_auth_user_id" in session_request.session.keys()
 
 
-@pytest.mark.django_db
 def test_user_log_in_wrong_password(
     user: User,
     session_request: HttpRequest,
@@ -122,7 +152,6 @@ def test_user_log_in_wrong_password(
     assert "_auth_user_id" not in session_request.session.keys()
 
 
-@pytest.mark.django_db
 def test_user_log_in_inactive(
     inactive_user: User,
     password: str,
@@ -142,7 +171,6 @@ def test_user_log_in_inactive(
 
 
 # - user_log_out
-@pytest.mark.django_db
 def test_user_log_out(
     session_request: HttpRequest, user: User, password: str
 ) -> None:
@@ -154,7 +182,6 @@ def test_user_log_out(
     assert "_auth_user_id" not in session_request.session.keys()
 
 
-@pytest.mark.django_db
 def test_user_log_out_not_logged_in(
     session_request: HttpRequest,
 ) -> None:
@@ -166,7 +193,6 @@ def test_user_log_out_not_logged_in(
     assert "_auth_user_id" not in session_request.session.keys()
 
 
-@pytest.mark.django_db
 def test_request_password_reset(
     user: User, faker: Faker, mailoutbox: list[object]
 ) -> None:
@@ -180,7 +206,6 @@ def test_request_password_reset(
     assert len(mailoutbox) == 1
 
 
-@pytest.mark.django_db
 def test_confirm_password_reset(
     user: User, password: str, faker: Faker
 ) -> None:

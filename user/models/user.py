@@ -49,6 +49,18 @@ class User(AbstractBaseUser, PermissionsMixin):
         blank=True,
         null=True,
     )
+    tos_agreed = models.DateTimeField(
+        verbose_name=_("Terms of service agreed"),
+        help_text=_("Date and time user has agreed to terms of service"),
+        blank=True,
+        null=True,
+    )
+    privacy_policy_agreed = models.DateTimeField(
+        verbose_name=_("Privacy Policy agreed"),
+        help_text=_("Date and time user has agreed to privacy policy"),
+        blank=True,
+        null=True,
+    )
     objects: ClassVar[UserManager] = UserManager()
 
     USERNAME_FIELD = "email"
