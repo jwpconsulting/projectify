@@ -190,7 +190,12 @@ class TestSignUp:
                 resource_url,
                 # TODO of course, we will validate password strength here in
                 # the future
-                data={"email": "hello@localhost", "password": "password"},
+                data={
+                    "email": "hello@localhost",
+                    "password": "password",
+                    "tos_agreed": True,
+                    "privacy_policy_agreed": True,
+                },
             )
             assert response.status_code == 204, response.data
         assert User.objects.count() == 1
@@ -213,7 +218,10 @@ class TestConfirmEmail:
     ) -> None:
         """Test the thing that I want to test."""
         user = user_sign_up(
-            email="hello@world.com", password="random_password"
+            email="hello@world.com",
+            password="random_password",
+            tos_agreed=True,
+            privacy_policy_agreed=True,
         )
         token = user.get_email_confirmation_token()
         with django_assert_num_queries(2):

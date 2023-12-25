@@ -113,6 +113,8 @@ class SignUp(views.APIView):
 
         email = serializers.EmailField()
         password = serializers.CharField()
+        tos_agreed = serializers.BooleanField()
+        privacy_policy_agreed = serializers.BooleanField()
 
     def post(self, request: Request) -> Response:
         """Handle POST."""
@@ -122,6 +124,8 @@ class SignUp(views.APIView):
         user_sign_up(
             email=data["email"],
             password=data["password"],
+            tos_agreed=data["tos_agreed"],
+            privacy_policy_agreed=data["privacy_policy_agreed"],
         )
         return Response(status=HTTP_204_NO_CONTENT)
 

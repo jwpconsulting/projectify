@@ -1,5 +1,6 @@
 """User model services in user app."""
 import logging
+from datetime import datetime
 from typing import Optional
 
 from django.contrib.auth import authenticate, login, logout
@@ -7,6 +8,7 @@ from django.contrib.auth.hashers import make_password
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http import HttpRequest
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
@@ -26,7 +28,9 @@ def _user_create(
     is_staff: bool,
     is_superuser: bool,
     is_active: bool,
-) -> "User":
+    tos_agreed: Optional[datetime] = None,
+    privacy_policy_agreed: Optional[datetime] = None,
+) -> User:
     """Create and save a user with the given email, and password."""
     email = UserManager.normalize_email(email)
     user = User(
@@ -34,6 +38,8 @@ def _user_create(
         is_staff=is_staff,
         is_superuser=is_superuser,
         is_active=is_active,
+        tos_agreed=tos_agreed,
+        privacy_policy_agreed=privacy_policy_agreed,
     )
     user.password = make_password(password)
     # XXX self._db needed? user.save(using=self._db)
@@ -46,7 +52,9 @@ def user_create(
     # TODO add initial *
     email: str,
     password: Optional[str] = None,
-) -> "User":
+    tos_agreed: Optional[datetime] = None,
+    privacy_policy_agreed: Optional[datetime] = None,
+) -> User:
     """Create a normal user."""
     return _user_create(
         email,
@@ -92,6 +100,8 @@ def user_sign_up(
     *,
     email: str,
     password: str,
+    tos_agreed: bool,
+    privacy_policy_agreed: bool,
 ) -> User:
     """Sign up a user."""
     # Check if user exists
@@ -103,10 +113,23 @@ def user_sign_up(
                 )
             }
         )
-    # Here we should validate the password with Django's validation criteria
+    if not tos_agreed:
+        raise serializers.ValidationError(
+            {"tos_agreed": _("Must agree to terms of service")}
+        )
+    if not privacy_policy_agreed:
+        raise serializers.ValidationError(
+            {"tos_agreed": _("Must agree to privacy policy")}
+        )
+
+    agreement_dt = timezone.now()
+
     user = user_create(
         email=email,
+        # Here we should validate the password with Django's validation criteria
         password=password,
+        tos_agreed=agreement_dt,
+        privacy_policy_agreed=agreement_dt,
     )
     mail = UserEmailConfirmationEmail(user)
     mail.send()
