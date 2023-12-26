@@ -14,17 +14,19 @@ import { uploadImage } from "$lib/utils/file";
 export async function getUser(
     repositoryContext: RepositoryContext,
 ): Promise<User | undefined> {
-    const response = await getWithCredentialsJson<User>(
-        `/user/user/current-user`,
-        repositoryContext,
+    type CurrentUser = User | { unauthenticated: true };
+    const user = failOrOk(
+        await getWithCredentialsJson<CurrentUser>(
+            `/user/user/current-user`,
+            repositoryContext,
+        ),
     );
-    if (response.ok) {
-        return response.data;
-    } else if (response.kind === "forbidden") {
+    // Perhaps we could include "unauthenticated": false
+    // for a logged in user as well
+    if ("unauthenticated" in user) {
         return undefined;
     }
-    console.error(response);
-    throw new Error("There was a problem retrieving the user");
+    return user;
 }
 // Update
 export async function updateUser(
