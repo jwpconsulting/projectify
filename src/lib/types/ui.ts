@@ -160,6 +160,7 @@ export interface FeatureDescription {
     };
     title: string;
     text: string;
+    learnMore?: { href: string; label: string };
 }
 
 export interface SolutionsHeroContent {

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import type { FeatureDescription } from "$lib/types/ui";
 
     export let feature: FeatureDescription;
@@ -16,6 +17,12 @@
         <p class="text-l">
             {feature.text}
         </p>
+        {#if feature.learnMore !== undefined}
+            <Anchor
+                label={feature.learnMore.label}
+                href={feature.learnMore.href}
+            />
+        {/if}
     </div>
     <div class="w-full max-w-xs justify-self-center">
         <img src={feature.image.src} alt={feature.image.alt} />

@@ -8,7 +8,8 @@
 </script>
 
 <footer class="flex w-full flex-col gap-6 border-t border-border p-8">
-    <div class="flex flex-col gap-8 sm:flex-row">
+    <div class="flex flex-col gap-8 sm:flex-row sm:flex-wrap">
+        <!-- Header -->
         <div class="flex flex-col gap-6">
             <div class="flex flex-col gap-2">
                 <div class="flex flex-row items-center gap-2">
@@ -28,6 +29,7 @@
                 label={$_("navigation.footer.cta")}
             />
         </div>
+        <!-- Nav -->
         <nav class="flex flex-col gap-12 sm:flex-row">
             <section class="flex flex-col gap-1">
                 <h6 class="font-bold">
@@ -105,8 +107,26 @@
                             href="/tos"
                         />
                     </li>
+                    <li>
+                        <Anchor
+                            label={$_(
+                                "navigation.footer.nav.legal.free-software",
+                            )}
+                            href="/free-software"
+                        />
+                    </li>
                 </ul>
             </section>
         </nav>
+        <!-- epilogue -->
+        <section>
+            {$_("navigation.footer.epilogue.copyright")}
+            <br />
+            {$_("navigation.footer.epilogue.free-software")}
+            <Anchor
+                href="/free-software"
+                label={$_("navigation.footer.epilogue.details")}
+            />
+        </section>
     </div>
 </footer>

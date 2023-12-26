@@ -195,6 +195,10 @@
                     alt: $_("index.features.feature-7.alt"),
                     position: "left",
                 },
+                learnMore: {
+                    href: "/free-software",
+                    label: $_("index.features.feature-7.link"),
+                },
             }}
         />
     </div>

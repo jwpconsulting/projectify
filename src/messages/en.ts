@@ -662,9 +662,10 @@ const messages: MessageDirectory = {
                 alt: "An illustration showing our mascot Poly safekeeping your data",
             },
             "feature-7": {
-                header: "Projectify is 100% open source software",
-                text: "We believe in transparency and being developer-friendly, which is why our source code can be found online.",
-                alt: "An illustration showing our mascot Poly being freed from their gilded cage",
+                header: "Projectify is 100% Free Software",
+                text: "We respect your freedom and privacy and provide you the source code under a Free Software license. The Projectify application is licensed under the GNU Affero General Public License (AGPL) version 3.0 or later.",
+                link: "Learn more here",
+                alt: "Birds freed from their gilded cage",
             },
         },
         solutions: {
@@ -994,6 +995,21 @@ const messages: MessageDirectory = {
             "english-gdpr": "English GDPR Privacy Policy (translation)",
             "go-back": "Jump back to top",
         },
+    },
+    "free-software": {
+        "hero": "Free Software and License Information",
+        "header": "Projectify project management software is created by:",
+        "license":
+            "This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.",
+        "warranty":
+            "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.",
+        "find-copy":
+            "You can retrieve a copy of the source code and the LICENSE here:",
+        "source": {
+            frontend: "Projectify Frontend",
+            backend: "Projectify Backend",
+        },
+        "trademark": "<strong>Projectify</strong> is a registered trademark.",
     },
     "contact-us": {
         title: "Contact",
@@ -1423,10 +1439,17 @@ const messages: MessageDirectory = {
                     "corporate-info": "Corporate information",
                 },
                 legal: {
-                    title: "Legal",
-                    privacy: "Privacy Policy",
-                    tos: "Terms of Service",
+                    "title": "Legal",
+                    "privacy": "Privacy Policy",
+                    "tos": "Terms of Service",
+                    "free-software": "Free Software",
                 },
+            },
+            epilogue: {
+                "copyright": "Copyright 2021-2023 JWP Consulting GK",
+                "free-software":
+                    "The Projectify application is free software, and you are welcome to redistribute it under certain conditions;",
+                "details": "see here for details",
             },
         },
     },
