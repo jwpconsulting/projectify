@@ -1,6 +1,5 @@
 """User app user model views."""
 from typing import (
-    Optional,
     Union,
     cast,
 )
@@ -85,11 +84,14 @@ class ProfilePictureUpload(views.APIView):
 
     parser_classes = (parsers.MultiPartParser,)
 
-    def post(self, request: Request, format: Optional[str] = None) -> Response:
+    def post(self, request: Request) -> Response:
         """Handle POST."""
-        file_obj = request.data["file"]
+        file_obj = request.data.get("file", None)
         user = request.user
-        user.profile_picture = file_obj
+        if file_obj is None:
+            user.profile_picture.delete()
+        else:
+            user.profile_picture = file_obj
         user.save()
         return Response(status=204)
 

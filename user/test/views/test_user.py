@@ -141,22 +141,31 @@ class TestProfilePictureUploadView:
 
     def test_authenticated(
         self,
-        user_client: Client,
+        rest_user_client: APIClient,
         resource_url: str,
         headers: Headers,
         uploaded_file: File,
         user: User,
     ) -> None:
-        """Assert we can post to this view this while being logged in."""
-        response = user_client.post(
+        """Test setting and then clearing a picture."""
+        response = rest_user_client.post(
             resource_url,
             {"file": uploaded_file},
             format="multipart",
             **headers,
         )
-        assert response.status_code == 204, response.content
+        assert response.status_code == 204, response.data
         user.refresh_from_db()
         assert user.profile_picture is not None
+        # Now clear it
+        response = rest_user_client.post(
+            resource_url,
+            {},
+            format="multipart",
+        )
+        assert response.status_code == 204, response.data
+        user.refresh_from_db()
+        assert not user.profile_picture
 
 
 # TODO these should be in user/test/views/test_auth.py
