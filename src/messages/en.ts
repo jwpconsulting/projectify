@@ -34,10 +34,10 @@ const messages: MessageDirectory = {
                 "create-board": "Create",
             },
             "invite-workspace-user": {
-                title: "Invite workspace users",
+                title: "Invite workspace user",
                 form: {
                     email: {
-                        label: "Enter email address separated by a comma",
+                        label: "Enter the email address of the user you would like to invite",
                         placeholder: "workspace-user@mail.com",
                         validation: {
                             ok: "The user was successfully invited",
