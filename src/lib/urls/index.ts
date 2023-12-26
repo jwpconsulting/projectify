@@ -62,12 +62,6 @@ export function getTaskUrl(taskUuid: string) {
 
 // TODO put me into dashboard urls
 // TODO accept task directly
-export function getTaskUpdatesUrl(taskUuid: string) {
-    return `/dashboard/task/${taskUuid}/updates`;
-}
-
-// TODO put me into dashboard urls
-// TODO accept task directly
 export function getTaskEditUrl(taskUuid: string) {
     return `/dashboard/task/${taskUuid}/update`;
 }

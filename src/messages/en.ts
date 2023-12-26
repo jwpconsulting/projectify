@@ -175,7 +175,6 @@ const messages: MessageDirectory = {
                 "move-to-top": "Move to top",
                 "move-to-bottom": "Move to bottom",
                 "copy-link": "Copy link",
-                "go-to-updates": "Go to updates",
                 "delete-task": "Delete task",
             },
             "help": {

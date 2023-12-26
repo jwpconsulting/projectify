@@ -1,7 +1,6 @@
 <script lang="ts">
     import {
         ArrowsExpand,
-        ChatAlt,
         ChevronDown,
         ChevronUp,
         Duplicate,
@@ -27,7 +26,6 @@
     import type { WorkspaceBoardSection } from "$lib/types/workspace";
     import {
         getTaskUrl,
-        getTaskUpdatesUrl,
         getDashboardWorkspaceBoardSectionUrl,
     } from "$lib/urls";
     import { copyToClipboard } from "$lib/utils/clipboard";
@@ -136,17 +134,6 @@
         state="normal"
         icon={Duplicate}
     />
-    {#if kind.location === "dashboard"}
-        <ContextMenuButton
-            kind={{
-                kind: "a",
-                href: getTaskUpdatesUrl(kind.task.uuid),
-            }}
-            label={$_("overlay.context-menu.task.go-to-updates")}
-            state="normal"
-            icon={ChatAlt}
-        />
-    {/if}
     <ContextMenuButton
         kind={{
             kind: "button",
