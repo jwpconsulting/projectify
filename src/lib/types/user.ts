@@ -1,6 +1,7 @@
 export interface User {
     email: string;
-    profile_picture?: string;
+    // TODO should be undefined
+    profile_picture: string | null;
     full_name?: string;
 }
 

@@ -486,11 +486,12 @@ const messages: MessageDirectory = {
             "profile-picture": {
                 prompt: "Upload a profile picture",
                 current: "Your current profile picture",
+                remove: "Remove profile picture",
             },
             "update-email": "Update email address",
             "change-password": "Change password",
             "delete-account": "Delete account",
-            "cancel": "Go back",
+            "cancel": "Cancel",
             "save": "Save changes",
         },
         "update-email": {

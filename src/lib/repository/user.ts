@@ -43,7 +43,9 @@ export async function updateUser(
         throw new Error("Could not update user");
     }
 }
-export async function updateProfilePicture(imageFile: File): Promise<void> {
+export async function updateProfilePicture(
+    imageFile: File | undefined,
+): Promise<void> {
     await uploadImage(
         imageFile,
         vars.API_ENDPOINT + "/user/user/profile-picture/upload",
