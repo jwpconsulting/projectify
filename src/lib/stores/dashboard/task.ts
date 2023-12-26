@@ -37,7 +37,7 @@ export function searchTasks(
     );
     const tasks = sectionTasks.flat();
     return searchAmong<TaskWithWorkspaceBoardSection>(
-        ["title"],
+        ["title", "number"],
         tasks,
         searchText,
     );
