@@ -8,11 +8,13 @@
     import UpdateSubTasks from "$lib/figma/screens/task/UpdateSubTasks.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { goto } from "$lib/navigation";
-    import { createTask as createTaskFn } from "$lib/repository/workspace";
+    import {
+        createTask as createTaskFn,
+        type CreateUpdateTaskData,
+    } from "$lib/repository/workspace";
     import { createSubTaskAssignment } from "$lib/stores/dashboard";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
-    import type { CreateUpdateTask } from "$lib/types/workspace";
     import {
         getDashboardWorkspaceBoardSectionUrl,
         getDashboardWorkspaceBoardUrl,
@@ -50,12 +52,12 @@
         if (!$labelAssignment) {
             throw new Error("Expected $labelAssignment");
         }
-        const createTaskFull: CreateUpdateTask = {
+        const createTaskFull: CreateUpdateTaskData = {
             title,
             description,
             workspace_board_section: workspaceBoardSection,
             labels: $labelAssignment,
-            assignee: $workspaceUserAssignment,
+            assignee: $workspaceUserAssignment ?? null,
             deadline: dueDate,
             sub_tasks: $subTasks,
         };

@@ -33,16 +33,6 @@ type ChatMessage = {
     text: string;
 } & TimestampedType;
 
-// Used for creating and updating tasks
-export type CreateUpdateTask = {
-    // TODO the following should be a Date
-    deadline?: string;
-    labels: Label[];
-    assignee?: WorkspaceUser;
-    workspace_board_section: WorkspaceBoardSection;
-    sub_tasks?: CreateUpdateSubTask[];
-} & TitleDescriptionType;
-
 // All the info we can receive from the API
 export type Task = {
     _order: number;

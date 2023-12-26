@@ -9,7 +9,6 @@ import {
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
     CreateUpdateSubTask,
-    CreateUpdateTask,
     Label,
     Task,
     TaskWithWorkspace,
@@ -19,7 +18,7 @@ import type {
 
 // Task CRUD
 // Create
-interface CreateUpdateTaskData {
+export interface CreateUpdateTaskData {
     title: string;
     description?: string;
     // TODO this has to be optional in the backend -> undefined means unset
@@ -33,16 +32,11 @@ interface CreateUpdateTaskData {
     deadline?: string;
     sub_tasks?: CreateUpdateSubTask[];
 }
-// TODO change me to accept CreateOrUpdateTaskData directly
+
 export async function createTask(
-    createTask: CreateUpdateTask,
+    data: CreateUpdateTaskData,
     repositoryContext: RepositoryContext,
 ): Promise<Task> {
-    const data: CreateUpdateTaskData = {
-        ...createTask,
-        // TODO: Should the API just accept a missing value here?
-        assignee: createTask.assignee ?? null,
-    };
     const response = await postWithCredentialsJson<Task>(
         "/workspace/task/",
         data,

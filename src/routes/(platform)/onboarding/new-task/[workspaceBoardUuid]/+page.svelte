@@ -5,9 +5,11 @@
     import Onboarding from "$lib/components/Onboarding.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { goto } from "$lib/navigation";
-    import { createTask } from "$lib/repository/workspace";
+    import {
+        createTask,
+        type CreateUpdateTaskData,
+    } from "$lib/repository/workspace";
     import { createWorkspaceBoardSection } from "$lib/repository/workspace/workspaceBoardSection";
-    import type { CreateUpdateTask } from "$lib/types/workspace";
     import { getNewLabelUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
@@ -33,10 +35,11 @@
             { fetch },
         );
         // Find ourselves
-        const assignee = workspace.workspace_users.find(
-            (w) => w.user.email === user.email,
-        );
-        const task: CreateUpdateTask = {
+        const assignee =
+            workspace.workspace_users.find(
+                (w) => w.user.email === user.email,
+            ) ?? null;
+        const task: CreateUpdateTaskData = {
             title: taskTitle,
             labels: [],
             workspace_board_section,
