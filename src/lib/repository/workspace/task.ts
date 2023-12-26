@@ -23,11 +23,11 @@ export interface CreateUpdateTaskData {
     description?: string;
     // TODO this has to be optional in the backend -> undefined means unset
     // labels
-    labels: Label[];
+    labels: Pick<Label, "uuid">[];
     // TODO this has to be optional in the backend -> undefined means unset
     // assignee
-    assignee: WorkspaceUser | null;
-    workspace_board_section: WorkspaceBoardSection;
+    assignee?: Pick<WorkspaceUser, "uuid">;
+    workspace_board_section: Pick<WorkspaceBoardSection, "uuid">;
     // TODO dueDate plz
     deadline?: string;
     sub_tasks?: CreateUpdateSubTask[];
@@ -39,7 +39,16 @@ export async function createTask(
 ): Promise<Task> {
     const response = await postWithCredentialsJson<Task>(
         "/workspace/task/",
-        data,
+        {
+            ...data,
+            workspace_board_section: {
+                uuid: data.workspace_board_section.uuid,
+            },
+            labels: data.labels.map((l) => {
+                return { uuid: l.uuid };
+            }),
+            assignee: data.assignee ? { uuid: data.assignee.uuid } : null,
+        },
         repositoryContext,
     );
     if (response.ok) {
@@ -70,35 +79,23 @@ export async function getTask(
 // This is possible now because the API accepts a whole task object,
 // incl. labels and so on
 export async function updateTask(
-    task: Task & {
-        workspace_board_section: Pick<WorkspaceBoardSection, "uuid">;
-    },
-    // XXX please move the following three arguments back into the top task
-    // argument
-    labels: Label[],
-    workspaceUser: WorkspaceUser | undefined,
-    subTasks: CreateUpdateSubTask[] | undefined,
+    task: Pick<Task, "uuid">,
+    data: CreateUpdateTaskData,
     repositoryContext: RepositoryContext,
 ): Promise<Task | undefined> {
     const { uuid } = task;
-    const data: CreateUpdateTaskData = {
-        title: task.title,
-        description: task.description ?? undefined,
-        deadline: task.deadline,
-        // XXX
-        // Ideally, the two following arguments would just be part of the Task
-        labels,
-        // TODO
-        // Please be undefined, not null
-        // Might have to check if the backend already accepts undefined as
-        // unassign
-        assignee: workspaceUser ?? null,
-        workspace_board_section: task.workspace_board_section,
-        sub_tasks: subTasks,
-    };
     const response = await putWithCredentialsJson<Task>(
         `/workspace/task/${uuid}`,
-        data,
+        {
+            ...data,
+            workspace_board_section: {
+                uuid: data.workspace_board_section.uuid,
+            },
+            assignee: data.assignee ? { uuid: data.assignee.uuid } : null,
+            labels: data.labels.map((l) => {
+                return { uuid: l.uuid };
+            }),
+        },
         repositoryContext,
     );
     if (response.ok) {

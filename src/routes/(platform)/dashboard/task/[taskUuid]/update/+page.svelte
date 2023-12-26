@@ -55,9 +55,15 @@
         try {
             await performUpdateTask(
                 submitTask,
-                $labelAssignment,
-                $workspaceUserAssignment,
-                $subTasks,
+                {
+                    title,
+                    description,
+                    deadline: dueDate,
+                    assignee: $workspaceUserAssignment,
+                    labels: $labelAssignment,
+                    sub_tasks: $subTasks,
+                    workspace_board_section: workspaceBoardSection,
+                },
                 { fetch },
             );
             if (continueEditing) {

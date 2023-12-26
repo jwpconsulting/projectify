@@ -29,7 +29,11 @@
             { name: labelTitle, color: 0 },
             { fetch },
         );
-        await updateTask(task, [label], task.assignee, [], { fetch });
+        await updateTask(
+            task,
+            { ...task, labels: [label], assignee: task.assignee },
+            { fetch },
+        );
         // TODO handle if label with this name already exists
         await goto(getAssignTaskUrl(task.uuid));
     }

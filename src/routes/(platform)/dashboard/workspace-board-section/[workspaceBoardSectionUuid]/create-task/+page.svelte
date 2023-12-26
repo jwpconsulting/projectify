@@ -57,7 +57,7 @@
             description,
             workspace_board_section: workspaceBoardSection,
             labels: $labelAssignment,
-            assignee: $workspaceUserAssignment ?? null,
+            assignee: $workspaceUserAssignment,
             deadline: dueDate,
             sub_tasks: $subTasks,
         };

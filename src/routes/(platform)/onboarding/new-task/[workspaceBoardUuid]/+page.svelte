@@ -35,10 +35,9 @@
             { fetch },
         );
         // Find ourselves
-        const assignee =
-            workspace.workspace_users.find(
-                (w) => w.user.email === user.email,
-            ) ?? null;
+        const assignee = workspace.workspace_users.find(
+            (w) => w.user.email === user.email,
+        );
         const task: CreateUpdateTaskData = {
             title: taskTitle,
             labels: [],
