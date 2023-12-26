@@ -1,4 +1,5 @@
 <script lang="ts">
+    // TODO bake me into update email page directly
     import { onMount } from "svelte";
     import { _ } from "svelte-i18n";
 
