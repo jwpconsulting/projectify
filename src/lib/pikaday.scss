@@ -8,9 +8,10 @@
 // Variables are namespaced with the pd (pikaday) prefix
 
 // Colours
-$pd-text-color: #333 !default;
-$pd-title-color: #333 !default;
-$pd-title-bg: #fff !default;
+$pd-text-color: theme("colors.base-content");
+$pd-title-color: theme("colors.base-content");
+$pd-title-bg: theme("colors.foreground");
+// TODO customize these colors
 $pd-picker-bg: #fff !default;
 $pd-picker-border: #ccc !default;
 $pd-picker-border-bottom: #bbb !default;
@@ -101,7 +102,7 @@ $pd-border-radius: 3px !default;
     overflow: hidden;
     margin: 0;
     padding: 5px 3px;
-    font-size: 14px;
+    font-size: theme("fontSize.base");
     line-height: 20px;
     font-weight: bold;
     color: $pd-title-color;
@@ -167,7 +168,7 @@ $pd-border-radius: 3px !default;
 
     th {
         color: $pd-th-color;
-        font-size: 12px;
+        font-size: theme("fontSize.base");
         line-height: 25px;
         font-weight: bold;
         text-align: center;
@@ -190,7 +191,7 @@ $pd-border-radius: 3px !default;
     width: 100%;
     padding: 5px;
     color: $pd-day-color;
-    font-size: 12px;
+    font-size: theme("fontSize.base");
     line-height: 15px;
     text-align: right;
     background: $pd-day-bg;
@@ -239,7 +240,7 @@ $pd-border-radius: 3px !default;
 }
 
 .pika-week {
-    font-size: 11px;
+    font-size: theme("fontSize.base");
     color: $pd-week-color;
 }
 
