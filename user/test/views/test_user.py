@@ -17,7 +17,7 @@ from django.urls import (
 )
 
 import pytest
-from rest_framework.status import HTTP_200_OK
+from rest_framework.status import HTTP_200_OK, HTTP_403_FORBIDDEN
 from rest_framework.test import APIClient
 
 from pytest_types import DjangoAssertNumQueries
@@ -39,12 +39,26 @@ class TestUserReadUpdate:
         """Return URL to this view."""
         return reverse("user:users:read-update")
 
+    def test_unauthenticated(
+        self,
+        rest_client: APIClient,
+        resource_url: str,
+    ) -> None:
+        """Assert that we get 200 back even if not logged in."""
+        response = rest_client.get(resource_url)
+        assert response.status_code == 200, response.data
+        assert response.data == {"unauthenticated": True}
+
     def test_authenticated(
-        self, user_client: Client, resource_url: str, user: User
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        user: User,
     ) -> None:
         """Assert we can post to this view this while being logged in."""
-        response = user_client.get(resource_url)
-        assert response.status_code == 200, response.content
+        response = rest_user_client.get(resource_url)
+        assert response.status_code == 200, response.data
+        assert response.data["full_name"] == user.full_name
 
     def test_update(
         self,
@@ -68,6 +82,23 @@ class TestUserReadUpdate:
         )
         user.refresh_from_db()
         assert user.full_name == "Locutus of Blorb"
+
+    def test_update_unauthenticed(
+        self,
+        rest_client: APIClient,
+        resource_url: str,
+        user: User,
+    ) -> None:
+        """Test updating when not authenticated."""
+        name = user.full_name
+        response = rest_client.put(
+            resource_url,
+            data={"full_name": "Here's to the finest crew in Starfleet."},
+        )
+        assert response.status_code == HTTP_403_FORBIDDEN, response.data
+        user.refresh_from_db()
+        # Canary in the mines
+        assert user.full_name == name
 
 
 # Delete

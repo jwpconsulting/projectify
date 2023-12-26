@@ -1,17 +1,19 @@
 """User app user model views."""
 from typing import (
-    Any,
     Optional,
+    Union,
+    cast,
 )
 
-from django.db import models as django_models
+from django.contrib.auth.models import AnonymousUser
+from django.utils.translation import gettext_lazy as _
 
 from rest_framework import (
-    generics,
     parsers,
     serializers,
     views,
 )
+from rest_framework.exceptions import NotAuthenticated
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -32,23 +34,10 @@ from user.services.user import (
 
 # Create
 # Read + Update
-class UserReadUpdate(
-    generics.RetrieveUpdateAPIView[
-        User,
-        django_models.QuerySet[User],
-        UserSerializer,
-    ]
-):
-    """Read user."""
+class UserReadUpdate(views.APIView):
+    """Read or update user."""
 
-    serializer_class = UserSerializer
-
-    def get_object(self) -> User:
-        """Return current user."""
-        # This can only ever be AbstractBaseUser-ish because this endpoint is
-        # only accessible after logging in
-        user = self.request.user
-        return user
+    permission_classes = (AllowAny,)
 
     class UpdateInputSerializer(serializers.ModelSerializer[User]):
         """Take only full_name in."""
@@ -59,17 +48,30 @@ class UserReadUpdate(
             fields = ("full_name",)
             model = User
 
-    def put(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+    def get(self, request: Request) -> Response:
+        """Handle GET."""
+        user = cast(Union[User, AnonymousUser], request.user)
+        if user.is_anonymous:
+            return Response(data={"unauthenticated": True})
+        serializer = UserSerializer(instance=user)
+        return Response(data=serializer.data)
+
+    def put(self, request: Request) -> Response:
         """Update a user."""
+        user = cast(Union[User, AnonymousUser], request.user)
+        if not isinstance(user, User):
+            raise NotAuthenticated(
+                _("Must be authenticated in order to update a user")
+            )
         serializer = self.UpdateInputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         user = user_update(
-            who=self.request.user,
-            user=self.request.user,
+            who=user,
+            user=user,
             full_name=data.get("full_name"),
         )
-        output_serializer = self.serializer_class(instance=user)
+        output_serializer = UserSerializer(instance=user)
         return Response(data=output_serializer.data, status=HTTP_200_OK)
 
 
