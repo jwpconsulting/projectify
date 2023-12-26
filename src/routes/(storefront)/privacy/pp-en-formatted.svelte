@@ -108,35 +108,8 @@
             Website, Etc.;
         </p>
     </li>
-    <li>
-        <p>
-            To authenticate the identity of any User when or after such a User
-            logs in in using the Website, Etc.;
-        </p>
-    </li>
-    <li>
-        <p>
-            To analyze any registration information and usage conditions in
-            order to make the contents and advertisements provided by any third
-            parties that the User sees when using the Website, Etc., be more
-            convenient for the User;
-        </p>
-    </li>
-    <li>
-        <p>
-            To understand the delivery status of advertisements, to measure the
-            effectiveness of advertisements, and to display behaviorally
-            targeted advertisements; and,
-        </p>
-    </li>
-    <li>
-        <p>
-            To distribute or display advertisements of the Company or any third
-            party.
-        </p>
-    </li>
 </ol>
-<h2>Article 6 (Provision to Third Party)</h2>
+<h2>Article 5 (Provision to Third Party)</h2>
 <ol type="1">
     <li>
         <p>
@@ -144,7 +117,7 @@
             party without the prior consent of the User, except in the
             following cases:
         </p>
-        <ol type="1">
+        <ol type="i">
             <li><p>In case of being required by laws and regulations;</p></li>
             <li>
                 <p>
@@ -178,7 +151,7 @@
             whom any Personal Information is provided in the following cases
             shall not be considered a third party:
         </p>
-        <ol type="1">
+        <ol type="i">
             <li>
                 <p>
                     In case the Company outsources all or part of the handling
@@ -209,7 +182,7 @@
         </ol>
     </li>
 </ol>
-<h2>Article 7 (Provision to a Third Party Located in a Foreign Country)</h2>
+<h2>Article 6 (Provision to a Third Party Located in a Foreign Country)</h2>
 <ol type="1">
     <li>
         <p>
@@ -231,7 +204,7 @@
             concerning the protection of the Personal Information in such
             foreign country(s):
         </p>
-        <ol type="1">
+        <ol type="i">
             <li>
                 <p>
                     United States of America (Federal)
@@ -270,7 +243,7 @@
         </ol>
     </li>
 </ol>
-<h2>Article 8 (Supervision of Subcontractors)</h2>
+<h2>Article 7 (Supervision of Subcontractors)</h2>
 <p>
     The Company may entrust the handling of any entrusted Personal Information
     to any third party to the extent necessary for the provision of the
@@ -280,7 +253,7 @@
     and will be supervised as necessary and appropriate through contracts and
     other means.
 </p>
-<h2>Article 9 (Security Control Measures)</h2>
+<h2>Article 8 (Security Control Measures)</h2>
 <p>
     The Company implements the following security control measures to ensure
     the proper handling of the Personal Data:
@@ -328,7 +301,7 @@
     </li>
 </ol>
 <h2>
-    Article 10 (Disclosure, Correction, Suspension of Use, etc. of Personal
+    Article 9 (Disclosure, Correction, Suspension of Use, etc. of Personal
     Information)
 </h2>
 <p>
@@ -343,7 +316,7 @@
     The fee of 1,000 yen per a request will be charged for the Disclosure, Etc.
     of the Personal Information.
 </p>
-<h2>Article 11 (Contact for Inquiries)</h2>
+<h2>Article 10 (Contact for Inquiries)</h2>
 <p>
     The Company would like the User to contact the following for the
     Disclosure, Etc. as specified in the preceding article of Article 10 or for
@@ -360,12 +333,12 @@
 </p>
 <p>Telephone Number: +81 50 5806 5251</p>
 <p>E-mail: hello@jwpconsulting.net</p>
-<h2>Article 12 (Revision)</h2>
+<h2>Article 11 (Revision)</h2>
 <p>
     The Company may revise the Privacy Policy as it deems necessary, and the
     User hereby consents to such revisions in advance. Any changes to the
     Privacy Policy shall become effective upon posting on the Website, Etc.
 </p>
 <p>Supplementary Provisions</p>
-<p>Established as of December 20, 2023</p>
+<p>Established as of December 26, 2023</p>
 <p>JWP Consulting GK</p>

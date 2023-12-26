@@ -141,7 +141,7 @@
             Website, Etc., changes to the registration information, or
             inquiries or communications from the User:
         </p>
-        <ol type="a">
+        <ol type="i">
             <li><p>Name;</p></li>
             <li>
                 <p>
@@ -180,7 +180,7 @@
             Information automatically obtained through the use of the Website,
             Etc. by the User:
         </p>
-        <ol type="a">
+        <ol type="i">
             <li><p>Location information;</p></li>
             <li>
                 <p>
@@ -227,7 +227,7 @@
             The Company may collect and process any Personal Data only for the
             purposes described below:
         </p>
-        <ol type="1">
+        <ol type="i">
             <li>
                 <p>
                     To provide, maintain, protect, and improve the Website,
@@ -274,27 +274,6 @@
                     a User logs in in using the Website, Etc.;
                 </p>
             </li>
-            <li>
-                <p>
-                    To analyze any registration information and usage
-                    conditions in order to make the contents and advertisements
-                    provided by any third parties that the User sees when using
-                    the Website, Etc., be more convenient for the User;
-                </p>
-            </li>
-            <li>
-                <p>
-                    To understand the delivery status of advertisements, to
-                    measure the effectiveness of advertisements, and to display
-                    behaviorally targeted advertisements; and,
-                </p>
-            </li>
-            <li>
-                <p>
-                    To distribute or display advertisements of the Company or
-                    any third party.
-                </p>
-            </li>
         </ol>
     </li>
     <li>
@@ -302,7 +281,7 @@
             The Company may process any Personal Data on the following legal
             grounds:
         </p>
-        <ol type="1">
+        <ol type="i">
             <li>
                 <p>
                     The Data Subject has given its consent to the Processing of
@@ -362,7 +341,7 @@
             transferred takes appropriate and adequate protective measures in
             accordance with the GDPR:
         </p>
-        <ol type="1">
+        <ol type="i">
             <li>
                 <p>Name: Salesforce, Inc.</p>
                 <p>Country: United States of America</p>
@@ -406,6 +385,14 @@
                     Austin, Texas 78735
                 </p>
             </li>
+            <li>
+                <p>Name: Netlify, Inc.</p>
+                <p>Country: United States of America</p>
+                <p>
+                    Address: 512 2nd Street, Suite 200<br />
+                    San Francisco, CA 94107
+                </p>
+            </li>
         </ol>
     </li>
     <li>
@@ -440,21 +427,12 @@
             browser, and the Company uses any different types of Cookies for
             any different purposes as follows:
         </p>
-        <ol type="1">
+        <ol type="i">
             <li>
                 <p>
                     Functional Cookies: These Cookies are necessary for the
                     correct functioning of the Website, Etc., and include any
                     Cookies necessary to create an account; and,
-                </p>
-            </li>
-            <li>
-                <p>
-                    Analytical Cookies: These Cookies are necessary for
-                    obtaining information on how the User uses the Website,
-                    Etc., and can make the Company possible to improve the
-                    Website, Etc. and make it as relevant as possible to the
-                    interests and concerns of the User.
                 </p>
             </li>
         </ol>

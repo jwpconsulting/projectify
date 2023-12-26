@@ -181,7 +181,7 @@
             notify or disclose to such a User, Etc. any reason for refusing or
             withholding the application for the User Registration:
         </p>
-        <ol type="1">
+        <ol type="i">
             <li>
                 <p>
                     In case of the User’s violation of laws, ordinances, public
@@ -258,7 +258,7 @@
             a Corporation, Etc. any reason for refusing or withholding the
             application for the Organizational Member registration:
         </p>
-        <ol type="1">
+        <ol type="i">
             <li>
                 <p>
                     In case of any violation of laws, ordinances, public order
@@ -397,7 +397,7 @@
             or disclose the circumstances or reasons for such measures to the
             relevant User, Etc.;
         </p>
-        <ol type="1">
+        <ol type="i">
             <li>
                 <p>
                     In case a User, Etc. violates all or part of Article 14
@@ -500,7 +500,7 @@
             The User, Etc. hereby represents and warrants to the Company as
             follows:
         </p>
-        <ol type="1">
+        <ol type="i">
             <li>
                 <p>
                     That the User, Etc. has the authority and power necessary
@@ -782,7 +782,7 @@
             discretion, suspend or discontinue the Services, in whole or in
             part, without any prior notice to the User, Etc.;
         </p>
-        <ol type="1">
+        <ol type="i">
             <li>
                 <p>
                     In case of periodic or emergency maintenance and inspection
@@ -828,7 +828,7 @@
             the User, Etc. does not fall under any of the followings and will
             not fall under any of the followings in the future:
         </p>
-        <ol type="1">
+        <ol type="i">
             <li>
                 <p>
                     That the User, Etc. (including its directors, officers,
@@ -901,7 +901,7 @@
             Company shall have the rights to immediately cancel the
             registration of the User, Etc. without any notice or demand:
         </p>
-        <ol type="1">
+        <ol type="i">
             <li>
                 <p>
                     When the User, Etc. has violated the preceding paragraph of
@@ -913,7 +913,7 @@
                     When the User, Etc. commits any of the following acts by
                     itself or through any third party;
                 </p>
-                <ol>
+                <ol type="a">
                     <li>
                         <p>
                             Any violent demanding behavior toward the Company
