@@ -1,5 +1,4 @@
 <script lang="ts">
-    import Footer from "$lib/figma/navigation/Footer.svelte";
     import Continue from "$lib/figma/navigation/header/Continue.svelte";
     import Landing from "$lib/figma/navigation/header/Landing.svelte";
     import MobileMenuOverlay from "$lib/figma/overlays/MobileMenuOverlay.svelte";
@@ -21,7 +20,6 @@
         {/if}
         <div class="flex grow flex-col justify-between">
             <slot />
-            <Footer />
         </div>
     </div>
 </div>

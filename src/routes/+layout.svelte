@@ -1,5 +1,6 @@
 <script lang="ts">
     import "$lib/app.scss";
+    import Footer from "$lib/figma/navigation/Footer.svelte";
 </script>
 
 <svelte:head>
@@ -11,3 +12,4 @@
 </svelte:head>
 
 <slot />
+<Footer />
