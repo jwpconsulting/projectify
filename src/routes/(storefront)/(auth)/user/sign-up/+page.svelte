@@ -10,23 +10,57 @@
     import { signUp } from "$lib/repository/user";
     import { logInUrl, sentEmailConfirmationLinkUrl } from "$lib/urls/user";
 
-    let email: string;
-    let password: string;
-    let tosAgreed: boolean;
-    let privacyPolicyAgreed: boolean;
-    let error: string | undefined = undefined;
+    let email: string | undefined = undefined;
+    let password: string | undefined = undefined;
+    let tosAgreed: boolean | undefined = undefined;
+    let privacyPolicyAgreed: boolean | undefined = undefined;
+    type State =
+        | { kind: "start" }
+        | { kind: "submitting" }
+        | { kind: "error"; message: string };
+    let state: State = { kind: "start" };
 
     async function action() {
+        state = { kind: "submitting" };
+        if (!email) {
+            state = {
+                kind: "error",
+                message: $_("auth.sign-up.email.missing"),
+            };
+            return;
+        }
+        if (!password) {
+            state = {
+                kind: "error",
+                message: $_("auth.sign-up.password.missing"),
+            };
+            return;
+        }
+        if (!tosAgreed) {
+            state = { kind: "error", message: $_("auth.sign-up.tos.missing") };
+            return;
+        }
+        if (!privacyPolicyAgreed) {
+            state = {
+                kind: "error",
+                message: $_("auth.sign-up.privacy-policy.missing"),
+            };
+            return;
+        }
         // TODO form validation
-        error = undefined;
         try {
+            // TODO show actual server error to user here
             await signUp(email, password, tosAgreed, privacyPolicyAgreed, {
                 fetch,
             });
-            await goto(sentEmailConfirmationLinkUrl);
         } catch {
-            error = $_("auth.sign-up.invalid-credentials");
+            state = {
+                kind: "error",
+                message: $_("auth.sign-up.generic-error"),
+            };
+            return;
         }
+        await goto(sentEmailConfirmationLinkUrl);
     }
 </script>
 
@@ -37,18 +71,18 @@
 >
     <div class="flex flex-col gap-6">
         <InputField
-            placeholder={$_("auth.sign-up.enter-your-email")}
+            placeholder={$_("auth.sign-up.email.placeholder")}
             style={{ inputType: "text" }}
             name="email"
-            label={$_("auth.sign-up.email")}
+            label={$_("auth.sign-up.email.label")}
             bind:value={email}
             required
         />
         <InputField
-            placeholder={$_("auth.sign-up.enter-your-password")}
+            placeholder={$_("auth.sign-up.password.placeholder")}
             style={{ inputType: "password" }}
             name="password"
-            label={$_("auth.sign-up.password")}
+            label={$_("auth.sign-up.password.label")}
             bind:value={password}
             required
         />
@@ -88,17 +122,19 @@
                 })}</span
             >
         </label>
-        {#if error}
-            <div>
-                {error}
-            </div>
+        {#if state.kind === "error"}
+            <p>
+                {state.message}
+            </p>
         {/if}
         <Button
-            action={{ kind: "submit" }}
+            action={{ kind: "submit", disabled: state.kind === "submitting" }}
             style={{ kind: "primary" }}
             color="blue"
             size="medium"
-            label={$_("auth.sign-up.sign-up")}
+            label={state.kind === "submitting"
+                ? $_("auth.sign-up.submit.submitting")
+                : $_("auth.sign-up.submit.ready")}
         />
         <div class="text-center">
             {$_("auth.sign-up.already-have-an-account")}

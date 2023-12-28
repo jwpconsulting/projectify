@@ -386,19 +386,30 @@ const messages: MessageDirectory = {
         "sign-up": {
             "title": "Sign up",
             "sub-title": "Sign up and start a free trial",
-            "enter-your-email": "Enter your email",
-            "email": "Email",
-            "enter-your-password": "Enter your password",
-            "password": "Password",
+            "email": {
+                label: "Email",
+                placeholder: "Enter your email",
+                missing: "Must enter email",
+            },
+            "password": {
+                label: "Password",
+                placeholder: "Enter your password",
+                missing: "Must enter password",
+            },
             "tos": {
                 label: 'I agree to the <a href="{tosUrl}">Terms of Service</a>',
+                missing: "Must agree to Terms of Service",
             },
             "privacy-policy": {
                 label: 'I agree to the <a href="{privacyPolicyUrl}">Privacy Policy</a>',
+                missing: "Must agree to Privacy Policy",
             },
-            "sign-up": "Sign up",
+            "submit": {
+                ready: "Sign up",
+                submitting: "Signing you up",
+            },
             "already-have-an-account": "Already have an account?",
-            "invalid-credentials":
+            "generic-error":
                 "We are unable to sign you up with these credentials. Please confirm whether you have not signed up with this email already.",
             "log-in-here": "Log in here",
         },
