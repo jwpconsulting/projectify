@@ -8,17 +8,15 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
     import { signUp } from "$lib/repository/user";
+    import type { AuthViewState } from "$lib/types/ui";
     import { logInUrl, sentEmailConfirmationLinkUrl } from "$lib/urls/user";
 
     let email: string | undefined = undefined;
     let password: string | undefined = undefined;
     let tosAgreed: boolean | undefined = undefined;
     let privacyPolicyAgreed: boolean | undefined = undefined;
-    type State =
-        | { kind: "start" }
-        | { kind: "submitting" }
-        | { kind: "error"; message: string };
-    let state: State = { kind: "start" };
+
+    let state: AuthViewState = { kind: "start" };
 
     async function action() {
         state = { kind: "submitting" };

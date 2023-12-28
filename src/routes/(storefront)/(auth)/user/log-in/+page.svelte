@@ -6,6 +6,7 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { login } from "$lib/stores/user";
+    import type { AuthViewState } from "$lib/types/ui";
     import { signUpUrl, requestPasswordResetUrl } from "$lib/urls/user";
 
     import type { PageData } from "./$types";
@@ -17,12 +18,7 @@
     let email: string | undefined = undefined;
     let password: string | undefined = undefined;
 
-    type State =
-        | { kind: "start" }
-        | { kind: "submitting" }
-        | { kind: "error"; message: string };
-
-    let state: State = { kind: "start" };
+    let state: AuthViewState = { kind: "start" };
 
     async function action() {
         state = { kind: "submitting" };

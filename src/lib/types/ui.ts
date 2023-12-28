@@ -182,3 +182,8 @@ export type EditableViewState =
     | { kind: "viewing" }
     | { kind: "editing" }
     | { kind: "saving" };
+
+export type AuthViewState =
+    | { kind: "start" }
+    | { kind: "submitting" }
+    | { kind: "error"; message: string };
