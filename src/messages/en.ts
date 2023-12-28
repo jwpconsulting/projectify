@@ -530,7 +530,6 @@ const messages: MessageDirectory = {
         "general": {
             "title": "General",
             "save": "Save",
-            "delete": "Delete workspace",
             "cancel": "Cancel",
             "workspace-name": {
                 label: "Workspace name",

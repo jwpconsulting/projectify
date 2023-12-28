@@ -55,11 +55,6 @@
         state = { kind: "viewing" };
         resetForm();
     }
-
-    async function onDelete() {
-        console.log("TODO implement deletion");
-        await new Promise(console.error);
-    }
 </script>
 
 <form
@@ -129,13 +124,6 @@
             style={{ kind: "secondary" }}
             color="blue"
             label={$_("workspace-settings.general.cancel")}
-        />
-        <Button
-            action={{ kind: "button", action: onDelete }}
-            size="medium"
-            style={{ kind: "secondary" }}
-            color="red"
-            label={$_("workspace-settings.general.delete")}
         />
     </div>
 </form>
