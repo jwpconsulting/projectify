@@ -178,9 +178,9 @@ class TestWorkspacePictureUploadView:
         )
         assert response.status_code == 403, response.content
 
-    def test_authenticated(
+    def test_upload_then_delete(
         self,
-        user_client: Client,
+        rest_user_client: Client,
         resource_url: str,
         headers: Headers,
         uploaded_file: File,
@@ -188,8 +188,8 @@ class TestWorkspacePictureUploadView:
         workspace: models.Workspace,
         workspace_user: models.WorkspaceUser,
     ) -> None:
-        """Assert we can post to this view this while being logged in."""
-        response = user_client.post(
+        """Try uploading and then deleting a picture."""
+        response = rest_user_client.post(
             resource_url,
             {"file": uploaded_file},
             format="multipart",
@@ -197,7 +197,12 @@ class TestWorkspacePictureUploadView:
         )
         assert response.status_code == 204, response.content
         workspace.refresh_from_db()
-        assert workspace.picture is not None
+        assert workspace.picture
+
+        response = rest_user_client.post(resource_url)
+        assert response.status_code == 204, response.content
+        workspace.refresh_from_db()
+        assert not workspace.picture
 
 
 @pytest.mark.django_db
