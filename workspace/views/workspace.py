@@ -2,7 +2,6 @@
 import uuid
 from typing import (
     Any,
-    Optional,
 )
 
 from django.shortcuts import (
@@ -127,27 +126,25 @@ class WorkspaceReadUpdate(
 
 
 # RPC
-# TODO the following two views are candidates for a GenericViewSet
 class WorkspacePictureUploadView(views.APIView):
     """View that allows uploading a profile picture."""
 
     parser_classes = (parsers.MultiPartParser,)
 
-    def post(
-        self,
-        request: Request,
-        uuid: uuid.UUID,
-        format: Optional[str] = None,
-    ) -> Response:
+    def post(self, request: Request, uuid: uuid.UUID) -> Response:
         """Handle POST."""
         user = request.user
-        file_obj = request.data["file"]
         qs = models.Workspace.objects.filter_for_user_and_uuid(
             user,
             uuid,
         )
         workspace = get_object_or_404(qs)
-        workspace.picture = file_obj
+
+        file_obj = request.data.get("file")
+        if file_obj is None:
+            workspace.picture.delete()
+        else:
+            workspace.picture = file_obj
         workspace.save()
         return Response(status=204)
 
