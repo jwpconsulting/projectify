@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import RequestPasswordReset from "$lib/figma/screens/auth/RequestPasswordReset.svelte";
+import RequestPasswordReset from "$routes/(storefront)/(auth)/user/request-password-reset/+page.svelte";
 
 const meta: Meta<RequestPasswordReset> = {
     component: RequestPasswordReset,

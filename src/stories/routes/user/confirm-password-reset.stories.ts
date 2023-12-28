@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import ConfirmPasswordReset from "$lib/figma/screens/auth/ConfirmPasswordReset.svelte";
+import ConfirmPasswordReset from "$routes/(storefront)/(auth)/user/confirm-password-reset/[email]/[token]/+page.svelte";
 
 const meta: Meta<ConfirmPasswordReset> = {
     component: ConfirmPasswordReset,
     args: {
-        email: "",
-        token: "",
-        newPassword1: "",
-        newPassword2: "",
+        data: {
+            email: "hello@example.com",
+            token: "yo",
+        },
     },
 };
 export default meta;
