@@ -25,6 +25,7 @@
         uuid: "does-not-exist",
         title: "",
         created: "",
+        picture: null,
         modified: "",
     };
     const workspaceBoardFallback: WorkspaceBoardDetail = {

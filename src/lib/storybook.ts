@@ -90,6 +90,7 @@ export const workspace = {
     title: "This is a workspace, the title is veeeeeryyy loooong",
     created: "",
     modified: "",
+    picture: null,
     workspace_boards: [workspaceBoard],
     workspace_users: [workspaceUser],
 };

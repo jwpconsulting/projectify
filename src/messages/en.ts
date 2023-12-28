@@ -543,6 +543,7 @@ const messages: MessageDirectory = {
                 "alt": "A picture used to identify this workspace",
                 "no-picture": "No picture uploaded.",
                 "label": "Upload a picture",
+                "remove-picture": "Remove picture",
             },
         },
         "workspace-users": {

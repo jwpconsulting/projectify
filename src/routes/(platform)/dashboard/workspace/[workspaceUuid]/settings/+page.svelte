@@ -30,7 +30,15 @@
         state = { kind: "editing" };
     }
 
+    function removePicture() {
+        state = { kind: "editing" };
+        imageFile = undefined;
+        picture = null;
+    }
+
     let imageFile: File | undefined = undefined;
+    $: hasImage = imageFile !== undefined || picture !== null;
+
     function fileSelected(file: File, src: string) {
         state = { kind: "editing" };
         imageFile = file;
@@ -39,13 +47,10 @@
 
     async function save() {
         state = { kind: "saving" };
-        if (imageFile) {
-            await uploadImage(
-                imageFile,
-                vars.API_ENDPOINT +
-                    `/workspace/workspace/${uuid}/picture-upload`,
-            );
-        }
+        await uploadImage(
+            imageFile,
+            vars.API_ENDPOINT + `/workspace/workspace/${uuid}/picture-upload`,
+        );
         workspace = await updateWorkspace(uuid, title, description, { fetch });
         resetForm();
         state = { kind: "viewing" };
@@ -103,6 +108,17 @@
             style={{ inputType: "text" }}
             name="title"
             label={$_("workspace-settings.general.description.label")}
+        />
+        <Button
+            action={{
+                kind: "button",
+                action: removePicture,
+                disabled: !hasImage || state.kind === "saving",
+            }}
+            size="medium"
+            style={{ kind: "secondary" }}
+            color="blue"
+            label={$_("workspace-settings.general.picture.remove-picture")}
         />
         <Button
             action={{

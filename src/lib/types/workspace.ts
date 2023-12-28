@@ -93,7 +93,7 @@ export type WorkspaceBoardDetail = WorkspaceBoard & {
 export type ArchivedWorkspaceBoard = WorkspaceBoard & { archived: string };
 
 export type Workspace = {
-    picture?: string;
+    picture: string | null;
     workspace_users?: WorkspaceUser[];
     workspace_boards?: WorkspaceBoard[];
     labels?: Label[];
