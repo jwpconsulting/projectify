@@ -416,10 +416,16 @@ const messages: MessageDirectory = {
         },
         "log-in": {
             "title": "Log in",
-            "enter-your-email": "Enter your email",
-            "email": "Email",
-            "enter-your-password": "Enter your password",
-            "password": "Password",
+            "email": {
+                label: "Email",
+                placeholder: "Enter your email",
+                missing: "Must enter email",
+            },
+            "password": {
+                label: "Password",
+                placeholder: "Enter your password",
+                missing: "Must enter password",
+            },
             "forgot-password": "Forgot password",
             "log-in": "Log in",
             "no-account": "Don't have an account yet?",

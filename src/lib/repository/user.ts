@@ -94,6 +94,7 @@ export async function logIn(
     password: string,
     repositoryContext: RepositoryContext,
 ): Promise<User> {
+    // TODO return result here instead
     return failOrOk(
         await postWithCredentialsJson<User>(
             "/user/user/log-in",

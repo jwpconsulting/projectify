@@ -15,6 +15,7 @@ export async function login(
     redirectTo: string | undefined,
     repositoryContext: RepositoryContext,
 ): Promise<void> {
+    // TODO handle result
     const response = await userRepository.logIn(
         email,
         password,

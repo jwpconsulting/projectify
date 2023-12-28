@@ -14,19 +14,40 @@
 
     const { redirectTo } = data;
 
-    let email: string;
-    let password: string;
+    let email: string | undefined = undefined;
+    let password: string | undefined = undefined;
 
-    let error: string | undefined;
+    type State =
+        | { kind: "start" }
+        | { kind: "submitting" }
+        | { kind: "error"; message: string };
+
+    let state: State = { kind: "start" };
 
     async function action() {
-        // TODO validate form
-        error = undefined;
+        state = { kind: "submitting" };
+        if (!email) {
+            state = {
+                kind: "error",
+                message: $_("auth.log-in.email.missing"),
+            };
+            return;
+        }
+        if (!password) {
+            state = {
+                kind: "error",
+                message: $_("auth.log-in.password.missing"),
+            };
+            return;
+        }
         try {
             await login(email, password, redirectTo, { fetch });
         } catch {
             // TODO set the error to something meaningful
-            error = $_("auth.log-in.invalid-credentials");
+            state = {
+                kind: "error",
+                message: $_("auth.log-in.invalid-credentials"),
+            };
         }
     }
 </script>
@@ -34,18 +55,18 @@
 <AuthScreen title={$_("auth.log-in.title")} {action}>
     <div class="flex flex-col gap-6">
         <InputField
-            placeholder={$_("auth.log-in.enter-your-email")}
+            placeholder={$_("auth.log-in.email.placeholder")}
             style={{ inputType: "email" }}
             name="email"
-            label={$_("auth.log-in.email")}
+            label={$_("auth.log-in.email.label")}
             required
             bind:value={email}
         />
         <InputField
-            placeholder={$_("auth.log-in.enter-your-password")}
+            placeholder={$_("auth.log-in.password.placeholder")}
             style={{ inputType: "password" }}
             name="password"
-            label={$_("auth.log-in.password")}
+            label={$_("auth.log-in.password.label")}
             bind:value={password}
             required
             anchorBottom={{
@@ -53,13 +74,13 @@
                 label: $_("auth.log-in.forgot-password"),
             }}
         />
-        {#if error}
-            <div>
-                {error}
-            </div>
+        {#if state.kind === "error"}
+            <p>
+                {state.message}
+            </p>
         {/if}
         <Button
-            action={{ kind: "button", action }}
+            action={{ kind: "submit", disabled: state.kind === "submitting" }}
             style={{ kind: "primary" }}
             color="blue"
             size="medium"
