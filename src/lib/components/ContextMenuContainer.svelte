@@ -14,7 +14,7 @@
     let contextMenu: HTMLElement | undefined = undefined;
     let resizeObserver: ResizeObserver | undefined = undefined;
 
-    let unfocus: undefined | (() => void) = undefined;
+    let removeFocusTrap: (() => void) | undefined = undefined;
     let escapeUnsubscriber: (() => void) | undefined = undefined;
     let removeScrollTrap: (() => void) | undefined = undefined;
 
@@ -31,14 +31,14 @@
                 if (resizeObserver) {
                     throw new Error("There already was a resizeObserver");
                 }
-                unfocus = keepFocusInside(contextMenu);
+                removeFocusTrap = keepFocusInside(contextMenu);
                 addObserver(contextMenu, $contextMenuState);
                 escapeUnsubscriber = handleKey("Escape", closeContextMenu);
                 removeScrollTrap = blockScrolling();
             } else {
-                if (unfocus) {
-                    unfocus();
-                    unfocus = undefined;
+                if (removeFocusTrap) {
+                    removeFocusTrap();
+                    removeFocusTrap = undefined;
                 }
                 clearObserver();
                 if (escapeUnsubscriber) {
@@ -56,9 +56,9 @@
         return () => {
             // It follows that when a context menu is visible, there is a focus
             // lock. Might be a good chance to do an integrity check here.
-            if (unfocus) {
-                unfocus();
-                unfocus = undefined;
+            if (removeFocusTrap) {
+                removeFocusTrap();
+                removeFocusTrap = undefined;
             }
             // One for good measure
             clearObserver();
