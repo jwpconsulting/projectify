@@ -23,6 +23,5 @@ max_line_length=72
 [*.nix]
 indent_size = 2
 
-
 [flake.lock]
 indent_size = 2
