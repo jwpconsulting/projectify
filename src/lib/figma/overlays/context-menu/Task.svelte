@@ -56,6 +56,12 @@
         kind.location === "dashboard"
             ? getTaskPosition(kind.workspaceBoardSection, kind.task)
             : undefined;
+    $: showMoveTop = taskPosition && taskPosition.kind !== "start";
+    $: showMoveBottom =
+        taskPosition &&
+        (taskPosition.kind === "start"
+            ? !taskPosition.isOnly
+            : taskPosition.kind !== "end");
 </script>
 
 <Layout>
@@ -89,7 +95,7 @@
                 />
             {/each}
         {/if}
-        {#if taskPosition && taskPosition.kind !== "start"}
+        {#if showMoveTop}
             <ContextMenuButton
                 kind={{
                     kind: "button",
@@ -105,7 +111,7 @@
                 icon={SortAscending}
             />
         {/if}
-        {#if taskPosition && taskPosition.kind !== "end" && taskPosition.kind === "start" && !taskPosition.isOnly}
+        {#if showMoveBottom}
             <ContextMenuButton
                 kind={{
                     kind: "button",
