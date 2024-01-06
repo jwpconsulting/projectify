@@ -7,7 +7,6 @@
         contextMenuState,
         handleKey,
     } from "$lib/stores/globalUi";
-    import type { ContextMenuState } from "$lib/types/ui";
     import { keepFocusInside } from "$lib/utils/focus";
     import { onResize } from "$lib/utils/resize";
     import { blockScrolling } from "$lib/utils/scroll";
@@ -34,11 +33,12 @@
                     throw new Error("There already was a resizeObserver");
                 }
                 removeFocusTrap = keepFocusInside(contextMenu);
-                addObserver(contextMenu, $contextMenuState);
+                const { anchor } = $contextMenuState;
+                addObserver(contextMenu, anchor);
                 escapeUnsubscriber = handleKey("Escape", closeContextMenu);
                 removeScrollTrap = blockScrolling();
                 removeResizeListener = onResize(
-                    repositionContextMenu.bind(null, contextMenu),
+                    repositionContextMenu.bind(null, anchor),
                 );
             } else {
                 clearTraps();
@@ -70,12 +70,7 @@
         }
     }
 
-    function addObserver(
-        contextMenu: HTMLElement,
-        $contextMenuState: ContextMenuState & { kind: "visible" },
-    ) {
-        console.debug($contextMenuState);
-        const anchor = $contextMenuState.anchor;
+    function addObserver(contextMenu: HTMLElement, anchor: HTMLElement) {
         resizeObserver = new ResizeObserver(() =>
             repositionContextMenu(anchor),
         );
@@ -97,48 +92,57 @@
         if (!contextMenu) {
             throw new Error("Expected contextMenu");
         }
-        if (contextMenu.offsetWidth == 0) {
+        // Width, height of context menu
+        const {
+            offsetWidth: contextMenuWidth,
+            offsetHeight: contextMenuHeight,
+        } = contextMenu;
+        console.debug({ contextMenuWidth, contextMenuHeight });
+        if (contextMenuWidth == 0) {
             console.debug("waiting for contextMenu to grow");
             return;
         }
-        const rect = anchor.getBoundingClientRect();
-        const anchorLeft = rect.left;
-        const anchorTop = rect.top;
-        // Get width of viewport
-        const viewPortWidth = document.body.clientWidth;
+        // Left, top position of anchor
+        // Height of anchor
+        const {
+            left: anchorLeft,
+            top: anchorTop,
+            height: anchorHeight,
+        } = anchor.getBoundingClientRect();
+        console.debug({ anchor, anchorLeft, anchorTop, anchorHeight });
+        // Width, height of viewport
+        const { clientWidth: viewPortWidth, clientHeight: viewPortHeight } =
+            document.body;
+        console.debug({ viewPortWidth, viewPortHeight });
         // Get x of right side of context menu
-        const xRightSide = anchorLeft + contextMenu.offsetWidth;
+        const xRightSide = anchorLeft + contextMenuWidth;
         // Calculate how many pixels the right side of contextMenu will go
         // over the width
         const xOverlap = Math.max(0, xRightSide - viewPortWidth);
-        console.debug("offsetWidth", contextMenu.offsetWidth);
-        console.debug({ viewPortWidth, anchorLeft, xRightSide, xOverlap });
-        if (xOverlap > 0) {
-            console.debug("xOverlap", xOverlap);
-        }
+        console.debug({ xRightSide, xOverlap });
         // Subtract the overlapy from y
-        const x = anchorLeft - xOverlap;
-        // Get height of viewport
-        const viewPortHeight = document.body.clientHeight;
+        const contextMenuLeft = anchorLeft - xOverlap;
         // Calculate how many pixels from anchor bottom to viewport bottom
         const anchorBottomToViewPortBottom = Math.abs(
-            viewPortHeight - (anchorTop + anchor.offsetHeight),
+            viewPortHeight - (anchorTop + anchorHeight),
         );
         // Calculate how many pixels high the context menu is
-        const contextMenuHeight = contextMenu.offsetHeight;
-        let y: number;
-        // If the context menu takes up more pixels, then reposition the context
-        // menu to be above the anchor
-        if (contextMenuHeight > anchorBottomToViewPortBottom)
-            // Subtract the overlap from y
-            y = rect.top - contextMenuHeight;
-        else {
-            // Else position it under the anchor;
-            y = rect.top + anchor.offsetHeight;
-        }
+        // If the context menu takes up more pixels, then reposition the
+        // context menu to be above the anchor
+        const contextMenuTop =
+            contextMenuHeight > anchorBottomToViewPortBottom
+                ? // Subtract the overlap from y
+                  anchorTop - contextMenuHeight
+                : // Else position it under the anchor;
+                  anchorTop + anchorHeight;
 
-        contextMenu.style.left = `${x}px`;
-        contextMenu.style.top = `${y}px`;
+        console.debug({
+            anchorBottomToViewPortBottom,
+            contextMenuLeft,
+            contextMenuTop,
+        });
+        contextMenu.style.left = `${contextMenuLeft}px`;
+        contextMenu.style.top = `${contextMenuTop}px`;
     }
 </script>
 
