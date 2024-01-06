@@ -11,8 +11,8 @@
     import { keepFocusInside } from "$lib/utils/focus";
     import { blockScrolling } from "$lib/utils/scroll";
 
-    let contextMenu: HTMLElement | null = null;
-    let resizeObserver: ResizeObserver | null = null;
+    let contextMenu: HTMLElement | undefined = undefined;
+    let resizeObserver: ResizeObserver | undefined = undefined;
 
     let unfocus: undefined | (() => void) = undefined;
     let escapeUnsubscriber: (() => void) | undefined = undefined;
@@ -89,11 +89,11 @@
      * disconnect resizeObserver, if it exists
      */
     function clearObserver() {
-        if (resizeObserver === null) {
+        if (resizeObserver === undefined) {
             return;
         }
         resizeObserver.disconnect();
-        resizeObserver = null;
+        resizeObserver = undefined;
     }
 
     function repositionContextMenu(anchor: HTMLElement) {
