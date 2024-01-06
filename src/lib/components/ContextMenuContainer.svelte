@@ -10,17 +10,11 @@
     import type { ContextMenuState } from "$lib/types/ui";
     import { keepFocusInside } from "$lib/utils/focus";
 
-    import { browser } from "$app/environment";
-
     let contextMenu: HTMLElement | null = null;
     let resizeObserver: ResizeObserver | null = null;
     let repositioned = false;
 
     onMount(() => {
-        if (!browser) {
-            return undefined;
-        }
-
         let unfocus: undefined | (() => void) = undefined;
         let escapeUnsubscriber: (() => void) | undefined = undefined;
         const unsubscriber = contextMenuState.subscribe(
