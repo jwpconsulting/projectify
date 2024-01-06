@@ -39,6 +39,23 @@ poetry run flake8
 poetry run mypy
 ```
 
+## Using Nix Flake and direnv
+
+You can automatically make Node and other tools available using the nix flake
+provided in this repository. To get started, you need to have the following
+installed and configured on your system:
+
+- [Nix](https://nixos.org/download#download-nix)
+- [Nix flakes](https://nixos.wiki/wiki/Flakes)
+- [Direnv](https://direnv.net/)
+- [nix-direnv](https://github.com/nix-community/nix-direnv)
+
+If everything is configured correctly, running `direnv allow` from the
+root directory of this repository will make all tools available. Setting up
+nix was a complicated process and took some time to get right.
+If you skip NixOS, home manager, and so on, you might be able to finish it in
+a few hours. If you have any questions, please contact the maintainers.
+
 ## Creating a new component
 
 This will create a component and story file for you automatically.
