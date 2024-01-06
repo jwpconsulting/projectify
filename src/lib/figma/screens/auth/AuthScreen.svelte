@@ -2,6 +2,7 @@
     export let title: string;
     export let action: () => Promise<void>;
 
+    // TODO use undefined
     export let subTitle: string | null = null;
 </script>
 
