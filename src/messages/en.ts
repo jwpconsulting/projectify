@@ -25,10 +25,6 @@ const messages: MessageDirectory = {
                         label: "Workspace board name",
                         placeholder: "Enter a workspace board name",
                     },
-                    deadline: {
-                        label: "Deadline",
-                        placeholder: "Select date",
-                    },
                 },
                 "cancel": "Cancel",
                 "create-board": "Create",

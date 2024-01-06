@@ -50,16 +50,6 @@
             style={{ inputType: "text" }}
             bind:value={title}
         />
-        <InputField
-            name="deadline"
-            label={$_(
-                "overlay.constructive.create-workspace-board.form.deadline.label",
-            )}
-            placeholder={$_(
-                "overlay.constructive.create-workspace-board.form.deadline.placeholder",
-            )}
-            style={{ inputType: "text" }}
-        />
     </svelte:fragment>
     <svelte:fragment slot="buttons">
         <Button
