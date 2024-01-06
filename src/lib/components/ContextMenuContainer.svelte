@@ -110,9 +110,18 @@
             height: anchorHeight,
         } = anchor.getBoundingClientRect();
         console.debug({ anchor, anchorLeft, anchorTop, anchorHeight });
+        if (anchorHeight === 0) {
+            console.debug(
+                "Context menu anchor",
+                anchor,
+                "is very likely hidden",
+            );
+            closeContextMenu();
+            return;
+        }
         // Width, height of viewport
-        const { clientWidth: viewPortWidth, clientHeight: viewPortHeight } =
-            document.body;
+        const { innerWidth: viewPortWidth, innerHeight: viewPortHeight } =
+            window;
         console.debug({ viewPortWidth, viewPortHeight });
         // Get x of right side of context menu
         const xRightSide = anchorLeft + contextMenuWidth;
