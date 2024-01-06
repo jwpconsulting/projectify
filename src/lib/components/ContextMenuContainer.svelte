@@ -9,12 +9,14 @@
     } from "$lib/stores/globalUi";
     import type { ContextMenuState } from "$lib/types/ui";
     import { keepFocusInside } from "$lib/utils/focus";
+    import { blockScrolling } from "$lib/utils/scroll";
 
     let contextMenu: HTMLElement | null = null;
     let resizeObserver: ResizeObserver | null = null;
 
     let unfocus: undefined | (() => void) = undefined;
     let escapeUnsubscriber: (() => void) | undefined = undefined;
+    let removeScrollTrap: (() => void) | undefined = undefined;
 
     onMount(() => {
         return closeContextMenu;
@@ -32,6 +34,7 @@
                 unfocus = keepFocusInside(contextMenu);
                 addObserver(contextMenu, $contextMenuState);
                 escapeUnsubscriber = handleKey("Escape", closeContextMenu);
+                removeScrollTrap = blockScrolling();
             } else {
                 if (unfocus) {
                     unfocus();
@@ -41,6 +44,9 @@
                 if (escapeUnsubscriber) {
                     escapeUnsubscriber();
                     escapeUnsubscriber = undefined;
+                }
+                if (removeScrollTrap) {
+                    removeScrollTrap();
                 }
             }
         });
@@ -54,14 +60,16 @@
                 unfocus();
                 unfocus = undefined;
             }
+            // One for good measure
+            clearObserver();
             // Think about whether this one is necessary
             if (escapeUnsubscriber) {
                 escapeUnsubscriber();
                 escapeUnsubscriber = undefined;
             }
-
-            // One for good measure
-            clearObserver();
+            if (removeScrollTrap) {
+                removeScrollTrap();
+            }
         };
     });
 
