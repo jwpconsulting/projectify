@@ -7,6 +7,9 @@
 # For example, for unused imports, eslint will first clear the lines, and
 # then any remaining whitespace will be cleaned up by prettier.
 # For good measure, we check one more time after a potential cleanup.
+
+npm run sync-types || exit
+
 if npm run format
 then
     echo "npm run format successful"
