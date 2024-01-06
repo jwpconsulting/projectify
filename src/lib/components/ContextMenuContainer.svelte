@@ -9,6 +9,7 @@
     } from "$lib/stores/globalUi";
     import type { ContextMenuState } from "$lib/types/ui";
     import { keepFocusInside } from "$lib/utils/focus";
+    import { onResize } from "$lib/utils/resize";
     import { blockScrolling } from "$lib/utils/scroll";
 
     let contextMenu: HTMLElement | undefined = undefined;
@@ -17,6 +18,7 @@
     let removeFocusTrap: (() => void) | undefined = undefined;
     let escapeUnsubscriber: (() => void) | undefined = undefined;
     let removeScrollTrap: (() => void) | undefined = undefined;
+    let removeResizeListener: (() => void) | undefined = undefined;
 
     onMount(() => {
         return closeContextMenu;
@@ -62,6 +64,9 @@
         }
         if (removeScrollTrap) {
             removeScrollTrap();
+        }
+        if (removeResizeListener) {
+            removeResizeListener();
         }
     }
 
