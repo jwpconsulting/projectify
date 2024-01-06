@@ -14,14 +14,15 @@
     let resizeObserver: ResizeObserver | null = null;
     let repositioned = false;
 
+    let unfocus: undefined | (() => void) = undefined;
+    let escapeUnsubscriber: (() => void) | undefined = undefined;
+
     onMount(() => {
         return closeContextMenu;
     });
 
     onMount(() => {
-        let unfocus: undefined | (() => void) = undefined;
-        let escapeUnsubscriber: (() => void) | undefined = undefined;
-        const unsubscriber = contextMenuState.subscribe(
+        return contextMenuState.subscribe(
             ($contextMenuState) => {
                 if (!contextMenu) {
                     throw new Error("Expected contextMenu");
@@ -47,6 +48,9 @@
                 }
             },
         );
+    });
+
+    onMount(() => {
         return () => {
             // It follows that when a context menu is visible, there is a focus
             // lock. Might be a good chance to do an integrity check here.
@@ -54,7 +58,6 @@
                 unfocus();
                 unfocus = undefined;
             }
-            unsubscriber();
             // Think about whether this one is necessary
             if (escapeUnsubscriber) {
                 escapeUnsubscriber();
