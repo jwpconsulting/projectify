@@ -3,7 +3,6 @@
         ArrowDown,
         ArrowUp,
         Pencil,
-        Plus,
         Selector,
         Trash,
         X,
@@ -28,7 +27,6 @@
         WorkspaceBoard,
         WorkspaceBoardSection,
     } from "$lib/types/workspace";
-    import { getNewTaskUrl } from "$lib/urls";
 
     export let workspaceBoard: WorkspaceBoard;
     export let workspaceBoardSection: WorkspaceBoardSection;
@@ -158,15 +156,6 @@
         label={$_("overlay.context-menu.workspace-board-section.edit-title")}
         state="normal"
         icon={Pencil}
-    />
-    <ContextMenuButton
-        kind={{
-            kind: "a",
-            href: getNewTaskUrl(workspaceBoardSection.uuid),
-        }}
-        label={$_("overlay.context-menu.workspace-board-section.add-task")}
-        state="normal"
-        icon={Plus}
     />
     <ContextMenuButton
         kind={{

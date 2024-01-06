@@ -166,7 +166,6 @@ const messages: MessageDirectory = {
                 "switch-previous": "Switch with previous section",
                 "switch-next": "Switch with next section",
                 "edit-title": "Edit section title",
-                "add-task": "Add task",
                 "delete-workspace-board-section": "Delete section",
             },
             "task": {
