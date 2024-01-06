@@ -24,10 +24,10 @@
 
     onMount(() => {
         return contextMenuState.subscribe(($contextMenuState) => {
-            if (!contextMenu) {
-                throw new Error("Expected contextMenu");
-            }
             if ($contextMenuState.kind === "visible") {
+                if (!contextMenu) {
+                    throw new Error("Expected contextMenu");
+                }
                 if (resizeObserver) {
                     throw new Error("There already was a resizeObserver");
                 }
@@ -35,43 +35,35 @@
                 addObserver(contextMenu, $contextMenuState);
                 escapeUnsubscriber = handleKey("Escape", closeContextMenu);
                 removeScrollTrap = blockScrolling();
+                removeResizeListener = onResize(
+                    repositionContextMenu.bind(null, contextMenu),
+                );
             } else {
-                if (removeFocusTrap) {
-                    removeFocusTrap();
-                    removeFocusTrap = undefined;
-                }
-                clearObserver();
-                if (escapeUnsubscriber) {
-                    escapeUnsubscriber();
-                    escapeUnsubscriber = undefined;
-                }
-                if (removeScrollTrap) {
-                    removeScrollTrap();
-                }
+                clearTraps();
             }
         });
     });
 
     onMount(() => {
-        return () => {
-            // It follows that when a context menu is visible, there is a focus
-            // lock. Might be a good chance to do an integrity check here.
-            if (removeFocusTrap) {
-                removeFocusTrap();
-                removeFocusTrap = undefined;
-            }
-            // One for good measure
-            clearObserver();
-            // Think about whether this one is necessary
-            if (escapeUnsubscriber) {
-                escapeUnsubscriber();
-                escapeUnsubscriber = undefined;
-            }
-            if (removeScrollTrap) {
-                removeScrollTrap();
-            }
-        };
+        return clearTraps;
     });
+
+    function clearTraps() {
+        if (removeFocusTrap) {
+            removeFocusTrap();
+            removeFocusTrap = undefined;
+        }
+        // One for good measure
+        clearObserver();
+        // Think about whether this one is necessary
+        if (escapeUnsubscriber) {
+            escapeUnsubscriber();
+            escapeUnsubscriber = undefined;
+        }
+        if (removeScrollTrap) {
+            removeScrollTrap();
+        }
+    }
 
     function addObserver(
         contextMenu: HTMLElement,
