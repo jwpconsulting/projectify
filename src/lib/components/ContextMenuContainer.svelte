@@ -15,6 +15,10 @@
     let repositioned = false;
 
     onMount(() => {
+        return closeContextMenu;
+    });
+
+    onMount(() => {
         let unfocus: undefined | (() => void) = undefined;
         let escapeUnsubscriber: (() => void) | undefined = undefined;
         const unsubscriber = contextMenuState.subscribe(
@@ -52,7 +56,6 @@
             }
             unsubscriber();
             // Think about whether this one is necessary
-            closeContextMenu();
             if (escapeUnsubscriber) {
                 escapeUnsubscriber();
                 escapeUnsubscriber = undefined;
