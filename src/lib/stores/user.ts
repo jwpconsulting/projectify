@@ -5,6 +5,7 @@ import { getUser, updateUser } from "$lib/repository/user";
 import * as userRepository from "$lib/repository/user";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { User } from "$lib/types/user";
+import { dashboardUrl } from "$lib/urls/dashboard";
 
 export const user = writable<User | undefined>(undefined);
 
@@ -23,9 +24,7 @@ export async function login(
     );
     user.set(response);
 
-    if (redirectTo) {
-        await goto(redirectTo);
-    }
+    await goto(redirectTo ?? dashboardUrl);
 }
 
 export async function logOut(repositoryContext: RepositoryContext) {
