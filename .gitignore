@@ -14,3 +14,6 @@ storybook-static
 /tmp
 .mypy_cache/
 .eslintcache
+
+# Direnv
+/.direnv/
