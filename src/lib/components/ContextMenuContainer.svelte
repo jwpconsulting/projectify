@@ -12,7 +12,6 @@
 
     let contextMenu: HTMLElement | null = null;
     let resizeObserver: ResizeObserver | null = null;
-    let repositioned = false;
 
     let unfocus: undefined | (() => void) = undefined;
     let escapeUnsubscriber: (() => void) | undefined = undefined;
@@ -22,32 +21,29 @@
     });
 
     onMount(() => {
-        return contextMenuState.subscribe(
-            ($contextMenuState) => {
-                if (!contextMenu) {
-                    throw new Error("Expected contextMenu");
+        return contextMenuState.subscribe(($contextMenuState) => {
+            if (!contextMenu) {
+                throw new Error("Expected contextMenu");
+            }
+            if ($contextMenuState.kind === "visible") {
+                if (resizeObserver) {
+                    throw new Error("There already was a resizeObserver");
                 }
-                if ($contextMenuState.kind === "visible") {
-                    if (resizeObserver) {
-                        throw new Error("There already was a resizeObserver");
-                    }
-                    unfocus = keepFocusInside(contextMenu);
-                    addObserver(contextMenu, $contextMenuState);
-                    escapeUnsubscriber = handleKey("Escape", closeContextMenu);
-                } else {
-                    if (unfocus) {
-                        unfocus();
-                        unfocus = undefined;
-                    }
-                    resizeObserver = null;
-                    repositioned = false;
-                    if (escapeUnsubscriber) {
-                        escapeUnsubscriber();
-                        escapeUnsubscriber = undefined;
-                    }
+                unfocus = keepFocusInside(contextMenu);
+                addObserver(contextMenu, $contextMenuState);
+                escapeUnsubscriber = handleKey("Escape", closeContextMenu);
+            } else {
+                if (unfocus) {
+                    unfocus();
+                    unfocus = undefined;
                 }
-            },
-        );
+                clearObserver();
+                if (escapeUnsubscriber) {
+                    escapeUnsubscriber();
+                    escapeUnsubscriber = undefined;
+                }
+            }
+        });
     });
 
     onMount(() => {
@@ -63,6 +59,9 @@
                 escapeUnsubscriber();
                 escapeUnsubscriber = undefined;
             }
+
+            // One for good measure
+            clearObserver();
         };
     });
 
@@ -72,26 +71,31 @@
     ) {
         console.debug($contextMenuState);
         const anchor = $contextMenuState.anchor;
-        repositioned = false;
         resizeObserver = new ResizeObserver(() =>
             repositionContextMenu(anchor),
         );
         resizeObserver.observe(contextMenu);
     }
 
+    /*
+     * disconnect resizeObserver, if it exists
+     */
+    function clearObserver() {
+        if (resizeObserver === null) {
+            return;
+        }
+        resizeObserver.disconnect();
+        resizeObserver = null;
+    }
+
     function repositionContextMenu(anchor: HTMLElement) {
         if (!contextMenu) {
             throw new Error("Expected contextMenu");
-        }
-        if (repositioned) {
-            console.debug("already repositioned");
-            return;
         }
         if (contextMenu.offsetWidth == 0) {
             console.debug("waiting for contextMenu to grow");
             return;
         }
-        console.debug("repositioning");
         const rect = anchor.getBoundingClientRect();
         const anchorLeft = rect.left;
         const anchorTop = rect.top;
@@ -130,12 +134,6 @@
 
         contextMenu.style.left = `${x}px`;
         contextMenu.style.top = `${y}px`;
-
-        if (!resizeObserver) {
-            throw new Error("Expected resizeObserver");
-        }
-        resizeObserver.disconnect();
-        repositioned = true;
     }
 </script>
 
