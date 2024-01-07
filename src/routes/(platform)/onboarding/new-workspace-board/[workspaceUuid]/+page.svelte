@@ -40,7 +40,7 @@
         if (!title) {
             throw new Error("Expected title");
         }
-        const { uuid } = await createWorkspaceBoard(
+        const result = await createWorkspaceBoard(
             workspace,
             {
                 title,
@@ -48,6 +48,10 @@
             },
             { fetch },
         );
+        if (!result.ok) {
+            throw result.error;
+        }
+        const { uuid } = result.data;
         const nextStep = getNewTaskUrl(uuid);
         await goto(nextStep);
     }

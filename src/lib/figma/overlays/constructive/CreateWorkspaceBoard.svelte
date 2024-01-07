@@ -27,18 +27,22 @@
         rejectConstructiveOverlay,
         resolveConstructiveOverlay,
     } from "$lib/stores/globalUi";
+    import type { AuthViewState } from "$lib/types/ui";
     import type { Workspace } from "$lib/types/workspace";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
     export let workspace: Workspace;
 
+    let state: AuthViewState = { kind: "start" };
+
     let title: string | undefined = undefined;
 
     async function onSubmit() {
+        state = { kind: "submitting" };
         if (!title) {
             throw new Error("Not valid");
         }
-        const { uuid } = await createWorkspaceBoard(
+        const result = await createWorkspaceBoard(
             workspace,
             {
                 title,
@@ -46,8 +50,14 @@
             },
             { fetch },
         );
-        await goto(getDashboardWorkspaceBoardUrl(uuid));
-        resolveConstructiveOverlay();
+        if (result.ok) {
+            const { uuid } = result.data;
+            await goto(getDashboardWorkspaceBoardUrl(uuid));
+            resolveConstructiveOverlay();
+        } else {
+            // TODO format error
+            state = { kind: "error", message: JSON.stringify(result.error) };
+        }
     }
 </script>
 
@@ -73,6 +83,7 @@
             action={{
                 kind: "button",
                 action: rejectConstructiveOverlay,
+                disabled: state.kind === "submitting",
             }}
             style={{ kind: "secondary" }}
             size="medium"
@@ -80,7 +91,7 @@
             label={$_("overlay.constructive.create-workspace-board.cancel")}
         />
         <Button
-            action={{ kind: "submit" }}
+            action={{ kind: "submit", disabled: state.kind === "submitting" }}
             style={{ kind: "primary" }}
             size="medium"
             color="blue"

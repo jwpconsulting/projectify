@@ -31,25 +31,22 @@ import type {
     WorkspaceBoardDetail,
 } from "$lib/types/workspace";
 
+import type { ApiResponse } from "../types";
+
 // WorkspaceBoard CRUD
 // Create
 export async function createWorkspaceBoard(
     workspace: Workspace,
-    workspaceBoard: { title: string; description: string; deadline?: string },
+    workspaceBoard: Pick<WorkspaceBoard, "title" | "description">,
     repositoryContext: RepositoryContext,
-): Promise<WorkspaceBoard> {
-    const { title, description, deadline } = workspaceBoard;
+): Promise<ApiResponse<WorkspaceBoard, unknown>> {
     const { uuid: workspace_uuid } = workspace;
     const response = await postWithCredentialsJson<Workspace>(
         `/workspace/workspace-board/`,
-        { workspace_uuid, title, description, deadline },
+        { ...workspaceBoard, workspace_uuid },
         repositoryContext,
     );
-    if (response.kind !== "ok") {
-        console.error("TODO handle", response);
-        throw new Error("Error while creating workspace  board");
-    }
-    return response.data;
+    return response;
 }
 
 // Read
