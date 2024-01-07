@@ -71,13 +71,11 @@ export async function updateWorkspaceBoardSection(
         "uuid" | "title" | "description"
     >,
     repositoryContext: RepositoryContext,
-): Promise<void> {
-    return failOrOk(
-        await putWithCredentialsJson(
-            `/workspace/workspace-board-section/${workspaceBoardSection.uuid}`,
-            workspaceBoardSection,
-            repositoryContext,
-        ),
+): Promise<ApiResponse<void, unknown>> {
+    return await putWithCredentialsJson(
+        `/workspace/workspace-board-section/${workspaceBoardSection.uuid}`,
+        workspaceBoardSection,
+        repositoryContext,
     );
 }
 
