@@ -76,18 +76,13 @@ export async function getArchivedWorkspaceBoards(
 
 // Update
 export async function updateWorkspaceBoard(
-    workspaceBoard: Pick<
-        WorkspaceBoard,
-        "title" | "description" | "uuid" | "deadline"
-    >,
+    workspaceBoard: Pick<WorkspaceBoard, "title" | "description" | "uuid">,
     repositoryContext: RepositoryContext,
-) {
-    return failOrOk(
-        await putWithCredentialsJson(
-            `/workspace/workspace-board/${workspaceBoard.uuid}`,
-            workspaceBoard,
-            repositoryContext,
-        ),
+): Promise<ApiResponse<void, unknown>> {
+    return await putWithCredentialsJson(
+        `/workspace/workspace-board/${workspaceBoard.uuid}`,
+        workspaceBoard,
+        repositoryContext,
     );
 }
 // Delete

@@ -26,20 +26,28 @@
         rejectConstructiveOverlay,
         resolveConstructiveOverlay,
     } from "$lib/stores/globalUi";
+    import type { AuthViewState } from "$lib/types/ui";
     import type { WorkspaceBoard } from "$lib/types/workspace";
 
     export let workspaceBoard: WorkspaceBoard;
 
+    let state: AuthViewState = { kind: "start" };
+
     let title = workspaceBoard.title;
-    let deadline = workspaceBoard.deadline;
 
     async function onSubmit() {
+        state = { kind: "submitting" };
         const updatedWorkspaceBoard = {
             ...workspaceBoard,
             title,
-            deadline,
         };
-        await updateWorkspaceBoard(updatedWorkspaceBoard, { fetch });
+        const result = await updateWorkspaceBoard(updatedWorkspaceBoard, {
+            fetch,
+        });
+        if (!result.ok) {
+            state = { kind: "error", message: JSON.stringify(result.error) };
+            throw result.error;
+        }
         resolveConstructiveOverlay();
     }
 </script>
@@ -61,23 +69,13 @@
             bind:value={title}
             required
         />
-        <InputField
-            name="deadline"
-            label={$_(
-                "overlay.constructive.update-workspace-board.form.deadline.label",
-            )}
-            placeholder={$_(
-                "overlay.constructive.update-workspace-board.form.deadline.placeholder",
-            )}
-            style={{ inputType: "date" }}
-            bind:value={deadline}
-        />
     </svelte:fragment>
     <svelte:fragment slot="buttons">
         <Button
             action={{
                 kind: "button",
                 action: rejectConstructiveOverlay,
+                disabled: state.kind === "submitting",
             }}
             style={{ kind: "secondary" }}
             size="medium"
@@ -87,6 +85,7 @@
         <Button
             action={{
                 kind: "submit",
+                disabled: state.kind === "submitting",
             }}
             style={{ kind: "primary" }}
             size="medium"
