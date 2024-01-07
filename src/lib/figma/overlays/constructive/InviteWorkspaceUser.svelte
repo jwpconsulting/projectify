@@ -29,17 +29,21 @@
         rejectConstructiveOverlay,
         resolveConstructiveOverlay,
     } from "$lib/stores/globalUi";
+    import type { AuthViewState } from "$lib/types/ui";
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspace: Workspace;
 
     let email: string | undefined;
+
+    let state: AuthViewState = { kind: "start" };
     let validation: InputFieldValidation | undefined = undefined;
 
     async function onSubmit() {
         if (email === undefined) {
             throw new Error("No email");
         }
+        state = { kind: "submitting" };
         const result = await inviteUser(workspace, email, { fetch });
         if (result.ok) {
             validation = {
@@ -51,6 +55,7 @@
             resolveConstructiveOverlay();
         } else {
             validation = { ok: false, error: result.error.email };
+            state = { kind: "error", message: JSON.stringify(result.error) };
         }
     }
 </script>
@@ -79,6 +84,7 @@
             action={{
                 kind: "button",
                 action: rejectConstructiveOverlay,
+                disabled: state.kind === "submitting",
             }}
             style={{ kind: "secondary" }}
             size="medium"
@@ -86,7 +92,7 @@
             label={$_("overlay.constructive.invite-workspace-user.cancel")}
         />
         <Button
-            action={{ kind: "submit" }}
+            action={{ kind: "submit", disabled: state.kind === "submitting" }}
             style={{ kind: "primary" }}
             size="medium"
             color="blue"
