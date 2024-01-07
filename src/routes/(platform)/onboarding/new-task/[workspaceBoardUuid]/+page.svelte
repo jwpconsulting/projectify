@@ -46,11 +46,15 @@
         if (!taskTitle) {
             throw new Error("Expected taskTitle");
         }
-        const workspace_board_section = await createWorkspaceBoardSection(
+        const result = await createWorkspaceBoardSection(
             workspaceBoard,
             { title: workspaceBoardSectionTitle },
             { fetch },
         );
+        if (!result.ok) {
+            throw result.error;
+        }
+        const workspace_board_section = result.data;
         // Find ourselves
         const assignee = workspace.workspace_users.find(
             (w) => w.user.email === user.email,

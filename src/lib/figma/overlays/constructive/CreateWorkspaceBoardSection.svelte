@@ -26,6 +26,7 @@
         rejectConstructiveOverlay,
         resolveConstructiveOverlay,
     } from "$lib/stores/globalUi";
+    import type { AuthViewState } from "$lib/types/ui";
     import type {
         CreateWorkspaceBoardSection,
         WorkspaceBoard,
@@ -33,19 +34,25 @@
 
     export let workspaceBoard: WorkspaceBoard;
 
+    let state: AuthViewState = { kind: "start" };
     let title: string;
 
     async function onSubmit() {
+        state = { kind: "submitting" };
         const workspaceBoardSection: CreateWorkspaceBoardSection = {
             title: title,
             description: "",
         };
-        await createWorkspaceBoardSection(
+        const result = await createWorkspaceBoardSection(
             workspaceBoard,
             workspaceBoardSection,
             { fetch },
         );
-        resolveConstructiveOverlay();
+        if (result.ok) {
+            resolveConstructiveOverlay();
+        } else {
+            state = { kind: "error", message: JSON.stringify(result.error) };
+        }
     }
 </script>
 
@@ -68,7 +75,11 @@
     </svelte:fragment>
     <svelte:fragment slot="buttons">
         <Button
-            action={{ kind: "button", action: rejectConstructiveOverlay }}
+            action={{
+                kind: "button",
+                action: rejectConstructiveOverlay,
+                disabled: state.kind === "submitting",
+            }}
             style={{ kind: "secondary" }}
             size="medium"
             color="blue"
@@ -77,7 +88,7 @@
             )}
         />
         <Button
-            action={{ kind: "submit" }}
+            action={{ kind: "submit", disabled: state.kind === "submitting" }}
             style={{ kind: "primary" }}
             size="medium"
             color="blue"

@@ -195,11 +195,13 @@ export interface SolutionsPageContent {
 }
 // END TODO
 
+// TODO users of this type should use FormViewState (see below) instead
 export type EditableViewState =
     | { kind: "viewing" }
     | { kind: "editing" }
     | { kind: "saving" };
 
+// TODO rename FormViewState
 export type AuthViewState =
     | { kind: "start" }
     | { kind: "submitting" }

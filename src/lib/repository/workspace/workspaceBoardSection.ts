@@ -33,6 +33,8 @@ import type {
     WorkspaceBoardSectionDetail,
 } from "$lib/types/workspace";
 
+import type { ApiResponse } from "../types";
+
 // Create
 export async function createWorkspaceBoardSection(
     { uuid: workspace_board_uuid }: WorkspaceBoard,
@@ -41,13 +43,11 @@ export async function createWorkspaceBoardSection(
         description,
     }: Pick<WorkspaceBoardSection, "title" | "description">,
     repositoryContext: RepositoryContext,
-): Promise<WorkspaceBoardSection> {
-    return failOrOk(
-        await postWithCredentialsJson(
-            `/workspace/workspace-board-section/`,
-            { workspace_board_uuid, title, description },
-            repositoryContext,
-        ),
+): Promise<ApiResponse<WorkspaceBoardSection, unknown>> {
+    return await postWithCredentialsJson(
+        `/workspace/workspace-board-section/`,
+        { workspace_board_uuid, title, description },
+        repositoryContext,
     );
 }
 
