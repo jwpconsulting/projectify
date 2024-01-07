@@ -84,7 +84,6 @@
         "svelte-boring-avatars": "~1.2.4",
         "svelte-i18n": "~4.0.0",
         "svelte-local-storage-store": "~0.6.4",
-        "sveltekit-html-minifier": "~1.0.2",
         "tailwindcss": "~3.3.3",
         "typescript": "~5.2.2",
         "vite": "~4.4.11"
