@@ -39,12 +39,6 @@ const messages: MessageDirectory = {
                 cancel: "Cancel",
                 invite: "Invite",
             },
-            "invite-workspace-user-error": {
-                "title": "Invite workspace users",
-                "notice": "You have no more seats left in your plan",
-                "cancel": "Cancel",
-                "go-to-billing": "Go to billing",
-            },
             "create-workspace-board-section": {
                 "title": "Create new workspace board section",
                 "form": {

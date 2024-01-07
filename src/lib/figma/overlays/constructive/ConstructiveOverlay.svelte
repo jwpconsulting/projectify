@@ -20,7 +20,6 @@
     import CreateWorkspaceBoard from "$lib/figma/overlays/constructive/CreateWorkspaceBoard.svelte";
     import CreateWorkspaceBoardSection from "$lib/figma/overlays/constructive/CreateWorkspaceBoardSection.svelte";
     import InviteWorkspaceUser from "$lib/figma/overlays/constructive/InviteWorkspaceUser.svelte";
-    import InviteWorkspaceUserError from "$lib/figma/overlays/constructive/InviteWorkspaceUserError.svelte";
     import RecoverWorkspaceBoard from "$lib/figma/overlays/constructive/RecoverWorkspaceBoard.svelte";
     import UpdateWorkspaceBoard from "$lib/figma/overlays/constructive/UpdateWorkspaceBoard.svelte";
     import type { ConstructiveOverlayType } from "$lib/types/ui";
@@ -36,8 +35,6 @@
     <CreateWorkspaceBoard workspace={target.workspace} />
 {:else if target.kind === "inviteWorkspaceUser"}
     <InviteWorkspaceUser workspace={target.workspace} />
-{:else if target.kind === "inviteWorkspaceUserError"}
-    <InviteWorkspaceUserError workspace={target.workspace} />
 {:else if target.kind === "createWorkspaceBoardSection"}
     <CreateWorkspaceBoardSection workspaceBoard={target.workspaceBoard} />
 {:else if target.kind === "updateWorkspaceBoardSection"}

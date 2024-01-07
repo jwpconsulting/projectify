@@ -139,10 +139,6 @@ export const constructiveOverlays =
         },
         "Create workspace board": { kind: "createWorkspaceBoard", workspace },
         "Invite workspace users": { kind: "inviteWorkspaceUser", workspace },
-        "Invite workspace users (error)": {
-            kind: "inviteWorkspaceUserError",
-            workspace,
-        },
         "Create workspace board section": {
             kind: "createWorkspaceBoardSection",
             workspaceBoard,
