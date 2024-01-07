@@ -16,7 +16,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    import CreateWorkspace from "$lib/figma/overlays/constructive/CreateWorkspace.svelte";
     import CreateWorkspaceBoard from "$lib/figma/overlays/constructive/CreateWorkspaceBoard.svelte";
     import CreateWorkspaceBoardSection from "$lib/figma/overlays/constructive/CreateWorkspaceBoardSection.svelte";
     import InviteWorkspaceUser from "$lib/figma/overlays/constructive/InviteWorkspaceUser.svelte";
@@ -41,8 +40,6 @@
     <UpdateWorkspaceBoardSection
         workspaceBoardSection={target.workspaceBoardSection}
     />
-{:else if target.kind === "createWorkspace"}
-    <CreateWorkspace />
 {:else if target.kind === "recoverWorkspaceBoard"}
     <RecoverWorkspaceBoard workspaceBoard={target.workspaceBoard} />
 {/if}

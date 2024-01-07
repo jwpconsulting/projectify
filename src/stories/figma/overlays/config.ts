@@ -147,7 +147,6 @@ export const constructiveOverlays =
             kind: "updateWorkspaceBoardSection",
             workspaceBoardSection,
         },
-        "Create workspace": { kind: "createWorkspace" },
         "Recover workspace board": {
             kind: "recoverWorkspaceBoard",
             workspaceBoard,

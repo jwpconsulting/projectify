@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    import { Briefcase, Plus } from "@steeze-ui/heroicons";
+    import { Briefcase } from "@steeze-ui/heroicons";
     import { _ } from "svelte-i18n";
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
@@ -44,14 +44,4 @@
             icon={Briefcase}
         />
     {/each}
-    <ContextMenuButton
-        kind={{
-            kind: "button",
-            action: () => console.error("add new workspace not implemented"),
-        }}
-        label={$_("overlay.context-menu.workspace.add-new-workspace")}
-        state="normal"
-        color="primary"
-        icon={Plus}
-    />
 </Layout>

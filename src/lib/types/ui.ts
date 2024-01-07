@@ -162,7 +162,6 @@ export type ConstructiveOverlayType =
           kind: "updateWorkspaceBoardSection";
           workspaceBoardSection: WorkspaceBoardSection;
       }
-    | { kind: "createWorkspace" }
     | { kind: "recoverWorkspaceBoard"; workspaceBoard: WorkspaceBoard };
 export type ConstructiveOverlayState = Overlay<ConstructiveOverlayType>;
 

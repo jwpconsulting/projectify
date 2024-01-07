@@ -61,12 +61,6 @@ const messages: MessageDirectory = {
                 cancel: "Cancel",
                 update: "Save",
             },
-            "create-workspace": {
-                "title": "Create a new workspace",
-                "notice": "Are you sure you want to create a new workspace?",
-                "cancel": "Cancel",
-                "create-workspace": "Create",
-            },
             "recover-workspace-board": {
                 "title": "Recover this board?",
                 "notice": "Recovering this board returns it to the dashboard",
@@ -128,7 +122,6 @@ const messages: MessageDirectory = {
             },
             "workspace": {
                 "select-workspace": "Switch to workspace:",
-                "add-new-workspace": "Add new workspace",
             },
             "side-nav": {
                 "minimise-sidebar": "Minimise sidebar",
