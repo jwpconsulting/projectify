@@ -102,12 +102,10 @@ export async function archiveWorkspaceBoard(
     { uuid }: WorkspaceBoard,
     archived: boolean,
     repositoryContext: RepositoryContext,
-) {
-    failOrOk(
-        await postWithCredentialsJson(
-            `/workspace/workspace-board/${uuid}/archive`,
-            { archived },
-            repositoryContext,
-        ),
+): Promise<ApiResponse<void, unknown>> {
+    return await postWithCredentialsJson(
+        `/workspace/workspace-board/${uuid}/archive`,
+        { archived },
+        repositoryContext,
     );
 }

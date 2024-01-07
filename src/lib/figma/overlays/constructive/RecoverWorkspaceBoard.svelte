@@ -25,12 +25,23 @@
         rejectConstructiveOverlay,
         resolveConstructiveOverlay,
     } from "$lib/stores/globalUi";
+    import type { AuthViewState } from "$lib/types/ui";
     import type { WorkspaceBoard } from "$lib/types/workspace";
 
     export let workspaceBoard: WorkspaceBoard;
 
+    let state: AuthViewState = { kind: "start" };
+
     async function onSubmit() {
-        await archiveWorkspaceBoard(workspaceBoard, false, { fetch });
+        state = { kind: "submitting" };
+        const result = await archiveWorkspaceBoard(workspaceBoard, false, {
+            fetch,
+        });
+        if (!result.ok) {
+            // TODO show error here
+            state = { kind: "error", message: JSON.stringify(result.error) };
+            throw result.error;
+        }
         resolveConstructiveOverlay();
     }
 </script>
@@ -49,6 +60,7 @@
             action={{
                 kind: "button",
                 action: rejectConstructiveOverlay,
+                disabled: state.kind === "submitting",
             }}
             style={{ kind: "secondary" }}
             size="medium"
@@ -56,7 +68,7 @@
             label={$_("overlay.constructive.recover-workspace-board.cancel")}
         />
         <Button
-            action={{ kind: "submit" }}
+            action={{ kind: "submit", disabled: state.kind === "submitting" }}
             style={{ kind: "primary" }}
             size="medium"
             color="blue"
