@@ -56,7 +56,3 @@ export type FilterLabelMenuState =
     | { kind: "list" }
     | { kind: "create" }
     | { kind: "update"; label: Label };
-
-const floatingActionButtonIcons = ["plus", "close"] as const;
-export type FloatingActionButtonIcon =
-    (typeof floatingActionButtonIcons)[number];

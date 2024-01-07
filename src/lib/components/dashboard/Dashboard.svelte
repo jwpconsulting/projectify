@@ -16,8 +16,10 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import { _ } from "svelte-i18n";
+
     import WorkspaceBoardSections from "$lib/components/dashboard/WorkspaceBoardSections.svelte";
-    import FloatingActionButton from "$lib/figma/buttons/FloatingActionButton.svelte";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type { WorkspaceBoardDetail } from "$lib/types/workspace";
 
@@ -35,6 +37,13 @@
 <div class="flex flex-col gap-4 p-2">
     <WorkspaceBoardSections {workspaceBoard} />
 </div>
-<div class="self-end p-2">
-    <FloatingActionButton icon="plus" action={onAddNewSection} />
+
+<div class="sticky bottom-0 self-end p-2">
+    <Button
+        style={{ kind: "primary" }}
+        label={$_("dashboard.actions.add-workspace-board-section")}
+        size="medium"
+        action={{ kind: "button", action: onAddNewSection }}
+        color="blue"
+    />
 </div>

@@ -190,6 +190,9 @@ const messages: MessageDirectory = {
         "apply-label": "Assign label",
     },
     "dashboard": {
+        "actions": {
+            "add-workspace-board-section": "Add workspace board section",
+        },
         "task-card": {
             "add-label": "Assign label",
             "task-number": "#{number}",
