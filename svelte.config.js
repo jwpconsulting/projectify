@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2021, 2022, 2023 JWP Consulting GK
+ *  Copyright (C) 2021 - 2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -17,6 +17,7 @@
  */
 import adapter from "@sveltejs/adapter-static";
 import { vitePreprocess } from "@sveltejs/kit/vite";
+import htmlMinifierAdaptor from "sveltekit-html-minifier";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -29,13 +30,16 @@ const config = {
             $messages: "src/messages",
             $routes: "src/routes",
         },
-        adapter: adapter({
-            pages: "build",
-            assets: "build",
-            fallback: "redirect.html",
-            precompress: false,
-            strict: true,
-        }),
+        adapter: htmlMinifierAdaptor(
+            adapter({
+                pages: "build",
+                assets: "build",
+                fallback: "redirect.html",
+                precompress: false,
+                strict: true,
+            }),
+            {},
+        ),
         csp: {
             directives: {
                 "script-src": ["self"],
