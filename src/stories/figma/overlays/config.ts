@@ -152,7 +152,6 @@ export const constructiveOverlays =
             workspaceBoardSection,
         },
         "Create workspace": { kind: "createWorkspace" },
-        "Skip onboarding": { kind: "skipOnboarding" },
         "Recover workspace board": {
             kind: "recoverWorkspaceBoard",
             workspaceBoard,

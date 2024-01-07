@@ -164,7 +164,6 @@ export type ConstructiveOverlayType =
           workspaceBoardSection: WorkspaceBoardSection;
       }
     | { kind: "createWorkspace" }
-    | { kind: "skipOnboarding" }
     | { kind: "recoverWorkspaceBoard"; workspaceBoard: WorkspaceBoard };
 export type ConstructiveOverlayState = Overlay<ConstructiveOverlayType>;
 

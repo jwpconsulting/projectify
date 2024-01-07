@@ -73,12 +73,6 @@ const messages: MessageDirectory = {
                 "cancel": "Cancel",
                 "create-workspace": "Create",
             },
-            "skip-onboarding": {
-                "title": "Skip onboarding",
-                "notice": "Any progress you've made so far will be lost",
-                "cancel": "Cancel",
-                "skip-onboarding": "Skip onboarding",
-            },
             "recover-workspace-board": {
                 "title": "Recover this board?",
                 "notice": "Recovering this board returns it to the dashboard",

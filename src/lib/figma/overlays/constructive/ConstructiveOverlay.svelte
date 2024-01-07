@@ -22,7 +22,6 @@
     import InviteWorkspaceUser from "$lib/figma/overlays/constructive/InviteWorkspaceUser.svelte";
     import InviteWorkspaceUserError from "$lib/figma/overlays/constructive/InviteWorkspaceUserError.svelte";
     import RecoverWorkspaceBoard from "$lib/figma/overlays/constructive/RecoverWorkspaceBoard.svelte";
-    import SkipOnboarding from "$lib/figma/overlays/constructive/SkipOnboarding.svelte";
     import UpdateWorkspaceBoard from "$lib/figma/overlays/constructive/UpdateWorkspaceBoard.svelte";
     import type { ConstructiveOverlayType } from "$lib/types/ui";
 
@@ -47,8 +46,6 @@
     />
 {:else if target.kind === "createWorkspace"}
     <CreateWorkspace />
-{:else if target.kind === "skipOnboarding"}
-    <SkipOnboarding />
 {:else if target.kind === "recoverWorkspaceBoard"}
     <RecoverWorkspaceBoard workspaceBoard={target.workspaceBoard} />
 {/if}
