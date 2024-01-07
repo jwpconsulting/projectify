@@ -1,3 +1,20 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!--
+    Copyright (C) 2022, 2023 JWP Consulting GK
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
 <svg width="272" height="350" viewBox="0 0 272 350" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M140.828 313.792C100.835 313.792 68.4146 281.372 68.4146 241.379C68.4146 201.386 100.835 168.965 140.828 168.965C180.821 168.965 213.242 201.386 213.242 241.379C213.242 281.372 180.821 313.792 140.828 313.792Z" fill="url(#paint0_radial_6113_247837)"/>
 <path d="M140.831 183.449C107.503 183.449 80.4861 156.432 80.4861 123.105C80.4861 89.7771 107.503 62.7598 140.831 62.7598C174.158 62.7598 201.176 89.7771 201.176 123.105C201.176 156.432 174.158 183.449 140.831 183.449Z" fill="url(#paint1_radial_6113_247837)"/>
