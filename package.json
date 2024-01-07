@@ -5,7 +5,7 @@
         "dev": "vite dev --host --port 3000",
         "build": "vite build",
         "package": "vite package",
-        "preview": "vite preview --port 3000",
+        "preview": "vite preview --port 3000 --outDir build",
         "typescript-language-server": "typescript-language-server",
         "svelteserver": "svelteserver",
         "test": "bin/test",
