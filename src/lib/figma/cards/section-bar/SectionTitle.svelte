@@ -40,8 +40,6 @@
     let dropDownMenuBtnRef: HTMLElement;
 
     async function openDropDownMenu() {
-        // TODO
-        console.log("Need to open drop down menu at", dropDownMenuBtnRef);
         const contextMenuType: ContextMenuType = {
             kind: "workspaceBoardSection",
             workspaceBoard,
