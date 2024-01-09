@@ -83,6 +83,7 @@ HasOrIsWorkspaceBoard = Union[
     TaskLabel,
     SubTask,
 ]
+HasOrIsTask = Union[Task, TaskLabel, SubTask, ChatMessage]
 
 
 logger = logging.getLogger(__name__)
@@ -166,10 +167,18 @@ def send_workspace_board_change_signal(
     )
 
 
-def send_task_change_signal(instance: Task) -> None:
+def send_task_change_signal(instance: HasOrIsTask) -> None:
     """Send task.change signal to correct group."""
-    uuid = str(instance.uuid)
-    # data = serialize(serializers.TaskDetailSerializer, instance)
+    match instance:
+        case Task():
+            task = instance
+        case TaskLabel():
+            task = instance.task
+        case SubTask():
+            task = instance.task
+        case ChatMessage():
+            task = instance.task
+    uuid = str(task.uuid)
     group_send(
         f"task-{uuid}",
         {
@@ -231,26 +240,23 @@ def task_changed(instance: Task, **kwargs: Unknown) -> None:
 @receiver(post_delete, sender=TaskLabel)
 def task_label_changed(instance: TaskLabel, **kwargs: Unknown) -> None:
     """Broadcast changes upon task label save/delete."""
-    task = instance.task
     send_workspace_board_change_signal(instance)
-    send_task_change_signal(task)
+    send_task_change_signal(instance)
 
 
 @receiver(post_save, sender=SubTask)
 @receiver(post_delete, sender=SubTask)
 def sub_task_changed(instance: SubTask, **kwargs: Unknown) -> None:
     """Broadcast changes upon sub task save/delete."""
-    task = instance.task
     send_workspace_board_change_signal(instance)
-    send_task_change_signal(task)
+    send_task_change_signal(instance)
 
 
 @receiver(post_save, sender=ChatMessage)
 @receiver(post_delete, sender=ChatMessage)
 def chat_message_changed(instance: ChatMessage, **kwargs: Unknown) -> None:
     """Broadcast changes upon chat message save/delete."""
-    task = instance.task
-    send_task_change_signal(task)
+    send_task_change_signal(instance)
 
 
 # TODO this should be in services
