@@ -101,9 +101,10 @@ class TestWorkspace:
             who=user,
         )
         assert workspace.workspaceboard_set.count() == 2
+        # Workspace boards are ordered by most recently created
         assert list(workspace.workspaceboard_set.all()) == [
-            board,
             board2,
+            board,
         ]
 
     # TODO these tests should be in workspace service tests
