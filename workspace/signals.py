@@ -19,6 +19,7 @@ import logging
 from typing import (
     TYPE_CHECKING,
     Any,
+    Union,
     cast,
 )
 
@@ -69,6 +70,14 @@ if TYPE_CHECKING:
 Unknown = object
 
 
+HasOrIsWorkspace = Union[
+    Workspace,
+    Label,
+    WorkspaceUser,
+    WorkspaceBoard,
+]
+
+
 logger = logging.getLogger(__name__)
 
 # TODO AsyncToSync is typed in a newer (unreleased) version of asgiref
@@ -100,10 +109,18 @@ def group_send(destination: str, event: ConsumerEvent) -> None:
     )
 
 
-def send_workspace_change_signal(instance: Workspace) -> None:
+def send_workspace_change_signal(instance: HasOrIsWorkspace) -> None:
     """Send workspace.change signal to correct group."""
-    uuid = str(instance.uuid)
-    # data = serialize(serializers.WorkspaceDetailSerializer, instance)
+    match instance:
+        case Workspace():
+            workspace = instance
+        case Label():
+            workspace = instance.workspace
+        case WorkspaceUser():
+            workspace = instance.workspace
+        case WorkspaceBoard():
+            workspace = instance.workspace
+    uuid = str(workspace.uuid)
     group_send(
         f"workspace-{uuid}",
         {
@@ -152,16 +169,14 @@ def workspace_changed(instance: Workspace, **kwargs: Unknown) -> None:
 @receiver(post_delete, sender=Label)
 def label_changed(instance: Label, **kwargs: Unknown) -> None:
     """Broadcast changes upon label save/delete."""
-    workspace = instance.workspace
-    send_workspace_change_signal(workspace)
+    send_workspace_change_signal(instance)
 
 
 @receiver(post_save, sender=WorkspaceUser)
 @receiver(post_delete, sender=WorkspaceUser)
 def workspace_user_changed(instance: WorkspaceUser, **kwargs: Unknown) -> None:
     """Broadcast changes upon workspace user save/delete."""
-    workspace = instance.workspace
-    send_workspace_change_signal(workspace)
+    send_workspace_change_signal(instance)
 
 
 @receiver(post_save, sender=WorkspaceBoard)
@@ -171,7 +186,7 @@ def workspace_board_changed(
 ) -> None:
     """Broadcast changes upon workspace board save/delete."""
     send_workspace_board_change_signal(instance)
-    send_workspace_change_signal(instance.workspace)
+    send_workspace_change_signal(instance)
 
 
 @receiver(post_save, sender=WorkspaceBoardSection)
