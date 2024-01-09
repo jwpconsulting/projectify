@@ -181,8 +181,8 @@ class TestWorkspaceBoardSectionMove:
         other_workspace_board_section.save()
         assert workspace_board_section._order == 0
         assert other_workspace_board_section._order == 1
-        # XXX that's a whole lot of queries
-        with django_assert_num_queries(17):
+        # XXX that's still a whole lot of queries
+        with django_assert_num_queries(14):
             response = rest_user_client.post(
                 resource_url,
                 data={

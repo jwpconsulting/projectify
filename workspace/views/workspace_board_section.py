@@ -192,7 +192,4 @@ class WorkspaceBoardSectionMove(APIView):
             who=user,
         )
         workspace_board_section.refresh_from_db()
-        output_serializer = WorkspaceBoardSectionDetailSerializer(
-            instance=workspace_board_section,
-        )
-        return Response(output_serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_200_OK)
