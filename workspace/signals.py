@@ -76,6 +76,13 @@ HasOrIsWorkspace = Union[
     WorkspaceUser,
     WorkspaceBoard,
 ]
+HasOrIsWorkspaceBoard = Union[
+    WorkspaceBoard,
+    WorkspaceBoardSection,
+    Task,
+    TaskLabel,
+    SubTask,
+]
 
 
 logger = logging.getLogger(__name__)
@@ -131,11 +138,25 @@ def send_workspace_change_signal(instance: HasOrIsWorkspace) -> None:
 
 
 def send_workspace_board_change_signal(
-    instance: WorkspaceBoard,
+    instance: HasOrIsWorkspaceBoard,
 ) -> None:
     """Send workspace_board.change signal to correct group."""
-    uuid = str(instance.uuid)
-    # data = serialize(serializers.WorkspaceBoardDetailSerializer, instance)
+    match instance:
+        case WorkspaceBoard():
+            workspace_board = instance
+        case WorkspaceBoardSection():
+            workspace_board = instance.workspace_board
+        case Task():
+            workspace_board = instance.workspace_board_section.workspace_board
+        case TaskLabel():
+            workspace_board = (
+                instance.task.workspace_board_section.workspace_board
+            )
+        case SubTask():
+            workspace_board = (
+                instance.task.workspace_board_section.workspace_board
+            )
+    uuid = str(workspace_board.uuid)
     group_send(
         f"workspace-board-{uuid}",
         {
@@ -195,16 +216,14 @@ def workspace_board_section_changed(
     instance: WorkspaceBoardSection, **kwargs: Unknown
 ) -> None:
     """Broadcast changes upon workspace board section save/delete."""
-    workspace_board = instance.workspace_board
-    send_workspace_board_change_signal(workspace_board)
+    send_workspace_board_change_signal(instance)
 
 
 @receiver(post_save, sender=Task)
 @receiver(post_delete, sender=Task)
 def task_changed(instance: Task, **kwargs: Unknown) -> None:
     """Broadcast changes upon task save/delete."""
-    workspace_board = instance.workspace_board_section.workspace_board
-    send_workspace_board_change_signal(workspace_board)
+    send_workspace_board_change_signal(instance)
     send_task_change_signal(instance)
 
 
@@ -213,8 +232,7 @@ def task_changed(instance: Task, **kwargs: Unknown) -> None:
 def task_label_changed(instance: TaskLabel, **kwargs: Unknown) -> None:
     """Broadcast changes upon task label save/delete."""
     task = instance.task
-    workspace_board = task.workspace_board_section.workspace_board
-    send_workspace_board_change_signal(workspace_board)
+    send_workspace_board_change_signal(instance)
     send_task_change_signal(task)
 
 
@@ -223,8 +241,7 @@ def task_label_changed(instance: TaskLabel, **kwargs: Unknown) -> None:
 def sub_task_changed(instance: SubTask, **kwargs: Unknown) -> None:
     """Broadcast changes upon sub task save/delete."""
     task = instance.task
-    workspace_board = task.workspace_board_section.workspace_board
-    send_workspace_board_change_signal(workspace_board)
+    send_workspace_board_change_signal(instance)
     send_task_change_signal(task)
 
 
