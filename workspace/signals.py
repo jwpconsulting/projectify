@@ -35,7 +35,6 @@ from user.signal_defs import (
     user_invitation_redeemed,
 )
 from workspace.models import TaskLabel
-from workspace.models.chat_message import ChatMessage
 from workspace.models.label import Label
 from workspace.models.sub_task import SubTask
 from workspace.models.task import Task
@@ -142,13 +141,6 @@ def task_label_changed(instance: TaskLabel, **kwargs: Unknown) -> None:
 def sub_task_changed(instance: SubTask, **kwargs: Unknown) -> None:
     """Broadcast changes upon sub task save/delete."""
     send_workspace_board_change_signal(instance)
-    send_task_change_signal(instance)
-
-
-@receiver(post_save, sender=ChatMessage)
-@receiver(post_delete, sender=ChatMessage)
-def chat_message_changed(instance: ChatMessage, **kwargs: Unknown) -> None:
-    """Broadcast changes upon chat message save/delete."""
     send_task_change_signal(instance)
 
 

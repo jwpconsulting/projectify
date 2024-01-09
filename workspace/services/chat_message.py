@@ -26,6 +26,7 @@ from workspace.models.task import Task
 from workspace.selectors.workspace_user import (
     workspace_user_find_for_workspace,
 )
+from workspace.services.signals import send_task_change_signal
 
 
 # TODO this could take an author instead of who -> user is derived from author
@@ -41,6 +42,8 @@ def chat_message_create(
         workspace=task.workspace,
         user=who,
     )
-    return ChatMessage.objects.create(
+    instance = ChatMessage.objects.create(
         task=task, text=text, author=workspace_user
     )
+    send_task_change_signal(instance)
+    return instance
