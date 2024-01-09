@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2021, 2022, 2023 JWP Consulting GK
+# Copyright (C) 2021-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -117,3 +117,8 @@ class WorkspaceBoard(TitleDescriptionModel, BaseModel):
     def __str__(self) -> str:
         """Return title."""
         return self.title
+
+    class Meta:
+        """Order by created, descending."""
+
+        ordering = ("-created",)
