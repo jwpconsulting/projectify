@@ -761,17 +761,6 @@ files = [
 Django = ">=3.2"
 
 [[package]]
-name = "django-ordered-model"
-version = "3.6"
-description = "Allows Django models to be ordered and provides a simple admin interface for reordering them."
-optional = false
-python-versions = "*"
-files = [
-    {file = "django-ordered-model-3.6.tar.gz", hash = "sha256:62161a6bc51d8b402644854b257605d7b5183d01fd349826682a87e9227c05b5"},
-    {file = "django_ordered_model-3.6-py3-none-any.whl", hash = "sha256:0006b111f472a2348f75554a4e77bee2b1f379a0f96726af6b1a3ebf3a950789"},
-]
-
-[[package]]
 name = "django-pgconnection"
 version = "1.0.3"
 description = "Route postgres connections and hook into cursor execution"
@@ -2286,4 +2275,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "45fc15236c71c444d2885c761fc7f36aaf4990af4518cb60bf5b4d8d78387537"
+content-hash = "0a5a91327a9da8154822ece13f9d513d14aaa391f083751336923f478a44fd55"
