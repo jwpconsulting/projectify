@@ -2,3 +2,4 @@
 projectify/media/
 projectify/staticfiles/
 __pycache__
+/.direnv

@@ -52,7 +52,13 @@ mypy_path = [
     "mypy/stubs",
 ]
 strict = true
-exclude = [".git", "__pycache__", "docs", "whitelist.py"]
+exclude = [
+    ".git",
+    "__pycache__",
+    "docs",
+    "whitelist.py",
+    ".direnv",
+]
 
 # Library imports
 [[tool.mypy.overrides]]
@@ -82,6 +88,7 @@ stubPath = "mypy/stubs"
 typeCheckingMode = "strict"
 typeshedPath = ""
 exclude = [
+    ".direnv",
     "**/__pycache__/",
     # TODO consider just removing whitelist.py
     "whitelist.py",
