@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -81,26 +81,6 @@ class WorkspaceQuerySet(models.QuerySet["Workspace"]):
         return self.get_for_user(user).filter(uuid=uuid)
 
 
-@pgtrigger.register(
-    pgtrigger.Trigger(
-        name="ensure_correct_highest_task_number",
-        when=pgtrigger.Before,
-        operation=pgtrigger.Update,
-        func="""
-              DECLARE
-                max_task_number   INTEGER;
-              BEGIN
-                SELECT MAX(workspace_task.number) INTO max_task_number
-                FROM workspace_task
-                WHERE workspace_task.workspace_id = NEW.id;
-                IF NEW.highest_task_number < max_task_number THEN
-                    RAISE EXCEPTION 'invalid highest_task_number:  \
-                    highest_task_number cannot be lower than a task number.';
-                END IF;
-                RETURN NEW;
-              END;""",
-    )
-)
 class Workspace(TitleDescriptionModel, BaseModel):
     """Workspace."""
 
@@ -179,3 +159,27 @@ class Workspace(TitleDescriptionModel, BaseModel):
     def __str__(self) -> str:
         """Return title."""
         return self.title
+
+    class Meta:
+        """Add triggers."""
+
+        triggers = (
+            pgtrigger.Trigger(
+                name="ensure_correct_highest_task_number",
+                when=pgtrigger.Before,
+                operation=pgtrigger.Update,
+                func="""
+              DECLARE
+                max_task_number   INTEGER;
+              BEGIN
+                SELECT MAX(workspace_task.number) INTO max_task_number
+                FROM workspace_task
+                WHERE workspace_task.workspace_id = NEW.id;
+                IF NEW.highest_task_number < max_task_number THEN
+                    RAISE EXCEPTION 'invalid highest_task_number:  \
+                    highest_task_number cannot be lower than a task number.';
+                END IF;
+                RETURN NEW;
+              END;""",
+            ),
+        )

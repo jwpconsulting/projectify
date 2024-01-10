@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -110,51 +110,6 @@ class TaskQuerySet(models.QuerySet["Task"]):
         return new_task
 
 
-@pgtrigger.register(
-    pgtrigger.Trigger(
-        name="ensure_correct_workspace",
-        when=pgtrigger.Before,
-        operation=pgtrigger.Insert | pgtrigger.Update,
-        func="""
-              DECLARE
-                correct_workspace_id   INTEGER;
-              BEGIN
-                SELECT "workspace_workspace"."id" INTO correct_workspace_id
-                FROM "workspace_workspace"
-                INNER JOIN "workspace_workspaceboard"
-                    ON ("workspace_workspace"."id" = \
-                    "workspace_workspaceboard"."workspace_id")
-                INNER JOIN "workspace_workspaceboardsection"
-                    ON ("workspace_workspaceboard"."id" = \
-                         "workspace_workspaceboardsection"."workspace_board_id")
-                INNER JOIN "workspace_task"
-                    ON ("workspace_workspaceboardsection"."id" = \
-                        "workspace_task"."workspace_board_section_id")
-                WHERE "workspace_task"."id" = NEW.id
-                LIMIT 1;
-                IF correct_workspace_id != NEW.workspace_id THEN
-                    RAISE EXCEPTION 'invalid workspace_id: workspace being \
-                        inserted does not match correct derived workspace.';
-                END IF;
-                RETURN NEW;
-              END;""",
-    )
-)
-@pgtrigger.register(
-    pgtrigger.Trigger(
-        name="read_only_task_number",
-        when=pgtrigger.Before,
-        operation=pgtrigger.Update,
-        func="""
-              BEGIN
-                IF NEW.number != OLD.number THEN
-                    RAISE EXCEPTION 'invalid number: Task number \
-                        cannot be modified after inserting Task.';
-                END IF;
-                RETURN NEW;
-              END;""",
-    )
-)
 class Task(TitleDescriptionModel, BaseModel):
     """Task, belongs to workspace board section."""
 
@@ -314,3 +269,47 @@ class Task(TitleDescriptionModel, BaseModel):
                 deferrable=models.Deferrable.DEFERRED,
             ),
         ]
+
+        triggers = (
+            pgtrigger.Trigger(
+                name="read_only_task_number",
+                when=pgtrigger.Before,
+                operation=pgtrigger.Update,
+                func="""
+              BEGIN
+                IF NEW.number != OLD.number THEN
+                    RAISE EXCEPTION 'invalid number: Task number \
+                        cannot be modified after inserting Task.';
+                END IF;
+                RETURN NEW;
+              END;""",
+            ),
+            pgtrigger.Trigger(
+                name="ensure_correct_workspace",
+                when=pgtrigger.Before,
+                operation=pgtrigger.Insert | pgtrigger.Update,
+                func="""
+                      DECLARE
+                        correct_workspace_id   INTEGER;
+                      BEGIN
+                        SELECT "workspace_workspace"."id" INTO correct_workspace_id
+                        FROM "workspace_workspace"
+                        INNER JOIN "workspace_workspaceboard"
+                            ON ("workspace_workspace"."id" = \
+                            "workspace_workspaceboard"."workspace_id")
+                        INNER JOIN "workspace_workspaceboardsection"
+                            ON ("workspace_workspaceboard"."id" = \
+                                 "workspace_workspaceboardsection"."workspace_board_id")
+                        INNER JOIN "workspace_task"
+                            ON ("workspace_workspaceboardsection"."id" = \
+                                "workspace_task"."workspace_board_section_id")
+                        WHERE "workspace_task"."id" = NEW.id
+                        LIMIT 1;
+                        IF correct_workspace_id != NEW.workspace_id THEN
+                            RAISE EXCEPTION 'invalid workspace_id: workspace being \
+                                inserted does not match correct derived workspace.';
+                        END IF;
+                        RETURN NEW;
+                      END;""",
+            ),
+        )

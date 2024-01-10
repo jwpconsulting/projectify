@@ -666,17 +666,18 @@ postal = ["cryptography"]
 
 [[package]]
 name = "django-celery-results"
-version = "2.4.0"
+version = "2.5.1"
 description = "Celery result backends for Django."
 optional = false
 python-versions = "*"
 files = [
-    {file = "django_celery_results-2.4.0-py3-none-any.whl", hash = "sha256:be91307c02fbbf0dda21993c3001c60edb74595444ccd6ad696552fe3689e85b"},
-    {file = "django_celery_results-2.4.0.tar.gz", hash = "sha256:75aa51970db5691cbf242c6a0ff50c8cdf419e265cd0e9b772335d06436c4b99"},
+    {file = "django_celery_results-2.5.1-py3-none-any.whl", hash = "sha256:0da4cd5ecc049333e4524a23fcfc3460dfae91aa0a60f1fae4b6b2889c254e01"},
+    {file = "django_celery_results-2.5.1.tar.gz", hash = "sha256:3ecb7147f773f34d0381bac6246337ce4cf88a2ea7b82774ed48e518b67bb8fd"},
 ]
 
 [package.dependencies]
-celery = ">=5.2.3,<6.0"
+celery = ">=5.2.7,<6.0"
+Django = ">=3.2.18"
 
 [[package]]
 name = "django-cloudinary-storage"
@@ -761,33 +762,18 @@ files = [
 Django = ">=3.2"
 
 [[package]]
-name = "django-pgconnection"
-version = "1.0.3"
-description = "Route postgres connections and hook into cursor execution"
-optional = false
-python-versions = ">=3.7.0,<4"
-files = [
-    {file = "django-pgconnection-1.0.3.tar.gz", hash = "sha256:395d82fc6ca612b8575373c317d6f1a47974dadda965e043d2704609ded12c0a"},
-    {file = "django_pgconnection-1.0.3-py3-none-any.whl", hash = "sha256:7d2dadeb8b7bdf8ac94f2a5c553f6d96c446331c1f3e930dd6fc4f194bbec90a"},
-]
-
-[package.dependencies]
-django = ">=2"
-
-[[package]]
 name = "django-pgtrigger"
-version = "2.4.1"
+version = "4.11.0"
 description = "Postgres trigger support integrated with Django models."
 optional = false
-python-versions = ">=3.7.0,<4"
+python-versions = ">=3.8.0,<4"
 files = [
-    {file = "django-pgtrigger-2.4.1.tar.gz", hash = "sha256:0c370d1bb44361faf9948cec67a0a983885ba8e36da9416aad8fda3b69fea992"},
-    {file = "django_pgtrigger-2.4.1-py3-none-any.whl", hash = "sha256:24938353f60898a57bf7ca6371f2f565fc473f506781c32719bd1538115d637e"},
+    {file = "django_pgtrigger-4.11.0-py3-none-any.whl", hash = "sha256:44bb04b240f2b09add0f62aad9d02fc0e3698e88a1b7fe9840eb7fd4786ae9e7"},
+    {file = "django_pgtrigger-4.11.0.tar.gz", hash = "sha256:35843058d6fb6e0077d26e111f121852130b2e1d77e739077efbb2dae3d67f80"},
 ]
 
 [package.dependencies]
-django = ">=2"
-django-pgconnection = ">=1.0.1"
+django = ">=3"
 
 [[package]]
 name = "django-test-migrations"
@@ -2275,4 +2261,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "0a5a91327a9da8154822ece13f9d513d14aaa391f083751336923f478a44fd55"
+content-hash = "68057f86b5dbe35a7faab309bb16e6c4d7ee52613ff5fb283adb2d061fbbae1a"
