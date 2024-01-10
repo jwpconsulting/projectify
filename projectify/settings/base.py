@@ -104,9 +104,6 @@ class Base(Configuration):
         "cloudinary_storage",
         "django_celery_results",
         "django_extensions",
-        # TODO
-        # XXX are we still using this?
-        "ordered_model",
         # TODO I think this is ours, not third party
         "premail",
         "rest_framework",
