@@ -132,6 +132,13 @@ Make sure to restart PostgreSQL, e.g. by running
 sudo systemctl restart postgresql.service
 ```
 
+## Flake
+
+There is a nix flake in this repository.
+
+- https://github.com/nix-community/poetry2nix
+- https://github.com/nix-community/nix-direnv
+
 # License
 
 This project is licensed under AGPL. See the LICENSE file in this repository.
