@@ -50,7 +50,7 @@ from rest_framework.request import (
 from .. import (
     models,
 )
-from ..services.sub_task import ValidatedData
+from ..services.sub_task import ValidatedData, sub_task_update_many
 from . import (
     base,
 )
@@ -237,6 +237,10 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         self, instance: models.Task, validated_data: dict[str, Any]
     ) -> models.Task:
         """Assign labels, assign assignee."""
+        request: Request = self.context.get("request", None)
+        if not request:
+            raise ValueError("Must provide request in context")
+
         labels: list[models.Label] = validated_data.pop("labels")
         sub_tasks: ValidatedData
         if "sub_tasks" in validated_data:
@@ -248,10 +252,13 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         assign_labels(task, labels)
 
         sub_task_instances = list(task.subtask_set.all())
-        sub_task_serializer = self.fields["sub_tasks"]
-        if not isinstance(sub_task_serializer, SubTaskListSerializer):
-            raise ValueError(_("sub_tasks field has to be a DRF Serializer"))
-        sub_task_serializer.update(sub_task_instances, sub_tasks)
+
+        sub_task_update_many(
+            task=instance,
+            who=request.user,
+            sub_tasks=sub_task_instances,
+            validated_data=sub_tasks,
+        )
 
         return task
 
