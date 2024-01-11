@@ -26,7 +26,11 @@ from workspace.models.label import Label
 from workspace.models.task import Task
 from workspace.models.workspace_board_section import WorkspaceBoardSection
 from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.sub_task import ValidatedData, sub_task_create_many
+from workspace.services.sub_task import (
+    ValidatedData,
+    sub_task_create_many,
+    sub_task_update_many,
+)
 
 
 # TODO hide this
@@ -109,6 +113,41 @@ def task_update(
     task.due_date = due_date
     task.assignee = assignee
     task.save()
+    return task
+
+
+# TODO make this method replace the above task_update
+@transaction.atomic
+def task_update_nested(
+    *,
+    who: User,
+    task: Task,
+    title: str,
+    description: Optional[str] = None,
+    due_date: Optional[datetime] = None,
+    assignee: Optional[WorkspaceUser] = None,
+    # Make these two optional
+    labels: Sequence[Label],
+    sub_tasks: ValidatedData,
+) -> Task:
+    """Assign labels, assign assignee."""
+    task = task_update(
+        who=who,
+        task=task,
+        title=title,
+        description=description,
+        due_date=due_date,
+        assignee=assignee,
+    )
+    task_assign_labels(task=task, labels=labels)
+    sub_task_instances = list(task.subtask_set.all())
+    sub_task_update_many(
+        task=task,
+        who=who,
+        sub_tasks=sub_task_instances,
+        create_sub_tasks=sub_tasks["create_sub_tasks"] or [],
+        update_sub_tasks=sub_tasks["update_sub_tasks"] or [],
+    )
     return task
 
 

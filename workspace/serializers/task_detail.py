@@ -32,9 +32,6 @@ from uuid import (
 from django.contrib.auth.models import (
     AbstractBaseUser,
 )
-from django.db import (
-    transaction,
-)
 from django.db.models.signals import (
     post_save,
 )
@@ -49,9 +46,8 @@ from rest_framework.request import (
 
 from workspace.models.workspace_board_section import WorkspaceBoardSection
 from workspace.services.task import (
-    task_assign_labels,
     task_create_nested,
-    task_update,
+    task_update_nested,
 )
 
 from .. import (
@@ -59,7 +55,6 @@ from .. import (
 )
 from ..services.sub_task import (
     ValidatedData,
-    sub_task_update_many,
 )
 from . import (
     base,
@@ -242,7 +237,6 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
             sub_tasks=sub_tasks,
         )
 
-    @transaction.atomic
     def update(
         self, instance: models.Task, validated_data: dict[str, Any]
     ) -> models.Task:
@@ -251,17 +245,7 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         if not request:
             raise ValueError("Must provide request in context")
 
-        task = task_update(
-            task=instance,
-            who=request.user,
-            title=validated_data["title"],
-            description=validated_data.get("description"),
-            due_date=validated_data.get("due_date"),
-            assignee=validated_data.get("assignee"),
-        )
-
         labels: list[models.Label] = validated_data.pop("labels")
-        task_assign_labels(task=task, labels=labels)
 
         sub_tasks: ValidatedData
         if "sub_tasks" in validated_data:
@@ -269,17 +253,16 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         else:
             sub_tasks = {"create_sub_tasks": [], "update_sub_tasks": []}
 
-        sub_task_instances = list(task.subtask_set.all())
-
-        sub_task_update_many(
-            task=instance,
+        return task_update_nested(
             who=request.user,
-            sub_tasks=sub_task_instances,
-            create_sub_tasks=sub_tasks["create_sub_tasks"] or [],
-            update_sub_tasks=sub_tasks["update_sub_tasks"] or [],
+            task=instance,
+            title=validated_data["title"],
+            description=validated_data.get("description"),
+            assignee=validated_data.get("assignee"),
+            due_date=validated_data.get("due_date"),
+            labels=labels,
+            sub_tasks=sub_tasks,
         )
-
-        return task
 
     def save(self, **kwargs: Any) -> models.Task:
         """
