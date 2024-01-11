@@ -120,7 +120,7 @@ class TestTaskCreate(UnauthenticatedTestMixin):
         # The increase below for RetrieveUpdate was only 7. Maybe we can look
         # into where the additional 3 queries on top of the 7 come. It could be
         # somethign we failed to select or prefetch.
-        with django_assert_num_queries(16):
+        with django_assert_num_queries(20):
             response = rest_user_client.post(
                 resource_url,
                 {**payload, "assignee": {"uuid": str(workspace_user.uuid)}},

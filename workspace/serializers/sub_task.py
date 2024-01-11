@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -20,9 +20,7 @@ from collections.abc import (
 )
 from typing import (
     Any,
-    NotRequired,
     Optional,
-    TypedDict,
 )
 from uuid import (
     UUID,
@@ -33,9 +31,16 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import (
     serializers,
 )
+from rest_framework.request import Request
 
 from workspace.serializers.base import (
     TaskBaseSerializer,
+)
+from workspace.services.sub_task import (
+    ValidatedData,
+    ValidatedDatum,
+    ValidatedDatumWithUuid,
+    sub_task_create_many,
 )
 
 from .. import (
@@ -44,31 +49,6 @@ from .. import (
 from ..models import (
     SubTask,
 )
-
-
-class ValidatedDatum(TypedDict):
-    """A validated datum, i.e. a single sub task."""
-
-    title: str
-    description: NotRequired[str]
-    done: bool
-    _order: int
-
-
-class ValidatedDatumWithUuid(ValidatedDatum):
-    """A validated datum with UUID required."""
-
-    uuid: UUID
-
-
-class ValidatedData(TypedDict):
-    """Validated data, split by create and update sub tasks."""
-
-    create_sub_tasks: Optional[list[ValidatedDatum]]
-    # TODO
-    # If we are really fancy, we could make update_sub_tasks a dict[str,
-    # UpdateSubTaskDatum] ??
-    update_sub_tasks: Optional[list[ValidatedDatumWithUuid]]
 
 
 class SubTaskListSerializer(serializers.ListSerializer[SubTask]):
@@ -214,16 +194,14 @@ class SubTaskListSerializer(serializers.ListSerializer[SubTask]):
             raise ValueError(
                 "Task must either be provided as kwarg or in context"
             )
-        # XXX select task and sub tasks for update?
-        create_sub_tasks = validated_data["create_sub_tasks"]
-        if create_sub_tasks is None:
-            raise serializers.ValidationError(
-                _("No creatable sub tasks have been provided")
-            )
-        sub_tasks: list[SubTask] = SubTask.objects.bulk_create(
-            SubTask(task=task, **sub_task) for sub_task in create_sub_tasks
+        request: Request = self.context.get("request", None)
+        if not request:
+            raise ValueError("Must provide request in context")
+        return sub_task_create_many(
+            task=task,
+            who=request.user,
+            validated_data=validated_data,
         )
-        return sub_tasks
 
     def update(
         self,

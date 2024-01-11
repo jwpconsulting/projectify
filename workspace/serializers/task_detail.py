@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -47,23 +47,22 @@ from rest_framework.request import (
     Request,
 )
 
-from workspace.serializers.sub_task import (
-    SubTaskCreateUpdateSerializer,
-    SubTaskListSerializer,
-    ValidatedData,
-)
-from workspace.serializers.task import (
-    TaskWithSubTaskSerializer,
-)
-from workspace.serializers.workspace_board_section import (
-    WorkspaceBoardSectionUpSerializer,
-)
-
 from .. import (
     models,
 )
+from ..services.sub_task import ValidatedData
 from . import (
     base,
+)
+from .sub_task import (
+    SubTaskCreateUpdateSerializer,
+    SubTaskListSerializer,
+)
+from .task import (
+    TaskWithSubTaskSerializer,
+)
+from .workspace_board_section import (
+    WorkspaceBoardSectionUpSerializer,
 )
 
 

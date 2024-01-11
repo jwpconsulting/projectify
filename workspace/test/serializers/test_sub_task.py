@@ -140,15 +140,16 @@ class TestSubTaskListSerializer:
         payload_single: PayloadSingle,
         task: Task,
     ) -> None:
-        """Test that without a context, we can still pass in the task."""
+        """Test that without a context, we can not create a sub task."""
         assert SubTask.objects.count() == 0
         serializer = SubTaskCreateUpdateSerializer(
             data=[payload_single],
             many=True,
         )
         assert serializer.is_valid()
-        serializer.create(serializer.validated_data, task)
-        assert SubTask.objects.count() == 1
+        with pytest.raises(ValueError):
+            serializer.create(serializer.validated_data, task)
+        assert SubTask.objects.count() == 0
 
     def test_several_new_sub_tasks(
         self,
