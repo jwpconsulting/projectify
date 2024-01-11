@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -20,9 +20,6 @@ from typing import (
     Union,
 )
 from unittest.mock import MagicMock
-from uuid import (
-    UUID,
-)
 
 import pytest
 from rest_framework.request import Request
@@ -140,11 +137,17 @@ class TestSubTaskListSerializer:
             ],
             "update_sub_tasks": [],
         }
-        serializer.save()
-        assert SubTask.objects.count() == 1
-        new_sub_task = SubTask.objects.get()
-        assert new_sub_task.title == payload_single["title"]
-        assert new_sub_task.done == payload_single["done"]
+        assert serializer.validated_data == {
+            "create_sub_tasks": [
+                {
+                    "_order": 0,
+                    "description": None,
+                    "done": False,
+                    "title": "This is a spectacular sub task",
+                },
+            ],
+            "update_sub_tasks": [],
+        }
 
     def test_create_no_context(
         self,
@@ -175,8 +178,41 @@ class TestSubTaskListSerializer:
             context=context,
         )
         assert serializer.is_valid()
-        serializer.save()
-        assert SubTask.objects.count() == n
+        assert serializer.validated_data == {
+            "create_sub_tasks": [
+                {
+                    "_order": 0,
+                    "description": None,
+                    "done": False,
+                    "title": "This is a spectacular sub task",
+                },
+                {
+                    "_order": 1,
+                    "description": None,
+                    "done": False,
+                    "title": "This is a spectacular sub task",
+                },
+                {
+                    "_order": 2,
+                    "description": None,
+                    "done": False,
+                    "title": "This is a spectacular sub task",
+                },
+                {
+                    "_order": 3,
+                    "description": None,
+                    "done": False,
+                    "title": "This is a spectacular sub task",
+                },
+                {
+                    "_order": 4,
+                    "description": None,
+                    "done": False,
+                    "title": "This is a spectacular sub task",
+                },
+            ],
+            "update_sub_tasks": [],
+        }
 
     def test_update_instance_missing(self, sub_task: SubTask) -> None:
         """Test we get a validation error when instance is missing."""
@@ -206,8 +242,10 @@ class TestSubTaskListSerializer:
             context=context,
         )
         assert serializer.is_valid(), serializer.errors
-        serializer.save()
-        assert SubTask.objects.count() == 0, SubTask.objects.all()
+        assert serializer.validated_data == {
+            "create_sub_tasks": [],
+            "update_sub_tasks": [],
+        }
 
     def test_empty_instance_list(self, sub_task: SubTask) -> None:
         """Test that passing an empty instance list will fail."""
@@ -239,10 +277,18 @@ class TestSubTaskListSerializer:
             context=context,
         )
         assert serializer.is_valid(), serializer.errors
-        serializer.save()
-        assert SubTask.objects.count() == 1
-        sub_task.refresh_from_db()
-        assert sub_task.title == new_title
+        assert serializer.validated_data == {
+            "create_sub_tasks": [],
+            "update_sub_tasks": [
+                {
+                    "_order": 0,
+                    "description": None,
+                    "done": True,
+                    "title": "This is a new title, made for this sub task",
+                    "uuid": sub_task.uuid,
+                }
+            ],
+        }
 
     def test_update_several_existing_sub_tasks(
         self,
@@ -267,10 +313,46 @@ class TestSubTaskListSerializer:
             context=context,
         )
         assert serializer.is_valid(), serializer.errors
-        serializer.save()
-        assert SubTask.objects.count() == len(sub_tasks)
-        for sub_task in task.subtask_set.all():
-            assert sub_task.title == new_title
+        assert serializer.validated_data == {
+            "create_sub_tasks": [],
+            "update_sub_tasks": [
+                {
+                    "_order": 0,
+                    "description": None,
+                    "done": False,
+                    "title": new_title,
+                    "uuid": sub_tasks[0].uuid,
+                },
+                {
+                    "_order": 1,
+                    "description": None,
+                    "done": False,
+                    "title": new_title,
+                    "uuid": sub_tasks[1].uuid,
+                },
+                {
+                    "_order": 2,
+                    "description": None,
+                    "done": False,
+                    "title": new_title,
+                    "uuid": sub_tasks[2].uuid,
+                },
+                {
+                    "_order": 3,
+                    "description": None,
+                    "done": False,
+                    "title": new_title,
+                    "uuid": sub_tasks[3].uuid,
+                },
+                {
+                    "_order": 4,
+                    "description": None,
+                    "done": False,
+                    "title": new_title,
+                    "uuid": sub_tasks[4].uuid,
+                },
+            ],
+        }
 
     def test_update_one_create_one(
         self, task: Task, context: Context, sub_task: SubTask
@@ -300,11 +382,25 @@ class TestSubTaskListSerializer:
             context=context,
         )
         assert serializer.is_valid(), serializer.errors
-        serializer.save()
-        assert task.subtask_set.count() == 2
-        a, b = task.subtask_set.all()
-        assert a.title == new_title
-        assert b.title == update_title
+        assert serializer.validated_data == {
+            "create_sub_tasks": [
+                {
+                    "_order": 0,
+                    "description": None,
+                    "done": False,
+                    "title": new_title,
+                }
+            ],
+            "update_sub_tasks": [
+                {
+                    "_order": 1,
+                    "description": None,
+                    "done": False,
+                    "title": update_title,
+                    "uuid": sub_task.uuid,
+                }
+            ],
+        }
 
     def test_change_order(
         self, sub_tasks: list[SubTask], task: Task, context: Context
@@ -345,12 +441,46 @@ class TestSubTaskListSerializer:
             context=context,
         )
         assert serializer.is_valid(), serializer.errors
-        serializer.save()
-        assert SubTask.objects.count() == len(sub_tasks)
-        new_order: list[UUID] = list(
-            task.subtask_set.values_list("uuid", flat=True)
-        )
-        assert new_order == [c.uuid, b.uuid, d.uuid, a.uuid, e.uuid]
+        assert serializer.validated_data == {
+            "create_sub_tasks": [],
+            "update_sub_tasks": [
+                {
+                    "_order": 0,
+                    "description": None,
+                    "done": False,
+                    "title": title,
+                    "uuid": c.uuid,
+                },
+                {
+                    "_order": 1,
+                    "description": None,
+                    "done": False,
+                    "title": title,
+                    "uuid": b.uuid,
+                },
+                {
+                    "_order": 2,
+                    "description": None,
+                    "done": False,
+                    "title": title,
+                    "uuid": d.uuid,
+                },
+                {
+                    "_order": 3,
+                    "description": None,
+                    "done": False,
+                    "title": title,
+                    "uuid": a.uuid,
+                },
+                {
+                    "_order": 4,
+                    "description": None,
+                    "done": False,
+                    "title": title,
+                    "uuid": e.uuid,
+                },
+            ],
+        }
 
     def test_create_one_delete_one(
         self, task: Task, context: Context, sub_task: SubTask
@@ -361,21 +491,28 @@ class TestSubTaskListSerializer:
         1) The new sub task shall be created
         2) The missing sub task shall be deleted
         """
+        title = "new sub task who dis"
         assert task.subtask_set.count() == 1
         serializer = SubTaskCreateUpdateSerializer(
             None,
             data=[
-                {"title": "new sub task who dis", "done": False},
+                {"title": title, "done": False},
             ],
             many=True,
             context=context,
         )
         assert serializer.is_valid(), serializer.errors
-        serializer.save()
-        assert task.subtask_set.count() == 1
-        new_sub_task = task.subtask_set.get()
-        assert new_sub_task.title == "new sub task who dis"
-        assert new_sub_task.uuid != sub_task.uuid
+        assert serializer.validated_data == {
+            "create_sub_tasks": [
+                {
+                    "_order": 0,
+                    "description": None,
+                    "done": False,
+                    "title": title,
+                }
+            ],
+            "update_sub_tasks": [],
+        }
 
     def test_create_and_change_order(
         self,
@@ -418,10 +555,35 @@ class TestSubTaskListSerializer:
             context=context,
         )
         assert serializer.is_valid(), serializer.errors
-        serializer.save()
-        assert SubTask.objects.count() == 4
-        new_order: list[UUID] = list(
-            task.subtask_set.values_list("uuid", flat=True)
-        )
-        assert new_order[1] == b.uuid, new_order
-        assert new_order[3] == a.uuid, new_order
+        assert serializer.validated_data == {
+            "create_sub_tasks": [
+                {
+                    "_order": 0,
+                    "description": None,
+                    "done": False,
+                    "title": new_title,
+                },
+                {
+                    "_order": 2,
+                    "description": None,
+                    "done": False,
+                    "title": new_title,
+                },
+            ],
+            "update_sub_tasks": [
+                {
+                    "_order": 1,
+                    "description": None,
+                    "done": False,
+                    "title": title,
+                    "uuid": b.uuid,
+                },
+                {
+                    "_order": 3,
+                    "description": None,
+                    "done": False,
+                    "title": title,
+                    "uuid": a.uuid,
+                },
+            ],
+        }

@@ -41,7 +41,6 @@ from workspace.services.sub_task import (
     ValidatedDatum,
     ValidatedDatumWithUuid,
     sub_task_create_many,
-    sub_task_update_many,
 )
 
 from .. import (
@@ -211,18 +210,7 @@ class SubTaskListSerializer(serializers.ListSerializer[SubTask]):
         validated_data: ValidatedData,
     ) -> list[SubTask]:
         """Update sub tasks."""
-        task = self.task
-        if task is None:
-            raise ValueError("Task missing")
-        request: Request = self.context.get("request", None)
-        if not request:
-            raise ValueError("Must provide request in context")
-        return sub_task_update_many(
-            task=task,
-            who=request.user,
-            validated_data=validated_data,
-            sub_tasks=instance,
-        )
+        raise NotImplementedError("Do not call")
 
 
 class SubTaskCreateUpdateSerializer(serializers.ModelSerializer[SubTask]):
