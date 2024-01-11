@@ -169,12 +169,14 @@ class TestTaskCreateUpdateSerializer:
     ) -> None:
         """Test updating a task."""
         assert len(task.subtask_set.all()) == 1
+        assert task.due_date is not None
         serializer = serializers.TaskCreateUpdateSerializer(
             task,
             data={
                 "title": task.title,
                 "labels": [{"uuid": str(label.uuid)}],
                 "assignee": {"uuid": str(workspace_user.uuid)},
+                "due_date": task.due_date.isoformat(),
                 "workspace_board_section": {
                     "uuid": str(workspace_board_section.uuid),
                 },

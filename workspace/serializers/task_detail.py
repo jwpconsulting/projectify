@@ -48,7 +48,7 @@ from rest_framework.request import (
 )
 
 from workspace.models.workspace_board_section import WorkspaceBoardSection
-from workspace.services.task import task_create
+from workspace.services.task import task_create, task_update
 
 from .. import (
     models,
@@ -264,7 +264,14 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         if not request:
             raise ValueError("Must provide request in context")
 
-        task = super().update(instance, validated_data)
+        task = task_update(
+            task=instance,
+            who=request.user,
+            title=validated_data["title"],
+            description=validated_data.get("description"),
+            due_date=validated_data.get("due_date"),
+            assignee=validated_data.get("assignee"),
+        )
 
         labels: list[models.Label] = validated_data.pop("labels")
         assign_labels(task, labels)

@@ -199,7 +199,8 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         """Test updating a task when logged in correctly."""
         # XXX high query count but ignore for now
         # 29 now
-        with django_assert_num_queries(29):
+        # 31 now
+        with django_assert_num_queries(31):
             response = rest_user_client.put(
                 resource_url,
                 {**payload, "assignee": {"uuid": str(workspace_user.uuid)}},

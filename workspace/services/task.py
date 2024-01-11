@@ -52,6 +52,25 @@ def task_create(
 
 
 # Update
+def task_update(
+    *,
+    who: User,
+    task: Task,
+    title: str,
+    description: Optional[str] = None,
+    due_date: Optional[datetime] = None,
+    assignee: Optional[WorkspaceUser] = None,
+) -> "Task":
+    """Add a task to this section."""
+    validate_perm("workspace.can_update_task", who, task)
+    task.title = title
+    task.description = description
+    task.due_date = due_date
+    task.assignee = assignee
+    task.save()
+    return task
+
+
 # Delete
 def task_delete(*, task: Task, who: User) -> None:
     """Delete a task."""
