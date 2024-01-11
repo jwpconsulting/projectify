@@ -16,15 +16,22 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Task services."""
 from datetime import datetime
-from typing import Optional, Union
+from typing import Optional, Sequence, Union
 
 from django.db import transaction
 
 from projectify.lib.auth import validate_perm
 from user.models import User
+from workspace.models.label import Label
 from workspace.models.task import Task
 from workspace.models.workspace_board_section import WorkspaceBoardSection
 from workspace.models.workspace_user import WorkspaceUser
+
+
+# TODO hide this
+def task_assign_labels(*, task: Task, labels: Sequence[Label]) -> None:
+    """Assign label uuids to the given task."""
+    task.set_labels(list(labels))
 
 
 # Create

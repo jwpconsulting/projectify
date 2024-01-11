@@ -48,7 +48,11 @@ from rest_framework.request import (
 )
 
 from workspace.models.workspace_board_section import WorkspaceBoardSection
-from workspace.services.task import task_create, task_update
+from workspace.services.task import (
+    task_assign_labels,
+    task_create,
+    task_update,
+)
 
 from .. import (
     models,
@@ -93,11 +97,6 @@ class TaskDetailSerializer(TaskWithSubTaskSerializer):
             "chat_messages",
             "workspace_board_section",
         )
-
-
-def assign_labels(task: models.Task, labels: list[models.Label]) -> None:
-    """Assign label uuids to the given task."""
-    task.set_labels(labels)
 
 
 class UuidDict(TypedDict):
@@ -239,7 +238,7 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         )
 
         labels: list[models.Label] = validated_data.pop("labels")
-        assign_labels(task, labels)
+        task_assign_labels(task=task, labels=labels)
 
         sub_tasks: ValidatedData
         if "sub_tasks" in validated_data:
@@ -274,7 +273,7 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         )
 
         labels: list[models.Label] = validated_data.pop("labels")
-        assign_labels(task, labels)
+        task_assign_labels(task=task, labels=labels)
 
         sub_tasks: ValidatedData
         if "sub_tasks" in validated_data:
