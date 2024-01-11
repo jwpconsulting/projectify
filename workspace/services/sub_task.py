@@ -67,6 +67,7 @@ def sub_task_create(
     )
 
 
+# The following two functions can be merged into one
 @transaction.atomic
 def sub_task_create_many(
     *,

@@ -171,17 +171,7 @@ class SubTaskListSerializer(serializers.ListSerializer[SubTask]):
 
     def save(self, **kwargs: Any) -> list[SubTask]:
         """Override save, allow passing complex validated data object."""
-        if self.instance is not None:
-            self.instance = self.update(self.instance, self.validated_data)
-            assert (
-                self.instance is not None
-            ), "`update()` did not return an object instance."
-        else:
-            self.instance = self.create(self.validated_data)
-            assert (
-                self.instance is not None
-            ), "`create()` did not return an object instance."
-        return self.instance
+        raise NotImplementedError("Do not call")
 
     def create(
         self, validated_data: ValidatedData, task: Optional[models.Task] = None
