@@ -32,7 +32,7 @@
     export let data: PageData;
 
     let { user } = data;
-    let { full_name: fullName } = user;
+    let fullName = user.full_name ?? undefined;
 
     $: hasProfilePicture =
         imageFile !== undefined || user.profile_picture !== null;
@@ -47,10 +47,9 @@
     }
 
     async function saveData() {
-        if (!fullName) {
-            throw new Error("Name was not given");
-        }
-        await updateUserProfile(fullName, { fetch });
+        await updateUserProfile(fullName === "" ? undefined : fullName, {
+            fetch,
+        });
     }
 
     async function save() {
@@ -73,7 +72,7 @@
 
     function cancel() {
         state = "viewing";
-        fullName = user.full_name;
+        fullName = user.full_name ?? undefined;
         user = data.user;
     }
 </script>

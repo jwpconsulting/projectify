@@ -283,10 +283,10 @@ const messages: MessageDirectory = {
         "about-you": {
             title: "About you",
             input: {
-                label: "Full name",
-                placeholder: "Your full name",
+                label: "Preferred name",
+                placeholder: "Your preferred name",
             },
-            prompt: "Write your full name below.",
+            prompt: "Tell us your preferred name. You can also keep it empty and continue by clicking the button below.",
             greeting: {
                 "with-name": "Welcome, {name}! 👋",
                 "without-name": "Welcome! 👋",

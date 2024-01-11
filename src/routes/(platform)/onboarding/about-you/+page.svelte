@@ -21,29 +21,23 @@
     import Onboarding from "$lib/components/Onboarding.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { goto } from "$lib/navigation";
-    import { updateUserProfile } from "$lib/stores/user";
+    import { user, updateUserProfile } from "$lib/stores/user";
     import { newWorkspaceUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
 
     export let data: PageData;
 
-    const { user } = data;
-
-    let fullName: string | undefined = user.full_name;
-
-    $: disabled = fullName === undefined;
+    let preferredName: string | undefined =
+        ($user ?? data.user).full_name ?? undefined;
 
     async function submit() {
-        if (fullName == undefined) {
-            throw new Error("Expected fullName");
-        }
-        await updateUserProfile(fullName, { fetch });
+        await updateUserProfile(preferredName, { fetch });
         await goto(newWorkspaceUrl);
     }
 </script>
 
-<Onboarding nextAction={{ kind: "submit", disabled, submit }}>
+<Onboarding nextAction={{ kind: "submit", submit }}>
     <svelte:fragment slot="title"
         >{$_("onboarding.about-you.title")}</svelte:fragment
     >
@@ -52,12 +46,11 @@
     </svelte:fragment>
     <svelte:fragment slot="inputs">
         <InputField
-            bind:value={fullName}
+            bind:value={preferredName}
             label={$_("onboarding.about-you.input.label")}
             placeholder={$_("onboarding.about-you.input.placeholder")}
             style={{ inputType: "text" }}
             name="full-name"
-            required
         />
     </svelte:fragment>
 
@@ -65,9 +58,9 @@
         <h1
             class="w-full overflow-hidden text-ellipsis text-center text-4xl font-bold"
         >
-            {#if fullName}
+            {#if preferredName !== undefined && preferredName !== ""}
                 {$_("onboarding.about-you.greeting.with-name", {
-                    values: { name: fullName },
+                    values: { name: preferredName },
                 })}
             {:else}
                 {$_("onboarding.about-you.greeting.without-name")}

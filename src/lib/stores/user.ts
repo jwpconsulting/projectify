@@ -58,11 +58,14 @@ export async function fetchUser(
 }
 
 export async function updateUserProfile(
-    // TODO fullName -> displayName
+    // TODO fullName -> preferredName
     fullName: string | undefined,
     repositoryContext: RepositoryContext,
 ) {
-    await updateUser({ full_name: fullName }, repositoryContext);
+    await updateUser(
+        { full_name: fullName === "" ? null : fullName ?? null },
+        repositoryContext,
+    );
     // We fetch the user to make sure the full name is updated
     // Ideally, this would just store the result of the above operation
     // in the user store

@@ -19,7 +19,7 @@ export interface User {
     email: string;
     // TODO should be undefined
     profile_picture: string | null;
-    full_name?: string;
+    full_name: string | null;
 }
 
 export function getDisplayName(user: User): string {

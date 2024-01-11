@@ -40,12 +40,12 @@ import type { Customer } from "./types/corporate";
 
 export const user1: User = {
     email: "this-email-is-very-long-so-you-know-we-mean-business@example.com",
-    full_name: undefined,
+    full_name: null,
     profile_picture: null,
 };
 export const user2: User = {
     email: "john@example.com",
-    full_name: undefined,
+    full_name: null,
     profile_picture: null,
 };
 
