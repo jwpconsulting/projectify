@@ -19,12 +19,15 @@ from typing import (
     Any,
     Union,
 )
+from unittest.mock import MagicMock
 from uuid import (
     UUID,
 )
 
 import pytest
+from rest_framework.request import Request
 
+from user.models.user import User
 from workspace.models.workspace_user import WorkspaceUser
 from workspace.services.sub_task import sub_task_create
 
@@ -52,9 +55,17 @@ def payload_single() -> PayloadSingle:
 
 
 @pytest.fixture
-def context(task: Task) -> Context:
+def user_request(user: User) -> Request:
+    """Return a request with a user."""
+    user_request = MagicMock()
+    user_request.user = user
+    return user_request
+
+
+@pytest.fixture
+def context(task: Task, user_request: Request) -> Context:
     """Return serializer context."""
-    return {"task": task}
+    return {"task": task, "request": user_request}
 
 
 @pytest.fixture

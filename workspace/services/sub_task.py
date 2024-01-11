@@ -15,9 +15,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Sub task services."""
-from typing import NotRequired, Optional, TypedDict
+from typing import NotRequired, Optional, Sequence, TypedDict
 from uuid import UUID
 
+from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
@@ -53,6 +54,7 @@ class ValidatedData(TypedDict):
     update_sub_tasks: Optional[list[ValidatedDatumWithUuid]]
 
 
+@transaction.atomic
 def sub_task_create(
     *,
     who: User,
@@ -68,6 +70,7 @@ def sub_task_create(
     )
 
 
+@transaction.atomic
 def sub_task_create_many(
     *,
     who: User,
@@ -85,3 +88,74 @@ def sub_task_create_many(
         SubTask(task=task, **sub_task) for sub_task in create_sub_tasks
     )
     return sub_tasks
+
+
+@transaction.atomic
+def sub_task_update_many(
+    *,
+    who: User,
+    task: Task,
+    sub_tasks: Sequence[SubTask],
+    validated_data: ValidatedData,
+) -> list[SubTask]:
+    """Update sub tasks, create missing sub tasks."""
+    validate_perm("workspace.can_create_sub_task", who, task)
+    validate_perm("workspace.can_update_sub_task", who, task)
+    result: list[SubTask] = []
+
+    create_sub_tasks = validated_data["create_sub_tasks"]
+    update_sub_tasks = validated_data["update_sub_tasks"]
+
+    # 1) delete missing sub tasks
+    existing_sub_task_uuids = set(sub_task.uuid for sub_task in sub_tasks)
+    update_sub_tasks_uuids = set(
+        sub_task.get("uuid") for sub_task in update_sub_tasks or []
+    )
+    # All the existing sub task uuids that are not in update sub task uuids
+    sub_tasks_to_delete = existing_sub_task_uuids - update_sub_tasks_uuids
+
+    deleted, _ = SubTask.objects.filter(
+        # XXX check if uuid is indexed
+        uuid__in=sub_tasks_to_delete
+    ).delete()
+
+    # Check for consistency after deletion
+    if not deleted == len(sub_tasks_to_delete):
+        raise Exception("Not all sub tasks were deleted")
+
+    # 2) update sub tasks and append to results list
+    if update_sub_tasks:
+        sub_task_mapping: dict[UUID, SubTask] = {
+            sub_task.uuid: sub_task for sub_task in sub_tasks
+        }
+        update_instances: list[SubTask] = []
+        for sub_task in update_sub_tasks:
+            current_instance = sub_task_mapping[sub_task["uuid"]]
+            current_instance.title = sub_task["title"]
+            current_instance.description = sub_task.get("description")
+            current_instance.done = sub_task["done"]
+            # pyright doesn't like this one here:
+            current_instance._order = sub_task["_order"]
+            update_instances.append(current_instance)
+        SubTask.objects.bulk_update(
+            update_instances,
+            ("title", "description", "done", "_order"),
+        )
+        result += update_instances
+    # 3) create sub tasks and append to results list
+    if create_sub_tasks:
+        create_instances: list[SubTask] = [
+            SubTask(
+                task=task,
+                title=create_sub_task["title"],
+                description=create_sub_task.get("description"),
+                done=create_sub_task["done"],
+                _order=create_sub_task["_order"],
+            )
+            for create_sub_task in create_sub_tasks
+        ]
+        SubTask.objects.bulk_create(create_instances)
+        result += create_instances
+    # 4) fix order
+    # XXX ? is fix order missing?
+    return result

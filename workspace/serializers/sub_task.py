@@ -41,6 +41,7 @@ from workspace.services.sub_task import (
     ValidatedDatum,
     ValidatedDatumWithUuid,
     sub_task_create_many,
+    sub_task_update_many,
 )
 
 from .. import (
@@ -209,62 +210,18 @@ class SubTaskListSerializer(serializers.ListSerializer[SubTask]):
         validated_data: ValidatedData,
     ) -> list[SubTask]:
         """Update sub tasks."""
-        sub_tasks: list[SubTask] = []
-
-        create_sub_tasks = validated_data["create_sub_tasks"]
-        update_sub_tasks = validated_data["update_sub_tasks"]
-
-        # 1) delete missing sub tasks
-        existing_sub_task_uuids = set(sub_task.uuid for sub_task in instance)
-        update_sub_tasks_uuids = set(
-            sub_task.get("uuid") for sub_task in update_sub_tasks or []
+        task = self.task
+        if task is None:
+            raise ValueError("Task missing")
+        request: Request = self.context.get("request", None)
+        if not request:
+            raise ValueError("Must provide request in context")
+        return sub_task_update_many(
+            task=task,
+            who=request.user,
+            validated_data=validated_data,
+            sub_tasks=instance,
         )
-        # All the existing sub task uuids that are not in update sub task uuids
-        sub_tasks_to_delete = existing_sub_task_uuids - update_sub_tasks_uuids
-
-        deleted, _ = SubTask.objects.filter(
-            # XXX check if uuid is indexed
-            uuid__in=sub_tasks_to_delete
-        ).delete()
-
-        # Check for consistency after deletion
-        if not deleted == len(sub_tasks_to_delete):
-            raise Exception("Not all sub tasks were deleted")
-
-        # 2) update sub tasks and append to results list
-        if update_sub_tasks:
-            sub_task_mapping: dict[UUID, SubTask] = {
-                sub_task.uuid: sub_task for sub_task in instance
-            }
-            update_instances: list[SubTask] = []
-            for sub_task in update_sub_tasks:
-                current_instance = sub_task_mapping[sub_task["uuid"]]
-                current_instance.title = sub_task["title"]
-                current_instance.description = sub_task.get("description")
-                current_instance.done = sub_task["done"]
-                # pyright doesn't like this one here:
-                current_instance._order = sub_task["_order"]
-                update_instances.append(current_instance)
-            SubTask.objects.bulk_update(
-                update_instances,
-                ("title", "description", "done", "_order"),
-            )
-        # 3) create sub tasks and append to results list
-        if create_sub_tasks:
-            create_instances: list[SubTask] = [
-                SubTask(
-                    task=self.task,
-                    title=create_sub_task["title"],
-                    description=create_sub_task.get("description"),
-                    done=create_sub_task["done"],
-                    _order=create_sub_task["_order"],
-                )
-                for create_sub_task in create_sub_tasks
-            ]
-            SubTask.objects.bulk_create(create_instances)
-            sub_tasks += create_instances
-        # 4) fix order
-        return sub_tasks
 
 
 class SubTaskCreateUpdateSerializer(serializers.ModelSerializer[SubTask]):
