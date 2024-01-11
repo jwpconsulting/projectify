@@ -44,11 +44,11 @@ class ValidatedDatumWithUuid(ValidatedDatum):
 class ValidatedData(TypedDict):
     """Validated data, split by create and update sub tasks."""
 
-    create_sub_tasks: Optional[list[ValidatedDatum]]
+    create_sub_tasks: Optional[Sequence[ValidatedDatum]]
     # TODO
     # If we are really fancy, we could make update_sub_tasks a dict[str,
     # UpdateSubTaskDatum] ??
-    update_sub_tasks: Optional[list[ValidatedDatumWithUuid]]
+    update_sub_tasks: Optional[Sequence[ValidatedDatumWithUuid]]
 
 
 @transaction.atomic
