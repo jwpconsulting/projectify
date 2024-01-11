@@ -32,7 +32,7 @@
     export let data: PageData;
 
     let { user } = data;
-    let fullName = user.full_name ?? undefined;
+    let preferredName = user.full_name ?? undefined;
 
     $: hasProfilePicture =
         imageFile !== undefined || user.profile_picture !== null;
@@ -47,9 +47,12 @@
     }
 
     async function saveData() {
-        await updateUserProfile(fullName === "" ? undefined : fullName, {
-            fetch,
-        });
+        await updateUserProfile(
+            preferredName === "" ? undefined : preferredName,
+            {
+                fetch,
+            },
+        );
     }
 
     async function save() {
@@ -72,7 +75,7 @@
 
     function cancel() {
         state = "viewing";
-        fullName = user.full_name ?? undefined;
+        preferredName = user.full_name ?? undefined;
         user = data.user;
     }
 </script>
@@ -107,12 +110,12 @@
 <div class="flex flex-col gap-10">
     <div class="flex flex-col gap-4">
         <InputField
-            label={$_("user-account-settings.overview.full-name.label")}
+            label={$_("user-account-settings.overview.preferred-name.label")}
             placeholder={$_(
-                "user-account-settings.overview.full-name.placeholder",
+                "user-account-settings.overview.preferred-name.placeholder",
             )}
             name="full_name"
-            bind:value={fullName}
+            bind:value={preferredName}
             style={{ inputType: "text" }}
             readonly={state !== "editing"}
             onClick={() => {

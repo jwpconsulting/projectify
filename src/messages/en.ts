@@ -283,7 +283,7 @@ const messages: MessageDirectory = {
         "about-you": {
             title: "About you",
             input: {
-                label: "Preferred name",
+                label: "Preferred name (optional)",
                 placeholder: "Your preferred name",
             },
             prompt: "Tell us your preferred name. You can also keep it empty and continue by clicking the button below.",
@@ -474,9 +474,9 @@ const messages: MessageDirectory = {
     "user-account-settings": {
         "title": "User account settings",
         "overview": {
-            "full-name": {
-                label: "Full name",
-                placeholder: "Enter your full name",
+            "preferred-name": {
+                label: "Preferred name (optional)",
+                placeholder: "Enter your preferred name",
             },
             "profile-picture": {
                 prompt: "Upload a profile picture",
