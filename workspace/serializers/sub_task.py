@@ -324,17 +324,8 @@ class SubTaskCreateUpdateSerializer(serializers.ModelSerializer[SubTask]):
         validated_data: dict[str, Any],
         task: Optional[models.Task] = None,
     ) -> SubTask:
-        """Override create behavior and add task id to validated data."""
-        # We can't pop the value here, if this is called as part of a list
-        # serializer, the task will disappear
-        task = self.context.get("task", task)
-        if not task:
-            raise ValueError(
-                "Task was not found in context, it must be passed as a kwarg "
-                "to this method"
-            )
-        validated_data = {**validated_data, "task": task}
-        return super().create(validated_data)
+        """Forbid create."""
+        raise NotImplementedError("Can't call this function anymore")
 
     class Meta:
         """Use the modified ListSerializer."""
