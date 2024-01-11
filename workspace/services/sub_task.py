@@ -19,9 +19,6 @@ from typing import NotRequired, Optional, Sequence, TypedDict
 from uuid import UUID
 
 from django.db import transaction
-from django.utils.translation import gettext_lazy as _
-
-from rest_framework import serializers
 
 from projectify.lib.auth import validate_perm
 from user.models import User
@@ -75,15 +72,10 @@ def sub_task_create_many(
     *,
     who: User,
     task: Task,
-    validated_data: ValidatedData,
+    create_sub_tasks: Sequence[ValidatedDatum],
 ) -> list[SubTask]:
     """Create several sub tasks."""
     validate_perm("workspace.can_create_sub_task", who, task)
-    create_sub_tasks = validated_data["create_sub_tasks"]
-    if create_sub_tasks is None:
-        raise serializers.ValidationError(
-            _("No creatable sub tasks have been provided")
-        )
     sub_tasks: list[SubTask] = SubTask.objects.bulk_create(
         SubTask(task=task, **sub_task) for sub_task in create_sub_tasks
     )
@@ -95,6 +87,7 @@ def sub_task_update_many(
     *,
     who: User,
     task: Task,
+    # XXX should be derived from task itself
     sub_tasks: Sequence[SubTask],
     validated_data: ValidatedData,
 ) -> list[SubTask]:

@@ -198,10 +198,11 @@ class SubTaskListSerializer(serializers.ListSerializer[SubTask]):
         request: Request = self.context.get("request", None)
         if not request:
             raise ValueError("Must provide request in context")
+        create_sub_tasks = validated_data["create_sub_tasks"] or []
         return sub_task_create_many(
             task=task,
             who=request.user,
-            validated_data=validated_data,
+            create_sub_tasks=create_sub_tasks,
         )
 
     def update(
