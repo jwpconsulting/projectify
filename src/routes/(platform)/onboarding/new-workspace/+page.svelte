@@ -52,11 +52,15 @@
 </script>
 
 <Onboarding nextAction={{ kind: "submit", disabled, submit }}>
-    <svelte:fragment slot="title"
-        >{$_("onboarding.new-workspace.title", {
-            values: { who },
-        })}</svelte:fragment
-    >
+    <svelte:fragment slot="title">
+        {#if who}
+            {$_("onboarding.new-workspace.title.with-name", {
+                values: { who },
+            })}
+        {:else}
+            {$_("onboarding.new-workspace.title.without-name", {})}
+        {/if}
+    </svelte:fragment>
     <svelte:fragment slot="prompt">
         {#if workspace}
             <p>{$_("onboarding.new-workspace.has-workspace")}</p>

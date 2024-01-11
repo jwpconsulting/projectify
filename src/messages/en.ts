@@ -293,7 +293,10 @@ const messages: MessageDirectory = {
             },
         },
         "new-workspace": {
-            "title": "Let’s set up your first workspace, {who}.",
+            "title": {
+                "with-name": "Let’s set up your first workspace, {who}.",
+                "without-name": "Let's set up your first workspace.",
+            },
             "prompt": "You can create and manage numerous workspaces",
             "has-workspace":
                 "It looks like you already have a workspace, would you like to create a workspace board?",
