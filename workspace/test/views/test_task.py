@@ -122,7 +122,8 @@ class TestTaskCreate(UnauthenticatedTestMixin):
         # somethign we failed to select or prefetch.
         # XXX Justus 2024-01-11 went up to 22 now, but since we are refactoring
         # signals, this might change up so I will ignore this for now
-        with django_assert_num_queries(22):
+        # 25 now
+        with django_assert_num_queries(25):
             response = rest_user_client.post(
                 resource_url,
                 {**payload, "assignee": {"uuid": str(workspace_user.uuid)}},

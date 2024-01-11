@@ -47,16 +47,22 @@ from rest_framework.request import (
     Request,
 )
 
+from workspace.models.workspace_board_section import WorkspaceBoardSection
+from workspace.services.task import task_create
+
 from .. import (
     models,
 )
-from ..services.sub_task import ValidatedData, sub_task_update_many
+from ..services.sub_task import (
+    ValidatedData,
+    sub_task_create_many,
+    sub_task_update_many,
+)
 from . import (
     base,
 )
 from .sub_task import (
     SubTaskCreateUpdateSerializer,
-    SubTaskListSerializer,
 )
 from .task import (
     TaskWithSubTaskSerializer,
@@ -216,20 +222,37 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
     @transaction.atomic
     def create(self, validated_data: dict[str, Any]) -> models.Task:
         """Create the task and assign label / ws user."""
+        request: Request = self.context.get("request", None)
+        if not request:
+            raise ValueError("Must provide request in context")
+
+        workspace_board_section: WorkspaceBoardSection = validated_data[
+            "workspace_board_section"
+        ]
+        task = task_create(
+            who=request.user,
+            workspace_board_section=workspace_board_section,
+            title=validated_data["title"],
+            description=validated_data.get("description"),
+            assignee=validated_data.get("assignee"),
+            due_date=validated_data.get("due_date"),
+        )
+
         labels: list[models.Label] = validated_data.pop("labels")
+        assign_labels(task, labels)
+
         sub_tasks: ValidatedData
         if "sub_tasks" in validated_data:
             sub_tasks = validated_data.pop("sub_tasks")
         else:
             sub_tasks = {"create_sub_tasks": [], "update_sub_tasks": []}
 
-        task = super().create(validated_data)
-        assign_labels(task, labels)
-
-        sub_task_serializer = self.fields["sub_tasks"]
-        if not isinstance(sub_task_serializer, SubTaskListSerializer):
-            raise ValueError(_("sub_tasks field has to be a DRF Serializer"))
-        sub_task_serializer.create(validated_data=sub_tasks, task=task)
+        create_sub_tasks = sub_tasks["create_sub_tasks"] or []
+        sub_task_create_many(
+            who=request.user,
+            task=task,
+            create_sub_tasks=create_sub_tasks,
+        )
         return task
 
     @transaction.atomic

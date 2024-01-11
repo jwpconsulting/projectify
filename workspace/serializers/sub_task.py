@@ -31,7 +31,6 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import (
     serializers,
 )
-from rest_framework.request import Request
 
 from workspace.serializers.base import (
     TaskBaseSerializer,
@@ -40,7 +39,6 @@ from workspace.services.sub_task import (
     ValidatedData,
     ValidatedDatum,
     ValidatedDatumWithUuid,
-    sub_task_create_many,
 )
 
 from .. import (
@@ -189,20 +187,7 @@ class SubTaskListSerializer(serializers.ListSerializer[SubTask]):
         self, validated_data: ValidatedData, task: Optional[models.Task] = None
     ) -> list[SubTask]:
         """Create several sub tasks."""
-        task = self.context.get("task", task)
-        if task is None:
-            raise ValueError(
-                "Task must either be provided as kwarg or in context"
-            )
-        request: Request = self.context.get("request", None)
-        if not request:
-            raise ValueError("Must provide request in context")
-        create_sub_tasks = validated_data["create_sub_tasks"] or []
-        return sub_task_create_many(
-            task=task,
-            who=request.user,
-            create_sub_tasks=create_sub_tasks,
-        )
+        raise NotImplementedError("Do not call")
 
     def update(
         self,

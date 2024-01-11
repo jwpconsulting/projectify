@@ -161,9 +161,17 @@ class TestSubTaskListSerializer:
             many=True,
         )
         assert serializer.is_valid()
-        with pytest.raises(ValueError):
-            serializer.create(serializer.validated_data, task)
-        assert SubTask.objects.count() == 0
+        assert serializer.validated_data == {
+            "create_sub_tasks": [
+                {
+                    "_order": 0,
+                    "description": None,
+                    "done": False,
+                    "title": "This is a spectacular sub task",
+                },
+            ],
+            "update_sub_tasks": [],
+        }
 
     def test_several_new_sub_tasks(
         self,
