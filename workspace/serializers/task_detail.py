@@ -50,7 +50,7 @@ from rest_framework.request import (
 from workspace.models.workspace_board_section import WorkspaceBoardSection
 from workspace.services.task import (
     task_assign_labels,
-    task_create,
+    task_create_nested,
     task_update,
 )
 
@@ -59,7 +59,6 @@ from .. import (
 )
 from ..services.sub_task import (
     ValidatedData,
-    sub_task_create_many,
     sub_task_update_many,
 )
 from . import (
@@ -215,10 +214,6 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
             "assignee": assignee,
         }
 
-    # This doesn't prevent deleting a label after validation, but it gets
-    # us far enough. Further transaction handling should happen in the views
-    # instead.
-    @transaction.atomic
     def create(self, validated_data: dict[str, Any]) -> models.Task:
         """Create the task and assign label / ws user."""
         request: Request = self.context.get("request", None)
@@ -228,17 +223,6 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         workspace_board_section: WorkspaceBoardSection = validated_data[
             "workspace_board_section"
         ]
-        task = task_create(
-            who=request.user,
-            workspace_board_section=workspace_board_section,
-            title=validated_data["title"],
-            description=validated_data.get("description"),
-            assignee=validated_data.get("assignee"),
-            due_date=validated_data.get("due_date"),
-        )
-
-        labels: list[models.Label] = validated_data.pop("labels")
-        task_assign_labels(task=task, labels=labels)
 
         sub_tasks: ValidatedData
         if "sub_tasks" in validated_data:
@@ -246,13 +230,17 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         else:
             sub_tasks = {"create_sub_tasks": [], "update_sub_tasks": []}
 
-        create_sub_tasks = sub_tasks["create_sub_tasks"] or []
-        sub_task_create_many(
+        labels: list[models.Label] = validated_data.pop("labels")
+        return task_create_nested(
             who=request.user,
-            task=task,
-            create_sub_tasks=create_sub_tasks,
+            workspace_board_section=workspace_board_section,
+            title=validated_data["title"],
+            description=validated_data.get("description"),
+            assignee=validated_data.get("assignee"),
+            due_date=validated_data.get("due_date"),
+            labels=labels,
+            sub_tasks=sub_tasks,
         )
-        return task
 
     @transaction.atomic
     def update(

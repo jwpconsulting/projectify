@@ -26,6 +26,7 @@ from workspace.models.label import Label
 from workspace.models.task import Task
 from workspace.models.workspace_board_section import WorkspaceBoardSection
 from workspace.models.workspace_user import WorkspaceUser
+from workspace.services.sub_task import ValidatedData, sub_task_create_many
 
 
 # TODO hide this
@@ -43,7 +44,7 @@ def task_create(
     description: Optional[str] = None,
     due_date: Optional[datetime] = None,
     assignee: Optional[WorkspaceUser] = None,
-) -> "Task":
+) -> Task:
     """Add a task to this section."""
     validate_perm("workspace.can_create_task", who, workspace_board_section)
     # XXX Implicit N+1 here
@@ -58,6 +59,39 @@ def task_create(
     )
 
 
+@transaction.atomic
+def task_create_nested(
+    *,
+    who: User,
+    workspace_board_section: WorkspaceBoardSection,
+    title: str,
+    # TODO make these two optional as well
+    sub_tasks: ValidatedData,
+    labels: Sequence[Label],
+    description: Optional[str] = None,
+    due_date: Optional[datetime] = None,
+    assignee: Optional[WorkspaceUser] = None,
+) -> Task:
+    """Create a task. This will replace the above task_create method."""
+    task = task_create(
+        who=who,
+        workspace_board_section=workspace_board_section,
+        title=title,
+        description=description,
+        assignee=assignee,
+        due_date=due_date,
+    )
+    task_assign_labels(task=task, labels=labels)
+
+    create_sub_tasks = sub_tasks["create_sub_tasks"] or []
+    sub_task_create_many(
+        who=who,
+        task=task,
+        create_sub_tasks=create_sub_tasks,
+    )
+    return task
+
+
 # Update
 def task_update(
     *,
@@ -67,7 +101,7 @@ def task_update(
     description: Optional[str] = None,
     due_date: Optional[datetime] = None,
     assignee: Optional[WorkspaceUser] = None,
-) -> "Task":
+) -> Task:
     """Add a task to this section."""
     validate_perm("workspace.can_update_task", who, task)
     task.title = title
