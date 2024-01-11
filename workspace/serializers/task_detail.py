@@ -264,15 +264,16 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         if not request:
             raise ValueError("Must provide request in context")
 
+        task = super().update(instance, validated_data)
+
         labels: list[models.Label] = validated_data.pop("labels")
+        assign_labels(task, labels)
+
         sub_tasks: ValidatedData
         if "sub_tasks" in validated_data:
             sub_tasks = validated_data.pop("sub_tasks")
         else:
             sub_tasks = {"create_sub_tasks": [], "update_sub_tasks": []}
-
-        task = super().update(instance, validated_data)
-        assign_labels(task, labels)
 
         sub_task_instances = list(task.subtask_set.all())
 
@@ -280,7 +281,8 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
             task=instance,
             who=request.user,
             sub_tasks=sub_task_instances,
-            validated_data=sub_tasks,
+            create_sub_tasks=sub_tasks["create_sub_tasks"] or [],
+            update_sub_tasks=sub_tasks["update_sub_tasks"] or [],
         )
 
         return task

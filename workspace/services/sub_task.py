@@ -90,15 +90,13 @@ def sub_task_update_many(
     task: Task,
     # XXX should be derived from task itself
     sub_tasks: Sequence[SubTask],
-    validated_data: ValidatedData,
+    create_sub_tasks: Sequence[ValidatedDatum],
+    update_sub_tasks: Sequence[ValidatedDatumWithUuid],
 ) -> list[SubTask]:
     """Update sub tasks, create missing sub tasks."""
     validate_perm("workspace.can_create_sub_task", who, task)
     validate_perm("workspace.can_update_sub_task", who, task)
     result: list[SubTask] = []
-
-    create_sub_tasks = validated_data["create_sub_tasks"]
-    update_sub_tasks = validated_data["update_sub_tasks"]
 
     # 1) delete missing sub tasks
     existing_sub_task_uuids = set(sub_task.uuid for sub_task in sub_tasks)

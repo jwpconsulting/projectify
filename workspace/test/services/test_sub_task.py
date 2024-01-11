@@ -28,7 +28,6 @@ from ...models import (
 )
 from ...models.workspace_user import WorkspaceUser
 from ...services.sub_task import (
-    ValidatedData,
     ValidatedDatum,
     sub_task_create,
     sub_task_create_many,
@@ -113,15 +112,12 @@ def test_delete_one(
 ) -> None:
     """Test a sub task is deleted when empty data are passed."""
     assert SubTask.objects.count() == 1
-    validated_data: ValidatedData = {
-        "create_sub_tasks": [],
-        "update_sub_tasks": [],
-    }
     sub_task_update_many(
         who=workspace_user.user,
         task=sub_task.task,
         sub_tasks=[sub_task],
-        validated_data=validated_data,
+        create_sub_tasks=[],
+        update_sub_tasks=[],
     )
     assert SubTask.objects.count() == 0, SubTask.objects.all()
 
@@ -132,8 +128,11 @@ def test_update_existing_sub_task(
 ) -> None:
     """Test updating sub task."""
     new_title = "This is a new title, made for this sub task"
-    validated_data: ValidatedData = {
-        "update_sub_tasks": [
+    sub_task_update_many(
+        who=workspace_user.user,
+        task=sub_task.task,
+        sub_tasks=[sub_task],
+        update_sub_tasks=[
             {
                 "uuid": sub_task.uuid,
                 "title": new_title,
@@ -141,13 +140,7 @@ def test_update_existing_sub_task(
                 "_order": 0,
             }
         ],
-        "create_sub_tasks": None,
-    }
-    sub_task_update_many(
-        who=workspace_user.user,
-        task=sub_task.task,
-        sub_tasks=[sub_task],
-        validated_data=validated_data,
+        create_sub_tasks=[],
     )
     assert SubTask.objects.count() == 1
     sub_task.refresh_from_db()
@@ -161,8 +154,8 @@ def test_update_several_existing_sub_tasks(
 ) -> None:
     """Test updating several existing sub tasks."""
     new_title = "fancy factory fabricates fakes"
-    validated_data: ValidatedData = {
-        "update_sub_tasks": [
+    sub_task_update_many(
+        update_sub_tasks=[
             {
                 "uuid": sub_task.uuid,
                 "title": new_title,
@@ -171,10 +164,7 @@ def test_update_several_existing_sub_tasks(
             }
             for n, sub_task in enumerate(sub_tasks)
         ],
-        "create_sub_tasks": [],
-    }
-    sub_task_update_many(
-        validated_data=validated_data,
+        create_sub_tasks=[],
         sub_tasks=sub_tasks,
         who=workspace_user.user,
         task=task,
@@ -199,11 +189,11 @@ def test_update_one_create_one(
     assert task.subtask_set.count() == 1
     update_title = "Foo the bar, baz the flub"
     new_title = "I am complete, new and creative, hello"
-    validated_data: ValidatedData = {
-        "create_sub_tasks": [
+    sub_task_update_many(
+        create_sub_tasks=[
             {"title": new_title, "done": False, "_order": 0},
         ],
-        "update_sub_tasks": [
+        update_sub_tasks=[
             {
                 "uuid": sub_task.uuid,
                 "title": update_title,
@@ -211,10 +201,6 @@ def test_update_one_create_one(
                 "_order": 1,
             },
         ],
-    }
-
-    sub_task_update_many(
-        validated_data=validated_data,
         sub_tasks=[sub_task],
         who=workspace_user.user,
         task=task,
@@ -233,9 +219,9 @@ def test_change_order(
     """Test changing the order of several sub tasks."""
     a, b, c, d, e = sub_tasks
     title = "asd"
-    validated_data: ValidatedData = {
-        "create_sub_tasks": [],
-        "update_sub_tasks": [
+    sub_task_update_many(
+        create_sub_tasks=[],
+        update_sub_tasks=[
             {
                 "uuid": c.uuid,
                 "title": title,
@@ -267,9 +253,6 @@ def test_change_order(
                 "_order": 4,
             },
         ],
-    }
-    sub_task_update_many(
-        validated_data=validated_data,
         sub_tasks=sub_tasks,
         who=workspace_user.user,
         task=task,
@@ -291,14 +274,11 @@ def test_create_one_delete_one(
     2) The missing sub task shall be deleted
     """
     assert task.subtask_set.count() == 1
-    validated_data: ValidatedData = {
-        "create_sub_tasks": [
+    sub_task_update_many(
+        create_sub_tasks=[
             {"title": "new sub task who dis", "done": False, "_order": 0},
         ],
-        "update_sub_tasks": [],
-    }
-    sub_task_update_many(
-        validated_data=validated_data,
+        update_sub_tasks=[],
         sub_tasks=[sub_task],
         who=workspace_user.user,
         task=task,
@@ -322,8 +302,8 @@ def test_create_and_change_order(
     a, b, _c, _d, _e = sub_tasks
     title = "asd"
     new_title = "i am a new sub task"
-    validated_data: ValidatedData = {
-        "create_sub_tasks": [
+    sub_task_update_many(
+        create_sub_tasks=[
             {
                 "title": new_title,
                 "done": False,
@@ -335,7 +315,7 @@ def test_create_and_change_order(
                 "_order": 2,
             },
         ],
-        "update_sub_tasks": [
+        update_sub_tasks=[
             {
                 "uuid": b.uuid,
                 "title": title,
@@ -349,9 +329,6 @@ def test_create_and_change_order(
                 "_order": 3,
             },
         ],
-    }
-    sub_task_update_many(
-        validated_data=validated_data,
         sub_tasks=sub_tasks,
         who=workspace_user.user,
         task=task,
