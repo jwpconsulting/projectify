@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -62,7 +62,9 @@
     </svelte:fragment>
 
     <svelte:fragment slot="content">
-        <h1 class="text-4xl font-bold">
+        <h1
+            class="w-full overflow-hidden text-ellipsis text-center text-4xl font-bold"
+        >
             {#if fullName}
                 {$_("onboarding.about-you.greeting.with-name", {
                     values: { name: fullName },
