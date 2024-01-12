@@ -84,7 +84,7 @@ def user_create(
 
 
 def user_create_superuser(
-    # TODO add initial *
+    *,
     email: str,
     password: Optional[str] = None,
 ) -> "User":
