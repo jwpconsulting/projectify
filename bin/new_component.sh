@@ -1,7 +1,7 @@
 #!/bin/sh
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Create a new Svelte component
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -21,12 +21,30 @@ component=$2
 component_file="lib/$path/$component.svelte"
 full_component_file="src/$component_file"
 stories_file="src/stories/$path/$component.stories.ts"
+year=$(date -Idate | cut -b1-4)
 
 mkdir -p $(dirname "$full_component_file")
 
 if test ! -e "$full_component_file"
 then
     cat <<EOF > "$full_component_file"
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
+<!--
+    Copyright (C) $year JWP Consulting GK
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
 <script lang="ts">
 </script>
 
@@ -40,6 +58,23 @@ if test ! -e "$stories_file"
 then
     mkdir -p "$(dirname $stories_file)"
     cat <<EOF > "$stories_file"
+// SPDX-License-Identifier: AGPL-3.0-or-later
+/*
+ *  Copyright (C) $year JWP Consulting GK
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as published
+ *  by the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 import $component from "\$$component_file";
