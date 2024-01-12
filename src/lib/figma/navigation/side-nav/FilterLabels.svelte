@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -47,6 +47,8 @@
 
     let chosenColor: LabelColor | undefined = undefined;
     let labelName: string | undefined = undefined;
+
+    $: canSave = chosenColor !== undefined && labelName !== undefined;
 
     async function createOrUpdate() {
         if (!chosenColor) {
@@ -151,12 +153,15 @@
                               )}
                         name="name"
                         bind:value={labelName}
+                        required
                     />
                     <div class="flex flex-col gap-4">
                         <div class="text-sm font-bold">Select label color</div>
                         <!-- XXX Hacky hacky radio emulation because Svelte wants radio
                 inputs to be contained in the same file in order to be grouped
-                together -->
+                together
+                        TODO Justus 2024-01-12, plz turn this into radio
+                        -->
                         <fieldset class="flex flex-row flex-wrap gap-3">
                             {#each labelColors as labelColor}
                                 <SelectLabelCheckBox
@@ -191,7 +196,7 @@
                         color="blue"
                         size="medium"
                         label={$_("dashboard.side-nav.filter-labels.save")}
-                        action={{ kind: "submit" }}
+                        action={{ kind: "submit", disabled: !canSave }}
                     />
                 </div>
             </form>
