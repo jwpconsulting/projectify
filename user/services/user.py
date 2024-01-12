@@ -65,7 +65,7 @@ def _user_create(
 
 
 def user_create(
-    # TODO add initial *
+    *,
     email: str,
     password: Optional[str] = None,
     tos_agreed: Optional[datetime] = None,
