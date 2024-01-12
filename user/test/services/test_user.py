@@ -44,7 +44,7 @@ pytestmark = pytest.mark.django_db
 
 def test_user_create() -> None:
     """Test creating a normal user."""
-    u = user_create("hello@example")
+    u = user_create(email="hello@example")
     assert u.is_active is False
 
 

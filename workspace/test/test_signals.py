@@ -49,7 +49,7 @@ class TestRedeemWorkspaceInvitations:
             email_or_user="hello@example.com",
         )
         assert workspace.users.count() == count
-        user_create("hello@example.com")
+        user_create(email="hello@example.com")
         assert workspace.users.count() == count + 1
 
     def test_signs_up_twice(
@@ -64,11 +64,11 @@ class TestRedeemWorkspaceInvitations:
             workspace=workspace,
             email_or_user="hello@example.com",
         )
-        user = user_create("hello@example.com")
+        user = user_create(email="hello@example.com")
         assert workspace.users.count() == count + 1
         user.delete()
         assert workspace.users.count() == count
-        user = user_create("hello@example.com")
+        user = user_create(email="hello@example.com")
         # The user is not automatically added
         assert workspace.users.count() == count
 
@@ -90,6 +90,6 @@ class TestRedeemWorkspaceInvitations:
             workspace=workspace,
             email="hello@example.com",
         )
-        user_create("hello@example.com")
+        user_create(email="hello@example.com")
         # The user is not added
         assert workspace.users.count() == count
