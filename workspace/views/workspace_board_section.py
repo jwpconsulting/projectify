@@ -29,6 +29,8 @@ from rest_framework.views import APIView
 from workspace.models import (
     WorkspaceBoard,
     WorkspaceBoardSection,
+)
+from workspace.models.workspace_board_section import (
     WorkspaceBoardSectionQuerySet,
 )
 from workspace.selectors.workspace_board_section import (

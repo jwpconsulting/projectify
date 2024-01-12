@@ -62,7 +62,7 @@ from ..serializers.workspace import (
 class WorkspaceCreate(
     generics.CreateAPIView[
         models.Workspace,
-        models.WorkspaceQuerySet,
+        WorkspaceQuerySet,
         WorkspaceBaseSerializer,
     ]
 ):
@@ -84,7 +84,7 @@ class WorkspaceCreate(
 class WorkspaceList(
     generics.ListAPIView[
         models.Workspace,
-        models.WorkspaceQuerySet,
+        WorkspaceQuerySet,
         WorkspaceBaseSerializer,
     ]
 ):
@@ -93,17 +93,18 @@ class WorkspaceList(
     queryset = models.Workspace.objects.all()
     serializer_class = WorkspaceBaseSerializer
 
-    def get_queryset(self) -> models.WorkspaceQuerySet:
+    def get_queryset(self) -> WorkspaceQuerySet:
         """Filter by user."""
         user = self.request.user
         return self.queryset.get_for_user(user)
 
 
+# TODO use regular APIView
 # Read + Update
 class WorkspaceReadUpdate(
     generics.RetrieveUpdateAPIView[
         models.Workspace,
-        models.WorkspaceQuerySet,
+        WorkspaceQuerySet,
         WorkspaceDetailSerializer,
     ]
 ):
