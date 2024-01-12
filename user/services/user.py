@@ -78,6 +78,8 @@ def user_create(
         is_staff=False,
         is_superuser=False,
         is_active=False,
+        tos_agreed=tos_agreed,
+        privacy_policy_agreed=privacy_policy_agreed,
     )
 
 

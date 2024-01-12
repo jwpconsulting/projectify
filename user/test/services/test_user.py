@@ -100,7 +100,9 @@ def test_user_sign_up(faker: Faker) -> None:
         tos_agreed=True,
         privacy_policy_agreed=True,
     )
-    assert User.objects.count() == 1
+    user = User.objects.get()
+    assert user.privacy_policy_agreed is not None
+    assert user.tos_agreed is not None
 
 
 def test_user_confirm_email(user: User, inactive_user: User) -> None:
