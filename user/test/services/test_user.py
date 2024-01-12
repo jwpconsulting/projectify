@@ -50,7 +50,7 @@ def test_user_create() -> None:
 
 def test_user_create_superuser() -> None:
     """Test creating a superuser. A superuser should be active."""
-    u = user_create_superuser("hello@example")
+    u = user_create_superuser(email="hello@example")
     assert u.is_active is True
 
 
