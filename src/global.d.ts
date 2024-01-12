@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2021-2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -16,3 +16,9 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /// <reference types="@sveltejs/kit" />
+declare const __GIT_COMMIT_DATE__: string;
+declare const __GIT_BRANCH_NAME__: string;
+declare const __GIT_COMMIT_HASH__: string;
+declare const __BUILD_DATE__: string;
+
+declare const __MODE__: string;

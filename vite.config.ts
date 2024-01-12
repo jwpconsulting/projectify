@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2023-2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -15,6 +15,9 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+import { exec } from "node:child_process";
+import { promisify } from "node:util";
+
 import { sveltekit } from "@sveltejs/kit/vite";
 import { defineConfig } from "vite";
 import type {
@@ -82,6 +85,36 @@ function getProxyConfig(
     };
 }
 
+async function buildInfo() {
+    const e = promisify(exec);
+
+    const getResult = async (command: string) => {
+        const { stdout } = await e(command);
+        return JSON.stringify(stdout.toString().trimEnd());
+    };
+
+    // kinda awkward code to write, but ok...
+    const [
+        __GIT_COMMIT_DATE__,
+        __GIT_BRANCH_NAME__,
+        __GIT_COMMIT_HASH__,
+        __BUILD_DATE__,
+    ] = await Promise.all(
+        [
+            "git log -1 --format=%cd --date=short",
+            "git rev-parse --abbrev-ref HEAD",
+            "git rev-parse --short HEAD",
+            "date -Idate",
+        ].map(getResult),
+    );
+    return {
+        __GIT_COMMIT_DATE__,
+        __GIT_BRANCH_NAME__,
+        __GIT_COMMIT_HASH__,
+        __BUILD_DATE__,
+    };
+}
+
 const config: UserConfigExport = defineConfig(async ({ mode }: ConfigEnv) => {
     const env = loadEnv(mode, process.cwd());
 
@@ -90,6 +123,10 @@ const config: UserConfigExport = defineConfig(async ({ mode }: ConfigEnv) => {
         plugins: await getPluginOptions(mode),
         server: {
             proxy: getProxyConfig(env),
+        },
+        define: {
+            ...(await buildInfo()),
+            __MODE__: JSON.stringify(mode),
         },
     };
 });

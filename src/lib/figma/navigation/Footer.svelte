@@ -22,6 +22,13 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { signUpUrl } from "$lib/urls/user";
+
+    const buildData = {
+        buildDate: __BUILD_DATE__,
+        commitHash: __GIT_COMMIT_HASH__,
+        commitDate: __GIT_COMMIT_DATE__,
+        branchName: __GIT_BRANCH_NAME__,
+    };
 </script>
 
 <footer class="flex w-full flex-col gap-6 border-t border-border p-8">
@@ -136,14 +143,21 @@
             </section>
         </nav>
         <!-- epilogue -->
-        <section>
-            {$_("navigation.footer.epilogue.copyright")}
-            <br />
-            {$_("navigation.footer.epilogue.free-software")}
-            <Anchor
-                href="/free-software"
-                label={$_("navigation.footer.epilogue.details")}
-            />
+        <section class="flex flex-col gap-4">
+            <p>
+                {$_("navigation.footer.epilogue.copyright")}
+                <br />
+                {$_("navigation.footer.epilogue.free-software")}
+                <Anchor
+                    href="/free-software"
+                    label={$_("navigation.footer.epilogue.details")}
+                />
+            </p>
+            <p class="text-utility">
+                {$_("navigation.footer.epilogue.build", {
+                    values: buildData,
+                })}
+            </p>
         </section>
     </div>
 </footer>

@@ -30,8 +30,17 @@
         $$slots["desktop-center"];
     // There are lots of conditionals here, it might make sense to refactor
     // it a bit
+
+    const isDevelopment = __MODE__ === "development";
 </script>
 
+{#if isDevelopment}
+    <p
+        class="absolute left-0 top-0 w-full bg-destructive/30 text-center font-bold"
+    >
+        {$_("navigation.header.development-preview")}
+    </p>
+{/if}
 <nav
     class="hidden flex-row items-center justify-between border-b-2 border-border bg-foreground px-6 py-4 md:flex"
     class:justify-between={!justCenter}

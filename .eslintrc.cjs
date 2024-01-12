@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2021, 2022, 2023 JWP Consulting GK
+ *  Copyright (C) 2021-2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -109,6 +109,10 @@ module.exports = {
         "import/newline-after-import": "error",
         "import/no-cycle": "error",
         "import/no-relative-packages": "error",
+        // Since we use typescript, we have declarations for __BUILD_DATE__
+        // and others, so we don't need to check for plain JS undefined
+        // variables.
+        "no-undef": "off",
         // https://stackoverflow.com/a//64150393
         "no-unused-vars": "off",
         // TODO Remove me
