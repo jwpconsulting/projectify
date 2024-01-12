@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Workspace models."""
-from .chat_message import ChatMessage, ChatMessageQuerySet
+from .chat_message import ChatMessage
 from .const import (
     WorkspaceUserRoles,
 )
@@ -27,17 +27,14 @@ from .sub_task import (
 )
 from .task import (
     Task,
-    TaskQuerySet,
 )
 from .task_label import TaskLabel
 from .workspace import (
     Workspace,
-    WorkspaceQuerySet,
 )
-from .workspace_board import WorkspaceBoard, WorkspaceBoardQuerySet
+from .workspace_board import WorkspaceBoard
 from .workspace_board_section import (
     WorkspaceBoardSection,
-    WorkspaceBoardSectionQuerySet,
 )
 from .workspace_user import (
     WorkspaceUser,
@@ -48,23 +45,13 @@ from .workspace_user_invite import (
 
 __all__ = (
     "ChatMessage",
-    # TODO get rid of this QuerySet export
-    "ChatMessageQuerySet",
     "Label",
     "SubTask",
     "Task",
     "TaskLabel",
-    # TODO get rid of this QuerySet export
-    "TaskQuerySet",
     "Workspace",
     "WorkspaceBoard",
-    # TODO get rid of this QuerySet export
-    "WorkspaceBoardQuerySet",
     "WorkspaceBoardSection",
-    # TODO get rid of this QuerySet export
-    "WorkspaceBoardSectionQuerySet",
-    # TODO get rid of this QuerySet export
-    "WorkspaceQuerySet",
     "WorkspaceUser",
     "WorkspaceUserInvite",
     "WorkspaceUserRoles",

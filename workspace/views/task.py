@@ -33,6 +33,7 @@ from rest_framework.response import (
 )
 from rest_framework.views import APIView
 
+from workspace.models.task import Task, TaskQuerySet
 from workspace.selectors.task import TaskDetailQuerySet, task_find_by_task_uuid
 from workspace.selectors.workspace_board_section import (
     find_workspace_board_section_for_user_and_uuid,
@@ -67,8 +68,8 @@ def get_object(request: Request, task_uuid: UUID) -> models.Task:
 # Create
 class TaskCreate(
     generics.CreateAPIView[
-        models.Task,
-        models.TaskQuerySet,
+        Task,
+        TaskQuerySet,
         TaskCreateUpdateSerializer,
     ],
 ):
