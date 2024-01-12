@@ -22,7 +22,6 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import FilterLabelMenu from "$lib/figma/composites/FilterLabelMenu.svelte";
-    import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
     import type { FilterLabelMenuState } from "$lib/figma/types";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
@@ -40,6 +39,8 @@
         getIndexFromLabelColor,
         getLabelColorFromIndex,
     } from "$lib/utils/colors";
+
+    import LabelRadio from "./filter-labels/LabelRadio.svelte";
 
     // Still exporting this one for better testability in storybook
     // TODO or perhaps we can refactor the form to a new component?
@@ -134,7 +135,7 @@
                         {$_("dashboard.side-nav.filter-labels.state.create")}
                     {/if}
                 </p>
-                <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-4">
                     <InputField
                         style={{ inputType: "text" }}
                         placeholder={state.kind === "update"
@@ -155,30 +156,7 @@
                         bind:value={labelName}
                         required
                     />
-                    <div class="flex flex-col gap-4">
-                        <div class="text-sm font-bold">Select label color</div>
-                        <!-- XXX Hacky hacky radio emulation because Svelte wants radio
-                inputs to be contained in the same file in order to be grouped
-                together
-                        TODO Justus 2024-01-12, plz turn this into radio
-                        -->
-                        <fieldset class="flex flex-row flex-wrap gap-3">
-                            {#each labelColors as labelColor}
-                                <SelectLabelCheckBox
-                                    label={{ kind: "createLabel", labelColor }}
-                                    checked={chosenColor === labelColor}
-                                    onCheck={() => {
-                                        chosenColor = labelColor;
-                                    }}
-                                    onUncheck={() =>
-                                        console.debug(
-                                            "Should we do something here?",
-                                        )}
-                                    name="label-color-{labelColor}"
-                                />
-                            {/each}
-                        </fieldset>
-                    </div>
+                    <LabelRadio bind:chosenColor />
                 </div>
                 <div class="flex flex-row gap-4">
                     <Button
