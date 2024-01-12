@@ -42,7 +42,12 @@ from workspace.serializers.task_detail import (
     TaskCreateUpdateSerializer,
     TaskDetailSerializer,
 )
-from workspace.services.task import task_delete, task_move_after
+from workspace.services.sub_task import ValidatedData
+from workspace.services.task import (
+    task_delete,
+    task_move_after,
+    task_update_nested,
+)
 
 from .. import (
     models,
@@ -108,7 +113,25 @@ class TaskRetrieveUpdateDelete(APIView):
             context={"request": request},
         )
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        validated_data = serializer.validated_data
+        labels: list[models.Label] = validated_data.pop("labels")
+
+        sub_tasks: ValidatedData
+        if "sub_tasks" in validated_data:
+            sub_tasks = validated_data.pop("sub_tasks")
+        else:
+            sub_tasks = {"create_sub_tasks": [], "update_sub_tasks": []}
+
+        task_update_nested(
+            who=request.user,
+            task=instance,
+            title=validated_data["title"],
+            description=validated_data.get("description"),
+            assignee=validated_data.get("assignee"),
+            due_date=validated_data.get("due_date"),
+            labels=labels,
+            sub_tasks=sub_tasks,
+        )
 
         instance = get_object(request, task_uuid)
         response_serializer = TaskDetailSerializer(instance=instance)

@@ -75,6 +75,7 @@ class TestTaskCreateUpdateSerializer:
     def test_readonly_fields(
         self,
         task: Task,
+        workspace: Workspace,
         workspace_user: WorkspaceUser,
         workspace_board_section: WorkspaceBoardSection,
         sub_task: SubTask,
@@ -101,15 +102,13 @@ class TestTaskCreateUpdateSerializer:
         # data
         serializer.is_valid(raise_exception=True)
         # Here we prove that DRF ignores "number" and other r/o fields
-        assert "number" not in serializer.validated_data
-        assert "uuid" not in serializer.validated_data
-        assert "title" in serializer.validated_data
-        serializer.save()
-        assert list(task.labels.values_list("uuid", flat=True)) == []
-        assert task.assignee is None
-
-        # Since we don't pass the sub task in, it will disappear
-        assert list(SubTask.objects.all()) == []
+        assert serializer.validated_data == {
+            "assignee": None,
+            "labels": [],
+            "title": task.title,
+            "workspace": workspace,
+            "workspace_board_section": workspace_board_section,
+        }
 
     def test_create(
         self,
@@ -163,6 +162,7 @@ class TestTaskCreateUpdateSerializer:
         task: Task,
         label: Label,
         workspace_user: WorkspaceUser,
+        workspace: Workspace,
         workspace_board_section: WorkspaceBoardSection,
         sub_task: SubTask,
         user_request: Request,
@@ -170,13 +170,14 @@ class TestTaskCreateUpdateSerializer:
         """Test updating a task."""
         assert len(task.subtask_set.all()) == 1
         assert task.due_date is not None
+        due_date = task.due_date
         serializer = serializers.TaskCreateUpdateSerializer(
             task,
             data={
                 "title": task.title,
                 "labels": [{"uuid": str(label.uuid)}],
                 "assignee": {"uuid": str(workspace_user.uuid)},
-                "due_date": task.due_date.isoformat(),
+                "due_date": due_date.isoformat(),
                 "workspace_board_section": {
                     "uuid": str(workspace_board_section.uuid),
                 },
@@ -199,20 +200,39 @@ class TestTaskCreateUpdateSerializer:
             context={"request": user_request},
         )
         assert serializer.is_valid(), serializer.errors
-        assert "title" in serializer.validated_data
-        task = serializer.save()
-
-        assert task.due_date is not None
-
-        assert list(task.labels.values_list("uuid", flat=True)) == [label.uuid]
-
-        assert task.assignee
-        assert task.assignee.user.email == workspace_user.user.email
-
-        sub_tasks = list(task.subtask_set.all())
-        assert len(sub_tasks) == 3
-        assert sub_tasks[1].uuid == sub_task.uuid
-        assert sub_tasks[1].done == (not sub_task.done)
+        assert serializer.validated_data == {
+            "assignee": workspace_user,
+            "due_date": due_date,
+            "labels": [label],
+            "sub_tasks": {
+                "create_sub_tasks": [
+                    {
+                        "_order": 0,
+                        "description": None,
+                        "done": True,
+                        "title": "Frobnice fluffballs",
+                    },
+                    {
+                        "_order": 2,
+                        "description": None,
+                        "done": True,
+                        "title": "Frebnecize flerfbowls",
+                    },
+                ],
+                "update_sub_tasks": [
+                    {
+                        "_order": 1,
+                        "description": None,
+                        "done": not sub_task.done,
+                        "title": "Settle Catan",
+                        "uuid": sub_task.uuid,
+                    }
+                ],
+            },
+            "title": task.title,
+            "workspace": workspace,
+            "workspace_board_section": workspace_board_section,
+        }
 
     def test_update_no_ws_board_section(
         self,

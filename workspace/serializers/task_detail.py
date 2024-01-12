@@ -47,7 +47,6 @@ from rest_framework.request import (
 from workspace.models.workspace_board_section import WorkspaceBoardSection
 from workspace.services.task import (
     task_create_nested,
-    task_update_nested,
 )
 
 from .. import (
@@ -241,28 +240,7 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         self, instance: models.Task, validated_data: dict[str, Any]
     ) -> models.Task:
         """Assign labels, assign assignee."""
-        request: Request = self.context.get("request", None)
-        if not request:
-            raise ValueError("Must provide request in context")
-
-        labels: list[models.Label] = validated_data.pop("labels")
-
-        sub_tasks: ValidatedData
-        if "sub_tasks" in validated_data:
-            sub_tasks = validated_data.pop("sub_tasks")
-        else:
-            sub_tasks = {"create_sub_tasks": [], "update_sub_tasks": []}
-
-        return task_update_nested(
-            who=request.user,
-            task=instance,
-            title=validated_data["title"],
-            description=validated_data.get("description"),
-            assignee=validated_data.get("assignee"),
-            due_date=validated_data.get("due_date"),
-            labels=labels,
-            sub_tasks=sub_tasks,
-        )
+        raise NotImplementedError("Don't call")
 
     def save(self, **kwargs: Any) -> models.Task:
         """
