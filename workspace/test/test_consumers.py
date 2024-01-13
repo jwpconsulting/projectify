@@ -248,7 +248,6 @@ class TestWorkspace:
 
     async def test_workspace_saved_or_deleted(
         self,
-        user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         workspace_communicator: WebsocketCommunicator,
@@ -269,7 +268,6 @@ class TestWorkspaceUser:
 
     async def test_workspace_user_saved_or_deleted(
         self,
-        user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         workspace_communicator: WebsocketCommunicator,
@@ -290,7 +288,6 @@ class TestWorkspaceBoard:
 
     async def test_workspace_board_saved_or_deleted_workspace(
         self,
-        user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         workspace_board: WorkspaceBoard,
@@ -309,7 +306,6 @@ class TestWorkspaceBoard:
 
     async def test_workspace_board_saved_or_deleted(
         self,
-        user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         workspace_board: WorkspaceBoard,
@@ -332,7 +328,6 @@ class TestWorkspaceBoardSection:
 
     async def test_workspace_board_section_saved_or_deleted(
         self,
-        user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         workspace_board: WorkspaceBoard,
@@ -357,7 +352,6 @@ class TestLabel:
 
     async def test_label_saved_or_deleted(
         self,
-        user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         label: Label,
@@ -376,7 +370,6 @@ class TestLabel:
 
     async def test_label_added_or_removed(
         self,
-        user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         label: Label,
@@ -405,7 +398,6 @@ class TestTaskConsumer:
 
     async def test_task_saved_or_deleted_workspace_board(
         self,
-        user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         workspace_board: WorkspaceBoard,
@@ -428,7 +420,6 @@ class TestTaskConsumer:
 
     async def test_task_saved_or_deleted(
         self,
-        user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         workspace_board: WorkspaceBoard,
@@ -452,7 +443,6 @@ class TestTaskLabel:
 
     async def test_label_added_or_removed(
         self,
-        user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         label: Label,
@@ -478,7 +468,6 @@ class TestSubTask:
 
     async def test_sub_task_saved_or_deleted_workspace_board(
         self,
-        user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         workspace_board: WorkspaceBoard,
@@ -503,7 +492,6 @@ class TestSubTask:
 
     async def test_sub_task_saved_or_deleted(
         self,
-        user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         workspace_board: WorkspaceBoard,
