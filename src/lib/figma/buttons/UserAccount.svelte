@@ -18,6 +18,7 @@
 <script lang="ts">
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
+    import { getDisplayName } from "$lib/types/user";
     import type { User } from "$lib/types/user";
 
     import AvatarVariant from "../navigation/AvatarVariant.svelte";
@@ -38,7 +39,8 @@
 <button
     on:click={click}
     bind:this={contextMenuAnchor}
-    class="flex h-11 w-11 flex-row items-center justify-center rounded-lg border border-transparent hover:bg-secondary-hover focus:border-base-content focus:outline-none"
+    class="flex flex-row items-center justify-center gap-2 rounded-lg px-2 py-0.5 hover:bg-secondary-hover"
 >
+    {getDisplayName(user)}
     <AvatarVariant content={{ kind: "single", user }} size="medium" />
 </button>
