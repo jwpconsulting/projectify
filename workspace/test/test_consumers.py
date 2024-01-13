@@ -36,7 +36,12 @@ from projectify.asgi import (
 )
 from user.models import User
 from user.services.user import user_create
+from workspace.models.label import Label
+from workspace.models.sub_task import SubTask
+from workspace.models.task import Task
 from workspace.models.workspace import Workspace
+from workspace.models.workspace_board import WorkspaceBoard
+from workspace.models.workspace_board_section import WorkspaceBoardSection
 from workspace.models.workspace_user import WorkspaceUser
 from workspace.selectors.workspace_user import (
     workspace_user_find_for_workspace,
@@ -89,50 +94,48 @@ async def workspace_user(workspace: Workspace, user: User) -> WorkspaceUser:
     return workspace_user
 
 
-@database_sync_to_async
-def create_workspace_board(
-    workspace: models.Workspace,
-    user: User,
-) -> models.WorkspaceBoard:
+@pytest.fixture
+async def workspace_board(workspace: Workspace, user: User) -> WorkspaceBoard:
     """Create workspace board."""
-    return workspace_board_create(
+    return await database_sync_to_async(workspace_board_create)(
         who=user,
         title="Don't care",
         workspace=workspace,
     )
 
 
-@database_sync_to_async
-def create_workspace_board_section(
-    workspace_board: models.WorkspaceBoard,
+@pytest.fixture
+async def workspace_board_section(
+    workspace_board: WorkspaceBoard,
     user: User,
-) -> models.WorkspaceBoardSection:
+) -> WorkspaceBoardSection:
     """Create workspace board section."""
-    return workspace_board_section_create(
+    return await database_sync_to_async(workspace_board_section_create)(
         workspace_board=workspace_board,
         who=user,
         title="I am a workspace board section",
     )
 
 
-@database_sync_to_async
-def create_task(
-    workspace_board_section: models.WorkspaceBoardSection,
-    assignee: models.WorkspaceUser,
-) -> models.Task:
+@pytest.fixture
+async def task(
+    user: User,
+    workspace_board_section: WorkspaceBoardSection,
+    workspace_user: WorkspaceUser,
+) -> Task:
     """Create task."""
-    return task_create(
+    return await database_sync_to_async(task_create)(
         workspace_board_section=workspace_board_section,
-        who=assignee.user,
-        assignee=assignee,
+        who=user,
+        assignee=workspace_user,
         title="I am a task",
     )
 
 
-@database_sync_to_async
-def create_label(workspace: models.Workspace, user: User) -> models.Label:
+@pytest.fixture
+async def label(workspace: Workspace, user: User) -> Label:
     """Create a label."""
-    return label_create(
+    return await database_sync_to_async(label_create)(
         workspace=workspace,
         who=user,
         color=0,
@@ -152,21 +155,11 @@ def remove_label(label: models.Label, task: models.Task) -> None:
     task.remove_label(label)
 
 
-@database_sync_to_async
-def create_sub_task(task: models.Task, user: User) -> models.SubTask:
+@pytest.fixture
+async def sub_task(task: Task, user: User) -> SubTask:
     """Create sub task."""
-    return sub_task_create(task=task, who=user, title="don't care", done=False)
-
-
-@database_sync_to_async
-def create_chat_message(
-    task: models.Task, workspace_user: models.WorkspaceUser
-) -> models.ChatMessage:
-    """Create chat message."""
-    return chat_message_create(
-        who=workspace_user.user,
-        task=task,
-        text="Hello world",
+    return await database_sync_to_async(sub_task_create)(
+        task=task, who=user, title="don't care", done=False
     )
 
 
@@ -245,9 +238,9 @@ class TestWorkspaceConsumer:
         user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
+        label: Label,
     ) -> None:
         """Test signal firing on workspace change."""
-        label = await create_label(workspace, user)
         resource = f"ws/workspace/{workspace.uuid}/"
         communicator = WebsocketCommunicator(
             websocket_application,
@@ -297,9 +290,9 @@ class TestWorkspaceConsumer:
         user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
+        workspace_board: WorkspaceBoard,
     ) -> None:
         """Test signal firing on workspace board change."""
-        workspace_board = await create_workspace_board(workspace, user)
         resource = f"ws/workspace/{workspace.uuid}/"
         communicator = WebsocketCommunicator(
             websocket_application,
@@ -328,9 +321,9 @@ class TestWorkspaceBoardConsumer:
         user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
+        workspace_board: WorkspaceBoard,
     ) -> None:
         """Test signal firing on workspace board change."""
-        workspace_board = await create_workspace_board(workspace, user)
         resource = f"ws/workspace-board/{workspace_board.uuid}/"
         communicator = WebsocketCommunicator(
             websocket_application,
@@ -355,13 +348,10 @@ class TestWorkspaceBoardConsumer:
         user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
+        workspace_board: WorkspaceBoard,
+        workspace_board_section: WorkspaceBoardSection,
     ) -> None:
         """Test signal firing on workspace board section change."""
-        workspace_board = await create_workspace_board(workspace, user)
-        workspace_board_section = await create_workspace_board_section(
-            workspace_board,
-            user,
-        )
         resource = f"ws/workspace-board/{workspace_board.uuid}/"
         communicator = WebsocketCommunicator(
             websocket_application,
@@ -387,14 +377,11 @@ class TestWorkspaceBoardConsumer:
         user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
+        workspace_board: WorkspaceBoard,
+        workspace_board_section: WorkspaceBoardSection,
+        task: Task,
     ) -> None:
         """Test signal firing on task change."""
-        workspace_board = await create_workspace_board(workspace, user)
-        workspace_board_section = await create_workspace_board_section(
-            workspace_board,
-            user,
-        )
-        task = await create_task(workspace_board_section, workspace_user)
         resource = f"ws/workspace-board/{workspace_board.uuid}/"
         communicator = WebsocketCommunicator(
             websocket_application,
@@ -421,15 +408,12 @@ class TestWorkspaceBoardConsumer:
         user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
+        label: Label,
+        workspace_board: WorkspaceBoard,
+        workspace_board_section: WorkspaceBoardSection,
+        task: Task,
     ) -> None:
         """Test workspace board update on task label add or remove."""
-        label = await create_label(workspace, user)
-        workspace_board = await create_workspace_board(workspace, user)
-        workspace_board_section = await create_workspace_board_section(
-            workspace_board,
-            user,
-        )
-        task = await create_task(workspace_board_section, workspace_user)
         resource = f"ws/workspace-board/{workspace_board.uuid}/"
         communicator = WebsocketCommunicator(
             websocket_application,
@@ -457,14 +441,12 @@ class TestWorkspaceBoardConsumer:
         user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
+        workspace_board: WorkspaceBoard,
+        workspace_board_section: WorkspaceBoardSection,
+        task: Task,
+        sub_task: SubTask,
     ) -> None:
         """Test signal firing on sub task change."""
-        workspace_board = await create_workspace_board(workspace, user)
-        workspace_board_section = await create_workspace_board_section(
-            workspace_board, user
-        )
-        task = await create_task(workspace_board_section, workspace_user)
-        sub_task = await create_sub_task(task, user)
         resource = f"ws/workspace-board/{workspace_board.uuid}/"
         communicator = WebsocketCommunicator(
             websocket_application,
@@ -496,13 +478,11 @@ class TestTaskConsumer:
         user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
+        workspace_board: WorkspaceBoard,
+        workspace_board_section: WorkspaceBoardSection,
+        task: Task,
     ) -> None:
         """Assert event is fired when task is saved or deleted."""
-        workspace_board = await create_workspace_board(workspace, user)
-        workspace_board_section = await create_workspace_board_section(
-            workspace_board, user
-        )
-        task = await create_task(workspace_board_section, workspace_user)
         resource = f"ws/task/{task.uuid}/"
         communicator = WebsocketCommunicator(websocket_application, resource)
         communicator.scope["user"] = user
@@ -526,14 +506,12 @@ class TestTaskConsumer:
         user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
+        label: Label,
+        workspace_board: WorkspaceBoard,
+        workspace_board_section: WorkspaceBoardSection,
+        task: Task,
     ) -> None:
         """Test adding or removing a label."""
-        workspace_board = await create_workspace_board(workspace, user)
-        workspace_board_section = await create_workspace_board_section(
-            workspace_board, user
-        )
-        task = await create_task(workspace_board_section, workspace_user)
-        label = await create_label(workspace, user)
         resource = f"ws/task/{task.uuid}/"
         communicator = WebsocketCommunicator(websocket_application, resource)
         communicator.scope["user"] = user
@@ -558,14 +536,12 @@ class TestTaskConsumer:
         user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
+        workspace_board: WorkspaceBoard,
+        workspace_board_section: WorkspaceBoardSection,
+        task: Task,
+        sub_task: SubTask,
     ) -> None:
         """Assert event is fired when sub task is saved or deleted."""
-        workspace_board = await create_workspace_board(workspace, user)
-        workspace_board_section = await create_workspace_board_section(
-            workspace_board, user
-        )
-        task = await create_task(workspace_board_section, workspace_user)
-        sub_task = await create_sub_task(task, user)
         resource = f"ws/task/{task.uuid}/"
         communicator = WebsocketCommunicator(websocket_application, resource)
         communicator.scope["user"] = user
@@ -590,19 +566,21 @@ class TestTaskConsumer:
         user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
+        workspace_board: WorkspaceBoard,
+        workspace_board_section: WorkspaceBoardSection,
+        task: Task,
     ) -> None:
         """Assert event is fired when chat message is saved or deleted."""
-        workspace_board = await create_workspace_board(workspace, user)
-        workspace_board_section = await create_workspace_board_section(
-            workspace_board, user
-        )
-        task = await create_task(workspace_board_section, workspace_user)
         resource = f"ws/task/{task.uuid}/"
         communicator = WebsocketCommunicator(websocket_application, resource)
         communicator.scope["user"] = user
         connected, _ = await communicator.connect()
         assert connected
-        await create_chat_message(task, workspace_user)
+        await database_sync_to_async(chat_message_create)(
+            who=user,
+            task=task,
+            text="Hello world",
+        )
         message = await communicator.receive_json_from()
         assert is_task_message(task, message)
         # TODO chat messages are not supported right now,
