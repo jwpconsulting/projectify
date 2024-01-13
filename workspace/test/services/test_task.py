@@ -20,14 +20,22 @@ from datetime import datetime
 import pytest
 
 from workspace.models import WorkspaceBoard
+from workspace.models.label import Label
+from workspace.models.sub_task import SubTask
 from workspace.models.task import Task
 from workspace.models.workspace_board_section import WorkspaceBoardSection
 from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.task import task_create, task_move_after
+from workspace.services.task import (
+    task_create,
+    task_create_nested,
+    task_move_after,
+    task_update_nested,
+)
+
+pytestmark = pytest.mark.django_db
 
 
 # Create
-@pytest.mark.django_db
 def test_create_task(
     workspace_board_section: WorkspaceBoardSection,
     workspace_user: WorkspaceUser,
@@ -51,7 +59,26 @@ def test_create_task(
     assert list(workspace_board_section.task_set.all()) == [task, task2]
 
 
-@pytest.mark.django_db
+def test_task_create_nested(
+    label: Label,
+    workspace_user: WorkspaceUser,
+    workspace_board_section: WorkspaceBoardSection,
+) -> None:
+    """Test task_create_nested."""
+    task = task_create_nested(
+        who=workspace_user.user,
+        workspace_board_section=workspace_board_section,
+        title="hello",
+        description=None,
+        assignee=workspace_user,
+        due_date=None,
+        labels=[label],
+        sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
+    )
+    assert list(task.labels.values_list("uuid", flat=True)) == [label.uuid]
+    assert task.assignee == workspace_user
+
+
 def test_add_task_due_date(
     workspace_board_section: WorkspaceBoardSection,
     workspace_user: WorkspaceUser,
@@ -68,7 +95,62 @@ def test_add_task_due_date(
     assert task.due_date is not None
 
 
-@pytest.mark.django_db
+# Update
+def test_task_update_nested(
+    task: Task,
+    label: Label,
+    workspace_user: WorkspaceUser,
+    other_workspace_user: WorkspaceUser,
+    sub_task: SubTask,
+) -> None:
+    """Test updating a task."""
+    assert task.subtask_set.count() == 1
+    task_update_nested(
+        who=workspace_user.user,
+        task=task,
+        title="Hello world",
+        description=None,
+        assignee=other_workspace_user,
+        labels=[label],
+        sub_tasks={
+            "create_sub_tasks": [
+                {
+                    "title": "Frobnice fluffballs",
+                    "done": True,
+                    "_order": 0,
+                },
+                {
+                    "title": "Frebnecize flerfbowls",
+                    "done": True,
+                    "_order": 2,
+                },
+            ],
+            "update_sub_tasks": [
+                {
+                    "uuid": sub_task.uuid,
+                    "title": "Settle Catan",
+                    "done": not sub_task.done,
+                    "_order": 1,
+                },
+            ],
+        },
+    )
+    task.refresh_from_db()
+    assert task.assignee == other_workspace_user
+
+    assert task.due_date is None
+
+    assert list(task.labels.values_list("uuid", flat=True)) == [label.uuid]
+
+    assert task.assignee
+    assert task.assignee.user.email == other_workspace_user.user.email
+
+    sub_tasks = list(task.subtask_set.all())
+    assert len(sub_tasks) == 3
+    assert sub_tasks[1].uuid == sub_task.uuid
+    assert sub_tasks[1].done == (not sub_task.done)
+
+
 def test_moving_task_within_section(
     workspace_board_section: WorkspaceBoardSection,
     task: Task,
@@ -95,7 +177,6 @@ def test_moving_task_within_section(
     ]
 
 
-@pytest.mark.django_db
 def test_moving_task_to_other_section(
     # TODO this fixture might not be needed
     workspace_board: WorkspaceBoard,
@@ -133,7 +214,6 @@ def test_moving_task_to_other_section(
     ]
 
 
-@pytest.mark.django_db
 def test_moving_task_to_empty_section(
     # TODO the following two fixtures might not be needed
     workspace_board: WorkspaceBoard,

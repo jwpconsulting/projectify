@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -20,7 +20,6 @@ from uuid import UUID
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import (
-    generics,
     serializers,
     status,
 )
@@ -33,16 +32,23 @@ from rest_framework.response import (
 )
 from rest_framework.views import APIView
 
-from workspace.models.task import Task, TaskQuerySet
+from workspace.models.workspace_board_section import WorkspaceBoardSection
 from workspace.selectors.task import TaskDetailQuerySet, task_find_by_task_uuid
 from workspace.selectors.workspace_board_section import (
-    find_workspace_board_section_for_user_and_uuid,
+    workspace_board_section_find_for_user_and_uuid,
 )
+from workspace.serializers.base import TaskBaseSerializer
 from workspace.serializers.task_detail import (
     TaskCreateUpdateSerializer,
     TaskDetailSerializer,
 )
-from workspace.services.task import task_delete, task_move_after
+from workspace.services.sub_task import ValidatedData
+from workspace.services.task import (
+    task_create_nested,
+    task_delete,
+    task_move_after,
+    task_update_nested,
+)
 
 from .. import (
     models,
@@ -64,18 +70,43 @@ def get_object(request: Request, task_uuid: UUID) -> models.Task:
     return obj
 
 
-# TODO make this a normal APIView
 # Create
-class TaskCreate(
-    generics.CreateAPIView[
-        Task,
-        TaskQuerySet,
-        TaskCreateUpdateSerializer,
-    ],
-):
+class TaskCreate(APIView):
     """Create a task."""
 
-    serializer_class = TaskCreateUpdateSerializer
+    def post(self, request: Request) -> Response:
+        """Handle POST."""
+        serializer = TaskCreateUpdateSerializer(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+
+        workspace_board_section: WorkspaceBoardSection = validated_data[
+            "workspace_board_section"
+        ]
+
+        sub_tasks: ValidatedData
+        if "sub_tasks" in validated_data:
+            sub_tasks = validated_data.pop("sub_tasks")
+        else:
+            sub_tasks = {"create_sub_tasks": [], "update_sub_tasks": []}
+
+        labels: list[models.Label] = validated_data.pop("labels")
+        task = task_create_nested(
+            who=request.user,
+            workspace_board_section=workspace_board_section,
+            title=validated_data["title"],
+            description=validated_data.get("description"),
+            assignee=validated_data.get("assignee"),
+            due_date=validated_data.get("due_date"),
+            labels=labels,
+            sub_tasks=sub_tasks,
+        )
+        output_serializer = TaskBaseSerializer(instance=task)
+        return Response(
+            data=output_serializer.data, status=status.HTTP_201_CREATED
+        )
 
 
 # Read + Update + Delete
@@ -108,7 +139,25 @@ class TaskRetrieveUpdateDelete(APIView):
             context={"request": request},
         )
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        validated_data = serializer.validated_data
+        labels: list[models.Label] = validated_data.pop("labels")
+
+        sub_tasks: ValidatedData
+        if "sub_tasks" in validated_data:
+            sub_tasks = validated_data.pop("sub_tasks")
+        else:
+            sub_tasks = {"create_sub_tasks": [], "update_sub_tasks": []}
+
+        task_update_nested(
+            who=request.user,
+            task=instance,
+            title=validated_data["title"],
+            description=validated_data.get("description"),
+            assignee=validated_data.get("assignee"),
+            due_date=validated_data.get("due_date"),
+            labels=labels,
+            sub_tasks=sub_tasks,
+        )
 
         instance = get_object(request, task_uuid)
         response_serializer = TaskDetailSerializer(instance=instance)
@@ -140,7 +189,7 @@ class TaskMoveToWorkspaceBoardSection(APIView):
         if task is None:
             raise NotFound(_("Task for this UUID not found"))
         workspace_board_section = (
-            find_workspace_board_section_for_user_and_uuid(
+            workspace_board_section_find_for_user_and_uuid(
                 workspace_board_section_uuid=data[
                     "workspace_board_section_uuid"
                 ],

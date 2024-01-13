@@ -16,15 +16,27 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Task services."""
 from datetime import datetime
-from typing import Optional, Union
+from typing import Optional, Sequence, Union
 
 from django.db import transaction
 
 from projectify.lib.auth import validate_perm
 from user.models import User
+from workspace.models.label import Label
 from workspace.models.task import Task
 from workspace.models.workspace_board_section import WorkspaceBoardSection
 from workspace.models.workspace_user import WorkspaceUser
+from workspace.services.sub_task import (
+    ValidatedData,
+    sub_task_create_many,
+    sub_task_update_many,
+)
+
+
+# TODO hide this
+def task_assign_labels(*, task: Task, labels: Sequence[Label]) -> None:
+    """Assign label uuids to the given task."""
+    task.set_labels(list(labels))
 
 
 # Create
@@ -36,7 +48,7 @@ def task_create(
     description: Optional[str] = None,
     due_date: Optional[datetime] = None,
     assignee: Optional[WorkspaceUser] = None,
-) -> "Task":
+) -> Task:
     """Add a task to this section."""
     validate_perm("workspace.can_create_task", who, workspace_board_section)
     # XXX Implicit N+1 here
@@ -51,7 +63,94 @@ def task_create(
     )
 
 
+@transaction.atomic
+def task_create_nested(
+    *,
+    who: User,
+    workspace_board_section: WorkspaceBoardSection,
+    title: str,
+    # TODO make these two optional as well
+    sub_tasks: ValidatedData,
+    labels: Sequence[Label],
+    description: Optional[str] = None,
+    due_date: Optional[datetime] = None,
+    assignee: Optional[WorkspaceUser] = None,
+) -> Task:
+    """Create a task. This will replace the above task_create method."""
+    task = task_create(
+        who=who,
+        workspace_board_section=workspace_board_section,
+        title=title,
+        description=description,
+        assignee=assignee,
+        due_date=due_date,
+    )
+    task_assign_labels(task=task, labels=labels)
+
+    create_sub_tasks = sub_tasks["create_sub_tasks"] or []
+    sub_task_create_many(
+        who=who,
+        task=task,
+        create_sub_tasks=create_sub_tasks,
+    )
+    return task
+
+
 # Update
+def task_update(
+    *,
+    who: User,
+    task: Task,
+    title: str,
+    description: Optional[str] = None,
+    due_date: Optional[datetime] = None,
+    assignee: Optional[WorkspaceUser] = None,
+) -> Task:
+    """Add a task to this section."""
+    validate_perm("workspace.can_update_task", who, task)
+    task.title = title
+    task.description = description
+    task.due_date = due_date
+    task.assignee = assignee
+    task.save()
+    return task
+
+
+# TODO make this method replace the above task_update
+@transaction.atomic
+def task_update_nested(
+    *,
+    who: User,
+    task: Task,
+    title: str,
+    description: Optional[str] = None,
+    due_date: Optional[datetime] = None,
+    assignee: Optional[WorkspaceUser] = None,
+    # Make these two optional
+    labels: Sequence[Label],
+    sub_tasks: ValidatedData,
+) -> Task:
+    """Assign labels, assign assignee."""
+    task = task_update(
+        who=who,
+        task=task,
+        title=title,
+        description=description,
+        due_date=due_date,
+        assignee=assignee,
+    )
+    task_assign_labels(task=task, labels=labels)
+    sub_task_instances = list(task.subtask_set.all())
+    sub_task_update_many(
+        task=task,
+        who=who,
+        sub_tasks=sub_task_instances,
+        create_sub_tasks=sub_tasks["create_sub_tasks"] or [],
+        update_sub_tasks=sub_tasks["update_sub_tasks"] or [],
+    )
+    return task
+
+
 # Delete
 def task_delete(*, task: Task, who: User) -> None:
     """Delete a task."""

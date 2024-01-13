@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -20,9 +20,7 @@ from collections.abc import (
 )
 from typing import (
     Any,
-    NotRequired,
     Optional,
-    TypedDict,
 )
 from uuid import (
     UUID,
@@ -37,6 +35,11 @@ from rest_framework import (
 from workspace.serializers.base import (
     TaskBaseSerializer,
 )
+from workspace.services.sub_task import (
+    ValidatedData,
+    ValidatedDatum,
+    ValidatedDatumWithUuid,
+)
 
 from .. import (
     models,
@@ -44,31 +47,6 @@ from .. import (
 from ..models import (
     SubTask,
 )
-
-
-class ValidatedDatum(TypedDict):
-    """A validated datum, i.e. a single sub task."""
-
-    title: str
-    description: NotRequired[str]
-    done: bool
-    _order: int
-
-
-class ValidatedDatumWithUuid(ValidatedDatum):
-    """A validated datum with UUID required."""
-
-    uuid: UUID
-
-
-class ValidatedData(TypedDict):
-    """Validated data, split by create and update sub tasks."""
-
-    create_sub_tasks: Optional[list[ValidatedDatum]]
-    # TODO
-    # If we are really fancy, we could make update_sub_tasks a dict[str,
-    # UpdateSubTaskDatum] ??
-    update_sub_tasks: Optional[list[ValidatedDatumWithUuid]]
 
 
 class SubTaskListSerializer(serializers.ListSerializer[SubTask]):
@@ -193,37 +171,13 @@ class SubTaskListSerializer(serializers.ListSerializer[SubTask]):
 
     def save(self, **kwargs: Any) -> list[SubTask]:
         """Override save, allow passing complex validated data object."""
-        if self.instance is not None:
-            self.instance = self.update(self.instance, self.validated_data)
-            assert (
-                self.instance is not None
-            ), "`update()` did not return an object instance."
-        else:
-            self.instance = self.create(self.validated_data)
-            assert (
-                self.instance is not None
-            ), "`create()` did not return an object instance."
-        return self.instance
+        raise NotImplementedError("Do not call")
 
     def create(
         self, validated_data: ValidatedData, task: Optional[models.Task] = None
     ) -> list[SubTask]:
         """Create several sub tasks."""
-        task = self.context.get("task", task)
-        if task is None:
-            raise ValueError(
-                "Task must either be provided as kwarg or in context"
-            )
-        # XXX select task and sub tasks for update?
-        create_sub_tasks = validated_data["create_sub_tasks"]
-        if create_sub_tasks is None:
-            raise serializers.ValidationError(
-                _("No creatable sub tasks have been provided")
-            )
-        sub_tasks: list[SubTask] = SubTask.objects.bulk_create(
-            SubTask(task=task, **sub_task) for sub_task in create_sub_tasks
-        )
-        return sub_tasks
+        raise NotImplementedError("Do not call")
 
     def update(
         self,
@@ -231,62 +185,7 @@ class SubTaskListSerializer(serializers.ListSerializer[SubTask]):
         validated_data: ValidatedData,
     ) -> list[SubTask]:
         """Update sub tasks."""
-        sub_tasks: list[SubTask] = []
-
-        create_sub_tasks = validated_data["create_sub_tasks"]
-        update_sub_tasks = validated_data["update_sub_tasks"]
-
-        # 1) delete missing sub tasks
-        existing_sub_task_uuids = set(sub_task.uuid for sub_task in instance)
-        update_sub_tasks_uuids = set(
-            sub_task.get("uuid") for sub_task in update_sub_tasks or []
-        )
-        # All the existing sub task uuids that are not in update sub task uuids
-        sub_tasks_to_delete = existing_sub_task_uuids - update_sub_tasks_uuids
-
-        deleted, _ = SubTask.objects.filter(
-            # XXX check if uuid is indexed
-            uuid__in=sub_tasks_to_delete
-        ).delete()
-
-        # Check for consistency after deletion
-        if not deleted == len(sub_tasks_to_delete):
-            raise Exception("Not all sub tasks were deleted")
-
-        # 2) update sub tasks and append to results list
-        if update_sub_tasks:
-            sub_task_mapping: dict[UUID, SubTask] = {
-                sub_task.uuid: sub_task for sub_task in instance
-            }
-            update_instances: list[SubTask] = []
-            for sub_task in update_sub_tasks:
-                current_instance = sub_task_mapping[sub_task["uuid"]]
-                current_instance.title = sub_task["title"]
-                current_instance.description = sub_task.get("description")
-                current_instance.done = sub_task["done"]
-                # pyright doesn't like this one here:
-                current_instance._order = sub_task["_order"]
-                update_instances.append(current_instance)
-            SubTask.objects.bulk_update(
-                update_instances,
-                ("title", "description", "done", "_order"),
-            )
-        # 3) create sub tasks and append to results list
-        if create_sub_tasks:
-            create_instances: list[SubTask] = [
-                SubTask(
-                    task=self.task,
-                    title=create_sub_task["title"],
-                    description=create_sub_task.get("description"),
-                    done=create_sub_task["done"],
-                    _order=create_sub_task["_order"],
-                )
-                for create_sub_task in create_sub_tasks
-            ]
-            SubTask.objects.bulk_create(create_instances)
-            sub_tasks += create_instances
-        # 4) fix order
-        return sub_tasks
+        raise NotImplementedError("Do not call")
 
 
 class SubTaskCreateUpdateSerializer(serializers.ModelSerializer[SubTask]):
@@ -324,17 +223,8 @@ class SubTaskCreateUpdateSerializer(serializers.ModelSerializer[SubTask]):
         validated_data: dict[str, Any],
         task: Optional[models.Task] = None,
     ) -> SubTask:
-        """Override create behavior and add task id to validated data."""
-        # We can't pop the value here, if this is called as part of a list
-        # serializer, the task will disappear
-        task = self.context.get("task", task)
-        if not task:
-            raise ValueError(
-                "Task was not found in context, it must be passed as a kwarg "
-                "to this method"
-            )
-        validated_data = {**validated_data, "task": task}
-        return super().create(validated_data)
+        """Forbid create."""
+        raise NotImplementedError("Can't call this function anymore")
 
     class Meta:
         """Use the modified ListSerializer."""

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -29,15 +29,6 @@ from uuid import (
     UUID,
 )
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
-from django.db import (
-    transaction,
-)
-from django.db.models.signals import (
-    post_save,
-)
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import (
@@ -47,16 +38,9 @@ from rest_framework.request import (
     Request,
 )
 
-from workspace.serializers.sub_task import (
-    SubTaskCreateUpdateSerializer,
-    SubTaskListSerializer,
-    ValidatedData,
-)
-from workspace.serializers.task import (
-    TaskWithSubTaskSerializer,
-)
-from workspace.serializers.workspace_board_section import (
-    WorkspaceBoardSectionUpSerializer,
+from user.models.user import User
+from workspace.selectors.workspace_board_section import (
+    workspace_board_section_find_for_user_and_uuid,
 )
 
 from .. import (
@@ -64,6 +48,15 @@ from .. import (
 )
 from . import (
     base,
+)
+from .sub_task import (
+    SubTaskCreateUpdateSerializer,
+)
+from .task import (
+    TaskWithSubTaskSerializer,
+)
+from .workspace_board_section import (
+    WorkspaceBoardSectionUpSerializer,
 )
 
 
@@ -88,11 +81,6 @@ class TaskDetailSerializer(TaskWithSubTaskSerializer):
             "chat_messages",
             "workspace_board_section",
         )
-
-
-def assign_labels(task: models.Task, labels: list[models.Label]) -> None:
-    """Assign label uuids to the given task."""
-    task.set_labels(labels)
 
 
 class UuidDict(TypedDict):
@@ -130,18 +118,17 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
     ) -> models.WorkspaceBoardSection:
         """Validate the workspace board section."""
         request: Request = self.context["request"]
-        user: AbstractBaseUser = request.user
+        user: User = request.user
 
         # First, we make sure we are assigning the task to a workspace board
         # section that the request's user has access to.
-        try:
-            workspace_board_section = (
-                models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
-                    user=user,
-                    uuid=value["uuid"],
-                ).get()
+        workspace_board_section = (
+            workspace_board_section_find_for_user_and_uuid(
+                user=user,
+                workspace_board_section_uuid=value["uuid"],
             )
-        except models.WorkspaceBoardSection.DoesNotExist:
+        )
+        if workspace_board_section is None:
             raise serializers.ValidationError(
                 _("Workspace board section does not exist"),
             )
@@ -211,61 +198,19 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
             "assignee": assignee,
         }
 
-    # This doesn't prevent deleting a label after validation, but it gets
-    # us far enough. Further transaction handling should happen in the views
-    # instead.
-    @transaction.atomic
     def create(self, validated_data: dict[str, Any]) -> models.Task:
-        """Create the task and assign label / ws user."""
-        labels: list[models.Label] = validated_data.pop("labels")
-        sub_tasks: ValidatedData
-        if "sub_tasks" in validated_data:
-            sub_tasks = validated_data.pop("sub_tasks")
-        else:
-            sub_tasks = {"create_sub_tasks": [], "update_sub_tasks": []}
+        """Do not call this method."""
+        raise NotImplementedError("Don't call")
 
-        task = super().create(validated_data)
-        assign_labels(task, labels)
-
-        sub_task_serializer = self.fields["sub_tasks"]
-        if not isinstance(sub_task_serializer, SubTaskListSerializer):
-            raise ValueError(_("sub_tasks field has to be a DRF Serializer"))
-        sub_task_serializer.create(validated_data=sub_tasks, task=task)
-        return task
-
-    @transaction.atomic
     def update(
         self, instance: models.Task, validated_data: dict[str, Any]
     ) -> models.Task:
-        """Assign labels, assign assignee."""
-        labels: list[models.Label] = validated_data.pop("labels")
-        sub_tasks: ValidatedData
-        if "sub_tasks" in validated_data:
-            sub_tasks = validated_data.pop("sub_tasks")
-        else:
-            sub_tasks = {"create_sub_tasks": [], "update_sub_tasks": []}
-
-        task = super().update(instance, validated_data)
-        assign_labels(task, labels)
-
-        sub_task_instances = list(task.subtask_set.all())
-        sub_task_serializer = self.fields["sub_tasks"]
-        if not isinstance(sub_task_serializer, SubTaskListSerializer):
-            raise ValueError(_("sub_tasks field has to be a DRF Serializer"))
-        sub_task_serializer.update(sub_task_instances, sub_tasks)
-
-        return task
+        """Do not call this method."""
+        raise NotImplementedError("Don't call")
 
     def save(self, **kwargs: Any) -> models.Task:
-        """
-        Save, and fire signal.
-
-        If we don't override the serialized here, updating sub tasks will
-        not fire a signal as expected.
-        """
-        result = super().save(**kwargs)
-        post_save.send(sender=models.Task, instance=result)
-        return result
+        """Do not call this method."""
+        raise NotImplementedError("Don't call")
 
     class Meta(base.TaskBaseSerializer.Meta):
         """Meta."""
