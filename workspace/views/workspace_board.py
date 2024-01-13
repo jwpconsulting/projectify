@@ -58,7 +58,7 @@ class WorkspaceBoardCreate(APIView):
             """Restrict to the bare minimum needed for creation."""
 
             model = WorkspaceBoard
-            fields = "title", "description", "workspace_uuid", "deadline"
+            fields = "title", "description", "workspace_uuid", "due_date"
 
     def post(self, request: Request) -> Response:
         """Create a workspace board."""
@@ -74,7 +74,7 @@ class WorkspaceBoardCreate(APIView):
         workspace_board = workspace_board_create(
             title=serializer.validated_data["title"],
             description=serializer.validated_data.get("description"),
-            deadline=serializer.validated_data.get("deadline"),
+            due_date=serializer.validated_data.get("due_date"),
             who=user,
             workspace=workspace,
         )
@@ -122,7 +122,7 @@ class WorkspaceBoardReadUpdateDelete(APIView):
             workspace_board=workspace_board,
             title=data["title"],
             description=data.get("description"),
-            deadline=data.get("deadline"),
+            due_date=data.get("due_date"),
         )
         return Response(data, status.HTTP_200_OK)
 
