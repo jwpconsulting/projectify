@@ -368,30 +368,6 @@ class TestLabel:
         await delete_model_instance(workspace)
         await workspace_communicator.disconnect()
 
-    async def test_label_added_or_removed(
-        self,
-        workspace: Workspace,
-        workspace_user: WorkspaceUser,
-        label: Label,
-        workspace_board: WorkspaceBoard,
-        workspace_board_section: WorkspaceBoardSection,
-        task: Task,
-        workspace_board_communicator: WebsocketCommunicator,
-    ) -> None:
-        """Test that workspace board consumer fires for labels."""
-        await add_label(label, task)
-        message = await workspace_board_communicator.receive_json_from()
-        assert is_workspace_board_message(workspace_board, message)
-        await remove_label(label, task)
-        message = await workspace_board_communicator.receive_json_from()
-        assert is_workspace_board_message(workspace_board, message)
-        await workspace_board_communicator.disconnect()
-        await delete_model_instance(workspace_board_section)
-        await delete_model_instance(workspace_board)
-        await delete_model_instance(workspace_user)
-        await delete_model_instance(label)
-        await delete_model_instance(workspace)
-
 
 class TestTaskConsumer:
     """Test consumer behavior for tasks."""
@@ -440,13 +416,25 @@ class TestTaskLabel:
         workspace_board: WorkspaceBoard,
         workspace_board_section: WorkspaceBoardSection,
         task: Task,
+        workspace_board_communicator: WebsocketCommunicator,
         task_communicator: WebsocketCommunicator,
     ) -> None:
-        """Test that task consumer fires."""
-        await remove_label(label, task)
+        """Test that workspace board and task consumer fire."""
+        await add_label(label, task)
+        message = await workspace_board_communicator.receive_json_from()
+        assert is_workspace_board_message(workspace_board, message)
         message = await task_communicator.receive_json_from()
         assert is_task_message(task, message)
+
+        await remove_label(label, task)
+        message = await workspace_board_communicator.receive_json_from()
+        assert is_workspace_board_message(workspace_board, message)
+        message = await task_communicator.receive_json_from()
+        assert is_task_message(task, message)
+
+        await workspace_board_communicator.disconnect()
         await task_communicator.disconnect()
+
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
