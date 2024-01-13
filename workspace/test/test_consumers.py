@@ -204,6 +204,41 @@ def is_task_message(task: models.Task, json: object) -> bool:
 pytestmark = [pytest.mark.django_db, pytest.mark.asyncio]
 
 
+async def make_communicator(
+    resource: str, user: User
+) -> WebsocketCommunicator:
+    """Create a websocket communicator for a given resource and user."""
+    communicator = WebsocketCommunicator(websocket_application, resource)
+    communicator.scope["user"] = user
+    connected, _maybe_code = await communicator.connect()
+    assert connected, _maybe_code
+    return communicator
+
+
+@pytest.fixture
+async def workspace_communicator(
+    workspace: Workspace, user: User
+) -> WebsocketCommunicator:
+    """Return a communicator to a workspace instance."""
+    return await make_communicator(f"ws/workspace/{workspace.uuid}/", user)
+
+
+@pytest.fixture
+async def workspace_board_communicator(
+    workspace_board: WorkspaceBoard, user: User
+) -> WebsocketCommunicator:
+    """Return a communicator to a workspace board instance."""
+    return await make_communicator(
+        f"ws/workspace-board/{workspace_board.uuid}/", user
+    )
+
+
+@pytest.fixture
+async def task_communicator(task: Task, user: User) -> WebsocketCommunicator:
+    """Return a communicator to a task instance."""
+    return await make_communicator(f"ws/task/{task.uuid}/", user)
+
+
 class TestWorkspaceConsumer:
     """Test WorkspaceConsumer."""
 
@@ -212,24 +247,17 @@ class TestWorkspaceConsumer:
         user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
+        workspace_communicator: WebsocketCommunicator,
     ) -> None:
         """Test signal firing on workspace change."""
-        resource = f"ws/workspace/{workspace.uuid}/"
-        communicator = WebsocketCommunicator(
-            websocket_application,
-            resource,
-        )
-        communicator.scope["user"] = user
-        connected, _ = await communicator.connect()
-        assert connected
         await save_model_instance(workspace)
-        message = await communicator.receive_json_from()
+        message = await workspace_communicator.receive_json_from()
         assert is_workspace_message(workspace, message)
         await delete_model_instance(workspace_user)
         await delete_model_instance(workspace)
-        message = await communicator.receive_json_from()
+        message = await workspace_communicator.receive_json_from()
         assert is_workspace_message(workspace, message)
-        await communicator.disconnect()
+        await workspace_communicator.disconnect()
         # If we delete the user before disconnecting, we're in trouble
         await delete_model_instance(user)
 
@@ -239,25 +267,18 @@ class TestWorkspaceConsumer:
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         label: Label,
+        workspace_communicator: WebsocketCommunicator,
     ) -> None:
         """Test signal firing on workspace change."""
-        resource = f"ws/workspace/{workspace.uuid}/"
-        communicator = WebsocketCommunicator(
-            websocket_application,
-            resource,
-        )
-        communicator.scope["user"] = user
-        connected, _ = await communicator.connect()
-        assert connected
         await save_model_instance(label)
-        message = await communicator.receive_json_from()
+        message = await workspace_communicator.receive_json_from()
         assert is_workspace_message(workspace, message)
         await delete_model_instance(label)
-        message = await communicator.receive_json_from()
+        message = await workspace_communicator.receive_json_from()
         assert is_workspace_message(workspace, message)
         await delete_model_instance(workspace_user)
         await delete_model_instance(workspace)
-        await communicator.disconnect()
+        await workspace_communicator.disconnect()
         await delete_model_instance(user)
 
     async def test_workspace_user_saved_or_deleted(
@@ -265,23 +286,16 @@ class TestWorkspaceConsumer:
         user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
+        workspace_communicator: WebsocketCommunicator,
     ) -> None:
         """Test signal firing on workspace user save or delete."""
-        resource = f"ws/workspace/{workspace.uuid}/"
-        communicator = WebsocketCommunicator(
-            websocket_application,
-            resource,
-        )
-        communicator.scope["user"] = user
-        connected, _ = await communicator.connect()
-        assert connected
         await save_model_instance(workspace_user)
-        message = await communicator.receive_json_from()
+        message = await workspace_communicator.receive_json_from()
         assert is_workspace_message(workspace, message)
         await delete_model_instance(workspace_user)
-        message = await communicator.receive_json_from()
+        message = await workspace_communicator.receive_json_from()
         assert is_workspace_message(workspace, message)
-        await communicator.disconnect()
+        await workspace_communicator.disconnect()
         await delete_model_instance(user)
         await delete_model_instance(workspace)
 
@@ -291,23 +305,16 @@ class TestWorkspaceConsumer:
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         workspace_board: WorkspaceBoard,
+        workspace_communicator: WebsocketCommunicator,
     ) -> None:
         """Test signal firing on workspace board change."""
-        resource = f"ws/workspace/{workspace.uuid}/"
-        communicator = WebsocketCommunicator(
-            websocket_application,
-            resource,
-        )
-        communicator.scope["user"] = user
-        connected, _ = await communicator.connect()
-        assert connected
         await save_model_instance(workspace_board)
-        message = await communicator.receive_json_from()
+        message = await workspace_communicator.receive_json_from()
         assert is_workspace_message(workspace, message)
         await delete_model_instance(workspace_board)
-        message = await communicator.receive_json_from()
+        message = await workspace_communicator.receive_json_from()
         assert is_workspace_message(workspace, message)
-        await communicator.disconnect()
+        await workspace_communicator.disconnect()
         await delete_model_instance(workspace_user)
         await delete_model_instance(user)
         await delete_model_instance(workspace)
@@ -322,23 +329,16 @@ class TestWorkspaceBoardConsumer:
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         workspace_board: WorkspaceBoard,
+        workspace_board_communicator: WebsocketCommunicator,
     ) -> None:
         """Test signal firing on workspace board change."""
-        resource = f"ws/workspace-board/{workspace_board.uuid}/"
-        communicator = WebsocketCommunicator(
-            websocket_application,
-            resource,
-        )
-        communicator.scope["user"] = user
-        connected, _ = await communicator.connect()
-        assert connected
         await save_model_instance(workspace_board)
-        message = await communicator.receive_json_from()
+        message = await workspace_board_communicator.receive_json_from()
         assert is_workspace_board_message(workspace_board, message)
         await delete_model_instance(workspace_board)
-        message = await communicator.receive_json_from()
+        message = await workspace_board_communicator.receive_json_from()
         assert is_workspace_board_message(workspace_board, message)
-        await communicator.disconnect()
+        await workspace_board_communicator.disconnect()
         await delete_model_instance(workspace_user)
         await delete_model_instance(user)
         await delete_model_instance(workspace)
@@ -350,23 +350,16 @@ class TestWorkspaceBoardConsumer:
         workspace_user: WorkspaceUser,
         workspace_board: WorkspaceBoard,
         workspace_board_section: WorkspaceBoardSection,
+        workspace_board_communicator: WebsocketCommunicator,
     ) -> None:
         """Test signal firing on workspace board section change."""
-        resource = f"ws/workspace-board/{workspace_board.uuid}/"
-        communicator = WebsocketCommunicator(
-            websocket_application,
-            resource,
-        )
-        communicator.scope["user"] = user
-        connected, _ = await communicator.connect()
-        assert connected
         await save_model_instance(workspace_board_section)
-        message = await communicator.receive_json_from()
+        message = await workspace_board_communicator.receive_json_from()
         assert is_workspace_board_message(workspace_board, message)
         await delete_model_instance(workspace_board_section)
-        message = await communicator.receive_json_from()
+        message = await workspace_board_communicator.receive_json_from()
         assert is_workspace_board_message(workspace_board, message)
-        await communicator.disconnect()
+        await workspace_board_communicator.disconnect()
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
         await delete_model_instance(user)
@@ -380,23 +373,16 @@ class TestWorkspaceBoardConsumer:
         workspace_board: WorkspaceBoard,
         workspace_board_section: WorkspaceBoardSection,
         task: Task,
+        workspace_board_communicator: WebsocketCommunicator,
     ) -> None:
         """Test signal firing on task change."""
-        resource = f"ws/workspace-board/{workspace_board.uuid}/"
-        communicator = WebsocketCommunicator(
-            websocket_application,
-            resource,
-        )
-        communicator.scope["user"] = user
-        connected, _ = await communicator.connect()
-        assert connected
         await save_model_instance(task)
-        message = await communicator.receive_json_from()
+        message = await workspace_board_communicator.receive_json_from()
         assert is_workspace_board_message(workspace_board, message)
         await delete_model_instance(task)
-        message = await communicator.receive_json_from()
+        message = await workspace_board_communicator.receive_json_from()
         assert is_workspace_board_message(workspace_board, message)
-        await communicator.disconnect()
+        await workspace_board_communicator.disconnect()
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
@@ -412,23 +398,16 @@ class TestWorkspaceBoardConsumer:
         workspace_board: WorkspaceBoard,
         workspace_board_section: WorkspaceBoardSection,
         task: Task,
+        workspace_board_communicator: WebsocketCommunicator,
     ) -> None:
         """Test workspace board update on task label add or remove."""
-        resource = f"ws/workspace-board/{workspace_board.uuid}/"
-        communicator = WebsocketCommunicator(
-            websocket_application,
-            resource,
-        )
-        communicator.scope["user"] = user
-        connected, _ = await communicator.connect()
-        assert connected
         await add_label(label, task)
-        message = await communicator.receive_json_from()
+        message = await workspace_board_communicator.receive_json_from()
         assert is_workspace_board_message(workspace_board, message)
         await remove_label(label, task)
-        message = await communicator.receive_json_from()
+        message = await workspace_board_communicator.receive_json_from()
         assert is_workspace_board_message(workspace_board, message)
-        await communicator.disconnect()
+        await workspace_board_communicator.disconnect()
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
@@ -445,23 +424,16 @@ class TestWorkspaceBoardConsumer:
         workspace_board_section: WorkspaceBoardSection,
         task: Task,
         sub_task: SubTask,
+        workspace_board_communicator: WebsocketCommunicator,
     ) -> None:
         """Test signal firing on sub task change."""
-        resource = f"ws/workspace-board/{workspace_board.uuid}/"
-        communicator = WebsocketCommunicator(
-            websocket_application,
-            resource,
-        )
-        communicator.scope["user"] = user
-        connected, _ = await communicator.connect()
-        assert connected
         await save_model_instance(sub_task)
-        message = await communicator.receive_json_from()
+        message = await workspace_board_communicator.receive_json_from()
         assert is_workspace_board_message(workspace_board, message)
         await delete_model_instance(sub_task)
-        message = await communicator.receive_json_from()
+        message = await workspace_board_communicator.receive_json_from()
         assert is_workspace_board_message(workspace_board, message)
-        await communicator.disconnect()
+        await workspace_board_communicator.disconnect()
         await delete_model_instance(task)
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
@@ -481,20 +453,13 @@ class TestTaskConsumer:
         workspace_board: WorkspaceBoard,
         workspace_board_section: WorkspaceBoardSection,
         task: Task,
+        task_communicator: WebsocketCommunicator,
     ) -> None:
         """Assert event is fired when task is saved or deleted."""
-        resource = f"ws/task/{task.uuid}/"
-        communicator = WebsocketCommunicator(websocket_application, resource)
-        communicator.scope["user"] = user
-        connected, _ = await communicator.connect()
-        assert connected
-        await save_model_instance(task)
-        message = await communicator.receive_json_from()
-        assert is_task_message(task, message)
         await delete_model_instance(task)
-        message = await communicator.receive_json_from()
+        message = await task_communicator.receive_json_from()
         assert is_task_message(task, message)
-        await communicator.disconnect()
+        await task_communicator.disconnect()
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
@@ -510,20 +475,13 @@ class TestTaskConsumer:
         workspace_board: WorkspaceBoard,
         workspace_board_section: WorkspaceBoardSection,
         task: Task,
+        task_communicator: WebsocketCommunicator,
     ) -> None:
         """Test adding or removing a label."""
-        resource = f"ws/task/{task.uuid}/"
-        communicator = WebsocketCommunicator(websocket_application, resource)
-        communicator.scope["user"] = user
-        connected, _ = await communicator.connect()
-        assert connected
-        await add_label(label, task)
-        message = await communicator.receive_json_from()
-        assert is_task_message(task, message)
         await remove_label(label, task)
-        message = await communicator.receive_json_from()
+        message = await task_communicator.receive_json_from()
         assert is_task_message(task, message)
-        await communicator.disconnect()
+        await task_communicator.disconnect()
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
@@ -540,20 +498,13 @@ class TestTaskConsumer:
         workspace_board_section: WorkspaceBoardSection,
         task: Task,
         sub_task: SubTask,
+        task_communicator: WebsocketCommunicator,
     ) -> None:
         """Assert event is fired when sub task is saved or deleted."""
-        resource = f"ws/task/{task.uuid}/"
-        communicator = WebsocketCommunicator(websocket_application, resource)
-        communicator.scope["user"] = user
-        connected, _ = await communicator.connect()
-        assert connected
-        await save_model_instance(sub_task)
-        message = await communicator.receive_json_from()
-        assert is_task_message(task, message)
         await delete_model_instance(sub_task)
-        message = await communicator.receive_json_from()
+        message = await task_communicator.receive_json_from()
         assert is_task_message(task, message)
-        await communicator.disconnect()
+        await task_communicator.disconnect()
         await delete_model_instance(task)
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
@@ -569,26 +520,22 @@ class TestTaskConsumer:
         workspace_board: WorkspaceBoard,
         workspace_board_section: WorkspaceBoardSection,
         task: Task,
+        task_communicator: WebsocketCommunicator,
     ) -> None:
         """Assert event is fired when chat message is saved or deleted."""
-        resource = f"ws/task/{task.uuid}/"
-        communicator = WebsocketCommunicator(websocket_application, resource)
-        communicator.scope["user"] = user
-        connected, _ = await communicator.connect()
-        assert connected
         await database_sync_to_async(chat_message_create)(
             who=user,
             task=task,
             text="Hello world",
         )
-        message = await communicator.receive_json_from()
+        message = await task_communicator.receive_json_from()
         assert is_task_message(task, message)
         # TODO chat messages are not supported right now,
         # so no chat_message_delete service exists.
         # await delete_model_instance(chat_message)
         # message = await communicator.receive_json_from()
         assert is_task_message(task, message)
-        await communicator.disconnect()
+        await task_communicator.disconnect()
         await delete_model_instance(task)
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
