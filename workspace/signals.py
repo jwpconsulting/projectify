@@ -34,7 +34,6 @@ from django.dispatch import (
 from user.signal_defs import (
     user_invitation_redeemed,
 )
-from workspace.models import TaskLabel
 from workspace.models.label import Label
 from workspace.models.task import Task
 from workspace.models.workspace import Workspace
@@ -123,14 +122,6 @@ def workspace_board_section_changed(
 @receiver(post_delete, sender=Task)
 def task_changed(instance: Task, **kwargs: Unknown) -> None:
     """Broadcast changes upon task save/delete."""
-    send_workspace_board_change_signal(instance)
-    send_task_change_signal(instance)
-
-
-@receiver(post_save, sender=TaskLabel)
-@receiver(post_delete, sender=TaskLabel)
-def task_label_changed(instance: TaskLabel, **kwargs: Unknown) -> None:
-    """Broadcast changes upon task label save/delete."""
     send_workspace_board_change_signal(instance)
     send_task_change_signal(instance)
 
