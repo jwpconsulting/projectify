@@ -46,7 +46,7 @@ export interface CreateUpdateTaskData {
     assignee?: Pick<WorkspaceUser, "uuid">;
     workspace_board_section: Pick<WorkspaceBoardSection, "uuid">;
     // TODO dueDate plz
-    deadline?: string;
+    due_date?: string;
     sub_tasks?: CreateUpdateSubTask[];
 }
 

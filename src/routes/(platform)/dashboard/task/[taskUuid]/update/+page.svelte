@@ -46,7 +46,7 @@
 
     // Initial data
     let { title, description } = task;
-    let dueDate = task.deadline && coerceIsoDate(task.deadline);
+    let dueDate = task.due_date && coerceIsoDate(task.due_date);
 
     $: workspaceUserAssignment = createWorkspaceUserAssignment(task);
     $: labelAssignment = createLabelAssignment(task);
@@ -64,7 +64,7 @@
         }
         const submitTask: TaskWithWorkspaceBoardSection = {
             ...task,
-            deadline: dueDate,
+            due_date: dueDate,
             title,
             description,
         };
@@ -75,7 +75,7 @@
                 {
                     title,
                     description,
-                    deadline: dueDate,
+                    due_date: dueDate,
                     assignee: $workspaceUserAssignment,
                     labels: $labelAssignment,
                     sub_tasks: $subTasks,

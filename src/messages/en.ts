@@ -781,7 +781,7 @@ const messages: MessageDirectory = {
         "index": {
             hero: {
                 title: "Solutions for every type of user",
-                text: "Explore the different ways users are using Projectify to meet deadlines, reach targets and be productive.",
+                text: "Explore the different ways users are using Projectify to meet due dates, reach targets and be productive.",
                 illustration: {
                     alt: "An illustration showing users of different backgrounds",
                 },
@@ -940,9 +940,9 @@ const messages: MessageDirectory = {
             features: {
                 "feature-1": {
                     title: "Deadlines become a lifeline",
-                    text: "Projectify notifies you of upcoming due dates for assignments, so you'll never miss a paper's deadline.",
+                    text: "Projectify notifies you of upcoming due dates for assignments, so you'll never miss a paper's due date.",
                     illustration: {
-                        alt: "An illustration showing how Projectify will inform a user of different task deadlines and other important updates",
+                        alt: "An illustration showing how Projectify will inform a user of different task due dates and other important updates",
                     },
                 },
                 "feature-2": {
@@ -998,7 +998,7 @@ const messages: MessageDirectory = {
             features: {
                 "feature-1": {
                     title: "Create tasks with ease",
-                    text: "Organise your tasks into individual projects with sections such as 'To do', 'In progress' and 'Done'. Provide descriptions for each task and set deadlines. Labels simplify the process of catergorizing tasks.",
+                    text: "Organise your tasks into individual projects with sections such as 'To do', 'In progress' and 'Done'. Provide descriptions for each task and set due dates. Labels simplify the process of catergorizing tasks.",
                     illustration: {
                         alt: "An illustration showing a 'To do' and 'Done' section, showing personal tasks that a user assigned to themselves, such as 'Book a ticket to Paris' or 'Learn French for beginners'",
                     },
@@ -1168,7 +1168,7 @@ const messages: MessageDirectory = {
                     id: "task",
                     title: "What is a task?",
                     content:
-                        "A task is a step in your project that needs to be completed. Tasks can be assigned to any workspace user in your workspace. Labels and detailed information can be applied to tasks. For every task that is created, a unique task number is assigned to it for ease of reference and searching. Tasks can be further divided into sub tasks - sub tasks are great for keeping track of micro achievements per task. Due dates can also be set for tasks that need to be completed on a deadline.For more information on tasks please see Tasks.",
+                        "A task is a step in your project that needs to be completed. Tasks can be assigned to any workspace user in your workspace. Labels and detailed information can be applied to tasks. For every task that is created, a unique task number is assigned to it for ease of reference and searching. Tasks can be further divided into sub tasks - sub tasks are great for keeping track of micro achievements per task. Due dates can also be set for tasks that need to be completed on a due date. For more information on tasks please see Tasks.",
                 },
                 {
                     id: "side-menu",
@@ -1294,7 +1294,7 @@ const messages: MessageDirectory = {
                     id: "add-context-to-task",
                     title: "Add context to a task",
                     content:
-                        "Context could be in the form of a title, description, label, assignee or deadline. You have the freedom to add as little or as much context as you want, however we require having a title at the very least. When you create a task, an input form allows you to input information about the task.",
+                        "Context could be in the form of a title, description, label, assignee or due date. You have the freedom to add as little or as much context as you want, however we require having a title at the very least. When you create a task, an input form allows you to input information about the task.",
                 },
                 {
                     id: "edit-task",

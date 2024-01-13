@@ -75,7 +75,7 @@
             workspace_board_section: workspaceBoardSection,
             labels: $labelAssignment,
             assignee: $workspaceUserAssignment,
-            deadline: dueDate,
+            due_date: dueDate,
             sub_tasks: $subTasks,
         };
         creating = true;
