@@ -18,6 +18,7 @@
 from collections.abc import AsyncIterable
 from typing import (
     Any,
+    Union,
     cast,
 )
 
@@ -179,30 +180,18 @@ def delete_model_instance(model_instance: django_models.Model) -> None:
     model_instance.delete()
 
 
-def is_workspace_message(workspace: models.Workspace, json: object) -> bool:
-    """Test if the message is correct."""
-    json_cast = cast(dict[str, Any], json)
-    return set(json_cast.keys()) == {"uuid", "type", "data"} and json_cast[
-        "uuid"
-    ] == str(workspace.uuid)
+HasUuid = Union[Workspace, WorkspaceBoard, Task]
 
 
-def is_workspace_board_message(
-    workspace_board: models.WorkspaceBoard, json: object
+async def expect_message(
+    communicator: WebsocketCommunicator, has_uuid: HasUuid
 ) -> bool:
     """Test if the message is correct."""
+    json = await communicator.receive_json_from()
     json_cast = cast(dict[str, Any], json)
     return set(json_cast.keys()) == {"uuid", "type", "data"} and json_cast[
         "uuid"
-    ] == str(workspace_board.uuid)
-
-
-def is_task_message(task: models.Task, json: object) -> bool:
-    """Test if the message is correct."""
-    json_cast = cast(dict[str, Any], json)
-    return set(json_cast.keys()) == {"uuid", "type", "data"} and json_cast[
-        "uuid"
-    ] == str(task.uuid)
+    ] == str(has_uuid.uuid)
 
 
 pytestmark = [pytest.mark.django_db, pytest.mark.asyncio]
@@ -254,12 +243,10 @@ class TestWorkspace:
     ) -> None:
         """Test signal firing on workspace change."""
         await save_model_instance(workspace)
-        message = await workspace_communicator.receive_json_from()
-        assert is_workspace_message(workspace, message)
+        assert await expect_message(workspace_communicator, workspace)
         await delete_model_instance(workspace_user)
         await delete_model_instance(workspace)
-        message = await workspace_communicator.receive_json_from()
-        assert is_workspace_message(workspace, message)
+        assert await expect_message(workspace_communicator, workspace)
         await workspace_communicator.disconnect()
 
 
@@ -274,11 +261,11 @@ class TestWorkspaceUser:
     ) -> None:
         """Test signal firing on workspace user save or delete."""
         await save_model_instance(workspace_user)
-        message = await workspace_communicator.receive_json_from()
-        assert is_workspace_message(workspace, message)
+        assert await expect_message(workspace_communicator, workspace)
+
         await delete_model_instance(workspace_user)
-        message = await workspace_communicator.receive_json_from()
-        assert is_workspace_message(workspace, message)
+        assert await expect_message(workspace_communicator, workspace)
+
         await workspace_communicator.disconnect()
         await delete_model_instance(workspace)
 
@@ -296,16 +283,16 @@ class TestWorkspaceBoard:
     ) -> None:
         """Test workspace / board consumer behavior for board changes."""
         await save_model_instance(workspace_board)
-        message = await workspace_board_communicator.receive_json_from()
-        assert is_workspace_board_message(workspace_board, message)
-        message = await workspace_communicator.receive_json_from()
-        assert is_workspace_message(workspace, message)
+        assert await expect_message(
+            workspace_board_communicator, workspace_board
+        )
+        assert await expect_message(workspace_communicator, workspace)
 
         await delete_model_instance(workspace_board)
-        message = await workspace_board_communicator.receive_json_from()
-        assert is_workspace_board_message(workspace_board, message)
-        message = await workspace_communicator.receive_json_from()
-        assert is_workspace_message(workspace, message)
+        assert await expect_message(
+            workspace_board_communicator, workspace_board
+        )
+        assert await expect_message(workspace_communicator, workspace)
 
         await workspace_communicator.disconnect()
         await workspace_board_communicator.disconnect()
@@ -326,11 +313,15 @@ class TestWorkspaceBoardSection:
     ) -> None:
         """Test workspace board consumer behavior for section changes."""
         await save_model_instance(workspace_board_section)
-        message = await workspace_board_communicator.receive_json_from()
-        assert is_workspace_board_message(workspace_board, message)
+        assert await expect_message(
+            workspace_board_communicator, workspace_board
+        )
+
         await delete_model_instance(workspace_board_section)
-        message = await workspace_board_communicator.receive_json_from()
-        assert is_workspace_board_message(workspace_board, message)
+        assert await expect_message(
+            workspace_board_communicator, workspace_board
+        )
+
         await workspace_board_communicator.disconnect()
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
@@ -349,11 +340,11 @@ class TestLabel:
     ) -> None:
         """Test that workspace consumer fires on label changes."""
         await save_model_instance(label)
-        message = await workspace_communicator.receive_json_from()
-        assert is_workspace_message(workspace, message)
+        assert await expect_message(workspace_communicator, workspace)
+
         await delete_model_instance(label)
-        message = await workspace_communicator.receive_json_from()
-        assert is_workspace_message(workspace, message)
+        assert await expect_message(workspace_communicator, workspace)
+
         await delete_model_instance(workspace_user)
         await delete_model_instance(workspace)
         await workspace_communicator.disconnect()
@@ -374,17 +365,17 @@ class TestTaskConsumer:
     ) -> None:
         """Test that board and task consumer fire."""
         await save_model_instance(task)
-        message = await workspace_board_communicator.receive_json_from()
-        assert is_workspace_board_message(workspace_board, message)
-        message = await task_communicator.receive_json_from()
-        assert is_task_message(task, message)
+        assert await expect_message(
+            workspace_board_communicator, workspace_board
+        )
+        assert await expect_message(task_communicator, task)
 
         await delete_model_instance(task)
-        message = await workspace_board_communicator.receive_json_from()
-        assert is_workspace_board_message(workspace_board, message)
+        assert await expect_message(
+            workspace_board_communicator, workspace_board
+        )
         # Ideally, a task consumer will disconnect when a task is deleted
-        message = await task_communicator.receive_json_from()
-        assert is_task_message(task, message)
+        assert await expect_message(task_communicator, task)
 
         await workspace_board_communicator.disconnect()
         await task_communicator.disconnect()
@@ -411,16 +402,16 @@ class TestTaskLabel:
     ) -> None:
         """Test that workspace board and task consumer fire."""
         await add_label(label, task)
-        message = await workspace_board_communicator.receive_json_from()
-        assert is_workspace_board_message(workspace_board, message)
-        message = await task_communicator.receive_json_from()
-        assert is_task_message(task, message)
+        assert await expect_message(
+            workspace_board_communicator, workspace_board
+        )
+        assert await expect_message(task_communicator, task)
 
         await remove_label(label, task)
-        message = await workspace_board_communicator.receive_json_from()
-        assert is_workspace_board_message(workspace_board, message)
-        message = await task_communicator.receive_json_from()
-        assert is_task_message(task, message)
+        assert await expect_message(
+            workspace_board_communicator, workspace_board
+        )
+        assert await expect_message(task_communicator, task)
 
         await workspace_board_communicator.disconnect()
         await task_communicator.disconnect()
@@ -448,16 +439,16 @@ class TestSubTask:
     ) -> None:
         """Test that workspace board and task consumer fire."""
         await save_model_instance(sub_task)
-        message = await workspace_board_communicator.receive_json_from()
-        assert is_workspace_board_message(workspace_board, message)
-        message = await task_communicator.receive_json_from()
-        assert is_task_message(task, message)
+        assert await expect_message(
+            workspace_board_communicator, workspace_board
+        )
+        assert await expect_message(task_communicator, task)
 
         await delete_model_instance(sub_task)
-        message = await workspace_board_communicator.receive_json_from()
-        assert is_workspace_board_message(workspace_board, message)
-        message = await task_communicator.receive_json_from()
-        assert is_task_message(task, message)
+        assert await expect_message(
+            workspace_board_communicator, workspace_board
+        )
+        assert await expect_message(task_communicator, task)
 
         await workspace_board_communicator.disconnect()
         await task_communicator.disconnect()
@@ -488,13 +479,11 @@ class TestChatMessage:
             task=task,
             text="Hello world",
         )
-        message = await task_communicator.receive_json_from()
-        assert is_task_message(task, message)
+        assert await expect_message(task_communicator, task)
         # TODO chat messages are not supported right now,
         # so no chat_message_delete service exists.
         # await delete_model_instance(chat_message)
         # message = await communicator.receive_json_from()
-        assert is_task_message(task, message)
         await task_communicator.disconnect()
         await delete_model_instance(task)
         await delete_model_instance(workspace_board_section)
