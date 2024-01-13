@@ -25,6 +25,7 @@ from workspace.models import WorkspaceBoard, WorkspaceBoardSection
 
 
 # Create
+# TODO make atomic
 def workspace_board_section_create(
     *,
     who: User,
@@ -48,12 +49,13 @@ def workspace_board_section_create(
 
 
 # Update
+# TODO make atomic
 def workspace_board_section_update(
     *,
     who: User,
     workspace_board_section: WorkspaceBoardSection,
     title: str,
-    description: Optional[str],
+    description: Optional[str] = None,
 ) -> WorkspaceBoardSection:
     """Update a workspace board section."""
     validate_perm(
