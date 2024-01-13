@@ -45,22 +45,21 @@
     } as const;
     $: innerSize = sizes[size];
     $: profilePicture = user ? user.profile_picture : undefined;
-    $: name = user ? `${user.email}${getDisplayName(user)}` : undefined;
+    $: name = user ? getDisplayName(user) : undefined;
 </script>
 
-<div class="p-0.5">
-    <div
-        class="flex {outerSize} items-center justify-center rounded-full border border-primary"
-        class:bg-background={user === undefined}
-    >
-        {#if profilePicture}
-            <img
-                src={profilePicture}
-                alt={name}
-                class="h-full w-full overflow-x-auto rounded-full object-cover object-center"
-            />
-        {:else if name}
-            <Avatar size={innerSize} {name} />
-        {/if}
-    </div>
+<div
+    class="flex flex-row {outerSize} items-center rounded-full border border-primary"
+    class:bg-background={user === undefined}
+>
+    {#if profilePicture}
+        <img
+            src={profilePicture}
+            alt={name}
+            class="h-full w-full overflow-x-auto rounded-full object-cover object-center"
+        />
+    {:else if name}
+        <!-- TODO Avatar needs accessible label -->
+        <Avatar size={innerSize} {name} />
+    {/if}
 </div>
