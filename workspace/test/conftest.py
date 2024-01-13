@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2021, 2022, 2023 JWP Consulting GK
+# Copyright (C) 2021-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -305,7 +305,7 @@ def task(
         title=faker.sentence(),
         description=faker.paragraph(),
         assignee=workspace_user if faker.pybool() else None,
-        deadline=faker.date_time(tzinfo=dt_timezone.utc),
+        due_date=faker.date_time(tzinfo=dt_timezone.utc),
     )
 
 

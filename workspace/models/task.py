@@ -130,10 +130,10 @@ class Task(TitleDescriptionModel, BaseModel):
         on_delete=models.SET_NULL,
         help_text=_("Workspace user this task is assigned to."),
     )
-    deadline = models.DateTimeField(
+    due_date = models.DateTimeField(
         null=True,
         blank=True,
-        help_text=_("Task's deadline"),
+        help_text=_("Due date for this task"),
     )
     labels = models.ManyToManyField(
         "workspace.Label",

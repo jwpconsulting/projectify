@@ -70,7 +70,7 @@ class TestTask:
     ) -> None:
         """Test that workspace_board_section is assigned correctly."""
         assert task.workspace_board_section == workspace_board_section
-        assert task.deadline is not None
+        assert task.due_date is not None
 
     def test_assign_to(
         self,

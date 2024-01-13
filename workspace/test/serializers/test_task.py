@@ -200,7 +200,7 @@ class TestTaskCreateUpdateSerializer:
         assert "title" in serializer.validated_data
         task = serializer.save()
 
-        assert task.deadline is not None
+        assert task.due_date is not None
 
         assert list(task.labels.values_list("uuid", flat=True)) == [label.uuid]
 

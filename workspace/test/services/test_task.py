@@ -52,20 +52,20 @@ def test_create_task(
 
 
 @pytest.mark.django_db
-def test_add_task_deadline(
+def test_add_task_due_date(
     workspace_board_section: WorkspaceBoardSection,
     workspace_user: WorkspaceUser,
     now: datetime,
 ) -> None:
-    """Test adding a task with a deadline."""
+    """Test adding a task with a due date."""
     task = task_create(
         workspace_board_section=workspace_board_section,
         who=workspace_user.user,
         title="foo",
         description="bar",
-        deadline=now,
+        due_date=now,
     )
-    assert task.deadline is not None
+    assert task.due_date is not None
 
 
 @pytest.mark.django_db
