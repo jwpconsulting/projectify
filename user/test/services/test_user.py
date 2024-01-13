@@ -57,9 +57,9 @@ def test_user_create_superuser() -> None:
 def test_user_update(user: User, faker: Faker) -> None:
     """Test updating a user."""
     new_name = faker.name()
-    user_update(who=user, user=user, full_name=new_name)
+    user_update(who=user, user=user, preferred_name=new_name)
     user.refresh_from_db()
-    assert user.full_name == new_name
+    assert user.preferred_name == new_name
 
 
 def test_user_sign_up_no_agree(faker: Faker) -> None:

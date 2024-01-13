@@ -74,7 +74,7 @@ class TestUserReadUpdate:
         """Assert we can post to this view this while being logged in."""
         response = rest_user_client.get(resource_url)
         assert response.status_code == 200, response.data
-        assert response.data["full_name"] == user.full_name
+        assert response.data["preferred_name"] == user.preferred_name
 
     def test_update(
         self,
@@ -91,13 +91,13 @@ class TestUserReadUpdate:
             )
             assert response.status_code == HTTP_200_OK, response.data
         user.refresh_from_db()
-        assert user.full_name is None
+        assert user.preferred_name is None
         response = rest_user_client.put(
             resource_url,
-            data={"full_name": "Locutus of Blorb"},
+            data={"preferred_name": "Locutus of Blorb"},
         )
         user.refresh_from_db()
-        assert user.full_name == "Locutus of Blorb"
+        assert user.preferred_name == "Locutus of Blorb"
 
     def test_update_unauthenticed(
         self,
@@ -106,15 +106,15 @@ class TestUserReadUpdate:
         user: User,
     ) -> None:
         """Test updating when not authenticated."""
-        name = user.full_name
+        name = user.preferred_name
         response = rest_client.put(
             resource_url,
-            data={"full_name": "Here's to the finest crew in Starfleet."},
+            data={"preferred_name": "Here's to the finest crew in Starfleet."},
         )
         assert response.status_code == HTTP_403_FORBIDDEN, response.data
         user.refresh_from_db()
         # Canary in the mines
-        assert user.full_name == name
+        assert user.preferred_name == name
 
 
 # Delete

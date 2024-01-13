@@ -55,12 +55,12 @@ class UserReadUpdate(views.APIView):
     permission_classes = (AllowAny,)
 
     class UpdateInputSerializer(serializers.ModelSerializer[User]):
-        """Take only full_name in."""
+        """Take only preferred_name in."""
 
         class Meta:
             """Meta."""
 
-            fields = ("full_name",)
+            fields = ("preferred_name",)
             model = User
 
     def get(self, request: Request) -> Response:
@@ -84,7 +84,7 @@ class UserReadUpdate(views.APIView):
         user = user_update(
             who=user,
             user=user,
-            full_name=data.get("full_name"),
+            preferred_name=data.get("preferred_name"),
         )
         output_serializer = UserSerializer(instance=user)
         return Response(data=output_serializer.data, status=HTTP_200_OK)

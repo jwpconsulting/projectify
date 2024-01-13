@@ -51,7 +51,7 @@ def user(faker: Faker, password: str) -> user_models.User:
     """Return a db user."""
     user = user_create(email=faker.email(), password=password)
     user.is_active = True
-    user.full_name = faker.name()
+    user.preferred_name = faker.name()
     user.save()
     return user
 
@@ -79,7 +79,7 @@ def meddling_user(faker: Faker, password: str) -> user_models.User:
     """Create a canary user to check permissions."""
     user = user_create(email=faker.email(), password=password)
     user.is_active = True
-    user.full_name = faker.name()
+    user.preferred_name = faker.name()
     user.save()
     return user
 
