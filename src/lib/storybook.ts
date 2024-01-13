@@ -40,12 +40,12 @@ import type { Customer } from "./types/corporate";
 
 export const user1: User = {
     email: "this-email-is-very-long-so-you-know-we-mean-business@example.com",
-    full_name: null,
+    preferred_name: null,
     profile_picture: null,
 };
 export const user2: User = {
     email: "john@example.com",
-    full_name: null,
+    preferred_name: null,
     profile_picture: null,
 };
 
@@ -148,7 +148,7 @@ export const task: TaskWithWorkspaceBoardSection = {
     created: "",
     modified: "",
     uuid: nullUuid,
-    deadline: "2022-08-01",
+    due_date: "2022-08-01",
     _order: 0,
     number: 1,
     labels: [...mappedLabels, ...mappedLabels],
@@ -174,7 +174,7 @@ const task2: Task = {
     created: "",
     modified: "",
     uuid: nullUuid,
-    deadline: "2022-08-01",
+    due_date: "2022-08-01",
     _order: 0,
     number: 1337,
     labels: mappedLabels.slice(4),

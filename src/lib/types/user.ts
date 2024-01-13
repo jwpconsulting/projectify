@@ -19,12 +19,12 @@ export interface User {
     email: string;
     // TODO should be undefined
     profile_picture: string | null;
-    full_name: string | null;
+    preferred_name: string | null;
 }
 
 export function getDisplayName(user: User): string {
-    if (user.full_name) {
-        return user.full_name;
+    if (user.preferred_name) {
+        return user.preferred_name;
     }
     return user.email;
 }

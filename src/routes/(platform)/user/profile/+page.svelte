@@ -32,7 +32,7 @@
     export let data: PageData;
 
     let { user } = data;
-    let preferredName = user.full_name ?? undefined;
+    let preferredName = user.preferred_name ?? undefined;
 
     $: hasProfilePicture =
         imageFile !== undefined || user.profile_picture !== null;
@@ -75,7 +75,7 @@
 
     function cancel() {
         state = "viewing";
-        preferredName = user.full_name ?? undefined;
+        preferredName = user.preferred_name ?? undefined;
         user = data.user;
     }
 </script>
@@ -114,7 +114,7 @@
             placeholder={$_(
                 "user-account-settings.overview.preferred-name.placeholder",
             )}
-            name="full_name"
+            name="preferred-name"
             bind:value={preferredName}
             style={{ inputType: "text" }}
             readonly={state !== "editing"}

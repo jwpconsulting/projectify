@@ -29,7 +29,7 @@
     export let data: PageData;
 
     let preferredName: string | undefined =
-        ($user ?? data.user).full_name ?? undefined;
+        ($user ?? data.user).preferred_name ?? undefined;
 
     async function submit() {
         await updateUserProfile(preferredName, { fetch });

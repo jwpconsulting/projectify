@@ -55,7 +55,7 @@ export type Task = {
     _order: number;
     uuid: string;
     // TODO the following should be a Date
-    deadline?: string;
+    due_date?: string;
     number: number;
     labels: Label[];
     assignee?: WorkspaceUser;
@@ -94,7 +94,7 @@ export type WorkspaceBoardSectionDetail = WorkspaceBoardSection &
     Required<Pick<WorkspaceBoardSection, "workspace_board" | "tasks">>;
 
 export type WorkspaceBoard = {
-    deadline?: string;
+    due_date?: string;
     uuid: string;
     workspace_board_sections?: WorkspaceBoardSection[];
     archived?: string;

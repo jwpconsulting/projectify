@@ -121,7 +121,7 @@
             />
             <TaskDueDate
                 slot="due-date"
-                dueDate={task.deadline && coerceIsoDate(task.deadline)}
+                dueDate={task.due_date && coerceIsoDate(task.due_date)}
                 readonly
                 {onInteract}
             />

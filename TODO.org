@@ -80,11 +80,15 @@
 ** Due dates
    Show that due dates are stored as UTC+0
 
-** Deadline -> Due date
-    Due date sounds less threatening
+** DONE Deadline -> Due date
+   CLOSED: [2024-01-13 Sat 11:09]
+   Due date sounds less threatening
+   <2024-01-13 Sat>
+   Kept "Deadlines become a lifeline" in the marketing copy, since it sounds
+   good.
 
-** Full name -> Preferred name
-   <2023-08-03 Thu>
+** DONE Full name -> Preferred name
+   <2023-08-03 Thu> CLOSED: [2024-01-13 Sat 11:04]
    We want to respect how a user wants to be called.
 
    Asking them to provide a full name even if they don't want to be called that

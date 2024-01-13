@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023, 2024 JWP Consulting GK
+ *  Copyright (C) 2023-2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -58,15 +58,17 @@ export async function fetchUser(
 }
 
 export async function updateUserProfile(
-    // TODO fullName -> preferredName
-    fullName: string | undefined,
+    preferredName: string | undefined,
     repositoryContext: RepositoryContext,
 ) {
     await updateUser(
-        { full_name: fullName === "" ? null : fullName ?? null },
+        {
+            preferred_name:
+                preferredName === "" ? null : preferredName ?? null,
+        },
         repositoryContext,
     );
-    // We fetch the user to make sure the full name is updated
+    // We fetch the user to make sure the preferred name is updated
     // Ideally, this would just store the result of the above operation
     // in the user store
     await fetchUser(repositoryContext);
