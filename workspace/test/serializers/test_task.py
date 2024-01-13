@@ -113,6 +113,7 @@ class TestTaskCreateUpdateSerializer:
     def test_create(
         self,
         label: Label,
+        workspace: Workspace,
         workspace_user: WorkspaceUser,
         workspace_board_section: WorkspaceBoardSection,
         user_request: Request,
@@ -130,11 +131,13 @@ class TestTaskCreateUpdateSerializer:
             context={"request": user_request},
         )
         serializer.is_valid(raise_exception=True)
-        assert "title" in serializer.validated_data
-        task = serializer.save()
-        assert list(task.labels.values_list("uuid", flat=True)) == [label.uuid]
-        assert task.assignee
-        assert task.assignee.user.email == workspace_user.user.email
+        assert serializer.validated_data == {
+            "assignee": workspace_user,
+            "labels": [label],
+            "title": "This is a great task title.",
+            "workspace": workspace,
+            "workspace_board_section": workspace_board_section,
+        }
 
     def test_create_unrelated_workspace_board_section(
         self,

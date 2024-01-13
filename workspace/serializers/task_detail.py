@@ -32,9 +32,6 @@ from uuid import (
 from django.contrib.auth.models import (
     AbstractBaseUser,
 )
-from django.db.models.signals import (
-    post_save,
-)
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import (
@@ -44,16 +41,8 @@ from rest_framework.request import (
     Request,
 )
 
-from workspace.models.workspace_board_section import WorkspaceBoardSection
-from workspace.services.task import (
-    task_create_nested,
-)
-
 from .. import (
     models,
-)
-from ..services.sub_task import (
-    ValidatedData,
 )
 from . import (
     base,
@@ -209,49 +198,18 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         }
 
     def create(self, validated_data: dict[str, Any]) -> models.Task:
-        """Create the task and assign label / ws user."""
-        request: Request = self.context.get("request", None)
-        if not request:
-            raise ValueError("Must provide request in context")
-
-        workspace_board_section: WorkspaceBoardSection = validated_data[
-            "workspace_board_section"
-        ]
-
-        sub_tasks: ValidatedData
-        if "sub_tasks" in validated_data:
-            sub_tasks = validated_data.pop("sub_tasks")
-        else:
-            sub_tasks = {"create_sub_tasks": [], "update_sub_tasks": []}
-
-        labels: list[models.Label] = validated_data.pop("labels")
-        return task_create_nested(
-            who=request.user,
-            workspace_board_section=workspace_board_section,
-            title=validated_data["title"],
-            description=validated_data.get("description"),
-            assignee=validated_data.get("assignee"),
-            due_date=validated_data.get("due_date"),
-            labels=labels,
-            sub_tasks=sub_tasks,
-        )
+        """Do not call this method."""
+        raise NotImplementedError("Don't call")
 
     def update(
         self, instance: models.Task, validated_data: dict[str, Any]
     ) -> models.Task:
-        """Assign labels, assign assignee."""
+        """Do not call this method."""
         raise NotImplementedError("Don't call")
 
     def save(self, **kwargs: Any) -> models.Task:
-        """
-        Save, and fire signal.
-
-        If we don't override the serialized here, updating sub tasks will
-        not fire a signal as expected.
-        """
-        result = super().save(**kwargs)
-        post_save.send(sender=models.Task, instance=result)
-        return result
+        """Do not call this method."""
+        raise NotImplementedError("Don't call")
 
     class Meta(base.TaskBaseSerializer.Meta):
         """Meta."""

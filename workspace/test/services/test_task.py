@@ -27,6 +27,7 @@ from workspace.models.workspace_board_section import WorkspaceBoardSection
 from workspace.models.workspace_user import WorkspaceUser
 from workspace.services.task import (
     task_create,
+    task_create_nested,
     task_move_after,
     task_update_nested,
 )
@@ -58,7 +59,26 @@ def test_create_task(
     assert list(workspace_board_section.task_set.all()) == [task, task2]
 
 
-@pytest.mark.django_db
+def test_task_create_nested(
+    label: Label,
+    workspace_user: WorkspaceUser,
+    workspace_board_section: WorkspaceBoardSection,
+) -> None:
+    """Test task_create_nested."""
+    task = task_create_nested(
+        who=workspace_user.user,
+        workspace_board_section=workspace_board_section,
+        title="hello",
+        description=None,
+        assignee=workspace_user,
+        due_date=None,
+        labels=[label],
+        sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
+    )
+    assert list(task.labels.values_list("uuid", flat=True)) == [label.uuid]
+    assert task.assignee == workspace_user
+
+
 def test_add_task_due_date(
     workspace_board_section: WorkspaceBoardSection,
     workspace_user: WorkspaceUser,
