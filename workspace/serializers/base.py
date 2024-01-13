@@ -110,7 +110,7 @@ class WorkspaceBoardBaseSerializer(
         fields = (
             *timestamps,
             *title_description,
-            "deadline",
+            "due_date",
             "uuid",
             "archived",
         )

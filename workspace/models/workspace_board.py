@@ -96,10 +96,10 @@ class WorkspaceBoard(TitleDescriptionModel, BaseModel):
         blank=True,
         help_text=_("Archival timestamp of this workspace board."),
     )
-    deadline = models.DateTimeField(
+    due_date = models.DateTimeField(
         null=True,
         blank=True,
-        help_text=_("Workspace board's deadline"),
+        help_text=_("Due date for this workspace board"),
     )
 
     objects: ClassVar[WorkspaceBoardQuerySet] = cast(  # type: ignore[assignment]

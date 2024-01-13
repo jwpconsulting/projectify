@@ -135,7 +135,7 @@ class TestWorkspaceBoardReadUpdateDelete:
                 data={
                     "title": "Project 1337",
                     "description": "This is Project 1337",
-                    "deadline": now(),
+                    "due_date": now(),
                 },
                 format="json",
             )

@@ -35,14 +35,14 @@ def workspace_board_create(
     workspace: Workspace,
     title: str,
     description: Optional[str] = None,
-    deadline: Optional[datetime] = None,
+    due_date: Optional[datetime] = None,
 ) -> WorkspaceBoard:
     """Create a workspace board inside a given workspace."""
     validate_perm("workspace.can_create_workspace_board", who, workspace)
     return workspace.workspaceboard_set.create(
         title=title,
         description=description,
-        deadline=deadline,
+        due_date=due_date,
     )
 
 
@@ -54,15 +54,15 @@ def workspace_board_update(
     workspace_board: WorkspaceBoard,
     title: str,
     description: Optional[str],
-    deadline: Optional[datetime],
+    due_date: Optional[datetime],
 ) -> WorkspaceBoard:
     """Update a workspace board."""
     validate_perm("workspace.can_update_workspace_board", who, workspace_board)
     workspace_board.title = title
     workspace_board.description = description
-    if deadline and deadline.tzinfo is None:
-        raise ValueError(f"tzinfo must be specified, got {deadline}")
-    workspace_board.deadline = deadline
+    if due_date and due_date.tzinfo is None:
+        raise ValueError(f"tzinfo must be specified, got {due_date}")
+    workspace_board.due_date = due_date
     workspace_board.save()
     return workspace_board
 
