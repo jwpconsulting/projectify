@@ -29,9 +29,6 @@ from uuid import (
     UUID,
 )
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import (
@@ -39,6 +36,11 @@ from rest_framework import (
 )
 from rest_framework.request import (
     Request,
+)
+
+from user.models.user import User
+from workspace.selectors.workspace_board_section import (
+    workspace_board_section_find_for_user_and_uuid,
 )
 
 from .. import (
@@ -116,18 +118,17 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
     ) -> models.WorkspaceBoardSection:
         """Validate the workspace board section."""
         request: Request = self.context["request"]
-        user: AbstractBaseUser = request.user
+        user: User = request.user
 
         # First, we make sure we are assigning the task to a workspace board
         # section that the request's user has access to.
-        try:
-            workspace_board_section = (
-                models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
-                    user=user,
-                    uuid=value["uuid"],
-                ).get()
+        workspace_board_section = (
+            workspace_board_section_find_for_user_and_uuid(
+                user=user,
+                workspace_board_section_uuid=value["uuid"],
             )
-        except models.WorkspaceBoardSection.DoesNotExist:
+        )
+        if workspace_board_section is None:
             raise serializers.ValidationError(
                 _("Workspace board section does not exist"),
             )

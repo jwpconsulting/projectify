@@ -34,7 +34,7 @@ from workspace.models.workspace_board_section import (
     WorkspaceBoardSectionQuerySet,
 )
 from workspace.selectors.workspace_board_section import (
-    find_workspace_board_section_for_user_and_uuid,
+    workspace_board_section_find_for_user_and_uuid,
 )
 from workspace.serializers.workspace_board_section import (
     WorkspaceBoardSectionDetailSerializer,
@@ -148,7 +148,7 @@ class WorkspaceBoardSectionReadUpdateDelete(
     ) -> Response:
         """Handle DELETE."""
         workspace_board_section = (
-            find_workspace_board_section_for_user_and_uuid(
+            workspace_board_section_find_for_user_and_uuid(
                 user=request.user,
                 workspace_board_section_uuid=workspace_board_section_uuid,
             )

@@ -35,7 +35,7 @@ from rest_framework.views import APIView
 from workspace.models.workspace_board_section import WorkspaceBoardSection
 from workspace.selectors.task import TaskDetailQuerySet, task_find_by_task_uuid
 from workspace.selectors.workspace_board_section import (
-    find_workspace_board_section_for_user_and_uuid,
+    workspace_board_section_find_for_user_and_uuid,
 )
 from workspace.serializers.base import TaskBaseSerializer
 from workspace.serializers.task_detail import (
@@ -189,7 +189,7 @@ class TaskMoveToWorkspaceBoardSection(APIView):
         if task is None:
             raise NotFound(_("Task for this UUID not found"))
         workspace_board_section = (
-            find_workspace_board_section_for_user_and_uuid(
+            workspace_board_section_find_for_user_and_uuid(
                 workspace_board_section_uuid=data[
                     "workspace_board_section_uuid"
                 ],
