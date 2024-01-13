@@ -396,28 +396,6 @@ class TestLabel:
 class TestTaskConsumer:
     """Test consumer behavior for tasks."""
 
-    async def test_task_saved_or_deleted_workspace_board(
-        self,
-        workspace: Workspace,
-        workspace_user: WorkspaceUser,
-        workspace_board: WorkspaceBoard,
-        workspace_board_section: WorkspaceBoardSection,
-        task: Task,
-        workspace_board_communicator: WebsocketCommunicator,
-    ) -> None:
-        """Test that ws board consumer fires for task changes."""
-        await save_model_instance(task)
-        message = await workspace_board_communicator.receive_json_from()
-        assert is_workspace_board_message(workspace_board, message)
-        await delete_model_instance(task)
-        message = await workspace_board_communicator.receive_json_from()
-        assert is_workspace_board_message(workspace_board, message)
-        await workspace_board_communicator.disconnect()
-        await delete_model_instance(workspace_board_section)
-        await delete_model_instance(workspace_board)
-        await delete_model_instance(workspace_user)
-        await delete_model_instance(workspace)
-
     async def test_task_saved_or_deleted(
         self,
         workspace: Workspace,
@@ -425,13 +403,26 @@ class TestTaskConsumer:
         workspace_board: WorkspaceBoard,
         workspace_board_section: WorkspaceBoardSection,
         task: Task,
+        workspace_board_communicator: WebsocketCommunicator,
         task_communicator: WebsocketCommunicator,
     ) -> None:
-        """Test that task consumer fires."""
-        await delete_model_instance(task)
+        """Test that board and task consumer fire."""
+        await save_model_instance(task)
+        message = await workspace_board_communicator.receive_json_from()
+        assert is_workspace_board_message(workspace_board, message)
         message = await task_communicator.receive_json_from()
         assert is_task_message(task, message)
+
+        await delete_model_instance(task)
+        message = await workspace_board_communicator.receive_json_from()
+        assert is_workspace_board_message(workspace_board, message)
+        # Ideally, a task consumer will disconnect when a task is deleted
+        message = await task_communicator.receive_json_from()
+        assert is_task_message(task, message)
+
+        await workspace_board_communicator.disconnect()
         await task_communicator.disconnect()
+
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
@@ -475,36 +466,24 @@ class TestSubTask:
         task: Task,
         sub_task: SubTask,
         workspace_board_communicator: WebsocketCommunicator,
+        task_communicator: WebsocketCommunicator,
     ) -> None:
-        """Test that workspace board consumer fires."""
+        """Test that workspace board and task consumer fire."""
         await save_model_instance(sub_task)
         message = await workspace_board_communicator.receive_json_from()
         assert is_workspace_board_message(workspace_board, message)
+        message = await task_communicator.receive_json_from()
+        assert is_task_message(task, message)
+
         await delete_model_instance(sub_task)
         message = await workspace_board_communicator.receive_json_from()
         assert is_workspace_board_message(workspace_board, message)
-        await workspace_board_communicator.disconnect()
-        await delete_model_instance(task)
-        await delete_model_instance(workspace_board_section)
-        await delete_model_instance(workspace_board)
-        await delete_model_instance(workspace_user)
-        await delete_model_instance(workspace)
-
-    async def test_sub_task_saved_or_deleted(
-        self,
-        workspace: Workspace,
-        workspace_user: WorkspaceUser,
-        workspace_board: WorkspaceBoard,
-        workspace_board_section: WorkspaceBoardSection,
-        task: Task,
-        sub_task: SubTask,
-        task_communicator: WebsocketCommunicator,
-    ) -> None:
-        """Test that task consumer fires."""
-        await delete_model_instance(sub_task)
         message = await task_communicator.receive_json_from()
         assert is_task_message(task, message)
+
+        await workspace_board_communicator.disconnect()
         await task_communicator.disconnect()
+
         await delete_model_instance(task)
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
