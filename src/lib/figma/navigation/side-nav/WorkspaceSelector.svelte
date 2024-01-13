@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -18,6 +18,7 @@
 <script lang="ts">
     import { Briefcase, ChevronDown, ChevronUp } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
+    import { _ } from "svelte-i18n";
 
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
@@ -95,6 +96,9 @@
             </div>
             <div bind:this={sideNavContextMenuAnchor}>
                 <CircleIcon
+                    ariaLabel={$_(
+                        "dashboard.side-nav.workspace-selector.context-menu",
+                    )}
                     icon="ellipsis"
                     size="medium"
                     action={{ kind: "button", action: showSideNavContextMenu }}

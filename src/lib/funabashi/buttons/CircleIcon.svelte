@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -34,6 +34,8 @@
 
     export let size: CircleIconSize;
     export let icon: CircleIconIcon;
+    // TODO make required
+    export let ariaLabel: string | undefined = undefined;
 
     export let action: ButtonAction & { kind: "a" | "button" };
 
@@ -58,6 +60,7 @@
 
 {#if action.kind === "button"}
     <button
+        aria-label={ariaLabel}
         on:click|preventDefault|stopPropagation={action.action}
         {disabled}
         class="{styleClasses} disabled:bg-transparent disabled:text-transparent"
@@ -65,7 +68,7 @@
         <Icon src={iconMapped} style="outline" />
     </button>
 {:else if action.kind === "a"}
-    <a href={action.href} class="block {styleClasses}">
+    <a href={action.href} class="block {styleClasses}" aria-label={ariaLabel}>
         <Icon src={iconMapped} style="outline" />
     </a>
 {/if}

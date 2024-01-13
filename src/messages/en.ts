@@ -229,6 +229,9 @@ const messages: MessageDirectory = {
             },
         },
         "side-nav": {
+            "workspace-selector": {
+                "context-menu": "Open workspace context menu",
+            },
             "filter-labels": {
                 "title": "Filter labels",
                 "create-new-label": "Create new label",
