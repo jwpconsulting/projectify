@@ -153,7 +153,7 @@ class Command(BaseCommand):
             [
                 User(
                     email=self.fake.email(),
-                    full_name=self.fake.name() if randint(0, 1) else None,
+                    preferred_name=self.fake.name() if randint(0, 1) else None,
                     is_staff=False,
                     is_superuser=False,
                 )

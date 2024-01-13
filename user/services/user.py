@@ -103,12 +103,12 @@ def user_update(
     *,
     who: User,
     user: User,
-    full_name: Optional[str],
+    preferred_name: Optional[str],
 ) -> User:
     """Update a user."""
     if not who == user:
         raise PermissionDenied("User can only update own user")
-    user.full_name = full_name
+    user.preferred_name = preferred_name
     user.save()
     return user
 

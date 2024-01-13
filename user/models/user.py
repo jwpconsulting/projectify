@@ -60,7 +60,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         blank=True,
         null=True,
     )
-    full_name = models.CharField(
+    preferred_name = models.CharField(
         max_length=255,
         blank=True,
         null=True,
