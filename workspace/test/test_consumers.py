@@ -286,38 +286,28 @@ class TestWorkspaceUser:
 class TestWorkspaceBoard:
     """Test consumer behavior for WorkspaceBoard changes."""
 
-    async def test_workspace_board_saved_or_deleted_workspace(
-        self,
-        workspace: Workspace,
-        workspace_user: WorkspaceUser,
-        workspace_board: WorkspaceBoard,
-        workspace_communicator: WebsocketCommunicator,
-    ) -> None:
-        """Test workspace consumer behavior for board changes."""
-        await save_model_instance(workspace_board)
-        message = await workspace_communicator.receive_json_from()
-        assert is_workspace_message(workspace, message)
-        await delete_model_instance(workspace_board)
-        message = await workspace_communicator.receive_json_from()
-        assert is_workspace_message(workspace, message)
-        await workspace_communicator.disconnect()
-        await delete_model_instance(workspace_user)
-        await delete_model_instance(workspace)
-
     async def test_workspace_board_saved_or_deleted(
         self,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         workspace_board: WorkspaceBoard,
+        workspace_communicator: WebsocketCommunicator,
         workspace_board_communicator: WebsocketCommunicator,
     ) -> None:
-        """Test workspace board consumer behavior for board changes."""
+        """Test workspace / board consumer behavior for board changes."""
         await save_model_instance(workspace_board)
         message = await workspace_board_communicator.receive_json_from()
         assert is_workspace_board_message(workspace_board, message)
+        message = await workspace_communicator.receive_json_from()
+        assert is_workspace_message(workspace, message)
+
         await delete_model_instance(workspace_board)
         message = await workspace_board_communicator.receive_json_from()
         assert is_workspace_board_message(workspace_board, message)
+        message = await workspace_communicator.receive_json_from()
+        assert is_workspace_message(workspace, message)
+
+        await workspace_communicator.disconnect()
         await workspace_board_communicator.disconnect()
         await delete_model_instance(workspace_user)
         await delete_model_instance(workspace)
