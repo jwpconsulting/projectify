@@ -242,6 +242,15 @@ const messages: MessageDirectory = {
                 },
                 "color": {
                     prompt: "Select label color",
+                    colors: {
+                        orange: "Orange",
+                        pink: "Pink",
+                        blue: "Blue",
+                        purple: "Purple",
+                        yellow: "Yellow",
+                        red: "Red",
+                        green: "Green",
+                    },
                 },
                 "update-input": {
                     label: "Label name",

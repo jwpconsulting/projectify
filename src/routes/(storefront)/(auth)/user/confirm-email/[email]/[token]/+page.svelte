@@ -17,9 +17,12 @@
 -->
 <script lang="ts">
     import { _ } from "svelte-i18n";
+
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { logInUrl } from "$lib/urls/user";
+
     import type { PageData } from "./$types";
+
     export let data: PageData;
 
     const { response } = data;

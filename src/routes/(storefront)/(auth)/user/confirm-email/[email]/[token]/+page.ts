@@ -20,9 +20,9 @@ import { confirmEmail } from "$lib/repository/user";
 
 import type { PageLoadEvent } from "./$types";
 
-type Data = {
+interface Data {
     response: ApiResponse<unknown, unknown>;
-};
+}
 
 export async function load({
     fetch,
