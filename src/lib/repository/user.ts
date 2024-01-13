@@ -49,7 +49,7 @@ export async function getUser(
 }
 // Update
 export async function updateUser(
-    user: Pick<User, "full_name">,
+    user: Pick<User, "preferred_name">,
     repositoryContext: RepositoryContext,
 ): Promise<void> {
     const response = await putWithCredentialsJson<User>(

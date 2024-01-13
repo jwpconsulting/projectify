@@ -83,8 +83,8 @@
 ** Deadline -> Due date
     Due date sounds less threatening
 
-** Full name -> Preferred name
-   <2023-08-03 Thu>
+** DONE Full name -> Preferred name
+   <2023-08-03 Thu> CLOSED: [2024-01-13 Sat 11:04]
    We want to respect how a user wants to be called.
 
    Asking them to provide a full name even if they don't want to be called that

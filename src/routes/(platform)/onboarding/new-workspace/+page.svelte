@@ -36,7 +36,7 @@
 
     $: disabled = workspaceTitle === undefined;
 
-    $: who = $user?.full_name ?? data.user.full_name;
+    $: who = $user?.preferred_name ?? data.user.preferred_name;
 
     async function submit() {
         if (!workspaceTitle) {

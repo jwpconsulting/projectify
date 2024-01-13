@@ -46,7 +46,7 @@ export function searchWorkspaceUsers(
     searchInput: SearchInput,
 ) {
     return searchAmong(
-        ["user.email", "user.full_name"],
+        ["user.email", "user.preferred_name"],
         workspaceUsers,
         searchInput,
     );
