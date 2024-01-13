@@ -24,6 +24,10 @@ from projectify.lib.auth import validate_perm
 from user.models import User
 from workspace.models.sub_task import SubTask
 from workspace.models.task import Task
+from workspace.services.signals import (
+    send_task_change_signal,
+    send_workspace_board_change_signal,
+)
 
 
 class ValidatedDatum(TypedDict):
@@ -51,6 +55,12 @@ class ValidatedData(TypedDict):
     update_sub_tasks: Optional[Sequence[ValidatedDatumWithUuid]]
 
 
+def _sub_task_changed(task: Task) -> None:
+    """Broadcast changes upon sub task save/delete."""
+    send_workspace_board_change_signal(task)
+    send_task_change_signal(task)
+
+
 @transaction.atomic
 def sub_task_create(
     *,
@@ -62,9 +72,11 @@ def sub_task_create(
 ) -> SubTask:
     """Create a sub task for a task."""
     validate_perm("workspace.can_create_sub_task", who, task)
-    return SubTask.objects.create(
+    sub_task = SubTask.objects.create(
         task=task, title=title, description=description, done=done
     )
+    _sub_task_changed(task)
+    return sub_task
 
 
 # The following two functions can be merged into one
@@ -80,6 +92,7 @@ def sub_task_create_many(
     sub_tasks: list[SubTask] = SubTask.objects.bulk_create(
         SubTask(task=task, **sub_task) for sub_task in create_sub_tasks
     )
+    _sub_task_changed(task)
     return sub_tasks
 
 
@@ -150,4 +163,5 @@ def sub_task_update_many(
         result += create_instances
     # 4) fix order
     # XXX ? is fix order missing?
+    _sub_task_changed(task)
     return result

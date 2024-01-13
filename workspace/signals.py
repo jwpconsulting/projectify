@@ -36,7 +36,6 @@ from user.signal_defs import (
 )
 from workspace.models import TaskLabel
 from workspace.models.label import Label
-from workspace.models.sub_task import SubTask
 from workspace.models.task import Task
 from workspace.models.workspace import Workspace
 from workspace.models.workspace_board import WorkspaceBoard
@@ -132,14 +131,6 @@ def task_changed(instance: Task, **kwargs: Unknown) -> None:
 @receiver(post_delete, sender=TaskLabel)
 def task_label_changed(instance: TaskLabel, **kwargs: Unknown) -> None:
     """Broadcast changes upon task label save/delete."""
-    send_workspace_board_change_signal(instance)
-    send_task_change_signal(instance)
-
-
-@receiver(post_save, sender=SubTask)
-@receiver(post_delete, sender=SubTask)
-def sub_task_changed(instance: SubTask, **kwargs: Unknown) -> None:
-    """Broadcast changes upon sub task save/delete."""
     send_workspace_board_change_signal(instance)
     send_task_change_signal(instance)
 

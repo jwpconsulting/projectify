@@ -50,7 +50,7 @@ from workspace.selectors.workspace_user import (
 )
 from workspace.services.chat_message import chat_message_create
 from workspace.services.label import label_create
-from workspace.services.sub_task import sub_task_create
+from workspace.services.sub_task import sub_task_create, sub_task_update_many
 from workspace.services.task import task_create
 from workspace.services.workspace import workspace_create
 from workspace.services.workspace_board import workspace_board_create
@@ -428,6 +428,7 @@ class TestSubTask:
 
     async def test_sub_task_saved_or_deleted_workspace_board(
         self,
+        user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         workspace_board: WorkspaceBoard,
@@ -438,13 +439,49 @@ class TestSubTask:
         task_communicator: WebsocketCommunicator,
     ) -> None:
         """Test that workspace board and task consumer fire."""
-        await save_model_instance(sub_task)
+        # Simulate editing a task
+        await database_sync_to_async(sub_task_update_many)(
+            who=user,
+            task=task,
+            sub_tasks=[sub_task],
+            create_sub_tasks=[],
+            update_sub_tasks=[
+                {
+                    "uuid": sub_task.uuid,
+                    "title": sub_task.title,
+                    "done": False,
+                    "_order": 0,
+                }
+            ],
+        )
         assert await expect_message(
             workspace_board_communicator, workspace_board
         )
         assert await expect_message(task_communicator, task)
 
-        await delete_model_instance(sub_task)
+        # Simulate removing a task
+        await database_sync_to_async(sub_task_update_many)(
+            who=user,
+            task=task,
+            sub_tasks=[sub_task],
+            create_sub_tasks=[],
+            update_sub_tasks=[],
+        )
+        assert await expect_message(
+            workspace_board_communicator, workspace_board
+        )
+        assert await expect_message(task_communicator, task)
+
+        # Simulate adding a task
+        await database_sync_to_async(sub_task_update_many)(
+            who=user,
+            task=task,
+            sub_tasks=[],
+            create_sub_tasks=[
+                {"title": "to do", "done": False, "_order": 0},
+            ],
+            update_sub_tasks=[],
+        )
         assert await expect_message(
             workspace_board_communicator, workspace_board
         )
