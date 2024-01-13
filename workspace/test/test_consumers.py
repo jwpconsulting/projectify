@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Consumer tests."""
+import logging
 from collections.abc import AsyncIterable
 from typing import (
     Any,
@@ -51,7 +52,7 @@ from workspace.selectors.workspace_user import (
 from workspace.services.chat_message import chat_message_create
 from workspace.services.label import label_create
 from workspace.services.sub_task import sub_task_create, sub_task_update_many
-from workspace.services.task import task_create
+from workspace.services.task import task_create, task_update_nested
 from workspace.services.workspace import workspace_create
 from workspace.services.workspace_board import workspace_board_create
 from workspace.services.workspace_board_section import (
@@ -61,6 +62,8 @@ from workspace.services.workspace_board_section import (
 from .. import (
     models,
 )
+
+logger = logging.getLogger(__name__)
 
 
 @pytest.fixture
@@ -148,18 +151,6 @@ async def label(workspace: Workspace, user: User) -> Label:
     )
 
 
-@database_sync_to_async
-def add_label(label: models.Label, task: models.Task) -> None:
-    """Add a label to a task."""
-    task.add_label(label)
-
-
-@database_sync_to_async
-def remove_label(label: models.Label, task: models.Task) -> None:
-    """Remove a label from a task."""
-    task.remove_label(label)
-
-
 @pytest.fixture
 async def sub_task(task: Task, user: User) -> SubTask:
     """Create sub task."""
@@ -189,6 +180,7 @@ async def expect_message(
     """Test if the message is correct."""
     json = await communicator.receive_json_from()
     json_cast = cast(dict[str, Any], json)
+    logger.info("Received message %s for %s", json_cast["type"], has_uuid)
     return set(json_cast.keys()) == {"uuid", "type", "data"} and json_cast[
         "uuid"
     ] == str(has_uuid.uuid)
@@ -391,6 +383,7 @@ class TestTaskLabel:
 
     async def test_label_added_or_removed(
         self,
+        user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         label: Label,
@@ -401,13 +394,27 @@ class TestTaskLabel:
         task_communicator: WebsocketCommunicator,
     ) -> None:
         """Test that workspace board and task consumer fire."""
-        await add_label(label, task)
+        # Add label
+        await database_sync_to_async(task_update_nested)(
+            who=user,
+            task=task,
+            title=task.title,
+            labels=[label],
+            sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
+        )
         assert await expect_message(
             workspace_board_communicator, workspace_board
         )
         assert await expect_message(task_communicator, task)
 
-        await remove_label(label, task)
+        # Remove label
+        await database_sync_to_async(task_update_nested)(
+            who=user,
+            task=task,
+            title=task.title,
+            labels=[],
+            sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
+        )
         assert await expect_message(
             workspace_board_communicator, workspace_board
         )
