@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2023-2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -15,18 +15,20 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { redirect } from "@sveltejs/kit";
-
+import type { ApiResponse } from "$lib/repository/types";
 import { confirmEmail } from "$lib/repository/user";
-import { logInUrl } from "$lib/urls/user";
 
 import type { PageLoadEvent } from "./$types";
+
+type Data = {
+    response: ApiResponse<unknown, unknown>;
+};
 
 export async function load({
     fetch,
     params: { email, token },
-}: PageLoadEvent) {
-    await confirmEmail(email, token, { fetch });
-
-    throw redirect(302, logInUrl);
+}: PageLoadEvent): Promise<Data> {
+    return {
+        response: await confirmEmail(email, token, { fetch }),
+    };
 }

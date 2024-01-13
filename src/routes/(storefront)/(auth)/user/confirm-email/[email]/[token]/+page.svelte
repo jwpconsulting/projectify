@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -16,11 +16,43 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    import { onMount } from "svelte";
+    import { _ } from "svelte-i18n";
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+    import { logInUrl } from "$lib/urls/user";
+    import type { PageData } from "./$types";
+    export let data: PageData;
 
-    onMount(() => {
-        throw new Error("this page shall not be seen");
-    });
+    const { response } = data;
 </script>
 
-If you can see this page, then something went wrong.
+<section class="flex flex-col gap-4 px-8 py-4">
+    {#if response.ok}
+        <h1 class="text-2xl font-bold">
+            {$_("auth.confirm-email.success.title")}
+        </h1>
+        <p>
+            {$_("auth.confirm-email.success.message")}
+        </p>
+
+        <Anchor
+            size="normal"
+            label={$_("auth.confirm-email.success.continue")}
+            href={logInUrl}
+        />
+    {:else}
+        <h1 class="text-2xl font-bold">
+            {$_("auth.confirm-email.error.title")}
+        </h1>
+        <p>
+            {$_("auth.confirm-email.error.message")}
+        </p>
+        <p>
+            {JSON.stringify(response.error)}
+        </p>
+        <Anchor
+            size="normal"
+            label={$_("auth.confirm-email.error.continue")}
+            href="/contact-us"
+        />
+    {/if}
+</section>

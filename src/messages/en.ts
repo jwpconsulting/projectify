@@ -458,6 +458,20 @@ const messages: MessageDirectory = {
             "confirm-new-password": "Confirm new password",
             "reset-password": "Reset password",
         },
+        "confirm-email": {
+            success: {
+                title: "Email address confirmed",
+                message:
+                    "Your email address was confirmed successfully. You may now proceed to log in.",
+                continue: "Continue to log in",
+            },
+            error: {
+                title: "Error while confirming email address",
+                message:
+                    "Unfortunately your email address could not be confirmed. The error code from the API was:",
+                continue: "Contact support",
+            },
+        },
     },
     "task-screen": {
         "update": {
