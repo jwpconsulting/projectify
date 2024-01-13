@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Consumer tests."""
+from collections.abc import AsyncIterable
 from typing import (
     Any,
     cast,
@@ -62,11 +63,14 @@ from .. import (
 
 
 @pytest.fixture
-async def user() -> User:
+async def user() -> AsyncIterable[User]:
     """Create a user."""
-    return await database_sync_to_async(user_create)(
+    user = await database_sync_to_async(user_create)(
         email="consumer-test@example.com"
     )
+    yield user
+    # TODO use a service based user deletion here
+    await database_sync_to_async(user.delete)()
 
 
 @pytest.fixture
@@ -258,8 +262,6 @@ class TestWorkspace:
         message = await workspace_communicator.receive_json_from()
         assert is_workspace_message(workspace, message)
         await workspace_communicator.disconnect()
-        # If we delete the user before disconnecting, we're in trouble
-        await delete_model_instance(user)
 
 
 class TestWorkspaceUser:
@@ -280,7 +282,6 @@ class TestWorkspaceUser:
         message = await workspace_communicator.receive_json_from()
         assert is_workspace_message(workspace, message)
         await workspace_communicator.disconnect()
-        await delete_model_instance(user)
         await delete_model_instance(workspace)
 
 
@@ -304,7 +305,6 @@ class TestWorkspaceBoard:
         assert is_workspace_message(workspace, message)
         await workspace_communicator.disconnect()
         await delete_model_instance(workspace_user)
-        await delete_model_instance(user)
         await delete_model_instance(workspace)
 
     async def test_workspace_board_saved_or_deleted(
@@ -324,7 +324,6 @@ class TestWorkspaceBoard:
         assert is_workspace_board_message(workspace_board, message)
         await workspace_board_communicator.disconnect()
         await delete_model_instance(workspace_user)
-        await delete_model_instance(user)
         await delete_model_instance(workspace)
 
 
@@ -350,7 +349,6 @@ class TestWorkspaceBoardSection:
         await workspace_board_communicator.disconnect()
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
-        await delete_model_instance(user)
         await delete_model_instance(workspace)
 
 
@@ -375,7 +373,6 @@ class TestLabel:
         await delete_model_instance(workspace_user)
         await delete_model_instance(workspace)
         await workspace_communicator.disconnect()
-        await delete_model_instance(user)
 
     async def test_label_added_or_removed(
         self,
@@ -399,7 +396,6 @@ class TestLabel:
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
-        await delete_model_instance(user)
         await delete_model_instance(label)
         await delete_model_instance(workspace)
 
@@ -428,7 +424,6 @@ class TestTaskConsumer:
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
-        await delete_model_instance(user)
         await delete_model_instance(workspace)
 
     async def test_task_saved_or_deleted(
@@ -449,7 +444,6 @@ class TestTaskConsumer:
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
-        await delete_model_instance(user)
         await delete_model_instance(workspace)
 
 
@@ -476,7 +470,6 @@ class TestTaskLabel:
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
         await delete_model_instance(label)
-        await delete_model_instance(user)
         await delete_model_instance(workspace)
 
 
@@ -506,7 +499,6 @@ class TestSubTask:
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
-        await delete_model_instance(user)
         await delete_model_instance(workspace)
 
     async def test_sub_task_saved_or_deleted(
@@ -529,7 +521,6 @@ class TestSubTask:
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
-        await delete_model_instance(user)
         await delete_model_instance(workspace)
 
 
@@ -564,5 +555,4 @@ class TestChatMessage:
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
-        await delete_model_instance(user)
         await delete_model_instance(workspace)
