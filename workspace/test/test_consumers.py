@@ -193,10 +193,17 @@ pytestmark = [pytest.mark.django_db, pytest.mark.asyncio]
 
 
 async def make_communicator(
-    resource: str, user: User
+    resource: Union[Workspace, WorkspaceBoard, Task], user: User
 ) -> WebsocketCommunicator:
     """Create a websocket communicator for a given resource and user."""
-    communicator = WebsocketCommunicator(websocket_application, resource)
+    match resource:
+        case Workspace():
+            url = f"ws/workspace/{resource.uuid}/"
+        case WorkspaceBoard():
+            url = f"ws/workspace-board/{resource.uuid}/"
+        case Task():
+            url = f"ws/task/{resource.uuid}/"
+    communicator = WebsocketCommunicator(websocket_application, url)
     communicator.scope["user"] = user
     connected, _maybe_code = await communicator.connect()
     assert connected, _maybe_code
@@ -208,7 +215,7 @@ async def workspace_communicator(
     workspace: Workspace, user: User
 ) -> WebsocketCommunicator:
     """Return a communicator to a workspace instance."""
-    return await make_communicator(f"ws/workspace/{workspace.uuid}/", user)
+    return await make_communicator(workspace, user)
 
 
 @pytest.fixture
@@ -216,15 +223,13 @@ async def workspace_board_communicator(
     workspace_board: WorkspaceBoard, user: User
 ) -> WebsocketCommunicator:
     """Return a communicator to a workspace board instance."""
-    return await make_communicator(
-        f"ws/workspace-board/{workspace_board.uuid}/", user
-    )
+    return await make_communicator(workspace_board, user)
 
 
 @pytest.fixture
 async def task_communicator(task: Task, user: User) -> WebsocketCommunicator:
     """Return a communicator to a task instance."""
-    return await make_communicator(f"ws/task/{task.uuid}/", user)
+    return await make_communicator(task, user)
 
 
 class TestWorkspace:
