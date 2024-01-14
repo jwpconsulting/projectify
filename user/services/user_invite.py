@@ -20,9 +20,10 @@ from typing import Optional
 
 from django.db import transaction
 
-from user import signal_defs
 from user.models import User, UserInvite
 from user.selectors.user import user_find_by_email
+from workspace.models.workspace_user_invite import WorkspaceUserInvite
+from workspace.services.workspace import workspace_add_user
 
 
 @transaction.atomic
@@ -38,17 +39,22 @@ def user_invite_create(*, email: str) -> Optional[UserInvite]:
     return UserInvite.objects.create(email=email)
 
 
+@transaction.atomic
 def user_invite_redeem(*, user_invite: UserInvite, user: User) -> None:
     """Redeem a UserInvite."""
     assert not user_invite.redeemed
     user_invite.redeemed = True
     user_invite.user = user
     user_invite.save()
-    signal_defs.user_invitation_redeemed.send(
-        sender=user_invite.__class__,
-        user=user,
-        instance=user_invite,
+
+    # Add user to workspaces for any outstanding invites
+    qs = WorkspaceUserInvite.objects.filter(
+        user_invite__user=user,
     )
+    for invite in qs:
+        workspace = invite.workspace
+        workspace_add_user(workspace=workspace, user=user)
+        invite.redeem()
 
 
 @transaction.atomic
