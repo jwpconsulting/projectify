@@ -121,18 +121,8 @@ def send_workspace_board_change_signal(
     )
 
 
-# TODO accept task only
-def send_task_change_signal(instance: HasOrIsTask) -> None:
+def send_task_change_signal(task: Task) -> None:
     """Send task.change signal to correct group."""
-    match instance:
-        case Task():
-            task = instance
-        case TaskLabel():
-            task = instance.task
-        case SubTask():
-            task = instance.task
-        case ChatMessage():
-            task = instance.task
     uuid = str(task.uuid)
     group_send(
         f"task-{uuid}",
