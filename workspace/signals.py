@@ -34,16 +34,12 @@ from django.dispatch import (
 from user.signal_defs import (
     user_invitation_redeemed,
 )
-from workspace.models import TaskLabel
 from workspace.models.label import Label
-from workspace.models.task import Task
 from workspace.models.workspace import Workspace
 from workspace.models.workspace_board import WorkspaceBoard
-from workspace.models.workspace_board_section import WorkspaceBoardSection
 from workspace.models.workspace_user import WorkspaceUser
 from workspace.models.workspace_user_invite import WorkspaceUserInvite
 from workspace.services.signals import (
-    send_task_change_signal,
     send_workspace_board_change_signal,
     send_workspace_change_signal,
 )
@@ -108,31 +104,6 @@ def workspace_board_changed(
     """Broadcast changes upon workspace board save/delete."""
     send_workspace_board_change_signal(instance)
     send_workspace_change_signal(instance)
-
-
-@receiver(post_save, sender=WorkspaceBoardSection)
-@receiver(post_delete, sender=WorkspaceBoardSection)
-def workspace_board_section_changed(
-    instance: WorkspaceBoardSection, **kwargs: Unknown
-) -> None:
-    """Broadcast changes upon workspace board section save/delete."""
-    send_workspace_board_change_signal(instance)
-
-
-@receiver(post_save, sender=Task)
-@receiver(post_delete, sender=Task)
-def task_changed(instance: Task, **kwargs: Unknown) -> None:
-    """Broadcast changes upon task save/delete."""
-    send_workspace_board_change_signal(instance)
-    send_task_change_signal(instance)
-
-
-@receiver(post_save, sender=TaskLabel)
-@receiver(post_delete, sender=TaskLabel)
-def task_label_changed(instance: TaskLabel, **kwargs: Unknown) -> None:
-    """Broadcast changes upon task label save/delete."""
-    send_workspace_board_change_signal(instance)
-    send_task_change_signal(instance)
 
 
 # TODO this should be in services
