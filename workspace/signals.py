@@ -30,14 +30,9 @@ from django.dispatch import (
 from user.signal_defs import (
     user_invitation_redeemed,
 )
-from workspace.models.workspace_user import WorkspaceUser
 from workspace.models.workspace_user_invite import WorkspaceUserInvite
 from workspace.services.workspace import (
     workspace_add_user,
-)
-
-from . import (
-    signal_defs,
 )
 
 if TYPE_CHECKING:
@@ -50,18 +45,6 @@ Unknown = object
 
 
 logger = logging.getLogger(__name__)
-
-
-@receiver(signal_defs.workspace_user_invited)
-def send_invitation_email(instance: WorkspaceUser, **kwargs: object) -> None:
-    """Send email when workspace user is invited."""
-    # Avoid circular import
-    from . import (
-        emails,
-    )
-
-    email = emails.WorkspaceUserInviteEmail(instance)
-    email.send()
 
 
 # TODO this should be in services
