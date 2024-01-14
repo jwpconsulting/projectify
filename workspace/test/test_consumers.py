@@ -57,6 +57,9 @@ from workspace.services.workspace import workspace_create
 from workspace.services.workspace_board import workspace_board_create
 from workspace.services.workspace_board_section import (
     workspace_board_section_create,
+    workspace_board_section_delete,
+    workspace_board_section_move,
+    workspace_board_section_update,
 )
 
 from .. import (
@@ -295,21 +298,52 @@ class TestWorkspaceBoard:
 class TestWorkspaceBoardSection:
     """Test workspace board section behavior."""
 
-    async def test_workspace_board_section_saved_or_deleted(
+    async def test_workspace_board_section_life_cycle(
         self,
+        user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         workspace_board: WorkspaceBoard,
-        workspace_board_section: WorkspaceBoardSection,
         workspace_board_communicator: WebsocketCommunicator,
     ) -> None:
         """Test workspace board consumer behavior for section changes."""
-        await save_model_instance(workspace_board_section)
+        # Create it
+        workspace_board_section = await database_sync_to_async(
+            workspace_board_section_create
+        )(
+            who=user,
+            title="A workspace board section",
+            workspace_board=workspace_board,
+        )
         assert await expect_message(
             workspace_board_communicator, workspace_board
         )
 
-        await delete_model_instance(workspace_board_section)
+        # Update it
+        await database_sync_to_async(workspace_board_section_update)(
+            who=user,
+            workspace_board_section=workspace_board_section,
+            title="Title has changed",
+        )
+        assert await expect_message(
+            workspace_board_communicator, workspace_board
+        )
+
+        # Move it
+        await database_sync_to_async(workspace_board_section_move)(
+            who=user,
+            workspace_board_section=workspace_board_section,
+            order=0,
+        )
+        assert await expect_message(
+            workspace_board_communicator, workspace_board
+        )
+
+        # Delete it
+        await database_sync_to_async(workspace_board_section_delete)(
+            who=user,
+            workspace_board_section=workspace_board_section,
+        )
         assert await expect_message(
             workspace_board_communicator, workspace_board
         )

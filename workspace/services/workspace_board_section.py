@@ -22,6 +22,7 @@ from django.db import transaction
 from projectify.lib.auth import validate_perm
 from user.models import User
 from workspace.models import WorkspaceBoard, WorkspaceBoardSection
+from workspace.services.signals import send_workspace_board_change_signal
 
 
 # Create
@@ -45,6 +46,7 @@ def workspace_board_section_create(
         workspace_board=workspace_board,
     )
     workspace_board_section.save()
+    send_workspace_board_change_signal(workspace_board)
     return workspace_board_section
 
 
@@ -66,6 +68,7 @@ def workspace_board_section_update(
     workspace_board_section.title = title
     workspace_board_section.description = description
     workspace_board_section.save()
+    send_workspace_board_change_signal(workspace_board_section)
     return workspace_board_section
 
 
@@ -83,6 +86,7 @@ def workspace_board_section_delete(
         workspace_board_section,
     )
     workspace_board_section.delete()
+    send_workspace_board_change_signal(workspace_board_section)
 
 
 # RPC
@@ -119,3 +123,4 @@ def workspace_board_section_move(
     # Set new order
     workspace_board.set_workspaceboardsection_order(order_list)
     workspace_board.save()
+    send_workspace_board_change_signal(workspace_board_section)
