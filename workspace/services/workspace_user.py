@@ -30,7 +30,7 @@ def workspace_user_update(
     *,
     workspace_user: WorkspaceUser,
     who: User,
-    job_title: Optional[str],
+    job_title: Optional[str] = None,
     # TODO should be an enum value
     role: str,
 ) -> WorkspaceUser:

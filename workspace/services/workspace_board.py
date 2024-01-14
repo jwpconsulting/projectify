@@ -26,9 +26,14 @@ from projectify.lib.auth import validate_perm
 from user.models import User
 from workspace.models import WorkspaceBoard
 from workspace.models.workspace import Workspace
+from workspace.services.signals import (
+    send_workspace_board_change_signal,
+    send_workspace_change_signal,
+)
 
 
 # Create
+# TODO atomic
 def workspace_board_create(
     *,
     who: User,
@@ -39,22 +44,24 @@ def workspace_board_create(
 ) -> WorkspaceBoard:
     """Create a workspace board inside a given workspace."""
     validate_perm("workspace.can_create_workspace_board", who, workspace)
-    return workspace.workspaceboard_set.create(
+    workspace_board = workspace.workspaceboard_set.create(
         title=title,
         description=description,
         due_date=due_date,
     )
+    send_workspace_change_signal(workspace_board)
+    return workspace_board
 
 
-# Read
 # Update
+# TODO atomic
 def workspace_board_update(
     *,
     who: User,
     workspace_board: WorkspaceBoard,
     title: str,
-    description: Optional[str],
-    due_date: Optional[datetime],
+    description: Optional[str] = None,
+    due_date: Optional[datetime] = None,
 ) -> WorkspaceBoard:
     """Update a workspace board."""
     validate_perm("workspace.can_update_workspace_board", who, workspace_board)
@@ -64,10 +71,13 @@ def workspace_board_update(
         raise ValueError(f"tzinfo must be specified, got {due_date}")
     workspace_board.due_date = due_date
     workspace_board.save()
+    send_workspace_change_signal(workspace_board)
+    send_workspace_board_change_signal(workspace_board)
     return workspace_board
 
 
 # Delete
+# TODO atomic
 def workspace_board_delete(
     *,
     who: User,
@@ -80,9 +90,12 @@ def workspace_board_delete(
         workspace_board,
     )
     workspace_board.delete()
+    send_workspace_change_signal(workspace_board)
+    send_workspace_board_change_signal(workspace_board)
 
 
 # RPC
+# TODO atomic
 def workspace_board_archive(
     *,
     who: User,
@@ -100,4 +113,6 @@ def workspace_board_archive(
     else:
         workspace_board.archived = None
     workspace_board.save()
+    send_workspace_change_signal(workspace_board)
+    send_workspace_board_change_signal(workspace_board)
     return workspace_board
