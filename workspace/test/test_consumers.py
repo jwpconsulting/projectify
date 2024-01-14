@@ -218,8 +218,8 @@ async def make_communicator(
 
 async def clean_up_communicator(communicator: WebsocketCommunicator) -> None:
     """Clean up a communicator."""
-    if await communicator.receive_nothing() is True:
-        logger.warn("There was at least one extra message")
+    if await communicator.receive_nothing() is False:
+        logger.warning("There was at least one extra message")
     await communicator.disconnect()
 
 
