@@ -39,6 +39,7 @@ from workspace.models.workspace import (
 from workspace.models.workspace_user import (
     WorkspaceUser,
 )
+from workspace.services.signals import send_workspace_change_signal
 
 logger = logging.getLogger(__name__)
 
@@ -137,4 +138,6 @@ def workspace_add_user(
     role: str = "OBSERVER",
 ) -> WorkspaceUser:
     """Add user to workspace. Return new workspace user."""
-    return workspace.workspaceuser_set.create(user=user, role=role)
+    workspace_user = workspace.workspaceuser_set.create(user=user, role=role)
+    send_workspace_change_signal(workspace)
+    return workspace_user

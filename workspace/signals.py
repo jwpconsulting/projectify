@@ -87,13 +87,6 @@ def label_changed(instance: Label, **kwargs: Unknown) -> None:
     send_workspace_change_signal(instance)
 
 
-@receiver(post_save, sender=WorkspaceUser)
-@receiver(post_delete, sender=WorkspaceUser)
-def workspace_user_changed(instance: WorkspaceUser, **kwargs: Unknown) -> None:
-    """Broadcast changes upon workspace user save/delete."""
-    send_workspace_change_signal(instance)
-
-
 # TODO this should be in services
 @receiver(user_invitation_redeemed)
 @transaction.atomic

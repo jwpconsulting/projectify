@@ -24,6 +24,7 @@ from rest_framework import serializers
 from projectify.lib.auth import validate_perm
 from user.models import User
 from workspace.models.workspace_user import WorkspaceUser
+from workspace.services.signals import send_workspace_change_signal
 
 
 # TODO atomic
@@ -40,6 +41,7 @@ def workspace_user_update(
     workspace_user.job_title = job_title
     workspace_user.role = role
     workspace_user.save()
+    send_workspace_change_signal(workspace_user.workspace)
     return workspace_user
 
 
@@ -67,3 +69,4 @@ def workspace_user_delete(
             {"workspace_user": _("Can't delete own workspace user")}
         )
     workspace_user.delete()
+    send_workspace_change_signal(workspace_user.workspace)
