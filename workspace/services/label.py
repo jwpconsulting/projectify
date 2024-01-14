@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -20,9 +20,11 @@ from projectify.lib.auth import validate_perm
 from user.models import User
 from workspace.models.label import Label
 from workspace.models.workspace import Workspace
+from workspace.services.signals import send_workspace_change_signal
 
 
 # Create
+# TODO atomic
 def label_create(
     *,
     workspace: Workspace,
@@ -33,14 +35,13 @@ def label_create(
 ) -> Label:
     """Create a label."""
     validate_perm("workspace.can_create_label", who, workspace)
-    return Label.objects.create(
-        workspace=workspace,
-        name=name,
-        color=color,
-    )
+    label = Label.objects.create(workspace=workspace, name=name, color=color)
+    send_workspace_change_signal(workspace)
+    return label
 
 
 # Update
+# TODO atomic
 def label_update(
     *,
     who: User,
@@ -53,11 +54,14 @@ def label_update(
     label.name = name
     label.color = color
     label.save()
+    send_workspace_change_signal(label.workspace)
     return label
 
 
 # Delete
+# TODO atomic
 def label_delete(*, who: User, label: Label) -> None:
     """Delete a label."""
     validate_perm("workspace.can_delete_label", who, label)
     label.delete()
+    send_workspace_change_signal(label.workspace)

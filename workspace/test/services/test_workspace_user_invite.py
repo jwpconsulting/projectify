@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -19,6 +19,7 @@ import pytest
 from rest_framework import serializers
 
 from user.models import User
+from user.services.user import user_create
 from workspace.models.workspace import Workspace
 from workspace.models.workspace_user import WorkspaceUser
 from workspace.services.workspace_user_invite import (
@@ -51,6 +52,42 @@ class TestAddOrInviteWorkspaceUser:
         )
         assert workspace_user_invite.workspace == workspace
         assert len(mailoutbox) == 1
+
+    def test_invite_then_up(
+        self,
+        workspace: Workspace,
+        workspace_user: WorkspaceUser,
+    ) -> None:
+        """Test inviting with a sign up."""
+        count = workspace.users.count()
+        add_or_invite_workspace_user(
+            who=workspace_user.user,
+            workspace=workspace,
+            email_or_user="hello@example.com",
+        )
+        assert workspace.users.count() == count
+        user_create(email="hello@example.com")
+        assert workspace.users.count() == count + 1
+
+    def test_signs_up_twice(
+        self,
+        workspace: Workspace,
+        workspace_user: WorkspaceUser,
+    ) -> None:
+        """Test what happens if a user signs up twice."""
+        count = workspace.users.count()
+        add_or_invite_workspace_user(
+            who=workspace_user.user,
+            workspace=workspace,
+            email_or_user="hello@example.com",
+        )
+        user = user_create(email="hello@example.com")
+        assert workspace.users.count() == count + 1
+        user.delete()
+        assert workspace.users.count() == count
+        user = user_create(email="hello@example.com")
+        # The user is not automatically added
+        assert workspace.users.count() == count
 
     def test_inviting_twice(
         self, workspace: Workspace, workspace_user: WorkspaceUser
@@ -111,6 +148,28 @@ class TestAddOrInviteWorkspaceUser:
             email="hello@example.com",
         )
         assert workspace.workspaceuserinvite_set.count() == count
+
+    def test_after_uninvite(
+        self,
+        workspace: Workspace,
+        workspace_user: WorkspaceUser,
+    ) -> None:
+        """Test what happens when a user is uninvited."""
+        count = workspace.users.count()
+        add_or_invite_workspace_user(
+            who=workspace_user.user,
+            workspace=workspace,
+            email_or_user="hello@example.com",
+        )
+        assert workspace.users.count() == count
+        uninvite_user(
+            who=workspace_user.user,
+            workspace=workspace,
+            email="hello@example.com",
+        )
+        user_create(email="hello@example.com")
+        # The user is not added
+        assert workspace.users.count() == count
 
     def test_uninviting_user_on_no_invite(
         self, workspace_user: WorkspaceUser, workspace: Workspace

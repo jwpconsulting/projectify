@@ -45,5 +45,5 @@ def chat_message_create(
     instance = ChatMessage.objects.create(
         task=task, text=text, author=workspace_user
     )
-    send_task_change_signal(instance)
+    send_task_change_signal(task)
     return instance

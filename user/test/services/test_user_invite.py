@@ -15,14 +15,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Test user invite services."""
-from unittest.mock import MagicMock
 
-from django.dispatch import receiver
 
 import pytest
 from faker import Faker
 
-from user import signal_defs
 from user.models import User, UserInvite
 from user.services.user import user_create
 from user.services.user_invite import (
@@ -57,15 +54,13 @@ def test_invite_existing_user(user: User) -> None:
 @pytest.mark.django_db
 def test_redeem(user: User, user_invite: UserInvite) -> None:
     """Test redeeming a user invite."""
-    mock = MagicMock()
-    receiver(
-        signal_defs.user_invitation_redeemed,
-        sender=UserInvite,
-    )(mock)
+    assert user_invite.redeemed is False
+
     user_invite_redeem(user_invite=user_invite, user=user)
+    user_invite.refresh_from_db()
 
     assert user_invite.user == user
-    assert mock.called
+    assert user_invite.redeemed is True
 
 
 @pytest.mark.django_db

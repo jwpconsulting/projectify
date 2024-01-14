@@ -68,7 +68,7 @@ def workspace_board_section_update(
     workspace_board_section.title = title
     workspace_board_section.description = description
     workspace_board_section.save()
-    send_workspace_board_change_signal(workspace_board_section)
+    send_workspace_board_change_signal(workspace_board_section.workspace_board)
     return workspace_board_section
 
 
@@ -86,7 +86,7 @@ def workspace_board_section_delete(
         workspace_board_section,
     )
     workspace_board_section.delete()
-    send_workspace_board_change_signal(workspace_board_section)
+    send_workspace_board_change_signal(workspace_board_section.workspace_board)
 
 
 # RPC
@@ -123,4 +123,4 @@ def workspace_board_section_move(
     # Set new order
     workspace_board.set_workspaceboardsection_order(order_list)
     workspace_board.save()
-    send_workspace_board_change_signal(workspace_board_section)
+    send_workspace_board_change_signal(workspace_board_section.workspace_board)

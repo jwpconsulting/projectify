@@ -24,7 +24,7 @@ from . import (
 )
 
 
-class WorkspaceUserInviteEmail(TemplateEmail[models.WorkspaceUser]):
+class WorkspaceUserInviteEmail(TemplateEmail[models.WorkspaceUserInvite]):
     """Email that informs users about an invite."""
 
     model = models.WorkspaceUserInvite

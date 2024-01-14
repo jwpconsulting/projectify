@@ -69,6 +69,7 @@ def group_send(destination: str, event: ConsumerEvent) -> None:
     )
 
 
+# TODO accept workspace only
 def send_workspace_change_signal(instance: HasOrIsWorkspace) -> None:
     """Send workspace.change signal to correct group."""
     match instance:
@@ -91,24 +92,9 @@ def send_workspace_change_signal(instance: HasOrIsWorkspace) -> None:
 
 
 def send_workspace_board_change_signal(
-    instance: HasOrIsWorkspaceBoard,
+    workspace_board: WorkspaceBoard
 ) -> None:
     """Send workspace_board.change signal to correct group."""
-    match instance:
-        case WorkspaceBoard():
-            workspace_board = instance
-        case WorkspaceBoardSection():
-            workspace_board = instance.workspace_board
-        case Task():
-            workspace_board = instance.workspace_board_section.workspace_board
-        case TaskLabel():
-            workspace_board = (
-                instance.task.workspace_board_section.workspace_board
-            )
-        case SubTask():
-            workspace_board = (
-                instance.task.workspace_board_section.workspace_board
-            )
     uuid = str(workspace_board.uuid)
     group_send(
         f"workspace-board-{uuid}",
@@ -119,17 +105,8 @@ def send_workspace_board_change_signal(
     )
 
 
-def send_task_change_signal(instance: HasOrIsTask) -> None:
+def send_task_change_signal(task: Task) -> None:
     """Send task.change signal to correct group."""
-    match instance:
-        case Task():
-            task = instance
-        case TaskLabel():
-            task = instance.task
-        case SubTask():
-            task = instance.task
-        case ChatMessage():
-            task = instance.task
     uuid = str(task.uuid)
     group_send(
         f"task-{uuid}",

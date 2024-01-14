@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -58,7 +58,7 @@ class LabelQuerySet(models.QuerySet["Label"]):
 class Label(BaseModel):
     """A label."""
 
-    # It should be fine to just use TitleDescription here
+    # TODO It should be fine to just use TitleDescription here
     name = models.CharField(max_length=255)
     color = models.PositiveBigIntegerField(
         help_text=_("Color index"),

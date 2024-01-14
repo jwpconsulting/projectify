@@ -38,9 +38,7 @@ from user.models import (  # noqa: F401
     UserInvite,
 )
 from user.services.user_invite import user_invite_create
-from workspace import (
-    signal_defs,
-)
+from workspace.emails import WorkspaceUserInviteEmail
 from workspace.exceptions import (
     UserAlreadyAdded,
     UserAlreadyInvited,
@@ -161,10 +159,10 @@ def add_or_invite_workspace_user(
     workspace_user_invite: WorkspaceUserInvite = (
         workspace.workspaceuserinvite_set.create(user_invite=user_invite)
     )
-    signal_defs.workspace_user_invited.send(
-        sender=Workspace,
-        instance=workspace_user_invite,
-    )
+
+    email_to_send = WorkspaceUserInviteEmail(workspace_user_invite)
+    email_to_send.send()
+
     return workspace_user_invite
 
 
