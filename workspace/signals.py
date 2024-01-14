@@ -36,11 +36,9 @@ from user.signal_defs import (
 )
 from workspace.models.label import Label
 from workspace.models.workspace import Workspace
-from workspace.models.workspace_board import WorkspaceBoard
 from workspace.models.workspace_user import WorkspaceUser
 from workspace.models.workspace_user_invite import WorkspaceUserInvite
 from workspace.services.signals import (
-    send_workspace_board_change_signal,
     send_workspace_change_signal,
 )
 from workspace.services.workspace import (
@@ -93,16 +91,6 @@ def label_changed(instance: Label, **kwargs: Unknown) -> None:
 @receiver(post_delete, sender=WorkspaceUser)
 def workspace_user_changed(instance: WorkspaceUser, **kwargs: Unknown) -> None:
     """Broadcast changes upon workspace user save/delete."""
-    send_workspace_change_signal(instance)
-
-
-@receiver(post_save, sender=WorkspaceBoard)
-@receiver(post_delete, sender=WorkspaceBoard)
-def workspace_board_changed(
-    instance: WorkspaceBoard, **kwargs: Unknown
-) -> None:
-    """Broadcast changes upon workspace board save/delete."""
-    send_workspace_board_change_signal(instance)
     send_workspace_change_signal(instance)
 
 

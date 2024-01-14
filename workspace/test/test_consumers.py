@@ -60,7 +60,12 @@ from workspace.services.task import (
     task_update_nested,
 )
 from workspace.services.workspace import workspace_create
-from workspace.services.workspace_board import workspace_board_create
+from workspace.services.workspace_board import (
+    workspace_board_archive,
+    workspace_board_create,
+    workspace_board_delete,
+    workspace_board_update,
+)
 from workspace.services.workspace_board_section import (
     workspace_board_section_create,
     workspace_board_section_delete,
@@ -286,29 +291,62 @@ class TestWorkspaceUser:
 class TestWorkspaceBoard:
     """Test consumer behavior for WorkspaceBoard changes."""
 
-    async def test_workspace_board_saved_or_deleted(
+    async def test_workspace_board_life_cycle(
         self,
+        user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
-        workspace_board: WorkspaceBoard,
         workspace_communicator: WebsocketCommunicator,
-        workspace_board_communicator: WebsocketCommunicator,
     ) -> None:
         """Test workspace / board consumer behavior for board changes."""
-        await save_model_instance(workspace_board)
+        # Create
+        workspace_board = await database_sync_to_async(workspace_board_create)(
+            who=user,
+            workspace=workspace,
+            title="It's time to chew bubble gum and write Django",
+            description="And I'm all out of Django",
+        )
+        assert await expect_message(workspace_communicator, workspace)
+
+        workspace_board_communicator = await make_communicator(
+            workspace_board, user
+        )
+
+        # Update
+        await database_sync_to_async(workspace_board_update)(
+            who=user,
+            workspace_board=workspace_board,
+            title="don't care",
+        )
         assert await expect_message(
             workspace_board_communicator, workspace_board
         )
         assert await expect_message(workspace_communicator, workspace)
 
-        await delete_model_instance(workspace_board)
+        # Archive
+        await database_sync_to_async(workspace_board_archive)(
+            who=user,
+            workspace_board=workspace_board,
+            archived=True,
+        )
         assert await expect_message(
             workspace_board_communicator, workspace_board
         )
         assert await expect_message(workspace_communicator, workspace)
 
-        await workspace_communicator.disconnect()
-        await workspace_board_communicator.disconnect()
+        # Delete
+        await database_sync_to_async(workspace_board_delete)(
+            who=user,
+            workspace_board=workspace_board,
+        )
+        assert await expect_message(
+            workspace_board_communicator, workspace_board
+        )
+        assert await expect_message(workspace_communicator, workspace)
+
+        await clean_up_communicator(workspace_communicator)
+        await clean_up_communicator(workspace_board_communicator)
+
         await delete_model_instance(workspace_user)
         await delete_model_instance(workspace)
 
