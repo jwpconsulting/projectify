@@ -91,26 +91,10 @@ def send_workspace_change_signal(instance: HasOrIsWorkspace) -> None:
     )
 
 
-# TODO accept workspace board only
 def send_workspace_board_change_signal(
-    instance: HasOrIsWorkspaceBoard,
+    workspace_board: WorkspaceBoard
 ) -> None:
     """Send workspace_board.change signal to correct group."""
-    match instance:
-        case WorkspaceBoard():
-            workspace_board = instance
-        case WorkspaceBoardSection():
-            workspace_board = instance.workspace_board
-        case Task():
-            workspace_board = instance.workspace_board_section.workspace_board
-        case TaskLabel():
-            workspace_board = (
-                instance.task.workspace_board_section.workspace_board
-            )
-        case SubTask():
-            workspace_board = (
-                instance.task.workspace_board_section.workspace_board
-            )
     uuid = str(workspace_board.uuid)
     group_send(
         f"workspace-board-{uuid}",

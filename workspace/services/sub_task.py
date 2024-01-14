@@ -57,7 +57,9 @@ class ValidatedData(TypedDict):
 
 def _sub_task_changed(task: Task) -> None:
     """Broadcast changes upon sub task save/delete."""
-    send_workspace_board_change_signal(task)
+    send_workspace_board_change_signal(
+        task.workspace_board_section.workspace_board
+    )
     send_task_change_signal(task)
 
 

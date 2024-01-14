@@ -98,7 +98,9 @@ def task_create_nested(
         task=task,
         create_sub_tasks=create_sub_tasks,
     )
-    send_workspace_board_change_signal(task)
+    send_workspace_board_change_signal(
+        task.workspace_board_section.workspace_board
+    )
     return task
 
 
@@ -154,7 +156,9 @@ def task_update_nested(
         create_sub_tasks=sub_tasks["create_sub_tasks"] or [],
         update_sub_tasks=sub_tasks["update_sub_tasks"] or [],
     )
-    send_workspace_board_change_signal(task)
+    send_workspace_board_change_signal(
+        task.workspace_board_section.workspace_board
+    )
     send_task_change_signal(task)
     return task
 
@@ -165,7 +169,9 @@ def task_delete(*, task: Task, who: User) -> None:
     """Delete a task."""
     validate_perm("workspace.can_delete_task", who, task)
     task.delete()
-    send_workspace_board_change_signal(task)
+    send_workspace_board_change_signal(
+        task.workspace_board_section.workspace_board
+    )
     send_task_change_signal(task)
 
 
@@ -208,6 +214,8 @@ def task_move_after(
     # Set the order
     workspace_board_section.set_task_order(order_list)
     workspace_board_section.save()
-    send_workspace_board_change_signal(task)
+    send_workspace_board_change_signal(
+        task.workspace_board_section.workspace_board
+    )
     send_task_change_signal(task)
     return task
