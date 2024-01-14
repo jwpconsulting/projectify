@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -19,11 +19,16 @@ Workspace services.
 
 This is where all workspace related services will live in the future.
 """
+import logging
 from typing import Optional
 
 from django.contrib.auth.models import (
     AbstractBaseUser,
 )
+from django.db import transaction
+from django.utils.translation import gettext_lazy as _
+
+from rest_framework import serializers
 
 from corporate.services.customer import customer_create
 from projectify.lib.auth import validate_perm
@@ -35,7 +40,10 @@ from workspace.models.workspace_user import (
     WorkspaceUser,
 )
 
+logger = logging.getLogger(__name__)
 
+
+# Create
 def workspace_create(
     *,
     title: str,
@@ -58,6 +66,7 @@ def workspace_create(
     return workspace
 
 
+# Update
 def workspace_update(
     *,
     workspace: Workspace,
@@ -75,6 +84,46 @@ def workspace_update(
     workspace.description = description
     workspace.save()
     return workspace
+
+
+# Delete
+@transaction.atomic
+def workspace_delete(
+    *,
+    who: User,
+    workspace: Workspace,
+) -> None:
+    """
+    Delete a workspace.
+
+    The business rules for deleting workspaces haven't really been thought out
+    so far, so it will only work under the following conditions:
+
+    - 1 remaining workspace user
+    - No open invites
+    - No boards
+    - No labels
+    """
+    validate_perm("workspace.can_delete_workspace", who, workspace)
+    if workspace.workspaceuser_set.count() > 1:
+        raise serializers.ValidationError(
+            _("Can only delete workspace with one remaining workspace user")
+        )
+    if workspace.workspaceuserinvite_set.exists():
+        raise serializers.ValidationError(
+            _("Can only delete workspace with no outstanding invites")
+        )
+    if workspace.workspaceboard_set.exists():
+        raise serializers.ValidationError(
+            _("Can only delete workspace with no workspace boards")
+        )
+    count, _info = workspace.workspaceuser_set.all().delete()
+    logger.info(
+        "Deleting workspace %s, after having deleted %d users",
+        workspace,
+        count,
+    )
+    workspace.delete()
 
 
 # TODO looks like this is a private method only to be used to create the
