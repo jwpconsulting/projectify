@@ -53,8 +53,8 @@ def workspace_board_update(
     who: User,
     workspace_board: WorkspaceBoard,
     title: str,
-    description: Optional[str],
-    due_date: Optional[datetime],
+    description: Optional[str] = None,
+    due_date: Optional[datetime] = None,
 ) -> WorkspaceBoard:
     """Update a workspace board."""
     validate_perm("workspace.can_update_workspace_board", who, workspace_board)
