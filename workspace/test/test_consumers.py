@@ -52,7 +52,13 @@ from workspace.selectors.workspace_user import (
 from workspace.services.chat_message import chat_message_create
 from workspace.services.label import label_create
 from workspace.services.sub_task import sub_task_create, sub_task_update_many
-from workspace.services.task import task_create, task_update_nested
+from workspace.services.task import (
+    task_create,
+    task_create_nested,
+    task_delete,
+    task_move_after,
+    task_update_nested,
+)
 from workspace.services.workspace import workspace_create
 from workspace.services.workspace_board import workspace_board_create
 from workspace.services.workspace_board_section import (
@@ -208,6 +214,13 @@ async def make_communicator(
     connected, _maybe_code = await communicator.connect()
     assert connected, _maybe_code
     return communicator
+
+
+async def clean_up_communicator(communicator: WebsocketCommunicator) -> None:
+    """Clean up a communicator."""
+    if await communicator.receive_nothing() is True:
+        logger.warn("There was at least one extra message")
+    await communicator.disconnect()
 
 
 @pytest.fixture
@@ -384,32 +397,67 @@ class TestLabel:
 class TestTaskConsumer:
     """Test consumer behavior for tasks."""
 
-    async def test_task_saved_or_deleted(
+    async def test_task_life_cycle(
         self,
+        user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         workspace_board: WorkspaceBoard,
         workspace_board_section: WorkspaceBoardSection,
-        task: Task,
         workspace_board_communicator: WebsocketCommunicator,
-        task_communicator: WebsocketCommunicator,
     ) -> None:
         """Test that board and task consumer fire."""
-        await save_model_instance(task)
+        # Create
+        task = await database_sync_to_async(task_create_nested)(
+            who=user,
+            workspace_board_section=workspace_board_section,
+            title="A task",
+            sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
+            labels=[],
+        )
+        assert await expect_message(
+            workspace_board_communicator, workspace_board
+        )
+
+        task_communicator = await make_communicator(task, user)
+
+        # Update
+        await database_sync_to_async(task_update_nested)(
+            who=user,
+            task=task,
+            title="A task",
+            sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
+            labels=[],
+        )
         assert await expect_message(
             workspace_board_communicator, workspace_board
         )
         assert await expect_message(task_communicator, task)
 
-        await delete_model_instance(task)
+        # Move
+        await database_sync_to_async(task_move_after)(
+            who=user,
+            task=task,
+            after=workspace_board_section,
+        )
         assert await expect_message(
             workspace_board_communicator, workspace_board
         )
+        assert await expect_message(task_communicator, task)
+
+        # Delete
+        await database_sync_to_async(task_delete)(
+            who=user,
+            task=task,
+        )
+        assert await expect_message(
+            workspace_board_communicator, workspace_board
+        )
+        assert await expect_message(task_communicator, task)
+
+        await clean_up_communicator(workspace_board_communicator)
         # Ideally, a task consumer will disconnect when a task is deleted
-        assert await expect_message(task_communicator, task)
-
-        await workspace_board_communicator.disconnect()
-        await task_communicator.disconnect()
+        await clean_up_communicator(task_communicator)
 
         await delete_model_instance(workspace_board_section)
         await delete_model_instance(workspace_board)

@@ -26,6 +26,10 @@ from workspace.models.label import Label
 from workspace.models.task import Task
 from workspace.models.workspace_board_section import WorkspaceBoardSection
 from workspace.models.workspace_user import WorkspaceUser
+from workspace.services.signals import (
+    send_task_change_signal,
+    send_workspace_board_change_signal,
+)
 from workspace.services.sub_task import (
     ValidatedData,
     sub_task_create_many,
@@ -63,6 +67,7 @@ def task_create(
     )
 
 
+# TODO make this the regular task_create
 @transaction.atomic
 def task_create_nested(
     *,
@@ -93,6 +98,7 @@ def task_create_nested(
         task=task,
         create_sub_tasks=create_sub_tasks,
     )
+    send_workspace_board_change_signal(task)
     return task
 
 
@@ -148,14 +154,19 @@ def task_update_nested(
         create_sub_tasks=sub_tasks["create_sub_tasks"] or [],
         update_sub_tasks=sub_tasks["update_sub_tasks"] or [],
     )
+    send_workspace_board_change_signal(task)
+    send_task_change_signal(task)
     return task
 
 
 # Delete
+# TODO atomic
 def task_delete(*, task: Task, who: User) -> None:
     """Delete a task."""
     validate_perm("workspace.can_delete_task", who, task)
     task.delete()
+    send_workspace_board_change_signal(task)
+    send_task_change_signal(task)
 
 
 @transaction.atomic
@@ -197,4 +208,6 @@ def task_move_after(
     # Set the order
     workspace_board_section.set_task_order(order_list)
     workspace_board_section.save()
+    send_workspace_board_change_signal(task)
+    send_task_change_signal(task)
     return task
