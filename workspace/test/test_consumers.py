@@ -62,7 +62,11 @@ from workspace.services.task import (
     task_move_after,
     task_update_nested,
 )
-from workspace.services.workspace import workspace_create, workspace_delete
+from workspace.services.workspace import (
+    workspace_create,
+    workspace_delete,
+    workspace_update,
+)
 from workspace.services.workspace_board import (
     workspace_board_archive,
     workspace_board_create,
@@ -263,19 +267,32 @@ async def task_communicator(task: Task, user: User) -> WebsocketCommunicator:
 class TestWorkspace:
     """Test consumer behavior for Workspace changes."""
 
-    async def test_workspace_saved_or_deleted(
+    async def test_workspace_life_cycle(
         self,
-        workspace: Workspace,
-        workspace_user: WorkspaceUser,
-        workspace_communicator: WebsocketCommunicator,
+        user: User,
     ) -> None:
         """Test signal firing on workspace change."""
-        await save_model_instance(workspace)
+        workspace = await database_sync_to_async(workspace_create)(
+            owner=user,
+            title="A workspace",
+        )
+
+        workspace_communicator = await make_communicator(workspace, user)
+
+        await database_sync_to_async(workspace_update)(
+            workspace=workspace,
+            who=user,
+            title="A new hope",
+        )
         assert await expect_message(workspace_communicator, workspace)
-        await delete_model_instance(workspace_user)
-        await delete_model_instance(workspace)
+
+        await database_sync_to_async(workspace_delete)(
+            who=user,
+            workspace=workspace,
+        )
         assert await expect_message(workspace_communicator, workspace)
-        await workspace_communicator.disconnect()
+
+        await clean_up_communicator(workspace_communicator)
 
 
 class TestWorkspaceUser:

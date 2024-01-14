@@ -73,13 +73,6 @@ def send_invitation_email(instance: WorkspaceUser, **kwargs: object) -> None:
     email.send()
 
 
-@receiver(post_save, sender=Workspace)
-@receiver(post_delete, sender=Workspace)
-def workspace_changed(instance: Workspace, **kwargs: Unknown) -> None:
-    """Broadcast changes upon workspace save/delete."""
-    send_workspace_change_signal(instance)
-
-
 @receiver(post_save, sender=Label)
 @receiver(post_delete, sender=Label)
 def label_changed(instance: Label, **kwargs: Unknown) -> None:

@@ -84,6 +84,7 @@ def workspace_update(
     workspace.title = title
     workspace.description = description
     workspace.save()
+    send_workspace_change_signal(workspace)
     return workspace
 
 
@@ -124,6 +125,7 @@ def workspace_delete(
         workspace,
         count,
     )
+    send_workspace_change_signal(workspace)
     workspace.delete()
 
 
