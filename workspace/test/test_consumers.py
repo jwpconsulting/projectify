@@ -53,7 +53,7 @@ from workspace.selectors.workspace_user import (
     workspace_user_find_for_workspace,
 )
 from workspace.services.chat_message import chat_message_create
-from workspace.services.label import label_create
+from workspace.services.label import label_create, label_delete, label_update
 from workspace.services.sub_task import sub_task_create, sub_task_update_many
 from workspace.services.task import (
     task_create,
@@ -470,18 +470,36 @@ class TestWorkspaceBoardSection:
 class TestLabel:
     """Test consumer behavior for label changes."""
 
-    async def test_label_saved_or_deleted(
+    async def test_label_life_cycle(
         self,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
-        label: Label,
+        user: User,
         workspace_communicator: WebsocketCommunicator,
     ) -> None:
         """Test that workspace consumer fires on label changes."""
-        await save_model_instance(label)
+        # Create
+        label = await database_sync_to_async(label_create)(
+            who=user,
+            workspace=workspace,
+            color=0,
+            name="hello",
+        )
+        assert await expect_message(workspace_communicator, workspace)
+        # Update
+        await database_sync_to_async(label_update)(
+            who=user,
+            label=label,
+            color=1,
+            name="updated",
+        )
         assert await expect_message(workspace_communicator, workspace)
 
-        await delete_model_instance(label)
+        # Delete
+        await database_sync_to_async(label_delete)(
+            who=user,
+            label=label,
+        )
         assert await expect_message(workspace_communicator, workspace)
 
         await delete_model_instance(workspace_user)

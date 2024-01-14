@@ -23,10 +23,6 @@ from typing import (
 from django.db import (
     transaction,
 )
-from django.db.models.signals import (
-    post_delete,
-    post_save,
-)
 from django.dispatch import (
     receiver,
 )
@@ -34,13 +30,8 @@ from django.dispatch import (
 from user.signal_defs import (
     user_invitation_redeemed,
 )
-from workspace.models.label import Label
-from workspace.models.workspace import Workspace
 from workspace.models.workspace_user import WorkspaceUser
 from workspace.models.workspace_user_invite import WorkspaceUserInvite
-from workspace.services.signals import (
-    send_workspace_change_signal,
-)
 from workspace.services.workspace import (
     workspace_add_user,
 )
@@ -71,13 +62,6 @@ def send_invitation_email(instance: WorkspaceUser, **kwargs: object) -> None:
 
     email = emails.WorkspaceUserInviteEmail(instance)
     email.send()
-
-
-@receiver(post_save, sender=Label)
-@receiver(post_delete, sender=Label)
-def label_changed(instance: Label, **kwargs: Unknown) -> None:
-    """Broadcast changes upon label save/delete."""
-    send_workspace_change_signal(instance)
 
 
 # TODO this should be in services
