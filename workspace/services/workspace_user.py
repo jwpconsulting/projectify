@@ -26,6 +26,7 @@ from user.models import User
 from workspace.models.workspace_user import WorkspaceUser
 
 
+# TODO atomic
 def workspace_user_update(
     *,
     workspace_user: WorkspaceUser,
@@ -42,6 +43,7 @@ def workspace_user_update(
     return workspace_user
 
 
+# TODO atomic
 def workspace_user_delete(
     *,
     workspace_user: WorkspaceUser,

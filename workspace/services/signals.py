@@ -69,6 +69,7 @@ def group_send(destination: str, event: ConsumerEvent) -> None:
     )
 
 
+# TODO accept workspace only
 def send_workspace_change_signal(instance: HasOrIsWorkspace) -> None:
     """Send workspace.change signal to correct group."""
     match instance:
@@ -90,6 +91,7 @@ def send_workspace_change_signal(instance: HasOrIsWorkspace) -> None:
     )
 
 
+# TODO accept workspace board only
 def send_workspace_board_change_signal(
     instance: HasOrIsWorkspaceBoard,
 ) -> None:
@@ -119,6 +121,7 @@ def send_workspace_board_change_signal(
     )
 
 
+# TODO accept task only
 def send_task_change_signal(instance: HasOrIsTask) -> None:
     """Send task.change signal to correct group."""
     match instance:
