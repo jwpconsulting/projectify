@@ -23,42 +23,35 @@
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { openContextMenu } from "$lib/stores/globalUi";
-    import type { ContextMenuType } from "$lib/types/ui";
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspace: Workspace;
-    export let workspaces: Workspace[];
+    export let workspaces: Workspace[] | undefined;
     export let open: boolean;
 
     let sideNavContextMenuAnchor: HTMLElement;
     let workspaceContextMenuAnchor: HTMLElement;
 
-    let sideNavContextMenuType: ContextMenuType;
-    $: sideNavContextMenuType = {
-        kind: "sideNav" as const,
-        workspace,
-    };
-
     async function showSideNavContextMenu() {
         await openContextMenu(
-            sideNavContextMenuType,
+            {
+                kind: "sideNav",
+                workspace,
+            },
             sideNavContextMenuAnchor,
         );
     }
 
-    let workspaceContextMenuType: ContextMenuType;
-    $: workspaceContextMenuType = {
-        kind: "workspace",
-        workspaces,
-    };
-
     let workspaceContextMenuOpen = false;
 
-    async function showWorkspaceContextMenu() {
+    async function showWorkspaceContextMenu(workspaces: Workspace[]) {
         workspaceContextMenuOpen = true;
         try {
             await openContextMenu(
-                workspaceContextMenuType,
+                {
+                    kind: "workspace",
+                    workspaces,
+                },
                 workspaceContextMenuAnchor,
             );
         } finally {
@@ -72,7 +65,9 @@
         <div class="flex flex-row items-center justify-between gap-4">
             <div class="min-w-0 grow" bind:this={workspaceContextMenuAnchor}>
                 <button
-                    on:click={showWorkspaceContextMenu}
+                    disabled={workspaces === undefined}
+                    on:click={workspaces &&
+                        showWorkspaceContextMenu.bind(null, workspaces)}
                     class="flex w-full flex-row items-center justify-between gap-2 rounded-lg border border-border p-2 hover:bg-secondary-hover"
                 >
                     <div class="flex min-w-0 flex-row items-center gap-2">
@@ -111,7 +106,8 @@
         <div bind:this={workspaceContextMenuAnchor}>
             <BorderedIcon
                 type="workspace"
-                on:click={showWorkspaceContextMenu}
+                on:click={workspaces &&
+                    showWorkspaceContextMenu.bind(null, workspaces)}
             />
         </div>
         <div bind:this={sideNavContextMenuAnchor}>

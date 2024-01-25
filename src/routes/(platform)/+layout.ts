@@ -15,9 +15,10 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { redirect } from "@sveltejs/kit";
+import { redirect, error } from "@sveltejs/kit";
 import { get } from "svelte/store";
 
+import { currentWorkspaces } from "$lib/stores/dashboard";
 import { fetchUser, user } from "$lib/stores/user";
 import type { User } from "$lib/types/user";
 import { getLogInWithNextUrl } from "$lib/urls/user";
@@ -38,13 +39,19 @@ export async function load({
 
     const fetchedUser = await fetchUser({ fetch });
 
-    if (fetchedUser) {
-        return { user: fetchedUser };
+    if (fetchedUser === undefined) {
+        const next = getLogInWithNextUrl(url.href);
+        console.log("Not logged in, redirecting to", next);
+        throw redirect(302, next);
     }
 
-    const next = getLogInWithNextUrl(url.href);
-    console.log("Not logged in, redirecting to", next);
-    throw redirect(302, next);
+    // XXX Might be able to do this asynchronously, meaning we don't need to wait
+    // for it to finish here?
+    const workspaces = await currentWorkspaces.load({ fetch });
+    if (!workspaces) {
+        throw error(404);
+    }
+    return { user: fetchedUser };
 }
 // Could we set one of the following to true here?
 // Prerender: This page is completely prerenderable, there is no user data here

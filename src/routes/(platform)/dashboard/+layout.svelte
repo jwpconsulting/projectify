@@ -24,9 +24,7 @@
     import type { Workspace } from "$lib/types/workspace";
 
     let workspace: Workspace | undefined = undefined;
-    let workspaces: Workspace[] = [];
 
-    $: workspaces = $currentWorkspaces ?? [];
     $: workspace = $currentWorkspace;
 </script>
 
@@ -34,7 +32,7 @@
     <!-- this breakpoint is in tune with the mobile menu breakpoint -->
     <div class="hidden h-full shrink-0 overflow-y-auto md:block">
         {#if workspace}
-            <SideNav {workspaces} {workspace} />
+            <SideNav workspaces={$currentWorkspaces} {workspace} />
         {:else}
             Loading workspaces
         {/if}
