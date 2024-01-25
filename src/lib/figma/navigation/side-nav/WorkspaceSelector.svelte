@@ -23,7 +23,6 @@
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { openContextMenu } from "$lib/stores/globalUi";
-    import type { ContextMenuType } from "$lib/types/ui";
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspace: Workspace;
@@ -33,24 +32,15 @@
     let sideNavContextMenuAnchor: HTMLElement;
     let workspaceContextMenuAnchor: HTMLElement;
 
-    let sideNavContextMenuType: ContextMenuType;
-    $: sideNavContextMenuType = {
-        kind: "sideNav" as const,
-        workspace,
-    };
-
     async function showSideNavContextMenu() {
         await openContextMenu(
-            sideNavContextMenuType,
+            {
+                kind: "sideNav",
+                workspace,
+            },
             sideNavContextMenuAnchor,
         );
     }
-
-    let workspaceContextMenuType: ContextMenuType;
-    $: workspaceContextMenuType = {
-        kind: "workspace",
-        workspaces,
-    };
 
     let workspaceContextMenuOpen = false;
 
@@ -58,7 +48,10 @@
         workspaceContextMenuOpen = true;
         try {
             await openContextMenu(
-                workspaceContextMenuType,
+                {
+                    kind: "workspace",
+                    workspaces,
+                },
                 workspaceContextMenuAnchor,
             );
         } finally {
