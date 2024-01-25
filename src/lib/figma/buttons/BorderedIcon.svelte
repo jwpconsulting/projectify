@@ -23,6 +23,7 @@
     import type { BorderedIconType } from "$lib/figma/types";
 
     export let type: BorderedIconType;
+    // TODO allow disabling
 
     $: src = {
         workspace: Briefcase,
@@ -33,6 +34,7 @@
     function click() {
         dispatch("click");
     }
+    // TODO add callback property and remote dispatch
 </script>
 
 <button

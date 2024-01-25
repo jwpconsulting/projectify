@@ -23,7 +23,7 @@
     import { showFilters } from "$lib/stores/dashboard";
     import type { Workspace } from "$lib/types/workspace";
 
-    export let workspaces: Workspace[];
+    export let workspaces: Workspace[] | undefined;
     export let workspace: Workspace;
 </script>
 

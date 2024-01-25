@@ -20,7 +20,6 @@ import { error } from "@sveltejs/kit";
 import {
     currentWorkspace,
     currentWorkspaceBoard,
-    currentWorkspaces,
 } from "$lib/stores/dashboard";
 import type { Workspace, WorkspaceBoardDetail } from "$lib/types/workspace";
 
@@ -29,7 +28,6 @@ import type { LayoutLoadEvent } from "./$types";
 interface Data {
     workspaceBoard: WorkspaceBoardDetail;
     workspace: Workspace;
-    workspaces: Workspace[];
 }
 
 export async function load({
@@ -53,11 +51,5 @@ export async function load({
     if (!workspace) {
         throw error(404);
     }
-    // XXX Might be able to do this asynchronously, meaning we don't need to wait
-    // for it to finish here?
-    const workspaces = await currentWorkspaces.load({ fetch });
-    if (!workspaces) {
-        throw error(404);
-    }
-    return { workspace, workspaceBoard, workspaces };
+    return { workspace, workspaceBoard };
 }

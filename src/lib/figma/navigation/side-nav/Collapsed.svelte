@@ -27,7 +27,7 @@
     import type { Workspace } from "$lib/types/workspace";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
-    export let workspaces: Workspace[];
+    export let workspaces: Workspace[] | undefined;
     export let workspace: Workspace;
 </script>
 

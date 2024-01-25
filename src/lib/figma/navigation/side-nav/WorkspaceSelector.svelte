@@ -26,7 +26,7 @@
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspace: Workspace;
-    export let workspaces: Workspace[];
+    export let workspaces: Workspace[] | undefined;
     export let open: boolean;
 
     let sideNavContextMenuAnchor: HTMLElement;
@@ -44,7 +44,7 @@
 
     let workspaceContextMenuOpen = false;
 
-    async function showWorkspaceContextMenu() {
+    async function showWorkspaceContextMenu(workspaces: Workspace[]) {
         workspaceContextMenuOpen = true;
         try {
             await openContextMenu(
@@ -65,7 +65,9 @@
         <div class="flex flex-row items-center justify-between gap-4">
             <div class="min-w-0 grow" bind:this={workspaceContextMenuAnchor}>
                 <button
-                    on:click={showWorkspaceContextMenu}
+                    disabled={workspaces === undefined}
+                    on:click={workspaces &&
+                        showWorkspaceContextMenu.bind(null, workspaces)}
                     class="flex w-full flex-row items-center justify-between gap-2 rounded-lg border border-border p-2 hover:bg-secondary-hover"
                 >
                     <div class="flex min-w-0 flex-row items-center gap-2">
@@ -104,7 +106,8 @@
         <div bind:this={workspaceContextMenuAnchor}>
             <BorderedIcon
                 type="workspace"
-                on:click={showWorkspaceContextMenu}
+                on:click={workspaces &&
+                    showWorkspaceContextMenu.bind(null, workspaces)}
             />
         </div>
         <div bind:this={sideNavContextMenuAnchor}>
