@@ -4,15 +4,17 @@
 
 - Python 3.11 (I recommend using [asdf](https://asdf-vm.com/))
 - [poetry](https://python-poetry.org/docs/)
-- PostgreSQL
+- PostgreSQL >= 15.5
 - Redis (6 >= for production)
 
 ## Debian 12 (bullseye) installation
 
-Make sure you have Postgres 13 and its dev library installed.
+Make sure you have Postgres 15 and its dev library installed.
 
 ```
-sudo apt install postgresql-13 libpq-dev
+sudo apt install postgresql-15 libpq-dev
+# Optionally run this, if not using nix flake
+sudo apt install libpq-dev
 ```
 
 Managing Python is convenient using asdf:
@@ -104,6 +106,8 @@ CREATE USER $USER WITH CREATEDB;
 ```
 
 ## Local password-less auth
+
+**Note**: This was written with PostgreSQL 13 in mind.
 
 > django.db.utils.OperationalError: fe_sendauth: no password supplied
 
