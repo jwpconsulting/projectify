@@ -17,7 +17,7 @@
         pkgs = nixpkgs.legacyPackages.${system};
         inherit (poetry2nix.lib.mkPoetry2Nix { inherit pkgs; }) mkPoetryEnv defaultPoetryOverrides;
         projectDir = self;
-        postgresql = pkgs.postgresql_13;
+        postgresql = pkgs.postgresql_15;
         overrides = defaultPoetryOverrides.extend (self: super: {
           django-cloudinary-storage = super.django-cloudinary-storage.overridePythonAttrs (
             old: {

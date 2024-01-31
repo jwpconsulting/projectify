@@ -16,7 +16,7 @@ executors:
           DJANGO_SETTINGS_MODULE: projectify.settings.test
           DJANGO_CONFIGURATION: Test
           DATABASE_URL: "postgres://projectify:projectify@localhost:5432/projectify"
-      - image: postgres:13.5
+      - image: postgres:15.5
         environment:
           POSTGRES_DB: projectify
           POSTGRES_USER: projectify
