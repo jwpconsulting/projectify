@@ -37,6 +37,7 @@
             size="large"
             href="/pricing#trial-mode"
             label={$_("onboarding.welcome.help.trial-mode-features")}
+            openBlank
         />
     </svelte:fragment>
     <svelte:fragment slot="content"></svelte:fragment>

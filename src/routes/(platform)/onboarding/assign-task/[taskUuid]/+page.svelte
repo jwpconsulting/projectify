@@ -60,12 +60,14 @@
             <Anchor
                 href="/help/billing"
                 label={$_("onboarding.assign-task.follow-up.billing-help")}
+                openBlank
             />
             <Anchor
                 href={getSettingsUrl(workspace.uuid, "billing")}
                 label={$_(
                     "onboarding.assign-task.follow-up.go-to-billing-settings",
                 )}
+                openBlank
             />
         </div>
     </svelte:fragment>

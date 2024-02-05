@@ -1504,5 +1504,10 @@ const messages: MessageDirectory = {
         maintainer: "Maintainer",
         owner: "Owner",
     },
+    "typography": {
+        anchor: {
+            "new-tab": "(Opens in new tab)",
+        },
+    },
 };
 export default messages;
