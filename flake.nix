@@ -52,7 +52,7 @@
       in
       {
         devShell = pkgs.mkShell {
-          buildInputs = [ poetryEnv postgresql ];
+          buildInputs = [ poetryEnv postgresql pkgs.heroku ];
         };
       });
 }
