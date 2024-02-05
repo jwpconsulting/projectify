@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2023-2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -27,6 +27,7 @@ const meta: Meta<Anchor> = {
         label: "This is a label",
         href: "#",
         size: "normal",
+        openBlank: false,
     },
     argTypes: {
         size: makeStorybookSelect({
@@ -36,6 +37,7 @@ const meta: Meta<Anchor> = {
         } satisfies Record<string, AnchorSize>),
         href: { control: "text" },
         label: { control: "text" },
+        openBlan: { control: "boolean" },
     },
 };
 export default meta;
@@ -43,3 +45,8 @@ export default meta;
 type Story = StoryObj<Anchor>;
 
 export const Default: Story = {};
+export const OpenBlank: Story = {
+    args: {
+        openBlank: true,
+    },
+};
