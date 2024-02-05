@@ -31,6 +31,8 @@
             workspaceBoard,
         });
     }
+
+    $: hasSections = workspaceBoard.workspace_board_sections.length > 0;
 </script>
 
 <!-- Sections -->
@@ -38,12 +40,14 @@
     <WorkspaceBoardSections {workspaceBoard} />
 </div>
 
-<div class="sticky bottom-0 self-end p-2">
-    <Button
-        style={{ kind: "primary" }}
-        label={$_("dashboard.actions.add-workspace-board-section")}
-        size="medium"
-        action={{ kind: "button", action: onAddNewSection }}
-        color="blue"
-    />
-</div>
+{#if hasSections}
+    <div class="sticky bottom-0 self-end p-2">
+        <Button
+            style={{ kind: "primary" }}
+            label={$_("dashboard.actions.add-workspace-board-section")}
+            size="medium"
+            action={{ kind: "button", action: onAddNewSection }}
+            color="blue"
+        />
+    </div>
+{/if}
