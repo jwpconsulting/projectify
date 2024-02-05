@@ -48,6 +48,7 @@
             name="search"
             bind:value={searchInput}
             showClearButton={false}
+            required
         />
         <Button
             label={$_("dashboard.search-task.button")}
