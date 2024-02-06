@@ -22,7 +22,6 @@
     import Form from "$lib/figma/screens/task/Form.svelte";
     import Layout from "$lib/figma/screens/task/Layout.svelte";
     import TopBar from "$lib/figma/screens/task/TopBar.svelte";
-    import UpdateSubTasks from "$lib/figma/screens/task/UpdateSubTasks.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { goto } from "$lib/navigation";
     import { updateTask as performUpdateTask } from "$lib/repository/workspace";
@@ -150,10 +149,10 @@
             action={action.bind(null, false)}
             {workspaceUserAssignment}
             {labelAssignment}
+            {subTaskAssignment}
             bind:title
             bind:dueDate
             bind:description
         />
-        <UpdateSubTasks {subTaskAssignment} />
     </svelte:fragment>
 </Layout>

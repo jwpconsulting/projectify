@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -28,7 +28,7 @@
     import type { SubTaskAssignment } from "$lib/types/stores";
     import type { CreateUpdateSubTask } from "$lib/types/workspace";
 
-    // TODO we might want to create a separate sub task for readonly.
+    // TODO we might want to create a separate sub task line for readonly.
     export let subTaskAssignment: SubTaskAssignment | undefined = undefined;
     export let subTask: Partial<CreateUpdateSubTask>;
     export let index: number | undefined = undefined;

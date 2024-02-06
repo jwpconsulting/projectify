@@ -25,8 +25,11 @@
     import { openContextMenu } from "$lib/stores/globalUi";
     import type {
         LabelAssignment,
+        SubTaskAssignment,
         WorkspaceUserAssignment,
     } from "$lib/types/stores";
+
+    import UpdateSubTasks from "./UpdateSubTasks.svelte";
 
     export let action: () => void;
 
@@ -36,6 +39,7 @@
 
     export let workspaceUserAssignment: WorkspaceUserAssignment;
     export let labelAssignment: LabelAssignment;
+    export let subTaskAssignment: SubTaskAssignment;
 
     async function showUpdateWorkspaceUser(anchor: HTMLElement) {
         await openContextMenu(
@@ -74,4 +78,5 @@
         <TaskDueDate slot="due-date" bind:dueDate />
         <TaskDescription slot="description" bind:description />
     </Fields>
+    <UpdateSubTasks {subTaskAssignment} />
 </form>
