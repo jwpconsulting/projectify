@@ -474,17 +474,66 @@ const messages: MessageDirectory = {
             "title": "Reset your password",
             "explanation":
                 "Enter the email associated with your account and we'll send you a link to reset your password.",
-            "enter-your-email": "Enter your email",
-            "email": "Email",
-            "send-reset-password-link": "Send reset password link",
+            "email": {
+                label: "Email",
+                placeholder: "Enter your email",
+            },
+            "submit": {
+                start: "Send password reset link",
+                submitting: "Submitting form...",
+            },
             "return-to-log-in": "Return to log in",
+            "error": {
+                generic:
+                    "Something went wrong when requesting your password reset link. Please try again using this form, or contact support if you have any questions",
+                validation:
+                    "Please check the fields above again for errors and submit again",
+            },
+        },
+        "requested-password-reset": {
+            "title": "Password reset requested",
+            "message":
+                "You have requested for your password to be reset and will receive an email with password reset instructions soon. Please check your email inbox.",
+            "troubleshooting":
+                "If you do not receive any email, you can request a new password email to be sent by using the email. Please contact support if you have any questions.",
+            "request-again": "Request password reset again",
         },
         "confirm-password-reset": {
             "title": "Reset your password",
-            "enter-new-password": "Enter new password",
-            "new-password": "New password",
-            "confirm-new-password": "Confirm new password",
-            "reset-password": "Reset password",
+            "password-1": {
+                label: "New password",
+                placeholder: "Enter new password",
+                validation: {
+                    "no-match":
+                        "The password entered here must match the password entered under 'Confirm new password'",
+                },
+            },
+            "password-2": {
+                label: "Confirm new password",
+                placeholder: "Confirm new password",
+                validation: {
+                    "no-match":
+                        "The password entered here must match the password entered under 'New password'",
+                },
+            },
+            "validation": {
+                "no-match":
+                    "The two passwords you have entered do not match. Please check one more time if you have entered the same password in both fields.",
+            },
+            "submit": {
+                start: "Reset password",
+                submitting: "Resetting password...",
+                error: "Reset password (try again)",
+            },
+            "error":
+                "Your password could not be reset. Please try again. If you have previously reset your password using this form, please try requesting a password reset one more time using the link below.",
+            "request-password-reset": "Request password reset again",
+        },
+        "reset-password": {
+            title: "Password reset complete",
+            message:
+                "Your password was reset successfully. You may now proceed and log in with your email address and the password that you have just entered.",
+            continue: "Continue to log in",
         },
         "confirm-email": {
             success: {

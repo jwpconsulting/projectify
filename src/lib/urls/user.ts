@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2023-2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -19,6 +19,10 @@ export const logInUrl = "/user/log-in";
 export const logOutUrl = "/user/log-out";
 export const signUpUrl = "/user/sign-up";
 export const requestPasswordResetUrl = "/user/request-password-reset";
+// For when a reset request has been sent out
+export const requestedPasswordResetUrl = "/user/requested-password-reset";
+// For when the user has reset their password
+export const resetPasswordUrl = "/user/reset-password";
 export const sentEmailConfirmationLinkUrl =
     "/user/sent-email-confirmation-link";
 

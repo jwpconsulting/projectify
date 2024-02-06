@@ -16,22 +16,26 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    export let title: string;
-    export let action: () => Promise<void>;
+    import { _ } from "svelte-i18n";
 
-    // TODO use undefined
-    export let subTitle: string | null = null;
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+    import { requestPasswordResetUrl } from "$lib/urls/user";
 </script>
 
-<!-- TODO this could use more padding -->
-<form class="flex flex-col gap-12 p-3" on:submit|preventDefault={action}>
-    <h1 class="text-center text-4xl font-bold">
-        {title}
+<section class="flex flex-col gap-4 px-8 py-4">
+    <h1 class="text-2xl font-bold">
+        {$_("auth.requested-password-reset.title")}
     </h1>
-    {#if subTitle}
-        <h2 class="text-center">
-            {subTitle}
-        </h2>
-    {/if}
-    <slot />
-</form>
+    <p>
+        {$_("auth.requested-password-reset.message")}
+    </p>
+    <p>
+        {$_("auth.requested-password-reset.troubleshooting")}
+    </p>
+
+    <Anchor
+        size="normal"
+        label={$_("auth.requested-password-reset.request-again")}
+        href={requestPasswordResetUrl}
+    />
+</section>
