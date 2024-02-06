@@ -16,6 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import { _ } from "svelte-i18n";
+
     import Boards from "$lib/figma/navigation/side-nav/Boards.svelte";
     import FilterLabels from "$lib/figma/navigation/side-nav/FilterLabels.svelte";
     import FilterWorkspaceUsers from "$lib/figma/navigation/side-nav/FilterWorkspaceUsers.svelte";
@@ -24,17 +26,28 @@
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspaces: Workspace[] | undefined;
-    export let workspace: Workspace;
+    export let workspace: Workspace | undefined;
 </script>
 
 <!-- XXX temporary fix to alleviate long side nav inside mobile menu -->
 <nav class="flex flex-col py-4">
     <WorkspaceSelector {workspaces} {workspace} open={true} />
-    <div class="flex shrink flex-col overflow-auto">
-        <Boards {workspace} />
-        {#if $showFilters}
-            <FilterWorkspaceUsers />
-            <FilterLabels />
-        {/if}
-    </div>
+    {#if workspace}
+        <div class="flex shrink flex-col overflow-auto">
+            <Boards {workspace} />
+            {#if $showFilters}
+                <FilterWorkspaceUsers />
+                <FilterLabels />
+            {/if}
+        </div>
+    {:else}
+        <div class="flex flex-col gap-4 px-4">
+            <p class="font-bold">
+                {$_("dashboard.side-nav.no-workspace.title")}
+            </p>
+            <p>
+                {$_("dashboard.side-nav.no-workspace.message")}
+            </p>
+        </div>
+    {/if}
 </nav>

@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -28,12 +28,13 @@
     import type { SubTaskAssignment } from "$lib/types/stores";
     import type { CreateUpdateSubTask } from "$lib/types/workspace";
 
-    // TODO we might want to create a separate sub task for readonly.
+    // TODO we might want to create a separate sub task line for readonly.
     export let subTaskAssignment: SubTaskAssignment | undefined = undefined;
     export let subTask: Partial<CreateUpdateSubTask>;
     export let index: number | undefined = undefined;
     export let readonly = true;
     export let onInteract: (() => void) | undefined = undefined;
+    export let onEnter: (() => void) | undefined = undefined;
 </script>
 
 <div class="flex w-full flex-row items-center justify-between gap-2 px-2 py-1">
@@ -44,11 +45,11 @@
             contained={false}
             onClick={onInteract}
         />
-        <!-- XXX should be only editable when in edit mode -->
         <div class="grow">
             <label for="sub-task" class="sr-only">
                 $_("task-screen.enter-a-subtask")}
             </label>
+            <!-- XXX duplicate IDs here -->
             <InputField
                 label={undefined}
                 style={{ inputType: "text" }}
@@ -57,6 +58,7 @@
                 bind:value={subTask.title}
                 {readonly}
                 onClick={onInteract}
+                {onEnter}
             />
         </div>
     </div>

@@ -15,8 +15,10 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
-<div class="flex h-full flex-col gap-8 p-4">
+<div class="flex h-full flex-col p-4 pt-0">
     <slot name="top-bar" />
-    <slot name="tab-bar-mobile" />
-    <slot name="content" />
+    <div class="flex flex-col gap-8">
+        <slot name="tab-bar-mobile" />
+        <slot name="content" />
+    </div>
 </div>

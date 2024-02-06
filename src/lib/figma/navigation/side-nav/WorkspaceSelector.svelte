@@ -25,7 +25,7 @@
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { Workspace } from "$lib/types/workspace";
 
-    export let workspace: Workspace;
+    export let workspace: Workspace | undefined = undefined;
     export let workspaces: Workspace[] | undefined;
     export let open: boolean;
 
@@ -33,6 +33,9 @@
     let workspaceContextMenuAnchor: HTMLElement;
 
     async function showSideNavContextMenu() {
+        if (workspace === undefined) {
+            throw new Error("Expected workspace");
+        }
         await openContextMenu(
             {
                 kind: "sideNav",
@@ -77,7 +80,11 @@
                             class="h-4 w-4 shrink-0"
                         />
                         <div class="min-w-0 truncate text-sm font-bold">
-                            {workspace.title}
+                            {workspace
+                                ? workspace.title
+                                : $_(
+                                      "dashboard.side-nav.workspace-selector.select",
+                                  )}
                         </div>
                     </div>
                     <Icon
@@ -96,7 +103,11 @@
                     )}
                     icon="ellipsis"
                     size="medium"
-                    action={{ kind: "button", action: showSideNavContextMenu }}
+                    action={{
+                        kind: "button",
+                        action: showSideNavContextMenu,
+                        disabled: workspace === undefined,
+                    }}
                 />
             </div>
         </div>
@@ -114,7 +125,11 @@
             <CircleIcon
                 icon="ellipsis"
                 size="medium"
-                action={{ kind: "button", action: showSideNavContextMenu }}
+                action={{
+                    kind: "button",
+                    action: showSideNavContextMenu,
+                    disabled: workspace === undefined,
+                }}
             />
         </div>
     </div>
