@@ -132,7 +132,7 @@
     $: workspace = {
         ...(state.workspace ?? workspaceFallback),
         ...(state.kind === "new-workspace"
-            ? { title: state.title }
+            ? { title: state.title, workspace_boards: [] }
             : undefined),
         ...(state.kind !== "new-workspace"
             ? { workspace_boards: [workspaceBoard] }
