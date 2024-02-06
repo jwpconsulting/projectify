@@ -143,11 +143,13 @@ class Command(BaseCommand):
                 password="password",
             )
             self.stdout.write("Created superuser")
-            user_create(
+            guest = user_create(
                 email="guest@localhost",
                 password="password",
             )
-            self.stdout.write("Created normal user")
+            guest.is_active = True
+            guest.save()
+            self.stdout.write("Created and manually activated normal user")
         remaining_users = self.n_users - User.objects.count()
         new_users = User.objects.bulk_create(
             [
