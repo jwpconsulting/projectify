@@ -240,6 +240,7 @@ const messages: MessageDirectory = {
         },
         "side-nav": {
             "workspace-selector": {
+                "select": "Select a workspace",
                 "context-menu": "Open workspace context menu",
             },
             "filter-labels": {

@@ -18,13 +18,28 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
-import { workspace, mobileParameters } from "$lib/storybook";
+import {
+    workspace,
+    mobileParameters,
+    makeStorybookSelect,
+} from "$lib/storybook";
+import type { Workspace } from "$lib/types/workspace";
 
 const meta: Meta<WorkspaceSelector> = {
     component: WorkspaceSelector,
+    argTypes: {
+        workspace: makeStorybookSelect<Workspace | undefined>({
+            "Workspace": workspace,
+            "No workspace": undefined,
+        }),
+        workspaces: makeStorybookSelect<Workspace[] | undefined>({
+            "Workspaces": [workspace],
+            "No workspaces": undefined,
+        }),
+    },
     args: {
-        workspace,
-        workspaces: [workspace],
+        workspace: "workspace",
+        workspaces: "workspaces",
         open: true,
     },
     parameters: mobileParameters,
