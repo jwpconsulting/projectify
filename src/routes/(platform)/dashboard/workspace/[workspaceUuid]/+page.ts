@@ -24,6 +24,7 @@ import { getNewWorkspaceBoardUrl } from "$lib/urls/onboarding";
 import type { PageLoadEvent } from "./$types";
 
 export async function load({ parent }: PageLoadEvent): Promise<void> {
+    // TODO call unsubscriber for selectedWorkspaceBoardUuids
     const [maybeWorkspaceBoardUuids, parentData] = await Promise.all([
         await new Promise<Map<string, string>>(
             selectedWorkspaceBoardUuids.subscribe,
@@ -33,10 +34,6 @@ export async function load({ parent }: PageLoadEvent): Promise<void> {
     const { workspace } = parentData;
 
     const { uuid, workspace_boards } = workspace;
-
-    if (!workspace_boards) {
-        throw new Error("Expected workspace_boards");
-    }
 
     const maybeWorkspaceBoardUuid = maybeWorkspaceBoardUuids.get(
         workspace.uuid,

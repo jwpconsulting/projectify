@@ -80,8 +80,7 @@ export async function updateWorkspace(
         repositoryContext,
     );
     if (response.kind !== "ok") {
-        console.error("TODO handle", response);
-        throw new Error("Error while creating workspace");
+        throw new Error("Error while updating workspace");
     }
     return response.data;
 }

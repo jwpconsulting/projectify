@@ -68,7 +68,13 @@
             imageFile,
             vars.API_ENDPOINT + `/workspace/workspace/${uuid}/picture-upload`,
         );
-        workspace = await updateWorkspace(uuid, title, description, { fetch });
+        const result = await updateWorkspace(uuid, title, description, {
+            fetch,
+        });
+        workspace = {
+            ...workspace,
+            ...result,
+        };
         resetForm();
         state = { kind: "viewing" };
     }
