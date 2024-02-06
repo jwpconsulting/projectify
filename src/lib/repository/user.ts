@@ -151,12 +151,15 @@ export async function confirmPasswordReset(
     token: string,
     newPassword: string,
     repositoryContext: RepositoryContext,
-): Promise<void> {
-    failOrOk(
-        await postWithCredentialsJson(
-            "/user/user/confirm-password-reset",
-            { email, token, new_password: newPassword },
-            repositoryContext,
-        ),
+): Promise<
+    ApiResponse<
+        void,
+        { token?: string; email?: string; new_password?: string }
+    >
+> {
+    return await postWithCredentialsJson(
+        "/user/user/confirm-password-reset",
+        { email, token, new_password: newPassword },
+        repositoryContext,
     );
 }

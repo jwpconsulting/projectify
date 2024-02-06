@@ -21,56 +21,122 @@
     import AuthScreen from "$lib/figma/screens/auth/AuthScreen.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import type { InputFieldValidation } from "$lib/funabashi/types";
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
     import { confirmPasswordReset } from "$lib/repository/user";
-    import { logInUrl } from "$lib/urls/user";
+    import type { AuthViewState } from "$lib/types/ui";
+    import { requestPasswordResetUrl, resetPasswordUrl } from "$lib/urls/user";
 
     import type { PageData } from "./$types";
 
     export let data: PageData;
 
+    let state: AuthViewState = { kind: "start" };
+
     const { email, token } = data;
-    // TODO should be string | undefined
-    let newPassword1: string;
-    let newPassword2: string;
+    let password1: string | undefined = undefined;
+    let password1Validation: InputFieldValidation | undefined = undefined;
+    let password2: string | undefined = undefined;
+    let password2Validation: InputFieldValidation | undefined = undefined;
 
     async function submit() {
-        // TODO validate form
-        // TODO show error
-        try {
-            await confirmPasswordReset(email, token, newPassword1, { fetch });
-            await goto(logInUrl);
-        } catch (error) {
-            console.error("password reset went wrong", error);
-            throw error;
+        if (password1 === undefined) {
+            throw new Error("Expected password1");
         }
+        if (password2 === undefined) {
+            throw new Error("Expected password1");
+        }
+        if (password1 !== password2) {
+            state = {
+                kind: "error",
+                message: $_("auth.confirm-password-reset.validation.no-match"),
+            };
+            password1Validation = {
+                ok: false,
+                error: $_(
+                    "auth.confirm-password-reset.password-1.validation.no-match",
+                ),
+            };
+            password2Validation = {
+                ok: false,
+                error: $_(
+                    "auth.confirm-password-reset.password-2.validation.no-match",
+                ),
+            };
+            return;
+        }
+        state = { kind: "submitting" };
+        const result = await confirmPasswordReset(email, token, password1, {
+            fetch,
+        });
+        if (result.ok) {
+            await goto(resetPasswordUrl);
+            return;
+        }
+        console.error("Error resetting password", result.error);
+        if (result.error.new_password) {
+            password1Validation = {
+                ok: false,
+                error: result.error.new_password,
+            };
+        }
+        state = {
+            kind: "error",
+            message: $_("auth.confirm-password-reset.error"),
+        };
     }
 </script>
 
 <AuthScreen title={$_("auth.confirm-password-reset.title")} action={submit}>
     <div class="flex flex-col gap-6">
         <InputField
-            placeholder={$_("auth.confirm-password-reset.enter-new-password")}
+            placeholder={$_(
+                "auth.confirm-password-reset.password-1.placeholder",
+            )}
             style={{ inputType: "password" }}
-            name="password1"
-            label={$_("auth.confirm-password-reset.new-password")}
-            bind:value={newPassword1}
+            name="password-1"
+            label={$_("auth.confirm-password-reset.password-1.label")}
+            bind:value={password1}
+            validation={password1Validation}
+            required
         />
         <InputField
             placeholder={$_(
-                "auth.confirm-password-reset.confirm-new-password",
+                "auth.confirm-password-reset.password-2.placeholder",
             )}
             style={{ inputType: "password" }}
-            name="password2"
-            label={$_("auth.confirm-password-reset.confirm-new-password")}
-            bind:value={newPassword2}
+            name="password-2"
+            label={$_("auth.confirm-password-reset.password-2.label")}
+            bind:value={password2}
+            validation={password2Validation}
+            required
         />
+        {#if state.kind === "error"}
+            <p>
+                {state.message}
+            </p>
+            <Anchor
+                label={$_(
+                    "auth.confirm-password-reset.request-password-reset",
+                )}
+                href={requestPasswordResetUrl}
+                size="normal"
+            />
+        {/if}
         <Button
-            action={{ kind: "button", action: submit }}
+            action={{
+                kind: "submit",
+                disabled: state.kind === "submitting",
+            }}
             style={{ kind: "primary" }}
             color="blue"
             size="medium"
-            label={$_("auth.confirm-password-reset.reset-password")}
+            label={state.kind == "submitting"
+                ? $_("auth.confirm-password-reset.submit.submitting")
+                : state.kind === "error"
+                ? $_("auth.confirm-password-reset.submit.error")
+                : $_("auth.confirm-password-reset.submit.start")}
         />
     </div>
 </AuthScreen>

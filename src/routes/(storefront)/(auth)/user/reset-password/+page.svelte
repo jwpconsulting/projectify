@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023, 2024 JWP Consulting GK
+    Copyright (C) 2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -16,22 +16,23 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    export let title: string;
-    export let action: () => Promise<void>;
+    import { _ } from "svelte-i18n";
 
-    // TODO use undefined
-    export let subTitle: string | null = null;
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+    import { logInUrl } from "$lib/urls/user";
 </script>
 
-<!-- TODO this could use more padding -->
-<form class="flex flex-col gap-12 p-3" on:submit|preventDefault={action}>
-    <h1 class="text-center text-4xl font-bold">
-        {title}
+<section class="flex flex-col gap-4 px-8 py-4">
+    <h1 class="text-2xl font-bold">
+        {$_("auth.reset-password.title")}
     </h1>
-    {#if subTitle}
-        <h2 class="text-center">
-            {subTitle}
-        </h2>
-    {/if}
-    <slot />
-</form>
+    <p>
+        {$_("auth.reset-password.message")}
+    </p>
+
+    <Anchor
+        size="normal"
+        label={$_("auth.reset-password.continue")}
+        href={logInUrl}
+    />
+</section>

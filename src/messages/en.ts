@@ -481,10 +481,40 @@ const messages: MessageDirectory = {
         },
         "confirm-password-reset": {
             "title": "Reset your password",
-            "enter-new-password": "Enter new password",
-            "new-password": "New password",
-            "confirm-new-password": "Confirm new password",
-            "reset-password": "Reset password",
+            "password-1": {
+                label: "New password",
+                placeholder: "Enter new password",
+                validation: {
+                    "no-match":
+                        "The password entered here must match the password entered under 'Confirm new password'",
+                },
+            },
+            "password-2": {
+                label: "Confirm new password",
+                placeholder: "Confirm new password",
+                validation: {
+                    "no-match":
+                        "The password entered here must match the password entered under 'New password'",
+                },
+            },
+            "validation": {
+                "no-match":
+                    "The two passwords you have entered do not match. Please check one more time if you have entered the same password in both fields.",
+            },
+            "submit": {
+                start: "Reset password",
+                submitting: "Resetting password...",
+                error: "Reset password (try again)",
+            },
+            "error":
+                "Your password could not be reset. Please try again. If you have previously reset your password using this form, please try requesting a password reset one more time using the link below.",
+            "request-password-reset": "Request password reset again",
+        },
+        "reset-password": {
+            title: "Password reset complete",
+            message:
+                "Your password was reset successfully. You may now proceed and log in with your email address and the password that you have just entered.",
+            continue: "Continue to log in",
         },
         "confirm-email": {
             success: {
