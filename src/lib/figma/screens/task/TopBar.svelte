@@ -24,7 +24,7 @@
 </script>
 
 <div
-    class="flex flex-row flex-wrap items-center justify-between gap-x-2 gap-y-4 lg:flex-nowrap"
+    class="sticky top-0 flex flex-row flex-wrap items-center justify-between gap-x-2 gap-y-4 bg-foreground pb-8 pt-4 lg:flex-nowrap"
 >
     <div class="flex shrink flex-row items-center gap-6">
         <div class="shrink-0">
