@@ -16,6 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import { tick } from "svelte";
     import { _ } from "svelte-i18n";
 
     import SubTaskBar from "$lib/figma/screens/task/SubTaskBar.svelte";
@@ -27,16 +28,26 @@
 
     $: progress = getSubTaskProgress($subTaskAssignment);
 
-    function onEnter() {
+    let lineContainer: HTMLElement;
+
+    async function onEnter() {
+        // TODO (nice-to-have)
+        // Locate if there are sub tasks that are empty and jump to these
+        // instead
         subTaskAssignment.addSubTask();
-        // locate the last sub task
+        // wait a bit
+        await tick();
+        // locate the last sub task input
+        const inputs = lineContainer.getElementsByTagName("input");
+        const last = inputs[inputs.length - 1];
         // focus on the input
+        last.focus();
     }
 </script>
 
 <SubTaskBar {progress} {subTaskAssignment} />
 {#if $subTaskAssignment.length > 0}
-    <div class="flex flex-col">
+    <div class="flex flex-col" bind:this={lineContainer}>
         {#each $subTaskAssignment as subTask, index}
             <SubTaskLine
                 bind:subTask
