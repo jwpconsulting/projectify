@@ -136,13 +136,11 @@ export async function logOut(
 export async function requestPasswordReset(
     email: string,
     repositoryContext: RepositoryContext,
-): Promise<void> {
-    failOrOk(
-        await postWithCredentialsJson(
-            "/user/user/request-password-reset",
-            { email },
-            repositoryContext,
-        ),
+): Promise<ApiResponse<void, { email?: string }>> {
+    return await postWithCredentialsJson(
+        "/user/user/request-password-reset",
+        { email },
+        repositoryContext,
     );
 }
 

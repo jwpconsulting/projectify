@@ -479,10 +479,16 @@ const messages: MessageDirectory = {
                 placeholder: "Enter your email",
             },
             "submit": {
-                start: "Send reset password link",
-                submitting: "Submitting form",
+                start: "Send password reset link",
+                submitting: "Submitting form...",
             },
             "return-to-log-in": "Return to log in",
+            "error": {
+                generic:
+                    "Something went wrong when requesting your password reset link. Please try again using this form, or contact support if you have any questions",
+                validation:
+                    "Please check the fields above again for errors and submit again",
+            },
         },
         "requested-password-reset": {
             "title": "Password reset requested",

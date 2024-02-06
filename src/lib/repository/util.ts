@@ -100,6 +100,9 @@ async function fetchResponse<T, E = unknown>(
     } else if (response.status === 404) {
         return { kind: "notFound", ok: false, error };
     } else {
+        console.error(
+            `Out-of-scope error encountered (status code ${response.status})`,
+        );
         throw new Error(`${response.statusText}: ${JSON.stringify(data)}`);
     }
 }

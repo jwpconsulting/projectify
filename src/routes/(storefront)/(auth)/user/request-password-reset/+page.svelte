@@ -21,6 +21,7 @@
     import AuthScreen from "$lib/figma/screens/auth/AuthScreen.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import type { InputFieldValidation } from "$lib/funabashi/types";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { requestPasswordReset } from "$lib/repository/user";
     import type { AuthViewState } from "$lib/types/ui";
@@ -29,6 +30,7 @@
     import { goto } from "$app/navigation";
 
     let email: string | undefined = undefined;
+    let emailValidation: InputFieldValidation | undefined = undefined;
 
     let state: AuthViewState = { kind: "start" };
 
@@ -37,9 +39,23 @@
             throw new Error("Expected email");
         }
         state = { kind: "submitting" };
-        // TODO do some kind of validation here
-        await requestPasswordReset(email, { fetch });
-        await goto(requestedPasswordResetUrl);
+        const response = await requestPasswordReset(email, { fetch });
+        if (response.ok) {
+            await goto(requestedPasswordResetUrl);
+            return;
+        }
+        if (response.error.email) {
+            emailValidation = { ok: false, error: response.error.email };
+            state = {
+                kind: "error",
+                message: $_("auth.request-password-reset.error.validation"),
+            };
+        } else {
+            state = {
+                kind: "error",
+                message: $_("auth.request-password-reset.error.generic"),
+            };
+        }
     }
 </script>
 
@@ -54,8 +70,14 @@
             name="email"
             label={$_("auth.request-password-reset.email.label")}
             bind:value={email}
+            validation={emailValidation}
             required
         />
+        {#if state.kind === "error"}
+            <p>
+                {state.message}
+            </p>
+        {/if}
         <Button
             action={{ kind: "submit", disabled: state.kind === "submitting" }}
             style={{ kind: "primary" }}
