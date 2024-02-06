@@ -19,6 +19,8 @@ export const logInUrl = "/user/log-in";
 export const logOutUrl = "/user/log-out";
 export const signUpUrl = "/user/sign-up";
 export const requestPasswordResetUrl = "/user/request-password-reset";
+// For when a reset request has been sent out
+export const requestedPasswordResetUrl = "/user/requested-password-reset";
 // For when the user has reset their password
 export const resetPasswordUrl = "/user/reset-password";
 export const sentEmailConfirmationLinkUrl =

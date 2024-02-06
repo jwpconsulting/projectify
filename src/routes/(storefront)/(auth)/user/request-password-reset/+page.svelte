@@ -23,13 +23,23 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { requestPasswordReset } from "$lib/repository/user";
+    import type { AuthViewState } from "$lib/types/ui";
+    import { requestedPasswordResetUrl } from "$lib/urls/user";
 
-    let email: string;
+    import { goto } from "$app/navigation";
+
+    let email: string | undefined = undefined;
+
+    let state: AuthViewState = { kind: "start" };
 
     async function submit() {
+        if (!email) {
+            throw new Error("Expected email");
+        }
+        state = { kind: "submitting" };
         // TODO do some kind of validation here
         await requestPasswordReset(email, { fetch });
-        // TODO redirect when successful
+        await goto(requestedPasswordResetUrl);
     }
 </script>
 
@@ -39,19 +49,21 @@
     </div>
     <div class="flex flex-col gap-6">
         <InputField
-            placeholder={$_("auth.request-password-reset.enter-your-email")}
+            placeholder={$_("auth.request-password-reset.email.placeholder")}
             style={{ inputType: "email" }}
             name="email"
-            label={$_("auth.request-password-reset.email")}
+            label={$_("auth.request-password-reset.email.label")}
             bind:value={email}
             required
         />
         <Button
-            action={{ kind: "submit" }}
+            action={{ kind: "submit", disabled: state.kind === "submitting" }}
             style={{ kind: "primary" }}
             color="blue"
             size="medium"
-            label={$_("auth.request-password-reset.send-reset-password-link")}
+            label={state.kind === "submitting"
+                ? $_("auth.request-password-reset.submit.submitting")
+                : $_("auth.request-password-reset.submit.start")}
         />
         <div class="text-center">
             <Anchor

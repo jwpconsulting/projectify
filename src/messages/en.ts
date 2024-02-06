@@ -474,10 +474,23 @@ const messages: MessageDirectory = {
             "title": "Reset your password",
             "explanation":
                 "Enter the email associated with your account and we'll send you a link to reset your password.",
-            "enter-your-email": "Enter your email",
-            "email": "Email",
-            "send-reset-password-link": "Send reset password link",
+            "email": {
+                label: "Email",
+                placeholder: "Enter your email",
+            },
+            "submit": {
+                start: "Send reset password link",
+                submitting: "Submitting form",
+            },
             "return-to-log-in": "Return to log in",
+        },
+        "requested-password-reset": {
+            "title": "Password reset requested",
+            "message":
+                "You have requested for your password to be reset and will receive an email with password reset instructions soon. Please check your email inbox.",
+            "troubleshooting":
+                "If you do not receive any email, you can request a new password email to be sent by using the email. Please contact support if you have any questions.",
+            "request-again": "Request password reset again",
         },
         "confirm-password-reset": {
             "title": "Reset your password",
