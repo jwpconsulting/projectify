@@ -22,7 +22,7 @@
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspaces: Workspace[] | undefined;
-    export let workspace: Workspace;
+    export let workspace: Workspace | undefined;
 </script>
 
 {#if $sideNavOpen}

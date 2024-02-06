@@ -28,7 +28,7 @@
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
     export let workspaces: Workspace[] | undefined;
-    export let workspace: Workspace;
+    export let workspace: Workspace | undefined;
 </script>
 
 <nav class="inline-flex h-full flex-col items-center gap-12 bg-foreground p-4">
@@ -40,7 +40,7 @@
                 <WorkspaceSelector {workspaces} {workspace} open={false} />
                 <div class="flex flex-col items-center gap-6">
                     <div class="flex flex-col items-center gap-4">
-                        {#if workspace.workspace_boards}
+                        {#if workspace?.workspace_boards}
                             {#each workspace.workspace_boards as board}
                                 <SquovalIcon
                                     icon="board"
@@ -50,12 +50,12 @@
                                         href: getDashboardWorkspaceBoardUrl(
                                             board.uuid,
                                         ),
-                                        onInteract() {
-                                            selectWorkspaceBoardUuid(
+                                        onInteract:
+                                            selectWorkspaceBoardUuid.bind(
+                                                null,
                                                 workspace.uuid,
                                                 board.uuid,
-                                            );
-                                        },
+                                            ),
                                     }}
                                 />
                             {/each}
@@ -63,7 +63,7 @@
                     </div>
                 </div>
             </div>
-            {#if $showFilters}
+            {#if workspace !== undefined && $showFilters}
                 <div class="flex flex-col gap-8">
                     <div class="flex flex-col items-center gap-6">
                         <UserDropdownClosedNav />
