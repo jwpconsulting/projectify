@@ -16,6 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import { _ } from "svelte-i18n";
+
     import Boards from "$lib/figma/navigation/side-nav/Boards.svelte";
     import FilterLabels from "$lib/figma/navigation/side-nav/FilterLabels.svelte";
     import FilterWorkspaceUsers from "$lib/figma/navigation/side-nav/FilterWorkspaceUsers.svelte";
@@ -37,6 +39,15 @@
                 <FilterWorkspaceUsers />
                 <FilterLabels />
             {/if}
+        </div>
+    {:else}
+        <div class="flex flex-col gap-4 px-4">
+            <p class="font-bold">
+                {$_("dashboard.side-nav.no-workspace.title")}
+            </p>
+            <p>
+                {$_("dashboard.side-nav.no-workspace.message")}
+            </p>
         </div>
     {/if}
 </nav>

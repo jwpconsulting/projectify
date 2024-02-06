@@ -239,6 +239,11 @@ const messages: MessageDirectory = {
             },
         },
         "side-nav": {
+            "no-workspace": {
+                title: "No workspace selected",
+                message:
+                    "To use a workspace, click the workspace selector above and select the workspace you would like to use.",
+            },
             "workspace-selector": {
                 "select": "Select a workspace",
                 "context-menu": "Open workspace context menu",
