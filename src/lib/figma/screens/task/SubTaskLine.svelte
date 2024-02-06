@@ -34,6 +34,7 @@
     export let index: number | undefined = undefined;
     export let readonly = true;
     export let onInteract: (() => void) | undefined = undefined;
+    export let onEnter: (() => void) | undefined = undefined;
 </script>
 
 <div class="flex w-full flex-row items-center justify-between gap-2 px-2 py-1">
@@ -44,11 +45,11 @@
             contained={false}
             onClick={onInteract}
         />
-        <!-- XXX should be only editable when in edit mode -->
         <div class="grow">
             <label for="sub-task" class="sr-only">
                 $_("task-screen.enter-a-subtask")}
             </label>
+            <!-- XXX duplicate IDs here -->
             <InputField
                 label={undefined}
                 style={{ inputType: "text" }}
@@ -57,6 +58,7 @@
                 bind:value={subTask.title}
                 {readonly}
                 onClick={onInteract}
+                {onEnter}
             />
         </div>
     </div>

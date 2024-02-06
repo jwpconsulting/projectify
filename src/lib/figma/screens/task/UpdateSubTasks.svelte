@@ -26,9 +26,12 @@
     export let subTaskAssignment: SubTaskAssignment;
 
     $: progress = getSubTaskProgress($subTaskAssignment);
-    // What does the following TODO mean? Justus 2023-12-12
-    // TODO determine correct state for children. Or should they do that
-    // themselves?
+
+    function onEnter() {
+        subTaskAssignment.addSubTask();
+        // locate the last sub task
+        // focus on the input
+    }
 </script>
 
 <SubTaskBar {progress} {subTaskAssignment} />
@@ -40,6 +43,7 @@
                 readonly={false}
                 {index}
                 {subTaskAssignment}
+                {onEnter}
             />
         {/each}
     </div>

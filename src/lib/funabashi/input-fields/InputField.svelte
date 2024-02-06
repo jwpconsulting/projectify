@@ -54,6 +54,7 @@
     export let required = false;
     export let readonly = false;
     export let onClick: (() => void) | undefined = undefined;
+    export let onEnter: (() => void) | undefined = undefined;
     export let validation: InputFieldValidation | undefined = undefined;
 
     let pikadayAnchor: HTMLElement | undefined = undefined;
@@ -65,6 +66,14 @@
     // Should we show a clear button - at all?
     export let showClearButton = false;
     $: hideClearButton = !showClearButton || value === undefined || readonly;
+
+    $: {
+        if (onEnter !== undefined && style.inputType !== "text") {
+            console.warn(
+                "At this moment, onEnter is only supported for text until a use case for other input types support onEnter as well is found.",
+            );
+        }
+    }
 
     // Possibly we can just have two onMount calls here, but I couldn't read
     // from the svelte docs whether that is explicitly supported or not.
@@ -129,6 +138,18 @@
         required,
         readonly: readonly || undefined,
     };
+
+    function onKeydown(event: KeyboardEvent) {
+        if (event.key === "Enter" && onEnter !== undefined) {
+            event.preventDefault();
+        }
+    }
+
+    function onKeyup(event: KeyboardEvent) {
+        if (event.key === "Enter" && onEnter !== undefined) {
+            onEnter();
+        }
+    }
 </script>
 
 <div class="flex flex-col items-start gap-2">
@@ -167,6 +188,8 @@
                 {...inputProps}
                 bind:value
                 on:click={onClick}
+                on:keydown={onKeydown}
+                on:keyup={onKeyup}
             />
         {:else if style.inputType === "password"}
             <input
