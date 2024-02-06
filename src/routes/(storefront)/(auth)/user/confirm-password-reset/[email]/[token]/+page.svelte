@@ -66,6 +66,7 @@
             };
             return;
         }
+        password1Validation = password2Validation = undefined;
         state = { kind: "submitting" };
         const result = await confirmPasswordReset(email, token, password1, {
             fetch,
