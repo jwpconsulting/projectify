@@ -191,8 +191,18 @@ const messages: MessageDirectory = {
             "add-label": "Assign label",
             "task-number": "#{number}",
         },
-        "tasks-not-found-for": "Tasks not found for ''{search}''",
-        "showing-results-for-search": "Showing results for ''{search}''",
+        "search": {
+            "not-found": {
+                title: "No tasks found for ''{search}''",
+                explanation:
+                    "No tasks were found for the search terms you specified. You can either try a new search using the search form above or go back and view entire the workspace board.",
+                back: "Go back to workspace board",
+            },
+            "found": {
+                title: "Showing results for ''{search}''",
+                back: "Go back to workspace board",
+            },
+        },
         "create-board": "Create new workspace board",
         "boards": "Workspace boards",
         "workspace-users": "Workspace users",
