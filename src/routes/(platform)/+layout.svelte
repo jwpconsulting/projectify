@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -20,9 +20,14 @@
     import ContextMenuContainer from "$lib/components/ContextMenuContainer.svelte";
     import OverlayContainer from "$lib/components/OverlayContainer.svelte";
     import HeaderDashboard from "$lib/figma/navigation/header/Dashboard.svelte";
+    import SideNav from "$lib/figma/navigation/SideNav.svelte";
     import ConstructiveOverlay from "$lib/figma/overlays/constructive/ConstructiveOverlay.svelte";
     import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
     import MobileMenuOverlay from "$lib/figma/overlays/MobileMenuOverlay.svelte";
+    import {
+        currentWorkspace,
+        currentWorkspaces,
+    } from "$lib/stores/dashboard";
     import {
         mobileMenuState,
         resolveConstructiveOverlay,
@@ -41,7 +46,22 @@
     {#if $mobileMenuState.kind === "visible"}
         <MobileMenuOverlay target={$mobileMenuState.target} />
     {/if}
-    <slot />
+    <div class="flex min-h-0 shrink grow flex-row">
+        <!-- this breakpoint is in tune with the mobile menu breakpoint -->
+        {#if $currentWorkspace}
+            <div class="hidden h-full shrink-0 overflow-y-auto md:block">
+                <SideNav
+                    workspaces={$currentWorkspaces}
+                    workspace={$currentWorkspace}
+                />
+            </div>
+        {/if}
+        <!-- not inserting min-w-0 will mean that this div will extend as much as
+    needed around whatever is inside the slot -->
+        <div class="min-w-0 grow overflow-y-auto">
+            <slot />
+        </div>
+    </div>
 </div>
 
 <ConnectionStatus />
