@@ -48,6 +48,7 @@
         });
         await deleteWorkspaceBoard(workspaceBoard, { fetch });
     }
+    // TODO create shared layout for archive and settings
 </script>
 
 <div class="flex min-h-full w-full flex-col items-center bg-background py-8">
