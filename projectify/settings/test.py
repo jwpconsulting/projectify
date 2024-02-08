@@ -27,6 +27,8 @@ from .base import (
 class Test(Base):
     """Test configuration."""
 
+    SITE_TITLE = "Projectify Pytest"
+
     # TODO populate me
     SECRET_KEY = "test"
 

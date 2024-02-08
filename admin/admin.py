@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Admin configuration for Projectify."""
+from django.conf import settings
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
@@ -32,9 +33,11 @@ class ProjectifyAdmin(admin.AdminSite):
     """
 
     # The header shown in the top nav bar
-    site_header = _("Projectify Administration")
+    site_header = _("Projectify Admin ({})").format(
+        settings.SITE_TITLE or "UNKNOWN"
+    )
     # Right half of <title>, ... | Projectify Administration
-    site_title = _("Projectify Administration")
+    site_title = site_header
     # Left half of <title> when visiting admin,
     # Index | Projectify Administration
     index_title = _("Index")

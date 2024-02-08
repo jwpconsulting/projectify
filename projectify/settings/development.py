@@ -59,6 +59,8 @@ def environ_get_or_warn(key: str) -> Optional[str]:
 class Development(Base):
     """Development configuration."""
 
+    SITE_TITLE = "Local Development"
+
     SECRET_KEY = "development"
 
     INSTALLED_APPS = (

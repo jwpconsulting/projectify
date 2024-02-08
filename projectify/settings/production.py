@@ -63,6 +63,8 @@ def populate_production_middleware(middleware: Sequence[str]) -> Iterable[str]:
 class Production(Base):
     """Production configuration."""
 
+    SITE_TITLE = "Projectify Production"
+
     # Redis URL
     REDIS_TLS_URL = get_redis_tls_url()
 

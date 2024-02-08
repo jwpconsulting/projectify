@@ -65,6 +65,9 @@ class Base(Configuration):
     See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
     """
 
+    # Used in admin site to show which environment we are using
+    SITE_TITLE: Optional[str] = None
+
     # SECURITY WARNING: don't run with debug turned on in production!
     ALLOWED_HOSTS: Iterable[str] = []
 
