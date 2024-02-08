@@ -21,13 +21,16 @@
 
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
+    import { goto } from "$lib/navigation";
     import { archiveWorkspaceBoard as repoArchiveWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
     import {
         openConstructiveOverlay,
         openDestructiveOverlay,
     } from "$lib/stores/globalUi";
-    import type { WorkspaceBoard } from "$lib/types/workspace";
+    import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
+    import { getDashboardWorkspaceUrl } from "$lib/urls";
 
+    export let workspace: Workspace;
     export let workspaceBoard: WorkspaceBoard;
 
     async function editBoard() {
@@ -131,6 +134,9 @@
             workspaceBoard,
         });
         await repoArchiveWorkspaceBoard(workspaceBoard, true, { fetch });
+        // XXX perhaps if we pass WorkspaceBoardDetail here we can guarantee
+        // a workspace
+        await goto(getDashboardWorkspaceUrl(workspace.uuid));
     }
 </script>
 

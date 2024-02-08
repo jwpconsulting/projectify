@@ -118,7 +118,11 @@ export type ContextMenuType =
     | { kind: "profile" }
     | { kind: "workspace"; workspaces: Workspace[] }
     | { kind: "sideNav"; workspace: Workspace }
-    | { kind: "workspaceBoard"; workspaceBoard: WorkspaceBoard }
+    | {
+          kind: "workspaceBoard";
+          workspace: Workspace;
+          workspaceBoard: WorkspaceBoard;
+      }
     | {
           kind: "workspaceBoardSection";
           workspaceBoard: WorkspaceBoard;

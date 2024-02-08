@@ -248,6 +248,13 @@ const messages: MessageDirectory = {
                 "select": "Select a workspace",
                 "context-menu": "Open workspace context menu",
             },
+            "workspace-boards": {
+                empty: {
+                    message:
+                        "You have no workspace boards available. Please check the workspace board archive and recover a workspace board from there. Alternatively you can also create a new workspace board using the button below.",
+                    archive: "Go to archive",
+                },
+            },
             "filter-labels": {
                 "title": "Filter labels",
                 "create-new-label": "Create new label",

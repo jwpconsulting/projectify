@@ -15,13 +15,14 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { error } from "@sveltejs/kit";
+import { error, redirect } from "@sveltejs/kit";
 
 import {
     currentWorkspace,
     currentWorkspaceBoard,
 } from "$lib/stores/dashboard";
 import type { Workspace, WorkspaceBoardDetail } from "$lib/types/workspace";
+import { dashboardUrl } from "$lib/urls/dashboard";
 
 import type { LayoutLoadEvent } from "./$types";
 
@@ -39,17 +40,20 @@ export async function load({
         { fetch },
     );
     if (!workspaceBoard) {
-        throw error(404);
+        // If we don't have a workspaceBoard, we don't have anything (no
+        // workspace uuid etc), so we are back to the dashboard in that case.
+        // TODO tell the user that we have done so
+        throw redirect(302, dashboardUrl);
     }
-    const workspaceUuid = workspaceBoard.workspace.uuid;
-    if (!workspaceUuid) {
-        throw new Error("Expected workspace");
-    }
-    const workspace = await currentWorkspace.loadUuid(workspaceUuid, {
-        fetch,
-    });
+    const workspace = await currentWorkspace.loadUuid(
+        workspaceBoard.workspace.uuid,
+        { fetch },
+    );
     if (!workspace) {
-        throw error(404);
+        throw error(
+            404,
+            "A workspace could not be found. This is should not happen.",
+        );
     }
     return { workspace, workspaceBoard };
 }

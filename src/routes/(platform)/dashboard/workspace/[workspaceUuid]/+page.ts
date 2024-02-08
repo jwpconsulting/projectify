@@ -17,42 +17,61 @@
  */
 import { redirect } from "@sveltejs/kit";
 
+import { getArchivedWorkspaceBoards } from "$lib/repository/workspace/workspaceBoard";
 import { selectedWorkspaceBoardUuids } from "$lib/stores/dashboard";
-import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
+import { getArchiveUrl, getDashboardWorkspaceBoardUrl } from "$lib/urls";
 import { getNewWorkspaceBoardUrl } from "$lib/urls/onboarding";
 
 import type { PageLoadEvent } from "./$types";
 
-export async function load({ parent }: PageLoadEvent): Promise<void> {
+export async function load({ parent, fetch }: PageLoadEvent): Promise<void> {
     // TODO call unsubscriber for selectedWorkspaceBoardUuids
     const [maybeWorkspaceBoardUuids, parentData] = await Promise.all([
         await new Promise<Map<string, string>>(
+            // Read from localstorage what the selected ws board uuids are
             selectedWorkspaceBoardUuids.subscribe,
         ),
         await parent(),
     ]);
-    const { workspace } = parentData;
 
-    const { uuid, workspace_boards } = workspace;
+    const { uuid: workspaceUuid, workspace_boards } = parentData.workspace;
 
-    const maybeWorkspaceBoardUuid = maybeWorkspaceBoardUuids.get(
-        workspace.uuid,
-    );
+    // We see if the user has selected a workspace board UUID for this
+    // workspace before (by referencing local storage above)
+    // And if we have one ...
+    const maybeWorkspaceBoardUuid =
+        maybeWorkspaceBoardUuids.get(workspaceUuid);
     if (
         maybeWorkspaceBoardUuid &&
         workspace_boards.map((b) => b.uuid).includes(maybeWorkspaceBoardUuid)
     ) {
+        // ... we redirect to it
         throw redirect(
             302,
             getDashboardWorkspaceBoardUrl(maybeWorkspaceBoardUuid),
         );
     }
+    // If we can't find it, that's also OK, because:
+    // If we find any workspace boards, we pick the first and direct the user there
     const first_workspace_board = workspace_boards.at(0);
     if (first_workspace_board) {
         const { uuid } = first_workspace_board;
+        // TODO show the user a notification in case of a redirect to here
+        // Indicate that the previous UUID is not available anymore
         throw redirect(302, getDashboardWorkspaceBoardUrl(uuid));
+    }
+
+    // Now we check if anything is archived and redirect to the archive in that
+    // case
+    const archived = await getArchivedWorkspaceBoards(workspaceUuid, {
+        fetch,
+    });
+    if (archived && archived.length > 0) {
+        // There are archived boards, so we redirect to the ws board archive
+        // TODO show the user a notification in case of a redirect to here
+        throw redirect(302, getArchiveUrl(workspaceUuid));
     }
     // TODO maybe throw in a nice notification to the user here that we have
     // not found any workspace board for this workspace
-    throw redirect(302, getNewWorkspaceBoardUrl(uuid));
+    throw redirect(302, getNewWorkspaceBoardUrl(workspaceUuid));
 }
