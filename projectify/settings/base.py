@@ -257,6 +257,7 @@ class Base(Configuration):
         "DEFAULT_PERMISSION_CLASSES": (
             "rest_framework.permissions.IsAuthenticated",
         ),
+        "EXCEPTION_HANDLER": "projectify.exception_handler.exception_handler",
     }
 
     # Where to store media

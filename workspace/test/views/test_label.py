@@ -59,6 +59,33 @@ class TestLabelCreate:
         assert response.status_code == 201, response.data
         assert response.data["name"] == "Bug"
 
+    def test_duplicate_create(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+        workspace: Workspace,
+        # Make sure we have a user
+        workspace_user: WorkspaceUser,
+    ) -> None:
+        """Assert we get a nice 400 on duplicate labels."""
+        # Gone up from 6 to 9 after introducing full_clean
+        payload = {
+            "color": 0,
+            "name": "Bug",
+            "workspace_uuid": str(workspace.uuid),
+        }
+        response = rest_user_client.post(
+            resource_url,
+            data=payload,
+        )
+        assert response.status_code == 201, response.data
+        response = rest_user_client.post(
+            resource_url,
+            data=payload,
+        )
+        assert response.status_code == 400, response.data
+
 
 @pytest.mark.django_db
 class TestLabelUpdateDelete:
