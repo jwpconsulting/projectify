@@ -21,9 +21,11 @@
     import DashboardPlaceholder from "$lib/components/onboarding/DashboardPlaceholder.svelte";
     import Onboarding from "$lib/components/Onboarding.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import type { InputFieldValidation } from "$lib/funabashi/types";
     import { goto } from "$lib/navigation";
     import { updateTask } from "$lib/repository/workspace";
     import { createLabel } from "$lib/repository/workspace/label";
+    import type { AuthViewState } from "$lib/types/ui";
     import { getAssignTaskUrl, getNewTaskUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
@@ -34,18 +36,36 @@
 
     const taskTitle = task.title;
     let labelTitle: string | undefined = undefined;
+    let labelTitleValidation: InputFieldValidation | undefined = undefined;
 
-    $: disabled = !labelTitle;
+    let state: AuthViewState = { kind: "start" };
+
+    $: disabled = !labelTitle || state.kind === "submitting";
 
     async function submit() {
         if (!labelTitle) {
             throw new Error("Expected labelTitle");
         }
-        const label = await createLabel(
+
+        state = { kind: "submitting" };
+        const result = await createLabel(
             workspace,
             { name: labelTitle, color: 0 },
             { fetch },
         );
+        labelTitleValidation = undefined;
+        if (!result.ok) {
+            if (result.error.name) {
+                labelTitleValidation = { ok: false, error: result.error.name };
+            }
+            state = {
+                kind: "error",
+                message: $_("onboarding.new-label.error"),
+            };
+            return;
+        }
+
+        const label = result.data;
         await updateTask(
             task,
             { ...task, labels: [label], assignee: task.assignee },
@@ -78,7 +98,13 @@
             label={$_("onboarding.new-label.input.label")}
             placeholder={$_("onboarding.new-label.input.placeholder")}
             bind:value={labelTitle}
+            validation={labelTitleValidation}
         />
+        {#if state.kind === "error"}
+            <p>
+                {state.message}
+            </p>
+        {/if}
     </svelte:fragment>
 
     <DashboardPlaceholder

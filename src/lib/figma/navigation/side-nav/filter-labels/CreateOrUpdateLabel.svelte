@@ -21,6 +21,7 @@
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import type { InputFieldValidation } from "$lib/funabashi/types";
     import { createLabel, updateLabel } from "$lib/repository/workspace/label";
     import { currentWorkspace } from "$lib/stores/dashboard";
     import type { AuthViewState } from "$lib/types/ui";
@@ -38,7 +39,11 @@
     export let onFinished: () => void;
 
     let chosenColor: LabelColor | undefined = undefined;
+    let chosenColorValidation: InputFieldValidation | undefined = undefined;
     let labelName: string | undefined = undefined;
+    let labelNameValidation: InputFieldValidation | undefined = undefined;
+
+    let editState: AuthViewState = { kind: "start" };
 
     onMount(() => {
         if (state.kind === "create") {
@@ -53,8 +58,6 @@
         labelName = label.name;
     });
 
-    let editState: AuthViewState = { kind: "start" };
-
     // We can only save if
     // 1) both fields are non-empty,
     // 2) we are not submitting already
@@ -63,42 +66,86 @@
         labelName !== undefined &&
         editState.kind != "submitting";
 
-    function cancelCreateOrUpdate() {
-        onFinished();
-    }
-
-    async function createOrUpdate() {
+    async function create() {
         if (!chosenColor) {
             throw new Error("Expected chosenColor");
         }
         if (!labelName) {
             throw new Error("Expected labelName");
         }
+        if (state.kind !== "create") {
+            throw new Error("Expected create state");
+        }
 
         editState = { kind: "submitting" };
+        labelNameValidation = undefined;
+        chosenColorValidation = undefined;
 
         const color = getIndexFromLabelColor(chosenColor);
-        if (state.kind === "update") {
-            await updateLabel(
-                { ...state.label, name: labelName, color },
-                { fetch },
-            );
-        } else {
-            await createLabel(
-                currentWorkspace.unwrap(),
-                { name: labelName, color },
-                { fetch },
-            );
+        const response = await createLabel(
+            currentWorkspace.unwrap(),
+            { name: labelName, color },
+            { fetch },
+        );
+        if (response.ok) {
+            editState = { kind: "start" };
+            onFinished();
+            return;
         }
-        editState = { kind: "start" };
-        onFinished();
+        if (response.error.name !== undefined) {
+            labelNameValidation = { ok: false, error: response.error.name };
+        }
+        if (response.error.color !== undefined) {
+            chosenColorValidation = { ok: false, error: response.error.color };
+        }
+        editState = {
+            kind: "error",
+            message: $_("dashboard.side-nav.filter-labels.errors.create"),
+        };
+    }
+
+    async function update() {
+        if (!chosenColor) {
+            throw new Error("Expected chosenColor");
+        }
+        if (!labelName) {
+            throw new Error("Expected labelName");
+        }
+        if (state.kind !== "update") {
+            throw new Error("Expected update state");
+        }
+
+        editState = { kind: "submitting" };
+        labelNameValidation = undefined;
+        chosenColorValidation = undefined;
+
+        const color = getIndexFromLabelColor(chosenColor);
+        const response = await updateLabel(
+            { ...state.label, name: labelName, color },
+            { fetch },
+        );
+        if (response.ok) {
+            editState = { kind: "start" };
+            onFinished();
+            return;
+        }
+        if (response.error.name !== undefined) {
+            labelNameValidation = { ok: false, error: response.error.name };
+        }
+        if (response.error.color !== undefined) {
+            chosenColorValidation = { ok: false, error: response.error.color };
+        }
+        editState = {
+            kind: "error",
+            message: $_("dashboard.side-nav.filter-labels.errors.update"),
+        };
     }
 </script>
 
 <!-- all this px-4 bizniz is sub-optimal -->
 <form
     class="flex flex-col gap-4 px-4"
-    on:submit|preventDefault={createOrUpdate}
+    on:submit|preventDefault={state.kind === "create" ? create : update}
 >
     <p>
         {#if state.kind === "update"}
@@ -124,10 +171,19 @@
                 : $_("dashboard.side-nav.filter-labels.create-input.label")}
             name="label-name"
             bind:value={labelName}
+            validation={labelNameValidation}
             required
         />
         <LabelRadio bind:chosenColor />
+        {#if chosenColorValidation && !chosenColorValidation.ok}
+            <p>{chosenColorValidation.error}</p>
+        {/if}
     </div>
+    {#if editState.kind === "error"}
+        <p>
+            {editState.message}
+        </p>
+    {/if}
     <div class="flex flex-row gap-4">
         <Button
             style={{ kind: "secondary" }}
@@ -136,7 +192,7 @@
             label={$_("dashboard.side-nav.filter-labels.cancel")}
             action={{
                 kind: "button",
-                action: cancelCreateOrUpdate,
+                action: onFinished,
                 disabled: editState.kind === "submitting",
             }}
         />
