@@ -18,18 +18,25 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 import CreateOrUpdateLabel from "$lib/figma/navigation/side-nav/filter-labels/CreateOrUpdateLabel.svelte";
+import { makeStorybookSelect, mappedLabels } from "$lib/storybook";
+
+const states = makeStorybookSelect({
+    "Create label": { kind: "create" },
+    "Update label": { kind: "update", label: mappedLabels[0] },
+});
 
 const meta: Meta<CreateOrUpdateLabel> = {
     component: CreateOrUpdateLabel,
-    argTypes: {},
-    args: {
-        state: { kind: "create" },
-        chosenColor: undefined,
-        labelName: undefined,
-    },
+    argTypes: { state: states },
 };
 export default meta;
 
 type Story = StoryObj<CreateOrUpdateLabel>;
 
-export const Default: Story = {};
+export const Create: Story = {
+    args: { state: "create-label" },
+};
+
+export const Update: Story = {
+    args: { state: "update-label" },
+};

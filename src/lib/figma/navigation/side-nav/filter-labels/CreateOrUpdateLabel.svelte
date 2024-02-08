@@ -16,26 +16,42 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import { onMount } from "svelte";
     import { _ } from "svelte-i18n";
 
-    import type { FilterLabelMenuState } from "$lib/figma/types";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { createLabel, updateLabel } from "$lib/repository/workspace/label";
     import { currentWorkspace } from "$lib/stores/dashboard";
     import type { AuthViewState } from "$lib/types/ui";
+    import type { Label } from "$lib/types/workspace";
     import {
         getIndexFromLabelColor,
+        getLabelColorFromIndex,
+        labelColors,
         type LabelColor,
     } from "$lib/utils/colors";
 
     import LabelRadio from "./LabelRadio.svelte";
 
-    export let state: FilterLabelMenuState;
+    export let state: { kind: "create" } | { kind: "update"; label: Label };
     export let onFinished: () => void;
 
-    export let chosenColor: LabelColor | undefined = undefined;
-    export let labelName: string | undefined = undefined;
+    let chosenColor: LabelColor | undefined = undefined;
+    let labelName: string | undefined = undefined;
+
+    onMount(() => {
+        if (state.kind === "create") {
+            return;
+        }
+        const { label } = state;
+        const labelColor = getLabelColorFromIndex(label.color);
+        if (!labelColor) {
+            console.warn("No color found for", label);
+        }
+        chosenColor = labelColor ?? labelColors[0];
+        labelName = label.name;
+    });
 
     let editState: AuthViewState = { kind: "start" };
 
@@ -48,11 +64,6 @@
         editState.kind != "submitting";
 
     function cancelCreateOrUpdate() {
-        // Reset form
-        chosenColor = undefined;
-        labelName = undefined;
-        // Go back
-        // state = { kind: "list" };
         onFinished();
     }
 

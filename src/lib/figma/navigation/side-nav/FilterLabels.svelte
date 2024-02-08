@@ -29,11 +29,6 @@
     } from "$lib/stores/dashboard";
     import { selectedLabels } from "$lib/stores/dashboard/labelFilter";
     import type { Label } from "$lib/types/workspace";
-    import {
-        labelColors,
-        type LabelColor,
-        getLabelColorFromIndex,
-    } from "$lib/utils/colors";
 
     import CreateOrUpdateLabel from "./filter-labels/CreateOrUpdateLabel.svelte";
 
@@ -41,23 +36,12 @@
     // TODO or perhaps we can refactor the form to a new component?
     export let state: FilterLabelMenuState = { kind: "list" };
 
-    let chosenColor: LabelColor | undefined = undefined;
-    let labelName: string | undefined = undefined;
-
     function startCreateLabel() {
         state = { kind: "create" };
-        chosenColor = undefined;
-        labelName = undefined;
     }
 
     function startUpdate(label: Label) {
         state = { kind: "update", label };
-        const labelColor = getLabelColorFromIndex(label.color);
-        if (!labelColor) {
-            console.warn("No color found for", label);
-        }
-        chosenColor = labelColor ?? labelColors[0];
-        labelName = label.name;
     }
 
     function onCreateOrUpdateFinish() {
@@ -85,12 +69,7 @@
                 kind={{ kind: "button", action: startCreateLabel }}
             />
         {:else}
-            <CreateOrUpdateLabel
-                onFinished={onCreateOrUpdateFinish}
-                {state}
-                bind:chosenColor
-                bind:labelName
-            />
+            <CreateOrUpdateLabel onFinished={onCreateOrUpdateFinish} {state} />
         {/if}
     </div>
 {/if}
