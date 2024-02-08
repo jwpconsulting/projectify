@@ -59,6 +59,10 @@
         chosenColor = labelColor ?? labelColors[0];
         labelName = label.name;
     }
+
+    function onCreateOrUpdateFinish() {
+        state = { kind: "list" };
+    }
 </script>
 
 <SideNavMenuCategory
@@ -81,7 +85,12 @@
                 kind={{ kind: "button", action: startCreateLabel }}
             />
         {:else}
-            <CreateOrUpdateLabel bind:state bind:chosenColor bind:labelName />
+            <CreateOrUpdateLabel
+                onFinished={onCreateOrUpdateFinish}
+                {state}
+                bind:chosenColor
+                bind:labelName
+            />
         {/if}
     </div>
 {/if}

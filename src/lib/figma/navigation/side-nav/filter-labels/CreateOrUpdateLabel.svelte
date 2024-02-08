@@ -32,6 +32,7 @@
     import LabelRadio from "./LabelRadio.svelte";
 
     export let state: FilterLabelMenuState;
+    export let onFinished: () => void;
 
     export let chosenColor: LabelColor | undefined = undefined;
     export let labelName: string | undefined = undefined;
@@ -51,7 +52,8 @@
         chosenColor = undefined;
         labelName = undefined;
         // Go back
-        state = { kind: "list" };
+        // state = { kind: "list" };
+        onFinished();
     }
 
     async function createOrUpdate() {
@@ -78,7 +80,7 @@
             );
         }
         editState = { kind: "start" };
-        state = { kind: "list" };
+        onFinished();
     }
 </script>
 
