@@ -23,6 +23,7 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { createLabel, updateLabel } from "$lib/repository/workspace/label";
     import { currentWorkspace } from "$lib/stores/dashboard";
+    import type { AuthViewState } from "$lib/types/ui";
     import {
         getIndexFromLabelColor,
         type LabelColor,
@@ -35,7 +36,15 @@
     export let chosenColor: LabelColor | undefined = undefined;
     export let labelName: string | undefined = undefined;
 
-    $: canSave = chosenColor !== undefined && labelName !== undefined;
+    let editState: AuthViewState = { kind: "start" };
+
+    // We can only save if
+    // 1) both fields are non-empty,
+    // 2) we are not submitting already
+    $: canSave =
+        chosenColor !== undefined &&
+        labelName !== undefined &&
+        editState.kind != "submitting";
 
     function cancelCreateOrUpdate() {
         // Reset form
@@ -52,6 +61,9 @@
         if (!labelName) {
             throw new Error("Expected labelName");
         }
+
+        editState = { kind: "submitting" };
+
         const color = getIndexFromLabelColor(chosenColor);
         if (state.kind === "update") {
             await updateLabel(
@@ -65,6 +77,7 @@
                 { fetch },
             );
         }
+        editState = { kind: "start" };
         state = { kind: "list" };
     }
 </script>
@@ -111,6 +124,7 @@
             action={{
                 kind: "button",
                 action: cancelCreateOrUpdate,
+                disabled: editState.kind === "submitting",
             }}
         />
         <Button
