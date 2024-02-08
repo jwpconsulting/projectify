@@ -98,7 +98,11 @@
         {/if}
     </a>
 {:else if action.kind === "button"}
-    <button on:click|preventDefault={action.action} {...formProps}>
+    <button
+        type="button"
+        on:click|preventDefault={action.action}
+        {...formProps}
+    >
         {#if style.kind === "tertiary" && style.icon && style.icon.position === "left"}
             <Icon
                 src={style.icon.icon}
