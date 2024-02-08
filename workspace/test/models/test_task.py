@@ -158,13 +158,18 @@ class TestTask:
         a, b, c, d, e = labels
         task.set_labels([a, b])
         assert task.labels.count() == 2
-        assert list(task.labels.values_list("id", flat=True)) == [a.id, b.id]
+        # The order is inverted since we are not actually sorting by the
+        # TaskLabel creation but the default ordering of the label itself
+        # Furthermore, we work independently of the service layer, so it is
+        # questionable how useful this code is to the application
+        # TODO refactor
+        assert list(task.labels.values_list("id", flat=True)) == [b.id, a.id]
         task.set_labels([c, d, e])
         assert task.labels.count() == 3
         assert list(task.labels.values_list("id", flat=True)) == [
-            c.id,
-            d.id,
             e.id,
+            d.id,
+            c.id,
         ]
         task.set_labels([])
         assert task.labels.count() == 0

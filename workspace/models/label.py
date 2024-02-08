@@ -86,3 +86,4 @@ class Label(BaseModel):
 
         # TODO remove this restriction, just let users do what they want to
         unique_together = ("workspace", "name")
+        ordering = ("-modified",)
