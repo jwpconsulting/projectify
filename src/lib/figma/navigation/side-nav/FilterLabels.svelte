@@ -23,24 +23,19 @@
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import FilterLabelMenu from "$lib/figma/composites/FilterLabelMenu.svelte";
     import type { FilterLabelMenuState } from "$lib/figma/types";
-    import Button from "$lib/funabashi/buttons/Button.svelte";
-    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
-    import { createLabel, updateLabel } from "$lib/repository/workspace/label";
     import {
         labelExpandOpen,
         toggleLabelDropdownClosedNavOpen,
-        currentWorkspace,
     } from "$lib/stores/dashboard";
     import { selectedLabels } from "$lib/stores/dashboard/labelFilter";
     import type { Label } from "$lib/types/workspace";
     import {
         labelColors,
         type LabelColor,
-        getIndexFromLabelColor,
         getLabelColorFromIndex,
     } from "$lib/utils/colors";
 
-    import LabelRadio from "./filter-labels/LabelRadio.svelte";
+    import CreateOrUpdateLabel from "./filter-labels/CreateOrUpdateLabel.svelte";
 
     // Still exporting this one for better testability in storybook
     // TODO or perhaps we can refactor the form to a new component?
@@ -49,43 +44,10 @@
     let chosenColor: LabelColor | undefined = undefined;
     let labelName: string | undefined = undefined;
 
-    $: canSave = chosenColor !== undefined && labelName !== undefined;
-
-    async function createOrUpdate() {
-        if (!chosenColor) {
-            throw new Error("Expected chosenColor");
-        }
-        if (!labelName) {
-            throw new Error("Expected labelName");
-        }
-        const color = getIndexFromLabelColor(chosenColor);
-        if (state.kind === "update") {
-            await updateLabel(
-                { ...state.label, name: labelName, color },
-                { fetch },
-            );
-        } else {
-            await createLabel(
-                currentWorkspace.unwrap(),
-                { name: labelName, color },
-                { fetch },
-            );
-        }
-        state = { kind: "list" };
-    }
-
     function startCreateLabel() {
         state = { kind: "create" };
         chosenColor = undefined;
         labelName = undefined;
-    }
-
-    function cancelCreateOrUpdate() {
-        // Reset form
-        chosenColor = undefined;
-        labelName = undefined;
-        // Go back
-        state = { kind: "list" };
     }
 
     function startUpdate(label: Label) {
@@ -97,8 +59,6 @@
         chosenColor = labelColor ?? labelColors[0];
         labelName = label.name;
     }
-
-    // TODO refactor creation thing into new thing
 </script>
 
 <SideNavMenuCategory
@@ -121,63 +81,7 @@
                 kind={{ kind: "button", action: startCreateLabel }}
             />
         {:else}
-            <!-- all this px-4 bizniz is sub-optimal -->
-            <form
-                class="flex flex-col gap-4 px-4"
-                on:submit|preventDefault={createOrUpdate}
-            >
-                <p>
-                    {#if state.kind === "update"}
-                        {$_("dashboard.side-nav.filter-labels.state.update", {
-                            values: { label: state.label.name },
-                        })}
-                    {:else}
-                        {$_("dashboard.side-nav.filter-labels.state.create")}
-                    {/if}
-                </p>
-                <div class="flex flex-col gap-4">
-                    <InputField
-                        style={{ inputType: "text" }}
-                        placeholder={state.kind === "update"
-                            ? $_(
-                                  "dashboard.side-nav.filter-labels.update-input.placeholder",
-                              )
-                            : $_(
-                                  "dashboard.side-nav.filter-labels.create-input.placeholder",
-                              )}
-                        label={state.kind === "update"
-                            ? $_(
-                                  "dashboard.side-nav.filter-labels.update-input.label",
-                              )
-                            : $_(
-                                  "dashboard.side-nav.filter-labels.create-input.label",
-                              )}
-                        name="name"
-                        bind:value={labelName}
-                        required
-                    />
-                    <LabelRadio bind:chosenColor />
-                </div>
-                <div class="flex flex-row gap-4">
-                    <Button
-                        style={{ kind: "secondary" }}
-                        color="blue"
-                        size="medium"
-                        label={$_("dashboard.side-nav.filter-labels.cancel")}
-                        action={{
-                            kind: "button",
-                            action: cancelCreateOrUpdate,
-                        }}
-                    />
-                    <Button
-                        style={{ kind: "primary" }}
-                        color="blue"
-                        size="medium"
-                        label={$_("dashboard.side-nav.filter-labels.save")}
-                        action={{ kind: "submit", disabled: !canSave }}
-                    />
-                </div>
-            </form>
+            <CreateOrUpdateLabel bind:state bind:chosenColor bind:labelName />
         {/if}
     </div>
 {/if}
