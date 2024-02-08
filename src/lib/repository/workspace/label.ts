@@ -22,9 +22,9 @@
 import type { RepositoryContext } from "$lib/types/repository";
 import type { Label, Workspace } from "$lib/types/workspace";
 
+import type { ApiResponse } from "../types";
 import {
     deleteWithCredentialsJson,
-    failOrOk,
     postWithCredentialsJson,
     putWithCredentialsJson,
 } from "../util";
@@ -34,17 +34,17 @@ export async function createLabel(
     workspace: Workspace,
     { name, color }: Pick<Label, "name" | "color">,
     repositoryContext: RepositoryContext,
-): Promise<Label> {
-    const response = await postWithCredentialsJson<Label>(
+): Promise<
+    ApiResponse<
+        Label,
+        { workspace_uuid?: string; name?: string; color?: string }
+    >
+> {
+    return await postWithCredentialsJson(
         `/workspace/label/`,
         { workspace_uuid: workspace.uuid, name, color },
         repositoryContext,
     );
-    if (response.kind !== "ok") {
-        console.error("TODO handle", response);
-        throw new Error("Error while creating label");
-    }
-    return response.data;
 }
 
 // Read
@@ -53,13 +53,13 @@ export async function createLabel(
 export async function updateLabel(
     label: Label,
     repositoryContext: RepositoryContext,
-): Promise<void> {
-    return failOrOk(
-        await putWithCredentialsJson(
-            `/workspace/label/${label.uuid}`,
-            label,
-            repositoryContext,
-        ),
+): Promise<
+    ApiResponse<unknown, { uuid?: string; name?: string; color?: string }>
+> {
+    return await putWithCredentialsJson(
+        `/workspace/label/${label.uuid}`,
+        label,
+        repositoryContext,
     );
 }
 

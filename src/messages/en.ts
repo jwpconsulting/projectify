@@ -279,6 +279,10 @@ const messages: MessageDirectory = {
                     update: "Updating label {label}",
                     create: "New label",
                 },
+                "errors": {
+                    create: "The label could not be created. Please make sure you entered a valid name and color and try again.",
+                    update: "The label could not be updated. Please make sure you entered a valid name and color and try again.",
+                },
                 "save": "Save",
                 "cancel": "Cancel",
             },
@@ -392,6 +396,8 @@ const messages: MessageDirectory = {
                 placeholder: "e.g., Bug",
                 label: "Label name",
             },
+            "error":
+                "Please check the label name you have specified one more time and try again.",
             "default-name": "Your label",
         },
         "assign-task": {
