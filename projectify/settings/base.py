@@ -88,7 +88,6 @@ class Base(Configuration):
     INSTALLED_APPS_DJANGO = (
         "channels",
         "daphne",
-        "django.contrib.admin",
         "django.contrib.auth",
         "django.contrib.contenttypes",
         "django.contrib.sessions",
@@ -113,6 +112,8 @@ class Base(Configuration):
 
     INSTALLED_APPS_FIRST_PARTY = (
         # TODO check if this can be alphabetized
+        # Replaces 'django.contrib.admin'
+        "admin.apps.ProjectifyAdminConfig",
         "projectify",
         "user",
         "workspace",
