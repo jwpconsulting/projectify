@@ -22,9 +22,9 @@ import {
     currentWorkspaceBoard,
 } from "$lib/stores/dashboard";
 import type { Workspace, WorkspaceBoardDetail } from "$lib/types/workspace";
+import { dashboardUrl } from "$lib/urls/dashboard";
 
 import type { LayoutLoadEvent } from "./$types";
-import { dashboardUrl } from "$lib/urls/dashboard";
 
 interface Data {
     workspaceBoard: WorkspaceBoardDetail;

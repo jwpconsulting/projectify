@@ -23,12 +23,14 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SelectWorkspaceBoard from "$lib/figma/buttons/SelectWorkspaceBoard.svelte";
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import {
         boardExpandOpen,
         toggleBoardExpandOpen,
     } from "$lib/stores/dashboard";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type { Workspace } from "$lib/types/workspace";
+    import { getArchiveUrl } from "$lib/urls";
 
     export let workspace: Workspace;
 
@@ -52,6 +54,21 @@
     <div class="flex shrink flex-col overflow-y-auto">
         {#if workspace.workspace_boards === undefined}
             <Loading />
+        {:else if workspace.workspace_boards.length === 0}
+            <div class="flex flex-col gap-2 p-4">
+                <p>
+                    {$_("dashboard.side-nav.workspace-boards.empty.message")}
+                </p>
+                <p>
+                    <Anchor
+                        label={$_(
+                            "dashboard.side-nav.workspace-boards.empty.archive",
+                        )}
+                        href={getArchiveUrl(workspace.uuid)}
+                        size="normal"
+                    />
+                </p>
+            </div>
         {:else}
             {#each workspace.workspace_boards as workspaceBoard (workspaceBoard.uuid)}
                 <SelectWorkspaceBoard {workspace} {workspaceBoard} />
