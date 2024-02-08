@@ -65,6 +65,9 @@ class Base(Configuration):
     See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
     """
 
+    # Used in admin site to show which environment we are using
+    SITE_TITLE: Optional[str] = None
+
     # SECURITY WARNING: don't run with debug turned on in production!
     ALLOWED_HOSTS: Iterable[str] = []
 
@@ -88,7 +91,6 @@ class Base(Configuration):
     INSTALLED_APPS_DJANGO = (
         "channels",
         "daphne",
-        "django.contrib.admin",
         "django.contrib.auth",
         "django.contrib.contenttypes",
         "django.contrib.sessions",
@@ -113,6 +115,8 @@ class Base(Configuration):
 
     INSTALLED_APPS_FIRST_PARTY = (
         # TODO check if this can be alphabetized
+        # Replaces 'django.contrib.admin'
+        "admin.apps.ProjectifyAdminConfig",
         "projectify",
         "user",
         "workspace",
