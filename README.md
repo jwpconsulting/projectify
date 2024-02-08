@@ -105,6 +105,8 @@ env PATH="/opt/local/lib/postgresql15/bin:$PATH" poetry install
 CREATE USER $USER WITH CREATEDB;
 ```
 
+Make sure to run `createdb` if you'd like the bare `psql` command to work.
+
 ## Local password-less auth
 
 **Note**: This was written with PostgreSQL 13 in mind.
@@ -127,6 +129,31 @@ CREATE USER $USER WITH CREATEDB;
  # replication privilege.
  local   replication     all                                     peer
 ```
+
+## PostgreSQL started, but can't connect
+
+Systemctl showed PostgreSQL 15 started, but `psql` couln't connect, not even
+as `sudo -u postgres psql`:
+
+```
+psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory
+        Is the server running locally and accepting connections on that socket?
+```
+
+The solution: `/etc/postgresql/15/main/postgresql.conf` had this line that I
+had to fix from
+
+```
+port = 5433                             # (change requires restart)
+```
+
+to
+
+```
+port = 5432                             # (change requires restart)
+```
+
+Remember to restart.
 
 ## Restarting PostgreSQL
 
