@@ -1,16 +1,18 @@
 from collections.abc import Sequence
-from typing import Type
+from typing import Type, Union
 
 from django.views import (
     View,
 )
 
 from rest_framework.permissions import BasePermission
+from rest_framework.request import Request
+from rest_framework.response import Response
 
-from . import (
-    request,
-)
+def exception_handler(
+    exc: Exception, context: object
+) -> Union[Response, None]: ...
 
 class APIView(View):
-    request: request.Request
+    request: Request
     permission_classes: Sequence[Type[BasePermission]]

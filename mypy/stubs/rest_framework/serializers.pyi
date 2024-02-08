@@ -10,6 +10,9 @@ from typing import (
     Union,
 )
 
+from django.core.exceptions import (
+    ValidationError as DjangoValidationError,
+)
 from django.db.models import (
     Model,
 )
@@ -67,6 +70,10 @@ class BaseSerializer:
     def create(self, validated_data: ValidatedData) -> Any: ...
     def save(self, **kwargs: Any) -> Any: ...
     def is_valid(self, *_: Any, raise_exception: bool = False) -> bool: ...
+
+def as_serializer_error(
+    exc: Union[ValidationError, DjangoValidationError],
+) -> Mapping[str, Any]: ...
 
 T = TypeVar("T")
 M = TypeVar("M", bound=Model)
