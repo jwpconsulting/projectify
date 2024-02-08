@@ -48,6 +48,7 @@
         await openContextMenu(
             {
                 kind: "workspaceBoard",
+                workspace,
                 workspaceBoard,
             },
             buttonRef,

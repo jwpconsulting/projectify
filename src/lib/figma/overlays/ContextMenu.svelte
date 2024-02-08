@@ -38,7 +38,10 @@
 {:else if target.kind === "sideNav"}
     <SideNavContextMenu workspace={target.workspace} />
 {:else if target.kind === "workspaceBoard"}
-    <WorkspaceBoard workspaceBoard={target.workspaceBoard} />
+    <WorkspaceBoard
+        workspace={target.workspace}
+        workspaceBoard={target.workspaceBoard}
+    />
 {:else if target.kind === "workspaceBoardSection"}
     <WorkspaceBoardSection
         workspaceBoard={target.workspaceBoard}

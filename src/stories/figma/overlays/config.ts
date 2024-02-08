@@ -44,6 +44,7 @@ export const contextMenus: Record<string, ContextMenuType> = {
     },
     "Workspace board": {
         kind: "workspaceBoard" as const,
+        workspace,
         workspaceBoard,
     },
     "Workspace board section": {
