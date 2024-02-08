@@ -46,7 +46,8 @@ class TestLabelCreate:
         workspace_user: WorkspaceUser,
     ) -> None:
         """Test as an authenticated user."""
-        with django_assert_num_queries(6):
+        # Gone up from 6 to 9 after introducing full_clean
+        with django_assert_num_queries(9):
             response = rest_user_client.post(
                 resource_url,
                 data={
@@ -79,7 +80,8 @@ class TestLabelUpdateDelete:
         label: Label,
     ) -> None:
         """Test as an authenticated user."""
-        with django_assert_num_queries(7):
+        # Gone up from 7 to 10 after introducing full_clean
+        with django_assert_num_queries(10):
             response = rest_user_client.put(
                 resource_url,
                 data={

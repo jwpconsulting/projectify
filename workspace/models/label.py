@@ -18,6 +18,7 @@
 import uuid
 from typing import (
     TYPE_CHECKING,
+    Any,
     ClassVar,
     Self,
     cast,
@@ -76,6 +77,11 @@ class Label(BaseModel):
 
     if TYPE_CHECKING:
         id: int
+
+    def save(self, *args: Any, **kwargs: Any) -> None:
+        """Override save and call full_clean."""
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         """Return name."""

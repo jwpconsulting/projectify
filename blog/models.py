@@ -17,8 +17,7 @@
 """Blog models."""
 from typing import (
     TYPE_CHECKING,
-    Iterable,
-    Optional,
+    Any,
 )
 
 from django.conf import (
@@ -52,22 +51,11 @@ class Post(BaseModel):
     teaser = models.TextField()
     published = models.DateTimeField(blank=True, null=True)
 
-    def save(
-        self,
-        force_insert: bool = False,
-        force_update: bool = False,
-        using: Optional[str] = None,
-        update_fields: Optional[Iterable[str]] = None,
-    ) -> None:
+    def save(self, *args: Any, **kwargs: Any) -> None:
         """Create slug if no slug."""
         if not self.slug:
             self.slug = slugify(self.title)
-        return super().save(
-            force_insert=force_insert,
-            force_update=force_update,
-            using=using,
-            update_fields=update_fields,
-        )
+        return super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         """Return the title when accessing __str__."""
