@@ -44,7 +44,7 @@ export async function load({
 }: PageLoadEvent): Promise<returnType> {
     const task = await getTask(taskUuid, { fetch });
     if (!task) {
-        throw error(404);
+        throw error(404, `No task could found for UUID ${taskUuid}.`);
     }
     const { workspace_board_section: workspaceBoardSection } = task;
     const workspaceBoardUuid =
