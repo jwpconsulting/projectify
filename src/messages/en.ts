@@ -420,6 +420,13 @@ const messages: MessageDirectory = {
                 "go-to-billing-settings": "Go to workspace billing settings",
             },
         },
+        "error": {
+            "title": "Onboarding failed",
+            "message":
+                "The last onboarding step did not finish correctly. Please try the onboarding process more time by clicking the button below.",
+            "error-detail": "Error message:",
+            "try-again": "Continue onboarding",
+        },
     },
     "auth": {
         "sign-up": {
