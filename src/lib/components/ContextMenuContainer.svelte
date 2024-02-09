@@ -30,7 +30,7 @@
 
     let contextMenu: HTMLElement | undefined = undefined;
 
-    let removeResizeObserver: (() => void) | undefined = undefined;
+    let removeObservers: (() => void) | undefined = undefined;
     let removeFocusTrap: (() => void) | undefined = undefined;
     let escapeUnsubscriber: (() => void) | undefined = undefined;
     let removeScrollTrap: (() => void) | undefined = undefined;
@@ -46,12 +46,12 @@
                 if (!contextMenu) {
                     throw new Error("Expected contextMenu");
                 }
-                if (removeResizeObserver) {
+                if (removeObservers) {
                     throw new Error("There already was a resizeObserver");
                 }
                 removeFocusTrap = keepFocusInside(contextMenu);
                 const { anchor } = $contextMenuState;
-                addObserver(contextMenu, anchor);
+                addObservers(contextMenu, anchor);
                 escapeUnsubscriber = handleKey("Escape", closeContextMenu);
                 removeScrollTrap = blockScrolling();
                 removeResizeListener = onResize(
@@ -73,9 +73,9 @@
             removeFocusTrap = undefined;
         }
         // Clear observer
-        if (removeResizeObserver) {
-            removeResizeObserver();
-            removeResizeObserver = undefined;
+        if (removeObservers) {
+            removeObservers();
+            removeObservers = undefined;
         }
         // Think about whether this one is necessary
         if (escapeUnsubscriber) {
@@ -92,15 +92,15 @@
         }
     }
 
-    function addObserver(contextMenu: HTMLElement, anchor: HTMLElement) {
+    function addObservers(contextMenu: HTMLElement, anchor: HTMLElement) {
         const resizeObserver = new ResizeObserver(() =>
             repositionContextMenu(anchor),
         );
         resizeObserver.observe(contextMenu);
-        if (removeResizeObserver) {
-            console.warn("A removeResizeObserver callback was already set");
+        if (removeObservers) {
+            console.warn("A removeObservers callback was already set");
         }
-        removeResizeObserver = () => resizeObserver.disconnect();
+        removeObservers = () => resizeObserver.disconnect();
     }
 
     function repositionContextMenu(anchor: HTMLElement) {
