@@ -29,8 +29,8 @@
     import { blockScrolling } from "$lib/utils/scroll";
 
     let contextMenu: HTMLElement | undefined = undefined;
-    let resizeObserver: ResizeObserver | undefined = undefined;
 
+    let removeResizeObserver: (() => void) | undefined = undefined;
     let removeFocusTrap: (() => void) | undefined = undefined;
     let escapeUnsubscriber: (() => void) | undefined = undefined;
     let removeScrollTrap: (() => void) | undefined = undefined;
@@ -46,7 +46,7 @@
                 if (!contextMenu) {
                     throw new Error("Expected contextMenu");
                 }
-                if (resizeObserver) {
+                if (removeResizeObserver) {
                     throw new Error("There already was a resizeObserver");
                 }
                 removeFocusTrap = keepFocusInside(contextMenu);
@@ -73,9 +73,9 @@
             removeFocusTrap = undefined;
         }
         // Clear observer
-        if (resizeObserver) {
-            resizeObserver.disconnect();
-            resizeObserver = undefined;
+        if (removeResizeObserver) {
+            removeResizeObserver();
+            removeResizeObserver = undefined;
         }
         // Think about whether this one is necessary
         if (escapeUnsubscriber) {
@@ -93,10 +93,14 @@
     }
 
     function addObserver(contextMenu: HTMLElement, anchor: HTMLElement) {
-        resizeObserver = new ResizeObserver(() =>
+        const resizeObserver = new ResizeObserver(() =>
             repositionContextMenu(anchor),
         );
         resizeObserver.observe(contextMenu);
+        if (removeResizeObserver) {
+            console.warn("A removeResizeObserver callback was already set");
+        }
+        removeResizeObserver = () => resizeObserver.disconnect();
     }
 
     function repositionContextMenu(anchor: HTMLElement) {
