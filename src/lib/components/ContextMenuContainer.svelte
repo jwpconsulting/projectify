@@ -29,8 +29,8 @@
     import { blockScrolling } from "$lib/utils/scroll";
 
     let contextMenu: HTMLElement | undefined = undefined;
-    let resizeObserver: ResizeObserver | undefined = undefined;
 
+    let removeObservers: (() => void) | undefined = undefined;
     let removeFocusTrap: (() => void) | undefined = undefined;
     let escapeUnsubscriber: (() => void) | undefined = undefined;
     let removeScrollTrap: (() => void) | undefined = undefined;
@@ -46,12 +46,12 @@
                 if (!contextMenu) {
                     throw new Error("Expected contextMenu");
                 }
-                if (resizeObserver) {
+                if (removeObservers) {
                     throw new Error("There already was a resizeObserver");
                 }
                 removeFocusTrap = keepFocusInside(contextMenu);
                 const { anchor } = $contextMenuState;
-                addObserver(contextMenu, anchor);
+                addObservers(contextMenu, anchor);
                 escapeUnsubscriber = handleKey("Escape", closeContextMenu);
                 removeScrollTrap = blockScrolling();
                 removeResizeListener = onResize(
@@ -72,8 +72,11 @@
             removeFocusTrap();
             removeFocusTrap = undefined;
         }
-        // One for good measure
-        clearObserver();
+        // Clear observer
+        if (removeObservers) {
+            removeObservers();
+            removeObservers = undefined;
+        }
         // Think about whether this one is necessary
         if (escapeUnsubscriber) {
             escapeUnsubscriber();
@@ -81,33 +84,48 @@
         }
         if (removeScrollTrap) {
             removeScrollTrap();
+            removeScrollTrap = undefined;
         }
         if (removeResizeListener) {
             removeResizeListener();
+            removeResizeListener = undefined;
         }
     }
 
-    function addObserver(contextMenu: HTMLElement, anchor: HTMLElement) {
-        resizeObserver = new ResizeObserver(() =>
+    function addObservers(contextMenu: HTMLElement, anchor: HTMLElement) {
+        // Observe changes made to context menu size
+        const resizeObserver = new ResizeObserver(() =>
             repositionContextMenu(anchor),
         );
         resizeObserver.observe(contextMenu);
-    }
+        // Observe changes made to context menu anchor
+        const mutationObserver = new MutationObserver(() =>
+            repositionContextMenu(anchor),
+        );
+        const mutationObserverConfig: MutationObserverInit = {
+            childList: true,
+        };
+        mutationObserver.observe(anchor, mutationObserverConfig);
 
-    /*
-     * disconnect resizeObserver, if it exists
-     */
-    function clearObserver() {
-        if (resizeObserver === undefined) {
-            return;
+        if (removeObservers) {
+            console.warn("A removeObservers callback was already set");
         }
-        resizeObserver.disconnect();
-        resizeObserver = undefined;
+        removeObservers = () => {
+            resizeObserver.disconnect();
+            mutationObserver.disconnect();
+        };
     }
 
     function repositionContextMenu(anchor: HTMLElement) {
         if (!contextMenu) {
             throw new Error("Expected contextMenu");
+        }
+        if (anchor.offsetParent === null) {
+            console.debug(
+                "Context menu anchor not rendered, closing context menu.",
+            );
+            closeContextMenu();
+            return;
         }
         // Width, height of context menu
         const {
@@ -127,15 +145,6 @@
             height: anchorHeight,
         } = anchor.getBoundingClientRect();
         console.debug({ anchor, anchorLeft, anchorTop, anchorHeight });
-        if (anchorHeight === 0) {
-            console.debug(
-                "Context menu anchor",
-                anchor,
-                "is very likely hidden",
-            );
-            closeContextMenu();
-            return;
-        }
         // Width, height of viewport
         const { innerWidth: viewPortWidth, innerHeight: viewPortHeight } =
             window;

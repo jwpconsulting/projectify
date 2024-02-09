@@ -30,6 +30,9 @@ type HttpStore<T> = Readable<T | undefined> & {
     load: (context: RepositoryContext) => Promise<T | undefined>;
 };
 
+/*
+ * Similar to createWsStore, but has to manually refetch
+ */
 function createHttpStore<T>(
     getter: (context: RepositoryContext) => Promise<T | undefined>,
 ): HttpStore<T> {
