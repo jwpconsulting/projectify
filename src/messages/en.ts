@@ -232,10 +232,10 @@ const messages: MessageDirectory = {
             "what-to-do": {
                 message:
                     "Unfortunately this means we are unable to load this page properly. To help resolve this:",
-                options: [
-                    "Visit our troubleshooting section](XXX) for common solutions.",
-                    "Contact [our support here](XXX) for help.",
-                ],
+                options: {
+                    "help": "Visit the help page for common solutions",
+                    "contact-us": "Contact us",
+                },
             },
         },
         "side-nav": {
