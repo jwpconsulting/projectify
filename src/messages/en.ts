@@ -232,10 +232,10 @@ const messages: MessageDirectory = {
             "what-to-do": {
                 message:
                     "Unfortunately this means we are unable to load this page properly. To help resolve this:",
-                options: [
-                    "Visit our troubleshooting section](XXX) for common solutions.",
-                    "Contact [our support here](XXX) for help.",
-                ],
+                options: {
+                    "help": "Visit the help page for common solutions",
+                    "contact-us": "Contact us",
+                },
             },
         },
         "side-nav": {
@@ -419,6 +419,13 @@ const messages: MessageDirectory = {
                 "billing-help": "Learn more about workspace billing settings",
                 "go-to-billing-settings": "Go to workspace billing settings",
             },
+        },
+        "error": {
+            "title": "Onboarding failed",
+            "message":
+                "The last onboarding step did not finish correctly. Please try the onboarding process more time by clicking the button below.",
+            "error-detail": "Error message:",
+            "try-again": "Continue onboarding",
         },
     },
     "auth": {

@@ -15,14 +15,13 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { redirect } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
 
 import {
     clearSelectedWorkspaceUuidIfMatch,
     currentWorkspace,
 } from "$lib/stores/dashboard";
 import type { WorkspaceDetail } from "$lib/types/workspace";
-import { dashboardUrl } from "$lib/urls/dashboard";
 
 import type { LayoutLoadEvent } from "./$types";
 
@@ -39,8 +38,7 @@ export async function load({
     });
     if (!workspace) {
         clearSelectedWorkspaceUuidIfMatch(workspaceUuid);
-        // TODO notify the user if we couldn't find a workspace uuid
-        throw redirect(302, dashboardUrl);
+        throw error(404, `No workspace found for UUID '${workspaceUuid}'`);
     }
     return { workspace };
 }

@@ -39,14 +39,21 @@ export async function load({
         fetch,
     });
     if (!workspaceBoard) {
-        throw error(404);
+        throw error(
+            404,
+            `No workspace board could be found for UUID ${workspaceBoardUuid}.`,
+        );
     }
     const { uuid: workspaceUuid } = workspaceBoard.workspace;
     const workspace = await getWorkspace(workspaceUuid, {
         fetch,
     });
     if (!workspace) {
-        throw error(404);
+        // If this happens something is very wrong
+        throw error(
+            500,
+            `No workspace with UUID ${workspaceUuid} could be found for workspace board UUID ${workspaceBoardUuid}.`,
+        );
     }
     const workspaceBoardSection =
         workspaceBoard.workspace_board_sections.at(0);

@@ -32,7 +32,10 @@ export async function load({
 }> {
     const workspace = await getWorkspace(workspaceUuid, { fetch });
     if (!workspace) {
-        throw error(404);
+        throw error(
+            404,
+            `No workspace could be found for UUID '${workspaceUuid}'`,
+        );
     }
     const workspaceBoardUuid = workspace.workspace_boards.at(0)?.uuid;
     const workspaceBoard = workspaceBoardUuid
