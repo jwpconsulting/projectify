@@ -72,8 +72,11 @@
             removeFocusTrap();
             removeFocusTrap = undefined;
         }
-        // One for good measure
-        clearObserver();
+        // Clear observer
+        if (resizeObserver) {
+            resizeObserver.disconnect();
+            resizeObserver = undefined;
+        }
         // Think about whether this one is necessary
         if (escapeUnsubscriber) {
             escapeUnsubscriber();
@@ -81,9 +84,11 @@
         }
         if (removeScrollTrap) {
             removeScrollTrap();
+            removeScrollTrap = undefined;
         }
         if (removeResizeListener) {
             removeResizeListener();
+            removeResizeListener = undefined;
         }
     }
 
@@ -92,17 +97,6 @@
             repositionContextMenu(anchor),
         );
         resizeObserver.observe(contextMenu);
-    }
-
-    /*
-     * disconnect resizeObserver, if it exists
-     */
-    function clearObserver() {
-        if (resizeObserver === undefined) {
-            return;
-        }
-        resizeObserver.disconnect();
-        resizeObserver = undefined;
     }
 
     function repositionContextMenu(anchor: HTMLElement) {
