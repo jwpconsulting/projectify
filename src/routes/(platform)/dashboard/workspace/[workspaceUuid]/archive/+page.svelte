@@ -59,7 +59,7 @@
         <div class="flex flex-col rounded-lg bg-foreground p-4 shadow-card">
             {#each archivedWorkspaceBoards as workspaceBoard}
                 <div class="flex flex-col gap-2 p-2">
-                    <p class="text-truncate line-clamp-1 font-bold">
+                    <p class="font-bold">
                         {workspaceBoard.title}
                     </p>
                     <div class="flex flex-row items-center justify-between">
