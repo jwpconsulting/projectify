@@ -93,19 +93,39 @@
     }
 
     function addObservers(contextMenu: HTMLElement, anchor: HTMLElement) {
+        // Observe changes made to context menu size
         const resizeObserver = new ResizeObserver(() =>
             repositionContextMenu(anchor),
         );
         resizeObserver.observe(contextMenu);
+        // Observe changes made to context menu anchor
+        const mutationObserver = new MutationObserver(() =>
+            repositionContextMenu(anchor),
+        );
+        const mutationObserverConfig: MutationObserverInit = {
+            childList: true,
+        };
+        mutationObserver.observe(anchor, mutationObserverConfig);
+
         if (removeObservers) {
             console.warn("A removeObservers callback was already set");
         }
-        removeObservers = () => resizeObserver.disconnect();
+        removeObservers = () => {
+            resizeObserver.disconnect();
+            mutationObserver.disconnect();
+        };
     }
 
     function repositionContextMenu(anchor: HTMLElement) {
         if (!contextMenu) {
             throw new Error("Expected contextMenu");
+        }
+        if (anchor.offsetParent === null) {
+            console.debug(
+                "Context menu anchor not rendered, closing context menu.",
+            );
+            closeContextMenu();
+            return;
         }
         // Width, height of context menu
         const {
@@ -125,15 +145,6 @@
             height: anchorHeight,
         } = anchor.getBoundingClientRect();
         console.debug({ anchor, anchorLeft, anchorTop, anchorHeight });
-        if (anchorHeight === 0) {
-            console.debug(
-                "Context menu anchor",
-                anchor,
-                "is very likely hidden",
-            );
-            closeContextMenu();
-            return;
-        }
         // Width, height of viewport
         const { innerWidth: viewPortWidth, innerHeight: viewPortHeight } =
             window;
