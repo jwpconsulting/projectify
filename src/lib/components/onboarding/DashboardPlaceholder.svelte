@@ -17,6 +17,7 @@
 -->
 <script lang="ts">
     import { onMount } from "svelte";
+    import { _ } from "svelte-i18n";
 
     import Full from "$lib/figma/navigation/side-nav/Full.svelte";
     import {
@@ -47,7 +48,7 @@
     };
     const workspaceBoardFallback: WorkspaceBoardDetail = {
         uuid: "does-not-exist",
-        title: "",
+        title: $_("onboarding.new-workspace-board.default-name"),
         modified: "",
         created: "",
         workspace_board_sections: [],
@@ -132,13 +133,15 @@
     $: workspace = {
         ...(state.workspace ?? workspaceFallback),
         ...(state.kind === "new-workspace"
-            ? { title: state.title, workspace_boards: [] }
+            ? {
+                  title: state.title,
+                  workspace_boards: [workspaceBoardFallback],
+              }
             : undefined),
         ...(state.kind !== "new-workspace"
             ? { workspace_boards: [workspaceBoard] }
             : undefined),
     } satisfies Workspace;
-    $: workspaces = [workspace];
 
     $: workspaceBoard = {
         ...((state.kind === "new-workspace"
