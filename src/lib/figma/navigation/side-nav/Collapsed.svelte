@@ -27,7 +27,6 @@
     import type { Workspace } from "$lib/types/workspace";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
-    export let workspaces: Workspace[] | undefined;
     export let workspace: Workspace | undefined;
 </script>
 
@@ -37,7 +36,7 @@
             <div
                 class="flex flex-col items-center gap-6 border-b border-border pb-12"
             >
-                <WorkspaceSelector {workspaces} {workspace} open={false} />
+                <WorkspaceSelector {workspace} open={false} />
                 <div class="flex flex-col items-center gap-6">
                     <div class="flex flex-col items-center gap-4">
                         {#if workspace?.workspace_boards}

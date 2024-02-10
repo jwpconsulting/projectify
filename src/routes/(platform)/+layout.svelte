@@ -24,10 +24,7 @@
     import ConstructiveOverlay from "$lib/figma/overlays/constructive/ConstructiveOverlay.svelte";
     import DestructiveOverlay from "$lib/figma/overlays/DestructiveOverlay.svelte";
     import MobileMenuOverlay from "$lib/figma/overlays/MobileMenuOverlay.svelte";
-    import {
-        currentWorkspace,
-        currentWorkspaces,
-    } from "$lib/stores/dashboard";
+    import { currentWorkspace } from "$lib/stores/dashboard";
     import {
         mobileMenuState,
         resolveConstructiveOverlay,
@@ -49,10 +46,7 @@
     <div class="flex min-h-0 shrink grow flex-row">
         <!-- this breakpoint is in tune with the mobile menu breakpoint -->
         <div class="hidden h-full shrink-0 overflow-y-auto md:block">
-            <SideNav
-                workspaces={$currentWorkspaces}
-                workspace={$currentWorkspace}
-            />
+            <SideNav workspace={$currentWorkspace} />
         </div>
         <!-- not inserting min-w-0 will mean that this div will extend as much as
     needed around whatever is inside the slot -->

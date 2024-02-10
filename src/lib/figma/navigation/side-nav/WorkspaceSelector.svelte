@@ -22,11 +22,12 @@
 
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
+    import { currentWorkspaces } from "$lib/stores/dashboard";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspace: Workspace | undefined = undefined;
-    export let workspaces: Workspace[] | undefined;
+    // TODO Rename to collapsed
     export let open: boolean;
 
     let sideNavContextMenuAnchor: HTMLElement;
@@ -47,7 +48,11 @@
 
     let workspaceContextMenuOpen = false;
 
-    async function showWorkspaceContextMenu(workspaces: Workspace[]) {
+    async function showWorkspaceContextMenu() {
+        const workspaces = $currentWorkspaces;
+        if (!workspaces) {
+            throw new Error("Expected workspaces");
+        }
         workspaceContextMenuOpen = true;
         try {
             await openContextMenu(
@@ -68,9 +73,8 @@
         <div class="flex flex-row items-center justify-between gap-4">
             <div class="min-w-0 grow" bind:this={workspaceContextMenuAnchor}>
                 <button
-                    disabled={workspaces === undefined}
-                    on:click={workspaces &&
-                        showWorkspaceContextMenu.bind(null, workspaces)}
+                    disabled={$currentWorkspaces === undefined}
+                    on:click={showWorkspaceContextMenu}
                     class="flex w-full flex-row items-center justify-between gap-2 rounded-lg border border-border p-2 hover:bg-secondary-hover"
                 >
                     <div class="flex min-w-0 flex-row items-center gap-2">
@@ -117,8 +121,9 @@
         <div bind:this={workspaceContextMenuAnchor}>
             <BorderedIcon
                 type="workspace"
-                on:click={workspaces &&
-                    showWorkspaceContextMenu.bind(null, workspaces)}
+                on:click={$currentWorkspaces !== undefined
+                    ? showWorkspaceContextMenu
+                    : undefined}
             />
         </div>
         <div bind:this={sideNavContextMenuAnchor}>
