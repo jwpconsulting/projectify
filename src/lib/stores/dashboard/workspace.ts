@@ -15,39 +15,11 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { writable } from "svelte/store";
-import type { Readable } from "svelte/store";
-
 import { getWorkspace, getWorkspaces } from "$lib/repository/workspace";
+import { createHttpStore } from "$lib/stores/httpSubscription";
 import { createWsStore } from "$lib/stores/wsSubscription";
-import type { RepositoryContext } from "$lib/types/repository";
 import type { Workspace } from "$lib/types/workspace";
 
 export const currentWorkspace = createWsStore("workspace", getWorkspace);
-
-// TODO This could be RepoGetter, except that RepoGetter takes a uuid
-type HttpStore<T> = Readable<T | undefined> & {
-    load: (context: RepositoryContext) => Promise<T | undefined>;
-};
-
-/*
- * Similar to createWsStore, but has to manually refetch
- */
-function createHttpStore<T>(
-    getter: (context: RepositoryContext) => Promise<T | undefined>,
-): HttpStore<T> {
-    const { set, subscribe } = writable<T | undefined>(undefined);
-    const load = async (
-        context: RepositoryContext,
-    ): Promise<T | undefined> => {
-        const result = await getter(context);
-        set(result);
-        return result;
-    };
-    return {
-        subscribe,
-        load,
-    };
-}
 
 export const currentWorkspaces = createHttpStore<Workspace[]>(getWorkspaces);
