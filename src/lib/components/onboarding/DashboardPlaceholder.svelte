@@ -203,7 +203,7 @@
     <div class="flex flex-col bg-foreground ring-4 ring-border" style:width>
         <div class="flex flex-row">
             <div class="max-w-xs shrink">
-                <Full {workspaces} {workspace} />
+                <Full {workspace} />
             </div>
             <div class="min-w-0 grow">
                 <Dashboard {workspaceBoard} />

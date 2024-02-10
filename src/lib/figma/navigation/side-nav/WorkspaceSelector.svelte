@@ -22,11 +22,12 @@
 
     import BorderedIcon from "$lib/figma/buttons/BorderedIcon.svelte";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
+    import { currentWorkspaces } from "$lib/stores/dashboard";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { Workspace } from "$lib/types/workspace";
 
     export let workspace: Workspace | undefined = undefined;
-    export let workspaces: Workspace[] | undefined;
+    // TODO Rename to collapsed
     export let open: boolean;
 
     let sideNavContextMenuAnchor: HTMLElement;
@@ -61,6 +62,8 @@
             workspaceContextMenuOpen = false;
         }
     }
+
+    $: workspaces = $currentWorkspaces;
 </script>
 
 {#if open}

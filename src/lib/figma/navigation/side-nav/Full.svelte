@@ -25,13 +25,12 @@
     import { showFilters } from "$lib/stores/dashboard";
     import type { Workspace } from "$lib/types/workspace";
 
-    export let workspaces: Workspace[] | undefined;
     export let workspace: Workspace | undefined;
 </script>
 
 <!-- XXX temporary fix to alleviate long side nav inside mobile menu -->
 <nav class="flex flex-col py-4">
-    <WorkspaceSelector {workspaces} {workspace} open={true} />
+    <WorkspaceSelector {workspace} open={true} />
     {#if workspace}
         <div class="flex shrink flex-col overflow-auto">
             <Boards {workspace} />
