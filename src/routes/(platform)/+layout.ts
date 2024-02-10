@@ -32,15 +32,10 @@ export async function load({
     // For reasons, fetchuser fires twice.
     // We should have user contain some kind of hint that the user is now
     // being fetched, so we don't fetch it twice.
-    const currentUser = get(user);
-    if (currentUser) {
-        return { user: currentUser };
-    }
+    const currentUser = get(user) ?? (await fetchUser({ fetch }));
 
-    const fetchedUser = await fetchUser({ fetch });
-
-    if (fetchedUser === undefined) {
-        const next = getLogInWithNextUrl(url.href);
+    if (currentUser === undefined) {
+        const next = getLogInWithNextUrl(url.pathname);
         console.log("Not logged in, redirecting to", next);
         throw redirect(302, next);
     }
@@ -49,9 +44,10 @@ export async function load({
     // for it to finish here?
     const workspaces = await currentWorkspaces.load({ fetch });
     if (!workspaces) {
-        throw error(404);
+        throw error(500, "Unable to fetch workspaces");
     }
-    return { user: fetchedUser };
+
+    return { user: currentUser };
 }
 // Could we set one of the following to true here?
 // Prerender: This page is completely prerenderable, there is no user data here
