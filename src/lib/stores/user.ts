@@ -30,8 +30,7 @@ import { dashboardUrl } from "$lib/urls/dashboard";
 
 export const user = writable<User | undefined>(undefined);
 
-// TODO rename this to logIn
-export async function login(
+export async function logIn(
     email: string,
     password: string,
     redirectTo: string | undefined,

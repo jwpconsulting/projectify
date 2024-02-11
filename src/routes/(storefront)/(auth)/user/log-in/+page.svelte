@@ -22,7 +22,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { login } from "$lib/stores/user";
+    import { logIn } from "$lib/stores/user";
     import type { AuthViewState } from "$lib/types/ui";
     import { signUpUrl, requestPasswordResetUrl } from "$lib/urls/user";
 
@@ -54,7 +54,7 @@
             return;
         }
         try {
-            await login(email, password, redirectTo, { fetch });
+            await logIn(email, password, redirectTo, { fetch });
         } catch {
             // TODO set the error to something meaningful
             state = {
