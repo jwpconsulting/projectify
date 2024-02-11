@@ -75,20 +75,40 @@ class Development(Base):
     DEBUG_TOOLBAR = True
     INTERNAL_IPS = ("127.0.0.1",)
 
+    FRONTEND_URL = "http://localhost:3000/"
+
+    # Workaround for connecting over .local domain
+    # ============================================
+    #
+    # Add this if you are serving the frontend from a local network host other
+    # than localhost, and vite is proxying the backend
+    # LOCAL_DOMAIN = "blabla"
+    # FRONTEND_URL = f"http://{LOCAL_DOMAIN}.local:3000/"
+    # CSRF_COOKIE_SECURE = False
+    # CSRF_COOKIE_SAMESITE = "Lax"
+    # XXX this might have to revised, not sure what the correct suffix is
+    # MEDIA_URL = f"http://{LOCAL_DOMAIN}.local:3000/media/"
+
+    # If all requests are proxied through vite, I'm not sure if this is
+    # relevant or not:
     CORS_ALLOWED_ORIGINS = (
         # Vite dev
         "http://localhost:3000",
         # Storybook
         "http://localhost:6006",
     )
+    # On the other hand, local tests showed me that CSRF_TRUSTED_ORIGINS has to
+    # be adjusted when serving from another local domain
     CSRF_TRUSTED_ORIGINS = (
         # Vite dev
         "http://localhost:3000",
+        # See above, add this if you want to serve from another local domain
+        # f"http://{LOCAL_DOMAIN}.local:3000",
         # Storybook
         "http://localhost:6006",
+        # See above
+        # f"http://{LOCAL_DOMAIN}.local:6006",
     )
-
-    FRONTEND_URL = "http://localhost:3000/"
 
     CELERY_TASK_ALWAYS_EAGER = True
     # TODO if celery is eager, a broker should not be necessary, right?
