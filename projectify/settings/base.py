@@ -246,7 +246,7 @@ class Base(Configuration):
     CELERY_RESULT_BACKEND = "django-db"
 
     # Email
-    DEFAULT_FROM_EMAIL = "hello@projectifyapp.com"
+    DEFAULT_FROM_EMAIL = '"Projectify" <hello@projectifyapp.com>'
     EMAIL_EAGER = False
 
     # Rest framework
