@@ -1,3 +1,5 @@
+# TODO
+# - Make mypy etc available from inside poetry env
 {
   description = "Application packaged using poetry2nix";
 
@@ -52,7 +54,13 @@
       in
       {
         devShell = pkgs.mkShell {
-          buildInputs = [ poetryEnv postgresql pkgs.heroku ];
+          buildInputs = [
+            poetryEnv
+            postgresql
+            pkgs.heroku
+            # Allow poetry to install
+            pkgs.openssl
+          ];
         };
       });
 }
