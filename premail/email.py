@@ -87,6 +87,8 @@ class TemplateEmail(Generic[T], metaclass=ABCMeta):
             self.get_context(),
         )
 
+    # TODO change to be addressee instead, we want to address the user by their
+    # preferred name if they have specified one.
     @abstractmethod
     def get_to_email(self) -> str:
         """Return recipient email. To override."""
