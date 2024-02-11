@@ -30,7 +30,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
 from user.emails import UserEmailConfirmationEmail, UserPasswordResetEmail
-from user.models.user import User, UserManager
+from user.models.user import User
 from user.selectors.user import user_find_by_email
 from user.services.user_invite import user_invite_redeem_many
 
@@ -48,7 +48,7 @@ def _user_create(
     privacy_policy_agreed: Optional[datetime] = None,
 ) -> User:
     """Create and save a user with the given email, and password."""
-    email = UserManager.normalize_email(email)
+    email = User.objects.normalize_email(email)
     user = User(
         email=email,
         is_staff=is_staff,

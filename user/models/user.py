@@ -38,10 +38,6 @@ EMAIL_CONFIRMATION_TOKEN_SALT = "email-confirmation-token-salt"
 PASSWORD_RESET_TOKEN_SALT = "password-reset-token-salt"
 
 
-class UserManager(BaseUserManager["User"]):
-    """Manager class for User."""
-
-
 class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     """User class."""
 
@@ -77,7 +73,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         blank=True,
         null=True,
     )
-    objects: ClassVar[UserManager] = UserManager()
+    objects: ClassVar[BaseUserManager["User"]] = BaseUserManager()
 
     USERNAME_FIELD = "email"
 
