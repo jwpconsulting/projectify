@@ -17,31 +17,31 @@
  */
 import { writable } from "svelte/store";
 
-import { goto } from "$lib/navigation";
-import { getUser, updateUser } from "$lib/repository/user";
+import {
+    getUser,
+    updateUser,
+    updateProfilePicture,
+} from "$lib/repository/user";
 import * as userRepository from "$lib/repository/user";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { User } from "$lib/types/user";
-import { dashboardUrl } from "$lib/urls/dashboard";
 
 export const user = writable<User | undefined>(undefined);
 
-// TODO rename this to logIn
-export async function login(
+export async function logIn(
     email: string,
     password: string,
-    redirectTo: string | undefined,
     repositoryContext: RepositoryContext,
-): Promise<void> {
-    // TODO handle result
+) {
     const response = await userRepository.logIn(
         email,
         password,
         repositoryContext,
     );
-    user.set(response);
-
-    await goto(redirectTo ?? dashboardUrl);
+    if (response.ok) {
+        user.set(response.data);
+    }
+    return response;
 }
 
 export async function logOut(repositoryContext: RepositoryContext) {
@@ -59,17 +59,30 @@ export async function fetchUser(
 
 export async function updateUserProfile(
     preferredName: string | undefined,
+    picture:
+        | { kind: "keep" }
+        | { kind: "update"; imageFile: File }
+        | { kind: "clear" },
     repositoryContext: RepositoryContext,
-) {
-    await updateUser(
+    // TODO Promise<ApiResponse<User, ...>>
+): Promise<User> {
+    if (picture.kind === "update") {
+        await updateProfilePicture(picture.imageFile);
+    } else if (picture.kind === "clear") {
+        await updateProfilePicture(undefined);
+    }
+    const response = await updateUser(
         {
+            // Kind of confusing logic here, tbh
+            // All we want to do is to clear the preferred name when it's empty
             preferred_name:
                 preferredName === "" ? null : preferredName ?? null,
         },
         repositoryContext,
     );
-    // We fetch the user to make sure the preferred name is updated
-    // Ideally, this would just store the result of the above operation
-    // in the user store
-    await fetchUser(repositoryContext);
+    if (!response.ok) {
+        throw new Error("Expected response.ok");
+    }
+    user.set(response.data);
+    return response.data;
 }

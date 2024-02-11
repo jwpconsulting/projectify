@@ -23,9 +23,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { updateProfilePicture } from "$lib/repository/user";
-    import { fetchUser, updateUserProfile } from "$lib/stores/user";
-    import { unwrap } from "$lib/utils/type";
+    import { updateUserProfile } from "$lib/stores/user";
 
     import type { PageData } from "./$types";
 
@@ -46,21 +44,16 @@
         user.profile_picture = src;
     }
 
-    async function saveData() {
-        await updateUserProfile(
-            preferredName === "" ? undefined : preferredName,
-            {
-                fetch,
-            },
-        );
-    }
-
     async function save() {
         state = "saving";
-        let fileUpload: Promise<void> | undefined = undefined;
-        fileUpload = updateProfilePicture(imageFile);
-        await Promise.all([saveData(), fileUpload]);
-        user = unwrap(await fetchUser({ fetch }), "Expected fetchUser");
+        const picture =
+            imageFile !== undefined
+                ? { kind: "update" as const, imageFile }
+                : user.profile_picture === null
+                ? { kind: "clear" as const }
+                : { kind: "keep" as const };
+        // TODO handle validation errors
+        user = await updateUserProfile(preferredName, picture, { fetch });
         // TODO show confirmation flash when saving complete Justus
         // 2023-08-03
         state = "viewing";

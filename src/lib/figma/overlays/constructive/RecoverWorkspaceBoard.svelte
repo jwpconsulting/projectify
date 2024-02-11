@@ -20,6 +20,7 @@
 
     import Layout from "$lib/figma/overlays/constructive/Layout.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import { goto } from "$lib/navigation";
     import { archiveWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
     import {
         rejectConstructiveOverlay,
@@ -27,6 +28,7 @@
     } from "$lib/stores/globalUi";
     import type { AuthViewState } from "$lib/types/ui";
     import type { WorkspaceBoard } from "$lib/types/workspace";
+    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
     export let workspaceBoard: WorkspaceBoard;
 
@@ -37,23 +39,35 @@
         const result = await archiveWorkspaceBoard(workspaceBoard, false, {
             fetch,
         });
-        if (!result.ok) {
-            // TODO show error here
-            state = { kind: "error", message: JSON.stringify(result.error) };
-            throw result.error;
+        if (result.ok) {
+            resolveConstructiveOverlay();
+            await goto(getDashboardWorkspaceBoardUrl(workspaceBoard.uuid));
+            return;
         }
-        resolveConstructiveOverlay();
+        state = {
+            kind: "error",
+            message: $_("overlay.constructive.recover-workspace-board.error", {
+                values: { details: JSON.stringify(result.error) },
+            }),
+        };
     }
 </script>
 
 <Layout {onSubmit}>
     <svelte:fragment slot="title">
-        {$_("overlay.constructive.recover-workspace-board.title")}
+        {$_("overlay.constructive.recover-workspace-board.title", {
+            values: { title: workspaceBoard.title },
+        })}
     </svelte:fragment>
     <svelte:fragment slot="message">
-        <p class="text-center text-error">
+        <p class="text-center">
             {$_("overlay.constructive.recover-workspace-board.notice")}
         </p>
+        {#if state.kind === "error"}
+            <p>
+                {state.message}
+            </p>
+        {/if}
     </svelte:fragment>
     <svelte:fragment slot="buttons">
         <Button
@@ -72,9 +86,13 @@
             style={{ kind: "primary" }}
             size="medium"
             color="blue"
-            label={$_(
-                "overlay.constructive.recover-workspace-board.recover-board",
-            )}
+            label={state.kind === "submitting"
+                ? $_(
+                      "overlay.constructive.recover-workspace-board.submit.submitting",
+                  )
+                : $_(
+                      "overlay.constructive.recover-workspace-board.submit.start",
+                  )}
         />
     </svelte:fragment>
 </Layout>

@@ -32,7 +32,7 @@
         ($user ?? data.user).preferred_name ?? undefined;
 
     async function submit() {
-        await updateUserProfile(preferredName, { fetch });
+        await updateUserProfile(preferredName, { kind: "keep" }, { fetch });
         await goto(newWorkspaceUrl);
     }
 </script>

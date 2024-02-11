@@ -21,9 +21,12 @@
     import AuthScreen from "$lib/figma/screens/auth/AuthScreen.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import type { InputFieldValidation } from "$lib/funabashi/types";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { login } from "$lib/stores/user";
+    import { goto } from "$lib/navigation";
+    import { logIn } from "$lib/stores/user";
     import type { AuthViewState } from "$lib/types/ui";
+    import { dashboardUrl } from "$lib/urls/dashboard";
     import { signUpUrl, requestPasswordResetUrl } from "$lib/urls/user";
 
     import type { PageData } from "./$types";
@@ -33,7 +36,9 @@
     const { redirectTo } = data;
 
     let email: string | undefined = undefined;
+    let emailValidation: InputFieldValidation | undefined = undefined;
     let password: string | undefined = undefined;
+    let passwordValidation: InputFieldValidation | undefined = undefined;
 
     let state: AuthViewState = { kind: "start" };
 
@@ -53,15 +58,35 @@
             };
             return;
         }
-        try {
-            await login(email, password, redirectTo, { fetch });
-        } catch {
-            // TODO set the error to something meaningful
-            state = {
-                kind: "error",
-                message: $_("auth.log-in.invalid-credentials"),
+        const response = await logIn(email, password, { fetch });
+        if (response.ok) {
+            // TODO redirect to `/{redirectTo}` instead
+            // To prevent users not being redirected to third parties
+            await goto(redirectTo ?? dashboardUrl);
+            return;
+        }
+        emailValidation = undefined;
+        passwordValidation = undefined;
+        if (response.error.email) {
+            emailValidation = { ok: false, error: response.error.email };
+        } else {
+            emailValidation = {
+                ok: true,
+                result: $_("auth.log-in.email.valid"),
             };
         }
+        if (response.error.password) {
+            passwordValidation = { ok: false, error: response.error.password };
+        } else {
+            passwordValidation = { ok: true, result: "" };
+        }
+        state = {
+            kind: "error",
+            message:
+                !emailValidation.ok || !passwordValidation.ok
+                    ? $_("auth.log-in.error.credentials")
+                    : $_("auth.log-in.error.other"),
+        };
     }
 </script>
 
@@ -74,6 +99,7 @@
             label={$_("auth.log-in.email.label")}
             required
             bind:value={email}
+            validation={emailValidation}
         />
         <InputField
             placeholder={$_("auth.log-in.password.placeholder")}
@@ -86,6 +112,7 @@
                 href: requestPasswordResetUrl,
                 label: $_("auth.log-in.forgot-password"),
             }}
+            validation={passwordValidation}
         />
         {#if state.kind === "error"}
             <p>
@@ -97,7 +124,9 @@
             style={{ kind: "primary" }}
             color="blue"
             size="medium"
-            label={$_("auth.log-in.log-in")}
+            label={state.kind === "submitting"
+                ? $_("auth.log-in.submit.submitting")
+                : $_("auth.log-in.submit.start")}
         />
         <div class="text-center">
             {$_("auth.log-in.no-account")}

@@ -28,7 +28,7 @@
         openDestructiveOverlay,
     } from "$lib/stores/globalUi";
     import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
-    import { getDashboardWorkspaceUrl } from "$lib/urls";
+    import { getArchiveUrl } from "$lib/urls";
 
     export let workspace: Workspace;
     export let workspaceBoard: WorkspaceBoard;
@@ -134,9 +134,7 @@
             workspaceBoard,
         });
         await repoArchiveWorkspaceBoard(workspaceBoard, true, { fetch });
-        // XXX perhaps if we pass WorkspaceBoardDetail here we can guarantee
-        // a workspace
-        await goto(getDashboardWorkspaceUrl(workspace.uuid));
+        await goto(getArchiveUrl(workspace.uuid));
     }
 </script>
 
