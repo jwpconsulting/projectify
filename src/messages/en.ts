@@ -477,6 +477,7 @@ const messages: MessageDirectory = {
                 label: "Email",
                 placeholder: "Enter your email",
                 missing: "Must enter email",
+                valid: "Email address found",
             },
             "password": {
                 label: "Password",
@@ -484,10 +485,16 @@ const messages: MessageDirectory = {
                 missing: "Must enter password",
             },
             "forgot-password": "Forgot password",
-            "log-in": "Log in",
+            "submit": {
+                start: "Log in",
+                submitting: "Logging you in...",
+            },
             "no-account": "Don't have an account yet?",
-            "invalid-credentials":
-                "Invalid credentials. Please check email and password.",
+            "error": {
+                credentials:
+                    "Invalid credentials. Please see the errors above.",
+                other: "Invalid credentials. Please check email and password.",
+            },
             "sign-up-here": "Sign up here",
         },
         "request-password-reset": {

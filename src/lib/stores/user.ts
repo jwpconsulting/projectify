@@ -17,7 +17,6 @@
  */
 import { writable } from "svelte/store";
 
-import { goto } from "$lib/navigation";
 import {
     getUser,
     updateUser,
@@ -26,29 +25,23 @@ import {
 import * as userRepository from "$lib/repository/user";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { User } from "$lib/types/user";
-import { dashboardUrl } from "$lib/urls/dashboard";
 
 export const user = writable<User | undefined>(undefined);
 
 export async function logIn(
     email: string,
     password: string,
-    redirectTo: string | undefined,
     repositoryContext: RepositoryContext,
-): Promise<void> {
+) {
     const response = await userRepository.logIn(
         email,
         password,
         repositoryContext,
     );
-    if (!response.ok) {
-        throw new Error("Expected response.ok");
+    if (response.ok) {
+        user.set(response.data);
     }
-    user.set(response.data);
-
-    // TODO redirect to `/{redirectTo}` instead
-    // To prevent users not being redirected to third parties
-    await goto(redirectTo ?? dashboardUrl);
+    return response;
 }
 
 export async function logOut(repositoryContext: RepositoryContext) {
