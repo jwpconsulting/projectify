@@ -79,10 +79,14 @@ const messages: MessageDirectory = {
                 update: "Save",
             },
             "recover-workspace-board": {
-                "title": "Recover this board?",
-                "notice": "Recovering this board returns it to the dashboard",
-                "cancel": "Cancel",
-                "recover-board": "Recover board",
+                title: "Recover workspace board ''{title}''?",
+                notice: "Recovering this workspace board returns it to the dashboard. You will be redirected to the workspace board after the recovery has finished.",
+                cancel: "Cancel",
+                submit: {
+                    start: "Recover workspace board",
+                    submitting: "Recovering ...",
+                },
+                error: "An error has happened while recovering the workspace board. The error details are {details}",
             },
         },
         "destructive": {
@@ -119,9 +123,9 @@ const messages: MessageDirectory = {
             },
             "archive-workspace-board": {
                 title: "Archive workspace board",
-                body: "Would you like to archive this ''{workspaceBoard}'' workspace board?",
+                body: "Would you like to archive this ''{workspaceBoard}'' workspace board? You will be redirected to the workspace board archive page after archival has finished.",
                 warning:
-                    "You can see archived workspace boards in the archives section",
+                    "You can always review and recover archived workspace boards in the archives section",
                 button: "Archive",
             },
             "delete-workspace-board": {
