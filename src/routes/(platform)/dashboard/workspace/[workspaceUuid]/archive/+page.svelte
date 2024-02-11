@@ -48,70 +48,61 @@
         });
         await deleteWorkspaceBoard(workspaceBoard, { fetch });
     }
-    // TODO create shared layout for archive and settings
 </script>
 
-<div class="flex min-h-full w-full flex-col items-center bg-background py-8">
-    <main class="flex w-full max-w-xl flex-col gap-4">
-        <h1 class="text-2xl font-bold">
-            {$_("workspace-board-archive.title")}
-        </h1>
-        <div class="flex flex-col rounded-lg bg-foreground p-4 shadow-card">
-            {#each archivedWorkspaceBoards as workspaceBoard}
-                <div class="flex flex-col gap-2 p-2">
-                    <p class="font-bold">
-                        {workspaceBoard.title}
+<main class="flex w-full max-w-xl flex-col gap-4">
+    <h1 class="text-2xl font-bold">
+        {$_("workspace-board-archive.title")}
+    </h1>
+    <div class="flex flex-col rounded-lg bg-foreground p-4 shadow-card">
+        {#each archivedWorkspaceBoards as workspaceBoard}
+            <div class="flex flex-col gap-2 p-2">
+                <p class="font-bold">
+                    {workspaceBoard.title}
+                </p>
+                <div class="flex flex-row items-center justify-between">
+                    <!--TODO show the archival date here-->
+                    <p>
+                        {$_("workspace-board-archive.card.archived", {
+                            values: {
+                                archived: parseISO(workspaceBoard.archived),
+                            },
+                        })}
                     </p>
-                    <div class="flex flex-row items-center justify-between">
-                        <!--TODO show the archival date here-->
-                        <p>
-                            {$_("workspace-board-archive.card.archived", {
-                                values: {
-                                    archived: parseISO(
-                                        workspaceBoard.archived,
-                                    ),
-                                },
-                            })}
-                        </p>
-                        <!-- Buttons here -->
-                        <div class="flex flex-row">
-                            <Button
-                                style={{ kind: "secondary" }}
-                                size="small"
-                                color="blue"
-                                label={$_(
-                                    "workspace-board-archive.card.recover",
-                                )}
-                                action={{
-                                    kind: "button",
-                                    action: recoverAction.bind(
-                                        null,
-                                        workspaceBoard,
-                                    ),
-                                }}
-                            />
+                    <!-- Buttons here -->
+                    <div class="flex flex-row">
+                        <Button
+                            style={{ kind: "secondary" }}
+                            size="small"
+                            color="blue"
+                            label={$_("workspace-board-archive.card.recover")}
+                            action={{
+                                kind: "button",
+                                action: recoverAction.bind(
+                                    null,
+                                    workspaceBoard,
+                                ),
+                            }}
+                        />
 
-                            <Button
-                                style={{ kind: "primary" }}
-                                size="small"
-                                color="red"
-                                label={$_(
-                                    "workspace-board-archive.card.delete",
-                                )}
-                                action={{
-                                    kind: "button",
-                                    action: deleteAction.bind(
-                                        null,
-                                        workspaceBoard,
-                                    ),
-                                }}
-                            />
-                        </div>
+                        <Button
+                            style={{ kind: "primary" }}
+                            size="small"
+                            color="red"
+                            label={$_("workspace-board-archive.card.delete")}
+                            action={{
+                                kind: "button",
+                                action: deleteAction.bind(
+                                    null,
+                                    workspaceBoard,
+                                ),
+                            }}
+                        />
                     </div>
                 </div>
-            {:else}
-                {$_("workspace-board-archive.empty")}
-            {/each}
-        </div>
-    </main>
-</div>
+            </div>
+        {:else}
+            {$_("workspace-board-archive.empty")}
+        {/each}
+    </div>
+</main>
