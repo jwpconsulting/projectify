@@ -51,16 +51,12 @@ export async function getUser(
 export async function updateUser(
     user: Pick<User, "preferred_name">,
     repositoryContext: RepositoryContext,
-): Promise<void> {
-    const response = await putWithCredentialsJson<User>(
+): Promise<ApiResponse<User, { preferred_name?: string }>> {
+    return await putWithCredentialsJson(
         `/user/user/current-user`,
         user,
         repositoryContext,
     );
-    if (!response.ok) {
-        console.error("Response was", response);
-        throw new Error("Could not update user");
-    }
 }
 export async function updateProfilePicture(
     imageFile: File | undefined,

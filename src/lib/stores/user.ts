@@ -27,7 +27,6 @@ import * as userRepository from "$lib/repository/user";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { User } from "$lib/types/user";
 import { dashboardUrl } from "$lib/urls/dashboard";
-import { unwrap } from "$lib/utils/type";
 
 export const user = writable<User | undefined>(undefined);
 
@@ -69,21 +68,23 @@ export async function updateUserProfile(
         | { kind: "update"; imageFile: File }
         | { kind: "clear" },
     repositoryContext: RepositoryContext,
-) {
+    // TODO Promise<ApiResponse<User, ...>>
+): Promise<User> {
     if (picture.kind === "update") {
         await updateProfilePicture(picture.imageFile);
     } else if (picture.kind === "clear") {
         await updateProfilePicture(undefined);
     }
-    await updateUser(
+    const response = await updateUser(
         {
             preferred_name:
                 preferredName === "" ? null : preferredName ?? null,
         },
         repositoryContext,
     );
-    // We fetch the user to make sure the preferred name is updated
-    // Ideally, this would just store the result of the above operation
-    // in the user store
-    return unwrap(await fetchUser(repositoryContext), "Expected user");
+    if (!response.ok) {
+        throw new Error("Expected response.ok");
+    }
+    user.set(response.data);
+    return response.data;
 }
