@@ -36,14 +36,18 @@ export async function logIn(
     redirectTo: string | undefined,
     repositoryContext: RepositoryContext,
 ): Promise<void> {
-    // TODO handle result
     const response = await userRepository.logIn(
         email,
         password,
         repositoryContext,
     );
-    user.set(response);
+    if (!response.ok) {
+        throw new Error("Expected response.ok");
+    }
+    user.set(response.data);
 
+    // TODO redirect to `/{redirectTo}` instead
+    // To prevent users not being redirected to third parties
     await goto(redirectTo ?? dashboardUrl);
 }
 
@@ -76,6 +80,8 @@ export async function updateUserProfile(
     }
     const response = await updateUser(
         {
+            // Kind of confusing logic here, tbh
+            // All we want to do is to clear the preferred name when it's empty
             preferred_name:
                 preferredName === "" ? null : preferredName ?? null,
         },

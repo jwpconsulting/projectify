@@ -106,14 +106,11 @@ export async function logIn(
     email: string,
     password: string,
     repositoryContext: RepositoryContext,
-): Promise<User> {
-    // TODO return result here instead
-    return failOrOk(
-        await postWithCredentialsJson<User>(
-            "/user/user/log-in",
-            { email, password },
-            repositoryContext,
-        ),
+): Promise<ApiResponse<User, { email?: string; password?: string }>> {
+    return await postWithCredentialsJson(
+        "/user/user/log-in",
+        { email, password },
+        repositoryContext,
     );
 }
 
