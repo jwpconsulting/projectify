@@ -86,7 +86,7 @@ Connecting is a big finicky, as you need to navigate away from your home dir
 sub folder.
 
 ```
-pushd /opt/local/lib/postgresl15; sudo -u postgres /opt/local/lib/postgresql15/bin/psql
+pushd /opt/local/lib/postgresql15; sudo -u postgres /opt/local/lib/postgresql15/bin/psql
 ```
 
 ## Psycopg2 installation with macports
