@@ -1,0 +1,27 @@
+root = true
+
+[*]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+trim_trailing_whitespace = true
+max_line_length = 79
+indent_style = space
+indent_size = 4
+
+[*.{yml,yaml}]
+indent_size = 4
+
+[*.md]
+# If we don't do this, lists will look weird
+# https://github.com/prettier/prettier/issues/5019
+indent_size = 2
+
+[.git/COMMIT_EDITMSG]
+max_line_length=72
+
+[*.nix]
+indent_size = 2
+
+[flake.lock]
+indent_size = 2

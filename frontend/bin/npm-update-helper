@@ -1,0 +1,119 @@
+#!/bin/bash
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Help updating npm dependencies one by one, thus avoiding large disasters
+# Copyright (C) 2023 JWP Consulting GK
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# TODO:
+# - Check with a dry-run whether this package actually was updated (storybook
+# is causing some issues here with @storybook/addon-essentials not updating)
+# - Think of more TODOs
+if git diff --exit-code > /dev/null
+then
+    echo "Git index is in a clean state"
+else
+    echo "Commit your changes first before continuing with this tool"
+    exit 1
+fi
+# Select those outdated entries where wanted and current do not match
+# Good:
+#  {
+#    "key": "svelte-local-storage-store",
+#    "value": {
+#      "current": "0.6.0",
+#      "wanted": "0.6.4",
+#      "latest": "0.6.4",
+#      "dependent": "projectify-frontend",
+#      "location": "/home/justusperlwitz/projects/projectify/projectify-frontend/node_modules/svelte-local-storage-store"
+#    }
+#  }
+#  Bad:
+#  {
+#    "key": "@steeze-ui/heroicons",
+#    "value": {
+#      "current": "1.1.1",
+#      "wanted": "1.1.1",
+#      "latest": "2.2.3",
+#      "dependent": "projectify-frontend",
+#      "location": "/home/justusperlwitz/projects/projectify/projectify-frontend/node_modules/@steeze-ui/heroicons"
+#    }
+#  }
+jq_program='to_entries |
+    map(select(.value.current != .value.wanted)) |
+    map([.key, .value.current, .value.wanted]) |
+    map(@tsv) |
+    .[]'
+
+if packages=$(npm outdated --json | jq --raw-output "$jq_program")
+then
+    echo "Found outdated packages"
+else
+    echo "Couldn't determine outdated packages"
+    exit 1
+fi
+
+# XXX Is that the cleanest way to pass NL delimited words?
+# Also what is the deal with ANSI C Quoting :O :O
+if package=$(printf "%s" "$packages" | fzf --delimiter=$'\t' --nth=1 | cut -d $'\t' -f1)
+then
+    echo "Determined that $package shall be updated next"
+else
+    echo "Couldn't determine package to update"
+    exit 1
+fi
+
+if npm update --save "$package"
+then
+    echo "Updated $package successfully"
+else
+    echo "Could not update $package"
+    exit 1
+fi
+
+if bin/git-helper
+then
+    echo "Smoke test successful"
+else
+    echo "Smoke test unsuccesful"
+    echo "You can now manually fix these. Please add any related changes "
+    echo "to the git index with git add."
+    echo "If there are any other unstaged changes, this program will exit"
+    read -p "Waiting for manual fix, press Enter to continue... " -n 1 -r
+    echo
+    if bin/git-helper
+    then
+        echo "All good now"
+    else
+        echo "Still not working, panicking."
+        exit 1
+    fi
+fi
+
+if git add --verbose package.json package-lock.json
+then
+    echo "Added package.json and package-lock.json to index"
+else
+    echo "Couldn't add package.json and package-lock.json to index"
+    exit 1
+fi
+
+if git diff --exit-code > /dev/null
+then
+    echo "Ready to commit..."
+    git commit --message "Package: Update $package" --edit
+else
+    echo "There are other unstaged changes, please commit these first"
+    exit 1
+fi

@@ -1,0 +1,19 @@
+.DS_Store
+node_modules
+# Build output
+/build
+storybook-static
+/.svelte-kit
+/package
+.env
+.env.*
+!.env.template
+.vercel
+.output
+.netlify
+/tmp
+.mypy_cache/
+.eslintcache
+
+# Direnv
+/.direnv/
