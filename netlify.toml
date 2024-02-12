@@ -1,10 +1,12 @@
 [build]
+base = "frontend"
 command = "npm run build"
 publish = "build"
+
 [build.environment]
 NODE_ENV = "production"
 
 [[redirects]]
-  from = "/*"
-  to = "/redirect.html"
-  status = 200
+from = "/*"
+to = "/redirect.html"
+status = 200
