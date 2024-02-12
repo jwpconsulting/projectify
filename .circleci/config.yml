@@ -21,10 +21,12 @@ executors:
           POSTGRES_DB: projectify
           POSTGRES_USER: projectify
           POSTGRES_PASSWORD: projectify
-
+  node:
+    docker:
+       - image: cimg/node:18.17.1
 commands:
   prepare_test_backend:
-    description: Install poetry
+    description: Install dependencies for backend
     steps:
       - checkout:
           path: ~/projectify
@@ -51,8 +53,50 @@ commands:
           paths:
             - ~/.local
             - ~/.cache
+  prepare_test_frontend:
+    description: Install node dependencies for frontend
+    steps:
+      - checkout:
+            path: ~/projectify
+      - restore_cache:
+            key: npm-cache-v2-{{ checksum "package-lock.json" }}
+      - run:
+            name: npm install
+            command: npm install
+      - save_cache:
+            key: npm-cache-v2-{{ checksum "package-lock.json" }}
+            paths:
+                - ~/.npm
+                - node_modules
+  prepare_test_frontend_python:
+    description: Install poetry dependencies for frontend
+    steps:
+      - checkout:
+          path: ~/projectify
+      - restore_cache:
+          keys: poetry-cache-v1-{{ checksum "poetry.lock" }}
+      - run:
+          name: Create venv
+          command: python3 -m venv ~/.local/share/poetry
+      - run:
+          name: Install pip and setuptools
+          command: ~/.local/share/poetry/bin/pip install -U pip setuptools
+      - run:
+          name: Install poetry
+          command: ~/.local/share/poetry/bin/pip install poetry
+      - run:
+          name: Link poetry (XXX hack)
+          command: ln -sv ~/.local/share/poetry/bin/poetry /usr/local/bin
+      - run:
+          name: Install pip packages
+          command: poetry install --all-extras
+      - save_cache:
+          key: poetry-cache-v1-{{ checksum "poetry.lock" }}
+          paths:
+              - ~/.local
+              - ~/.cache
 jobs:
-  poetry_check:
+  backend_poetry_check:
     executor: python
     working_directory: ~/projectify/backend
     steps:
@@ -66,7 +110,7 @@ jobs:
       - run:
           name: Check if requirements.txt up to date
           command: git diff --exit-code HEAD -- requirements.txt
-  lint:
+  backend_lint:
     executor: python
     working_directory: ~/projectify/backend
     steps:
@@ -77,7 +121,7 @@ jobs:
       - run:
           name: Run ruff
           command: poetry run ruff .
-  mypy:
+  backend_mypy:
     executor: python
     working_directory: ~/projectify/backend
     steps:
@@ -85,7 +129,7 @@ jobs:
       - run:
           name: Run mypy
           command: poetry run mypy .
-  pyright:
+  backend_pyright:
     executor: python
     working_directory: ~/projectify/backend
     steps:
@@ -93,7 +137,7 @@ jobs:
       - run:
           name: Run pyright
           command: poetry run pyright .
-  collectstatic:
+  backend_collectstatic:
     executor: python
     working_directory: ~/projectify/backend
     steps:
@@ -103,7 +147,7 @@ jobs:
           command: poetry run ./manage.py collectstatic --noinput
           environment:
             DJANGO_CONFIGURATION: TestCollectstatic
-  tests:
+  backend_tests:
     executor: python_and_postgres
     working_directory: ~/projectify/backend
     parallelism: 8
@@ -124,7 +168,7 @@ jobs:
           path: test-results
       - store_artifacts:
           path: test-results
-  seeddb:
+  backend_seeddb:
     executor: python_and_postgres
     working_directory: ~/projectify/backend
     steps:
@@ -135,14 +179,140 @@ jobs:
       - run:
           name: Seed DB
           command: poetry run ./manage.py seeddb --n-users 3 --n-workspaces 1 --n-workspace-boards 1 --n-labels 1 --n-tasks 1
+  frontend_svelte-check:
+    executor: node
+    working_directory: ~/projectify/frontend
+    steps:
+      - prepare_test_frontend
+      - run:
+          name: Generate type information
+          command: npm run sync-types
+      - run:
+          name: Run svelte-check
+          command: npm run check:svelte-check
+  frontend_eslint:
+    executor: node
+    working_directory: ~/projectify/frontend
+    parallelism: 8
+    steps:
+      - prepare_test_frontend
+      - run:
+          name: Generate type information
+          command: npm run sync-types
+      - run:
+          name: Collect files to check
+          command: |
+            circleci tests glob "src/**/*.{ts,js,svelte}" |
+            circleci tests split --split-by=timings > /tmp/files-to-check
+      - store_artifacts:
+          path: /tmp/files-to-check
+          destination: files-checked
+      - run:
+          name: Run eslint (split)
+          command: npx eslint $(cat /tmp/files-to-check)
 
+  frontend_prettier:
+    executor: node
+    working_directory: ~/projectify/frontend
+    steps:
+      - prepare_test_frontend
+      - run:
+          name: Run prettier
+          command: npm run check:prettier:nocache
+  frontend_knip:
+    executor: node
+    working_directory: ~/projectify/frontend
+    steps:
+      - prepare_test_frontend
+      - run:
+          name: Generate type information
+          command: npm run sync-types
+      - run:
+          name: Run knip
+          command: npm run check:knip
+  frontend_check-i18n:
+    executor: node
+    working_directory: ~/projectify/frontend
+    steps:
+      - prepare_test_frontend
+      - run:
+          name: Generate type information
+          command: npm run sync-types
+      - run:
+          name: Check translations
+          command: bin/check-i18n
+  frontend_build:
+    executor: node
+    working_directory: ~/projectify/frontend
+    environment:
+      NODE_ENV: production
+    steps:
+      - prepare_test_frontend
+      - run:
+          name: Run build
+          command: npm run build
+      - run:
+          name: Compress artifacts
+          command: tar --create --verbose --gzip --file=build.tar.gz build
+      - store_artifacts:
+          path: build.tar.gz
+  frontend_visualize-bundle:
+    executor: node
+    working_directory: ~/projectify/frontend
+    environment:
+      NODE_ENV: production
+    steps:
+      - prepare_test_frontend
+      - run:
+          name: Run build
+          command: npm run build -- --mode staging
+      - store_artifacts:
+          path: .svelte-kit/output/client/bundle.html
+          destination: client-bundle
+      - store_artifacts:
+          path: .svelte-kit/output/server/bundle.html
+          destination: server-bundle
+  frontend_poetry_check:
+    executor: python
+    working_directory: ~/projectify/frontend
+    steps:
+      - prepare_test_frontend_python
+      - run:
+          name: Poetry check
+          command: poetry check
+  frontend_python_lint:
+    executor: python
+    working_directory: ~/projectify/frontend
+    steps:
+      - prepare_test_frontend_python
+      - run:
+          name: Run flake8
+          command: poetry run flake8 bin/rename-component
+  frontend_mypy:
+    executor: python
+    working_directory: ~/projectify/frontend
+    steps:
+      - prepare_test_frontend_python
+      - run:
+          name: Run mypy
+          command: poetry run mypy bin/rename-component
 workflows:
   test_all:
     jobs:
-      - poetry_check
-      - lint
-      - mypy
-      - pyright
-      - tests
-      - seeddb
-      - collectstatic
+      - backend_poetry_check
+      - backend_lint
+      - backend_mypy
+      - backend_pyright
+      - backend_tests
+      - backend_seeddb
+      - backend_collectstatic
+      - frontend_svelte-check
+      - frontend_eslint
+      - frontend_prettier
+      - frontend_knip
+      - frontend_check-i18n
+      - frontend_build
+      - frontend_visualize-bundle
+      - frontend_poetry_check
+      - frontend_python_lint
+      - frontend_mypy
