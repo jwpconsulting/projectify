@@ -1,0 +1,333 @@
+* Features
+
+** Localize 404 messages in frontend
+   <2023-10-20 Fri>
+   We throw error(404), but we don't give any messages. We first need to access
+   the localized messages in a load() function. How?
+
+** DONE Implement save/create and continue editing
+   CLOSED: [2023-11-02 Thu 17:06]
+   Django admin has this :thumbsup:
+
+** Implement workspace board archive
+
+** Figure out where we are with billing
+   We spent a lot of time creating the thing in the backend. But does it work?
+
+   A customer isn't automatically created, it seems.
+
+** DONE Implement workspace user edit screen in workspace settings
+   CLOSED: [2023-11-02 Thu 17:10]
+   The scaffolding is there, but it doesn't work
+
+   Some features
+   - [X] Invite new workspace users
+   - [X] Search workspace user
+
+   Won't do:
+   - [ ] Filter by roles
+   - [ ] Job title assignment
+
+** Allow setting workspace user role in workspace settings
+   Allow changing a workspace user role to owner / admin / etc.
+
+** Add action complete notifications
+   Here I list some of the possible ones we can add
+
+   - Created / updated / deleted task
+   - Assigned / Unassigned user to task
+   - Assigned / Unassigned label to task
+   - Created / updated / deleted label
+   - Created / updated / deleted workspace board
+   - Created / updated / deleted workspace board section
+
+** Hamburger menu should always allow me to go back to dashboard
+   If I open the hamburger menu from my profile page or workspace settings, I
+   can't get back to the dashboard. Actually, I can't get back to the dashboard
+   from anywhere.
+
+** DONE Show side nav in new task page
+   CLOSED: [2023-10-03 Tue 16:05]
+
+** Implement description rich text area for tasks
+
+** DONE Allow assigning due date directly from create task page
+   CLOSED: [2023-10-03 Tue 16:04]
+
+** DONE Allow assigning labels directly from create task page
+   CLOSED: [2023-10-03 Tue 16:04]
+
+** DONE Allow assigning assignee directly from create task page
+   CLOSED: [2023-10-03 Tue 16:04]
+
+** Merge read and update task page
+
+** Allow adding and updating deadline to ws board
+
+** Edit labels after clicking edit label pencil button in side nav
+
+** Add sub task CRUD in frontend back
+
+** DONE Localstore remember
+   CLOSED: [2023-09-06 Wed 10:01]
+   Remember with sidenav menus have been open and not in localstorage
+
+** DONE Date picker
+   Evaluate [[https://www.npmjs.com/package/date-picker-svelte][this]] as date
+   picker.
+   CLOSED: [2023-08-03 Thu 11:36]
+
+** Due dates
+   Show that due dates are stored as UTC+0
+
+** DONE Deadline -> Due date
+   CLOSED: [2024-01-13 Sat 11:09]
+   Due date sounds less threatening
+   <2024-01-13 Sat>
+   Kept "Deadlines become a lifeline" in the marketing copy, since it sounds
+   good.
+
+** DONE Full name -> Preferred name
+   <2023-08-03 Thu> CLOSED: [2024-01-13 Sat 11:04]
+   We want to respect how a user wants to be called.
+
+   Asking them to provide a full name even if they don't want to be called that
+   way reeks of social media real name policies that only serve large
+   corporations and their need to moderate what they deem are undesirable
+   opinions. Word. Make things personal and respectful.
+
+* Bug
+
+** Mobile menu event handling not implement
+
+** Close on anchor click
+   When clicking on an anchor inside <Full />, we most likely navigate to a
+   new ws board. Then we should close the mobile menu
+
+** Buttons have irregular growth behavior
+   Inside flex, it goes wild! There is a hacky grow parameter inside there,
+   but it doesn't help much. To see where it goes wrong, look at the
+   constructive overlays.
+
+** Create ws board section button is too far down
+   It looks like it sticks to the bottom relative to the side nav?
+
+** With an expanded side nav, the dashboard looks buggy on narrow screens
+   It's better if we just add overflow-x-auto here
+
+** On first page load, mobile menu not accessible
+   When going to landing ~/~, clicking on the hamburger button doesn't
+   immediately open up the mobile menu. It seems like initializing the JS takes
+   some time. If some JS is required to be able to operate this button, then it
+   should not be shown at all.
+
+** DONE Mobile menu overlay not closing consistently
+   CLOSED: [2023-08-31 Thu 10:42]
+   <2023-08-28 Mon>
+   When clicking on the "continue to dashboard" link when logged in, the mobile
+   menu does not close consistently. Why is this? Adding an on:click handler to
+   the menu might solve the issue, somewhat, but it requires us messing around
+   with aria roles and feels hacky.
+
+   - Why does clicking on an anchor not reset everything?
+   - Could it be because our app issues redirects in a weird way that the
+     browser remembers?
+
+   In the network tab I was not able to see any requests fired when clicking on
+   the continue to dashboard link, from time to time.
+
+   Need to investigate further.
+
+** Step count is not shown during onboarding
+   Justus <2023-08-02>
+
+** Header height difference
+   Solve issue where all headers have different heights (at least on Desktop)
+
+** Buttons inside flex
+   Fix issue where buttons don't react well when placed inside an items-center
+   flex with column layout
+
+** dashboard/task/uuid does not support refetching
+   Is this still a bug? Justus <2023-05-01>
+
+** DONE Overlay form submit
+   CLOSED: [2023-09-06 Wed 10:02]
+   Add new workspace board section overlay does not react well when pressing
+   enter.
+   Justus <2023-05-01>
+
+** Sub task progress wrong
+   In the task card on the dashboard, the sub task progress is falsely shown as
+   100 % for tasks with no sub tasks.
+   Justus <2023-05-01>
+
+** DONE Clicking cancel doesn't do anything in the constructive overlays
+   CLOSED: [2023-09-06 Wed 10:03]
+   Overlays are now rejected properly
+
+** It would be nice to show login after attempting to fetch user
+   What does this mean? <2023-09-06 Wed>
+
+** Fix storybook svelte kit goto import issue
+   It might be good to wait for a fix from the storybook svelte plugin. On the
+   other hand, we are now using our own goto() wrapper, so perhaps we can
+   consider this partially solved.
+
+** DONE The drop down in user assignment does not indicate the current
+   assignee
+
+* Accessiblity
+
+** Mobile menu should be more obvious to dismiss
+   There is the sandwich button on top, of course, but it's a bit hard to find?
+   Or at least, having to jump all the way back to the top of the mobile
+   menu when fiddling with the filters in the bottom is a bit tough.
+
+** Overlays use should <dialog /> like accessibility features
+   <2023-09-06 Wed>
+   The problem is that right now Overlays leave the background usable / focusable
+   Surely we can fix this using something
+   [[like this][https://www.npmjs.com/package/a11y-dialog]]
+
+   Also the rest of the content should be aria-hidden, so that something like
+   the VoiceOver focus can't go on it.
+
+** Change task cards and dashboard to have table semantics
+   <2023-11-02 Thu>
+   We use a wild combination of flex and grid here. Let's simplify it
+   and also use <table> here, where we can.
+
+* Refactor
+
+** DONE Stop using gql for mutating tasks
+   CLOSED: [2023-12-07 Thu 15:03]
+   That includes changing the order.
+
+** DONE Use async in overlays
+   CLOSED: [2023-08-31 Thu 13:53]
+   All overlays should use async functions so we can await them finishing /
+   closing / whatever it is that they do
+
+** Remove improvised storybook
+   <2023-08-30 Wed>
+   Basically, create stories for all files in src/routes/storybook.
+
+** DONE Change context menu to use overlay generic
+   CLOSED: [2023-08-31 Thu 11:22]
+   <2023-08-30 Wed>
+   If we use a generic here, everything becomes simpler.
+   Destructive Overlay
+   Constructive Overlay
+   Mobile Menu
+   Context Menu
+   They all use the same logic yo
+   <2023-08-31 Thu>
+   I have decided to not go further than using the same type for both.
+
+** TODO Remove focus outlines
+   <2023-08-28 Mon>
+   The thought process is that users who rely on focus outlines the most are
+   those who use keyboards etc to navigate pages for, amongst other,
+   accessiblity reasons.
+
+   When we use our own styling, we deviate from the browser default. The browser
+   default is most likely what our users are already used to, given that they
+   use the browser they use to access Projectify for other applications.
+   For us, having consistent styling for focus outlines means that users
+   using the app in different browsers will experience a consistent experience.
+
+   But how often does that happen? Most likely, a user sticks with one browser,
+   and those who use multiple browsers on a daily base and overlap
+   venn-diagram-speaking with keyboard users already know what they are doing
+   in the first place.
+
+   We can therefore safely say that we can get rid of custom styled focus
+   states, since it will not affect users in a negative way, even when
+   considering a11y.
+
+   Furthermore, we've been having some quality issues with focus states not
+   styled correctly and debugging and fixing these issues takes too much time
+   away from focusing (lol) on real app development.
+
+   https://www.tjvantoll.com/2013/01/28/stop-messing-with-the-browsers-default-focus-outline/
+
+*** DONE Change OverlayContainer to accept overlay as slot
+    CLOSED: [2023-08-31 Thu 11:24]
+    <2023-08-27 Sun>
+    This is more sveltonic?
+    <2023-08-31 Thu>
+    Turns out I already did this
+
+** DONE Tertiary nav btns to be replaced by HeaderButton
+   CLOSED: [2023-08-31 Thu 11:25]
+   Done in f63689901
+
+** Update button to use ButtonAction
+
+** Consistent undefined
+   Make undefined and null for empty form fields more consistent. We want to
+   use undefined all the time. [[Check this][https://github.com/Microsoft/TypeScript/wiki/Coding-guidelines#null-and-undefined]].
+
+   The only time where null makes sense is when asking for an object from an
+   API/DB and nothing could be found. [[See
+   here][https://stackoverflow.com/questions/5076944/what-is-the-difference-between-null-and-undefined-in-javascript/57249968#57249968]].
+
+** DONE Refactor ButtonAction
+   CLOSED: [2023-08-30 Wed 14:16]
+   Factor disabled state into ButtonAction (since anchors cannot be disabled)
+
+** Remove store modules
+   Reintroduce calling the store from lib/figma components instead of module
+   construct
+
+** DONE Better business object stores
+   CLOSED: [2023-09-06 Wed 10:06]
+   Create a store factory for self-refreshing task / ws / ws board entities,
+   then
+
+   1. Perform initial load in page ts, so that a page can definitely be rendered
+      with a entity instance,
+   2. Continuously reassign $entity to page data so it stays fresh.
+
+   Done as part of the wsSubscription refactor. It now uses our own store.
+
+** A label should have title/description, not name
+
+** Rename /onboarding/assign-task
+   It would be better if we named this something like
+   ~/onboarding/finished/[taskUuid]~
+
+* Performance
+
+** Consider enabling SSR for some pages
+   <2023-10-03 Tue>
+   Perhaps we can acquire a JWT and query some things like the current
+   dashboard's contents, and then render this on the server directly? Sounds
+   like a whole new thing so we should do some research.
+
+* Update Dependency
+
+** Update [cite/t:@steeze-ui/heroicons]
+   Some of the icons have been renamed (search, eye, ...)
+
+* QA
+
+** Consider introducing shellcheck
+
+** DONE Warn about unused variables (possible just in svelte files)
+   CLOSED: [2023-09-06 Wed 10:07]
+
+   We are using knip now
+
+* For Consideration
+
+** Remove Roboto
+   <2023-11-02 Thu>
+   We are now loading roboto directly, instead of as a Google fonts dependency.
+   But, the question remains of whether we even need to load a font? The
+   question is similar to having our custom focus style anywhere:
+
+   How much consistency do we need?
+
+   I say, we should get rid of it.

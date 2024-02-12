@@ -1,0 +1,10 @@
+[build]
+command = "npm run build"
+publish = "build"
+[build.environment]
+NODE_ENV = "production"
+
+[[redirects]]
+  from = "/*"
+  to = "/redirect.html"
+  status = 200

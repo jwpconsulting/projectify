@@ -1,0 +1,79 @@
+#!/bin/bash
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Check and format code
+# Copyright (C) 2023, 2024 JWP Consulting GK
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# This is similar to running npm run check, except that it attempts to be more
+# "best-effort".
+# The difference is that if eslint fails, it will try to fix and run prettier.
+# For example, for unused imports, eslint will first clear the lines, and
+# then any remaining whitespace will be cleaned up by prettier.
+# For good measure, we check one more time after a potential cleanup.
+
+npm run sync-types || exit
+
+if npm run format
+then
+    echo "npm run format successful"
+else
+    echo "Couldn't format"
+    exit 1
+fi
+
+if npm run check:eslint
+then
+    echo "npm run check:eslint successful"
+else
+    echo "Couldn't eslint-fix, attempting to fix"
+    if npm run fix:eslint && npm run format
+    then
+        echo "Trying to check one more time"
+        if npm run check:eslint
+        then
+            echo "All good now"
+        else
+            echo "Still didn't work"
+            exit 1
+        fi
+    else
+        echo "Couldn't fix"
+        exit 1
+    fi
+fi
+
+if npm run check:svelte-check
+then
+    echo "npm run svelte-check successful"
+else
+    echo "svelte-check didn't exit cleanly"
+    exit 1
+fi
+
+if npm run check:knip
+then
+    echo "npm run knip successful"
+else
+    echo "knip didn't exit cleanly"
+    exit 1
+fi
+
+if bin/check-i18n
+then
+    echo "bin/check-i18n successful"
+else
+    echo "bin/check-i18n didn't exit cleanly"
+    exit 1
+fi
