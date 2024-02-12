@@ -24,8 +24,10 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from corporate.services.coupon import coupon_redeem
-from workspace.selectors.workspace import workspace_find_by_workspace_uuid
+from projectify.corporate.services.coupon import coupon_redeem
+from projectify.workspace.selectors.workspace import (
+    workspace_find_by_workspace_uuid,
+)
 
 
 class CouponRedeem(APIView):

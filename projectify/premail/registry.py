@@ -45,7 +45,7 @@ def add_members(emails: object) -> None:
 
 for app in apps.app_configs:
     try:
-        emails = importlib.import_module(f"{app}.emails")
+        emails = importlib.import_module(f"projectify.{app}.emails")
     except ModuleNotFoundError:
         continue
     add_members(emails)

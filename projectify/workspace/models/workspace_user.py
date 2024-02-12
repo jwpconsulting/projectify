@@ -51,7 +51,7 @@ from .workspace import (
 if TYPE_CHECKING:
     from django.db.models.fields.related import RelatedField  # noqa: F401
 
-    from user.models import (  # noqa: F401
+    from projectify.user.models import (  # noqa: F401
         User,
         UserInvite,
     )

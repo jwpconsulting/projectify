@@ -17,9 +17,9 @@
 """Test workspace board selectors."""
 import pytest
 
-from workspace.models.workspace_board import WorkspaceBoard
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.selectors.workspace_board import (
+from projectify.workspace.models.workspace_board import WorkspaceBoard
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.selectors.workspace_board import (
     workspace_board_find_by_workspace_uuid,
 )
 

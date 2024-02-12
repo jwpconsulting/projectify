@@ -33,22 +33,24 @@ from rest_framework import serializers
 from projectify.lib.auth import (
     validate_perm,
 )
-from user.models import (  # noqa: F401
+from projectify.user.models import (  # noqa: F401
     User,
     UserInvite,
 )
-from user.services.user_invite import user_invite_create
-from workspace.emails import WorkspaceUserInviteEmail
-from workspace.exceptions import (
+from projectify.user.services.user_invite import user_invite_create
+from projectify.workspace.emails import WorkspaceUserInviteEmail
+from projectify.workspace.exceptions import (
     UserAlreadyAdded,
     UserAlreadyInvited,
 )
-from workspace.models.workspace import Workspace
-from workspace.models.workspace_user import (
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models.workspace_user import (
     WorkspaceUser,
 )
-from workspace.models.workspace_user_invite import WorkspaceUserInvite
-from workspace.services.workspace import (
+from projectify.workspace.models.workspace_user_invite import (
+    WorkspaceUserInvite,
+)
+from projectify.workspace.services.workspace import (
     workspace_add_user,
 )
 

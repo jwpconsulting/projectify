@@ -28,11 +28,11 @@ from rest_framework import (
 )
 from rest_framework.request import Request
 
-from workspace.exceptions import (
+from projectify.workspace.exceptions import (
     UserAlreadyAdded,
     UserAlreadyInvited,
 )
-from workspace.services.workspace_user_invite import (
+from projectify.workspace.services.workspace_user_invite import (
     add_or_invite_workspace_user,
 )
 

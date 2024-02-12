@@ -21,16 +21,18 @@ from typing import Optional, Sequence, Union
 from django.db import transaction
 
 from projectify.lib.auth import validate_perm
-from user.models import User
-from workspace.models.label import Label
-from workspace.models.task import Task
-from workspace.models.workspace_board_section import WorkspaceBoardSection
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.signals import (
+from projectify.user.models import User
+from projectify.workspace.models.label import Label
+from projectify.workspace.models.task import Task
+from projectify.workspace.models.workspace_board_section import (
+    WorkspaceBoardSection,
+)
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.services.signals import (
     send_task_change_signal,
     send_workspace_board_change_signal,
 )
-from workspace.services.sub_task import (
+from projectify.workspace.services.sub_task import (
     ValidatedData,
     sub_task_create_many,
     sub_task_update_many,

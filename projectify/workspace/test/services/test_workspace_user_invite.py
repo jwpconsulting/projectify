@@ -18,11 +18,11 @@
 import pytest
 from rest_framework import serializers
 
-from user.models import User
-from user.services.user import user_create
-from workspace.models.workspace import Workspace
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.workspace_user_invite import (
+from projectify.user.models import User
+from projectify.user.services.user import user_create
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.services.workspace_user_invite import (
     add_or_invite_workspace_user,
     uninvite_user,
 )

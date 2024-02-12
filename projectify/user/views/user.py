@@ -34,9 +34,9 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
-from user.models import User
-from user.serializers import UserSerializer
-from user.services.user import (
+from projectify.user.models import User
+from projectify.user.serializers import UserSerializer
+from projectify.user.services.user import (
     user_confirm_email,
     user_confirm_password_reset,
     user_log_in,

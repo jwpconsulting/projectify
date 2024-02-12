@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Workspace emails."""
-from premail.email import (
+from projectify.premail.email import (
     TemplateEmail,
 )
 

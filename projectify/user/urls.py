@@ -20,7 +20,7 @@ from django.urls import (
     path,
 )
 
-from user.views.user import (
+from projectify.user.views.user import (
     ConfirmEmail,
     LogIn,
     LogOut,

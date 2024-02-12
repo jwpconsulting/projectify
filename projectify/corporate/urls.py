@@ -20,13 +20,13 @@ from django.urls import (
     path,
 )
 
-from corporate.views.coupon import CouponRedeem
-from corporate.views.customer import (
+from projectify.corporate.views.coupon import CouponRedeem
+from projectify.corporate.views.customer import (
     WorkspaceBillingPortalSessionCreate,
     WorkspaceCheckoutSessionCreate,
     WorkspaceCustomerRetrieve,
 )
-from corporate.views.stripe import stripe_webhook
+from projectify.corporate.views.stripe import stripe_webhook
 
 app_name = "corporate"
 

@@ -53,7 +53,7 @@ if TYPE_CHECKING:
     from django.db.models.fields.related import RelatedField  # noqa: F401
     from django.db.models.manager import RelatedManager  # noqa: F401
 
-    from corporate.models import (
+    from projectify.corporate.models import (
         Customer,
     )
 
@@ -116,7 +116,7 @@ class Workspace(TitleDescriptionModel, BaseModel):
     @transaction.atomic
     def remove_user(self, user: AbstractBaseUser) -> AbstractBaseUser:
         """
-        Remove user from workspace.
+        Remove user from projectify.workspace.
 
         Removes the user from task assignments.
 

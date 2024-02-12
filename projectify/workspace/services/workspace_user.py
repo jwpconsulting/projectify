@@ -22,9 +22,9 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
 from projectify.lib.auth import validate_perm
-from user.models import User
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.signals import send_workspace_change_signal
+from projectify.user.models import User
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.services.signals import send_workspace_change_signal
 
 
 # TODO atomic

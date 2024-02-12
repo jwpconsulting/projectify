@@ -20,16 +20,18 @@ from django.core.exceptions import PermissionDenied
 import pytest
 from rest_framework import serializers
 
-from corporate.models.coupon import Coupon
-from corporate.models.customer import Customer
-from corporate.services.coupon import (
+from projectify.corporate.models.coupon import Coupon
+from projectify.corporate.models.customer import Customer
+from projectify.corporate.services.coupon import (
     coupon_create,
     coupon_redeem,
 )
-from corporate.services.customer import customer_check_active_for_workspace
-from user.models import User
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.workspace import workspace_create
+from projectify.corporate.services.customer import (
+    customer_check_active_for_workspace,
+)
+from projectify.user.models import User
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.services.workspace import workspace_create
 
 pytestmark = pytest.mark.django_db
 

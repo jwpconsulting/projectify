@@ -24,13 +24,15 @@ from django.contrib.auth.models import (
 
 import pytest
 
-from user.models import User
-from workspace.models.workspace import Workspace
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.workspace import (
+from projectify.user.models import User
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.services.workspace import (
     workspace_add_user,
 )
-from workspace.services.workspace_board import workspace_board_create
+from projectify.workspace.services.workspace_board import (
+    workspace_board_create,
+)
 
 from ... import (
     models,

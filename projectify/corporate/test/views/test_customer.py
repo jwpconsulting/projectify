@@ -27,9 +27,9 @@ import pytest
 from faker import Faker
 from rest_framework.test import APIClient
 
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models.workspace_user import WorkspaceUser
 from pytest_types import DjangoAssertNumQueries
-from workspace.models.workspace import Workspace
-from workspace.models.workspace_user import WorkspaceUser
 
 from ...models import Customer
 

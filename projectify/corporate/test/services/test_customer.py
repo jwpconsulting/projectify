@@ -19,14 +19,14 @@ from unittest import mock
 
 import pytest
 
-from corporate.models import Customer
-from corporate.services.customer import (
+from projectify.corporate.models import Customer
+from projectify.corporate.services.customer import (
     customer_activate_subscription,
     customer_cancel_subscription,
     customer_check_active_for_workspace,
     customer_update_seats,
 )
-from workspace.models.workspace import Workspace
+from projectify.workspace.models.workspace import Workspace
 
 
 @pytest.mark.django_db

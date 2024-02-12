@@ -6,7 +6,8 @@ from django.http import (
     HttpRequest,
 )
 
-from user.models import User
+# Cheat and use our own user type
+from projectify.user.models import User
 
 # XXX
 # The inheritance is not entirely accurate.

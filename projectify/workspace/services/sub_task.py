@@ -21,10 +21,10 @@ from uuid import UUID
 from django.db import transaction
 
 from projectify.lib.auth import validate_perm
-from user.models import User
-from workspace.models.sub_task import SubTask
-from workspace.models.task import Task
-from workspace.services.signals import (
+from projectify.user.models import User
+from projectify.workspace.models.sub_task import SubTask
+from projectify.workspace.models.task import Task
+from projectify.workspace.services.signals import (
     send_task_change_signal,
     send_workspace_board_change_signal,
 )

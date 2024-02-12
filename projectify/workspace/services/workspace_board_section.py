@@ -20,9 +20,11 @@ from typing import Optional
 from django.db import transaction
 
 from projectify.lib.auth import validate_perm
-from user.models import User
-from workspace.models import WorkspaceBoard, WorkspaceBoardSection
-from workspace.services.signals import send_workspace_board_change_signal
+from projectify.user.models import User
+from projectify.workspace.models import WorkspaceBoard, WorkspaceBoardSection
+from projectify.workspace.services.signals import (
+    send_workspace_board_change_signal,
+)
 
 
 # Create

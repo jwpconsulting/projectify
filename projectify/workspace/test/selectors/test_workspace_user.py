@@ -17,10 +17,10 @@
 """Test workspace user selectors."""
 import pytest
 
-from user.models import User
-from workspace.models.workspace import Workspace
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.selectors.workspace_user import (
+from projectify.user.models import User
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.selectors.workspace_user import (
     workspace_user_find_for_workspace,
 )
 

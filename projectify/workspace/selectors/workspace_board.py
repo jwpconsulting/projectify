@@ -18,8 +18,8 @@
 from typing import Optional
 from uuid import UUID
 
-from user.models import User
-from workspace.models.workspace_board import (
+from projectify.user.models import User
+from projectify.workspace.models.workspace_board import (
     WorkspaceBoard,
     WorkspaceBoardQuerySet,
 )

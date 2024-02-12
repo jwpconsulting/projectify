@@ -25,4 +25,4 @@ from django.contrib.admin.apps import AdminConfig
 class ProjectifyAdminConfig(AdminConfig):
     """Configure Projectify admin site."""
 
-    default_site = "admin.admin.ProjectifyAdmin"
+    default_site = "projectify.admin.admin.ProjectifyAdmin"

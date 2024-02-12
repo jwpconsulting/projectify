@@ -20,10 +20,12 @@ from typing import Optional
 
 from django.db import transaction
 
-from user.models import User, UserInvite
-from user.selectors.user import user_find_by_email
-from workspace.models.workspace_user_invite import WorkspaceUserInvite
-from workspace.services.workspace import workspace_add_user
+from projectify.user.models import User, UserInvite
+from projectify.user.selectors.user import user_find_by_email
+from projectify.workspace.models.workspace_user_invite import (
+    WorkspaceUserInvite,
+)
+from projectify.workspace.services.workspace import workspace_add_user
 
 
 @transaction.atomic

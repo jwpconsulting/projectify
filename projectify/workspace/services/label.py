@@ -17,10 +17,10 @@
 """Label services."""
 
 from projectify.lib.auth import validate_perm
-from user.models import User
-from workspace.models.label import Label
-from workspace.models.workspace import Workspace
-from workspace.services.signals import send_workspace_change_signal
+from projectify.user.models import User
+from projectify.workspace.models.label import Label
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.services.signals import send_workspace_change_signal
 
 
 # Create

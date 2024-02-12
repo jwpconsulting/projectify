@@ -26,14 +26,16 @@ from rest_framework.request import (
 )
 
 from projectify.lib.auth import validate_perm
-from user.models import User
-from workspace.models.label import Label
-from workspace.models.sub_task import SubTask
-from workspace.models.task import Task
-from workspace.models.workspace import Workspace
-from workspace.models.workspace_board_section import WorkspaceBoardSection
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.workspace import (
+from projectify.user.models import User
+from projectify.workspace.models.label import Label
+from projectify.workspace.models.sub_task import SubTask
+from projectify.workspace.models.task import Task
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models.workspace_board_section import (
+    WorkspaceBoardSection,
+)
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.services.workspace import (
     workspace_add_user,
 )
 

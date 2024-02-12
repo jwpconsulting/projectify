@@ -26,10 +26,14 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
 
-from workspace.models.label import Label
-from workspace.models.workspace import Workspace
-from workspace.serializers.base import LabelBaseSerializer
-from workspace.services.label import label_create, label_delete, label_update
+from projectify.workspace.models.label import Label
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.serializers.base import LabelBaseSerializer
+from projectify.workspace.services.label import (
+    label_create,
+    label_delete,
+    label_update,
+)
 
 
 # Create

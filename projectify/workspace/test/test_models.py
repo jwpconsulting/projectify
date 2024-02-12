@@ -17,8 +17,8 @@
 """Test workspace models."""
 import pytest
 
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.sub_task import sub_task_create
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.services.sub_task import sub_task_create
 
 from .. import (
     models,

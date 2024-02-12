@@ -30,7 +30,7 @@ from django.db import (
 )
 
 if TYPE_CHECKING:
-    from workspace.models import WorkspaceBoard as _WorkspaceBoard
+    from projectify.workspace.models import WorkspaceBoard as _WorkspaceBoard
 
 
 def ensure_correct_order(apps: Apps, schema_editor: object) -> None:

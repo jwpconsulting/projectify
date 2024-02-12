@@ -24,9 +24,9 @@ from unittest.mock import MagicMock
 import pytest
 from rest_framework.request import Request
 
-from user.models.user import User
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.sub_task import sub_task_create
+from projectify.user.models.user import User
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.services.sub_task import sub_task_create
 
 from ...models import (
     SubTask,

@@ -24,4 +24,4 @@ class WorkspaceConfig(AppConfig):
     """Workspace AppConfig."""
 
     default_auto_field = "django.db.models.BigAutoField"
-    name = "workspace"
+    name = "projectify.workspace"

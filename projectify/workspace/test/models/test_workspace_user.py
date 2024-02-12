@@ -18,11 +18,11 @@
 
 import pytest
 
-from user.models import User
-from workspace.models.workspace import (
+from projectify.user.models import User
+from projectify.workspace.models.workspace import (
     Workspace,
 )
-from workspace.services.workspace import (
+from projectify.workspace.services.workspace import (
     workspace_add_user,
 )
 

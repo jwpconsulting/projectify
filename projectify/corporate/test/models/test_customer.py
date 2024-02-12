@@ -19,10 +19,10 @@
 import pytest
 from faker import Faker
 
-from corporate.models import Customer
-from user.models import User
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.workspace_user_invite import (
+from projectify.corporate.models import Customer
+from projectify.user.models import User
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.services.workspace_user_invite import (
     add_or_invite_workspace_user,
 )
 

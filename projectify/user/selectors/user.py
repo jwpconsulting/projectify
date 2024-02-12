@@ -17,7 +17,7 @@
 """User model selectors."""
 from typing import Optional
 
-from user.models import User
+from projectify.user.models import User
 
 
 def user_find_by_email(*, email: str) -> Optional[User]:

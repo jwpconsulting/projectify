@@ -28,7 +28,7 @@ from .email import (
 )
 
 if TYPE_CHECKING:
-    from user.models import User  # noqa: F401
+    from projectify.user.models import User  # noqa: F401
 
 
 class SampleEmail(TemplateEmail["User"]):

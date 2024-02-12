@@ -28,13 +28,17 @@ from stripe.api_resources.billing_portal.session import (
 )
 from stripe.api_resources.checkout.session import Session
 
-from corporate.selectors.customer import customer_find_by_workspace_uuid
-from corporate.services.customer import (
+from projectify.corporate.selectors.customer import (
+    customer_find_by_workspace_uuid,
+)
+from projectify.corporate.services.customer import (
     customer_create,
 )
 from projectify.lib.auth import validate_perm
-from user.models import User
-from workspace.selectors.workspace import workspace_find_by_workspace_uuid
+from projectify.user.models import User
+from projectify.workspace.selectors.workspace import (
+    workspace_find_by_workspace_uuid,
+)
 
 from ..models import Customer
 

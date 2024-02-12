@@ -23,10 +23,10 @@ from django.utils.timezone import (
 )
 
 from projectify.lib.auth import validate_perm
-from user.models import User
-from workspace.models import WorkspaceBoard
-from workspace.models.workspace import Workspace
-from workspace.services.signals import (
+from projectify.user.models import User
+from projectify.workspace.models import WorkspaceBoard
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.services.signals import (
     send_workspace_board_change_signal,
     send_workspace_change_signal,
 )

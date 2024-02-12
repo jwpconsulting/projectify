@@ -30,16 +30,16 @@ from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 
-from corporate.services.customer import customer_create
+from projectify.corporate.services.customer import customer_create
 from projectify.lib.auth import validate_perm
-from user.models import User
-from workspace.models.workspace import (
+from projectify.user.models import User
+from projectify.workspace.models.workspace import (
     Workspace,
 )
-from workspace.models.workspace_user import (
+from projectify.workspace.models.workspace_user import (
     WorkspaceUser,
 )
-from workspace.services.signals import send_workspace_change_signal
+from projectify.workspace.services.signals import send_workspace_change_signal
 
 logger = logging.getLogger(__name__)
 

@@ -36,54 +36,65 @@ from channels.testing import (
     WebsocketCommunicator,
 )
 
-from corporate.services.customer import customer_activate_subscription
 from projectify.asgi import (
     websocket_application,
 )
-from user.models import User
-from user.services.user import user_create
-from workspace.models.label import Label
-from workspace.models.sub_task import SubTask
-from workspace.models.task import Task
-from workspace.models.workspace import Workspace
-from workspace.models.workspace_board import WorkspaceBoard
-from workspace.models.workspace_board_section import WorkspaceBoardSection
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.selectors.workspace_user import (
+from projectify.corporate.services.customer import (
+    customer_activate_subscription,
+)
+from projectify.user.models import User
+from projectify.user.services.user import user_create
+from projectify.workspace.models.label import Label
+from projectify.workspace.models.sub_task import SubTask
+from projectify.workspace.models.task import Task
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models.workspace_board import WorkspaceBoard
+from projectify.workspace.models.workspace_board_section import (
+    WorkspaceBoardSection,
+)
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.selectors.workspace_user import (
     workspace_user_find_for_workspace,
 )
-from workspace.services.chat_message import chat_message_create
-from workspace.services.label import label_create, label_delete, label_update
-from workspace.services.sub_task import sub_task_create, sub_task_update_many
-from workspace.services.task import (
+from projectify.workspace.services.chat_message import chat_message_create
+from projectify.workspace.services.label import (
+    label_create,
+    label_delete,
+    label_update,
+)
+from projectify.workspace.services.sub_task import (
+    sub_task_create,
+    sub_task_update_many,
+)
+from projectify.workspace.services.task import (
     task_create,
     task_create_nested,
     task_delete,
     task_move_after,
     task_update_nested,
 )
-from workspace.services.workspace import (
+from projectify.workspace.services.workspace import (
     workspace_create,
     workspace_delete,
     workspace_update,
 )
-from workspace.services.workspace_board import (
+from projectify.workspace.services.workspace_board import (
     workspace_board_archive,
     workspace_board_create,
     workspace_board_delete,
     workspace_board_update,
 )
-from workspace.services.workspace_board_section import (
+from projectify.workspace.services.workspace_board_section import (
     workspace_board_section_create,
     workspace_board_section_delete,
     workspace_board_section_move,
     workspace_board_section_update,
 )
-from workspace.services.workspace_user import (
+from projectify.workspace.services.workspace_user import (
     workspace_user_delete,
     workspace_user_update,
 )
-from workspace.services.workspace_user_invite import (
+from projectify.workspace.services.workspace_user_invite import (
     add_or_invite_workspace_user,
 )
 

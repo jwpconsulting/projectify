@@ -30,9 +30,9 @@ from django.db import (
     transaction,
 )
 
-from corporate.types import CustomerSubscriptionStatus
+from projectify.corporate.types import CustomerSubscriptionStatus
 from projectify.lib.models import BaseModel
-from workspace.models import Workspace
+from projectify.workspace.models import Workspace
 
 
 class CustomerQuerySet(models.QuerySet["Customer"]):

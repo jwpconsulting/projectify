@@ -20,10 +20,10 @@ from uuid import UUID
 
 from django.db.models import Prefetch
 
-from user.models import User
-from workspace.models.workspace import Workspace, WorkspaceQuerySet
-from workspace.models.workspace_board import WorkspaceBoard
-from workspace.models.workspace_user import WorkspaceUser
+from projectify.user.models import User
+from projectify.workspace.models.workspace import Workspace, WorkspaceQuerySet
+from projectify.workspace.models.workspace_board import WorkspaceBoard
+from projectify.workspace.models.workspace_user import WorkspaceUser
 
 WorkspaceDetailQuerySet = Workspace.objects.prefetch_related(
     "label_set",

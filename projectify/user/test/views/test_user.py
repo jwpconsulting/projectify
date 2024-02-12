@@ -36,8 +36,8 @@ import pytest
 from rest_framework.status import HTTP_200_OK, HTTP_403_FORBIDDEN
 from rest_framework.test import APIClient
 
+from projectify.user.services.user import user_sign_up
 from pytest_types import DjangoAssertNumQueries
-from user.services.user import user_sign_up
 
 from ...models import User
 

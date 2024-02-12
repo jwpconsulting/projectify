@@ -17,11 +17,14 @@
 """Services for customer model."""
 import logging
 
-from corporate.models import Customer
-from corporate.types import CustomerSubscriptionStatus, WorkspaceFeatures
+from projectify.corporate.models import Customer
+from projectify.corporate.types import (
+    CustomerSubscriptionStatus,
+    WorkspaceFeatures,
+)
 from projectify.lib.auth import validate_perm
-from user.models import User
-from workspace.models.workspace import Workspace
+from projectify.user.models import User
+from projectify.workspace.models.workspace import Workspace
 
 logger = logging.getLogger(__name__)
 

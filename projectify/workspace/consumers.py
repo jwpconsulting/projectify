@@ -41,25 +41,30 @@ from channels.generic.websocket import (
 )
 from rest_framework import serializers
 
-from user.models import User
-from workspace.models.task import Task
-from workspace.models.workspace import Workspace
-from workspace.models.workspace_board import WorkspaceBoard
-from workspace.selectors.task import TaskDetailQuerySet, task_find_by_task_uuid
-from workspace.selectors.workspace import (
+from projectify.user.models import User
+from projectify.workspace.models.task import Task
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models.workspace_board import WorkspaceBoard
+from projectify.workspace.selectors.task import (
+    TaskDetailQuerySet,
+    task_find_by_task_uuid,
+)
+from projectify.workspace.selectors.workspace import (
     WorkspaceDetailQuerySet,
     workspace_find_by_workspace_uuid,
 )
-from workspace.selectors.workspace_board import (
+from projectify.workspace.selectors.workspace_board import (
     WorkspaceBoardDetailQuerySet,
     workspace_board_find_by_workspace_board_uuid,
 )
-from workspace.serializers.task_detail import TaskDetailSerializer
-from workspace.serializers.workspace import WorkspaceDetailSerializer
-from workspace.serializers.workspace_board import (
+from projectify.workspace.serializers.task_detail import TaskDetailSerializer
+from projectify.workspace.serializers.workspace import (
+    WorkspaceDetailSerializer,
+)
+from projectify.workspace.serializers.workspace_board import (
     WorkspaceBoardDetailSerializer,
 )
-from workspace.types import ConsumerEvent, Message
+from projectify.workspace.types import ConsumerEvent, Message
 
 async_to_sync = cast(Any, _async_to_sync)
 

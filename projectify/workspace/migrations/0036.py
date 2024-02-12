@@ -28,7 +28,7 @@ from django.db import (
 )
 
 if TYPE_CHECKING:
-    from workspace.models import Task as _Task
+    from projectify.workspace.models import Task as _Task
 
 
 def add_unique_task_number(apps: Apps, schema_editor: object) -> None:

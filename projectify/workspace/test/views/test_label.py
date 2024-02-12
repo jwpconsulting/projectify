@@ -21,10 +21,10 @@ import pytest
 from rest_framework.status import HTTP_204_NO_CONTENT
 from rest_framework.test import APIClient
 
+from projectify.workspace.models.label import Label
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models.workspace_user import WorkspaceUser
 from pytest_types import DjangoAssertNumQueries
-from workspace.models.label import Label
-from workspace.models.workspace import Workspace
-from workspace.models.workspace_user import WorkspaceUser
 
 
 @pytest.mark.django_db

@@ -33,7 +33,7 @@ from django.template.defaultfilters import (
 from projectify.lib.models import BaseModel
 
 if TYPE_CHECKING:
-    from user.models import (  # noqa: F401
+    from projectify.user.models import (  # noqa: F401
         User,
     )
 

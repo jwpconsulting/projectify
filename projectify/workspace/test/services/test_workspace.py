@@ -19,14 +19,16 @@ import pytest
 from faker import Faker
 from rest_framework.exceptions import ValidationError
 
-from user.models.user import User
-from workspace.models.workspace import Workspace
-from workspace.models.workspace_board import WorkspaceBoard
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.workspace import workspace_delete
-from workspace.services.workspace_board import workspace_board_delete
-from workspace.services.workspace_user import workspace_user_delete
-from workspace.services.workspace_user_invite import (
+from projectify.user.models.user import User
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models.workspace_board import WorkspaceBoard
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.services.workspace import workspace_delete
+from projectify.workspace.services.workspace_board import (
+    workspace_board_delete,
+)
+from projectify.workspace.services.workspace_user import workspace_user_delete
+from projectify.workspace.services.workspace_user_invite import (
     add_or_invite_workspace_user,
     uninvite_user,
 )

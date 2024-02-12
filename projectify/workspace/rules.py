@@ -27,21 +27,27 @@ from typing import (
 
 import rules
 
-from corporate.services.customer import customer_check_active_for_workspace
-from corporate.types import WorkspaceFeatures
-from user.models import User
-from workspace.models.chat_message import ChatMessage
-from workspace.models.const import WorkspaceUserRoles
-from workspace.models.label import Label
-from workspace.models.sub_task import SubTask
-from workspace.models.task import Task
-from workspace.models.task_label import TaskLabel
-from workspace.models.workspace import Workspace
-from workspace.models.workspace_board import WorkspaceBoard
-from workspace.models.workspace_board_section import WorkspaceBoardSection
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.models.workspace_user_invite import WorkspaceUserInvite
-from workspace.selectors.workspace_user import (
+from projectify.corporate.services.customer import (
+    customer_check_active_for_workspace,
+)
+from projectify.corporate.types import WorkspaceFeatures
+from projectify.user.models import User
+from projectify.workspace.models.chat_message import ChatMessage
+from projectify.workspace.models.const import WorkspaceUserRoles
+from projectify.workspace.models.label import Label
+from projectify.workspace.models.sub_task import SubTask
+from projectify.workspace.models.task import Task
+from projectify.workspace.models.task_label import TaskLabel
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models.workspace_board import WorkspaceBoard
+from projectify.workspace.models.workspace_board_section import (
+    WorkspaceBoardSection,
+)
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.models.workspace_user_invite import (
+    WorkspaceUserInvite,
+)
+from projectify.workspace.selectors.workspace_user import (
     workspace_user_find_for_workspace,
 )
 

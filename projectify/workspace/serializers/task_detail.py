@@ -38,8 +38,8 @@ from rest_framework.request import (
     Request,
 )
 
-from user.models.user import User
-from workspace.selectors.workspace_board_section import (
+from projectify.user.models.user import User
+from projectify.workspace.selectors.workspace_board_section import (
     workspace_board_section_find_for_user_and_uuid,
 )
 

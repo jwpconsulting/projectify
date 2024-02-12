@@ -28,13 +28,15 @@ from rest_framework.test import (
     APIClient,
 )
 
+from projectify.workspace.models.task import (
+    Task,
+)
+from projectify.workspace.models.workspace_board_section import (
+    WorkspaceBoardSection,
+)
 from pytest_types import (
     DjangoAssertNumQueries,
 )
-from workspace.models.task import (
-    Task,
-)
-from workspace.models.workspace_board_section import WorkspaceBoardSection
 
 from ... import (
     models,

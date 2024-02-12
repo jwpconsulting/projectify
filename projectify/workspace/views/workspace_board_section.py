@@ -26,20 +26,20 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from workspace.models import (
+from projectify.workspace.models import (
     WorkspaceBoard,
     WorkspaceBoardSection,
 )
-from workspace.models.workspace_board_section import (
+from projectify.workspace.models.workspace_board_section import (
     WorkspaceBoardSectionQuerySet,
 )
-from workspace.selectors.workspace_board_section import (
+from projectify.workspace.selectors.workspace_board_section import (
     workspace_board_section_find_for_user_and_uuid,
 )
-from workspace.serializers.workspace_board_section import (
+from projectify.workspace.serializers.workspace_board_section import (
     WorkspaceBoardSectionDetailSerializer,
 )
-from workspace.services.workspace_board_section import (
+from projectify.workspace.services.workspace_board_section import (
     workspace_board_section_create,
     workspace_board_section_delete,
     workspace_board_section_move,

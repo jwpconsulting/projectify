@@ -34,7 +34,7 @@ from rest_framework import (
 from projectify import (
     utils,
 )
-from user import serializers as user_serializers
+from projectify.user import serializers as user_serializers
 
 from .. import (
     models,

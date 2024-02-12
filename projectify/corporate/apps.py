@@ -29,7 +29,7 @@ class CorporateConfig(AppConfig):
     """App config."""
 
     default_auto_field = "django.db.models.BigAutoField"
-    name = "corporate"
+    name = "projectify.corporate"
 
     def ready(self) -> None:
         """Execute on loading the app."""

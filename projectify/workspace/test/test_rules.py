@@ -18,26 +18,33 @@
 import pytest
 from faker import Faker
 
-from corporate.services.customer import customer_cancel_subscription
-from corporate.types import CustomerSubscriptionStatus
-from user.models import User
-from user.services.user import user_create
-from workspace.models.const import WorkspaceUserRoles
-from workspace.models.task import Task
-from workspace.models.workspace import Workspace
-from workspace.models.workspace_board import WorkspaceBoard
-from workspace.models.workspace_board_section import WorkspaceBoardSection
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.chat_message import chat_message_create
-from workspace.services.label import label_create
-from workspace.services.sub_task import sub_task_create
-from workspace.services.task import task_create
-from workspace.services.workspace import workspace_add_user, workspace_create
-from workspace.services.workspace_board import workspace_board_create
-from workspace.services.workspace_board_section import (
+from projectify.corporate.services.customer import customer_cancel_subscription
+from projectify.corporate.types import CustomerSubscriptionStatus
+from projectify.user.models import User
+from projectify.user.services.user import user_create
+from projectify.workspace.models.const import WorkspaceUserRoles
+from projectify.workspace.models.task import Task
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models.workspace_board import WorkspaceBoard
+from projectify.workspace.models.workspace_board_section import (
+    WorkspaceBoardSection,
+)
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.services.chat_message import chat_message_create
+from projectify.workspace.services.label import label_create
+from projectify.workspace.services.sub_task import sub_task_create
+from projectify.workspace.services.task import task_create
+from projectify.workspace.services.workspace import (
+    workspace_add_user,
+    workspace_create,
+)
+from projectify.workspace.services.workspace_board import (
+    workspace_board_create,
+)
+from projectify.workspace.services.workspace_board_section import (
     workspace_board_section_create,
 )
-from workspace.services.workspace_user_invite import (
+from projectify.workspace.services.workspace_user_invite import (
     add_or_invite_workspace_user,
 )
 
@@ -217,7 +224,7 @@ class TestTrialRules:
         We go down to allowing one or two of each.
         """
         monkeypatch.setattr(
-            "workspace.rules.trial_conditions",
+            "projectify.workspace.rules.trial_conditions",
             {
                 "ChatMessage": 1,
                 "Label": 1,

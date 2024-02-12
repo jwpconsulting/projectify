@@ -23,7 +23,7 @@ from django.contrib import (
     auth,
 )
 
-from premail.email import (
+from projectify.premail.email import (
     TemplateEmail,
 )
 

@@ -21,7 +21,7 @@ The order of rules follows the ordering of models.
 """
 import rules
 
-from workspace.rules import (
+from projectify.workspace.rules import (
     is_at_least_owner,
 )
 

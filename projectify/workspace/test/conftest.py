@@ -43,30 +43,35 @@ from django.utils import (
 import pytest
 from faker import Faker
 
-from corporate.services.customer import customer_activate_subscription
-from user.models import User, UserInvite
-from workspace.models.label import Label
-from workspace.models.workspace import Workspace
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.models.workspace_user_invite import (
+from projectify.corporate.services.customer import (
+    customer_activate_subscription,
+)
+from projectify.user.models import User, UserInvite
+from projectify.workspace.models.label import Label
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.models.workspace_user_invite import (
     WorkspaceUserInvite,
 )
-from workspace.selectors.workspace_user import (
+from projectify.workspace.selectors.workspace_user import (
     workspace_user_find_for_workspace,
 )
-from workspace.services.chat_message import chat_message_create
-from workspace.services.label import label_create
-from workspace.services.sub_task import sub_task_create
-from workspace.services.task import task_create
-from workspace.services.workspace import workspace_add_user, workspace_create
-from workspace.services.workspace_board import (
+from projectify.workspace.services.chat_message import chat_message_create
+from projectify.workspace.services.label import label_create
+from projectify.workspace.services.sub_task import sub_task_create
+from projectify.workspace.services.task import task_create
+from projectify.workspace.services.workspace import (
+    workspace_add_user,
+    workspace_create,
+)
+from projectify.workspace.services.workspace_board import (
     workspace_board_archive,
     workspace_board_create,
 )
-from workspace.services.workspace_board_section import (
+from projectify.workspace.services.workspace_board_section import (
     workspace_board_section_create,
 )
-from workspace.services.workspace_user_invite import (
+from projectify.workspace.services.workspace_user_invite import (
     add_or_invite_workspace_user,
 )
 

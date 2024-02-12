@@ -26,8 +26,8 @@ from faker import Faker
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from user.models import User
-from user.services.user import (
+from projectify.user.models import User
+from projectify.user.services.user import (
     user_confirm_email,
     user_confirm_password_reset,
     user_create,

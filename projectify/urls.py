@@ -54,28 +54,29 @@ from django.urls import (
     path,
 )
 
-from workspace.consumers import (
+from projectify.workspace.consumers import (
     TaskConsumer,
     WorkspaceBoardConsumer,
     WorkspaceConsumer,
 )
 
 urlpatterns: Iterable[Union[URLResolver, URLPattern]] = (
+    # TODO may I use projectify.admin.admin.urls here?
     path("admin/", admin.site.urls),
     path(
         r"premail/",
-        include("premail.urls"),
+        include("projectify.premail.urls"),
     ),
     path(
         r"user/",
-        include("user.urls"),
+        include("projectify.user.urls"),
     ),
     path(
         "workspace/",
-        include("workspace.urls"),
+        include("projectify.workspace.urls"),
     ),
-    path("blog/api/v1/", include("blog.urls")),
-    path("corporate/", include("corporate.urls")),
+    path("blog/api/v1/", include("projectify.blog.urls")),
+    path("corporate/", include("projectify.corporate.urls")),
 )
 
 if settings.SERVE_MEDIA:

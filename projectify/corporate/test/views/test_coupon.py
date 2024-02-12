@@ -20,11 +20,13 @@ from django.urls import reverse
 import pytest
 from rest_framework.test import APIClient
 
-from corporate.models.coupon import Coupon
-from corporate.models.customer import Customer
-from corporate.services.customer import customer_check_active_for_workspace
+from projectify.corporate.models.coupon import Coupon
+from projectify.corporate.models.customer import Customer
+from projectify.corporate.services.customer import (
+    customer_check_active_for_workspace,
+)
+from projectify.workspace.models.workspace import Workspace
 from pytest_types import DjangoAssertNumQueries
-from workspace.models.workspace import Workspace
 
 
 @pytest.mark.django_db

@@ -17,9 +17,9 @@
 """Workspace user selectors."""
 from typing import Optional
 
-from user.models import User
-from workspace.models.workspace import Workspace
-from workspace.models.workspace_user import WorkspaceUser
+from projectify.user.models import User
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models.workspace_user import WorkspaceUser
 
 
 def workspace_user_find_for_workspace(

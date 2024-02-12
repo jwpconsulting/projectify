@@ -17,11 +17,13 @@
 """Workspace board model tests."""
 import pytest
 
-from workspace.models.workspace import Workspace
-from workspace.models.workspace_board import WorkspaceBoard
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.workspace_board import workspace_board_archive
-from workspace.services.workspace_board_section import (
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models.workspace_board import WorkspaceBoard
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.services.workspace_board import (
+    workspace_board_archive,
+)
+from projectify.workspace.services.workspace_board_section import (
     workspace_board_section_create,
 )
 

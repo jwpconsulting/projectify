@@ -21,9 +21,9 @@ from uuid import UUID
 
 from django.db.models import Prefetch
 
-from user.models import User
-from workspace.models.chat_message import ChatMessage
-from workspace.models.task import Task, TaskQuerySet
+from projectify.user.models import User
+from projectify.workspace.models.chat_message import ChatMessage
+from projectify.workspace.models.task import Task, TaskQuerySet
 
 TaskDetailQuerySet: TaskQuerySet = (
     Task.objects.select_related(

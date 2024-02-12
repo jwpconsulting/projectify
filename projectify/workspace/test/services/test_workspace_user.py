@@ -17,11 +17,11 @@
 """Test workspace user services."""
 import pytest
 
-from user.models import User
-from workspace.models.workspace import Workspace
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.workspace import workspace_add_user
-from workspace.services.workspace_user import workspace_user_delete
+from projectify.user.models import User
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.services.workspace import workspace_add_user
+from projectify.workspace.services.workspace_user import workspace_user_delete
 
 
 @pytest.mark.django_db

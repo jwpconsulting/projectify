@@ -20,13 +20,13 @@ Chat message services.
 Chat messages will not be in the initial launch.
 """
 from projectify.lib.auth import validate_perm
-from user.models import User
-from workspace.models.chat_message import ChatMessage
-from workspace.models.task import Task
-from workspace.selectors.workspace_user import (
+from projectify.user.models import User
+from projectify.workspace.models.chat_message import ChatMessage
+from projectify.workspace.models.task import Task
+from projectify.workspace.selectors.workspace_user import (
     workspace_user_find_for_workspace,
 )
-from workspace.services.signals import send_task_change_signal
+from projectify.workspace.services.signals import send_task_change_signal
 
 
 # TODO this could take an author instead of who -> user is derived from author

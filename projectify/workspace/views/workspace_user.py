@@ -20,10 +20,10 @@ from rest_framework import (
     generics,
 )
 
-from workspace.serializers.base import (
+from projectify.workspace.serializers.base import (
     WorkspaceUserBaseSerializer,
 )
-from workspace.services.workspace_user import (
+from projectify.workspace.services.workspace_user import (
     workspace_user_delete,
     workspace_user_update,
 )

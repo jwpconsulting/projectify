@@ -24,10 +24,10 @@ from django.contrib.auth.models import (
 
 import pytest
 
-from workspace.models.label import Label
-from workspace.models.workspace import Workspace
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.label import label_create
+from projectify.workspace.models.label import Label
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.services.label import label_create
 
 from ... import (
     models,

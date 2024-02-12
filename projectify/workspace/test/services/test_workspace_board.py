@@ -17,9 +17,11 @@
 """Test workspace board services."""
 import pytest
 
-from workspace.models.workspace_board import WorkspaceBoard
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.workspace_board import workspace_board_archive
+from projectify.workspace.models.workspace_board import WorkspaceBoard
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.services.workspace_board import (
+    workspace_board_archive,
+)
 
 
 @pytest.mark.django_db

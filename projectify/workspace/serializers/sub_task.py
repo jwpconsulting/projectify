@@ -32,10 +32,10 @@ from rest_framework import (
     serializers,
 )
 
-from workspace.serializers.base import (
+from projectify.workspace.serializers.base import (
     TaskBaseSerializer,
 )
-from workspace.services.sub_task import (
+from projectify.workspace.services.sub_task import (
     ValidatedData,
     ValidatedDatum,
     ValidatedDatumWithUuid,

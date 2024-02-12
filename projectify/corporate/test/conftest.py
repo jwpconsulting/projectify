@@ -19,19 +19,19 @@
 import pytest
 from faker import Faker
 
-from corporate.models import Customer
-from corporate.models.coupon import Coupon
-from corporate.services.coupon import coupon_create
-from corporate.services.customer import (
+from projectify.corporate.models import Customer
+from projectify.corporate.models.coupon import Coupon
+from projectify.corporate.services.coupon import coupon_create
+from projectify.corporate.services.customer import (
     customer_activate_subscription,
 )
-from user.models import User
-from workspace.models.workspace import Workspace
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.selectors.workspace_user import (
+from projectify.user.models import User
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.selectors.workspace_user import (
     workspace_user_find_for_workspace,
 )
-from workspace.services.workspace import workspace_create
+from projectify.workspace.services.workspace import workspace_create
 
 
 @pytest.fixture

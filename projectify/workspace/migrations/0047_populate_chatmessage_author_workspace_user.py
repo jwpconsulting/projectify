@@ -30,8 +30,8 @@ from django.db import (
 )
 
 if TYPE_CHECKING:
-    from workspace.models import ChatMessage as _ChatMessage
-    from workspace.models import WorkspaceUser as _WorkspaceUser
+    from projectify.workspace.models import ChatMessage as _ChatMessage
+    from projectify.workspace.models import WorkspaceUser as _WorkspaceUser
 
 
 def add_author_workspace_user_to_chat_message(

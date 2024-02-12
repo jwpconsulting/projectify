@@ -62,15 +62,15 @@ from faker import (
     Faker,
 )
 
-from corporate.models import (
+from projectify.corporate.models import (
     Customer,
 )
-from corporate.types import CustomerSubscriptionStatus
-from user.models import (
+from projectify.corporate.types import CustomerSubscriptionStatus
+from projectify.user.models import (
     User,
 )
-from user.services.user import user_create, user_create_superuser
-from workspace.models import (
+from projectify.user.services.user import user_create, user_create_superuser
+from projectify.workspace.models import (
     ChatMessage,
     Label,
     Task,
@@ -79,10 +79,10 @@ from workspace.models import (
     WorkspaceBoard,
     WorkspaceBoardSection,
 )
-from workspace.models.sub_task import (
+from projectify.workspace.models.sub_task import (
     SubTask,
 )
-from workspace.models.workspace_user import (
+from projectify.workspace.models.workspace_user import (
     WorkspaceUser,
 )
 

@@ -24,4 +24,4 @@ class UserConfig(AppConfig):
     """UserConfig class."""
 
     default_auto_field = "django.db.models.BigAutoField"
-    name = "user"
+    name = "projectify.user"

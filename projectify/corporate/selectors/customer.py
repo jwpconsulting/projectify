@@ -19,9 +19,9 @@ import logging
 from typing import Optional
 from uuid import UUID
 
-from corporate.models import Customer
-from user.models import User
-from workspace.models.workspace import Workspace
+from projectify.corporate.models import Customer
+from projectify.user.models import User
+from projectify.workspace.models.workspace import Workspace
 
 logger = logging.getLogger(__name__)
 

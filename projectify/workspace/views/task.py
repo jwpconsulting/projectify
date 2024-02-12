@@ -32,18 +32,23 @@ from rest_framework.response import (
 )
 from rest_framework.views import APIView
 
-from workspace.models.workspace_board_section import WorkspaceBoardSection
-from workspace.selectors.task import TaskDetailQuerySet, task_find_by_task_uuid
-from workspace.selectors.workspace_board_section import (
+from projectify.workspace.models.workspace_board_section import (
+    WorkspaceBoardSection,
+)
+from projectify.workspace.selectors.task import (
+    TaskDetailQuerySet,
+    task_find_by_task_uuid,
+)
+from projectify.workspace.selectors.workspace_board_section import (
     workspace_board_section_find_for_user_and_uuid,
 )
-from workspace.serializers.base import TaskBaseSerializer
-from workspace.serializers.task_detail import (
+from projectify.workspace.serializers.base import TaskBaseSerializer
+from projectify.workspace.serializers.task_detail import (
     TaskCreateUpdateSerializer,
     TaskDetailSerializer,
 )
-from workspace.services.sub_task import ValidatedData
-from workspace.services.task import (
+from projectify.workspace.services.sub_task import ValidatedData
+from projectify.workspace.services.task import (
     task_create_nested,
     task_delete,
     task_move_after,

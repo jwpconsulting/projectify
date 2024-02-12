@@ -18,9 +18,9 @@
 import pytest
 from faker import Faker
 
-from workspace.models.task import Task
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.chat_message import chat_message_create
+from projectify.workspace.models.task import Task
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.services.chat_message import chat_message_create
 
 
 @pytest.mark.django_db

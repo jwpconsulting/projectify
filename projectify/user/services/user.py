@@ -29,10 +29,13 @@ from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 
-from user.emails import UserEmailConfirmationEmail, UserPasswordResetEmail
-from user.models.user import User
-from user.selectors.user import user_find_by_email
-from user.services.user_invite import user_invite_redeem_many
+from projectify.user.emails import (
+    UserEmailConfirmationEmail,
+    UserPasswordResetEmail,
+)
+from projectify.user.models.user import User
+from projectify.user.selectors.user import user_find_by_email
+from projectify.user.services.user_invite import user_invite_redeem_many
 
 logger = logging.getLogger(__name__)
 

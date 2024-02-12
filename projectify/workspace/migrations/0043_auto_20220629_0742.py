@@ -29,7 +29,7 @@ from django.db import (
 )
 
 if TYPE_CHECKING:
-    from workspace.models import Task as _Task
+    from projectify.workspace.models import Task as _Task
 
 
 def add_assignee_workspace_user_to_task(

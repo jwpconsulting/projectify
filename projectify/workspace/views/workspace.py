@@ -36,8 +36,8 @@ from rest_framework.response import (
     Response,
 )
 
-from workspace.selectors.workspace import WorkspaceDetailQuerySet
-from workspace.services.workspace import (
+from projectify.workspace.selectors.workspace import WorkspaceDetailQuerySet
+from projectify.workspace.services.workspace import (
     workspace_create,
     workspace_update,
 )

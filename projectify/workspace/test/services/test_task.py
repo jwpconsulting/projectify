@@ -19,13 +19,15 @@ from datetime import datetime
 
 import pytest
 
-from workspace.models import WorkspaceBoard
-from workspace.models.label import Label
-from workspace.models.sub_task import SubTask
-from workspace.models.task import Task
-from workspace.models.workspace_board_section import WorkspaceBoardSection
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.services.task import (
+from projectify.workspace.models import WorkspaceBoard
+from projectify.workspace.models.label import Label
+from projectify.workspace.models.sub_task import SubTask
+from projectify.workspace.models.task import Task
+from projectify.workspace.models.workspace_board_section import (
+    WorkspaceBoardSection,
+)
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.services.task import (
     task_create,
     task_create_nested,
     task_move_after,

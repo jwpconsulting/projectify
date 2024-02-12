@@ -26,7 +26,7 @@ from django.urls import (
 import pytest
 from rest_framework.test import APIClient
 
-from corporate.types import CustomerSubscriptionStatus
+from projectify.corporate.types import CustomerSubscriptionStatus
 
 from ...models import Customer
 

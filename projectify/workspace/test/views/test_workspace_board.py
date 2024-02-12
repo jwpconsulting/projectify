@@ -29,18 +29,20 @@ from rest_framework.test import (
     APIClient,
 )
 
+from projectify.workspace.models import TaskLabel
+from projectify.workspace.models.task import Task
+from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.models.workspace_board import WorkspaceBoard
+from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.selectors.workspace_board import (
+    workspace_board_find_by_workspace_uuid,
+)
+from projectify.workspace.services.workspace_board import (
+    workspace_board_archive,
+)
 from pytest_types import (
     DjangoAssertNumQueries,
 )
-from workspace.models import TaskLabel
-from workspace.models.task import Task
-from workspace.models.workspace import Workspace
-from workspace.models.workspace_board import WorkspaceBoard
-from workspace.models.workspace_user import WorkspaceUser
-from workspace.selectors.workspace_board import (
-    workspace_board_find_by_workspace_uuid,
-)
-from workspace.services.workspace_board import workspace_board_archive
 
 
 # Create

@@ -34,8 +34,8 @@ from .types import (
 )
 
 if TYPE_CHECKING:
-    from user.models import UserInvite  # noqa: F401
-    from workspace.models import Workspace  # noqa: F401
+    from projectify.user.models import UserInvite  # noqa: F401
+    from projectify.workspace.models import Workspace  # noqa: F401
 
 
 class WorkspaceUserInviteQuerySet(models.QuerySet["WorkspaceUserInvite"]):

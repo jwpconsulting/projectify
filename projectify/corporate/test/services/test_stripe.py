@@ -18,11 +18,11 @@
 import pytest
 from rest_framework.exceptions import PermissionDenied
 
-from corporate.models import Customer
-from corporate.services.stripe import (
+from projectify.corporate.models import Customer
+from projectify.corporate.services.stripe import (
     create_billing_portal_session_for_workspace_uuid,
 )
-from workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.models.workspace_user import WorkspaceUser
 
 
 @pytest.mark.django_db

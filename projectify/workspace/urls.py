@@ -20,14 +20,14 @@ from django.urls import (
     path,
 )
 
-from workspace.views.label import LabelCreate, LabelUpdateDelete
-from workspace.views.workspace_board import (
+from projectify.workspace.views.label import LabelCreate, LabelUpdateDelete
+from projectify.workspace.views.workspace_board import (
     WorkspaceBoardArchive,
     WorkspaceBoardArchivedList,
     WorkspaceBoardCreate,
     WorkspaceBoardReadUpdateDelete,
 )
-from workspace.views.workspace_board_section import (
+from projectify.workspace.views.workspace_board_section import (
     WorkspaceBoardSectionCreate,
     WorkspaceBoardSectionMove,
     WorkspaceBoardSectionReadUpdateDelete,
