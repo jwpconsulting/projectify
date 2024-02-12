@@ -1,5 +1,6 @@
-.env
-projectify/media/
-projectify/staticfiles/
-__pycache__
-/.direnv
+/backend/.env
+/backend/projectify/media/
+/backend/projectify/staticfiles/
+/backend/**/__pycache__
+/backend/.direnv
+/backend/.mypy_cache/
