@@ -23,10 +23,11 @@ executors:
           POSTGRES_PASSWORD: projectify
 
 commands:
-  install_dependencies:
+  prepare_test_backend:
     description: Install poetry
     steps:
-      - checkout
+      - checkout:
+          path: ~/projectify
       - restore_cache:
           keys:
             - poetry-cache-v1-{{ checksum "poetry.lock" }}
@@ -53,8 +54,9 @@ commands:
 jobs:
   poetry_check:
     executor: python
+    working_directory: ~/projectify/backend
     steps:
-      - install_dependencies
+      - prepare_test_backend
       - run:
           name: Poetry check
           command: poetry check
@@ -66,8 +68,9 @@ jobs:
           command: git diff --exit-code HEAD -- requirements.txt
   lint:
     executor: python
+    working_directory: ~/projectify/backend
     steps:
-      - install_dependencies
+      - prepare_test_backend
       - run:
           name: Run ruff format
           command: poetry run ruff format --check .
@@ -76,22 +79,25 @@ jobs:
           command: poetry run ruff .
   mypy:
     executor: python
+    working_directory: ~/projectify/backend
     steps:
-      - install_dependencies
+      - prepare_test_backend
       - run:
           name: Run mypy
           command: poetry run mypy .
   pyright:
     executor: python
+    working_directory: ~/projectify/backend
     steps:
-      - install_dependencies
+      - prepare_test_backend
       - run:
           name: Run pyright
           command: poetry run pyright .
   collectstatic:
     executor: python
+    working_directory: ~/projectify/backend
     steps:
-      - install_dependencies
+      - prepare_test_backend
       - run:
           name: Run collectstatic
           command: poetry run ./manage.py collectstatic --noinput
@@ -99,9 +105,10 @@ jobs:
             DJANGO_CONFIGURATION: TestCollectstatic
   tests:
     executor: python_and_postgres
+    working_directory: ~/projectify/backend
     parallelism: 8
     steps:
-      - install_dependencies
+      - prepare_test_backend
       - run:
           name: Create junit folder
           command: mkdir junit
@@ -119,8 +126,9 @@ jobs:
           path: test-results
   seeddb:
     executor: python_and_postgres
+    working_directory: ~/projectify/backend
     steps:
-      - install_dependencies
+      - prepare_test_backend
       - run:
           name: Migrate
           command: poetry run ./manage.py migrate
