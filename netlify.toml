@@ -1,6 +1,8 @@
 [build]
 base = "frontend"
 command = "npm run build"
+# Apparently netlify automatically assumes this to be relative to the base
+# folder
 publish = "build"
 
 [build.environment]
