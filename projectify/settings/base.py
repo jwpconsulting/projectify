@@ -107,7 +107,7 @@ class Base(Configuration):
         "django_celery_results",
         "django_extensions",
         # TODO I think this is ours, not third party
-        "premail",
+        "projectify.premail",
         "rest_framework",
         "rules.apps.AutodiscoverRulesConfig",
         "pgtrigger",
@@ -116,12 +116,12 @@ class Base(Configuration):
     INSTALLED_APPS_FIRST_PARTY = (
         # TODO check if this can be alphabetized
         # Replaces 'django.contrib.admin'
-        "admin.apps.ProjectifyAdminConfig",
+        "projectify.admin.apps.ProjectifyAdminConfig",
         "projectify",
-        "user",
-        "workspace",
-        "blog",
-        "corporate",
+        "projectify.user.apps.UserConfig",
+        "projectify.workspace.apps.WorkspaceConfig",
+        "projectify.blog.apps.BlogConfig",
+        "projectify.corporate.apps.CorporateConfig",
     )
 
     INSTALLED_APPS: Sequence[str] = (

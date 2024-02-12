@@ -78,7 +78,22 @@ git add requirements.txt
 # Maybe git commit here
 ```
 
-# Postgres troubleshooting
+# PostgreSQL troubleshooting
+
+## Use PostgreSQL with unix domain sockets
+
+Referring to the [dj-database-url documentation on URL schema](https://github.com/jazzband/dj-database-url?tab=readme-ov-file#url-schema), we see that we can write unix domain socket paths like so:
+
+```
+postgres://%2Fvar%2Flib%2Fpostgresql/dbname
+```
+
+In our case, running PostgreSQL 15 installed through Nix on macOS, we see
+that there is a socket in `/tmp/.s.PGSQL.5432`. We therefore craft the following link:
+
+```
+DATABASE_URL = postgres://%2Ftmp/projectify
+```
 
 ## Creating a db after installing with MacPorts
 

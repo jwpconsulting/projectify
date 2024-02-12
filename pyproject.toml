@@ -71,15 +71,15 @@ ignore_missing_imports = true
 # Our own modules
 [[tool.mypy.overrides]]
 module = [
-    "premail.tasks",
+    "projectify.premail.tasks",
 ]
 disallow_untyped_decorators = false
 
 
 [[tool.mypy.overrides]]
 module = [
-    "workspace.test.test_migrations",
-    "premail.test.*",
+    "projectify.workspace.test.test_migrations",
+    "projectify.premail.test.*",
 ]
 disallow_untyped_defs = false
 
@@ -93,21 +93,21 @@ exclude = [
     # TODO consider just removing whitelist.py
     "whitelist.py",
     # Created by django so we don't bother
-    "*/migrations/*.py",
+    "projectify/*/migrations/*.py",
     # Missing type stub
-    "workspace/test/test_migrations.py",
+    "projectify/workspace/test/test_migrations.py",
     # This one is sort of covered by mypy
     "projectify/settings/monkeypatch.py",
     # TODO cloudinary stub
     "projectify/utils.py",
     # TODO django rules stub
-    "*/rules.py",
+    "projectify/*/rules.py",
     # TODO write typings
-    "premail/views.py",
-    "premail/test/test_views.py",
-    "premail/test/test_emails.py",
+    "projectify/premail/views.py",
+    "projectify/premail/test/test_views.py",
+    "projectify/premail/test/test_emails.py",
     # pyright doesn't find stripe typings
-    "corporate/views/stripe.py",
+    "projectify/corporate/views/stripe.py",
 ]
 # Mypy doesn't complain about these, so it's fine
 reportUnknownParameterType = true
