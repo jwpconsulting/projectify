@@ -27,22 +27,40 @@ asdf install python 3.11.4
 
 # Quickstart
 
+To get started, you have to
+
+1. Clone the repository,
+2. cd into `backend` directory,
+3. create a `.env` file from `.env.template`,
+4. edit the `.env` file to add a `DATABASE_URL` and `REDIS_TLS_URL` for a local
+   Redis and PostgreSQL 15 instance, and
+5. create the projectify PostgreSQL database. Then,
+6. inside a poetry shell,
+  a. migrate the database,
+  b. seed it with test data, and then
+  c. run the development server
+
+The commands to run are these:
+
 ```
 git clone git@github.com:jwp-consulting/projectify-backend.git
 cd projectify-backend/backend
-poetry install --with dev --with test
-poetry shell
+poetry install --with dev --with test --no-root
 cp .env.template .env
 vim .env
-# Edit DATABASE_URL
-# Edit REDIS_TLS_URL
+# Inside .env:
+# 1) Edit DATABASE_URL
+# 2) Edit REDIS_TLS_URL
+# Create the database
 createdb projectify
+# Now you can run the server
+poetry shell
 ./manage.py migrate
 ./manage.py seeddb
 ./manage.py runserver
 ```
 
-To run a celery worker:
+Furthermore, to run a celery worker:
 
 `celery -A projectify worker -c 1`
 
