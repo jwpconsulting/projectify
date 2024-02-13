@@ -20,14 +20,16 @@ from django.urls import (
     path,
 )
 
-from projectify.user.views.user import (
+from projectify.user.views.auth import (
     ConfirmEmail,
     LogIn,
     LogOut,
     PasswordResetConfirm,
     PasswordResetRequest,
-    ProfilePictureUpload,
     SignUp,
+)
+from projectify.user.views.user import (
+    ProfilePictureUpload,
     UserReadUpdate,
 )
 
