@@ -142,7 +142,7 @@ djangorestframework = "^3"
 gunicorn = "~20.1.0"
 newrelic = "~8"
 pillow = "^10.0.1"
-psycopg2 = "~2.9.3"
+psycopg = {version = "^3.1.18", extras = ["c"]}
 python = "~3.11"
 python-dotenv = "~0.20.0"
 redis = "~4.5.4"

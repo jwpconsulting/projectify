@@ -37,9 +37,15 @@
               buildInputs = (old.buildInputs or [ ]) ++ [ super.poetry ];
             }
           );
-          psycopg2 = super.psycopg2.overridePythonAttrs (
+          psycopg-c = super.psycopg-c.overridePythonAttrs (
             old: {
-              buildInputs = (old.buildInputs or [ ]) ++ [ super.poetry postgresql ];
+              nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
+                postgresql
+              ];
+              buildInputs = (old.buildInputs or [ ]) ++ [
+                super.setuptools
+                super.tomli
+              ];
             }
           );
           django-test-migrations = super.django-test-migrations.overridePythonAttrs (
