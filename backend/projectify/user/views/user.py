@@ -32,11 +32,12 @@ from rest_framework.exceptions import NotAuthenticated
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK
+from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
 from projectify.user.models import User
 from projectify.user.serializers import UserSerializer
 from projectify.user.services.user import (
+    user_change_password,
     user_update,
 )
 
@@ -104,3 +105,26 @@ class ProfilePictureUpload(views.APIView):
             user.profile_picture = file_obj
         user.save()
         return Response(status=204)
+
+
+class ChangePassword(views.APIView):
+    """Allow changing password by specifying old and new password."""
+
+    class InputSerializer(serializers.Serializer):
+        """Accept old and new password."""
+
+        old_password = serializers.CharField()
+        new_password = serializers.CharField()
+
+    def post(self, request: Request) -> Response:
+        """Handle POST."""
+        user = request.user
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        user_change_password(
+            user=user,
+            old_password=data["old_password"],
+            new_password=data["new_password"],
+        )
+        return Response(status=HTTP_204_NO_CONTENT)

@@ -29,6 +29,7 @@ from projectify.user.views.auth import (
     SignUp,
 )
 from projectify.user.views.user import (
+    ChangePassword,
     ProfilePictureUpload,
     UserReadUpdate,
 )
@@ -50,6 +51,12 @@ user_patterns = (
         ProfilePictureUpload.as_view(),
         name="upload-profile-picture",
     ),
+    path(
+        "change-password",
+        ChangePassword.as_view(),
+        name="change-password",
+    ),
+    # Auth
     path(
         "log-out",
         LogOut.as_view(),

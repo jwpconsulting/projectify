@@ -40,12 +40,13 @@ from pytest_types import DjangoAssertNumQueries
 
 from ...models import User
 
+pytestmark = pytest.mark.django_db
+
 Headers = Mapping[str, Any]
 
 
-# Create
+# Create (not relevant)
 # Read + Update
-@pytest.mark.django_db
 class TestUserReadUpdate:
     """Test UserReadUpdate view."""
 
@@ -120,7 +121,6 @@ class TestUserReadUpdate:
 
 
 # RPC
-@pytest.mark.django_db
 class TestProfilePictureUploadView:
     """Test ProfilePictureUploadView."""
 
@@ -181,3 +181,34 @@ class TestProfilePictureUploadView:
         assert response.status_code == 204, response.data
         user.refresh_from_db()
         assert not user.profile_picture
+
+
+@pytest.mark.django_db
+class TestChangePassword:
+    """Test changing password using API."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("user:users:change-password")
+
+    def test_with_correct_password(
+        self,
+        user: User,
+        password: str,
+        rest_user_client: APIClient,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test changing password with a good password."""
+        with django_assert_num_queries(1):
+            response = rest_user_client.post(
+                resource_url,
+                data={
+                    "old_password": password,
+                    "new_password": "hello-world123",
+                },
+            )
+            assert response.status_code == 204, response.data
+        user.refresh_from_db()
+        assert user.check_password("hello-world123")
