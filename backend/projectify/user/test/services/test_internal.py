@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -14,20 +14,25 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Test user services."""
+"""Test user app internal services."""
 
 import pytest
-from faker import Faker
 
-from ...models import User
-from ...services.user import user_update
+from ...services.internal import (
+    user_create,
+    user_create_superuser,
+)
 
 pytestmark = pytest.mark.django_db
 
 
-def test_user_update(user: User, faker: Faker) -> None:
-    """Test updating a user."""
-    new_name = faker.name()
-    user_update(who=user, user=user, preferred_name=new_name)
-    user.refresh_from_db()
-    assert user.preferred_name == new_name
+def test_user_create() -> None:
+    """Test creating a normal user."""
+    u = user_create(email="hello@example")
+    assert u.is_active is False
+
+
+def test_user_create_superuser() -> None:
+    """Test creating a superuser. A superuser should be active."""
+    u = user_create_superuser(email="hello@example")
+    assert u.is_active is True
