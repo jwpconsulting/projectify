@@ -20,15 +20,11 @@
         inherit (poetry2nix.lib.mkPoetry2Nix { inherit pkgs; }) mkPoetryEnv defaultPoetryOverrides;
         projectDir = self;
         postgresql = pkgs.postgresql_15;
+        python = pkgs.python311;
         overrides = defaultPoetryOverrides.extend (self: super: {
           django-cloudinary-storage = super.django-cloudinary-storage.overridePythonAttrs (
             old: {
               buildInputs = (old.buildInputs or [ ]) ++ [ super.setuptools ];
-            }
-          );
-          django-pgconnection = super.django-pgconnection.overridePythonAttrs (
-            old: {
-              buildInputs = (old.buildInputs or [ ]) ++ [ super.poetry ];
             }
           );
           twisted = super.twisted.overridePythonAttrs (
@@ -41,26 +37,51 @@
               buildInputs = (old.buildInputs or [ ]) ++ [ super.poetry ];
             }
           );
-          psycopg2 = super.psycopg2.overridePythonAttrs (
+          psycopg-c = super.psycopg-c.overridePythonAttrs (
             old: {
-              buildInputs = (old.buildInputs or [ ]) ++ [ super.poetry postgresql ];
+              nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
+                postgresql
+              ];
+              buildInputs = (old.buildInputs or [ ]) ++ [
+                super.setuptools
+                super.tomli
+              ];
+            }
+          );
+          django-test-migrations = super.django-test-migrations.overridePythonAttrs (
+            old: {
+              buildInputs = (old.buildInputs or [ ]) ++ [ super.poetry ];
+            }
+          );
+          types-stripe = super.types-stripe.overridePythonAttrs (
+            old: {
+              buildInputs = (old.buildInputs or [ ]) ++ [ super.setuptools ];
             }
           );
         });
         poetryEnv = mkPoetryEnv {
           inherit projectDir;
           inherit overrides;
+          inherit python;
+          pyproject = ./pyproject.toml;
+          poetrylock = ./poetry.lock;
+          groups = [ "dev" "test" ];
         };
       in
       {
         devShell = pkgs.mkShell {
           buildInputs = [
+            python
             poetryEnv
             postgresql
             pkgs.heroku
             # Allow poetry to install
             pkgs.openssl
           ];
+          shellHook = ''
+            # For gunicorn
+            export PORT=8000
+          '';
         };
       });
 }
