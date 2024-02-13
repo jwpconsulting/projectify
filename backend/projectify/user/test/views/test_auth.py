@@ -22,7 +22,7 @@ from django.urls import (
 import pytest
 from rest_framework.test import APIClient
 
-from projectify.user.services.user import user_sign_up
+from projectify.user.services.auth import user_sign_up
 from pytest_types import DjangoAssertNumQueries
 
 from ...models import User

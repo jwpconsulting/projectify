@@ -21,7 +21,7 @@ import pytest
 from faker import Faker
 
 from projectify.user.models import User, UserInvite
-from projectify.user.services.user import user_create
+from projectify.user.services.internal import user_create
 from projectify.user.services.user_invite import (
     user_invite_create,
     user_invite_redeem,

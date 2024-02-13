@@ -27,17 +27,19 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from projectify.user.models import User
-from projectify.user.services.user import (
+from projectify.user.services.auth import (
     user_confirm_email,
     user_confirm_password_reset,
-    user_create,
-    user_create_superuser,
     user_log_in,
     user_log_out,
     user_request_password_reset,
     user_sign_up,
-    user_update,
 )
+from projectify.user.services.internal import (
+    user_create,
+    user_create_superuser,
+)
+from projectify.user.services.user import user_update
 
 pytestmark = pytest.mark.django_db
 

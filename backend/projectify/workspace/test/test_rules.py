@@ -21,7 +21,7 @@ from faker import Faker
 from projectify.corporate.services.customer import customer_cancel_subscription
 from projectify.corporate.types import CustomerSubscriptionStatus
 from projectify.user.models import User
-from projectify.user.services.user import user_create
+from projectify.user.services.internal import user_create
 from projectify.workspace.models.const import WorkspaceUserRoles
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.workspace import Workspace

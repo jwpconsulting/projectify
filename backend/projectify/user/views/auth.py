@@ -24,7 +24,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import HTTP_204_NO_CONTENT
 
-from projectify.user.services.user import (
+from projectify.user.services.auth import (
     user_confirm_email,
     user_confirm_password_reset,
     user_log_in,
