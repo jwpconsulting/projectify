@@ -226,14 +226,17 @@ class TestTask:
         self, task: models.Task, workspace: models.Workspace
     ) -> None:
         """Test saving with no number."""
-        with pytest.raises(db.InternalError):
+        # With psycopg2 we had an db.InternalError, now with psycopg 3 it
+        # became db.ProgrammingError instead
+        with pytest.raises(db.ProgrammingError):
             task.number = None  # type: ignore[assignment]
             task.save()
             workspace.refresh_from_db()
 
     def test_save_different_number(self, task: models.Task) -> None:
         """Test saving with different number."""
-        with pytest.raises(db.InternalError):
+        # Changed from db.InternalError, see above in test_save_no_number
+        with pytest.raises(db.ProgrammingError):
             task.number = 154785787
             task.save()
 
@@ -241,6 +244,7 @@ class TestTask:
         self, task: models.Task, unrelated_workspace: models.Workspace
     ) -> None:
         """Test database trigger for wrong workspace assignment."""
-        with pytest.raises(db.InternalError):
+        # Changed from db.InternalError, see above in test_save_no_number
+        with pytest.raises(db.ProgrammingError):
             task.workspace = unrelated_workspace
             task.save()

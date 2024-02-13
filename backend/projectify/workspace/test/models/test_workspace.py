@@ -22,6 +22,7 @@ from django.contrib.auth.models import (
     AbstractUser,
 )
 
+import psycopg.errors
 import pytest
 
 from projectify.user.models import User
@@ -169,10 +170,12 @@ class TestWorkspace:
         self, workspace: models.Workspace, task: models.Task
     ) -> None:
         """Test db trigger when highest_task_number < highest child task."""
-        with pytest.raises(db.InternalError):
+        # Changed from db.InternalError
+        with pytest.raises(db.ProgrammingError) as e:
             task.save()
             workspace.highest_task_number = 0
             workspace.save()
+        assert isinstance(e.value.__cause__, psycopg.errors.RaiseException)
 
     def test_has_at_least_role(
         self, workspace: models.Workspace, workspace_user: models.WorkspaceUser
