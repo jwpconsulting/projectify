@@ -20,23 +20,24 @@
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import type { InputFieldValidation } from "$lib/funabashi/types";
+    import { goto } from "$lib/navigation";
+    import { changePassword } from "$lib/repository/user";
     import type { AuthViewState } from "$lib/types/ui";
     import { getProfileUrl } from "$lib/urls";
-
-    import type { PageData } from "./$types";
-
-    export let data: PageData;
-    const { user } = data;
 
     let state: AuthViewState = { kind: "start" };
 
     let currentPassword: string | undefined = undefined;
+    let currentPasswordValidation: InputFieldValidation | undefined =
+        undefined;
     let newPassword1: string | undefined = undefined;
+    let newPasswordValidation: InputFieldValidation | undefined = undefined;
     let newPassword2: string | undefined = undefined;
 
     $: canSubmit = state.kind !== "submitting";
 
-    function submit() {
+    async function submit() {
         if (currentPassword === undefined) {
             throw new Error("Expected currentPassword");
         }
@@ -56,7 +57,56 @@
             return;
         }
         state = { kind: "submitting" };
-        console.log(user);
+        const result = await changePassword(currentPassword, newPassword1, {
+            fetch,
+        });
+        if (result.ok) {
+            // TODO Display confirmation
+            await goto(getProfileUrl());
+            return;
+        }
+        if (result.error.current_password !== undefined) {
+            currentPasswordValidation = {
+                ok: false,
+                error: result.error.current_password,
+            };
+        } else {
+            currentPasswordValidation = {
+                ok: true,
+                result: $_(
+                    "user-account-settings.change-password.current-password.correct",
+                ),
+            };
+        }
+        if (result.error.new_password !== undefined) {
+            newPasswordValidation = {
+                ok: false,
+                error: result.error.new_password,
+            };
+        } else {
+            newPasswordValidation = {
+                ok: true,
+                result: $_(
+                    "user-account-settings.change-password.new-password.correct",
+                ),
+            };
+        }
+        if (currentPasswordValidation.ok && newPasswordValidation.ok) {
+            state = {
+                kind: "error",
+                message: $_(
+                    "user-account-settings.change-password.validation.general-error",
+                    { values: { detail: JSON.stringify(result.error) } },
+                ),
+            };
+        } else {
+            state = {
+                kind: "error",
+                message: $_(
+                    "user-account-settings.change-password.validation.field-errors",
+                ),
+            };
+        }
     }
 </script>
 
@@ -76,6 +126,7 @@
             style={{ inputType: "password" }}
             bind:value={currentPassword}
             required
+            validation={currentPasswordValidation}
         />
         <InputField
             label={$_(
@@ -88,6 +139,7 @@
             style={{ inputType: "password" }}
             bind:value={newPassword1}
             required
+            validation={newPasswordValidation}
         />
         <InputField
             label={$_(
@@ -100,6 +152,7 @@
             style={{ inputType: "password" }}
             bind:value={newPassword2}
             required
+            validation={newPasswordValidation}
         />
         {#if state.kind === "error"}
             <p>

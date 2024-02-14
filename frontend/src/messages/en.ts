@@ -649,10 +649,12 @@ const messages: MessageDirectory = {
             "current-password": {
                 label: "Current password",
                 placeholder: "Enter your password",
+                correct: "Current password matches",
             },
             "new-password": {
                 label: "New password",
                 placeholder: "Enter the new password",
+                correct: "This is a valid new password.",
             },
             "confirm-password": {
                 label: "Confirm password",
@@ -666,6 +668,10 @@ const messages: MessageDirectory = {
             "validation": {
                 "must-match":
                     "'New password' and 'Confirm password' must match.",
+                "field-errors":
+                    "Please check any errors in the above fields and try submitting again.",
+                "general-error":
+                    "There was an error when changing your password. Please try again or contact support. The error details are: {details}",
             },
         },
     },

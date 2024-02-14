@@ -58,6 +58,9 @@ export async function updateUser(
         repositoryContext,
     );
 }
+
+// Delete
+// RPC
 export async function updateProfilePicture(
     imageFile: File | undefined,
 ): Promise<void> {
@@ -67,8 +70,21 @@ export async function updateProfilePicture(
     );
 }
 
-// Delete
-// RPC
+export async function changePassword(
+    current_password: string,
+    new_password: string,
+    repositoryContext: RepositoryContext,
+): Promise<
+    ApiResponse<void, { current_password?: string; new_password?: string }>
+> {
+    return await postWithCredentialsJson(
+        "/user/user/change-password",
+        { current_password, new_password },
+        repositoryContext,
+    );
+}
+
+// Auth
 export async function signUp(
     email: string,
     password: string,
