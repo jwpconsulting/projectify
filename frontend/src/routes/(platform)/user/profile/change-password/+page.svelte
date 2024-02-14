@@ -25,6 +25,7 @@
     import { changePassword } from "$lib/repository/user";
     import type { AuthViewState } from "$lib/types/ui";
     import { getProfileUrl } from "$lib/urls";
+    import { changedPasswordUrl } from "$lib/urls/user";
 
     let state: AuthViewState = { kind: "start" };
 
@@ -61,8 +62,7 @@
             fetch,
         });
         if (result.ok) {
-            // TODO Display confirmation
-            await goto(getProfileUrl());
+            await goto(changedPasswordUrl);
             return;
         }
         if (result.error.current_password !== undefined) {
