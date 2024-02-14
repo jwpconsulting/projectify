@@ -1,4 +1,12 @@
 {% load i18n %}
 {% blocktranslate %}Kind regards,
 
-Projectify Support{% endblocktranslate %}
+Projectify Support
+
+---
+
+Write us if you have any questions:
+
+hello@projectifyapp.com
+
+https://www.projectifyapp.com{% endblocktranslate %}
