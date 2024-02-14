@@ -15,26 +15,19 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """User emails."""
-from typing import (
-    TYPE_CHECKING,
-)
 
-from django.contrib import (
-    auth,
-)
 
 from projectify.premail.email import (
     TemplateEmail,
 )
 
-if TYPE_CHECKING:
-    from .models import User  # noqa: F401
+from .models import User
 
 
-class UserEmailConfirmationEmail(TemplateEmail["User"]):
+class UserEmailConfirmationEmail(TemplateEmail[User]):
     """Email that allows users to confirm their email address."""
 
-    model = auth.get_user_model()
+    model = User
     template_prefix = "user/email/email_confirmation"
 
     def get_to_email(self) -> str:
@@ -42,11 +35,31 @@ class UserEmailConfirmationEmail(TemplateEmail["User"]):
         return self.obj.email
 
 
-class UserPasswordResetEmail(TemplateEmail["User"]):
+# TODO UserEmailConfirmedEmail
+# We want to tell a user that we have confirmed their email and that they can
+# start using Projectify now
+
+
+class UserPasswordResetEmail(TemplateEmail[User]):
     """Email that shows a password reset token to the user."""
 
-    model = auth.get_user_model()
+    model = User
     template_prefix = "user/email/password_reset"
+
+    def get_to_email(self) -> str:
+        """Return user email."""
+        return self.obj.email
+
+
+# TODO UserPasswordResetConfirmedEmail
+# We want to tell a user that we have reset their password
+
+
+class UserPasswordChangedEmail(TemplateEmail[User]):
+    """Email that tells a user their password changed."""
+
+    model = User
+    template_prefix = "user/email/password_changed"
 
     def get_to_email(self) -> str:
         """Return user email."""

@@ -19,10 +19,12 @@ import logging
 from typing import Optional
 
 from django.core.exceptions import PermissionDenied
+from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 
+from projectify.user.emails import UserPasswordChangedEmail
 from projectify.user.models.user import User
 
 logger = logging.getLogger(__name__)
@@ -48,6 +50,7 @@ def user_update(
 
 
 # RPC style
+@transaction.atomic
 def user_change_password(
     *,
     user: User,
@@ -61,3 +64,6 @@ def user_change_password(
         )
     user.set_password(new_password)
     user.save()
+
+    email = UserPasswordChangedEmail(user)
+    email.send()

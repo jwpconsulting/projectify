@@ -203,7 +203,8 @@ class TestChangePassword:
         """Test changing password with a good password."""
         # 1 for changing the password
         # 7 for session update
-        with django_assert_num_queries(8):
+        # 2 for email send
+        with django_assert_num_queries(10):
             response = rest_user_client.post(
                 resource_url,
                 data={

@@ -20,6 +20,8 @@ import pytest
 from faker import Faker
 from rest_framework import serializers
 
+from pytest_types import Mailbox
+
 from ...models import User
 from ...services.user import user_change_password, user_update
 
@@ -34,8 +36,10 @@ def test_user_update(user: User, faker: Faker) -> None:
     assert user.preferred_name == new_name
 
 
-def test_user_change_password(user: User, password: str, faker: Faker) -> None:
-    """Test changing a user's password."""
+def test_user_change_password(
+    user: User, password: str, faker: Faker, mailoutbox: Mailbox
+) -> None:
+    """Test changing a user's password. Check that notification email goes out."""
     new_password = "hello-123"
     # First we give in the wrong old password
     with pytest.raises(serializers.ValidationError):
@@ -45,6 +49,7 @@ def test_user_change_password(user: User, password: str, faker: Faker) -> None:
 
     user.refresh_from_db()
     assert user.check_password(new_password) is False
+    assert len(mailoutbox) == 0
 
     # Then try with correct current password
     user_change_password(
@@ -52,3 +57,5 @@ def test_user_change_password(user: User, password: str, faker: Faker) -> None:
     )
     user.refresh_from_db()
     assert user.check_password(new_password) is True
+    (mail,) = mailoutbox
+    assert "password has been changed" in mail.body
