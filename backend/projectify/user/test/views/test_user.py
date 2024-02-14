@@ -205,7 +205,7 @@ class TestChangePassword:
             response = rest_user_client.post(
                 resource_url,
                 data={
-                    "old_password": password,
+                    "current_password": password,
                     "new_password": "hello-world123",
                 },
             )

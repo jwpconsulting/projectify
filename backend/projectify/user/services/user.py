@@ -51,13 +51,13 @@ def user_update(
 def user_change_password(
     *,
     user: User,
-    old_password: str,
+    current_password: str,
     new_password: str,
 ) -> None:
     """Change a user's password."""
-    if not user.check_password(old_password):
+    if not user.check_password(current_password):
         raise serializers.ValidationError(
-            {"old_password": _("Incorrect password. Check again.")}
+            {"current_password": _("Incorrect password. Check again.")}
         )
     user.set_password(new_password)
     user.save()

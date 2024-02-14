@@ -113,7 +113,7 @@ class ChangePassword(views.APIView):
     class InputSerializer(serializers.Serializer):
         """Accept old and new password."""
 
-        old_password = serializers.CharField()
+        current_password = serializers.CharField()
         new_password = serializers.CharField()
 
     def post(self, request: Request) -> Response:
@@ -124,7 +124,7 @@ class ChangePassword(views.APIView):
         data = serializer.validated_data
         user_change_password(
             user=user,
-            old_password=data["old_password"],
+            current_password=data["current_password"],
             new_password=data["new_password"],
         )
         return Response(status=HTTP_204_NO_CONTENT)

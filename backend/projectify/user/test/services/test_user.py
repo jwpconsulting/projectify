@@ -40,15 +40,15 @@ def test_user_change_password(user: User, password: str, faker: Faker) -> None:
     # First we give in the wrong old password
     with pytest.raises(serializers.ValidationError):
         user_change_password(
-            user=user, old_password="wrongpw123", new_password=new_password
+            user=user, current_password="wrongpw123", new_password=new_password
         )
 
     user.refresh_from_db()
     assert user.check_password(new_password) is False
 
-    # Then try with correct old password
+    # Then try with correct current password
     user_change_password(
-        user=user, old_password=password, new_password=new_password
+        user=user, current_password=password, new_password=new_password
     )
     user.refresh_from_db()
     assert user.check_password(new_password) is True
