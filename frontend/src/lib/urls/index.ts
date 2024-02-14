@@ -61,6 +61,7 @@ export function getArchiveUrl(workspaceUuid: string) {
 }
 
 // TODO put me into auth routes
+// Doesn't have to a function, can just be const string
 export function getProfileUrl() {
     return "/user/profile";
 }

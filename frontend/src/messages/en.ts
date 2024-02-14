@@ -659,7 +659,14 @@ const messages: MessageDirectory = {
                 placeholder: "Confirm the new password",
             },
             "cancel": "Go back",
-            "save": "Change password",
+            "submit": {
+                start: "Change password",
+                submitting: "Changing password...",
+            },
+            "validation": {
+                "must-match":
+                    "'New password' and 'Confirm password' must match.",
+            },
         },
     },
     "workspace-settings": {
