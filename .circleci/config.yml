@@ -47,7 +47,7 @@ commands:
           command: ln -sv ~/.local/share/poetry/bin/poetry /usr/local/bin
       - run:
           name: Install pip packages
-          command: poetry install --with test
+          command: poetry install --with test --no-root
       - save_cache:
           key: poetry-cache-v1-{{ checksum "poetry.lock" }}
           paths:
