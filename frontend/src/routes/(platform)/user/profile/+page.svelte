@@ -139,28 +139,41 @@
             style={{ kind: "secondary" }}
             label={$_("user-account-settings.overview.cancel")}
         />
-        <Button
-            action={{
-                kind: "button",
-                action: console.error.bind(
-                    null,
-                    "Delete account not implemented",
-                ),
-            }}
-            size="medium"
-            color="red"
-            style={{ kind: "secondary" }}
-            label={$_("user-account-settings.overview.delete-account")}
-        />
+    </div>
+    <div class="flex flex-col gap-2">
+        <h3 class="font-bold">
+            {$_("user-account-settings.overview.other-actions.title")}
+        </h3>
         <Anchor
             href="/user/profile/change-password"
             size="normal"
-            label={$_("user-account-settings.overview.change-password")}
+            label={$_(
+                "user-account-settings.overview.other-actions.change-password",
+            )}
         />
         <Anchor
             href="/user/profile/update-email"
             size="normal"
-            label={$_("user-account-settings.overview.update-email")}
+            label={$_(
+                "user-account-settings.overview.other-actions.update-email",
+            )}
         />
+    </div>
+    <div class="flex flex-col gap-2">
+        <h3 class="font-bold">
+            {$_("user-account-settings.overview.delete-account.title")}
+        </h3>
+        <p>{$_("user-account-settings.overview.delete-account.message")}</p>
+        <p>
+            <Anchor
+                label={$_(
+                    "user-account-settings.overview.delete-account.label",
+                )}
+                href={$_(
+                    "user-account-settings.overview.delete-account.email",
+                )}
+                size="normal"
+            />
+        </p>
     </div>
 </div>

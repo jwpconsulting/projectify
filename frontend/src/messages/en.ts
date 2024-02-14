@@ -625,9 +625,18 @@ const messages: MessageDirectory = {
                 current: "Your current profile picture",
                 remove: "Remove profile picture",
             },
-            "update-email": "Update email address",
-            "change-password": "Change password",
-            "delete-account": "Delete account",
+            "other-actions": {
+                "title": "Other settings",
+                "update-email": "Update email address",
+                "change-password": "Change password",
+            },
+            "delete-account": {
+                title: "Account deletion",
+                message:
+                    "If you would like to delete your account, please send us an email using the link below. We have not implemented self-serve account deletion at this point, and would like to apologize for the inconvenience.",
+                label: "Request account deletion (opens email client)",
+                email: "mailto:hello@projectifyapp.com?subject=Account+deletion",
+            },
             "cancel": "Cancel",
             "save": "Save changes",
         },
