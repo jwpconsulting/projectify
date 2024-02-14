@@ -17,6 +17,9 @@
 """Test premail emails."""
 import pytest
 
+from projectify.user.models.user import User
+from pytest_types import Mailbox
+
 from ..emails import (
     SampleEmail,
 )
@@ -26,8 +29,8 @@ from ..emails import (
 class TestSampleEmail:
     """Test SampleEmail."""
 
-    def test_send(self, user, mailoutbox):
+    def test_send(self, user: User, mailoutbox: Mailbox) -> None:
         """Test send."""
-        mail = SampleEmail(user)
+        mail = SampleEmail(receiver=user, obj=user)
         mail.send()
         assert len(mailoutbox) == 1

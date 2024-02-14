@@ -33,6 +33,7 @@ from rest_framework import serializers
 from projectify.lib.auth import (
     validate_perm,
 )
+from projectify.premail.email import EmailAddress
 from projectify.user.models import (  # noqa: F401
     User,
     UserInvite,
@@ -162,7 +163,9 @@ def add_or_invite_workspace_user(
         workspace.workspaceuserinvite_set.create(user_invite=user_invite)
     )
 
-    email_to_send = WorkspaceUserInviteEmail(workspace_user_invite)
+    email_to_send = WorkspaceUserInviteEmail(
+        receiver=EmailAddress(email), obj=workspace_user_invite
+    )
     email_to_send.send()
 
     return workspace_user_invite

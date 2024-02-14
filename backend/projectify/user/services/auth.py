@@ -72,7 +72,7 @@ def user_sign_up(
         tos_agreed=agreement_dt,
         privacy_policy_agreed=agreement_dt,
     )
-    mail = UserEmailConfirmationEmail(user)
+    mail = UserEmailConfirmationEmail(receiver=user, obj=user)
     mail.send()
     # TODO do not return User here
     return user
@@ -161,7 +161,7 @@ def user_request_password_reset(
         raise serializers.ValidationError(
             {"email": _("No user could be found for this email")}
         )
-    password_reset_email = UserPasswordResetEmail(user)
+    password_reset_email = UserPasswordResetEmail(receiver=user, obj=user)
     password_reset_email.send()
 
 

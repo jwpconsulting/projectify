@@ -17,6 +17,7 @@
 """Premail email registry."""
 import importlib
 import inspect
+from typing import Any
 
 from django.apps import (
     apps,
@@ -26,7 +27,7 @@ from .email import (
     TemplateEmail,
 )
 
-registry = {
+registry: dict[str, Any] = {
     # 'user-email-confirmation': user_emails.UserEmailConfirmationEmail,
 }
 

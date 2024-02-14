@@ -29,7 +29,3 @@ class WorkspaceUserInviteEmail(TemplateEmail[models.WorkspaceUserInvite]):
 
     model = models.WorkspaceUserInvite
     template_prefix = "workspace/email/workspace_user_invite"
-
-    def get_to_email(self) -> str:
-        """Return recipient email."""
-        return self.obj.user_invite.email

@@ -65,5 +65,5 @@ def user_change_password(
     user.set_password(new_password)
     user.save()
 
-    email = UserPasswordChangedEmail(user)
+    email = UserPasswordChangedEmail(receiver=user, obj=user)
     email.send()

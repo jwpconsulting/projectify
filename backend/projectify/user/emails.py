@@ -30,10 +30,6 @@ class UserEmailConfirmationEmail(TemplateEmail[User]):
     model = User
     template_prefix = "user/email/email_confirmation"
 
-    def get_to_email(self) -> str:
-        """Return user email."""
-        return self.obj.email
-
 
 # TODO UserEmailConfirmedEmail
 # We want to tell a user that we have confirmed their email and that they can
@@ -46,10 +42,6 @@ class UserPasswordResetEmail(TemplateEmail[User]):
     model = User
     template_prefix = "user/email/password_reset"
 
-    def get_to_email(self) -> str:
-        """Return user email."""
-        return self.obj.email
-
 
 # TODO UserPasswordResetConfirmedEmail
 # We want to tell a user that we have reset their password
@@ -60,7 +52,3 @@ class UserPasswordChangedEmail(TemplateEmail[User]):
 
     model = User
     template_prefix = "user/email/password_changed"
-
-    def get_to_email(self) -> str:
-        """Return user email."""
-        return self.obj.email

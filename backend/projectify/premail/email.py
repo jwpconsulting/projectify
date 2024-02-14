@@ -15,14 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Premail email templates."""
-from abc import (
-    ABCMeta,
-    abstractmethod,
-)
 from typing import (
     Any,
     Generic,
+    NewType,
     TypeVar,
+    Union,
 )
 
 from django.conf import (
@@ -35,6 +33,7 @@ from django.template import (
 from projectify.context_processors import (
     frontend_url,
 )
+from projectify.user.models.user import User
 
 from .tasks import (
     send_mail,
@@ -44,15 +43,19 @@ Context = dict[str, Any]
 
 T = TypeVar("T")
 
+EmailAddress = NewType("EmailAddress", str)
 
-class TemplateEmail(Generic[T], metaclass=ABCMeta):
+
+class TemplateEmail(Generic[T]):
     """Email template."""
 
     template_prefix: str
     obj: T
+    receiver: Union[User, EmailAddress]
 
-    def __init__(self, obj: T):
+    def __init__(self, *, receiver: Union[User, EmailAddress], obj: T):
         """Designate receiver."""
+        self.receiver = receiver
         self.obj = obj
 
     def get_subject_template_path(self) -> str:
@@ -68,6 +71,7 @@ class TemplateEmail(Generic[T], metaclass=ABCMeta):
         return {
             **frontend_url(None),
             "object": self.obj,
+            "addressee": self.addressee,
         }
 
     def render_subject(self) -> str:
@@ -87,22 +91,29 @@ class TemplateEmail(Generic[T], metaclass=ABCMeta):
             self.get_context(),
         )
 
-    # TODO change to be addressee instead, we want to address the user by their
-    # preferred name if they have specified one.
-    @abstractmethod
-    def get_to_email(self) -> str:
-        """Return recipient email. To override."""
-
     def send(self) -> None:
         """Send email to obj."""
+        subject = self.render_subject()
+        body = self.render_body()
         if settings.EMAIL_EAGER:
-            send_mail(
-                self.render_subject(),
-                self.render_body(),
-                self.get_to_email(),
-            )
-        send_mail.delay(
-            self.render_subject(),
-            self.render_body(),
-            self.get_to_email(),
-        )
+            send_mail(subject, body, self.to)
+        else:
+            send_mail.delay(subject, body, self.to)
+
+    @property
+    def addressee(self) -> str:
+        """Return displayable name for receiver of this email."""
+        match self.receiver:
+            case User(email=email, preferred_name=preferred_name):
+                return preferred_name or email
+            case email:
+                return email
+
+    @property
+    def to(self) -> str:
+        """Return email address email should be sent to."""
+        match self.receiver:
+            case User(email=email):
+                return email
+            case email:
+                return email
