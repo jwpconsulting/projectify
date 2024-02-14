@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2021, 2022 JWP Consulting GK
+# Copyright (C) 2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -14,23 +14,25 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Test premail emails."""
+"""Test user app internal services."""
+
 import pytest
 
-from projectify.user.models.user import User
-from pytest_types import Mailbox
-
-from ..emails import (
-    SampleEmail,
+from ...services.internal import (
+    user_create,
+    user_create_superuser,
 )
 
+pytestmark = pytest.mark.django_db
 
-@pytest.mark.django_db
-class TestSampleEmail:
-    """Test SampleEmail."""
 
-    def test_send(self, user: User, mailoutbox: Mailbox) -> None:
-        """Test send."""
-        mail = SampleEmail(receiver=user, obj=user)
-        mail.send()
-        assert len(mailoutbox) == 1
+def test_user_create() -> None:
+    """Test creating a normal user."""
+    u = user_create(email="hello@example")
+    assert u.is_active is False
+
+
+def test_user_create_superuser() -> None:
+    """Test creating a superuser. A superuser should be active."""
+    u = user_create_superuser(email="hello@example")
+    assert u.is_active is True

@@ -69,7 +69,10 @@ from projectify.corporate.types import CustomerSubscriptionStatus
 from projectify.user.models import (
     User,
 )
-from projectify.user.services.user import user_create, user_create_superuser
+from projectify.user.services.internal import (
+    user_create,
+    user_create_superuser,
+)
 from projectify.workspace.models import (
     ChatMessage,
     Label,

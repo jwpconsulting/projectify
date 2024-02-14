@@ -15,6 +15,11 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+/*
+ * Contain user related URL constants
+ */
+export const changedPasswordUrl = "/user/profile/changed-password";
+// Auth
 export const logInUrl = "/user/log-in";
 export const logOutUrl = "/user/log-out";
 export const signUpUrl = "/user/sign-up";

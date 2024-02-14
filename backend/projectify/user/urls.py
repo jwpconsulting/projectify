@@ -20,14 +20,17 @@ from django.urls import (
     path,
 )
 
-from projectify.user.views.user import (
+from projectify.user.views.auth import (
     ConfirmEmail,
     LogIn,
     LogOut,
     PasswordResetConfirm,
     PasswordResetRequest,
-    ProfilePictureUpload,
     SignUp,
+)
+from projectify.user.views.user import (
+    ChangePassword,
+    ProfilePictureUpload,
     UserReadUpdate,
 )
 
@@ -48,6 +51,12 @@ user_patterns = (
         ProfilePictureUpload.as_view(),
         name="upload-profile-picture",
     ),
+    path(
+        "change-password",
+        ChangePassword.as_view(),
+        name="change-password",
+    ),
+    # Auth
     path(
         "log-out",
         LogOut.as_view(),

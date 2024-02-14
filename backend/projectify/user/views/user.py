@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2022, 2023 JWP Consulting GK
+# Copyright (C) 2022-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -20,6 +20,7 @@ from typing import (
     cast,
 )
 
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import AnonymousUser
 from django.utils.translation import gettext_lazy as _
 
@@ -37,12 +38,7 @@ from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 from projectify.user.models import User
 from projectify.user.serializers import UserSerializer
 from projectify.user.services.user import (
-    user_confirm_email,
-    user_confirm_password_reset,
-    user_log_in,
-    user_log_out,
-    user_request_password_reset,
-    user_sign_up,
+    user_change_password,
     user_update,
 )
 
@@ -112,130 +108,27 @@ class ProfilePictureUpload(views.APIView):
         return Response(status=204)
 
 
-# TODO these should be in user/views/auth.py
-class LogOut(views.APIView):
-    """Log a user out."""
-
-    def post(self, request: Request) -> Response:
-        """Handle POST."""
-        user_log_out(request=request)
-        return Response(status=HTTP_204_NO_CONTENT)
-
-
-# The following views have no authentication required
-class SignUp(views.APIView):
-    """Sign up a user."""
-
-    permission_classes = (AllowAny,)
+class ChangePassword(views.APIView):
+    """Allow changing password by specifying old and new password."""
 
     class InputSerializer(serializers.Serializer):
-        """Take in email and password."""
+        """Accept old and new password."""
 
-        email = serializers.EmailField()
-        password = serializers.CharField()
-        tos_agreed = serializers.BooleanField()
-        privacy_policy_agreed = serializers.BooleanField()
-
-    def post(self, request: Request) -> Response:
-        """Handle POST."""
-        serializer = self.InputSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-        user_sign_up(
-            email=data["email"],
-            password=data["password"],
-            tos_agreed=data["tos_agreed"],
-            privacy_policy_agreed=data["privacy_policy_agreed"],
-        )
-        return Response(status=HTTP_204_NO_CONTENT)
-
-
-class ConfirmEmail(views.APIView):
-    """Log a user in."""
-
-    permission_classes = (AllowAny,)
-
-    class InputSerializer(serializers.Serializer):
-        """Take email and password."""
-
-        email = serializers.EmailField()
-        token = serializers.CharField()
-
-    def post(self, request: Request) -> Response:
-        """Handle POST."""
-        serializer = self.InputSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-        user_confirm_email(
-            email=data["email"],
-            token=data["token"],
-        )
-        return Response(status=HTTP_204_NO_CONTENT)
-
-
-class LogIn(views.APIView):
-    """Log a user in."""
-
-    permission_classes = (AllowAny,)
-
-    class InputSerializer(serializers.Serializer):
-        """Take email and password."""
-
-        email = serializers.EmailField()
-        password = serializers.CharField()
-
-    def post(self, request: Request) -> Response:
-        """Handle POST."""
-        serializer = self.InputSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-        user_log_in(
-            email=data["email"],
-            password=data["password"],
-            request=request,
-        )
-        return Response(status=HTTP_204_NO_CONTENT)
-
-
-class PasswordResetRequest(views.APIView):
-    """Request password to be reset."""
-
-    permission_classes = (AllowAny,)
-
-    class InputSerializer(serializers.Serializer):
-        """Take an email address."""
-
-        email = serializers.EmailField()
-
-    def post(self, request: Request) -> Response:
-        """Handle POST."""
-        serializer = self.InputSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-        user_request_password_reset(email=data["email"])
-        return Response(status=HTTP_204_NO_CONTENT)
-
-
-class PasswordResetConfirm(views.APIView):
-    """Reset a user's password."""
-
-    permission_classes = (AllowAny,)
-
-    class InputSerializer(serializers.Serializer):
-        """Take email, token and a new password."""
-
-        email = serializers.EmailField()
-        token = serializers.CharField()
+        current_password = serializers.CharField()
         new_password = serializers.CharField()
 
     def post(self, request: Request) -> Response:
         """Handle POST."""
+        user = request.user
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
-        user_confirm_password_reset(
-            email=data["email"],
-            token=data["token"],
+        user_change_password(
+            user=user,
+            current_password=data["current_password"],
             new_password=data["new_password"],
         )
+        # Ensure we stay logged in
+        # https://docs.djangoproject.com/en/5.0/topics/auth/default/#session-invalidation-on-password-change
+        update_session_auth_hash(request, user)
         return Response(status=HTTP_204_NO_CONTENT)

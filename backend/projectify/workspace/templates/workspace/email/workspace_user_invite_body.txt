@@ -4,5 +4,5 @@ You have been invited to join the workspace {{ title }} on
 Projectify. You can sign up by clicking the following link. You will be
 automatically added to the workspace upon following the sign up process.
 {% endblocktranslate %}
-{{ FRONTEND_URL }}signup/
+{{ FRONTEND_URL }}/user/sign-up/
 {% include "email/_greeting.txt" %}

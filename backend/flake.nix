@@ -58,6 +58,16 @@
               buildInputs = (old.buildInputs or [ ]) ++ [ super.setuptools ];
             }
           );
+          editables = super.editables.overridePythonAttrs (
+            old: {
+              buildInputs = (old.buildInputs or [ ]) ++ [ super.flit-core ];
+            }
+          );
+          django-debug-toolbar = super.django-debug-toolbar.overridePythonAttrs (
+            old: {
+              buildInputs = (old.buildInputs or [ ]) ++ [ super.hatchling super.setuptools ];
+            }
+          );
         });
         poetryEnv = mkPoetryEnv {
           inherit projectDir;

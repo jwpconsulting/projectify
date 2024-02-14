@@ -19,7 +19,7 @@ import pytest
 from rest_framework import serializers
 
 from projectify.user.models import User
-from projectify.user.services.user import user_create
+from projectify.user.services.internal import user_create
 from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.workspace_user import WorkspaceUser
 from projectify.workspace.services.workspace_user_invite import (

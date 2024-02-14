@@ -157,7 +157,16 @@ faker = "^19.13.0"
 
 [tool.poetry.group.dev.dependencies]
 # Strictly only used for local development
-django-debug-toolbar = "~3.5.0"
+django-debug-toolbar = "^4.3.0"
+# Hatchling was added to pin a new version of hatchling used transiently for
+# django-debug-toolbar. The one in Nix 23.11 is very old and causes
+# problems with pyproject Classifier:
+# >     File "/nix/store/rx7c2lpgdr761kq7ih6gc1rdx6mmiaga-python3.11-hatchling-1.18.0/lib/python3.11/site-packages/hatchling/metadata/core.py", line 978, in classifiers
+# >       raise ValueError(message)
+# >   ValueError: Unknown classifier in field `project.classifiers`: Framework :: Django :: 5.0
+# Nix 23.11 hatchling is still 1.18.0
+hatchling = "^1.21.1"
+
 ipython = "~8.10.0"
 pdbpp = "~0.10.3"
 ruff = "^0.1.6"

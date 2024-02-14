@@ -75,7 +75,7 @@ class Development(Base):
     DEBUG_TOOLBAR = True
     INTERNAL_IPS = ("127.0.0.1",)
 
-    FRONTEND_URL = "http://localhost:3000/"
+    FRONTEND_URL = "http://localhost:3000"
 
     # Workaround for connecting over .local domain
     # ============================================

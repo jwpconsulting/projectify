@@ -35,7 +35,10 @@ from rest_framework.test import (
 )
 
 from projectify.user import models as user_models
-from projectify.user.services.user import user_create, user_create_superuser
+from projectify.user.services.internal import (
+    user_create,
+    user_create_superuser,
+)
 from projectify.user.services.user_invite import (
     user_invite_create,
     user_invite_redeem,

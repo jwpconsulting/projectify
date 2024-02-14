@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -15,13 +15,19 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+/*
+ * Stories for user change password form
+ */
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import ChangePassword from "$lib/figma/screens/user-account-settings/ChangePassword.svelte";
+import { user1 } from "$lib/storybook";
+import ChangePassword from "$routes/(platform)/user/profile/change-password/+page.svelte";
 
 const meta: Meta<ChangePassword> = {
     component: ChangePassword,
-    argTypes: {},
+    args: {
+        data: { user: user1 },
+    },
 };
 export default meta;
 

@@ -734,18 +734,18 @@ Django = ">=3.2"
 
 [[package]]
 name = "django-debug-toolbar"
-version = "3.5.0"
+version = "4.3.0"
 description = "A configurable set of panels that display various debug information about the current request/response."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "django-debug-toolbar-3.5.0.tar.gz", hash = "sha256:97965f2630692de316ea0c1ca5bfa81660d7ba13146dbc6be2059cf55b35d0e5"},
-    {file = "django_debug_toolbar-3.5.0-py3-none-any.whl", hash = "sha256:89a52128309eb4da12738801ff0c202d2ff8730d1c3225fac6acf630c303e661"},
+    {file = "django_debug_toolbar-4.3.0-py3-none-any.whl", hash = "sha256:e09b7dcb8417b743234dfc57c95a7c1d1d87a88844abd13b4c5387f807b31bf6"},
+    {file = "django_debug_toolbar-4.3.0.tar.gz", hash = "sha256:0b0dddee5ea29b9cb678593bc0d7a6d76b21d7799cb68e091a2148341a80f3c4"},
 ]
 
 [package.dependencies]
-Django = ">=3.2"
-sqlparse = ">=0.2.0"
+django = ">=3.2.4"
+sqlparse = ">=0.2"
 
 [[package]]
 name = "django-extensions"
@@ -814,6 +814,17 @@ files = [
 [package.dependencies]
 django = ">=3.0"
 pytz = "*"
+
+[[package]]
+name = "editables"
+version = "0.5"
+description = "Editable installations"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "editables-0.5-py3-none-any.whl", hash = "sha256:61e5ffa82629e0d8bfe09bc44a07db3c1ab8ed1ce78a6980732870f19b5e7d4c"},
+    {file = "editables-0.5.tar.gz", hash = "sha256:309627d9b5c4adc0e668d8c6fa7bac1ba7c8c5d415c2d27f60f081f8e80d1de2"},
+]
 
 [[package]]
 name = "execnet"
@@ -902,6 +913,24 @@ files = [
     {file = "h11-0.14.0-py3-none-any.whl", hash = "sha256:e3fe4ac4b851c468cc8363d500db52c2ead036020723024a109d37346efaa761"},
     {file = "h11-0.14.0.tar.gz", hash = "sha256:8f19fbbe99e72420ff35c00b27a34cb9937e902a8b810e2c88300c6f0a3b699d"},
 ]
+
+[[package]]
+name = "hatchling"
+version = "1.21.1"
+description = "Modern, extensible Python build backend"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "hatchling-1.21.1-py3-none-any.whl", hash = "sha256:21e8c13f8458b219a91cb84e5b61c15bf786695d1c4fabc29e91e78f94bfe892"},
+    {file = "hatchling-1.21.1.tar.gz", hash = "sha256:bba440453a224e7d4478457fa2e8d8c3633765bafa02975a6b53b9bf917980bc"},
+]
+
+[package.dependencies]
+editables = ">=0.3"
+packaging = ">=21.3"
+pathspec = ">=0.10.1"
+pluggy = ">=1.0.0"
+trove-classifiers = "*"
 
 [[package]]
 name = "hyperlink"
@@ -1251,6 +1280,17 @@ files = [
 [package.extras]
 qa = ["flake8 (==3.8.3)", "mypy (==0.782)"]
 testing = ["docopt", "pytest (<6.0.0)"]
+
+[[package]]
+name = "pathspec"
+version = "0.12.1"
+description = "Utility library for gitignore style pattern matching of file paths."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "pathspec-0.12.1-py3-none-any.whl", hash = "sha256:a0d503e138a4c123b27490a4f7beda6a01c6f288df0e4a8b79c7eb0dc7b4cc08"},
+    {file = "pathspec-0.12.1.tar.gz", hash = "sha256:a482d51503a1ab33b1c67a6c3813a26953dbdc71c31dacaef9a838c4e29f5712"},
+]
 
 [[package]]
 name = "pdbpp"
@@ -1936,6 +1976,17 @@ docs = ["myst-parser", "pydata-sphinx-theme", "sphinx"]
 test = ["argcomplete (>=2.0)", "pre-commit", "pytest", "pytest-mock"]
 
 [[package]]
+name = "trove-classifiers"
+version = "2024.1.31"
+description = "Canonical source for classifiers on PyPI (pypi.org)."
+optional = false
+python-versions = "*"
+files = [
+    {file = "trove-classifiers-2024.1.31.tar.gz", hash = "sha256:bfdfe60bbf64985c524416afb637ecc79c558e0beb4b7f52b0039e01044b0229"},
+    {file = "trove_classifiers-2024.1.31-py3-none-any.whl", hash = "sha256:854aba3358f3cf10e5c0916aa533f5a39e27aadd8ade26a54cdc2a93257e39c4"},
+]
+
+[[package]]
 name = "twisted"
 version = "23.10.0"
 description = "An asynchronous networking framework written in Python"
@@ -2293,4 +2344,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "cd86b18cee445c8b8057e511db3a7f867f14c94ff225ba7df9f75729f008ee1a"
+content-hash = "865b4cd4b03cf362d1d67bceb9f6a9e85471f6325f27062195dbbbbe68a38918"

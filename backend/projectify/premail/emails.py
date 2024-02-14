@@ -36,7 +36,3 @@ class SampleEmail(TemplateEmail["User"]):
 
     model = auth.get_user_model()
     template_prefix = "premail/email/sample_email"
-
-    def get_to_email(self) -> str:
-        """Return user email."""
-        return self.obj.email

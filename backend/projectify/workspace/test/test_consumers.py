@@ -43,7 +43,7 @@ from projectify.corporate.services.customer import (
     customer_activate_subscription,
 )
 from projectify.user.models import User
-from projectify.user.services.user import user_create
+from projectify.user.services.internal import user_create
 from projectify.workspace.models.label import Label
 from projectify.workspace.models.sub_task import SubTask
 from projectify.workspace.models.task import Task

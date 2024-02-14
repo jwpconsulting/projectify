@@ -649,17 +649,36 @@ const messages: MessageDirectory = {
             "current-password": {
                 label: "Current password",
                 placeholder: "Enter your password",
+                correct: "Current password matches",
             },
             "new-password": {
                 label: "New password",
                 placeholder: "Enter the new password",
+                correct: "This is a valid new password.",
             },
             "confirm-password": {
                 label: "Confirm password",
                 placeholder: "Confirm the new password",
             },
             "cancel": "Go back",
-            "save": "Change password",
+            "submit": {
+                start: "Change password",
+                submitting: "Changing password...",
+            },
+            "validation": {
+                "must-match":
+                    "'New password' and 'Confirm password' must match.",
+                "field-errors":
+                    "Please check any errors in the above fields and try submitting again.",
+                "general-error":
+                    "There was an error when changing your password. Please try again or contact support. The error details are: {details}",
+            },
+        },
+        "changed-password": {
+            "title": "Password changed",
+            "message":
+                "Your password has been changed. An email has been sent out to your email address to confirm the password change. You can use your new password to log in from now on.",
+            "back-to-profile": "Back to profile",
         },
     },
     "workspace-settings": {
