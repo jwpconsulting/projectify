@@ -16,12 +16,89 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    import ChangePassword from "$lib/figma/screens/user-account-settings/ChangePassword.svelte";
+    import { _ } from "svelte-i18n";
+
+    import Button from "$lib/funabashi/buttons/Button.svelte";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
 
     import type { PageData } from "./$types";
 
     export let data: PageData;
     const { user } = data;
+
+    const hasBeenEdited = false;
+    let currentPassword = "";
+    let newPassword1 = "";
+    let newPassword2 = "";
+
+    // TODO wiring
+    console.log(user);
 </script>
 
-<ChangePassword {user} />
+<div class="flex flex-col items-center gap-12">
+    <h1 class="text-2xl font-bold">
+        {$_("user-account-settings.change-password.title")}
+    </h1>
+    <div class="flex w-full flex-col gap-10">
+        <div class="flex flex-col gap-4">
+            <InputField
+                label={$_(
+                    "user-account-settings.change-password.current-password.label",
+                )}
+                placeholder={$_(
+                    "user-account-settings.change-password.current-password.placeholder",
+                )}
+                name="current-password"
+                style={{ inputType: "password" }}
+                bind:value={currentPassword}
+            />
+            <InputField
+                label={$_(
+                    "user-account-settings.change-password.new-password.label",
+                )}
+                placeholder={$_(
+                    "user-account-settings.change-password.new-password.placeholder",
+                )}
+                name="new-password"
+                style={{ inputType: "password" }}
+                bind:value={newPassword1}
+            />
+            <InputField
+                label={$_(
+                    "user-account-settings.change-password.confirm-password.label",
+                )}
+                placeholder={$_(
+                    "user-account-settings.change-password.confirm-password.placeholder",
+                )}
+                name="confirm-password"
+                style={{ inputType: "password" }}
+                bind:value={newPassword2}
+            />
+        </div>
+        <div class="flex flex-row gap-2">
+            <Button
+                action={{
+                    kind: "a",
+                    href: "/user/profile",
+                }}
+                size="medium"
+                color="blue"
+                style={{ kind: "secondary" }}
+                label={$_("user-account-settings.change-password.cancel")}
+            />
+            <Button
+                action={{
+                    kind: "button",
+                    action: () => {
+                        console.error("Change password not implemented");
+                    },
+                    disabled: !hasBeenEdited,
+                }}
+                size="medium"
+                color="blue"
+                style={{ kind: "primary" }}
+                label={$_("user-account-settings.change-password.save")}
+            />
+        </div>
+    </div>
+</div>
