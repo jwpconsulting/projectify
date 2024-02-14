@@ -20,6 +20,7 @@ from typing import (
     cast,
 )
 
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import AnonymousUser
 from django.utils.translation import gettext_lazy as _
 
@@ -127,4 +128,7 @@ class ChangePassword(views.APIView):
             current_password=data["current_password"],
             new_password=data["new_password"],
         )
+        # Ensure we stay logged in
+        # https://docs.djangoproject.com/en/5.0/topics/auth/default/#session-invalidation-on-password-change
+        update_session_auth_hash(request, user)
         return Response(status=HTTP_204_NO_CONTENT)
