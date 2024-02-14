@@ -26,6 +26,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
+import warnings
 from collections.abc import (
     Iterable,
     Sequence,
@@ -74,6 +75,8 @@ class Base(Configuration):
     # Debug
     DEBUG_TOOLBAR = False
     DEBUG = False
+
+    FRONTEND_URL: str
 
     SESSION_COOKIE_SAMESITE = "None"
     SESSION_COOKIE_SECURE = True
@@ -296,3 +299,13 @@ class Base(Configuration):
     # Stripe
     STRIPE_SECRET_KEY: Optional[str] = None
     STRIPE_ENDPOINT_SECRET: Optional[str] = None
+
+    @classmethod
+    def post_setup(cls) -> None:
+        """Warn if FRONTEND_URL ends on '/'."""
+        # Technically, this won't catch multiple trailing slashes... but who
+        # would specify a URL like that?
+        if not cls.FRONTEND_URL.endswith("/"):
+            return
+        warnings.warn("Please ensure FRONTEND_URL does not end on a '/'")
+        cls.FRONTEND_URL = cls.FRONTEND_URL[:-1]
