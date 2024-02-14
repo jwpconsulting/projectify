@@ -25,6 +25,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
 from projectify.user.emails import UserPasswordChangedEmail
+from projectify.user.models.previous_email_address import PreviousEmailAddress
 from projectify.user.models.user import User
 
 logger = logging.getLogger(__name__)
@@ -67,3 +68,36 @@ def user_change_password(
 
     email = UserPasswordChangedEmail(receiver=user, obj=user)
     email.send()
+
+
+@transaction.atomic
+def user_request_email_address_update(
+    *,
+    user: User,
+    new_email: str,
+) -> None:
+    """Start user email change process."""
+    user.unconfirmed_email = new_email
+    user.save()
+    # TODO get token
+    # TODO send email
+
+
+@transaction.atomic
+def user_confirm_email_address_update(
+    *,
+    user: User,
+    confirmation_token: str,
+) -> None:
+    """Finalize user email change process."""
+    # TODO compare token
+    old_email = user.email
+    new_email = user.unconfirmed_email
+    if new_email is None:
+        raise serializers.ValidationError(
+            _("Email address update was never requested")
+        )
+    user.email = new_email
+    user.save()
+    PreviousEmailAddress.objects.create(user=user, email=old_email)
+    # TODO send email

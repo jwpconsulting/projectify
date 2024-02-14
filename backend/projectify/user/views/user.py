@@ -39,6 +39,8 @@ from projectify.user.models import User
 from projectify.user.serializers import UserSerializer
 from projectify.user.services.user import (
     user_change_password,
+    user_confirm_email_address_update,
+    user_request_email_address_update,
     user_update,
 )
 
@@ -131,4 +133,46 @@ class ChangePassword(views.APIView):
         # Ensure we stay logged in
         # https://docs.djangoproject.com/en/5.0/topics/auth/default/#session-invalidation-on-password-change
         update_session_auth_hash(request, user)
+        return Response(status=HTTP_204_NO_CONTENT)
+
+
+class RequestEmailAddressUpdate(views.APIView):
+    """Request an email address update."""
+
+    class InputSerializer(serializers.Serializer):
+        """Accept new email."""
+
+        new_email = serializers.EmailField()
+
+    def post(self, request: Request) -> Response:
+        """Handle POST."""
+        user = request.user
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        user_request_email_address_update(
+            user=user,
+            new_email=data["new_email"],
+        )
+        return Response(status=HTTP_204_NO_CONTENT)
+
+
+class ConfirmEmailAddressUpdate(views.APIView):
+    """Confirm an email address update."""
+
+    class InputSerializer(serializers.Serializer):
+        """Accept new email."""
+
+        confirmation_token = serializers.CharField()
+
+    def post(self, request: Request) -> Response:
+        """Handle POST."""
+        user = request.user
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        user_confirm_email_address_update(
+            user=user,
+            confirmation_token=data["confirmation_token"],
+        )
         return Response(status=HTTP_204_NO_CONTENT)

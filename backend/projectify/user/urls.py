@@ -30,7 +30,9 @@ from projectify.user.views.auth import (
 )
 from projectify.user.views.user import (
     ChangePassword,
+    ConfirmEmailAddressUpdate,
     ProfilePictureUpload,
+    RequestEmailAddressUpdate,
     UserReadUpdate,
 )
 
@@ -55,6 +57,16 @@ user_patterns = (
         "change-password",
         ChangePassword.as_view(),
         name="change-password",
+    ),
+    path(
+        "email-address-update/request",
+        RequestEmailAddressUpdate.as_view(),
+        name="request-email-address-update",
+    ),
+    path(
+        "email-address-update/confirm",
+        ConfirmEmailAddressUpdate.as_view(),
+        name="confirm-email-address-update",
     ),
     # Auth
     path(

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2021, 2022, 2023 JWP Consulting GK
+# Copyright (C) 2021-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -45,6 +45,13 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
         verbose_name=_("Email"),
         unique=True,
     )
+    unconfirmed_email = models.EmailField(
+        null=True,
+        blank=True,
+        verbose_name=_(
+            "If update email address requested, new, unconfirmed email"
+        ),
+    )
     is_staff = models.BooleanField()
     is_superuser = models.BooleanField()
     is_active = models.BooleanField(
@@ -79,6 +86,8 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
 
     def get_email_confirmation_token(self) -> str:
         """Return a secure email confirmation token."""
+        # TODO
+        # Use django.contrib.auth.tokens.PasswordResetGenerator
         return crypto.salted_hmac(
             key_salt=EMAIL_CONFIRMATION_TOKEN_SALT,
             value=self.email,
@@ -86,11 +95,15 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
 
     def check_email_confirmation_token(self, token: str) -> bool:
         """Compare a hexdigest to the actual email confirmation token."""
+        # TODO
+        # Use django.contrib.auth.tokens.PasswordResetGenerator
         actual = self.get_email_confirmation_token()
         return crypto.constant_time_compare(token, actual)
 
     def get_password_reset_token(self) -> str:
         """Return a secure password reset token."""
+        # TODO
+        # Use django.contrib.auth.tokens.PasswordResetGenerator
         return crypto.salted_hmac(
             key_salt=PASSWORD_RESET_TOKEN_SALT,
             value=self.password,
@@ -98,5 +111,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
 
     def check_password_reset_token(self, token: str) -> bool:
         """Compare a hexdigest to the actual password reset token."""
+        # TODO
+        # Use django.contrib.auth.tokens.PasswordResetGenerator
         actual = self.get_password_reset_token()
         return crypto.constant_time_compare(token, actual)
