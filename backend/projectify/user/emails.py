@@ -93,6 +93,16 @@ class UserEmailAddressUpdateEmail(TemplateEmail[User]):
             "new_email": self.obj.unconfirmed_email,
         }
 
+    @property
+    def addressee(self) -> str:
+        """
+        Return preferred name of user or email.
+
+        Override is necessary because email goes to new email, but we need
+        to reference the user objects name.
+        """
+        return self.obj.preferred_name or self.obj.email
+
 
 class UserEmailAddressUpdatedEmail(TemplateEmail[User]):
     """Email to confirm to user that email address was changed."""
