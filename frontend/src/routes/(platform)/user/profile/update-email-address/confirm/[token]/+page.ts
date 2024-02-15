@@ -16,21 +16,17 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /*
- * Stories for user update email form
+ * Page script for email address confirmation
  */
-import type { Meta, StoryObj } from "@storybook/svelte";
+import type { PageLoadEvent } from "./$types";
 
-import { user1 } from "$lib/storybook";
-import UpdateEmail from "$routes/(platform)/user/profile/update-email/+page.svelte";
+interface Data {
+    token: string;
+}
 
-const meta: Meta<UpdateEmail> = {
-    component: UpdateEmail,
-    args: {
-        data: { user: user1 },
-    },
-};
-export default meta;
-
-type Story = StoryObj<UpdateEmail>;
-
-export const Default: Story = {};
+/*
+ * Pass token from URL to browser
+ */
+export function load({ params: { token } }: PageLoadEvent): Data {
+    return { token };
+}

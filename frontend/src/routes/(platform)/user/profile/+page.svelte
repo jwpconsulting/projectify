@@ -24,6 +24,7 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { updateUserProfile } from "$lib/stores/user";
+    import { changePasswordUrl, updateEmailAddressUrl } from "$lib/urls/user";
 
     import type { PageData } from "./$types";
 
@@ -145,17 +146,17 @@
             {$_("user-account-settings.overview.other-actions.title")}
         </h3>
         <Anchor
-            href="/user/profile/change-password"
+            href={changePasswordUrl}
             size="normal"
             label={$_(
                 "user-account-settings.overview.other-actions.change-password",
             )}
         />
         <Anchor
-            href="/user/profile/update-email"
+            href={updateEmailAddressUrl}
             size="normal"
             label={$_(
-                "user-account-settings.overview.other-actions.update-email",
+                "user-account-settings.overview.other-actions.update-email-address",
             )}
         />
     </div>

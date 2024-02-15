@@ -20,9 +20,12 @@
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
-    import type { AuthViewState } from "$lib/types/ui";
     import type { InputFieldValidation } from "$lib/funabashi/types";
+    import { goto } from "$lib/navigation";
+    import { requestEmailAddressUpdate } from "$lib/repository/user";
+    import type { AuthViewState } from "$lib/types/ui";
     import { getProfileUrl } from "$lib/urls";
+    import { requestedEmailAddressUpdateUrl } from "$lib/urls/user";
 
     let state: AuthViewState = { kind: "start" };
 
@@ -32,20 +35,77 @@
     let newEmail: string | undefined = undefined;
     let newEmailValidation: InputFieldValidation | undefined = undefined;
 
-    function submit() {}
+    async function submit() {
+        if (currentPassword === undefined) {
+            throw new Error("Expected currentPassword");
+        }
+        if (newEmail === undefined) {
+            throw new Error("Expected newEmail");
+        }
+        const response = await requestEmailAddressUpdate(
+            currentPassword,
+            newEmail,
+            { fetch },
+        );
+        if (response.ok) {
+            await goto(requestedEmailAddressUpdateUrl);
+            return;
+        }
+        if (response.error.new_email === undefined) {
+            newEmailValidation = {
+                ok: true,
+                result: $_(
+                    "user-account-settings.update-email-address.new-email.valid",
+                ),
+            };
+        } else {
+            newEmailValidation = {
+                ok: false,
+                error: response.error.new_email,
+            };
+        }
+        if (response.error.password === undefined) {
+            currentPasswordValidation = {
+                ok: true,
+                result: $_(
+                    "user-account-settings.update-email-address.current-password.valid",
+                ),
+            };
+        } else {
+            currentPasswordValidation = {
+                ok: false,
+                error: response.error.password,
+            };
+        }
+        if (newEmailValidation.ok && currentPasswordValidation.ok) {
+            state = {
+                kind: "error",
+                message: $_(
+                    "user-account-settings.update-email-address.error.general",
+                ),
+            };
+        } else {
+            state = {
+                kind: "error",
+                message: $_(
+                    "user-account-settings.update-email-address.error.field",
+                ),
+            };
+        }
+    }
 </script>
 
 <h1 class="text-center text-2xl font-bold">
-    {$_("user-account-settings.update-email.title")}
+    {$_("user-account-settings.update-email-address.title")}
 </h1>
 <form class="flex w-full flex-col gap-10" on:submit|preventDefault={submit}>
     <div class="flex flex-col gap-4">
         <InputField
             label={$_(
-                "user-account-settings.update-email.current-password.label",
+                "user-account-settings.update-email-address.current-password.label",
             )}
             placeholder={$_(
-                "user-account-settings.update-email.current-password.placeholder",
+                "user-account-settings.update-email-address.current-password.placeholder",
             )}
             name="current-password"
             style={{ inputType: "password" }}
@@ -54,9 +114,11 @@
             required
         />
         <InputField
-            label={$_("user-account-settings.update-email.new-email.label")}
+            label={$_(
+                "user-account-settings.update-email-address.new-email.label",
+            )}
             placeholder={$_(
-                "user-account-settings.update-email.new-email.placeholder",
+                "user-account-settings.update-email-address.new-email.placeholder",
             )}
             name="new-email"
             style={{ inputType: "email" }}
@@ -77,7 +139,7 @@
             size="medium"
             color="blue"
             style={{ kind: "secondary" }}
-            label={$_("user-account-settings.update-email.cancel")}
+            label={$_("user-account-settings.update-email-address.cancel")}
         />
         <Button
             action={{
@@ -87,7 +149,7 @@
             size="medium"
             color="blue"
             style={{ kind: "primary" }}
-            label={$_("user-account-settings.update-email.save")}
+            label={$_("user-account-settings.update-email-address.save")}
         />
     </div>
 </form>

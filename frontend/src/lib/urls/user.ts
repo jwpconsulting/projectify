@@ -18,7 +18,15 @@
 /*
  * Contain user related URL constants
  */
+export const changePasswordUrl = "/user/profile/change-password";
 export const changedPasswordUrl = "/user/profile/changed-password";
+export const updateEmailAddressUrl = "/user/profile/update-email-address";
+// These two URLs are needed for the email change flow, but not implemented yet
+// TODO
+export const requestedEmailAddressUpdateUrl =
+    "/user/profile/update-email-address/requested";
+export const confirmedEmailAddressUpdateUrl =
+    "/user/profile/update-email-address/confirmed";
 // Auth
 export const logInUrl = "/user/log-in";
 export const logOutUrl = "/user/log-out";
