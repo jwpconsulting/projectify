@@ -16,12 +16,70 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    import UpdateEmail from "$lib/figma/screens/user-account-settings/UpdateEmail.svelte";
+    import { _ } from "svelte-i18n";
 
-    import type { PageData } from "./$types";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
 
-    export let data: PageData;
-    const { user } = data;
+    const hasBeenEdited = false;
+    let currentPassword = "";
+    let newEmail = "";
 </script>
 
-<UpdateEmail {user} />
+<div class="flex flex-col items-center gap-12">
+    <h1 class="text-2xl font-bold">
+        {$_("user-account-settings.update-email.title")}
+    </h1>
+    <div class="flex w-full flex-col gap-10">
+        <div class="flex flex-col gap-4">
+            <InputField
+                label={$_(
+                    "user-account-settings.update-email.current-password.label",
+                )}
+                placeholder={$_(
+                    "user-account-settings.update-email.current-password.placeholder",
+                )}
+                name="current-password"
+                style={{ inputType: "password" }}
+                bind:value={currentPassword}
+            />
+            <InputField
+                label={$_(
+                    "user-account-settings.update-email.new-email.label",
+                )}
+                placeholder={$_(
+                    "user-account-settings.update-email.new-email.placeholder",
+                )}
+                name="new-email"
+                style={{ inputType: "text" }}
+                bind:value={newEmail}
+            />
+        </div>
+        <div class="flex flex-row gap-2">
+            <Button
+                action={{
+                    kind: "a",
+                    href: "/user/profile",
+                }}
+                size="medium"
+                color="blue"
+                style={{ kind: "secondary" }}
+                label={$_("user-account-settings.update-email.cancel")}
+            />
+            <Button
+                action={{
+                    kind: "button",
+                    action: console.error.bind(
+                        null,
+                        "Update email not implemented",
+                    ),
+                    disabled: hasBeenEdited,
+                }}
+                size="medium"
+                color="blue"
+                style={{ kind: "primary" }}
+                label={$_("user-account-settings.update-email.save")}
+            />
+        </div>
+    </div>
+</div>
