@@ -19,36 +19,43 @@ from inspect import (
     getdoc,
 )
 from typing import (
-    TYPE_CHECKING,
     Any,
     Dict,
+    cast,
 )
 
 from django.contrib.auth.mixins import (
     UserPassesTestMixin,
 )
+from django.http.request import HttpRequest
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
     TemplateView,
 )
+
+from projectify.admin.admin import ProjectifyAdmin
+from projectify.user.models.user import User
 
 from .registry import (
     registry,
 )
 
-if TYPE_CHECKING:
-    from projectify.user.models import User  # noqa: F401
-
 
 class SuperUserTestMixin(UserPassesTestMixin):
     """Permission mixin that tests for superuser status."""
 
+    request: HttpRequest
+
     def test_func(self) -> bool:
         """Assert that user is superuser."""
         # XXX the request should have a user here, at least as an optional
-        user: "User" = self.request.user  # type: ignore
-        # I thought AbstractBaseUser had the method is_superuser, but I was
-        # wrong... XXX
+        user = cast(User, self.request.user)
         return user.is_superuser
+
+
+# TODO we might want to figure out how to properly add templated sites to
+# django admin instead of having to manually pull in site_header, site_title
+# and so on from ProjectifyAdmin
 
 
 class EmailList(SuperUserTestMixin, TemplateView):
@@ -58,16 +65,19 @@ class EmailList(SuperUserTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         """Populate with all available emails."""
-        context = super().get_context_data(**kwargs)
-        object_list = [
-            {
-                "doc": getdoc(registry[key]),
-                "slug": key,
-            }
-            for key in registry.keys()
-        ]
-        context["object_list"] = object_list
-        return context
+        return {
+            **super().get_context_data(**kwargs),
+            "site_header": ProjectifyAdmin.site_header,
+            "site_title": ProjectifyAdmin.site_title,
+            "title": _("Emails"),
+            "object_list": [
+                {
+                    "doc": getdoc(registry[key]),
+                    "slug": key,
+                }
+                for key in registry.keys()
+            ],
+        }
 
 
 class EmailPreview(SuperUserTestMixin, TemplateView):
@@ -77,11 +87,17 @@ class EmailPreview(SuperUserTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         """Add email preview data to context."""
-        context = super().get_context_data(**kwargs)
-        Email = registry[self.kwargs["slug"]]
+        slug: str = self.kwargs["slug"]
+        Email = registry[slug]
         email = Email(
-            receiver="hello@example.com", obj=Email.model.objects.first()
+            receiver="hello@example.com",
+            obj=Email.model.objects.first(),
         )
-        context["subject"] = email.render_subject()
-        context["body"] = email.render_body()
-        return context
+        return {
+            **super().get_context_data(**kwargs),
+            "site_header": ProjectifyAdmin.site_header,
+            "site_title": ProjectifyAdmin.site_title,
+            "title": _("{} preview").format(slug),
+            "subject": email.render_subject(),
+            "body": email.render_body(),
+        }
