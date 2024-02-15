@@ -20,66 +20,74 @@
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import type { AuthViewState } from "$lib/types/ui";
+    import type { InputFieldValidation } from "$lib/funabashi/types";
+    import { getProfileUrl } from "$lib/urls";
 
-    const hasBeenEdited = false;
-    let currentPassword = "";
-    let newEmail = "";
+    let state: AuthViewState = { kind: "start" };
+
+    let currentPassword: string | undefined = undefined;
+    let currentPasswordValidation: InputFieldValidation | undefined =
+        undefined;
+    let newEmail: string | undefined = undefined;
+    let newEmailValidation: InputFieldValidation | undefined = undefined;
+
+    function submit() {}
 </script>
 
-<div class="flex flex-col items-center gap-12">
-    <h1 class="text-2xl font-bold">
-        {$_("user-account-settings.update-email.title")}
-    </h1>
-    <div class="flex w-full flex-col gap-10">
-        <div class="flex flex-col gap-4">
-            <InputField
-                label={$_(
-                    "user-account-settings.update-email.current-password.label",
-                )}
-                placeholder={$_(
-                    "user-account-settings.update-email.current-password.placeholder",
-                )}
-                name="current-password"
-                style={{ inputType: "password" }}
-                bind:value={currentPassword}
-            />
-            <InputField
-                label={$_(
-                    "user-account-settings.update-email.new-email.label",
-                )}
-                placeholder={$_(
-                    "user-account-settings.update-email.new-email.placeholder",
-                )}
-                name="new-email"
-                style={{ inputType: "text" }}
-                bind:value={newEmail}
-            />
-        </div>
-        <div class="flex flex-row gap-2">
-            <Button
-                action={{
-                    kind: "a",
-                    href: "/user/profile",
-                }}
-                size="medium"
-                color="blue"
-                style={{ kind: "secondary" }}
-                label={$_("user-account-settings.update-email.cancel")}
-            />
-            <Button
-                action={{
-                    kind: "button",
-                    action: console.error.bind(
-                        null,
-                        "Update email not implemented",
-                    ),
-                    disabled: hasBeenEdited,
-                }}
-                size="medium"
-                color="blue"
-                style={{ kind: "primary" }}
-                label={$_("user-account-settings.update-email.save")}
-            />
-        </div>
+<h1 class="text-center text-2xl font-bold">
+    {$_("user-account-settings.update-email.title")}
+</h1>
+<form class="flex w-full flex-col gap-10" on:submit|preventDefault={submit}>
+    <div class="flex flex-col gap-4">
+        <InputField
+            label={$_(
+                "user-account-settings.update-email.current-password.label",
+            )}
+            placeholder={$_(
+                "user-account-settings.update-email.current-password.placeholder",
+            )}
+            name="current-password"
+            style={{ inputType: "password" }}
+            bind:value={currentPassword}
+            validation={currentPasswordValidation}
+            required
+        />
+        <InputField
+            label={$_("user-account-settings.update-email.new-email.label")}
+            placeholder={$_(
+                "user-account-settings.update-email.new-email.placeholder",
+            )}
+            name="new-email"
+            style={{ inputType: "email" }}
+            bind:value={newEmail}
+            validation={newEmailValidation}
+            required
+        />
+        {#if state.kind === "error"}
+            <p>{state.message}</p>
+        {/if}
     </div>
-</div>
+    <div class="flex flex-row gap-2">
+        <Button
+            action={{
+                kind: "a",
+                href: getProfileUrl(),
+            }}
+            size="medium"
+            color="blue"
+            style={{ kind: "secondary" }}
+            label={$_("user-account-settings.update-email.cancel")}
+        />
+        <Button
+            action={{
+                kind: "submit",
+                disabled: state.kind === "submitting",
+            }}
+            size="medium"
+            color="blue"
+            style={{ kind: "primary" }}
+            label={$_("user-account-settings.update-email.save")}
+        />
+    </div>
+</form>
