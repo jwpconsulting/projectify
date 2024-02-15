@@ -105,7 +105,7 @@ def test_user_email_update_complete(
     # Assert we get an email
     assert len(mailoutbox) == 1
     body = mailoutbox[0].body
-    match = re.search(r"confirm-email-address-update/(.+)\n", body)
+    match = re.search(r"update-email-address/confirm/(.+)\n", body)
     assert match
     token = Token(match.group(1))
 
