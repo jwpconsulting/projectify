@@ -26,6 +26,8 @@ from faker import Faker
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from projectify.user.services.internal import Token, user_make_token
+
 from ...models import User
 from ...services.auth import (
     user_confirm_email,
@@ -87,7 +89,7 @@ def test_user_confirm_email(user: User, inactive_user: User) -> None:
     assert user.is_active
     user_confirm_email(
         email=user.email,
-        token=user.get_email_confirmation_token(),
+        token=user_make_token(user=user, kind="confirm_email_address"),
     )
     user.refresh_from_db()
     assert user.is_active
@@ -95,7 +97,9 @@ def test_user_confirm_email(user: User, inactive_user: User) -> None:
     assert not inactive_user.is_active
     user_confirm_email(
         email=inactive_user.email,
-        token=inactive_user.get_email_confirmation_token(),
+        token=user_make_token(
+            user=inactive_user, kind="confirm_email_address"
+        ),
     )
     inactive_user.refresh_from_db()
     assert inactive_user.is_active
@@ -212,7 +216,7 @@ def test_confirm_password_reset(
         user_confirm_password_reset(
             email=user.email,
             new_password=new_password,
-            token="wrong token",
+            token=Token("wrong token"),
         )
     assert error.match("token is invalid")
     user.refresh_from_db()
@@ -220,7 +224,7 @@ def test_confirm_password_reset(
     assert not user.check_password(new_password)
 
     # Then with right token, wrong email
-    token = user.get_password_reset_token()
+    token = user_make_token(user=user, kind="reset_password")
     with pytest.raises(ValidationError) as error:
         user_confirm_password_reset(
             email=faker.email(),

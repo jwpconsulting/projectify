@@ -32,7 +32,11 @@ from projectify.user.emails import (
 )
 from projectify.user.models.user import User
 from projectify.user.selectors.user import user_find_by_email
-from projectify.user.services.internal import user_create
+from projectify.user.services.internal import (
+    Token,
+    user_check_token,
+    user_create,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -81,7 +85,7 @@ def user_sign_up(
 def user_confirm_email(
     *,
     email: str,
-    token: str,
+    token: Token,
 ) -> Optional[User]:
     """Confirm a user's email, return User on success."""
     user = user_find_by_email(email=email)
@@ -89,7 +93,9 @@ def user_confirm_email(
         raise serializers.ValidationError(
             {"email": _("No user could be found for this email address")}
         )
-    if not user.check_email_confirmation_token(token):
+    if not user_check_token(
+        user=user, kind="confirm_email_address", token=token
+    ):
         raise serializers.ValidationError(
             {"token": _("This email confirmation token is invalid")}
         )
@@ -169,7 +175,7 @@ def user_request_password_reset(
 def user_confirm_password_reset(
     *,
     email: str,
-    token: str,
+    token: Token,
     new_password: str,
     # TODO don't return anything here
 ) -> Optional[User]:
@@ -183,7 +189,7 @@ def user_confirm_password_reset(
         raise serializers.ValidationError(
             {"email": _("This email is not recognized")}
         )
-    if not user.check_password_reset_token(token):
+    if not user_check_token(user=user, token=token, kind="reset_password"):
         logger.warning("Could not match a reset token to email %s", email)
         raise serializers.ValidationError(
             {"token": _("This token is invalid")}

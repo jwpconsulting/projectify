@@ -84,6 +84,29 @@ export async function changePassword(
     );
 }
 
+export async function requestEmailAddressUpdate(
+    password: string,
+    new_email: string,
+    repositoryContext: RepositoryContext,
+): Promise<ApiResponse<void, { password?: string; new_email?: string }>> {
+    return await postWithCredentialsJson(
+        "/user/user/email-address-update/request",
+        { password, new_email },
+        repositoryContext,
+    );
+}
+
+export async function confirmEmailAddressUpdate(
+    confirmation_token: string,
+    repositoryContext: RepositoryContext,
+): Promise<ApiResponse<void, { confirmation_token?: string }>> {
+    return await postWithCredentialsJson(
+        "/user/user/email-address-update/confirm",
+        { confirmation_token },
+        repositoryContext,
+    );
+}
+
 // Auth
 export async function signUp(
     email: string,

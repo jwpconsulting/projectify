@@ -24,8 +24,15 @@ from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 
-from projectify.user.emails import UserPasswordChangedEmail
+from projectify.premail.email import EmailAddress
+from projectify.user.emails import (
+    UserEmailAddressUpdatedEmail,
+    UserEmailAddressUpdateEmail,
+    UserPasswordChangedEmail,
+)
+from projectify.user.models.previous_email_address import PreviousEmailAddress
 from projectify.user.models.user import User
+from projectify.user.services.internal import Token, user_check_token
 
 logger = logging.getLogger(__name__)
 
@@ -67,3 +74,48 @@ def user_change_password(
 
     email = UserPasswordChangedEmail(receiver=user, obj=user)
     email.send()
+
+
+@transaction.atomic
+def user_request_email_address_update(
+    *,
+    user: User,
+    new_email: str,
+    password: str,
+) -> None:
+    """Start user email change process."""
+    if not user.check_password(password):
+        raise serializers.ValidationError(
+            {"password": _("Password is incorrect")}
+        )
+    user.unconfirmed_email = new_email
+    user.save()
+    UserEmailAddressUpdateEmail(
+        receiver=EmailAddress(new_email),
+        obj=user,
+    ).send()
+
+
+@transaction.atomic
+def user_confirm_email_address_update(
+    *,
+    user: User,
+    confirmation_token: Token,
+) -> None:
+    """Finalize user email change process."""
+    old_email = user.email
+    new_email = user.unconfirmed_email
+    if new_email is None:
+        raise serializers.ValidationError(
+            _("Email address update was never requested")
+        )
+    if not user_check_token(
+        user=user, token=confirmation_token, kind="update_email_address"
+    ):
+        raise serializers.ValidationError(
+            {"confirmation_token": _("Provided token is not valid")}
+        )
+    user.email = new_email
+    user.save()
+    PreviousEmailAddress.objects.create(user=user, email=old_email)
+    UserEmailAddressUpdatedEmail(receiver=user, obj=user).send()

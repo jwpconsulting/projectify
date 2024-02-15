@@ -23,6 +23,7 @@ import pytest
 from rest_framework.test import APIClient
 
 from projectify.user.services.auth import user_sign_up
+from projectify.user.services.internal import user_make_token
 from pytest_types import DjangoAssertNumQueries
 
 from ...models import User
@@ -121,7 +122,7 @@ class TestConfirmEmail:
             tos_agreed=True,
             privacy_policy_agreed=True,
         )
-        token = user.get_email_confirmation_token()
+        token = user_make_token(user=user, kind="confirm_email_address")
         with django_assert_num_queries(2):
             response = rest_client.post(
                 resource_url,
@@ -210,7 +211,7 @@ class TestPasswordResetConfirm:
         )
         assert response.status_code == 204, response.data
         # We are somewhat cheating here since we don't check the email outbox
-        token = user.get_password_reset_token()
+        token = user_make_token(user=user, kind="reset_password")
         with django_assert_num_queries(4):
             response = rest_client.post(
                 resource_url,

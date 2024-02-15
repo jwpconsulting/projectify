@@ -1,0 +1,1 @@
+{% load i18n %}{% include "email/_subject.txt" %} {% translate "Your email address was updated" %}

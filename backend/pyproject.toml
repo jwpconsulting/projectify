@@ -203,6 +203,7 @@ exclude = [
 ]
 
 [tool.pytest.ini_options]
+FAIL_INVALID_TEMPLATE_VARS = "True"
 DJANGO_SETTINGS_MODULE = "projectify.settings.test"
 DJANGO_CONFIGURATION = "Test"
 asyncio_mode = "auto"

@@ -36,6 +36,7 @@ import pytest
 from rest_framework.status import HTTP_200_OK, HTTP_403_FORBIDDEN
 from rest_framework.test import APIClient
 
+from projectify.user.services.internal import user_make_token
 from pytest_types import DjangoAssertNumQueries
 
 from ...models import User
@@ -217,3 +218,64 @@ class TestChangePassword:
         assert "sessionid" in response.cookies
         user.refresh_from_db()
         assert user.check_password("hello-world123")
+
+
+@pytest.mark.django_db
+class TestRequestEmailAddressUpdate:
+    """Test requesting an email address update token."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("user:users:request-email-address-update")
+
+    def test_happy_path(
+        self,
+        user: User,
+        password: str,
+        rest_user_client: APIClient,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test sending the correct data."""
+        old_email = user.email
+        new_email = "henlo-wolrd@example.com"
+        with django_assert_num_queries(3):
+            response = rest_user_client.post(
+                resource_url,
+                data={"new_email": new_email, "password": password},
+            )
+            assert response.status_code == 204, response.data
+        user.refresh_from_db()
+        assert user.email == old_email  # i.e., nothing changed
+        assert user.unconfirmed_email == new_email
+
+
+@pytest.mark.django_db
+class TestConfirmEmailAddressUpdate:
+    """Test confirming the email address."""
+
+    @pytest.fixture
+    def resource_url(self) -> str:
+        """Return URL to this view."""
+        return reverse("user:users:confirm-email-address-update")
+
+    def test_happy_path(
+        self,
+        user: User,
+        rest_user_client: APIClient,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test that the email address is updated."""
+        user.unconfirmed_email = "new-email@example.com"
+        user.save()
+        token = user_make_token(user=user, kind="update_email_address")
+        with django_assert_num_queries(4):
+            response = rest_user_client.post(
+                resource_url,
+                data={"confirmation_token": token},
+            )
+            assert response.status_code == 204, response.data
+        user.refresh_from_db()
+        assert user.email == "new-email@example.com"

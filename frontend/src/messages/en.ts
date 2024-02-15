@@ -625,24 +625,72 @@ const messages: MessageDirectory = {
                 current: "Your current profile picture",
                 remove: "Remove profile picture",
             },
-            "update-email": "Update email address",
-            "change-password": "Change password",
-            "delete-account": "Delete account",
+            "other-actions": {
+                "title": "Other settings",
+                "update-email-address": "Update email address",
+                "change-password": "Change password",
+            },
+            "delete-account": {
+                title: "Account deletion",
+                message:
+                    "If you would like to delete your account, please send us an email using the link below. We have not implemented self-serve account deletion at this point, and would like to apologize for the inconvenience.",
+                label: "Request account deletion (opens email client)",
+                email: "mailto:hello@projectifyapp.com?subject=Account+deletion",
+            },
             "cancel": "Cancel",
             "save": "Save changes",
         },
-        "update-email": {
+        "update-email-address": {
             "title": "Change password",
             "current-password": {
                 label: "Current password",
                 placeholder: "Enter your current password",
+                valid: "Correct password",
             },
             "new-email": {
                 label: "New email",
                 placeholder: "Enter your new email address",
+                valid: "Valid new email",
             },
             "cancel": "Go back",
             "save": "Update email",
+            "error": {
+                general:
+                    "An unknown error has occured and your email update has not finished",
+                field: "Please check the errors above and try one more time",
+            },
+            "requested": {
+                "title": "Email address update requested",
+                "message":
+                    "We will send an email with to your new email address containing a link that you can click to confirm your new email address. Please follow the instructions in the email.",
+                "back-to-profile": "Go back to profile",
+            },
+            "confirm": {
+                title: "Confirming new email address",
+                submitting:
+                    "We are confirming your new email address using the token that is contained in this page's URL.",
+                error: {
+                    "general":
+                        "An unknown error has occured and your email address could not be updated. Please try again or contact us if you have any questions",
+                    "confirmation-token":
+                        "The confirmation token provided in the URL you used to open this page is not valid. This means that you might have already changed your email address, or that you have requested for your email address to be changed multiple times. Please try updating your email address one more time by following the link below. The error was: ''{error}''.",
+                    "what-to-do": {
+                        "title": "What to do",
+                        "try-again":
+                            "Try updating your email address one more time",
+                        "contact-us": {
+                            label: "Contact us via email",
+                            email: "mailto:hello@projectifyapp.com?subject=Update+emai+address",
+                        },
+                    },
+                },
+            },
+            "confirmed": {
+                "title": "Email address updated successfully",
+                "message":
+                    "Your email address has been updated succesfully. You may now use your new email address to log in.",
+                "back-to-profile": "Go back to profile",
+            },
         },
         "change-password": {
             "title": "Change password",

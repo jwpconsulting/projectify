@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -15,13 +15,26 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
+<!--
+    @component Show the user that their email has been updated successfully
+-->
 <script lang="ts">
-    import UpdateEmail from "$lib/figma/screens/user-account-settings/UpdateEmail.svelte";
+    import { _ } from "svelte-i18n";
 
-    import type { PageData } from "./$types";
-
-    export let data: PageData;
-    const { user } = data;
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+    import { getProfileUrl } from "$lib/urls";
 </script>
 
-<UpdateEmail {user} />
+<h1 class="text-center text-2xl font-bold">
+    {$_("user-account-settings.update-email-address.confirmed.title")}
+</h1>
+<div class="flex flex-col gap-4">
+    {$_("user-account-settings.update-email-address.confirmed.message")}
+    <Anchor
+        label={$_(
+            "user-account-settings.update-email-address.confirmed.back-to-profile",
+        )}
+        href={getProfileUrl()}
+        size="normal"
+    />
+</div>

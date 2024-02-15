@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -15,16 +15,18 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { Meta, StoryObj } from "@storybook/svelte";
+/*
+ * Page script for email address confirmation
+ */
+import type { PageLoadEvent } from "./$types";
 
-import UpdateEmail from "$lib/figma/screens/user-account-settings/UpdateEmail.svelte";
+interface Data {
+    token: string;
+}
 
-const meta: Meta<UpdateEmail> = {
-    component: UpdateEmail,
-    argTypes: {},
-};
-export default meta;
-
-type Story = StoryObj<UpdateEmail>;
-
-export const Default: Story = {};
+/*
+ * Pass token from URL to browser
+ */
+export function load({ params: { token } }: PageLoadEvent): Data {
+    return { token };
+}
