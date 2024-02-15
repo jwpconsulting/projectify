@@ -18,8 +18,10 @@
 
 
 from projectify.premail.email import (
+    Context,
     TemplateEmail,
 )
+from projectify.user.services.internal import user_make_token
 
 from .models import User
 
@@ -29,6 +31,16 @@ class UserEmailConfirmationEmail(TemplateEmail[User]):
 
     model = User
     template_prefix = "user/email/email_confirmation"
+
+    def get_context(self) -> Context:
+        """Add email confirm token."""
+        return {
+            **super().get_context(),
+            "confirm_email_address_token": user_make_token(
+                user=self.obj,
+                kind="confirm_email_address",
+            ),
+        }
 
 
 # TODO UserEmailConfirmedEmail

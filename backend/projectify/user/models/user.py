@@ -84,22 +84,6 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = "email"
 
-    def get_email_confirmation_token(self) -> str:
-        """Return a secure email confirmation token."""
-        # TODO
-        # Use django.contrib.auth.tokens.PasswordResetGenerator
-        return crypto.salted_hmac(
-            key_salt=EMAIL_CONFIRMATION_TOKEN_SALT,
-            value=self.email,
-        ).hexdigest()
-
-    def check_email_confirmation_token(self, token: str) -> bool:
-        """Compare a hexdigest to the actual email confirmation token."""
-        # TODO
-        # Use django.contrib.auth.tokens.PasswordResetGenerator
-        actual = self.get_email_confirmation_token()
-        return crypto.constant_time_compare(token, actual)
-
     def get_password_reset_token(self) -> str:
         """Return a secure password reset token."""
         # TODO

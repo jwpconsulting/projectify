@@ -26,6 +26,8 @@ from faker import Faker
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from projectify.user.services.internal import user_make_token
+
 from ...models import User
 from ...services.auth import (
     user_confirm_email,
@@ -87,7 +89,7 @@ def test_user_confirm_email(user: User, inactive_user: User) -> None:
     assert user.is_active
     user_confirm_email(
         email=user.email,
-        token=user.get_email_confirmation_token(),
+        token=user_make_token(user=user, kind="confirm_email_address"),
     )
     user.refresh_from_db()
     assert user.is_active
@@ -95,7 +97,9 @@ def test_user_confirm_email(user: User, inactive_user: User) -> None:
     assert not inactive_user.is_active
     user_confirm_email(
         email=inactive_user.email,
-        token=inactive_user.get_email_confirmation_token(),
+        token=user_make_token(
+            user=inactive_user, kind="confirm_email_address"
+        ),
     )
     inactive_user.refresh_from_db()
     assert inactive_user.is_active

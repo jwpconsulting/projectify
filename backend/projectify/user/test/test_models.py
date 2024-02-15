@@ -29,30 +29,6 @@ class TestUser:
         assert user.email
         assert user.preferred_name is not None
 
-    def test_get_email_confirmation_token(self, user: User) -> None:
-        """Test retrieving the email confirmation token."""
-        user.email = "test@example"
-        assert (
-            user.get_email_confirmation_token()
-            == "d4aa423d5ee52b8d51ca9bbc7fd9d3acb7067855"
-        )
-
-    def test_check_email_confirmation_token(self, user: User) -> None:
-        """Test checking the email confirmation token."""
-        user.email = "test@example"
-        assert (
-            user.check_email_confirmation_token(
-                "d4aa423d5ee52b8d51ca9bbc7fd9d3acb7067855"
-            )
-            is True
-        )
-        assert (
-            user.check_email_confirmation_token(
-                "e4aa423d5ee52b8d51ca9bbc7fd9d3acb7067855"
-            )
-            is False
-        )
-
 
 @pytest.mark.django_db
 class TestUserInviteQuerySet:

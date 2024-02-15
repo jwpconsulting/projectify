@@ -19,6 +19,8 @@ from django.core.mail import EmailMessage
 
 import pytest
 
+from projectify.user.services.internal import user_make_token
+
 from ..emails import (
     UserEmailConfirmationEmail,
     UserPasswordResetEmail,
@@ -39,7 +41,9 @@ class TestUserEmailConfirmationEmail:
         assert len(mailoutbox) == 1
         m = mailoutbox[0]
         assert "contains%20space%40example.com" in m.body
-        assert user.get_email_confirmation_token() in m.body
+        assert (
+            user_make_token(user=user, kind="confirm_email_address") in m.body
+        )
 
 
 @pytest.mark.django_db
