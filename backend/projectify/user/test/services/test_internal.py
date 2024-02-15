@@ -80,6 +80,25 @@ def test_user_make_token(
     assert user_make_token(user=deterministic_user, kind=kind) == token
 
 
+@pytest.mark.parametrize(
+    "kind", ["confirm_email_address", "reset_password", "update_email_address"]
+)
+def test_user_make_token_with_unconfirmed_email(
+    deterministic_user: User,
+    monkeypatch: pytest.MonkeyPatch,
+    kind: TokenKind,
+) -> None:
+    """Test token making when unconfirmed_email changes."""
+    monkeypatch.setattr(PasswordResetTokenGenerator, "_now", now)
+    token1 = user_make_token(user=deterministic_user, kind=kind)
+    deterministic_user.unconfirmed_email = "abc@example.com"
+    token2 = user_make_token(user=deterministic_user, kind=kind)
+    assert token1 != token2
+    # Make sure we can repeat this
+    token3 = user_make_token(user=deterministic_user, kind=kind)
+    assert token2 == token3
+
+
 @pytest.mark.parametrize("kind,token", tokens)
 def test_user_check_token(
     deterministic_user: User,

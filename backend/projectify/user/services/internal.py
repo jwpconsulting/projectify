@@ -19,6 +19,7 @@ from datetime import datetime
 from typing import Literal, NewType, Optional
 
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 from projectify.user.models.user import User
@@ -92,15 +93,32 @@ TokenKind = Literal[
 Token = NewType("Token", str)
 
 
+class TokenGenerator(PasswordResetTokenGenerator):
+    """
+    Override PasswordResetTokenGenerator.
+
+    Reference unconfirmed_email as well to create hash value.
+    """
+
+    def _make_hash_value(self, user: AbstractBaseUser, timestamp: int) -> str:
+        """Override to include unconfirmed email in hash value."""
+        original = super()._make_hash_value(user, timestamp)
+        if isinstance(user, User):
+            return f"{original}{user.unconfirmed_email or ''}"
+        else:
+            return original
+
+
 def user_make_token(*, user: User, kind: TokenKind) -> Token:
     """
     Return a salted token of 'kind' for a user.
 
     This is guaranteed to unique for a given user state and token kind.
 
-    A user state is derived by Django's PasswordResetTokenGenerator using the
-    user's primary key, email and "some user state" that will change if the
-    action is performed for which this token is generated.
+    A user state is derived by TokenGenerator (and in turn Django's
+    PasswordResetTokenGenerator) using the user's primary key, email,
+    unconfirmed email and "some user state" that will change if the action is
+    performed for which this token is generated.
 
     For password reset:
     1. user requests password reset
@@ -123,6 +141,12 @@ def user_make_token(*, user: User, kind: TokenKind) -> Token:
     3. user confirms the new email address
     4. token is invalidated, they can't use it again.
 
+    Furthermore, should the user request another email change after the initial
+    one, a new token will be emitted, since the token depends on
+    unconfirmed_email as well. This way, users can not accidentally reuse the
+    first token for the second change. Doing so, we can ensure that each token
+    truly represents a user's intent to change their email address.
+
     In a way, email confirm and email change are about confirming a new email
     address. Since the email confirm is entwined into the business logic of
     confirming and onboarding users, we would like to keep these two separate.
@@ -136,7 +160,7 @@ def user_make_token(*, user: User, kind: TokenKind) -> Token:
     this risk is addresses sufficiently (for example, user.pk is sure to be
     different between users)
     """
-    generator = PasswordResetTokenGenerator()
+    generator = TokenGenerator()
     generator.key_salt = kind
     token = generator.make_token(user)
     return Token(token)
@@ -148,6 +172,6 @@ def user_check_token(*, user: User, kind: TokenKind, token: Token) -> bool:
 
     Use Django's PasswordResetTokenGenerator salted with TokenKind.
     """
-    generator = PasswordResetTokenGenerator()
+    generator = TokenGenerator()
     generator.key_salt = kind
     return generator.check_token(user, token)
