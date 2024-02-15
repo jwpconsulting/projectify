@@ -54,6 +54,16 @@ class UserPasswordResetEmail(TemplateEmail[User]):
     model = User
     template_prefix = "user/email/password_reset"
 
+    def get_context(self) -> Context:
+        """Add reset password token."""
+        return {
+            **super().get_context(),
+            "reset_password_token": user_make_token(
+                user=self.obj,
+                kind="reset_password",
+            ),
+        }
+
 
 # TODO UserPasswordResetConfirmedEmail
 # We want to tell a user that we have reset their password

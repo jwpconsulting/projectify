@@ -56,4 +56,4 @@ class TestUserPasswordResetEmail:
         mail.send()
         assert len(mailoutbox) == 1
         m = mailoutbox[0]
-        assert user.get_password_reset_token() in m.body
+        assert user_make_token(user=user, kind="reset_password") in m.body

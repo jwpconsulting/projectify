@@ -175,7 +175,7 @@ def user_request_password_reset(
 def user_confirm_password_reset(
     *,
     email: str,
-    token: str,
+    token: Token,
     new_password: str,
     # TODO don't return anything here
 ) -> Optional[User]:
@@ -189,7 +189,7 @@ def user_confirm_password_reset(
         raise serializers.ValidationError(
             {"email": _("This email is not recognized")}
         )
-    if not user.check_password_reset_token(token):
+    if not user_check_token(user=user, token=token, kind="reset_password"):
         logger.warning("Could not match a reset token to email %s", email)
         raise serializers.ValidationError(
             {"token": _("This token is invalid")}

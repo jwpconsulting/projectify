@@ -26,7 +26,7 @@ from faker import Faker
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from projectify.user.services.internal import user_make_token
+from projectify.user.services.internal import Token, user_make_token
 
 from ...models import User
 from ...services.auth import (
@@ -216,7 +216,7 @@ def test_confirm_password_reset(
         user_confirm_password_reset(
             email=user.email,
             new_password=new_password,
-            token="wrong token",
+            token=Token("wrong token"),
         )
     assert error.match("token is invalid")
     user.refresh_from_db()
@@ -224,7 +224,7 @@ def test_confirm_password_reset(
     assert not user.check_password(new_password)
 
     # Then with right token, wrong email
-    token = user.get_password_reset_token()
+    token = user_make_token(user=user, kind="reset_password")
     with pytest.raises(ValidationError) as error:
         user_confirm_password_reset(
             email=faker.email(),

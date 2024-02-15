@@ -27,9 +27,6 @@ from django.contrib.auth.models import (
 from django.db import (
     models,
 )
-from django.utils import (
-    crypto,
-)
 from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import BaseModel
@@ -83,19 +80,3 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     objects: ClassVar[BaseUserManager["User"]] = BaseUserManager()
 
     USERNAME_FIELD = "email"
-
-    def get_password_reset_token(self) -> str:
-        """Return a secure password reset token."""
-        # TODO
-        # Use django.contrib.auth.tokens.PasswordResetGenerator
-        return crypto.salted_hmac(
-            key_salt=PASSWORD_RESET_TOKEN_SALT,
-            value=self.password,
-        ).hexdigest()
-
-    def check_password_reset_token(self, token: str) -> bool:
-        """Compare a hexdigest to the actual password reset token."""
-        # TODO
-        # Use django.contrib.auth.tokens.PasswordResetGenerator
-        actual = self.get_password_reset_token()
-        return crypto.constant_time_compare(token, actual)
