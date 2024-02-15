@@ -1,0 +1,5 @@
+{% load i18n %}
+{% include "email/_salutation.txt" %}{% blocktranslate %}
+Your email address has been updated. You can now log in using your new email address '{{ new_email }}'.
+{% endblocktranslate %}
+{% include "email/_greeting.txt" %}

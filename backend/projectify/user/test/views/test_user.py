@@ -36,6 +36,7 @@ import pytest
 from rest_framework.status import HTTP_200_OK, HTTP_403_FORBIDDEN
 from rest_framework.test import APIClient
 
+from projectify.user.services.internal import user_make_token
 from pytest_types import DjangoAssertNumQueries
 
 from ...models import User
@@ -268,9 +269,7 @@ class TestConfirmEmailAddressUpdate:
         """Test that the email address is updated."""
         user.unconfirmed_email = "new-email@example.com"
         user.save()
-
-        # TODO smuggle token in here
-        token = "asd"
+        token = user_make_token(user=user, kind="update_email_address")
         with django_assert_num_queries(4):
             response = rest_user_client.post(
                 resource_url,

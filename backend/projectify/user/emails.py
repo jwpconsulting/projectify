@@ -74,3 +74,35 @@ class UserPasswordChangedEmail(TemplateEmail[User]):
 
     model = User
     template_prefix = "user/email/password_changed"
+
+
+class UserEmailAddressUpdateEmail(TemplateEmail[User]):
+    """Email to ask user to confirm email change."""
+
+    model = User
+    template_prefix = "user/email/email_address_update"
+
+    def get_context(self) -> Context:
+        """Add reset password token."""
+        return {
+            **super().get_context(),
+            "update_email_address_token": user_make_token(
+                user=self.obj,
+                kind="update_email_address",
+            ),
+            "new_email": self.obj.unconfirmed_email,
+        }
+
+
+class UserEmailAddressUpdatedEmail(TemplateEmail[User]):
+    """Email to confirm to user that email address was changed."""
+
+    model = User
+    template_prefix = "user/email/email_address_updated"
+
+    def get_context(self) -> Context:
+        """Add reset password token."""
+        return {
+            **super().get_context(),
+            "new_email": self.obj.email,
+        }

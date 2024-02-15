@@ -1,0 +1,9 @@
+{% load i18n %}
+{% include "email/_salutation.txt" %}{% blocktranslate with new_email=new_email %}
+You have requested for your email address to be updated. This email is sent to
+the your new email address '{{ new_email }}'.
+
+Please confirm your new email address by visiting the link below:
+{% endblocktranslate %}
+{{ FRONTEND_URL }}/user/confirm-email-address-update/{{ update_email_address_token|urlencode:"" }}
+{% include "email/_greeting.txt" %}
