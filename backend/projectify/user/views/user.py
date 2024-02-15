@@ -142,6 +142,7 @@ class RequestEmailAddressUpdate(views.APIView):
     class InputSerializer(serializers.Serializer):
         """Accept new email."""
 
+        password = serializers.CharField()
         new_email = serializers.EmailField()
 
     def post(self, request: Request) -> Response:
@@ -152,6 +153,7 @@ class RequestEmailAddressUpdate(views.APIView):
         data = serializer.validated_data
         user_request_email_address_update(
             user=user,
+            password=data["password"],
             new_email=data["new_email"],
         )
         return Response(status=HTTP_204_NO_CONTENT)

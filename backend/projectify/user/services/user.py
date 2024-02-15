@@ -81,8 +81,13 @@ def user_request_email_address_update(
     *,
     user: User,
     new_email: str,
+    password: str,
 ) -> None:
     """Start user email change process."""
+    if not user.check_password(password):
+        raise serializers.ValidationError(
+            {"password": _("Password is incorrect")}
+        )
     user.unconfirmed_email = new_email
     user.save()
     UserEmailAddressUpdateEmail(

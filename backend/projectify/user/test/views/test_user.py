@@ -232,6 +232,7 @@ class TestRequestEmailAddressUpdate:
     def test_happy_path(
         self,
         user: User,
+        password: str,
         rest_user_client: APIClient,
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
@@ -242,7 +243,7 @@ class TestRequestEmailAddressUpdate:
         with django_assert_num_queries(3):
             response = rest_user_client.post(
                 resource_url,
-                data={"new_email": new_email},
+                data={"new_email": new_email, "password": password},
             )
             assert response.status_code == 204, response.data
         user.refresh_from_db()
