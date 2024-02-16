@@ -33,6 +33,7 @@
     import { goto } from "$lib/navigation";
     import { moveTaskToWorkspaceBoardSection } from "$lib/repository/workspace";
     import { deleteTask } from "$lib/stores/dashboard";
+    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
     import {
         moveToTop,
@@ -73,12 +74,15 @@
         kind.location === "dashboard"
             ? getTaskPosition(kind.workspaceBoardSection, kind.task)
             : undefined;
-    $: showMoveTop = taskPosition && taskPosition.kind !== "start";
+    $: canMoveTask = $currentWorkspaceUserCan("update", "task");
+    $: showMoveTop =
+        taskPosition && taskPosition.kind !== "start" && canMoveTask;
     $: showMoveBottom =
         taskPosition &&
         (taskPosition.kind === "start"
             ? !taskPosition.isOnly
-            : taskPosition.kind !== "end");
+            : taskPosition.kind !== "end") &&
+        canMoveTask;
 </script>
 
 <Layout>
@@ -93,7 +97,11 @@
             icon={ArrowsExpand}
         />
         <ContextMenuButton
-            kind={{ kind: "button", action: toggleMoveToSection }}
+            kind={{
+                kind: "button",
+                action: toggleMoveToSection,
+                disabled: !canMoveTask,
+            }}
             label={$_("overlay.context-menu.task.move-to-section")}
             state="normal"
             closeOnInteract={false}
@@ -161,6 +169,7 @@
         kind={{
             kind: "button",
             action: promptDeleteTask,
+            disabled: !$currentWorkspaceUserCan("delete", "task"),
         }}
         label={$_("overlay.context-menu.task.delete-task")}
         state="normal"
