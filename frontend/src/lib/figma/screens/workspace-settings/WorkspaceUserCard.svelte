@@ -22,6 +22,7 @@
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { deleteWorkspaceUser } from "$lib/repository/workspace/workspaceUser";
+    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
     import { getDisplayName } from "$lib/types/user";
     import type { WorkspaceUser } from "$lib/types/workspace";
@@ -65,7 +66,11 @@
     <td class=""
         ><Button
             label={$_("workspace-settings.workspace-users.actions.remove")}
-            action={{ kind: "button", action: removeUser }}
+            action={{
+                kind: "button",
+                action: removeUser,
+                disabled: !$currentWorkspaceUserCan("delete", "workspaceUser"),
+            }}
             style={{ kind: "tertiary", icon: { position: "left", icon: X } }}
             color="red"
             size="medium"

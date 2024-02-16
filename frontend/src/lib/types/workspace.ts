@@ -18,11 +18,13 @@
 import type { TimestampedType, TitleDescriptionType } from "$lib/types/base";
 import type { User } from "$lib/types/user";
 
+export type WorkspaceUserRole = "OBSERVER" | "MEMBER" | "MAINTAINER" | "OWNER";
+
 export type WorkspaceUser = {
     user: User;
     uuid: string;
     job_title?: string;
-    role: string;
+    role: WorkspaceUserRole;
 } & TimestampedType;
 
 export interface Label {

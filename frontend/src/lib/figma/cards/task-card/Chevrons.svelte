@@ -21,6 +21,7 @@ Up and down chevrons for task movement within a workspace board section
 -->
 <script lang="ts">
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
+    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { getTaskPosition, moveUp, moveDown } from "$lib/stores/modules";
     import type {
         Task,
@@ -32,14 +33,15 @@ Up and down chevrons for task movement within a workspace board section
 
     let upDisabled = true;
     let downDisabled = true;
+    $: canMove = $currentWorkspaceUserCan("update", "task");
     $: {
         const position = getTaskPosition(workspaceBoardSection, task);
-        upDisabled = position.kind === "start";
+        upDisabled = position.kind === "start" || !canMove;
         // If we are the only task, we don't want to show the down chevron.
         downDisabled =
-            position.kind === "start"
+            (position.kind === "start"
                 ? position.isOnly
-                : position.kind === "end";
+                : position.kind === "end") || !canMove;
     }
 </script>
 
