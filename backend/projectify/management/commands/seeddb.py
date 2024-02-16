@@ -306,6 +306,9 @@ class Command(BaseCommand):
                 WorkspaceUser(
                     workspace=workspace,
                     user=user,
+                    role="OWNER"
+                    if user.email == "admin@localhost"
+                    else "MEMBER",
                 )
                 for workspace in workspaces
                 for user in sample(users, self.n_add_users)
