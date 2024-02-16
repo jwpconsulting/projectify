@@ -37,7 +37,7 @@
         destructive: "text-destructive",
     }[color];
     $: style = {
-        normal: "hover:bg-secondary-hover active:bg-disabled",
+        normal: "hover:bg-secondary-hover active:bg-disabled disabled:active:bg-secondary-hover",
         accordion: "bg-background text-base-content",
     }[state];
 

@@ -23,6 +23,7 @@
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import { goto } from "$lib/navigation";
     import { archiveWorkspaceBoard as repoArchiveWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
+    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import {
         openConstructiveOverlay,
         openDestructiveOverlay,
@@ -143,6 +144,7 @@
         kind={{
             kind: "button",
             action: editBoard,
+            disabled: !$currentWorkspaceUserCan("update", "workspaceBoard"),
         }}
         label={$_("overlay.context-menu.workspace-board.edit-board")}
         state="normal"
@@ -152,6 +154,7 @@
         kind={{
             kind: "button",
             action: archiveWorkspaceBoard,
+            disabled: !$currentWorkspaceUserCan("update", "workspaceBoard"),
         }}
         label={$_(
             "overlay.context-menu.workspace-board.archive-workspace-board",

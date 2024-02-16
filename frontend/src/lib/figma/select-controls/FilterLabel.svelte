@@ -22,6 +22,7 @@
     import type { SelectLabel } from "$lib/figma/types";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { deleteLabel } from "$lib/repository/workspace/label";
+    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
 
     export let label: SelectLabel;
@@ -71,12 +72,20 @@
             <CircleIcon
                 size="small"
                 icon="edit"
-                action={{ kind: "button", action: onEdit }}
+                action={{
+                    kind: "button",
+                    action: onEdit,
+                    disabled: !$currentWorkspaceUserCan("update", "label"),
+                }}
             />
             <CircleIcon
                 size="small"
                 icon="delete"
-                action={{ kind: "button", action: onDelete }}
+                action={{
+                    kind: "button",
+                    action: onDelete,
+                    disabled: !$currentWorkspaceUserCan("delete", "label"),
+                }}
             />
         {/if}
     </div>
