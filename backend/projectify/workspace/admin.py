@@ -80,6 +80,14 @@ class WorkspaceUserAdmin(admin.ModelAdmin[models.WorkspaceUser]):
         "workspace",
         "user",
     )
+    search_fields = (
+        "workspace__title",
+        "user__email",
+        "user__preferred_name",
+    )
+    search_help_text = _(
+        "You can seach by workspace title, user email and preferred name"
+    )
 
     @admin.display(description=_("Workspace title"))
     def workspace_title(self, instance: models.WorkspaceUser) -> str:
