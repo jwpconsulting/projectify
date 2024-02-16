@@ -103,6 +103,27 @@
 />
 <div class="flex flex-col gap-10">
     <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-2">
+            <div class="flex flex-col gap-1">
+                <p class="font-bold">
+                    {$_(
+                        "user-account-settings.overview.current-email-address.label",
+                    )}
+                </p>
+                <p>
+                    {user.email}
+                </p>
+            </div>
+            <p>
+                <Anchor
+                    href={updateEmailAddressUrl}
+                    size="normal"
+                    label={$_(
+                        "user-account-settings.overview.current-email-address.update-email-address",
+                    )}
+                />
+            </p>
+        </div>
         <InputField
             label={$_("user-account-settings.overview.preferred-name.label")}
             placeholder={$_(
@@ -150,13 +171,6 @@
             size="normal"
             label={$_(
                 "user-account-settings.overview.other-actions.change-password",
-            )}
-        />
-        <Anchor
-            href={updateEmailAddressUrl}
-            size="normal"
-            label={$_(
-                "user-account-settings.overview.other-actions.update-email-address",
             )}
         />
     </div>

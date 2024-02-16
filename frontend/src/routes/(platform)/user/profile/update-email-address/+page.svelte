@@ -27,6 +27,14 @@
     import { getProfileUrl } from "$lib/urls";
     import { requestedEmailAddressUpdateUrl } from "$lib/urls/user";
 
+    import type { PageData } from "./$types";
+
+    export let data: PageData;
+
+    const {
+        user: { email },
+    } = data;
+
     let state: AuthViewState = { kind: "start" };
 
     let currentPassword: string | undefined = undefined;
@@ -100,6 +108,11 @@
 </h1>
 <form class="flex w-full flex-col gap-10" on:submit|preventDefault={submit}>
     <div class="flex flex-col gap-4">
+        <p>
+            {$_("user-account-settings.update-email-address.current-email", {
+                values: { email },
+            })}
+        </p>
         <InputField
             label={$_(
                 "user-account-settings.update-email-address.current-password.label",

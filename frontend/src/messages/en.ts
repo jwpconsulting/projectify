@@ -620,6 +620,10 @@ const messages: MessageDirectory = {
                 label: "Preferred name (optional)",
                 placeholder: "Enter your preferred name",
             },
+            "current-email-address": {
+                "label": "Your current email address",
+                "update-email-address": "Update email address",
+            },
             "profile-picture": {
                 prompt: "Upload a profile picture",
                 current: "Your current profile picture",
@@ -627,7 +631,6 @@ const messages: MessageDirectory = {
             },
             "other-actions": {
                 "title": "Other settings",
-                "update-email-address": "Update email address",
                 "change-password": "Change password",
             },
             "delete-account": {
@@ -641,7 +644,8 @@ const messages: MessageDirectory = {
             "save": "Save changes",
         },
         "update-email-address": {
-            "title": "Change password",
+            "title": "Update email address",
+            "current-email": "Your current email address is ''{email}''.",
             "current-password": {
                 label: "Current password",
                 placeholder: "Enter your current password",
