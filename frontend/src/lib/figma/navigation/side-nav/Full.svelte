@@ -18,9 +18,9 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import Boards from "$lib/figma/navigation/side-nav/Boards.svelte";
     import FilterLabels from "$lib/figma/navigation/side-nav/FilterLabels.svelte";
     import FilterWorkspaceUsers from "$lib/figma/navigation/side-nav/FilterWorkspaceUsers.svelte";
+    import WorkspaceBoards from "$lib/figma/navigation/side-nav/WorkspaceBoards.svelte";
     import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
     import { showFilters } from "$lib/stores/dashboard";
     import type { Workspace } from "$lib/types/workspace";
@@ -33,7 +33,7 @@
     <WorkspaceSelector {workspace} open={true} />
     {#if workspace}
         <div class="flex shrink flex-col overflow-auto">
-            <Boards {workspace} />
+            <WorkspaceBoards {workspace} />
             {#if $showFilters}
                 <FilterWorkspaceUsers />
                 <FilterLabels />

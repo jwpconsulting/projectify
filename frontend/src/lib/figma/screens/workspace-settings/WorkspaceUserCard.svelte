@@ -64,16 +64,18 @@
     </td>
     <td class="text-left text-base-content">{role}</td>
     <td class=""
-        ><Button
-            label={$_("workspace-settings.workspace-users.actions.remove")}
-            action={{
-                kind: "button",
-                action: removeUser,
-                disabled: !$currentWorkspaceUserCan("delete", "workspaceUser"),
-            }}
-            style={{ kind: "tertiary", icon: { position: "left", icon: X } }}
-            color="red"
-            size="medium"
-        /></td
+        >{#if $currentWorkspaceUserCan("delete", "workspaceUser")}<Button
+                label={$_("workspace-settings.workspace-users.actions.remove")}
+                action={{
+                    kind: "button",
+                    action: removeUser,
+                }}
+                style={{
+                    kind: "tertiary",
+                    icon: { position: "left", icon: X },
+                }}
+                color="red"
+                size="medium"
+            />{/if}</td
     >
 </tr>

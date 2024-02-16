@@ -63,22 +63,20 @@
     >
         <Icon slot="left" src={Search} class="w-4" theme="outline" />
     </InputField>
-    <Button
-        action={{
-            kind: "button",
-            action: inviteWorkspaceUser,
-            disabled: !$currentWorkspaceUserCan(
-                "create",
-                "workspaceUserInvite",
-            ),
-        }}
-        label={$_(
-            "workspace-settings.workspace-users.invite-new-workspace-users",
-        )}
-        style={{ kind: "primary" }}
-        size="medium"
-        color="blue"
-    />
+    {#if $currentWorkspaceUserCan("create", "workspaceUserInvite")}
+        <Button
+            action={{
+                kind: "button",
+                action: inviteWorkspaceUser,
+            }}
+            label={$_(
+                "workspace-settings.workspace-users.invite-new-workspace-users",
+            )}
+            style={{ kind: "primary" }}
+            size="medium"
+            color="blue"
+        />
+    {/if}
 </div>
 <table class="grid w-full grid-cols-4 items-center gap-y-4 px-2">
     <thead class="contents">
