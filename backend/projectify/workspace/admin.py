@@ -51,6 +51,8 @@ class WorkspaceAdmin(admin.ModelAdmin[models.Workspace]):
         "modified",
     )
     readonly_fields = ("uuid",)
+    search_fields = ("title",)
+    search_help_text = _("You can search by workspace title")
 
 
 @admin.register(models.WorkspaceUserInvite)

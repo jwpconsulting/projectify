@@ -18,6 +18,7 @@
 from django.contrib import (
     admin,
 )
+from django.utils.translation import gettext_lazy as _
 
 from . import (
     models,
@@ -36,6 +37,11 @@ class UserAdmin(admin.ModelAdmin[models.User]):
         "is_superuser",
         "last_login",
     )
+    search_fields = (
+        "email",
+        "preferred_name",
+    )
+    search_help_text = _("You can search by email and preferred name")
 
 
 @admin.register(models.UserInvite)
