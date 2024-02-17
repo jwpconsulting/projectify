@@ -36,6 +36,10 @@
     import { currentUser } from "$lib/stores/user";
 </script>
 
+<svelte:head>
+    <title>Projectify Dashboard</title>
+</svelte:head>
+
 <div class="flex h-screen grow flex-col overflow-y-auto">
     {#if $currentUser}
         <HeaderDashboard user={$currentUser} />

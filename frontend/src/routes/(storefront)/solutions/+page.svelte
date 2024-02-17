@@ -124,6 +124,10 @@
     ] satisfies Solution[];
 </script>
 
+<svelte:head>
+    <title>{$_("solutions.index.title")}</title>
+</svelte:head>
+
 <HeroLayout>
     <Hero slot="hero" {heroContent} />
     <div

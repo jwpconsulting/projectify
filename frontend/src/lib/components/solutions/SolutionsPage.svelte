@@ -16,6 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import { _ } from "svelte-i18n";
+
     import Hero from "$lib/components/layouts/Hero.svelte";
     import HeroLayout from "$lib/components/layouts/HeroLayout.svelte";
     import SolutionsFeature from "$lib/components/solutions/SolutionsFeature.svelte";
@@ -23,6 +25,14 @@
 
     export let pageContent: SolutionsPageContent;
 </script>
+
+<svelte:head>
+    <title
+        >{$_("solutions.sub-page-title", {
+            values: { pageTitle: pageContent.heroContent.title },
+        })}</title
+    >
+</svelte:head>
 
 <HeroLayout>
     <Hero slot="hero" heroContent={pageContent.heroContent} />

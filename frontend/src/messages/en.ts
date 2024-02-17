@@ -919,6 +919,7 @@ const messages: MessageDirectory = {
         },
     },
     "index": {
+        title: "Projectify",
         hero: {
             header: "Manage projects the right way.",
             text: "Warp drive your way to success with software that helps you to collaborate on and manage projects efficiently, with speed.",
@@ -1035,7 +1036,9 @@ const messages: MessageDirectory = {
         },
     },
     "solutions": {
+        "sub-page-title": "{pageTitle} - Projectify",
         "index": {
+            title: "Solutions - Projectify",
             hero: {
                 title: "Solutions for every type of user",
                 text: "Explore the different ways users are using Projectify to meet due dates, reach targets and be productive.",

@@ -36,6 +36,10 @@
     import HeroResearch from "./solutions/assets/hero-research.png";
 </script>
 
+<svelte:head>
+    <title>{$_("index.title")}</title>
+</svelte:head>
+
 <HeroLayout heroBackground={false}>
     <section
         slot="hero"
