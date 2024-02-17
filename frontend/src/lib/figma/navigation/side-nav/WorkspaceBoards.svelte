@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -21,13 +21,14 @@
 
     import Loading from "$lib/components/loading.svelte";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
-    import SelectWorkspaceBoard from "$lib/figma/buttons/SelectWorkspaceBoard.svelte";
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
+    import SelectWorkspaceBoard from "$lib/figma/navigation/side-nav/SelectWorkspaceBoard.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import {
         boardExpandOpen,
         toggleBoardExpandOpen,
     } from "$lib/stores/dashboard";
+    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type { Workspace } from "$lib/types/workspace";
     import { getArchiveUrl } from "$lib/urls";
@@ -75,11 +76,13 @@
             {/each}
         {/if}
     </div>
-    <ContextMenuButton
-        label={$_("dashboard.create-board")}
-        icon={Plus}
-        color="primary"
-        state="normal"
-        kind={{ kind: "button", action: openCreateWorkspaceBoard }}
-    />
+    {#if $currentWorkspaceUserCan("create", "workspaceBoard")}
+        <ContextMenuButton
+            label={$_("dashboard.create-board")}
+            icon={Plus}
+            color="primary"
+            state="normal"
+            kind={{ kind: "button", action: openCreateWorkspaceBoard }}
+        />
+    {/if}
 {/if}

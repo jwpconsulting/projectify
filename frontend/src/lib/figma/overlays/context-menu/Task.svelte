@@ -33,6 +33,7 @@
     import { goto } from "$lib/navigation";
     import { moveTaskToWorkspaceBoardSection } from "$lib/repository/workspace";
     import { deleteTask } from "$lib/stores/dashboard";
+    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
     import {
         moveToTop,
@@ -73,16 +74,19 @@
         kind.location === "dashboard"
             ? getTaskPosition(kind.workspaceBoardSection, kind.task)
             : undefined;
-    $: showMoveTop = taskPosition && taskPosition.kind !== "start";
+    $: canMoveTask = $currentWorkspaceUserCan("update", "task");
+    $: showMoveTop =
+        taskPosition && taskPosition.kind !== "start" && canMoveTask;
     $: showMoveBottom =
         taskPosition &&
         (taskPosition.kind === "start"
             ? !taskPosition.isOnly
-            : taskPosition.kind !== "end");
+            : taskPosition.kind !== "end") &&
+        canMoveTask;
 </script>
 
 <Layout>
-    {#if kind.location === "dashboard"}
+    {#if kind.location === "dashboard" && canMoveTask}
         <ContextMenuButton
             kind={{
                 kind: "a",
@@ -93,7 +97,10 @@
             icon={ArrowsExpand}
         />
         <ContextMenuButton
-            kind={{ kind: "button", action: toggleMoveToSection }}
+            kind={{
+                kind: "button",
+                action: toggleMoveToSection,
+            }}
             label={$_("overlay.context-menu.task.move-to-section")}
             state="normal"
             closeOnInteract={false}
@@ -157,14 +164,16 @@
         state="normal"
         icon={Duplicate}
     />
-    <ContextMenuButton
-        kind={{
-            kind: "button",
-            action: promptDeleteTask,
-        }}
-        label={$_("overlay.context-menu.task.delete-task")}
-        state="normal"
-        color="destructive"
-        icon={Trash}
-    />
+    {#if $currentWorkspaceUserCan("delete", "task")}
+        <ContextMenuButton
+            kind={{
+                kind: "button",
+                action: promptDeleteTask,
+            }}
+            label={$_("overlay.context-menu.task.delete-task")}
+            state="normal"
+            color="destructive"
+            icon={Trash}
+        />
+    {/if}
 </Layout>

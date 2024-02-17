@@ -60,6 +60,7 @@
 <button
     class="focus:border-focus group h-14 w-14 rounded-full border border-transparent p-0.5"
     on:click={click}
+    type="button"
     name="picture"
     aria-label={label}
 >

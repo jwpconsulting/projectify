@@ -20,6 +20,7 @@
 
     import WorkspaceBoardSections from "$lib/components/dashboard/WorkspaceBoardSections.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type { WorkspaceBoardDetail } from "$lib/types/workspace";
 
@@ -40,7 +41,7 @@
     <WorkspaceBoardSections {workspaceBoard} />
 </div>
 
-{#if hasSections}
+{#if hasSections && $currentWorkspaceUserCan("create", "workspaceBoardSection")}
     <div class="sticky bottom-0 self-end p-2">
         <Button
             style={{ kind: "primary" }}

@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -16,7 +16,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    // TODO Rename figma/navigation/side-nav/SelectWorkspaceBoard.svelte
     import { Folder } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
 
@@ -25,39 +24,42 @@
         currentWorkspaceBoard,
         selectWorkspaceBoardUuid,
     } from "$lib/stores/dashboard";
+    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
-    // Hehe, apparently this IS necessary, because $currentWorkspaceBoard
-    // is evaluated despite the subscription never returning a value!
-    // That is a sveltism, I suppose.
-    // XXX TODO
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     $: currentWorkspaceBoardUuid = $currentWorkspaceBoard?.uuid;
 
     export let workspaceBoard: WorkspaceBoard;
     export let workspace: Workspace;
 
     let buttonRef: HTMLElement;
+    let contextMenuOpen = false;
 
     async function toggleMenu() {
+        contextMenuOpen = true;
         // TODO: When the context menu is open, we should indicate that it
         // belongs to a certain board by highlighting the board in blue (using
         // the hover color)
-        await openContextMenu(
-            {
-                kind: "workspaceBoard",
-                workspace,
-                workspaceBoard,
-            },
-            buttonRef,
-        );
+        try {
+            await openContextMenu(
+                {
+                    kind: "workspaceBoard",
+                    workspace,
+                    workspaceBoard,
+                },
+                buttonRef,
+            );
+        } finally {
+            contextMenuOpen = false;
+        }
     }
 </script>
 
 <a
-    class="group block flex w-full flex-row justify-between px-4 py-1 hover:bg-base-200"
+    class="group block flex w-full flex-row justify-between gap-1 px-4 py-1 hover:bg-base-200"
+    class:bg-base-200={contextMenuOpen}
     href={getDashboardWorkspaceBoardUrl(workspaceBoard.uuid)}
     on:click={() =>
         selectWorkspaceBoardUuid(workspace.uuid, workspaceBoard.uuid)}
@@ -84,11 +86,13 @@
             {workspaceBoard.title}
         </div>
     </div>
-    <div class="invisible group-hover:visible" bind:this={buttonRef}>
-        <CircleIcon
-            size="small"
-            icon="ellipsis"
-            action={{ kind: "button", action: toggleMenu }}
-        />
-    </div>
+    {#if $currentWorkspaceUserCan("update", "workspaceBoard")}
+        <div class="shrink-0" bind:this={buttonRef}>
+            <CircleIcon
+                size="small"
+                icon="ellipsis"
+                action={{ kind: "button", action: toggleMenu }}
+            />
+        </div>
+    {/if}
 </a>

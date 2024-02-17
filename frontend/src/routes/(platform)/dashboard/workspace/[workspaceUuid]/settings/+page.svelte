@@ -23,6 +23,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { updateWorkspace } from "$lib/repository/workspace";
+    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import type { EditableViewState } from "$lib/types/ui";
     import { uploadImage } from "$lib/utils/file";
 
@@ -37,6 +38,8 @@
     let { title, description, picture } = workspace;
 
     let state: EditableViewState = { kind: "viewing" };
+
+    $: canEdit = $currentWorkspaceUserCan("update", "workspace");
 
     function resetForm() {
         title = workspace.title;
@@ -103,12 +106,14 @@
                     {$_("workspace-settings.general.picture.no-picture")}
                 </div>
             {/if}
-            <div class="absolute -bottom-1/4 -right-1/4">
-                <UploadAvatar
-                    label={$_("workspace-settings.general.picture.label")}
-                    {fileSelected}
-                />
-            </div>
+            {#if canEdit}
+                <div class="absolute -bottom-1/4 -right-1/4">
+                    <UploadAvatar
+                        label={$_("workspace-settings.general.picture.label")}
+                        {fileSelected}
+                    />
+                </div>
+            {/if}
         </div>
     </div>
     <div class="flex flex-col gap-6">
@@ -117,52 +122,56 @@
             placeholder={$_(
                 "workspace-settings.general.workspace-name.placeholder",
             )}
-            onClick={fieldChanged}
+            onClick={canEdit ? fieldChanged : undefined}
             style={{ inputType: "text" }}
             name="title"
             label={$_("workspace-settings.general.workspace-name.label")}
+            readonly={!canEdit}
         />
         <InputField
             bind:value={description}
             placeholder={$_(
                 "workspace-settings.general.description.placeholder",
             )}
-            onClick={fieldChanged}
+            onClick={canEdit ? fieldChanged : undefined}
             style={{ inputType: "text" }}
             name="title"
             label={$_("workspace-settings.general.description.label")}
+            readonly={!canEdit}
         />
-        <Button
-            action={{
-                kind: "button",
-                action: removePicture,
-                disabled: !hasImage || state.kind === "saving",
-            }}
-            size="medium"
-            style={{ kind: "secondary" }}
-            color="blue"
-            label={$_("workspace-settings.general.picture.remove-picture")}
-        />
-        <Button
-            action={{
-                kind: "submit",
-                disabled: state.kind !== "editing",
-            }}
-            size="medium"
-            style={{ kind: "primary" }}
-            color="blue"
-            label={$_("workspace-settings.general.save")}
-        />
-        <Button
-            action={{
-                kind: "button",
-                action: cancel,
-                disabled: state.kind !== "editing",
-            }}
-            size="medium"
-            style={{ kind: "secondary" }}
-            color="blue"
-            label={$_("workspace-settings.general.cancel")}
-        />
+        {#if canEdit}
+            <Button
+                action={{
+                    kind: "button",
+                    action: removePicture,
+                    disabled: !hasImage || state.kind === "saving",
+                }}
+                size="medium"
+                style={{ kind: "secondary" }}
+                color="blue"
+                label={$_("workspace-settings.general.picture.remove-picture")}
+            />
+            <Button
+                action={{
+                    kind: "submit",
+                    disabled: state.kind !== "editing",
+                }}
+                size="medium"
+                style={{ kind: "primary" }}
+                color="blue"
+                label={$_("workspace-settings.general.save")}
+            />
+            <Button
+                action={{
+                    kind: "button",
+                    action: cancel,
+                    disabled: state.kind !== "editing",
+                }}
+                size="medium"
+                style={{ kind: "secondary" }}
+                color="blue"
+                label={$_("workspace-settings.general.cancel")}
+            />
+        {/if}
     </div>
 </form>

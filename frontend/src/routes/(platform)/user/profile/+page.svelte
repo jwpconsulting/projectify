@@ -74,35 +74,54 @@
     }
 </script>
 
-<figure class="flex flex-col items-center gap-7">
-    <div class="relative flex w-max flex-col">
-        <AvatarVariant size="large" content={{ kind: "single", user }} />
-        <div class="absolute -bottom-1/4 -right-1/4">
-            <UploadAvatar
-                {fileSelected}
-                label={$_(
-                    "user-account-settings.overview.profile-picture.prompt",
-                )}
-            />
+<form class="flex flex-col gap-10" on:submit|preventDefault={save}>
+    <figure class="flex flex-col items-center gap-7">
+        <div class="relative flex w-max flex-col">
+            <AvatarVariant size="large" content={{ kind: "single", user }} />
+            <div class="absolute -bottom-1/4 -right-1/4">
+                <UploadAvatar
+                    {fileSelected}
+                    label={$_(
+                        "user-account-settings.overview.profile-picture.prompt",
+                    )}
+                />
+            </div>
         </div>
-    </div>
-    <figcaption>
-        {$_("user-account-settings.overview.profile-picture.current")}
-    </figcaption>
-</figure>
-<Button
-    action={{
-        kind: "button",
-        action: removePicture,
-        disabled: !hasProfilePicture || state === "saving",
-    }}
-    size="medium"
-    color="blue"
-    style={{ kind: "primary" }}
-    label={$_("user-account-settings.overview.profile-picture.remove")}
-/>
-<div class="flex flex-col gap-10">
+        <figcaption>
+            {$_("user-account-settings.overview.profile-picture.current")}
+        </figcaption>
+    </figure>
+    <Button
+        action={{
+            kind: "button",
+            action: removePicture,
+            disabled: !hasProfilePicture || state === "saving",
+        }}
+        size="medium"
+        color="blue"
+        style={{ kind: "primary" }}
+        label={$_("user-account-settings.overview.profile-picture.remove")}
+    />
     <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1">
+            <p class="font-bold">
+                {$_(
+                    "user-account-settings.overview.current-email-address.label",
+                )}
+            </p>
+            <p>
+                {user.email}
+            </p>
+            <p>
+                <Anchor
+                    href={updateEmailAddressUrl}
+                    size="normal"
+                    label={$_(
+                        "user-account-settings.overview.current-email-address.update-email-address",
+                    )}
+                />
+            </p>
+        </div>
         <InputField
             label={$_("user-account-settings.overview.preferred-name.label")}
             placeholder={$_(
@@ -120,8 +139,7 @@
     <div class="flex flex-col gap-2">
         <Button
             action={{
-                kind: "button",
-                action: save,
+                kind: "submit",
                 disabled: state !== "editing",
             }}
             size="medium"
@@ -141,40 +159,31 @@
             label={$_("user-account-settings.overview.cancel")}
         />
     </div>
-    <div class="flex flex-col gap-2">
-        <h3 class="font-bold">
-            {$_("user-account-settings.overview.other-actions.title")}
-        </h3>
+</form>
+<div class="flex flex-col gap-2">
+    <h3 class="font-bold">
+        {$_("user-account-settings.overview.other-actions.title")}
+    </h3>
+    <Anchor
+        href={changePasswordUrl}
+        size="normal"
+        label={$_(
+            "user-account-settings.overview.other-actions.change-password",
+        )}
+    />
+</div>
+<div class="flex flex-col gap-2">
+    <h3 class="font-bold">
+        {$_("user-account-settings.overview.delete-account.title")}
+    </h3>
+    <p>
+        {$_("user-account-settings.overview.delete-account.message")}
+    </p>
+    <p>
         <Anchor
-            href={changePasswordUrl}
+            label={$_("user-account-settings.overview.delete-account.label")}
+            href={$_("user-account-settings.overview.delete-account.email")}
             size="normal"
-            label={$_(
-                "user-account-settings.overview.other-actions.change-password",
-            )}
         />
-        <Anchor
-            href={updateEmailAddressUrl}
-            size="normal"
-            label={$_(
-                "user-account-settings.overview.other-actions.update-email-address",
-            )}
-        />
-    </div>
-    <div class="flex flex-col gap-2">
-        <h3 class="font-bold">
-            {$_("user-account-settings.overview.delete-account.title")}
-        </h3>
-        <p>{$_("user-account-settings.overview.delete-account.message")}</p>
-        <p>
-            <Anchor
-                label={$_(
-                    "user-account-settings.overview.delete-account.label",
-                )}
-                href={$_(
-                    "user-account-settings.overview.delete-account.email",
-                )}
-                size="normal"
-            />
-        </p>
-    </div>
+    </p>
 </div>

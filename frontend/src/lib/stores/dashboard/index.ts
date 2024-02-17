@@ -24,4 +24,3 @@ export * from "$lib/stores/dashboard/ui";
 export * from "$lib/stores/dashboard/workspace";
 export * from "$lib/stores/dashboard/workspaceBoard";
 export * from "$lib/stores/dashboard/workspaceBoardSection";
-export * from "$lib/stores/dashboard/workspaceUser";

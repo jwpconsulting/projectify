@@ -23,10 +23,11 @@
     import WorkspaceUserCard from "$lib/figma/screens/workspace-settings/WorkspaceUserCard.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import { currentWorkspace } from "$lib/stores/dashboard";
     import {
+        currentWorkspaceUserCan,
         currentWorkspaceUsers,
-        currentWorkspace,
-    } from "$lib/stores/dashboard";
+    } from "$lib/stores/dashboard/workspaceUser";
     import { searchWorkspaceUsers } from "$lib/stores/dashboard/workspaceUserFilter";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type { SearchInput } from "$lib/types/base";
@@ -62,15 +63,20 @@
     >
         <Icon slot="left" src={Search} class="w-4" theme="outline" />
     </InputField>
-    <Button
-        action={{ kind: "button", action: inviteWorkspaceUser }}
-        label={$_(
-            "workspace-settings.workspace-users.invite-new-workspace-users",
-        )}
-        style={{ kind: "primary" }}
-        size="medium"
-        color="blue"
-    />
+    {#if $currentWorkspaceUserCan("create", "workspaceUserInvite")}
+        <Button
+            action={{
+                kind: "button",
+                action: inviteWorkspaceUser,
+            }}
+            label={$_(
+                "workspace-settings.workspace-users.invite-new-workspace-users",
+            )}
+            style={{ kind: "primary" }}
+            size="medium"
+            color="blue"
+        />
+    {/if}
 </div>
 <table class="grid w-full grid-cols-4 items-center gap-y-4 px-2">
     <thead class="contents">

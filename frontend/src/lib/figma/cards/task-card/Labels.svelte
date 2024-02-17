@@ -23,6 +23,7 @@
     import LabelPill from "$lib/components/dashboard/LabelPill.svelte";
     import { updateTask } from "$lib/repository/workspace";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
+    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { LabelAssignment } from "$lib/types/stores";
     import type { ContextMenuType } from "$lib/types/ui";
@@ -92,12 +93,18 @@
         // TODO There is a brief flash after updateTask finishes, the task is
         // reloaded and labelAssignment is recreated
     }
+
+    $: canUpdate = $currentWorkspaceUserCan("update", "taskLabel");
 </script>
 
 {#if labels.length}
     <div class="flex flex-row">
         {#each labels as label}
-            <button on:click|preventDefault={openLabelPicker}>
+            <button
+                on:click|preventDefault={canUpdate
+                    ? openLabelPicker
+                    : undefined}
+            >
                 <LabelPill {label} />
             </button>
         {/each}
@@ -106,7 +113,7 @@
     <div class="p-0.5">
         <button
             class="flex flex-row items-center rounded-xl border border-dashed border-primary px-4 py-1 text-sm font-bold text-primary"
-            on:click|preventDefault={openLabelPicker}
+            on:click|preventDefault={canUpdate ? openLabelPicker : undefined}
         >
             {$_("dashboard.task-card.add-label")}</button
         >

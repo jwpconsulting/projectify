@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -54,9 +54,18 @@ class TestWorkspaceCustomerRetrieve:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test as authenticated user."""
-        with django_assert_num_queries(8):
+        with django_assert_num_queries(10):
             response = user_client.get(resource_url)
             assert response.status_code == 200, response.content
+
+    def test_404(
+        self,
+        rest_meddling_client: APIClient,
+        resource_url: str,
+    ) -> None:
+        """Test no workspace/customer locatable for current user."""
+        response = rest_meddling_client.get(resource_url)
+        assert response.status_code == 404, response.content
 
 
 # RPC
@@ -121,7 +130,7 @@ class TestWorkspaceCheckoutSessionCreate:
             "corporate:customers:create-checkout-session",
             args=(str(unpaid_customer.workspace.uuid),),
         )
-        with django_assert_num_queries(4):
+        with django_assert_num_queries(6):
             response = rest_user_client.post(
                 resource_url,
                 data={"seats": 1337},
@@ -166,7 +175,7 @@ class TestWorkspaceCheckoutSessionCreate:
             "corporate:customers:create-checkout-session",
             args=(str(paid_customer.workspace.uuid),),
         )
-        with django_assert_num_queries(2):
+        with django_assert_num_queries(4):
             response = rest_user_client.post(
                 resource_url,
                 data={"seats": 1337},
@@ -189,7 +198,7 @@ class TestWorkspaceBillingPortalSessionCreate:
             "corporate:customers:create-billing-portal-session",
             args=(str(unpaid_customer.workspace.uuid),),
         )
-        with django_assert_num_queries(4):
+        with django_assert_num_queries(6):
             response = rest_user_client.post(resource_url)
             assert response.status_code == 403, response.data
         assert "no subscription is active" in response.data["detail"]
@@ -206,7 +215,7 @@ class TestWorkspaceBillingPortalSessionCreate:
             "corporate:customers:create-billing-portal-session",
             args=(str(paid_customer.workspace.uuid),),
         )
-        with django_assert_num_queries(4):
+        with django_assert_num_queries(6):
             response = rest_user_client.post(resource_url)
             assert response.status_code == 200, response.data
         assert response.data == {"url": "https://www.example.com"}

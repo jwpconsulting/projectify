@@ -31,6 +31,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import { currentTask } from "$lib/stores/dashboard";
+    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openContextMenu } from "$lib/stores/globalUi";
     import {
         getDashboardWorkspaceBoardSectionUrl,
@@ -54,6 +55,9 @@
     let contextMenuRef: HTMLElement;
 
     async function onInteract() {
+        if (!$currentWorkspaceUserCan("update", "task")) {
+            return;
+        }
         await goto(getTaskEditUrl(task.uuid));
     }
 
@@ -76,14 +80,16 @@
     <TopBar slot="top-bar" {workspaceBoardSection}>
         <Breadcrumbs slot="breadcrumbs" {crumbs} />
         <svelte:fragment slot="buttons">
-            <Button
-                grow={false}
-                color="blue"
-                size="small"
-                style={{ kind: "primary" }}
-                label={$_("task-screen.edit")}
-                action={{ kind: "a", href: getTaskEditUrl(task.uuid) }}
-            />
+            {#if $currentWorkspaceUserCan("update", "task")}
+                <Button
+                    grow={false}
+                    color="blue"
+                    size="small"
+                    style={{ kind: "primary" }}
+                    label={$_("task-screen.edit")}
+                    action={{ kind: "a", href: getTaskEditUrl(task.uuid) }}
+                />
+            {/if}
             <div bind:this={contextMenuRef}>
                 <SquovalIcon
                     icon="dotsVertical"

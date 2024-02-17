@@ -51,6 +51,8 @@ class WorkspaceAdmin(admin.ModelAdmin[models.Workspace]):
         "modified",
     )
     readonly_fields = ("uuid",)
+    search_fields = ("title",)
+    search_help_text = _("You can search by workspace title")
 
 
 @admin.register(models.WorkspaceUserInvite)
@@ -79,6 +81,14 @@ class WorkspaceUserAdmin(admin.ModelAdmin[models.WorkspaceUser]):
     list_select_related = (
         "workspace",
         "user",
+    )
+    search_fields = (
+        "workspace__title",
+        "user__email",
+        "user__preferred_name",
+    )
+    search_help_text = _(
+        "You can seach by workspace title, user email and preferred name"
     )
 
     @admin.display(description=_("Workspace title"))

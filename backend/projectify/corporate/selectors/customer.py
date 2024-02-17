@@ -20,8 +20,11 @@ from typing import Optional
 from uuid import UUID
 
 from projectify.corporate.models import Customer
+from projectify.lib.auth import validate_perm
 from projectify.user.models import User
-from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.selectors.workspace import (
+    workspace_find_by_workspace_uuid,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -56,15 +59,17 @@ def customer_find_by_workspace_uuid(
     who: User,
 ) -> Optional[Customer]:
     """Find a customer given a workspace uuid."""
-    try:
-        workspace = Workspace.objects.filter_for_user_and_uuid(
-            user=who,
-            uuid=workspace_uuid,
-        ).get()
-    except Workspace.DoesNotExist:
-        logger.warning("No workspace found for uuid %s", workspace_uuid)
+    workspace = workspace_find_by_workspace_uuid(
+        who=who,
+        workspace_uuid=workspace_uuid,
+    )
+    if workspace is None:
         return None
     try:
-        return workspace.customer
+        customer = workspace.customer
     except Customer.DoesNotExist:
+        logger.error("No customer found for uuid %s. Why?", workspace_uuid)
         return None
+
+    validate_perm("corporate.can_read_customer", who, workspace)
+    return customer

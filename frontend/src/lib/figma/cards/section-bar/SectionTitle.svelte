@@ -23,6 +23,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import { toggleWorkspaceBoardSectionOpen } from "$lib/stores/dashboard";
+    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
     import type {
@@ -71,19 +72,21 @@
         class="flex shrink-0 flex-row items-center gap-1"
         data-figma-name="Right side"
     >
-        <Button
-            action={{
-                kind: "a",
-                href: getNewTaskUrl(workspaceBoardSection.uuid),
-            }}
-            style={{
-                kind: "tertiary",
-                icon: { position: "left", icon: Plus },
-            }}
-            size="medium"
-            color="blue"
-            label={$_("dashboard.section.add-task")}
-        />
+        {#if $currentWorkspaceUserCan("create", "task")}
+            <Button
+                action={{
+                    kind: "a",
+                    href: getNewTaskUrl(workspaceBoardSection.uuid),
+                }}
+                style={{
+                    kind: "tertiary",
+                    icon: { position: "left", icon: Plus },
+                }}
+                size="medium"
+                color="blue"
+                label={$_("dashboard.section.add-task")}
+            />
+        {/if}
         <div bind:this={dropDownMenuBtnRef}>
             <SquovalIcon
                 icon="ellipsis"

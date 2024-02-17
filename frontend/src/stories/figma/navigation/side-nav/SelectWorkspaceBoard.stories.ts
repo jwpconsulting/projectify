@@ -17,7 +17,7 @@
  */
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import SelectWorkspaceBoard from "$lib/figma/buttons/SelectWorkspaceBoard.svelte";
+import SelectWorkspaceBoard from "$lib/figma/navigation/side-nav/SelectWorkspaceBoard.svelte";
 import { workspaceBoard } from "$lib/storybook";
 
 const meta: Meta<SelectWorkspaceBoard> = {

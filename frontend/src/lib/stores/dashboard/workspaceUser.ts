@@ -28,9 +28,13 @@
 import { derived } from "svelte/store";
 import type { Readable } from "svelte/store";
 
+import { can, type Resource, type Verb } from "$lib/rules/workspace";
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 import type { Workspace, WorkspaceUser } from "$lib/types/workspace";
 
+import { user } from "../user";
+
+// TODO make Readable<WorkspaceUser[] | undefined>
 export type CurrentWorkspaceUsers = Readable<WorkspaceUser[]>;
 
 export const currentWorkspaceUsers: CurrentWorkspaceUsers = derived<
@@ -49,4 +53,56 @@ export const currentWorkspaceUsers: CurrentWorkspaceUsers = derived<
         set($currentWorkspace.workspace_users);
     },
     [],
+);
+
+type CurrentWorkspaceUser = Readable<WorkspaceUser | undefined>;
+
+/**
+ * Find current workspace user belonging to logged in user
+ */
+const currentWorkspaceUser: CurrentWorkspaceUser = derived<
+    [typeof user, typeof currentWorkspace],
+    WorkspaceUser | undefined
+>(
+    [user, currentWorkspace],
+    ([$user, $currentWorkspace], set) => {
+        if ($user === undefined || $currentWorkspace === undefined) {
+            set(undefined);
+            return;
+        }
+        const wsUser = $currentWorkspace.workspace_users.find(
+            (wsUser) => wsUser.user.email === $user.email,
+        );
+        if (wsUser === undefined) {
+            throw new Error("Couldn't find currentWorkspaceUser");
+        }
+        set(wsUser);
+    },
+    undefined,
+);
+
+type CurrentWorkspaceUserCan = Readable<
+    (verb: Verb, resource: Resource) => boolean
+>;
+
+/**
+ * A store that returns a function that allows permission checking for the
+ * currently active, logged in user's workspace user.
+ */
+export const currentWorkspaceUserCan: CurrentWorkspaceUserCan = derived<
+    CurrentWorkspaceUser,
+    (verb: Verb, resource: Resource) => boolean
+>(
+    currentWorkspaceUser,
+    ($currentWorkspaceUser, set) => {
+        if ($currentWorkspaceUser === undefined) {
+            console.warn("workspaceUser was undefined");
+            set(() => false);
+            return;
+        }
+        const fn = (verb: Verb, resource: Resource) =>
+            can(verb, resource, $currentWorkspaceUser);
+        set(fn);
+    },
+    () => false,
 );
