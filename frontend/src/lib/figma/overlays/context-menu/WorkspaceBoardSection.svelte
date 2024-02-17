@@ -36,6 +36,7 @@
         toggleWorkspaceBoardSectionOpen,
         workspaceBoardSectionClosed,
     } from "$lib/stores/dashboard";
+    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import {
         openConstructiveOverlay,
         openDestructiveOverlay,
@@ -139,51 +140,57 @@
         state="normal"
         icon={closed ? Selector : X}
     />
-    {#if previousSection}
+    {#if $currentWorkspaceUserCan("update", "workspaceBoardSection")}
+        {#if previousSection}
+            <ContextMenuButton
+                kind={{
+                    kind: "button",
+                    action: switchWithPreviousSection,
+                }}
+                label={$_(
+                    "overlay.context-menu.workspace-board-section.switch-previous",
+                )}
+                state="normal"
+                icon={ArrowUp}
+            />
+        {/if}
+        {#if nextSection}
+            <ContextMenuButton
+                kind={{
+                    kind: "button",
+                    action: switchWithNextSection,
+                }}
+                label={$_(
+                    "overlay.context-menu.workspace-board-section.switch-next",
+                )}
+                state="normal"
+                icon={ArrowDown}
+            />
+        {/if}
         <ContextMenuButton
             kind={{
                 kind: "button",
-                action: switchWithPreviousSection,
+                action: updateWorkspaceBoardSection,
             }}
             label={$_(
-                "overlay.context-menu.workspace-board-section.switch-previous",
+                "overlay.context-menu.workspace-board-section.edit-title",
             )}
             state="normal"
-            icon={ArrowUp}
+            icon={Pencil}
         />
     {/if}
-    {#if nextSection}
+    {#if $currentWorkspaceUserCan("delete", "workspaceBoardSection")}
         <ContextMenuButton
             kind={{
                 kind: "button",
-                action: switchWithNextSection,
+                action: deleteWorkspaceBoardSection,
             }}
             label={$_(
-                "overlay.context-menu.workspace-board-section.switch-next",
+                "overlay.context-menu.workspace-board-section.delete-workspace-board-section",
             )}
             state="normal"
-            icon={ArrowDown}
+            icon={Trash}
+            color="destructive"
         />
     {/if}
-    <ContextMenuButton
-        kind={{
-            kind: "button",
-            action: updateWorkspaceBoardSection,
-        }}
-        label={$_("overlay.context-menu.workspace-board-section.edit-title")}
-        state="normal"
-        icon={Pencil}
-    />
-    <ContextMenuButton
-        kind={{
-            kind: "button",
-            action: deleteWorkspaceBoardSection,
-        }}
-        label={$_(
-            "overlay.context-menu.workspace-board-section.delete-workspace-board-section",
-        )}
-        state="normal"
-        icon={Trash}
-        color="destructive"
-    />
 </Layout>
