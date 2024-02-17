@@ -21,8 +21,8 @@
 
     import Loading from "$lib/components/loading.svelte";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
-    import SelectWorkspaceBoard from "$lib/figma/buttons/SelectWorkspaceBoard.svelte";
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
+    import SelectWorkspaceBoard from "$lib/figma/navigation/side-nav/SelectWorkspaceBoard.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import {
         boardExpandOpen,
