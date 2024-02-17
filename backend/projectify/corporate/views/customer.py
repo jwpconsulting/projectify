@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -18,8 +18,10 @@
 import logging
 from uuid import UUID
 
+from django.utils.translation import gettext_lazy as _
+
 from rest_framework import (
-    generics,
+    exceptions,
     serializers,
 )
 from rest_framework.request import Request
@@ -27,7 +29,9 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
 
-from projectify.corporate.models.customer import Customer, CustomerQuerySet
+from projectify.corporate.selectors.customer import (
+    customer_find_by_workspace_uuid,
+)
 from projectify.corporate.serializers import CustomerSerializer
 from projectify.corporate.services.stripe import (
     create_billing_portal_session_for_workspace_uuid,
@@ -37,28 +41,22 @@ from projectify.corporate.services.stripe import (
 logger = logging.getLogger(__name__)
 
 
-class WorkspaceCustomerRetrieve(
-    generics.RetrieveAPIView[
-        Customer,
-        CustomerQuerySet,
-        CustomerSerializer,
-    ]
-):
+class WorkspaceCustomerRetrieve(APIView):
     """Retrieve customer for a workspace."""
 
-    queryset = Customer.objects.all()
-    serializer_class = CustomerSerializer
-
-    def get_queryset(self) -> CustomerQuerySet:
-        """Filter by request user."""
-        user = self.request.user
-        return self.queryset.filter_by_user(user)
-
-    def get_object(self) -> Customer:
-        """Get customer."""
-        return self.get_queryset().get_by_workspace_uuid(
-            self.kwargs["workspace_uuid"]
+    def get(self, request: Request, workspace_uuid: UUID) -> Response:
+        """Handle GET."""
+        user = request.user
+        customer = customer_find_by_workspace_uuid(
+            who=user,
+            workspace_uuid=workspace_uuid,
         )
+        if customer is None:
+            raise exceptions.NotFound(
+                _("No customer found for this workspace uuid")
+            )
+        serializer = CustomerSerializer(instance=customer)
+        return Response(status=HTTP_200_OK, data=serializer.data)
 
 
 # RPC

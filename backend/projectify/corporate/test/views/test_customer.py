@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -57,6 +57,15 @@ class TestWorkspaceCustomerRetrieve:
         with django_assert_num_queries(8):
             response = user_client.get(resource_url)
             assert response.status_code == 200, response.content
+
+    def test_404(
+        self,
+        rest_meddling_client: APIClient,
+        resource_url: str,
+    ) -> None:
+        """Test no workspace/customer locatable for current user."""
+        response = rest_meddling_client.get(resource_url)
+        assert response.status_code == 404, response.content
 
 
 # RPC
