@@ -24,6 +24,7 @@
         currentWorkspaceBoard,
         selectWorkspaceBoardUuid,
     } from "$lib/stores/dashboard";
+    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
@@ -85,11 +86,13 @@
             {workspaceBoard.title}
         </div>
     </div>
-    <div class="shrink-0" bind:this={buttonRef}>
-        <CircleIcon
-            size="small"
-            icon="ellipsis"
-            action={{ kind: "button", action: toggleMenu }}
-        />
-    </div>
+    {#if $currentWorkspaceUserCan("update", "workspaceBoard")}
+        <div class="shrink-0" bind:this={buttonRef}>
+            <CircleIcon
+                size="small"
+                icon="ellipsis"
+                action={{ kind: "button", action: toggleMenu }}
+            />
+        </div>
+    {/if}
 </a>
