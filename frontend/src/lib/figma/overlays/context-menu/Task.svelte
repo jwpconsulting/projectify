@@ -86,7 +86,7 @@
 </script>
 
 <Layout>
-    {#if kind.location === "dashboard"}
+    {#if kind.location === "dashboard" && canMoveTask}
         <ContextMenuButton
             kind={{
                 kind: "a",
@@ -100,7 +100,6 @@
             kind={{
                 kind: "button",
                 action: toggleMoveToSection,
-                disabled: !canMoveTask,
             }}
             label={$_("overlay.context-menu.task.move-to-section")}
             state="normal"
@@ -165,15 +164,16 @@
         state="normal"
         icon={Duplicate}
     />
-    <ContextMenuButton
-        kind={{
-            kind: "button",
-            action: promptDeleteTask,
-            disabled: !$currentWorkspaceUserCan("delete", "task"),
-        }}
-        label={$_("overlay.context-menu.task.delete-task")}
-        state="normal"
-        color="destructive"
-        icon={Trash}
-    />
+    {#if $currentWorkspaceUserCan("delete", "task")}
+        <ContextMenuButton
+            kind={{
+                kind: "button",
+                action: promptDeleteTask,
+            }}
+            label={$_("overlay.context-menu.task.delete-task")}
+            state="normal"
+            color="destructive"
+            icon={Trash}
+        />
+    {/if}
 </Layout>
