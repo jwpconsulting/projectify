@@ -22,6 +22,7 @@ The resources that workspace users can work on are the following:
 - Task label
 - Sub task
 - Chat message
+- Customer
 
 The following actions are possible on each resource, modelled after a typical
 CRUD application:
@@ -48,6 +49,7 @@ role required to perform that action.
 | Task label              | Member     | Observer   | Member     | Member     |
 | Sub task                | Member     | Observer   | Member     | Member     |
 | Chat message            | Member     | Observer   | Member     | Maintainer |
+| Customer                | Owner      | Owner      | Owner      | Owner      |
 
 ## Role descriptions
 
@@ -110,6 +112,7 @@ workspace maintenance.
 - Create, read, update and delete workspace user invites, that is, invite new
   workspace users
 - Create, update and delete workspace users
+- Create, read, update and delete customer
 
 ## Rule implementation
 

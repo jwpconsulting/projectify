@@ -61,6 +61,7 @@ type Rules = {
 | Task label              | Member     | Observer   | Member     | Member     |
 | Sub task                | Member     | Observer   | Member     | Member     |
 | Chat message            | Member     | Observer   | Member     | Maintainer |
+| Customer                | Owner      | Owner      | Owner      | Owner      |
  */
 
 const rules: Rules = {
