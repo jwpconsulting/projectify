@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Workspace model selectors."""
+import logging
 from typing import Optional
 from uuid import UUID
 
@@ -24,6 +25,8 @@ from projectify.user.models import User
 from projectify.workspace.models.workspace import Workspace, WorkspaceQuerySet
 from projectify.workspace.models.workspace_board import WorkspaceBoard
 from projectify.workspace.models.workspace_user import WorkspaceUser
+
+logger = logging.getLogger(__name__)
 
 WorkspaceDetailQuerySet = Workspace.objects.prefetch_related(
     "label_set",
@@ -57,4 +60,5 @@ def workspace_find_by_workspace_uuid(
     try:
         return qs.filter_for_user_and_uuid(user=who, uuid=workspace_uuid).get()
     except Workspace.DoesNotExist:
+        logger.warning("No workspace found for uuid %s", workspace_uuid)
         return None
