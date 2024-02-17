@@ -37,7 +37,8 @@ export type Resource =
     | "label"
     | "taskLabel"
     | "subTask"
-    | "chatMessage";
+    | "chatMessage"
+    | "customer";
 
 type CrudMinimumRole = {
     [K in Verb]: WorkspaceUserRole;
@@ -124,6 +125,12 @@ const rules: Rules = {
         read: "OBSERVER",
         update: "MEMBER",
         delete: "MAINTAINER",
+    },
+    customer: {
+        create: "OWNER",
+        read: "OWNER",
+        update: "OWNER",
+        delete: "OWNER",
     },
 };
 

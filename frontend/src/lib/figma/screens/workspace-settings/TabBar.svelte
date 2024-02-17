@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -19,6 +19,7 @@
     import { _ } from "svelte-i18n";
 
     import TabElement from "$lib/figma/buttons/TabElement.svelte";
+    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import type { SettingKind } from "$lib/types/dashboard";
     import type { Workspace } from "$lib/types/workspace";
     import { getSettingsUrl } from "$lib/urls";
@@ -38,10 +39,12 @@
         label={$_("workspace-settings.workspace-users.title")}
         active={activeSetting === "workspace-users"}
     />
-    <TabElement
-        href={getSettingsUrl(workspace.uuid, "billing")}
-        label={$_("workspace-settings.billing.title")}
-        active={activeSetting === "billing"}
-    />
+    {#if $currentWorkspaceUserCan("read", "customer")}
+        <TabElement
+            href={getSettingsUrl(workspace.uuid, "billing")}
+            label={$_("workspace-settings.billing.title")}
+            active={activeSetting === "billing"}
+        />
+    {/if}
     <div class="grow border-b-2 border-border" />
 </div>
