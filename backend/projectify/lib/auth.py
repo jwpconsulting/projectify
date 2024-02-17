@@ -17,11 +17,14 @@
 """Authorization and authentication related functions."""
 # This is coupled to our own user model for now, otherwise we need to
 # do lots of weird casting with AbstractBaseUser vs. AbstractUser
+import logging
 from typing import Any, Optional
 
 from django.core.exceptions import PermissionDenied
 
 from projectify.user.models import User
+
+logger = logging.getLogger(__name__)
 
 
 def validate_perm(
@@ -32,4 +35,5 @@ def validate_perm(
     """Verify if who has perm to do what. Raise PermissionDenied otherwise."""
     if who.has_perm(perm, what):
         return True
+    logger.warning(f"'{who}' did not have permission '{perm}' for '{what}'")
     raise PermissionDenied(f"'{who}' can not '{perm}' for '{what}'")
