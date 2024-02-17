@@ -18,6 +18,7 @@
 <script lang="ts">
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import { updateTask } from "$lib/repository/workspace";
+    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
@@ -49,9 +50,14 @@
             },
         );
     }
+
+    $: canUpdate = $currentWorkspaceUserCan("update", "task");
 </script>
 
-<button bind:this={userPickerBtnRef} on:click|preventDefault={openUserPicker}>
+<button
+    bind:this={userPickerBtnRef}
+    on:click|preventDefault={canUpdate ? openUserPicker : undefined}
+>
     <AvatarVariant
         content={{ kind: "single", user: assignee?.user }}
         size="small"
