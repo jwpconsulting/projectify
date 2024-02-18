@@ -54,7 +54,7 @@ def stripe_checkout_session_create(
         raise serializers.ValidationError(
             _("This customer already activated a subscription before")
         )
-    validate_perm("corporate.can_update_customer", who, customer)
+    validate_perm("corporate.can_update_customer", who, customer.workspace)
     session = stripe.checkout.Session.create(
         success_url=settings.FRONTEND_URL,
         cancel_url=settings.FRONTEND_URL,
@@ -115,7 +115,7 @@ def create_billing_portal_session_for_workspace_uuid(
         raise serializers.ValidationError(
             {"workspace_uuid": _("No customer found for this workspace_uuid")}
         )
-    validate_perm("corporate.can_update_customer", who, customer)
+    validate_perm("corporate.can_update_customer", who, customer.workspace)
     customer_id = customer.stripe_customer_id
     if customer_id is None:
         raise PermissionDenied(

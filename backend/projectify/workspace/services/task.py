@@ -56,7 +56,11 @@ def task_create(
     assignee: Optional[WorkspaceUser] = None,
 ) -> Task:
     """Add a task to this section."""
-    validate_perm("workspace.can_create_task", who, workspace_board_section)
+    validate_perm(
+        "workspace.create_task",
+        who,
+        workspace_board_section.workspace_board.workspace,
+    )
     # XXX Implicit N+1 here
     workspace = workspace_board_section.workspace_board.workspace
     return Task.objects.create(
@@ -117,7 +121,7 @@ def task_update(
     assignee: Optional[WorkspaceUser] = None,
 ) -> Task:
     """Add a task to this section."""
-    validate_perm("workspace.can_update_task", who, task)
+    validate_perm("workspace.update_task", who, task.workspace)
     task.title = title
     task.description = description
     task.due_date = due_date
@@ -169,7 +173,7 @@ def task_update_nested(
 # TODO atomic
 def task_delete(*, task: Task, who: User) -> None:
     """Delete a task."""
-    validate_perm("workspace.can_delete_task", who, task)
+    validate_perm("workspace.delete_task", who, task.workspace)
     task.delete()
     send_workspace_board_change_signal(
         task.workspace_board_section.workspace_board
@@ -185,7 +189,7 @@ def task_move_after(
     after: Union[Task, WorkspaceBoardSection],
 ) -> Task:
     """Move a task after a task or in front of a workspace board section."""
-    validate_perm("workspace.can_update_task", who, task)
+    validate_perm("workspace.update_task", who, task.workspace)
     match after:
         case Task():
             workspace_board_section = after.workspace_board_section

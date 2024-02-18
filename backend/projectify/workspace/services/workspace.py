@@ -77,7 +77,7 @@ def workspace_update(
 ) -> Workspace:
     """Update a workspace."""
     validate_perm(
-        "workspace.can_update_workspace",
+        "workspace.update_workspace",
         who,
         workspace,
     )
@@ -106,7 +106,7 @@ def workspace_delete(
     - No boards
     - No labels
     """
-    validate_perm("workspace.can_delete_workspace", who, workspace)
+    validate_perm("workspace.delete_workspace", who, workspace)
     if workspace.workspaceuser_set.count() > 1:
         raise serializers.ValidationError(
             _("Can only delete workspace with one remaining workspace user")

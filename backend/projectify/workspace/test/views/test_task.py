@@ -126,7 +126,8 @@ class TestTaskCreate(UnauthenticatedTestMixin):
         # signals, this might change up so I will ignore this for now
         # 25 now
         # 26 now
-        with django_assert_num_queries(26):
+        # 24 now
+        with django_assert_num_queries(24):
             response = rest_user_client.post(
                 resource_url,
                 {**payload, "assignee": {"uuid": str(workspace_user.uuid)}},
@@ -203,7 +204,8 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         # XXX high query count but ignore for now
         # 29 now
         # 31 now
-        with django_assert_num_queries(31):
+        # 28 now
+        with django_assert_num_queries(28):
             response = rest_user_client.put(
                 resource_url,
                 {**payload, "assignee": {"uuid": str(workspace_user.uuid)}},
@@ -224,7 +226,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test deleting a task."""
-        with django_assert_num_queries(13):
+        with django_assert_num_queries(11):
             response = rest_user_client.delete(resource_url)
             assert response.status_code == 204, response.content
         # Ensure that the task is gone for good
@@ -257,7 +259,7 @@ class TestMoveTaskToWorkspaceBoardSection:
     ) -> None:
         """Test moving a task."""
         assert task.workspace_board_section == workspace_board_section
-        with django_assert_num_queries(21):
+        with django_assert_num_queries(19):
             response = rest_user_client.post(
                 resource_url,
                 data={
@@ -293,7 +295,7 @@ class TestTaskMoveAfterTask:
         other_task: Task,
     ) -> None:
         """Test as an authenticated user."""
-        with django_assert_num_queries(20):
+        with django_assert_num_queries(18):
             response = rest_user_client.post(
                 resource_url,
                 data={"task_uuid": str(other_task.uuid)},

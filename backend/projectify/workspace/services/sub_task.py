@@ -73,7 +73,7 @@ def sub_task_create(
     description: Optional[str] = None,
 ) -> SubTask:
     """Create a sub task for a task."""
-    validate_perm("workspace.can_create_sub_task", who, task)
+    validate_perm("workspace.create_sub_task", who, task.workspace)
     sub_task = SubTask.objects.create(
         task=task, title=title, description=description, done=done
     )
@@ -90,7 +90,7 @@ def sub_task_create_many(
     create_sub_tasks: Sequence[ValidatedDatum],
 ) -> list[SubTask]:
     """Create several sub tasks."""
-    validate_perm("workspace.can_create_sub_task", who, task)
+    validate_perm("workspace.create_sub_task", who, task.workspace)
     sub_tasks: list[SubTask] = SubTask.objects.bulk_create(
         SubTask(task=task, **sub_task) for sub_task in create_sub_tasks
     )
@@ -109,8 +109,8 @@ def sub_task_update_many(
     update_sub_tasks: Sequence[ValidatedDatumWithUuid],
 ) -> list[SubTask]:
     """Update sub tasks, create missing sub tasks."""
-    validate_perm("workspace.can_create_sub_task", who, task)
-    validate_perm("workspace.can_update_sub_task", who, task)
+    validate_perm("workspace.create_sub_task", who, task.workspace)
+    validate_perm("workspace.update_sub_task", who, task.workspace)
     result: list[SubTask] = []
 
     # 1) delete missing sub tasks

@@ -38,9 +38,9 @@ def workspace_board_section_create(
 ) -> WorkspaceBoardSection:
     """Create a workspace board section."""
     validate_perm(
-        "workspace.can_create_workspace_board_section",
+        "workspace.create_workspace_board_section",
         who,
-        workspace_board,
+        workspace_board.workspace,
     )
     workspace_board_section = WorkspaceBoardSection(
         title=title,
@@ -63,9 +63,9 @@ def workspace_board_section_update(
 ) -> WorkspaceBoardSection:
     """Update a workspace board section."""
     validate_perm(
-        "workspace.can_update_workspace_board_section",
+        "workspace.update_workspace_board_section",
         who,
-        workspace_board_section,
+        workspace_board_section.workspace_board.workspace,
     )
     workspace_board_section.title = title
     workspace_board_section.description = description
@@ -83,9 +83,9 @@ def workspace_board_section_delete(
 ) -> None:
     """Delete a workspace board section."""
     validate_perm(
-        "workspace.can_delete_workspace_board_section",
+        "workspace.delete_workspace_board_section",
         who,
-        workspace_board_section,
+        workspace_board_section.workspace_board.workspace,
     )
     workspace_board_section.delete()
     send_workspace_board_change_signal(workspace_board_section.workspace_board)
@@ -105,9 +105,9 @@ def workspace_board_section_move(
     No save required.
     """
     validate_perm(
-        "workspace.can_update_workspace_board_section",
+        "workspace.update_workspace_board_section",
         who,
-        workspace_board_section,
+        workspace_board_section.workspace_board.workspace,
     )
     workspace_board = workspace_board_section.workspace_board
     neighbor_sections = (
