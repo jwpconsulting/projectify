@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Workspace CRUD views."""
-import uuid
+from uuid import UUID
 
 from django.shortcuts import (
     get_object_or_404,
@@ -35,29 +35,19 @@ from rest_framework.request import (
 from rest_framework.response import (
     Response,
 )
-from rest_framework.status import HTTP_201_CREATED
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 
-from projectify.workspace.exceptions import (
+from ..exceptions import (
     UserAlreadyAdded,
     UserAlreadyInvited,
 )
-from projectify.workspace.selectors.workspace import (
-    WorkspaceDetailQuerySet,
-    workspace_find_by_workspace_uuid,
-)
-from projectify.workspace.services.workspace import (
-    workspace_create,
-    workspace_update,
-)
-from projectify.workspace.services.workspace_user_invite import (
-    add_or_invite_workspace_user,
-)
-
-from .. import (
-    models,
-)
+from ..models import Workspace
 from ..models.workspace import (
     WorkspaceQuerySet,
+)
+from ..selectors.workspace import (
+    WorkspaceDetailQuerySet,
+    workspace_find_by_workspace_uuid,
 )
 from ..serializers.base import (
     WorkspaceBaseSerializer,
@@ -65,41 +55,53 @@ from ..serializers.base import (
 from ..serializers.workspace import (
     WorkspaceDetailSerializer,
 )
+from ..services.workspace import (
+    workspace_create,
+    workspace_update,
+)
+from ..services.workspace_user_invite import (
+    add_or_invite_workspace_user,
+)
 
 
 # Create
-class WorkspaceCreate(
-    generics.CreateAPIView[
-        models.Workspace,
-        WorkspaceQuerySet,
-        WorkspaceBaseSerializer,
-    ]
-):
+class WorkspaceCreate(views.APIView):
     """Create a workspace."""
 
-    serializer_class = WorkspaceBaseSerializer
+    class InputSerializer(serializers.ModelSerializer[Workspace]):
+        """Accept title, description."""
 
-    def perform_create(self, serializer: WorkspaceBaseSerializer) -> None:
+        class Meta:
+            """Meta."""
+
+            fields = "title", "description"
+            model = Workspace
+
+    def post(self, request: Request) -> Response:
         """Create the workspace and add this user."""
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
         workspace = workspace_create(
-            **serializer.validated_data, owner=self.request.user
+            title=serializer.validated_data["title"],
+            description=serializer.validated_data["description"],
+            owner=self.request.user,
         )
-        # Kind of hacky, CreateAPIView relies on this being set when
-        # serializing the result
-        serializer.instance = workspace
+        result = WorkspaceBaseSerializer(instance=workspace)
+        return Response(status=HTTP_201_CREATED, data=result.data)
 
 
 # Read
 class WorkspaceList(
     generics.ListAPIView[
-        models.Workspace,
+        Workspace,
         WorkspaceQuerySet,
         WorkspaceBaseSerializer,
     ]
 ):
     """List all workspaces for a user."""
 
-    queryset = models.Workspace.objects.all()
+    queryset = Workspace.objects.all()
     serializer_class = WorkspaceBaseSerializer
 
     def get_queryset(self) -> WorkspaceQuerySet:
@@ -108,44 +110,50 @@ class WorkspaceList(
         return self.queryset.get_for_user(user)
 
 
-# TODO use regular APIView
 # Read + Update
-class WorkspaceReadUpdate(
-    generics.RetrieveUpdateAPIView[
-        models.Workspace,
-        WorkspaceQuerySet,
-        WorkspaceDetailSerializer,
-    ]
-):
-    """Workspace retrieve view."""
+class WorkspaceReadUpdate(views.APIView):
+    """Workspace read and update view."""
 
-    serializer_class = WorkspaceDetailSerializer
-
-    def get_object(self) -> models.Workspace:
-        """Return queryset with authenticated user in mind."""
-        user = self.request.user
-        qs = WorkspaceDetailQuerySet
-        qs = qs.filter_for_user_and_uuid(
-            user,
-            self.kwargs["workspace_uuid"],
+    def get(self, request: Request, workspace_uuid: UUID) -> Response:
+        """Handle GET."""
+        workspace = workspace_find_by_workspace_uuid(
+            who=request.user,
+            workspace_uuid=workspace_uuid,
+            qs=WorkspaceDetailQuerySet,
         )
-        workspace: models.Workspace = get_object_or_404(qs)
-        return workspace
+        if workspace is None:
+            raise NotFound(_("Could not find workspace with this UUID"))
+        serializer = WorkspaceDetailSerializer(instance=workspace)
+        return Response(status=HTTP_200_OK, data=serializer.data)
 
-    def perform_update(self, serializer: WorkspaceDetailSerializer) -> None:
-        """Perform update."""
-        instance = serializer.instance
-        # This should not happen -- the point of updating is that we already
-        # have an instance present
-        if instance is None:
-            raise ValueError("perform_update was called without instance")
-        data = serializer.validated_data
+    class InputSerializer(serializers.ModelSerializer[Workspace]):
+        """Accept title, description."""
+
+        class Meta:
+            """Meta."""
+
+            fields = "title", "description"
+            model = Workspace
+
+    def put(self, request: Request, workspace_uuid: UUID) -> Response:
+        """Handle PUT."""
+        workspace = workspace_find_by_workspace_uuid(
+            who=request.user,
+            workspace_uuid=workspace_uuid,
+            qs=WorkspaceDetailQuerySet,
+        )
+        if workspace is None:
+            raise NotFound(_("Could not find workspace with this UUID"))
+
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         workspace_update(
-            workspace=instance,
-            title=data["title"],
-            description=data.get("description"),
+            workspace=workspace,
+            title=serializer.validated_data["title"],
+            description=serializer.validated_data.get("description"),
             who=self.request.user,
         )
+        return Response(status=HTTP_200_OK, data=serializer.data)
 
 
 # Delete
@@ -157,10 +165,10 @@ class WorkspacePictureUploadView(views.APIView):
 
     parser_classes = (parsers.MultiPartParser,)
 
-    def post(self, request: Request, uuid: uuid.UUID) -> Response:
+    def post(self, request: Request, uuid: UUID) -> Response:
         """Handle POST."""
         user = request.user
-        qs = models.Workspace.objects.filter_for_user_and_uuid(
+        qs = Workspace.objects.filter_for_user_and_uuid(
             user,
             uuid,
         )
@@ -183,7 +191,7 @@ class InviteUserToWorkspace(views.APIView):
 
         email = serializers.EmailField()
 
-    def post(self, request: Request, uuid: uuid.UUID) -> Response:
+    def post(self, request: Request, uuid: UUID) -> Response:
         """Handle POST."""
         user = request.user
         workspace = workspace_find_by_workspace_uuid(
@@ -218,4 +226,4 @@ class InviteUserToWorkspace(views.APIView):
                     ).format(email=email)
                 }
             )
-        return Response(status=HTTP_201_CREATED)
+        return Response(data=serializer.data, status=HTTP_201_CREATED)

@@ -116,7 +116,7 @@ class TestWorkspaceReadUpdate:
             "workspace:workspaces:read-update", args=(workspace.uuid,)
         )
 
-    def test_authenticated(
+    def test_get(
         self,
         user_client: Client,
         resource_url: str,
@@ -143,7 +143,7 @@ class TestWorkspaceReadUpdate:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating a given workspace with a new title."""
-        with django_assert_num_queries(11):
+        with django_assert_num_queries(7):
             response = rest_user_client.put(
                 resource_url,
                 data={
