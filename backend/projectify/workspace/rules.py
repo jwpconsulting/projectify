@@ -97,10 +97,9 @@ def is_at_least_owner(user: User, target: Workspace) -> bool:
 # It is perhaps not necessary to check if the workspace exists,
 # or we can cache it as part of the predicate invocation
 def check_available_features(
-    features: WorkspaceFeatures, user: User, target: Workspace
+    features: WorkspaceFeatures, user: User, workspace: Workspace
 ) -> bool:
     """Return True if a workspace has a feature set active."""
-    workspace = target
     workspace_user = workspace_user_find_for_workspace(
         workspace=workspace,
         user=user,
@@ -128,7 +127,7 @@ def belongs_to_trial_workspace(user: User, target: Workspace) -> bool:
 
 
 @rules.predicate
-def within_trial_chat_message_quota(user: User, target: Workspace) -> bool:
+def within_chat_message_quota(user: User, target: Workspace) -> bool:
     """Return True if a chat message can be created for workspace."""
     return workspace_quota_for(
         resource="ChatMessage", workspace=target
@@ -136,13 +135,13 @@ def within_trial_chat_message_quota(user: User, target: Workspace) -> bool:
 
 
 @rules.predicate
-def within_trial_label_quota(user: User, target: Workspace) -> bool:
+def within_label_quota(user: User, target: Workspace) -> bool:
     """Return True if a label can be created for workspace."""
     return workspace_quota_for(resource="Label", workspace=target).within_quota
 
 
 @rules.predicate
-def within_trial_sub_task_quota(user: User, target: Workspace) -> bool:
+def within_sub_task_quota(user: User, target: Workspace) -> bool:
     """Return True if a sub task can be created in workspace."""
     return workspace_quota_for(
         workspace=target, resource="SubTask"
@@ -150,13 +149,13 @@ def within_trial_sub_task_quota(user: User, target: Workspace) -> bool:
 
 
 @rules.predicate
-def within_trial_task_quota(user: User, target: Workspace) -> bool:
+def within_task_quota(user: User, target: Workspace) -> bool:
     """Return True if a task can be created in workspace."""
     return workspace_quota_for(workspace=target, resource="Task").within_quota
 
 
 @rules.predicate
-def within_trial_task_label_quota(user: User, target: Workspace) -> bool:
+def within_task_label_quota(user: User, target: Workspace) -> bool:
     """Return True if a task label can be created for a task."""
     return workspace_quota_for(
         workspace=target, resource="TaskLabel"
@@ -164,7 +163,7 @@ def within_trial_task_label_quota(user: User, target: Workspace) -> bool:
 
 
 @rules.predicate
-def within_trial_workspace_board_quota(user: User, target: Workspace) -> bool:
+def within_workspace_board_quota(user: User, target: Workspace) -> bool:
     """Return True if a workspace board can be created in workspace."""
     return workspace_quota_for(
         workspace=target, resource="WorkspaceBoard"
@@ -172,7 +171,7 @@ def within_trial_workspace_board_quota(user: User, target: Workspace) -> bool:
 
 
 @rules.predicate
-def within_trial_workspace_board_section_quota(
+def within_workspace_board_section_quota(
     user: User, target: Workspace
 ) -> bool:
     """Return True if a section can be created in a workspace."""
@@ -182,7 +181,7 @@ def within_trial_workspace_board_section_quota(
 
 
 @rules.predicate
-def within_trial_workspace_user_quota(user: User, target: Workspace) -> bool:
+def within_workspace_user_quota(user: User, target: Workspace) -> bool:
     """Return True if a workspace user can be added to a workspace."""
     return workspace_quota_for(
         workspace=target, resource="WorkspaceUserAndInvite"
@@ -190,9 +189,7 @@ def within_trial_workspace_user_quota(user: User, target: Workspace) -> bool:
 
 
 @rules.predicate
-def within_trial_workspace_user_invite_quota(
-    user: User, target: Workspace
-) -> bool:
+def within_workspace_user_invite_quota(user: User, target: Workspace) -> bool:
     """Return True if a workspace user invite can be sent for a workspace."""
     return workspace_quota_for(
         workspace=target, resource="WorkspaceUserAndInvite"
@@ -224,7 +221,7 @@ rules.add_perm(
 # TODO quota rule should only be used for workspace.create_*
 workspace_user_invite_usable = (
     belongs_to_full_workspace  # type: ignore[operator]
-    | (belongs_to_trial_workspace & within_trial_workspace_user_invite_quota)
+    | (belongs_to_trial_workspace & within_workspace_user_invite_quota)
 )
 rules.add_perm(
     "workspace.create_workspace_user_invite",
@@ -246,7 +243,7 @@ rules.add_perm(
 # Workspace user
 workspace_user_usable = (
     belongs_to_full_workspace  # type: ignore[operator]
-    | (belongs_to_trial_workspace & within_trial_workspace_user_quota)
+    | (belongs_to_trial_workspace & within_workspace_user_quota)
 )
 rules.add_perm(
     "workspace.create_workspace_user",
@@ -268,7 +265,7 @@ rules.add_perm(
 # Workspace board
 workspace_board_usable = (
     belongs_to_full_workspace  # type: ignore[operator]
-    | (belongs_to_trial_workspace & within_trial_workspace_board_quota)
+    | (belongs_to_trial_workspace & within_workspace_board_quota)
 )
 rules.add_perm(
     "workspace.create_workspace_board",
@@ -290,7 +287,7 @@ rules.add_perm(
 # Workspace board section
 workspace_board_section_usable = (
     belongs_to_full_workspace  # type: ignore[operator]
-    | (belongs_to_trial_workspace & within_trial_workspace_board_section_quota)
+    | (belongs_to_trial_workspace & within_workspace_board_section_quota)
 )
 rules.add_perm(
     "workspace.create_workspace_board_section",
@@ -312,7 +309,7 @@ rules.add_perm(
 # Task
 task_usable = (
     belongs_to_full_workspace  # type: ignore[operator]
-    | (belongs_to_trial_workspace & within_trial_task_quota)
+    | (belongs_to_trial_workspace & within_task_quota)
 )
 rules.add_perm(
     "workspace.create_task",
@@ -334,7 +331,7 @@ rules.add_perm(
 # Label
 label_usable = (
     belongs_to_full_workspace  # type: ignore[operator]
-    | (belongs_to_trial_workspace & within_trial_label_quota)
+    | (belongs_to_trial_workspace & within_label_quota)
 )
 rules.add_perm(
     "workspace.create_label",
@@ -356,7 +353,7 @@ rules.add_perm(
 # Task label
 task_label_usable = (
     belongs_to_full_workspace  # type: ignore[operator]
-    | (belongs_to_trial_workspace & within_trial_task_label_quota)
+    | (belongs_to_trial_workspace & within_task_label_quota)
 )
 rules.add_perm(
     "workspace.create_task_label",
@@ -379,7 +376,7 @@ rules.add_perm(
 # Sub task
 sub_task_usable = (
     belongs_to_full_workspace  # type: ignore[operator]
-    | (belongs_to_trial_workspace & within_trial_sub_task_quota)
+    | (belongs_to_trial_workspace & within_sub_task_quota)
 )
 rules.add_perm(
     "workspace.create_sub_task",
@@ -401,7 +398,7 @@ rules.add_perm(
 # Chat message
 chat_message_usable = (
     belongs_to_full_workspace  # type: ignore[operator]
-    | (belongs_to_trial_workspace & within_trial_chat_message_quota)
+    | (belongs_to_trial_workspace & within_chat_message_quota)
 )
 rules.add_perm(
     "workspace.create_chat_message",
