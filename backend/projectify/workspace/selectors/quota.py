@@ -93,10 +93,9 @@ def workspace_quota_for(*, resource: Resource, workspace: Workspace) -> Quota:
     match customer_check_active_for_workspace(workspace=workspace):
         case "full":
             limit = None
-        case "trial":
+        # We regard inactive as trial
+        case "trial" | "inactive":
             limit = trial_conditions[resource]
-        case "inactive":
-            limit = 0
     # Short circuit for no limit
     if limit is None:
         return Quota(current=None, limit=None, within_quota=True)

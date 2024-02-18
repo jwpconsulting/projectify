@@ -23,10 +23,6 @@ import logging
 
 import rules
 
-from projectify.corporate.services.customer import (
-    customer_check_active_for_workspace,
-)
-from projectify.corporate.types import WorkspaceFeatures
 from projectify.user.models import User
 from projectify.workspace.models.const import WorkspaceUserRoles
 from projectify.workspace.models.workspace import Workspace
@@ -57,73 +53,25 @@ def check_permissions_for(
 @rules.predicate
 def is_at_least_observer(user: User, target: Workspace) -> bool:
     """Return True if a user is at least an observer of workspace parent."""
-    return check_permissions_for(
-        WorkspaceUserRoles.OBSERVER,
-        user,
-        target,
-    )
+    return check_permissions_for(WorkspaceUserRoles.OBSERVER, user, target)
 
 
 @rules.predicate
 def is_at_least_member(user: User, target: Workspace) -> bool:
     """Return True if a user is at least a member of workspace parent."""
-    return check_permissions_for(
-        WorkspaceUserRoles.MEMBER,
-        user,
-        target,
-    )
+    return check_permissions_for(WorkspaceUserRoles.MEMBER, user, target)
 
 
 @rules.predicate
 def is_at_least_maintainer(user: User, target: Workspace) -> bool:
     """Return True if a user is at least a maintainer of workspace parent."""
-    return check_permissions_for(
-        WorkspaceUserRoles.MAINTAINER,
-        user,
-        target,
-    )
+    return check_permissions_for(WorkspaceUserRoles.MAINTAINER, user, target)
 
 
 @rules.predicate
 def is_at_least_owner(user: User, target: Workspace) -> bool:
     """Return True if a user is at least an owner of workspace parent."""
-    return check_permissions_for(
-        WorkspaceUserRoles.OWNER,
-        user,
-        target,
-    )
-
-
-# It is perhaps not necessary to check if the workspace exists,
-# or we can cache it as part of the predicate invocation
-def check_available_features(
-    features: WorkspaceFeatures, user: User, workspace: Workspace
-) -> bool:
-    """Return True if a workspace has a feature set active."""
-    workspace_user = workspace_user_find_for_workspace(
-        workspace=workspace,
-        user=user,
-    )
-    if workspace_user is None:
-        logger.warning("No workspace user found for user %s", user)
-        return False
-    return customer_check_active_for_workspace(workspace=workspace) == features
-
-
-@rules.predicate
-def belongs_to_full_workspace(user: User, target: Workspace) -> bool:
-    """
-    Return True if target belongs to a full workspace.
-
-    Also returns True if target is an active workspace itself.
-    """
-    return check_available_features("full", user, target)
-
-
-@rules.predicate
-def belongs_to_trial_workspace(user: User, target: Workspace) -> bool:
-    """Return True if target belongs to a workspace."""
-    return check_available_features("trial", user, target)
+    return check_permissions_for(WorkspaceUserRoles.OWNER, user, target)
 
 
 @rules.predicate

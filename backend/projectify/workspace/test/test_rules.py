@@ -19,7 +19,6 @@ import pytest
 from faker import Faker
 
 from projectify.corporate.services.customer import customer_cancel_subscription
-from projectify.corporate.types import CustomerSubscriptionStatus
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 from projectify.user.services.internal import user_create
@@ -37,7 +36,6 @@ from projectify.workspace.services.sub_task import sub_task_create
 from projectify.workspace.services.task import task_create
 from projectify.workspace.services.workspace import (
     workspace_add_user,
-    workspace_create,
 )
 from projectify.workspace.services.workspace_board import (
     workspace_board_create,
@@ -143,70 +141,6 @@ class TestPredicates:
     ) -> None:
         """Test is_at_least_owner with other workspace."""
         assert not rules.is_at_least_owner(observer.user, unrelated_workspace)
-
-    def test_belongs_to_active_workspace(
-        self,
-        workspace: Workspace,
-        observer: WorkspaceUser,
-    ) -> None:
-        """Test belongs_to_full_workspace."""
-        # Active
-        assert rules.belongs_to_full_workspace(
-            observer.user,
-            workspace,
-        )
-        # Inactive
-        workspace.customer.subscription_status = (
-            CustomerSubscriptionStatus.CANCELLED
-        )
-        assert not rules.belongs_to_full_workspace(
-            observer.user,
-            workspace,
-        )
-        # Cancelled is considered as going back to trial
-        assert rules.belongs_to_trial_workspace(
-            observer.user,
-            workspace,
-        )
-
-    def test_belongs_to_trial_workspace(self, user: User) -> None:
-        """Test that a freshly created workspace is in trial."""
-        workspace = workspace_create(
-            owner=user,
-            title="blabla",
-        )
-        assert rules.belongs_to_trial_workspace(user=user, target=workspace)
-
-    @pytest.mark.xfail(
-        reason="Workspaces should not exist without customers. Consider "
-        "deleting this test"
-    )
-    def test_belongs_to_active_workspace_no_customer(
-        self,
-        workspace: Workspace,
-        observer: WorkspaceUser,
-    ) -> None:
-        """Test belongs_to_full_workspace."""
-        # The workspace fixture creates an active customer so we have to delete
-        # it
-        workspace.customer.delete()
-        # The attribute has to be evicted by refreshing from db
-        workspace.refresh_from_db()
-        assert not rules.belongs_to_full_workspace(
-            observer.user,
-            workspace,
-        )
-
-    def test_belongs_to_active_workspace_unrelated_workspace(
-        self,
-        unrelated_workspace: Workspace,
-        observer: WorkspaceUser,
-    ) -> None:
-        """Test belongs_to_full_workspace with other workspace."""
-        assert not rules.belongs_to_full_workspace(
-            observer.user,
-            unrelated_workspace,
-        )
 
 
 @pytest.mark.django_db
