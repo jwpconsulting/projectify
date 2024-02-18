@@ -27,21 +27,18 @@ from rest_framework.request import (
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
-from projectify.workspace.models.label import Label
-from projectify.workspace.models.sub_task import SubTask
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_board_section import (
-    WorkspaceBoardSection,
-)
-from projectify.workspace.models.workspace_user import WorkspaceUser
-from projectify.workspace.services.workspace import (
-    workspace_add_user,
-)
 
-from ... import (
-    serializers,
+from ...models.label import Label
+from ...models.sub_task import SubTask
+from ...models.task import Task
+from ...models.workspace import Workspace
+from ...models.workspace_board_section import WorkspaceBoardSection
+from ...models.workspace_user import WorkspaceUser
+from ...serializers.task_detail import (
+    TaskCreateUpdateSerializer,
+    TaskDetailSerializer,
 )
+from ...services.workspace import workspace_add_user
 
 
 @pytest.mark.django_db
@@ -50,7 +47,7 @@ class TestTaskDetailSerializer:
 
     def test_readonly_fields(self, task: Task) -> None:
         """Check that fields are actually readonly by trying a few."""
-        serializer = serializers.TaskDetailSerializer(
+        serializer = TaskDetailSerializer(
             task,
             data={"title": task.title, "number": 133337, "uuid": 2},
         )
@@ -86,7 +83,7 @@ class TestTaskCreateUpdateSerializer:
         """Check that fields are actually readonly by trying a few."""
         assert task.subtask_set.count() == 1
         task.assign_to(workspace_user)
-        serializer = serializers.TaskCreateUpdateSerializer(
+        serializer = TaskCreateUpdateSerializer(
             task,
             data={
                 "title": task.title,
@@ -121,7 +118,7 @@ class TestTaskCreateUpdateSerializer:
         user_request: Request,
     ) -> None:
         """Test creating a task."""
-        serializer = serializers.TaskCreateUpdateSerializer(
+        serializer = TaskCreateUpdateSerializer(
             data={
                 "title": "This is a great task title.",
                 "labels": [{"uuid": str(label.uuid)}],
@@ -148,7 +145,7 @@ class TestTaskCreateUpdateSerializer:
         unrelated_workspace_board_section: WorkspaceBoardSection,
     ) -> None:
         """Test creating a task but the ws board section is wrong."""
-        serializer = serializers.TaskCreateUpdateSerializer(
+        serializer = TaskCreateUpdateSerializer(
             data={
                 "title": "This is a great task title.",
                 "labels": [],
@@ -176,7 +173,7 @@ class TestTaskCreateUpdateSerializer:
         assert len(task.subtask_set.all()) == 1
         assert task.due_date is not None
         due_date = task.due_date
-        serializer = serializers.TaskCreateUpdateSerializer(
+        serializer = TaskCreateUpdateSerializer(
             task,
             data={
                 "title": task.title,
@@ -245,7 +242,7 @@ class TestTaskCreateUpdateSerializer:
         user_request: Request,
     ) -> None:
         """Test updating a task when a board does not exist."""
-        serializer = serializers.TaskCreateUpdateSerializer(
+        serializer = TaskCreateUpdateSerializer(
             task,
             data={
                 "title": task.title,
@@ -281,7 +278,7 @@ class TestTaskCreateUpdateSerializer:
             workspace_user.user,
             unrelated_workspace_board_section.workspace_board.workspace,
         )
-        serializer = serializers.TaskCreateUpdateSerializer(
+        serializer = TaskCreateUpdateSerializer(
             task,
             data={
                 "title": task.title,
@@ -307,7 +304,7 @@ class TestTaskCreateUpdateSerializer:
         unrelated_label: Label,
     ) -> None:
         """Test updating with an unrelated label."""
-        serializer = serializers.TaskCreateUpdateSerializer(
+        serializer = TaskCreateUpdateSerializer(
             task,
             data={
                 "title": task.title,
@@ -334,7 +331,7 @@ class TestTaskCreateUpdateSerializer:
         unrelated_workspace_user: WorkspaceUser,
     ) -> None:
         """Test updating a task."""
-        serializer = serializers.TaskCreateUpdateSerializer(
+        serializer = TaskCreateUpdateSerializer(
             task,
             data={
                 "title": task.title,

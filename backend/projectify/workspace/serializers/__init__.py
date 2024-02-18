@@ -15,32 +15,3 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Workspace app serializers."""
-from .base import (
-    WorkspaceBaseSerializer,
-    WorkspaceBoardBaseSerializer,
-)
-from .task_detail import (
-    TaskCreateUpdateSerializer,
-    TaskDetailSerializer,
-)
-from .workspace import (
-    WorkspaceDetailSerializer,
-)
-from .workspace_board import (
-    WorkspaceBoardDetailSerializer,
-)
-from .workspace_board_section import (
-    WorkspaceBoardSectionDetailSerializer,
-)
-
-# XXX
-# I don't like that we user the Base serializer here
-__all__ = [
-    "TaskDetailSerializer",
-    "TaskCreateUpdateSerializer",
-    "WorkspaceBaseSerializer",
-    "WorkspaceBoardBaseSerializer",
-    "WorkspaceBoardDetailSerializer",
-    "WorkspaceBoardSectionDetailSerializer",
-    "WorkspaceDetailSerializer",
-]
