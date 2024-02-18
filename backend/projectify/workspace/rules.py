@@ -39,13 +39,8 @@ from projectify.workspace.models.sub_task import SubTask
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.task_label import TaskLabel
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_board import WorkspaceBoard
 from projectify.workspace.models.workspace_board_section import (
     WorkspaceBoardSection,
-)
-from projectify.workspace.models.workspace_user import WorkspaceUser
-from projectify.workspace.models.workspace_user_invite import (
-    WorkspaceUserInvite,
 )
 from projectify.workspace.selectors.workspace_user import (
     workspace_user_find_for_workspace,
@@ -54,47 +49,11 @@ from projectify.workspace.selectors.workspace_user import (
 logger = logging.getLogger(__name__)
 
 
-WorkspaceTarget = Union[
-    ChatMessage,
-    Label,
-    SubTask,
-    Task,
-    TaskLabel,
-    Workspace,
-    WorkspaceBoard,
-    WorkspaceBoardSection,
-    WorkspaceUser,
-    WorkspaceUserInvite,
-]
-
-
-def get_workspace_from_target(target: WorkspaceTarget) -> Workspace:
-    """Return a workspace."""
-    match target:
-        # TODO alphabetize like in WorkspaceTarget
-        case Workspace():
-            return target
-        case WorkspaceBoardSection():
-            return target.workspace_board.workspace
-        case TaskLabel():
-            return target.label.workspace
-        case ChatMessage():
-            return (
-                target.task.workspace_board_section.workspace_board.workspace
-            )
-        case SubTask():
-            return (
-                target.task.workspace_board_section.workspace_board.workspace
-            )
-        case target:
-            return target.workspace
-
-
 def check_permissions_for(
-    role: WorkspaceUserRoles, user: User, target: WorkspaceTarget
+    role: WorkspaceUserRoles, user: User, target: Workspace
 ) -> bool:
     """Check whether a user has required role for target."""
-    workspace = get_workspace_from_target(target)
+    workspace = target
     workspace_user = workspace_user_find_for_workspace(
         workspace=workspace,
         user=user,
@@ -107,7 +66,7 @@ def check_permissions_for(
 # Role predicates
 # Observer < Member < Maintainer < Owner
 @rules.predicate
-def is_at_least_observer(user: User, target: WorkspaceTarget) -> bool:
+def is_at_least_observer(user: User, target: Workspace) -> bool:
     """Return True if a user is at least an observer of workspace parent."""
     return check_permissions_for(
         WorkspaceUserRoles.OBSERVER,
@@ -117,7 +76,7 @@ def is_at_least_observer(user: User, target: WorkspaceTarget) -> bool:
 
 
 @rules.predicate
-def is_at_least_member(user: User, target: WorkspaceTarget) -> bool:
+def is_at_least_member(user: User, target: Workspace) -> bool:
     """Return True if a user is at least a member of workspace parent."""
     return check_permissions_for(
         WorkspaceUserRoles.MEMBER,
@@ -127,7 +86,7 @@ def is_at_least_member(user: User, target: WorkspaceTarget) -> bool:
 
 
 @rules.predicate
-def is_at_least_maintainer(user: User, target: WorkspaceTarget) -> bool:
+def is_at_least_maintainer(user: User, target: Workspace) -> bool:
     """Return True if a user is at least a maintainer of workspace parent."""
     return check_permissions_for(
         WorkspaceUserRoles.MAINTAINER,
@@ -137,7 +96,7 @@ def is_at_least_maintainer(user: User, target: WorkspaceTarget) -> bool:
 
 
 @rules.predicate
-def is_at_least_owner(user: User, target: WorkspaceTarget) -> bool:
+def is_at_least_owner(user: User, target: Workspace) -> bool:
     """Return True if a user is at least an owner of workspace parent."""
     return check_permissions_for(
         WorkspaceUserRoles.OWNER,
@@ -149,10 +108,10 @@ def is_at_least_owner(user: User, target: WorkspaceTarget) -> bool:
 # It is perhaps not necessary to check if the workspace exists,
 # or we can cache it as part of the predicate invocation
 def check_available_features(
-    features: WorkspaceFeatures, user: User, target: WorkspaceTarget
+    features: WorkspaceFeatures, user: User, target: Workspace
 ) -> bool:
     """Return True if a workspace has a feature set active."""
-    workspace = get_workspace_from_target(target)
+    workspace = target
     workspace_user = workspace_user_find_for_workspace(
         workspace=workspace,
         user=user,
@@ -164,7 +123,7 @@ def check_available_features(
 
 
 @rules.predicate
-def belongs_to_full_workspace(user: User, target: WorkspaceTarget) -> bool:
+def belongs_to_full_workspace(user: User, target: Workspace) -> bool:
     """
     Return True if target belongs to a full workspace.
 
@@ -174,7 +133,7 @@ def belongs_to_full_workspace(user: User, target: WorkspaceTarget) -> bool:
 
 
 @rules.predicate
-def belongs_to_trial_workspace(user: User, target: WorkspaceTarget) -> bool:
+def belongs_to_trial_workspace(user: User, target: Workspace) -> bool:
     """Return True if target belongs to a workspace."""
     return check_available_features("trial", user, target)
 
@@ -204,9 +163,7 @@ trial_conditions: dict[CreateWhat, Limitation] = {
 }
 
 
-def check_trial_conditions(
-    create_what: CreateWhat, target: WorkspaceTarget
-) -> bool:
+def check_trial_conditions(create_what: CreateWhat, target: Workspace) -> bool:
     """
     Return True if for a target type, something can still be created.
 
@@ -227,7 +184,7 @@ def check_trial_conditions(
     - WorkspaceBoardSection: 100,
     - WorkspaceUser + WorkspaceUserInivite(unredeemed): 2
     """
-    workspace = get_workspace_from_target(target)
+    workspace = target
     limit = trial_conditions[create_what]
     # Short circuit
     if limit is None:
@@ -276,64 +233,58 @@ def check_trial_conditions(
 
 
 @rules.predicate
-def within_trial_chat_message_quota(
-    user: User, target: WorkspaceTarget
-) -> bool:
+def within_trial_chat_message_quota(user: User, target: Workspace) -> bool:
     """Return True if a chat message can be created for workspace."""
     return check_trial_conditions("ChatMessage", target)
 
 
 @rules.predicate
-def within_trial_label_quota(user: User, target: WorkspaceTarget) -> bool:
+def within_trial_label_quota(user: User, target: Workspace) -> bool:
     """Return True if a label can be created for workspace."""
     return check_trial_conditions("Label", target)
 
 
 @rules.predicate
-def within_trial_sub_task_quota(user: User, target: WorkspaceTarget) -> bool:
+def within_trial_sub_task_quota(user: User, target: Workspace) -> bool:
     """Return True if a sub task can be created in workspace."""
     return check_trial_conditions("SubTask", target)
 
 
 @rules.predicate
-def within_trial_task_quota(user: User, target: WorkspaceTarget) -> bool:
+def within_trial_task_quota(user: User, target: Workspace) -> bool:
     """Return True if a task can be created in workspace."""
     return check_trial_conditions("Task", target)
 
 
 @rules.predicate
-def within_trial_task_label_quota(user: User, target: WorkspaceTarget) -> bool:
+def within_trial_task_label_quota(user: User, target: Workspace) -> bool:
     """Return True if a task label can be created for a task."""
     return check_trial_conditions("TaskLabel", target)
 
 
 @rules.predicate
-def within_trial_workspace_board_quota(
-    user: User, target: WorkspaceTarget
-) -> bool:
+def within_trial_workspace_board_quota(user: User, target: Workspace) -> bool:
     """Return True if a workspace board can be created in workspace."""
     return check_trial_conditions("WorkspaceBoard", target)
 
 
 @rules.predicate
 def within_trial_workspace_board_section_quota(
-    user: User, target: WorkspaceTarget
+    user: User, target: Workspace
 ) -> bool:
     """Return True if a section can be created in a workspace."""
     return check_trial_conditions("WorkspaceBoardSection", target)
 
 
 @rules.predicate
-def within_trial_workspace_user_quota(
-    user: User, target: WorkspaceTarget
-) -> bool:
+def within_trial_workspace_user_quota(user: User, target: Workspace) -> bool:
     """Return True if a workspace user can be added to a workspace."""
     return check_trial_conditions("WorkspaceUserAndInvite", target)
 
 
 @rules.predicate
 def within_trial_workspace_user_invite_quota(
-    user: User, target: WorkspaceTarget
+    user: User, target: Workspace
 ) -> bool:
     """Return True if a workspace user invite can be sent for a workspace."""
     return check_trial_conditions("WorkspaceUserAndInvite", target)

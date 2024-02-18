@@ -50,7 +50,7 @@ def label_update(
     color: int,
 ) -> Label:
     """Update a label with new name and color."""
-    validate_perm("workspace.can_update_label", who, label)
+    validate_perm("workspace.can_update_label", who, label.workspace)
     label.name = name
     label.color = color
     label.save()
@@ -62,6 +62,6 @@ def label_update(
 # TODO atomic
 def label_delete(*, who: User, label: Label) -> None:
     """Delete a label."""
-    validate_perm("workspace.can_delete_label", who, label)
+    validate_perm("workspace.can_delete_label", who, label.workspace)
     label.delete()
     send_workspace_change_signal(label.workspace)

@@ -64,7 +64,9 @@ def workspace_board_update(
     due_date: Optional[datetime] = None,
 ) -> WorkspaceBoard:
     """Update a workspace board."""
-    validate_perm("workspace.can_update_workspace_board", who, workspace_board)
+    validate_perm(
+        "workspace.can_update_workspace_board", who, workspace_board.workspace
+    )
     workspace_board.title = title
     workspace_board.description = description
     if due_date and due_date.tzinfo is None:
@@ -87,7 +89,7 @@ def workspace_board_delete(
     validate_perm(
         "workspace.can_delete_workspace_board",
         who,
-        workspace_board,
+        workspace_board.workspace,
     )
     workspace_board.delete()
     send_workspace_change_signal(workspace_board)
@@ -106,7 +108,7 @@ def workspace_board_archive(
     validate_perm(
         "workspace.can_update_workspace_board",
         who,
-        workspace_board,
+        workspace_board.workspace,
     )
     if archived:
         workspace_board.archived = now()

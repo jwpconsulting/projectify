@@ -72,7 +72,7 @@ def coupon_redeem(
 ) -> None:
     """Redeem a coupon for a workspace."""
     customer = workspace.customer
-    validate_perm("corporate.can_update_customer", who, customer)
+    validate_perm("corporate.can_update_customer", who, workspace)
     try:
         # Make sure we lock the code to prevent race conditions
         coupon = (

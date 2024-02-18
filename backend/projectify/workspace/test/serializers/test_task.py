@@ -279,7 +279,7 @@ class TestTaskCreateUpdateSerializer:
         validate_perm(
             "workspace.can_read_workspace_board_section",
             workspace_user.user,
-            unrelated_workspace_board_section,
+            unrelated_workspace_board_section.workspace_board.workspace,
         )
         serializer = serializers.TaskCreateUpdateSerializer(
             task,

@@ -18,11 +18,12 @@
 # This is coupled to our own user model for now, otherwise we need to
 # do lots of weird casting with AbstractBaseUser vs. AbstractUser
 import logging
-from typing import Any, Optional
+from typing import Optional
 
 from django.core.exceptions import PermissionDenied
 
 from projectify.user.models import User
+from projectify.workspace.models.workspace import Workspace
 
 logger = logging.getLogger(__name__)
 
@@ -30,10 +31,14 @@ logger = logging.getLogger(__name__)
 def validate_perm(
     perm: str,
     who: User,
-    what: Optional[Any] = None,
+    where: Optional[Workspace] = None,
 ) -> bool:
-    """Verify if who has perm to do what. Raise PermissionDenied otherwise."""
-    if who.has_perm(perm, what):
+    """
+    Verify if 'who' has permission 'perm' to do in Workspace 'where'.
+
+    Raise PermissionDenied if no Permission and log warning.
+    """
+    if who.has_perm(perm, where):
         return True
-    logger.warning(f"'{who}' did not have permission '{perm}' for '{what}'")
-    raise PermissionDenied(f"'{who}' can not '{perm}' for '{what}'")
+    logger.warning(f"'{who}' did not have permission '{perm}' in '{where}'")
+    raise PermissionDenied(f"'{who}' can not '{perm}' in '{where}'")

@@ -246,17 +246,17 @@ class TestTrialRules:
     ) -> None:
         """Assert 1 chat messages can not be created."""
         assert workspace_user.user.has_perm(
-            "workspace.can_create_chat_message", task
+            "workspace.can_create_chat_message", workspace
         )
         customer_cancel_subscription(customer=workspace.customer)
         assert workspace_user.user.has_perm(
-            "workspace.can_create_chat_message", task
+            "workspace.can_create_chat_message", workspace
         )
         chat_message_create(
             who=workspace_user.user, task=task, text="hello world"
         )
         assert not workspace_user.user.has_perm(
-            "workspace.can_create_chat_message", task
+            "workspace.can_create_chat_message", workspace
         )
 
     def test_create_label(
@@ -311,7 +311,7 @@ class TestTrialRules:
     ) -> None:
         """Assert only 1 task can be created."""
         assert workspace_user.user.has_perm(
-            "workspace.can_create_task", workspace_board_section
+            "workspace.can_create_task", workspace
         )
         customer_cancel_subscription(customer=workspace.customer)
         assert workspace_user.user.has_perm(
@@ -354,11 +354,13 @@ class TestTrialRules:
     ) -> None:
         """Assert only 100 workspace board sections can be created."""
         assert workspace_user.user.has_perm(
-            "workspace.can_create_workspace_board_section", workspace_board
+            "workspace.can_create_workspace_board_section",
+            workspace,
         )
         customer_cancel_subscription(customer=workspace.customer)
         assert workspace_user.user.has_perm(
-            "workspace.can_create_workspace_board_section", workspace_board
+            "workspace.can_create_workspace_board_section",
+            workspace,
         )
         workspace_board_section_create(
             workspace_board=workspace_board,
@@ -366,7 +368,8 @@ class TestTrialRules:
             who=workspace_user.user,
         )
         assert not workspace_user.user.has_perm(
-            "workspace.can_create_workspace_board_section", workspace_board
+            "workspace.can_create_workspace_board_section",
+            workspace,
         )
 
     def test_workspace_user_and_invite_limit(
