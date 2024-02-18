@@ -84,7 +84,7 @@ class Quota:
     current: Optional[int]
     # None means unlimited
     limit: Optional[int]
-    within_quota: bool
+    can_create_more: bool
 
 
 def workspace_quota_for(*, resource: Resource, workspace: Workspace) -> Quota:
@@ -98,7 +98,7 @@ def workspace_quota_for(*, resource: Resource, workspace: Workspace) -> Quota:
             limit = trial_conditions[resource]
     # Short circuit for no limit
     if limit is None:
-        return Quota(current=None, limit=None, within_quota=True)
+        return Quota(current=None, limit=None, can_create_more=True)
     current: int
     match resource:
         case "ChatMessage":
@@ -130,4 +130,4 @@ def workspace_quota_for(*, resource: Resource, workspace: Workspace) -> Quota:
                 redeemed=False
             ).count()
             current = user_count + invite_count
-    return Quota(current=current, limit=limit, within_quota=current < limit)
+    return Quota(current=current, limit=limit, can_create_more=current < limit)

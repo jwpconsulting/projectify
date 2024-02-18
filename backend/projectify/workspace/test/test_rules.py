@@ -328,6 +328,7 @@ class TestTrialRules:
     ) -> None:
         """Assert only one more workspace user can be invited or added."""
         count = workspace.users.count()
+        assert count == 1
         # Test both permissons
         assert validate_perm(
             "workspace.create_workspace_user", user, workspace
