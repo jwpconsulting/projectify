@@ -149,6 +149,11 @@ class WorkspaceConsumer(BaseConsumer):
             workspace_uuid=self.uuid,
             qs=WorkspaceDetailQuerySet,
         )
+
+        if workspace is None:
+            self.disconnect(close_code=CODE_OBJECT_DISAPPEARED)
+            return
+
         serialized = serialize(WorkspaceDetailSerializer, workspace, event)
         self.send_json(serialized)
 

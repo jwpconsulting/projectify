@@ -301,8 +301,6 @@ class TestWorkspace:
             who=user,
             workspace=workspace,
         )
-        assert await expect_message(workspace_communicator, workspace)
-
         await clean_up_communicator(workspace_communicator)
 
 
@@ -351,8 +349,8 @@ class TestWorkspaceUser:
             workspace=workspace,
             who=user,
         )
-        await expect_message(workspace_communicator, workspace)
-
+        # Before we would expect a message here, but now we disconnect when a
+        # workspace is deleted
         await clean_up_communicator(workspace_communicator)
 
 
