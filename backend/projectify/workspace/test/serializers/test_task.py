@@ -277,7 +277,7 @@ class TestTaskCreateUpdateSerializer:
         )
         # test for sanity
         validate_perm(
-            "workspace.can_read_workspace_board_section",
+            "workspace.read_workspace_board_section",
             workspace_user.user,
             unrelated_workspace_board_section.workspace_board.workspace,
         )

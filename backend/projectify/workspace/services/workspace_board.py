@@ -43,7 +43,7 @@ def workspace_board_create(
     due_date: Optional[datetime] = None,
 ) -> WorkspaceBoard:
     """Create a workspace board inside a given workspace."""
-    validate_perm("workspace.can_create_workspace_board", who, workspace)
+    validate_perm("workspace.create_workspace_board", who, workspace)
     workspace_board = workspace.workspaceboard_set.create(
         title=title,
         description=description,
@@ -65,7 +65,7 @@ def workspace_board_update(
 ) -> WorkspaceBoard:
     """Update a workspace board."""
     validate_perm(
-        "workspace.can_update_workspace_board", who, workspace_board.workspace
+        "workspace.update_workspace_board", who, workspace_board.workspace
     )
     workspace_board.title = title
     workspace_board.description = description
@@ -87,7 +87,7 @@ def workspace_board_delete(
 ) -> None:
     """Delete a workspace board."""
     validate_perm(
-        "workspace.can_delete_workspace_board",
+        "workspace.delete_workspace_board",
         who,
         workspace_board.workspace,
     )
@@ -106,7 +106,7 @@ def workspace_board_archive(
 ) -> WorkspaceBoard:
     """Archive a workspace board, or not."""
     validate_perm(
-        "workspace.can_update_workspace_board",
+        "workspace.update_workspace_board",
         who,
         workspace_board.workspace,
     )

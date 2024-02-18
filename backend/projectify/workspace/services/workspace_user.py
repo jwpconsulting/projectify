@@ -38,7 +38,7 @@ def workspace_user_update(
 ) -> WorkspaceUser:
     """Update a workspace user with new role and job title."""
     validate_perm(
-        "workspace.can_update_workspace_user", who, workspace_user.workspace
+        "workspace.update_workspace_user", who, workspace_user.workspace
     )
     workspace_user.job_title = job_title
     workspace_user.role = role
@@ -66,7 +66,7 @@ def workspace_user_delete(
     so big TODO maybe?
     """
     validate_perm(
-        "workspace.can_delete_workspace_user", who, workspace_user.workspace
+        "workspace.delete_workspace_user", who, workspace_user.workspace
     )
     if workspace_user.user == who:
         raise serializers.ValidationError(

@@ -37,7 +37,7 @@ def chat_message_create(
     text: str,
 ) -> ChatMessage:
     """Create a chat message for a task."""
-    validate_perm("workspace.can_create_chat_message", who, task.workspace)
+    validate_perm("workspace.create_chat_message", who, task.workspace)
     workspace_user = workspace_user_find_for_workspace(
         workspace=task.workspace,
         user=who,

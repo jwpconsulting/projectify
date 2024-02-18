@@ -38,7 +38,7 @@ def workspace_board_section_create(
 ) -> WorkspaceBoardSection:
     """Create a workspace board section."""
     validate_perm(
-        "workspace.can_create_workspace_board_section",
+        "workspace.create_workspace_board_section",
         who,
         workspace_board.workspace,
     )
@@ -63,7 +63,7 @@ def workspace_board_section_update(
 ) -> WorkspaceBoardSection:
     """Update a workspace board section."""
     validate_perm(
-        "workspace.can_update_workspace_board_section",
+        "workspace.update_workspace_board_section",
         who,
         workspace_board_section.workspace_board.workspace,
     )
@@ -83,7 +83,7 @@ def workspace_board_section_delete(
 ) -> None:
     """Delete a workspace board section."""
     validate_perm(
-        "workspace.can_delete_workspace_board_section",
+        "workspace.delete_workspace_board_section",
         who,
         workspace_board_section.workspace_board.workspace,
     )
@@ -105,7 +105,7 @@ def workspace_board_section_move(
     No save required.
     """
     validate_perm(
-        "workspace.can_update_workspace_board_section",
+        "workspace.update_workspace_board_section",
         who,
         workspace_board_section.workspace_board.workspace,
     )

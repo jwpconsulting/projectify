@@ -247,18 +247,14 @@ class TestTrialRules:
         workspace: Workspace,
     ) -> None:
         """Assert 1 chat messages can not be created."""
-        assert validate_perm(
-            "workspace.can_create_chat_message", user, workspace
-        )
+        assert validate_perm("workspace.create_chat_message", user, workspace)
         customer_cancel_subscription(customer=workspace.customer)
-        assert validate_perm(
-            "workspace.can_create_chat_message", user, workspace
-        )
+        assert validate_perm("workspace.create_chat_message", user, workspace)
         chat_message_create(
             who=workspace_user.user, task=task, text="hello world"
         )
         assert not validate_perm(
-            "workspace.can_create_chat_message",
+            "workspace.create_chat_message",
             user,
             workspace,
             raise_exception=False,
@@ -271,9 +267,9 @@ class TestTrialRules:
         workspace: Workspace,
     ) -> None:
         """Assert only 1 labels can be created."""
-        assert validate_perm("workspace.can_create_label", user, workspace)
+        assert validate_perm("workspace.create_label", user, workspace)
         customer_cancel_subscription(customer=workspace.customer)
-        assert validate_perm("workspace.can_create_label", user, workspace)
+        assert validate_perm("workspace.create_label", user, workspace)
         label_create(
             workspace=workspace,
             name="label",
@@ -281,7 +277,7 @@ class TestTrialRules:
             who=workspace_user.user,
         )
         assert not validate_perm(
-            "workspace.can_create_label",
+            "workspace.create_label",
             user,
             workspace,
             raise_exception=False,
@@ -295,14 +291,14 @@ class TestTrialRules:
         task: Task,
     ) -> None:
         """Assert only 1 sub task can be created."""
-        assert validate_perm("workspace.can_create_sub_task", user, workspace)
+        assert validate_perm("workspace.create_sub_task", user, workspace)
         customer_cancel_subscription(customer=workspace.customer)
-        assert validate_perm("workspace.can_create_sub_task", user, workspace)
+        assert validate_perm("workspace.create_sub_task", user, workspace)
         sub_task_create(
             task=task, title="sub task", who=workspace_user.user, done=False
         )
         assert not validate_perm(
-            "workspace.can_create_sub_task",
+            "workspace.create_sub_task",
             user,
             workspace,
             raise_exception=False,
@@ -316,16 +312,16 @@ class TestTrialRules:
         workspace: Workspace,
     ) -> None:
         """Assert only 1 task can be created."""
-        assert validate_perm("workspace.can_create_task", user, workspace)
+        assert validate_perm("workspace.create_task", user, workspace)
         customer_cancel_subscription(customer=workspace.customer)
-        assert validate_perm("workspace.can_create_task", user, workspace)
+        assert validate_perm("workspace.create_task", user, workspace)
         task_create(
             workspace_board_section=workspace_board_section,
             title="task title",
             who=workspace_user.user,
         )
         assert not validate_perm(
-            "workspace.can_create_task",
+            "workspace.create_task",
             user,
             workspace,
             raise_exception=False,
@@ -339,11 +335,11 @@ class TestTrialRules:
     ) -> None:
         """Assert only 1 workspace board can be created."""
         assert validate_perm(
-            "workspace.can_create_workspace_board", user, workspace
+            "workspace.create_workspace_board", user, workspace
         )
         customer_cancel_subscription(customer=workspace.customer)
         assert validate_perm(
-            "workspace.can_create_workspace_board", user, workspace
+            "workspace.create_workspace_board", user, workspace
         )
         workspace_board_create(
             workspace=workspace,
@@ -351,7 +347,7 @@ class TestTrialRules:
             who=workspace_user.user,
         )
         assert not validate_perm(
-            "workspace.can_create_workspace_board",
+            "workspace.create_workspace_board",
             user,
             workspace,
             raise_exception=False,
@@ -366,13 +362,13 @@ class TestTrialRules:
     ) -> None:
         """Assert only 100 workspace board sections can be created."""
         assert validate_perm(
-            "workspace.can_create_workspace_board_section",
+            "workspace.create_workspace_board_section",
             user,
             workspace,
         )
         customer_cancel_subscription(customer=workspace.customer)
         assert validate_perm(
-            "workspace.can_create_workspace_board_section",
+            "workspace.create_workspace_board_section",
             user,
             workspace,
         )
@@ -382,7 +378,7 @@ class TestTrialRules:
             who=workspace_user.user,
         )
         assert not validate_perm(
-            "workspace.can_create_workspace_board_section",
+            "workspace.create_workspace_board_section",
             user,
             workspace,
             raise_exception=False,
@@ -400,17 +396,17 @@ class TestTrialRules:
         count = workspace.users.count()
         # Test both permissons
         assert validate_perm(
-            "workspace.can_create_workspace_user", user, workspace
+            "workspace.create_workspace_user", user, workspace
         )
         assert validate_perm(
-            "workspace.can_create_workspace_user_invite", user, workspace
+            "workspace.create_workspace_user_invite", user, workspace
         )
         customer_cancel_subscription(customer=workspace.customer)
         assert validate_perm(
-            "workspace.can_create_workspace_user", user, workspace
+            "workspace.create_workspace_user", user, workspace
         )
         assert validate_perm(
-            "workspace.can_create_workspace_user_invite", user, workspace
+            "workspace.create_workspace_user_invite", user, workspace
         )
         # Assume workspace_user_invite_create handles creating an invite and potential user creation
         invite = add_or_invite_workspace_user(
@@ -420,13 +416,13 @@ class TestTrialRules:
         )
         assert workspace.users.count() == count
         assert not validate_perm(
-            "workspace.can_create_workspace_user",
+            "workspace.create_workspace_user",
             user,
             workspace,
             raise_exception=False,
         )
         assert not validate_perm(
-            "workspace.can_create_workspace_user_invite",
+            "workspace.create_workspace_user_invite",
             user,
             workspace,
             raise_exception=False,
@@ -434,10 +430,10 @@ class TestTrialRules:
         # Back to allowed, now add
         invite.delete()
         assert validate_perm(
-            "workspace.can_create_workspace_user", user, workspace
+            "workspace.create_workspace_user", user, workspace
         )
         assert validate_perm(
-            "workspace.can_create_workspace_user_invite", user, workspace
+            "workspace.create_workspace_user_invite", user, workspace
         )
         add_or_invite_workspace_user(
             workspace=workspace,
@@ -448,13 +444,13 @@ class TestTrialRules:
 
         # Now forbidden again
         assert not validate_perm(
-            "workspace.can_create_workspace_user",
+            "workspace.create_workspace_user",
             user,
             workspace,
             raise_exception=False,
         )
         assert not validate_perm(
-            "workspace.can_create_workspace_user_invite",
+            "workspace.create_workspace_user_invite",
             user,
             workspace,
             raise_exception=False,

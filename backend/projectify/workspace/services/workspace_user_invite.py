@@ -127,7 +127,7 @@ def add_or_invite_workspace_user(
     5) No user registration, never invited to this workspace:
     Create a UserInvite and a WorkspaceUserInvite
     """
-    validate_perm("workspace.can_create_workspace_user", who, workspace)
+    validate_perm("workspace.create_workspace_user", who, workspace)
     match email_or_user:
         case AbstractBaseUser() as user:
             return workspace_add_user(workspace=workspace, user=user)
@@ -175,7 +175,7 @@ def add_or_invite_workspace_user(
 @transaction.atomic
 def uninvite_user(who: User, workspace: Workspace, email: str) -> None:
     """Remove a users invitation."""
-    validate_perm("workspace.can_delete_workspace_user_invite", who, workspace)
+    validate_perm("workspace.delete_workspace_user_invite", who, workspace)
     invite = _try_find_invitation(
         workspace=workspace,
         email=email,

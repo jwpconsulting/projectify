@@ -290,53 +290,47 @@ def within_trial_workspace_user_invite_quota(
     return check_trial_conditions("WorkspaceUserAndInvite", target)
 
 
-# TODO rules should be of the format
-# <app>.<action>_<resource>
-# and not as currently
-# <app>.can_<action>_<resource>
-# Going here by the django-rules guide:
-# https://github.com/dfunckt/django-rules#setting-up-rules
-
 # Workspace
 # Anyone should be able to create a workspace
 rules.add_perm(
-    "workspace.can_create_workspace",
+    "workspace.create_workspace",
     # TODO use this instead:
     # rules.is_active,
     is_at_least_owner,
 )
 rules.add_perm(
-    "workspace.can_read_workspace",
+    "workspace.read_workspace",
     is_at_least_observer,
 )
 rules.add_perm(
-    "workspace.can_update_workspace",
+    "workspace.update_workspace",
     is_at_least_owner,
 )
 rules.add_perm(
-    "workspace.can_delete_workspace",
+    "workspace.delete_workspace",
     is_at_least_owner,
 )
 
 # Workspace user invite
+# TODO quota rule should only be used for workspace.create_*
 workspace_user_invite_usable = (
     belongs_to_full_workspace  # type: ignore[operator]
     | (belongs_to_trial_workspace & within_trial_workspace_user_invite_quota)
 )
 rules.add_perm(
-    "workspace.can_create_workspace_user_invite",
+    "workspace.create_workspace_user_invite",
     is_at_least_owner & workspace_user_invite_usable,
 )
 rules.add_perm(
-    "workspace.can_read_workspace_user_invite",
+    "workspace.read_workspace_user_invite",
     is_at_least_owner & workspace_user_invite_usable,
 )
 rules.add_perm(
-    "workspace.can_update_workspace_user_invite",
+    "workspace.update_workspace_user_invite",
     is_at_least_owner & workspace_user_invite_usable,
 )
 rules.add_perm(
-    "workspace.can_delete_workspace_user_invite",
+    "workspace.delete_workspace_user_invite",
     is_at_least_owner & workspace_user_invite_usable,
 )
 
@@ -346,19 +340,19 @@ workspace_user_usable = (
     | (belongs_to_trial_workspace & within_trial_workspace_user_quota)
 )
 rules.add_perm(
-    "workspace.can_create_workspace_user",
+    "workspace.create_workspace_user",
     is_at_least_owner & workspace_user_usable,
 )
 rules.add_perm(
-    "workspace.can_read_workspace_user",
+    "workspace.read_workspace_user",
     is_at_least_observer & workspace_user_usable,
 )
 rules.add_perm(
-    "workspace.can_update_workspace_user",
+    "workspace.update_workspace_user",
     is_at_least_owner & workspace_user_usable,
 )
 rules.add_perm(
-    "workspace.can_delete_workspace_user",
+    "workspace.delete_workspace_user",
     is_at_least_owner & workspace_user_usable,
 )
 
@@ -368,19 +362,19 @@ workspace_board_usable = (
     | (belongs_to_trial_workspace & within_trial_workspace_board_quota)
 )
 rules.add_perm(
-    "workspace.can_create_workspace_board",
+    "workspace.create_workspace_board",
     is_at_least_maintainer & workspace_board_usable,
 )
 rules.add_perm(
-    "workspace.can_read_workspace_board",
+    "workspace.read_workspace_board",
     is_at_least_observer & workspace_board_usable,
 )
 rules.add_perm(
-    "workspace.can_update_workspace_board",
+    "workspace.update_workspace_board",
     is_at_least_maintainer & workspace_board_usable,
 )
 rules.add_perm(
-    "workspace.can_delete_workspace_board",
+    "workspace.delete_workspace_board",
     is_at_least_maintainer & workspace_board_usable,
 )
 
@@ -390,19 +384,19 @@ workspace_board_section_usable = (
     | (belongs_to_trial_workspace & within_trial_workspace_board_section_quota)
 )
 rules.add_perm(
-    "workspace.can_create_workspace_board_section",
+    "workspace.create_workspace_board_section",
     is_at_least_maintainer & workspace_board_section_usable,
 )
 rules.add_perm(
-    "workspace.can_read_workspace_board_section",
+    "workspace.read_workspace_board_section",
     is_at_least_observer & workspace_board_section_usable,
 )
 rules.add_perm(
-    "workspace.can_update_workspace_board_section",
+    "workspace.update_workspace_board_section",
     is_at_least_maintainer & workspace_board_section_usable,
 )
 rules.add_perm(
-    "workspace.can_delete_workspace_board_section",
+    "workspace.delete_workspace_board_section",
     is_at_least_maintainer & workspace_board_section_usable,
 )
 
@@ -412,19 +406,19 @@ task_usable = (
     | (belongs_to_trial_workspace & within_trial_task_quota)
 )
 rules.add_perm(
-    "workspace.can_create_task",
+    "workspace.create_task",
     is_at_least_member & task_usable,
 )
 rules.add_perm(
-    "workspace.can_read_task",
+    "workspace.read_task",
     is_at_least_observer & task_usable,
 )
 rules.add_perm(
-    "workspace.can_update_task",
+    "workspace.update_task",
     is_at_least_member & task_usable,
 )
 rules.add_perm(
-    "workspace.can_delete_task",
+    "workspace.delete_task",
     is_at_least_maintainer & task_usable,
 )
 
@@ -434,19 +428,19 @@ label_usable = (
     | (belongs_to_trial_workspace & within_trial_label_quota)
 )
 rules.add_perm(
-    "workspace.can_create_label",
+    "workspace.create_label",
     is_at_least_maintainer & label_usable,
 )
 rules.add_perm(
-    "workspace.can_read_label",
+    "workspace.read_label",
     is_at_least_observer & label_usable,
 )
 rules.add_perm(
-    "workspace.can_update_label",
+    "workspace.update_label",
     is_at_least_maintainer & label_usable,
 )
 rules.add_perm(
-    "workspace.can_delete_label",
+    "workspace.delete_label",
     is_at_least_maintainer & label_usable,
 )
 
@@ -456,19 +450,19 @@ task_label_usable = (
     | (belongs_to_trial_workspace & within_trial_task_label_quota)
 )
 rules.add_perm(
-    "workspace.can_create_task_label",
+    "workspace.create_task_label",
     is_at_least_member & task_label_usable,
 )
 rules.add_perm(
-    "workspace.can_read_task_label",
+    "workspace.read_task_label",
     is_at_least_observer & task_label_usable,
 )
 rules.add_perm(
-    "workspace.can_update_task_label",
+    "workspace.update_task_label",
     is_at_least_member & task_label_usable,
 )
 rules.add_perm(
-    "workspace.can_delete_task_label",
+    "workspace.delete_task_label",
     is_at_least_member & task_label_usable,
 )
 
@@ -479,19 +473,19 @@ sub_task_usable = (
     | (belongs_to_trial_workspace & within_trial_sub_task_quota)
 )
 rules.add_perm(
-    "workspace.can_create_sub_task",
+    "workspace.create_sub_task",
     is_at_least_member & sub_task_usable,
 )
 rules.add_perm(
-    "workspace.can_read_sub_task",
+    "workspace.read_sub_task",
     is_at_least_observer & sub_task_usable,
 )
 rules.add_perm(
-    "workspace.can_update_sub_task",
+    "workspace.update_sub_task",
     is_at_least_member & sub_task_usable,
 )
 rules.add_perm(
-    "workspace.can_delete_sub_task",
+    "workspace.delete_sub_task",
     is_at_least_member & sub_task_usable,
 )
 
@@ -501,18 +495,18 @@ chat_message_usable = (
     | (belongs_to_trial_workspace & within_trial_chat_message_quota)
 )
 rules.add_perm(
-    "workspace.can_create_chat_message",
+    "workspace.create_chat_message",
     is_at_least_member & chat_message_usable,
 )
 rules.add_perm(
-    "workspace.can_read_chat_message",
+    "workspace.read_chat_message",
     is_at_least_observer & chat_message_usable,
 )
 rules.add_perm(
-    "workspace.can_update_chat_message",
+    "workspace.update_chat_message",
     is_at_least_member & chat_message_usable,
 )
 rules.add_perm(
-    "workspace.can_delete_chat_message",
+    "workspace.delete_chat_message",
     is_at_least_maintainer & chat_message_usable,
 )

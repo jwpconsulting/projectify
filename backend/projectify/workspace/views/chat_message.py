@@ -34,7 +34,7 @@ def add_chat_message(
     )
     task = get_object_or_404(qs)
     assert info.context.user.has_perm(
-        "workspace.can_create_chat_message", task
+        "workspace.create_chat_message", task
     )
     chat_message = task.add_chat_message(
         text=input.text,
