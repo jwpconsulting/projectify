@@ -211,8 +211,8 @@ def check_trial_conditions(
     Return True if for a target type, something can still be created.
 
     Limitations for trial plan:
-    Be able to create 10 boards with 10 sections in each board
-    Be able to create 100 tasks in that workspace
+    Be able to create 10 boards and up to 100 sections across all boards
+    Be able to create 1000 tasks in that workspace
     Be able to create 10 * 100 sub tasks
     Be able to add one more user, therefore that workspace being limited to having
     2 workspace users in total.
