@@ -19,8 +19,6 @@ Workspace app rules.
 
 The order of rules follows the ordering of models.
 """
-import logging
-
 import rules
 
 from projectify.user.models import User
@@ -30,8 +28,6 @@ from projectify.workspace.selectors.quota import workspace_quota_for
 from projectify.workspace.selectors.workspace_user import (
     workspace_user_find_for_workspace,
 )
-
-logger = logging.getLogger(__name__)
 
 
 def check_permissions_for(
@@ -146,12 +142,7 @@ def within_workspace_user_invite_quota(user: User, target: Workspace) -> bool:
 
 # Workspace
 # Anyone should be able to create a workspace
-rules.add_perm(
-    "workspace.create_workspace",
-    # TODO use this instead:
-    # rules.is_active,
-    is_at_least_owner,
-)
+rules.add_perm("workspace.create_workspace", rules.is_active)
 rules.add_perm("workspace.read_workspace", is_at_least_observer)
 rules.add_perm("workspace.update_workspace", is_at_least_owner)
 rules.add_perm("workspace.delete_workspace", is_at_least_owner)
