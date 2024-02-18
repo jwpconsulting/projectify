@@ -117,7 +117,7 @@ interface Quota {
     can_create_more: boolean;
 }
 
-interface WorkspaceQuota {
+export interface WorkspaceQuota {
     workspace_status: "full" | "trial" | "inactive";
     chat_messages: Quota;
     labels: Quota;

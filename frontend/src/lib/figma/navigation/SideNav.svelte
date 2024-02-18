@@ -19,9 +19,9 @@
     import Collapsed from "$lib/figma/navigation/side-nav/Collapsed.svelte";
     import Full from "$lib/figma/navigation/side-nav/Full.svelte";
     import { sideNavOpen } from "$lib/stores/dashboard";
-    import type { Workspace } from "$lib/types/workspace";
+    import type { WorkspaceDetail } from "$lib/types/workspace";
 
-    export let workspace: Workspace | undefined;
+    export let workspace: WorkspaceDetail | undefined;
 </script>
 
 {#if $sideNavOpen}

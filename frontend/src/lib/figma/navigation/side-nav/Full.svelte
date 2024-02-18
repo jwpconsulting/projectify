@@ -23,9 +23,9 @@
     import WorkspaceBoards from "$lib/figma/navigation/side-nav/WorkspaceBoards.svelte";
     import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
     import { showFilters } from "$lib/stores/dashboard";
-    import type { Workspace } from "$lib/types/workspace";
+    import type { WorkspaceDetail } from "$lib/types/workspace";
 
-    export let workspace: Workspace | undefined;
+    export let workspace: WorkspaceDetail | undefined;
 </script>
 
 <!-- XXX temporary fix to alleviate long side nav inside mobile menu -->
