@@ -16,44 +16,53 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Workspace CRUD views."""
 import uuid
-from typing import (
-    Any,
-)
 
 from django.shortcuts import (
     get_object_or_404,
 )
+from django.utils.translation import gettext_lazy as _
 
 from rest_framework import (
     generics,
     parsers,
+    serializers,
     views,
 )
+from rest_framework.exceptions import NotFound
 from rest_framework.request import (
     Request,
 )
 from rest_framework.response import (
     Response,
 )
+from rest_framework.status import HTTP_201_CREATED
 
-from projectify.workspace.selectors.workspace import WorkspaceDetailQuerySet
+from projectify.workspace.exceptions import (
+    UserAlreadyAdded,
+    UserAlreadyInvited,
+)
+from projectify.workspace.selectors.workspace import (
+    WorkspaceDetailQuerySet,
+    workspace_find_by_workspace_uuid,
+)
 from projectify.workspace.services.workspace import (
     workspace_create,
     workspace_update,
+)
+from projectify.workspace.services.workspace_user_invite import (
+    add_or_invite_workspace_user,
 )
 
 from .. import (
     models,
 )
 from ..models.workspace import (
-    Workspace,
     WorkspaceQuerySet,
 )
 from ..serializers.base import (
     WorkspaceBaseSerializer,
 )
 from ..serializers.workspace import (
-    InviteUserToWorkspaceSerializer,
     WorkspaceDetailSerializer,
 )
 
@@ -166,31 +175,47 @@ class WorkspacePictureUploadView(views.APIView):
         return Response(status=204)
 
 
-class InviteUserToWorkspace(
-    generics.CreateAPIView[
-        Workspace, WorkspaceQuerySet, InviteUserToWorkspaceSerializer
-    ]
-):
+class InviteUserToWorkspace(views.APIView):
     """Invite a user to a workspace."""
 
-    lookup_field = "uuid"
-    queryset = Workspace.objects.all()
-    serializer_class = InviteUserToWorkspaceSerializer
+    class InputSerializer(serializers.Serializer):
+        """Accept email."""
 
-    # A given TypedDict is a bit hard to override...
-    def get_serializer_context(self) -> Any:
-        """Enrich serializer context with workspace."""
-        context = super().get_serializer_context()
-        return {
-            **context,
-            "workspace": self.get_object(),
-        }
+        email = serializers.EmailField()
 
-    def get_queryset(self) -> WorkspaceQuerySet:
-        """Search for workspace belonging to this user."""
-        return models.Workspace.objects.filter_for_user_and_uuid(
-            self.request.user,
-            # We can look up by the uuid separately, I guess...
-            # XXX this queryset will only have 0 or 1 results.
-            self.kwargs["uuid"],
+    def post(self, request: Request, uuid: uuid.UUID) -> Response:
+        """Handle POST."""
+        user = request.user
+        workspace = workspace_find_by_workspace_uuid(
+            workspace_uuid=uuid,
+            who=user,
         )
+        if workspace is None:
+            raise NotFound(_("No workspace found for this UUID"))
+
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email: str = serializer.validated_data["email"]
+        try:
+            add_or_invite_workspace_user(
+                who=user, workspace=workspace, email_or_user=email
+            )
+        except UserAlreadyInvited:
+            raise serializers.ValidationError(
+                {
+                    "email": _(
+                        "User with email {email} has already been invited to "
+                        "this workspace."
+                    ).format(email=email)
+                }
+            )
+        except UserAlreadyAdded:
+            raise serializers.ValidationError(
+                {
+                    "email": _(
+                        "User with email {email} has already been added to "
+                        "this workspace."
+                    ).format(email=email)
+                }
+            )
+        return Response(status=HTTP_201_CREATED)
