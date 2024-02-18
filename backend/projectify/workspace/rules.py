@@ -30,7 +30,7 @@ from projectify.corporate.types import WorkspaceFeatures
 from projectify.user.models import User
 from projectify.workspace.models.const import WorkspaceUserRoles
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.selectors.quota import Resource, workspace_quota_for
+from projectify.workspace.selectors.quota import workspace_quota_for
 from projectify.workspace.selectors.workspace_user import (
     workspace_user_find_for_workspace,
 )
@@ -127,48 +127,48 @@ def belongs_to_trial_workspace(user: User, target: Workspace) -> bool:
     return check_available_features("trial", user, target)
 
 
-def check_trial_conditions(
-    create_what: Resource, workspace: Workspace
-) -> bool:
-    """Return True if for a target type, something can still be created."""
-    quota = workspace_quota_for(resource=create_what, workspace=workspace)
-    return quota.within_quota
-
-
 @rules.predicate
 def within_trial_chat_message_quota(user: User, target: Workspace) -> bool:
     """Return True if a chat message can be created for workspace."""
-    return check_trial_conditions("ChatMessage", target)
+    return workspace_quota_for(
+        resource="ChatMessage", workspace=target
+    ).within_quota
 
 
 @rules.predicate
 def within_trial_label_quota(user: User, target: Workspace) -> bool:
     """Return True if a label can be created for workspace."""
-    return check_trial_conditions("Label", target)
+    return workspace_quota_for(resource="Label", workspace=target).within_quota
 
 
 @rules.predicate
 def within_trial_sub_task_quota(user: User, target: Workspace) -> bool:
     """Return True if a sub task can be created in workspace."""
-    return check_trial_conditions("SubTask", target)
+    return workspace_quota_for(
+        workspace=target, resource="SubTask"
+    ).within_quota
 
 
 @rules.predicate
 def within_trial_task_quota(user: User, target: Workspace) -> bool:
     """Return True if a task can be created in workspace."""
-    return check_trial_conditions("Task", target)
+    return workspace_quota_for(workspace=target, resource="Task").within_quota
 
 
 @rules.predicate
 def within_trial_task_label_quota(user: User, target: Workspace) -> bool:
     """Return True if a task label can be created for a task."""
-    return check_trial_conditions("TaskLabel", target)
+    return workspace_quota_for(
+        workspace=target, resource="TaskLabel"
+    ).within_quota
 
 
 @rules.predicate
 def within_trial_workspace_board_quota(user: User, target: Workspace) -> bool:
     """Return True if a workspace board can be created in workspace."""
-    return check_trial_conditions("WorkspaceBoard", target)
+    return workspace_quota_for(
+        workspace=target, resource="WorkspaceBoard"
+    ).within_quota
 
 
 @rules.predicate
@@ -176,13 +176,17 @@ def within_trial_workspace_board_section_quota(
     user: User, target: Workspace
 ) -> bool:
     """Return True if a section can be created in a workspace."""
-    return check_trial_conditions("WorkspaceBoardSection", target)
+    return workspace_quota_for(
+        workspace=target, resource="WorkspaceBoardSection"
+    ).within_quota
 
 
 @rules.predicate
 def within_trial_workspace_user_quota(user: User, target: Workspace) -> bool:
     """Return True if a workspace user can be added to a workspace."""
-    return check_trial_conditions("WorkspaceUserAndInvite", target)
+    return workspace_quota_for(
+        workspace=target, resource="WorkspaceUserAndInvite"
+    ).within_quota
 
 
 @rules.predicate
@@ -190,7 +194,9 @@ def within_trial_workspace_user_invite_quota(
     user: User, target: Workspace
 ) -> bool:
     """Return True if a workspace user invite can be sent for a workspace."""
-    return check_trial_conditions("WorkspaceUserAndInvite", target)
+    return workspace_quota_for(
+        workspace=target, resource="WorkspaceUserAndInvite"
+    ).within_quota
 
 
 # Workspace
