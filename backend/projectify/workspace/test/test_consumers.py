@@ -199,12 +199,6 @@ async def sub_task(task: Task, user: User) -> SubTask:
 
 
 @database_sync_to_async
-def save_model_instance(model_instance: django_models.Model) -> None:
-    """Save model instance."""
-    model_instance.save()
-
-
-@database_sync_to_async
 def delete_model_instance(model_instance: django_models.Model) -> None:
     """Delete model instance."""
     model_instance.delete()
