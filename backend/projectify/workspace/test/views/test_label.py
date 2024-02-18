@@ -99,7 +99,7 @@ class TestLabelUpdateDelete:
             "workspace:labels:update-delete", args=(str(label.uuid),)
         )
 
-    def test_authenticated_user(
+    def test_updating(
         self,
         rest_user_client: APIClient,
         resource_url: str,
@@ -107,10 +107,11 @@ class TestLabelUpdateDelete:
         workspace_user: WorkspaceUser,
         label: Label,
     ) -> None:
-        """Test as an authenticated user."""
+        """Test updating a label."""
         # Gone up from 7 to 10 after introducing full_clean
         # now 9
-        with django_assert_num_queries(9):
+        # now 8 yay
+        with django_assert_num_queries(8):
             response = rest_user_client.put(
                 resource_url,
                 data={
@@ -133,7 +134,7 @@ class TestLabelUpdateDelete:
         label: Label,
     ) -> None:
         """Test deleting a label."""
-        with django_assert_num_queries(7):
+        with django_assert_num_queries(6):
             response = rest_user_client.delete(resource_url)
             assert response.status_code == HTTP_204_NO_CONTENT, response.data
         assert Label.objects.count() == 0

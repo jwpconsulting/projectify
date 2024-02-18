@@ -204,188 +204,86 @@ rules.add_perm(
     # rules.is_active,
     is_at_least_owner,
 )
-rules.add_perm(
-    "workspace.read_workspace",
-    is_at_least_observer,
-)
-rules.add_perm(
-    "workspace.update_workspace",
-    is_at_least_owner,
-)
-rules.add_perm(
-    "workspace.delete_workspace",
-    is_at_least_owner,
-)
+rules.add_perm("workspace.read_workspace", is_at_least_observer)
+rules.add_perm("workspace.update_workspace", is_at_least_owner)
+rules.add_perm("workspace.delete_workspace", is_at_least_owner)
 
 # Workspace user invite
-# TODO quota rule should only be used for workspace.create_*
-workspace_user_invite_usable = within_workspace_user_invite_quota
 rules.add_perm(
     "workspace.create_workspace_user_invite",
-    is_at_least_owner & workspace_user_invite_usable,
+    is_at_least_owner & within_workspace_user_invite_quota,
 )
-rules.add_perm(
-    "workspace.read_workspace_user_invite",
-    is_at_least_owner & workspace_user_invite_usable,
-)
-rules.add_perm(
-    "workspace.update_workspace_user_invite",
-    is_at_least_owner & workspace_user_invite_usable,
-)
-rules.add_perm(
-    "workspace.delete_workspace_user_invite",
-    is_at_least_owner & workspace_user_invite_usable,
-)
+rules.add_perm("workspace.read_workspace_user_invite", is_at_least_owner)
+rules.add_perm("workspace.update_workspace_user_invite", is_at_least_owner)
+rules.add_perm("workspace.delete_workspace_user_invite", is_at_least_owner)
 
 # Workspace user
-workspace_user_usable = within_workspace_user_quota
 rules.add_perm(
     "workspace.create_workspace_user",
-    is_at_least_owner & workspace_user_usable,
+    is_at_least_owner & within_workspace_user_quota,
 )
-rules.add_perm(
-    "workspace.read_workspace_user",
-    is_at_least_observer & workspace_user_usable,
-)
-rules.add_perm(
-    "workspace.update_workspace_user",
-    is_at_least_owner & workspace_user_usable,
-)
-rules.add_perm(
-    "workspace.delete_workspace_user",
-    is_at_least_owner & workspace_user_usable,
-)
+rules.add_perm("workspace.read_workspace_user", is_at_least_observer)
+rules.add_perm("workspace.update_workspace_user", is_at_least_owner)
+rules.add_perm("workspace.delete_workspace_user", is_at_least_owner)
 
 # Workspace board
-workspace_board_usable = within_workspace_board_quota
 rules.add_perm(
     "workspace.create_workspace_board",
-    is_at_least_maintainer & workspace_board_usable,
+    is_at_least_maintainer & within_workspace_board_quota,
 )
-rules.add_perm(
-    "workspace.read_workspace_board",
-    is_at_least_observer & workspace_board_usable,
-)
-rules.add_perm(
-    "workspace.update_workspace_board",
-    is_at_least_maintainer & workspace_board_usable,
-)
-rules.add_perm(
-    "workspace.delete_workspace_board",
-    is_at_least_maintainer & workspace_board_usable,
-)
+rules.add_perm("workspace.read_workspace_board", is_at_least_observer)
+rules.add_perm("workspace.update_workspace_board", is_at_least_maintainer)
+rules.add_perm("workspace.delete_workspace_board", is_at_least_maintainer)
 
 # Workspace board section
-workspace_board_section_usable = within_workspace_board_section_quota
 rules.add_perm(
     "workspace.create_workspace_board_section",
-    is_at_least_maintainer & workspace_board_section_usable,
+    is_at_least_maintainer & within_workspace_board_section_quota,
+)
+rules.add_perm("workspace.read_workspace_board_section", is_at_least_observer)
+rules.add_perm(
+    "workspace.update_workspace_board_section", is_at_least_maintainer
 )
 rules.add_perm(
-    "workspace.read_workspace_board_section",
-    is_at_least_observer & workspace_board_section_usable,
-)
-rules.add_perm(
-    "workspace.update_workspace_board_section",
-    is_at_least_maintainer & workspace_board_section_usable,
-)
-rules.add_perm(
-    "workspace.delete_workspace_board_section",
-    is_at_least_maintainer & workspace_board_section_usable,
+    "workspace.delete_workspace_board_section", is_at_least_maintainer
 )
 
 # Task
-task_usable = within_task_quota
-rules.add_perm(
-    "workspace.create_task",
-    is_at_least_member & task_usable,
-)
-rules.add_perm(
-    "workspace.read_task",
-    is_at_least_observer & task_usable,
-)
-rules.add_perm(
-    "workspace.update_task",
-    is_at_least_member & task_usable,
-)
-rules.add_perm(
-    "workspace.delete_task",
-    is_at_least_maintainer & task_usable,
-)
+rules.add_perm("workspace.create_task", is_at_least_member & within_task_quota)
+rules.add_perm("workspace.read_task", is_at_least_observer)
+rules.add_perm("workspace.update_task", is_at_least_member)
+rules.add_perm("workspace.delete_task", is_at_least_maintainer)
 
 # Label
-label_usable = within_label_quota
 rules.add_perm(
-    "workspace.create_label",
-    is_at_least_maintainer & label_usable,
+    "workspace.create_label", is_at_least_maintainer & within_label_quota
 )
-rules.add_perm(
-    "workspace.read_label",
-    is_at_least_observer & label_usable,
-)
-rules.add_perm(
-    "workspace.update_label",
-    is_at_least_maintainer & label_usable,
-)
-rules.add_perm(
-    "workspace.delete_label",
-    is_at_least_maintainer & label_usable,
-)
+rules.add_perm("workspace.read_label", is_at_least_observer)
+rules.add_perm("workspace.update_label", is_at_least_maintainer)
+rules.add_perm("workspace.delete_label", is_at_least_maintainer)
 
 # Task label
-task_label_usable = within_task_label_quota
 rules.add_perm(
-    "workspace.create_task_label",
-    is_at_least_member & task_label_usable,
+    "workspace.create_task_label", is_at_least_member & within_task_label_quota
 )
-rules.add_perm(
-    "workspace.read_task_label",
-    is_at_least_observer & task_label_usable,
-)
-rules.add_perm(
-    "workspace.update_task_label",
-    is_at_least_member & task_label_usable,
-)
-rules.add_perm(
-    "workspace.delete_task_label",
-    is_at_least_member & task_label_usable,
-)
+rules.add_perm("workspace.read_task_label", is_at_least_observer)
+rules.add_perm("workspace.update_task_label", is_at_least_member)
+rules.add_perm("workspace.delete_task_label", is_at_least_member)
 
 
 # Sub task
-sub_task_usable = within_sub_task_quota
 rules.add_perm(
-    "workspace.create_sub_task",
-    is_at_least_member & sub_task_usable,
+    "workspace.create_sub_task", is_at_least_member & within_sub_task_quota
 )
-rules.add_perm(
-    "workspace.read_sub_task",
-    is_at_least_observer & sub_task_usable,
-)
-rules.add_perm(
-    "workspace.update_sub_task",
-    is_at_least_member & sub_task_usable,
-)
-rules.add_perm(
-    "workspace.delete_sub_task",
-    is_at_least_member & sub_task_usable,
-)
+rules.add_perm("workspace.read_sub_task", is_at_least_observer)
+rules.add_perm("workspace.update_sub_task", is_at_least_member)
+rules.add_perm("workspace.delete_sub_task", is_at_least_member)
 
 # Chat message
-chat_message_usable = within_chat_message_quota
 rules.add_perm(
     "workspace.create_chat_message",
-    is_at_least_member & chat_message_usable,
+    is_at_least_member & within_chat_message_quota,
 )
-rules.add_perm(
-    "workspace.read_chat_message",
-    is_at_least_observer & chat_message_usable,
-)
-rules.add_perm(
-    "workspace.update_chat_message",
-    is_at_least_member & chat_message_usable,
-)
-rules.add_perm(
-    "workspace.delete_chat_message",
-    is_at_least_maintainer & chat_message_usable,
-)
+rules.add_perm("workspace.read_chat_message", is_at_least_observer)
+rules.add_perm("workspace.update_chat_message", is_at_least_member)
+rules.add_perm("workspace.delete_chat_message", is_at_least_maintainer)

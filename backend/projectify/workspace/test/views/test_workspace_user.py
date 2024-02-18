@@ -65,7 +65,7 @@ class TestWorkspaceUserReadUpdateDelete:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test reading a user."""
-        with django_assert_num_queries(7):
+        with django_assert_num_queries(6):
             response = rest_user_client.put(
                 resource_url,
                 data={
