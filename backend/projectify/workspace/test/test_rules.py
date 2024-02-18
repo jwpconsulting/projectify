@@ -225,7 +225,7 @@ class TestTrialRules:
         We go down to allowing one or two of each.
         """
         monkeypatch.setattr(
-            "projectify.workspace.rules.trial_conditions",
+            "projectify.workspace.selectors.quota.trial_conditions",
             {
                 "ChatMessage": 1,
                 "Label": 1,

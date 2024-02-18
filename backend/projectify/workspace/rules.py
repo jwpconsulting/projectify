@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2022, 2023 JWP Consulting GK
+# Copyright (C) 2022-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -20,10 +20,6 @@ Workspace app rules.
 The order of rules follows the ordering of models.
 """
 import logging
-from typing import (
-    Literal,
-    Union,
-)
 
 import rules
 
@@ -32,16 +28,9 @@ from projectify.corporate.services.customer import (
 )
 from projectify.corporate.types import WorkspaceFeatures
 from projectify.user.models import User
-from projectify.workspace.models.chat_message import ChatMessage
 from projectify.workspace.models.const import WorkspaceUserRoles
-from projectify.workspace.models.label import Label
-from projectify.workspace.models.sub_task import SubTask
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.task_label import TaskLabel
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_board_section import (
-    WorkspaceBoardSection,
-)
+from projectify.workspace.selectors.quota import Resource, workspace_quota_for
 from projectify.workspace.selectors.workspace_user import (
     workspace_user_find_for_workspace,
 )
@@ -138,98 +127,12 @@ def belongs_to_trial_workspace(user: User, target: Workspace) -> bool:
     return check_available_features("trial", user, target)
 
 
-CreateWhat = Literal[
-    "ChatMessage",
-    "Label",
-    "SubTask",
-    "Task",
-    "TaskLabel",
-    "WorkspaceBoard",
-    "WorkspaceBoardSection",
-    "WorkspaceUserAndInvite",
-]
-
-
-Limitation = Union[None, int]
-trial_conditions: dict[CreateWhat, Limitation] = {
-    "ChatMessage": 0,
-    "Label": 10,
-    "SubTask": 1000,
-    "Task": 1000,
-    "TaskLabel": None,
-    "WorkspaceBoard": 10,
-    "WorkspaceBoardSection": 100,
-    "WorkspaceUserAndInvite": 2,
-}
-
-
-def check_trial_conditions(create_what: CreateWhat, target: Workspace) -> bool:
-    """
-    Return True if for a target type, something can still be created.
-
-    Limitations for trial plan:
-    Be able to create 10 boards and up to 100 sections across all boards
-    Be able to create 1000 tasks in that workspace
-    Be able to create 10 * 100 sub tasks
-    Be able to add one more user, therefore that workspace being limited to having
-    2 workspace users in total.
-    Be able to create 10 labels, assign them to all tasks
-    Limitations for a trial workspace are
-    - ChatMessage: 0 chat messages,
-    - Label: 10 labels
-    - SubTask: 1000 sub tasks,
-    - Task: 1000 tasks,
-    - TaskLabel: unlimited,
-    - WorkspaceBoard: 10,
-    - WorkspaceBoardSection: 100,
-    - WorkspaceUser + WorkspaceUserInivite(unredeemed): 2
-    """
-    workspace = target
-    limit = trial_conditions[create_what]
-    # Short circuit
-    if limit is None:
-        return True
-    match create_what:
-        case "ChatMessage":
-            # XXX At the moment, chat messages are not supported
-            return (
-                ChatMessage.objects.filter(task__workspace=workspace).count()
-                < limit
-            )
-        case "Label":
-            return Label.objects.filter(workspace=workspace).count() < limit
-        case "SubTask":
-            return (
-                SubTask.objects.filter(task__workspace=workspace).count()
-                < limit
-            )
-        case "Task":
-            return (
-                Task.objects.filter(
-                    workspace_board_section__workspace_board__workspace=workspace
-                ).count()
-                < limit
-            )
-        case "TaskLabel":
-            return (
-                TaskLabel.objects.filter(label__workspace=workspace).count()
-                < limit
-            )
-        case "WorkspaceBoard":
-            return workspace.workspaceboard_set.count() < limit
-        case "WorkspaceBoardSection":
-            return (
-                WorkspaceBoardSection.objects.filter(
-                    workspace_board__workspace=workspace
-                ).count()
-                < limit
-            )
-        case "WorkspaceUserAndInvite":
-            user_count = workspace.users.count()
-            invite_count = workspace.workspaceuserinvite_set.filter(
-                redeemed=False
-            ).count()
-            return user_count + invite_count < limit
+def check_trial_conditions(
+    create_what: Resource, workspace: Workspace
+) -> bool:
+    """Return True if for a target type, something can still be created."""
+    quota = workspace_quota_for(resource=create_what, workspace=workspace)
+    return quota.within_quota
 
 
 @rules.predicate
