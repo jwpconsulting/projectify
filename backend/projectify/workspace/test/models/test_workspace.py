@@ -26,17 +26,16 @@ import psycopg.errors
 import pytest
 
 from projectify.user.models import User
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_user import WorkspaceUser
-from projectify.workspace.services.workspace import (
+
+from ...models.const import WorkspaceUserRoles
+from ...models.task import Task
+from ...models.workspace import Workspace
+from ...models.workspace_user import WorkspaceUser
+from ...services.workspace import (
     workspace_add_user,
 )
-from projectify.workspace.services.workspace_board import (
+from ...services.workspace_board import (
     workspace_board_create,
-)
-
-from ... import (
-    models,
 )
 
 
@@ -49,24 +48,24 @@ class TestWorkspaceManager:
         user: AbstractUser,
         # This workplace shall be retrievable by the user
         workspace: Workspace,
-        workspace_user: models.WorkspaceUser,
+        workspace_user: WorkspaceUser,
         # This workpace will not be retrieved since the user does not have a
         # workspace user for it
         unrelated_workspace_user: AbstractUser,
         unrelated_workspace: Workspace,
     ) -> None:
         """Test getting workspaces for user."""
-        assert list(models.Workspace.objects.get_for_user(user)) == [workspace]
+        assert list(Workspace.objects.get_for_user(user)) == [workspace]
 
     def test_filter_for_user_and_uuid(
         self,
-        workspace_user: models.WorkspaceUser,
-        workspace: models.Workspace,
+        workspace_user: WorkspaceUser,
+        workspace: Workspace,
         user: AbstractUser,
     ) -> None:
         """Test getting workspace for user and uuid."""
         assert (
-            models.Workspace.objects.filter_for_user_and_uuid(
+            Workspace.objects.filter_for_user_and_uuid(
                 user,
                 workspace.uuid,
             ).get()
@@ -78,13 +77,13 @@ class TestWorkspaceManager:
 class TestWorkspace:
     """Test Workspace."""
 
-    def test_factory(self, workspace: models.Workspace) -> None:
+    def test_factory(self, workspace: Workspace) -> None:
         """Assert that the creates."""
         assert workspace
 
     def test_add_workspace_board(
         self,
-        workspace: models.Workspace,
+        workspace: Workspace,
         user: User,
         workspace_user: WorkspaceUser,
     ) -> None:
@@ -111,9 +110,7 @@ class TestWorkspace:
         ]
 
     # TODO these tests should be in workspace service tests
-    def test_add_user(
-        self, workspace: models.Workspace, other_user: User
-    ) -> None:
+    def test_add_user(self, workspace: Workspace, other_user: User) -> None:
         """Test adding a user."""
         count = workspace.users.count()
         workspace_add_user(workspace=workspace, user=other_user)
@@ -121,8 +118,8 @@ class TestWorkspace:
 
     def test_add_user_twice(
         self,
-        workspace: models.Workspace,
-        workspace_user: models.WorkspaceUser,
+        workspace: Workspace,
+        workspace_user: WorkspaceUser,
         other_user: AbstractUser,
     ) -> None:
         """Test that adding a user twice won't work."""
@@ -132,8 +129,8 @@ class TestWorkspace:
 
     def test_remove_user(
         self,
-        workspace: models.Workspace,
-        workspace_user: models.WorkspaceUser,
+        workspace: Workspace,
+        workspace_user: WorkspaceUser,
         user: AbstractUser,
     ) -> None:
         """Test remove_user."""
@@ -143,9 +140,9 @@ class TestWorkspace:
 
     def test_remove_user_when_assigned(
         self,
-        workspace: models.Workspace,
-        task: models.Task,
-        workspace_user: models.WorkspaceUser,
+        workspace: Workspace,
+        task: Task,
+        workspace_user: WorkspaceUser,
         user: AbstractUser,
     ) -> None:
         """Assert that the user is removed when removing the workspace user."""
@@ -156,9 +153,7 @@ class TestWorkspace:
         task.refresh_from_db()
         assert task.assignee is None
 
-    def test_increment_highest_task_number(
-        self, workspace: models.Workspace
-    ) -> None:
+    def test_increment_highest_task_number(self, workspace: Workspace) -> None:
         """Test set_highest_task_number."""
         num = workspace.highest_task_number
         new = workspace.increment_highest_task_number()
@@ -167,7 +162,7 @@ class TestWorkspace:
         assert workspace.highest_task_number == new
 
     def test_wrong_highest_task_number(
-        self, workspace: models.Workspace, task: models.Task
+        self, workspace: Workspace, task: Task
     ) -> None:
         """Test db trigger when highest_task_number < highest child task."""
         # Changed from db.InternalError
@@ -178,30 +173,28 @@ class TestWorkspace:
         assert isinstance(e.value.__cause__, psycopg.errors.RaiseException)
 
     def test_has_at_least_role(
-        self, workspace: models.Workspace, workspace_user: models.WorkspaceUser
+        self, workspace: Workspace, workspace_user: WorkspaceUser
     ) -> None:
         """Test has_at_least_role."""
         assert workspace.has_at_least_role(
             workspace_user,
-            models.WorkspaceUserRoles.OWNER,
+            WorkspaceUserRoles.OWNER,
         )
-        workspace_user.assign_role(models.WorkspaceUserRoles.OBSERVER)
+        workspace_user.assign_role(WorkspaceUserRoles.OBSERVER)
         assert workspace.has_at_least_role(
             workspace_user,
-            models.WorkspaceUserRoles.OBSERVER,
+            WorkspaceUserRoles.OBSERVER,
         )
         assert not workspace.has_at_least_role(
             workspace_user,
-            models.WorkspaceUserRoles.OWNER,
+            WorkspaceUserRoles.OWNER,
         )
 
     def test_has_at_least_role_unrelated_workspace(
-        self,
-        unrelated_workspace: models.Workspace,
-        workspace_user: models.WorkspaceUser,
+        self, unrelated_workspace: Workspace, workspace_user: WorkspaceUser
     ) -> None:
         """Test has_at_least_role with a different workspace."""
         assert not unrelated_workspace.has_at_least_role(
             workspace_user,
-            models.WorkspaceUserRoles.OBSERVER,
+            WorkspaceUserRoles.OBSERVER,
         )
