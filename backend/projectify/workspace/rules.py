@@ -19,25 +19,24 @@ Workspace app rules.
 
 The order of rules follows the ordering of models.
 """
+from functools import partial
+
 import rules
 
 from projectify.user.models import User
-from projectify.workspace.models.const import WorkspaceUserRoles
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.selectors.quota import workspace_quota_for
-from projectify.workspace.selectors.workspace_user import (
-    workspace_user_find_for_workspace,
-)
+
+from .models.const import WorkspaceUserRoles
+from .models.workspace import Workspace
+from .selectors.quota import Resource, workspace_quota_for
+from .selectors.workspace_user import workspace_user_find_for_workspace
 
 
 def check_permissions_for(
-    role: WorkspaceUserRoles, user: User, target: Workspace
+    role: WorkspaceUserRoles, user: User, workspace: Workspace
 ) -> bool:
     """Check whether a user has required role for target."""
-    workspace = target
     workspace_user = workspace_user_find_for_workspace(
-        workspace=workspace,
-        user=user,
+        workspace=workspace, user=user
     )
     if workspace_user is None:
         return False
@@ -45,99 +44,60 @@ def check_permissions_for(
 
 
 # Role predicates
+# ---------------
 # Observer < Member < Maintainer < Owner
-@rules.predicate
-def is_at_least_observer(user: User, target: Workspace) -> bool:
-    """Return True if a user is at least an observer of workspace parent."""
-    return check_permissions_for(WorkspaceUserRoles.OBSERVER, user, target)
+is_at_least_observer = rules.predicate(
+    partial(check_permissions_for, WorkspaceUserRoles.OBSERVER)
+)
+is_at_least_member = rules.predicate(
+    partial(check_permissions_for, WorkspaceUserRoles.MEMBER)
+)
+is_at_least_maintainer = rules.predicate(
+    partial(check_permissions_for, WorkspaceUserRoles.MAINTAINER)
+)
+is_at_least_owner = rules.predicate(
+    partial(check_permissions_for, WorkspaceUserRoles.OWNER)
+)
 
 
-@rules.predicate
-def is_at_least_member(user: User, target: Workspace) -> bool:
-    """Return True if a user is at least a member of workspace parent."""
-    return check_permissions_for(WorkspaceUserRoles.MEMBER, user, target)
-
-
-@rules.predicate
-def is_at_least_maintainer(user: User, target: Workspace) -> bool:
-    """Return True if a user is at least a maintainer of workspace parent."""
-    return check_permissions_for(WorkspaceUserRoles.MAINTAINER, user, target)
-
-
-@rules.predicate
-def is_at_least_owner(user: User, target: Workspace) -> bool:
-    """Return True if a user is at least an owner of workspace parent."""
-    return check_permissions_for(WorkspaceUserRoles.OWNER, user, target)
-
-
-@rules.predicate
-def within_chat_message_quota(user: User, target: Workspace) -> bool:
-    """Return True if a chat message can be created for workspace."""
-    return workspace_quota_for(
-        resource="ChatMessage", workspace=target
-    ).within_quota
-
-
-@rules.predicate
-def within_label_quota(user: User, target: Workspace) -> bool:
-    """Return True if a label can be created for workspace."""
-    return workspace_quota_for(resource="Label", workspace=target).within_quota
-
-
-@rules.predicate
-def within_sub_task_quota(user: User, target: Workspace) -> bool:
-    """Return True if a sub task can be created in workspace."""
-    return workspace_quota_for(
-        workspace=target, resource="SubTask"
-    ).within_quota
-
-
-@rules.predicate
-def within_task_quota(user: User, target: Workspace) -> bool:
-    """Return True if a task can be created in workspace."""
-    return workspace_quota_for(workspace=target, resource="Task").within_quota
-
-
-@rules.predicate
-def within_task_label_quota(user: User, target: Workspace) -> bool:
-    """Return True if a task label can be created for a task."""
-    return workspace_quota_for(
-        workspace=target, resource="TaskLabel"
-    ).within_quota
-
-
-@rules.predicate
-def within_workspace_board_quota(user: User, target: Workspace) -> bool:
-    """Return True if a workspace board can be created in workspace."""
-    return workspace_quota_for(
-        workspace=target, resource="WorkspaceBoard"
-    ).within_quota
-
-
-@rules.predicate
-def within_workspace_board_section_quota(
-    user: User, target: Workspace
+def within_quota(
+    resource: Resource, _user: User, workspace: Workspace
 ) -> bool:
-    """Return True if a section can be created in a workspace."""
+    """Extract .within_quota from workspace_quota_for."""
     return workspace_quota_for(
-        workspace=target, resource="WorkspaceBoardSection"
+        resource=resource, workspace=workspace
     ).within_quota
 
 
-@rules.predicate
-def within_workspace_user_quota(user: User, target: Workspace) -> bool:
-    """Return True if a workspace user can be added to a workspace."""
-    return workspace_quota_for(
-        workspace=target, resource="WorkspaceUserAndInvite"
-    ).within_quota
-
-
-@rules.predicate
-def within_workspace_user_invite_quota(user: User, target: Workspace) -> bool:
-    """Return True if a workspace user invite can be sent for a workspace."""
-    return workspace_quota_for(
-        workspace=target, resource="WorkspaceUserAndInvite"
-    ).within_quota
+# Quota predicates
+# ----------------
+# Return True if a chat message can be created for workspace
+within_chat_message_quota = rules.predicate(
+    partial(within_quota, "ChatMessage")
+)
+# Return True if a label can be created for workspace
+within_label_quota = rules.predicate(partial(within_quota, "Label"))
+# Return True if a sub task can be created in workspace
+within_sub_task_quota = rules.predicate(partial(within_quota, "SubTask"))
+# Return True if a task can be created in workspace
+within_task_quota = rules.predicate(partial(within_quota, "Task"))
+# Return True if a task label can be created for a task
+within_task_label_quota = rules.predicate(partial(within_quota, "TaskLabel"))
+# Return True if a workspace board can be created in workspace
+within_workspace_board_quota = rules.predicate(
+    partial(within_quota, "WorkspaceBoard")
+)
+# Return True if a section can be created in a workspace
+within_workspace_board_section_quota = rules.predicate(
+    partial(within_quota, "WorkspaceBoardSection")
+)
+# Return True if a workspace user can be added to a workspace
+# The two following use the same quota
+within_workspace_user_quota = rules.predicate(
+    partial(within_quota, "WorkspaceUserAndInvite")
+)
+# Return True if a workspace user invite can be sent for a workspace
+within_workspace_user_invite_quota = within_workspace_user_quota
 
 
 # Workspace
