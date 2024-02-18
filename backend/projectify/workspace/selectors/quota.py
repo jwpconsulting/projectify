@@ -38,6 +38,9 @@ Limitations for a trial workspace are
 from dataclasses import dataclass
 from typing import Literal, Optional, Union
 
+from projectify.corporate.services.customer import (
+    customer_check_active_for_workspace,
+)
 from projectify.workspace.models.chat_message import ChatMessage
 from projectify.workspace.models.label import Label
 from projectify.workspace.models.sub_task import SubTask
@@ -73,11 +76,12 @@ trial_conditions: dict[Resource, Limitation] = {
 }
 
 
-@dataclass
+@dataclass(frozen=True, kw_only=True)
 class Quota:
     """Store quota for a resource, including the maximum amount."""
 
-    current: int
+    # None means irrelevant. No limit means counting unnecessary.
+    current: Optional[int]
     # None means unlimited
     limit: Optional[int]
     within_quota: bool
@@ -85,7 +89,17 @@ class Quota:
 
 def workspace_quota_for(*, resource: Resource, workspace: Workspace) -> Quota:
     """Return the quota within a workspace for a given resource."""
-    limit = trial_conditions[resource]
+    limit: Optional[int]
+    match customer_check_active_for_workspace(workspace=workspace):
+        case "full":
+            limit = None
+        case "trial":
+            limit = trial_conditions[resource]
+        case "inactive":
+            limit = 0
+    # Short circuit for no limit
+    if limit is None:
+        return Quota(current=None, limit=None, within_quota=True)
     current: int
     match resource:
         case "ChatMessage":
@@ -117,5 +131,4 @@ def workspace_quota_for(*, resource: Resource, workspace: Workspace) -> Quota:
                 redeemed=False
             ).count()
             current = user_count + invite_count
-    within = current < limit if limit is not None else True
-    return Quota(current, limit, within)
+    return Quota(current=current, limit=limit, within_quota=current < limit)
