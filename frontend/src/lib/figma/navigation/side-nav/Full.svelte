@@ -22,6 +22,7 @@
     import FilterWorkspaceUsers from "$lib/figma/navigation/side-nav/FilterWorkspaceUsers.svelte";
     import WorkspaceBoards from "$lib/figma/navigation/side-nav/WorkspaceBoards.svelte";
     import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { showFilters } from "$lib/stores/dashboard";
     import type { WorkspaceDetail } from "$lib/types/workspace";
 
@@ -32,6 +33,31 @@
 <nav class="flex flex-col py-4">
     <WorkspaceSelector {workspace} open={true} />
     {#if workspace}
+        {#if workspace.quota.workspace_status === "trial"}
+            <p class="px-4">
+                <strong>
+                    {$_("dashboard.side-nav.quota.status.trial.label")}
+                </strong>
+                <Anchor
+                    label={$_("dashboard.side-nav.quota.status.trial.help")}
+                    href="/help/billing"
+                    size="normal"
+                    openBlank
+                />
+            </p>
+        {:else if workspace.quota.workspace_status === "inactive"}
+            <p class="px-4">
+                <strong>
+                    {$_("dashboard.side-nav.quota.status.inactive.label")}
+                </strong>
+                <Anchor
+                    label={$_("dashboard.side-nav.quota.status.inactive.help")}
+                    href="/help/billing"
+                    size="normal"
+                    openBlank
+                />
+            </p>
+        {/if}
         <div class="flex shrink flex-col overflow-auto">
             <WorkspaceBoards {workspace} />
             {#if $showFilters}
