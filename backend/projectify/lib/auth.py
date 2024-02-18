@@ -32,6 +32,7 @@ def validate_perm(
     perm: str,
     who: User,
     where: Optional[Workspace] = None,
+    raise_exception: bool = True,
 ) -> bool:
     """
     Verify if 'who' has permission 'perm' to do in Workspace 'where'.
@@ -41,4 +42,6 @@ def validate_perm(
     if who.has_perm(perm, where):
         return True
     logger.warning(f"'{who}' did not have permission '{perm}' in '{where}'")
-    raise PermissionDenied(f"'{who}' can not '{perm}' in '{where}'")
+    if raise_exception:
+        raise PermissionDenied(f"'{who}' can not '{perm}' in '{where}'")
+    return False
