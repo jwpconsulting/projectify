@@ -17,13 +17,9 @@
 """Workspace CRUD views."""
 from uuid import UUID
 
-from django.shortcuts import (
-    get_object_or_404,
-)
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import (
-    generics,
     parsers,
     serializers,
     views,
@@ -42,9 +38,6 @@ from ..exceptions import (
     UserAlreadyInvited,
 )
 from ..models import Workspace
-from ..models.workspace import (
-    WorkspaceQuerySet,
-)
 from ..selectors.workspace import (
     WorkspaceDetailQuerySet,
     workspace_find_by_workspace_uuid,
@@ -92,22 +85,15 @@ class WorkspaceCreate(views.APIView):
 
 
 # Read
-class WorkspaceList(
-    generics.ListAPIView[
-        Workspace,
-        WorkspaceQuerySet,
-        WorkspaceBaseSerializer,
-    ]
-):
+class WorkspaceList(views.APIView):
     """List all workspaces for a user."""
 
-    queryset = Workspace.objects.all()
-    serializer_class = WorkspaceBaseSerializer
-
-    def get_queryset(self) -> WorkspaceQuerySet:
-        """Filter by user."""
-        user = self.request.user
-        return self.queryset.get_for_user(user)
+    def get(self, request: Request) -> Response:
+        """Handle GET."""
+        # TODO this should be a selector
+        workspaces = Workspace.objects.all().get_for_user(request.user)
+        serializer = WorkspaceBaseSerializer(instance=workspaces, many=True)
+        return Response(status=HTTP_200_OK, data=serializer.data)
 
 
 # Read + Update
@@ -167,12 +153,14 @@ class WorkspacePictureUploadView(views.APIView):
 
     def post(self, request: Request, uuid: UUID) -> Response:
         """Handle POST."""
-        user = request.user
-        qs = Workspace.objects.filter_for_user_and_uuid(
-            user,
-            uuid,
+        workspace = workspace_find_by_workspace_uuid(
+            who=request.user,
+            workspace_uuid=uuid,
         )
-        workspace = get_object_or_404(qs)
+        if workspace is None:
+            raise NotFound(
+                _("Could not find workspace with UUID for picture upload")
+            )
 
         file_obj = request.data.get("file")
         if file_obj is None:
