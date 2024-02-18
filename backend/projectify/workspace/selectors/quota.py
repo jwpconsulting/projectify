@@ -35,7 +35,7 @@ Limitations for a trial workspace are
 - WorkspaceBoardSection: 100,
 - WorkspaceUser + WorkspaceUserInivite(unredeemed): 2
 """
-from dataclasses import dataclass
+from functools import partial
 from typing import Literal, Optional, Union
 
 from projectify.corporate.services.customer import (
@@ -50,6 +50,7 @@ from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.workspace_board_section import (
     WorkspaceBoardSection,
 )
+from projectify.workspace.types import Quota, WorkspaceQuota
 
 Resource = Literal[
     "ChatMessage",
@@ -74,17 +75,6 @@ trial_conditions: dict[Resource, Limitation] = {
     "WorkspaceBoardSection": 100,
     "WorkspaceUserAndInvite": 2,
 }
-
-
-@dataclass(frozen=True, kw_only=True)
-class Quota:
-    """Store quota for a resource, including the maximum amount."""
-
-    # None means irrelevant. No limit means counting unnecessary.
-    current: Optional[int]
-    # None means unlimited
-    limit: Optional[int]
-    can_create_more: bool
 
 
 def workspace_quota_for(*, resource: Resource, workspace: Workspace) -> Quota:
@@ -131,3 +121,21 @@ def workspace_quota_for(*, resource: Resource, workspace: Workspace) -> Quota:
             ).count()
             current = user_count + invite_count
     return Quota(current=current, limit=limit, can_create_more=current < limit)
+
+
+def workspace_get_all_quotas(workspace: Workspace) -> WorkspaceQuota:
+    """Calculate all quotas for a workspace. Expensive calculation."""
+    mk = partial(workspace_quota_for, workspace=workspace)
+    return WorkspaceQuota(
+        workspace_status=customer_check_active_for_workspace(
+            workspace=workspace
+        ),
+        chat_messages=mk(resource="ChatMessage"),
+        labels=mk(resource="Label"),
+        sub_tasks=mk(resource="SubTask"),
+        tasks=mk(resource="Task"),
+        task_labels=mk(resource="TaskLabel"),
+        workspace_boards=mk(resource="WorkspaceBoard"),
+        workspace_board_sections=mk(resource="WorkspaceBoardSection"),
+        workspace_users_and_invites=mk(resource="WorkspaceUserAndInvite"),
+    )

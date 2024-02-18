@@ -33,6 +33,8 @@ from rest_framework.response import (
 )
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 
+from projectify.workspace.selectors.quota import workspace_get_all_quotas
+
 from ..exceptions import (
     UserAlreadyAdded,
     UserAlreadyInvited,
@@ -109,6 +111,7 @@ class WorkspaceReadUpdate(views.APIView):
         )
         if workspace is None:
             raise NotFound(_("Could not find workspace with this UUID"))
+        workspace.quota = workspace_get_all_quotas(workspace)
         serializer = WorkspaceDetailSerializer(instance=workspace)
         return Response(status=HTTP_200_OK, data=serializer.data)
 

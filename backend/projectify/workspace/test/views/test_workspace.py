@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Test workspace CRUD views."""
+import unittest.mock
+
 from django.contrib.auth.models import (
     AbstractBaseUser,
     AbstractUser,
@@ -35,6 +37,7 @@ from rest_framework.test import (
     APIClient,
 )
 
+from projectify.corporate.services.customer import customer_cancel_subscription
 from pytest_types import (
     DjangoAssertNumQueries,
     Headers,
@@ -128,10 +131,89 @@ class TestWorkspaceReadUpdate:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can GET this view this while being logged in."""
-        with django_assert_num_queries(6):
+        with django_assert_num_queries(7):
             response = user_client.get(resource_url)
         assert response.status_code == 200, response.content
         assert len(response.json()["workspace_boards"]) == 1
+
+    def test_get_trial(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        workspace: models.Workspace,
+        workspace_user: models.WorkspaceUser,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Assert that trial limits are annotated correctly."""
+        customer_cancel_subscription(customer=workspace.customer)
+        with django_assert_num_queries(12):
+            response = rest_user_client.get(resource_url)
+        assert response.status_code == 200, response.data
+        assert response.data == {
+            "created": unittest.mock.ANY,
+            "modified": unittest.mock.ANY,
+            "title": workspace.title,
+            "description": workspace.description,
+            "uuid": str(workspace.uuid),
+            "picture": None,
+            "workspace_users": [
+                {
+                    # Thx internet
+                    # https://stackoverflow.com/questions/18064610/ignoring-an-element-from-a-dict-when-asserting-in-pytest/37680581#37680581
+                    "created": unittest.mock.ANY,
+                    "modified": unittest.mock.ANY,
+                    "user": {
+                        "email": workspace_user.user.email,
+                        "preferred_name": workspace_user.user.preferred_name,
+                        "profile_picture": None,
+                    },
+                    "uuid": str(workspace_user.uuid),
+                    "role": "OWNER",
+                    "job_title": None,
+                }
+            ],
+            "workspace_boards": [],
+            "labels": [],
+            "quota": {
+                "workspace_status": "trial",
+                "chat_messages": {
+                    "current": 0,
+                    "limit": 0,
+                    "can_create_more": False,
+                },
+                "labels": {"current": 0, "limit": 10, "can_create_more": True},
+                "sub_tasks": {
+                    "current": 0,
+                    "limit": 1000,
+                    "can_create_more": True,
+                },
+                "tasks": {
+                    "current": 0,
+                    "limit": 1000,
+                    "can_create_more": True,
+                },
+                "task_labels": {
+                    "current": None,
+                    "limit": None,
+                    "can_create_more": True,
+                },
+                "workspace_boards": {
+                    "current": 0,
+                    "limit": 10,
+                    "can_create_more": True,
+                },
+                "workspace_board_sections": {
+                    "current": 0,
+                    "limit": 100,
+                    "can_create_more": True,
+                },
+                "workspace_users_and_invites": {
+                    "current": 1,
+                    "limit": 2,
+                    "can_create_more": True,
+                },
+            },
+        }
 
     def test_updating(
         self,

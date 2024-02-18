@@ -15,11 +15,34 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Workspace serializers."""
-
+from rest_framework import serializers
 
 from . import (
     base,
 )
+
+
+class SingleQuotaSerializer(serializers.Serializer):
+    """Serializer a single Quota dataclass."""
+
+    current = serializers.IntegerField(required=False)
+    limit = serializers.IntegerField(required=False)
+    can_create_more = serializers.BooleanField()
+
+
+class WorkspaceQuotaSerializer(serializers.Serializer):
+    """Serializer quota."""
+
+    # full | trial | inactive
+    workspace_status = serializers.CharField()
+    chat_messages = SingleQuotaSerializer()
+    labels = SingleQuotaSerializer()
+    sub_tasks = SingleQuotaSerializer()
+    tasks = SingleQuotaSerializer()
+    task_labels = SingleQuotaSerializer()
+    workspace_boards = SingleQuotaSerializer()
+    workspace_board_sections = SingleQuotaSerializer()
+    workspace_users_and_invites = SingleQuotaSerializer()
 
 
 class WorkspaceDetailSerializer(base.WorkspaceBaseSerializer):
@@ -39,6 +62,7 @@ class WorkspaceDetailSerializer(base.WorkspaceBaseSerializer):
     labels = base.LabelBaseSerializer(
         read_only=True, many=True, source="label_set"
     )
+    quota = WorkspaceQuotaSerializer(required=False)
 
     class Meta(base.WorkspaceBaseSerializer.Meta):
         """Meta."""
@@ -48,4 +72,5 @@ class WorkspaceDetailSerializer(base.WorkspaceBaseSerializer):
             "workspace_users",
             "workspace_boards",
             "labels",
+            "quota",
         )
