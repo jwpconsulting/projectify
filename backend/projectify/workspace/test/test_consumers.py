@@ -389,18 +389,12 @@ class TestWorkspaceBoard:
             workspace_board=workspace_board,
             archived=True,
         )
-        assert await expect_message(
-            workspace_board_communicator, workspace_board
-        )
         assert await expect_message(workspace_communicator, workspace)
 
         # Delete
         await database_sync_to_async(workspace_board_delete)(
             who=user,
             workspace_board=workspace_board,
-        )
-        assert await expect_message(
-            workspace_board_communicator, workspace_board
         )
         assert await expect_message(workspace_communicator, workspace)
 
@@ -569,7 +563,6 @@ class TestTaskConsumer:
         assert await expect_message(
             workspace_board_communicator, workspace_board
         )
-        assert await expect_message(task_communicator, task)
 
         await clean_up_communicator(workspace_board_communicator)
         # Ideally, a task consumer will disconnect when a task is deleted

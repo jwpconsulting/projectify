@@ -188,6 +188,11 @@ class WorkspaceBoardConsumer(BaseConsumer):
             workspace_board_uuid=self.uuid,
             qs=WorkspaceBoardDetailQuerySet,
         )
+
+        if workspace_board is None:
+            self.disconnect(close_code=CODE_OBJECT_DISAPPEARED)
+            return
+
         serialized = serialize(
             WorkspaceBoardDetailSerializer, workspace_board, event
         )
@@ -211,5 +216,10 @@ class TaskConsumer(BaseConsumer):
         task = task_find_by_task_uuid(
             who=self.user, task_uuid=self.uuid, qs=TaskDetailQuerySet
         )
+
+        if task is None:
+            self.disconnect(close_code=CODE_OBJECT_DISAPPEARED)
+            return
+
         serialized = serialize(TaskDetailSerializer, task, event)
         self.send_json(serialized)
