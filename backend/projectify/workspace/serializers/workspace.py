@@ -15,33 +15,34 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Workspace serializers."""
-from typing import (
-    Any,
-    Mapping,
-    Optional,
-)
+from rest_framework import serializers
 
-from django.utils.translation import gettext_lazy as _
-
-from rest_framework import (
-    serializers,
-)
-from rest_framework.request import Request
-
-from projectify.workspace.exceptions import (
-    UserAlreadyAdded,
-    UserAlreadyInvited,
-)
-from projectify.workspace.services.workspace_user_invite import (
-    add_or_invite_workspace_user,
-)
-
-from ..models.workspace import (
-    Workspace,
-)
 from . import (
     base,
 )
+
+
+class SingleQuotaSerializer(serializers.Serializer):
+    """Serializer a single Quota dataclass."""
+
+    current = serializers.IntegerField(required=False)
+    limit = serializers.IntegerField(required=False)
+    can_create_more = serializers.BooleanField()
+
+
+class WorkspaceQuotaSerializer(serializers.Serializer):
+    """Serializer quota."""
+
+    # full | trial | inactive
+    workspace_status = serializers.CharField()
+    chat_messages = SingleQuotaSerializer()
+    labels = SingleQuotaSerializer()
+    sub_tasks = SingleQuotaSerializer()
+    tasks = SingleQuotaSerializer()
+    task_labels = SingleQuotaSerializer()
+    workspace_boards = SingleQuotaSerializer()
+    workspace_board_sections = SingleQuotaSerializer()
+    workspace_users_and_invites = SingleQuotaSerializer()
 
 
 class WorkspaceDetailSerializer(base.WorkspaceBaseSerializer):
@@ -61,6 +62,7 @@ class WorkspaceDetailSerializer(base.WorkspaceBaseSerializer):
     labels = base.LabelBaseSerializer(
         read_only=True, many=True, source="label_set"
     )
+    quota = WorkspaceQuotaSerializer(required=False)
 
     class Meta(base.WorkspaceBaseSerializer.Meta):
         """Meta."""
@@ -70,42 +72,5 @@ class WorkspaceDetailSerializer(base.WorkspaceBaseSerializer):
             "workspace_users",
             "workspace_boards",
             "labels",
+            "quota",
         )
-
-
-class InviteUserToWorkspaceSerializer(serializers.Serializer):
-    """Serialize information needed to invite a user to a workspace."""
-
-    email = serializers.EmailField()
-
-    def create(self, validated_data: Mapping[str, Any]) -> Mapping[str, Any]:
-        """Perform invitation."""
-        request: Optional[Request] = self.context.get("request")
-        if request is None:
-            raise ValueError("context must contain request")
-        user = request.user
-        workspace: Workspace = self.context["workspace"]
-        email: str = validated_data["email"]
-        try:
-            add_or_invite_workspace_user(
-                who=user, workspace=workspace, email_or_user=email
-            )
-        except UserAlreadyInvited:
-            raise serializers.ValidationError(
-                {
-                    "email": _(
-                        "User with email {email} has already been invited to "
-                        "this workspace."
-                    ).format(email=email)
-                }
-            )
-        except UserAlreadyAdded:
-            raise serializers.ValidationError(
-                {
-                    "email": _(
-                        "User with email {email} has already been added to "
-                        "this workspace."
-                    ).format(email=email)
-                }
-            )
-        return validated_data

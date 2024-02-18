@@ -199,12 +199,6 @@ async def sub_task(task: Task, user: User) -> SubTask:
 
 
 @database_sync_to_async
-def save_model_instance(model_instance: django_models.Model) -> None:
-    """Save model instance."""
-    model_instance.save()
-
-
-@database_sync_to_async
 def delete_model_instance(model_instance: django_models.Model) -> None:
     """Delete model instance."""
     model_instance.delete()
@@ -301,8 +295,6 @@ class TestWorkspace:
             who=user,
             workspace=workspace,
         )
-        assert await expect_message(workspace_communicator, workspace)
-
         await clean_up_communicator(workspace_communicator)
 
 
@@ -351,8 +343,8 @@ class TestWorkspaceUser:
             workspace=workspace,
             who=user,
         )
-        await expect_message(workspace_communicator, workspace)
-
+        # Before we would expect a message here, but now we disconnect when a
+        # workspace is deleted
         await clean_up_communicator(workspace_communicator)
 
 
@@ -397,18 +389,12 @@ class TestWorkspaceBoard:
             workspace_board=workspace_board,
             archived=True,
         )
-        assert await expect_message(
-            workspace_board_communicator, workspace_board
-        )
         assert await expect_message(workspace_communicator, workspace)
 
         # Delete
         await database_sync_to_async(workspace_board_delete)(
             who=user,
             workspace_board=workspace_board,
-        )
-        assert await expect_message(
-            workspace_board_communicator, workspace_board
         )
         assert await expect_message(workspace_communicator, workspace)
 
@@ -577,7 +563,6 @@ class TestTaskConsumer:
         assert await expect_message(
             workspace_board_communicator, workspace_board
         )
-        assert await expect_message(task_communicator, task)
 
         await clean_up_communicator(workspace_board_communicator)
         # Ideally, a task consumer will disconnect when a task is deleted

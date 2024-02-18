@@ -252,6 +252,15 @@ const messages: MessageDirectory = {
                 "select": "Select a workspace",
                 "context-menu": "Open workspace context menu",
             },
+            "quota": {
+                status: {
+                    trial: { label: "Trial workspace", help: "Learn more" },
+                    inactive: {
+                        label: "Inactive workspace",
+                        help: "Learn more",
+                    },
+                },
+            },
             "workspace-boards": {
                 empty: {
                     message:

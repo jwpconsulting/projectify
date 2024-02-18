@@ -15,15 +15,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Test workspace CRUD views."""
+import unittest.mock
+
 from django.contrib.auth.models import (
     AbstractBaseUser,
     AbstractUser,
 )
 from django.core.files import (
     File,
-)
-from django.test import (
-    Client,
 )
 from django.urls import (
     reverse,
@@ -35,6 +34,7 @@ from rest_framework.test import (
     APIClient,
 )
 
+from projectify.corporate.services.customer import customer_cancel_subscription
 from pytest_types import (
     DjangoAssertNumQueries,
     Headers,
@@ -55,7 +55,7 @@ class TestWorkspaceCreate:
         """Return URL to this view."""
         return reverse("workspace:workspace-create")
 
-    def test_authenticated(
+    def test_create(
         self,
         user: AbstractBaseUser,
         rest_user_client: APIClient,
@@ -78,6 +78,10 @@ class TestWorkspaceCreate:
         assert workspace_user.user == user
         assert workspace_user.role == "OWNER"
 
+        # Test also that we can submit with empty description
+        response = rest_user_client.post(resource_url, {"title": "blabla"})
+        assert response.status_code == 201
+
 
 # Read
 @pytest.mark.django_db
@@ -91,7 +95,7 @@ class TestWorkspaceList:
 
     def test_authenticated(
         self,
-        user_client: Client,
+        rest_user_client: APIClient,
         resource_url: str,
         user: AbstractBaseUser,
         workspace: models.Workspace,
@@ -99,10 +103,19 @@ class TestWorkspaceList:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can GET this view this while being logged in."""
-        with django_assert_num_queries(3):
-            response = user_client.get(resource_url)
-        assert response.status_code == 200, response.content
-        assert len(response.json()) == 1
+        with django_assert_num_queries(1):
+            response = rest_user_client.get(resource_url)
+            assert response.status_code == 200, response.data
+        assert response.data == [
+            {
+                "created": unittest.mock.ANY,
+                "description": workspace.description,
+                "modified": unittest.mock.ANY,
+                "picture": None,
+                "title": workspace.title,
+                "uuid": str(workspace.uuid),
+            },
+        ]
 
 
 @pytest.mark.django_db
@@ -116,9 +129,9 @@ class TestWorkspaceReadUpdate:
             "workspace:workspaces:read-update", args=(workspace.uuid,)
         )
 
-    def test_authenticated(
+    def test_get(
         self,
-        user_client: Client,
+        rest_user_client: APIClient,
         resource_url: str,
         user: AbstractBaseUser,
         workspace: models.Workspace,
@@ -128,10 +141,105 @@ class TestWorkspaceReadUpdate:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can GET this view this while being logged in."""
-        with django_assert_num_queries(6):
-            response = user_client.get(resource_url)
-        assert response.status_code == 200, response.content
-        assert len(response.json()["workspace_boards"]) == 1
+        with django_assert_num_queries(5):
+            response = rest_user_client.get(resource_url)
+            assert response.status_code == 200, response.data
+        assert response.data == {
+            "created": unittest.mock.ANY,
+            "modified": unittest.mock.ANY,
+            "title": workspace.title,
+            "description": workspace.description,
+            "uuid": str(workspace.uuid),
+            "picture": None,
+            "workspace_users": [
+                unittest.mock.ANY,
+                unittest.mock.ANY,
+            ],
+            "workspace_boards": [
+                unittest.mock.ANY,
+            ],
+            "labels": [],
+            "quota": unittest.mock.ANY,
+        }
+
+    def test_get_trial(
+        self,
+        rest_user_client: APIClient,
+        resource_url: str,
+        workspace: models.Workspace,
+        workspace_user: models.WorkspaceUser,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Assert that trial limits are annotated correctly."""
+        customer_cancel_subscription(customer=workspace.customer)
+        with django_assert_num_queries(12):
+            response = rest_user_client.get(resource_url)
+        assert response.status_code == 200, response.data
+        assert response.data == {
+            "created": unittest.mock.ANY,
+            "modified": unittest.mock.ANY,
+            "title": workspace.title,
+            "description": workspace.description,
+            "uuid": str(workspace.uuid),
+            "picture": None,
+            "workspace_users": [
+                {
+                    # Thx internet
+                    # https://stackoverflow.com/questions/18064610/ignoring-an-element-from-a-dict-when-asserting-in-pytest/37680581#37680581
+                    "created": unittest.mock.ANY,
+                    "modified": unittest.mock.ANY,
+                    "user": {
+                        "email": workspace_user.user.email,
+                        "preferred_name": workspace_user.user.preferred_name,
+                        "profile_picture": None,
+                    },
+                    "uuid": str(workspace_user.uuid),
+                    "role": "OWNER",
+                    "job_title": None,
+                }
+            ],
+            "workspace_boards": [],
+            "labels": [],
+            "quota": {
+                "workspace_status": "trial",
+                "chat_messages": {
+                    "current": 0,
+                    "limit": 0,
+                    "can_create_more": False,
+                },
+                "labels": {"current": 0, "limit": 10, "can_create_more": True},
+                "sub_tasks": {
+                    "current": 0,
+                    "limit": 1000,
+                    "can_create_more": True,
+                },
+                "tasks": {
+                    "current": 0,
+                    "limit": 1000,
+                    "can_create_more": True,
+                },
+                "task_labels": {
+                    "current": None,
+                    "limit": None,
+                    "can_create_more": True,
+                },
+                "workspace_boards": {
+                    "current": 0,
+                    "limit": 10,
+                    "can_create_more": True,
+                },
+                "workspace_board_sections": {
+                    "current": 0,
+                    "limit": 100,
+                    "can_create_more": True,
+                },
+                "workspace_users_and_invites": {
+                    "current": 1,
+                    "limit": 2,
+                    "can_create_more": True,
+                },
+            },
+        }
 
     def test_updating(
         self,
@@ -143,7 +251,7 @@ class TestWorkspaceReadUpdate:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating a given workspace with a new title."""
-        with django_assert_num_queries(11):
+        with django_assert_num_queries(7):
             response = rest_user_client.put(
                 resource_url,
                 data={
@@ -180,23 +288,23 @@ class TestWorkspacePictureUploadView:
 
     def test_unauthenticated(
         self,
-        client: Client,
+        rest_client: APIClient,
         resource_url: str,
         headers: Headers,
         uploaded_file: File,
     ) -> None:
         """Assert we can't view this while being logged out."""
-        response = client.post(
+        response = rest_client.post(
             resource_url,
             {"file": uploaded_file},
             format="multipart",
             **headers,
         )
-        assert response.status_code == 403, response.content
+        assert response.status_code == 403, response.data
 
     def test_upload_then_delete(
         self,
-        rest_user_client: Client,
+        rest_user_client: APIClient,
         resource_url: str,
         headers: Headers,
         uploaded_file: File,
@@ -211,12 +319,12 @@ class TestWorkspacePictureUploadView:
             format="multipart",
             **headers,
         )
-        assert response.status_code == 204, response.content
+        assert response.status_code == 204, response.data
         workspace.refresh_from_db()
         assert workspace.picture
 
         response = rest_user_client.post(resource_url)
-        assert response.status_code == 204, response.content
+        assert response.status_code == 204, response.data
         workspace.refresh_from_db()
         assert not workspace.picture
 
@@ -238,32 +346,32 @@ class TestInviteUserToWorkspace:
     def test_new_user(
         self,
         resource_url: str,
-        user_client: Client,
+        rest_user_client: APIClient,
         workspace: models.Workspace,
     ) -> None:
         """Test with a new, unregistered user."""
         assert workspace.workspaceuserinvite_set.count() == 0
-        response = user_client.post(
+        response = rest_user_client.post(
             resource_url,
             {"email": "taro@yamamoto.jp"},
         )
-        assert response.status_code == 201, response.content
+        assert response.status_code == 201, response.data
         assert workspace.workspaceuserinvite_set.count() == 1
 
     def test_existing_user(
         self,
         resource_url: str,
-        user_client: Client,
+        rest_user_client: APIClient,
         workspace: models.Workspace,
         other_user: AbstractUser,
     ) -> None:
         """Test by inviting an existing user."""
         assert workspace.workspaceuserinvite_set.count() == 0
-        response = user_client.post(
+        response = rest_user_client.post(
             resource_url,
             {"email": other_user.email},
         )
-        assert response.status_code == 201, response.content
+        assert response.status_code == 201, response.data
         assert workspace.workspaceuserinvite_set.count() == 0
 
     def test_existing_workspace_user(
@@ -288,7 +396,7 @@ class TestInviteUserToWorkspace:
             resource_url,
             {"email": "hello@example.com"},
         )
-        assert response.status_code == 201, response.content
+        assert response.status_code == 201, response.data
         response = rest_user_client.post(
             resource_url,
             {"email": "hello@example.com"},

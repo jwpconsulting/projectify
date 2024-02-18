@@ -35,16 +35,26 @@
         WorkspaceBoardSection,
         WorkspaceBoardDetail,
         WorkspaceUser,
+        WorkspaceDetail,
+        WorkspaceQuota,
     } from "$lib/types/workspace";
 
     import Dashboard from "../dashboard/Dashboard.svelte";
 
-    const workspaceFallback: Workspace = {
+    // We are cheating a bit here
+    const quota: WorkspaceQuota = {
+        workspace_status: "trial",
+    } as WorkspaceQuota;
+    const workspaceFallback: WorkspaceDetail = {
         uuid: "does-not-exist",
         title: "",
         created: "",
         picture: null,
         modified: "",
+        workspace_boards: [],
+        labels: [],
+        workspace_users: [],
+        quota,
     };
     const workspaceBoardFallback: WorkspaceBoardDetail = {
         uuid: "does-not-exist",
@@ -131,7 +141,8 @@
     export let state: State;
 
     $: workspace = {
-        ...(state.workspace ?? workspaceFallback),
+        ...workspaceFallback,
+        ...state.workspace,
         ...(state.kind === "new-workspace"
             ? {
                   title: state.title,
@@ -141,7 +152,7 @@
         ...(state.kind !== "new-workspace"
             ? { workspace_boards: [workspaceBoard] }
             : undefined),
-    } satisfies Workspace;
+    } satisfies WorkspaceDetail;
 
     $: workspaceBoard = {
         ...((state.kind === "new-workspace"

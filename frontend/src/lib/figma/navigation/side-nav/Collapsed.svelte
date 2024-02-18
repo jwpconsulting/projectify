@@ -24,10 +24,10 @@
         selectWorkspaceBoardUuid,
         showFilters,
     } from "$lib/stores/dashboard";
-    import type { Workspace } from "$lib/types/workspace";
+    import type { WorkspaceDetail } from "$lib/types/workspace";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
-    export let workspace: Workspace | undefined;
+    export let workspace: WorkspaceDetail | undefined;
 </script>
 
 <nav class="inline-flex h-full flex-col items-center gap-12 bg-foreground p-4">

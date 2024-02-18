@@ -45,6 +45,7 @@ from projectify.user.models import User
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.workspace_board import WorkspaceBoard
+from projectify.workspace.selectors.quota import workspace_get_all_quotas
 from projectify.workspace.selectors.task import (
     TaskDetailQuerySet,
     task_find_by_task_uuid,
@@ -65,6 +66,8 @@ from projectify.workspace.serializers.workspace_board import (
     WorkspaceBoardDetailSerializer,
 )
 from projectify.workspace.types import ConsumerEvent, Message
+
+CODE_OBJECT_DISAPPEARED = 404
 
 async_to_sync = cast(Any, _async_to_sync)
 
@@ -149,6 +152,12 @@ class WorkspaceConsumer(BaseConsumer):
             workspace_uuid=self.uuid,
             qs=WorkspaceDetailQuerySet,
         )
+
+        if workspace is None:
+            self.disconnect(close_code=CODE_OBJECT_DISAPPEARED)
+            return
+
+        workspace.quota = workspace_get_all_quotas(workspace)
         serialized = serialize(WorkspaceDetailSerializer, workspace, event)
         self.send_json(serialized)
 
@@ -179,6 +188,11 @@ class WorkspaceBoardConsumer(BaseConsumer):
             workspace_board_uuid=self.uuid,
             qs=WorkspaceBoardDetailQuerySet,
         )
+
+        if workspace_board is None:
+            self.disconnect(close_code=CODE_OBJECT_DISAPPEARED)
+            return
+
         serialized = serialize(
             WorkspaceBoardDetailSerializer, workspace_board, event
         )
@@ -202,5 +216,10 @@ class TaskConsumer(BaseConsumer):
         task = task_find_by_task_uuid(
             who=self.user, task_uuid=self.uuid, qs=TaskDetailQuerySet
         )
+
+        if task is None:
+            self.disconnect(close_code=CODE_OBJECT_DISAPPEARED)
+            return
+
         serialized = serialize(TaskDetailSerializer, task, event)
         self.send_json(serialized)

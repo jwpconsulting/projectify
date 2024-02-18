@@ -19,6 +19,7 @@ import uuid
 from typing import (
     TYPE_CHECKING,
     ClassVar,
+    Optional,
     Self,
     cast,
 )
@@ -41,6 +42,7 @@ from django_extensions.db.models import (
 
 from projectify.lib.models import BaseModel
 
+from ..types import WorkspaceQuota
 from .const import (
     MAINTAINER_EQUIVALENT,
     MEMBER_EQUIVALENT,
@@ -101,6 +103,10 @@ class Workspace(TitleDescriptionModel, BaseModel):
     objects: ClassVar[WorkspaceQuerySet] = cast(  # type: ignore[assignment]
         WorkspaceQuerySet, WorkspaceQuerySet.as_manager()
     )
+
+    # Optional annotation to show trial limits
+    # Since it involves additional queries, it is None by default
+    quota: Optional[WorkspaceQuota] = None
 
     if TYPE_CHECKING:
         # Related fields

@@ -111,16 +111,38 @@ export type WorkspaceBoardDetail = WorkspaceBoard & {
 
 export type ArchivedWorkspaceBoard = WorkspaceBoard & { archived: string };
 
+interface Quota {
+    current?: number;
+    limit?: number;
+    can_create_more: boolean;
+}
+
+export interface WorkspaceQuota {
+    workspace_status: "full" | "trial" | "inactive";
+    chat_messages: Quota;
+    labels: Quota;
+    sub_tasks: Quota;
+    tasks: Quota;
+    task_labels: Quota;
+    workspace_boards: Quota;
+    workspace_board_sections: Quota;
+    workspace_users_and_invites: Quota;
+}
+
 export type Workspace = {
     picture: string | null;
     workspace_users?: WorkspaceUser[];
     workspace_boards?: WorkspaceBoard[];
     labels?: Label[];
     uuid: string;
+    quota?: WorkspaceQuota;
 } & TimestampedType &
     TitleDescriptionType;
 
 export type WorkspaceDetail = Required<
-    Pick<Workspace, "workspace_boards" | "labels" | "workspace_users">
+    Pick<
+        Workspace,
+        "workspace_boards" | "labels" | "workspace_users" | "quota"
+    >
 > &
     Workspace;

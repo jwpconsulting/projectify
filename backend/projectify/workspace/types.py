@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Shared type definitions in workspace app."""
+from dataclasses import dataclass
 from typing import (
     Mapping,
     Optional,
@@ -22,6 +23,8 @@ from typing import (
     TypedDict,
     Union,
 )
+
+from projectify.corporate.types import WorkspaceFeatures
 
 
 class ConsumerEvent(TypedDict):
@@ -38,3 +41,29 @@ class Message(TypedDict):
     uuid: str
     # TODO Sequence required here?
     data: Optional[Union[Mapping[str, object], Sequence[object]]]
+
+
+@dataclass(frozen=True, kw_only=True)
+class Quota:
+    """Store quota for a resource, including the maximum amount."""
+
+    # None means irrelevant. No limit means counting unnecessary.
+    current: Optional[int]
+    # None means unlimited
+    limit: Optional[int]
+    can_create_more: bool
+
+
+@dataclass(frozen=True, kw_only=True)
+class WorkspaceQuota:
+    """Contain all workspace quota values."""
+
+    workspace_status: WorkspaceFeatures
+    chat_messages: Quota
+    labels: Quota
+    sub_tasks: Quota
+    tasks: Quota
+    task_labels: Quota
+    workspace_boards: Quota
+    workspace_board_sections: Quota
+    workspace_users_and_invites: Quota
