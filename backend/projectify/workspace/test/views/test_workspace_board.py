@@ -66,7 +66,7 @@ class TestWorkspaceBoardCreate:
         workspace_user: WorkspaceUser,
     ) -> None:
         """Assert that we can create a new workspace board."""
-        with django_assert_num_queries(7):
+        with django_assert_num_queries(6):
             response = rest_user_client.post(
                 resource_url,
                 {
@@ -131,7 +131,7 @@ class TestWorkspaceBoardReadUpdateDelete:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating a ws board."""
-        with django_assert_num_queries(7):
+        with django_assert_num_queries(6):
             response = rest_user_client.put(
                 resource_url,
                 data={
@@ -151,7 +151,7 @@ class TestWorkspaceBoardReadUpdateDelete:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating a ws board."""
-        with django_assert_num_queries(8):
+        with django_assert_num_queries(7):
             response = rest_user_client.delete(
                 resource_url,
             )
@@ -220,7 +220,7 @@ class TestWorkspaceBoardArchive:
                 archived=False,
             )
         )
-        with django_assert_num_queries(10):
+        with django_assert_num_queries(9):
             response = rest_user_client.post(
                 resource_url,
                 data={"archived": True},
@@ -237,7 +237,7 @@ class TestWorkspaceBoardArchive:
             )
             + 1
         )
-        with django_assert_num_queries(10):
+        with django_assert_num_queries(9):
             response = rest_user_client.post(
                 resource_url,
                 data={"archived": False},

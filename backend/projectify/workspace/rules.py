@@ -219,10 +219,7 @@ rules.add_perm(
 
 # Workspace user invite
 # TODO quota rule should only be used for workspace.create_*
-workspace_user_invite_usable = (
-    belongs_to_full_workspace  # type: ignore[operator]
-    | (belongs_to_trial_workspace & within_workspace_user_invite_quota)
-)
+workspace_user_invite_usable = within_workspace_user_invite_quota
 rules.add_perm(
     "workspace.create_workspace_user_invite",
     is_at_least_owner & workspace_user_invite_usable,
@@ -241,10 +238,7 @@ rules.add_perm(
 )
 
 # Workspace user
-workspace_user_usable = (
-    belongs_to_full_workspace  # type: ignore[operator]
-    | (belongs_to_trial_workspace & within_workspace_user_quota)
-)
+workspace_user_usable = within_workspace_user_quota
 rules.add_perm(
     "workspace.create_workspace_user",
     is_at_least_owner & workspace_user_usable,
@@ -263,10 +257,7 @@ rules.add_perm(
 )
 
 # Workspace board
-workspace_board_usable = (
-    belongs_to_full_workspace  # type: ignore[operator]
-    | (belongs_to_trial_workspace & within_workspace_board_quota)
-)
+workspace_board_usable = within_workspace_board_quota
 rules.add_perm(
     "workspace.create_workspace_board",
     is_at_least_maintainer & workspace_board_usable,
@@ -285,10 +276,7 @@ rules.add_perm(
 )
 
 # Workspace board section
-workspace_board_section_usable = (
-    belongs_to_full_workspace  # type: ignore[operator]
-    | (belongs_to_trial_workspace & within_workspace_board_section_quota)
-)
+workspace_board_section_usable = within_workspace_board_section_quota
 rules.add_perm(
     "workspace.create_workspace_board_section",
     is_at_least_maintainer & workspace_board_section_usable,
@@ -307,10 +295,7 @@ rules.add_perm(
 )
 
 # Task
-task_usable = (
-    belongs_to_full_workspace  # type: ignore[operator]
-    | (belongs_to_trial_workspace & within_task_quota)
-)
+task_usable = within_task_quota
 rules.add_perm(
     "workspace.create_task",
     is_at_least_member & task_usable,
@@ -329,10 +314,7 @@ rules.add_perm(
 )
 
 # Label
-label_usable = (
-    belongs_to_full_workspace  # type: ignore[operator]
-    | (belongs_to_trial_workspace & within_label_quota)
-)
+label_usable = within_label_quota
 rules.add_perm(
     "workspace.create_label",
     is_at_least_maintainer & label_usable,
@@ -351,10 +333,7 @@ rules.add_perm(
 )
 
 # Task label
-task_label_usable = (
-    belongs_to_full_workspace  # type: ignore[operator]
-    | (belongs_to_trial_workspace & within_task_label_quota)
-)
+task_label_usable = within_task_label_quota
 rules.add_perm(
     "workspace.create_task_label",
     is_at_least_member & task_label_usable,
@@ -374,10 +353,7 @@ rules.add_perm(
 
 
 # Sub task
-sub_task_usable = (
-    belongs_to_full_workspace  # type: ignore[operator]
-    | (belongs_to_trial_workspace & within_sub_task_quota)
-)
+sub_task_usable = within_sub_task_quota
 rules.add_perm(
     "workspace.create_sub_task",
     is_at_least_member & sub_task_usable,
@@ -396,10 +372,7 @@ rules.add_perm(
 )
 
 # Chat message
-chat_message_usable = (
-    belongs_to_full_workspace  # type: ignore[operator]
-    | (belongs_to_trial_workspace & within_chat_message_quota)
-)
+chat_message_usable = within_chat_message_quota
 rules.add_perm(
     "workspace.create_chat_message",
     is_at_least_member & chat_message_usable,
