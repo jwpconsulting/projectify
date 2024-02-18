@@ -55,7 +55,7 @@ class TestWorkspaceCreate:
         """Return URL to this view."""
         return reverse("workspace:workspace-create")
 
-    def test_authenticated(
+    def test_create(
         self,
         user: AbstractBaseUser,
         rest_user_client: APIClient,
@@ -77,6 +77,10 @@ class TestWorkspaceCreate:
         workspace_user = workspace.workspaceuser_set.get()
         assert workspace_user.user == user
         assert workspace_user.role == "OWNER"
+
+        # Test also that we can submit with empty description
+        response = rest_user_client.post(resource_url, {"title": "blabla"})
+        assert response.status_code == 201
 
 
 # Read

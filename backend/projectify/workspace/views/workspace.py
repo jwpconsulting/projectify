@@ -79,7 +79,7 @@ class WorkspaceCreate(views.APIView):
 
         workspace = workspace_create(
             title=serializer.validated_data["title"],
-            description=serializer.validated_data["description"],
+            description=serializer.validated_data.get("description"),
             owner=self.request.user,
         )
         result = WorkspaceBaseSerializer(instance=workspace)
