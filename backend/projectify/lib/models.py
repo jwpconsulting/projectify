@@ -17,15 +17,28 @@
 """Projectify base models."""
 
 from django.db.models import Model
+from django.utils.translation import gettext_lazy as _
 
-from django_extensions.db.models import TimeStampedModel
+from django_extensions.db.fields import (
+    CreationDateTimeField,
+    ModificationDateTimeField,
+)
 
 
-# TODO copy TimeStampedModel into here
-class BaseModel(TimeStampedModel, Model):
-    """The base model to use for all Projectify models."""
+class BaseModel(Model):
+    """
+    The base model to use for all Projectify models.
 
-    class Meta(TimeStampedModel.Meta):
+    This previously used the django-extensions TimeStampedModel. Since only the
+    created and modified fields were needed, they were copied here and the save
+    override was left out.
+    """
+
+    created = CreationDateTimeField(verbose_name=_("created"))
+    modified = ModificationDateTimeField(verbose_name=_("modified"))
+
+    class Meta:
         """Make this model abstract."""
 
         abstract = True
+        get_latest_by = "modified"
