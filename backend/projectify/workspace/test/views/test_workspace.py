@@ -24,9 +24,6 @@ from django.contrib.auth.models import (
 from django.core.files import (
     File,
 )
-from django.test import (
-    Client,
-)
 from django.urls import (
     reverse,
 )
@@ -94,7 +91,7 @@ class TestWorkspaceList:
 
     def test_authenticated(
         self,
-        user_client: Client,
+        rest_user_client: APIClient,
         resource_url: str,
         user: AbstractBaseUser,
         workspace: models.Workspace,
@@ -102,10 +99,19 @@ class TestWorkspaceList:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can GET this view this while being logged in."""
-        with django_assert_num_queries(3):
-            response = user_client.get(resource_url)
-        assert response.status_code == 200, response.content
-        assert len(response.json()) == 1
+        with django_assert_num_queries(1):
+            response = rest_user_client.get(resource_url)
+            assert response.status_code == 200, response.data
+        assert response.data == [
+            {
+                "created": unittest.mock.ANY,
+                "description": workspace.description,
+                "modified": unittest.mock.ANY,
+                "picture": None,
+                "title": workspace.title,
+                "uuid": str(workspace.uuid),
+            },
+        ]
 
 
 @pytest.mark.django_db
@@ -121,7 +127,7 @@ class TestWorkspaceReadUpdate:
 
     def test_get(
         self,
-        user_client: Client,
+        rest_user_client: APIClient,
         resource_url: str,
         user: AbstractBaseUser,
         workspace: models.Workspace,
@@ -131,10 +137,26 @@ class TestWorkspaceReadUpdate:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can GET this view this while being logged in."""
-        with django_assert_num_queries(7):
-            response = user_client.get(resource_url)
-        assert response.status_code == 200, response.content
-        assert len(response.json()["workspace_boards"]) == 1
+        with django_assert_num_queries(5):
+            response = rest_user_client.get(resource_url)
+            assert response.status_code == 200, response.data
+        assert response.data == {
+            "created": unittest.mock.ANY,
+            "modified": unittest.mock.ANY,
+            "title": workspace.title,
+            "description": workspace.description,
+            "uuid": str(workspace.uuid),
+            "picture": None,
+            "workspace_users": [
+                unittest.mock.ANY,
+                unittest.mock.ANY,
+            ],
+            "workspace_boards": [
+                unittest.mock.ANY,
+            ],
+            "labels": [],
+            "quota": unittest.mock.ANY,
+        }
 
     def test_get_trial(
         self,
@@ -262,23 +284,23 @@ class TestWorkspacePictureUploadView:
 
     def test_unauthenticated(
         self,
-        client: Client,
+        rest_client: APIClient,
         resource_url: str,
         headers: Headers,
         uploaded_file: File,
     ) -> None:
         """Assert we can't view this while being logged out."""
-        response = client.post(
+        response = rest_client.post(
             resource_url,
             {"file": uploaded_file},
             format="multipart",
             **headers,
         )
-        assert response.status_code == 403, response.content
+        assert response.status_code == 403, response.data
 
     def test_upload_then_delete(
         self,
-        rest_user_client: Client,
+        rest_user_client: APIClient,
         resource_url: str,
         headers: Headers,
         uploaded_file: File,
@@ -293,12 +315,12 @@ class TestWorkspacePictureUploadView:
             format="multipart",
             **headers,
         )
-        assert response.status_code == 204, response.content
+        assert response.status_code == 204, response.data
         workspace.refresh_from_db()
         assert workspace.picture
 
         response = rest_user_client.post(resource_url)
-        assert response.status_code == 204, response.content
+        assert response.status_code == 204, response.data
         workspace.refresh_from_db()
         assert not workspace.picture
 
@@ -320,32 +342,32 @@ class TestInviteUserToWorkspace:
     def test_new_user(
         self,
         resource_url: str,
-        user_client: Client,
+        rest_user_client: APIClient,
         workspace: models.Workspace,
     ) -> None:
         """Test with a new, unregistered user."""
         assert workspace.workspaceuserinvite_set.count() == 0
-        response = user_client.post(
+        response = rest_user_client.post(
             resource_url,
             {"email": "taro@yamamoto.jp"},
         )
-        assert response.status_code == 201, response.content
+        assert response.status_code == 201, response.data
         assert workspace.workspaceuserinvite_set.count() == 1
 
     def test_existing_user(
         self,
         resource_url: str,
-        user_client: Client,
+        rest_user_client: APIClient,
         workspace: models.Workspace,
         other_user: AbstractUser,
     ) -> None:
         """Test by inviting an existing user."""
         assert workspace.workspaceuserinvite_set.count() == 0
-        response = user_client.post(
+        response = rest_user_client.post(
             resource_url,
             {"email": other_user.email},
         )
-        assert response.status_code == 201, response.content
+        assert response.status_code == 201, response.data
         assert workspace.workspaceuserinvite_set.count() == 0
 
     def test_existing_workspace_user(
@@ -370,7 +392,7 @@ class TestInviteUserToWorkspace:
             resource_url,
             {"email": "hello@example.com"},
         )
-        assert response.status_code == 201, response.content
+        assert response.status_code == 201, response.data
         response = rest_user_client.post(
             resource_url,
             {"email": "hello@example.com"},
