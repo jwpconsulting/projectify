@@ -78,6 +78,7 @@
         "autoprefixer": "~10.4.16",
         "date-fns": "~2.30.0",
         "fuse.js": "~6.6.2",
+        "marked": "~12.0.0",
         "pikaday": "~1.8.2",
         "rollup-plugin-visualizer": "~5.9.2",
         "svelte": "~4.0.0",
