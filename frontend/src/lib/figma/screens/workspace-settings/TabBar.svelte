@@ -46,5 +46,10 @@
             active={activeSetting === "billing"}
         />
     {/if}
+    <TabElement
+        href={getSettingsUrl(workspace.uuid, "quota")}
+        label={$_("workspace-settings.quota.title")}
+        active={activeSetting === "quota"}
+    />
     <div class="grow border-b-2 border-border" />
 </div>

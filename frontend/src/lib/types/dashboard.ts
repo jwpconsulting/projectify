@@ -15,11 +15,5 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-// TODO remove labels Justus 2022-09-28
-const settingKinds = [
-    "index",
-    "labels",
-    "workspace-users",
-    "billing",
-] as const;
+const settingKinds = ["index", "workspace-users", "billing", "quota"] as const;
 export type SettingKind = (typeof settingKinds)[number];

@@ -836,6 +836,43 @@ const messages: MessageDirectory = {
                 "Contact us if you have any questions regarding billing.",
             "billing-contact": "hello@projectifyapp.com",
         },
+        "quota": {
+            "title": "Quota",
+            "explanation": {
+                "quota-for":
+                    "These are the quotas for the ''{title}'' workspace:",
+                "no-quota": "No quotas apply to your workspace.",
+            },
+            "workspace-status": {
+                label: "Workspace status:",
+                full: "Full workspace",
+                trial: "Trial workspace",
+                inactive: "Inactive workspace",
+            },
+            "columns": {
+                resource: "Resource",
+                current: "Current",
+                limit: "Limit",
+            },
+            "resource": {
+                "labels": "Labels",
+                "sub-tasks": "Sub tasks",
+                "tasks": "Tasks",
+                "task-labels": "Task labels",
+                "workspace-boards": "Workspace boards",
+                "workspace-board-sections": "Workspace board sections",
+                "workspace-users-and-invites": "Workspace users and invites",
+            },
+            "rows": {
+                unlimited: "Unlimited",
+                na: "n/a",
+            },
+            "help": {
+                title: "Learn more about workspace quotas",
+                trial: "Quotas for trial workspaces",
+                paid: "Quotas for paid workspaces",
+            },
+        },
     },
     "index": {
         hero: {
