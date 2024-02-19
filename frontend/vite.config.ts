@@ -25,6 +25,7 @@ import type {
     ProxyOptions,
     PluginOption,
     UserConfigExport,
+    Plugin,
 } from "vite";
 import type { ConfigEnv } from "vite";
 import { loadEnv } from "vite";
@@ -47,13 +48,12 @@ async function getPluginOptions(mode: string): Promise<PluginOption[]> {
         return pluginDefaults;
     }
     const { visualizer } = await import("rollup-plugin-visualizer");
-    return [
-        ...pluginDefaults,
-        visualizer({
-            emitFile: true,
-            filename: "bundle.html",
-        }),
-    ];
+    const visualizerPlugin = visualizer({
+        emitFile: true,
+        filename: "bundle.html",
+        // https://github.com/btd/rollup-plugin-visualizer/issues/176#issuecomment-1834045713
+    }) as Plugin;
+    return [...pluginDefaults, visualizerPlugin];
 }
 
 function getFromEnv(env: Record<string, string>, key: string): string {
@@ -128,7 +128,7 @@ const config: UserConfigExport = defineConfig(async ({ mode }: ConfigEnv) => {
             ...(await buildInfo()),
             __MODE__: JSON.stringify(mode),
         },
-    };
+    } satisfies UserConfig;
 });
 
 export default config;

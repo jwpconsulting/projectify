@@ -42,7 +42,7 @@ export async function load({
         // If we don't have a workspaceBoard, we don't have anything (no
         // workspace uuid etc), so we are back to the dashboard in that case.
         // TODO tell the user that we have done so
-        throw error(
+        error(
             404,
             `No workspace board could be found for UUID '${workspaceBoardUuid}'`,
         );
@@ -53,7 +53,7 @@ export async function load({
     });
     if (!workspace) {
         // Big whoops if this actually happens
-        throw error(
+        error(
             500,
             `For workspace board ${workspaceBoardUuid}, the workspace with UUID ${workspaceUuid} could not be found.`,
         );

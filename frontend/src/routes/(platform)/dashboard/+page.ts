@@ -29,16 +29,16 @@ export async function load({ fetch }: PageLoadEvent): Promise<void> {
         selectedWorkspaceUuid.subscribe,
     );
     if (maybeWorkspaceUuid) {
-        throw redirect(302, getDashboardWorkspaceUrl(maybeWorkspaceUuid));
+        redirect(302, getDashboardWorkspaceUrl(maybeWorkspaceUuid));
     }
     const workspaces = await getWorkspaces({ fetch });
     if (!workspaces) {
         // The workspaces endpoint not being reachable is unrecoverable
-        throw error(500);
+        error(500);
     }
     if (workspaces.length === 0) {
-        throw redirect(302, startUrl);
+        redirect(302, startUrl);
     }
     const [workspace, ..._rest] = workspaces;
-    throw redirect(302, getDashboardWorkspaceUrl(workspace.uuid));
+    redirect(302, getDashboardWorkspaceUrl(workspace.uuid));
 }

@@ -38,7 +38,7 @@ export async function load({
         { fetch },
     );
     if (!workspaceBoardSection) {
-        throw error(
+        error(
             404,
             `The workspace board section with UUID '${workspaceBoardSectionUuid}' could not be found`,
         );

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -15,7 +15,8 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-declare module "@sveltejs/kit" {
-    function error(code: number, extra?: string | Record<str, unknown>): Error;
-    function redirect(code: number, url: string): Error;
+/** Add missing types for marked related libraries
+ */
+declare module "marked-custom-heading-id" {
+    export = any;
 }

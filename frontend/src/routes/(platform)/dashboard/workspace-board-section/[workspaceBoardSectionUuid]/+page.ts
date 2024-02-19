@@ -32,8 +32,8 @@ export async function load({
         { fetch },
     );
     if (!workspaceBoardSection) {
-        throw error(404);
+        error(404);
     }
     const workspaceBoard = workspaceBoardSection.workspace_board;
-    throw redirect(302, getDashboardWorkspaceBoardUrl(workspaceBoard.uuid));
+    redirect(302, getDashboardWorkspaceBoardUrl(workspaceBoard.uuid));
 }

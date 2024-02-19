@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import adapter from "@sveltejs/adapter-static";
-import { vitePreprocess } from "@sveltejs/kit/vite";
+import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -32,6 +32,11 @@ const config = {
         adapter: adapter({
             pages: "build",
             assets: "build",
+            /* XXX we get this error:
+             * > Using @sveltejs/adapter-static
+             * Overwriting build/redirect.html with fallback page. Consider
+             * using a different name for the fallback.
+             */
             fallback: "redirect.html",
             precompress: false,
             strict: true,

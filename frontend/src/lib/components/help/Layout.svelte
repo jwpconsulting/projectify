@@ -71,6 +71,10 @@
             title: $_("help.billing.title"),
             href: "/help/billing",
         },
+        {
+            title: $_("help.quota.title"),
+            href: "/help/quota",
+        },
     ] as HelpItem[];
 </script>
 
@@ -106,14 +110,18 @@
             </ul>
         </nav>
         <main class="flex flex-col gap-2">
-            {#each sections as section}
-                <section id={section.id} class="flex flex-col gap-4">
-                    <h3 class="text-3xl font-bold">{section.title}</h3>
-                    <p>
-                        {section.content}
-                    </p>
-                </section>
-            {/each}
+            {#if $$slots.content}
+                <slot name="content" />
+            {:else}
+                {#each sections as section}
+                    <section id={section.id} class="flex flex-col gap-4">
+                        <h3 class="text-3xl font-bold">{section.title}</h3>
+                        <p>
+                            {section.content}
+                        </p>
+                    </section>
+                {/each}
+            {/if}
         </main>
     </div>
 </HeroLayout>

@@ -37,14 +37,14 @@ export async function load({
     if (currentUser === undefined) {
         const next = getLogInWithNextUrl(url.pathname);
         console.log("Not logged in, redirecting to", next);
-        throw redirect(302, next);
+        redirect(302, next);
     }
 
     // XXX Might be able to do this asynchronously, meaning we don't need to wait
     // for it to finish here?
     const workspaces = await currentWorkspaces.load({ fetch });
     if (!workspaces) {
-        throw error(500, "Unable to fetch workspaces");
+        error(500, "Unable to fetch workspaces");
     }
 
     return { user: currentUser };

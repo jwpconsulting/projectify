@@ -28,7 +28,7 @@ export async function load({
     const workspaces = await getWorkspaces({ fetch });
     if (!workspaces) {
         // Undefined workspaces is unrecoverable
-        throw error(500);
+        error(500);
     }
     const workspace = workspaces.at(0);
     return { workspace };
