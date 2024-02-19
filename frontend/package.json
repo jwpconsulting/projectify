@@ -81,6 +81,7 @@
         "date-fns": "~2.30.0",
         "fuse.js": "~6.6.2",
         "marked": "~12.0.0",
+        "marked-custom-heading-id": "~2.0.7",
         "pikaday": "~1.8.2",
         "rollup-plugin-visualizer": "~5.12",
         "sass": "~1.71.0",
