@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -18,7 +18,7 @@
 <script lang="ts">
     import { ChevronDown, ChevronUp } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
-    import type { IconSource } from "@steeze-ui/svelte-icon/types";
+    import type { IconSource } from "@steeze-ui/svelte-icon";
     import { createEventDispatcher } from "svelte";
 
     export let label: string;
