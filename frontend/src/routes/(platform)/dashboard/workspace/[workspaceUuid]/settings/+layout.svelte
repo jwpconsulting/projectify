@@ -33,6 +33,8 @@
             return "billing";
         } else if (pathname.endsWith("workspace-users")) {
             return "workspace-users";
+        } else if (pathname.endsWith("quota")) {
+            return "quota";
         }
         throw new Error("Unknown settings path");
     }

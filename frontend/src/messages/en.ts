@@ -836,6 +836,9 @@ const messages: MessageDirectory = {
                 "Contact us if you have any questions regarding billing.",
             "billing-contact": "hello@projectifyapp.com",
         },
+        "quota": {
+            title: "Quota",
+        },
     },
     "index": {
         hero: {

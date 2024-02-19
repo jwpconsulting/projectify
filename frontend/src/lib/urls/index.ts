@@ -46,10 +46,9 @@ export function getDashboardWorkspaceBoardSectionUrl(
 export function getSettingsUrl(workspaceUuid: string, kind: SettingKind) {
     const suffix = {
         "index": "",
-        // TODO remove me
-        "labels": "/labels",
         "workspace-users": "/workspace-users",
         "billing": "/billing",
+        "quota": "/quota",
     }[kind];
     return `/dashboard/workspace/${workspaceUuid}/settings${suffix}`;
 }
