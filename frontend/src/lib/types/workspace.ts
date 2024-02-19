@@ -111,9 +111,9 @@ export type WorkspaceBoardDetail = WorkspaceBoard & {
 
 export type ArchivedWorkspaceBoard = WorkspaceBoard & { archived: string };
 
-interface Quota {
-    current?: number;
-    limit?: number;
+export interface Quota {
+    current: number | null;
+    limit: number | null;
     can_create_more: boolean;
 }
 
