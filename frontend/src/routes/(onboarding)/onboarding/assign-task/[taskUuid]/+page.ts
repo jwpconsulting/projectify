@@ -46,10 +46,7 @@ export async function load({
     const task = await currentTask.loadUuid(taskUuid, { fetch });
     if (!task) {
         // TODO find out if we can i18n this?
-        throw error(
-            404,
-            `No task could be found for task UUID '${taskUuid}'.`,
-        );
+        error(404, `No task could be found for task UUID '${taskUuid}'.`);
     }
     const workspaceBoardSection = task.workspace_board_section;
     const workspaceBoardUuid = workspaceBoardSection.workspace_board.uuid;

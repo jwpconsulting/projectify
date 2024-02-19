@@ -33,14 +33,14 @@ export async function load({
 }: LayoutLoadEvent): Promise<Data> {
     const task = await currentTask.loadUuid(taskUuid, { fetch });
     if (!task) {
-        throw error(404, `No task could be found for UUID '${taskUuid}'`);
+        error(404, `No task could be found for UUID '${taskUuid}'`);
     }
     const workspace = await currentWorkspace.loadUuid(
         task.workspace_board_section.workspace_board.workspace.uuid,
         { fetch },
     );
     if (!workspace) {
-        throw error(404);
+        error(404);
     }
     return {
         task,

@@ -39,7 +39,7 @@ export async function load({
         fetch,
     });
     if (!workspaceBoard) {
-        throw error(
+        error(
             404,
             `No workspace board could be found for UUID ${workspaceBoardUuid}.`,
         );
@@ -50,7 +50,7 @@ export async function load({
     });
     if (!workspace) {
         // If this happens something is very wrong
-        throw error(
+        error(
             500,
             `No workspace with UUID ${workspaceUuid} could be found for workspace board UUID ${workspaceBoardUuid}.`,
         );

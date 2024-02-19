@@ -46,10 +46,7 @@ export async function load({ parent, fetch }: PageLoadEvent): Promise<void> {
         workspace_boards.map((b) => b.uuid).includes(maybeWorkspaceBoardUuid)
     ) {
         // ... we redirect to it
-        throw redirect(
-            302,
-            getDashboardWorkspaceBoardUrl(maybeWorkspaceBoardUuid),
-        );
+        redirect(302, getDashboardWorkspaceBoardUrl(maybeWorkspaceBoardUuid));
     }
     // If we can't find it, that's also OK, because:
     // If we find any workspace boards, we pick the first and direct the user there
@@ -58,7 +55,7 @@ export async function load({ parent, fetch }: PageLoadEvent): Promise<void> {
         const { uuid } = first_workspace_board;
         // TODO show the user a notification in case of a redirect to here
         // Indicate that the previous UUID is not available anymore
-        throw redirect(302, getDashboardWorkspaceBoardUrl(uuid));
+        redirect(302, getDashboardWorkspaceBoardUrl(uuid));
     }
 
     // Now we check if anything is archived and redirect to the archive in that
@@ -69,9 +66,9 @@ export async function load({ parent, fetch }: PageLoadEvent): Promise<void> {
     if (archived && archived.length > 0) {
         // There are archived boards, so we redirect to the ws board archive
         // TODO show the user a notification in case of a redirect to here
-        throw redirect(302, getArchiveUrl(workspaceUuid));
+        redirect(302, getArchiveUrl(workspaceUuid));
     }
     // TODO maybe throw in a nice notification to the user here that we have
     // not found any workspace board for this workspace
-    throw redirect(302, getNewWorkspaceBoardUrl(workspaceUuid));
+    redirect(302, getNewWorkspaceBoardUrl(workspaceUuid));
 }

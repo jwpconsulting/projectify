@@ -37,7 +37,7 @@ export async function load({
     const customer = await getWorkspaceCustomer(workspaceUuid, { fetch });
     if (!customer) {
         // TODO maybe better error message here?
-        throw error(404);
+        error(404);
     }
     return {
         customer,

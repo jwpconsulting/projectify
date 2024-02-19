@@ -38,7 +38,7 @@ export async function load({
     });
     if (!workspace) {
         clearSelectedWorkspaceUuidIfMatch(workspaceUuid);
-        throw error(404, `No workspace found for UUID '${workspaceUuid}'`);
+        error(404, `No workspace found for UUID '${workspaceUuid}'`);
     }
     return { workspace };
 }
