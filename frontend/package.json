@@ -87,6 +87,6 @@
         "svelte-local-storage-store": "~0.6.4",
         "tailwindcss": "~3.3.3",
         "typescript": "~5.2.2",
-        "vite": "~4.4.11"
+        "vite": "~4.5"
     }
 }
