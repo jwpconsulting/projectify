@@ -2,6 +2,7 @@
     "name": "projectify-frontend",
     "version": "0.0.1",
     "scripts": {
+        "postinstall": "bin/prebuild.sh",
         "dev": "vite dev --host --port 3000",
         "build": "vite build",
         "package": "vite package",
