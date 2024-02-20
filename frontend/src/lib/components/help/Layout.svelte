@@ -117,25 +117,26 @@
     <div slot="content" class="flex flex-col gap-4">
         <h2 class="text-4xl font-bold">{heroContent.title}</h2>
         <!-- skip links -->
-        <nav class="flex flex-col gap-4">
-            <h3 class="text-xl font-bold">{$_("help.skip")}</h3>
-            <ul class="flex list-inside list-disc flex-col gap-1">
+        <nav class="prose">
+            <h3>{$_("help.skip")}</h3>
+            <ul>
                 {#each sectionNav as section}
                     <li>
-                        <Anchor
-                            href={`#${section.id}`}
-                            label={section.title}
-                        />
+                        <!-- marked escapes quotes and so on as html entities -->
+                        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                        <a href={`#${section.id}`}>{@html section.title}</a>
                     </li>
                 {/each}
             </ul>
         </nav>
-        <main class="flex flex-col gap-2">
+        <main
+            class="flex flex-col"
+            class:gap-2={content === undefined}
+            class:prose={content !== undefined}
+        >
             {#if content}
-                <div class="prose">
-                    <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-                    {@html text}
-                </div>
+                <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                {@html text}
             {:else if sections}
                 {#each sections as section}
                     <section id={section.id} class="flex flex-col gap-4">
