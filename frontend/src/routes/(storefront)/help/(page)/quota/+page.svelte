@@ -17,8 +17,6 @@
 -->
 <!-- @component Explain how quotas work for paid/trial workspaces -->
 <script lang="ts">
-    import { marked } from "marked";
-    import { getHeadingList, gfmHeadingId } from "marked-gfm-heading-id";
     import { _ } from "svelte-i18n";
 
     import Layout from "$lib/components/help/Layout.svelte";
@@ -28,21 +26,6 @@
         title: $_("help.quota.title"),
         text: $_("help.quota.description"),
     } satisfies SolutionsHeroContent;
-
-    marked.use(gfmHeadingId());
-    $: text = marked.parse($_("help.quota.content"));
-    $: sections = getHeadingList().map(({ id, text }) => {
-        return {
-            id: id,
-            content: "",
-            title: text,
-        };
-    });
 </script>
 
-<Layout {heroContent} {sections}>
-    <div class="prose" slot="content">
-        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-        {@html text}
-    </div>
-</Layout>
+<Layout {heroContent} content={$_("help.quota.content")} />

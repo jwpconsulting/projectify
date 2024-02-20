@@ -16,6 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import { marked } from "marked";
+    import { getHeadingList, gfmHeadingId } from "marked-gfm-heading-id";
     import { _ } from "svelte-i18n";
 
     import Hero from "$lib/components/layouts/Hero.svelte";
@@ -24,7 +26,13 @@
     import type { SolutionsHeroContent } from "$lib/types/ui";
 
     export let heroContent: SolutionsHeroContent;
-    export let sections: { id: string; content: string; title: string }[];
+    export let sections:
+        | { id: string; content: string; title: string }[]
+        | undefined = undefined;
+    export let content: string | undefined = undefined;
+
+    marked.use(gfmHeadingId());
+    $: text = content ? marked.parse(content) : undefined;
 
     interface HelpItem {
         title: string;
@@ -80,6 +88,15 @@
             href: "/help/quota",
         },
     ] as HelpItem[];
+
+    $: sectionNav = content
+        ? getHeadingList().map(({ id, text }) => {
+              return {
+                  id: id,
+                  title: text,
+              };
+          })
+        : sections ?? [];
 </script>
 
 <HeroLayout>
@@ -103,7 +120,7 @@
         <nav class="flex flex-col gap-4">
             <h3 class="text-xl font-bold">{$_("help.skip")}</h3>
             <ul class="flex list-inside list-disc flex-col gap-1">
-                {#each sections as section}
+                {#each sectionNav as section}
                     <li>
                         <Anchor
                             href={`#${section.id}`}
@@ -114,9 +131,12 @@
             </ul>
         </nav>
         <main class="flex flex-col gap-2">
-            {#if $$slots.content}
-                <slot name="content" />
-            {:else}
+            {#if content}
+                <div class="prose">
+                    <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                    {@html text}
+                </div>
+            {:else if sections}
                 {#each sections as section}
                     <section id={section.id} class="flex flex-col gap-4">
                         <h3 class="text-3xl font-bold">{section.title}</h3>
