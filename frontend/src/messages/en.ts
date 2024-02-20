@@ -15,6 +15,18 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+import BasicsHelpPage from "./en/help/basics.md?raw";
+import BillingHelpPage from "./en/help/billing.md?raw";
+import FiltersHelpPage from "./en/help/filters.md?raw";
+import LabelsHelpPage from "./en/help/labels.md?raw";
+import QuotaHelpPage from "./en/help/quota.md?raw";
+import TasksHelpPage from "./en/help/tasks.md?raw";
+import TrialHelpPage from "./en/help/trial.md?raw";
+import WorkspaceBoardSectionsHelpPage from "./en/help/workspace-board-sections.md?raw";
+import WorkspaceBoardsHelpPage from "./en/help/workspace-boards.md?raw";
+import WorkspaceUsersHelpPage from "./en/help/workspace-users.md?raw";
+import WorkspacesHelpPage from "./en/help/workspaces.md?raw";
 import type { MessageDirectory } from "./types";
 
 const messages: MessageDirectory = {
@@ -1358,227 +1370,59 @@ const messages: MessageDirectory = {
         "basics": {
             title: "Basics",
             description: "Your first steps towards productivity",
-            content: `
-# What is a workspace?
-
-A workspace is an area where you can create projects, tasks, labels and invite various members of your organisation as workspace users. In a workspace you can set permissions and customise the overall look and feel of your productivity center. For more information on workspaces please see Workspaces.
-
-# What is a board?
-
-A board is a specific project in your workspace that you would like to work on.You can create unlimited boards per workspace and have the freedom to rename and organise them.Completed boards can be archived to remove clutter from your workspace. For more information on boards please see Boards.
-
-# What is a section?
-
-A section is a category that you can divide tasks into. Popular categories include ‘To do’ ‘In progress’ and ‘Done’. Sections can be moved and edited freely. For more information on sections please see Sections.
-
-# What is a task?
-
-A task is a step in your project that needs to be completed. Tasks can be assigned to any workspace user in your workspace. Labels and detailed information can be applied to tasks. For every task that is created, a unique task number is assigned to it for ease of reference and searching. Tasks can be further divided into sub tasks - sub tasks are great for keeping track of micro achievements per task. Due dates can also be set for tasks that need to be completed on a due date. For more information on tasks please see Tasks.
-
-# How to use the side menu
-
-The side menu allows for full control of your workspace and projects.You are able to switch between workspaces or boards through this menu. Filtering between workspace users and labels can also be performed here.Workspace settings such as permissions and billing can be accessed from this menu.The menu can be viewed in full expanded mode or in collapsed mode.
-`,
+            content: BasicsHelpPage,
         },
         "workspaces": {
             title: "Workspaces",
             description: "Independent spaces at your fingertips",
-            content: `
-# Create a workspace
-
-When you make an account with Projectify you will automatically have one workspace created for you. To create more workspaces, click the workspace dropdown in the side menu. This will open up a sub menu where you can click the Add new workspace button.
-
-# Switch workspaces
-
-To switch between workspaces, click the workspace dropdown in the side menu. This will open up a sub menu where you can switch between different workspaces associated with your account.
-
-# Workspace settings
-
-To go to workspace settings, click the ellipsis next to the workspace button in the side menu. This will open up a sub menu where you can access the current workspaces settings page.Workspace settings consists of three tabs. General, workspace users and billing. General provides information on your current workspace such as the name of the workspace. Workspace users allows you to add, edit permissions and delete workspace users. Billing provides a way for you to amend your account billing details.
-
-# Delete a workspace
-
-To delete a workspace, first click the workspace dropdown button to select the correct workspace. Then, click the ellipsis next to the workspace button in the side menu. This will open up a sub menu where you can access the current workspaces settings page.In the General tab you will find a button at the bottom of the page that gives you the option to delete this workspace.Be aware that if you only have one workspace, deleting your workspace will also delete your account.
-`,
+            content: WorkspacesHelpPage,
         },
         "workspace-boards": {
             title: "Workspace boards",
             description: "Separate projects from each other",
-            content: `
-# Create a workspace board
-
-To create a board, click the Add New Board button in the side menu. You can cycle through the different boards in your workspace easily by clicking each board button.
-
-# Edit a workspace board
-
-To edit a workspace board, hover over the workspace board and click the ellipsis button that appears. This will bring up a sub menu with an option to edit the board. Click Edit board to bring up an overlay that allows you to edit the board name.
-
-# Archive a workspace board
-
-To archive a workspace board, hover over the workspace board and click the ellipsis button that appears. This will bring up a sub menu with an option to archive the workspace board. Click Archive workspace board to bring up an overlay that allows you to archive the board.
-
-# Delete a workspace board
-
-To delete a workspace board, first navigate to the workspace board archive. You can reach the workspace board archive by clikcing on the ellipsis menu button next to the workspace selector. It appears as three blue dots inside a blue circle. From there a context menu opens, where you can click on ''Go to archive'' to go to the workspace board archive. Once you reach the workspace board archive from there, you can either recover a workspace board or permanently delete it. When you recover a workspace board, it will be put back next to the other workspace boards in your side navigation. When you delete a workspace board, all the workspace boards sections and tasks contained within will be deleted as well.
-`,
+            content: WorkspaceBoardsHelpPage,
         },
         "workspace-board-sections": {
             title: "Workspace board sections",
             description: "Maximize the efficiency of your tasks",
-            content: `
-# Create a workspace board section
-
-To create a workspace board section click the + icon in the top right corner. This will bring up an overlay for you to give the workspace board section a name.
-
-# Workspace board section navigation
-
-On the right side of the dashboard you will find a number of dots that indicate how many workspace board sections you have created on this workspace board. The current workspace board section you are focused on with have its dot extended. Click the dots to quickly navigate through to another workspace board section. This is particularly useful when you have a lot of tasks in each workspace board section.
-
-# Workspace board section context menu
-
-The workspace board section context menu gives you the option to: Expandind or collapsing the workspace board section, swapping positions with the previous or next workspace board section, creating a new task within that workspace board section, edit the workspace board section, and deleting the workspace board section
-
-# Move a workspace board sections
-
-To move a workspace board section, click the ellipsis in the right corner of the workspace board section. This will bring up a sub menu with the options mentioned above in 'workspace board section context menu'. You can either switch the workspace board section with the previous or the next workspace board section.
-
-# Edit a workspace board section
-
-To edit a workspace board section, click the ellipsis in the right corner of the section. This will bring up a context menu with the options mentioned in 'Workspace board section context menu'. Click 'Edit workspace board section' to edit the name of the workspace board section.
-
-# Delete a workspace board section
-
-To delete a workspace board section, click the ellipsis in the right corner of the workspace board section. This will bring up a context menu with the options mentioned in 'Workspace board section context menu'. Click 'Delete workspace board section' to bring up an overlay where you can confirm your decision to delete the workspace board section.
-`,
+            content: WorkspaceBoardSectionsHelpPage,
         },
         "tasks": {
             title: "Tasks",
             description: "All the ins and outs of task creation",
-            content: `
-# Create a task
-
-Tasks are the backbone of Projectify. In order to create a task simply click the + (plus) icon in a workspace board section panel. If you do not know how to create a workspace board section, please see the help page on workspace board sections. Another way of creating a task is to click the ellipsis button in the workspace board section panel, then click on 'Add a new task'
-
-# Add context to a task
-
-Context could be in the form of a title, description, label, assignee or due date. You have the freedom to add as little or as much context as you want, however we require having a title at the very least. When you create a task, an input form allows you to input information about the task.
-
-# Edit a task
-
-Once a task has been saved, you can go back in and edit the task by click the task. This will open up the same menu mentioned in the previous section above. You can also open this page with the task ellipsis button on the far right. Click in each field to edit the content you previously entered and once youre done, dont forget to save your work!
-
-# Move a task
-
-There are a few ways you can move a task as well as a few places. You can move your tasks around inside the workspace board section they are housed in as well as move them to other workspace board sections in your workspace board. For example, if you have a workspace board section called 'To Do' and another workspace board section called 'In Progress', you can move tasks between these workspace board sections. Moving tasks is simple. On the right of a task are three buttons. An up button, a down button and an ellipsis (three dots) button. The up and down buttons move the task inside the workpace board section. The ellipsis button allows you to select a workspace board section to move the task to, as well as more actions inside the current workspace board section such as 'Move to top' and 'Move to bottom'.
-
-# Delete a task
-
-In order to delete a task, click the ellipsis button in the task card and select 'Delete task' from the dropdown. This will open an overlay for you to confirm your choice to delete this task.
-`,
+            content: TasksHelpPage,
         },
         "labels": {
             title: "Labels",
             description: "Create categories for your tasks",
             // TODO "Ways to use labels"
-            content: `
-# Create a label
-
-Labels allow you to bring some organisation to your tasks. To create a label, click the label button in the side menu and then click the 'Create new label' button. This will open up a new menu where you can write the name of your new label as well as choose a color for it. Click the 'Save label' button to create your new label. Another way to create a label is when you are creating a new task.
-
-# Apply a label to a task
-
-There are two ways to apply a label to a task. If you are creating a task for the first time, you have the option to apply a label to the task in the context menu. You will find this button in the top right corner next to the title.If you have created a task but haven't applied a label to it yet. Click the apply label button on the task card. This will open up a menu with your labels so that you can select the appropriate one for your task.
-
-# Edit a label
-
-Open the side menu and click the label button. Hover over any label and click the edit button that appears. This will open the same menu as creating a label, but this time the name and color will be filled in. From here you can edit the name of the label as well as change the color of the label. Click the save label button to keep your changes.
-
-# Filter by labels
-
-You can filter and search labels that you have created by using the side menu. Searching for labels helps you to find a label quickly and filtering by label allows you to see similar tasks at the same time. You can apply more than one filter at a time. Click the label button in the side menu and from there you can either search for a label or filter labels.
-
-# Delete a label
-
-In order to delete a task, click the label section in the side menu and hover over any label. Click the delete icon that appears and confirm your choice to delete this label.
-            `,
+            content: LabelsHelpPage,
         },
         "workspace-users": {
             title: "Workspace users",
             description: "Collaboration starts with an invite",
-            content: `
-# Invite a workspace user
-
-To invite a workspace user to your workspace click the workspace users button in the side menu. Then click the 'Add new workspace user' button. This will take you to a new page away from the dashboard called Workspace settings. This page can be found in the ellipsis next to the workspace dropdown in the side menu. From this page, you can send invites for workspace users to access your workspace by entering their email addresses. We'll take care of the rest. Be aware that you will not be able to invite workspace users if you do not have enough seats available in your workspace.
-
-# Assign a task to a workspace user
-
-There are two ways to apply a label to a task. If you are creating a task for the first time, you have the option to assign it to a workspace user in the context menu. You will find this assign workspace user button in the top left corner next to the title. If you have created a task but haven't assigned it to a workspace user yet. Click the assign workspace user button on the task card. This will open up a menu with a list of your workspace users so that you can select the appropriate one for the task.
-
-# Filter by workspace user
-
-You can filter and search workspace users that are part of your workspace by using the side menu. Searching for workspace users helps you to find a workspace user quickly and filtering by workspace users allows you to see tasks a certain workspace user is working on. You can apply more than one filter at a time. Click the workspace user button in the side menu and from there you can either search for a workspace user or filter workspace users. Filtering a workspace user also allows you to see how many tasks that workspace user has assigned to them. This feature is great in determing which team workspace users are available for new tasks to be assigned to them.
-
-# Edit a workspace user's permissions
-
-To edit workspace user permissions, click the ellipsis button in the side menu.This will open up the workspace settings page. Click workspace users and from here you can search
-
-# Delete a workspace user
-
-To delete a workspace user, click the ellipsis button in the side menu. This will open up the workspace settings page. Click the workspace user tab and from here you can search for workspace users and edit their permissions. For more on permissions, please see our guide on workspace user roles and permissions.
-            `,
+            content: WorkspaceUsersHelpPage,
         },
         // TODO Bulk select
         "filters": {
             title: "Filters",
             description: "Streamline your workflow with filters",
-            content: `
-# Filter and search by workspace user
-
-You can filter and search workspace users that are part of your workspace by using the side menu. Searching for workspace users helps you to find a workspace user quickly and filtering by workspace user allows you to see tasks a certain workspace user is working on. You can apply more than one filter at a time. Click the workspace user button in the side menu and from there you can either search for a workspaceu or filter workspace users. Filtering a workspace user also allows you to see how many tasks that workspace user has assigned to them. This feature is great in determing which team workspace users are available for new tasks to be assigned to them.
-
-# Filter and search by label
-
-You can filter and search labels that you have created by using the side menu. Searching for labels helps you to find a label quickly and filtering by label allows you to see similar tasks at the same time. You can apply more than one filter at a time. Click the label button in the side menu and from there you can either search for a label or filter labels.
-
-# Search by keyword
-
-The search bar located in the header gives you the ability to further narrow down tasks by their title. Start typing any text and matching results will be automatically displayed below as you type. Clear your search by pressing the 'X' button to the right of the search input.
-            `,
+            content: FiltersHelpPage,
         },
         "billing": {
             title: "Billing and accounts",
             description: "Payment and account information",
-            content: `
-# Billing settings
-
-To go to workspace settings, click the ellipsis next to the workspace button in the side menu. This will open up a sub menu where you can access the current workspace’s settings page. From this page, you can access the billing settings of your account.
-
-# Removing/adding workspaces
-
-Only users with the permission role of Owner can create and delete workspaces. You will need to provide your banking details for each workspace you create.
-
-# Removing/adding workspace users
-
-Only users with the permission role of Owner can invite or remove users. Be aware that you will not be able to invite workspace users if you do not have enough seats available in your workspace. In order to add more seats, please amend the seat numbers in your account.
-
-# Delete your account
-
-To delete your account visit the billing page in workspace settings and cancel your subscription. Deleting your account will also remove workspace users from any workspaces that you own. You can transfer ownership of the account to a different workspace user before deletion to ensure that content and workspace users can continue to use the workspace. Deleting your account without transferring ownership will delete all data including personal information and all content created on the platform will cease to exist.
-`,
+            content: BillingHelpPage,
         },
         "trial": {
             title: "Workspace trial",
             description: "Try Projectify with a trial workspace",
-            content: `hello world`,
+            content: TrialHelpPage,
         },
         "quota": {
             title: "Workspace quotas",
             description: "Understand workspace resource quotas",
-            content: `
-# What are quotas
-# Quotas for trial workspaces
-# Quotas for paid workspaces
-            `,
+            content: QuotaHelpPage,
         },
         "skip": "Skip ahead to",
     },
