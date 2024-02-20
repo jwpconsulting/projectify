@@ -77,6 +77,16 @@
             description: $_("help.billing.description"),
             href: "/help/billing",
         },
+        {
+            title: $_("help.trial.title"),
+            description: $_("help.trial.description"),
+            href: "/help/trial",
+        },
+        {
+            title: $_("help.quota.title"),
+            description: $_("help.quota.description"),
+            href: "/help/quota",
+        },
     ] satisfies HelpTopic[];
     $: heroContent = {
         title: $_("help.hero.header.text"),
