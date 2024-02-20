@@ -1569,7 +1569,7 @@ To delete your account visit the billing page in workspace settings and cancel y
         "trial": {
             title: "Workspace trial",
             description: "Try Projectify with a trial workspace",
-            sections: [],
+            content: ``,
         },
         "quota": {
             title: "Workspace quotas",
