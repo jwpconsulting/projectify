@@ -141,6 +141,16 @@ async function check() {
     const defined = new Set(buildMessageStrings(messages));
     const messageStrings = await extractMessageStrings();
 
+    if (defined.size === 0) {
+        console.error("No messages defined. Why?");
+        process.exit(1);
+    }
+
+    if (messageStrings.length === 0) {
+        console.error("No message ids found. Why?");
+        process.exit(1);
+    }
+
     const stringsUsed = new Set(messageStrings.map((m) => m.message));
     const unused = difference(defined, stringsUsed);
     if (unused.size > 0) {
@@ -157,6 +167,7 @@ async function check() {
     if (unused.size > 0 || notFound.length > 0) {
         process.exit(1);
     }
+    console.log("check-i18n ok");
 }
 
 await check();
