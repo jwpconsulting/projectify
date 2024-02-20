@@ -18,20 +18,18 @@
 <!-- @component Explain how quotas work for paid/trial workspaces -->
 <script lang="ts">
     import { marked } from "marked";
-    // eslint-disable-next-line
-    import customHeadingId from "marked-custom-heading-id";
+    import { gfmHeadingId } from "marked-gfm-heading-id";
     import { _, json } from "svelte-i18n";
 
     import Layout from "$lib/components/help/Layout.svelte";
     import type { SolutionsHeroContent } from "$lib/types/ui";
 
-    // eslint-disable-next-line
-    marked.use(customHeadingId());
+    marked.use(gfmHeadingId());
     const text = marked.parse(
         `
-# General {#general}
-# Trial {#trial}
-# Paid {#paid}
+# General
+# Trial
+# Paid
 `,
     );
     $: heroContent = {
