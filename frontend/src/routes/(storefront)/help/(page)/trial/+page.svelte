@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -22,9 +22,9 @@
     import type { SolutionsHeroContent } from "$lib/types/ui";
 
     $: heroContent = {
-        title: $_("help.workspace-board-sections.title"),
-        text: $_("help.workspace-board-sections.description"),
+        title: $_("help.trial.title"),
+        text: $_("help.trial.description"),
     } satisfies SolutionsHeroContent;
 </script>
 
-<Layout {heroContent} content={$_("help.workspace-board-sections.content")} />
+<Layout {heroContent} content={$_("help.trial.content")} />

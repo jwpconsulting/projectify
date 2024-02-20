@@ -68,6 +68,11 @@ module.exports = {
             // Justus 2023-09-06
             "dom-focus-lock/dist/index.esm.js",
             "@steeze-ui/heroicons.index.js",
+            // fixes
+            // `parseForESLint` from parser
+            // `monorepo/frontend/node_modules/svelte-eslint-parser/lib/index.js`
+            // is invalid and will just be ignored
+            "marked-gfm-heading-id/src/index.js",
         ],
         "import/resolver": {
             typescript: {

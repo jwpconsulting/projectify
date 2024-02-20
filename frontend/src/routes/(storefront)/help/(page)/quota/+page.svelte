@@ -17,38 +17,15 @@
 -->
 <!-- @component Explain how quotas work for paid/trial workspaces -->
 <script lang="ts">
-    import { marked } from "marked";
-    // eslint-disable-next-line
-    import customHeadingId from "marked-custom-heading-id";
-    import { _, json } from "svelte-i18n";
+    import { _ } from "svelte-i18n";
 
     import Layout from "$lib/components/help/Layout.svelte";
     import type { SolutionsHeroContent } from "$lib/types/ui";
 
-    // eslint-disable-next-line
-    marked.use(customHeadingId());
-    const text = marked.parse(
-        `
-# General {#general}
-# Trial {#trial}
-# Paid {#paid}
-`,
-    );
     $: heroContent = {
         title: $_("help.quota.title"),
         text: $_("help.quota.description"),
     } satisfies SolutionsHeroContent;
-
-    $: sections = $json("help.quota.sections") as {
-        id: string;
-        content: string;
-        title: string;
-    }[];
 </script>
 
-<Layout {heroContent} {sections}>
-    <div class="prose" slot="content">
-        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-        {@html text}
-    </div>
-</Layout>
+<Layout {heroContent} content={$_("help.quota.content")} />

@@ -86,7 +86,7 @@ async function walk(dir: string): Promise<string[]> {
 // 4) Numbers
 // deleteWorkspaceBoard: $_("overlay.destructive.delete-workspace-board.title"),
 // 4) Json
-// $: sections = $json("help.basics.sections") as {
+// $: sections = $json("onboarding.welcome.prompt") as {
 const MESSAGE_RE = /\$(?:_|json)\(\s*?"(?<message>[a-z0-9.-]+)".*?\)/gs;
 
 /*

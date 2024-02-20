@@ -16,6 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import { marked } from "marked";
+    import { getHeadingList, gfmHeadingId } from "marked-gfm-heading-id";
     import { _ } from "svelte-i18n";
 
     import Hero from "$lib/components/layouts/Hero.svelte";
@@ -24,7 +26,10 @@
     import type { SolutionsHeroContent } from "$lib/types/ui";
 
     export let heroContent: SolutionsHeroContent;
-    export let sections: { id: string; content: string; title: string }[];
+    export let content: string;
+
+    marked.use(gfmHeadingId());
+    $: text = marked.parse(content);
 
     interface HelpItem {
         title: string;
@@ -72,56 +77,50 @@
             href: "/help/billing",
         },
         {
+            title: $_("help.trial.title"),
+            href: "/help/trial",
+        },
+        {
             title: $_("help.quota.title"),
             href: "/help/quota",
         },
     ] as HelpItem[];
+
+    $: sectionNav = getHeadingList().map(({ id, text }) => {
+        return {
+            id: id,
+            title: text,
+        };
+    });
 </script>
 
 <HeroLayout>
     <Hero slot="hero" {heroContent} />
     <nav slot="side" class="flex grow flex-col gap-4 sm:max-w-xs">
-        <h2 class="text-3xl font-bold">
-            {$_("help.help-sections")}
-        </h2>
+        <h2 class="text-3xl font-bold">{$_("help.help-sections")}</h2>
         <!-- sections -->
         <ul class="flex min-w-max list-inside list-disc flex-col gap-2">
             {#each helpItems as helpItem}
-                <li>
-                    <Anchor href={helpItem.href} label={helpItem.title} />
-                </li>
+                <li><Anchor href={helpItem.href} label={helpItem.title} /></li>
             {/each}
         </ul>
     </nav>
-    <div slot="content" class="flex flex-col gap-4">
-        <h2 class="text-4xl font-bold">{heroContent.title}</h2>
+    <div slot="content" class="prose">
+        <h2>{heroContent.title}</h2>
         <!-- skip links -->
-        <nav class="flex flex-col gap-4">
-            <h3 class="text-xl font-bold">{$_("help.skip")}</h3>
-            <ul class="flex list-inside list-disc flex-col gap-1">
-                {#each sections as section}
+        <nav>
+            <h3>{$_("help.skip")}</h3>
+            <ul>
+                {#each sectionNav as section}
                     <li>
-                        <Anchor
-                            href={`#${section.id}`}
-                            label={section.title}
-                        />
+                        <!-- marked escapes quotes and so on as html entities -->
+                        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                        <a href={`#${section.id}`}>{@html section.title}</a>
                     </li>
                 {/each}
             </ul>
         </nav>
-        <main class="flex flex-col gap-2">
-            {#if $$slots.content}
-                <slot name="content" />
-            {:else}
-                {#each sections as section}
-                    <section id={section.id} class="flex flex-col gap-4">
-                        <h3 class="text-3xl font-bold">{section.title}</h3>
-                        <p>
-                            {section.content}
-                        </p>
-                    </section>
-                {/each}
-            {/if}
-        </main>
+        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+        <main>{@html text}</main>
     </div>
 </HeroLayout>

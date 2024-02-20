@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    import { _, json } from "svelte-i18n";
+    import { _ } from "svelte-i18n";
 
     import Layout from "$lib/components/help/Layout.svelte";
     import type { SolutionsHeroContent } from "$lib/types/ui";
@@ -25,12 +25,6 @@
         title: $_("help.filters.title"),
         text: $_("help.filters.description"),
     } satisfies SolutionsHeroContent;
-
-    $: sections = $json("help.filters.sections") as {
-        id: string;
-        content: string;
-        title: string;
-    }[];
 </script>
 
-<Layout {heroContent} {sections} />
+<Layout {heroContent} content={$_("help.filters.content")} />

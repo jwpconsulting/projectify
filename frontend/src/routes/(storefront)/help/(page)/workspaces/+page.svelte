@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    import { _, json } from "svelte-i18n";
+    import { _ } from "svelte-i18n";
 
     import Layout from "$lib/components/help/Layout.svelte";
     import type { SolutionsHeroContent } from "$lib/types/ui";
@@ -25,12 +25,6 @@
         title: $_("help.workspaces.title"),
         text: $_("help.workspaces.description"),
     } satisfies SolutionsHeroContent;
-
-    $: sections = $json("help.workspaces.sections") as {
-        id: string;
-        content: string;
-        title: string;
-    }[];
 </script>
 
-<Layout {sections} {heroContent} />
+<Layout {heroContent} content={$_("help.workspaces.content")} />
