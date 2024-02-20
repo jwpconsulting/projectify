@@ -1658,6 +1658,11 @@ const messages: MessageDirectory = {
                 },
             ],
         },
+        "trial": {
+            title: "Workspace trial",
+            description: "Try Projectify with a trial workspace",
+            sections: [],
+        },
         "quota": {
             title: "Workspace quotas",
             description: "Understand workspace resource quotas",

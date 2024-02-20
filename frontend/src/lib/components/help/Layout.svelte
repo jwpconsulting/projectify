@@ -72,6 +72,10 @@
             href: "/help/billing",
         },
         {
+            title: $_("help.trial.title"),
+            href: "/help/trial",
+        },
+        {
             title: $_("help.quota.title"),
             href: "/help/quota",
         },
