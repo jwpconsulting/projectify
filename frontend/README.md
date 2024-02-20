@@ -1,5 +1,9 @@
 # Projectify Frontend
 
+## Requirements
+
+- Node >= v20.11.1
+
 ## Quickstart
 
 ```

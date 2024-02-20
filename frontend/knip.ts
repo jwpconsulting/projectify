@@ -51,6 +51,12 @@ const config: KnipConfig = {
         "bin/test",
         "bin/prebuild.sh",
     ],
+    ignoreDependencies: [
+        "esm-loader-import-alias",
+        "esm-loader-import-relative-extension",
+        "esm-loader-typescript",
+        "node-esm-loader",
+    ],
     compilers: {
         // https://github.com/webpro/knip/blob/7011a5107b6693f70a966a12bc3c31b6bc3353a8/docs/compilers.md
         svelte: (text: string) =>
