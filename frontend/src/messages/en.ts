@@ -1358,177 +1358,123 @@ const messages: MessageDirectory = {
         "basics": {
             title: "Basics",
             description: "Your first steps towards productivity",
-            sections: [
-                {
-                    id: "workspace",
-                    title: "What is a workspace?",
-                    content:
-                        "A workspace is an area where you can create projects, tasks, labels and invite various members of your organisation as workspace users. In a workspace you can set permissions and customise the overall look and feel of your productivity center. For more information on workspaces please see Workspaces.",
-                },
-                {
-                    id: "workspace-board",
-                    title: "What is a board?",
-                    content:
-                        "A board is a specific project in your workspace that you would like to work on.You can create unlimited boards per workspace and have the freedom to rename and organise them.Completed boards can be archived to remove clutter from your workspace. For more information on boards please see Boards.",
-                },
-                {
-                    id: "workspace-board-section",
-                    title: "What is a section?",
-                    content:
-                        "A section is a category that you can divide tasks into. Popular categories include ‘To do’ ‘In progress’ and ‘Done’. Sections can be moved and edited freely. For more information on sections please see Sections.",
-                },
-                {
-                    id: "task",
-                    title: "What is a task?",
-                    content:
-                        "A task is a step in your project that needs to be completed. Tasks can be assigned to any workspace user in your workspace. Labels and detailed information can be applied to tasks. For every task that is created, a unique task number is assigned to it for ease of reference and searching. Tasks can be further divided into sub tasks - sub tasks are great for keeping track of micro achievements per task. Due dates can also be set for tasks that need to be completed on a due date. For more information on tasks please see Tasks.",
-                },
-                {
-                    id: "side-menu",
-                    title: "How to use the side menu",
-                    content:
-                        "The side menu allows for full control of your workspace and projects.You are able to switch between workspaces or boards through this menu. Filtering between workspace users and labels can also be performed here.Workspace settings such as permissions and billing can be accessed from this menu.The menu can be viewed in full expanded mode or in collapsed mode.",
-                },
-            ],
+            content: `
+# What is a workspace?
+
+A workspace is an area where you can create projects, tasks, labels and invite various members of your organisation as workspace users. In a workspace you can set permissions and customise the overall look and feel of your productivity center. For more information on workspaces please see Workspaces.
+
+# What is a board?
+
+A board is a specific project in your workspace that you would like to work on.You can create unlimited boards per workspace and have the freedom to rename and organise them.Completed boards can be archived to remove clutter from your workspace. For more information on boards please see Boards.
+
+# What is a section?
+
+A section is a category that you can divide tasks into. Popular categories include ‘To do’ ‘In progress’ and ‘Done’. Sections can be moved and edited freely. For more information on sections please see Sections.
+
+# What is a task?
+
+A task is a step in your project that needs to be completed. Tasks can be assigned to any workspace user in your workspace. Labels and detailed information can be applied to tasks. For every task that is created, a unique task number is assigned to it for ease of reference and searching. Tasks can be further divided into sub tasks - sub tasks are great for keeping track of micro achievements per task. Due dates can also be set for tasks that need to be completed on a due date. For more information on tasks please see Tasks.
+
+# How to use the side menu
+
+The side menu allows for full control of your workspace and projects.You are able to switch between workspaces or boards through this menu. Filtering between workspace users and labels can also be performed here.Workspace settings such as permissions and billing can be accessed from this menu.The menu can be viewed in full expanded mode or in collapsed mode.
+`,
         },
         "workspaces": {
             title: "Workspaces",
             description: "Independent spaces at your fingertips",
-            sections: [
-                {
-                    id: "create-workspace",
-                    title: "Create a workspace",
-                    content:
-                        "When you make an account with Projectify you will automatically have one workspace created for you. To create more workspaces, click the workspace dropdown in the side menu. This will open up a sub menu where you can click the Add new workspace button.",
-                },
-                {
-                    id: "switch-workspaces",
-                    title: "Switch workspaces",
-                    content:
-                        "To switch between workspaces, click the workspace dropdown in the side menu. This will open up a sub menu where you can switch between different workspaces associated with your account.",
-                },
-                {
-                    id: "workspace-settings",
-                    title: "Workspace settings",
-                    content:
-                        "To go to workspace settings, click the ellipsis next to the workspace button in the side menu. This will open up a sub menu where you can access the current workspaces settings page.Workspace settings consists of three tabs. General, workspace users and billing. General provides information on your current workspace such as the name of the workspace. Workspace users allows you to add, edit permissions and delete workspace users. Billing provides a way for you to amend your account billing details.",
-                },
-                {
-                    id: "delete-workspace",
-                    title: "Delete a workspace",
-                    content:
-                        "To delete a workspace, first click the workspace dropdown button to select the correct workspace. Then, click the ellipsis next to the workspace button in the side menu. This will open up a sub menu where you can access the current workspaces settings page.In the General tab you will find a button at the bottom of the page that gives you the option to delete this workspace.Be aware that if you only have one workspace, deleting your workspace will also delete your account.",
-                },
-            ],
+            content: `
+# Create a workspace
+
+When you make an account with Projectify you will automatically have one workspace created for you. To create more workspaces, click the workspace dropdown in the side menu. This will open up a sub menu where you can click the Add new workspace button.
+
+# Switch workspaces
+
+To switch between workspaces, click the workspace dropdown in the side menu. This will open up a sub menu where you can switch between different workspaces associated with your account.
+
+# Workspace settings
+
+To go to workspace settings, click the ellipsis next to the workspace button in the side menu. This will open up a sub menu where you can access the current workspaces settings page.Workspace settings consists of three tabs. General, workspace users and billing. General provides information on your current workspace such as the name of the workspace. Workspace users allows you to add, edit permissions and delete workspace users. Billing provides a way for you to amend your account billing details.
+
+# Delete a workspace
+
+To delete a workspace, first click the workspace dropdown button to select the correct workspace. Then, click the ellipsis next to the workspace button in the side menu. This will open up a sub menu where you can access the current workspaces settings page.In the General tab you will find a button at the bottom of the page that gives you the option to delete this workspace.Be aware that if you only have one workspace, deleting your workspace will also delete your account.
+`,
         },
         "workspace-boards": {
             title: "Workspace boards",
             description: "Separate projects from each other",
-            sections: [
-                {
-                    id: "create-workspace-board",
-                    title: "Create a workspace board",
-                    content:
-                        "To create a board, click the Add New Board button in the side menu. You can cycle through the different boards in your workspace easily by clicking each board button.",
-                },
-                {
-                    id: "edit-workspace-board",
-                    title: "Edit a workspace board",
-                    content:
-                        "To edit a workspace board, hover over the workspace board and click the ellipsis button that appears. This will bring up a sub menu with an option to edit the board. Click Edit board to bring up an overlay that allows you to edit the board name.",
-                },
-                {
-                    id: "archive-workspace-board",
-                    title: "Archive a workspace board",
-                    content:
-                        "To archive a workspace board, hover over the workspace board and click the ellipsis button that appears. This will bring up a sub menu with an option to archive the workspace board. Click Archive workspace board to bring up an overlay that allows you to archive the board.",
-                },
-                {
-                    id: "delete-workspace-board",
-                    title: "Delete a workspace board",
-                    content:
-                        "To delete a workspace board, first navigate to the workspace board archive. You can reach the workspace board archive by clikcing on the ellipsis menu button next to the workspace selector. It appears as three blue dots inside a blue circle. From there a context menu opens, where you can click on ''Go to archive'' to go to the workspace board archive. Once you reach the workspace board archive from there, you can either recover a workspace board or permanently delete it. When you recover a workspace board, it will be put back next to the other workspace boards in your side navigation. When you delete a workspace board, all the workspace boards sections and tasks contained within will be deleted as well.",
-                },
-            ],
+            content: `
+# Create a workspace board
+
+To create a board, click the Add New Board button in the side menu. You can cycle through the different boards in your workspace easily by clicking each board button.
+
+# Edit a workspace board
+
+To edit a workspace board, hover over the workspace board and click the ellipsis button that appears. This will bring up a sub menu with an option to edit the board. Click Edit board to bring up an overlay that allows you to edit the board name.
+
+# Archive a workspace board
+
+To archive a workspace board, hover over the workspace board and click the ellipsis button that appears. This will bring up a sub menu with an option to archive the workspace board. Click Archive workspace board to bring up an overlay that allows you to archive the board.
+
+# Delete a workspace board
+
+To delete a workspace board, first navigate to the workspace board archive. You can reach the workspace board archive by clikcing on the ellipsis menu button next to the workspace selector. It appears as three blue dots inside a blue circle. From there a context menu opens, where you can click on ''Go to archive'' to go to the workspace board archive. Once you reach the workspace board archive from there, you can either recover a workspace board or permanently delete it. When you recover a workspace board, it will be put back next to the other workspace boards in your side navigation. When you delete a workspace board, all the workspace boards sections and tasks contained within will be deleted as well.
+`,
         },
         "workspace-board-sections": {
             title: "Workspace board sections",
             description: "Maximize the efficiency of your tasks",
-            sections: [
-                {
-                    id: "create-workspace-board-section",
-                    title: "Create a workspace board section",
-                    content:
-                        "To create a workspace board section click the + icon in the top right corner. This will bring up an overlay for you to give the workspace board section a name.",
-                },
-                {
-                    id: "workspace-board-section-navigation",
-                    title: "Workspace board section navigation",
-                    content:
-                        "On the right side of the dashboard you will find a number of dots that indicate how many workspace board sections you have created on this workspace board. The current workspace board section you are focused on with have its dot extended. Click the dots to quickly navigate through to another workspace board section. This is particularly useful when you have a lot of tasks in each workspace board section.",
-                },
-                {
-                    id: "workspace-board-section-context-menu",
-                    title: "Workspace board section context menu",
-                    content:
-                        "The workspace board section context menu gives you the option to: Expandind or collapsing the workspace board section, swapping positions with the previous or next workspace board section, creating a new task within that workspace board section, edit the workspace board section, and deleting the workspace board section",
-                },
-                {
-                    id: "move-workspace-board-section",
-                    title: "Move a workspace board sections",
-                    content:
-                        "To move a workspace board section, click the ellipsis in the right corner of the workspace board section. This will bring up a sub menu with the options mentioned above in 'workspace board section context menu'. You can either switch the workspace board section with the previous or the next workspace board section.",
-                },
-                {
-                    id: "edit-workspace-board-section",
-                    title: "Edit a workspace board section",
-                    content:
-                        "To edit a workspace board section, click the ellipsis in the right corner of the section. This will bring up a context menu with the options mentioned in 'Workspace board section context menu'. Click 'Edit workspace board section' to edit the name of the workspace board section.",
-                },
-                {
-                    id: "delete-workspace-board-section",
-                    title: "Delete a workspace board section",
-                    content:
-                        "To delete a workspace board section, click the ellipsis in the right corner of the workspace board section. This will bring up a context menu with the options mentioned in 'Workspace board section context menu'. Click 'Delete workspace board section' to bring up an overlay where you can confirm your decision to delete the workspace board section.",
-                },
-            ],
+            content: `
+# Create a workspace board section
+
+To create a workspace board section click the + icon in the top right corner. This will bring up an overlay for you to give the workspace board section a name.
+
+# Workspace board section navigation
+
+On the right side of the dashboard you will find a number of dots that indicate how many workspace board sections you have created on this workspace board. The current workspace board section you are focused on with have its dot extended. Click the dots to quickly navigate through to another workspace board section. This is particularly useful when you have a lot of tasks in each workspace board section.
+
+# Workspace board section context menu
+
+The workspace board section context menu gives you the option to: Expandind or collapsing the workspace board section, swapping positions with the previous or next workspace board section, creating a new task within that workspace board section, edit the workspace board section, and deleting the workspace board section
+
+# Move a workspace board sections
+
+To move a workspace board section, click the ellipsis in the right corner of the workspace board section. This will bring up a sub menu with the options mentioned above in 'workspace board section context menu'. You can either switch the workspace board section with the previous or the next workspace board section.
+
+# Edit a workspace board section
+
+To edit a workspace board section, click the ellipsis in the right corner of the section. This will bring up a context menu with the options mentioned in 'Workspace board section context menu'. Click 'Edit workspace board section' to edit the name of the workspace board section.
+
+# Delete a workspace board section
+
+To delete a workspace board section, click the ellipsis in the right corner of the workspace board section. This will bring up a context menu with the options mentioned in 'Workspace board section context menu'. Click 'Delete workspace board section' to bring up an overlay where you can confirm your decision to delete the workspace board section.
+`,
         },
         "tasks": {
             title: "Tasks",
             description: "All the ins and outs of task creation",
-            sections: [
-                {
-                    id: "create-task",
-                    title: "Create a task",
-                    content:
-                        "Tasks are the backbone of Projectify. In order to create a task simply click the + (plus) icon in a workspace board section panel. If you do not know how to create a workspace board section, please see the help page on workspace board sections. Another way of creating a task is to click the ellipsis button in the workspace board section panel, then click on 'Add a new task'",
-                },
-                {
-                    id: "add-context-to-task",
-                    title: "Add context to a task",
-                    content:
-                        "Context could be in the form of a title, description, label, assignee or due date. You have the freedom to add as little or as much context as you want, however we require having a title at the very least. When you create a task, an input form allows you to input information about the task.",
-                },
-                {
-                    id: "edit-task",
-                    title: "Edit a task",
-                    content:
-                        "Once a task has been saved, you can go back in and edit the task by click the task. This will open up the same menu mentioned in the previous section above. You can also open this page with the task ellipsis button on the far right. Click in each field to edit the content you previously entered and once youre done, dont forget to save your work!",
-                },
-                {
-                    id: "move-task",
-                    title: "Move a task",
-                    content:
-                        "There are a few ways you can move a task as well as a few places. You can move your tasks around inside the workspace board section they are housed in as well as move them to other workspace board sections in your workspace board. For example, if you have a workspace board section called 'To Do' and another workspace board section called 'In Progress', you can move tasks between these workspace board sections. Moving tasks is simple. On the right of a task are three buttons. An up button, a down button and an ellipsis (three dots) button. The up and down buttons move the task inside the workpace board section. The ellipsis button allows you to select a workspace board section to move the task to, as well as more actions inside the current workspace board section such as 'Move to top' and 'Move to bottom'.",
-                },
-                {
-                    id: "delete-task",
-                    title: "Delete a task",
-                    content:
-                        "In order to delete a task, click the ellipsis button in the task card and select 'Delete task' from the dropdown. This will open an overlay for you to confirm your choice to delete this task.",
-                },
-                // TODO mention bulk delete in delete-task
-            ],
+            content: `
+# Create a task
+
+Tasks are the backbone of Projectify. In order to create a task simply click the + (plus) icon in a workspace board section panel. If you do not know how to create a workspace board section, please see the help page on workspace board sections. Another way of creating a task is to click the ellipsis button in the workspace board section panel, then click on 'Add a new task'
+
+# Add context to a task
+
+Context could be in the form of a title, description, label, assignee or due date. You have the freedom to add as little or as much context as you want, however we require having a title at the very least. When you create a task, an input form allows you to input information about the task.
+
+# Edit a task
+
+Once a task has been saved, you can go back in and edit the task by click the task. This will open up the same menu mentioned in the previous section above. You can also open this page with the task ellipsis button on the far right. Click in each field to edit the content you previously entered and once youre done, dont forget to save your work!
+
+# Move a task
+
+There are a few ways you can move a task as well as a few places. You can move your tasks around inside the workspace board section they are housed in as well as move them to other workspace board sections in your workspace board. For example, if you have a workspace board section called 'To Do' and another workspace board section called 'In Progress', you can move tasks between these workspace board sections. Moving tasks is simple. On the right of a task are three buttons. An up button, a down button and an ellipsis (three dots) button. The up and down buttons move the task inside the workpace board section. The ellipsis button allows you to select a workspace board section to move the task to, as well as more actions inside the current workspace board section such as 'Move to top' and 'Move to bottom'.
+
+# Delete a task
+
+In order to delete a task, click the ellipsis button in the task card and select 'Delete task' from the dropdown. This will open an overlay for you to confirm your choice to delete this task.
+`,
         },
         "labels": {
             title: "Labels",
