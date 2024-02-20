@@ -456,11 +456,11 @@ const messages: MessageDirectory = {
                 missing: "Must enter password",
             },
             "tos": {
-                label: 'I agree to the <a href="{tosUrl}">Terms of Service</a>',
+                label: "I agree to the Terms of Service",
                 missing: "Must agree to Terms of Service",
             },
             "privacy-policy": {
-                label: 'I agree to the <a href="{privacyPolicyUrl}">Privacy Policy</a>',
+                label: "I agree to the Privacy Policy",
                 missing: "Must agree to Privacy Policy",
             },
             "submit": {
