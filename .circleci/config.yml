@@ -23,7 +23,7 @@ executors:
           POSTGRES_PASSWORD: projectify
   node:
     docker:
-       - image: cimg/node:18.17.1
+       - image: cimg/node:20.11.0
 commands:
   prepare_test_backend:
     description: Install dependencies for backend
