@@ -16,20 +16,18 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    import { marked } from "marked";
-    import { getHeadingList, gfmHeadingId } from "marked-gfm-heading-id";
     import { _ } from "svelte-i18n";
 
     import Hero from "$lib/components/layouts/Hero.svelte";
     import HeroLayout from "$lib/components/layouts/HeroLayout.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import type { SolutionsHeroContent } from "$lib/types/ui";
+    import { toMarkdown } from "$lib/utils/markdown";
 
     export let heroContent: SolutionsHeroContent;
     export let content: string;
 
-    marked.use(gfmHeadingId());
-    $: text = marked.parse(content);
+    $: markdown = toMarkdown(content);
 
     interface HelpItem {
         title: string;
@@ -85,13 +83,6 @@
             href: "/help/quota",
         },
     ] as HelpItem[];
-
-    $: sectionNav = getHeadingList().map(({ id, text }) => {
-        return {
-            id: id,
-            title: text,
-        };
-    });
 </script>
 
 <HeroLayout>
@@ -111,7 +102,7 @@
         <nav>
             <h3>{$_("help.skip")}</h3>
             <ul>
-                {#each sectionNav as section}
+                {#each markdown.sections as section}
                     <li>
                         <!-- marked escapes quotes and so on as html entities -->
                         <!-- eslint-disable-next-line svelte/no-at-html-tags -->
@@ -121,6 +112,6 @@
             </ul>
         </nav>
         <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-        <main>{@html text}</main>
+        <main>{@html markdown.content}</main>
     </div>
 </HeroLayout>
