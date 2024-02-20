@@ -1533,75 +1533,53 @@ const messages: MessageDirectory = {
         "labels": {
             title: "Labels",
             description: "Create categories for your tasks",
-            sections: [
-                {
-                    id: "create-label",
-                    title: "Create a label",
-                    content:
-                        "Labels allow you to bring some organisation to your tasks. To create a label, click the label button in the side menu and then click the 'Create new label' button. This will open up a new menu where you can write the name of your new label as well as choose a color for it. Click the 'Save label' button to create your new label. Another way to create a label is when you are creating a new task.",
-                },
-                {
-                    id: "apply-label-to-task",
-                    title: "Apply a label to a task",
-                    content:
-                        "There are two ways to apply a label to a task. If you are creating a task for the first time, you have the option to apply a label to the task in the context menu. You will find this button in the top right corner next to the title.If you have created a task but haven't applied a label to it yet. Click the apply label button on the task card. This will open up a menu with your labels so that you can select the appropriate one for your task.",
-                },
-                {
-                    id: "edit-label",
-                    title: "Edit a label",
-                    content:
-                        "Open the side menu and click the label button. Hover over any label and click the edit button that appears. This will open the same menu as creating a label, but this time the name and color will be filled in. From here you can edit the name of the label as well as change the color of the label. Click the save label button to keep your changes.",
-                },
-                {
-                    id: "filter-by-labels",
-                    title: "Filter by labels",
-                    content:
-                        "You can filter and search labels that you have created by using the side menu. Searching for labels helps you to find a label quickly and filtering by label allows you to see similar tasks at the same time. You can apply more than one filter at a time. Click the label button in the side menu and from there you can either search for a label or filter labels.",
-                },
-                {
-                    id: "delete-label",
-                    title: "Delete a label",
-                    content:
-                        "In order to delete a task, click the label section in the side menu and hover over any label. Click the delete icon that appears and confirm your choice to delete this label.",
-                },
-                // TODO "Ways to use labels"
-            ],
+            // TODO "Ways to use labels"
+            content: `
+# Create a label
+
+Labels allow you to bring some organisation to your tasks. To create a label, click the label button in the side menu and then click the 'Create new label' button. This will open up a new menu where you can write the name of your new label as well as choose a color for it. Click the 'Save label' button to create your new label. Another way to create a label is when you are creating a new task.
+
+# Apply a label to a task
+
+There are two ways to apply a label to a task. If you are creating a task for the first time, you have the option to apply a label to the task in the context menu. You will find this button in the top right corner next to the title.If you have created a task but haven't applied a label to it yet. Click the apply label button on the task card. This will open up a menu with your labels so that you can select the appropriate one for your task.
+
+# Edit a label
+
+Open the side menu and click the label button. Hover over any label and click the edit button that appears. This will open the same menu as creating a label, but this time the name and color will be filled in. From here you can edit the name of the label as well as change the color of the label. Click the save label button to keep your changes.
+
+# Filter by labels
+
+You can filter and search labels that you have created by using the side menu. Searching for labels helps you to find a label quickly and filtering by label allows you to see similar tasks at the same time. You can apply more than one filter at a time. Click the label button in the side menu and from there you can either search for a label or filter labels.
+
+# Delete a label
+
+In order to delete a task, click the label section in the side menu and hover over any label. Click the delete icon that appears and confirm your choice to delete this label.
+            `,
         },
         "workspace-users": {
             title: "Workspace users",
             description: "Collaboration starts with an invite",
-            sections: [
-                {
-                    id: "invite-a-workspace-user",
-                    title: "Invite a workspace user",
-                    content:
-                        "To invite a workspace user to your workspace click the workspace users button in the side menu. Then click the 'Add new workspace user' button. This will take you to a new page away from the dashboard called Workspace settings. This page can be found in the ellipsis next to the workspace dropdown in the side menu. From this page, you can send invites for workspace users to access your workspace by entering their email addresses. We'll take care of the rest. Be aware that you will not be able to invite workspace users if you do not have enough seats available in your workspace.",
-                },
-                {
-                    id: "assign-task-to-workspace-user",
-                    title: "Assign a task to a workspace user",
-                    content:
-                        "There are two ways to apply a label to a task. If you are creating a task for the first time, you have the option to assign it to a workspace user in the context menu. You will find this assign workspace user button in the top left corner next to the title. If you have created a task but haven't assigned it to a workspace user yet. Click the assign workspace user button on the task card. This will open up a menu with a list of your workspace users so that you can select the appropriate one for the task.",
-                },
-                {
-                    id: "filter-workspace-user",
-                    title: "Filter by workspace user",
-                    content:
-                        "You can filter and search workspace users that are part of your workspace by using the side menu. Searching for workspace users helps you to find a workspace user quickly and filtering by workspace users allows you to see tasks a certain workspace user is working on. You can apply more than one filter at a time. Click the workspace user button in the side menu and from there you can either search for a workspace user or filter workspace users. Filtering a workspace user also allows you to see how many tasks that workspace user has assigned to them. This feature is great in determing which team workspace users are available for new tasks to be assigned to them.",
-                },
-                {
-                    id: "edit-workspace-user-permissions",
-                    title: "Edit a workspace user's permissions",
-                    content:
-                        "To edit workspace user permissions, click the ellipsis button in the side menu.This will open up the workspace settings page. Click workspace users and from here you can search",
-                },
-                {
-                    id: "delete-workspace-user",
-                    title: "Delete a workspace user",
-                    content:
-                        "To delete a workspace user, click the ellipsis button in the side menu. This will open up the workspace settings page. Click the workspace user tab and from here you can search for workspace users and edit their permissions. For more on permissions, please see our guide on workspace user roles and permissions.",
-                },
-            ],
+            content: `
+# Invite a workspace user
+
+To invite a workspace user to your workspace click the workspace users button in the side menu. Then click the 'Add new workspace user' button. This will take you to a new page away from the dashboard called Workspace settings. This page can be found in the ellipsis next to the workspace dropdown in the side menu. From this page, you can send invites for workspace users to access your workspace by entering their email addresses. We'll take care of the rest. Be aware that you will not be able to invite workspace users if you do not have enough seats available in your workspace.
+
+# Assign a task to a workspace user
+
+There are two ways to apply a label to a task. If you are creating a task for the first time, you have the option to assign it to a workspace user in the context menu. You will find this assign workspace user button in the top left corner next to the title. If you have created a task but haven't assigned it to a workspace user yet. Click the assign workspace user button on the task card. This will open up a menu with a list of your workspace users so that you can select the appropriate one for the task.
+
+# Filter by workspace user
+
+You can filter and search workspace users that are part of your workspace by using the side menu. Searching for workspace users helps you to find a workspace user quickly and filtering by workspace users allows you to see tasks a certain workspace user is working on. You can apply more than one filter at a time. Click the workspace user button in the side menu and from there you can either search for a workspace user or filter workspace users. Filtering a workspace user also allows you to see how many tasks that workspace user has assigned to them. This feature is great in determing which team workspace users are available for new tasks to be assigned to them.
+
+# Edit a workspace user's permissions
+
+To edit workspace user permissions, click the ellipsis button in the side menu.This will open up the workspace settings page. Click workspace users and from here you can search
+
+# Delete a workspace user
+
+To delete a workspace user, click the ellipsis button in the side menu. This will open up the workspace settings page. Click the workspace user tab and from here you can search for workspace users and edit their permissions. For more on permissions, please see our guide on workspace user roles and permissions.
+            `,
         },
         // TODO Bulk select
         "filters": {
