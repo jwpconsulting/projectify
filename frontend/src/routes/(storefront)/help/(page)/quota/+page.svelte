@@ -18,30 +18,26 @@
 <!-- @component Explain how quotas work for paid/trial workspaces -->
 <script lang="ts">
     import { marked } from "marked";
-    import { gfmHeadingId } from "marked-gfm-heading-id";
-    import { _, json } from "svelte-i18n";
+    import { getHeadingList, gfmHeadingId } from "marked-gfm-heading-id";
+    import { _ } from "svelte-i18n";
 
     import Layout from "$lib/components/help/Layout.svelte";
     import type { SolutionsHeroContent } from "$lib/types/ui";
 
-    marked.use(gfmHeadingId());
-    const text = marked.parse(
-        `
-# General
-# Trial
-# Paid
-`,
-    );
     $: heroContent = {
         title: $_("help.quota.title"),
         text: $_("help.quota.description"),
     } satisfies SolutionsHeroContent;
 
-    $: sections = $json("help.quota.sections") as {
-        id: string;
-        content: string;
-        title: string;
-    }[];
+    marked.use(gfmHeadingId());
+    $: text = marked.parse($_("help.quota.content"));
+    $: sections = getHeadingList().map(({ id, text }) => {
+        return {
+            id: id,
+            content: "",
+            title: text,
+        };
+    });
 </script>
 
 <Layout {heroContent} {sections}>

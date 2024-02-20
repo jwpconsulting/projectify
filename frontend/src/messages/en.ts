@@ -1666,23 +1666,11 @@ const messages: MessageDirectory = {
         "quota": {
             title: "Workspace quotas",
             description: "Understand workspace resource quotas",
-            sections: [
-                {
-                    id: "general",
-                    title: "What are quotas",
-                    content: "",
-                },
-                {
-                    id: "trial",
-                    title: "Quotas for trial workspaces",
-                    content: "",
-                },
-                {
-                    id: "paid",
-                    title: "Quotas for paid workspaces",
-                    content: "",
-                },
-            ],
+            content: `
+# What are quotas
+# Quotas for trial workspaces
+# Quotas for paid workspaces
+            `,
         },
         "skip": "Skip ahead to",
     },
