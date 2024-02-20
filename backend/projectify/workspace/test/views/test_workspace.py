@@ -141,7 +141,9 @@ class TestWorkspaceReadUpdate:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can GET this view this while being logged in."""
-        with django_assert_num_queries(5):
+        # Went up from 5 to 7, since we now return the quota for remaining
+        # seats
+        with django_assert_num_queries(7):
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.data
         assert response.data == {
@@ -159,7 +161,22 @@ class TestWorkspaceReadUpdate:
                 unittest.mock.ANY,
             ],
             "labels": [],
-            "quota": unittest.mock.ANY,
+            # TODO
+            "quota": {
+                "workspace_status": "full",
+                "chat_messages": unittest.mock.ANY,
+                "labels": unittest.mock.ANY,
+                "sub_tasks": unittest.mock.ANY,
+                "tasks": unittest.mock.ANY,
+                "task_labels": unittest.mock.ANY,
+                "workspace_boards": unittest.mock.ANY,
+                "workspace_board_sections": unittest.mock.ANY,
+                "workspace_users_and_invites": {
+                    "current": 2,
+                    "limit": 10,
+                    "can_create_more": True,
+                },
+            },
         }
 
     def test_get_trial(

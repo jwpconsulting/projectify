@@ -36,7 +36,7 @@ Limitations for a trial workspace are
 - WorkspaceUser + WorkspaceUserInivite(unredeemed): 2
 """
 from functools import partial
-from typing import Literal, Optional, Union
+from typing import Literal, TypedDict, Union
 
 from projectify.corporate.services.customer import (
     customer_check_active_for_workspace,
@@ -63,9 +63,23 @@ Resource = Literal[
     "WorkspaceUserAndInvite",
 ]
 
-
 Limitation = Union[None, int]
-trial_conditions: dict[Resource, Limitation] = {
+
+
+class Limitations(TypedDict):
+    """Contain all limitations."""
+
+    ChatMessage: Limitation
+    Label: Limitation
+    SubTask: Limitation
+    Task: Limitation
+    TaskLabel: Limitation
+    WorkspaceBoard: Limitation
+    WorkspaceBoardSection: Limitation
+    WorkspaceUserAndInvite: Limitation
+
+
+trial_conditions: Limitations = {
     "ChatMessage": 0,
     "Label": 10,
     "SubTask": 1000,
@@ -76,42 +90,57 @@ trial_conditions: dict[Resource, Limitation] = {
     "WorkspaceUserAndInvite": 2,
 }
 
+# Full workspace conditions are somewhat like this:
+# {
+#     "ChatMessage": None,
+#     "Label": None,
+#     "SubTask": None,
+#     "Task": None,
+#     "TaskLabel": None,
+#     "WorkspaceBoard": None,
+#     "WorkspaceBoardSection": None,
+#     "WorkspaceUserAndInvite": workspace.customer.seats,
+# }
 
-def workspace_quota_for(*, resource: Resource, workspace: Workspace) -> Quota:
-    """Return the quota within a workspace for a given resource."""
-    limit: Optional[int]
-    match customer_check_active_for_workspace(workspace=workspace):
-        case "full":
-            limit = None
-        # We regard inactive as trial
-        case "trial" | "inactive":
-            limit = trial_conditions[resource]
-    # Short circuit for no limit
-    if limit is None:
-        return Quota(current=None, limit=None, can_create_more=True)
-    current: int
+
+def get_workspace_quota_for_resource(
+    resource: Resource, workspace: Workspace
+) -> Limitation:
+    """Get specific resource quota for a workspace."""
+    status = customer_check_active_for_workspace(workspace=workspace)
+    # We regard inactive as trial
+    if status in ["trial", "inactive"]:
+        return trial_conditions[resource]
+    if resource == "WorkspaceUserAndInvite":
+        customer = workspace.customer
+        return customer.seats
+    return None
+
+
+def get_workspace_resource_count(
+    resource: Resource, workspace: Workspace
+) -> int:
+    """Return resource count for a specific resource."""
     match resource:
         case "ChatMessage":
             # XXX At the moment, chat messages are not supported
-            current = ChatMessage.objects.filter(
+            return ChatMessage.objects.filter(
                 task__workspace=workspace
             ).count()
         case "Label":
-            current = Label.objects.filter(workspace=workspace).count()
+            return Label.objects.filter(workspace=workspace).count()
         case "SubTask":
-            current = SubTask.objects.filter(task__workspace=workspace).count()
+            return SubTask.objects.filter(task__workspace=workspace).count()
         case "Task":
-            current = Task.objects.filter(
+            return Task.objects.filter(
                 workspace_board_section__workspace_board__workspace=workspace
             ).count()
         case "TaskLabel":
-            current = TaskLabel.objects.filter(
-                label__workspace=workspace
-            ).count()
+            return TaskLabel.objects.filter(label__workspace=workspace).count()
         case "WorkspaceBoard":
-            current = workspace.workspaceboard_set.count()
+            return workspace.workspaceboard_set.count()
         case "WorkspaceBoardSection":
-            current = WorkspaceBoardSection.objects.filter(
+            return WorkspaceBoardSection.objects.filter(
                 workspace_board__workspace=workspace
             ).count()
         case "WorkspaceUserAndInvite":
@@ -119,7 +148,16 @@ def workspace_quota_for(*, resource: Resource, workspace: Workspace) -> Quota:
             invite_count = workspace.workspaceuserinvite_set.filter(
                 redeemed=False
             ).count()
-            current = user_count + invite_count
+            return user_count + invite_count
+
+
+def workspace_quota_for(*, resource: Resource, workspace: Workspace) -> Quota:
+    """Return the quota within a workspace for a given resource."""
+    limit = get_workspace_quota_for_resource(resource, workspace)
+    # Short circuit for no limit
+    if limit is None:
+        return Quota(current=None, limit=None, can_create_more=True)
+    current = get_workspace_resource_count(resource, workspace)
     return Quota(current=current, limit=limit, can_create_more=current < limit)
 
 
