@@ -110,14 +110,12 @@
                 contained={false}
                 required
             />
-            <span class="prose">
-                <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-                {@html $_("auth.sign-up.tos.label", {
-                    values: {
-                        tosUrl: "/tos",
-                    },
-                })}</span
-            >
+            <Anchor
+                label={$_("auth.sign-up.tos.label")}
+                href="/tos"
+                size="normal"
+                openBlank
+            />
         </label>
         <!-- XXX false positive -->
         <!-- svelte-ignore a11y-label-has-associated-control -->
@@ -128,14 +126,12 @@
                 contained={false}
                 required
             />
-            <span class="prose">
-                <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-                {@html $_("auth.sign-up.privacy-policy.label", {
-                    values: {
-                        privacyPolicyUrl: "/privacy",
-                    },
-                })}</span
-            >
+            <Anchor
+                label={$_("auth.sign-up.privacy-policy.label")}
+                href="/privacy"
+                size="normal"
+                openBlank
+            />
         </label>
         {#if state.kind === "error"}
             <p>
