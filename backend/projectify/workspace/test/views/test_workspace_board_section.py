@@ -125,7 +125,7 @@ class TestWorkspaceBoardSectionReadUpdateDelete:
         workspace_board_section: WorkspaceBoardSection,
     ) -> None:
         """Test updating a workspace board section."""
-        with django_assert_num_queries(6):
+        with django_assert_num_queries(5):
             response = rest_user_client.put(
                 resource_url,
                 data={
@@ -134,6 +134,10 @@ class TestWorkspaceBoardSectionReadUpdateDelete:
                 },
             )
             assert response.status_code == status.HTTP_200_OK, response.data
+        assert response.data == {
+            "title": "New title",
+            "description": "New description",
+        }
         workspace_board_section.refresh_from_db()
         assert workspace_board_section.title == "New title"
         assert workspace_board_section.description == "New description"

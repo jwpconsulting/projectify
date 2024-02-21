@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Workspace board section views."""
+from typing import Any
 from uuid import UUID
 
 from django.shortcuts import get_object_or_404
@@ -129,19 +130,38 @@ class WorkspaceBoardSectionReadUpdateDelete(
         workspace_board_section: WorkspaceBoardSection = get_object_or_404(qs)
         return workspace_board_section
 
-    def perform_update(
-        self, serializer: WorkspaceBoardSectionDetailSerializer
-    ) -> None:
+    def get(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+        """Handle GET."""
+        workspace_board_section = self.get_object()
+        serializer = WorkspaceBoardSectionDetailSerializer(
+            instance=workspace_board_section
+        )
+        return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+    class InputSerializer(serializers.ModelSerializer[WorkspaceBoardSection]):
+        """Input serializer for PUT."""
+
+        class Meta:
+            """Accept title and description."""
+
+            fields = "title", "description"
+            model = WorkspaceBoardSection
+
+    def put(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         """Update workspace board section."""
-        if serializer.instance is None:
-            raise ValueError("Expected serializer.instance")
+        workspace_board_section = self.get_object()
+
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
+
         workspace_board_section_update(
             who=self.request.user,
-            workspace_board_section=serializer.instance,
+            workspace_board_section=workspace_board_section,
             title=data["title"],
             description=data.get("description"),
         )
+        return Response(data=data)
 
     def delete(
         self, request: Request, workspace_board_section_uuid: UUID
