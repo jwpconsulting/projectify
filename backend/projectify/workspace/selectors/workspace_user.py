@@ -16,6 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Workspace user selectors."""
 from typing import Optional
+from uuid import UUID
 
 from projectify.user.models import User
 from projectify.workspace.models.workspace import Workspace
@@ -28,5 +29,17 @@ def workspace_user_find_for_workspace(
     """Find a workspace user."""
     try:
         return WorkspaceUser.objects.get(workspace=workspace, user=user)
+    except WorkspaceUser.DoesNotExist:
+        return None
+
+
+def workspace_user_find_by_workspace_user_uuid(
+    *, who: User, workspace_user_uuid: UUID
+) -> Optional[WorkspaceUser]:
+    """Find workspace user by UUID according to user access permissions."""
+    try:
+        return WorkspaceUser.objects.get(
+            workspace__users=who, uuid=workspace_user_uuid
+        )
     except WorkspaceUser.DoesNotExist:
         return None

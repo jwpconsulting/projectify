@@ -65,7 +65,7 @@ class TestWorkspaceUserReadUpdateDelete:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test reading a user."""
-        with django_assert_num_queries(6):
+        with django_assert_num_queries(5):
             response = rest_user_client.put(
                 resource_url,
                 data={
@@ -74,9 +74,10 @@ class TestWorkspaceUserReadUpdateDelete:
                 },
             )
             assert response.status_code == status.HTTP_200_OK, response.data
-        assert (
-            response.data["job_title"] == "World famous plumber from Brooklyn"
-        )
+        assert response.data == {
+            "job_title": "World famous plumber from Brooklyn",
+            "role": "OBSERVER",
+        }
 
     def test_delete_self(
         self,
