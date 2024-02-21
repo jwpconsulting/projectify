@@ -99,5 +99,10 @@ export function helpTopics($_: (id: string) => string): HelpTopic[] {
             description: $_("help.quota.description"),
             href: "/help/quota",
         },
+        {
+            title: $_("help.roles.title"),
+            description: $_("help.roles.description"),
+            href: "/help/roles",
+        },
     ] satisfies HelpTopic[];
 }

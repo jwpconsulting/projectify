@@ -21,6 +21,7 @@ import BillingHelpPage from "./en/help/billing.md?raw";
 import FiltersHelpPage from "./en/help/filters.md?raw";
 import LabelsHelpPage from "./en/help/labels.md?raw";
 import QuotaHelpPage from "./en/help/quota.md?raw";
+import RolesHelpPage from "./en/help/roles.md?raw";
 import TasksHelpPage from "./en/help/tasks.md?raw";
 import TrialHelpPage from "./en/help/trial.md?raw";
 import WorkspaceBoardSectionsHelpPage from "./en/help/workspace-board-sections.md?raw";
@@ -1428,6 +1429,11 @@ const messages: MessageDirectory = {
             title: "Workspace quotas",
             description: "Understand workspace resource quotas",
             content: QuotaHelpPage,
+        },
+        "roles": {
+            title: "Roles",
+            description: "Divide up roles between workspace users",
+            content: RolesHelpPage,
         },
         "skip": "Skip ahead to",
     },
