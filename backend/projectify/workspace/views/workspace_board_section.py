@@ -15,13 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Workspace board section views."""
-from typing import Any
 from uuid import UUID
 
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 
-from rest_framework import generics, serializers, status
+from rest_framework import serializers, status, views
 from rest_framework.exceptions import NotFound
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -31,10 +30,8 @@ from projectify.workspace.models import (
     WorkspaceBoard,
     WorkspaceBoardSection,
 )
-from projectify.workspace.models.workspace_board_section import (
-    WorkspaceBoardSectionQuerySet,
-)
 from projectify.workspace.selectors.workspace_board_section import (
+    WorkspaceBoardSectionDetailQuerySet,
     workspace_board_section_find_for_user_and_uuid,
 )
 from projectify.workspace.serializers.workspace_board_section import (
@@ -96,43 +93,24 @@ class WorkspaceBoardSectionCreate(APIView):
 
 
 # Read + Update + Delete
-class WorkspaceBoardSectionReadUpdateDelete(
-    generics.RetrieveUpdateAPIView[
-        WorkspaceBoardSection,
-        WorkspaceBoardSectionQuerySet,
-        WorkspaceBoardSectionDetailSerializer,
-    ]
-):
+class WorkspaceBoardSectionReadUpdateDelete(views.APIView):
     """Workspace board retrieve view."""
 
-    # TODO make me
-    # workspace/selectors/workspace_board_section.py:WorkspaceBoardSectionDetail
-    queryset = WorkspaceBoardSection.objects.prefetch_related(
-        "task_set",
-        "task_set__assignee",
-        "task_set__assignee__user",
-        "task_set__labels",
-        "task_set__subtask_set",
-    ).select_related(
-        "workspace_board",
-        "workspace_board__workspace",
-    )
-    serializer_class = WorkspaceBoardSectionDetailSerializer
-
-    def get_object(self) -> WorkspaceBoardSection:
-        """Return queryset with authenticated user in mind."""
-        user = self.request.user
-        qs = self.get_queryset()
-        qs = qs.filter_for_user_and_uuid(
-            user,
-            self.kwargs["workspace_board_section_uuid"],
-        )
-        workspace_board_section: WorkspaceBoardSection = get_object_or_404(qs)
-        return workspace_board_section
-
-    def get(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+    def get(
+        self, request: Request, workspace_board_section_uuid: UUID
+    ) -> Response:
         """Handle GET."""
-        workspace_board_section = self.get_object()
+        workspace_board_section = (
+            workspace_board_section_find_for_user_and_uuid(
+                user=request.user,
+                workspace_board_section_uuid=workspace_board_section_uuid,
+                qs=WorkspaceBoardSectionDetailQuerySet,
+            )
+        )
+        if workspace_board_section is None:
+            raise NotFound(
+                _("Workspace board section not found for this UUID")
+            )
         serializer = WorkspaceBoardSectionDetailSerializer(
             instance=workspace_board_section
         )
@@ -147,21 +125,32 @@ class WorkspaceBoardSectionReadUpdateDelete(
             fields = "title", "description"
             model = WorkspaceBoardSection
 
-    def put(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+    def put(
+        self, request: Request, workspace_board_section_uuid: UUID
+    ) -> Response:
         """Update workspace board section."""
-        workspace_board_section = self.get_object()
+        workspace_board_section = (
+            workspace_board_section_find_for_user_and_uuid(
+                user=request.user,
+                workspace_board_section_uuid=workspace_board_section_uuid,
+                qs=WorkspaceBoardSectionDetailQuerySet,
+            )
+        )
+        if workspace_board_section is None:
+            raise NotFound(
+                _("Workspace board section not found for this UUID")
+            )
 
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
 
         workspace_board_section_update(
-            who=self.request.user,
+            who=request.user,
             workspace_board_section=workspace_board_section,
-            title=data["title"],
-            description=data.get("description"),
+            title=serializer.validated_data["title"],
+            description=serializer.validated_data.get("description"),
         )
-        return Response(data=data)
+        return Response(data=serializer.validated_data)
 
     def delete(
         self, request: Request, workspace_board_section_uuid: UUID
