@@ -782,7 +782,7 @@ const messages: MessageDirectory = {
             "no-workspace-users-found":
                 "No workspace users found for this search query. Please try another search.",
             "role": "Role",
-            "workspace-user-details": "Workspace user details",
+            "workspace-user": "Workspace user",
             "invite-new-workspace-users": "Invite new workspace users",
             "edit-role": {
                 label: "Edit role",
@@ -792,6 +792,11 @@ const messages: MessageDirectory = {
             "actions": {
                 action: "Action",
                 remove: "Remove",
+            },
+            "help": {
+                "title": "Help",
+                "about-roles": "About roles",
+                "about-workspace-users": "About workspace users",
             },
         },
         "billing": {

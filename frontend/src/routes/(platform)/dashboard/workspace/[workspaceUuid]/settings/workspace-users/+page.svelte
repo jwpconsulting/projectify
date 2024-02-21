@@ -20,6 +20,7 @@
 
     import WorkspaceUserCard from "$lib/figma/screens/workspace-settings/WorkspaceUserCard.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { currentWorkspace } from "$lib/stores/dashboard";
     import {
         currentWorkspaceUserCan,
@@ -57,14 +58,11 @@
         />
     {/if}
 </div>
-<!-- TODO Add help link to show what role can do what -->
 <table class="grid w-full grid-cols-4 items-center gap-y-4 px-2">
     <thead class="contents">
         <tr class="contents">
             <th class="col-span-2 border-b border-border text-left font-bold"
-                >{$_(
-                    "workspace-settings.workspace-users.workspace-user-details",
-                )}</th
+                >{$_("workspace-settings.workspace-users.workspace-user")}</th
             >
             <th class="border-b border-border text-left font-bold"
                 >{$_("workspace-settings.workspace-users.role")}</th
@@ -86,3 +84,27 @@
         {/each}
     </tbody>
 </table>
+<hr />
+<section class="flex flex-col gap-2">
+    <strong>{$_("workspace-settings.workspace-users.help.title")}</strong>
+    <ul class="flex list-inside list-disc flex-col gap-2">
+        <li>
+            <Anchor
+                href="/help/workspace-users"
+                label={$_(
+                    "workspace-settings.workspace-users.help.about-workspace-users",
+                )}
+                size="normal"
+            />
+        </li>
+        <li>
+            <Anchor
+                href="/help/roles"
+                label={$_(
+                    "workspace-settings.workspace-users.help.about-roles",
+                )}
+                size="normal"
+            />
+        </li>
+    </ul>
+</section>
