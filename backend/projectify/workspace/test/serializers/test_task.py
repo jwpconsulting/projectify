@@ -27,6 +27,7 @@ from rest_framework.request import (
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
+from projectify.workspace.models.const import WorkspaceUserRoles
 
 from ...models.label import Label
 from ...models.sub_task import SubTask
@@ -270,7 +271,9 @@ class TestTaskCreateUpdateSerializer:
         # We need to add ourselves to make sure we have access to the
         # workspace board section
         workspace_add_user(
-            workspace=unrelated_workspace, user=workspace_user.user
+            workspace=unrelated_workspace,
+            user=workspace_user.user,
+            role=WorkspaceUserRoles.OBSERVER,
         )
         # test for sanity
         validate_perm(

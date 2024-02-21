@@ -15,23 +15,18 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Test coupon services."""
-from django.core.exceptions import PermissionDenied
-
 import pytest
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied
 
-from projectify.corporate.models.coupon import Coupon
-from projectify.corporate.models.customer import Customer
-from projectify.corporate.services.coupon import (
-    coupon_create,
-    coupon_redeem,
-)
-from projectify.corporate.services.customer import (
-    customer_check_active_for_workspace,
-)
 from projectify.user.models import User
 from projectify.workspace.models.workspace_user import WorkspaceUser
 from projectify.workspace.services.workspace import workspace_create
+
+from ...models.coupon import Coupon
+from ...models.customer import Customer
+from ...services.coupon import coupon_create, coupon_redeem
+from ...services.customer import customer_check_active_for_workspace
 
 pytestmark = pytest.mark.django_db
 

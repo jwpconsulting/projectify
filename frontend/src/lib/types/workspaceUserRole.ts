@@ -21,4 +21,5 @@ export const workspaceUserRoles = [
     "MAINTAINER",
     "OWNER",
 ] as const;
+// TODO duplicated from types/workspace.ts
 export type WorkspaceUserRole = (typeof workspaceUserRoles)[number];

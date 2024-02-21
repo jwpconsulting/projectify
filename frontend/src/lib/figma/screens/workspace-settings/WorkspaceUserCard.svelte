@@ -21,11 +21,23 @@
 
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import { deleteWorkspaceUser } from "$lib/repository/workspace/workspaceUser";
-    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
+    import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
+    import {
+        deleteWorkspaceUser,
+        updateWorkspaceUser,
+    } from "$lib/repository/workspace/workspaceUser";
+    import {
+        currentWorkspaceUser,
+        currentWorkspaceUserCan,
+    } from "$lib/stores/dashboard/workspaceUser";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
+    import type { EditableViewState } from "$lib/types/ui";
     import { getDisplayName } from "$lib/types/user";
-    import type { WorkspaceUser } from "$lib/types/workspace";
+    import type {
+        WorkspaceUser,
+        WorkspaceUserRole,
+    } from "$lib/types/workspace";
+    import { workspaceUserRoles } from "$lib/types/workspaceUserRole";
     import { getMessageNameForRole } from "$lib/utils/i18n";
 
     export let workspaceUser: WorkspaceUser;
@@ -39,6 +51,10 @@
     let role: string;
     $: role = getMessageNameForRole($_, workspaceUser.role);
 
+    let mode: EditableViewState = { kind: "viewing" };
+
+    let roleSelected: WorkspaceUserRole | undefined = undefined;
+
     async function removeUser() {
         await openDestructiveOverlay({
             kind: "deleteWorkspaceUser",
@@ -47,6 +63,25 @@
         // TODO: Do something with the result
         await deleteWorkspaceUser(workspaceUser, { fetch });
     }
+
+    function startEdit() {
+        mode = { kind: "editing" };
+        roleSelected = workspaceUser.role;
+    }
+
+    async function changeRole() {
+        if (roleSelected === undefined) {
+            throw new Error("Expected roleSelected");
+        }
+        console.debug(roleSelected);
+        mode = { kind: "saving" };
+        await updateWorkspaceUser(
+            { ...workspaceUser, role: roleSelected },
+            { fetch },
+        );
+        mode = { kind: "viewing" };
+    }
+    $: isCurrentUser = workspaceUser.uuid === $currentWorkspaceUser?.uuid;
 </script>
 
 <tr class="contents">
@@ -56,14 +91,48 @@
             size="medium"
         />
         <div class="flex flex-col gap-1">
-            <div class="text-sm font-bold text-base-content">
+            <span class="font-bold">
                 {preferredName}
-            </div>
-            <div class="text-sm text-base-content">{jobTitle}</div>
+            </span>
+            <span>{jobTitle}</span>
         </div>
     </td>
-    <td class="text-left text-base-content">{role}</td>
-    <td class=""
+    <td class="flex flex-row items-center gap-2">
+        {#if mode.kind === "viewing"}
+            <span>
+                {role}
+            </span>
+            {#if $currentWorkspaceUserCan("update", "workspaceUser")}
+                <CircleIcon
+                    icon="edit"
+                    size="medium"
+                    ariaLabel={isCurrentUser
+                        ? $_(
+                              "workspace-settings.workspace-users.edit-role.self",
+                          )
+                        : $_(
+                              "workspace-settings.workspace-users.edit-role.label",
+                          )}
+                    action={{
+                        kind: "button",
+                        action: startEdit,
+                        disabled: isCurrentUser,
+                    }}
+                />
+            {/if}
+        {:else if mode.kind === "editing"}
+            <select bind:value={roleSelected} on:change={changeRole}>
+                {#each workspaceUserRoles as workspaceUserRole}
+                    <option value={workspaceUserRole}>
+                        {getMessageNameForRole($_, workspaceUserRole)}
+                    </option>
+                {/each}
+            </select>
+        {:else}
+            {$_("workspace-settings.workspace-users.edit-role.saving")}
+        {/if}
+    </td>
+    <td
         >{#if $currentWorkspaceUserCan("delete", "workspaceUser")}<Button
                 label={$_("workspace-settings.workspace-users.actions.remove")}
                 action={{

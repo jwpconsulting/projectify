@@ -63,7 +63,7 @@ class TestWorkspaceBoardSectionCreate:
     ) -> None:
         """Assert that we can create a new workspace board."""
         assert WorkspaceBoardSection.objects.count() == 0
-        with django_assert_num_queries(8):
+        with django_assert_num_queries(7):
             response = rest_user_client.post(
                 resource_url,
                 {
@@ -125,7 +125,7 @@ class TestWorkspaceBoardSectionReadUpdateDelete:
         workspace_board_section: WorkspaceBoardSection,
     ) -> None:
         """Test updating a workspace board section."""
-        with django_assert_num_queries(5):
+        with django_assert_num_queries(4):
             response = rest_user_client.put(
                 resource_url,
                 data={
@@ -150,7 +150,7 @@ class TestWorkspaceBoardSectionReadUpdateDelete:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test deleting."""
-        with django_assert_num_queries(8):
+        with django_assert_num_queries(7):
             response = rest_user_client.delete(resource_url)
             assert (
                 response.status_code == status.HTTP_204_NO_CONTENT
@@ -191,7 +191,7 @@ class TestWorkspaceBoardSectionMove:
         assert other_workspace_board_section._order == 1
         # XXX that's still a whole lot of queries
         # 50% XXX Better now
-        with django_assert_num_queries(11):
+        with django_assert_num_queries(10):
             response = rest_user_client.post(
                 resource_url,
                 data={

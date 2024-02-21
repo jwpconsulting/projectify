@@ -43,13 +43,6 @@ from django_extensions.db.models import (
 from projectify.lib.models import BaseModel
 
 from ..types import WorkspaceQuota
-from .const import (
-    MAINTAINER_EQUIVALENT,
-    MEMBER_EQUIVALENT,
-    OBSERVER_EQUIVALENT,
-    OWNER_EQUIVALENT,
-    WorkspaceUserRoles,
-)
 
 if TYPE_CHECKING:
     from django.db.models.fields.related import RelatedField  # noqa: F401
@@ -142,25 +135,6 @@ class Workspace(TitleDescriptionModel, BaseModel):
         qs = Workspace.objects.filter(pk=self.pk).select_for_update()
         qs.update(highest_task_number=models.F("highest_task_number") + 1)
         return qs.get().highest_task_number
-
-    def has_at_least_role(
-        self, workspace_user: "WorkspaceUser", role: str
-    ) -> bool:
-        """Check if a workspace user has at least a given role."""
-        if not workspace_user.workspace == self:
-            return False
-        if role == WorkspaceUserRoles.OBSERVER:
-            return workspace_user.role in OBSERVER_EQUIVALENT
-        elif role == WorkspaceUserRoles.MEMBER:
-            return workspace_user.role in MEMBER_EQUIVALENT
-        elif role == WorkspaceUserRoles.MAINTAINER:
-            return workspace_user.role in MAINTAINER_EQUIVALENT
-        elif role == WorkspaceUserRoles.OWNER:
-            return workspace_user.role in OWNER_EQUIVALENT
-        else:
-            raise ValueError(
-                f"This just happened: {workspace_user} {role} {self}"
-            )
 
     def __str__(self) -> str:
         """Return title."""

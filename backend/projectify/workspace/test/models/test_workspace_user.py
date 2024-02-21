@@ -19,20 +19,11 @@
 import pytest
 
 from projectify.user.models import User
-from projectify.workspace.models.workspace import (
-    Workspace,
-)
-from projectify.workspace.services.workspace import (
-    workspace_add_user,
-)
 
-from ... import (
-    models,
-)
-from ...models import (
-    WorkspaceUser,
-    WorkspaceUserRoles,
-)
+from ...models.const import WorkspaceUserRoles
+from ...models.workspace import Workspace
+from ...models.workspace_user import WorkspaceUser
+from ...services.workspace import workspace_add_user
 
 
 @pytest.mark.django_db
@@ -40,7 +31,7 @@ class TestWorkspaceUserManager:
     """Test workspace user manager."""
 
     def test_filter_by_workspace_pks(
-        self, workspace_user: WorkspaceUser, workspace: models.Workspace
+        self, workspace_user: WorkspaceUser, workspace: Workspace
     ) -> None:
         """Test filter_by_workspace_pks."""
         qs = WorkspaceUser.objects.filter_by_workspace_pks(
@@ -73,7 +64,11 @@ class TestWorkspaceUserManager:
             ).count()
             == 0
         )
-        workspace_add_user(workspace=workspace, user=unrelated_user)
+        workspace_add_user(
+            workspace=workspace,
+            user=unrelated_user,
+            role=WorkspaceUserRoles.OBSERVER,
+        )
         assert (
             WorkspaceUser.objects.filter_by_user(unrelated_user).count() == 2
         )

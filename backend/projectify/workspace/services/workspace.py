@@ -22,9 +22,6 @@ This is where all workspace related services will live in the future.
 import logging
 from typing import Optional
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
@@ -33,13 +30,11 @@ from rest_framework import serializers
 from projectify.corporate.services.customer import customer_create
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
-from projectify.workspace.models.workspace import (
-    Workspace,
-)
-from projectify.workspace.models.workspace_user import (
-    WorkspaceUser,
-)
-from projectify.workspace.services.signals import send_workspace_change_signal
+
+from ..models.const import WorkspaceUserRoles
+from ..models.workspace import Workspace
+from ..models.workspace_user import WorkspaceUser
+from ..services.signals import send_workspace_change_signal
 
 logger = logging.getLogger(__name__)
 
@@ -53,10 +48,10 @@ def workspace_create(
 ) -> Workspace:
     """Create a workspace."""
     # TODO validate that user can only create 1 unpaid workspace
-    # TODO use Workspace.objects.create
-    workspace = Workspace(title=title, description=description)
-    workspace.save()
-    workspace_add_user(workspace=workspace, user=owner, role="OWNER")
+    workspace = Workspace.objects.create(title=title, description=description)
+    workspace_add_user(
+        workspace=workspace, user=owner, role=WorkspaceUserRoles.OWNER
+    )
     customer_create(
         who=owner,
         workspace=workspace,
@@ -130,14 +125,12 @@ def workspace_delete(
 
 
 # TODO looks like this is a private method only to be used to create the
-# initial user
+# initial user, or when adding users through invitations
 def workspace_add_user(
     *,
     workspace: Workspace,
-    user: AbstractBaseUser,
-    # TODO derive the correct role from an enum
-    # Can we just use WorkspaceUserRoles here?
-    role: str = "OBSERVER",
+    user: User,
+    role: WorkspaceUserRoles,
 ) -> WorkspaceUser:
     """Add user to workspace. Return new workspace user."""
     workspace_user = workspace.workspaceuser_set.create(user=user, role=role)

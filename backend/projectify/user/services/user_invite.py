@@ -22,6 +22,7 @@ from django.db import transaction
 
 from projectify.user.models import User, UserInvite
 from projectify.user.selectors.user import user_find_by_email
+from projectify.workspace.models.const import WorkspaceUserRoles
 from projectify.workspace.models.workspace_user_invite import (
     WorkspaceUserInvite,
 )
@@ -55,7 +56,9 @@ def user_invite_redeem(*, user_invite: UserInvite, user: User) -> None:
     )
     for invite in qs:
         workspace = invite.workspace
-        workspace_add_user(workspace=workspace, user=user)
+        workspace_add_user(
+            workspace=workspace, user=user, role=WorkspaceUserRoles.OBSERVER
+        )
         invite.redeem()
 
 

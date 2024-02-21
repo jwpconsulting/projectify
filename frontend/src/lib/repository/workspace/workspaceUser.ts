@@ -19,11 +19,23 @@ import type { Result } from "$lib/types/base";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { WorkspaceUser } from "$lib/types/workspace";
 
-import { deleteWithCredentialsJson } from "../util";
+import type { ApiResponse } from "../types";
+import { deleteWithCredentialsJson, putWithCredentialsJson } from "../util";
 
 // Create
 // Read
 // Update
+export async function updateWorkspaceUser(
+    workspaceUser: Pick<WorkspaceUser, "uuid" | "role" | "job_title">,
+    repositoryContext: RepositoryContext,
+): Promise<ApiResponse<undefined, { role?: string; job_title?: string }>> {
+    return await putWithCredentialsJson(
+        `/workspace/workspace-user/${workspaceUser.uuid}`,
+        workspaceUser,
+        repositoryContext,
+    );
+}
+
 // Delete
 interface DeleteError {
     workspaceUser: string;

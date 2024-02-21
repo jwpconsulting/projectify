@@ -196,7 +196,10 @@ export interface SolutionsPageContent {
 }
 // END TODO
 
-// TODO users of this type should use FormViewState (see below) instead
+/**
+ * This should be used for form-like widgets that are read-only by default
+ * and can be modified by activating them through an edit button.
+ */
 export type EditableViewState =
     | { kind: "viewing" }
     | { kind: "editing" }

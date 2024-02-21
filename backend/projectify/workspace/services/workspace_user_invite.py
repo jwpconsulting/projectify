@@ -20,9 +20,6 @@ from typing import (
     Union,
 )
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
 from django.db import (
     transaction,
 )
@@ -34,26 +31,16 @@ from projectify.lib.auth import (
     validate_perm,
 )
 from projectify.premail.email import EmailAddress
-from projectify.user.models import (  # noqa: F401
-    User,
-    UserInvite,
-)
+from projectify.user.models import User, UserInvite
 from projectify.user.services.user_invite import user_invite_create
-from projectify.workspace.emails import WorkspaceUserInviteEmail
-from projectify.workspace.exceptions import (
-    UserAlreadyAdded,
-    UserAlreadyInvited,
-)
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_user import (
-    WorkspaceUser,
-)
-from projectify.workspace.models.workspace_user_invite import (
-    WorkspaceUserInvite,
-)
-from projectify.workspace.services.workspace import (
-    workspace_add_user,
-)
+
+from ..emails import WorkspaceUserInviteEmail
+from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
+from ..models.const import WorkspaceUserRoles
+from ..models.workspace import Workspace
+from ..models.workspace_user import WorkspaceUser
+from ..models.workspace_user_invite import WorkspaceUserInvite
+from ..services.workspace import workspace_add_user
 
 
 # TODO these could be better suited as selectors
@@ -61,7 +48,7 @@ def _try_find_workspace_user(
     # TODO add *,
     workspace: Workspace,
     email: str,
-) -> Union[None, AbstractBaseUser, WorkspaceUser]:
+) -> Union[None, User, WorkspaceUser]:
     """
     Try to find a workspace user by email.
 
@@ -109,7 +96,7 @@ def _try_find_invitation(
 def add_or_invite_workspace_user(
     *,
     workspace: Workspace,
-    email_or_user: Union[AbstractBaseUser, str],
+    email_or_user: Union[User, str],
     who: User,
 ) -> Union[WorkspaceUser, WorkspaceUserInvite]:
     """
@@ -129,16 +116,24 @@ def add_or_invite_workspace_user(
     """
     validate_perm("workspace.create_workspace_user", who, workspace)
     match email_or_user:
-        case AbstractBaseUser() as user:
-            return workspace_add_user(workspace=workspace, user=user)
+        case User() as user:
+            return workspace_add_user(
+                workspace=workspace,
+                user=user,
+                role=WorkspaceUserRoles.OBSERVER,
+            )
         case email:
             pass
 
     match _try_find_workspace_user(workspace, email):
         case WorkspaceUser():
             raise UserAlreadyAdded()
-        case AbstractBaseUser() as user:
-            return workspace_add_user(workspace=workspace, user=user)
+        case User() as user:
+            return workspace_add_user(
+                workspace=workspace,
+                user=user,
+                role=WorkspaceUserRoles.OBSERVER,
+            )
         case None:
             pass
 
