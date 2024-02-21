@@ -63,7 +63,7 @@
         aria-label={ariaLabel}
         on:click|preventDefault|stopPropagation={action.action}
         {disabled}
-        class="{styleClasses} disabled:bg-transparent disabled:text-transparent"
+        class="{styleClasses} disabled:bg-transparent disabled:text-disabled"
     >
         <Icon src={iconMapped} style="outline" />
     </button>

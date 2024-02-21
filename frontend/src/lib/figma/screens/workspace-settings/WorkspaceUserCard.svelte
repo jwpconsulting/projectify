@@ -19,7 +19,6 @@
     import { X } from "@steeze-ui/heroicons";
     import { _ } from "svelte-i18n";
 
-    import Loading from "$lib/components/loading.svelte";
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
@@ -27,7 +26,10 @@
         deleteWorkspaceUser,
         updateWorkspaceUser,
     } from "$lib/repository/workspace/workspaceUser";
-    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
+    import {
+        currentWorkspaceUser,
+        currentWorkspaceUserCan,
+    } from "$lib/stores/dashboard/workspaceUser";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
     import type { EditableViewState } from "$lib/types/ui";
     import { getDisplayName } from "$lib/types/user";
@@ -51,7 +53,7 @@
 
     let mode: EditableViewState = { kind: "viewing" };
 
-    let roleSelected: WorkspaceUserRole | undefined;
+    let roleSelected: WorkspaceUserRole | undefined = undefined;
 
     async function removeUser() {
         await openDestructiveOverlay({
@@ -79,6 +81,7 @@
         );
         mode = { kind: "viewing" };
     }
+    $: isCurrentUser = workspaceUser.uuid === $currentWorkspaceUser?.uuid;
 </script>
 
 <tr class="contents">
@@ -99,11 +102,24 @@
             <span>
                 {role}
             </span>
-            <CircleIcon
-                icon="edit"
-                size="medium"
-                action={{ kind: "button", action: startEdit }}
-            />
+            {#if $currentWorkspaceUserCan("update", "workspaceUser")}
+                <CircleIcon
+                    icon="edit"
+                    size="medium"
+                    ariaLabel={isCurrentUser
+                        ? $_(
+                              "workspace-settings.workspace-users.edit-role.self",
+                          )
+                        : $_(
+                              "workspace-settings.workspace-users.edit-role.label",
+                          )}
+                    action={{
+                        kind: "button",
+                        action: startEdit,
+                        disabled: isCurrentUser,
+                    }}
+                />
+            {/if}
         {:else if mode.kind === "editing"}
             <select bind:value={roleSelected} on:change={changeRole}>
                 {#each workspaceUserRoles as workspaceUserRole}
@@ -113,7 +129,7 @@
                 {/each}
             </select>
         {:else}
-            <Loading />
+            {$_("workspace-settings.workspace-users.edit-role.saving")}
         {/if}
     </td>
     <td

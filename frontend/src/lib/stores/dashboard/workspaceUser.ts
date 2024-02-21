@@ -60,7 +60,7 @@ type CurrentWorkspaceUser = Readable<WorkspaceUser | undefined>;
 /**
  * Find current workspace user belonging to logged in user
  */
-const currentWorkspaceUser: CurrentWorkspaceUser = derived<
+export const currentWorkspaceUser: CurrentWorkspaceUser = derived<
     [typeof user, typeof currentWorkspace],
     WorkspaceUser | undefined
 >(
