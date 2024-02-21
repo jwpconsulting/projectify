@@ -90,18 +90,28 @@ type CurrentWorkspaceUserCan = Readable<
  * currently active, logged in user's workspace user.
  */
 export const currentWorkspaceUserCan: CurrentWorkspaceUserCan = derived<
-    CurrentWorkspaceUser,
+    [CurrentWorkspaceUser, typeof currentWorkspace],
     (verb: Verb, resource: Resource) => boolean
 >(
-    currentWorkspaceUser,
-    ($currentWorkspaceUser, set) => {
+    [currentWorkspaceUser, currentWorkspace],
+    ([$currentWorkspaceUser, $currentWorkspace], set) => {
         if ($currentWorkspaceUser === undefined) {
             console.warn("workspaceUser was undefined");
             set(() => false);
             return;
         }
+        if ($currentWorkspace === undefined) {
+            console.warn("workspace was undefined");
+            set(() => false);
+            return;
+        }
         const fn = (verb: Verb, resource: Resource) =>
-            can(verb, resource, $currentWorkspaceUser);
+            can(
+                verb,
+                resource,
+                $currentWorkspaceUser,
+                $currentWorkspace.quota,
+            );
         set(fn);
     },
     () => false,
