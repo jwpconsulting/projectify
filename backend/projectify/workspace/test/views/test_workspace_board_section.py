@@ -150,7 +150,7 @@ class TestWorkspaceBoardSectionReadUpdateDelete:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test deleting."""
-        with django_assert_num_queries(9):
+        with django_assert_num_queries(8):
             response = rest_user_client.delete(resource_url)
             assert (
                 response.status_code == status.HTTP_204_NO_CONTENT
@@ -190,7 +190,8 @@ class TestWorkspaceBoardSectionMove:
         assert workspace_board_section._order == 0
         assert other_workspace_board_section._order == 1
         # XXX that's still a whole lot of queries
-        with django_assert_num_queries(12):
+        # 50% XXX Better now
+        with django_assert_num_queries(11):
             response = rest_user_client.post(
                 resource_url,
                 data={

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -17,10 +17,9 @@
 """Workspace board section views."""
 from uuid import UUID
 
-from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 
-from rest_framework import serializers, status, views
+from rest_framework import serializers, status
 from rest_framework.exceptions import NotFound
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -93,7 +92,7 @@ class WorkspaceBoardSectionCreate(APIView):
 
 
 # Read + Update + Delete
-class WorkspaceBoardSectionReadUpdateDelete(views.APIView):
+class WorkspaceBoardSectionReadUpdateDelete(APIView):
     """Workspace board retrieve view."""
 
     def get(
@@ -160,6 +159,7 @@ class WorkspaceBoardSectionReadUpdateDelete(views.APIView):
             workspace_board_section_find_for_user_and_uuid(
                 user=request.user,
                 workspace_board_section_uuid=workspace_board_section_uuid,
+                qs=WorkspaceBoardSectionDetailQuerySet,
             )
         )
         if workspace_board_section is None:
@@ -190,13 +190,17 @@ class WorkspaceBoardSectionMove(APIView):
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         user = request.user
-        workspace_board_section_qs = (
-            WorkspaceBoardSection.objects.filter_for_user_and_uuid(
-                user=user,
-                uuid=workspace_board_section_uuid,
+        workspace_board_section = (
+            workspace_board_section_find_for_user_and_uuid(
+                user=request.user,
+                workspace_board_section_uuid=workspace_board_section_uuid,
+                qs=WorkspaceBoardSectionDetailQuerySet,
             )
         )
-        workspace_board_section = get_object_or_404(workspace_board_section_qs)
+        if workspace_board_section is None:
+            raise NotFound(
+                _("Workspace board section not found for this UUID")
+            )
         workspace_board_section_move(
             workspace_board_section=workspace_board_section,
             order=data["order"],
