@@ -63,7 +63,7 @@ class TestWorkspaceCreate:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert that we can create a new workspace."""
-        with django_assert_num_queries(5):
+        with django_assert_num_queries(4):
             response = rest_user_client.post(
                 resource_url,
                 {
@@ -268,7 +268,7 @@ class TestWorkspaceReadUpdate:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating a given workspace with a new title."""
-        with django_assert_num_queries(7):
+        with django_assert_num_queries(6):
             response = rest_user_client.put(
                 resource_url,
                 data={

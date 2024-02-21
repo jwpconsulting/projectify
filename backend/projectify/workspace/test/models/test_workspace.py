@@ -27,7 +27,6 @@ import pytest
 
 from projectify.user.models import User
 
-from ...models.const import WorkspaceUserRoles
 from ...models.task import Task
 from ...models.workspace import Workspace
 from ...models.workspace_user import WorkspaceUser
@@ -171,30 +170,3 @@ class TestWorkspace:
             workspace.highest_task_number = 0
             workspace.save()
         assert isinstance(e.value.__cause__, psycopg.errors.RaiseException)
-
-    def test_has_at_least_role(
-        self, workspace: Workspace, workspace_user: WorkspaceUser
-    ) -> None:
-        """Test has_at_least_role."""
-        assert workspace.has_at_least_role(
-            workspace_user,
-            WorkspaceUserRoles.OWNER,
-        )
-        workspace_user.assign_role(WorkspaceUserRoles.OBSERVER)
-        assert workspace.has_at_least_role(
-            workspace_user,
-            WorkspaceUserRoles.OBSERVER,
-        )
-        assert not workspace.has_at_least_role(
-            workspace_user,
-            WorkspaceUserRoles.OWNER,
-        )
-
-    def test_has_at_least_role_unrelated_workspace(
-        self, unrelated_workspace: Workspace, workspace_user: WorkspaceUser
-    ) -> None:
-        """Test has_at_least_role with a different workspace."""
-        assert not unrelated_workspace.has_at_least_role(
-            workspace_user,
-            WorkspaceUserRoles.OBSERVER,
-        )

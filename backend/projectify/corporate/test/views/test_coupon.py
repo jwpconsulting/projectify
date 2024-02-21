@@ -52,7 +52,7 @@ class TestCouponRedeem:
         assert (
             customer_check_active_for_workspace(workspace=workspace) == "trial"
         )
-        with django_assert_num_queries(8):
+        with django_assert_num_queries(7):
             response = rest_user_client.post(
                 resource_url,
                 data={"code": "thiscodedoesnotexist"},
@@ -76,7 +76,7 @@ class TestCouponRedeem:
         assert (
             customer_check_active_for_workspace(workspace=workspace) == "trial"
         )
-        with django_assert_num_queries(9):
+        with django_assert_num_queries(8):
             response = rest_user_client.post(
                 resource_url,
                 data={"code": coupon.code},

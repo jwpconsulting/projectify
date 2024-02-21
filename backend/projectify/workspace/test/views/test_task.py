@@ -127,7 +127,7 @@ class TestTaskCreate(UnauthenticatedTestMixin):
         # 25 now
         # 26 now
         # 24 now
-        with django_assert_num_queries(24):
+        with django_assert_num_queries(22):
             response = rest_user_client.post(
                 resource_url,
                 {**payload, "assignee": {"uuid": str(workspace_user.uuid)}},
@@ -205,7 +205,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         # 29 now
         # 31 now
         # 28 now
-        with django_assert_num_queries(28):
+        with django_assert_num_queries(25):
             response = rest_user_client.put(
                 resource_url,
                 {**payload, "assignee": {"uuid": str(workspace_user.uuid)}},
@@ -226,7 +226,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test deleting a task."""
-        with django_assert_num_queries(11):
+        with django_assert_num_queries(10):
             response = rest_user_client.delete(resource_url)
             assert response.status_code == 204, response.content
         # Ensure that the task is gone for good
@@ -259,7 +259,7 @@ class TestMoveTaskToWorkspaceBoardSection:
     ) -> None:
         """Test moving a task."""
         assert task.workspace_board_section == workspace_board_section
-        with django_assert_num_queries(19):
+        with django_assert_num_queries(18):
             response = rest_user_client.post(
                 resource_url,
                 data={
@@ -295,7 +295,7 @@ class TestTaskMoveAfterTask:
         other_task: Task,
     ) -> None:
         """Test as an authenticated user."""
-        with django_assert_num_queries(18):
+        with django_assert_num_queries(17):
             response = rest_user_client.post(
                 resource_url,
                 data={"task_uuid": str(other_task.uuid)},

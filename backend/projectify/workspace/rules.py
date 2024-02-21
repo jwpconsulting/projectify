@@ -30,6 +30,33 @@ from .models.workspace import Workspace
 from .selectors.quota import Resource, workspace_quota_for
 from .selectors.workspace_user import workspace_user_find_for_workspace
 
+ROLE_EQUIVALENCE = {
+    WorkspaceUserRoles.OWNER: {
+        WorkspaceUserRoles.OWNER: True,
+        WorkspaceUserRoles.MAINTAINER: True,
+        WorkspaceUserRoles.MEMBER: True,
+        WorkspaceUserRoles.OBSERVER: True,
+    },
+    WorkspaceUserRoles.MAINTAINER: {
+        WorkspaceUserRoles.OWNER: False,
+        WorkspaceUserRoles.MAINTAINER: True,
+        WorkspaceUserRoles.MEMBER: True,
+        WorkspaceUserRoles.OBSERVER: True,
+    },
+    WorkspaceUserRoles.MEMBER: {
+        WorkspaceUserRoles.OWNER: False,
+        WorkspaceUserRoles.MAINTAINER: False,
+        WorkspaceUserRoles.MEMBER: True,
+        WorkspaceUserRoles.OBSERVER: True,
+    },
+    WorkspaceUserRoles.OBSERVER: {
+        WorkspaceUserRoles.OWNER: False,
+        WorkspaceUserRoles.MAINTAINER: False,
+        WorkspaceUserRoles.MEMBER: False,
+        WorkspaceUserRoles.OBSERVER: True,
+    },
+}
+
 
 def check_permissions_for(
     role: WorkspaceUserRoles, user: User, workspace: Workspace
@@ -40,7 +67,10 @@ def check_permissions_for(
     )
     if workspace_user is None:
         return False
-    return workspace.has_at_least_role(workspace_user, role)
+    workspace_user_role: WorkspaceUserRoles = WorkspaceUserRoles[
+        workspace_user.role
+    ]
+    return ROLE_EQUIVALENCE[workspace_user_role][role]
 
 
 # Role predicates

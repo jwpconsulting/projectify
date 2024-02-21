@@ -28,23 +28,3 @@ class WorkspaceUserRoles(models.TextChoices):
     MEMBER = "MEMBER", _("Member")
     MAINTAINER = "MAINTAINER", _("Maintainer")
     OWNER = "OWNER", _("Owner")
-
-
-OBSERVER_EQUIVALENT = [
-    WorkspaceUserRoles.OBSERVER,
-    WorkspaceUserRoles.MEMBER,
-    WorkspaceUserRoles.MAINTAINER,
-    WorkspaceUserRoles.OWNER,
-]
-MEMBER_EQUIVALENT = [
-    WorkspaceUserRoles.MEMBER,
-    WorkspaceUserRoles.MAINTAINER,
-    WorkspaceUserRoles.OWNER,
-]
-MAINTAINER_EQUIVALENT = [
-    WorkspaceUserRoles.MAINTAINER,
-    WorkspaceUserRoles.OWNER,
-]
-OWNER_EQUIVALENT = [
-    WorkspaceUserRoles.OWNER,
-]
