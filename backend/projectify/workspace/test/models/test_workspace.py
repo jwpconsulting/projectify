@@ -26,6 +26,7 @@ import psycopg.errors
 import pytest
 
 from projectify.user.models import User
+from projectify.workspace.models.const import WorkspaceUserRoles
 
 from ...models.task import Task
 from ...models.workspace import Workspace
@@ -112,7 +113,11 @@ class TestWorkspace:
     def test_add_user(self, workspace: Workspace, other_user: User) -> None:
         """Test adding a user."""
         count = workspace.users.count()
-        workspace_add_user(workspace=workspace, user=other_user)
+        workspace_add_user(
+            workspace=workspace,
+            user=other_user,
+            role=WorkspaceUserRoles.OBSERVER,
+        )
         assert workspace.users.count() == count + 1
 
     def test_add_user_twice(
@@ -122,9 +127,19 @@ class TestWorkspace:
         other_user: AbstractUser,
     ) -> None:
         """Test that adding a user twice won't work."""
-        workspace_add_user(workspace=workspace, user=other_user)
+        workspace_add_user(
+            workspace=workspace,
+            user=other_user,
+            role=WorkspaceUserRoles.OBSERVER,
+        )
+        # XXX TODO should be validationerror, not integrityerror
+        # We might get a bad 500 here, could be 400 instead
         with pytest.raises(db.IntegrityError):
-            workspace_add_user(workspace=workspace, user=other_user)
+            workspace_add_user(
+                workspace=workspace,
+                user=other_user,
+                role=WorkspaceUserRoles.OBSERVER,
+            )
 
     def test_remove_user(
         self,

@@ -48,7 +48,7 @@ def workspace_user_update(
     return workspace_user
 
 
-# TODO atomic
+@transaction.atomic
 def workspace_user_delete(
     *,
     workspace_user: WorkspaceUser,

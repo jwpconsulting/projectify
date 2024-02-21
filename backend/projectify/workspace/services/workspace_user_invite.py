@@ -44,6 +44,7 @@ from projectify.workspace.exceptions import (
     UserAlreadyAdded,
     UserAlreadyInvited,
 )
+from projectify.workspace.models.const import WorkspaceUserRoles
 from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.workspace_user import (
     WorkspaceUser,
@@ -130,7 +131,11 @@ def add_or_invite_workspace_user(
     validate_perm("workspace.create_workspace_user", who, workspace)
     match email_or_user:
         case AbstractBaseUser() as user:
-            return workspace_add_user(workspace=workspace, user=user)
+            return workspace_add_user(
+                workspace=workspace,
+                user=user,
+                role=WorkspaceUserRoles.OBSERVER,
+            )
         case email:
             pass
 
@@ -138,7 +143,11 @@ def add_or_invite_workspace_user(
         case WorkspaceUser():
             raise UserAlreadyAdded()
         case AbstractBaseUser() as user:
-            return workspace_add_user(workspace=workspace, user=user)
+            return workspace_add_user(
+                workspace=workspace,
+                user=user,
+                role=WorkspaceUserRoles.OBSERVER,
+            )
         case None:
             pass
 

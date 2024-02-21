@@ -60,6 +60,7 @@ def test_workspace_user_delete(
         # TODO perm check missing in workspace_add_user
         # E who=workspace_user.user,
         user=unrelated_user,
+        role=WorkspaceUserRoles.OBSERVER,
     )
     assert workspace.users.count() == count + 1
     workspace_user_delete(

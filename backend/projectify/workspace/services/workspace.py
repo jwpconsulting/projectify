@@ -133,13 +133,12 @@ def workspace_delete(
 
 
 # TODO looks like this is a private method only to be used to create the
-# initial user
+# initial user, or when adding users through invitations
 def workspace_add_user(
     *,
     workspace: Workspace,
     user: AbstractBaseUser,
-    # TODO make this not-optional
-    role: WorkspaceUserRoles = WorkspaceUserRoles.OBSERVER,
+    role: WorkspaceUserRoles,
 ) -> WorkspaceUser:
     """Add user to workspace. Return new workspace user."""
     workspace_user = workspace.workspaceuser_set.create(user=user, role=role)
