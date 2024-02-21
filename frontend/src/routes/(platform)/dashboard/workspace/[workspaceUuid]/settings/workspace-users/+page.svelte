@@ -52,6 +52,7 @@
 </script>
 
 <div class="flex flex-col gap-4">
+    <!-- TODO remove search -->
     <InputField
         style={{ inputType: "text" }}
         name="workspaceUserSearch"
@@ -78,6 +79,7 @@
         />
     {/if}
 </div>
+<!-- TODO Add help link to show what role can do what -->
 <table class="grid w-full grid-cols-4 items-center gap-y-4 px-2">
     <thead class="contents">
         <tr class="contents">
