@@ -33,6 +33,7 @@ from rest_framework import serializers
 from projectify.corporate.services.customer import customer_create
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
+from projectify.workspace.models.const import WorkspaceUserRoles
 from projectify.workspace.models.workspace import (
     Workspace,
 )
@@ -56,7 +57,9 @@ def workspace_create(
     # TODO use Workspace.objects.create
     workspace = Workspace(title=title, description=description)
     workspace.save()
-    workspace_add_user(workspace=workspace, user=owner, role="OWNER")
+    workspace_add_user(
+        workspace=workspace, user=owner, role=WorkspaceUserRoles.OWNER
+    )
     customer_create(
         who=owner,
         workspace=workspace,
@@ -135,9 +138,8 @@ def workspace_add_user(
     *,
     workspace: Workspace,
     user: AbstractBaseUser,
-    # TODO derive the correct role from an enum
-    # Can we just use WorkspaceUserRoles here?
-    role: str = "OBSERVER",
+    # TODO make this not-optional
+    role: WorkspaceUserRoles = WorkspaceUserRoles.OBSERVER,
 ) -> WorkspaceUser:
     """Add user to workspace. Return new workspace user."""
     workspace_user = workspace.workspaceuser_set.create(user=user, role=role)

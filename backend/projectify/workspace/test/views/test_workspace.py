@@ -40,9 +40,10 @@ from pytest_types import (
     Headers,
 )
 
-from ... import (
-    models,
-)
+from ...models.const import WorkspaceUserRoles
+from ...models.workspace import Workspace
+from ...models.workspace_board import WorkspaceBoard
+from ...models.workspace_user import WorkspaceUser
 
 
 # Create
@@ -72,11 +73,11 @@ class TestWorkspaceCreate:
                 },
             )
             assert response.status_code == 201
-        assert models.Workspace.objects.count() == 1
-        workspace = models.Workspace.objects.get()
+        assert Workspace.objects.count() == 1
+        workspace = Workspace.objects.get()
         workspace_user = workspace.workspaceuser_set.get()
         assert workspace_user.user == user
-        assert workspace_user.role == "OWNER"
+        assert workspace_user.role == WorkspaceUserRoles.OWNER
 
         # Test also that we can submit with empty description
         response = rest_user_client.post(resource_url, {"title": "blabla"})
@@ -98,8 +99,8 @@ class TestWorkspaceList:
         rest_user_client: APIClient,
         resource_url: str,
         user: AbstractBaseUser,
-        workspace: models.Workspace,
-        workspace_user: models.WorkspaceUser,
+        workspace: Workspace,
+        workspace_user: WorkspaceUser,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can GET this view this while being logged in."""
@@ -123,7 +124,7 @@ class TestWorkspaceReadUpdate:
     """Test WorkspaceReadUpdate."""
 
     @pytest.fixture
-    def resource_url(self, workspace: models.Workspace) -> str:
+    def resource_url(self, workspace: Workspace) -> str:
         """Return URL to this view."""
         return reverse(
             "workspace:workspaces:read-update", args=(workspace.uuid,)
@@ -134,10 +135,10 @@ class TestWorkspaceReadUpdate:
         rest_user_client: APIClient,
         resource_url: str,
         user: AbstractBaseUser,
-        workspace: models.Workspace,
-        workspace_user: models.WorkspaceUser,
-        workspace_board: models.WorkspaceBoard,
-        archived_workspace_board: models.WorkspaceBoard,
+        workspace: Workspace,
+        workspace_user: WorkspaceUser,
+        workspace_board: WorkspaceBoard,
+        archived_workspace_board: WorkspaceBoard,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can GET this view this while being logged in."""
@@ -183,8 +184,8 @@ class TestWorkspaceReadUpdate:
         self,
         rest_user_client: APIClient,
         resource_url: str,
-        workspace: models.Workspace,
-        workspace_user: models.WorkspaceUser,
+        workspace: Workspace,
+        workspace_user: WorkspaceUser,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert that trial limits are annotated correctly."""
@@ -263,8 +264,8 @@ class TestWorkspaceReadUpdate:
         rest_user_client: APIClient,
         resource_url: str,
         user: AbstractBaseUser,
-        workspace: models.Workspace,
-        workspace_user: models.WorkspaceUser,
+        workspace: Workspace,
+        workspace_user: WorkspaceUser,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating a given workspace with a new title."""
@@ -289,7 +290,7 @@ class TestWorkspacePictureUploadView:
     """Test WorkspacePictureUploadView."""
 
     @pytest.fixture
-    def resource_url(self, workspace: models.Workspace) -> str:
+    def resource_url(self, workspace: Workspace) -> str:
         """Return URL to this view."""
         return reverse(
             "workspace:workspace-picture-upload", args=(workspace.uuid,)
@@ -326,8 +327,8 @@ class TestWorkspacePictureUploadView:
         headers: Headers,
         uploaded_file: File,
         user: AbstractBaseUser,
-        workspace: models.Workspace,
-        workspace_user: models.WorkspaceUser,
+        workspace: Workspace,
+        workspace_user: WorkspaceUser,
     ) -> None:
         """Try uploading and then deleting a picture."""
         response = rest_user_client.post(
@@ -351,7 +352,7 @@ class TestInviteUserToWorkspace:
     """Test InviteUserToWorkspace."""
 
     @pytest.fixture
-    def resource_url(self, workspace_user: models.WorkspaceUser) -> str:
+    def resource_url(self, workspace_user: WorkspaceUser) -> str:
         """Return URL to this view."""
         return reverse(
             "workspace:workspace-invite-user",
@@ -364,7 +365,7 @@ class TestInviteUserToWorkspace:
         self,
         resource_url: str,
         rest_user_client: APIClient,
-        workspace: models.Workspace,
+        workspace: Workspace,
     ) -> None:
         """Test with a new, unregistered user."""
         assert workspace.workspaceuserinvite_set.count() == 0
@@ -379,7 +380,7 @@ class TestInviteUserToWorkspace:
         self,
         resource_url: str,
         rest_user_client: APIClient,
-        workspace: models.Workspace,
+        workspace: Workspace,
         other_user: AbstractUser,
     ) -> None:
         """Test by inviting an existing user."""
@@ -395,7 +396,7 @@ class TestInviteUserToWorkspace:
         self,
         resource_url: str,
         rest_user_client: APIClient,
-        workspace_user: models.WorkspaceUser,
+        workspace_user: WorkspaceUser,
     ) -> None:
         """Test inviting an existing workspace user."""
         response = rest_user_client.post(
