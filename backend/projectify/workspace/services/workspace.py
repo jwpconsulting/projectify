@@ -22,9 +22,6 @@ This is where all workspace related services will live in the future.
 import logging
 from typing import Optional
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
@@ -33,14 +30,11 @@ from rest_framework import serializers
 from projectify.corporate.services.customer import customer_create
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
-from projectify.workspace.models.const import WorkspaceUserRoles
-from projectify.workspace.models.workspace import (
-    Workspace,
-)
-from projectify.workspace.models.workspace_user import (
-    WorkspaceUser,
-)
-from projectify.workspace.services.signals import send_workspace_change_signal
+
+from ..models.const import WorkspaceUserRoles
+from ..models.workspace import Workspace
+from ..models.workspace_user import WorkspaceUser
+from ..services.signals import send_workspace_change_signal
 
 logger = logging.getLogger(__name__)
 
@@ -54,9 +48,7 @@ def workspace_create(
 ) -> Workspace:
     """Create a workspace."""
     # TODO validate that user can only create 1 unpaid workspace
-    # TODO use Workspace.objects.create
-    workspace = Workspace(title=title, description=description)
-    workspace.save()
+    workspace = Workspace.objects.create(title=title, description=description)
     workspace_add_user(
         workspace=workspace, user=owner, role=WorkspaceUserRoles.OWNER
     )
@@ -137,7 +129,7 @@ def workspace_delete(
 def workspace_add_user(
     *,
     workspace: Workspace,
-    user: AbstractBaseUser,
+    user: User,
     role: WorkspaceUserRoles,
 ) -> WorkspaceUser:
     """Add user to workspace. Return new workspace user."""

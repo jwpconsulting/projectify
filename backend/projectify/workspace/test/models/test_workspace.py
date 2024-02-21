@@ -18,9 +18,6 @@
 from django import (
     db,
 )
-from django.contrib.auth.models import (
-    AbstractUser,
-)
 
 import psycopg.errors
 import pytest
@@ -31,12 +28,8 @@ from projectify.workspace.models.const import WorkspaceUserRoles
 from ...models.task import Task
 from ...models.workspace import Workspace
 from ...models.workspace_user import WorkspaceUser
-from ...services.workspace import (
-    workspace_add_user,
-)
-from ...services.workspace_board import (
-    workspace_board_create,
-)
+from ...services.workspace import workspace_add_user
+from ...services.workspace_board import workspace_board_create
 
 
 @pytest.mark.django_db
@@ -45,13 +38,13 @@ class TestWorkspaceManager:
 
     def test_get_for_user(
         self,
-        user: AbstractUser,
+        user: User,
         # This workplace shall be retrievable by the user
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         # This workpace will not be retrieved since the user does not have a
         # workspace user for it
-        unrelated_workspace_user: AbstractUser,
+        unrelated_workspace_user: User,
         unrelated_workspace: Workspace,
     ) -> None:
         """Test getting workspaces for user."""
@@ -61,7 +54,7 @@ class TestWorkspaceManager:
         self,
         workspace_user: WorkspaceUser,
         workspace: Workspace,
-        user: AbstractUser,
+        user: User,
     ) -> None:
         """Test getting workspace for user and uuid."""
         assert (
@@ -124,7 +117,7 @@ class TestWorkspace:
         self,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
-        other_user: AbstractUser,
+        other_user: User,
     ) -> None:
         """Test that adding a user twice won't work."""
         workspace_add_user(
@@ -145,7 +138,7 @@ class TestWorkspace:
         self,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
-        user: AbstractUser,
+        user: User,
     ) -> None:
         """Test remove_user."""
         count = workspace.users.count()
@@ -157,7 +150,7 @@ class TestWorkspace:
         workspace: Workspace,
         task: Task,
         workspace_user: WorkspaceUser,
-        user: AbstractUser,
+        user: User,
     ) -> None:
         """Assert that the user is removed when removing the workspace user."""
         task.assign_to(workspace_user)
