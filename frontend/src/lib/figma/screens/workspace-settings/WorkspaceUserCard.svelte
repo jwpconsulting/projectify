@@ -56,14 +56,14 @@
             size="medium"
         />
         <div class="flex flex-col gap-1">
-            <div class="text-sm font-bold text-base-content">
+            <span class="font-bold">
                 {preferredName}
-            </div>
-            <div class="text-sm text-base-content">{jobTitle}</div>
+            </span>
+            <span>{jobTitle}</span>
         </div>
     </td>
-    <td class="text-left text-base-content">{role}</td>
-    <td class=""
+    <td>{role}</td>
+    <td
         >{#if $currentWorkspaceUserCan("delete", "workspaceUser")}<Button
                 label={$_("workspace-settings.workspace-users.actions.remove")}
                 action={{
