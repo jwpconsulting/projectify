@@ -20,7 +20,7 @@
 import logging
 from typing import Optional
 
-from django.core.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied
 
 from projectify.user.models import User
 from projectify.workspace.models.workspace import Workspace
