@@ -41,7 +41,7 @@ export { selectedWorkspaceUser };
 type WorkspaceUserSearch = Writable<SearchInput>;
 const createWorkspaceUserFilter = () => writable<SearchInput>(undefined);
 
-export function searchWorkspaceUsers(
+function searchWorkspaceUsers(
     workspaceUsers: WorkspaceUser[],
     searchInput: SearchInput,
 ) {

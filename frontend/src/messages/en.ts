@@ -21,6 +21,7 @@ import BillingHelpPage from "./en/help/billing.md?raw";
 import FiltersHelpPage from "./en/help/filters.md?raw";
 import LabelsHelpPage from "./en/help/labels.md?raw";
 import QuotaHelpPage from "./en/help/quota.md?raw";
+import RolesHelpPage from "./en/help/roles.md?raw";
 import TasksHelpPage from "./en/help/tasks.md?raw";
 import TrialHelpPage from "./en/help/trial.md?raw";
 import WorkspaceBoardSectionsHelpPage from "./en/help/workspace-board-sections.md?raw";
@@ -777,15 +778,11 @@ const messages: MessageDirectory = {
         },
         "workspace-users": {
             "title": "Workspace users",
-            "search": {
-                label: "Search workspace users",
-                placeholder: "Enter a query to search for workspace users",
-            },
             "no-job-title": "No job title",
             "no-workspace-users-found":
                 "No workspace users found for this search query. Please try another search.",
             "role": "Role",
-            "workspace-user-details": "Workspace user details",
+            "workspace-user": "Workspace user",
             "invite-new-workspace-users": "Invite new workspace users",
             "edit-role": {
                 label: "Edit role",
@@ -795,6 +792,11 @@ const messages: MessageDirectory = {
             "actions": {
                 action: "Action",
                 remove: "Remove",
+            },
+            "help": {
+                "title": "Help",
+                "about-roles": "About roles",
+                "about-workspace-users": "About workspace users",
             },
         },
         "billing": {
@@ -1428,6 +1430,11 @@ const messages: MessageDirectory = {
             title: "Workspace quotas",
             description: "Understand workspace resource quotas",
             content: QuotaHelpPage,
+        },
+        "roles": {
+            title: "Roles",
+            description: "Divide up roles between workspace users",
+            content: RolesHelpPage,
         },
         "skip": "Skip ahead to",
     },

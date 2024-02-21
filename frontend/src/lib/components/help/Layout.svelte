@@ -22,6 +22,7 @@
     import HeroLayout from "$lib/components/layouts/HeroLayout.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import type { SolutionsHeroContent } from "$lib/types/ui";
+    import { helpTopics } from "$lib/utils/i18n";
     import { toMarkdown } from "$lib/utils/markdown";
 
     export let heroContent: SolutionsHeroContent;
@@ -29,60 +30,7 @@
 
     $: markdown = toMarkdown(content);
 
-    interface HelpItem {
-        title: string;
-        href: string;
-    }
-    $: helpItems = [
-        {
-            title: $_("help.overview"),
-            href: "/help",
-        },
-        {
-            title: $_("help.basics.title"),
-            href: "/help/basics",
-        },
-        {
-            title: $_("help.workspaces.title"),
-            href: "/help/workspaces",
-        },
-        {
-            title: $_("help.workspace-boards.title"),
-            href: "/help/workspace-boards",
-        },
-        {
-            title: $_("help.workspace-board-sections.title"),
-            href: "/help/workspace-board-sections",
-        },
-        {
-            title: $_("help.tasks.title"),
-            href: "/help/tasks",
-        },
-        {
-            title: $_("help.labels.title"),
-            href: "/help/labels",
-        },
-        {
-            title: $_("help.workspace-users.title"),
-            href: "/help/workspace-users",
-        },
-        {
-            title: $_("help.filters.title"),
-            href: "/help/filters",
-        },
-        {
-            title: $_("help.billing.title"),
-            href: "/help/billing",
-        },
-        {
-            title: $_("help.trial.title"),
-            href: "/help/trial",
-        },
-        {
-            title: $_("help.quota.title"),
-            href: "/help/quota",
-        },
-    ] as HelpItem[];
+    $: helpItems = helpTopics($_);
 </script>
 
 <HeroLayout>

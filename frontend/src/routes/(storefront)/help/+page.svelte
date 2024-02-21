@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -22,72 +22,10 @@
     import HeroLayout from "$lib/components/layouts/HeroLayout.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import type { SolutionsHeroContent } from "$lib/types/ui";
+    import { helpTopics as makeHelpTopics } from "$lib/utils/i18n";
 
     import HeroHelp from "./hero-help.png";
 
-    interface HelpTopic {
-        title: string;
-        description: string;
-        href: string;
-    }
-
-    $: helpTopics = [
-        {
-            title: $_("help.basics.title"),
-            description: $_("help.basics.description"),
-            href: "/help/basics",
-        },
-        {
-            title: $_("help.workspaces.title"),
-            description: $_("help.workspaces.description"),
-            href: "/help/workspaces",
-        },
-        {
-            title: $_("help.workspace-boards.title"),
-            description: $_("help.workspace-boards.description"),
-            href: "/help/workspace-boards",
-        },
-        {
-            title: $_("help.workspace-board-sections.title"),
-            description: $_("help.workspace-board-sections.description"),
-            href: "/help/workspace-board-sections",
-        },
-        {
-            title: $_("help.tasks.title"),
-            description: $_("help.tasks.description"),
-            href: "/help/tasks",
-        },
-        {
-            title: $_("help.labels.title"),
-            description: $_("help.labels.description"),
-            href: "/help/labels",
-        },
-        {
-            title: $_("help.workspace-users.title"),
-            description: $_("help.workspace-users.description"),
-            href: "/help/workspace-users",
-        },
-        {
-            title: $_("help.filters.title"),
-            description: $_("help.filters.description"),
-            href: "/help/filters",
-        },
-        {
-            title: $_("help.billing.title"),
-            description: $_("help.billing.description"),
-            href: "/help/billing",
-        },
-        {
-            title: $_("help.trial.title"),
-            description: $_("help.trial.description"),
-            href: "/help/trial",
-        },
-        {
-            title: $_("help.quota.title"),
-            description: $_("help.quota.description"),
-            href: "/help/quota",
-        },
-    ] satisfies HelpTopic[];
     $: heroContent = {
         title: $_("help.hero.header.text"),
         text: $_("help.hero.header.subtext"),
@@ -96,6 +34,8 @@
             alt: $_("help.hero.image.alt"),
         },
     } satisfies SolutionsHeroContent;
+
+    $: helpTopics = makeHelpTopics($_).filter((t) => t.isOverview !== true);
 </script>
 
 <HeroLayout>
