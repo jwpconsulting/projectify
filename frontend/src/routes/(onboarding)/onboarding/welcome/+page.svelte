@@ -35,7 +35,7 @@
         {/each}
         <Anchor
             size="large"
-            href="/pricing#trial-mode"
+            href="/help/quota#quotas-for-trial-workspaces"
             label={$_("onboarding.welcome.help.trial-mode-features")}
             openBlank
         />

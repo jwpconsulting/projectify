@@ -1415,8 +1415,8 @@ const messages: MessageDirectory = {
             content: BillingHelpPage,
         },
         "trial": {
-            title: "Workspace trial",
-            description: "Try Projectify with a trial workspace",
+            title: "Trial workspace",
+            description: "How to set up a trial workspace",
             content: TrialHelpPage,
         },
         "quota": {

@@ -40,7 +40,7 @@
                 </strong>
                 <Anchor
                     label={$_("dashboard.side-nav.quota.status.trial.help")}
-                    href="/help/billing"
+                    href="/help/trial"
                     size="normal"
                     openBlank
                 />
