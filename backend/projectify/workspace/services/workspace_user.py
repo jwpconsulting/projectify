@@ -17,6 +17,7 @@
 """Workspace user services."""
 from typing import Optional
 
+from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
@@ -27,7 +28,7 @@ from projectify.workspace.models.workspace_user import WorkspaceUser
 from projectify.workspace.services.signals import send_workspace_change_signal
 
 
-# TODO atomic
+@transaction.atomic
 def workspace_user_update(
     *,
     workspace_user: WorkspaceUser,
