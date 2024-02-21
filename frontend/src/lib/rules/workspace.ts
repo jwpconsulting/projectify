@@ -16,7 +16,11 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import type { WorkspaceUser, WorkspaceUserRole } from "$lib/types/workspace";
+import type {
+    WorkspaceQuota,
+    WorkspaceUser,
+    WorkspaceUserRole,
+} from "$lib/types/workspace";
 
 /**
  * Functions for permission checking, see rules in Django backend
@@ -166,12 +170,52 @@ const isAtLeast: {
     },
 };
 
+/**
+ * Map resource name to quota key in WorkspaceQuota
+ * If no quota exists for a resource, map to undefined.
+ * For example, no quota exists on workspaces themselves, since they exist
+ * independently of a workspace.
+ */
+const resourceToQuota: {
+    [K in Resource]:
+        | keyof Omit<WorkspaceQuota, "workspace_status">
+        | undefined;
+} = {
+    workspace: undefined,
+    workspaceUserInvite: "workspace_users_and_invites",
+    workspaceUser: "workspace_users_and_invites",
+    workspaceBoard: "workspace_boards",
+    workspaceBoardSection: "workspace_board_sections",
+    task: "tasks",
+    label: "labels",
+    taskLabel: "task_labels",
+    subTask: "sub_tasks",
+    chatMessage: "chat_messages",
+    customer: undefined,
+};
+
+function canCreateMore(resource: Resource, quota: WorkspaceQuota): boolean {
+    const quotaKey = resourceToQuota[resource];
+    // Short circuit for undefined quotaKey
+    if (quotaKey === undefined) {
+        return true;
+    }
+    const resourceQuota = quota[quotaKey];
+    return resourceQuota.can_create_more;
+}
+
 // TODO check trial limits as well for create actions
 export function can(
     verb: Verb,
     resource: Resource,
     { role }: Pick<WorkspaceUser, "role">,
+    quota: WorkspaceQuota,
 ): boolean {
+    // 1. Check permission
     const minimum = rules[resource][verb];
-    return isAtLeast[role][minimum];
+    const hasMiniminumRole = isAtLeast[role][minimum];
+    // 2. Check quota if create
+    const withinQuota =
+        verb === "create" ? canCreateMore(resource, quota) : true;
+    return hasMiniminumRole && withinQuota;
 }
