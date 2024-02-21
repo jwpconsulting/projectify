@@ -16,32 +16,22 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    import { Search } from "@steeze-ui/heroicons";
-    import { Icon } from "@steeze-ui/svelte-icon";
     import { _ } from "svelte-i18n";
 
     import WorkspaceUserCard from "$lib/figma/screens/workspace-settings/WorkspaceUserCard.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { currentWorkspace } from "$lib/stores/dashboard";
     import {
         currentWorkspaceUserCan,
         currentWorkspaceUsers,
     } from "$lib/stores/dashboard/workspaceUser";
-    import { searchWorkspaceUsers } from "$lib/stores/dashboard/workspaceUserFilter";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
-    import type { SearchInput } from "$lib/types/base";
-    import type { WorkspaceUser } from "$lib/types/workspace";
 
     import type { PageData } from "./$types";
 
     export let data: PageData;
 
     $: workspace = $currentWorkspace ?? data.workspace;
-
-    let filter: SearchInput = undefined;
-    let workspaceUsers: WorkspaceUser[] = [];
-    $: workspaceUsers = searchWorkspaceUsers($currentWorkspaceUsers, filter);
 
     async function inviteWorkspaceUser() {
         await openConstructiveOverlay({
@@ -52,18 +42,6 @@
 </script>
 
 <div class="flex flex-col gap-4">
-    <!-- TODO remove search -->
-    <InputField
-        style={{ inputType: "text" }}
-        name="workspaceUserSearch"
-        bind:value={filter}
-        label={$_("workspace-settings.workspace-users.search.label")}
-        placeholder={$_(
-            "workspace-settings.workspace-users.search.placeholder",
-        )}
-    >
-        <Icon slot="left" src={Search} class="w-4" theme="outline" />
-    </InputField>
     {#if $currentWorkspaceUserCan("create", "workspaceUserInvite")}
         <Button
             action={{
@@ -97,7 +75,7 @@
         </tr>
     </thead>
     <tbody class="contents">
-        {#each workspaceUsers as workspaceUser}
+        {#each $currentWorkspaceUsers as workspaceUser}
             <WorkspaceUserCard {workspaceUser} />
         {:else}
             <td class="col-span-4">

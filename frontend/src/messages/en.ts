@@ -778,10 +778,6 @@ const messages: MessageDirectory = {
         },
         "workspace-users": {
             "title": "Workspace users",
-            "search": {
-                label: "Search workspace users",
-                placeholder: "Enter a query to search for workspace users",
-            },
             "no-job-title": "No job title",
             "no-workspace-users-found":
                 "No workspace users found for this search query. Please try another search.",
