@@ -24,6 +24,7 @@ from rest_framework import serializers
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
+from projectify.workspace.models.const import WorkspaceUserRoles
 from projectify.workspace.models.workspace_user import WorkspaceUser
 from projectify.workspace.services.signals import send_workspace_change_signal
 
@@ -34,8 +35,7 @@ def workspace_user_update(
     workspace_user: WorkspaceUser,
     who: User,
     job_title: Optional[str] = None,
-    # TODO should be an enum value
-    role: str,
+    role: WorkspaceUserRoles,
 ) -> WorkspaceUser:
     """Update a workspace user with new role and job title."""
     validate_perm(

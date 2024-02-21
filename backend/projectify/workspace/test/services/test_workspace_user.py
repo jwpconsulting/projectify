@@ -19,6 +19,7 @@ import pytest
 from rest_framework.exceptions import PermissionDenied
 
 from projectify.user.models import User
+from projectify.workspace.models.const import WorkspaceUserRoles
 from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.workspace_user import WorkspaceUser
 from projectify.workspace.services.workspace import workspace_add_user
@@ -30,22 +31,20 @@ from projectify.workspace.services.workspace_user import (
 pytestmark = pytest.mark.django_db
 
 
-def test_workspace_user_update(
-    workspace_user: WorkspaceUser, workspace: Workspace
-) -> None:
+def test_workspace_user_update(workspace_user: WorkspaceUser) -> None:
     """Test updating a workspace user."""
     # First, we update ourselves
     workspace_user_update(
         who=workspace_user.user,
         workspace_user=workspace_user,
-        role="OBSERVER",
+        role=WorkspaceUserRoles.OBSERVER,
     )
     # Now we have demoted ourselves and we can't do it again
     with pytest.raises(PermissionDenied):
         workspace_user_update(
             who=workspace_user.user,
             workspace_user=workspace_user,
-            role="OWNER",
+            role=WorkspaceUserRoles.OWNER,
         )
 
 

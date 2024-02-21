@@ -44,63 +44,51 @@ from projectify.corporate.services.customer import (
 )
 from projectify.user.models import User
 from projectify.user.services.internal import user_create
-from projectify.workspace.models.label import Label
-from projectify.workspace.models.sub_task import SubTask
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_board import WorkspaceBoard
-from projectify.workspace.models.workspace_board_section import (
-    WorkspaceBoardSection,
+
+from .. import (
+    models,
 )
-from projectify.workspace.models.workspace_user import WorkspaceUser
-from projectify.workspace.selectors.workspace_user import (
-    workspace_user_find_for_workspace,
-)
-from projectify.workspace.services.chat_message import chat_message_create
-from projectify.workspace.services.label import (
-    label_create,
-    label_delete,
-    label_update,
-)
-from projectify.workspace.services.sub_task import (
-    sub_task_create,
-    sub_task_update_many,
-)
-from projectify.workspace.services.task import (
+from ..models.const import WorkspaceUserRoles
+from ..models.label import Label
+from ..models.sub_task import SubTask
+from ..models.task import Task
+from ..models.workspace import Workspace
+from ..models.workspace_board import WorkspaceBoard
+from ..models.workspace_board_section import WorkspaceBoardSection
+from ..models.workspace_user import WorkspaceUser
+from ..selectors.workspace_user import workspace_user_find_for_workspace
+from ..services.chat_message import chat_message_create
+from ..services.label import label_create, label_delete, label_update
+from ..services.sub_task import sub_task_create, sub_task_update_many
+from ..services.task import (
     task_create,
     task_create_nested,
     task_delete,
     task_move_after,
     task_update_nested,
 )
-from projectify.workspace.services.workspace import (
+from ..services.workspace import (
     workspace_create,
     workspace_delete,
     workspace_update,
 )
-from projectify.workspace.services.workspace_board import (
+from ..services.workspace_board import (
     workspace_board_archive,
     workspace_board_create,
     workspace_board_delete,
     workspace_board_update,
 )
-from projectify.workspace.services.workspace_board_section import (
+from ..services.workspace_board_section import (
     workspace_board_section_create,
     workspace_board_section_delete,
     workspace_board_section_move,
     workspace_board_section_update,
 )
-from projectify.workspace.services.workspace_user import (
+from ..services.workspace_user import (
     workspace_user_delete,
     workspace_user_update,
 )
-from projectify.workspace.services.workspace_user_invite import (
-    add_or_invite_workspace_user,
-)
-
-from .. import (
-    models,
-)
+from ..services.workspace_user_invite import add_or_invite_workspace_user
 
 logger = logging.getLogger(__name__)
 
@@ -326,7 +314,7 @@ class TestWorkspaceUser:
         await database_sync_to_async(workspace_user_update)(
             workspace_user=other_workspace_user,
             who=user,
-            role="OBSERVER",
+            role=WorkspaceUserRoles.OBSERVER,
         )
         await expect_message(workspace_communicator, workspace)
 
