@@ -31,14 +31,8 @@ from stripe.api_resources.checkout.session import Session
 from projectify.corporate.selectors.customer import (
     customer_find_by_workspace_uuid,
 )
-from projectify.corporate.services.customer import (
-    customer_create,
-)
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
-from projectify.workspace.selectors.workspace import (
-    workspace_find_by_workspace_uuid,
-)
 
 from ..models import Customer
 
@@ -50,19 +44,24 @@ def stripe_checkout_session_create(
     seats: int,
 ) -> Session:
     """Generate the URL for a checkout session."""
+    validate_perm("corporate.can_update_customer", who, customer.workspace)
+
     if customer.stripe_customer_id is not None:
         raise serializers.ValidationError(
             _("This customer already activated a subscription before")
         )
-    validate_perm("corporate.can_update_customer", who, customer.workspace)
+
+    # TODO
+    # customer.seats = seats
+    # customer.save()
+
     session = stripe.checkout.Session.create(
+        # TODO Update url
         success_url=settings.FRONTEND_URL,
+        # TODO Update url
         cancel_url=settings.FRONTEND_URL,
         line_items=[
-            {
-                "price": settings.STRIPE_PRICE_OBJECT,
-                "quantity": seats,
-            },
+            {"price": settings.STRIPE_PRICE_OBJECT, "quantity": seats},
         ],
         mode="subscription",
         subscription_data={"trial_period_days": 31},
@@ -70,33 +69,6 @@ def stripe_checkout_session_create(
         metadata={"customer_uuid": customer.uuid},
     )
     return session
-
-
-def stripe_checkout_session_create_for_workspace_uuid(
-    *, who: User, workspace_uuid: UUID, seats: int
-) -> Session:
-    """Create a checkout session given a workspace uuid."""
-    # TODO maybe we can shortcut the below into a customer_find_by_workspace
-    # and get the workspace first?
-    customer = customer_find_by_workspace_uuid(
-        workspace_uuid=workspace_uuid,
-        who=who,
-    )
-    if customer is None:
-        workspace = workspace_find_by_workspace_uuid(
-            who=who, workspace_uuid=workspace_uuid
-        )
-        if workspace is None:
-            raise serializers.ValidationError(
-                {"workspace_uuid": _("No workspace found for this uuid")}
-            )
-        customer = customer_create(who=who, workspace=workspace, seats=seats)
-
-    return stripe_checkout_session_create(
-        customer=customer,
-        who=who,
-        seats=seats,
-    )
 
 
 # TODO change to create_billing_portal_session_for_workspace
@@ -108,8 +80,7 @@ def create_billing_portal_session_for_workspace_uuid(
 ) -> BillingPortalSession:
     """Create a billing session for a user given a workspace uuid."""
     customer = customer_find_by_workspace_uuid(
-        who=who,
-        workspace_uuid=workspace_uuid,
+        who=who, workspace_uuid=workspace_uuid
     )
     if customer is None:
         raise serializers.ValidationError(

@@ -24,8 +24,9 @@ from projectify.corporate.services.stripe import (
 )
 from projectify.workspace.models.workspace_user import WorkspaceUser
 
+pytestmark = pytest.mark.django_db
 
-@pytest.mark.django_db
+
 class TestCreateBillingPortalSessionForWorkspaceUuid:
     """Test create_billing_portal_session_for_workspace_uuid."""
 

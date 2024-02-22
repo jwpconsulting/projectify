@@ -35,7 +35,7 @@ from projectify.corporate.selectors.customer import (
 from projectify.corporate.serializers import CustomerSerializer
 from projectify.corporate.services.stripe import (
     create_billing_portal_session_for_workspace_uuid,
-    stripe_checkout_session_create_for_workspace_uuid,
+    stripe_checkout_session_create,
 )
 
 logger = logging.getLogger(__name__)
@@ -79,13 +79,20 @@ class WorkspaceCheckoutSessionCreate(APIView):
 
     def post(self, request: Request, workspace_uuid: UUID) -> Response:
         """Handle POST."""
-        serializer = self.InputSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-        session = stripe_checkout_session_create_for_workspace_uuid(
+        customer = customer_find_by_workspace_uuid(
             workspace_uuid=workspace_uuid,
             who=request.user,
-            seats=data["seats"],
+        )
+        if customer is None:
+            raise exceptions.NotFound(
+                _("No customer found for this workspace uuid")
+            )
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        session = stripe_checkout_session_create(
+            customer=customer,
+            who=request.user,
+            seats=serializer.validated_data["seats"],
         )
         output_serializer = self.OutputSerializer(instance=session)
         return Response(data=output_serializer.data, status=HTTP_200_OK)
