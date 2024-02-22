@@ -58,7 +58,7 @@ def workspace_board_find_by_workspace_board_uuid(
     qs = WorkspaceBoard.objects.all() if qs is None else qs
     if include_archived is False:
         qs = qs.filter(archived__isnull=True)
-    qs = qs.filter_for_user_and_uuid(user=who, uuid=workspace_board_uuid)
+    qs = qs.filter_by_user(who).filter(uuid=workspace_board_uuid)
     try:
         return qs.get()
     except WorkspaceBoard.DoesNotExist:
