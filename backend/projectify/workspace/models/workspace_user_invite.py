@@ -15,36 +15,18 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Contains workspace user invite qs / manager / model."""
-from typing import (
-    TYPE_CHECKING,
-    ClassVar,
-    Self,
-    cast,
-)
+from typing import TYPE_CHECKING
 
-from django.db import (
-    models,
-)
+from django.db import models
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import BaseModel
 
-from .types import (
-    Pks,
-)
-
 if TYPE_CHECKING:
     from projectify.user.models import UserInvite  # noqa: F401
-    from projectify.workspace.models import Workspace  # noqa: F401
 
-
-class WorkspaceUserInviteQuerySet(models.QuerySet["WorkspaceUserInvite"]):
-    """QuerySet for WorkspaceUserInvite."""
-
-    def filter_by_workspace_pks(self, workspace_pks: Pks) -> Self:
-        """Filter by workspace pks."""
-        return self.filter(workspace__pk__in=workspace_pks)
+    from ..models import Workspace  # noqa: F401
 
 
 class WorkspaceUserInvite(BaseModel):
@@ -69,10 +51,6 @@ class WorkspaceUserInvite(BaseModel):
         editable=False,
         default=None,
         help_text=_("When has this invite been redeemed?"),
-    )
-
-    objects: ClassVar[WorkspaceUserInviteQuerySet] = cast(  # type: ignore[assignment]
-        WorkspaceUserInviteQuerySet, WorkspaceUserInviteQuerySet.as_manager()
     )
 
     def redeem(self) -> None:
