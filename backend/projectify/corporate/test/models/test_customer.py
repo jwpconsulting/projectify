@@ -23,7 +23,7 @@ from projectify.corporate.models import Customer
 from projectify.user.models import User
 from projectify.workspace.models.workspace_user import WorkspaceUser
 from projectify.workspace.services.workspace_user_invite import (
-    add_or_invite_workspace_user,
+    workspace_user_invite_create,
 )
 
 
@@ -100,7 +100,7 @@ class TestCustomer:
         """Test seats remaining."""
         # user is already added, so there is already one seat used up
         assert paid_customer.seats_remaining == paid_customer.seats - 1
-        add_or_invite_workspace_user(
+        workspace_user_invite_create(
             who=user,
             workspace=paid_customer.workspace,
             email_or_user=faker.email(),

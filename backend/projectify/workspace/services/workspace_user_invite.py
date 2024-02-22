@@ -91,9 +91,8 @@ def _try_find_invitation(
         return None
 
 
-# TODO rename me workspace_user_invite_create
 @transaction.atomic
-def add_or_invite_workspace_user(
+def workspace_user_invite_create(
     *,
     workspace: Workspace,
     email_or_user: Union[User, str],
@@ -166,9 +165,10 @@ def add_or_invite_workspace_user(
     return workspace_user_invite
 
 
-# TODO rename me workspace_user_invite_delete
 @transaction.atomic
-def uninvite_user(who: User, workspace: Workspace, email: str) -> None:
+def workspace_user_invite_delete(
+    *, who: User, workspace: Workspace, email: str
+) -> None:
     """Remove a users invitation."""
     validate_perm("workspace.delete_workspace_user_invite", who, workspace)
     invite = _try_find_invitation(

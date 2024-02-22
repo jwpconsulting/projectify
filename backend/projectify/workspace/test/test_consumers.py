@@ -88,7 +88,7 @@ from ..services.workspace_user import (
     workspace_user_delete,
     workspace_user_update,
 )
-from ..services.workspace_user_invite import add_or_invite_workspace_user
+from ..services.workspace_user_invite import workspace_user_invite_create
 
 logger = logging.getLogger(__name__)
 
@@ -302,7 +302,7 @@ class TestWorkspaceUser:
         )
         # New workspace user
         other_workspace_user = await database_sync_to_async(
-            add_or_invite_workspace_user
+            workspace_user_invite_create
         )(
             workspace=workspace,
             email_or_user=other_user,

@@ -73,7 +73,7 @@ from projectify.workspace.services.workspace_board_section import (
     workspace_board_section_create,
 )
 from projectify.workspace.services.workspace_user_invite import (
-    add_or_invite_workspace_user,
+    workspace_user_invite_create,
 )
 
 from .. import (
@@ -142,7 +142,7 @@ def workspace_user_invite(
 ) -> models.WorkspaceUserInvite:
     """Return workspace user invite."""
     email: str = faker.email()
-    invite = add_or_invite_workspace_user(
+    invite = workspace_user_invite_create(
         who=workspace_user.user, workspace=workspace, email_or_user=email
     )
     assert isinstance(invite, WorkspaceUserInvite)

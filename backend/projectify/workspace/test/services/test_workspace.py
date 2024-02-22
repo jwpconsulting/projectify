@@ -29,8 +29,8 @@ from projectify.workspace.services.workspace_board import (
 )
 from projectify.workspace.services.workspace_user import workspace_user_delete
 from projectify.workspace.services.workspace_user_invite import (
-    add_or_invite_workspace_user,
-    uninvite_user,
+    workspace_user_invite_create,
+    workspace_user_invite_delete,
 )
 
 pytestmark = pytest.mark.django_db
@@ -57,7 +57,7 @@ def test_workspace_delete_dependencies(
     count = Workspace.objects.count()
 
     invite_email = faker.email()
-    add_or_invite_workspace_user(
+    workspace_user_invite_create(
         who=user,
         workspace=workspace,
         email_or_user=invite_email,
@@ -72,7 +72,9 @@ def test_workspace_delete_dependencies(
         workspace_delete(workspace=workspace, who=user)
     assert error.match("no outstanding invites")
 
-    uninvite_user(who=user, email=invite_email, workspace=workspace)
+    workspace_user_invite_delete(
+        who=user, email=invite_email, workspace=workspace
+    )
 
     with pytest.raises(ValidationError) as error:
         workspace_delete(workspace=workspace, who=user)
