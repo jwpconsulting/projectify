@@ -89,11 +89,10 @@ export async function updateWorkspace(
 
 // RPC
 export async function inviteUser(
-    workspace: Workspace,
+    { uuid }: Workspace,
     email: string,
     repositoryContext: RepositoryContext,
 ): Promise<ApiResponse<unknown, { email?: string }>> {
-    const { uuid } = workspace;
     return await postWithCredentialsJson(
         `/workspace/workspace/${uuid}/invite-workspace-user`,
         { email },
