@@ -40,10 +40,11 @@ def workspace_board_find_by_workspace_uuid(
     *, workspace_uuid: UUID, who: User, archived: Optional[bool] = None
 ) -> QuerySet[WorkspaceBoard]:
     """Find workspace boards for a workspace."""
-    qs = WorkspaceBoard.objects
+    qs = WorkspaceBoard.objects.filter(
+        workspace__users=who, workspace__uuid=workspace_uuid
+    )
     if archived is not None:
         qs = qs.filter(archived__isnull=not archived)
-    qs = qs.filter(workspace__users=who, workspace__uuid=workspace_uuid)
     return qs
 
 
