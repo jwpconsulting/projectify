@@ -99,3 +99,15 @@ export async function inviteUser(
         repositoryContext,
     );
 }
+
+export async function uninviteUser(
+    { uuid }: Workspace,
+    email: string,
+    repositoryContext: RepositoryContext,
+): Promise<ApiResponse<unknown, { email?: string }>> {
+    return await postWithCredentialsJson(
+        `/workspace/workspace/${uuid}/uninvite-workspace-user`,
+        { email },
+        repositoryContext,
+    );
+}

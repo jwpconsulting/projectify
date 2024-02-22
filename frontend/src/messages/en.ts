@@ -802,6 +802,7 @@ const messages: MessageDirectory = {
             "actions": {
                 action: "Action",
                 remove: "Remove",
+                uninvite: "Uninvite",
             },
             "help": {
                 "title": "Help",
