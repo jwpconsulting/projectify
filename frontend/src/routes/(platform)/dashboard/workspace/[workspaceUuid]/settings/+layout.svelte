@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -16,7 +16,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    import Layout from "$lib/figma/screens/workspace-settings/Layout.svelte";
+    import { _ } from "svelte-i18n";
+
+    import TabBar from "$lib/figma/screens/workspace-settings/TabBar.svelte";
     import type { SettingKind } from "$lib/types/dashboard";
 
     import type { LayoutData } from "./$types";
@@ -39,9 +41,17 @@
         throw new Error("Unknown settings path");
     }
 
-    $: settingKind = getActiveSetting($page.url);
+    $: activeSetting = getActiveSetting($page.url);
 </script>
 
-<Layout {workspace} activeSetting={settingKind}>
-    <slot />
-</Layout>
+<div class="flex w-full max-w-xl flex-col gap-4">
+    <h1 class="px-2 text-2xl font-bold sm:px-0">
+        {$_("workspace-settings.title")}
+    </h1>
+    <main
+        class="flex w-full max-w-xl flex-col gap-10 rounded-lg bg-foreground p-4 shadow-context-menu"
+    >
+        <TabBar {workspace} {activeSetting} />
+        <slot />
+    </main>
+</div>
