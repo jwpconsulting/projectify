@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2023-2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -21,9 +21,10 @@ import {
     postWithCredentialsJson,
     putWithCredentialsJson,
 } from "$lib/repository/util";
-import type { Result } from "$lib/types/base";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { Workspace, WorkspaceDetail } from "$lib/types/workspace";
+
+import type { ApiResponse } from "../types";
 
 // Create
 export async function createWorkspace(
@@ -91,20 +92,11 @@ export async function inviteUser(
     workspace: Workspace,
     email: string,
     repositoryContext: RepositoryContext,
-): Promise<Result<{ email: string }, { email: string }>> {
+): Promise<ApiResponse<unknown, { email?: string }>> {
     const { uuid } = workspace;
-    const response = await postWithCredentialsJson<
-        { email: string },
-        { email: string }
-    >(
-        `/workspace/workspace/${uuid}/invite-user`,
+    return await postWithCredentialsJson(
+        `/workspace/workspace/${uuid}/invite-workspace-user`,
         { email },
         repositoryContext,
     );
-    if (response.kind === "ok") {
-        return { ok: true, result: response.data };
-    } else if (response.kind === "badRequest") {
-        return { ok: false, error: response.error };
-    }
-    throw new Error();
 }

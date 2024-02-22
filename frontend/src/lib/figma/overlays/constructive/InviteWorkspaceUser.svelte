@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -46,16 +46,33 @@
         state = { kind: "submitting" };
         const result = await inviteUser(workspace, email, { fetch });
         if (result.ok) {
+            resolveConstructiveOverlay();
+            return;
+        }
+        if (result.error.email === undefined) {
             validation = {
                 ok: true,
                 result: $_(
                     "overlay.constructive.invite-workspace-user.form.email.validation.ok",
                 ),
             };
-            resolveConstructiveOverlay();
+            state = {
+                kind: "error",
+                message: $_(
+                    "overlay.constructive.invite-workspace-user.error.field",
+                ),
+            };
         } else {
-            validation = { ok: false, error: result.error.email };
-            state = { kind: "error", message: JSON.stringify(result.error) };
+            validation = {
+                ok: false,
+                error: result.error.email,
+            };
+            state = {
+                kind: "error",
+                message: $_(
+                    "overlay.constructive.invite-workspace-user.error.general",
+                ),
+            };
         }
     }
 </script>
@@ -78,6 +95,9 @@
             required
             {validation}
         />
+        {#if state.kind === "error"}
+            <p>{state.message}</p>
+        {/if}
     </svelte:fragment>
     <svelte:fragment slot="buttons">
         <Button

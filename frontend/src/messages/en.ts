@@ -62,9 +62,13 @@ const messages: MessageDirectory = {
                         label: "Enter the email address of the user you would like to invite",
                         placeholder: "workspace-user@mail.com",
                         validation: {
-                            ok: "The user was successfully invited",
+                            ok: "Email address looks good",
                         },
                     },
+                },
+                error: {
+                    general: "An unknown error occured",
+                    field: "Please correct the errors above and submit one more time",
                 },
                 cancel: "Cancel",
                 invite: "Invite",
