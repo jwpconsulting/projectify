@@ -62,7 +62,7 @@ class WorkspaceDetailSerializer(base.WorkspaceBaseSerializer):
     labels = base.LabelBaseSerializer(
         read_only=True, many=True, source="label_set"
     )
-    quota = WorkspaceQuotaSerializer(required=False)
+    quota = WorkspaceQuotaSerializer()
 
     class Meta(base.WorkspaceBaseSerializer.Meta):
         """Meta."""
