@@ -25,14 +25,14 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
     import { confirmPasswordReset } from "$lib/repository/user";
-    import type { AuthViewState } from "$lib/types/ui";
+    import type { FormViewState } from "$lib/types/ui";
     import { requestPasswordResetUrl, resetPasswordUrl } from "$lib/urls/user";
 
     import type { PageData } from "./$types";
 
     export let data: PageData;
 
-    let state: AuthViewState = { kind: "start" };
+    let state: FormViewState = { kind: "start" };
 
     const { email, token } = data;
     let password1: string | undefined = undefined;

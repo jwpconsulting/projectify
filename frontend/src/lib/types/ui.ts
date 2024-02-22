@@ -206,7 +206,7 @@ export type EditableViewState =
     | { kind: "saving" };
 
 // TODO rename FormViewState
-export type AuthViewState =
+export type FormViewState =
     | { kind: "start" }
     | { kind: "submitting" }
     | { kind: "error"; message: string };

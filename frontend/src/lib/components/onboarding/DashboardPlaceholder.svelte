@@ -54,6 +54,7 @@
         workspace_boards: [],
         labels: [],
         workspace_users: [],
+        workspace_user_invites: [],
         quota,
     };
     const workspaceBoardFallback: WorkspaceBoardDetail = {

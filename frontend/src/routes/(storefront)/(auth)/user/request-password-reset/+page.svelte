@@ -24,7 +24,7 @@
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { requestPasswordReset } from "$lib/repository/user";
-    import type { AuthViewState } from "$lib/types/ui";
+    import type { FormViewState } from "$lib/types/ui";
     import { requestedPasswordResetUrl } from "$lib/urls/user";
 
     import { goto } from "$app/navigation";
@@ -32,7 +32,7 @@
     let email: string | undefined = undefined;
     let emailValidation: InputFieldValidation | undefined = undefined;
 
-    let state: AuthViewState = { kind: "start" };
+    let state: FormViewState = { kind: "start" };
 
     async function submit() {
         if (!email) {

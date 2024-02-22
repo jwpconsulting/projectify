@@ -25,7 +25,7 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
     import { logIn } from "$lib/stores/user";
-    import type { AuthViewState } from "$lib/types/ui";
+    import type { FormViewState } from "$lib/types/ui";
     import { dashboardUrl } from "$lib/urls/dashboard";
     import { signUpUrl, requestPasswordResetUrl } from "$lib/urls/user";
 
@@ -40,7 +40,7 @@
     let password: string | undefined = undefined;
     let passwordValidation: InputFieldValidation | undefined = undefined;
 
-    let state: AuthViewState = { kind: "start" };
+    let state: FormViewState = { kind: "start" };
 
     async function action() {
         state = { kind: "submitting" };

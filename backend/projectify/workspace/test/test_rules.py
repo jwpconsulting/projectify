@@ -44,7 +44,7 @@ from projectify.workspace.services.workspace_board_section import (
     workspace_board_section_create,
 )
 from projectify.workspace.services.workspace_user_invite import (
-    add_or_invite_workspace_user,
+    workspace_user_invite_create,
 )
 
 from .. import (
@@ -344,7 +344,7 @@ class TestTrialRules:
             "workspace.create_workspace_user_invite", user, workspace
         )
         # Assume workspace_user_invite_create handles creating an invite and potential user creation
-        invite = add_or_invite_workspace_user(
+        invite = workspace_user_invite_create(
             workspace=workspace,
             email_or_user=faker.email(),
             who=workspace_user.user,
@@ -370,7 +370,7 @@ class TestTrialRules:
         assert validate_perm(
             "workspace.create_workspace_user_invite", user, workspace
         )
-        add_or_invite_workspace_user(
+        workspace_user_invite_create(
             workspace=workspace,
             who=workspace_user.user,
             email_or_user=unrelated_user,

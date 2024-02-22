@@ -56,7 +56,7 @@ from ..services.workspace import (
     workspace_update,
 )
 from ..services.workspace_user_invite import (
-    add_or_invite_workspace_user,
+    workspace_user_invite_create,
 )
 
 
@@ -196,7 +196,7 @@ class InviteUserToWorkspace(views.APIView):
         serializer.is_valid(raise_exception=True)
         email: str = serializer.validated_data["email"]
         try:
-            add_or_invite_workspace_user(
+            workspace_user_invite_create(
                 who=user, workspace=workspace, email_or_user=email
             )
         except UserAlreadyInvited:

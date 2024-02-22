@@ -58,32 +58,92 @@
         />
     {/if}
 </div>
-<table class="grid w-full grid-cols-4 items-center gap-y-4 px-2">
-    <thead class="contents">
-        <tr class="contents">
-            <th class="col-span-2 border-b border-border text-left font-bold"
-                >{$_("workspace-settings.workspace-users.workspace-user")}</th
-            >
-            <th class="border-b border-border text-left font-bold"
-                >{$_("workspace-settings.workspace-users.role")}</th
-            >
-            <th class="border-b border-border text-left font-bold"
-                >{$_("workspace-settings.workspace-users.actions.action")}</th
-            >
-        </tr>
-    </thead>
-    <tbody class="contents">
-        {#each $currentWorkspaceUsers as workspaceUser}
-            <WorkspaceUserCard {workspaceUser} />
-        {:else}
-            <td class="col-span-4">
-                {$_(
-                    "workspace-settings.workspace-users.no-workspace-users-found",
-                )}
-            </td>
-        {/each}
-    </tbody>
-</table>
+<section class="flex flex-col gap-4">
+    <h2 class="text-xl font-bold">
+        {$_("workspace-settings.workspace-users.title")}
+    </h2>
+    <table class="grid w-full grid-cols-4 items-center gap-y-4">
+        <thead class="contents">
+            <tr class="contents">
+                <th
+                    class="col-span-2 border-b border-border text-left font-bold"
+                    >{$_(
+                        "workspace-settings.workspace-users.workspace-user",
+                    )}</th
+                >
+                <th class="border-b border-border text-left font-bold"
+                    >{$_("workspace-settings.workspace-users.role")}</th
+                >
+                <th class="border-b border-border text-left font-bold"
+                    >{$_(
+                        "workspace-settings.workspace-users.actions.action",
+                    )}</th
+                >
+            </tr>
+        </thead>
+        <tbody class="contents">
+            {#each $currentWorkspaceUsers as workspaceUser}
+                <WorkspaceUserCard {workspaceUser} />
+            {:else}
+                <td class="col-span-4">
+                    {$_(
+                        "workspace-settings.workspace-users.no-workspace-users-found",
+                    )}
+                </td>
+            {/each}
+        </tbody>
+    </table>
+</section>
+<section class="flex flex-col gap-4">
+    <h2 class="text-xl font-bold">
+        {$_("workspace-settings.workspace-users.invites.title")}
+    </h2>
+    <table class="grid w-full grid-cols-3 items-center gap-y-4">
+        <thead class="contents">
+            <tr class="contents">
+                <th class="border-b border-border text-left font-bold"
+                    >{$_(
+                        "workspace-settings.workspace-users.invites.email",
+                    )}</th
+                >
+                <th class="border-b border-border text-left font-bold"
+                    >{$_(
+                        "workspace-settings.workspace-users.invites.date",
+                    )}</th
+                >
+                <th class="border-b border-border text-left font-bold"
+                    >{$_(
+                        "workspace-settings.workspace-users.actions.action",
+                    )}</th
+                >
+            </tr>
+        </thead>
+        <tbody class="contents">
+            {#each workspace.workspace_user_invites as invite}
+                <td>
+                    {invite.email}
+                </td>
+                <td>n/a</td>
+                <td
+                    ><Button
+                        style={{ kind: "tertiary" }}
+                        color="red"
+                        action={{ kind: "button", disabled: true }}
+                        size="medium"
+                        label={$_(
+                            "workspace-settings.workspace-users.actions.remove",
+                        )}
+                        grow={false}
+                    />
+                </td>
+            {:else}
+                <td class="col-span-3">
+                    {$_("workspace-settings.workspace-users.invites.empty")}
+                </td>
+            {/each}
+        </tbody>
+    </table>
+</section>
 <hr />
 <section class="flex flex-col gap-2">
     <strong>{$_("workspace-settings.workspace-users.help.title")}</strong>

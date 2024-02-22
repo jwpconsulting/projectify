@@ -24,7 +24,7 @@
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import { createLabel, updateLabel } from "$lib/repository/workspace/label";
     import { currentWorkspace } from "$lib/stores/dashboard";
-    import type { AuthViewState } from "$lib/types/ui";
+    import type { FormViewState } from "$lib/types/ui";
     import type { Label } from "$lib/types/workspace";
     import {
         getIndexFromLabelColor,
@@ -43,7 +43,7 @@
     let labelName: string | undefined = undefined;
     let labelNameValidation: InputFieldValidation | undefined = undefined;
 
-    let editState: AuthViewState = { kind: "start" };
+    let editState: FormViewState = { kind: "start" };
 
     onMount(() => {
         if (state.kind === "create") {

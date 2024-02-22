@@ -23,8 +23,8 @@ from projectify.user.services.internal import user_create
 from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.workspace_user import WorkspaceUser
 from projectify.workspace.services.workspace_user_invite import (
-    add_or_invite_workspace_user,
-    uninvite_user,
+    workspace_user_invite_create,
+    workspace_user_invite_delete,
 )
 
 from ...exceptions import (
@@ -45,7 +45,7 @@ class TestAddOrInviteWorkspaceUser:
         workspace_user: WorkspaceUser,
     ) -> None:
         """Test inviting a user."""
-        workspace_user_invite = add_or_invite_workspace_user(
+        workspace_user_invite = workspace_user_invite_create(
             who=workspace_user.user,
             workspace=workspace,
             email_or_user="hello@example.com",
@@ -60,7 +60,7 @@ class TestAddOrInviteWorkspaceUser:
     ) -> None:
         """Test inviting with a sign up."""
         count = workspace.users.count()
-        add_or_invite_workspace_user(
+        workspace_user_invite_create(
             who=workspace_user.user,
             workspace=workspace,
             email_or_user="hello@example.com",
@@ -76,7 +76,7 @@ class TestAddOrInviteWorkspaceUser:
     ) -> None:
         """Test what happens if a user signs up twice."""
         count = workspace.users.count()
-        add_or_invite_workspace_user(
+        workspace_user_invite_create(
             who=workspace_user.user,
             workspace=workspace,
             email_or_user="hello@example.com",
@@ -93,13 +93,13 @@ class TestAddOrInviteWorkspaceUser:
         self, workspace: Workspace, workspace_user: WorkspaceUser
     ) -> None:
         """Test that inviting twice won't work."""
-        add_or_invite_workspace_user(
+        workspace_user_invite_create(
             who=workspace_user.user,
             workspace=workspace,
             email_or_user="hello@example.com",
         )
         with pytest.raises(UserAlreadyInvited):
-            add_or_invite_workspace_user(
+            workspace_user_invite_create(
                 who=workspace_user.user,
                 workspace=workspace,
                 email_or_user="hello@example.com",
@@ -110,7 +110,7 @@ class TestAddOrInviteWorkspaceUser:
     ) -> None:
         """Test that inviting a pre-existing user won't work."""
         with pytest.raises(UserAlreadyAdded):
-            add_or_invite_workspace_user(
+            workspace_user_invite_create(
                 workspace=workspace,
                 who=workspace_user.user,
                 email_or_user=workspace_user.user.email,
@@ -124,7 +124,7 @@ class TestAddOrInviteWorkspaceUser:
     ) -> None:
         """Test that inviting an existing user will work."""
         count = workspace.workspaceuser_set.count()
-        add_or_invite_workspace_user(
+        workspace_user_invite_create(
             workspace=workspace,
             who=workspace_user.user,
             email_or_user=unrelated_user.email,
@@ -136,13 +136,13 @@ class TestAddOrInviteWorkspaceUser:
     ) -> None:
         """Test uninviting a user."""
         count = workspace.workspaceuserinvite_set.count()
-        add_or_invite_workspace_user(
+        workspace_user_invite_create(
             who=workspace_user.user,
             workspace=workspace,
             email_or_user="hello@example.com",
         )
         assert workspace.workspaceuserinvite_set.count() == count + 1
-        uninvite_user(
+        workspace_user_invite_delete(
             workspace=workspace,
             who=workspace_user.user,
             email="hello@example.com",
@@ -156,13 +156,13 @@ class TestAddOrInviteWorkspaceUser:
     ) -> None:
         """Test what happens when a user is uninvited."""
         count = workspace.users.count()
-        add_or_invite_workspace_user(
+        workspace_user_invite_create(
             who=workspace_user.user,
             workspace=workspace,
             email_or_user="hello@example.com",
         )
         assert workspace.users.count() == count
-        uninvite_user(
+        workspace_user_invite_delete(
             who=workspace_user.user,
             workspace=workspace,
             email="hello@example.com",
@@ -177,7 +177,7 @@ class TestAddOrInviteWorkspaceUser:
         """Test uninviting a user that was never invited."""
         count = workspace.workspaceuserinvite_set.count()
         with pytest.raises(serializers.ValidationError) as error:
-            uninvite_user(
+            workspace_user_invite_delete(
                 workspace=workspace,
                 who=workspace_user.user,
                 email="hello@example.com",

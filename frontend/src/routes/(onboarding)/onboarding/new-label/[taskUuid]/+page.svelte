@@ -25,7 +25,7 @@
     import { goto } from "$lib/navigation";
     import { updateTask } from "$lib/repository/workspace";
     import { createLabel } from "$lib/repository/workspace/label";
-    import type { AuthViewState } from "$lib/types/ui";
+    import type { FormViewState } from "$lib/types/ui";
     import { getAssignTaskUrl, getNewTaskUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
@@ -38,7 +38,7 @@
     let labelTitle: string | undefined = undefined;
     let labelTitleValidation: InputFieldValidation | undefined = undefined;
 
-    let state: AuthViewState = { kind: "start" };
+    let state: FormViewState = { kind: "start" };
 
     $: disabled = !labelTitle || state.kind === "submitting";
 

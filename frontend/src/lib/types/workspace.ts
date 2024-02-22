@@ -129,9 +129,14 @@ export interface WorkspaceQuota {
     workspace_users_and_invites: Quota;
 }
 
+interface WorkspaceUserInvite {
+    email: string;
+}
+
 export type Workspace = {
     picture: string | null;
     workspace_users?: WorkspaceUser[];
+    workspace_user_invites?: WorkspaceUserInvite[];
     workspace_boards?: WorkspaceBoard[];
     labels?: Label[];
     uuid: string;
@@ -142,7 +147,11 @@ export type Workspace = {
 export type WorkspaceDetail = Required<
     Pick<
         Workspace,
-        "workspace_boards" | "labels" | "workspace_users" | "quota"
+        | "workspace_boards"
+        | "labels"
+        | "workspace_users"
+        | "quota"
+        | "workspace_user_invites"
     >
 > &
     Workspace;
