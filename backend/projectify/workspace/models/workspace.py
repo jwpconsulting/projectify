@@ -18,10 +18,7 @@
 import uuid
 from typing import (
     TYPE_CHECKING,
-    ClassVar,
     Optional,
-    Self,
-    cast,
 )
 
 from django.conf import (
@@ -62,14 +59,6 @@ if TYPE_CHECKING:
     )
 
 
-class WorkspaceQuerySet(models.QuerySet["Workspace"]):
-    """Workspace Manager."""
-
-    def get_for_user(self, user: AbstractBaseUser) -> Self:
-        """Return workspaces for a user."""
-        return self.filter(users=user)
-
-
 class Workspace(TitleDescriptionModel, BaseModel):
     """Workspace."""
 
@@ -86,10 +75,6 @@ class Workspace(TitleDescriptionModel, BaseModel):
     )
 
     highest_task_number = models.IntegerField(default=0)
-
-    objects: ClassVar[WorkspaceQuerySet] = cast(  # type: ignore[assignment]
-        WorkspaceQuerySet, WorkspaceQuerySet.as_manager()
-    )
 
     # Optional annotation to show trial limits
     # Since it involves additional queries, it is None by default

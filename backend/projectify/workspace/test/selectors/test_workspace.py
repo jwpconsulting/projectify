@@ -17,11 +17,30 @@
 """Test workspace model selectors."""
 import pytest
 
-from projectify.workspace.models.workspace_user import WorkspaceUser
-
-from ...selectors.workspace import workspace_find_by_workspace_uuid
+from ...models.workspace_user import WorkspaceUser
+from ...selectors.workspace import (
+    workspace_find_by_workspace_uuid,
+    workspace_find_for_user,
+)
+from ...services.workspace import workspace_delete
 
 pytestmark = pytest.mark.django_db
+
+
+def test_workspace_find_for_user(
+    workspace_user: WorkspaceUser, unrelated_workspace_user: WorkspaceUser
+) -> None:
+    """Test workspace_find_for_user."""
+    a = workspace_user
+    b = unrelated_workspace_user
+    assert workspace_find_for_user(who=a.user).count() == 1
+    assert workspace_find_for_user(who=b.user).count() == 1
+    workspace_delete(who=a.user, workspace=a.workspace)
+    assert workspace_find_for_user(who=a.user).count() == 0
+    assert workspace_find_for_user(who=b.user).count() == 1
+    workspace_delete(who=b.user, workspace=b.workspace)
+    assert workspace_find_for_user(who=a.user).count() == 0
+    assert workspace_find_for_user(who=b.user).count() == 0
 
 
 def test_workspace_find_by_workspace_uuid(
