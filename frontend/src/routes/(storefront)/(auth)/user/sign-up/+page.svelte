@@ -25,7 +25,7 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
     import { signUp } from "$lib/repository/user";
-    import type { AuthViewState } from "$lib/types/ui";
+    import type { FormViewState } from "$lib/types/ui";
     import { logInUrl, sentEmailConfirmationLinkUrl } from "$lib/urls/user";
 
     let email: string | undefined = undefined;
@@ -33,7 +33,7 @@
     let tosAgreed: boolean | undefined = undefined;
     let privacyPolicyAgreed: boolean | undefined = undefined;
 
-    let state: AuthViewState = { kind: "start" };
+    let state: FormViewState = { kind: "start" };
 
     async function action() {
         state = { kind: "submitting" };

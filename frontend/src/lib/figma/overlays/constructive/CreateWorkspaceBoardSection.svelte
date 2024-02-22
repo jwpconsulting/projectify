@@ -26,7 +26,7 @@
         rejectConstructiveOverlay,
         resolveConstructiveOverlay,
     } from "$lib/stores/globalUi";
-    import type { AuthViewState } from "$lib/types/ui";
+    import type { FormViewState } from "$lib/types/ui";
     import type {
         CreateWorkspaceBoardSection,
         WorkspaceBoard,
@@ -34,7 +34,7 @@
 
     export let workspaceBoard: WorkspaceBoard;
 
-    let state: AuthViewState = { kind: "start" };
+    let state: FormViewState = { kind: "start" };
     let title: string;
 
     async function onSubmit() {

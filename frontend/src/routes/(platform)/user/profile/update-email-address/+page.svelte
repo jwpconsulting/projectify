@@ -23,7 +23,7 @@
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import { goto } from "$lib/navigation";
     import { requestEmailAddressUpdate } from "$lib/repository/user";
-    import type { AuthViewState } from "$lib/types/ui";
+    import type { FormViewState } from "$lib/types/ui";
     import { getProfileUrl } from "$lib/urls";
     import { requestedEmailAddressUpdateUrl } from "$lib/urls/user";
 
@@ -35,7 +35,7 @@
         user: { email },
     } = data;
 
-    let state: AuthViewState = { kind: "start" };
+    let state: FormViewState = { kind: "start" };
 
     let currentPassword: string | undefined = undefined;
     let currentPasswordValidation: InputFieldValidation | undefined =
