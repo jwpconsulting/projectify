@@ -18,9 +18,11 @@
 from typing import Optional
 from uuid import UUID
 
+from django.db.models import QuerySet
+
 from projectify.user.models import User
 
-from ..models.workspace_board import WorkspaceBoard, WorkspaceBoardQuerySet
+from ..models.workspace_board import WorkspaceBoard
 
 WorkspaceBoardDetailQuerySet = WorkspaceBoard.objects.prefetch_related(
     "workspaceboardsection_set",
@@ -36,7 +38,7 @@ WorkspaceBoardDetailQuerySet = WorkspaceBoard.objects.prefetch_related(
 
 def workspace_board_find_by_workspace_uuid(
     *, workspace_uuid: UUID, who: User, archived: Optional[bool] = None
-) -> WorkspaceBoardQuerySet:
+) -> QuerySet[WorkspaceBoard]:
     """Find workspace boards for a workspace."""
     qs = WorkspaceBoard.objects
     if archived is not None:
@@ -49,7 +51,7 @@ def workspace_board_find_by_workspace_board_uuid(
     *,
     workspace_board_uuid: UUID,
     who: User,
-    qs: Optional[WorkspaceBoardQuerySet] = None,
+    qs: Optional[QuerySet[WorkspaceBoard]] = None,
     include_archived: bool = False,
 ) -> Optional[WorkspaceBoard]:
     """Find a workspace by uuid for a given user."""

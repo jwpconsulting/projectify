@@ -18,8 +18,6 @@
 import uuid
 from typing import (
     TYPE_CHECKING,
-    ClassVar,
-    cast,
 )
 
 from django.db import (
@@ -52,10 +50,6 @@ if TYPE_CHECKING:
     )
 
 
-class WorkspaceBoardQuerySet(models.QuerySet["WorkspaceBoard"]):
-    """WorkspaceBoard Manager."""
-
-
 class WorkspaceBoard(TitleDescriptionModel, BaseModel):
     """Workspace board."""
 
@@ -73,10 +67,6 @@ class WorkspaceBoard(TitleDescriptionModel, BaseModel):
         null=True,
         blank=True,
         help_text=_("Due date for this workspace board"),
-    )
-
-    objects: ClassVar[WorkspaceBoardQuerySet] = cast(  # type: ignore[assignment]
-        WorkspaceBoardQuerySet, WorkspaceBoardQuerySet.as_manager()
     )
 
     if TYPE_CHECKING:
