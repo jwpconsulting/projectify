@@ -98,17 +98,6 @@ class TaskQuerySet(models.QuerySet["Task"]):
             workspace_board_section__workspace_board=workspace_board,
         )
 
-    # XXX still used?
-    def duplicate_task(self, task: "Task") -> "Task":
-        """Duplicate a task."""
-        new_task = self.create(
-            workspace_board_section=task.workspace_board_section,
-            title=task.title,
-            description=task.description,
-            workspace=task.workspace,
-        )
-        return new_task
-
 
 class Task(TitleDescriptionModel, BaseModel):
     """Task, belongs to workspace board section."""
