@@ -36,6 +36,7 @@ pytestmark = pytest.mark.django_db
 def test_workspace_board_find_by_workspace_uuid(
     workspace_board: WorkspaceBoard,
     workspace_user: WorkspaceUser,
+    unrelated_workspace_user: WorkspaceUser,
 ) -> None:
     """Test workspace_board_find_by_workspace_uuid."""
     qs = workspace_board_find_by_workspace_uuid(
@@ -43,6 +44,15 @@ def test_workspace_board_find_by_workspace_uuid(
         workspace_uuid=workspace_user.workspace.uuid,
     )
     assert qs.get() == workspace_board
+
+    # Unrelated user can not access
+    qs = workspace_board_find_by_workspace_uuid(
+        who=unrelated_workspace_user.user,
+        workspace_uuid=workspace_user.workspace.uuid,
+    )
+    assert qs.count() == 0
+
+    # Filter by ONLY archived, and we will get nothing
     qs = workspace_board_find_by_workspace_uuid(
         who=workspace_user.user,
         workspace_uuid=workspace_user.workspace.uuid,

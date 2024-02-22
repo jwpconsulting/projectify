@@ -19,13 +19,9 @@ import uuid
 from typing import (
     TYPE_CHECKING,
     ClassVar,
-    Self,
     cast,
 )
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
 from django.db import (
     models,
 )
@@ -58,10 +54,6 @@ if TYPE_CHECKING:
 
 class WorkspaceBoardQuerySet(models.QuerySet["WorkspaceBoard"]):
     """WorkspaceBoard Manager."""
-
-    def filter_by_user(self, user: AbstractBaseUser) -> Self:
-        """Filter by user."""
-        return self.filter(workspace__users=user)
 
 
 class WorkspaceBoard(TitleDescriptionModel, BaseModel):

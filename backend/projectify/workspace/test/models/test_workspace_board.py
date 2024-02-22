@@ -17,26 +17,10 @@
 """Workspace board model tests."""
 import pytest
 
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_board import WorkspaceBoard
-from projectify.workspace.models.workspace_user import WorkspaceUser
-from projectify.workspace.services.workspace_board_section import (
-    workspace_board_section_create,
-)
-
-
-@pytest.mark.django_db
-class TestWorkspaceBoardManager:
-    """Test WorkspaceBoard manager."""
-
-    def test_filter_by_user(
-        self,
-        workspace_board: WorkspaceBoard,
-        workspace_user: WorkspaceUser,
-    ) -> None:
-        """Test filter_by_user."""
-        qs = WorkspaceBoard.objects.filter_by_user(workspace_user.user)
-        assert list(qs) == [workspace_board]
+from ...models.workspace import Workspace
+from ...models.workspace_board import WorkspaceBoard
+from ...models.workspace_user import WorkspaceUser
+from ...services.workspace_board_section import workspace_board_section_create
 
 
 @pytest.mark.django_db

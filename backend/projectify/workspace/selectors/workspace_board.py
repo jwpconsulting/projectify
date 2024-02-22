@@ -19,10 +19,8 @@ from typing import Optional
 from uuid import UUID
 
 from projectify.user.models import User
-from projectify.workspace.models.workspace_board import (
-    WorkspaceBoard,
-    WorkspaceBoardQuerySet,
-)
+
+from ..models.workspace_board import WorkspaceBoard, WorkspaceBoardQuerySet
 
 WorkspaceBoardDetailQuerySet = WorkspaceBoard.objects.prefetch_related(
     "workspaceboardsection_set",
@@ -40,10 +38,10 @@ def workspace_board_find_by_workspace_uuid(
     *, workspace_uuid: UUID, who: User, archived: Optional[bool] = None
 ) -> WorkspaceBoardQuerySet:
     """Find workspace boards for a workspace."""
-    qs = WorkspaceBoard.objects.filter_by_user(who)
+    qs = WorkspaceBoard.objects
     if archived is not None:
         qs = qs.filter(archived__isnull=not archived)
-    qs = qs.filter(workspace__uuid=workspace_uuid)
+    qs = qs.filter(workspace__users=who, workspace__uuid=workspace_uuid)
     return qs
 
 
@@ -58,7 +56,7 @@ def workspace_board_find_by_workspace_board_uuid(
     qs = WorkspaceBoard.objects.all() if qs is None else qs
     if include_archived is False:
         qs = qs.filter(archived__isnull=True)
-    qs = qs.filter_by_user(who).filter(uuid=workspace_board_uuid)
+    qs = qs.filter(workspace__users=who, uuid=workspace_board_uuid)
     try:
         return qs.get()
     except WorkspaceBoard.DoesNotExist:
