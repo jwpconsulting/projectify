@@ -784,6 +784,11 @@ const messages: MessageDirectory = {
             "role": "Role",
             "workspace-user": "Workspace user",
             "invite-new-workspace-users": "Invite new workspace users",
+            "invites": {
+                email: "Invited email",
+                date: "Invited on",
+                empty: "You have no open invites",
+            },
             "edit-role": {
                 label: "Edit role",
                 self: "Can't edit own role",
