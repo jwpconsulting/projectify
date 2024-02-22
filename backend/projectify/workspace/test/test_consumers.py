@@ -88,7 +88,10 @@ from ..services.workspace_user import (
     workspace_user_delete,
     workspace_user_update,
 )
-from ..services.workspace_user_invite import workspace_user_invite_create
+from ..services.workspace_user_invite import (
+    workspace_user_invite_create,
+    workspace_user_invite_delete,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -326,6 +329,23 @@ class TestWorkspaceUser:
             who=user,
         )
         await expect_message(workspace_communicator, workspace)
+
+        # Now we invite someone without an account:
+        await database_sync_to_async(workspace_user_invite_create)(
+            workspace=workspace,
+            email_or_user="doesnotexist@example.com",
+            who=user,
+        )
+        await expect_message(workspace_communicator, workspace)
+
+        # And we remove their invitation
+        await database_sync_to_async(workspace_user_invite_delete)(
+            workspace=workspace,
+            email="doesnotexist@example.com",
+            who=user,
+        )
+        await expect_message(workspace_communicator, workspace)
+
         # With only one remaining user, we call workspace_delete instead
         await database_sync_to_async(workspace_delete)(
             workspace=workspace,

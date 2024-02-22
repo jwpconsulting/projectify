@@ -19,6 +19,7 @@
 from typing import Optional
 
 from django.db import transaction
+from django.utils.timezone import now
 
 from projectify.user.models import User, UserInvite
 from projectify.user.selectors.user import user_find_by_email
@@ -52,14 +53,18 @@ def user_invite_redeem(*, user_invite: UserInvite, user: User) -> None:
 
     # Add user to workspaces for any outstanding invites
     qs = WorkspaceUserInvite.objects.filter(
+        # This plausibly keeps us from redeeming the same invite twice
         user_invite__user=user,
+        redeemed=False,
     )
     for invite in qs:
         workspace = invite.workspace
         workspace_add_user(
             workspace=workspace, user=user, role=WorkspaceUserRoles.OBSERVER
         )
-        invite.redeem()
+        invite.redeemed = True
+        invite.redeemed_when = now()
+        invite.save()
 
 
 @transaction.atomic

@@ -33,6 +33,7 @@ from projectify.lib.auth import (
 from projectify.premail.email import EmailAddress
 from projectify.user.models import User, UserInvite
 from projectify.user.services.user_invite import user_invite_create
+from projectify.workspace.services.signals import send_workspace_change_signal
 
 from ..emails import WorkspaceUserInviteEmail
 from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
@@ -162,6 +163,7 @@ def workspace_user_invite_create(
     )
     email_to_send.send()
 
+    send_workspace_change_signal(workspace)
     return workspace_user_invite
 
 
@@ -182,3 +184,4 @@ def workspace_user_invite_delete(
             )
         case WorkspaceUserInvite() as workspace_user_invite:
             workspace_user_invite.delete()
+    send_workspace_change_signal(workspace)

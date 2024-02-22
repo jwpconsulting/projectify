@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -15,72 +15,39 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Contains workspace user invite qs / manager / model."""
-from typing import (
-    TYPE_CHECKING,
-    ClassVar,
-    Self,
-    cast,
-)
 
-from django.db import (
-    models,
-)
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import BaseModel
+from projectify.user.models import UserInvite
 
-from .types import (
-    Pks,
-)
-
-if TYPE_CHECKING:
-    from projectify.user.models import UserInvite  # noqa: F401
-    from projectify.workspace.models import Workspace  # noqa: F401
-
-
-class WorkspaceUserInviteQuerySet(models.QuerySet["WorkspaceUserInvite"]):
-    """QuerySet for WorkspaceUserInvite."""
-
-    def filter_by_workspace_pks(self, workspace_pks: Pks) -> Self:
-        """Filter by workspace pks."""
-        return self.filter(workspace__pk__in=workspace_pks)
-
-    def filter_by_redeemed(self, redeemed: bool = True) -> Self:
-        """Filter by redeemed workspace user invites."""
-        return self.filter(redeemed=redeemed)
+from ..models import Workspace
 
 
 class WorkspaceUserInvite(BaseModel):
     """UserInvites belonging to this workspace."""
 
-    user_invite = models.ForeignKey["UserInvite"](
+    user_invite = models.ForeignKey[UserInvite](
         "user.UserInvite",
         on_delete=models.CASCADE,
     )
-    workspace = models.ForeignKey["Workspace"](
+    workspace = models.ForeignKey[Workspace](
         "Workspace",
         on_delete=models.CASCADE,
     )
-    # TODO make this a datetimefield with default null
+    # TODO use redeemed_when only
     redeemed = models.BooleanField(
         default=False,
-        # TODO this should then say "When has this invite been redeemed?"
         help_text=_("Has this invite been redeemed?"),
     )
-
-    objects: ClassVar[WorkspaceUserInviteQuerySet] = cast(  # type: ignore[assignment]
-        WorkspaceUserInviteQuerySet, WorkspaceUserInviteQuerySet.as_manager()
+    redeemed_when = models.DateTimeField(
+        blank=True,
+        null=True,
+        editable=False,
+        default=None,
+        help_text=_("When has this invite been redeemed?"),
     )
-
-    def redeem(self) -> None:
-        """
-        Redeem invite.
-
-        Save.
-        """
-        assert not self.redeemed
-        self.redeemed = True
-        self.save()
 
     class Meta:
         """Meta."""

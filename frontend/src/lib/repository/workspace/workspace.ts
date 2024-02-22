@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2023-2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -21,9 +21,10 @@ import {
     postWithCredentialsJson,
     putWithCredentialsJson,
 } from "$lib/repository/util";
-import type { Result } from "$lib/types/base";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { Workspace, WorkspaceDetail } from "$lib/types/workspace";
+
+import type { ApiResponse } from "../types";
 
 // Create
 export async function createWorkspace(
@@ -32,7 +33,7 @@ export async function createWorkspace(
     repositoryContext: RepositoryContext,
 ): Promise<Workspace> {
     const response = await postWithCredentialsJson<Workspace>(
-        `/workspace/workspaces/`,
+        `/workspace/workspace/`,
         { title, description },
         repositoryContext,
     );
@@ -48,7 +49,7 @@ export async function getWorkspaces(
 ): Promise<Workspace[] | undefined> {
     return handle404(
         await getWithCredentialsJson<Workspace[]>(
-            `/workspace/user/workspaces/`,
+            `/workspace/workspace/user-workspaces/`,
             repositoryContext,
         ),
     );
@@ -88,23 +89,25 @@ export async function updateWorkspace(
 
 // RPC
 export async function inviteUser(
-    workspace: Workspace,
+    { uuid }: Workspace,
     email: string,
     repositoryContext: RepositoryContext,
-): Promise<Result<{ email: string }, { email: string }>> {
-    const { uuid } = workspace;
-    const response = await postWithCredentialsJson<
-        { email: string },
-        { email: string }
-    >(
-        `/workspace/workspace/${uuid}/invite-user`,
+): Promise<ApiResponse<unknown, { email?: string }>> {
+    return await postWithCredentialsJson(
+        `/workspace/workspace/${uuid}/invite-workspace-user`,
         { email },
         repositoryContext,
     );
-    if (response.kind === "ok") {
-        return { ok: true, result: response.data };
-    } else if (response.kind === "badRequest") {
-        return { ok: false, error: response.error };
-    }
-    throw new Error();
+}
+
+export async function uninviteUser(
+    { uuid }: Workspace,
+    email: string,
+    repositoryContext: RepositoryContext,
+): Promise<ApiResponse<unknown, { email?: string }>> {
+    return await postWithCredentialsJson(
+        `/workspace/workspace/${uuid}/uninvite-workspace-user`,
+        { email },
+        repositoryContext,
+    );
 }

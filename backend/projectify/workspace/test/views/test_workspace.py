@@ -57,7 +57,7 @@ class TestWorkspaceCreate:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("workspace:workspace-create")
+        return reverse("workspace:workspaces:create")
 
     def test_create(
         self,
@@ -89,13 +89,13 @@ class TestWorkspaceCreate:
 
 # Read
 @pytest.mark.django_db
-class TestWorkspaceList:
+class TestUserWorkspaces:
     """Test Workspace list."""
 
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("workspace:workspace-list")
+        return reverse("workspace:workspaces:user-workspaces")
 
     def test_authenticated(
         self,
@@ -305,7 +305,7 @@ class TestWorkspacePictureUploadView:
     def resource_url(self, workspace: Workspace) -> str:
         """Return URL to this view."""
         return reverse(
-            "workspace:workspace-picture-upload", args=(workspace.uuid,)
+            "workspace:workspaces:upload-picture", args=(workspace.uuid,)
         )
 
     @pytest.fixture
@@ -361,15 +361,23 @@ class TestWorkspacePictureUploadView:
 
 @pytest.mark.django_db
 class TestInviteUserToWorkspace:
-    """Test InviteUserToWorkspace."""
+    """Test two views, InviteUserToWorkspace and UninviteUserFromWorkspace."""
 
     @pytest.fixture
     def resource_url(self, workspace_user: WorkspaceUser) -> str:
         """Return URL to this view."""
         return reverse(
-            "workspace:workspace-invite-user",
+            "workspace:workspaces:invite-workspace-user",
             # Using the workspace_user fixture, we create a ws user and ws in
             # one go! Mighty clever I dare say >:)
+            args=(workspace_user.workspace.uuid,),
+        )
+
+    @pytest.fixture
+    def uninvite_url(self, workspace_user: WorkspaceUser) -> str:
+        """Return URL to this view."""
+        return reverse(
+            "workspace:workspaces:uninvite-workspace-user",
             args=(workspace_user.workspace.uuid,),
         )
 
@@ -378,15 +386,29 @@ class TestInviteUserToWorkspace:
         resource_url: str,
         rest_user_client: APIClient,
         workspace: Workspace,
+        uninvite_url: str,
     ) -> None:
         """Test with a new, unregistered user."""
         assert workspace.workspaceuserinvite_set.count() == 0
         response = rest_user_client.post(
-            resource_url,
-            {"email": "taro@yamamoto.jp"},
+            resource_url, {"email": "taro@yamamoto.jp"}
         )
         assert response.status_code == 201, response.data
         assert workspace.workspaceuserinvite_set.count() == 1
+
+        # Then uninvite them
+        response = rest_user_client.post(
+            uninvite_url, {"email": "taro@yamamoto.jp"}
+        )
+        assert response.status_code == 204, response.data
+        assert workspace.workspaceuserinvite_set.count() == 0
+
+        # Can't uninvite twice
+        response = rest_user_client.post(
+            uninvite_url, {"email": "taro@yamamoto.jp"}
+        )
+        assert response.status_code == 400, response.data
+        assert workspace.workspaceuserinvite_set.count() == 0
 
     def test_existing_user(
         self,
@@ -398,8 +420,7 @@ class TestInviteUserToWorkspace:
         """Test by inviting an existing user."""
         assert workspace.workspaceuserinvite_set.count() == 0
         response = rest_user_client.post(
-            resource_url,
-            {"email": other_user.email},
+            resource_url, {"email": other_user.email}
         )
         assert response.status_code == 201, response.data
         assert workspace.workspaceuserinvite_set.count() == 0
@@ -412,8 +433,7 @@ class TestInviteUserToWorkspace:
     ) -> None:
         """Test inviting an existing workspace user."""
         response = rest_user_client.post(
-            resource_url,
-            {"email": workspace_user.user.email},
+            resource_url, {"email": workspace_user.user.email}
         )
         assert response.status_code == 400, response.data
         assert "already been added" in response.data["email"], response.data
@@ -423,13 +443,32 @@ class TestInviteUserToWorkspace:
     ) -> None:
         """Test inviting someone twice."""
         response = rest_user_client.post(
-            resource_url,
-            {"email": "hello@example.com"},
+            resource_url, {"email": "hello@example.com"}
         )
         assert response.status_code == 201, response.data
         response = rest_user_client.post(
-            resource_url,
-            {"email": "hello@example.com"},
+            resource_url, {"email": "hello@example.com"}
         )
         assert response.status_code == 400, response.data
         assert "already been invited" in response.data["email"], response.data
+
+    def test_uninvite_non_existing(
+        self, uninvite_url: str, rest_user_client: APIClient
+    ) -> None:
+        """Assert nothing weird happens when uninviting an invalid email."""
+        response = rest_user_client.post(
+            uninvite_url, {"email": "hello@example.com"}
+        )
+        assert response.status_code == 400, response.data
+
+    def test_uninvite_existing_user(
+        self,
+        uninvite_url: str,
+        rest_user_client: APIClient,
+        workspace_user: WorkspaceUser,
+    ) -> None:
+        """Assert nothing weird happens when uninviting an invalid email."""
+        response = rest_user_client.post(
+            uninvite_url, {"email": workspace_user.user.email}
+        )
+        assert response.status_code == 400, response.data

@@ -21,6 +21,7 @@
     import WorkspaceUserCard from "$lib/figma/screens/workspace-settings/WorkspaceUserCard.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+    import { uninviteUser } from "$lib/repository/workspace";
     import { currentWorkspace } from "$lib/stores/dashboard";
     import {
         currentWorkspaceUserCan,
@@ -39,6 +40,14 @@
             kind: "inviteWorkspaceUser",
             workspace,
         });
+    }
+
+    async function uninvite(email: string) {
+        const result = await uninviteUser(workspace, email, { fetch });
+        if (result.ok) {
+            return;
+        }
+        throw Error(JSON.stringify(result.error));
     }
 </script>
 
@@ -120,7 +129,7 @@
         </thead>
         <tbody class="contents">
             {#each workspace.workspace_user_invites as invite}
-                <td>
+                <td class="overflow-x-auto">
                     {invite.email}
                 </td>
                 <td>n/a</td>
@@ -128,10 +137,13 @@
                     ><Button
                         style={{ kind: "tertiary" }}
                         color="red"
-                        action={{ kind: "button", disabled: true }}
+                        action={{
+                            kind: "button",
+                            action: uninvite.bind(null, invite.email),
+                        }}
                         size="medium"
                         label={$_(
-                            "workspace-settings.workspace-users.actions.remove",
+                            "workspace-settings.workspace-users.actions.uninvite",
                         )}
                         grow={false}
                     />
