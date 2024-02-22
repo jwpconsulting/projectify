@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Stripe related services."""
-from uuid import UUID
 
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
@@ -28,9 +27,6 @@ from stripe.api_resources.billing_portal.session import (
 )
 from stripe.api_resources.checkout.session import Session
 
-from projectify.corporate.selectors.customer import (
-    customer_find_by_workspace_uuid,
-)
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 
@@ -71,21 +67,12 @@ def stripe_checkout_session_create(
     return session
 
 
-# TODO change to create_billing_portal_session_for_workspace
-# throw 404 in view instead
-def create_billing_portal_session_for_workspace_uuid(
+def create_billing_portal_session_for_customer(
     *,
     who: User,
-    workspace_uuid: UUID,
+    customer: Customer,
 ) -> BillingPortalSession:
     """Create a billing session for a user given a workspace uuid."""
-    customer = customer_find_by_workspace_uuid(
-        who=who, workspace_uuid=workspace_uuid
-    )
-    if customer is None:
-        raise serializers.ValidationError(
-            {"workspace_uuid": _("No customer found for this workspace_uuid")}
-        )
     validate_perm("corporate.can_update_customer", who, customer.workspace)
     customer_id = customer.stripe_customer_id
     if customer_id is None:

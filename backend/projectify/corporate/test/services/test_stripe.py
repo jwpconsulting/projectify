@@ -20,7 +20,7 @@ from rest_framework.exceptions import PermissionDenied
 
 from projectify.corporate.models import Customer
 from projectify.corporate.services.stripe import (
-    create_billing_portal_session_for_workspace_uuid,
+    create_billing_portal_session_for_customer,
 )
 from projectify.workspace.models.workspace_user import WorkspaceUser
 
@@ -35,8 +35,7 @@ class TestCreateBillingPortalSessionForWorkspaceUuid:
     ) -> None:
         """Test missing customer id will throw ValueError."""
         with pytest.raises(PermissionDenied) as error:
-            create_billing_portal_session_for_workspace_uuid(
-                workspace_uuid=unpaid_customer.workspace.uuid,
-                who=workspace_user.user,
+            create_billing_portal_session_for_customer(
+                customer=unpaid_customer, who=workspace_user.user
             )
         assert error.match("no subscription is active")
