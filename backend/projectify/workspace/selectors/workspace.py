@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -57,8 +57,9 @@ def workspace_find_by_workspace_uuid(
     """Find a workspace by uuid for a given user."""
     if qs is None:
         qs = Workspace.objects.all()
+    qs = qs.filter(users=who, uuid=workspace_uuid)
     try:
-        return qs.filter_for_user_and_uuid(user=who, uuid=workspace_uuid).get()
+        return qs.get()
     except Workspace.DoesNotExist:
         logger.warning("No workspace found for uuid %s", workspace_uuid)
         return None

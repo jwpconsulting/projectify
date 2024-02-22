@@ -27,7 +27,9 @@ from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
 
 from projectify.workspace.models.label import Label
-from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.selectors.workspace import (
+    workspace_find_by_workspace_uuid,
+)
 from projectify.workspace.serializers.base import LabelBaseSerializer
 from projectify.workspace.services.label import (
     label_create,
@@ -58,12 +60,11 @@ class LabelCreate(APIView):
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         workspace_uuid: UUID = data["workspace_uuid"]
-        try:
-            workspace = Workspace.objects.filter_for_user_and_uuid(
-                uuid=workspace_uuid,
-                user=user,
-            ).get()
-        except Workspace.DoesNotExist:
+        workspace = workspace_find_by_workspace_uuid(
+            workspace_uuid=workspace_uuid,
+            who=user,
+        )
+        if workspace is None:
             raise serializers.ValidationError(
                 {
                     "workspace_uuid": _(
