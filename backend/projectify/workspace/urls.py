@@ -41,6 +41,7 @@ from .views.task import (
 )
 from .views.workspace import (
     InviteUserToWorkspace,
+    UninviteUserFromWorkspace,
     UserWorkspaces,
     WorkspaceCreate,
     WorkspacePictureUploadView,
@@ -83,6 +84,11 @@ workspace_patterns = (
         "<uuid:workspace_uuid>/invite-workspace-user",
         InviteUserToWorkspace.as_view(),
         name="invite-workspace-user",
+    ),
+    path(
+        "<uuid:workspace_uuid>/uninvite-workspace-user",
+        UninviteUserFromWorkspace.as_view(),
+        name="uninvite-workspace-user",
     ),
     # Related
     # Archived workspace boards

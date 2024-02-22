@@ -31,7 +31,11 @@ from rest_framework.request import (
 from rest_framework.response import (
     Response,
 )
-from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
+from rest_framework.status import (
+    HTTP_200_OK,
+    HTTP_201_CREATED,
+    HTTP_204_NO_CONTENT,
+)
 
 from projectify.workspace.selectors.quota import workspace_get_all_quotas
 
@@ -57,6 +61,7 @@ from ..services.workspace import (
 )
 from ..services.workspace_user_invite import (
     workspace_user_invite_create,
+    workspace_user_invite_delete,
 )
 
 
@@ -215,3 +220,28 @@ class InviteUserToWorkspace(views.APIView):
                 }
             )
         return Response(data=serializer.data, status=HTTP_201_CREATED)
+
+
+class UninviteUserFromWorkspace(views.APIView):
+    """Remove a user invitation."""
+
+    class InputSerializer(serializers.Serializer):
+        """Accept email."""
+
+        email = serializers.EmailField()
+
+    def post(self, request: Request, workspace_uuid: UUID) -> Response:
+        """Handle POST."""
+        workspace = workspace_find_by_workspace_uuid(
+            workspace_uuid=workspace_uuid, who=request.user
+        )
+        if workspace is None:
+            raise NotFound(_("No workspace found for this UUID"))
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        workspace_user_invite_delete(
+            workspace=workspace,
+            who=request.user,
+            email=serializer.validated_data["email"],
+        )
+        return Response(data=serializer.data, status=HTTP_204_NO_CONTENT)
