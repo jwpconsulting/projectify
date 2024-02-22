@@ -43,6 +43,7 @@ from ..models import Workspace
 from ..selectors.workspace import (
     WorkspaceDetailQuerySet,
     workspace_find_by_workspace_uuid,
+    workspace_find_for_user,
 )
 from ..serializers.base import (
     WorkspaceBaseSerializer,
@@ -92,8 +93,7 @@ class WorkspaceList(views.APIView):
 
     def get(self, request: Request) -> Response:
         """Handle GET."""
-        # TODO this should be a selector
-        workspaces = Workspace.objects.all().get_for_user(request.user)
+        workspaces = workspace_find_for_user(who=request.user)
         serializer = WorkspaceBaseSerializer(instance=workspaces, many=True)
         return Response(status=HTTP_200_OK, data=serializer.data)
 

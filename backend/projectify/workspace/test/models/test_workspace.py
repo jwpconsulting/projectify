@@ -33,40 +33,6 @@ from ...services.workspace_board import workspace_board_create
 
 
 @pytest.mark.django_db
-class TestWorkspaceManager:
-    """Test Workspace manager."""
-
-    def test_get_for_user(
-        self,
-        user: User,
-        # This workplace shall be retrievable by the user
-        workspace: Workspace,
-        workspace_user: WorkspaceUser,
-        # This workpace will not be retrieved since the user does not have a
-        # workspace user for it
-        unrelated_workspace_user: User,
-        unrelated_workspace: Workspace,
-    ) -> None:
-        """Test getting workspaces for user."""
-        assert list(Workspace.objects.get_for_user(user)) == [workspace]
-
-    def test_filter_for_user_and_uuid(
-        self,
-        workspace_user: WorkspaceUser,
-        workspace: Workspace,
-        user: User,
-    ) -> None:
-        """Test getting workspace for user and uuid."""
-        assert (
-            Workspace.objects.filter_for_user_and_uuid(
-                user,
-                workspace.uuid,
-            ).get()
-            == workspace
-        )
-
-
-@pytest.mark.django_db
 class TestWorkspace:
     """Test Workspace."""
 

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -19,10 +19,10 @@ import logging
 from typing import Optional
 from uuid import UUID
 
-from django.db.models import Prefetch
+from django.db.models import Prefetch, QuerySet
 
 from projectify.user.models import User
-from projectify.workspace.models.workspace import Workspace, WorkspaceQuerySet
+from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.workspace_board import WorkspaceBoard
 from projectify.workspace.models.workspace_user import WorkspaceUser
 
@@ -43,22 +43,27 @@ WorkspaceDetailQuerySet = Workspace.objects.prefetch_related(
     ),
 )
 
-# 2023-11-30
-# I am torn between requiring selectors to select for a user or not
-# I don't want to accidentally leak data
+
+def workspace_find_for_user(
+    *, who: User, qs: Optional[QuerySet[Workspace]] = None
+) -> QuerySet[Workspace]:
+    """Filter by user."""
+    if qs is None:
+        qs = Workspace.objects.all()
+    return qs.filter(users=who)
 
 
 def workspace_find_by_workspace_uuid(
     *,
     workspace_uuid: UUID,
     who: User,
-    qs: Optional[WorkspaceQuerySet] = None,
+    qs: Optional[QuerySet[Workspace]] = None,
 ) -> Optional[Workspace]:
     """Find a workspace by uuid for a given user."""
-    if qs is None:
-        qs = Workspace.objects.all()
+    qs = workspace_find_for_user(who=who, qs=qs)
+    qs = qs.filter(uuid=workspace_uuid)
     try:
-        return qs.filter_for_user_and_uuid(user=who, uuid=workspace_uuid).get()
+        return qs.get()
     except Workspace.DoesNotExist:
         logger.warning("No workspace found for uuid %s", workspace_uuid)
         return None
