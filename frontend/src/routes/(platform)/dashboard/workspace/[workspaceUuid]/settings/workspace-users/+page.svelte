@@ -16,6 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import { X } from "@steeze-ui/heroicons";
     import { _ } from "svelte-i18n";
 
     import WorkspaceUserCard from "$lib/figma/screens/workspace-settings/WorkspaceUserCard.svelte";
@@ -28,6 +29,7 @@
         currentWorkspaceUsers,
     } from "$lib/stores/dashboard/workspaceUser";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
+    import { coerceIsoDate } from "$lib/utils/date";
 
     import type { PageData } from "./$types";
 
@@ -107,10 +109,11 @@
     <h2 class="text-xl font-bold">
         {$_("workspace-settings.workspace-users.invites.title")}
     </h2>
-    <table class="grid w-full grid-cols-3 items-center gap-y-4">
+    <table class="grid w-full grid-cols-4 items-center gap-y-4">
         <thead class="contents">
             <tr class="contents">
-                <th class="border-b border-border text-left font-bold"
+                <th
+                    class="col-span-2 border-b border-border text-left font-bold"
                     >{$_(
                         "workspace-settings.workspace-users.invites.email",
                     )}</th
@@ -129,13 +132,16 @@
         </thead>
         <tbody class="contents">
             {#each workspace.workspace_user_invites as invite}
-                <td class="overflow-x-auto">
+                <td class="col-span-2 overflow-x-auto">
                     {invite.email}
                 </td>
-                <td>n/a</td>
+                <td>{coerceIsoDate(invite.created)}</td>
                 <td
                     ><Button
-                        style={{ kind: "tertiary" }}
+                        style={{
+                            kind: "tertiary",
+                            icon: { position: "left", icon: X },
+                        }}
                         color="red"
                         action={{
                             kind: "button",

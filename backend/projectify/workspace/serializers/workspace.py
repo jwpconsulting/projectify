@@ -24,11 +24,7 @@ class WorkspaceUserInviteSerializer(serializers.Serializer):
     """Serializer workspace user invites."""
 
     email = serializers.EmailField(source="user_invite.email")
-
-    class Meta:
-        """Restrict to synthetic email field."""
-
-        fields = ("email",)
+    created = serializers.DateTimeField()
 
 
 class SingleQuotaSerializer(serializers.Serializer):
