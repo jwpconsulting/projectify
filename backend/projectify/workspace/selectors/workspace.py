@@ -33,7 +33,7 @@ WorkspaceDetailQuerySet = Workspace.objects.prefetch_related(
 ).prefetch_related(
     Prefetch(
         "workspaceboard_set",
-        queryset=WorkspaceBoard.objects.filter_by_archived(False),
+        queryset=WorkspaceBoard.objects.filter(archived__isnull=True),
     ),
     Prefetch(
         "workspaceuser_set",

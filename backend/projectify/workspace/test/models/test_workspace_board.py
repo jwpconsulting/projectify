@@ -20,9 +20,6 @@ import pytest
 from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.workspace_board import WorkspaceBoard
 from projectify.workspace.models.workspace_user import WorkspaceUser
-from projectify.workspace.services.workspace_board import (
-    workspace_board_archive,
-)
 from projectify.workspace.services.workspace_board_section import (
     workspace_board_section_create,
 )
@@ -49,29 +46,6 @@ class TestWorkspaceBoardManager:
         """Test filter_by_user."""
         qs = WorkspaceBoard.objects.filter_by_user(workspace_user.user)
         assert list(qs) == [workspace_board]
-
-    def test_filter_by_archived(
-        self, workspace_board: WorkspaceBoard, workspace_user: WorkspaceUser
-    ) -> None:
-        """Test filter_by_archived."""
-        qs_archived = WorkspaceBoard.objects.filter_by_archived(True)
-        qs_unarchived = WorkspaceBoard.objects.filter_by_archived(False)
-        assert qs_archived.count() == 0
-        assert qs_unarchived.count() == 1
-        workspace_board_archive(
-            workspace_board=workspace_board,
-            who=workspace_user.user,
-            archived=True,
-        )
-        assert qs_archived.count() == 1
-        assert qs_unarchived.count() == 0
-        workspace_board_archive(
-            workspace_board=workspace_board,
-            who=workspace_user.user,
-            archived=False,
-        )
-        assert qs_archived.count() == 0
-        assert qs_unarchived.count() == 1
 
 
 @pytest.mark.django_db

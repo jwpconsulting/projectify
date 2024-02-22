@@ -67,10 +67,6 @@ class WorkspaceBoardQuerySet(models.QuerySet["WorkspaceBoard"]):
         """Filter by user."""
         return self.filter(workspace__users=user)
 
-    def filter_by_archived(self, archived: bool = True) -> Self:
-        """Filter by archived boards."""
-        return self.filter(archived__isnull=not archived)
-
 
 class WorkspaceBoard(TitleDescriptionModel, BaseModel):
     """Workspace board."""
