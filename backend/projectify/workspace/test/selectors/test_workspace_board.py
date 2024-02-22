@@ -17,9 +17,14 @@
 """Test workspace board selectors."""
 import pytest
 
-from projectify.workspace.models.workspace_board import WorkspaceBoard
-from projectify.workspace.models.workspace_user import WorkspaceUser
-from projectify.workspace.selectors.workspace_board import (
+from projectify.workspace.services.workspace_board import (
+    workspace_board_archive,
+)
+
+from ...models.workspace_board import WorkspaceBoard
+from ...models.workspace_user import WorkspaceUser
+from ...selectors.workspace_board import (
+    workspace_board_find_by_workspace_board_uuid,
     workspace_board_find_by_workspace_uuid,
 )
 
@@ -44,3 +49,58 @@ def test_workspace_board_find_by_workspace_uuid(
         archived=True,
     )
     assert qs.count() == 0
+
+
+def test_workspace_board_find_by_workspace_board_uuid(
+    workspace_board: WorkspaceBoard,
+    workspace_user: WorkspaceUser,
+    unrelated_workspace_user: WorkspaceUser,
+    unrelated_workspace_board: WorkspaceBoard,
+) -> None:
+    """Test finding workspace board for a user by UUID."""
+    # Normal case, user finds their workspace board
+    assert workspace_board_find_by_workspace_board_uuid(
+        workspace_board_uuid=workspace_board.uuid,
+        who=workspace_user.user,
+    )
+    # Unrelated user finds their board
+    assert workspace_board_find_by_workspace_board_uuid(
+        workspace_board_uuid=unrelated_workspace_board.uuid,
+        who=unrelated_workspace_user.user,
+    )
+    # Unrelated workspace user does not have access
+    assert (
+        workspace_board_find_by_workspace_board_uuid(
+            workspace_board_uuid=workspace_board.uuid,
+            who=unrelated_workspace_user.user,
+        )
+        is None
+    )
+    # And our user can not see unrelated user's board
+    assert (
+        workspace_board_find_by_workspace_board_uuid(
+            workspace_board_uuid=unrelated_workspace_board.uuid,
+            who=workspace_user.user,
+        )
+        is None
+    )
+
+    # Archiving hides it unless passing extra flag
+    workspace_board_archive(
+        who=workspace_user.user,
+        workspace_board=workspace_board,
+        archived=True,
+    )
+    assert (
+        workspace_board_find_by_workspace_board_uuid(
+            workspace_board_uuid=workspace_board.uuid,
+            who=workspace_user.user,
+        )
+        is None
+    )
+    # Passing include_archived will make it show up again
+    assert workspace_board_find_by_workspace_board_uuid(
+        workspace_board_uuid=workspace_board.uuid,
+        who=workspace_user.user,
+        include_archived=True,
+    )
