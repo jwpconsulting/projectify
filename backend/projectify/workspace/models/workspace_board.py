@@ -18,14 +18,8 @@
 import uuid
 from typing import (
     TYPE_CHECKING,
-    ClassVar,
-    Self,
-    cast,
 )
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
 from django.db import (
     models,
 )
@@ -37,7 +31,6 @@ from django_extensions.db.models import (
 
 from projectify.lib.models import BaseModel
 
-from .types import Pks
 from .workspace import (
     Workspace,
 )
@@ -57,32 +50,6 @@ if TYPE_CHECKING:
     )
 
 
-class WorkspaceBoardQuerySet(models.QuerySet["WorkspaceBoard"]):
-    """WorkspaceBoard Manager."""
-
-    def filter_by_workspace(self, workspace: Workspace) -> Self:
-        """Filter by workspace."""
-        return self.filter(workspace=workspace)
-
-    def filter_by_user(self, user: AbstractBaseUser) -> Self:
-        """Filter by user."""
-        return self.filter(workspace__users=user)
-
-    def filter_by_workspace_pks(self, workspace_pks: Pks) -> Self:
-        """Filter by workspace pks."""
-        return self.filter(workspace__pk__in=workspace_pks)
-
-    def filter_for_user_and_uuid(
-        self, user: AbstractBaseUser, uuid: uuid.UUID
-    ) -> Self:
-        """Get a workspace baord for user and uuid."""
-        return self.filter_by_user(user).filter(uuid=uuid)
-
-    def filter_by_archived(self, archived: bool = True) -> Self:
-        """Filter by archived boards."""
-        return self.filter(archived__isnull=not archived)
-
-
 class WorkspaceBoard(TitleDescriptionModel, BaseModel):
     """Workspace board."""
 
@@ -100,10 +67,6 @@ class WorkspaceBoard(TitleDescriptionModel, BaseModel):
         null=True,
         blank=True,
         help_text=_("Due date for this workspace board"),
-    )
-
-    objects: ClassVar[WorkspaceBoardQuerySet] = cast(  # type: ignore[assignment]
-        WorkspaceBoardQuerySet, WorkspaceBoardQuerySet.as_manager()
     )
 
     if TYPE_CHECKING:

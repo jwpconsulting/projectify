@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -21,12 +21,11 @@ from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers, status
 from rest_framework.exceptions import NotFound
-from rest_framework.generics import get_object_or_404
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from projectify.workspace.models import Workspace, WorkspaceBoard
+from projectify.workspace.models import WorkspaceBoard
 from projectify.workspace.selectors.workspace import (
     workspace_find_by_workspace_uuid,
 )
@@ -68,11 +67,14 @@ class WorkspaceBoardCreate(APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         workspace_uuid: UUID = serializer.validated_data.pop("workspace_uuid")
-        workspace_qs = Workspace.objects.get_for_user(user).filter(
-            uuid=workspace_uuid
+        workspace = workspace_find_by_workspace_uuid(
+            workspace_uuid=workspace_uuid,
+            who=user,
         )
-        # Workspace not found -> Raise 400, not 404
-        workspace = get_object_or_404(workspace_qs)
+        if workspace is None:
+            raise serializers.ValidationError(
+                {"workspace_uuid": _("No workspace found for this UUID")}
+            )
         workspace_board = workspace_board_create(
             title=serializer.validated_data["title"],
             description=serializer.validated_data.get("description"),
@@ -181,16 +183,17 @@ class WorkspaceBoardArchive(APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
-        user = request.user
-        workspace_board_qs = WorkspaceBoard.objects.filter_for_user_and_uuid(
-            user=user,
-            uuid=workspace_board_uuid,
+        workspace_board = workspace_board_find_by_workspace_board_uuid(
+            workspace_board_uuid=workspace_board_uuid,
+            who=request.user,
+            include_archived=True,
         )
-        workspace_board = get_object_or_404(workspace_board_qs)
+        if workspace_board is None:
+            raise NotFound(_("No workspace board found for this UUID"))
         workspace_board_archive(
             workspace_board=workspace_board,
             archived=data["archived"],
-            who=user,
+            who=request.user,
         )
         workspace_board.refresh_from_db()
         output_serializer = WorkspaceBoardDetailSerializer(

@@ -17,88 +17,10 @@
 """Workspace board model tests."""
 import pytest
 
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_board import WorkspaceBoard
-from projectify.workspace.models.workspace_user import WorkspaceUser
-from projectify.workspace.services.workspace_board import (
-    workspace_board_archive,
-)
-from projectify.workspace.services.workspace_board_section import (
-    workspace_board_section_create,
-)
-
-
-@pytest.mark.django_db
-class TestWorkspaceBoardManager:
-    """Test WorkspaceBoard manager."""
-
-    def test_filter_by_workspace(
-        self,
-        workspace: Workspace,
-        workspace_board: WorkspaceBoard,
-    ) -> None:
-        """Test filter_by_workspace_uuid."""
-        qs = WorkspaceBoard.objects.filter_by_workspace(workspace)
-        assert list(qs) == [workspace_board]
-
-    def test_filter_by_user(
-        self,
-        workspace_board: WorkspaceBoard,
-        workspace_user: WorkspaceUser,
-    ) -> None:
-        """Test filter_by_user."""
-        qs = WorkspaceBoard.objects.filter_by_user(workspace_user.user)
-        assert list(qs) == [workspace_board]
-
-    def test_filter_by_workspace_pks(
-        self,
-        workspace: Workspace,
-        workspace_board: WorkspaceBoard,
-    ) -> None:
-        """Test filter_by_workspace_pks."""
-        qs = WorkspaceBoard.objects.filter_by_workspace_pks(
-            [workspace.pk],
-        )
-        assert list(qs) == [workspace_board]
-
-    def test_filter_for_user_and_uuid(
-        self,
-        workspace_board: WorkspaceBoard,
-        workspace_user: WorkspaceUser,
-        # TODO what do these fixtures achieve?
-        workspace: Workspace,
-        other_workspace_user: WorkspaceUser,
-    ) -> None:
-        """Test that the workspace board is retrieved correctly."""
-        assert workspace_board.workspace.users.count() == 2
-        actual = WorkspaceBoard.objects.filter_for_user_and_uuid(
-            workspace_user.user,
-            workspace_board.uuid,
-        )
-        assert actual.get() == workspace_board
-
-    def test_filter_by_archived(
-        self, workspace_board: WorkspaceBoard, workspace_user: WorkspaceUser
-    ) -> None:
-        """Test filter_by_archived."""
-        qs_archived = WorkspaceBoard.objects.filter_by_archived(True)
-        qs_unarchived = WorkspaceBoard.objects.filter_by_archived(False)
-        assert qs_archived.count() == 0
-        assert qs_unarchived.count() == 1
-        workspace_board_archive(
-            workspace_board=workspace_board,
-            who=workspace_user.user,
-            archived=True,
-        )
-        assert qs_archived.count() == 1
-        assert qs_unarchived.count() == 0
-        workspace_board_archive(
-            workspace_board=workspace_board,
-            who=workspace_user.user,
-            archived=False,
-        )
-        assert qs_archived.count() == 0
-        assert qs_unarchived.count() == 1
+from ...models.workspace import Workspace
+from ...models.workspace_board import WorkspaceBoard
+from ...models.workspace_user import WorkspaceUser
+from ...services.workspace_board_section import workspace_board_section_create
 
 
 @pytest.mark.django_db

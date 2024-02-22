@@ -18,11 +18,11 @@
 from typing import Optional
 from uuid import UUID
 
+from django.db.models import QuerySet
+
 from projectify.user.models import User
-from projectify.workspace.models.workspace_board import (
-    WorkspaceBoard,
-    WorkspaceBoardQuerySet,
-)
+
+from ..models.workspace_board import WorkspaceBoard
 
 WorkspaceBoardDetailQuerySet = WorkspaceBoard.objects.prefetch_related(
     "workspaceboardsection_set",
@@ -38,12 +38,13 @@ WorkspaceBoardDetailQuerySet = WorkspaceBoard.objects.prefetch_related(
 
 def workspace_board_find_by_workspace_uuid(
     *, workspace_uuid: UUID, who: User, archived: Optional[bool] = None
-) -> WorkspaceBoardQuerySet:
+) -> QuerySet[WorkspaceBoard]:
     """Find workspace boards for a workspace."""
-    qs = WorkspaceBoard.objects.filter_by_user(who)
+    qs = WorkspaceBoard.objects.filter(
+        workspace__users=who, workspace__uuid=workspace_uuid
+    )
     if archived is not None:
-        qs = qs.filter_by_archived(archived)
-    qs = qs.filter(workspace__uuid=workspace_uuid)
+        qs = qs.filter(archived__isnull=not archived)
     return qs
 
 
@@ -51,15 +52,15 @@ def workspace_board_find_by_workspace_board_uuid(
     *,
     workspace_board_uuid: UUID,
     who: User,
-    qs: Optional[WorkspaceBoardQuerySet] = None,
+    qs: Optional[QuerySet[WorkspaceBoard]] = None,
+    include_archived: bool = False,
 ) -> Optional[WorkspaceBoard]:
     """Find a workspace by uuid for a given user."""
     qs = WorkspaceBoard.objects.all() if qs is None else qs
+    if include_archived is False:
+        qs = qs.filter(archived__isnull=True)
+    qs = qs.filter(workspace__users=who, uuid=workspace_board_uuid)
     try:
-        return (
-            qs.filter_for_user_and_uuid(user=who, uuid=workspace_board_uuid)
-            .filter(archived__isnull=True)
-            .get()
-        )
+        return qs.get()
     except WorkspaceBoard.DoesNotExist:
         return None
