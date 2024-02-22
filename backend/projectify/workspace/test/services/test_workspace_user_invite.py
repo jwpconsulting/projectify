@@ -16,12 +16,18 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Test WorkspaceUserInvite services."""
 import pytest
+from faker import Faker
 from rest_framework import serializers
 
 from projectify.user.models import User
+from projectify.user.models.user_invite import UserInvite
 from projectify.user.services.internal import user_create
 from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.models.workspace_user_invite import (
+    WorkspaceUserInvite,
+)
+from projectify.workspace.services.workspace_user import workspace_user_delete
 from projectify.workspace.services.workspace_user_invite import (
     workspace_user_invite_create,
     workspace_user_invite_delete,
@@ -184,3 +190,88 @@ class TestAddOrInviteWorkspaceUser:
             )
         assert error.match("was never invited")
         assert workspace.workspaceuserinvite_set.count() == count
+
+    def test_invite_redeem_delete_invite_redeem(
+        self,
+        workspace: Workspace,
+        workspace_user: WorkspaceUser,
+        faker: Faker,
+    ) -> None:
+        """Test entire life cycle and make sure redeemed invites are not redeemed twice."""
+        email = faker.email()
+        count = workspace.users.count()
+
+        # Blank slate
+        assert WorkspaceUserInvite.objects.count() == 0
+        assert UserInvite.objects.count() == 0
+
+        # Invite new user
+        invite = workspace_user_invite_create(
+            who=workspace_user.user, workspace=workspace, email_or_user=email
+        )
+        assert isinstance(invite, WorkspaceUserInvite)
+
+        # There is one workspace user invite
+        assert WorkspaceUserInvite.objects.count() == 1
+        # And one user invite
+        assert UserInvite.objects.count() == 1
+
+        # New user accepts invitation
+        user = user_create(email=email)
+        assert workspace.users.count() == count + 1
+
+        # Invite is redeemed
+        invite.refresh_from_db()
+        assert invite.redeemed is True
+        assert invite.redeemed_when is not None
+        # Counts are unchanged
+        assert WorkspaceUserInvite.objects.count() == 1
+        assert UserInvite.objects.count() == 1
+
+        # User deletes account
+        user.delete()
+        assert workspace.users.count() == count
+        # Invites are deleted
+        assert WorkspaceUserInvite.objects.count() == 0
+        assert UserInvite.objects.count() == 0
+
+        # User is invited again
+        new_invite = workspace_user_invite_create(
+            who=workspace_user.user, workspace=workspace, email_or_user=email
+        )
+        assert isinstance(new_invite, WorkspaceUserInvite)
+
+        # User accepts invitation
+        user = user_create(email=email)
+        assert workspace.users.count() == count + 1
+        new_workspace_user = WorkspaceUser.objects.get(user=user)
+
+        # Invite is redeemed
+        new_invite.refresh_from_db()
+        assert new_invite.redeemed is True
+        assert new_invite.redeemed_when is not None
+        # There is still only one invite
+        assert WorkspaceUserInvite.objects.count() == 1
+        assert UserInvite.objects.count() == 1
+
+        # Workspace user is deleted
+        workspace_user_delete(
+            workspace_user=new_workspace_user, who=workspace_user.user
+        )
+
+        # TODO consider if an invite should be deleted as a consequence of ws
+        # user deletion
+        # Workspace user invite is still there
+        assert WorkspaceUserInvite.objects.count() == 1
+        # Invite is still there
+        assert UserInvite.objects.count() == 1
+
+        # User is invited one more time
+        one_more_invite = workspace_user_invite_create(
+            who=workspace_user.user, workspace=workspace, email_or_user=email
+        )
+        assert isinstance(one_more_invite, WorkspaceUser)
+
+        # Now, no new invites are created, so the count shall stay the same
+        assert WorkspaceUserInvite.objects.count() == 1
+        assert UserInvite.objects.count() == 1
