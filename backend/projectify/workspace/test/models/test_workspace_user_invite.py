@@ -29,17 +29,3 @@ class TestWorkspaceUserInvite:
     def test_factory(self, workspace_user_invite: WorkspaceUserInvite) -> None:
         """Test factory."""
         assert workspace_user_invite
-
-    def test_redeem(self, workspace_user_invite: WorkspaceUserInvite) -> None:
-        """Test redeeming."""
-        workspace_user_invite.redeem()
-        workspace_user_invite.refresh_from_db()
-        assert workspace_user_invite.redeemed
-
-    def test_redeeming_twice(
-        self, workspace_user_invite: WorkspaceUserInvite
-    ) -> None:
-        """Test redeeming twice."""
-        workspace_user_invite.redeem()
-        with pytest.raises(AssertionError):
-            workspace_user_invite.redeem()

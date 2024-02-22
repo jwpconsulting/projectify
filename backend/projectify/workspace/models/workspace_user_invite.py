@@ -17,7 +17,6 @@
 """Contains workspace user invite qs / manager / model."""
 
 from django.db import models
-from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import BaseModel
@@ -49,17 +48,6 @@ class WorkspaceUserInvite(BaseModel):
         default=None,
         help_text=_("When has this invite been redeemed?"),
     )
-
-    def redeem(self) -> None:
-        """
-        Redeem invite.
-
-        Save.
-        """
-        assert not self.redeemed
-        self.redeemed = True
-        self.redeemed_when = now()
-        self.save()
 
     class Meta:
         """Meta."""
