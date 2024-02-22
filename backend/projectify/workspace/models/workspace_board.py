@@ -59,10 +59,6 @@ if TYPE_CHECKING:
 class WorkspaceBoardQuerySet(models.QuerySet["WorkspaceBoard"]):
     """WorkspaceBoard Manager."""
 
-    def filter_by_workspace(self, workspace: Workspace) -> Self:
-        """Filter by workspace."""
-        return self.filter(workspace=workspace)
-
     def filter_by_user(self, user: AbstractBaseUser) -> Self:
         """Filter by user."""
         return self.filter(workspace__users=user)

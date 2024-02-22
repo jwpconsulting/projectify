@@ -29,15 +29,6 @@ from projectify.workspace.services.workspace_board_section import (
 class TestWorkspaceBoardManager:
     """Test WorkspaceBoard manager."""
 
-    def test_filter_by_workspace(
-        self,
-        workspace: Workspace,
-        workspace_board: WorkspaceBoard,
-    ) -> None:
-        """Test filter_by_workspace_uuid."""
-        qs = WorkspaceBoard.objects.filter_by_workspace(workspace)
-        assert list(qs) == [workspace_board]
-
     def test_filter_by_user(
         self,
         workspace_board: WorkspaceBoard,
