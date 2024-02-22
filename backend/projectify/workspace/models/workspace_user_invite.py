@@ -61,8 +61,10 @@ class WorkspaceUserInvite(BaseModel):
         "Workspace",
         on_delete=models.CASCADE,
     )
+    # TODO make this a datetimefield with default null
     redeemed = models.BooleanField(
         default=False,
+        # TODO this should then say "When has this invite been redeemed?"
         help_text=_("Has this invite been redeemed?"),
     )
 

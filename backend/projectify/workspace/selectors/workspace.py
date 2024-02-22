@@ -22,9 +22,11 @@ from uuid import UUID
 from django.db.models import Prefetch, QuerySet
 
 from projectify.user.models import User
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_board import WorkspaceBoard
-from projectify.workspace.models.workspace_user import WorkspaceUser
+
+from ..models.workspace import Workspace
+from ..models.workspace_board import WorkspaceBoard
+from ..models.workspace_user import WorkspaceUser
+from ..models.workspace_user_invite import WorkspaceUserInvite
 
 logger = logging.getLogger(__name__)
 
@@ -37,9 +39,19 @@ WorkspaceDetailQuerySet = Workspace.objects.prefetch_related(
     ),
     Prefetch(
         "workspaceuser_set",
-        queryset=WorkspaceUser.objects.select_related(
-            "user",
-        ),
+        queryset=WorkspaceUser.objects.select_related("user"),
+    ),
+    Prefetch(
+        "workspaceuserinvite_set",
+        # Is there a privacy impact in having a workspace be able to resolve
+        # ws -> ws user invite -> user invite?
+        # Is there a way one can smuggle a resolution like
+        # ws -> ws user invite -> user invite -> other ws's user invite ->
+        # other ws and so on?
+        # Perhaps only if RCE exists, but then we have different problems...
+        queryset=WorkspaceUserInvite.objects.select_related(
+            "user_invite"
+        ).filter(redeemed=False),
     ),
 )
 

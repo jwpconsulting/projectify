@@ -35,6 +35,9 @@ from rest_framework.test import (
 )
 
 from projectify.corporate.services.customer import customer_cancel_subscription
+from projectify.workspace.services.workspace_user_invite import (
+    workspace_user_invite_create,
+)
 from pytest_types import (
     DjangoAssertNumQueries,
     Headers,
@@ -142,9 +145,16 @@ class TestWorkspaceReadUpdate:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can GET this view this while being logged in."""
+        # Make sure we have an unredeemed invite
+        workspace_user_invite_create(
+            email_or_user="rando@calrissian.org",
+            who=workspace_user.user,
+            workspace=workspace,
+        )
         # Went up from 5 to 7, since we now return the quota for remaining
         # seats
-        with django_assert_num_queries(7):
+        # One more for user invites
+        with django_assert_num_queries(8):
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.data
         assert response.data == {
@@ -158,6 +168,7 @@ class TestWorkspaceReadUpdate:
                 unittest.mock.ANY,
                 unittest.mock.ANY,
             ],
+            "workspace_user_invites": [{"email": "rando@calrissian.org"}],
             "workspace_boards": [
                 unittest.mock.ANY,
             ],
@@ -173,7 +184,7 @@ class TestWorkspaceReadUpdate:
                 "workspace_boards": unittest.mock.ANY,
                 "workspace_board_sections": unittest.mock.ANY,
                 "workspace_users_and_invites": {
-                    "current": 2,
+                    "current": 3,
                     "limit": 10,
                     "can_create_more": True,
                 },
@@ -190,7 +201,7 @@ class TestWorkspaceReadUpdate:
     ) -> None:
         """Assert that trial limits are annotated correctly."""
         customer_cancel_subscription(customer=workspace.customer)
-        with django_assert_num_queries(12):
+        with django_assert_num_queries(13):
             response = rest_user_client.get(resource_url)
         assert response.status_code == 200, response.data
         assert response.data == {
@@ -216,6 +227,7 @@ class TestWorkspaceReadUpdate:
                     "job_title": None,
                 }
             ],
+            "workspace_user_invites": [],
             "workspace_boards": [],
             "labels": [],
             "quota": {
@@ -269,7 +281,7 @@ class TestWorkspaceReadUpdate:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating a given workspace with a new title."""
-        with django_assert_num_queries(6):
+        with django_assert_num_queries(7):
             response = rest_user_client.put(
                 resource_url,
                 data={

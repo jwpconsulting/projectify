@@ -17,9 +17,18 @@
 """Workspace serializers."""
 from rest_framework import serializers
 
-from . import (
-    base,
-)
+from . import base
+
+
+class WorkspaceUserInviteSerializer(serializers.Serializer):
+    """Serializer workspace user invites."""
+
+    email = serializers.EmailField(source="user_invite.email")
+
+    class Meta:
+        """Restrict to synthetic email field."""
+
+        fields = ("email",)
 
 
 class SingleQuotaSerializer(serializers.Serializer):
@@ -56,6 +65,9 @@ class WorkspaceDetailSerializer(base.WorkspaceBaseSerializer):
     workspace_users = base.WorkspaceUserBaseSerializer(
         read_only=True, many=True, source="workspaceuser_set"
     )
+    workspace_user_invites = WorkspaceUserInviteSerializer(
+        read_only=True, many=True, source="workspaceuserinvite_set"
+    )
     workspace_boards = base.WorkspaceBoardBaseSerializer(
         read_only=True, many=True, source="workspaceboard_set"
     )
@@ -70,6 +82,7 @@ class WorkspaceDetailSerializer(base.WorkspaceBaseSerializer):
         fields = (
             *base.WorkspaceBaseSerializer.Meta.fields,
             "workspace_users",
+            "workspace_user_invites",
             "workspace_boards",
             "labels",
             "quota",
