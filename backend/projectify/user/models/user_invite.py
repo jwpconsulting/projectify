@@ -66,6 +66,7 @@ class UserInvite(BaseModel):
         default=False,
         help_text=_("Has this invite been redeemed?"),
     )
+    # TODO add redeemed_when
 
     objects: ClassVar[UserInviteQuerySet] = cast(  # type: ignore[assignment]
         UserInviteQuerySet, UserInviteQuerySet.as_manager()

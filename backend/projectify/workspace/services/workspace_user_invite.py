@@ -79,14 +79,12 @@ def _try_find_invitation(
     If nothing found, return None.
     """
     try:
-        user_invite = UserInvite.objects.get(
-            email=email,
-        )
+        user_invite = UserInvite.objects.get(email=email, redeemed=False)
     except UserInvite.DoesNotExist:
         return None
     try:
         return workspace.workspaceuserinvite_set.get(
-            user_invite=user_invite,
+            user_invite=user_invite, redeemed=False
         )
     except WorkspaceUserInvite.DoesNotExist:
         return None
@@ -154,8 +152,8 @@ def workspace_user_invite_create(
     if user_invite is None:
         raise AssertionError("This shouldn't be hit")
 
-    workspace_user_invite: WorkspaceUserInvite = (
-        workspace.workspaceuserinvite_set.create(user_invite=user_invite)
+    workspace_user_invite = WorkspaceUserInvite.objects.create(
+        workspace=workspace, user_invite=user_invite
     )
 
     email_to_send = WorkspaceUserInviteEmail(

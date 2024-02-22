@@ -43,6 +43,7 @@ from projectify.corporate.services.customer import (
     customer_activate_subscription,
 )
 from projectify.user.models import User
+from projectify.user.models.user_invite import UserInvite
 from projectify.user.services.internal import user_create
 
 from .. import (
@@ -354,6 +355,9 @@ class TestWorkspaceUser:
         # Before we would expect a message here, but now we disconnect when a
         # workspace is deleted
         await clean_up_communicator(workspace_communicator)
+
+        # Clean up user invite
+        await UserInvite.objects.all().adelete()
 
 
 class TestWorkspaceBoard:

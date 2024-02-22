@@ -168,7 +168,9 @@ class TestWorkspaceReadUpdate:
                 unittest.mock.ANY,
                 unittest.mock.ANY,
             ],
-            "workspace_user_invites": [{"email": "rando@calrissian.org"}],
+            "workspace_user_invites": [
+                {"email": "rando@calrissian.org", "created": unittest.mock.ANY}
+            ],
             "workspace_boards": [
                 unittest.mock.ANY,
             ],

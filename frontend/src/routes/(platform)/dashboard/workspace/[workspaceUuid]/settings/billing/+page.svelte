@@ -23,7 +23,6 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import type { InputFieldValidation } from "$lib/funabashi/types";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { goto } from "$lib/navigation";
     import {
         createBillingPortalSession,
         createCheckoutSession,
@@ -60,7 +59,7 @@
             return;
         }
         const { url } = response.data;
-        await goto(url);
+        window.location.href = url;
     }
 
     async function submitRedeemCoupon() {
@@ -100,7 +99,7 @@
             return;
         }
         const { url } = response.data;
-        await goto(url);
+        window.location.href = url;
     }
 
     // Unpaid user:

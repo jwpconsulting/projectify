@@ -131,6 +131,7 @@ export interface WorkspaceQuota {
 
 interface WorkspaceUserInvite {
     email: string;
+    created: string;
 }
 
 export type Workspace = {
