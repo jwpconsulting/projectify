@@ -17,8 +17,8 @@
 """Test WorkspaceUserInvite model."""
 import pytest
 
-from ... import (
-    models,
+from projectify.workspace.models.workspace_user_invite import (
+    WorkspaceUserInvite,
 )
 
 
@@ -26,22 +26,18 @@ from ... import (
 class TestWorkspaceUserInvite:
     """Test workspace user invite."""
 
-    def test_factory(
-        self, workspace_user_invite: models.WorkspaceUserInvite
-    ) -> None:
+    def test_factory(self, workspace_user_invite: WorkspaceUserInvite) -> None:
         """Test factory."""
         assert workspace_user_invite
 
-    def test_redeem(
-        self, workspace_user_invite: models.WorkspaceUserInvite
-    ) -> None:
+    def test_redeem(self, workspace_user_invite: WorkspaceUserInvite) -> None:
         """Test redeeming."""
         workspace_user_invite.redeem()
         workspace_user_invite.refresh_from_db()
         assert workspace_user_invite.redeemed
 
     def test_redeeming_twice(
-        self, workspace_user_invite: models.WorkspaceUserInvite
+        self, workspace_user_invite: WorkspaceUserInvite
     ) -> None:
         """Test redeeming twice."""
         workspace_user_invite.redeem()

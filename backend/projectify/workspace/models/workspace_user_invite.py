@@ -15,28 +15,25 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Contains workspace user invite qs / manager / model."""
-from typing import TYPE_CHECKING
 
 from django.db import models
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import BaseModel
+from projectify.user.models import UserInvite
 
-if TYPE_CHECKING:
-    from projectify.user.models import UserInvite  # noqa: F401
-
-    from ..models import Workspace  # noqa: F401
+from ..models import Workspace
 
 
 class WorkspaceUserInvite(BaseModel):
     """UserInvites belonging to this workspace."""
 
-    user_invite = models.ForeignKey["UserInvite"](
+    user_invite = models.ForeignKey[UserInvite](
         "user.UserInvite",
         on_delete=models.CASCADE,
     )
-    workspace = models.ForeignKey["Workspace"](
+    workspace = models.ForeignKey[Workspace](
         "Workspace",
         on_delete=models.CASCADE,
     )
