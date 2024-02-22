@@ -26,8 +26,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from projectify.workspace.models import (
-    WorkspaceBoard,
     WorkspaceBoardSection,
+)
+from projectify.workspace.selectors.workspace_board import (
+    workspace_board_find_by_workspace_board_uuid,
 )
 from projectify.workspace.selectors.workspace_board_section import (
     WorkspaceBoardSectionDetailQuerySet,
@@ -65,13 +67,12 @@ class WorkspaceBoardSectionCreate(APIView):
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         workspace_board_uuid: UUID = data["workspace_board_uuid"]
-        workspace_board_qs = WorkspaceBoard.objects.filter_for_user_and_uuid(
-            user=user,
-            uuid=workspace_board_uuid,
+        workspace_board = workspace_board_find_by_workspace_board_uuid(
+            workspace_board_uuid=workspace_board_uuid,
+            who=request.user,
+            include_archived=True,
         )
-        try:
-            workspace_board = workspace_board_qs.get()
-        except WorkspaceBoard.DoesNotExist:
+        if workspace_board is None:
             raise serializers.ValidationError(
                 {
                     "workspace_board_uuid": _(

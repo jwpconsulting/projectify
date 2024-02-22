@@ -72,12 +72,6 @@ class WorkspaceBoardQuerySet(models.QuerySet["WorkspaceBoard"]):
         """Filter by workspace pks."""
         return self.filter(workspace__pk__in=workspace_pks)
 
-    def filter_for_user_and_uuid(
-        self, user: AbstractBaseUser, uuid: uuid.UUID
-    ) -> Self:
-        """Get a workspace baord for user and uuid."""
-        return self.filter_by_user(user).filter(uuid=uuid)
-
     def filter_by_archived(self, archived: bool = True) -> Self:
         """Filter by archived boards."""
         return self.filter(archived__isnull=not archived)

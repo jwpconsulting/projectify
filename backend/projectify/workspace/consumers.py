@@ -30,9 +30,6 @@ from uuid import (
     UUID,
 )
 
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-)
 from django.db import models
 
 from asgiref.sync import async_to_sync as _async_to_sync
@@ -42,30 +39,24 @@ from channels.generic.websocket import (
 from rest_framework import serializers
 
 from projectify.user.models import User
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_board import WorkspaceBoard
-from projectify.workspace.selectors.quota import workspace_get_all_quotas
-from projectify.workspace.selectors.task import (
-    TaskDetailQuerySet,
-    task_find_by_task_uuid,
-)
-from projectify.workspace.selectors.workspace import (
+
+from .models.task import Task
+from .models.workspace import Workspace
+from .models.workspace_board import WorkspaceBoard
+from .selectors.quota import workspace_get_all_quotas
+from .selectors.task import TaskDetailQuerySet, task_find_by_task_uuid
+from .selectors.workspace import (
     WorkspaceDetailQuerySet,
     workspace_find_by_workspace_uuid,
 )
-from projectify.workspace.selectors.workspace_board import (
+from .selectors.workspace_board import (
     WorkspaceBoardDetailQuerySet,
     workspace_board_find_by_workspace_board_uuid,
 )
-from projectify.workspace.serializers.task_detail import TaskDetailSerializer
-from projectify.workspace.serializers.workspace import (
-    WorkspaceDetailSerializer,
-)
-from projectify.workspace.serializers.workspace_board import (
-    WorkspaceBoardDetailSerializer,
-)
-from projectify.workspace.types import ConsumerEvent, Message
+from .serializers.task_detail import TaskDetailSerializer
+from .serializers.workspace import WorkspaceDetailSerializer
+from .serializers.workspace_board import WorkspaceBoardDetailSerializer
+from .types import ConsumerEvent, Message
 
 CODE_OBJECT_DISAPPEARED = 404
 
@@ -170,16 +161,13 @@ class WorkspaceBoardConsumer(BaseConsumer):
         uuid = self.scope["url_route"]["kwargs"]["uuid"]
         return f"workspace-board-{uuid}"
 
-    def get_object(
-        self, user: AbstractBaseUser, uuid: UUID
-    ) -> Optional[WorkspaceBoard]:
+    def get_object(self, user: User, uuid: UUID) -> Optional[WorkspaceBoard]:
         """Get workspace board."""
-        try:
-            return WorkspaceBoard.objects.filter_for_user_and_uuid(
-                user, uuid
-            ).get()
-        except WorkspaceBoard.DoesNotExist:
-            return None
+        return workspace_board_find_by_workspace_board_uuid(
+            workspace_board_uuid=uuid,
+            who=user,
+            include_archived=True,
+        )
 
     def workspace_board_change(self, event: ConsumerEvent) -> None:
         """Respond to workspace board change event."""

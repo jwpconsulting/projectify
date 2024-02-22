@@ -61,22 +61,6 @@ class TestWorkspaceBoardManager:
         )
         assert list(qs) == [workspace_board]
 
-    def test_filter_for_user_and_uuid(
-        self,
-        workspace_board: WorkspaceBoard,
-        workspace_user: WorkspaceUser,
-        # TODO what do these fixtures achieve?
-        workspace: Workspace,
-        other_workspace_user: WorkspaceUser,
-    ) -> None:
-        """Test that the workspace board is retrieved correctly."""
-        assert workspace_board.workspace.users.count() == 2
-        actual = WorkspaceBoard.objects.filter_for_user_and_uuid(
-            workspace_user.user,
-            workspace_board.uuid,
-        )
-        assert actual.get() == workspace_board
-
     def test_filter_by_archived(
         self, workspace_board: WorkspaceBoard, workspace_user: WorkspaceUser
     ) -> None:
