@@ -75,7 +75,6 @@ urlpatterns: Iterable[Union[URLResolver, URLPattern]] = (
         "workspace/",
         include("projectify.workspace.urls"),
     ),
-    path("blog/api/v1/", include("projectify.blog.urls")),
     path("corporate/", include("projectify.corporate.urls")),
 )
 
