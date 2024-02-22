@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -25,6 +25,7 @@ from typing import (
 from django.db import (
     models,
 )
+from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
 from projectify.lib.models import BaseModel
@@ -61,11 +62,17 @@ class WorkspaceUserInvite(BaseModel):
         "Workspace",
         on_delete=models.CASCADE,
     )
-    # TODO make this a datetimefield with default null
+    # TODO use redeemed_when only
     redeemed = models.BooleanField(
         default=False,
-        # TODO this should then say "When has this invite been redeemed?"
         help_text=_("Has this invite been redeemed?"),
+    )
+    redeemed_when = models.DateTimeField(
+        blank=True,
+        null=True,
+        editable=False,
+        default=None,
+        help_text=_("When has this invite been redeemed?"),
     )
 
     objects: ClassVar[WorkspaceUserInviteQuerySet] = cast(  # type: ignore[assignment]
@@ -80,6 +87,7 @@ class WorkspaceUserInvite(BaseModel):
         """
         assert not self.redeemed
         self.redeemed = True
+        self.redeemed_when = now()
         self.save()
 
     class Meta:
