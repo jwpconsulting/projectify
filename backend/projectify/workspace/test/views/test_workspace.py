@@ -57,7 +57,7 @@ class TestWorkspaceCreate:
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("workspace:workspace-create")
+        return reverse("workspace:workspaces:create")
 
     def test_create(
         self,
@@ -89,13 +89,13 @@ class TestWorkspaceCreate:
 
 # Read
 @pytest.mark.django_db
-class TestWorkspaceList:
+class TestUserWorkspaces:
     """Test Workspace list."""
 
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("workspace:workspace-list")
+        return reverse("workspace:workspaces:user-workspaces")
 
     def test_authenticated(
         self,
@@ -305,7 +305,7 @@ class TestWorkspacePictureUploadView:
     def resource_url(self, workspace: Workspace) -> str:
         """Return URL to this view."""
         return reverse(
-            "workspace:workspace-picture-upload", args=(workspace.uuid,)
+            "workspace:workspaces:upload-picture", args=(workspace.uuid,)
         )
 
     @pytest.fixture
@@ -367,7 +367,7 @@ class TestInviteUserToWorkspace:
     def resource_url(self, workspace_user: WorkspaceUser) -> str:
         """Return URL to this view."""
         return reverse(
-            "workspace:workspace-invite-user",
+            "workspace:workspaces:invite-workspace-user",
             # Using the workspace_user fixture, we create a ws user and ws in
             # one go! Mighty clever I dare say >:)
             args=(workspace_user.workspace.uuid,),

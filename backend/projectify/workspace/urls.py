@@ -41,8 +41,8 @@ from .views.task import (
 )
 from .views.workspace import (
     InviteUserToWorkspace,
+    UserWorkspaces,
     WorkspaceCreate,
-    WorkspaceList,
     WorkspacePictureUploadView,
     WorkspaceReadUpdate,
 )
@@ -53,12 +53,38 @@ from .views.workspace_user import (
 app_name = "workspace"
 
 workspace_patterns = (
+    # Create
+    path(
+        "",
+        WorkspaceCreate.as_view(),
+        name="create",
+    ),
     # Read + Update
     path(
         "<uuid:workspace_uuid>",
         WorkspaceReadUpdate.as_view(),
         name="read-update",
     ),
+    # Read
+    path(
+        "user-workspaces/",
+        UserWorkspaces.as_view(),
+        name="user-workspaces",
+    ),
+    # Update
+    # Delete
+    # RPC
+    path(
+        "<uuid:workspace_uuid>/picture-upload",
+        WorkspacePictureUploadView.as_view(),
+        name="upload-picture",
+    ),
+    path(
+        "<uuid:workspace_uuid>/invite-workspace-user",
+        InviteUserToWorkspace.as_view(),
+        name="invite-workspace-user",
+    ),
+    # Related
     # Archived workspace boards
     path(
         "<uuid:workspace_uuid>/archived-workspace-boards/",
@@ -128,6 +154,7 @@ task_patterns = (
     # Read, Update, Delete
     path(
         "<uuid:task_uuid>",
+        # TODO Rename all views to use standard CRUD terminology
         TaskRetrieveUpdateDelete.as_view(),
         name="read-update-delete",
     ),
@@ -161,38 +188,11 @@ label_patterns = (
     # Delete
 )
 
-# TODO Rename all views to use standard CRUD terminology
 urlpatterns = (
     # Workspace
     path(
         "workspace/",
         include((workspace_patterns, "workspaces")),
-    ),
-    # TODO put the below paths into workspace_patterns as well
-    # Create
-    path(
-        "workspaces/",
-        WorkspaceCreate.as_view(),
-        name="workspace-create",
-    ),
-    # Read
-    path(
-        "user/workspaces/",
-        WorkspaceList.as_view(),
-        name="workspace-list",
-    ),
-    # Update
-    # Delete
-    # RPC
-    path(
-        "workspace/<uuid:uuid>/picture-upload",
-        WorkspacePictureUploadView.as_view(),
-        name="workspace-picture-upload",
-    ),
-    path(
-        "workspace/<uuid:uuid>/invite-user",
-        InviteUserToWorkspace.as_view(),
-        name="workspace-invite-user",
     ),
     # WorkspaceUser
     path(
@@ -216,8 +216,6 @@ urlpatterns = (
         "task/",
         include((task_patterns, "tasks")),
     ),
-    # TODO put into task_patterns
-    # Create
     # Label
     path("label/", include((label_patterns, "labels"))),
 )

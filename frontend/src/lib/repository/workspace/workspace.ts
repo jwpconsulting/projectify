@@ -32,7 +32,7 @@ export async function createWorkspace(
     repositoryContext: RepositoryContext,
 ): Promise<Workspace> {
     const response = await postWithCredentialsJson<Workspace>(
-        `/workspace/workspaces/`,
+        `/workspace/workspace/`,
         { title, description },
         repositoryContext,
     );
@@ -48,7 +48,7 @@ export async function getWorkspaces(
 ): Promise<Workspace[] | undefined> {
     return handle404(
         await getWithCredentialsJson<Workspace[]>(
-            `/workspace/user/workspaces/`,
+            `/workspace/workspace/user-workspaces/`,
             repositoryContext,
         ),
     );
