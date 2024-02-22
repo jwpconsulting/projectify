@@ -37,7 +37,6 @@ from django_extensions.db.models import (
 
 from projectify.lib.models import BaseModel
 
-from .types import Pks
 from .workspace import (
     Workspace,
 )
@@ -67,10 +66,6 @@ class WorkspaceBoardQuerySet(models.QuerySet["WorkspaceBoard"]):
     def filter_by_user(self, user: AbstractBaseUser) -> Self:
         """Filter by user."""
         return self.filter(workspace__users=user)
-
-    def filter_by_workspace_pks(self, workspace_pks: Pks) -> Self:
-        """Filter by workspace pks."""
-        return self.filter(workspace__pk__in=workspace_pks)
 
     def filter_by_archived(self, archived: bool = True) -> Self:
         """Filter by archived boards."""

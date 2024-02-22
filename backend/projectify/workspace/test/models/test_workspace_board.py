@@ -50,17 +50,6 @@ class TestWorkspaceBoardManager:
         qs = WorkspaceBoard.objects.filter_by_user(workspace_user.user)
         assert list(qs) == [workspace_board]
 
-    def test_filter_by_workspace_pks(
-        self,
-        workspace: Workspace,
-        workspace_board: WorkspaceBoard,
-    ) -> None:
-        """Test filter_by_workspace_pks."""
-        qs = WorkspaceBoard.objects.filter_by_workspace_pks(
-            [workspace.pk],
-        )
-        assert list(qs) == [workspace_board]
-
     def test_filter_by_archived(
         self, workspace_board: WorkspaceBoard, workspace_user: WorkspaceUser
     ) -> None:
