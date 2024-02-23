@@ -59,10 +59,13 @@ def test_subscription_activation(
     """Test activating subscription."""
     assert customer_check_active_for_workspace(workspace=workspace) == "trial"
     customer_activate_subscription(
-        customer=unpaid_customer, stripe_customer_id=stripe_customer_id
+        customer=unpaid_customer,
+        stripe_customer_id=stripe_customer_id,
+        seats=1337,
     )
     unpaid_customer.refresh_from_db()
     assert customer_check_active_for_workspace(workspace=workspace) == "full"
+    assert unpaid_customer.seats == 1337
 
 
 def test_cancel_subscription(
@@ -97,6 +100,8 @@ def test_active(
     """Test active property."""
     assert customer_check_active_for_workspace(workspace=workspace) == "trial"
     customer_activate_subscription(
-        customer=unpaid_customer, stripe_customer_id=stripe_customer_id
+        customer=unpaid_customer,
+        stripe_customer_id=stripe_customer_id,
+        seats=1337,
     )
     assert customer_check_active_for_workspace(workspace=workspace) == "full"

@@ -118,7 +118,9 @@ async def workspace(user: User) -> models.Workspace:
     customer = workspace.customer
     # XXX use same fixture as in corporate/test/conftest.py
     await database_sync_to_async(customer_activate_subscription)(
-        customer=customer, stripe_customer_id="stripe_"
+        customer=customer,
+        stripe_customer_id="stripe_",
+        seats=10,
     )
     return workspace
 

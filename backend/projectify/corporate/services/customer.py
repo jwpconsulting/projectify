@@ -15,7 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Services for customer model."""
-from django.conf import settings
+from typing import Any
+
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
@@ -31,6 +32,7 @@ from projectify.corporate.types import (
     WorkspaceFeatures,
 )
 from projectify.lib.auth import validate_perm
+from projectify.lib.settings import get_settings
 from projectify.user.models import User
 from projectify.workspace.models.workspace import Workspace
 
@@ -51,6 +53,16 @@ def customer_create(
 
 
 # RPC
+def _billing_site_url(customer: Customer) -> str:
+    """Return URL to customer.workspace's billing settings."""
+    settings = get_settings()
+    # XXX semi-hardcoded for now
+    return (
+        f"{settings.FRONTEND_URL}/dashboard/workspace/"
+        f"{customer.workspace.uuid}/settings/billing"
+    )
+
+
 def stripe_checkout_session_create(
     *,
     customer: Customer,
@@ -60,31 +72,50 @@ def stripe_checkout_session_create(
     """Generate the URL for a checkout session."""
     validate_perm("corporate.can_update_customer", who, customer.workspace)
 
-    if customer.stripe_customer_id is not None:
+    if customer.subscription_status == "ACTIVE":
         raise serializers.ValidationError(
             _("This customer already activated a subscription before")
         )
 
-    # TODO
-    # customer.seats = seats
-    # customer.save()
+    settings = get_settings()
+    if settings.STRIPE_PRICE_OBJECT is None:
+        raise ValueError("Expected STRIPE_PRICE_OBJECT")
 
+    # XXX
+    # Stripe types have invariance problems here
+    line_items: list[Any] = [
+        {
+            "price": settings.STRIPE_PRICE_OBJECT,
+            "quantity": seats,
+        },
+    ]
     client = stripe_client()
-    session = client.checkout.sessions.create(
-        params={
-            # TODO Update url
-            "success_url": settings.FRONTEND_URL,
-            # TODO Update url
-            "cancel_url": settings.FRONTEND_URL,
-            "line_items": [
-                {"price": settings.STRIPE_PRICE_OBJECT, "quantity": seats},
-            ],
-            "mode": "subscription",
-            "subscription_data": {"trial_period_days": 31},
-            "customer_email": who.email,
-            "metadata": {"customer_uuid": str(customer.uuid)},
-        }
-    )
+    match customer.stripe_customer_id:
+        case str():
+            session = client.checkout.sessions.create(
+                params={
+                    "success_url": _billing_site_url(customer),
+                    # Same as above, perhaps we need a different one?
+                    "cancel_url": _billing_site_url(customer),
+                    "line_items": line_items,
+                    "customer": customer.stripe_customer_id,
+                    "mode": "subscription",
+                    "metadata": {"customer_uuid": str(customer.uuid)},
+                }
+            )
+        case None:
+            session = client.checkout.sessions.create(
+                params={
+                    "success_url": _billing_site_url(customer),
+                    # Same as above, perhaps we need a different one?
+                    "cancel_url": _billing_site_url(customer),
+                    "line_items": line_items,
+                    "customer_email": who.email,
+                    "mode": "subscription",
+                    "metadata": {"customer_uuid": str(customer.uuid)},
+                }
+            )
+
     return session
 
 
@@ -108,7 +139,7 @@ def create_billing_portal_session_for_customer(
     return client.billing_portal.sessions.create(
         params={
             "customer": customer_id,
-            "return_url": settings.FRONTEND_URL,
+            "return_url": _billing_site_url(customer),
         }
     )
 

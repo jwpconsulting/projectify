@@ -17,6 +17,7 @@
 """Customer model for corporate app."""
 import uuid
 from typing import (
+    TYPE_CHECKING,
     ClassVar,
     Self,
     cast,
@@ -27,7 +28,6 @@ from django.contrib.auth.models import (
 )
 from django.db import (
     models,
-    transaction,
 )
 
 from projectify.corporate.types import CustomerSubscriptionStatus
@@ -83,6 +83,8 @@ class Customer(BaseModel):
         # Looks mysterious. Should probably uncomment these:
         # Justus 2023-12-03
         # XXX
+        # Hm?
+        # Justus 2024-02-23
         # unique=True,
         # db_index=True,
     )
@@ -91,13 +93,9 @@ class Customer(BaseModel):
         CustomerQuerySet, CustomerQuerySet.as_manager()
     )
 
-    # TODO this should be a selector.
-    # XXX this prop can have an n+1 as a side effect
-    @property
-    @transaction.atomic
-    def seats_remaining(self) -> int:
-        """Return the number of seats remaining."""
-        num_users = len(self.workspace.users.all())
-        invites_qs = self.workspace.workspaceuserinvite_set.all()
-        num_invites = len(invites_qs)
-        return self.seats - num_users - num_invites
+    if TYPE_CHECKING:
+        workspace_id: int
+
+    def __str__(self) -> str:
+        """Return string representation."""
+        return f"Workspace {self.workspace_id} customer"

@@ -814,8 +814,9 @@ const messages: MessageDirectory = {
             "title": "Billing",
             "active": {
                 "status": {
-                    title: "Current subscription status",
-                    explanation: "Your subscription is currently active",
+                    title: "Subscription status: Paid workspace",
+                    explanation:
+                        "You have a paid workspace. You can review your billing details and seat count using the 'Edit billing details' button below.",
                 },
                 "monthly-total": {
                     title: "Monthly total ({pricePerSeat, number, ::currency/USD} per seat/month):",
@@ -824,6 +825,7 @@ const messages: MessageDirectory = {
                 "seats": {
                     title: "Number of seats:",
                     status: "{seats} seats in total, {seatsRemaining} {seatsRemaining, plural, one {seat} other {seats}} remaining",
+                    unlimited: "unlimited",
                 },
                 "edit-billing-details": "Edit billing details",
             },
@@ -832,6 +834,11 @@ const messages: MessageDirectory = {
                     title: "Trial mode",
                     explanation:
                         "You are currently using this workspace in trial mode. To create a subscription and use all available features for this workspace, please continue using the checkout below. Alternatively, you can enter a coupon code further below.",
+                },
+                cancelled: {
+                    title: "Subscription cancelled",
+                    explanation:
+                        "Your subscription has been cancelled. If you want to reactivate your subscription, please resubscribe using the checkout form below.",
                 },
                 checkout: {
                     title: "Checkout",

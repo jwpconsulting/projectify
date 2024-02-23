@@ -16,8 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 export interface Customer {
-    seats_remaining: number;
     seats: number;
     uuid: string;
-    subscription_status: "UNPAID" | "CUSTOM" | "ACTIVE";
+    subscription_status: "UNPAID" | "CUSTOM" | "ACTIVE" | "CANCELLED";
 }

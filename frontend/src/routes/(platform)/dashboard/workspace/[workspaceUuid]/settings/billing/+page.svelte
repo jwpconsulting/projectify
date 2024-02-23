@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    import { _, number } from "svelte-i18n";
+    import { _ } from "svelte-i18n";
 
     import { pricePerSeat } from "$lib/config";
     import Button from "$lib/funabashi/buttons/Button.svelte";
@@ -113,6 +113,10 @@
 
     // Paid user:
     let editBillingError: string | undefined = undefined;
+    $: quota = workspace.quota?.workspace_users_and_invites;
+    $: seatsRemaining = quota
+        ? (quota.current ?? 0) - (quota.limit ?? 0)
+        : $_("workspace-settings.billing.active.seats.unlimited");
 </script>
 
 <section class="flex flex-col gap-12 px-4 py-6">
@@ -149,7 +153,7 @@
                 {$_("workspace-settings.billing.active.seats.status", {
                     values: {
                         seats: customer.seats,
-                        seatsRemaining: $number(customer.seats_remaining),
+                        seatsRemaining,
                     },
                 })}
             </p>
@@ -166,13 +170,25 @@
             )}
             size="medium"
         />
-    {:else if customer.subscription_status === "UNPAID"}
+    {:else if customer.subscription_status === "UNPAID" || customer.subscription_status === "CANCELLED"}
         <section>
             <p class="font-bold">
-                {$_("workspace-settings.billing.unpaid.status.title")}
+                {#if customer.subscription_status === "UNPAID"}
+                    {$_("workspace-settings.billing.unpaid.status.title")}
+                {:else}
+                    {$_("workspace-settings.billing.unpaid.cancelled.title")}
+                {/if}
             </p>
             <p>
-                {$_("workspace-settings.billing.unpaid.status.explanation")}
+                {#if customer.subscription_status === "UNPAID"}
+                    {$_(
+                        "workspace-settings.billing.unpaid.status.explanation",
+                    )}
+                {:else}
+                    {$_(
+                        "workspace-settings.billing.unpaid.cancelled.explanation",
+                    )}
+                {/if}
             </p>
         </section>
         <form

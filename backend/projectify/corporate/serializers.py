@@ -27,8 +27,6 @@ from . import (
 class CustomerSerializer(serializers.ModelSerializer[models.Customer]):
     """Serializer for customer."""
 
-    seats_remaining = serializers.IntegerField(read_only=True)
-
     class Meta:
         """Meta."""
 
@@ -37,5 +35,4 @@ class CustomerSerializer(serializers.ModelSerializer[models.Customer]):
             "seats",
             "uuid",
             "subscription_status",
-            "seats_remaining",
         )
