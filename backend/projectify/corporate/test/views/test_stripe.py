@@ -63,7 +63,10 @@ class TestStripeWebhook:
         event = mock.MagicMock()
         event.type = "checkout.session.completed"
         event["data"]["object"].customer = "unique_stripe_id"
-        event["data"]["object"].metadata.customer_uuid = unpaid_customer.uuid
+        # ["customer_uuid"]
+        event["data"]["object"].metadata.get.return_value = str(
+            unpaid_customer.uuid
+        )
 
         with mock.patch(
             "stripe._stripe_client.StripeClient.construct_event"
@@ -92,7 +95,9 @@ class TestStripeWebhook:
         event = mock.MagicMock()
         event.type = "customer.subscription.updated"
         event["data"]["object"].customer = paid_customer.stripe_customer_id
-        event["data"]["object"].quantity = new_seats
+        item_data = mock.MagicMock()
+        item_data.quantity = new_seats
+        event["data"]["object"].items.data = [item_data]
 
         with mock.patch(
             "stripe._stripe_client.StripeClient.construct_event"

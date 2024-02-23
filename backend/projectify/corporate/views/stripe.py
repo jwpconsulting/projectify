@@ -38,6 +38,7 @@ from rest_framework.status import (
     HTTP_400_BAD_REQUEST,
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
+from stripe.checkout import Session
 
 from projectify.corporate.lib.stripe import stripe_client
 from projectify.lib.settings import get_settings
@@ -57,16 +58,50 @@ logger = logging.getLogger(__name__)
 
 def handle_session_completed(event: stripe.Event) -> None:
     """Handle Stripe checkout.session.completed."""
-    session = event["data"]["object"]
-    customer_uuid: UUID = session.metadata.customer_uuid
-    stripe_customer_id: str = session.customer
-    customer = customer_find_by_uuid(
-        customer_uuid=customer_uuid,
-    )
+    session: Session = event["data"]["object"]
+
+    if session.metadata is None:
+        raise serializers.ValidationError({"metadata": _("Expected metadata")})
+    customer_uuid_raw = session.metadata.get("customer_uuid")
+
+    if customer_uuid_raw is None:
+        raise serializers.ValidationError(
+            {"metadata": {"customer_uuid": _("Expected value")}}
+        )
+
+    # XXX
+    # Looks like a job for DRF serializers
+    try:
+        customer_uuid = UUID(customer_uuid_raw)
+    except ValueError:
+        raise serializers.ValidationError(
+            {
+                "metadata": {
+                    "customer_uuid": _("Not a valid UUID {}").format(
+                        customer_uuid_raw
+                    )
+                }
+            }
+        )
+
+    customer = customer_find_by_uuid(customer_uuid=customer_uuid)
+
     if customer is None:
         raise serializers.ValidationError(
             {"metadata": {"customer_uuid": _("No customer for this uuid")}}
         )
+
+    stripe_customer = session.customer
+    match stripe_customer:
+        case None:
+            raise serializers.ValidationError(
+                {"customer": _("Expected customer")},
+            )
+        case str():
+            stripe_customer_id = stripe_customer
+        case stripe.Customer():
+            stripe_customer_id = stripe_customer.id
+
     customer_activate_subscription(
         customer=customer,
         stripe_customer_id=stripe_customer_id,
@@ -75,23 +110,48 @@ def handle_session_completed(event: stripe.Event) -> None:
 
 def handle_subscription_updated(event: stripe.Event) -> None:
     """Handle Stripe customer.subscription.updated."""
-    subscription = event["data"]["object"]
-    stripe_customer_id: str = subscription.customer
+    subscription: stripe.Subscription = event["data"]["object"]
+    stripe_customer = subscription.customer
+    match stripe_customer:
+        case str():
+            stripe_customer_id = stripe_customer
+        case stripe.Customer():
+            stripe_customer_id = stripe_customer.id
+
     customer = customer_find_by_stripe_customer_id(
         stripe_customer_id=stripe_customer_id
     )
+
     if customer is None:
         raise serializers.ValidationError(
             {"customer": _("Could not find customer for this id")}
         )
-    seats: int = subscription.quantity
+    items = subscription.items.data
+
+    match items:
+        case [item]:
+            pass
+        case []:
+            raise serializers.ValidationError(
+                {"items": _("Expected 1 subscription item")}
+            )
+        case _:
+            raise serializers.ValidationError(
+                {"items": _("There are too many subscription items")}
+            )
+    seats = item.quantity
+    if seats is None:
+        raise serializers.ValidationError(
+            {"items": {"quantity": _("Expected quantity")}}
+        )
+
     customer_update_seats(customer=customer, seats=seats)
     logger.info("Customer %s updated subscription: %s", customer, subscription)
 
 
 def handle_payment_failure(event: stripe.Event) -> None:
     """Handle Stripe invoice.payment_failed."""
-    invoice = event["data"]["object"]
+    invoice: stripe.Invoice = event["data"]["object"]
 
     # TODO should this be handled as some kind of error?
     if invoice.next_payment_attempt is not None:
@@ -101,7 +161,16 @@ def handle_payment_failure(event: stripe.Event) -> None:
         )
         return
 
-    stripe_customer_id: str = invoice.customer
+    match invoice.customer:
+        case str() as stripe_customer_id:
+            pass
+        case stripe.Customer() as stripe_customer:
+            stripe_customer_id = stripe_customer.id
+        case None:
+            raise serializers.ValidationError(
+                {"customer": _("Expected a customer")}
+            )
+
     customer = customer_find_by_stripe_customer_id(
         stripe_customer_id=stripe_customer_id
     )
