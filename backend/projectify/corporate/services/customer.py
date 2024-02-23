@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Services for customer model."""
-from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
@@ -31,6 +30,7 @@ from projectify.corporate.types import (
     WorkspaceFeatures,
 )
 from projectify.lib.auth import validate_perm
+from projectify.lib.settings import get_settings
 from projectify.user.models import User
 from projectify.workspace.models.workspace import Workspace
 
@@ -51,6 +51,16 @@ def customer_create(
 
 
 # RPC
+def _billing_site_url(customer: Customer) -> str:
+    """Return URL to customer.workspace's billing settings."""
+    settings = get_settings()
+    # XXX semi-hardcoded for now
+    return (
+        f"{settings.FRONTEND_URL}/dashboard/workspace/"
+        f"{customer.workspace.uuid}/settings/billing"
+    )
+
+
 def stripe_checkout_session_create(
     *,
     customer: Customer,
@@ -65,13 +75,16 @@ def stripe_checkout_session_create(
             _("This customer already activated a subscription before")
         )
 
+    settings = get_settings()
+    if settings.STRIPE_PRICE_OBJECT is None:
+        raise ValueError("Expected STRIPE_PRICE_OBJECT")
+
     client = stripe_client()
     session = client.checkout.sessions.create(
         params={
-            # TODO Update url
-            "success_url": settings.FRONTEND_URL,
-            # TODO Update url
-            "cancel_url": settings.FRONTEND_URL,
+            "success_url": _billing_site_url(customer),
+            # Same as above, perhaps we need a different one?
+            "cancel_url": _billing_site_url(customer),
             "line_items": [
                 {"price": settings.STRIPE_PRICE_OBJECT, "quantity": seats},
             ],
@@ -104,7 +117,7 @@ def create_billing_portal_session_for_customer(
     return client.billing_portal.sessions.create(
         params={
             "customer": customer_id,
-            "return_url": settings.FRONTEND_URL,
+            "return_url": _billing_site_url(customer),
         }
     )
 
