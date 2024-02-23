@@ -7,7 +7,7 @@
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:NixOS/nixpkgs/23.11";
     poetry2nix = {
-      url = "github:nix-community/poetry2nix/2023.12.2614813";
+      url = "github:nix-community/poetry2nix/2024.2.2230616";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
