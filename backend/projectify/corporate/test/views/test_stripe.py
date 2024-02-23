@@ -37,7 +37,6 @@ pytestmark = pytest.mark.django_db
 @pytest.fixture(autouse=True)
 def patch_stripe_settings(settings: Base) -> None:
     """Patch stripe settings."""
-    # 1) Patch STRIPE_ENDPOINT_SECRET and STRIPE_SECRET_KEY
     settings.STRIPE_SECRET_KEY = "mock-test-value"
     settings.STRIPE_ENDPOINT_SECRET = "mock-test-value"
 
