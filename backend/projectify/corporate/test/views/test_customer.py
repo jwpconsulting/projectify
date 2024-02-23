@@ -40,11 +40,11 @@ class TestWorkspaceCustomerRetrieve:
     """Test WorkspaceCustomerRetrieve."""
 
     @pytest.fixture
-    def resource_url(
-        self, paid_customer: Customer, workspace: Workspace
-    ) -> str:
+    def resource_url(self, paid_customer: Customer) -> str:
         """Return URL to resource."""
-        return reverse("corporate:customers:read", args=(workspace.uuid,))
+        return reverse(
+            "corporate:customers:read", args=(paid_customer.workspace.uuid,)
+        )
 
     def test_authenticated(
         self,
@@ -54,7 +54,7 @@ class TestWorkspaceCustomerRetrieve:
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test as authenticated user."""
-        with django_assert_num_queries(9):
+        with django_assert_num_queries(8):
             response = user_client.get(resource_url)
             assert response.status_code == 200, response.content
 
@@ -111,12 +111,11 @@ class TestWorkspaceCheckoutSessionCreate:
             "corporate:customers:create-checkout-session",
             args=(str(faker.uuid4()),),
         )
-        with django_assert_num_queries(2):
+        with django_assert_num_queries(1):
             response = rest_user_client.post(
-                resource_url,
-                data={"seats": 1337},
+                resource_url, data={"seats": 1337}
             )
-            assert response.status_code == 400, response.data
+            assert response.status_code == 404, response.data
 
     def test_posting_normal_data(
         self,
@@ -130,7 +129,7 @@ class TestWorkspaceCheckoutSessionCreate:
             "corporate:customers:create-checkout-session",
             args=(str(unpaid_customer.workspace.uuid),),
         )
-        with django_assert_num_queries(4):
+        with django_assert_num_queries(3):
             response = rest_user_client.post(
                 resource_url,
                 data={"seats": 1337},
@@ -198,7 +197,7 @@ class TestWorkspaceBillingPortalSessionCreate:
             "corporate:customers:create-billing-portal-session",
             args=(str(unpaid_customer.workspace.uuid),),
         )
-        with django_assert_num_queries(4):
+        with django_assert_num_queries(3):
             response = rest_user_client.post(resource_url)
             assert response.status_code == 403, response.data
         assert "no subscription is active" in response.data["detail"]
@@ -215,7 +214,7 @@ class TestWorkspaceBillingPortalSessionCreate:
             "corporate:customers:create-billing-portal-session",
             args=(str(paid_customer.workspace.uuid),),
         )
-        with django_assert_num_queries(4):
+        with django_assert_num_queries(3):
             response = rest_user_client.post(resource_url)
             assert response.status_code == 200, response.data
         assert response.data == {"url": "https://www.example.com"}
