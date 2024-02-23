@@ -65,10 +65,6 @@ def stripe_checkout_session_create(
             _("This customer already activated a subscription before")
         )
 
-    # TODO
-    # customer.seats = seats
-    # customer.save()
-
     client = stripe_client()
     session = client.checkout.sessions.create(
         params={

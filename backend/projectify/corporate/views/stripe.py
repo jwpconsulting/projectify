@@ -118,12 +118,10 @@ def handle_session_completed(session: stripe.checkout.Session) -> None:
 
     customer = _get_customer_from_metadata(session)
 
-    line_items = session.line_items
-
-    if line_items is None:
-        raise serializers.ValidationError(
-            {"line_items": _("Expected line items")}
-        )
+    # We'd like to make sure that we have the actual line items, for the most
+    # recent session that they have created, not seats that we store
+    # in database
+    line_items = session.list_line_items()
 
     match line_items.data:
         case [item]:
