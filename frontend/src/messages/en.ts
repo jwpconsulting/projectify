@@ -814,8 +814,9 @@ const messages: MessageDirectory = {
             "title": "Billing",
             "active": {
                 "status": {
-                    title: "Current subscription status",
-                    explanation: "Your subscription is currently active",
+                    title: "Subscription status: Paid workspace",
+                    explanation:
+                        "You have a paid workspace. You can review your billing details and seat count using the 'Edit billing details' button below.",
                 },
                 "monthly-total": {
                     title: "Monthly total ({pricePerSeat, number, ::currency/USD} per seat/month):",
