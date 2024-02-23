@@ -51,8 +51,10 @@ class TestStripeWebhook:
         """Return URL to resource."""
         return reverse("corporate:stripe-webhook")
 
+    @mock.patch("projectify.corporate.lib.stripe.StripeClient")
     def test_checkout_session_completed(
         self,
+        stripe_client: mock.MagicMock,
         unpaid_customer: Customer,
         rest_client: APIClient,
         resource_url: str,
@@ -69,14 +71,12 @@ class TestStripeWebhook:
         )
         line_item = mock.MagicMock()
         line_item.quantity = 13131313
-        event["data"]["object"].line_items.data = [line_item]
+        event["data"]["object"].list_line_items.return_value.data = [line_item]
 
-        with mock.patch(
-            "stripe._stripe_client.StripeClient.construct_event"
-        ) as construct_event:
-            construct_event.return_value = event
-            # TODO count queries
-            response = rest_client.post(resource_url, **header)
+        stripe_client.return_value.construct_event.return_value = event
+
+        # TODO count queries
+        response = rest_client.post(resource_url, **header)
         assert response.status_code == 200, response.data
         unpaid_customer.refresh_from_db()
         assert (
@@ -86,8 +86,10 @@ class TestStripeWebhook:
         assert unpaid_customer.stripe_customer_id == "unique_stripe_id"
         assert unpaid_customer.seats == 13131313
 
+    @mock.patch("projectify.corporate.lib.stripe.StripeClient")
     def test_customer_subscription_updated(
         self,
+        stripe_client: mock.MagicMock,
         paid_customer: Customer,
         rest_client: APIClient,
         resource_url: str,
@@ -101,20 +103,22 @@ class TestStripeWebhook:
         event["data"]["object"].customer = paid_customer.stripe_customer_id
         item_data = mock.MagicMock()
         item_data.quantity = new_seats
-        event["data"]["object"].items.data = [item_data]
+        stripe_client.return_value.subscription_items.list.return_value.data = [
+            item_data
+        ]
 
-        with mock.patch(
-            "stripe._stripe_client.StripeClient.construct_event"
-        ) as construct_event:
-            construct_event.return_value = event
-            # TODO count queries
-            response = rest_client.post(resource_url, **header)
+        stripe_client.return_value.construct_event.return_value = event
+
+        # TODO count queries
+        response = rest_client.post(resource_url, **header)
         assert response.status_code == 200, response.data
         paid_customer.refresh_from_db()
         assert paid_customer.seats == new_seats
 
+    @mock.patch("projectify.corporate.lib.stripe.StripeClient")
     def test_customer_subscription_cancelled(
         self,
+        stripe_client: mock.MagicMock,
         paid_customer: Customer,
         rest_client: APIClient,
         resource_url: str,
@@ -125,15 +129,16 @@ class TestStripeWebhook:
         event.type = "invoice.payment_failed"
         event["data"]["object"].customer = paid_customer.stripe_customer_id
         event["data"]["object"].next_payment_attempt = None
-        with mock.patch(
-            "stripe._stripe_client.StripeClient.construct_event"
-        ) as construct_event:
-            construct_event.return_value = event
-            # TODO count queries
-            response = rest_client.post(resource_url, **header)
+        stripe_client.return_value.construct_event.return_value = event
+
+        # TODO count queries
+        response = rest_client.post(resource_url, **header)
         assert response.status_code == 200, response.data
         paid_customer.refresh_from_db()
         assert (
             paid_customer.subscription_status
             == CustomerSubscriptionStatus.CANCELLED
         )
+
+
+# TODO test customer.subscription.deleted
