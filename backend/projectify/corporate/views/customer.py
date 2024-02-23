@@ -29,11 +29,9 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
 
-from projectify.corporate.selectors.customer import (
-    customer_find_by_workspace_uuid,
-)
-from projectify.corporate.serializers import CustomerSerializer
-from projectify.corporate.services.stripe import (
+from ..selectors.customer import customer_find_by_workspace_uuid
+from ..serializers import CustomerSerializer
+from ..services.customer import (
     create_billing_portal_session_for_customer,
     stripe_checkout_session_create,
 )

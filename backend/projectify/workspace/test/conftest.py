@@ -43,7 +43,7 @@ from django.utils import (
 import pytest
 from faker import Faker
 
-from projectify.corporate.services.customer import (
+from projectify.corporate.services.stripe import (
     customer_activate_subscription,
     customer_update_seats,
 )

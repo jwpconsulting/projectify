@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023 JWP Consulting GK
+# Copyright (C) 2023-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -15,9 +15,17 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Services for customer model."""
-import logging
+from django.conf import settings
+from django.utils.translation import gettext_lazy as _
 
-from projectify.corporate.models import Customer
+import stripe
+from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied
+from stripe.api_resources.billing_portal.session import (
+    Session as BillingPortalSession,
+)
+from stripe.api_resources.checkout.session import Session
+
 from projectify.corporate.types import (
     CustomerSubscriptionStatus,
     WorkspaceFeatures,
@@ -26,9 +34,10 @@ from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 from projectify.workspace.models.workspace import Workspace
 
-logger = logging.getLogger(__name__)
+from ..models import Customer
 
 
+# Create
 def customer_create(
     *, who: User, workspace: Workspace, seats: int
 ) -> Customer:
@@ -37,38 +46,65 @@ def customer_create(
     return Customer.objects.create(workspace=workspace, seats=seats)
 
 
-# TODO permissions needed?
-def customer_activate_subscription(
-    *, customer: Customer, stripe_customer_id: str
-) -> None:
-    """Active a subscription for a customer."""
-    customer.stripe_customer_id = stripe_customer_id
-    customer.subscription_status = CustomerSubscriptionStatus.ACTIVE
-    customer.save()
+# Update
+# Delete
 
 
-# TODO permissions needed?
-def customer_update_seats(*, customer: Customer, seats: int) -> None:
-    """Update the number of seats for a customer."""
-    # TODO Check why returning None is required
-    if customer.seats == seats:
-        logger.warning(
-            "Customer %s set the same number of seats (%d) as before",
-            str(customer.uuid),
-            seats,
+# RPC
+def stripe_checkout_session_create(
+    *,
+    customer: Customer,
+    who: User,
+    seats: int,
+) -> Session:
+    """Generate the URL for a checkout session."""
+    validate_perm("corporate.can_update_customer", who, customer.workspace)
+
+    if customer.stripe_customer_id is not None:
+        raise serializers.ValidationError(
+            _("This customer already activated a subscription before")
         )
-        return None
-    customer.seats = seats
-    customer.save()
+
+    # TODO
+    # customer.seats = seats
+    # customer.save()
+
+    session = stripe.checkout.Session.create(
+        # TODO Update url
+        success_url=settings.FRONTEND_URL,
+        # TODO Update url
+        cancel_url=settings.FRONTEND_URL,
+        line_items=[
+            {"price": settings.STRIPE_PRICE_OBJECT, "quantity": seats},
+        ],
+        mode="subscription",
+        subscription_data={"trial_period_days": 31},
+        customer_email=who.email,
+        metadata={"customer_uuid": customer.uuid},
+    )
+    return session
 
 
-# TODO permissions needed?
-# Since this will be called by Stripe, the who could be an explicit Stripe
-# identifier
-def customer_cancel_subscription(*, customer: Customer) -> None:
-    """Cancel a customer's subscription."""
-    customer.subscription_status = CustomerSubscriptionStatus.CANCELLED
-    customer.save()
+def create_billing_portal_session_for_customer(
+    *,
+    who: User,
+    customer: Customer,
+) -> BillingPortalSession:
+    """Create a billing session for a user given a workspace uuid."""
+    validate_perm("corporate.can_update_customer", who, customer.workspace)
+    customer_id = customer.stripe_customer_id
+    if customer_id is None:
+        raise PermissionDenied(
+            _(
+                "Can not create billing portal session because no "
+                "subscription is active. If you believe this is an error, "
+                "please contact support."
+            )
+        )
+    return stripe.billing_portal.Session.create(
+        customer=customer.stripe_customer_id,
+        return_url=settings.FRONTEND_URL,
+    )
 
 
 # TODO permissions needed?

@@ -34,7 +34,7 @@ from rest_framework.test import (
     APIClient,
 )
 
-from projectify.corporate.services.customer import customer_cancel_subscription
+from projectify.corporate.services.stripe import customer_cancel_subscription
 from projectify.workspace.services.workspace_user_invite import (
     workspace_user_invite_create,
 )

@@ -38,11 +38,11 @@ from rest_framework.status import (
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
 
-from projectify.corporate.selectors.customer import (
+from ..selectors.customer import (
     customer_find_by_stripe_customer_id,
     customer_find_by_uuid,
 )
-from projectify.corporate.services.customer import (
+from ..services.stripe import (
     customer_activate_subscription,
     customer_cancel_subscription,
     customer_update_seats,
