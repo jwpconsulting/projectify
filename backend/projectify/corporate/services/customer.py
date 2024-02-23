@@ -100,7 +100,6 @@ def stripe_checkout_session_create(
                     "line_items": line_items,
                     "customer": customer.stripe_customer_id,
                     "mode": "subscription",
-                    "subscription_data": {"trial_period_days": 31},
                     "metadata": {"customer_uuid": str(customer.uuid)},
                 }
             )
@@ -113,7 +112,6 @@ def stripe_checkout_session_create(
                     "line_items": line_items,
                     "customer_email": who.email,
                     "mode": "subscription",
-                    "subscription_data": {"trial_period_days": 31},
                     "metadata": {"customer_uuid": str(customer.uuid)},
                 }
             )
