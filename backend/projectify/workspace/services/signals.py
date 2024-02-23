@@ -92,7 +92,7 @@ def send_workspace_change_signal(instance: HasOrIsWorkspace) -> None:
 
 
 def send_workspace_board_change_signal(
-    workspace_board: WorkspaceBoard
+    workspace_board: WorkspaceBoard,
 ) -> None:
     """Send workspace_board.change signal to correct group."""
     uuid = str(workspace_board.uuid)

@@ -299,6 +299,7 @@ class Base(Configuration):
     # Stripe
     STRIPE_SECRET_KEY: Optional[str] = None
     STRIPE_ENDPOINT_SECRET: Optional[str] = None
+    STRIPE_PRICE_OBJECT: Optional[str] = None
 
     @classmethod
     def post_setup(cls) -> None:

@@ -39,7 +39,7 @@ from channels.testing import (
 from projectify.asgi import (
     websocket_application,
 )
-from projectify.corporate.services.customer import (
+from projectify.corporate.services.stripe import (
     customer_activate_subscription,
 )
 from projectify.user.models import User

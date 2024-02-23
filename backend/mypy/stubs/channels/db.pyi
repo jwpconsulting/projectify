@@ -12,5 +12,5 @@ R = TypeVar("R")
 P = ParamSpec("P")
 
 def database_sync_to_async(
-    fn: Callable[P, R]
+    fn: Callable[P, R],
 ) -> Callable[P, Awaitable[R]]: ...

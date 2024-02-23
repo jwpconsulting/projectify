@@ -27,11 +27,22 @@ import pytest
 from rest_framework.test import APIClient
 
 from projectify.corporate.types import CustomerSubscriptionStatus
+from projectify.settings.base import Base
 
 from ...models import Customer
 
+pytestmark = pytest.mark.django_db
 
-@pytest.mark.django_db
+
+@pytest.fixture(autouse=True)
+def patch_stripe_settings(
+    settings: Base, stripe_secret_key: str, stripe_endpoint_secret: str
+) -> None:
+    """Patch stripe settings."""
+    settings.STRIPE_SECRET_KEY = stripe_secret_key
+    settings.STRIPE_ENDPOINT_SECRET = stripe_endpoint_secret
+
+
 class TestStripeWebhook:
     """Test incoming webhooks from Stripe."""
 
@@ -54,7 +65,9 @@ class TestStripeWebhook:
         event["data"]["object"].customer = "unique_stripe_id"
         event["data"]["object"].metadata.customer_uuid = unpaid_customer.uuid
 
-        with mock.patch("stripe.Webhook.construct_event") as construct_event:
+        with mock.patch(
+            "stripe._stripe_client.StripeClient.construct_event"
+        ) as construct_event:
             construct_event.return_value = event
             response = client.post(resource_url, **header)
         assert response.status_code == 200
@@ -77,7 +90,9 @@ class TestStripeWebhook:
         event["data"]["object"].customer = paid_customer.stripe_customer_id
         event["data"]["object"].quantity = new_seats
 
-        with mock.patch("stripe.Webhook.construct_event") as construct_event:
+        with mock.patch(
+            "stripe._stripe_client.StripeClient.construct_event"
+        ) as construct_event:
             construct_event.return_value = event
             response = client.post(resource_url, **header)
         assert response.status_code == 200
@@ -96,7 +111,9 @@ class TestStripeWebhook:
         event.type = "invoice.payment_failed"
         event["data"]["object"].customer = paid_customer.stripe_customer_id
         event["data"]["object"].next_payment_attempt = None
-        with mock.patch("stripe.Webhook.construct_event") as construct_event:
+        with mock.patch(
+            "stripe._stripe_client.StripeClient.construct_event"
+        ) as construct_event:
             construct_event.return_value = event
             response = client.post(resource_url, **header)
         assert response.status_code == 200

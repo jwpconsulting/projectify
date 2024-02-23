@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2023-2024 JWP Consulting GK
+# Copyright (C) 2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -14,4 +14,18 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Test customer services in corporate app."""
+"""Settings related functions."""
+from typing import cast
+
+from django.conf import settings
+
+from projectify.settings.base import Base
+
+
+def get_settings() -> Base:
+    """
+    Return typed settings. Uses casting, so buyer beware.
+
+    Still better than hoping that Django settings will contain our settings.
+    """
+    return cast(Base, settings)

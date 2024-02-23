@@ -19,12 +19,6 @@
 import pytest
 from faker import Faker
 
-from projectify.corporate.models import Customer
-from projectify.corporate.models.coupon import Coupon
-from projectify.corporate.services.coupon import coupon_create
-from projectify.corporate.services.customer import (
-    customer_activate_subscription,
-)
 from projectify.user.models import User
 from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.workspace_user import WorkspaceUser
@@ -32,6 +26,11 @@ from projectify.workspace.selectors.workspace_user import (
     workspace_user_find_for_workspace,
 )
 from projectify.workspace.services.workspace import workspace_create
+
+from ..models import Customer
+from ..models.coupon import Coupon
+from ..services.coupon import coupon_create
+from ..services.stripe import customer_activate_subscription
 
 
 @pytest.fixture

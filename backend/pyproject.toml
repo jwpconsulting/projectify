@@ -106,8 +106,6 @@ exclude = [
     "projectify/premail/views.py",
     "projectify/premail/test/test_views.py",
     "projectify/premail/test/test_emails.py",
-    # pyright doesn't find stripe typings
-    "projectify/corporate/views/stripe.py",
 ]
 # Mypy doesn't complain about these, so it's fine
 reportUnknownParameterType = true
@@ -119,7 +117,7 @@ reportUnknownMemberType = false
 reportUnusedImport = false
 
 [tool.poetry]
-name = "Projectify Backend"
+name = "projectify"
 version = "0.1.0"
 description = ""
 authors = ["Justus Perlwitz <justus@jwpconsulting.net>"]
@@ -129,6 +127,7 @@ readme = "README.md"
 celery = {extras = ["redis"], version = "~5.2.7"}
 channels = {version = "~4.0.0", extras = ["daphne"]}
 channels-redis = "~4.0.0"
+cryptography = "42.0.2"
 dj-database-url = "~2.1.0"
 django = "~4.2.3"
 django-anymail = {extras = ["mailgun"], version = "~8.6"}
@@ -147,7 +146,7 @@ python = "~3.11"
 python-dotenv = "~0.20.0"
 redis = "~4.5.4"
 rules = "~3.3"
-stripe = "~3.5.0"
+stripe = "^8"
 uvicorn = "~0.17.6"
 websockets = "~10.3"
 whitenoise = "~6.2.0"
@@ -185,7 +184,6 @@ pytest-celery = "~0.0.0"
 pytest-django = "~4.5.2"
 pytest-xdist = {extras = ["psutil"], version = "~3.3.1"}
 types-redis = "~4.6.0.5"
-types-stripe = "~3.5.2.14"
 types-tqdm = "~4.66.0.2"
 vulture = "^2.9.1"
 

@@ -15,14 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Corporate app config."""
-from django.apps import (
-    AppConfig,
-)
-from django.conf import (
-    settings,
-)
-
-import stripe
+from django.apps import AppConfig
 
 
 class CorporateConfig(AppConfig):
@@ -30,7 +23,3 @@ class CorporateConfig(AppConfig):
 
     default_auto_field = "django.db.models.BigAutoField"
     name = "projectify.corporate"
-
-    def ready(self) -> None:
-        """Execute on loading the app."""
-        stripe.api_key = settings.STRIPE_SECRET_KEY

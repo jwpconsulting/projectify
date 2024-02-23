@@ -18,7 +18,7 @@
 import pytest
 from faker import Faker
 
-from projectify.corporate.services.customer import customer_cancel_subscription
+from projectify.corporate.services.stripe import customer_cancel_subscription
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 from projectify.user.services.internal import user_create

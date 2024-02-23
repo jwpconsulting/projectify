@@ -16,11 +16,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Callback views for Stripe."""
 import logging
+from typing import Literal, Union
 from uuid import UUID
 
-from django.conf import (
-    settings,
-)
 from django.http import (
     HttpRequest,
     HttpResponse,
@@ -38,20 +36,20 @@ from rest_framework.status import (
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
 
-from projectify.corporate.selectors.customer import (
+from projectify.corporate.lib.stripe import stripe_client
+from projectify.lib.settings import get_settings
+
+from ..selectors.customer import (
     customer_find_by_stripe_customer_id,
     customer_find_by_uuid,
 )
-from projectify.corporate.services.customer import (
+from ..services.stripe import (
     customer_activate_subscription,
     customer_cancel_subscription,
     customer_update_seats,
 )
 
 logger = logging.getLogger(__name__)
-
-
-endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
 
 
 def handle_session_completed(event: stripe.Event) -> None:
@@ -122,17 +120,19 @@ dispatch = {
 }
 
 
-# TODO Refactor this as a DRF view function so that we can get nicer
-# errors
-@csrf_exempt
-def stripe_webhook(request: HttpRequest) -> HttpResponse:
-    """Handle Stripe Webhooks."""
-    payload = request.body
-    sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
-    event: stripe.Event
+def _construct_event(
+    payload: bytes, sig_header: str
+) -> Union[stripe.Event, Literal["invalid_payload", "invalid_signature"]]:
+    """Construct an event, and maybe return errors."""
+    settings = get_settings()
+    endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
+    if endpoint_secret is None:
+        raise ValueError("Expected STRIPE_ENDPOINT_SECRET")
+
+    client = stripe_client()
 
     try:
-        event = stripe.Webhook.construct_event(
+        return client.construct_event(
             payload=payload,
             sig_header=sig_header,
             secret=endpoint_secret,
@@ -140,12 +140,15 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
     except ValueError:
         # Invalid payload
         logger.exception("Invalid payload")
-        return HttpResponse(status=HTTP_400_BAD_REQUEST)
-    except stripe.error.SignatureVerificationError:
+        return "invalid_payload"
+    except stripe.SignatureVerificationError:
         # Invalid signature
         logger.exception("Invalid signature")
-        return HttpResponse(status=HTTP_400_BAD_REQUEST)
+        return "invalid_signature"
 
+
+def _handle_event(event: stripe.Event) -> HttpResponse:
+    """Dispatch to event handler and return HttpResponse."""
     event_type: str = event.type
 
     handler = dispatch.get(event_type)
@@ -164,3 +167,21 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
         return HttpResponse(status=HTTP_500_INTERNAL_SERVER_ERROR)
 
     return HttpResponse(status=HTTP_200_OK)
+
+
+# TODO Refactor this as a DRF view function so that we can get nicer
+# errors
+@csrf_exempt
+def stripe_webhook(request: HttpRequest) -> HttpResponse:
+    """Construct event type using data coming from stripe."""
+    payload = request.body
+    sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
+
+    event = _construct_event(payload, sig_header)
+    match event:
+        case "invalid_payload":
+            return HttpResponse(status=HTTP_400_BAD_REQUEST)
+        case "invalid_signature":
+            return HttpResponse(status=HTTP_400_BAD_REQUEST)
+        case event:
+            return _handle_event(event)
