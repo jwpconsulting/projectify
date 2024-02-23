@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2022, 2023 JWP Consulting GK
+# Copyright (C) 2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -14,12 +14,4 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Corporate app config."""
-from django.apps import AppConfig
-
-
-class CorporateConfig(AppConfig):
-    """App config."""
-
-    default_auto_field = "django.db.models.BigAutoField"
-    name = "projectify.corporate"
+"""Projectify shared utilities."""

@@ -18,14 +18,14 @@
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
-import stripe
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
-from stripe.api_resources.billing_portal.session import (
+from stripe.billing_portal import (
     Session as BillingPortalSession,
 )
-from stripe.api_resources.checkout.session import Session
+from stripe.checkout import Session
 
+from projectify.corporate.lib.stripe import stripe_client
 from projectify.corporate.types import (
     CustomerSubscriptionStatus,
     WorkspaceFeatures,
@@ -69,18 +69,21 @@ def stripe_checkout_session_create(
     # customer.seats = seats
     # customer.save()
 
-    session = stripe.checkout.Session.create(
-        # TODO Update url
-        success_url=settings.FRONTEND_URL,
-        # TODO Update url
-        cancel_url=settings.FRONTEND_URL,
-        line_items=[
-            {"price": settings.STRIPE_PRICE_OBJECT, "quantity": seats},
-        ],
-        mode="subscription",
-        subscription_data={"trial_period_days": 31},
-        customer_email=who.email,
-        metadata={"customer_uuid": customer.uuid},
+    client = stripe_client()
+    session = client.checkout.sessions.create(
+        params={
+            # TODO Update url
+            "success_url": settings.FRONTEND_URL,
+            # TODO Update url
+            "cancel_url": settings.FRONTEND_URL,
+            "line_items": [
+                {"price": settings.STRIPE_PRICE_OBJECT, "quantity": seats},
+            ],
+            "mode": "subscription",
+            "subscription_data": {"trial_period_days": 31},
+            "customer_email": who.email,
+            "metadata": {"customer_uuid": str(customer.uuid)},
+        }
     )
     return session
 
@@ -101,9 +104,12 @@ def create_billing_portal_session_for_customer(
                 "please contact support."
             )
         )
-    return stripe.billing_portal.Session.create(
-        customer=customer.stripe_customer_id,
-        return_url=settings.FRONTEND_URL,
+    client = stripe_client()
+    return client.billing_portal.sessions.create(
+        params={
+            "customer": customer_id,
+            "return_url": settings.FRONTEND_URL,
+        }
     )
 
 
