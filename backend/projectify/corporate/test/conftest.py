@@ -107,6 +107,7 @@ def paid_customer(
     customer_activate_subscription(
         customer=unpaid_customer,
         stripe_customer_id=stripe_customer_id,
+        seats=1337,
     )
     return unpaid_customer
 

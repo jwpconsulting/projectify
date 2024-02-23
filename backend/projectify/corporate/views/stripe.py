@@ -17,7 +17,7 @@
 """Callback views for Stripe."""
 import logging
 from collections.abc import Callable, Mapping
-from typing import Any, Literal, Union
+from typing import Any, Literal, Optional, Union
 from uuid import UUID
 
 from django.utils.translation import gettext_lazy as _
@@ -40,9 +40,10 @@ from rest_framework.status import (
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
 
-from projectify.corporate.lib.stripe import stripe_client
 from projectify.lib.settings import get_settings
 
+from ..lib.stripe import stripe_client
+from ..models.customer import Customer
 from ..selectors.customer import (
     customer_find_by_stripe_customer_id,
     customer_find_by_uuid,
@@ -56,11 +57,27 @@ from ..services.stripe import (
 logger = logging.getLogger(__name__)
 
 
-def handle_session_completed(session: stripe.checkout.Session) -> None:
-    """Handle Stripe checkout.session.completed."""
-    if session.metadata is None:
+def _deserialize_stripe_customer(
+    customer: Union[None, str, stripe.Customer],
+) -> str:
+    """Get customer id string from various .customer properties."""
+    match customer:
+        case None:
+            raise serializers.ValidationError(
+                {"customer": _("Expected customer")},
+            )
+        case str():
+            return customer
+        case stripe.Customer():
+            return customer.id
+
+
+def _get_customer_from_metadata(session: stripe.checkout.Session) -> Customer:
+    """Try to get customer from metadata."""
+    metadata = session.metadata
+    if metadata is None:
         raise serializers.ValidationError({"metadata": _("Expected metadata")})
-    customer_uuid_raw = session.metadata.get("customer_uuid")
+    customer_uuid_raw: Optional[str] = metadata.get("customer_uuid")
 
     if customer_uuid_raw is None:
         raise serializers.ValidationError(
@@ -88,41 +105,64 @@ def handle_session_completed(session: stripe.checkout.Session) -> None:
         raise serializers.ValidationError(
             {"metadata": {"customer_uuid": _("No customer for this uuid")}}
         )
+    return customer
 
-    stripe_customer = session.customer
-    match stripe_customer:
-        case None:
+
+def handle_session_completed(session: stripe.checkout.Session) -> None:
+    """Handle Stripe checkout.session.completed."""
+    stripe_customer_id = _deserialize_stripe_customer(session.customer)
+    customer = _get_customer_from_metadata(session)
+
+    line_items = session.line_items
+
+    if line_items is None:
+        raise serializers.ValidationError(
+            {"line_items": _("Expected line items")}
+        )
+
+    match line_items.data:
+        case [item]:
+            pass
+        case []:
             raise serializers.ValidationError(
-                {"customer": _("Expected customer")},
+                {"items": _("Expected 1 line item")}
             )
-        case str():
-            stripe_customer_id = stripe_customer
-        case stripe.Customer():
-            stripe_customer_id = stripe_customer.id
+        case _:
+            raise serializers.ValidationError(
+                {"items": _("There are too many line items")}
+            )
+
+    seats = item.quantity
+    if seats is None:
+        raise serializers.ValidationError(
+            {"line_items.data.quantity": _("Expected value")}
+        )
 
     customer_activate_subscription(
         customer=customer,
         stripe_customer_id=stripe_customer_id,
+        seats=seats,
     )
 
 
-def handle_subscription_updated(subscription: stripe.Subscription) -> None:
-    """Handle Stripe customer.subscription.updated."""
-    stripe_customer = subscription.customer
-    match stripe_customer:
-        case str():
-            stripe_customer_id = stripe_customer
-        case stripe.Customer():
-            stripe_customer_id = stripe_customer.id
-
+def _get_customer_from_stripe_customer(
+    stripe_customer: Union[None, str, stripe.Customer],
+) -> Customer:
+    """Get our customer using their customer id."""
+    stripe_customer_id = _deserialize_stripe_customer(stripe_customer)
     customer = customer_find_by_stripe_customer_id(
         stripe_customer_id=stripe_customer_id
     )
-
     if customer is None:
         raise serializers.ValidationError(
             {"customer": _("Could not find customer for this id")}
         )
+    return customer
+
+
+def handle_subscription_updated(subscription: stripe.Subscription) -> None:
+    """Handle Stripe customer.subscription.updated."""
+    customer = _get_customer_from_stripe_customer(subscription.customer)
     items = subscription.items.data
 
     match items:
@@ -155,24 +195,8 @@ def handle_payment_failure(invoice: stripe.Invoice) -> None:
             invoice,
         )
         return
+    customer = _get_customer_from_stripe_customer(invoice.customer)
 
-    match invoice.customer:
-        case str() as stripe_customer_id:
-            pass
-        case stripe.Customer() as stripe_customer:
-            stripe_customer_id = stripe_customer.id
-        case None:
-            raise serializers.ValidationError(
-                {"customer": _("Expected a customer")}
-            )
-
-    customer = customer_find_by_stripe_customer_id(
-        stripe_customer_id=stripe_customer_id
-    )
-    if customer is None:
-        raise serializers.ValidationError(
-            {"customer": _("No customer found for this id")}
-        )
     customer_cancel_subscription(customer=customer)
     logger.info(
         "Customer %s has failed to renew payment for their account.", customer

@@ -45,7 +45,6 @@ from faker import Faker
 
 from projectify.corporate.services.stripe import (
     customer_activate_subscription,
-    customer_update_seats,
 )
 from projectify.user.models import User, UserInvite
 from projectify.workspace.models.label import Label
@@ -97,13 +96,9 @@ def workspace(faker: Faker, user: User) -> models.Workspace:
     )
     customer = workspace.customer
     # XXX use same fixture as in corporate/test/conftest.py
-    customer_activate_subscription(
-        customer=customer, stripe_customer_id="stripe_"
-    )
     # Give ourselves some more seats so that tests can pass
-    customer_update_seats(
-        customer=customer,
-        seats=10,
+    customer_activate_subscription(
+        customer=customer, stripe_customer_id="stripe_", seats=10
     )
     # TODO right now our tests depend on the workspace being paid for
     # We should also be able to test most actions here for a workspace that
@@ -124,7 +119,9 @@ def unrelated_workspace(
     customer = workspace.customer
     # XXX use same fixture as in corporate/test/conftest.py
     customer_activate_subscription(
-        customer=customer, stripe_customer_id="stripe_"
+        customer=customer,
+        stripe_customer_id="stripe_",
+        seats=10,
     )
     # TODO right now our tests depend on the workspace being paid for
     # We should also be able to test most actions here for a workspace that

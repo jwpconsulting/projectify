@@ -67,6 +67,9 @@ class TestStripeWebhook:
         event["data"]["object"].metadata.get.return_value = str(
             unpaid_customer.uuid
         )
+        line_item = mock.MagicMock()
+        line_item.quantity = 13131313
+        event["data"]["object"].line_items.data = [line_item]
 
         with mock.patch(
             "stripe._stripe_client.StripeClient.construct_event"
@@ -81,6 +84,7 @@ class TestStripeWebhook:
             == CustomerSubscriptionStatus.ACTIVE
         )
         assert unpaid_customer.stripe_customer_id == "unique_stripe_id"
+        assert unpaid_customer.seats == 13131313
 
     def test_customer_subscription_updated(
         self,
