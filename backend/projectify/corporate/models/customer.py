@@ -17,6 +17,7 @@
 """Customer model for corporate app."""
 import uuid
 from typing import (
+    TYPE_CHECKING,
     ClassVar,
     Self,
     cast,
@@ -83,6 +84,8 @@ class Customer(BaseModel):
         # Looks mysterious. Should probably uncomment these:
         # Justus 2023-12-03
         # XXX
+        # Hm?
+        # Justus 2024-02-23
         # unique=True,
         # db_index=True,
     )
@@ -90,6 +93,9 @@ class Customer(BaseModel):
     objects: ClassVar[CustomerQuerySet] = cast(  # type: ignore[assignment]
         CustomerQuerySet, CustomerQuerySet.as_manager()
     )
+
+    if TYPE_CHECKING:
+        workspace_id: int
 
     # TODO this should be a selector.
     # XXX this prop can have an n+1 as a side effect
@@ -101,3 +107,7 @@ class Customer(BaseModel):
         invites_qs = self.workspace.workspaceuserinvite_set.all()
         num_invites = len(invites_qs)
         return self.seats - num_users - num_invites
+
+    def __str__(self) -> str:
+        """Return string representation."""
+        return f"Workspace {self.workspace_id} customer"
