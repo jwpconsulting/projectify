@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Services for customer model."""
+from typing import Any
+
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
@@ -70,7 +72,7 @@ def stripe_checkout_session_create(
     """Generate the URL for a checkout session."""
     validate_perm("corporate.can_update_customer", who, customer.workspace)
 
-    if customer.stripe_customer_id is not None:
+    if customer.subscription_status == "ACTIVE":
         raise serializers.ValidationError(
             _("This customer already activated a subscription before")
         )
@@ -79,21 +81,43 @@ def stripe_checkout_session_create(
     if settings.STRIPE_PRICE_OBJECT is None:
         raise ValueError("Expected STRIPE_PRICE_OBJECT")
 
+    # XXX
+    # Stripe types have invariance problems here
+    line_items: list[Any] = [
+        {
+            "price": settings.STRIPE_PRICE_OBJECT,
+            "quantity": seats,
+        },
+    ]
     client = stripe_client()
-    session = client.checkout.sessions.create(
-        params={
-            "success_url": _billing_site_url(customer),
-            # Same as above, perhaps we need a different one?
-            "cancel_url": _billing_site_url(customer),
-            "line_items": [
-                {"price": settings.STRIPE_PRICE_OBJECT, "quantity": seats},
-            ],
-            "mode": "subscription",
-            "subscription_data": {"trial_period_days": 31},
-            "customer_email": who.email,
-            "metadata": {"customer_uuid": str(customer.uuid)},
-        }
-    )
+    match customer.stripe_customer_id:
+        case str():
+            session = client.checkout.sessions.create(
+                params={
+                    "success_url": _billing_site_url(customer),
+                    # Same as above, perhaps we need a different one?
+                    "cancel_url": _billing_site_url(customer),
+                    "line_items": line_items,
+                    "customer": customer.stripe_customer_id,
+                    "mode": "subscription",
+                    "subscription_data": {"trial_period_days": 31},
+                    "metadata": {"customer_uuid": str(customer.uuid)},
+                }
+            )
+        case None:
+            session = client.checkout.sessions.create(
+                params={
+                    "success_url": _billing_site_url(customer),
+                    # Same as above, perhaps we need a different one?
+                    "cancel_url": _billing_site_url(customer),
+                    "line_items": line_items,
+                    "customer_email": who.email,
+                    "mode": "subscription",
+                    "subscription_data": {"trial_period_days": 31},
+                    "metadata": {"customer_uuid": str(customer.uuid)},
+                }
+            )
+
     return session
 
 
