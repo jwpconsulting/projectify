@@ -1946,13 +1946,13 @@ tests = ["cython", "littleutils", "pygments", "pytest", "typeguard"]
 
 [[package]]
 name = "stripe"
-version = "7.14.0"
+version = "8.4.0"
 description = "Python bindings for the Stripe API"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "stripe-7.14.0-py2.py3-none-any.whl", hash = "sha256:f39def4dec42b374a39b110ab809c8130e14b7027ee40e3111a658e0f46709cb"},
-    {file = "stripe-7.14.0.tar.gz", hash = "sha256:556bfa86f8b298b666ff2caa0d754ee19ece52159d12a45ed7ddb02daadd1799"},
+    {file = "stripe-8.4.0-py2.py3-none-any.whl", hash = "sha256:6d889b6a8a5351c561538d23f4726b2cf1b3dc2591fd579a5dab236558dd776f"},
+    {file = "stripe-8.4.0.tar.gz", hash = "sha256:7f5941814d13a62e9a77e19fe3242b5aafc3063bdd9be6ae3e5a288404e6de60"},
 ]
 
 [package.dependencies]
@@ -2354,4 +2354,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "7554b8b31afc73ae2b65eeaedc0cee2a3ea2efdcb57d4f0eeef60d49e5b3b780"
+content-hash = "0b73006ff50edc7413fe46c7e911cda4125df90be3d608cdacb5e0d5f13ad902"
