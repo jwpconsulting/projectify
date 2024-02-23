@@ -119,7 +119,7 @@ reportUnknownMemberType = false
 reportUnusedImport = false
 
 [tool.poetry]
-name = "Projectify Backend"
+name = "projectify"
 version = "0.1.0"
 description = ""
 authors = ["Justus Perlwitz <justus@jwpconsulting.net>"]
