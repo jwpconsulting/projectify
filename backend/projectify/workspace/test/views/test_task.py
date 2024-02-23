@@ -47,10 +47,10 @@ class UnauthenticatedTestMixin:
     """Test that resource cannot be accessed without authorization."""
 
     def test_unauthenticated(
-        self, resource_url: str, test_client: APIClient
+        self, resource_url: str, rest_client: APIClient
     ) -> None:
         """Test we cannot access the resource."""
-        response: Response = test_client.options(resource_url)
+        response: Response = rest_client.options(resource_url)
         # It's not 403, because DRF does not return the www authenticate realm
         # as a response to an API user.
         # See
