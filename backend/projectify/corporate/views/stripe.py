@@ -201,19 +201,17 @@ def handle_subscription_updated(subscription: stripe.Subscription) -> None:
 
 def handle_payment_failure(invoice: stripe.Invoice) -> None:
     """Handle Stripe invoice.payment_failed."""
-    # TODO should this be handled as some kind of error?
-    if invoice.next_payment_attempt is not None:
-        logger.warn(
-            "next_payment_attempt was given for invoice.payment_failed: %s",
-            invoice,
-        )
-        return
-
     customer = _get_customer_from_stripe_customer(invoice.customer)
     if customer is None:
         logger.warn(
             "customer.subscription.updated event received, but no customer provded"
         )
+        return
+
+    # If there is a next payment attempt scheduled, we should not cancel
+    # immediately
+    if invoice.next_payment_attempt is not None:
+        logger.info("Payment failed, but will try charging %s again", customer)
         return
 
     customer_cancel_subscription(customer=customer)
