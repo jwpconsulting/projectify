@@ -252,9 +252,9 @@ def _handle_event(
 
     try:
         handler(event["data"]["object"])
-    except serializers.ValidationError:
+    except serializers.ValidationError as e:
         logger.exception("Invalid input for event %s", event_type)
-        return "bad_request"
+        raise e
     except Exception:
         logger.exception("Error encountered for %s", event_type)
         return "internal_server_error"
