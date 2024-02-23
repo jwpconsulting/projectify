@@ -483,9 +483,9 @@ six==1.16.0 ; python_version >= "3.11" and python_version < "3.12" \
 sqlparse==0.4.4 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:5430a4fe2ac7d0f93e66f1efc6e1338a41884b7ddf2a350cedd20ccc4d9d28f3 \
     --hash=sha256:d446183e84b8349fa3061f0fe7f06ca94ba65b426946ffebe6e3e8295332420c
-stripe==5.5.0 ; python_version >= "3.11" and python_version < "3.12" \
-    --hash=sha256:04a9732b37a46228ecf0e496163a3edd93596b0e6200029fbc48911638627e19 \
-    --hash=sha256:b4947da66dbb3de8969004ba6398f9a019c6b1b3ffe6aa88d5b07ac560a52b28
+stripe==6.7.0 ; python_version >= "3.11" and python_version < "3.12" \
+    --hash=sha256:2794ccc4b4c97070d1cab4385e1d2aad65937b4437b75cc1faf7d67dda8199f4 \
+    --hash=sha256:a453d6daa633f656297a9323c736fdcb53164418d643fdc30499a6d32ad7933c
 twisted-iocpsupport==1.0.4 ; python_version >= "3.11" and python_version < "3.12" and platform_system == "Windows" \
     --hash=sha256:0058c963c8957bcd3deda62122e89953c9de1e867a274facc9b15dde1a9f31e8 \
     --hash=sha256:0c1b5cf37f0b2d96cc3c9bc86fff16613b9f5d0ca565c96cf1f1fb8cfca4b81c \
