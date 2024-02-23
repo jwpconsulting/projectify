@@ -16,7 +16,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Callback views for Stripe."""
 import logging
-from typing import Literal, Union
+from collections.abc import Callable, Mapping
+from typing import Any, Literal, Union
 from uuid import UUID
 
 from django.utils.translation import gettext_lazy as _
@@ -38,7 +39,6 @@ from rest_framework.status import (
     HTTP_400_BAD_REQUEST,
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
-from stripe.checkout import Session
 
 from projectify.corporate.lib.stripe import stripe_client
 from projectify.lib.settings import get_settings
@@ -56,10 +56,8 @@ from ..services.stripe import (
 logger = logging.getLogger(__name__)
 
 
-def handle_session_completed(event: stripe.Event) -> None:
+def handle_session_completed(session: stripe.checkout.Session) -> None:
     """Handle Stripe checkout.session.completed."""
-    session: Session = event["data"]["object"]
-
     if session.metadata is None:
         raise serializers.ValidationError({"metadata": _("Expected metadata")})
     customer_uuid_raw = session.metadata.get("customer_uuid")
@@ -108,9 +106,8 @@ def handle_session_completed(event: stripe.Event) -> None:
     )
 
 
-def handle_subscription_updated(event: stripe.Event) -> None:
+def handle_subscription_updated(subscription: stripe.Subscription) -> None:
     """Handle Stripe customer.subscription.updated."""
-    subscription: stripe.Subscription = event["data"]["object"]
     stripe_customer = subscription.customer
     match stripe_customer:
         case str():
@@ -149,10 +146,8 @@ def handle_subscription_updated(event: stripe.Event) -> None:
     logger.info("Customer %s updated subscription: %s", customer, subscription)
 
 
-def handle_payment_failure(event: stripe.Event) -> None:
+def handle_payment_failure(invoice: stripe.Invoice) -> None:
     """Handle Stripe invoice.payment_failed."""
-    invoice: stripe.Invoice = event["data"]["object"]
-
     # TODO should this be handled as some kind of error?
     if invoice.next_payment_attempt is not None:
         logger.warn(
@@ -185,7 +180,7 @@ def handle_payment_failure(event: stripe.Event) -> None:
 
 
 # Handle events
-dispatch = {
+dispatch: Mapping[str, Callable[[Any], None]] = {
     "checkout.session.completed": handle_session_completed,
     "customer.subscription.updated": handle_subscription_updated,
     "invoice.payment_failed": handle_payment_failure,
@@ -219,7 +214,9 @@ def _construct_event(
         return "invalid_signature"
 
 
-def _handle_event(event: stripe.Event) -> Response:
+def _handle_event(
+    event: stripe.Event,
+) -> Literal["ok", "bad_request", "internal_server_error"]:
     """Dispatch to event handler and return HttpResponse."""
     event_type: str = event.type
 
@@ -227,18 +224,17 @@ def _handle_event(event: stripe.Event) -> Response:
 
     if handler is None:
         logger.warning("Unhandled event type %s", event_type)
-        return Response(status=HTTP_400_BAD_REQUEST)
+        return "bad_request"
 
     try:
-        handler(event)
+        handler(event["data"]["object"])
     except serializers.ValidationError:
         logger.exception("Invalid input for event %s", event_type)
-        return Response(status=HTTP_400_BAD_REQUEST)
+        return "bad_request"
     except Exception:
         logger.exception("Error encountered for %s", event_type)
-        return Response(status=HTTP_500_INTERNAL_SERVER_ERROR)
-
-    return Response(status=HTTP_200_OK)
+        return "internal_server_error"
+    return "ok"
 
 
 @csrf_exempt
@@ -256,4 +252,13 @@ def stripe_webhook(request: Request) -> Response:
         case "invalid_signature":
             return Response(status=HTTP_400_BAD_REQUEST)
         case event:
-            return _handle_event(event)
+            pass
+
+    result = _handle_event(event)
+    match result:
+        case "bad_request":
+            return Response(status=HTTP_400_BAD_REQUEST)
+        case "internal_server_error":
+            return Response(status=HTTP_500_INTERNAL_SERVER_ERROR)
+        case "ok":
+            return Response(status=HTTP_200_OK)
