@@ -53,6 +53,7 @@ def customer_update_seats(*, customer: Customer, seats: int) -> None:
         return None
     customer.seats = seats
     customer.save()
+    logger.info("Customer %s updated to %d seats", customer, seats)
 
 
 def customer_cancel_subscription(*, customer: Customer) -> None:

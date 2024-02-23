@@ -173,7 +173,11 @@ def handle_subscription_updated(subscription: stripe.Subscription) -> None:
             "customer.subscription.updated event received, but no customer provded"
         )
         return
-    items = subscription.items.data
+
+    client = stripe_client()
+    items = client.subscription_items.list(
+        params={"subscription": subscription.id},
+    ).data
 
     match items:
         case [item]:
@@ -193,7 +197,6 @@ def handle_subscription_updated(subscription: stripe.Subscription) -> None:
         )
 
     customer_update_seats(customer=customer, seats=seats)
-    logger.info("Customer %s updated subscription: %s", customer, subscription)
 
 
 def handle_payment_failure(invoice: stripe.Invoice) -> None:
