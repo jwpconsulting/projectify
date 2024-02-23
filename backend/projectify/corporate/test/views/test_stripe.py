@@ -28,6 +28,7 @@ from rest_framework.test import APIClient
 
 from projectify.corporate.types import CustomerSubscriptionStatus
 from projectify.settings.base import Base
+from pytest_types import DjangoAssertNumQueries
 
 from ...models import Customer
 
@@ -140,5 +141,27 @@ class TestStripeWebhook:
             == CustomerSubscriptionStatus.CANCELLED
         )
 
+    @mock.patch("projectify.corporate.lib.stripe.StripeClient")
+    def test_customer_subscription_deleted(
+        self,
+        stripe_client: mock.MagicMock,
+        paid_customer: Customer,
+        rest_client: APIClient,
+        resource_url: str,
+        django_assert_num_queries: DjangoAssertNumQueries,
+    ) -> None:
+        """Test cancelling Subscription when payment fails."""
+        header = {"HTTP_STRIPE_SIGNATURE": "dummy_sig"}
+        event = mock.MagicMock()
+        event.type = "customer.subscription.deleted"
+        event["data"]["object"].customer = paid_customer.stripe_customer_id
+        stripe_client.return_value.construct_event.return_value = event
 
-# TODO test customer.subscription.deleted
+        with django_assert_num_queries(2):
+            response = rest_client.post(resource_url, **header)
+        assert response.status_code == 200, response.data
+        paid_customer.refresh_from_db()
+        assert (
+            paid_customer.subscription_status
+            == CustomerSubscriptionStatus.CANCELLED
+        )

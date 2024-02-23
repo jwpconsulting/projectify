@@ -222,11 +222,30 @@ def handle_payment_failure(invoice: stripe.Invoice) -> None:
     )
 
 
+def handle_subscription_cancelled(subscription: stripe.Subscription) -> None:
+    """Handle Stripe customer_subscription.cancelled."""
+    # TODO check subscription.status
+    # https://docs.stripe.com/api/subscriptions/object#subscription_object-status
+    customer = _get_customer_from_stripe_customer(subscription.customer)
+    if customer is None:
+        logger.warn(
+            "customer.subscription.cancelled event received, "
+            "but no customer provided"
+        )
+        return
+
+    customer_cancel_subscription(customer=customer)
+    logger.info(
+        "Customer %s has failed to renew payment for their account.", customer
+    )
+
+
 # Handle events
 dispatch: Mapping[str, Callable[[Any], None]] = {
     "checkout.session.completed": handle_session_completed,
     "customer.subscription.updated": handle_subscription_updated,
     "invoice.payment_failed": handle_payment_failure,
+    "customer.subscription.deleted": handle_subscription_cancelled,
 }
 
 
