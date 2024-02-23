@@ -28,7 +28,6 @@ from django.contrib.auth.models import (
 )
 from django.db import (
     models,
-    transaction,
 )
 
 from projectify.corporate.types import CustomerSubscriptionStatus
@@ -96,17 +95,6 @@ class Customer(BaseModel):
 
     if TYPE_CHECKING:
         workspace_id: int
-
-    # TODO this should be a selector.
-    # XXX this prop can have an n+1 as a side effect
-    @property
-    @transaction.atomic
-    def seats_remaining(self) -> int:
-        """Return the number of seats remaining."""
-        num_users = len(self.workspace.users.all())
-        invites_qs = self.workspace.workspaceuserinvite_set.all()
-        num_invites = len(invites_qs)
-        return self.seats - num_users - num_invites
 
     def __str__(self) -> str:
         """Return string representation."""

@@ -17,14 +17,9 @@
 """Test corporate models."""
 
 import pytest
-from faker import Faker
 
 from projectify.corporate.models import Customer
-from projectify.user.models import User
 from projectify.workspace.models.workspace_user import WorkspaceUser
-from projectify.workspace.services.workspace_user_invite import (
-    workspace_user_invite_create,
-)
 
 
 @pytest.mark.django_db
@@ -90,19 +85,3 @@ class TestCustomer:
     def test_factory(self, unpaid_customer: Customer) -> None:
         """Test factory."""
         assert unpaid_customer.workspace
-
-    def test_seats_remaining(
-        self,
-        paid_customer: Customer,
-        faker: Faker,
-        user: User,
-    ) -> None:
-        """Test seats remaining."""
-        # user is already added, so there is already one seat used up
-        assert paid_customer.seats_remaining == paid_customer.seats - 1
-        workspace_user_invite_create(
-            who=user,
-            workspace=paid_customer.workspace,
-            email_or_user=faker.email(),
-        )
-        assert paid_customer.seats_remaining == paid_customer.seats - 2
