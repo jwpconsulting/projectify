@@ -2109,17 +2109,6 @@ cryptography = ">=35.0.0"
 types-pyOpenSSL = "*"
 
 [[package]]
-name = "types-stripe"
-version = "3.5.2.14"
-description = "Typing stubs for stripe"
-optional = false
-python-versions = "*"
-files = [
-    {file = "types-stripe-3.5.2.14.tar.gz", hash = "sha256:bcc020aa5ba9acd796b9f2ac21f044c8e377ce2c0f570057f0f64c4b4637bbe7"},
-    {file = "types_stripe-3.5.2.14-py3-none-any.whl", hash = "sha256:f5f1249f72a35ada1db95523edc7e8f7b543dc8434b2ff23eaa9ec2e251c2e59"},
-]
-
-[[package]]
 name = "types-tqdm"
 version = "4.66.0.2"
 description = "Typing stubs for tqdm"
@@ -2354,4 +2343,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "0b73006ff50edc7413fe46c7e911cda4125df90be3d608cdacb5e0d5f13ad902"
+content-hash = "4745f0fa24da855055ff2cabaffa28dceaae982d64c7da9c3009f8ede84a4ed7"

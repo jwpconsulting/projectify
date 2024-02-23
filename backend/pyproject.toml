@@ -106,8 +106,6 @@ exclude = [
     "projectify/premail/views.py",
     "projectify/premail/test/test_views.py",
     "projectify/premail/test/test_emails.py",
-    # pyright doesn't find stripe typings
-    "projectify/corporate/views/stripe.py",
 ]
 # Mypy doesn't complain about these, so it's fine
 reportUnknownParameterType = true
@@ -186,7 +184,6 @@ pytest-celery = "~0.0.0"
 pytest-django = "~4.5.2"
 pytest-xdist = {extras = ["psutil"], version = "~3.3.1"}
 types-redis = "~4.6.0.5"
-types-stripe = "~3.5.2.14"
 types-tqdm = "~4.66.0.2"
 vulture = "^2.9.1"
 
