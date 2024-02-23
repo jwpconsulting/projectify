@@ -264,7 +264,7 @@ def _handle_event(
 
     if handler is None:
         logger.warning("Unhandled event type %s", event_type)
-        return "bad_request"
+        return "ok"
 
     try:
         handler(event["data"]["object"])
