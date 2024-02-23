@@ -1946,18 +1946,18 @@ tests = ["cython", "littleutils", "pygments", "pytest", "typeguard"]
 
 [[package]]
 name = "stripe"
-version = "6.7.0"
+version = "7.14.0"
 description = "Python bindings for the Stripe API"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "stripe-6.7.0-py2.py3-none-any.whl", hash = "sha256:a453d6daa633f656297a9323c736fdcb53164418d643fdc30499a6d32ad7933c"},
-    {file = "stripe-6.7.0.tar.gz", hash = "sha256:2794ccc4b4c97070d1cab4385e1d2aad65937b4437b75cc1faf7d67dda8199f4"},
+    {file = "stripe-7.14.0-py2.py3-none-any.whl", hash = "sha256:f39def4dec42b374a39b110ab809c8130e14b7027ee40e3111a658e0f46709cb"},
+    {file = "stripe-7.14.0.tar.gz", hash = "sha256:556bfa86f8b298b666ff2caa0d754ee19ece52159d12a45ed7ddb02daadd1799"},
 ]
 
 [package.dependencies]
 requests = {version = ">=2.20", markers = "python_version >= \"3.0\""}
-typing-extensions = {version = ">=4.0.0", markers = "python_version >= \"3.7\""}
+typing-extensions = {version = ">=4.5.0", markers = "python_version >= \"3.7\""}
 
 [[package]]
 name = "toml"
@@ -2354,4 +2354,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "8b96e94bbc9da9768d9601b6770d97cb36152092948079111ac27091a2eaae65"
+content-hash = "7554b8b31afc73ae2b65eeaedc0cee2a3ea2efdcb57d4f0eeef60d49e5b3b780"
