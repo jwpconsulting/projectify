@@ -166,13 +166,25 @@
             )}
             size="medium"
         />
-    {:else if customer.subscription_status === "UNPAID"}
+    {:else if customer.subscription_status === "UNPAID" || customer.subscription_status === "CANCELLED"}
         <section>
             <p class="font-bold">
-                {$_("workspace-settings.billing.unpaid.status.title")}
+                {#if customer.subscription_status === "UNPAID"}
+                    {$_("workspace-settings.billing.unpaid.status.title")}
+                {:else}
+                    {$_("workspace-settings.billing.unpaid.cancelled.title")}
+                {/if}
             </p>
             <p>
-                {$_("workspace-settings.billing.unpaid.status.explanation")}
+                {#if customer.subscription_status === "UNPAID"}
+                    {$_(
+                        "workspace-settings.billing.unpaid.status.explanation",
+                    )}
+                {:else}
+                    {$_(
+                        "workspace-settings.billing.unpaid.cancelled.explanation",
+                    )}
+                {/if}
             </p>
         </section>
         <form

@@ -833,6 +833,11 @@ const messages: MessageDirectory = {
                     explanation:
                         "You are currently using this workspace in trial mode. To create a subscription and use all available features for this workspace, please continue using the checkout below. Alternatively, you can enter a coupon code further below.",
                 },
+                cancelled: {
+                    title: "Subscription cancelled",
+                    explanation:
+                        "Your subscription has been cancelled. If you want to reactivate your subscription, please resubscribe using the checkout form below.",
+                },
                 checkout: {
                     title: "Checkout",
                     seats: {
