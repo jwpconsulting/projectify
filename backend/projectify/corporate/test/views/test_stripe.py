@@ -54,7 +54,7 @@ class TestStripeWebhook:
     def test_checkout_session_completed(
         self,
         unpaid_customer: Customer,
-        client: APIClient,
+        rest_client: APIClient,
         resource_url: str,
     ) -> None:
         """Test the handling of a checkout session."""
@@ -69,8 +69,9 @@ class TestStripeWebhook:
             "stripe._stripe_client.StripeClient.construct_event"
         ) as construct_event:
             construct_event.return_value = event
-            response = client.post(resource_url, **header)
-        assert response.status_code == 200
+            # TODO count queries
+            response = rest_client.post(resource_url, **header)
+        assert response.status_code == 200, response.data
         unpaid_customer.refresh_from_db()
         assert (
             unpaid_customer.subscription_status
@@ -79,7 +80,10 @@ class TestStripeWebhook:
         assert unpaid_customer.stripe_customer_id == "unique_stripe_id"
 
     def test_customer_subscription_updated(
-        self, paid_customer: Customer, client: APIClient, resource_url: str
+        self,
+        paid_customer: Customer,
+        rest_client: APIClient,
+        resource_url: str,
     ) -> None:
         """Test customer.subscription.updated."""
         header = {"HTTP_STRIPE_SIGNATURE": "dummy_sig"}
@@ -94,15 +98,16 @@ class TestStripeWebhook:
             "stripe._stripe_client.StripeClient.construct_event"
         ) as construct_event:
             construct_event.return_value = event
-            response = client.post(resource_url, **header)
-        assert response.status_code == 200
+            # TODO count queries
+            response = rest_client.post(resource_url, **header)
+        assert response.status_code == 200, response.data
         paid_customer.refresh_from_db()
         assert paid_customer.seats == new_seats
 
     def test_customer_subscription_cancelled(
         self,
         paid_customer: Customer,
-        client: APIClient,
+        rest_client: APIClient,
         resource_url: str,
     ) -> None:
         """Test cancelling Subscription when payment fails."""
@@ -115,8 +120,9 @@ class TestStripeWebhook:
             "stripe._stripe_client.StripeClient.construct_event"
         ) as construct_event:
             construct_event.return_value = event
-            response = client.post(resource_url, **header)
-        assert response.status_code == 200
+            # TODO count queries
+            response = rest_client.post(resource_url, **header)
+        assert response.status_code == 200, response.data
         paid_customer.refresh_from_db()
         assert (
             paid_customer.subscription_status

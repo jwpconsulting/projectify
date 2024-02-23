@@ -19,10 +19,6 @@ import logging
 from typing import Literal, Union
 from uuid import UUID
 
-from django.http import (
-    HttpRequest,
-    HttpResponse,
-)
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import (
     csrf_exempt,
@@ -30,6 +26,8 @@ from django.views.decorators.csrf import (
 
 import stripe
 from rest_framework import serializers
+from rest_framework.request import Request
+from rest_framework.response import Response
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_400_BAD_REQUEST,
@@ -147,7 +145,7 @@ def _construct_event(
         return "invalid_signature"
 
 
-def _handle_event(event: stripe.Event) -> HttpResponse:
+def _handle_event(event: stripe.Event) -> Response:
     """Dispatch to event handler and return HttpResponse."""
     event_type: str = event.type
 
@@ -155,24 +153,24 @@ def _handle_event(event: stripe.Event) -> HttpResponse:
 
     if handler is None:
         logger.warning("Unhandled event type %s", event_type)
-        return HttpResponse(status=HTTP_400_BAD_REQUEST)
+        return Response(status=HTTP_400_BAD_REQUEST)
 
     try:
         handler(event)
     except serializers.ValidationError:
         logger.exception("Invalid input for event %s", event_type)
-        return HttpResponse(status=HTTP_400_BAD_REQUEST)
+        return Response(status=HTTP_400_BAD_REQUEST)
     except Exception:
         logger.exception("Error encountered for %s", event_type)
-        return HttpResponse(status=HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(status=HTTP_500_INTERNAL_SERVER_ERROR)
 
-    return HttpResponse(status=HTTP_200_OK)
+    return Response(status=HTTP_200_OK)
 
 
 # TODO Refactor this as a DRF view function so that we can get nicer
 # errors
 @csrf_exempt
-def stripe_webhook(request: HttpRequest) -> HttpResponse:
+def stripe_webhook(request: Request) -> Response:
     """Construct event type using data coming from stripe."""
     payload = request.body
     sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
@@ -180,8 +178,8 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
     event = _construct_event(payload, sig_header)
     match event:
         case "invalid_payload":
-            return HttpResponse(status=HTTP_400_BAD_REQUEST)
+            return Response(status=HTTP_400_BAD_REQUEST)
         case "invalid_signature":
-            return HttpResponse(status=HTTP_400_BAD_REQUEST)
+            return Response(status=HTTP_400_BAD_REQUEST)
         case event:
             return _handle_event(event)
