@@ -59,13 +59,11 @@ logger = logging.getLogger(__name__)
 
 def _deserialize_stripe_customer(
     customer: Union[None, str, stripe.Customer],
-) -> str:
+) -> Optional[str]:
     """Get customer id string from various .customer properties."""
     match customer:
         case None:
-            raise serializers.ValidationError(
-                {"customer": _("Expected customer")},
-            )
+            return None
         case str():
             return customer
         case stripe.Customer():
@@ -111,6 +109,13 @@ def _get_customer_from_metadata(session: stripe.checkout.Session) -> Customer:
 def handle_session_completed(session: stripe.checkout.Session) -> None:
     """Handle Stripe checkout.session.completed."""
     stripe_customer_id = _deserialize_stripe_customer(session.customer)
+
+    if stripe_customer_id is None:
+        logger.warn(
+            "A stripe checkout session was completed, but no customer was given"
+        )
+        return
+
     customer = _get_customer_from_metadata(session)
 
     line_items = session.line_items
@@ -147,9 +152,11 @@ def handle_session_completed(session: stripe.checkout.Session) -> None:
 
 def _get_customer_from_stripe_customer(
     stripe_customer: Union[None, str, stripe.Customer],
-) -> Customer:
+) -> Optional[Customer]:
     """Get our customer using their customer id."""
     stripe_customer_id = _deserialize_stripe_customer(stripe_customer)
+    if stripe_customer_id is None:
+        return None
     customer = customer_find_by_stripe_customer_id(
         stripe_customer_id=stripe_customer_id
     )
@@ -163,6 +170,11 @@ def _get_customer_from_stripe_customer(
 def handle_subscription_updated(subscription: stripe.Subscription) -> None:
     """Handle Stripe customer.subscription.updated."""
     customer = _get_customer_from_stripe_customer(subscription.customer)
+    if customer is None:
+        logger.warn(
+            "customer.subscription.updated event received, but no customer provded"
+        )
+        return
     items = subscription.items.data
 
     match items:
@@ -195,7 +207,13 @@ def handle_payment_failure(invoice: stripe.Invoice) -> None:
             invoice,
         )
         return
+
     customer = _get_customer_from_stripe_customer(invoice.customer)
+    if customer is None:
+        logger.warn(
+            "customer.subscription.updated event received, but no customer provded"
+        )
+        return
 
     customer_cancel_subscription(customer=customer)
     logger.info(
