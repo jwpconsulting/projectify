@@ -35,10 +35,12 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture(autouse=True)
-def patch_stripe_settings(settings: Base) -> None:
+def patch_stripe_settings(
+    settings: Base, stripe_secret_key: str, stripe_endpoint_secret: str
+) -> None:
     """Patch stripe settings."""
-    settings.STRIPE_SECRET_KEY = "mock-test-value"
-    settings.STRIPE_ENDPOINT_SECRET = "mock-test-value"
+    settings.STRIPE_SECRET_KEY = stripe_secret_key
+    settings.STRIPE_ENDPOINT_SECRET = stripe_endpoint_secret
 
 
 class TestStripeWebhook:
