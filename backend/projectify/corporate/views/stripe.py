@@ -183,5 +183,5 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
             return HttpResponse(status=HTTP_400_BAD_REQUEST)
         case "invalid_signature":
             return HttpResponse(status=HTTP_400_BAD_REQUEST)
-        case stripe.Event():
+        case event:
             return _handle_event(event)
