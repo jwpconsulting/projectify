@@ -70,7 +70,7 @@ class WorkspaceBoardSectionCreate(APIView):
         workspace_board = workspace_board_find_by_workspace_board_uuid(
             workspace_board_uuid=workspace_board_uuid,
             who=request.user,
-            include_archived=True,
+            archived=False,
         )
         if workspace_board is None:
             raise serializers.ValidationError(
