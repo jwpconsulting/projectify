@@ -25,8 +25,8 @@ from projectify.workspace.services.workspace import workspace_create
 
 from ...models.coupon import Coupon
 from ...models.customer import Customer
+from ...selectors.customer import customer_check_active_for_workspace
 from ...services.coupon import coupon_create, coupon_redeem
-from ...services.customer import customer_check_active_for_workspace
 
 pytestmark = pytest.mark.django_db
 

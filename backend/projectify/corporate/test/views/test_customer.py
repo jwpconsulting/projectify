@@ -131,7 +131,7 @@ class TestWorkspaceCheckoutSessionCreate:
             "corporate:customers:create-checkout-session",
             args=(str(unpaid_customer.workspace.uuid),),
         )
-        with django_assert_num_queries(3):
+        with django_assert_num_queries(7):
             response = rest_user_client.post(
                 resource_url,
                 data={"seats": 1337},
@@ -176,7 +176,7 @@ class TestWorkspaceCheckoutSessionCreate:
             "corporate:customers:create-checkout-session",
             args=(str(paid_customer.workspace.uuid),),
         )
-        with django_assert_num_queries(3):
+        with django_assert_num_queries(6):
             response = rest_user_client.post(
                 resource_url,
                 data={"seats": 1337},

@@ -33,7 +33,7 @@ from ..selectors.customer import customer_find_by_workspace_uuid
 from ..serializers import CustomerSerializer
 from ..services.customer import (
     create_billing_portal_session_for_customer,
-    stripe_checkout_session_create,
+    customer_create_stripe_checkout_session,
 )
 
 logger = logging.getLogger(__name__)
@@ -87,7 +87,7 @@ class WorkspaceCheckoutSessionCreate(APIView):
             )
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        session = stripe_checkout_session_create(
+        session = customer_create_stripe_checkout_session(
             customer=customer,
             who=request.user,
             seats=serializer.validated_data["seats"],

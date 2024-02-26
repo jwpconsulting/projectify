@@ -25,7 +25,7 @@ from pytest_types import DjangoAssertNumQueries
 
 from ...models.coupon import Coupon
 from ...models.customer import Customer
-from ...services.customer import customer_check_active_for_workspace
+from ...selectors.customer import customer_check_active_for_workspace
 
 
 @pytest.mark.django_db
