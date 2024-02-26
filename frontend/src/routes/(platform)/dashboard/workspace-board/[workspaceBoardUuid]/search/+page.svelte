@@ -25,17 +25,17 @@
     import type { PageData } from "./$types";
 
     export let data: PageData;
-    const { workspaceBoard, tasks, search } = data;
+    const { workspaceBoard } = data;
     $: backUrl = getDashboardWorkspaceBoardUrl(workspaceBoard.uuid);
 </script>
 
-{#await tasks then tasks}
+{#await data.tasks then tasks}
     {#if tasks.length}
         <div class="flex flex-col gap-6 px-4 pb-6 pt-4">
             <div class="flex flex-col gap-2">
                 <h1 class="text-xl font-bold">
                     {$_("dashboard.search.found.title", {
-                        values: { search },
+                        values: { search: data.search },
                     })}
                 </h1>
                 <p>
@@ -66,7 +66,7 @@
             >
                 <p class="font-bold">
                     {$_("dashboard.search.not-found.title", {
-                        values: { search },
+                        values: { search: data.search },
                     })}
                 </p>
                 <p class="max-w-md">
