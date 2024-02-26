@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -17,19 +17,21 @@
  */
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import Dashboard from "$lib/components/dashboard/Dashboard.svelte";
 import {
     mobileParameters,
     workspaceBoard,
     workspaceBoardSection,
 } from "$lib/storybook";
+import Dashboard from "$routes/(platform)/dashboard/workspace-board/[workspaceBoardUuid]/+page.svelte";
 
 const meta: Meta<Dashboard> = {
     component: Dashboard,
     args: {
-        workspaceBoard: {
-            ...workspaceBoard,
-            workspace_board_sections: [workspaceBoardSection],
+        data: {
+            workspaceBoard: {
+                ...workspaceBoard,
+                workspace_board_sections: [workspaceBoardSection],
+            },
         },
     },
 };

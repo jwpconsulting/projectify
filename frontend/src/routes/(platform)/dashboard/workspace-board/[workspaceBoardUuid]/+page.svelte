@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -16,10 +16,24 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    import Dashboard from "$lib/components/dashboard/Dashboard.svelte";
+    import { _ } from "svelte-i18n";
+
+    import WorkspaceBoardSections from "$lib/components/dashboard/WorkspaceBoardSections.svelte";
+    import Button from "$lib/funabashi/buttons/Button.svelte";
     import { currentWorkspaceBoard } from "$lib/stores/dashboard";
+    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
+    import { openConstructiveOverlay } from "$lib/stores/globalUi";
 
     import type { PageData } from "./$types";
+
+    async function onAddNewSection() {
+        await openConstructiveOverlay({
+            kind: "createWorkspaceBoardSection",
+            workspaceBoard,
+        });
+    }
+
+    $: hasSections = workspaceBoard.workspace_board_sections.length > 0;
 
     export let data: PageData;
 
@@ -28,4 +42,19 @@
     $: workspaceBoard = $currentWorkspaceBoard ?? workspaceBoard;
 </script>
 
-<Dashboard {workspaceBoard} />
+<!-- Sections -->
+<div class="flex flex-col gap-4 p-2">
+    <WorkspaceBoardSections {workspaceBoard} />
+</div>
+
+{#if hasSections && $currentWorkspaceUserCan("create", "workspaceBoardSection")}
+    <div class="sticky bottom-0 self-end p-2">
+        <Button
+            style={{ kind: "primary" }}
+            label={$_("dashboard.actions.add-workspace-board-section")}
+            size="medium"
+            action={{ kind: "button", action: onAddNewSection }}
+            color="blue"
+        />
+    </div>
+{/if}

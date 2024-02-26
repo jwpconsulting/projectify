@@ -170,7 +170,7 @@ const task2: Task = {
     title: "A second task, worthy of being a task, and having a wordy title",
     created: "",
     modified: "",
-    uuid: nullUuid,
+    uuid: "00000000-0000-0000-0000-000000000001",
     due_date: "2022-08-01",
     _order: 0,
     number: 1337,

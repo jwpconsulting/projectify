@@ -28,6 +28,7 @@
         toggleUserExpandOpen,
         userExpandOpen,
     } from "$lib/stores/dashboard";
+    import { user } from "$lib/stores/user";
     import type {
         Label,
         Task,
@@ -38,8 +39,7 @@
         WorkspaceDetail,
         WorkspaceQuota,
     } from "$lib/types/workspace";
-
-    import Dashboard from "../dashboard/Dashboard.svelte";
+    import Dashboard from "$routes/(platform)/dashboard/workspace-board/[workspaceBoardUuid]/+page.svelte";
 
     // We are cheating a bit here
     const quota: WorkspaceQuota = {
@@ -218,7 +218,9 @@
                 <Full {workspace} />
             </div>
             <div class="min-w-0 grow">
-                <Dashboard {workspaceBoard} />
+                {#if $user}
+                    <Dashboard data={{ user: $user, workspaceBoard }} />
+                {/if}
             </div>
         </div>
     </div>
