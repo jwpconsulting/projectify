@@ -166,7 +166,7 @@ django-debug-toolbar = "^4.3.0"
 # Nix 23.11 hatchling is still 1.18.0
 hatchling = "^1.21.1"
 
-ipython = "~8.10.0"
+ipython = "~8.22"
 pdbpp = "~0.10.3"
 ruff = "^0.1.6"
 
