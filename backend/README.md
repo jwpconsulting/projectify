@@ -91,6 +91,8 @@ When updating a package installed by poetry, make sure to recreate and check in
 requirements.txt by running
 
 ```
+poetry lock --no-update
+poetry install --sync
 bin/update-requirements
 git add requirements.txt
 # Maybe git commit here

@@ -433,9 +433,9 @@ pillow==10.2.0 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:edca80cbfb2b68d7b56930b84a0e45ae1694aeba0541f798e908a49d66b837f1 \
     --hash=sha256:f379abd2f1e3dddb2b61bc67977a6b5a0a3f7485538bcc6f39ec76163891ee48 \
     --hash=sha256:fe4c15f6c9285dc54ce6553a3ce908ed37c8f3825b5a51a15c91442bb955b868
-prompt-toolkit==3.0.39 ; python_version >= "3.11" and python_version < "3.12" \
-    --hash=sha256:04505ade687dc26dc4284b1ad19a83be2f2afe83e7a828ace0c72f3a1df72aac \
-    --hash=sha256:9dffbe1d8acf91e3de75f3b544e4842382fc06c6babe903ac9acb74dc6e08d88
+prompt-toolkit==3.0.43 ; python_version >= "3.11" and python_version < "3.12" \
+    --hash=sha256:3527b7af26106cbc65a040bcc84839a3566ec1b051bb0bfe953631e704b0ff7d \
+    --hash=sha256:a11a29cb3bf0a28a387fe5122cdb649816a957cd9261dcedf8c9f1fef33eacf6
 psycopg-c==3.1.18 ; implementation_name != "pypy" and python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:ffff0c4a9c0e0b7aadb1acb7b61eb8f886365dd8ef00120ce14676235846ba73
 psycopg[c]==3.1.18 ; python_version >= "3.11" and python_version < "3.12" \
