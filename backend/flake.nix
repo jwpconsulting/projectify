@@ -68,6 +68,15 @@
               buildInputs = (old.buildInputs or [ ]) ++ [ super.hatchling super.setuptools ];
             }
           );
+          cryptography = super.cryptography.overridePythonAttrs (old: rec {
+            cargoDeps = pkgs.rustPlatform.fetchCargoTarball {
+              inherit (old) src;
+              name = "${old.pname}-${old.version}";
+              sourceRoot = "${old.pname}-${old.version}/${cargoRoot}";
+              sha256 = "sha256-qaXQiF1xZvv4sNIiR2cb5TfD7oNiYdvUwcm37nh2P2M=";
+            };
+            cargoRoot = "src/rust";
+          });
         });
         poetryEnv = mkPoetryEnv {
           inherit projectDir;
