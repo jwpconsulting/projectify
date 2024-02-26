@@ -42,10 +42,16 @@ export async function load({
 
     // XXX Might be able to do this asynchronously, meaning we don't need to wait
     // for it to finish here?
-    const workspaces = await currentWorkspaces.load({ fetch });
-    if (!workspaces) {
-        error(500, "Unable to fetch workspaces");
-    }
+    currentWorkspaces
+        .load({ fetch })
+        .then((workspaces) => {
+            if (!workspaces) {
+                error(500, "Unable to fetch workspaces");
+            }
+        })
+        .catch((error) =>
+            console.error(`Error when fetching workspaces: ${error}`),
+        );
 
     return { user: currentUser };
 }
