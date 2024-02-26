@@ -18,13 +18,30 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import WorkspaceBoardSections from "$lib/components/dashboard/WorkspaceBoardSections.svelte";
+    import WorkspaceBoardSectionC from "$lib/figma/cards/WorkspaceBoardSection.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import { currentWorkspaceBoard } from "$lib/stores/dashboard";
+    import {
+        currentWorkspaceBoard,
+        currentWorkspaceBoardSections,
+    } from "$lib/stores/dashboard";
     import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
+    import type { WorkspaceBoardSectionWithTasks } from "$lib/types/workspace";
 
     import type { PageData } from "./$types";
+
+    export let data: PageData;
+
+    let { workspaceBoard } = data;
+
+    $: workspaceBoard = $currentWorkspaceBoard ?? workspaceBoard;
+
+    $: hasSections = workspaceBoard.workspace_board_sections.length > 0;
+
+    let workspaceBoardSections: WorkspaceBoardSectionWithTasks[];
+    $: workspaceBoardSections =
+        $currentWorkspaceBoardSections ??
+        workspaceBoard.workspace_board_sections;
 
     async function onAddNewSection() {
         await openConstructiveOverlay({
@@ -32,19 +49,29 @@
             workspaceBoard,
         });
     }
-
-    $: hasSections = workspaceBoard.workspace_board_sections.length > 0;
-
-    export let data: PageData;
-
-    let { workspaceBoard } = data;
-
-    $: workspaceBoard = $currentWorkspaceBoard ?? workspaceBoard;
 </script>
 
 <!-- Sections -->
 <div class="flex flex-col gap-4 p-2">
-    <WorkspaceBoardSections {workspaceBoard} />
+    {#each workspaceBoardSections as workspaceBoardSection (workspaceBoardSection.uuid)}
+        <WorkspaceBoardSectionC {workspaceBoard} {workspaceBoardSection} />
+    {:else}
+        <section
+            class="py-2 px-4 gap-8 bg-foreground rounded-lg flex flex-col"
+        >
+            <p>
+                {$_("dashboard.no-sections.message")}
+            </p>
+            <Button
+                style={{ kind: "primary" }}
+                color="blue"
+                size="small"
+                grow={false}
+                label={$_("dashboard.no-sections.prompt")}
+                action={{ kind: "button", action: onAddNewSection }}
+            />
+        </section>
+    {/each}
 </div>
 
 {#if hasSections && $currentWorkspaceUserCan("create", "workspaceBoardSection")}
