@@ -76,7 +76,8 @@ class Development(Base):
     ALLOWED_HOSTS = os.getenv(
         "ALLOWED_HOSTS", ".localhost,127.0.0.1,[::1]"
     ).split(",")
-    INTERNAL_IPS = ("127.0.0.1",)
+    # Add the IP you are connecting from to get SQL debug HTTP headers
+    INTERNAL_IPS = os.getenv("INTERNAL_IPS", "127.0.0.1").split(",")
 
     FRONTEND_URL = "http://localhost:3000"
 
