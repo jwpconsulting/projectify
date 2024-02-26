@@ -148,13 +148,22 @@ class TestWorkspaceBoardReadUpdateDelete:
         rest_user_client: APIClient,
         resource_url: str,
         workspace_user: WorkspaceUser,
+        workspace_board: WorkspaceBoard,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating a ws board."""
+        # Can't find it, when not archived
+        response = rest_user_client.delete(resource_url)
+        assert response.status_code == 404, response.content
+
+        workspace_board_archive(
+            workspace_board=workspace_board,
+            who=workspace_user.user,
+            archived=True,
+        )
+
         with django_assert_num_queries(5):
-            response = rest_user_client.delete(
-                resource_url,
-            )
+            response = rest_user_client.delete(resource_url)
             assert (
                 response.status_code == status.HTTP_204_NO_CONTENT
             ), response.data

@@ -38,7 +38,7 @@ Limitations for a trial workspace are
 from functools import partial
 from typing import Literal, TypedDict, Union
 
-from projectify.corporate.services.customer import (
+from projectify.corporate.selectors.customer import (
     customer_check_active_for_workspace,
 )
 from projectify.workspace.models.chat_message import ChatMessage

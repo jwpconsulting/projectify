@@ -24,9 +24,11 @@ from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.workspace_user import WorkspaceUser
 
 from ...models import Customer
+from ...selectors.customer import (
+    customer_check_active_for_workspace,
+)
 from ...services.customer import (
     create_billing_portal_session_for_customer,
-    customer_check_active_for_workspace,
 )
 from ...services.stripe import (
     customer_activate_subscription,

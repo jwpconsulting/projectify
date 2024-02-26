@@ -23,18 +23,29 @@ import { unwrap } from "$lib/utils/type";
 import type { PageLoadEvent } from "./$types";
 
 interface Data {
-    tasks: TaskWithWorkspaceBoardSection[];
+    tasks: Promise<TaskWithWorkspaceBoardSection[]>;
     search: SearchInput;
 }
-
-export async function load({ url, parent }: PageLoadEvent): Promise<Data> {
-    const { workspaceBoard } = await parent();
-    const { workspace_board_sections: workspaceBoardSections } =
-        workspaceBoard;
+export function load({ url, parent }: PageLoadEvent): Data {
     const search: SearchInput = url.searchParams.get("search") ?? undefined;
-    const tasks = searchTasks(
-        unwrap(workspaceBoardSections, "Expected workspaceBoardSections"),
-        search,
+    const tasks = new Promise<TaskWithWorkspaceBoardSection[]>(
+        (resolve, reject) => {
+            parent()
+                .then(({ workspaceBoard }) => {
+                    const {
+                        workspace_board_sections: workspaceBoardSections,
+                    } = workspaceBoard;
+                    const tasks = searchTasks(
+                        unwrap(
+                            workspaceBoardSections,
+                            "Expected workspaceBoardSections",
+                        ),
+                        search,
+                    );
+                    resolve(tasks);
+                })
+                .catch(reject);
+        },
     );
     return { tasks, search };
 }

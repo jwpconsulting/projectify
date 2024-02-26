@@ -108,9 +108,9 @@ def test_workspace_board_find_by_workspace_board_uuid(
         )
         is None
     )
-    # Passing include_archived will make it show up again
+    # Passing archived will make it show up again
     assert workspace_board_find_by_workspace_board_uuid(
         workspace_board_uuid=workspace_board.uuid,
         who=workspace_user.user,
-        include_archived=True,
+        archived=True,
     )

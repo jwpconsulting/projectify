@@ -15,8 +15,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Services for customer model."""
+import logging
 from typing import Any
 
+from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
@@ -27,16 +29,15 @@ from stripe.billing_portal import (
 from stripe.checkout import Session
 
 from projectify.corporate.lib.stripe import stripe_client
-from projectify.corporate.types import (
-    CustomerSubscriptionStatus,
-    WorkspaceFeatures,
-)
 from projectify.lib.auth import validate_perm
 from projectify.lib.settings import get_settings
 from projectify.user.models import User
 from projectify.workspace.models.workspace import Workspace
+from projectify.workspace.selectors.quota import workspace_quota_for
 
 from ..models import Customer
+
+logger = logging.getLogger(__name__)
 
 
 # Create
@@ -63,18 +64,35 @@ def _billing_site_url(customer: Customer) -> str:
     )
 
 
-def stripe_checkout_session_create(
+@transaction.atomic
+def customer_create_stripe_checkout_session(
     *,
     customer: Customer,
     who: User,
     seats: int,
 ) -> Session:
     """Generate the URL for a checkout session."""
-    validate_perm("corporate.can_update_customer", who, customer.workspace)
+    workspace = customer.workspace
+    validate_perm("corporate.can_update_customer", who, workspace)
 
     if customer.subscription_status == "ACTIVE":
         raise serializers.ValidationError(
             _("This customer already activated a subscription before")
+        )
+
+    # Ensure we can't ask for too few seats
+    quota = workspace_quota_for(
+        resource="WorkspaceUserAndInvite", workspace=workspace
+    )
+    if quota.current is None:
+        logger.info("Customer for workspace %s has no seat quota")
+    elif seats < quota.current:
+        raise serializers.ValidationError(
+            {
+                "seats": _(
+                    "Must request at least as many seats as current amount of workspace users and pending workspace user invites"
+                )
+            }
         )
 
     settings = get_settings()
@@ -142,27 +160,3 @@ def create_billing_portal_session_for_customer(
             "return_url": _billing_site_url(customer),
         }
     )
-
-
-# TODO permissions needed?
-# TODO check whether a workspace is in trial, then check further conditions
-# TODO rename customer_check_workspace_features
-def customer_check_active_for_workspace(
-    *, workspace: Workspace
-) -> WorkspaceFeatures:
-    """Check if a customer is active for a given workspace."""
-    try:
-        customer = workspace.customer
-    except Customer.DoesNotExist:
-        raise ValueError(f"No customer found for workspace {workspace}")
-    match customer.subscription_status:
-        case CustomerSubscriptionStatus.ACTIVE:
-            return "full"
-        case CustomerSubscriptionStatus.CUSTOM:
-            return "full"
-        case CustomerSubscriptionStatus.UNPAID:
-            return "trial"
-        case CustomerSubscriptionStatus.CANCELLED:
-            return "trial"
-        case status:
-            raise ValueError(f"Unknown status {status}")

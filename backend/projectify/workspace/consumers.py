@@ -166,7 +166,6 @@ class WorkspaceBoardConsumer(BaseConsumer):
         return workspace_board_find_by_workspace_board_uuid(
             workspace_board_uuid=uuid,
             who=user,
-            include_archived=True,
         )
 
     def workspace_board_change(self, event: ConsumerEvent) -> None:

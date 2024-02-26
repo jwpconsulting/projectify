@@ -111,6 +111,7 @@
                             label={$_(
                                 "navigation.footer.nav.company.corporate-info",
                             )}
+                            openBlank
                         />
                     </li>
                 </ul>

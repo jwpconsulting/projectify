@@ -22,6 +22,12 @@ from uuid import UUID
 from projectify.corporate.models import Customer
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
+from projectify.workspace.models.workspace import Workspace
+
+from ..types import (
+    CustomerSubscriptionStatus,
+    WorkspaceFeatures,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -67,3 +73,27 @@ def customer_find_by_workspace_uuid(
 
     validate_perm("corporate.can_read_customer", who, customer.workspace)
     return customer
+
+
+# TODO permissions needed?
+# TODO check whether a workspace is in trial, then check further conditions
+# TODO rename customer_check_workspace_features
+def customer_check_active_for_workspace(
+    *, workspace: Workspace
+) -> WorkspaceFeatures:
+    """Check if a customer is active for a given workspace."""
+    try:
+        customer = workspace.customer
+    except Customer.DoesNotExist:
+        raise ValueError(f"No customer found for workspace {workspace}")
+    match customer.subscription_status:
+        case CustomerSubscriptionStatus.ACTIVE:
+            return "full"
+        case CustomerSubscriptionStatus.CUSTOM:
+            return "full"
+        case CustomerSubscriptionStatus.UNPAID:
+            return "trial"
+        case CustomerSubscriptionStatus.CANCELLED:
+            return "trial"
+        case status:
+            raise ValueError(f"Unknown status {status}")

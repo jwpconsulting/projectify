@@ -25,18 +25,32 @@
     import type { PageData } from "./$types";
 
     export let data: PageData;
-    const { workspaceBoard, tasks, search } = data;
+    const { workspaceBoard } = data;
     $: backUrl = getDashboardWorkspaceBoardUrl(workspaceBoard.uuid);
 </script>
 
-{#if tasks.length}
-    <div class="flex flex-col gap-6 px-4 pb-6 pt-4">
-        <div class="flex flex-col gap-2">
-            <h1 class="text-xl font-bold">
-                {$_("dashboard.search.found.title", {
-                    values: { search },
-                })}
-            </h1>
+{#await data.tasks then tasks}
+    {#if tasks.length}
+        <div class="flex flex-col gap-6 px-4 pb-6 pt-4">
+            <div class="flex flex-col gap-2">
+                <h1 class="text-xl font-bold">
+                    {$_("dashboard.search.found.title", {
+                        values: { search: data.search },
+                    })}
+                </h1>
+                <p>
+                    <Anchor
+                        label={$_("dashboard.search.found.back")}
+                        size="normal"
+                        href={backUrl}
+                    />
+                </p>
+            </div>
+            <div class="flex flex-col">
+                {#each tasks as task}
+                    <TaskCard {task} {workspaceBoard} />
+                {/each}
+            </div>
             <p>
                 <Anchor
                     label={$_("dashboard.search.found.back")}
@@ -45,37 +59,27 @@
                 />
             </p>
         </div>
-        <div class="flex flex-col">
-            {#each tasks as task}
-                <TaskCard {task} {workspaceBoard} />
-            {/each}
+    {:else}
+        <div class="flex items-center justify-center py-6">
+            <div
+                class="flex flex-col gap-4 rounded-md bg-base-100 p-6 shadow-sm"
+            >
+                <p class="font-bold">
+                    {$_("dashboard.search.not-found.title", {
+                        values: { search: data.search },
+                    })}
+                </p>
+                <p class="max-w-md">
+                    {$_("dashboard.search.not-found.explanation")}
+                </p>
+                <p>
+                    <Anchor
+                        label={$_("dashboard.search.not-found.back")}
+                        size="normal"
+                        href={backUrl}
+                    />
+                </p>
+            </div>
         </div>
-        <p>
-            <Anchor
-                label={$_("dashboard.search.found.back")}
-                size="normal"
-                href={backUrl}
-            />
-        </p>
-    </div>
-{:else}
-    <div class="flex items-center justify-center py-6">
-        <div class="flex flex-col gap-4 rounded-md bg-base-100 p-6 shadow-sm">
-            <p class="font-bold">
-                {$_("dashboard.search.not-found.title", {
-                    values: { search },
-                })}
-            </p>
-            <p class="max-w-md">
-                {$_("dashboard.search.not-found.explanation")}
-            </p>
-            <p>
-                <Anchor
-                    label={$_("dashboard.search.not-found.back")}
-                    size="normal"
-                    href={backUrl}
-                />
-            </p>
-        </div>
-    </div>
-{/if}
+    {/if}
+{/await}

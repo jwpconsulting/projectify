@@ -135,6 +135,7 @@ class WorkspaceBoardReadUpdateDelete(APIView):
         workspace_board = workspace_board_find_by_workspace_board_uuid(
             who=request.user,
             workspace_board_uuid=workspace_board_uuid,
+            archived=True,
         )
         if workspace_board is None:
             raise NotFound(_("No workspace board found for this uuid"))
@@ -182,17 +183,21 @@ class WorkspaceBoardArchive(APIView):
         """Process request."""
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
+        archived = serializer.validated_data["archived"]
         workspace_board = workspace_board_find_by_workspace_board_uuid(
             workspace_board_uuid=workspace_board_uuid,
             who=request.user,
-            include_archived=True,
+            archived=not archived,
         )
         if workspace_board is None:
-            raise NotFound(_("No workspace board found for this UUID"))
+            raise NotFound(
+                _(
+                    "No workspace board found for this UUID where archived={}"
+                ).format(not archived)
+            )
         workspace_board_archive(
             workspace_board=workspace_board,
-            archived=data["archived"],
+            archived=archived,
             who=request.user,
         )
         workspace_board.refresh_from_db()
