@@ -15,11 +15,16 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Test user emails."""
+import re
+
 from django.core.mail import EmailMessage
 
 import pytest
 
-from projectify.user.services.internal import user_make_token
+from projectify.user.services.internal import (
+    Token,
+    user_check_token,
+)
 
 from ..emails import (
     UserEmailConfirmationEmail,
@@ -41,8 +46,11 @@ class TestUserEmailConfirmationEmail:
         assert len(mailoutbox) == 1
         m = mailoutbox[0]
         assert "contains%20space%40example.com" in m.body
-        assert (
-            user_make_token(user=user, kind="confirm_email_address") in m.body
+        match = re.search("/user/confirm-email/.+/(.+)\n", m.body)
+        assert match
+        token = Token(match.group(1))
+        assert user_check_token(
+            token=token, user=user, kind="confirm_email_address"
         )
 
 
@@ -56,4 +64,7 @@ class TestUserPasswordResetEmail:
         mail.send()
         assert len(mailoutbox) == 1
         m = mailoutbox[0]
-        assert user_make_token(user=user, kind="reset_password") in m.body
+        match = re.search("/user/confirm-password-reset/.+/(.+)\n", m.body)
+        assert match
+        token = Token(match.group(1))
+        assert user_check_token(token=token, user=user, kind="reset_password")
