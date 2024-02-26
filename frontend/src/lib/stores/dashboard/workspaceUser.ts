@@ -32,7 +32,7 @@ import { can, type Resource, type Verb } from "$lib/rules/workspace";
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 import type { Workspace, WorkspaceUser } from "$lib/types/workspace";
 
-import { user } from "../user";
+import { currentUser } from "../user";
 
 // TODO make Readable<WorkspaceUser[] | undefined>
 export type CurrentWorkspaceUsers = Readable<WorkspaceUser[]>;
@@ -61,10 +61,10 @@ type CurrentWorkspaceUser = Readable<WorkspaceUser | undefined>;
  * Find current workspace user belonging to logged in user
  */
 export const currentWorkspaceUser: CurrentWorkspaceUser = derived<
-    [typeof user, typeof currentWorkspace],
+    [typeof currentUser, typeof currentWorkspace],
     WorkspaceUser | undefined
 >(
-    [user, currentWorkspace],
+    [currentUser, currentWorkspace],
     ([$user, $currentWorkspace], set) => {
         if ($user === undefined || $currentWorkspace === undefined) {
             set(undefined);

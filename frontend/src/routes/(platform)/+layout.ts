@@ -19,7 +19,7 @@ import { redirect, error } from "@sveltejs/kit";
 import { get } from "svelte/store";
 
 import { currentWorkspaces } from "$lib/stores/dashboard";
-import { fetchUser, user } from "$lib/stores/user";
+import { fetchUser, currentUser } from "$lib/stores/user";
 import type { User } from "$lib/types/user";
 import { getLogInWithNextUrl } from "$lib/urls/user";
 
@@ -32,22 +32,25 @@ export async function load({
     // For reasons, fetchuser fires twice.
     // We should have user contain some kind of hint that the user is now
     // being fetched, so we don't fetch it twice.
-    const currentUser = get(user) ?? (await fetchUser({ fetch }));
+    const user = get(currentUser) ?? (await fetchUser({ fetch }));
 
-    if (currentUser === undefined) {
+    if (user === undefined) {
         const next = getLogInWithNextUrl(url.pathname);
         console.log("Not logged in, redirecting to", next);
         redirect(302, next);
     }
+    currentWorkspaces
+        .load({ fetch })
+        .then((workspaces) => {
+            if (!workspaces) {
+                error(500, "Unable to fetch workspaces");
+            }
+        })
+        .catch((error) =>
+            console.error(`Error when fetching workspaces: ${error}`),
+        );
 
-    // XXX Might be able to do this asynchronously, meaning we don't need to wait
-    // for it to finish here?
-    const workspaces = await currentWorkspaces.load({ fetch });
-    if (!workspaces) {
-        error(500, "Unable to fetch workspaces");
-    }
-
-    return { user: currentUser };
+    return { user };
 }
 // Could we set one of the following to true here?
 // Prerender: This page is completely prerenderable, there is no user data here

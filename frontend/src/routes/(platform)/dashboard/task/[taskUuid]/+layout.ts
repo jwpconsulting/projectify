@@ -18,13 +18,12 @@
 import { error } from "@sveltejs/kit";
 
 import { currentTask, currentWorkspace } from "$lib/stores/dashboard";
-import type { TaskWithWorkspace, Workspace } from "$lib/types/workspace";
+import type { TaskWithWorkspace } from "$lib/types/workspace";
 
 import type { LayoutLoadEvent } from "./$types";
 
 interface Data {
     task: TaskWithWorkspace;
-    workspace: Workspace;
 }
 
 export async function load({
@@ -35,15 +34,17 @@ export async function load({
     if (!task) {
         error(404, `No task could be found for UUID '${taskUuid}'`);
     }
-    const workspace = await currentWorkspace.loadUuid(
-        task.workspace_board_section.workspace_board.workspace.uuid,
-        { fetch },
-    );
-    if (!workspace) {
-        error(404);
-    }
+    currentWorkspace
+        .loadUuid(
+            task.workspace_board_section.workspace_board.workspace.uuid,
+            { fetch },
+        )
+        .catch((error) =>
+            console.error(
+                `Error when fetching currentWorkspace for task ${taskUuid}: ${error}`,
+            ),
+        );
     return {
         task,
-        workspace,
     };
 }

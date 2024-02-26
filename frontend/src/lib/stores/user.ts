@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { writable } from "svelte/store";
+import { readonly, writable } from "svelte/store";
 
 import {
     getUser,
@@ -26,7 +26,8 @@ import * as userRepository from "$lib/repository/user";
 import type { RepositoryContext } from "$lib/types/repository";
 import type { User } from "$lib/types/user";
 
-export const user = writable<User | undefined>(undefined);
+const _user = writable<User | undefined>(undefined);
+export const currentUser = readonly(_user);
 
 export async function logIn(
     email: string,
@@ -39,21 +40,21 @@ export async function logIn(
         repositoryContext,
     );
     if (response.ok) {
-        user.set(response.data);
+        _user.set(response.data);
     }
     return response;
 }
 
 export async function logOut(repositoryContext: RepositoryContext) {
     await userRepository.logOut(repositoryContext);
-    user.set(undefined);
+    _user.set(undefined);
 }
 
 export async function fetchUser(
     repositoryContext: RepositoryContext,
 ): Promise<User | undefined> {
     const userData = await getUser(repositoryContext);
-    user.set(userData);
+    _user.set(userData);
     return userData;
 }
 
@@ -83,6 +84,6 @@ export async function updateUserProfile(
     if (!response.ok) {
         throw new Error("Expected response.ok");
     }
-    user.set(response.data);
+    _user.set(response.data);
     return response.data;
 }

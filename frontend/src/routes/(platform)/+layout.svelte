@@ -33,12 +33,12 @@
         rejectDestructiveOverlay,
         rejectConstructiveOverlay,
     } from "$lib/stores/globalUi";
-    import { user } from "$lib/stores/user";
+    import { currentUser } from "$lib/stores/user";
 </script>
 
 <div class="flex h-screen grow flex-col overflow-y-auto">
-    {#if $user}
-        <HeaderDashboard user={$user} />
+    {#if $currentUser}
+        <HeaderDashboard user={$currentUser} />
     {/if}
     {#if $mobileMenuState.kind === "visible"}
         <MobileMenuOverlay target={$mobileMenuState.target} />

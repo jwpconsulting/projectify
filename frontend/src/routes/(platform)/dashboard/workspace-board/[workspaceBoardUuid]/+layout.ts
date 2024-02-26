@@ -21,17 +21,16 @@ import {
     currentWorkspace,
     currentWorkspaceBoard,
 } from "$lib/stores/dashboard";
-import type { Workspace, WorkspaceBoardDetail } from "$lib/types/workspace";
+import type { WorkspaceBoardDetail } from "$lib/types/workspace";
 
 import type { LayoutLoadEvent } from "./$types";
 
 interface Data {
     workspaceBoard: WorkspaceBoardDetail;
-    workspace: Workspace;
 }
 
 export async function load({
-    params: { workspaceBoardUuid }, // TODO add fetch back and use in subscription somehow
+    params: { workspaceBoardUuid },
     fetch,
 }: LayoutLoadEvent): Promise<Data> {
     const workspaceBoard = await currentWorkspaceBoard.loadUuid(
@@ -48,15 +47,21 @@ export async function load({
         );
     }
     const workspaceUuid = workspaceBoard.workspace.uuid;
-    const workspace = await currentWorkspace.loadUuid(workspaceUuid, {
-        fetch,
-    });
-    if (!workspace) {
-        // Big whoops if this actually happens
-        error(
-            500,
-            `For workspace board ${workspaceBoardUuid}, the workspace with UUID ${workspaceUuid} could not be found.`,
+    currentWorkspace
+        .loadUuid(workspaceUuid, {
+            fetch,
+        })
+        .then((workspace) => {
+            if (!workspace) {
+                throw new Error(
+                    `For workspace board ${workspaceBoardUuid}, the workspace with UUID ${workspaceUuid} could not be found.`,
+                );
+            }
+        })
+        .catch((error) =>
+            console.error(
+                `Something went very wrong when fetching workspace ${workspaceUuid}: ${error}`,
+            ),
         );
-    }
-    return { workspace, workspaceBoard };
+    return { workspaceBoard };
 }

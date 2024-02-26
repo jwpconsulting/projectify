@@ -20,11 +20,11 @@
     import Landing from "$lib/figma/navigation/header/Landing.svelte";
     import MobileMenuOverlay from "$lib/figma/overlays/MobileMenuOverlay.svelte";
     import { mobileMenuState } from "$lib/stores/globalUi";
-    import { user } from "$lib/stores/user";
+    import { currentUser } from "$lib/stores/user";
 </script>
 
 <div class="flex grow flex-col">
-    {#if $user}
+    {#if $currentUser}
         <Continue />
     {:else}
         <Landing />
