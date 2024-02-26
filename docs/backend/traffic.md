@@ -376,23 +376,10 @@ I configure the DATABASE_URL to be
 DATABASE_URL = postgres://%2Fvar%2Frun%2Fpostgresql/projectify
 ```
 
-The django `development.py` configuration is patched to allow for the additional IP
-address:
+For the backend, we insert into `.env` the `ALLOWED_HOSTS` config:
 
 ```
-diff --git a/backend/projectify/settings/development.py b/backend/projectify/settings/development.py
-index f039e78e..27e08731 100644
---- a/backend/projectify/settings/development.py
-+++ b/backend/projectify/settings/development.py
-@@ -73,7 +73,8 @@ class Development(Base):
-     # Debug
-     DEBUG = True
-     DEBUG_TOOLBAR = True
-+    ALLOWED_HOSTS = ("192.168.128.1",)
-     INTERNAL_IPS = ("127.0.0.1",)
-
-     FRONTEND_URL = "http://localhost:3000"
-
+ALLOWED_HOSTS=localhost,127.0.0.1,192.168.128.1
 ```
 
 We have to run Django from the same ip namespace:

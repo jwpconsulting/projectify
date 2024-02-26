@@ -73,6 +73,9 @@ class Development(Base):
     # Debug
     DEBUG = True
     DEBUG_TOOLBAR = True
+    ALLOWED_HOSTS = os.getenv(
+        "ALLOWED_HOSTS", ".localhost,127.0.0.1,[::1]"
+    ).split(",")
     INTERNAL_IPS = ("127.0.0.1",)
 
     FRONTEND_URL = "http://localhost:3000"
