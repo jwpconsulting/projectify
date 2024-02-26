@@ -27,7 +27,7 @@ import type { RepositoryContext } from "$lib/types/repository";
 import type { User } from "$lib/types/user";
 
 const _user = writable<User | undefined>(undefined);
-export const user = readonly(_user);
+export const currentUser = readonly(_user);
 
 export async function logIn(
     email: string,

@@ -28,7 +28,7 @@
         toggleUserExpandOpen,
         userExpandOpen,
     } from "$lib/stores/dashboard";
-    import { user } from "$lib/stores/user";
+    import { currentUser } from "$lib/stores/user";
     import type {
         Label,
         Task,
@@ -218,8 +218,8 @@
                 <Full {workspace} />
             </div>
             <div class="min-w-0 grow">
-                {#if $user}
-                    <Dashboard data={{ user: $user, workspaceBoard }} />
+                {#if $currentUser}
+                    <Dashboard data={{ user: $currentUser, workspaceBoard }} />
                 {/if}
             </div>
         </div>

@@ -21,7 +21,7 @@
     import Onboarding from "$lib/components/Onboarding.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { goto } from "$lib/navigation";
-    import { user, updateUserProfile } from "$lib/stores/user";
+    import { currentUser, updateUserProfile } from "$lib/stores/user";
     import { newWorkspaceUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
@@ -29,7 +29,7 @@
     export let data: PageData;
 
     let preferredName: string | undefined =
-        ($user ?? data.user).preferred_name ?? undefined;
+        ($currentUser ?? data.user).preferred_name ?? undefined;
 
     async function submit() {
         await updateUserProfile(preferredName, { kind: "keep" }, { fetch });

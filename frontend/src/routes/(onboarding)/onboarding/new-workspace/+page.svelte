@@ -24,7 +24,7 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
     import { createWorkspace } from "$lib/repository/workspace";
-    import { user } from "$lib/stores/user";
+    import { currentUser } from "$lib/stores/user";
     import { getNewWorkspaceBoardUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
@@ -36,7 +36,7 @@
 
     $: disabled = workspaceTitle === undefined;
 
-    $: who = $user?.preferred_name ?? data.user.preferred_name;
+    $: who = $currentUser?.preferred_name ?? data.user.preferred_name;
 
     async function submit() {
         if (!workspaceTitle) {
