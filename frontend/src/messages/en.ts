@@ -1298,10 +1298,11 @@ const messages: MessageDirectory = {
         "find-copy":
             "You can retrieve a copy of the source code and the LICENSE here:",
         "source": {
-            frontend: "Projectify Frontend",
-            backend: "Projectify Backend",
+            repository: "Projectify Repository",
+            license: "GNU Affero General Public License",
         },
-        "trademark": "<strong>Projectify</strong> is a registered trademark.",
+        "trademark":
+            "<strong>Projectify</strong> is a registered trademark in the EU, USA, and Japan. Use of the trademark is only permitted with permisson by JWP Consulting GK.",
     },
     "contact-us": {
         title: "Contact",
