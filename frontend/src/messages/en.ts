@@ -779,6 +779,13 @@ const messages: MessageDirectory = {
                 "label": "Upload a picture",
                 "remove-picture": "Remove picture",
             },
+            "delete": {
+                title: "Workspace deletion",
+                message:
+                    "If you would like to delete this workspace, please send us an email using the link below. We have not implemented self-serve workspace deletion at this point, and would like to apologize for the inconvenience.",
+                label: "Request workspace deletion (opens email client)",
+                email: "mailto:hello@projectifyapp.com?subject=Workspace+deletion",
+            },
         },
         "workspace-users": {
             "title": "Workspace users",
