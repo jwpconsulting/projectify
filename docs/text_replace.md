@@ -142,6 +142,23 @@ board section name like so:
 
 ```fish
 fd --type directory \
-  "Workspace[_ -]?[bB]oard[_ -][sS]ections?" \
+  "workspace[_ -]?[bB]oard[_ -]?[sS]ections?" \
   .
+# (there are no results for Workspace with uppercase w)
+```
+
+There are four folders, and we can rename them like so:
+
+```fish
+for f in (
+  fd --type directory \
+    "workspace[_ -]?[bB]oard[_ -]?[sS]ections?" \
+    .
+)
+  echo "Moving $f"
+  set -l dir (dirname $f)
+  read -l -P "New path: $dir/" base || break
+  echo "Moving to $base"
+  git mv -v $f $dir/$base || break
+end
 ```
