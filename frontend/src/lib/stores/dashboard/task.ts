@@ -54,7 +54,7 @@ export function searchTasks(
     );
     const tasks = sectionTasks.flat();
     return searchAmong<TaskWithWorkspaceBoardSection>(
-        ["title", "number"],
+        ["workspace_board_section.title", "title", "number"],
         tasks,
         searchText,
     );

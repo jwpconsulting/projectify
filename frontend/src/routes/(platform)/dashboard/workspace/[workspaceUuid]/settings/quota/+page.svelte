@@ -20,12 +20,13 @@
     import { _ } from "svelte-i18n";
 
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+    import { currentWorkspace } from "$lib/stores/dashboard";
     import type { Quota } from "$lib/types/workspace";
 
     import type { PageData } from "./$types";
 
     export let data: PageData;
-    const { workspace } = data;
+    $: workspace = $currentWorkspace ?? data.workspace;
 
     $: quotaRows = [
         {

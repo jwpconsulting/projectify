@@ -22,6 +22,7 @@
     import UploadAvatar from "$lib/figma/buttons/UploadAvatar.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { updateWorkspace } from "$lib/repository/workspace";
     import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import type { EditableViewState } from "$lib/types/ui";
@@ -175,3 +176,18 @@
         {/if}
     </div>
 </form>
+{#if $currentWorkspaceUserCan("delete", "workspace")}
+    <section class="flex flex-col gap-2">
+        <h2 class="font-bold">
+            {$_("workspace-settings.general.delete.title")}
+        </h2>
+
+        <p>
+            {$_("workspace-settings.general.delete.message")}
+        </p>
+        <Anchor
+            label={$_("workspace-settings.general.delete.label")}
+            href={$_("workspace-settings.general.delete.email")}
+        />
+    </section>
+{/if}
