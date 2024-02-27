@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -29,22 +29,22 @@
         <p>{$_("free-software.header")}</p>
         <!-- make sure to add future authors here -->
         <ul>
-            <li>Copyright 2021-2023 JWP Consulting GK</li>
+            <li>Copyright 2021-2024 JWP Consulting GK</li>
         </ul>
         <p>{$_("free-software.license")}</p>
         <p>{$_("free-software.warranty")}</p>
         <p>{$_("free-software.find-copy")}</p>
         <ul>
             <li>
-                <a
-                    href="https://github.com/jwp-consulting/projectify-frontend"
-                >
-                    {$_("free-software.source.frontend")}
+                <a href="https://github.com/jwpconsulting/projectify">
+                    {$_("free-software.source.repository")}
                 </a>
             </li>
             <li>
-                <a href="https://github.com/jwp-consulting/projectify-backend">
-                    {$_("free-software.source.backend")}
+                <a
+                    href="https://github.com/jwpconsulting/projectify/blob/main/LICENSE"
+                >
+                    {$_("free-software.source.license")}
                 </a>
             </li>
         </ul>
