@@ -138,6 +138,7 @@
                 action={{
                     kind: "button",
                     action: removeUser,
+                    disabled: isCurrentUser,
                 }}
                 style={{
                     kind: "tertiary",
