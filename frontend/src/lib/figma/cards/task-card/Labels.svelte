@@ -29,10 +29,10 @@
     import type { ContextMenuType } from "$lib/types/ui";
     import type {
         Label,
-        TaskWithWorkspaceBoardSection,
+        TaskWithSection,
     } from "$lib/types/workspace";
 
-    export let task: TaskWithWorkspaceBoardSection;
+    export let task: TaskWithSection;
 
     let labelPickerOpen = false;
 

@@ -14,101 +14,101 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Test workspace board section services."""
+"""Test section services."""
 import pytest
 
 from projectify.workspace.models import WorkspaceBoard
 from projectify.workspace.models.task import Task
-from projectify.workspace.models.workspace_board_section import (
-    WorkspaceBoardSection,
+from projectify.workspace.models.section import (
+    Section,
 )
 from projectify.workspace.models.workspace_user import WorkspaceUser
-from projectify.workspace.services.workspace_board_section import (
-    workspace_board_section_delete,
-    workspace_board_section_move,
+from projectify.workspace.services.section import (
+    section_delete,
+    section_move,
 )
 
 
 @pytest.mark.django_db
 def test_delete_non_empty_section(
     workspace_user: WorkspaceUser,
-    workspace_board_section: WorkspaceBoardSection,
+    section: Section,
     # Make sure there is a task
     task: Task,
 ) -> None:
     """Assert we can delete a non-empty section."""
-    count = WorkspaceBoardSection.objects.count()
+    count = Section.objects.count()
     task_count = Task.objects.count()
-    workspace_board_section_delete(
-        workspace_board_section=workspace_board_section,
+    section_delete(
+        section=section,
         who=workspace_user.user,
     )
-    assert WorkspaceBoardSection.objects.count() == count - 1
+    assert Section.objects.count() == count - 1
     assert Task.objects.count() == task_count - 1
 
 
 @pytest.mark.django_db
 def test_moving_section(
     workspace_board: WorkspaceBoard,
-    workspace_board_section: WorkspaceBoardSection,
-    other_workspace_board_section: WorkspaceBoardSection,
-    other_other_workspace_board_section: WorkspaceBoardSection,
+    section: Section,
+    other_section: Section,
+    other_other_section: Section,
     workspace_user: WorkspaceUser,
 ) -> None:
     """Test moving a section around."""
-    assert list(workspace_board.workspaceboardsection_set.all()) == [
-        workspace_board_section,
-        other_workspace_board_section,
-        other_other_workspace_board_section,
+    assert list(workspace_board.section_set.all()) == [
+        section,
+        other_section,
+        other_other_section,
     ]
-    workspace_board_section_move(
-        workspace_board_section=workspace_board_section,
+    section_move(
+        section=section,
         order=0,
         who=workspace_user.user,
     )
-    assert list(workspace_board.workspaceboardsection_set.all()) == [
-        workspace_board_section,
-        other_workspace_board_section,
-        other_other_workspace_board_section,
+    assert list(workspace_board.section_set.all()) == [
+        section,
+        other_section,
+        other_other_section,
     ]
-    workspace_board_section_move(
-        workspace_board_section=workspace_board_section,
+    section_move(
+        section=section,
         order=2,
         who=workspace_user.user,
     )
-    assert list(workspace_board.workspaceboardsection_set.all()) == [
-        other_workspace_board_section,
-        other_other_workspace_board_section,
-        workspace_board_section,
+    assert list(workspace_board.section_set.all()) == [
+        other_section,
+        other_other_section,
+        section,
     ]
-    workspace_board_section_move(
-        workspace_board_section=workspace_board_section,
+    section_move(
+        section=section,
         order=1,
         who=workspace_user.user,
     )
-    assert list(workspace_board.workspaceboardsection_set.all()) == [
-        other_workspace_board_section,
-        workspace_board_section,
-        other_other_workspace_board_section,
+    assert list(workspace_board.section_set.all()) == [
+        other_section,
+        section,
+        other_other_section,
     ]
 
 
 @pytest.mark.django_db
 def test_moving_empty_section(
     workspace_board: WorkspaceBoard,
-    workspace_board_section: WorkspaceBoardSection,
+    section: Section,
     workspace_user: WorkspaceUser,
 ) -> None:
     """Test moving when there are no other sections."""
-    assert list(workspace_board.workspaceboardsection_set.all()) == [
-        workspace_board_section,
+    assert list(workspace_board.section_set.all()) == [
+        section,
     ]
-    workspace_board_section_move(
-        workspace_board_section=workspace_board_section,
+    section_move(
+        section=section,
         order=1,
         who=workspace_user.user,
     )
-    assert list(workspace_board.workspaceboardsection_set.all()) == [
-        workspace_board_section,
+    assert list(workspace_board.section_set.all()) == [
+        section,
     ]
-    assert workspace_board_section._order == 0
+    assert section._order == 0

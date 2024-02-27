@@ -36,7 +36,7 @@ export async function load({
     }
     currentWorkspace
         .loadUuid(
-            task.workspace_board_section.workspace_board.workspace.uuid,
+            task.section.workspace_board.workspace.uuid,
             { fetch },
         )
         .catch((error) =>

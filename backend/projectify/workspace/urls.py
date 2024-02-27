@@ -27,16 +27,16 @@ from projectify.workspace.views.workspace_board import (
     WorkspaceBoardCreate,
     WorkspaceBoardReadUpdateDelete,
 )
-from projectify.workspace.views.workspace_board_section import (
-    WorkspaceBoardSectionCreate,
-    WorkspaceBoardSectionMove,
-    WorkspaceBoardSectionReadUpdateDelete,
+from projectify.workspace.views.section import (
+    SectionCreate,
+    SectionMove,
+    SectionReadUpdateDelete,
 )
 
 from .views.task import (
     TaskCreate,
     TaskMoveAfterTask,
-    TaskMoveToWorkspaceBoardSection,
+    TaskMoveToSection,
     TaskRetrieveUpdateDelete,
 )
 from .views.workspace import (
@@ -129,23 +129,23 @@ workspace_board_patterns = (
     ),
 )
 
-workspace_board_section_patterns = (
+section_patterns = (
     # Create
     path(
         "",
-        WorkspaceBoardSectionCreate.as_view(),
+        SectionCreate.as_view(),
         name="create",
     ),
     # Read + Update + Delete
     path(
-        "<uuid:workspace_board_section_uuid>",
-        WorkspaceBoardSectionReadUpdateDelete.as_view(),
+        "<uuid:section_uuid>",
+        SectionReadUpdateDelete.as_view(),
         name="read-update-delete",
     ),
     # RPC
     path(
-        "<uuid:workspace_board_section_uuid>/move",
-        WorkspaceBoardSectionMove.as_view(),
+        "<uuid:section_uuid>/move",
+        SectionMove.as_view(),
         name="move",
     ),
 )
@@ -166,9 +166,9 @@ task_patterns = (
     ),
     # RPC
     path(
-        "<uuid:task_uuid>/move-to-workspace-board-section",
-        TaskMoveToWorkspaceBoardSection.as_view(),
-        name="move-to-workspace-board-section",
+        "<uuid:task_uuid>/move-to-section",
+        TaskMoveToSection.as_view(),
+        name="move-to-section",
     ),
     path(
         "<uuid:task_uuid>/move-after-task",
@@ -210,11 +210,11 @@ urlpatterns = (
         "workspace-board/",
         include((workspace_board_patterns, "workspace-boards")),
     ),
-    # WorkspaceBoardSection
+    # Section
     path(
-        "workspace-board-section/",
+        "section/",
         include(
-            (workspace_board_section_patterns, "workspace-board-sections")
+            (section_patterns, "sections")
         ),
     ),
     # Task

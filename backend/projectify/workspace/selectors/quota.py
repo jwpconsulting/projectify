@@ -32,7 +32,7 @@ Limitations for a trial workspace are
 - Task: 1000 tasks,
 - TaskLabel: unlimited,
 - WorkspaceBoard: 10,
-- WorkspaceBoardSection: 100,
+- Section: 100,
 - WorkspaceUser + WorkspaceUserInivite(unredeemed): 2
 """
 from functools import partial
@@ -47,8 +47,8 @@ from projectify.workspace.models.sub_task import SubTask
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.task_label import TaskLabel
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_board_section import (
-    WorkspaceBoardSection,
+from projectify.workspace.models.section import (
+    Section,
 )
 from projectify.workspace.types import Quota, WorkspaceQuota
 
@@ -59,7 +59,7 @@ Resource = Literal[
     "Task",
     "TaskLabel",
     "WorkspaceBoard",
-    "WorkspaceBoardSection",
+    "Section",
     "WorkspaceUserAndInvite",
 ]
 
@@ -75,7 +75,7 @@ class Limitations(TypedDict):
     Task: Limitation
     TaskLabel: Limitation
     WorkspaceBoard: Limitation
-    WorkspaceBoardSection: Limitation
+    Section: Limitation
     WorkspaceUserAndInvite: Limitation
 
 
@@ -86,7 +86,7 @@ trial_conditions: Limitations = {
     "Task": 1000,
     "TaskLabel": None,
     "WorkspaceBoard": 10,
-    "WorkspaceBoardSection": 100,
+    "Section": 100,
     "WorkspaceUserAndInvite": 2,
 }
 
@@ -98,7 +98,7 @@ trial_conditions: Limitations = {
 #     "Task": None,
 #     "TaskLabel": None,
 #     "WorkspaceBoard": None,
-#     "WorkspaceBoardSection": None,
+#     "Section": None,
 #     "WorkspaceUserAndInvite": workspace.customer.seats,
 # }
 
@@ -133,14 +133,14 @@ def get_workspace_resource_count(
             return SubTask.objects.filter(task__workspace=workspace).count()
         case "Task":
             return Task.objects.filter(
-                workspace_board_section__workspace_board__workspace=workspace
+                section__workspace_board__workspace=workspace
             ).count()
         case "TaskLabel":
             return TaskLabel.objects.filter(label__workspace=workspace).count()
         case "WorkspaceBoard":
             return workspace.workspaceboard_set.count()
-        case "WorkspaceBoardSection":
-            return WorkspaceBoardSection.objects.filter(
+        case "Section":
+            return Section.objects.filter(
                 workspace_board__workspace=workspace
             ).count()
         case "WorkspaceUserAndInvite":
@@ -174,6 +174,6 @@ def workspace_get_all_quotas(workspace: Workspace) -> WorkspaceQuota:
         tasks=mk(resource="Task"),
         task_labels=mk(resource="TaskLabel"),
         workspace_boards=mk(resource="WorkspaceBoard"),
-        workspace_board_sections=mk(resource="WorkspaceBoardSection"),
+        sections=mk(resource="Section"),
         workspace_users_and_invites=mk(resource="WorkspaceUserAndInvite"),
     )

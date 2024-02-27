@@ -34,8 +34,8 @@ from projectify.lib.models import BaseModel
 from .workspace import (
     Workspace,
 )
-from .workspace_board_section import (
-    WorkspaceBoardSection,
+from .section import (
+    Section,
 )
 
 # TODO Here we could be using __all__
@@ -71,11 +71,11 @@ class WorkspaceBoard(TitleDescriptionModel, BaseModel):
 
     if TYPE_CHECKING:
         # Related managers
-        workspaceboardsection_set: RelatedManager["WorkspaceBoardSection"]
+        section_set: RelatedManager["Section"]
 
         # For ordering
-        get_workspaceboardsection_order: GetOrder
-        set_workspaceboardsection_order: SetOrder
+        get_section_order: GetOrder
+        set_section_order: SetOrder
 
     def __str__(self) -> str:
         """Return title."""

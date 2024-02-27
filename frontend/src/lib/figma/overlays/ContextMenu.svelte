@@ -24,7 +24,7 @@
     import Task from "$lib/figma/overlays/context-menu/Task.svelte";
     import Workspace from "$lib/figma/overlays/context-menu/Workspace.svelte";
     import WorkspaceBoard from "$lib/figma/overlays/context-menu/WorkspaceBoard.svelte";
-    import WorkspaceBoardSection from "$lib/figma/overlays/context-menu/WorkspaceBoardSection.svelte";
+    import Section from "$lib/figma/overlays/context-menu/Section.svelte";
     import WorkspaceUser from "$lib/figma/overlays/context-menu/WorkspaceUser.svelte";
     import type { ContextMenuType } from "$lib/types/ui";
 
@@ -42,10 +42,10 @@
         workspace={target.workspace}
         workspaceBoard={target.workspaceBoard}
     />
-{:else if target.kind === "workspaceBoardSection"}
-    <WorkspaceBoardSection
+{:else if target.kind === "section"}
+    <Section
         workspaceBoard={target.workspaceBoard}
-        workspaceBoardSection={target.workspaceBoardSection}
+        section={target.section}
     />
 {:else if target.kind === "task"}
     <Task kind={target} />

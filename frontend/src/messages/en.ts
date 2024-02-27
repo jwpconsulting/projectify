@@ -24,7 +24,7 @@ import QuotaHelpPage from "./en/help/quota.md?raw";
 import RolesHelpPage from "./en/help/roles.md?raw";
 import TasksHelpPage from "./en/help/tasks.md?raw";
 import TrialHelpPage from "./en/help/trial.md?raw";
-import WorkspaceBoardSectionsHelpPage from "./en/help/workspace-board-sections.md?raw";
+import SectionsHelpPage from "./en/help/sections.md?raw";
 import WorkspaceBoardsHelpPage from "./en/help/workspace-boards.md?raw";
 import WorkspaceUsersHelpPage from "./en/help/workspace-users.md?raw";
 import WorkspacesHelpPage from "./en/help/workspaces.md?raw";
@@ -73,23 +73,23 @@ const messages: MessageDirectory = {
                 cancel: "Cancel",
                 invite: "Invite",
             },
-            "create-workspace-board-section": {
-                "title": "Create new workspace board section",
+            "create-section": {
+                "title": "Create new section",
                 "form": {
                     title: {
-                        label: "New workspace board section name",
-                        placeholder: "New workspace board section name",
+                        label: "New section name",
+                        placeholder: "New section name",
                     },
                 },
                 "cancel": "Cancel",
                 "create-section": "Create",
             },
-            "update-workspace-board-section": {
-                title: "Edit workspace board section",
+            "update-section": {
+                title: "Edit section",
                 form: {
                     title: {
-                        label: "Workspace board section title",
-                        placeholder: "Enter new workspace board section title",
+                        label: "Section title",
+                        placeholder: "Enter new section title",
                     },
                 },
                 cancel: "Cancel",
@@ -119,9 +119,9 @@ const messages: MessageDirectory = {
                 warning: "This action cannot be undone.",
                 button: "Remove",
             },
-            "delete-workspace-board-section": {
-                title: "Delete workspace board section",
-                body: "Would you like to delete the ''{workspaceBoardSection}'' workspace board section?",
+            "delete-section": {
+                title: "Delete section",
+                body: "Would you like to delete the ''{section}'' section?",
                 warning:
                     "Deleting this section will also delete all tasks within it.",
                 button: "Delete",
@@ -171,13 +171,13 @@ const messages: MessageDirectory = {
                 "edit-board": "Edit board",
                 "archive-workspace-board": "Archive board",
             },
-            "workspace-board-section": {
+            "section": {
                 "expand-section": "Expand section",
                 "collapse-section": "Collapse section",
                 "switch-previous": "Switch with previous section",
                 "switch-next": "Switch with next section",
                 "edit-title": "Edit section title",
-                "delete-workspace-board-section": "Delete section",
+                "delete-section": "Delete section",
             },
             "task": {
                 "open-task": "Open task",
@@ -206,7 +206,7 @@ const messages: MessageDirectory = {
     },
     "dashboard": {
         "actions": {
-            "add-workspace-board-section": "Add workspace board section",
+            "add-section": "Add section",
         },
         "task-card": {
             "add-label": "Assign label",
@@ -412,12 +412,12 @@ const messages: MessageDirectory = {
         },
         "new-task": {
             "title": "What is a task you’d like to complete?",
-            "workspace-board-section-title": "To do",
+            "section-title": "To do",
             "default-name": "Your task",
             "prompt": {
                 location:
-                    'This task will be placed in a section called "{workspaceBoardSectionTitle}"',
-                exists: 'It looks like you already have a workspace board section called "{workspaceBoardSectionTitle}". We will now create a task  and place it into that workspace board section.',
+                    'This task will be placed in a section called "{sectionTitle}"',
+                exists: 'It looks like you already have a section called "{sectionTitle}". We will now create a task  and place it into that section.',
                 explanation:
                     "Tasks can be further divided into sub tasks and contain detailed descriptions.",
             },
@@ -904,7 +904,7 @@ const messages: MessageDirectory = {
                 "tasks": "Tasks",
                 "task-labels": "Task labels",
                 "workspace-boards": "Workspace boards",
-                "workspace-board-sections": "Workspace board sections",
+                "sections": "Sections",
                 "workspace-users-and-invites": "Workspace users and invites",
             },
             "rows": {
@@ -1026,7 +1026,7 @@ const messages: MessageDirectory = {
                     // TODO mention chat messages when available -
                     "A workspace can have up to <strong>2</strong> workspace users",
                     "A workspace can hold up to <strong>10</strong> workspace boards",
-                    "You can create up to <strong>100</strong> workspace board sections",
+                    "You can create up to <strong>100</strong> sections",
                     "You can create up to <strong>1000</strong> tasks",
                     "You can create up to <strong>1000</strong> sub tasks",
                     "You can create up to <strong>10</strong> labels",
@@ -1415,10 +1415,10 @@ const messages: MessageDirectory = {
             description: "Separate projects from each other",
             content: WorkspaceBoardsHelpPage,
         },
-        "workspace-board-sections": {
-            title: "Workspace board sections",
+        "sections": {
+            title: "Sections",
             description: "Maximize the efficiency of your tasks",
-            content: WorkspaceBoardSectionsHelpPage,
+            content: SectionsHelpPage,
         },
         "tasks": {
             title: "Tasks",

@@ -20,7 +20,7 @@ import pytest
 from ...models.workspace import Workspace
 from ...models.workspace_board import WorkspaceBoard
 from ...models.workspace_user import WorkspaceUser
-from ...services.workspace_board_section import workspace_board_section_create
+from ...services.section import section_create
 
 
 @pytest.mark.django_db
@@ -35,28 +35,28 @@ class TestWorkspaceBoard:
         """Test workspace board creation works."""
         assert workspace_board.workspace == workspace
 
-    def test_add_workspace_board_section(
+    def test_add_section(
         self,
         workspace_board: WorkspaceBoard,
         workspace_user: WorkspaceUser,
     ) -> None:
-        """Test workspace board section creation."""
-        assert workspace_board.workspaceboardsection_set.count() == 0
-        section = workspace_board_section_create(
+        """Test section creation."""
+        assert workspace_board.section_set.count() == 0
+        section = section_create(
             who=workspace_user.user,
             workspace_board=workspace_board,
             title="hello",
             description="world",
         )
-        assert workspace_board.workspaceboardsection_set.count() == 1
-        section2 = workspace_board_section_create(
+        assert workspace_board.section_set.count() == 1
+        section2 = section_create(
             who=workspace_user.user,
             workspace_board=workspace_board,
             title="hello",
             description="world",
         )
-        assert workspace_board.workspaceboardsection_set.count() == 2
-        assert list(workspace_board.workspaceboardsection_set.all()) == [
+        assert workspace_board.section_set.count() == 2
+        assert list(workspace_board.section_set.all()) == [
             section,
             section2,
         ]

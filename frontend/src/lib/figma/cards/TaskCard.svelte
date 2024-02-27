@@ -23,16 +23,16 @@
     import Title from "$lib/figma/cards/task-card/Title.svelte";
     import WorkspaceUser from "$lib/figma/cards/task-card/WorkspaceUser.svelte";
     import type {
-        TaskWithWorkspaceBoardSection,
+        TaskWithSection,
         WorkspaceBoardDetail,
-        WorkspaceBoardSectionWithTasks,
+        SectionWithTasks,
     } from "$lib/types/workspace";
     import { getTaskUrl } from "$lib/urls";
 
-    export let task: TaskWithWorkspaceBoardSection;
+    export let task: TaskWithSection;
     export let workspaceBoard: WorkspaceBoardDetail;
-    export let workspaceBoardSection:
-        | WorkspaceBoardSectionWithTasks
+    export let section:
+        | SectionWithTasks
         | undefined = undefined;
 </script>
 
@@ -48,13 +48,13 @@
                     <Title {task} />
                 </div>
                 <div class="flex flex-row items-center gap-2 justify-self-end">
-                    {#if workspaceBoardSection}
-                        <Chevrons {task} {workspaceBoardSection} />
+                    {#if section}
+                        <Chevrons {task} {section} />
                     {/if}
                     <MenuButton
                         {task}
                         {workspaceBoard}
-                        {workspaceBoardSection}
+                        {section}
                     />
                 </div>
             </div>
@@ -89,13 +89,13 @@
                 <div class="flex flex-row items-center gap-2">
                     <WorkspaceUser {task} />
                     <div class="flex flex-row items-center">
-                        {#if workspaceBoardSection}
-                            <Chevrons {task} {workspaceBoardSection} />
+                        {#if section}
+                            <Chevrons {task} {section} />
                         {/if}
                         <MenuButton
                             {task}
                             {workspaceBoard}
-                            {workspaceBoardSection}
+                            {section}
                         />
                     </div>
                 </div>

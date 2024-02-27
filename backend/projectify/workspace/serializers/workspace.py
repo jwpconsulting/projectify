@@ -46,7 +46,7 @@ class WorkspaceQuotaSerializer(serializers.Serializer):
     tasks = SingleQuotaSerializer()
     task_labels = SingleQuotaSerializer()
     workspace_boards = SingleQuotaSerializer()
-    workspace_board_sections = SingleQuotaSerializer()
+    sections = SingleQuotaSerializer()
     workspace_users_and_invites = SingleQuotaSerializer()
 
 

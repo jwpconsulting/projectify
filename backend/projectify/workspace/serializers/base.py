@@ -116,15 +116,15 @@ class WorkspaceBoardBaseSerializer(
         )
 
 
-class WorkspaceBoardSectionBaseSerializer(
-    serializers.ModelSerializer[models.WorkspaceBoardSection]
+class SectionBaseSerializer(
+    serializers.ModelSerializer[models.Section]
 ):
-    """Workspace board section serializer."""
+    """Section serializer."""
 
     class Meta:
         """Meta."""
 
-        model = models.WorkspaceBoardSection
+        model = models.Section
         fields = (
             *timestamps,
             *title_description,

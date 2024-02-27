@@ -18,15 +18,15 @@
 <script lang="ts">
     import { _ } from "svelte-i18n";
 
-    import WorkspaceBoardSectionC from "$lib/figma/cards/WorkspaceBoardSection.svelte";
+    import SectionC from "$lib/figma/cards/Section.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import {
         currentWorkspaceBoard,
-        currentWorkspaceBoardSections,
+        currentSections,
     } from "$lib/stores/dashboard";
     import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
-    import type { WorkspaceBoardSectionWithTasks } from "$lib/types/workspace";
+    import type { SectionWithTasks } from "$lib/types/workspace";
 
     import type { PageData } from "./$types";
 
@@ -36,16 +36,16 @@
 
     $: workspaceBoard = $currentWorkspaceBoard ?? workspaceBoard;
 
-    $: hasSections = workspaceBoard.workspace_board_sections.length > 0;
+    $: hasSections = workspaceBoard.sections.length > 0;
 
-    let workspaceBoardSections: WorkspaceBoardSectionWithTasks[];
-    $: workspaceBoardSections =
-        $currentWorkspaceBoardSections ??
-        workspaceBoard.workspace_board_sections;
+    let sections: SectionWithTasks[];
+    $: sections =
+        $currentSections ??
+        workspaceBoard.sections;
 
     async function onAddNewSection() {
         await openConstructiveOverlay({
-            kind: "createWorkspaceBoardSection",
+            kind: "createSection",
             workspaceBoard,
         });
     }
@@ -53,8 +53,8 @@
 
 <!-- Sections -->
 <div class="flex flex-col gap-4 p-2">
-    {#each workspaceBoardSections as workspaceBoardSection (workspaceBoardSection.uuid)}
-        <WorkspaceBoardSectionC {workspaceBoard} {workspaceBoardSection} />
+    {#each sections as section (section.uuid)}
+        <SectionC {workspaceBoard} {section} />
     {:else}
         <section
             class="py-2 px-4 gap-8 bg-foreground rounded-lg flex flex-col"
@@ -74,11 +74,11 @@
     {/each}
 </div>
 
-{#if hasSections && $currentWorkspaceUserCan("create", "workspaceBoardSection")}
+{#if hasSections && $currentWorkspaceUserCan("create", "section")}
     <div class="sticky bottom-0 self-end p-2">
         <Button
             style={{ kind: "primary" }}
-            label={$_("dashboard.actions.add-workspace-board-section")}
+            label={$_("dashboard.actions.add-section")}
             size="medium"
             action={{ kind: "button", action: onAddNewSection }}
             color="blue"

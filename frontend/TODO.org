@@ -39,7 +39,7 @@
    - Assigned / Unassigned label to task
    - Created / updated / deleted label
    - Created / updated / deleted workspace board
-   - Created / updated / deleted workspace board section
+   - Created / updated / deleted section
 
 ** Hamburger menu should always allow me to go back to dashboard
    If I open the hamburger menu from my profile page or workspace settings, I
@@ -153,7 +153,7 @@
 
 ** DONE Overlay form submit
    CLOSED: [2023-09-06 Wed 10:02]
-   Add new workspace board section overlay does not react well when pressing
+   Add new section overlay does not react well when pressing
    enter.
    Justus <2023-05-01>
 

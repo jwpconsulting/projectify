@@ -56,9 +56,9 @@ export const WorkspaceBoard: Story = {
     },
 };
 
-export const WorkspaceBoardSection: Story = {
+export const Section: Story = {
     args: {
-        target: "workspace-board-section",
+        target: "section",
     },
 };
 

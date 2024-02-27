@@ -26,35 +26,35 @@
         createTask,
         type CreateUpdateTaskData,
     } from "$lib/repository/workspace";
-    import { createWorkspaceBoardSection } from "$lib/repository/workspace/workspaceBoardSection";
+    import { createSection } from "$lib/repository/workspace/section";
     import { getNewLabelUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
 
     export let data: PageData;
 
-    const { user, workspace, workspaceBoard, workspaceBoardSection } = data;
+    const { user, workspace, workspaceBoard, section } = data;
 
     let taskTitle: string | undefined = undefined;
 
-    $: workspaceBoardSectionTitle =
-        workspaceBoardSection?.title ??
-        $_("onboarding.new-task.workspace-board-section-title");
+    $: sectionTitle =
+        section?.title ??
+        $_("onboarding.new-task.section-title");
 
     $: disabled = taskTitle === undefined;
     async function submit() {
         if (!taskTitle) {
             throw new Error("Expected taskTitle");
         }
-        const result = await createWorkspaceBoardSection(
+        const result = await createSection(
             workspaceBoard,
-            { title: workspaceBoardSectionTitle },
+            { title: sectionTitle },
             { fetch },
         );
         if (!result.ok) {
             throw result.error;
         }
-        const workspace_board_section = result.data;
+        const section = result.data;
         // Find ourselves
         const assignee = workspace.workspace_users.find(
             (w) => w.user.email === user.email,
@@ -62,7 +62,7 @@
         const task: CreateUpdateTaskData = {
             title: taskTitle,
             labels: [],
-            workspace_board_section,
+            section,
             assignee,
         };
         const { uuid } = await createTask(task, { fetch });
@@ -81,13 +81,13 @@
     <svelte:fragment slot="prompt">
         <div class="flex flex-col gap-4">
             <p>
-                {#if workspaceBoardSection}
+                {#if section}
                     {$_("onboarding.new-task.prompt.exists", {
-                        values: { workspaceBoardSectionTitle },
+                        values: { sectionTitle },
                     })}
                 {:else}
                     {$_("onboarding.new-task.prompt.location", {
-                        values: { workspaceBoardSectionTitle },
+                        values: { sectionTitle },
                     })}
                 {/if}
             </p>
@@ -111,7 +111,7 @@
             kind: "new-task",
             workspace,
             workspaceBoard,
-            workspaceBoardSectionTitle,
+            sectionTitle,
             title: taskTitle ?? $_("onboarding.new-task.default-name"),
         }}
     />

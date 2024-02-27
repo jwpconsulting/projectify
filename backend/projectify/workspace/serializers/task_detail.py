@@ -39,8 +39,8 @@ from rest_framework.request import (
 )
 
 from projectify.user.models.user import User
-from projectify.workspace.selectors.workspace_board_section import (
-    workspace_board_section_find_for_user_and_uuid,
+from projectify.workspace.selectors.section import (
+    section_find_for_user_and_uuid,
 )
 
 from .. import (
@@ -55,8 +55,8 @@ from .sub_task import (
 from .task import (
     TaskWithSubTaskSerializer,
 )
-from .workspace_board_section import (
-    WorkspaceBoardSectionUpSerializer,
+from .section import (
+    SectionUpSerializer,
 )
 
 
@@ -71,7 +71,7 @@ class TaskDetailSerializer(TaskWithSubTaskSerializer):
     chat_messages = base.ChatMessageBaseSerializer(
         many=True, read_only=True, source="chatmessage_set"
     )
-    workspace_board_section = WorkspaceBoardSectionUpSerializer(read_only=True)
+    section = SectionUpSerializer(read_only=True)
 
     class Meta(TaskWithSubTaskSerializer.Meta):
         """Meta."""
@@ -79,7 +79,7 @@ class TaskDetailSerializer(TaskWithSubTaskSerializer):
         fields = (
             *TaskWithSubTaskSerializer.Meta.fields,
             "chat_messages",
-            "workspace_board_section",
+            "section",
         )
 
 
@@ -97,7 +97,7 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
     assignee uuid and evaluates them.
     """
 
-    workspace_board_section = base.UuidObjectSerializer(write_only=True)
+    section = base.UuidObjectSerializer(write_only=True)
     # TODO make label optional, when unset remove labels or on create
     # do not assign label
     labels = serializers.ListField(
@@ -112,28 +112,28 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
 
     sub_tasks = SubTaskCreateUpdateSerializer(many=True, required=False)
 
-    def validate_workspace_board_section(
+    def validate_section(
         self,
         value: UuidDict,
-    ) -> models.WorkspaceBoardSection:
-        """Validate the workspace board section."""
+    ) -> models.Section:
+        """Validate the section."""
         request: Request = self.context["request"]
         user: User = request.user
 
         # First, we make sure we are assigning the task to a workspace board
         # section that the request's user has access to.
-        workspace_board_section = (
-            workspace_board_section_find_for_user_and_uuid(
+        section = (
+            section_find_for_user_and_uuid(
                 user=user,
-                workspace_board_section_uuid=value["uuid"],
+                section_uuid=value["uuid"],
             )
         )
-        if workspace_board_section is None:
+        if section is None:
             raise serializers.ValidationError(
-                _("Workspace board section does not exist"),
+                _("Section does not exist"),
             )
         # TODO select related
-        workspace = workspace_board_section.workspace_board.workspace
+        workspace = section.workspace_board.workspace
         if self.instance and self.instance.workspace != workspace:
             raise serializers.ValidationError(
                 _("This task cannot be assigned to another workspace"),
@@ -143,15 +143,15 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         # The question is whether we can put each into a separate validate_*
         # method and make ws board section available to them instead using
         # the serializer context.
-        return workspace_board_section
+        return section
 
     def validate(self, data: dict[str, Any]) -> dict[str, Any]:
         """Validate user access to ws board sect, assignee and labels."""
-        workspace_board_section: models.WorkspaceBoardSection = data[
-            "workspace_board_section"
+        section: models.Section = data[
+            "section"
         ]
         # TODO select related
-        workspace = workspace_board_section.workspace_board.workspace
+        workspace = section.workspace_board.workspace
 
         # Then we filter the list of labels for labels that are contained
         # in this workspace
@@ -217,6 +217,6 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
 
         fields = (
             *base.TaskBaseSerializer.Meta.fields,
-            "workspace_board_section",
+            "section",
             "sub_tasks",
         )

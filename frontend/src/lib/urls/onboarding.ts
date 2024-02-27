@@ -20,7 +20,7 @@ export const startUrl = "/onboarding/welcome";
 export const aboutYouUrl = "/onboarding/about-you";
 
 export const newWorkspaceUrl = "/onboarding/new-workspace";
-// TODO type these with workspace / workspace board section etc. instances
+// TODO type these with workspace / section etc. instances
 export function getNewWorkspaceBoardUrl(workspaceUuid: string): string {
     return `/onboarding/new-workspace-board/${workspaceUuid}`;
 }

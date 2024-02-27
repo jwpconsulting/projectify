@@ -17,15 +17,15 @@
  */
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import UpdateWorkspaceBoardSection from "$lib/figma/overlays/constructive/UpdateWorkspaceBoardSection.svelte";
-import { workspaceBoardSection } from "$lib/storybook";
+import UpdateSection from "$lib/figma/overlays/constructive/UpdateSection.svelte";
+import { section } from "$lib/storybook";
 
-const meta: Meta<UpdateWorkspaceBoardSection> = {
-    component: UpdateWorkspaceBoardSection,
-    args: { workspaceBoardSection },
+const meta: Meta<UpdateSection> = {
+    component: UpdateSection,
+    args: { section },
 };
 export default meta;
 
-type Story = StoryObj<UpdateWorkspaceBoardSection>;
+type Story = StoryObj<UpdateSection>;
 
 export const Default: Story = {};

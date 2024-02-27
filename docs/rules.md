@@ -16,7 +16,7 @@ The resources that workspace users can work on are the following:
 - Workspace user invite
 - Workspace user
 - Workspace board
-- Workspace board section
+- Section
 - Task
 - Label
 - Task label
@@ -43,7 +43,7 @@ role required to perform that action.
 | Workspace user invite   | Owner      | Owner      | Owner      | Owner      |
 | Workspace user          | Owner      | Observer   | Owner      | Owner      |
 | Workspace board         | Maintainer | Observer   | Maintainer | Maintainer |
-| Workspace board section | Maintainer | Observer   | Maintainer | Maintainer |
+| Section | Maintainer | Observer   | Maintainer | Maintainer |
 | Task                    | Member     | Observer   | Member     | Maintainer |
 | Label                   | Maintainer | Observer   | Maintainer | Maintainer |
 | Task label              | Member     | Observer   | Member     | Member     |
@@ -65,7 +65,7 @@ changes on them or create them. They can read the following resources:
 - Workspace
 - Workspace users
 - Workspace boards
-- Workspace board sections
+- Sections
 - Tasks
 - Labels
 - Task labels
@@ -95,7 +95,7 @@ Project Lead, and so on.
 Maintainer have the following permissions in addition to member permissons:
 
 - Create, update and delete workspace boards
-- Create, update and delete workspace board sections
+- Create, update and delete sections
 - Delete tasks
 - Create, update and delete labels
 - Delete chat messages
@@ -122,7 +122,7 @@ authenticated user's account and the workspace they are operating on to get the
 WorkspaceUser instance.
 
 The workspace is inferred from the actual resource the user is calling the API
-on. For example, when updating a workspace board section, we resolve the
+on. For example, when updating a section, we resolve the
 workspace belonging to it by looking at the associated workspace board's
 workspace foreign key. The order of lookup operations is roughly:
 

@@ -8,8 +8,8 @@ Assuming all paths relative to `src/routes`.
   workspace loading (redirect to ws board) and settings
 - `(platform)/dashboard/workspace-board/[workspaceBoardUuid]/+layout.ts`: Layout for
   workspace board view (the main view in this application)
-- `(platform)/dashboard/workspace-board-section/[workspaceBoardUuid]/+layout.ts`: Layout for
-  workspace board section view for task creation, redirecting to ws board
+- `(platform)/dashboard/section/[workspaceBoardUuid]/+layout.ts`: Layout for
+  section view for task creation, redirecting to ws board
   scrolled to section
 - `(platform)/+layout.ts`: Layout for logged in users
 - `(storefront)/(auth)/+layout.ts: Layout for non-logged in users

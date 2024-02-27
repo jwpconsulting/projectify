@@ -28,7 +28,7 @@ actions are as follows:
 | Workspace billing settings  | Current subscription status and payment information         |
 | Workspace users and invites | Who has been added to the workspace, and who is invited     |
 | Workspace board             | Description and other information about a workspace board   |
-| Workspace board sections    | Name, position within workspace board                       |
+| Sections    | Name, position within workspace board                       |
 | Tasks                       | Title, description, due date, label, assignee, and position |
 | Sub tasks                   | Done state and title                                        |
 | Labels                      | Name and color                                              |
@@ -54,7 +54,7 @@ individual cell in this table is as follows:
 | Workspace billing settings  | -        | -      | -          | Full  |
 | Workspace users and invites | Read     | Read   | Read       | Full  |
 | Workspace board             | Read     | Read   | Full       | Full  |
-| Workspace board sections    | Read     | Read   | Full       | Full  |
+| Sections    | Read     | Read   | Full       | Full  |
 | Tasks                       | Read     | Write  | Full       | Full  |
 | Sub tasks                   | Read     | Full   | Full       | Full  |
 | Labels                      | Read     | Read   | Full       | Full  |
@@ -85,7 +85,7 @@ With the **maintainer** workspace user role, the following activities become
 possible, on top of the **member** permissions:
 
 - Create, update and delete workspace boards
-- Create, update and delete workspace board sections
+- Create, update and delete sections
 - Create, update and delete labels
 - Delete tasks
 

@@ -32,15 +32,15 @@ from rest_framework.response import (
 )
 from rest_framework.views import APIView
 
-from projectify.workspace.models.workspace_board_section import (
-    WorkspaceBoardSection,
+from projectify.workspace.models.section import (
+    Section,
 )
 from projectify.workspace.selectors.task import (
     TaskDetailQuerySet,
     task_find_by_task_uuid,
 )
-from projectify.workspace.selectors.workspace_board_section import (
-    workspace_board_section_find_for_user_and_uuid,
+from projectify.workspace.selectors.section import (
+    section_find_for_user_and_uuid,
 )
 from projectify.workspace.serializers.base import TaskBaseSerializer
 from projectify.workspace.serializers.task_detail import (
@@ -87,8 +87,8 @@ class TaskCreate(APIView):
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
 
-        workspace_board_section: WorkspaceBoardSection = validated_data[
-            "workspace_board_section"
+        section: Section = validated_data[
+            "section"
         ]
 
         sub_tasks: ValidatedData
@@ -100,7 +100,7 @@ class TaskCreate(APIView):
         labels: list[models.Label] = validated_data.pop("labels")
         task = task_create_nested(
             who=request.user,
-            workspace_board_section=workspace_board_section,
+            section=section,
             title=validated_data["title"],
             description=validated_data.get("description"),
             assignee=validated_data.get("assignee"),
@@ -176,13 +176,13 @@ class TaskRetrieveUpdateDelete(APIView):
 
 
 # RPC
-class TaskMoveToWorkspaceBoardSection(APIView):
-    """Move a task to the beginning of a workspace board section."""
+class TaskMoveToSection(APIView):
+    """Move a task to the beginning of a section."""
 
     class InputSerializer(serializers.Serializer):
-        """Accept the target workspace board section uuid."""
+        """Accept the target section uuid."""
 
-        workspace_board_section_uuid = serializers.UUIDField()
+        section_uuid = serializers.UUIDField()
 
     def post(self, request: Request, task_uuid: UUID) -> Response:
         """Process the request."""
@@ -193,23 +193,23 @@ class TaskMoveToWorkspaceBoardSection(APIView):
         task = task_find_by_task_uuid(who=user, task_uuid=task_uuid)
         if task is None:
             raise NotFound(_("Task for this UUID not found"))
-        workspace_board_section = (
-            workspace_board_section_find_for_user_and_uuid(
-                workspace_board_section_uuid=data[
-                    "workspace_board_section_uuid"
+        section = (
+            section_find_for_user_and_uuid(
+                section_uuid=data[
+                    "section_uuid"
                 ],
                 user=user,
             )
         )
-        if workspace_board_section is None:
+        if section is None:
             raise serializers.ValidationError(
                 {
-                    "workspace_board_section_uuid": _(
-                        "No workspace board section was found for the given uuid"
+                    "section_uuid": _(
+                        "No section was found for the given uuid"
                     )
                 }
             )
-        task_move_after(task=task, who=user, after=workspace_board_section)
+        task_move_after(task=task, who=user, after=section)
         task = task_find_by_task_uuid(
             who=user, task_uuid=task_uuid, qs=TaskDetailQuerySet
         )

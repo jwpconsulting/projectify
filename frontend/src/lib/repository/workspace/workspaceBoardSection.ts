@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /*
- * Repository functions for workspace board sections
+ * Repository functions for sections
  */
 import {
     deleteWithCredentialsJson,
@@ -29,78 +29,78 @@ import {
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
     WorkspaceBoard,
-    WorkspaceBoardSection,
-    WorkspaceBoardSectionDetail,
+    Section,
+    SectionDetail,
 } from "$lib/types/workspace";
 
 import type { ApiResponse } from "../types";
 
 // Create
-export async function createWorkspaceBoardSection(
+export async function createSection(
     { uuid: workspace_board_uuid }: WorkspaceBoard,
     {
         title,
         description,
-    }: Pick<WorkspaceBoardSection, "title" | "description">,
+    }: Pick<Section, "title" | "description">,
     repositoryContext: RepositoryContext,
-): Promise<ApiResponse<WorkspaceBoardSection, unknown>> {
+): Promise<ApiResponse<Section, unknown>> {
     return await postWithCredentialsJson(
-        `/workspace/workspace-board-section/`,
+        `/workspace/section/`,
         { workspace_board_uuid, title, description },
         repositoryContext,
     );
 }
 
 // Read
-export async function getWorkspaceBoardSection(
+export async function getSection(
     uuid: string,
     repositoryContext: RepositoryContext,
-): Promise<WorkspaceBoardSectionDetail | undefined> {
+): Promise<SectionDetail | undefined> {
     return handle404(
         await getWithCredentialsJson(
-            `/workspace/workspace-board-section/${uuid}`,
+            `/workspace/section/${uuid}`,
             repositoryContext,
         ),
     );
 }
 
 // Update
-export async function updateWorkspaceBoardSection(
-    workspaceBoardSection: Pick<
-        WorkspaceBoardSection,
+export async function updateSection(
+    section: Pick<
+        Section,
         "uuid" | "title" | "description"
     >,
     repositoryContext: RepositoryContext,
 ): Promise<ApiResponse<void, unknown>> {
     return await putWithCredentialsJson(
-        `/workspace/workspace-board-section/${workspaceBoardSection.uuid}`,
-        workspaceBoardSection,
+        `/workspace/section/${section.uuid}`,
+        section,
         repositoryContext,
     );
 }
 
 // Delete
-export async function deleteWorkspaceBoardSection(
-    { uuid }: Pick<WorkspaceBoardSection, "uuid">,
+export async function deleteSection(
+    { uuid }: Pick<Section, "uuid">,
     repositoryContext: RepositoryContext,
 ): Promise<void> {
     return failOrOk(
         await deleteWithCredentialsJson(
-            `/workspace/workspace-board-section/${uuid}`,
+            `/workspace/section/${uuid}`,
             repositoryContext,
         ),
     );
 }
 
 // RPC
-export async function moveWorkspaceBoardSection(
-    { uuid }: WorkspaceBoardSection,
+export async function moveSection(
+    { uuid }: Section,
     order: number,
     repositoryContext: RepositoryContext,
 ) {
     return failOrOk(
         await postWithCredentialsJson(
-            `/workspace/workspace-board-section/${uuid}/move`,
+            `/workspace/section/${uuid}/move`,
             { order },
             repositoryContext,
         ),

@@ -29,7 +29,7 @@ import type {
     Label,
     Task,
     TaskWithWorkspace,
-    WorkspaceBoardSection,
+    Section,
     WorkspaceUser,
 } from "$lib/types/workspace";
 
@@ -44,7 +44,7 @@ export interface CreateUpdateTaskData {
     // TODO this has to be optional in the backend -> undefined means unset
     // assignee
     assignee?: Pick<WorkspaceUser, "uuid">;
-    workspace_board_section: Pick<WorkspaceBoardSection, "uuid">;
+    section: Pick<Section, "uuid">;
     // TODO dueDate plz
     due_date?: string;
     sub_tasks?: CreateUpdateSubTask[];
@@ -58,8 +58,8 @@ export async function createTask(
         "/workspace/task/",
         {
             ...data,
-            workspace_board_section: {
-                uuid: data.workspace_board_section.uuid,
+            section: {
+                uuid: data.section.uuid,
             },
             labels: data.labels.map((l) => {
                 return { uuid: l.uuid };
@@ -105,8 +105,8 @@ export async function updateTask(
         `/workspace/task/${uuid}`,
         {
             ...data,
-            workspace_board_section: {
-                uuid: data.workspace_board_section.uuid,
+            section: {
+                uuid: data.section.uuid,
             },
             assignee: data.assignee ? { uuid: data.assignee.uuid } : null,
             labels: data.labels.map((l) => {
@@ -125,15 +125,15 @@ export async function updateTask(
     throw new Error();
 }
 
-export async function moveTaskToWorkspaceBoardSection(
+export async function moveTaskToSection(
     task: Task,
-    { uuid }: WorkspaceBoardSection,
+    { uuid }: Section,
     repositoryContext: RepositoryContext,
 ): Promise<void> {
     failOrOk(
         await postWithCredentialsJson(
-            `/workspace/task/${task.uuid}/move-to-workspace-board-section`,
-            { workspace_board_section_uuid: uuid },
+            `/workspace/task/${task.uuid}/move-to-section`,
+            { section_uuid: uuid },
             repositoryContext,
         ),
     );

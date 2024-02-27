@@ -20,7 +20,7 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 import {
     mobileParameters,
     workspaceBoard,
-    workspaceBoardSection,
+    section,
 } from "$lib/storybook";
 import Dashboard from "$routes/(platform)/dashboard/workspace-board/[workspaceBoardUuid]/+page.svelte";
 
@@ -30,7 +30,7 @@ const meta: Meta<Dashboard> = {
         data: {
             workspaceBoard: {
                 ...workspaceBoard,
-                workspace_board_sections: [workspaceBoardSection],
+                sections: [section],
             },
         },
     },

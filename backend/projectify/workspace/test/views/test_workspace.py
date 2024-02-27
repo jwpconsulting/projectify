@@ -184,7 +184,7 @@ class TestWorkspaceReadUpdate:
                 "tasks": unittest.mock.ANY,
                 "task_labels": unittest.mock.ANY,
                 "workspace_boards": unittest.mock.ANY,
-                "workspace_board_sections": unittest.mock.ANY,
+                "sections": unittest.mock.ANY,
                 "workspace_users_and_invites": {
                     "current": 3,
                     "limit": 10,
@@ -260,7 +260,7 @@ class TestWorkspaceReadUpdate:
                     "limit": 10,
                     "can_create_more": True,
                 },
-                "workspace_board_sections": {
+                "sections": {
                     "current": 0,
                     "limit": 100,
                     "can_create_more": True,

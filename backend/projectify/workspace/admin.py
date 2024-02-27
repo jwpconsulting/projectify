@@ -102,12 +102,12 @@ class WorkspaceUserAdmin(admin.ModelAdmin[models.WorkspaceUser]):
         return instance.user.email
 
 
-class WorkspaceBoardSectionInline(
-    admin.TabularInline[models.WorkspaceBoardSection]
+class SectionInline(
+    admin.TabularInline[models.Section]
 ):
-    """WorkspaceBoardSection inline admin."""
+    """Section inline admin."""
 
-    model = models.WorkspaceBoardSection
+    model = models.Section
     extra = 0
 
 
@@ -115,7 +115,7 @@ class WorkspaceBoardSectionInline(
 class WorkspaceBoardAdmin(admin.ModelAdmin[models.WorkspaceBoard]):
     """WorkspaceBoard Admin."""
 
-    inlines = (WorkspaceBoardSectionInline,)
+    inlines = (SectionInline,)
     list_display = (
         "title",
         "workspace_title",
@@ -139,11 +139,11 @@ class TaskInline(admin.TabularInline[models.Task]):
     readonly_fields = ("assignee",)
 
 
-@admin.register(models.WorkspaceBoardSection)
-class WorkspaceBoardSectionAdmin(
-    admin.ModelAdmin[models.WorkspaceBoardSection]
+@admin.register(models.Section)
+class SectionAdmin(
+    admin.ModelAdmin[models.Section]
 ):
-    """WorkspaceBoardSection Admin."""
+    """Section Admin."""
 
     inlines = (TaskInline,)
     list_display = (
@@ -158,13 +158,13 @@ class WorkspaceBoardSectionAdmin(
 
     @admin.display(description=_("Workspace board title"))
     def workspace_board_title(
-        self, instance: models.WorkspaceBoardSection
+        self, instance: models.Section
     ) -> str:
         """Return the workspace board's title."""
         return instance.workspace_board.title
 
     @admin.display(description=_("Workspace title"))
-    def workspace_title(self, instance: models.WorkspaceBoardSection) -> str:
+    def workspace_title(self, instance: models.Section) -> str:
         """Return the workspace's title."""
         return instance.workspace_board.workspace.title
 
@@ -190,31 +190,31 @@ class TaskAdmin(admin.ModelAdmin[models.Task]):
     inlines = (SubTaskInline, TaskLabelInline)
     list_display = (
         "title",
-        "workspace_board_section_title",
+        "section_title",
         "workspace_board_title",
         "workspace_title",
         "created",
         "modified",
     )
     list_select_related = (
-        "workspace_board_section__workspace_board__workspace",
+        "section__workspace_board__workspace",
     )
     readonly_fields = ("uuid", "assignee")
 
-    @admin.display(description=_("Workspace board section title"))
-    def workspace_board_section_title(self, instance: models.Task) -> str:
+    @admin.display(description=_("Section title"))
+    def section_title(self, instance: models.Task) -> str:
         """Return the workspace board's title."""
-        return instance.workspace_board_section.title
+        return instance.section.title
 
     @admin.display(description=_("Workspace board title"))
     def workspace_board_title(self, instance: models.Task) -> str:
         """Return the workspace board's title."""
-        return instance.workspace_board_section.workspace_board.title
+        return instance.section.workspace_board.title
 
     @admin.display(description=_("Workspace title"))
     def workspace_title(self, instance: models.Task) -> str:
         """Return the workspace's title."""
-        return instance.workspace_board_section.workspace_board.workspace.title
+        return instance.section.workspace_board.workspace.title
 
 
 @admin.register(models.Label)
@@ -242,14 +242,14 @@ class SubTaskAdmin(admin.ModelAdmin[models.SubTask]):
     list_display = (
         "title",
         "task_title",
-        "workspace_board_section_title",
+        "section_title",
         "workspace_board_title",
         "workspace_title",
         "created",
         "modified",
     )
     list_select_related = (
-        "task__workspace_board_section__workspace_board__workspace",
+        "task__section__workspace_board__workspace",
     )
     readonly_fields = ("uuid",)
 
@@ -258,20 +258,20 @@ class SubTaskAdmin(admin.ModelAdmin[models.SubTask]):
         """Return the task's title."""
         return instance.task.title
 
-    @admin.display(description=_("Workspace board section title"))
-    def workspace_board_section_title(self, instance: models.SubTask) -> str:
+    @admin.display(description=_("Section title"))
+    def section_title(self, instance: models.SubTask) -> str:
         """Return the workspace board's title."""
-        return instance.task.workspace_board_section.title
+        return instance.task.section.title
 
     @admin.display(description=_("Workspace board title"))
     def workspace_board_title(self, instance: models.SubTask) -> str:
         """Return the workspace board's title."""
-        return instance.task.workspace_board_section.workspace_board.title
+        return instance.task.section.workspace_board.title
 
     @admin.display(description=_("Workspace title"))
     def workspace_title(self, instance: models.SubTask) -> str:
         """Return the workspace's title."""
-        workspace_board = instance.task.workspace_board_section.workspace_board
+        workspace_board = instance.task.section.workspace_board
         return workspace_board.workspace.title
 
 
@@ -281,14 +281,14 @@ class ChatMessageAdmin(admin.ModelAdmin[models.ChatMessage]):
 
     list_display = (
         "task_title",
-        "workspace_board_section_title",
+        "section_title",
         "workspace_board_title",
         "workspace_title",
         "created",
         "modified",
     )
     list_select_related = (
-        "task__workspace_board_section__workspace_board__workspace",
+        "task__section__workspace_board__workspace",
     )
     readonly_fields = ("uuid", "author")
 
@@ -297,20 +297,20 @@ class ChatMessageAdmin(admin.ModelAdmin[models.ChatMessage]):
         """Return the task's title."""
         return instance.task.title
 
-    @admin.display(description=_("Workspace board section title"))
-    def workspace_board_section_title(
+    @admin.display(description=_("Section title"))
+    def section_title(
         self, instance: models.ChatMessage
     ) -> str:
         """Return the workspace board's title."""
-        return instance.task.workspace_board_section.title
+        return instance.task.section.title
 
     @admin.display(description=_("Workspace board title"))
     def workspace_board_title(self, instance: models.ChatMessage) -> str:
         """Return the workspace board's title."""
-        return instance.task.workspace_board_section.workspace_board.title
+        return instance.task.section.workspace_board.title
 
     @admin.display(description=_("Workspace title"))
     def workspace_title(self, instance: models.ChatMessage) -> str:
         """Return the workspace's title."""
-        workspace_board = instance.task.workspace_board_section.workspace_board
+        workspace_board = instance.task.section.workspace_board
         return workspace_board.workspace.title

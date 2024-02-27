@@ -41,9 +41,9 @@
         },
         {
             label: $_(
-                "workspace-settings.quota.resource.workspace-board-sections",
+                "workspace-settings.quota.resource.sections",
             ),
-            quota: workspace.quota.workspace_board_sections,
+            quota: workspace.quota.sections,
         },
         {
             label: $_("workspace-settings.quota.resource.tasks"),

@@ -24,7 +24,7 @@ import type {
     Task,
     Workspace,
     WorkspaceBoardDetail,
-    WorkspaceBoardSection,
+    Section,
     WorkspaceUser,
 } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
@@ -33,7 +33,7 @@ import type { PageLoadEvent } from "./$types";
 
 interface returnType {
     task: Task;
-    workspaceBoardSection: WorkspaceBoardSection;
+    section: Section;
     workspaceBoard: WorkspaceBoardDetail;
     workspace: Workspace;
     label: Label;
@@ -48,8 +48,8 @@ export async function load({
         // TODO find out if we can i18n this?
         error(404, `No task could be found for task UUID '${taskUuid}'.`);
     }
-    const workspaceBoardSection = task.workspace_board_section;
-    const workspaceBoardUuid = workspaceBoardSection.workspace_board.uuid;
+    const section = task.section;
+    const workspaceBoardUuid = section.workspace_board.uuid;
     const workspaceBoard = await getWorkspaceBoard(workspaceBoardUuid, {
         fetch,
     });
@@ -62,7 +62,7 @@ export async function load({
     return {
         task,
         assignee,
-        workspaceBoardSection,
+        section,
         workspaceBoard,
         workspace,
         label,

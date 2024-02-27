@@ -17,7 +17,7 @@
  */
 import { redirect, error } from "@sveltejs/kit";
 
-import { getWorkspaceBoardSection } from "$lib/repository/workspace/workspaceBoardSection";
+import { getSection } from "$lib/repository/workspace/section";
 import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
 export async function load({
@@ -25,15 +25,15 @@ export async function load({
     params,
 }: {
     fetch: typeof window.fetch;
-    params: { workspaceBoardSectionUuid: string };
+    params: { sectionUuid: string };
 }) {
-    const workspaceBoardSection = await getWorkspaceBoardSection(
-        params.workspaceBoardSectionUuid,
+    const section = await getSection(
+        params.sectionUuid,
         { fetch },
     );
-    if (!workspaceBoardSection) {
+    if (!section) {
         error(404);
     }
-    const workspaceBoard = workspaceBoardSection.workspace_board;
+    const workspaceBoard = section.workspace_board;
     redirect(302, getDashboardWorkspaceBoardUrl(workspaceBoard.uuid));
 }

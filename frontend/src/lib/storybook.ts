@@ -28,9 +28,9 @@ import type {
     Label,
     SubTask,
     Task,
-    TaskWithWorkspaceBoardSection,
+    TaskWithSection,
     WorkspaceBoard,
-    WorkspaceBoardSectionWithTasks,
+    SectionWithTasks,
     WorkspaceUser,
 } from "$lib/types/workspace";
 import { getIndexFromLabelColor, labelColors } from "$lib/utils/colors";
@@ -140,7 +140,7 @@ export const subTask: SubTask = {
     order: 0,
 };
 
-export const task: TaskWithWorkspaceBoardSection = {
+export const task: TaskWithSection = {
     title: "This task has a very long name, yes, it's long, and as you know that will tell us whether we have overflow problems or not.",
     created: "",
     modified: "",
@@ -151,7 +151,7 @@ export const task: TaskWithWorkspaceBoardSection = {
     labels: [...mappedLabels, ...mappedLabels],
     assignee: workspaceUser,
     sub_tasks: [subTask],
-    workspace_board_section: {
+    section: {
         title: "section name that is long",
         created: "",
         modified: "",
@@ -179,7 +179,7 @@ const task2: Task = {
     sub_tasks: [],
 };
 
-export const workspaceBoardSection: WorkspaceBoardSectionWithTasks = {
+export const section: SectionWithTasks = {
     title: "section name that is very very very very very very long",
     created: "",
     modified: "",

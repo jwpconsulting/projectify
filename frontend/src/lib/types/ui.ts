@@ -22,12 +22,12 @@ import type {
 import type {
     Label,
     Task,
-    TaskWithWorkspaceBoardSection,
+    TaskWithSection,
     Workspace,
     WorkspaceBoard,
     WorkspaceBoardDetail,
-    WorkspaceBoardSection,
-    WorkspaceBoardSectionWithTasks,
+    Section,
+    SectionWithTasks,
     WorkspaceUser,
 } from "$lib/types/workspace";
 
@@ -77,8 +77,8 @@ export type DestructiveOverlayType =
     | { kind: "deleteLabel"; label: Label }
     | { kind: "deleteWorkspaceUser"; workspaceUser: WorkspaceUser }
     | {
-          kind: "deleteWorkspaceBoardSection";
-          workspaceBoardSection: WorkspaceBoardSection;
+          kind: "deleteSection";
+          section: Section;
       }
     | { kind: "deleteTask"; task: Task }
     // XXX this is never used
@@ -124,23 +124,23 @@ export type ContextMenuType =
           workspaceBoard: WorkspaceBoard;
       }
     | {
-          kind: "workspaceBoardSection";
+          kind: "section";
           workspaceBoard: WorkspaceBoard;
-          workspaceBoardSection: WorkspaceBoardSection;
+          section: Section;
       }
     | {
           kind: "task";
-          task: TaskWithWorkspaceBoardSection;
+          task: TaskWithSection;
           location: "task";
           // TODO remove this property
-          workspaceBoardSection: WorkspaceBoardSection;
+          section: Section;
       }
     | {
           kind: "task";
-          task: TaskWithWorkspaceBoardSection;
+          task: TaskWithSection;
           location: "dashboard";
           // TODO remove this property?
-          workspaceBoardSection: WorkspaceBoardSectionWithTasks;
+          section: SectionWithTasks;
           workspaceBoard: WorkspaceBoardDetail;
       }
     | { kind: "help" }
@@ -161,10 +161,10 @@ export type ConstructiveOverlayType =
     | { kind: "updateWorkspaceBoard"; workspaceBoard: WorkspaceBoard }
     | { kind: "createWorkspaceBoard"; workspace: Workspace }
     | { kind: "inviteWorkspaceUser"; workspace: Workspace }
-    | { kind: "createWorkspaceBoardSection"; workspaceBoard: WorkspaceBoard }
+    | { kind: "createSection"; workspaceBoard: WorkspaceBoard }
     | {
-          kind: "updateWorkspaceBoardSection";
-          workspaceBoardSection: WorkspaceBoardSection;
+          kind: "updateSection";
+          section: Section;
       }
     | { kind: "recoverWorkspaceBoard"; workspaceBoard: WorkspaceBoard };
 export type ConstructiveOverlayState = Overlay<ConstructiveOverlayType>;

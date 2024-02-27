@@ -33,7 +33,7 @@
         Label,
         Task,
         Workspace,
-        WorkspaceBoardSection,
+        Section,
         WorkspaceBoardDetail,
         WorkspaceUser,
         WorkspaceDetail,
@@ -62,10 +62,10 @@
         title: $_("onboarding.new-workspace-board.default-name"),
         modified: "",
         created: "",
-        workspace_board_sections: [],
+        sections: [],
         workspace: workspaceFallback,
     };
-    const workspaceBoardSectionFallback: WorkspaceBoardSection = {
+    const sectionFallback: Section = {
         title: "",
         modified: "",
         created: "",
@@ -118,14 +118,14 @@
               kind: "new-task";
               workspace: Workspace;
               workspaceBoard: WorkspaceBoardDetail;
-              workspaceBoardSectionTitle: string;
+              sectionTitle: string;
               title: string;
           }
         | {
               kind: "new-label";
               workspace: Workspace;
               workspaceBoard: WorkspaceBoardDetail;
-              workspaceBoardSection: WorkspaceBoardSection;
+              section: Section;
               task: Task;
               title: string;
           }
@@ -133,7 +133,7 @@
               kind: "assign-task";
               workspace: Workspace;
               workspaceBoard: WorkspaceBoardDetail;
-              workspaceBoardSection: WorkspaceBoardSection;
+              section: Section;
               task: Task;
               label: Label;
               assignee: WorkspaceUser;
@@ -160,14 +160,14 @@
             ? undefined
             : state.workspaceBoard) ?? workspaceBoardFallback),
         ...(state.kind === "new-workspace-board"
-            ? { title: state.title, workspace_board_sections: [] }
+            ? { title: state.title, sections: [] }
             : undefined),
         ...(state.kind === "new-task"
             ? {
-                  workspace_board_sections: [
+                  sections: [
                       {
-                          ...workspaceBoardSectionFallback,
-                          title: state.workspaceBoardSectionTitle,
+                          ...sectionFallback,
+                          title: state.sectionTitle,
                           tasks: [{ ...taskFallback, title: state.title }],
                       },
                   ],
@@ -175,9 +175,9 @@
             : undefined),
         ...(state.kind === "new-label"
             ? {
-                  workspace_board_sections: [
+                  sections: [
                       {
-                          ...state.workspaceBoardSection,
+                          ...state.section,
                           tasks: [
                               {
                                   ...state.task,
@@ -192,9 +192,9 @@
             : undefined),
         ...(state.kind === "assign-task"
             ? {
-                  workspace_board_sections: [
+                  sections: [
                       {
-                          ...workspaceBoardSectionFallback,
+                          ...sectionFallback,
                           tasks: [
                               {
                                   ...state.task,

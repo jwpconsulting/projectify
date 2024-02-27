@@ -19,13 +19,13 @@
 // task store file
 import {
     moveTaskAfterTask,
-    moveTaskToWorkspaceBoardSection,
+    moveTaskToSection,
 } from "$lib/repository/workspace";
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
     Task,
-    TaskWithWorkspaceBoardSection,
-    WorkspaceBoardSectionWithTasks,
+    TaskWithSection,
+    SectionWithTasks,
 } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
 
@@ -36,10 +36,10 @@ type TaskPosition =
     | { kind: "outside" };
 
 export function getTaskPosition(
-    workspaceBoardSection: WorkspaceBoardSectionWithTasks,
+    section: SectionWithTasks,
     task: Task,
 ): TaskPosition {
-    const { tasks } = workspaceBoardSection;
+    const { tasks } = section;
     const taskIndex = tasks.findIndex((t) => t.uuid == task.uuid);
     const lastIndex = tasks.length - 1;
     switch (taskIndex) {
@@ -55,34 +55,34 @@ export function getTaskPosition(
 }
 
 export async function moveToTop(
-    workspaceBoardSection: WorkspaceBoardSectionWithTasks,
-    task: TaskWithWorkspaceBoardSection,
+    section: SectionWithTasks,
+    task: TaskWithSection,
     repositoryContext: RepositoryContext,
 ) {
-    await moveTaskToWorkspaceBoardSection(
+    await moveTaskToSection(
         task,
-        workspaceBoardSection,
+        section,
         repositoryContext,
     );
 }
 
 export async function moveToBottom(
-    workspaceBoardSection: WorkspaceBoardSectionWithTasks,
+    section: SectionWithTasks,
     task: Task,
     repositoryContext: RepositoryContext,
 ) {
-    const tasks = unwrap(workspaceBoardSection.tasks, "Expected tasks");
+    const tasks = unwrap(section.tasks, "Expected tasks");
     const lastTask = unwrap(tasks.at(-1), "Expected lastTask");
     await moveTaskAfterTask(task, lastTask, repositoryContext);
 }
 
 export async function moveUp(
-    workspaceBoardSection: WorkspaceBoardSectionWithTasks,
+    section: SectionWithTasks,
     task: Task,
     repositoryContext: RepositoryContext,
 ) {
-    const tasks = unwrap(workspaceBoardSection.tasks, "Expected tasks");
-    const position = getTaskPosition(workspaceBoardSection, task);
+    const tasks = unwrap(section.tasks, "Expected tasks");
+    const position = getTaskPosition(section, task);
     if (!(position.kind === "within" || position.kind === "end")) {
         throw new Error("Expected task to be within or at end");
     }
@@ -94,15 +94,15 @@ export async function moveUp(
 }
 
 export async function moveDown(
-    workspaceBoardSection: WorkspaceBoardSectionWithTasks,
+    section: SectionWithTasks,
     task: Task,
     repositoryContext: RepositoryContext,
 ) {
-    const position = getTaskPosition(workspaceBoardSection, task);
+    const position = getTaskPosition(section, task);
     if (!(position.kind === "start" || position.kind === "within")) {
         throw new Error("Expected task to be at start or within");
     }
-    const tasks = unwrap(workspaceBoardSection.tasks, "Expected tasks");
+    const tasks = unwrap(section.tasks, "Expected tasks");
     const nextTask = unwrap(
         tasks.at(position.position + 1),
         "Expected nextTask",

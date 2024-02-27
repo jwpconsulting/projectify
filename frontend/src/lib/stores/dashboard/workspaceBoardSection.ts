@@ -29,21 +29,21 @@ import type {
 import type {
     Label,
     Task,
-    WorkspaceBoardSection,
-    WorkspaceBoardSectionWithTasks,
+    Section,
+    SectionWithTasks,
 } from "$lib/types/workspace";
 
 interface CurrentFilter {
     labels: LabelSelection;
     workspaceUser: WorkspaceUserSelection;
-    workspaceBoardSections: WorkspaceBoardSectionWithTasks[];
+    sections: SectionWithTasks[];
 }
 
 function filterSectionsTasks(
     currentFilter: CurrentFilter,
-): WorkspaceBoardSectionWithTasks[] {
-    let sections: WorkspaceBoardSectionWithTasks[] =
-        currentFilter.workspaceBoardSections;
+): SectionWithTasks[] {
+    let sections: SectionWithTasks[] =
+        currentFilter.sections;
     if (currentFilter.labels.kind === "noLabel") {
         // TODO filter by no label? Justus 2023-04-04
         // eslint-disable-next-line
@@ -92,13 +92,13 @@ function filterSectionsTasks(
     return sections;
 }
 
-export const currentWorkspaceBoardSections = derived<
+export const currentSections = derived<
     [
         typeof selectedLabels,
         typeof selectedWorkspaceUser,
         typeof currentWorkspaceBoard,
     ],
-    WorkspaceBoardSectionWithTasks[] | undefined
+    SectionWithTasks[] | undefined
 >(
     [selectedLabels, selectedWorkspaceUser, currentWorkspaceBoard],
     (
@@ -109,13 +109,13 @@ export const currentWorkspaceBoardSections = derived<
             set(undefined);
             return;
         }
-        const workspaceBoardSections =
-            $currentWorkspaceBoard.workspace_board_sections;
+        const sections =
+            $currentWorkspaceBoard.sections;
         set(
             filterSectionsTasks({
                 labels: $selectedLabels,
                 workspaceUser: $selectedWorkspaceUser,
-                workspaceBoardSections,
+                sections,
             }),
         );
     },
@@ -123,17 +123,17 @@ export const currentWorkspaceBoardSections = derived<
 );
 
 export const tasksPerUser: Readable<TasksPerUser> = derived<
-    Readable<WorkspaceBoardSection[] | undefined>,
+    Readable<Section[] | undefined>,
     TasksPerUser
 >(
-    currentWorkspaceBoardSections,
-    ($currentWorkspaceBoardSections, set) => {
-        if (!$currentWorkspaceBoardSections) {
+    currentSections,
+    ($currentSections, set) => {
+        if (!$currentSections) {
             return;
         }
         const assigned = new Map<string, number>();
         let unassigned = 0;
-        $currentWorkspaceBoardSections.forEach((section) => {
+        $currentSections.forEach((section) => {
             if (!section.tasks) {
                 return;
             }

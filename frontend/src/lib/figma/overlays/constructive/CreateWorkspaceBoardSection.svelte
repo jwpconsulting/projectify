@@ -21,14 +21,14 @@
     import Layout from "$lib/figma/overlays/constructive/Layout.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
-    import { createWorkspaceBoardSection } from "$lib/repository/workspace/workspaceBoardSection";
+    import { createSection } from "$lib/repository/workspace/section";
     import {
         rejectConstructiveOverlay,
         resolveConstructiveOverlay,
     } from "$lib/stores/globalUi";
     import type { FormViewState } from "$lib/types/ui";
     import type {
-        CreateWorkspaceBoardSection,
+        CreateSection,
         WorkspaceBoard,
     } from "$lib/types/workspace";
 
@@ -39,13 +39,13 @@
 
     async function onSubmit() {
         state = { kind: "submitting" };
-        const workspaceBoardSection: CreateWorkspaceBoardSection = {
+        const section: CreateSection = {
             title: title,
             description: "",
         };
-        const result = await createWorkspaceBoardSection(
+        const result = await createSection(
             workspaceBoard,
-            workspaceBoardSection,
+            section,
             { fetch },
         );
         if (result.ok) {
@@ -58,16 +58,16 @@
 
 <Layout {onSubmit}>
     <svelte:fragment slot="title">
-        {$_("overlay.constructive.create-workspace-board-section.title")}
+        {$_("overlay.constructive.create-section.title")}
     </svelte:fragment>
     <svelte:fragment slot="form">
         <InputField
             name="workspace-board-name"
             label={$_(
-                "overlay.constructive.create-workspace-board-section.form.title.label",
+                "overlay.constructive.create-section.form.title.label",
             )}
             placeholder={$_(
-                "overlay.constructive.create-workspace-board-section.form.title.placeholder",
+                "overlay.constructive.create-section.form.title.placeholder",
             )}
             style={{ inputType: "text" }}
             bind:value={title}
@@ -84,7 +84,7 @@
             size="medium"
             color="blue"
             label={$_(
-                "overlay.constructive.create-workspace-board-section.cancel",
+                "overlay.constructive.create-section.cancel",
             )}
         />
         <Button
@@ -93,7 +93,7 @@
             size="medium"
             color="blue"
             label={$_(
-                "overlay.constructive.create-workspace-board-section.create-section",
+                "overlay.constructive.create-section.create-section",
             )}
         />
     </svelte:fragment>

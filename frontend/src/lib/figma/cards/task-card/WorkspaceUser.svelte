@@ -22,9 +22,9 @@
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
-    import type { TaskWithWorkspaceBoardSection } from "$lib/types/workspace";
+    import type { TaskWithSection } from "$lib/types/workspace";
 
-    export let task: TaskWithWorkspaceBoardSection;
+    export let task: TaskWithSection;
 
     let userPickerBtnRef: HTMLElement;
 

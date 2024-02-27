@@ -22,29 +22,29 @@
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
-    import { toggleWorkspaceBoardSectionOpen } from "$lib/stores/dashboard";
+    import { toggleSectionOpen } from "$lib/stores/dashboard";
     import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
     import type {
         WorkspaceBoard,
-        WorkspaceBoardSection,
+        Section,
     } from "$lib/types/workspace";
     import { getNewTaskUrl } from "$lib/urls";
 
     export let workspaceBoard: WorkspaceBoard;
-    export let workspaceBoardSection: WorkspaceBoardSection;
+    export let section: Section;
     export let open: boolean;
 
-    const { uuid } = workspaceBoardSection;
-    $: toggleOpen = toggleWorkspaceBoardSectionOpen.bind(null, uuid);
+    const { uuid } = section;
+    $: toggleOpen = toggleSectionOpen.bind(null, uuid);
     let dropDownMenuBtnRef: HTMLElement;
 
     async function openDropDownMenu() {
         const contextMenuType: ContextMenuType = {
-            kind: "workspaceBoardSection",
+            kind: "section",
             workspaceBoard,
-            workspaceBoardSection,
+            section,
         };
         await openContextMenu(contextMenuType, dropDownMenuBtnRef);
     }
@@ -65,7 +65,7 @@
             />
         </button>
         <h1 class="line-clamp-1 min-w-0 shrink font-bold">
-            {workspaceBoardSection.title}
+            {section.title}
         </h1>
     </div>
     <div
@@ -76,7 +76,7 @@
             <Button
                 action={{
                     kind: "a",
-                    href: getNewTaskUrl(workspaceBoardSection.uuid),
+                    href: getNewTaskUrl(section.uuid),
                 }}
                 style={{
                     kind: "tertiary",

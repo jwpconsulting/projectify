@@ -28,9 +28,9 @@ import type { SearchInput } from "$lib/types/base";
 import type {
     Task,
     // XXX only use TaskWithWorkspace
-    TaskWithWorkspaceBoardSection,
+    TaskWithSection,
     TaskWithWorkspace,
-    WorkspaceBoardSection,
+    Section,
 } from "$lib/types/workspace";
 
 // Clear on workspace board change
@@ -43,18 +43,18 @@ currentWorkspaceBoard.subscribe((_$currentWorkspaceBoard) => {
 });
 
 export function searchTasks(
-    sections: WorkspaceBoardSection[],
+    sections: Section[],
     searchText: SearchInput,
-): TaskWithWorkspaceBoardSection[] {
-    const sectionTasks: TaskWithWorkspaceBoardSection[][] = sections.map(
-        (workspace_board_section) =>
-            (workspace_board_section.tasks ?? []).map((task: Task) => {
-                return { ...task, workspace_board_section };
+): TaskWithSection[] {
+    const sectionTasks: TaskWithSection[][] = sections.map(
+        (section) =>
+            (section.tasks ?? []).map((task: Task) => {
+                return { ...task, section };
             }),
     );
     const tasks = sectionTasks.flat();
-    return searchAmong<TaskWithWorkspaceBoardSection>(
-        ["workspace_board_section.title", "title", "number"],
+    return searchAmong<TaskWithSection>(
+        ["section.title", "title", "number"],
         tasks,
         searchText,
     );

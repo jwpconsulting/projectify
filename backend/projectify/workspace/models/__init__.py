@@ -33,8 +33,8 @@ from .workspace import (
     Workspace,
 )
 from .workspace_board import WorkspaceBoard
-from .workspace_board_section import (
-    WorkspaceBoardSection,
+from .section import (
+    Section,
 )
 from .workspace_user import (
     WorkspaceUser,
@@ -51,7 +51,7 @@ __all__ = (
     "TaskLabel",
     "Workspace",
     "WorkspaceBoard",
-    "WorkspaceBoardSection",
+    "Section",
     "WorkspaceUser",
     "WorkspaceUserInvite",
     "WorkspaceUserRoles",

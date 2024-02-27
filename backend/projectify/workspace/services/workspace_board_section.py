@@ -14,14 +14,14 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Workspace board section services."""
+"""Section services."""
 from typing import Optional
 
 from django.db import transaction
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
-from projectify.workspace.models import WorkspaceBoard, WorkspaceBoardSection
+from projectify.workspace.models import WorkspaceBoard, Section
 from projectify.workspace.services.signals import (
     send_workspace_board_change_signal,
 )
@@ -29,73 +29,73 @@ from projectify.workspace.services.signals import (
 
 # Create
 # TODO make atomic
-def workspace_board_section_create(
+def section_create(
     *,
     who: User,
     title: str,
     description: Optional[str] = None,
     workspace_board: WorkspaceBoard,
-) -> WorkspaceBoardSection:
-    """Create a workspace board section."""
+) -> Section:
+    """Create a section."""
     validate_perm(
-        "workspace.create_workspace_board_section",
+        "workspace.create_section",
         who,
         workspace_board.workspace,
     )
-    workspace_board_section = WorkspaceBoardSection(
+    section = Section(
         title=title,
         description=description,
         workspace_board=workspace_board,
     )
-    workspace_board_section.save()
+    section.save()
     send_workspace_board_change_signal(workspace_board)
-    return workspace_board_section
+    return section
 
 
 # Update
 # TODO make atomic
-def workspace_board_section_update(
+def section_update(
     *,
     who: User,
-    workspace_board_section: WorkspaceBoardSection,
+    section: Section,
     title: str,
     description: Optional[str] = None,
-) -> WorkspaceBoardSection:
-    """Update a workspace board section."""
+) -> Section:
+    """Update a section."""
     validate_perm(
-        "workspace.update_workspace_board_section",
+        "workspace.update_section",
         who,
-        workspace_board_section.workspace_board.workspace,
+        section.workspace_board.workspace,
     )
-    workspace_board_section.title = title
-    workspace_board_section.description = description
-    workspace_board_section.save()
-    send_workspace_board_change_signal(workspace_board_section.workspace_board)
-    return workspace_board_section
+    section.title = title
+    section.description = description
+    section.save()
+    send_workspace_board_change_signal(section.workspace_board)
+    return section
 
 
 # Delete
 @transaction.atomic
-def workspace_board_section_delete(
+def section_delete(
     *,
     who: User,
-    workspace_board_section: WorkspaceBoardSection,
+    section: Section,
 ) -> None:
-    """Delete a workspace board section."""
+    """Delete a section."""
     validate_perm(
-        "workspace.delete_workspace_board_section",
+        "workspace.delete_section",
         who,
-        workspace_board_section.workspace_board.workspace,
+        section.workspace_board.workspace,
     )
-    workspace_board_section.delete()
-    send_workspace_board_change_signal(workspace_board_section.workspace_board)
+    section.delete()
+    send_workspace_board_change_signal(section.workspace_board)
 
 
 # RPC
 @transaction.atomic
-def workspace_board_section_move(
+def section_move(
     *,
-    workspace_board_section: WorkspaceBoardSection,
+    section: Section,
     order: int,
     who: User,
 ) -> None:
@@ -105,24 +105,24 @@ def workspace_board_section_move(
     No save required.
     """
     validate_perm(
-        "workspace.update_workspace_board_section",
+        "workspace.update_section",
         who,
-        workspace_board_section.workspace_board.workspace,
+        section.workspace_board.workspace,
     )
-    workspace_board = workspace_board_section.workspace_board
+    workspace_board = section.workspace_board
     neighbor_sections = (
-        workspace_board.workspaceboardsection_set.select_for_update()
+        workspace_board.section_set.select_for_update()
     )
     # Force queryset to be evaluated to lock them for the time of
     # this transaction
     len(neighbor_sections)
     # Django docs wrong, need to cast to list
-    order_list = list(workspace_board.get_workspaceboardsection_order())
+    order_list = list(workspace_board.get_section_order())
     # The list is ordered by pk, which is not uuid for us
-    current_object_index = order_list.index(workspace_board_section.pk)
+    current_object_index = order_list.index(section.pk)
     # Mutate to perform move operation
     order_list.insert(order, order_list.pop(current_object_index))
     # Set new order
-    workspace_board.set_workspaceboardsection_order(order_list)
+    workspace_board.set_section_order(order_list)
     workspace_board.save()
-    send_workspace_board_change_signal(workspace_board_section.workspace_board)
+    send_workspace_board_change_signal(section.workspace_board)

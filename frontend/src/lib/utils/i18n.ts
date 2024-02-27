@@ -60,9 +60,9 @@ export function helpTopics($_: (id: string) => string): HelpTopic[] {
             href: "/help/workspace-boards",
         },
         {
-            title: $_("help.workspace-board-sections.title"),
-            description: $_("help.workspace-board-sections.description"),
-            href: "/help/workspace-board-sections",
+            title: $_("help.sections.title"),
+            description: $_("help.sections.description"),
+            href: "/help/sections",
         },
         {
             title: $_("help.tasks.title"),

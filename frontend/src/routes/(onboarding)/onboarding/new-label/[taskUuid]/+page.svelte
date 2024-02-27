@@ -32,7 +32,7 @@
 
     export let data: PageData;
 
-    const { workspace, workspaceBoard, workspaceBoardSection, task } = data;
+    const { workspace, workspaceBoard, section, task } = data;
 
     const taskTitle = task.title;
     let labelTitle: string | undefined = undefined;
@@ -113,7 +113,7 @@
             kind: "new-label",
             workspace,
             workspaceBoard,
-            workspaceBoardSection,
+            section,
             task,
             title: labelTitle ?? $_("onboarding.new-label.default-name"),
         }}

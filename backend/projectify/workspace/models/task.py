@@ -63,7 +63,7 @@ if TYPE_CHECKING:
         SubTask,
         TaskLabel,
         WorkspaceBoard,
-        WorkspaceBoardSection,
+        Section,
         WorkspaceUser,
     )
 
@@ -74,20 +74,20 @@ class TaskQuerySet(models.QuerySet["Task"]):
     def filter_by_workspace(self, workspace: Workspace) -> Self:
         """Filter by workspace."""
         return self.filter(
-            workspace_board_section__workspace_board__workspace=workspace,
+            section__workspace_board__workspace=workspace,
         )
 
     def filter_by_assignee(self, assignee: "WorkspaceUser") -> Self:
         """Filter by assignee user."""
         return self.filter(assignee=assignee)
 
-    def filter_by_workspace_board_section_pks(
+    def filter_by_section_pks(
         self,
-        workspace_board_section_pks: Pks,
+        section_pks: Pks,
     ) -> Self:
-        """Filter by workspace board section pks."""
+        """Filter by section pks."""
         return self.filter(
-            workspace_board_section__pk__in=workspace_board_section_pks,
+            section__pk__in=section_pks,
         )
 
     def filter_by_workspace_board(
@@ -95,20 +95,20 @@ class TaskQuerySet(models.QuerySet["Task"]):
     ) -> Self:
         """Filter by tasks contained in workspace board."""
         return self.filter(
-            workspace_board_section__workspace_board=workspace_board,
+            section__workspace_board=workspace_board,
         )
 
 
 class Task(TitleDescriptionModel, BaseModel):
-    """Task, belongs to workspace board section."""
+    """Task, belongs to section."""
 
     workspace = models.ForeignKey[Workspace](
         Workspace,
         on_delete=models.CASCADE,
     )
 
-    workspace_board_section = models.ForeignKey["WorkspaceBoardSection"](
-        "WorkspaceBoardSection",
+    section = models.ForeignKey["Section"](
+        "Section",
         on_delete=models.CASCADE,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
@@ -159,10 +159,10 @@ class Task(TitleDescriptionModel, BaseModel):
         self.assignee = assignee
         self.save()
 
-    def get_next_section(self) -> "WorkspaceBoardSection":
+    def get_next_section(self) -> "Section":
         """Return instance of the next section."""
-        next_section: "WorkspaceBoardSection" = (
-            self.workspace_board_section.get_next_in_order()
+        next_section: "Section" = (
+            self.section.get_next_in_order()
         )
         return next_section
 
@@ -202,7 +202,7 @@ class Task(TitleDescriptionModel, BaseModel):
             TaskLabel,
         )
 
-        workspace = self.workspace_board_section.workspace_board.workspace
+        workspace = self.section.workspace_board.workspace
 
         # XXX can this be a db constraint?
         # Or done in the serializer?
@@ -245,10 +245,10 @@ class Task(TitleDescriptionModel, BaseModel):
     class Meta:
         """Meta."""
 
-        order_with_respect_to = "workspace_board_section"
+        order_with_respect_to = "section"
         constraints = [
             models.UniqueConstraint(
-                fields=["workspace_board_section", "_order"],
+                fields=["section", "_order"],
                 name="unique_task_order",
                 deferrable=models.Deferrable.DEFERRED,
             ),
@@ -286,12 +286,12 @@ class Task(TitleDescriptionModel, BaseModel):
                         INNER JOIN "workspace_workspaceboard"
                             ON ("workspace_workspace"."id" = \
                             "workspace_workspaceboard"."workspace_id")
-                        INNER JOIN "workspace_workspaceboardsection"
+                        INNER JOIN "workspace_section"
                             ON ("workspace_workspaceboard"."id" = \
-                                 "workspace_workspaceboardsection"."workspace_board_id")
+                                 "workspace_section"."workspace_board_id")
                         INNER JOIN "workspace_task"
-                            ON ("workspace_workspaceboardsection"."id" = \
-                                "workspace_task"."workspace_board_section_id")
+                            ON ("workspace_section"."id" = \
+                                "workspace_task"."section_id")
                         WHERE "workspace_task"."id" = NEW.id
                         LIMIT 1;
                         IF correct_workspace_id != NEW.workspace_id THEN

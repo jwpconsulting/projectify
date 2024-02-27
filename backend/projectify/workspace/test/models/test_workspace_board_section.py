@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Workspace board section model tests."""
+"""Section model tests."""
 
 import pytest
 
@@ -24,45 +24,45 @@ from ... import (
 
 
 @pytest.mark.django_db
-class TestWorkspaceBoardSectionManager:
-    """Test WorkspaceBoardSection manager."""
+class TestSectionManager:
+    """Test Section manager."""
 
     def test_filter_by_workspace_board_pks(
         self,
         workspace_board: models.WorkspaceBoard,
-        workspace_board_section: models.WorkspaceBoardSection,
+        section: models.Section,
     ) -> None:
         """Test filter_by_workspace_board_pks."""
-        objects = models.WorkspaceBoardSection.objects
+        objects = models.Section.objects
         qs = objects.filter_by_workspace_board_pks(
             [workspace_board.pk],
         )
-        assert list(qs) == [workspace_board_section]
+        assert list(qs) == [section]
 
     def test_filter_for_user_and_uuid(
         self,
-        workspace_board_section: models.WorkspaceBoardSection,
+        section: models.Section,
         workspace_user: models.WorkspaceUser,
         # TODO are these two fixtures needed?
         workspace: models.Workspace,
         other_workspace_user: models.WorkspaceUser,
     ) -> None:
         """Test getting for user and uuid."""
-        actual = models.WorkspaceBoardSection.objects.filter_for_user_and_uuid(
+        actual = models.Section.objects.filter_for_user_and_uuid(
             workspace_user.user,
-            workspace_board_section.uuid,
+            section.uuid,
         ).get()
-        assert actual == workspace_board_section
+        assert actual == section
 
 
 @pytest.mark.django_db
-class TestWorkspaceBoardSection:
-    """Test WorkspaceBoardSection."""
+class TestSection:
+    """Test Section."""
 
     def test_factory(
         self,
         workspace_board: models.WorkspaceBoard,
-        workspace_board_section: models.WorkspaceBoardSection,
+        section: models.Section,
     ) -> None:
-        """Test workspace board section creation works."""
-        assert workspace_board_section.workspace_board == workspace_board
+        """Test section creation works."""
+        assert section.workspace_board == workspace_board

@@ -17,24 +17,24 @@
  */
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import WorkspaceBoardSection from "$lib/figma/cards/WorkspaceBoardSection.svelte";
+import Section from "$lib/figma/cards/Section.svelte";
 import {
     mobileParameters,
     workspaceBoard,
-    workspaceBoardSection,
+    section,
 } from "$lib/storybook";
 
-const meta: Meta<WorkspaceBoardSection> = {
-    component: WorkspaceBoardSection,
+const meta: Meta<Section> = {
+    component: Section,
     argTypes: {},
     args: {
         workspaceBoard,
-        workspaceBoardSection,
+        section,
     },
 };
 export default meta;
 
-type Story = StoryObj<WorkspaceBoardSection>;
+type Story = StoryObj<Section>;
 
 export const Default: Story = {};
 

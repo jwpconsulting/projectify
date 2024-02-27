@@ -16,38 +16,38 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    // TODO rename me to WorkspaceBoardSection.svelte
+    // TODO rename me to Section.svelte
     import { _ } from "svelte-i18n";
 
     import SectionTitle from "$lib/figma/cards/section-bar/SectionTitle.svelte";
     import TaskCard from "$lib/figma/cards/TaskCard.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { workspaceBoardSectionClosed } from "$lib/stores/dashboard";
+    import { sectionClosed } from "$lib/stores/dashboard";
     import type {
         WorkspaceBoardDetail,
-        WorkspaceBoardSectionWithTasks,
+        SectionWithTasks,
     } from "$lib/types/workspace";
     import { getNewTaskUrl } from "$lib/urls";
 
     export let workspaceBoard: WorkspaceBoardDetail;
-    export let workspaceBoardSection: WorkspaceBoardSectionWithTasks;
+    export let section: SectionWithTasks;
 
-    const { uuid } = workspaceBoardSection;
-    $: open = !$workspaceBoardSectionClosed.has(uuid);
+    const { uuid } = section;
+    $: open = !$sectionClosed.has(uuid);
 </script>
 
 <section class="flex flex-col">
-    <SectionTitle {workspaceBoard} {workspaceBoardSection} {open} />
+    <SectionTitle {workspaceBoard} {section} {open} />
     {#if open}
         <div class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4">
-            {#each workspaceBoardSection.tasks as task (task.uuid)}
+            {#each section.tasks as task (task.uuid)}
                 <TaskCard
                     {workspaceBoard}
                     task={{
                         ...task,
-                        workspace_board_section: workspaceBoardSection,
+                        section: section,
                     }}
-                    {workspaceBoardSection}
+                    {section}
                 />
             {:else}
                 <p>
@@ -55,7 +55,7 @@
                     <Anchor
                         label={$_("dashboard.section.empty.prompt")}
                         size="normal"
-                        href={getNewTaskUrl(workspaceBoardSection.uuid)}
+                        href={getNewTaskUrl(section.uuid)}
                     />
                 </p>
             {/each}

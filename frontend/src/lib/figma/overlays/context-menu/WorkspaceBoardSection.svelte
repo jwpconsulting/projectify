@@ -29,12 +29,12 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import {
-        moveWorkspaceBoardSection,
-        deleteWorkspaceBoardSection as repoDeleteWorkspaceBoardSection,
-    } from "$lib/repository/workspace/workspaceBoardSection";
+        moveSection,
+        deleteSection as repoDeleteSection,
+    } from "$lib/repository/workspace/section";
     import {
-        toggleWorkspaceBoardSectionOpen,
-        workspaceBoardSectionClosed,
+        toggleSectionOpen,
+        sectionClosed,
     } from "$lib/stores/dashboard";
     import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import {
@@ -43,44 +43,44 @@
     } from "$lib/stores/globalUi";
     import type {
         WorkspaceBoard,
-        WorkspaceBoardSection,
+        Section,
     } from "$lib/types/workspace";
 
     export let workspaceBoard: WorkspaceBoard;
-    export let workspaceBoardSection: WorkspaceBoardSection;
+    export let section: Section;
 
     let closed: boolean;
     $: {
-        closed = $workspaceBoardSectionClosed.has(workspaceBoardSection.uuid);
+        closed = $sectionClosed.has(section.uuid);
     }
 
-    let workspaceBoardSections: WorkspaceBoardSection[] = [];
-    $: workspaceBoardSections = workspaceBoard.workspace_board_sections ?? [];
+    let sections: Section[] = [];
+    $: sections = workspaceBoard.sections ?? [];
 
     // TODO this might have to be refactored to check if previous or next section exists
 
     let sectionIndex: number | undefined;
     let previousIndex: number | undefined;
     let nextIndex: number | undefined;
-    let previousSection: WorkspaceBoardSection | undefined;
-    let nextSection: WorkspaceBoardSection | undefined;
+    let previousSection: Section | undefined;
+    let nextSection: Section | undefined;
 
     $: {
-        sectionIndex = workspaceBoardSections.findIndex(
-            (s: WorkspaceBoardSection) => s.uuid == workspaceBoardSection.uuid,
+        sectionIndex = sections.findIndex(
+            (s: Section) => s.uuid == section.uuid,
         );
         previousIndex = sectionIndex > 0 ? sectionIndex - 1 : undefined;
         nextIndex =
-            sectionIndex < workspaceBoardSections.length - 1
+            sectionIndex < sections.length - 1
                 ? sectionIndex + 1
                 : undefined;
         previousSection =
             previousIndex !== undefined
-                ? workspaceBoardSections[previousIndex]
+                ? sections[previousIndex]
                 : undefined;
         nextSection =
             nextIndex !== undefined
-                ? workspaceBoardSections[nextIndex]
+                ? sections[nextIndex]
                 : undefined;
     }
 
@@ -88,8 +88,8 @@
         if (!previousSection) {
             throw new Error("Expected previousSection");
         }
-        await moveWorkspaceBoardSection(
-            workspaceBoardSection,
+        await moveSection(
+            section,
             previousSection._order,
             { fetch },
         );
@@ -98,26 +98,26 @@
         if (!nextSection) {
             throw new Error("Expected nextSection");
         }
-        await moveWorkspaceBoardSection(
-            workspaceBoardSection,
+        await moveSection(
+            section,
             nextSection._order,
             { fetch },
         );
     }
 
-    async function updateWorkspaceBoardSection() {
+    async function updateSection() {
         await openConstructiveOverlay({
-            kind: "updateWorkspaceBoardSection",
-            workspaceBoardSection,
+            kind: "updateSection",
+            section,
         });
     }
 
-    async function deleteWorkspaceBoardSection() {
+    async function deleteSection() {
         await openDestructiveOverlay({
-            kind: "deleteWorkspaceBoardSection",
-            workspaceBoardSection,
+            kind: "deleteSection",
+            section,
         });
-        await repoDeleteWorkspaceBoardSection(workspaceBoardSection, {
+        await repoDeleteSection(section, {
             fetch,
         });
     }
@@ -127,20 +127,20 @@
     <ContextMenuButton
         kind={{
             kind: "button",
-            action: toggleWorkspaceBoardSectionOpen.bind(
+            action: toggleSectionOpen.bind(
                 null,
-                workspaceBoardSection.uuid,
+                section.uuid,
             ),
         }}
         label={closed
-            ? $_("overlay.context-menu.workspace-board-section.expand-section")
+            ? $_("overlay.context-menu.section.expand-section")
             : $_(
-                  "overlay.context-menu.workspace-board-section.collapse-section",
+                  "overlay.context-menu.section.collapse-section",
               )}
         state="normal"
         icon={closed ? Selector : X}
     />
-    {#if $currentWorkspaceUserCan("update", "workspaceBoardSection")}
+    {#if $currentWorkspaceUserCan("update", "section")}
         {#if previousSection}
             <ContextMenuButton
                 kind={{
@@ -148,7 +148,7 @@
                     action: switchWithPreviousSection,
                 }}
                 label={$_(
-                    "overlay.context-menu.workspace-board-section.switch-previous",
+                    "overlay.context-menu.section.switch-previous",
                 )}
                 state="normal"
                 icon={ArrowUp}
@@ -161,7 +161,7 @@
                     action: switchWithNextSection,
                 }}
                 label={$_(
-                    "overlay.context-menu.workspace-board-section.switch-next",
+                    "overlay.context-menu.section.switch-next",
                 )}
                 state="normal"
                 icon={ArrowDown}
@@ -170,23 +170,23 @@
         <ContextMenuButton
             kind={{
                 kind: "button",
-                action: updateWorkspaceBoardSection,
+                action: updateSection,
             }}
             label={$_(
-                "overlay.context-menu.workspace-board-section.edit-title",
+                "overlay.context-menu.section.edit-title",
             )}
             state="normal"
             icon={Pencil}
         />
     {/if}
-    {#if $currentWorkspaceUserCan("delete", "workspaceBoardSection")}
+    {#if $currentWorkspaceUserCan("delete", "section")}
         <ContextMenuButton
             kind={{
                 kind: "button",
-                action: deleteWorkspaceBoardSection,
+                action: deleteSection,
             }}
             label={$_(
-                "overlay.context-menu.workspace-board-section.delete-workspace-board-section",
+                "overlay.context-menu.section.delete-section",
             )}
             state="normal"
             icon={Trash}

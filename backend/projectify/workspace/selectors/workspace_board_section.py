@@ -14,19 +14,19 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Workspace board section selectors."""
+"""Section selectors."""
 from typing import Optional
 from uuid import UUID
 
 from django.db.models import QuerySet
 
 from projectify.user.models import User
-from projectify.workspace.models.workspace_board_section import (
-    WorkspaceBoardSection,
+from projectify.workspace.models.section import (
+    Section,
 )
 
-WorkspaceBoardSectionDetailQuerySet = (
-    WorkspaceBoardSection.objects.prefetch_related(
+SectionDetailQuerySet = (
+    Section.objects.prefetch_related(
         "task_set",
         "task_set__assignee",
         "task_set__assignee__user",
@@ -39,23 +39,23 @@ WorkspaceBoardSectionDetailQuerySet = (
 )
 
 
-def workspace_board_section_find_for_user_and_uuid(
+def section_find_for_user_and_uuid(
     *,
-    workspace_board_section_uuid: UUID,
+    section_uuid: UUID,
     user: User,
-    qs: Optional[QuerySet[WorkspaceBoardSection]] = None,
-) -> Optional[WorkspaceBoardSection]:
+    qs: Optional[QuerySet[Section]] = None,
+) -> Optional[Section]:
     """
-    Find a workspace board section given a UUID and a user.
+    Find a section given a UUID and a user.
 
     Allows specifying optional base queryset.
     """
     if qs is None:
-        qs = WorkspaceBoardSection.objects
+        qs = Section.objects
     try:
         return qs.filter(
             workspace_board__workspace__users=user,
-            uuid=workspace_board_section_uuid,
+            uuid=section_uuid,
         ).get()
-    except WorkspaceBoardSection.DoesNotExist:
+    except Section.DoesNotExist:
         return None

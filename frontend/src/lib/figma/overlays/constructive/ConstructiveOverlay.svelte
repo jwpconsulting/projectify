@@ -17,13 +17,13 @@
 -->
 <script lang="ts">
     import CreateWorkspaceBoard from "$lib/figma/overlays/constructive/CreateWorkspaceBoard.svelte";
-    import CreateWorkspaceBoardSection from "$lib/figma/overlays/constructive/CreateWorkspaceBoardSection.svelte";
+    import CreateSection from "$lib/figma/overlays/constructive/CreateSection.svelte";
     import InviteWorkspaceUser from "$lib/figma/overlays/constructive/InviteWorkspaceUser.svelte";
     import RecoverWorkspaceBoard from "$lib/figma/overlays/constructive/RecoverWorkspaceBoard.svelte";
     import UpdateWorkspaceBoard from "$lib/figma/overlays/constructive/UpdateWorkspaceBoard.svelte";
     import type { ConstructiveOverlayType } from "$lib/types/ui";
 
-    import UpdateWorkspaceBoardSection from "./UpdateWorkspaceBoardSection.svelte";
+    import UpdateSection from "./UpdateSection.svelte";
 
     export let target: ConstructiveOverlayType;
 </script>
@@ -34,11 +34,11 @@
     <CreateWorkspaceBoard workspace={target.workspace} />
 {:else if target.kind === "inviteWorkspaceUser"}
     <InviteWorkspaceUser workspace={target.workspace} />
-{:else if target.kind === "createWorkspaceBoardSection"}
-    <CreateWorkspaceBoardSection workspaceBoard={target.workspaceBoard} />
-{:else if target.kind === "updateWorkspaceBoardSection"}
-    <UpdateWorkspaceBoardSection
-        workspaceBoardSection={target.workspaceBoardSection}
+{:else if target.kind === "createSection"}
+    <CreateSection workspaceBoard={target.workspaceBoard} />
+{:else if target.kind === "updateSection"}
+    <UpdateSection
+        section={target.section}
     />
 {:else if target.kind === "recoverWorkspaceBoard"}
     <RecoverWorkspaceBoard workspaceBoard={target.workspaceBoard} />

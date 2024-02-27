@@ -31,7 +31,7 @@
         task,
         assignee,
         workspaceBoard,
-        workspaceBoardSection,
+        section,
         workspace,
         label,
     } = data;
@@ -80,7 +80,7 @@
             label,
             workspace,
             workspaceBoard,
-            workspaceBoardSection,
+            section,
             assignee,
         }}
     />

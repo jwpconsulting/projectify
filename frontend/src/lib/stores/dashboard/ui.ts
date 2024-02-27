@@ -104,8 +104,8 @@ export function toggleSideNavOpen() {
     _sideNavOpen.update((state) => !state);
 }
 
-const _workspaceBoardSectionClosed = persisted(
-    "workspace-board-section-closed",
+const _sectionClosed = persisted(
+    "section-closed",
     new Set<string>(),
     {
         serializer: {
@@ -125,20 +125,20 @@ const _workspaceBoardSectionClosed = persisted(
         },
     },
 );
-export const workspaceBoardSectionClosed = readonly(
-    _workspaceBoardSectionClosed,
+export const sectionClosed = readonly(
+    _sectionClosed,
 );
 
-export function toggleWorkspaceBoardSectionOpen(
-    workspaceBoardSectionUuid: string,
+export function toggleSectionOpen(
+    sectionUuid: string,
 ) {
-    _workspaceBoardSectionClosed.update(($workspaceBoardSectionClosed) => {
-        if ($workspaceBoardSectionClosed.has(workspaceBoardSectionUuid)) {
-            $workspaceBoardSectionClosed.delete(workspaceBoardSectionUuid);
+    _sectionClosed.update(($sectionClosed) => {
+        if ($sectionClosed.has(sectionUuid)) {
+            $sectionClosed.delete(sectionUuid);
         } else {
-            $workspaceBoardSectionClosed.add(workspaceBoardSectionUuid);
+            $sectionClosed.add(sectionUuid);
         }
-        return $workspaceBoardSectionClosed;
+        return $sectionClosed;
     });
 }
 
