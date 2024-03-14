@@ -17,6 +17,7 @@
 """Ensure unique Task number for current Task objects."""
 from typing import (
     TYPE_CHECKING,
+    Any,
     cast,
 )
 
@@ -27,14 +28,11 @@ from django.db import (
     migrations,
 )
 
-if TYPE_CHECKING:
-    from projectify.workspace.models import Task as _Task
-
 
 def add_workspace_to_task(apps: Apps, schema_editor: object) -> None:
     """Add unique task number."""
-    Task = cast("_Task", apps.get_model("workspace", "Task"))
-    for i, task in enumerate(Task.objects.all()):
+    Task = cast(Any, apps.get_model("workspace", "Task"))
+    for _, task in enumerate(Task.objects.all()):
         task.workspace = task.workspace_board_section.workspace_board.workspace
         task.save()
 

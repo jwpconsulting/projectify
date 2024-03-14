@@ -19,6 +19,7 @@
 
 from typing import (
     TYPE_CHECKING,
+    Any,
     cast,
 )
 
@@ -29,14 +30,11 @@ from django.db import (
     migrations,
 )
 
-if TYPE_CHECKING:
-    from projectify.workspace.models import WorkspaceBoard as _WorkspaceBoard
-
 
 def ensure_correct_order(apps: Apps, schema_editor: object) -> None:
     """Correct _order field."""
     WorkspaceBoard = cast(
-        "_WorkspaceBoard", apps.get_model("workspace", "WorkspaceBoard")
+        Any, apps.get_model("workspace", "WorkspaceBoard")
     )
     for workspaceboard in WorkspaceBoard.objects.all():
         for i, wbs in enumerate(
