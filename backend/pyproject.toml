@@ -129,7 +129,7 @@ channels = {version = "~4.0.0", extras = ["daphne"]}
 channels-redis = "~4.0.0"
 cryptography = "42.0.4"
 dj-database-url = "~2.1.0"
-django = "~4.2.3"
+django = "~5"
 django-anymail = {extras = ["mailgun"], version = "~8.6"}
 django-celery-results = "~2.5.0"
 django-cloudinary-storage = "~0.3.0"
@@ -213,9 +213,7 @@ filterwarnings = [
     # Some issue with daphne or twisted
     "ignore:'cgi' is deprecated and slated for removal in Python 3.13:DeprecationWarning",
     # Some issue with django-configurations
-    "ignore:The USE_DEPRECATED_PYTZ setting:django.utils.deprecation.RemovedInDjango50Warning",
-    "ignore:The USE_L10N setting:django.utils.deprecation.RemovedInDjango50Warning",
-    "ignore:The CSRF_COOKIE_MASKED transitional setting:django.utils.deprecation.RemovedInDjango50Warning",
+    "ignore:The FORMS_URLFIELD_ASSUME_HTTPS transitional setting is deprecated:django.utils.deprecation.RemovedInDjango60Warning",
     # Again, another issue with djagno-configurations
     # https://github.com/jazzband/django-configurations/issues/367
     "ignore:the imp module is deprecated:DeprecationWarning",
