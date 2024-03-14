@@ -55,7 +55,6 @@ export async function load({
             `No workspace with UUID ${workspaceUuid} could be found for workspace board UUID ${workspaceBoardUuid}.`,
         );
     }
-    const section =
-        workspaceBoard.sections.at(0);
+    const section = workspaceBoard.sections.at(0);
     return { workspaceBoard, workspace, section };
 }

@@ -33,10 +33,7 @@ export async function load({
     fetch,
 }: LayoutLoadEvent): Promise<Data> {
     // If thing is fetched, use the fetch argument above
-    const section = await getSection(
-        sectionUuid,
-        { fetch },
-    );
+    const section = await getSection(sectionUuid, { fetch });
     if (!section) {
         error(
             404,

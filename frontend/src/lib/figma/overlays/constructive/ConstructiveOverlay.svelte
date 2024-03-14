@@ -37,9 +37,7 @@
 {:else if target.kind === "createSection"}
     <CreateSection workspaceBoard={target.workspaceBoard} />
 {:else if target.kind === "updateSection"}
-    <UpdateSection
-        section={target.section}
-    />
+    <UpdateSection section={target.section} />
 {:else if target.kind === "recoverWorkspaceBoard"}
     <RecoverWorkspaceBoard workspaceBoard={target.workspaceBoard} />
 {/if}

@@ -18,11 +18,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 import Section from "$lib/figma/cards/Section.svelte";
-import {
-    mobileParameters,
-    workspaceBoard,
-    section,
-} from "$lib/storybook";
+import { mobileParameters, workspaceBoard, section } from "$lib/storybook";
 
 const meta: Meta<Section> = {
     component: Section,

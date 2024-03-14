@@ -37,10 +37,7 @@
 
     async function onSubmit() {
         state = { kind: "submitting" };
-        const result = await updateSection(
-            { ...section, title },
-            { fetch },
-        );
+        const result = await updateSection({ ...section, title }, { fetch });
         if (!result.ok) {
             // TODO show error
             state = { kind: "error", message: JSON.stringify(result.error) };
@@ -57,9 +54,7 @@
     <svelte:fragment slot="form">
         <InputField
             name="workspace-board-name"
-            label={$_(
-                "overlay.constructive.update-section.form.title.label",
-            )}
+            label={$_("overlay.constructive.update-section.form.title.label")}
             placeholder={$_(
                 "overlay.constructive.update-section.form.title.placeholder",
             )}
@@ -77,18 +72,14 @@
             style={{ kind: "secondary" }}
             size="medium"
             color="blue"
-            label={$_(
-                "overlay.constructive.update-section.cancel",
-            )}
+            label={$_("overlay.constructive.update-section.cancel")}
         />
         <Button
             action={{ kind: "submit", disabled: state.kind === "submitting" }}
             style={{ kind: "primary" }}
             size="medium"
             color="blue"
-            label={$_(
-                "overlay.constructive.update-section.update",
-            )}
+            label={$_("overlay.constructive.update-section.update")}
         />
     </svelte:fragment>
 </Layout>

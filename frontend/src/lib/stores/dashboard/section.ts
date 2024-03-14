@@ -42,8 +42,7 @@ interface CurrentFilter {
 function filterSectionsTasks(
     currentFilter: CurrentFilter,
 ): SectionWithTasks[] {
-    let sections: SectionWithTasks[] =
-        currentFilter.sections;
+    let sections: SectionWithTasks[] = currentFilter.sections;
     if (currentFilter.labels.kind === "noLabel") {
         // TODO filter by no label? Justus 2023-04-04
         // eslint-disable-next-line
@@ -109,8 +108,7 @@ export const currentSections = derived<
             set(undefined);
             return;
         }
-        const sections =
-            $currentWorkspaceBoard.sections;
+        const sections = $currentWorkspaceBoard.sections;
         set(
             filterSectionsTasks({
                 labels: $selectedLabels,

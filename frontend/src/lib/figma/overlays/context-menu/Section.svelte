@@ -32,19 +32,13 @@
         moveSection,
         deleteSection as repoDeleteSection,
     } from "$lib/repository/workspace/section";
-    import {
-        toggleSectionOpen,
-        sectionClosed,
-    } from "$lib/stores/dashboard";
+    import { toggleSectionOpen, sectionClosed } from "$lib/stores/dashboard";
     import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import {
         openConstructiveOverlay,
         openDestructiveOverlay,
     } from "$lib/stores/globalUi";
-    import type {
-        WorkspaceBoard,
-        Section,
-    } from "$lib/types/workspace";
+    import type { WorkspaceBoard, Section } from "$lib/types/workspace";
 
     export let workspaceBoard: WorkspaceBoard;
     export let section: Section;
@@ -71,38 +65,24 @@
         );
         previousIndex = sectionIndex > 0 ? sectionIndex - 1 : undefined;
         nextIndex =
-            sectionIndex < sections.length - 1
-                ? sectionIndex + 1
-                : undefined;
+            sectionIndex < sections.length - 1 ? sectionIndex + 1 : undefined;
         previousSection =
-            previousIndex !== undefined
-                ? sections[previousIndex]
-                : undefined;
+            previousIndex !== undefined ? sections[previousIndex] : undefined;
         nextSection =
-            nextIndex !== undefined
-                ? sections[nextIndex]
-                : undefined;
+            nextIndex !== undefined ? sections[nextIndex] : undefined;
     }
 
     async function switchWithPreviousSection() {
         if (!previousSection) {
             throw new Error("Expected previousSection");
         }
-        await moveSection(
-            section,
-            previousSection._order,
-            { fetch },
-        );
+        await moveSection(section, previousSection._order, { fetch });
     }
     async function switchWithNextSection() {
         if (!nextSection) {
             throw new Error("Expected nextSection");
         }
-        await moveSection(
-            section,
-            nextSection._order,
-            { fetch },
-        );
+        await moveSection(section, nextSection._order, { fetch });
     }
 
     async function updateSection() {
@@ -127,16 +107,11 @@
     <ContextMenuButton
         kind={{
             kind: "button",
-            action: toggleSectionOpen.bind(
-                null,
-                section.uuid,
-            ),
+            action: toggleSectionOpen.bind(null, section.uuid),
         }}
         label={closed
             ? $_("overlay.context-menu.section.expand-section")
-            : $_(
-                  "overlay.context-menu.section.collapse-section",
-              )}
+            : $_("overlay.context-menu.section.collapse-section")}
         state="normal"
         icon={closed ? Selector : X}
     />
@@ -147,9 +122,7 @@
                     kind: "button",
                     action: switchWithPreviousSection,
                 }}
-                label={$_(
-                    "overlay.context-menu.section.switch-previous",
-                )}
+                label={$_("overlay.context-menu.section.switch-previous")}
                 state="normal"
                 icon={ArrowUp}
             />
@@ -160,9 +133,7 @@
                     kind: "button",
                     action: switchWithNextSection,
                 }}
-                label={$_(
-                    "overlay.context-menu.section.switch-next",
-                )}
+                label={$_("overlay.context-menu.section.switch-next")}
                 state="normal"
                 icon={ArrowDown}
             />
@@ -172,9 +143,7 @@
                 kind: "button",
                 action: updateSection,
             }}
-            label={$_(
-                "overlay.context-menu.section.edit-title",
-            )}
+            label={$_("overlay.context-menu.section.edit-title")}
             state="normal"
             icon={Pencil}
         />
@@ -185,9 +154,7 @@
                 kind: "button",
                 action: deleteSection,
             }}
-            label={$_(
-                "overlay.context-menu.section.delete-section",
-            )}
+            label={$_("overlay.context-menu.section.delete-section")}
             state="normal"
             icon={Trash}
             color="destructive"

@@ -23,10 +23,7 @@ Up and down chevrons for task movement within a section
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { getTaskPosition, moveUp, moveDown } from "$lib/stores/modules";
-    import type {
-        Task,
-        SectionWithTasks,
-    } from "$lib/types/workspace";
+    import type { Task, SectionWithTasks } from "$lib/types/workspace";
 
     export let task: Task;
     export let section: SectionWithTasks;

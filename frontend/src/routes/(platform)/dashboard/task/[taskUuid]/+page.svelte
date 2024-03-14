@@ -68,9 +68,7 @@
         },
         {
             label: section.title,
-            href: getDashboardSectionUrl(
-                section.uuid,
-            ),
+            href: getDashboardSectionUrl(section.uuid),
         },
         { label: $number(task.number), href: getTaskUrl(task.uuid) },
     ];

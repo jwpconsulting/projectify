@@ -17,11 +17,7 @@
  */
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import {
-    mobileParameters,
-    workspaceBoard,
-    section,
-} from "$lib/storybook";
+import { mobileParameters, workspaceBoard, section } from "$lib/storybook";
 import Dashboard from "$routes/(platform)/dashboard/workspace-board/[workspaceBoardUuid]/+page.svelte";
 
 const meta: Meta<Dashboard> = {

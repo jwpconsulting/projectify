@@ -43,10 +43,7 @@
         workspaceBoard={target.workspaceBoard}
     />
 {:else if target.kind === "section"}
-    <Section
-        workspaceBoard={target.workspaceBoard}
-        section={target.section}
-    />
+    <Section workspaceBoard={target.workspaceBoard} section={target.section} />
 {:else if target.kind === "task"}
     <Task kind={target} />
 {:else if target.kind === "help"}

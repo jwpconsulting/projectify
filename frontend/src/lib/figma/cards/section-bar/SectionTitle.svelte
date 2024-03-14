@@ -26,10 +26,7 @@
     import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
-    import type {
-        WorkspaceBoard,
-        Section,
-    } from "$lib/types/workspace";
+    import type { WorkspaceBoard, Section } from "$lib/types/workspace";
     import { getNewTaskUrl } from "$lib/urls";
 
     export let workspaceBoard: WorkspaceBoard;

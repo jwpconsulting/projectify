@@ -46,11 +46,10 @@ export function searchTasks(
     sections: Section[],
     searchText: SearchInput,
 ): TaskWithSection[] {
-    const sectionTasks: TaskWithSection[][] = sections.map(
-        (section) =>
-            (section.tasks ?? []).map((task: Task) => {
-                return { ...task, section };
-            }),
+    const sectionTasks: TaskWithSection[][] = sections.map((section) =>
+        (section.tasks ?? []).map((task: Task) => {
+            return { ...task, section };
+        }),
     );
     const tasks = sectionTasks.flat();
     return searchAmong<TaskWithSection>(

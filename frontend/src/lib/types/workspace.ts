@@ -89,8 +89,7 @@ export type Section = {
 } & TimestampedType &
     CreateSection;
 
-export type SectionWithTasks = Section &
-    Required<Pick<Section, "tasks">>;
+export type SectionWithTasks = Section & Required<Pick<Section, "tasks">>;
 
 export type SectionDetail = Section &
     Required<Pick<Section, "workspace_board" | "tasks">>;

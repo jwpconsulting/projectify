@@ -59,24 +59,14 @@
                 );
                 break;
             case "deleteSection":
-                title = $_(
-                    "overlay.destructive.delete-section.title",
-                );
-                body = $_(
-                    "overlay.destructive.delete-section.body",
-                    {
-                        values: {
-                            section:
-                                target.section.title,
-                        },
+                title = $_("overlay.destructive.delete-section.title");
+                body = $_("overlay.destructive.delete-section.body", {
+                    values: {
+                        section: target.section.title,
                     },
-                );
-                warning = $_(
-                    "overlay.destructive.delete-section.warning",
-                );
-                buttonLabel = $_(
-                    "overlay.destructive.delete-section.button",
-                );
+                });
+                warning = $_("overlay.destructive.delete-section.warning");
+                buttonLabel = $_("overlay.destructive.delete-section.button");
                 break;
             case "deleteTask":
                 title = $_("overlay.destructive.delete-task.title");

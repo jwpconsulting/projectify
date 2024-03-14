@@ -59,9 +59,7 @@ export const contextMenus: Record<string, ContextMenuType> = {
         section,
         workspaceBoard: {
             ...workspaceBoard,
-            sections: [
-                { ...section, tasks: [task] },
-            ],
+            sections: [{ ...section, tasks: [task] }],
             workspace,
         },
     },

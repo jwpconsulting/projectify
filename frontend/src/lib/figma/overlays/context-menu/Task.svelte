@@ -42,10 +42,7 @@
     } from "$lib/stores/modules";
     import type { ContextMenuType } from "$lib/types/ui";
     import type { Section } from "$lib/types/workspace";
-    import {
-        getTaskUrl,
-        getDashboardSectionUrl,
-    } from "$lib/urls";
+    import { getTaskUrl, getDashboardSectionUrl } from "$lib/urls";
     import { copyToClipboard } from "$lib/utils/clipboard";
 
     export let kind: ContextMenuType & { kind: "task" };
@@ -123,12 +120,9 @@
             <ContextMenuButton
                 kind={{
                     kind: "button",
-                    action: moveToTop.bind(
-                        null,
-                        kind.section,
-                        kind.task,
-                        { fetch },
-                    ),
+                    action: moveToTop.bind(null, kind.section, kind.task, {
+                        fetch,
+                    }),
                 }}
                 label={$_("overlay.context-menu.task.move-to-top")}
                 state="normal"
@@ -139,12 +133,9 @@
             <ContextMenuButton
                 kind={{
                     kind: "button",
-                    action: moveToBottom.bind(
-                        null,
-                        kind.section,
-                        kind.task,
-                        { fetch },
-                    ),
+                    action: moveToBottom.bind(null, kind.section, kind.task, {
+                        fetch,
+                    }),
                 }}
                 label={$_("overlay.context-menu.task.move-to-bottom")}
                 state="normal"

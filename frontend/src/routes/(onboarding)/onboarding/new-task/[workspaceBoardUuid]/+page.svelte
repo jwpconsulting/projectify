@@ -38,8 +38,7 @@
     let taskTitle: string | undefined = undefined;
 
     $: sectionTitle =
-        section?.title ??
-        $_("onboarding.new-task.section-title");
+        section?.title ?? $_("onboarding.new-task.section-title");
 
     $: disabled = taskTitle === undefined;
     async function submit() {

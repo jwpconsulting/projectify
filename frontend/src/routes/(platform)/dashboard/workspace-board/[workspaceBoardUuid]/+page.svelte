@@ -39,9 +39,7 @@
     $: hasSections = workspaceBoard.sections.length > 0;
 
     let sections: SectionWithTasks[];
-    $: sections =
-        $currentSections ??
-        workspaceBoard.sections;
+    $: sections = $currentSections ?? workspaceBoard.sections;
 
     async function onAddNewSection() {
         await openConstructiveOverlay({

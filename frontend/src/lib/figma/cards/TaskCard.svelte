@@ -31,9 +31,7 @@
 
     export let task: TaskWithSection;
     export let workspaceBoard: WorkspaceBoardDetail;
-    export let section:
-        | SectionWithTasks
-        | undefined = undefined;
+    export let section: SectionWithTasks | undefined = undefined;
 </script>
 
 <a
@@ -51,11 +49,7 @@
                     {#if section}
                         <Chevrons {task} {section} />
                     {/if}
-                    <MenuButton
-                        {task}
-                        {workspaceBoard}
-                        {section}
-                    />
+                    <MenuButton {task} {workspaceBoard} {section} />
                 </div>
             </div>
             <div class="flex flex-row justify-between">
@@ -92,11 +86,7 @@
                         {#if section}
                             <Chevrons {task} {section} />
                         {/if}
-                        <MenuButton
-                            {task}
-                            {workspaceBoard}
-                            {section}
-                        />
+                        <MenuButton {task} {workspaceBoard} {section} />
                     </div>
                 </div>
             </div>

@@ -47,8 +47,7 @@ export async function load({
         error(404, `No task could found for UUID ${taskUuid}.`);
     }
     const { section: section } = task;
-    const workspaceBoardUuid =
-        task.section.workspace_board.uuid;
+    const workspaceBoardUuid = task.section.workspace_board.uuid;
     const workspaceBoard = await getWorkspaceBoard(workspaceBoardUuid, {
         fetch,
     });

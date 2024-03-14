@@ -35,10 +35,7 @@ export async function load({
         error(404, `No task could be found for UUID '${taskUuid}'`);
     }
     currentWorkspace
-        .loadUuid(
-            task.section.workspace_board.workspace.uuid,
-            { fetch },
-        )
+        .loadUuid(task.section.workspace_board.workspace.uuid, { fetch })
         .catch((error) =>
             console.error(
                 `Error when fetching currentWorkspace for task ${taskUuid}: ${error}`,

@@ -27,14 +27,7 @@
 
     export let data: PageData;
 
-    const {
-        task,
-        assignee,
-        workspaceBoard,
-        section,
-        workspace,
-        label,
-    } = data;
+    const { task, assignee, workspaceBoard, section, workspace, label } = data;
 
     const taskTitle = task.title;
 </script>

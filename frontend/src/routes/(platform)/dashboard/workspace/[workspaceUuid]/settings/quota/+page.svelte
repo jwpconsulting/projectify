@@ -40,9 +40,7 @@
             quota: workspace.quota.workspace_boards,
         },
         {
-            label: $_(
-                "workspace-settings.quota.resource.sections",
-            ),
+            label: $_("workspace-settings.quota.resource.sections"),
             quota: workspace.quota.sections,
         },
         {

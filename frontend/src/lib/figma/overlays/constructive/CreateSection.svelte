@@ -27,10 +27,7 @@
         resolveConstructiveOverlay,
     } from "$lib/stores/globalUi";
     import type { FormViewState } from "$lib/types/ui";
-    import type {
-        CreateSection,
-        WorkspaceBoard,
-    } from "$lib/types/workspace";
+    import type { CreateSection, WorkspaceBoard } from "$lib/types/workspace";
 
     export let workspaceBoard: WorkspaceBoard;
 
@@ -43,11 +40,7 @@
             title: title,
             description: "",
         };
-        const result = await createSection(
-            workspaceBoard,
-            section,
-            { fetch },
-        );
+        const result = await createSection(workspaceBoard, section, { fetch });
         if (result.ok) {
             resolveConstructiveOverlay();
         } else {
@@ -63,9 +56,7 @@
     <svelte:fragment slot="form">
         <InputField
             name="workspace-board-name"
-            label={$_(
-                "overlay.constructive.create-section.form.title.label",
-            )}
+            label={$_("overlay.constructive.create-section.form.title.label")}
             placeholder={$_(
                 "overlay.constructive.create-section.form.title.placeholder",
             )}
@@ -83,18 +74,14 @@
             style={{ kind: "secondary" }}
             size="medium"
             color="blue"
-            label={$_(
-                "overlay.constructive.create-section.cancel",
-            )}
+            label={$_("overlay.constructive.create-section.cancel")}
         />
         <Button
             action={{ kind: "submit", disabled: state.kind === "submitting" }}
             style={{ kind: "primary" }}
             size="medium"
             color="blue"
-            label={$_(
-                "overlay.constructive.create-section.create-section",
-            )}
+            label={$_("overlay.constructive.create-section.create-section")}
         />
     </svelte:fragment>
 </Layout>

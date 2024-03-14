@@ -29,9 +29,7 @@
     // this is only ever needed for the dashboard, not when a task is part
     // of search results... time for another ADT?
     export let workspaceBoard: WorkspaceBoardDetail;
-    export let section:
-        | SectionWithTasks
-        | undefined = undefined;
+    export let section: SectionWithTasks | undefined = undefined;
 
     let dropDownMenuBtnRef: HTMLElement;
 

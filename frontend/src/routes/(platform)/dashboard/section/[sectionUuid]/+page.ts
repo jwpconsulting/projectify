@@ -27,10 +27,7 @@ export async function load({
     fetch: typeof window.fetch;
     params: { sectionUuid: string };
 }) {
-    const section = await getSection(
-        params.sectionUuid,
-        { fetch },
-    );
+    const section = await getSection(params.sectionUuid, { fetch });
     if (!section) {
         error(404);
     }

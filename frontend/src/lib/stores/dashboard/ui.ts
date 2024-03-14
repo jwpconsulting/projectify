@@ -104,34 +104,26 @@ export function toggleSideNavOpen() {
     _sideNavOpen.update((state) => !state);
 }
 
-const _sectionClosed = persisted(
-    "section-closed",
-    new Set<string>(),
-    {
-        serializer: {
-            // XXX Using json.parse, maybe a security problem?
-            parse(value: string): Set<string> {
-                const values = JSON.parse(value) as string[];
-                try {
-                    return new Set(values);
-                } catch {
-                    return new Set();
-                }
-            },
-            stringify(set: Set<string>): string {
-                const values: string[] = [...set];
-                return JSON.stringify(values);
-            },
+const _sectionClosed = persisted("section-closed", new Set<string>(), {
+    serializer: {
+        // XXX Using json.parse, maybe a security problem?
+        parse(value: string): Set<string> {
+            const values = JSON.parse(value) as string[];
+            try {
+                return new Set(values);
+            } catch {
+                return new Set();
+            }
+        },
+        stringify(set: Set<string>): string {
+            const values: string[] = [...set];
+            return JSON.stringify(values);
         },
     },
-);
-export const sectionClosed = readonly(
-    _sectionClosed,
-);
+});
+export const sectionClosed = readonly(_sectionClosed);
 
-export function toggleSectionOpen(
-    sectionUuid: string,
-) {
+export function toggleSectionOpen(sectionUuid: string) {
     _sectionClosed.update(($sectionClosed) => {
         if ($sectionClosed.has(sectionUuid)) {
             $sectionClosed.delete(sectionUuid);

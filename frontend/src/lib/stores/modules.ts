@@ -59,11 +59,7 @@ export async function moveToTop(
     task: TaskWithSection,
     repositoryContext: RepositoryContext,
 ) {
-    await moveTaskToSection(
-        task,
-        section,
-        repositoryContext,
-    );
+    await moveTaskToSection(task, section, repositoryContext);
 }
 
 export async function moveToBottom(
