@@ -162,3 +162,20 @@ for f in (
   git mv -v $f $dir/$base || break
 end
 ```
+
+To rename the files, we run
+
+```fish
+for f in (
+  fd --type file \
+    "workspace[_ -]?[bB]oard[_ -]?[sS]ections?" \
+    --exclude migrations \
+    .
+)
+  echo "Moving $f"
+  set -l dir (dirname $f)
+  read -l -P "New path: $dir/" base || break
+  echo "Moving to $dir/$base"
+  git mv -v $f $dir/$base || break
+end
+```
