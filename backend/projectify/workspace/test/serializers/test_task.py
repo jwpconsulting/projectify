@@ -30,10 +30,10 @@ from projectify.user.models import User
 from projectify.workspace.models.const import WorkspaceUserRoles
 
 from ...models.label import Label
+from ...models.section import Section
 from ...models.sub_task import SubTask
 from ...models.task import Task
 from ...models.workspace import Workspace
-from ...models.section import Section
 from ...models.workspace_user import WorkspaceUser
 from ...serializers.task_detail import (
     TaskCreateUpdateSerializer,

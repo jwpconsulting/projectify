@@ -31,11 +31,11 @@ from django_extensions.db.models import (
 
 from projectify.lib.models import BaseModel
 
-from .workspace import (
-    Workspace,
-)
 from .section import (
     Section,
+)
+from .workspace import (
+    Workspace,
 )
 
 # TODO Here we could be using __all__

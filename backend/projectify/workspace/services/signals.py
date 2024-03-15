@@ -29,11 +29,11 @@ from channels.layers import (
 from ..models import TaskLabel
 from ..models.chat_message import ChatMessage
 from ..models.label import Label
+from ..models.section import Section
 from ..models.sub_task import SubTask
 from ..models.task import Task
 from ..models.workspace import Workspace
 from ..models.workspace_board import WorkspaceBoard
-from ..models.section import Section
 from ..models.workspace_user import WorkspaceUser
 from ..types import ConsumerEvent
 

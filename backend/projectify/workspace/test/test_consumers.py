@@ -51,15 +51,21 @@ from .. import (
 )
 from ..models.const import WorkspaceUserRoles
 from ..models.label import Label
+from ..models.section import Section
 from ..models.sub_task import SubTask
 from ..models.task import Task
 from ..models.workspace import Workspace
 from ..models.workspace_board import WorkspaceBoard
-from ..models.section import Section
 from ..models.workspace_user import WorkspaceUser
 from ..selectors.workspace_user import workspace_user_find_for_workspace
 from ..services.chat_message import chat_message_create
 from ..services.label import label_create, label_delete, label_update
+from ..services.section import (
+    section_create,
+    section_delete,
+    section_move,
+    section_update,
+)
 from ..services.sub_task import sub_task_create, sub_task_update_many
 from ..services.task import (
     task_create,
@@ -78,12 +84,6 @@ from ..services.workspace_board import (
     workspace_board_create,
     workspace_board_delete,
     workspace_board_update,
-)
-from ..services.section import (
-    section_create,
-    section_delete,
-    section_move,
-    section_update,
 )
 from ..services.workspace_user import (
     workspace_user_delete,

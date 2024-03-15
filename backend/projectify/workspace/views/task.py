@@ -35,12 +35,12 @@ from rest_framework.views import APIView
 from projectify.workspace.models.section import (
     Section,
 )
+from projectify.workspace.selectors.section import (
+    section_find_for_user_and_uuid,
+)
 from projectify.workspace.selectors.task import (
     TaskDetailQuerySet,
     task_find_by_task_uuid,
-)
-from projectify.workspace.selectors.section import (
-    section_find_for_user_and_uuid,
 )
 from projectify.workspace.serializers.base import TaskBaseSerializer
 from projectify.workspace.serializers.task_detail import (

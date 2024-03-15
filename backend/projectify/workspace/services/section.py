@@ -21,7 +21,7 @@ from django.db import transaction
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
-from projectify.workspace.models import WorkspaceBoard, Section
+from projectify.workspace.models import Section, WorkspaceBoard
 from projectify.workspace.services.signals import (
     send_workspace_board_change_signal,
 )

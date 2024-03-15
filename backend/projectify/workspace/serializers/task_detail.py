@@ -49,14 +49,14 @@ from .. import (
 from . import (
     base,
 )
+from .section import (
+    SectionUpSerializer,
+)
 from .sub_task import (
     SubTaskCreateUpdateSerializer,
 )
 from .task import (
     TaskWithSubTaskSerializer,
-)
-from .section import (
-    SectionUpSerializer,
 )
 
 

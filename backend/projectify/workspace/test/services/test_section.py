@@ -18,10 +18,10 @@
 import pytest
 
 from projectify.workspace.models import WorkspaceBoard
-from projectify.workspace.models.task import Task
 from projectify.workspace.models.section import (
     Section,
 )
+from projectify.workspace.models.task import Task
 from projectify.workspace.models.workspace_user import WorkspaceUser
 from projectify.workspace.services.section import (
     section_delete,

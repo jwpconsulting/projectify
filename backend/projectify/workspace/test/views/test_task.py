@@ -28,11 +28,11 @@ from rest_framework.test import (
     APIClient,
 )
 
-from projectify.workspace.models.task import (
-    Task,
-)
 from projectify.workspace.models.section import (
     Section,
+)
+from projectify.workspace.models.task import (
+    Task,
 )
 from pytest_types import (
     DjangoAssertNumQueries,
