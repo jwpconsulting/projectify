@@ -23,14 +23,14 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
-    import { createWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
+    import { createWorkspaceBoard } from "$lib/repository/workspace/project";
     import { getNewTaskUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
 
     export let data: PageData;
 
-    const { workspace, workspaceBoard } = data;
+    const { workspace, project } = data;
 
     let title: string | undefined = undefined;
 
@@ -56,7 +56,7 @@
         await goto(nextStep);
     }
 
-    $: prompts = $json("onboarding.new-workspace-board.prompt") as string[];
+    $: prompts = $json("onboarding.new-project.prompt") as string[];
 </script>
 
 <Onboarding
@@ -69,26 +69,26 @@
     }}
 >
     <svelte:fragment slot="title"
-        >{$_("onboarding.new-workspace-board.title")}</svelte:fragment
+        >{$_("onboarding.new-project.title")}</svelte:fragment
     >
     <svelte:fragment slot="prompt">
         <div class="flex flex-col gap-8">
-            {#if workspaceBoard}
+            {#if project}
                 <div class="flex flex-col gap-4">
                     <p>
                         {$_(
-                            "onboarding.new-workspace-board.workspace-board-exists.message",
-                            { values: { title: workspaceBoard.title } },
+                            "onboarding.new-project.project-exists.message",
+                            { values: { title: project.title } },
                         )}
                     </p>
                     <p>
                         <Anchor
                             label={$_(
-                                "onboarding.new-workspace-board.workspace-board-exists.prompt",
-                                { values: { title: workspaceBoard.title } },
+                                "onboarding.new-project.project-exists.prompt",
+                                { values: { title: project.title } },
                             )}
                             size="large"
-                            href={getNewTaskUrl(workspaceBoard.uuid)}
+                            href={getNewTaskUrl(project.uuid)}
                         />
                     </p>
                 </div>
@@ -106,9 +106,9 @@
         <InputField
             style={{ inputType: "text" }}
             name="title"
-            label={$_("onboarding.new-workspace-board.input.label")}
+            label={$_("onboarding.new-project.input.label")}
             placeholder={$_(
-                "onboarding.new-workspace-board.input.placeholder",
+                "onboarding.new-project.input.placeholder",
             )}
             bind:value={title}
             required
@@ -118,13 +118,13 @@
     <DashboardPlaceholder
         slot="content"
         state={{
-            kind: "new-workspace-board",
+            kind: "new-project",
             workspace,
-            workspaceBoard,
+            project,
             title:
                 title ??
-                workspaceBoard?.title ??
-                $_("onboarding.new-workspace-board.default-name"),
+                project?.title ??
+                $_("onboarding.new-project.default-name"),
         }}
     />
 </Onboarding>

@@ -37,13 +37,13 @@ import type { ApiResponse } from "../types";
 // Create
 export async function createWorkspaceBoard(
     workspace: Workspace,
-    workspaceBoard: Pick<WorkspaceBoard, "title" | "description">,
+    project: Pick<WorkspaceBoard, "title" | "description">,
     repositoryContext: RepositoryContext,
 ): Promise<ApiResponse<WorkspaceBoard, unknown>> {
     const { uuid: workspace_uuid } = workspace;
     const response = await postWithCredentialsJson<Workspace>(
-        `/workspace/workspace-board/`,
-        { ...workspaceBoard, workspace_uuid },
+        `/workspace/project/`,
+        { ...project, workspace_uuid },
         repositoryContext,
     );
     return response;
@@ -56,7 +56,7 @@ export async function getWorkspaceBoard(
 ): Promise<WorkspaceBoardDetail | undefined> {
     return handle404(
         await getWithCredentialsJson<WorkspaceBoardDetail>(
-            `/workspace/workspace-board/${uuid}`,
+            `/workspace/project/${uuid}`,
             repositoryContext,
         ),
     );
@@ -68,7 +68,7 @@ export async function getArchivedWorkspaceBoards(
 ): Promise<undefined | ArchivedWorkspaceBoard[]> {
     return handle404(
         await getWithCredentialsJson<ArchivedWorkspaceBoard[]>(
-            `/workspace/workspace/${workspace_uuid}/archived-workspace-boards/`,
+            `/workspace/workspace/${workspace_uuid}/archived-projects/`,
             repositoryContext,
         ),
     );
@@ -76,12 +76,12 @@ export async function getArchivedWorkspaceBoards(
 
 // Update
 export async function updateWorkspaceBoard(
-    workspaceBoard: Pick<WorkspaceBoard, "title" | "description" | "uuid">,
+    project: Pick<WorkspaceBoard, "title" | "description" | "uuid">,
     repositoryContext: RepositoryContext,
 ): Promise<ApiResponse<void, unknown>> {
     return await putWithCredentialsJson(
-        `/workspace/workspace-board/${workspaceBoard.uuid}`,
-        workspaceBoard,
+        `/workspace/project/${project.uuid}`,
+        project,
         repositoryContext,
     );
 }
@@ -92,7 +92,7 @@ export async function deleteWorkspaceBoard(
 ): Promise<void> {
     failOrOk(
         await deleteWithCredentialsJson(
-            `/workspace/workspace-board/${uuid}`,
+            `/workspace/project/${uuid}`,
             repositoryContext,
         ),
     );
@@ -104,7 +104,7 @@ export async function archiveWorkspaceBoard(
     repositoryContext: RepositoryContext,
 ): Promise<ApiResponse<void, unknown>> {
     return await postWithCredentialsJson(
-        `/workspace/workspace-board/${uuid}/archive`,
+        `/workspace/project/${uuid}/archive`,
         { archived },
         repositoryContext,
     );

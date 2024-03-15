@@ -28,7 +28,7 @@
     export let task: TaskWithSection;
     // this is only ever needed for the dashboard, not when a task is part
     // of search results... time for another ADT?
-    export let workspaceBoard: WorkspaceBoardDetail;
+    export let project: WorkspaceBoardDetail;
     export let section: SectionWithTasks | undefined = undefined;
 
     let dropDownMenuBtnRef: HTMLElement;
@@ -47,7 +47,7 @@
                       task,
                       location: "dashboard" as const,
                       section,
-                      workspaceBoard,
+                      project,
                   };
         await openContextMenu(contextMenu, dropDownMenuBtnRef);
     }

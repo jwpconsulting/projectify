@@ -22,5 +22,5 @@ export * from "$lib/stores/dashboard/subTaskAssignment";
 export * from "$lib/stores/dashboard/task";
 export * from "$lib/stores/dashboard/ui";
 export * from "$lib/stores/dashboard/workspace";
-export * from "$lib/stores/dashboard/workspaceBoard";
+export * from "$lib/stores/dashboard/project";
 export * from "$lib/stores/dashboard/section";

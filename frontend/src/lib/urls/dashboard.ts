@@ -25,5 +25,5 @@ export const dashboardUrl = "/dashboard";
 export function getWorkspaceBoardSearchUrl({
     uuid,
 }: Pick<WorkspaceBoard, "uuid">): string {
-    return `/dashboard/workspace-board/${uuid}/search`;
+    return `/dashboard/project/${uuid}/search`;
 }

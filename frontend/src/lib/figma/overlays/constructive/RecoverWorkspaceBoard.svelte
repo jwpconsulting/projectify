@@ -21,7 +21,7 @@
     import Layout from "$lib/figma/overlays/constructive/Layout.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { goto } from "$lib/navigation";
-    import { archiveWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
+    import { archiveWorkspaceBoard } from "$lib/repository/workspace/project";
     import {
         rejectConstructiveOverlay,
         resolveConstructiveOverlay,
@@ -30,23 +30,23 @@
     import type { WorkspaceBoard } from "$lib/types/workspace";
     import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
-    export let workspaceBoard: WorkspaceBoard;
+    export let project: WorkspaceBoard;
 
     let state: FormViewState = { kind: "start" };
 
     async function onSubmit() {
         state = { kind: "submitting" };
-        const result = await archiveWorkspaceBoard(workspaceBoard, false, {
+        const result = await archiveWorkspaceBoard(project, false, {
             fetch,
         });
         if (result.ok) {
             resolveConstructiveOverlay();
-            await goto(getDashboardWorkspaceBoardUrl(workspaceBoard.uuid));
+            await goto(getDashboardWorkspaceBoardUrl(project.uuid));
             return;
         }
         state = {
             kind: "error",
-            message: $_("overlay.constructive.recover-workspace-board.error", {
+            message: $_("overlay.constructive.recover-project.error", {
                 values: { details: JSON.stringify(result.error) },
             }),
         };
@@ -55,13 +55,13 @@
 
 <Layout {onSubmit}>
     <svelte:fragment slot="title">
-        {$_("overlay.constructive.recover-workspace-board.title", {
-            values: { title: workspaceBoard.title },
+        {$_("overlay.constructive.recover-project.title", {
+            values: { title: project.title },
         })}
     </svelte:fragment>
     <svelte:fragment slot="message">
         <p class="text-center">
-            {$_("overlay.constructive.recover-workspace-board.notice")}
+            {$_("overlay.constructive.recover-project.notice")}
         </p>
         {#if state.kind === "error"}
             <p>
@@ -79,7 +79,7 @@
             style={{ kind: "secondary" }}
             size="medium"
             color="blue"
-            label={$_("overlay.constructive.recover-workspace-board.cancel")}
+            label={$_("overlay.constructive.recover-project.cancel")}
         />
         <Button
             action={{ kind: "submit", disabled: state.kind === "submitting" }}
@@ -88,10 +88,10 @@
             color="blue"
             label={state.kind === "submitting"
                 ? $_(
-                      "overlay.constructive.recover-workspace-board.submit.submitting",
+                      "overlay.constructive.recover-project.submit.submitting",
                   )
                 : $_(
-                      "overlay.constructive.recover-workspace-board.submit.start",
+                      "overlay.constructive.recover-project.submit.start",
                   )}
         />
     </svelte:fragment>

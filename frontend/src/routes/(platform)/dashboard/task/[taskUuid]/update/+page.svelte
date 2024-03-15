@@ -41,7 +41,7 @@
     export let data: PageData;
     const { task } = data;
     const { section: section } = task;
-    const { workspace_board: workspaceBoard } = section;
+    const { project: project } = section;
 
     // Initial data
     let { title, description } = task;
@@ -95,8 +95,8 @@
 
     $: crumbs = [
         {
-            label: workspaceBoard.title,
-            href: getDashboardWorkspaceBoardUrl(workspaceBoard.uuid),
+            label: project.title,
+            href: getDashboardWorkspaceBoardUrl(project.uuid),
         },
         {
             label: section.title,

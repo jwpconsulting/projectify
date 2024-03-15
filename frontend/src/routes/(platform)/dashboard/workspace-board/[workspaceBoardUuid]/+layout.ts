@@ -26,27 +26,27 @@ import type { WorkspaceBoardDetail } from "$lib/types/workspace";
 import type { LayoutLoadEvent } from "./$types";
 
 interface Data {
-    workspaceBoard: WorkspaceBoardDetail;
+    project: WorkspaceBoardDetail;
 }
 
 export async function load({
-    params: { workspaceBoardUuid },
+    params: { projectUuid },
     fetch,
 }: LayoutLoadEvent): Promise<Data> {
-    const workspaceBoard = await currentWorkspaceBoard.loadUuid(
-        workspaceBoardUuid,
+    const project = await currentWorkspaceBoard.loadUuid(
+        projectUuid,
         { fetch },
     );
-    if (!workspaceBoard) {
-        // If we don't have a workspaceBoard, we don't have anything (no
+    if (!project) {
+        // If we don't have a project, we don't have anything (no
         // workspace uuid etc), so we are back to the dashboard in that case.
         // TODO tell the user that we have done so
         error(
             404,
-            `No workspace board could be found for UUID '${workspaceBoardUuid}'`,
+            `No project could be found for UUID '${projectUuid}'`,
         );
     }
-    const workspaceUuid = workspaceBoard.workspace.uuid;
+    const workspaceUuid = project.workspace.uuid;
     currentWorkspace
         .loadUuid(workspaceUuid, {
             fetch,
@@ -54,7 +54,7 @@ export async function load({
         .then((workspace) => {
             if (!workspace) {
                 throw new Error(
-                    `For workspace board ${workspaceBoardUuid}, the workspace with UUID ${workspaceUuid} could not be found.`,
+                    `For project ${projectUuid}, the workspace with UUID ${workspaceUuid} could not be found.`,
                 );
             }
         })
@@ -63,5 +63,5 @@ export async function load({
                 `Something went very wrong when fetching workspace ${workspaceUuid}: ${error}`,
             ),
         );
-    return { workspaceBoard };
+    return { project };
 }

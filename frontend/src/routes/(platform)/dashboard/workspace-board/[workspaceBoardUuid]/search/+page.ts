@@ -30,8 +30,8 @@ export function load({ url, parent }: PageLoadEvent): Data {
     const search: SearchInput = url.searchParams.get("search") ?? undefined;
     const tasks = new Promise<TaskWithSection[]>((resolve, reject) => {
         parent()
-            .then(({ workspaceBoard }) => {
-                const { sections: sections } = workspaceBoard;
+            .then(({ project }) => {
+                const { sections: sections } = project;
                 const tasks = searchTasks(
                     unwrap(sections, "Expected sections"),
                     search,

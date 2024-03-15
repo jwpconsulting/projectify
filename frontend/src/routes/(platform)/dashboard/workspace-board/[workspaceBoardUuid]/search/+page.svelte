@@ -25,8 +25,8 @@
     import type { PageData } from "./$types";
 
     export let data: PageData;
-    const { workspaceBoard } = data;
-    $: backUrl = getDashboardWorkspaceBoardUrl(workspaceBoard.uuid);
+    const { project } = data;
+    $: backUrl = getDashboardWorkspaceBoardUrl(project.uuid);
 </script>
 
 {#await data.tasks then tasks}
@@ -48,7 +48,7 @@
             </div>
             <div class="flex flex-col">
                 {#each tasks as task}
-                    <TaskCard {task} {workspaceBoard} />
+                    <TaskCard {task} {project} />
                 {/each}
             </div>
             <p>

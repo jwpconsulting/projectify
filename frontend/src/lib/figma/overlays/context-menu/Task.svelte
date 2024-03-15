@@ -105,7 +105,7 @@
             iconRight={moveToSectionOpened ? ChevronUp : ChevronDown}
         />
         {#if moveToSectionOpened}
-            {#each kind.workspaceBoard.sections as section}
+            {#each kind.project.sections as section}
                 <ContextMenuButton
                     state="normal"
                     label={section.title}

@@ -68,7 +68,7 @@
                 <Anchor
                     size="large"
                     href={getNewWorkspaceBoardUrl(workspace.uuid)}
-                    label={"Create workspace board"}
+                    label={"Create project"}
                 />
             </p>
         {:else}

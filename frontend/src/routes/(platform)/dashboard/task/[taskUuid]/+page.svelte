@@ -50,7 +50,7 @@
     $: task = $currentTask ?? data.task;
     $: subTasks = task.sub_tasks;
     $: section = task.section;
-    $: workspaceBoard = section.workspace_board;
+    $: project = section.project;
 
     let contextMenuRef: HTMLElement;
 
@@ -63,8 +63,8 @@
 
     $: crumbs = [
         {
-            label: workspaceBoard.title,
-            href: getDashboardWorkspaceBoardUrl(workspaceBoard.uuid),
+            label: project.title,
+            href: getDashboardWorkspaceBoardUrl(project.uuid),
         },
         {
             label: section.title,

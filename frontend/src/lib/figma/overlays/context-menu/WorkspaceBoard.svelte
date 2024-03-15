@@ -22,7 +22,7 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import { goto } from "$lib/navigation";
-    import { archiveWorkspaceBoard as repoArchiveWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
+    import { archiveWorkspaceBoard as repoArchiveWorkspaceBoard } from "$lib/repository/workspace/project";
     import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import {
         openConstructiveOverlay,
@@ -32,12 +32,12 @@
     import { getArchiveUrl } from "$lib/urls";
 
     export let workspace: Workspace;
-    export let workspaceBoard: WorkspaceBoard;
+    export let project: WorkspaceBoard;
 
     async function editBoard() {
         await openConstructiveOverlay({
             kind: "updateWorkspaceBoard",
-            workspaceBoard,
+            project,
         });
     }
 
@@ -132,9 +132,9 @@
         // successful dialog. Reason: We should separate concerns here.
         await openDestructiveOverlay({
             kind: "archiveWorkspaceBoard",
-            workspaceBoard,
+            project,
         });
-        await repoArchiveWorkspaceBoard(workspaceBoard, true, { fetch });
+        await repoArchiveWorkspaceBoard(project, true, { fetch });
         await goto(getArchiveUrl(workspace.uuid));
     }
 </script>
@@ -144,9 +144,9 @@
         kind={{
             kind: "button",
             action: editBoard,
-            disabled: !$currentWorkspaceUserCan("update", "workspaceBoard"),
+            disabled: !$currentWorkspaceUserCan("update", "project"),
         }}
-        label={$_("overlay.context-menu.workspace-board.edit-board")}
+        label={$_("overlay.context-menu.project.edit-board")}
         state="normal"
         icon={Pencil}
     />
@@ -154,10 +154,10 @@
         kind={{
             kind: "button",
             action: archiveWorkspaceBoard,
-            disabled: !$currentWorkspaceUserCan("update", "workspaceBoard"),
+            disabled: !$currentWorkspaceUserCan("update", "project"),
         }}
         label={$_(
-            "overlay.context-menu.workspace-board.archive-workspace-board",
+            "overlay.context-menu.project.archive-project",
         )}
         state="normal"
         icon={Archive}

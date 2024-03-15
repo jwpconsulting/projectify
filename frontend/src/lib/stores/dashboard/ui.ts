@@ -46,7 +46,7 @@ export function clearSelectedWorkspaceUuidIfMatch(uuid: string) {
 }
 
 const _selectedWorkspaceBoardUuids = persisted<Map<string, string>>(
-    "selected-workspace-board-uuid",
+    "selected-project-uuid",
     new Map(),
     {
         serializer: {
@@ -71,10 +71,10 @@ export const selectedWorkspaceBoardUuids = readonly(
 );
 export function selectWorkspaceBoardUuid(
     workspaceUuid: string,
-    workspaceBoardUuid: string,
+    projectUuid: string,
 ) {
     _selectedWorkspaceBoardUuids.update(($selectedWorkspaceBoardUuids) => {
-        $selectedWorkspaceBoardUuids.set(workspaceUuid, workspaceBoardUuid);
+        $selectedWorkspaceBoardUuids.set(workspaceUuid, projectUuid);
         return $selectedWorkspaceBoardUuids;
     });
 }
@@ -136,7 +136,7 @@ export function toggleSectionOpen(sectionUuid: string) {
 
 // Adjust this if the dashboard URLs ever change
 const showFilterRouteIds = [
-    "/(platform)/dashboard/workspace-board/[workspaceBoardUuid]",
+    "/(platform)/dashboard/project/[projectUuid]",
 ];
 
 /*

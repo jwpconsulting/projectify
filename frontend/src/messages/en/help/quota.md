@@ -32,7 +32,7 @@ In a trial workspace, the following quotas apply:
 
 - You can invite and add up to 1 additional workspace user, for a total of 2
   including yourself.
-- You can create up to 10 workspace boards
+- You can create up to 10 projects
 - You can create up to 100 sections
 - You can create up to 1000 tasks
 - You can create up to 1000 sub tasks

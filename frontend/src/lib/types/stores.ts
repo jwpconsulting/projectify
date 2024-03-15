@@ -58,7 +58,7 @@ export interface SubTaskAssignment
     moveSubTaskDown: (where: number) => void;
 }
 
-const subscriptionTypes = ["workspace", "workspace-board", "task"] as const;
+const subscriptionTypes = ["workspace", "project", "task"] as const;
 export type SubscriptionType = (typeof subscriptionTypes)[number];
 
 // A subscriber that can deal with possible undefined values

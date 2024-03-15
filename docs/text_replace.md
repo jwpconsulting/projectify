@@ -179,3 +179,32 @@ for f in (
   git mv -v $f $dir/$base || break
 end
 ```
+
+# Now the same for workspace boards
+
+Since it we couldn't rename all instance of workspace_board_section in the
+backend, we have to be careful.
+
+For lower case:
+
+```fish
+nvim (ag \
+  --files-with-matches \
+  --ignore migrations \
+  --ignore docs/text_replace.md \
+  "workspace[_ -]?[bB]oard[_ -]?s?" \
+  . \
+) -c "bufdo %s/\vworkspace[_ -]?[bB]oard(s?)([_ -][sS]section)@!/project\1/ce"
+```
+
+For upper case:
+
+```fish
+nvim (ag \
+  --files-with-matches \
+  --ignore migrations \
+  --ignore docs/text_replace.md \
+  "Workspace[_ -]?[bB]oard[_ -]?s?" \
+  . \
+) -c "bufdo %s/\vWorkspace[_ -]?[bB]oard(s?)/project\1/ce"
+```

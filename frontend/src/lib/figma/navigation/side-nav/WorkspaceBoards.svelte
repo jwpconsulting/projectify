@@ -53,17 +53,17 @@
 />
 {#if $boardExpandOpen}
     <div class="flex shrink flex-col overflow-y-auto">
-        {#if workspace.workspace_boards === undefined}
+        {#if workspace.projects === undefined}
             <Loading />
-        {:else if workspace.workspace_boards.length === 0}
+        {:else if workspace.projects.length === 0}
             <div class="flex flex-col gap-2 p-4">
                 <p>
-                    {$_("dashboard.side-nav.workspace-boards.empty.message")}
+                    {$_("dashboard.side-nav.projects.empty.message")}
                 </p>
                 <p>
                     <Anchor
                         label={$_(
-                            "dashboard.side-nav.workspace-boards.empty.archive",
+                            "dashboard.side-nav.projects.empty.archive",
                         )}
                         href={getArchiveUrl(workspace.uuid)}
                         size="normal"
@@ -71,12 +71,12 @@
                 </p>
             </div>
         {:else}
-            {#each workspace.workspace_boards as workspaceBoard (workspaceBoard.uuid)}
-                <SelectWorkspaceBoard {workspace} {workspaceBoard} />
+            {#each workspace.projects as project (project.uuid)}
+                <SelectWorkspaceBoard {workspace} {project} />
             {/each}
         {/if}
     </div>
-    {#if $currentWorkspaceUserCan("create", "workspaceBoard")}
+    {#if $currentWorkspaceUserCan("create", "project")}
         <ContextMenuButton
             label={$_("dashboard.create-board")}
             icon={Plus}

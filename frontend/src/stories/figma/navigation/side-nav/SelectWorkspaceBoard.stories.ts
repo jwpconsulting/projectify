@@ -18,13 +18,13 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 import SelectWorkspaceBoard from "$lib/figma/navigation/side-nav/SelectWorkspaceBoard.svelte";
-import { workspaceBoard } from "$lib/storybook";
+import { project } from "$lib/storybook";
 
 const meta: Meta<SelectWorkspaceBoard> = {
     component: SelectWorkspaceBoard,
     argTypes: {},
     args: {
-        workspaceBoard,
+        project,
     },
 };
 export default meta;

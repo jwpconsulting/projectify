@@ -20,7 +20,7 @@ import {
     deleteTask as repositoryDeleteTask,
 } from "$lib/repository/workspace";
 import { selectedLabels } from "$lib/stores/dashboard/labelFilter";
-import { currentWorkspaceBoard } from "$lib/stores/dashboard/workspaceBoard";
+import { currentWorkspaceBoard } from "$lib/stores/dashboard/project";
 import { filterByWorkspaceUser } from "$lib/stores/dashboard/workspaceUserFilter";
 import { searchAmong } from "$lib/stores/util";
 import { createWsStore } from "$lib/stores/wsSubscription";
@@ -33,7 +33,7 @@ import type {
     Section,
 } from "$lib/types/workspace";
 
-// Clear on workspace board change
+// Clear on project change
 // TODO clarify if this subscription still makes sense
 // It's good to unsubscribe whenever we can
 // Justus 2023-08-30

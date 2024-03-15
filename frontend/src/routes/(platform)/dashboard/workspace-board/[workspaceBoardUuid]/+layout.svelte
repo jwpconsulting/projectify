@@ -28,11 +28,11 @@
 
     export let data: LayoutData;
 
-    $: workspaceBoard = data.workspaceBoard;
+    $: project = data.project;
     let searchInput: string | undefined = undefined;
 
     $: canSearch = searchInput !== undefined;
-    $: workspaceBoardHasTasks = workspaceBoard.sections.some(
+    $: projectHasTasks = project.sections.some(
         (s: SectionWithTasks) => s.tasks.length > 0,
     );
 </script>
@@ -40,9 +40,9 @@
 <div
     class="flex h-full flex-col items-center gap-4 overflow-y-auto bg-background py-4"
 >
-    {#if workspaceBoardHasTasks}
+    {#if projectHasTasks}
         <form
-            action={getWorkspaceBoardSearchUrl(workspaceBoard)}
+            action={getWorkspaceBoardSearchUrl(project)}
             class="flex w-full max-w-md flex-col gap-2 rounded-xl bg-foreground px-4 py-4"
         >
             <!-- XXX definitely not ideal, placeholder will disappear after input -->
@@ -68,7 +68,7 @@
             />
         </form>
     {/if}
-    <!-- shared layout for workspace board and search results -->
+    <!-- shared layout for project and search results -->
     <!-- XXX: setting overflow-x-auto here magically solves an overflowing task card
     Why? Justus 2023-08-28 -->
     <div class="flex w-full grow flex-col">

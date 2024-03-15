@@ -52,7 +52,7 @@ export const SideNav: Story = {
 
 export const WorkspaceBoard: Story = {
     args: {
-        target: "workspace-board",
+        target: "project",
     },
 };
 

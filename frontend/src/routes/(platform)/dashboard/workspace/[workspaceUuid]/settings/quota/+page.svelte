@@ -36,8 +36,8 @@
             quota: workspace.quota.workspace_users_and_invites,
         },
         {
-            label: $_("workspace-settings.quota.resource.workspace-boards"),
-            quota: workspace.quota.workspace_boards,
+            label: $_("workspace-settings.quota.resource.projects"),
+            quota: workspace.quota.projects,
         },
         {
             label: $_("workspace-settings.quota.resource.sections"),

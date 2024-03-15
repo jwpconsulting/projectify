@@ -25,7 +25,7 @@ import RolesHelpPage from "./en/help/roles.md?raw";
 import SectionsHelpPage from "./en/help/sections.md?raw";
 import TasksHelpPage from "./en/help/tasks.md?raw";
 import TrialHelpPage from "./en/help/trial.md?raw";
-import WorkspaceBoardsHelpPage from "./en/help/workspace-boards.md?raw";
+import WorkspaceBoardsHelpPage from "./en/help/projects.md?raw";
 import WorkspaceUsersHelpPage from "./en/help/workspace-users.md?raw";
 import WorkspacesHelpPage from "./en/help/workspaces.md?raw";
 import type { MessageDirectory } from "./types";
@@ -33,23 +33,23 @@ import type { MessageDirectory } from "./types";
 const messages: MessageDirectory = {
     "overlay": {
         "constructive": {
-            "update-workspace-board": {
-                title: "Edit workspace board",
+            "update-project": {
+                title: "Edit project",
                 form: {
                     title: {
-                        label: "workspace board name",
-                        placeholder: "Enter a workspace board name",
+                        label: "project name",
+                        placeholder: "Enter a project name",
                     },
                 },
                 cancel: "Cancel",
                 save: "Save",
             },
-            "create-workspace-board": {
-                "title": "Create workspace board",
+            "create-project": {
+                "title": "Create project",
                 "form": {
                     title: {
                         label: "Workspace board name",
-                        placeholder: "Enter a workspace board name",
+                        placeholder: "Enter a project name",
                     },
                 },
                 "cancel": "Cancel",
@@ -95,15 +95,15 @@ const messages: MessageDirectory = {
                 cancel: "Cancel",
                 update: "Save",
             },
-            "recover-workspace-board": {
-                title: "Recover workspace board ''{title}''?",
-                notice: "Recovering this workspace board returns it to the dashboard. You will be redirected to the workspace board after the recovery has finished.",
+            "recover-project": {
+                title: "Recover project ''{title}''?",
+                notice: "Recovering this project returns it to the dashboard. You will be redirected to the project after the recovery has finished.",
                 cancel: "Cancel",
                 submit: {
-                    start: "Recover workspace board",
+                    start: "Recover project",
                     submitting: "Recovering ...",
                 },
-                error: "An error has happened while recovering the workspace board. The error details are {details}",
+                error: "An error has happened while recovering the project. The error details are {details}",
             },
         },
         "destructive": {
@@ -138,16 +138,16 @@ const messages: MessageDirectory = {
                 warning: "This action cannot be undone.",
                 button: "Delete",
             },
-            "archive-workspace-board": {
-                title: "Archive workspace board",
-                body: "Would you like to archive this ''{workspaceBoard}'' workspace board? You will be redirected to the workspace board archive page after archival has finished.",
+            "archive-project": {
+                title: "Archive project",
+                body: "Would you like to archive this ''{project}'' project? You will be redirected to the project archive page after archival has finished.",
                 warning:
-                    "You can always review and recover archived workspace boards in the archives section",
+                    "You can always review and recover archived projects in the archives section",
                 button: "Archive",
             },
-            "delete-workspace-board": {
-                title: "Delete workspace board",
-                body: "Would you like to delete this ''{workspaceBoard}'' workspace board?",
+            "delete-project": {
+                title: "Delete project",
+                body: "Would you like to delete this ''{project}'' project?",
                 warning: "This action cannot be undone",
                 button: "Delete",
             },
@@ -167,9 +167,9 @@ const messages: MessageDirectory = {
                 "go-to-archive": "Go to archive",
                 "workspace-settings": "Workspace settings",
             },
-            "workspace-board": {
+            "project": {
                 "edit-board": "Edit board",
-                "archive-workspace-board": "Archive board",
+                "archive-project": "Archive board",
             },
             "section": {
                 "expand-section": "Expand section",
@@ -216,15 +216,15 @@ const messages: MessageDirectory = {
             "not-found": {
                 title: "No tasks found for ''{search}''",
                 explanation:
-                    "No tasks were found for the search terms you specified. You can either try a new search using the search form above or go back and view entire the workspace board.",
-                back: "Go back to workspace board",
+                    "No tasks were found for the search terms you specified. You can either try a new search using the search form above or go back and view entire the project.",
+                back: "Go back to project",
             },
             "found": {
                 title: "Showing results for ''{search}''",
-                back: "Go back to workspace board",
+                back: "Go back to project",
             },
         },
-        "create-board": "Create new workspace board",
+        "create-board": "Create new project",
         "boards": "Workspace boards",
         "workspace-users": "Workspace users",
         "workspace-user-name": "Workspace user name",
@@ -235,7 +235,7 @@ const messages: MessageDirectory = {
         },
         "assign-user": "Assign workspace user",
         "no-sections": {
-            message: "There are no sections in this workspace board.",
+            message: "There are no sections in this project.",
             prompt: "Add a section",
         },
         "section": {
@@ -278,10 +278,10 @@ const messages: MessageDirectory = {
                     },
                 },
             },
-            "workspace-boards": {
+            "projects": {
                 empty: {
                     message:
-                        "You have no workspace boards available. Please check the workspace board archive and recover a workspace board from there. Alternatively you can also create a new workspace board using the button below.",
+                        "You have no projects available. Please check the project archive and recover a project from there. Alternatively you can also create a new project using the button below.",
                     archive: "Go to archive",
                 },
             },
@@ -325,14 +325,14 @@ const messages: MessageDirectory = {
             },
         },
     },
-    "workspace-board-archive": {
+    "project-archive": {
         title: "Workspace board archive",
         card: {
             recover: "Recover",
             delete: "Delete",
             archived: "Archived on {archived, date, medium}",
         },
-        empty: "No workspace boards have been archived.",
+        empty: "No projects have been archived.",
     },
     // Factor this into a general error section
     "page404": {
@@ -388,12 +388,12 @@ const messages: MessageDirectory = {
             },
             "prompt": "You can create and manage numerous workspaces",
             "has-workspace":
-                "It looks like you already have a workspace, would you like to create a workspace board?",
+                "It looks like you already have a workspace, would you like to create a project?",
             "label": "Workspace name",
             "placeholder": "e.g. the name of your company",
             "default-name": "Your workspace",
         },
-        "new-workspace-board": {
+        "new-project": {
             "title": "Add your first board",
             "prompt": [
                 "You can create unlimited boards per workspace.",
@@ -404,9 +404,9 @@ const messages: MessageDirectory = {
                 placeholder: "Release spring Aug 2023",
             },
             "default-name": "Your board",
-            "workspace-board-exists": {
+            "project-exists": {
                 message:
-                    'It looks like you already have a workspace board called "{title}". Would you like to continue adding a task for it?',
+                    'It looks like you already have a project called "{title}". Would you like to continue adding a task for it?',
                 prompt: 'Continue adding task to "{title}"',
             },
         },
@@ -903,7 +903,7 @@ const messages: MessageDirectory = {
                 "sub-tasks": "Sub tasks",
                 "tasks": "Tasks",
                 "task-labels": "Task labels",
-                "workspace-boards": "Workspace boards",
+                "projects": "Workspace boards",
                 "sections": "Sections",
                 "workspace-users-and-invites": "Workspace users and invites",
             },
@@ -1003,13 +1003,13 @@ const messages: MessageDirectory = {
             title: "What's included?",
             list: [
                 "Unlimited tasks",
-                "Unlimited workspace boards",
+                "Unlimited projects",
                 "Collaborate with workspace users",
                 "Add multiple labels",
                 "Role permissions",
                 // "Set due dates",
                 "Customize your workspace",
-                "Archive completed workspace boards",
+                "Archive completed projects",
                 // "Real-time notifications",
                 // "File storage of 3 GB",
                 "Filter by label or assignee",
@@ -1025,7 +1025,7 @@ const messages: MessageDirectory = {
                 list: [
                     // TODO mention chat messages when available -
                     "A workspace can have up to <strong>2</strong> workspace users",
-                    "A workspace can hold up to <strong>10</strong> workspace boards",
+                    "A workspace can hold up to <strong>10</strong> projects",
                     "You can create up to <strong>100</strong> sections",
                     "You can create up to <strong>1000</strong> tasks",
                     "You can create up to <strong>1000</strong> sub tasks",
@@ -1242,7 +1242,7 @@ const messages: MessageDirectory = {
                     title: "Assign tasks to users all over the world",
                     text: "Whether it's Leo in the Phillipines or Valerie in Brazil, once you assign a task to someone they will be notified immediately with a pop-up.",
                     illustration: {
-                        alt: "An illustration showing the 'In Progress' section of a workspace board with tasks being assigned to different users",
+                        alt: "An illustration showing the 'In Progress' section of a project with tasks being assigned to different users",
                     },
                 },
             },
@@ -1271,7 +1271,7 @@ const messages: MessageDirectory = {
                     title: "Add friends and family to your space",
                     text: "Get everyone on the same page by assigning task to different workspace users.",
                     illustration: {
-                        alt: "An illustration showing how different tasks in the 'In progress' section of a workspace board have been assigned to friends and family. The tasks are 'Trim back overgrown hedges', 'Polish wooden furnishings', and 'Replace extractor fan grating'",
+                        alt: "An illustration showing how different tasks in the 'In progress' section of a project have been assigned to friends and family. The tasks are 'Trim back overgrown hedges', 'Polish wooden furnishings', and 'Replace extractor fan grating'",
                     },
                 },
             },
@@ -1410,7 +1410,7 @@ const messages: MessageDirectory = {
             description: "Independent spaces at your fingertips",
             content: WorkspacesHelpPage,
         },
-        "workspace-boards": {
+        "projects": {
             title: "Workspace boards",
             description: "Separate projects from each other",
             content: WorkspaceBoardsHelpPage,

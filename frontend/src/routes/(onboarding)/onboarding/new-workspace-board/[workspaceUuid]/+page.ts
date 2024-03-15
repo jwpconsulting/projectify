@@ -18,7 +18,7 @@
 import { error } from "@sveltejs/kit";
 
 import { getWorkspace } from "$lib/repository/workspace";
-import { getWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
+import { getWorkspaceBoard } from "$lib/repository/workspace/project";
 import type { Workspace, WorkspaceBoardDetail } from "$lib/types/workspace";
 
 import type { PageLoadEvent } from "./$types";
@@ -28,15 +28,15 @@ export async function load({
     fetch,
 }: PageLoadEvent): Promise<{
     workspace: Workspace;
-    workspaceBoard?: WorkspaceBoardDetail;
+    project?: WorkspaceBoardDetail;
 }> {
     const workspace = await getWorkspace(workspaceUuid, { fetch });
     if (!workspace) {
         error(404, `No workspace could be found for UUID '${workspaceUuid}'`);
     }
-    const workspaceBoardUuid = workspace.workspace_boards.at(0)?.uuid;
-    const workspaceBoard = workspaceBoardUuid
-        ? await getWorkspaceBoard(workspaceBoardUuid, { fetch })
+    const projectUuid = workspace.projects.at(0)?.uuid;
+    const project = projectUuid
+        ? await getWorkspaceBoard(projectUuid, { fetch })
         : undefined;
-    return { workspace, workspaceBoard };
+    return { workspace, project };
 }

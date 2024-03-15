@@ -60,7 +60,7 @@
         // 1. update task 1's labels using the label picker
         // 2. while the update request is stil happening, open task 2's label
         // picker
-        // 3. wait for task 1's request to finish - the workspace board will
+        // 3. wait for task 1's request to finish - the project will
         // re-render
         // 4. click on any label, it the labels shown in the task card
         // will not refresh

@@ -92,28 +92,28 @@
                 break;
             case "archiveWorkspaceBoard":
                 title = $_(
-                    "overlay.destructive.archive-workspace-board.title",
+                    "overlay.destructive.archive-project.title",
                 );
-                body = $_("overlay.destructive.archive-workspace-board.body", {
-                    values: { workspaceBoard: target.workspaceBoard.title },
+                body = $_("overlay.destructive.archive-project.body", {
+                    values: { project: target.project.title },
                 });
                 warning = $_(
-                    "overlay.destructive.archive-workspace-board.warning",
+                    "overlay.destructive.archive-project.warning",
                 );
                 buttonLabel = $_(
-                    "overlay.destructive.archive-workspace-board.button",
+                    "overlay.destructive.archive-project.button",
                 );
                 break;
             case "deleteWorkspaceBoard":
-                title = $_("overlay.destructive.delete-workspace-board.title");
-                body = $_("overlay.destructive.delete-workspace-board.body", {
-                    values: { workspaceBoard: target.workspaceBoard.title },
+                title = $_("overlay.destructive.delete-project.title");
+                body = $_("overlay.destructive.delete-project.body", {
+                    values: { project: target.project.title },
                 });
                 warning = $_(
-                    "overlay.destructive.delete-workspace-board.warning",
+                    "overlay.destructive.delete-project.warning",
                 );
                 buttonLabel = $_(
-                    "overlay.destructive.delete-workspace-board.button",
+                    "overlay.destructive.delete-project.button",
                 );
                 break;
         }

@@ -29,15 +29,15 @@
 </script>
 
 {#if target.kind === "updateWorkspaceBoard"}
-    <UpdateWorkspaceBoard workspaceBoard={target.workspaceBoard} />
+    <UpdateWorkspaceBoard project={target.project} />
 {:else if target.kind === "createWorkspaceBoard"}
     <CreateWorkspaceBoard workspace={target.workspace} />
 {:else if target.kind === "inviteWorkspaceUser"}
     <InviteWorkspaceUser workspace={target.workspace} />
 {:else if target.kind === "createSection"}
-    <CreateSection workspaceBoard={target.workspaceBoard} />
+    <CreateSection project={target.project} />
 {:else if target.kind === "updateSection"}
     <UpdateSection section={target.section} />
 {:else if target.kind === "recoverWorkspaceBoard"}
-    <RecoverWorkspaceBoard workspaceBoard={target.workspaceBoard} />
+    <RecoverWorkspaceBoard project={target.project} />
 {/if}

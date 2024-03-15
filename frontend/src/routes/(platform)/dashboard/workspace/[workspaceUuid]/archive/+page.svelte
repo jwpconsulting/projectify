@@ -23,7 +23,7 @@
     import {
         archiveWorkspaceBoard,
         deleteWorkspaceBoard,
-    } from "$lib/repository/workspace/workspaceBoard";
+    } from "$lib/repository/workspace/project";
     import { currentArchivedWorkspaceBoards } from "$lib/stores/dashboard";
     import {
         openConstructiveOverlay,
@@ -33,39 +33,39 @@
 
     $: archivedWorkspaceBoards = $currentArchivedWorkspaceBoards ?? [];
 
-    async function recoverAction(workspaceBoard: WorkspaceBoard) {
+    async function recoverAction(project: WorkspaceBoard) {
         await openConstructiveOverlay({
             kind: "recoverWorkspaceBoard",
-            workspaceBoard,
+            project,
         });
-        await archiveWorkspaceBoard(workspaceBoard, false, { fetch });
+        await archiveWorkspaceBoard(project, false, { fetch });
     }
 
-    async function deleteAction(workspaceBoard: WorkspaceBoard) {
+    async function deleteAction(project: WorkspaceBoard) {
         await openDestructiveOverlay({
             kind: "deleteWorkspaceBoard",
-            workspaceBoard,
+            project,
         });
-        await deleteWorkspaceBoard(workspaceBoard, { fetch });
+        await deleteWorkspaceBoard(project, { fetch });
     }
 </script>
 
 <main class="flex w-full max-w-xl flex-col gap-4">
     <h1 class="text-2xl font-bold">
-        {$_("workspace-board-archive.title")}
+        {$_("project-archive.title")}
     </h1>
     <div class="flex flex-col rounded-lg bg-foreground p-4 shadow-card">
-        {#each archivedWorkspaceBoards as workspaceBoard}
+        {#each archivedWorkspaceBoards as project}
             <div class="flex flex-col gap-2 p-2">
                 <p class="font-bold">
-                    {workspaceBoard.title}
+                    {project.title}
                 </p>
                 <div class="flex flex-row items-center justify-between">
                     <!--TODO show the archival date here-->
                     <p>
-                        {$_("workspace-board-archive.card.archived", {
+                        {$_("project-archive.card.archived", {
                             values: {
-                                archived: parseISO(workspaceBoard.archived),
+                                archived: parseISO(project.archived),
                             },
                         })}
                     </p>
@@ -75,12 +75,12 @@
                             style={{ kind: "secondary" }}
                             size="small"
                             color="blue"
-                            label={$_("workspace-board-archive.card.recover")}
+                            label={$_("project-archive.card.recover")}
                             action={{
                                 kind: "button",
                                 action: recoverAction.bind(
                                     null,
-                                    workspaceBoard,
+                                    project,
                                 ),
                             }}
                         />
@@ -89,12 +89,12 @@
                             style={{ kind: "primary" }}
                             size="small"
                             color="red"
-                            label={$_("workspace-board-archive.card.delete")}
+                            label={$_("project-archive.card.delete")}
                             action={{
                                 kind: "button",
                                 action: deleteAction.bind(
                                     null,
-                                    workspaceBoard,
+                                    project,
                                 ),
                             }}
                         />
@@ -102,7 +102,7 @@
                 </div>
             </div>
         {:else}
-            {$_("workspace-board-archive.empty")}
+            {$_("project-archive.empty")}
         {/each}
     </div>
 </main>

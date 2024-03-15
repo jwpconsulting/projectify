@@ -24,7 +24,7 @@ import { destructiveOverlays } from "./config";
 const meta: Meta<DestructiveOverlay> = {
     component: DestructiveOverlay,
     argTypes: { target: destructiveOverlays },
-    args: { target: "delete-workspace-board" },
+    args: { target: "delete-project" },
 };
 export default meta;
 

@@ -94,12 +94,12 @@ class TaskQuerySet(models.QuerySet["Task"]):
         )
 
     # TODO use selector
-    def filter_by_workspace_board(
-        self, workspace_board: "WorkspaceBoard"
+    def filter_by_project(
+        self, project: "WorkspaceBoard"
     ) -> Self:
-        """Filter by tasks contained in workspace board."""
+        """Filter by tasks contained in project."""
         return self.filter(
-            workspace_board_section__workspace_board=workspace_board,
+            workspace_board_section__project=project,
         )
 
 
@@ -206,7 +206,7 @@ class Task(TitleDescriptionModel, BaseModel):
             TaskLabel,
         )
 
-        workspace = self.workspace_board_section.workspace_board.workspace
+        workspace = self.workspace_board_section.project.workspace
 
         # XXX can this be a db constraint?
         # Or done in the serializer?
@@ -292,12 +292,12 @@ class Task(TitleDescriptionModel, BaseModel):
                       BEGIN
                         SELECT "workspace_workspace"."id" INTO correct_workspace_id
                         FROM "workspace_workspace"
-                        INNER JOIN "workspace_workspaceboard"
+                        INNER JOIN "workspace_project"
                             ON ("workspace_workspace"."id" = \
-                            "workspace_workspaceboard"."workspace_id")
+                            "workspace_project"."workspace_id")
                         INNER JOIN "workspace_section"
-                            ON ("workspace_workspaceboard"."id" = \
-                                 "workspace_section"."workspace_board_id")
+                            ON ("workspace_project"."id" = \
+                                 "workspace_section"."project_id")
                         INNER JOIN "workspace_task"
                             ON ("workspace_section"."id" = \
                                 "workspace_task"."workspace_board_section_id")

@@ -37,13 +37,13 @@ import type { ApiResponse } from "../types";
 
 // Create
 export async function createSection(
-    { uuid: workspace_board_uuid }: WorkspaceBoard,
+    { uuid: project_uuid }: WorkspaceBoard,
     { title, description }: Pick<Section, "title" | "description">,
     repositoryContext: RepositoryContext,
 ): Promise<ApiResponse<Section, unknown>> {
     return await postWithCredentialsJson(
         `/workspace/section/`,
-        { workspace_board_uuid, title, description },
+        { project_uuid, title, description },
         repositoryContext,
     );
 }

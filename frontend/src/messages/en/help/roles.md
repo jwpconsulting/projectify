@@ -27,8 +27,8 @@ actions are as follows:
 | Workspace                   | Title and description                                       |
 | Workspace billing settings  | Current subscription status and payment information         |
 | Workspace users and invites | Who has been added to the workspace, and who is invited     |
-| Workspace board             | Description and other information about a workspace board   |
-| Sections                    | Name, position within workspace board                       |
+| Workspace board             | Description and other information about a project   |
+| Sections                    | Name, position within project                       |
 | Tasks                       | Title, description, due date, label, assignee, and position |
 | Sub tasks                   | Done state and title                                        |
 | Labels                      | Name and color                                              |
@@ -76,7 +76,7 @@ following additional permissions in their workspace:
 - They can create, update and delete sub tasks
 
 More importantly, they do not gain any additional delete permissions for the
-above two resources, or any other edit permissions for workspace boards,
+above two resources, or any other edit permissions for projects,
 sections, labels, users, billing settings, and the workspace itself.
 
 # Maintainer
@@ -84,7 +84,7 @@ sections, labels, users, billing settings, and the workspace itself.
 With the **maintainer** workspace user role, the following activities become
 possible, on top of the **member** permissions:
 
-- Create, update and delete workspace boards
+- Create, update and delete projects
 - Create, update and delete sections
 - Create, update and delete labels
 - Delete tasks

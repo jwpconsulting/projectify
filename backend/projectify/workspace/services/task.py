@@ -30,7 +30,7 @@ from projectify.workspace.models.task import Task
 from projectify.workspace.models.workspace_user import WorkspaceUser
 from projectify.workspace.services.signals import (
     send_task_change_signal,
-    send_workspace_board_change_signal,
+    send_project_change_signal,
 )
 from projectify.workspace.services.sub_task import (
     ValidatedData,
@@ -59,10 +59,10 @@ def task_create(
     validate_perm(
         "workspace.create_task",
         who,
-        section.workspace_board.workspace,
+        section.project.workspace,
     )
     # XXX Implicit N+1 here
-    workspace = section.workspace_board.workspace
+    workspace = section.project.workspace
     return Task.objects.create(
         workspace_board_section=section,
         title=title,
@@ -104,7 +104,7 @@ def task_create_nested(
         task=task,
         create_sub_tasks=create_sub_tasks,
     )
-    send_workspace_board_change_signal(task.section.workspace_board)
+    send_workspace_board_change_signal(task.section.project)
     return task
 
 
@@ -160,7 +160,7 @@ def task_update_nested(
         create_sub_tasks=sub_tasks["create_sub_tasks"] or [],
         update_sub_tasks=sub_tasks["update_sub_tasks"] or [],
     )
-    send_workspace_board_change_signal(task.section.workspace_board)
+    send_project_change_signal(task.section.project)
     send_task_change_signal(task)
     return task
 
@@ -171,7 +171,7 @@ def task_delete(*, task: Task, who: User) -> None:
     """Delete a task."""
     validate_perm("workspace.delete_task", who, task.workspace)
     task.delete()
-    send_workspace_board_change_signal(task.section.workspace_board)
+    send_project_change_signal(task.section.project)
     send_task_change_signal(task)
 
 
@@ -214,6 +214,6 @@ def task_move_after(
     # Set the order
     section.set_task_order(order_list)
     section.save()
-    send_workspace_board_change_signal(task.section.workspace_board)
+    send_project_change_signal(task.section.project)
     send_task_change_signal(task)
     return task

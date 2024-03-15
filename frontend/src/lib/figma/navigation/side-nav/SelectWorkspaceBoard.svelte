@@ -31,7 +31,7 @@
 
     $: currentWorkspaceBoardUuid = $currentWorkspaceBoard?.uuid;
 
-    export let workspaceBoard: WorkspaceBoard;
+    export let project: WorkspaceBoard;
     export let workspace: Workspace;
 
     let buttonRef: HTMLElement;
@@ -45,9 +45,9 @@
         try {
             await openContextMenu(
                 {
-                    kind: "workspaceBoard",
+                    kind: "project",
                     workspace,
-                    workspaceBoard,
+                    project,
                 },
                 buttonRef,
             );
@@ -60,14 +60,14 @@
 <a
     class="group block flex w-full flex-row justify-between gap-1 px-4 py-1 hover:bg-base-200"
     class:bg-base-200={contextMenuOpen}
-    href={getDashboardWorkspaceBoardUrl(workspaceBoard.uuid)}
+    href={getDashboardWorkspaceBoardUrl(project.uuid)}
     on:click={() =>
-        selectWorkspaceBoardUuid(workspace.uuid, workspaceBoard.uuid)}
+        selectWorkspaceBoardUuid(workspace.uuid, project.uuid)}
 >
     <div class="flex min-w-0 flex-row items-center gap-2">
         <div
             class={`rounded-md p-1 ${
-                workspaceBoard.uuid === currentWorkspaceBoardUuid
+                project.uuid === currentWorkspaceBoardUuid
                     ? "bg-primary-focus"
                     : ""
             }`}
@@ -76,17 +76,17 @@
                 src={Folder}
                 theme="outline"
                 class={`h-4 w-4 ${
-                    workspaceBoard.uuid === currentWorkspaceBoardUuid
+                    project.uuid === currentWorkspaceBoardUuid
                         ? "text-base-100"
                         : ""
                 }`}
             />
         </div>
         <div class="line-clamp-1 min-w-0 text-sm font-bold">
-            {workspaceBoard.title}
+            {project.title}
         </div>
     </div>
-    {#if $currentWorkspaceUserCan("update", "workspaceBoard")}
+    {#if $currentWorkspaceUserCan("update", "project")}
         <div class="shrink-0" bind:this={buttonRef}>
             <CircleIcon
                 size="small"

@@ -19,7 +19,7 @@ import { derived } from "svelte/store";
 import type { Readable } from "svelte/store";
 
 import { selectedLabels } from "$lib/stores/dashboard/labelFilter";
-import { currentWorkspaceBoard } from "$lib/stores/dashboard/workspaceBoard";
+import { currentWorkspaceBoard } from "$lib/stores/dashboard/project";
 import { selectedWorkspaceUser } from "$lib/stores/dashboard/workspaceUserFilter";
 import type {
     LabelSelection,

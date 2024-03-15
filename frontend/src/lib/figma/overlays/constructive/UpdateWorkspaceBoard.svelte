@@ -21,7 +21,7 @@
     import Layout from "$lib/figma/overlays/constructive/Layout.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
-    import { updateWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
+    import { updateWorkspaceBoard } from "$lib/repository/workspace/project";
     import {
         rejectConstructiveOverlay,
         resolveConstructiveOverlay,
@@ -29,16 +29,16 @@
     import type { FormViewState } from "$lib/types/ui";
     import type { WorkspaceBoard } from "$lib/types/workspace";
 
-    export let workspaceBoard: WorkspaceBoard;
+    export let project: WorkspaceBoard;
 
     let state: FormViewState = { kind: "start" };
 
-    let title = workspaceBoard.title;
+    let title = project.title;
 
     async function onSubmit() {
         state = { kind: "submitting" };
         const updatedWorkspaceBoard = {
-            ...workspaceBoard,
+            ...project,
             title,
         };
         const result = await updateWorkspaceBoard(updatedWorkspaceBoard, {
@@ -54,16 +54,16 @@
 
 <Layout {onSubmit}>
     <svelte:fragment slot="title">
-        {$_("overlay.constructive.update-workspace-board.title")}
+        {$_("overlay.constructive.update-project.title")}
     </svelte:fragment>
     <svelte:fragment slot="form">
         <InputField
             label={$_(
-                "overlay.constructive.update-workspace-board.form.title.label",
+                "overlay.constructive.update-project.form.title.label",
             )}
-            name="workspace-board-name"
+            name="project-name"
             placeholder={$_(
-                "overlay.constructive.update-workspace-board.form.title.placeholder",
+                "overlay.constructive.update-project.form.title.placeholder",
             )}
             style={{ inputType: "text" }}
             bind:value={title}
@@ -80,7 +80,7 @@
             style={{ kind: "secondary" }}
             size="medium"
             color="blue"
-            label={$_("overlay.constructive.update-workspace-board.cancel")}
+            label={$_("overlay.constructive.update-project.cancel")}
         />
         <Button
             action={{
@@ -90,7 +90,7 @@
             style={{ kind: "primary" }}
             size="medium"
             color="blue"
-            label={$_("overlay.constructive.update-workspace-board.save")}
+            label={$_("overlay.constructive.update-project.save")}
         />
     </svelte:fragment>
 </Layout>

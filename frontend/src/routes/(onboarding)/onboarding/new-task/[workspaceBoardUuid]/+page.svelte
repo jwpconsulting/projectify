@@ -33,7 +33,7 @@
 
     export let data: PageData;
 
-    const { user, workspace, workspaceBoard, section } = data;
+    const { user, workspace, project, section } = data;
 
     let taskTitle: string | undefined = undefined;
 
@@ -46,7 +46,7 @@
             throw new Error("Expected taskTitle");
         }
         const result = await createSection(
-            workspaceBoard,
+            project,
             { title: sectionTitle },
             { fetch },
         );
@@ -109,7 +109,7 @@
         state={{
             kind: "new-task",
             workspace,
-            workspaceBoard,
+            project,
             sectionTitle,
             title: taskTitle ?? $_("onboarding.new-task.default-name"),
         }}

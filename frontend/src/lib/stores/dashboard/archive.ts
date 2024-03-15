@@ -17,7 +17,7 @@
  */
 import { derived } from "svelte/store";
 
-import { getArchivedWorkspaceBoards } from "$lib/repository/workspace/workspaceBoard";
+import { getArchivedWorkspaceBoards } from "$lib/repository/workspace/project";
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
 import type { ArchivedWorkspaceBoard } from "$lib/types/workspace";
 

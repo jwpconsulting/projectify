@@ -18,7 +18,7 @@
 import { error } from "@sveltejs/kit";
 
 import { getWorkspace } from "$lib/repository/workspace";
-import { getWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
+import { getWorkspaceBoard } from "$lib/repository/workspace/project";
 import type {
     WorkspaceBoardDetail,
     Section,
@@ -28,23 +28,23 @@ import type {
 import type { PageLoadEvent } from "./$types";
 
 export async function load({
-    params: { workspaceBoardUuid },
+    params: { projectUuid },
     fetch,
 }: PageLoadEvent): Promise<{
-    workspaceBoard: WorkspaceBoardDetail;
+    project: WorkspaceBoardDetail;
     workspace: WorkspaceDetail;
     section?: Section;
 }> {
-    const workspaceBoard = await getWorkspaceBoard(workspaceBoardUuid, {
+    const project = await getWorkspaceBoard(projectUuid, {
         fetch,
     });
-    if (!workspaceBoard) {
+    if (!project) {
         error(
             404,
-            `No workspace board could be found for UUID ${workspaceBoardUuid}.`,
+            `No project could be found for UUID ${projectUuid}.`,
         );
     }
-    const { uuid: workspaceUuid } = workspaceBoard.workspace;
+    const { uuid: workspaceUuid } = project.workspace;
     const workspace = await getWorkspace(workspaceUuid, {
         fetch,
     });
@@ -52,9 +52,9 @@ export async function load({
         // If this happens something is very wrong
         error(
             500,
-            `No workspace with UUID ${workspaceUuid} could be found for workspace board UUID ${workspaceBoardUuid}.`,
+            `No workspace with UUID ${workspaceUuid} could be found for project UUID ${projectUuid}.`,
         );
     }
-    const section = workspaceBoard.sections.at(0);
-    return { workspaceBoard, workspace, section };
+    const section = project.sections.at(0);
+    return { project, workspace, section };
 }

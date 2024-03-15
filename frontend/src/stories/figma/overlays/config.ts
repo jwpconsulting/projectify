@@ -18,7 +18,7 @@
 import {
     task,
     workspace,
-    workspaceBoard,
+    project,
     section,
     workspaceUserAssignment,
     workspaceUser,
@@ -43,13 +43,13 @@ export const contextMenus: Record<string, ContextMenuType> = {
         workspace,
     },
     "Workspace board": {
-        kind: "workspaceBoard" as const,
+        kind: "project" as const,
         workspace,
-        workspaceBoard,
+        project,
     },
     "Section": {
         kind: "section" as const,
-        workspaceBoard,
+        project,
         section,
     },
     "Task dashboard": {
@@ -57,8 +57,8 @@ export const contextMenus: Record<string, ContextMenuType> = {
         task,
         location: "dashboard",
         section,
-        workspaceBoard: {
-            ...workspaceBoard,
+        project: {
+            ...project,
             sections: [{ ...section, tasks: [task] }],
             workspace,
         },
@@ -117,7 +117,7 @@ export const destructiveOverlays = makeStorybookSelect({
     },
     "Archive board": {
         kind: "archiveWorkspaceBoard" as const,
-        workspaceBoard: {
+        project: {
             title: "veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryvery long word",
             created: "",
             modified: "",
@@ -126,28 +126,28 @@ export const destructiveOverlays = makeStorybookSelect({
     },
     "Delete board": {
         kind: "deleteWorkspaceBoard" as const,
-        workspaceBoard,
+        project,
     },
 });
 
 export const constructiveOverlays =
     makeStorybookSelect<ConstructiveOverlayType>({
-        "Update workspace board": {
+        "Update project": {
             kind: "updateWorkspaceBoard",
-            workspaceBoard,
+            project,
         },
-        "Create workspace board": { kind: "createWorkspaceBoard", workspace },
+        "Create project": { kind: "createWorkspaceBoard", workspace },
         "Invite workspace users": { kind: "inviteWorkspaceUser", workspace },
         "Create section": {
             kind: "createSection",
-            workspaceBoard,
+            project,
         },
         "Update section": {
             kind: "updateSection",
             section,
         },
-        "Recover workspace board": {
+        "Recover project": {
             kind: "recoverWorkspaceBoard",
-            workspaceBoard,
+            project,
         },
     });

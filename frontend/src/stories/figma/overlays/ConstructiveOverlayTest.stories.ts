@@ -28,7 +28,7 @@ const meta: Meta<ConstructiveOverlayTest> = {
         target: constructiveOverlays,
     },
     args: {
-        target: "update-workspace-board",
+        target: "update-project",
     },
     parameters: {
         layout: "fullscreen",

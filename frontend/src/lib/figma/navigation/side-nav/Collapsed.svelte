@@ -39,8 +39,8 @@
                 <WorkspaceSelector {workspace} open={false} />
                 <div class="flex flex-col items-center gap-6">
                     <div class="flex flex-col items-center gap-4">
-                        {#if workspace?.workspace_boards}
-                            {#each workspace.workspace_boards as board}
+                        {#if workspace?.projects}
+                            {#each workspace.projects as board}
                                 <SquovalIcon
                                     icon="board"
                                     state="active"

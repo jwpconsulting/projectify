@@ -32,19 +32,19 @@
 
     export let data: PageData;
 
-    let { workspaceBoard } = data;
+    let { project } = data;
 
-    $: workspaceBoard = $currentWorkspaceBoard ?? workspaceBoard;
+    $: project = $currentWorkspaceBoard ?? project;
 
-    $: hasSections = workspaceBoard.sections.length > 0;
+    $: hasSections = project.sections.length > 0;
 
     let sections: SectionWithTasks[];
-    $: sections = $currentSections ?? workspaceBoard.sections;
+    $: sections = $currentSections ?? project.sections;
 
     async function onAddNewSection() {
         await openConstructiveOverlay({
             kind: "createSection",
-            workspaceBoard,
+            project,
         });
     }
 </script>
@@ -52,7 +52,7 @@
 <!-- Sections -->
 <div class="flex flex-col gap-4 p-2">
     {#each sections as section (section.uuid)}
-        <SectionC {workspaceBoard} {section} />
+        <SectionC {project} {section} />
     {:else}
         <section
             class="py-2 px-4 gap-8 bg-foreground rounded-lg flex flex-col"

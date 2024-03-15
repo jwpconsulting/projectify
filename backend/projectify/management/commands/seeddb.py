@@ -96,7 +96,7 @@ Altogether = TypedDict(
         "workspace": Workspace,
         "workspace_users": list[WorkspaceUser],
         "labels": list[Label],
-        "workspace_boards": list[WorkspaceBoard],
+        "projects": list[WorkspaceBoard],
         "sections": list[Section],
         "number": "count[int]",
     },
@@ -133,7 +133,7 @@ class Command(BaseCommand):
     fake: Faker
     n_users: int
     n_workspaces: int
-    n_workspace_boards: int
+    n_projects: int
     n_labels: int
     n_tasks: int
     n_add_users: int
@@ -332,7 +332,7 @@ class Command(BaseCommand):
         )
         self.stdout.write(f"Created {len(workspaces_labels)} labels")
 
-        workspaces_workspace_boards = WorkspaceBoard.objects.bulk_create(
+        workspaces_projects = WorkspaceBoard.objects.bulk_create(
             [
                 WorkspaceBoard(
                     title=self.fake.text(
@@ -346,24 +346,24 @@ class Command(BaseCommand):
                     due_date=self.fake.date_time(tzinfo=timezone.utc),
                 )
                 for workspace in workspaces
-                for _ in range(self.n_workspace_boards)
+                for _ in range(self.n_projects)
             ]
         )
         self.stdout.write(
-            f"Created {len(workspaces_workspace_boards)} workspace boards"
+            f"Created {len(workspaces_projects)} projects"
         )
 
         workspaces_sections = Section.objects.bulk_create(
             [
                 Section(
-                    workspace_board=workspace_board,
+                    project=project,
                     title=title,
                     _order=_order,
                 )
-                for _, workspace_boards in groupby(
-                    workspaces_workspace_boards, key=lambda b: b.workspace
+                for _, projects in groupby(
+                    workspaces_projects, key=lambda b: b.workspace
                 )
-                for workspace_board in workspace_boards
+                for project in projects
                 for _order, title in enumerate(
                     self.fake.text(
                         randint(
@@ -390,31 +390,31 @@ class Command(BaseCommand):
         # Create all workspaces
         # Assign all users to all new workspaces
         # Create all labels for all new workspaces
-        # Create all workspace boards for all new workspaces
+        # Create all projects for all new workspaces
         # etc.
         altogether: list[Altogether] = [
             {
                 "workspace": workspace,
                 "workspace_users": list(workspace_users),
                 "labels": list(labels),
-                "workspace_boards": list(workspace_boards),
+                "projects": list(projects),
                 "sections": list(sections),
                 "number": count(1),
             }
             for (
                 (workspace, workspace_users),
                 (_, labels),
-                (_, workspace_boards),
+                (_, projects),
                 (_, sections),
             ) in zip(
                 groupby(workspaces_workspace_users, key=lambda u: u.workspace),
                 groupby(workspaces_labels, key=lambda label: label.workspace),
                 groupby(
-                    workspaces_workspace_boards, key=lambda b: b.workspace
+                    workspaces_projects, key=lambda b: b.workspace
                 ),
                 groupby(
                     workspaces_sections,
-                    key=lambda b: b.workspace_board.workspace,
+                    key=lambda b: b.project.workspace,
                 ),
             )
         ]
@@ -460,10 +460,10 @@ class Command(BaseCommand):
             help="Ensure N workspaces are present",
         )
         parser.add_argument(
-            "--n-workspace-boards",
+            "--n-projects",
             type=int,
             default=20,
-            help="Ensure N workspace boards are added to a new workspace",
+            help="Ensure N projects are added to a new workspace",
         )
         parser.add_argument(
             "--n-add-users",
@@ -490,7 +490,7 @@ class Command(BaseCommand):
         self.fake = Faker()
         self.n_users = options["n_users"]
         self.n_workspaces = options["n_workspaces"]
-        self.n_workspace_boards = options["n_workspace_boards"]
+        self.n_projects = options["n_projects"]
         self.n_labels = options["n_labels"]
         self.n_tasks = options["n_tasks"]
         self.n_add_users = options["n_add_users"]

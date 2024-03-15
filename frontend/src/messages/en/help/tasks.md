@@ -12,7 +12,7 @@ Once a task has been saved, you can go back in and edit the task by click the ta
 
 # Move a task
 
-There are a few ways you can move a task as well as a few places. You can move your tasks around inside the section they are housed in as well as move them to other sections in your workspace board. For example, if you have a section called 'To Do' and another section called 'In Progress', you can move tasks between these sections. Moving tasks is simple. On the right of a task are three buttons. An up button, a down button and an ellipsis (three dots) button. The up and down buttons move the task inside the workpace board section. The ellipsis button allows you to select a section to move the task to, as well as more actions inside the current section such as 'Move to top' and 'Move to bottom'.
+There are a few ways you can move a task as well as a few places. You can move your tasks around inside the section they are housed in as well as move them to other sections in your project. For example, if you have a section called 'To Do' and another section called 'In Progress', you can move tasks between these sections. Moving tasks is simple. On the right of a task are three buttons. An up button, a down button and an ellipsis (three dots) button. The up and down buttons move the task inside the workpace board section. The ellipsis button allows you to select a section to move the task to, as well as more actions inside the current section such as 'Move to top' and 'Move to bottom'.
 
 # Delete a task
 

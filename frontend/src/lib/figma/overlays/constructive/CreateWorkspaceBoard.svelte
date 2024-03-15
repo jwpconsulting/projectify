@@ -22,7 +22,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { goto } from "$lib/navigation";
-    import { createWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
+    import { createWorkspaceBoard } from "$lib/repository/workspace/project";
     import {
         rejectConstructiveOverlay,
         resolveConstructiveOverlay,
@@ -63,16 +63,16 @@
 
 <Layout {onSubmit}>
     <svelte:fragment slot="title">
-        {$_("overlay.constructive.create-workspace-board.title")}
+        {$_("overlay.constructive.create-project.title")}
     </svelte:fragment>
     <svelte:fragment slot="form">
         <InputField
-            name="workspace-board-name"
+            name="project-name"
             label={$_(
-                "overlay.constructive.create-workspace-board.form.title.label",
+                "overlay.constructive.create-project.form.title.label",
             )}
             placeholder={$_(
-                "overlay.constructive.create-workspace-board.form.title.placeholder",
+                "overlay.constructive.create-project.form.title.placeholder",
             )}
             style={{ inputType: "text" }}
             bind:value={title}
@@ -88,7 +88,7 @@
             style={{ kind: "secondary" }}
             size="medium"
             color="blue"
-            label={$_("overlay.constructive.create-workspace-board.cancel")}
+            label={$_("overlay.constructive.create-project.cancel")}
         />
         <Button
             action={{ kind: "submit", disabled: state.kind === "submitting" }}
@@ -96,7 +96,7 @@
             size="medium"
             color="blue"
             label={$_(
-                "overlay.constructive.create-workspace-board.create-board",
+                "overlay.constructive.create-project.create-board",
             )}
         />
     </svelte:fragment>

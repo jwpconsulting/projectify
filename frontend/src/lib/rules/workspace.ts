@@ -35,7 +35,7 @@ export type Resource =
     | "workspace"
     | "workspaceUserInvite"
     | "workspaceUser"
-    | "workspaceBoard"
+    | "project"
     | "section"
     | "task"
     | "label"
@@ -88,7 +88,7 @@ const rules: Rules = {
         update: "OWNER",
         delete: "OWNER",
     },
-    workspaceBoard: {
+    project: {
         create: "MAINTAINER",
         read: "OBSERVER",
         update: "MAINTAINER",
@@ -184,7 +184,7 @@ const resourceToQuota: {
     workspace: undefined,
     workspaceUserInvite: "workspace_users_and_invites",
     workspaceUser: "workspace_users_and_invites",
-    workspaceBoard: "workspace_boards",
+    project: "projects",
     section: "sections",
     task: "tasks",
     label: "labels",
