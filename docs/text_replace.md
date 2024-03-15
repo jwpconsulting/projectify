@@ -214,13 +214,32 @@ For folders:
 ```fish
 for f in (
   fd --type directory \
-    "workspace[_ -]?[bB]oard[_ -]?s?" \
+    "[wW]orkspace[_ -]?[bB]oard[_ -]?s?" \
     .
 )
   echo "Moving $f"
   set -l dir (dirname $f)
   read -l -P "New path: $dir/" base || break
   echo "Moving to $base"
+  git mv -v $f $dir/$base || break
+end
+```
+
+The above might have to be run multiple times.
+
+For files:
+
+```
+for f in (
+  fd --type file \
+    "[wW]orkspace[_ -]?[bB]oard[_ -]?s?" \
+    --exclude migrations \
+    .
+)
+  echo "Moving $f"
+  set -l dir (dirname $f)
+  read -l -P "New path: $dir/" base || break
+  echo "Moving to $dir/$base"
   git mv -v $f $dir/$base || break
 end
 ```
