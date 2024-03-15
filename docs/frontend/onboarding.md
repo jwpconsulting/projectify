@@ -100,7 +100,7 @@ to continue using it in the next step.
 ### New task
 
 We assume that the user wants to try putting their first task in this workspace
-board, so we create a workspace board section "To Do" for them, and ask them
+board, so we create a section "To Do" for them, and ask them
 what they want their task to be.
 
 If a task has been created before, it should support continuation. This is

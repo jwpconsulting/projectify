@@ -21,7 +21,7 @@ import { getWorkspace } from "$lib/repository/workspace";
 import { getWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
 import type {
     WorkspaceBoardDetail,
-    WorkspaceBoardSection,
+    Section,
     WorkspaceDetail,
 } from "$lib/types/workspace";
 
@@ -33,7 +33,7 @@ export async function load({
 }: PageLoadEvent): Promise<{
     workspaceBoard: WorkspaceBoardDetail;
     workspace: WorkspaceDetail;
-    workspaceBoardSection?: WorkspaceBoardSection;
+    section?: Section;
 }> {
     const workspaceBoard = await getWorkspaceBoard(workspaceBoardUuid, {
         fetch,
@@ -55,7 +55,6 @@ export async function load({
             `No workspace with UUID ${workspaceUuid} could be found for workspace board UUID ${workspaceBoardUuid}.`,
         );
     }
-    const workspaceBoardSection =
-        workspaceBoard.workspace_board_sections.at(0);
-    return { workspaceBoard, workspace, workspaceBoardSection };
+    const section = workspaceBoard.sections.at(0);
+    return { workspaceBoard, workspace, section };
 }

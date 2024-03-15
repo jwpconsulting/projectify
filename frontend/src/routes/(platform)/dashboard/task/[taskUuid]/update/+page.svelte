@@ -28,9 +28,9 @@
     import { createSubTaskAssignment } from "$lib/stores/dashboard";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
-    import type { TaskWithWorkspaceBoardSection } from "$lib/types/workspace";
+    import type { TaskWithSection } from "$lib/types/workspace";
     import {
-        getDashboardWorkspaceBoardSectionUrl,
+        getDashboardSectionUrl,
         getDashboardWorkspaceBoardUrl,
         getTaskUrl,
     } from "$lib/urls";
@@ -40,8 +40,8 @@
 
     export let data: PageData;
     const { task } = data;
-    const { workspace_board_section: workspaceBoardSection } = task;
-    const { workspace_board: workspaceBoard } = workspaceBoardSection;
+    const { section: section } = task;
+    const { workspace_board: workspaceBoard } = section;
 
     // Initial data
     let { title, description } = task;
@@ -61,7 +61,7 @@
         if (!$labelAssignment) {
             throw new Error("Expected $labelAssignment");
         }
-        const submitTask: TaskWithWorkspaceBoardSection = {
+        const submitTask: TaskWithSection = {
             ...task,
             due_date: dueDate,
             title,
@@ -78,7 +78,7 @@
                     assignee: $workspaceUserAssignment,
                     labels: $labelAssignment,
                     sub_tasks: $subTasks,
-                    workspace_board_section: workspaceBoardSection,
+                    section: section,
                 },
                 { fetch },
             );
@@ -86,11 +86,7 @@
                 await goto(getTaskUrl(task.uuid));
                 return;
             }
-            await goto(
-                getDashboardWorkspaceBoardSectionUrl(
-                    workspaceBoardSection.uuid,
-                ),
-            );
+            await goto(getDashboardSectionUrl(section.uuid));
         } catch (e) {
             updating = false;
             throw e;
@@ -103,10 +99,8 @@
             href: getDashboardWorkspaceBoardUrl(workspaceBoard.uuid),
         },
         {
-            label: workspaceBoardSection.title,
-            href: getDashboardWorkspaceBoardSectionUrl(
-                workspaceBoardSection.uuid,
-            ),
+            label: section.title,
+            href: getDashboardSectionUrl(section.uuid),
         },
         // We could add a better task name here, or even
         // extract the whole thing as a layout for any task/[taskUuid] route
@@ -115,7 +109,7 @@
 </script>
 
 <Layout>
-    <TopBar slot="top-bar" {workspaceBoardSection}>
+    <TopBar slot="top-bar" {section}>
         <Breadcrumbs slot="breadcrumbs" {crumbs} />
         <svelte:fragment slot="buttons">
             <Button

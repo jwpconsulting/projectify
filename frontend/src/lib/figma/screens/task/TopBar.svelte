@@ -17,10 +17,10 @@
 -->
 <script lang="ts">
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
-    import type { WorkspaceBoardSection } from "$lib/types/workspace";
-    import { getDashboardWorkspaceBoardSectionUrl } from "$lib/urls";
+    import type { Section } from "$lib/types/workspace";
+    import { getDashboardSectionUrl } from "$lib/urls";
 
-    export let workspaceBoardSection: WorkspaceBoardSection;
+    export let section: Section;
 </script>
 
 <div
@@ -32,9 +32,7 @@
             <CircleIcon
                 action={{
                     kind: "a",
-                    href: getDashboardWorkspaceBoardSectionUrl(
-                        workspaceBoardSection.uuid,
-                    ),
+                    href: getDashboardSectionUrl(section.uuid),
                 }}
                 size="medium"
                 icon="close"

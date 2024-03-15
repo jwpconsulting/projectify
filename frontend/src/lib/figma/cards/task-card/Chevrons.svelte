@@ -17,25 +17,22 @@
 -->
 <!--
 @component
-Up and down chevrons for task movement within a workspace board section
+Up and down chevrons for task movement within a section
 -->
 <script lang="ts">
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { getTaskPosition, moveUp, moveDown } from "$lib/stores/modules";
-    import type {
-        Task,
-        WorkspaceBoardSectionWithTasks,
-    } from "$lib/types/workspace";
+    import type { Task, SectionWithTasks } from "$lib/types/workspace";
 
     export let task: Task;
-    export let workspaceBoardSection: WorkspaceBoardSectionWithTasks;
+    export let section: SectionWithTasks;
 
     let upDisabled = true;
     let downDisabled = true;
     $: canMove = $currentWorkspaceUserCan("update", "task");
     $: {
-        const position = getTaskPosition(workspaceBoardSection, task);
+        const position = getTaskPosition(section, task);
         upDisabled = position.kind === "start" || !canMove;
         // If we are the only task, we don't want to show the down chevron.
         downDisabled =
@@ -51,7 +48,7 @@ Up and down chevrons for task movement within a workspace board section
         icon="up"
         action={{
             kind: "button",
-            action: () => moveUp(workspaceBoardSection, task, { fetch }),
+            action: () => moveUp(section, task, { fetch }),
             disabled: upDisabled,
         }}
     />
@@ -60,7 +57,7 @@ Up and down chevrons for task movement within a workspace board section
         icon="down"
         action={{
             kind: "button",
-            action: () => moveDown(workspaceBoardSection, task, { fetch }),
+            action: () => moveDown(section, task, { fetch }),
             disabled: downDisabled,
         }}
     />

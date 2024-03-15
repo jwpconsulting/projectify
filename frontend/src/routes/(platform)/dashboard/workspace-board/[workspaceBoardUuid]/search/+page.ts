@@ -17,35 +17,28 @@
  */
 import { searchTasks } from "$lib/stores/dashboard";
 import type { SearchInput } from "$lib/types/base";
-import type { TaskWithWorkspaceBoardSection } from "$lib/types/workspace";
+import type { TaskWithSection } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
 
 import type { PageLoadEvent } from "./$types";
 
 interface Data {
-    tasks: Promise<TaskWithWorkspaceBoardSection[]>;
+    tasks: Promise<TaskWithSection[]>;
     search: SearchInput;
 }
 export function load({ url, parent }: PageLoadEvent): Data {
     const search: SearchInput = url.searchParams.get("search") ?? undefined;
-    const tasks = new Promise<TaskWithWorkspaceBoardSection[]>(
-        (resolve, reject) => {
-            parent()
-                .then(({ workspaceBoard }) => {
-                    const {
-                        workspace_board_sections: workspaceBoardSections,
-                    } = workspaceBoard;
-                    const tasks = searchTasks(
-                        unwrap(
-                            workspaceBoardSections,
-                            "Expected workspaceBoardSections",
-                        ),
-                        search,
-                    );
-                    resolve(tasks);
-                })
-                .catch(reject);
-        },
-    );
+    const tasks = new Promise<TaskWithSection[]>((resolve, reject) => {
+        parent()
+            .then(({ workspaceBoard }) => {
+                const { sections: sections } = workspaceBoard;
+                const tasks = searchTasks(
+                    unwrap(sections, "Expected sections"),
+                    search,
+                );
+                resolve(tasks);
+            })
+            .catch(reject);
+    });
     return { tasks, search };
 }

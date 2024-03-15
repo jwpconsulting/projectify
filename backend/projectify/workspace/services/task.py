@@ -23,10 +23,10 @@ from django.db import transaction
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 from projectify.workspace.models.label import Label
-from projectify.workspace.models.task import Task
-from projectify.workspace.models.workspace_board_section import (
-    WorkspaceBoardSection,
+from projectify.workspace.models.section import (
+    Section,
 )
+from projectify.workspace.models.task import Task
 from projectify.workspace.models.workspace_user import WorkspaceUser
 from projectify.workspace.services.signals import (
     send_task_change_signal,
@@ -49,7 +49,7 @@ def task_assign_labels(*, task: Task, labels: Sequence[Label]) -> None:
 def task_create(
     *,
     who: User,
-    workspace_board_section: WorkspaceBoardSection,
+    section: Section,
     title: str,
     description: Optional[str] = None,
     due_date: Optional[datetime] = None,
@@ -59,12 +59,12 @@ def task_create(
     validate_perm(
         "workspace.create_task",
         who,
-        workspace_board_section.workspace_board.workspace,
+        section.workspace_board.workspace,
     )
     # XXX Implicit N+1 here
-    workspace = workspace_board_section.workspace_board.workspace
+    workspace = section.workspace_board.workspace
     return Task.objects.create(
-        workspace_board_section=workspace_board_section,
+        workspace_board_section=section,
         title=title,
         description=description,
         due_date=due_date,
@@ -78,7 +78,7 @@ def task_create(
 def task_create_nested(
     *,
     who: User,
-    workspace_board_section: WorkspaceBoardSection,
+    section: Section,
     title: str,
     # TODO make these two optional as well
     sub_tasks: ValidatedData,
@@ -90,7 +90,7 @@ def task_create_nested(
     """Create a task. This will replace the above task_create method."""
     task = task_create(
         who=who,
-        workspace_board_section=workspace_board_section,
+        section=section,
         title=title,
         description=description,
         assignee=assignee,
@@ -104,9 +104,7 @@ def task_create_nested(
         task=task,
         create_sub_tasks=create_sub_tasks,
     )
-    send_workspace_board_change_signal(
-        task.workspace_board_section.workspace_board
-    )
+    send_workspace_board_change_signal(task.section.workspace_board)
     return task
 
 
@@ -162,9 +160,7 @@ def task_update_nested(
         create_sub_tasks=sub_tasks["create_sub_tasks"] or [],
         update_sub_tasks=sub_tasks["update_sub_tasks"] or [],
     )
-    send_workspace_board_change_signal(
-        task.workspace_board_section.workspace_board
-    )
+    send_workspace_board_change_signal(task.section.workspace_board)
     send_task_change_signal(task)
     return task
 
@@ -175,9 +171,7 @@ def task_delete(*, task: Task, who: User) -> None:
     """Delete a task."""
     validate_perm("workspace.delete_task", who, task.workspace)
     task.delete()
-    send_workspace_board_change_signal(
-        task.workspace_board_section.workspace_board
-    )
+    send_workspace_board_change_signal(task.section.workspace_board)
     send_task_change_signal(task)
 
 
@@ -186,42 +180,40 @@ def task_move_after(
     *,
     who: User,
     task: Task,
-    after: Union[Task, WorkspaceBoardSection],
+    after: Union[Task, Section],
 ) -> Task:
-    """Move a task after a task or in front of a workspace board section."""
+    """Move a task after a task or in front of a section."""
     validate_perm("workspace.update_task", who, task.workspace)
     match after:
         case Task():
-            workspace_board_section = after.workspace_board_section
+            section = after.section
             order = after._order
-        case WorkspaceBoardSection():
-            workspace_board_section = after
+        case Section():
+            section = after
             order = 0
 
-    # Lock tasks in own workspace board section
-    neighbor_tasks = workspace_board_section.task_set.select_for_update()
+    # Lock tasks in own section
+    neighbor_tasks = section.task_set.select_for_update()
     len(neighbor_tasks)
 
-    # Depending on whether we move within the same workspace board section, we
-    # might have to lock only this workspace board section, or the destination
+    # Depending on whether we move within the same section, we
+    # might have to lock only this section, or the destination
     # as well.
-    if task.workspace_board_section != workspace_board_section:
-        other_tasks = workspace_board_section.task_set.select_for_update()
+    if task.section != section:
+        other_tasks = section.task_set.select_for_update()
         len(other_tasks)
-        # And assign task's workspace board section
-        task.workspace_board_section = workspace_board_section
+        # And assign task's section
+        task.workspace_board_section = section
         task.save()
 
     # Change order
-    order_list = list(workspace_board_section.get_task_order())
+    order_list = list(section.get_task_order())
     current_object_index = order_list.index(task.pk)
     order_list.insert(order, order_list.pop(current_object_index))
 
     # Set the order
-    workspace_board_section.set_task_order(order_list)
-    workspace_board_section.save()
-    send_workspace_board_change_signal(
-        task.workspace_board_section.workspace_board
-    )
+    section.set_task_order(order_list)
+    section.save()
+    send_workspace_board_change_signal(task.section.workspace_board)
     send_task_change_signal(task)
     return task

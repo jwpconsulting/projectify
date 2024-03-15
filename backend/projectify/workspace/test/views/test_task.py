@@ -28,11 +28,11 @@ from rest_framework.test import (
     APIClient,
 )
 
+from projectify.workspace.models.section import (
+    Section,
+)
 from projectify.workspace.models.task import (
     Task,
-)
-from projectify.workspace.models.workspace_board_section import (
-    WorkspaceBoardSection,
 )
 from pytest_types import (
     DjangoAssertNumQueries,
@@ -74,16 +74,14 @@ class TestTaskCreate(UnauthenticatedTestMixin):
     @pytest.fixture
     def payload(
         self,
-        workspace_board_section: models.WorkspaceBoardSection,
+        section: models.Section,
     ) -> dict[str, object]:
         """Return a payload for API."""
         return {
             "title": "bla",
             "labels": [],
             "assignee": None,
-            "workspace_board_section": {
-                "uuid": str(workspace_board_section.uuid)
-            },
+            "section": {"uuid": str(section.uuid)},
             "sub_tasks": [
                 {"title": "I am a sub task", "done": False},
             ],
@@ -100,7 +98,7 @@ class TestTaskCreate(UnauthenticatedTestMixin):
             resource_url, payload, format="json"
         )
         # We get 400 and NOT 403. We don't want to tell the user whether a
-        # workspace board section with the given UUID exists. Instead, we
+        # section with the given UUID exists. Instead, we
         # will treat it like a non-existent UUID. That makes sense, because to
         # the user it *really* does not exist and anything else does not
         # matter.
@@ -151,14 +149,12 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
     @pytest.fixture
     def payload(
         self,
-        workspace_board_section: models.WorkspaceBoardSection,
+        section: models.Section,
     ) -> dict[str, object]:
         """Create payload."""
         return {
             "title": "Hello world",
-            "workspace_board_section": {
-                "uuid": str(workspace_board_section.uuid)
-            },
+            "section": {"uuid": str(section.uuid)},
             "number": 2,
             "labels": [],
             "assignee": None,
@@ -197,7 +193,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
         workspace_user: models.WorkspaceUser,
-        workspace_board_section: models.WorkspaceBoardSection,
+        section: models.Section,
         payload: dict[str, object],
     ) -> None:
         """Test updating a task when logged in correctly."""
@@ -214,10 +210,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
             assert response.status_code == 200, response.content
         assert response.data["title"] == "Hello world"
         # We get the whole nested thing
-        assert (
-            response.data["workspace_board_section"]["title"]
-            == workspace_board_section.title
-        )
+        assert response.data["section"]["title"] == section.title
 
     def test_delete(
         self,
@@ -237,14 +230,14 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
 
 # RPC
 @pytest.mark.django_db
-class TestMoveTaskToWorkspaceBoardSection:
-    """Test moving a task to a workspace board section."""
+class TestMoveTaskToSection:
+    """Test moving a task to a section."""
 
     @pytest.fixture
     def resource_url(self, task: Task) -> str:
         """Return URL to this view."""
         return reverse(
-            "workspace:tasks:move-to-workspace-board-section",
+            "workspace:tasks:move-to-section",
             args=(str(task.uuid),),
         )
 
@@ -253,25 +246,21 @@ class TestMoveTaskToWorkspaceBoardSection:
         rest_user_client: APIClient,
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
-        workspace_board_section: WorkspaceBoardSection,
-        other_workspace_board_section: WorkspaceBoardSection,
+        section: Section,
+        other_section: Section,
         task: Task,
     ) -> None:
         """Test moving a task."""
-        assert task.workspace_board_section == workspace_board_section
+        assert task.section == section
         with django_assert_num_queries(18):
             response = rest_user_client.post(
                 resource_url,
-                data={
-                    "workspace_board_section_uuid": str(
-                        other_workspace_board_section.uuid
-                    )
-                },
+                data={"section_uuid": str(other_section.uuid)},
             )
             assert response.status_code == status.HTTP_200_OK, response.data
 
         task.refresh_from_db()
-        assert task.workspace_board_section == other_workspace_board_section
+        assert task.section == other_section
         assert task._order == 0
 
 

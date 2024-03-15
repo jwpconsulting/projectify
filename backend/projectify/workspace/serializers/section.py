@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Workspace board section serializers."""
+"""Section serializers."""
 from projectify.workspace.serializers.task import (
     TaskWithSubTaskSerializer,
 )
@@ -42,27 +42,23 @@ class WorkspaceBoardUpSerializer(base.WorkspaceBoardBaseSerializer):
         )
 
 
-class WorkspaceBoardSectionUpSerializer(
-    base.WorkspaceBoardSectionBaseSerializer
-):
-    """Serialize workspace board section up the hierarchy."""
+class SectionUpSerializer(base.SectionBaseSerializer):
+    """Serialize section up the hierarchy."""
 
     workspace_board = WorkspaceBoardUpSerializer(read_only=True)
 
-    class Meta(base.WorkspaceBoardSectionBaseSerializer.Meta):
+    class Meta(base.SectionBaseSerializer.Meta):
         """Meta."""
 
         fields = (
-            *base.WorkspaceBoardSectionBaseSerializer.Meta.fields,
+            *base.SectionBaseSerializer.Meta.fields,
             "workspace_board",
         )
 
 
-class WorkspaceBoardSectionDetailSerializer(
-    base.WorkspaceBoardSectionBaseSerializer
-):
+class SectionDetailSerializer(base.SectionBaseSerializer):
     """
-    Workspace board section detail serializer.
+    Section detail serializer.
 
     Goes both up (to workspace) and down (all tasks).
     """
@@ -72,11 +68,11 @@ class WorkspaceBoardSectionDetailSerializer(
         many=True, read_only=True, source="task_set"
     )
 
-    class Meta(base.WorkspaceBoardSectionBaseSerializer.Meta):
+    class Meta(base.SectionBaseSerializer.Meta):
         """Meta."""
 
         fields = (
-            *base.WorkspaceBoardSectionBaseSerializer.Meta.fields,
+            *base.SectionBaseSerializer.Meta.fields,
             "workspace_board",
             "tasks",
         )

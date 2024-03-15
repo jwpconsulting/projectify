@@ -34,11 +34,11 @@ export function getDashboardWorkspaceBoardUrl(workspaceBoardUuid: string) {
 }
 
 // TODO put me into dashboard urls
-export function getDashboardWorkspaceBoardSectionUrl(
-    // TODO accept workspaceBoardSection directly
-    workspaceBoardSectionUuid: string,
+export function getDashboardSectionUrl(
+    // TODO accept section directly
+    sectionUuid: string,
 ) {
-    return `/dashboard/workspace-board-section/${workspaceBoardSectionUuid}`;
+    return `/dashboard/section/${sectionUuid}`;
 }
 
 // TODO put me into dashboard urls
@@ -66,9 +66,9 @@ export function getProfileUrl() {
 }
 
 // TODO put me into dashboard urls
-// TODO accept workspaceBoardSection directly
-export function getNewTaskUrl(workspaceBoardSectionUuid: string) {
-    return `/dashboard/workspace-board-section/${workspaceBoardSectionUuid}/create-task`;
+// TODO accept section directly
+export function getNewTaskUrl(sectionUuid: string) {
+    return `/dashboard/section/${sectionUuid}/create-task`;
 }
 
 // TODO put me into dashboard urls

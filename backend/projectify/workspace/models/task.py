@@ -60,10 +60,10 @@ if TYPE_CHECKING:
     from . import (
         ChatMessage,
         Label,
+        Section,
         SubTask,
         TaskLabel,
         WorkspaceBoard,
-        WorkspaceBoardSection,
         WorkspaceUser,
     )
 
@@ -71,25 +71,29 @@ if TYPE_CHECKING:
 class TaskQuerySet(models.QuerySet["Task"]):
     """Manager for Task."""
 
+    # TODO use selector
     def filter_by_workspace(self, workspace: Workspace) -> Self:
         """Filter by workspace."""
         return self.filter(
             workspace_board_section__workspace_board__workspace=workspace,
         )
 
+    # TODO use selector
     def filter_by_assignee(self, assignee: "WorkspaceUser") -> Self:
         """Filter by assignee user."""
         return self.filter(assignee=assignee)
 
-    def filter_by_workspace_board_section_pks(
+    # TODO use selector
+    def filter_by_section_pks(
         self,
-        workspace_board_section_pks: Pks,
+        section_pks: Pks,
     ) -> Self:
-        """Filter by workspace board section pks."""
+        """Filter by section pks."""
         return self.filter(
-            workspace_board_section__pk__in=workspace_board_section_pks,
+            workspace_board_section__pk__in=section_pks,
         )
 
+    # TODO use selector
     def filter_by_workspace_board(
         self, workspace_board: "WorkspaceBoard"
     ) -> Self:
@@ -100,15 +104,15 @@ class TaskQuerySet(models.QuerySet["Task"]):
 
 
 class Task(TitleDescriptionModel, BaseModel):
-    """Task, belongs to workspace board section."""
+    """Task, belongs to section."""
 
     workspace = models.ForeignKey[Workspace](
         Workspace,
         on_delete=models.CASCADE,
     )
 
-    workspace_board_section = models.ForeignKey["WorkspaceBoardSection"](
-        "WorkspaceBoardSection",
+    workspace_board_section = models.ForeignKey["Section"](
+        "Section",
         on_delete=models.CASCADE,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
@@ -159,9 +163,9 @@ class Task(TitleDescriptionModel, BaseModel):
         self.assignee = assignee
         self.save()
 
-    def get_next_section(self) -> "WorkspaceBoardSection":
+    def get_next_section(self) -> "Section":
         """Return instance of the next section."""
-        next_section: "WorkspaceBoardSection" = (
+        next_section: "Section" = (
             self.workspace_board_section.get_next_in_order()
         )
         return next_section
@@ -242,6 +246,11 @@ class Task(TitleDescriptionModel, BaseModel):
         """Return title."""
         return self.title
 
+    @property
+    def section(self) -> "Section":
+        """Return current section."""
+        return self.workspace_board_section
+
     class Meta:
         """Meta."""
 
@@ -286,11 +295,11 @@ class Task(TitleDescriptionModel, BaseModel):
                         INNER JOIN "workspace_workspaceboard"
                             ON ("workspace_workspace"."id" = \
                             "workspace_workspaceboard"."workspace_id")
-                        INNER JOIN "workspace_workspaceboardsection"
+                        INNER JOIN "workspace_section"
                             ON ("workspace_workspaceboard"."id" = \
-                                 "workspace_workspaceboardsection"."workspace_board_id")
+                                 "workspace_section"."workspace_board_id")
                         INNER JOIN "workspace_task"
-                            ON ("workspace_workspaceboardsection"."id" = \
+                            ON ("workspace_section"."id" = \
                                 "workspace_task"."workspace_board_section_id")
                         WHERE "workspace_task"."id" = NEW.id
                         LIMIT 1;

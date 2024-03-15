@@ -18,7 +18,7 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 import TopBar from "$lib/figma/screens/task/TopBar.svelte";
-import { task, workspaceBoardSection, workspaceBoard } from "$lib/storybook";
+import { task, section, workspaceBoard } from "$lib/storybook";
 
 const meta: Meta<TopBar> = {
     component: TopBar,
@@ -33,8 +33,8 @@ export const Default: Story = {
     args: {
         breadcrumb: {
             task,
-            workspaceBoardSection: {
-                ...workspaceBoardSection,
+            section: {
+                ...section,
                 workspace_board: workspaceBoard,
             },
         },
@@ -44,8 +44,8 @@ export const Default: Story = {
 export const NoTask: Story = {
     args: {
         breadcrumb: {
-            workspaceBoardSection: {
-                ...workspaceBoardSection,
+            section: {
+                ...section,
                 workspace_board: workspaceBoard,
             },
         },

@@ -31,7 +31,7 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import { goto } from "$lib/navigation";
-    import { moveTaskToWorkspaceBoardSection } from "$lib/repository/workspace";
+    import { moveTaskToSection } from "$lib/repository/workspace";
     import { deleteTask } from "$lib/stores/dashboard";
     import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
@@ -41,23 +41,20 @@
         getTaskPosition,
     } from "$lib/stores/modules";
     import type { ContextMenuType } from "$lib/types/ui";
-    import type { WorkspaceBoardSection } from "$lib/types/workspace";
-    import {
-        getTaskUrl,
-        getDashboardWorkspaceBoardSectionUrl,
-    } from "$lib/urls";
+    import type { Section } from "$lib/types/workspace";
+    import { getTaskUrl, getDashboardSectionUrl } from "$lib/urls";
     import { copyToClipboard } from "$lib/utils/clipboard";
 
     export let kind: ContextMenuType & { kind: "task" };
 
     async function promptDeleteTask() {
-        const { uuid } = kind.workspaceBoardSection;
+        const { uuid } = kind.section;
         await openDestructiveOverlay({
             kind: "deleteTask" as const,
             task: kind.task,
         });
         await deleteTask(kind.task);
-        await goto(getDashboardWorkspaceBoardSectionUrl(uuid));
+        await goto(getDashboardSectionUrl(uuid));
     }
 
     let moveToSectionOpened = false;
@@ -66,13 +63,13 @@
         moveToSectionOpened = !moveToSectionOpened;
     }
 
-    async function moveToSection(section: WorkspaceBoardSection) {
-        await moveTaskToWorkspaceBoardSection(kind.task, section, { fetch });
+    async function moveToSection(section: Section) {
+        await moveTaskToSection(kind.task, section, { fetch });
     }
 
     $: taskPosition =
         kind.location === "dashboard"
-            ? getTaskPosition(kind.workspaceBoardSection, kind.task)
+            ? getTaskPosition(kind.section, kind.task)
             : undefined;
     $: canMoveTask = $currentWorkspaceUserCan("update", "task");
     $: showMoveTop =
@@ -108,7 +105,7 @@
             iconRight={moveToSectionOpened ? ChevronUp : ChevronDown}
         />
         {#if moveToSectionOpened}
-            {#each kind.workspaceBoard.workspace_board_sections as section}
+            {#each kind.workspaceBoard.sections as section}
                 <ContextMenuButton
                     state="normal"
                     label={section.title}
@@ -123,12 +120,9 @@
             <ContextMenuButton
                 kind={{
                     kind: "button",
-                    action: moveToTop.bind(
-                        null,
-                        kind.workspaceBoardSection,
-                        kind.task,
-                        { fetch },
-                    ),
+                    action: moveToTop.bind(null, kind.section, kind.task, {
+                        fetch,
+                    }),
                 }}
                 label={$_("overlay.context-menu.task.move-to-top")}
                 state="normal"
@@ -139,12 +133,9 @@
             <ContextMenuButton
                 kind={{
                     kind: "button",
-                    action: moveToBottom.bind(
-                        null,
-                        kind.workspaceBoardSection,
-                        kind.task,
-                        { fetch },
-                    ),
+                    action: moveToBottom.bind(null, kind.section, kind.task, {
+                        fetch,
+                    }),
                 }}
                 label={$_("overlay.context-menu.task.move-to-bottom")}
                 state="normal"

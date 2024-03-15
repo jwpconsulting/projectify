@@ -61,44 +61,43 @@ export type Task = {
     number: number;
     labels: Label[];
     assignee?: WorkspaceUser;
-    workspace_board_section?: WorkspaceBoardSection;
+    section?: Section;
     sub_tasks?: SubTask[];
     chat_messages?: ChatMessage[];
 } & TimestampedType &
     TitleDescriptionType;
 
-export type TaskWithWorkspaceBoardSection = Task & {
-    workspace_board_section: WorkspaceBoardSection;
+export type TaskWithSection = Task & {
+    section: Section;
 };
 
 export type TaskWithWorkspace = Task & {
-    workspace_board_section: WorkspaceBoardSection & {
+    section: Section & {
         workspace_board: WorkspaceBoard & {
             workspace: Workspace;
         };
     };
 };
 
-export type CreateWorkspaceBoardSection = TitleDescriptionType;
+export type CreateSection = TitleDescriptionType;
 
-export type WorkspaceBoardSection = {
+export type Section = {
     _order: number;
     uuid: string;
     tasks?: Task[];
     workspace_board?: WorkspaceBoard;
 } & TimestampedType &
-    CreateWorkspaceBoardSection;
+    CreateSection;
 
-export type WorkspaceBoardSectionWithTasks = WorkspaceBoardSection &
-    Required<Pick<WorkspaceBoardSection, "tasks">>;
+export type SectionWithTasks = Section & Required<Pick<Section, "tasks">>;
 
-export type WorkspaceBoardSectionDetail = WorkspaceBoardSection &
-    Required<Pick<WorkspaceBoardSection, "workspace_board" | "tasks">>;
+export type SectionDetail = Section &
+    Required<Pick<Section, "workspace_board" | "tasks">>;
 
 export type WorkspaceBoard = {
     due_date?: string;
     uuid: string;
-    workspace_board_sections?: WorkspaceBoardSection[];
+    sections?: Section[];
     archived?: string;
     workspace?: Workspace;
 } & TimestampedType &
@@ -106,7 +105,7 @@ export type WorkspaceBoard = {
 
 export type WorkspaceBoardDetail = WorkspaceBoard & {
     workspace: Workspace;
-    workspace_board_sections: WorkspaceBoardSectionWithTasks[];
+    sections: SectionWithTasks[];
 };
 
 export type ArchivedWorkspaceBoard = WorkspaceBoard & { archived: string };
@@ -125,7 +124,7 @@ export interface WorkspaceQuota {
     tasks: Quota;
     task_labels: Quota;
     workspace_boards: Quota;
-    workspace_board_sections: Quota;
+    sections: Quota;
     workspace_users_and_invites: Quota;
 }
 

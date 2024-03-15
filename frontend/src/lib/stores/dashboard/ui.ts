@@ -104,41 +104,33 @@ export function toggleSideNavOpen() {
     _sideNavOpen.update((state) => !state);
 }
 
-const _workspaceBoardSectionClosed = persisted(
-    "workspace-board-section-closed",
-    new Set<string>(),
-    {
-        serializer: {
-            // XXX Using json.parse, maybe a security problem?
-            parse(value: string): Set<string> {
-                const values = JSON.parse(value) as string[];
-                try {
-                    return new Set(values);
-                } catch {
-                    return new Set();
-                }
-            },
-            stringify(set: Set<string>): string {
-                const values: string[] = [...set];
-                return JSON.stringify(values);
-            },
+const _sectionClosed = persisted("section-closed", new Set<string>(), {
+    serializer: {
+        // XXX Using json.parse, maybe a security problem?
+        parse(value: string): Set<string> {
+            const values = JSON.parse(value) as string[];
+            try {
+                return new Set(values);
+            } catch {
+                return new Set();
+            }
+        },
+        stringify(set: Set<string>): string {
+            const values: string[] = [...set];
+            return JSON.stringify(values);
         },
     },
-);
-export const workspaceBoardSectionClosed = readonly(
-    _workspaceBoardSectionClosed,
-);
+});
+export const sectionClosed = readonly(_sectionClosed);
 
-export function toggleWorkspaceBoardSectionOpen(
-    workspaceBoardSectionUuid: string,
-) {
-    _workspaceBoardSectionClosed.update(($workspaceBoardSectionClosed) => {
-        if ($workspaceBoardSectionClosed.has(workspaceBoardSectionUuid)) {
-            $workspaceBoardSectionClosed.delete(workspaceBoardSectionUuid);
+export function toggleSectionOpen(sectionUuid: string) {
+    _sectionClosed.update(($sectionClosed) => {
+        if ($sectionClosed.has(sectionUuid)) {
+            $sectionClosed.delete(sectionUuid);
         } else {
-            $workspaceBoardSectionClosed.add(workspaceBoardSectionUuid);
+            $sectionClosed.add(sectionUuid);
         }
-        return $workspaceBoardSectionClosed;
+        return $sectionClosed;
     });
 }
 

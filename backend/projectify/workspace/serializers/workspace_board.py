@@ -24,11 +24,9 @@ from . import (
 )
 
 
-class WorkspaceBoardSectionSerializer(
-    base.WorkspaceBoardSectionBaseSerializer
-):
+class SectionSerializer(base.SectionBaseSerializer):
     """
-    Workspace board section serializer.
+    Section serializer.
 
     Serializers the tasks that it contains.
     """
@@ -37,11 +35,11 @@ class WorkspaceBoardSectionSerializer(
         many=True, read_only=True, source="task_set"
     )
 
-    class Meta(base.WorkspaceBoardSectionBaseSerializer.Meta):
+    class Meta(base.SectionBaseSerializer.Meta):
         """Meta."""
 
         fields = (
-            *base.WorkspaceBoardSectionBaseSerializer.Meta.fields,
+            *base.SectionBaseSerializer.Meta.fields,
             "tasks",
         )
 
@@ -54,8 +52,8 @@ class WorkspaceBoardDetailSerializer(base.WorkspaceBoardBaseSerializer):
     tasks.
     """
 
-    workspace_board_sections = WorkspaceBoardSectionSerializer(
-        many=True, read_only=True, source="workspaceboardsection_set"
+    sections = SectionSerializer(
+        many=True, read_only=True, source="section_set"
     )
 
     workspace = base.WorkspaceBaseSerializer(read_only=True)
@@ -65,6 +63,6 @@ class WorkspaceBoardDetailSerializer(base.WorkspaceBoardBaseSerializer):
 
         fields = (
             *base.WorkspaceBoardBaseSerializer.Meta.fields,
-            "workspace_board_sections",
+            "sections",
             "workspace",
         )

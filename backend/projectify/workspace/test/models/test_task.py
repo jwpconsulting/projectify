@@ -38,14 +38,14 @@ from ... import (
 class TestTaskManager:
     """Test TaskManager."""
 
-    def test_filter_by_workspace_board_section_pks(
+    def test_filter_by_section_pks(
         self,
-        workspace_board_section: models.WorkspaceBoardSection,
+        section: models.Section,
         task: models.Task,
     ) -> None:
-        """Test filter_by_workspace_board_section_pks."""
-        qs = models.Task.objects.filter_by_workspace_board_section_pks(
-            [workspace_board_section.pk],
+        """Test filter_by_section_pks."""
+        qs = models.Task.objects.filter_by_section_pks(
+            [section.pk],
         )
         assert list(qs) == [task]
 
@@ -56,13 +56,13 @@ class TestTask:
 
     def test_factory(
         self,
-        workspace_board_section: models.WorkspaceBoardSection,
+        section: models.Section,
         workspace_user: models.WorkspaceUser,
         task: models.Task,
         user: AbstractUser,
     ) -> None:
-        """Test that workspace_board_section is assigned correctly."""
-        assert task.workspace_board_section == workspace_board_section
+        """Test that section is assigned correctly."""
+        assert task.section == section
         assert task.due_date is not None
 
     def test_assign_to(
@@ -125,16 +125,16 @@ class TestTask:
         self,
         workspace_board: models.WorkspaceBoard,
         task: models.Task,
-        other_workspace_board_section: models.WorkspaceBoardSection,
+        other_section: models.Section,
     ) -> None:
         """Test getting the next section."""
-        assert task.get_next_section() == other_workspace_board_section
+        assert task.get_next_section() == other_section
 
     def test_get_next_section_no_next_section(
         self, workspace_board: models.WorkspaceBoard, task: models.Task
     ) -> None:
         """Test getting the next section when there is none."""
-        with pytest.raises(models.WorkspaceBoardSection.DoesNotExist):
+        with pytest.raises(models.Section.DoesNotExist):
             task.get_next_section()
 
     def test_set_labels(

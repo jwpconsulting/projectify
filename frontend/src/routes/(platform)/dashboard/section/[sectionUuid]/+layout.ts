@@ -17,33 +17,30 @@
  */
 import { error } from "@sveltejs/kit";
 
-import { getWorkspaceBoardSection } from "$lib/repository/workspace/workspaceBoardSection";
+import { getSection } from "$lib/repository/workspace/section";
 import { currentWorkspace } from "$lib/stores/dashboard";
-import type { WorkspaceBoardSectionDetail } from "$lib/types/workspace";
+import type { SectionDetail } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
 
 import type { LayoutLoadEvent } from "./$types";
 
 interface Data {
-    workspaceBoardSection: WorkspaceBoardSectionDetail;
+    section: SectionDetail;
 }
 
 export async function load({
-    params: { workspaceBoardSectionUuid },
+    params: { sectionUuid },
     fetch,
 }: LayoutLoadEvent): Promise<Data> {
     // If thing is fetched, use the fetch argument above
-    const workspaceBoardSection = await getWorkspaceBoardSection(
-        workspaceBoardSectionUuid,
-        { fetch },
-    );
-    if (!workspaceBoardSection) {
+    const section = await getSection(sectionUuid, { fetch });
+    if (!section) {
         error(
             404,
-            `The workspace board section with UUID '${workspaceBoardSectionUuid}' could not be found`,
+            `The section with UUID '${sectionUuid}' could not be found`,
         );
     }
-    const workspaceBoard = workspaceBoardSection.workspace_board;
+    const workspaceBoard = section.workspace_board;
     const { uuid: workspaceUuid } = unwrap(
         workspaceBoard.workspace,
         "Expected workspace",
@@ -54,5 +51,5 @@ export async function load({
             reason,
         );
     });
-    return { workspaceBoardSection };
+    return { section };
 }

@@ -120,9 +120,7 @@ within_workspace_board_quota = rules.predicate(
     partial(can_create_more, "WorkspaceBoard")
 )
 # Return True if a section can be created in a workspace
-within_workspace_board_section_quota = rules.predicate(
-    partial(can_create_more, "WorkspaceBoardSection")
-)
+within_section_quota = rules.predicate(partial(can_create_more, "Section"))
 # Return True if a workspace user can be added to a workspace
 # The two following use the same quota
 within_workspace_user_quota = rules.predicate(
@@ -166,18 +164,14 @@ rules.add_perm("workspace.read_workspace_board", is_at_least_observer)
 rules.add_perm("workspace.update_workspace_board", is_at_least_maintainer)
 rules.add_perm("workspace.delete_workspace_board", is_at_least_maintainer)
 
-# Workspace board section
+# Section
 rules.add_perm(
-    "workspace.create_workspace_board_section",
-    is_at_least_maintainer & within_workspace_board_section_quota,
+    "workspace.create_section",
+    is_at_least_maintainer & within_section_quota,
 )
-rules.add_perm("workspace.read_workspace_board_section", is_at_least_observer)
-rules.add_perm(
-    "workspace.update_workspace_board_section", is_at_least_maintainer
-)
-rules.add_perm(
-    "workspace.delete_workspace_board_section", is_at_least_maintainer
-)
+rules.add_perm("workspace.read_section", is_at_least_observer)
+rules.add_perm("workspace.update_section", is_at_least_maintainer)
+rules.add_perm("workspace.delete_section", is_at_least_maintainer)
 
 # Task
 rules.add_perm("workspace.create_task", is_at_least_member & within_task_quota)

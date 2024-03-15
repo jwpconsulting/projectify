@@ -30,10 +30,10 @@ from projectify.user.models import User
 from projectify.workspace.models.const import WorkspaceUserRoles
 
 from ...models.label import Label
+from ...models.section import Section
 from ...models.sub_task import SubTask
 from ...models.task import Task
 from ...models.workspace import Workspace
-from ...models.workspace_board_section import WorkspaceBoardSection
 from ...models.workspace_user import WorkspaceUser
 from ...serializers.task_detail import (
     TaskCreateUpdateSerializer,
@@ -77,7 +77,7 @@ class TestTaskCreateUpdateSerializer:
         task: Task,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
-        workspace_board_section: WorkspaceBoardSection,
+        section: Section,
         sub_task: SubTask,
         user_request: Request,
     ) -> None:
@@ -92,8 +92,8 @@ class TestTaskCreateUpdateSerializer:
                 "uuid": 2,
                 "labels": [],
                 "assignee": None,
-                "workspace_board_section": {
-                    "uuid": str(workspace_board_section.uuid),
+                "section": {
+                    "uuid": str(section.uuid),
                 },
             },
             context={"request": user_request},
@@ -107,7 +107,7 @@ class TestTaskCreateUpdateSerializer:
             "labels": [],
             "title": task.title,
             "workspace": workspace,
-            "workspace_board_section": workspace_board_section,
+            "section": section,
         }
 
     def test_create(
@@ -115,7 +115,7 @@ class TestTaskCreateUpdateSerializer:
         label: Label,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
-        workspace_board_section: WorkspaceBoardSection,
+        section: Section,
         user_request: Request,
     ) -> None:
         """Test creating a task."""
@@ -124,8 +124,8 @@ class TestTaskCreateUpdateSerializer:
                 "title": "This is a great task title.",
                 "labels": [{"uuid": str(label.uuid)}],
                 "assignee": {"uuid": str(workspace_user.uuid)},
-                "workspace_board_section": {
-                    "uuid": str(workspace_board_section.uuid),
+                "section": {
+                    "uuid": str(section.uuid),
                 },
             },
             context={"request": user_request},
@@ -136,14 +136,14 @@ class TestTaskCreateUpdateSerializer:
             "labels": [label],
             "title": "This is a great task title.",
             "workspace": workspace,
-            "workspace_board_section": workspace_board_section,
+            "section": section,
         }
 
-    def test_create_unrelated_workspace_board_section(
+    def test_create_unrelated_section(
         self,
         workspace_user: WorkspaceUser,
         user_request: Request,
-        unrelated_workspace_board_section: WorkspaceBoardSection,
+        unrelated_section: Section,
     ) -> None:
         """Test creating a task but the ws board section is wrong."""
         serializer = TaskCreateUpdateSerializer(
@@ -151,14 +151,14 @@ class TestTaskCreateUpdateSerializer:
                 "title": "This is a great task title.",
                 "labels": [],
                 "assignee": None,
-                "workspace_board_section": {
-                    "uuid": str(unrelated_workspace_board_section.uuid),
+                "section": {
+                    "uuid": str(unrelated_section.uuid),
                 },
             },
             context={"request": user_request},
         )
         assert not serializer.is_valid()
-        assert serializer.errors["workspace_board_section"]
+        assert serializer.errors["section"]
 
     def test_update(
         self,
@@ -166,7 +166,7 @@ class TestTaskCreateUpdateSerializer:
         label: Label,
         workspace_user: WorkspaceUser,
         workspace: Workspace,
-        workspace_board_section: WorkspaceBoardSection,
+        section: Section,
         sub_task: SubTask,
         user_request: Request,
     ) -> None:
@@ -181,8 +181,8 @@ class TestTaskCreateUpdateSerializer:
                 "labels": [{"uuid": str(label.uuid)}],
                 "assignee": {"uuid": str(workspace_user.uuid)},
                 "due_date": due_date.isoformat(),
-                "workspace_board_section": {
-                    "uuid": str(workspace_board_section.uuid),
+                "section": {
+                    "uuid": str(section.uuid),
                 },
                 "sub_tasks": [
                     {
@@ -234,7 +234,7 @@ class TestTaskCreateUpdateSerializer:
             },
             "title": task.title,
             "workspace": workspace,
-            "workspace_board_section": workspace_board_section,
+            "section": section,
         }
 
     def test_update_no_ws_board_section(
@@ -249,14 +249,14 @@ class TestTaskCreateUpdateSerializer:
                 "title": task.title,
                 "labels": [],
                 "assignee": None,
-                "workspace_board_section": {
+                "section": {
                     "uuid": str(uuid4()),
                 },
             },
             context={"request": user_request},
         )
         assert not serializer.is_valid()
-        (error,) = serializer.errors["workspace_board_section"]
+        (error,) = serializer.errors["section"]
         assert "exist" in error
 
     def test_update_wrong_workspace(
@@ -264,12 +264,12 @@ class TestTaskCreateUpdateSerializer:
         task: Task,
         workspace_user: WorkspaceUser,
         user_request: Request,
-        unrelated_workspace_board_section: WorkspaceBoardSection,
+        unrelated_section: Section,
         unrelated_workspace: Workspace,
     ) -> None:
         """Test assigning a task to an unrelated ws board section."""
         # We need to add ourselves to make sure we have access to the
-        # workspace board section
+        # section
         workspace_add_user(
             workspace=unrelated_workspace,
             user=workspace_user.user,
@@ -277,9 +277,9 @@ class TestTaskCreateUpdateSerializer:
         )
         # test for sanity
         validate_perm(
-            "workspace.read_workspace_board_section",
+            "workspace.read_section",
             workspace_user.user,
-            unrelated_workspace_board_section.workspace_board.workspace,
+            unrelated_section.workspace_board.workspace,
         )
         serializer = TaskCreateUpdateSerializer(
             task,
@@ -287,14 +287,14 @@ class TestTaskCreateUpdateSerializer:
                 "title": task.title,
                 "labels": [],
                 "assignee": None,
-                "workspace_board_section": {
-                    "uuid": str(unrelated_workspace_board_section.uuid),
+                "section": {
+                    "uuid": str(unrelated_section.uuid),
                 },
             },
             context={"request": user_request},
         )
         assert not serializer.is_valid()
-        (error,) = serializer.errors["workspace_board_section"]
+        (error,) = serializer.errors["section"]
         assert "cannot be assigned" in error
 
     def test_update_missing_label(
@@ -316,8 +316,8 @@ class TestTaskCreateUpdateSerializer:
                     {"uuid": str(unrelated_label.uuid)},
                 ],
                 "assignee": None,
-                "workspace_board_section": {
-                    "uuid": str(task.workspace_board_section.uuid),
+                "section": {
+                    "uuid": str(task.section.uuid),
                 },
             },
             context={"request": user_request},
@@ -340,8 +340,8 @@ class TestTaskCreateUpdateSerializer:
                 "title": task.title,
                 "labels": [],
                 "assignee": {"uuid": str(unrelated_workspace_user.uuid)},
-                "workspace_board_section": {
-                    "uuid": str(task.workspace_board_section.uuid),
+                "section": {
+                    "uuid": str(task.section.uuid),
                 },
             },
             context={"request": user_request},

@@ -76,11 +76,11 @@ from projectify.user.services.internal import (
 from projectify.workspace.models import (
     ChatMessage,
     Label,
+    Section,
     Task,
     TaskLabel,
     Workspace,
     WorkspaceBoard,
-    WorkspaceBoardSection,
 )
 from projectify.workspace.models.const import WorkspaceUserRoles
 from projectify.workspace.models.sub_task import (
@@ -97,7 +97,7 @@ Altogether = TypedDict(
         "workspace_users": list[WorkspaceUser],
         "labels": list[Label],
         "workspace_boards": list[WorkspaceBoard],
-        "workspace_board_sections": list[WorkspaceBoardSection],
+        "sections": list[Section],
         "number": "count[int]",
     },
 )
@@ -179,9 +179,9 @@ class Command(BaseCommand):
         # We store all the combinations in a list here (using tee was
         # evaluated for a second)
         task_combos = list(
-            (together, workspace_board_section, _order)
+            (together, section, _order)
             for together in altogether
-            for workspace_board_section in together["workspace_board_sections"]
+            for section in together["sections"]
             for _order in range(randint(self.n_tasks // 2, self.n_tasks))
         )
         tasks = Task.objects.bulk_create(
@@ -193,7 +193,7 @@ class Command(BaseCommand):
                     description=self.fake.paragraph(
                         TASK_DESCRIPTION_SENTENCES
                     ),
-                    workspace_board_section=workspace_board_section,
+                    workspace_board_section=section,
                     due_date=self.fake.date_time(tzinfo=timezone.utc),
                     workspace=together["workspace"],
                     _order=_order,
@@ -203,7 +203,7 @@ class Command(BaseCommand):
                     if randint(0, 2)
                     else None,
                 )
-                for (together, workspace_board_section, _order) in task_combos
+                for (together, section, _order) in task_combos
             ]
         )
         self.stdout.write(f"Created {len(tasks)} tasks")
@@ -353,38 +353,35 @@ class Command(BaseCommand):
             f"Created {len(workspaces_workspace_boards)} workspace boards"
         )
 
-        workspaces_workspace_board_sections = (
-            WorkspaceBoardSection.objects.bulk_create(
-                [
-                    WorkspaceBoardSection(
-                        workspace_board=workspace_board,
-                        title=title,
-                        _order=_order,
-                    )
-                    for _, workspace_boards in groupby(
-                        workspaces_workspace_boards, key=lambda b: b.workspace
-                    )
-                    for workspace_board in workspace_boards
-                    for _order, title in enumerate(
-                        self.fake.text(
-                            randint(
-                                SECTION_TITLE_MIN_LENGTH,
-                                SECTION_TITLE_MAX_LENGTH,
-                            )
-                        )
-                        for _ in range(
-                            randint(
-                                WORKSPACE_BOARD_MIN_SECTIONS,
-                                WORKSPACE_BOARD_MAX_SECTIONS,
-                            )
+        workspaces_sections = Section.objects.bulk_create(
+            [
+                Section(
+                    workspace_board=workspace_board,
+                    title=title,
+                    _order=_order,
+                )
+                for _, workspace_boards in groupby(
+                    workspaces_workspace_boards, key=lambda b: b.workspace
+                )
+                for workspace_board in workspace_boards
+                for _order, title in enumerate(
+                    self.fake.text(
+                        randint(
+                            SECTION_TITLE_MIN_LENGTH,
+                            SECTION_TITLE_MAX_LENGTH,
                         )
                     )
-                ]
-            )
+                    for _ in range(
+                        randint(
+                            WORKSPACE_BOARD_MIN_SECTIONS,
+                            WORKSPACE_BOARD_MAX_SECTIONS,
+                        )
+                    )
+                )
+            ]
         )
         self.stdout.write(
-            f"Created {len(workspaces_workspace_board_sections)} workspace "
-            "board sections"
+            f"Created {len(workspaces_sections)} workspace " "board sections"
         )
 
         # The idea here is that instead of going into each nested object in
@@ -401,14 +398,14 @@ class Command(BaseCommand):
                 "workspace_users": list(workspace_users),
                 "labels": list(labels),
                 "workspace_boards": list(workspace_boards),
-                "workspace_board_sections": list(workspace_board_sections),
+                "sections": list(sections),
                 "number": count(1),
             }
             for (
                 (workspace, workspace_users),
                 (_, labels),
                 (_, workspace_boards),
-                (_, workspace_board_sections),
+                (_, sections),
             ) in zip(
                 groupby(workspaces_workspace_users, key=lambda u: u.workspace),
                 groupby(workspaces_labels, key=lambda label: label.workspace),
@@ -416,7 +413,7 @@ class Command(BaseCommand):
                     workspaces_workspace_boards, key=lambda b: b.workspace
                 ),
                 groupby(
-                    workspaces_workspace_board_sections,
+                    workspaces_sections,
                     key=lambda b: b.workspace_board.workspace,
                 ),
             )
@@ -484,7 +481,7 @@ class Command(BaseCommand):
             "--n-tasks",
             type=int,
             default=40,
-            help="Ensure up to N tasks are in new workspace board section",
+            help="Ensure up to N tasks are in new section",
         )
 
     @transaction.atomic

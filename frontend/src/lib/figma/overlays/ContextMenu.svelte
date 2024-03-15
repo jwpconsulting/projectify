@@ -20,11 +20,11 @@
     import Label from "$lib/figma/overlays/context-menu/Label.svelte";
     import Permissions from "$lib/figma/overlays/context-menu/Permissions.svelte";
     import Profile from "$lib/figma/overlays/context-menu/Profile.svelte";
+    import Section from "$lib/figma/overlays/context-menu/Section.svelte";
     import SideNavContextMenu from "$lib/figma/overlays/context-menu/SideNavContextMenu.svelte";
     import Task from "$lib/figma/overlays/context-menu/Task.svelte";
     import Workspace from "$lib/figma/overlays/context-menu/Workspace.svelte";
     import WorkspaceBoard from "$lib/figma/overlays/context-menu/WorkspaceBoard.svelte";
-    import WorkspaceBoardSection from "$lib/figma/overlays/context-menu/WorkspaceBoardSection.svelte";
     import WorkspaceUser from "$lib/figma/overlays/context-menu/WorkspaceUser.svelte";
     import type { ContextMenuType } from "$lib/types/ui";
 
@@ -42,11 +42,8 @@
         workspace={target.workspace}
         workspaceBoard={target.workspaceBoard}
     />
-{:else if target.kind === "workspaceBoardSection"}
-    <WorkspaceBoardSection
-        workspaceBoard={target.workspaceBoard}
-        workspaceBoardSection={target.workspaceBoardSection}
-    />
+{:else if target.kind === "section"}
+    <Section workspaceBoard={target.workspaceBoard} section={target.section} />
 {:else if target.kind === "task"}
     <Task kind={target} />
 {:else if target.kind === "help"}

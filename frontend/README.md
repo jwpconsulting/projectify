@@ -81,7 +81,7 @@ src/lib/figma/overlays/context-menu/ProfileOverlay.svelte,src/lib/figma/overlays
 src/lib/figma/overlays/context-menu/SideNavOverlay.svelte,src/lib/figma/overlays/context-menu/SideNavContextMenu.svelte
 src/lib/figma/overlays/context-menu/TaskOverlay.svelte,src/lib/figma/overlays/context-menu/TaskContextMenu.svelte
 src/lib/figma/overlays/context-menu/WorkspaceBoardOverlay.svelte,src/lib/figma/overlays/context-menu/WorkspaceBoardContextMenu.svelte
-src/lib/figma/overlays/context-menu/WorkspaceBoardSectionOverlay.svelte,src/lib/figma/overlays/context-menu/WorkspaceBoardSectionContextMenu.svelte
+src/lib/figma/overlays/context-menu/SectionOverlay.svelte,src/lib/figma/overlays/context-menu/SectionContextMenu.svelte
 src/lib/figma/overlays/context-menu/WorkspaceOverlay.svelte,src/lib/figma/overlays/context-menu/WorkspaceContextMenu.svelte
 ```
 

@@ -32,7 +32,7 @@
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
     import {
-        getDashboardWorkspaceBoardSectionUrl,
+        getDashboardSectionUrl,
         getDashboardWorkspaceBoardUrl,
         getNewTaskUrl,
         getTaskUrl,
@@ -42,8 +42,8 @@
 
     export let data: PageData;
 
-    const { workspaceBoardSection } = data;
-    $: workspaceBoard = workspaceBoardSection.workspace_board;
+    const { section } = data;
+    $: workspaceBoard = section.workspace_board;
 
     // form fields
     let title: string | undefined = undefined;
@@ -71,7 +71,7 @@
         const createTaskFull: CreateUpdateTaskData = {
             title,
             description,
-            workspace_board_section: workspaceBoardSection,
+            section: section,
             labels: $labelAssignment,
             assignee: $workspaceUserAssignment,
             due_date: dueDate,
@@ -84,11 +84,7 @@
                 await goto(getTaskUrl(uuid));
                 return;
             }
-            await goto(
-                getDashboardWorkspaceBoardSectionUrl(
-                    workspaceBoardSection.uuid,
-                ),
-            );
+            await goto(getDashboardSectionUrl(section.uuid));
             return;
         } catch (e) {
             creating = false;
@@ -102,20 +98,18 @@
             href: getDashboardWorkspaceBoardUrl(workspaceBoard.uuid),
         },
         {
-            label: workspaceBoardSection.title,
-            href: getDashboardWorkspaceBoardSectionUrl(
-                workspaceBoardSection.uuid,
-            ),
+            label: section.title,
+            href: getDashboardSectionUrl(section.uuid),
         },
         {
             label: $_("task-screen.new-task-breadcrumb"),
-            href: getNewTaskUrl(workspaceBoardSection.uuid),
+            href: getNewTaskUrl(section.uuid),
         },
     ];
 </script>
 
 <Layout>
-    <TopBar slot="top-bar" {workspaceBoardSection}>
+    <TopBar slot="top-bar" {section}>
         <Breadcrumbs slot="breadcrumbs" {crumbs} />
         <svelte:fragment slot="buttons">
             <Button

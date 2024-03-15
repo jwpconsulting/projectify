@@ -58,6 +58,9 @@ from projectify.workspace.selectors.workspace_user import (
 )
 from projectify.workspace.services.chat_message import chat_message_create
 from projectify.workspace.services.label import label_create
+from projectify.workspace.services.section import (
+    section_create,
+)
 from projectify.workspace.services.sub_task import sub_task_create
 from projectify.workspace.services.task import task_create
 from projectify.workspace.services.workspace import (
@@ -67,9 +70,6 @@ from projectify.workspace.services.workspace import (
 from projectify.workspace.services.workspace_board import (
     workspace_board_archive,
     workspace_board_create,
-)
-from projectify.workspace.services.workspace_board_section import (
-    workspace_board_section_create,
 )
 from projectify.workspace.services.workspace_user_invite import (
     workspace_user_invite_create,
@@ -242,16 +242,16 @@ def archived_workspace_board(
 
 
 @pytest.fixture
-def workspace_board_section(
+def section(
     workspace_board: models.WorkspaceBoard,
     # Another workspace user creates it, so that we can correctly assess
     # permissions and not implicitly associate the main user with this
     # workspace
     other_workspace_user: WorkspaceUser,
     faker: Faker,
-) -> models.WorkspaceBoardSection:
-    """Return workspace board section."""
-    return workspace_board_section_create(
+) -> models.Section:
+    """Return section."""
+    return section_create(
         who=other_workspace_user.user,
         workspace_board=workspace_board,
         title=faker.sentence(),
@@ -259,13 +259,13 @@ def workspace_board_section(
 
 
 @pytest.fixture
-def other_workspace_board_section(
+def other_section(
     workspace_board: models.WorkspaceBoard,
     workspace_user: WorkspaceUser,
     faker: Faker,
-) -> models.WorkspaceBoardSection:
-    """Create another workspace board section."""
-    return workspace_board_section_create(
+) -> models.Section:
+    """Create another section."""
+    return section_create(
         who=workspace_user.user,
         workspace_board=workspace_board,
         title=faker.sentence(),
@@ -273,13 +273,13 @@ def other_workspace_board_section(
 
 
 @pytest.fixture
-def other_other_workspace_board_section(
+def other_other_section(
     workspace_board: models.WorkspaceBoard,
     workspace_user: WorkspaceUser,
     faker: Faker,
-) -> models.WorkspaceBoardSection:
-    """Create yet another workspace board section."""
-    return workspace_board_section_create(
+) -> models.Section:
+    """Create yet another section."""
+    return section_create(
         who=workspace_user.user,
         workspace_board=workspace_board,
         title=faker.sentence(),
@@ -287,13 +287,13 @@ def other_other_workspace_board_section(
 
 
 @pytest.fixture
-def unrelated_workspace_board_section(
+def unrelated_section(
     unrelated_workspace_board: models.WorkspaceBoard,
     unrelated_workspace_user: WorkspaceUser,
     faker: Faker,
-) -> models.WorkspaceBoardSection:
-    """Return unrelated workspace board section."""
-    return workspace_board_section_create(
+) -> models.Section:
+    """Return unrelated section."""
+    return section_create(
         who=unrelated_workspace_user.user,
         workspace_board=unrelated_workspace_board,
         title=faker.sentence(),
@@ -302,14 +302,14 @@ def unrelated_workspace_board_section(
 
 @pytest.fixture
 def task(
-    workspace_board_section: models.WorkspaceBoardSection,
+    section: models.Section,
     workspace_user: models.WorkspaceUser,
     faker: Faker,
 ) -> models.Task:
     """Return task."""
     return task_create(
         who=workspace_user.user,
-        workspace_board_section=workspace_board_section,
+        section=section,
         title=faker.sentence(),
         description=faker.paragraph(),
         assignee=workspace_user if faker.pybool() else None,
@@ -319,26 +319,26 @@ def task(
 
 @pytest.fixture
 def other_task(
-    workspace_board_section: models.WorkspaceBoardSection,
+    section: models.Section,
     workspace_user: models.WorkspaceUser,
 ) -> models.Task:
-    """Return another task belonging to the same workspace board section."""
+    """Return another task belonging to the same section."""
     return task_create(
         who=workspace_user.user,
-        workspace_board_section=workspace_board_section,
+        section=section,
         title="I am the other task",
     )
 
 
 @pytest.fixture
 def unrelated_task(
-    unrelated_workspace_board_section: models.WorkspaceBoardSection,
+    unrelated_section: models.Section,
     unrelated_workspace_user: models.WorkspaceUser,
 ) -> models.Task:
-    """Return another task belonging to the same workspace board section."""
+    """Return another task belonging to the same section."""
     return task_create(
         who=unrelated_workspace_user.user,
-        workspace_board_section=unrelated_workspace_board_section,
+        section=unrelated_section,
         title="I am an unrelated task",
     )
 

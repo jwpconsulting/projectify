@@ -51,15 +51,21 @@ from .. import (
 )
 from ..models.const import WorkspaceUserRoles
 from ..models.label import Label
+from ..models.section import Section
 from ..models.sub_task import SubTask
 from ..models.task import Task
 from ..models.workspace import Workspace
 from ..models.workspace_board import WorkspaceBoard
-from ..models.workspace_board_section import WorkspaceBoardSection
 from ..models.workspace_user import WorkspaceUser
 from ..selectors.workspace_user import workspace_user_find_for_workspace
 from ..services.chat_message import chat_message_create
 from ..services.label import label_create, label_delete, label_update
+from ..services.section import (
+    section_create,
+    section_delete,
+    section_move,
+    section_update,
+)
 from ..services.sub_task import sub_task_create, sub_task_update_many
 from ..services.task import (
     task_create,
@@ -78,12 +84,6 @@ from ..services.workspace_board import (
     workspace_board_create,
     workspace_board_delete,
     workspace_board_update,
-)
-from ..services.workspace_board_section import (
-    workspace_board_section_create,
-    workspace_board_section_delete,
-    workspace_board_section_move,
-    workspace_board_section_update,
 )
 from ..services.workspace_user import (
     workspace_user_delete,
@@ -146,27 +146,27 @@ async def workspace_board(workspace: Workspace, user: User) -> WorkspaceBoard:
 
 
 @pytest.fixture
-async def workspace_board_section(
+async def section(
     workspace_board: WorkspaceBoard,
     user: User,
-) -> WorkspaceBoardSection:
-    """Create workspace board section."""
-    return await database_sync_to_async(workspace_board_section_create)(
+) -> Section:
+    """Create section."""
+    return await database_sync_to_async(section_create)(
         workspace_board=workspace_board,
         who=user,
-        title="I am a workspace board section",
+        title="I am a section",
     )
 
 
 @pytest.fixture
 async def task(
     user: User,
-    workspace_board_section: WorkspaceBoardSection,
+    section: Section,
     workspace_user: WorkspaceUser,
 ) -> Task:
     """Create task."""
     return await database_sync_to_async(task_create)(
-        workspace_board_section=workspace_board_section,
+        section=section,
         who=user,
         assignee=workspace_user,
         title="I am a task",
@@ -419,10 +419,10 @@ class TestWorkspaceBoard:
         await delete_model_instance(workspace)
 
 
-class TestWorkspaceBoardSection:
-    """Test workspace board section behavior."""
+class TestSection:
+    """Test section behavior."""
 
-    async def test_workspace_board_section_life_cycle(
+    async def test_section_life_cycle(
         self,
         user: User,
         workspace: Workspace,
@@ -432,11 +432,9 @@ class TestWorkspaceBoardSection:
     ) -> None:
         """Test workspace board consumer behavior for section changes."""
         # Create it
-        workspace_board_section = await database_sync_to_async(
-            workspace_board_section_create
-        )(
+        section = await database_sync_to_async(section_create)(
             who=user,
-            title="A workspace board section",
+            title="A section",
             workspace_board=workspace_board,
         )
         assert await expect_message(
@@ -444,9 +442,9 @@ class TestWorkspaceBoardSection:
         )
 
         # Update it
-        await database_sync_to_async(workspace_board_section_update)(
+        await database_sync_to_async(section_update)(
             who=user,
-            workspace_board_section=workspace_board_section,
+            section=section,
             title="Title has changed",
         )
         assert await expect_message(
@@ -454,9 +452,9 @@ class TestWorkspaceBoardSection:
         )
 
         # Move it
-        await database_sync_to_async(workspace_board_section_move)(
+        await database_sync_to_async(section_move)(
             who=user,
-            workspace_board_section=workspace_board_section,
+            section=section,
             order=0,
         )
         assert await expect_message(
@@ -464,9 +462,9 @@ class TestWorkspaceBoardSection:
         )
 
         # Delete it
-        await database_sync_to_async(workspace_board_section_delete)(
+        await database_sync_to_async(section_delete)(
             who=user,
-            workspace_board_section=workspace_board_section,
+            section=section,
         )
         assert await expect_message(
             workspace_board_communicator, workspace_board
@@ -527,14 +525,14 @@ class TestTaskConsumer:
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         workspace_board: WorkspaceBoard,
-        workspace_board_section: WorkspaceBoardSection,
+        section: Section,
         workspace_board_communicator: WebsocketCommunicator,
     ) -> None:
         """Test that board and task consumer fire."""
         # Create
         task = await database_sync_to_async(task_create_nested)(
             who=user,
-            workspace_board_section=workspace_board_section,
+            section=section,
             title="A task",
             sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
             labels=[],
@@ -562,7 +560,7 @@ class TestTaskConsumer:
         await database_sync_to_async(task_move_after)(
             who=user,
             task=task,
-            after=workspace_board_section,
+            after=section,
         )
         assert await expect_message(
             workspace_board_communicator, workspace_board
@@ -582,7 +580,7 @@ class TestTaskConsumer:
         # Ideally, a task consumer will disconnect when a task is deleted
         await clean_up_communicator(task_communicator)
 
-        await delete_model_instance(workspace_board_section)
+        await delete_model_instance(section)
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
         await delete_model_instance(workspace)
@@ -598,7 +596,7 @@ class TestTaskLabel:
         workspace_user: WorkspaceUser,
         label: Label,
         workspace_board: WorkspaceBoard,
-        workspace_board_section: WorkspaceBoardSection,
+        section: Section,
         task: Task,
         workspace_board_communicator: WebsocketCommunicator,
         task_communicator: WebsocketCommunicator,
@@ -633,7 +631,7 @@ class TestTaskLabel:
         await workspace_board_communicator.disconnect()
         await task_communicator.disconnect()
 
-        await delete_model_instance(workspace_board_section)
+        await delete_model_instance(section)
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
         await delete_model_instance(label)
@@ -649,7 +647,7 @@ class TestSubTask:
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         workspace_board: WorkspaceBoard,
-        workspace_board_section: WorkspaceBoardSection,
+        section: Section,
         task: Task,
         sub_task: SubTask,
         workspace_board_communicator: WebsocketCommunicator,
@@ -708,7 +706,7 @@ class TestSubTask:
         await task_communicator.disconnect()
 
         await delete_model_instance(task)
-        await delete_model_instance(workspace_board_section)
+        await delete_model_instance(section)
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
         await delete_model_instance(workspace)
@@ -723,7 +721,7 @@ class TestChatMessage:
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         workspace_board: WorkspaceBoard,
-        workspace_board_section: WorkspaceBoardSection,
+        section: Section,
         task: Task,
         task_communicator: WebsocketCommunicator,
     ) -> None:
@@ -740,7 +738,7 @@ class TestChatMessage:
         # message = await communicator.receive_json_from()
         await task_communicator.disconnect()
         await delete_model_instance(task)
-        await delete_model_instance(workspace_board_section)
+        await delete_model_instance(section)
         await delete_model_instance(workspace_board)
         await delete_model_instance(workspace_user)
         await delete_model_instance(workspace)

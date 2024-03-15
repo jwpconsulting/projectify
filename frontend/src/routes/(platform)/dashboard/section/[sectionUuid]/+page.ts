@@ -15,17 +15,22 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { Meta, StoryObj } from "@storybook/svelte";
+import { redirect, error } from "@sveltejs/kit";
 
-import UpdateWorkspaceBoardSection from "$lib/figma/overlays/constructive/UpdateWorkspaceBoardSection.svelte";
-import { workspaceBoardSection } from "$lib/storybook";
+import { getSection } from "$lib/repository/workspace/section";
+import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
 
-const meta: Meta<UpdateWorkspaceBoardSection> = {
-    component: UpdateWorkspaceBoardSection,
-    args: { workspaceBoardSection },
-};
-export default meta;
-
-type Story = StoryObj<UpdateWorkspaceBoardSection>;
-
-export const Default: Story = {};
+export async function load({
+    fetch,
+    params,
+}: {
+    fetch: typeof window.fetch;
+    params: { sectionUuid: string };
+}) {
+    const section = await getSection(params.sectionUuid, { fetch });
+    if (!section) {
+        error(404);
+    }
+    const workspaceBoard = section.workspace_board;
+    redirect(302, getDashboardWorkspaceBoardUrl(workspaceBoard.uuid));
+}

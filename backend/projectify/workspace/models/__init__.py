@@ -22,6 +22,9 @@ from .const import (
 from .label import (
     Label,
 )
+from .section import (
+    Section,
+)
 from .sub_task import (
     SubTask,
 )
@@ -33,9 +36,6 @@ from .workspace import (
     Workspace,
 )
 from .workspace_board import WorkspaceBoard
-from .workspace_board_section import (
-    WorkspaceBoardSection,
-)
 from .workspace_user import (
     WorkspaceUser,
 )
@@ -51,7 +51,7 @@ __all__ = (
     "TaskLabel",
     "Workspace",
     "WorkspaceBoard",
-    "WorkspaceBoardSection",
+    "Section",
     "WorkspaceUser",
     "WorkspaceUserInvite",
     "WorkspaceUserRoles",

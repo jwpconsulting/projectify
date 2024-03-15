@@ -21,11 +21,11 @@ import pytest
 
 from projectify.workspace.models import WorkspaceBoard
 from projectify.workspace.models.label import Label
+from projectify.workspace.models.section import (
+    Section,
+)
 from projectify.workspace.models.sub_task import SubTask
 from projectify.workspace.models.task import Task
-from projectify.workspace.models.workspace_board_section import (
-    WorkspaceBoardSection,
-)
 from projectify.workspace.models.workspace_user import WorkspaceUser
 from projectify.workspace.services.task import (
     task_create,
@@ -39,37 +39,37 @@ pytestmark = pytest.mark.django_db
 
 # Create
 def test_create_task(
-    workspace_board_section: WorkspaceBoardSection,
+    section: Section,
     workspace_user: WorkspaceUser,
 ) -> None:
     """Test adding tasks to a workspace board."""
-    assert workspace_board_section.task_set.count() == 0
+    assert section.task_set.count() == 0
     task = task_create(
         who=workspace_user.user,
-        workspace_board_section=workspace_board_section,
+        section=section,
         title="foo",
         description="bar",
     )
-    assert workspace_board_section.task_set.count() == 1
+    assert section.task_set.count() == 1
     task2 = task_create(
         who=workspace_user.user,
-        workspace_board_section=workspace_board_section,
+        section=section,
         title="foo",
         description="bar",
     )
-    assert workspace_board_section.task_set.count() == 2
-    assert list(workspace_board_section.task_set.all()) == [task, task2]
+    assert section.task_set.count() == 2
+    assert list(section.task_set.all()) == [task, task2]
 
 
 def test_task_create_nested(
     label: Label,
     workspace_user: WorkspaceUser,
-    workspace_board_section: WorkspaceBoardSection,
+    section: Section,
 ) -> None:
     """Test task_create_nested."""
     task = task_create_nested(
         who=workspace_user.user,
-        workspace_board_section=workspace_board_section,
+        section=section,
         title="hello",
         description=None,
         assignee=workspace_user,
@@ -82,13 +82,13 @@ def test_task_create_nested(
 
 
 def test_add_task_due_date(
-    workspace_board_section: WorkspaceBoardSection,
+    section: Section,
     workspace_user: WorkspaceUser,
     now: datetime,
 ) -> None:
     """Test adding a task with a due date."""
     task = task_create(
-        workspace_board_section=workspace_board_section,
+        section=section,
         who=workspace_user.user,
         title="foo",
         description="bar",
@@ -154,7 +154,7 @@ def test_task_update_nested(
 
 
 def test_moving_task_within_section(
-    workspace_board_section: WorkspaceBoardSection,
+    section: Section,
     task: Task,
     workspace_user: WorkspaceUser,
 ) -> None:
@@ -162,9 +162,9 @@ def test_moving_task_within_section(
     other_task = task_create(
         who=workspace_user.user,
         title="don't care",
-        workspace_board_section=workspace_board_section,
+        section=section,
     )
-    assert list(workspace_board_section.task_set.all()) == [
+    assert list(section.task_set.all()) == [
         task,
         other_task,
     ]
@@ -173,7 +173,7 @@ def test_moving_task_within_section(
         task=task,
         after=other_task,
     )
-    assert list(workspace_board_section.task_set.all()) == [
+    assert list(section.task_set.all()) == [
         other_task,
         task,
     ]
@@ -182,8 +182,8 @@ def test_moving_task_within_section(
 def test_moving_task_to_other_section(
     # TODO this fixture might not be needed
     workspace_board: WorkspaceBoard,
-    workspace_board_section: WorkspaceBoardSection,
-    other_workspace_board_section: WorkspaceBoardSection,
+    section: Section,
+    other_section: Section,
     task: Task,
     workspace_user: WorkspaceUser,
 ) -> None:
@@ -191,26 +191,26 @@ def test_moving_task_to_other_section(
     other_task = task_create(
         who=workspace_user.user,
         title="don't care",
-        workspace_board_section=workspace_board_section,
+        section=section,
     )
-    assert list(workspace_board_section.task_set.all()) == [
+    assert list(section.task_set.all()) == [
         task,
         other_task,
     ]
     other_section_task = task_create(
         who=workspace_user.user,
         title="don't care",
-        workspace_board_section=other_workspace_board_section,
+        section=other_section,
     )
-    assert list(other_workspace_board_section.task_set.all()) == [
+    assert list(other_section.task_set.all()) == [
         other_section_task,
     ]
     task_move_after(
         who=workspace_user.user,
         task=task,
-        after=other_workspace_board_section,
+        after=other_section,
     )
-    assert list(other_workspace_board_section.task_set.all()) == [
+    assert list(other_section.task_set.all()) == [
         task,
         other_section_task,
     ]
@@ -219,8 +219,8 @@ def test_moving_task_to_other_section(
 def test_moving_task_to_empty_section(
     # TODO the following two fixtures might not be needed
     workspace_board: WorkspaceBoard,
-    workspace_board_section: WorkspaceBoardSection,
-    other_workspace_board_section: WorkspaceBoardSection,
+    section: Section,
+    other_section: Section,
     task: Task,
     workspace_user: WorkspaceUser,
 ) -> None:
@@ -232,9 +232,9 @@ def test_moving_task_to_empty_section(
     task_move_after(
         who=workspace_user.user,
         task=task,
-        after=other_workspace_board_section,
+        after=other_section,
     )
-    assert list(other_workspace_board_section.task_set.all()) == [
+    assert list(other_section.task_set.all()) == [
         task,
     ]
     task.refresh_from_db()

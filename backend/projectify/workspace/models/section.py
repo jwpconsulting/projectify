@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Workspace board section model."""
+"""Section model."""
 import uuid
 from typing import (
     TYPE_CHECKING,
@@ -52,7 +52,7 @@ if TYPE_CHECKING:
     from . import WorkspaceBoard  # noqa: F401
 
 
-class WorkspaceBoardSectionQuerySet(models.QuerySet["WorkspaceBoardSection"]):
+class SectionQuerySet(models.QuerySet["Section"]):
     """QuerySet for WorkspaceBoard."""
 
     def filter_by_workspace_board_pks(self, keys: Pks) -> Self:
@@ -66,7 +66,7 @@ class WorkspaceBoardSectionQuerySet(models.QuerySet["WorkspaceBoardSection"]):
         return self.filter(workspace_board__workspace__users=user, uuid=uuid)
 
 
-class WorkspaceBoardSection(TitleDescriptionModel, BaseModel):
+class Section(TitleDescriptionModel, BaseModel):
     """Section of a WorkspaceBoard."""
 
     workspace_board = models.ForeignKey["WorkspaceBoard"](
@@ -74,9 +74,9 @@ class WorkspaceBoardSection(TitleDescriptionModel, BaseModel):
         on_delete=models.CASCADE,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
-    objects: ClassVar[WorkspaceBoardSectionQuerySet] = cast(  # type: ignore[assignment]
-        WorkspaceBoardSectionQuerySet,
-        WorkspaceBoardSectionQuerySet.as_manager(),
+    objects: ClassVar[SectionQuerySet] = cast(  # type: ignore[assignment]
+        SectionQuerySet,
+        SectionQuerySet.as_manager(),
     )
 
     if TYPE_CHECKING:
@@ -86,7 +86,7 @@ class WorkspaceBoardSection(TitleDescriptionModel, BaseModel):
         # For ordering
         get_task_order: GetOrder
         set_task_order: SetOrder
-        get_next_in_order: Callable[[], "WorkspaceBoardSection"]
+        get_next_in_order: Callable[[], "Section"]
         _order: int
 
     def __str__(self) -> str:

@@ -25,12 +25,12 @@ from projectify.user.models import User
 from ..models.workspace_board import WorkspaceBoard
 
 WorkspaceBoardDetailQuerySet = WorkspaceBoard.objects.prefetch_related(
-    "workspaceboardsection_set",
-    "workspaceboardsection_set__task_set",
-    "workspaceboardsection_set__task_set__assignee",
-    "workspaceboardsection_set__task_set__assignee__user",
-    "workspaceboardsection_set__task_set__labels",
-    "workspaceboardsection_set__task_set__subtask_set",
+    "section_set",
+    "section_set__task_set",
+    "section_set__task_set__assignee",
+    "section_set__task_set__assignee__user",
+    "section_set__task_set__labels",
+    "section_set__task_set__subtask_set",
 ).select_related(
     "workspace",
 )

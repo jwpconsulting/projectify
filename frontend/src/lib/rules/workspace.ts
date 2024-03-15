@@ -36,7 +36,7 @@ export type Resource =
     | "workspaceUserInvite"
     | "workspaceUser"
     | "workspaceBoard"
-    | "workspaceBoardSection"
+    | "section"
     | "task"
     | "label"
     | "taskLabel"
@@ -60,7 +60,7 @@ type Rules = {
 | Workspace user invite   | Owner      | Owner      | Owner      | Owner      |
 | Workspace user          | Owner      | Observer   | Owner      | Owner      |
 | Workspace board         | Maintainer | Observer   | Maintainer | Maintainer |
-| Workspace board section | Maintainer | Observer   | Maintainer | Maintainer |
+| Section | Maintainer | Observer   | Maintainer | Maintainer |
 | Task                    | Member     | Observer   | Member     | Maintainer |
 | Label                   | Maintainer | Observer   | Maintainer | Maintainer |
 | Task label              | Member     | Observer   | Member     | Member     |
@@ -94,7 +94,7 @@ const rules: Rules = {
         update: "MAINTAINER",
         delete: "MAINTAINER",
     },
-    workspaceBoardSection: {
+    section: {
         create: "MAINTAINER",
         read: "OBSERVER",
         update: "MAINTAINER",
@@ -185,7 +185,7 @@ const resourceToQuota: {
     workspaceUserInvite: "workspace_users_and_invites",
     workspaceUser: "workspace_users_and_invites",
     workspaceBoard: "workspace_boards",
-    workspaceBoardSection: "workspace_board_sections",
+    section: "sections",
     task: "tasks",
     label: "labels",
     taskLabel: "task_labels",

@@ -58,25 +58,15 @@
                     "overlay.destructive.delete-workspace-user.button",
                 );
                 break;
-            case "deleteWorkspaceBoardSection":
-                title = $_(
-                    "overlay.destructive.delete-workspace-board-section.title",
-                );
-                body = $_(
-                    "overlay.destructive.delete-workspace-board-section.body",
-                    {
-                        values: {
-                            workspaceBoardSection:
-                                target.workspaceBoardSection.title,
-                        },
+            case "deleteSection":
+                title = $_("overlay.destructive.delete-section.title");
+                body = $_("overlay.destructive.delete-section.body", {
+                    values: {
+                        section: target.section.title,
                     },
-                );
-                warning = $_(
-                    "overlay.destructive.delete-workspace-board-section.warning",
-                );
-                buttonLabel = $_(
-                    "overlay.destructive.delete-workspace-board-section.button",
-                );
+                });
+                warning = $_("overlay.destructive.delete-section.warning");
+                buttonLabel = $_("overlay.destructive.delete-section.button");
                 break;
             case "deleteTask":
                 title = $_("overlay.destructive.delete-task.title");

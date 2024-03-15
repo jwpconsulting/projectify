@@ -62,7 +62,7 @@ limitations are as follows:
   invite
   + user <= 2)
 - A trial workspace can hold 10 workspace boards
-- A trial workspace can hold 100 workspace board sections in total, with no
+- A trial workspace can hold 100 sections in total, with no
   per-workspace board limitations
 - A trial workspace can hold 1000 tasks. Again, there is no limitation where
   those tasks can be put, they could all be in the same workspace board or

@@ -22,9 +22,9 @@
     import type { SolutionsHeroContent } from "$lib/types/ui";
 
     $: heroContent = {
-        title: $_("help.workspace-board-sections.title"),
-        text: $_("help.workspace-board-sections.description"),
+        title: $_("help.sections.title"),
+        text: $_("help.sections.description"),
     } satisfies SolutionsHeroContent;
 </script>
 
-<Layout {heroContent} content={$_("help.workspace-board-sections.content")} />
+<Layout {heroContent} content={$_("help.sections.content")} />

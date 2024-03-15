@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Test workspace board section CRUD views."""
+"""Test section CRUD views."""
 from django.contrib.auth.models import (
     AbstractBaseUser,
 )
@@ -29,9 +29,9 @@ from rest_framework.test import (
 )
 
 from projectify.workspace.models import (
+    Section,
     TaskLabel,
     WorkspaceBoard,
-    WorkspaceBoardSection,
 )
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.workspace import Workspace
@@ -43,13 +43,13 @@ from pytest_types import (
 
 # Create
 @pytest.mark.django_db
-class TestWorkspaceBoardSectionCreate:
-    """Test workspace board section creation."""
+class TestSectionCreate:
+    """Test section creation."""
 
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("workspace:workspace-board-sections:create")
+        return reverse("workspace:sections:create")
 
     def test_authenticated(
         self,
@@ -62,37 +62,32 @@ class TestWorkspaceBoardSectionCreate:
         workspace_user: WorkspaceUser,
     ) -> None:
         """Assert that we can create a new workspace board."""
-        assert WorkspaceBoardSection.objects.count() == 0
+        assert Section.objects.count() == 0
         with django_assert_num_queries(7):
             response = rest_user_client.post(
                 resource_url,
                 {
-                    "title": "New workspace board section, who dis??",
+                    "title": "New section, who dis??",
                     "workspace_board_uuid": str(workspace_board.uuid),
                 },
             )
         assert response.status_code == 201
-        assert WorkspaceBoardSection.objects.count() == 1
-        workspace_board_section = WorkspaceBoardSection.objects.get()
-        assert (
-            workspace_board_section.title
-            == "New workspace board section, who dis??"
-        )
+        assert Section.objects.count() == 1
+        section = Section.objects.get()
+        assert section.title == "New section, who dis??"
 
 
 # Read + Update + Delete
 @pytest.mark.django_db
-class TestWorkspaceBoardSectionReadUpdateDelete:
-    """Test WorkspaceBoardSectionReadUpdateDelete view."""
+class TestSectionReadUpdateDelete:
+    """Test SectionReadUpdateDelete view."""
 
     @pytest.fixture
-    def resource_url(
-        self, workspace_board_section: WorkspaceBoardSection
-    ) -> str:
+    def resource_url(self, section: Section) -> str:
         """Return URL to this view."""
         return reverse(
-            "workspace:workspace-board-sections:read-update-delete",
-            args=(workspace_board_section.uuid,),
+            "workspace:sections:read-update-delete",
+            args=(section.uuid,),
         )
 
     def test_get(
@@ -122,9 +117,9 @@ class TestWorkspaceBoardSectionReadUpdateDelete:
         user: AbstractBaseUser,
         workspace_user: WorkspaceUser,
         django_assert_num_queries: DjangoAssertNumQueries,
-        workspace_board_section: WorkspaceBoardSection,
+        section: Section,
     ) -> None:
-        """Test updating a workspace board section."""
+        """Test updating a section."""
         with django_assert_num_queries(4):
             response = rest_user_client.put(
                 resource_url,
@@ -138,9 +133,9 @@ class TestWorkspaceBoardSectionReadUpdateDelete:
             "title": "New title",
             "description": "New description",
         }
-        workspace_board_section.refresh_from_db()
-        assert workspace_board_section.title == "New title"
-        assert workspace_board_section.description == "New description"
+        section.refresh_from_db()
+        assert section.title == "New title"
+        assert section.description == "New description"
 
     def test_delete(
         self,
@@ -155,22 +150,20 @@ class TestWorkspaceBoardSectionReadUpdateDelete:
             assert (
                 response.status_code == status.HTTP_204_NO_CONTENT
             ), response.data
-        assert WorkspaceBoardSection.objects.count() == 0
+        assert Section.objects.count() == 0
 
 
 # RPC
 @pytest.mark.django_db
-class TestWorkspaceBoardSectionMove:
-    """Test moving a workspace board section."""
+class TestSectionMove:
+    """Test moving a section."""
 
     @pytest.fixture
-    def resource_url(
-        self, workspace_board_section: WorkspaceBoardSection
-    ) -> str:
+    def resource_url(self, section: Section) -> str:
         """Return URL to this view."""
         return reverse(
-            "workspace:workspace-board-sections:move",
-            args=(str(workspace_board_section.uuid),),
+            "workspace:sections:move",
+            args=(str(section.uuid),),
         )
 
     def test_authenticated_user(
@@ -178,17 +171,17 @@ class TestWorkspaceBoardSectionMove:
         rest_user_client: APIClient,
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
-        workspace_board_section: WorkspaceBoardSection,
+        section: Section,
         workspace_user: WorkspaceUser,
     ) -> None:
         """Test as an authenticated user."""
-        other_workspace_board_section = WorkspaceBoardSection(
-            workspace_board=workspace_board_section.workspace_board,
+        other_section = Section(
+            workspace_board=section.workspace_board,
             title="test",
         )
-        other_workspace_board_section.save()
-        assert workspace_board_section._order == 0
-        assert other_workspace_board_section._order == 1
+        other_section.save()
+        assert section._order == 0
+        assert other_section._order == 1
         # XXX that's still a whole lot of queries
         # 50% XXX Better now
         with django_assert_num_queries(10):
@@ -200,7 +193,7 @@ class TestWorkspaceBoardSectionMove:
             )
 
         assert response.status_code == status.HTTP_200_OK, response.data
-        workspace_board_section.refresh_from_db()
-        other_workspace_board_section.refresh_from_db()
-        assert other_workspace_board_section._order == 0
-        assert workspace_board_section._order == 1
+        section.refresh_from_db()
+        other_section.refresh_from_db()
+        assert other_section._order == 0
+        assert section._order == 1

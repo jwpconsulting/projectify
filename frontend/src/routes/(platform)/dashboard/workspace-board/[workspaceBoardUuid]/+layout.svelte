@@ -21,7 +21,7 @@
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
-    import type { WorkspaceBoardSectionWithTasks } from "$lib/types/workspace";
+    import type { SectionWithTasks } from "$lib/types/workspace";
     import { getWorkspaceBoardSearchUrl } from "$lib/urls/dashboard";
 
     import type { LayoutData } from "./$types";
@@ -32,8 +32,8 @@
     let searchInput: string | undefined = undefined;
 
     $: canSearch = searchInput !== undefined;
-    $: workspaceBoardHasTasks = workspaceBoard.workspace_board_sections.some(
-        (s: WorkspaceBoardSectionWithTasks) => s.tasks.length > 0,
+    $: workspaceBoardHasTasks = workspaceBoard.sections.some(
+        (s: SectionWithTasks) => s.tasks.length > 0,
     );
 </script>
 

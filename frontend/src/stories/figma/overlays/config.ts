@@ -19,7 +19,7 @@ import {
     task,
     workspace,
     workspaceBoard,
-    workspaceBoardSection,
+    section,
     workspaceUserAssignment,
     workspaceUser,
     labelAssignment,
@@ -47,21 +47,19 @@ export const contextMenus: Record<string, ContextMenuType> = {
         workspace,
         workspaceBoard,
     },
-    "Workspace board section": {
-        kind: "workspaceBoardSection" as const,
+    "Section": {
+        kind: "section" as const,
         workspaceBoard,
-        workspaceBoardSection,
+        section,
     },
     "Task dashboard": {
         kind: "task" as const,
         task,
         location: "dashboard",
-        workspaceBoardSection,
+        section,
         workspaceBoard: {
             ...workspaceBoard,
-            workspace_board_sections: [
-                { ...workspaceBoardSection, tasks: [task] },
-            ],
+            sections: [{ ...section, tasks: [task] }],
             workspace,
         },
     },
@@ -69,7 +67,7 @@ export const contextMenus: Record<string, ContextMenuType> = {
         kind: "task" as const,
         task,
         location: "task",
-        workspaceBoardSection,
+        section,
     },
     "Help": {
         kind: "help",
@@ -106,8 +104,8 @@ export const destructiveOverlays = makeStorybookSelect({
         workspaceUser,
     },
     "Delete section": {
-        kind: "deleteWorkspaceBoardSection" as const,
-        workspaceBoardSection,
+        kind: "deleteSection" as const,
+        section,
     },
     "Delete task": {
         kind: "deleteTask" as const,
@@ -140,13 +138,13 @@ export const constructiveOverlays =
         },
         "Create workspace board": { kind: "createWorkspaceBoard", workspace },
         "Invite workspace users": { kind: "inviteWorkspaceUser", workspace },
-        "Create workspace board section": {
-            kind: "createWorkspaceBoardSection",
+        "Create section": {
+            kind: "createSection",
             workspaceBoard,
         },
-        "Update workspace board section": {
-            kind: "updateWorkspaceBoardSection",
-            workspaceBoardSection,
+        "Update section": {
+            kind: "updateSection",
+            section,
         },
         "Recover workspace board": {
             kind: "recoverWorkspaceBoard",

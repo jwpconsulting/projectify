@@ -34,7 +34,7 @@
     import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openContextMenu } from "$lib/stores/globalUi";
     import {
-        getDashboardWorkspaceBoardSectionUrl,
+        getDashboardSectionUrl,
         getDashboardWorkspaceBoardUrl,
         getTaskEditUrl,
         getTaskUrl,
@@ -49,8 +49,8 @@
 
     $: task = $currentTask ?? data.task;
     $: subTasks = task.sub_tasks;
-    $: workspaceBoardSection = task.workspace_board_section;
-    $: workspaceBoard = workspaceBoardSection.workspace_board;
+    $: section = task.section;
+    $: workspaceBoard = section.workspace_board;
 
     let contextMenuRef: HTMLElement;
 
@@ -67,17 +67,15 @@
             href: getDashboardWorkspaceBoardUrl(workspaceBoard.uuid),
         },
         {
-            label: workspaceBoardSection.title,
-            href: getDashboardWorkspaceBoardSectionUrl(
-                workspaceBoardSection.uuid,
-            ),
+            label: section.title,
+            href: getDashboardSectionUrl(section.uuid),
         },
         { label: $number(task.number), href: getTaskUrl(task.uuid) },
     ];
 </script>
 
 <Layout>
-    <TopBar slot="top-bar" {workspaceBoardSection}>
+    <TopBar slot="top-bar" {section}>
         <Breadcrumbs slot="breadcrumbs" {crumbs} />
         <svelte:fragment slot="buttons">
             {#if $currentWorkspaceUserCan("update", "task")}
@@ -102,7 +100,7 @@
                                 kind: "task",
                                 task,
                                 location: "task",
-                                workspaceBoardSection,
+                                section,
                             },
                             contextMenuRef,
                         ),
