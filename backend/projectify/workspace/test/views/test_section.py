@@ -29,9 +29,9 @@ from rest_framework.test import (
 )
 
 from projectify.workspace.models import (
+    Project,
     Section,
     TaskLabel,
-    Project,
 )
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.workspace import Workspace

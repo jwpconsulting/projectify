@@ -76,11 +76,11 @@ from projectify.user.services.internal import (
 from projectify.workspace.models import (
     ChatMessage,
     Label,
+    Project,
     Section,
     Task,
     TaskLabel,
     Workspace,
-    Project,
 )
 from projectify.workspace.models.const import WorkspaceUserRoles
 from projectify.workspace.models.sub_task import (

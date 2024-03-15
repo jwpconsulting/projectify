@@ -22,6 +22,7 @@ from .const import (
 from .label import (
     Label,
 )
+from .project import Project
 from .section import (
     Section,
 )
@@ -35,7 +36,6 @@ from .task_label import TaskLabel
 from .workspace import (
     Workspace,
 )
-from .project import Project
 from .workspace_user import (
     WorkspaceUser,
 )

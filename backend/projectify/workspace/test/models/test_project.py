@@ -17,8 +17,8 @@
 """Project model tests."""
 import pytest
 
-from ...models.workspace import Workspace
 from ...models.project import Project
+from ...models.workspace import Workspace
 from ...models.workspace_user import WorkspaceUser
 from ...services.section import section_create
 

@@ -56,8 +56,8 @@ from django.urls import (
 )
 
 from projectify.workspace.consumers import (
-    TaskConsumer,
     ProjectConsumer,
+    TaskConsumer,
     WorkspaceConsumer,
 )
 

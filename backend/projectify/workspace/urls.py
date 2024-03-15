@@ -21,16 +21,16 @@ from django.urls import (
 )
 
 from projectify.workspace.views.label import LabelCreate, LabelUpdateDelete
-from projectify.workspace.views.section import (
-    SectionCreate,
-    SectionMove,
-    SectionReadUpdateDelete,
-)
 from projectify.workspace.views.project import (
     ProjectArchive,
     ProjectArchivedList,
     ProjectCreate,
     ProjectReadUpdateDelete,
+)
+from projectify.workspace.views.section import (
+    SectionCreate,
+    SectionMove,
+    SectionReadUpdateDelete,
 )
 
 from .views.task import (

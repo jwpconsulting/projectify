@@ -44,8 +44,8 @@ from pytest_types import (
 )
 
 from ...models.const import WorkspaceUserRoles
-from ...models.workspace import Workspace
 from ...models.project import Project
+from ...models.workspace import Workspace
 from ...models.workspace_user import WorkspaceUser
 
 

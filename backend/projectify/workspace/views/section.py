@@ -28,12 +28,12 @@ from rest_framework.views import APIView
 from projectify.workspace.models import (
     Section,
 )
+from projectify.workspace.selectors.project import (
+    project_find_by_project_uuid,
+)
 from projectify.workspace.selectors.section import (
     SectionDetailQuerySet,
     section_find_for_user_and_uuid,
-)
-from projectify.workspace.selectors.project import (
-    project_find_by_project_uuid,
 )
 from projectify.workspace.serializers.section import (
     SectionDetailSerializer,

@@ -40,22 +40,22 @@ from rest_framework import serializers
 
 from projectify.user.models import User
 
+from .models.project import Project
 from .models.task import Task
 from .models.workspace import Workspace
-from .models.project import Project
+from .selectors.project import (
+    ProjectDetailQuerySet,
+    project_find_by_project_uuid,
+)
 from .selectors.quota import workspace_get_all_quotas
 from .selectors.task import TaskDetailQuerySet, task_find_by_task_uuid
 from .selectors.workspace import (
     WorkspaceDetailQuerySet,
     workspace_find_by_workspace_uuid,
 )
-from .selectors.project import (
-    ProjectDetailQuerySet,
-    project_find_by_project_uuid,
-)
+from .serializers.project import ProjectDetailSerializer
 from .serializers.task_detail import TaskDetailSerializer
 from .serializers.workspace import WorkspaceDetailSerializer
-from .serializers.project import ProjectDetailSerializer
 from .types import ConsumerEvent, Message
 
 CODE_OBJECT_DISAPPEARED = 404

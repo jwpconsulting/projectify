@@ -28,8 +28,8 @@ from projectify.workspace.models.const import WorkspaceUserRoles
 from ...models.task import Task
 from ...models.workspace import Workspace
 from ...models.workspace_user import WorkspaceUser
-from ...services.workspace import workspace_add_user
 from ...services.project import project_create
+from ...services.workspace import workspace_add_user
 
 
 @pytest.mark.django_db

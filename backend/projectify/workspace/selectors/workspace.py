@@ -23,8 +23,8 @@ from django.db.models import Prefetch, QuerySet
 
 from projectify.user.models import User
 
-from ..models.workspace import Workspace
 from ..models.project import Project
+from ..models.workspace import Workspace
 from ..models.workspace_user import WorkspaceUser
 from ..models.workspace_user_invite import WorkspaceUserInvite
 

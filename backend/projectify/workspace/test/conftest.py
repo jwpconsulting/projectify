@@ -58,6 +58,10 @@ from projectify.workspace.selectors.workspace_user import (
 )
 from projectify.workspace.services.chat_message import chat_message_create
 from projectify.workspace.services.label import label_create
+from projectify.workspace.services.project import (
+    project_archive,
+    project_create,
+)
 from projectify.workspace.services.section import (
     section_create,
 )
@@ -66,10 +70,6 @@ from projectify.workspace.services.task import task_create
 from projectify.workspace.services.workspace import (
     workspace_add_user,
     workspace_create,
-)
-from projectify.workspace.services.project import (
-    project_archive,
-    project_create,
 )
 from projectify.workspace.services.workspace_user_invite import (
     workspace_user_invite_create,

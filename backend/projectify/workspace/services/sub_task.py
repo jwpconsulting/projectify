@@ -25,8 +25,8 @@ from projectify.user.models import User
 from projectify.workspace.models.sub_task import SubTask
 from projectify.workspace.models.task import Task
 from projectify.workspace.services.signals import (
-    send_task_change_signal,
     send_project_change_signal,
+    send_task_change_signal,
 )
 
 

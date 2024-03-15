@@ -26,13 +26,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from projectify.workspace.models import Project
-from projectify.workspace.selectors.workspace import (
-    workspace_find_by_workspace_uuid,
-)
 from projectify.workspace.selectors.project import (
     ProjectDetailQuerySet,
     project_find_by_project_uuid,
     project_find_by_workspace_uuid,
+)
+from projectify.workspace.selectors.workspace import (
+    workspace_find_by_workspace_uuid,
 )
 from projectify.workspace.serializers.base import ProjectBaseSerializer
 from projectify.workspace.serializers.project import (

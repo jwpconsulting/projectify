@@ -20,13 +20,13 @@ from faker import Faker
 from rest_framework.exceptions import ValidationError
 
 from projectify.user.models.user import User
-from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.project import Project
+from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.workspace_user import WorkspaceUser
-from projectify.workspace.services.workspace import workspace_delete
 from projectify.workspace.services.project import (
     project_delete,
 )
+from projectify.workspace.services.workspace import workspace_delete
 from projectify.workspace.services.workspace_user import workspace_user_delete
 from projectify.workspace.services.workspace_user_invite import (
     workspace_user_invite_create,

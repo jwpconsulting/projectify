@@ -60,10 +60,10 @@ if TYPE_CHECKING:
     from . import (
         ChatMessage,
         Label,
+        Project,
         Section,
         SubTask,
         TaskLabel,
-        Project,
         WorkspaceUser,
     )
 
