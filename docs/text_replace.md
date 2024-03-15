@@ -208,3 +208,19 @@ nvim (ag \
   . \
 ) -c "bufdo %s/\vWorkspace[_ -]?[bB]oard(s?)(_ -][sS]ection)@!/Project\1/ce"
 ```
+
+For folders:
+
+```fish
+for f in (
+  fd --type directory \
+    "workspace[_ -]?[bB]oard[_ -]?s?" \
+    .
+)
+  echo "Moving $f"
+  set -l dir (dirname $f)
+  read -l -P "New path: $dir/" base || break
+  echo "Moving to $base"
+  git mv -v $f $dir/$base || break
+end
+```
