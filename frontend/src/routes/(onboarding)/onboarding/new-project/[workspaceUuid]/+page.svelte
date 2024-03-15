@@ -76,10 +76,9 @@
             {#if project}
                 <div class="flex flex-col gap-4">
                     <p>
-                        {$_(
-                            "onboarding.new-project.project-exists.message",
-                            { values: { title: project.title } },
-                        )}
+                        {$_("onboarding.new-project.project-exists.message", {
+                            values: { title: project.title },
+                        })}
                     </p>
                     <p>
                         <Anchor
@@ -107,9 +106,7 @@
             style={{ inputType: "text" }}
             name="title"
             label={$_("onboarding.new-project.input.label")}
-            placeholder={$_(
-                "onboarding.new-project.input.placeholder",
-            )}
+            placeholder={$_("onboarding.new-project.input.placeholder")}
             bind:value={title}
             required
         />

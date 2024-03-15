@@ -20,10 +20,7 @@
     import UserDropdownClosedNav from "$lib/figma/buttons/UserDropdownClosedNav.svelte";
     import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
-    import {
-        selectProjectUuid,
-        showFilters,
-    } from "$lib/stores/dashboard";
+    import { selectProjectUuid, showFilters } from "$lib/stores/dashboard";
     import type { WorkspaceDetail } from "$lib/types/workspace";
     import { getDashboardProjectUrl } from "$lib/urls";
 
@@ -49,12 +46,11 @@
                                         href: getDashboardProjectUrl(
                                             board.uuid,
                                         ),
-                                        onInteract:
-                                            selectProjectUuid.bind(
-                                                null,
-                                                workspace.uuid,
-                                                board.uuid,
-                                            ),
+                                        onInteract: selectProjectUuid.bind(
+                                            null,
+                                            workspace.uuid,
+                                            board.uuid,
+                                        ),
                                     }}
                                 />
                             {/each}

@@ -39,10 +39,7 @@ export async function load({
         fetch,
     });
     if (!project) {
-        error(
-            404,
-            `No project could be found for UUID ${projectUuid}.`,
-        );
+        error(404, `No project could be found for UUID ${projectUuid}.`);
     }
     const { uuid: workspaceUuid } = project.workspace;
     const workspace = await getWorkspace(workspaceUuid, {

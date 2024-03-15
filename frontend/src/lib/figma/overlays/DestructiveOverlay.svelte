@@ -91,30 +91,20 @@
                 );
                 break;
             case "archiveProject":
-                title = $_(
-                    "overlay.destructive.archive-project.title",
-                );
+                title = $_("overlay.destructive.archive-project.title");
                 body = $_("overlay.destructive.archive-project.body", {
                     values: { project: target.project.title },
                 });
-                warning = $_(
-                    "overlay.destructive.archive-project.warning",
-                );
-                buttonLabel = $_(
-                    "overlay.destructive.archive-project.button",
-                );
+                warning = $_("overlay.destructive.archive-project.warning");
+                buttonLabel = $_("overlay.destructive.archive-project.button");
                 break;
             case "deleteProject":
                 title = $_("overlay.destructive.delete-project.title");
                 body = $_("overlay.destructive.delete-project.body", {
                     values: { project: target.project.title },
                 });
-                warning = $_(
-                    "overlay.destructive.delete-project.warning",
-                );
-                buttonLabel = $_(
-                    "overlay.destructive.delete-project.button",
-                );
+                warning = $_("overlay.destructive.delete-project.warning");
+                buttonLabel = $_("overlay.destructive.delete-project.button");
                 break;
         }
     }

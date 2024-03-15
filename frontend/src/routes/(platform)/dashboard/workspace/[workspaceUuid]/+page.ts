@@ -39,8 +39,7 @@ export async function load({ parent, fetch }: PageLoadEvent): Promise<void> {
     // We see if the user has selected a project UUID for this
     // workspace before (by referencing local storage above)
     // And if we have one ...
-    const maybeProjectUuid =
-        maybeProjectUuids.get(workspaceUuid);
+    const maybeProjectUuid = maybeProjectUuids.get(workspaceUuid);
     if (
         maybeProjectUuid &&
         projects.map((b) => b.uuid).includes(maybeProjectUuid)

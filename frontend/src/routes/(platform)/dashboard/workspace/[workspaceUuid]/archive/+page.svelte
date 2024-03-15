@@ -78,10 +78,7 @@
                             label={$_("project-archive.card.recover")}
                             action={{
                                 kind: "button",
-                                action: recoverAction.bind(
-                                    null,
-                                    project,
-                                ),
+                                action: recoverAction.bind(null, project),
                             }}
                         />
 
@@ -92,10 +89,7 @@
                             label={$_("project-archive.card.delete")}
                             action={{
                                 kind: "button",
-                                action: deleteAction.bind(
-                                    null,
-                                    project,
-                                ),
+                                action: deleteAction.bind(null, project),
                             }}
                         />
                     </div>

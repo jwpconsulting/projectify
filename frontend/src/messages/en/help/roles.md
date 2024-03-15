@@ -27,8 +27,8 @@ actions are as follows:
 | Workspace                   | Title and description                                       |
 | Workspace billing settings  | Current subscription status and payment information         |
 | Workspace users and invites | Who has been added to the workspace, and who is invited     |
-| Project             | Description and other information about a project   |
-| Sections                    | Name, position within project                       |
+| Project                     | Description and other information about a project           |
+| Sections                    | Name, position within project                               |
 | Tasks                       | Title, description, due date, label, assignee, and position |
 | Sub tasks                   | Done state and title                                        |
 | Labels                      | Name and color                                              |
@@ -53,7 +53,7 @@ individual cell in this table is as follows:
 | Workspace                   | Read     | Read   | Read       | Full  |
 | Workspace billing settings  | -        | -      | -          | Full  |
 | Workspace users and invites | Read     | Read   | Read       | Full  |
-| Project             | Read     | Read   | Full       | Full  |
+| Project                     | Read     | Read   | Full       | Full  |
 | Sections                    | Read     | Read   | Full       | Full  |
 | Tasks                       | Read     | Write  | Full       | Full  |
 | Sub tasks                   | Read     | Full   | Full       | Full  |

@@ -20,10 +20,7 @@
 
     import SectionC from "$lib/figma/cards/Section.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
-    import {
-        currentProject,
-        currentSections,
-    } from "$lib/stores/dashboard";
+    import { currentProject, currentSections } from "$lib/stores/dashboard";
     import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type { SectionWithTasks } from "$lib/types/workspace";

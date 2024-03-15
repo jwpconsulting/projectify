@@ -156,9 +156,7 @@
             action: archiveProject,
             disabled: !$currentWorkspaceUserCan("update", "project"),
         }}
-        label={$_(
-            "overlay.context-menu.project.archive-project",
-        )}
+        label={$_("overlay.context-menu.project.archive-project")}
         state="normal"
         icon={Archive}
     />

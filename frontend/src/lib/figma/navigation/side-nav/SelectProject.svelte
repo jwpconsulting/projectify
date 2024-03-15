@@ -20,10 +20,7 @@
     import { Icon } from "@steeze-ui/svelte-icon";
 
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
-    import {
-        currentProject,
-        selectProjectUuid,
-    } from "$lib/stores/dashboard";
+    import { currentProject, selectProjectUuid } from "$lib/stores/dashboard";
     import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { Workspace, Project } from "$lib/types/workspace";
@@ -61,24 +58,19 @@
     class="group block flex w-full flex-row justify-between gap-1 px-4 py-1 hover:bg-base-200"
     class:bg-base-200={contextMenuOpen}
     href={getDashboardProjectUrl(project.uuid)}
-    on:click={() =>
-        selectProjectUuid(workspace.uuid, project.uuid)}
+    on:click={() => selectProjectUuid(workspace.uuid, project.uuid)}
 >
     <div class="flex min-w-0 flex-row items-center gap-2">
         <div
             class={`rounded-md p-1 ${
-                project.uuid === currentProjectUuid
-                    ? "bg-primary-focus"
-                    : ""
+                project.uuid === currentProjectUuid ? "bg-primary-focus" : ""
             }`}
         >
             <Icon
                 src={Folder}
                 theme="outline"
                 class={`h-4 w-4 ${
-                    project.uuid === currentProjectUuid
-                        ? "text-base-100"
-                        : ""
+                    project.uuid === currentProjectUuid ? "text-base-100" : ""
                 }`}
             />
         </div>

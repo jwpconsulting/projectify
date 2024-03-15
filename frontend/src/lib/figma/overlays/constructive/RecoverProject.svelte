@@ -87,12 +87,8 @@
             size="medium"
             color="blue"
             label={state.kind === "submitting"
-                ? $_(
-                      "overlay.constructive.recover-project.submit.submitting",
-                  )
-                : $_(
-                      "overlay.constructive.recover-project.submit.start",
-                  )}
+                ? $_("overlay.constructive.recover-project.submit.submitting")
+                : $_("overlay.constructive.recover-project.submit.start")}
         />
     </svelte:fragment>
 </Layout>

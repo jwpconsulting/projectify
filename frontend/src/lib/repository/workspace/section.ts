@@ -27,11 +27,7 @@ import {
     putWithCredentialsJson,
 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
-import type {
-    Project,
-    Section,
-    SectionDetail,
-} from "$lib/types/workspace";
+import type { Project, Section, SectionDetail } from "$lib/types/workspace";
 
 import type { ApiResponse } from "../types";
 

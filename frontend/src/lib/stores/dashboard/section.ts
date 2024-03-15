@@ -100,10 +100,7 @@ export const currentSections = derived<
     SectionWithTasks[] | undefined
 >(
     [selectedLabels, selectedWorkspaceUser, currentProject],
-    (
-        [$selectedLabels, $selectedWorkspaceUser, $currentProject],
-        set,
-    ) => {
+    ([$selectedLabels, $selectedWorkspaceUser, $currentProject], set) => {
         if (!$currentProject) {
             set(undefined);
             return;

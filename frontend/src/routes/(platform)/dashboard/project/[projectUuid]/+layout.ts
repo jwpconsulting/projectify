@@ -17,10 +17,7 @@
  */
 import { error } from "@sveltejs/kit";
 
-import {
-    currentWorkspace,
-    currentProject,
-} from "$lib/stores/dashboard";
+import { currentWorkspace, currentProject } from "$lib/stores/dashboard";
 import type { ProjectDetail } from "$lib/types/workspace";
 
 import type { LayoutLoadEvent } from "./$types";
@@ -33,18 +30,12 @@ export async function load({
     params: { projectUuid },
     fetch,
 }: LayoutLoadEvent): Promise<Data> {
-    const project = await currentProject.loadUuid(
-        projectUuid,
-        { fetch },
-    );
+    const project = await currentProject.loadUuid(projectUuid, { fetch });
     if (!project) {
         // If we don't have a project, we don't have anything (no
         // workspace uuid etc), so we are back to the dashboard in that case.
         // TODO tell the user that we have done so
-        error(
-            404,
-            `No project could be found for UUID '${projectUuid}'`,
-        );
+        error(404, `No project could be found for UUID '${projectUuid}'`);
     }
     const workspaceUuid = project.workspace.uuid;
     currentWorkspace

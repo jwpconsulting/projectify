@@ -38,10 +38,7 @@
 {:else if target.kind === "sideNav"}
     <SideNavContextMenu workspace={target.workspace} />
 {:else if target.kind === "project"}
-    <Project
-        workspace={target.workspace}
-        project={target.project}
-    />
+    <Project workspace={target.workspace} project={target.project} />
 {:else if target.kind === "section"}
     <Section project={target.project} section={target.section} />
 {:else if target.kind === "task"}

@@ -66,13 +66,8 @@ const _selectedProjectUuids = persisted<Map<string, string>>(
         },
     },
 );
-export const selectedProjectUuids = readonly(
-    _selectedProjectUuids,
-);
-export function selectProjectUuid(
-    workspaceUuid: string,
-    projectUuid: string,
-) {
+export const selectedProjectUuids = readonly(_selectedProjectUuids);
+export function selectProjectUuid(workspaceUuid: string, projectUuid: string) {
     _selectedProjectUuids.update(($selectedProjectUuids) => {
         $selectedProjectUuids.set(workspaceUuid, projectUuid);
         return $selectedProjectUuids;
@@ -135,9 +130,7 @@ export function toggleSectionOpen(sectionUuid: string) {
 }
 
 // Adjust this if the dashboard URLs ever change
-const showFilterRouteIds = [
-    "/(platform)/dashboard/project/[projectUuid]",
-];
+const showFilterRouteIds = ["/(platform)/dashboard/project/[projectUuid]"];
 
 /*
  * showFilters is true only for pages for which we show the user

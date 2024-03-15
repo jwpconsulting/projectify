@@ -156,9 +156,8 @@
     } satisfies WorkspaceDetail;
 
     $: project = {
-        ...((state.kind === "new-workspace"
-            ? undefined
-            : state.project) ?? projectFallback),
+        ...((state.kind === "new-workspace" ? undefined : state.project) ??
+            projectFallback),
         ...(state.kind === "new-project"
             ? { title: state.title, sections: [] }
             : undefined),

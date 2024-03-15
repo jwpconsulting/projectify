@@ -22,8 +22,6 @@ import type { Project } from "$lib/types/workspace";
 
 export const dashboardUrl = "/dashboard";
 
-export function getProjectSearchUrl({
-    uuid,
-}: Pick<Project, "uuid">): string {
+export function getProjectSearchUrl({ uuid }: Pick<Project, "uuid">): string {
     return `/dashboard/project/${uuid}/search`;
 }

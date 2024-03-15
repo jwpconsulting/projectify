@@ -68,9 +68,7 @@
     <svelte:fragment slot="form">
         <InputField
             name="project-name"
-            label={$_(
-                "overlay.constructive.create-project.form.title.label",
-            )}
+            label={$_("overlay.constructive.create-project.form.title.label")}
             placeholder={$_(
                 "overlay.constructive.create-project.form.title.placeholder",
             )}
@@ -95,9 +93,7 @@
             style={{ kind: "primary" }}
             size="medium"
             color="blue"
-            label={$_(
-                "overlay.constructive.create-project.create-board",
-            )}
+            label={$_("overlay.constructive.create-project.create-board")}
         />
     </svelte:fragment>
 </Layout>
