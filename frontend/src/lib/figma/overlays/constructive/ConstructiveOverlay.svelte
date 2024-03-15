@@ -16,8 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    import CreateSection from "$lib/figma/overlays/constructive/CreateSection.svelte";
     import CreateProject from "$lib/figma/overlays/constructive/CreateProject.svelte";
+    import CreateSection from "$lib/figma/overlays/constructive/CreateSection.svelte";
     import InviteWorkspaceUser from "$lib/figma/overlays/constructive/InviteWorkspaceUser.svelte";
     import RecoverProject from "$lib/figma/overlays/constructive/RecoverProject.svelte";
     import UpdateProject from "$lib/figma/overlays/constructive/UpdateProject.svelte";
