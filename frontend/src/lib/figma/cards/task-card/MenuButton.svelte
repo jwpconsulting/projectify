@@ -21,14 +21,14 @@
     import type { ContextMenuType } from "$lib/types/ui";
     import type {
         TaskWithSection,
-        WorkspaceBoardDetail,
+        ProjectDetail,
         SectionWithTasks,
     } from "$lib/types/workspace";
 
     export let task: TaskWithSection;
     // this is only ever needed for the dashboard, not when a task is part
     // of search results... time for another ADT?
-    export let project: WorkspaceBoardDetail;
+    export let project: ProjectDetail;
     export let section: SectionWithTasks | undefined = undefined;
 
     let dropDownMenuBtnRef: HTMLElement;

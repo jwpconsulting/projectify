@@ -21,9 +21,9 @@ from django.db import transaction
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
-from projectify.workspace.models import Section, WorkspaceBoard
+from projectify.workspace.models import Section, Project
 from projectify.workspace.services.signals import (
-    send_workspace_board_change_signal,
+    send_project_change_signal,
 )
 
 
@@ -34,21 +34,21 @@ def section_create(
     who: User,
     title: str,
     description: Optional[str] = None,
-    workspace_board: WorkspaceBoard,
+    project: Project,
 ) -> Section:
     """Create a section."""
     validate_perm(
         "workspace.create_section",
         who,
-        workspace_board.workspace,
+        project.workspace,
     )
     section = Section(
         title=title,
         description=description,
-        workspace_board=workspace_board,
+        project=project,
     )
     section.save()
-    send_workspace_board_change_signal(workspace_board)
+    send_project_change_signal(project)
     return section
 
 
@@ -65,12 +65,12 @@ def section_update(
     validate_perm(
         "workspace.update_section",
         who,
-        section.workspace_board.workspace,
+        section.project.workspace,
     )
     section.title = title
     section.description = description
     section.save()
-    send_workspace_board_change_signal(section.workspace_board)
+    send_project_change_signal(section.project)
     return section
 
 
@@ -85,10 +85,10 @@ def section_delete(
     validate_perm(
         "workspace.delete_section",
         who,
-        section.workspace_board.workspace,
+        section.project.workspace,
     )
     section.delete()
-    send_workspace_board_change_signal(section.workspace_board)
+    send_project_change_signal(section.project)
 
 
 # RPC
@@ -100,27 +100,27 @@ def section_move(
     who: User,
 ) -> None:
     """
-    Move to specified order n within workspace board.
+    Move to specified order n within project.
 
     No save required.
     """
     validate_perm(
         "workspace.update_section",
         who,
-        section.workspace_board.workspace,
+        section.project.workspace,
     )
-    workspace_board = section.workspace_board
-    neighbor_sections = workspace_board.section_set.select_for_update()
+    project = section.project
+    neighbor_sections = project.section_set.select_for_update()
     # Force queryset to be evaluated to lock them for the time of
     # this transaction
     len(neighbor_sections)
     # Django docs wrong, need to cast to list
-    order_list = list(workspace_board.get_section_order())
+    order_list = list(project.get_section_order())
     # The list is ordered by pk, which is not uuid for us
     current_object_index = order_list.index(section.pk)
     # Mutate to perform move operation
     order_list.insert(order, order_list.pop(current_object_index))
     # Set new order
-    workspace_board.set_section_order(order_list)
-    workspace_board.save()
-    send_workspace_board_change_signal(section.workspace_board)
+    project.set_section_order(order_list)
+    project.save()
+    send_project_change_signal(section.project)

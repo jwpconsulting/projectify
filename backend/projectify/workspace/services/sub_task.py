@@ -26,7 +26,7 @@ from projectify.workspace.models.sub_task import SubTask
 from projectify.workspace.models.task import Task
 from projectify.workspace.services.signals import (
     send_task_change_signal,
-    send_workspace_board_change_signal,
+    send_project_change_signal,
 )
 
 
@@ -57,7 +57,7 @@ class ValidatedData(TypedDict):
 
 def _sub_task_changed(task: Task) -> None:
     """Broadcast changes upon sub task save/delete."""
-    send_workspace_board_change_signal(task.section.workspace_board)
+    send_project_change_signal(task.section.project)
     send_task_change_signal(task)
 
 

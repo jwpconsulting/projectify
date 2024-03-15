@@ -21,15 +21,15 @@
     import Layout from "$lib/figma/overlays/constructive/Layout.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
-    import { updateWorkspaceBoard } from "$lib/repository/workspace/project";
+    import { updateProject } from "$lib/repository/workspace/project";
     import {
         rejectConstructiveOverlay,
         resolveConstructiveOverlay,
     } from "$lib/stores/globalUi";
     import type { FormViewState } from "$lib/types/ui";
-    import type { WorkspaceBoard } from "$lib/types/workspace";
+    import type { Project } from "$lib/types/workspace";
 
-    export let project: WorkspaceBoard;
+    export let project: Project;
 
     let state: FormViewState = { kind: "start" };
 
@@ -37,11 +37,11 @@
 
     async function onSubmit() {
         state = { kind: "submitting" };
-        const updatedWorkspaceBoard = {
+        const updatedProject = {
             ...project,
             title,
         };
-        const result = await updateWorkspaceBoard(updatedWorkspaceBoard, {
+        const result = await updateProject(updatedProject, {
             fetch,
         });
         if (!result.ok) {

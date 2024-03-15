@@ -17,13 +17,13 @@
  */
 import { error } from "@sveltejs/kit";
 
-import { getWorkspaceBoard } from "$lib/repository/workspace/project";
+import { getProject } from "$lib/repository/workspace/project";
 import { currentTask } from "$lib/stores/dashboard";
 import type {
     Label,
     Task,
     Workspace,
-    WorkspaceBoardDetail,
+    ProjectDetail,
     Section,
     WorkspaceUser,
 } from "$lib/types/workspace";
@@ -34,7 +34,7 @@ import type { PageLoadEvent } from "./$types";
 interface returnType {
     task: Task;
     section: Section;
-    project: WorkspaceBoardDetail;
+    project: ProjectDetail;
     workspace: Workspace;
     label: Label;
     assignee: WorkspaceUser;
@@ -50,7 +50,7 @@ export async function load({
     }
     const section = task.section;
     const projectUuid = section.project.uuid;
-    const project = await getWorkspaceBoard(projectUuid, {
+    const project = await getProject(projectUuid, {
         fetch,
     });
     if (!project) {

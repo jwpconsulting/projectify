@@ -25,7 +25,7 @@ import RolesHelpPage from "./en/help/roles.md?raw";
 import SectionsHelpPage from "./en/help/sections.md?raw";
 import TasksHelpPage from "./en/help/tasks.md?raw";
 import TrialHelpPage from "./en/help/trial.md?raw";
-import WorkspaceBoardsHelpPage from "./en/help/projects.md?raw";
+import ProjectsHelpPage from "./en/help/projects.md?raw";
 import WorkspaceUsersHelpPage from "./en/help/workspace-users.md?raw";
 import WorkspacesHelpPage from "./en/help/workspaces.md?raw";
 import type { MessageDirectory } from "./types";
@@ -48,7 +48,7 @@ const messages: MessageDirectory = {
                 "title": "Create project",
                 "form": {
                     title: {
-                        label: "Workspace board name",
+                        label: "Project name",
                         placeholder: "Enter a project name",
                     },
                 },
@@ -225,7 +225,7 @@ const messages: MessageDirectory = {
             },
         },
         "create-board": "Create new project",
-        "boards": "Workspace boards",
+        "boards": "Projects",
         "workspace-users": "Workspace users",
         "workspace-user-name": "Workspace user name",
         "filter-workspace-users": "Filter workspace users",
@@ -326,7 +326,7 @@ const messages: MessageDirectory = {
         },
     },
     "project-archive": {
-        title: "Workspace board archive",
+        title: "Project archive",
         card: {
             recover: "Recover",
             delete: "Delete",
@@ -903,7 +903,7 @@ const messages: MessageDirectory = {
                 "sub-tasks": "Sub tasks",
                 "tasks": "Tasks",
                 "task-labels": "Task labels",
-                "projects": "Workspace boards",
+                "projects": "Projects",
                 "sections": "Sections",
                 "workspace-users-and-invites": "Workspace users and invites",
             },
@@ -1411,9 +1411,9 @@ const messages: MessageDirectory = {
             content: WorkspacesHelpPage,
         },
         "projects": {
-            title: "Workspace boards",
+            title: "Projects",
             description: "Separate projects from each other",
-            content: WorkspaceBoardsHelpPage,
+            content: ProjectsHelpPage,
         },
         "sections": {
             title: "Sections",

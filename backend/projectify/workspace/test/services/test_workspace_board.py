@@ -14,41 +14,41 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Test workspace board services."""
+"""Test project services."""
 import pytest
 
-from projectify.workspace.models.workspace_board import WorkspaceBoard
+from projectify.workspace.models.project import Project
 from projectify.workspace.models.workspace_user import WorkspaceUser
-from projectify.workspace.services.workspace_board import (
-    workspace_board_archive,
+from projectify.workspace.services.project import (
+    project_archive,
 )
 
 
 @pytest.mark.django_db
 def test_archive(
-    workspace_board: WorkspaceBoard, workspace_user: WorkspaceUser
+    project: Project, workspace_user: WorkspaceUser
 ) -> None:
     """Test archive method."""
-    assert workspace_board.archived is None
-    workspace_board_archive(
-        workspace_board=workspace_board, archived=True, who=workspace_user.user
+    assert project.archived is None
+    project_archive(
+        project=project, archived=True, who=workspace_user.user
     )
-    assert workspace_board.archived is not None
+    assert project.archived is not None
 
 
 @pytest.mark.django_db
 def test_unarchive(
-    workspace_board: WorkspaceBoard, workspace_user: WorkspaceUser
+    project: Project, workspace_user: WorkspaceUser
 ) -> None:
     """Test unarchive method."""
-    assert workspace_board.archived is None
-    workspace_board_archive(
-        workspace_board=workspace_board, archived=True, who=workspace_user.user
+    assert project.archived is None
+    project_archive(
+        project=project, archived=True, who=workspace_user.user
     )
-    assert workspace_board.archived is not None
-    workspace_board_archive(
-        workspace_board=workspace_board,
+    assert project.archived is not None
+    project_archive(
+        project=project,
         archived=False,
         who=workspace_user.user,
     )
-    assert workspace_board.archived is None
+    assert project.archived is None

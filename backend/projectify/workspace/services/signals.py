@@ -33,7 +33,7 @@ from ..models.section import Section
 from ..models.sub_task import SubTask
 from ..models.task import Task
 from ..models.workspace import Workspace
-from ..models.workspace_board import WorkspaceBoard
+from ..models.project import Project
 from ..models.workspace_user import WorkspaceUser
 from ..types import ConsumerEvent
 
@@ -46,10 +46,10 @@ HasOrIsWorkspace = Union[
     Workspace,
     Label,
     WorkspaceUser,
-    WorkspaceBoard,
+    Project,
 ]
-HasOrIsWorkspaceBoard = Union[
-    WorkspaceBoard,
+HasOrIsProject = Union[
+    Project,
     Section,
     Task,
     TaskLabel,
@@ -79,7 +79,7 @@ def send_workspace_change_signal(instance: HasOrIsWorkspace) -> None:
             workspace = instance.workspace
         case WorkspaceUser():
             workspace = instance.workspace
-        case WorkspaceBoard():
+        case Project():
             workspace = instance.workspace
     uuid = str(workspace.uuid)
     group_send(
@@ -91,13 +91,13 @@ def send_workspace_change_signal(instance: HasOrIsWorkspace) -> None:
     )
 
 
-def send_workspace_board_change_signal(
-    workspace_board: WorkspaceBoard,
+def send_project_change_signal(
+    project: Project,
 ) -> None:
-    """Send workspace_board.change signal to correct group."""
-    uuid = str(workspace_board.uuid)
+    """Send project.change signal to correct group."""
+    uuid = str(project.uuid)
     group_send(
-        f"workspace-board-{uuid}",
+        f"project-{uuid}",
         {
             "type": "workspace.board.change",
             "uuid": uuid,

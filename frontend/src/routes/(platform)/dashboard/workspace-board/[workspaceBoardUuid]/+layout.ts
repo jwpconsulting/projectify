@@ -19,21 +19,21 @@ import { error } from "@sveltejs/kit";
 
 import {
     currentWorkspace,
-    currentWorkspaceBoard,
+    currentProject,
 } from "$lib/stores/dashboard";
-import type { WorkspaceBoardDetail } from "$lib/types/workspace";
+import type { ProjectDetail } from "$lib/types/workspace";
 
 import type { LayoutLoadEvent } from "./$types";
 
 interface Data {
-    project: WorkspaceBoardDetail;
+    project: ProjectDetail;
 }
 
 export async function load({
     params: { projectUuid },
     fetch,
 }: LayoutLoadEvent): Promise<Data> {
-    const project = await currentWorkspaceBoard.loadUuid(
+    const project = await currentProject.loadUuid(
         projectUuid,
         { fetch },
     );

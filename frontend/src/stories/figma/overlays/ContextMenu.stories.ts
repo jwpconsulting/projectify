@@ -50,7 +50,7 @@ export const SideNav: Story = {
     },
 };
 
-export const WorkspaceBoard: Story = {
+export const Project: Story = {
     args: {
         target: "project",
     },

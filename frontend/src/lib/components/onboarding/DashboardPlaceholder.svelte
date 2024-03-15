@@ -34,7 +34,7 @@
         Task,
         Workspace,
         Section,
-        WorkspaceBoardDetail,
+        ProjectDetail,
         WorkspaceUser,
         WorkspaceDetail,
         WorkspaceQuota,
@@ -57,7 +57,7 @@
         workspace_user_invites: [],
         quota,
     };
-    const projectFallback: WorkspaceBoardDetail = {
+    const projectFallback: ProjectDetail = {
         uuid: "does-not-exist",
         title: $_("onboarding.new-project.default-name"),
         modified: "",
@@ -111,20 +111,20 @@
         | {
               kind: "new-project";
               workspace: Workspace;
-              project?: WorkspaceBoardDetail;
+              project?: ProjectDetail;
               title: string;
           }
         | {
               kind: "new-task";
               workspace: Workspace;
-              project: WorkspaceBoardDetail;
+              project: ProjectDetail;
               sectionTitle: string;
               title: string;
           }
         | {
               kind: "new-label";
               workspace: Workspace;
-              project: WorkspaceBoardDetail;
+              project: ProjectDetail;
               section: Section;
               task: Task;
               title: string;
@@ -132,7 +132,7 @@
         | {
               kind: "assign-task";
               workspace: Workspace;
-              project: WorkspaceBoardDetail;
+              project: ProjectDetail;
               section: Section;
               task: Task;
               label: Label;
@@ -206,7 +206,7 @@
                   ],
               }
             : undefined),
-    } satisfies WorkspaceBoardDetail;
+    } satisfies ProjectDetail;
 
     const width = 500;
 </script>

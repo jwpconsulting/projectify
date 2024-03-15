@@ -42,20 +42,20 @@ from projectify.user.models import User
 
 from .models.task import Task
 from .models.workspace import Workspace
-from .models.workspace_board import WorkspaceBoard
+from .models.project import Project
 from .selectors.quota import workspace_get_all_quotas
 from .selectors.task import TaskDetailQuerySet, task_find_by_task_uuid
 from .selectors.workspace import (
     WorkspaceDetailQuerySet,
     workspace_find_by_workspace_uuid,
 )
-from .selectors.workspace_board import (
-    WorkspaceBoardDetailQuerySet,
-    workspace_board_find_by_workspace_board_uuid,
+from .selectors.project import (
+    ProjectDetailQuerySet,
+    project_find_by_project_uuid,
 )
 from .serializers.task_detail import TaskDetailSerializer
 from .serializers.workspace import WorkspaceDetailSerializer
-from .serializers.workspace_board import WorkspaceBoardDetailSerializer
+from .serializers.project import ProjectDetailSerializer
 from .types import ConsumerEvent, Message
 
 CODE_OBJECT_DISAPPEARED = 404
@@ -137,7 +137,7 @@ class WorkspaceConsumer(BaseConsumer):
         return workspace_find_by_workspace_uuid(who=user, workspace_uuid=uuid)
 
     def workspace_change(self, event: ConsumerEvent) -> None:
-        """Respond to workspace board change event."""
+        """Respond to project change event."""
         workspace = workspace_find_by_workspace_uuid(
             who=self.user,
             workspace_uuid=self.uuid,
@@ -153,35 +153,35 @@ class WorkspaceConsumer(BaseConsumer):
         self.send_json(serialized)
 
 
-class WorkspaceBoardConsumer(BaseConsumer):
-    """Consumer for WorkspaceBoard ws."""
+class ProjectConsumer(BaseConsumer):
+    """Consumer for Project ws."""
 
     def get_group_name(self) -> str:
         """Return group name."""
         uuid = self.scope["url_route"]["kwargs"]["uuid"]
-        return f"workspace-board-{uuid}"
+        return f"project-{uuid}"
 
-    def get_object(self, user: User, uuid: UUID) -> Optional[WorkspaceBoard]:
-        """Get workspace board."""
-        return workspace_board_find_by_workspace_board_uuid(
-            workspace_board_uuid=uuid,
+    def get_object(self, user: User, uuid: UUID) -> Optional[Project]:
+        """Get project."""
+        return project_find_by_project_uuid(
+            project_uuid=uuid,
             who=user,
         )
 
-    def workspace_board_change(self, event: ConsumerEvent) -> None:
-        """Respond to workspace board change event."""
-        workspace_board = workspace_board_find_by_workspace_board_uuid(
+    def project_change(self, event: ConsumerEvent) -> None:
+        """Respond to project change event."""
+        project = project_find_by_project_uuid(
             who=self.user,
-            workspace_board_uuid=self.uuid,
-            qs=WorkspaceBoardDetailQuerySet,
+            project_uuid=self.uuid,
+            qs=ProjectDetailQuerySet,
         )
 
-        if workspace_board is None:
+        if project is None:
             self.disconnect(close_code=CODE_OBJECT_DISAPPEARED)
             return
 
         serialized = serialize(
-            WorkspaceBoardDetailSerializer, workspace_board, event
+            ProjectDetailSerializer, project, event
         )
         self.send_json(serialized)
 
@@ -199,7 +199,7 @@ class TaskConsumer(BaseConsumer):
         return task_find_by_task_uuid(who=user, task_uuid=uuid)
 
     def task_change(self, event: ConsumerEvent) -> None:
-        """Respond to workspace board change event."""
+        """Respond to project change event."""
         task = task_find_by_task_uuid(
             who=self.user, task_uuid=self.uuid, qs=TaskDetailQuerySet
         )

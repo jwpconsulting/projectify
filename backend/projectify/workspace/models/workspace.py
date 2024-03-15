@@ -51,7 +51,7 @@ if TYPE_CHECKING:
 
     from . import (
         Label,
-        WorkspaceBoard,
+        Project,
         WorkspaceUser,
     )
     from .workspace_user_invite import (
@@ -85,7 +85,7 @@ class Workspace(TitleDescriptionModel, BaseModel):
         customer: RelatedField[None, "Customer"]
 
         # Related sets
-        workspaceboard_set: RelatedManager["WorkspaceBoard"]
+        project_set: RelatedManager["Project"]
         workspaceuser_set: RelatedManager["WorkspaceUser"]
         workspaceuserinvite_set: RelatedManager["WorkspaceUserInvite"]
         label_set: RelatedManager["Label"]

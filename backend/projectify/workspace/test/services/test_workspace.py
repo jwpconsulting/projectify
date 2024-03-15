@@ -21,11 +21,11 @@ from rest_framework.exceptions import ValidationError
 
 from projectify.user.models.user import User
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_board import WorkspaceBoard
+from projectify.workspace.models.project import Project
 from projectify.workspace.models.workspace_user import WorkspaceUser
 from projectify.workspace.services.workspace import workspace_delete
-from projectify.workspace.services.workspace_board import (
-    workspace_board_delete,
+from projectify.workspace.services.project import (
+    project_delete,
 )
 from projectify.workspace.services.workspace_user import workspace_user_delete
 from projectify.workspace.services.workspace_user_invite import (
@@ -48,7 +48,7 @@ def test_workspace_delete(
 
 def test_workspace_delete_dependencies(
     workspace: Workspace,
-    workspace_board: WorkspaceBoard,
+    project: Project,
     other_workspace_user: WorkspaceUser,
     user: User,
     faker: Faker,
@@ -78,9 +78,9 @@ def test_workspace_delete_dependencies(
 
     with pytest.raises(ValidationError) as error:
         workspace_delete(workspace=workspace, who=user)
-    assert error.match("no workspace boards")
+    assert error.match("no projects")
 
     # Finally it will work
-    workspace_board_delete(who=user, workspace_board=workspace_board)
+    project_delete(who=user, project=project)
     workspace_delete(workspace=workspace, who=user)
     assert Workspace.objects.count() == count - 1

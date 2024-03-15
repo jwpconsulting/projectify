@@ -24,7 +24,7 @@ from django.db.models import Prefetch, QuerySet
 from projectify.user.models import User
 
 from ..models.workspace import Workspace
-from ..models.workspace_board import WorkspaceBoard
+from ..models.project import Project
 from ..models.workspace_user import WorkspaceUser
 from ..models.workspace_user_invite import WorkspaceUserInvite
 
@@ -34,8 +34,8 @@ WorkspaceDetailQuerySet = Workspace.objects.prefetch_related(
     "label_set",
 ).prefetch_related(
     Prefetch(
-        "workspaceboard_set",
-        queryset=WorkspaceBoard.objects.filter(archived__isnull=True),
+        "project_set",
+        queryset=Project.objects.filter(archived__isnull=True),
     ),
     Prefetch(
         "workspaceuser_set",

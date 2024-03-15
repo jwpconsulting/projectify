@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Workspace board serializers."""
+"""Project serializers."""
 from projectify.workspace.serializers.task import (
     TaskWithSubTaskSerializer,
 )
@@ -44,9 +44,9 @@ class SectionSerializer(base.SectionBaseSerializer):
         )
 
 
-class WorkspaceBoardDetailSerializer(base.WorkspaceBoardBaseSerializer):
+class ProjectDetailSerializer(base.ProjectBaseSerializer):
     """
-    Workspace board serializer.
+    Project serializer.
 
     Serializes in both directions, workspace and sections, including their
     tasks.
@@ -58,11 +58,11 @@ class WorkspaceBoardDetailSerializer(base.WorkspaceBoardBaseSerializer):
 
     workspace = base.WorkspaceBaseSerializer(read_only=True)
 
-    class Meta(base.WorkspaceBoardBaseSerializer.Meta):
+    class Meta(base.ProjectBaseSerializer.Meta):
         """Meta."""
 
         fields = (
-            *base.WorkspaceBoardBaseSerializer.Meta.fields,
+            *base.ProjectBaseSerializer.Meta.fields,
             "sections",
             "workspace",
         )

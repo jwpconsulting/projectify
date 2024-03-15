@@ -29,7 +29,7 @@ from ...models.task import Task
 from ...models.workspace import Workspace
 from ...models.workspace_user import WorkspaceUser
 from ...services.workspace import workspace_add_user
-from ...services.workspace_board import workspace_board_create
+from ...services.project import project_create
 
 
 @pytest.mark.django_db
@@ -40,30 +40,30 @@ class TestWorkspace:
         """Assert that the creates."""
         assert workspace
 
-    def test_add_workspace_board(
+    def test_add_project(
         self,
         workspace: Workspace,
         user: User,
         workspace_user: WorkspaceUser,
     ) -> None:
-        """Test adding a workspace board."""
-        assert workspace.workspaceboard_set.count() == 0
-        board = workspace_board_create(
+        """Test adding a project."""
+        assert workspace.project_set.count() == 0
+        board = project_create(
             workspace=workspace,
             title="foo",
             description="bar",
             who=user,
         )
-        assert workspace.workspaceboard_set.count() == 1
-        board2 = workspace_board_create(
+        assert workspace.project_set.count() == 1
+        board2 = project_create(
             workspace=workspace,
             title="foo",
             description="bar",
             who=user,
         )
-        assert workspace.workspaceboard_set.count() == 2
-        # Workspace boards are ordered by most recently created
-        assert list(workspace.workspaceboard_set.all()) == [
+        assert workspace.project_set.count() == 2
+        # Projects are ordered by most recently created
+        assert list(workspace.project_set.all()) == [
             board2,
             board,
         ]

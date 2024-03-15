@@ -38,9 +38,9 @@
         openConstructiveOverlay,
         openDestructiveOverlay,
     } from "$lib/stores/globalUi";
-    import type { WorkspaceBoard, Section } from "$lib/types/workspace";
+    import type { Project, Section } from "$lib/types/workspace";
 
-    export let project: WorkspaceBoard;
+    export let project: Project;
     export let section: Section;
 
     let closed: boolean;

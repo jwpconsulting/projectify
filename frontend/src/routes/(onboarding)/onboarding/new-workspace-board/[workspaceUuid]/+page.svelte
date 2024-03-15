@@ -23,7 +23,7 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { goto } from "$lib/navigation";
-    import { createWorkspaceBoard } from "$lib/repository/workspace/project";
+    import { createProject } from "$lib/repository/workspace/project";
     import { getNewTaskUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
@@ -40,7 +40,7 @@
         if (!title) {
             throw new Error("Expected title");
         }
-        const result = await createWorkspaceBoard(
+        const result = await createProject(
             workspace,
             {
                 title,

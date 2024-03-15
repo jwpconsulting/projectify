@@ -21,27 +21,27 @@
     import Layout from "$lib/figma/overlays/constructive/Layout.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { goto } from "$lib/navigation";
-    import { archiveWorkspaceBoard } from "$lib/repository/workspace/project";
+    import { archiveProject } from "$lib/repository/workspace/project";
     import {
         rejectConstructiveOverlay,
         resolveConstructiveOverlay,
     } from "$lib/stores/globalUi";
     import type { FormViewState } from "$lib/types/ui";
-    import type { WorkspaceBoard } from "$lib/types/workspace";
-    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
+    import type { Project } from "$lib/types/workspace";
+    import { getDashboardProjectUrl } from "$lib/urls";
 
-    export let project: WorkspaceBoard;
+    export let project: Project;
 
     let state: FormViewState = { kind: "start" };
 
     async function onSubmit() {
         state = { kind: "submitting" };
-        const result = await archiveWorkspaceBoard(project, false, {
+        const result = await archiveProject(project, false, {
             fetch,
         });
         if (result.ok) {
             resolveConstructiveOverlay();
-            await goto(getDashboardWorkspaceBoardUrl(project.uuid));
+            await goto(getDashboardProjectUrl(project.uuid));
             return;
         }
         state = {

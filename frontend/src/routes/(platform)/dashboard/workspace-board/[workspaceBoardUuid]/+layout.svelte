@@ -22,7 +22,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import type { SectionWithTasks } from "$lib/types/workspace";
-    import { getWorkspaceBoardSearchUrl } from "$lib/urls/dashboard";
+    import { getProjectSearchUrl } from "$lib/urls/dashboard";
 
     import type { LayoutData } from "./$types";
 
@@ -42,7 +42,7 @@
 >
     {#if projectHasTasks}
         <form
-            action={getWorkspaceBoardSearchUrl(project)}
+            action={getProjectSearchUrl(project)}
             class="flex w-full max-w-md flex-col gap-2 rounded-xl bg-foreground px-4 py-4"
         >
             <!-- XXX definitely not ideal, placeholder will disappear after input -->

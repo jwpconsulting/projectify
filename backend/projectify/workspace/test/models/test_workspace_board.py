@@ -14,49 +14,49 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Workspace board model tests."""
+"""Project model tests."""
 import pytest
 
 from ...models.workspace import Workspace
-from ...models.workspace_board import WorkspaceBoard
+from ...models.project import Project
 from ...models.workspace_user import WorkspaceUser
 from ...services.section import section_create
 
 
 @pytest.mark.django_db
-class TestWorkspaceBoard:
-    """Test WorkspaceBoard."""
+class TestProject:
+    """Test Project."""
 
     def test_factory(
         self,
         workspace: Workspace,
-        workspace_board: WorkspaceBoard,
+        project: Project,
     ) -> None:
-        """Test workspace board creation works."""
-        assert workspace_board.workspace == workspace
+        """Test project creation works."""
+        assert project.workspace == workspace
 
     def test_add_section(
         self,
-        workspace_board: WorkspaceBoard,
+        project: Project,
         workspace_user: WorkspaceUser,
     ) -> None:
         """Test section creation."""
-        assert workspace_board.section_set.count() == 0
+        assert project.section_set.count() == 0
         section = section_create(
             who=workspace_user.user,
-            workspace_board=workspace_board,
+            project=project,
             title="hello",
             description="world",
         )
-        assert workspace_board.section_set.count() == 1
+        assert project.section_set.count() == 1
         section2 = section_create(
             who=workspace_user.user,
-            workspace_board=workspace_board,
+            project=project,
             title="hello",
             description="world",
         )
-        assert workspace_board.section_set.count() == 2
-        assert list(workspace_board.section_set.all()) == [
+        assert project.section_set.count() == 2
+        assert list(project.section_set.all()) == [
             section,
             section2,
         ]

@@ -22,7 +22,7 @@
     import Loading from "$lib/components/loading.svelte";
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
-    import SelectWorkspaceBoard from "$lib/figma/navigation/side-nav/SelectWorkspaceBoard.svelte";
+    import SelectProject from "$lib/figma/navigation/side-nav/SelectProject.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import {
         boardExpandOpen,
@@ -35,9 +35,9 @@
 
     export let workspace: Workspace;
 
-    async function openCreateWorkspaceBoard() {
+    async function openCreateProject() {
         const target = {
-            kind: "createWorkspaceBoard" as const,
+            kind: "createProject" as const,
             workspace,
         };
         await openConstructiveOverlay(target);
@@ -72,7 +72,7 @@
             </div>
         {:else}
             {#each workspace.projects as project (project.uuid)}
-                <SelectWorkspaceBoard {workspace} {project} />
+                <SelectProject {workspace} {project} />
             {/each}
         {/if}
     </div>
@@ -82,7 +82,7 @@
             icon={Plus}
             color="primary"
             state="normal"
-            kind={{ kind: "button", action: openCreateWorkspaceBoard }}
+            kind={{ kind: "button", action: openCreateProject }}
         />
     {/if}
 {/if}

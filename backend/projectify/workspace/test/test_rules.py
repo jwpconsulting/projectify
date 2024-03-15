@@ -28,7 +28,7 @@ from projectify.workspace.models.section import (
 )
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_board import WorkspaceBoard
+from projectify.workspace.models.project import Project
 from projectify.workspace.models.workspace_user import WorkspaceUser
 from projectify.workspace.services.chat_message import chat_message_create
 from projectify.workspace.services.label import label_create
@@ -40,8 +40,8 @@ from projectify.workspace.services.task import task_create
 from projectify.workspace.services.workspace import (
     workspace_add_user,
 )
-from projectify.workspace.services.workspace_board import (
-    workspace_board_create,
+from projectify.workspace.services.project import (
+    project_create,
 )
 from projectify.workspace.services.workspace_user_invite import (
     workspace_user_invite_create,
@@ -166,7 +166,7 @@ class TestTrialRules:
                 "SubTask": 1,
                 "Task": 1,
                 "TaskLabel": 1,
-                "WorkspaceBoard": 1,
+                "Project": 1,
                 "Section": 1,
                 # We need at least one user to use the workspace at all
                 "WorkspaceUserAndInvite": 2,
@@ -261,27 +261,27 @@ class TestTrialRules:
             raise_exception=False,
         )
 
-    def test_create_workspace_board(
+    def test_create_project(
         self,
         user: User,
         workspace_user: WorkspaceUser,
         workspace: Workspace,
     ) -> None:
-        """Assert only 1 workspace board can be created."""
+        """Assert only 1 project can be created."""
         assert validate_perm(
-            "workspace.create_workspace_board", user, workspace
+            "workspace.create_project", user, workspace
         )
         customer_cancel_subscription(customer=workspace.customer)
         assert validate_perm(
-            "workspace.create_workspace_board", user, workspace
+            "workspace.create_project", user, workspace
         )
-        workspace_board_create(
+        project_create(
             workspace=workspace,
-            title="workspace board",
+            title="project",
             who=workspace_user.user,
         )
         assert not validate_perm(
-            "workspace.create_workspace_board",
+            "workspace.create_project",
             user,
             workspace,
             raise_exception=False,
@@ -291,7 +291,7 @@ class TestTrialRules:
         self,
         user: User,
         workspace_user: WorkspaceUser,
-        workspace_board: WorkspaceBoard,
+        project: Project,
         workspace: Workspace,
     ) -> None:
         """Assert only 100 sections can be created."""
@@ -307,7 +307,7 @@ class TestTrialRules:
             workspace,
         )
         section_create(
-            workspace_board=workspace_board,
+            project=project,
             title="section",
             who=workspace_user.user,
         )

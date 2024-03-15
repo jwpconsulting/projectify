@@ -42,7 +42,7 @@ export const contextMenus: Record<string, ContextMenuType> = {
         kind: "sideNav" as const,
         workspace,
     },
-    "Workspace board": {
+    "Project": {
         kind: "project" as const,
         workspace,
         project,
@@ -116,7 +116,7 @@ export const destructiveOverlays = makeStorybookSelect({
         tasks: [task],
     },
     "Archive board": {
-        kind: "archiveWorkspaceBoard" as const,
+        kind: "archiveProject" as const,
         project: {
             title: "veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryvery long word",
             created: "",
@@ -125,7 +125,7 @@ export const destructiveOverlays = makeStorybookSelect({
         },
     },
     "Delete board": {
-        kind: "deleteWorkspaceBoard" as const,
+        kind: "deleteProject" as const,
         project,
     },
 });
@@ -133,10 +133,10 @@ export const destructiveOverlays = makeStorybookSelect({
 export const constructiveOverlays =
     makeStorybookSelect<ConstructiveOverlayType>({
         "Update project": {
-            kind: "updateWorkspaceBoard",
+            kind: "updateProject",
             project,
         },
-        "Create project": { kind: "createWorkspaceBoard", workspace },
+        "Create project": { kind: "createProject", workspace },
         "Invite workspace users": { kind: "inviteWorkspaceUser", workspace },
         "Create section": {
             kind: "createSection",
@@ -147,7 +147,7 @@ export const constructiveOverlays =
             section,
         },
         "Recover project": {
-            kind: "recoverWorkspaceBoard",
+            kind: "recoverProject",
             project,
         },
     });

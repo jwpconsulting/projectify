@@ -22,26 +22,26 @@
     import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import { goto } from "$lib/navigation";
-    import { archiveWorkspaceBoard as repoArchiveWorkspaceBoard } from "$lib/repository/workspace/project";
+    import { archiveProject as repoArchiveProject } from "$lib/repository/workspace/project";
     import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import {
         openConstructiveOverlay,
         openDestructiveOverlay,
     } from "$lib/stores/globalUi";
-    import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
+    import type { Workspace, Project } from "$lib/types/workspace";
     import { getArchiveUrl } from "$lib/urls";
 
     export let workspace: Workspace;
-    export let project: WorkspaceBoard;
+    export let project: Project;
 
     async function editBoard() {
         await openConstructiveOverlay({
-            kind: "updateWorkspaceBoard",
+            kind: "updateProject",
             project,
         });
     }
 
-    async function archiveWorkspaceBoard() {
+    async function archiveProject() {
         // XXX this gives off a bit of a smell, because we accidentally
         // involve the context menu itself in a stack trace when the overlay
         // is cancelled:
@@ -81,11 +81,11 @@
          *     mount ContextMenuButton.svelte:413
          *     m svelte-hooks.js:291
          *     mount_component Component.js:44
-         *     mount WorkspaceBoard.svelte:83
+         *     mount Project.svelte:83
          *     mount Layout.svelte:53
          *     m svelte-hooks.js:291
          *     mount_component Component.js:44
-         *     mount WorkspaceBoard.svelte:146
+         *     mount Project.svelte:146
          *     m svelte-hooks.js:291
          *     mount_component Component.js:44
          *     mount ContextMenu.svelte:359
@@ -104,7 +104,7 @@
          *     update index.js:69
          *     openContextMenu globalUi.ts:156
          *     openContextMenu globalUi.ts:155
-         *     toggleMenu SelectWorkspaceBoard.svelte:30
+         *     toggleMenu SelectProject.svelte:30
          *     dispose CircleIcon.svelte:43
          *     prevent_default dom.js:369
          *     stop_propagation dom.js:379
@@ -114,7 +114,7 @@
          *     mount CircleIcon.svelte:292
          *     m svelte-hooks.js:291
          *     mount_component Component.js:44
-         *     mount SelectWorkspaceBoard.svelte:151
+         *     mount SelectProject.svelte:151
          *     m svelte-hooks.js:291
          *     mount_component Component.js:44
          *     mount Boards.svelte:336
@@ -131,10 +131,10 @@
         // TODO move awaiting a closed context menu away from awaiting a
         // successful dialog. Reason: We should separate concerns here.
         await openDestructiveOverlay({
-            kind: "archiveWorkspaceBoard",
+            kind: "archiveProject",
             project,
         });
-        await repoArchiveWorkspaceBoard(project, true, { fetch });
+        await repoArchiveProject(project, true, { fetch });
         await goto(getArchiveUrl(workspace.uuid));
     }
 </script>
@@ -153,7 +153,7 @@
     <ContextMenuButton
         kind={{
             kind: "button",
-            action: archiveWorkspaceBoard,
+            action: archiveProject,
             disabled: !$currentWorkspaceUserCan("update", "project"),
         }}
         label={$_(

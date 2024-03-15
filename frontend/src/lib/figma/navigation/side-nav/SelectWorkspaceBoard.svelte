@@ -21,17 +21,17 @@
 
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import {
-        currentWorkspaceBoard,
-        selectWorkspaceBoardUuid,
+        currentProject,
+        selectProjectUuid,
     } from "$lib/stores/dashboard";
     import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openContextMenu } from "$lib/stores/globalUi";
-    import type { Workspace, WorkspaceBoard } from "$lib/types/workspace";
-    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
+    import type { Workspace, Project } from "$lib/types/workspace";
+    import { getDashboardProjectUrl } from "$lib/urls";
 
-    $: currentWorkspaceBoardUuid = $currentWorkspaceBoard?.uuid;
+    $: currentProjectUuid = $currentProject?.uuid;
 
-    export let project: WorkspaceBoard;
+    export let project: Project;
     export let workspace: Workspace;
 
     let buttonRef: HTMLElement;
@@ -60,14 +60,14 @@
 <a
     class="group block flex w-full flex-row justify-between gap-1 px-4 py-1 hover:bg-base-200"
     class:bg-base-200={contextMenuOpen}
-    href={getDashboardWorkspaceBoardUrl(project.uuid)}
+    href={getDashboardProjectUrl(project.uuid)}
     on:click={() =>
-        selectWorkspaceBoardUuid(workspace.uuid, project.uuid)}
+        selectProjectUuid(workspace.uuid, project.uuid)}
 >
     <div class="flex min-w-0 flex-row items-center gap-2">
         <div
             class={`rounded-md p-1 ${
-                project.uuid === currentWorkspaceBoardUuid
+                project.uuid === currentProjectUuid
                     ? "bg-primary-focus"
                     : ""
             }`}
@@ -76,7 +76,7 @@
                 src={Folder}
                 theme="outline"
                 class={`h-4 w-4 ${
-                    project.uuid === currentWorkspaceBoardUuid
+                    project.uuid === currentProjectUuid
                         ? "text-base-100"
                         : ""
                 }`}

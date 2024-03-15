@@ -14,18 +14,18 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Test workspace board selectors."""
+"""Test project selectors."""
 import pytest
 
-from projectify.workspace.services.workspace_board import (
-    workspace_board_archive,
+from projectify.workspace.services.project import (
+    project_archive,
 )
 
-from ...models.workspace_board import WorkspaceBoard
+from ...models.project import Project
 from ...models.workspace_user import WorkspaceUser
-from ...selectors.workspace_board import (
-    workspace_board_find_by_workspace_board_uuid,
-    workspace_board_find_by_workspace_uuid,
+from ...selectors.project import (
+    project_find_by_project_uuid,
+    project_find_by_workspace_uuid,
 )
 
 # So apparently this is also possible:
@@ -33,27 +33,27 @@ pytestmark = pytest.mark.django_db
 # See https://docs.pytest.org/en/stable/example/markers.html#scoped-marking
 
 
-def test_workspace_board_find_by_workspace_uuid(
-    workspace_board: WorkspaceBoard,
+def test_project_find_by_workspace_uuid(
+    project: Project,
     workspace_user: WorkspaceUser,
     unrelated_workspace_user: WorkspaceUser,
 ) -> None:
-    """Test workspace_board_find_by_workspace_uuid."""
-    qs = workspace_board_find_by_workspace_uuid(
+    """Test project_find_by_workspace_uuid."""
+    qs = project_find_by_workspace_uuid(
         who=workspace_user.user,
         workspace_uuid=workspace_user.workspace.uuid,
     )
-    assert qs.get() == workspace_board
+    assert qs.get() == project
 
     # Unrelated user can not access
-    qs = workspace_board_find_by_workspace_uuid(
+    qs = project_find_by_workspace_uuid(
         who=unrelated_workspace_user.user,
         workspace_uuid=workspace_user.workspace.uuid,
     )
     assert qs.count() == 0
 
     # Filter by ONLY archived, and we will get nothing
-    qs = workspace_board_find_by_workspace_uuid(
+    qs = project_find_by_workspace_uuid(
         who=workspace_user.user,
         workspace_uuid=workspace_user.workspace.uuid,
         archived=True,
@@ -61,56 +61,56 @@ def test_workspace_board_find_by_workspace_uuid(
     assert qs.count() == 0
 
 
-def test_workspace_board_find_by_workspace_board_uuid(
-    workspace_board: WorkspaceBoard,
+def test_project_find_by_project_uuid(
+    project: Project,
     workspace_user: WorkspaceUser,
     unrelated_workspace_user: WorkspaceUser,
-    unrelated_workspace_board: WorkspaceBoard,
+    unrelated_project: Project,
 ) -> None:
-    """Test finding workspace board for a user by UUID."""
-    # Normal case, user finds their workspace board
-    assert workspace_board_find_by_workspace_board_uuid(
-        workspace_board_uuid=workspace_board.uuid,
+    """Test finding project for a user by UUID."""
+    # Normal case, user finds their project
+    assert project_find_by_project_uuid(
+        project_uuid=project.uuid,
         who=workspace_user.user,
     )
     # Unrelated user finds their board
-    assert workspace_board_find_by_workspace_board_uuid(
-        workspace_board_uuid=unrelated_workspace_board.uuid,
+    assert project_find_by_project_uuid(
+        project_uuid=unrelated_project.uuid,
         who=unrelated_workspace_user.user,
     )
     # Unrelated workspace user does not have access
     assert (
-        workspace_board_find_by_workspace_board_uuid(
-            workspace_board_uuid=workspace_board.uuid,
+        project_find_by_project_uuid(
+            project_uuid=project.uuid,
             who=unrelated_workspace_user.user,
         )
         is None
     )
     # And our user can not see unrelated user's board
     assert (
-        workspace_board_find_by_workspace_board_uuid(
-            workspace_board_uuid=unrelated_workspace_board.uuid,
+        project_find_by_project_uuid(
+            project_uuid=unrelated_project.uuid,
             who=workspace_user.user,
         )
         is None
     )
 
     # Archiving hides it unless passing extra flag
-    workspace_board_archive(
+    project_archive(
         who=workspace_user.user,
-        workspace_board=workspace_board,
+        project=project,
         archived=True,
     )
     assert (
-        workspace_board_find_by_workspace_board_uuid(
-            workspace_board_uuid=workspace_board.uuid,
+        project_find_by_project_uuid(
+            project_uuid=project.uuid,
             who=workspace_user.user,
         )
         is None
     )
     # Passing archived will make it show up again
-    assert workspace_board_find_by_workspace_board_uuid(
-        workspace_board_uuid=workspace_board.uuid,
+    assert project_find_by_project_uuid(
+        project_uuid=project.uuid,
         who=workspace_user.user,
         archived=True,
     )

@@ -45,7 +45,7 @@ export function clearSelectedWorkspaceUuidIfMatch(uuid: string) {
     });
 }
 
-const _selectedWorkspaceBoardUuids = persisted<Map<string, string>>(
+const _selectedProjectUuids = persisted<Map<string, string>>(
     "selected-project-uuid",
     new Map(),
     {
@@ -66,16 +66,16 @@ const _selectedWorkspaceBoardUuids = persisted<Map<string, string>>(
         },
     },
 );
-export const selectedWorkspaceBoardUuids = readonly(
-    _selectedWorkspaceBoardUuids,
+export const selectedProjectUuids = readonly(
+    _selectedProjectUuids,
 );
-export function selectWorkspaceBoardUuid(
+export function selectProjectUuid(
     workspaceUuid: string,
     projectUuid: string,
 ) {
-    _selectedWorkspaceBoardUuids.update(($selectedWorkspaceBoardUuids) => {
-        $selectedWorkspaceBoardUuids.set(workspaceUuid, projectUuid);
-        return $selectedWorkspaceBoardUuids;
+    _selectedProjectUuids.update(($selectedProjectUuids) => {
+        $selectedProjectUuids.set(workspaceUuid, projectUuid);
+        return $selectedProjectUuids;
     });
 }
 

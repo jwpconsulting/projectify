@@ -194,7 +194,7 @@ nvim (ag \
   --ignore docs/text_replace.md \
   "workspace[_ -]?[bB]oard[_ -]?s?" \
   . \
-) -c "bufdo %s/\vworkspace[_ -]?[bB]oard(s?)([_ -][sS]section)@!/project\1/ce"
+) -c "bufdo %s/\vworkspace[_ -]?[bB]oard(s?)([_ -][sS]ection)@!/project\1/ce"
 ```
 
 For upper case:
@@ -206,5 +206,5 @@ nvim (ag \
   --ignore docs/text_replace.md \
   "Workspace[_ -]?[bB]oard[_ -]?s?" \
   . \
-) -c "bufdo %s/\vWorkspace[_ -]?[bB]oard(s?)/project\1/ce"
+) -c "bufdo %s/\vWorkspace[_ -]?[bB]oard(s?)(_ -][sS]ection)@!/Project\1/ce"
 ```

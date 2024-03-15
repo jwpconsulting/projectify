@@ -21,7 +21,7 @@
     import DashboardPlaceholder from "$lib/components/onboarding/DashboardPlaceholder.svelte";
     import Onboarding from "$lib/components/Onboarding.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { getDashboardWorkspaceBoardUrl, getSettingsUrl } from "$lib/urls";
+    import { getDashboardProjectUrl, getSettingsUrl } from "$lib/urls";
 
     import type { PageData } from "./$types";
 
@@ -38,7 +38,7 @@
     nextLabel={$_("onboarding.assign-task.continue")}
     nextAction={{
         kind: "a",
-        href: getDashboardWorkspaceBoardUrl(project.uuid),
+        href: getDashboardProjectUrl(project.uuid),
     }}
 >
     <svelte:fragment slot="title"

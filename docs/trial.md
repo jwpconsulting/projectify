@@ -61,11 +61,11 @@ limitations are as follows:
   creator/owner of the workspace. This also includes open invites. (i.e., sum
   invite
   + user <= 2)
-- A trial workspace can hold 10 workspace boards
+- A trial workspace can hold 10 projects
 - A trial workspace can hold 100 sections in total, with no
-  per-workspace board limitations
+  per-project limitations
 - A trial workspace can hold 1000 tasks. Again, there is no limitation where
-  those tasks can be put, they could all be in the same workspace board or
+  those tasks can be put, they could all be in the same project or
   section.
 - A trial workspace can hold 10 labels
 - A trial workspace can not have any chat messages (they are not supported by
@@ -89,7 +89,7 @@ One can imagine structured data coming back like so, for a workspace object:
 {
   "uuid": "workspace-uuid",
   "quota": {
-    "workspace_boards": {
+    "projects": {
       "current": 5,
       "limit": 10
     },

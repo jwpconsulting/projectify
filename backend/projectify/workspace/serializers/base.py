@@ -98,15 +98,15 @@ class WorkspaceUserBaseSerializer(
         )
 
 
-class WorkspaceBoardBaseSerializer(
-    serializers.ModelSerializer[models.WorkspaceBoard]
+class ProjectBaseSerializer(
+    serializers.ModelSerializer[models.Project]
 ):
-    """Workspace board base serializer."""
+    """Project base serializer."""
 
     class Meta:
         """Meta."""
 
-        model = models.WorkspaceBoard
+        model = models.Project
         fields = (
             *timestamps,
             *title_description,

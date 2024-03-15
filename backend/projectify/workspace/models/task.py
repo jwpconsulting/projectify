@@ -63,7 +63,7 @@ if TYPE_CHECKING:
         Section,
         SubTask,
         TaskLabel,
-        WorkspaceBoard,
+        Project,
         WorkspaceUser,
     )
 
@@ -75,7 +75,7 @@ class TaskQuerySet(models.QuerySet["Task"]):
     def filter_by_workspace(self, workspace: Workspace) -> Self:
         """Filter by workspace."""
         return self.filter(
-            workspace_board_section__workspace_board__workspace=workspace,
+            workspace_board_section__project__workspace=workspace,
         )
 
     # TODO use selector
@@ -95,7 +95,7 @@ class TaskQuerySet(models.QuerySet["Task"]):
 
     # TODO use selector
     def filter_by_project(
-        self, project: "WorkspaceBoard"
+        self, project: "Project"
     ) -> Self:
         """Filter by tasks contained in project."""
         return self.filter(

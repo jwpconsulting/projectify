@@ -17,16 +17,16 @@
  */
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import WorkspaceBoard from "$lib/figma/overlays/context-menu/WorkspaceBoard.svelte";
+import Project from "$lib/figma/overlays/context-menu/Project.svelte";
 import { project } from "$lib/storybook";
 
-const meta: Meta<WorkspaceBoard> = {
-    component: WorkspaceBoard,
+const meta: Meta<Project> = {
+    component: Project,
     argTypes: {},
     args: { project },
 };
 export default meta;
 
-type Story = StoryObj<WorkspaceBoard>;
+type Story = StoryObj<Project>;
 
 export const Default: Story = {};

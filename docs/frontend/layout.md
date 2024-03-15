@@ -6,9 +6,9 @@ Assuming all paths relative to `src/routes`.
 - `(platform)/dashboard/task/[taskUuid]/+layout.ts`: Layout for task CRUD
 - `(platform)/dashboard/workspace/[workspaceUuid]/+layout.ts`: Layout for
   workspace loading (redirect to ws board) and settings
-- `(platform)/dashboard/workspace-board/[workspaceBoardUuid]/+layout.ts`: Layout for
-  workspace board view (the main view in this application)
-- `(platform)/dashboard/section/[workspaceBoardUuid]/+layout.ts`: Layout for
+- `(platform)/dashboard/project/[projectUuid]/+layout.ts`: Layout for
+  project view (the main view in this application)
+- `(platform)/dashboard/section/[projectUuid]/+layout.ts`: Layout for
   section view for task creation, redirecting to ws board
   scrolled to section
 - `(platform)/+layout.ts`: Layout for logged in users

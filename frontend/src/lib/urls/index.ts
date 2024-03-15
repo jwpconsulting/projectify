@@ -29,7 +29,7 @@ export function getDashboardWorkspaceUrl(workspaceUuid: string) {
 
 // TODO put me into dashboard urls
 // TODO accept project directly
-export function getDashboardWorkspaceBoardUrl(projectUuid: string) {
+export function getDashboardProjectUrl(projectUuid: string) {
     return `/dashboard/project/${projectUuid}`;
 }
 

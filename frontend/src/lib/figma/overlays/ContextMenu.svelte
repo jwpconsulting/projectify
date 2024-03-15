@@ -24,7 +24,7 @@
     import SideNavContextMenu from "$lib/figma/overlays/context-menu/SideNavContextMenu.svelte";
     import Task from "$lib/figma/overlays/context-menu/Task.svelte";
     import Workspace from "$lib/figma/overlays/context-menu/Workspace.svelte";
-    import WorkspaceBoard from "$lib/figma/overlays/context-menu/WorkspaceBoard.svelte";
+    import Project from "$lib/figma/overlays/context-menu/Project.svelte";
     import WorkspaceUser from "$lib/figma/overlays/context-menu/WorkspaceUser.svelte";
     import type { ContextMenuType } from "$lib/types/ui";
 
@@ -38,7 +38,7 @@
 {:else if target.kind === "sideNav"}
     <SideNavContextMenu workspace={target.workspace} />
 {:else if target.kind === "project"}
-    <WorkspaceBoard
+    <Project
         workspace={target.workspace}
         project={target.project}
     />

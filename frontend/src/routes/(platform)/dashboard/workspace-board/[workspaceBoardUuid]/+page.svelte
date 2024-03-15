@@ -21,7 +21,7 @@
     import SectionC from "$lib/figma/cards/Section.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import {
-        currentWorkspaceBoard,
+        currentProject,
         currentSections,
     } from "$lib/stores/dashboard";
     import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
@@ -34,7 +34,7 @@
 
     let { project } = data;
 
-    $: project = $currentWorkspaceBoard ?? project;
+    $: project = $currentProject ?? project;
 
     $: hasSections = project.sections.length > 0;
 

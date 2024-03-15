@@ -31,7 +31,7 @@
     import type { TaskWithSection } from "$lib/types/workspace";
     import {
         getDashboardSectionUrl,
-        getDashboardWorkspaceBoardUrl,
+        getDashboardProjectUrl,
         getTaskUrl,
     } from "$lib/urls";
     import { coerceIsoDate } from "$lib/utils/date";
@@ -96,7 +96,7 @@
     $: crumbs = [
         {
             label: project.title,
-            href: getDashboardWorkspaceBoardUrl(project.uuid),
+            href: getDashboardProjectUrl(project.uuid),
         },
         {
             label: section.title,

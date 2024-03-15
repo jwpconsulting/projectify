@@ -55,7 +55,7 @@ from ..models.section import Section
 from ..models.sub_task import SubTask
 from ..models.task import Task
 from ..models.workspace import Workspace
-from ..models.workspace_board import WorkspaceBoard
+from ..models.project import Project
 from ..models.workspace_user import WorkspaceUser
 from ..selectors.workspace_user import workspace_user_find_for_workspace
 from ..services.chat_message import chat_message_create
@@ -79,11 +79,11 @@ from ..services.workspace import (
     workspace_delete,
     workspace_update,
 )
-from ..services.workspace_board import (
-    workspace_board_archive,
-    workspace_board_create,
-    workspace_board_delete,
-    workspace_board_update,
+from ..services.project import (
+    project_archive,
+    project_create,
+    project_delete,
+    project_update,
 )
 from ..services.workspace_user import (
     workspace_user_delete,
@@ -136,9 +136,9 @@ async def workspace_user(workspace: Workspace, user: User) -> WorkspaceUser:
 
 
 @pytest.fixture
-async def workspace_board(workspace: Workspace, user: User) -> WorkspaceBoard:
-    """Create workspace board."""
-    return await database_sync_to_async(workspace_board_create)(
+async def project(workspace: Workspace, user: User) -> Project:
+    """Create project."""
+    return await database_sync_to_async(project_create)(
         who=user,
         title="Don't care",
         workspace=workspace,
@@ -147,12 +147,12 @@ async def workspace_board(workspace: Workspace, user: User) -> WorkspaceBoard:
 
 @pytest.fixture
 async def section(
-    workspace_board: WorkspaceBoard,
+    project: Project,
     user: User,
 ) -> Section:
     """Create section."""
     return await database_sync_to_async(section_create)(
-        workspace_board=workspace_board,
+        project=project,
         who=user,
         title="I am a section",
     )
@@ -198,7 +198,7 @@ def delete_model_instance(model_instance: django_models.Model) -> None:
     model_instance.delete()
 
 
-HasUuid = Union[Workspace, WorkspaceBoard, Task]
+HasUuid = Union[Workspace, Project, Task]
 
 
 async def expect_message(
@@ -217,14 +217,14 @@ pytestmark = [pytest.mark.django_db, pytest.mark.asyncio]
 
 
 async def make_communicator(
-    resource: Union[Workspace, WorkspaceBoard, Task], user: User
+    resource: Union[Workspace, Project, Task], user: User
 ) -> WebsocketCommunicator:
     """Create a websocket communicator for a given resource and user."""
     match resource:
         case Workspace():
             url = f"ws/workspace/{resource.uuid}/"
-        case WorkspaceBoard():
-            url = f"ws/workspace-board/{resource.uuid}/"
+        case Project():
+            url = f"ws/project/{resource.uuid}/"
         case Task():
             url = f"ws/task/{resource.uuid}/"
     communicator = WebsocketCommunicator(websocket_application, url)
@@ -250,11 +250,11 @@ async def workspace_communicator(
 
 
 @pytest.fixture
-async def workspace_board_communicator(
-    workspace_board: WorkspaceBoard, user: User
+async def project_communicator(
+    project: Project, user: User
 ) -> WebsocketCommunicator:
-    """Return a communicator to a workspace board instance."""
-    return await make_communicator(workspace_board, user)
+    """Return a communicator to a project instance."""
+    return await make_communicator(project, user)
 
 
 @pytest.fixture
@@ -362,10 +362,10 @@ class TestWorkspaceUser:
         await UserInvite.objects.all().adelete()
 
 
-class TestWorkspaceBoard:
-    """Test consumer behavior for WorkspaceBoard changes."""
+class TestProject:
+    """Test consumer behavior for Project changes."""
 
-    async def test_workspace_board_life_cycle(
+    async def test_project_life_cycle(
         self,
         user: User,
         workspace: Workspace,
@@ -374,7 +374,7 @@ class TestWorkspaceBoard:
     ) -> None:
         """Test workspace / board consumer behavior for board changes."""
         # Create
-        workspace_board = await database_sync_to_async(workspace_board_create)(
+        project = await database_sync_to_async(project_create)(
             who=user,
             workspace=workspace,
             title="It's time to chew bubble gum and write Django",
@@ -382,38 +382,38 @@ class TestWorkspaceBoard:
         )
         assert await expect_message(workspace_communicator, workspace)
 
-        workspace_board_communicator = await make_communicator(
-            workspace_board, user
+        project_communicator = await make_communicator(
+            project, user
         )
 
         # Update
-        await database_sync_to_async(workspace_board_update)(
+        await database_sync_to_async(project_update)(
             who=user,
-            workspace_board=workspace_board,
+            project=project,
             title="don't care",
         )
         assert await expect_message(
-            workspace_board_communicator, workspace_board
+            project_communicator, project
         )
         assert await expect_message(workspace_communicator, workspace)
 
         # Archive
-        await database_sync_to_async(workspace_board_archive)(
+        await database_sync_to_async(project_archive)(
             who=user,
-            workspace_board=workspace_board,
+            project=project,
             archived=True,
         )
         assert await expect_message(workspace_communicator, workspace)
 
         # Delete
-        await database_sync_to_async(workspace_board_delete)(
+        await database_sync_to_async(project_delete)(
             who=user,
-            workspace_board=workspace_board,
+            project=project,
         )
         assert await expect_message(workspace_communicator, workspace)
 
         await clean_up_communicator(workspace_communicator)
-        await clean_up_communicator(workspace_board_communicator)
+        await clean_up_communicator(project_communicator)
 
         await delete_model_instance(workspace_user)
         await delete_model_instance(workspace)
@@ -427,18 +427,18 @@ class TestSection:
         user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
-        workspace_board: WorkspaceBoard,
-        workspace_board_communicator: WebsocketCommunicator,
+        project: Project,
+        project_communicator: WebsocketCommunicator,
     ) -> None:
-        """Test workspace board consumer behavior for section changes."""
+        """Test project consumer behavior for section changes."""
         # Create it
         section = await database_sync_to_async(section_create)(
             who=user,
             title="A section",
-            workspace_board=workspace_board,
+            project=project,
         )
         assert await expect_message(
-            workspace_board_communicator, workspace_board
+            project_communicator, project
         )
 
         # Update it
@@ -448,7 +448,7 @@ class TestSection:
             title="Title has changed",
         )
         assert await expect_message(
-            workspace_board_communicator, workspace_board
+            project_communicator, project
         )
 
         # Move it
@@ -458,7 +458,7 @@ class TestSection:
             order=0,
         )
         assert await expect_message(
-            workspace_board_communicator, workspace_board
+            project_communicator, project
         )
 
         # Delete it
@@ -467,11 +467,11 @@ class TestSection:
             section=section,
         )
         assert await expect_message(
-            workspace_board_communicator, workspace_board
+            project_communicator, project
         )
 
-        await workspace_board_communicator.disconnect()
-        await delete_model_instance(workspace_board)
+        await project_communicator.disconnect()
+        await delete_model_instance(project)
         await delete_model_instance(workspace_user)
         await delete_model_instance(workspace)
 
@@ -524,9 +524,9 @@ class TestTaskConsumer:
         user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
-        workspace_board: WorkspaceBoard,
+        project: Project,
         section: Section,
-        workspace_board_communicator: WebsocketCommunicator,
+        project_communicator: WebsocketCommunicator,
     ) -> None:
         """Test that board and task consumer fire."""
         # Create
@@ -538,7 +538,7 @@ class TestTaskConsumer:
             labels=[],
         )
         assert await expect_message(
-            workspace_board_communicator, workspace_board
+            project_communicator, project
         )
 
         task_communicator = await make_communicator(task, user)
@@ -552,7 +552,7 @@ class TestTaskConsumer:
             labels=[],
         )
         assert await expect_message(
-            workspace_board_communicator, workspace_board
+            project_communicator, project
         )
         assert await expect_message(task_communicator, task)
 
@@ -563,7 +563,7 @@ class TestTaskConsumer:
             after=section,
         )
         assert await expect_message(
-            workspace_board_communicator, workspace_board
+            project_communicator, project
         )
         assert await expect_message(task_communicator, task)
 
@@ -573,15 +573,15 @@ class TestTaskConsumer:
             task=task,
         )
         assert await expect_message(
-            workspace_board_communicator, workspace_board
+            project_communicator, project
         )
 
-        await clean_up_communicator(workspace_board_communicator)
+        await clean_up_communicator(project_communicator)
         # Ideally, a task consumer will disconnect when a task is deleted
         await clean_up_communicator(task_communicator)
 
         await delete_model_instance(section)
-        await delete_model_instance(workspace_board)
+        await delete_model_instance(project)
         await delete_model_instance(workspace_user)
         await delete_model_instance(workspace)
 
@@ -595,13 +595,13 @@ class TestTaskLabel:
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         label: Label,
-        workspace_board: WorkspaceBoard,
+        project: Project,
         section: Section,
         task: Task,
-        workspace_board_communicator: WebsocketCommunicator,
+        project_communicator: WebsocketCommunicator,
         task_communicator: WebsocketCommunicator,
     ) -> None:
-        """Test that workspace board and task consumer fire."""
+        """Test that project and task consumer fire."""
         # Add label
         await database_sync_to_async(task_update_nested)(
             who=user,
@@ -611,7 +611,7 @@ class TestTaskLabel:
             sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
         )
         assert await expect_message(
-            workspace_board_communicator, workspace_board
+            project_communicator, project
         )
         assert await expect_message(task_communicator, task)
 
@@ -624,15 +624,15 @@ class TestTaskLabel:
             sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
         )
         assert await expect_message(
-            workspace_board_communicator, workspace_board
+            project_communicator, project
         )
         assert await expect_message(task_communicator, task)
 
-        await workspace_board_communicator.disconnect()
+        await project_communicator.disconnect()
         await task_communicator.disconnect()
 
         await delete_model_instance(section)
-        await delete_model_instance(workspace_board)
+        await delete_model_instance(project)
         await delete_model_instance(workspace_user)
         await delete_model_instance(label)
         await delete_model_instance(workspace)
@@ -641,19 +641,19 @@ class TestTaskLabel:
 class TestSubTask:
     """Test consumer behavior for sub tasks."""
 
-    async def test_sub_task_saved_or_deleted_workspace_board(
+    async def test_sub_task_saved_or_deleted_project(
         self,
         user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
-        workspace_board: WorkspaceBoard,
+        project: Project,
         section: Section,
         task: Task,
         sub_task: SubTask,
-        workspace_board_communicator: WebsocketCommunicator,
+        project_communicator: WebsocketCommunicator,
         task_communicator: WebsocketCommunicator,
     ) -> None:
-        """Test that workspace board and task consumer fire."""
+        """Test that project and task consumer fire."""
         # Simulate editing a task
         await database_sync_to_async(sub_task_update_many)(
             who=user,
@@ -670,7 +670,7 @@ class TestSubTask:
             ],
         )
         assert await expect_message(
-            workspace_board_communicator, workspace_board
+            project_communicator, project
         )
         assert await expect_message(task_communicator, task)
 
@@ -683,7 +683,7 @@ class TestSubTask:
             update_sub_tasks=[],
         )
         assert await expect_message(
-            workspace_board_communicator, workspace_board
+            project_communicator, project
         )
         assert await expect_message(task_communicator, task)
 
@@ -698,16 +698,16 @@ class TestSubTask:
             update_sub_tasks=[],
         )
         assert await expect_message(
-            workspace_board_communicator, workspace_board
+            project_communicator, project
         )
         assert await expect_message(task_communicator, task)
 
-        await workspace_board_communicator.disconnect()
+        await project_communicator.disconnect()
         await task_communicator.disconnect()
 
         await delete_model_instance(task)
         await delete_model_instance(section)
-        await delete_model_instance(workspace_board)
+        await delete_model_instance(project)
         await delete_model_instance(workspace_user)
         await delete_model_instance(workspace)
 
@@ -720,7 +720,7 @@ class TestChatMessage:
         user: User,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
-        workspace_board: WorkspaceBoard,
+        project: Project,
         section: Section,
         task: Task,
         task_communicator: WebsocketCommunicator,
@@ -739,6 +739,6 @@ class TestChatMessage:
         await task_communicator.disconnect()
         await delete_model_instance(task)
         await delete_model_instance(section)
-        await delete_model_instance(workspace_board)
+        await delete_model_instance(project)
         await delete_model_instance(workspace_user)
         await delete_model_instance(workspace)

@@ -45,7 +45,7 @@ class WorkspaceQuotaSerializer(serializers.Serializer):
     sub_tasks = SingleQuotaSerializer()
     tasks = SingleQuotaSerializer()
     task_labels = SingleQuotaSerializer()
-    workspace_boards = SingleQuotaSerializer()
+    projects = SingleQuotaSerializer()
     sections = SingleQuotaSerializer()
     workspace_users_and_invites = SingleQuotaSerializer()
 
@@ -64,8 +64,8 @@ class WorkspaceDetailSerializer(base.WorkspaceBaseSerializer):
     workspace_user_invites = WorkspaceUserInviteSerializer(
         read_only=True, many=True, source="workspaceuserinvite_set"
     )
-    workspace_boards = base.WorkspaceBoardBaseSerializer(
-        read_only=True, many=True, source="workspaceboard_set"
+    projects = base.ProjectBaseSerializer(
+        read_only=True, many=True, source="project_set"
     )
     labels = base.LabelBaseSerializer(
         read_only=True, many=True, source="label_set"
@@ -79,7 +79,7 @@ class WorkspaceDetailSerializer(base.WorkspaceBaseSerializer):
             *base.WorkspaceBaseSerializer.Meta.fields,
             "workspace_users",
             "workspace_user_invites",
-            "workspace_boards",
+            "projects",
             "labels",
             "quota",
         )

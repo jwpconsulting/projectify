@@ -35,7 +35,7 @@ from .task_label import TaskLabel
 from .workspace import (
     Workspace,
 )
-from .workspace_board import WorkspaceBoard
+from .project import Project
 from .workspace_user import (
     WorkspaceUser,
 )
@@ -50,7 +50,7 @@ __all__ = (
     "Task",
     "TaskLabel",
     "Workspace",
-    "WorkspaceBoard",
+    "Project",
     "Section",
     "WorkspaceUser",
     "WorkspaceUserInvite",

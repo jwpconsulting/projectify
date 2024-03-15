@@ -59,7 +59,7 @@ type Rules = {
 | Workspace               | Owner      | Observer   | Owner      | Owner      |
 | Workspace user invite   | Owner      | Owner      | Owner      | Owner      |
 | Workspace user          | Owner      | Observer   | Owner      | Owner      |
-| Workspace board         | Maintainer | Observer   | Maintainer | Maintainer |
+| Project         | Maintainer | Observer   | Maintainer | Maintainer |
 | Section | Maintainer | Observer   | Maintainer | Maintainer |
 | Task                    | Member     | Observer   | Member     | Maintainer |
 | Label                   | Maintainer | Observer   | Maintainer | Maintainer |

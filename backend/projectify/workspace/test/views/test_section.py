@@ -31,7 +31,7 @@ from rest_framework.test import (
 from projectify.workspace.models import (
     Section,
     TaskLabel,
-    WorkspaceBoard,
+    Project,
 )
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.workspace import Workspace
@@ -57,18 +57,18 @@ class TestSectionCreate:
         rest_user_client: APIClient,
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
-        workspace_board: WorkspaceBoard,
+        project: Project,
         # Make sure that we are part of that workspace
         workspace_user: WorkspaceUser,
     ) -> None:
-        """Assert that we can create a new workspace board."""
+        """Assert that we can create a new project."""
         assert Section.objects.count() == 0
         with django_assert_num_queries(7):
             response = rest_user_client.post(
                 resource_url,
                 {
                     "title": "New section, who dis??",
-                    "workspace_board_uuid": str(workspace_board.uuid),
+                    "project_uuid": str(project.uuid),
                 },
             )
         assert response.status_code == 201
@@ -176,7 +176,7 @@ class TestSectionMove:
     ) -> None:
         """Test as an authenticated user."""
         other_section = Section(
-            workspace_board=section.workspace_board,
+            project=section.project,
             title="test",
         )
         other_section.save()

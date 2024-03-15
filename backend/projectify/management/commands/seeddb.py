@@ -80,7 +80,7 @@ from projectify.workspace.models import (
     Task,
     TaskLabel,
     Workspace,
-    WorkspaceBoard,
+    Project,
 )
 from projectify.workspace.models.const import WorkspaceUserRoles
 from projectify.workspace.models.sub_task import (
@@ -96,7 +96,7 @@ Altogether = TypedDict(
         "workspace": Workspace,
         "workspace_users": list[WorkspaceUser],
         "labels": list[Label],
-        "projects": list[WorkspaceBoard],
+        "projects": list[Project],
         "sections": list[Section],
         "number": "count[int]",
     },
@@ -332,9 +332,9 @@ class Command(BaseCommand):
         )
         self.stdout.write(f"Created {len(workspaces_labels)} labels")
 
-        workspaces_projects = WorkspaceBoard.objects.bulk_create(
+        workspaces_projects = Project.objects.bulk_create(
             [
-                WorkspaceBoard(
+                Project(
                     title=self.fake.text(
                         randint(
                             WORKSPACE_BOARD_TITLE_MIN_LENGTH,

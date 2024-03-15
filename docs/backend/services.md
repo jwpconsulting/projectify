@@ -35,11 +35,11 @@ called
 <resource_name>_find_by_<most significant filter criterion>
 ```
 
-For example, to define a function that find all workspace boards in a
+For example, to define a function that find all projects in a
 workspace, one would name it
 
 ```
-workspace_board_find_by_workspace
+project_find_by_workspace
 ```
 
 The reason we name it find, and not filter, is that filter implies ORM

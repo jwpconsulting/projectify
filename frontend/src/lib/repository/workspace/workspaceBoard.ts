@@ -25,21 +25,21 @@ import {
 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
-    ArchivedWorkspaceBoard,
+    ArchivedProject,
     Workspace,
-    WorkspaceBoard,
-    WorkspaceBoardDetail,
+    Project,
+    ProjectDetail,
 } from "$lib/types/workspace";
 
 import type { ApiResponse } from "../types";
 
-// WorkspaceBoard CRUD
+// Project CRUD
 // Create
-export async function createWorkspaceBoard(
+export async function createProject(
     workspace: Workspace,
-    project: Pick<WorkspaceBoard, "title" | "description">,
+    project: Pick<Project, "title" | "description">,
     repositoryContext: RepositoryContext,
-): Promise<ApiResponse<WorkspaceBoard, unknown>> {
+): Promise<ApiResponse<Project, unknown>> {
     const { uuid: workspace_uuid } = workspace;
     const response = await postWithCredentialsJson<Workspace>(
         `/workspace/project/`,
@@ -50,24 +50,24 @@ export async function createWorkspaceBoard(
 }
 
 // Read
-export async function getWorkspaceBoard(
+export async function getProject(
     uuid: string,
     repositoryContext: RepositoryContext,
-): Promise<WorkspaceBoardDetail | undefined> {
+): Promise<ProjectDetail | undefined> {
     return handle404(
-        await getWithCredentialsJson<WorkspaceBoardDetail>(
+        await getWithCredentialsJson<ProjectDetail>(
             `/workspace/project/${uuid}`,
             repositoryContext,
         ),
     );
 }
 
-export async function getArchivedWorkspaceBoards(
+export async function getArchivedProjects(
     workspace_uuid: string,
     repositoryContext: RepositoryContext,
-): Promise<undefined | ArchivedWorkspaceBoard[]> {
+): Promise<undefined | ArchivedProject[]> {
     return handle404(
-        await getWithCredentialsJson<ArchivedWorkspaceBoard[]>(
+        await getWithCredentialsJson<ArchivedProject[]>(
             `/workspace/workspace/${workspace_uuid}/archived-projects/`,
             repositoryContext,
         ),
@@ -75,8 +75,8 @@ export async function getArchivedWorkspaceBoards(
 }
 
 // Update
-export async function updateWorkspaceBoard(
-    project: Pick<WorkspaceBoard, "title" | "description" | "uuid">,
+export async function updateProject(
+    project: Pick<Project, "title" | "description" | "uuid">,
     repositoryContext: RepositoryContext,
 ): Promise<ApiResponse<void, unknown>> {
     return await putWithCredentialsJson(
@@ -86,8 +86,8 @@ export async function updateWorkspaceBoard(
     );
 }
 // Delete
-export async function deleteWorkspaceBoard(
-    { uuid }: WorkspaceBoard,
+export async function deleteProject(
+    { uuid }: Project,
     repositoryContext: RepositoryContext,
 ): Promise<void> {
     failOrOk(
@@ -98,8 +98,8 @@ export async function deleteWorkspaceBoard(
     );
 }
 
-export async function archiveWorkspaceBoard(
-    { uuid }: WorkspaceBoard,
+export async function archiveProject(
+    { uuid }: Project,
     archived: boolean,
     repositoryContext: RepositoryContext,
 ): Promise<ApiResponse<void, unknown>> {

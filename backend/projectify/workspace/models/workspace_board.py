@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Workspace board model."""
+"""Project model."""
 import uuid
 from typing import (
     TYPE_CHECKING,
@@ -50,8 +50,8 @@ if TYPE_CHECKING:
     )
 
 
-class WorkspaceBoard(TitleDescriptionModel, BaseModel):
-    """Workspace board."""
+class Project(TitleDescriptionModel, BaseModel):
+    """Project."""
 
     workspace = models.ForeignKey["Workspace"](
         Workspace,
@@ -61,12 +61,12 @@ class WorkspaceBoard(TitleDescriptionModel, BaseModel):
     archived = models.DateTimeField(
         null=True,
         blank=True,
-        help_text=_("Archival timestamp of this workspace board."),
+        help_text=_("Archival timestamp of this project."),
     )
     due_date = models.DateTimeField(
         null=True,
         blank=True,
-        help_text=_("Due date for this workspace board"),
+        help_text=_("Due date for this project"),
     )
 
     if TYPE_CHECKING:

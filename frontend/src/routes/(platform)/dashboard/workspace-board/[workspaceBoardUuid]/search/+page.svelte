@@ -20,13 +20,13 @@
 
     import TaskCard from "$lib/figma/cards/TaskCard.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
+    import { getDashboardProjectUrl } from "$lib/urls";
 
     import type { PageData } from "./$types";
 
     export let data: PageData;
     const { project } = data;
-    $: backUrl = getDashboardWorkspaceBoardUrl(project.uuid);
+    $: backUrl = getDashboardProjectUrl(project.uuid);
 </script>
 
 {#await data.tasks then tasks}

@@ -32,8 +32,8 @@ from projectify.workspace.selectors.section import (
     SectionDetailQuerySet,
     section_find_for_user_and_uuid,
 )
-from projectify.workspace.selectors.workspace_board import (
-    workspace_board_find_by_workspace_board_uuid,
+from projectify.workspace.selectors.project import (
+    project_find_by_project_uuid,
 )
 from projectify.workspace.serializers.section import (
     SectionDetailSerializer,
@@ -52,13 +52,13 @@ class SectionCreate(APIView):
     class InputSerializer(serializers.ModelSerializer[Section]):
         """Parse section creation input."""
 
-        workspace_board_uuid = serializers.UUIDField()
+        project_uuid = serializers.UUIDField()
 
         class Meta:
             """Restrict fields to bare minimum needed for section creation."""
 
             model = Section
-            fields = "title", "description", "workspace_board_uuid"
+            fields = "title", "description", "project_uuid"
 
     def post(self, request: Request) -> Response:
         """Create a section."""
@@ -66,22 +66,22 @@ class SectionCreate(APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
-        workspace_board_uuid: UUID = data["workspace_board_uuid"]
-        workspace_board = workspace_board_find_by_workspace_board_uuid(
-            workspace_board_uuid=workspace_board_uuid,
+        project_uuid: UUID = data["project_uuid"]
+        project = project_find_by_project_uuid(
+            project_uuid=project_uuid,
             who=request.user,
             archived=False,
         )
-        if workspace_board is None:
+        if project is None:
             raise serializers.ValidationError(
                 {
-                    "workspace_board_uuid": _(
-                        "Could not find a workspace board with this uuid"
+                    "project_uuid": _(
+                        "Could not find a project with this uuid"
                     )
                 }
             )
         section = section_create(
-            workspace_board=workspace_board,
+            project=project,
             title=data["title"],
             description=data.get("description"),
             who=user,
@@ -94,7 +94,7 @@ class SectionCreate(APIView):
 
 # Read + Update + Delete
 class SectionReadUpdateDelete(APIView):
-    """Workspace board retrieve view."""
+    """Project retrieve view."""
 
     def get(self, request: Request, section_uuid: UUID) -> Response:
         """Handle GET."""
@@ -159,7 +159,7 @@ class SectionMove(APIView):
     """Insert a section at a given position."""
 
     class InputSerializer(serializers.Serializer):
-        """Accept the desired position within workspace board."""
+        """Accept the desired position within project."""
 
         order = serializers.IntegerField()
 

@@ -32,8 +32,8 @@ SectionDetailQuerySet = Section.objects.prefetch_related(
     "task_set__labels",
     "task_set__subtask_set",
 ).select_related(
-    "workspace_board",
-    "workspace_board__workspace",
+    "project",
+    "project__workspace",
 )
 
 
@@ -52,7 +52,7 @@ def section_find_for_user_and_uuid(
         qs = Section.objects
     try:
         return qs.filter(
-            workspace_board__workspace__users=user,
+            project__workspace__users=user,
             uuid=section_uuid,
         ).get()
     except Section.DoesNotExist:

@@ -104,7 +104,7 @@ def task_create_nested(
         task=task,
         create_sub_tasks=create_sub_tasks,
     )
-    send_workspace_board_change_signal(task.section.project)
+    send_project_change_signal(task.section.project)
     return task
 
 

@@ -5,7 +5,7 @@ usage quotas will apply. Usage quotas determine how many items of a resouce you
 can create within your workspace. Resources within your workspace are:
 
 - Workspace users and invitations
-- Workspace boards and sections
+- Projects and sections
 - Tasks and sub tasks
 - Labels
 

@@ -90,7 +90,7 @@
                     "overlay.destructive.delete-selected-tasks.button",
                 );
                 break;
-            case "archiveWorkspaceBoard":
+            case "archiveProject":
                 title = $_(
                     "overlay.destructive.archive-project.title",
                 );
@@ -104,7 +104,7 @@
                     "overlay.destructive.archive-project.button",
                 );
                 break;
-            case "deleteWorkspaceBoard":
+            case "deleteProject":
                 title = $_("overlay.destructive.delete-project.title");
                 body = $_("overlay.destructive.delete-project.body", {
                     values: { project: target.project.title },

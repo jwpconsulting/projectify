@@ -17,7 +17,7 @@
  */
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import Boards from "$lib/figma/navigation/side-nav/WorkspaceBoards.svelte";
+import Boards from "$lib/figma/navigation/side-nav/Projects.svelte";
 import { workspace } from "$lib/storybook";
 
 const meta: Meta<Boards> = {

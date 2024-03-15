@@ -21,32 +21,32 @@
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import {
-        archiveWorkspaceBoard,
-        deleteWorkspaceBoard,
+        archiveProject,
+        deleteProject,
     } from "$lib/repository/workspace/project";
-    import { currentArchivedWorkspaceBoards } from "$lib/stores/dashboard";
+    import { currentArchivedProjects } from "$lib/stores/dashboard";
     import {
         openConstructiveOverlay,
         openDestructiveOverlay,
     } from "$lib/stores/globalUi";
-    import type { WorkspaceBoard } from "$lib/types/workspace";
+    import type { Project } from "$lib/types/workspace";
 
-    $: archivedWorkspaceBoards = $currentArchivedWorkspaceBoards ?? [];
+    $: archivedProjects = $currentArchivedProjects ?? [];
 
-    async function recoverAction(project: WorkspaceBoard) {
+    async function recoverAction(project: Project) {
         await openConstructiveOverlay({
-            kind: "recoverWorkspaceBoard",
+            kind: "recoverProject",
             project,
         });
-        await archiveWorkspaceBoard(project, false, { fetch });
+        await archiveProject(project, false, { fetch });
     }
 
-    async function deleteAction(project: WorkspaceBoard) {
+    async function deleteAction(project: Project) {
         await openDestructiveOverlay({
-            kind: "deleteWorkspaceBoard",
+            kind: "deleteProject",
             project,
         });
-        await deleteWorkspaceBoard(project, { fetch });
+        await deleteProject(project, { fetch });
     }
 </script>
 
@@ -55,7 +55,7 @@
         {$_("project-archive.title")}
     </h1>
     <div class="flex flex-col rounded-lg bg-foreground p-4 shadow-card">
-        {#each archivedWorkspaceBoards as project}
+        {#each archivedProjects as project}
             <div class="flex flex-col gap-2 p-2">
                 <p class="font-bold">
                     {project.title}

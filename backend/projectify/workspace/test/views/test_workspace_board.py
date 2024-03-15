@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Test workspace board CRUD views."""
+"""Test project CRUD views."""
 from django.contrib.auth.models import (
     AbstractBaseUser,
 )
@@ -32,13 +32,13 @@ from rest_framework.test import (
 from projectify.workspace.models import TaskLabel
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_board import WorkspaceBoard
+from projectify.workspace.models.project import Project
 from projectify.workspace.models.workspace_user import WorkspaceUser
-from projectify.workspace.selectors.workspace_board import (
-    workspace_board_find_by_workspace_uuid,
+from projectify.workspace.selectors.project import (
+    project_find_by_workspace_uuid,
 )
-from projectify.workspace.services.workspace_board import (
-    workspace_board_archive,
+from projectify.workspace.services.project import (
+    project_archive,
 )
 from pytest_types import (
     DjangoAssertNumQueries,
@@ -47,13 +47,13 @@ from pytest_types import (
 
 # Create
 @pytest.mark.django_db
-class TestWorkspaceBoardCreate:
-    """Test workspace board creation."""
+class TestProjectCreate:
+    """Test project creation."""
 
     @pytest.fixture
     def resource_url(self) -> str:
         """Return URL to this view."""
-        return reverse("workspace:workspace-boards:create")
+        return reverse("workspace:projects:create")
 
     def test_authenticated(
         self,
@@ -65,39 +65,39 @@ class TestWorkspaceBoardCreate:
         # Make sure that we are part of that workspace
         workspace_user: WorkspaceUser,
     ) -> None:
-        """Assert that we can create a new workspace board."""
+        """Assert that we can create a new project."""
         with django_assert_num_queries(5):
             response = rest_user_client.post(
                 resource_url,
                 {
-                    "title": "New workspace board, who dis??",
+                    "title": "New project, who dis??",
                     "workspace_uuid": str(workspace.uuid),
                 },
             )
         assert response.status_code == 201
-        assert WorkspaceBoard.objects.count() == 1
-        workspace_board = WorkspaceBoard.objects.get()
-        assert workspace_board.title == "New workspace board, who dis??"
+        assert Project.objects.count() == 1
+        project = Project.objects.get()
+        assert project.title == "New project, who dis??"
 
 
 # Read + Update + Delete
 @pytest.mark.django_db
-class TestWorkspaceBoardReadUpdateDelete:
-    """Test WorkspaceBoardReadUpdateDelete view."""
+class TestProjectReadUpdateDelete:
+    """Test ProjectReadUpdateDelete view."""
 
     @pytest.fixture
-    def resource_url(self, workspace_board: WorkspaceBoard) -> str:
+    def resource_url(self, project: Project) -> str:
         """Return URL to this view."""
         return reverse(
-            "workspace:workspace-boards:read-update-delete",
-            args=(workspace_board.uuid,),
+            "workspace:projects:read-update-delete",
+            args=(project.uuid,),
         )
 
     def test_getting(
         self,
         rest_user_client: APIClient,
         resource_url: str,
-        workspace_board: WorkspaceBoard,
+        project: Project,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
         task: Task,
@@ -112,9 +112,9 @@ class TestWorkspaceBoardReadUpdateDelete:
         with django_assert_num_queries(7):
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.content
-        workspace_board_archive(
+        project_archive(
             who=workspace_user.user,
-            workspace_board=workspace_board,
+            project=project,
             archived=True,
         )
 
@@ -148,7 +148,7 @@ class TestWorkspaceBoardReadUpdateDelete:
         rest_user_client: APIClient,
         resource_url: str,
         workspace_user: WorkspaceUser,
-        workspace_board: WorkspaceBoard,
+        project: Project,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating a ws board."""
@@ -156,8 +156,8 @@ class TestWorkspaceBoardReadUpdateDelete:
         response = rest_user_client.delete(resource_url)
         assert response.status_code == 404, response.content
 
-        workspace_board_archive(
-            workspace_board=workspace_board,
+        project_archive(
+            project=project,
             who=workspace_user.user,
             archived=True,
         )
@@ -171,14 +171,14 @@ class TestWorkspaceBoardReadUpdateDelete:
 
 # Read (list)
 @pytest.mark.django_db
-class TestWorkspaceBoardsArchivedList:
-    """Test WorkspaceBoardsArchived list."""
+class TestProjectsArchivedList:
+    """Test ProjectsArchived list."""
 
     @pytest.fixture
     def resource_url(self, workspace: Workspace) -> str:
         """Return URL to this view."""
         return reverse(
-            "workspace:workspaces:archived-workspace-boards",
+            "workspace:workspaces:archived-projects",
             args=(workspace.uuid,),
         )
 
@@ -187,9 +187,9 @@ class TestWorkspaceBoardsArchivedList:
         rest_user_client: APIClient,
         resource_url: str,
         workspace_user: WorkspaceUser,
-        # In total 2 workspace boards, but only one shall be returned
-        workspace_board: WorkspaceBoard,
-        archived_workspace_board: WorkspaceBoard,
+        # In total 2 projects, but only one shall be returned
+        project: Project,
+        archived_project: Project,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can GET this view this while being logged in."""
@@ -197,20 +197,20 @@ class TestWorkspaceBoardsArchivedList:
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.content
         assert len(response.data) == 1
-        assert response.data[0]["uuid"] == str(archived_workspace_board.uuid)
+        assert response.data[0]["uuid"] == str(archived_project.uuid)
 
 
 # RPC
 @pytest.mark.django_db
-class TestWorkspaceBoardArchive:
-    """Test workspace board archival."""
+class TestProjectArchive:
+    """Test project archival."""
 
     @pytest.fixture
-    def resource_url(self, workspace_board: WorkspaceBoard) -> str:
+    def resource_url(self, project: Project) -> str:
         """Return URL to this view."""
         return reverse(
-            "workspace:workspace-boards:archive",
-            args=(str(workspace_board.uuid),),
+            "workspace:projects:archive",
+            args=(str(project.uuid),),
         )
 
     def test_archiving_and_unarchiving(
@@ -223,7 +223,7 @@ class TestWorkspaceBoardArchive:
     ) -> None:
         """Test archiving a board and then unarchiving it."""
         count = len(
-            workspace_board_find_by_workspace_uuid(
+            project_find_by_workspace_uuid(
                 who=workspace_user.user,
                 workspace_uuid=workspace.uuid,
                 archived=False,
@@ -238,7 +238,7 @@ class TestWorkspaceBoardArchive:
         assert (
             count
             == len(
-                workspace_board_find_by_workspace_uuid(
+                project_find_by_workspace_uuid(
                     who=workspace_user.user,
                     workspace_uuid=workspace.uuid,
                     archived=False,
@@ -253,7 +253,7 @@ class TestWorkspaceBoardArchive:
             )
             assert response.status_code == 200, response.data
         assert count == len(
-            workspace_board_find_by_workspace_uuid(
+            project_find_by_workspace_uuid(
                 who=workspace_user.user,
                 workspace_uuid=workspace.uuid,
                 archived=False,

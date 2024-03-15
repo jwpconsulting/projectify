@@ -27,9 +27,9 @@
         resolveConstructiveOverlay,
     } from "$lib/stores/globalUi";
     import type { FormViewState } from "$lib/types/ui";
-    import type { CreateSection, WorkspaceBoard } from "$lib/types/workspace";
+    import type { CreateSection, Project } from "$lib/types/workspace";
 
-    export let project: WorkspaceBoard;
+    export let project: Project;
 
     let state: FormViewState = { kind: "start" };
     let title: string;

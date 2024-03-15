@@ -15,10 +15,10 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import { getWorkspaceBoard } from "$lib/repository/workspace/project";
+import { getProject } from "$lib/repository/workspace/project";
 import { createWsStore } from "$lib/stores/wsSubscription";
 
-export const currentWorkspaceBoard = createWsStore(
+export const currentProject = createWsStore(
     "project",
-    getWorkspaceBoard,
+    getProject,
 );

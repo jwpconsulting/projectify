@@ -28,7 +28,7 @@ import {
 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
 import type {
-    WorkspaceBoard,
+    Project,
     Section,
     SectionDetail,
 } from "$lib/types/workspace";
@@ -37,7 +37,7 @@ import type { ApiResponse } from "../types";
 
 // Create
 export async function createSection(
-    { uuid: project_uuid }: WorkspaceBoard,
+    { uuid: project_uuid }: Project,
     { title, description }: Pick<Section, "title" | "description">,
     repositoryContext: RepositoryContext,
 ): Promise<ApiResponse<Section, unknown>> {

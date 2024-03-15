@@ -26,11 +26,11 @@ from projectify.workspace.views.section import (
     SectionMove,
     SectionReadUpdateDelete,
 )
-from projectify.workspace.views.workspace_board import (
-    WorkspaceBoardArchive,
-    WorkspaceBoardArchivedList,
-    WorkspaceBoardCreate,
-    WorkspaceBoardReadUpdateDelete,
+from projectify.workspace.views.project import (
+    ProjectArchive,
+    ProjectArchivedList,
+    ProjectCreate,
+    ProjectReadUpdateDelete,
 )
 
 from .views.task import (
@@ -91,11 +91,11 @@ workspace_patterns = (
         name="uninvite-workspace-user",
     ),
     # Related
-    # Archived workspace boards
+    # Archived projects
     path(
-        "<uuid:workspace_uuid>/archived-workspace-boards/",
-        WorkspaceBoardArchivedList.as_view(),
-        name="archived-workspace-boards",
+        "<uuid:workspace_uuid>/archived-projects/",
+        ProjectArchivedList.as_view(),
+        name="archived-projects",
     ),
 )
 
@@ -108,23 +108,23 @@ workspace_user_patterns = (
     ),
 )
 
-workspace_board_patterns = (
+project_patterns = (
     # Create
     path(
         "",
-        WorkspaceBoardCreate.as_view(),
+        ProjectCreate.as_view(),
         name="create",
     ),
     # Read + Update + Delete
     path(
-        "<uuid:workspace_board_uuid>",
-        WorkspaceBoardReadUpdateDelete.as_view(),
+        "<uuid:project_uuid>",
+        ProjectReadUpdateDelete.as_view(),
         name="read-update-delete",
     ),
     # RPC
     path(
-        "<uuid:workspace_board_uuid>/archive",
-        WorkspaceBoardArchive.as_view(),
+        "<uuid:project_uuid>/archive",
+        ProjectArchive.as_view(),
         name="archive",
     ),
 )
@@ -205,10 +205,10 @@ urlpatterns = (
         "workspace-user/",
         include((workspace_user_patterns, "workspace-users")),
     ),
-    # WorkspaceBoard
+    # Project
     path(
-        "workspace-board/",
-        include((workspace_board_patterns, "workspace-boards")),
+        "project/",
+        include((project_patterns, "projects")),
     ),
     # Section
     path(

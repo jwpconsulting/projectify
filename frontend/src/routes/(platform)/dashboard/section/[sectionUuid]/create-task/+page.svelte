@@ -33,7 +33,7 @@
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
     import {
         getDashboardSectionUrl,
-        getDashboardWorkspaceBoardUrl,
+        getDashboardProjectUrl,
         getNewTaskUrl,
         getTaskUrl,
     } from "$lib/urls";
@@ -95,7 +95,7 @@
     $: crumbs = [
         {
             label: project.title,
-            href: getDashboardWorkspaceBoardUrl(project.uuid),
+            href: getDashboardProjectUrl(project.uuid),
         },
         {
             label: section.title,

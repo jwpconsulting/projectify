@@ -22,14 +22,14 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { goto } from "$lib/navigation";
-    import { createWorkspaceBoard } from "$lib/repository/workspace/project";
+    import { createProject } from "$lib/repository/workspace/project";
     import {
         rejectConstructiveOverlay,
         resolveConstructiveOverlay,
     } from "$lib/stores/globalUi";
     import type { FormViewState } from "$lib/types/ui";
     import type { Workspace } from "$lib/types/workspace";
-    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
+    import { getDashboardProjectUrl } from "$lib/urls";
 
     export let workspace: Workspace;
 
@@ -42,7 +42,7 @@
         if (!title) {
             throw new Error("Not valid");
         }
-        const result = await createWorkspaceBoard(
+        const result = await createProject(
             workspace,
             {
                 title,
@@ -52,7 +52,7 @@
         );
         if (result.ok) {
             const { uuid } = result.data;
-            await goto(getDashboardWorkspaceBoardUrl(uuid));
+            await goto(getDashboardProjectUrl(uuid));
             resolveConstructiveOverlay();
         } else {
             // TODO format error

@@ -24,12 +24,12 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { sectionClosed } from "$lib/stores/dashboard";
     import type {
-        WorkspaceBoardDetail,
+        ProjectDetail,
         SectionWithTasks,
     } from "$lib/types/workspace";
     import { getNewTaskUrl } from "$lib/urls";
 
-    export let project: WorkspaceBoardDetail;
+    export let project: ProjectDetail;
     export let section: SectionWithTasks;
 
     const { uuid } = section;

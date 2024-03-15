@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Workspace board services."""
+"""Project services."""
 from datetime import datetime
 from typing import Optional
 
@@ -24,97 +24,97 @@ from django.utils.timezone import (
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
-from projectify.workspace.models import WorkspaceBoard
+from projectify.workspace.models import Project
 from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.services.signals import (
-    send_workspace_board_change_signal,
+    send_project_change_signal,
     send_workspace_change_signal,
 )
 
 
 # Create
 # TODO atomic
-def workspace_board_create(
+def project_create(
     *,
     who: User,
     workspace: Workspace,
     title: str,
     description: Optional[str] = None,
     due_date: Optional[datetime] = None,
-) -> WorkspaceBoard:
-    """Create a workspace board inside a given workspace."""
-    validate_perm("workspace.create_workspace_board", who, workspace)
-    workspace_board = workspace.workspaceboard_set.create(
+) -> Project:
+    """Create a project inside a given workspace."""
+    validate_perm("workspace.create_project", who, workspace)
+    project = workspace.project_set.create(
         title=title,
         description=description,
         due_date=due_date,
     )
-    send_workspace_change_signal(workspace_board)
-    return workspace_board
+    send_workspace_change_signal(project)
+    return project
 
 
 # Update
 # TODO atomic
-def workspace_board_update(
+def project_update(
     *,
     who: User,
-    workspace_board: WorkspaceBoard,
+    project: Project,
     title: str,
     description: Optional[str] = None,
     due_date: Optional[datetime] = None,
-) -> WorkspaceBoard:
-    """Update a workspace board."""
+) -> Project:
+    """Update a project."""
     validate_perm(
-        "workspace.update_workspace_board", who, workspace_board.workspace
+        "workspace.update_project", who, project.workspace
     )
-    workspace_board.title = title
-    workspace_board.description = description
+    project.title = title
+    project.description = description
     if due_date and due_date.tzinfo is None:
         raise ValueError(f"tzinfo must be specified, got {due_date}")
-    workspace_board.due_date = due_date
-    workspace_board.save()
-    send_workspace_change_signal(workspace_board)
-    send_workspace_board_change_signal(workspace_board)
-    return workspace_board
+    project.due_date = due_date
+    project.save()
+    send_workspace_change_signal(project)
+    send_project_change_signal(project)
+    return project
 
 
 # Delete
 # TODO atomic
-def workspace_board_delete(
+def project_delete(
     *,
     who: User,
-    workspace_board: WorkspaceBoard,
+    project: Project,
 ) -> None:
-    """Delete a workspace board."""
+    """Delete a project."""
     validate_perm(
-        "workspace.delete_workspace_board",
+        "workspace.delete_project",
         who,
-        workspace_board.workspace,
+        project.workspace,
     )
-    workspace_board.delete()
-    send_workspace_change_signal(workspace_board)
-    send_workspace_board_change_signal(workspace_board)
+    project.delete()
+    send_workspace_change_signal(project)
+    send_project_change_signal(project)
 
 
 # RPC
 # TODO atomic
-def workspace_board_archive(
+def project_archive(
     *,
     who: User,
-    workspace_board: WorkspaceBoard,
+    project: Project,
     archived: bool,
-) -> WorkspaceBoard:
-    """Archive a workspace board, or not."""
+) -> Project:
+    """Archive a project, or not."""
     validate_perm(
-        "workspace.update_workspace_board",
+        "workspace.update_project",
         who,
-        workspace_board.workspace,
+        project.workspace,
     )
     if archived:
-        workspace_board.archived = now()
+        project.archived = now()
     else:
-        workspace_board.archived = None
-    workspace_board.save()
-    send_workspace_change_signal(workspace_board)
-    send_workspace_board_change_signal(workspace_board)
-    return workspace_board
+        project.archived = None
+    project.save()
+    send_workspace_change_signal(project)
+    send_project_change_signal(project)
+    return project

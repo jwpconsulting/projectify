@@ -57,7 +57,7 @@ from django.urls import (
 
 from projectify.workspace.consumers import (
     TaskConsumer,
-    WorkspaceBoardConsumer,
+    ProjectConsumer,
     WorkspaceConsumer,
 )
 
@@ -96,6 +96,6 @@ if settings.DEBUG_TOOLBAR:
 
 websocket_urlpatterns = (
     path("ws/task/<uuid:uuid>/", TaskConsumer.as_asgi()),
-    path("ws/workspace-board/<uuid:uuid>/", WorkspaceBoardConsumer.as_asgi()),
+    path("ws/project/<uuid:uuid>/", ProjectConsumer.as_asgi()),
     path("ws/workspace/<uuid:uuid>/", WorkspaceConsumer.as_asgi()),
 )

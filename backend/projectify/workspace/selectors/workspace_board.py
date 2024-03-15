@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Workspace board model selectors."""
+"""Project model selectors."""
 from typing import Optional
 from uuid import UUID
 
@@ -22,9 +22,9 @@ from django.db.models import QuerySet
 
 from projectify.user.models import User
 
-from ..models.workspace_board import WorkspaceBoard
+from ..models.project import Project
 
-WorkspaceBoardDetailQuerySet = WorkspaceBoard.objects.prefetch_related(
+ProjectDetailQuerySet = Project.objects.prefetch_related(
     "section_set",
     "section_set__task_set",
     "section_set__task_set__assignee",
@@ -36,11 +36,11 @@ WorkspaceBoardDetailQuerySet = WorkspaceBoard.objects.prefetch_related(
 )
 
 
-def workspace_board_find_by_workspace_uuid(
+def project_find_by_workspace_uuid(
     *, workspace_uuid: UUID, who: User, archived: Optional[bool] = None
-) -> QuerySet[WorkspaceBoard]:
-    """Find workspace boards for a workspace."""
-    qs = WorkspaceBoard.objects.filter(
+) -> QuerySet[Project]:
+    """Find projects for a workspace."""
+    qs = Project.objects.filter(
         workspace__users=who, workspace__uuid=workspace_uuid
     )
     if archived is not None:
@@ -48,18 +48,18 @@ def workspace_board_find_by_workspace_uuid(
     return qs
 
 
-def workspace_board_find_by_workspace_board_uuid(
+def project_find_by_project_uuid(
     *,
-    workspace_board_uuid: UUID,
+    project_uuid: UUID,
     who: User,
-    qs: Optional[QuerySet[WorkspaceBoard]] = None,
+    qs: Optional[QuerySet[Project]] = None,
     archived: bool = False,
-) -> Optional[WorkspaceBoard]:
+) -> Optional[Project]:
     """Find a workspace by uuid for a given user."""
-    qs = WorkspaceBoard.objects.all() if qs is None else qs
+    qs = Project.objects.all() if qs is None else qs
     qs = qs.filter(archived__isnull=not archived)
-    qs = qs.filter(workspace__users=who, uuid=workspace_board_uuid)
+    qs = qs.filter(workspace__users=who, uuid=project_uuid)
     try:
         return qs.get()
-    except WorkspaceBoard.DoesNotExist:
+    except Project.DoesNotExist:
         return None

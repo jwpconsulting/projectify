@@ -18,9 +18,9 @@
 import { error } from "@sveltejs/kit";
 
 import { getWorkspace } from "$lib/repository/workspace";
-import { getWorkspaceBoard } from "$lib/repository/workspace/project";
+import { getProject } from "$lib/repository/workspace/project";
 import type {
-    WorkspaceBoardDetail,
+    ProjectDetail,
     Section,
     WorkspaceDetail,
 } from "$lib/types/workspace";
@@ -31,11 +31,11 @@ export async function load({
     params: { projectUuid },
     fetch,
 }: PageLoadEvent): Promise<{
-    project: WorkspaceBoardDetail;
+    project: ProjectDetail;
     workspace: WorkspaceDetail;
     section?: Section;
 }> {
-    const project = await getWorkspaceBoard(projectUuid, {
+    const project = await getProject(projectUuid, {
         fetch,
     });
     if (!project) {

@@ -17,23 +17,23 @@
  */
 import { derived } from "svelte/store";
 
-import { getArchivedWorkspaceBoards } from "$lib/repository/workspace/project";
+import { getArchivedProjects } from "$lib/repository/workspace/project";
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
-import type { ArchivedWorkspaceBoard } from "$lib/types/workspace";
+import type { ArchivedProject } from "$lib/types/workspace";
 
-export const currentArchivedWorkspaceBoards = derived<
+export const currentArchivedProjects = derived<
     typeof currentWorkspace,
-    ArchivedWorkspaceBoard[] | undefined
+    ArchivedProject[] | undefined
 >(currentWorkspace, ($currentWorkspace, set) => {
     const uuid = $currentWorkspace?.uuid;
     if (!uuid) {
         return;
     }
-    getArchivedWorkspaceBoards(uuid, { fetch })
+    getArchivedProjects(uuid, { fetch })
         .then(set)
         .catch((error: Error) => {
             console.error(
-                "An error happened when retrieving currentArchivedWorkspaceBoards",
+                "An error happened when retrieving currentArchivedProjects",
                 { error },
             );
         });

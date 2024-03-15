@@ -120,7 +120,7 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         request: Request = self.context["request"]
         user: User = request.user
 
-        # First, we make sure we are assigning the task to a workspace board
+        # First, we make sure we are assigning the task to a project
         # section that the request's user has access to.
         section = section_find_for_user_and_uuid(
             user=user,
@@ -131,7 +131,7 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
                 _("Section does not exist"),
             )
         # TODO select related
-        workspace = section.workspace_board.workspace
+        workspace = section.project.workspace
         if self.instance and self.instance.workspace != workspace:
             raise serializers.ValidationError(
                 _("This task cannot be assigned to another workspace"),
@@ -147,7 +147,7 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         """Validate user access to ws board sect, assignee and labels."""
         section: models.Section = data["section"]
         # TODO select related
-        workspace = section.workspace_board.workspace
+        workspace = section.project.workspace
 
         # Then we filter the list of labels for labels that are contained
         # in this workspace

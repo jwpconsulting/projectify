@@ -15,7 +15,7 @@ The resources that workspace users can work on are the following:
 - Workspace
 - Workspace user invite
 - Workspace user
-- Workspace board
+- Project
 - Section
 - Task
 - Label
@@ -42,7 +42,7 @@ role required to perform that action.
 | Workspace               | Owner      | Observer   | Owner      | Owner      |
 | Workspace user invite   | Owner      | Owner      | Owner      | Owner      |
 | Workspace user          | Owner      | Observer   | Owner      | Owner      |
-| Workspace board         | Maintainer | Observer   | Maintainer | Maintainer |
+| Project         | Maintainer | Observer   | Maintainer | Maintainer |
 | Section | Maintainer | Observer   | Maintainer | Maintainer |
 | Task                    | Member     | Observer   | Member     | Maintainer |
 | Label                   | Maintainer | Observer   | Maintainer | Maintainer |
@@ -64,7 +64,7 @@ changes on them or create them. They can read the following resources:
 
 - Workspace
 - Workspace users
-- Workspace boards
+- Projects
 - Sections
 - Tasks
 - Labels
@@ -94,7 +94,7 @@ Project Lead, and so on.
 
 Maintainer have the following permissions in addition to member permissons:
 
-- Create, update and delete workspace boards
+- Create, update and delete projects
 - Create, update and delete sections
 - Delete tasks
 - Create, update and delete labels
@@ -123,16 +123,16 @@ WorkspaceUser instance.
 
 The workspace is inferred from the actual resource the user is calling the API
 on. For example, when updating a section, we resolve the
-workspace belonging to it by looking at the associated workspace board's
+workspace belonging to it by looking at the associated project's
 workspace foreign key. The order of lookup operations is roughly:
 
 1. Identify current, authenticated user based on session cookie
-2. Identify resource based on API URL (workspace-board/<uuid>/... would be
+2. Identify resource based on API URL (project/<uuid>/... would be
    workspace with UUID <uuid>)
 3. For the authenticated user, look up all available resources of the given
-   type. (For workspace boards, retrieve all workspace boards that they can
+   type. (For projects, retrieve all projects that they can
    access as a workspace user)
-4. See if resource is part of the available resources (For workspace boards,
+4. See if resource is part of the available resources (For projects,
    match by <uuid>)
 5. If no resource is found, return HTTP status code 404 __NOT FOUND__.
 6. For a GET, we are done and can serialize return the resource (except for

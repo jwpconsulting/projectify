@@ -35,7 +35,7 @@
     import { openContextMenu } from "$lib/stores/globalUi";
     import {
         getDashboardSectionUrl,
-        getDashboardWorkspaceBoardUrl,
+        getDashboardProjectUrl,
         getTaskEditUrl,
         getTaskUrl,
     } from "$lib/urls";
@@ -64,7 +64,7 @@
     $: crumbs = [
         {
             label: project.title,
-            href: getDashboardWorkspaceBoardUrl(project.uuid),
+            href: getDashboardProjectUrl(project.uuid),
         },
         {
             label: section.title,

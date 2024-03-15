@@ -24,13 +24,13 @@
     import WorkspaceUser from "$lib/figma/cards/task-card/WorkspaceUser.svelte";
     import type {
         TaskWithSection,
-        WorkspaceBoardDetail,
+        ProjectDetail,
         SectionWithTasks,
     } from "$lib/types/workspace";
     import { getTaskUrl } from "$lib/urls";
 
     export let task: TaskWithSection;
-    export let project: WorkspaceBoardDetail;
+    export let project: ProjectDetail;
     export let section: SectionWithTasks | undefined = undefined;
 </script>
 

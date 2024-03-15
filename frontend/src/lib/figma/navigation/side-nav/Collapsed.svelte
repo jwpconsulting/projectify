@@ -21,11 +21,11 @@
     import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import {
-        selectWorkspaceBoardUuid,
+        selectProjectUuid,
         showFilters,
     } from "$lib/stores/dashboard";
     import type { WorkspaceDetail } from "$lib/types/workspace";
-    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
+    import { getDashboardProjectUrl } from "$lib/urls";
 
     export let workspace: WorkspaceDetail | undefined;
 </script>
@@ -46,11 +46,11 @@
                                     state="active"
                                     action={{
                                         kind: "a",
-                                        href: getDashboardWorkspaceBoardUrl(
+                                        href: getDashboardProjectUrl(
                                             board.uuid,
                                         ),
                                         onInteract:
-                                            selectWorkspaceBoardUuid.bind(
+                                            selectProjectUuid.bind(
                                                 null,
                                                 workspace.uuid,
                                                 board.uuid,
