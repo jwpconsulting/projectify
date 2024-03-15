@@ -116,9 +116,7 @@ within_task_label_quota = rules.predicate(
     partial(can_create_more, "TaskLabel")
 )
 # Return True if a project can be created in workspace
-within_project_quota = rules.predicate(
-    partial(can_create_more, "Project")
-)
+within_project_quota = rules.predicate(partial(can_create_more, "Project"))
 # Return True if a section can be created in a workspace
 within_section_quota = rules.predicate(partial(can_create_more, "Section"))
 # Return True if a workspace user can be added to a workspace

@@ -382,9 +382,7 @@ class TestProject:
         )
         assert await expect_message(workspace_communicator, workspace)
 
-        project_communicator = await make_communicator(
-            project, user
-        )
+        project_communicator = await make_communicator(project, user)
 
         # Update
         await database_sync_to_async(project_update)(
@@ -392,9 +390,7 @@ class TestProject:
             project=project,
             title="don't care",
         )
-        assert await expect_message(
-            project_communicator, project
-        )
+        assert await expect_message(project_communicator, project)
         assert await expect_message(workspace_communicator, workspace)
 
         # Archive
@@ -437,9 +433,7 @@ class TestSection:
             title="A section",
             project=project,
         )
-        assert await expect_message(
-            project_communicator, project
-        )
+        assert await expect_message(project_communicator, project)
 
         # Update it
         await database_sync_to_async(section_update)(
@@ -447,9 +441,7 @@ class TestSection:
             section=section,
             title="Title has changed",
         )
-        assert await expect_message(
-            project_communicator, project
-        )
+        assert await expect_message(project_communicator, project)
 
         # Move it
         await database_sync_to_async(section_move)(
@@ -457,18 +449,14 @@ class TestSection:
             section=section,
             order=0,
         )
-        assert await expect_message(
-            project_communicator, project
-        )
+        assert await expect_message(project_communicator, project)
 
         # Delete it
         await database_sync_to_async(section_delete)(
             who=user,
             section=section,
         )
-        assert await expect_message(
-            project_communicator, project
-        )
+        assert await expect_message(project_communicator, project)
 
         await project_communicator.disconnect()
         await delete_model_instance(project)
@@ -537,9 +525,7 @@ class TestTaskConsumer:
             sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
             labels=[],
         )
-        assert await expect_message(
-            project_communicator, project
-        )
+        assert await expect_message(project_communicator, project)
 
         task_communicator = await make_communicator(task, user)
 
@@ -551,9 +537,7 @@ class TestTaskConsumer:
             sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
             labels=[],
         )
-        assert await expect_message(
-            project_communicator, project
-        )
+        assert await expect_message(project_communicator, project)
         assert await expect_message(task_communicator, task)
 
         # Move
@@ -562,9 +546,7 @@ class TestTaskConsumer:
             task=task,
             after=section,
         )
-        assert await expect_message(
-            project_communicator, project
-        )
+        assert await expect_message(project_communicator, project)
         assert await expect_message(task_communicator, task)
 
         # Delete
@@ -572,9 +554,7 @@ class TestTaskConsumer:
             who=user,
             task=task,
         )
-        assert await expect_message(
-            project_communicator, project
-        )
+        assert await expect_message(project_communicator, project)
 
         await clean_up_communicator(project_communicator)
         # Ideally, a task consumer will disconnect when a task is deleted
@@ -610,9 +590,7 @@ class TestTaskLabel:
             labels=[label],
             sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
         )
-        assert await expect_message(
-            project_communicator, project
-        )
+        assert await expect_message(project_communicator, project)
         assert await expect_message(task_communicator, task)
 
         # Remove label
@@ -623,9 +601,7 @@ class TestTaskLabel:
             labels=[],
             sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
         )
-        assert await expect_message(
-            project_communicator, project
-        )
+        assert await expect_message(project_communicator, project)
         assert await expect_message(task_communicator, task)
 
         await project_communicator.disconnect()
@@ -669,9 +645,7 @@ class TestSubTask:
                 }
             ],
         )
-        assert await expect_message(
-            project_communicator, project
-        )
+        assert await expect_message(project_communicator, project)
         assert await expect_message(task_communicator, task)
 
         # Simulate removing a task
@@ -682,9 +656,7 @@ class TestSubTask:
             create_sub_tasks=[],
             update_sub_tasks=[],
         )
-        assert await expect_message(
-            project_communicator, project
-        )
+        assert await expect_message(project_communicator, project)
         assert await expect_message(task_communicator, task)
 
         # Simulate adding a task
@@ -697,9 +669,7 @@ class TestSubTask:
             ],
             update_sub_tasks=[],
         )
-        assert await expect_message(
-            project_communicator, project
-        )
+        assert await expect_message(project_communicator, project)
         assert await expect_message(task_communicator, task)
 
         await project_communicator.disconnect()

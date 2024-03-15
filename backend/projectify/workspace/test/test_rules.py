@@ -268,13 +268,9 @@ class TestTrialRules:
         workspace: Workspace,
     ) -> None:
         """Assert only 1 project can be created."""
-        assert validate_perm(
-            "workspace.create_project", user, workspace
-        )
+        assert validate_perm("workspace.create_project", user, workspace)
         customer_cancel_subscription(customer=workspace.customer)
-        assert validate_perm(
-            "workspace.create_project", user, workspace
-        )
+        assert validate_perm("workspace.create_project", user, workspace)
         project_create(
             workspace=workspace,
             title="project",

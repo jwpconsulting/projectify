@@ -180,9 +180,7 @@ class ProjectConsumer(BaseConsumer):
             self.disconnect(close_code=CODE_OBJECT_DISAPPEARED)
             return
 
-        serialized = serialize(
-            ProjectDetailSerializer, project, event
-        )
+        serialized = serialize(ProjectDetailSerializer, project, event)
         self.send_json(serialized)
 
 

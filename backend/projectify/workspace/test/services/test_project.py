@@ -25,26 +25,18 @@ from projectify.workspace.services.project import (
 
 
 @pytest.mark.django_db
-def test_archive(
-    project: Project, workspace_user: WorkspaceUser
-) -> None:
+def test_archive(project: Project, workspace_user: WorkspaceUser) -> None:
     """Test archive method."""
     assert project.archived is None
-    project_archive(
-        project=project, archived=True, who=workspace_user.user
-    )
+    project_archive(project=project, archived=True, who=workspace_user.user)
     assert project.archived is not None
 
 
 @pytest.mark.django_db
-def test_unarchive(
-    project: Project, workspace_user: WorkspaceUser
-) -> None:
+def test_unarchive(project: Project, workspace_user: WorkspaceUser) -> None:
     """Test unarchive method."""
     assert project.archived is None
-    project_archive(
-        project=project, archived=True, who=workspace_user.user
-    )
+    project_archive(project=project, archived=True, who=workspace_user.user)
     assert project.archived is not None
     project_archive(
         project=project,

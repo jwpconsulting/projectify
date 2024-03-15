@@ -74,11 +74,7 @@ class SectionCreate(APIView):
         )
         if project is None:
             raise serializers.ValidationError(
-                {
-                    "project_uuid": _(
-                        "Could not find a project with this uuid"
-                    )
-                }
+                {"project_uuid": _("Could not find a project with this uuid")}
             )
         section = section_create(
             project=project,

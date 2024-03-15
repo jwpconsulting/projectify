@@ -83,9 +83,7 @@ class ProjectCreate(APIView):
             workspace=workspace,
         )
 
-        output_serializer = ProjectDetailSerializer(
-            instance=project
-        )
+        output_serializer = ProjectDetailSerializer(instance=project)
         return Response(data=output_serializer.data, status=201)
 
 
@@ -191,9 +189,9 @@ class ProjectArchive(APIView):
         )
         if project is None:
             raise NotFound(
-                _(
-                    "No project found for this UUID where archived={}"
-                ).format(not archived)
+                _("No project found for this UUID where archived={}").format(
+                    not archived
+                )
             )
         project_archive(
             project=project,

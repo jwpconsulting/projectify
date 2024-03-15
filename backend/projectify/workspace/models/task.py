@@ -94,9 +94,7 @@ class TaskQuerySet(models.QuerySet["Task"]):
         )
 
     # TODO use selector
-    def filter_by_project(
-        self, project: "Project"
-    ) -> Self:
+    def filter_by_project(self, project: "Project") -> Self:
         """Filter by tasks contained in project."""
         return self.filter(
             workspace_board_section__workspace_board=project,

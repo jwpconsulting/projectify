@@ -64,9 +64,7 @@ def project_update(
     due_date: Optional[datetime] = None,
 ) -> Project:
     """Update a project."""
-    validate_perm(
-        "workspace.update_project", who, project.workspace
-    )
+    validate_perm("workspace.update_project", who, project.workspace)
     project.title = title
     project.description = description
     if due_date and due_date.tzinfo is None:

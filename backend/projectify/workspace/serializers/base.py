@@ -98,9 +98,7 @@ class WorkspaceUserBaseSerializer(
         )
 
 
-class ProjectBaseSerializer(
-    serializers.ModelSerializer[models.Project]
-):
+class ProjectBaseSerializer(serializers.ModelSerializer[models.Project]):
     """Project base serializer."""
 
     class Meta:

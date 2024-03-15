@@ -349,9 +349,7 @@ class Command(BaseCommand):
                 for _ in range(self.n_projects)
             ]
         )
-        self.stdout.write(
-            f"Created {len(workspaces_projects)} projects"
-        )
+        self.stdout.write(f"Created {len(workspaces_projects)} projects")
 
         workspaces_sections = Section.objects.bulk_create(
             [
@@ -409,9 +407,7 @@ class Command(BaseCommand):
             ) in zip(
                 groupby(workspaces_workspace_users, key=lambda u: u.workspace),
                 groupby(workspaces_labels, key=lambda label: label.workspace),
-                groupby(
-                    workspaces_projects, key=lambda b: b.workspace
-                ),
+                groupby(workspaces_projects, key=lambda b: b.workspace),
                 groupby(
                     workspaces_sections,
                     key=lambda b: b.project.workspace,
