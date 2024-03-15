@@ -87,9 +87,7 @@ class TaskCreate(APIView):
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
 
-        section: Section = validated_data[
-            "section"
-        ]
+        section: Section = validated_data["section"]
 
         sub_tasks: ValidatedData
         if "sub_tasks" in validated_data:
@@ -193,21 +191,13 @@ class TaskMoveToSection(APIView):
         task = task_find_by_task_uuid(who=user, task_uuid=task_uuid)
         if task is None:
             raise NotFound(_("Task for this UUID not found"))
-        section = (
-            section_find_for_user_and_uuid(
-                section_uuid=data[
-                    "section_uuid"
-                ],
-                user=user,
-            )
+        section = section_find_for_user_and_uuid(
+            section_uuid=data["section_uuid"],
+            user=user,
         )
         if section is None:
             raise serializers.ValidationError(
-                {
-                    "section_uuid": _(
-                        "No section was found for the given uuid"
-                    )
-                }
+                {"section_uuid": _("No section was found for the given uuid")}
             )
         task_move_after(task=task, who=user, after=section)
         task = task_find_by_task_uuid(

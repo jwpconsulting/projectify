@@ -122,11 +122,9 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
 
         # First, we make sure we are assigning the task to a workspace board
         # section that the request's user has access to.
-        section = (
-            section_find_for_user_and_uuid(
-                user=user,
-                section_uuid=value["uuid"],
-            )
+        section = section_find_for_user_and_uuid(
+            user=user,
+            section_uuid=value["uuid"],
         )
         if section is None:
             raise serializers.ValidationError(
@@ -147,9 +145,7 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
 
     def validate(self, data: dict[str, Any]) -> dict[str, Any]:
         """Validate user access to ws board sect, assignee and labels."""
-        section: models.Section = data[
-            "section"
-        ]
+        section: models.Section = data["section"]
         # TODO select related
         workspace = section.workspace_board.workspace
 

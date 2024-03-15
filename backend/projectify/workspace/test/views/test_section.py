@@ -74,10 +74,7 @@ class TestSectionCreate:
         assert response.status_code == 201
         assert Section.objects.count() == 1
         section = Section.objects.get()
-        assert (
-            section.title
-            == "New section, who dis??"
-        )
+        assert section.title == "New section, who dis??"
 
 
 # Read + Update + Delete
@@ -86,9 +83,7 @@ class TestSectionReadUpdateDelete:
     """Test SectionReadUpdateDelete view."""
 
     @pytest.fixture
-    def resource_url(
-        self, section: Section
-    ) -> str:
+    def resource_url(self, section: Section) -> str:
         """Return URL to this view."""
         return reverse(
             "workspace:sections:read-update-delete",
@@ -164,9 +159,7 @@ class TestSectionMove:
     """Test moving a section."""
 
     @pytest.fixture
-    def resource_url(
-        self, section: Section
-    ) -> str:
+    def resource_url(self, section: Section) -> str:
         """Return URL to this view."""
         return reverse(
             "workspace:sections:move",

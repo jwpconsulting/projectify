@@ -33,9 +33,7 @@ from django.db import (
 
 def ensure_correct_order(apps: Apps, schema_editor: object) -> None:
     """Correct _order field."""
-    WorkspaceBoard = cast(
-        Any, apps.get_model("workspace", "WorkspaceBoard")
-    )
+    WorkspaceBoard = cast(Any, apps.get_model("workspace", "WorkspaceBoard"))
     for workspaceboard in WorkspaceBoard.objects.all():
         for i, wbs in enumerate(
             workspaceboard.workspaceboardsection_set.all()

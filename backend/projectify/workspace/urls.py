@@ -213,9 +213,7 @@ urlpatterns = (
     # Section
     path(
         "section/",
-        include(
-            (section_patterns, "sections")
-        ),
+        include((section_patterns, "sections")),
     ),
     # Task
     path(

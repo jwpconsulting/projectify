@@ -81,9 +81,7 @@ class TestTaskCreate(UnauthenticatedTestMixin):
             "title": "bla",
             "labels": [],
             "assignee": None,
-            "section": {
-                "uuid": str(section.uuid)
-            },
+            "section": {"uuid": str(section.uuid)},
             "sub_tasks": [
                 {"title": "I am a sub task", "done": False},
             ],
@@ -156,9 +154,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         """Create payload."""
         return {
             "title": "Hello world",
-            "section": {
-                "uuid": str(section.uuid)
-            },
+            "section": {"uuid": str(section.uuid)},
             "number": 2,
             "labels": [],
             "assignee": None,
@@ -214,10 +210,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
             assert response.status_code == 200, response.content
         assert response.data["title"] == "Hello world"
         # We get the whole nested thing
-        assert (
-            response.data["section"]["title"]
-            == section.title
-        )
+        assert response.data["section"]["title"] == section.title
 
     def test_delete(
         self,
@@ -262,11 +255,7 @@ class TestMoveTaskToSection:
         with django_assert_num_queries(18):
             response = rest_user_client.post(
                 resource_url,
-                data={
-                    "section_uuid": str(
-                        other_section.uuid
-                    )
-                },
+                data={"section_uuid": str(other_section.uuid)},
             )
             assert response.status_code == status.HTTP_200_OK, response.data
 

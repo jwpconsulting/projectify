@@ -42,9 +42,7 @@ class WorkspaceBoardUpSerializer(base.WorkspaceBoardBaseSerializer):
         )
 
 
-class SectionUpSerializer(
-    base.SectionBaseSerializer
-):
+class SectionUpSerializer(base.SectionBaseSerializer):
     """Serialize section up the hierarchy."""
 
     workspace_board = WorkspaceBoardUpSerializer(read_only=True)
@@ -58,9 +56,7 @@ class SectionUpSerializer(
         )
 
 
-class SectionDetailSerializer(
-    base.SectionBaseSerializer
-):
+class SectionDetailSerializer(base.SectionBaseSerializer):
     """
     Section detail serializer.
 

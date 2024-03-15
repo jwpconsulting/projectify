@@ -110,9 +110,7 @@ def section_move(
         section.workspace_board.workspace,
     )
     workspace_board = section.workspace_board
-    neighbor_sections = (
-        workspace_board.section_set.select_for_update()
-    )
+    neighbor_sections = workspace_board.section_set.select_for_update()
     # Force queryset to be evaluated to lock them for the time of
     # this transaction
     len(neighbor_sections)

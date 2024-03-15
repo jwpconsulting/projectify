@@ -432,9 +432,7 @@ class TestSection:
     ) -> None:
         """Test workspace board consumer behavior for section changes."""
         # Create it
-        section = await database_sync_to_async(
-            section_create
-        )(
+        section = await database_sync_to_async(section_create)(
             who=user,
             title="A section",
             workspace_board=workspace_board,

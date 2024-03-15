@@ -96,24 +96,16 @@ class SectionCreate(APIView):
 class SectionReadUpdateDelete(APIView):
     """Workspace board retrieve view."""
 
-    def get(
-        self, request: Request, section_uuid: UUID
-    ) -> Response:
+    def get(self, request: Request, section_uuid: UUID) -> Response:
         """Handle GET."""
-        section = (
-            section_find_for_user_and_uuid(
-                user=request.user,
-                section_uuid=section_uuid,
-                qs=SectionDetailQuerySet,
-            )
+        section = section_find_for_user_and_uuid(
+            user=request.user,
+            section_uuid=section_uuid,
+            qs=SectionDetailQuerySet,
         )
         if section is None:
-            raise NotFound(
-                _("Section not found for this UUID")
-            )
-        serializer = SectionDetailSerializer(
-            instance=section
-        )
+            raise NotFound(_("Section not found for this UUID"))
+        serializer = SectionDetailSerializer(instance=section)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     class InputSerializer(serializers.ModelSerializer[Section]):
@@ -125,21 +117,15 @@ class SectionReadUpdateDelete(APIView):
             fields = "title", "description"
             model = Section
 
-    def put(
-        self, request: Request, section_uuid: UUID
-    ) -> Response:
+    def put(self, request: Request, section_uuid: UUID) -> Response:
         """Update section."""
-        section = (
-            section_find_for_user_and_uuid(
-                user=request.user,
-                section_uuid=section_uuid,
-                qs=SectionDetailQuerySet,
-            )
+        section = section_find_for_user_and_uuid(
+            user=request.user,
+            section_uuid=section_uuid,
+            qs=SectionDetailQuerySet,
         )
         if section is None:
-            raise NotFound(
-                _("Section not found for this UUID")
-            )
+            raise NotFound(_("Section not found for this UUID"))
 
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -152,21 +138,15 @@ class SectionReadUpdateDelete(APIView):
         )
         return Response(data=serializer.validated_data)
 
-    def delete(
-        self, request: Request, section_uuid: UUID
-    ) -> Response:
+    def delete(self, request: Request, section_uuid: UUID) -> Response:
         """Handle DELETE."""
-        section = (
-            section_find_for_user_and_uuid(
-                user=request.user,
-                section_uuid=section_uuid,
-                qs=SectionDetailQuerySet,
-            )
+        section = section_find_for_user_and_uuid(
+            user=request.user,
+            section_uuid=section_uuid,
+            qs=SectionDetailQuerySet,
         )
         if section is None:
-            raise NotFound(
-                _("Section not found for this UUID")
-            )
+            raise NotFound(_("Section not found for this UUID"))
         section_delete(
             who=self.request.user,
             section=section,
@@ -183,25 +163,19 @@ class SectionMove(APIView):
 
         order = serializers.IntegerField()
 
-    def post(
-        self, request: Request, section_uuid: UUID
-    ) -> Response:
+    def post(self, request: Request, section_uuid: UUID) -> Response:
         """Process request."""
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         user = request.user
-        section = (
-            section_find_for_user_and_uuid(
-                user=request.user,
-                section_uuid=section_uuid,
-                qs=SectionDetailQuerySet,
-            )
+        section = section_find_for_user_and_uuid(
+            user=request.user,
+            section_uuid=section_uuid,
+            qs=SectionDetailQuerySet,
         )
         if section is None:
-            raise NotFound(
-                _("Section not found for this UUID")
-            )
+            raise NotFound(_("Section not found for this UUID"))
         section_move(
             section=section,
             order=data["order"],

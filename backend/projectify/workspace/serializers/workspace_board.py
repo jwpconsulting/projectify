@@ -24,9 +24,7 @@ from . import (
 )
 
 
-class SectionSerializer(
-    base.SectionBaseSerializer
-):
+class SectionSerializer(base.SectionBaseSerializer):
     """
     Section serializer.
 

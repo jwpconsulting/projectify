@@ -116,9 +116,7 @@ class WorkspaceBoardBaseSerializer(
         )
 
 
-class SectionBaseSerializer(
-    serializers.ModelSerializer[models.Section]
-):
+class SectionBaseSerializer(serializers.ModelSerializer[models.Section]):
     """Section serializer."""
 
     class Meta:

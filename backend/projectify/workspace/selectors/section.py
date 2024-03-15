@@ -25,17 +25,15 @@ from projectify.workspace.models.section import (
     Section,
 )
 
-SectionDetailQuerySet = (
-    Section.objects.prefetch_related(
-        "task_set",
-        "task_set__assignee",
-        "task_set__assignee__user",
-        "task_set__labels",
-        "task_set__subtask_set",
-    ).select_related(
-        "workspace_board",
-        "workspace_board__workspace",
-    )
+SectionDetailQuerySet = Section.objects.prefetch_related(
+    "task_set",
+    "task_set__assignee",
+    "task_set__assignee__user",
+    "task_set__labels",
+    "task_set__subtask_set",
+).select_related(
+    "workspace_board",
+    "workspace_board__workspace",
 )
 
 

@@ -102,9 +102,7 @@ class WorkspaceUserAdmin(admin.ModelAdmin[models.WorkspaceUser]):
         return instance.user.email
 
 
-class SectionInline(
-    admin.TabularInline[models.Section]
-):
+class SectionInline(admin.TabularInline[models.Section]):
     """Section inline admin."""
 
     model = models.Section
@@ -140,9 +138,7 @@ class TaskInline(admin.TabularInline[models.Task]):
 
 
 @admin.register(models.Section)
-class SectionAdmin(
-    admin.ModelAdmin[models.Section]
-):
+class SectionAdmin(admin.ModelAdmin[models.Section]):
     """Section Admin."""
 
     inlines = (TaskInline,)
@@ -157,9 +153,7 @@ class SectionAdmin(
     readonly_fields = ("uuid",)
 
     @admin.display(description=_("Workspace board title"))
-    def workspace_board_title(
-        self, instance: models.Section
-    ) -> str:
+    def workspace_board_title(self, instance: models.Section) -> str:
         """Return the workspace board's title."""
         return instance.workspace_board.title
 
@@ -196,9 +190,7 @@ class TaskAdmin(admin.ModelAdmin[models.Task]):
         "created",
         "modified",
     )
-    list_select_related = (
-        "section__workspace_board__workspace",
-    )
+    list_select_related = ("section__workspace_board__workspace",)
     readonly_fields = ("uuid", "assignee")
 
     @admin.display(description=_("Section title"))
@@ -248,9 +240,7 @@ class SubTaskAdmin(admin.ModelAdmin[models.SubTask]):
         "created",
         "modified",
     )
-    list_select_related = (
-        "task__section__workspace_board__workspace",
-    )
+    list_select_related = ("task__section__workspace_board__workspace",)
     readonly_fields = ("uuid",)
 
     @admin.display(description=_("Task title"))
@@ -287,9 +277,7 @@ class ChatMessageAdmin(admin.ModelAdmin[models.ChatMessage]):
         "created",
         "modified",
     )
-    list_select_related = (
-        "task__section__workspace_board__workspace",
-    )
+    list_select_related = ("task__section__workspace_board__workspace",)
     readonly_fields = ("uuid", "author")
 
     @admin.display(description=_("Task title"))
@@ -298,9 +286,7 @@ class ChatMessageAdmin(admin.ModelAdmin[models.ChatMessage]):
         return instance.task.title
 
     @admin.display(description=_("Section title"))
-    def section_title(
-        self, instance: models.ChatMessage
-    ) -> str:
+    def section_title(self, instance: models.ChatMessage) -> str:
         """Return the workspace board's title."""
         return instance.task.section.title
 

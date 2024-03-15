@@ -353,38 +353,35 @@ class Command(BaseCommand):
             f"Created {len(workspaces_workspace_boards)} workspace boards"
         )
 
-        workspaces_sections = (
-            Section.objects.bulk_create(
-                [
-                    Section(
-                        workspace_board=workspace_board,
-                        title=title,
-                        _order=_order,
-                    )
-                    for _, workspace_boards in groupby(
-                        workspaces_workspace_boards, key=lambda b: b.workspace
-                    )
-                    for workspace_board in workspace_boards
-                    for _order, title in enumerate(
-                        self.fake.text(
-                            randint(
-                                SECTION_TITLE_MIN_LENGTH,
-                                SECTION_TITLE_MAX_LENGTH,
-                            )
-                        )
-                        for _ in range(
-                            randint(
-                                WORKSPACE_BOARD_MIN_SECTIONS,
-                                WORKSPACE_BOARD_MAX_SECTIONS,
-                            )
+        workspaces_sections = Section.objects.bulk_create(
+            [
+                Section(
+                    workspace_board=workspace_board,
+                    title=title,
+                    _order=_order,
+                )
+                for _, workspace_boards in groupby(
+                    workspaces_workspace_boards, key=lambda b: b.workspace
+                )
+                for workspace_board in workspace_boards
+                for _order, title in enumerate(
+                    self.fake.text(
+                        randint(
+                            SECTION_TITLE_MIN_LENGTH,
+                            SECTION_TITLE_MAX_LENGTH,
                         )
                     )
-                ]
-            )
+                    for _ in range(
+                        randint(
+                            WORKSPACE_BOARD_MIN_SECTIONS,
+                            WORKSPACE_BOARD_MAX_SECTIONS,
+                        )
+                    )
+                )
+            ]
         )
         self.stdout.write(
-            f"Created {len(workspaces_sections)} workspace "
-            "board sections"
+            f"Created {len(workspaces_sections)} workspace " "board sections"
         )
 
         # The idea here is that instead of going into each nested object in
