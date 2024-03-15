@@ -27,7 +27,7 @@ from projectify.workspace.models.task import Task, TaskQuerySet
 
 TaskDetailQuerySet: TaskQuerySet = (
     Task.objects.select_related(
-        "section__workspace_board__workspace",
+        "workspace_board_section__workspace_board__workspace",
         "assignee",
         "assignee__user",
     )
@@ -56,7 +56,7 @@ def task_find_by_task_uuid(
     qs = Task.objects if qs is None else qs
     try:
         return qs.get(
-            section__workspace_board__workspace__users=who,
+            workspace_board_section__workspace_board__workspace__users=who,
             uuid=task_uuid,
         )
     except Task.DoesNotExist:

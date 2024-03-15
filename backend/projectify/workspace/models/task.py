@@ -71,31 +71,35 @@ if TYPE_CHECKING:
 class TaskQuerySet(models.QuerySet["Task"]):
     """Manager for Task."""
 
+    # TODO use selector
     def filter_by_workspace(self, workspace: Workspace) -> Self:
         """Filter by workspace."""
         return self.filter(
-            section__workspace_board__workspace=workspace,
+            workspace_board_section__workspace_board__workspace=workspace,
         )
 
+    # TODO use selector
     def filter_by_assignee(self, assignee: "WorkspaceUser") -> Self:
         """Filter by assignee user."""
         return self.filter(assignee=assignee)
 
+    # TODO use selector
     def filter_by_section_pks(
         self,
         section_pks: Pks,
     ) -> Self:
         """Filter by section pks."""
         return self.filter(
-            section__pk__in=section_pks,
+            workspace_board_section__pk__in=section_pks,
         )
 
+    # TODO use selector
     def filter_by_workspace_board(
         self, workspace_board: "WorkspaceBoard"
     ) -> Self:
         """Filter by tasks contained in workspace board."""
         return self.filter(
-            section__workspace_board=workspace_board,
+            workspace_board_section__workspace_board=workspace_board,
         )
 
 
@@ -107,7 +111,7 @@ class Task(TitleDescriptionModel, BaseModel):
         on_delete=models.CASCADE,
     )
 
-    section = models.ForeignKey["Section"](
+    workspace_board_section = models.ForeignKey["Section"](
         "Section",
         on_delete=models.CASCADE,
     )
@@ -162,7 +166,7 @@ class Task(TitleDescriptionModel, BaseModel):
     def get_next_section(self) -> "Section":
         """Return instance of the next section."""
         next_section: "Section" = (
-            self.section.get_next_in_order()
+            self.workspace_board_section.get_next_in_order()
         )
         return next_section
 
@@ -202,7 +206,7 @@ class Task(TitleDescriptionModel, BaseModel):
             TaskLabel,
         )
 
-        workspace = self.section.workspace_board.workspace
+        workspace = self.workspace_board_section.workspace_board.workspace
 
         # XXX can this be a db constraint?
         # Or done in the serializer?
@@ -242,13 +246,18 @@ class Task(TitleDescriptionModel, BaseModel):
         """Return title."""
         return self.title
 
+    @property
+    def section(self) -> "Section":
+        """Return current section."""
+        return self.workspace_board_section
+
     class Meta:
         """Meta."""
 
-        order_with_respect_to = "section"
+        order_with_respect_to = "workspace_board_section"
         constraints = [
             models.UniqueConstraint(
-                fields=["section", "_order"],
+                fields=["workspace_board_section", "_order"],
                 name="unique_task_order",
                 deferrable=models.Deferrable.DEFERRED,
             ),
@@ -291,7 +300,7 @@ class Task(TitleDescriptionModel, BaseModel):
                                  "workspace_section"."workspace_board_id")
                         INNER JOIN "workspace_task"
                             ON ("workspace_section"."id" = \
-                                "workspace_task"."section_id")
+                                "workspace_task"."workspace_board_section_id")
                         WHERE "workspace_task"."id" = NEW.id
                         LIMIT 1;
                         IF correct_workspace_id != NEW.workspace_id THEN
