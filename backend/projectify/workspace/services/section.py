@@ -45,7 +45,7 @@ def section_create(
     section = Section(
         title=title,
         description=description,
-        project=project,
+        workspace_board=project,
     )
     section.save()
     send_project_change_signal(project)

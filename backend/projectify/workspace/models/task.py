@@ -99,7 +99,7 @@ class TaskQuerySet(models.QuerySet["Task"]):
     ) -> Self:
         """Filter by tasks contained in project."""
         return self.filter(
-            workspace_board_section__project=project,
+            workspace_board_section__workspace_board=project,
         )
 
 
@@ -111,6 +111,7 @@ class Task(TitleDescriptionModel, BaseModel):
         on_delete=models.CASCADE,
     )
 
+    # TODO rename to section
     workspace_board_section = models.ForeignKey["Section"](
         "Section",
         on_delete=models.CASCADE,
@@ -297,7 +298,7 @@ class Task(TitleDescriptionModel, BaseModel):
                             "workspace_project"."workspace_id")
                         INNER JOIN "workspace_section"
                             ON ("workspace_project"."id" = \
-                                 "workspace_section"."project_id")
+                                 "workspace_section"."workspace_board_id")
                         INNER JOIN "workspace_task"
                             ON ("workspace_section"."id" = \
                                 "workspace_task"."workspace_board_section_id")

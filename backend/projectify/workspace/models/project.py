@@ -61,12 +61,12 @@ class Project(TitleDescriptionModel, BaseModel):
     archived = models.DateTimeField(
         null=True,
         blank=True,
-        help_text=_("Archival timestamp of this project."),
+        help_text=_("Archival timestamp of this workspace board."),
     )
     due_date = models.DateTimeField(
         null=True,
         blank=True,
-        help_text=_("Due date for this project"),
+        help_text=_("Due date for this workspace board"),
     )
 
     if TYPE_CHECKING:

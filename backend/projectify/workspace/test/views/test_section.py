@@ -176,7 +176,7 @@ class TestSectionMove:
     ) -> None:
         """Test as an authenticated user."""
         other_section = Section(
-            project=section.project,
+            workspace_board=section.project,
             title="test",
         )
         other_section.save()

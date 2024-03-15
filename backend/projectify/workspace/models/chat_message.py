@@ -50,7 +50,7 @@ class ChatMessageQuerySet(models.QuerySet["ChatMessage"]):
     ) -> Self:
         """Get for a specific workspace user and uuid."""
         kwargs = {
-            "task__workspace_board_section__project__"
+            "task__workspace_board_section__workspace_board__"
             "workspace__users": user,
             "uuid": uuid,
         }

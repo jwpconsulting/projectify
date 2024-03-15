@@ -99,7 +99,7 @@ def send_project_change_signal(
     group_send(
         f"project-{uuid}",
         {
-            "type": "workspace.board.change",
+            "type": "project.change",
             "uuid": uuid,
         },
     )

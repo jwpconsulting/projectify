@@ -57,19 +57,19 @@ class SectionQuerySet(models.QuerySet["Section"]):
 
     def filter_by_project_pks(self, keys: Pks) -> Self:
         """Filter by projects."""
-        return self.filter(project__pk__in=keys)
+        return self.filter(workspace_board__pk__in=keys)
 
     def filter_for_user_and_uuid(
         self, user: AbstractBaseUser, uuid: uuid.UUID
     ) -> Self:
         """Return a workspace for user and uuid."""
-        return self.filter(project__workspace__users=user, uuid=uuid)
+        return self.filter(workspace_board__workspace__users=user, uuid=uuid)
 
 
 class Section(TitleDescriptionModel, BaseModel):
     """Section of a Project."""
 
-    project = models.ForeignKey["Project"](
+    workspace_board = models.ForeignKey["Project"](
         "Project",
         on_delete=models.CASCADE,
     )
@@ -93,13 +93,18 @@ class Section(TitleDescriptionModel, BaseModel):
         """Return title."""
         return self.title
 
+    @property
+    def project(self) -> "Project":
+        """Return project (workspace board)."""
+        return self.workspace_board
+
     class Meta:
         """Meta."""
 
-        order_with_respect_to = "project"
+        order_with_respect_to = "workspace_board"
         constraints = [
             models.UniqueConstraint(
-                fields=["project", "_order"],
+                fields=["workspace_board", "_order"],
                 name="unique_project_order",
                 deferrable=models.Deferrable.DEFERRED,
             )
