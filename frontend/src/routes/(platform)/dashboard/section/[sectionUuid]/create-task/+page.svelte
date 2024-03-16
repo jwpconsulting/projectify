@@ -108,6 +108,10 @@
     ];
 </script>
 
+<svelte:head>
+    <title>{project.title}</title>
+</svelte:head>
+
 <Layout>
     <TopBar slot="top-bar" {section}>
         <Breadcrumbs slot="breadcrumbs" {crumbs} />
