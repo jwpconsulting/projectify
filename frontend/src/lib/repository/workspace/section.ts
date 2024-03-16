@@ -27,23 +27,19 @@ import {
     putWithCredentialsJson,
 } from "$lib/repository/util";
 import type { RepositoryContext } from "$lib/types/repository";
-import type {
-    WorkspaceBoard,
-    Section,
-    SectionDetail,
-} from "$lib/types/workspace";
+import type { Project, Section, SectionDetail } from "$lib/types/workspace";
 
 import type { ApiResponse } from "../types";
 
 // Create
 export async function createSection(
-    { uuid: workspace_board_uuid }: WorkspaceBoard,
+    { uuid: project_uuid }: Project,
     { title, description }: Pick<Section, "title" | "description">,
     repositoryContext: RepositoryContext,
 ): Promise<ApiResponse<Section, unknown>> {
     return await postWithCredentialsJson(
         `/workspace/section/`,
-        { workspace_board_uuid, title, description },
+        { project_uuid, title, description },
         repositoryContext,
     );
 }

@@ -26,10 +26,10 @@
     import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
-    import type { WorkspaceBoard, Section } from "$lib/types/workspace";
+    import type { Project, Section } from "$lib/types/workspace";
     import { getNewTaskUrl } from "$lib/urls";
 
-    export let workspaceBoard: WorkspaceBoard;
+    export let project: Project;
     export let section: Section;
     export let open: boolean;
 
@@ -40,7 +40,7 @@
     async function openDropDownMenu() {
         const contextMenuType: ContextMenuType = {
             kind: "section",
-            workspaceBoard,
+            project,
             section,
         };
         await openContextMenu(contextMenuType, dropDownMenuBtnRef);

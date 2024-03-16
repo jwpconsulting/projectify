@@ -34,12 +34,12 @@
         Task,
         Workspace,
         Section,
-        WorkspaceBoardDetail,
+        ProjectDetail,
         WorkspaceUser,
         WorkspaceDetail,
         WorkspaceQuota,
     } from "$lib/types/workspace";
-    import Dashboard from "$routes/(platform)/dashboard/workspace-board/[workspaceBoardUuid]/+page.svelte";
+    import Dashboard from "$routes/(platform)/dashboard/project/[projectUuid]/+page.svelte";
 
     // We are cheating a bit here
     const quota: WorkspaceQuota = {
@@ -51,15 +51,15 @@
         created: "",
         picture: null,
         modified: "",
-        workspace_boards: [],
+        projects: [],
         labels: [],
         workspace_users: [],
         workspace_user_invites: [],
         quota,
     };
-    const workspaceBoardFallback: WorkspaceBoardDetail = {
+    const projectFallback: ProjectDetail = {
         uuid: "does-not-exist",
-        title: $_("onboarding.new-workspace-board.default-name"),
+        title: $_("onboarding.new-project.default-name"),
         modified: "",
         created: "",
         sections: [],
@@ -109,22 +109,22 @@
               title: string;
           }
         | {
-              kind: "new-workspace-board";
+              kind: "new-project";
               workspace: Workspace;
-              workspaceBoard?: WorkspaceBoardDetail;
+              project?: ProjectDetail;
               title: string;
           }
         | {
               kind: "new-task";
               workspace: Workspace;
-              workspaceBoard: WorkspaceBoardDetail;
+              project: ProjectDetail;
               sectionTitle: string;
               title: string;
           }
         | {
               kind: "new-label";
               workspace: Workspace;
-              workspaceBoard: WorkspaceBoardDetail;
+              project: ProjectDetail;
               section: Section;
               task: Task;
               title: string;
@@ -132,7 +132,7 @@
         | {
               kind: "assign-task";
               workspace: Workspace;
-              workspaceBoard: WorkspaceBoardDetail;
+              project: ProjectDetail;
               section: Section;
               task: Task;
               label: Label;
@@ -147,19 +147,18 @@
         ...(state.kind === "new-workspace"
             ? {
                   title: state.title,
-                  workspace_boards: [workspaceBoardFallback],
+                  projects: [projectFallback],
               }
             : undefined),
         ...(state.kind !== "new-workspace"
-            ? { workspace_boards: [workspaceBoard] }
+            ? { projects: [project] }
             : undefined),
     } satisfies WorkspaceDetail;
 
-    $: workspaceBoard = {
-        ...((state.kind === "new-workspace"
-            ? undefined
-            : state.workspaceBoard) ?? workspaceBoardFallback),
-        ...(state.kind === "new-workspace-board"
+    $: project = {
+        ...((state.kind === "new-workspace" ? undefined : state.project) ??
+            projectFallback),
+        ...(state.kind === "new-project"
             ? { title: state.title, sections: [] }
             : undefined),
         ...(state.kind === "new-task"
@@ -206,7 +205,7 @@
                   ],
               }
             : undefined),
-    } satisfies WorkspaceBoardDetail;
+    } satisfies ProjectDetail;
 
     const width = 500;
 </script>
@@ -219,7 +218,7 @@
             </div>
             <div class="min-w-0 grow">
                 {#if $currentUser}
-                    <Dashboard data={{ user: $currentUser, workspaceBoard }} />
+                    <Dashboard data={{ user: $currentUser, project }} />
                 {/if}
             </div>
         </div>

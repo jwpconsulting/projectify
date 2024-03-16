@@ -17,7 +17,7 @@
 """Test section services."""
 import pytest
 
-from projectify.workspace.models import WorkspaceBoard
+from projectify.workspace.models import Project
 from projectify.workspace.models.section import (
     Section,
 )
@@ -49,14 +49,14 @@ def test_delete_non_empty_section(
 
 @pytest.mark.django_db
 def test_moving_section(
-    workspace_board: WorkspaceBoard,
+    project: Project,
     section: Section,
     other_section: Section,
     other_other_section: Section,
     workspace_user: WorkspaceUser,
 ) -> None:
     """Test moving a section around."""
-    assert list(workspace_board.section_set.all()) == [
+    assert list(project.section_set.all()) == [
         section,
         other_section,
         other_other_section,
@@ -66,7 +66,7 @@ def test_moving_section(
         order=0,
         who=workspace_user.user,
     )
-    assert list(workspace_board.section_set.all()) == [
+    assert list(project.section_set.all()) == [
         section,
         other_section,
         other_other_section,
@@ -76,7 +76,7 @@ def test_moving_section(
         order=2,
         who=workspace_user.user,
     )
-    assert list(workspace_board.section_set.all()) == [
+    assert list(project.section_set.all()) == [
         other_section,
         other_other_section,
         section,
@@ -86,7 +86,7 @@ def test_moving_section(
         order=1,
         who=workspace_user.user,
     )
-    assert list(workspace_board.section_set.all()) == [
+    assert list(project.section_set.all()) == [
         other_section,
         section,
         other_other_section,
@@ -95,12 +95,12 @@ def test_moving_section(
 
 @pytest.mark.django_db
 def test_moving_empty_section(
-    workspace_board: WorkspaceBoard,
+    project: Project,
     section: Section,
     workspace_user: WorkspaceUser,
 ) -> None:
     """Test moving when there are no other sections."""
-    assert list(workspace_board.section_set.all()) == [
+    assert list(project.section_set.all()) == [
         section,
     ]
     section_move(
@@ -108,7 +108,7 @@ def test_moving_empty_section(
         order=1,
         who=workspace_user.user,
     )
-    assert list(workspace_board.section_set.all()) == [
+    assert list(project.section_set.all()) == [
         section,
     ]
     assert section._order == 0

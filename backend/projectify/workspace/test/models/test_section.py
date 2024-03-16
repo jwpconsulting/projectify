@@ -27,15 +27,15 @@ from ... import (
 class TestSectionManager:
     """Test Section manager."""
 
-    def test_filter_by_workspace_board_pks(
+    def test_filter_by_project_pks(
         self,
-        workspace_board: models.WorkspaceBoard,
+        project: models.Project,
         section: models.Section,
     ) -> None:
-        """Test filter_by_workspace_board_pks."""
+        """Test filter_by_project_pks."""
         objects = models.Section.objects
-        qs = objects.filter_by_workspace_board_pks(
-            [workspace_board.pk],
+        qs = objects.filter_by_project_pks(
+            [project.pk],
         )
         assert list(qs) == [section]
 
@@ -61,8 +61,8 @@ class TestSection:
 
     def test_factory(
         self,
-        workspace_board: models.WorkspaceBoard,
+        project: models.Project,
         section: models.Section,
     ) -> None:
         """Test section creation works."""
-        assert section.workspace_board == workspace_board
+        assert section.project == project

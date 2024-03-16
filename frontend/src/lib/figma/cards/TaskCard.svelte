@@ -24,13 +24,13 @@
     import WorkspaceUser from "$lib/figma/cards/task-card/WorkspaceUser.svelte";
     import type {
         TaskWithSection,
-        WorkspaceBoardDetail,
+        ProjectDetail,
         SectionWithTasks,
     } from "$lib/types/workspace";
     import { getTaskUrl } from "$lib/urls";
 
     export let task: TaskWithSection;
-    export let workspaceBoard: WorkspaceBoardDetail;
+    export let project: ProjectDetail;
     export let section: SectionWithTasks | undefined = undefined;
 </script>
 
@@ -49,7 +49,7 @@
                     {#if section}
                         <Chevrons {task} {section} />
                     {/if}
-                    <MenuButton {task} {workspaceBoard} {section} />
+                    <MenuButton {task} {project} {section} />
                 </div>
             </div>
             <div class="flex flex-row justify-between">
@@ -86,7 +86,7 @@
                         {#if section}
                             <Chevrons {task} {section} />
                         {/if}
-                        <MenuButton {task} {workspaceBoard} {section} />
+                        <MenuButton {task} {project} {section} />
                     </div>
                 </div>
             </div>

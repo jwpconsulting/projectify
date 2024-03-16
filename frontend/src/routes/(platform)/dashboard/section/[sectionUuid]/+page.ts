@@ -18,7 +18,7 @@
 import { redirect, error } from "@sveltejs/kit";
 
 import { getSection } from "$lib/repository/workspace/section";
-import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
+import { getDashboardProjectUrl } from "$lib/urls";
 
 export async function load({
     fetch,
@@ -31,6 +31,6 @@ export async function load({
     if (!section) {
         error(404);
     }
-    const workspaceBoard = section.workspace_board;
-    redirect(302, getDashboardWorkspaceBoardUrl(workspaceBoard.uuid));
+    const project = section.project;
+    redirect(302, getDashboardProjectUrl(project.uuid));
 }

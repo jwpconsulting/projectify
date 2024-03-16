@@ -64,6 +64,6 @@ class WorkspaceQuota:
     sub_tasks: Quota
     tasks: Quota
     task_labels: Quota
-    workspace_boards: Quota
+    projects: Quota
     sections: Quota
     workspace_users_and_invites: Quota

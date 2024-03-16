@@ -21,51 +21,51 @@
 
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import {
-        archiveWorkspaceBoard,
-        deleteWorkspaceBoard,
-    } from "$lib/repository/workspace/workspaceBoard";
-    import { currentArchivedWorkspaceBoards } from "$lib/stores/dashboard";
+        archiveProject,
+        deleteProject,
+    } from "$lib/repository/workspace/project";
+    import { currentArchivedProjects } from "$lib/stores/dashboard";
     import {
         openConstructiveOverlay,
         openDestructiveOverlay,
     } from "$lib/stores/globalUi";
-    import type { WorkspaceBoard } from "$lib/types/workspace";
+    import type { Project } from "$lib/types/workspace";
 
-    $: archivedWorkspaceBoards = $currentArchivedWorkspaceBoards ?? [];
+    $: archivedProjects = $currentArchivedProjects ?? [];
 
-    async function recoverAction(workspaceBoard: WorkspaceBoard) {
+    async function recoverAction(project: Project) {
         await openConstructiveOverlay({
-            kind: "recoverWorkspaceBoard",
-            workspaceBoard,
+            kind: "recoverProject",
+            project,
         });
-        await archiveWorkspaceBoard(workspaceBoard, false, { fetch });
+        await archiveProject(project, false, { fetch });
     }
 
-    async function deleteAction(workspaceBoard: WorkspaceBoard) {
+    async function deleteAction(project: Project) {
         await openDestructiveOverlay({
-            kind: "deleteWorkspaceBoard",
-            workspaceBoard,
+            kind: "deleteProject",
+            project,
         });
-        await deleteWorkspaceBoard(workspaceBoard, { fetch });
+        await deleteProject(project, { fetch });
     }
 </script>
 
 <main class="flex w-full max-w-xl flex-col gap-4">
     <h1 class="text-2xl font-bold">
-        {$_("workspace-board-archive.title")}
+        {$_("project-archive.title")}
     </h1>
     <div class="flex flex-col rounded-lg bg-foreground p-4 shadow-card">
-        {#each archivedWorkspaceBoards as workspaceBoard}
+        {#each archivedProjects as project}
             <div class="flex flex-col gap-2 p-2">
                 <p class="font-bold">
-                    {workspaceBoard.title}
+                    {project.title}
                 </p>
                 <div class="flex flex-row items-center justify-between">
                     <!--TODO show the archival date here-->
                     <p>
-                        {$_("workspace-board-archive.card.archived", {
+                        {$_("project-archive.card.archived", {
                             values: {
-                                archived: parseISO(workspaceBoard.archived),
+                                archived: parseISO(project.archived),
                             },
                         })}
                     </p>
@@ -75,13 +75,10 @@
                             style={{ kind: "secondary" }}
                             size="small"
                             color="blue"
-                            label={$_("workspace-board-archive.card.recover")}
+                            label={$_("project-archive.card.recover")}
                             action={{
                                 kind: "button",
-                                action: recoverAction.bind(
-                                    null,
-                                    workspaceBoard,
-                                ),
+                                action: recoverAction.bind(null, project),
                             }}
                         />
 
@@ -89,20 +86,17 @@
                             style={{ kind: "primary" }}
                             size="small"
                             color="red"
-                            label={$_("workspace-board-archive.card.delete")}
+                            label={$_("project-archive.card.delete")}
                             action={{
                                 kind: "button",
-                                action: deleteAction.bind(
-                                    null,
-                                    workspaceBoard,
-                                ),
+                                action: deleteAction.bind(null, project),
                             }}
                         />
                     </div>
                 </div>
             </div>
         {:else}
-            {$_("workspace-board-archive.empty")}
+            {$_("project-archive.empty")}
         {/each}
     </div>
 </main>

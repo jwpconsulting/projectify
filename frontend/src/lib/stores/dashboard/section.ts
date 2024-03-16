@@ -19,7 +19,7 @@ import { derived } from "svelte/store";
 import type { Readable } from "svelte/store";
 
 import { selectedLabels } from "$lib/stores/dashboard/labelFilter";
-import { currentWorkspaceBoard } from "$lib/stores/dashboard/workspaceBoard";
+import { currentProject } from "$lib/stores/dashboard/project";
 import { selectedWorkspaceUser } from "$lib/stores/dashboard/workspaceUserFilter";
 import type {
     LabelSelection,
@@ -95,20 +95,17 @@ export const currentSections = derived<
     [
         typeof selectedLabels,
         typeof selectedWorkspaceUser,
-        typeof currentWorkspaceBoard,
+        typeof currentProject,
     ],
     SectionWithTasks[] | undefined
 >(
-    [selectedLabels, selectedWorkspaceUser, currentWorkspaceBoard],
-    (
-        [$selectedLabels, $selectedWorkspaceUser, $currentWorkspaceBoard],
-        set,
-    ) => {
-        if (!$currentWorkspaceBoard) {
+    [selectedLabels, selectedWorkspaceUser, currentProject],
+    ([$selectedLabels, $selectedWorkspaceUser, $currentProject], set) => {
+        if (!$currentProject) {
             set(undefined);
             return;
         }
-        const sections = $currentWorkspaceBoard.sections;
+        const sections = $currentProject.sections;
         set(
             filterSectionsTasks({
                 labels: $selectedLabels,

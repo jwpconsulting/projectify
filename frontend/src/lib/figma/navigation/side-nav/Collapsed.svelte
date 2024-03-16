@@ -20,12 +20,9 @@
     import UserDropdownClosedNav from "$lib/figma/buttons/UserDropdownClosedNav.svelte";
     import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
-    import {
-        selectWorkspaceBoardUuid,
-        showFilters,
-    } from "$lib/stores/dashboard";
+    import { selectProjectUuid, showFilters } from "$lib/stores/dashboard";
     import type { WorkspaceDetail } from "$lib/types/workspace";
-    import { getDashboardWorkspaceBoardUrl } from "$lib/urls";
+    import { getDashboardProjectUrl } from "$lib/urls";
 
     export let workspace: WorkspaceDetail | undefined;
 </script>
@@ -39,22 +36,21 @@
                 <WorkspaceSelector {workspace} open={false} />
                 <div class="flex flex-col items-center gap-6">
                     <div class="flex flex-col items-center gap-4">
-                        {#if workspace?.workspace_boards}
-                            {#each workspace.workspace_boards as board}
+                        {#if workspace?.projects}
+                            {#each workspace.projects as board}
                                 <SquovalIcon
                                     icon="board"
                                     state="active"
                                     action={{
                                         kind: "a",
-                                        href: getDashboardWorkspaceBoardUrl(
+                                        href: getDashboardProjectUrl(
                                             board.uuid,
                                         ),
-                                        onInteract:
-                                            selectWorkspaceBoardUuid.bind(
-                                                null,
-                                                workspace.uuid,
-                                                board.uuid,
-                                            ),
+                                        onInteract: selectProjectUuid.bind(
+                                            null,
+                                            workspace.uuid,
+                                            board.uuid,
+                                        ),
                                     }}
                                 />
                             {/each}

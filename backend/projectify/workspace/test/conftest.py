@@ -58,6 +58,10 @@ from projectify.workspace.selectors.workspace_user import (
 )
 from projectify.workspace.services.chat_message import chat_message_create
 from projectify.workspace.services.label import label_create
+from projectify.workspace.services.project import (
+    project_archive,
+    project_create,
+)
 from projectify.workspace.services.section import (
     section_create,
 )
@@ -66,10 +70,6 @@ from projectify.workspace.services.task import task_create
 from projectify.workspace.services.workspace import (
     workspace_add_user,
     workspace_create,
-)
-from projectify.workspace.services.workspace_board import (
-    workspace_board_archive,
-    workspace_board_create,
 )
 from projectify.workspace.services.workspace_user_invite import (
     workspace_user_invite_create,
@@ -185,13 +185,13 @@ def unrelated_workspace_user(
 
 
 @pytest.fixture
-def workspace_board(
+def project(
     other_workspace_user: WorkspaceUser,
     faker: Faker,
     workspace: models.Workspace,
-) -> models.WorkspaceBoard:
-    """Return workspace board."""
-    return workspace_board_create(
+) -> models.Project:
+    """Return project."""
+    return project_create(
         who=other_workspace_user.user,
         title=faker.text(),
         description=faker.paragraph(),
@@ -203,13 +203,13 @@ def workspace_board(
 
 
 @pytest.fixture
-def unrelated_workspace_board(
+def unrelated_project(
     unrelated_workspace_user: WorkspaceUser,
     faker: Faker,
     unrelated_workspace: models.Workspace,
-) -> models.WorkspaceBoard:
-    """Return an unrelated workspace board."""
-    return workspace_board_create(
+) -> models.Project:
+    """Return an unrelated project."""
+    return project_create(
         who=unrelated_workspace_user.user,
         title=faker.text(),
         description=faker.paragraph(),
@@ -220,30 +220,30 @@ def unrelated_workspace_board(
 
 
 @pytest.fixture
-def archived_workspace_board(
+def archived_project(
     workspace: models.Workspace,
     now: datetime,
     other_workspace_user: WorkspaceUser,
     faker: Faker,
-) -> models.WorkspaceBoard:
-    """Return archived workspace board."""
-    workspace_board = workspace_board_create(
+) -> models.Project:
+    """Return archived project."""
+    project = project_create(
         who=other_workspace_user.user,
         title=faker.text(),
         description=faker.paragraph(),
         workspace=workspace,
     )
-    workspace_board_archive(
+    project_archive(
         who=other_workspace_user.user,
-        workspace_board=workspace_board,
+        project=project,
         archived=True,
     )
-    return workspace_board
+    return project
 
 
 @pytest.fixture
 def section(
-    workspace_board: models.WorkspaceBoard,
+    project: models.Project,
     # Another workspace user creates it, so that we can correctly assess
     # permissions and not implicitly associate the main user with this
     # workspace
@@ -253,49 +253,49 @@ def section(
     """Return section."""
     return section_create(
         who=other_workspace_user.user,
-        workspace_board=workspace_board,
+        project=project,
         title=faker.sentence(),
     )
 
 
 @pytest.fixture
 def other_section(
-    workspace_board: models.WorkspaceBoard,
+    project: models.Project,
     workspace_user: WorkspaceUser,
     faker: Faker,
 ) -> models.Section:
     """Create another section."""
     return section_create(
         who=workspace_user.user,
-        workspace_board=workspace_board,
+        project=project,
         title=faker.sentence(),
     )
 
 
 @pytest.fixture
 def other_other_section(
-    workspace_board: models.WorkspaceBoard,
+    project: models.Project,
     workspace_user: WorkspaceUser,
     faker: Faker,
 ) -> models.Section:
     """Create yet another section."""
     return section_create(
         who=workspace_user.user,
-        workspace_board=workspace_board,
+        project=project,
         title=faker.sentence(),
     )
 
 
 @pytest.fixture
 def unrelated_section(
-    unrelated_workspace_board: models.WorkspaceBoard,
+    unrelated_project: models.Project,
     unrelated_workspace_user: WorkspaceUser,
     faker: Faker,
 ) -> models.Section:
     """Return unrelated section."""
     return section_create(
         who=unrelated_workspace_user.user,
-        workspace_board=unrelated_workspace_board,
+        project=unrelated_project,
         title=faker.sentence(),
     )
 

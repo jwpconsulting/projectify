@@ -4,7 +4,7 @@ To create a section click the + icon in the top right corner. This will bring up
 
 # Section navigation
 
-On the right side of the dashboard you will find a number of dots that indicate how many sections you have created on this workspace board. The current section you are focused on with have its dot extended. Click the dots to quickly navigate through to another section. This is particularly useful when you have a lot of tasks in each section.
+On the right side of the dashboard you will find a number of dots that indicate how many sections you have created on this project. The current section you are focused on with have its dot extended. Click the dots to quickly navigate through to another section. This is particularly useful when you have a lot of tasks in each section.
 
 # Section context menu
 

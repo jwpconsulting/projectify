@@ -20,7 +20,7 @@
 
     import FilterLabels from "$lib/figma/navigation/side-nav/FilterLabels.svelte";
     import FilterWorkspaceUsers from "$lib/figma/navigation/side-nav/FilterWorkspaceUsers.svelte";
-    import WorkspaceBoards from "$lib/figma/navigation/side-nav/WorkspaceBoards.svelte";
+    import Projects from "$lib/figma/navigation/side-nav/Projects.svelte";
     import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { showFilters } from "$lib/stores/dashboard";
@@ -59,7 +59,7 @@
             </p>
         {/if}
         <div class="flex shrink flex-col overflow-auto">
-            <WorkspaceBoards {workspace} />
+            <Projects {workspace} />
             {#if $showFilters}
                 <FilterWorkspaceUsers />
                 <FilterLabels />

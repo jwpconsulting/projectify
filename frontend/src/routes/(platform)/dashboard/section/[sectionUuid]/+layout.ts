@@ -40,9 +40,9 @@ export async function load({
             `The section with UUID '${sectionUuid}' could not be found`,
         );
     }
-    const workspaceBoard = section.workspace_board;
+    const project = section.project;
     const { uuid: workspaceUuid } = unwrap(
-        workspaceBoard.workspace,
+        project.workspace,
         "Expected workspace",
     );
     currentWorkspace.loadUuid(workspaceUuid, { fetch }).catch((reason) => {

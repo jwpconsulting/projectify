@@ -45,8 +45,8 @@ export function clearSelectedWorkspaceUuidIfMatch(uuid: string) {
     });
 }
 
-const _selectedWorkspaceBoardUuids = persisted<Map<string, string>>(
-    "selected-workspace-board-uuid",
+const _selectedProjectUuids = persisted<Map<string, string>>(
+    "selected-project-uuid",
     new Map(),
     {
         serializer: {
@@ -66,16 +66,11 @@ const _selectedWorkspaceBoardUuids = persisted<Map<string, string>>(
         },
     },
 );
-export const selectedWorkspaceBoardUuids = readonly(
-    _selectedWorkspaceBoardUuids,
-);
-export function selectWorkspaceBoardUuid(
-    workspaceUuid: string,
-    workspaceBoardUuid: string,
-) {
-    _selectedWorkspaceBoardUuids.update(($selectedWorkspaceBoardUuids) => {
-        $selectedWorkspaceBoardUuids.set(workspaceUuid, workspaceBoardUuid);
-        return $selectedWorkspaceBoardUuids;
+export const selectedProjectUuids = readonly(_selectedProjectUuids);
+export function selectProjectUuid(workspaceUuid: string, projectUuid: string) {
+    _selectedProjectUuids.update(($selectedProjectUuids) => {
+        $selectedProjectUuids.set(workspaceUuid, projectUuid);
+        return $selectedProjectUuids;
     });
 }
 
@@ -135,9 +130,7 @@ export function toggleSectionOpen(sectionUuid: string) {
 }
 
 // Adjust this if the dashboard URLs ever change
-const showFilterRouteIds = [
-    "/(platform)/dashboard/workspace-board/[workspaceBoardUuid]",
-];
+const showFilterRouteIds = ["/(platform)/dashboard/project/[projectUuid]"];
 
 /*
  * showFilters is true only for pages for which we show the user

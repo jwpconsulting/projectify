@@ -123,7 +123,7 @@ class TestTask:
 
     def test_get_next_section(
         self,
-        workspace_board: models.WorkspaceBoard,
+        project: models.Project,
         task: models.Task,
         other_section: models.Section,
     ) -> None:
@@ -131,7 +131,7 @@ class TestTask:
         assert task.get_next_section() == other_section
 
     def test_get_next_section_no_next_section(
-        self, workspace_board: models.WorkspaceBoard, task: models.Task
+        self, project: models.Project, task: models.Task
     ) -> None:
         """Test getting the next section when there is none."""
         with pytest.raises(models.Section.DoesNotExist):

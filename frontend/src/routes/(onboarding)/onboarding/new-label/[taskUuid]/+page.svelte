@@ -32,7 +32,7 @@
 
     export let data: PageData;
 
-    const { workspace, workspaceBoard, section, task } = data;
+    const { workspace, project, section, task } = data;
 
     const taskTitle = task.title;
     let labelTitle: string | undefined = undefined;
@@ -79,7 +79,7 @@
 <Onboarding
     stepCount={5}
     step={4}
-    backAction={{ kind: "a", href: getNewTaskUrl(workspaceBoard.uuid) }}
+    backAction={{ kind: "a", href: getNewTaskUrl(project.uuid) }}
     nextAction={{ kind: "submit", disabled, submit }}
 >
     <svelte:fragment slot="title"
@@ -112,7 +112,7 @@
         state={{
             kind: "new-label",
             workspace,
-            workspaceBoard,
+            project,
             section,
             task,
             title: labelTitle ?? $_("onboarding.new-label.default-name"),

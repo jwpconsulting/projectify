@@ -24,8 +24,8 @@ import type {
     Task,
     TaskWithSection,
     Workspace,
-    WorkspaceBoard,
-    WorkspaceBoardDetail,
+    Project,
+    ProjectDetail,
     Section,
     SectionWithTasks,
     WorkspaceUser,
@@ -83,8 +83,8 @@ export type DestructiveOverlayType =
     | { kind: "deleteTask"; task: Task }
     // XXX this is never used
     | { kind: "deleteSelectedTasks"; tasks: Task[] }
-    | { kind: "archiveWorkspaceBoard"; workspaceBoard: WorkspaceBoard }
-    | { kind: "deleteWorkspaceBoard"; workspaceBoard: WorkspaceBoard };
+    | { kind: "archiveProject"; project: Project }
+    | { kind: "deleteProject"; project: Project };
 
 // These are the times when a header element is shown and a hamburger menu is
 // needed
@@ -119,13 +119,13 @@ export type ContextMenuType =
     | { kind: "workspace"; workspaces: Workspace[] }
     | { kind: "sideNav"; workspace: Workspace }
     | {
-          kind: "workspaceBoard";
+          kind: "project";
           workspace: Workspace;
-          workspaceBoard: WorkspaceBoard;
+          project: Project;
       }
     | {
           kind: "section";
-          workspaceBoard: WorkspaceBoard;
+          project: Project;
           section: Section;
       }
     | {
@@ -141,7 +141,7 @@ export type ContextMenuType =
           location: "dashboard";
           // TODO remove this property?
           section: SectionWithTasks;
-          workspaceBoard: WorkspaceBoardDetail;
+          project: ProjectDetail;
       }
     | { kind: "help" }
     | { kind: "permissions" }
@@ -158,15 +158,15 @@ export type ContextMenuType =
 export type ContextMenuState = Overlay<ContextMenuType, HTMLElement>;
 
 export type ConstructiveOverlayType =
-    | { kind: "updateWorkspaceBoard"; workspaceBoard: WorkspaceBoard }
-    | { kind: "createWorkspaceBoard"; workspace: Workspace }
+    | { kind: "updateProject"; project: Project }
+    | { kind: "createProject"; workspace: Workspace }
     | { kind: "inviteWorkspaceUser"; workspace: Workspace }
-    | { kind: "createSection"; workspaceBoard: WorkspaceBoard }
+    | { kind: "createSection"; project: Project }
     | {
           kind: "updateSection";
           section: Section;
       }
-    | { kind: "recoverWorkspaceBoard"; workspaceBoard: WorkspaceBoard };
+    | { kind: "recoverProject"; project: Project };
 export type ConstructiveOverlayState = Overlay<ConstructiveOverlayType>;
 
 // TODO These can probably stay in their individual svelte pages

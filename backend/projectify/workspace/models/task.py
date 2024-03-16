@@ -60,10 +60,10 @@ if TYPE_CHECKING:
     from . import (
         ChatMessage,
         Label,
+        Project,
         Section,
         SubTask,
         TaskLabel,
-        WorkspaceBoard,
         WorkspaceUser,
     )
 
@@ -75,7 +75,7 @@ class TaskQuerySet(models.QuerySet["Task"]):
     def filter_by_workspace(self, workspace: Workspace) -> Self:
         """Filter by workspace."""
         return self.filter(
-            workspace_board_section__workspace_board__workspace=workspace,
+            workspace_board_section__project__workspace=workspace,
         )
 
     # TODO use selector
@@ -94,12 +94,10 @@ class TaskQuerySet(models.QuerySet["Task"]):
         )
 
     # TODO use selector
-    def filter_by_workspace_board(
-        self, workspace_board: "WorkspaceBoard"
-    ) -> Self:
-        """Filter by tasks contained in workspace board."""
+    def filter_by_project(self, project: "Project") -> Self:
+        """Filter by tasks contained in project."""
         return self.filter(
-            workspace_board_section__workspace_board=workspace_board,
+            workspace_board_section__workspace_board=project,
         )
 
 
@@ -111,6 +109,7 @@ class Task(TitleDescriptionModel, BaseModel):
         on_delete=models.CASCADE,
     )
 
+    # TODO rename to section
     workspace_board_section = models.ForeignKey["Section"](
         "Section",
         on_delete=models.CASCADE,
@@ -206,7 +205,7 @@ class Task(TitleDescriptionModel, BaseModel):
             TaskLabel,
         )
 
-        workspace = self.workspace_board_section.workspace_board.workspace
+        workspace = self.workspace_board_section.project.workspace
 
         # XXX can this be a db constraint?
         # Or done in the serializer?
@@ -292,11 +291,11 @@ class Task(TitleDescriptionModel, BaseModel):
                       BEGIN
                         SELECT "workspace_workspace"."id" INTO correct_workspace_id
                         FROM "workspace_workspace"
-                        INNER JOIN "workspace_workspaceboard"
+                        INNER JOIN "workspace_project"
                             ON ("workspace_workspace"."id" = \
-                            "workspace_workspaceboard"."workspace_id")
+                            "workspace_project"."workspace_id")
                         INNER JOIN "workspace_section"
-                            ON ("workspace_workspaceboard"."id" = \
+                            ON ("workspace_project"."id" = \
                                  "workspace_section"."workspace_board_id")
                         INNER JOIN "workspace_task"
                             ON ("workspace_section"."id" = \

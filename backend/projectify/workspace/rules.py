@@ -115,10 +115,8 @@ within_task_quota = rules.predicate(partial(can_create_more, "Task"))
 within_task_label_quota = rules.predicate(
     partial(can_create_more, "TaskLabel")
 )
-# Return True if a workspace board can be created in workspace
-within_workspace_board_quota = rules.predicate(
-    partial(can_create_more, "WorkspaceBoard")
-)
+# Return True if a project can be created in workspace
+within_project_quota = rules.predicate(partial(can_create_more, "Project"))
 # Return True if a section can be created in a workspace
 within_section_quota = rules.predicate(partial(can_create_more, "Section"))
 # Return True if a workspace user can be added to a workspace
@@ -155,14 +153,14 @@ rules.add_perm("workspace.read_workspace_user", is_at_least_observer)
 rules.add_perm("workspace.update_workspace_user", is_at_least_owner)
 rules.add_perm("workspace.delete_workspace_user", is_at_least_owner)
 
-# Workspace board
+# Project
 rules.add_perm(
-    "workspace.create_workspace_board",
-    is_at_least_maintainer & within_workspace_board_quota,
+    "workspace.create_project",
+    is_at_least_maintainer & within_project_quota,
 )
-rules.add_perm("workspace.read_workspace_board", is_at_least_observer)
-rules.add_perm("workspace.update_workspace_board", is_at_least_maintainer)
-rules.add_perm("workspace.delete_workspace_board", is_at_least_maintainer)
+rules.add_perm("workspace.read_project", is_at_least_observer)
+rules.add_perm("workspace.update_project", is_at_least_maintainer)
+rules.add_perm("workspace.delete_project", is_at_least_maintainer)
 
 # Section
 rules.add_perm(

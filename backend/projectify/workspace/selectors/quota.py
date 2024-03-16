@@ -31,7 +31,7 @@ Limitations for a trial workspace are
 - SubTask: 1000 sub tasks,
 - Task: 1000 tasks,
 - TaskLabel: unlimited,
-- WorkspaceBoard: 10,
+- Project: 10,
 - Section: 100,
 - WorkspaceUser + WorkspaceUserInivite(unredeemed): 2
 """
@@ -58,7 +58,7 @@ Resource = Literal[
     "SubTask",
     "Task",
     "TaskLabel",
-    "WorkspaceBoard",
+    "Project",
     "Section",
     "WorkspaceUserAndInvite",
 ]
@@ -74,7 +74,7 @@ class Limitations(TypedDict):
     SubTask: Limitation
     Task: Limitation
     TaskLabel: Limitation
-    WorkspaceBoard: Limitation
+    Project: Limitation
     Section: Limitation
     WorkspaceUserAndInvite: Limitation
 
@@ -85,7 +85,7 @@ trial_conditions: Limitations = {
     "SubTask": 1000,
     "Task": 1000,
     "TaskLabel": None,
-    "WorkspaceBoard": 10,
+    "Project": 10,
     "Section": 100,
     "WorkspaceUserAndInvite": 2,
 }
@@ -97,7 +97,7 @@ trial_conditions: Limitations = {
 #     "SubTask": None,
 #     "Task": None,
 #     "TaskLabel": None,
-#     "WorkspaceBoard": None,
+#     "Project": None,
 #     "Section": None,
 #     "WorkspaceUserAndInvite": workspace.customer.seats,
 # }
@@ -137,8 +137,8 @@ def get_workspace_resource_count(
             ).count()
         case "TaskLabel":
             return TaskLabel.objects.filter(label__workspace=workspace).count()
-        case "WorkspaceBoard":
-            return workspace.workspaceboard_set.count()
+        case "Project":
+            return workspace.project_set.count()
         case "Section":
             return Section.objects.filter(
                 workspace_board__workspace=workspace
@@ -173,7 +173,7 @@ def workspace_get_all_quotas(workspace: Workspace) -> WorkspaceQuota:
         sub_tasks=mk(resource="SubTask"),
         tasks=mk(resource="Task"),
         task_labels=mk(resource="TaskLabel"),
-        workspace_boards=mk(resource="WorkspaceBoard"),
+        projects=mk(resource="Project"),
         sections=mk(resource="Section"),
         workspace_users_and_invites=mk(resource="WorkspaceUserAndInvite"),
     )

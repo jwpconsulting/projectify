@@ -29,7 +29,7 @@ import type {
     SubTask,
     Task,
     TaskWithSection,
-    WorkspaceBoard,
+    Project,
     SectionWithTasks,
     WorkspaceUser,
 } from "$lib/types/workspace";
@@ -95,7 +95,7 @@ export const workspaceUserSelectionInputs: WorkspaceUserSelectionInput[] = [
     { kind: "workspaceUser", workspaceUser },
 ];
 
-export const workspaceBoard: WorkspaceBoard = {
+export const project: Project = {
     uuid: nullUuid,
     title: "Project board with a long name, it is long",
     created: "",
@@ -108,7 +108,7 @@ export const workspace = {
     created: "",
     modified: "",
     picture: null,
-    workspace_boards: [workspaceBoard],
+    projects: [project],
     workspace_users: [workspaceUser],
 };
 
@@ -157,7 +157,7 @@ export const task: TaskWithSection = {
         modified: "",
         uuid: nullUuid,
         _order: 0,
-        workspace_board: {
+        project: {
             uuid: nullUuid,
             title: "Project board with a long name, it is long",
             created: "",

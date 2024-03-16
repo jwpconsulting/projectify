@@ -17,7 +17,7 @@
  */
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import { workspaceBoard, section } from "$lib/storybook";
+import { project, section } from "$lib/storybook";
 import type { SectionDetail } from "$lib/types/workspace";
 import CreateTask from "$routes/(platform)/dashboard/section/[sectionUuid]/create-task/+page.svelte";
 
@@ -27,7 +27,7 @@ const meta: Meta<CreateTask> = {
         data: {
             section: {
                 ...section,
-                workspace_board: workspaceBoard,
+                project: project,
             } satisfies SectionDetail,
         },
     },

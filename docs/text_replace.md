@@ -179,3 +179,67 @@ for f in (
   git mv -v $f $dir/$base || break
 end
 ```
+
+# Now the same for workspace boards
+
+Since it we couldn't rename all instance of workspace_board_section in the
+backend, we have to be careful.
+
+For lower case:
+
+```fish
+nvim (ag \
+  --files-with-matches \
+  --ignore migrations \
+  --ignore docs/text_replace.md \
+  "workspace[_ -]?[bB]oard[_ -]?s?" \
+  . \
+) -c "bufdo %s/\vworkspace[_ -]?[bB]oard(s?)([_ -][sS]ection)@!/project\1/ce"
+```
+
+For upper case:
+
+```fish
+nvim (ag \
+  --files-with-matches \
+  --ignore migrations \
+  --ignore docs/text_replace.md \
+  "Workspace[_ -]?[bB]oard[_ -]?s?" \
+  . \
+) -c "bufdo %s/\vWorkspace[_ -]?[bB]oard(s?)(_ -][sS]ection)@!/Project\1/ce"
+```
+
+For folders:
+
+```fish
+for f in (
+  fd --type directory \
+    "[wW]orkspace[_ -]?[bB]oard[_ -]?s?" \
+    .
+)
+  echo "Moving $f"
+  set -l dir (dirname $f)
+  read -l -P "New path: $dir/" base || break
+  echo "Moving to $base"
+  git mv -v $f $dir/$base || break
+end
+```
+
+The above might have to be run multiple times.
+
+For files:
+
+```
+for f in (
+  fd --type file \
+    "[wW]orkspace[_ -]?[bB]oard[_ -]?s?" \
+    --exclude migrations \
+    .
+)
+  echo "Moving $f"
+  set -l dir (dirname $f)
+  read -l -P "New path: $dir/" base || break
+  echo "Moving to $dir/$base"
+  git mv -v $f $dir/$base || break
+end
+```

@@ -27,7 +27,7 @@ const meta: Meta<ConstructiveOverlay> = {
         target: constructiveOverlays,
     },
     args: {
-        target: "update-workspace-board",
+        target: "update-project",
     },
 };
 export default meta;

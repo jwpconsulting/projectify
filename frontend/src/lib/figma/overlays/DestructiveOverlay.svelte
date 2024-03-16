@@ -90,31 +90,21 @@
                     "overlay.destructive.delete-selected-tasks.button",
                 );
                 break;
-            case "archiveWorkspaceBoard":
-                title = $_(
-                    "overlay.destructive.archive-workspace-board.title",
-                );
-                body = $_("overlay.destructive.archive-workspace-board.body", {
-                    values: { workspaceBoard: target.workspaceBoard.title },
+            case "archiveProject":
+                title = $_("overlay.destructive.archive-project.title");
+                body = $_("overlay.destructive.archive-project.body", {
+                    values: { project: target.project.title },
                 });
-                warning = $_(
-                    "overlay.destructive.archive-workspace-board.warning",
-                );
-                buttonLabel = $_(
-                    "overlay.destructive.archive-workspace-board.button",
-                );
+                warning = $_("overlay.destructive.archive-project.warning");
+                buttonLabel = $_("overlay.destructive.archive-project.button");
                 break;
-            case "deleteWorkspaceBoard":
-                title = $_("overlay.destructive.delete-workspace-board.title");
-                body = $_("overlay.destructive.delete-workspace-board.body", {
-                    values: { workspaceBoard: target.workspaceBoard.title },
+            case "deleteProject":
+                title = $_("overlay.destructive.delete-project.title");
+                body = $_("overlay.destructive.delete-project.body", {
+                    values: { project: target.project.title },
                 });
-                warning = $_(
-                    "overlay.destructive.delete-workspace-board.warning",
-                );
-                buttonLabel = $_(
-                    "overlay.destructive.delete-workspace-board.button",
-                );
+                warning = $_("overlay.destructive.delete-project.warning");
+                buttonLabel = $_("overlay.destructive.delete-project.button");
                 break;
         }
     }

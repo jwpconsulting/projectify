@@ -4,8 +4,8 @@ These are the onboarding steps:
 
 - _About you_: `/onboarding/about-you`
 - _New workspace_: `/onboarding/new-workspace`
-- _New workspace board_: `/onboarding/new-workspace-board/[workspaceUuid]`
-- _New task_: `/onboarding/new-task/[workspaceBoardUuid]`
+- _New project_: `/onboarding/new-project/[workspaceUuid]`
+- _New task_: `/onboarding/new-task/[projectUuid]`
 - _New label_: `/onboarding/new-label/[taskUuid]`
 - _Assign task (confirmation)_: `/onboarding/assign-task/[taskUuid]`
 
@@ -44,16 +44,16 @@ The onboarding steps should be:
 - Welcome: /onboarding/welcome
 - About you: /onboarding/about-you
 - New workspace: /onboarding/new-workspace
-- New workspace board: /onboarding/new-workspace-board
+- New project: /onboarding/new-project
 - New task: /onboarding/new-task
 - New label: /onboarding/new-label
 - Assign task: /onboarding/assign-task
 
-Furthermore, after _New workspace board_, the user should be able to skip the
-onboarding and go directly to the newly created workspace board. It is
-not possible at the moment to skip workspace board creation, since that
+Furthermore, after _New project_, the user should be able to skip the
+onboarding and go directly to the newly created project. It is
+not possible at the moment to skip project creation, since that
 would make the UI look pretty awkward; the dashboard does not correctly
-render when no workspace board is selected.
+render when no project is selected.
 
 ### Welcome
 
@@ -84,17 +84,17 @@ the user as the workspace's owner.
 
 If a workspace already exists, we tell them that they may continue setting
 up this workspace instead of creating a new one. A link is shown that brings
-them to the next onboarding step (workspace board creation) for the already
+them to the next onboarding step (project creation) for the already
 existing workspace.
 
-### New workspace board
+### New project
 
 After a workspace has been created, the user is now asked to specify the name
-for a workspace board that we will create for them.
+for a project that we will create for them.
 
-Again, should the user already have created a workspace board, they can
+Again, should the user already have created a project, they can
 continue from this step directly with Projectify telling the user that
-they have already created a workspace board and asking them whether they want
+they have already created a project and asking them whether they want
 to continue using it in the next step.
 
 ### New task

@@ -53,7 +53,7 @@
     </svelte:fragment>
     <svelte:fragment slot="form">
         <InputField
-            name="workspace-board-name"
+            name="project-name"
             label={$_("overlay.constructive.update-section.form.title.label")}
             placeholder={$_(
                 "overlay.constructive.update-section.form.title.placeholder",

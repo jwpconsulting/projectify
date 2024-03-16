@@ -21,12 +21,12 @@ export const aboutYouUrl = "/onboarding/about-you";
 
 export const newWorkspaceUrl = "/onboarding/new-workspace";
 // TODO type these with workspace / section etc. instances
-export function getNewWorkspaceBoardUrl(workspaceUuid: string): string {
-    return `/onboarding/new-workspace-board/${workspaceUuid}`;
+export function getNewProjectUrl(workspaceUuid: string): string {
+    return `/onboarding/new-project/${workspaceUuid}`;
 }
 
-export function getNewTaskUrl(workspaceBoardUuid: string): string {
-    return `/onboarding/new-task/${workspaceBoardUuid}`;
+export function getNewTaskUrl(projectUuid: string): string {
+    return `/onboarding/new-task/${projectUuid}`;
 }
 
 export function getNewLabelUrl(taskUuid: string): string {

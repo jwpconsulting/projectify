@@ -73,7 +73,7 @@ export type TaskWithSection = Task & {
 
 export type TaskWithWorkspace = Task & {
     section: Section & {
-        workspace_board: WorkspaceBoard & {
+        project: Project & {
             workspace: Workspace;
         };
     };
@@ -85,16 +85,16 @@ export type Section = {
     _order: number;
     uuid: string;
     tasks?: Task[];
-    workspace_board?: WorkspaceBoard;
+    project?: Project;
 } & TimestampedType &
     CreateSection;
 
 export type SectionWithTasks = Section & Required<Pick<Section, "tasks">>;
 
 export type SectionDetail = Section &
-    Required<Pick<Section, "workspace_board" | "tasks">>;
+    Required<Pick<Section, "project" | "tasks">>;
 
-export type WorkspaceBoard = {
+export type Project = {
     due_date?: string;
     uuid: string;
     sections?: Section[];
@@ -103,12 +103,12 @@ export type WorkspaceBoard = {
 } & TimestampedType &
     TitleDescriptionType;
 
-export type WorkspaceBoardDetail = WorkspaceBoard & {
+export type ProjectDetail = Project & {
     workspace: Workspace;
     sections: SectionWithTasks[];
 };
 
-export type ArchivedWorkspaceBoard = WorkspaceBoard & { archived: string };
+export type ArchivedProject = Project & { archived: string };
 
 export interface Quota {
     current: number | null;
@@ -123,7 +123,7 @@ export interface WorkspaceQuota {
     sub_tasks: Quota;
     tasks: Quota;
     task_labels: Quota;
-    workspace_boards: Quota;
+    projects: Quota;
     sections: Quota;
     workspace_users_and_invites: Quota;
 }
@@ -137,7 +137,7 @@ export type Workspace = {
     picture: string | null;
     workspace_users?: WorkspaceUser[];
     workspace_user_invites?: WorkspaceUserInvite[];
-    workspace_boards?: WorkspaceBoard[];
+    projects?: Project[];
     labels?: Label[];
     uuid: string;
     quota?: WorkspaceQuota;
@@ -147,7 +147,7 @@ export type Workspace = {
 export type WorkspaceDetail = Required<
     Pick<
         Workspace,
-        | "workspace_boards"
+        | "projects"
         | "labels"
         | "workspace_users"
         | "quota"

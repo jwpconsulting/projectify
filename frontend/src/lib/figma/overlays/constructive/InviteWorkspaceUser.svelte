@@ -83,7 +83,7 @@
     </svelte:fragment>
     <svelte:fragment slot="form">
         <InputField
-            name="workspace-board-name"
+            name="project-name"
             bind:value={email}
             label={$_(
                 "overlay.constructive.invite-workspace-user.form.email.label",

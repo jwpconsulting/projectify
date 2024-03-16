@@ -49,14 +49,14 @@ from .types import (
 if TYPE_CHECKING:
     from django.db.models.manager import RelatedManager  # noqa: F401
 
-    from . import WorkspaceBoard  # noqa: F401
+    from . import Project  # noqa: F401
 
 
 class SectionQuerySet(models.QuerySet["Section"]):
-    """QuerySet for WorkspaceBoard."""
+    """QuerySet for Project."""
 
-    def filter_by_workspace_board_pks(self, keys: Pks) -> Self:
-        """Filter by workspace boards."""
+    def filter_by_project_pks(self, keys: Pks) -> Self:
+        """Filter by projects."""
         return self.filter(workspace_board__pk__in=keys)
 
     def filter_for_user_and_uuid(
@@ -67,10 +67,10 @@ class SectionQuerySet(models.QuerySet["Section"]):
 
 
 class Section(TitleDescriptionModel, BaseModel):
-    """Section of a WorkspaceBoard."""
+    """Section of a Project."""
 
-    workspace_board = models.ForeignKey["WorkspaceBoard"](
-        "WorkspaceBoard",
+    workspace_board = models.ForeignKey["Project"](
+        "Project",
         on_delete=models.CASCADE,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
@@ -93,6 +93,11 @@ class Section(TitleDescriptionModel, BaseModel):
         """Return title."""
         return self.title
 
+    @property
+    def project(self) -> "Project":
+        """Return project (workspace board)."""
+        return self.workspace_board
+
     class Meta:
         """Meta."""
 
@@ -100,7 +105,7 @@ class Section(TitleDescriptionModel, BaseModel):
         constraints = [
             models.UniqueConstraint(
                 fields=["workspace_board", "_order"],
-                name="unique_workspace_board_order",
+                name="unique_project_order",
                 deferrable=models.Deferrable.DEFERRED,
             )
         ]

@@ -21,11 +21,11 @@
 import { error } from "@sveltejs/kit";
 
 import { getTask } from "$lib/repository/workspace";
-import { getWorkspaceBoard } from "$lib/repository/workspace/workspaceBoard";
+import { getProject } from "$lib/repository/workspace/project";
 import type {
     TaskWithSection,
     Workspace,
-    WorkspaceBoardDetail,
+    ProjectDetail,
     Section,
 } from "$lib/types/workspace";
 
@@ -34,7 +34,7 @@ import type { PageLoadEvent } from "./$types";
 interface returnType {
     task: TaskWithSection;
     section: Section;
-    workspaceBoard: WorkspaceBoardDetail;
+    project: ProjectDetail;
     workspace: Workspace;
 }
 
@@ -47,13 +47,13 @@ export async function load({
         error(404, `No task could found for UUID ${taskUuid}.`);
     }
     const { section: section } = task;
-    const workspaceBoardUuid = task.section.workspace_board.uuid;
-    const workspaceBoard = await getWorkspaceBoard(workspaceBoardUuid, {
+    const projectUuid = task.section.project.uuid;
+    const project = await getProject(projectUuid, {
         fetch,
     });
-    if (!workspaceBoard) {
-        throw new Error("Expected workspaceBoard");
+    if (!project) {
+        throw new Error("Expected project");
     }
-    const { workspace } = workspaceBoard;
-    return { task, section, workspaceBoard, workspace };
+    const { workspace } = project;
+    return { task, section, project, workspace };
 }

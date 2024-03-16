@@ -16,11 +16,11 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import CreateProject from "$lib/figma/overlays/constructive/CreateProject.svelte";
     import CreateSection from "$lib/figma/overlays/constructive/CreateSection.svelte";
-    import CreateWorkspaceBoard from "$lib/figma/overlays/constructive/CreateWorkspaceBoard.svelte";
     import InviteWorkspaceUser from "$lib/figma/overlays/constructive/InviteWorkspaceUser.svelte";
-    import RecoverWorkspaceBoard from "$lib/figma/overlays/constructive/RecoverWorkspaceBoard.svelte";
-    import UpdateWorkspaceBoard from "$lib/figma/overlays/constructive/UpdateWorkspaceBoard.svelte";
+    import RecoverProject from "$lib/figma/overlays/constructive/RecoverProject.svelte";
+    import UpdateProject from "$lib/figma/overlays/constructive/UpdateProject.svelte";
     import type { ConstructiveOverlayType } from "$lib/types/ui";
 
     import UpdateSection from "./UpdateSection.svelte";
@@ -28,16 +28,16 @@
     export let target: ConstructiveOverlayType;
 </script>
 
-{#if target.kind === "updateWorkspaceBoard"}
-    <UpdateWorkspaceBoard workspaceBoard={target.workspaceBoard} />
-{:else if target.kind === "createWorkspaceBoard"}
-    <CreateWorkspaceBoard workspace={target.workspace} />
+{#if target.kind === "updateProject"}
+    <UpdateProject project={target.project} />
+{:else if target.kind === "createProject"}
+    <CreateProject workspace={target.workspace} />
 {:else if target.kind === "inviteWorkspaceUser"}
     <InviteWorkspaceUser workspace={target.workspace} />
 {:else if target.kind === "createSection"}
-    <CreateSection workspaceBoard={target.workspaceBoard} />
+    <CreateSection project={target.project} />
 {:else if target.kind === "updateSection"}
     <UpdateSection section={target.section} />
-{:else if target.kind === "recoverWorkspaceBoard"}
-    <RecoverWorkspaceBoard workspaceBoard={target.workspaceBoard} />
+{:else if target.kind === "recoverProject"}
+    <RecoverProject project={target.project} />
 {/if}

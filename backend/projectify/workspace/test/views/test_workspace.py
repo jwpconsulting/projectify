@@ -44,8 +44,8 @@ from pytest_types import (
 )
 
 from ...models.const import WorkspaceUserRoles
+from ...models.project import Project
 from ...models.workspace import Workspace
-from ...models.workspace_board import WorkspaceBoard
 from ...models.workspace_user import WorkspaceUser
 
 
@@ -140,8 +140,8 @@ class TestWorkspaceReadUpdate:
         user: AbstractBaseUser,
         workspace: Workspace,
         workspace_user: WorkspaceUser,
-        workspace_board: WorkspaceBoard,
-        archived_workspace_board: WorkspaceBoard,
+        project: Project,
+        archived_project: Project,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can GET this view this while being logged in."""
@@ -171,7 +171,7 @@ class TestWorkspaceReadUpdate:
             "workspace_user_invites": [
                 {"email": "rando@calrissian.org", "created": unittest.mock.ANY}
             ],
-            "workspace_boards": [
+            "projects": [
                 unittest.mock.ANY,
             ],
             "labels": [],
@@ -183,7 +183,7 @@ class TestWorkspaceReadUpdate:
                 "sub_tasks": unittest.mock.ANY,
                 "tasks": unittest.mock.ANY,
                 "task_labels": unittest.mock.ANY,
-                "workspace_boards": unittest.mock.ANY,
+                "projects": unittest.mock.ANY,
                 "sections": unittest.mock.ANY,
                 "workspace_users_and_invites": {
                     "current": 3,
@@ -230,7 +230,7 @@ class TestWorkspaceReadUpdate:
                 }
             ],
             "workspace_user_invites": [],
-            "workspace_boards": [],
+            "projects": [],
             "labels": [],
             "quota": {
                 "workspace_status": "trial",
@@ -255,7 +255,7 @@ class TestWorkspaceReadUpdate:
                     "limit": None,
                     "can_create_more": True,
                 },
-                "workspace_boards": {
+                "projects": {
                     "current": 0,
                     "limit": 10,
                     "can_create_more": True,

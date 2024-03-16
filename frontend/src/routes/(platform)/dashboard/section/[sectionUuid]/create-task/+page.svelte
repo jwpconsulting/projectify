@@ -33,7 +33,7 @@
     import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
     import {
         getDashboardSectionUrl,
-        getDashboardWorkspaceBoardUrl,
+        getDashboardProjectUrl,
         getNewTaskUrl,
         getTaskUrl,
     } from "$lib/urls";
@@ -43,7 +43,7 @@
     export let data: PageData;
 
     const { section } = data;
-    $: workspaceBoard = section.workspace_board;
+    $: project = section.project;
 
     // form fields
     let title: string | undefined = undefined;
@@ -94,8 +94,8 @@
 
     $: crumbs = [
         {
-            label: workspaceBoard.title,
-            href: getDashboardWorkspaceBoardUrl(workspaceBoard.uuid),
+            label: project.title,
+            href: getDashboardProjectUrl(project.uuid),
         },
         {
             label: section.title,

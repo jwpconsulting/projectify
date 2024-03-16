@@ -9,7 +9,7 @@
    CLOSED: [2023-11-02 Thu 17:06]
    Django admin has this :thumbsup:
 
-** Implement workspace board archive
+** Implement project archive
 
 ** Figure out where we are with billing
    We spent a lot of time creating the thing in the backend. But does it work?
@@ -38,7 +38,7 @@
    - Assigned / Unassigned user to task
    - Assigned / Unassigned label to task
    - Created / updated / deleted label
-   - Created / updated / deleted workspace board
+   - Created / updated / deleted project
    - Created / updated / deleted section
 
 ** Hamburger menu should always allow me to go back to dashboard

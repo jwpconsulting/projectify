@@ -110,9 +110,9 @@ def workspace_delete(
         raise serializers.ValidationError(
             _("Can only delete workspace with no outstanding invites")
         )
-    if workspace.workspaceboard_set.exists():
+    if workspace.project_set.exists():
         raise serializers.ValidationError(
-            _("Can only delete workspace with no workspace boards")
+            _("Can only delete workspace with no projects")
         )
     count, _info = workspace.workspaceuser_set.all().delete()
     logger.info(

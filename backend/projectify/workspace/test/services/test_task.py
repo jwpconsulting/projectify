@@ -19,7 +19,7 @@ from datetime import datetime
 
 import pytest
 
-from projectify.workspace.models import WorkspaceBoard
+from projectify.workspace.models import Project
 from projectify.workspace.models.label import Label
 from projectify.workspace.models.section import (
     Section,
@@ -42,7 +42,7 @@ def test_create_task(
     section: Section,
     workspace_user: WorkspaceUser,
 ) -> None:
-    """Test adding tasks to a workspace board."""
+    """Test adding tasks to a project."""
     assert section.task_set.count() == 0
     task = task_create(
         who=workspace_user.user,
@@ -181,7 +181,7 @@ def test_moving_task_within_section(
 
 def test_moving_task_to_other_section(
     # TODO this fixture might not be needed
-    workspace_board: WorkspaceBoard,
+    project: Project,
     section: Section,
     other_section: Section,
     task: Task,
@@ -218,7 +218,7 @@ def test_moving_task_to_other_section(
 
 def test_moving_task_to_empty_section(
     # TODO the following two fixtures might not be needed
-    workspace_board: WorkspaceBoard,
+    project: Project,
     section: Section,
     other_section: Section,
     task: Task,

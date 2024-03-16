@@ -17,50 +17,49 @@
  */
 import { redirect } from "@sveltejs/kit";
 
-import { getArchivedWorkspaceBoards } from "$lib/repository/workspace/workspaceBoard";
-import { selectedWorkspaceBoardUuids } from "$lib/stores/dashboard";
-import { getArchiveUrl, getDashboardWorkspaceBoardUrl } from "$lib/urls";
-import { getNewWorkspaceBoardUrl } from "$lib/urls/onboarding";
+import { getArchivedProjects } from "$lib/repository/workspace/project";
+import { selectedProjectUuids } from "$lib/stores/dashboard";
+import { getArchiveUrl, getDashboardProjectUrl } from "$lib/urls";
+import { getNewProjectUrl } from "$lib/urls/onboarding";
 
 import type { PageLoadEvent } from "./$types";
 
 export async function load({ parent, fetch }: PageLoadEvent): Promise<void> {
-    // TODO call unsubscriber for selectedWorkspaceBoardUuids
-    const [maybeWorkspaceBoardUuids, parentData] = await Promise.all([
+    // TODO call unsubscriber for selectedProjectUuids
+    const [maybeProjectUuids, parentData] = await Promise.all([
         await new Promise<Map<string, string>>(
             // Read from localstorage what the selected ws board uuids are
-            selectedWorkspaceBoardUuids.subscribe,
+            selectedProjectUuids.subscribe,
         ),
         await parent(),
     ]);
 
-    const { uuid: workspaceUuid, workspace_boards } = parentData.workspace;
+    const { uuid: workspaceUuid, projects } = parentData.workspace;
 
-    // We see if the user has selected a workspace board UUID for this
+    // We see if the user has selected a project UUID for this
     // workspace before (by referencing local storage above)
     // And if we have one ...
-    const maybeWorkspaceBoardUuid =
-        maybeWorkspaceBoardUuids.get(workspaceUuid);
+    const maybeProjectUuid = maybeProjectUuids.get(workspaceUuid);
     if (
-        maybeWorkspaceBoardUuid &&
-        workspace_boards.map((b) => b.uuid).includes(maybeWorkspaceBoardUuid)
+        maybeProjectUuid &&
+        projects.map((b) => b.uuid).includes(maybeProjectUuid)
     ) {
         // ... we redirect to it
-        redirect(302, getDashboardWorkspaceBoardUrl(maybeWorkspaceBoardUuid));
+        redirect(302, getDashboardProjectUrl(maybeProjectUuid));
     }
     // If we can't find it, that's also OK, because:
-    // If we find any workspace boards, we pick the first and direct the user there
-    const first_workspace_board = workspace_boards.at(0);
-    if (first_workspace_board) {
-        const { uuid } = first_workspace_board;
+    // If we find any projects, we pick the first and direct the user there
+    const first_project = projects.at(0);
+    if (first_project) {
+        const { uuid } = first_project;
         // TODO show the user a notification in case of a redirect to here
         // Indicate that the previous UUID is not available anymore
-        redirect(302, getDashboardWorkspaceBoardUrl(uuid));
+        redirect(302, getDashboardProjectUrl(uuid));
     }
 
     // Now we check if anything is archived and redirect to the archive in that
     // case
-    const archived = await getArchivedWorkspaceBoards(workspaceUuid, {
+    const archived = await getArchivedProjects(workspaceUuid, {
         fetch,
     });
     if (archived && archived.length > 0) {
@@ -69,6 +68,6 @@ export async function load({ parent, fetch }: PageLoadEvent): Promise<void> {
         redirect(302, getArchiveUrl(workspaceUuid));
     }
     // TODO maybe throw in a nice notification to the user here that we have
-    // not found any workspace board for this workspace
-    redirect(302, getNewWorkspaceBoardUrl(workspaceUuid));
+    // not found any project for this workspace
+    redirect(302, getNewProjectUrl(workspaceUuid));
 }

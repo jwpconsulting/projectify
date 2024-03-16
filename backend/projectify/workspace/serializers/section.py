@@ -24,20 +24,20 @@ from . import (
 )
 
 
-class WorkspaceBoardUpSerializer(base.WorkspaceBoardBaseSerializer):
+class ProjectUpSerializer(base.ProjectBaseSerializer):
     """
-    Serialize workspace board and workspace containing it.
+    Serialize project and workspace containing it.
 
     Used when serializing up from a task or ws board section.
     """
 
     workspace = base.WorkspaceBaseSerializer(read_only=True)
 
-    class Meta(base.WorkspaceBoardBaseSerializer.Meta):
+    class Meta(base.ProjectBaseSerializer.Meta):
         """Meta."""
 
         fields = (
-            *base.WorkspaceBoardBaseSerializer.Meta.fields,
+            *base.ProjectBaseSerializer.Meta.fields,
             "workspace",
         )
 
@@ -45,14 +45,14 @@ class WorkspaceBoardUpSerializer(base.WorkspaceBoardBaseSerializer):
 class SectionUpSerializer(base.SectionBaseSerializer):
     """Serialize section up the hierarchy."""
 
-    workspace_board = WorkspaceBoardUpSerializer(read_only=True)
+    project = ProjectUpSerializer(read_only=True)
 
     class Meta(base.SectionBaseSerializer.Meta):
         """Meta."""
 
         fields = (
             *base.SectionBaseSerializer.Meta.fields,
-            "workspace_board",
+            "project",
         )
 
 
@@ -63,7 +63,7 @@ class SectionDetailSerializer(base.SectionBaseSerializer):
     Goes both up (to workspace) and down (all tasks).
     """
 
-    workspace_board = WorkspaceBoardUpSerializer(read_only=True)
+    project = ProjectUpSerializer(read_only=True)
     tasks = TaskWithSubTaskSerializer(
         many=True, read_only=True, source="task_set"
     )
@@ -73,6 +73,6 @@ class SectionDetailSerializer(base.SectionBaseSerializer):
 
         fields = (
             *base.SectionBaseSerializer.Meta.fields,
-            "workspace_board",
+            "project",
             "tasks",
         )

@@ -21,13 +21,13 @@
     import DashboardPlaceholder from "$lib/components/onboarding/DashboardPlaceholder.svelte";
     import Onboarding from "$lib/components/Onboarding.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { getDashboardWorkspaceBoardUrl, getSettingsUrl } from "$lib/urls";
+    import { getDashboardProjectUrl, getSettingsUrl } from "$lib/urls";
 
     import type { PageData } from "./$types";
 
     export let data: PageData;
 
-    const { task, assignee, workspaceBoard, section, workspace, label } = data;
+    const { task, assignee, project, section, workspace, label } = data;
 
     const taskTitle = task.title;
 </script>
@@ -38,7 +38,7 @@
     nextLabel={$_("onboarding.assign-task.continue")}
     nextAction={{
         kind: "a",
-        href: getDashboardWorkspaceBoardUrl(workspaceBoard.uuid),
+        href: getDashboardProjectUrl(project.uuid),
     }}
 >
     <svelte:fragment slot="title"
@@ -72,7 +72,7 @@
             task,
             label,
             workspace,
-            workspaceBoard,
+            project,
             section,
             assignee,
         }}

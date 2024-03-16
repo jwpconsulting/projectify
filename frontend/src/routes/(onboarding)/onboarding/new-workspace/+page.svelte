@@ -25,7 +25,7 @@
     import { goto } from "$lib/navigation";
     import { createWorkspace } from "$lib/repository/workspace";
     import { currentUser } from "$lib/stores/user";
-    import { getNewWorkspaceBoardUrl } from "$lib/urls/onboarding";
+    import { getNewProjectUrl } from "$lib/urls/onboarding";
 
     import type { PageData } from "./$types";
 
@@ -46,7 +46,7 @@
             fetch,
         });
 
-        const nextStep = getNewWorkspaceBoardUrl(uuid);
+        const nextStep = getNewProjectUrl(uuid);
         await goto(nextStep);
     }
 </script>
@@ -67,8 +67,8 @@
             <p>
                 <Anchor
                     size="large"
-                    href={getNewWorkspaceBoardUrl(workspace.uuid)}
-                    label={"Create workspace board"}
+                    href={getNewProjectUrl(workspace.uuid)}
+                    label={"Create project"}
                 />
             </p>
         {:else}

@@ -38,9 +38,9 @@
         openConstructiveOverlay,
         openDestructiveOverlay,
     } from "$lib/stores/globalUi";
-    import type { WorkspaceBoard, Section } from "$lib/types/workspace";
+    import type { Project, Section } from "$lib/types/workspace";
 
-    export let workspaceBoard: WorkspaceBoard;
+    export let project: Project;
     export let section: Section;
 
     let closed: boolean;
@@ -49,7 +49,7 @@
     }
 
     let sections: Section[] = [];
-    $: sections = workspaceBoard.sections ?? [];
+    $: sections = project.sections ?? [];
 
     // TODO this might have to be refactored to check if previous or next section exists
 

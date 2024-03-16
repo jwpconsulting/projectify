@@ -24,12 +24,12 @@
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { sectionClosed } from "$lib/stores/dashboard";
     import type {
-        WorkspaceBoardDetail,
+        ProjectDetail,
         SectionWithTasks,
     } from "$lib/types/workspace";
     import { getNewTaskUrl } from "$lib/urls";
 
-    export let workspaceBoard: WorkspaceBoardDetail;
+    export let project: ProjectDetail;
     export let section: SectionWithTasks;
 
     const { uuid } = section;
@@ -37,12 +37,12 @@
 </script>
 
 <section class="flex flex-col">
-    <SectionTitle {workspaceBoard} {section} {open} />
+    <SectionTitle {project} {section} {open} />
     {#if open}
         <div class="flex flex-col gap-2 rounded-b-2xl bg-foreground p-4">
             {#each section.tasks as task (task.uuid)}
                 <TaskCard
-                    {workspaceBoard}
+                    {project}
                     task={{
                         ...task,
                         section: section,
