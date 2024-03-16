@@ -62,7 +62,7 @@
 
 ** Merge read and update task page
 
-** Allow adding and updating deadline to ws board
+** Allow adding and updating deadline to project
 
 ** Edit labels after clicking edit label pencil button in side nav
 
@@ -102,14 +102,14 @@
 
 ** Close on anchor click
    When clicking on an anchor inside <Full />, we most likely navigate to a
-   new ws board. Then we should close the mobile menu
+   new project. Then we should close the mobile menu
 
 ** Buttons have irregular growth behavior
    Inside flex, it goes wild! There is a hacky grow parameter inside there,
    but it doesn't help much. To see where it goes wrong, look at the
    constructive overlays.
 
-** Create ws board section button is too far down
+** Create section button is too far down
    It looks like it sticks to the bottom relative to the side nav?
 
 ** With an expanded side nav, the dashboard looks buggy on narrow screens
@@ -283,7 +283,7 @@
 
 ** DONE Better business object stores
    CLOSED: [2023-09-06 Wed 10:06]
-   Create a store factory for self-refreshing task / ws / ws board entities,
+   Create a store factory for self-refreshing task / ws / project entities,
    then
 
    1. Perform initial load in page ts, so that a page can definitely be rendered

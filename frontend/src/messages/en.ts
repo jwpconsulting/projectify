@@ -45,15 +45,15 @@ const messages: MessageDirectory = {
                 save: "Save",
             },
             "create-project": {
-                "title": "Create project",
-                "form": {
+                title: "Create project",
+                form: {
                     title: {
                         label: "Project name",
                         placeholder: "Enter a project name",
                     },
                 },
-                "cancel": "Cancel",
-                "create-board": "Create",
+                cancel: "Cancel",
+                create: "Create",
             },
             "invite-workspace-user": {
                 title: "Invite workspace user",
@@ -168,8 +168,8 @@ const messages: MessageDirectory = {
                 "workspace-settings": "Workspace settings",
             },
             "project": {
-                "edit-board": "Edit board",
-                "archive-project": "Archive board",
+                "edit": "Edit project",
+                "archive-project": "Archive project",
             },
             "section": {
                 "expand-section": "Expand section",
@@ -224,8 +224,8 @@ const messages: MessageDirectory = {
                 back: "Go back to project",
             },
         },
-        "create-board": "Create new project",
-        "boards": "Projects",
+        "create-project": "Create new project",
+        "projects": "Projects",
         "workspace-users": "Workspace users",
         "workspace-user-name": "Workspace user name",
         "filter-workspace-users": "Filter workspace users",
@@ -394,16 +394,16 @@ const messages: MessageDirectory = {
             "default-name": "Your workspace",
         },
         "new-project": {
-            "title": "Add your first board",
+            "title": "Add your first project",
             "prompt": [
-                "You can create unlimited boards per workspace.",
+                "You can create unlimited project per workspace.",
                 "They help you to focus on different projects you may be working on.",
             ],
             "input": {
-                label: "Board title",
+                label: "Project title",
                 placeholder: "Release spring Aug 2023",
             },
-            "default-name": "Your board",
+            "default-name": "Your project",
             "project-exists": {
                 message:
                     'It looks like you already have a project called "{title}". Would you like to continue adding a task for it?',
@@ -942,7 +942,7 @@ const messages: MessageDirectory = {
             },
             "feature-3": {
                 header: "Full control of your workspaces",
-                text: "List and column views allow you to organize workflows and see the bigger picture. Split your workspace into boards to enable multi-project management. Filter by labels, workspace users, or keywords to focus on specific tasks.",
+                text: "List and column views allow you to organize workflows and see the bigger picture. Split your workspace into projects to enable multi-project management. Filter by labels, workspace users, or keywords to focus on specific tasks.",
                 alt: "An illustration showing how tasks can be filtered by workspace users or labels",
             },
             "feature-4": {
@@ -1146,7 +1146,7 @@ const messages: MessageDirectory = {
                 },
                 "feature-3": {
                     title: "Create and monitor multiple projects",
-                    text: "With unlimited project boards and tasks per workspace, you're free to perform as much research and testing as you require.",
+                    text: "With unlimited projects and tasks per workspace, you're free to perform as much research and testing as you require.",
                     illustration: {
                         alt: "An illustration suggesting the different ways labels can be assigned to different team members depending on their role, such as design or marketing",
                     },
@@ -1175,7 +1175,7 @@ const messages: MessageDirectory = {
                 },
                 "feature-3": {
                     title: "Full control of your workspaces",
-                    text: "List and column views allow you to organise workflows and see the bigger picture. Split your workspace into boards to enable multi-project management. Filter by labels, users or keyboards to focus on specific tasks.",
+                    text: "List and column views allow you to organise workflows and see the bigger picture. Split your workspace into projects to enable multi-project management. Filter by labels, users or keyboards to focus on specific tasks.",
                     illustration: {
                         alt: "An illustration showing a collapsed dashboard side bar and various workspace users and labels",
                     },

@@ -74,10 +74,10 @@ export function selectProjectUuid(workspaceUuid: string, projectUuid: string) {
     });
 }
 
-const _boardExpandOpen = persisted("board-expand-open", true);
-export const boardExpandOpen = readonly(_boardExpandOpen);
-export function toggleBoardExpandOpen() {
-    _boardExpandOpen.update((state) => !state);
+const _projectExpandOpen = persisted("board-expand-open", true);
+export const projectExpandOpen = readonly(_projectExpandOpen);
+export function toggleProjectExpandOpen() {
+    _projectExpandOpen.update((state) => !state);
 }
 
 const _userExpandOpen = persisted("user-expand-open", true);
