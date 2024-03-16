@@ -105,10 +105,10 @@ Altogether = TypedDict(
 WORKSPACE_TITLE_MIN_LENGTH = 20
 WORKSPACE_TITLE_MAX_LENGTH = 200
 
-WORKSPACE_BOARD_MIN_SECTIONS = 2
-WORKSPACE_BOARD_MAX_SECTIONS = 15
-WORKSPACE_BOARD_TITLE_MIN_LENGTH = 20
-WORKSPACE_BOARD_TITLE_MAX_LENGTH = 100
+PROJECT_MIN_SECTIONS = 2
+PROJECT_MAX_SECTIONS = 15
+PROJECT_TITLE_MIN_LENGTH = 20
+PROJECT_TITLE_MAX_LENGTH = 100
 
 SECTION_TITLE_MIN_LENGTH = 20
 SECTION_TITLE_MAX_LENGTH = 200
@@ -337,8 +337,8 @@ class Command(BaseCommand):
                 Project(
                     title=self.fake.text(
                         randint(
-                            WORKSPACE_BOARD_TITLE_MIN_LENGTH,
-                            WORKSPACE_BOARD_TITLE_MAX_LENGTH,
+                            PROJECT_TITLE_MIN_LENGTH,
+                            PROJECT_TITLE_MAX_LENGTH,
                         )
                     ),
                     description=self.fake.paragraph(),
@@ -354,7 +354,7 @@ class Command(BaseCommand):
         workspaces_sections = Section.objects.bulk_create(
             [
                 Section(
-                    project=project,
+                    workspace_board=project,
                     title=title,
                     _order=_order,
                 )
@@ -371,8 +371,8 @@ class Command(BaseCommand):
                     )
                     for _ in range(
                         randint(
-                            WORKSPACE_BOARD_MIN_SECTIONS,
-                            WORKSPACE_BOARD_MAX_SECTIONS,
+                            PROJECT_MIN_SECTIONS,
+                            PROJECT_MAX_SECTIONS,
                         )
                     )
                 )
