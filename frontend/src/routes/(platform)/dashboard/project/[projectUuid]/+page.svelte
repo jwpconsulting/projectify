@@ -47,7 +47,8 @@
 </script>
 
 <svelte:head>
-    <title>{project.title}</title>
+    <title>{$_("dashboard.title", { values: { title: project.title } })}</title
+    >
 </svelte:head>
 
 <!-- Sections -->

@@ -205,6 +205,7 @@ const messages: MessageDirectory = {
         "apply-label": "Assign label",
     },
     "dashboard": {
+        "title": "{title} - Projectify",
         "actions": {
             "add-section": "Add section",
         },
