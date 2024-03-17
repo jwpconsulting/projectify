@@ -991,6 +991,7 @@ const messages: MessageDirectory = {
         },
     },
     "pricing": {
+        "title": "Pricing - Projectify",
         "header": {
             title: "Pricing",
             subtitle: "One plan. One price. All features.",
@@ -1281,6 +1282,7 @@ const messages: MessageDirectory = {
         },
     },
     "terms-of-service": {
+        title: "Terms of service - Projectify",
         nav: {
             "title": "Terms of service",
             "japanese": "Japanese (original)",
@@ -1289,6 +1291,7 @@ const messages: MessageDirectory = {
         },
     },
     "privacy-policy": {
+        title: "Privacy policy - Projectify",
         nav: {
             "title": "Privacy Policy",
             "japanese": "Japanese Privacy Policy (original)",
@@ -1299,6 +1302,7 @@ const messages: MessageDirectory = {
         },
     },
     "free-software": {
+        "title": "Free software - Projectify",
         "hero": "Free Software and License Information",
         "header": "Projectify project management software is created by:",
         "license":
@@ -1315,20 +1319,22 @@ const messages: MessageDirectory = {
             "<strong>Projectify</strong> is a registered trademark in the EU, USA, and Japan. Use of the trademark is only permitted with permisson by JWP Consulting GK.",
     },
     "contact-us": {
-        title: "Contact",
-        body: {
+        "title": "Contact - Projectify",
+        "hero-title": "Contact",
+        "body": {
             title: "Contact information",
             text: "Should you have any questions, suggestions, or other inquiries regarding Projectify, please contact us using the following email address written below. We try to answer all inquiries within two working days. Please be patient if it takes longer.",
         },
-        email: {
+        "email": {
             href: "mailto:hello@projectifyapp.com?subject=Projectify contact",
             label: "hello@projectifyapp.com",
         },
-        illustration: {
+        "illustration": {
             alt: "An illustration of a phone booth",
         },
     },
     "accessibility": {
+        title: "Accessibility statement - Projectify",
         hero: {
             title: "Accessibility statement",
             illustration: {
@@ -1390,6 +1396,8 @@ const messages: MessageDirectory = {
         },
     },
     "help": {
+        "title": "Help - Projectify",
+        "sub-page-title": "{topic} help - Projectify",
         "hero": {
             image: {
                 alt: "Our mascot poly flying into the air using a jetpack",

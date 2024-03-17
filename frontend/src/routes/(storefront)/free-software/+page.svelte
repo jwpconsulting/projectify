@@ -21,6 +21,10 @@
     import HeroLayout from "$lib/components/layouts/HeroLayout.svelte";
 </script>
 
+<svelte:head>
+    <title>{$_("free-software.title")}</title>
+</svelte:head>
+
 <HeroLayout>
     <div slot="hero">
         <h1 class="text-3xl font-bold">{$_("free-software.hero")}</h1>

@@ -33,6 +33,14 @@
     $: helpItems = helpTopics($_);
 </script>
 
+<svelte:head>
+    <title
+        >{$_("help.sub-page-title", {
+            values: { topic: heroContent.title },
+        })}</title
+    >
+</svelte:head>
+
 <HeroLayout>
     <Hero slot="hero" {heroContent} />
     <nav slot="side" class="flex grow flex-col gap-4 sm:max-w-xs">

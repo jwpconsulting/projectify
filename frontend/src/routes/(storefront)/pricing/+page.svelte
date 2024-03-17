@@ -24,6 +24,10 @@
     $: limitations = $json("pricing.trial-mode.limitations.list") as string[];
 </script>
 
+<svelte:head>
+    <title>{$_("pricing.title")}</title>
+</svelte:head>
+
 <main class="flex w-full flex-col items-center px-8 py-10">
     <div class="flex w-full max-w-xl flex-col gap-4 sm:items-center sm:gap-8">
         <!-- explain that we have one price to rule them all -->

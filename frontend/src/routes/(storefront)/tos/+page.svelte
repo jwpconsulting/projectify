@@ -25,6 +25,10 @@
     import TosJa from "./tos-ja-formatted.svelte";
 </script>
 
+<svelte:head>
+    <title>{$_("terms-of-service.title")}</title>
+</svelte:head>
+
 <HeroLayout isProseContent={true}>
     <nav slot="side" class="flex max-w-xs grow flex-col gap-2">
         <p id="top" class="font-bold">{$_("terms-of-service.nav.title")}</p>
