@@ -46,6 +46,11 @@
     }
 </script>
 
+<svelte:head>
+    <title>{$_("dashboard.title", { values: { title: project.title } })}</title
+    >
+</svelte:head>
+
 <!-- Sections -->
 <div class="flex flex-col gap-4 p-2">
     {#each sections as section (section.uuid)}

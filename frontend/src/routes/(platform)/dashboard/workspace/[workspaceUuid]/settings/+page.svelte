@@ -89,6 +89,14 @@
     }
 </script>
 
+<svelte:head>
+    <title
+        >{$_("workspace-settings.title", {
+            values: { title: workspace.title },
+        })}</title
+    >
+</svelte:head>
+
 <form
     class="flex flex-col gap-6"
     on:submit|preventDefault={save}

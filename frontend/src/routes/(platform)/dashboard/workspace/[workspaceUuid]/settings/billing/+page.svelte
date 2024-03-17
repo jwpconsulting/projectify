@@ -119,6 +119,14 @@
         : $_("workspace-settings.billing.active.seats.unlimited");
 </script>
 
+<svelte:head>
+    <title
+        >{$_("workspace-settings.billing.title", {
+            values: { title: workspace.title },
+        })}</title
+    >
+</svelte:head>
+
 <section class="flex flex-col gap-12 px-4 py-6">
     {#if customer.subscription_status === "ACTIVE"}
         <section>

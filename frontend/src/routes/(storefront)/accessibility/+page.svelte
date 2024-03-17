@@ -73,6 +73,10 @@
     ];
 </script>
 
+<svelte:head>
+    <title>{$_("accessibility.title")}</title>
+</svelte:head>
+
 <HeroLayout>
     <Hero slot="hero" {heroContent} />
 

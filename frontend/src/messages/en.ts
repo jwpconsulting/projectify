@@ -45,15 +45,15 @@ const messages: MessageDirectory = {
                 save: "Save",
             },
             "create-project": {
-                "title": "Create project",
-                "form": {
+                title: "Create project",
+                form: {
                     title: {
                         label: "Project name",
                         placeholder: "Enter a project name",
                     },
                 },
-                "cancel": "Cancel",
-                "create-board": "Create",
+                cancel: "Cancel",
+                create: "Create",
             },
             "invite-workspace-user": {
                 title: "Invite workspace user",
@@ -168,8 +168,8 @@ const messages: MessageDirectory = {
                 "workspace-settings": "Workspace settings",
             },
             "project": {
-                "edit-board": "Edit board",
-                "archive-project": "Archive board",
+                "edit": "Edit project",
+                "archive-project": "Archive project",
             },
             "section": {
                 "expand-section": "Expand section",
@@ -204,7 +204,13 @@ const messages: MessageDirectory = {
     "label": {
         "apply-label": "Assign label",
     },
+    "task": {
+        "title": "{title} - Projectify",
+        "update-task-title": "Edit {title} - Projectify",
+        "create-task-title": "Add task to {title} - Projectify",
+    },
     "dashboard": {
+        "title": "{title} - Projectify",
         "actions": {
             "add-section": "Add section",
         },
@@ -224,8 +230,8 @@ const messages: MessageDirectory = {
                 back: "Go back to project",
             },
         },
-        "create-board": "Create new project",
-        "boards": "Projects",
+        "create-project": "Create new project",
+        "projects": "Projects",
         "workspace-users": "Workspace users",
         "workspace-user-name": "Workspace user name",
         "filter-workspace-users": "Filter workspace users",
@@ -394,16 +400,16 @@ const messages: MessageDirectory = {
             "default-name": "Your workspace",
         },
         "new-project": {
-            "title": "Add your first board",
+            "title": "Add your first project",
             "prompt": [
-                "You can create unlimited boards per workspace.",
+                "You can create unlimited project per workspace.",
                 "They help you to focus on different projects you may be working on.",
             ],
             "input": {
-                label: "Board title",
+                label: "Project title",
                 placeholder: "Release spring Aug 2023",
             },
-            "default-name": "Your board",
+            "default-name": "Your project",
             "project-exists": {
                 message:
                     'It looks like you already have a project called "{title}". Would you like to continue adding a task for it?',
@@ -460,8 +466,9 @@ const messages: MessageDirectory = {
     },
     "auth": {
         "sign-up": {
-            "title": "Sign up",
-            "sub-title": "Sign up and start a free trial",
+            "title": "Sign up - Projectify",
+            "heading": "Sign up",
+            "sub-heading": "Sign up and start a free trial",
             "email": {
                 label: "Email",
                 placeholder: "Enter your email",
@@ -502,7 +509,8 @@ const messages: MessageDirectory = {
             "landing": "Go to landing",
         },
         "log-in": {
-            "title": "Log in",
+            "title": "Log in - Projectify",
+            "heading": "Log in",
             "email": {
                 label: "Email",
                 placeholder: "Enter your email",
@@ -528,7 +536,8 @@ const messages: MessageDirectory = {
             "sign-up-here": "Sign up here",
         },
         "request-password-reset": {
-            "title": "Reset your password",
+            "title": "Reset your password - Projectify",
+            "heading": "Reset your password",
             "explanation":
                 "Enter the email associated with your account and we'll send you a link to reset your password.",
             "email": {
@@ -548,7 +557,8 @@ const messages: MessageDirectory = {
             },
         },
         "requested-password-reset": {
-            "title": "Password reset requested",
+            "title": "Password reset requested - Projectify",
+            "heading": "Password reset requested",
             "message":
                 "You have requested for your password to be reset and will receive an email with password reset instructions soon. Please check your email inbox.",
             "troubleshooting":
@@ -556,7 +566,8 @@ const messages: MessageDirectory = {
             "request-again": "Request password reset again",
         },
         "confirm-password-reset": {
-            "title": "Reset your password",
+            "title": "Reset your password - Projectify",
+            "heading": "Reset your password",
             "password-1": {
                 label: "New password",
                 placeholder: "Enter new password",
@@ -587,7 +598,8 @@ const messages: MessageDirectory = {
             "request-password-reset": "Request password reset again",
         },
         "reset-password": {
-            title: "Password reset complete",
+            title: "Password reset complete - Projectify",
+            heading: "Password reset complete",
             message:
                 "Your password was reset successfully. You may now proceed and log in with your email address and the password that you have just entered.",
             continue: "Continue to log in",
@@ -760,9 +772,10 @@ const messages: MessageDirectory = {
         },
     },
     "workspace-settings": {
-        "title": "Workspace settings",
+        "title": "{title} settings - Projectify",
+        "heading": "Workspace settings",
         "general": {
-            "title": "General",
+            "heading": "General",
             "save": "Save",
             "cancel": "Cancel",
             "workspace-name": {
@@ -788,7 +801,8 @@ const messages: MessageDirectory = {
             },
         },
         "workspace-users": {
-            "title": "Workspace users",
+            "title": "{title} workspace users - Projectify",
+            "heading": "Workspace users",
             "no-job-title": "No job title",
             "no-workspace-users-found":
                 "No workspace users found for this search query. Please try another search.",
@@ -818,7 +832,8 @@ const messages: MessageDirectory = {
             },
         },
         "billing": {
-            "title": "Billing",
+            "title": "{title} billing - Projectify",
+            "heading": "Billing",
             "active": {
                 "status": {
                     title: "Subscription status: Paid workspace",
@@ -881,7 +896,8 @@ const messages: MessageDirectory = {
             "billing-contact": "hello@projectifyapp.com",
         },
         "quota": {
-            "title": "Quota",
+            "title": "{title} quota - Projectify",
+            "heading": "Quota",
             "explanation": {
                 "quota-for":
                     "These are the quotas for the ''{title}'' workspace:",
@@ -919,6 +935,7 @@ const messages: MessageDirectory = {
         },
     },
     "index": {
+        title: "Projectify",
         hero: {
             header: "Manage projects the right way.",
             text: "Warp drive your way to success with software that helps you to collaborate on and manage projects efficiently, with speed.",
@@ -942,7 +959,7 @@ const messages: MessageDirectory = {
             },
             "feature-3": {
                 header: "Full control of your workspaces",
-                text: "List and column views allow you to organize workflows and see the bigger picture. Split your workspace into boards to enable multi-project management. Filter by labels, workspace users, or keywords to focus on specific tasks.",
+                text: "List and column views allow you to organize workflows and see the bigger picture. Split your workspace into projects to enable multi-project management. Filter by labels, workspace users, or keywords to focus on specific tasks.",
                 alt: "An illustration showing how tasks can be filtered by workspace users or labels",
             },
             "feature-4": {
@@ -990,6 +1007,7 @@ const messages: MessageDirectory = {
         },
     },
     "pricing": {
+        "title": "Pricing - Projectify",
         "header": {
             title: "Pricing",
             subtitle: "One plan. One price. All features.",
@@ -1035,7 +1053,9 @@ const messages: MessageDirectory = {
         },
     },
     "solutions": {
+        "sub-page-title": "{pageTitle} - Projectify",
         "index": {
+            title: "Solutions - Projectify",
             hero: {
                 title: "Solutions for every type of user",
                 text: "Explore the different ways users are using Projectify to meet due dates, reach targets and be productive.",
@@ -1146,7 +1166,7 @@ const messages: MessageDirectory = {
                 },
                 "feature-3": {
                     title: "Create and monitor multiple projects",
-                    text: "With unlimited project boards and tasks per workspace, you're free to perform as much research and testing as you require.",
+                    text: "With unlimited projects and tasks per workspace, you're free to perform as much research and testing as you require.",
                     illustration: {
                         alt: "An illustration suggesting the different ways labels can be assigned to different team members depending on their role, such as design or marketing",
                     },
@@ -1175,7 +1195,7 @@ const messages: MessageDirectory = {
                 },
                 "feature-3": {
                     title: "Full control of your workspaces",
-                    text: "List and column views allow you to organise workflows and see the bigger picture. Split your workspace into boards to enable multi-project management. Filter by labels, users or keyboards to focus on specific tasks.",
+                    text: "List and column views allow you to organise workflows and see the bigger picture. Split your workspace into projects to enable multi-project management. Filter by labels, users or keyboards to focus on specific tasks.",
                     illustration: {
                         alt: "An illustration showing a collapsed dashboard side bar and various workspace users and labels",
                     },
@@ -1278,6 +1298,7 @@ const messages: MessageDirectory = {
         },
     },
     "terms-of-service": {
+        title: "Terms of service - Projectify",
         nav: {
             "title": "Terms of service",
             "japanese": "Japanese (original)",
@@ -1286,6 +1307,7 @@ const messages: MessageDirectory = {
         },
     },
     "privacy-policy": {
+        title: "Privacy policy - Projectify",
         nav: {
             "title": "Privacy Policy",
             "japanese": "Japanese Privacy Policy (original)",
@@ -1296,6 +1318,7 @@ const messages: MessageDirectory = {
         },
     },
     "free-software": {
+        "title": "Free software - Projectify",
         "hero": "Free Software and License Information",
         "header": "Projectify project management software is created by:",
         "license":
@@ -1312,20 +1335,22 @@ const messages: MessageDirectory = {
             "<strong>Projectify</strong> is a registered trademark in the EU, USA, and Japan. Use of the trademark is only permitted with permisson by JWP Consulting GK.",
     },
     "contact-us": {
-        title: "Contact",
-        body: {
+        "title": "Contact - Projectify",
+        "hero-title": "Contact",
+        "body": {
             title: "Contact information",
             text: "Should you have any questions, suggestions, or other inquiries regarding Projectify, please contact us using the following email address written below. We try to answer all inquiries within two working days. Please be patient if it takes longer.",
         },
-        email: {
+        "email": {
             href: "mailto:hello@projectifyapp.com?subject=Projectify contact",
             label: "hello@projectifyapp.com",
         },
-        illustration: {
+        "illustration": {
             alt: "An illustration of a phone booth",
         },
     },
     "accessibility": {
+        title: "Accessibility statement - Projectify",
         hero: {
             title: "Accessibility statement",
             illustration: {
@@ -1387,6 +1412,8 @@ const messages: MessageDirectory = {
         },
     },
     "help": {
+        "title": "Help - Projectify",
+        "sub-page-title": "{topic} help - Projectify",
         "hero": {
             image: {
                 alt: "Our mascot poly flying into the air using a jetpack",

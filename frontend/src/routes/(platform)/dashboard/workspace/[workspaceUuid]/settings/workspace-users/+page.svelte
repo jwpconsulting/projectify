@@ -53,6 +53,14 @@
     }
 </script>
 
+<svelte:head>
+    <title
+        >{$_("workspace-settings.workspace-users.title", {
+            values: { title: workspace.title },
+        })}</title
+    >
+</svelte:head>
+
 <div class="flex flex-col gap-4">
     {#if $currentWorkspaceUserCan("create", "workspaceUserInvite")}
         <Button
@@ -71,7 +79,7 @@
 </div>
 <section class="flex flex-col gap-4">
     <h2 class="text-xl font-bold">
-        {$_("workspace-settings.workspace-users.title")}
+        {$_("workspace-settings.workspace-users.heading")}
     </h2>
     <table class="grid w-full grid-cols-4 items-center gap-y-4">
         <thead class="contents">

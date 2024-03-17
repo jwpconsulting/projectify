@@ -38,6 +38,10 @@
     $: helpTopics = makeHelpTopics($_).filter((t) => t.isOverview !== true);
 </script>
 
+<svelte:head>
+    <title>{$_("help.title")}</title>
+</svelte:head>
+
 <HeroLayout>
     <Hero slot="hero" {heroContent} />
     <div slot="content" class="flex w-full flex-col gap-4">

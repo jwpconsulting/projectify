@@ -27,6 +27,10 @@
     import PpJa from "./pp-ja-formatted.svelte";
 </script>
 
+<svelte:head>
+    <title>{$_("privacy-policy.title")}</title>
+</svelte:head>
+
 <HeroLayout isProseContent={true}>
     <nav slot="side" class="flex max-w-xs grow flex-col gap-2">
         <p id="top" class="font-bold">{$_("privacy-policy.nav.title")}</p>

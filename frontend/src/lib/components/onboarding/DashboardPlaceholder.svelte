@@ -21,9 +21,9 @@
 
     import Full from "$lib/figma/navigation/side-nav/Full.svelte";
     import {
-        boardExpandOpen,
+        projectExpandOpen,
         labelExpandOpen,
-        toggleBoardExpandOpen,
+        toggleProjectExpandOpen,
         toggleLabelDropdownClosedNavOpen,
         toggleUserExpandOpen,
         userExpandOpen,
@@ -89,8 +89,8 @@
 
     onMount(() => {
         // Ensure we have all side panels open
-        if (!$boardExpandOpen) {
-            toggleBoardExpandOpen();
+        if (!$projectExpandOpen) {
+            toggleProjectExpandOpen();
         }
         if (!$labelExpandOpen) {
             toggleLabelDropdownClosedNavOpen();

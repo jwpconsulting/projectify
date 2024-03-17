@@ -25,9 +25,9 @@
     import SelectProject from "$lib/figma/navigation/side-nav/SelectProject.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import {
-        boardExpandOpen,
-        toggleBoardExpandOpen,
-    } from "$lib/stores/dashboard";
+        projectExpandOpen,
+        toggleProjectExpandOpen,
+    } from "$lib/stores/dashboard/ui";
     import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type { Workspace } from "$lib/types/workspace";
@@ -45,13 +45,13 @@
 </script>
 
 <SideNavMenuCategory
-    label={$_("dashboard.boards")}
+    label={$_("dashboard.projects")}
     icon={Folder}
-    open={$boardExpandOpen}
-    on:click={toggleBoardExpandOpen}
+    open={$projectExpandOpen}
+    on:click={toggleProjectExpandOpen}
     filtered={false}
 />
-{#if $boardExpandOpen}
+{#if $projectExpandOpen}
     <div class="flex shrink flex-col overflow-y-auto">
         {#if workspace.projects === undefined}
             <Loading />
@@ -76,7 +76,7 @@
     </div>
     {#if $currentWorkspaceUserCan("create", "project")}
         <ContextMenuButton
-            label={$_("dashboard.create-board")}
+            label={$_("dashboard.create-project")}
             icon={Plus}
             color="primary"
             state="normal"

@@ -90,7 +90,11 @@
     }
 </script>
 
-<AuthScreen title={$_("auth.log-in.title")} {action}>
+<svelte:head>
+    <title>{$_("auth.log-in.title")}</title>
+</svelte:head>
+
+<AuthScreen title={$_("auth.log-in.heading")} {action}>
     <div class="flex flex-col gap-6">
         <InputField
             placeholder={$_("auth.log-in.email.placeholder")}

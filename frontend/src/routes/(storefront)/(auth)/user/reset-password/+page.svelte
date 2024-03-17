@@ -22,9 +22,13 @@
     import { logInUrl } from "$lib/urls/user";
 </script>
 
+<svelte:head>
+    <title>{$_("auth.reset-password.title")}</title>
+</svelte:head>
+
 <section class="flex flex-col gap-4 px-8 py-4">
     <h1 class="text-2xl font-bold">
-        {$_("auth.reset-password.title")}
+        {$_("auth.reset-password.heading")}
     </h1>
     <p>
         {$_("auth.reset-password.message")}

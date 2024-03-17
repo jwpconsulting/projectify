@@ -108,6 +108,14 @@
     ];
 </script>
 
+<svelte:head>
+    <title
+        >{$_("task.create-task-title", {
+            values: { title: project.title },
+        })}</title
+    >
+</svelte:head>
+
 <Layout>
     <TopBar slot="top-bar" {section}>
         <Breadcrumbs slot="breadcrumbs" {crumbs} />

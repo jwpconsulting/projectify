@@ -97,7 +97,7 @@ export const workspaceUserSelectionInputs: WorkspaceUserSelectionInput[] = [
 
 export const project: Project = {
     uuid: nullUuid,
-    title: "Project board with a long name, it is long",
+    title: "Project with a long name, it is long",
     created: "",
     modified: "",
 };
@@ -159,7 +159,7 @@ export const task: TaskWithSection = {
         _order: 0,
         project: {
             uuid: nullUuid,
-            title: "Project board with a long name, it is long",
+            title: "Project with a long name, it is long",
             created: "",
             modified: "",
         },

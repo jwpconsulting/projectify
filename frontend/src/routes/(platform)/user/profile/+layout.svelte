@@ -19,6 +19,10 @@
     import { _ } from "svelte-i18n";
 </script>
 
+<svelte:head>
+    <title>{$_("user-account-settings.title")}</title>
+</svelte:head>
+
 <div class="flex h-full flex-col items-center bg-background p-8">
     <div class="w-full max-w-lg">
         <div class="flex flex-col gap-4">

@@ -34,7 +34,7 @@
     export let workspace: Workspace;
     export let project: Project;
 
-    async function editBoard() {
+    async function editProject() {
         await openConstructiveOverlay({
             kind: "updateProject",
             project,
@@ -143,10 +143,10 @@
     <ContextMenuButton
         kind={{
             kind: "button",
-            action: editBoard,
+            action: editProject,
             disabled: !$currentWorkspaceUserCan("update", "project"),
         }}
-        label={$_("overlay.context-menu.project.edit-board")}
+        label={$_("overlay.context-menu.project.edit")}
         state="normal"
         icon={Pencil}
     />

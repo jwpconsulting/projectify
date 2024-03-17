@@ -59,7 +59,11 @@
     }
 </script>
 
-<AuthScreen title={$_("auth.request-password-reset.title")} action={submit}>
+<svelte:head>
+    <title>{$_("auth.request-password-reset.title")}</title>
+</svelte:head>
+
+<AuthScreen title={$_("auth.request-password-reset.heading")} action={submit}>
     <div class="text-center">
         {$_("auth.request-password-reset.explanation")}
     </div>

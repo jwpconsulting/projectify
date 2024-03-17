@@ -26,9 +26,13 @@
     import Illustration from "./illustration.png";
 
     $: heroContent = {
-        title: $_("contact-us.title"),
+        title: $_("contact-us.hero-title"),
     } satisfies SolutionsHeroContent;
 </script>
+
+<svelte:head>
+    <title>{$_("contact-us.title")}</title>
+</svelte:head>
 
 <HeroLayout>
     <Hero {heroContent} slot="hero" />
