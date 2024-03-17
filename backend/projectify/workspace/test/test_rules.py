@@ -102,7 +102,9 @@ class TestPredicates:
         observer: WorkspaceUser,
     ) -> None:
         """Test is_at_least_contributor with other workspace."""
-        assert not rules.is_at_least_contributor(observer.user, unrelated_workspace)
+        assert not rules.is_at_least_contributor(
+            observer.user, unrelated_workspace
+        )
 
     def test_is_at_least_maintainer(
         self,

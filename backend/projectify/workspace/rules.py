@@ -172,7 +172,9 @@ rules.add_perm("workspace.update_section", is_at_least_maintainer)
 rules.add_perm("workspace.delete_section", is_at_least_maintainer)
 
 # Task
-rules.add_perm("workspace.create_task", is_at_least_contributor & within_task_quota)
+rules.add_perm(
+    "workspace.create_task", is_at_least_contributor & within_task_quota
+)
 rules.add_perm("workspace.read_task", is_at_least_observer)
 rules.add_perm("workspace.update_task", is_at_least_contributor)
 rules.add_perm("workspace.delete_task", is_at_least_maintainer)
@@ -187,7 +189,8 @@ rules.add_perm("workspace.delete_label", is_at_least_maintainer)
 
 # Task label
 rules.add_perm(
-    "workspace.create_task_label", is_at_least_contributor & within_task_label_quota
+    "workspace.create_task_label",
+    is_at_least_contributor & within_task_label_quota,
 )
 rules.add_perm("workspace.read_task_label", is_at_least_observer)
 rules.add_perm("workspace.update_task_label", is_at_least_contributor)
@@ -196,7 +199,8 @@ rules.add_perm("workspace.delete_task_label", is_at_least_contributor)
 
 # Sub task
 rules.add_perm(
-    "workspace.create_sub_task", is_at_least_contributor & within_sub_task_quota
+    "workspace.create_sub_task",
+    is_at_least_contributor & within_sub_task_quota,
 )
 rules.add_perm("workspace.read_sub_task", is_at_least_observer)
 rules.add_perm("workspace.update_sub_task", is_at_least_contributor)
