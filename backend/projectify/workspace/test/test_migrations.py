@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2022 JWP Consulting GK
+# Copyright (C) 2022-2024 JWP Consulting GK
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published
@@ -15,14 +15,17 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Test migrations in workspace app."""
+from typing import Any
+
 import pytest
 
+pytestmark = pytest.mark.django_db
 
-@pytest.mark.django_db
+
 class Test0043:
     """Test migration 0043."""
 
-    def test(self, migrator, settings):
+    def test(self, migrator: Any, settings: Any) -> None:
         """Test that assignee_workspace_user is populated correctly."""
         old_state = migrator.apply_initial_migration(
             ("workspace", "0042_task_assignee_workspace_user")
@@ -97,11 +100,10 @@ class Test0043:
         assert other_task.assignee_workspace_user is None
 
 
-@pytest.mark.django_db
 class Test0047PopulateChatMessageAuthorWorkspaceUser:
     """Test migration 0047."""
 
-    def test(self, migrator, settings):
+    def test(self, migrator: Any, settings: Any) -> None:
         """Test that author_workspace_user is populated correctly."""
         old_state = migrator.apply_initial_migration(
             ("workspace", "0046_chatmessage_author_workspace_user")
@@ -176,3 +178,72 @@ class Test0047PopulateChatMessageAuthorWorkspaceUser:
         assert chat_message.author_workspace_user is not None
         assert chat_message.author_workspace_user.user == chat_message.author
         assert other_chat_message.author_workspace_user is None
+
+
+class Test0060AlterWorkspaceUserRole:
+    """Test migration 0060, where we modify the role enum."""
+
+    def test(self, migrator: Any) -> None:
+        """Test that author_workspace_user is populated correctly."""
+        old_state = migrator.apply_initial_migration(
+            ("workspace", "0059_rename_workspaceboard_project_and_more")
+        )
+
+        User = old_state.apps.get_model("user", "User")
+        Workspace = old_state.apps.get_model("workspace", "Workspace")
+        WorkspaceUser = old_state.apps.get_model("workspace", "WorkspaceUser")
+
+        workspace = Workspace.objects.create(title="asdasd", description="")
+
+        user1, user2, user3, user4 = User.objects.bulk_create(
+            [
+                User(
+                    email=email,
+                    is_staff=False,
+                    is_superuser=False,
+                    is_active=False,
+                )
+                for email in [
+                    "hello1@example.com",
+                    "hello2@example.com",
+                    "hello3@example.com",
+                    "hello4@example.com",
+                ]
+            ]
+        )
+        WorkspaceUser.objects.bulk_create(
+            [
+                WorkspaceUser(
+                    user=user1,
+                    workspace_id=workspace.pk,
+                    role="MEMBER",
+                ),
+                WorkspaceUser(
+                    user=user2,
+                    workspace_id=workspace.pk,
+                    role="OWNER",
+                ),
+                WorkspaceUser(
+                    user=user3,
+                    workspace_id=workspace.pk,
+                    role="MAINTAINER",
+                ),
+                WorkspaceUser(
+                    user=user4,
+                    workspace_id=workspace.pk,
+                    role="OBSERVER",
+                ),
+            ]
+        )
+        new_state: Any = migrator.apply_tested_migration(
+            ("workspace", "0060_alter_workspaceuser_role")
+        )
+        NewWorkspaceUser: Any = new_state.apps.get_model(
+            "workspace", "WorkspaceUser"
+        )
+        roles = list(
+            NewWorkspaceUser.objects.order_by("pk").values_list(
+                "role", flat=True
+            )
+        )
+        assert roles == ["CONTRIBUTOR", "OWNER", "MAINTAINER", "OBSERVER"]

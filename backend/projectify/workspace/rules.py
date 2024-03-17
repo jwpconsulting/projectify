@@ -34,25 +34,25 @@ ROLE_EQUIVALENCE = {
     WorkspaceUserRoles.OWNER: {
         WorkspaceUserRoles.OWNER: True,
         WorkspaceUserRoles.MAINTAINER: True,
-        WorkspaceUserRoles.MEMBER: True,
+        WorkspaceUserRoles.CONTRIBUTOR: True,
         WorkspaceUserRoles.OBSERVER: True,
     },
     WorkspaceUserRoles.MAINTAINER: {
         WorkspaceUserRoles.OWNER: False,
         WorkspaceUserRoles.MAINTAINER: True,
-        WorkspaceUserRoles.MEMBER: True,
+        WorkspaceUserRoles.CONTRIBUTOR: True,
         WorkspaceUserRoles.OBSERVER: True,
     },
-    WorkspaceUserRoles.MEMBER: {
+    WorkspaceUserRoles.CONTRIBUTOR: {
         WorkspaceUserRoles.OWNER: False,
         WorkspaceUserRoles.MAINTAINER: False,
-        WorkspaceUserRoles.MEMBER: True,
+        WorkspaceUserRoles.CONTRIBUTOR: True,
         WorkspaceUserRoles.OBSERVER: True,
     },
     WorkspaceUserRoles.OBSERVER: {
         WorkspaceUserRoles.OWNER: False,
         WorkspaceUserRoles.MAINTAINER: False,
-        WorkspaceUserRoles.MEMBER: False,
+        WorkspaceUserRoles.CONTRIBUTOR: False,
         WorkspaceUserRoles.OBSERVER: True,
     },
 }
@@ -75,12 +75,12 @@ def check_permissions_for(
 
 # Role predicates
 # ---------------
-# Observer < Member < Maintainer < Owner
+# Observer < Contributor < Maintainer < Owner
 is_at_least_observer = rules.predicate(
     partial(check_permissions_for, WorkspaceUserRoles.OBSERVER)
 )
-is_at_least_member = rules.predicate(
-    partial(check_permissions_for, WorkspaceUserRoles.MEMBER)
+is_at_least_contributor = rules.predicate(
+    partial(check_permissions_for, WorkspaceUserRoles.CONTRIBUTOR)
 )
 is_at_least_maintainer = rules.predicate(
     partial(check_permissions_for, WorkspaceUserRoles.MAINTAINER)
@@ -172,9 +172,11 @@ rules.add_perm("workspace.update_section", is_at_least_maintainer)
 rules.add_perm("workspace.delete_section", is_at_least_maintainer)
 
 # Task
-rules.add_perm("workspace.create_task", is_at_least_member & within_task_quota)
+rules.add_perm(
+    "workspace.create_task", is_at_least_contributor & within_task_quota
+)
 rules.add_perm("workspace.read_task", is_at_least_observer)
-rules.add_perm("workspace.update_task", is_at_least_member)
+rules.add_perm("workspace.update_task", is_at_least_contributor)
 rules.add_perm("workspace.delete_task", is_at_least_maintainer)
 
 # Label
@@ -187,26 +189,28 @@ rules.add_perm("workspace.delete_label", is_at_least_maintainer)
 
 # Task label
 rules.add_perm(
-    "workspace.create_task_label", is_at_least_member & within_task_label_quota
+    "workspace.create_task_label",
+    is_at_least_contributor & within_task_label_quota,
 )
 rules.add_perm("workspace.read_task_label", is_at_least_observer)
-rules.add_perm("workspace.update_task_label", is_at_least_member)
-rules.add_perm("workspace.delete_task_label", is_at_least_member)
+rules.add_perm("workspace.update_task_label", is_at_least_contributor)
+rules.add_perm("workspace.delete_task_label", is_at_least_contributor)
 
 
 # Sub task
 rules.add_perm(
-    "workspace.create_sub_task", is_at_least_member & within_sub_task_quota
+    "workspace.create_sub_task",
+    is_at_least_contributor & within_sub_task_quota,
 )
 rules.add_perm("workspace.read_sub_task", is_at_least_observer)
-rules.add_perm("workspace.update_sub_task", is_at_least_member)
-rules.add_perm("workspace.delete_sub_task", is_at_least_member)
+rules.add_perm("workspace.update_sub_task", is_at_least_contributor)
+rules.add_perm("workspace.delete_sub_task", is_at_least_contributor)
 
 # Chat message
 rules.add_perm(
     "workspace.create_chat_message",
-    is_at_least_member & within_chat_message_quota,
+    is_at_least_contributor & within_chat_message_quota,
 )
 rules.add_perm("workspace.read_chat_message", is_at_least_observer)
-rules.add_perm("workspace.update_chat_message", is_at_least_member)
+rules.add_perm("workspace.update_chat_message", is_at_least_contributor)
 rules.add_perm("workspace.delete_chat_message", is_at_least_maintainer)

@@ -9,7 +9,7 @@ There are 4 different roles available to be assigned to a workspace user. They
 are listed here starting with the role with the fewest permissions:
 
 1. Observer
-2. Member
+2. Contributor
 3. Maintainer
 4. Owner
 
@@ -48,16 +48,16 @@ individual cell in this table is as follows:
 - Cells with a **-** indicate that no permissions exist for this resource and
   role.
 
-| Resource                    | Observer | Member | Maintainer | Owner |
-| --------------------------- | -------- | ------ | ---------- | ----- |
-| Workspace                   | Read     | Read   | Read       | Full  |
-| Workspace billing settings  | -        | -      | -          | Full  |
-| Workspace users and invites | Read     | Read   | Read       | Full  |
-| Project                     | Read     | Read   | Full       | Full  |
-| Sections                    | Read     | Read   | Full       | Full  |
-| Tasks                       | Read     | Write  | Full       | Full  |
-| Sub tasks                   | Read     | Full   | Full       | Full  |
-| Labels                      | Read     | Read   | Full       | Full  |
+| Resource                    | Observer | Contributor | Maintainer | Owner |
+| --------------------------- | -------- | ----------- | ---------- | ----- |
+| Workspace                   | Read     | Read        | Read       | Full  |
+| Workspace billing settings  | -        | -           | -          | Full  |
+| Workspace users and invites | Read     | Read        | Read       | Full  |
+| Project                     | Read     | Read        | Full       | Full  |
+| Sections                    | Read     | Read        | Full       | Full  |
+| Tasks                       | Read     | Write       | Full       | Full  |
+| Sub tasks                   | Read     | Full        | Full       | Full  |
+| Labels                      | Read     | Read        | Full       | Full  |
 
 # Observer
 
@@ -67,9 +67,9 @@ the other resources. This role is suitable for outside users who want to
 observer the progress of a project, but do not need to commit any changes
 themselves.
 
-# Member
+# Contributor
 
-On top of the **observer** permissions, a **member** workspace user has the
+On top of the **observer** permissions, a **contributor** workspace user has the
 following additional permissions in their workspace:
 
 - They can create and update tasks
@@ -82,7 +82,7 @@ sections, labels, users, billing settings, and the workspace itself.
 # Maintainer
 
 With the **maintainer** workspace user role, the following activities become
-possible, on top of the **member** permissions:
+possible, on top of the **contributor** permissions:
 
 - Create, update and delete projects
 - Create, update and delete sections

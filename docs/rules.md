@@ -6,7 +6,7 @@ certain things.
 There are four roles, sorted by least privileged role first
 
 - Observer
-- Member
+- Contributor
 - Maintainer
 - Owner
 
@@ -44,11 +44,11 @@ role required to perform that action.
 | Workspace user          | Owner      | Observer   | Owner      | Owner      |
 | Project         | Maintainer | Observer   | Maintainer | Maintainer |
 | Section | Maintainer | Observer   | Maintainer | Maintainer |
-| Task                    | Member     | Observer   | Member     | Maintainer |
+| Task                    | Contributor     | Observer   | Contributor     | Maintainer |
 | Label                   | Maintainer | Observer   | Maintainer | Maintainer |
-| Task label              | Member     | Observer   | Member     | Member     |
-| Sub task                | Member     | Observer   | Member     | Member     |
-| Chat message            | Member     | Observer   | Member     | Maintainer |
+| Task label              | Contributor     | Observer   | Contributor     | Contributor     |
+| Sub task                | Contributor     | Observer   | Contributor     | Contributor     |
+| Chat message            | Contributor     | Observer   | Contributor     | Maintainer |
 | Customer                | Owner      | Owner      | Owner      | Owner      |
 
 ## Role descriptions
@@ -72,18 +72,18 @@ changes on them or create them. They can read the following resources:
 - Sub tasks
 - Chat messages
 
-### Member
+### Contributor
 
-A workspace user __member__ is an individual contributor in a team.
+A workspace user __contributor__ is an individual contributor in a team.
 
-In addition to an observer's permissions, members have the following additional
+In addition to an observer's permissions, contributors have the following additional
 permissions:
 
-- A member can create and update tasks
-- A member can create, update and delete task labels, that is, they can assign
+- A contributor can create and update tasks
+- A contributor can create, update and delete task labels, that is, they can assign
   labels to tasks
-- A member can create, update and delete sub tasks.
-- A member can create and update chat messages.
+- A contributor can create, update and delete sub tasks.
+- A contributor can create and update chat messages.
 
 ### Maintainer
 
@@ -92,7 +92,7 @@ their team and therefore has to organize and clean up their team's project data
 on Projectify. Persons with this role are typically called Project Manager,
 Project Lead, and so on.
 
-Maintainer have the following permissions in addition to member permissons:
+Maintainer have the following permissions in addition to contributor permissons:
 
 - Create, update and delete projects
 - Create, update and delete sections

@@ -82,7 +82,7 @@ class WorkspaceUser(BaseModel):
         on_delete=models.CASCADE,
     )
     role = models.CharField(
-        max_length=10,
+        max_length=11,
         choices=WorkspaceUserRoles.choices,
         default=WorkspaceUserRoles.OBSERVER,
     )

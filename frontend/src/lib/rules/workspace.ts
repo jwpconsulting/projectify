@@ -61,11 +61,11 @@ type Rules = {
 | Workspace user          | Owner      | Observer   | Owner      | Owner      |
 | Project         | Maintainer | Observer   | Maintainer | Maintainer |
 | Section | Maintainer | Observer   | Maintainer | Maintainer |
-| Task                    | Member     | Observer   | Member     | Maintainer |
+| Task                    | Contributor     | Observer   | Contributor     | Maintainer |
 | Label                   | Maintainer | Observer   | Maintainer | Maintainer |
-| Task label              | Member     | Observer   | Member     | Member     |
-| Sub task                | Member     | Observer   | Member     | Member     |
-| Chat message            | Member     | Observer   | Member     | Maintainer |
+| Task label              | Contributor     | Observer   | Contributor     | Contributor     |
+| Sub task                | Contributor     | Observer   | Contributor     | Contributor     |
+| Chat message            | Contributor     | Observer   | Contributor     | Maintainer |
 | Customer                | Owner      | Owner      | Owner      | Owner      |
  */
 
@@ -101,9 +101,9 @@ const rules: Rules = {
         delete: "MAINTAINER",
     },
     task: {
-        create: "MEMBER",
+        create: "CONTRIBUTOR",
         read: "OBSERVER",
-        update: "MEMBER",
+        update: "CONTRIBUTOR",
         delete: "MAINTAINER",
     },
     label: {
@@ -113,21 +113,21 @@ const rules: Rules = {
         delete: "MAINTAINER",
     },
     taskLabel: {
-        create: "MEMBER",
+        create: "CONTRIBUTOR",
         read: "OBSERVER",
-        update: "MEMBER",
-        delete: "MEMBER",
+        update: "CONTRIBUTOR",
+        delete: "CONTRIBUTOR",
     },
     subTask: {
-        create: "MEMBER",
+        create: "CONTRIBUTOR",
         read: "OBSERVER",
-        update: "MEMBER",
-        delete: "MEMBER",
+        update: "CONTRIBUTOR",
+        delete: "CONTRIBUTOR",
     },
     chatMessage: {
-        create: "MEMBER",
+        create: "CONTRIBUTOR",
         read: "OBSERVER",
-        update: "MEMBER",
+        update: "CONTRIBUTOR",
         delete: "MAINTAINER",
     },
     customer: {
@@ -146,25 +146,25 @@ const isAtLeast: {
 } = {
     OBSERVER: {
         OBSERVER: true,
-        MEMBER: false,
+        CONTRIBUTOR: false,
         MAINTAINER: false,
         OWNER: false,
     },
-    MEMBER: {
+    CONTRIBUTOR: {
         OBSERVER: true,
-        MEMBER: true,
+        CONTRIBUTOR: true,
         MAINTAINER: false,
         OWNER: false,
     },
     MAINTAINER: {
         OBSERVER: true,
-        MEMBER: true,
+        CONTRIBUTOR: true,
         MAINTAINER: true,
         OWNER: false,
     },
     OWNER: {
         OBSERVER: true,
-        MEMBER: true,
+        CONTRIBUTOR: true,
         MAINTAINER: true,
         OWNER: true,
     },

@@ -86,23 +86,25 @@ class TestPredicates:
             observer.user, unrelated_workspace
         )
 
-    def test_is_at_least_member(
+    def test_is_at_least_contributor(
         self,
         workspace: Workspace,
         observer: WorkspaceUser,
     ) -> None:
-        """Test is_at_least_member."""
-        assert not rules.is_at_least_member(observer.user, workspace)
-        observer.assign_role(WorkspaceUserRoles.MEMBER)
-        assert rules.is_at_least_member(observer.user, workspace)
+        """Test is_at_least_contributor."""
+        assert not rules.is_at_least_contributor(observer.user, workspace)
+        observer.assign_role(WorkspaceUserRoles.CONTRIBUTOR)
+        assert rules.is_at_least_contributor(observer.user, workspace)
 
-    def test_is_at_least_member_unrelated_workspace(
+    def test_is_at_least_contributor_unrelated_workspace(
         self,
         unrelated_workspace: Workspace,
         observer: WorkspaceUser,
     ) -> None:
-        """Test is_at_least_member with other workspace."""
-        assert not rules.is_at_least_member(observer.user, unrelated_workspace)
+        """Test is_at_least_contributor with other workspace."""
+        assert not rules.is_at_least_contributor(
+            observer.user, unrelated_workspace
+        )
 
     def test_is_at_least_maintainer(
         self,
