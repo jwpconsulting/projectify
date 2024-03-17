@@ -23,7 +23,7 @@ export function getMessageNameForRole(
 ) {
     return {
         OBSERVER: $_("roles.observer"),
-        MEMBER: $_("roles.member"),
+        CONTRIBUTOR: $_("roles.contributor"),
         MAINTAINER: $_("roles.maintainer"),
         OWNER: $_("roles.owner"),
     }[role];

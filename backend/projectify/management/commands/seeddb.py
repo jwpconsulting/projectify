@@ -309,7 +309,7 @@ class Command(BaseCommand):
                     user=user,
                     role=WorkspaceUserRoles.OWNER
                     if user.email == "admin@localhost"
-                    else WorkspaceUserRoles.MEMBER,
+                    else WorkspaceUserRoles.CONTRIBUTOR,
                 )
                 for workspace in workspaces
                 for user in sample(users, self.n_add_users)

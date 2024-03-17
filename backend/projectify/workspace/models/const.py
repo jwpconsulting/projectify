@@ -25,6 +25,6 @@ class WorkspaceUserRoles(models.TextChoices):
     """Roles available."""
 
     OBSERVER = "OBSERVER", _("Observer")
-    MEMBER = "MEMBER", _("Member")
+    CONTRIBUTOR = "CONTRIBUTOR", _("Contributor")
     MAINTAINER = "MAINTAINER", _("Maintainer")
     OWNER = "OWNER", _("Owner")

@@ -17,7 +17,7 @@
  */
 export const workspaceUserRoles = [
     "OBSERVER",
-    "MEMBER",
+    "CONTRIBUTOR",
     "MAINTAINER",
     "OWNER",
 ] as const;

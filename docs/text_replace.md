@@ -243,3 +243,32 @@ for f in (
   git mv -v $f $dir/$base || break
 end
 ```
+
+# Renaming member to contributor
+
+In order to rename workspace users to members, we want to first change
+the role member to be contributor, to remove ambiguity.
+
+```fish
+nvim (ag \
+  --files-with-matches \
+  --ignore migrations \
+  --ignore docs/text_replace.md \
+  "MEMBER" \
+  . \
+) -c "bufdo %s/\vMEMBER/CONTRIBUTOR\1/ce"
+nvim (ag \
+  --files-with-matches \
+  --ignore migrations \
+  --ignore docs/text_replace.md \
+  "Member" \
+  . \
+) -c "bufdo %s/\vMember/Contributor\1/ce"
+nvim (ag \
+  --files-with-matches \
+  --ignore migrations \
+  --ignore docs/text_replace.md \
+  "member" \
+  . \
+) -c "bufdo %s/\vmember/contributor\1/ce"
+```

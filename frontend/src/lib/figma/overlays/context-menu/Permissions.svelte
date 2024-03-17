@@ -51,9 +51,9 @@
     <ContextMenuButton
         kind={{
             kind: "button",
-            action: () => console.error("member not implemented"),
+            action: () => console.error("contributor not implemented"),
         }}
-        label={$_("overlay.context-menu.permissions.member")}
+        label={$_("overlay.context-menu.permissions.contributor")}
         state="normal"
     />
     <ContextMenuButton

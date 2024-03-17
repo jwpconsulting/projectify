@@ -195,7 +195,7 @@ const messages: MessageDirectory = {
                 "all-roles": "All roles",
                 "owner": "Owner",
                 "maintainer": "Maintainer",
-                "member": "Member",
+                "contributor": "Contributor",
                 "observer": "Observer",
             },
         },
@@ -1202,7 +1202,7 @@ const messages: MessageDirectory = {
                 },
                 "feature-4": {
                     title: "Permissions to control access",
-                    text: "Make sure nothing important gets deleted. With permission roles - Owner, Maintainer, Member and Observer, you can be safe in knowing there won't be any accidentally data loss.",
+                    text: "Make sure nothing important gets deleted. With permission roles - Owner, Maintainer, Contributor and Observer, you can be safe in knowing there won't be any accidentally data loss.",
                     illustration: {
                         alt: "An illustration of a settings screen showing workspace users belonging to a workspace user and their role within the workspace. The illustration also shows a button allowing filtering by role and another button letting a user invite new workspace users",
                     },
@@ -1544,7 +1544,7 @@ const messages: MessageDirectory = {
     },
     "roles": {
         observer: "Observer",
-        member: "Member",
+        contributor: "Contributor",
         maintainer: "Maintainer",
         owner: "Owner",
     },
