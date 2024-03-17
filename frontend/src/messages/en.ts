@@ -204,6 +204,11 @@ const messages: MessageDirectory = {
     "label": {
         "apply-label": "Assign label",
     },
+    "task": {
+        "title": "{title} - Projectify",
+        "update-task-title": "Edit {title} - Projectify",
+        "create-task-title": "Add task to {title} - Projectify",
+    },
     "dashboard": {
         "title": "{title} - Projectify",
         "actions": {
@@ -767,9 +772,10 @@ const messages: MessageDirectory = {
         },
     },
     "workspace-settings": {
-        "title": "Workspace settings",
+        "title": "{title} settings - Projectify",
+        "heading": "Workspace settings",
         "general": {
-            "title": "General",
+            "heading": "General",
             "save": "Save",
             "cancel": "Cancel",
             "workspace-name": {
@@ -795,7 +801,8 @@ const messages: MessageDirectory = {
             },
         },
         "workspace-users": {
-            "title": "Workspace users",
+            "title": "{title} workspace users - Projectify",
+            "heading": "Workspace users",
             "no-job-title": "No job title",
             "no-workspace-users-found":
                 "No workspace users found for this search query. Please try another search.",
@@ -825,7 +832,8 @@ const messages: MessageDirectory = {
             },
         },
         "billing": {
-            "title": "Billing",
+            "title": "{title} billing - Projectify",
+            "heading": "Billing",
             "active": {
                 "status": {
                     title: "Subscription status: Paid workspace",
@@ -888,7 +896,8 @@ const messages: MessageDirectory = {
             "billing-contact": "hello@projectifyapp.com",
         },
         "quota": {
-            "title": "Quota",
+            "title": "{title} quota - Projectify",
+            "heading": "Quota",
             "explanation": {
                 "quota-for":
                     "These are the quotas for the ''{title}'' workspace:",

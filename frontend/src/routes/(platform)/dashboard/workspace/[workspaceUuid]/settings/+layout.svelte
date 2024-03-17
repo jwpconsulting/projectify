@@ -44,9 +44,17 @@
     $: activeSetting = getActiveSetting($page.url);
 </script>
 
+<svelte:head>
+    <title
+        >{$_("workspace-settings.title", {
+            values: { title: workspace.title },
+        })}</title
+    >
+</svelte:head>
+
 <div class="flex w-full max-w-xl flex-col gap-4">
     <h1 class="px-2 text-2xl font-bold sm:px-0">
-        {$_("workspace-settings.title")}
+        {$_("workspace-settings.heading")}
     </h1>
     <main
         class="flex w-full max-w-xl flex-col gap-10 rounded-lg bg-foreground p-4 shadow-context-menu"

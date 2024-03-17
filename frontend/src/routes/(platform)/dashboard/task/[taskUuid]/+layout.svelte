@@ -16,4 +16,20 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <!-- TODO At some point we will add the tab bar and bread crumbs here -->
+<script lang="ts">
+    import { _ } from "svelte-i18n";
+
+    import { currentTask } from "$lib/stores/dashboard";
+
+    import type { LayoutData } from "./$types";
+
+    export let data: LayoutData;
+
+    $: task = $currentTask ?? data.task;
+</script>
+
+<svelte:head>
+    <title>{$_("task.title", { values: { title: task.title } })}</title>
+</svelte:head>
+
 <slot />

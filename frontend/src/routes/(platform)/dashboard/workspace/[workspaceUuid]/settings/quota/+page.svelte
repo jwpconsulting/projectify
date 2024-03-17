@@ -65,6 +65,14 @@
     }[];
 </script>
 
+<svelte:head>
+    <title
+        >{$_("workspace-settings.quota.title", {
+            values: { title: workspace.title },
+        })}</title
+    >
+</svelte:head>
+
 <section class="flex flex-col gap-2">
     <p>
         <strong>{$_("workspace-settings.quota.workspace-status.label")}</strong

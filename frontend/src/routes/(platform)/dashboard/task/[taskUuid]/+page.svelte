@@ -74,10 +74,6 @@
     ];
 </script>
 
-<svelte:head>
-    <title>{task.title}</title>
-</svelte:head>
-
 <Layout>
     <TopBar slot="top-bar" {section}>
         <Breadcrumbs slot="breadcrumbs" {crumbs} />

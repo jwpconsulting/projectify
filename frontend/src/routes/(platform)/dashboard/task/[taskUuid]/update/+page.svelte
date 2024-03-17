@@ -109,7 +109,11 @@
 </script>
 
 <svelte:head>
-    <title>{task.title}</title>
+    <title
+        >{$_("task.update-task-title", {
+            values: { title: task.title },
+        })}</title
+    >
 </svelte:head>
 
 <Layout>
