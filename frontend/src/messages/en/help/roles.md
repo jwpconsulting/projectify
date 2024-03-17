@@ -49,15 +49,15 @@ individual cell in this table is as follows:
   role.
 
 | Resource                    | Observer | Contributor | Maintainer | Owner |
-| --------------------------- | -------- | ------ | ---------- | ----- |
-| Workspace                   | Read     | Read   | Read       | Full  |
-| Workspace billing settings  | -        | -      | -          | Full  |
-| Workspace users and invites | Read     | Read   | Read       | Full  |
-| Project                     | Read     | Read   | Full       | Full  |
-| Sections                    | Read     | Read   | Full       | Full  |
-| Tasks                       | Read     | Write  | Full       | Full  |
-| Sub tasks                   | Read     | Full   | Full       | Full  |
-| Labels                      | Read     | Read   | Full       | Full  |
+| --------------------------- | -------- | ----------- | ---------- | ----- |
+| Workspace                   | Read     | Read        | Read       | Full  |
+| Workspace billing settings  | -        | -           | -          | Full  |
+| Workspace users and invites | Read     | Read        | Read       | Full  |
+| Project                     | Read     | Read        | Full       | Full  |
+| Sections                    | Read     | Read        | Full       | Full  |
+| Tasks                       | Read     | Write       | Full       | Full  |
+| Sub tasks                   | Read     | Full        | Full       | Full  |
+| Labels                      | Read     | Read        | Full       | Full  |
 
 # Observer
 

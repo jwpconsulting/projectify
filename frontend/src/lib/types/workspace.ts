@@ -18,7 +18,11 @@
 import type { TimestampedType, TitleDescriptionType } from "$lib/types/base";
 import type { User } from "$lib/types/user";
 
-export type WorkspaceUserRole = "OBSERVER" | "CONTRIBUTOR" | "MAINTAINER" | "OWNER";
+export type WorkspaceUserRole =
+    | "OBSERVER"
+    | "CONTRIBUTOR"
+    | "MAINTAINER"
+    | "OWNER";
 
 export type WorkspaceUser = {
     user: User;
