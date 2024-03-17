@@ -79,10 +79,14 @@
     }
 </script>
 
+<svelte:head>
+    <title>{$_("auth.sign-up.title")}</title>
+</svelte:head>
+
 <AuthScreen
-    title={$_("auth.sign-up.title")}
+    title={$_("auth.sign-up.heading")}
     {action}
-    subTitle={$_("auth.sign-up.sub-title")}
+    subTitle={$_("auth.sign-up.sub-heading")}
 >
     <div class="flex flex-col gap-6">
         <InputField

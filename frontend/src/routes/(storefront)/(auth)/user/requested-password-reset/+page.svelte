@@ -22,9 +22,13 @@
     import { requestPasswordResetUrl } from "$lib/urls/user";
 </script>
 
+<svelte:head>
+    <title>{$_("auth.requested-password-reset.title")}</title>
+</svelte:head>
+
 <section class="flex flex-col gap-4 px-8 py-4">
     <h1 class="text-2xl font-bold">
-        {$_("auth.requested-password-reset.title")}
+        {$_("auth.requested-password-reset.heading")}
     </h1>
     <p>
         {$_("auth.requested-password-reset.message")}

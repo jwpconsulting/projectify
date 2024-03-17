@@ -460,8 +460,9 @@ const messages: MessageDirectory = {
     },
     "auth": {
         "sign-up": {
-            "title": "Sign up",
-            "sub-title": "Sign up and start a free trial",
+            "title": "Sign up - Projectify",
+            "heading": "Sign up",
+            "sub-heading": "Sign up and start a free trial",
             "email": {
                 label: "Email",
                 placeholder: "Enter your email",
@@ -502,7 +503,8 @@ const messages: MessageDirectory = {
             "landing": "Go to landing",
         },
         "log-in": {
-            "title": "Log in",
+            "title": "Log in - Projectify",
+            "heading": "Log in",
             "email": {
                 label: "Email",
                 placeholder: "Enter your email",
@@ -528,7 +530,8 @@ const messages: MessageDirectory = {
             "sign-up-here": "Sign up here",
         },
         "request-password-reset": {
-            "title": "Reset your password",
+            "title": "Reset your password - Projectify",
+            "heading": "Reset your password",
             "explanation":
                 "Enter the email associated with your account and we'll send you a link to reset your password.",
             "email": {
@@ -548,7 +551,8 @@ const messages: MessageDirectory = {
             },
         },
         "requested-password-reset": {
-            "title": "Password reset requested",
+            "title": "Password reset requested - Projectify",
+            "heading": "Password reset requested",
             "message":
                 "You have requested for your password to be reset and will receive an email with password reset instructions soon. Please check your email inbox.",
             "troubleshooting":
@@ -556,7 +560,8 @@ const messages: MessageDirectory = {
             "request-again": "Request password reset again",
         },
         "confirm-password-reset": {
-            "title": "Reset your password",
+            "title": "Reset your password - Projectify",
+            "heading": "Reset your password",
             "password-1": {
                 label: "New password",
                 placeholder: "Enter new password",
@@ -587,7 +592,8 @@ const messages: MessageDirectory = {
             "request-password-reset": "Request password reset again",
         },
         "reset-password": {
-            title: "Password reset complete",
+            title: "Password reset complete - Projectify",
+            heading: "Password reset complete",
             message:
                 "Your password was reset successfully. You may now proceed and log in with your email address and the password that you have just entered.",
             continue: "Continue to log in",

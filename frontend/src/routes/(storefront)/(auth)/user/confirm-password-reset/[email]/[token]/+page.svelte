@@ -89,7 +89,11 @@
     }
 </script>
 
-<AuthScreen title={$_("auth.confirm-password-reset.title")} action={submit}>
+<svelte:head>
+    <title>{$_("auth.confirm-password-reset.title")}</title>
+</svelte:head>
+
+<AuthScreen title={$_("auth.confirm-password-reset.heading")} action={submit}>
     <div class="flex flex-col gap-6">
         <InputField
             placeholder={$_(
