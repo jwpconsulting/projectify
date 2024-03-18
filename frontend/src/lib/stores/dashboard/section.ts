@@ -92,11 +92,7 @@ function filterSectionsTasks(
 }
 
 export const currentSections = derived<
-    [
-        typeof selectedLabels,
-        typeof selectedTeamMember,
-        typeof currentProject,
-    ],
+    [typeof selectedLabels, typeof selectedTeamMember, typeof currentProject],
     SectionWithTasks[] | undefined
 >(
     [selectedLabels, selectedTeamMember, currentProject],

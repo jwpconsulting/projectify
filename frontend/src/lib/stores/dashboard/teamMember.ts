@@ -106,12 +106,7 @@ export const currentTeamMemberCan: CurrentTeamMemberCan = derived<
             return;
         }
         const fn = (verb: Verb, resource: Resource) =>
-            can(
-                verb,
-                resource,
-                $currentTeamMember,
-                $currentWorkspace.quota,
-            );
+            can(verb, resource, $currentTeamMember, $currentWorkspace.quota);
         set(fn);
     },
     () => false,

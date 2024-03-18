@@ -33,10 +33,7 @@
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
     import type { EditableViewState } from "$lib/types/ui";
     import { getDisplayName } from "$lib/types/user";
-    import type {
-        TeamMember,
-        TeamMemberRole,
-    } from "$lib/types/workspace";
+    import type { TeamMember, TeamMemberRole } from "$lib/types/workspace";
     import { teamMemberRoles } from "$lib/types/teamMemberRole";
     import { getMessageNameForRole } from "$lib/utils/i18n";
 
@@ -107,9 +104,7 @@
                     icon="edit"
                     size="medium"
                     ariaLabel={isCurrentUser
-                        ? $_(
-                              "workspace-settings.team-members.edit-role.self",
-                          )
+                        ? $_("workspace-settings.team-members.edit-role.self")
                         : $_(
                               "workspace-settings.team-members.edit-role.label",
                           )}

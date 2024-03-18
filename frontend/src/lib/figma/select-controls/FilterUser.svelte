@@ -80,9 +80,7 @@
                 {:else if teamMemberSelectionInput.kind === "allTeamMembers"}
                     {$_("filter-team-member.all-users")}
                 {:else if teamMemberSelectionInput.kind === "teamMember"}
-                    {getDisplayName(
-                        teamMemberSelectionInput.teamMember.user,
-                    )}
+                    {getDisplayName(teamMemberSelectionInput.teamMember.user)}
                 {/if}
             </div>
         </div>

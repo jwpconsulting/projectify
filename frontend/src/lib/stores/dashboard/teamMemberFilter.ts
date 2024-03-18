@@ -64,82 +64,63 @@ function createTeamMemberSearchResults(
     >(
         [currentTeamMembers, teamMemberSearch],
         ([$currentTeamMembers, $teamMemberSearch], set) => {
-            set(
-                searchTeamMembers(
-                    $currentTeamMembers,
-                    $teamMemberSearch,
-                ),
-            );
+            set(searchTeamMembers($currentTeamMembers, $teamMemberSearch));
         },
         [],
     );
 }
 
-export const teamMemberSearch: TeamMemberSearch =
-    createTeamMemberFilter();
+export const teamMemberSearch: TeamMemberSearch = createTeamMemberFilter();
 
 export const teamMemberSearchResults: TeamMemberSearchResults =
-    createTeamMemberSearchResults(
-        currentTeamMembers,
-        teamMemberSearch,
-    );
+    createTeamMemberSearchResults(currentTeamMembers, teamMemberSearch);
 
 export function filterByTeamMember(selection: TeamMemberSelectionInput) {
-    _selectedTeamMember.update(
-        ($selectedTeamMember: TeamMemberSelection) => {
-            if (selection.kind === "allTeamMembers") {
+    _selectedTeamMember.update(($selectedTeamMember: TeamMemberSelection) => {
+        if (selection.kind === "allTeamMembers") {
+            return { kind: "allTeamMembers" };
+        } else if (selection.kind === "unassigned") {
+            if ($selectedTeamMember.kind === "unassigned") {
                 return { kind: "allTeamMembers" };
-            } else if (selection.kind === "unassigned") {
-                if ($selectedTeamMember.kind === "unassigned") {
-                    return { kind: "allTeamMembers" };
-                } else {
-                    return { kind: "unassigned" };
-                }
             } else {
-                const selectionUuid = selection.teamMember.uuid;
-                if ($selectedTeamMember.kind === "teamMembers") {
-                    $selectedTeamMember.teamMemberUuids.add(
-                        selectionUuid,
-                    );
-                    return $selectedTeamMember;
-                } else {
-                    const teamMemberUuids = new Set<string>();
-                    teamMemberUuids.add(selectionUuid);
-                    return { kind: "teamMembers", teamMemberUuids };
-                }
+                return { kind: "unassigned" };
             }
-        },
-    );
+        } else {
+            const selectionUuid = selection.teamMember.uuid;
+            if ($selectedTeamMember.kind === "teamMembers") {
+                $selectedTeamMember.teamMemberUuids.add(selectionUuid);
+                return $selectedTeamMember;
+            } else {
+                const teamMemberUuids = new Set<string>();
+                teamMemberUuids.add(selectionUuid);
+                return { kind: "teamMembers", teamMemberUuids };
+            }
+        }
+    });
 }
 
-export function unfilterByTeamMember(
-    selection: TeamMemberSelectionInput,
-) {
-    _selectedTeamMember.update(
-        ($selectedTeamMember: TeamMemberSelection) => {
-            if (selection.kind === "allTeamMembers") {
+export function unfilterByTeamMember(selection: TeamMemberSelectionInput) {
+    _selectedTeamMember.update(($selectedTeamMember: TeamMemberSelection) => {
+        if (selection.kind === "allTeamMembers") {
+            return { kind: "allTeamMembers" };
+        } else if (selection.kind === "unassigned") {
+            if ($selectedTeamMember.kind === "unassigned") {
                 return { kind: "allTeamMembers" };
-            } else if (selection.kind === "unassigned") {
-                if ($selectedTeamMember.kind === "unassigned") {
+            } else {
+                return { kind: "unassigned" };
+            }
+        } else {
+            const selectionUuid = selection.teamMember.uuid;
+            if ($selectedTeamMember.kind === "teamMembers") {
+                $selectedTeamMember.teamMemberUuids.delete(selectionUuid);
+                if ($selectedTeamMember.teamMemberUuids.size === 0) {
                     return { kind: "allTeamMembers" };
                 } else {
-                    return { kind: "unassigned" };
+                    return $selectedTeamMember;
                 }
             } else {
-                const selectionUuid = selection.teamMember.uuid;
-                if ($selectedTeamMember.kind === "teamMembers") {
-                    $selectedTeamMember.teamMemberUuids.delete(
-                        selectionUuid,
-                    );
-                    if ($selectedTeamMember.teamMemberUuids.size === 0) {
-                        return { kind: "allTeamMembers" };
-                    } else {
-                        return $selectedTeamMember;
-                    }
-                } else {
-                    return { kind: "allTeamMembers" };
-                }
+                return { kind: "allTeamMembers" };
             }
-        },
-    );
+        }
+    });
 }

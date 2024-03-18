@@ -22,16 +22,16 @@ workspace.
 The resources and their contained information that team members can perform
 actions are as follows:
 
-| Resource                    | Contains information such as                                |
-| --------------------------- | ----------------------------------------------------------- |
-| Workspace                   | Title and description                                       |
-| Workspace billing settings  | Current subscription status and payment information         |
-| Team members and invites | Who has been added to the workspace, and who is invited     |
-| Project                     | Description and other information about a project           |
-| Sections                    | Name, position within project                               |
-| Tasks                       | Title, description, due date, label, assignee, and position |
-| Sub tasks                   | Done state and title                                        |
-| Labels                      | Name and color                                              |
+| Resource                   | Contains information such as                                |
+| -------------------------- | ----------------------------------------------------------- |
+| Workspace                  | Title and description                                       |
+| Workspace billing settings | Current subscription status and payment information         |
+| Team members and invites   | Who has been added to the workspace, and who is invited     |
+| Project                    | Description and other information about a project           |
+| Sections                   | Name, position within project                               |
+| Tasks                      | Title, description, due date, label, assignee, and position |
+| Sub tasks                  | Done state and title                                        |
+| Labels                     | Name and color                                              |
 
 # Overview
 
@@ -48,16 +48,16 @@ individual cell in this table is as follows:
 - Cells with a **-** indicate that no permissions exist for this resource and
   role.
 
-| Resource                    | Observer | Contributor | Maintainer | Owner |
-| --------------------------- | -------- | ----------- | ---------- | ----- |
-| Workspace                   | Read     | Read        | Read       | Full  |
-| Workspace billing settings  | -        | -           | -          | Full  |
-| Team members and invites | Read     | Read        | Read       | Full  |
-| Project                     | Read     | Read        | Full       | Full  |
-| Sections                    | Read     | Read        | Full       | Full  |
-| Tasks                       | Read     | Write       | Full       | Full  |
-| Sub tasks                   | Read     | Full        | Full       | Full  |
-| Labels                      | Read     | Read        | Full       | Full  |
+| Resource                   | Observer | Contributor | Maintainer | Owner |
+| -------------------------- | -------- | ----------- | ---------- | ----- |
+| Workspace                  | Read     | Read        | Read       | Full  |
+| Workspace billing settings | -        | -           | -          | Full  |
+| Team members and invites   | Read     | Read        | Read       | Full  |
+| Project                    | Read     | Read        | Full       | Full  |
+| Sections                   | Read     | Read        | Full       | Full  |
+| Tasks                      | Read     | Write       | Full       | Full  |
+| Sub tasks                  | Read     | Full        | Full       | Full  |
+| Labels                     | Read     | Read        | Full       | Full  |
 
 # Observer
 

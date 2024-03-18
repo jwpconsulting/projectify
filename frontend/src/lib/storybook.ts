@@ -18,10 +18,7 @@
 import { readable, writable } from "svelte/store";
 
 import type { LabelLabel, SelectLabel } from "$lib/figma/types";
-import type {
-    LabelAssignment,
-    TeamMemberAssignment,
-} from "$lib/types/stores";
+import type { LabelAssignment, TeamMemberAssignment } from "$lib/types/stores";
 import type { TeamMemberSelectionInput } from "$lib/types/ui";
 import type { User } from "$lib/types/user";
 import type {

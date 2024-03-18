@@ -46,14 +46,10 @@
                 title = $_("overlay.destructive.delete-team-member.title");
                 body = $_("overlay.destructive.delete-team-member.body", {
                     values: {
-                        teamMember: getDisplayName(
-                            target.teamMember.user,
-                        ),
+                        teamMember: getDisplayName(target.teamMember.user),
                     },
                 });
-                warning = $_(
-                    "overlay.destructive.delete-team-member.warning",
-                );
+                warning = $_("overlay.destructive.delete-team-member.warning");
                 buttonLabel = $_(
                     "overlay.destructive.delete-team-member.button",
                 );

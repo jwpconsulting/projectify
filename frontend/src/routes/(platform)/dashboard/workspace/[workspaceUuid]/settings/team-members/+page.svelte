@@ -86,17 +86,13 @@
             <tr class="contents">
                 <th
                     class="col-span-2 border-b border-border text-left font-bold"
-                    >{$_(
-                        "workspace-settings.team-members.team-member",
-                    )}</th
+                    >{$_("workspace-settings.team-members.team-member")}</th
                 >
                 <th class="border-b border-border text-left font-bold"
                     >{$_("workspace-settings.team-members.role")}</th
                 >
                 <th class="border-b border-border text-left font-bold"
-                    >{$_(
-                        "workspace-settings.team-members.actions.action",
-                    )}</th
+                    >{$_("workspace-settings.team-members.actions.action")}</th
                 >
             </tr>
         </thead>
@@ -122,19 +118,13 @@
             <tr class="contents">
                 <th
                     class="col-span-2 border-b border-border text-left font-bold"
-                    >{$_(
-                        "workspace-settings.team-members.invites.email",
-                    )}</th
+                    >{$_("workspace-settings.team-members.invites.email")}</th
                 >
                 <th class="border-b border-border text-left font-bold"
-                    >{$_(
-                        "workspace-settings.team-members.invites.date",
-                    )}</th
+                    >{$_("workspace-settings.team-members.invites.date")}</th
                 >
                 <th class="border-b border-border text-left font-bold"
-                    >{$_(
-                        "workspace-settings.team-members.actions.action",
-                    )}</th
+                    >{$_("workspace-settings.team-members.actions.action")}</th
                 >
             </tr>
         </thead>
@@ -186,9 +176,7 @@
         <li>
             <Anchor
                 href="/help/roles"
-                label={$_(
-                    "workspace-settings.team-members.help.about-roles",
-                )}
+                label={$_("workspace-settings.team-members.help.about-roles")}
                 size="normal"
             />
         </li>

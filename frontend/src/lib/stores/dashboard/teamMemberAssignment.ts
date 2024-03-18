@@ -24,9 +24,7 @@ import type {
 } from "$lib/types/ui";
 import type { Task, TeamMember } from "$lib/types/workspace";
 
-export function createTeamMemberAssignment(
-    task?: Task,
-): TeamMemberAssignment {
+export function createTeamMemberAssignment(task?: Task): TeamMemberAssignment {
     const maybeSelected: TeamMemberAssignmentState = task?.assignee
         ? {
               kind: "teamMember",
