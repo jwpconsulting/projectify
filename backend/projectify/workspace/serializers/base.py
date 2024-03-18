@@ -78,9 +78,7 @@ class WorkspaceBaseSerializer(serializers.ModelSerializer[models.Workspace]):
         )
 
 
-class TeamMemberBaseSerializer(
-    serializers.ModelSerializer[models.TeamMember]
-):
+class TeamMemberBaseSerializer(serializers.ModelSerializer[models.TeamMember]):
     """Team member serializer."""
 
     user = user_serializers.UserSerializer(read_only=True)

@@ -48,11 +48,11 @@ from projectify.corporate.services.stripe import (
 )
 from projectify.user.models import User, UserInvite
 from projectify.workspace.models.label import Label
-from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.models.team_member_invite import (
     TeamMemberInvite,
 )
+from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.selectors.team_member import (
     team_member_find_for_workspace,
 )
@@ -67,12 +67,12 @@ from projectify.workspace.services.section import (
 )
 from projectify.workspace.services.sub_task import sub_task_create
 from projectify.workspace.services.task import task_create
+from projectify.workspace.services.team_member_invite import (
+    team_member_invite_create,
+)
 from projectify.workspace.services.workspace import (
     workspace_add_user,
     workspace_create,
-)
-from projectify.workspace.services.team_member_invite import (
-    team_member_invite_create,
 )
 
 from .. import (
@@ -147,9 +147,7 @@ def team_member_invite(
 
 
 @pytest.fixture
-def team_member(
-    workspace: models.Workspace, user: User
-) -> models.TeamMember:
+def team_member(workspace: models.Workspace, user: User) -> models.TeamMember:
     """Return team member with owner status."""
     team_member = team_member_find_for_workspace(
         workspace=workspace, user=user

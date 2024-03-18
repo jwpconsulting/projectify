@@ -38,9 +38,9 @@ from projectify.workspace.services.signals import send_workspace_change_signal
 from ..emails import TeamMemberInviteEmail
 from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
 from ..models.const import TeamMemberRoles
-from ..models.workspace import Workspace
 from ..models.team_member import TeamMember
 from ..models.team_member_invite import TeamMemberInvite
+from ..models.workspace import Workspace
 from ..services.workspace import workspace_add_user
 
 

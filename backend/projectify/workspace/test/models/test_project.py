@@ -18,8 +18,8 @@
 import pytest
 
 from ...models.project import Project
-from ...models.workspace import Workspace
 from ...models.team_member import TeamMember
+from ...models.workspace import Workspace
 from ...services.section import section_create
 
 

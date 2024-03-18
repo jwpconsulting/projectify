@@ -33,14 +33,14 @@ from .task import (
     Task,
 )
 from .task_label import TaskLabel
-from .workspace import (
-    Workspace,
-)
 from .team_member import (
     TeamMember,
 )
 from .team_member_invite import (
     TeamMemberInvite,
+)
+from .workspace import (
+    Workspace,
 )
 
 __all__ = (

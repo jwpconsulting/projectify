@@ -38,9 +38,7 @@ def team_member_update(
     role: TeamMemberRoles,
 ) -> TeamMember:
     """Update a team member with new role and job title."""
-    validate_perm(
-        "workspace.update_team_member", who, team_member.workspace
-    )
+    validate_perm("workspace.update_team_member", who, team_member.workspace)
     team_member.job_title = job_title
     team_member.role = role
     team_member.save()
@@ -66,9 +64,7 @@ def team_member_delete(
     On the other hand, we might introduce a proper hand-off procedure,
     so big TODO maybe?
     """
-    validate_perm(
-        "workspace.delete_team_member", who, team_member.workspace
-    )
+    validate_perm("workspace.delete_team_member", who, team_member.workspace)
     if team_member.user == who:
         raise serializers.ValidationError(
             {"team_member": _("Can't delete own team member")}

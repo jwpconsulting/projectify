@@ -113,7 +113,5 @@ class TeamMemberReadUpdateDelete(views.APIView):
         )
         if team_member is None:
             raise NotFound(_("Could not find team member for given UUID"))
-        team_member_delete(
-            who=self.request.user, team_member=team_member
-        )
+        team_member_delete(who=self.request.user, team_member=team_member)
         return Response(status=HTTP_204_NO_CONTENT)

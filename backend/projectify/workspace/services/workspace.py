@@ -32,8 +32,8 @@ from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 
 from ..models.const import TeamMemberRoles
-from ..models.workspace import Workspace
 from ..models.team_member import TeamMember
+from ..models.workspace import Workspace
 from ..services.signals import send_workspace_change_signal
 
 logger = logging.getLogger(__name__)

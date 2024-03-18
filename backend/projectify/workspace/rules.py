@@ -67,9 +67,7 @@ def check_permissions_for(
     )
     if team_member is None:
         return False
-    team_member_role: TeamMemberRoles = TeamMemberRoles[
-        team_member.role
-    ]
+    team_member_role: TeamMemberRoles = TeamMemberRoles[team_member.role]
     return ROLE_EQUIVALENCE[team_member_role][role]
 
 

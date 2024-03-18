@@ -33,8 +33,8 @@ from ...models.label import Label
 from ...models.section import Section
 from ...models.sub_task import SubTask
 from ...models.task import Task
-from ...models.workspace import Workspace
 from ...models.team_member import TeamMember
+from ...models.workspace import Workspace
 from ...serializers.task_detail import (
     TaskCreateUpdateSerializer,
     TaskDetailSerializer,

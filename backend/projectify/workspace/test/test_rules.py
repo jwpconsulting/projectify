@@ -28,8 +28,8 @@ from projectify.workspace.models.section import (
     Section,
 )
 from projectify.workspace.models.task import Task
-from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.team_member import TeamMember
+from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.services.chat_message import chat_message_create
 from projectify.workspace.services.label import label_create
 from projectify.workspace.services.project import (
@@ -40,11 +40,11 @@ from projectify.workspace.services.section import (
 )
 from projectify.workspace.services.sub_task import sub_task_create
 from projectify.workspace.services.task import task_create
-from projectify.workspace.services.workspace import (
-    workspace_add_user,
-)
 from projectify.workspace.services.team_member_invite import (
     team_member_invite_create,
+)
+from projectify.workspace.services.workspace import (
+    workspace_add_user,
 )
 
 from .. import (
@@ -328,16 +328,12 @@ class TestTrialRules:
         count = workspace.users.count()
         assert count == 1
         # Test both permissons
-        assert validate_perm(
-            "workspace.create_team_member", user, workspace
-        )
+        assert validate_perm("workspace.create_team_member", user, workspace)
         assert validate_perm(
             "workspace.create_team_member_invite", user, workspace
         )
         customer_cancel_subscription(customer=workspace.customer)
-        assert validate_perm(
-            "workspace.create_team_member", user, workspace
-        )
+        assert validate_perm("workspace.create_team_member", user, workspace)
         assert validate_perm(
             "workspace.create_team_member_invite", user, workspace
         )
@@ -362,9 +358,7 @@ class TestTrialRules:
         )
         # Back to allowed, now add
         invite.delete()
-        assert validate_perm(
-            "workspace.create_team_member", user, workspace
-        )
+        assert validate_perm("workspace.create_team_member", user, workspace)
         assert validate_perm(
             "workspace.create_team_member_invite", user, workspace
         )

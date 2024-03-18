@@ -32,8 +32,8 @@ from rest_framework.test import (
 from projectify.workspace.models import TaskLabel
 from projectify.workspace.models.project import Project
 from projectify.workspace.models.task import Task
-from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.team_member import TeamMember
+from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.selectors.project import (
     project_find_by_workspace_uuid,
 )

@@ -45,8 +45,8 @@ from pytest_types import (
 
 from ...models.const import TeamMemberRoles
 from ...models.project import Project
-from ...models.workspace import Workspace
 from ...models.team_member import TeamMember
+from ...models.workspace import Workspace
 
 
 # Create

@@ -21,17 +21,17 @@ from rest_framework.exceptions import ValidationError
 
 from projectify.user.models.user import User
 from projectify.workspace.models.project import Project
-from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.team_member import TeamMember
+from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.services.project import (
     project_delete,
 )
-from projectify.workspace.services.workspace import workspace_delete
 from projectify.workspace.services.team_member import team_member_delete
 from projectify.workspace.services.team_member_invite import (
     team_member_invite_create,
     team_member_invite_delete,
 )
+from projectify.workspace.services.workspace import workspace_delete
 
 pytestmark = pytest.mark.django_db
 

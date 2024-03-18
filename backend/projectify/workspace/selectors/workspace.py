@@ -24,9 +24,9 @@ from django.db.models import Prefetch, QuerySet
 from projectify.user.models import User
 
 from ..models.project import Project
-from ..models.workspace import Workspace
 from ..models.team_member import TeamMember
 from ..models.team_member_invite import TeamMemberInvite
+from ..models.workspace import Workspace
 
 logger = logging.getLogger(__name__)
 
@@ -49,9 +49,9 @@ WorkspaceDetailQuerySet = Workspace.objects.prefetch_related(
         # ws -> ws user invite -> user invite -> other ws's user invite ->
         # other ws and so on?
         # Perhaps only if RCE exists, but then we have different problems...
-        queryset=TeamMemberInvite.objects.select_related(
-            "user_invite"
-        ).filter(redeemed=False),
+        queryset=TeamMemberInvite.objects.select_related("user_invite").filter(
+            redeemed=False
+        ),
     ),
 )
 

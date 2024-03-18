@@ -55,8 +55,8 @@ from ..models.project import Project
 from ..models.section import Section
 from ..models.sub_task import SubTask
 from ..models.task import Task
-from ..models.workspace import Workspace
 from ..models.team_member import TeamMember
+from ..models.workspace import Workspace
 from ..selectors.team_member import team_member_find_for_workspace
 from ..services.chat_message import chat_message_create
 from ..services.label import label_create, label_delete, label_update
@@ -80,11 +80,6 @@ from ..services.task import (
     task_move_after,
     task_update_nested,
 )
-from ..services.workspace import (
-    workspace_create,
-    workspace_delete,
-    workspace_update,
-)
 from ..services.team_member import (
     team_member_delete,
     team_member_update,
@@ -92,6 +87,11 @@ from ..services.team_member import (
 from ..services.team_member_invite import (
     team_member_invite_create,
     team_member_invite_delete,
+)
+from ..services.workspace import (
+    workspace_create,
+    workspace_delete,
+    workspace_update,
 )
 
 logger = logging.getLogger(__name__)
@@ -128,9 +128,9 @@ async def workspace(user: User) -> models.Workspace:
 @pytest.fixture
 async def team_member(workspace: Workspace, user: User) -> TeamMember:
     """Return team member with owner status."""
-    team_member = await database_sync_to_async(
-        team_member_find_for_workspace
-    )(workspace=workspace, user=user)
+    team_member = await database_sync_to_async(team_member_find_for_workspace)(
+        workspace=workspace, user=user
+    )
     assert team_member
     return team_member
 

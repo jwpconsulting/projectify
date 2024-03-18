@@ -26,8 +26,8 @@ from projectify.user.models import User
 from projectify.workspace.models.const import TeamMemberRoles
 
 from ...models.task import Task
-from ...models.workspace import Workspace
 from ...models.team_member import TeamMember
+from ...models.workspace import Workspace
 from ...services.project import project_create
 from ...services.workspace import workspace_add_user
 

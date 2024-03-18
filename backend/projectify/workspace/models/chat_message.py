@@ -32,10 +32,10 @@ from projectify.lib.models import BaseModel
 from .task import (
     Task,
 )
-from .types import Pks
 from .team_member import (
     TeamMember,
 )
+from .types import Pks
 
 
 class ChatMessageQuerySet(models.QuerySet["ChatMessage"]):

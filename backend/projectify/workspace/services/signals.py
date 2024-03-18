@@ -33,8 +33,8 @@ from ..models.project import Project
 from ..models.section import Section
 from ..models.sub_task import SubTask
 from ..models.task import Task
-from ..models.workspace import Workspace
 from ..models.team_member import TeamMember
+from ..models.workspace import Workspace
 from ..types import ConsumerEvent
 
 # TODO AsyncToSync is typed in a newer (unreleased) version of asgiref

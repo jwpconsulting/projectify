@@ -20,8 +20,8 @@ import pytest
 from faker import Faker
 
 from projectify.user.models import User
-from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.team_member import TeamMember
+from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.selectors.team_member import (
     team_member_find_for_workspace,
 )

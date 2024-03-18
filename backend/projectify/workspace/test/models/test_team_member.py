@@ -21,8 +21,8 @@ import pytest
 from projectify.user.models import User
 
 from ...models.const import TeamMemberRoles
-from ...models.workspace import Workspace
 from ...models.team_member import TeamMember
+from ...models.workspace import Workspace
 from ...services.workspace import workspace_add_user
 
 
@@ -41,10 +41,7 @@ class TestTeamMemberManager:
 
     def test_filter_by_user(self, team_member: TeamMember) -> None:
         """Test filter_by_user."""
-        assert (
-            TeamMember.objects.filter_by_user(team_member.user).count()
-            == 1
-        )
+        assert TeamMember.objects.filter_by_user(team_member.user).count() == 1
 
     # TODO make me a selector
     def test_filter_by_user_with_unrelated_team_member(
@@ -54,10 +51,7 @@ class TestTeamMemberManager:
         unrelated_user: User,
     ) -> None:
         """Test filtering when an unrelated team member exists."""
-        assert (
-            TeamMember.objects.filter_by_user(team_member.user).count()
-            == 1
-        )
+        assert TeamMember.objects.filter_by_user(team_member.user).count() == 1
         assert (
             TeamMember.objects.filter_by_user(
                 unrelated_user,
@@ -69,9 +63,7 @@ class TestTeamMemberManager:
             user=unrelated_user,
             role=TeamMemberRoles.OBSERVER,
         )
-        assert (
-            TeamMember.objects.filter_by_user(unrelated_user).count() == 2
-        )
+        assert TeamMember.objects.filter_by_user(unrelated_user).count() == 2
 
 
 @pytest.mark.django_db

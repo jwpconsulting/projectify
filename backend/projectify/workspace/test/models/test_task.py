@@ -25,8 +25,8 @@ from django.contrib.auth.models import (
 import pytest
 
 from projectify.workspace.models.label import Label
-from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.team_member import TeamMember
+from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.services.label import label_create
 
 from ... import (

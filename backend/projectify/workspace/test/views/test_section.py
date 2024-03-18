@@ -34,8 +34,8 @@ from projectify.workspace.models import (
     TaskLabel,
 )
 from projectify.workspace.models.task import Task
-from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.team_member import TeamMember
+from projectify.workspace.models.workspace import Workspace
 from pytest_types import (
     DjangoAssertNumQueries,
 )

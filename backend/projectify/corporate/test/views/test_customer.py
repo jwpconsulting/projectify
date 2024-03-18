@@ -27,8 +27,8 @@ from faker import Faker
 from rest_framework.test import APIClient
 
 from projectify.settings.base import Base
-from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.team_member import TeamMember
+from projectify.workspace.models.workspace import Workspace
 from pytest_types import DjangoAssertNumQueries
 
 from ...models import Customer

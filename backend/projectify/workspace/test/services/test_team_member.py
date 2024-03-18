@@ -20,13 +20,13 @@ from rest_framework.exceptions import PermissionDenied
 
 from projectify.user.models import User
 from projectify.workspace.models.const import TeamMemberRoles
-from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.team_member import TeamMember
-from projectify.workspace.services.workspace import workspace_add_user
+from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.services.team_member import (
     team_member_delete,
     team_member_update,
 )
+from projectify.workspace.services.workspace import workspace_add_user
 
 pytestmark = pytest.mark.django_db
 
@@ -63,7 +63,5 @@ def test_team_member_delete(
         role=TeamMemberRoles.OBSERVER,
     )
     assert workspace.users.count() == count + 1
-    team_member_delete(
-        team_member=new_team_member, who=team_member.user
-    )
+    team_member_delete(team_member=new_team_member, who=team_member.user)
     assert workspace.users.count() == count

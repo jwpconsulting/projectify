@@ -22,11 +22,11 @@ from rest_framework import serializers
 from projectify.user.models import User
 from projectify.user.models.user_invite import UserInvite
 from projectify.user.services.internal import user_create
-from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.models.team_member_invite import (
     TeamMemberInvite,
 )
+from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.services.team_member import team_member_delete
 from projectify.workspace.services.team_member_invite import (
     team_member_invite_create,
@@ -255,9 +255,7 @@ class TestAddOrInviteTeamMember:
         assert UserInvite.objects.count() == 1
 
         # Team member is deleted
-        team_member_delete(
-            team_member=new_team_member, who=team_member.user
-        )
+        team_member_delete(team_member=new_team_member, who=team_member.user)
 
         # TODO consider if an invite should be deleted as a consequence of ws
         # user deletion

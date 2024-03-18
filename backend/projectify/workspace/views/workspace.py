@@ -55,13 +55,13 @@ from ..serializers.base import (
 from ..serializers.workspace import (
     WorkspaceDetailSerializer,
 )
-from ..services.workspace import (
-    workspace_create,
-    workspace_update,
-)
 from ..services.team_member_invite import (
     team_member_invite_create,
     team_member_invite_delete,
+)
+from ..services.workspace import (
+    workspace_create,
+    workspace_update,
 )
 
 

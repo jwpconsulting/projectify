@@ -22,8 +22,8 @@ from rest_framework.status import HTTP_204_NO_CONTENT
 from rest_framework.test import APIClient
 
 from projectify.workspace.models.label import Label
-from projectify.workspace.models.workspace import Workspace
 from projectify.workspace.models.team_member import TeamMember
+from projectify.workspace.models.workspace import Workspace
 from pytest_types import DjangoAssertNumQueries
 
 

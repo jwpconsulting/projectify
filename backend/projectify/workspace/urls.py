@@ -39,6 +39,9 @@ from .views.task import (
     TaskMoveToSection,
     TaskRetrieveUpdateDelete,
 )
+from .views.team_member import (
+    TeamMemberReadUpdateDelete,
+)
 from .views.workspace import (
     InviteUserToWorkspace,
     UninviteUserFromWorkspace,
@@ -46,9 +49,6 @@ from .views.workspace import (
     WorkspaceCreate,
     WorkspacePictureUploadView,
     WorkspaceReadUpdate,
-)
-from .views.team_member import (
-    TeamMemberReadUpdateDelete,
 )
 
 app_name = "workspace"
