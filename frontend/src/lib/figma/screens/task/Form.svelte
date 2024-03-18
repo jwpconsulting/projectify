@@ -26,7 +26,7 @@
     import type {
         LabelAssignment,
         SubTaskAssignment,
-        WorkspaceUserAssignment,
+        TeamMemberAssignment,
     } from "$lib/types/stores";
 
     import UpdateSubTasks from "./UpdateSubTasks.svelte";
@@ -37,15 +37,15 @@
     export let description: string | undefined;
     export let dueDate: string | undefined;
 
-    export let workspaceUserAssignment: WorkspaceUserAssignment;
+    export let teamMemberAssignment: TeamMemberAssignment;
     export let labelAssignment: LabelAssignment;
     export let subTaskAssignment: SubTaskAssignment;
 
-    async function showUpdateWorkspaceUser(anchor: HTMLElement) {
+    async function showUpdateTeamMember(anchor: HTMLElement) {
         await openContextMenu(
             {
-                kind: "updateWorkspaceUser",
-                workspaceUserAssignment,
+                kind: "updateTeamMember",
+                teamMemberAssignment,
             },
             anchor,
         );
@@ -67,8 +67,8 @@
         <TaskTitle slot="title" bind:title />
         <TaskUser
             slot="assignee"
-            onInteract={showUpdateWorkspaceUser}
-            workspaceUser={$workspaceUserAssignment}
+            onInteract={showUpdateTeamMember}
+            teamMember={$teamMemberAssignment}
         />
         <TaskLabel
             slot="labels"

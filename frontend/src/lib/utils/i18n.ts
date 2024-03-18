@@ -15,11 +15,11 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type { WorkspaceUserRole } from "$lib/types/workspaceUserRole";
+import type { TeamMemberRole } from "$lib/types/teamMemberRole";
 
 export function getMessageNameForRole(
     $_: (id: string) => string,
-    role: WorkspaceUserRole,
+    role: TeamMemberRole,
 ) {
     return {
         OBSERVER: $_("roles.observer"),
@@ -75,9 +75,9 @@ export function helpTopics($_: (id: string) => string): HelpTopic[] {
             href: "/help/labels",
         },
         {
-            title: $_("help.workspace-users.title"),
-            description: $_("help.workspace-users.description"),
-            href: "/help/workspace-users",
+            title: $_("help.team-members.title"),
+            description: $_("help.team-members.description"),
+            href: "/help/team-members",
         },
         {
             title: $_("help.filters.title"),

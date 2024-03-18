@@ -94,7 +94,7 @@ export async function inviteUser(
     repositoryContext: RepositoryContext,
 ): Promise<ApiResponse<unknown, { email?: string }>> {
     return await postWithCredentialsJson(
-        `/workspace/workspace/${uuid}/invite-workspace-user`,
+        `/workspace/workspace/${uuid}/invite-team-member`,
         { email },
         repositoryContext,
     );
@@ -106,7 +106,7 @@ export async function uninviteUser(
     repositoryContext: RepositoryContext,
 ): Promise<ApiResponse<unknown, { email?: string }>> {
     return await postWithCredentialsJson(
-        `/workspace/workspace/${uuid}/uninvite-workspace-user`,
+        `/workspace/workspace/${uuid}/uninvite-team-member`,
         { email },
         repositoryContext,
     );

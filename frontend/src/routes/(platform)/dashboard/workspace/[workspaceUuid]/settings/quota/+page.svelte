@@ -31,9 +31,9 @@
     $: quotaRows = [
         {
             label: $_(
-                "workspace-settings.quota.resource.workspace-users-and-invites",
+                "workspace-settings.quota.resource.team-members-and-invites",
             ),
-            quota: workspace.quota.workspace_users_and_invites,
+            quota: workspace.quota.team_members_and_invites,
         },
         {
             label: $_("workspace-settings.quota.resource.projects"),

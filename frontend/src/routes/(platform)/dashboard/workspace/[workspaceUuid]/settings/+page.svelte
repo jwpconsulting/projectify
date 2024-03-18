@@ -24,7 +24,7 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { updateWorkspace } from "$lib/repository/workspace";
-    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
+    import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import type { EditableViewState } from "$lib/types/ui";
     import { uploadImage } from "$lib/utils/file";
 
@@ -40,7 +40,7 @@
 
     let state: EditableViewState = { kind: "viewing" };
 
-    $: canEdit = $currentWorkspaceUserCan("update", "workspace");
+    $: canEdit = $currentTeamMemberCan("update", "workspace");
 
     function resetForm() {
         title = workspace.title;
@@ -184,7 +184,7 @@
         {/if}
     </div>
 </form>
-{#if $currentWorkspaceUserCan("delete", "workspace")}
+{#if $currentTeamMemberCan("delete", "workspace")}
     <section class="flex flex-col gap-2">
         <h2 class="font-bold">
             {$_("workspace-settings.general.delete.title")}

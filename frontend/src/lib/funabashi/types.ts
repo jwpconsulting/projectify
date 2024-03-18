@@ -67,11 +67,11 @@ export type CircleIconIcon = (typeof circleIconIcons)[number];
 export const squovalIcons = [
     // TODO rename project
     "board",
-    "workspaceUser",
+    "teamMember",
     "label",
     "bulk",
     "move",
-    "filterWorkspaceUser",
+    "filterTeamMember",
     "delete",
     "ellipsis",
     "plus",

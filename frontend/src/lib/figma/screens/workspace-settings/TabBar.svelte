@@ -19,7 +19,7 @@
     import { _ } from "svelte-i18n";
 
     import TabElement from "$lib/figma/buttons/TabElement.svelte";
-    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
+    import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import type { SettingKind } from "$lib/types/dashboard";
     import type { Workspace } from "$lib/types/workspace";
     import { getSettingsUrl } from "$lib/urls";
@@ -35,11 +35,11 @@
         active={activeSetting === "index"}
     />
     <TabElement
-        href={getSettingsUrl(workspace.uuid, "workspace-users")}
-        label={$_("workspace-settings.workspace-users.heading")}
-        active={activeSetting === "workspace-users"}
+        href={getSettingsUrl(workspace.uuid, "team-members")}
+        label={$_("workspace-settings.team-members.heading")}
+        active={activeSetting === "team-members"}
     />
-    {#if $currentWorkspaceUserCan("read", "customer")}
+    {#if $currentTeamMemberCan("read", "customer")}
         <TabElement
             href={getSettingsUrl(workspace.uuid, "billing")}
             label={$_("workspace-settings.billing.heading")}

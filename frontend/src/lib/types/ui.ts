@@ -15,10 +15,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import type {
-    WorkspaceUserAssignment,
-    LabelAssignment,
-} from "$lib/types/stores";
+import type { TeamMemberAssignment, LabelAssignment } from "$lib/types/stores";
 import type {
     Label,
     Task,
@@ -28,7 +25,7 @@ import type {
     ProjectDetail,
     Section,
     SectionWithTasks,
-    WorkspaceUser,
+    TeamMember,
 } from "$lib/types/workspace";
 
 // TODO rename LabelFilterInput
@@ -50,22 +47,22 @@ export type LabelAssignmentState = LabelSelection & {
     kind: "noLabel" | "labels";
 };
 
-// Rename WorkspaceUserFilterInput
-export type WorkspaceUserSelectionInput =
-    | { kind: "workspaceUser"; workspaceUser: WorkspaceUser }
-    | { kind: "allWorkspaceUsers" }
+// Rename TeamMemberFilterInput
+export type TeamMemberSelectionInput =
+    | { kind: "teamMember"; teamMember: TeamMember }
+    | { kind: "allTeamMembers" }
     | { kind: "unassigned" };
-// Rename WorkspaceUserFilterState
-export type WorkspaceUserSelection =
-    | { kind: "workspaceUsers"; workspaceUserUuids: Set<string> }
-    | { kind: "allWorkspaceUsers" }
+// Rename TeamMemberFilterState
+export type TeamMemberSelection =
+    | { kind: "teamMembers"; teamMemberUuids: Set<string> }
+    | { kind: "allTeamMembers" }
     | { kind: "unassigned" };
 
-export type WorkspaceUserAssignmentInput = WorkspaceUserSelectionInput & {
-    kind: "workspaceUser" | "unassigned";
+export type TeamMemberAssignmentInput = TeamMemberSelectionInput & {
+    kind: "teamMember" | "unassigned";
 };
-export type WorkspaceUserAssignmentState =
-    | { kind: "workspaceUser"; workspaceUser: WorkspaceUser }
+export type TeamMemberAssignmentState =
+    | { kind: "teamMember"; teamMember: TeamMember }
     | { kind: "unassigned" };
 
 export interface TasksPerUser {
@@ -75,7 +72,7 @@ export interface TasksPerUser {
 
 export type DestructiveOverlayType =
     | { kind: "deleteLabel"; label: Label }
-    | { kind: "deleteWorkspaceUser"; workspaceUser: WorkspaceUser }
+    | { kind: "deleteTeamMember"; teamMember: TeamMember }
     | {
           kind: "deleteSection";
           section: Section;
@@ -146,8 +143,8 @@ export type ContextMenuType =
     | { kind: "help" }
     | { kind: "permissions" }
     | {
-          kind: "updateWorkspaceUser";
-          workspaceUserAssignment: WorkspaceUserAssignment;
+          kind: "updateTeamMember";
+          teamMemberAssignment: TeamMemberAssignment;
       }
     | {
           kind: "updateLabel";
@@ -160,7 +157,7 @@ export type ContextMenuState = Overlay<ContextMenuType, HTMLElement>;
 export type ConstructiveOverlayType =
     | { kind: "updateProject"; project: Project }
     | { kind: "createProject"; workspace: Workspace }
-    | { kind: "inviteWorkspaceUser"; workspace: Workspace }
+    | { kind: "inviteTeamMember"; workspace: Workspace }
     | { kind: "createSection"; project: Project }
     | {
           kind: "updateSection";

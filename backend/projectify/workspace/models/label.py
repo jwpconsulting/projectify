@@ -52,7 +52,7 @@ class LabelQuerySet(models.QuerySet["Label"]):
     def filter_for_user_and_uuid(
         self, user: AbstractBaseUser, uuid: uuid.UUID
     ) -> Self:
-        """Return for matching workspace user and uuid."""
+        """Return for matching team member and uuid."""
         return self.filter(workspace__users=user, uuid=uuid)
 
 

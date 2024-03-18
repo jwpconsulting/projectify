@@ -27,7 +27,7 @@ from projectify.workspace.models.section import (
     Section,
 )
 from projectify.workspace.models.task import Task
-from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.services.signals import (
     send_project_change_signal,
     send_task_change_signal,
@@ -53,7 +53,7 @@ def task_create(
     title: str,
     description: Optional[str] = None,
     due_date: Optional[datetime] = None,
-    assignee: Optional[WorkspaceUser] = None,
+    assignee: Optional[TeamMember] = None,
 ) -> Task:
     """Add a task to this section."""
     validate_perm(
@@ -85,7 +85,7 @@ def task_create_nested(
     labels: Sequence[Label],
     description: Optional[str] = None,
     due_date: Optional[datetime] = None,
-    assignee: Optional[WorkspaceUser] = None,
+    assignee: Optional[TeamMember] = None,
 ) -> Task:
     """Create a task. This will replace the above task_create method."""
     task = task_create(
@@ -116,7 +116,7 @@ def task_update(
     title: str,
     description: Optional[str] = None,
     due_date: Optional[datetime] = None,
-    assignee: Optional[WorkspaceUser] = None,
+    assignee: Optional[TeamMember] = None,
 ) -> Task:
     """Add a task to this section."""
     validate_perm("workspace.update_task", who, task.workspace)
@@ -137,7 +137,7 @@ def task_update_nested(
     title: str,
     description: Optional[str] = None,
     due_date: Optional[datetime] = None,
-    assignee: Optional[WorkspaceUser] = None,
+    assignee: Optional[TeamMember] = None,
     # Make these two optional
     labels: Sequence[Label],
     sub_tasks: ValidatedData,

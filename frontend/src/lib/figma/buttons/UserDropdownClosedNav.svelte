@@ -16,53 +16,53 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    // TODO rename WorkspaceUserDropdownClosedNav
+    // TODO rename TeamMemberDropdownClosedNav
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
+    import {
+        selectedTeamMember,
+        filterByTeamMember,
+        unfilterByTeamMember,
+        teamMemberSearchResults,
+    } from "$lib/stores/dashboard/teamMemberFilter";
     import {
         toggleUserExpandOpen,
         userExpandOpen,
     } from "$lib/stores/dashboard/ui";
-    import {
-        selectedWorkspaceUser,
-        filterByWorkspaceUser,
-        unfilterByWorkspaceUser,
-        workspaceUserSearchResults,
-    } from "$lib/stores/dashboard/workspaceUserFilter";
 </script>
 
 <div class="flex flex-col items-center gap-6">
     <SquovalIcon
         state="active"
-        icon="workspaceUser"
+        icon="teamMember"
         action={{ kind: "button", action: toggleUserExpandOpen }}
-        active={$selectedWorkspaceUser.kind === "workspaceUsers"}
+        active={$selectedTeamMember.kind === "teamMembers"}
     />
     {#if $userExpandOpen}
         <div class="flex flex-col items-center gap-2">
             <SelectUserClosedNav
                 user={undefined}
-                active={$selectedWorkspaceUser.kind === "unassigned"}
-                on:select={() => filterByWorkspaceUser({ kind: "unassigned" })}
+                active={$selectedTeamMember.kind === "unassigned"}
+                on:select={() => filterByTeamMember({ kind: "unassigned" })}
                 on:deselect={() =>
-                    unfilterByWorkspaceUser({ kind: "unassigned" })}
+                    unfilterByTeamMember({ kind: "unassigned" })}
             />
-            {#each $workspaceUserSearchResults as workspaceUser}
+            {#each $teamMemberSearchResults as teamMember}
                 <SelectUserClosedNav
-                    user={workspaceUser.user}
-                    active={$selectedWorkspaceUser.kind === "workspaceUsers" &&
-                        $selectedWorkspaceUser.workspaceUserUuids.has(
-                            workspaceUser.uuid,
+                    user={teamMember.user}
+                    active={$selectedTeamMember.kind === "teamMembers" &&
+                        $selectedTeamMember.teamMemberUuids.has(
+                            teamMember.uuid,
                         )}
                     on:select={() =>
-                        filterByWorkspaceUser({
-                            kind: "workspaceUser",
-                            workspaceUser,
+                        filterByTeamMember({
+                            kind: "teamMember",
+                            teamMember,
                         })}
                     on:deselect={() =>
-                        unfilterByWorkspaceUser({
-                            kind: "workspaceUser",
-                            workspaceUser,
+                        unfilterByTeamMember({
+                            kind: "teamMember",
+                            teamMember,
                         })}
                 />
             {/each}

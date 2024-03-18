@@ -21,11 +21,11 @@
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import type { AvatarVariantContent } from "$lib/figma/types";
     import { getDisplayName } from "$lib/types/user";
-    import type { WorkspaceUser } from "$lib/types/workspace";
+    import type { TeamMember } from "$lib/types/workspace";
 
     // Either a user has been assigned, or if not we should ask the user
     // to assign a user
-    export let workspaceUser: WorkspaceUser | undefined;
+    export let teamMember: TeamMember | undefined;
     export let onInteract: ((anchor: HTMLElement) => void) | undefined =
         undefined;
 
@@ -41,7 +41,7 @@
         };
     }
 
-    $: user = workspaceUser?.user;
+    $: user = teamMember?.user;
 
     let displayName: string | undefined = undefined;
     $: {

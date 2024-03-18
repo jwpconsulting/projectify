@@ -22,7 +22,7 @@ authorization with a given `who: User` argument. The `User` class MUST be
 importedd from `user/models.py`.
 
 Drawback: This couples our service layer tightly to the User model. Any
-checking of service functions must create workspace users with the correct
+checking of service functions must create team members with the correct
 roles.
 
 ## Selectors

@@ -20,11 +20,11 @@ import type { Readable } from "svelte/store";
 
 import { selectedLabels } from "$lib/stores/dashboard/labelFilter";
 import { currentProject } from "$lib/stores/dashboard/project";
-import { selectedWorkspaceUser } from "$lib/stores/dashboard/workspaceUserFilter";
+import { selectedTeamMember } from "$lib/stores/dashboard/teamMemberFilter";
 import type {
     LabelSelection,
     TasksPerUser,
-    WorkspaceUserSelection,
+    TeamMemberSelection,
 } from "$lib/types/ui";
 import type {
     Label,
@@ -35,7 +35,7 @@ import type {
 
 interface CurrentFilter {
     labels: LabelSelection;
-    workspaceUser: WorkspaceUserSelection;
+    teamMember: TeamMemberSelection;
     sections: SectionWithTasks[];
 }
 
@@ -69,15 +69,15 @@ function filterSectionsTasks(
         });
     }
 
-    const workspaceUserSelection = currentFilter.workspaceUser;
-    if (workspaceUserSelection.kind !== "allWorkspaceUsers") {
+    const teamMemberSelection = currentFilter.teamMember;
+    if (teamMemberSelection.kind !== "allTeamMembers") {
         sections = sections.map((section) => {
             const tasks = section.tasks.filter((task: Task) => {
-                if (workspaceUserSelection.kind === "unassigned") {
+                if (teamMemberSelection.kind === "unassigned") {
                     return !task.assignee;
                 } else {
                     return task.assignee
-                        ? workspaceUserSelection.workspaceUserUuids.has(
+                        ? teamMemberSelection.teamMemberUuids.has(
                               task.assignee.uuid,
                           )
                         : false;
@@ -92,15 +92,11 @@ function filterSectionsTasks(
 }
 
 export const currentSections = derived<
-    [
-        typeof selectedLabels,
-        typeof selectedWorkspaceUser,
-        typeof currentProject,
-    ],
+    [typeof selectedLabels, typeof selectedTeamMember, typeof currentProject],
     SectionWithTasks[] | undefined
 >(
-    [selectedLabels, selectedWorkspaceUser, currentProject],
-    ([$selectedLabels, $selectedWorkspaceUser, $currentProject], set) => {
+    [selectedLabels, selectedTeamMember, currentProject],
+    ([$selectedLabels, $selectedTeamMember, $currentProject], set) => {
         if (!$currentProject) {
             set(undefined);
             return;
@@ -109,7 +105,7 @@ export const currentSections = derived<
         set(
             filterSectionsTasks({
                 labels: $selectedLabels,
-                workspaceUser: $selectedWorkspaceUser,
+                teamMember: $selectedTeamMember,
                 sections,
             }),
         );

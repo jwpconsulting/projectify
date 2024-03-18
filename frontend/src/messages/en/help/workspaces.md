@@ -8,7 +8,7 @@ To switch between workspaces, click the workspace dropdown in the side menu. Thi
 
 # Workspace settings
 
-To go to workspace settings, click the ellipsis next to the workspace button in the side menu. This will open up a sub menu where you can access the current workspaces settings page.Workspace settings consists of three tabs. General, workspace users and billing. General provides information on your current workspace such as the name of the workspace. Workspace users allows you to add, edit permissions and delete workspace users. Billing provides a way for you to amend your account billing details.
+To go to workspace settings, click the ellipsis next to the workspace button in the side menu. This will open up a sub menu where you can access the current workspaces settings page.Workspace settings consists of three tabs. General, team members and billing. General provides information on your current workspace such as the name of the workspace. Team members allows you to add, edit permissions and delete team members. Billing provides a way for you to amend your account billing details.
 
 # Delete a workspace
 

@@ -49,15 +49,15 @@ from projectify.user.services.internal import user_create
 from .. import (
     models,
 )
-from ..models.const import WorkspaceUserRoles
+from ..models.const import TeamMemberRoles
 from ..models.label import Label
 from ..models.project import Project
 from ..models.section import Section
 from ..models.sub_task import SubTask
 from ..models.task import Task
+from ..models.team_member import TeamMember
 from ..models.workspace import Workspace
-from ..models.workspace_user import WorkspaceUser
-from ..selectors.workspace_user import workspace_user_find_for_workspace
+from ..selectors.team_member import team_member_find_for_workspace
 from ..services.chat_message import chat_message_create
 from ..services.label import label_create, label_delete, label_update
 from ..services.project import (
@@ -80,18 +80,18 @@ from ..services.task import (
     task_move_after,
     task_update_nested,
 )
+from ..services.team_member import (
+    team_member_delete,
+    team_member_update,
+)
+from ..services.team_member_invite import (
+    team_member_invite_create,
+    team_member_invite_delete,
+)
 from ..services.workspace import (
     workspace_create,
     workspace_delete,
     workspace_update,
-)
-from ..services.workspace_user import (
-    workspace_user_delete,
-    workspace_user_update,
-)
-from ..services.workspace_user_invite import (
-    workspace_user_invite_create,
-    workspace_user_invite_delete,
 )
 
 logger = logging.getLogger(__name__)
@@ -126,13 +126,13 @@ async def workspace(user: User) -> models.Workspace:
 
 
 @pytest.fixture
-async def workspace_user(workspace: Workspace, user: User) -> WorkspaceUser:
-    """Return workspace user with owner status."""
-    workspace_user = await database_sync_to_async(
-        workspace_user_find_for_workspace
-    )(workspace=workspace, user=user)
-    assert workspace_user
-    return workspace_user
+async def team_member(workspace: Workspace, user: User) -> TeamMember:
+    """Return team member with owner status."""
+    team_member = await database_sync_to_async(team_member_find_for_workspace)(
+        workspace=workspace, user=user
+    )
+    assert team_member
+    return team_member
 
 
 @pytest.fixture
@@ -162,13 +162,13 @@ async def section(
 async def task(
     user: User,
     section: Section,
-    workspace_user: WorkspaceUser,
+    team_member: TeamMember,
 ) -> Task:
     """Create task."""
     return await database_sync_to_async(task_create)(
         section=section,
         who=user,
-        assignee=workspace_user,
+        assignee=team_member,
         title="I am a task",
     )
 
@@ -292,49 +292,49 @@ class TestWorkspace:
         await clean_up_communicator(workspace_communicator)
 
 
-class TestWorkspaceUser:
-    """Test consumer behavior for WorkspaceUser changes."""
+class TestTeamMember:
+    """Test consumer behavior for TeamMember changes."""
 
-    async def test_workspace_user_life_cycle(
+    async def test_team_member_life_cycle(
         self,
         user: User,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         workspace_communicator: WebsocketCommunicator,
     ) -> None:
-        """Test signal firing on workspace user save or delete."""
+        """Test signal firing on team member save or delete."""
         other_user = await database_sync_to_async(user_create)(
             email="hello-world@example.com"
         )
-        # New workspace user
-        other_workspace_user = await database_sync_to_async(
-            workspace_user_invite_create
+        # New team member
+        other_team_member = await database_sync_to_async(
+            team_member_invite_create
         )(
             workspace=workspace,
             email_or_user=other_user,
             who=user,
         )
-        assert isinstance(other_workspace_user, WorkspaceUser)
+        assert isinstance(other_team_member, TeamMember)
         await expect_message(workspace_communicator, workspace)
-        # Workspace user updated
-        await database_sync_to_async(workspace_user_update)(
-            workspace_user=other_workspace_user,
+        # Team member updated
+        await database_sync_to_async(team_member_update)(
+            team_member=other_team_member,
             who=user,
-            role=WorkspaceUserRoles.OBSERVER,
+            role=TeamMemberRoles.OBSERVER,
         )
         await expect_message(workspace_communicator, workspace)
 
         # TODO user updated (picture/name)
 
-        # Workspace user deleted (delete initial ws user as well)
-        await database_sync_to_async(workspace_user_delete)(
-            workspace_user=other_workspace_user,
+        # Team member deleted (delete initial ws user as well)
+        await database_sync_to_async(team_member_delete)(
+            team_member=other_team_member,
             who=user,
         )
         await expect_message(workspace_communicator, workspace)
 
         # Now we invite someone without an account:
-        await database_sync_to_async(workspace_user_invite_create)(
+        await database_sync_to_async(team_member_invite_create)(
             workspace=workspace,
             email_or_user="doesnotexist@example.com",
             who=user,
@@ -342,7 +342,7 @@ class TestWorkspaceUser:
         await expect_message(workspace_communicator, workspace)
 
         # And we remove their invitation
-        await database_sync_to_async(workspace_user_invite_delete)(
+        await database_sync_to_async(team_member_invite_delete)(
             workspace=workspace,
             email="doesnotexist@example.com",
             who=user,
@@ -369,7 +369,7 @@ class TestProject:
         self,
         user: User,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         workspace_communicator: WebsocketCommunicator,
     ) -> None:
         """Test workspace / board consumer behavior for board changes."""
@@ -411,7 +411,7 @@ class TestProject:
         await clean_up_communicator(workspace_communicator)
         await clean_up_communicator(project_communicator)
 
-        await delete_model_instance(workspace_user)
+        await delete_model_instance(team_member)
         await delete_model_instance(workspace)
 
 
@@ -422,7 +422,7 @@ class TestSection:
         self,
         user: User,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         project: Project,
         project_communicator: WebsocketCommunicator,
     ) -> None:
@@ -460,7 +460,7 @@ class TestSection:
 
         await project_communicator.disconnect()
         await delete_model_instance(project)
-        await delete_model_instance(workspace_user)
+        await delete_model_instance(team_member)
         await delete_model_instance(workspace)
 
 
@@ -470,7 +470,7 @@ class TestLabel:
     async def test_label_life_cycle(
         self,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         user: User,
         workspace_communicator: WebsocketCommunicator,
     ) -> None:
@@ -499,7 +499,7 @@ class TestLabel:
         )
         assert await expect_message(workspace_communicator, workspace)
 
-        await delete_model_instance(workspace_user)
+        await delete_model_instance(team_member)
         await delete_model_instance(workspace)
         await workspace_communicator.disconnect()
 
@@ -511,7 +511,7 @@ class TestTaskConsumer:
         self,
         user: User,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         project: Project,
         section: Section,
         project_communicator: WebsocketCommunicator,
@@ -562,7 +562,7 @@ class TestTaskConsumer:
 
         await delete_model_instance(section)
         await delete_model_instance(project)
-        await delete_model_instance(workspace_user)
+        await delete_model_instance(team_member)
         await delete_model_instance(workspace)
 
 
@@ -573,7 +573,7 @@ class TestTaskLabel:
         self,
         user: User,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         label: Label,
         project: Project,
         section: Section,
@@ -609,7 +609,7 @@ class TestTaskLabel:
 
         await delete_model_instance(section)
         await delete_model_instance(project)
-        await delete_model_instance(workspace_user)
+        await delete_model_instance(team_member)
         await delete_model_instance(label)
         await delete_model_instance(workspace)
 
@@ -621,7 +621,7 @@ class TestSubTask:
         self,
         user: User,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         project: Project,
         section: Section,
         task: Task,
@@ -678,7 +678,7 @@ class TestSubTask:
         await delete_model_instance(task)
         await delete_model_instance(section)
         await delete_model_instance(project)
-        await delete_model_instance(workspace_user)
+        await delete_model_instance(team_member)
         await delete_model_instance(workspace)
 
 
@@ -689,7 +689,7 @@ class TestChatMessage:
         self,
         user: User,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         project: Project,
         section: Section,
         task: Task,
@@ -710,5 +710,5 @@ class TestChatMessage:
         await delete_model_instance(task)
         await delete_model_instance(section)
         await delete_model_instance(project)
-        await delete_model_instance(workspace_user)
+        await delete_model_instance(team_member)
         await delete_model_instance(workspace)

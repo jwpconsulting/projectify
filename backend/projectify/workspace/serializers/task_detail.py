@@ -176,11 +176,11 @@ class TaskCreateUpdateSerializer(base.TaskBaseSerializer):
         try:
             assignee = (
                 assignee_uuid
-                and workspace.workspaceuser_set.filter(
+                and workspace.teammember_set.filter(
                     uuid=assignee_uuid["uuid"]
                 ).get()
             )
-        except models.WorkspaceUser.DoesNotExist:
+        except models.TeamMember.DoesNotExist:
             raise serializers.ValidationError(
                 {
                     "assignee": _("The assignee could not be found"),

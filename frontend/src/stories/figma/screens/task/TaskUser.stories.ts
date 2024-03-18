@@ -18,12 +18,12 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 import TaskUser from "$lib/figma/screens/task/TaskUser.svelte";
-import { workspaceUser } from "$lib/storybook";
+import { teamMember } from "$lib/storybook";
 
 const meta: Meta<TaskUser> = {
     component: TaskUser,
     args: {
-        workspaceUser,
+        teamMember,
         onInteract: console.log,
     },
 };
@@ -33,6 +33,6 @@ type Story = StoryObj<TaskUser>;
 
 export const Default: Story = {};
 
-export const NoUser: Story = { args: { workspaceUser: undefined } };
+export const NoUser: Story = { args: { teamMember: undefined } };
 
 export const NoAction: Story = { args: { onInteract: undefined } };

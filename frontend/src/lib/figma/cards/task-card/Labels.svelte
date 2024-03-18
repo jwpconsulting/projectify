@@ -23,7 +23,7 @@
     import LabelPill from "$lib/components/dashboard/LabelPill.svelte";
     import { updateTask } from "$lib/repository/workspace";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
-    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
+    import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { LabelAssignment } from "$lib/types/stores";
     import type { ContextMenuType } from "$lib/types/ui";
@@ -91,7 +91,7 @@
         // reloaded and labelAssignment is recreated
     }
 
-    $: canUpdate = $currentWorkspaceUserCan("update", "taskLabel");
+    $: canUpdate = $currentTeamMemberCan("update", "taskLabel");
 </script>
 
 {#if labels.length}

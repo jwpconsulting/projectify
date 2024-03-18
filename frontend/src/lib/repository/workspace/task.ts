@@ -30,7 +30,7 @@ import type {
     Task,
     TaskWithWorkspace,
     Section,
-    WorkspaceUser,
+    TeamMember,
 } from "$lib/types/workspace";
 
 // Task CRUD
@@ -43,7 +43,7 @@ export interface CreateUpdateTaskData {
     labels: Pick<Label, "uuid">[];
     // TODO this has to be optional in the backend -> undefined means unset
     // assignee
-    assignee?: Pick<WorkspaceUser, "uuid">;
+    assignee?: Pick<TeamMember, "uuid">;
     section: Pick<Section, "uuid">;
     // TODO dueDate plz
     due_date?: string;

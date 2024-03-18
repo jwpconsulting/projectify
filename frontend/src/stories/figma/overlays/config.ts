@@ -20,8 +20,8 @@ import {
     workspace,
     project,
     section,
-    workspaceUserAssignment,
-    workspaceUser,
+    teamMemberAssignment,
+    teamMember,
     labelAssignment,
     makeStorybookSelect,
 } from "$lib/storybook";
@@ -75,11 +75,11 @@ export const contextMenus: Record<string, ContextMenuType> = {
     "Permissions": {
         kind: "permissions",
     },
-    // TODO name of component / kind should be update workspace user assignment?
+    // TODO name of component / kind should be update team member assignment?
     // TODO yep, I agree even one month later. Justus 2023-10-19
-    "Update workspace user": {
-        kind: "updateWorkspaceUser",
-        workspaceUserAssignment,
+    "Update team member": {
+        kind: "updateTeamMember",
+        teamMemberAssignment,
     },
     "Update label": {
         kind: "updateLabel",
@@ -99,9 +99,9 @@ export const destructiveOverlays = makeStorybookSelect({
             uuid: "",
         },
     },
-    "Delete workspace user": {
-        kind: "deleteWorkspaceUser" as const,
-        workspaceUser,
+    "Delete team member": {
+        kind: "deleteTeamMember" as const,
+        teamMember,
     },
     "Delete section": {
         kind: "deleteSection" as const,
@@ -137,7 +137,7 @@ export const constructiveOverlays =
             project,
         },
         "Create project": { kind: "createProject", workspace },
-        "Invite workspace users": { kind: "inviteWorkspaceUser", workspace },
+        "Invite team members": { kind: "inviteTeamMember", workspace },
         "Create section": {
             kind: "createSection",
             project,

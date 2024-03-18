@@ -46,7 +46,7 @@ export function getDashboardSectionUrl(
 export function getSettingsUrl(workspaceUuid: string, kind: SettingKind) {
     const suffix = {
         "index": "",
-        "workspace-users": "/workspace-users",
+        "team-members": "/team-members",
         "billing": "/billing",
         "quota": "/quota",
     }[kind];

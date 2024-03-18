@@ -22,7 +22,7 @@ Be able to create 10 boards and up to 100 sections across all boards
 Be able to create 1000 tasks in that workspace
 Be able to create 10 * 100 sub tasks
 Be able to add one more user, therefore that workspace being limited to having
-2 workspace users in total.
+2 team members in total.
 Be able to create 10 labels, assign them to all tasks
 
 Limitations for a trial workspace are
@@ -33,7 +33,7 @@ Limitations for a trial workspace are
 - TaskLabel: unlimited,
 - Project: 10,
 - Section: 100,
-- WorkspaceUser + WorkspaceUserInivite(unredeemed): 2
+- TeamMember + TeamMemberInivite(unredeemed): 2
 """
 from functools import partial
 from typing import Literal, TypedDict, Union
@@ -60,7 +60,7 @@ Resource = Literal[
     "TaskLabel",
     "Project",
     "Section",
-    "WorkspaceUserAndInvite",
+    "TeamMemberAndInvite",
 ]
 
 Limitation = Union[None, int]
@@ -76,7 +76,7 @@ class Limitations(TypedDict):
     TaskLabel: Limitation
     Project: Limitation
     Section: Limitation
-    WorkspaceUserAndInvite: Limitation
+    TeamMemberAndInvite: Limitation
 
 
 trial_conditions: Limitations = {
@@ -87,7 +87,7 @@ trial_conditions: Limitations = {
     "TaskLabel": None,
     "Project": 10,
     "Section": 100,
-    "WorkspaceUserAndInvite": 2,
+    "TeamMemberAndInvite": 2,
 }
 
 # Full workspace conditions are somewhat like this:
@@ -99,7 +99,7 @@ trial_conditions: Limitations = {
 #     "TaskLabel": None,
 #     "Project": None,
 #     "Section": None,
-#     "WorkspaceUserAndInvite": workspace.customer.seats,
+#     "TeamMemberAndInvite": workspace.customer.seats,
 # }
 
 
@@ -111,7 +111,7 @@ def get_workspace_quota_for_resource(
     # We regard inactive as trial
     if status in ["trial", "inactive"]:
         return trial_conditions[resource]
-    if resource == "WorkspaceUserAndInvite":
+    if resource == "TeamMemberAndInvite":
         customer = workspace.customer
         return customer.seats
     return None
@@ -143,9 +143,9 @@ def get_workspace_resource_count(
             return Section.objects.filter(
                 workspace_board__workspace=workspace
             ).count()
-        case "WorkspaceUserAndInvite":
+        case "TeamMemberAndInvite":
             user_count = workspace.users.count()
-            invite_count = workspace.workspaceuserinvite_set.filter(
+            invite_count = workspace.teammemberinvite_set.filter(
                 redeemed=False
             ).count()
             return user_count + invite_count
@@ -175,5 +175,5 @@ def workspace_get_all_quotas(workspace: Workspace) -> WorkspaceQuota:
         task_labels=mk(resource="TaskLabel"),
         projects=mk(resource="Project"),
         sections=mk(resource="Section"),
-        workspace_users_and_invites=mk(resource="WorkspaceUserAndInvite"),
+        team_members_and_invites=mk(resource="TeamMemberAndInvite"),
     )

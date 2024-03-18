@@ -24,9 +24,9 @@ from django.db.models import Prefetch, QuerySet
 from projectify.user.models import User
 
 from ..models.project import Project
+from ..models.team_member import TeamMember
+from ..models.team_member_invite import TeamMemberInvite
 from ..models.workspace import Workspace
-from ..models.workspace_user import WorkspaceUser
-from ..models.workspace_user_invite import WorkspaceUserInvite
 
 logger = logging.getLogger(__name__)
 
@@ -38,20 +38,20 @@ WorkspaceDetailQuerySet = Workspace.objects.prefetch_related(
         queryset=Project.objects.filter(archived__isnull=True),
     ),
     Prefetch(
-        "workspaceuser_set",
-        queryset=WorkspaceUser.objects.select_related("user"),
+        "teammember_set",
+        queryset=TeamMember.objects.select_related("user"),
     ),
     Prefetch(
-        "workspaceuserinvite_set",
+        "teammemberinvite_set",
         # Is there a privacy impact in having a workspace be able to resolve
         # ws -> ws user invite -> user invite?
         # Is there a way one can smuggle a resolution like
         # ws -> ws user invite -> user invite -> other ws's user invite ->
         # other ws and so on?
         # Perhaps only if RCE exists, but then we have different problems...
-        queryset=WorkspaceUserInvite.objects.select_related(
-            "user_invite"
-        ).filter(redeemed=False),
+        queryset=TeamMemberInvite.objects.select_related("user_invite").filter(
+            redeemed=False
+        ),
     ),
 )
 

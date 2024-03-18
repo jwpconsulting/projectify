@@ -26,7 +26,7 @@ from projectify.corporate.services.customer import (
     customer_create_stripe_checkout_session,
 )
 from projectify.settings.base import Base
-from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.models.team_member import TeamMember
 
 pytestmark = pytest.mark.django_db
 
@@ -66,18 +66,18 @@ class TestCustomerCreateStripeCheckoutSession:
             yield m
 
     def test_too_few_seats(
-        self, unpaid_customer: Customer, workspace_user: WorkspaceUser
+        self, unpaid_customer: Customer, team_member: TeamMember
     ) -> None:
         """Assert that a minimum amount of seats is ensured."""
         seats = unpaid_customer.workspace.users.count()
         with pytest.raises(serializers.ValidationError):
             customer_create_stripe_checkout_session(
-                who=workspace_user.user,
+                who=team_member.user,
                 customer=unpaid_customer,
                 seats=seats - 1,
             )
         customer_create_stripe_checkout_session(
-            who=workspace_user.user,
+            who=team_member.user,
             customer=unpaid_customer,
             seats=seats,
         )

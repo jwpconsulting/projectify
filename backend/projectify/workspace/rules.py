@@ -25,68 +25,66 @@ import rules
 
 from projectify.user.models import User
 
-from .models.const import WorkspaceUserRoles
+from .models.const import TeamMemberRoles
 from .models.workspace import Workspace
 from .selectors.quota import Resource, workspace_quota_for
-from .selectors.workspace_user import workspace_user_find_for_workspace
+from .selectors.team_member import team_member_find_for_workspace
 
 ROLE_EQUIVALENCE = {
-    WorkspaceUserRoles.OWNER: {
-        WorkspaceUserRoles.OWNER: True,
-        WorkspaceUserRoles.MAINTAINER: True,
-        WorkspaceUserRoles.CONTRIBUTOR: True,
-        WorkspaceUserRoles.OBSERVER: True,
+    TeamMemberRoles.OWNER: {
+        TeamMemberRoles.OWNER: True,
+        TeamMemberRoles.MAINTAINER: True,
+        TeamMemberRoles.CONTRIBUTOR: True,
+        TeamMemberRoles.OBSERVER: True,
     },
-    WorkspaceUserRoles.MAINTAINER: {
-        WorkspaceUserRoles.OWNER: False,
-        WorkspaceUserRoles.MAINTAINER: True,
-        WorkspaceUserRoles.CONTRIBUTOR: True,
-        WorkspaceUserRoles.OBSERVER: True,
+    TeamMemberRoles.MAINTAINER: {
+        TeamMemberRoles.OWNER: False,
+        TeamMemberRoles.MAINTAINER: True,
+        TeamMemberRoles.CONTRIBUTOR: True,
+        TeamMemberRoles.OBSERVER: True,
     },
-    WorkspaceUserRoles.CONTRIBUTOR: {
-        WorkspaceUserRoles.OWNER: False,
-        WorkspaceUserRoles.MAINTAINER: False,
-        WorkspaceUserRoles.CONTRIBUTOR: True,
-        WorkspaceUserRoles.OBSERVER: True,
+    TeamMemberRoles.CONTRIBUTOR: {
+        TeamMemberRoles.OWNER: False,
+        TeamMemberRoles.MAINTAINER: False,
+        TeamMemberRoles.CONTRIBUTOR: True,
+        TeamMemberRoles.OBSERVER: True,
     },
-    WorkspaceUserRoles.OBSERVER: {
-        WorkspaceUserRoles.OWNER: False,
-        WorkspaceUserRoles.MAINTAINER: False,
-        WorkspaceUserRoles.CONTRIBUTOR: False,
-        WorkspaceUserRoles.OBSERVER: True,
+    TeamMemberRoles.OBSERVER: {
+        TeamMemberRoles.OWNER: False,
+        TeamMemberRoles.MAINTAINER: False,
+        TeamMemberRoles.CONTRIBUTOR: False,
+        TeamMemberRoles.OBSERVER: True,
     },
 }
 
 
 def check_permissions_for(
-    role: WorkspaceUserRoles, user: User, workspace: Workspace
+    role: TeamMemberRoles, user: User, workspace: Workspace
 ) -> bool:
     """Check whether a user has required role for target."""
-    workspace_user = workspace_user_find_for_workspace(
+    team_member = team_member_find_for_workspace(
         workspace=workspace, user=user
     )
-    if workspace_user is None:
+    if team_member is None:
         return False
-    workspace_user_role: WorkspaceUserRoles = WorkspaceUserRoles[
-        workspace_user.role
-    ]
-    return ROLE_EQUIVALENCE[workspace_user_role][role]
+    team_member_role: TeamMemberRoles = TeamMemberRoles[team_member.role]
+    return ROLE_EQUIVALENCE[team_member_role][role]
 
 
 # Role predicates
 # ---------------
 # Observer < Contributor < Maintainer < Owner
 is_at_least_observer = rules.predicate(
-    partial(check_permissions_for, WorkspaceUserRoles.OBSERVER)
+    partial(check_permissions_for, TeamMemberRoles.OBSERVER)
 )
 is_at_least_contributor = rules.predicate(
-    partial(check_permissions_for, WorkspaceUserRoles.CONTRIBUTOR)
+    partial(check_permissions_for, TeamMemberRoles.CONTRIBUTOR)
 )
 is_at_least_maintainer = rules.predicate(
-    partial(check_permissions_for, WorkspaceUserRoles.MAINTAINER)
+    partial(check_permissions_for, TeamMemberRoles.MAINTAINER)
 )
 is_at_least_owner = rules.predicate(
-    partial(check_permissions_for, WorkspaceUserRoles.OWNER)
+    partial(check_permissions_for, TeamMemberRoles.OWNER)
 )
 
 
@@ -119,13 +117,13 @@ within_task_label_quota = rules.predicate(
 within_project_quota = rules.predicate(partial(can_create_more, "Project"))
 # Return True if a section can be created in a workspace
 within_section_quota = rules.predicate(partial(can_create_more, "Section"))
-# Return True if a workspace user can be added to a workspace
+# Return True if a team member can be added to a workspace
 # The two following use the same quota
-within_workspace_user_quota = rules.predicate(
-    partial(can_create_more, "WorkspaceUserAndInvite")
+within_team_member_quota = rules.predicate(
+    partial(can_create_more, "TeamMemberAndInvite")
 )
-# Return True if a workspace user invite can be sent for a workspace
-within_workspace_user_invite_quota = within_workspace_user_quota
+# Return True if a team member invite can be sent for a workspace
+within_team_member_invite_quota = within_team_member_quota
 
 
 # Workspace
@@ -135,23 +133,23 @@ rules.add_perm("workspace.read_workspace", is_at_least_observer)
 rules.add_perm("workspace.update_workspace", is_at_least_owner)
 rules.add_perm("workspace.delete_workspace", is_at_least_owner)
 
-# Workspace user invite
+# Team member invite
 rules.add_perm(
-    "workspace.create_workspace_user_invite",
-    is_at_least_owner & within_workspace_user_invite_quota,
+    "workspace.create_team_member_invite",
+    is_at_least_owner & within_team_member_invite_quota,
 )
-rules.add_perm("workspace.read_workspace_user_invite", is_at_least_owner)
-rules.add_perm("workspace.update_workspace_user_invite", is_at_least_owner)
-rules.add_perm("workspace.delete_workspace_user_invite", is_at_least_owner)
+rules.add_perm("workspace.read_team_member_invite", is_at_least_owner)
+rules.add_perm("workspace.update_team_member_invite", is_at_least_owner)
+rules.add_perm("workspace.delete_team_member_invite", is_at_least_owner)
 
-# Workspace user
+# Team member
 rules.add_perm(
-    "workspace.create_workspace_user",
-    is_at_least_owner & within_workspace_user_quota,
+    "workspace.create_team_member",
+    is_at_least_owner & within_team_member_quota,
 )
-rules.add_perm("workspace.read_workspace_user", is_at_least_observer)
-rules.add_perm("workspace.update_workspace_user", is_at_least_owner)
-rules.add_perm("workspace.delete_workspace_user", is_at_least_owner)
+rules.add_perm("workspace.read_team_member", is_at_least_observer)
+rules.add_perm("workspace.update_team_member", is_at_least_owner)
+rules.add_perm("workspace.delete_team_member", is_at_least_owner)
 
 # Project
 rules.add_perm(

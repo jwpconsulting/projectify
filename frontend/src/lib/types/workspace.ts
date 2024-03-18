@@ -18,17 +18,17 @@
 import type { TimestampedType, TitleDescriptionType } from "$lib/types/base";
 import type { User } from "$lib/types/user";
 
-export type WorkspaceUserRole =
+export type TeamMemberRole =
     | "OBSERVER"
     | "CONTRIBUTOR"
     | "MAINTAINER"
     | "OWNER";
 
-export type WorkspaceUser = {
+export type TeamMember = {
     user: User;
     uuid: string;
     job_title?: string;
-    role: WorkspaceUserRole;
+    role: TeamMemberRole;
 } & TimestampedType;
 
 export interface Label {
@@ -51,7 +51,7 @@ export type CreateUpdateSubTask = {
 } & TitleDescriptionType;
 
 type ChatMessage = {
-    author: WorkspaceUser;
+    author: TeamMember;
     uuid: string;
     text: string;
 } & TimestampedType;
@@ -64,7 +64,7 @@ export type Task = {
     due_date?: string;
     number: number;
     labels: Label[];
-    assignee?: WorkspaceUser;
+    assignee?: TeamMember;
     section?: Section;
     sub_tasks?: SubTask[];
     chat_messages?: ChatMessage[];
@@ -129,18 +129,18 @@ export interface WorkspaceQuota {
     task_labels: Quota;
     projects: Quota;
     sections: Quota;
-    workspace_users_and_invites: Quota;
+    team_members_and_invites: Quota;
 }
 
-interface WorkspaceUserInvite {
+interface TeamMemberInvite {
     email: string;
     created: string;
 }
 
 export type Workspace = {
     picture: string | null;
-    workspace_users?: WorkspaceUser[];
-    workspace_user_invites?: WorkspaceUserInvite[];
+    team_members?: TeamMember[];
+    team_member_invites?: TeamMemberInvite[];
     projects?: Project[];
     labels?: Label[];
     uuid: string;
@@ -153,9 +153,9 @@ export type WorkspaceDetail = Required<
         Workspace,
         | "projects"
         | "labels"
-        | "workspace_users"
+        | "team_members"
         | "quota"
-        | "workspace_user_invites"
+        | "team_member_invites"
     >
 > &
     Workspace;

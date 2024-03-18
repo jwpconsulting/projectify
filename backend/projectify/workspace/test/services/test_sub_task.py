@@ -26,7 +26,7 @@ from ...models import (
     SubTask,
     Task,
 )
-from ...models.workspace_user import WorkspaceUser
+from ...models.team_member import TeamMember
 from ...services.sub_task import (
     ValidatedDatum,
     sub_task_create,
@@ -37,11 +37,11 @@ from ...services.sub_task import (
 pytestmark = pytest.mark.django_db
 
 
-def test_add_sub_task(task: Task, workspace_user: WorkspaceUser) -> None:
+def test_add_sub_task(task: Task, team_member: TeamMember) -> None:
     """Test adding a sub task."""
     assert task.subtask_set.count() == 0
     sub_task_create(
-        who=workspace_user.user,
+        who=team_member.user,
         task=task,
         title="don't care",
         done=False,
@@ -50,12 +50,12 @@ def test_add_sub_task(task: Task, workspace_user: WorkspaceUser) -> None:
 
 
 @pytest.fixture
-def sub_tasks(task: Task, workspace_user: WorkspaceUser) -> Sequence[SubTask]:
+def sub_tasks(task: Task, team_member: TeamMember) -> Sequence[SubTask]:
     """Create several sub tasks."""
     N = 5
     return [
         sub_task_create(
-            who=workspace_user.user,
+            who=team_member.user,
             task=task,
             title="don't care",
             done=False,
@@ -65,7 +65,7 @@ def sub_tasks(task: Task, workspace_user: WorkspaceUser) -> Sequence[SubTask]:
 
 
 def test_new_sub_task(
-    workspace_user: WorkspaceUser,
+    team_member: TeamMember,
     task: Task,
 ) -> None:
     """Assert we can create a new sub task."""
@@ -76,7 +76,7 @@ def test_new_sub_task(
     }
     assert SubTask.objects.count() == 0
     sub_task_create_many(
-        who=workspace_user.user,
+        who=team_member.user,
         task=task,
         create_sub_tasks=[payload_single],
     )
@@ -88,7 +88,7 @@ def test_new_sub_task(
 
 def test_several_new_sub_tasks(
     task: Task,
-    workspace_user: WorkspaceUser,
+    team_member: TeamMember,
 ) -> None:
     """Assert we can create several new sub tasks."""
     create_sub_tasks: list[ValidatedDatum] = [
@@ -101,19 +101,19 @@ def test_several_new_sub_tasks(
     sub_task_create_many(
         create_sub_tasks=create_sub_tasks,
         task=task,
-        who=workspace_user.user,
+        who=team_member.user,
     )
     assert SubTask.objects.count() == len(create_sub_tasks)
 
 
 def test_delete_one(
-    workspace_user: WorkspaceUser,
+    team_member: TeamMember,
     sub_task: SubTask,
 ) -> None:
     """Test a sub task is deleted when empty data are passed."""
     assert SubTask.objects.count() == 1
     sub_task_update_many(
-        who=workspace_user.user,
+        who=team_member.user,
         task=sub_task.task,
         sub_tasks=[sub_task],
         create_sub_tasks=[],
@@ -124,12 +124,12 @@ def test_delete_one(
 
 def test_update_existing_sub_task(
     sub_task: SubTask,
-    workspace_user: WorkspaceUser,
+    team_member: TeamMember,
 ) -> None:
     """Test updating sub task."""
     new_title = "This is a new title, made for this sub task"
     sub_task_update_many(
-        who=workspace_user.user,
+        who=team_member.user,
         task=sub_task.task,
         sub_tasks=[sub_task],
         update_sub_tasks=[
@@ -149,7 +149,7 @@ def test_update_existing_sub_task(
 
 def test_update_several_existing_sub_tasks(
     task: Task,
-    workspace_user: WorkspaceUser,
+    team_member: TeamMember,
     sub_tasks: list[SubTask],
 ) -> None:
     """Test updating several existing sub tasks."""
@@ -166,7 +166,7 @@ def test_update_several_existing_sub_tasks(
         ],
         create_sub_tasks=[],
         sub_tasks=sub_tasks,
-        who=workspace_user.user,
+        who=team_member.user,
         task=task,
     )
     assert SubTask.objects.count() == len(sub_tasks)
@@ -176,7 +176,7 @@ def test_update_several_existing_sub_tasks(
 
 def test_update_one_create_one(
     task: Task,
-    workspace_user: WorkspaceUser,
+    team_member: TeamMember,
     sub_task: SubTask,
 ) -> None:
     """
@@ -202,7 +202,7 @@ def test_update_one_create_one(
             },
         ],
         sub_tasks=[sub_task],
-        who=workspace_user.user,
+        who=team_member.user,
         task=task,
     )
     assert task.subtask_set.count() == 2
@@ -214,7 +214,7 @@ def test_update_one_create_one(
 def test_change_order(
     sub_tasks: list[SubTask],
     task: Task,
-    workspace_user: WorkspaceUser,
+    team_member: TeamMember,
 ) -> None:
     """Test changing the order of several sub tasks."""
     a, b, c, d, e = sub_tasks
@@ -254,7 +254,7 @@ def test_change_order(
             },
         ],
         sub_tasks=sub_tasks,
-        who=workspace_user.user,
+        who=team_member.user,
         task=task,
     )
     assert SubTask.objects.count() == len(sub_tasks)
@@ -265,7 +265,7 @@ def test_change_order(
 
 
 def test_create_one_delete_one(
-    task: Task, sub_task: SubTask, workspace_user: WorkspaceUser
+    task: Task, sub_task: SubTask, team_member: TeamMember
 ) -> None:
     """
     Test creating and deleting.
@@ -280,7 +280,7 @@ def test_create_one_delete_one(
         ],
         update_sub_tasks=[],
         sub_tasks=[sub_task],
-        who=workspace_user.user,
+        who=team_member.user,
         task=task,
     )
 
@@ -291,7 +291,7 @@ def test_create_one_delete_one(
 
 
 def test_create_and_change_order(
-    task: Task, workspace_user: WorkspaceUser, sub_tasks: list[SubTask]
+    task: Task, team_member: TeamMember, sub_tasks: list[SubTask]
 ) -> None:
     """
     Test creating sub tasks and changing the order of existing ones.
@@ -330,7 +330,7 @@ def test_create_and_change_order(
             },
         ],
         sub_tasks=sub_tasks,
-        who=workspace_user.user,
+        who=team_member.user,
         task=task,
     )
     assert SubTask.objects.count() == 4

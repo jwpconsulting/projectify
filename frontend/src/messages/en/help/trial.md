@@ -24,12 +24,12 @@ create your first project, task and so on.
 # Using the trial workspace
 
 After the onboarding finishes, you can start using your trial workspace. You
-can add other workspace users by going to the [workspace user
-settings](/help/workspace-users). You can add new projects, sections,
+can add other team members by going to the [team member
+settings](/help/team-members). You can add new projects, sections,
 and tasks, and use all the other features available in Projectify.
 
 Within a trial, certain limits will apply to your workspace, such as how many
-workspace users you will be able to add, or how many projects and tasks
+team members you will be able to add, or how many projects and tasks
 and so on you can create. Please review the [workspace quota
 help](/help/quota#quotas-for-trial-workspaces) for more information on this.
 
@@ -38,7 +38,7 @@ help](/help/quota#quotas-for-trial-workspaces) for more information on this.
 If you want to turn your trial workspace into a paid workspace, you can
 subscribe from the [billing settings page](/help/billing) in your workspace
 settings. With a paid workspace, you can add as many items (projects,
-tasks, and so on) as you want to, and as many workspace users as you have added
+tasks, and so on) as you want to, and as many team members as you have added
 seats to your workspace.
 
 The exact usage quotas that apply to paid workspaces are described in the

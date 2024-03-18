@@ -31,7 +31,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import { currentTask } from "$lib/stores/dashboard";
-    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
+    import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openContextMenu } from "$lib/stores/globalUi";
     import {
         getDashboardSectionUrl,
@@ -55,7 +55,7 @@
     let contextMenuRef: HTMLElement;
 
     async function onInteract() {
-        if (!$currentWorkspaceUserCan("update", "task")) {
+        if (!$currentTeamMemberCan("update", "task")) {
             return;
         }
         await goto(getTaskEditUrl(task.uuid));
@@ -78,7 +78,7 @@
     <TopBar slot="top-bar" {section}>
         <Breadcrumbs slot="breadcrumbs" {crumbs} />
         <svelte:fragment slot="buttons">
-            {#if $currentWorkspaceUserCan("update", "task")}
+            {#if $currentTeamMemberCan("update", "task")}
                 <Button
                     grow={false}
                     color="blue"
@@ -114,7 +114,7 @@
             <TaskTitle slot="title" title={task.title} readonly {onInteract} />
             <TaskUser
                 slot="assignee"
-                workspaceUser={task.assignee}
+                teamMember={task.assignee}
                 {onInteract}
             />
             <TaskLabel

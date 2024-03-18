@@ -30,7 +30,7 @@
     } from "$lib/repository/workspace";
     import { createSubTaskAssignment } from "$lib/stores/dashboard";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
-    import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
+    import { createTeamMemberAssignment } from "$lib/stores/dashboard/teamMemberAssignment";
     import {
         getDashboardSectionUrl,
         getDashboardProjectUrl,
@@ -52,7 +52,7 @@
 
     // Do the following 3 variables have to be reactive? If so,
     // what do they depend on?
-    const workspaceUserAssignment = createWorkspaceUserAssignment();
+    const teamMemberAssignment = createTeamMemberAssignment();
     const labelAssignment = createLabelAssignment();
     const subTaskAssignment = createSubTaskAssignment();
     $: subTasks = subTaskAssignment.subTasks;
@@ -73,7 +73,7 @@
             description,
             section: section,
             labels: $labelAssignment,
-            assignee: $workspaceUserAssignment,
+            assignee: $teamMemberAssignment,
             due_date: dueDate,
             sub_tasks: $subTasks,
         };
@@ -150,7 +150,7 @@
     <svelte:fragment slot="content">
         <Form
             action={action.bind(null, false)}
-            {workspaceUserAssignment}
+            {teamMemberAssignment}
             {labelAssignment}
             {subTaskAssignment}
             bind:title

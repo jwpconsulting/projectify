@@ -42,20 +42,16 @@
                 warning = $_("overlay.destructive.delete-label.warning");
                 buttonLabel = $_("overlay.destructive.delete-label.button");
                 break;
-            case "deleteWorkspaceUser":
-                title = $_("overlay.destructive.delete-workspace-user.title");
-                body = $_("overlay.destructive.delete-workspace-user.body", {
+            case "deleteTeamMember":
+                title = $_("overlay.destructive.delete-team-member.title");
+                body = $_("overlay.destructive.delete-team-member.body", {
                     values: {
-                        workspaceUser: getDisplayName(
-                            target.workspaceUser.user,
-                        ),
+                        teamMember: getDisplayName(target.teamMember.user),
                     },
                 });
-                warning = $_(
-                    "overlay.destructive.delete-workspace-user.warning",
-                );
+                warning = $_("overlay.destructive.delete-team-member.warning");
                 buttonLabel = $_(
-                    "overlay.destructive.delete-workspace-user.button",
+                    "overlay.destructive.delete-team-member.button",
                 );
                 break;
             case "deleteSection":

@@ -20,24 +20,24 @@ import type { Readable, Subscriber, Writable } from "svelte/store";
 
 import type {
     LabelAssignmentInput,
-    WorkspaceUserAssignmentInput,
+    TeamMemberAssignmentInput,
     LabelAssignmentState,
-    WorkspaceUserAssignmentState,
+    TeamMemberAssignmentState,
 } from "$lib/types/ui";
 import type {
     CreateUpdateSubTask,
     Label,
-    WorkspaceUser,
+    TeamMember,
 } from "$lib/types/workspace";
 
 import type { RepositoryContext } from "./repository";
 
-export interface WorkspaceUserAssignment
-    extends Readable<WorkspaceUser | undefined> {
-    select: (selection: WorkspaceUserAssignmentInput) => unknown;
-    deselect: (selection: WorkspaceUserAssignmentInput) => unknown;
+export interface TeamMemberAssignment
+    extends Readable<TeamMember | undefined> {
+    select: (selection: TeamMemberAssignmentInput) => unknown;
+    deselect: (selection: TeamMemberAssignmentInput) => unknown;
     // Might even completely remove this:
-    selected: Readable<WorkspaceUserAssignmentState>;
+    selected: Readable<TeamMemberAssignmentState>;
 }
 
 export interface LabelAssignment extends Readable<Label[] | undefined> {

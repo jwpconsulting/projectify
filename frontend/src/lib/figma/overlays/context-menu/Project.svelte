@@ -23,7 +23,7 @@
     import Layout from "$lib/figma/overlays/context-menu/Layout.svelte";
     import { goto } from "$lib/navigation";
     import { archiveProject as repoArchiveProject } from "$lib/repository/workspace/project";
-    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
+    import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import {
         openConstructiveOverlay,
         openDestructiveOverlay,
@@ -144,7 +144,7 @@
         kind={{
             kind: "button",
             action: editProject,
-            disabled: !$currentWorkspaceUserCan("update", "project"),
+            disabled: !$currentTeamMemberCan("update", "project"),
         }}
         label={$_("overlay.context-menu.project.edit")}
         state="normal"
@@ -154,7 +154,7 @@
         kind={{
             kind: "button",
             action: archiveProject,
-            disabled: !$currentWorkspaceUserCan("update", "project"),
+            disabled: !$currentTeamMemberCan("update", "project"),
         }}
         label={$_("overlay.context-menu.project.archive-project")}
         state="normal"

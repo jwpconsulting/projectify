@@ -57,7 +57,7 @@ limit on how many objects can be created as part of a workspace. The
 limitations are as follows:
 
 - A user can create as many trial workspaces as they would like
-- A trial workspace can have 2 workspace users at most, including the
+- A trial workspace can have 2 team members at most, including the
   creator/owner of the workspace. This also includes open invites. (i.e., sum
   invite
   + user <= 2)

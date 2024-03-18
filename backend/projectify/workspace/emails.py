@@ -24,8 +24,8 @@ from . import (
 )
 
 
-class WorkspaceUserInviteEmail(TemplateEmail[models.WorkspaceUserInvite]):
+class TeamMemberInviteEmail(TemplateEmail[models.TeamMemberInvite]):
     """Email that informs users about an invite."""
 
-    model = models.WorkspaceUserInvite
-    template_prefix = "workspace/email/workspace_user_invite"
+    model = models.TeamMemberInvite
+    template_prefix = "workspace/email/team_member_invite"

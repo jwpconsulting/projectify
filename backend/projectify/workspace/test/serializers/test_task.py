@@ -27,14 +27,14 @@ from rest_framework.request import (
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
-from projectify.workspace.models.const import WorkspaceUserRoles
+from projectify.workspace.models.const import TeamMemberRoles
 
 from ...models.label import Label
 from ...models.section import Section
 from ...models.sub_task import SubTask
 from ...models.task import Task
+from ...models.team_member import TeamMember
 from ...models.workspace import Workspace
-from ...models.workspace_user import WorkspaceUser
 from ...serializers.task_detail import (
     TaskCreateUpdateSerializer,
     TaskDetailSerializer,
@@ -76,14 +76,14 @@ class TestTaskCreateUpdateSerializer:
         self,
         task: Task,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         section: Section,
         sub_task: SubTask,
         user_request: Request,
     ) -> None:
         """Check that fields are actually readonly by trying a few."""
         assert task.subtask_set.count() == 1
-        task.assign_to(workspace_user)
+        task.assign_to(team_member)
         serializer = TaskCreateUpdateSerializer(
             task,
             data={
@@ -114,7 +114,7 @@ class TestTaskCreateUpdateSerializer:
         self,
         label: Label,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         section: Section,
         user_request: Request,
     ) -> None:
@@ -123,7 +123,7 @@ class TestTaskCreateUpdateSerializer:
             data={
                 "title": "This is a great task title.",
                 "labels": [{"uuid": str(label.uuid)}],
-                "assignee": {"uuid": str(workspace_user.uuid)},
+                "assignee": {"uuid": str(team_member.uuid)},
                 "section": {
                     "uuid": str(section.uuid),
                 },
@@ -132,7 +132,7 @@ class TestTaskCreateUpdateSerializer:
         )
         serializer.is_valid(raise_exception=True)
         assert serializer.validated_data == {
-            "assignee": workspace_user,
+            "assignee": team_member,
             "labels": [label],
             "title": "This is a great task title.",
             "workspace": workspace,
@@ -141,7 +141,7 @@ class TestTaskCreateUpdateSerializer:
 
     def test_create_unrelated_section(
         self,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         user_request: Request,
         unrelated_section: Section,
     ) -> None:
@@ -164,7 +164,7 @@ class TestTaskCreateUpdateSerializer:
         self,
         task: Task,
         label: Label,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         workspace: Workspace,
         section: Section,
         sub_task: SubTask,
@@ -179,7 +179,7 @@ class TestTaskCreateUpdateSerializer:
             data={
                 "title": task.title,
                 "labels": [{"uuid": str(label.uuid)}],
-                "assignee": {"uuid": str(workspace_user.uuid)},
+                "assignee": {"uuid": str(team_member.uuid)},
                 "due_date": due_date.isoformat(),
                 "section": {
                     "uuid": str(section.uuid),
@@ -204,7 +204,7 @@ class TestTaskCreateUpdateSerializer:
         )
         assert serializer.is_valid(), serializer.errors
         assert serializer.validated_data == {
-            "assignee": workspace_user,
+            "assignee": team_member,
             "due_date": due_date,
             "labels": [label],
             "sub_tasks": {
@@ -262,7 +262,7 @@ class TestTaskCreateUpdateSerializer:
     def test_update_wrong_workspace(
         self,
         task: Task,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         user_request: Request,
         unrelated_section: Section,
         unrelated_workspace: Workspace,
@@ -272,13 +272,13 @@ class TestTaskCreateUpdateSerializer:
         # section
         workspace_add_user(
             workspace=unrelated_workspace,
-            user=workspace_user.user,
-            role=WorkspaceUserRoles.OBSERVER,
+            user=team_member.user,
+            role=TeamMemberRoles.OBSERVER,
         )
         # test for sanity
         validate_perm(
             "workspace.read_section",
-            workspace_user.user,
+            team_member.user,
             unrelated_section.project.workspace,
         )
         serializer = TaskCreateUpdateSerializer(
@@ -302,8 +302,8 @@ class TestTaskCreateUpdateSerializer:
         task: Task,
         user_request: Request,
         label: Label,
-        workspace_user: WorkspaceUser,
-        unrelated_workspace_user: WorkspaceUser,
+        team_member: TeamMember,
+        unrelated_team_member: TeamMember,
         unrelated_label: Label,
     ) -> None:
         """Test updating with an unrelated label."""
@@ -331,7 +331,7 @@ class TestTaskCreateUpdateSerializer:
         self,
         task: Task,
         user_request: Request,
-        unrelated_workspace_user: WorkspaceUser,
+        unrelated_team_member: TeamMember,
     ) -> None:
         """Test updating a task."""
         serializer = TaskCreateUpdateSerializer(
@@ -339,7 +339,7 @@ class TestTaskCreateUpdateSerializer:
             data={
                 "title": task.title,
                 "labels": [],
-                "assignee": {"uuid": str(unrelated_workspace_user.uuid)},
+                "assignee": {"uuid": str(unrelated_team_member.uuid)},
                 "section": {
                     "uuid": str(task.section.uuid),
                 },

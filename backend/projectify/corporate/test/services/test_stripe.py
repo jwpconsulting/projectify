@@ -20,8 +20,8 @@ from unittest import mock
 import pytest
 from rest_framework.exceptions import PermissionDenied
 
+from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_user import WorkspaceUser
 
 from ...models import Customer
 from ...selectors.customer import (
@@ -43,12 +43,12 @@ class TestCreateBillingPortalSessionForWorkspaceUuid:
     """Test create_billing_portal_session_for_workspace_uuid."""
 
     def test_missing_customer_id(
-        self, workspace_user: WorkspaceUser, unpaid_customer: Customer
+        self, team_member: TeamMember, unpaid_customer: Customer
     ) -> None:
         """Test missing customer id will throw ValueError."""
         with pytest.raises(PermissionDenied) as error:
             create_billing_portal_session_for_customer(
-                customer=unpaid_customer, who=workspace_user.user
+                customer=unpaid_customer, who=team_member.user
             )
         assert error.match("no subscription is active")
 

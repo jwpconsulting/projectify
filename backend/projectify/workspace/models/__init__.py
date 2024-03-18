@@ -17,7 +17,7 @@
 """Workspace models."""
 from .chat_message import ChatMessage
 from .const import (
-    WorkspaceUserRoles,
+    TeamMemberRoles,
 )
 from .label import (
     Label,
@@ -33,14 +33,14 @@ from .task import (
     Task,
 )
 from .task_label import TaskLabel
+from .team_member import (
+    TeamMember,
+)
+from .team_member_invite import (
+    TeamMemberInvite,
+)
 from .workspace import (
     Workspace,
-)
-from .workspace_user import (
-    WorkspaceUser,
-)
-from .workspace_user_invite import (
-    WorkspaceUserInvite,
 )
 
 __all__ = (
@@ -52,7 +52,7 @@ __all__ = (
     "Workspace",
     "Project",
     "Section",
-    "WorkspaceUser",
-    "WorkspaceUserInvite",
-    "WorkspaceUserRoles",
+    "TeamMember",
+    "TeamMemberInvite",
+    "TeamMemberRoles",
 )

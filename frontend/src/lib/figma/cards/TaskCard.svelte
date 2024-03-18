@@ -20,8 +20,8 @@
     import Labels from "$lib/figma/cards/task-card/Labels.svelte";
     import MenuButton from "$lib/figma/cards/task-card/MenuButton.svelte";
     import SubTaskProgress from "$lib/figma/cards/task-card/SubTaskProgress.svelte";
+    import TeamMember from "$lib/figma/cards/task-card/TeamMember.svelte";
     import Title from "$lib/figma/cards/task-card/Title.svelte";
-    import WorkspaceUser from "$lib/figma/cards/task-card/WorkspaceUser.svelte";
     import type {
         TaskWithSection,
         ProjectDetail,
@@ -61,7 +61,7 @@
                         <SubTaskProgress {task} />
                     </div>
                     <div class="flex flex-row items-center">
-                        <WorkspaceUser {task} />
+                        <TeamMember {task} />
                     </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@
             <SubTaskProgress {task} />
             <div class="flex flex-row items-center justify-end gap-2">
                 <div class="flex flex-row items-center gap-2">
-                    <WorkspaceUser {task} />
+                    <TeamMember {task} />
                     <div class="flex flex-row items-center">
                         {#if section}
                             <Chevrons {task} {section} />

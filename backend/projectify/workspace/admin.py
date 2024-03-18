@@ -25,10 +25,10 @@ from . import (
 )
 
 
-class WorkspaceUserInline(admin.TabularInline[models.WorkspaceUser]):
-    """WorkspaceUser Inline."""
+class TeamMemberInline(admin.TabularInline[models.TeamMember]):
+    """TeamMember Inline."""
 
-    model = models.WorkspaceUser
+    model = models.TeamMember
     extra = 0
 
 
@@ -43,7 +43,7 @@ class ProjectInline(admin.TabularInline[models.Project]):
 class WorkspaceAdmin(admin.ModelAdmin[models.Workspace]):
     """Workspace Admin."""
 
-    inlines = (WorkspaceUserInline, ProjectInline)
+    inlines = (TeamMemberInline, ProjectInline)
     list_display = (
         "title",
         "description",
@@ -55,22 +55,22 @@ class WorkspaceAdmin(admin.ModelAdmin[models.Workspace]):
     search_help_text = _("You can search by workspace title")
 
 
-@admin.register(models.WorkspaceUserInvite)
-class WorkspaceUserInviteAdmin(admin.ModelAdmin[models.WorkspaceUserInvite]):
-    """Workspace user invite admin."""
+@admin.register(models.TeamMemberInvite)
+class TeamMemberInviteAdmin(admin.ModelAdmin[models.TeamMemberInvite]):
+    """Team member invite admin."""
 
     list_display = ("workspace_title",)
     list_select_related = ("workspace",)
 
     @admin.display(description=_("Workspace title"))
-    def workspace_title(self, instance: models.WorkspaceUserInvite) -> str:
+    def workspace_title(self, instance: models.TeamMemberInvite) -> str:
         """Return the workspace's title."""
         return instance.workspace.title
 
 
-@admin.register(models.WorkspaceUser)
-class WorkspaceUserAdmin(admin.ModelAdmin[models.WorkspaceUser]):
-    """WorkspaceUser Admin."""
+@admin.register(models.TeamMember)
+class TeamMemberAdmin(admin.ModelAdmin[models.TeamMember]):
+    """TeamMember Admin."""
 
     list_display = (
         "workspace_title",
@@ -92,12 +92,12 @@ class WorkspaceUserAdmin(admin.ModelAdmin[models.WorkspaceUser]):
     )
 
     @admin.display(description=_("Workspace title"))
-    def workspace_title(self, instance: models.WorkspaceUser) -> str:
+    def workspace_title(self, instance: models.TeamMember) -> str:
         """Return the workspace's title."""
         return instance.workspace.title
 
     @admin.display(description=_("User email"))
-    def user_email(self, instance: models.WorkspaceUser) -> str:
+    def user_email(self, instance: models.TeamMember) -> str:
         """Return the workspace's title."""
         return instance.user.email
 

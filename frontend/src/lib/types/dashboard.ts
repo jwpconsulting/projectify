@@ -15,5 +15,5 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-const settingKinds = ["index", "workspace-users", "billing", "quota"] as const;
+const settingKinds = ["index", "team-members", "billing", "quota"] as const;
 export type SettingKind = (typeof settingKinds)[number];

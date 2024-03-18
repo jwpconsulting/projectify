@@ -18,8 +18,8 @@
 
 import type {
     WorkspaceQuota,
-    WorkspaceUser,
-    WorkspaceUserRole,
+    TeamMember,
+    TeamMemberRole,
 } from "$lib/types/workspace";
 
 /**
@@ -33,8 +33,8 @@ import type {
 export type Verb = "create" | "read" | "update" | "delete";
 export type Resource =
     | "workspace"
-    | "workspaceUserInvite"
-    | "workspaceUser"
+    | "teamMemberInvite"
+    | "teamMember"
     | "project"
     | "section"
     | "task"
@@ -45,7 +45,7 @@ export type Resource =
     | "customer";
 
 type CrudMinimumRole = {
-    [K in Verb]: WorkspaceUserRole;
+    [K in Verb]: TeamMemberRole;
 };
 
 type Rules = {
@@ -57,8 +57,8 @@ type Rules = {
 | Resource                | Create     | Read       | Update     | Delete     |
 |-------------------------|------------|------------|------------|------------|
 | Workspace               | Owner      | Observer   | Owner      | Owner      |
-| Workspace user invite   | Owner      | Owner      | Owner      | Owner      |
-| Workspace user          | Owner      | Observer   | Owner      | Owner      |
+| Team member invite   | Owner      | Owner      | Owner      | Owner      |
+| Team member          | Owner      | Observer   | Owner      | Owner      |
 | Project         | Maintainer | Observer   | Maintainer | Maintainer |
 | Section | Maintainer | Observer   | Maintainer | Maintainer |
 | Task                    | Contributor     | Observer   | Contributor     | Maintainer |
@@ -76,13 +76,13 @@ const rules: Rules = {
         update: "OWNER",
         delete: "OWNER",
     },
-    workspaceUserInvite: {
+    teamMemberInvite: {
         create: "OWNER",
         read: "OWNER",
         update: "OWNER",
         delete: "OWNER",
     },
-    workspaceUser: {
+    teamMember: {
         create: "OWNER",
         read: "OBSERVER",
         update: "OWNER",
@@ -142,7 +142,7 @@ const rules: Rules = {
  * Total ordering for roles. For a given role, is this role at least $ROLE?
  */
 const isAtLeast: {
-    [K in WorkspaceUserRole]: { [K in WorkspaceUserRole]: boolean };
+    [K in TeamMemberRole]: { [K in TeamMemberRole]: boolean };
 } = {
     OBSERVER: {
         OBSERVER: true,
@@ -182,8 +182,8 @@ const resourceToQuota: {
         | undefined;
 } = {
     workspace: undefined,
-    workspaceUserInvite: "workspace_users_and_invites",
-    workspaceUser: "workspace_users_and_invites",
+    teamMemberInvite: "team_members_and_invites",
+    teamMember: "team_members_and_invites",
     project: "projects",
     section: "sections",
     task: "tasks",
@@ -208,7 +208,7 @@ function canCreateMore(resource: Resource, quota: WorkspaceQuota): boolean {
 export function can(
     verb: Verb,
     resource: Resource,
-    { role }: Pick<WorkspaceUser, "role">,
+    { role }: Pick<TeamMember, "role">,
     quota: WorkspaceQuota,
 ): boolean {
     // 1. Check permission

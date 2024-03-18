@@ -49,7 +49,7 @@
     <svelte:fragment slot="prompt">
         <div class="flex flex-col gap-4">
             <p>{$_("onboarding.assign-task.prompt.finished")}</p>
-            <p>{$_("onboarding.assign-task.prompt.adding-workspace-users")}</p>
+            <p>{$_("onboarding.assign-task.prompt.adding-team-members")}</p>
             <Anchor
                 href="/help/billing"
                 label={$_("onboarding.assign-task.follow-up.billing-help")}

@@ -19,6 +19,7 @@
 
 from typing import (
     TYPE_CHECKING,
+    Any,
     cast,
 )
 
@@ -31,7 +32,6 @@ from django.db import (
 
 if TYPE_CHECKING:
     from projectify.workspace.models import ChatMessage as _ChatMessage
-    from projectify.workspace.models import WorkspaceUser as _WorkspaceUser
 
 
 def add_author_workspace_user_to_chat_message(
@@ -41,9 +41,7 @@ def add_author_workspace_user_to_chat_message(
     ChatMessage = cast(
         "_ChatMessage", apps.get_model("workspace", "ChatMessage")
     )
-    WorkspaceUser = cast(
-        "_WorkspaceUser", apps.get_model("workspace", "WorkspaceUser")
-    )
+    WorkspaceUser: Any = apps.get_model("workspace", "WorkspaceUser")
     for chat_message in ChatMessage.objects.all():
         try:
             ws_user = WorkspaceUser.objects.get(

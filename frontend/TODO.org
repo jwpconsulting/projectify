@@ -16,20 +16,20 @@
 
    A customer isn't automatically created, it seems.
 
-** DONE Implement workspace user edit screen in workspace settings
+** DONE Implement team member edit screen in workspace settings
    CLOSED: [2023-11-02 Thu 17:10]
    The scaffolding is there, but it doesn't work
 
    Some features
-   - [X] Invite new workspace users
-   - [X] Search workspace user
+   - [X] Invite new team members
+   - [X] Search team member
 
    Won't do:
    - [ ] Filter by roles
    - [ ] Job title assignment
 
-** Allow setting workspace user role in workspace settings
-   Allow changing a workspace user role to owner / admin / etc.
+** Allow setting team member role in workspace settings
+   Allow changing a team member role to owner / admin / etc.
 
 ** Add action complete notifications
    Here I list some of the possible ones we can add

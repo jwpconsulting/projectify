@@ -33,8 +33,8 @@
             return "index";
         } else if (pathname.endsWith("billing")) {
             return "billing";
-        } else if (pathname.endsWith("workspace-users")) {
-            return "workspace-users";
+        } else if (pathname.endsWith("team-members")) {
+            return "team-members";
         } else if (pathname.endsWith("quota")) {
             return "quota";
         }

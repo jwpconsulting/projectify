@@ -27,8 +27,8 @@ from faker import Faker
 from rest_framework.test import APIClient
 
 from projectify.settings.base import Base
+from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_user import WorkspaceUser
 from pytest_types import DjangoAssertNumQueries
 
 from ...models import Customer
@@ -64,7 +64,7 @@ class TestWorkspaceCustomerRetrieve:
         self,
         user_client: APIClient,
         resource_url: str,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test as authenticated user."""
@@ -147,7 +147,7 @@ class TestWorkspaceCheckoutSessionCreate:
         mock_stripe_checkout: mock.MagicMock,
         rest_user_client: APIClient,
         django_assert_num_queries: DjangoAssertNumQueries,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         workspace: Workspace,
     ) -> None:
         """Test it works even with no customer."""

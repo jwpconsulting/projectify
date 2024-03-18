@@ -113,7 +113,7 @@
 
     // Paid user:
     let editBillingError: string | undefined = undefined;
-    $: quota = workspace.quota?.workspace_users_and_invites;
+    $: quota = workspace.quota?.team_members_and_invites;
     $: seatsRemaining = quota
         ? (quota.current ?? 0) - (quota.limit ?? 0)
         : $_("workspace-settings.billing.active.seats.unlimited");

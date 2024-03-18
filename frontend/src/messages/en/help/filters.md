@@ -1,6 +1,6 @@
-# Filter and search by workspace user
+# Filter and search by team member
 
-You can filter and search workspace users that are part of your workspace by using the side menu. Searching for workspace users helps you to find a workspace user quickly and filtering by workspace user allows you to see tasks a certain workspace user is working on. You can apply more than one filter at a time. Click the workspace user button in the side menu and from there you can either search for a workspaceu or filter workspace users. Filtering a workspace user also allows you to see how many tasks that workspace user has assigned to them. This feature is great in determing which team workspace users are available for new tasks to be assigned to them.
+You can filter and search team members that are part of your workspace by using the side menu. Searching for team members helps you to find a team member quickly and filtering by team member allows you to see tasks a certain team member is working on. You can apply more than one filter at a time. Click the team member button in the side menu and from there you can either search for a workspaceu or filter team members. Filtering a team member also allows you to see how many tasks that team member has assigned to them. This feature is great in determing which team team members are available for new tasks to be assigned to them.
 
 # Filter and search by label
 

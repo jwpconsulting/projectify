@@ -16,15 +16,15 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    // TODO rename FilterWorkspaceUser
+    // TODO rename FilterTeamMember
     import { _ } from "svelte-i18n";
 
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import Checkbox from "$lib/funabashi/select-controls/Checkbox.svelte";
-    import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
+    import type { TeamMemberSelectionInput } from "$lib/types/ui";
     import { getDisplayName } from "$lib/types/user";
 
-    export let workspaceUserSelectionInput: WorkspaceUserSelectionInput;
+    export let teamMemberSelectionInput: TeamMemberSelectionInput;
     export let active: boolean;
     export let count: number | undefined;
 
@@ -58,11 +58,11 @@
             />
         </div>
         <div class="flex min-w-0 flex-row items-center gap-2">
-            {#if workspaceUserSelectionInput.kind === "workspaceUser"}
+            {#if teamMemberSelectionInput.kind === "teamMember"}
                 <AvatarVariant
                     content={{
                         kind: "single",
-                        user: workspaceUserSelectionInput.workspaceUser.user,
+                        user: teamMemberSelectionInput.teamMember.user,
                     }}
                     size="small"
                 />
@@ -75,14 +75,12 @@
                 />
             {/if}
             <div class="text-regular min-w-0 truncate text-sm">
-                {#if workspaceUserSelectionInput.kind === "unassigned"}
-                    {$_("filter-workspace-user.assigned-nobody")}
-                {:else if workspaceUserSelectionInput.kind === "allWorkspaceUsers"}
-                    {$_("filter-workspace-user.all-users")}
-                {:else if workspaceUserSelectionInput.kind === "workspaceUser"}
-                    {getDisplayName(
-                        workspaceUserSelectionInput.workspaceUser.user,
-                    )}
+                {#if teamMemberSelectionInput.kind === "unassigned"}
+                    {$_("filter-team-member.assigned-nobody")}
+                {:else if teamMemberSelectionInput.kind === "allTeamMembers"}
+                    {$_("filter-team-member.all-users")}
+                {:else if teamMemberSelectionInput.kind === "teamMember"}
+                    {getDisplayName(teamMemberSelectionInput.teamMember.user)}
                 {/if}
             </div>
         </div>

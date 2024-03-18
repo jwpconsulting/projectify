@@ -28,7 +28,7 @@
         toggleLabelDropdownClosedNavOpen,
     } from "$lib/stores/dashboard";
     import { selectedLabels } from "$lib/stores/dashboard/labelFilter";
-    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
+    import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import type { Label } from "$lib/types/workspace";
 
     import CreateOrUpdateLabel from "./filter-labels/CreateOrUpdateLabel.svelte";
@@ -62,7 +62,7 @@
         {#if state.kind === "list"}
             <FilterLabelMenu mode={{ kind: "filter", startUpdate }} />
             <!-- Some left padding issues here, not aligned with the rest above -->
-            {#if $currentWorkspaceUserCan("create", "label")}
+            {#if $currentTeamMemberCan("create", "label")}
                 <ContextMenuButton
                     label={$_(
                         "dashboard.side-nav.filter-labels.create-new-label",

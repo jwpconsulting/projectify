@@ -20,10 +20,10 @@ import pytest
 from faker import Faker
 
 from projectify.user.models import User
+from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_user import WorkspaceUser
-from projectify.workspace.selectors.workspace_user import (
-    workspace_user_find_for_workspace,
+from projectify.workspace.selectors.team_member import (
+    team_member_find_for_workspace,
 )
 from projectify.workspace.services.workspace import workspace_create
 
@@ -77,13 +77,13 @@ def workspace(user: User, faker: Faker) -> Workspace:
 
 
 @pytest.fixture
-def workspace_user(user: User, workspace: Workspace) -> WorkspaceUser:
-    """Create a workspace user."""
-    workspace_user = workspace_user_find_for_workspace(
+def team_member(user: User, workspace: Workspace) -> TeamMember:
+    """Create a team member."""
+    team_member = team_member_find_for_workspace(
         workspace=workspace, user=user
     )
-    assert workspace_user
-    return workspace_user
+    assert team_member
+    return team_member
 
 
 @pytest.fixture

@@ -64,7 +64,7 @@ if TYPE_CHECKING:
         Section,
         SubTask,
         TaskLabel,
-        WorkspaceUser,
+        TeamMember,
     )
 
 
@@ -79,7 +79,7 @@ class TaskQuerySet(models.QuerySet["Task"]):
         )
 
     # TODO use selector
-    def filter_by_assignee(self, assignee: "WorkspaceUser") -> Self:
+    def filter_by_assignee(self, assignee: "TeamMember") -> Self:
         """Filter by assignee user."""
         return self.filter(assignee=assignee)
 
@@ -115,12 +115,12 @@ class Task(TitleDescriptionModel, BaseModel):
         on_delete=models.CASCADE,
     )
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
-    assignee = models.ForeignKey["WorkspaceUser"](
-        "WorkspaceUser",
+    assignee = models.ForeignKey["TeamMember"](
+        "TeamMember",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        help_text=_("Workspace user this task is assigned to."),
+        help_text=_("Team member this task is assigned to."),
     )
     due_date = models.DateTimeField(
         null=True,
@@ -150,7 +150,7 @@ class Task(TitleDescriptionModel, BaseModel):
         _order: int
         id: int
 
-    def assign_to(self, assignee: Optional["WorkspaceUser"]) -> None:
+    def assign_to(self, assignee: Optional["TeamMember"]) -> None:
         """
         Assign task to user.
 
@@ -158,7 +158,7 @@ class Task(TitleDescriptionModel, BaseModel):
         """
         # XXX I suppose we can use a database trigger for validation here!
         if assignee:
-            self.workspace.workspaceuser_set.get(uuid=assignee.uuid)
+            self.workspace.teammember_set.get(uuid=assignee.uuid)
         self.assignee = assignee
         self.save()
 

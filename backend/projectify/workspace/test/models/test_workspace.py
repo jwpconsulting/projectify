@@ -23,11 +23,11 @@ import psycopg.errors
 import pytest
 
 from projectify.user.models import User
-from projectify.workspace.models.const import WorkspaceUserRoles
+from projectify.workspace.models.const import TeamMemberRoles
 
 from ...models.task import Task
+from ...models.team_member import TeamMember
 from ...models.workspace import Workspace
-from ...models.workspace_user import WorkspaceUser
 from ...services.project import project_create
 from ...services.workspace import workspace_add_user
 
@@ -44,7 +44,7 @@ class TestWorkspace:
         self,
         workspace: Workspace,
         user: User,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
     ) -> None:
         """Test adding a project."""
         assert workspace.project_set.count() == 0
@@ -75,21 +75,21 @@ class TestWorkspace:
         workspace_add_user(
             workspace=workspace,
             user=other_user,
-            role=WorkspaceUserRoles.OBSERVER,
+            role=TeamMemberRoles.OBSERVER,
         )
         assert workspace.users.count() == count + 1
 
     def test_add_user_twice(
         self,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         other_user: User,
     ) -> None:
         """Test that adding a user twice won't work."""
         workspace_add_user(
             workspace=workspace,
             user=other_user,
-            role=WorkspaceUserRoles.OBSERVER,
+            role=TeamMemberRoles.OBSERVER,
         )
         # XXX TODO should be validationerror, not integrityerror
         # We might get a bad 500 here, could be 400 instead
@@ -97,13 +97,13 @@ class TestWorkspace:
             workspace_add_user(
                 workspace=workspace,
                 user=other_user,
-                role=WorkspaceUserRoles.OBSERVER,
+                role=TeamMemberRoles.OBSERVER,
             )
 
     def test_remove_user(
         self,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         user: User,
     ) -> None:
         """Test remove_user."""
@@ -115,13 +115,13 @@ class TestWorkspace:
         self,
         workspace: Workspace,
         task: Task,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         user: User,
     ) -> None:
-        """Assert that the user is removed when removing the workspace user."""
-        task.assign_to(workspace_user)
+        """Assert that the user is removed when removing the team member."""
+        task.assign_to(team_member)
         task.refresh_from_db()
-        assert task.assignee == workspace_user
+        assert task.assignee == team_member
         workspace.remove_user(user)
         task.refresh_from_db()
         assert task.assignee is None
