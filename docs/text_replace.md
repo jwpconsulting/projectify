@@ -289,3 +289,20 @@ nvim (ag \
   -c "bufdo %s/\C\vworkspace([_ -]?)User(s?)/team\1Member\2/ce" \
   -c "bufdo %s/\C\vWorkspace([_ -]?)User(s?)/Team\1Member\2/ce"
 ```
+
+Rename files
+
+```fish
+for f in (
+  fd \
+    "[wW]orkspace[_ -]?[uU]ser[_ -]?s?" \
+    --exclude migrations \
+    .
+)
+  echo "Moving $f"
+  set -l dir (dirname $f)
+  read -l -P "New path: $dir/" base || break
+  echo "Moving to $dir/$base"
+  git mv -v $f $dir/$base || break
+end
+```
