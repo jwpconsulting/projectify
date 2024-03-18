@@ -25,8 +25,8 @@ import QuotaHelpPage from "./en/help/quota.md?raw";
 import RolesHelpPage from "./en/help/roles.md?raw";
 import SectionsHelpPage from "./en/help/sections.md?raw";
 import TasksHelpPage from "./en/help/tasks.md?raw";
-import TrialHelpPage from "./en/help/trial.md?raw";
 import TeamMembersHelpPage from "./en/help/team-members.md?raw";
+import TrialHelpPage from "./en/help/trial.md?raw";
 import WorkspacesHelpPage from "./en/help/workspaces.md?raw";
 import type { MessageDirectory } from "./types";
 

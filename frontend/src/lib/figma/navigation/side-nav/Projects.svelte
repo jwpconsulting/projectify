@@ -24,11 +24,11 @@
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
     import SelectProject from "$lib/figma/navigation/side-nav/SelectProject.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
+    import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import {
         projectExpandOpen,
         toggleProjectExpandOpen,
     } from "$lib/stores/dashboard/ui";
-    import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type { Workspace } from "$lib/types/workspace";
     import { getArchiveUrl } from "$lib/urls";

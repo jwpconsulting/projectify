@@ -20,8 +20,8 @@
     import Labels from "$lib/figma/cards/task-card/Labels.svelte";
     import MenuButton from "$lib/figma/cards/task-card/MenuButton.svelte";
     import SubTaskProgress from "$lib/figma/cards/task-card/SubTaskProgress.svelte";
-    import Title from "$lib/figma/cards/task-card/Title.svelte";
     import TeamMember from "$lib/figma/cards/task-card/TeamMember.svelte";
+    import Title from "$lib/figma/cards/task-card/Title.svelte";
     import type {
         TaskWithSection,
         ProjectDetail,

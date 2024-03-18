@@ -24,8 +24,8 @@
     import Section from "$lib/figma/overlays/context-menu/Section.svelte";
     import SideNavContextMenu from "$lib/figma/overlays/context-menu/SideNavContextMenu.svelte";
     import Task from "$lib/figma/overlays/context-menu/Task.svelte";
-    import Workspace from "$lib/figma/overlays/context-menu/Workspace.svelte";
     import TeamMember from "$lib/figma/overlays/context-menu/TeamMember.svelte";
+    import Workspace from "$lib/figma/overlays/context-menu/Workspace.svelte";
     import type { ContextMenuType } from "$lib/types/ui";
 
     export let target: ContextMenuType;

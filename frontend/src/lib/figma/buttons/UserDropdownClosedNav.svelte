@@ -20,15 +20,15 @@
     import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import {
-        toggleUserExpandOpen,
-        userExpandOpen,
-    } from "$lib/stores/dashboard/ui";
-    import {
         selectedTeamMember,
         filterByTeamMember,
         unfilterByTeamMember,
         teamMemberSearchResults,
     } from "$lib/stores/dashboard/teamMemberFilter";
+    import {
+        toggleUserExpandOpen,
+        userExpandOpen,
+    } from "$lib/stores/dashboard/ui";
 </script>
 
 <div class="flex flex-col items-center gap-6">
