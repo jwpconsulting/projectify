@@ -19,7 +19,7 @@
     import { _ } from "svelte-i18n";
 
     import FilterLabels from "$lib/figma/navigation/side-nav/FilterLabels.svelte";
-    import FilterWorkspaceUsers from "$lib/figma/navigation/side-nav/FilterWorkspaceUsers.svelte";
+    import FilterTeamMembers from "$lib/figma/navigation/side-nav/FilterTeamMembers.svelte";
     import Projects from "$lib/figma/navigation/side-nav/Projects.svelte";
     import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
@@ -61,7 +61,7 @@
         <div class="flex shrink flex-col overflow-auto">
             <Projects {workspace} />
             {#if $showFilters}
-                <FilterWorkspaceUsers />
+                <FilterTeamMembers />
                 <FilterLabels />
             {/if}
         </div>

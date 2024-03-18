@@ -14,32 +14,32 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Workspace user selectors."""
+"""Team member selectors."""
 from typing import Optional
 from uuid import UUID
 
 from projectify.user.models import User
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.models.team_member import TeamMember
 
 
-def workspace_user_find_for_workspace(
+def team_member_find_for_workspace(
     *, user: User, workspace: Workspace
-) -> Optional[WorkspaceUser]:
-    """Find a workspace user."""
+) -> Optional[TeamMember]:
+    """Find a team member."""
     try:
-        return WorkspaceUser.objects.get(workspace=workspace, user=user)
-    except WorkspaceUser.DoesNotExist:
+        return TeamMember.objects.get(workspace=workspace, user=user)
+    except TeamMember.DoesNotExist:
         return None
 
 
-def workspace_user_find_by_workspace_user_uuid(
-    *, who: User, workspace_user_uuid: UUID
-) -> Optional[WorkspaceUser]:
-    """Find workspace user by UUID according to user access permissions."""
+def team_member_find_by_team_member_uuid(
+    *, who: User, team_member_uuid: UUID
+) -> Optional[TeamMember]:
+    """Find team member by UUID according to user access permissions."""
     try:
-        return WorkspaceUser.objects.get(
-            workspace__users=who, uuid=workspace_user_uuid
+        return TeamMember.objects.get(
+            workspace__users=who, uuid=team_member_uuid
         )
-    except WorkspaceUser.DoesNotExist:
+    except TeamMember.DoesNotExist:
         return None

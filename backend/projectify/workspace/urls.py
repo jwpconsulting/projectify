@@ -47,8 +47,8 @@ from .views.workspace import (
     WorkspacePictureUploadView,
     WorkspaceReadUpdate,
 )
-from .views.workspace_user import (
-    WorkspaceUserReadUpdateDelete,
+from .views.team_member import (
+    TeamMemberReadUpdateDelete,
 )
 
 app_name = "workspace"
@@ -81,14 +81,14 @@ workspace_patterns = (
         name="upload-picture",
     ),
     path(
-        "<uuid:workspace_uuid>/invite-workspace-user",
+        "<uuid:workspace_uuid>/invite-team-member",
         InviteUserToWorkspace.as_view(),
-        name="invite-workspace-user",
+        name="invite-team-member",
     ),
     path(
-        "<uuid:workspace_uuid>/uninvite-workspace-user",
+        "<uuid:workspace_uuid>/uninvite-team-member",
         UninviteUserFromWorkspace.as_view(),
-        name="uninvite-workspace-user",
+        name="uninvite-team-member",
     ),
     # Related
     # Archived projects
@@ -99,11 +99,11 @@ workspace_patterns = (
     ),
 )
 
-workspace_user_patterns = (
+team_member_patterns = (
     # Read + Update + Destroy
     path(
-        "<uuid:workspace_user_uuid>",
-        WorkspaceUserReadUpdateDelete.as_view(),
+        "<uuid:team_member_uuid>",
+        TeamMemberReadUpdateDelete.as_view(),
         name="read-update-delete",
     ),
 )
@@ -200,10 +200,10 @@ urlpatterns = (
         "workspace/",
         include((workspace_patterns, "workspaces")),
     ),
-    # WorkspaceUser
+    # TeamMember
     path(
-        "workspace-user/",
-        include((workspace_user_patterns, "workspace-users")),
+        "team-member/",
+        include((team_member_patterns, "team-members")),
     ),
     # Project
     path(

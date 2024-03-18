@@ -25,7 +25,7 @@ import type {
     Workspace,
     ProjectDetail,
     Section,
-    WorkspaceUser,
+    TeamMember,
 } from "$lib/types/workspace";
 import { unwrap } from "$lib/utils/type";
 
@@ -37,7 +37,7 @@ interface returnType {
     project: ProjectDetail;
     workspace: Workspace;
     label: Label;
-    assignee: WorkspaceUser;
+    assignee: TeamMember;
 }
 export async function load({
     fetch,

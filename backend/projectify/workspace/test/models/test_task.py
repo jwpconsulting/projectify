@@ -26,7 +26,7 @@ import pytest
 
 from projectify.workspace.models.label import Label
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.services.label import label_create
 
 from ... import (
@@ -57,7 +57,7 @@ class TestTask:
     def test_factory(
         self,
         section: models.Section,
-        workspace_user: models.WorkspaceUser,
+        team_member: models.TeamMember,
         task: models.Task,
         user: AbstractUser,
     ) -> None:
@@ -69,18 +69,18 @@ class TestTask:
         self,
         workspace: models.Workspace,
         task: models.Task,
-        other_workspace_user: models.WorkspaceUser,
+        other_team_member: models.TeamMember,
     ) -> None:
         """Test assigning to a different workspace's user."""
-        task.assign_to(other_workspace_user)
-        assert task.assignee == other_workspace_user
+        task.assign_to(other_team_member)
+        assert task.assignee == other_team_member
 
     def test_assign_then_delete_user(
-        self, task: models.Task, workspace_user: models.WorkspaceUser
+        self, task: models.Task, team_member: models.TeamMember
     ) -> None:
         """Assert that nothing happens to the task if the user is gone."""
-        task.assign_to(workspace_user)
-        workspace_user.user.delete()
+        task.assign_to(team_member)
+        team_member.user.delete()
         task.refresh_from_db()
         assert task.assignee is None
 
@@ -88,34 +88,34 @@ class TestTask:
         self,
         workspace: models.Workspace,
         task: models.Task,
-        unrelated_workspace_user: models.WorkspaceUser,
+        unrelated_team_member: models.TeamMember,
     ) -> None:
         """Test assigning to a different workspace's user."""
-        # This time do not create a workspace_user
-        with pytest.raises(models.WorkspaceUser.DoesNotExist):
-            task.assign_to(unrelated_workspace_user)
+        # This time do not create a team_member
+        with pytest.raises(models.TeamMember.DoesNotExist):
+            task.assign_to(unrelated_team_member)
 
     def test_assign_none(
         self,
         workspace: models.Workspace,
         task: models.Task,
-        workspace_user: models.WorkspaceUser,
+        team_member: models.TeamMember,
     ) -> None:
         """Test assigning to no user."""
-        task.assign_to(workspace_user)
+        task.assign_to(team_member)
         task.assign_to(None)
         task.refresh_from_db()
         assert task.assignee is None
 
-    def test_assign_remove_workspace_user(
+    def test_assign_remove_team_member(
         self,
         user: AbstractUser,
         workspace: models.Workspace,
-        workspace_user: models.WorkspaceUser,
+        team_member: models.TeamMember,
         task: models.Task,
     ) -> None:
-        """Test what happens if a workspace user is removed."""
-        task.assignee = workspace_user
+        """Test what happens if a team member is removed."""
+        task.assignee = team_member
         task.save()
         workspace.remove_user(user)
         task.refresh_from_db()
@@ -142,9 +142,9 @@ class TestTask:
         workspace: Workspace,
         task: models.Task,
         labels: list[Label],
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         unrelated_workspace: Workspace,
-        unrelated_workspace_user: WorkspaceUser,
+        unrelated_team_member: TeamMember,
     ) -> None:
         """Test setting labels."""
         assert task.labels.count() == 0
@@ -170,7 +170,7 @@ class TestTask:
 
         unrelated = label_create(
             workspace=unrelated_workspace,
-            who=unrelated_workspace_user.user,
+            who=unrelated_team_member.user,
             color=0,
             name="don't care",
         )

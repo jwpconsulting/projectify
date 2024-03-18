@@ -33,7 +33,7 @@
         deleteSection as repoDeleteSection,
     } from "$lib/repository/workspace/section";
     import { toggleSectionOpen, sectionClosed } from "$lib/stores/dashboard";
-    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
+    import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import {
         openConstructiveOverlay,
         openDestructiveOverlay,
@@ -115,7 +115,7 @@
         state="normal"
         icon={closed ? Selector : X}
     />
-    {#if $currentWorkspaceUserCan("update", "section")}
+    {#if $currentTeamMemberCan("update", "section")}
         {#if previousSection}
             <ContextMenuButton
                 kind={{
@@ -148,7 +148,7 @@
             icon={Pencil}
         />
     {/if}
-    {#if $currentWorkspaceUserCan("delete", "section")}
+    {#if $currentTeamMemberCan("delete", "section")}
         <ContextMenuButton
             kind={{
                 kind: "button",

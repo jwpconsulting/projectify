@@ -35,18 +35,18 @@ from rest_framework.test import (
 )
 
 from projectify.corporate.services.stripe import customer_cancel_subscription
-from projectify.workspace.services.workspace_user_invite import (
-    workspace_user_invite_create,
+from projectify.workspace.services.team_member_invite import (
+    team_member_invite_create,
 )
 from pytest_types import (
     DjangoAssertNumQueries,
     Headers,
 )
 
-from ...models.const import WorkspaceUserRoles
+from ...models.const import TeamMemberRoles
 from ...models.project import Project
 from ...models.workspace import Workspace
-from ...models.workspace_user import WorkspaceUser
+from ...models.team_member import TeamMember
 
 
 # Create
@@ -78,9 +78,9 @@ class TestWorkspaceCreate:
             assert response.status_code == 201
         assert Workspace.objects.count() == 1
         workspace = Workspace.objects.get()
-        workspace_user = workspace.workspaceuser_set.get()
-        assert workspace_user.user == user
-        assert workspace_user.role == WorkspaceUserRoles.OWNER
+        team_member = workspace.teammember_set.get()
+        assert team_member.user == user
+        assert team_member.role == TeamMemberRoles.OWNER
 
         # Test also that we can submit with empty description
         response = rest_user_client.post(resource_url, {"title": "blabla"})
@@ -103,7 +103,7 @@ class TestUserWorkspaces:
         resource_url: str,
         user: AbstractBaseUser,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can GET this view this while being logged in."""
@@ -139,16 +139,16 @@ class TestWorkspaceReadUpdate:
         resource_url: str,
         user: AbstractBaseUser,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         project: Project,
         archived_project: Project,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can GET this view this while being logged in."""
         # Make sure we have an unredeemed invite
-        workspace_user_invite_create(
+        team_member_invite_create(
             email_or_user="rando@calrissian.org",
-            who=workspace_user.user,
+            who=team_member.user,
             workspace=workspace,
         )
         # Went up from 5 to 7, since we now return the quota for remaining
@@ -164,11 +164,11 @@ class TestWorkspaceReadUpdate:
             "description": workspace.description,
             "uuid": str(workspace.uuid),
             "picture": None,
-            "workspace_users": [
+            "team_members": [
                 unittest.mock.ANY,
                 unittest.mock.ANY,
             ],
-            "workspace_user_invites": [
+            "team_member_invites": [
                 {"email": "rando@calrissian.org", "created": unittest.mock.ANY}
             ],
             "projects": [
@@ -185,7 +185,7 @@ class TestWorkspaceReadUpdate:
                 "task_labels": unittest.mock.ANY,
                 "projects": unittest.mock.ANY,
                 "sections": unittest.mock.ANY,
-                "workspace_users_and_invites": {
+                "team_members_and_invites": {
                     "current": 3,
                     "limit": 10,
                     "can_create_more": True,
@@ -198,7 +198,7 @@ class TestWorkspaceReadUpdate:
         rest_user_client: APIClient,
         resource_url: str,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert that trial limits are annotated correctly."""
@@ -213,23 +213,23 @@ class TestWorkspaceReadUpdate:
             "description": workspace.description,
             "uuid": str(workspace.uuid),
             "picture": None,
-            "workspace_users": [
+            "team_members": [
                 {
                     # Thx internet
                     # https://stackoverflow.com/questions/18064610/ignoring-an-element-from-a-dict-when-asserting-in-pytest/37680581#37680581
                     "created": unittest.mock.ANY,
                     "modified": unittest.mock.ANY,
                     "user": {
-                        "email": workspace_user.user.email,
-                        "preferred_name": workspace_user.user.preferred_name,
+                        "email": team_member.user.email,
+                        "preferred_name": team_member.user.preferred_name,
                         "profile_picture": None,
                     },
-                    "uuid": str(workspace_user.uuid),
+                    "uuid": str(team_member.uuid),
                     "role": "OWNER",
                     "job_title": None,
                 }
             ],
-            "workspace_user_invites": [],
+            "team_member_invites": [],
             "projects": [],
             "labels": [],
             "quota": {
@@ -265,7 +265,7 @@ class TestWorkspaceReadUpdate:
                     "limit": 100,
                     "can_create_more": True,
                 },
-                "workspace_users_and_invites": {
+                "team_members_and_invites": {
                     "current": 1,
                     "limit": 2,
                     "can_create_more": True,
@@ -279,7 +279,7 @@ class TestWorkspaceReadUpdate:
         resource_url: str,
         user: AbstractBaseUser,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating a given workspace with a new title."""
@@ -342,7 +342,7 @@ class TestWorkspacePictureUploadView:
         uploaded_file: File,
         user: AbstractBaseUser,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
     ) -> None:
         """Try uploading and then deleting a picture."""
         response = rest_user_client.post(
@@ -366,21 +366,21 @@ class TestInviteUserToWorkspace:
     """Test two views, InviteUserToWorkspace and UninviteUserFromWorkspace."""
 
     @pytest.fixture
-    def resource_url(self, workspace_user: WorkspaceUser) -> str:
+    def resource_url(self, team_member: TeamMember) -> str:
         """Return URL to this view."""
         return reverse(
-            "workspace:workspaces:invite-workspace-user",
-            # Using the workspace_user fixture, we create a ws user and ws in
+            "workspace:workspaces:invite-team-member",
+            # Using the team_member fixture, we create a ws user and ws in
             # one go! Mighty clever I dare say >:)
-            args=(workspace_user.workspace.uuid,),
+            args=(team_member.workspace.uuid,),
         )
 
     @pytest.fixture
-    def uninvite_url(self, workspace_user: WorkspaceUser) -> str:
+    def uninvite_url(self, team_member: TeamMember) -> str:
         """Return URL to this view."""
         return reverse(
-            "workspace:workspaces:uninvite-workspace-user",
-            args=(workspace_user.workspace.uuid,),
+            "workspace:workspaces:uninvite-team-member",
+            args=(team_member.workspace.uuid,),
         )
 
     def test_new_user(
@@ -391,26 +391,26 @@ class TestInviteUserToWorkspace:
         uninvite_url: str,
     ) -> None:
         """Test with a new, unregistered user."""
-        assert workspace.workspaceuserinvite_set.count() == 0
+        assert workspace.teammemberinvite_set.count() == 0
         response = rest_user_client.post(
             resource_url, {"email": "taro@yamamoto.jp"}
         )
         assert response.status_code == 201, response.data
-        assert workspace.workspaceuserinvite_set.count() == 1
+        assert workspace.teammemberinvite_set.count() == 1
 
         # Then uninvite them
         response = rest_user_client.post(
             uninvite_url, {"email": "taro@yamamoto.jp"}
         )
         assert response.status_code == 204, response.data
-        assert workspace.workspaceuserinvite_set.count() == 0
+        assert workspace.teammemberinvite_set.count() == 0
 
         # Can't uninvite twice
         response = rest_user_client.post(
             uninvite_url, {"email": "taro@yamamoto.jp"}
         )
         assert response.status_code == 400, response.data
-        assert workspace.workspaceuserinvite_set.count() == 0
+        assert workspace.teammemberinvite_set.count() == 0
 
     def test_existing_user(
         self,
@@ -420,22 +420,22 @@ class TestInviteUserToWorkspace:
         other_user: AbstractUser,
     ) -> None:
         """Test by inviting an existing user."""
-        assert workspace.workspaceuserinvite_set.count() == 0
+        assert workspace.teammemberinvite_set.count() == 0
         response = rest_user_client.post(
             resource_url, {"email": other_user.email}
         )
         assert response.status_code == 201, response.data
-        assert workspace.workspaceuserinvite_set.count() == 0
+        assert workspace.teammemberinvite_set.count() == 0
 
-    def test_existing_workspace_user(
+    def test_existing_team_member(
         self,
         resource_url: str,
         rest_user_client: APIClient,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
     ) -> None:
-        """Test inviting an existing workspace user."""
+        """Test inviting an existing team member."""
         response = rest_user_client.post(
-            resource_url, {"email": workspace_user.user.email}
+            resource_url, {"email": team_member.user.email}
         )
         assert response.status_code == 400, response.data
         assert "already been added" in response.data["email"], response.data
@@ -467,10 +467,10 @@ class TestInviteUserToWorkspace:
         self,
         uninvite_url: str,
         rest_user_client: APIClient,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
     ) -> None:
         """Assert nothing weird happens when uninviting an invalid email."""
         response = rest_user_client.post(
-            uninvite_url, {"email": workspace_user.user.email}
+            uninvite_url, {"email": team_member.user.email}
         )
         assert response.status_code == 400, response.data

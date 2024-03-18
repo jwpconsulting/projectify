@@ -33,7 +33,7 @@ from projectify.workspace.models import TaskLabel
 from projectify.workspace.models.project import Project
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.selectors.project import (
     project_find_by_workspace_uuid,
 )
@@ -63,7 +63,7 @@ class TestProjectCreate:
         django_assert_num_queries: DjangoAssertNumQueries,
         workspace: Workspace,
         # Make sure that we are part of that workspace
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
     ) -> None:
         """Assert that we can create a new project."""
         with django_assert_num_queries(5):
@@ -99,21 +99,21 @@ class TestProjectReadUpdateDelete:
         resource_url: str,
         project: Project,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         task: Task,
         other_task: Task,
         task_label: TaskLabel,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can post to this view this while being logged in."""
-        # Make sure section -> task -> workspace_user -> user is resolved
-        task.assignee = workspace_user
+        # Make sure section -> task -> team_member -> user is resolved
+        task.assignee = team_member
         task.save()
         with django_assert_num_queries(7):
             response = rest_user_client.get(resource_url)
             assert response.status_code == 200, response.content
         project_archive(
-            who=workspace_user.user,
+            who=team_member.user,
             project=project,
             archived=True,
         )
@@ -127,7 +127,7 @@ class TestProjectReadUpdateDelete:
         self,
         rest_user_client: APIClient,
         resource_url: str,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test updating a ws board."""
@@ -147,7 +147,7 @@ class TestProjectReadUpdateDelete:
         self,
         rest_user_client: APIClient,
         resource_url: str,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         project: Project,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
@@ -158,7 +158,7 @@ class TestProjectReadUpdateDelete:
 
         project_archive(
             project=project,
-            who=workspace_user.user,
+            who=team_member.user,
             archived=True,
         )
 
@@ -186,7 +186,7 @@ class TestProjectsArchivedList:
         self,
         rest_user_client: APIClient,
         resource_url: str,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         # In total 2 projects, but only one shall be returned
         project: Project,
         archived_project: Project,
@@ -219,12 +219,12 @@ class TestProjectArchive:
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
     ) -> None:
         """Test archiving a board and then unarchiving it."""
         count = len(
             project_find_by_workspace_uuid(
-                who=workspace_user.user,
+                who=team_member.user,
                 workspace_uuid=workspace.uuid,
                 archived=False,
             )
@@ -239,7 +239,7 @@ class TestProjectArchive:
             count
             == len(
                 project_find_by_workspace_uuid(
-                    who=workspace_user.user,
+                    who=team_member.user,
                     workspace_uuid=workspace.uuid,
                     archived=False,
                 )
@@ -254,7 +254,7 @@ class TestProjectArchive:
             assert response.status_code == 200, response.data
         assert count == len(
             project_find_by_workspace_uuid(
-                who=workspace_user.user,
+                who=team_member.user,
                 workspace_uuid=workspace.uuid,
                 archived=False,
             )

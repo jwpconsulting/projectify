@@ -25,7 +25,7 @@
     import SideNavContextMenu from "$lib/figma/overlays/context-menu/SideNavContextMenu.svelte";
     import Task from "$lib/figma/overlays/context-menu/Task.svelte";
     import Workspace from "$lib/figma/overlays/context-menu/Workspace.svelte";
-    import WorkspaceUser from "$lib/figma/overlays/context-menu/WorkspaceUser.svelte";
+    import TeamMember from "$lib/figma/overlays/context-menu/TeamMember.svelte";
     import type { ContextMenuType } from "$lib/types/ui";
 
     export let target: ContextMenuType;
@@ -47,8 +47,8 @@
     <HelpContextMenu />
 {:else if target.kind === "permissions"}
     <Permissions />
-{:else if target.kind === "updateWorkspaceUser"}
-    <WorkspaceUser workspaceUserAssignment={target.workspaceUserAssignment} />
+{:else if target.kind === "updateTeamMember"}
+    <TeamMember teamMemberAssignment={target.teamMemberAssignment} />
 {:else if target.kind === "updateLabel"}
     <Label labelAssignment={target.labelAssignment} />
 {/if}

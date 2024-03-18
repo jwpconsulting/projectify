@@ -21,7 +21,7 @@
 
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { currentProject, selectProjectUuid } from "$lib/stores/dashboard";
-    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
+    import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { Workspace, Project } from "$lib/types/workspace";
     import { getDashboardProjectUrl } from "$lib/urls";
@@ -78,7 +78,7 @@
             {project.title}
         </div>
     </div>
-    {#if $currentWorkspaceUserCan("update", "project")}
+    {#if $currentTeamMemberCan("update", "project")}
         <div class="shrink-0" bind:this={buttonRef}>
             <CircleIcon
                 size="small"

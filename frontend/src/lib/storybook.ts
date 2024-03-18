@@ -20,9 +20,9 @@ import { readable, writable } from "svelte/store";
 import type { LabelLabel, SelectLabel } from "$lib/figma/types";
 import type {
     LabelAssignment,
-    WorkspaceUserAssignment,
+    TeamMemberAssignment,
 } from "$lib/types/stores";
-import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
+import type { TeamMemberSelectionInput } from "$lib/types/ui";
 import type { User } from "$lib/types/user";
 import type {
     Label,
@@ -31,7 +31,7 @@ import type {
     TaskWithSection,
     Project,
     SectionWithTasks,
-    WorkspaceUser,
+    TeamMember,
 } from "$lib/types/workspace";
 import { getIndexFromLabelColor, labelColors } from "$lib/utils/colors";
 import type { LabelColor } from "$lib/utils/colors";
@@ -81,7 +81,7 @@ export const selectLabels: SelectLabel[] = [
     { kind: "noLabel" },
 ];
 
-export const workspaceUser: WorkspaceUser = {
+export const teamMember: TeamMember = {
     user: user1,
     uuid: nullUuid,
     role: "OWNER",
@@ -89,10 +89,10 @@ export const workspaceUser: WorkspaceUser = {
     modified: "",
 };
 
-export const workspaceUserSelectionInputs: WorkspaceUserSelectionInput[] = [
+export const teamMemberSelectionInputs: TeamMemberSelectionInput[] = [
     { kind: "unassigned" },
-    { kind: "allWorkspaceUsers" },
-    { kind: "workspaceUser", workspaceUser },
+    { kind: "allTeamMembers" },
+    { kind: "teamMember", teamMember },
 ];
 
 export const project: Project = {
@@ -109,7 +109,7 @@ export const workspace = {
     modified: "",
     picture: null,
     projects: [project],
-    workspace_users: [workspaceUser],
+    team_members: [teamMember],
 };
 
 export const customer: Customer = {
@@ -149,7 +149,7 @@ export const task: TaskWithSection = {
     _order: 0,
     number: 1,
     labels: [...mappedLabels, ...mappedLabels],
-    assignee: workspaceUser,
+    assignee: teamMember,
     sub_tasks: [subTask],
     section: {
         title: "section name that is long",
@@ -175,7 +175,7 @@ const task2: Task = {
     _order: 0,
     number: 1337,
     labels: mappedLabels.slice(4),
-    assignee: workspaceUser,
+    assignee: teamMember,
     sub_tasks: [],
 };
 
@@ -196,10 +196,10 @@ export const mobileParameters = {
 
 const noop = console.error.bind(null, "noop");
 
-export const workspaceUserAssignment: WorkspaceUserAssignment = {
+export const teamMemberAssignment: TeamMemberAssignment = {
     select: noop,
     deselect: noop,
-    subscribe: readable<WorkspaceUser | undefined>(undefined).subscribe,
+    subscribe: readable<TeamMember | undefined>(undefined).subscribe,
     selected: writable({ kind: "unassigned" }),
 };
 

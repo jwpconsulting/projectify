@@ -15,11 +15,11 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-export const workspaceUserRoles = [
+export const teamMemberRoles = [
     "OBSERVER",
     "CONTRIBUTOR",
     "MAINTAINER",
     "OWNER",
 ] as const;
 // TODO duplicated from types/workspace.ts
-export type WorkspaceUserRole = (typeof workspaceUserRoles)[number];
+export type TeamMemberRole = (typeof teamMemberRoles)[number];

@@ -17,7 +17,7 @@
 """Test workspace model selectors."""
 import pytest
 
-from ...models.workspace_user import WorkspaceUser
+from ...models.team_member import TeamMember
 from ...selectors.workspace import (
     workspace_find_by_workspace_uuid,
     workspace_find_for_user,
@@ -28,11 +28,11 @@ pytestmark = pytest.mark.django_db
 
 
 def test_workspace_find_for_user(
-    workspace_user: WorkspaceUser, unrelated_workspace_user: WorkspaceUser
+    team_member: TeamMember, unrelated_team_member: TeamMember
 ) -> None:
     """Test workspace_find_for_user."""
-    a = workspace_user
-    b = unrelated_workspace_user
+    a = team_member
+    b = unrelated_team_member
     assert workspace_find_for_user(who=a.user).count() == 1
     assert workspace_find_for_user(who=b.user).count() == 1
     workspace_delete(who=a.user, workspace=a.workspace)
@@ -44,11 +44,11 @@ def test_workspace_find_for_user(
 
 
 def test_workspace_find_by_workspace_uuid(
-    workspace_user: WorkspaceUser, unrelated_workspace_user: WorkspaceUser
+    team_member: TeamMember, unrelated_team_member: TeamMember
 ) -> None:
     """Test workspace_find_by_workspace_uuid."""
-    a = workspace_user
-    b = unrelated_workspace_user
+    a = team_member
+    b = unrelated_team_member
     # A can find A's workspace
     assert workspace_find_by_workspace_uuid(
         who=a.user, workspace_uuid=a.workspace.uuid

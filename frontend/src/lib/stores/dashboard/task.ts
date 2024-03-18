@@ -21,7 +21,7 @@ import {
 } from "$lib/repository/workspace";
 import { selectedLabels } from "$lib/stores/dashboard/labelFilter";
 import { currentProject } from "$lib/stores/dashboard/project";
-import { filterByWorkspaceUser } from "$lib/stores/dashboard/workspaceUserFilter";
+import { filterByTeamMember } from "$lib/stores/dashboard/teamMemberFilter";
 import { searchAmong } from "$lib/stores/util";
 import { createWsStore } from "$lib/stores/wsSubscription";
 import type { SearchInput } from "$lib/types/base";
@@ -39,7 +39,7 @@ import type {
 // Justus 2023-08-30
 currentProject.subscribe((_$currentProject) => {
     selectedLabels.set({ kind: "allLabels" });
-    filterByWorkspaceUser({ kind: "allWorkspaceUsers" });
+    filterByTeamMember({ kind: "allTeamMembers" });
 });
 
 export function searchTasks(

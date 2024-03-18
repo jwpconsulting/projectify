@@ -24,46 +24,46 @@
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { tasksPerUser } from "$lib/stores/dashboard";
     import {
-        filterByWorkspaceUser,
-        selectedWorkspaceUser,
-        unfilterByWorkspaceUser,
-        workspaceUserSearch,
-        workspaceUserSearchResults,
-    } from "$lib/stores/dashboard/workspaceUserFilter";
-    import type { WorkspaceUserAssignment } from "$lib/types/stores";
+        filterByTeamMember,
+        selectedTeamMember,
+        unfilterByTeamMember,
+        teamMemberSearch,
+        teamMemberSearchResults,
+    } from "$lib/stores/dashboard/teamMemberFilter";
+    import type { TeamMemberAssignment } from "$lib/types/stores";
     import type {
-        WorkspaceUserAssignmentState,
-        WorkspaceUserSelection,
+        TeamMemberAssignmentState,
+        TeamMemberSelection,
     } from "$lib/types/ui";
-    import type { WorkspaceUser } from "$lib/types/workspace";
+    import type { TeamMember } from "$lib/types/workspace";
 
-    type FilterWorkspaceUserMenuMode =
+    type FilterTeamMemberMenuMode =
         | { kind: "filter" }
-        | { kind: "assign"; workspaceUserAssignment: WorkspaceUserAssignment };
+        | { kind: "assign"; teamMemberAssignment: TeamMemberAssignment };
 
-    export let mode: FilterWorkspaceUserMenuMode;
+    export let mode: FilterTeamMemberMenuMode;
 
     $: selected =
         mode.kind === "filter"
-            ? selectedWorkspaceUser
-            : mode.workspaceUserAssignment.selected;
+            ? selectedTeamMember
+            : mode.teamMemberAssignment.selected;
     $: select =
         mode.kind === "filter"
-            ? filterByWorkspaceUser
-            : mode.workspaceUserAssignment.select;
+            ? filterByTeamMember
+            : mode.teamMemberAssignment.select;
     $: deselect =
         mode.kind === "filter"
-            ? unfilterByWorkspaceUser
-            : mode.workspaceUserAssignment.deselect;
+            ? unfilterByTeamMember
+            : mode.teamMemberAssignment.deselect;
 
     function isSelected(
-        $selected: WorkspaceUserAssignmentState | WorkspaceUserSelection,
-        workspaceUser: WorkspaceUser,
+        $selected: TeamMemberAssignmentState | TeamMemberSelection,
+        teamMember: TeamMember,
     ): boolean {
-        if ($selected.kind === "workspaceUsers") {
-            return $selected.workspaceUserUuids.has(workspaceUser.uuid);
-        } else if ($selected.kind === "workspaceUser") {
-            return workspaceUser.uuid === $selected.workspaceUser.uuid;
+        if ($selected.kind === "teamMembers") {
+            return $selected.teamMemberUuids.has(teamMember.uuid);
+        } else if ($selected.kind === "teamMember") {
+            return teamMember.uuid === $selected.teamMember.uuid;
         }
         return false;
     }
@@ -72,11 +72,11 @@
 <!-- TODO remove px/pt here -->
 <div class="flex flex-col px-4 pt-2">
     <InputField
-        bind:value={$workspaceUserSearch}
+        bind:value={$teamMemberSearch}
         style={{ inputType: "text" }}
-        label={$_("dashboard.filter-workspace-users")}
-        name="workspace-user-name"
-        placeholder={$_("dashboard.workspace-user-name")}
+        label={$_("dashboard.filter-team-members")}
+        name="team-member-name"
+        placeholder={$_("dashboard.team-member-name")}
     >
         <Icon
             slot="left"
@@ -88,29 +88,29 @@
 </div>
 <div class="flex flex-col">
     <FilterUser
-        workspaceUserSelectionInput={{ kind: "unassigned" }}
+        teamMemberSelectionInput={{ kind: "unassigned" }}
         active={$selected.kind === "unassigned"}
         count={$tasksPerUser.unassigned}
         onSelect={() => select({ kind: "unassigned" })}
         onDeselect={() => deselect({ kind: "unassigned" })}
     />
-    {#each $workspaceUserSearchResults as workspaceUser (workspaceUser.uuid)}
+    {#each $teamMemberSearchResults as teamMember (teamMember.uuid)}
         <FilterUser
-            workspaceUserSelectionInput={{
-                kind: "workspaceUser",
-                workspaceUser: workspaceUser,
+            teamMemberSelectionInput={{
+                kind: "teamMember",
+                teamMember: teamMember,
             }}
-            active={isSelected($selected, workspaceUser)}
-            count={$tasksPerUser.assigned.get(workspaceUser.uuid)}
+            active={isSelected($selected, teamMember)}
+            count={$tasksPerUser.assigned.get(teamMember.uuid)}
             onSelect={() =>
                 select({
-                    kind: "workspaceUser",
-                    workspaceUser: workspaceUser,
+                    kind: "teamMember",
+                    teamMember: teamMember,
                 })}
             onDeselect={() =>
                 deselect({
-                    kind: "workspaceUser",
-                    workspaceUser: workspaceUser,
+                    kind: "teamMember",
+                    teamMember: teamMember,
                 })}
         />
     {/each}

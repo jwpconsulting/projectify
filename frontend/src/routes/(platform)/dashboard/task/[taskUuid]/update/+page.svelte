@@ -27,7 +27,7 @@
     import { updateTask as performUpdateTask } from "$lib/repository/workspace";
     import { createSubTaskAssignment } from "$lib/stores/dashboard";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
-    import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
+    import { createTeamMemberAssignment } from "$lib/stores/dashboard/teamMemberAssignment";
     import type { TaskWithSection } from "$lib/types/workspace";
     import {
         getDashboardSectionUrl,
@@ -47,7 +47,7 @@
     let { title, description } = task;
     let dueDate = task.due_date && coerceIsoDate(task.due_date);
 
-    $: workspaceUserAssignment = createWorkspaceUserAssignment(task);
+    $: teamMemberAssignment = createTeamMemberAssignment(task);
     $: labelAssignment = createLabelAssignment(task);
     $: subTaskAssignment = createSubTaskAssignment(task);
     $: subTasks = subTaskAssignment.subTasks;
@@ -75,7 +75,7 @@
                     title,
                     description,
                     due_date: dueDate,
-                    assignee: $workspaceUserAssignment,
+                    assignee: $teamMemberAssignment,
                     labels: $labelAssignment,
                     sub_tasks: $subTasks,
                     section: section,
@@ -149,7 +149,7 @@
     <svelte:fragment slot="content">
         <Form
             action={action.bind(null, false)}
-            {workspaceUserAssignment}
+            {teamMemberAssignment}
             {labelAssignment}
             {subTaskAssignment}
             bind:title

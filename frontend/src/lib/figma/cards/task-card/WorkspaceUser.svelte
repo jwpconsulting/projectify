@@ -18,8 +18,8 @@
 <script lang="ts">
     import AvatarVariant from "$lib/figma/navigation/AvatarVariant.svelte";
     import { updateTask } from "$lib/repository/workspace";
-    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
-    import { createWorkspaceUserAssignment } from "$lib/stores/dashboard/workspaceUserAssignment";
+    import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
+    import { createTeamMemberAssignment } from "$lib/stores/dashboard/teamMemberAssignment";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
     import type { TaskWithSection } from "$lib/types/workspace";
@@ -28,30 +28,30 @@
 
     let userPickerBtnRef: HTMLElement;
 
-    $: workspaceUserAssignment = createWorkspaceUserAssignment(task);
+    $: teamMemberAssignment = createTeamMemberAssignment(task);
 
-    $: assignee = task.assignee ?? $workspaceUserAssignment;
+    $: assignee = task.assignee ?? $teamMemberAssignment;
 
     async function openUserPicker() {
         const contextMenuType: ContextMenuType = {
-            kind: "updateWorkspaceUser",
-            workspaceUserAssignment,
+            kind: "updateTeamMember",
+            teamMemberAssignment,
         };
         await openContextMenu(contextMenuType, userPickerBtnRef);
-        const workspaceUser = $workspaceUserAssignment;
+        const teamMember = $teamMemberAssignment;
         // XXX need to investigate what happens when sub tasks change while
         // the user picker is open. Possibly, a sub task can be deleted if
         // it is added
         await updateTask(
             task,
-            { ...task, assignee: workspaceUser },
+            { ...task, assignee: teamMember },
             {
                 fetch,
             },
         );
     }
 
-    $: canUpdate = $currentWorkspaceUserCan("update", "task");
+    $: canUpdate = $currentTeamMemberCan("update", "task");
 </script>
 
 <button

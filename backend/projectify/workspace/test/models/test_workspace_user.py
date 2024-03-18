@@ -14,52 +14,52 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Test WorkspaceUser model."""
+"""Test TeamMember model."""
 
 import pytest
 
 from projectify.user.models import User
 
-from ...models.const import WorkspaceUserRoles
+from ...models.const import TeamMemberRoles
 from ...models.workspace import Workspace
-from ...models.workspace_user import WorkspaceUser
+from ...models.team_member import TeamMember
 from ...services.workspace import workspace_add_user
 
 
 @pytest.mark.django_db
-class TestWorkspaceUserManager:
-    """Test workspace user manager."""
+class TestTeamMemberManager:
+    """Test team member manager."""
 
     def test_filter_by_workspace_pks(
-        self, workspace_user: WorkspaceUser, workspace: Workspace
+        self, team_member: TeamMember, workspace: Workspace
     ) -> None:
         """Test filter_by_workspace_pks."""
-        qs = WorkspaceUser.objects.filter_by_workspace_pks(
+        qs = TeamMember.objects.filter_by_workspace_pks(
             [workspace.pk],
         )
-        assert list(qs) == [workspace_user]
+        assert list(qs) == [team_member]
 
-    def test_filter_by_user(self, workspace_user: WorkspaceUser) -> None:
+    def test_filter_by_user(self, team_member: TeamMember) -> None:
         """Test filter_by_user."""
         assert (
-            WorkspaceUser.objects.filter_by_user(workspace_user.user).count()
+            TeamMember.objects.filter_by_user(team_member.user).count()
             == 1
         )
 
     # TODO make me a selector
-    def test_filter_by_user_with_unrelated_workspace_user(
+    def test_filter_by_user_with_unrelated_team_member(
         self,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         unrelated_user: User,
     ) -> None:
-        """Test filtering when an unrelated workspace user exists."""
+        """Test filtering when an unrelated team member exists."""
         assert (
-            WorkspaceUser.objects.filter_by_user(workspace_user.user).count()
+            TeamMember.objects.filter_by_user(team_member.user).count()
             == 1
         )
         assert (
-            WorkspaceUser.objects.filter_by_user(
+            TeamMember.objects.filter_by_user(
                 unrelated_user,
             ).count()
             == 0
@@ -67,23 +67,23 @@ class TestWorkspaceUserManager:
         workspace_add_user(
             workspace=workspace,
             user=unrelated_user,
-            role=WorkspaceUserRoles.OBSERVER,
+            role=TeamMemberRoles.OBSERVER,
         )
         assert (
-            WorkspaceUser.objects.filter_by_user(unrelated_user).count() == 2
+            TeamMember.objects.filter_by_user(unrelated_user).count() == 2
         )
 
 
 @pytest.mark.django_db
-class TestWorkspaceUser:
-    """Test WorkspaceUser."""
+class TestTeamMember:
+    """Test TeamMember."""
 
-    def test_factory(self, workspace_user: WorkspaceUser) -> None:
+    def test_factory(self, team_member: TeamMember) -> None:
         """Test that the default rule is observer."""
-        assert workspace_user.role == WorkspaceUserRoles.OWNER
+        assert team_member.role == TeamMemberRoles.OWNER
 
-    def test_assign_role(self, workspace_user: WorkspaceUser) -> None:
+    def test_assign_role(self, team_member: TeamMember) -> None:
         """Test assign_role."""
-        workspace_user.assign_role(WorkspaceUserRoles.OWNER)
-        workspace_user.refresh_from_db()
-        assert workspace_user.role == WorkspaceUserRoles.OWNER
+        team_member.assign_role(TeamMemberRoles.OWNER)
+        team_member.refresh_from_db()
+        assert team_member.role == TeamMemberRoles.OWNER

@@ -66,4 +66,4 @@ class WorkspaceQuota:
     task_labels: Quota
     projects: Quota
     sections: Quota
-    workspace_users_and_invites: Quota
+    team_members_and_invites: Quota

@@ -20,8 +20,8 @@ from rest_framework import serializers
 from . import base
 
 
-class WorkspaceUserInviteSerializer(serializers.Serializer):
-    """Serializer workspace user invites."""
+class TeamMemberInviteSerializer(serializers.Serializer):
+    """Serializer team member invites."""
 
     email = serializers.EmailField(source="user_invite.email")
     created = serializers.DateTimeField()
@@ -47,7 +47,7 @@ class WorkspaceQuotaSerializer(serializers.Serializer):
     task_labels = SingleQuotaSerializer()
     projects = SingleQuotaSerializer()
     sections = SingleQuotaSerializer()
-    workspace_users_and_invites = SingleQuotaSerializer()
+    team_members_and_invites = SingleQuotaSerializer()
 
 
 class WorkspaceDetailSerializer(base.WorkspaceBaseSerializer):
@@ -58,11 +58,11 @@ class WorkspaceDetailSerializer(base.WorkspaceBaseSerializer):
     contain.
     """
 
-    workspace_users = base.WorkspaceUserBaseSerializer(
-        read_only=True, many=True, source="workspaceuser_set"
+    team_members = base.TeamMemberBaseSerializer(
+        read_only=True, many=True, source="teammember_set"
     )
-    workspace_user_invites = WorkspaceUserInviteSerializer(
-        read_only=True, many=True, source="workspaceuserinvite_set"
+    team_member_invites = TeamMemberInviteSerializer(
+        read_only=True, many=True, source="teammemberinvite_set"
     )
     projects = base.ProjectBaseSerializer(
         read_only=True, many=True, source="project_set"
@@ -77,8 +77,8 @@ class WorkspaceDetailSerializer(base.WorkspaceBaseSerializer):
 
         fields = (
             *base.WorkspaceBaseSerializer.Meta.fields,
-            "workspace_users",
-            "workspace_user_invites",
+            "team_members",
+            "team_member_invites",
             "projects",
             "labels",
             "quota",

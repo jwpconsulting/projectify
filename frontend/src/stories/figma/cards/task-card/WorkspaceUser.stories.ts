@@ -17,16 +17,16 @@
  */
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import WorkspaceUser from "$lib/figma/cards/task-card/WorkspaceUser.svelte";
+import TeamMember from "$lib/figma/cards/task-card/TeamMember.svelte";
 import { task } from "$lib/storybook";
 
-const meta: Meta<WorkspaceUser> = {
-    component: WorkspaceUser,
+const meta: Meta<TeamMember> = {
+    component: TeamMember,
     argTypes: {},
 };
 export default meta;
 
-type Story = StoryObj<WorkspaceUser>;
+type Story = StoryObj<TeamMember>;
 
 export const Assignee: Story = {
     args: {

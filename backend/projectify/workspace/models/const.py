@@ -21,7 +21,7 @@ from django.db import (
 from django.utils.translation import gettext_lazy as _
 
 
-class WorkspaceUserRoles(models.TextChoices):
+class TeamMemberRoles(models.TextChoices):
     """Roles available."""
 
     OBSERVER = "OBSERVER", _("Observer")

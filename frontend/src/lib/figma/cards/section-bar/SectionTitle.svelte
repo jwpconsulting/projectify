@@ -23,7 +23,7 @@
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import { toggleSectionOpen } from "$lib/stores/dashboard";
-    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
+    import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
     import type { Project, Section } from "$lib/types/workspace";
@@ -69,7 +69,7 @@
         class="flex shrink-0 flex-row items-center gap-1"
         data-figma-name="Right side"
     >
-        {#if $currentWorkspaceUserCan("create", "task")}
+        {#if $currentTeamMemberCan("create", "task")}
             <Button
                 action={{
                     kind: "a",

@@ -35,7 +35,7 @@
         Workspace,
         Section,
         ProjectDetail,
-        WorkspaceUser,
+        TeamMember,
         WorkspaceDetail,
         WorkspaceQuota,
     } from "$lib/types/workspace";
@@ -53,8 +53,8 @@
         modified: "",
         projects: [],
         labels: [],
-        workspace_users: [],
-        workspace_user_invites: [],
+        team_members: [],
+        team_member_invites: [],
         quota,
     };
     const projectFallback: ProjectDetail = {
@@ -136,7 +136,7 @@
               section: Section;
               task: Task;
               label: Label;
-              assignee: WorkspaceUser;
+              assignee: TeamMember;
           };
 
     export let state: State;

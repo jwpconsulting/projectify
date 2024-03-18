@@ -21,7 +21,7 @@ Up and down chevrons for task movement within a section
 -->
 <script lang="ts">
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
-    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
+    import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { getTaskPosition, moveUp, moveDown } from "$lib/stores/modules";
     import type { Task, SectionWithTasks } from "$lib/types/workspace";
 
@@ -30,7 +30,7 @@ Up and down chevrons for task movement within a section
 
     let upDisabled = true;
     let downDisabled = true;
-    $: canMove = $currentWorkspaceUserCan("update", "task");
+    $: canMove = $currentTeamMemberCan("update", "task");
     $: {
         const position = getTaskPosition(section, task);
         upDisabled = position.kind === "start" || !canMove;

@@ -28,7 +28,7 @@
         projectExpandOpen,
         toggleProjectExpandOpen,
     } from "$lib/stores/dashboard/ui";
-    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
+    import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type { Workspace } from "$lib/types/workspace";
     import { getArchiveUrl } from "$lib/urls";
@@ -74,7 +74,7 @@
             {/each}
         {/if}
     </div>
-    {#if $currentWorkspaceUserCan("create", "project")}
+    {#if $currentTeamMemberCan("create", "project")}
         <ContextMenuButton
             label={$_("dashboard.create-project")}
             icon={Plus}

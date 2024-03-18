@@ -16,12 +16,12 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /*
- * Workspace user related store
+ * Team member related store
  * Following use cases:
  *
- * - Selecting a user to be assigned to task (workspaceUserAssignment)
+ * - Selecting a user to be assigned to task (teamMemberAssignment)
  * - Filtering tasks inside a ws board by ws user
- * (workspaceUserFilter)
+ * (teamMemberFilter)
  * Before I wrote these two things to be the same, even though that meant
  * unnecessarily shoehorning unrelated features into the same thing
  */
@@ -30,16 +30,16 @@ import type { Readable } from "svelte/store";
 
 import { can, type Resource, type Verb } from "$lib/rules/workspace";
 import { currentWorkspace } from "$lib/stores/dashboard/workspace";
-import type { Workspace, WorkspaceUser } from "$lib/types/workspace";
+import type { Workspace, TeamMember } from "$lib/types/workspace";
 
 import { currentUser } from "../user";
 
-// TODO make Readable<WorkspaceUser[] | undefined>
-export type CurrentWorkspaceUsers = Readable<WorkspaceUser[]>;
+// TODO make Readable<TeamMember[] | undefined>
+export type CurrentTeamMembers = Readable<TeamMember[]>;
 
-export const currentWorkspaceUsers: CurrentWorkspaceUsers = derived<
+export const currentTeamMembers: CurrentTeamMembers = derived<
     typeof currentWorkspace,
-    WorkspaceUser[]
+    TeamMember[]
     // Derived stores are initialized with undefined
 >(
     currentWorkspace,
@@ -47,22 +47,22 @@ export const currentWorkspaceUsers: CurrentWorkspaceUsers = derived<
         if (!$currentWorkspace) {
             return;
         }
-        if (!$currentWorkspace.workspace_users) {
-            throw new Error("Expected $currentWorkspace.workspace_users");
+        if (!$currentWorkspace.team_members) {
+            throw new Error("Expected $currentWorkspace.team_members");
         }
-        set($currentWorkspace.workspace_users);
+        set($currentWorkspace.team_members);
     },
     [],
 );
 
-type CurrentWorkspaceUser = Readable<WorkspaceUser | undefined>;
+type CurrentTeamMember = Readable<TeamMember | undefined>;
 
 /**
- * Find current workspace user belonging to logged in user
+ * Find current team member belonging to logged in user
  */
-export const currentWorkspaceUser: CurrentWorkspaceUser = derived<
+export const currentTeamMember: CurrentTeamMember = derived<
     [typeof currentUser, typeof currentWorkspace],
-    WorkspaceUser | undefined
+    TeamMember | undefined
 >(
     [currentUser, currentWorkspace],
     ([$user, $currentWorkspace], set) => {
@@ -70,33 +70,33 @@ export const currentWorkspaceUser: CurrentWorkspaceUser = derived<
             set(undefined);
             return;
         }
-        const wsUser = $currentWorkspace.workspace_users.find(
+        const wsUser = $currentWorkspace.team_members.find(
             (wsUser) => wsUser.user.email === $user.email,
         );
         if (wsUser === undefined) {
-            throw new Error("Couldn't find currentWorkspaceUser");
+            throw new Error("Couldn't find currentTeamMember");
         }
         set(wsUser);
     },
     undefined,
 );
 
-type CurrentWorkspaceUserCan = Readable<
+type CurrentTeamMemberCan = Readable<
     (verb: Verb, resource: Resource) => boolean
 >;
 
 /**
  * A store that returns a function that allows permission checking for the
- * currently active, logged in user's workspace user.
+ * currently active, logged in user's team member.
  */
-export const currentWorkspaceUserCan: CurrentWorkspaceUserCan = derived<
-    [CurrentWorkspaceUser, typeof currentWorkspace],
+export const currentTeamMemberCan: CurrentTeamMemberCan = derived<
+    [CurrentTeamMember, typeof currentWorkspace],
     (verb: Verb, resource: Resource) => boolean
 >(
-    [currentWorkspaceUser, currentWorkspace],
-    ([$currentWorkspaceUser, $currentWorkspace], set) => {
-        if ($currentWorkspaceUser === undefined) {
-            console.warn("workspaceUser was undefined");
+    [currentTeamMember, currentWorkspace],
+    ([$currentTeamMember, $currentWorkspace], set) => {
+        if ($currentTeamMember === undefined) {
+            console.warn("teamMember was undefined");
             set(() => false);
             return;
         }
@@ -109,7 +109,7 @@ export const currentWorkspaceUserCan: CurrentWorkspaceUserCan = derived<
             can(
                 verb,
                 resource,
-                $currentWorkspaceUser,
+                $currentTeamMember,
                 $currentWorkspace.quota,
             );
         set(fn);

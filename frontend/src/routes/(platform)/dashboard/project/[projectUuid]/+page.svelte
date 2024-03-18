@@ -21,7 +21,7 @@
     import SectionC from "$lib/figma/cards/Section.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import { currentProject, currentSections } from "$lib/stores/dashboard";
-    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
+    import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import type { SectionWithTasks } from "$lib/types/workspace";
 
@@ -74,7 +74,7 @@
     {/each}
 </div>
 
-{#if hasSections && $currentWorkspaceUserCan("create", "section")}
+{#if hasSections && $currentTeamMemberCan("create", "section")}
     <div class="sticky bottom-0 self-end p-2">
         <Button
             style={{ kind: "primary" }}

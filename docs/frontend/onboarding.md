@@ -58,7 +58,7 @@ render when no project is selected.
 ### Welcome
 
 The welcome onboarding page is the first page a user sees after logging in and
-not added to any workspace. (no workspace user exists for this user) Here,
+not added to any workspace. (no team member exists for this user) Here,
 we explain to the user that:
 
 - They have successfully signed up and logged in on Projectify

@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Workspace user models."""
+"""Team member models."""
 import uuid
 from typing import (
     TYPE_CHECKING,
@@ -36,7 +36,7 @@ from django.db import (
 from projectify.lib.models import BaseModel
 
 from .const import (
-    WorkspaceUserRoles,
+    TeamMemberRoles,
 )
 from .types import (
     Pks,
@@ -57,19 +57,19 @@ if TYPE_CHECKING:
     )
 
 
-class WorkspaceUserQuerySet(models.QuerySet["WorkspaceUser"]):
-    """Workspace user queryset."""
+class TeamMemberQuerySet(models.QuerySet["TeamMember"]):
+    """Team member queryset."""
 
     def filter_by_workspace_pks(self, workspace_pks: Pks) -> Self:
         """Filter by workspace pks."""
         return self.filter(workspace__pk__in=workspace_pks)
 
     def filter_by_user(self, user: AbstractBaseUser) -> Self:
-        """Filter workspace users based on this user's workspaces."""
+        """Filter team members based on this user's workspaces."""
         return self.filter(workspace__users=user)
 
 
-class WorkspaceUser(BaseModel):
+class TeamMember(BaseModel):
     """Workspace to user mapping."""
 
     workspace = models.ForeignKey["Workspace"](
@@ -83,8 +83,8 @@ class WorkspaceUser(BaseModel):
     )
     role = models.CharField(
         max_length=11,
-        choices=WorkspaceUserRoles.choices,
-        default=WorkspaceUserRoles.OBSERVER,
+        choices=TeamMemberRoles.choices,
+        default=TeamMemberRoles.OBSERVER,
     )
     job_title = models.CharField(
         max_length=255,
@@ -94,8 +94,8 @@ class WorkspaceUser(BaseModel):
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 
     # Sort of nonsensical
-    objects: ClassVar[WorkspaceUserQuerySet] = cast(  # type: ignore[assignment]
-        WorkspaceUserQuerySet, WorkspaceUserQuerySet.as_manager()
+    objects: ClassVar[TeamMemberQuerySet] = cast(  # type: ignore[assignment]
+        TeamMemberQuerySet, TeamMemberQuerySet.as_manager()
     )
 
     if TYPE_CHECKING:

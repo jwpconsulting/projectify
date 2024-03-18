@@ -17,13 +17,13 @@
  */
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import FilterWorkspaceUsers from "$lib/figma/navigation/side-nav/FilterWorkspaceUsers.svelte";
+import FilterTeamMembers from "$lib/figma/navigation/side-nav/FilterTeamMembers.svelte";
 
-const meta: Meta<FilterWorkspaceUsers> = {
-    component: FilterWorkspaceUsers,
+const meta: Meta<FilterTeamMembers> = {
+    component: FilterTeamMembers,
 };
 export default meta;
 
-type Story = StoryObj<FilterWorkspaceUsers>;
+type Story = StoryObj<FilterTeamMembers>;
 
 export const Default: Story = {};

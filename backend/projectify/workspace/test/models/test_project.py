@@ -19,7 +19,7 @@ import pytest
 
 from ...models.project import Project
 from ...models.workspace import Workspace
-from ...models.workspace_user import WorkspaceUser
+from ...models.team_member import TeamMember
 from ...services.section import section_create
 
 
@@ -38,19 +38,19 @@ class TestProject:
     def test_add_section(
         self,
         project: Project,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
     ) -> None:
         """Test section creation."""
         assert project.section_set.count() == 0
         section = section_create(
-            who=workspace_user.user,
+            who=team_member.user,
             project=project,
             title="hello",
             description="world",
         )
         assert project.section_set.count() == 1
         section2 = section_create(
-            who=workspace_user.user,
+            who=team_member.user,
             project=project,
             title="hello",
             description="world",

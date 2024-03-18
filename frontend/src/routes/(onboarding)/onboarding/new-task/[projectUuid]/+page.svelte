@@ -55,7 +55,7 @@
         }
         const section = result.data;
         // Find ourselves
-        const assignee = workspace.workspace_users.find(
+        const assignee = workspace.team_members.find(
             (w) => w.user.email === user.email,
         );
         const task: CreateUpdateTaskData = {

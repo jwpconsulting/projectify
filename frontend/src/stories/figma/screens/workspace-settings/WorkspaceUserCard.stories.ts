@@ -17,15 +17,15 @@
  */
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import WorkspaceUserCard from "$lib/figma/screens/workspace-settings/WorkspaceUserCard.svelte";
-import { workspaceUser } from "$lib/storybook";
+import TeamMemberCard from "$lib/figma/screens/workspace-settings/TeamMemberCard.svelte";
+import { teamMember } from "$lib/storybook";
 
-const meta: Meta<WorkspaceUserCard> = {
-    component: WorkspaceUserCard,
-    args: { workspaceUser },
+const meta: Meta<TeamMemberCard> = {
+    component: TeamMemberCard,
+    args: { teamMember },
 };
 export default meta;
 
-type Story = StoryObj<WorkspaceUserCard>;
+type Story = StoryObj<TeamMemberCard>;
 
 export const Default: Story = {};

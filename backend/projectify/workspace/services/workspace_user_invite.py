@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Workspace user invite services."""
+"""Team member invite services."""
 from typing import (
     Optional,
     Union,
@@ -35,23 +35,23 @@ from projectify.user.models import User, UserInvite
 from projectify.user.services.user_invite import user_invite_create
 from projectify.workspace.services.signals import send_workspace_change_signal
 
-from ..emails import WorkspaceUserInviteEmail
+from ..emails import TeamMemberInviteEmail
 from ..exceptions import UserAlreadyAdded, UserAlreadyInvited
-from ..models.const import WorkspaceUserRoles
+from ..models.const import TeamMemberRoles
 from ..models.workspace import Workspace
-from ..models.workspace_user import WorkspaceUser
-from ..models.workspace_user_invite import WorkspaceUserInvite
+from ..models.team_member import TeamMember
+from ..models.team_member_invite import TeamMemberInvite
 from ..services.workspace import workspace_add_user
 
 
 # TODO these could be better suited as selectors
-def _try_find_workspace_user(
+def _try_find_team_member(
     # TODO add *,
     workspace: Workspace,
     email: str,
-) -> Union[None, User, WorkspaceUser]:
+) -> Union[None, User, TeamMember]:
     """
-    Try to find a workspace user by email.
+    Try to find a team member by email.
 
     If not found return just the user.
     If no user found, return None.
@@ -62,8 +62,8 @@ def _try_find_workspace_user(
     except User.DoesNotExist:
         return None
     try:
-        return workspace.workspaceuser_set.get(user=user)
-    except WorkspaceUser.DoesNotExist:
+        return workspace.teammember_set.get(user=user)
+    except TeamMember.DoesNotExist:
         return user
 
 
@@ -71,11 +71,11 @@ def _try_find_invitation(
     # TODO add *,
     workspace: Workspace,
     email: str,
-) -> Union[UserInvite, WorkspaceUserInvite, None]:
+) -> Union[UserInvite, TeamMemberInvite, None]:
     """
-    Try to locate a workspace user invite.
+    Try to locate a team member invite.
 
-    If not workspace user invite can be found, try to return a user invite.
+    If not team member invite can be found, try to return a user invite.
     If nothing found, return None.
     """
     try:
@@ -83,54 +83,54 @@ def _try_find_invitation(
     except UserInvite.DoesNotExist:
         return None
     try:
-        return workspace.workspaceuserinvite_set.get(
+        return workspace.teammemberinvite_set.get(
             user_invite=user_invite, redeemed=False
         )
-    except WorkspaceUserInvite.DoesNotExist:
+    except TeamMemberInvite.DoesNotExist:
         return None
 
 
 @transaction.atomic
-def workspace_user_invite_create(
+def team_member_invite_create(
     *,
     workspace: Workspace,
     email_or_user: Union[User, str],
     who: User,
-) -> Union[WorkspaceUser, WorkspaceUserInvite]:
+) -> Union[TeamMember, TeamMemberInvite]:
     """
-    Add or invite a new workspace user. Accept either email or user instance.
+    Add or invite a new team member. Accept either email or user instance.
 
     There are a few scenarios to consider here:
     1) User exists, part of this workspace
     raise UserAlreadyAdded
     2) User exists, not part of this workspace
-    Add WorkspaceUser
+    Add TeamMember
     3) No user registration, invited to this workspace
     raise UserAlreadyInvited
     4) No user registration, invited to the platform, but not workspace
-    Create a WorkspaceUserInvite
+    Create a TeamMemberInvite
     5) No user registration, never invited to this workspace:
-    Create a UserInvite and a WorkspaceUserInvite
+    Create a UserInvite and a TeamMemberInvite
     """
-    validate_perm("workspace.create_workspace_user", who, workspace)
+    validate_perm("workspace.create_team_member", who, workspace)
     match email_or_user:
         case User() as user:
             return workspace_add_user(
                 workspace=workspace,
                 user=user,
-                role=WorkspaceUserRoles.OBSERVER,
+                role=TeamMemberRoles.OBSERVER,
             )
         case email:
             pass
 
-    match _try_find_workspace_user(workspace, email):
-        case WorkspaceUser():
+    match _try_find_team_member(workspace, email):
+        case TeamMember():
             raise UserAlreadyAdded()
         case User() as user:
             return workspace_add_user(
                 workspace=workspace,
                 user=user,
-                role=WorkspaceUserRoles.OBSERVER,
+                role=TeamMemberRoles.OBSERVER,
             )
         case None:
             pass
@@ -140,7 +140,7 @@ def workspace_user_invite_create(
     user_invite: Optional[UserInvite]
 
     match _try_find_invitation(workspace, email):
-        case WorkspaceUserInvite():
+        case TeamMemberInvite():
             raise UserAlreadyInvited(_("Email is already invited"))
         case UserInvite() as found:
             user_invite = found
@@ -152,25 +152,25 @@ def workspace_user_invite_create(
     if user_invite is None:
         raise AssertionError("This shouldn't be hit")
 
-    workspace_user_invite = WorkspaceUserInvite.objects.create(
+    team_member_invite = TeamMemberInvite.objects.create(
         workspace=workspace, user_invite=user_invite
     )
 
-    email_to_send = WorkspaceUserInviteEmail(
-        receiver=EmailAddress(email), obj=workspace_user_invite
+    email_to_send = TeamMemberInviteEmail(
+        receiver=EmailAddress(email), obj=team_member_invite
     )
     email_to_send.send()
 
     send_workspace_change_signal(workspace)
-    return workspace_user_invite
+    return team_member_invite
 
 
 @transaction.atomic
-def workspace_user_invite_delete(
+def team_member_invite_delete(
     *, who: User, workspace: Workspace, email: str
 ) -> None:
     """Remove a users invitation."""
-    validate_perm("workspace.delete_workspace_user_invite", who, workspace)
+    validate_perm("workspace.delete_team_member_invite", who, workspace)
     invite = _try_find_invitation(
         workspace=workspace,
         email=email,
@@ -180,6 +180,6 @@ def workspace_user_invite_delete(
             raise serializers.ValidationError(
                 {"email": _("User with this email was never invited")}
             )
-        case WorkspaceUserInvite() as workspace_user_invite:
-            workspace_user_invite.delete()
+        case TeamMemberInvite() as team_member_invite:
+            team_member_invite.delete()
     send_workspace_change_signal(workspace)

@@ -42,14 +42,14 @@ class TestSectionManager:
     def test_filter_for_user_and_uuid(
         self,
         section: models.Section,
-        workspace_user: models.WorkspaceUser,
+        team_member: models.TeamMember,
         # TODO are these two fixtures needed?
         workspace: models.Workspace,
-        other_workspace_user: models.WorkspaceUser,
+        other_team_member: models.TeamMember,
     ) -> None:
         """Test getting for user and uuid."""
         actual = models.Section.objects.filter_for_user_and_uuid(
-            workspace_user.user,
+            team_member.user,
             section.uuid,
         ).get()
         assert actual == section

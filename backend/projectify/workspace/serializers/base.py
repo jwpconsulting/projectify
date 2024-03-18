@@ -78,17 +78,17 @@ class WorkspaceBaseSerializer(serializers.ModelSerializer[models.Workspace]):
         )
 
 
-class WorkspaceUserBaseSerializer(
-    serializers.ModelSerializer[models.WorkspaceUser]
+class TeamMemberBaseSerializer(
+    serializers.ModelSerializer[models.TeamMember]
 ):
-    """Workspace user serializer."""
+    """Team member serializer."""
 
     user = user_serializers.UserSerializer(read_only=True)
 
     class Meta:
         """Meta."""
 
-        model = models.WorkspaceUser
+        model = models.TeamMember
         fields = (
             *timestamps,
             "user",
@@ -154,7 +154,7 @@ class ChatMessageBaseSerializer(
 ):
     """ChatMessage model serializer."""
 
-    author = WorkspaceUserBaseSerializer(read_only=True)
+    author = TeamMemberBaseSerializer(read_only=True)
 
     class Meta:
         """Meta."""

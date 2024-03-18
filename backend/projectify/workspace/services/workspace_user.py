@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Workspace user services."""
+"""Team member services."""
 from typing import Optional
 
 from django.db import transaction
@@ -24,42 +24,42 @@ from rest_framework import serializers
 
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
-from projectify.workspace.models.const import WorkspaceUserRoles
-from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.models.const import TeamMemberRoles
+from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.services.signals import send_workspace_change_signal
 
 
 @transaction.atomic
-def workspace_user_update(
+def team_member_update(
     *,
-    workspace_user: WorkspaceUser,
+    team_member: TeamMember,
     who: User,
     job_title: Optional[str] = None,
-    role: WorkspaceUserRoles,
-) -> WorkspaceUser:
-    """Update a workspace user with new role and job title."""
+    role: TeamMemberRoles,
+) -> TeamMember:
+    """Update a team member with new role and job title."""
     validate_perm(
-        "workspace.update_workspace_user", who, workspace_user.workspace
+        "workspace.update_team_member", who, team_member.workspace
     )
-    workspace_user.job_title = job_title
-    workspace_user.role = role
-    workspace_user.save()
-    send_workspace_change_signal(workspace_user.workspace)
-    return workspace_user
+    team_member.job_title = job_title
+    team_member.role = role
+    team_member.save()
+    send_workspace_change_signal(team_member.workspace)
+    return team_member
 
 
 @transaction.atomic
-def workspace_user_delete(
+def team_member_delete(
     *,
-    workspace_user: WorkspaceUser,
+    team_member: TeamMember,
     who: User,
 ) -> None:
     """
-    Delete a workspace user.
+    Delete a team member.
 
     Validate that own user can not be deleted.
 
-    We do not support deleting one's own workspace user for now. This is
+    We do not support deleting one's own team member for now. This is
     to avoid that if a user is an admin, that they will leave the workspace
     inoperable.
 
@@ -67,11 +67,11 @@ def workspace_user_delete(
     so big TODO maybe?
     """
     validate_perm(
-        "workspace.delete_workspace_user", who, workspace_user.workspace
+        "workspace.delete_team_member", who, team_member.workspace
     )
-    if workspace_user.user == who:
+    if team_member.user == who:
         raise serializers.ValidationError(
-            {"workspace_user": _("Can't delete own workspace user")}
+            {"team_member": _("Can't delete own team member")}
         )
-    workspace_user.delete()
-    send_workspace_change_signal(workspace_user.workspace)
+    team_member.delete()
+    send_workspace_change_signal(team_member.workspace)

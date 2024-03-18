@@ -17,15 +17,15 @@
  */
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import InviteWorkspaceUser from "$lib/figma/overlays/constructive/InviteWorkspaceUser.svelte";
+import InviteTeamMember from "$lib/figma/overlays/constructive/InviteTeamMember.svelte";
 import { workspace } from "$lib/storybook";
 
-const meta: Meta<InviteWorkspaceUser> = {
-    component: InviteWorkspaceUser,
+const meta: Meta<InviteTeamMember> = {
+    component: InviteTeamMember,
     args: { workspace },
 };
 export default meta;
 
-type Story = StoryObj<InviteWorkspaceUser>;
+type Story = StoryObj<InviteTeamMember>;
 
 export const Default: Story = {};

@@ -31,9 +31,9 @@ from projectify.corporate.services.customer import customer_create
 from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 
-from ..models.const import WorkspaceUserRoles
+from ..models.const import TeamMemberRoles
 from ..models.workspace import Workspace
-from ..models.workspace_user import WorkspaceUser
+from ..models.team_member import TeamMember
 from ..services.signals import send_workspace_change_signal
 
 logger = logging.getLogger(__name__)
@@ -50,7 +50,7 @@ def workspace_create(
     # TODO validate that user can only create 1 unpaid workspace
     workspace = Workspace.objects.create(title=title, description=description)
     workspace_add_user(
-        workspace=workspace, user=owner, role=WorkspaceUserRoles.OWNER
+        workspace=workspace, user=owner, role=TeamMemberRoles.OWNER
     )
     customer_create(
         who=owner,
@@ -96,17 +96,17 @@ def workspace_delete(
     The business rules for deleting workspaces haven't really been thought out
     so far, so it will only work under the following conditions:
 
-    - 1 remaining workspace user
+    - 1 remaining team member
     - No open invites
     - No boards
     - No labels
     """
     validate_perm("workspace.delete_workspace", who, workspace)
-    if workspace.workspaceuser_set.count() > 1:
+    if workspace.teammember_set.count() > 1:
         raise serializers.ValidationError(
-            _("Can only delete workspace with one remaining workspace user")
+            _("Can only delete workspace with one remaining team member")
         )
-    if workspace.workspaceuserinvite_set.exists():
+    if workspace.teammemberinvite_set.exists():
         raise serializers.ValidationError(
             _("Can only delete workspace with no outstanding invites")
         )
@@ -114,7 +114,7 @@ def workspace_delete(
         raise serializers.ValidationError(
             _("Can only delete workspace with no projects")
         )
-    count, _info = workspace.workspaceuser_set.all().delete()
+    count, _info = workspace.teammember_set.all().delete()
     logger.info(
         "Deleting workspace %s, after having deleted %d users",
         workspace,
@@ -130,9 +130,9 @@ def workspace_add_user(
     *,
     workspace: Workspace,
     user: User,
-    role: WorkspaceUserRoles,
-) -> WorkspaceUser:
-    """Add user to workspace. Return new workspace user."""
-    workspace_user = workspace.workspaceuser_set.create(user=user, role=role)
+    role: TeamMemberRoles,
+) -> TeamMember:
+    """Add user to workspace. Return new team member."""
+    team_member = workspace.teammember_set.create(user=user, role=role)
     send_workspace_change_signal(workspace)
-    return workspace_user
+    return team_member

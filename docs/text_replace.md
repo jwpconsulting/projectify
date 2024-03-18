@@ -272,3 +272,20 @@ nvim (ag \
   . \
 ) -c "bufdo %s/\vmember/contributor\1/ce"
 ```
+
+# Renaming workspace user to team member
+
+Rename strings, making the vim regex case sensitive:
+
+```fish
+nvim (ag \
+  --files-with-matches \
+  --ignore migrations \
+  --ignore docs/text_replace.md \
+  "workspace[_ -]?users?" \
+  . \
+) -c "bufdo %s/\C\vworkspace([_ -]?)user(s?)/team\1member\2/ce" \
+  -c "bufdo %s/\C\vWorkspace([_ -]?)user(s?)/Team\1member\2/ce" \
+  -c "bufdo %s/\C\vworkspace([_ -]?)User(s?)/team\1Member\2/ce" \
+  -c "bufdo %s/\C\vWorkspace([_ -]?)User(s?)/Team\1Member\2/ce"
+```

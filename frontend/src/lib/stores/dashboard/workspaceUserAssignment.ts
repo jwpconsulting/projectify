@@ -17,48 +17,48 @@
  */
 import { derived, readonly, writable } from "svelte/store";
 
-import type { WorkspaceUserAssignment } from "$lib/types/stores";
+import type { TeamMemberAssignment } from "$lib/types/stores";
 import type {
-    WorkspaceUserAssignmentInput,
-    WorkspaceUserAssignmentState,
+    TeamMemberAssignmentInput,
+    TeamMemberAssignmentState,
 } from "$lib/types/ui";
-import type { Task, WorkspaceUser } from "$lib/types/workspace";
+import type { Task, TeamMember } from "$lib/types/workspace";
 
-export function createWorkspaceUserAssignment(
+export function createTeamMemberAssignment(
     task?: Task,
-): WorkspaceUserAssignment {
-    const maybeSelected: WorkspaceUserAssignmentState = task?.assignee
+): TeamMemberAssignment {
+    const maybeSelected: TeamMemberAssignmentState = task?.assignee
         ? {
-              kind: "workspaceUser",
-              workspaceUser: task.assignee,
+              kind: "teamMember",
+              teamMember: task.assignee,
           }
         : {
               kind: "unassigned",
           };
-    const selected = writable<WorkspaceUserAssignmentState>(maybeSelected);
-    const { subscribe } = derived<typeof selected, WorkspaceUser | undefined>(
+    const selected = writable<TeamMemberAssignmentState>(maybeSelected);
+    const { subscribe } = derived<typeof selected, TeamMember | undefined>(
         selected,
         ($selected, set) => {
             if ($selected.kind == "unassigned") {
                 set(undefined);
             } else {
-                const { workspaceUser } = $selected;
-                set(workspaceUser);
+                const { teamMember } = $selected;
+                set(teamMember);
             }
         },
     );
-    const select = (selection: WorkspaceUserAssignmentInput) => {
+    const select = (selection: TeamMemberAssignmentInput) => {
         if (selection.kind === "unassigned") {
             selected.set(selection);
         } else {
             selected.set({
-                kind: "workspaceUser",
-                workspaceUser: selection.workspaceUser,
+                kind: "teamMember",
+                teamMember: selection.teamMember,
             });
         }
     };
     // No matter what, we always unassign
-    const deselect = (_selection: WorkspaceUserAssignmentInput) => {
+    const deselect = (_selection: TeamMemberAssignmentInput) => {
         selected.set({ kind: "unassigned" });
     };
     return {

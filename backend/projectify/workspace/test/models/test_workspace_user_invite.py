@@ -14,18 +14,18 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Test WorkspaceUserInvite model."""
+"""Test TeamMemberInvite model."""
 import pytest
 
-from projectify.workspace.models.workspace_user_invite import (
-    WorkspaceUserInvite,
+from projectify.workspace.models.team_member_invite import (
+    TeamMemberInvite,
 )
 
 
 @pytest.mark.django_db
-class TestWorkspaceUserInvite:
-    """Test workspace user invite."""
+class TestTeamMemberInvite:
+    """Test team member invite."""
 
-    def test_factory(self, workspace_user_invite: WorkspaceUserInvite) -> None:
+    def test_factory(self, team_member_invite: TeamMemberInvite) -> None:
         """Test factory."""
-        assert workspace_user_invite
+        assert team_member_invite

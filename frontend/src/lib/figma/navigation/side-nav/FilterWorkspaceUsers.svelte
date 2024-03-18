@@ -20,23 +20,23 @@
     import { _ } from "svelte-i18n";
 
     import SideNavMenuCategory from "$lib/figma/buttons/SideNavMenuCategory.svelte";
-    import FilterWorkspaceUser from "$lib/figma/composites/FilterWorkspaceUser.svelte";
+    import FilterTeamMember from "$lib/figma/composites/FilterTeamMember.svelte";
     import {
         userExpandOpen,
         toggleUserExpandOpen,
     } from "$lib/stores/dashboard";
-    import { selectedWorkspaceUser } from "$lib/stores/dashboard/workspaceUserFilter";
+    import { selectedTeamMember } from "$lib/stores/dashboard/teamMemberFilter";
 </script>
 
 <SideNavMenuCategory
-    label={$_("dashboard.workspace-users")}
+    label={$_("dashboard.team-members")}
     icon={User}
     open={$userExpandOpen}
     on:click={toggleUserExpandOpen}
-    filtered={$selectedWorkspaceUser.kind !== "allWorkspaceUsers"}
+    filtered={$selectedTeamMember.kind !== "allTeamMembers"}
 />
 {#if $userExpandOpen}
     <div class="shrink overflow-y-auto">
-        <FilterWorkspaceUser mode={{ kind: "filter" }} />
+        <FilterTeamMember mode={{ kind: "filter" }} />
     </div>
 {/if}

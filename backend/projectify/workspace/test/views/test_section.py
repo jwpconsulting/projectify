@@ -35,7 +35,7 @@ from projectify.workspace.models import (
 )
 from projectify.workspace.models.task import Task
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.models.team_member import TeamMember
 from pytest_types import (
     DjangoAssertNumQueries,
 )
@@ -59,7 +59,7 @@ class TestSectionCreate:
         django_assert_num_queries: DjangoAssertNumQueries,
         project: Project,
         # Make sure that we are part of that workspace
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
     ) -> None:
         """Assert that we can create a new project."""
         assert Section.objects.count() == 0
@@ -96,15 +96,15 @@ class TestSectionReadUpdateDelete:
         resource_url: str,
         user: AbstractBaseUser,
         workspace: Workspace,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         task: Task,
         other_task: Task,
         task_label: TaskLabel,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Assert we can post to this view this while being logged in."""
-        # Make sure task -> workspace_user -> user is resolved
-        task.assignee = workspace_user
+        # Make sure task -> team_member -> user is resolved
+        task.assignee = team_member
         task.save()
         with django_assert_num_queries(6):
             response = rest_user_client.get(resource_url)
@@ -115,7 +115,7 @@ class TestSectionReadUpdateDelete:
         rest_user_client: APIClient,
         resource_url: str,
         user: AbstractBaseUser,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
         section: Section,
     ) -> None:
@@ -141,7 +141,7 @@ class TestSectionReadUpdateDelete:
         self,
         rest_user_client: APIClient,
         resource_url: str,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
         """Test deleting."""
@@ -172,7 +172,7 @@ class TestSectionMove:
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
         section: Section,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
     ) -> None:
         """Test as an authenticated user."""
         other_section = Section(

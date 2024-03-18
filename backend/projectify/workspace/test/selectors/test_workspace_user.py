@@ -14,28 +14,28 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Test workspace user selectors."""
+"""Test team member selectors."""
 import pytest
 
 from projectify.user.models import User
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_user import WorkspaceUser
-from projectify.workspace.selectors.workspace_user import (
-    workspace_user_find_for_workspace,
+from projectify.workspace.models.team_member import TeamMember
+from projectify.workspace.selectors.team_member import (
+    team_member_find_for_workspace,
 )
 
 
 @pytest.mark.django_db
-def test_workspace_user_find_for_workspace(
+def test_team_member_find_for_workspace(
     workspace: Workspace,
     user: User,
-    workspace_user: WorkspaceUser,
+    team_member: TeamMember,
 ) -> None:
     """Test get_by_workspace_and_user."""
     assert (
-        workspace_user_find_for_workspace(
+        team_member_find_for_workspace(
             workspace=workspace,
             user=user,
         )
-        == workspace_user
+        == team_member
     )

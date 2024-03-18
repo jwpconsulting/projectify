@@ -82,19 +82,19 @@ from projectify.workspace.models import (
     TaskLabel,
     Workspace,
 )
-from projectify.workspace.models.const import WorkspaceUserRoles
+from projectify.workspace.models.const import TeamMemberRoles
 from projectify.workspace.models.sub_task import (
     SubTask,
 )
-from projectify.workspace.models.workspace_user import (
-    WorkspaceUser,
+from projectify.workspace.models.team_member import (
+    TeamMember,
 )
 
 Altogether = TypedDict(
     "Altogether",
     {
         "workspace": Workspace,
-        "workspace_users": list[WorkspaceUser],
+        "team_members": list[TeamMember],
         "labels": list[Label],
         "projects": list[Project],
         "sections": list[Section],
@@ -198,7 +198,7 @@ class Command(BaseCommand):
                     workspace=together["workspace"],
                     _order=_order,
                     number=next(together["number"]),
-                    assignee=choice(together["workspace_users"])
+                    assignee=choice(together["team_members"])
                     # 2 out of 3 tasks have an assignee
                     if randint(0, 2)
                     else None,
@@ -261,7 +261,7 @@ class Command(BaseCommand):
                 ChatMessage(
                     task=task,
                     text=self.fake.paragraph(),
-                    author=choice(together["workspace_users"]),
+                    author=choice(together["team_members"]),
                 )
                 for together, task in something
                 for _ in range(
@@ -302,21 +302,21 @@ class Command(BaseCommand):
         )
         self.stdout.write(f"Created {len(workspaces)} new workspaces")
 
-        workspaces_workspace_users = WorkspaceUser.objects.bulk_create(
+        workspaces_team_members = TeamMember.objects.bulk_create(
             [
-                WorkspaceUser(
+                TeamMember(
                     workspace=workspace,
                     user=user,
-                    role=WorkspaceUserRoles.OWNER
+                    role=TeamMemberRoles.OWNER
                     if user.email == "admin@localhost"
-                    else WorkspaceUserRoles.CONTRIBUTOR,
+                    else TeamMemberRoles.CONTRIBUTOR,
                 )
                 for workspace in workspaces
                 for user in sample(users, self.n_add_users)
             ]
         )
         self.stdout.write(
-            f"Added {len(workspaces_workspace_users)} users to "
+            f"Added {len(workspaces_team_members)} users to "
             f"{len(workspaces)} new workspaces"
         )
         workspaces_labels = Label.objects.bulk_create(
@@ -393,19 +393,19 @@ class Command(BaseCommand):
         altogether: list[Altogether] = [
             {
                 "workspace": workspace,
-                "workspace_users": list(workspace_users),
+                "team_members": list(team_members),
                 "labels": list(labels),
                 "projects": list(projects),
                 "sections": list(sections),
                 "number": count(1),
             }
             for (
-                (workspace, workspace_users),
+                (workspace, team_members),
                 (_, labels),
                 (_, projects),
                 (_, sections),
             ) in zip(
-                groupby(workspaces_workspace_users, key=lambda u: u.workspace),
+                groupby(workspaces_team_members, key=lambda u: u.workspace),
                 groupby(workspaces_labels, key=lambda label: label.workspace),
                 groupby(workspaces_projects, key=lambda b: b.workspace),
                 groupby(

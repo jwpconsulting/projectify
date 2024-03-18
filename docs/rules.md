@@ -10,11 +10,11 @@ There are four roles, sorted by least privileged role first
 - Maintainer
 - Owner
 
-The resources that workspace users can work on are the following:
+The resources that team members can work on are the following:
 
 - Workspace
-- Workspace user invite
-- Workspace user
+- Team member invite
+- Team member
 - Project
 - Section
 - Task
@@ -40,8 +40,8 @@ role required to perform that action.
 | Resource                | Create     | Read       | Update     | Delete     |
 |-------------------------|------------|------------|------------|------------|
 | Workspace               | Owner      | Observer   | Owner      | Owner      |
-| Workspace user invite   | Owner      | Owner      | Owner      | Owner      |
-| Workspace user          | Owner      | Observer   | Owner      | Owner      |
+| Team member invite   | Owner      | Owner      | Owner      | Owner      |
+| Team member          | Owner      | Observer   | Owner      | Owner      |
 | Project         | Maintainer | Observer   | Maintainer | Maintainer |
 | Section | Maintainer | Observer   | Maintainer | Maintainer |
 | Task                    | Contributor     | Observer   | Contributor     | Maintainer |
@@ -55,7 +55,7 @@ role required to perform that action.
 
 ### Observer
 
-The idea of __observer__ workspace users is to grant third parties, such as
+The idea of __observer__ team members is to grant third parties, such as
 persons observing a project but not directly participating in them, to see how
 a project is doing.
 
@@ -63,7 +63,7 @@ An observer can only read resources in their workspace, but not perform any
 changes on them or create them. They can read the following resources:
 
 - Workspace
-- Workspace users
+- Team members
 - Projects
 - Sections
 - Tasks
@@ -74,7 +74,7 @@ changes on them or create them. They can read the following resources:
 
 ### Contributor
 
-A workspace user __contributor__ is an individual contributor in a team.
+A team member __contributor__ is an individual contributor in a team.
 
 In addition to an observer's permissions, contributors have the following additional
 permissions:
@@ -109,17 +109,17 @@ They have the following additional permissions, necessary for billing and
 workspace maintenance.
 
 - Create, update and delete workspaces
-- Create, read, update and delete workspace user invites, that is, invite new
-  workspace users
-- Create, update and delete workspace users
+- Create, read, update and delete team member invites, that is, invite new
+  team members
+- Create, update and delete team members
 - Create, read, update and delete customer
 
 ## Rule implementation
 
 In the __backend__ we validate role permissions during each API request coming
-in. Since a role is tied to the WorkspaceUser object, we reference the
+in. Since a role is tied to the TeamMember object, we reference the
 authenticated user's account and the workspace they are operating on to get the
-WorkspaceUser instance.
+TeamMember instance.
 
 The workspace is inferred from the actual resource the user is calling the API
 on. For example, when updating a section, we resolve the
@@ -131,13 +131,13 @@ workspace foreign key. The order of lookup operations is roughly:
    workspace with UUID <uuid>)
 3. For the authenticated user, look up all available resources of the given
    type. (For projects, retrieve all projects that they can
-   access as a workspace user)
+   access as a team member)
 4. See if resource is part of the available resources (For projects,
    match by <uuid>)
 5. If no resource is found, return HTTP status code 404 __NOT FOUND__.
 6. For a GET, we are done and can serialize return the resource (except for
-   workspace user invites)
-7. For POST/PUT/DELETE, we now reference the workspace user record (M2M mapping
+   team member invites)
+7. For POST/PUT/DELETE, we now reference the team member record (M2M mapping
    between authenticated user and the workspace containing the resource), and
    check if they have permission to perform the operation.
 8. If a workspace is in trial mode, we apply some extra logic here on top of
@@ -147,6 +147,6 @@ Trial mode checking adds more complexity to this, but essentially only
 restricts an action based on whether a workspace is within trial limits. Trial
 limits are defined as a workspace only being able to have a finite amount of
 individual resources. For example, there currently is a limit of 2 of workspace
-users and workspace user invites.
+users and team member invites.
 
 

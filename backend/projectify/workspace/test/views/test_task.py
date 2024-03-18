@@ -109,7 +109,7 @@ class TestTaskCreate(UnauthenticatedTestMixin):
         self,
         rest_user_client: APIClient,
         resource_url: str,
-        workspace_user: models.WorkspaceUser,
+        team_member: models.TeamMember,
         django_assert_num_queries: DjangoAssertNumQueries,
         payload: dict[str, object],
     ) -> None:
@@ -128,12 +128,12 @@ class TestTaskCreate(UnauthenticatedTestMixin):
         with django_assert_num_queries(22):
             response = rest_user_client.post(
                 resource_url,
-                {**payload, "assignee": {"uuid": str(workspace_user.uuid)}},
+                {**payload, "assignee": {"uuid": str(team_member.uuid)}},
                 format="json",
             )
             assert response.status_code == 201, response.data
         assert Task.objects.count() == 1
-        assert Task.objects.get().assignee == workspace_user
+        assert Task.objects.get().assignee == team_member
 
 
 # Read
@@ -176,7 +176,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         self,
         rest_user_client: APIClient,
         resource_url: str,
-        workspace_user: models.WorkspaceUser,
+        team_member: models.TeamMember,
         task: Task,
         django_assert_num_queries: DjangoAssertNumQueries,
     ) -> None:
@@ -192,7 +192,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         rest_user_client: APIClient,
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
-        workspace_user: models.WorkspaceUser,
+        team_member: models.TeamMember,
         section: models.Section,
         payload: dict[str, object],
     ) -> None:
@@ -204,7 +204,7 @@ class TestTaskRetrieveUpdateDestroy(UnauthenticatedTestMixin):
         with django_assert_num_queries(25):
             response = rest_user_client.put(
                 resource_url,
-                {**payload, "assignee": {"uuid": str(workspace_user.uuid)}},
+                {**payload, "assignee": {"uuid": str(team_member.uuid)}},
                 format="json",
             )
             assert response.status_code == 200, response.content

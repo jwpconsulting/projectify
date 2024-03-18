@@ -41,11 +41,11 @@
     export let icon: SquovalIcon;
     $: src = {
         board: Folder,
-        workspaceUser: User,
+        teamMember: User,
         label: Tag,
         bulk: CheckCircle,
         move: SwitchVertical,
-        filterWorkspaceUser: Users,
+        filterTeamMember: Users,
         delete: Trash,
         ellipsis: DotsHorizontal,
         plus: Plus,

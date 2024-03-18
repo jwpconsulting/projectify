@@ -21,18 +21,18 @@ import FilterUser from "$lib/figma/select-controls/FilterUser.svelte";
 import {
     makeStorybookSelect,
     mobileParameters,
-    workspaceUserSelectionInputs,
+    teamMemberSelectionInputs,
 } from "$lib/storybook";
-import type { WorkspaceUserSelectionInput } from "$lib/types/ui";
+import type { TeamMemberSelectionInput } from "$lib/types/ui";
 
 const meta: Meta<FilterUser> = {
     component: FilterUser,
     argTypes: {
-        workspaceUserSelectionInput:
-            makeStorybookSelect<WorkspaceUserSelectionInput>({
-                "Unassigned": workspaceUserSelectionInputs[0],
-                "All workspace users": workspaceUserSelectionInputs[1],
-                "Workspace user": workspaceUserSelectionInputs[2],
+        teamMemberSelectionInput:
+            makeStorybookSelect<TeamMemberSelectionInput>({
+                "Unassigned": teamMemberSelectionInputs[0],
+                "All team members": teamMemberSelectionInputs[1],
+                "Team member": teamMemberSelectionInputs[2],
             }),
         count: makeStorybookSelect({
             "Unknown tasks assigned": undefined,
@@ -47,7 +47,7 @@ const meta: Meta<FilterUser> = {
     args: {
         active: true,
         count: "no-tasks-assigned",
-        workspaceUserSelectionInput: workspaceUserSelectionInputs[2],
+        teamMemberSelectionInput: teamMemberSelectionInputs[2],
         onSelect: console.error,
         onDeselect: console.error,
     },

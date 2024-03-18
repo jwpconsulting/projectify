@@ -22,7 +22,7 @@ from projectify.workspace.models.section import (
     Section,
 )
 from projectify.workspace.models.task import Task
-from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.services.section import (
     section_delete,
     section_move,
@@ -31,7 +31,7 @@ from projectify.workspace.services.section import (
 
 @pytest.mark.django_db
 def test_delete_non_empty_section(
-    workspace_user: WorkspaceUser,
+    team_member: TeamMember,
     section: Section,
     # Make sure there is a task
     task: Task,
@@ -41,7 +41,7 @@ def test_delete_non_empty_section(
     task_count = Task.objects.count()
     section_delete(
         section=section,
-        who=workspace_user.user,
+        who=team_member.user,
     )
     assert Section.objects.count() == count - 1
     assert Task.objects.count() == task_count - 1
@@ -53,7 +53,7 @@ def test_moving_section(
     section: Section,
     other_section: Section,
     other_other_section: Section,
-    workspace_user: WorkspaceUser,
+    team_member: TeamMember,
 ) -> None:
     """Test moving a section around."""
     assert list(project.section_set.all()) == [
@@ -64,7 +64,7 @@ def test_moving_section(
     section_move(
         section=section,
         order=0,
-        who=workspace_user.user,
+        who=team_member.user,
     )
     assert list(project.section_set.all()) == [
         section,
@@ -74,7 +74,7 @@ def test_moving_section(
     section_move(
         section=section,
         order=2,
-        who=workspace_user.user,
+        who=team_member.user,
     )
     assert list(project.section_set.all()) == [
         other_section,
@@ -84,7 +84,7 @@ def test_moving_section(
     section_move(
         section=section,
         order=1,
-        who=workspace_user.user,
+        who=team_member.user,
     )
     assert list(project.section_set.all()) == [
         other_section,
@@ -97,7 +97,7 @@ def test_moving_section(
 def test_moving_empty_section(
     project: Project,
     section: Section,
-    workspace_user: WorkspaceUser,
+    team_member: TeamMember,
 ) -> None:
     """Test moving when there are no other sections."""
     assert list(project.section_set.all()) == [
@@ -106,7 +106,7 @@ def test_moving_empty_section(
     section_move(
         section=section,
         order=1,
-        who=workspace_user.user,
+        who=team_member.user,
     )
     assert list(project.section_set.all()) == [
         section,

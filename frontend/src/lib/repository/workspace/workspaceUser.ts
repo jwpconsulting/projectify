@@ -17,7 +17,7 @@
  */
 import type { Result } from "$lib/types/base";
 import type { RepositoryContext } from "$lib/types/repository";
-import type { WorkspaceUser } from "$lib/types/workspace";
+import type { TeamMember } from "$lib/types/workspace";
 
 import type { ApiResponse } from "../types";
 import { deleteWithCredentialsJson, putWithCredentialsJson } from "../util";
@@ -25,27 +25,27 @@ import { deleteWithCredentialsJson, putWithCredentialsJson } from "../util";
 // Create
 // Read
 // Update
-export async function updateWorkspaceUser(
-    workspaceUser: Pick<WorkspaceUser, "uuid" | "role" | "job_title">,
+export async function updateTeamMember(
+    teamMember: Pick<TeamMember, "uuid" | "role" | "job_title">,
     repositoryContext: RepositoryContext,
 ): Promise<ApiResponse<undefined, { role?: string; job_title?: string }>> {
     return await putWithCredentialsJson(
-        `/workspace/workspace-user/${workspaceUser.uuid}`,
-        workspaceUser,
+        `/workspace/team-member/${teamMember.uuid}`,
+        teamMember,
         repositoryContext,
     );
 }
 
 // Delete
 interface DeleteError {
-    workspaceUser: string;
+    teamMember: string;
 }
-export async function deleteWorkspaceUser(
-    workspaceUser: WorkspaceUser,
+export async function deleteTeamMember(
+    teamMember: TeamMember,
     repositoryContext: RepositoryContext,
 ): Promise<Result<undefined, DeleteError>> {
     const result = await deleteWithCredentialsJson(
-        `/workspace/workspace-user/${workspaceUser.uuid}`,
+        `/workspace/team-member/${teamMember.uuid}`,
         repositoryContext,
     );
     if (result.kind === "ok") {

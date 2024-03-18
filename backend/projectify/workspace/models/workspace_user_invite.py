@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Contains workspace user invite qs / manager / model."""
+"""Contains team member invite qs / manager / model."""
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -25,7 +25,7 @@ from projectify.user.models import UserInvite
 from ..models import Workspace
 
 
-class WorkspaceUserInvite(BaseModel):
+class TeamMemberInvite(BaseModel):
     """UserInvites belonging to this workspace."""
 
     user_invite = models.ForeignKey[UserInvite](

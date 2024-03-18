@@ -34,7 +34,7 @@ from ..models.section import Section
 from ..models.sub_task import SubTask
 from ..models.task import Task
 from ..models.workspace import Workspace
-from ..models.workspace_user import WorkspaceUser
+from ..models.team_member import TeamMember
 from ..types import ConsumerEvent
 
 # TODO AsyncToSync is typed in a newer (unreleased) version of asgiref
@@ -45,7 +45,7 @@ async_to_sync = cast(Any, _async_to_sync)
 HasOrIsWorkspace = Union[
     Workspace,
     Label,
-    WorkspaceUser,
+    TeamMember,
     Project,
 ]
 HasOrIsProject = Union[
@@ -77,7 +77,7 @@ def send_workspace_change_signal(instance: HasOrIsWorkspace) -> None:
             workspace = instance
         case Label():
             workspace = instance.workspace
-        case WorkspaceUser():
+        case TeamMember():
             workspace = instance.workspace
         case Project():
             workspace = instance.workspace

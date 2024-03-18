@@ -26,7 +26,7 @@ import RolesHelpPage from "./en/help/roles.md?raw";
 import SectionsHelpPage from "./en/help/sections.md?raw";
 import TasksHelpPage from "./en/help/tasks.md?raw";
 import TrialHelpPage from "./en/help/trial.md?raw";
-import WorkspaceUsersHelpPage from "./en/help/workspace-users.md?raw";
+import TeamMembersHelpPage from "./en/help/team-members.md?raw";
 import WorkspacesHelpPage from "./en/help/workspaces.md?raw";
 import type { MessageDirectory } from "./types";
 
@@ -55,12 +55,12 @@ const messages: MessageDirectory = {
                 cancel: "Cancel",
                 create: "Create",
             },
-            "invite-workspace-user": {
-                title: "Invite workspace user",
+            "invite-team-member": {
+                title: "Invite team member",
                 form: {
                     email: {
                         label: "Enter the email address of the user you would like to invite",
-                        placeholder: "workspace-user@mail.com",
+                        placeholder: "team-member@mail.com",
                         validation: {
                             ok: "Email address looks good",
                         },
@@ -113,9 +113,9 @@ const messages: MessageDirectory = {
                 button: "Delete",
                 warning: "This action cannot be undone.",
             },
-            "delete-workspace-user": {
-                title: "Remove workspace user",
-                body: "Would you like to remove ''{workspaceUser}'' from this workspace?",
+            "delete-team-member": {
+                title: "Remove team member",
+                body: "Would you like to remove ''{teamMember}'' from this workspace?",
                 warning: "This action cannot be undone.",
                 button: "Remove",
             },
@@ -232,14 +232,14 @@ const messages: MessageDirectory = {
         },
         "create-project": "Create new project",
         "projects": "Projects",
-        "workspace-users": "Workspace users",
-        "workspace-user-name": "Workspace user name",
-        "filter-workspace-users": "Filter workspace users",
+        "team-members": "Team members",
+        "team-member-name": "Team member name",
+        "filter-team-members": "Filter team members",
         "search-task": {
             button: "Search tasks",
             input: { placeholder: "Enter search terms", label: "Task search" },
         },
-        "assign-user": "Assign workspace user",
+        "assign-user": "Assign team member",
         "no-sections": {
             message: "There are no sections in this project.",
             prompt: "Add a section",
@@ -251,7 +251,7 @@ const messages: MessageDirectory = {
             },
             "add-task": "Add task",
         },
-        "no-user-assigned": "No workspace user assigned",
+        "no-user-assigned": "No team member assigned",
         "error": {
             "title": "Error:",
             "description":
@@ -357,7 +357,7 @@ const messages: MessageDirectory = {
         none: "No label",
     },
     // TODO factor this into "dashboard"?
-    "filter-workspace-user": {
+    "filter-team-member": {
         "all-users": "All users",
         "assigned-nobody": "Assigned to nobody",
     },
@@ -448,8 +448,8 @@ const messages: MessageDirectory = {
             "continue": "Get started",
             "prompt": {
                 "finished": "You’re all set!",
-                "adding-workspace-users":
-                    "If you wish to add new workspace users to your workspace, please go to the workspace settings menu next to your workspace name.",
+                "adding-team-members":
+                    "If you wish to add new team members to your workspace, please go to the workspace settings menu next to your workspace name.",
             },
             "follow-up": {
                 "billing-help": "Learn more about workspace billing settings",
@@ -800,17 +800,17 @@ const messages: MessageDirectory = {
                 email: "mailto:hello@projectifyapp.com?subject=Workspace+deletion",
             },
         },
-        "workspace-users": {
-            "title": "{title} workspace users - Projectify",
-            "heading": "Workspace users",
+        "team-members": {
+            "title": "{title} team members - Projectify",
+            "heading": "Team members",
             "no-job-title": "No job title",
-            "no-workspace-users-found":
-                "No workspace users found for this search query. Please try another search.",
+            "no-team-members-found":
+                "No team members found for this search query. Please try another search.",
             "role": "Role",
-            "workspace-user": "Workspace user",
-            "invite-new-workspace-users": "Invite new workspace users",
+            "team-member": "Team member",
+            "invite-new-team-members": "Invite new team members",
             "invites": {
-                title: "Workspace user invites",
+                title: "Team member invites",
                 email: "Invited email",
                 date: "Invited on",
                 empty: "You have no open invites",
@@ -828,7 +828,7 @@ const messages: MessageDirectory = {
             "help": {
                 "title": "Help",
                 "about-roles": "About roles",
-                "about-workspace-users": "About workspace users",
+                "about-team-members": "About team members",
             },
         },
         "billing": {
@@ -866,7 +866,7 @@ const messages: MessageDirectory = {
                     title: "Checkout",
                     seats: {
                         explanation:
-                            "Select the amount of workspace seats. For each workspace user that is invited or added, a seat is used up.",
+                            "Select the amount of workspace seats. For each team member that is invited or added, a seat is used up.",
                         placeholder: "Number of workspace seats",
                         label: "Workspace seats",
                     },
@@ -921,7 +921,7 @@ const messages: MessageDirectory = {
                 "task-labels": "Task labels",
                 "projects": "Projects",
                 "sections": "Sections",
-                "workspace-users-and-invites": "Workspace users and invites",
+                "team-members-and-invites": "Team members and invites",
             },
             "rows": {
                 unlimited: "Unlimited",
@@ -959,8 +959,8 @@ const messages: MessageDirectory = {
             },
             "feature-3": {
                 header: "Full control of your workspaces",
-                text: "List and column views allow you to organize workflows and see the bigger picture. Split your workspace into projects to enable multi-project management. Filter by labels, workspace users, or keywords to focus on specific tasks.",
-                alt: "An illustration showing how tasks can be filtered by workspace users or labels",
+                text: "List and column views allow you to organize workflows and see the bigger picture. Split your workspace into projects to enable multi-project management. Filter by labels, team members, or keywords to focus on specific tasks.",
+                alt: "An illustration showing how tasks can be filtered by team members or labels",
             },
             "feature-4": {
                 header: "Keep an eye on important updates",
@@ -1022,7 +1022,7 @@ const messages: MessageDirectory = {
             list: [
                 "Unlimited tasks",
                 "Unlimited projects",
-                "Collaborate with workspace users",
+                "Collaborate with team members",
                 "Add multiple labels",
                 "Role permissions",
                 // "Set due dates",
@@ -1042,7 +1042,7 @@ const messages: MessageDirectory = {
                 title: "Trial mode limitations",
                 list: [
                     // TODO mention chat messages when available -
-                    "A workspace can have up to <strong>2</strong> workspace users",
+                    "A workspace can have up to <strong>2</strong> team members",
                     "A workspace can hold up to <strong>10</strong> projects",
                     "You can create up to <strong>100</strong> sections",
                     "You can create up to <strong>1000</strong> tasks",
@@ -1137,7 +1137,7 @@ const messages: MessageDirectory = {
                 },
                 "feature-3": {
                     title: "Plan and execute",
-                    text: "Set up and monitor pull requests, merges, bug fixes and more for multiple workspace users of your team.",
+                    text: "Set up and monitor pull requests, merges, bug fixes and more for multiple team members of your team.",
                     illustration: {
                         alt: "An illlustration showing tasks in a section called 'In Progress'",
                     },
@@ -1176,14 +1176,14 @@ const messages: MessageDirectory = {
         "project-management": {
             hero: {
                 title: "Project management solutions",
-                text: "How project managers can use Projectify to efficiently manage tasks, projects and workspace users of their team.",
+                text: "How project managers can use Projectify to efficiently manage tasks, projects and team members of their team.",
             },
             features: {
                 "feature-1": {
                     title: "An ethical approach to management",
-                    text: "View how many tasks a workspace user has assigned to them, so the workload can be divided equally. Filter by workspace user to see what individual colleagues are working on.",
+                    text: "View how many tasks a team member has assigned to them, so the workload can be divided equally. Filter by team member to see what individual colleagues are working on.",
                     illustration: {
-                        alt: "An illustration showing how Projectify displays each workspace users assigned task count",
+                        alt: "An illustration showing how Projectify displays each team members assigned task count",
                     },
                 },
                 "feature-2": {
@@ -1197,14 +1197,14 @@ const messages: MessageDirectory = {
                     title: "Full control of your workspaces",
                     text: "List and column views allow you to organise workflows and see the bigger picture. Split your workspace into projects to enable multi-project management. Filter by labels, users or keyboards to focus on specific tasks.",
                     illustration: {
-                        alt: "An illustration showing a collapsed dashboard side bar and various workspace users and labels",
+                        alt: "An illustration showing a collapsed dashboard side bar and various team members and labels",
                     },
                 },
                 "feature-4": {
                     title: "Permissions to control access",
                     text: "Make sure nothing important gets deleted. With permission roles - Owner, Maintainer, Contributor and Observer, you can be safe in knowing there won't be any accidentally data loss.",
                     illustration: {
-                        alt: "An illustration of a settings screen showing workspace users belonging to a workspace user and their role within the workspace. The illustration also shows a button allowing filtering by role and another button letting a user invite new workspace users",
+                        alt: "An illustration of a settings screen showing team members belonging to a team member and their role within the workspace. The illustration also shows a button allowing filtering by role and another button letting a user invite new team members",
                     },
                 },
             },
@@ -1248,7 +1248,7 @@ const messages: MessageDirectory = {
                     title: "Work together across timezones",
                     text: "Asynchronous communication is vital for all teams be they remote or in the office. Assign tasks, create new projects and provide updates, anywhere, anytime.",
                     illustration: {
-                        alt: "An illustration showing the updates screen of a task where two workspace users decide on when to organize a remote meeting",
+                        alt: "An illustration showing the updates screen of a task where two team members decide on when to organize a remote meeting",
                     },
                 },
                 "feature-2": {
@@ -1289,7 +1289,7 @@ const messages: MessageDirectory = {
                 },
                 "feature-3": {
                     title: "Add friends and family to your space",
-                    text: "Get everyone on the same page by assigning task to different workspace users.",
+                    text: "Get everyone on the same page by assigning task to different team members.",
                     illustration: {
                         alt: "An illustration showing how different tasks in the 'In progress' section of a project have been assigned to friends and family. The tasks are 'Trim back overgrown hedges', 'Polish wooden furnishings', and 'Replace extractor fan grating'",
                     },
@@ -1458,10 +1458,10 @@ const messages: MessageDirectory = {
             // TODO "Ways to use labels"
             content: LabelsHelpPage,
         },
-        "workspace-users": {
-            title: "Workspace users",
+        "team-members": {
+            title: "Team members",
             description: "Collaboration starts with an invite",
-            content: WorkspaceUsersHelpPage,
+            content: TeamMembersHelpPage,
         },
         // TODO Bulk select
         "filters": {
@@ -1486,7 +1486,7 @@ const messages: MessageDirectory = {
         },
         "roles": {
             title: "Roles",
-            description: "Divide up roles between workspace users",
+            description: "Divide up roles between team members",
             content: RolesHelpPage,
         },
         "skip": "Skip ahead to",

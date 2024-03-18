@@ -23,7 +23,7 @@ from rest_framework.test import APIClient
 
 from projectify.workspace.models.label import Label
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.models.team_member import TeamMember
 from pytest_types import DjangoAssertNumQueries
 
 
@@ -43,7 +43,7 @@ class TestLabelCreate:
         django_assert_num_queries: DjangoAssertNumQueries,
         workspace: Workspace,
         # Make sure we have a user
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
     ) -> None:
         """Test as an authenticated user."""
         # Gone up from 6 to 9 after introducing full_clean
@@ -67,7 +67,7 @@ class TestLabelCreate:
         django_assert_num_queries: DjangoAssertNumQueries,
         workspace: Workspace,
         # Make sure we have a user
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
     ) -> None:
         """Assert we get a nice 400 on duplicate labels."""
         # Gone up from 6 to 9 after introducing full_clean
@@ -104,7 +104,7 @@ class TestLabelUpdateDelete:
         rest_user_client: APIClient,
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         label: Label,
     ) -> None:
         """Test updating a label."""
@@ -130,7 +130,7 @@ class TestLabelUpdateDelete:
         rest_user_client: APIClient,
         resource_url: str,
         django_assert_num_queries: DjangoAssertNumQueries,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         label: Label,
     ) -> None:
         """Test deleting a label."""

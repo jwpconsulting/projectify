@@ -26,7 +26,7 @@ from projectify.workspace.models.section import (
 )
 from projectify.workspace.models.sub_task import SubTask
 from projectify.workspace.models.task import Task
-from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.services.task import (
     task_create,
     task_create_nested,
@@ -40,19 +40,19 @@ pytestmark = pytest.mark.django_db
 # Create
 def test_create_task(
     section: Section,
-    workspace_user: WorkspaceUser,
+    team_member: TeamMember,
 ) -> None:
     """Test adding tasks to a project."""
     assert section.task_set.count() == 0
     task = task_create(
-        who=workspace_user.user,
+        who=team_member.user,
         section=section,
         title="foo",
         description="bar",
     )
     assert section.task_set.count() == 1
     task2 = task_create(
-        who=workspace_user.user,
+        who=team_member.user,
         section=section,
         title="foo",
         description="bar",
@@ -63,33 +63,33 @@ def test_create_task(
 
 def test_task_create_nested(
     label: Label,
-    workspace_user: WorkspaceUser,
+    team_member: TeamMember,
     section: Section,
 ) -> None:
     """Test task_create_nested."""
     task = task_create_nested(
-        who=workspace_user.user,
+        who=team_member.user,
         section=section,
         title="hello",
         description=None,
-        assignee=workspace_user,
+        assignee=team_member,
         due_date=None,
         labels=[label],
         sub_tasks={"create_sub_tasks": [], "update_sub_tasks": []},
     )
     assert list(task.labels.values_list("uuid", flat=True)) == [label.uuid]
-    assert task.assignee == workspace_user
+    assert task.assignee == team_member
 
 
 def test_add_task_due_date(
     section: Section,
-    workspace_user: WorkspaceUser,
+    team_member: TeamMember,
     now: datetime,
 ) -> None:
     """Test adding a task with a due date."""
     task = task_create(
         section=section,
-        who=workspace_user.user,
+        who=team_member.user,
         title="foo",
         description="bar",
         due_date=now,
@@ -101,18 +101,18 @@ def test_add_task_due_date(
 def test_task_update_nested(
     task: Task,
     label: Label,
-    workspace_user: WorkspaceUser,
-    other_workspace_user: WorkspaceUser,
+    team_member: TeamMember,
+    other_team_member: TeamMember,
     sub_task: SubTask,
 ) -> None:
     """Test updating a task."""
     assert task.subtask_set.count() == 1
     task_update_nested(
-        who=workspace_user.user,
+        who=team_member.user,
         task=task,
         title="Hello world",
         description=None,
-        assignee=other_workspace_user,
+        assignee=other_team_member,
         labels=[label],
         sub_tasks={
             "create_sub_tasks": [
@@ -138,14 +138,14 @@ def test_task_update_nested(
         },
     )
     task.refresh_from_db()
-    assert task.assignee == other_workspace_user
+    assert task.assignee == other_team_member
 
     assert task.due_date is None
 
     assert list(task.labels.values_list("uuid", flat=True)) == [label.uuid]
 
     assert task.assignee
-    assert task.assignee.user.email == other_workspace_user.user.email
+    assert task.assignee.user.email == other_team_member.user.email
 
     sub_tasks = list(task.subtask_set.all())
     assert len(sub_tasks) == 3
@@ -156,11 +156,11 @@ def test_task_update_nested(
 def test_moving_task_within_section(
     section: Section,
     task: Task,
-    workspace_user: WorkspaceUser,
+    team_member: TeamMember,
 ) -> None:
     """Test moving a task around within the same section."""
     other_task = task_create(
-        who=workspace_user.user,
+        who=team_member.user,
         title="don't care",
         section=section,
     )
@@ -169,7 +169,7 @@ def test_moving_task_within_section(
         other_task,
     ]
     task_move_after(
-        who=workspace_user.user,
+        who=team_member.user,
         task=task,
         after=other_task,
     )
@@ -185,11 +185,11 @@ def test_moving_task_to_other_section(
     section: Section,
     other_section: Section,
     task: Task,
-    workspace_user: WorkspaceUser,
+    team_member: TeamMember,
 ) -> None:
     """Test moving a task around to another section."""
     other_task = task_create(
-        who=workspace_user.user,
+        who=team_member.user,
         title="don't care",
         section=section,
     )
@@ -198,7 +198,7 @@ def test_moving_task_to_other_section(
         other_task,
     ]
     other_section_task = task_create(
-        who=workspace_user.user,
+        who=team_member.user,
         title="don't care",
         section=other_section,
     )
@@ -206,7 +206,7 @@ def test_moving_task_to_other_section(
         other_section_task,
     ]
     task_move_after(
-        who=workspace_user.user,
+        who=team_member.user,
         task=task,
         after=other_section,
     )
@@ -222,7 +222,7 @@ def test_moving_task_to_empty_section(
     section: Section,
     other_section: Section,
     task: Task,
-    workspace_user: WorkspaceUser,
+    team_member: TeamMember,
 ) -> None:
     """
     Test what happens if we move it into an empty section.
@@ -230,7 +230,7 @@ def test_moving_task_to_empty_section(
     We also see what happens when the id is set too high.
     """
     task_move_after(
-        who=workspace_user.user,
+        who=team_member.user,
         task=task,
         after=other_section,
     )

@@ -16,58 +16,58 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /*
- * Filter used to filter tasks by workspace users
+ * Filter used to filter tasks by team members
  */
 import { derived, writable } from "svelte/store";
 import type { Readable, Writable } from "svelte/store";
 
-import { currentWorkspaceUsers } from "$lib/stores/dashboard/workspaceUser";
-import type { CurrentWorkspaceUsers } from "$lib/stores/dashboard/workspaceUser";
+import { currentTeamMembers } from "$lib/stores/dashboard/teamMember";
+import type { CurrentTeamMembers } from "$lib/stores/dashboard/teamMember";
 import type { SearchInput } from "$lib/types/base";
 import type {
-    WorkspaceUserSelection,
-    WorkspaceUserSelectionInput,
+    TeamMemberSelection,
+    TeamMemberSelectionInput,
 } from "$lib/types/ui";
-import type { WorkspaceUser } from "$lib/types/workspace";
+import type { TeamMember } from "$lib/types/workspace";
 
 import { internallyWritable, searchAmong } from "../util";
 
-const { priv: _selectedWorkspaceUser, pub: selectedWorkspaceUser } =
-    internallyWritable<WorkspaceUserSelection>({
-        kind: "allWorkspaceUsers",
+const { priv: _selectedTeamMember, pub: selectedTeamMember } =
+    internallyWritable<TeamMemberSelection>({
+        kind: "allTeamMembers",
     });
-export { selectedWorkspaceUser };
+export { selectedTeamMember };
 
-type WorkspaceUserSearch = Writable<SearchInput>;
-const createWorkspaceUserFilter = () => writable<SearchInput>(undefined);
+type TeamMemberSearch = Writable<SearchInput>;
+const createTeamMemberFilter = () => writable<SearchInput>(undefined);
 
-function searchWorkspaceUsers(
-    workspaceUsers: WorkspaceUser[],
+function searchTeamMembers(
+    teamMembers: TeamMember[],
     searchInput: SearchInput,
 ) {
     return searchAmong(
         ["user.email", "user.preferred_name"],
-        workspaceUsers,
+        teamMembers,
         searchInput,
     );
 }
 
-type WorkspaceUserSearchResults = Readable<WorkspaceUser[]>;
+type TeamMemberSearchResults = Readable<TeamMember[]>;
 
-function createWorkspaceUserSearchResults(
-    currentWorkspaceUsers: CurrentWorkspaceUsers,
-    workspaceUserSearch: WorkspaceUserSearch,
-): WorkspaceUserSearchResults {
+function createTeamMemberSearchResults(
+    currentTeamMembers: CurrentTeamMembers,
+    teamMemberSearch: TeamMemberSearch,
+): TeamMemberSearchResults {
     return derived<
-        [typeof currentWorkspaceUsers, typeof workspaceUserSearch],
-        WorkspaceUser[]
+        [typeof currentTeamMembers, typeof teamMemberSearch],
+        TeamMember[]
     >(
-        [currentWorkspaceUsers, workspaceUserSearch],
-        ([$currentWorkspaceUsers, $workspaceUserSearch], set) => {
+        [currentTeamMembers, teamMemberSearch],
+        ([$currentTeamMembers, $teamMemberSearch], set) => {
             set(
-                searchWorkspaceUsers(
-                    $currentWorkspaceUsers,
-                    $workspaceUserSearch,
+                searchTeamMembers(
+                    $currentTeamMembers,
+                    $teamMemberSearch,
                 ),
             );
         },
@@ -75,69 +75,69 @@ function createWorkspaceUserSearchResults(
     );
 }
 
-export const workspaceUserSearch: WorkspaceUserSearch =
-    createWorkspaceUserFilter();
+export const teamMemberSearch: TeamMemberSearch =
+    createTeamMemberFilter();
 
-export const workspaceUserSearchResults: WorkspaceUserSearchResults =
-    createWorkspaceUserSearchResults(
-        currentWorkspaceUsers,
-        workspaceUserSearch,
+export const teamMemberSearchResults: TeamMemberSearchResults =
+    createTeamMemberSearchResults(
+        currentTeamMembers,
+        teamMemberSearch,
     );
 
-export function filterByWorkspaceUser(selection: WorkspaceUserSelectionInput) {
-    _selectedWorkspaceUser.update(
-        ($selectedWorkspaceUser: WorkspaceUserSelection) => {
-            if (selection.kind === "allWorkspaceUsers") {
-                return { kind: "allWorkspaceUsers" };
+export function filterByTeamMember(selection: TeamMemberSelectionInput) {
+    _selectedTeamMember.update(
+        ($selectedTeamMember: TeamMemberSelection) => {
+            if (selection.kind === "allTeamMembers") {
+                return { kind: "allTeamMembers" };
             } else if (selection.kind === "unassigned") {
-                if ($selectedWorkspaceUser.kind === "unassigned") {
-                    return { kind: "allWorkspaceUsers" };
+                if ($selectedTeamMember.kind === "unassigned") {
+                    return { kind: "allTeamMembers" };
                 } else {
                     return { kind: "unassigned" };
                 }
             } else {
-                const selectionUuid = selection.workspaceUser.uuid;
-                if ($selectedWorkspaceUser.kind === "workspaceUsers") {
-                    $selectedWorkspaceUser.workspaceUserUuids.add(
+                const selectionUuid = selection.teamMember.uuid;
+                if ($selectedTeamMember.kind === "teamMembers") {
+                    $selectedTeamMember.teamMemberUuids.add(
                         selectionUuid,
                     );
-                    return $selectedWorkspaceUser;
+                    return $selectedTeamMember;
                 } else {
-                    const workspaceUserUuids = new Set<string>();
-                    workspaceUserUuids.add(selectionUuid);
-                    return { kind: "workspaceUsers", workspaceUserUuids };
+                    const teamMemberUuids = new Set<string>();
+                    teamMemberUuids.add(selectionUuid);
+                    return { kind: "teamMembers", teamMemberUuids };
                 }
             }
         },
     );
 }
 
-export function unfilterByWorkspaceUser(
-    selection: WorkspaceUserSelectionInput,
+export function unfilterByTeamMember(
+    selection: TeamMemberSelectionInput,
 ) {
-    _selectedWorkspaceUser.update(
-        ($selectedWorkspaceUser: WorkspaceUserSelection) => {
-            if (selection.kind === "allWorkspaceUsers") {
-                return { kind: "allWorkspaceUsers" };
+    _selectedTeamMember.update(
+        ($selectedTeamMember: TeamMemberSelection) => {
+            if (selection.kind === "allTeamMembers") {
+                return { kind: "allTeamMembers" };
             } else if (selection.kind === "unassigned") {
-                if ($selectedWorkspaceUser.kind === "unassigned") {
-                    return { kind: "allWorkspaceUsers" };
+                if ($selectedTeamMember.kind === "unassigned") {
+                    return { kind: "allTeamMembers" };
                 } else {
                     return { kind: "unassigned" };
                 }
             } else {
-                const selectionUuid = selection.workspaceUser.uuid;
-                if ($selectedWorkspaceUser.kind === "workspaceUsers") {
-                    $selectedWorkspaceUser.workspaceUserUuids.delete(
+                const selectionUuid = selection.teamMember.uuid;
+                if ($selectedTeamMember.kind === "teamMembers") {
+                    $selectedTeamMember.teamMemberUuids.delete(
                         selectionUuid,
                     );
-                    if ($selectedWorkspaceUser.workspaceUserUuids.size === 0) {
-                        return { kind: "allWorkspaceUsers" };
+                    if ($selectedTeamMember.teamMemberUuids.size === 0) {
+                        return { kind: "allTeamMembers" };
                     } else {
-                        return $selectedWorkspaceUser;
+                        return $selectedTeamMember;
                     }
                 } else {
-                    return { kind: "allWorkspaceUsers" };
+                    return { kind: "allTeamMembers" };
                 }
             }
         },

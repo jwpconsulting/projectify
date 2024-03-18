@@ -19,7 +19,7 @@
 import pytest
 
 from projectify.corporate.models import Customer
-from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.models.team_member import TeamMember
 
 
 @pytest.mark.django_db
@@ -45,21 +45,21 @@ class TestCustomerManager:
     def test_filter_by_user(
         self,
         unpaid_customer: Customer,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
     ) -> None:
         """Test filter_by_user."""
-        qs = Customer.objects.filter_by_user(workspace_user.user)
+        qs = Customer.objects.filter_by_user(team_member.user)
         assert list(qs) == [unpaid_customer]
 
     def test_get_for_user_and_uuid(
         self,
         unpaid_customer: Customer,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
     ) -> None:
         """Test get_for_user_and_uuid."""
         assert (
             Customer.objects.get_for_user_and_uuid(
-                workspace_user.user, unpaid_customer.uuid
+                team_member.user, unpaid_customer.uuid
             )
             == unpaid_customer
         )

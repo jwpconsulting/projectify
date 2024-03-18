@@ -20,7 +20,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 
 from projectify.user.models import User
-from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.services.workspace import workspace_create
 
 from ...models.coupon import Coupon
@@ -52,47 +52,47 @@ class TestCouponCreate:
 class TestCouponRedeem:
     """Test redeeming coupons."""
 
-    def test_invalid_code(self, workspace_user: WorkspaceUser) -> None:
+    def test_invalid_code(self, team_member: TeamMember) -> None:
         """Make sure nothing bad happens with an invalid code."""
         assert (
             customer_check_active_for_workspace(
-                workspace=workspace_user.workspace
+                workspace=team_member.workspace
             )
             == "trial"
         )
         with pytest.raises(serializers.ValidationError) as error:
             coupon_redeem(
-                who=workspace_user.user,
+                who=team_member.user,
                 code="i-do-not-exist",
-                workspace=workspace_user.workspace,
+                workspace=team_member.workspace,
             )
         assert error.match("No coupon is available")
         assert (
             customer_check_active_for_workspace(
-                workspace=workspace_user.workspace
+                workspace=team_member.workspace
             )
             == "trial"
         )
 
     def test_redeem_twice_different_workspace(
-        self, coupon: Coupon, workspace_user: WorkspaceUser
+        self, coupon: Coupon, team_member: TeamMember
     ) -> None:
         """Make sure we can't redeem a code twice."""
-        user = workspace_user.user
+        user = team_member.user
         assert (
             customer_check_active_for_workspace(
-                workspace=workspace_user.workspace
+                workspace=team_member.workspace
             )
             == "trial"
         )
         coupon_redeem(
             who=user,
             code=coupon.code,
-            workspace=workspace_user.workspace,
+            workspace=team_member.workspace,
         )
         assert (
             customer_check_active_for_workspace(
-                workspace=workspace_user.workspace
+                workspace=team_member.workspace
             )
             == "full"
         )
@@ -106,7 +106,7 @@ class TestCouponRedeem:
         assert error.match("No coupon is available")
         assert (
             customer_check_active_for_workspace(
-                workspace=workspace_user.workspace
+                workspace=team_member.workspace
             )
             == "full"
         )
@@ -114,13 +114,13 @@ class TestCouponRedeem:
     def test_redeem_different_codes_same_workspace(
         self,
         coupon: Coupon,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         superuser: User,
     ) -> None:
         """Make sure we can't redeem two codes for a workspace."""
-        workspace = workspace_user.workspace
+        workspace = team_member.workspace
         other_coupon = coupon_create(who=superuser, seats=1337)
-        user = workspace_user.user
+        user = team_member.user
         assert (
             customer_check_active_for_workspace(workspace=workspace) == "trial"
         )
@@ -145,7 +145,7 @@ class TestCouponRedeem:
 
     def test_redeem_paid(
         self,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         coupon: Coupon,
         paid_customer: Customer,
     ) -> None:
@@ -153,7 +153,7 @@ class TestCouponRedeem:
         workspace = paid_customer.workspace
         with pytest.raises(serializers.ValidationError) as error:
             coupon_redeem(
-                who=workspace_user.user,
+                who=team_member.user,
                 code=coupon.code,
                 workspace=workspace,
             )

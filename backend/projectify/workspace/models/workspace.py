@@ -52,10 +52,10 @@ if TYPE_CHECKING:
     from . import (
         Label,
         Project,
-        WorkspaceUser,
+        TeamMember,
     )
-    from .workspace_user_invite import (
-        WorkspaceUserInvite,
+    from .team_member_invite import (
+        TeamMemberInvite,
     )
 
 
@@ -64,9 +64,9 @@ class Workspace(TitleDescriptionModel, BaseModel):
 
     users = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
-        through="WorkspaceUser",
+        through="TeamMember",
         through_fields=("workspace", "user"),
-    )  # type: models.ManyToManyField[AbstractBaseUser, "WorkspaceUser"]
+    )  # type: models.ManyToManyField[AbstractBaseUser, "TeamMember"]
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     picture = models.ImageField(
         upload_to="workspace_picture/",
@@ -86,11 +86,11 @@ class Workspace(TitleDescriptionModel, BaseModel):
 
         # Related sets
         project_set: RelatedManager["Project"]
-        workspaceuser_set: RelatedManager["WorkspaceUser"]
-        workspaceuserinvite_set: RelatedManager["WorkspaceUserInvite"]
+        teammember_set: RelatedManager["TeamMember"]
+        teammemberinvite_set: RelatedManager["TeamMemberInvite"]
         label_set: RelatedManager["Label"]
 
-    # TODO I wish this worked with WorkspaceUser instead?
+    # TODO I wish this worked with TeamMember instead?
     @transaction.atomic
     def remove_user(self, user: AbstractBaseUser) -> AbstractBaseUser:
         """
@@ -100,8 +100,8 @@ class Workspace(TitleDescriptionModel, BaseModel):
 
         Return user.
         """
-        workspace_user = self.workspaceuser_set.get(user=user)
-        workspace_user.delete()
+        team_member = self.teammember_set.get(user=user)
+        team_member.delete()
         return user
 
     @transaction.atomic

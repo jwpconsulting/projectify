@@ -59,9 +59,9 @@ from ..services.workspace import (
     workspace_create,
     workspace_update,
 )
-from ..services.workspace_user_invite import (
-    workspace_user_invite_create,
-    workspace_user_invite_delete,
+from ..services.team_member_invite import (
+    team_member_invite_create,
+    team_member_invite_delete,
 )
 
 
@@ -198,7 +198,7 @@ class InviteUserToWorkspace(views.APIView):
         serializer.is_valid(raise_exception=True)
         email: str = serializer.validated_data["email"]
         try:
-            workspace_user_invite_create(
+            team_member_invite_create(
                 who=request.user, workspace=workspace, email_or_user=email
             )
         except UserAlreadyInvited:
@@ -239,7 +239,7 @@ class UninviteUserFromWorkspace(views.APIView):
             raise NotFound(_("No workspace found for this UUID"))
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        workspace_user_invite_delete(
+        team_member_invite_delete(
             workspace=workspace,
             who=request.user,
             email=serializer.validated_data["email"],

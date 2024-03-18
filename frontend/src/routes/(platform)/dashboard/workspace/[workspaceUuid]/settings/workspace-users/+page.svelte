@@ -19,15 +19,15 @@
     import { X } from "@steeze-ui/heroicons";
     import { _ } from "svelte-i18n";
 
-    import WorkspaceUserCard from "$lib/figma/screens/workspace-settings/WorkspaceUserCard.svelte";
+    import TeamMemberCard from "$lib/figma/screens/workspace-settings/TeamMemberCard.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
     import { uninviteUser } from "$lib/repository/workspace";
     import { currentWorkspace } from "$lib/stores/dashboard";
     import {
-        currentWorkspaceUserCan,
-        currentWorkspaceUsers,
-    } from "$lib/stores/dashboard/workspaceUser";
+        currentTeamMemberCan,
+        currentTeamMembers,
+    } from "$lib/stores/dashboard/teamMember";
     import { openConstructiveOverlay } from "$lib/stores/globalUi";
     import { coerceIsoDate } from "$lib/utils/date";
 
@@ -37,9 +37,9 @@
 
     $: workspace = $currentWorkspace ?? data.workspace;
 
-    async function inviteWorkspaceUser() {
+    async function inviteTeamMember() {
         await openConstructiveOverlay({
-            kind: "inviteWorkspaceUser",
+            kind: "inviteTeamMember",
             workspace,
         });
     }
@@ -55,21 +55,21 @@
 
 <svelte:head>
     <title
-        >{$_("workspace-settings.workspace-users.title", {
+        >{$_("workspace-settings.team-members.title", {
             values: { title: workspace.title },
         })}</title
     >
 </svelte:head>
 
 <div class="flex flex-col gap-4">
-    {#if $currentWorkspaceUserCan("create", "workspaceUserInvite")}
+    {#if $currentTeamMemberCan("create", "teamMemberInvite")}
         <Button
             action={{
                 kind: "button",
-                action: inviteWorkspaceUser,
+                action: inviteTeamMember,
             }}
             label={$_(
-                "workspace-settings.workspace-users.invite-new-workspace-users",
+                "workspace-settings.team-members.invite-new-team-members",
             )}
             style={{ kind: "primary" }}
             size="medium"
@@ -79,7 +79,7 @@
 </div>
 <section class="flex flex-col gap-4">
     <h2 class="text-xl font-bold">
-        {$_("workspace-settings.workspace-users.heading")}
+        {$_("workspace-settings.team-members.heading")}
     </h2>
     <table class="grid w-full grid-cols-4 items-center gap-y-4">
         <thead class="contents">
@@ -87,26 +87,26 @@
                 <th
                     class="col-span-2 border-b border-border text-left font-bold"
                     >{$_(
-                        "workspace-settings.workspace-users.workspace-user",
+                        "workspace-settings.team-members.team-member",
                     )}</th
                 >
                 <th class="border-b border-border text-left font-bold"
-                    >{$_("workspace-settings.workspace-users.role")}</th
+                    >{$_("workspace-settings.team-members.role")}</th
                 >
                 <th class="border-b border-border text-left font-bold"
                     >{$_(
-                        "workspace-settings.workspace-users.actions.action",
+                        "workspace-settings.team-members.actions.action",
                     )}</th
                 >
             </tr>
         </thead>
         <tbody class="contents">
-            {#each $currentWorkspaceUsers as workspaceUser}
-                <WorkspaceUserCard {workspaceUser} />
+            {#each $currentTeamMembers as teamMember}
+                <TeamMemberCard {teamMember} />
             {:else}
                 <td class="col-span-4">
                     {$_(
-                        "workspace-settings.workspace-users.no-workspace-users-found",
+                        "workspace-settings.team-members.no-team-members-found",
                     )}
                 </td>
             {/each}
@@ -115,7 +115,7 @@
 </section>
 <section class="flex flex-col gap-4">
     <h2 class="text-xl font-bold">
-        {$_("workspace-settings.workspace-users.invites.title")}
+        {$_("workspace-settings.team-members.invites.title")}
     </h2>
     <table class="grid w-full grid-cols-4 items-center gap-y-4">
         <thead class="contents">
@@ -123,23 +123,23 @@
                 <th
                     class="col-span-2 border-b border-border text-left font-bold"
                     >{$_(
-                        "workspace-settings.workspace-users.invites.email",
+                        "workspace-settings.team-members.invites.email",
                     )}</th
                 >
                 <th class="border-b border-border text-left font-bold"
                     >{$_(
-                        "workspace-settings.workspace-users.invites.date",
+                        "workspace-settings.team-members.invites.date",
                     )}</th
                 >
                 <th class="border-b border-border text-left font-bold"
                     >{$_(
-                        "workspace-settings.workspace-users.actions.action",
+                        "workspace-settings.team-members.actions.action",
                     )}</th
                 >
             </tr>
         </thead>
         <tbody class="contents">
-            {#each workspace.workspace_user_invites as invite}
+            {#each workspace.team_member_invites as invite}
                 <td class="col-span-2 overflow-x-auto">
                     {invite.email}
                 </td>
@@ -157,14 +157,14 @@
                         }}
                         size="medium"
                         label={$_(
-                            "workspace-settings.workspace-users.actions.uninvite",
+                            "workspace-settings.team-members.actions.uninvite",
                         )}
                         grow={false}
                     />
                 </td>
             {:else}
                 <td class="col-span-3">
-                    {$_("workspace-settings.workspace-users.invites.empty")}
+                    {$_("workspace-settings.team-members.invites.empty")}
                 </td>
             {/each}
         </tbody>
@@ -172,13 +172,13 @@
 </section>
 <hr />
 <section class="flex flex-col gap-2">
-    <strong>{$_("workspace-settings.workspace-users.help.title")}</strong>
+    <strong>{$_("workspace-settings.team-members.help.title")}</strong>
     <ul class="flex list-inside list-disc flex-col gap-2">
         <li>
             <Anchor
-                href="/help/workspace-users"
+                href="/help/team-members"
                 label={$_(
-                    "workspace-settings.workspace-users.help.about-workspace-users",
+                    "workspace-settings.team-members.help.about-team-members",
                 )}
                 size="normal"
             />
@@ -187,7 +187,7 @@
             <Anchor
                 href="/help/roles"
                 label={$_(
-                    "workspace-settings.workspace-users.help.about-roles",
+                    "workspace-settings.team-members.help.about-roles",
                 )}
                 size="normal"
             />

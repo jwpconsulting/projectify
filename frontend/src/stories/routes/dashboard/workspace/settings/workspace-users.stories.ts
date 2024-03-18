@@ -20,7 +20,7 @@ import type { Meta, StoryObj } from "@storybook/svelte";
 import { workspace, makeStorybookSelect, user1 } from "$lib/storybook";
 import type { User } from "$lib/types/user";
 import type { Workspace } from "$lib/types/workspace";
-import WorkspaceUsers from "$routes/(platform)/dashboard/workspace/[workspaceUuid]/settings/workspace-users/+page.svelte";
+import TeamMembers from "$routes/(platform)/dashboard/workspace/[workspaceUuid]/settings/team-members/+page.svelte";
 
 // XXX duplicated because we can't import ./$types
 interface PageData {
@@ -35,13 +35,13 @@ const data = makeStorybookSelect<PageData>({
     },
 });
 
-const meta: Meta<WorkspaceUsers> = {
-    component: WorkspaceUsers,
+const meta: Meta<TeamMembers> = {
+    component: TeamMembers,
     argTypes: { data },
     args: { data: "regular-workspace" },
 };
 export default meta;
 
-type Story = StoryObj<WorkspaceUsers>;
+type Story = StoryObj<TeamMembers>;
 
 export const RegularWorkspace: Story = { args: { data: "regular-workspace" } };

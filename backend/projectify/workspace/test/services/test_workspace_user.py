@@ -14,56 +14,56 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Test workspace user services."""
+"""Test team member services."""
 import pytest
 from rest_framework.exceptions import PermissionDenied
 
 from projectify.user.models import User
-from projectify.workspace.models.const import WorkspaceUserRoles
+from projectify.workspace.models.const import TeamMemberRoles
 from projectify.workspace.models.workspace import Workspace
-from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.services.workspace import workspace_add_user
-from projectify.workspace.services.workspace_user import (
-    workspace_user_delete,
-    workspace_user_update,
+from projectify.workspace.services.team_member import (
+    team_member_delete,
+    team_member_update,
 )
 
 pytestmark = pytest.mark.django_db
 
 
-def test_workspace_user_update(workspace_user: WorkspaceUser) -> None:
-    """Test updating a workspace user."""
+def test_team_member_update(team_member: TeamMember) -> None:
+    """Test updating a team member."""
     # First, we update ourselves
-    workspace_user_update(
-        who=workspace_user.user,
-        workspace_user=workspace_user,
-        role=WorkspaceUserRoles.OBSERVER,
+    team_member_update(
+        who=team_member.user,
+        team_member=team_member,
+        role=TeamMemberRoles.OBSERVER,
     )
     # Now we have demoted ourselves and we can't do it again
     with pytest.raises(PermissionDenied):
-        workspace_user_update(
-            who=workspace_user.user,
-            workspace_user=workspace_user,
-            role=WorkspaceUserRoles.OWNER,
+        team_member_update(
+            who=team_member.user,
+            team_member=team_member,
+            role=TeamMemberRoles.OWNER,
         )
 
 
-def test_workspace_user_delete(
-    workspace_user: WorkspaceUser,
+def test_team_member_delete(
+    team_member: TeamMember,
     workspace: Workspace,
     unrelated_user: User,
 ) -> None:
-    """Test deleting a workspace user after adding them."""
+    """Test deleting a team member after adding them."""
     count = workspace.users.count()
-    new_workspace_user = workspace_add_user(
+    new_team_member = workspace_add_user(
         workspace=workspace,
         # TODO perm check missing in workspace_add_user
-        # E who=workspace_user.user,
+        # E who=team_member.user,
         user=unrelated_user,
-        role=WorkspaceUserRoles.OBSERVER,
+        role=TeamMemberRoles.OBSERVER,
     )
     assert workspace.users.count() == count + 1
-    workspace_user_delete(
-        workspace_user=new_workspace_user, who=workspace_user.user
+    team_member_delete(
+        team_member=new_team_member, who=team_member.user
     )
     assert workspace.users.count() == count

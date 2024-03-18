@@ -23,8 +23,8 @@ from projectify.lib.auth import validate_perm
 from projectify.user.models import User
 from projectify.workspace.models.chat_message import ChatMessage
 from projectify.workspace.models.task import Task
-from projectify.workspace.selectors.workspace_user import (
-    workspace_user_find_for_workspace,
+from projectify.workspace.selectors.team_member import (
+    team_member_find_for_workspace,
 )
 from projectify.workspace.services.signals import send_task_change_signal
 
@@ -38,12 +38,12 @@ def chat_message_create(
 ) -> ChatMessage:
     """Create a chat message for a task."""
     validate_perm("workspace.create_chat_message", who, task.workspace)
-    workspace_user = workspace_user_find_for_workspace(
+    team_member = team_member_find_for_workspace(
         workspace=task.workspace,
         user=who,
     )
     instance = ChatMessage.objects.create(
-        task=task, text=text, author=workspace_user
+        task=task, text=text, author=team_member
     )
     send_task_change_signal(task)
     return instance

@@ -82,7 +82,7 @@ def customer_create_stripe_checkout_session(
 
     # Ensure we can't ask for too few seats
     quota = workspace_quota_for(
-        resource="WorkspaceUserAndInvite", workspace=workspace
+        resource="TeamMemberAndInvite", workspace=workspace
     )
     if quota.current is None:
         logger.info("Customer for workspace %s has no seat quota")
@@ -90,7 +90,7 @@ def customer_create_stripe_checkout_session(
         raise serializers.ValidationError(
             {
                 "seats": _(
-                    "Must request at least as many seats as current amount of workspace users and pending workspace user invites"
+                    "Must request at least as many seats as current amount of team members and pending team member invites"
                 )
             }
         )

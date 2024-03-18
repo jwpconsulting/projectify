@@ -17,7 +17,7 @@
 """Test workspace models."""
 import pytest
 
-from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.services.sub_task import sub_task_create
 
 from .. import (
@@ -39,12 +39,12 @@ class TestLabelManager:
         assert list(qs) == labels
 
     def test_filter_for_user_and_uuid(
-        self, label: models.Label, workspace_user: models.WorkspaceUser
+        self, label: models.Label, team_member: models.TeamMember
     ) -> None:
         """Test filter_for_user_and_uuid."""
         assert (
             models.Label.objects.filter_for_user_and_uuid(
-                workspace_user.user,
+                team_member.user,
                 label.uuid,
             ).get()
             == label
@@ -74,12 +74,12 @@ class TestSubTaskManager:
         assert list(qs) == [sub_task]
 
     def test_filter_for_user_and_uuid(
-        self, sub_task: models.SubTask, workspace_user: models.WorkspaceUser
+        self, sub_task: models.SubTask, team_member: models.TeamMember
     ) -> None:
         """Test filter_for_user_and_uuid."""
         assert (
             models.SubTask.objects.filter_for_user_and_uuid(
-                workspace_user.user,
+                team_member.user,
                 sub_task.uuid,
             ).get()
             == sub_task
@@ -101,18 +101,18 @@ class TestSubTask:
         self,
         task: models.Task,
         sub_task: models.SubTask,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
     ) -> None:
         """Test moving a sub task around."""
         other_sub_task = sub_task_create(
             task=task,
-            who=workspace_user.user,
+            who=team_member.user,
             title="don't care",
             done=False,
         )
         other_other_sub_task = sub_task_create(
             task=task,
-            who=workspace_user.user,
+            who=team_member.user,
             title="don't care",
             done=False,
         )
@@ -171,12 +171,12 @@ class TestChatMessageManager:
     def test_filter_for_user_and_uuid(
         self,
         chat_message: models.ChatMessage,
-        workspace_user: models.WorkspaceUser,
+        team_member: models.TeamMember,
     ) -> None:
         """Test filter_for_user_and_uuid."""
         assert (
             models.ChatMessage.objects.filter_for_user_and_uuid(
-                workspace_user.user,
+                team_member.user,
                 chat_message.uuid,
             ).get()
             == chat_message
@@ -190,8 +190,8 @@ class TestChatMessage:
 
     def test_factory(
         self,
-        workspace_user: models.WorkspaceUser,
+        team_member: models.TeamMember,
         chat_message: models.ChatMessage,
     ) -> None:
         """Test that chat message belongs to user."""
-        assert chat_message.author == workspace_user
+        assert chat_message.author == team_member

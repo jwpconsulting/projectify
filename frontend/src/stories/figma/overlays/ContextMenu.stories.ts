@@ -86,9 +86,9 @@ export const Permissions: Story = {
     },
 };
 
-export const UpdateWorkspaceUser: Story = {
+export const UpdateTeamMember: Story = {
     args: {
-        target: "update-workspace-user",
+        target: "update-team-member",
     },
 };
 

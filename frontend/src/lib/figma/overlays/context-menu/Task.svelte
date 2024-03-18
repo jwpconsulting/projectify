@@ -33,7 +33,7 @@
     import { goto } from "$lib/navigation";
     import { moveTaskToSection } from "$lib/repository/workspace";
     import { deleteTask } from "$lib/stores/dashboard";
-    import { currentWorkspaceUserCan } from "$lib/stores/dashboard/workspaceUser";
+    import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { openDestructiveOverlay } from "$lib/stores/globalUi";
     import {
         moveToTop,
@@ -71,7 +71,7 @@
         kind.location === "dashboard"
             ? getTaskPosition(kind.section, kind.task)
             : undefined;
-    $: canMoveTask = $currentWorkspaceUserCan("update", "task");
+    $: canMoveTask = $currentTeamMemberCan("update", "task");
     $: showMoveTop =
         taskPosition && taskPosition.kind !== "start" && canMoveTask;
     $: showMoveBottom =
@@ -155,7 +155,7 @@
         state="normal"
         icon={Duplicate}
     />
-    {#if $currentWorkspaceUserCan("delete", "task")}
+    {#if $currentTeamMemberCan("delete", "task")}
         <ContextMenuButton
             kind={{
                 kind: "button",

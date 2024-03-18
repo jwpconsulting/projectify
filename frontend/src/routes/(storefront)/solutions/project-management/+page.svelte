@@ -25,7 +25,7 @@
     import Notifications from "../../assets/notifications.png";
     import HeroProjectManagement from "../assets/hero-project-management.png";
     import ProjectManagementPermissions from "../assets/project-management-permissions.png";
-    import ProjectManagementWorkspaceUser from "../assets/project-management-workspace-user.png";
+    import ProjectManagementTeamMember from "../assets/project-management-team-member.png";
 
     $: pageContent = {
         heroContent: {
@@ -42,7 +42,7 @@
             {
                 image: {
                     position: "right",
-                    src: ProjectManagementWorkspaceUser,
+                    src: ProjectManagementTeamMember,
                     alt: $_(
                         "solutions.project-management.features.feature-1.illustration.alt",
                     ),

@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Views for workspace user."""
+"""Views for team member."""
 from uuid import UUID
 
 from django.utils.translation import gettext_lazy as _
@@ -28,92 +28,92 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
-from projectify.workspace.selectors.workspace_user import (
-    workspace_user_find_by_workspace_user_uuid,
+from projectify.workspace.selectors.team_member import (
+    team_member_find_by_team_member_uuid,
 )
 from projectify.workspace.serializers.base import (
-    WorkspaceUserBaseSerializer,
+    TeamMemberBaseSerializer,
 )
-from projectify.workspace.services.workspace_user import (
-    workspace_user_delete,
-    workspace_user_update,
+from projectify.workspace.services.team_member import (
+    team_member_delete,
+    team_member_update,
 )
 
-from ..models.workspace_user import (
-    WorkspaceUser,
-    WorkspaceUserQuerySet,
+from ..models.team_member import (
+    TeamMember,
+    TeamMemberQuerySet,
 )
 
 
 # Create
 # Read + Update + Delete
-class WorkspaceUserReadUpdateDelete(views.APIView):
-    """Delete a workspace user."""
+class TeamMemberReadUpdateDelete(views.APIView):
+    """Delete a team member."""
 
-    serializer_class = WorkspaceUserBaseSerializer
-    queryset = WorkspaceUser.objects.all()
+    serializer_class = TeamMemberBaseSerializer
+    queryset = TeamMember.objects.all()
     lookup_field = "uuid"
-    lookup_url_kwarg = "workspace_user_uuid"
+    lookup_url_kwarg = "team_member_uuid"
 
-    def get_queryset(self) -> WorkspaceUserQuerySet:
-        """Restrict to this user's workspace's workspace users."""
+    def get_queryset(self) -> TeamMemberQuerySet:
+        """Restrict to this user's workspace's team members."""
         return self.queryset.filter_by_user(self.request.user)
 
-    def get(self, request: Request, workspace_user_uuid: UUID) -> Response:
+    def get(self, request: Request, team_member_uuid: UUID) -> Response:
         """Handle GET."""
-        workspace_user = workspace_user_find_by_workspace_user_uuid(
+        team_member = team_member_find_by_team_member_uuid(
             who=request.user,
-            workspace_user_uuid=workspace_user_uuid,
+            team_member_uuid=team_member_uuid,
         )
-        if workspace_user is None:
-            raise NotFound(_("Could not find workspace user for given UUID"))
+        if team_member is None:
+            raise NotFound(_("Could not find team member for given UUID"))
 
-        serializer = WorkspaceUserBaseSerializer(
-            instance=workspace_user,
+        serializer = TeamMemberBaseSerializer(
+            instance=team_member,
         )
 
         return Response(status=HTTP_200_OK, data=serializer.data)
 
-    class InputSerializer(serializers.ModelSerializer[WorkspaceUser]):
+    class InputSerializer(serializers.ModelSerializer[TeamMember]):
         """Serializer for PUT updates."""
 
         class Meta:
             """Accept job_title, role."""
 
             fields = "job_title", "role"
-            model = WorkspaceUser
+            model = TeamMember
 
-    def put(self, request: Request, workspace_user_uuid: UUID) -> Response:
+    def put(self, request: Request, team_member_uuid: UUID) -> Response:
         """Handle PUT."""
-        workspace_user = workspace_user_find_by_workspace_user_uuid(
+        team_member = team_member_find_by_team_member_uuid(
             who=request.user,
-            workspace_user_uuid=workspace_user_uuid,
+            team_member_uuid=team_member_uuid,
         )
-        if workspace_user is None:
-            raise NotFound(_("Could not find workspace user for given UUID"))
+        if team_member is None:
+            raise NotFound(_("Could not find team member for given UUID"))
 
         serializer = self.InputSerializer(
             data=request.data,
-            instance=workspace_user,
+            instance=team_member,
         )
         serializer.is_valid(raise_exception=True)
-        workspace_user_update(
-            workspace_user=workspace_user,
+        team_member_update(
+            team_member=team_member,
             who=request.user,
             role=serializer.validated_data["role"],
             job_title=serializer.validated_data.get("job_title"),
         )
         return Response(status=HTTP_200_OK, data=serializer.data)
 
-    def delete(self, request: Request, workspace_user_uuid: UUID) -> Response:
+    def delete(self, request: Request, team_member_uuid: UUID) -> Response:
         """Handle DELETE."""
-        workspace_user = workspace_user_find_by_workspace_user_uuid(
+        team_member = team_member_find_by_team_member_uuid(
             who=request.user,
-            workspace_user_uuid=workspace_user_uuid,
+            team_member_uuid=team_member_uuid,
         )
-        if workspace_user is None:
-            raise NotFound(_("Could not find workspace user for given UUID"))
-        workspace_user_delete(
-            who=self.request.user, workspace_user=workspace_user
+        if team_member is None:
+            raise NotFound(_("Could not find team member for given UUID"))
+        team_member_delete(
+            who=self.request.user, team_member=team_member
         )
         return Response(status=HTTP_204_NO_CONTENT)

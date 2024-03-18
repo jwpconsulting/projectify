@@ -17,7 +17,7 @@
 -->
 <script lang="ts">
     // TODO I should be called InviteUser - because we are inviting users
-    // on Projectify to join this workspace as a workspace user...
+    // on Projectify to join this workspace as a team member...
     import { _ } from "svelte-i18n";
 
     import Layout from "$lib/figma/overlays/constructive/Layout.svelte";
@@ -53,13 +53,13 @@
             validation = {
                 ok: true,
                 result: $_(
-                    "overlay.constructive.invite-workspace-user.form.email.validation.ok",
+                    "overlay.constructive.invite-team-member.form.email.validation.ok",
                 ),
             };
             state = {
                 kind: "error",
                 message: $_(
-                    "overlay.constructive.invite-workspace-user.error.field",
+                    "overlay.constructive.invite-team-member.error.field",
                 ),
             };
         } else {
@@ -70,7 +70,7 @@
             state = {
                 kind: "error",
                 message: $_(
-                    "overlay.constructive.invite-workspace-user.error.general",
+                    "overlay.constructive.invite-team-member.error.general",
                 ),
             };
         }
@@ -79,17 +79,17 @@
 
 <Layout {onSubmit}>
     <svelte:fragment slot="title">
-        {$_("overlay.constructive.invite-workspace-user.title")}
+        {$_("overlay.constructive.invite-team-member.title")}
     </svelte:fragment>
     <svelte:fragment slot="form">
         <InputField
             name="project-name"
             bind:value={email}
             label={$_(
-                "overlay.constructive.invite-workspace-user.form.email.label",
+                "overlay.constructive.invite-team-member.form.email.label",
             )}
             placeholder={$_(
-                "overlay.constructive.invite-workspace-user.form.email.placeholder",
+                "overlay.constructive.invite-team-member.form.email.placeholder",
             )}
             style={{ inputType: "email" }}
             required
@@ -109,14 +109,14 @@
             style={{ kind: "secondary" }}
             size="medium"
             color="blue"
-            label={$_("overlay.constructive.invite-workspace-user.cancel")}
+            label={$_("overlay.constructive.invite-team-member.cancel")}
         />
         <Button
             action={{ kind: "submit", disabled: state.kind === "submitting" }}
             style={{ kind: "primary" }}
             size="medium"
             color="blue"
-            label={$_("overlay.constructive.invite-workspace-user.invite")}
+            label={$_("overlay.constructive.invite-team-member.invite")}
         />
     </svelte:fragment>
 </Layout>

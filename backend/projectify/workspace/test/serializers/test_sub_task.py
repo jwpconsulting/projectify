@@ -25,7 +25,7 @@ import pytest
 from rest_framework.request import Request
 
 from projectify.user.models.user import User
-from projectify.workspace.models.workspace_user import WorkspaceUser
+from projectify.workspace.models.team_member import TeamMember
 from projectify.workspace.services.sub_task import sub_task_create
 
 from ...models import (
@@ -66,12 +66,12 @@ def context(task: Task, user_request: Request) -> Context:
 
 
 @pytest.fixture
-def sub_tasks(task: Task, workspace_user: WorkspaceUser) -> list[SubTask]:
+def sub_tasks(task: Task, team_member: TeamMember) -> list[SubTask]:
     """Create several sub tasks."""
     N = 5
     return [
         sub_task_create(
-            who=workspace_user.user,
+            who=team_member.user,
             task=task,
             title="don't care",
             done=False,
@@ -302,7 +302,7 @@ class TestSubTaskListSerializer:
         self,
         task: Task,
         context: Context,
-        workspace_user: WorkspaceUser,
+        team_member: TeamMember,
         sub_tasks: list[SubTask],
     ) -> None:
         """Test updating several existing sub tasks."""
