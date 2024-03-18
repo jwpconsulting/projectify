@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Contains team member invite qs / manager / model."""
+from typing import TYPE_CHECKING
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -22,7 +23,8 @@ from django.utils.translation import gettext_lazy as _
 from projectify.lib.models import BaseModel
 from projectify.user.models import UserInvite
 
-from ..models import Workspace
+if TYPE_CHECKING:
+    from ..models import Workspace  # noqa
 
 
 class TeamMemberInvite(BaseModel):
@@ -32,7 +34,7 @@ class TeamMemberInvite(BaseModel):
         "user.UserInvite",
         on_delete=models.CASCADE,
     )
-    workspace = models.ForeignKey[Workspace](
+    workspace = models.ForeignKey["Workspace"](
         "Workspace",
         on_delete=models.CASCADE,
     )
