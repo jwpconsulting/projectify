@@ -96,7 +96,7 @@
 
 {#if labels.length}
     <div
-        class="flex w-full flex-row items-center justify-start gap-1 overflow-x-auto"
+        class="flex w-full flex-row items-center justify-start gap-1 self-start overflow-x-auto"
     >
         {#each labels as label}
             <button
@@ -109,12 +109,10 @@
         {/each}
     </div>
 {:else if canUpdate}
-    <div class="p-0.5">
-        <button
-            class="flex flex-row items-center rounded-xl border border-dashed border-primary px-4 py-1 font-bold text-primary"
-            on:click|preventDefault={openLabelPicker}
-        >
-            {$_("dashboard.task-card.add-label")}</button
-        >
-    </div>
+    <button
+        class="flex flex-row items-center self-start rounded-xl border border-dashed border-primary px-4 py-1 font-bold text-primary"
+        on:click|preventDefault={openLabelPicker}
+    >
+        {$_("dashboard.task-card.add-label")}</button
+    >
 {/if}

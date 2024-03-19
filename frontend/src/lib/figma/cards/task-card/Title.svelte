@@ -25,7 +25,9 @@
     export let task: Task;
 </script>
 
-<div class="flex flex-row items-start gap-1 sm:gap-6">
+<div
+    class="flex flex-row items-start items-center gap-1 self-start sm:gap-6 lg:self-center"
+>
     <div class="shrink-0">
         <Anchor
             label={$_("dashboard.task-card.task-number", {

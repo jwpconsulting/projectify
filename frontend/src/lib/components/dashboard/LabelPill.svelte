@@ -38,9 +38,9 @@
 <div class="p-0.5">
     <div class="rounded-xl p-0.5">
         <div
-            class={`label max-w-xs whitespace-nowrap rounded-full px-3 py-1 font-bold ${bgColorClass} ${textColorClass}`}
+            class="label max-w-xs overflow-hidden text-ellipsis whitespace-nowrap rounded-full px-3 py-1 font-bold {bgColorClass} {textColorClass}"
         >
-            <span class="nowrap-ellipsis">{label.name}</span>
+            {label.name}
         </div>
     </div>
 </div>

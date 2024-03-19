@@ -33,22 +33,20 @@
     export let section: SectionWithTasks | undefined = undefined;
 </script>
 
-<section class="w-full rounded-lg border border-base-300 bg-base-100 p-2">
-    <div
-        class="flex w-full grid-cols-[8fr_5fr_4fr] flex-col items-center lg:grid"
-    >
-        <Title {task} />
-        <Labels {task} />
-        <div class="flex flex-row items-center justify-end gap-2 self-end">
-            <SubTaskProgress {task} />
-            <div class="flex flex-row items-center gap-2">
-                <TeamMember {task} />
-                <div class="flex flex-row items-center">
-                    {#if section}
-                        <Chevrons {task} {section} />
-                    {/if}
-                    <MenuButton {task} {project} {section} />
-                </div>
+<section
+    class="flex w-full grid-cols-[8fr_5fr_4fr] flex-col items-center items-center gap-1 rounded-lg border border-border p-3 lg:grid lg:p-2"
+>
+    <Title {task} />
+    <Labels {task} />
+    <div class="flex flex-row items-center justify-end gap-2 self-end">
+        <SubTaskProgress {task} />
+        <div class="flex flex-row items-center gap-2">
+            <TeamMember {task} />
+            <div class="flex flex-row items-center">
+                {#if section}
+                    <Chevrons {task} {section} />
+                {/if}
+                <MenuButton {task} {project} {section} />
             </div>
         </div>
     </div>
