@@ -23,6 +23,7 @@
     } from "$lib/utils/colors";
 
     export let label: Label;
+    export let action: ((event: MouseEvent) => void) | undefined;
     let bgColorClass: string;
     let textColorClass: string;
 
@@ -35,12 +36,10 @@
     }
 </script>
 
-<div class="p-0.5">
-    <div class="rounded-xl p-0.5">
-        <div
-            class="label max-w-xs overflow-hidden text-ellipsis whitespace-nowrap rounded-full px-3 py-1 font-bold {bgColorClass} {textColorClass}"
-        >
-            {label.name}
-        </div>
-    </div>
-</div>
+<button
+    type="button"
+    on:click|preventDefault={action}
+    class="max-w-xs shrink-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-full px-3 py-1 font-bold {bgColorClass} {textColorClass}"
+>
+    {label.name}
+</button>

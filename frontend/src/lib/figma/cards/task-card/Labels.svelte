@@ -99,13 +99,10 @@
         class="flex w-full flex-row items-center justify-start gap-1 self-start overflow-x-auto"
     >
         {#each labels as label}
-            <button
-                on:click|preventDefault={canUpdate
-                    ? openLabelPicker
-                    : undefined}
-            >
-                <LabelPill {label} />
-            </button>
+            <LabelPill
+                {label}
+                action={canUpdate ? openLabelPicker : undefined}
+            />
         {/each}
     </div>
 {:else if canUpdate}
