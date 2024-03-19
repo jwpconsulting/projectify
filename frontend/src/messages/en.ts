@@ -187,10 +187,12 @@ const messages: MessageDirectory = {
     "label": {
         "apply-label": "Assign label",
     },
+    // TODO merge this into task-screen
     "task": {
         "title": "{title} - Projectify",
         "update-task-title": "Edit {title} - Projectify",
         "create-task-title": "Add task to {title} - Projectify",
+        "go-back-to-section": "Go back to section",
     },
     "dashboard": {
         "title": "{title} - Projectify",
@@ -200,6 +202,9 @@ const messages: MessageDirectory = {
         "task-card": {
             "add-label": "Assign label",
             "task-number": "#{number}",
+            "move-up": "Move task up",
+            "move-down": "Move task down",
+            "open-context-menu": "Open context menu",
         },
         "search": {
             "not-found": {
@@ -249,6 +254,7 @@ const messages: MessageDirectory = {
             },
         },
         "side-nav": {
+            "open-context-menu": "Open side nav context menu",
             "no-workspace": {
                 title: "No workspace selected",
                 message:
@@ -268,11 +274,12 @@ const messages: MessageDirectory = {
                 },
             },
             "projects": {
-                empty: {
+                "empty": {
                     message:
                         "You have no projects available. Please check the project archive and recover a project from there. Alternatively you can also create a new project using the button below.",
                     archive: "Go to archive",
                 },
+                "context-menu": "Open project context menu",
             },
             "filter-labels": {
                 "title": "Filter labels",
@@ -336,8 +343,10 @@ const messages: MessageDirectory = {
     },
     // TODO factor this into "dashboard"?
     "filter-label": {
-        all: "All labels",
-        none: "No label",
+        "all": "All labels",
+        "none": "No label",
+        "edit-label": "Edit label",
+        "delete-label": "Delete label",
     },
     // TODO factor this into "dashboard"?
     "filter-team-member": {
@@ -621,6 +630,9 @@ const messages: MessageDirectory = {
             "add-sub-task": {
                 button: "Add sub task",
             },
+            "move-up": "Move sub task up",
+            "move-down": "Move sub task down",
+            "remove": "Remove sub task",
         },
         "new-task-breadcrumb": "New task (currently creating)",
         // TODO organize this as "form": {} with labels and placeholders

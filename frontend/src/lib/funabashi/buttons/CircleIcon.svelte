@@ -34,8 +34,7 @@
 
     export let size: CircleIconSize;
     export let icon: CircleIconIcon;
-    // TODO make required
-    export let ariaLabel: string | undefined = undefined;
+    export let ariaLabel: string;
 
     export let action: ButtonAction & { kind: "a" | "button" };
 

@@ -18,6 +18,7 @@
 <script lang="ts">
     import { Folder } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
+    import { _ } from "svelte-i18n";
 
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { currentProject, selectProjectUuid } from "$lib/stores/dashboard";
@@ -84,6 +85,7 @@
                 size="medium"
                 icon="ellipsis"
                 action={{ kind: "button", action: toggleMenu }}
+                ariaLabel={$_("dashboard.side-nav.projects.context-menu")}
             />
         </div>
     {/if}
