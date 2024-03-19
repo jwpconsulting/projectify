@@ -21,14 +21,16 @@
 
     import TeamMemberCard from "$lib/figma/screens/workspace-settings/TeamMemberCard.svelte";
     import Button from "$lib/funabashi/buttons/Button.svelte";
+    import InputField from "$lib/funabashi/input-fields/InputField.svelte";
+    import type { InputFieldValidation } from "$lib/funabashi/types";
     import Anchor from "$lib/funabashi/typography/Anchor.svelte";
-    import { uninviteUser } from "$lib/repository/workspace";
+    import { inviteUser, uninviteUser } from "$lib/repository/workspace";
     import { currentWorkspace } from "$lib/stores/dashboard";
     import {
         currentTeamMemberCan,
         currentTeamMembers,
     } from "$lib/stores/dashboard/teamMember";
-    import { openConstructiveOverlay } from "$lib/stores/globalUi";
+    import type { FormViewState } from "$lib/types/ui";
     import { coerceIsoDate } from "$lib/utils/date";
 
     import type { PageData } from "./$types";
@@ -37,19 +39,55 @@
 
     $: workspace = $currentWorkspace ?? data.workspace;
 
-    async function inviteTeamMember() {
-        await openConstructiveOverlay({
-            kind: "inviteTeamMember",
-            workspace,
-        });
-    }
-
     async function uninvite(email: string) {
         const result = await uninviteUser(workspace, email, { fetch });
         if (result.ok) {
             return;
         }
         throw Error(JSON.stringify(result.error));
+    }
+
+    // Invite form
+    let inviteEmail: string | undefined;
+
+    let state: FormViewState = { kind: "start" };
+    let inviteEmailValidation: InputFieldValidation | undefined = undefined;
+
+    async function performInviteUser() {
+        if (inviteEmail === undefined) {
+            throw new Error("No email");
+        }
+        state = { kind: "submitting" };
+        const result = await inviteUser(workspace, inviteEmail, { fetch });
+        if (result.ok) {
+            state = { kind: "start" };
+            return;
+        }
+        if (result.error.email === undefined) {
+            inviteEmailValidation = {
+                ok: true,
+                result: $_(
+                    "workspace-settings.team-members.invite.form.email.validation.ok",
+                ),
+            };
+            state = {
+                kind: "error",
+                message: $_(
+                    "workspace-settings.team-members.invite.error.general",
+                ),
+            };
+        } else {
+            inviteEmailValidation = {
+                ok: false,
+                error: result.error.email,
+            };
+            state = {
+                kind: "error",
+                message: $_(
+                    "workspace-settings.team-members.invite.error.field",
+                ),
+            };
+        }
     }
 </script>
 
@@ -61,22 +99,36 @@
     >
 </svelte:head>
 
-<div class="flex flex-col gap-4">
-    {#if $currentTeamMemberCan("create", "teamMemberInvite")}
-        <Button
-            action={{
-                kind: "button",
-                action: inviteTeamMember,
-            }}
+{#if $currentTeamMemberCan("create", "teamMemberInvite")}
+    <form
+        class="flex flex-col gap-4"
+        on:submit|preventDefault={performInviteUser}
+    >
+        <InputField
+            name="project-name"
+            bind:value={inviteEmail}
             label={$_(
-                "workspace-settings.team-members.invite-new-team-members",
+                "workspace-settings.team-members.invite.form.email.label",
             )}
+            placeholder={$_(
+                "workspace-settings.team-members.invite.form.email.placeholder",
+            )}
+            style={{ inputType: "email" }}
+            required
+            validation={inviteEmailValidation}
+        />
+        {#if state.kind === "error"}
+            <p>{state.message}</p>
+        {/if}
+        <Button
+            action={{ kind: "submit", disabled: state.kind === "submitting" }}
+            label={$_("workspace-settings.team-members.invite.invite")}
             style={{ kind: "primary" }}
             size="medium"
             color="blue"
         />
-    {/if}
-</div>
+    </form>
+{/if}
 <section class="flex flex-col gap-4">
     <h2 class="text-xl font-bold">
         {$_("workspace-settings.team-members.heading")}
@@ -171,6 +223,7 @@
                     "workspace-settings.team-members.help.about-team-members",
                 )}
                 size="normal"
+                openBlank
             />
         </li>
         <li>
@@ -178,6 +231,7 @@
                 href="/help/roles"
                 label={$_("workspace-settings.team-members.help.about-roles")}
                 size="normal"
+                openBlank
             />
         </li>
     </ul>

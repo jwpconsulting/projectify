@@ -55,24 +55,6 @@ const messages: MessageDirectory = {
                 cancel: "Cancel",
                 create: "Create",
             },
-            "invite-team-member": {
-                title: "Invite team member",
-                form: {
-                    email: {
-                        label: "Enter the email address of the user you would like to invite",
-                        placeholder: "team-member@mail.com",
-                        validation: {
-                            ok: "Email address looks good",
-                        },
-                    },
-                },
-                error: {
-                    general: "An unknown error occured",
-                    field: "Please correct the errors above and submit one more time",
-                },
-                cancel: "Cancel",
-                invite: "Invite",
-            },
             "create-section": {
                 "title": "Create new section",
                 "form": {
@@ -808,7 +790,22 @@ const messages: MessageDirectory = {
                 "No team members found for this search query. Please try another search.",
             "role": "Role",
             "team-member": "Team member",
-            "invite-new-team-members": "Invite new team members",
+            "invite": {
+                form: {
+                    email: {
+                        label: "Enter the email address of the user you would like to invite",
+                        placeholder: "team-member@mail.com",
+                        validation: {
+                            ok: "Email address looks good",
+                        },
+                    },
+                },
+                error: {
+                    general: "An unknown error occured",
+                    field: "Please correct the errors above and submit one more time",
+                },
+                invite: "Invite team member",
+            },
             "invites": {
                 title: "Team member invites",
                 email: "Invited email",
