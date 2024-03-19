@@ -22,7 +22,6 @@
     import type { SolutionsPageContent } from "$lib/types/ui";
 
     import Filters from "../../assets/filters.png";
-    import Notifications from "../../assets/notifications.png";
     import HeroProjectManagement from "../assets/hero-project-management.png";
     import ProjectManagementPermissions from "../assets/project-management-permissions.png";
     import ProjectManagementTeamMember from "../assets/project-management-team-member.png";
@@ -52,21 +51,6 @@
                 ),
                 text: $_(
                     "solutions.project-management.features.feature-1.text",
-                ),
-            },
-            {
-                image: {
-                    position: "left",
-                    src: Notifications,
-                    alt: $_(
-                        "solutions.project-management.features.feature-2.illustration.alt",
-                    ),
-                },
-                title: $_(
-                    "solutions.project-management.features.feature-2.title",
-                ),
-                text: $_(
-                    "solutions.project-management.features.feature-2.text",
                 ),
             },
             {

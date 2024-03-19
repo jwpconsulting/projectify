@@ -959,11 +959,6 @@ const messages: MessageDirectory = {
                 text: "List and column views allow you to organize workflows and see the bigger picture. Split your workspace into projects to enable multi-project management. Filter by labels, team members, or keywords to focus on specific tasks.",
                 alt: "An illustration showing how tasks can be filtered by team members or labels",
             },
-            "feature-4": {
-                header: "Keep an eye on important updates",
-                text: "Whether it's a question about a task, a change of assignee, or simply a task moving to the next stage of development, notifications immediately let you know when there's an update.",
-                alt: "An illustration showing notifications in the Projectify UI informing the user of recent updates to their tasks",
-            },
             "feature-5": {
                 header: "Responsive for on-the-go",
                 text: "Need to access your projects while away from the office? No app. No problem. A fully responsive experience to stay connected and keep projects on track.",
@@ -1025,7 +1020,6 @@ const messages: MessageDirectory = {
                 // "Set due dates",
                 "Customize your workspace",
                 "Archive completed projects",
-                // "Real-time notifications",
                 // "File storage of 3 GB",
                 "Filter by label or assignee",
                 "Accessible interface",
@@ -1125,13 +1119,6 @@ const messages: MessageDirectory = {
                         alt: "A illustration showing the label context menu used in Projectify",
                     },
                 },
-                "feature-2": {
-                    title: "Live notifications",
-                    text: "Notifications provide you with all the information you need whilst also giving you conveniant 'reply' and 'go to task' actions. The notification center houses updates from all workspaces so you never miss a beat.",
-                    illustration: {
-                        alt: "An illustration showing the live notifications a user can receive in Projectify",
-                    },
-                },
                 "feature-3": {
                     title: "Plan and execute",
                     text: "Set up and monitor pull requests, merges, bug fixes and more for multiple team members of your team.",
@@ -1181,13 +1168,6 @@ const messages: MessageDirectory = {
                     text: "View how many tasks a team member has assigned to them, so the workload can be divided equally. Filter by team member to see what individual colleagues are working on.",
                     illustration: {
                         alt: "An illustration showing how Projectify displays each team members assigned task count",
-                    },
-                },
-                "feature-2": {
-                    title: "Live notifications",
-                    text: "Notifications provide you with all the information you need whilst also giving you convenient 'reply' and 'go to task' actions. The notification center houses updates from all workspaces so you never miss a beat.",
-                    illustration: {
-                        alt: "An illustration showing notifications arriving about tasks being updated",
                     },
                 },
                 "feature-3": {
@@ -1246,13 +1226,6 @@ const messages: MessageDirectory = {
                     text: "Asynchronous communication is vital for all teams be they remote or in the office. Assign tasks, create new projects and provide updates, anywhere, anytime.",
                     illustration: {
                         alt: "An illustration showing the updates screen of a task where two team members decide on when to organize a remote meeting",
-                    },
-                },
-                "feature-2": {
-                    title: "Notifications and updates on any task",
-                    text: "Notifications allow for important information to be delivered, even if you're not around. When you're away from your computer, updates to task will stay unread in the notification center until you get back.",
-                    illustration: {
-                        alt: "An illustration showing a notification popup telling the user about recent updates to the tasks in their workspace",
                     },
                 },
                 "feature-3": {
