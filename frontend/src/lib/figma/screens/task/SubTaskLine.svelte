@@ -72,6 +72,7 @@
                     action: subTaskAssignment.moveSubTaskUp.bind(null, index),
                     disabled: index < 1,
                 }}
+                ariaLabel={$_("task-screen.sub-tasks.move-up")}
             />
             <CircleIcon
                 size="medium"
@@ -84,6 +85,7 @@
                     ),
                     disabled: index >= $subTaskAssignment.length - 1,
                 }}
+                ariaLabel={$_("task-screen.sub-tasks.move-down")}
             />
             <CircleIcon
                 size="medium"
@@ -92,6 +94,7 @@
                     kind: "button",
                     action: subTaskAssignment.removeSubTask.bind(null, index),
                 }}
+                ariaLabel={$_("task-screen.sub-tasks.remove")}
             />
         </div>
     {/if}

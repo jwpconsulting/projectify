@@ -135,6 +135,7 @@
                     action: showSideNavContextMenu,
                     disabled: workspace === undefined,
                 }}
+                ariaLabel={$_("dashboard.side-nav.open-context-menu")}
             />
         </div>
     </div>

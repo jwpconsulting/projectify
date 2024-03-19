@@ -187,10 +187,12 @@ const messages: MessageDirectory = {
     "label": {
         "apply-label": "Assign label",
     },
+    // TODO merge this into task-screen
     "task": {
         "title": "{title} - Projectify",
         "update-task-title": "Edit {title} - Projectify",
         "create-task-title": "Add task to {title} - Projectify",
+        "go-back-to-section": "Go back to section",
     },
     "dashboard": {
         "title": "{title} - Projectify",
@@ -200,6 +202,9 @@ const messages: MessageDirectory = {
         "task-card": {
             "add-label": "Assign label",
             "task-number": "#{number}",
+            "move-up": "Move task up",
+            "move-down": "Move task down",
+            "open-context-menu": "Open context menu",
         },
         "search": {
             "not-found": {
@@ -233,6 +238,7 @@ const messages: MessageDirectory = {
                 prompt: "Add a task here",
             },
             "add-task": "Add task",
+            "open-context-menu": "Open section context menu",
         },
         "no-user-assigned": "No team member assigned",
         "error": {
@@ -249,6 +255,7 @@ const messages: MessageDirectory = {
             },
         },
         "side-nav": {
+            "open-context-menu": "Open side nav context menu",
             "no-workspace": {
                 title: "No workspace selected",
                 message:
@@ -268,13 +275,20 @@ const messages: MessageDirectory = {
                 },
             },
             "projects": {
-                empty: {
+                "empty": {
                     message:
                         "You have no projects available. Please check the project archive and recover a project from there. Alternatively you can also create a new project using the button below.",
                     archive: "Go to archive",
                 },
+                "context-menu": "Open project context menu",
+            },
+            "filter-team-members": {
+                "open-collapsible": "Open team member filter menu",
+                "close-collapsible": "Close team member filter menu",
             },
             "filter-labels": {
+                "open-collapsible": "Open label filter menu",
+                "close-collapsible": "Close label filter menu",
                 "title": "Filter labels",
                 "create-new-label": "Create new label",
                 "input": {
@@ -336,8 +350,10 @@ const messages: MessageDirectory = {
     },
     // TODO factor this into "dashboard"?
     "filter-label": {
-        all: "All labels",
-        none: "No label",
+        "all": "All labels",
+        "none": "No label",
+        "edit-label": "Edit label",
+        "delete-label": "Delete label",
     },
     // TODO factor this into "dashboard"?
     "filter-team-member": {
@@ -603,6 +619,7 @@ const messages: MessageDirectory = {
         },
     },
     "task-screen": {
+        "open-context-menu": "Open task context menu",
         "update": {
             "update": "Update task",
             "update-continue-editing": "Update task and stay",
@@ -621,6 +638,9 @@ const messages: MessageDirectory = {
             "add-sub-task": {
                 button: "Add sub task",
             },
+            "move-up": "Move sub task up",
+            "move-down": "Move sub task down",
+            "remove": "Remove sub task",
         },
         "new-task-breadcrumb": "New task (currently creating)",
         // TODO organize this as "form": {} with labels and placeholders

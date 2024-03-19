@@ -27,69 +27,27 @@
         ProjectDetail,
         SectionWithTasks,
     } from "$lib/types/workspace";
-    import { getTaskUrl } from "$lib/urls";
 
     export let task: TaskWithSection;
     export let project: ProjectDetail;
     export let section: SectionWithTasks | undefined = undefined;
 </script>
 
-<a
-    class="block rounded-llg border-2 border-transparent focus:border-base-content"
-    href={getTaskUrl(task.uuid)}
+<section
+    class="flex w-full grid-cols-[8fr_5fr_4fr] flex-col items-center items-center gap-1 rounded-lg border border-border p-3 lg:grid lg:p-2"
 >
-    <div class="w-full rounded-lg border border-base-300 bg-base-100 p-2">
-        <!-- Compact view (< lg)-->
-        <div class="flex flex-col lg:hidden">
-            <div class="flex flex-row justify-between">
-                <div class="">
-                    <Title {task} />
-                </div>
-                <div class="flex flex-row items-center gap-2 justify-self-end">
-                    {#if section}
-                        <Chevrons {task} {section} />
-                    {/if}
-                    <MenuButton {task} {project} {section} />
-                </div>
-            </div>
-            <div class="flex flex-row justify-between">
-                <div class="flex flex-row overflow-x-auto">
-                    <Labels {task} />
-                </div>
-                <div class="flex shrink-0 flex-row justify-self-end">
-                    <div class="flex flex-row items-center gap-4">
-                        <SubTaskProgress {task} />
-                    </div>
-                    <div class="flex flex-row items-center">
-                        <TeamMember {task} />
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Wide view (lg) -->
-        <div
-            class="hidden w-full grid-cols-[8fr_5fr_minmax(100px,_1fr)_max-content] lg:grid"
-        >
+    <Title {task} />
+    <Labels {task} />
+    <div class="flex flex-row items-center justify-end gap-2 self-end">
+        <SubTaskProgress {task} />
+        <div class="flex flex-row items-center gap-2">
+            <TeamMember {task} />
             <div class="flex flex-row items-center">
-                <Title {task} />
-            </div>
-            <div
-                class="flex flex-row items-center justify-start gap-6 overflow-x-auto"
-            >
-                <Labels {task} />
-            </div>
-            <SubTaskProgress {task} />
-            <div class="flex flex-row items-center justify-end gap-2">
-                <div class="flex flex-row items-center gap-2">
-                    <TeamMember {task} />
-                    <div class="flex flex-row items-center">
-                        {#if section}
-                            <Chevrons {task} {section} />
-                        {/if}
-                        <MenuButton {task} {project} {section} />
-                    </div>
-                </div>
+                {#if section}
+                    <Chevrons {task} {section} />
+                {/if}
+                <MenuButton {task} {project} {section} />
             </div>
         </div>
     </div>
-</a>
+</section>

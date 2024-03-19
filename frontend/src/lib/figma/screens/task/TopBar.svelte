@@ -16,6 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import { _ } from "svelte-i18n";
+
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import type { Section } from "$lib/types/workspace";
     import { getDashboardSectionUrl } from "$lib/urls";
@@ -36,6 +38,7 @@
                 }}
                 size="medium"
                 icon="close"
+                ariaLabel={$_("task.go-back-to-section")}
             />
         </div>
         <slot name="breadcrumbs">Breadcrumbs missing</slot>

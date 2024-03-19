@@ -16,6 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import { _ } from "svelte-i18n";
+
     import SelectTeamMemberClosed from "$lib/figma/navigation/side-nav/SelectTeamMemberClosed.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import {
@@ -32,6 +34,9 @@
 
 <div class="flex flex-col items-center gap-6">
     <SquovalIcon
+        ariaLabel={$userExpandOpen
+            ? $_("dashboard.side-nav.filter-team-members.close-collapsible")
+            : $_("dashboard.side-nav.filter-team-members.open-collapsible")}
         state="active"
         icon="teamMember"
         action={{ kind: "button", action: toggleUserExpandOpen }}

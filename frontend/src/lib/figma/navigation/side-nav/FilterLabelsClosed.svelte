@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -16,6 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import { _ } from "svelte-i18n";
+
     // Refactor these
     // TODO Justus 2023-05-03
     import SelectLabelCheckBox from "$lib/figma/select-controls/SelectLabelCheckBox.svelte";
@@ -38,6 +40,9 @@
         icon="label"
         action={{ kind: "button", action: toggleLabelDropdownClosedNavOpen }}
         active={$selectedLabels.kind !== "allLabels"}
+        ariaLabel={$labelExpandOpen
+            ? $_("dashboard.side-nav.filter-labels.close-collapsible")
+            : $_("dashboard.side-nav.filter-labels.open-collapsible")}
     />
     {#if $labelExpandOpen}
         <div class="flex flex-col items-center gap-2">

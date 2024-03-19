@@ -77,6 +77,7 @@
                     action: onEdit,
                     disabled: !$currentTeamMemberCan("update", "label"),
                 }}
+                ariaLabel={$_("filter-label.edit-label")}
             />
             <CircleIcon
                 size="medium"
@@ -86,6 +87,7 @@
                     action: onDelete,
                     disabled: !$currentTeamMemberCan("delete", "label"),
                 }}
+                ariaLabel={$_("filter-label.delete-label")}
             />
         {/if}
     </div>

@@ -20,6 +20,8 @@
 Up and down chevrons for task movement within a section
 -->
 <script lang="ts">
+    import { _ } from "svelte-i18n";
+
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
     import { getTaskPosition, moveUp, moveDown } from "$lib/stores/modules";
@@ -51,6 +53,7 @@ Up and down chevrons for task movement within a section
             action: () => moveUp(section, task, { fetch }),
             disabled: upDisabled,
         }}
+        ariaLabel={$_("dashboard.task-card.move-up")}
     />
     <CircleIcon
         size="medium"
@@ -60,5 +63,6 @@ Up and down chevrons for task movement within a section
             action: () => moveDown(section, task, { fetch }),
             disabled: downDisabled,
         }}
+        ariaLabel={$_("dashboard.task-card.move-down")}
     />
 </div>

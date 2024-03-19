@@ -16,6 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import { _ } from "svelte-i18n";
+
     import CircleIcon from "$lib/funabashi/buttons/CircleIcon.svelte";
     import { openContextMenu } from "$lib/stores/globalUi";
     import type { ContextMenuType } from "$lib/types/ui";
@@ -56,5 +58,10 @@
 </script>
 
 <div bind:this={dropDownMenuBtnRef}>
-    <CircleIcon icon="ellipsis" size="medium" {action} />
+    <CircleIcon
+        icon="ellipsis"
+        size="medium"
+        {action}
+        ariaLabel={$_("dashboard.task-card.open-context-menu")}
+    />
 </div>

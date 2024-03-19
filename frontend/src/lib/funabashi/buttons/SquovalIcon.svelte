@@ -59,6 +59,7 @@
     export let active = false;
 
     export let action: ButtonAction & { kind: "button" | "a" };
+    export let ariaLabel: string;
 
     const style =
         "focus:base-content relative h-8 w-8 rounded-lg border border-transparent p-1 focus:border-base-content focus:outline-none active:text-display enabled:hover:bg-secondary-hover enabled:active:bg-primary";
@@ -69,6 +70,7 @@
 <!-- terrible hack. Ideally we don't support this being an anchor at all -->
 {#if action.kind === "button"}
     <button
+        aria-label={ariaLabel}
         on:click={action.action}
         class={style}
         class:text-base-content={state === "active"}
@@ -83,6 +85,7 @@
     </button>
 {:else}
     <a
+        aria-label={ariaLabel}
         href={action.href}
         on:click={action.onInteract}
         class={style}

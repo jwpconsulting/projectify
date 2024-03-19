@@ -86,6 +86,7 @@
         {/if}
         <div bind:this={dropDownMenuBtnRef}>
             <SquovalIcon
+                ariaLabel={$_("dashboard.section.open-context-menu")}
                 icon="ellipsis"
                 state="active"
                 active={false}
