@@ -37,18 +37,18 @@
 
     let state: FormViewState = { kind: "start" };
 
+    let newEmail: string | undefined = undefined;
+    let newEmailValidation: InputFieldValidation | undefined = undefined;
     let currentPassword: string | undefined = undefined;
     let currentPasswordValidation: InputFieldValidation | undefined =
         undefined;
-    let newEmail: string | undefined = undefined;
-    let newEmailValidation: InputFieldValidation | undefined = undefined;
 
     async function submit() {
-        if (currentPassword === undefined) {
-            throw new Error("Expected currentPassword");
-        }
         if (newEmail === undefined) {
             throw new Error("Expected newEmail");
+        }
+        if (currentPassword === undefined) {
+            throw new Error("Expected currentPassword");
         }
         const response = await requestEmailAddressUpdate(
             currentPassword,
@@ -58,19 +58,6 @@
         if (response.ok) {
             await goto(requestedEmailAddressUpdateUrl);
             return;
-        }
-        if (response.error.new_email === undefined) {
-            newEmailValidation = {
-                ok: true,
-                result: $_(
-                    "user-account-settings.update-email-address.new-email.valid",
-                ),
-            };
-        } else {
-            newEmailValidation = {
-                ok: false,
-                error: response.error.new_email,
-            };
         }
         if (response.error.password === undefined) {
             currentPasswordValidation = {
@@ -85,7 +72,20 @@
                 error: response.error.password,
             };
         }
-        if (newEmailValidation.ok && currentPasswordValidation.ok) {
+        if (response.error.new_email === undefined) {
+            newEmailValidation = {
+                ok: true,
+                result: $_(
+                    "user-account-settings.update-email-address.new-email.valid",
+                ),
+            };
+        } else {
+            newEmailValidation = {
+                ok: false,
+                error: response.error.new_email,
+            };
+        }
+        if (currentPasswordValidation.ok && newEmailValidation.ok) {
             state = {
                 kind: "error",
                 message: $_(
@@ -115,19 +115,6 @@
         </p>
         <InputField
             label={$_(
-                "user-account-settings.update-email-address.current-password.label",
-            )}
-            placeholder={$_(
-                "user-account-settings.update-email-address.current-password.placeholder",
-            )}
-            name="current-password"
-            style={{ inputType: "password" }}
-            bind:value={currentPassword}
-            validation={currentPasswordValidation}
-            required
-        />
-        <InputField
-            label={$_(
                 "user-account-settings.update-email-address.new-email.label",
             )}
             placeholder={$_(
@@ -137,6 +124,19 @@
             style={{ inputType: "email" }}
             bind:value={newEmail}
             validation={newEmailValidation}
+            required
+        />
+        <InputField
+            label={$_(
+                "user-account-settings.update-email-address.current-password.label",
+            )}
+            placeholder={$_(
+                "user-account-settings.update-email-address.current-password.placeholder",
+            )}
+            name="current-password"
+            style={{ inputType: "password" }}
+            bind:value={currentPassword}
+            validation={currentPasswordValidation}
             required
         />
         {#if state.kind === "error"}
