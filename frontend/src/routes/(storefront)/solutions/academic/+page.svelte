@@ -21,7 +21,6 @@
     import SolutionsPage from "$lib/components/solutions/SolutionsPage.svelte";
     import type { SolutionsPageContent } from "$lib/types/ui";
 
-    import AcademicPopup from "../assets/academic-popup.png";
     import AcademicSubTask from "../assets/academic-sub-task.png";
     import HeroAcademic from "../assets/hero-academic.png";
 
@@ -35,17 +34,6 @@
             },
         },
         features: [
-            {
-                image: {
-                    position: "right",
-                    src: AcademicPopup,
-                    alt: $_(
-                        "solutions.academic.features.feature-1.illustration.alt",
-                    ),
-                },
-                title: $_("solutions.academic.features.feature-1.title"),
-                text: $_("solutions.academic.features.feature-1.text"),
-            },
             {
                 image: {
                     position: "left",

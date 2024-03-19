@@ -1185,13 +1185,6 @@ const messages: MessageDirectory = {
                 text: "How students can use Projectify to plan a thesis, collaborate, or keep track of assignments.",
             },
             features: {
-                "feature-1": {
-                    title: "Deadlines become a lifeline",
-                    text: "Projectify notifies you of upcoming due dates for assignments, so you'll never miss a paper's due date.",
-                    illustration: {
-                        alt: "An illustration showing how Projectify will inform a user of different task due dates and other important updates",
-                    },
-                },
                 "feature-2": {
                     title: "Checklists that aid your progress",
                     text: "We know that projects and dissertations can be daunting, but we're here to help. Breaking tasks into smaller sub tasks allow you to micro-achieve your way to completion.",
