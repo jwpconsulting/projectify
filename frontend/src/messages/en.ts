@@ -238,6 +238,7 @@ const messages: MessageDirectory = {
                 prompt: "Add a task here",
             },
             "add-task": "Add task",
+            "open-context-menu": "Open section context menu",
         },
         "no-user-assigned": "No team member assigned",
         "error": {
@@ -281,7 +282,13 @@ const messages: MessageDirectory = {
                 },
                 "context-menu": "Open project context menu",
             },
+            "filter-team-members": {
+                "open-collapsible": "Open team member filter menu",
+                "close-collapsible": "Close team member filter menu",
+            },
             "filter-labels": {
+                "open-collapsible": "Open label filter menu",
+                "close-collapsible": "Close label filter menu",
                 "title": "Filter labels",
                 "create-new-label": "Create new label",
                 "input": {
@@ -612,6 +619,7 @@ const messages: MessageDirectory = {
         },
     },
     "task-screen": {
+        "open-context-menu": "Open task context menu",
         "update": {
             "update": "Update task",
             "update-continue-editing": "Update task and stay",
