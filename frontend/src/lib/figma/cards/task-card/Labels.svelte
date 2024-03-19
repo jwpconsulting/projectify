@@ -20,7 +20,7 @@
     // The label picker is TODO
     import { _ } from "svelte-i18n";
 
-    import LabelPill from "$lib/components/dashboard/LabelPill.svelte";
+    import LabelPill from "$lib/figma/cards/task-card/LabelPill.svelte";
     import { updateTask } from "$lib/repository/workspace";
     import { createLabelAssignment } from "$lib/stores/dashboard/labelAssignment";
     import { currentTeamMemberCan } from "$lib/stores/dashboard/teamMember";
