@@ -52,7 +52,7 @@
 </script>
 
 <button
-    class="flex w-full flex-row items-center gap-2 rounded-2.5xl border border-dashed border-primary px-2 py-1 text-sm font-bold text-primary {action !==
+    class="flex w-full flex-row items-center gap-2 rounded-2.5xl border border-dashed border-primary px-2 py-1 font-bold text-primary {action !==
     undefined
         ? 'hover:bg-background active:bg-secondary-hover'
         : ''}"
@@ -62,7 +62,7 @@
     disabled={!action}
     bind:this={btnRef}
 >
-    <AvatarVariant size="small" content={avatarContent} />
+    <AvatarVariant size="medium" content={avatarContent} />
     <div class="truncate">
         {#if user}
             {displayName}

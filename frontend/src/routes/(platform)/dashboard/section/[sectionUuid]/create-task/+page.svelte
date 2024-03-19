@@ -128,7 +128,7 @@
                     disabled: !canCreate,
                 }}
                 color="blue"
-                size="small"
+                size="medium"
                 style={{ kind: "primary" }}
                 label={$_("task-screen.create.create")}
             />
@@ -140,7 +140,7 @@
                     disabled: !canCreate,
                 }}
                 color="blue"
-                size="small"
+                size="medium"
                 style={{ kind: "secondary" }}
                 label={$_("task-screen.create.create-continue-editing")}
             />

@@ -109,7 +109,7 @@
 {:else if canUpdate}
     <div class="p-0.5">
         <button
-            class="flex flex-row items-center rounded-xl border border-dashed border-primary px-4 py-1 text-sm font-bold text-primary"
+            class="flex flex-row items-center rounded-xl border border-dashed border-primary px-4 py-1 font-bold text-primary"
             on:click|preventDefault={openLabelPicker}
         >
             {$_("dashboard.task-card.add-label")}</button

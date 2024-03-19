@@ -73,7 +73,7 @@
                     <div class="flex flex-row">
                         <Button
                             style={{ kind: "secondary" }}
-                            size="small"
+                            size="medium"
                             color="blue"
                             label={$_("project-archive.card.recover")}
                             action={{
@@ -84,7 +84,7 @@
 
                         <Button
                             style={{ kind: "primary" }}
-                            size="small"
+                            size="medium"
                             color="red"
                             label={$_("project-archive.card.delete")}
                             action={{

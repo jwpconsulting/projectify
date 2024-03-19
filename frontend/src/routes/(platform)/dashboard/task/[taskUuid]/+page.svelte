@@ -82,7 +82,7 @@
                 <Button
                     grow={false}
                     color="blue"
-                    size="small"
+                    size="medium"
                     style={{ kind: "primary" }}
                     label={$_("task-screen.edit")}
                     action={{ kind: "a", href: getTaskEditUrl(task.uuid) }}

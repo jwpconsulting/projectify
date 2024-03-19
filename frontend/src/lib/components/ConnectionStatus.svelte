@@ -37,7 +37,7 @@
                 <Icon src={Exclamation} class="h-6 w-6" theme="outline" />
                 <div>{$_("connection-status.disconnected")}</div>
             </div>
-            <a class="link p-2 py-4 text-sm" href="/"
+            <a class="link p-2 py-4" href="/"
                 >{$_("connection-status.back-to-landing")}</a
             >
         </div>

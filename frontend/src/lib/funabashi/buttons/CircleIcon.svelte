@@ -50,8 +50,6 @@
         close: X,
     }[icon];
     $: sizeMapped = {
-        // TODO remove small
-        small: "w-6 h-6 p-1",
         medium: "w-8 h-8 p-1.5",
     }[size];
 

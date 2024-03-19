@@ -17,8 +17,7 @@
  */
 import type { IconSource } from "@steeze-ui/svelte-icon";
 
-// TODO remove small
-const anchorSizes = ["small", "normal", "large"] as const;
+const anchorSizes = ["normal", "large"] as const;
 export type AnchorSize = (typeof anchorSizes)[number];
 
 // For all buttons
@@ -43,13 +42,11 @@ export type ButtonStyle =
       };
 export const buttonColors = ["blue", "red"] as const;
 export type ButtonColor = (typeof buttonColors)[number];
-// TODO remove small
-export const buttonSizes = ["medium", "small"] as const;
+export const buttonSizes = ["medium"] as const;
 export type ButtonSize = (typeof buttonSizes)[number];
 
 // For buttons/CircleIcon.svelte
-// TODO remove small
-export const circleIconSizes = ["small", "medium"] as const;
+export const circleIconSizes = ["medium"] as const;
 export type CircleIconSize = (typeof circleIconSizes)[number];
 // TODO rename circleIcons
 export const circleIconIcons = [

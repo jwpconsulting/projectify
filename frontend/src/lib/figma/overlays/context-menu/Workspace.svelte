@@ -29,7 +29,7 @@
 </script>
 
 <Layout>
-    <p class="px-4 py-2 text-sm font-bold">
+    <p class="px-4 py-2 font-bold">
         {$_("overlay.context-menu.workspace.select-workspace")}
     </p>
     {#each workspaces as workspace}

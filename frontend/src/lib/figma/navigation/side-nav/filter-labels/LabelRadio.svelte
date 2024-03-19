@@ -40,7 +40,7 @@
 </script>
 
 <div class="flex flex-col gap-2">
-    <legend class="text-sm font-bold">
+    <legend class="font-bold">
         {$_("dashboard.side-nav.filter-labels.color.prompt")}
     </legend>
     <div class="flex flex-row flex-wrap gap-3">

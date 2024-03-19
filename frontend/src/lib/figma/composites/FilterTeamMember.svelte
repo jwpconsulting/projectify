@@ -20,7 +20,7 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import { _ } from "svelte-i18n";
 
-    import FilterUser from "$lib/figma/select-controls/FilterUser.svelte";
+    import FilterTeamMember from "$lib/figma/select-controls/FilterTeamMember.svelte";
     import InputField from "$lib/funabashi/input-fields/InputField.svelte";
     import { tasksPerUser } from "$lib/stores/dashboard";
     import {
@@ -87,7 +87,7 @@
     >
 </div>
 <div class="flex flex-col">
-    <FilterUser
+    <FilterTeamMember
         teamMemberSelectionInput={{ kind: "unassigned" }}
         active={$selected.kind === "unassigned"}
         count={$tasksPerUser.unassigned}
@@ -95,7 +95,7 @@
         onDeselect={() => deselect({ kind: "unassigned" })}
     />
     {#each $teamMemberSearchResults as teamMember (teamMember.uuid)}
-        <FilterUser
+        <FilterTeamMember
             teamMemberSelectionInput={{
                 kind: "teamMember",
                 teamMember: teamMember,

@@ -17,7 +17,7 @@
  */
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import FilterUser from "$lib/figma/select-controls/FilterUser.svelte";
+import FilterTeamMember from "$lib/figma/select-controls/FilterTeamMember.svelte";
 import {
     makeStorybookSelect,
     mobileParameters,
@@ -25,8 +25,8 @@ import {
 } from "$lib/storybook";
 import type { TeamMemberSelectionInput } from "$lib/types/ui";
 
-const meta: Meta<FilterUser> = {
-    component: FilterUser,
+const meta: Meta<FilterTeamMember> = {
+    component: FilterTeamMember,
     argTypes: {
         teamMemberSelectionInput:
             makeStorybookSelect<TeamMemberSelectionInput>({
@@ -54,7 +54,7 @@ const meta: Meta<FilterUser> = {
 };
 export default meta;
 
-type Story = StoryObj<FilterUser>;
+type Story = StoryObj<FilterTeamMember>;
 
 export const Default: Story = {};
 

@@ -31,7 +31,6 @@ const meta: Meta<Anchor> = {
     },
     argTypes: {
         size: makeStorybookSelect({
-            Small: "small",
             Normal: "normal",
             Large: "large",
         } satisfies Record<string, AnchorSize>),

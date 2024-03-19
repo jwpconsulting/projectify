@@ -36,7 +36,7 @@
             <div class="flex h-5 w-5 flex-row items-center">
                 <Icon src={ViewList} theme="outline" class="text-primary" />
             </div>
-            <div class="text-sm font-bold text-primary">
+            <div class="font-bold text-primary">
                 {$number(subTaskCompletionPercentage, {
                     style: "percent",
                 })}

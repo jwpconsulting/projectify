@@ -74,14 +74,14 @@
                 }`}
             />
         </div>
-        <div class="line-clamp-1 min-w-0 text-sm font-bold">
+        <div class="line-clamp-1 min-w-0 font-bold">
             {project.title}
         </div>
     </div>
     {#if $currentTeamMemberCan("update", "project")}
         <div class="shrink-0" bind:this={buttonRef}>
             <CircleIcon
-                size="small"
+                size="medium"
                 icon="ellipsis"
                 action={{ kind: "button", action: toggleMenu }}
             />

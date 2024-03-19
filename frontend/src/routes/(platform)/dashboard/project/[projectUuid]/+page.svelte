@@ -65,7 +65,7 @@
             <Button
                 style={{ kind: "primary" }}
                 color="blue"
-                size="small"
+                size="medium"
                 grow={false}
                 label={$_("dashboard.no-sections.prompt")}
                 action={{ kind: "button", action: onAddNewSection }}

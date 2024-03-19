@@ -31,19 +31,13 @@
 
     $: outerSize = {
         large: tw`h-24 w-24`,
-        medium: tw`h-8 w-8`,
-        small: tw`h-6 w-6`,
-        // TODO remove hoverable size
-        hoverable: tw`h-6 w-6 group-hover:h-8 group-hover:w-8`,
+        medium: tw`h-6 w-6`,
     }[size];
-    type Size = 24 | 32 | 92;
+    type Size = 32 | 96;
     let innerSize: Size;
     const sizes: Record<AvatarStateSize, Size> = {
-        large: 92,
+        large: 96,
         medium: 32,
-        small: 24,
-        // TODO remove hoverable size
-        hoverable: 32,
     } as const;
     $: innerSize = sizes[size];
     $: profilePicture = user ? user.profile_picture : undefined;
