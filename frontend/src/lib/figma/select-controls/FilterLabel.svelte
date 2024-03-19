@@ -70,7 +70,7 @@
     <div class="flex flex-row items-center gap-2">
         {#if label.kind === "label" && onEdit}
             <CircleIcon
-                size="small"
+                size="medium"
                 icon="edit"
                 action={{
                     kind: "button",
@@ -79,7 +79,7 @@
                 }}
             />
             <CircleIcon
-                size="small"
+                size="medium"
                 icon="delete"
                 action={{
                     kind: "button",

@@ -62,7 +62,7 @@
                     kind: "tertiary",
                     icon: { position: "left", icon: Search },
                 }}
-                size="small"
+                size="medium"
                 color="blue"
                 grow={false}
             />

@@ -125,7 +125,7 @@
         }
     }
 
-    const inputStyle = tw`placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2 text-sm`;
+    const inputStyle = tw`placeholder:text-task-update-text peer h-full w-full rounded-lg border border-border px-2 py-2`;
 
     function clear() {
         value = undefined;
@@ -160,20 +160,15 @@
             class:justify-end={!label}
         >
             {#if label}
-                <!-- TODO remove text-sm -->
                 <label
                     for={id}
-                    class="text-sm font-bold text-base-content first-letter:uppercase"
+                    class="font-bold text-base-content first-letter:uppercase"
                 >
                     {label}
                 </label>
             {/if}
             {#if anchorTop}
-                <Anchor
-                    href={anchorTop.href}
-                    label={anchorTop.label}
-                    size="small"
-                />
+                <Anchor href={anchorTop.href} label={anchorTop.label} />
             {/if}
         </div>
     {/if}
@@ -249,7 +244,6 @@
         >
             {#if validation}
                 <p
-                    class="text-s"
                     class:text-success={validation.ok}
                     class:text-error={!validation.ok}
                 >
@@ -261,11 +255,7 @@
                 </p>
             {/if}
             {#if anchorBottom}
-                <Anchor
-                    href={anchorBottom.href}
-                    label={anchorBottom.label}
-                    size="small"
-                />
+                <Anchor href={anchorBottom.href} label={anchorBottom.label} />
             {/if}
         </div>
     {/if}

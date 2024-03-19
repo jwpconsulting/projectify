@@ -128,7 +128,7 @@
                     disabled: !canUpdate,
                 }}
                 color="blue"
-                size="small"
+                size="medium"
                 style={{ kind: "primary" }}
                 label={$_("task-screen.update.update")}
             />
@@ -140,7 +140,7 @@
                     disabled: !canUpdate,
                 }}
                 color="blue"
-                size="small"
+                size="medium"
                 style={{ kind: "primary" }}
                 label={$_("task-screen.update.update-continue-editing")}
             />

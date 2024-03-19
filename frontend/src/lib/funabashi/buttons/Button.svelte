@@ -52,11 +52,9 @@
     }[style.kind][color];
     $: sizeStyle = {
         medium: tw`text-base`,
-        small: tw`text-sm`,
     }[size];
     $: iconSizeStyle = {
         medium: tw`h-6 w-6`,
-        small: tw`h-5 w-5`,
     }[size];
 
     $: outerGrowStyle = grow ? tw`w-full` : "";

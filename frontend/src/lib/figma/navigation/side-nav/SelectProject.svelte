@@ -81,7 +81,7 @@
     {#if $currentTeamMemberCan("update", "project")}
         <div class="shrink-0" bind:this={buttonRef}>
             <CircleIcon
-                size="small"
+                size="medium"
                 icon="ellipsis"
                 action={{ kind: "button", action: toggleMenu }}
             />
