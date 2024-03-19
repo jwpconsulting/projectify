@@ -57,11 +57,16 @@ const meta: Meta<FilterLabel> = {
     component: FilterLabel,
     argTypes: {
         label: makeStorybookSelect(label),
+        checked: { control: "boolean" },
+        onEdit: makeStorybookSelect({
+            undefined: undefined,
+            callback: () => undefined,
+        }),
     },
     args: {
         label: "red",
         checked: false,
-        canEdit: false,
+        onEdit: "undefined",
     },
 };
 export default meta;
