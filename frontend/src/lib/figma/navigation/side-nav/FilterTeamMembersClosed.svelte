@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -16,8 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    // TODO rename TeamMemberDropdownClosedNav
-    import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
+    import SelectTeamMemberClosed from "$lib/figma/navigation/side-nav/SelectTeamMemberClosed.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import {
         selectedTeamMember,
@@ -40,7 +39,7 @@
     />
     {#if $userExpandOpen}
         <div class="flex flex-col items-center gap-2">
-            <SelectUserClosedNav
+            <SelectTeamMemberClosed
                 user={undefined}
                 active={$selectedTeamMember.kind === "unassigned"}
                 on:select={() => filterByTeamMember({ kind: "unassigned" })}
@@ -48,7 +47,7 @@
                     unfilterByTeamMember({ kind: "unassigned" })}
             />
             {#each $teamMemberSearchResults as teamMember}
-                <SelectUserClosedNav
+                <SelectTeamMemberClosed
                     user={teamMember.user}
                     active={$selectedTeamMember.kind === "teamMembers" &&
                         $selectedTeamMember.teamMemberUuids.has(

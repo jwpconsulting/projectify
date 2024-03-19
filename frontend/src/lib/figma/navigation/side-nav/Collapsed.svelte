@@ -16,8 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    import LabelDropdownClosedNav from "$lib/figma/buttons/LabelDropdownClosedNav.svelte";
-    import UserDropdownClosedNav from "$lib/figma/buttons/UserDropdownClosedNav.svelte";
+    import FilterLabelsClosed from "$lib/figma/navigation/side-nav/FilterLabelsClosed.svelte";
+    import FilterTeamMembersClosed from "$lib/figma/navigation/side-nav/FilterTeamMembersClosed.svelte";
     import WorkspaceSelector from "$lib/figma/navigation/side-nav/WorkspaceSelector.svelte";
     import SquovalIcon from "$lib/funabashi/buttons/SquovalIcon.svelte";
     import { selectProjectUuid, showFilters } from "$lib/stores/dashboard";
@@ -61,8 +61,8 @@
             {#if workspace !== undefined && $showFilters}
                 <div class="flex flex-col gap-8">
                     <div class="flex flex-col items-center gap-6">
-                        <UserDropdownClosedNav />
-                        <LabelDropdownClosedNav />
+                        <FilterTeamMembersClosed />
+                        <FilterLabelsClosed />
                     </div>
                 </div>
             {/if}

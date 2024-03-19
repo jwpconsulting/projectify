@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -48,16 +48,16 @@
 <button on:click={click} class="group relative text-primary">
     {#if active}
         <div
-            class="absolute left-4 top-0 z-10 h-4 w-4 rounded-full border-2 border-base-TODO bg-primary group-hover:left-6"
+            class="absolute left-6 top-0 z-10 h-4 w-4 rounded-full border-2 border-base-TODO bg-primary"
         />
     {:else}
         <Icon
             src={CheckCircle}
             theme="outline"
-            class="absolute left-4 top-0 z-10 h-4 w-4 rounded-full bg-base-TODO group-hover:left-6 group-active:bg-primary group-active:text-base-TODO"
+            class="absolute left-6 top-0 z-10 h-4 w-4 rounded-full bg-base-TODO group-active:bg-primary group-active:text-base-TODO"
         />
     {/if}
     <div class="relative z-0 p-0.5">
-        <AvatarVariant {content} size="hoverable" />
+        <AvatarVariant {content} size="medium" />
     </div>
 </button>

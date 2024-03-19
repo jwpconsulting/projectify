@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2023-2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -17,13 +17,13 @@
  */
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import LabelDropdownClosedNav from "$lib/figma/buttons/LabelDropdownClosedNav.svelte";
+import FilterLabelsClosed from "$lib/figma/navigation/side-nav/FilterLabelsClosed.svelte";
 
-const meta: Meta<LabelDropdownClosedNav> = {
-    component: LabelDropdownClosedNav,
+const meta: Meta<FilterLabelsClosed> = {
+    component: FilterLabelsClosed,
 };
 export default meta;
 
-type Story = StoryObj<LabelDropdownClosedNav>;
+type Story = StoryObj<FilterLabelsClosed>;
 
 export const Default: Story = {};
