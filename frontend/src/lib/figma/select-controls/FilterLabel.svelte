@@ -57,7 +57,7 @@
 >
     <div class="flex min-w-0 flex-row items-center gap-2">
         <SelectLabelCheckBox {label} bind:checked {onCheck} {onUncheck} />
-        <div class="text-regular truncate text-sm">
+        <div class="text-regular truncate">
             {#if label.kind === "allLabels"}
                 {$_("filter-label.all")}
             {:else if label.kind === "noLabel"}

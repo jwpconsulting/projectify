@@ -74,7 +74,7 @@
                 }`}
             />
         </div>
-        <div class="line-clamp-1 min-w-0 text-sm font-bold">
+        <div class="line-clamp-1 min-w-0 font-bold">
             {project.title}
         </div>
     </div>

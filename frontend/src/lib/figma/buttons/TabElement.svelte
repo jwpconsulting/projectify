@@ -23,7 +23,7 @@
 
 <a
     {href}
-    class="border-b-2 p-2.5 text-sm font-bold uppercase hover:text-base-content"
+    class="border-b-2 p-2.5 font-bold uppercase hover:text-base-content"
     class:border-base-content={active}
     class:border-border={!active}
     class:text-base-content={active}

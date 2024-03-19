@@ -72,7 +72,7 @@
                     size="small"
                 />
             {/if}
-            <div class="text-regular min-w-0 truncate text-sm">
+            <div class="text-regular min-w-0 truncate">
                 {#if teamMemberSelectionInput.kind === "unassigned"}
                     {$_("filter-team-member.assigned-nobody")}
                 {:else if teamMemberSelectionInput.kind === "allTeamMembers"}
@@ -84,7 +84,7 @@
         </div>
     </div>
     <div
-        class="flex shrink-0 flex-row items-center gap-2 rounded-2.5xl bg-background px-2 py-0.5 text-sm text-primary group-hover:bg-foreground"
+        class="flex shrink-0 flex-row items-center gap-2 rounded-2.5xl bg-background px-2 py-0.5 text-primary group-hover:bg-foreground"
     >
         {count ?? ""}
     </div>

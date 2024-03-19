@@ -83,7 +83,7 @@
                             theme="outline"
                             class="h-4 w-4 shrink-0"
                         />
-                        <div class="min-w-0 truncate text-sm font-bold">
+                        <div class="min-w-0 truncate font-bold">
                             {workspace
                                 ? workspace.title
                                 : $_(

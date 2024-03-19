@@ -58,7 +58,7 @@
 
 <!-- TODO no active state styling for this button -->
 <button
-    class="group rounded-2.5xl border border-dashed border-primary px-3 py-1 text-sm font-bold {bgStyle} {hoverBgStyle} {textStyle}"
+    class="group rounded-2.5xl border border-dashed border-primary px-3 py-1 font-bold {bgStyle} {hoverBgStyle} {textStyle}"
     type="button"
     on:click={action}
     disabled={!action}
