@@ -137,7 +137,6 @@ export const constructiveOverlays =
             project,
         },
         "Create project": { kind: "createProject", workspace },
-        "Invite team members": { kind: "inviteTeamMember", workspace },
         "Create section": {
             kind: "createSection",
             project,

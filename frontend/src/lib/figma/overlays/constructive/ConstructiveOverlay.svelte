@@ -18,7 +18,6 @@
 <script lang="ts">
     import CreateProject from "$lib/figma/overlays/constructive/CreateProject.svelte";
     import CreateSection from "$lib/figma/overlays/constructive/CreateSection.svelte";
-    import InviteTeamMember from "$lib/figma/overlays/constructive/InviteTeamMember.svelte";
     import RecoverProject from "$lib/figma/overlays/constructive/RecoverProject.svelte";
     import UpdateProject from "$lib/figma/overlays/constructive/UpdateProject.svelte";
     import type { ConstructiveOverlayType } from "$lib/types/ui";
@@ -32,8 +31,6 @@
     <UpdateProject project={target.project} />
 {:else if target.kind === "createProject"}
     <CreateProject workspace={target.workspace} />
-{:else if target.kind === "inviteTeamMember"}
-    <InviteTeamMember workspace={target.workspace} />
 {:else if target.kind === "createSection"}
     <CreateSection project={target.project} />
 {:else if target.kind === "updateSection"}

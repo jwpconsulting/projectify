@@ -157,7 +157,6 @@ export type ContextMenuState = Overlay<ContextMenuType, HTMLElement>;
 export type ConstructiveOverlayType =
     | { kind: "updateProject"; project: Project }
     | { kind: "createProject"; workspace: Workspace }
-    | { kind: "inviteTeamMember"; workspace: Workspace }
     | { kind: "createSection"; project: Project }
     | {
           kind: "updateSection";
