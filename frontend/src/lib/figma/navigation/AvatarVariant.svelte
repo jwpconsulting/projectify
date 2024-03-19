@@ -33,10 +33,10 @@
         large: tw`h-24 w-24`,
         medium: tw`h-6 w-6`,
     }[size];
-    type Size = 32 | 92;
+    type Size = 32 | 96;
     let innerSize: Size;
     const sizes: Record<AvatarStateSize, Size> = {
-        large: 92,
+        large: 96,
         medium: 32,
     } as const;
     $: innerSize = sizes[size];
