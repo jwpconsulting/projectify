@@ -96,7 +96,7 @@
 
 {#if labels.length}
     <div
-        class="flex flex-row items-center justify-start gap-1 overflow-x-auto"
+        class="flex w-full flex-row items-center justify-start gap-1 overflow-x-auto"
     >
         {#each labels as label}
             <button

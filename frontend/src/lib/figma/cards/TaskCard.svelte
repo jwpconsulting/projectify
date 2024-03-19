@@ -34,34 +34,12 @@
 </script>
 
 <section class="w-full rounded-lg border border-base-300 bg-base-100 p-2">
-    <!-- Compact view (< lg)-->
-    <div class="flex flex-col lg:hidden">
-        <div class="flex flex-row justify-between">
-            <Title {task} />
-            <div class="flex flex-row items-center gap-2 justify-self-end">
-                {#if section}
-                    <Chevrons {task} {section} />
-                {/if}
-                <MenuButton {task} {project} {section} />
-            </div>
-        </div>
-        <div class="flex flex-row justify-between">
-            <Labels {task} />
-            <div class="flex shrink-0 flex-row justify-self-end">
-                <div class="flex flex-row items-center gap-4">
-                    <SubTaskProgress {task} />
-                </div>
-                <div class="flex flex-row items-center">
-                    <TeamMember {task} />
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Wide view (lg) -->
-    <div class="hidden w-full grid-cols-[8fr_5fr_4fr] items-center lg:grid">
+    <div
+        class="flex w-full grid-cols-[8fr_5fr_4fr] flex-col items-center lg:grid"
+    >
         <Title {task} />
         <Labels {task} />
-        <div class="flex flex-row items-center justify-end gap-2">
+        <div class="flex flex-row items-center justify-end gap-2 self-end">
             <SubTaskProgress {task} />
             <div class="flex flex-row items-center gap-2">
                 <TeamMember {task} />
