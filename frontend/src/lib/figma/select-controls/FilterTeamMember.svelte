@@ -62,14 +62,14 @@
                         kind: "single",
                         user: teamMemberSelectionInput.teamMember.user,
                     }}
-                    size="small"
+                    size="medium"
                 />
             {:else}
                 <AvatarVariant
                     content={{
                         kind: "single",
                     }}
-                    size="small"
+                    size="medium"
                 />
             {/if}
             <div class="text-regular min-w-0 truncate">

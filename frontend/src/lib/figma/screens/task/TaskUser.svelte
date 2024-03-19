@@ -62,7 +62,7 @@
     disabled={!action}
     bind:this={btnRef}
 >
-    <AvatarVariant size="small" content={avatarContent} />
+    <AvatarVariant size="medium" content={avatarContent} />
     <div class="truncate">
         {#if user}
             {displayName}

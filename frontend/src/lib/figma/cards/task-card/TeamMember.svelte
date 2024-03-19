@@ -60,6 +60,6 @@
 >
     <AvatarVariant
         content={{ kind: "single", user: assignee?.user }}
-        size="small"
+        size="medium"
     />
 </button>
