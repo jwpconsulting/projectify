@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /*
- *  Copyright (C) 2023 JWP Consulting GK
+ *  Copyright (C) 2023-2024 JWP Consulting GK
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published
@@ -17,27 +17,13 @@
  */
 import type { Meta, StoryObj } from "@storybook/svelte";
 
-import SelectUserClosedNav from "$lib/figma/buttons/SelectUserClosedNav.svelte";
-import { makeStorybookSelect, user1, user2 } from "$lib/storybook";
-import type { User } from "$lib/types/user";
+import FilterTeamMembersClosed from "$lib/figma/navigation/side-nav/FilterTeamMembersClosed.svelte";
 
-const users = makeStorybookSelect<User | null>({
-    "With user 1": user1,
-    "With user 2": user2,
-    "No user": null,
-});
-
-const meta: Meta<SelectUserClosedNav> = {
-    component: SelectUserClosedNav,
-    argTypes: { user: users, active: { control: "boolean" } },
-    args: {
-        user: "with-user-1",
-        active: true,
-    },
+const meta: Meta<FilterTeamMembersClosed> = {
+    component: FilterTeamMembersClosed,
 };
 export default meta;
 
-type Story = StoryObj<SelectUserClosedNav>;
+type Story = StoryObj<FilterTeamMembersClosed>;
 
 export const Default: Story = {};
-export const NoUser: Story = { args: { user: "no-user" } };
