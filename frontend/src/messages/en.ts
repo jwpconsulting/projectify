@@ -1141,13 +1141,6 @@ const messages: MessageDirectory = {
                         alt: "An illustration showing tasks in a section called 'In Progress'",
                     },
                 },
-                "feature-2": {
-                    title: "Provide and request updates on any task",
-                    text: "The updates sections allows you and your colleagues to share new details about how a test, experiment or study has gone.",
-                    illustration: {
-                        alt: "An illustration showing updates posted in a task by various users discussing organizing a meeting",
-                    },
-                },
                 "feature-3": {
                     title: "Create and monitor multiple projects",
                     text: "With unlimited projects and tasks per workspace, you're free to perform as much research and testing as you require.",
@@ -1206,13 +1199,6 @@ const messages: MessageDirectory = {
                         alt: "An illustration showing how users can track subtask progress for each task",
                     },
                 },
-                "feature-3": {
-                    title: "Create notes on each task and coordinate with friends",
-                    text: "Invite friends and classmates into your workspace to collaborate, share ideas and more.",
-                    illustration: {
-                        alt: "An illustration showing the various features the task view has to offer, such as description, sub tasks, tracking task updates, and more",
-                    },
-                },
             },
         },
         "remote-work": {
@@ -1221,13 +1207,6 @@ const messages: MessageDirectory = {
                 text: "How remote workers can use Projectify to keep in tune with projects and stay connected.",
             },
             features: {
-                "feature-1": {
-                    title: "Work together across timezones",
-                    text: "Asynchronous communication is vital for all teams be they remote or in the office. Assign tasks, create new projects and provide updates, anywhere, anytime.",
-                    illustration: {
-                        alt: "An illustration showing the updates screen of a task where two team members decide on when to organize a remote meeting",
-                    },
-                },
                 "feature-3": {
                     title: "Assign tasks to users all over the world",
                     text: "Whether it's Leo in the Phillipines or Valerie in Brazil, once you assign a task to someone they will be notified immediately with a pop-up.",

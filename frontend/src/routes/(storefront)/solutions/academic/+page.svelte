@@ -23,7 +23,6 @@
 
     import AcademicPopup from "../assets/academic-popup.png";
     import AcademicSubTask from "../assets/academic-sub-task.png";
-    import AcademicUpdate from "../assets/academic-update.png";
     import HeroAcademic from "../assets/hero-academic.png";
 
     $: pageContent = {
@@ -57,17 +56,6 @@
                 },
                 title: $_("solutions.academic.features.feature-2.title"),
                 text: $_("solutions.academic.features.feature-2.text"),
-            },
-            {
-                image: {
-                    position: "right",
-                    src: AcademicUpdate,
-                    alt: $_(
-                        "solutions.academic.features.feature-3.illustration.alt",
-                    ),
-                },
-                title: $_("solutions.academic.features.feature-3.title"),
-                text: $_("solutions.academic.features.feature-3.text"),
             },
         ],
     } satisfies SolutionsPageContent;
