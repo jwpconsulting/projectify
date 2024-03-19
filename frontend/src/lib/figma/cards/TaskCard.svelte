@@ -58,13 +58,11 @@
         </div>
     </div>
     <!-- Wide view (lg) -->
-    <div
-        class="hidden w-full grid-cols-[8fr_5fr_minmax(100px,_1fr)_max-content] items-center lg:grid"
-    >
+    <div class="hidden w-full grid-cols-[8fr_5fr_4fr] items-center lg:grid">
         <Title {task} />
         <Labels {task} />
-        <SubTaskProgress {task} />
         <div class="flex flex-row items-center justify-end gap-2">
+            <SubTaskProgress {task} />
             <div class="flex flex-row items-center gap-2">
                 <TeamMember {task} />
                 <div class="flex flex-row items-center">
