@@ -29,9 +29,14 @@
     import { logInUrl, signUpUrl } from "$lib/urls/user";
 
     export let target: MobileMenuType;
+    export let minHScreen = true;
 </script>
 
-<div class="min-h-screen w-full bg-foreground p-2" role="menu">
+<div
+    class="w-full bg-foreground p-2"
+    class:min-h-screen={minHScreen}
+    role="menu"
+>
     <div class="flex h-full flex-col gap-8 p-2">
         {#if target.kind === "dashboard"}
             {#if $currentWorkspace !== undefined}

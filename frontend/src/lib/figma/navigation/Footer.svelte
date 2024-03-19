@@ -66,6 +66,14 @@
                             label={$_("navigation.footer.nav.product.pricing")}
                         />
                     </li>
+                    <li>
+                        <Anchor
+                            href="/solutions"
+                            label={$_(
+                                "navigation.footer.nav.product.solutions",
+                            )}
+                        />
+                    </li>
                 </ul>
             </section>
             <section class="flex flex-col gap-1">

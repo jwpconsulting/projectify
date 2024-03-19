@@ -21,10 +21,8 @@
     import SolutionsPage from "$lib/components/solutions/SolutionsPage.svelte";
     import type { SolutionsPageContent } from "$lib/types/ui";
 
-    import Notifications from "../../assets/notifications.png";
     import HeroRemoteWork from "../assets/hero-remote-work.png";
     import RemoteWorkTasks from "../assets/remote-work-tasks.png";
-    import RemoteWorkUpdate from "../assets/remote-work-update.png";
 
     $: pageContent = {
         heroContent: {
@@ -38,28 +36,6 @@
             },
         },
         features: [
-            {
-                image: {
-                    position: "right",
-                    src: RemoteWorkUpdate,
-                    alt: $_(
-                        "solutions.remote-work.features.feature-1.illustration.alt",
-                    ),
-                },
-                title: $_("solutions.remote-work.features.feature-1.title"),
-                text: $_("solutions.remote-work.features.feature-1.text"),
-            },
-            {
-                image: {
-                    position: "left",
-                    src: Notifications,
-                    alt: $_(
-                        "solutions.remote-work.features.feature-2.illustration.alt",
-                    ),
-                },
-                title: $_("solutions.remote-work.features.feature-2.title"),
-                text: $_("solutions.remote-work.features.feature-2.text"),
-            },
             {
                 image: {
                     position: "right",

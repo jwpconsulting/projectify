@@ -16,6 +16,7 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import Accessiblity from "./en/accessibility.md?raw";
 import BasicsHelpPage from "./en/help/basics.md?raw";
 import BillingHelpPage from "./en/help/billing.md?raw";
 import FiltersHelpPage from "./en/help/filters.md?raw";
@@ -959,11 +960,6 @@ const messages: MessageDirectory = {
                 text: "List and column views allow you to organize workflows and see the bigger picture. Split your workspace into projects to enable multi-project management. Filter by labels, team members, or keywords to focus on specific tasks.",
                 alt: "An illustration showing how tasks can be filtered by team members or labels",
             },
-            "feature-4": {
-                header: "Keep an eye on important updates",
-                text: "Whether it's a question about a task, a change of assignee, or simply a task moving to the next stage of development, notifications immediately let you know when there's an update.",
-                alt: "An illustration showing notifications in the Projectify UI informing the user of recent updates to their tasks",
-            },
             "feature-5": {
                 header: "Responsive for on-the-go",
                 text: "Need to access your projects while away from the office? No app. No problem. A fully responsive experience to stay connected and keep projects on track.",
@@ -1025,7 +1021,6 @@ const messages: MessageDirectory = {
                 // "Set due dates",
                 "Customize your workspace",
                 "Archive completed projects",
-                // "Real-time notifications",
                 // "File storage of 3 GB",
                 "Filter by label or assignee",
                 "Accessible interface",
@@ -1125,13 +1120,6 @@ const messages: MessageDirectory = {
                         alt: "A illustration showing the label context menu used in Projectify",
                     },
                 },
-                "feature-2": {
-                    title: "Live notifications",
-                    text: "Notifications provide you with all the information you need whilst also giving you conveniant 'reply' and 'go to task' actions. The notification center houses updates from all workspaces so you never miss a beat.",
-                    illustration: {
-                        alt: "An illustration showing the live notifications a user can receive in Projectify",
-                    },
-                },
                 "feature-3": {
                     title: "Plan and execute",
                     text: "Set up and monitor pull requests, merges, bug fixes and more for multiple team members of your team.",
@@ -1152,13 +1140,6 @@ const messages: MessageDirectory = {
                     text: "Labels simplify the process of categorizing tasks. Automatically assigned task numbers take organisation one step further",
                     illustration: {
                         alt: "An illustration showing tasks in a section called 'In Progress'",
-                    },
-                },
-                "feature-2": {
-                    title: "Provide and request updates on any task",
-                    text: "The updates sections allows you and your colleagues to share new details about how a test, experiment or study has gone.",
-                    illustration: {
-                        alt: "An illustration showing updates posted in a task by various users discussing organizing a meeting",
                     },
                 },
                 "feature-3": {
@@ -1183,13 +1164,6 @@ const messages: MessageDirectory = {
                         alt: "An illustration showing how Projectify displays each team members assigned task count",
                     },
                 },
-                "feature-2": {
-                    title: "Live notifications",
-                    text: "Notifications provide you with all the information you need whilst also giving you convenient 'reply' and 'go to task' actions. The notification center houses updates from all workspaces so you never miss a beat.",
-                    illustration: {
-                        alt: "An illustration showing notifications arriving about tasks being updated",
-                    },
-                },
                 "feature-3": {
                     title: "Full control of your workspaces",
                     text: "List and column views allow you to organise workflows and see the bigger picture. Split your workspace into projects to enable multi-project management. Filter by labels, users or keyboards to focus on specific tasks.",
@@ -1212,25 +1186,11 @@ const messages: MessageDirectory = {
                 text: "How students can use Projectify to plan a thesis, collaborate, or keep track of assignments.",
             },
             features: {
-                "feature-1": {
-                    title: "Deadlines become a lifeline",
-                    text: "Projectify notifies you of upcoming due dates for assignments, so you'll never miss a paper's due date.",
-                    illustration: {
-                        alt: "An illustration showing how Projectify will inform a user of different task due dates and other important updates",
-                    },
-                },
                 "feature-2": {
                     title: "Checklists that aid your progress",
                     text: "We know that projects and dissertations can be daunting, but we're here to help. Breaking tasks into smaller sub tasks allow you to micro-achieve your way to completion.",
                     illustration: {
                         alt: "An illustration showing how users can track subtask progress for each task",
-                    },
-                },
-                "feature-3": {
-                    title: "Create notes on each task and coordinate with friends",
-                    text: "Invite friends and classmates into your workspace to collaborate, share ideas and more.",
-                    illustration: {
-                        alt: "An illustration showing the various features the task view has to offer, such as description, sub tasks, tracking task updates, and more",
                     },
                 },
             },
@@ -1241,20 +1201,6 @@ const messages: MessageDirectory = {
                 text: "How remote workers can use Projectify to keep in tune with projects and stay connected.",
             },
             features: {
-                "feature-1": {
-                    title: "Work together across timezones",
-                    text: "Asynchronous communication is vital for all teams be they remote or in the office. Assign tasks, create new projects and provide updates, anywhere, anytime.",
-                    illustration: {
-                        alt: "An illustration showing the updates screen of a task where two team members decide on when to organize a remote meeting",
-                    },
-                },
-                "feature-2": {
-                    title: "Notifications and updates on any task",
-                    text: "Notifications allow for important information to be delivered, even if you're not around. When you're away from your computer, updates to task will stay unread in the notification center until you get back.",
-                    illustration: {
-                        alt: "An illustration showing a notification popup telling the user about recent updates to the tasks in their workspace",
-                    },
-                },
                 "feature-3": {
                     title: "Assign tasks to users all over the world",
                     text: "Whether it's Leo in the Phillipines or Valerie in Brazil, once you assign a task to someone they will be notified immediately with a pop-up.",
@@ -1354,59 +1300,7 @@ const messages: MessageDirectory = {
                 alt: "Accessibility logo",
             },
         },
-        goals: {
-            title: "Accessibility goals",
-            text: "Projectify is committed to ensuring digital inclusivity and accessibility for people with diverse disabilities. We are continually improving the user experience for everyone, and applying the relevant accessibility standards. We are also aiming to improve the use of both our website and platform for users who employ assistive technologies.",
-        },
-        measures: {
-            title: "Measures we take to support accessiblity",
-            list: [
-                "Include accessibility as part of our mission statement",
-                "Ensure designs meet a minimum accessibilty level (WCAG 2.1 level AA)",
-                "Compatibility with different web browsers and assistive technology",
-                "Include people with disabilities in our user personas",
-                "Conduct usability tests with people who have disabilities",
-            ],
-        },
-        conformance: {
-            title: "Conformance status",
-            text: "The Web Content Accessibility Guidelines (WCAG) standard defines requirements to improve accessibility for people with disabilities. It defines three levels of conformance: Level A, Level AA, and Level AAA. 'Fully conforms' means that the content meets all of the WCAG requirements at the specified Level without exceptions. Although our goal is WCAG 2.1 Level AA conformance, we have also applied some Level AAA Success Criteria: Images of text are only used for decorative purposes. Content posted since May 2022 fully conforms to WCAG 2.1 Level AA. It partially conforms to Level AAA.Older content conforms to earlier versions of WCAG, for example, WCAG 2.0.",
-        },
-        compatibility: {
-            title: "Compatibility with browsers and assistive technologies",
-            text: "The Projectify website and platform is designed to be compatible with assistive technologies and the last two versions of major browsers. The website and platform are not designed for Internet Explorer 11 and earlier versions.",
-        },
-        platform: {
-            title: "Platform",
-            text: "We are currently in the process of making our platform conform to accessiblity standards. Our main focus is to improve color contrast in both the light and dark modes of our platform, increase discoverability of features for users with vision impairments and enhance the usability of our main components.",
-        },
-        website: {
-            title: "Website",
-            list: [
-                "Keyboard navigation: All menus, buttons , inputs and actions are accessible from a keyboard",
-                "Screen reader compatibility: Our code supports the use of screen readers for users who digest information through audio means",
-                "Images: All images are supported with descriptive and accurate alternative text which can be read by screen readers",
-                "Text: Our text size, weight and font style have been carefully chosen to be accessible to users with dyslexia and/or visual impairment. WCAG 2.0 level AA requires a contrast ratio of at least 4.5:1 for normal text and 3:1 for large text.",
-                "Color: WCAG 2.1 requires a contrast ratio of at least 3:1 for graphics and user interface components, which we meet",
-                "Magnification: For sight impaired users, all pages and content can be magnified using standard browser controls or magnification software",
-            ],
-        },
-        limitations: {
-            title: "Limitations",
-            text: "We are aware that, despite our best efforts, there may be limitations to the accessibilty of both the platform and website. Below is a description of known limitations. Please contact us if you discover an issue not listed below. Known limitations of the platform:",
-            list: [
-                "Tab selection not working on the calendar menu",
-                "Not all screen readers can read placeholder text",
-            ],
-        },
-        evaluation: {
-            title: "Evaluation report",
-            text: "An evaluation report can be found here link. Assessment of both the platform and website was carried out by self-evaluation.",
-        },
-        contact: {
-            title: "Contact us",
-            text: "We welcome feedback on the accessibility of Projectify. If you encounter any acccessibility barriers whilst using the platform or website, please email hello@projectify.com. ",
-        },
+        content: Accessiblity,
     },
     "help": {
         "title": "Help - Projectify",
@@ -1511,6 +1405,7 @@ const messages: MessageDirectory = {
                 product: {
                     title: "Product",
                     pricing: "Pricing",
+                    solutions: "Solutions",
                 },
                 resources: {
                     "title": "Resources",

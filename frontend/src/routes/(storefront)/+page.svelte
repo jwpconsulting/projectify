@@ -25,7 +25,6 @@
 
     import Filters from "./assets/filters.png";
     import Hero from "./assets/hero.png";
-    import Notifications from "./assets/notifications.png";
     import OpenSource from "./assets/open-source.png";
     import Privacy from "./assets/privacy.png";
     import Responsive from "./assets/responsive.png";
@@ -109,18 +108,6 @@
                     src: Filters,
                     alt: $_("index.features.feature-3.alt"),
                     position: "right",
-                },
-            }}
-        />
-
-        <SolutionsFeature
-            feature={{
-                title: $_("index.features.feature-4.header"),
-                text: $_("index.features.feature-4.text"),
-                image: {
-                    src: Notifications,
-                    alt: $_("index.features.feature-4.alt"),
-                    position: "left",
                 },
             }}
         />

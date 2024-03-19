@@ -24,7 +24,6 @@
     import Filters from "../../assets/filters.png";
     import HeroResearch from "../assets/hero-research.png";
     import ResearchTasks from "../assets/research-tasks.png";
-    import ResearchUpdate from "../assets/research-update.png";
 
     $: pageContent = {
         heroContent: {
@@ -46,17 +45,6 @@
                 },
                 title: $_("solutions.research.features.feature-1.title"),
                 text: $_("solutions.research.features.feature-1.text"),
-            },
-            {
-                image: {
-                    position: "left",
-                    src: ResearchUpdate,
-                    alt: $_(
-                        "solutions.research.features.feature-2.illustration.alt",
-                    ),
-                },
-                title: $_("solutions.research.features.feature-2.title"),
-                text: $_("solutions.research.features.feature-2.text"),
             },
             {
                 image: {

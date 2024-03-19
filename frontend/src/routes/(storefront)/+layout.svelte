@@ -32,7 +32,10 @@
     <div class="flex grow flex-col">
         {#if $mobileMenuState.kind === "visible"}
             <div class="w-full border-b-2 border-border md:hidden">
-                <MobileMenuOverlay target={$mobileMenuState.target} />
+                <MobileMenuOverlay
+                    minHScreen={false}
+                    target={$mobileMenuState.target}
+                />
             </div>
         {/if}
         <div class="flex grow flex-col justify-between">
