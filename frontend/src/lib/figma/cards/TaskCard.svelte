@@ -27,24 +27,20 @@
         ProjectDetail,
         SectionWithTasks,
     } from "$lib/types/workspace";
-    import { getTaskUrl } from "$lib/urls";
 
     export let task: TaskWithSection;
     export let project: ProjectDetail;
     export let section: SectionWithTasks | undefined = undefined;
 </script>
 
-<a
+<section
     class="block rounded-llg border-2 border-transparent focus:border-base-content"
-    href={getTaskUrl(task.uuid)}
 >
     <div class="w-full rounded-lg border border-base-300 bg-base-100 p-2">
         <!-- Compact view (< lg)-->
         <div class="flex flex-col lg:hidden">
             <div class="flex flex-row justify-between">
-                <div class="">
-                    <Title {task} />
-                </div>
+                <Title {task} />
                 <div class="flex flex-row items-center gap-2 justify-self-end">
                     {#if section}
                         <Chevrons {task} {section} />
@@ -53,9 +49,7 @@
                 </div>
             </div>
             <div class="flex flex-row justify-between">
-                <div class="flex flex-row overflow-x-auto">
-                    <Labels {task} />
-                </div>
+                <Labels {task} />
                 <div class="flex shrink-0 flex-row justify-self-end">
                     <div class="flex flex-row items-center gap-4">
                         <SubTaskProgress {task} />
@@ -68,16 +62,10 @@
         </div>
         <!-- Wide view (lg) -->
         <div
-            class="hidden w-full grid-cols-[8fr_5fr_minmax(100px,_1fr)_max-content] lg:grid"
+            class="hidden w-full grid-cols-[8fr_5fr_minmax(100px,_1fr)_max-content] items-center lg:grid"
         >
-            <div class="flex flex-row items-center">
-                <Title {task} />
-            </div>
-            <div
-                class="flex flex-row items-center justify-start gap-6 overflow-x-auto"
-            >
-                <Labels {task} />
-            </div>
+            <Title {task} />
+            <Labels {task} />
             <SubTaskProgress {task} />
             <div class="flex flex-row items-center justify-end gap-2">
                 <div class="flex flex-row items-center gap-2">
@@ -92,4 +80,4 @@
             </div>
         </div>
     </div>
-</a>
+</section>

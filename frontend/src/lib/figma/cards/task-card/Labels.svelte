@@ -95,7 +95,9 @@
 </script>
 
 {#if labels.length}
-    <div class="flex flex-row">
+    <div
+        class="flex flex-row items-center justify-start gap-1 overflow-x-auto"
+    >
         {#each labels as label}
             <button
                 on:click|preventDefault={canUpdate
