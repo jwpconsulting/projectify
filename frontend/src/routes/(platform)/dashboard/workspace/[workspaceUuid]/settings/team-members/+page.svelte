@@ -223,6 +223,7 @@
                     "workspace-settings.team-members.help.about-team-members",
                 )}
                 size="normal"
+                openBlank
             />
         </li>
         <li>
@@ -230,6 +231,7 @@
                 href="/help/roles"
                 label={$_("workspace-settings.team-members.help.about-roles")}
                 size="normal"
+                openBlank
             />
         </li>
     </ul>
