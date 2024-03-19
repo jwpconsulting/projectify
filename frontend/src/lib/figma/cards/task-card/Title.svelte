@@ -35,7 +35,7 @@
             size="normal"
         />
     </div>
-    <div class="line-clamp-2 h-12 justify-self-start lg:line-clamp-1 lg:h-6">
+    <div class="line-clamp-3 justify-self-start lg:line-clamp-1 lg:h-6">
         <Anchor
             label={task.title}
             href={getTaskUrl(task.uuid)}

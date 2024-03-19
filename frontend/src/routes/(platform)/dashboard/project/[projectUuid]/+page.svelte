@@ -52,7 +52,7 @@
 </svelte:head>
 
 <!-- Sections -->
-<div class="flex flex-col gap-4 p-2">
+<div class="flex flex-col gap-4 md:p-2">
     {#each sections as section (section.uuid)}
         <SectionC {project} {section} />
     {:else}
