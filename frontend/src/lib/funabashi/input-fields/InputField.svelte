@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -45,12 +45,8 @@
      */
     export let id: string | undefined = undefined;
     export let label: string | undefined;
-    // TODO
-    // export let anchorTop: InputFieldAnchor | undefined = undefined;
-    export let anchorTop: InputFieldAnchor | null = null;
-    // TODO
-    // export let anchorBottom: InputFieldAnchor | undefined = undefined;
-    export let anchorBottom: InputFieldAnchor | null = null;
+    export let anchorTop: InputFieldAnchor | undefined = undefined;
+    export let anchorBottom: InputFieldAnchor | undefined = undefined;
     export let required = false;
     export let readonly = false;
     export let onClick: (() => void) | undefined = undefined;
@@ -153,7 +149,7 @@
 </script>
 
 <div class="flex flex-col items-start gap-2">
-    {#if label !== undefined || anchorTop !== null}
+    {#if label !== undefined || anchorTop !== undefined}
         <div
             class="flex w-full flex-row items-center"
             class:justify-between={label}
@@ -236,7 +232,7 @@
             </button>
         {/if}
     </div>
-    {#if anchorBottom !== null || validation !== undefined}
+    {#if anchorBottom !== undefined || validation !== undefined}
         <div
             class="flex w-full flex-row items-end justify-end gap-1 px-1"
             class:justify-end={anchorBottom && !validation}
