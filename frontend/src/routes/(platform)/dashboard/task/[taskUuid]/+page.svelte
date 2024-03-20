@@ -117,6 +117,7 @@
                 slot="assignee"
                 teamMember={task.assignee}
                 {onInteract}
+                readonly
             />
             <TaskLabel
                 slot="labels"
