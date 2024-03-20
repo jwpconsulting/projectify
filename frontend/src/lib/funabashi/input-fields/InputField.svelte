@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    import { X } from "@steeze-ui/heroicons";
+    import { Pencil, X } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { parseISO } from "date-fns";
     import type Pikaday from "pikaday";
@@ -169,7 +169,6 @@
                 class={inputStyle}
                 {...inputProps}
                 bind:value
-                on:click={onClick}
                 on:keydown={onKeydown}
                 on:keyup={onKeyup}
             />
@@ -179,7 +178,6 @@
                 class={inputStyle}
                 {...inputProps}
                 bind:value
-                on:click={onClick}
             />
         {:else if style.inputType === "email"}
             <input
@@ -187,7 +185,6 @@
                 class={inputStyle}
                 {...inputProps}
                 bind:value
-                on:click={onClick}
             />
         {:else if style.inputType === "date"}
             <input
@@ -195,7 +192,6 @@
                 class={inputStyle}
                 {...inputProps}
                 bind:value
-                on:click={onClick}
                 bind:this={pikadayAnchor}
             />
         {:else if style.inputType === "numeric"}
@@ -205,11 +201,19 @@
                 class={inputStyle}
                 {...inputProps}
                 bind:value
-                on:click={onClick}
                 bind:this={pikadayAnchor}
                 min={style.min}
                 max={style.max}
             />
+        {/if}
+        {#if readonly && onClick}
+            <button
+                class="flex flex-row"
+                on:click|preventDefault={onClick}
+                type="button"
+            >
+                <Icon src={Pencil} theme="outline" class="h-4 w-4" />
+            </button>
         {/if}
         {#if showClearButton}
             <button
