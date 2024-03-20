@@ -90,7 +90,6 @@
                 href: getTaskUrl(kind.task.uuid),
             }}
             label={$_("overlay.context-menu.task.open-task")}
-            state="normal"
             icon={ArrowsExpand}
         />
         <ContextMenuButton
@@ -99,7 +98,6 @@
                 action: toggleMoveToSection,
             }}
             label={$_("overlay.context-menu.task.move-to-section")}
-            state="normal"
             closeOnInteract={false}
             icon={SwitchVertical}
             iconRight={moveToSectionOpened ? ChevronUp : ChevronDown}
@@ -107,7 +105,6 @@
         {#if moveToSectionOpened}
             {#each kind.project.sections as section}
                 <ContextMenuButton
-                    state="normal"
                     label={section.title}
                     kind={{
                         kind: "button",
@@ -125,7 +122,6 @@
                     }),
                 }}
                 label={$_("overlay.context-menu.task.move-to-top")}
-                state="normal"
                 icon={SortAscending}
             />
         {/if}
@@ -138,7 +134,6 @@
                     }),
                 }}
                 label={$_("overlay.context-menu.task.move-to-bottom")}
-                state="normal"
                 icon={SortDescending}
             />
         {/if}
@@ -152,7 +147,6 @@
             ),
         }}
         label={$_("overlay.context-menu.task.copy-link")}
-        state="normal"
         icon={Duplicate}
     />
     {#if $currentTeamMemberCan("delete", "task")}
@@ -162,7 +156,6 @@
                 action: promptDeleteTask,
             }}
             label={$_("overlay.context-menu.task.delete-task")}
-            state="normal"
             color="destructive"
             icon={Trash}
         />

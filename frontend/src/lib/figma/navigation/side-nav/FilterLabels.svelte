@@ -68,7 +68,6 @@
                         "dashboard.side-nav.filter-labels.create-new-label",
                     )}
                     icon={Plus}
-                    state="normal"
                     color="primary"
                     kind={{
                         kind: "button",

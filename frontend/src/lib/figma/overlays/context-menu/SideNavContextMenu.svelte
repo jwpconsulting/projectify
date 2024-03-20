@@ -40,19 +40,16 @@
         label={$sideNavOpen
             ? $_("overlay.context-menu.side-nav.minimise-sidebar")
             : $_("overlay.context-menu.side-nav.expand-sidebar")}
-        state="normal"
         icon={$sideNavOpen ? ArrowCircleLeft : ArrowCircleRight}
     />
     <ContextMenuButton
         kind={{ kind: "a", href: getArchiveUrl(workspace.uuid) }}
         label={$_("overlay.context-menu.side-nav.go-to-archive")}
-        state="normal"
         icon={Archive}
     />
     <ContextMenuButton
         kind={{ kind: "a", href: getSettingsUrl(workspace.uuid, "index") }}
         label={$_("overlay.context-menu.side-nav.workspace-settings")}
-        state="normal"
         icon={Cog}
     />
 </Layout>

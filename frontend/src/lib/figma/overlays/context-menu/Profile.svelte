@@ -29,13 +29,11 @@
     <ContextMenuButton
         kind={{ kind: "a", href: getProfileUrl() }}
         label={$_("overlay.context-menu.profile.my-profile")}
-        state="normal"
         icon={User}
     />
     <ContextMenuButton
         kind={{ kind: "a", href: logOutUrl }}
         label={$_("overlay.context-menu.profile.log-out")}
-        state="normal"
         icon={Logout}
     />
 </Layout>

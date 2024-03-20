@@ -30,7 +30,6 @@
             action: () => console.error("all roles not implemented"),
         }}
         label={$_("overlay.context-menu.permissions.all-roles")}
-        state="normal"
     />
     <ContextMenuButton
         kind={{
@@ -38,7 +37,6 @@
             action: () => console.error("owner not implemented"),
         }}
         label={$_("overlay.context-menu.permissions.owner")}
-        state="normal"
     />
     <ContextMenuButton
         kind={{
@@ -46,7 +44,6 @@
             action: () => console.error("maintainer not implemented"),
         }}
         label={$_("overlay.context-menu.permissions.maintainer")}
-        state="normal"
     />
     <ContextMenuButton
         kind={{
@@ -54,7 +51,6 @@
             action: () => console.error("contributor not implemented"),
         }}
         label={$_("overlay.context-menu.permissions.contributor")}
-        state="normal"
     />
     <ContextMenuButton
         kind={{
@@ -62,6 +58,5 @@
             action: () => console.error("observer not implemented"),
         }}
         label={$_("overlay.context-menu.permissions.observer")}
-        state="normal"
     />
 </Layout>

@@ -112,7 +112,6 @@
         label={closed
             ? $_("overlay.context-menu.section.expand-section")
             : $_("overlay.context-menu.section.collapse-section")}
-        state="normal"
         icon={closed ? Selector : X}
     />
     {#if $currentTeamMemberCan("update", "section")}
@@ -123,7 +122,6 @@
                     action: switchWithPreviousSection,
                 }}
                 label={$_("overlay.context-menu.section.switch-previous")}
-                state="normal"
                 icon={ArrowUp}
             />
         {/if}
@@ -134,7 +132,6 @@
                     action: switchWithNextSection,
                 }}
                 label={$_("overlay.context-menu.section.switch-next")}
-                state="normal"
                 icon={ArrowDown}
             />
         {/if}
@@ -144,7 +141,6 @@
                 action: updateSection,
             }}
             label={$_("overlay.context-menu.section.edit-title")}
-            state="normal"
             icon={Pencil}
         />
     {/if}
@@ -155,7 +151,6 @@
                 action: deleteSection,
             }}
             label={$_("overlay.context-menu.section.delete-section")}
-            state="normal"
             icon={Trash}
             color="destructive"
         />

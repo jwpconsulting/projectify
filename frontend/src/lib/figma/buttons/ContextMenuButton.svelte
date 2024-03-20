@@ -19,14 +19,13 @@
     import { Icon } from "@steeze-ui/svelte-icon";
     import type { IconSource } from "@steeze-ui/svelte-icon";
 
-    import type { MenuButtonColor, MenuButtonState } from "$lib/figma/types";
+    import type { MenuButtonColor } from "$lib/figma/types";
     import type { ButtonAction } from "$lib/funabashi/types";
     import { closeContextMenu } from "$lib/stores/globalUi";
 
     export let label: string;
     export let icon: IconSource | undefined = undefined;
     export let iconRight: IconSource | undefined = undefined;
-    export let state: MenuButtonState;
     export let color: MenuButtonColor = "base";
     export let kind: ButtonAction & { kind: "button" | "a" };
     export let closeOnInteract = true;
@@ -36,10 +35,6 @@
         primary: "text-primary",
         destructive: "text-destructive",
     }[color];
-    $: style = {
-        normal: "hover:bg-secondary-hover active:bg-disabled disabled:active:bg-secondary-hover",
-        accordion: "bg-background text-base-content",
-    }[state];
 
     function action() {
         if (kind.kind !== "button") {
@@ -66,6 +61,8 @@
         }
     }
 
+    const style =
+        "hover:bg-secondary-hover active:bg-disabled disabled:active:bg-secondary-hover";
     $: outerClass = `w-full flex-start flex flex-row items-center gap-2 px-4 py-2 text-left font-bold ${colorStyle} ${style}`;
 </script>
 
