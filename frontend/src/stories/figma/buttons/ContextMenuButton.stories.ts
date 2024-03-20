@@ -28,17 +28,33 @@ const colors = makeStorybookSelect<MenuButtonColor>({
     Destructive: "destructive",
 });
 
+const iconSelect = makeStorybookSelect({
+    "With icon": Search,
+    "No icon": undefined,
+});
+
+const kinds = makeStorybookSelect({
+    Button: { kind: "button", action: console.error },
+    Anchor: { kind: "a", href: "#" },
+});
+
 const meta: Meta<ContextMenuButton> = {
     component: ContextMenuButton,
     argTypes: {
         label: { control: "text" },
         color: colors,
+        icon: iconSelect,
+        iconRight: iconSelect,
+        kind: kinds,
+        closeOnInteract: { control: "boolean" },
     },
     args: {
         label: "Hello world",
-        icon: Search,
-        kind: { kind: "a", href: "#" },
+        icon: "with-icon",
+        iconRight: "with-icon",
+        kind: "anchor",
         color: "base",
+        closeOnInteract: false,
     },
 };
 export default meta;
