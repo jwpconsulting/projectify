@@ -32,8 +32,6 @@
     import { formatIsoDate } from "$lib/utils/date";
     import { tw } from "$lib/utils/ui";
 
-    import { browser } from "$app/environment";
-
     // TODO make border customizable (e.g. in TaskFormFields)
     export let value: string | undefined = undefined;
     export let placeholder: string;
@@ -71,27 +69,20 @@
         }
     }
 
-    // Possibly we can just have two onMount calls here, but I couldn't read
-    // from the svelte docs whether that is explicitly supported or not.
     onMount(() => {
-        if (!browser) {
-            return;
+        if (style.inputType === "date") {
+            import("pikaday")
+                .then((mod) => {
+                    pikaday = mod.default;
+                })
+                .catch(console.error);
         }
-        // We have no further business if no date picker
-        if (style.inputType !== "date") {
-            return;
-        }
-
-        import("pikaday")
-            .then((mod) => {
-                pikaday = mod.default;
-            })
-            .catch(console.error);
+    });
+    onMount(() => {
         return () => {
-            if (!datePicker) {
-                return;
+            if (datePicker) {
+                datePicker.destroy();
             }
-            datePicker.destroy();
         };
     });
 
