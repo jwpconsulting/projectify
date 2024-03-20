@@ -129,12 +129,13 @@ export const tasksPerUser: Readable<TasksPerUser> = derived<
                 return;
             }
             section.tasks.forEach((task) => {
-                if (!task.assignee) {
+                const uuid = task.assignee?.uuid;
+                if (uuid === undefined) {
                     unassigned = unassigned + 1;
                     return;
                 }
-                const uuid = task.assignee.uuid;
-                assigned.set(uuid, assigned.get(uuid) ?? 0 + 1);
+                const current = assigned.get(uuid) ?? 0;
+                assigned.set(uuid, current + 1);
             });
         });
         set({ unassigned, assigned });

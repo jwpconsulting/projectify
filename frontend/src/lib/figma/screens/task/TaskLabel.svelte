@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -16,6 +16,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import { Pencil } from "@steeze-ui/heroicons";
+    import { Icon } from "@steeze-ui/svelte-icon";
+
     import LabelC from "$lib/figma/buttons/Label.svelte";
     import type { Label } from "$lib/types/workspace";
 
@@ -33,16 +36,27 @@
         <div class="shrink-0">
             <LabelC
                 label={{ kind: "label", label }}
-                action={onInteract ? onInteract.bind(null, btnRef) : undefined}
+                action={!readonly && onInteract
+                    ? onInteract.bind(null, btnRef)
+                    : undefined}
             />
         </div>
     {/each}
-    {#if !readonly && onInteract}
-        <div class="shrink-0" bind:this={btnRef}>
-            <LabelC
-                label={{ kind: "applyLabel" }}
-                action={onInteract.bind(null, btnRef)}
-            />
-        </div>
+    {#if onInteract}
+        {#if readonly}
+            <button
+                on:click|preventDefault={onInteract.bind(null, btnRef)}
+                type="button"
+            >
+                <Icon src={Pencil} theme="outline" class="h-4 w-4" />
+            </button>
+        {:else}
+            <div class="shrink-0" bind:this={btnRef}>
+                <LabelC
+                    label={{ kind: "applyLabel" }}
+                    action={onInteract.bind(null, btnRef)}
+                />
+            </div>
+        {/if}
     {/if}
 </div>

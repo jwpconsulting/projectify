@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023, 2024 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -135,7 +135,7 @@
             style={{ inputType: "text" }}
             name="title"
             label={$_("workspace-settings.general.workspace-name.label")}
-            readonly={!canEdit}
+            readonly={!canEdit || state.kind !== "editing"}
         />
         <InputField
             bind:value={description}
@@ -146,7 +146,7 @@
             style={{ inputType: "text" }}
             name="title"
             label={$_("workspace-settings.general.description.label")}
-            readonly={!canEdit}
+            readonly={!canEdit || state.kind !== "editing"}
         />
         {#if canEdit}
             <Button

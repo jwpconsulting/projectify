@@ -16,6 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
+    import { Pencil } from "@steeze-ui/heroicons";
+    import { Icon } from "@steeze-ui/svelte-icon";
     import { _ } from "svelte-i18n";
 
     export let description: string | undefined;
@@ -23,7 +25,7 @@
     export let onInteract: (() => void) | undefined = undefined;
 </script>
 
-<div class="w-full">
+<div class="flex w-full flex-row items-center gap-2">
     <textarea
         class="w-full rounded-lg border border-border p-2"
         rows="5"
@@ -31,7 +33,11 @@
         id="description"
         bind:value={description}
         placeholder={$_("task-screen.description")}
-        on:click={onInteract}
         {readonly}
     />
+    {#if readonly}
+        <button on:click|preventDefault={onInteract} type="button">
+            <Icon src={Pencil} theme="outline" class="h-4 w-4" />
+        </button>
+    {/if}
 </div>

@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -16,7 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <script lang="ts">
-    import { X } from "@steeze-ui/heroicons";
+    import { Pencil, X } from "@steeze-ui/heroicons";
     import { Icon } from "@steeze-ui/svelte-icon";
     import { parseISO } from "date-fns";
     import type Pikaday from "pikaday";
@@ -32,8 +32,6 @@
     import { formatIsoDate } from "$lib/utils/date";
     import { tw } from "$lib/utils/ui";
 
-    import { browser } from "$app/environment";
-
     // TODO make border customizable (e.g. in TaskFormFields)
     export let value: string | undefined = undefined;
     export let placeholder: string;
@@ -45,12 +43,8 @@
      */
     export let id: string | undefined = undefined;
     export let label: string | undefined;
-    // TODO
-    // export let anchorTop: InputFieldAnchor | undefined = undefined;
-    export let anchorTop: InputFieldAnchor | null = null;
-    // TODO
-    // export let anchorBottom: InputFieldAnchor | undefined = undefined;
-    export let anchorBottom: InputFieldAnchor | null = null;
+    export let anchorTop: InputFieldAnchor | undefined = undefined;
+    export let anchorBottom: InputFieldAnchor | undefined = undefined;
     export let required = false;
     export let readonly = false;
     export let onClick: (() => void) | undefined = undefined;
@@ -75,27 +69,20 @@
         }
     }
 
-    // Possibly we can just have two onMount calls here, but I couldn't read
-    // from the svelte docs whether that is explicitly supported or not.
     onMount(() => {
-        if (!browser) {
-            return;
+        if (style.inputType === "date") {
+            import("pikaday")
+                .then((mod) => {
+                    pikaday = mod.default;
+                })
+                .catch(console.error);
         }
-        // We have no further business if no date picker
-        if (style.inputType !== "date") {
-            return;
-        }
-
-        import("pikaday")
-            .then((mod) => {
-                pikaday = mod.default;
-            })
-            .catch(console.error);
+    });
+    onMount(() => {
         return () => {
-            if (!datePicker) {
-                return;
+            if (datePicker) {
+                datePicker.destroy();
             }
-            datePicker.destroy();
         };
     });
 
@@ -153,7 +140,7 @@
 </script>
 
 <div class="flex flex-col items-start gap-2">
-    {#if label !== undefined || anchorTop !== null}
+    {#if label !== undefined || anchorTop !== undefined}
         <div
             class="flex w-full flex-row items-center"
             class:justify-between={label}
@@ -182,7 +169,6 @@
                 class={inputStyle}
                 {...inputProps}
                 bind:value
-                on:click={onClick}
                 on:keydown={onKeydown}
                 on:keyup={onKeyup}
             />
@@ -192,7 +178,6 @@
                 class={inputStyle}
                 {...inputProps}
                 bind:value
-                on:click={onClick}
             />
         {:else if style.inputType === "email"}
             <input
@@ -200,7 +185,6 @@
                 class={inputStyle}
                 {...inputProps}
                 bind:value
-                on:click={onClick}
             />
         {:else if style.inputType === "date"}
             <input
@@ -208,7 +192,6 @@
                 class={inputStyle}
                 {...inputProps}
                 bind:value
-                on:click={onClick}
                 bind:this={pikadayAnchor}
             />
         {:else if style.inputType === "numeric"}
@@ -218,11 +201,19 @@
                 class={inputStyle}
                 {...inputProps}
                 bind:value
-                on:click={onClick}
                 bind:this={pikadayAnchor}
                 min={style.min}
                 max={style.max}
             />
+        {/if}
+        {#if readonly && onClick}
+            <button
+                class="flex flex-row"
+                on:click|preventDefault={onClick}
+                type="button"
+            >
+                <Icon src={Pencil} theme="outline" class="h-4 w-4" />
+            </button>
         {/if}
         {#if showClearButton}
             <button
@@ -236,7 +227,7 @@
             </button>
         {/if}
     </div>
-    {#if anchorBottom !== null || validation !== undefined}
+    {#if anchorBottom !== undefined || validation !== undefined}
         <div
             class="flex w-full flex-row items-end justify-end gap-1 px-1"
             class:justify-end={anchorBottom && !validation}
