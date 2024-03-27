@@ -23,7 +23,7 @@
 export function blockScrolling(): () => void {
     const scrollOffset = window.scrollY;
     document.body.style.position = "fixed";
-    document.body.scroll(0, scrollOffset);
+    document.body.style.top = `-${scrollOffset}px`;
     return () => {
         document.body.style.position = "";
         window.scrollTo(0, scrollOffset);
