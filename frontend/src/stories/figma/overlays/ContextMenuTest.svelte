@@ -40,6 +40,7 @@
     let button5: HTMLElement;
 </script>
 
+<div class="h-20">Empty space to test scrolling</div>
 <div class="flex h-screen flex-col justify-between">
     <div class="flex flex-row justify-between">
         <div bind:this={button1}>
@@ -98,5 +99,6 @@
         </div>
     </div>
 </div>
+<div class="h-20">Empty space to test scrolling</div>
 
 <ContextMenuContainer />

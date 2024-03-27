@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023, 2024 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -26,7 +26,7 @@
     } from "$lib/stores/globalUi";
     import { keepFocusInside } from "$lib/utils/focus";
     import { onResize } from "$lib/utils/resize";
-    import { blockScrolling } from "$lib/utils/scroll";
+    import { onScroll } from "$lib/utils/scroll";
 
     let contextMenu: HTMLElement | undefined = undefined;
 
@@ -66,7 +66,9 @@
                         "Escape",
                         closeContextMenu,
                     ),
-                    removeScrollTrap: blockScrolling(),
+                    removeScrollTrap: onScroll(() =>
+                        repositionContextMenu(anchor),
+                    ),
                     removeResizeListener: onResize(
                         repositionContextMenu.bind(null, anchor),
                     ),
@@ -85,6 +87,7 @@
         if (!unsubscribers) {
             return;
         }
+        console.debug("Clearing traps");
         unsubscribers.removeFocusTrap();
         unsubscribers.removeResizeObserver();
         unsubscribers.removeMutationObserver();
@@ -105,7 +108,7 @@
             repositionContextMenu(anchor),
         );
         resizeObserver.observe(contextMenu);
-        return resizeObserver.disconnect.bind(null);
+        return () => resizeObserver.disconnect();
     }
 
     /**
@@ -119,7 +122,7 @@
             childList: true,
         };
         mutationObserver.observe(anchor, mutationObserverConfig);
-        return mutationObserver.disconnect.bind(null);
+        return () => mutationObserver.disconnect();
     }
 
     function repositionContextMenu(anchor: HTMLElement) {
@@ -148,13 +151,20 @@
         const {
             left: anchorLeft,
             top: anchorTop,
-            height: anchorHeight,
+            bottom: anchorBottom,
         } = anchor.getBoundingClientRect();
-        console.debug({ anchor, anchorLeft, anchorTop, anchorHeight });
+        console.debug({ anchor, anchorLeft, anchorTop });
+
         // Width, height of viewport
         const { innerWidth: viewPortWidth, innerHeight: viewPortHeight } =
             window;
         console.debug({ viewPortWidth, viewPortHeight });
+
+        if (anchorTop > viewPortHeight || anchorBottom < 0) {
+            console.debug("anchor left viewport");
+            closeContextMenu();
+            return;
+        }
         // Get x of right side of context menu
         const xRightSide = anchorLeft + contextMenuWidth;
         // Calculate how many pixels the right side of contextMenu will go
@@ -165,7 +175,7 @@
         const contextMenuLeft = anchorLeft - xOverlap;
         // Calculate how many pixels from anchor bottom to viewport bottom
         const anchorBottomToViewPortBottom = Math.abs(
-            viewPortHeight - (anchorTop + anchorHeight),
+            viewPortHeight - anchorBottom,
         );
         // Calculate how many pixels high the context menu is
         // If the context menu takes up more pixels, then reposition the
@@ -175,7 +185,7 @@
                 ? // Subtract the overlap from y
                   anchorTop - contextMenuHeight
                 : // Else position it under the anchor;
-                  anchorTop + anchorHeight;
+                  anchorBottom;
 
         console.debug({
             anchorBottomToViewPortBottom,
