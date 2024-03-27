@@ -58,7 +58,7 @@
                 />
             </p>
         {/if}
-        <div class="flex shrink flex-col overflow-auto">
+        <div class="flex flex-col">
             <Projects {workspace} />
             {#if $showFilters}
                 <FilterTeamMembers />
