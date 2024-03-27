@@ -58,25 +58,21 @@
     filtered={$selectedLabels.kind !== "allLabels"}
 />
 {#if $labelExpandOpen}
-    <div class="shrink overflow-y-auto">
-        {#if state.kind === "list"}
-            <FilterLabelMenu mode={{ kind: "filter", startUpdate }} />
-            <!-- Some left padding issues here, not aligned with the rest above -->
-            {#if $currentTeamMemberCan("create", "label")}
-                <ContextMenuButton
-                    label={$_(
-                        "dashboard.side-nav.filter-labels.create-new-label",
-                    )}
-                    icon={Plus}
-                    color="primary"
-                    kind={{
-                        kind: "button",
-                        action: startCreateLabel,
-                    }}
-                />
-            {/if}
-        {:else}
-            <CreateOrUpdateLabel onFinished={onCreateOrUpdateFinish} {state} />
+    {#if state.kind === "list"}
+        <FilterLabelMenu mode={{ kind: "filter", startUpdate }} />
+        <!-- Some left padding issues here, not aligned with the rest above -->
+        {#if $currentTeamMemberCan("create", "label")}
+            <ContextMenuButton
+                label={$_("dashboard.side-nav.filter-labels.create-new-label")}
+                icon={Plus}
+                color="primary"
+                kind={{
+                    kind: "button",
+                    action: startCreateLabel,
+                }}
+            />
         {/if}
-    </div>
+    {:else}
+        <CreateOrUpdateLabel onFinished={onCreateOrUpdateFinish} {state} />
+    {/if}
 {/if}
