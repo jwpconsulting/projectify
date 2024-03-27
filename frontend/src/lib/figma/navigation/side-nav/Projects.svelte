@@ -52,7 +52,8 @@
     filtered={false}
 />
 {#if $projectExpandOpen}
-    <div class="flex shrink flex-col overflow-y-auto">
+    <!-- TODO evaluate revmoing this shrink class here -->
+    <div class="flex shrink flex-col">
         {#if workspace.projects === undefined}
             <Loading />
         {:else if workspace.projects.length === 0}

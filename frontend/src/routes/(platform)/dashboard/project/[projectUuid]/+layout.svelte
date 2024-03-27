@@ -37,9 +37,7 @@
     );
 </script>
 
-<div
-    class="flex h-full flex-col items-center gap-4 overflow-y-auto bg-background py-4"
->
+<div class="flex h-full flex-col items-center gap-4 bg-background py-4">
     {#if projectHasTasks}
         <form
             action={getProjectSearchUrl(project)}
@@ -69,8 +67,6 @@
         </form>
     {/if}
     <!-- shared layout for project and search results -->
-    <!-- XXX: setting overflow-x-auto here magically solves an overflowing task card
-    Why? Justus 2023-08-28 -->
     <div class="flex w-full grow flex-col">
         <slot />
     </div>

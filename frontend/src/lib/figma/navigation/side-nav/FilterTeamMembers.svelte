@@ -36,7 +36,8 @@
     filtered={$selectedTeamMember.kind !== "allTeamMembers"}
 />
 {#if $userExpandOpen}
-    <div class="shrink overflow-y-auto">
+    <!-- TODO evaluate removing this shrink class here -->
+    <div class="shrink">
         <FilterTeamMember mode={{ kind: "filter" }} />
     </div>
 {/if}
