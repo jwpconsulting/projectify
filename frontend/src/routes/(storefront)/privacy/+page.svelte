@@ -61,10 +61,7 @@
             </li>
         </ol>
     </nav>
-    <div
-        slot="content"
-        class="flex flex-col gap-10 sm:max-h-screen sm:overflow-y-auto"
-    >
+    <div slot="content" class="flex flex-col gap-10">
         <section class="prose" id="japanese">
             <PpJa />
         </section>
