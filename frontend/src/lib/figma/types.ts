@@ -18,9 +18,6 @@
 import type { User } from "$lib/types/user";
 import type { Label } from "$lib/types/workspace";
 
-// TODO remove accordion
-const menuButtonStates = ["normal", "accordion"] as const;
-export type MenuButtonState = (typeof menuButtonStates)[number];
 const menuButtonColors = ["base", "primary", "destructive"] as const;
 export type MenuButtonColor = (typeof menuButtonColors)[number];
 

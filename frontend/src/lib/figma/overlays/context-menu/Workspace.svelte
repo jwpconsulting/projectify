@@ -40,7 +40,6 @@
                 onInteract: () => selectWorkspaceUuid(workspace.uuid),
             }}
             label={workspace.title}
-            state="normal"
             icon={Briefcase}
         />
     {/each}

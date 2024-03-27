@@ -19,13 +19,8 @@ import { Search } from "@steeze-ui/heroicons";
 import type { Meta, StoryObj } from "@storybook/svelte";
 
 import ContextMenuButton from "$lib/figma/buttons/ContextMenuButton.svelte";
-import type { MenuButtonColor, MenuButtonState } from "$lib/figma/types";
+import type { MenuButtonColor } from "$lib/figma/types";
 import { makeStorybookSelect } from "$lib/storybook";
-
-const states = makeStorybookSelect<MenuButtonState>({
-    Normal: "normal",
-    Accordion: "accordion",
-});
 
 const colors = makeStorybookSelect<MenuButtonColor>({
     Base: "base",
@@ -33,19 +28,33 @@ const colors = makeStorybookSelect<MenuButtonColor>({
     Destructive: "destructive",
 });
 
+const iconSelect = makeStorybookSelect({
+    "With icon": Search,
+    "No icon": undefined,
+});
+
+const kinds = makeStorybookSelect({
+    Button: { kind: "button", action: console.error },
+    Anchor: { kind: "a", href: "#" },
+});
+
 const meta: Meta<ContextMenuButton> = {
     component: ContextMenuButton,
     argTypes: {
         label: { control: "text" },
-        state: states,
         color: colors,
+        icon: iconSelect,
+        iconRight: iconSelect,
+        kind: kinds,
+        closeOnInteract: { control: "boolean" },
     },
     args: {
         label: "Hello world",
-        icon: Search,
-        state: "normal",
-        kind: { kind: "a", href: "#" },
+        icon: "with-icon",
+        iconRight: "with-icon",
+        kind: "anchor",
         color: "base",
+        closeOnInteract: false,
     },
 };
 export default meta;

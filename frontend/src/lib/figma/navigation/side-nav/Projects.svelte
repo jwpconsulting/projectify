@@ -79,7 +79,6 @@
             label={$_("dashboard.create-project")}
             icon={Plus}
             color="primary"
-            state="normal"
             kind={{ kind: "button", action: openCreateProject }}
         />
     {/if}

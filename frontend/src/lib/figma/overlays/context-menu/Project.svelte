@@ -147,7 +147,6 @@
             disabled: !$currentTeamMemberCan("update", "project"),
         }}
         label={$_("overlay.context-menu.project.edit")}
-        state="normal"
         icon={Pencil}
     />
     <ContextMenuButton
@@ -157,7 +156,6 @@
             disabled: !$currentTeamMemberCan("update", "project"),
         }}
         label={$_("overlay.context-menu.project.archive-project")}
-        state="normal"
         icon={Archive}
     />
 </Layout>
