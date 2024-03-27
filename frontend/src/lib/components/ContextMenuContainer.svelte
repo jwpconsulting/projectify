@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 <!--
-    Copyright (C) 2023, 2024 JWP Consulting GK
+    Copyright (C) 2023-2024 JWP Consulting GK
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published
@@ -26,15 +26,19 @@
     } from "$lib/stores/globalUi";
     import { keepFocusInside } from "$lib/utils/focus";
     import { onResize } from "$lib/utils/resize";
-    import { blockScrolling } from "$lib/utils/scroll";
+    import { onScroll } from "$lib/utils/scroll";
 
     let contextMenu: HTMLElement | undefined = undefined;
 
-    let removeObservers: (() => void) | undefined = undefined;
-    let removeFocusTrap: (() => void) | undefined = undefined;
-    let escapeUnsubscriber: (() => void) | undefined = undefined;
-    let removeScrollTrap: (() => void) | undefined = undefined;
-    let removeResizeListener: (() => void) | undefined = undefined;
+    interface Unsubscribers {
+        removeResizeObserver: () => void;
+        removeMutationObserver: () => void;
+        removeFocusTrap: () => void;
+        removeEscapeSubscriber: () => void;
+        removeScrollTrap: () => void;
+        removeResizeListener: () => void;
+    }
+    let unsubscribers: Unsubscribers | undefined = undefined;
 
     onMount(() => {
         return closeContextMenu;
@@ -46,17 +50,30 @@
                 if (!contextMenu) {
                     throw new Error("Expected contextMenu");
                 }
-                if (removeObservers) {
-                    throw new Error("There already was a resizeObserver");
+                if (unsubscribers) {
+                    throw new Error("Unsubscribers were already set");
                 }
-                removeFocusTrap = keepFocusInside(contextMenu);
                 const { anchor } = $contextMenuState;
-                addObservers(contextMenu, anchor);
-                escapeUnsubscriber = handleKey("Escape", closeContextMenu);
-                removeScrollTrap = blockScrolling();
-                removeResizeListener = onResize(
-                    repositionContextMenu.bind(null, anchor),
-                );
+
+                const callback = () => repositionContextMenu(anchor);
+
+                unsubscribers = {
+                    removeFocusTrap: keepFocusInside(contextMenu),
+                    removeResizeObserver: addResizeObserver(
+                        contextMenu,
+                        callback,
+                    ),
+                    removeMutationObserver: addMutationObserver(
+                        anchor,
+                        callback,
+                    ),
+                    removeEscapeSubscriber: handleKey(
+                        "Escape",
+                        closeContextMenu,
+                    ),
+                    removeScrollTrap: onScroll(callback),
+                    removeResizeListener: onResize(callback),
+                };
             } else {
                 clearTraps();
             }
@@ -68,52 +85,44 @@
     });
 
     function clearTraps() {
-        if (removeFocusTrap) {
-            removeFocusTrap();
-            removeFocusTrap = undefined;
+        if (!unsubscribers) {
+            return;
         }
-        // Clear observer
-        if (removeObservers) {
-            removeObservers();
-            removeObservers = undefined;
-        }
-        // Think about whether this one is necessary
-        if (escapeUnsubscriber) {
-            escapeUnsubscriber();
-            escapeUnsubscriber = undefined;
-        }
-        if (removeScrollTrap) {
-            removeScrollTrap();
-            removeScrollTrap = undefined;
-        }
-        if (removeResizeListener) {
-            removeResizeListener();
-            removeResizeListener = undefined;
-        }
+        console.debug("Clearing traps");
+        unsubscribers.removeFocusTrap();
+        unsubscribers.removeResizeObserver();
+        unsubscribers.removeMutationObserver();
+        unsubscribers.removeEscapeSubscriber();
+        unsubscribers.removeScrollTrap();
+        unsubscribers.removeResizeListener();
+        unsubscribers = undefined;
     }
 
-    function addObservers(contextMenu: HTMLElement, anchor: HTMLElement) {
-        // Observe changes made to context menu size
-        const resizeObserver = new ResizeObserver(() =>
-            repositionContextMenu(anchor),
-        );
+    /**
+     * Observe changes made to context menu size
+     */
+    function addResizeObserver(
+        contextMenu: HTMLElement,
+        callback: () => void,
+    ): () => void {
+        const resizeObserver = new ResizeObserver(callback);
         resizeObserver.observe(contextMenu);
-        // Observe changes made to context menu anchor
-        const mutationObserver = new MutationObserver(() =>
-            repositionContextMenu(anchor),
-        );
+        return () => resizeObserver.disconnect();
+    }
+
+    /**
+     * Observe changes made to context menu anchor
+     */
+    function addMutationObserver(
+        anchor: HTMLElement,
+        callback: () => void,
+    ): () => void {
+        const mutationObserver = new MutationObserver(callback);
         const mutationObserverConfig: MutationObserverInit = {
             childList: true,
         };
         mutationObserver.observe(anchor, mutationObserverConfig);
-
-        if (removeObservers) {
-            console.warn("A removeObservers callback was already set");
-        }
-        removeObservers = () => {
-            resizeObserver.disconnect();
-            mutationObserver.disconnect();
-        };
+        return () => mutationObserver.disconnect();
     }
 
     function repositionContextMenu(anchor: HTMLElement) {
@@ -142,13 +151,20 @@
         const {
             left: anchorLeft,
             top: anchorTop,
-            height: anchorHeight,
+            bottom: anchorBottom,
         } = anchor.getBoundingClientRect();
-        console.debug({ anchor, anchorLeft, anchorTop, anchorHeight });
+        console.debug({ anchor, anchorLeft, anchorTop });
+
         // Width, height of viewport
         const { innerWidth: viewPortWidth, innerHeight: viewPortHeight } =
             window;
         console.debug({ viewPortWidth, viewPortHeight });
+
+        if (anchorTop > viewPortHeight || anchorBottom < 0) {
+            console.debug("anchor left viewport");
+            closeContextMenu();
+            return;
+        }
         // Get x of right side of context menu
         const xRightSide = anchorLeft + contextMenuWidth;
         // Calculate how many pixels the right side of contextMenu will go
@@ -159,7 +175,7 @@
         const contextMenuLeft = anchorLeft - xOverlap;
         // Calculate how many pixels from anchor bottom to viewport bottom
         const anchorBottomToViewPortBottom = Math.abs(
-            viewPortHeight - (anchorTop + anchorHeight),
+            viewPortHeight - anchorBottom,
         );
         // Calculate how many pixels high the context menu is
         // If the context menu takes up more pixels, then reposition the
@@ -169,7 +185,7 @@
                 ? // Subtract the overlap from y
                   anchorTop - contextMenuHeight
                 : // Else position it under the anchor;
-                  anchorTop + anchorHeight;
+                  anchorBottom;
 
         console.debug({
             anchorBottomToViewPortBottom,

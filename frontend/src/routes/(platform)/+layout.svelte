@@ -36,7 +36,12 @@
     import { currentUser } from "$lib/stores/user";
 </script>
 
-<div class="flex h-screen grow flex-col overflow-y-auto">
+<!--
+With no overflow, we needed to change h-screen -> min-h-screen,
+otherwise the footer will be placed inside the dashboard.
+TODO evaluate whether grow is still necessary. Seems that with grow set, we wouldn't need min-h-screen, really.
+-->
+<div class="flex min-h-screen grow flex-col">
     {#if $currentUser}
         <HeaderDashboard user={$currentUser} />
     {/if}
@@ -45,12 +50,12 @@
     {/if}
     <div class="flex min-h-0 shrink grow flex-row">
         <!-- this breakpoint is in tune with the mobile menu breakpoint -->
-        <div class="hidden h-full shrink-0 overflow-y-auto md:block">
+        <div class="hidden h-full shrink-0 md:block">
             <SideNav workspace={$currentWorkspace} />
         </div>
         <!-- not inserting min-w-0 will mean that this div will extend as much as
     needed around whatever is inside the slot -->
-        <div class="min-w-0 grow overflow-y-auto">
+        <div class="min-w-0 grow">
             <slot />
         </div>
     </div>

@@ -33,11 +33,6 @@ import { loadEnv } from "vite";
 const pluginDefaults: PluginOption[] = [sveltekit()];
 
 const configDefaults: UserConfig = {
-    esbuild: {
-        // It could be useful to drop console etc. here using the following
-        // config
-        // drop: ["console", "debugger"],
-    },
     build: {
         target: ["es2020"],
     },
@@ -120,6 +115,9 @@ const config: UserConfigExport = defineConfig(async ({ mode }: ConfigEnv) => {
 
     return {
         ...configDefaults,
+        esbuild: {
+            drop: mode === "production" ? ["console", "debugger"] : [],
+        },
         plugins: await getPluginOptions(mode),
         server: {
             proxy: getProxyConfig(env),

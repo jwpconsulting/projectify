@@ -37,7 +37,7 @@
     class:min-h-screen={minHScreen}
     role="menu"
 >
-    <div class="flex h-full flex-col gap-8 p-2">
+    <div class="flex h-full flex-col gap-4 p-2">
         {#if target.kind === "dashboard"}
             {#if $currentWorkspace !== undefined}
                 <Full workspace={$currentWorkspace} />

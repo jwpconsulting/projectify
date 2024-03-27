@@ -16,16 +16,9 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /*
- * Block scrolling until the callback that is returned is called
- * This might not be compatible with other functions that change
- * document body style or scroll.
+ * Listen to scroll events, call callback, return unsubscriber
  */
-export function blockScrolling(): () => void {
-    const scrollOffset = window.scrollY;
-    document.body.style.position = "fixed";
-    document.body.scroll(0, scrollOffset);
-    return () => {
-        document.body.style.position = "";
-        window.scrollTo(0, scrollOffset);
-    };
+export function onScroll(callback: () => void): () => void {
+    document.addEventListener("scroll", callback);
+    return () => document.removeEventListener("scroll", callback);
 }
