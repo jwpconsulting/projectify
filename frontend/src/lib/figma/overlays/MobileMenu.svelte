@@ -28,7 +28,7 @@
     ];
 </script>
 
-<div class="flex flex-col gap-4 divide-y divide-border">
+<div class="flex flex-col">
     {#each links as link}
         <HeaderButton
             action={{
