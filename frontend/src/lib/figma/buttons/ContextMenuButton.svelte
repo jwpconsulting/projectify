@@ -68,14 +68,14 @@
 {#if kind.kind === "a"}
     <a href={kind.href} class={outerClass} on:click={interact}>
         {#if icon}<Icon src={icon} theme="outline" class="h-4 w-4" />{/if}
-        <div>{label}</div>
+        {label}
         {#if iconRight}
             <Icon src={iconRight} theme="outline" class="h-4 w-4" />{/if}
     </a>
 {:else}
     <button disabled={kind.disabled} on:click={action} class={outerClass}>
         {#if icon}<Icon src={icon} theme="outline" class="h-4 w-4" />{/if}
-        <div>{label}</div>
+        {label}
         {#if iconRight}
             <Icon src={iconRight} theme="outline" class="h-4 w-4" />{/if}
     </button>
